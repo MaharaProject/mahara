@@ -29,10 +29,10 @@ addLoadEvent(function() {
                     document.location.href = config.wwwroot + 'artefact/file/';
                     break;
                 case 'g':
-                    document.location.href = config.wwwroot + 'contacts/groups/';
+                    document.location.href = config.wwwroot + 'group/';
                     break;
                 case 'o':
-                    document.location.href = config.wwwroot + 'contacts/groups/owned.php';
+                    document.location.href = config.wwwroot + 'group/owned.php';
                     break;
                 case '/':
                     document.searchform.query.focus();

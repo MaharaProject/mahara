@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage artefact
@@ -25,7 +25,6 @@
  */
 
 defined('INTERNAL') || die();
-require_once('artefact.php');
 
 /**
  * Base artefact plugin class
@@ -41,6 +40,17 @@ abstract class PluginArtefact extends Plugin {
      */
     public static abstract function get_artefact_types();
 
+    
+    /**
+    * This function returns a list of classnames
+    * of block types this plugin provides
+    * they must match directories inside artefact/$name/blocktype
+    * @abstract
+    * @return array
+    */
+    public static abstract function get_block_types();
+
+
     /**
      * This function returns the name of the plugin.
      * @abstract
@@ -48,11 +58,6 @@ abstract class PluginArtefact extends Plugin {
      */
     public static abstract function get_plugin_name();
 
-
-    /**
-     * Gets a list of top level artefact types, used in the view creation wizard
-     */
-    public static abstract function get_toplevel_artefact_types(); 
 
     /**
      * This function returns an array of menu items
@@ -359,6 +364,8 @@ abstract class ArtefactType {
             return;
         }
       
+        db_begin();
+
         // Call delete() on children (if there are any)
         if ($children = $this->get_children_instances()) {
             foreach ($children as $child) {
@@ -368,6 +375,15 @@ abstract class ArtefactType {
 
         // Delete any references to this artefact from non-artefact places.
         delete_records_select('artefact_parent_cache', 'artefact = ? OR parent = ?', array($this->id, $this->id));
+
+        // Make sure that the artefact is removed from any view blockinstances that have it
+        if ($records = get_column('view_artefact', 'block', 'artefact', $this->id)) {
+            foreach ($records as $blockid) {
+                require_once(get_config('docroot') . 'blocktype/lib.php');
+                $bi = new BlockInstance($blockid);
+                $bi->delete_artefact($this->id);
+            }
+        }
         delete_records('view_artefact', 'artefact', $this->id);
         delete_records('artefact_feedback', 'artefact', $this->id);
         delete_records('artefact_tag', 'artefact', $this->id);
@@ -381,80 +397,16 @@ abstract class ArtefactType {
         $this->dirty = false;
         $this->parentdirty = true;
         $this->deleted = true;
+
+        db_commit();
     }
 
     /**
-     * render instance to given format.  This function simply switches and
-     * calls one of listself(), listchildren(), render_metadata() or
-     * render_full().  If a format it doesn't know about is passed in, it
-     * throws an exception.  You should only need to override this if you have
-     * invented some kind of new format.
-     *
-     * @param int $format format type (constant)
-     * @param array $options options for format
-     */
-    public function render($format, $options) {
-        switch ($format) {
-        case FORMAT_ARTEFACT_LISTSELF:
-            return $this->listself($options);
-            
-        case FORMAT_ARTEFACT_RENDERMETADATA:
-            return $this->render_metadata($options);
-
-        case FORMAT_ARTEFACT_LISTCHILDREN:
-            return $this->listchildren($options);
-
-        case FORMAT_ARTEFACT_RENDERFULL:
-            return $this->render_full($options);
-            
-        default:
-            //@todo: This should be an invalid render format exception
-            throw new Exception('invalid render format');
-        }
-    }
-
-    
-    protected function get_metadata($options) {
-        $data = array('title'        => $this->get('title'),
-                      'type'         => get_string($this->get('artefacttype'), 'artefact.' . $this->get_plugin_name()),
-                      'owner'        => display_name(optional_userobj($this->get('owner'))),
-                      'created'      => format_date($this->get('ctime')),
-                      'lastmodified' => format_date($this->get('mtime')));
-        foreach ($data as $key => $value) {
-            $data[$key] = array('name' => get_string($key),
-                                'value' => $value);
-        }
-        return $data;
-    }
-
-
-    /**
-     * render instance to metadata format
-     * @param $options 
-     * @todo: get and display artefact size.
-     */
-    protected function render_metadata($options) {
-
-        $smarty = smarty();
-
-        if (isset($options['viewid'])) {
-            $smarty->assign('title', '<a href="' . get_config('wwwroot') . 'view/view.php?view=' . $options['viewid'] . '&amp;artefact=' . $this->get('id') . '">'
-                . $this->get('title') . '</a>');
-        } 
-        else {
-            $smarty->assign('title', $this->get('title'));
-        }
-        $smarty->assign('type', get_string($this->get('artefacttype'), 'artefact.' . $this->get_plugin_name()));
-        $smarty->assign('owner', display_name(optional_userobj($this->get('owner'))));
-        $smarty->assign('nicectime', format_date($this->get('ctime')));
-        $smarty->assign('nicemtime', format_date($this->get('mtime')));
-
-        return array('html' => $smarty->fetch('artefact/render_metadata.tpl'),
-                     'javascript' => null);
-
-    }
-
-
+    * this function provides the way to link to viewing very deeply nested artefacts
+    * within a view
+    *
+    * @todo not sure the comment here is appropriate
+    */
     public function add_to_render_path(&$options) {
         if (empty($options['path'])) {
             $options['path'] = $this->get('id');
@@ -462,72 +414,6 @@ abstract class ArtefactType {
         else {
             $options['path'] .= ',' . $this->get('id');
         }
-    }
-
-
-    /**
-     * list artefact children.  There's a default for this, but we only use it
-     * if the class thinks it can render FORMAT_ARTEFACT_LISTCHILDREN. 
-     *
-     * @param $options 
-     * @todo: use a smarty template.
-     */
-    protected function listchildren($options) {
-        if (in_array(FORMAT_ARTEFACT_LISTCHILDREN, $this->get_render_list())) {
-      
-            $html = '<ul>';
-            $js = '';
-            foreach ($this->get_children_instances() as $child) {
-                $renderedchild = $child->render(FORMAT_ARTEFACT_LISTSELF, $options);
-                $html .= '<li>' . $renderedchild['html'] . "</li>\n";
-                $js .= $renderedchild['javascript'] . "\n";
-            }
-            $html .= '</ul>';
-            return array('html' => $html,
-                         'javascript' => $js);
-        }
-
-        throw new Exception('This artefact cannot render to this format.');
-    }
-
-    /** 
-     * render self
-     * @param array options
-     */
-    protected function listself($options) {
-        if (isset($options['viewid'])) {
-            require_once('artefact.php');
-            if (artefact_in_view($id = $this->get('id'), $options['viewid'])) {
-                $title = '<a href="' . get_config('wwwroot') . 'view/view.php?view=' . $options['viewid']
-                    . '&artefact=' . $id;
-                if (!empty($options['path'])) {
-                    $title .= '&path=' . $options['path'];
-                }
-                $title .= '">' . $this->title . '</a>';
-            }
-        }
-        if (!isset($title)) {
-            $title = $this->title;
-        }
-        if (!empty($options['size']) && method_exists($this, 'describe_size')) {
-            $title .= ' (' . $this->describe_size() . ')';
-        }
-        if (!empty($options['link']) && method_exists($this, 'linkself')) {
-            $title .= ' (' . $this->linkself() . ')';
-        }
-        return array('html' => $title,
-                     'javascript' => null);
-    }
-
-    /**
-     * render the artefact in full.  This isn't supported by default.  You need
-     * to override this method if your artefact can do this.
-     *
-     * @param array
-     */
-    protected function render_full($options) {
-        // @todo This should be a proper exception of some sort.
-        throw new Exception('This artefact cannot render to this format.');
     }
 
 
@@ -552,13 +438,19 @@ abstract class ArtefactType {
 
 
     /**
-     * returns path to icon
-     * can be called statically but not defined so
-     * so that can be either from instance or static.
+     * Returns a URL for an icon for the appropriate artefact
+     *
+     * @param array $options Options for the artefact. The array MUST have the 
+     *                       'id' key, representing the ID of the artefact for 
+     *                       which the icon is being generated. Other keys 
+     *                       include 'size' for a [width]x[height] version of 
+     *                       the icon, as opposed to the default 20x20, and 
+     *                       'view' for the id of the view in which the icon is 
+     *                       being displayed.
      * @abstract 
-     * @return string path to icon (relative to docroot)
+     * @return string URL for the icon
      */
-    public abstract function get_icon();
+    public static abstract function get_icon($options=null);
     
 
     // ******************** STATIC FUNCTIONS ******************** //
@@ -569,16 +461,6 @@ abstract class ArtefactType {
 
     public static function get_metadata_by_userid($userid, $order, $offset, $limit) {
         // @todo
-    }
-
-    /**
-     * returns array of formats can render to (constants)
-     */
-    public static function get_render_list() {
-        return array(
-            FORMAT_ARTEFACT_LISTSELF,
-            FORMAT_ARTEFACT_RENDERMETADATA
-        );
     }
 
     /**
@@ -602,6 +484,36 @@ abstract class ArtefactType {
      * @param integer This is the ID of the artefact being linked to
      */
     public static abstract function get_links($id);
+
+    // @TODO maybe uncomment this later and implement it everywhere
+    // when we know a bit more about what blocks we want.
+    //public abstract function render_self($options);
+
+
+    /**
+    * Returns the printable name of this artefact
+    * (used in lists and such)
+    */
+    public function get_name() {
+        return $this->get('title');
+    }
+
+    /**
+    * Should the artefact be linked to from the listing on my views?
+    */
+    public function in_view_list() {
+        return true;
+    }
+
+    /**
+    * Returns a short name for the artefact to be used in a list of artefacts in a view 
+    */
+    public function display_title($maxlen=null) {
+        if ($maxlen) {
+            return str_shorten($this->get('title'), $maxlen, true);
+        }
+        return $this->get('title');
+    }
 
     // ******************** HELPER FUNCTIONS ******************** //
 
@@ -634,4 +546,198 @@ abstract class ArtefactType {
     }
 }
 
+/**
+ * Given an artefact plugin name, this function will test if 
+ * it's installable or not.  If not, InstallationException will be thrown.
+ */
+function artefact_check_plugin_sanity($pluginname) {
+    $classname = generate_class_name('artefact', $pluginname);
+    safe_require('artefact', $pluginname);
+    if (!is_callable(array($classname, 'get_artefact_types'))) {
+        throw new InstallationException(get_string('artefactpluginmethodmissing', 'error', $classname, 'get_artefact_types'));
+    }
+    if (!is_callable(array($classname, 'get_block_types'))) {
+        throw new InstallationException(get_string('artefactpluginmethodmissing', 'error', $classname, 'get_block_types'));
+    }
+    $types = call_static_method($classname, 'get_artefact_types');
+    foreach ($types as $type) {
+        $typeclassname = generate_artefact_class_name($type);
+        if (get_config('installed')) {
+            if ($taken = get_record_select('artefact_installed_type', 'name = ? AND plugin != ?', 
+                                           array($type, $pluginname))) {
+                throw new InstallationException(get_string('artefacttypenametaken', 'error', $type, $taken->plugin));
+            }
+        }
+        if (!class_exists($typeclassname)) {
+            throw new InstallationException(get_string('classmissing', 'error', $typeclassname, $type, $plugin));
+        }
+    }
+    $types = call_static_method($classname, 'get_block_types');
+    foreach ($types as $type) {
+        $pluginclassname = generate_class_name('blocktype', 'image');
+        if (get_config('installed')) {
+            if (table_exists(new XMLDBTable('blocktype_installed')) && $taken = get_record_select('blocktype_installed', 
+                'name = ? AND artefactplugin != ? ',
+                array($type, $pluginname))) {
+                throw new InstallationException(get_string('blocktypenametaken', 'error', $type,
+                    ((!empty($taken->artefactplugin)) ? $taken->artefactplugin : get_string('system'))));
+            }
+        }
+        // go look for the lib file to include
+        try {
+            safe_require('blocktype', $pluginname . '/' . $type);
+        }
+        catch (Exception $_e) {
+            throw new InstallationException(get_string('blocktypelibmissing', 'error', $type, $pluginname));
+        }
+        if (!class_exists($pluginclassname)) {
+            throw new InstallationException(get_string('classmissing', 'error', $pluginclassname, $type, $pluginname));
+        }
+    }
+}
+
+function rebuild_artefact_parent_cache_dirty() {
+    // this will give us a list of artefacts, as the first returned column
+    // is not unqiue, but that's ok, it's what we want.
+    if (!$dirty = get_records_array('artefact_parent_cache', 'dirty', 1, '', 'DISTINCT(artefact)')) {
+        return;
+    }
+    db_begin();
+    delete_records('artefact_parent_cache', 'dirty', 1);
+    foreach ($dirty as $d) {
+        $parentids = array();
+        $current = $d->artefact;
+        delete_records('artefact_parent_cache', 'artefact', $current);
+        $parentids = array_keys(artefact_get_parents_for_cache($current));
+        foreach ($parentids as $p) {
+            $apc = new StdClass;
+            $apc->artefact = $d->artefact;
+            $apc->parent   = $p;
+            $apc->dirty    = 0;
+            insert_record('artefact_parent_cache', $apc);
+        }
+    }
+    db_commit();
+}
+
+function rebuild_artefact_parent_cache_complete() {
+    db_begin();
+    delete_records('artefact_parent_cache');
+    if ($artefactids = get_column('artefact', 'id')) {
+        foreach ($artefactids as $id) {
+            $parentids = array_keys(artefact_get_parents_for_cache($id));
+            foreach ($parentids as $p) {
+                $apc = new StdClass;
+                $apc->artefact = $id;
+                $apc->parent   = $p;
+                $apc->dirty    = 0;
+                insert_record('artefact_parent_cache', $apc);
+            }
+        }
+    }
+    db_commit();
+}
+
+
+function artefact_get_parents_for_cache($artefactid, &$parentids=false) {
+    static $blogsinstalled;
+    if (!isset($blogsinstalled)) {
+        $blogsinstalled = get_field('artefact_installed', 'active', 'name', 'blog');
+    }
+    $current = $artefactid;
+    if (empty($parentids)) { // first call
+        $parentids = array();
+    }
+    while (true) {
+        if (!$parent = get_record('artefact', 'id', $current)) {
+            break;
+        }
+        // get any blog posts it may be attached to 
+        if (($parent->artefacttype == 'file' || $parent->artefacttype == 'image') && $blogsinstalled
+            && $associated = get_column('artefact_blog_blogpost_file', 'blogpost', 'file', $parent->id)) {
+            foreach ($associated as $a) {
+                $parentids[$a] = 1;
+                artefact_get_parents_for_cache($a, $parentids);
+            }
+        }
+        if (!$parent->parent) {
+            break;
+        }
+        $parentids[$parent->parent] = 1;
+        $current = $parent->parent;
+    }
+    return $parentids;
+}
+
+function artefact_can_render_to($type, $format) {
+    return in_array($format, call_static_method(generate_artefact_class_name($type), 'get_render_list'));
+}
+
+function artefact_instance_from_id($id) {
+    $sql = 'SELECT a.*, i.plugin 
+            FROM {artefact} a 
+            JOIN {artefact_installed_type} i ON a.artefacttype = i.name
+            WHERE a.id = ?';
+    if (!$data = get_record_sql($sql, array($id))) {
+        throw new ArtefactNotFoundException(get_string('artefactnotfound', 'mahara', $id));
+    }
+    $classname = generate_artefact_class_name($data->artefacttype);
+    safe_require('artefact', $data->plugin);
+    return new $classname($id, $data);
+}
+
+/**
+ * This function will return an instance of any "0 or 1" artefact. That is any
+ * artefact that each user will have at most one instance of (e.g. profile
+ * fields).
+ *
+ * @param string Is the type of artefact to return
+ * @param string The user_id who owns the fetched artefact. (defaults to the
+ * current user)
+ *
+ * @returns ArtefactType Instance of the artefact.
+ */
+function artefact_instance_from_type($artefact_type, $user_id=null) {
+    global $USER;
+
+    if ($user_id === null) {
+        $user_id = $USER->get('id');
+    }
+
+    safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact_type));
+
+    if (!call_static_method(generate_artefact_class_name($artefact_type), 'is_singular')) {
+        throw new ArtefactNotFoundException("This artefact type is not a 'singular' artefact type");
+    }
+
+    // email is special (as in the user can have more than one of them, but
+    // it's treated as a 0 or 1 artefact and the primary is returned
+    if ($artefact_type == 'email') {
+        $id = get_field('artefact_internal_profile_email', 'artefact', 'owner', $user_id, 'principal', 1);
+
+        if (!$id) {
+            throw new ArtefactNotFoundException("Artefact of type '${artefact_type}' doesn't exist");
+        }
+
+        $classname = generate_artefact_class_name($artefact_type);
+        safe_require('artefact', 'internal');
+        return new $classname($id);
+    }
+    else {
+        $sql = 'SELECT a.*, i.plugin 
+                FROM {artefact} a 
+                JOIN {artefact_installed_type} i ON a.artefacttype = i.name
+                WHERE a.artefacttype = ? AND a.owner = ?';
+        if (!$data = get_record_sql($sql, array($artefact_type, $user_id))) {
+            throw new ArtefactNotFoundException("Artefact of type '${artefact_type}' doesn't exist");
+        }
+
+        $classname = generate_artefact_class_name($artefact_type);
+        safe_require('artefact', $data->plugin);
+        return new $classname($data->id, $data);
+    }
+
+    throw new ArtefactNotFoundException("Artefact of type '${artefact_type}' doesn't exist");
+}
+        
 ?>

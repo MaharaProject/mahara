@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -58,11 +58,21 @@ if (!empty($_SESSION['registered'])) {
 }
 
 $key = param_alphanum('key', null);
-// Step three of registration - given a key, fill out mandatory profile fields,
-// optional profile icon, and register the user
+// Step three of registration - given a key register the user
 if (isset($key)) {
 
-    function profileform_submit(Pieform $form, $values) {
+    // Begin the registration form buliding
+    if (!$registration = get_record_select('usr_registration', '"key" = ? AND expiry >= ?', array($key, db_format_timestamp(time())))) {
+        die_info(get_string('registrationnosuchkey', 'auth.internal'));
+    }
+
+    // In case a new session has started, reset the session language
+    // to the one selected during registration
+    if (!empty($registration->lang)) {
+        $SESSION->set('lang', $registration->lang);
+    }
+
+    function create_registered_user($profilefields=array()) {
         global $registration, $SESSION, $USER;
 
         db_begin();
@@ -71,7 +81,7 @@ if (isset($key)) {
         $registrationid = $registration->id;
         unset($registration->id);
         unset($registration->expiry);
-        if ($expirytime = get_field('institution', 'defaultaccountlifetime', 'name', $registration->institution)) {
+        if ($expirytime = get_config('defaultaccountlifetime')) {
             $registration->expiry = db_format_timestamp(time() + $expirytime);
         }
         $registration->lastlogin = db_format_timestamp(time());
@@ -85,17 +95,16 @@ if (isset($key)) {
         $user = new User();
         $user->username         = $registration->username;
         $user->password         = $registration->password;
-        $user->institution      = $registration->institution;
         $user->salt             = $registration->salt;
         $user->passwordchange   = 0;
         $user->active           = 1;
-        $user->firstname        = $registration->firstname;
-        $user->lastname         = $registration->lastname;
         $user->authinstance     = $authinstance->id;
-        $user->lastname         = $registration->lastname;
         $user->firstname        = $registration->firstname;
         $user->lastname         = $registration->lastname;
+        $user->email            = $registration->email;
         $user->commit();
+
+        $user->add_institution_request($registration->institution);
 
         $registration->id = $user->id;
 
@@ -103,6 +112,9 @@ if (isset($key)) {
         set_profile_field($user->id, 'email', $registration->email);
         set_profile_field($user->id, 'firstname', $registration->firstname);
         set_profile_field($user->id, 'lastname', $registration->lastname);
+        if (!empty($registration->lang) && $registration->lang != 'default') {
+            set_account_preference($user->id, 'lang', $registration->lang);
+        }
 
         // Delete the old registration record
         delete_records('usr_registration', 'id', $registrationid);
@@ -113,36 +125,11 @@ if (isset($key)) {
             if (in_array($field, array('firstname', 'lastname', 'email'))) {
                 continue;
             }
-            set_profile_field($user->id, $field, $values[$field]);
+            set_profile_field($user->id, $field, $profilefields[$field]);
         }
 
-        // Handle the profile image if uploaded
-        if ($values['profileimg'] && $values['profileimg']['error'] == 0 && $values['profileimg']['size'] > 0) {
-            // Entry in artefact table
-            $artefact = new ArtefactTypeProfileIcon();
-            $artefact->set('owner', $user->id);
-            $artefact->set('title', ($values['profileimgtitle']) ? $values['profileimgtitle'] : $values['profileimg']['name']);
-            $artefact->set('note', $values['profileimg']['name']);
-            $artefact->commit();
-
-            $id = $artefact->get('id');
-
-            $filesize = filesize($values['profileimg']['tmp_name']);
-            set_field('usr', 'quotaused', $filesize, 'id', $user->id);
-            $registration->quotaused = $filesize;
-            $registration->quota = get_config_plugin('artefact', 'file', 'defaultquota');
-            set_field('usr', 'profileicon', $id, 'id', $user->id);
-            $registration->profileicon = $id;
-
-            // Move the file into the correct place.
-            $directory = get_config('dataroot') . 'artefact/internal/profileicons/' . ($id % 256) . '/';
-            check_dir_exists($directory);
-            move_uploaded_file($values['profileimg']['tmp_name'], $directory . $id);
-        }
-        else {
-            $registration->quotaused = 0;
-            $registration->quota = get_config_plugin('artefact', 'file', 'defaultquota');
-        }
+        $registration->quotaused = 0;
+        $registration->quota = get_config_plugin('artefact', 'file', 'defaultquota');
 
         db_commit();
         handle_event('createuser', $registration);
@@ -150,111 +137,20 @@ if (isset($key)) {
         // Log the user in and send them to the homepage
         $USER = new LiveUser();
         $USER->reanimate($user->id, $authinstance->id);
+
+        // A special greeting for special people
+        if (in_array($user->username, array('waawaamilk', 'Mjollnir`', 'Ned', 'richardm', 'fmarier'))) {
+            $SESSION->add_ok_msg('MAMA!!! Maharababy happy to see you :D :D!');
+        }
+        else if ($user->username == 'htaccess') {
+            $SESSION->add_ok_msg('Welcome B-Quack, htaccess!');
+        }
+        else {
+            $SESSION->add_ok_msg(get_string('registrationcomplete', 'mahara', get_config('sitename')));
+        }
         redirect();
     }
-
-    function profileform_validate(Pieform $form, $values) {
-        // Profile icon, if uploaded
-        if ($values['profileimg'] && $values['profileimg']['error'] == 0 && $values['profileimg']['size'] > 0) {
-            require_once('file.php');
-            if (!is_image_mime_type(get_mime_type($values['profileimg']['tmp_name']))) {
-                $form->set_error('profileimg', get_string('filenotimage'));
-            }
-
-            // Check the file isn't greater than 300x300
-            list($width, $height) = getimagesize($values['profileimg']['tmp_name']);
-            if ($width > 300 || $height > 300) {
-                $form->set_error('profileimg', get_string('profileiconimagetoobig', 'artefact.internal', $width, $height));
-            }
-        }
-
-        foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
-            // @todo here and above, use the method for getting "always mandatory" fields
-            if (in_array($field, array('firstname', 'lastname', 'email'))) {
-                continue;
-            }
-            // @todo here, validate the fields using their static validate method
-        }
-    }
-
-
-    // Begin the registration form buliding
-    if (!$registration = get_record_select('usr_registration', '"key" = ? AND expiry >= ?', array($key, db_format_timestamp(time())))) {
-        die_info(get_string('registrationnosuchkey', 'auth.internal'));
-    }
-
-    $elements = array(
-        'optionalheader' => array(
-            'type'  => 'html',
-            'value' => get_string('registerstep3fieldsoptional')
-        ),
-        'profileimg' => array(
-            'type' => 'file',
-            'title' => 'Profile Image'
-        ),
-        'profileimgtitle' => array(
-            'type' => 'text',
-            'title' => 'Title'
-        )
-    );
-
-    $mandatoryheaderadded = false;
-    safe_require('artefact', 'internal');
-    foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
-        if (in_array($field, array('firstname', 'lastname', 'email'))) {
-            continue;
-        }
-
-        if (!$mandatoryheaderadded) {
-            $elements['mandatoryheader'] = array(
-                'type'  => 'html',
-                'value' => get_string('registerstep3fieldsmandatory')
-            );
-            $mandatoryheaderadded = true;
-        }
-
-        $elements[$field] = array(
-            'type'  => $type,
-            'title' => get_string($field, 'artefact.internal'),
-            'rules' => array('required' => true)
-        );
-
-        // @todo ruthlessly stolen from artefact/internal/index.php, could be merged
-        if ($type == 'wysiwyg') {
-            $elements[$field]['rows'] = 10;
-            $elements[$field]['cols'] = 60;
-        }
-        if ($type == 'textarea') {
-            $elements[$field]['rows'] = 4;
-            $elements[$field]['cols'] = 60;
-        }
-        if ($field == 'country') {
-            $elements[$field]['options'] = getoptions_country();
-            $elements[$field]['defaultvalue'] = 'nz';
-        }
-    }
-
-    $elements['key'] = array(
-        'type' => 'hidden',
-        'name' => 'key',
-        'value' => $key
-    );
-    $elements['submit'] = array(
-        'type' => 'submit',
-        'value' => get_string('completeregistration', 'auth.internal')
-    );
-
-    $form = pieform(array(
-        'name'     => 'profileform',
-        'method'   => 'post',
-        'action'   => '',
-        'elements' => $elements
-    ));
-
-    $smarty = smarty();
-    $smarty->assign('register_profile_form', $form);
-    $smarty->display('register.tpl');
-    exit;
+    create_registered_user();
 }
 
 
@@ -272,6 +168,7 @@ $elements = array(
     'password1' => array(
         'type' => 'password',
         'title' => get_string('password'),
+        'description' => get_string('passwordformdescription', 'auth.internal'),
         'rules' => array(
             'required' => true
         ),
@@ -314,7 +211,8 @@ $sql = 'SELECT
             {auth_instance} ai
         WHERE
             ai.authname = \'internal\' AND
-            ai.institution = i.name';
+            ai.institution = i.name AND
+            i.registerallowed = 1';
 $institutions = get_records_sql_array($sql, array());
 
 if (count($institutions) > 1) {
@@ -356,14 +254,15 @@ $elements['tandc'] = array(
     'separator' => ' &nbsp; '
 );
 
-$elements['captcha'] = array(
-    'type' => 'html',
-    'title' => get_string('captchatitle'),
-    'description' => get_string('captchadescription'),
-    'value' => '<img src="' . get_config('wwwroot') . 'captcha.php" alt="' . get_string('captchaimage') . '" style="padding: 2px 0;"><br>'
-        . '<input type="text" class="text required" name="captcha" style="width: 137px;" tabindex="4">',
-    'rules' => array('required' => true)
-);
+$captcharequired = get_config('captcha_on_register_form');
+if (is_null($captcharequired) || $captcharequired) {
+    $elements['captcha'] = array(
+        'type' => 'captcha',
+        'title' => get_string('captchatitle'),
+        'description' => get_string('captchadescription'),
+        'rules' => array('required' => true)
+    );
+}
 
 $elements['submit'] = array(
     'type' => 'submitcancel',
@@ -376,6 +275,7 @@ $form = array(
     'plugintype' => 'core',
     'pluginname' => 'register',
     'action' => '',
+    'showdescriptiononerror' => false,
     'renderer' => 'table',
     'elements' => $elements
 );
@@ -399,7 +299,9 @@ function register_validate(Pieform $form, $values) {
         $form->set_error('username', get_string('usernamealreadytaken', 'auth.internal'));
     }
 
-    password_validate($form, $values, $values['username'], $values['institution']);
+    $user =(object) $values;
+    $user->authinstance = get_field('auth_instance', 'id', 'authname', 'internal', 'institution', $institution);
+    password_validate($form, $values, $user);
 
     // First name and last name must contain at least one non whitespace
     // character, so that there's something to read
@@ -424,9 +326,30 @@ function register_validate(Pieform $form, $values) {
     }
 
     // CAPTCHA image
-    if (!isset($_POST['captcha']) || strtolower($_POST['captcha']) != strtolower($SESSION->get('captcha'))) {
+    $captcharequired = get_config('captcha_on_register_form');
+    if ((is_null($captcharequired) || $captcharequired) && !$values['captcha']) {
         $form->set_error('captcha', get_string('captchaincorrect'));
     }
+
+    $institution = get_record_sql('
+        SELECT 
+            i.name, i.maxuseraccounts, i.registerallowed, COUNT(u.id)
+        FROM {institution} i
+            LEFT OUTER JOIN {usr_institution} ui ON ui.institution = i.name
+            LEFT OUTER JOIN {usr} u ON (ui.usr = u.id AND u.deleted = 0)
+        WHERE
+            i.name = ?
+        GROUP BY
+            i.name, i.maxuseraccounts, i.registerallowed', array($institution));
+
+    if (!empty($institution->maxuseraccounts) && $institution->count >= $institution->maxuseraccounts) {
+        $form->set_error('institution', get_string('institutionfull'));
+    }
+
+    if (!$institution->registerallowed) {
+        $form->set_error('institution', get_string('registrationnotallowed'));
+    }
+
 }
 
 function register_submit(Pieform $form, $values) {
@@ -441,8 +364,12 @@ function register_submit(Pieform $form, $values) {
     $values['key']   = get_random_key();
     // @todo the expiry date should be configurable
     $values['expiry'] = db_format_timestamp(time() + 86400);
+    $values['lang'] = $SESSION->get('lang');
     try {
         insert_record('usr_registration', $values);
+
+        $f = fopen('/tmp/donal.txt','w');
+        fwrite($f, get_string('registeredemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), $values['key'], get_config('sitename')));
 
         $user =(object) $values;
         $user->admin = 0;
@@ -473,6 +400,7 @@ function register_cancel_submit() {
 
 $smarty = smarty();
 $smarty->assign('register_form', pieform($form));
+$smarty->assign('heading', get_string('register'));
 $smarty->display('register.tpl');
 
 ?>

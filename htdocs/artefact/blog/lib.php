@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage artefact-blog
@@ -37,6 +37,10 @@ class PluginArtefactBlog extends PluginArtefact {
             'blogpost',
         );
     }
+    
+    public static function get_block_types() {
+        return array();
+    }
 
     public static function get_plugin_name() {
         return 'blog';
@@ -47,14 +51,10 @@ class PluginArtefactBlog extends PluginArtefact {
             array(
                 'path'   => 'myportfolio/blogs',
                 'url'    => 'artefact/blog/',
-                'title'  => get_string('blogs', 'artefact.blog'),
+                'title'  => get_string('myblogs', 'artefact.blog'),
                 'weight' => 30,
             ),
         );
-    }
-
-    public static function get_toplevel_artefact_types() {
-        return array('blog');
     }
 
     public static function get_cron() {
@@ -114,21 +114,7 @@ class ArtefactTypeBlog extends ArtefactType {
      * This constant gives the per-page pagination for listing blogs.
      */
     const pagination = 10;
-    
-    
-    /** 
-     * Whether comments are allowed on this blog or not.
-     *
-     * @var boolean
-     */
-    protected $commentsallowed = false;
 
-    /** 
-     * Whether the blog owner will be notified of comments or not.
-     *
-     * @var boolean
-     */
-    protected $commentsnotify = false;
 
     /**
      * We override the constructor to fetch the extra data.
@@ -138,22 +124,6 @@ class ArtefactTypeBlog extends ArtefactType {
      */
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
-
-        if (!$data) {
-            if ($this->id) {
-                if ($blogdata = get_record('artefact_blog_blog', 'blog', $this->id)) {
-                    foreach($blogdata as $name => $value) {
-                        if (property_exists($this, $name)) {
-                            $this->$name = $value;
-                        }
-                    }
-                }
-                else {
-                    // This should never happen unless the user is playing around with blog IDs in the location bar or similar
-                    throw new ArtefactNotFoundException(get_string('blogdoesnotexist', 'artefact.blog'));
-                }
-            }
-        }
 
         if (empty($this->id)) {
             $this->container = 1;
@@ -181,22 +151,6 @@ class ArtefactTypeBlog extends ArtefactType {
         // Commit to the artefact table.
         parent::commit();
 
-        // Reset dirtyness for the time being.
-        $this->dirty = true;
-
-        $data = (object)array(
-            'blog'            => $this->get('id'),
-            'commentsallowed' => ($this->get('commentsallowed') ? 1 : 0),
-            'commentsnotify'  => ($this->get('commentsnotify') ? 1 : 0)
-        );
-
-        if ($new) {
-            insert_record('artefact_blog_blog', $data);
-        }
-        else {
-            update_record('artefact_blog_blog', $data, 'blog');
-        }
-
         $this->dirty = false;
     }
 
@@ -208,9 +162,6 @@ class ArtefactTypeBlog extends ArtefactType {
         if (empty($this->id)) {
             return;
         }
-
-        // Delete the blog-specific data.
-        delete_records('artefact_blog_blog', 'blog', $this->id);
 
         // Delete the artefact and all children.
         parent::delete();
@@ -229,48 +180,22 @@ class ArtefactTypeBlog extends ArtefactType {
         }
     }
 
-    /**
-     * This function overrides the default functionality for listing children,
-     * using a smarty template and tablerenderer stuff.
-     *
-     * @param array
-     * @return string
-     */
-    protected function listchildren($options) {
-        // This is because if there are multiple blocks on a page, they need separate
-        // js variables.
-        $blockid = isset($options['blockid'])
-            ? $options['blockid']
-            : mt_rand();
-
-        $this->add_to_render_path($options);
-
-        // This uses the above blockid, so needs to be inlcuded after.
-        $javascript = require(get_config('docroot') . 'artefact/blog/render/blog_listchildren.js.php');
-
-        $smarty = smarty();
-        $smarty->assign('artefact', $this);
-        $smarty->assign('blockid', $blockid);
-        $smarty->assign_by_ref('options', $options);
-        return array('html' => $smarty->fetch('artefact:blog:render/blog_listchildren.tpl'),
-                     'javascript' => $javascript);
-    }
-
 
     public function describe_size() {
         return $this->count_children() . ' ' . get_string('posts', 'artefact.blog');
     }
 
-
     /**
-     * This function implements the render_full functionality for blogs.
-     * Rendering full involves rendering blog posts with render_full, and
-     * possibly some other stuff.
+     * Renders a blog for a view. This involves using a tablerenderer to paginate the posts.
      *
-     * @param array
-     * @return string
+     * This uses some legacy stuff from the old views interface, including its 
+     * dependence on javascript and the table renderer, which would be nice to 
+     * fix using the new pagination stuff some time.
+     *
+     * @param  array  Options for rendering
+     * @return array  A two key array, 'html' and 'javascript'.
      */
-    function render_full($options) {
+    public function render_self($options) {
         // This is because if there are multiple blocks on a page, they need separate
         // js variables.
         $blockid = isset($options['blockid'])
@@ -279,59 +204,31 @@ class ArtefactTypeBlog extends ArtefactType {
 
         $this->add_to_render_path($options);
 
-        // This uses the above blockid, so needs to be inlcuded after.
-        $javascript = require(get_config('docroot') . 'artefact/blog/render/blog_renderfull.js.php');
-        
-        $smarty = smarty();
+        $smarty = smarty_core();
         if (isset($options['viewid'])) {
-            $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/view.php?view=' 
-                                             . $options['viewid'] . '&artefact=' . $this->get('id')
+            $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/artefact.php?artefact='
+                                             . $this->get('id') . '&view=' . $options['viewid']
                                              . '">' . $this->get('title') . '</a>');
         }
         else {
             $smarty->assign('artefacttitle', $this->get('title'));
         }
+
         $smarty->assign('blockid', $blockid);
-        $smarty->assign_by_ref('options', $options);
-        return array('html' => $smarty->fetch('artefact:blog:render/blog_renderfull.tpl'),
-                     'javascript' => $javascript);
-    }
+        $smarty->assign('options', $options);
+        $smarty->assign('enc_id', json_encode($this->id));
+        $smarty->assign('limit', self::pagination);
+        $smarty->assign('loading_img', theme_get_url('images/loading.gif'));
 
-    protected function get_metadata($options=array()) {
-        $data = parent::get_metadata($options);
-        $data['description'] = array('name' => get_string('description'),
-                                     'value' => $this->get('description'));
-        $data['type']['value'] = get_string($this->get('artefacttype'), 'artefact.blog');
-        $data['size'] = array('name' => get_string('size'),
-                              'value' => $this->count_children() . ' ' 
-                                         . get_string('posts', 'artefact.blog'));
+        // Remove unnecessary options for blog posts
+        unset($options['hidetitle']);
+        $smarty->assign('enc_options', json_encode(json_encode($options)));
 
-        if (isset($options['viewid']) && artefact_in_view($id = $this->get('id'), $options['viewid'])) {
-            $data['title']['value'] = '<a href="' . get_config('wwwroot') . 'view/view.php?view=' . $options['viewid'] . '&artefact=' . $id . '">' . $data['title']['value'] . '</a>';
-        }
-
-        return $data;
-    }
-
-    protected function render_metadata($options) {
-        $smarty = smarty();
-        $smarty->assign('PROPERTIES', $this->get_metadata($options));
-        return array('html' => $smarty->fetch('artefact:blog:render/blog_rendermetadata.tpl'),
-                     'javascript' => null);
+        return array('html' => $smarty->fetch('blocktype:blog:blog_render_self.tpl'), 'javascript' => '');
     }
 
                 
-    public function get_icon() {
-    }
-
-    public static function get_render_list() {
-        return array_values(array_unique(array_merge(
-            array(
-                FORMAT_ARTEFACT_LISTCHILDREN,
-                FORMAT_ARTEFACT_RENDERFULL
-            ),
-            parent::get_render_list()
-        )));
+    public static function get_icon($options=null) {
     }
 
     public static function is_singular() {
@@ -373,8 +270,6 @@ class ArtefactTypeBlog extends ArtefactType {
         $artefact->set('title', $values['title']);
         $artefact->set('description', $values['description']);
         $artefact->set('owner', $user->get('id'));
-        $artefact->set('commentsallowed', $values['commentsallowed'] ? true : false);
-        $artefact->set('commentsnotify', $values['commentsnotify'] ? true : false);
         $artefact->set('tags', $values['tags']);
         $artefact->commit();
     }
@@ -397,19 +292,8 @@ class ArtefactTypeBlog extends ArtefactType {
         
         $artefact->set('title', $values['title']);
         $artefact->set('description', $values['description']);
-        $artefact->set('commentsallowed', $values['commentsallowed'] ? true : false);
-        $artefact->set('commentsnotify', $values['commentsnotify'] ? true : false);
         $artefact->set('tags', $values['tags']);
         $artefact->commit();
-    }
-
-    public function public_feedback_allowed() {
-        return $this->get('commentsallowed');
-    }
-
-
-    public function feedback_notify_owner() {
-        return $this->get('commentsnotify');
     }
 
     public static function get_links($id) {
@@ -426,11 +310,6 @@ class ArtefactTypeBlog extends ArtefactType {
  * BlogPost artefacts occur within Blog artefacts
  */
 class ArtefactTypeBlogPost extends ArtefactType {
-
-    /**
-     * This gives the number of blog posts to display at a time.
-     */
-    const pagination = 10;
 
     /**
      * This defines whether the blogpost is published or not.
@@ -527,37 +406,39 @@ class ArtefactTypeBlogPost extends ArtefactType {
         return $this->count_attachments() . ' ' . get_string('attachments', 'artefact.blog');
     }
 
-    /**
-     * This function displays the blogpost in renderfull mode.
-     *
-     * @param array
-     */
-    protected function render_full($options) {
-        $smarty = smarty();
-        if (isset($options['viewid'])) {
-            $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/view.php?view=' 
-                                             . $options['viewid'] . '&artefact=' . $this->get('id')
-                                             . '">' . $this->get('title') . '</a>');
-        }
-        else {
-            $smarty->assign('artefacttitle', $this->get('title'));
+    public function render_self($options) {
+        $smarty = smarty_core();
+        if (empty($options['hidetitle'])) {
+            if (isset($options['viewid'])) {
+                $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/artefact.php?artefact='
+                     . $this->get('id') . '&view=' . $options['viewid']
+                     . '">' . $this->get('title') . '</a>');
+            }
+            else {
+                $smarty->assign('artefacttitle', $this->get('title'));
+            }
         }
 
         // We need to make sure that the images in the post have the right viewid associated with them
         $postcontent = $this->get('description');
         if (isset($options['viewid'])) {
-            $postcontent = preg_replace('#(<img src=".*artefact/file/download\.php\?file=\d+)#', '\1&amp;view=' . $options['viewid'], $postcontent);
+            $postcontent = preg_replace('#(<img[^>]+src="[^>]+artefact/file/download\.php\?file=\d+)#', '\1&amp;view=' . $options['viewid'], $postcontent);
         }
         $smarty->assign('artefactdescription', $postcontent);
         $smarty->assign('artefact', $this);
         $attachments = $this->get_attached_files();
         if ($attachments) {
             $this->add_to_render_path($options);
-            require_once('artefact.php');
+            require_once(get_config('docroot') . 'artefact/lib.php');
             foreach ($attachments as &$attachment) {
                 $f = artefact_instance_from_id($attachment->id);
-                $rf = $f->render(FORMAT_ARTEFACT_LISTSELF, $options);
-                $attachment->content = $rf['html'];
+                $attachment->size = $f->describe_size();
+                $attachment->iconpath = $f->get_icon(array('id' => $attachment->id, 'viewid' => $options['viewid']));
+                $attachment->viewpath = get_config('wwwroot') . 'view/artefact.php?artefact=' . $attachment->id . '&view=' . $options['viewid'];
+                $attachment->downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $attachment->id;
+                if (isset($options['viewid'])) {
+                    $attachment->downloadpath .= '&id=' . $options['viewid'];
+                }
             }
             $smarty->assign('attachments', $attachments);
         }
@@ -565,9 +446,13 @@ class ArtefactTypeBlogPost extends ArtefactType {
                                                  display_name($this->owner),
                                                  format_date($this->ctime)));
         return array('html' => $smarty->fetch('artefact:blog:render/blogpost_renderfull.tpl'),
-                     'javascript' => null);
+                     'javascript' => '');
     }
 
+
+    /**
+     * Returns an array of IDs of artefacts attached to this blogpost
+     */
     public function attachment_id_list() {
         if (!$list = get_column('artefact_blog_blogpost_file', 'file', 'blogpost', $this->get('id'))) {
             $list = array();
@@ -581,15 +466,28 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $data->file = $artefactid;
         insert_record('artefact_blog_blogpost_file', $data);
 
-        $data->artefact = $data->file;
-        $data->parent = $data->blogpost;
+        $data = new StdClass;
+        $data->artefact = $artefactid;
+        $data->parent = $this->get('id');
         $data->dirty = true;
         insert_record('artefact_parent_cache', $data);
+
+        // Ensure the attachment is recorded as being related to the blog as well
+        $data = new StdClass;
+        $data->artefact = $artefactid;
+        $data->parent = $this->get('parent');
+        $data->dirty = 0;
+
+        $where = $data;
+        unset($where->dirty);
+        ensure_record_exists('artefact_parent_cache', $where, $data);
     }
 
     public function detach_file($artefactid) {
         delete_records('artefact_blog_blogpost_file', 'blogpost', $this->get('id'), 'file', $artefactid);
         delete_records('artefact_parent_cache', 'parent', $this->get('id'), 'artefact', $artefactid);
+        // Remove the record relating the attachment with the blog
+        delete_records('artefact_parent_cache', 'parent', $this->get('parent'), 'artefact', $artefactid);
     }
 
 
@@ -598,41 +496,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
 
-    protected function get_metadata($options=array()) {
-        $data = parent::get_metadata($options);
-        unset($data['description']);
-        unset($data['size']);
-        $data['type']['value'] = get_string($this->get('artefacttype'), 'artefact.blog');
-        $data['attachments'] = array('name' => get_string('attachments', 'artefact.blog'),
-                                     'value' => $this->count_attachments() . ' ' 
-                                               . get_string('files', 'artefact.file'));
-        if (isset($options['viewid']) && artefact_in_view($id = $this->get('id'), $options['viewid'])) {
-            $data['title']['value'] = '<a href="' . get_config('wwwroot') . 'view/view.php?view=' . $options['viewid'] . '&artefact=' . $id . '">' . $data['title']['value'] . '</a>';
-        }
-        return $data;
-    }
-
-                
-    protected function render_metadata($options=array()) {
-        $smarty = smarty();
-        $smarty->assign('PROPERTIES', $this->get_metadata($options));
-        return array('html' => $smarty->fetch('artefact:blog:render/blog_rendermetadata.tpl'),
-                     'javascript' => null);
-    }
-
-
-
-    public function get_icon() {
-    }
-
-    public static function get_render_list() {
-        return array_values(array_unique(array_merge(
-            array(
-                FORMAT_ARTEFACT_LISTSELF,
-                FORMAT_ARTEFACT_RENDERFULL
-            ),
-            parent::get_render_list()
-        )));
+    public static function get_icon($options=null) {
     }
 
     public static function is_singular() {
@@ -691,45 +555,6 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
     /** 
-     * This function returns a list of rendered blog posts.
-     *
-     * @param integer
-     * @param integer
-     * @param integer
-     * @param integer
-     */
-    public static function render_posts($format, $options, $id, $limit = self::pagination, $offset = 0) {
-        ($postids = get_records_sql_array("
-         SELECT a.id
-         FROM {artefact} a
-          LEFT OUTER JOIN {artefact_blog_blogpost} bp
-           ON a.id = bp.blogpost
-         WHERE a.parent = ?
-          AND bp.published = 1
-         ORDER BY a.ctime DESC
-         LIMIT ? OFFSET ?;", array($id, $limit, $offset)))
-            || ($postids = array());
-
-        $posts = array();
-        foreach($postids as $postid) {
-            $blogpost = new ArtefactTypeBlogPost($postid->id);
-            $posts[] = array(
-                'id' => $postid->id,
-                'content' => $blogpost->render($format, (array) $options)
-            );
-        }
-
-        $count = (int)get_field_sql("
-         SELECT COUNT(*)
-         FROM {artefact} a
-          LEFT OUTER JOIN {artefact_blog_blogpost} bp
-           ON a.id = bp.blogpost
-         WHERE a.parent = ?
-          AND bp.published = 1", array($id));
-
-        return array($count, $posts);
-    }
-
     /**
      * This function creates a new blog post.
      *
@@ -837,11 +662,30 @@ class ArtefactTypeBlogPost extends ArtefactType {
         return $fileid;
     }
 
-    public static function blogfiles_folder_id() {
+    public static function blogfiles_folder_id($create = true) {
         $name = get_string('blogfilesdirname', 'artefact.blog');
         $description = get_string('blogfilesdirdescription', 'artefact.blog');
         safe_require('artefact', 'file');
-        return ArtefactTypeFolder::get_folder_id($name, $description);
+        return ArtefactTypeFolder::get_folder_id($name, $description, null, null, $create);
+    }
+
+    // Change the name & description of a user's blogfiles folder when the user changes language pref
+    public static function change_language($userid, $oldlang, $newlang) {
+        $oldname = get_string_from_language($oldlang, 'blogfilesdirname', 'artefact.blog');
+        safe_require('artefact', 'file');
+        $blogfiles = ArtefactTypeFolder::get_folder_by_name($oldname, null, $userid);
+        if (empty($blogfiles)) {
+            return;
+        }
+
+        $name = get_string_from_language($newlang, 'blogfilesdirname', 'artefact.blog');
+        $description = get_string_from_language($newlang, 'blogfilesdirdescription', 'artefact.blog');
+        if (!empty($name)) {
+            $blogfiles = artefact_instance_from_id($blogfiles->id);
+            $blogfiles->set('title', $name);
+            $blogfiles->set('description', $description);
+            $blogfiles->commit();
+        }
     }
 
     /**
@@ -878,7 +722,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $list = get_records_sql_array('SELECT a.id, a.artefacttype, a.title, a.description 
             FROM {artefact_blog_blogpost_file} f
             INNER JOIN {artefact} a ON a.id = f.file
-            WHERE f.blogpost = ' . $this->id, '');
+            WHERE f.blogpost = ?
+            ORDER BY a.title', array($this->id));
 
         // load tags
         if ($list) {
@@ -887,21 +732,6 @@ class ArtefactTypeBlogPost extends ArtefactType {
             }
         }
         return $list;
-    }
-
-    public function public_feedback_allowed() {
-        // Comments are not allowed on posts when the blog has
-        // commentsallowed set to 0;
-        $parent = get_field('artefact', 'parent', 'id', $this->get('id'));
-        return get_field('artefact_blog_blog', 'commentsallowed', 'blog', $parent);
-    }
-    
-    
-    public function feedback_notify_owner() {
-        // Notify owner of comments on posts when the blog has
-        // commentsnotify set to 1;
-        $parent = get_field('artefact', 'parent', 'id', $this->get('id'));
-        return get_field('artefact_blog_blog', 'commentsnotify', 'blog', $parent);
     }
     
     public static function get_links($id) {

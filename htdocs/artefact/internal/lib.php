@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage artefact-internal
@@ -59,6 +59,33 @@ class PluginArtefactInternal extends PluginArtefact {
         );
     }
 
+    public static function get_contactinfo_artefact_types() {
+        return array(
+            'email',
+            'officialwebsite',
+            'personalwebsite',
+            'blogaddress',
+            'address',
+            'town',
+            'city',
+            'country',
+            'homenumber',
+            'businessnumber',
+            'mobilenumber',
+            'faxnumber',
+            'icqnumber',
+            'msnnumber',
+            'aimscreenname',
+            'yahoochat',
+            'skypeusername',
+            'jabberusername',
+        );
+    }
+    
+    public static function get_block_types() {
+        return array();
+    }
+
     public static function get_plugin_name() {
         return 'internal';
     }
@@ -100,10 +127,6 @@ class PluginArtefactInternal extends PluginArtefact {
         delete_records_select('artefact_internal_profile_email', 'verified=0 AND expiry IS NOT NULL AND expiry < ?', array(db_format_timestamp(time())));
     }
 
-    public static function get_toplevel_artefact_types() {
-        return array('profile');
-    }
-    
     public static function sort_child_data($a, $b) {
         return strnatcasecmp($a->text, $b->text);
     }
@@ -153,17 +176,8 @@ class ArtefactTypeProfile extends ArtefactType {
         return parent::set($field, $value);
     }
 
-    public function render_full($options) {
-        return array('html' => $this->title,
-                     'javascript' => null);
-    }
+    public static function get_icon($options=null) {
 
-    public function get_icon() {
-
-    }
-
-    public static function get_render_list() {
-        return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERFULL, FORMAT_ARTEFACT_RENDERMETADATA);
     }
 
     public static function is_singular() {
@@ -220,12 +234,13 @@ class ArtefactTypeProfile extends ArtefactType {
         return array(
             'firstname' => 'text', 
             'lastname'  => 'text', 
-            'email'     => 'emaillist', 
+            'email'     => 'emaillist',
         );
     }
 
     public static function get_public_fields() {
         $all = self::get_all_fields();
+        $alwaysp = self::get_always_public_fields();
         $p = array();
         if ($pub = get_config_plugin('artefact', 'internal', 'profilepublic')) {
             $public = explode(',', $pub);
@@ -236,7 +251,13 @@ class ArtefactTypeProfile extends ArtefactType {
         foreach ($public as $pf) {
             $p[$pf] = $all[$pf];
         }
-        return $p;
+        return array_merge($p, $alwaysp);
+    }
+
+    public static function get_always_public_fields() {
+        return array(
+            'introduction' => 'wysiwyg'
+        );
     }
 
     public static function has_config() {
@@ -247,6 +268,7 @@ class ArtefactTypeProfile extends ArtefactType {
         $mandatory = self::get_mandatory_fields();
         $public = self::get_public_fields();
         $alwaysmandatory = self::get_always_mandatory_fields();
+        $alwayspublic = self::get_always_public_fields();
         $form = array(
             'renderer'   => 'multicolumntable',
             'elements'   => array(
@@ -281,6 +303,10 @@ class ArtefactTypeProfile extends ArtefactType {
                 'type'         => 'checkbox',
 
             );
+            if (isset($alwayspublic[$field])) {
+                $form['elements'][$field . '_public']['value'] = 'checked';
+                $form['elements'][$field . '_public']['disabled'] = true;
+            }
         }
 
         $form['elements']['emptyrow'] = array(
@@ -344,6 +370,13 @@ class ArtefactTypeProfile extends ArtefactType {
             '_default' => $wwwroot . 'artefact/internal/',
         );
     }
+
+    public function in_view_list() {
+        return false;
+    }
+    public function display_title($maxlen=null) {
+        return get_string($this->get('artefacttype'), 'artefact.internal');
+    }
 }
 
 class ArtefactTypeProfileField extends ArtefactTypeProfile {
@@ -351,39 +384,9 @@ class ArtefactTypeProfileField extends ArtefactTypeProfile {
         return 'profile';
     }
 
-    /**
-     * This method is optional, and specifies how child data should be formatted
-     * for the artefact tree.
-     *
-     * It should return a StdClass object, with the following fields set:
-     *
-     *  - id
-     *  - title
-     *  - text
-     *  - container
-     *  - parent
-     *
-     *  @param object $data The data to reformat. Contains some fields from the
-     *                      <kbd>artefact</kbd> table, namely title, artefacttype
-     *                      and container
-     *  @return object      The reformatted data
-     */
-    public static function format_child_data($data, $pluginname) {
-        $res = new StdClass;
-        $res->id         = $data->id;
-        $res->title      = $data->title;
-        $res->isartefact = true;
-        if ($data->artefacttype == 'email') {
-            $res->text = get_string('email') . ' - ' . $data->title;
-        }
-        else {
-            $res->text = get_string($data->artefacttype, "artefact.$pluginname");
-        }
-        $res->container = 0;
-        $res->parent    = null;
-        return $res;
+    public function render_self($options) {
+        return array('html' => $this->title, 'javascript' => null);
     }
-
 }
 
 class ArtefactTypeCachedProfileField extends ArtefactTypeProfileField {
@@ -446,24 +449,21 @@ class ArtefactTypeEmail extends ArtefactTypeProfileField {
                         'artefact'  => $this->id,
                     )
                 );
+                update_record('usr', (object)array('email' => $this->title, 'id' => $this->owner));
             }
         }
     }
 }
 
 class ArtefactTypeStudentid extends ArtefactTypeProfileField {}
-class ArtefactTypeIntroduction extends ArtefactTypeProfileField {}
-class ArtefactTypeWebAddress extends ArtefactTypeProfileField {
-    public function listself($options) {
-        if ($options['link'] == true) {
-            $html = make_link($this->title);
-        }
-        else {
-            $html = $this->title;
-        }
-        return array('html' => $html, 'javascript' => null);
+class ArtefactTypeIntroduction extends ArtefactTypeProfileField {
+    public function in_view_list() {
+        return true;
     }
-    public function render_full($options) {
+}
+class ArtefactTypeWebAddress extends ArtefactTypeProfileField {
+
+    public function render_self($options) {
         if ($options['link'] == true) {
             $html = make_link($this->title);
         }
@@ -480,13 +480,10 @@ class ArtefactTypeAddress extends ArtefactTypeProfileField {}
 class ArtefactTypeTown extends ArtefactTypeProfileField {}
 class ArtefactTypeCity extends ArtefactTypeProfileField {}
 class ArtefactTypeCountry extends ArtefactTypeProfileField {
-    public function listself($options) {
-        $countries = getoptions_country();
-        return array('html' => $countries[$this->title], 'javascript' => null);
-    }
-    public function render_full($options) {
-        $countries = getoptions_country();
-        return array('html' => $countries[$this->title], 'javascript' => null);
+
+    public function render_self($options) {
+          $countries = getoptions_country();
+          return array('html' => $countries[$this->title], 'javascript' => null);
     }
 }
 class ArtefactTypeHomenumber extends ArtefactTypeProfileField {}
@@ -507,17 +504,28 @@ class ArtefactTypeProfileIcon extends ArtefactTypeProfileField {
         return true;
     }
 
-    public function render_full($options) {
-        $html = '<img src="' . get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $this->id . '"'
-            . 'alt="' . hsc($this->title) . '"';
-        if (isset($options['width'])) {
-            $html .= ' width="' . hsc($options['width']) . '"';
+    public function render_self($options) {
+        $options['id'] = $this->get('id');
+
+        $size = filesize(get_config('dataroot') . 'artefact/internal/profileicons/originals/'
+            . ($this->get('id') % 256) . '/' . $this->get('id'));
+
+        $downloadpath = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $this->id;
+        if (isset($options['viewid'])) {
+            $downloadpath .= '&id=' . $options['viewid'];
         }
-        if (isset($options['height'])) {
-            $html .= ' height="' . hsc($options['height']) . '"';
-        }
-        $html .= '>';
-        return array('html' => $html, 'javascript' => null);
+        $smarty = smarty_core();
+        $smarty->assign('iconpath', $this->get_icon($options));
+        $smarty->assign('downloadpath', $downloadpath);
+        $smarty->assign('owner', display_name($this->get('owner')));
+        $smarty->assign('title', $this->get('note'));
+        $smarty->assign('description', $this->get('title'));
+        $smarty->assign('artefacttype', $this->get('artefacttype'));
+        $smarty->assign('created', strftime(get_string('strftimedaydatetime'), $this->get('ctime')));
+        $smarty->assign('modified', strftime(get_string('strftimedaydatetime'), $this->get('mtime')));
+        $smarty->assign('size', display_size($size) . ' (' . $size . ' ' . get_string('bytes') . ')');
+        $smarty->assign('previewpath', get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $this->get('id') . '&maxwidth=400');
+        return array('html' => $smarty->fetch('artefact:internal:profileicon_render_self.tpl'), 'javascript' => '');
     }
 
     public static function get_links($id) {
@@ -526,6 +534,23 @@ class ArtefactTypeProfileIcon extends ArtefactTypeProfileField {
         return array(
             '_default' => $wwwroot . 'artefact/internal/profileicons.php',
         );
+    }
+
+    public static function get_icon($options=null) {
+        $url = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . hsc($options['id']);
+
+        if (isset($options['size'])) {
+            $url .= '&size=' . $options['size'];
+        }
+        else {
+            $url .= '&size=20x20';
+        }
+
+        return $url;
+    }
+
+    public function in_view_list() {
+        return true;
     }
 }
 

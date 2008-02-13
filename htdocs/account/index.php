@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -125,7 +125,19 @@ $elements['lang'] = array(
         'required' => true
     ),
     'help' => true,
-);                        
+    'ignore' => count(get_languages()) < 2,
+);
+$elements['addremovecolumns'] = array(
+    'type' => 'radio',
+    'options' => array(
+        1 => get_string('on', 'account'),
+        0 => get_string('off', 'account'),
+    ),
+    'defaultvalue' => $prefs->addremovecolumns,
+    'title' => get_string('showviewcolumns', 'account'),
+    'rules' => array('required' => true),
+    'help' => 'true'
+);
 $elements['submit'] = array(
     'type' => 'submit',
     'value' => get_string('save')
@@ -141,33 +153,23 @@ $prefsform = array(
     'elements'    => $elements
 );
 
-
-$smarty = smarty();
-$smarty->assign('form', pieform($prefsform));
-$smarty->assign('INLINEJAVASCRIPT', "
-function clearPasswords(form, data) {
-    formSuccess(form, data);
-    $('accountprefs_oldpassword').value = '';
-    $('accountprefs_password1').value = '';
-    $('accountprefs_password2').value = '';
-}");
-$smarty->display('account/index.tpl');
-
 function accountprefs_validate(Pieform $form, $values) {
     global $USER;
 
     $authobj = AuthFactory::create($USER->authinstance);
 
-    if ($values['oldpassword'] !== '') {
-        global $USER, $authtype, $authclass;
-        if (!$authobj->authenticate_user_account($USER, $values['oldpassword'])) {
-            $form->set_error('oldpassword', get_string('oldpasswordincorrect', 'account'));
-            return;
+    if (isset($values['oldpassword'])) {
+        if ($values['oldpassword'] !== '') {
+            global $USER, $authtype, $authclass;
+            if (!$authobj->authenticate_user_account($USER, $values['oldpassword'])) {
+                $form->set_error('oldpassword', get_string('oldpasswordincorrect', 'account'));
+                return;
+            }
+            password_validate($form, $values, $USER);
         }
-        password_validate_user($form, $values, $USER);
-    }
-    else if ($values['password1'] !== '' || $values['password2'] !== '') {
-        $form->set_error('oldpassword', get_string('mustspecifyoldpassword'));
+        else if ($values['password1'] !== '' || $values['password2'] !== '') {
+            $form->set_error('oldpassword', get_string('mustspecifyoldpassword'));
+        }
     }
 }
 
@@ -177,7 +179,7 @@ function accountprefs_submit(Pieform $form, $values) {
     $authobj = AuthFactory::create($USER->authinstance);
 
     db_begin();
-    if ($values['password1'] !== '') {
+    if (isset($values['password1']) && $values['password1'] !== '') {
         global $authclass;
         $password = $authobj->change_password($USER, $values['password1']);
         $USER->password = $password;
@@ -188,12 +190,31 @@ function accountprefs_submit(Pieform $form, $values) {
     // use this as looping through values is not safe.
     $expectedprefs = expected_account_preferences(); 
     foreach (array_keys($expectedprefs) as $pref) {
-        $USER->set_account_preference($pref, $values[$pref]);
+        if (isset($values[$pref])) {
+            $USER->set_account_preference($pref, $values[$pref]);
+        }
     }
 
     db_commit();
     $form->json_reply(PIEFORM_OK, get_string('prefssaved', 'account'));
 }
+
+
+
+
+$smarty = smarty();
+$smarty->assign('form', pieform($prefsform));
+$smarty->assign('INLINEJAVASCRIPT', "
+function clearPasswords(form, data) {
+    formSuccess(form, data);
+    if ($('accountprefs_oldpassword')) {
+        $('accountprefs_oldpassword').value = '';
+        $('accountprefs_password1').value = '';
+        $('accountprefs_password2').value = '';
+    }
+}");
+$smarty->assign('heading', get_string('preferences'));
+$smarty->display('account/index.tpl');
 
 
 ?>

@@ -1,131 +1,265 @@
 /**
- * Pieforms core javascript
- * Author: Nigel McNie
- * (C) 2006 Nigel McNie
- * Released under the GNU GPL, see the COPYING file
- * @todo pack this, provide a source version. Same with MochiKit
- */
-
-// The resizable textarea code is based on the code from Drupal (http://drupal.org/)
-
-/**
- * Retrieves the absolute position of an element on the screen
- * This function (C) 2006 Drupal
- */
-function absolutePosition(el) {
-    var sLeft = 0, sTop = 0;
-    var isDiv = /^div$/i.test(el.tagName);
-    if (isDiv && el.scrollLeft) {
-        sLeft = el.scrollLeft;
-    }
-    if (isDiv && el.scrollTop) {
-        sTop = el.scrollTop;
-    }
-    var r = { x: el.offsetLeft - sLeft, y: el.offsetTop - sTop };
-    if (el.offsetParent) {
-        var tmp = absolutePosition(el.offsetParent);
-        r.x += tmp.x;
-        r.y += tmp.y;
-    }
-    return r;
-}
-
-addLoadEvent(function() {
-    forEach(getElementsByTagAndClassName('form', 'pieform'), function(form) {
-        forEach(getElementsByTagAndClassName('textarea', 'resizable', form), function (textarea) {
-            new TextArea(textarea);
-        });
-    });
-});
-
-/**
- * This class based on Drupal's textArea class, which is (C) 2006 Drupal
+ * Pieforms: Advanced web forms made easy
+ * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- * Provides a 'grippie' for resizing a textarea vertically.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @package    pieform
+ * @subpackage static
+ * @author     Nigel McNie <nigel@catalyst.net.nz>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
+ * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ *
  */
-function TextArea(element) {
+
+window.pieformHandlers = {};
+
+/**
+ * Handles things that work the same across all pieforms, such as plugin
+ * management and events
+ */
+function PieformManager() {//{{{
     var self = this;
 
-    this.element = element;
-    this.parent = this.element.parentNode;
-    this.dimensions = getElementDimensions(element);
+    this.init = function() {//{{{
+        self.connect('onload', null, self.setFocus);
+        self.signal('onload', null);
+    }//}}}
 
-    // Prepare wrapper
-    this.wrapper = DIV({'class':'resizable-textarea'});
-    insertSiblingNodesBefore(this.element, this.wrapper);
-
-    // Add grippie and measure it
-    this.grippie = DIV({'class': 'grippie'});
-    appendChildNodes(this.wrapper, this.grippie);
-    this.grippie.dimensions = getElementDimensions(this.grippie);
-
-    // Set wrapper and textarea dimensions
-    setElementDimensions(this.wrapper, {'h': this.dimensions.h + this.grippie.dimensions.h + 1, 'w': this.dimensions.w});
-    setStyle(this.element, {
-        'margin-bottom': '0',
-        'width': '100%',
-        'height': this.dimensions.h + 'px'
-    });
-
-    // Wrap textarea
-    removeElement(this.element);
-    insertSiblingNodesBefore(this.grippie, this.element);
-
-    // Measure difference between desired and actual textarea dimensions to account for padding/borders
-    this.widthOffset = getElementDimensions(this.wrapper).w - this.dimensions.w;
-
-    // Make the grippie line up in various browsers
-    if (window.opera) {
-        setStyle(this.grippie, {'margin-right': '4px'});
-    }
-    if (document.all && !window.opera) {
-        this.grippie.style.width = '100%';
-        this.grippie.style.paddingLeft = '2px';
-        setStyle(this.grippie, {
-            'padding-left': '2px'
+    /**
+     * When called, ensures the focus is set correctly for all pieforms on the
+     * page
+     */
+    this.setFocus = function() {//{{{
+        var check = getElementsByTagAndClassName('form', 'pieform');
+        var formsWithError = filter(function(i) { return hasElementClass(i, 'error'); }, check);
+        if (formsWithError.length > 0) {
+            check = formsWithError;
+        }
+        forEach(check, function(form) {
+            var element = getFirstElementByTagAndClassName(null, 'autofocus', form);
+            if (element && typeof(element.focus) == 'function') {
+                element.focus();
+                throw MochiKit.Iter.StopIteration;
+            }
         });
-    }
-    this.element.style.MozBoxSizing = 'border-box';
+    }//}}}
 
-    this.heightOffset = absolutePosition(this.grippie).y - absolutePosition(this.element).y - this.dimensions.h;
-
-
-    this.handleDrag = function (e) {
-        // Get coordinates relative to text area
-        var pos = absolutePosition(this.element);
-        var y = e.mouse().client.y - pos.y;
-
-        // Set new height
-        var height = Math.max(32, y - this.dragOffset - this.heightOffset);
-        setStyle(this.wrapper, {'height': height + this.grippie.dimensions.h + 1 + 'px'});
-        setStyle(this.element, {'height': height + 'px'});
-
-        // Avoid text selection
-        e.stop();
-    }
-
-    this.endDrag = function (e) {
-        disconnect(this.mouseMoveHandler);
-        disconnect(this.mouseUpHandler);
-        document.isDragging = false;
-    }
-
-    this.beginDrag = function(e) {
-        if (document.isDragging) {
+    /**
+     * Loads a javascript plugin file
+     */
+    this.loadPlugin = function(type, name) {//{{{
+        if (type != 'element' && type != 'renderer' && type != 'rule') {
+            throw 'Plugin type ' + type + ' is not valid';
+        }
+        if (typeof(self.loadCache[type][name]) != 'undefined') {
             return;
         }
-        document.isDragging = true;
 
-        self.mouseMoveHandler = connect(document, 'onmousemove', self, 'handleDrag');
-        self.mouseUpHandler   = connect(document, 'onmouseup', self, 'endDrag');
+        var script = createDOM('script', {
+            'type': 'text/javascript',
+            'src' : self.pieformPath + type + 's/' + name + '.js'
+        });
 
-        // Store drag offset from grippie top
-        var pos = absolutePosition(this.grippie);
-        this.dragOffset = e.mouse().client.y - pos.y;
+        appendChildNodes(self.head, script);
+        self.loadCache[type][name] = 1;
+    }//}}}
 
-        // Process
-        this.handleDrag(e);
+    /**
+     * Registers an observer for a given event type
+     */
+    this.connect = function(slot, form, callback) {//{{{
+        if (typeof(self.observers[slot]) == 'undefined') {
+            throw 'Slot ' + slot + ' does not exist';
+        }
+        self.observers[slot].push({'form': form, 'callback': callback});
+    }//}}}
+
+    this.signal = function(slot, form) {//{{{
+        forEach(self.observers[slot], function(observer) {
+            if (form == null || observer.form == null || form == observer['form']) {
+                observer.callback(form);
+            }
+        });
+    }//}}}
+
+    this.head = getFirstElementByTagAndClassName('head');
+
+    if (typeof(pieformPath) == 'string') {
+        this.pieformPath = pieformPath;
+        if (pieformPath.substr(pieformPath.length - 1, 1) != '/') {
+            this.pieformPath += '/';
+        }
+    }
+    else {
+        this.pieformPath = '';
     }
 
-    connect(this.grippie, 'onmousedown', self, 'beginDrag');
-}
+    this.loadCache = {'element': {}, 'renderer': {}, 'rule': {}};
+
+    this.observers = {
+        'onload'  : [],  // when elements are loaded
+        'onsubmit': [],  // when a form is submitted
+        'onreply' : []   // when a response is received
+    };
+
+    addLoadEvent(self.init);
+}//}}}
+
+PieformManager = new PieformManager();
+
+
+/**
+ * Handles the javascript side of pieforms - submitting the form via a hidden
+ * iframe and dealing with the result
+ */
+function Pieform(data) {//{{{
+    var self = this;
+
+    this.init = function() {//{{{
+        connect(self.data.name, 'onsubmit', self.processForm);
+
+        self.connectSubmitButtons();
+    }//}}}
+
+    this.processForm = function(e) {//{{{
+        PieformManager.signal('onsubmit', self.data.name);
+
+        // Call the presubmit callback, if there is one
+        if (typeof(self.data.preSubmitCallback) == 'string'
+            && self.data.preSubmitCallback != "") {
+            window[self.data.preSubmitCallback]($(self.data.name), self.clickedButton, e);
+        }
+
+        // If the form actually isn't a jsform - i.e. only a presubmithandler
+        // was defined - we stop here
+        if (!self.data.jsForm) {
+            return;
+        }
+
+        // Ensure the iframe exists and make sure the form targets it
+        self.setupIframe();
+        $(self.data.name).target = self.data.name + '_iframe';
+
+        appendChildNodes(self.data.name,
+            INPUT({
+                'type': 'hidden',
+                'name': 'pieform_jssubmission',
+                'value': 1
+            })
+        );
+
+        window.pieformHandlers[self.data.name] = function(data) {
+            // If canceling the form, redirect away
+            if (data.returnCode == -2) {
+                window.location = data.location;
+                return;
+            }
+
+            PieformManager.signal('onreply', self.data.name);
+
+            var tmp = DIV();
+            tmp.innerHTML = data.replaceHTML;
+
+            // Work out whether the new form tag has the error class on it, for
+            // updating the form in the document
+            if (hasElementClass(tmp.childNodes[0], 'error')) {
+                addElementClass(self.data.name, 'error');
+            }
+            else {
+                removeElementClass(self.data.name, 'error');
+            }
+
+            // The first child node is the form tag. We replace the children of
+            // the current form tag with the new children. This prevents
+            // javascript references being lost
+            replaceChildNodes($(self.data.name), tmp.childNodes[0].childNodes);
+
+            self.connectSubmitButtons();
+            PieformManager.signal('onload', self.data.name);
+
+            if (data.returnCode == 0) {
+                // Call the defined success callback, if there is one
+                if (typeof(self.data.jsSuccessCallback) == 'string'
+                    && self.data.jsSuccessCallback != "") {
+                    window[self.data.jsSuccessCallback]($(self.data.name), data);
+                }
+                else {
+                    // TODO: work out what I'm going to do here...
+                    if (typeof(data.message) == 'string' && data.message != '') {
+                        alert(data.message);
+                    }
+                }
+            }
+            else if (data.returnCode == -1) {
+                if (typeof(self.data.jsErrorCallback) == 'string'
+                    && self.data.jsErrorCallback != '') {
+                    window[self.data.jsErrorCallback]($(self.data.name), data);
+                }
+            }
+            else if (typeof(self.data.globalJsErrorCallback) == 'string'
+                && self.data.globalJsErrorCallback != '') {
+                window[self.data.globalJsErrorCallback]($(self.data.name), data);
+            }
+            else {
+                alert('Developer: got error code ' + data.returnCode
+                + ', either fix your form to not use this code or define '
+                + 'a global js error handler');
+            }
+
+            // The post submit callback (for if the form succeeds or fails, but
+            // not for if it cancels)
+            if (typeof(self.data.postSubmitCallback) == 'string'
+                && self.data.postSubmitCallback != '') {
+                window[self.data.postSubmitCallback]($(self.data.name), self.clickedButton, e);
+            }
+        }
+    }//}}}
+
+    this.setupIframe = function() {//{{{
+        var iframeName = self.data.name + '_iframe';
+        if ($(iframeName)) {
+            self.iframe = $(iframeName);
+        }
+        else {
+            self.iframe = createDOM('iframe', {
+                'name': iframeName,
+                'id'  : iframeName,
+                'style': 'position: absolute; visibility: hidden;'
+            });
+            insertSiblingNodesAfter(self.data.name, self.iframe);
+        }
+    }//}}}
+
+    this.connectSubmitButtons = function() {//{{{
+        forEach(self.data.submitButtons, function(buttonName) {
+            var btn = $(self.data.name + '_' + buttonName);
+            if (btn) {
+                connect(btn, 'onclick', function() { self.clickedButton = this; });
+            }
+        });
+    }//}}}
+
+    // A reference to the iframe that submissions are made through
+    this.iframe = null;
+
+    // The button that was clicked to trigger the form submission
+    this.clickedButton = null;
+
+    // Form configuration data passed from PHP
+    this.data = data;
+
+    addLoadEvent(self.init);
+}//}}}
+

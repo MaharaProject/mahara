@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -28,7 +28,7 @@ define('INTERNAL', 1);
 define('MENUITEM', 'profile/icons');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'internal');
-define('SECTION_PAGE', 'profileficons');
+define('SECTION_PAGE', 'profileicons');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('profileicons', 'artefact.internal'));
@@ -55,12 +55,16 @@ $settingsform = new Pieform(array(
     'elements' => array(
         'default' => array(
             'type'  => 'submit',
-            'value' => get_string('default')
+            'value' => get_string('Default', 'artefact.internal'),
         ),
         'delete' => array(
             'type'  => 'submit', 
-            'value' => get_string('delete')
-        )
+            'value' => get_string('Delete', 'artefact.internal'),
+        ),
+        'unsetdefault' => array(
+            'type' => 'submit',
+            'value' => get_string('usenodefault', 'artefact.internal'),
+        ),
     )
 ));
 
@@ -79,7 +83,7 @@ $uploadform = pieform(array(
         ),
         'title' => array(
             'type' => 'text',
-            'title' => get_string('title'),
+            'title' => get_string('Title', 'artefact.internal'),
             'help'  => true,
         ),
         'submit' => array(
@@ -98,7 +102,7 @@ var table = new TableRenderer(
     'profileicons.json.php',
     [
         function(rowdata) {
-            return TD(null, IMG({'src': '$wwwroot/thumb.php?type=profileiconbyid&size=100x100&id=' + rowdata.id, 'alt': rowdata.note}));
+            return TD(null, IMG({'src': '$wwwroot/thumb.php?type=profileiconbyid&maxsize=100&id=' + rowdata.id, 'alt': rowdata.note}));
         },
         function(rowdata) {
             return TD(null, rowdata.title ? rowdata.title : rowdata.note);
@@ -162,10 +166,12 @@ function upload_validate(Pieform $form, $values) {
         $form->set_error('file', get_string('profileiconuploadexceedsquota', 'artefact.internal', get_config('wwwroot')));
     }
 
-    // Check the file isn't greater than 300x300
+    // Check the file isn't greater than the max allowable size
     list($width, $height) = getimagesize($values['file']['tmp_name']);
-    if ($width > 300 || $height > 300) {
-        $form->set_error('file', get_string('profileiconimagetoobig', 'artefact.internal', $width, $height));
+    $imagemaxwidth  = get_config('imagemaxwidth');
+    $imagemaxheight = get_config('imagemaxheight');
+    if ($width > $imagemaxwidth || $height > $imagemaxheight) {
+        $form->set_error('file', get_string('profileiconimagetoobig', 'artefact.internal', $width, $height, $imagemaxwidth, $imagemaxheight));
     }
 }
 
@@ -198,7 +204,7 @@ function upload_submit(Pieform $form, $values) {
     $id = $artefact->get('id');
 
     // Move the file into the correct place.
-    $directory = get_config('dataroot') . 'artefact/internal/profileicons/' . ($id % 256) . '/';
+    $directory = get_config('dataroot') . 'artefact/internal/profileicons/originals/' . ($id % 256) . '/';
     check_dir_exists($directory);
     move_uploaded_file($values['file']['tmp_name'], $directory . $id);
 
@@ -235,16 +241,27 @@ function settings_submit_delete(Pieform $form, $values) {
 
     $icons = join(',', array_map('intval', $icons));
     if ($icons) {
+        db_begin();
+        delete_records_select('view_artefact', "artefact IN ($icons)");
         delete_records_select('artefact', "
             artefacttype = 'profileicon' AND
             owner = ? AND
             id IN($icons)", array($USER->id));
-        // Remove all of the images
+
+        if (in_array($USER->get('profileicon'), explode(',', $icons))) {
+            $USER->profileicon = null;
+        }
+
+        db_commit();
+
+        // Now all the database manipulation has happened successfully, remove 
+        // all of the images
         foreach (explode(',', $icons) as $icon) {
-            $USER->quota_remove(filesize(get_config('dataroot') . 'artefact/internal/profileicons/' . ($icon % 256) . '/' . $icon));
+            $USER->quota_remove(filesize(get_config('dataroot') . 'artefact/internal/profileicons/originals/' . ($icon % 256) . '/' . $icon));
             $USER->commit();
             delete_image('artefact/internal/profileicons', $icon);
         }
+
         $SESSION->add_ok_msg(get_string('profileiconsdeletedsuccessfully', 'artefact.internal'));
     }
     else {
@@ -254,11 +271,20 @@ function settings_submit_delete(Pieform $form, $values) {
     redirect('/artefact/internal/profileicons.php');
 }
 
+function settings_submit_unsetdefault(Pieform $form, $values) {
+    global $USER, $SESSION;
+    $USER->profileicon = null;
+    $USER->commit();
+    $SESSION->add_info_msg(get_string('usingnodefaultprofileicon', 'artefact.internal'));
+}
+
 $smarty->assign('uploadform', $uploadform);
 // This is a rare case where we don't actually care about the form, because
 // it only contains submit buttons (which we can just write as HTML), and
 // the buttons need to be inside the tablerenderer.
 $smarty->assign('settingsformtag', $settingsform->get_form_tag());
+$smarty->assign('imagemaxdimensions', array(get_config('imagemaxwidth'), get_config('imagemaxheight')));
+$smarty->assign('heading', get_string('profileicons', 'artefact.internal'));
 $smarty->display('artefact:internal:profileicons.tpl');
 
 ?>

@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -61,7 +61,7 @@ defined('INTERNAL') || die();
  *               ),
  *           );
  */
-function search_user($query_string, $limit, $offset = 0) {
+function search_user($query_string, $limit, $offset = 0, $data = array()) {
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
     safe_require('artefact', 'internal');
@@ -72,7 +72,7 @@ function search_user($query_string, $limit, $offset = 0) {
     }
     $fieldlist = "('" . join("','", $publicfields) . "')";
 
-    $results = call_static_method(generate_class_name('search', $plugin), 'search_user', $query_string, $limit, $offset);
+    $results = call_static_method(generate_class_name('search', $plugin), 'search_user', $query_string, $limit, $offset, $data);
 
     if ($results['data']) {
         $userlist = '('.join(',', array_map(create_function('$u','return $u[\'id\'];'), $results['data'])).')';
@@ -106,12 +106,184 @@ function search_user($query_string, $limit, $offset = 0) {
                     $result[$field] = $value;
                 }
             }
+            if (isset($result['country'])) {
+                $result['country'] = get_string('country.' . $result['country']);
+            }
         }
 
     }
 
     return $results;
 }
+
+
+
+/* 
+ * Institutional admin queries:
+ *
+ * These are only used to populate user lists on the Institution
+ * Members page.  They may return users who are not in the same
+ * institution as the logged in institutional admin, so they should
+ * return names only, not email addresses.
+ */
+
+function get_institutional_admin_search_results($search, $limit) {
+    $institution = new StdClass;
+    $institution->name = $search->institution;
+    foreach (array('member', 'requested', 'invitedby') as $p) {
+        $institution->{$p} = $search->{$p};
+    }
+    $results = institutional_admin_user_search($search->query, $institution, $limit);
+    if ($results['count']) {
+        foreach ($results['data'] as &$r) {
+            $r['name'] = $r['firstname'] . ' ' . $r['lastname'] . ' (' . $r['username'] . ')';
+            if (!empty($r['studentid'])) {
+                $r['name'] .= ' (' . $r['studentid'] . ')';
+            }
+        }
+    }
+    return $results;
+}
+
+function institutional_admin_user_search($query, $institution, $limit) {
+    $plugin = get_config('searchplugin');
+    safe_require('search', $plugin);
+    return call_static_method(generate_class_name('search', $plugin), 'institutional_admin_search_user', 
+                              $query, $institution, $limit);
+}
+
+
+
+
+function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir) {
+    // In admin search, the search string is interpreted as either a
+    // name search or an email search depending on its contents
+    $queries = array();
+    $constraints = array();
+    if (!empty($search->query)) {
+        if (strpos($search->query, '@') !== false) {
+            $queries[] = array('field' => 'email',
+                               'type' => 'contains',
+                               'string' => $search->query);
+        } else {
+            $queries = array(array('field' => 'firstname',
+                                   'type' => 'contains',
+                                   'string' => $search->query),
+                             array('field' => 'lastname',
+                                   'type' => 'contains',
+                                   'string' => $search->query));
+        }
+    }
+    if (!empty($search->f)) {
+        $constraints[] = array('field' => 'firstname',
+                               'type' => 'starts',
+                               'string' => $search->f);
+    }
+    if (!empty($search->l)) {
+        $constraints[] = array('field' => 'lastname',
+                               'type' => 'starts',
+                               'string' => $search->l);
+    }
+    // Filter by viewable institutions:
+    global $USER;
+    if (!$USER->get('admin')) {
+        if (empty($search->institution) && empty($search->institution_requested)) {
+            $search->institution_requested = 'all';
+        }
+        $allowed = $USER->get('admininstitutions');
+        foreach (array('institution', 'institution_requested') as $p) {
+            if (!empty($search->{$p})) {
+                if ($search->{$p} == 'all' || !isset($allowed[$search->{$p}])) {
+                    $constraints[] = array('field' => $p,
+                                           'type' => 'in',
+                                           'string' => $allowed);
+                } else {
+                    $constraints[] = array('field' => $p,
+                                           'type' => 'equals',
+                                           'string' => $search->{$p});
+                }
+            }
+        }
+    } else if (!empty($search->institution) && $search->institution != 'all') {
+        $constraints[] = array('field' => 'institution',
+                               'type' => 'equals',
+                               'string' => $search->institution);
+    }
+    
+    $results = admin_user_search($queries, $constraints, $offset, $limit, $sortby, $sortdir);
+    if ($results['count']) {
+        foreach ($results['data'] as &$result) {
+            $result['name'] = display_name($result);
+            if (!empty($result['institutions'])) {
+                $result['institutions'] = array_combine($result['institutions'],$result['institutions']);
+            }
+        }
+    }
+    return $results;
+}
+
+
+function build_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir) {
+    global $USER;
+
+    $results = get_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir);
+
+    $params = array();
+    foreach ($search as $k => $v) {
+        if (!empty($v)) {
+            $params[] = $k . '=' . $v;
+        }
+    }
+    $searchurl = get_config('wwwroot') . 'admin/users/search.php?' . join('&amp;', $params)
+        . '&amp;limit=' . $limit;
+
+    $usernametemplate = '<a href="' . get_config('wwwroot') . 'admin/users/edit.php?id={$r.id}">{$r.username|escape}</a>';
+    if (!$USER->get('admin')) {
+        // Only create the edit link if the returned user belongs to an institution that the viewer administers
+        $cond = array();
+        foreach ($USER->get('admininstitutions') as $i) {
+            $cond[] = 'isset($r.institutions.' . $i . ')';
+        }
+        $usernametemplate = '{if ' . join('||', $cond) . '}' . $usernametemplate . '{else}{$r.username}{/if}';
+    }
+
+    $cols = array(
+        'icon'        => array('name'     => '',
+                               'template' => '<img src="' . get_config('wwwroot') . 'thumb.php?type=profileicon&size=40x40&id={$r.id}" alt="' . get_string('profileimage') . '" />'),
+        'firstname'   => array('name'     => get_string('firstname')),
+        'lastname'    => array('name'     => get_string('lastname')),
+        'username'    => array('name'     => get_string('username'),
+                               'template' => $usernametemplate),
+        'email'       => array('name'     => get_string('email')),
+    );
+
+    $institutions = get_records_assoc('institution', '', '', '', 'name,displayname');
+    if (count($institutions) > 1) {
+        $cols['institution'] = array('name'     => get_string('institution'),
+                                     'template' => '{if empty($r.institutions)}{$institutions.mahara->displayname}{else}{foreach from=$r.institutions item=i}<div>{$institutions[$i]->displayname}</div>{/foreach}{/if}{if !empty($r.requested)}{foreach from=$r.requested item=i}<div class="pending">{str tag=requestto section=admin} {$institutions[$i]->displayname}{if $USER->is_institutional_admin("$i")} (<a href="{$WWWROOT}admin/users/addtoinstitution.php?id={$r.id}&institution={$i}">{str tag=confirm section=admin}</a>){/if}</div>{/foreach}{/if}{if !empty($r.invitedby)}{foreach from=$r.invitedby item=i}<div class="pending">{str tag=invitedby section=admin} {$institutions[$i]->displayname}</div>{/foreach}{/if}');
+    }
+
+    $smarty = smarty_core();
+    $smarty->assign_by_ref('results', $results);
+    $smarty->assign_by_ref('institutions', $institutions);
+    $smarty->assign('USER', $USER);
+    $smarty->assign('searchurl', $searchurl);
+    $smarty->assign('sortby', $sortby);
+    $smarty->assign('sortdir', $sortdir);
+    $smarty->assign('pagebaseurl', $searchurl . '&sortby=' . $sortby . '&sortdir=' . $sortdir);
+    $smarty->assign('cols', $cols);
+    $smarty->assign('ncols', count($cols));
+    return $smarty->fetch('searchresulttable.tpl');
+}
+
+
+function admin_user_search($queries, $constraints, $offset, $limit, $sortfield, $sortdir) {
+    $plugin = get_config('searchplugin');
+    safe_require('search', $plugin);
+    return call_static_method(generate_class_name('search', $plugin), 'admin_search_user', 
+                              $queries, $constraints, $offset, $limit, $sortfield, $sortdir);
+}
+
 
 /**
  * Given a query string and limits, return an array of matching groups using the
@@ -146,11 +318,11 @@ function search_user($query_string, $limit, $offset = 0) {
  *               ),
  *           );
  */
-function search_group($query_string, $limit, $offset = 0, $all = false) {
+function search_group($query_string, $limit, $offset = 0, $type = 'member') {
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
 
-    return call_static_method(generate_class_name('search', $plugin), 'search_group', $query_string, $limit, $offset, $all);
+    return call_static_method(generate_class_name('search', $plugin), 'search_group', $query_string, $limit, $offset, $type);
 }
 
 function search_selfsearch($query_string, $limit, $offset, $type = 'all') {

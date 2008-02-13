@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="lib/db" VERSION="20060926" COMMENT="XMLDB file for core Mahara tables"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../lib/xmldb/xmldb.xsd"
+>
+    <TABLES>
+        <TABLE NAME="interaction_forum_instance_config">
+            <FIELDS>
+                <FIELD NAME="forum" TYPE="int" NOTNULL="true" />
+                <FIELD NAME="field" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="value" TYPE="text" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="forumfk" TYPE="foreign" FIELDS="forum" REFTABLE="interaction_instance" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+
+        <TABLE NAME="interaction_forum_topic">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
+                <FIELD NAME="forum" TYPE="int" NOTNULL="true" />
+                <FIELD NAME="sticky" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="closed" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="forumfk" TYPE="foreign" FIELDS="forum" REFTABLE="interaction_instance" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+
+        <TABLE NAME="interaction_forum_post">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
+                <FIELD NAME="topic" TYPE="int" NOTNULL="true" />
+                <FIELD NAME="parent" TYPE="int" NOTNULL="false" />
+                <FIELD NAME="poster" TYPE="int" NOTNULL="true" />
+                <FIELD NAME="subject" TYPE="char" LENGTH="255" NOTNULL="false" />
+                <FIELD NAME="body" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="sent" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="topicfk" TYPE="foreign" FIELDS="topic" REFTABLE="interaction_forum_topic" REFFIELDS="id" />
+                <KEY NAME="parentfk" TYPE="foreign" FIELDS="parent" REFTABLE="interaction_forum_post" REFFIELDS="id" />
+                <KEY NAME="posterfk" TYPE="foreign" FIELDS="poster" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+
+        <TABLE NAME="interaction_forum_subscription_forum">
+            <FIELDS>
+                <FIELD NAME="user" TYPE="int" NOTNULL="true" />
+                <FIELD NAME="forum" TYPE="int" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="forumfk" TYPE="foreign" FIELDS="forum" REFTABLE="interaction_instance" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+
+        <TABLE NAME="interaction_forum_subscription_topic">
+            <FIELDS>
+                <FIELD NAME="user" TYPE="int" NOTNULL="true" />
+                <FIELD NAME="topic" TYPE="int" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="topicfk" TYPE="foreign" FIELDS="topic" REFTABLE="interaction_forum_topic" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+
+        <TABLE NAME="interaction_forum_moderator">
+            <FIELDS>
+                <FIELD NAME="user" TYPE="int" NOTNULL="true" />
+                <FIELD NAME="forum" TYPE="int" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="forumfk" TYPE="foreign" FIELDS="forum" REFTABLE="interaction_instance" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        
+        <TABLE NAME="interaction_forum_edit">
+            <FIELDS>
+                <FIELD NAME="user" TYPE="int" NOTNULL="true" />
+                <FIELD NAME="post" TYPE="int" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="postfk" TYPE="foreign" FIELDS="post" REFTABLE="interaction_forum_post" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+    </TABLES>
+</XMLDB>

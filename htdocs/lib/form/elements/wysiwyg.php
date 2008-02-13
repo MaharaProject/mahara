@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage form
@@ -23,6 +23,8 @@
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
+
+$_PIEFORM_WYSIWYGS = array();
 
 /**
  * Renders a textarea, but with extra javascript to turn it into a wysiwyg
@@ -35,7 +37,8 @@
  * @return string          The HTML for the element
  */
 function pieform_element_wysiwyg(Pieform $form, $element) {
-    global $USER;
+    global $USER, $_PIEFORM_WYSIWYGS;
+    $_PIEFORM_WYSIWYGS[] = $form->get_name() . '_' . $element['name'];
     if ($USER->get_account_preference('wysiwyg')) {
         if (!$form->get_property('elementclasses')) {
             $element['class'] = isset($element['class']) && $element['class'] !== '' ? $element['class'] . ' wysiwyg' : 'wysiwyg';
@@ -90,9 +93,20 @@ function pieform_element_wysiwyg_rule_required(Pieform $form, $value, $element, 
 }
 
 function pieform_element_wysiwyg_get_headdata() {
-    global $USER;
+    global $USER, $_PIEFORM_WYSIWYGS;
     if ($USER->get_account_preference('wysiwyg') || defined('PUBLIC')) {
-        return array('tinymce');
+        $result = '<script type="text/javascript">'
+         . "\nPieformManager.connect('onsubmit', null, tinyMCE.triggerSave);"
+         . "\nPieformManager.connect('onload', null, function() {\n";
+        foreach ($_PIEFORM_WYSIWYGS as $editor) {
+            $result .= "    tinyMCE.execCommand('mceAddControl', false, '$editor');\n";
+        }
+        $result .= "});\nPieformManager.connect('onreply', null, function() {\n";
+        foreach ($_PIEFORM_WYSIWYGS as $editor) {
+            $result .= "    tinyMCE.execCommand('mceRemoveControl', false, '$editor');\n";
+        }
+        $result .= "});</script>";
+        return array('tinymce', $result);
     }
     return array();
 }

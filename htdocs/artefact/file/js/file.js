@@ -24,6 +24,8 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
     this.createfolderscript = config.wwwroot+'artefact/file/createfolder.json.php';
     this.updatemetadatascript = config.wwwroot+'artefact/file/updatemetadata.json.php';
     this.downloadscript = config.wwwroot+'artefact/file/download.php';
+    this.movescript = config.wwwroot+'artefact/file/move.json.php';
+    this.maxnamestrlen = 34;
 
     if (typeof(startDirectory) == 'object') {
         var dirWalk = this.rootDirectory;
@@ -48,6 +50,9 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
 
     if (this.actionname) {
         this.lastcolumnfunc = function(r) {
+            if (r.isparent) {
+                return TD(null);
+            }
             if (r.artefacttype != 'folder') {
                 var button = INPUT({'type':'button', 'class':'button', 'value':self.actionname});
                 button.onclick = function () { self.actioncallback(r) };
@@ -58,12 +63,13 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
     }
     else {
         this.lastcolumnfunc = function (r) {
+            if (r.isparent) {
+                return TD(null);
+            }
             var editb = INPUT({'type':'button', 'class':'button', 'value':get_string('edit')});
             editb.onclick = function () { self.openeditform(r); };
-            var edith = SPAN(null);
-            edith.innerHTML = get_string('edit.help');
             if (r.childcount > 0) {
-                return TD(null, editb, edith);
+                return TD(null, editb);
             }
             var deleteb = INPUT({'type':'button', 'class':'button', 'value':get_string('delete')});
             deleteb.onclick = function () {
@@ -74,9 +80,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                     }
                 }
             };
-            var deleteh = SPAN(null);
-            deleteh.innerHTML = get_string('delete.help');
-            return TD(null, editb, edith, deleteb, deleteh);
+            return TD(null, editb, deleteb);
         }
     }
 
@@ -89,9 +93,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                 hideElement(self.createfolderbutton);
                 showElement(self.createfolderform);
             }});
-            var help = SPAN(null);
-            help.innerHTML = get_string('createfolder.help');
-            self.createfolderbutton = SPAN(null, button, help);
+            self.createfolderbutton = SPAN(null, button);
             self.createfolderform = self.initcreatefolderform();
             insertSiblingNodesBefore(self.element, self.createfolderbutton, self.createfolderform);
         }
@@ -120,10 +122,85 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
             self.filelist.statevars.push(property);
         }
         self.filelist.rowfunction = function (r, n) {
-            return TR({'class': 'r' + (n%2),'id':'row_' + r.id});
+            var row = TR({'class': 'r' + (n%2),'id':'row_' + r.id});
+            addElementClass(row, 'directory-item');
+            addElementClass(row, r.artefacttype);
+            if (self.canmodify) {
+                self.makeRowDraggable(row);
+            }
+            return row;
         };
         self.chdir(self.currentDirectory);
     }
+
+    this.makeRowDroppable = function(row) {
+        new Droppable(row, {
+            accept: ['directory-item'],
+            hoverclass: 'folderhover',
+            ondrop: function (dragged, dropped) {
+                sendjsonrequest(
+                    self.movescript,
+                    { artefact : dragged.id.replace(/row_/, ''),
+                      newparent : dropped.id.replace(/row_/, '') },
+                    'POST',
+                    self.refresh);
+            }
+        });
+    };
+
+    this.drag = {};
+
+    this.makeRowDraggable = function(row) {
+        new Draggable(row, {
+            starteffect: function(row) {
+                // The existing row gets dragged around with only its first two children (icon & filename).
+                // self.drag.clone is a copy of the row which gets left behind.
+
+                map(self.makeRowDroppable,
+                    getElementsByTagAndClassName('tr', 'folder', 'filelist'));
+
+                var children = getElementsByTagAndClassName('td', null, row);
+                var newchildren = [];  // copy the cells
+                for (var i = 0; i < children.length; i++) {
+                    newchildren[i] = children[i].cloneNode(true);
+                    if (i > 1) {
+                        removeElement(children[i]);
+                    }
+                }
+
+                self.drag.clone = TR({'id':row.id}, newchildren);
+                setElementClass(self.drag.clone, row.className);
+                //insertSiblingNodesAfter(row, self.drag.clone);
+                row.parentNode.insertBefore(self.drag.clone, row);
+
+                // Try to give the dragged row the same width as the first two cells
+                var id = getElementDimensions(children[0]);
+                var nd = getElementDimensions(children[1]);
+                setElementDimensions(children[0], id);
+                setElementDimensions(children[1], nd);
+
+                MochiKit.Position.absolutize(row);
+                setStyle(row, {
+                    'border': '2px solid #000', // doesn't show up in IE6
+                    'width': (id.w + nd.w) + 'px',
+                    'height': (id.h + 4) + 'px'
+                });
+
+                setOpacity(row, 0.5);
+            },
+            revert: function(element) {
+                // Throw away the row being dragged
+                removeElement(element);
+                element = null;
+                self.refresh();
+            }
+        });
+        // Draggable sets position = 'relative', but we set it back
+        // here because with position = 'relative' in IE6 the rows
+        // stay put instead of moving down when the create/upload
+        // forms are opened on the page.
+        row.style.position = 'static';
+    };
 
     this.deleted = function (data) {
         quotaUpdate(data.quotaused, data.quota);
@@ -186,10 +263,10 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
         var editformtitle = get_string(fileinfo.artefacttype == 'folder' ? 'editfolder' : 'editfile');
         var edittable = TABLE({'align':'center'},TBODY(null,
                          TR(null,TH({'colspan':2},LABEL(editformtitle))),
-                         TR(null,TH(null,LABEL(get_string('name'))),
+                         TR(null,TH(null,LABEL(get_string('Name'))),
                           TD(null,INPUT({'type':'text','class':'text','name':'name',
                                          'value':fileinfo.title,'size':40}))),
-                         TR(null,TH(null,LABEL(get_string('description'))),
+                         TR(null,TH(null,LABEL(get_string('Description'))),
                           TD(null,INPUT({'type':'text','class':'text','name':'description',
                                          'value':fileinfo.description,'size':40}))),
                          TR(null, TH(null, LABEL(null, get_string('tags'))),
@@ -217,7 +294,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
         var cancelbutton = INPUT({'type':'button','class':'button',
                                   'value':get_string('cancel'), 'onclick':cancelcreateform});
         var createbutton = INPUT({'type':'button','class':'button',
-                                  'value':get_string('create'),'onclick':function () {
+                                  'value':get_string('createfolder'),'onclick':function () {
             if (self.savemetadata(null, formid, false)) {
                 cancelcreateform();
             }
@@ -229,24 +306,21 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                 cancelcreateform();
             }
         }});
-        var namehelp = SPAN(null); namehelp.innerHTML = get_string('name.help');
-        var deschelp = SPAN(null); deschelp.innerHTML = get_string('folderdescription.help');
-        var cancelhelp = SPAN(null); cancelhelp.innerHTML = get_string('cancelfolder.help');
         return FORM({'method':'post', 'id':formid, 'style':'display: none;'},
                 TABLE(null,
                  TBODY(null,
                   TR(null,TH({'colSpan':2},LABEL(null,get_string('createfolder')))),
                   TR(null,TH(null,LABEL(get_string('destination'))),
                      TD(null, SPAN({'id':'createdest'},self.generatePath(self.currentDirectory)))),
-                  TR(null,TH(null,LABEL(get_string('name'))),
+                  TR(null,TH(null,LABEL(get_string('Name'))),
                      TD(null,INPUT({'type':'text','class':'text','name':'name','value':'',
-                                    'size':40}), namehelp)),
-                  TR(null,TH(null,LABEL(get_string('description'))),
+                                    'size':40}))),
+                  TR(null,TH(null,LABEL(get_string('Description'))),
                      TD(null,INPUT({'type':'text','class':'text','name':'description',
-                                    'value':'','size':40}), deschelp)),
+                                    'value':'','size':40}))),
                   TR(null, TH(null, LABEL(null, get_string('tags'))), TD({'colspan':'2'}, create_tags_control('tags'))),
                   TR(null,TD({'colspan':2},SPAN({'id':formid+'message'}))),
-                  TR(null,TD({'colspan':2},createbutton,replacebutton,cancelbutton,cancelhelp)))));
+                  TR(null,TD({'colspan':2},createbutton,replacebutton,cancelbutton)))));
     };
 
     this.showsize = function(bytes) {
@@ -260,12 +334,39 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
     }
 
     this.icon = function (type) {
+        // TODO: for images, you can get a thumbnail by hitting artefact/file/download.php?file=[id]&size=[width]x[height]
         return IMG({'src':get_themeurl('images/'+type+'.gif')});
     }
 
     this.formatname = function(r) {
         self.filenames[r.title] = true;
-        if (r.artefacttype == 'folder') {
+        var parentattribs = {};
+        if (r.title.length > self.maxnamestrlen + 3) {
+            var parts = map(
+                function (s) {
+                    if (s.length > self.maxnamestrlen + 3)
+                        return s.substring(0,self.maxnamestrlen/2) + '...'
+                        + s.substring(s.length-self.maxnamestrlen/2,s.length);
+                    else 
+                        return s;
+                },
+                r.title.split(' '));
+            var displaytitle = parts.join(' ');
+            if (displaytitle != r.title) {
+                parentattribs.title = r.title;
+            }
+        } else {
+            var displaytitle = r.title;
+        }
+        if (r.isparent) {
+            parentattribs.href = '';
+            var link = A(parentattribs, displaytitle);
+            connect(link, 'onclick', function (e) {
+                self.chdir(self.currentDirectory.parent);
+                e.stop();
+            });
+            var cell = TD(null, link);
+        } else if (r.artefacttype == 'folder') {
             // If we haven't seen this directory before
             if (!self.currentDirectory.children[r.title]) {
                 self.currentDirectory.children[r.title] = {
@@ -275,17 +376,20 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                     'folderid': r.id
                 }
             }
-            var link = A({'href':''}, r.title);
+            parentattribs.href = '';
+            var link = A(parentattribs, displaytitle);
             connect(link, 'onclick', function (e) {
                 self.chdir(self.currentDirectory.children[r.title]);
                 e.stop();
             });
-            return TD(null, link);
+            var cell = TD(null, link);
+        } else if (self.actionname) {
+            var cell = TD(parentattribs, displaytitle);
+        } else {
+            parentattribs.href = self.downloadscript + '?file=' + r.id;
+            var cell = TD(null, A(parentattribs, displaytitle));
         }
-        if (self.actionname) {
-            return TD(null, r.title);
-        }
-        return TD(null, A({'href':self.downloadscript + '?file=' + r.id}, r.title));
+        return cell;
     }
 
     this.fileexists = function (filename) { 
@@ -326,6 +430,21 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                 self.chdir(dir);
                 e.stop();
             }, cwd));
+
+            if (self.canmodify) {
+                new Droppable(link, {
+                    accept: ['directory-item'],
+                    hoverclass: 'folderhover',
+                    ondrop: partial(function (dirid, dragged) {
+                        sendjsonrequest(
+                            self.movescript,
+                            { artefact : dragged.id.replace(/row_/, ''),
+                              newparent : dirid },
+                            'POST',
+                            self.refresh);
+                    }, cwd.folderid)
+                });
+            }
 
             folders.unshift(link);
 
@@ -373,9 +492,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
             showElement(self.form);
             keepElementInViewport(self.form);
         }});
-        var uploadhelp = SPAN({'id':'uploadfilehelp'});
-        uploadhelp.innerHTML = get_string('uploadfile.help');
-        self.openbutton = SPAN(null, button, uploadhelp);
+        self.openbutton = SPAN(null, button);
 
         appendChildNodes(self.element, self.form, self.openbutton);
     }
@@ -399,9 +516,6 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
         };
         var notice = SPAN(null);
         notice.innerHTML = copyrightnotice + get_string('notice.help');
-        var titlehelp = SPAN(null); titlehelp.innerHTML = get_string('title.help');
-        var deschelp = SPAN(null); deschelp.innerHTML = get_string('description.help');
-        var cancelhelp = SPAN(null); cancelhelp.innerHTML = get_string('cancel.help');
         var destinationattributes = (self.folderid === false) ? {'style':'display: none;'} : null;
         appendChildNodes(form,
             TABLE(null,
@@ -411,26 +525,26 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
                 TD(null, SPAN({'id':'uploaddest'},self.foldername))),
              TR(null, TH(null,LABEL(null,get_string('copyrightnotice'))),
                 TD(null,INPUT({'type':'checkbox','class':'checkbox','name':'notice'}),notice)),
-             TR(null, TH(null, LABEL(null, get_string('file'))),
+             TR(null, TH(null, LABEL(null, get_string('File'))),
                 TD(null, INPUT({'type':'file','class':'file','name':'userfile','size':40,'onchange':function () {
                     self.form.title.value = basename(self.form.userfile.value);
                 }}))),
-             TR(null, TH(null, LABEL(null, get_string('title'))),
-                TD(null, INPUT({'type':'text', 'class':'text', 'name':'title', 'size':40}), titlehelp)),
-             TR(null, TH(null, LABEL(null, get_string('description'))),
-                TD(null, INPUT({'type':'text', 'class':'text', 'name':'description', 'size':40}), deschelp)),
+             TR(null, TH(null, LABEL(null, get_string('Name'))),
+                TD(null, INPUT({'type':'text', 'class':'text', 'name':'title', 'size':40}))),
+             TR(null, TH(null, LABEL(null, get_string('Description'))),
+                TD(null, INPUT({'type':'text', 'class':'text', 'name':'description', 'size':40}))),
              TR(null, TH(null, LABEL(null, get_string('tags'))),
                 TD({'colspan': 2}, create_tags_control('tags'))),
              TR(null,TD({'colspan':2, 'id':'uploadformmessage'})),
              TR(null,TD({'colspan':2},
               INPUT({'name':'upload','type':'button','class':'button',
-                     'value':get_string('upload'),
+                     'value':get_string('uploadfile'),
                      'onclick':function () { if (self.sendform(false)) { cancelform(); } }}),
               INPUT({'name':'replace','type':'button','class':'button',
                      'value':get_string('overwrite'),
                      'onclick':function () { if (self.sendform(true)) { cancelform(); } }}),
               INPUT({'type':'button','class':'button','value':get_string('cancel'),
-                     'onclick':cancelform}), cancelhelp)))));
+                     'onclick':cancelform}))))));
 
 
         hideElement(form.replace);

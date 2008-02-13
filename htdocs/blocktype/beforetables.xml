@@ -1,0 +1,8 @@
+        <TABLE NAME="blocktype_category">
+            <FIELDS>
+                <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
+            </KEYS>
+        </TABLE>

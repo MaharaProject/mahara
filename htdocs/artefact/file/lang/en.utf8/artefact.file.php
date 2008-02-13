@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage lang
@@ -26,46 +26,66 @@
 
 defined('INTERNAL') || die();
 
+$string['pluginname'] = 'Files';
+
 $string['adminfilesloaded'] = 'Admin files loaded';
 $string['bytes'] = 'bytes';
 $string['changessaved'] = 'Changes saved';
 $string['contents'] = 'Contents';
 $string['copyrightnotice'] = 'Copyright notice';
 $string['create'] = 'Create';
+$string['Created'] = 'Created';
 $string['createfolder'] = 'Create folder';
+$string['Date'] = 'Date';
 $string['defaultquota'] = 'Default Quota';
 $string['defaultquotadescription'] = 'You can set the amount of disk space that new users will have as their quota here. Existing user quotas will not be changed.';
 $string['deletefile?'] = 'Are you sure you want to delete this file?';
 $string['deletefolder?'] = 'Are you sure you want to delete this folder?';
-$string['description'] = 'Description';
+$string['Description'] = 'Description';
 $string['destination'] = 'Destination';
-$string['download'] = 'Download';
+$string['Download'] = 'Download';
+$string['downloadoriginalversion'] = 'Download the original version';
 $string['editfile'] = 'Edit file';
 $string['editfolder'] = 'Edit folder';
 $string['emptyfolder'] = 'Empty folder';
-$string['file'] = 'File';
+$string['file'] = 'file';
+$string['File'] = 'File';
+$string['filealreadyindestination'] = 'The file you moved is already in that folder';
 $string['files'] = 'files';
 $string['fileexists'] = 'File exists';
 $string['fileexistsonserver'] = 'A file with the name %s already exists.';
 $string['fileexistsoverwritecancel'] =  'A file with that name already exists.  You can try a different name, or overwrite the existing file.';
 $string['filelistloaded'] = 'File list loaded';
+$string['filemoved'] = 'File moved successfully';
 $string['filenamefieldisrequired'] = 'The file field is required';
+$string['fileinstructions'] = 'Upload your images, documents, or other files for inclusion in views. To move a file or folder, drag and drop it onto a folder.';
 $string['filethingdeleted'] = '%s deleted';
 $string['filetypes'] = 'Configure Uploadable File Types';
 $string['filetypedescription'] = '<p>You may configure the allowed file types that users can upload here. This grants you more control over what can be uploaded. This checking is performed in addition to virus checking, if you have virus checking turned on.</p><p>Note that &quot;Unknown Application&quot; may be necessary for some movies and archive files (such as gzip) to work.<p>';
 $string['folder'] = 'Folder';
 $string['foldercreated'] = 'Folder created';
 $string['home'] = 'Home';
+$string['htmlremovedmessage'] = 'You are viewing <strong>%s</strong> by <a href="%s">%s</a>. The file displayed below has been filtered to remove malicious content, and is only a rough representation of the original.';
 $string['image'] = 'Image';
+$string['lastmodified'] = 'Last Modified';
 $string['myfiles'] = 'My Files';
-$string['name'] = 'Name';
+$string['Name'] = 'Name';
 $string['namefieldisrequired'] = 'The name field is required';
+$string['movefaileddestinationinartefact'] = 'You cannot put a folder inside itself.';
+$string['movefaileddestinationnotfolder'] = 'You can only move files into folders.';
+$string['movefailednotfileartefact'] = 'Only file, folder and image artefacts can be moved.';
+$string['movefailednotowner'] = 'You do not have permission to move the file into this folder';
+$string['movefailed'] = 'Move failed.';
 $string['nofilesfound'] = 'No files found';
 $string['overwrite'] = 'Overwrite';
+$string['Owner'] = 'Owner';
+$string['parentfolder'] = 'Parent folder';
+$string['Preview'] = 'Preview';
 $string['savechanges'] = 'Save changes';
-$string['size'] = 'Size';
+$string['Size'] = 'Size';
 $string['title'] = 'Name';
 $string['titlefieldisrequired'] = 'The name field is required';
+$string['Type'] = 'Type';
 $string['unlinkthisfilefromblogposts?'] = 'This file is attached to one or more blog posts.  If you delete the file, it will be removed from these posts.';
 $string['upload'] = 'Upload';
 $string['uploadfile'] =  'Upload file';
@@ -76,6 +96,7 @@ $string['uploadoffilefailed'] =  'Upload of %s failed';
 $string['uploadoffiletofoldercomplete'] = 'Upload of %s to %s complete';
 $string['uploadoffiletofolderfailed'] = 'Upload of %s to %s failed';
 $string['youmustagreetothecopyrightnotice'] = 'You must agree to the copyright notice';
+
 
 // File types
 $string['ai'] = 'Postscript Document';
@@ -88,6 +109,7 @@ $string['doc'] = 'MS Word Document';
 $string['dss'] = 'Digital Speech Standard Sound File';
 $string['gif'] = 'GIF Image';
 $string['html'] = 'HTML File';
+$string['jpg'] = 'JPEG Image';
 $string['jpeg'] = 'JPEG Image';
 $string['js'] = 'Javascript File';
 $string['latex'] = 'LaTeX Document';
@@ -122,5 +144,13 @@ $string['wav'] = 'WAV Audio File';
 $string['wmv'] = 'WMV Video File';
 $string['xml'] = 'XML File';
 $string['zip'] = 'ZIP Archive';
+$string['swf'] = 'SWF Flash movie';
+$string['flv'] = 'FLV Flash movie';
+$string['mov'] = 'MOV Quicktime movie';
+$string['mpg'] = 'MPG Movie';
+$string['ram'] = 'RAM Real Player Movie';
+$string['rpm'] = 'RPM Real Player Movie';
+$string['rm'] = 'RM Real Player Movie';
+
 
 ?>

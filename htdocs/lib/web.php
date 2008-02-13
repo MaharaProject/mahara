@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -25,6 +25,32 @@
  */
 
 defined('INTERNAL') || die();
+
+
+function &smarty_core() {
+
+    require_once(get_config('libroot') . 'smarty/Smarty.class.php');
+    $smarty =& new Smarty();
+    
+    $theme = theme_setup();
+    $themepaths = themepaths();
+
+    $smarty->template_dir = $theme->template_dir;
+
+    $smarty->compile_dir  = get_config('dataroot').'smarty/compile';
+    $smarty->cache_dir    = get_config('dataroot').'smarty/cache';
+
+    $smarty->assign('THEMEURL', get_config('themeurl'));
+    $smarty->assign('WWWROOT', get_config('wwwroot'));
+
+    $theme_list = array();
+    foreach ($themepaths['mahara'] as $themepath) {
+        $theme_list[$themepath] = theme_get_url($themepath);
+    }
+    $smarty->assign('THEMELIST', json_encode($theme_list));
+
+    return $smarty;
+}
 
 
 /**
@@ -54,12 +80,27 @@ defined('INTERNAL') || die();
 //smarty(array('js/tablerenderer.js', 'artefact/file/js/filebrowser.js'))
 function &smarty($javascript = array(), $headers = array(), $pagestrings = array(), $extraconfig = array()) {
     global $USER, $SESSION;
+
+    if (!is_array($headers)) {
+        $headers = array();
+    }
+    if (!is_array($pagestrings)) {
+        $pagestrings = array();
+    }
+    if (!is_array($extraconfig)) {
+        $extraconfig = array();
+    }
+
     $SIDEBLOCKS = array();
 
-    require_once(get_config('libroot') . 'smarty/Smarty.class.php');
+    $smarty = smarty_core();
+
     $wwwroot = get_config('wwwroot');
+    $jswwwroot = json_encode($wwwroot);
 
     $theme_list = array();
+
+    $smarty->assign('searchform', searchform());
     
     if (function_exists('pieform_get_headdata')) {
         $headers = array_merge($headers, pieform_get_headdata());
@@ -71,43 +112,86 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
 
     // TinyMCE must be included first for some reason we're not sure about
     $checkarray = array(&$javascript, &$headers);
+    $found_tinymce = false;
     foreach ($checkarray as &$check) {
-        if (($key = array_search('tinymce', $check)) !== false) {
-            $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
-            if (isset($extraconfig['tinymceinit'])) {
-                $headers[] = $extraconfig['tinymceinit'];
-            }
-            else {
+        if (($key = array_search('tinymce', $check)) !== false || ($key = array_search('tinytinymce', $check)) !== false) {
+            if (!$found_tinymce) {
+                $found_tinymce = $check[$key];
+                $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
                 $content_css = json_encode(theme_get_url('style/tinymce.css'));
                 $language = substr(current_language(), 0, 2);
-                $headers[] = <<<EOF
-<script type="text/javascript">
-tinyMCE.init({
-    mode: "textareas",
-    editor_selector: 'wysiwyg',
-    button_tile_map: true,
-    language: '{$language}',
+                $execcommand = '';
+                if (isset($extraconfig['tinymcecommandcallback'])) {
+                    $execcommand = 'execcommand_callback: "' . $extraconfig['tinymcecommandcallback'] . '",';
+                }
+
+                    if ($check[$key] == 'tinymce') {
+                        $tinymce_config = <<<EOF
+    mode: "none",
     theme: "advanced",
     plugins: "table,emotions,iespell,inlinepopups,paste",
-    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,iespell,cleanup,separator,link,unlink,separator,code",
+    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,image,iespell,cleanup,separator,link,unlink,separator,code",
     theme_advanced_buttons2 : "bullist,numlist,separator,tablecontrols,separator,cut,copy,paste,pasteword",
     theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect",
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "center",
     width: '512',
-    content_css : {$content_css}
+EOF;
+                    }
+                    else {
+                        $tinymce_config = <<<EOF
+    mode: "textareas",
+    editor_selector: 'tinywysiwyg',
+    theme: "advanced",
+    plugins: "fullscreen",
+    theme_advanced_buttons1 : "bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull",
+    theme_advanced_buttons2 : "bullist,numlist,separator,link,unlink,separator,code,fullscreen",
+    theme_advanced_buttons3 : "",
+    theme_advanced_toolbar_location : "top",
+    theme_advanced_toolbar_align : "center",
+    fullscreen_new_window: true,
+    fullscreen_settings: {
+        theme: "advanced",
+        plugins: "table,emotions,iespell,inlinepopups,paste",
+        theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,image,iespell,cleanup,separator,link,unlink,separator,code",
+        theme_advanced_buttons2 : "bullist,numlist,separator,tablecontrols,separator,cut,copy,paste,pasteword",
+        theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect"
+    },
+EOF;
+                }
+
+                $headers[] = <<<EOF
+<script type="text/javascript">
+tinyMCE.init({
+    button_tile_map: true,
+    {$tinymce_config}
+    {$execcommand}
+    language: '{$language}',
+    content_css : {$content_css},
+    document_base_url: {$jswwwroot},
+    relative_urls: false
 });
 </script>
 
 EOF;
+                unset($check[$key]);
             }
-            unset($check[$key]);
-            break;
+            else {
+                if ($check[$key] != $found_tinymce) {
+                    log_warn('Two differently configured tinyMCE instances have been asked for on this page! This is not possible');
+                }
+                unset($check[$key]);
+            }
         }
     }
 
     if (get_config('developermode')) {
         $javascript_array[] = $jsroot . 'MochiKit/MochiKit.js';
+        $javascript_array[] = $jsroot . 'MochiKit/Position.js';
+        $javascript_array[] = $jsroot . 'MochiKit/Color.js';
+        $javascript_array[] = $jsroot . 'MochiKit/Visual.js';
+        $javascript_array[] = $jsroot . 'MochiKit/DragAndDrop.js';
+        $javascript_array[] = $jsroot . 'MochiKit/Format.js';
     }
     else {
         $javascript_array[] = $jsroot . 'MochiKit/Packed.js';
@@ -199,9 +283,6 @@ EOF;
             $strings[$tag] = get_raw_string($tag, $section);
         }
     }
-    foreach ($themepaths['mahara'] as $themepath) {
-        $theme_list[$themepath] = theme_get_url($themepath);
-    }
     if (isset($extraconfig['themepaths']) && is_array($extraconfig['themepaths'])) {
         foreach ($extraconfig['themepaths'] as $themepath) {
             $theme_list[$themepath] = theme_get_url($themepath);
@@ -211,18 +292,7 @@ EOF;
     $stringjs = '<script type="text/javascript">';
     $stringjs .= 'var strings = ' . json_encode($strings) . ';';
     $stringjs .= '</script>';
-    $headers[] = $stringjs;
 
-    $smarty =& new Smarty();
-    
-    $theme = theme_setup();
-
-    $smarty->template_dir = $theme->template_dir;
-
-    $smarty->compile_dir  = get_config('dataroot').'smarty/compile';
-    $smarty->cache_dir    = get_config('dataroot').'smarty/cache';
-
-    $smarty->assign('THEMEURL', get_config('themeurl'));
 
     // stylesheet set up - if we're in a plugin also get its stylesheet
     $stylesheets = array_reverse(theme_get_url('style/style.css', null, true));
@@ -234,10 +304,23 @@ EOF;
     if (get_config('developermode')) {
         $stylesheets[] = get_config('wwwroot') . 'theme/debug.css';
     }
+
+    // look for extra stylesheets
+    if (isset($extraconfig['stylesheets']) && is_array($extraconfig['stylesheets'])) {
+        foreach ($extraconfig['stylesheets'] as $extrasheet) {
+            if ($sheet = theme_get_url($extrasheet)) {
+                $stylesheets[] = $sheet;
+            }
+        }
+    }
+
+    $smarty->assign('STRINGJS', $stringjs);
+
     $smarty->assign('STYLESHEETLIST', $stylesheets);
-    $smarty->assign('WWWROOT', $wwwroot);
-    $smarty->assign('SESSKEY', $USER->get('sesskey'));
-    $smarty->assign('THEMELIST', json_encode($theme_list));
+    if (!empty($theme_list)) {
+        // this gets assigned in smarty_core, but do it again here if it's changed locally
+        $smarty->assign('THEMELIST', json_encode(array_merge((array)json_decode($smarty->get_template_vars('THEMELIST')),  $theme_list))); 
+    }
 
     if (defined('TITLE')) {
         $smarty->assign('PAGETITLE', TITLE . ' - ' . get_config('sitename'));
@@ -257,74 +340,95 @@ EOF;
     if (defined('ADMIN')) {
         $smarty->assign('ADMIN', true);
     }
+    if (defined('INSTITUTIONALADMIN')) {
+        $smarty->assign('INSTITUTIONALADMIN', true);
+    }
 
     $smarty->assign('LOGGEDIN', $USER->is_logged_in());
     if ($USER->is_logged_in()) {
         $smarty->assign('MAINNAV', main_nav());
         $smarty->assign('LOGGEDINSTR', get_loggedin_string());
     }
+    else {
+        $smarty->assign('sitedefaultlang', get_string('sitedefault', 'admin') . ' (' . 
+                        get_string_from_language('default', 'thislanguage') . ')');
+        $smarty->assign('LANGUAGES', get_languages());
+    }
 
     $smarty->assign_by_ref('USER', $USER);
+    $smarty->assign('SESSKEY', $USER->get('sesskey'));
     $smarty->assign_by_ref('JAVASCRIPT', $javascript_array);
     $smarty->assign_by_ref('HEADERS', $headers);
 
-    $smarty->assign('searchform', searchform());
-
-    if ($help = has_page_help()) {
+    if ((!isset($extraconfig['pagehelp']) || $extraconfig['pagehelp'] !== false)
+        and $help = has_page_help()) {
         $smarty->assign('PAGEHELPNAME', $help[0]);
         $smarty->assign('PAGEHELPICON', $help[1]);
     }
 
     // ---------- sideblock stuff ----------
-    if (get_config('installed')) {
-        $smarty->assign('SITEMENU', site_menu());
-        $SIDEBLOCKS[] = array(
-            'name'   => 'mainmenu',
-            'weight' => 10,
-            'data'   => site_menu(),
-        );
-    }
+    if (!defined('INSTALLER') && (!defined('MENUITEM') || substr(MENUITEM, 0, 5) != 'admin')) {
+        if (get_config('installed')) {
+            $data = site_menu();
+            if (!empty($data)) {
+                $smarty->assign('SITEMENU', site_menu());
+                $SIDEBLOCKS[] = array(
+                    'name'   => 'linksandresources',
+                    'weight' => 10,
+                    'data'   => $data,
+                );
+            }
+        }
 
-    if ($USER->is_logged_in() && defined('MENUITEM') && substr(MENUITEM, 0, 11) == 'myportfolio') {
-        $SIDEBLOCKS[] = array(
-            'name'   => 'selfsearch',
-            'weight' => 0,
-            'data'   => array(),
-        );
-    }
-   
-   if (!$USER->is_logged_in()) {
-        $SIDEBLOCKS[] = array(
-            'name'   => 'login',
-            'weight' => -10,
-            'id'     => 'loginbox',
-            'data'   => array(
-                'loginform' => auth_generate_login_form(),
-            ),
-        );
-    }
-
-    if (get_config('enablenetworking')) {
-        require_once(get_config('docroot') .'api/xmlrpc/lib.php');
-        if ($USER->is_logged_in() && $ssopeers = get_service_providers($USER->authinstance)) {
+        if ($USER->is_logged_in() && defined('MENUITEM') && substr(MENUITEM, 0, 11) == 'myportfolio') {
             $SIDEBLOCKS[] = array(
-                'name'   => 'ssopeers',
-                'weight' => 1,
-                'data'   => $ssopeers,
+                'name'   => 'selfsearch',
+                'weight' => 0,
+                'data'   => array(),
             );
         }
-    }
 
-    if (isset($extraconfig['sideblocks']) && is_array($extraconfig['sideblocks'])) {
-        foreach ($extraconfig['sideblocks'] as $sideblock) {
-            $SIDEBLOCKS[] = $sideblock;
+        if($USER->is_logged_in()) {
+            $SIDEBLOCKS[] = array(
+                'name'   => 'profile',
+                'weight' => -20,
+                'data'   => profile_sideblock()
+            );
         }
+
+       if (!$USER->is_logged_in()) {
+            $SIDEBLOCKS[] = array(
+                'name'   => 'login',
+                'weight' => -10,
+                'id'     => 'loginbox',
+                'data'   => array(
+                    'loginform' => auth_generate_login_form(),
+                ),
+            );
+        }
+
+        if (get_config('enablenetworking')) {
+            require_once(get_config('docroot') .'api/xmlrpc/lib.php');
+            if ($USER->is_logged_in() && $ssopeers = get_service_providers($USER->authinstance)) {
+                $SIDEBLOCKS[] = array(
+                    'name'   => 'ssopeers',
+                    'weight' => 1,
+                    'data'   => $ssopeers,
+                );
+            }
+        }
+
+        if (isset($extraconfig['sideblocks']) && is_array($extraconfig['sideblocks'])) {
+            foreach ($extraconfig['sideblocks'] as $sideblock) {
+                $SIDEBLOCKS[] = $sideblock;
+            }
+        }
+
+        usort($SIDEBLOCKS, create_function('$a,$b', 'if ($a["weight"] == $b["weight"]) return 0; return ($a["weight"] < $b["weight"]) ? -1 : 1;'));
+
+        $smarty->assign('userauthinstance', $USER->lastauthinstance);
+        $smarty->assign('SIDEBLOCKS', $SIDEBLOCKS);
     }
-
-    usort($SIDEBLOCKS, create_function('$a,$b', 'if ($a["weight"] == $b["weight"]) return 0; return ($a["weight"] < $b["weight"]) ? -1 : 1;'));
-
-    $smarty->assign('userauthinstance', $USER->lastauthinstance);
-    $smarty->assign('SIDEBLOCKS', $SIDEBLOCKS);
 
     return $smarty;
 }
@@ -346,6 +450,8 @@ function jsstrings() {
                 'showtags',
                 'unreadmessages',
                 'unreadmessage',
+                'pendingfriend',
+                'pendingfriends',
                 'couldnotgethelp',
             ),
         ),
@@ -357,13 +463,8 @@ function jsstrings() {
                 'lastpage',
             )
         ),
-        'collapsabletree' => array(
-            'view' => array(
-                'nochildren',
-            ),
-        ),
         'friends' => array(
-            'mahara' => array(
+            'group' => array(
                 'confirmremovefriend',
                 'seeallviews',
                 'noviewstosee',
@@ -387,19 +488,39 @@ function jsstrings() {
                 'cancel',
             ),
         ),
+        'views' => array(
+            'view' => array(
+                'confirmdeleteblockinstance',
+                'blocksinstructionajax',
+            ),
+        ),
+        'adminusersearch' => array(
+            'admin' => array(
+                'suspenduser',
+                'suspensionreason',
+            ),
+            'mahara' => array(
+                'cancel',
+            ),
+        ),
     );
 }
 
 function themepaths() {
-    return array(
-        'mahara' => array(
-            'images/icon_close.gif',
-            'images/failure.gif',
-            'images/loading.gif',
-            'images/success.gif',
-            'images/icon_help.gif',
-        ),
-    );
+
+    static $paths;
+    if (empty($paths)) {
+        $paths = array(
+            'mahara' => array(
+                'images/icon_close.gif',
+                'images/failure.gif',
+                'images/loading.gif',
+                'images/success.gif',
+                'images/icon_help.gif',
+            ),
+        );
+    }
+    return $paths;
 }
 
 /** 
@@ -434,7 +555,13 @@ function theme_setup() {
     }
     
     $theme = new StdClass;
-    $theme->theme = get_config('theme');
+    global $USER;
+    if (!empty($USER)) {
+        $theme->theme = $USER->get('theme');
+    }
+    if (empty($theme->theme)) {
+        $theme->theme = get_config('theme');
+    }
     $theme->path = get_config('docroot') . 'theme/' . $theme->theme . '/';
     $theme->template_dir = array($theme->path . 'templates/');
     $theme->inheritance = array($theme->theme);
@@ -759,6 +886,120 @@ function param_boolean($name) {
 }
 
 /**
+ * NOTE: this function is only meant to be used by get_imagesize_parameters(),
+ * which you should use in your scripts.
+ *
+ * This function returns a GET or POST parameter as a two element array 
+ * repesenting an allowed width and height value for a resized image. If the 
+ * default isn't specified and the parameter hasn't been sent, a 
+ * ParameterException is thrown. Likewise, if the parameter isn't a valid size 
+ * dimension, a ParameterException is thrown.
+ *
+ * A size parameter is a string, in the form /\d+x\d+/ - e.g. 200x150. The 
+ * width and height are not allowed to be greater than the configured allowed
+ * maximums - config variables imagemaxwidth and imagemaxheight.
+ *
+ * You call this function like so:
+ *
+ * list($width, $height) = param_imagesize('size');
+ *
+ * @param string The GET or POST parameter you want returned.
+ * TODO: i18n for the error messages
+ */
+function param_imagesize($name) {
+    $args = func_get_args();
+
+    list ($value, $defaultused) = call_user_func_array('_param_retrieve', $args);
+
+    if ($defaultused) {
+        return $value;
+    }
+
+    if (!preg_match('/\d+x\d+/', $value)) {
+        throw new ParameterException('Invalid size for image specified');
+    }
+
+    list($width, $height) = explode('x', $value);
+    if ($width > get_config('imagemaxwidth') || $height > get_config('imagemaxheight')) {
+        throw new ParameterException('Requested image size is too big');
+    }
+    if ($width < 16 || $height < 16) {
+        throw new ParameterException('Requested image size is too small');
+    }
+    return array('w' => $width, 'h' => $height);
+}
+
+/**
+ * Works out what size a requested image should be, based on request parameters
+ *
+ * The result of this function can be passed to get_dataroot_image_path to 
+ * retrieve the filesystem path of the appropriate image
+ */
+function get_imagesize_parameters($sizeparam='size', $widthparam='width', $heightparam='height',
+    $maxsizeparam='maxsize', $maxwidthparam='maxwidth', $maxheightparam='maxheight') {
+
+    $size      = param_imagesize($sizeparam, '');
+    $width     = param_integer($widthparam, 0);
+    $height    = param_integer($heightparam, 0);
+    $maxsize   = param_integer($maxsizeparam, 0);
+    $maxwidth  = param_integer($maxwidthparam, 0);
+    $maxheight = param_integer($maxheightparam, 0);
+
+    $imagemaxwidth  = get_config('imagemaxwidth');
+    $imagemaxheight = get_config('imagemaxheight');
+
+    if ($size) {
+        return $size;
+    }
+    if ($maxsize) {
+        if ($maxsize > $imagemaxwidth && $maxsize > $imagemaxheight) {
+            throw new ParameterException('Requested image size is too big');
+        }
+        if ($maxsize < 16) {
+            throw new ParameterException('Requested image size is too small');
+        }
+        return $maxsize;
+    }
+    if ($width) {
+        if ($width > $imagemaxwidth) {
+            throw new ParameterException('Requested image size is too big');
+        }
+        if ($width < 16) {
+            throw new ParameterException('Requested image size is too small');
+        }
+        return array('w' => $width);
+    }
+    if ($height) {
+        if ($height > $imagemaxheight) {
+            throw new ParameterException('Requested image size is too big');
+        }
+        if ($height < 16) {
+            throw new ParameterException('Requested image size is too small');
+        }
+        return array('h' => $height);
+    }
+    if ($maxwidth) {
+        if ($maxwidth > $imagemaxwidth) {
+            throw new ParameterException('Requested image size is too big');
+        }
+        if ($maxwidth < 16) {
+            throw new ParameterException('Requested image size is too small');
+        }
+        return array('maxw' => $maxwidth);
+    }
+    if ($maxheight) {
+        if ($maxheight > $imagemaxheight) {
+            throw new ParameterException('Requested image size is too big');
+        }
+        if ($maxheight < 16) {
+            throw new ParameterException('Requested image size is too small');
+        }
+        return array('maxh' => $maxheight);
+    }
+    return null;
+}
+
+/**
  * Gets a cookie, respecting the configured cookie prefix
  *
  * @param string $name The name of the cookie to get the value of
@@ -794,7 +1035,7 @@ function getoptions_country() {
     if (!empty($countries)) {
         return $countries;
     }
-    $countries = array(
+    $codes = array(
         'af',
         'ax',
         'al',
@@ -1040,10 +1281,10 @@ function getoptions_country() {
         'zw',
     );
 
-    $countries = array_map(
-        create_function('$a', 'return get_string("country.{$a}");'), 
-        $countries
-    );
+    foreach ($codes as $c) {
+        $countries[$c] = get_string("country.{$c}");
+    };
+    uasort($countries, 'strcoll');
     return $countries;
 }
 
@@ -1081,11 +1322,9 @@ function make_link($url) {
  * @return $adminnav a data structure containing the admin navigation
  */
 function admin_nav() {
-    $wwwroot = get_config('wwwroot');
-
     $menu = array(
         array(
-            'path'   => 'admin',
+            'path'   => 'adminhome',
             'url'    => 'admin/',
             'title'  => get_string('adminhome', 'admin'),
             'weight' => 10,
@@ -1105,13 +1344,13 @@ function admin_nav() {
         array(
             'path'   => 'configsite/sitepages',
             'url'    => 'admin/site/pages.php',
-            'title'  => get_string('sitepages', 'admin'),
+            'title'  => get_string('editsitepages', 'admin'),
             'weight' => 20
         ),
         array(
             'path'   => 'configsite/sitemenu',
             'url'    => 'admin/site/menu.php',
-            'title'  => get_string('sitemenu', 'admin'),
+            'title'  => get_string('linksandresourcesmenu', 'admin'),
             'weight' => 30,
         ),
         array(
@@ -1128,26 +1367,32 @@ function admin_nav() {
         ),
         array(
             'path'   => 'configusers',
-            'url'    => 'admin/users/suspended.php',
+            'url'    => 'admin/users/search.php',
             'title'  => get_string('configusers', 'admin'),
             'weight' => 30,
+        ),
+        array(
+            'path'   => 'configusers/usersearch',
+            'url'    => 'admin/users/search.php',
+            'title'  => get_string('usersearch', 'admin'),
+            'weight' => 10,
         ),
         array(
             'path'   => 'configusers/suspendedusers',
             'url'    => 'admin/users/suspended.php',
             'title'  => get_string('suspendedusers', 'admin'),
-            'weight' => 10,
+            'weight' => 15,
         ),
         array(
             'path'   => 'configusers/staffusers',
             'url'    => 'admin/users/staff.php',
-            'title'  => get_string('staffusers', 'admin'),
+            'title'  => get_string('sitestaff', 'admin'),
             'weight' => 20,
         ),
         array(
             'path'   => 'configusers/adminusers',
             'url'    => 'admin/users/admins.php',
-            'title'  => get_string('adminusers', 'admin'),
+            'title'  => get_string('siteadmins', 'admin'),
             'weight' => 30,
         ),
         array(
@@ -1157,9 +1402,9 @@ function admin_nav() {
             'weight' => 40,
         ),
         array(
-            'path'   => 'configusers/institutions',
-            'url'    => 'admin/users/institutions.php',
-            'title'  => get_string('institutions', 'admin'),
+            'path'   => 'configusers/adduser',
+            'url'    => 'admin/users/add.php',
+            'title'  => get_string('adduser', 'admin'),
             'weight' => 50,
         ),
         array(
@@ -1169,10 +1414,34 @@ function admin_nav() {
             'weight' => 60,
         ),
         array(
-            'path'   => 'configusers/usersearch',
-            'url'    => 'admin/users/search.php',
-            'title'  => get_string('usersearch', 'admin'),
-            'weight' => 70,
+            'path'   => 'manageinstitutions',
+            'url'    => 'admin/users/institutions.php',
+            'title'  => get_string('manageinstitutions', 'admin'),
+            'weight' => 35,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutions',
+            'url'    => 'admin/users/institutions.php',
+            'title'  => get_string('institutions', 'admin'),
+            'weight' => 10,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutionusers',
+            'url'    => 'admin/users/institutionusers.php',
+            'title'  => get_string('institutionmembers', 'admin'),
+            'weight' => 20,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutionstaff',
+            'url'    => 'admin/users/institutionstaff.php',
+            'title'  => get_string('institutionstaff', 'admin'),
+            'weight' => 30,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutionadmins',
+            'url'    => 'admin/users/institutionadmins.php',
+            'title'  => get_string('institutionadmins', 'admin'),
+            'weight' => 40,
         ),
         array(
             'path'   => 'configextensions',
@@ -1186,23 +1455,96 @@ function admin_nav() {
             'title'  => get_string('pluginadmin', 'admin'),
             'weight' => 10,
         ),
-        array(
-            'path'   => 'configextensions/templatesadmin',
-            'url'    => 'admin/extensions/templates.php',
-            'title'  => get_string('templatesadmin', 'admin'),
-            'weight' => 20
-        ),
     );
 
     return $menu;
 }
 
 /**
+ * Returns the entries in the standard institutional admin menu
+ *
+ * @return $adminnav a data structure containing the admin navigation
+ */
+function institutional_admin_nav() {
+
+    return array(
+        array(
+            'path'   => 'configusers',
+            'url'    => 'admin/users/search.php',
+            'title'  => get_string('configusers', 'admin'),
+            'weight' => 10,
+        ),
+        array(
+            'path'   => 'configusers/usersearch',
+            'url'    => 'admin/users/search.php',
+            'title'  => get_string('usersearch', 'admin'),
+            'weight' => 10,
+        ),
+        array(
+            'path'   => 'configusers/suspendedusers',
+            'url'    => 'admin/users/suspended.php',
+            'title'  => get_string('suspendedusers', 'admin'),
+            'weight' => 20,
+        ),
+        array(
+            'path'   => 'configusers/adduser',
+            'url'    => 'admin/users/add.php',
+            'title'  => get_string('adduser', 'admin'),
+            'weight' => 30,
+        ),
+        array(
+            'path'   => 'configusers/uploadcsv',
+            'url'    => 'admin/users/uploadcsv.php',
+            'title'  => get_string('uploadcsv', 'admin'),
+            'weight' => 40,
+        ),
+        array(
+            'path'   => 'manageinstitutions',
+            'url'    => 'admin/users/institutions.php',
+            'title'  => get_string('manageinstitutions', 'admin'),
+            'weight' => 20,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutions',
+            'url'    => 'admin/users/institutions.php',
+            'title'  => get_string('institutionsettings', 'admin'),
+            'weight' => 10,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutionusers',
+            'url'    => 'admin/users/institutionusers.php',
+            'title'  => get_string('institutionmembers', 'admin'),
+            'weight' => 20,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutionstaff',
+            'url'    => 'admin/users/institutionstaff.php',
+            'title'  => get_string('institutionstaff', 'admin'),
+            'weight' => 30,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutionadmins',
+            'url'    => 'admin/users/institutionadmins.php',
+            'title'  => get_string('institutionadmins', 'admin'),
+            'weight' => 40,
+        ),
+        array(
+            'path'   => 'manageinstitutions/adminnotifications',
+            'url'    => 'admin/users/notifications.php',
+            'title'  => get_string('adminnotifications', 'admin'),
+            'weight' => 50,
+        ),
+    );
+
+}
+
+/**
  * Builds a data structure representing the menu for Mahara.
  */
 function main_nav() {
-    if (defined('ADMIN')) {
-        $menu = admin_nav();
+    if (defined('ADMIN') || defined('INSTITUTIONALADMIN')) {
+        global $USER;
+        $menu = $USER->get('admin') ? admin_nav() : institutional_admin_nav();
     }
     else {
         // Build the menu structure for the site
@@ -1228,38 +1570,44 @@ function main_nav() {
             array(
                 'path' => 'myportfolio/views',
                 'url' => 'view/',
-                'title' => get_string('views'),
+                'title' => get_string('myviews'),
                 'weight' => 10
             ),
             array(
                 'path' => 'groups',
-                'url' => 'contacts/',
+                'url' => 'group/mygroups.php',
                 'title' => get_string('groups'),
                 'weight' => 40,
             ),
             array(
+                'path' => 'groups/mygroups',
+                'url' => 'group/mygroups.php',
+                'title' => get_string('mygroups'),
+                'weight' => 10
+            ),
+            array(
+                'path' => 'groups/find',
+                'url' => 'group/find.php',
+                'title' => get_string('findgroups'),
+                'weight' => 20
+            ),
+            array(
                 'path' => 'groups/myfriends',
-                'url' => 'contacts/',
+                'url' => 'user/myfriends.php',
                 'title' => get_string('myfriends'),
-                'weight' => 10,
+                'weight' => 30
             ),
             array(
-                'path' => 'groups/groupsimin',
-                'url' => 'contacts/groups/',
-                'title' => get_string('groupsimin'),
-                'weight' => 20,
-            ),
-            array(
-                'path' => 'groups/groupsiown',
-                'url' => 'contacts/groups/owned.php',
-                'title' => get_string('groupsiown'),
-                'weight' => 30,
+                'path' => 'groups/findfriends',
+                'url' => 'user/find.php',
+                'title' => get_string('findfriends'),
+                'weight' => 40
             ),
             array(
                 'path' => 'settings',
                 'url' => 'account/',
                 'title' => get_string('settings'),
-                'weight' => 50
+                'weight' => 60
             ),
             array(
                 'path' => 'settings/preferences',
@@ -1278,6 +1626,12 @@ function main_nav() {
                 'url' => 'account/activity/preferences/',
                 'title' => get_string('activityprefs'),
                 'weight' => 30,
+            ),
+            array(
+                'path' => 'settings/institutions',
+                'url' => 'account/institutions.php',
+                'title' => get_string('institution'),
+                'weight' => 40,
             ),
         );
 
@@ -1308,12 +1662,10 @@ function find_menu_children(&$menu, $path) {
     }
 
     foreach ($menu as $key => $item) {
-        if (
-            defined('MENUITEM') &&
-            ((MENUITEM == '' && $item['path'] == '') ||
-            ($item['path'] != '' && $item['path'] == substr(MENUITEM, 0, strlen($item['path']))))) {
-            $item['selected'] = true;
-        }
+        $len = strlen($item['path']);
+        $item['selected'] = defined('MENUITEM')
+            && ($item['path'] == MENUITEM
+                || ($item['path'] . '/' == substr(MENUITEM, 0, strlen($item['path'])+1)));
         if (
             ($path == '' && $item['path'] == '') ||
             ($item['path'] != '' && substr($item['path'], 0, strlen($path)) == $path && !preg_match('%/%', substr($item['path'], strlen($path) + 1)))) {
@@ -1428,7 +1780,7 @@ function searchform() {
     require_once('pieforms/pieform.php');
     return pieform(array(
         'name'                => 'searchform',
-        'action'              => get_config('wwwroot') . 'search.php',
+        'action'              => get_config('wwwroot') . 'user/find.php',
         'renderer'            => 'oneline',
         'autofocus'           => false,
         'validate'            => false,
@@ -1464,8 +1816,14 @@ function get_loggedin_string() {
         // these spans are here so that on the ajax page that marks messages as read, the contents can be updated.
         $str .=
             ' (<a href="' . get_config('wwwroot') . 'account/activity/">'  . 
-            '<span id="headerunreadmessagecount">' . $count . '</span> ' . 
-            '<span id="headerunreadmessages">' . get_string($key) . '</span></a>)';
+            '<span class="unreadmessagescontainer"><span class="unreadmessagecount">' . $count . '</span> ' .
+            '<span class="unreadmessages">' . get_string($key) . '</span></span></a>)';
+    }
+
+    $saveduser = $USER->get('parentuser');
+    if (!empty($saveduser) && $saveduser->name) {
+        $str .= ' (<a href="' . get_config('wwwroot') . 'admin/users/changeuser.php?restore=1">'
+            . get_string('becomeadminagain', 'admin', $saveduser->name) . '</a>)';
     }
 
     return $str;
@@ -1612,18 +1970,6 @@ function format_whitespace($text) {
 }
 
 /**
- * Returns only the first short snippet of a user's introduction
- */
-function format_introduction($introduction) {
-    $introduction = strip_tags($introduction);
-    // Note: the lengths are different to prevent chopping off just one or two characters in order to add an ellipsis
-    if (strlen($introduction) < 110) {
-        return $introduction;
-    }
-    return substr($introduction, 0, 100) . '...';
-}
-
-/**
  * Given raw text (eg typed in by a user), this function cleans it up
  * and removes any nasty tags that could mess up pages.
  *
@@ -1631,107 +1977,251 @@ function format_introduction($introduction) {
  * @return string The cleaned up text
  */
 function clean_text($text) {
+    require_once('htmlpurifier/HTMLPurifier.auto.php');
+    $config = HTMLPurifier_Config::createDefault();
+    $config->set('Cache', 'SerializerPath', get_config('dataroot') . 'htmlpurifier');
+    $purifier = new HTMLPurifier($config);
+    return $purifier->purify($text);
+}
 
-    $ALLOWED_TAGS =
-'<p><br><b><i><u><font><table><tbody><span><div><tr><td><th><ol><ul><dl><li><dt><dd><h1><h2><h3><h4><h5><h6><hr><img><a><strong><emphasis><em><sup><sub><address><cite><blockquote><pre><strike><param><acronym><nolink><lang><tex><algebra><math><mi><mn><mo><mtext><mspace><ms><mrow><mfrac><msqrt><mroot><mstyle><merror><mpadded><mphantom><mfenced><msub><msup><msubsup><munder><mover><munderover><mmultiscripts><mtable><mtr><mtd><maligngroup><malignmark><maction><cn><ci><apply><reln><fn><interval><inverse><sep><condition><declare><lambda><compose><ident><quotient><exp><factorial><divide><max><min><minus><plus><power><rem><times><root><gcd><and><or><xor><not><implies><forall><exists><abs><conjugate><eq><neq><gt><lt><geq><leq><ln><log><int><diff><partialdiff><lowlimit><uplimit><bvar><degree><set><list><union><intersect><in><notin><subset><prsubset><notsubset><notprsubset><setdiff><sum><product><limit><tendsto><mean><sdev><variance><median><mode><moment><vector><matrix><matrixrow><determinant><transpose><selector><annotation><semantics><annotation-xml><tt><code>';
 
-    // Fix non standard entity notations
-    $text = preg_replace('/(&#[0-9]+)(;?)/', "\\1;", $text);
-    $text = preg_replace('/(&#x[0-9a-fA-F]+)(;?)/', "\\1;", $text);
-
-    // Remove tags that are not allowed
-    $text = strip_tags($text, $ALLOWED_TAGS);
-
-    // Clean up embedded scripts and , using kses
-    $text = clean_attributes($text);
-
-    // Remove script events
-    $text = eregi_replace("([^a-z])language([[:space:]]*)=", "\\1Xlanguage=", $text);
-    $text = eregi_replace("([^a-z])on([a-z]+)([[:space:]]*)=", "\\1Xon\\2=", $text);
-
-    return $text;
+/**
+ * Displays purified html on a page with an explanatory message.
+ * 
+ * @param string $html     The purified html.
+ * @param string $filename The filename to serve the file as
+ * @param array $params    Parameters previously passed to serve_file
+ */
+function display_cleaned_html($html, $filename, $params) {
+    $smarty = smarty_core();
+    $smarty->assign('params', $params);
+    $smarty->assign('htmlremovedmessage', get_string('htmlremovedmessage', 'artefact.file', $filename, get_config('wwwroot') . 'user/view.php?id=' . $params['owner'], display_name($params['owner'])));
+    $smarty->assign('content', clean_text($html));
+    $smarty->display('cleanedhtml.tpl');
+    exit;
 }
 
 /**
- * This function takes a string and examines it for HTML tags.
- * If tags are detected it passes the string to a helper function {@link cleanAttributes2()}
- *  which checks for attributes and filters them for malicious content
- *         17/08/2004              ::          Eamon DOT Costello AT dcu DOT ie
+ * Takes a string and a length, and ensures that the string is no longer than
+ * this length, by putting '...' in the middle
+ * Strips all tags except <br> and <p>
  *
- * @param string $str The string to be examined for html tags                                                                      
+ * @param string $str String to shorten
+ * @param int $maxlen The maximum length the new string should be (default 100)
+ * @param bool $truncate if true, cut the string at the end rather than in the middle (default false)
+ * @param bool $newlines if false, cut off after the first newline (default true)
  * @return string
  */
-function clean_attributes($str){
-    $result = preg_replace_callback(
-        '%(<[^>]*(>|$)|>)%m', #search for html tags
-        "clean_attributes_2",
-        $str
-    );
-    return $result;
-}
-
-/**
- * This function takes a string with an html tag and strips out any unallowed
- * protocols e.g. javascript:
- * It calls ancillary functions in kses which are prefixed by kses
- *        17/08/2004              ::          Eamon DOT Costello AT dcu DOT ie
- *
- * @param array $htmlArray An array from {@link cleanAttributes()}, containing in its 1st
- *              element the html to be cleared
- * @return string
- */
-function clean_attributes_2($htmlArray) {
-    require_once('kses.php');
-    $ALLOWED_PROTOCOLS = array('http', 'https', 'ftp', 'news', 'mailto', 'rtsp', 'teamspeak', 'gopher', 'mms',
-                               'color', 'callto', 'cursor', 'text-align', 'font-size', 'font-weight', 'font-style',
-                               'border', 'margin', 'padding', 'background');   // CSS as well to get through kses
-
-
-    $htmlTag = $htmlArray[1];
-    if (substr($htmlTag, 0, 1) != '<') {
-        return '&gt;';  //a single character ">" detected
+function str_shorten($str, $maxlen=100, $truncate=false, $newlines=true) {
+    if (empty($str)) {
+        return $str;
     }
-    if (!preg_match('%^<\s*(/\s*)?([a-zA-Z0-9]+)([^>]*)>?$%', $htmlTag, $matches)) {
-        return ''; // It's seriously malformed
-    }                                                                                                                                        
-    $slash = trim($matches[1]); //trailing xhtml slash
-    $elem = $matches[2];    //the element name
-    $attrlist = $matches[3]; // the list of attributes as a string
-
-    $attrArray = kses_hair($attrlist, $ALLOWED_PROTOCOLS);
-
-    $attStr = '';
-    foreach ($attrArray as $arreach) {
-        $arreach['name'] = strtolower($arreach['name']);
-        if ($arreach['name'] == 'style') {
-            $value = $arreach['value'];
-            while (true) {
-                $prevvalue = $value;
-                $value = kses_no_null($value);
-                $value = preg_replace("/\/\*.*\*\//Us", '', $value);
-                $value = kses_decode_entities($value);
-                $value = preg_replace('/(&#[0-9]+)(;?)/', "\\1;", $value);
-                $value = preg_replace('/(&#x[0-9a-fA-F]+)(;?)/', "\\1;", $value);
-                if ($value === $prevvalue) {
-                    $arreach['value'] = $value;
-                    break;
-                }
-            }
-            $arreach['value'] = preg_replace("/j\s*a\s*v\s*a\s*s\s*c\s*r\s*i\s*p\s*t/i", "Xjavascript", $arreach['value']);
-            $arreach['value'] = preg_replace("/e\s*x\s*p\s*r\s*e\s*s\s*s\s*i\s*o\s*n/i", "Xexpression", $arreach['value']);
+    if (!$newlines) {
+        $nextbreak = strpos($str, '<p', 1);
+        if ($nextbreak !== false) {
+            $str = substr($str, 0, $nextbreak);
         }
-        $attStr .=  ' '.$arreach['name'].'="'.$arreach['value'].'" ';
+        $nextbreak = strpos($str, '<br', 1);
+        if ($nextbreak !== false) {
+            $str = substr($str, 0, $nextbreak);
+        }
+    }
+    // so newlines don't disappear but ignore the first <p>
+    $str = $str[0] . str_replace('<p', "\n\n<p", substr($str, 1));
+    $str = str_replace('<br', "\n<br", $str);
+
+    $str = strip_tags($str);
+    $str = html_entity_decode($str); // no things like &nbsp; only take up one character
+    // take the first $length chars, then up to the first space (max length $length + $extra chars)
+
+    if ($truncate && strlen($str) > $maxlen) {
+        $str = substr($str, 0, $maxlen-3) . '...';
+    }
+    if (strlen($str) > $maxlen) {
+        $str =  substr($str, 0, floor($maxlen / 2) - 1) . '...' . substr($str, -(floor($maxlen / 2) - 2));
     }
 
-    // Remove last space from attribute list
-    $attStr = rtrim($attStr);
-
-    $xhtml_slash = '';
-    if (preg_match('%/\s*$%', $attrlist)) {
-        $xhtml_slash = ' /';
-    }
-    return '<'. $slash . $elem . $attStr . $xhtml_slash .'>';
+    return nl2br(hsc($str));
 }
 
+/**
+ * Builds pagination links for HTML display.
+ *
+ * The pagination is quite configurable, but at the same time gives a consitent 
+ * look and feel to all pagination.
+ *
+ * This function takes one array that contains the options to configure the 
+ * pagination. Required options include:
+ *
+ * - url: The base URL to use for all links
+ * - count: The total number of results to paginate for
+ * - limit: How many to show per page
+ * - offset: At which result to start showing results
+ *
+ * Optional options include:
+ *
+ * - id: The ID of the div enclosing the pagination
+ * - class: The class of the div enclosing the pagination
+ * - offsetname: The name of the offset parameter in the url
+ * - firsttext: The text to use for the 'first page' link
+ * - previoustext: The text to use for the 'previous page' link
+ * - nexttext: The text to use for the 'next page' link
+ * - lasttext: The text to use for the 'last page' link
+ * - numbersincludefirstlast: Whether the page numbering should include links 
+ *   for the first and last pages
+ * - resultcounttextsingular: The text to use for 'result'
+ * - resultcounttextplural: The text to use for 'results'
+ *
+ * Optional options to support javascript pagination include:
+ *
+ * - datatable: The ID of the table whose TBODY's rows will be replaced with the 
+ *   resulting rows
+ * - jsonscript: The script to make a json request to in order to retrieve 
+ *   both the new rows and the new pagination. See js/artefactchooser.json.php 
+ *   for an example. Note that the paginator javascript library is NOT 
+ *   automatically included just because you call this function, so make sure 
+ *   that your smarty() call hooks it in.
+ *
+ * @param array $params Options for the pagination
+ */
+function build_pagination($params) {
+    // Bail if the required attributes are not present
+    $required = array('url', 'count', 'limit', 'offset');
+    foreach ($required as $option) {
+        if (!isset($params[$option])) {
+            throw new ParameterException('You must supply option "' . $option . '" to build_pagination');
+        }
+    }
+
+    // Work out default values for parameters
+    if (!isset($params['id'])) {
+        $params['id'] = substr(md5(microtime()), 0, 4);
+    }
+
+    $params['offsetname'] = (isset($params['offsetname'])) ? $params['offsetname'] : 'offset';
+    $params['offset'] = param_integer($params['offsetname'], 0);
+    // Correct for odd offsets
+    $params['offset'] -= $params['offset'] % $params['limit'];
+
+    $params['firsttext'] = (isset($params['firsttext'])) ? $params['firsttext'] : get_string('first');
+    $params['previoustext'] = (isset($params['previoustext'])) ? $params['previoustext'] : get_string('previous');
+    $params['nexttext']  = (isset($params['nexttext']))  ? $params['nexttext'] : get_string('next');
+    $params['lasttext']  = (isset($params['lasttext']))  ? $params['lasttext'] : get_string('last');
+    $params['resultcounttextsingular'] = (isset($params['resultcounttextsingular'])) ? $params['resultcounttextsingular'] : get_string('result');
+    $params['resultcounttextplural'] = (isset($params['resultcounttextplural'])) ? $params['resultcounttextplural'] : get_string('results');
+
+    if (!isset($params['numbersincludefirstlast'])) {
+        $params['numbersincludefirstlast'] = true;
+    }
+    if (!isset($params['numbersincludeprevnext'])) {
+        $params['numbersincludeprevnext'] = true;
+    }
+
+    if (!isset($params['extradata'])) {
+        $params['extradata'] = null;
+    }
+
+    // Begin building the output
+    $output = '<div id="' . $params['id'] . '" class="pagination';
+    if (isset($params['class'])) {
+        $output .= ' ' . hsc($params['class']);
+    }
+    $output .= '">';
+
+    if ($params['limit'] <= $params['count']) {
+        $pages = ceil($params['count'] / $params['limit']);
+        $page = $params['offset'] / $params['limit'];
+
+        $last = $pages - 1;
+        $next = min($last, $page + 1);
+        $prev = max(0, $page - 1);
+
+        // Build a list of what pagenumbers will be put between the previous/next links
+        $pagenumbers = array();
+        if ($params['numbersincludefirstlast']) {
+            $pagenumbers[] = 0;
+        }
+        if ($params['numbersincludeprevnext']) {
+            $pagenumbers[] = $prev;
+        }
+        $pagenumbers[] = $page;
+        if ($params['numbersincludeprevnext']) {
+            $pagenumbers[] = $next;
+        }
+        if ($params['numbersincludefirstlast']) {
+            $pagenumbers[] = $last;
+        }
+        $pagenumbers = array_unique($pagenumbers);
+
+        // Build the first/previous links
+        $isfirst = $page == 0;
+        $output .= build_pagination_pagelink('first', $params['url'], 0, '&laquo; ' . $params['firsttext'], get_string('firstpage'), $isfirst, $params['offsetname']);
+        $output .= build_pagination_pagelink('prev', $params['url'], $params['limit'] * $prev, 
+            '&larr; ' . $params['previoustext'], get_string('prevpage'), $isfirst, $params['offsetname']);
+
+        // Build the pagenumbers in the middle
+        foreach ($pagenumbers as $k => $i) {
+            if ($k != 0 && $prevpagenum < $i - 1) {
+                $output .= '…';
+            }
+            if ($i == $page) {
+                $output .= '<span class="selected">' . ($i + 1) . '</span>';
+            }
+            else {
+                $output .= build_pagination_pagelink('', $params['url'],
+                    $params['limit'] * $i, $i + 1, '', false, $params['offsetname']);
+            }
+            $prevpagenum = $i;
+        }
+
+        // Build the next/last links
+        $islast = $page == $last;
+        $output .= build_pagination_pagelink('next', $params['url'], $params['limit'] * $next,
+            $params['nexttext'] . ' &rarr;', get_string('nextpage'), $islast, $params['offsetname']);
+        $output .= build_pagination_pagelink('last', $params['url'], $params['limit'] * $last,
+            $params['lasttext'] . ' &raquo;', get_string('lastpage'), $islast, $params['offsetname']);
+    }
+
+    // Work out what javascript we need for the paginator
+    $js = '';
+    if (isset($params['jsonscript']) && isset($params['datatable'])) {
+        $paginator_js = hsc(get_config('wwwroot') . 'js/paginator.js');
+        $id           = json_encode($params['id']);
+        $datatable    = json_encode($params['datatable']);
+        $jsonscript   = json_encode($params['jsonscript']);
+        $extradata    = json_encode($params['extradata']);
+        $js .= "new Paginator($id, $datatable, $jsonscript, $extradata);";
+    }
+
+    // Output the count of results
+    $resultsstr = ($params['count'] == 1) ? $params['resultcounttextsingular'] : $params['resultcounttextplural'];
+    $output .= '<div class="results">' . $params['count'] . ' ' . $resultsstr . '</div>';
+
+    // Close the container div
+    $output .= '</div>';
+
+    return array('html' => $output, 'javascript' => $js);
+
+}
+
+/**
+ * Used by build_pagination to build individual links. Shouldn't be used 
+ * elsewhere.
+ */
+function build_pagination_pagelink($class, $url, $offset, $text, $title, $disabled=false, $offsetname='offset') {
+    $return = '<span class="pagination';
+    $return .= ($class) ? " $class" : '';
+
+    if ($disabled) {
+        $return .= ' disabled">' . $text . '</span>';
+    }
+    else {
+        $return .= '">'
+            . '<a href="' . $url . '&amp;' . $offsetname . '=' . $offset
+            . '" title="' . $title . '">' . $text . '</a></span>';
+    }
+
+    return $return;
+}
 
 ?>

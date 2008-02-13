@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage artefact-internal
@@ -35,6 +35,8 @@ define('TITLE', get_string('profile','artefact.internal'));
 require_once('pieforms/pieform.php');
 safe_require('artefact', 'internal');
 
+$fieldset = param_alpha('fs', 'aboutme');
+
 $element_list = call_static_method('ArtefactTypeProfile', 'get_all_fields');
 $element_required = call_static_method('ArtefactTypeProfile', 'get_mandatory_fields');
 
@@ -47,6 +49,8 @@ if ($profile_data) {
         $profilefields[$field->artefacttype] = $field->title;
     }
 }
+
+$lockedfields = locked_profile_fields();
 
 $profilefields['email'] = array();
 $profilefields['email']['all'] = get_records_array('artefact_internal_profile_email', 'owner', $USER->get('id'));
@@ -67,44 +71,86 @@ if ($profilefields['email']['all']) {
     }
 }
 
-// build form elements
-$elements = array();
+$items = array();
 foreach ( $element_list as $element => $type ) {
-    $elements[$element] = array(
+    $items[$element] = array(
         'type'  => $type,
         'title' => get_string($element, 'artefact.internal'),
     );
 
     if ($type == 'wysiwyg') {
-        $elements[$element]['rows'] = 10;
-        $elements[$element]['cols'] = 60;
+        $items[$element]['rows'] = 10;
+        $items[$element]['cols'] = 60;
     }
     if ($type == 'textarea') {
-        $elements[$element]['rows'] = 4;
-        $elements[$element]['cols'] = 60;
+        $items[$element]['rows'] = 4;
+        $items[$element]['cols'] = 60;
     }
     if ($element == 'country') {
-        $elements[$element]['options'] = getoptions_country();
+        $items[$element]['options'] = getoptions_country();
         // @todo configure default country somehow...
-        $elements[$element]['defaultvalue'] = 'nz';
+        $items[$element]['defaultvalue'] = 'nz';
     }
 
     if (get_helpfile_location('artefact', 'internal', 'profileform', $element)) {
-        $elements[$element]['help'] = true;
+        $items[$element]['help'] = true;
     }
 
     if (isset($profilefields[$element])) {
-        $elements[$element]['defaultvalue'] = $profilefields[$element];
+        $items[$element]['defaultvalue'] = $profilefields[$element];
     }
 
     if (isset($element_required[$element])) {
-        $elements[$element]['rules']['required'] = true;
+        $items[$element]['rules']['required'] = true;
+    }
+
+    if (isset($lockedfields[$element]) && !$USER->get('admin')) {
+        $items[$element]['disabled'] = true;
     }
 
 }
-$elements['submit'] = array(
-    'type'  => 'submit',
-    'value' => get_string('saveprofile','artefact.internal'),
+if ($items['firstname']) {
+    $items['firstname']['autofocus'] = true;
+}
+
+// build form elements
+$elements = array(
+    'topsubmit' => array(
+        'type'  => 'submit',
+        'value' => get_string('saveprofile','artefact.internal'),
+    ),
+    'profile' => array(
+        'type' => 'fieldset',
+        'legend' => get_string('aboutme', 'artefact.internal'),
+        'collapsible' => true,
+        'collapsed' => $fieldset != 'aboutme',
+        'elements' => get_desired_fields(&$items, array('firstname', 'lastname', 'studentid', 'preferredname', 'introduction')),
+    ),
+    'contact' => array(
+        'type' => 'fieldset',
+        'legend' => get_string('contact', 'artefact.internal'),
+        'collapsible' => true,
+        'collapsed' => $fieldset != 'contact',
+        'elements' => get_desired_fields(&$items, array('email', 'officialwebsite', 'personalwebsite', 'blogaddress', 'address', 'town', 'city', 'country', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber')),
+    ),
+    'messaging' => array(
+        'type' => 'fieldset',
+        'legend' => get_string('messaging', 'artefact.internal'),
+        'collapsible' => true,
+        'collapsed' => $fieldset != 'messaging',
+        'elements' => get_desired_fields(&$items, array('icqnumber', 'msnnumber', 'aimscreenname', 'yahoochat', 'skypeusername', 'jabberusername')),
+    ),
+    'general' => array(
+        'type' => 'fieldset',
+        'legend' => get_string('general', 'artefact.internal'),
+        'collapsible' => true,
+        'collapsed' => $fieldset != 'general',
+        'elements' => $items
+    ),
+    'submit' => array(
+        'type'  => 'submit',
+        'value' => get_string('saveprofile','artefact.internal'),
+    )
 );
 
 $profileform = pieform(array(
@@ -114,7 +160,19 @@ $profileform = pieform(array(
     'jsform'     => true,
     'method'     => 'post',
     'elements'   => $elements,
+    'autofocus'  => false,
 ));
+
+function get_desired_fields($allfields, $desiredfields) {
+    $return = array();
+    foreach ($desiredfields as $field) {
+        if (isset($allfields[$field])) {
+            $return[$field] = $allfields[$field];
+            unset($allfields[$field]);
+        }
+    }
+    return $return;
+}
 
 function profileform_validate(Pieform $form, $values) {
     global $profilefields;
@@ -147,7 +205,13 @@ function profileform_submit(Pieform $form, $values) {
     $now = db_format_timestamp(time());
     $email_errors = array();
 
+    $lockedfields = locked_profile_fields();
+
     foreach ($element_list as $element => $type) {
+
+        if (isset($lockedfields[$element]) && !$USER->get('admin')) {
+            continue;
+        }
 
         if ($element == 'email') {
             if (!isset($values['email']['unvalidated'])) {
@@ -276,26 +340,64 @@ function profileform_submit(Pieform $form, $values) {
         db_commit();
     }
     catch (Exception $e) {
-        $form->json_reply(PIEFORM_ERR, get_string('profilefailedsaved','artefact.internal'));
+        profileform_reply($form, PIEFORM_ERR, get_string('profilefailedsaved','artefact.internal'));
     }
 
     handle_event('updateuser', $USER->get('id'));
 
     if (count($email_errors)) {
-        $form->json_reply(PIEFORM_ERR, array('message' => get_string('emailingfailed', 'artefact.internal', join(', ', $email_errors))));
+        profileform_reply($form, PIEFORM_ERR, array('message' => get_string('emailingfailed', 'artefact.internal', join(', ', $email_errors))));
     }
 
-    $form->json_reply(PIEFORM_OK, get_string('profilesaved','artefact.internal'));
+    profileform_reply($form, PIEFORM_OK, get_string('profilesaved','artefact.internal'));
+}
 
+function profileform_reply($form, $code, $message) {
+    global $SESSION;
+    if ($form->submitted_by_js()) {
+        $form->json_reply($code, $message);
+    }
+    else if (is_string($message)) {
+        if ($code == PIEFORM_ERR) {
+            $method = 'add_error_msg';
+        }
+        else {
+            $method = 'add_ok_msg';
+        }
+        $SESSION->$method($message);
+        redirect('/artefact/internal/');
+    }
+    // Should never be replying with an array for an OK message
 }
 
 
 $smarty = smarty(array(), array(), array(
-    'mahara' => array('cantremovedefaultemail'),
+    'mahara' => array(
+        'cannotremovedefaultemail',
+        'emailtoolong'
+    ),
 ));
 
-$smarty->assign('profileform', $profileform);
 
+$smarty->assign('profileform', $profileform);
+$smarty->assign('heading', get_string('profile', 'artefact.internal'));
 $smarty->display('artefact:internal:index.tpl');
+
+
+function locked_profile_fields() {
+    global $USER;
+
+    // Profile fields are locked for a user if they are locked by any
+    // institution the user is a member of, but not an admin for.
+    $lockinginstitutions = array_keys($USER->get('institutions'));
+    $lockinginstitutions[] = 'mahara';
+    $lockinginstitutions = array_diff($lockinginstitutions, $USER->get('admininstitutions'));
+
+    return get_records_select_assoc(
+        'institution_locked_profile_field',
+        'name IN (' . join(',', array_map('db_quote', $lockinginstitutions)) . ')',
+        null, '', 'profilefield,name'
+    );
+}
 
 ?>

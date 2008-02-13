@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage artefact-resume
@@ -34,7 +34,7 @@ if (isset($_POST['view'])) {
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'resume');
 
-$limit = param_integer('limit', 10);
+$limit = param_integer('limit', null);
 $offset = param_integer('offset', 0);
 $type = param_alpha('type');
 $view = param_integer('view', 0);
@@ -50,8 +50,7 @@ $sql = 'SELECT ar.*, a.owner
     FROM {artefact} a 
     JOIN {' . $othertable . '} ar ON ar.artefact = a.id
     WHERE a.owner = ? AND a.artefacttype = ?
-    ORDER BY ' . call_static_method(generate_artefact_class_name($type), 'get_order_field') . ' DESC
-    LIMIT ' . $limit . ' OFFSET ' . $offset;
+    ORDER BY ar.displayorder';
 
 if (!empty($view)) { 
     if (!can_view_view($view)) {
@@ -68,13 +67,6 @@ if (!$data = get_records_sql_array($sql, array($owner, $type))) {
 
 $count = count_records('artefact', 'owner', $owner, 'artefacttype', $type);
 
-foreach ($data as &$row) {
-    foreach (array('date', 'startdate', 'enddate') as $key) {
-        if (array_key_exists($key, $row)) {
-            $row->{$key} = format_date(strtotime($row->{$key}), 'strftimedate', 'current', 'artefact.resume');
-        }
-    }
-}
 echo json_encode(array(
     'data' => $data,
     'limit' => $limit,

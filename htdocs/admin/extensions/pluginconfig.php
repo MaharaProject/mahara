@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage admin
@@ -32,7 +32,7 @@ define('TITLE', get_string('pluginadmin', 'admin'));
 require_once('pieforms/pieform.php');
 
 $plugintype = param_alpha('plugintype');
-$pluginname = param_alpha('pluginname');
+$pluginname = param_variable('pluginname');
 
 define('SECTION_PLUGINTYPE', $plugintype);
 define('SECTION_PLUGINNAME', $pluginname);
@@ -83,6 +83,11 @@ $smarty->assign('form', pieform($form));
 $smarty->assign('plugintype', $plugintype);
 $smarty->assign('pluginname', $pluginname);
 $smarty->assign('type', $type);
+$heading = get_string('pluginadmin', 'admin') . ': ' . $plugintype . ': ' . $pluginname;
+if ($type) {
+    $heading .= ': ' . $type;
+}
+$smarty->assign('heading', $heading);
 $smarty->display('admin/extensions/pluginconfig.tpl');
 
 

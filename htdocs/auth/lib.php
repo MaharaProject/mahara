@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage auth
@@ -202,15 +202,37 @@ abstract class Auth {
      */
     public function user_exists($username) {
         $this->must_be_ready();
-        if (record_exists('usr', 'LOWER(username)', strtolower($username), 'authinstance', $this->instanceid)) {
+        if (record_exists('usr', 'LOWER(username)', strtolower($username))) {
             return true;
         }
         throw new AuthUnknownUserException("\"$username\" is not known to Auth");
     }
 
     /**
+     * Returns whether the authentication instance can automatically create a 
+     * user record.
+     *
+     * Auto creating users means that the authentication plugin can say that 
+     * users who don't exist yet in Mahara's usr table are allowed, and Mahara
+     * should create a user account for them. Example: the first time a user logs
+     * in, when authenticating against an ldap store or similar).
+     *
+     * However, if a plugin says a user can be authenticated, then it must 
+     * implement the get_user_info() method which will be called to find out 
+     * information about the user so a record in the usr table _can_ be created 
+     * for the new user.
+     *
+     * Authentication methods must implement this method. Some may choose to 
+     * implement it by returning an instance config value that the admin user 
+     * can set.
+     *
+     * @return bool
+     */
+    public abstract function can_auto_create_users();
+
+    /**
      * Given a username, returns a hash of information about a user from the
-     * external data source, e.g. Moodle or Drupal.
+     * external data source.
      *
      * @param string $username The username to look up information for
      * @return array           The information for the user
@@ -243,7 +265,7 @@ abstract class Auth {
      */
     public function get_user_info_cached($username) {
         $this->must_be_ready();
-        if (!$result = get_record('usr', 'LOWER(username)', strtolower($username), 'authinstance', $this->instanceid,
+        if (!$result = get_record('usr', 'LOWER(username)', strtolower($username), null, null, null, null,
                     '*, ' . db_format_tsfield('expiry') . ', ' . db_format_tsfield('lastlogin'))) {
             throw new AuthUnknownUserException("\"$username\" is not known to AuthInternal");
         }
@@ -331,24 +353,34 @@ function auth_setup () {
             else if ($USER->get('admin') && !$userreallyadmin) {
                 // The user's admin rights have been taken away
                 $USER->admin = 0;
+            }
+            if (!$USER->get('admin')) {
                 $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
                 redirect();
             }
-            elseif (!$USER->get('admin')) {
-                // The user never was an admin
+        } else if (defined('INSTITUTIONALADMIN') && !$USER->get('admin')) {
+            $userreallyadminfor = get_column('usr_institution', 'institution', 'usr', $USER->id, 'admin', 1);
+            if (!$USER->is_institutional_admin() && !empty($userreallyadminfor)) {
+                $USER->set_admin_institutions($userreallyadminfor);
+            }
+            else if ($USER->is_institutional_admin() && empty($userreallyadminfor)) {
+                $USER->set_admin_institutions(array());
+            }
+            if (!$USER->is_institutional_admin()) {
                 $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
                 redirect();
             }
         }
         $USER->renew();
         auth_check_password_change();
+        auth_check_required_fields();
     }
     else if ($sessionlogouttime > 0) {
         // The session timed out
         $USER->logout();
 
         if (defined('JSON')) {
-            json_reply('global', '', 1);
+            json_reply('global', get_string('sessiontimedoutreload'), 1);
         }
 
         // If the page the user is viewing is public, inform them that they can
@@ -378,11 +410,85 @@ function auth_setup () {
         if (defined('PUBLIC') && !isset($_GET['login'])) {
             return;
         }
+
+        // No session and a json request
+        if (defined('JSON')) {
+            json_reply('global', get_string('nosessionreload'), 1);
+        }
         
         auth_draw_login_page(null, $form);
         exit;
     }
 }
+
+/**
+ * 
+ * Returns all auth instances
+ *
+ * @return array                     Array of auth instance records
+ */
+function auth_get_auth_instances() {
+    static $cache = array();
+
+    if (count($cache) > 0) {
+        return $cache;
+    }
+
+    $sql ='
+        SELECT DISTINCT
+            i.id,
+            inst.name,
+            inst.displayname,
+            i.instancename,
+            i.authname
+        FROM 
+            {institution} inst,
+            {auth_instance} i
+        WHERE 
+            i.institution = inst.name
+        ORDER BY
+            inst.displayname,
+            i.instancename';
+
+    $cache = get_records_sql_array($sql, array());
+
+    if (empty($cache)) {
+        return array();
+    }
+
+    return $cache;
+}
+
+
+/**
+ * 
+ * Given a list of institutions, returns all auth instances associated with them
+ *
+ * @return array                     Array of auth instance records
+ */
+function auth_get_auth_instances_for_institutions($institutions) {
+    if (empty($institutions)) {
+        return array();
+    }
+    $sql ='
+        SELECT DISTINCT
+            i.id,
+            inst.name,
+            inst.displayname,
+            i.instancename
+        FROM 
+            {institution} inst,
+            {auth_instance} i
+        WHERE 
+            i.institution = inst.name AND
+            inst.name IN (' . join(',', array_map('db_quote',$institutions)) . ')
+        ORDER BY
+            inst.displayname,
+            i.instancename';
+
+    return get_records_sql_array($sql, array());
+}
+
 
 /**
  * Given an institution, returns the authentication methods used by it, sorted 
@@ -550,6 +656,74 @@ function auth_get_available_auth_types($institution=null) {
 
     return $result;
 }
+/**
+ * Checks that all the required fields are set, and handles setting them if required.
+ */
+function auth_check_required_fields() {
+    global $USER;
+    safe_require('artefact', 'internal');
+    require_once('pieforms/pieform.php');
+    $elements = array();
+
+    foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
+        if (get_profile_field($USER->get('id'), $field) != null) {
+            continue;
+        }
+
+        $elements[$field] = array(
+            'type'  => $type,
+            'title' => get_string($field, 'artefact.internal'),
+            'rules' => array('required' => true)
+        );
+
+        // @todo ruthlessly stolen from artefact/internal/index.php, could be merged
+        if ($type == 'wysiwyg') {
+            $elements[$field]['rows'] = 10;
+            $elements[$field]['cols'] = 60;
+        }
+        if ($type == 'textarea') {
+            $elements[$field]['rows'] = 4;
+            $elements[$field]['cols'] = 60;
+        }
+        if ($field == 'country') {
+            $elements[$field]['options'] = getoptions_country();
+            $elements[$field]['defaultvalue'] = 'nz';
+        }
+    }
+
+    if (empty($elements)) { // No mandatory fields that aren't set
+        return;
+    }
+
+    $elements['submit'] = array(
+        'type' => 'submit',
+        'value' => get_string('submit')
+    );
+
+    $form = pieform(array(
+        'name'     => 'requiredfields',
+        'method'   => 'post',
+        'action'   => '',
+        'elements' => $elements
+    ));
+
+    $smarty = smarty();
+    $smarty->assign('form', $form);
+    $smarty->display('requiredfields.tpl');
+    exit;
+}
+
+function requiredfields_submit(Pieform $form, $values) {
+    global $USER, $SESSION;
+    foreach ($values as $field => $value) {
+        if (in_array($field, array('submit', 'sesskey'))) {
+            continue;
+        }
+        set_profile_field($USER->get('id'), $field, $value);
+    }
+    $SESSION->add_ok_msg(get_string('requiredfieldsset', 'auth'));
+    redirect();
+}
 
 /**
  * Checks whether the current user needs to change their password, and handles
@@ -637,7 +811,7 @@ function change_password_validate(Pieform $form, $values) {
     $authobj = AuthFactory::create($USER->authinstance);
 
     // @todo this could be done by a custom form rule... 'password' => $user
-    password_validate_user($form, $values, $USER);
+    password_validate($form, $values, $USER);
 
     // The password cannot be the same as the old one
     if (!$form->get_error('password1')
@@ -661,11 +835,14 @@ function change_password_submit(Pieform $form, $values) {
     if ($password = $authobj->change_password($USER, $values['password1'])) {
         $SESSION->add_ok_msg(get_string('passwordsaved'));
         if (!empty($values['email'])) {
+            $USER->email = $values['email'];
+            $USER->commit();
             set_profile_field($USER->id, 'email', $values['email']);
         }
         redirect();
     }
 
+    // TODO: Exception is the wrong type here!
     throw new Exception('Attempt by "' . $USER->get('username') . '@'
         . $USER->get('institution') . 'to change their password failed');
 }
@@ -707,7 +884,7 @@ function auth_draw_login_page($message=null, Pieform $form=null) {
     if ($message) {
         $SESSION->add_info_msg($message);
     }
-    $smarty = smarty();
+    $smarty = smarty(array(), array(), array(), array('pagehelp' => false));
     $smarty->assign('login_form', $loginform);
     $smarty->assign('loginmessage', get_string('loginto', 'mahara', get_config('sitename')));
     $smarty->display('login.tpl');
@@ -722,10 +899,6 @@ function auth_draw_login_page($message=null, Pieform $form=null) {
  */
 function auth_get_login_form() {
     $institutions = get_records_menu('institution', '', '', 'name, displayname');
-    $defaultinstitution = get_cookie('institution');
-    if (!$defaultinstitution) {
-        $defaultinstitution = 'mahara';
-    }
 
     $elements = array(
         'login_username' => array(
@@ -744,16 +917,6 @@ function auth_get_login_form() {
             'rules' => array(
                 'required'    => true
             )
-        ),
-        'login_institution' => array(
-            'type'         => 'select',
-            'title'        => get_string('institution'). ':',
-            'defaultvalue' => $defaultinstitution,
-            'options'      => $institutions,
-            'rules' => array(
-                'required' => true
-            ),
-            'ignore' => count($institutions) == 1
         ),
         'submit' => array(
             'type'  => 'submit',
@@ -882,119 +1045,151 @@ function login_submit(Pieform $form, $values) {
 
     $username      = $values['login_username'];
     $password      = $values['login_password'];
-    $institution   = (isset($values['login_institution'])) ? $values['login_institution'] : 'mahara';
     $authenticated = false;
     $oldlastlogin  = 0;
 
     try {
-        //var_dump(array($username, $password, $institution, $_SESSION));
-        $authenticated = $USER->login($username, $password, $institution);
+        $authenticated = $USER->login($username, $password);
 
         if (empty($authenticated)) {
             $SESSION->add_error_msg(get_string('loginfailed'));
+            return;
         }
 
     }
     catch (AuthUnknownUserException $e) {
+        // If the user doesn't exist, check for institutions that
+        // want to create users automatically.
         try {
-            // The user doesn't exist, but maybe the institution wants us to 
-            // create users that don't exist
-            $institution  = get_record('institution', 'name', $institution);
-            if ($institution != false) {
-                if ($institution->updateuserinfoonlogin == 0) {
-                    // Institution does not want us to create unknown users
-                    throw new AuthUnknownUserException("\"$username\" at \"$institution\" is not known");
-                }
+            // Reset the LiveUser object, since we are attempting to create a 
+            // new user
+            $USER = new LiveUser();
+
+            $authinstances = get_records_sql_array('
+                SELECT a.id, a.instancename, a.priority, a.authname, a.institution
+                FROM {institution} i JOIN {auth_instance} a ON a.institution = i.name
+                ORDER BY a.institution, a.priority, a.instancename', null);
+
+            if ($authinstances == false) {
+                throw new AuthUnknownUserException("\"$username\" is not known");
             }
 
-            // Institution says we should create unknown users
-            // Get all the auth options for the institution
-            $authinstances = get_records_array('auth_instance', 'institution', $institution, 'priority, instancename', 'id, instancename, priority, authname');
+            $USER->username = $username;
 
-            $USER->username    = $username;
-            $USER->institution = $institution->name;
-
-            while (list(, $authinstance) = each($authinstances) && false == $authenticated) {
-                // TODO: Test this code with an auth plugin that provides a 
-                // get_user_info method
+            reset($authinstances);
+            while ((list(, $authinstance) = each($authinstances)) && false == $authenticated) {
                 $auth = AuthFactory::create($authinstance->id);
+                if (!$auth->can_auto_create_users()) {
+                    continue;
+                }
                 if ($auth->authenticate_user_account($USER, $password)) {
                     $authenticated = true;
-                } else {
+                }
+                else {
                     continue;
                 }
 
-                $USER->authinstance = $authinstance->id;
-
-                if ($auth->authenticate_user_account($username, $password, $institution)) {
-                    $userdata = $auth->get_user_info();
-                    if (
-                         empty($userdata) ||
-                         empty($userdata->firstname) ||
-                         empty($userdata->lastname) ||
-                         empty($userdata->email) 
-                        ) {
-                        throw new AuthUnknownUserException("\"$username\" at \"$institution\" is not known");
-                    } else {
-                        // We have the data - create the user
-                        $USER->expiry    = db_format_timestamp(time() + 86400);
-                        $USER->lastlogin = db_format_timestamp(time());
-                        $USER->firstname = $userdata->firstname;
-                        $USER->lastname  = $userdata->lastname;
-                        $USER->email     = $userdata->email;
-
-                        try {
-                            db_begin();
-                            $USER->commit();
-    
-                            handle_event('createuser', $USER);
-                            db_commit();
-                        }
-                        catch (Exception $e) {
-                            db_rollback();
-                            throw $e;
-                        }
-                    }
+                // Check now to see if the institution has its maximum quota of users
+                require_once('institution.php');
+                $institution = new Institution($authinstance->institution);
+                if ($institution->isFull()) {
+                    throw new AuthUnknownUserException('Institution has too many users');
                 }
+
+                $USER->authinstance = $authinstance->id;
+                $userdata = $auth->get_user_info($username);
+
+                if (empty($userdata) || empty($userdata->email)) {
+                    throw new AuthUnknownUserException("\"$username\" is not known");
+                }
+                // We have the data - create the user
+                $USER->lastlogin = db_format_timestamp(time());
+                if (isset($userdata->firstname)) {
+                    $USER->firstname = $userdata->firstname;
+                }
+                if (isset($userdata->lastname)) {
+                    $USER->lastname = $userdata->lastname;
+                }
+                $USER->email = $userdata->email;
+                try {
+                    db_begin();
+                    $USER->commit();
+                    if (isset($userdata->firstname)) {
+                        set_profile_field($USER->id, 'firstname', $USER->firstname);
+                    }
+                    if (isset($userdata->lastname)) {
+                        set_profile_field($USER->id, 'lastname', $USER->lastname);
+                    }
+                    set_profile_field($USER->id, 'email', $USER->email);
+                    if ($authinstance->institution !== 'mahara') {
+                        $USER->join_institution($authinstance->institution);
+                    }
+
+                    handle_event('createuser', $USER->to_stdclass());
+                    db_commit();
+                    $USER->reanimate($USER->id, $authinstance->id);
+                }
+                catch (Exception $e) {
+                    db_rollback();
+                    throw $e;
+                }
+            }
+
+            if (!$authenticated) {
+                $SESSION->add_error_msg(get_string('loginfailed'));
+                return;
             }
 
         }
         catch (AuthUnknownUserException $e) {
+            // We weren't able to authenticate the user for some reason that 
+            // probably isn't their fault (e.g. ldap extension not available 
+            // when using ldap authentication)
+            log_info($e->getMessage());
             $SESSION->add_error_msg(get_string('loginfailed'));
+            return;
         }
     }
 
     // Only admins in the admin section!
-    if (defined('ADMIN') && !$USER->admin) {
+    if (!$USER->get('admin') && 
+        (defined('ADMIN') || defined('INSTITUTIONALADMIN') && !$USER->is_institutional_admin())) {
         $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
         redirect();
     }
 
     // Check if the user's account has been deleted
     if ($USER->deleted) {
+        $USER->logout();
         die_info(get_string('accountdeleted'));
     }
 
     // Check if the user's account has expired
     if ($USER->expiry > 0 && time() > $USER->expiry) {
+        $USER->logout();
         die_info(get_string('accountexpired'));
     }
 
     // Check if the user's account has become inactive
-    $inactivetime = get_field('institution', 'defaultaccountinactiveexpire', 'name', $USER->institution);
+    $inactivetime = get_config('defaultaccountinactiveexpire');
     if ($inactivetime && $oldlastlogin > 0
         && $oldlastlogin + $inactivetime < time()) {
+        $USER->logout();
         die_info(get_string('accountinactive'));
     }
 
     // Check if the user's account has been suspended
     if ($USER->suspendedcusr) {
-        die_info(get_string('accountsuspended', 'mahara', $USER->suspendedctime, $USER->suspendedreason));
+        $suspendedctime  = $USER->suspendedctime;
+        $suspendedreason = $USER->suspendedreason;
+        $USER->logout();
+        die_info(get_string('accountsuspended', 'mahara', $suspendedctime, $suspendedreason));
     }
 
     // User is allowed to log in
     //$USER->login($userdata);
     auth_check_password_change();
+    auth_check_required_fields();
 }
 
 /**
@@ -1022,17 +1217,19 @@ function auth_handle_account_expiries() {
     // The 'expiry' flag on the usr table
     $sitename = get_config('sitename');
     $wwwroot  = get_config('wwwroot');
+    $expire   = get_config('defaultaccountinactiveexpire');
+    $warn     = get_config('defaultaccountinactivewarn');
+
+    $daystoexpire = ceil($warn / 86400) . ' ';
+    $daystoexpire .= ($daystoexpire == 1) ? get_string('day') : get_string('days');
 
     // Expiry warning messages
-    if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, i.defaultaccountinactivewarn AS timeout
-        FROM {usr} u, {institution} i
-        WHERE u.institution = i.name
-        AND ? - ' . db_format_tsfield('u.expiry', false) . ' < i.defaultaccountinactivewarn
-        AND expirymailsent = 0', array(time()))) {
+    if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff
+        FROM {usr} u
+        WHERE ' . db_format_tsfield('u.expiry', false) . ' < ?
+        AND expirymailsent = 0', array(time() + $warn))) {
         foreach ($users as $user) {
             $displayname  = display_name($user);
-            $daystoexpire = ceil($user->timeout / 86400) . ' ';
-            $daystoexpire .= ($daystoexpire == 1) ? get_string('day') : get_string('days');
             email_user($user, null,
                 get_string('accountexpirywarning'),
                 get_string('accountexpirywarningtext', 'mahara', $displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename),
@@ -1052,34 +1249,62 @@ function auth_handle_account_expiries() {
         }
     }
 
-    // Inactivity (lastlogin is too old)
-    if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, i.defaultaccountinactivewarn AS timeout
-        FROM {usr} u, {institution} i
-        WHERE u.institution = i.name
-        AND (? - ' . db_format_tsfield('u.lastlogin', false) . ') > (i.defaultaccountinactiveexpire - i.defaultaccountinactivewarn)
-        AND inactivemailsent = 0', array(time()))) {
-        foreach ($users as $user) {
-            $displayname = display_name($user);
-            $daystoinactive = ceil($user->timeout / 86400) . ' ';
-            $daystoinactive .= ($daystoexpire == 1) ? get_string('day') : get_string('days');
-            email_user($user, null, get_string('accountinactivewarning'),
-                get_string('accountinactivewarningtext', 'mahara', $displayname, $sitename, $daystoinactive, $sitename),
-                get_string('accountinactivewarninghtml', 'mahara', $displayname, $sitename, $daystoinactive, $sitename)
-            );
-            set_field('usr', 'inactivemailsent', 1, 'id', $user->id);
-        }
-    }
     
-    // Actual inactive users
-    if ($users = get_records_sql_array('SELECT u.id
-        FROM {usr} u
-        LEFT JOIN {institution} i ON (u.institution = i.name)
-        WHERE ' . db_format_tsfield('lastlogin', false) . ' < ? - i.defaultaccountinactiveexpire', array(time()))) {
-        // Users have become inactive!
-        foreach ($users as $user) {
-            deactivate_user($user->id);
+    if ($expire) {
+        // Inactivity (lastlogin is too old)
+        if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff
+            FROM {usr} u
+            WHERE (? - ' . db_format_tsfield('u.lastlogin', false) . ') > ' . ($expire - $warn) . '
+            AND inactivemailsent = 0', array(time()))) {
+            foreach ($users as $user) {
+                $displayname = display_name($user);
+                email_user($user, null, get_string('accountinactivewarning'),
+                    get_string('accountinactivewarningtext', 'mahara', $displayname, $sitename, $daystoexpire, $sitename),
+                    get_string('accountinactivewarninghtml', 'mahara', $displayname, $sitename, $daystoexpire, $sitename)
+                );
+                set_field('usr', 'inactivemailsent', 1, 'id', $user->id);
+            }
+        }
+        
+        // Actual inactive users
+        if ($users = get_records_sql_array('SELECT u.id
+            FROM {usr} u
+            WHERE (? - ' . db_format_tsfield('lastlogin', false) . ') > ?', array(time(), $expire))) {
+            // Users have become inactive!
+            foreach ($users as $user) {
+                deactivate_user($user->id);
+            }
         }
     }
+
+    // Institution membership expiry
+    delete_records_sql('DELETE FROM {usr_institution} 
+        WHERE ' . db_format_tsfield('expiry', false) . ' < ? AND expirymailsent = 1', array(time()));
+
+    // Institution membership expiry warnings
+    if ($users = get_records_sql_array('
+        SELECT
+            u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff,
+            ui.institution, ui.expiry, i.displayname as institutionname
+        FROM {usr} u
+        INNER JOIN {usr_institution} ui ON u.id = ui.usr
+        INNER JOIN {institution} i ON ui.institution = i.name
+        WHERE ' . db_format_tsfield('ui.expiry', false) . ' < ?
+        AND ui.expirymailsent = 0', array(time() + $warn))) {
+        foreach ($users as $user) {
+            $displayname  = display_name($user);
+            email_user($user, null,
+                get_string('institutionexpirywarning'),
+                get_string('institutionexpirywarningtext', 'mahara', $displayname, $user->institutionname,
+                           $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename),
+                get_string('institutionexpirywarninghtml', 'mahara', $displayname, $user->institutionname,
+                           $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename)
+            );
+            set_field('usr_institution', 'expirymailsent', 1, 'usr', $user->id,
+                      'institution', $user->institution);
+        }
+    }
+
 }
 
 function auth_generate_login_form() {
@@ -1087,11 +1312,6 @@ function auth_generate_login_form() {
         return;
     }
     require_once('pieforms/pieform.php');
-    $institutions = get_records_menu('institution', '', '', 'name, displayname');
-    $defaultinstitution = get_cookie('institution');
-    if (!$defaultinstitution) {
-        $defaultinstitution = 'mahara';
-    }
     $loginform = get_login_form_js(pieform(array(
         'name'       => 'login',
         'renderer'   => 'div',
@@ -1115,17 +1335,6 @@ function auth_generate_login_form() {
                 'rules' => array(
                     'required'    => true
                 )
-            ),
-            'login_institution' => array(
-                'type' => 'select',
-                'title' => get_string('institution') . ':',
-                'defaultvalue' => $defaultinstitution,
-                'options' => $institutions,
-                'rules' => array(
-                    'required' => true
-                ),
-                'ignore' => count($institutions) == 1,
-                'help' => true,
             ),
             'submit' => array(
                 'type'  => 'submit',
@@ -1165,70 +1374,7 @@ function auth_generate_login_form() {
  * @param array $values         The values passed through
  * @param string $authplugin    The authentication plugin that the user uses
  */
-function password_validate(Pieform $form, $values, $username, $institution) {
-
-    $authinstances  = auth_get_auth_instances_for_institution($institution);
-    
-    // If there's only one auth instance, and it's 'internal' then we use it to
-    // validate the password. This was a requirement of the original spec, so 
-    // even though this code is... strange... it's still here.
-    if (1 == count($authinstances) && $authinstances[0]->authname == 'internal') {
-        $authobj = AuthFactory::create($authinstances[0]->id);
-        safe_require('auth', 'internal');
-        $authobj = new AuthInternal($authinstances[0]->id);
-
-        if (!$form->get_error('password1') && !$authobj->is_password_valid($values['password1'])) {
-            $form->set_error('password1', get_string('passwordinvalidform', "auth.$authobj->type"));
-        }
-    }
-
-    $suckypasswords = array(
-        'mahara', 'password', $username, 'abc123'
-    );
-
-    if (!$form->get_error('password1') && in_array($values['password1'], $suckypasswords)) {
-        $form->set_error('password1', get_string('passwordtooeasy'));
-    }
-
-    if (!$form->get_error('password1') && $values['password1'] != $values['password2']) {
-        $form->set_error('password2', get_string('passwordsdonotmatch'));
-    }
-
-    // No Mike, that's a _BAD_ Mike! :)
-    if (substr($values['password1'], 0, 6) == 'mike01') {
-        if (!$form->get_property('jsform')) {
-            die_info('<img src="'
-                . theme_get_url('images/sidebox1_corner_botright.gif')
-                . '" alt="(C) 2007 MSS Enterprises"></p>');
-        }
-    }
-}
-
-/**
- * Given a form, an array of values with 'password1' and 'password2'
- * indices and a user, validate that the user can change their password to
- * the one in $values.
- *
- * This provides one place where validation of passwords can be done. This is
- * used by:
- *  - registration
- *  - user forgot password
- *  - user changing password on their account page
- *  - user forced to change their password by the <kbd>passwordchange</kbd>
- *    flag on the <kbd>usr</kbd> table.
- *
- * The password is checked for:
- *  - Being in valid form according to the rules of the authentication method
- *    for the user
- *  - Not being an easy password (a blacklist of strings, NOT a length check or
- *     similar), including being the user's username
- *  - Both values being equal
- *
- * @param Pieform $form         The form to validate
- * @param array $values         The values passed through
- * @param string $authplugin    The authentication plugin that the user uses
- */
-function password_validate_user(Pieform $form, $values, User $user) {
+function password_validate(Pieform $form, $values, $user) {
 
     $authobj = AuthFactory::create($user->authinstance);
 
@@ -1248,14 +1394,6 @@ function password_validate_user(Pieform $form, $values, User $user) {
         $form->set_error('password2', get_string('passwordsdonotmatch'));
     }
 
-    // No Mike, that's a _BAD_ Mike! :)
-    if (substr($values['password1'], 0, 6) == 'mike01') {
-        if (!$form->get_property('jsform')) {
-            die_info('<img src="'
-                . theme_get_url('images/sidebox1_corner_botright.gif')
-                . '" alt="(C) 2007 MSS Enterprises"></p>');
-        }
-    }
 }
 
 class PluginAuth extends Plugin {
@@ -1292,7 +1430,7 @@ class PluginAuth extends Plugin {
         // ensure we have everything we need
         $user = get_user($user['id']);
 
-        $inactivetime = get_field('institution', 'defaultaccountinactiveexpire', 'name', $user->institution);
+        $inactivetime = get_config('defaultaccountinactiveexpire');
         if ($user->suspendedcusr) {
             $active = false;
         }

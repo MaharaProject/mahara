@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage admin
@@ -46,18 +46,19 @@ $siteoptionform = pieform(array(
     'renderer'   => 'table',
     'plugintype' => 'core',
     'pluginname' => 'admin',
+    'jssuccesscallback' => 'checkReload',
     'elements'   => array(
         'sitename' => array(
             'type'         => 'text',
-            'title'        => get_string('sitename','admin'),
-            'description'  => get_string('sitenamedescription','admin'),
+            'title'        => get_string('sitename', 'admin'),
+            'description'  => get_string('sitenamedescription', 'admin'),
             'defaultvalue' => get_config('sitename'),
             'help'         => true,
         ),
         'lang' => array(
             'type'         => 'select',
-            'title'        => get_string('language','admin'),
-            'description'  => get_string('sitelanguagedescription','admin'),
+            'title'        => get_string('language', 'admin'),
+            'description'  => get_string('sitelanguagedescription', 'admin'),
             'defaultvalue' => get_config('lang'),
             'collapseifoneoption' => true,
             'options'      => $langoptions,
@@ -65,8 +66,8 @@ $siteoptionform = pieform(array(
         ),
         'theme' => array(
             'type'         => 'select',
-            'title'        => get_string('theme','admin'),
-            'description'  => get_string('sitethemedescription','admin'),
+            'title'        => get_string('theme', 'admin'),
+            'description'  => get_string('sitethemedescription', 'admin'),
             'defaultvalue' => get_config('theme'),
             'collapseifoneoption' => true,
             'options'      => $themeoptions,
@@ -74,8 +75,8 @@ $siteoptionform = pieform(array(
         ),
         'searchplugin' => array(
             'type'         => 'select',
-            'title'        => get_string('searchplugin','admin'),
-            'description'  => get_string('searchplugindescription','admin'),
+            'title'        => get_string('searchplugin', 'admin'),
+            'description'  => get_string('searchplugindescription', 'admin'),
             'defaultvalue' => get_config('searchplugin'),
             'collapseifoneoption' => true,
             'options'      => $searchpluginoptions,
@@ -83,80 +84,114 @@ $siteoptionform = pieform(array(
         ),
         'pathtofile' => array(
             'type'         => 'text',
-            'title'        => get_string('pathtofile','admin'),
-            'description'  => get_string('pathtofiledescription','admin'),
+            'title'        => get_string('pathtofile', 'admin'),
+            'description'  => get_string('pathtofiledescription', 'admin'),
             'defaultvalue' => get_config('pathtofile'),
             'help'         => true,
         ),
         'viruschecking' => array(
             'type'         => 'checkbox',
-            'title'        => get_string('viruschecking','admin'),
-            'description'  => get_string('viruscheckingdescription','admin'),
+            'title'        => get_string('viruschecking', 'admin'),
+            'description'  => get_string('viruscheckingdescription', 'admin'),
             'defaultvalue' => get_config('viruschecking'),
             'help'         => true,
         ),
         'pathtoclam' => array(
             'type'         => 'text',
-            'title'        => get_string('pathtoclam','admin'),
-            'description'  => get_string('pathtoclamdescription','admin'),
+            'title'        => get_string('pathtoclam', 'admin'),
+            'description'  => get_string('pathtoclamdescription', 'admin'),
             'defaultvalue' => get_config('pathtoclam'),
             'help'         => true,
         ),
         'sessionlifetime' => array(
             'type'         => 'text',
             'size'         => 4,
-            'title'        => get_string('sessionlifetime','admin'),
-            'description'  => get_string('sessionlifetimedescription','admin'),
+            'title'        => get_string('sessionlifetime', 'admin'),
+            'description'  => get_string('sessionlifetimedescription', 'admin'),
             'defaultvalue' => get_config('session_timeout') / 60,
             'help'         => true,
         ),
         'allowpublicviews' => array(
             'type'         => 'select',
-            'title'        => get_string('allowpublicviews','admin'),
-            'description'  => get_string('allowpublicviewsdescription','admin'),
+            'title'        => get_string('allowpublicviews', 'admin'),
+            'description'  => get_string('allowpublicviewsdescription', 'admin'),
             'defaultvalue' => get_config('allowpublicviews'),
             'options'      => $yesno,
             'help'         => true,
         ),
-        'artefactviewinactivitytime' => array(
+        'defaultaccountlifetime' => array(
             'type'         => 'expiry',
-            'title'        => get_string('artefactviewinactivitytime','admin'),
-            'description'  => get_string('artefactviewinactivitytimedescription','admin'),
-            'defaultvalue' => get_config('artefactviewinactivitytime'),
+            'title'        => get_string('defaultaccountlifetime', 'admin'),
+            'description'  => get_string('defaultaccountlifetimedescription', 'admin'),
+            'defaultvalue' => get_config('defaultaccountlifetime'),
+            'help'         => true,
+        ),
+        'defaultaccountinactiveexpire' => array(
+            'type'         => 'expiry',
+            'title'        => get_string('defaultaccountinactiveexpire', 'admin'),
+            'description'  => get_string('defaultaccountinactiveexpiredescription', 'admin'),
+            'defaultvalue' => get_config('defaultaccountinactiveexpire'),
+            'help'         => true,
+        ),
+        'defaultaccountinactivewarn' => array(
+            'type'         => 'expiry',
+            'title'        => get_string('defaultaccountinactivewarn', 'admin'),
+            'description'  => get_string('defaultaccountinactivewarndescription', 'admin'),
+            'defaultvalue' => get_config('defaultaccountinactivewarn'),
+            'help'         => true,
+        ),
+        'usersallowedmultipleinstitutions' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('usersallowedmultipleinstitutions', 'admin'),
+            'description'  => get_string('usersallowedmultipleinstitutionsdescription', 'admin'),
+            'defaultvalue' => get_config('usersallowedmultipleinstitutions'),
             'help'         => true,
         ),
         'submit' => array(
             'type'  => 'submit',
-            'value' => get_string('updatesiteoptions','admin')
+            'value' => get_string('updatesiteoptions', 'admin')
         ),
     )
 ));
 
 function siteoptions_fail(Pieform $form, $field) {
-    $form->json_reply(PIEFORM_ERR, get_string('setsiteoptionsfailed','admin', get_string($field)), array($field => get_string($field . 'invalid', 'admin')));
+    $form->reply(PIEFORM_ERR, array(
+        'message' => get_string('setsiteoptionsfailed', 'admin', get_string($field, 'admin')),
+        'goto'    => '/admin/site/options.php',
+    ));
 }
 
 function siteoptions_submit(Pieform $form, $values) {
     $fields = array('sitename','lang','theme','pathtofile', 'pathtoclam',
-                    'allowpublicviews','artefactviewinactivitytime', 'searchplugin');
+                    'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn', 
+                    'allowpublicviews', 'searchplugin');
+    $oldlanguage = get_config('lang');
     foreach ($fields as $field) {
         if (!set_config($field, $values[$field])) {
             siteoptions_fail($form, $field);
         }
     }
+    if ($oldlanguage != $values['lang']) {
+        safe_require('artefact', 'file');
+        ArtefactTypeFolder::change_public_folder_name($oldlanguage, $values['lang']);
+    }
+    
     // submitted sessionlifetime is in minutes; db entry session_timeout is in seconds
     if (!set_config('session_timeout', $values['sessionlifetime'] * 60)) {
         siteoptions_fail($form, 'sessionlifetime');
     }
     // Submitted value is on/off; database entry should be 1/0
-    if (!set_config('viruschecking', (int) ($values['viruschecking'] == 'on'))) {
-        siteoptions_fail($form, 'viruschecking');
+    foreach(array('viruschecking', 'usersallowedmultipleinstitutions') as $checkbox) {
+        if (!set_config($checkbox, (int) ($values[$checkbox] == 'on'))) {
+            siteoptions_fail($form, $checkbox);
+        }
     }
-    $form->json_reply(PIEFORM_OK, get_string('siteoptionsset','admin'));
+    $form->reply(PIEFORM_OK, array('message' => get_string('siteoptionsset', 'admin'), 'goto' => '/admin/site/options.php'));
 }
 
-$smarty = smarty();
-$smarty->assign('SITEOPTIONFORM', $siteoptionform);
+$thispage = json_encode(get_config('wwwroot') . 'admin/site/options.php');
+$smarty = smarty(array('adminsiteoptions'));
+$smarty->assign('siteoptionform', $siteoptionform);
 $smarty->display('admin/site/options.tpl');
 
 ?>

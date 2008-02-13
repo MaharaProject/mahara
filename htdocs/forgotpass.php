@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -32,7 +32,6 @@ define('SECTION_PAGE', 'forgotpass');
 
 require('init.php');
 require_once('pieforms/pieform.php');
-define('TITLE', get_string('forgotpassword'));
 
 if (!session_id()) {
     session_start();
@@ -44,6 +43,8 @@ if (!empty($_SESSION['pwchangerequested'])) {
 }
 
 if (isset($_GET['key'])) {
+    define('TITLE', get_string('changepassword'));
+
     if (!$pwrequest = get_record('usr_password_request', 'key', $_GET['key'])) {
         die_info(get_string('nosuchpasswordrequest'));
     }
@@ -81,8 +82,11 @@ if (isset($_GET['key'])) {
 
     $smarty = smarty();
     $smarty->assign('forgotpasschange_form', pieform($form));
+    $smarty->assign('heading', get_string('changepassword'));
     $smarty->display('forgotpass.tpl');
     exit;
+} else {
+    define('TITLE', get_string('forgotpassword'));
 }
 
 $form = array(
@@ -102,7 +106,7 @@ $form = array(
         ),
         'submit' => array(
             'type' => 'submit',
-            'value' => get_string('change')
+            'value' => get_string('send')
         )
     )
 );
@@ -159,10 +163,9 @@ function forgotpass_submit(Pieform $form, $values) {
 }
 
 function forgotpasschange_validate(Pieform $form, $values) {
-    if (!$user = get_record('usr', 'id', $values['user'])) {
-        throw new Exception('Request to change the password for a user who does not exist');
-    }
-    password_validate($form, $values, $user->username, $user->institution);
+    $user = new User();
+    $user->find_by_id($values['user']);
+    password_validate($form, $values, $user);
 }
 
 
@@ -192,12 +195,13 @@ function forgotpasschange_submit(Pieform $form, $values) {
         exit;
     }
 
-    throw new Exception('User "' . $user->username . '@' . $user->institution
+    throw new Exception('User "' . $user->username
         . ' tried to change their password, but the attempt failed');
 }
 
 $smarty = smarty();
 $smarty->assign('forgotpass_form', pieform($form));
+$smarty->assign('heading', get_string('forgotpassword'));
 $smarty->display('forgotpass.tpl');
 
 ?>

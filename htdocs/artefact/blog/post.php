@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage artefact-blog
@@ -110,7 +110,6 @@ $textinputform = pieform(array(
                 'required' => true
             ),
             'defaultvalue' => $title,
-            'help' => true
         ),
         'description' => array(
             'type' => 'wysiwyg',
@@ -122,7 +121,6 @@ $textinputform = pieform(array(
                 'required' => true
             ),
             'defaultvalue' => $description,
-            'help'        => true,
         ),
         'tags'       => array(
             'defaultvalue' => $tags,
@@ -157,6 +155,8 @@ $getstring = quotestrings(array(
         'insert',
         'insertimage',
         'left',
+        'mustspecifycontent',
+        'mustspecifytitle',
         'middle',
         'name',
         'nofilesattachedtothispost',
@@ -175,8 +175,6 @@ $getstring = quotestrings(array(
 // automatically when file.js is included.
 $copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
 $wwwroot = get_config('wwwroot');
-$uploadfilehelp = json_encode(get_help_icon('artefact', 'blog', null, null, null, 'uploadfile'));
-$removehelp = json_encode(get_help_icon('artefact', 'blog', null, null, null, 'remove'));
 
 
 
@@ -195,15 +193,6 @@ var copyrightnotice = '{$copyright}';
 var uploader = new FileUploader('uploader', 'upload.php', null, {$getstring['blogpost']}, false, 
                                 attachtopost, fileattached);
 uploader.createid = {$createid};
-
-
-
-// Change the contextual help from the myfiles upload help to the
-// blogpost upload help
-addLoadEvent(function () {
-    var h = getElement('uploadfilehelp');
-    h.innerHTML = {$uploadfilehelp};
-});
 
 
 
@@ -233,11 +222,6 @@ addLoadEvent(function () {connect('browsebutton', 'onclick', browsemyfiles);});
 
 
 // List of attachments to the blog post
-function removehelp () {
-    var h = SPAN(null);
-    h.innerHTML = {$removehelp};
-    return h;
-}
 var attached = new TableRenderer(
     'attachedfiles',
     'attachedfiles.json.php',
@@ -250,8 +234,7 @@ var attached = new TableRenderer(
      function (r) { 
          return TD(null, INPUT({'type':'button', 'class':'button',
                                 'value':{$getstring['remove']},
-                                'onclick':"removefrompost('artefact:"+r.id+"')"}),
-                   removehelp());
+                                'onclick':"removefrompost('artefact:"+r.id+"')"}));
      }
     ]
 );
@@ -308,9 +291,7 @@ function attachtopost(data) {
                     [SPAN({'style':'display: none;'}, ext),
                      INPUT(
                         {'type':'button', 'class':'button', 'value':{$getstring['remove']},
-                        'onclick':"removefrompost('"+rowid+"')"}
-                        ),
-                     removehelp()]
+                        'onclick':"removefrompost('"+rowid+"')"})]
                 ]
             )
         )
@@ -343,7 +324,7 @@ function fileattached_id(id) {
 function saveblogpost() {
     // Hacky inline validation - see bug #380
     if ($('editpost_title').value == '') {
-        alert('You must specify a title for your post');
+        alert({$getstring['mustspecifytitle']});
         return false;
     }
     var data = {'title' : $('editpost_title').value,
@@ -379,7 +360,7 @@ function saveblogpost() {
 
     data.body = $('editpost_description').value;
     if (data.body == '') {
-        alert('You must specify some content for your post');
+        alert({$getstring['mustspecifycontent']});
         return false;
     }
     data.tags = $('editpost_tags').value;
@@ -674,32 +655,6 @@ function blogpostExecCommandHandler(editor_id, elm, command, user_interface, val
 EOF;
 
 
-// Override the default Mahara tinyMCE.init();  Add an image button and
-// the execcommand_callback.
-
-$content_css = json_encode(theme_get_url('style/tinymce.css'));
-$language = substr(current_language(), 0, 2);
-$tinymceinit = <<<EOF
-<script type="text/javascript">
-tinyMCE.init({
-    mode: "textareas",
-    editor_selector: 'wysiwyg',
-    button_tile_map: true,
-    language: '{$language}',
-    theme: "advanced",
-    plugins: "table,emotions,iespell,inlinepopups",
-    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,iespell,cleanup,separator,link,unlink,image,separator,code",
-    theme_advanced_buttons2 : "bullist,numlist,separator,tablecontrols,separator,cut,copy,paste",
-    theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect",
-    theme_advanced_toolbar_location : "top",
-    theme_advanced_toolbar_align : "center",
-    content_css : {$content_css},
-    execcommand_callback : "blogpostExecCommandHandler"
-});
-</script>
-EOF;
-
-
 $draftform = pieform(array(
     'name' => 'draftpost',
     'plugintype' => 'artefact',
@@ -719,8 +674,8 @@ $draftform = pieform(array(
 
 
 
-$smarty = smarty(array('tablerenderer', 'artefact/file/js/file.js'), 
-                 array(), array(), array('tinymceinit' => $tinymceinit));
+$smarty = smarty(array('tablerenderer', 'artefact/file/js/file.js', 'tinymce'), 
+                 array(), array(), array('tinymcecommandcallback' => 'blogpostExecCommandHandler'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign_by_ref('textinputform', $textinputform);
 $smarty->assign_by_ref('draftform', $draftform);

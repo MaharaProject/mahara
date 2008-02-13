@@ -152,6 +152,13 @@
             <mimetype>video/ms-wmv</mimetype>
         </mimetypes>
     </filetype>
+    <filetype>
+        <description>swf</description>
+        <enabled>0</enabled>
+        <mimetypes>
+            <mimetype>application/x-shockwave-flash</mimetype>
+        </mimetypes>
+    </filetype>
 
     <!-- Audio types -->
     <filetype>

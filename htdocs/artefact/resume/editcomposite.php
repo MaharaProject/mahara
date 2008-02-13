@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage artefact-resume
@@ -30,7 +30,7 @@ define('MENUITEM', 'profile/myresume');
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
-require('artefact.php');
+require_once(get_config('docroot') . 'artefact/lib.php');
 
 $id = param_integer('id');
 $artefact = param_integer('artefact');
@@ -44,8 +44,9 @@ if ($a->get('owner') != $USER->get('id')) {
 
 $elements = call_static_method(generate_artefact_class_name($type), 'get_addform_elements');
 $elements['submit'] = array(
-    'type' => 'submit',
-    'value' => get_string('save'),
+    'type' => 'submitcancel',
+    'value' => array(get_string('save'), get_string('cancel')),
+    'goto' => get_config('wwwroot') . '/artefact/resume/',
 );
 $elements['compositetype'] = array(
     'type' => 'hidden',
@@ -55,9 +56,8 @@ $cform = array(
     'name' => $type,
     'plugintype' => 'artefact',
     'pluginname' => 'resume',
-    'elements' => $elements, 
-    'jsform' => true,
-    'successcallback' => 'compositeform_submit',
+    'elements' => $elements,
+    'successcallback' => 'compositeformedit_submit',
 );
 
 $a->populate_form($cform, $id, $type);

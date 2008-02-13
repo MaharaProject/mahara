@@ -1,0 +1,54 @@
+        <TABLE NAME="__PLUGINTYPE___installed">
+            <FIELDS>
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="release" TYPE="text" LENGTH="small" NOTNULL="true" />
+                <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
+                <!-- PLUGINTYPE_INSTALLED_EXTRAFIELDS -->
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
+                <!-- PLUGINTYPE_INSTALLED_EXTRAKEYS -->
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="__PLUGINTYPE___config">
+            <FIELDS>
+                <FIELD NAME="plugin" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,field" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="__PLUGINTYPE___installed" REFFIELDS="name" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="__PLUGINTYPE___cron">
+            <FIELDS>
+                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="callfunction" TYPE="char" LENGTH="255" NOTNULL="true"  />
+                <FIELD NAME="nextrun" TYPE="datetime" NOTNULL="false"  />
+                <FIELD NAME="minute" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="hour" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="day" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="month" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="dayofweek" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,callfunction" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="__PLUGINTYPE___installed" REFFIELDS="name" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="__PLUGINTYPE___event_subscription">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true"  NOTNULL="true" />
+                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="event" TYPE="char" LENGTH="50" NOTNULL="true" />
+                <FIELD NAME="callfunction" TYPE="char" LENGTH="255" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="__PLUGINTYPE___installed" REFFIELDS="name" />
+                <KEY NAME="eventfk" TYPE="foreign" FIELDS="event" REFTABLE="event_type" REFFIELDS="name" />
+                <KEY NAME="subscruk" TYPE="unique" FIELDS="plugin,event,callfunction" />
+            </KEYS>
+        </TABLE>

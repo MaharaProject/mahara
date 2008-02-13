@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage auth
@@ -159,7 +159,7 @@ function fetch_user_image($username) {
         }
         try {
             $user = new User;
-            $user->find_by_instanceid_username($authinstance->id, $username);
+            $user->find_by_instanceid_username($authinstance->id, $username, true);
             $candidates[$user->id] = $user;
         } catch (Exception $e) {
             // we don't care
@@ -186,7 +186,7 @@ function fetch_user_image($username) {
         $return['f1'] = base64_encode($fi);
 
         require_once('file.php');
-        $im = get_dataroot_image_path('artefact/internal/profileicons' , $user->profileicon, '100x100');
+        $im = get_dataroot_image_path('artefact/internal/profileicons' , $user->profileicon, 100);
         $fi = file_get_contents($im);
         $return['f2'] = base64_encode($fi);
         return $return;
@@ -225,6 +225,9 @@ function user_authorise($token, $useragent) {
     // load existing profile information
     $profilefields = array();
     $profile_data = get_records_select_assoc('artefact', "owner=? AND artefacttype IN (" . join(",",array_map(create_function('$a','return db_quote($a);'),array_keys($element_list))) . ")", array($USER->get('id')), '','artefacttype, title');
+    if ($profile_data == false) {
+        $profile_data = array();
+    }
 
     $email = get_field('artefact_internal_profile_email', 'email', 'owner', $sso_session->userid, 'principal', 1);
     if (false == $email) {
@@ -253,9 +256,12 @@ function user_authorise($token, $useragent) {
 
     // Todo: push application name to list of hosts... update Moodle block to display more info, maybe in 'Other' list
     $userdata['myhosts'] = array();
-    $userdata['myhosts'][] = array('name'=> $SITE->shortname, 'url' => get_config('wwwroot'), 'count' => 0);
 
     return $userdata;
+}
+
+function xmlrpc_not_implemented() {
+    return true;
 }
 
 /**
@@ -434,11 +440,13 @@ function parse_payload($payload) {
     }
 }
 
-function get_peer($wwwroot) {
+function get_peer($wwwroot, $cache=true) {
 
     $wwwroot = (string)$wwwroot;
     static $peers = array();
-    if (isset($peers[$wwwroot])) return $peers[$wwwroot];
+    if ($cache) {
+        if (isset($peers[$wwwroot])) return $peers[$wwwroot];
+    }
 
     require_once(get_config('libroot') . 'peer.php');
     $peer = new Peer();

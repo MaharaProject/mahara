@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage admin
@@ -24,20 +24,35 @@
  *
  */
 define('INTERNAL', 1);
-define('ADMIN', 1);
-define('MENUITEM', 'configusers/institutions');
+define('INSTITUTIONALADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('institutions', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'institutions');
 require_once('pieforms/pieform.php');
+define('MENUITEM', 'manageinstitutions/institutions');
 $smarty = smarty();
 
 $institution = param_variable('i', '');
 $add         = param_boolean('add');
 $edit        = param_boolean('edit');
 $delete      = param_boolean('delete');
+
+if (!$USER->get('admin')) {
+    // Institutional admins with only 1 institution go straight to the edit page for that institution
+    // They cannot add or delete institutions, or edit an institution they don't administer
+    $add = false;
+    $delete = false;
+    if (!empty($institution) && !$USER->is_institutional_admin($institution)) {
+        $institution = '';
+        $edit = false;
+    }
+    if (empty($institution) && count($USER->get('admininstitutions')) == 1) {
+        redirect(get_config('wwwroot') . 'admin/users/institutions.php?i='
+                 . key($USER->get('institutions')));
+    }
+}
 
 if ($institution || $add) {
 
@@ -48,7 +63,8 @@ if ($institution || $add) {
 
     if ($delete) {
         function delete_validate(Pieform $form, $values) {
-            if (get_field('usr', 'COUNT(*)', 'institution', $values['i'])) {
+            if (get_field('usr_institution', 'COUNT(*)', 'institution', $values['i'])) {
+                // TODO: exception is of the wrong type
                 throw new Exception('Attempt to delete an institution that has members');
             }
         }
@@ -60,8 +76,16 @@ if ($institution || $add) {
         function delete_submit(Pieform $form, $values) {
             global $SESSION;
 
+            $authinstanceids = get_column('auth_instance', 'id', 'institution', $values['i']);
+
             db_begin();
+            foreach ($authinstanceids as $id) {
+                delete_records('auth_instance_config', 'instance', $id);
+            }
+            delete_records('auth_instance', 'institution', $values['i']);
+            delete_records('host', 'institution', $values['i']);
             delete_records('institution_locked_profile_field', 'name', $values['i']);
+            delete_records('usr_institution_request', 'institution', $values['i']);
             delete_records('institution', 'name', $values['i']);
             db_commit();
 
@@ -93,32 +117,43 @@ if ($institution || $add) {
     $instancearray = array();
     $instancestring = '';
     $c = count($authinstances);
+    $inuse = '';
 
     if (!$add) {
         $data = get_record('institution', 'name', $institution);
         $lockedprofilefields = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
         
         // TODO: Find a better way to work around Smarty's minimal looping logic
-        foreach($authinstances as $key => $val) {
-            $authinstances[$key]->index = $key;
-            $authinstances[$key]->total = $c;
-            $instancearray[] = $val->id;
-        }
+        if (!empty($authinstances)) {
+            foreach($authinstances as $key => $val) {
+                $authinstances[$key]->index = $key;
+                $authinstances[$key]->total = $c;
+                $instancearray[] = $val->id;
+            }
 
+            $instancestring = implode(',',$instancearray);
+            $inuserecords = array();
+            if ($records = get_records_sql_assoc('select authinstance, count(id) from {usr} where authinstance in ('.$instancestring.') group by authinstance', array())) {
+                foreach ($records as $record) {
+                    $inuserecords[] = $record->authinstance;
+                }
+            }
+            $inuse = implode(',',$inuserecords);
+        }
         $authtypes = auth_get_available_auth_types($institution);
     }
     else {
         $data = new StdClass;
         $data->displayname = '';
         $data->registerallowed = 1;
-        $data->defaultaccountlifetime = null;
-        $data->defaultaccountinactiveexpire = null;
-        $data->defaultaccountinactivewarn = 604800; // 1 week
+        $data->theme = 'default';
+        $data->defaultmembershipperiod = null;
         $lockedprofilefields = array();
         $smarty->assign('add', true);
 
         $authtypes = auth_get_available_auth_types();
     }
+    $themeoptions = get_themes();
     
     safe_require('artefact', 'internal');
     $elements = array(
@@ -137,6 +172,12 @@ if ($institution || $add) {
             'type'   => 'hidden',
             'value'  => true,
             'ignore' => !$add
+        ),
+        'inuse' => array(
+            'type'   => 'hidden',
+            'value'  => $inuse,
+            'id'     => 'inuse',
+            'ignore' => $add
         ),
         'i' => array(
             'type'   => 'hidden',
@@ -159,7 +200,7 @@ if ($institution || $add) {
             'options' => $authinstances,
             'authtypes' => $authtypes,
             'instancearray' => $instancearray,
-            'instancestring' => implode(',',$instancearray),
+            'instancestring' => $instancestring,
             'institution' => $institution,
             'help'   => true,
             'ignore' => count($authtypes) == 0
@@ -171,41 +212,56 @@ if ($institution || $add) {
             'defaultvalue' => $data->registerallowed,
             'help'   => true,
         ),
-        'defaultaccountlifetime' => array(
-            'type'         => 'expiry',
-            'title'        => get_string('defaultaccountlifetime', 'admin'),
-            'description'  => get_string('defaultaccountlifetimedescription', 'admin'),
-            'defaultvalue' => $data->defaultaccountlifetime,
-            'help'   => true,
-        ),
-        'defaultaccountinactiveexpire' => array(
-            'type'         => 'expiry',
-            'title'        => get_string('defaultaccountinactiveexpire', 'admin'),
-            'description'  => get_string('defaultaccountinactiveexpiredescription', 'admin'),
-            'defaultvalue' => $data->defaultaccountinactiveexpire,
-            'help'   => true,
-        ),
-        'defaultaccountinactivewarn' => array(
-            'type' => 'expiry',
-            'title' => get_string('defaultaccountinactivewarn', 'admin'),
-            'description' => get_string('defaultaccountinactivewarndescription', 'admin'),
-            'defaultvalue' => $data->defaultaccountinactivewarn,
-            'help'   => true,
-        ),
-        'lockedfields' => array(
-            'value' => '<tr><th colspan="2">Locked fields ' 
-                . get_help_icon('core', 'admin', 'institution', 'lockedfields') 
-                . '</th></tr>'
-        )
     );
 
+    if (empty($data->name) || $data->name != 'mahara') {
+        $elements['defaultmembershipperiod'] = array(
+            'type'         => 'expiry',
+            'title'        => get_string('defaultmembershipperiod', 'admin'),
+            'description'  => get_string('defaultmembershipperioddescription', 'admin'),
+            'defaultvalue' => $data->defaultmembershipperiod,
+            'help'   => true,
+        );
+        $elements['theme'] = array(
+            'type'         => 'select',
+            'title'        => get_string('theme','admin'),
+            'description'  => get_string('sitethemedescription','admin'),
+            'defaultvalue' => $data->theme,
+            'collapseifoneoption' => true,
+            'options'      => $themeoptions,
+            'help'         => true,
+        );
+        if ($USER->get('admin')) {
+            $elements['maxuseraccounts'] = array(
+                'type'         => 'text',
+                'title'        => get_string('maxuseraccounts','admin'),
+                'description'  => get_string('maxuseraccountsdescription','admin'),
+                'defaultvalue' => empty($data->maxuseraccounts) ? '' : $data->maxuseraccounts,
+                'rules'        => array('regex' => '/^\d*$/'),
+            );
+        }
+    }
+
+    $elements['lockedfields'] = array(
+        'type' => 'fieldset',
+        'legend' => 'Locked fields ',
+        'collapsible' => true,
+        'collapsed' => true,
+        'elements' => array(),
+    );
     foreach (ArtefactTypeProfile::get_all_fields() as $field => $type) {
-        $elements[$field] = array(
+        $elements['lockedfields']['elements'][$field] = array(
             'type' => 'checkbox',
             'title' => get_string($field, 'artefact.internal'),
             'defaultvalue' => in_array($field, $lockedprofilefields)
         );
     }
+    $elements['lockedfieldshelp'] = array(
+        'value' => '<tr><th colspan="2">'
+        . get_help_icon('core', 'admin', 'institution', 'lockedfields') 
+        . '</th></tr>'
+    );
+
     $elements['submit'] = array(
         'type' => 'submitcancel',
         'value' => array(get_string('submit'), get_string('cancel'))
@@ -224,16 +280,42 @@ if ($institution || $add) {
 }
 else {
     // Get a list of institutions
-    $institutions = get_records_sql_array('SELECT i.name, i.displayname, i.registerallowed, COUNT(u.id) AS hasmembers
+    if (!$USER->get('admin')) { // Filter the list for institutional admins
+        $where = '
+        WHERE i.name IN (' . join(',', array_map('db_quote', $USER->get('admininstitutions'))) . ')';
+    }
+    else {
+        $where = '';
+        $smarty->assign('siteadmin', true);
+        $defaultinstmembers = count_records_sql('
+            SELECT COUNT(u.id) FROM {usr} u LEFT OUTER JOIN {usr_institution} i ON u.id = i.usr
+            WHERE u.deleted = 0 AND i.usr IS NULL AND u.id != 0
+        ');
+    }
+    $institutions = get_records_sql_assoc('
+        SELECT
+            i.name, i.displayname, i.maxuseraccounts, 
+            COUNT(ui.usr) AS members, SUM(ui.staff) AS staff, SUM(ui.admin) AS admins
         FROM {institution} i
-        LEFT OUTER JOIN {usr} u ON (u.institution = i.name)
-        GROUP BY 1, 2, 3
-        ORDER BY i.name', array());
+        LEFT OUTER JOIN {usr_institution} ui ON (ui.institution = i.name)
+        LEFT OUTER JOIN {usr} u ON (u.id = ui.usr AND u.deleted = 0) ' . $where . '
+        GROUP BY
+            i.name, i.displayname, i.maxuseraccounts
+        ORDER BY i.name = \'mahara\', i.displayname', array());
+    if (isset($defaultinstmembers)) {
+        $institutions['mahara']->members = $defaultinstmembers;
+    }
     $smarty->assign('institutions', $institutions);
 }
 
+function institution_validate(Pieform $form, $values) {
+    if (!empty($values['name']) && !$form->get_error('name') && record_exists('institution', 'name', $values['name'])) {
+        $form->set_error('name', get_string('institutionnamealreadytaken', 'admin'));
+    }
+}
+
 function institution_submit(Pieform $form, $values) {
-    global $SESSION, $institution, $add, $instancearray;
+    global $SESSION, $institution, $add, $instancearray, $USER;
 
     db_begin();
     // Update the basic institution record...
@@ -245,23 +327,30 @@ function institution_submit(Pieform $form, $values) {
     $newinstitution->displayname                  = $values['displayname'];
     $newinstitution->authplugin                   = $values['authplugin'];
     $newinstitution->registerallowed              = ($values['registerallowed']) ? 1 : 0;
-    $newinstitution->defaultaccountlifetime       = ($values['defaultaccountlifetime']) ? intval($values['defaultaccountlifetime']) : null;
-    $newinstitution->defaultaccountinactiveexpire = ($values['defaultaccountinactiveexpire']) ? intval($values['defaultaccountinactiveexpire']) : null;
-    $newinstitution->defaultaccountinactivewarn   = ($values['defaultaccountinactivewarn']) ? intval($values['defaultaccountinactivewarn']) : null;
+    $newinstitution->theme                        = empty($values['theme']) ? null : $values['theme'];
+    if ($institution != 'mahara') {
+        $newinstitution->defaultmembershipperiod  = ($values['defaultmembershipperiod']) ? intval($values['defaultmembershipperiod']) : null;
+        if ($USER->get('admin')) {
+            $newinstitution->maxuseraccounts      = ($values['maxuseraccounts']) ? intval($values['maxuseraccounts']) : null;
+        }
+    }
 
     $allinstances = array_merge($values['authplugin']['instancearray'], $values['authplugin']['deletearray']);
 
     if (array_diff($allinstances, $instancearray)) {
+        // TODO wrong exception type
         throw new Exception('Attempt to delete or update another institution\'s auth instance');
     }
 
     if (array_diff($instancearray, $allinstances)) {
+        // TODO wrong exception type
         throw new Exception('One of your instances is unaccounted for in this transaction');
     }
 
     foreach($values['authplugin']['instancearray'] as $priority => $instanceid) {
         if (in_array($instanceid, $values['authplugin']['deletearray'])) {
             // Should never happen:
+            // TODO wrong exception type
             throw new Exception('Attempt to update AND delete an auth instance');
         }
         $record = new StdClass;
@@ -312,6 +401,7 @@ function institution_cancel_submit() {
     redirect('/admin/users/institutions.php');
 }
 
+$smarty->assign('heading', get_string('admininstitutions', 'admin'));			
 $smarty->display('admin/users/institutions.tpl');
 
 ?>

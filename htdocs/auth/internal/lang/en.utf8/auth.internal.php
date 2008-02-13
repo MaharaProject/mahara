@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage auth-internal
@@ -31,6 +31,7 @@ $string['internal'] = 'Internal';
 $string['completeregistration'] = 'Complete Registration';
 $string['emailalreadytaken'] = 'This e-mail address has already registered here';
 $string['iagreetothetermsandconditions'] = 'I agree to the Terms and Conditions';
+$string['passwordformdescription'] = 'Your password must be at least six characters long and contain at least one digit and two letters';
 $string['passwordinvalidform'] = 'Your password must be at least six characters long and contain at least one digit and two letters';
 $string['registeredemailsubject'] = 'You have registered at %s';
 $string['registeredemailmessagetext'] = 'Hi %s,
@@ -56,7 +57,7 @@ $string['registrationnosuchkey'] = 'Sorry, there does not seem to be a registrat
 $string['registrationunsuccessful'] = 'Sorry, your registration attempt was unsuccessful. This is our fault, not yours. Please try again later.';
 $string['usernamealreadytaken'] = 'Sorry, this username is already taken';
 $string['usernameinvalidform'] = 'Your username may only include alphanumeric characters, full stops, underscores and @ symbols. Also, it must be between 3 and 30 characters long.';
-$string['youmaynotregisterwithouttandc'] = 'You may not register unless you agree to abide by the Terms and Conditions';
+$string['youmaynotregisterwithouttandc'] = 'You may not register unless you agree to abide by the <a href="terms.php">Terms and Conditions</a>';
 $string['youmustagreetothetermsandconditions'] = 'You must agree to the <a href="terms.php">Terms and Conditions</a>';
 
 ?>

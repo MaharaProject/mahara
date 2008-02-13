@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage auth-internal
@@ -105,7 +105,7 @@ class AuthXmlrpc extends Auth {
         $peer = get_peer($remotewwwroot);
 
         if ($peer->deleted != 0 || $this->config['theyssoin'] != 1) {
-            throw new MaharaException('We don\'t accept SSO connections from '.$peer->name );
+            throw new XmlrpcClientException('We don\'t accept SSO connections from ' . $peer->name);
         }
 
         $client = new Client();
@@ -117,26 +117,12 @@ class AuthXmlrpc extends Auth {
         $remoteuser = (object)$client->response;
 
         if (empty($remoteuser) or !property_exists($remoteuser, 'username')) {
-            $errorobject = $remoteuser;
-
-            $errreport = 'Authorisation failure. ';
-            $faultcode = 1;
-
-            if (property_exists($errorobject, 'faultCode')) {
-                $errreport .= "\nCode: ".$errorobject->faultCode;
-                $faultcode  = $errorobject->faultCode;
-            }
-
-            if (property_exists($errorobject, 'faultString')) {
-                $errreport .= "\nMessage: ".$errorobject->faultString;
-            }
-
-            throw new AccessDeniedException($errreport, $faultcode);
+            // Caught by land.php
+            throw new AccessDeniedException();
         }
 
         $virgin = false;
 
-        set_cookie('institution', $peer->institution, 0, get_mahara_install_subdirectory());
         $oldlastlogin = null;
         $create = false;
         $update = false;
@@ -144,12 +130,16 @@ class AuthXmlrpc extends Auth {
         // Retrieve a $user object. If that fails, create a blank one.
         try {
             $user = new User;
-            $user->find_by_instanceid_username($this->instanceid, $remoteuser->username);
+            $user->find_by_instanceid_username($this->instanceid, $remoteuser->username, true);
             if ('1' == $this->config['updateuserinfoonlogin']) {
                 $update = true;
             }
-        } catch (Exception $e) {
+        } catch (AuthUnknownUserException $e) {
             if (!empty($this->config['weautocreateusers'])) {
+                $institution = new Institution($this->institution);
+                if ($institution->isFull()) {
+                    throw new XmlrpcClientException('SSO attempt from ' . $institution->displayname . ' failed - institution is full');
+                }
                 $user = new User;
                 $create = true;
             } else {
@@ -161,8 +151,6 @@ class AuthXmlrpc extends Auth {
 
         if ($create) {
 
-            $user->username           = $remoteuser->username;
-            $user->institution        = $peer->institution;            
             $user->passwordchange     = 1;
             $user->active             = 1;
             $user->deleted            = 0;
@@ -175,18 +163,29 @@ class AuthXmlrpc extends Auth {
     
             $user->firstname          = $remoteuser->firstname;
             $user->lastname           = $remoteuser->lastname;
-            $user->preferredname      = $remoteuser->firstname;
             $user->email              = $remoteuser->email;
 
             //TODO: import institution's per-user-quota?:
             //$user->quota              = $userrecord->quota;
             $user->authinstance       = empty($this->config['parent']) ? $this->instanceid : $this->parent;
+
+            db_begin();
+            $user->username           = get_new_username($remoteuser->username);
             $user->commit();
 
+            insert_record('auth_remote_user', (object) array(
+                'authinstance'   => $user->authinstance,
+                'remoteusername' => $remoteuser->username,
+                'localusr'       => $user->id,
+            ));
+
+            $user->join_institution($peer->institution);
 
             set_profile_field($user->id, 'firstname', $user->firstname);
             set_profile_field($user->id, 'lastname', $user->lastname);
             set_profile_field($user->id, 'email', $user->email);
+
+            $this->import_user_settings($user, $remoteuser);
 
             /*
              * We need to convert the object to a stdclass with its own
@@ -197,25 +196,19 @@ class AuthXmlrpc extends Auth {
             $userobj = $user->to_stdclass();
             $userarray = (array)$userobj;
             handle_event('createuser', $userarray);
+            db_commit();
 
         } elseif ($update) {
-
-            if ($user->firstname != $remoteuser->firstname) {
-                $user->firstname = $remoteuser->firstname;
-                set_profile_field($user->id, 'firstname', $user->firstname);
+            $simplefieldstoimport = array('firstname', 'lastname', 'email');
+            foreach ($simplefieldstoimport as $field) {
+                if ($user->$field != $remoteuser->$field) {
+                    $user->$field = $remoteuser->$field;
+                    set_profile_field($user->id, $field, $user->$field);
+                }
             }
 
-            if ($user->lastname != $remoteuser->lastname) {
-                $user->lastname = $remoteuser->lastname;
-                set_profile_field($user->id, 'lastname', $user->lastname);
-            }
+            $this->import_user_settings($user, $remoteuser);
 
-            if ($user->email != $remoteuser->email) {
-                $user->email = $remoteuser->email;
-                set_profile_field($user->id, 'email', $user->email);
-            }
-
-            $user->preferredname      = $remoteuser->firstname;
             $user->lastlogin          = time();
 
             //TODO: import institution's per-user-quota?:
@@ -228,7 +221,7 @@ class AuthXmlrpc extends Auth {
         if ($create || $update) {
 
             $client->set_method('auth/mnet/auth.php/fetch_user_image')
-                   ->add_param($user->username)
+                   ->add_param($remoteuser->username)
                    ->send($remotewwwroot);
 
             $imageobject = (object)$client->response;
@@ -271,8 +264,10 @@ class AuthXmlrpc extends Auth {
                     }
 
                     list($width, $height) = getimagesize($filename);
-                    if ($width > 300 || $height > 300) {
-                        $error = get_string('profileiconimagetoobig', 'artefact.internal', $width, $height);
+                    $imagemaxwidth  = get_config('imagemaxwidth');
+                    $imagemaxheight = get_config('imagemaxheight');
+                    if ($width > $imagemaxwidth || $height > $imagemaxheight) {
+                        $error = get_string('profileiconimagetoobig', 'artefact.internal', $width, $height, $imagemaxwidth, $imagemaxheight);
                     }
 
                     try {
@@ -342,22 +337,76 @@ class AuthXmlrpc extends Auth {
     }
 
     /**
-     * Given a user that we know about, return an array of information about them
-     *
-     * Used when a user who was otherwise unknown authenticates successfully,
-     * or if getting userinfo on each login is enabled for this auth method.
-     *
-     * Does not need to be implemented for the internal authentication method,
-     * because all users are already known about.
+     * In practice, I don't think this method needs to return an accurate 
+     * answer for this, because XMLRPC authentication doesn't use the standard 
+     * authentication mechanisms, instead relying on land.php to handle 
+     * everything.
      */
-    public function get_user_info($username) {
-        $this->must_be_ready();
-        
-        $userdata = parent::get_user_info_cached($username);
-        /**
-         * Here, we will sift through the data returned by the XMLRPC server
-         * and update any userdata properties that have changed
-         */
+    public function can_auto_create_users() {
+        return (bool)$this->config['weautocreateusers'];
+    }
+
+    /**
+     * Given a user and their remote user record, attempt to populate some of 
+     * the user's profile fields and account settings from the remote data.
+     *
+     * This does not change the first name, last name or e-mail fields, as these are 
+     * dealt with differently depending on whether we are creating the user 
+     * record or updating it.
+     *
+     * This method attempts to set:
+     *
+     * * City
+     * * Country
+     * * Language
+     * * Introduction
+     * * WYSIWYG editor setting
+     *
+     * @param User $user
+     * @param stdClass $remoteuser
+     */
+    private function import_user_settings($user, $remoteuser) {
+        // City
+        if (!empty($remoteuser->city)) {
+            if (get_profile_field($user->id, 'city') != $remoteuser->city) {
+                set_profile_field($user->id, 'city', $remoteuser->city);
+            }
+        }
+
+        // Country
+        if (!empty($remoteuser->country)) {
+            $validcountries = array_keys(getoptions_country());
+            $newcountry = strtolower($remoteuser->country);
+            if (in_array($newcountry, $validcountries)) {
+                set_profile_field($user->id, 'country', $newcountry);
+            }
+        }
+
+        // Language
+        if (!empty($remoteuser->lang)) {
+            $validlanguages = array_keys(get_languages());
+            $newlanguage = str_replace('_', '.', strtolower($remoteuser->lang));
+            if (in_array($newlanguage, $validlanguages)) {
+                set_account_preference($user->id, 'lang', $newlanguage);
+                $user->set_account_preference('lang', $newlanguage);
+            }
+        }
+
+        // Description
+        if (isset($remoteuser->description)) {
+            if (get_profile_field($user->id, 'introduction') != $remoteuser->description) {
+                set_profile_field($user->id, 'introduction', $remoteuser->description);
+            }
+        }
+
+        // HTML Editor setting
+        if (isset($remoteuser->htmleditor)) {
+            $htmleditor = ($remoteuser->htmleditor) ? 1 : 0;
+            if ($htmleditor != get_account_preference($user->id, 'wysiwyg')) {
+                set_account_preference($user->id, 'wysiwyg', $htmleditor);
+                $user->set_account_preference('wysiwyg', $htmleditor);
+            }
+        }
     }
 
 }
@@ -438,12 +487,12 @@ class PluginAuthXmlrpc extends PluginAuth {
         if ($instance > 0) {
             $default = get_record('auth_instance', 'id', $instance);
             if ($default == false) {
-                throw new Exception(get_string('nodataforinstance', 'auth').$instance);
+                throw new SystemException(get_string('nodataforinstance', 'auth').$instance);
             }
             $current_config = get_records_menu('auth_instance_config', 'instance', $instance, '', 'field, value');
 
             if ($current_config == false) {
-                throw new Exception('No config data for instance: '.$instance);
+                throw new SystemException('No config data for instance: '.$instance);
             }
 
             foreach (self::$default_config as $key => $value) {

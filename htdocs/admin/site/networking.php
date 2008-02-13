@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage admin
@@ -62,6 +62,7 @@ $networkingform = pieform(
             'wwwroot' => array(
                 'type'         => 'html',
                 'title'        => get_string('wwwroot','admin'),
+                'description'  => get_string('wwwrootdescription', 'admin'),
                 'value'        => get_config('wwwroot')
             ),
             'pubkey' => array(
@@ -98,20 +99,24 @@ $networkingform = pieform(
 );
 
 function networkingform_fail(Pieform $form) {
-    $form->json_reply(PIEFORM_ERR, get_string('enablenetworkingfailed','admin'));
+    $form->reply(PIEFORM_ERR, array(
+        'message' => get_string('enablenetworkingfailed','admin'),
+        'goto'    => '/admin/site/networking.php',
+    ));
 }
 
 function networkingform_submit(Pieform $form, $values) {
-
     $reply = '';
 
     if (get_config('enablenetworking') != $values['enablenetworking']) {
         if (!set_config('enablenetworking', $values['enablenetworking'])) {
             networkingform_fail($form);
-        } else {
+        }
+        else {
             if (empty($values['enablenetworking'])) {
                 $reply .= get_string('networkingdisabled','admin');
-            } else {
+            }
+            else {
                 $reply .= get_string('networkingenabled','admin');
             }
         }
@@ -120,20 +125,25 @@ function networkingform_submit(Pieform $form, $values) {
     if (get_config('promiscuousmode') != $values['promiscuousmode']) {
         if (!set_config('promiscuousmode', $values['promiscuousmode'])) {
             networkingform_fail($form);
-        } else {
+        }
+        else {
             if (empty($values['promiscuousmode'])) {
                 $reply .= get_string('promiscuousmodedisabled','admin');
-            } else {
+            }
+            else {
                 $reply .= get_string('promiscuousmodeenabled','admin');
             }
         }
     }
 
-    $form->json_reply(PIEFORM_OK, ($reply == '') ? get_string('networkingunchanged','admin') : $reply);
+    $form->reply(PIEFORM_OK, array(
+        'message' => ($reply == '') ? get_string('networkingunchanged','admin') : $reply,
+        'goto'    => '/admin/site/networking.php',
+    ));
 }
 
 $smarty = smarty();
-$smarty->assign('NETWORKINGFORM',   $networkingform);
+$smarty->assign('networkingform', $networkingform);
+$smarty->display('admin/site/networking.tpl');
 
-$smarty->display('admin/networking.tpl');
 ?>

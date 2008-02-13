@@ -27,7 +27,7 @@ function smarty_function_mahara_performance_info($params, &$smarty) {
 
     $info = get_performance_info();
 
-    $smarty = smarty();
+    $smarty = smarty_core();
 
     foreach ($info as $key => $value) {
         $smarty->assign('perf_' . $key, $value);

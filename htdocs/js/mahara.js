@@ -94,22 +94,12 @@ function formStartProcessing(form, btn) {
         });
         insertSiblingNodesAfter(button, node);
 
-        button.proxyContainer = node;
         button.disabled = "disabled";
         button.blur();
     }
 }
 function formStopProcessing(form, btn) {
     processingStop();
-    var button = $(btn);
-    if (button) {
-        button.value = oldValue;
-        if(button.proxyContainer) {
-            removeElement(button.proxyContainer);
-            button.proxyContainer = null;
-        }
-        button.disabled = null;
-    }
 }
 function formError(form, data) {
     var errMsg = DIV({'id': 'messages'}, makeMessage(data.message.message, 'error'));
@@ -401,6 +391,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
     if (contextualHelpCache[key]) {
         buildContextualHelpBox(contextualHelpCache[key]);
         callLater(0, function() { contextualHelpOpened = true; });
+        ensureHelpIsOnScreen(contextualHelpContainer, position);
     }
     else {
         if (contextualHelpDeferrable && contextualHelpDeferrable.cancel) {
@@ -418,6 +409,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
                 buildContextualHelpBox(contextualHelpCache[key]);
             }
             contextualHelpOpened = true;
+            ensureHelpIsOnScreen(contextualHelpContainer, position);
             processingStop();
         },
         function (error) {
@@ -442,6 +434,19 @@ function buildContextualHelpBox(content) {
     result += '</div>';
     contextualHelpContainer.innerHTML = result;
     connect('helpstop', 'onclick', function(e) { e.stop(); });
+}
+
+/*
+ * Ensures that the contextual help box given is fully visible on screen. This
+ * will adjust the position of the help vertically if the help has opened right
+ * next to the bottom or top of the viewport
+ */
+function ensureHelpIsOnScreen(container, position) {
+    var dimensions = getElementDimensions(container);
+    if (position.y + dimensions.h > screenDimensions.h + getFirstElementByTagAndClassName('html').scrollTop) {
+        position.y -= dimensions.h - 18;
+        setElementPosition(container, position);
+    }
 }
 
 /* Only works in non-ie at the moment. Using 'document' as the element

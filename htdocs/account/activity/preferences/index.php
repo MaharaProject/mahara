@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -34,7 +34,7 @@ require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 require_once('pieforms/pieform.php');
 
 $activitytypes = get_records_array('activity_type', 'admin', 0);
-if ($USER->get('admin')) {
+if ($USER->get('admin') || $USER->is_institutional_admin()) {
     $admintypes = get_records_array('activity_type', 'admin', 1);
     $activitytypes = array_merge($activitytypes , $admintypes);
 }
@@ -48,26 +48,32 @@ foreach ($notifications as $n) {
 }
 
 foreach ($activitytypes as $type) {
-    $dv = $USER->get_activity_preference($type->name);
+    $dv = $USER->get_activity_preference($type->id);
     if (empty($dv)) {
-        if (!empty($type->admin)) {
+        if (!empty($type->admin) && $USER->get('admin')) {
             $dv = 'none';
         } else {
             $dv = 'internal';
         }
     }
-    $elements[$type->name] = array(
+    if (!empty($type->plugintype)) {
+        $section = $type->plugintype . '.' . $type->pluginname;
+    } 
+    else {
+        $section = 'activity';
+    }
+    $elements['activity_'.$type->id] = array(
         'defaultvalue' => $dv,
         'type' => 'select',
-        'title' => get_string('type' . $type->name, 'activity'),
+        'title' => get_string('type' . $type->name, $section),
         'options' => $options, 
         'rules' => array(
             'required' => true
         )
     );
     if (!empty($type->admin)) {
-        $elements[$type->name]['rules']['required'] = false;
-        $elements[$type->name]['options']['none'] = get_string('none');
+        $elements['activity_'.$type->id]['rules']['required'] = false;
+        $elements['activity_'.$type->id]['options']['none'] = get_string('none');
     }
 
 }
@@ -91,6 +97,7 @@ $prefsform = array(
 $smarty = smarty();
 $smarty->assign('prefsdescr', get_string('prefsdescr', 'activity'));
 $smarty->assign('form', pieform($prefsform));
+$smarty->assign('heading', get_string('activityprefs'));
 $smarty->display('account/activity/preferences/index.tpl');
 
 function activityprefs_submit(Pieform $form, $values) {
@@ -98,11 +105,11 @@ function activityprefs_submit(Pieform $form, $values) {
     
     $userid = $USER->get('id');
     foreach ($activitytypes as $type) {
-        if ($values[$type->name] == 'none') {
-            $USER->set_activity_preference($type->name, null);
+        if ($values['activity_'.$type->id] == 'none') {
+            $USER->set_activity_preference($type->id, null);
         } 
         else {
-            $USER->set_activity_preference($type->name, $values[$type->name]);
+            $USER->set_activity_preference($type->id, $values['activity_'.$type->id]);
         }
     }
     $form->json_reply(PIEFORM_OK, get_string('prefssaved', 'account'));

@@ -1,8 +1,7 @@
 {include file="header.tpl"}
 
 {include file="columnfullstart.tpl"}
-	
-			<h2>{str section=admin tag=editmenus}</h2>
+            <p>{str tag=linksandresourcesmenupagedescription section=admin args=$descriptionstrargs}</p>
 			
 			<div id="editmenus">
 			

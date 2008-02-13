@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage lang
@@ -36,22 +36,33 @@ $string['save']    = 'Save';
 $string['submit']  = 'Submit';
 $string['update']  = 'Update';
 $string['change']  = 'Change';
+$string['send']    = 'Send';
 $string['go']      = 'Go';
 $string['default'] = 'Default';
 $string['upload']  = 'Upload';
 $string['complete']  = 'Complete';
+$string['Failed']  = 'Failed';
 $string['loading'] = 'Loading ...';
 $string['showtags'] = 'Show my tags';
 $string['errorprocessingform'] = 'There was an error with submitting this form. Please check the marked fields and try again.';
+$string['description'] = 'Description';
+$string['remove']  = 'Remove';
 
 $string['no']     = 'No';
 $string['yes']    = 'Yes';
 $string['none']   = 'None';
 $string['at'] = 'at';
+$string['From'] = 'From';
+$string['To'] = 'To';
+$string['All'] = 'All';
 
+$string['next']      = 'Next';
 $string['nextpage']  = 'Next page';
+$string['previous']  = 'Previous';
 $string['prevpage']  = 'Previous page';
+$string['first']     = 'First';
 $string['firstpage'] = 'First page';
+$string['last']      = 'Last';
 $string['lastpage']  = 'Last page';
 
 $string['accept'] = 'Accept';
@@ -61,7 +72,8 @@ $string['reason'] = 'Reason';
 $string['select'] = 'Select';
 
 $string['tags'] = 'Tags';
-$string['tagsdesc'] = 'Enter comma separated tags for this item';
+$string['tagsdesc'] = 'Enter comma separated tags for this item.';
+$string['tagsdescprofile'] = 'Enter comma separated tags for this item. Items tagged with \'profile\' are displayed in the sidebar.';
 
 $string['selfsearch'] = 'Search My Portfolio';
 $string['ssopeers'] = 'SSO Peers';
@@ -70,11 +82,21 @@ $string['ssopeers'] = 'SSO Peers';
 $string['quota'] = 'Quota';
 $string['quotausage'] = 'You have used <span id="quota_used">%s</span> of your <span id="quota_total">%s</span> quota.';
 
-$string['mainmenu'] = 'Main menu';
 $string['updatefailed'] = 'Update failed';
-$string['declinerequest'] = 'Decline request';
 
 $string['strftimenotspecified']  = 'Not specified';
+
+// profile sideblock strings
+$string['invitedgroup'] = 'group invited to';
+$string['invitedgroups'] = 'groups invited to';
+$string['logout'] = 'Logout';
+$string['pendingfriend'] = 'pending friend';
+$string['pendingfriends'] = 'pending friends';
+$string['profile'] = 'profile';
+$string['views'] = 'Views';
+
+// Links and resources sideblock
+$string['linksandresources'] = 'Links and Resources';
 
 // auth
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section';
@@ -99,6 +121,23 @@ $string['accountexpirywarninghtml'] = '<p>Dear %s,</p>
 <p>We recommend you save the contents of your portfolio using the Export tool. Instructions on using this feature may be found within the user guide.</p>
 
 <p>If you wish to extend your account access or have any questions regarding the above, please feel free to <a href="%s">Contact Us</a>.</p>
+
+<p>Regards, %s Site Administrator</p>';
+$string['institutionexpirywarning'] = 'Institution membership expiry warning';
+$string['institutionexpirywarningtext'] = 'Dear %s,
+
+Your membership of %s on %s will expire within %s.
+
+If you wish to extend your membership or have any questions regarding the above, please feel free to contact us:
+
+%s
+
+Regards, %s Site Administrator';
+$string['institutionexpirywarninghtml'] = '<p>Dear %s,</p>
+    
+<p>Your membership of %s on %s will expire within %s.</p>
+
+<p>If you wish to extend your membership or have any questions regarding the above, please feel free to <a href="%s">Contact Us</a>.</p>
 
 <p>Regards, %s Site Administrator</p>';
 $string['accountinactive'] = 'Sorry, your account is currently inactive';
@@ -127,6 +166,7 @@ $string['youraccounthasbeenunsuspended'] = 'Your account has been unsuspeneded';
 $string['changepassword'] = 'Change Password';
 $string['changepasswordinfo'] = 'You are required to change your password before you can proceed.';
 $string['confirmpassword'] = 'Confirm password';
+$string['javascriptnotenabled'] = 'Your browser does not have javascript enabled for this site. Mahara requires javascript to be enabled before you can log in';
 $string['cookiesnotenabled'] = 'Your browser does not have cookies enabled, or is blocking cookies from this site. Mahara requires cookies to be enabled before you can log in';
 $string['institution'] = 'Institution';
 $string['loggedoutok'] = 'You have been logged out successfully';
@@ -134,6 +174,7 @@ $string['login'] = 'Login';
 $string['loginfailed'] = 'You have not provided the correct credentials to log in. Please check your username and password are correct.';
 $string['loginto'] = 'Log in to %s';
 $string['newpassword'] = 'New Password';
+$string['nosessionreload'] = 'Reload the page to log in';
 $string['oldpassword'] = 'Current Password';
 $string['password'] = 'Password';
 $string['passworddescription'] = ' ';
@@ -145,6 +186,7 @@ $string['passwordtooeasy'] = 'Your password is too easy! Please choose a harder 
 $string['register'] = 'Register';
 $string['sessiontimedout'] = 'Your session has timed out, please enter your login details to continue';
 $string['sessiontimedoutpublic'] = 'Your session has timed out. You may <a href="?login">log in</a> to continue browsing';
+$string['sessiontimedoutreload'] = 'Your session has timed out. Reload the page to log in again';
 $string['username'] = 'Username';
 $string['preferredname'] = 'Preferred Name';
 $string['usernamedescription'] = ' ';
@@ -152,9 +194,11 @@ $string['usernamehelp'] = 'The username you have been given to access this syste
 $string['yournewpassword'] = 'Your new password';
 $string['yournewpasswordagain'] = 'Your new password again';
 $string['invalidsesskey'] = 'Invalid session key';
-$string['cantremovedefaultemail'] = 'You cannot remove your primary email address';
+$string['cannotremovedefaultemail'] = 'You cannot remove your primary email address';
+$string['emailtoolong'] = 'E-mail addresses cannot be longer that 255 characters';
 $string['mustspecifyoldpassword'] = 'You must specify your current password';
 $string['captchatitle'] = 'CAPTCHA Image';
+$string['captchaimage'] = 'CAPTCHA Image';
 $string['captchadescription'] = 'Enter the characters you see in the picture to the right. Letters are not case sensitive';
 $string['captchaincorrect'] = 'Enter the letters as they are shown in the image';
 
@@ -165,10 +209,18 @@ $string['firstname'] = 'First name';
 $string['firstnamedescription'] = ' ';
 $string['lastname'] = 'Last name';
 $string['lastnamedescription'] = ' ';
+$string['studentid'] = 'ID number';
+$string['displayname'] = 'Display name';
+$string['fullname'] = 'Full name';
 $string['registerstep1description'] = 'Welcome! To use this site you must first register. You must also agree to the <a href="terms.php">terms and conditions</a>. The data we collect here will be stored according to our <a href="privacy.php">privacy statement</a>.';
-$string['registerstep3fieldsoptional'] = '<h3>Choose an Optional Profile Image</h3><p>You have now successfully registered with ' . get_config('sitename') . '! You may now choose an optional profile icon to be displayed as your avatar. This image cannot be larger than 300x300 pixels.</p>';
+$string['registerstep3fieldsoptional'] = '<h3>Choose an Optional Profile Image</h3><p>You have now successfully registered with ' . get_config('sitename') . '! You may now choose an optional profile icon to be displayed as your avatar.</p>';
 $string['registerstep3fieldsmandatory'] = '<h3>Fill Out Mandatory Profile Fields</h3><p>The following fields are required. You must fill them out before your registration is complete.</p>';
 $string['registeringdisallowed'] = 'Sorry, you cannot register for this system at this time';
+$string['membershipexpiry'] = 'Membership expires';
+$string['institutionfull'] = 'The institution you have chosen is not accepting any more registrations.';
+$string['registrationnotallowed'] = 'The institution you have chosen does not allow self-registration.';
+$string['registrationcomplete'] = 'Thank you for registering at %s';
+$string['language'] = 'Language';
 
 // Forgot password
 $string['cantchangepassword'] = 'Sorry, you are unable to change your password through this interface - please use your institution\'s interface instead';
@@ -216,6 +268,41 @@ $string['forgotpasswordenternew'] = 'Please enter your new password to continue'
 $string['nosuchpasswordrequest'] = 'No such password request';
 $string['passwordchangedok'] = 'Your password was successfully changed';
 
+// Reset password when moving from external to internal auth.
+$string['noinstitutionsetpassemailsubject'] = '%s: Membership of %s';
+$string['noinstitutionsetpassemailmessagetext'] = 'Dear %s,
+
+You are no longer a member of %s.
+You may continue to use %s with your current username %s, but you must set a new password for your account.
+
+Please follow the link below to continue the reset process.
+
+' . get_config('wwwroot') . 'forgotpass.php?key=%s
+
+If you have any questsions regarding the above, please feel free to contact
+us.
+
+' . get_config('wwwroot') . 'contact.php
+
+Regards, %s Site Administrator
+
+' . get_config('wwwroot') . 'forgotpass.php?key=%s';
+$string['noinstitutionsetpassemailmessagehtml'] = '<p>Dear %s,</p>
+
+<p>You are no longer a member of %s.</p>
+<p>You may continue to use %s with your current username %s, but you must set a new password for your account.</p>
+
+<p>Please follow the link below to continue the reset process.</p>
+
+<p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>
+
+<p>If you have any questsions regarding the above, please feel free to <a href="' . get_config('wwwroot') . 'contact.php">contact us</a>.</p>
+
+<p>Regards, %s Site Administrator</p>
+
+<p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>';
+
+
 // Expiry times
 $string['noenddate'] = 'No end date';
 $string['day']       = 'day';
@@ -246,10 +333,13 @@ $string['unknownerror']       = 'An unknown error occurred (0x20f91a0)';
 // menu
 $string['home']        = 'Home';
 $string['myportfolio'] = 'My Portfolio';
+$string['myviews']       = ' My Views';
 $string['settings']    = 'Settings';
-$string['groupsimin']  = 'Groups I\'m In';
-$string['groupsiown']  = 'Groups I Own';
 $string['myfriends']          = 'My Friends';
+$string['findfriends']        = 'Find Friends';
+$string['groups']             = 'Groups';
+$string['mygroups']           = 'My Groups';
+$string['findgroups']         = 'Find Groups';
 $string['youareloggedinas']   = 'You are logged in as %s';
 $string['unreadmessages'] = 'unread messages';
 $string['unreadmessage'] = 'unread message';
@@ -267,48 +357,26 @@ $string['preferences'] = 'Preferences';
 $string['activityprefs'] = 'Activity preferences';
 $string['changepassword'] = 'Change password';
 $string['notifications'] = 'Notifications';
-
-// my views
-$string['accessstartdate'] = 'Access start date';
-$string['accessstopdate'] = 'Access end date';
-$string['artefacts'] = 'Artefacts';
-$string['createnewview'] = 'Create New View';
-$string['deleteviewfailed'] = 'Delete view failed';
-$string['deleteviewquestion'] = 'Do you really want to delete this view?';
-$string['description'] = 'Description';
-$string['editaccess'] = 'Edit Access';
-$string['editview'] = 'Edit View';
-$string['editviewinformation'] = 'Edit View Information';
-$string['myviews'] = 'My Views';
-$string['notownerofview'] = 'You are not the owner of this view';
-$string['reallyaddaccesstoemptyview'] = 'Your view contains no artefacts.  Do you really want to give these users access to the view?';
-$string['saveaccess'] = 'Save Access';
-$string['submitview'] = 'Submit View';
-$string['submitviewfailed'] = 'Submit view failed';
-$string['submitviewquestion'] = 'If you submit this view for assessment, you will not be able to edit the view or any of its associated artefacts until your tutor has finished marking the view.  Are you sure you want to submit this view now?';
-$string['viewaccesseditedsuccessfully'] = 'View access saved successfully';
-$string['viewdeleted'] = 'View deleted';
-$string['views'] = 'Views';
-$string['viewsubmitted'] = 'View submitted';
-$string['viewsubmittedto'] = 'This view has been submitted to %s';
-
-// access levels
-$string['public'] = 'Public';
-$string['loggedin'] = 'Logged In Users';
-$string['friends'] = 'Friends';
-$string['groups'] = 'Groups';
-$string['users'] = 'Users';
-
-// view user
-$string['fullname'] = 'Full name';
-$string['displayname'] = 'Display name';
-$string['studentid'] = 'ID number';
-$string['inviteusertojoingroup'] = 'Invite this user to join a group';
-$string['addusertogroup'] = 'Add this user to a group';
+$string['institutionmembership'] = 'Institution membership';
+$string['youareamemberof'] = 'You are a member of %s';
+$string['leaveinstitution'] = 'Leave institution';
+$string['reallyleaveinstitution'] = 'Are you sure you want to leave this institution?';
+$string['youhaverequestedmembershipof'] = 'You have requested membership of %s';
+$string['cancelrequest'] = 'Cancel request';
+$string['youhavebeeninvitedtojoin'] = 'You have been invited to join %s';
+$string['confirminvitation'] = 'Confirm invitation';
+$string['joininstitution'] = 'Join institution';
+$string['decline'] = 'Decline';
+$string['requestmembershipofaninstitution'] = 'Request membership of an institution';
+$string['optionalinstitutionid'] = 'Institution ID (optional)';
+$string['institutionmemberconfirmsubject'] = 'Institution membership confirmation';
+$string['institutionmemberconfirmmessage'] = 'You have been added as a member of %s.';
 
 $string['emailname'] = 'Mahara System'; // robot! 
 
 $string['config'] = 'Config';
+
+$string['sendmessage'] = 'Send message';
 
 $string['notinstallable'] = 'Not installable!';
 $string['installedplugins'] = 'Installed plugins';
@@ -335,218 +403,23 @@ $string['addemail'] = 'Add email address';
 
 // Search
 $string['search'] = 'Search';
-$string['advancedsearch'] = 'Advanced search';
+$string['Query'] = 'Query';
 $string['query'] = 'Query';
 $string['querydescription'] = 'The words to be searched for';
-$string['results'] = 'Results';
+$string['result'] = 'result';
+$string['results'] = 'results';
+$string['Results'] = 'Results';
 $string['noresultsfound'] = 'No results found';
+$string['users'] = 'Users';
 
 // artefact
 $string['artefact'] = 'artefact';
 $string['Artefact'] = 'Artefact';
 $string['artefactnotfound'] = 'Artefact with id %s not found';
 $string['artefactnotrendered'] = 'Artefact not rendered';
-$string['created'] = 'Created';
-$string['lastmodified'] = 'Last modified';
-$string['owner'] = 'Owner';
-$string['size'] = 'Size';
-$string['title'] = 'Title';
-$string['type'] = 'Type';
 
 $string['belongingto'] = 'Belonging to';
 $string['allusers'] = 'All users';
-
-// view view
-$string['addedtowatchlist'] = 'This view has been added to your watchlist';
-$string['removedfromwatchlist'] = 'This view has been removed from your watchlist';
-$string['addfeedbackfailed'] = 'Add feedback failed';
-$string['addtowatchlist'] = 'Add view to watchlist';
-$string['removefromwatchlist'] = 'Remove view from watchlist';
-$string['alreadyinwatchlist'] = 'This view is already in your watchlist';
-$string['attachedfileaddedtofolder'] = "The attached file %s has been added to your '%s' folder.";
-$string['attachfile'] = "Attach file";
-$string['complaint'] = 'Complaint';
-$string['date'] = 'Date';
-$string['feedback'] = 'Feedback';
-$string['feedbackattachdirname'] = 'assessmentfiles';
-$string['feedbackattachdirdesc'] = 'Files attached to view assessments';
-$string['feedbackattachmessage'] = 'The attached file has been added to your %s folder';
-$string['feedbackmadeprivate'] = 'Feedback changed to private';
-$string['feedbackonthisartefactwillbeprivate'] = 'Feedback on this artefact will only be visible to the owner.';
-$string['feedbackonviewbytutorofgroup'] = 'Feedback on %s by %s of %s';
-$string['feedbacksubmitted'] = 'Feedback submitted';
-$string['makepublic'] = 'Make public';
-$string['nopublicfeedback'] = 'No public feedback';
-$string['notifysiteadministrator'] = 'Notify site administrator';
-$string['placefeedback'] = 'Place feedback';
-$string['print'] = 'Print';
-$string['private'] = 'Private';
-$string['makeprivate'] = 'Change to Private';
-$string['reportobjectionablematerial'] = 'Report objectionable material';
-$string['reportsent'] = 'Your report has been sent';
-$string['updatewatchlistfailed'] = 'Update of watchlist failed';
-$string['view'] = 'view';
-$string['View'] = 'View';
-$string['watchlistupdated'] = 'Your watchlist has been updated';
-
-// group
-$string['creategroup'] = 'Create Group';
-$string['groupmemberrequests'] = 'Pending membership requests';
-$string['addgroup'] = 'Add new group';
-$string['sendinvitation'] = 'Send invite';
-$string['invitetogroupsubject'] = 'You were invited to join a group';
-$string['invitetogroupmessage'] = '%s has invited you to join a group, \'%s\'.  Click on the link below for more information.';
-$string['inviteuserfailed'] = 'Failed to invite the user';
-$string['userinvited'] = 'Invite sent';
-$string['addedtogroupsubject'] = 'You were added to a group';
-$string['addedtogroupmessage'] = '%s has added you to a group, \'%s\'.  Click on the link below to see the group';
-$string['adduserfailed'] = 'Failed to add the user';
-$string['useradded'] = 'User added';
-$string['editgroup'] = 'Edit Group';
-$string['savegroup'] = 'Save Group';
-$string['groupsaved'] = 'Group Saved Successfully';
-$string['groupname'] = 'Group Name';
-$string['invalidgroup'] = 'The group doesn\'t exist';
-$string['canteditdontown'] = 'You can\'t edit this group because you don\'t own it';
-$string['groupdescription'] = 'Group Description';
-$string['membershiptype'] = 'Group Membership Type';
-$string['membershiptype.controlled'] = 'Controlled Membership';
-$string['membershiptype.invite']     = 'Invite Only';
-$string['membershiptype.request']    = 'Request Membership';
-$string['membershiptype.open']       = 'Open Membership';
-$string['pendingmembers']            = 'Pending Members';
-$string['reason']                    = 'Reason';
-$string['approve']                   = 'Approve';
-$string['reject']                    = 'Reject';
-$string['groupalreadyexists'] = 'A Group by this name already exists';
-$string['owner'] = 'Owner';
-$string['members'] = 'Members';
-$string['memberrequests'] = 'Membership requests';
-$string['submittedviews'] = 'Submitted views';
-$string['releaseview'] = 'Release view';
-$string['tutor'] = 'Tutor';
-$string['tutors'] = 'Tutors';
-$string['member'] = 'Member';
-$string['remove'] = 'Remove';
-$string['updatemembership'] = 'Update membership';
-$string['memberchangefailed'] = 'Failed to update some membership information';
-$string['memberchangesuccess'] = 'Membership status changed successfully';
-$string['viewreleasedsubject'] = 'Your view has been released';
-$string['viewreleasedmessage'] = 'The view that you submitted to group %s has been released back to you by %s';
-$string['viewreleasedsuccess'] = 'View was released successfully';
-$string['groupmembershipchangesubject'] = 'Group membership: %s';
-$string['groupmembershipchangemessagetutor'] = 'You have been promoted to a tutor in this group';
-$string['groupmembershipchangemessagemember'] = 'You have been demoted from a tutor in this group';
-$string['groupmembershipchangemessageremove'] = 'You have been removed from this group';
-$string['groupmembershipchangemessagedeclinerequest'] = 'Your request to join this group has been declined';
-$string['groupmembershipchangedmessageaddedtutor'] = 'You have been added as a tutor in this group';
-$string['groupmembershipchangedmessageaddedmember'] = 'You have been added as a member in this group';
-$string['leavegroup'] = 'Leave this group';
-$string['joingroup'] = 'Join this group';
-$string['requestjoingroup'] = 'Request to join this group';
-$string['grouphaveinvite'] = 'You have been invited to join this group';
-$string['groupnotinvited'] = 'You have not been invited to join this group';
-$string['groupinviteaccepted'] = 'Invite accepted successfully! You are now a group member';
-$string['groupinvitedeclined'] = 'Invite declined successfully!';
-$string['acceptinvitegroup'] = 'Accept';
-$string['declineinvitegroup'] = 'Decline';
-$string['leftgroup'] = 'You have now left this group';
-$string['leftgroup'] = 'Leaving group failed';
-$string['couldnotleavegroup'] = 'You cannot leave this group';
-$string['joinedgroup'] = 'You are now a group member';
-$string['couldnotjoingroup'] = 'You cannot join this group';
-$string['grouprequestsent'] = 'Group membership request sent';
-$string['couldnotrequestgroup'] = 'Could not send group membership request';
-$string['groupjointypeopen'] = 'Membership to this community is open';
-$string['groupjointypecontrolled'] = 'Membership to this community  is controlled.  You cannot join this community';
-$string['groupjointypeinvite'] = 'Membership to this community is invite only';
-$string['groupjointyperequest'] = 'Membership to this community is by request only';
-$string['grouprequestsubject'] = 'New community membership request';
-$string['grouprequestmessage'] = '%s has sent a membership request to join the community %s';
-$string['grouprequestmessagereason'] = '%s has sent a membership request to join the community %s with the reason %s.';
-$string['groupconfirmdelete'] = 'Are you sure you wish to delete this community?';
-$string['groupconfirmdeletehasviews'] = 'Are you sure you wish to delete this community? Some of your views use this community for access control, removing this community would mean that the members of that community would not have access to the views.';
-$string['deletegroup'] = 'Group Deleted Successfully';
-
-
-
-// friendslist
-$string['reasonoptional'] = 'Reason (optional)';
-$string['request'] = 'Request';
-
-$string['friendformaddsuccess'] = 'Added %s to your friends list';
-$string['friendformremovesuccess'] = 'Removed %s from your friends list';
-$string['friendformrequestsuccess'] = 'Sent a friendship request to %s';
-$string['friendformacceptsuccess'] = 'Accepted friend request';
-$string['friendformrejectsuccess'] = 'Rejected friend request';
-
-$string['addtofriendslist'] = 'Add to friends';
-$string['requestfriendship'] = 'Request friendship';
-
-$string['addedtofriendslistsubject'] = 'New friend';
-$string['addedtofriendslistmessage'] = '%s added you as a friend! This means that %s is also on your friend list now too. '
-    . ' Click on the link below to see their profile page';
-
-$string['requestedfriendlistsubject'] = 'New friend request';
-$string['requestedfriendlistmessage'] = '%s has requested that you add them as a friend.  '
-    .' You can either do this from the link below, or from your friends list page';
-
-$string['requestedfriendlistmessagereason'] = '%s has requested that you add them as a friend.'
-    . ' You can either do this from the link below, or from your friends list page.'
-    . ' Their reason was:
-    ';
-
-$string['removefromfriendslist'] = 'Remove from friends';
-$string['confirmremovefriend'] = 'Are you sure you want to remove this user from your friends list?';
-$string['removedfromfriendslistsubject'] = 'Removed from friends list';
-$string['removedfromfriendslistmessage'] = '%s has removed you from their friends list.';
-$string['removedfromfriendslistmessagereason'] = '%s has removed you from their friends list.  Their reason was: ';
-
-$string['friendshipalreadyrequested'] = 'You have requested to be added to %s\'s friends list';
-$string['friendshipalreadyrequestedowner'] = '%s has requested to be added to your friends list';
-$string['rejectfriendshipreason'] = 'Reason for rejecting request';
-
-$string['friendrequestacceptedsubject'] = 'Friend request accepted';
-$string['friendrequestacceptedmessage'] = '%s has accepted your friend request and they have been added to your friends list'; 
-$string['friendrequestrejectedsubject'] = 'Friend request rejected';
-$string['friendrequestrejectedmessage'] = '%s has rejected your friend request.';
-$string['friendrequestrejectedmessagereason'] = '%s has rejected your friend request.  Their reason was: ';
-
-$string['allfriends']     = 'All Friends';
-$string['currentfriends'] = 'Current Friends';
-$string['pendingfriends'] = 'Pending friends';
-$string['backtofriendslist'] = 'Back to Friends List';
-$string['findnewfriends'] = 'Find New Friends';
-$string['seeallviews']    = 'See all %s views...';
-$string['noviewstosee']   = 'None that you can see :(';
-$string['whymakemeyourfriend'] = 'This is why you should make me your friend:';
-$string['approverequest'] = 'Approve Request!';
-$string['denyrequest']    = 'Deny Request';
-$string['pending']        = 'pending';
-$string['trysearchingforfriends'] = 'Try %ssearching for your friends%s to grow your network!';
-$string['nobodyawaitsfriendapproval'] = 'Nobody is awaiting your approval to become your friend';
-$string['sendfriendrequest'] = 'Send Friend Request!';
-$string['addtomyfriends'] = 'Add to My Friends!';
-$string['friendshiprequested'] = 'Friendship requested!';
-$string['existingfriend'] = 'existing friend';
-$string['nosearchresultsfound'] = 'No search results found :(';
-
-$string['friendlistfailure'] = 'Failed to modify your friends list';
-$string['userdoesntwantfriends'] = 'This user doesn\'t want any new friends';
-
-//messaging between users
-$string['messagebody'] = 'Send message';
-$string['sendmessage'] = 'Send message';
-$string['messagesent'] = 'Message sent!';
-$string['messagenotsent'] = 'Failed to send message';
-$string['newusermessage'] = 'New message from %s';
-
-
-$string['friend'] = 'Friend';
-$string['profileicon'] = 'Profile Icon';
-
-// general views stuff
-$string['allviews'] = 'All views';
 
 // Upload manager
 $string['quarantinedirname'] = 'quarantine';
@@ -578,6 +451,7 @@ $string['sizemb'] = 'MB';
 $string['sizekb'] = 'KB';
 $string['sizegb'] = 'GB';
 $string['sizeb'] = 'b';
+$string['bytes'] = 'bytes';
 
 // countries
 
@@ -825,6 +699,10 @@ $string['country.ye'] = 'Yemen';
 $string['country.zm'] = 'Zambia';
 $string['country.zw'] = 'Zimbabwe';
 
-
+// general stuff that doesn't really fit anywhere else
+$string['system'] = 'System';
+$string['done'] = 'Done';
+$string['back'] = 'Back';
+$string['alphabet'] = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z';
 
 ?>

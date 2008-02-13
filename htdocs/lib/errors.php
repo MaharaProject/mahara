@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -117,11 +117,17 @@ function log_environ ($message, $escape=true, $backtrace=true) {
  * @access private
  */
 function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $line=null, $trace=null) {
-    global $SESSION;
-    if (!$SESSION && function_exists('get_config')) {
+    global $SESSION, $CFG;
+    if (!$SESSION && function_exists('get_config') && $CFG) {
         require_once(get_config('docroot') . 'auth/lib.php');
         $SESSION = Session::singleton();
     }
+
+    static $requestprefix = '';
+    if (!$requestprefix) {
+        $requestprefix = substr(md5(microtime()), 0, 2) . ' ';
+    }
+
     static $loglevelnames = array(
         LOG_LEVEL_ENVIRON => 'environ',
         LOG_LEVEL_DBG     => 'dbg',
@@ -163,15 +169,13 @@ function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $lin
     }
 
     // Make a prefix for each line, if we are logging a normal debug/info/warn message
+    $prefix = $requestprefix;
     if ($loglevel != LOG_LEVEL_ENVIRON && function_exists('get_config')) {
         $docroot = get_config('docroot');
         $prefixfilename = (substr($filename, 0, strlen($docroot)) == $docroot)
             ? substr($filename, strlen($docroot))
             : $filename;
-        $prefix = '(' . $prefixfilename . ':' . $linenum . ') ';
-    }
-    else {
-        $prefix = '';
+        $prefix .= '(' . $prefixfilename . ':' . $linenum . ') ';
     }
     $prefix = '[' . str_pad(substr(strtoupper($loglevelnames[$loglevel]), 0, 3), 3) . '] ' . $prefix;
 
@@ -391,6 +395,8 @@ function exception (Exception $e) {
             $e->set_log_off();
         }
     }
+
+    // Display the message and die
     $e->handle_exception();
 }
 
@@ -456,7 +462,7 @@ class MaharaException extends Exception {
         return $this->getMessage();
     }
 
-    public function handle_exception() {
+    public final function handle_exception() {
 
         if (!empty($this->log)) {
             log_message($this->getMessage(), LOG_LEVEL_WARN, true, true, $this->getFile(), $this->getLine(), $this->getTrace());
@@ -480,7 +486,7 @@ class MaharaException extends Exception {
         }
 
         $outputtitle = $this->get_string('title');
-        $outputmessage = $this->render_exception();
+        $outputmessage = trim($this->render_exception());
 
         if (function_exists('smarty') && !$this instanceof ConfigSanityException) {
             $smarty = smarty();
@@ -550,6 +556,11 @@ EOF;
  */
 class SystemException extends MaharaException implements MaharaThrowable {
 
+    public function __construct($message, $code=0) {
+        parent::__construct($message, $code);
+        $this->set_log();
+    }
+
     public function render_exception () {
         return $this->get_string('message');
     }
@@ -607,8 +618,8 @@ class UserException extends MaharaException implements MaharaThrowable {
 class NotFoundException extends UserException {
     public function strings() {
         return array_merge(parent::strings(), 
-                           array('message' => 'The page you are looking for could not be found',
-                                 'title' => 'Not Found'));
+                           array('message' => get_string('notfoundexception', 'error'),
+                                 'title'   => get_string('notfound', 'error')));
     }
 
     public function render_exception() {
@@ -631,12 +642,17 @@ class ConfigSanityException extends ConfigException {
  * An SQL related error occured
  */
 class SQLException extends SystemException {
-    public function handle_exception() {
-        if (!empty($GLOBALS['_TRANSACTION_STARTED'])) {
+    public function __construct($message=null, $code=0) {
+        global $DB_IGNORE_SQL_EXCEPTIONS;
+
+        if ($GLOBALS['_TRANSACTION_LEVEL'] > 0) {
             db_rollback();
         }
-        log_warn($this->getMessage());
-        parent::handle_exception();
+        parent::__construct($message, $code);
+
+        if (empty($DB_IGNORE_SQL_EXCEPTIONS)) {
+            log_warn($this->getMessage());
+        }
     }
 }
 
@@ -671,7 +687,14 @@ class XmlrpcServerException extends SystemException {}
 /**
  * Xmlrpc Client exception - Something has gone wrong in the networking
  */
-class XmlrpcClientException extends SystemException {}
+class XmlrpcClientException extends SystemException {
+    public function strings() {
+        return array_merge(parent::strings(), array(
+            'title'   => get_string('xmlrpccouldnotlogyouin', 'auth'),
+            'message' => get_string('xmlrpccouldnotlogyouindetail', 'auth'))
+        );
+    }
+}
 
 /**
  * Error with SSL and encryption
@@ -689,6 +712,16 @@ class EmailException extends SystemException {}
 class ArtefactNotFoundException extends NotFoundException {}
 
 /**
+ * Exception - block instance not found
+ */
+class BlockInstanceNotFoundException extends NotFoundException {}
+
+/** 
+ * Exception - interaction instance not found
+ */
+class InteractionInstanceNotFoundException extends NotFoundException {}
+
+/**
  * Exception - view not found
  */
 class ViewNotFoundException extends NotFoundException {}
@@ -697,6 +730,17 @@ class ViewNotFoundException extends NotFoundException {}
  * Exception - user not found
  */
 class UserNotFoundException extends NotFoundException {}
+
+/**
+ * Exception - user not found while doing XMLRPC authentication
+ */
+class XmlrpcUserNotFoundException extends UserNotFoundException {
+    public function strings() {
+        return array_merge(parent::strings(),
+            array('message' => ''),
+            array('title'   => get_string('unabletosigninviasso', 'auth')));
+    }
+}
 
 /**
  * Exception - group not found
@@ -709,18 +753,13 @@ class GroupNotFoundException extends NotFoundException {}
 class QuotaExceededException extends UserException {}
 
 /**
- * Exception - anything to do with template parsing
- */
-class TemplateParserException extends ConfigException {}
-
-/**
  * Exception - Access denied. Throw this if a user is trying to view something they can't
  */
 class AccessDeniedException extends UserException {
     public function strings() {
         return array_merge(parent::strings(), 
-                           array('message' => 'You do not have access to view this page',
-                                 'title' => 'Access denied'));
+                           array('message' => get_string('accessdeniedexception', 'error'),
+                                 'title'   => get_string('accessdenied', 'error')));
     }
 
     public function render_exception() {

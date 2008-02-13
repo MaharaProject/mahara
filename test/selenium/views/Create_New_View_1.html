@@ -1,0 +1,84 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>create_new_view_1</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">create_new_view_1</td></tr>
+</thead><tbody>
+<tr>
+    <td>open</td>
+    <td>/</td>
+    <td></td>
+</tr>
+<tr>
+    <td>clickAndWait</td>
+    <td>link=My Portfolio</td>
+    <td></td>
+</tr>
+<tr>
+    <td>clickAndWait</td>
+    <td>createnew</td>
+    <td></td>
+</tr>
+<tr>
+    <td>type</td>
+    <td>editview_title</td>
+    <td>Test view</td>
+</tr>
+<tr>
+    <td>clickAndWait</td>
+    <td>editview_submit</td>
+    <td></td>
+</tr>
+<tr>
+    <td>assertElementPresent</td>
+    <td>//input[@value='Back']</td>
+    <td></td>
+</tr>
+<tr>
+    <td>assertElementPresent</td>
+    <td>//input[@value='Next']</td>
+    <td></td>
+</tr>
+<tr>
+    <td>assertElementPresent</td>
+    <td>link=Change view layout</td>
+    <td></td>
+</tr>
+<tr>
+    <td>click</td>
+    <td>link=General (1)</td>
+    <td></td>
+</tr>
+<tr>
+    <td>clickAndWait</td>
+    <td>//input[@value='Next']</td>
+    <td></td>
+</tr>
+<tr>
+    <td>click</td>
+    <td>//button[@type='button']</td>
+    <td></td>
+</tr>
+<tr>
+    <td>clickAndWait</td>
+    <td>editaccess_submit</td>
+    <td></td>
+</tr>
+<tr>
+    <td>assertConfirmation</td>
+    <td>Your view contains no artefacts.&nbsp;&nbsp;Do you really want to give these users access to the view?</td>
+    <td></td>
+</tr>
+<tr>
+    <td>verifyTextPresent</td>
+    <td>View created successfully</td>
+    <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

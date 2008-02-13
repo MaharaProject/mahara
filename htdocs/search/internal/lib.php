@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage search-internal
@@ -40,6 +40,11 @@ class PluginSearchInternal extends PluginSearch {
      * @param string  The query string
      * @param integer How many results to return
      * @param integer What result to start at (0 == first result)
+     * @param data    Filters the users searched by
+     *                can contain:
+     *             'group' => integer, // only users in this group
+     *             'owner' => boolean  // include the group ownwer (only if group is set)
+     *             'exclude'=> int     // excludes a user
      * @return array  A data structure containing results looking like ...
      *         $results = array(
      *               count   => integer, // total number of results
@@ -68,33 +73,40 @@ class PluginSearchInternal extends PluginSearch {
      *               ),
      *           );
      */
-    public static function search_user($query_string, $limit, $offset = 0) {
+    public static function search_user($query_string, $limit, $offset = 0, $data=array()) {
         safe_require('artefact', 'internal');
         $publicfields = array_keys(ArtefactTypeProfile::get_public_fields());
         if (empty($publicfields)) {
             $publicfields = array('preferredname');
         }
         if (is_postgres()) {
-            return self::search_user_pg($query_string, $limit, $offset, $publicfields);
+            return self::search_user_pg($query_string, $limit, $offset, $data, $publicfields);
         } 
         else if (is_mysql()) {
-            return self::search_user_my($query_string, $limit, $offset, $publicfields);
+            return self::search_user_my($query_string, $limit, $offset, $data, $publicfields);
         }
         else {
             throw new SQLException('search_user() is not implemented for your database engine (' . get_config('dbtype') . ')');
         }
     }
 
-    public static function search_user_pg($query_string, $limit, $offset, $publicfields) {
+    public static function search_user_pg($query_string, $limit, $offset, $data, $publicfields) {
         $fieldlist = "('" . join("','", $publicfields) . "')";
-
-        $count = get_field_sql('
-            SELECT 
+        $sql = 'SELECT
                 COUNT(DISTINCT u.id)
             FROM
                 {usr} u
                 LEFT JOIN {artefact} a ON u.id=a.owner
-            WHERE
+                ';
+        if (isset($data['group'])) {
+            $sql .= 'INNER JOIN {group_member} gm ON (gm.member = u.id AND gm.group = ' . (int)$data['group'] . ')
+                ';
+            if (isset($data['owner']) && !$data['owner']) {
+                $sql .= 'INNER JOIN {group} g ON (g.id = gm.group AND g.owner != u.id)
+                    ';
+            }
+        }
+        $sql .= 'WHERE
                 u.id <> 0 AND u.active = 1
                 AND ((
                         u.preferredname ILIKE \'%\' || ? || \'%\'
@@ -111,17 +123,25 @@ class PluginSearchInternal extends PluginSearch {
                         AND ( a.title ILIKE \'%\' || ? || \'%\')
                     )
                 )
-            ',
-            array($query_string, $query_string, $query_string, $query_string)
-        );
+                ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
+            ';
+        $count = get_field_sql($sql, array($query_string, $query_string, $query_string, $query_string));
 
         if ($count > 0) {
-            $data = get_records_sql_array('
-                SELECT DISTINCT ON (u.firstname, u.lastname, u.id)
-                    u.id, u.username, u.institution, u.firstname, u.lastname, u.preferredname, u.email, u.staff
+            $sql = 'SELECT DISTINCT ON (u.firstname, u.lastname, u.id)
+                    u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff
                 FROM {artefact} a
                     INNER JOIN {usr} u ON u.id = a.owner
-                WHERE
+                ';
+            if (isset($data['group'])) {
+                $sql .= 'INNER JOIN {group_member} gm ON (gm.member = u.id AND gm.group = ' . (int)$data['group'] . ')
+                    ';
+                if (isset($data['owner']) && !$data['owner']) {
+                    $sql .= 'INNER JOIN {group} g ON (g.id = gm.group AND g.owner != u.id)
+                        ';
+                    }
+            }
+            $sql .= 'WHERE
                     u.id <> 0 AND u.active = 1
                     AND ((
                             u.preferredname ILIKE \'%\' || ? || \'%\'
@@ -138,7 +158,9 @@ class PluginSearchInternal extends PluginSearch {
                             AND ( a.title ILIKE \'%\' || ? || \'%\')
                         )
                     )
-                ORDER BY u.firstname, u.lastname, u.id',
+                    ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
+                ORDER BY u.firstname, u.lastname, u.id';
+            $data = get_records_sql_array($sql,
             array($query_string, $query_string, $query_string, $query_string),
             $offset,
             $limit);
@@ -161,16 +183,24 @@ class PluginSearchInternal extends PluginSearch {
         );
     }
 
-    public static function search_user_my($query_string, $limit, $offset, $publicfields) {
+    public static function search_user_my($query_string, $limit, $offset, $data, $publicfields) {
         $fieldlist = "('" . join("','", $publicfields) . "')";
 
-        $count = get_field_sql('
-            SELECT 
-                COUNT(DISTINCT owner)
+        $sql = 'SELECT
+                COUNT(DISTINCT u.id)
             FROM
                 {usr} u
                 LEFT JOIN {artefact} a ON u.id=a.owner
-            WHERE
+                ';
+        if (isset($data['group'])) {
+            $sql .= 'INNER JOIN {group_member} gm ON (gm.member = u.id AND gm.group = ' . (int)$data['group'] . ')
+                ';
+            if (isset($data['owner']) && !$data['owner']) {
+                $sql .= 'INNER JOIN {group} g ON (g.id = gm.group AND g.owner != u.id)
+                    ';
+            }
+        }
+        $sql .= 'WHERE
                 u.id <> 0 AND u.active = 1
                 AND ((
                         u.preferredname IS NULL
@@ -184,9 +214,9 @@ class PluginSearchInternal extends PluginSearch {
                         AND ( a.title LIKE \'%\' || ? || \'%\')
                     )
                 )
-            ',
-            array($query_string, $query_string, $query_string)
-        );
+                ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
+            ';
+        $count = get_field_sql($sql, array($query_string, $query_string, $query_string));
 
         if ($count > 0) {
             // @todo This is quite possibly not correct. See the postgres 
@@ -194,12 +224,20 @@ class PluginSearchInternal extends PluginSearch {
             // postgres query. There is a workaround by using SELECT * followed 
             // by GROUP BY 1, 2, 3, but it's not really valid SQL. The other 
             // way is to rewrite the query using a self join on the usr table.
-            $data = get_records_sql_array('
-                SELECT DISTINCT
-                    u.id, u.username, u.institution, u.firstname, u.lastname, u.preferredname, u.email, u.staff
+            $sql = 'SELECT DISTINCT
+                    u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff
                 FROM {artefact} a
                     INNER JOIN {usr} u ON u.id = a.owner
-                WHERE
+                    ';
+            if (isset($data['group'])) {
+                $sql .= 'INNER JOIN {group_member} gm ON (gm.member = u.id AND gm.group = ' . (int)$data['group'] . ')
+                    ';
+                if (isset($data['owner']) && !$data['owner']) {
+                    $sql .= 'INNER JOIN {group} g ON (g.id = gm.group AND g.owner != u.id)
+                        ';
+                    }
+            }
+            $sql .= 'WHERE
                     u.id <> 0 AND u.active = 1
                     AND ((
                             u.preferredname IS NULL
@@ -213,8 +251,9 @@ class PluginSearchInternal extends PluginSearch {
                             AND ( a.title LIKE \'%\' || ? || \'%\')
                         )
                     )
-                ORDER BY u.firstname, u.lastname, u.id',
-            array($query_string, $query_string, $query_string),
+                    ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
+                ORDER BY u.firstname, u.lastname, u.id';
+            get_records_sql_array($sql, array($query_string, $query_string, $query_string),
             $offset,
             $limit);
 
@@ -236,12 +275,237 @@ class PluginSearchInternal extends PluginSearch {
         );
     }
     
+
+    private static function match_expression($op, $string, &$values, $ilike) {
+        switch ($op) {
+        case 'starts':
+            $values[] = $string;
+            return ' ' . $ilike . ' ? || \'%\'';
+        case 'equals':
+            $values[] = $string;
+            return ' = ? ';
+        case 'contains':
+            $values[] = $string;
+            return ' ' . $ilike . ' \'%\' || ? || \'%\'';
+        case 'in':
+            return ' IN (' . join(',', array_map('db_quote',$string)) . ')';
+        }
+    }
+
+
+    public static function admin_search_user($queries, $constraints, $offset, $limit, 
+                                             $sortfield, $sortdir) {
+        $sort = $sortfield . ' ' . strtoupper($sortdir);
+        $where = 'WHERE u.id <> 0 AND u.deleted = 0';
+        $values = array();
+
+        // Get the correct keyword for case insensitive LIKE
+        $ilike = db_ilike();
+
+        // Only handle OR/AND expressions at the top level.  Eventually we may need subexpressions.
+
+        if (!empty($queries)) {
+            $where .= ' AND ( ';
+            $str = array();
+            foreach ($queries as $f) {
+                $str[] = 'u.' . $f['field'] 
+                    . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
+            }
+            $where .= join(' OR ', $str) . ') ';
+        } 
+
+        // @todo: Institution stuff is messy and will probably need to
+        // be rewritten when we get multiple institutions per user
+
+        $requested = false;
+        $institutionsearch = '';
+        if (!empty($constraints)) {
+            foreach ($constraints as $f) {
+                if (strpos($f['field'], 'institution') === 0) {
+                    $institutionsearch .= ' 
+                        LEFT OUTER JOIN {usr_institution} i ON i.usr = u.id ';
+                    if (strpos($f['field'], 'requested') > 0) {
+                        $institutionsearch .= ' 
+                            LEFT OUTER JOIN {usr_institution_request} ir ON ir.usr = u.id ';
+                    }
+                    if ($f['field'] == 'institution_requested') {
+                        $where .= ' AND ( i.institution ' .
+                            PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike) .
+                            ' OR ir.institution ' .
+                            PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike) . ')';
+                        $requested = true;
+                    } else {
+                        if ($f['string'] == 'mahara') {
+                            $where .= ' AND i.institution IS NULL';
+                        } else {
+                            $where .= ' AND i.institution'
+                                . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
+                        }
+                    }
+                } else {
+                    $where .= ' AND u.' . $f['field'] 
+                        . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
+                }
+            }
+        }
+        if (strpos($sort, 'institution') === 0) {
+            $sort = 'i.' . $sort;
+            if ($institutionsearch == '') {
+                $institutionsearch = ' LEFT OUTER JOIN {usr_institution} i ON i.usr = u.id ';
+            }
+        }
+
+        $count = get_field_sql('SELECT COUNT(*) FROM {usr} u ' . $institutionsearch . $where, $values);
+
+        if ($count > 0) {
+            $data = get_records_sql_assoc('
+                SELECT 
+                    u.id, u.firstname, u.lastname, u.username, u.email, u.staff,
+                    u.active, NOT u.suspendedcusr IS NULL as suspended
+                FROM
+                    {usr} u ' . $institutionsearch . $where . '
+                ORDER BY ' . $sort,
+                $values,
+                $offset,
+                $limit);
+
+            if ($data) {
+                $inst = get_records_select_array('usr_institution', 
+                                                 'usr IN (' . join(',', array_keys($data)) . ')',
+                                                 null, '', 'usr,institution');
+                if ($inst) {
+                    foreach ($inst as $i) {
+                        $data[$i->usr]->institutions[] = $i->institution;
+                    }
+                }
+                if ($requested) {
+                    $inst = get_records_select_array('usr_institution_request', 
+                                                     'usr IN (' . join(',', array_keys($data)) . ')',
+                                                     null, '', 'usr,institution,confirmedusr,confirmedinstitution');
+                    if ($inst) {
+                        foreach ($inst as $i) {
+                            if ($i->confirmedusr) {
+                                $data[$i->usr]->requested[] = $i->institution;
+                            }
+                            if ($i->confirmedinstitution) {
+                                $data[$i->usr]->invitedby[] = $i->institution;
+                            }
+                        }
+                    }
+                }
+                foreach ($data as &$item) {
+                    $item = (array)$item;
+                }
+                $data = array_values($data);
+            }
+        }
+        else {
+            $data = false;
+        }
+
+        return array(
+            'count'   => $count,
+            'limit'   => $limit,
+            'offset'  => $offset,
+            'data'    => $data,
+        );
+    }
+
+
+
+    public static function institutional_admin_search_user($query, $institution, $limit) {
+        if (is_postgres()) {
+            return self::institutional_admin_search_user_pg($query, $institution, $limit);
+        } 
+        else {
+            throw new SQLException('institutional_admin_search_user() is not implemented for your database engine (' . get_config('dbtype') . ')');
+        }
+    }
+
+
+    public static function institutional_admin_search_user_pg($query, $institution, $limit) {
+        $sql = '
+            FROM {usr} u ';
+
+        $where = '
+            WHERE u.id <> 0 AND u.deleted = 0 ';
+
+        $values = array();
+        if (!empty($query)) {
+            $where .= '
+                AND (u.firstname ILIKE \'%\' || ? || \'%\'
+                     OR u.lastname ILIKE \'%\' || ? || \'%\') ';
+            $values = array($query,$query);
+        }
+
+        $studentid = '';
+        if (!is_null($institution->member)) {
+            $sql .= '
+                LEFT OUTER JOIN {usr_institution} member ON (member.usr = u.id
+                    AND member.institution = ' . db_quote($institution->name) . ')';
+            $where .= '
+                AND ' . ($institution->member ? ' NOT ' : '') . ' member.usr IS NULL';
+            $studentid = ', member.studentid';
+        }
+        if (!is_null($institution->requested) || !is_null($institution->invitedby)) {
+            $sql .= '
+                LEFT OUTER JOIN {usr_institution_request} req ON (req.usr = u.id
+                    AND req.institution = ' . db_quote($institution->name) . ')';
+            if (!is_null($institution->requested)) {
+                if ($institution->requested == 1) {
+                    $where .= ' AND req.confirmedusr = 1';
+                } else {
+                    $where .= ' AND (req.confirmedusr = 0 OR req.confirmedusr IS NULL)';
+                }
+                $studentid = ', req.studentid';
+            }
+            if (!is_null($institution->invitedby)) {
+                if ($institution->requested == 1) {
+                    $where .= ' AND req.confirmedinstitution = 1';
+                } else {
+                    $where .= ' AND (req.confirmedinstitution = 0 OR req.confirmedinstitution IS NULL)';
+                }
+            }
+        }
+
+        $count = get_field_sql('SELECT COUNT(*) ' . $sql . $where, $values);
+
+        if ($count > 0) {
+            $data = get_records_sql_array('
+                SELECT 
+                    u.id, u.firstname, u.lastname, u.username, u.preferredname, 
+                    u.admin, u.staff' . $studentid . $sql . $where . '
+                ORDER BY u.firstname ASC',
+                $values,
+                0,
+                $limit);
+            foreach ($data as &$item) {
+                $item = (array)$item;
+            }
+        }
+        else {
+            $data = false;
+        }
+
+        return array(
+            'count'   => $count,
+            'limit'   => $limit,
+            'offset'  => 0,
+            'data'    => $data,
+        );
+    }
+
+
+
+
+
     /**
      * Implement group searching with SQL
      *
      * @param string  The query string
      * @param integer How many results to return
      * @param integer What result to start at (0 == first result)
+     * @param string  Which groups to search (all, member, notmember)
      * @return array  A data structure containing results looking like ...
      *         $results = array(
      *               count   => integer, // total number of results
@@ -270,19 +534,19 @@ class PluginSearchInternal extends PluginSearch {
      *               ),
      *           );
      */
-    public static function search_group($query_string, $limit, $offset=0, $all=false) {
+    public static function search_group($query_string, $limit, $offset=0, $type='member') {
         if (is_postgres()) {
-            return self::search_group_pg($query_string, $limit, $offset, $all);
+            return self::search_group_pg($query_string, $limit, $offset, $type);
         } 
         else if (is_mysql()) {
-            return self::search_group_my($query_string, $limit, $offset, $all);
+            return self::search_group_my($query_string, $limit, $offset, $type);
         } 
         else {
             throw new SQLException('search_group() is not implemented for your database engine (' . get_config('dbtype') . ')');
         }
     }
 
-    public static function search_group_pg($query_string, $limit, $offset, $all) {
+    public static function search_group_pg($query_string, $limit, $offset, $type) {
         global $USER;
         $sql = "
             SELECT
@@ -292,10 +556,10 @@ class PluginSearchInternal extends PluginSearch {
             WHERE (
                 name ILIKE '%' || ? || '%' 
                 OR description ILIKE '%' || ? || '%' 
-            )";
-        $values = array($query_string, $query_string);
-        if (!$all) {
-            $sql .=  'AND ( 
+            ) AND deleted = ? ";
+        $values = array($query_string, $query_string, 0);
+        if ($type == 'member') {
+            $sql .=  'AND (
                 owner = ? OR id IN (
                     SELECT "group" FROM {group_member} WHERE member = ?
                 )
@@ -303,6 +567,16 @@ class PluginSearchInternal extends PluginSearch {
             $values[] = $USER->get('id');
             $values[] = $USER->get('id');
         }
+        else if ($type == 'notmember') {
+            $sql .=  'AND (
+                owner != ? AND id NOT IN (
+                    SELECT "group" FROM {group_member} WHERE member = ?
+                )
+            )';
+            $values[] = $USER->get('id');
+            $values[] = $USER->get('id');
+        }
+        $sql .= 'ORDER BY name';
         $data = get_records_sql_array($sql, $values, $offset, $limit);
 
         $sql = "
@@ -313,10 +587,18 @@ class PluginSearchInternal extends PluginSearch {
             WHERE (
                 name ILIKE '%' || ? || '%' 
                 OR description ILIKE '%' || ? || '%' 
-            )";
-        if (!$all) {
-            $sql .= 'AND ( 
+            ) AND deleted = ? ";
+        if ($type == 'member') {
+            $sql .= 'AND (
                     owner = ? OR id IN (
+                        SELECT "group" FROM {group_member} WHERE member = ?
+                    )
+                )
+            ';
+        }
+        else if ($type == 'notmember') {
+            $sql .= 'AND (
+                    owner != ? AND id NOT IN (
                         SELECT "group" FROM {group_member} WHERE member = ?
                     )
                 )
@@ -332,7 +614,7 @@ class PluginSearchInternal extends PluginSearch {
         );
     }
 
-    public static function search_group_my($query_string, $limit, $offset, $all) {
+    public static function search_group_my($query_string, $limit, $offset, $type) {
         global $USER;
         $sql = "
             SELECT
@@ -342,17 +624,27 @@ class PluginSearchInternal extends PluginSearch {
             WHERE (
                 name LIKE '%' || ? || '%' 
                 OR description LIKE '%' || ? || '%' 
-            )";
-        $values = array($query_string, $query_string);
-        if (!$all) {
-            $sql .=  "AND ( 
+            ) AND deleted = ? ";
+        $values = array($query_string, $query_string, 0);
+        if ($type == 'member') {
+            $sql .=  'AND (
                 owner = ? OR id IN (
-                    SELECT group FROM {group_member} WHERE member = ?
+                    SELECT gm.group FROM {group_member} gm WHERE gm.member = ?
+                )
+            )';
+            $values[] = $USER->get('id');
+            $values[] = $USER->get('id');
+        }
+        else if ($type == 'notmember') {
+            $sql .=  "AND (
+                owner != ? AND id NOT IN (
+                    SELECT gm.group FROM {group_member} gm WHERE gm.member = ?
                 )
             )";
             $values[] = $USER->get('id');
             $values[] = $USER->get('id');
         }
+        $sql .= 'ORDER BY name';
         $data = get_records_sql_array($sql, $values, $offset, $limit);
 
         $sql = "
@@ -363,11 +655,19 @@ class PluginSearchInternal extends PluginSearch {
             WHERE (
                 name LIKE '%' || ? || '%' 
                 OR description LIKE '%' || ? || '%' 
-            )";
-        if (!$all) {
-            $sql .= "AND ( 
+            ) AND deleted = ? ";
+        if ($type == 'member') {
+            $sql .= 'AND (
                     owner = ? OR id IN (
-                        SELECT group FROM {group_member} WHERE member = ?
+                        SELECT gm.group FROM {group_member} gm WHERE gm.member = ?
+                    )
+                )
+            ';
+        }
+        else if ($type == 'notmember') {
+            $sql .= "AND (
+                    owner != ? AND id NOT IN (
+                        SELECT gm.group FROM {group_member} gm WHERE gm.member = ?
                     )
                 )
             ";
@@ -412,22 +712,33 @@ class PluginSearchInternal extends PluginSearch {
 
         $sql = "
             SELECT
-                id, artefacttype, title, description
+                a.id, a.artefacttype, a.title, a.description
             FROM
                 {artefact} a
+            LEFT JOIN {artefact_tag} at ON (at.artefact = a.id)
             WHERE
-                owner = ?
-            AND ($querydata[0])";
+                a.owner = ?
+            AND (
+                ($querydata[0])
+                OR
+                (LOWER(at.tag) = ?)
+            )";
         $count_sql = "
             SELECT
                 COUNT(*)
             FROM
                 {artefact} a
+            LEFT JOIN {artefact_tag} at ON (at.artefact = a.id)
             WHERE
-                owner = ?
-            AND ($querydata[0])";
-
+                a.owner = ?
+            AND (
+                ($querydata[0])
+                OR
+                (LOWER(at.tag) = ?)
+            )";
         array_unshift($querydata[1], $USER->get('id'));
+        array_push($querydata[1], $querystring);
+
         $results = array(
             'data'   => get_records_sql_array($sql, $querydata[1], $offset, $limit),
             'offset' => $offset,
@@ -435,26 +746,28 @@ class PluginSearchInternal extends PluginSearch {
             'count'  => get_field_sql($count_sql, $querydata[1])
         );
 
-        foreach ($results['data'] as &$result) {
-            $newresult = array();
-            foreach ($result as $key => &$value) {
-                if ($key == 'id' || $key == 'artefacttype' || $key == 'title' || $key == 'description') {
-                    $newresult[$key] = $value;
+        if ($results['data']) {
+            foreach ($results['data'] as &$result) {
+                $newresult = array();
+                foreach ($result as $key => &$value) {
+                    if ($key == 'id' || $key == 'artefacttype' || $key == 'title' || $key == 'description') {
+                        $newresult[$key] = $value;
+                    }
                 }
+                $newresult['type'] = 'artefact';
+                $artefactplugin = get_field('artefact_installed_type', 'plugin', 'name', $newresult['artefacttype']);
+                if ($artefactplugin == 'internal') {
+                    $newresult['summary'] = $newresult['title'];
+                    $newresult['title'] = get_string($newresult['artefacttype'], 'artefact.' . $artefactplugin);
+                }
+                else {
+                    $newresult['summary'] = $newresult['description'];
+                }
+                $result = $newresult;
             }
-            $newresult['type'] = 'artefact';
-            $artefactplugin = get_field('artefact_installed_type', 'plugin', 'name', $newresult['artefacttype']);
-            if ($artefactplugin == 'internal') {
-                $newresult['summary'] = $newresult['title'];
-                $newresult['title'] = get_string($newresult['artefacttype'], 'artefact.' . $artefactplugin);
-            }
-            else {
-                $newresult['summary'] = $newresult['description'];
-            }
-            $result = $newresult;
+
+            self::self_search_make_links($results);
         }
-        
-        self::self_search_make_links($results);
 
         return $results;
     }

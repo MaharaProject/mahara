@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage xmlrpc
@@ -47,8 +47,8 @@ class Client {
         return $this;
     }
 
-    function send($wwwroot) {
-        $this->peer     = get_peer($wwwroot);
+    function send($wwwroot, $use_cached_peer=true) {
+        $this->peer     = get_peer($wwwroot, $use_cached_peer);
         $this->response = '';
         $URL = $this->peer->wwwroot . $this->peer->application->xmlrpcserverurl;
 
@@ -83,14 +83,16 @@ class Client {
         $remote_timestamp  = null;
 
         if ($this->rawresponse == false) {
-            throw new Exception('Curl error: '.curl_errno($ch) .':'. curl_error($ch));
+            throw new XmlrpcClientException('Curl error: '.curl_errno($ch) .':'. curl_error($ch));
             return false;
         }
 
         try {
             $xml = new SimpleXMLElement($this->rawresponse);
-        } catch (Exception $e) {
-            throw new Exception('Payload is not a valid XML document', 6001);
+        }
+        catch (Exception $e) {
+            log_debug($this->rawresponse);
+            throw new XmlrpcClientException('Payload is not a valid XML document (payload is above)', 6001);
         }
 
         if ($xml->getName() == 'encryptedMessage') {
@@ -120,7 +122,40 @@ class Client {
                 $time_offset      = $remote_timestamp - $timestamp_send;
                 // We've set the maximum time drift between servers to 15 seconds
                 if ($time_offset > 15) {
-                    throw new MaharaException('Time drift ('.$margin_of_error.', '.$time_offset.') is too large.');
+                    throw new XmlrpcClientException('Time drift ('.$margin_of_error.', '.$time_offset.') is too large.');
+                }
+            }
+
+            if (is_array($this->response) && array_key_exists('faultCode', $this->response)) {
+                if ($this->response['faultCode'] == 7025) {
+                    log_info('Remote application has sent us a new public key');
+                    // The remote application sent back a new public key, the 
+                    // old one must have expired
+                    if (array_key_exists('faultString', $this->response)) {
+                        $details = openssl_x509_parse($this->response['faultString']);
+                        if (isset($details['validTo_time_t'])) {
+                            $updateobj = (object)array(
+                                'publickey' => $this->response['faultString'],
+                                'publickeyexpires' => $details['validTo_time_t'],
+                            );
+                            $whereobj = (object)array(
+                                'wwwroot' => $wwwroot,
+                            );
+                            update_record('host', $updateobj, $whereobj);
+                            log_info('New key has been imported. Valid until ' . date('Y/m/d h:i:s', $details['validTo_time_t']));
+
+                            // Send request again. But don't use the cached 
+                            // peer, look it up again now we've changed the 
+                            // public key
+                            $this->send($wwwroot, false);
+                        }
+                        else {
+                            throw new XmlrpcClientException('Could not parse new public key');
+                        }
+                    }
+                    else {
+                        throw new XmlrpcClientException('Remote site claims to have sent a public key, but they LIE');
+                    }
                 }
             }
 
@@ -132,7 +167,7 @@ class Client {
             $this->method           = '';
             return true;
         } else {
-            throw new MaharaException('Unrecognized XML document form: ' . $payload);
+            throw new XmlrpcClientException('Unrecognized XML document form: ' . $payload);
         }
     }
 

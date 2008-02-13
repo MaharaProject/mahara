@@ -1,7 +1,5 @@
 {include file="header.tpl"}
 {include file="columnfullstart.tpl"}
-			<h2>{str tag=register}</h2>
-			
 			{if $register_form}
 			<p>{str tag=registerstep1description}</P>
 			

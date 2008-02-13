@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage notification-emaildigest
@@ -55,10 +55,12 @@ class PluginNotificationEmaildigest extends PluginNotification {
         $users = array();
         $sitename = get_config('sitename');
 
-        $sql = 'SELECT q.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff, q.*,' . db_format_tsfield('ctime').'
+        $sql = 'SELECT q.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff,
+                    p.value AS lang, q.*,' . db_format_tsfield('ctime').'
                 FROM {usr} u 
                     JOIN {notification_emaildigest_queue} q
                         ON q.usr = u.id
+                    LEFT OUTER JOIN {usr_account_preference} p ON (p.usr = u.id AND p.field = \'lang\')
                 ORDER BY usr,type,q.ctime';
 
         if ($tosend = get_records_sql_array($sql, array())) {
@@ -67,6 +69,7 @@ class PluginNotificationEmaildigest extends PluginNotification {
                     $users[$queue->usr] = new StdClass;
                     
                     $users[$queue->usr]->user = new StdClass;
+                    $users[$queue->usr]->user->username      = $queue->username;
                     $users[$queue->usr]->user->firstname     = $queue->firstname;
                     $users[$queue->usr]->user->lastname      = $queue->lastname;
                     $users[$queue->usr]->user->preferredname = $queue->preferredname;
@@ -74,21 +77,24 @@ class PluginNotificationEmaildigest extends PluginNotification {
                     $users[$queue->usr]->user->admin         = $queue->admin;
                     $users[$queue->usr]->user->staff         = $queue->staff;
                     $users[$queue->usr]->user->id            = $queue->usr;
+                    $users[$queue->usr]->user->lang          = (empty($queue->lang) || $queue->lang == 'default') ? get_config('lang') : $queue->lang;
                     
                     $users[$queue->usr]->entries = array();
                 }
-                $queue->nicetype = get_string('type' . $queue->type, 'activity');
+                $queue->nicetype = get_string_from_language($users[$queue->usr]->user->lang, 
+                                                            'type' . $queue->type, 'activity');
                 $users[$queue->usr]->entries[$queue->id] = $queue;
             }
         }
         foreach ($users as $user) {
-            $subject = get_string('emailsubject', 'notification.emaildigest', $sitename);
-            $body = get_string('emailbodynoreply', 'notification.emaildigest', $sitename);
+            $lang = $user->user->lang;
+            $subject = get_string_from_language($lang, 'emailsubject', 'notification.emaildigest', $sitename);
+            $body = get_string_from_language($lang, 'emailbodynoreply', 'notification.emaildigest', $sitename);
             foreach ($user->entries as $entry) {
-                $body .= get_string('type', 'activity') . $entry->nicetype 
-                    . ' ' . get_string('attime', 'activity')  . ' ' . format_date($entry->ctime) . "\n";
+                $body .= get_string_from_language($lang, 'type', 'activity') . ': ' . $entry->nicetype 
+                    . ' ' . get_string_from_language($lang, 'attime', 'activity')  . ' ' . format_date($entry->ctime) . "\n";
                 if (!empty($queue->subject)) {
-                    $body .= get_string('subject') . $queue->subject ."\n";
+                    $body .= get_string_from_language($lang, 'subject') . $queue->subject ."\n";
                 }
                 if (!empty($queue->message)) {
                     $body .= "\n" . $queue->message;
@@ -99,7 +105,7 @@ class PluginNotificationEmaildigest extends PluginNotification {
                 $body .= "\n\n";
             }
             $prefurl = get_config('wwwroot') . 'account/activity/preferences/';
-            $body .= "\n\n" . get_string('emailbodyending', 'notification.emaildigest', $prefurl);
+            $body .= "\n\n" . get_string_from_language($lang, 'emailbodyending', 'notification.emaildigest', $prefurl);
             try {
                 email_user($user->user, null, $subject, $body);
                 //only delete them if the email succeeded! 

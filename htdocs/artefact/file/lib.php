@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage artefact-internal
@@ -35,6 +35,10 @@ class PluginArtefactFile extends PluginArtefact {
             'image',
         );
     }
+    
+    public static function get_block_types() {
+        return array('image');
+    }
 
     public static function get_plugin_name() {
         return 'file';
@@ -45,7 +49,7 @@ class PluginArtefactFile extends PluginArtefact {
             array(
                 'path' => 'myportfolio/files',
                 'url' => 'artefact/file/',
-                'title' => get_string('files', 'artefact.file'),
+                'title' => get_string('myfiles', 'artefact.file'),
                 'weight' => 20,
             ),
         );
@@ -72,9 +76,6 @@ class PluginArtefactFile extends PluginArtefact {
         update_record('usr', array('quota' => get_config_plugin('artefact', 'file', 'defaultquota')), array('id' => $user['id']));
     }
     
-    public static function get_toplevel_artefact_types() {
-        return array('file');
-    }
 
     public static function sort_child_data($a, $b) {
         if ($a->container && !$b->container) {
@@ -112,16 +113,15 @@ class PluginArtefactFile extends PluginArtefact {
                     'createfolder',
                     'deletefile?',
                     'deletefolder?',
-                    'description',
-                    'description',
+                    'Description',
                     'destination',
                     'editfile',
                     'editfolder',
-                    'file',
+                    'File',
                     'fileexistsoverwritecancel',
                     'filenamefieldisrequired',
                     'home',
-                    'name',
+                    'Name',
                     'namefieldisrequired',
                     'nofilesfound',
                     'overwrite',
@@ -144,17 +144,8 @@ class PluginArtefactFile extends PluginArtefact {
         static $jshelp = array(
             'file' => array(
                 'artefact.file' => array(
-                    'cancelfolder',
-                    'cancel',
-                    'createfolder',
-                    'delete',
-                    'description',
-                    'edit',
-                    'folderdescription',
-                    'name',
                     'notice',
                     'quota_message',
-                    'title',
                     'uploadfile',
                     'tags',
                 ),
@@ -285,6 +276,34 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
 
     }
 
+    public function render_self($options) {
+        $options['id'] = $this->get('id');
+
+        $downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->get('id');
+        if (isset($options['viewid'])) {
+            $downloadpath .= '&view=' . $options['viewid'];
+        }
+        $filetype = get_string($this->get('oldextension'), 'artefact.file');
+        if (substr($filetype, 0, 2) == '[[') {
+            $filetype = $this->get('oldextension') . ' ' . get_string('file', 'artefact.file');
+        }
+
+        $smarty = smarty_core();
+        $smarty->assign('iconpath', $this->get_icon($options));
+        $smarty->assign('downloadpath', $downloadpath);
+        $smarty->assign('filetype', $filetype);
+        $smarty->assign('owner', display_name($this->get('owner')));
+        $smarty->assign('created', strftime(get_string('strftimedaydatetime'), $this->get('ctime')));
+        $smarty->assign('modified', strftime(get_string('strftimedaydatetime'), $this->get('mtime')));
+        $smarty->assign('size', $this->describe_size() . ' (' . $this->get('size') . ' ' . get_string('bytes', 'artefact.file') . ')');
+
+        foreach (array('title', 'description', 'artefacttype') as $field) {
+            $smarty->assign($field, $this->get($field));
+        }
+
+        return array('html' => $smarty->fetch('artefact:file:file_render_self.tpl'), 'javascript' => '');
+    }
+
     /**
      * This function updates or inserts the artefact.  This involves putting
      * some data in the artefact table (handled by parent::commit()), and then
@@ -324,20 +343,22 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $this->dirty = false;
     }
 
-    public static function get_render_list() {
-        return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERMETADATA);
-    }
-
     public static function is_singular() {
         return false;
     }
 
-    public function get_icon() {
+    public static function get_icon($options=null) {
 
     }
 
     public static function collapse_config() {
         return 'file';
+    }
+
+    public function move($newparentid) {
+        $this->set('parent', $newparentid);
+        $this->commit();
+        return true;
     }
 
     public function delete() {
@@ -410,25 +431,21 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             }
         }
 
+        // Add parent folder to the list
+        if (!empty($parentfolderid)) {
+            $grandparentid = get_field('artefact', 'parent', 'id', $parentfolderid);
+            $filedata[] = (object) array(
+                'title'        => '..',
+                'artefacttype' => 'folder',
+                'description'  => get_string('parentfolder', 'artefact.file'),
+                'isparent'     => true,
+                'id'           => (int) $grandparentid
+            );
+        }
+
         usort($filedata, array("ArtefactTypeFileBase", "my_files_cmp"));
         return $filedata;
     }
-
-    protected function get_metadata($options=array()) {
-        $data = parent::get_metadata($options);
-        $data['description'] = array('name' => get_string('description'),
-                                     'value' => $this->description);
-        $data['type']['value'] = get_string($this->get('artefacttype'), 'artefact.file');
-        return $data;
-    }
-
-    protected function render_metadata($options) {
-        $smarty = smarty();
-        $smarty->assign('PROPERTIES', $this->get_metadata($options));
-        return array('html' => $smarty->fetch('artefact:file:file_render_metadata.tpl'),
-                     'javascript' => null);
-    }
-
 }
 
 class ArtefactTypeFile extends ArtefactTypeFileBase {
@@ -442,15 +459,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
     }
 
-
-    // Where to store files under dataroot in the filesystem
-    static $artefactfileroot = 'artefact/file/';
-
-    // Number of subdirectories to create under $artefactfileroot
-    static $artefactfilesubdirs = 256;
-
     public static function get_file_directory($id) {
-        return self::$artefactfileroot . $id % self::$artefactfilesubdirs;
+        return "artefact/file/originals/" . ($id % 256);
     }
 
     public function get_path() {
@@ -560,20 +570,34 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
     public static function get_admin_files($public) {
         $pubfolder = ArtefactTypeFolder::admin_public_folder_id();
-        if ($public) {
-            $foldersql = ' a.parent = ' . $pubfolder;
-        }
-        else {
-            $foldersql = ' (a.parent = ' . $pubfolder . ' OR a.parent IS NULL) ';
-        }
-        return get_records_sql_array('
+        $artefacts = get_records_sql_assoc('
             SELECT
-                a.id, a.title, a.parent
+                a.id, a.title, a.parent, a.artefacttype
             FROM {artefact} a
                 INNER JOIN {artefact_file_files} f ON f.artefact = a.id
-            WHERE f.adminfiles = 1 
-                AND ' . $foldersql . "
-                AND a.artefacttype != 'folder'", null);
+            WHERE f.adminfiles = 1', array());
+
+        $files = array();
+        if (!empty($artefacts)) {
+            foreach ($artefacts as $a) {
+                if ($a->artefacttype != 'folder') {
+                    $title = $a->title;
+                    $parent = $a->parent;
+                    while (!empty($parent)) {
+                        if ($public && $parent == $pubfolder) {
+                            $files[] = array('name' => $title, 'id' => $a->id);
+                            continue 2;
+                        }
+                        $title = $artefacts[$parent]->title . '/' . $title;
+                        $parent = $artefacts[$parent]->parent;
+                    }
+                    if (!$public) {
+                        $files[] = array('name' => $title, 'id' => $a->id);
+                    }
+                }
+            }
+        }
+        return $files;
     }
 
     public function delete() {
@@ -600,8 +624,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return true;
     }
 
-    public function get_icon() {
-
+    public static function get_icon($options=null) {
+        return theme_get_url('images/file.gif');
     }
 
     public static function get_config_options() {
@@ -672,34 +696,9 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             return $bytes <= 0 ? '0' : ($bytes . ' ' . get_string('bytes', 'artefact.file'));
         }
         if ($bytes < 1048576) {
-            return floor(($bytes / 1024) * 10 + 0.5) / 10 . 'k';
+            return floor(($bytes / 1024) * 10 + 0.5) / 10 . 'K';
         }
         return floor(($bytes / 1048576) * 10 + 0.5) / 10 . 'M';
-    }
-
-    private function file_url($options) {
-        $result = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->get('id');
-        if (isset($options['viewid'])) {
-            $result .= '&view=' . $options['viewid'];
-        }
-        return $result;
-    }
-
-    public function linkself() {
-        return '<a href="' . $this->file_url() . '">' . get_string('download', 'artefact.file') . '</a>';
-    }
-
-    protected function get_metadata($options=array()) {
-        $data = parent::get_metadata($options);
-        $data['size'] = array('name' => get_string('size', 'artefact.file'),
-                              'value' => $this->get('size') . ' ' . get_string('bytes', 'artefact.file'));
-        $data['download'] = array('name' => get_string('download', 'artefact.file'),
-                                  'value' => make_link($this->file_url($options)));
-        return $data;
-    }
-
-    public static function get_render_list() {
-        return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERMETADATA);
     }
 
     public static function get_links($id) {
@@ -709,6 +708,20 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             '_default' => $wwwroot . 'artefact/file/download.php?file=' . $id,
             get_string('folder', 'artefact.file') => $wwwroot . 'artefact/file/?folder=' . $id,
         );
+    }
+
+    public function override_content_type() {
+        static $extensions;
+        if (empty($extensions)) {
+            $extensions = array(
+                'wmv' => 'video/x-ms-wmv',
+                'flv' => 'video/x-flv',
+            );
+        }
+        if (array_key_exists($this->get('oldextension'), $extensions)) {
+            return $extensions[$this->get('oldextension')];
+        }
+        return false;
     }
 }
 
@@ -729,46 +742,26 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         return get_records_array('artefact', 'parent', $this->get('id'));
     }
 
-    public function render_full($options) {
-        $smarty = smarty();
-        $smarty->assign('artefact', $this);
-        if ($options == null) {
-            $options = array();
-        }
-        $smarty->assign('options', array_merge(array('date'=>true, 'icon'=>true), $options));
+    public function render_self($options) {
+        $smarty = smarty_core();
+        $smarty->assign('title', $this->get('title'));
+        $smarty->assign('description', $this->get('description'));
+        $smarty->assign('viewid', $options['viewid']);
+        $smarty->assign('hidetitle', isset($options['hidetitle']) ? $options['hidetitle'] : false);
+
         if ($childrecords = $this->folder_contents()) {
             $this->add_to_render_path($options);
-            usort($childrecords, array("ArtefactTypeFileBase", "my_files_cmp"));
+            usort($childrecords, array('ArtefactTypeFileBase', 'my_files_cmp'));
             $children = array();
-            require_once('artefact.php');
             foreach ($childrecords as &$child) {
                 $c = artefact_instance_from_id($child->id);
-                $rc = $c->render(FORMAT_ARTEFACT_LISTSELF, $options);
-                $child->title = $rc['html'];
+                $child->title = $c->get('title');
                 $child->date = format_date(strtotime($child->mtime), 'strfdaymonthyearshort');
-                $child->iconsrc = theme_get_url('images/' . $child->artefacttype . '.gif');
+                $child->iconsrc = call_static_method(generate_artefact_class_name($child->artefacttype), 'get_icon', array('id' => $child->id, 'viewid' => $options['viewid']));
             }
             $smarty->assign('children', $childrecords);
         }
-        return array('html' => $smarty->fetch('artefact:file:folder_renderfull.tpl'),
-                     'javascript' => null);
-    }
-
-    public function listchildren($options) {
-        $smarty = smarty();
-        if ($childrecords = $this->folder_contents()) {
-            $this->add_to_render_path($options);
-            usort($childrecords, array("ArtefactTypeFileBase", "my_files_cmp"));
-            $children = array();
-            require_once('artefact.php');
-            foreach ($childrecords as $child) {
-                $c = artefact_instance_from_id($child->id);
-                $rc = $c->render(FORMAT_ARTEFACT_LISTSELF, $options);
-                $children[] = $rc['html'];
-            }
-            $smarty->assign('children', $children);
-        }
-        return array('html' => $smarty->fetch('artefact:file:folder_listchildren.tpl'),
+        return array('html' => $smarty->fetch('artefact:file:folder_render_self.tpl'),
                      'javascript' => null);
     }
 
@@ -776,21 +769,19 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         return $this->count_children() . ' ' . get_string('files', 'artefact.file');
     }
 
-    public function get_icon() {
-
+    public static function get_icon($options=null) {
+        return theme_get_url('images/folder.gif');
     }
 
     public static function collapse_config() {
         return 'file';
     }
     
-    public static function get_render_list() {
-        return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_LISTCHILDREN,
-                     FORMAT_ARTEFACT_RENDERFULL, FORMAT_ARTEFACT_RENDERMETADATA);
-    }
-    
     public static function admin_public_folder_id() {
-        $name = get_string('adminpublicdirname', 'admin');
+        // There is one public files directory and many admins, so the
+        // name of the directory uses the site language rather than
+        // the language of the admin who first creates it.
+        $name = get_string_from_language(get_config('lang'), 'adminpublicdirname', 'admin');
         $folderid = get_field_sql('
            SELECT
              a.id
@@ -801,17 +792,48 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
              AND f.adminfiles = 1
              AND a.parent IS NULL', array($name, 'folder'));
         if (!$folderid) {
-            $description = get_string('adminpublicdirdescription', 'admin');
             global $USER;
-            $data = (object) array('title' => $name,
-                                   'description' => $description,
-                                   'owner' => $USER->id,
-                                   'adminfiles' => 1);
-            $f = new ArtefactTypeFolder(0, $data);
-            $f->commit();
-            $folderid = $f->get('id');
+            if (get_field('usr', 'admin', 'id', $USER->id)) {
+                $description = get_string_from_language(get_config('lang'), 
+                                                        'adminpublicdirdescription', 'admin');
+                $data = (object) array('title' => $name,
+                                       'description' => $description,
+                                       'owner' => $USER->id,
+                                       'adminfiles' => 1);
+                $f = new ArtefactTypeFolder(0, $data);
+                $f->commit();
+                $folderid = $f->get('id');
+            } else {
+                return false;
+            }
         }
         return $folderid;
+    }
+
+    public static function change_public_folder_name($oldlang, $newlang) {
+        $oldname = get_string_from_language($oldlang, 'adminpublicdirname', 'admin');
+        $folderid = get_field_sql('
+           SELECT
+             a.id
+           FROM {artefact} a
+             INNER JOIN {artefact_file_files} f ON a.id = f.artefact
+           WHERE a.title = ?
+             AND a.artefacttype = ?
+             AND f.adminfiles = 1
+             AND a.parent IS NULL', array($oldname, 'folder'));
+
+        if (!$folderid) {
+            return;
+        }
+
+        $name = get_string_from_language($newlang, 'adminpublicdirname', 'admin');
+        $description = get_string_from_language($newlang, 'adminpublicdirdescription', 'admin');
+        if (!empty($name)) {
+            $artefact = artefact_instance_from_id($folderid);
+            $artefact->set('title', $name);
+            $artefact->set('description', $description);
+            $artefact->commit();
+        }
     }
 
     public static function get_folder_by_name($name, $parentfolderid=null, $userid=null) {
@@ -826,12 +848,15 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
     }
 
     // Get the id of a folder, creating the folder if necessary
-    public static function get_folder_id($name, $description, $parentfolderid=null, $userid=null) {
+    public static function get_folder_id($name, $description, $parentfolderid=null, $userid=null, $create=true) {
         if (empty($userid)) {
             global $USER;
             $userid = $USER->id;
         }
         if (!$record = self::get_folder_by_name($name, $parentfolderid, $userid)) {
+            if (!$create) {
+                return false;
+            }
             $data = new StdClass;
             $data->title = $name;
             $data->description = $description;
@@ -844,13 +869,6 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         return $record->id;
     }
 
-    protected function get_metadata($options=array()) {
-        $data = parent::get_metadata($options);
-        $data['size'] = array('name' => get_string('size', 'artefact.file'),
-                              'value' => $this->count_children() . ' ' . get_string('files', 'artefact.file'));
-        return $data;
-    }
-
     public static function get_links($id) {
         $wwwroot = get_config('wwwroot');
 
@@ -858,6 +876,24 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             '_default' => $wwwroot . 'artefact/file/?folder=' . $id,
         );
     }
+
+    public static function change_language($userid, $oldlang, $newlang) {
+        $oldname = get_string_from_language($oldlang, 'feedbackattachdirname', 'view');
+        $artefact = ArtefactTypeFolder::get_folder_by_name($oldname, null, $userid);
+        if (empty($artefact)) {
+            return;
+        }
+
+        $name = get_string_from_language($newlang, 'feedbackattachdirname', 'view');
+        $description = get_string_from_language($newlang, 'feedbackattachdirdesc', 'view');
+        if (!empty($name)) {
+            $artefact = artefact_instance_from_id($artefact->id);
+            $artefact->set('title', $name);
+            $artefact->set('description', $description);
+            $artefact->commit();
+        }
+    }
+
 }
 
 class ArtefactTypeImage extends ArtefactTypeFile {
@@ -919,49 +955,36 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         return 'file';
    } 
 
-    public function render_full($options) {
-        $smarty = smarty();
-        $src = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id;
-        if (isset($options['viewid'])) {
-            $src .= '&amp;view=' . $options['viewid'];
-        }
-        $smarty->assign('src', $src);
-        $smarty->assign('title', $this->title);
-        $smarty->assign('description', $this->description);
-        if (isset($options['width'])) {
-            $width = $options['width'];
-        }
-        else {
-            $width = $this->get('width');
-        }
-        $smarty->assign('width', $width ? $width : '');
-        if (isset($options['height'])) {
-            $height = $options['height'];
-        }
-        else {
-            $height = $this->get('height');
-        }
-        if ((isset($options['width']) || isset($options['height'])) && isset($options['viewid'])) {
-            $url = get_config('wwwroot') . 'view/view.php?artefact=' . $this->get('id')
-                . '&view=' . $options['viewid'];
-            if (isset($options['path'])) {
-                $url .= '&path=' . $options['path'];
-            }
-            $smarty->assign('url', $url);
-        }
-        $smarty->assign('height', $height ? $height : '');
-        return array('html' => $smarty->fetch('artefact:file:image_renderfull.tpl'),
-                     'javascript' => null);
-    }
-
-    public static function get_render_list() {
-        return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERFULL, 
-                     FORMAT_ARTEFACT_RENDERMETADATA);
-    }
-
+    /**
+     * err... wtf. Let's find where this method is called and change the call eh?
+     */
     public static function is_image_mime_type($type) {
         require_once('file.php');
         return is_image_mime_type($type);
+    }
+
+    public static function get_icon($options=null) {
+        $url = get_config('wwwroot') . 'artefact/file/download.php?';
+        $url .= 'file=' . $options['id'];
+
+        if (isset($options['viewid'])) {
+            $url .= '&view=' . $options['viewid'];
+        }
+        if (isset($options['size'])) {
+            $url .= '&size=' . $options['size'];
+        }
+        else {
+            $url .= '&size=20x20';
+        }
+
+        return $url;
+    }
+
+    public function get_path($data=array()) {
+        require_once('file.php');
+        $size = (isset($data['size'])) ? $data['size'] : null;
+        $result = get_dataroot_image_path('artefact/file/', $this->id, $size);
+        return $result;
     }
 
     public function delete() {
@@ -972,6 +995,13 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         parent::delete();
     }
 
+    public function render_self($options) {
+        $result = parent::render_self($options);
+        $result['html'] = '<div class="fr filedata-icon" style="text-align: center;"><h4>' . get_string('Preview', 'artefact.file') . '</h4><img src="'
+            . hsc(get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id . '&view=' . $options['viewid'] . '&maxwidth=400')
+            . '" alt=""></div>' . $result['html'];
+        return $result;
+    }
 }
 
 ?>

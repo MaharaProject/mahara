@@ -16,10 +16,11 @@ function TableRenderer(target, source, columns, options) {
     this.emptycontent = undefined;  // Something to display when no results are found
     this.rowfunction = function(rowdata, rownumber, data) { return TR({'class': 'r' + (rownumber % 2)}); }
     this.updatecallback = function () {};
+    this.updateOnLoadFlag = false;
 
     this.init = function() {
         self.table = getElement(target);
-        self.loadingMessage = DIV({'class': 'tablerenderer-loading'}, IMG({'src': config.theme['images/loading.gif'], 'alt': ''}), ' Loading...');
+        self.loadingMessage = DIV({'class': 'tablerenderer-loading'}, IMG({'src': config.theme['images/loading.gif'], 'alt': ''}), ' ', get_string('loading'));
         insertSiblingNodesAfter(self.table, self.loadingMessage);
 
         self.tbody = getFirstElementByTagAndClassName('tbody', null, self.table);
@@ -54,9 +55,11 @@ function TableRenderer(target, source, columns, options) {
                 self.emptycontent = DIV(null,self.emptycontent);
                 insertSiblingNodesBefore(self.table, self.emptycontent);
             }
-            if (self.loadingMessage) {
-                removeElement(self.loadingMessage);
-                self.loadingMessage = null;
+            if (!self.updateOnLoadFlag) {
+                if (self.loadingMessage) {
+                    removeElement(self.loadingMessage);
+                    self.loadingMessage = null;
+                }
             }
         }
     };
@@ -134,6 +137,7 @@ function TableRenderer(target, source, columns, options) {
                 rownumber++;
 
                 row._rownumber = rownumber;
+                row._last = rownumber == data.data.length;
                 var tr = self.rowfunction(row, rownumber, data);
                 if ( row._class ) { tr.className = row._class; }
                 if ( row._id ) { tr.id = row._id; }
@@ -248,6 +252,7 @@ function TableRenderer(target, source, columns, options) {
     };
 
     this.updateOnLoad = function() {
+        self.updateOnLoadFlag = true;
         if ( TableRendererPageLoaded ) {
             self.doupdate();
         }

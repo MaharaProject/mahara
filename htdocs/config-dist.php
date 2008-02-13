@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -28,12 +28,13 @@ $cfg = new StdClass;
 
 
 // database connection details
+// valid values for dbtype are 'postgres8' and 'mysql5'
 $cfg->dbtype   = 'postgres8';
 $cfg->dbhost   = 'localhost';
-$cfg->dbport   = 5432;
-$cfg->dbname   = 'mahara';
-$cfg->dbuser   = 'mahara';
-$cfg->dbpass   = 'mahara';
+$cfg->dbport   = null;
+$cfg->dbname   = '';
+$cfg->dbuser   = '';
+$cfg->dbpass   = '';
 $cfg->dbprefix = '';
 
 // wwwroot - the web-visible path to your Mahara installation
@@ -111,9 +112,9 @@ $cfg->developermode = false;
 // $cfg->smtpuser = '';
 // $cfg->smtppass = '';
 
-// xmlrpc
-// if you're running in a configuration where the host contacting you will be
-// using an IP address that is not the same as the IP address that is registered
-// for its host name, then you should change the value below to 'true'.
-$cfg->xmlrpc_allow_masquerading = false;
+// maximum allowed size of uploaded images
+// NOTE: the scalable resize might result in images with one dimesion larger than one of these sizes, but not both
+$cfg->imagemaxwidth = 1024;
+$cfg->imagemaxheight = 1024;
+
 ?>

@@ -101,16 +101,17 @@
        <field name="idtype"      type="string" indexed="true" stored="true"                     />
        <field name="title"       type="text"   indexed="true" stored="true"                     />
        <field name="description" type="text"   indexed="true" stored="true"                     />
-       <field name="tags"        type="text"   indexed="true" stored="true"                     />
+       <field name="tags"        type="textTight"   indexed="true" stored="true" multiValued="true" />
        <field name="ctime"       type="sint"   indexed="true" stored="true"                     />
        <field name="mtime"       type="sint"   indexed="true" stored="true"                     />
 
        <field name="text"        type="text"    indexed="true" stored="false" multiValued="true" />
 
-       <dynamicField name="text_*"  type="text"  indexed="true"  stored="true"  />
-       <dynamicField name="ref_*"   type="text"  indexed="true"  stored="true"  />
-       <dynamicField name="store_*" type="text"  indexed="false" stored="true"  />
-       <dynamicField name="index_*" type="text"  indexed="true"  stored="false" />
+       <dynamicField name="text_*"   type="text"    indexed="true"  stored="true"  />
+       <dynamicField name="ref_*"    type="text"    indexed="true"  stored="true"  />
+       <dynamicField name="store_*"  type="text"    indexed="false" stored="true"  />
+       <dynamicField name="index_*"  type="text"    indexed="true"  stored="false" />
+       <dynamicField name="string_*" type="string"  indexed="true"  stored="true"  />
 
        <!-- Dynamic field definitions.  If a field name is not found, dynamicFields
             will be used if the name matches any of the patterns.

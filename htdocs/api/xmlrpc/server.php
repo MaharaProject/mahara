@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -99,46 +99,12 @@ try {
 
 // Cascading switch. Kinda.
 if ($xml->getName() == 'encryptedMessage') {
-
-    // The IP address for the hostname supplied by the client.
-    // This hostname can't be trusted.
-    $ipaddress = gethostbyname(get_hostname_from_uri((string)$xml->wwwroot));
-
-    // Check for masquerading
-    if (!get_config('xmlrpc_allow_masquerading') && $ipaddress != $_SERVER['REMOTE_ADDR']) {
-        if ($networkingdebug) {
-            throw new XmlrpcServerException('Your hostname ('.
-            get_hostname_from_uri((string)$xml->wwwroot) .
-            ') resolves to the IP address '.$ipaddress .
-            ' but your IP address is actually '.$_SERVER['REMOTE_ADDR'] , 6012);
-        }
-        header($protocol.' 403 Forbidden');
-        exit;
-    }
-
     $payload_encrypted = true;
     $REMOTEWWWROOT     = (string)$xml->wwwroot;
     $payload           = xmlenc_envelope_strip($xml);
 }
 
 if ($xml->getName() == 'signedMessage') {
-
-    // The IP address for the hostname supplied by the client.
-    // This hostname can't be trusted.
-    $ipaddress = gethostbyname(get_hostname_from_uri((string)$xml->wwwroot));
-
-    // Check for masquerading
-    if (!get_config('xmlrpc_allow_masquerading') && $ipaddress != $_SERVER['REMOTE_ADDR']) {
-        if ($networkingdebug) {
-            throw new XmlrpcServerException('Your hostname ('.
-            get_hostname_from_uri((string)$xml->wwwroot) .
-            ') resolves to the IP address '.$ipaddress .
-            ' but your IP address is actually '.$_SERVER['REMOTE_ADDR'] , 6012);
-        }
-        header($protocol.' 403 Forbidden');
-        exit;
-    }
-
     $payload_signed = true;
     $REMOTEWWWROOT  = (string)$xml->wwwroot;
     $payload        = xmldsig_envelope_strip($xml);

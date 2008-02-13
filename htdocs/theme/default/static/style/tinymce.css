@@ -26,7 +26,6 @@ h1, h2 {
 	font-weight: normal !important;	
 	margin: 0 0 5px 0 !important;
 	padding: 0 !important;
-	text-transform: capitalize !important;
 	border-bottom: 1px solid #819f18 !important;
 }
 h2 {
@@ -38,7 +37,6 @@ h3, h4 {
 	font-weight: bold !important;
 	font-size: 17px !important;
 	margin: 15px 0 0 !important;
-	text-transform: capitalize !important;
 }
 h4 {
     font-size: 15px !important;

@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -34,7 +34,7 @@ defined('INTERNAL') || die();
 function ensure_sanity() {
 
     // PHP version
-    if (version_compare(phpversion(), '5.1.0') < 0) {
+    if (version_compare(phpversion(), '5.1.3') < 0) {
         throw new ConfigSanityException(get_string('phpversion', 'error'));
     }
 
@@ -42,8 +42,22 @@ function ensure_sanity() {
     if (!extension_loaded('json')) {
         throw new ConfigSanityException(get_string('jsonextensionnotloaded', 'error'));
     }
-    if (!extension_loaded('pgsql') && !extension_loaded('mysqli')) {
-        throw new ConfigSanityException(get_string('dbextensionnotloaded', 'error'));
+    switch (get_config('dbtype')) {
+    case 'postgres8':
+        if (!extension_loaded('pgsql')) {
+            throw new ConfigSanityException(get_string('pgsqldbextensionnotloaded', 'error'));
+        }
+        break;
+    case 'mysql': // NOTE: mysql to be phased out. This should be log_environ() in 1.0 and removed in 1.1
+        log_environ(get_string('mysqldbtypedeprecated', 'error'));
+        // intentionally no break here
+    case 'mysql5':
+        if (!extension_loaded('mysql')) {
+            throw new ConfigSanityException(get_string('mysqldbextensionnotloaded', 'error'));
+        }
+        break;
+    default:
+        throw new ConfigSanityException(get_string('unknowndbtype', 'error'));
     }
     if (!extension_loaded('libxml')) {
         throw new ConfigSanityException(get_string('libxmlextensionnotloaded', 'error'));
@@ -76,7 +90,7 @@ function ensure_sanity() {
     }
 
     // magic_quotes_gpc workaround
-    if (ini_get_bool('magic_quotes_gpc')) {
+    if (!defined('CRON') && ini_get_bool('magic_quotes_gpc')) {
         log_environ(get_string('magicquotesgpc', 'error'));
         function stripslashes_deep($value) {
             $value = is_array($value) ?
@@ -135,7 +149,8 @@ function ensure_sanity() {
         !check_dir_exists(get_config('dataroot') . 'smarty/compile') ||
         !check_dir_exists(get_config('dataroot') . 'smarty/cache') ||
         !check_dir_exists(get_config('dataroot') . 'templates') ||
-        !check_dir_exists(get_config('dataroot') . 'sessions')) {
+        !check_dir_exists(get_config('dataroot') . 'sessions') ||
+        !check_dir_exists(get_config('dataroot') . 'htmlpurifier')) {
         throw new ConfigSanityException(get_string('couldnotmakedatadirectories', 'error'));
     }
 }
@@ -166,6 +181,21 @@ function get_string($identifier, $section='mahara') {
     }
     
     return get_string_location($identifier, $section, $variables);
+}
+
+function get_string_from_language($lang, $identifier, $section='mahara') {
+
+    $variables = func_get_args();
+    if (count($variables) > 3) { // we have some stuff we need to sprintf
+        array_shift($variables);
+        array_shift($variables);
+        array_shift($variables); //shift off the first three.
+    }
+    else {
+        $variables = array();
+    }
+    
+    return get_string_location($identifier, $section, $variables, 'format_langstring', $lang);
 }
 
 function get_helpfile($plugintype, $pluginname, $form, $element, $page=null, $section=null) {
@@ -225,12 +255,12 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
 
     // if it's not found, try the parent language if there is one...
     if (empty($data) && empty($trieden)) {
-        $langfile = $location . $lang . '/langconfig.php';
+        $langfile = get_config('docroot') . 'lang/' . $lang . '/langconfig.php';
         if ($parentlang = get_string_from_file('parentlanguage', $langfile)) {
             if ($parentlang == 'en.utf8') {
                 $trieden = true;
             }
-            $langfile = $location . $parentlang . '/' . $file;
+            $langfile = get_config('docroot') . 'lang/' . $parentlang . '/' . $file;
             if (is_readable($langfile)) {
                 return $langfile;
             }
@@ -268,7 +298,7 @@ function get_raw_string($identifier, $section='mahara') {
  * @param function $replacefunc
  * @return string
  */
-function get_string_location($identifier, $section, $variables, $replacefunc='format_langstring') {
+function get_string_location($identifier, $section, $variables, $replacefunc='format_langstring', $lang='') {
 
     $langconfigstrs = array('parentlanguage', 'strftimedate', 'strftimedateshort', 'strftimedatetime',
                             'strftimedaydate', 'strftimedaydatetime', 'strftimedayshort', 'strftimedaytime',
@@ -279,7 +309,9 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
         $section = 'langconfig';
     }
 
-    $lang = current_language();
+    if (empty($lang)) {
+        $lang = current_language();
+    }
 
     // Define the locations of language strings for this section
     $docroot = get_config('docroot');
@@ -291,9 +323,17 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     else {
         $extras = plugin_types(); // more later..
         foreach ($extras as $tocheck) {
-            if (strpos($section,$tocheck . '.') === 0) {
+            if (strpos($section, $tocheck . '.') === 0) {
                 $pluginname = substr($section ,strlen($tocheck) + 1);
-                $locations[] = $docroot . $tocheck . '/' . $pluginname . '/lang/';
+                if ($tocheck == 'blocktype' && 
+                    strpos($pluginname, '/') !== false) { // it belongs to an artefact plugin
+                    $bits = explode('/', $pluginname);
+                    $locations[] = $docroot . 'artefact/' . $bits[0] . '/blocktype/' . $bits[1] . '/lang/';
+                    $section = 'blocktype.' . $bits[1];
+                }
+                else {
+                    $locations[] = $docroot . $tocheck . '/' . $pluginname . '/lang/';
+                }
             }
         }
     }
@@ -456,15 +496,7 @@ function ini_get_bool($ini_get_arg) {
 function load_config() {
     global $CFG;
     
-    try {
-        $dbconfig = get_records_array('config', '', '', '', 'field, value');
-    } 
-    catch (SQLException $e) {
-        // TODO: better reporting if config could not be obtained? This 
-        // normally happens when the system isn't installed
-        log_info($e->getMessage());
-        return false;
-    }
+    $dbconfig = get_records_array('config', '', '', '', 'field, value');
     
     foreach ($dbconfig as $cfg) {
         if (isset($CFG->{$cfg->field}) && $CFG->{$cfg->field} != $cfg->value) {
@@ -486,7 +518,7 @@ function load_config() {
  */
 function get_config($key) {
     global $CFG;
-    if (array_key_exists($key,$CFG)) {
+    if (isset($CFG->$key)) {
         return $CFG->$key;
     }
     return null;
@@ -503,6 +535,7 @@ function get_config($key) {
 function set_config($key, $value) {
     global $CFG;
 
+    db_ignore_sql_exceptions(true);
     if (get_record('config', 'field', $key)) {
         if (set_field('config', 'value', $value, 'field', $key)) {
             $status = true;
@@ -514,6 +547,7 @@ function set_config($key, $value) {
         $config->value = $value;
         $status = insert_record('config', $config);
     }
+    db_ignore_sql_exceptions(false);
 
     if (!empty($status)) {
         $CFG->{$key} = $value;
@@ -668,13 +702,21 @@ function print_object($mixed) {
  * @return string
  */
 function current_language() {
-    global $USER, $CFG;
+    global $USER, $CFG, $SESSION;
     if ($USER instanceof User) {
         $lang = $USER->get_account_preference('lang');
         if ($lang !== null && $lang != 'default') {
             return $lang;
         }
     }
+
+    if (is_a($SESSION, 'Session')) {
+        $sesslang = $SESSION->get('lang');
+        if (!empty($sesslang) && $sesslang != 'default') {
+            return $sesslang;
+        }
+    }
+
     if (!empty($CFG->lang)) {
         return $CFG->lang;
     }
@@ -757,7 +799,23 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
         throw new Exception ('invalid require type');
     }
 
-    $fullpath = get_config('docroot') . $plugintype . '/' . $pluginname . '/' . $filename;
+    if ($plugintype == 'blocktype') { // these are a bit of a special case
+        $bits = explode('/', $pluginname);
+        if (count($bits) == 2) {
+           $fullpath = get_config('docroot') . 'artefact/' . $bits[0] . '/blocktype/' . $bits[1] . '/' . $filename;
+        }
+        else {
+            if (table_exists(new XMLDBTable('blocktype_installed'))) {
+                if ($artefactplugin = get_field('blocktype_installed', 'artefactplugin', 'name', $pluginname)) {
+                    $fullpath = get_config('docroot') . 'artefact/' . $artefactplugin . '/blocktype/' . $pluginname . '/'. $filename;
+                }
+            }
+        }
+    } 
+    if (empty($fullpath)) {
+        $fullpath = get_config('docroot') . $plugintype . '/' . $pluginname . '/' . $filename;
+    }
+
     if (!$realpath = realpath($fullpath)) {
         if (!empty($nonfatal)) {
             return false;
@@ -786,7 +844,8 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
 function plugin_types() {
     static $pluginstocheck;
     if (empty($pluginstocheck)) {
-        $pluginstocheck = array('artefact', 'auth', 'notification', 'search');
+        // ORDER MATTERS! artefact has to be first!
+        $pluginstocheck = array('artefact', 'auth', 'notification', 'search', 'blocktype', 'interaction');
     }
     return $pluginstocheck;
 }
@@ -814,12 +873,34 @@ function call_static_method($class, $method) {
 
 function generate_class_name() {
     $args = func_get_args();
+    if (count($args) == 2 && $args[0] == 'blocktype') {
+        return 'PluginBlocktype' . ucfirst(blocktype_namespaced_to_single($args[1]));
+    }
     return 'Plugin' . implode('', array_map('ucfirst', $args));
 }
 
 function generate_artefact_class_name($type) {
     return 'ArtefactType' . ucfirst($type);
 }
+
+function generate_interaction_instance_class_name($type) {
+    return 'Interaction' . ucfirst($type) . 'Instance';
+}
+
+function blocktype_namespaced_to_single($blocktype) {
+    if (strpos($blocktype, '/') === false) { // system blocktype
+        return $blocktype;
+    }
+    return substr($blocktype, strpos($blocktype, '/') + 1 );
+}
+
+function blocktype_single_to_namespaced($blocktype, $artefact='') {
+    if (empty($artefact)) {
+        return $blocktype;
+    }
+    return $artefact . '/' . $blocktype;
+}
+
 
 /**
  * Fires an event which can be handled by different parts of the system
@@ -829,7 +910,7 @@ function handle_event($event, $data) {
         throw new Exception("Invalid event");
     }
 
-    if ($data instanceof ArtefactType) {
+    if ($data instanceof ArtefactType || $data instanceof BlockInstance) {
         // leave it alone
     }
     else if (is_object($data)) {
@@ -948,6 +1029,15 @@ class Plugin {
     public static function has_config() {
         return false;
     }
+
+    /**
+    * Does this plugin offer any activity types
+    * If it does, you must subclass ActivityTypePlugin like 
+    * ActivityType{$PluginType}{$Pluginname}
+    */
+    public static function get_activity_types() {
+        return array();
+    }
 }
 
 /**
@@ -1009,6 +1099,8 @@ function pieform_configure() {
         'renderer'  => 'maharatable',
         'requiredmarker' => true,
         'elementclasses' => true,
+        'jsdirectory'    => get_config('wwwroot') . 'lib/pieforms/static/core/',
+        'replycallback'  => 'pieform_reply',
         'jserrorcallback'       => 'formError',
         'globaljserrorcallback' => 'formGlobalError',
         'jssuccesscallback'     => 'formSuccess',
@@ -1045,6 +1137,23 @@ function pieform_validate(Pieform $form, $values) {
             throw new UserException(get_string('accountsuspended', 'mahara', $record->suspendedctime, $record->suspendedreason));
         }
     }
+}
+
+function pieform_reply($code, $data) {
+    global $SESSION;
+    if (isset($data['message'])) {
+        if ($code == PIEFORM_ERR) {
+            $SESSION->add_error_msg($data['message']);
+        }
+        else {
+            $SESSION->add_ok_msg($data['message']);
+        }
+    }
+    if (isset($data['goto'])) {
+        redirect($data['goto']);
+    }
+    // NOT explicitly exiting here. Pieforms will throw an exception which will 
+    // force the user to fix their form
 }
 
 function pieform_element_calendar_configure($element) {
@@ -1135,6 +1244,8 @@ function can_view_view($view_id, $user_id=null) {
 
     // check public
     if (
+        get_config('allowpublicviews') == '1'
+        &&
         isset($view_record['access']['public'])
         && (    
             $view_record['access']['public']['startdate'] == null
@@ -1217,7 +1328,7 @@ function can_view_view($view_id, $user_id=null) {
             a.view
         FROM
             {view_access_group} a
-            INNER JOIN {group} g ON a.group = g.id
+            INNER JOIN {group} g ON (a.group = g.id AND g.deleted = ?)
             INNER JOIN {group_member} m ON g.id=m.group
         WHERE
             a.view = ? 
@@ -1225,7 +1336,7 @@ function can_view_view($view_id, $user_id=null) {
             AND ( a.stopdate > ?  OR a.stopdate  IS NULL )
             AND ( ( m.member = ? AND (a.tutoronly = 0 OR m.tutor = 1 ) ) OR g.owner = ?)
         LIMIT 1',
-        array( $view_id, $dbnow, $dbnow, $user_id, $user_id  )
+        array(0, $view_id, $dbnow, $dbnow, $user_id, $user_id  )
         )
     ) {
         //log_debug('Yes - View is available to a specific group');
@@ -1366,12 +1477,13 @@ function get_views($users, $userlooking=null, $limit=5) {
             {view} v
             INNER JOIN {view_access_group} a ON v.id=a.view
             INNER JOIN {group_member} m ON m.group=a.group AND m.member=?
+            INNER JOIN {group} g ON (g.id = a.group AND g.deleted = ?)
         WHERE
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )
             AND ( v.stopdate IS NULL OR v.stopdate > ? )
         ',
-        array($userlooking, $dbnow, $dbnow)
+        array($userlooking, 0, $dbnow, $dbnow)
         )
     ) {
         foreach ($results as &$row) {
@@ -1576,4 +1688,46 @@ function display_size($size) {
     }
     return $size;
 }
+
+/**
+ * creates the profile sideblock
+ */
+function profile_sideblock() {
+    global $USER;
+    safe_require('notification', 'internal');
+    require_once('group.php');
+    $data = array(
+        'id' => $USER->get('id'),
+    );
+    $saveduser = $USER->get('parentuser');
+    if (!empty($saveduser) && $saveduser->name) {
+        $data['realuser'] = $saveduser->name;
+    }
+    $data['unreadnotifications'] = call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'));
+    $data['unreadnotificationsmessage'] = $data['unreadnotifications'] == 1 ? get_string('unreadmessage') : get_string('unreadmessages');
+    $invitedgroups = get_invited_groups();
+    $data['invitedgroups'] = $invitedgroups ? count($invitedgroups) : 0;
+    $data['invitedgroupsmessage'] = $data['invitedgroups'] == 1 ? get_string('invitedgroup') : get_string('invitedgroups');
+    $data['pendingfriends'] = count_records('usr_friend_request', 'owner', $USER->get('id'));
+    $data['pendingfriendsmessage'] = $data['pendingfriends'] == 1 ? get_string('pendingfriend') : get_string('pendingfriends');
+    $data['groups'] = get_owned_groups();
+    $data['views'] = get_records_sql_array(
+        'SELECT v.id, v.title
+        FROM {view} v
+        INNER JOIN {view_tag} vt ON (vt.tag = ? AND vt.view = v.id)
+        WHERE v.owner = ?
+        ORDER BY v.title',
+        array(get_string('profile'), $USER->get('id'))
+    );
+    $data['artefacts'] = get_records_sql_array(
+         'SELECT a.id, a.artefacttype, a.title
+         FROM {artefact} a
+         INNER JOIN {artefact_tag} at ON (a.id = at.artefact AND tag = ?)
+         WHERE a.owner = ?
+         ORDER BY a.title',
+         array(get_string('profile'), $USER->get('id'))
+    );
+    return $data;
+}
+
 ?>

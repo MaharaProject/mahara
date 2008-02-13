@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage lang
@@ -33,7 +33,8 @@ $string['wwwroot'] = 'WWW root';
 $string['port'] = 'Port number'; 
 $string['protocol'] = 'Protocol';
 $string['changepasswordurl'] = 'Password-change URL';
-$string['cannotremove']  = "We can't remove this auth plugin, as it's the only \\nplugin that exists for this institution.";
+$string['cannotremove']  = "We can't remove this auth plugin, as it's the only \nplugin that exists for this institution.";
+$string['cannotremoveinuse']  = "We can't remove this auth plugin, as it's being used by some users.\nYou must update their records before you can remove this plugin.";
 $string['saveinstitutiondetailsfirst'] = 'Please save the institution details before configuring authentication plugins.';
 
 $string['editauthority'] = 'Edit an Authority';
@@ -54,4 +55,20 @@ $string['wessoout'] = 'We SSO out';
 $string['theyssoin'] = 'They SSO in';
 $string['application'] = 'Application';
 $string['cantretrievekey'] = 'An error occurred while retrieving the public key from the remote server.<br>Please ensure that the Application and WWW Root fields are correct, and that networking is enabled on the remote host.';
+
+$string['errnoauthinstances']   = 'We don\'t seem to have any authentication plugin instances configured for the host at ';
+$string['errnoxmlrcpinstances'] = 'We don\'t seem to have any XMLRPC authentication plugin instances configured for the host at ';
+$string['errnoxmlrcpwwwroot']   = 'We don\'t have a record for any host at ';
+$string['errnoxmlrpcuser']      = "We were unable to authenticate you at this time. Possible reasons might be:
+
+    * Your SSO session might have expired. Go back to the other application and click the link to sign into Mahara again.
+    * You may not be allowed to SSO to Mahara. Please check with your administrator if you think you should be allowed to.";
+
+$string['unabletosigninviasso'] = 'Unable to sign in via SSO';
+$string['xmlrpccouldnotlogyouin'] = 'Sorry, could not log you in :(';
+$string['xmlrpccouldnotlogyouindetail'] = 'Sorry, we could not log you into Mahara at this time. Please tryin again shortly, and if the problem persists, contact your administrator';
+
+$string['requiredfields'] = 'Required profile fields';
+$string['requiredfieldsset'] = 'Required profile fields set';
+
 ?>

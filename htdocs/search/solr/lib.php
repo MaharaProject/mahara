@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage search-internal
@@ -109,6 +109,7 @@ class PluginSearchSolr extends PluginSearchInternal {
         $elements = array();
 
         $enc_complete = json_encode(get_string('complete'));
+        $enc_failed   = json_encode(get_string('Failed'));
 
         $script = <<<END
 <script type="text/javascript">
@@ -118,7 +119,7 @@ class PluginSearchSolr extends PluginSearchInternal {
         insertSiblingNodesAfter(td, progress);
 
         sendjsonrequest(config.wwwroot + 'search/solr/reindex.json.php', {'type': type}, 'POST', function (data) {
-            replaceChildNodes(progress, {$enc_complete});
+            replaceChildNodes(progress, (data.error) ? {$enc_failed} : {$enc_complete});
         });
     }
 </script>
@@ -128,6 +129,10 @@ END;
             'type'         => 'text',
             'title'        => get_string('solrurl', 'search.solr'), 
             'defaultvalue' => get_config_plugin('search', 'solr', 'solrurl'),
+            'rules' => array(
+                // Rather simplistic for now. Should match a valid URL
+                'regex' => '#^https?://.*$#',
+            ),
         );
         $elements['indexcontrol'] = array(
             'type'     => 'fieldset',
@@ -163,10 +168,14 @@ END;
         set_config_plugin('search', 'solr', 'solrurl', $values['solrurl']);
     }
 
-    public static function search_user($query_string, $limit, $offset = 0) {
-        $results = self::send_query($query_string, $limit, $offset, array('type' => 'user'));
-
+    private static function remove_key_prefix(&$results) {
         if (is_array($results['data'])) {
+            $toarray = array(
+                'institutions' => 1,
+                'invitedby'    => 1,
+                'member'       => 1,
+                'requested'    => 1,
+            );
             foreach ($results['data'] as &$result) {
                 $new_result = array();
                 foreach ($result as $key => &$value) {
@@ -181,15 +190,108 @@ END;
                         continue;
                     }
 
-                    if ($key_parts[0] == 'store' || $key == 'ref_institution') {
+                    if ($key_parts[0] == 'store' || $key_parts[0] == 'text' || $key_parts[0] == 'string') { 
+                        if (isset($toarray[$key_parts[1]])) {
+                            $value = $value == 'mahara' ? array() : explode(' ', $value);
+                        }
                         $new_result[$key_parts[1]] = $value;
                     }
                 }
                 $result = $new_result;
             }
         }
+    }
 
+    public static function search_user($query_string, $limit, $offset = 0) {
+        if (!empty($query_string)) {
+            $query_string = 'index_name:' . $query_string . '*';
+        }
+        $results = self::send_query($query_string, $limit, $offset,
+                                    array('type' => 'user', 'index_active' => 1));
+        self::remove_key_prefix($results);
         return $results;
+    }
+
+
+    public static function admin_search_user($queries, $constraints, $offset, $limit, $sortby, $sortdir) {
+        $q = '';
+        $solrfields = array(
+            'id'          => 'id',
+            'institution' => 'text_institutions',
+            'email'       => 'string_email',
+            'username'    => 'text_username',
+            'firstname'   => 'text_firstname',
+            'lastname'    => 'text_lastname',
+            'suspended'   => 'string_suspended',
+            'institution_requested' => 'text_institutions_requested',
+        );
+        if (!empty($queries)) {
+            $terms = array();
+            foreach ($queries as $f) {
+                if ($f['field'] == 'email' && $f['type'] == 'contains' && strpos($f['string'],'@') === 0) {
+                    $terms[] = 'string_emaildomain:' . substr($f['string'], 1) . '*';
+                } else {
+                    $terms[] = $solrfields[$f['field']] . ':' . strtolower($f['string'])
+                        . ($f['type'] != 'equals' ? '*' : '');
+                }
+            }
+            $q .= '(' . join(' OR ', $terms) . ')';
+        }
+        if (!empty($constraints)) {
+            if (!empty($q)) {
+                $q .= ' AND ';
+            }
+            $terms = array();
+            foreach ($constraints as $f) {
+                if ($f['type'] == 'in' && is_array($f['string'])) {
+                    foreach ($f['string'] as &$string) {
+                        $string = $solrfields[$f['field']] . ':' . strtolower($string);
+                    }
+                    $terms[] = '(' . join(' OR ', $f['string']) . ')';
+                } else {
+                    $terms[] = $solrfields[$f['field']] . ':' . strtolower($f['string'])
+                        . ($f['type'] != 'equals' ? '*' : '');
+                }
+            }
+            $q .= join(' AND ', $terms);
+        }
+
+        $sort = $solrfields[$sortby] . ' ' . $sortdir;
+
+        $results = self::send_query($q, $limit, $offset, array('type' => 'user'), '*', false, $sort);
+        self::remove_key_prefix($results);
+        return $results;
+    }
+
+
+    public static function institutional_admin_search_user($query, $institution, $limit) {
+        $fields = 'id,text_firstname,text_lastname,text_username,store_preferredname,idtype';
+        if (empty($query)) {
+            $q = array();
+        } else {
+            $query = strtolower($query);
+            $q = array('(text_firstname:'.$query.'* OR text_lastname:'.$query.'*)');
+        }
+
+        if (!empty($institution->name)) {
+            foreach (array('member', 'requested', 'invitedby') as $f) {
+                if ($institution->{$f} == 0) {
+                    $neg[] = '-text_' . $f . ':' . $institution->name;
+                } else if ($institution->{$f} == 1) {
+                    $q[] = 'text_' . $f . ':' . $institution->name;
+                }
+            }
+        }
+        // Solr doesn't like all-negative queries
+        if (empty($q) && !empty($neg)) {
+            $q = array('*:*');
+        }
+        $q = join(' AND ', array_merge($q, $neg));
+
+        $results = self::send_query($q, $limit, 0, array('type' => 'user'), $fields);
+        self::remove_key_prefix(&$results);
+        return $results;
+        
     }
 
     /**
@@ -263,7 +365,7 @@ END;
                 'type'               => 'view',
                 'title'              => $view['title'],
                 'description'        => strip_tags($view['description']),
-                'tags'               => join(', ', get_column('view_tag', 'tag', 'view', $view['id'])),
+                'tags'               => get_column('view_tag', 'tag', 'view', $view['id']),
                 'ctime'              => $view['ctime'],
                 'mtime'              => $view['mtime'],
             );
@@ -289,7 +391,7 @@ END;
                 'type'               => 'artefact',
                 'title'              => $artefact['title'],
                 'description'        => strip_tags($artefact['description']),
-                'tags'               => join(', ', get_column('artefact_tag', 'tag', 'artefact', $artefact['id'])),
+                'tags'               => get_column('artefact_tag', 'tag', 'artefact', $artefact['id']),
                 'ctime'              => $artefact['ctime'],
                 'mtime'              => $artefact['mtime'],
             );
@@ -305,7 +407,7 @@ END;
 
         self::delete_bytype('user');
 
-        $users = get_recordset('usr', 'active', '1');
+        $users = get_recordset('usr', 'deleted', '0');
         safe_require('artefact', 'internal');
         $publicfields = array_keys(ArtefactTypeProfile::get_public_fields());
 
@@ -334,7 +436,7 @@ END;
             'type'                => 'artefact',
             'title'               => $artefact->get('title'),
             'description'         => $artefact->get('description'),
-            'tags'                => join(', ', $artefact->get('tags')),
+            'tags'                => $artefact->get('tags'),
             'ctime'               => $artefact->get('ctime'),
             'mtime'               => $artefact->get('mtime'),
         );
@@ -351,7 +453,7 @@ END;
             'type'               => 'view',
             'title'              => $view['title'],
             'description'        => strip_tags($view['description']),
-            'tags'               => join(', ', get_column('view_tag', 'tag', 'view', $view['id'])),
+            'tags'               => get_column('view_tag', 'tag', 'view', $view['id']),
             'ctime'              => $view['ctime'],
             'mtime'              => $view['mtime'],
         );
@@ -365,7 +467,6 @@ END;
         }
         if (
             !isset($user['preferredname'])
-            || !isset($user['institution'])
             || !isset($user['email'])
             || !isset($user['username'])
             || !isset($user['preferredname'])
@@ -378,26 +479,47 @@ END;
             }
         }
 
-        if (!$user['active']) {
+        if ($user['deleted']) {
             self::delete_byidtype($user['id'], 'user');
             return;
         }
         
+        if (!isset($user['institutions'])) {
+            $user['institutions']   = get_column('usr_institution', 'institution', 'usr', $user['id']);
+            $requested              = get_column('usr_institution_request', 'institution', 
+                                                 'usr', $user['id'], 'confirmedusr', 1);
+            $invited                = get_column('usr_institution_request', 'institution', 
+                                                 'usr', $user['id'], 'confirmedinstitution', 1);
+            $institutions_requested = array_merge($user['institutions'], $requested, $invited);
+        }
+
         // @todo: need to index public profile fields
         $doc = array(
             'id'                  => $user['id'],
             'owner'               => $user['id'],
             'type'                => 'user',
             'index_name'          => $user['preferredname'],
-            'ref_institution'     => $user['institution'],
-            'store_email'         => $user['email'],
-            'store_username'      => $user['username'],
+            'text_institutions'   => empty($user['institutions']) ? 'mahara' : join(' ', $user['institutions']),
+            'string_email'        => $user['email'],
+            'text_username'       => $user['username'],
             'store_preferredname' => $user['preferredname'],
-            'store_firstname'     => $user['firstname'],
-            'store_lastname'      => $user['lastname'],
+            'text_firstname'      => $user['firstname'],
+            'text_lastname'       => $user['lastname'],
+            'index_active'        => $user['active'],
+            'string_suspended'    => (int)!empty($user['suspendedcusr']),
+            'text_institutions_requested' => join(' ', $institutions_requested),
+            'text_member'         => join(' ', $user['institutions']),
+            'text_requested'      => join(' ', $requested),
+            'text_invitedby'      => join(' ', $invited),
         );
         if (empty($doc['index_name'])) {
             $doc['index_name'] = $user['firstname'] . ' ' . $user['lastname'];
+        }
+        if ($emailparts = split('@', $user['email'])
+            and !empty($emailparts[1])) {
+            $doc['string_emaildomain'] = $emailparts[1];
+        } else {
+            $doc['string_emaildomain'] = $user['email'];
         }
 
         self::add_document($doc);
@@ -428,6 +550,9 @@ END;
     private static function send_update($message) {
         require_once('snoopy/Snoopy.class.php');
         $snoopy = new Snoopy;
+        $snoopy->rawheaders = array(
+            'Content-type' => 'text/xml'
+        );
 
         $url = get_config_plugin('search', 'solr', 'solrurl') . 'update';
 
@@ -441,7 +566,7 @@ END;
             throw new RemoteServerException('Parsing Solr response failed');
         }
 
-        $root = $dom->getElementsByTagName('result'); // get root node
+        $root = $dom->getElementsByTagName('response'); // get root node
         $root = $root->item(0);
         if (is_null($root) || $root->getAttribute('status') != 0) {
             log_warn('PluginSearchSolr::send_update (Got non-zero return status)' . $snoopy->results);
@@ -449,7 +574,7 @@ END;
         }
     }
 
-    private static function send_query($query, $limit, $offset, $constraints = array(), $fields = '*', $highlight = false) {
+    private static function send_query($query, $limit, $offset, $constraints = array(), $fields = '*', $highlight = false, $sort = null) {
         $q = array();
 
         foreach ( $constraints as $key => $value ) {
@@ -476,6 +601,9 @@ END;
             'rows'   => $limit,
             //'indent' => 1,
         );
+        if (!empty($sort)) {
+            $data['sort'] = $sort;
+        }
 
         if ($highlight) {
             $data['hl']          = 'true';
@@ -490,7 +618,8 @@ END;
         }
 
         if( $client->status != 200 ) {
-            log_warn('solr_send_query(Solr Error)',$client->results);
+            log_warn('solr_send_query(Solr Error)', true, false);
+            log_warn($client->results);
             $result = array(
                 'error'   => 'Bad repsponse from Solr (HTTP ' . $client->status . ')',
                 'data' => array()
@@ -500,7 +629,8 @@ END;
 
         $dom = new DOMDocument;
         if (!$dom->loadXML($client->results)) {
-            log_warn('solr_send_query(Solr Error)',$client->results);
+            log_warn('solr_send_query(Solr Error)', true, false);
+            log_warn($client->results);
             $result = array(
                 'error'   => 'Query parse error',
                 'data' => array()
@@ -596,11 +726,14 @@ END;
 
         foreach ( $data as $key => $value )
         {
-            $node_field = $dom->createElement('field');
-            $text = $dom->createTextNode($value);
-            $node_field->appendChild($text);
-            $node_field->setAttribute('name', $key);
-            $node_doc->appendChild($node_field);
+            $value = (array)$value;
+            foreach ($value as $v) {
+                $node_field = $dom->createElement('field');
+                $text = $dom->createTextNode($v);
+                $node_field->appendChild($text);
+                $node_field->setAttribute('name', $key);
+                $node_doc->appendChild($node_field);
+            }
         }
 
         self::send_update($dom->saveXML());

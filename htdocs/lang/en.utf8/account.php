@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -35,6 +35,7 @@ $string['friendsnobody'] = 'Nobody may add me as a friend';
 $string['friendsauth'] = 'New friends require my authorisation';
 $string['friendsauto'] = 'New friends are automatically authorised';
 $string['friendsdescr'] = 'Friends control';
+$string['updatedfriendcontrolsetting'] = 'Updated friends control';
 
 $string['wysiwygdescr'] = 'HTML editor';
 $string['on'] = 'On';
@@ -46,6 +47,8 @@ $string['messagesfriends'] = 'Allow people on my Friends list to send me message
 $string['messagesallow'] = 'Allow anyone to send me messages';
 
 $string['language'] = 'Language';
+
+$string['showviewcolumns'] = 'Show controls to add and remove columns when editing a view';
 
 $string['prefssaved']  = 'Preferences saved';
 $string['prefsnotsaved'] = 'Failed to save your Preferences!';

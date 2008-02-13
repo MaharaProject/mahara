@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage form-element
@@ -42,6 +42,26 @@ function pieform_element_cancelbackcreate(Pieform $form, $element) {
     $backelement['value'] = $element['value'][1];
     $submitelement = $element;
     $submitelement['value'] = $element['value'][2];
+
+    if (isset($element['confirm']) && isset($element['confirm'][0])) {
+        $cancelelement['confirm'] = $element['confirm'][0];
+    }
+    else {
+        unset($cancelelement['confirm']);
+    }
+    if (isset($element['confirm']) && isset($element['confirm'][1])) {
+        $backelement['confirm'] = $element['confirm'][1];
+    }
+    else {
+        unset($backelement['confirm']);
+    }
+    if (isset($element['confirm']) && isset($element['confirm'][2])) {
+        $submitelement['confirm'] = $element['confirm'][2];
+    }
+    else {
+        unset($submitelement['confirm']);
+    }
+
     return  pieform_element_cancel($form, $cancelelement) . ' ' . pieform_element_submit($form, $backelement)
         . ' ' . pieform_element_submit($form, $submitelement);
 }

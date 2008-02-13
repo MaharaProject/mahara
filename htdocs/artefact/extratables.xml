@@ -1,0 +1,10 @@
+        <TABLE NAME="artefact_installed_type">
+            <FIELDS>
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="artefact_installed" REFFIELDS="name" />
+            </KEYS>
+        </TABLE>

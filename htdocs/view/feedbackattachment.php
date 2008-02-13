@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -41,12 +41,12 @@ $filename = param_variable('filename');
 // Group name, view title, feedback number?
 $viewdata = get_record_sql('
      SELECT
-         v.title, v.owner, c.name
+         v.title, v.owner, g.name
      FROM {view} v
      INNER JOIN {group} g ON v.submittedto = g.id
      WHERE v.id = ' . $viewid, '');
 
-$page = '/view/view.php?view=' . $viewid;
+$page = '/view/view.php?id=' . $viewid;
 
 require_once('uploadmanager.php');
 $um = new upload_manager('attachment');
@@ -58,9 +58,11 @@ if ($error = $um->preprocess_file()) {
 }
 $size = $um->file['size'];
 
+$ownerlang = get_user_language($viewdata->owner);
+
 safe_require('artefact', 'file');
-$folderid = ArtefactTypeFolder::get_folder_id(get_string('feedbackattachdirname'),
-                                              get_string('feedbackattachdirdesc'),
+$folderid = ArtefactTypeFolder::get_folder_id(get_string_from_language($ownerlang, 'feedbackattachdirname', 'view'),
+                                              get_string_from_language($ownerlang, 'feedbackattachdirdesc', 'view'),
                                               null, $viewdata->owner);
 
 // Create a new file object
@@ -68,7 +70,7 @@ $data = (object) array('owner' => $viewdata->owner,
                        'parent' => $folderid,
                        'size' => $size,
                        'title' => $filename,
-                       'description' => get_string('feedbackonviewbytutorofgroup', 'mahara', 
+                       'description' => get_string_from_language($ownerlang, 'feedbackonviewbytutorofgroup', 'view',
                                                    $viewdata->title, display_name($USER), $viewdata->name));
 $f = ArtefactTypeFile::new_file($um->file['tmp_name'], $data);
 $f->commit();
@@ -103,6 +105,6 @@ require_once('activity.php');
 activity_occurred('feedback', $data);
 
 
-redirect('/view/view.php?view=' . $viewid);
+redirect('/view/view.php?id=' . $viewid);
 
 ?>

@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage lang
@@ -25,6 +25,8 @@
  */
 
 defined('INTERNAL') || die();
+
+$string['pluginname'] = 'Blogs';
 
 $string['blog'] = 'Blog';
 $string['blogs'] = 'Blogs';
@@ -41,7 +43,7 @@ $string['blogdoesnotexist'] = 'You are trying to access a blog that does not exi
 $string['blogpostdoesnotexist'] = 'You are trying to access a blog post that does not exist';
 $string['blogfilesdirdescription'] = 'Files uploaded as blog post attachments';
 $string['blogfilesdirname'] = 'blogfiles';
-$string['blogpost'] = 'blog post';
+$string['blogpost'] = 'Blog Post';
 $string['blogdeleted'] = 'Blog deleted';
 $string['blogpostdeleted'] = 'Blog post deleted';
 $string['blogpostpublished'] = 'Blog post published';
@@ -76,6 +78,8 @@ $string['errorsavingattachments'] = 'An error occurred while saving blog post at
 $string['horizontalspace'] = 'Horizontal space';
 $string['insert'] = 'Insert';
 $string['insertimage'] = 'Insert image';
+$string['mustspecifytitle'] = 'You must specify a title for your post';
+$string['mustspecifycontent'] = 'You must specify some content for your post';
 $string['myblogs'] = 'My Blogs';
 $string['name'] = 'Name';
 $string['newattachmentsexceedquota'] = 'The total size of the new files that you have uploaded to this post would exceed your quota.  You may be able to save the post if you remove some of the attachments you have just added.';

@@ -1,8 +1,7 @@
 {include file="header.tpl"}
 
 {include file="columnfullstart.tpl"}
-	
-			<h2>{str section=admin tag=editsitecontent}</h2>
+            <p>{str tag=editsitepagespagedescription section=admin}</p>
 	
 			{$pageeditform}
 

@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -91,12 +91,14 @@ class upload_manager {
         require_once('file.php');
         $type = get_mime_type($file['tmp_name']);
         if ($type) {
-            $validtypes = get_column_sql('SELECT mimetype
-                FROM {artefact_file_mime_types} m
-                LEFT JOIN {artefact_file_file_types} f ON (m.description = f.description)
-                WHERE f.enabled = 1');
-            if (!in_array($type, $validtypes)) {
-                return get_string('filetypenotallowed');
+            if ($type != 'application/x-empty' && substr($type, 0, 5) != 'text/') {
+                $validtypes = get_column_sql('SELECT mimetype
+                    FROM {artefact_file_mime_types} m
+                    LEFT JOIN {artefact_file_file_types} f ON (m.description = f.description)
+                    WHERE f.enabled = 1');
+                if (!in_array($type, $validtypes)) {
+                    return get_string('filetypenotallowed');
+                }
             }
         }
 
@@ -288,8 +290,12 @@ function clam_scan_file(&$file) {
         clam_handle_infected_file($fullpath); 
         // Notify admins if user has uploaded more than 3 infected
         // files in the last month
-        if (count_records_sql('SELECT COUNT(*) FROM {usr_infectedupload}
-            WHERE usr = ? AND time > CURRENT_TIMESTAMP - ?::INTERVAL;', array($userid, '1 month')) >= 2) {
+        if (count_records_sql('
+            SELECT
+                COUNT(*)
+            FROM {usr_infectedupload}
+            WHERE usr = ? AND time > ?',
+            array($userid, db_format_timestamp(time() - 60*60*24*30))) >= 2) {
             log_debug('sending virusrepeat notification');
             $data = (object) array('username' => $USER->get('username'),
                                    'userid' => $userid,

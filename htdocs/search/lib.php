@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage search
@@ -76,8 +76,7 @@ abstract class PluginSearch extends Plugin {
      * @param string  The query string
      * @param integer How many results to return
      * @param integer What result to start at (0 == first result)
-     * @param boolean Return all matching groups, or just ones this user
-     * is a member of?
+     * @param string  Which groups to search (all, member, notmember)
      * @return array  A data structure containing results looking like ...
      *         $results = array(
      *               count   => integer, // total number of results
@@ -106,7 +105,7 @@ abstract class PluginSearch extends Plugin {
      *               ),
      *           );
      */
-    public static abstract function search_group($query_string, $limit, $offset=0, $all=false);
+    public static abstract function search_group($query_string, $limit, $offset=0, $type='member');
 
     /**
      * Given a query string and limits, return an array of matching objects
@@ -138,7 +137,8 @@ abstract class PluginSearch extends Plugin {
                         break;
                     case 'view':
                         $result['links'] = array(
-                            '_default'                        => $wwwroot . 'view/view.php?view=' . $result['id'],
+                            '_default'                        => $wwwroot . 'view/view.php?id=' . $result['id'],
+                            // TODO: these are certainly broken!
                             get_string('editviewinformation') => $wwwroot . 'view/editmetadata.php?viewid=' . $result['id'],
                             get_string('editview')            => $wwwroot . 'view/edit.php?viewid=' . $result['id'],
                             get_string('editaccess')          => $wwwroot . 'view/editaccess.php?viewid=' . $result['id'],

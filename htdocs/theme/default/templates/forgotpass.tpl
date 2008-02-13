@@ -2,8 +2,6 @@
 
 {include file="columnfullstart.tpl"}
 
-			<h2>{str tag='forgotpassword'}</h2>
-	
 			{if $forgotpass_form}
 			<p>{str tag="forgotpasswordtext"}</p>
 	

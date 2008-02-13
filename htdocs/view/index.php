@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -32,122 +32,190 @@ define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'index');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-define('TITLE', get_string('myviews'));
+require_once('pieforms/pieform.php');
+define('TITLE', get_string('myviews', 'view'));
 
-$wwwroot = get_config('wwwroot');
+$limit = param_integer('limit', 5);
+$offset = param_integer('offset', 0);
 
-$getstring = quotestrings(array('mahara' => array(
-    'accessstartdate', 'accessstopdate', 'artefacts', 'delete', 'deleteviewquestion', 'description', 
-    'editaccess', 'editview', 'editviewinformation', 'submitted', 'submitview', 'submitviewquestion'
-)));
+$userid = $USER->get('id');
 
-$editcontrolshelp = get_help_icon('core', 'views', null, null, null, 'vieweditcontrols');
+$count = count_records('view', 'owner', $userid);
 
-$javascript = <<<JAVASCRIPT
-var viewlist = new TableRenderer(
-    'viewlist',
-    'myviews.json.php',
-    [undefined,undefined]
-);
+/* Get $limit views from the view table, then get all these views'
+   associated artefacts */
 
-viewlist.rowfunction = function(r, n, data) {
-    return map(partial(TR,null), [ title(r,data.groups), 
-                                 [ TD(null,{$getstring['accessstartdate']}),TD(r.startdate)  ],
-                                 [ TD(null,{$getstring['accessstopdate']}), TD(r.stopdate)   ],
-                                 [ TD(null,{$getstring['description']}),    function () { var desc = TD(); desc.innerHTML=r.description; return desc }],
-                                 [ TD(null,{$getstring['artefacts']}),
-                                   TD(null,UL(null,map(partial(renderartefact,r.id),r.artefacts)))]]);
+/* Do this in one query sometime */
+
+$viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, g.id AS groupid, g.name
+        FROM {view} v
+        LEFT OUTER JOIN {group} g ON (v.submittedto = g.id AND g.deleted = 0)
+        WHERE v.owner = ' . $userid . '
+        ORDER BY v.title, v.id', '', $offset, $limit);
+
+if ($viewdata) {
+    $viewidlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $viewdata));
+    $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
+        FROM {view_artefact} va
+        INNER JOIN {artefact} a ON va.artefact = a.id
+        INNER JOIN {artefact_installed_type} t ON a.artefacttype = t.name
+        WHERE va.view IN (' . $viewidlist . ')
+        GROUP BY 1, 2, 3, 4, 5
+        ORDER BY a.title, va.artefact', '');
+    $accessgroups = get_records_sql_array('SELECT view, accesstype, id, name, startdate, stopdate
+        FROM (
+            SELECT view, \'group\' AS accesstype, g.id, g.name, startdate, stopdate
+            FROM {view_access_group} vg
+            INNER JOIN {group} g ON g.id = vg.group AND g.deleted = 0
+            WHERE vg.tutoronly = 0
+            UNION SELECT view, \'tutorgroup\' AS accesstype, g.id, g.name, startdate, stopdate
+            FROM {view_access_group} vg
+            INNER JOIN {group} g ON g.id = vg.group AND g.deleted = 0
+            WHERE vg.tutoronly = 1
+            UNION SELECT view, \'user\' AS accesstype, usr AS id, \'\' AS name, startdate, stopdate
+            FROM {view_access_usr} vu
+            UNION SELECT view, accesstype, 0 AS id, \'\' AS name, startdate, stopdate
+            FROM {view_access} va
+        ) AS a
+        WHERE view in (' . $viewidlist . ')
+        ORDER BY view, accesstype, name, id
+    ', array());
 }
 
-function title(r, groups) {
-    var editinfo = INPUT({'type':'button','class':'button',
-                              'value':{$getstring['editviewinformation']},
-                              'onclick':"submitform(" + r.id + ", 'editinfo')"});
-    var edit = INPUT({'type':'button','class':'button','value':{$getstring['editview']},
-                          'onclick':"submitform(" + r.id + ", 'edit')"});
-    var editaccess = INPUT({'type':'button','class':'button','value':{$getstring['editaccess']},
-                                'onclick':"submitform(" + r.id + ", 'editaccess')"});
-    var del = INPUT({'type':'button','class':'button','value':{$getstring['delete']},
-                         'onclick':"return submitform(" + r.id + ", 'delete');"});
-    if (r.submittedto) {
-        var buttons = [editaccess];
-        var assess = get_string('viewsubmittedto', r.submittedto);
-    }
-    else {
-        var buttons = [editinfo,edit,editaccess,del];
-        var assess = assessselect(r.id,groups);
-    }
-    var f = FORM({'id':('form'+r.id),'method':'post','enctype':'multipart/form-data',
-                      'encoding':'multipart/form-data'},
-                 DIV({'class': 'viewbuttons'}, buttons),
-                 DIV({'class': 'viewbuttons'}, assess));
-    var s = SPAN();
-    if (r._rownumber == 1) {
-        s.innerHTML = '{$editcontrolshelp}';
-    }
-    return [TD(null,A({'href':'view.php?view='+r.id},r.title)),
-            TD(null,f, s)];
-}
 
-function groupoption(group) {
-    return OPTION({'value':group.id},group.name);
-}
-
-function assessselect(viewid, grouplist) {
-    if (grouplist.length < 1) {
-        return null;
-    }
-    var submitview = INPUT({'type':'button','class':'button',
-                            'value':{$getstring['submitview']}});
-    submitview.onclick = function () { submitform(viewid, 'submitview'); };
-    return [SELECT({'name':'group','class':'select'},
-                   map(groupoption, grouplist)), submitview];
-            
-}
-
-function renderartefact(viewid,a) {
-    var link = A({'href':'{$wwwroot}view/view.php?view='+viewid+'&artefact='+a.id});
-    link.innerHTML = a.title;
-    return LI(null,link);
-}
-
-function submitform(viewid, action) {
-    if (action == 'delete') {
-        if (confirm({$getstring['deleteviewquestion']})) {
-            sendjsonrequest('delete.json.php', {'viewid':viewid}, 'POST', viewlist.doupdate);
+$data = array();
+if ($viewdata) {
+    for ($i = 0; $i < count($viewdata); $i++) {
+        $index[$viewdata[$i]->id] = $i;
+        $data[$i]['id'] = $viewdata[$i]->id;
+        $data[$i]['title'] = $viewdata[$i]->title;
+        $data[$i]['description'] = $viewdata[$i]->description;
+        if ($viewdata[$i]->name) {
+            $data[$i]['submittedto'] = array('name' => $viewdata[$i]->name, 'id' => $viewdata[$i]->groupid);
         }
-        return false;
-    }
-    var form = $('form' + viewid);
-    if (action == 'submitview') {
-        if (confirm({$getstring['submitviewquestion']})) {
-            sendjsonrequest('submit.json.php', {'viewid':viewid,'groupid':form.group.options[form.group.selectedIndex].value}, 'POST', viewlist.doupdate);
+        $data[$i]['artefacts'] = array();
+        $data[$i]['accessgroups'] = array();
+        if ($viewdata[$i]->startdate && $viewdata[$i]->stopdate) {
+            $data[$i]['access'] = get_string('accessbetweendates', 'view', format_date(strtotime($viewdata[$i]->startdate), 'strftimedate'),
+                format_date(strtotime($viewdata[$i]->stopdate), 'strftimedate'));
         }
-        return false;
+        else if ($viewdata[$i]->startdate) {
+            $data[$i]['access'] = get_string('accessfromdate', 'view', format_date(strtotime($viewdata[$i]->startdate), 'strftimedate'));
+        }
+        else if ($viewdata[$i]->stopdate) {
+            $data[$i]['access'] = get_string('accessuntildate', 'view', format_date(strtotime($viewdata[$i]->stopdate), 'strftimedate'));
+        }
     }
-    var page = 'index.php';
-    if (action == 'editinfo') {
-        page = 'editmetadata.php';
+    // Go through all the artefact records and put them in with the
+    // views they belong to.
+    if ($artefacts) {
+        foreach ($artefacts as $artefactrec) {
+            safe_require('artefact', $artefactrec->plugin);
+            // Perhaps I shouldn't have to construct the entire
+            // artefact object to render the name properly.
+            $classname = generate_artefact_class_name($artefactrec->artefacttype);
+            $artefactobj = new $classname(0, array('title' => $artefactrec->title));
+            $artefactobj->set('dirty', false);
+            if (!$artefactobj->in_view_list()) {
+                continue;
+            }
+            $artname = $artefactobj->display_title(30);
+            if (strlen($artname)) {
+                $data[$index[$artefactrec->view]]['artefacts'][] = array('id'    => $artefactrec->artefact,
+                                                                         'title' => $artname);
+            }
+        }
     }
-    if (action == 'edit') {
-        page = 'edit.php';
+    if ($accessgroups) {
+        foreach ($accessgroups as $access) {
+            $data[$index[$access->view]]['accessgroups'][] = array(
+                'accesstype' => $access->accesstype, // friends, group, loggedin, public, tutorsgroup, user
+                'id' => $access->id,
+                'name' => $access->name,
+                'startdate' => $access->startdate,
+                'stopdate' => $access->stopdate
+            );
+        }
     }
-    if (action == 'editaccess') {
-        page = 'editaccess.php';
-    }
-    setNodeAttribute(form, 'action', page);
-    appendChildNodes(form, INPUT({'type':'hidden','name':'viewid','value':viewid}));
-    form.submit();
-    return false;
 }
 
-viewlist.limit = 5;
-viewlist.updateOnLoad();
 
-JAVASCRIPT;
+/* Get a list of groups that the user belongs to which also have
+   a tutor member.  This is the list of groups that the user is
+   able to submit views to. */
 
-$smarty = smarty(array('tablerenderer'), array(), array('viewsubmittedto' => 'mahara'));
-$smarty->assign('INLINEJAVASCRIPT', $javascript);
+if (!$tutorgroupdata = @get_records_sql_array('SELECT g.id, g.name
+       FROM {group_member} u
+       INNER JOIN {group} g ON (u.group = g.id AND g.deleted = 0)
+       INNER JOIN {group_member} t ON t.group = g.id 
+       WHERE u.member = ?
+       AND t.tutor = 1
+       AND t.member != ?
+       GROUP BY g.id, g.name
+       ORDER BY g.name', array($userid, $userid))) {
+    $tutorgroupdata = array();
+}
+else {
+	$options = array();
+	foreach ($tutorgroupdata as $group) {
+	    $options[$group->id] = $group->name;
+	}
+    $i = 0;
+    foreach ($data as &$view) {
+        if (empty($view['submittedto'])) {
+            $view['submitto'] = pieform(array(
+                'name' => 'submitto' . $i++,
+                'method' => 'post',
+                'renderer' => 'oneline',
+                'autofocus' => false,
+                'successcallback' => 'submitto_submit',
+                'elements' => array(
+                    'text1' => array(
+                        'type' => 'html',
+                        'value' => 'Submit this view to '
+                    ),
+                    'options' => array(
+                        'type' => 'select',
+                        'collapseifoneoption' => false,
+                        'options' => $options,
+                    ),
+                    'text2' => array(
+                        'type' => 'html',
+                        'value' => ' for assessment',
+                    ),
+                    'submit' => array(
+                        'type' => 'submit',
+                        'value' => get_string('go')
+                    ),
+                    'view' => array(
+                        'type' => 'hidden',
+                        'value' => $view['id']
+                    )
+                ),
+            ));
+        }
+        else {
+            $view['submittedto'] = get_string('viewsubmittedtogroup', 'view', $view['submittedto']['id'], $view['submittedto']['name']);
+        }
+    }
+}
+
+$pagination = build_pagination(array(
+    'url' => get_config('wwwroot') . 'view/myviews.php?',
+    'count' => $count,
+    'limit' => $limit,
+    'offset' => $offset,
+    'resultcounttextsingular' => get_string('view', 'view'),
+    'resultcounttextplural' => get_string('views', 'view')
+));
+
+function submitto_submit(Pieform $form, $values) {
+    redirect('/view/submit.php?id=' . $values['view'] . '&group=' . $values['options']);
+}
+
+$smarty = smarty();
+$smarty->assign('views', $data);
+$smarty->assign('pagination', $pagination['html']);
+$smarty->assign('heading', get_string('myviews'));
 $smarty->display('view/index.tpl');
-
 ?>

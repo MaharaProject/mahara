@@ -4,21 +4,6 @@
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
 <TABLES>
-    <!-- This table is supposed to have a 1-1 relation with every row in the
-    artefact table with artefacttype = 'blog'. It contains additional
-    information that isn't in the artefact table. -->
-    <TABLE NAME="artefact_blog_blog">
-        <FIELDS>
-            <FIELD NAME="blog" TYPE="int" LENGTH="10" NOTNULL="true" />
-            <FIELD NAME="commentsallowed" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" UNSIGNED="true" />
-            <FIELD NAME="commentsnotify" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" UNSIGNED="true" />
-        </FIELDS>
-
-        <KEYS>
-            <KEY NAME="blogpk" TYPE="primary" FIELDS="blog" />
-            <KEY NAME="blogfk" TYPE="foreign" FIELDS="blog" REFTABLE="artefact" REFFIELDS="id" />
-        </KEYS>
-    </TABLE>
 
     <!-- This table is supposed to have a 1-1 relation with every row in the
     artefact table with artefacttype = 'blogpost'.  It contains additional data

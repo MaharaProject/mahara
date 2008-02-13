@@ -1,32 +1,31 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
+        <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
         <title>{$PAGETITLE|escape}</title>
         <script type="text/javascript">
         var config = {literal}{{/literal}
             'theme': {$THEMELIST},
             'sesskey' : '{$SESSKEY}',
             'wwwroot': '{$WWWROOT}',
-            'loggedin': {$USER->is_logged_in()|intval}
+            'loggedin': {$USER->is_logged_in()|intval},
+            'userid': {$USER->get('id')}
         {literal}}{/literal};
         </script>
+        {$STRINGJS}
 {foreach from=$JAVASCRIPT item=script}        <script type="text/javascript" src="{$script}"></script>
 {/foreach}
 {foreach from=$HEADERS item=header}        {$header}
 {/foreach}
 {if isset($INLINEJAVASCRIPT)}
         <script type="text/javascript">
-        
 {$INLINEJAVASCRIPT}
         </script>
 {/if}
-        <script type="text/javascript" src="{$WWWROOT}js/pieforms.js"></script>
 {foreach from=$STYLESHEETLIST item=cssurl}
         <link rel="stylesheet" type="text/css" href="{$cssurl}">
 {/foreach}
-        <link rel="stylesheet" type="text/css" href="{theme_path location='style/dev.css'}">
         <link rel="stylesheet" type="text/css" href="{theme_path location='style/print.css'}" media="print">
-        <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
         <style type="text/css">
             {literal}
             body { background: white; }
@@ -42,11 +41,11 @@
             <div id="header">
                 <div class="frX"></div>
                 <div id="logo"><a href="{$WWWROOT}"><img src="{theme_path location='images/logo_mahara.gif'}" border="0" alt=""></a></div>
-                <h1 class="hiddenStructure"><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
+                <h1 class="hidden"><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
             </div>
         </div>
         <div id="mainwrapperX">
             {insert name="messages"}
             <div id="maincontentwrapper">
             <div class="maincontent">
-                {if $PAGEHELPNAME} <div id="{$PAGEHELPNAME}_container" class="pagehelpicon">{$PAGEHELPICON}</div>{/if}
+                {if $PAGEHELPNAME && $heading} <h2>{$heading|escape}<span id="{$PAGEHELPNAME}_container" class="pagehelpicon">{$PAGEHELPICON}</span></h2>{/if}

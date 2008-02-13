@@ -1,23 +1,27 @@
 {include file="header.tpl"}
 
 {include file="columnfullstart.tpl"}
+{if $can_edit}
+<div class="fr editview">
+    <span class="settingsicon">
+        <a href="blocks.php?id={$viewid}&amp;new={$new}">{str tag=editmyview section=view}</a>
+    </span>
+</div>
+{/if}
 <div id="view">
-	<h3>
-        {foreach name=viewnav from=$VIEWNAV item=item}
-          {$item}
-          {if !$smarty.foreach.viewnav.last}
-            :
-          {/if}
-        {/foreach}
-        </h3>
+        <p class="view-description">{$viewdescription}</p>
 	
-	{if $VIEWCONTENT}
-	   {$VIEWCONTENT}
-	{/if}
+        <div id="bottom-pane">
+            <div id="column-container">
+               {$viewcontent}
+                <div class="cb">
+                </div>
+            </div>
+        </div>
 	<div id="publicfeedback">
 	<table id="feedbacktable">
 		<thead>
-			<tr><th colspan=5>{str tag=feedback}</th></tr>
+			<tr><th colspan=5>{str tag=feedback section=view}</th></tr>
 		</thead>
 	</table>
 	</div>

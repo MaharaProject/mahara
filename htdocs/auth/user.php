@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -44,7 +44,6 @@ class User {
     protected $authenticated = false;
     protected $changed       = false;
     protected $attributes    = array();
-    protected $SESSION;
 
     /**
      * Sets defaults for the user object (only because PHP5 does not appear
@@ -56,7 +55,6 @@ class User {
             'id'               => 0,
             'username'         => '',
             'password'         => '',
-            'institution'      => 'mahara',
             'salt'             => '',
             'passwordchange'   => 0,
             'active'           => 1,
@@ -83,10 +81,14 @@ class User {
             'sessionid'        => '', /* The real session ID that PHP knows about */
             'accountprefs'     => array(),
             'activityprefs'    => array(),
+            'institutions'     => array(),
+            'theme'            => null,
+            'admininstitutions' => array(),
+            'staffinstitutions' => array(),
+            'parentuser'       => null,
             'sesskey'          => ''
         );
         $this->attributes = array();
-        $this->SESSION = Session::singleton();
 
     }
 
@@ -116,13 +118,14 @@ class User {
         }
 
         $this->populate($user);
+        $this->reset_institutions();
         return $this;
     }
 
     /**
      * 
      */
-    public function find_by_instanceid_username($instanceid, $username) {
+    public function find_by_instanceid_username($instanceid, $username, $remoteuser=false) {
 
         if (!is_numeric($instanceid) || $instanceid < 0) {
             throw new InvalidArgumentException('parameter must be a positive integer to create a User object');
@@ -132,16 +135,30 @@ class User {
             $instanceid = $parentid;
         }
 
-        $sql = 'SELECT
-                    *, 
-                    ' . db_format_tsfield('expiry') . ', 
-                    ' . db_format_tsfield('lastlogin') . ', 
-                    ' . db_format_tsfield('suspendedctime') . '
-                FROM
-                    {usr}
-                WHERE
-                    LOWER(username) = ? AND
-                    authinstance = ?';
+        if ($remoteuser) {
+            $sql = 'SELECT
+                        u.*, 
+                        ' . db_format_tsfield('u.expiry', 'expiry') . ', 
+                        ' . db_format_tsfield('u.lastlogin', 'lastlogin') . ', 
+                        ' . db_format_tsfield('u.suspendedctime', 'suspendedctime') . '
+                    FROM {usr} u
+                    INNER JOIN {auth_remote_user} r ON u.id = r.localusr
+                    WHERE
+                        LOWER(r.remoteusername) = ? AND
+                        r.authinstance = ?';
+        } else {
+            $sql = 'SELECT
+                        *, 
+                        ' . db_format_tsfield('expiry') . ', 
+                        ' . db_format_tsfield('lastlogin') . ', 
+                        ' . db_format_tsfield('suspendedctime') . '
+                    FROM
+                        {usr}
+                    WHERE
+                        LOWER(username) = ? AND
+                        authinstance = ?';
+        }
+
 
         $user = get_record_sql($sql, array($username, $instanceid));
 
@@ -258,7 +275,7 @@ class User {
      * This function returns a method for a particular
      * activity type, or null if it's not set.
      * 
-     * @param string $key the activity type
+     * @param int $key the activity type id
      */
     public function get_activity_preference($key) {
         $activityprefs = $this->get('activityprefs');
@@ -291,6 +308,7 @@ class User {
         $accountprefs[$field] = $value;
         $this->set('accountprefs', $accountprefs);
     }
+
 
     /**
      * Determines if the user is currently logged in
@@ -345,14 +363,148 @@ class User {
 
         return true;
     }
+
+    public function join_institution($institution) {
+        if ($institution != 'mahara' && !$this->in_institution($institution)) {
+            require_once('institution.php');
+            $institution = new Institution($institution);
+            $institution->addUserAsMember($this);
+            $this->reset_institutions();
+        }
+    }
+
+    public function leave_institution($institution) {
+        if ($institution != 'mahara' && $this->in_institution($institution)) {
+            require_once('institution.php');
+            $institution = new Institution($institution);
+            $institution->removeMember($this->to_stdclass());
+        }
+    }
+
+    public function in_institution($institution, $role = null) {
+        $institutions = $this->get('institutions');
+        return isset($institutions[$institution]) 
+            && (is_null($role) || $institutions[$institution]->{$role});
+    }
+
+    public function is_institutional_admin($institution = null) {
+        $a = $this->get('admininstitutions');
+        if (is_null($institution)) {
+            return !empty($a);
+        }
+        return isset($a[$institution]);
+    }
+
+    public function is_institutional_staff($institution = null) {
+        $a = $this->get('staffinstitutions');
+        if (is_null($institution)) {
+            return !empty($a);
+        }
+        return isset($a[$institution]);
+    }
+
+    /**
+     * There is currently no difference in privileges of site staff
+     * and institutional staff
+     */
+    public function can_create_controlled_groups() {
+        return $this->get('admin') || $this->get('staff') || $this->is_institutional_admin()
+            || $this->is_institutional_staff();
+    }
+
+    public function can_edit_institution($institution = null) {
+        return $this->get('admin') || $this->is_institutional_admin($institution);
+    }
+
+    public function is_admin_for_user($user) {
+        if ($this->get('admin')) {
+            return true;
+        }
+        if (!$this->is_institutional_admin()) {
+            return false;
+        }
+        if ($user instanceof User) {
+            $userinstitutions = $user->get('institutions');
+        } else {
+            $userinstitutions = load_user_institutions($user->id);
+        }
+        foreach ($userinstitutions as $i) {
+            if ($this->is_institutional_admin($i->institution)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function is_staff_for_user($user) {
+        if ($this->get('admin') || $this->get('staff')) {
+            return true;
+        }
+        if (!$this->is_institutional_admin() && !$this->is_institutional_staff()) {
+            return false;
+        }
+        if ($user instanceof User) {
+            $userinstitutions = $user->get('institutions');
+        } else {
+            $userinstitutions = load_user_institutions($user->id);
+        }
+        foreach ($userinstitutions as $i) {
+            if ($this->is_institutional_admin($i->institution)
+                || $this->is_institutional_staff($i->institution)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function set_admin_institutions($institutions) {
+        if (empty($institutions)) {
+            $this->set('admininstitutions', array());
+        } else {
+            $this->set('admininstitutions', array_combine($institutions, $institutions));
+        }
+    }
+
+    public function add_institution_request($institution, $studentid = null) {
+        if (empty($institution) || $institution == 'mahara') {
+            return;
+        }
+        require_once('institution.php');
+        $institution = new Institution($institution);
+        $institution->addRequestFromUser($this, $studentid);
+    }
+
+    protected function reset_institutions() {
+        $institutions             = load_user_institutions($this->id);
+        $admininstitutions = array();
+        $staffinstitutions = array();
+        foreach ($institutions as $i) {
+            if ($i->admin) {
+                $admininstitutions[$i->institution] = $i->institution;
+            }
+            if ($i->staff) {
+                $staffinstitutions[$i->institution] = $i->institution;
+            }
+            if (empty($this->theme)) {
+                $this->theme = $i->theme;
+            }
+        }
+        $this->institutions       = $institutions;
+        $this->admininstitutions  = $admininstitutions;
+        $this->staffinstitutions  = $staffinstitutions;
+    }
+
 }
 
 
 class LiveUser extends User {
 
+    protected $SESSION;
+
     public function __construct() {
 
         parent::__construct();
+        $this->SESSION = Session::singleton();
 
         if ($this->SESSION->is_live()) {
             $this->authenticated  = true;
@@ -363,28 +515,34 @@ class LiveUser extends User {
     }
 
     /**
-     * Take a username, password and institution and try to authenticate the
+     * Take a username and password and try to authenticate the
      * user
      *
      * @param  string $username
      * @param  string $password
-     * @param  string $institution
      * @return bool
      */
-    public function login($username, $password, $institution) {
-        $users = get_records_select_array('usr', 'LOWER(username) = ? AND institution = ?', array(strtolower($username), $institution), 'authinstance', '*');
+    public function login($username, $password) {
+        $sql = 'SELECT
+                    *, 
+                    ' . db_format_tsfield('expiry') . ', 
+                    ' . db_format_tsfield('lastlogin') . ', 
+                    ' . db_format_tsfield('suspendedctime') . '
+                FROM
+                    {usr}
+                WHERE
+                    LOWER(username) = ?';
+        $user = get_record_sql($sql, array(strtolower($username)));
 
-        if ($users == false) {
-            throw new AuthUnknownUserException("\"$username\" at \"$institution\" is not known");
+        if ($user == false) {
+            throw new AuthUnknownUserException("\"$username\" is not known");
         }
 
-        foreach($users as $user) {
-            $auth = AuthFactory::create($user->authinstance);
-            if ($auth->authenticate_user_account($user, $password)) {
-                $user->lastauthinstance = $auth->instanceid;
-                $this->authenticate($user);
-                return true;
-            }
+        $auth = AuthFactory::create($user->authinstance);
+        if ($auth->authenticate_user_account($user, $password)) {
+            $user->lastauthinstance = $auth->instanceid;
+            $this->authenticate($user);
+            return true;
         }
 
         return false;
@@ -440,6 +598,7 @@ class LiveUser extends User {
         if (empty($user->id)) $this->commit();
         $this->activityprefs      = load_activity_preferences($user->id);
         $this->accountprefs       = load_account_preferences($user->id);
+        $this->reset_institutions();
         $this->commit();
     }
 
@@ -493,5 +652,55 @@ class LiveUser extends User {
         $this->SESSION->set("user/$key", $value);
         return $this;
     }
+
+    protected function reloadLiveUser($id=null) {
+        if (is_null($id)) {
+            $id = $this->get('id');
+        }
+        $this->find_by_id($id);
+        $this->activityprefs = load_activity_preferences($id);
+        $this->accountprefs = load_account_preferences($id);
+    }
+
+    public function change_identity_to($userid) {
+        $user = new User;
+        $user->find_by_id($userid);
+        if (!$this->is_admin_for_user($user)) {
+            throw new AccessDeniedException(get_string('loginasdenied', 'admin'));
+        }
+        $olduser = $this->get('parentuser');
+        if (!is_null($olduser)) {
+            throw new UserException(get_string('loginastwice', 'admin'));
+        }
+
+        $olduser = new StdClass;
+        $olduser->id = $this->get('id');
+        $olduser->name = $this->firstname . ' ' . $this->lastname;
+
+        $this->reloadLiveUser($userid);
+
+        $this->set('parentuser', $olduser);
+    }
+
+    public function restore_identity() {
+        $id = $this->get('id');
+        $olduser = $this->get('parentuser');
+        if (empty($olduser) || empty($olduser->id)) {
+            throw new UserException(get_string('loginasrestorenodata', 'admin'));
+        }
+
+        $this->reloadLiveUser($olduser->id);
+        $this->set('parentuser', null);
+
+        return $id;
+    }
+
+    public function leave_institution($institution) {
+        parent::leave_institution($institution);
+        $this->find_by_id($this->get('id'));
+        $this->reset_institutions();
+    }
+
+
 }
 ?>

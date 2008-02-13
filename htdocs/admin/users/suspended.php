@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage admin
@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('ADMIN', 1);
+define('INSTITUTIONALADMIN', 1);
 define('MENUITEM', 'configusers/suspendedusers');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('suspendedusers', 'admin'));
@@ -42,8 +42,12 @@ var suspendedlist = new TableRenderer(
     'suspended.json.php',
     [
         'name',
-        'studentid',
-        'institution',
+        function (r) {
+            return TD(null, r.institutions ? map(partial(DIV, null), r.institutions) : null);
+        },
+        function (r) {
+            return TD(null, r.institutions ? map(partial(DIV, null), r.institutionids) : r.studentid);
+        },
         'cusrname',
         'reason',
         function (rowdata) { return TD(null, INPUT({'type': 'checkbox', 'name': 'usr_' + rowdata.id})); }
@@ -64,11 +68,6 @@ $form = new Pieform(array(
             'name' => 'unsuspend',
             'value' => get_string('unsuspendusers', 'admin')
         ),
-        'export' => array(
-            'type' => 'submit',
-            'name' => 'export',
-            'value' => get_string('exportuserprofiles', 'admin')
-        ),
         'delete' => array(
             'type'    => 'submit',
             'confirm' => get_string('confirmdeleteusers', 'admin'),
@@ -79,7 +78,7 @@ $form = new Pieform(array(
 ));
 $smarty->assign('buttonformopen', $form->get_form_tag());
 $smarty->assign('buttonform', $form->build(false));
-
+$smarty->assign('heading', get_string('suspendedusers', 'admin'));
 $smarty->display('admin/users/suspended.tpl');
 
 function buttons_submit_unsuspend(Pieform $form, $values) {
@@ -91,13 +90,6 @@ function buttons_submit_unsuspend(Pieform $form, $values) {
     }
 
     $SESSION->add_ok_msg(get_string('usersunsuspendedsuccessfully', 'admin'));
-    redirect('/admin/users/suspended.php');
-}
-
-function buttons_submit_export(Pieform $form, $values) {
-    global $SESSION;
-    $ids = get_user_ids_from_post();
-    $SESSION->add_info_msg(get_string('exportingnotsupportedyet', 'admin'));
     redirect('/admin/users/suspended.php');
 }
 

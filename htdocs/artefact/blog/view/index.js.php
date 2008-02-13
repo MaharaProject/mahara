@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage artefact-blog
@@ -45,8 +45,6 @@ $enc_cannotdeleteblogpost = json_encode(get_string('cannotdeleteblogpost', 'arte
 
 
 $enc_publish_help = json_encode(get_help_icon('artefact', 'blog', null, null, null, 'publish'));
-$enc_edit_help = json_encode(get_help_icon('artefact', 'blog', null, null, null, 'edit'));
-$enc_delete_help = json_encode(get_help_icon('artefact', 'blog', null, null, null, 'delete'));
 
 return <<<EOJAVASCRIPT
 
@@ -108,12 +106,9 @@ postlist.rowfunction = function(d, n, gd) {
             }
         )
     );
-    var edithelp = SPAN(null); edithelp.innerHTML = {$enc_edit_help};
-
     var del = INPUT(
         { 'type' : 'button', 'class' : 'button', 'value': {$enc_delete} }
     );
-    var delhelp = SPAN(null); delhelp.innerHTML = {$enc_delete_help};
 
     var desctd = TD({'colSpan':3});
     desctd.innerHTML = d.description;
@@ -123,7 +118,7 @@ postlist.rowfunction = function(d, n, gd) {
             null,
             TH(null, d.title),
             status,
-            TH(null, [pub, pubhelp, ' ', edit, edithelp, ' ', del, delhelp])
+            TH(null, [pub, pubhelp, ' ', edit, ' ', del])
         ),
         TR(null, desctd)
     ];

@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage artefact-resume
@@ -31,9 +31,9 @@ define('SECTION_PLUGINNAME', 'resume');
 define('SECTION_PAGE', 'index');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
+define('TITLE', get_string('myresume', 'artefact.resume'));
 require_once('pieforms/pieform.php');
-require_once('pieforms/pieform/elements/calendar.php');
-require('artefact.php');
+require_once(get_config('docroot') . 'artefact/lib.php');
 
 // load up all the artefacts this user already has....
 $coverletter = null;
@@ -59,11 +59,12 @@ try {
 }
 catch (Exception $e) { }
 
-$form = array(
-    'name'        => 'resumemainform',
+$contactinformation_value = $contactinformation->render_self(array('editing' => true));
+$contactinformation_value = $contactinformation_value['html'];
+
+$coverletterform = pieform(array(
+    'name'        => 'coverletter',
     'jsform'      => true,
-    'plugintype'  => 'artefact',
-    'pluginname'  => 'account',
     'plugintype'  => 'artefact',
     'pluginname'  => 'resume',
     'jsform'      => true,
@@ -82,8 +83,23 @@ $form = array(
                     'defaultvalue' => ((!empty($coverletter)) ? $coverletter->get('description') : null),
                     'help' => true,
                 ),
+                'save' => array(
+                    'type' => 'submit',
+                    'value' => get_string('save'),
+                ),
             )
-        ),
+        )
+    )
+));
+
+$interestsform = pieform(array(
+    'name'        => 'interests',
+    'jsform'      => true,
+    'plugintype'  => 'artefact',
+    'pluginname'  => 'resume',
+    'jsform'      => true,
+    'method'      => 'post',
+    'elements'    => array(
         'interestsfs' => array(
             'type' => 'fieldset',
             'legend' => get_string('interest', 'artefact.resume'),
@@ -97,8 +113,23 @@ $form = array(
                     'rows'  => 10,
                     'help'  => true,
                 ),
-            ),
-        ),
+                'save' => array(
+                    'type' => 'submit',
+                    'value' => get_string('save'),
+                ),
+            )
+        )
+    )
+));
+
+$contactinformationform = pieform(array(
+    'name'        => 'contactinformation',
+    'jsform'      => true,
+    'plugintype'  => 'artefact',
+    'pluginname'  => 'resume',
+    'jsform'      => true,
+    'method'      => 'post',
+    'elements'    => array(
         'contactinformationfs' => array(
             'type' => 'fieldset',
             'legend' => get_string('contactinformation', 'artefact.resume'),
@@ -107,11 +138,22 @@ $form = array(
             'elements' => array(
                 'contactinformation' => array(
                     'type'  => 'html',
-                    'value' => $contactinformation->get_html(), 
+                    'value' => $contactinformation_value,
                     'help'  => true,
                 ),
-            ),
-        ),
+            )
+        )
+    )
+));
+
+$personalinformationform = pieform(array(
+    'name'        => 'personalinformation',
+    'jsform'      => true,
+    'plugintype'  => 'artefact',
+    'pluginname'  => 'resume',
+    'jsform'      => true,
+    'method'      => 'post',
+    'elements'    => array(
         'personalinformation' => array(
             'type'        => 'fieldset',
             'legend'      => get_string('personalinformation', 'artefact.resume'),
@@ -134,14 +176,12 @@ $form = array(
                     'defaultvalue' => ((!empty($personalinformation)) 
                         ? $personalinformation->get_composite('placeofbirth') : null),
                     'title' => get_string('placeofbirth', 'artefact.resume'),
-                    'help'  => true,
                 ),  
                 'citizenship' => array(
                     'type' => 'text',
                     'defaultvalue' => ((!empty($personalinformation))
                         ? $personalinformation->get_composite('citizenship') : null),
                     'title' => get_string('citizenship', 'artefact.resume'),
-                    'help'  => true,
                 ),
                 'visastatus' => array(
                     'type' => 'text', 
@@ -159,55 +199,58 @@ $form = array(
                         'male'   => get_string('male', 'artefact.resume'),
                     ),
                     'title' => get_string('gender', 'artefact.resume'),
-                    'help'  => true,
                 ),
                 'maritalstatus' => array(
                     'type' => 'text',
                     'defaultvalue' => ((!empty($personalinformation))
                         ? $personalinformation->get_composite('maritalstatus') :  null),
                     'title' => get_string('maritalstatus', 'artefact.resume'),
-                    'help'  => true,
                 ),
-            ),
-        ),
-        'save' => array(
-            'type' => 'submit',
-            'value' => get_string('save'),
-        ),
+                'save' => array(
+                    'type' => 'submit',
+                    'value' => get_string('save'),
+                ),
+            )
+        )
     )
-);
+));
 
 $cancelstr = get_string('cancel');
 $addstr = get_string('add');
 $editstr = get_string('edit');
 $delstr = get_string('delete');
 $confirmdelstr = get_string('compositedeleteconfirm', 'artefact.resume');
-$confirmeditprofilestr = get_string('confirmeditprofile', 'artefact.resume');
+$imagepath = theme_get_url('images');
+$upstr = get_string('moveup', 'artefact.resume');
+$downstr = get_string('movedown', 'artefact.resume');
 
 $wwwroot = get_config('wwwroot');
 
-$mainform = pieform($form);
 $smarty = smarty(array('tablerenderer'));
 
-$smarty->assign('mainform', $mainform);
+$smarty->assign('coverletterform', $coverletterform);
+$smarty->assign('interestsform', $interestsform);
+$smarty->assign('contactinformationform', $contactinformationform);
+$smarty->assign('personalinformationform',$personalinformationform);
+
 $inlinejs = <<<EOF
 var tableRenderers = {};
 
 function toggleCompositeForm(type) {
     var elemName = ''; 
     elemName = type + 'form';
-    if (hasElementClass(elemName, 'hiddenStructure')) {
-        removeElementClass(elemName, 'hiddenStructure');
+    if (hasElementClass(elemName, 'hidden')) {
+        removeElementClass(elemName, 'hidden');
         $('add' + type + 'button').innerHTML = '{$cancelstr}';
     }
     else {
         $('add' + type + 'button').innerHTML = '{$addstr}';
-        addElementClass(elemName, 'hiddenStructure'); 
+        addElementClass(elemName, 'hidden'); 
     }
 }
 
-function compositeSaveCallback(name, data) {
-    key = name.substr(3);
+function compositeSaveCallback(form, data) {
+    key = form.id.substr(3);
     tableRenderers[key].doupdate(); 
     toggleCompositeForm(key);
     $('add' + key).reset();
@@ -229,10 +272,22 @@ function deleteComposite(type, id, artefact) {
     return false;
 }
 
+function moveComposite(type, id, artefact, direction) {
+    sendjsonrequest('compositemove.json.php',
+        {'id': id, 'artefact': artefact, 'direction':direction},
+        'GET', 
+        function(data) {
+            tableRenderers[type].doupdate();
+        },
+        function() {
+            // @todo error
+        }
+    );
+    return false;
+}
+
 function editprofilebutton() {
-    if (confirm('{$confirmeditprofilestr}')) {
-        document.location='{$wwwroot}artefact/internal/';
-    }
+    document.location='{$wwwroot}artefact/internal/index.php?fs=contact';
     return false;
 }
 
@@ -260,6 +315,27 @@ EOF;
                 return deleteComposite(d.type, r.id, r.artefact);
             });
             return TD(null, link);
+        },
+        function (r, d) {
+            var buttons = [];
+            if (r._rownumber > 1) {
+                var up = A({'href': ''}, IMG({'src': '{$imagepath}/move-block-up.png', 'alt':'{$upstr}'}));
+                connect(up, 'onclick', function (e) {
+                    e.stop();
+                    return moveComposite(d.type, r.id, r.artefact, 'up');
+                });
+                buttons.push(up);
+            }
+            if (!r._last) {
+                var down = A({'href': ''}, IMG({'src': '{$imagepath}/move-block-down.png', 'alt':'{$downstr}'}));
+                connect(down, 'onclick', function (e) {
+                    e.stop();
+                    return moveComposite(d.type, r.id, r.artefact, 'down');
+                });
+                buttons.push(' ');
+                buttons.push(down);
+            }
+            return TD({'style':'text-align:center;'}, buttons);
         }
     ]
 );
@@ -293,9 +369,10 @@ EOF;
 
 $smarty->assign('compositeforms', $compositeforms);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
+$smarty->assign('heading', get_string('myresume', 'artefact.resume'));
 $smarty->display('artefact:resume:index.tpl');
 
-function resumemainform_submit(Pieform $form, $values) {
+function coverletter_submit(Pieform $form, $values) {
     global $coverletter, $personalinformation, $interest, $USER;
 
     $userid = $USER->get('id');
@@ -320,7 +397,24 @@ function resumemainform_submit(Pieform $form, $values) {
     catch (Exception $e) {
         $errors['coverletter'] = true;
     }
-        
+    if (empty($errors)) {
+        $form->json_reply(PIEFORM_OK, get_string('resumesaved','artefact.resume'));
+    }
+    else {
+        $message = '';
+        foreach (array_keys($errors) as $key) {
+            $message .= get_string('resumesavefailed', 'artefact.resume')."\n";
+        }
+        $form->json_reply(PIEFORM_ERR, $message);
+    }
+}
+
+function interests_submit(Pieform $form, $values) {
+    global $coverletter, $personalinformation, $interest, $USER;
+
+    $userid = $USER->get('id');
+    $errors = array();
+
     try {
         if (empty($interest) && !empty($values['interest'])) {
             $interest = new ArtefactTypeInterest(0, array( 
@@ -341,6 +435,23 @@ function resumemainform_submit(Pieform $form, $values) {
         $errors['interest'] = true;
     }   
 
+    if (empty($errors)) {
+        $form->json_reply(PIEFORM_OK, get_string('resumesaved','artefact.resume'));
+    }
+    else {
+        $message = '';
+        foreach (array_keys($errors) as $key) {
+            $message .= get_string('resumesavefailed', 'artefact.resume')."\n";
+        }
+        $form->json_reply(PIEFORM_ERR, $message);
+    }
+}
+
+function personalinformation_submit(Pieform $form, $values) {
+    global $personalinformation, $USER;
+    $userid = $USER->get('id');
+    $errors = array();
+
     try {
         if (empty($personalinformation)) {
             $personalinformation = new ArtefactTypePersonalinformation(0, array(
@@ -359,7 +470,7 @@ function resumemainform_submit(Pieform $form, $values) {
 
     if (empty($errors)) {
         $form->json_reply(PIEFORM_OK, get_string('resumesaved','artefact.resume'));
-    }   
+    }
     else {
         $message = '';
         foreach (array_keys($errors) as $key) {

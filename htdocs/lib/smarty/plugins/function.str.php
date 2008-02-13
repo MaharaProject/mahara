@@ -27,7 +27,10 @@ function smarty_function_str($params, &$smarty) {
     }
 
     $args = array($params['tag'],$params['section']);
-    if (isset($params['args']) && is_array($params['args'])) {
+    if (isset($params['args'])) {
+        if (!is_array($params['args'])) {
+            $params['args'] = array($params['args']);
+        }
         $args = array_merge($args,$params['args']);
     }
 

@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -43,7 +43,7 @@ function db_table_name($name) {
  * @return string
  */
 function db_quote_table_placeholders($sql) {
-    return preg_replace_callback('/\{([a-z_]+)\}/', create_function('$matches', 'return db_table_name($matches[1]);'), $sql);
+    return preg_replace_callback('/\{([a-z][a-z0-9_]+)\}/', create_function('$matches', 'return db_table_name($matches[1]);'), $sql);
 }
 
 /**
@@ -56,6 +56,9 @@ function db_quote_table_placeholders($sql) {
 function db_quote_identifier($identifier) {
     // Currently, postgres and mysql (in postgres compat. mode) both support 
     // the sql standard "
+    if (strpos($identifier, '"') !== false) {
+        return $identifier;
+    }
     return '"' . $identifier . '"';
 }
 
@@ -69,7 +72,7 @@ function db_quote_identifier($identifier) {
  * @return string
  * @throws SQLException
  */
-function execute_sql($command) {
+function execute_sql($command, $values=null) {
     global $db;
     
     if (!is_a($db, 'ADOConnection')) {
@@ -84,7 +87,13 @@ function execute_sql($command) {
     $db->debug = false;
 
     try {
-        $result = $db->Execute($command);
+        if (!empty($values) && is_array($values) && count($values) > 0) {
+            $stmt = $db->Prepare($command);
+            $result = $db->Execute($stmt, $values);
+        }
+        else {
+            $result = $db->Execute($command);
+        }
         // searching for these rather than just select as subqueries may have select in them.
         if (preg_match('/(update|insert|delete|alter|create)/i', $command)) {
             increment_perf_db_writes();
@@ -329,7 +338,7 @@ function get_record_select($table, $select='', $values=null, $fields='*') {
 function get_recordset($table, $field='', $value='', $sort='', $fields='*', $limitfrom='', $limitnum='') {
     $values = null;
     if ($field) {
-        $select = "$field = ?";
+        $select = db_quote_identifier($field) . " = ?";
         $values = array($value);
     } else {
         $select = '';
@@ -818,7 +827,7 @@ function set_field_select($table, $newfield, $newvalue, $select, $values) {
     $select = db_quote_table_placeholders($select);
 
     $values = array_merge(array($newvalue), $values);
-    $sql = 'UPDATE '. db_table_name($table) .' SET "'. $newfield  .'" = ? ' . $select;
+    $sql = 'UPDATE '. db_table_name($table) .' SET '. db_quote_identifier($newfield)  .' = ? ' . $select;
     try {
         $stmt = $db->Prepare($sql);
         increment_perf_db_writes();
@@ -1023,6 +1032,60 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
 }
 
 /**
+ * Inserts a record, only if the record does not already exist. 
+ * If the record DOES exist, it is updated.
+ *
+ * @uses $db
+ * @param string $table The database table to be checked against.
+ * @param array $whereobject A data object with values for one or more fields in the record (to determine whether the record exists or not)
+ * @param array $dataobject A data object with values for one or more fields in the record (to be inserted or updated)
+ * @param string $primarykey The primary key of the table we are inserting into (almost always "id")
+ * @param bool $returnpk Should the id of the newly created record entry be returned? If this option is not requested then true/false is returned.
+ * @throws SQLException
+ */
+function ensure_record_exists($table, $whereobject, $dataobject, $primarykey=false, $returnpk=false) {
+    $columns = (array)$whereobject;
+    $field = '*';
+    $where = array();
+    $toreturn = false;
+
+    foreach ($columns as $key => $value) {
+        if ($field == '*') {
+            $field = $key;
+        }
+
+        $where[] = db_quote_identifier($key) . ' = ' . db_quote($value);
+    }
+
+    $where = implode(' AND ', $where);
+
+    if (is_postgres()) {
+        $where .= ' FOR UPDATE ';
+    }
+    else {
+        // @TODO maybe some mysql specific stuff here
+    }
+        
+    db_begin();
+    if ($exists = get_record_select($table, $where)) {
+        if ($returnpk) {
+            $toreturn = $exists->{$primarykey};
+        }
+        else {
+            $toreturn = true;
+        }
+        if ($dataobject && $dataobject != $whereobject) { // we want to update it)
+            update_record($table, $dataobject, $whereobject);
+        }
+    }
+    else {
+        $toreturn = insert_record($table, $dataobject, $primarykey, $returnpk);
+    }
+    db_commit();
+    return $toreturn;
+}
+
+/**
  * Update a record in a table
  *
  * $dataobject is an object containing needed data
@@ -1040,6 +1103,10 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
 function update_record($table, $dataobject, $where=null) {
 
     global $db;
+
+    if (is_object($dataobject)) {
+        $dataobject = clone $dataobject;
+    }
 
     if (empty($where)) {
         $where = 'id';
@@ -1113,7 +1180,7 @@ function update_record($table, $dataobject, $where=null) {
 
     foreach ($ddd as $key => $value) {
         $count++;
-        $update .= $key .' = ? ';
+        $update .= db_quote_identifier($key) .' = ? ';
         if ($count < $numddd) {
             $update .= ', ';
         }
@@ -1126,7 +1193,7 @@ function update_record($table, $dataobject, $where=null) {
 
     foreach ($wherefields as $field) {
         $count++;
-        $whereclause .= $field .' = ? ';
+        $whereclause .= db_quote_identifier($field) .' = ? ';
         if ($count < $numddd) {
             $whereclause .= ' AND ';
         }
@@ -1369,7 +1436,7 @@ function db_array_to_ph($array) {
 
 // This is used by the SQLException, to detect if there is a transaction when
 // an error occurs, so it can roll the transaction back
-$GLOBALS['_TRANSACTION_STARTED'] = false;
+$GLOBALS['_TRANSACTION_LEVEL'] = 0;
 
 /**
  * This function starts a smart transaction
@@ -1378,7 +1445,7 @@ $GLOBALS['_TRANSACTION_STARTED'] = false;
 function db_begin() {
     global $db;
 
-    $GLOBALS['_TRANSACTION_STARTED'] = true;
+    $GLOBALS['_TRANSACTION_LEVEL']++;
     $db->StartTrans();
 }
 
@@ -1390,14 +1457,17 @@ function db_begin() {
  */
 function db_commit() {
     global $db;
-    $GLOBALS['_TRANSACTION_STARTED'] = false;
+    $GLOBALS['_TRANSACTION_LEVEL']--;
 
-    if ($db->HasFailedTrans()) {
-        $db->CompleteTrans();
-        throw new SQLException('Transaction Failed');
+    if ($GLOBALS['_TRANSACTION_LEVEL'] == 0) {
+
+        if ($db->HasFailedTrans()) {
+            $db->CompleteTrans();
+            throw new SQLException('Transaction Failed');
+        }
     }
 
-    $db->CompleteTrans();
+    return $db->CompleteTrans();
 }
 
 /**
@@ -1405,9 +1475,11 @@ function db_commit() {
  */
 function db_rollback() {
     global $db;
-    $GLOBALS['_TRANSACTION_STARTED'] = false;
     $db->FailTrans();
-    $db->CompleteTrans();
+    for ($i = $GLOBALS['_TRANSACTION_LEVEL']; $i >= 0; $i--) {
+        $db->CompleteTrans();
+    }
+    $GLOBALS['_TRANSACTION_LEVEL'] = 0;
 }
 
 /**
@@ -1447,4 +1519,45 @@ function increment_perf_db_writes() {
     global $PERF;
     $PERF->dbwrites++;
 }
+
+/**
+ * Gives the caller the ability to disable logging of SQL exceptions in the 
+ * SQLException constructor.
+ *
+ * This is only used by the config loading code to prevent spurious errors 
+ * about the config table not existing going to the logs. If you are going to 
+ * use this function, you had better have a very good reason!
+ *
+ * @param bool $status Whether to ignore logging exceptions or not. If null, 
+ *                     you can retrieve the current value of this setting
+ */
+function db_ignore_sql_exceptions($status=null) {
+    global $DB_IGNORE_SQL_EXCEPTIONS;
+
+    // Initialise it if being called for the first time
+    if ($DB_IGNORE_SQL_EXCEPTIONS === null) {
+        $DB_IGNORE_SQL_EXCEPTIONS = false;
+    }
+
+    // Return the value if asked for
+    if ($status === null) {
+        return $DB_IGNORE_SQL_EXCEPTIONS;
+    }
+
+    $DB_IGNORE_SQL_EXCEPTIONS = (bool)$status;
+}
+
+/**
+ * Returns the SQL keyword required to do LIKE in a case insensitive fashion.
+ *
+ * MySQL, as long as you use a case insensitive collation (as is the default), 
+ * uses LIKE for this, while real databases use ILIKE.
+ */
+function db_ilike() {
+    if (is_mysql()) {
+        return 'LIKE';
+    }
+    return 'ILIKE';
+}
+
 ?>

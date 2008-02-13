@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage admin
@@ -72,16 +72,14 @@ function adminusers_submit(Pieform $form, $values) {
     execute_sql('UPDATE {usr}
         SET admin = 1
         WHERE id IN (' . join(',', $values['users']) . ')');
-    execute_sql('DELETE FROM {usr_activity_preference}
-        WHERE activity IN (SELECT name FROM {activity_type}
-            WHERE admin = 1)
-        AND usr NOT IN (' . join(',', $values['users']) . ')');
+    activity_add_admin_defaults($values['users']);
     db_commit();
     $SESSION->add_ok_msg(get_string('adminusersupdated', 'admin'));
     redirect('/admin/users/admins.php');
 }
 
 $smarty->assign('adminusersform', pieform($form));
+$smarty->assign('heading', get_string('adminusers', 'admin'));
 $smarty->display('admin/users/admin.tpl');
 
 ?>

@@ -2,9 +2,11 @@
 
 {include file="columnfullstart.tpl"}
 	
-<h2>{str section=admin tag=siteoptions}</h2>
+<h2>{str tag=siteoptions section=admin}</h2>
 
-{$SITEOPTIONFORM}
+<p>{str tag=siteoptionspagedescription section=admin}</p>
+
+{$siteoptionform}
 
 {include file="columnfullend.tpl"}
 
