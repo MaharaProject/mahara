@@ -254,7 +254,7 @@ $smarty->display('interaction:forum:view.tpl');
 function setup_topics(&$topics) {
     if ($topics) {
         foreach ($topics as $topic) {
-            $topic->body = str_shorten($topic->body, 50, false, false);
+            $topic->body = str_shorten($topic->body, 50, true, false);
             $topic->lastposttime = relative_date(get_string('strftimerecentrelative', 'interaction.forum'), get_string('strftimerecent'), $topic->lastposttime);
         }
     }
