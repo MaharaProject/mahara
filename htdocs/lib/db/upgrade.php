@@ -796,8 +796,15 @@ function xmldb_core_upgrade($oldversion=0) {
         // New columns for institution table
         execute_sql('ALTER TABLE {institution} ADD COLUMN theme varchar(255)');
         set_field('institution', 'theme', get_config('theme'));
-        execute_sql('ALTER TABLE {institution} ADD COLUMN defaultmembershipperiod BIGINT(10)');
-        execute_sql('ALTER TABLE {institution} ADD COLUMN maxuseraccounts BIGINT(10)');
+
+        if (is_mysql()) {
+            $type = 'BIGINT(10)';
+        }
+        else {
+            $type = 'INTEGER';
+        }
+        execute_sql('ALTER TABLE {institution} ADD COLUMN defaultmembershipperiod ' . $type);
+        execute_sql('ALTER TABLE {institution} ADD COLUMN maxuseraccounts ' . $type);
 
     }
 
