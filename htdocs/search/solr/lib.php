@@ -140,11 +140,11 @@ END;
             'collapsible' => true,
             'collapsed' => true,
             'elements' => array(
-                array(
+                'script' => array(
                     'type'  => 'html',
                     'value' => $script,
                 ),
-                array(
+                'reindex' => array(
                     'type'  => 'html',
                     'value' => '<table><tbody>' 
                     . '<tr><td><a href="" onclick="solr_reindex(this, \'user\'); return false;">' . hsc(get_string('reindexusers','search.solr')) . '</a></td></tr>'
