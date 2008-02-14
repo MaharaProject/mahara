@@ -58,8 +58,7 @@ if (!empty($_SESSION['registered'])) {
 }
 
 $key = param_alphanum('key', null);
-// Step three of registration - given a key, fill out mandatory profile fields,
-// optional profile icon, and register the user
+// Step three of registration - given a key register the user
 if (isset($key)) {
 
     // Begin the registration form buliding
@@ -151,82 +150,7 @@ if (isset($key)) {
         }
         redirect();
     }
-
-    function profileform_submit(Pieform $form, $values) {
-        create_registered_user($values);
-    }
-
-    function profileform_validate(Pieform $form, $values) {
-        foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
-            // @todo here and above, use the method for getting "always mandatory" fields
-            if (in_array($field, array('firstname', 'lastname', 'email'))) {
-                continue;
-            }
-            // @todo here, validate the fields using their static validate method
-        }
-    }
-
-    safe_require('artefact', 'internal');
-
-    $elements = array(
-        'mandatoryheader' => array(
-            'type'  => 'html',
-            'value' => get_string('registerstep3fieldsmandatory')
-        )
-    );
-
-    foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
-        if (in_array($field, array('firstname', 'lastname', 'email'))) {
-            continue;
-        }
-
-        $elements[$field] = array(
-            'type'  => $type,
-            'title' => get_string($field, 'artefact.internal'),
-            'rules' => array('required' => true)
-        );
-
-        // @todo ruthlessly stolen from artefact/internal/index.php, could be merged
-        if ($type == 'wysiwyg') {
-            $elements[$field]['rows'] = 10;
-            $elements[$field]['cols'] = 60;
-        }
-        if ($type == 'textarea') {
-            $elements[$field]['rows'] = 4;
-            $elements[$field]['cols'] = 60;
-        }
-        if ($field == 'country') {
-            $elements[$field]['options'] = getoptions_country();
-            $elements[$field]['defaultvalue'] = 'nz';
-        }
-    }
-
-    if (count($elements) < 2) { // No mandatory fields, just create the user
-        create_registered_user();
-    }
-
-    $elements['key'] = array(
-        'type' => 'hidden',
-        'name' => 'key',
-        'value' => $key
-    );
-    $elements['submit'] = array(
-        'type' => 'submit',
-        'value' => get_string('completeregistration', 'auth.internal')
-    );
-
-    $form = pieform(array(
-        'name'     => 'profileform',
-        'method'   => 'post',
-        'action'   => '',
-        'elements' => $elements
-    ));
-
-    $smarty = smarty();
-    $smarty->assign('register_profile_form', $form);
-    $smarty->assign('heading', get_string('register'));
-    $smarty->display('register.tpl');
-    exit;
+    create_registered_user();
 }
 
 

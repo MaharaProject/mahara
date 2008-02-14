@@ -17,20 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage core
- * @author     Penny Leach <penny@catalyst.net.nz>
+ * @subpackage artefact-blog
+ * @author     Alastair Pharo <alastair@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-$config = new StdClass;
-$config->version = 2008012500;
-$config->release = '1.0.0beta2dev';
-$config->minupgradefrom = 2007080700;
-$config->minupgraderelease = '0.8.0 (release tag 0.8.0_RELEASE)';
-$config->disablelogin = false;
+$smarty = smarty_core();
+$smarty->display('artefact:blog:image_popup.tpl');
 
 ?>

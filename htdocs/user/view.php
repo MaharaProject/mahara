@@ -108,7 +108,7 @@ if ($allviews = get_records_array('view', 'owner', $userid)) {
         if (can_view_view($view->id)) {
             $views[$view->id] = $view;
             $view->artefacts = array();
-            $view->description = str_shorten($view->description, 100, false);
+            $view->description = str_shorten($view->description, 100, true);
         }
     }
 }
@@ -148,7 +148,7 @@ if (!$userassocgroups = get_associated_groups($userid, false)) {
 }
 
 foreach ($userassocgroups as $group) {
-    $group->description = str_shorten($group->description, 100, false);
+    $group->description = str_shorten($group->description, 100, true);
 }
 
 if (is_postgres()) {

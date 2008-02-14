@@ -141,31 +141,15 @@ $getstring = quotestrings(array(
     'mahara' => array(
     ),
     'artefact.blog' => array(
-        'absolutemiddle',
-        'absolutebottom',
-        'alignment',
         'attach',
-        'baseline',
         'blogpost',
-        'border',
-        'bottom',
         'cancel',
-        'dimensions',
-        'horizontalspace',
-        'insert',
-        'insertimage',
-        'left',
         'mustspecifycontent',
         'mustspecifytitle',
-        'middle',
         'name',
         'nofilesattachedtothispost',
         'remove',
-        'right',
-        'texttop',
-        'top',
         'update',
-        'verticalspace',
         'noimageshavebeenattachedtothispost',
     )));
 
@@ -475,44 +459,6 @@ function attachedImageList() {
 }
 
 
-function insertImage() {
-    var form = $('insertimageform');
-    var alt = scrapeText(form.imageselector.options[form.imageselector.selectedIndex]);
-    var src = imageSrcFromId(form.imgid.value);
-    var border = form.border.value;
-    var vspace = form.vspace.value;
-    var hspace = form.hspace.value;
-    var height = form.height.value;
-    var width = form.width.value;
-    var align = form.align.value;
-    // Insert image doesn't work in IE without first focusing the editor:
-    tinyMCE.execCommand('mceFocus', false, 'mce_editor_0'); 
-    tinyMCE.themes['advanced']._insertImage(src, alt, border, hspace, vspace, 
-                                            width, height, align, '', '', '');
-    replaceChildNodes('insertimage', null);
-}
-
-
-function resetImageData() {
-	var form = $('insertimageform');
-	form.width.value = form.height.value = "";	
-}
-
-
-var preloadImage = new Image();
-
-
-function updateImageData() {
-	var form = $('insertimageform');
-	if (form.width.value == "") {
-	    form.width.value = preloadImage.width;
-    }
-	if (form.height.value == "") {
-	    form.height.value = preloadImage.height;
-    }
-}
-
-
 function imageSrcFromId(imageid) {
     var idparts = imageid.split(':');
     if (idparts[0] == 'artefact') {
@@ -524,21 +470,6 @@ function imageSrcFromId(imageid) {
     }
     return '';
 }
-
-
-function getImageData(imageid) {
-	preloadImage = new Image();
-    preloadImage.onload = updateImageData;
-    preloadImage.onerror = function () {
-        var form = $('insertimageform');
-        form.width.value = form.height.value = "";
-    };
-    var imgsrc = imageSrcFromId(imageid);
-    $('insertimageform').imgsrc.value = imgsrc;
-    $('insertimageform').imgid.value = imageid;
-	preloadImage.src = imgsrc;
-}
-
 
 function imageIdFromSrc(src) {
     var artefactstring = 'download.php?file=';
@@ -554,97 +485,32 @@ function imageIdFromSrc(src) {
     return '';
 }
 
-function imageSelector(src) {
-    var imageid = imageIdFromSrc(src);
-    var imagefiles = attachedImageList();
-    if (imagefiles.length == 0) {
-        return false;
-    }
-    else {
-        var sel = SELECT({'class':'select', 'id':'imageselector'});
-        appendChildNodes(sel, OPTION({'value':''}, '--'));
-        for (var i = 0; i < imagefiles.length; i++) {
-            if (imageid == imagefiles[i].id) {
-                appendChildNodes(sel, OPTION({'value':imagefiles[i].id, 'selected':true}, 
-                                             imagefiles[i].name));
-            }
-            else {
-                appendChildNodes(sel, OPTION({'value':imagefiles[i].id}, imagefiles[i].name));
-            }
-        }
-        sel.onchange = function () {
-            resetImageData();
-            $('insertimageform').imgid.value = sel.value;
-            getImageData(sel.value);
-        };
-        return sel;
-    }
-}
-
-
-
-function alignSelector(align) {
-    var sel = SELECT({'name':'align', 'class':'select'});
-    var options = {'' : '--',
-                   'baseline': {$getstring['baseline']},
-                   'top': {$getstring['top']},
-                   'middle': {$getstring['middle']},
-                   'bottom': {$getstring['bottom']},
-                   'texttop': {$getstring['texttop']},
-                   'absmiddle': {$getstring['absolutemiddle']},
-                   'absbottom': {$getstring['absolutebottom']},
-                   'left': {$getstring['left']},
-                   'right': {$getstring['right']}};
-    for (option in options) {
-        if (align == option) {
-            appendChildNodes(sel, OPTION({'value':option, 'selected':true}, options[option]));
-        }
-        else {
-            appendChildNodes(sel, OPTION({'value':option}, options[option]));
-        }
-    }
-    return sel;
-}
-
-
+var imageList = {};
 
 function blogpostExecCommandHandler(editor_id, elm, command, user_interface, value) {
     var linkElm, imageElm, inst;
     switch (command) {
     case "mceImage":
         a = getSelectedImgAttributes(editor_id);
-        var sel = imageSelector(a.src);
-        if (!sel) {
+
+        imageList = attachedImageList();
+        if (imageList.length == 0) {
             alert({$getstring['noimageshavebeenattachedtothispost']});
             return true;
         }
-        var tbody = TBODY(null,
-          TR(null, TH({'colSpan':2}, LABEL(null,{$getstring['insertimage']}))),
-          TR(null, TH(null, LABEL(null,{$getstring['name']})),
-             TD(null, sel)),
-          TR(null, TH(null, LABEL(null,{$getstring['alignment']})),
-             TD(null, alignSelector(a.align))),
-          TR(null, TH(null, LABEL(null,{$getstring['dimensions']})),
-             TD(null,INPUT({'type':'text', 'class':'text', 'name':'width', 'size':3, 'value':a.width}),
-                ' x ', INPUT({'type':'text', 'class':'text', 'name':'height', 'size':3, 'value':a.height}))),
-          TR(null, TH(null, LABEL(null,{$getstring['border']})),
-             TD(null,INPUT({'type':'text', 'class':'text', 'name':'border', 'size':3, 'value':a.border}))),
-          TR(null, TH(null, LABEL(null,{$getstring['verticalspace']})),
-             TD(null,INPUT({'type':'text', 'class':'text', 'name':'vspace', 'size':3, 'value':a.vspace}))),
-          TR(null, TH(null, LABEL(null,{$getstring['horizontalspace']})),
-             TD(null,INPUT({'type':'text', 'class':'text', 'name':'hspace', 'size':3, 'value':a.hspace}))));
 
-        var imageform = FORM({'id':'insertimageform'},
-                             INPUT({'type':'hidden', 'name':'imgsrc', 'value':a.src}),
-                             INPUT({'type':'hidden', 'name':'imgid', 'value':imageIdFromSrc(a.src)}),
-                             TABLE(null,tbody));
-        appendChildNodes(tbody, TR(null,TD({'colSpan':2},
-                         INPUT({'type':'button', 'class':'button', 
-                                'value':(a.src == '' ? {$getstring['insert']} : {$getstring['update']}),
-                                'onclick':function () { insertImage(); }}),
-                         INPUT({'type':'button', 'class':'button', 'value':{$getstring['cancel']},
-                                'onclick':function () { replaceChildNodes('insertimage', null); }}))));
-        replaceChildNodes('insertimage', imageform);
+        var template = new Array();
+
+        template['file'] = '{$wwwroot}artefact/blog/image_popup.php?src=\{\$src\}';
+        template['width'] = 355;
+        template['height'] = 265 + (tinyMCE.isMSIE ? 25 : 0);
+
+        // Language specific width and height addons
+        template['width'] += tinyMCE.getLang('lang_insert_image_delta_width', 0);
+        template['height'] += tinyMCE.getLang('lang_insert_image_delta_height', 0);
+
+        a.inline = "yes";
+        tinyMCE.openWindow(template, a);
 
         return true;
     }

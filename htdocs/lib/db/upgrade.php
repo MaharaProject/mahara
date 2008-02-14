@@ -468,22 +468,22 @@ function xmldb_core_upgrade($oldversion=0) {
         // create interaction tables
 
         $table = new XMLDBTable('interaction_installed');
-        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFieldInfo('version', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFieldInfo('release', XMLDB_TYPE_TEXT, 'small', XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFieldInfo('active', XMLDB_TYPE_INTEGER,  1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 1);
+        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('version', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('release', XMLDB_TYPE_TEXT, 'small', null, XMLDB_NOTNULL);
+        $table->addFieldInfo('active', XMLDB_TYPE_INTEGER,  1, null, XMLDB_NOTNULL, null, null, null, 1);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('name'));
 
         create_table($table);
        
         $table = new XMLDBTable('interaction_cron');
-        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFieldInfo('callfunction', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFieldInfo('minute', XMLDB_TYPE_CHAR, 25, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '*');
-        $table->addFieldInfo('hour', XMLDB_TYPE_CHAR, 25, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '*');
-        $table->addFieldInfo('day', XMLDB_TYPE_CHAR, 25, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '*');
-        $table->addFieldInfo('dayofweek', XMLDB_TYPE_CHAR, 25, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '*');
-        $table->addFieldInfo('month', XMLDB_TYPE_CHAR, 25, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '*');
+        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('callfunction', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('minute', XMLDB_TYPE_CHAR, 25, null, XMLDB_NOTNULL, null, null, null, '*');
+        $table->addFieldInfo('hour', XMLDB_TYPE_CHAR, 25, null, XMLDB_NOTNULL, null, null, null, '*');
+        $table->addFieldInfo('day', XMLDB_TYPE_CHAR, 25, null, XMLDB_NOTNULL, null, null, null, '*');
+        $table->addFieldInfo('dayofweek', XMLDB_TYPE_CHAR, 25, null, XMLDB_NOTNULL, null, null, null, '*');
+        $table->addFieldInfo('month', XMLDB_TYPE_CHAR, 25, null, XMLDB_NOTNULL, null, null, null, '*');
         $table->addFieldInfo('nextrun', XMLDB_TYPE_DATETIME, null, null);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('plugin', 'callfunction'));
         $table->addKeyInfo('pluginfk', XMLDB_KEY_FOREIGN, array('plugin'), 'interaction_installed', array('name'));
@@ -491,20 +491,20 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table); 
 
         $table = new XMLDBTable('interaction_config');
-        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 100, XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFieldInfo('field', XMLDB_TYPE_CHAR, 100, XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFieldInfo('value', XMLDB_TYPE_TEXT, 'small', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 100, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('field', XMLDB_TYPE_CHAR, 100, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('value', XMLDB_TYPE_TEXT, 'small', null, XMLDB_NOTNULL);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('plugin', 'field'));
         $table->addKeyInfo('pluginfk', XMLDB_KEY_FOREIGN, array('plugin'), 'interaction_installed', array('name'));
 
         create_table($table);
 
         $table = new XMLDBTable('interaction_event_subscription');
-        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, 
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, 
             XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
-        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFieldInfo('event', XMLDB_TYPE_CHAR, 50, XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFieldInfo('callfunction', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('event', XMLDB_TYPE_CHAR, 50, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('callfunction', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
         $table->addKeyInfo('pluginfk', XMLDB_KEY_FOREIGN, array('plugin'), 'interaction_installed', array('name'));
         $table->addKeyInfo('eventfk', XMLDB_KEY_FOREIGN, array('event'), 'event_type', array('name'));
@@ -513,15 +513,15 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table);
 
         $table = new XMLDBTable('interaction_instance');
-        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED,
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null,
             XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
-        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFieldInfo('title', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFieldInfo('description', XMLDB_TYPE_TEXT, null, XMLDB_UNSIGNED, null);
-        $table->addFieldInfo('group', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('title', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('description', XMLDB_TYPE_TEXT, null, null, null);
+        $table->addFieldInfo('group', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
         $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
-        $table->addFieldInfo('creator', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFIeldInfo('deleted', XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+        $table->addFieldInfo('creator', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFIeldInfo('deleted', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
         $table->addKeyInfo('pluginfk', XMLDB_KEY_FOREIGN, array('plugin'), 'interaction_installed', array('name'));
         $table->addKeyInfo('groupfk', XMLDB_KEY_FOREIGN, array('group'), 'group', array('id'));
@@ -553,32 +553,47 @@ function xmldb_core_upgrade($oldversion=0) {
         $typekey->setAttributes(XMLDB_KEY_PRIMARY, array('name'));
         drop_key($typetable, $typekey);
 
-        // create the new field
-        $typefield = new XMLDBField('id');
-        $typefield->setAttributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
-        add_field($typetable, $typefield);
+        if (is_mysql()) {
+            // MySQL doesn't let us create a auto_increment (sequence) column 
+            // unless it is also a key; an operation that XMLDB doesn't support
+            execute_sql('ALTER TABLE {activity_type} ADD id BIGINT(10) NOT NULL AUTO_INCREMENT PRIMARY KEY');
+        }
+        else {
+            // create the new field
+            $typefield = new XMLDBField('id');
+            $typefield->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            add_field($typetable, $typefield);
 
-        // create the new primary key
-        $typekey = new XMLDBKey('primary');
-        $typekey->setAttributes(XMLDB_KEY_PRIMARY, array('id'));
-        add_key($typetable, $typekey);
+            // create the new primary key
+            $typekey = new XMLDBKey('primary');
+            $typekey->setAttributes(XMLDB_KEY_PRIMARY, array('id'));
+            add_key($typetable, $typekey);
+        }
 
         foreach ($fks as $table => $field) {
             $xmldbtable = new XMLDBTable($table);
             $xmldbfield = new XMLDBField($field . 'new');
-            $xmldbfield->setAttributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, null);
+            $xmldbfield->setAttributes(XMLDB_TYPE_INTEGER, 10, null, null);
             add_field($xmldbtable, $xmldbfield);
             $sql = 'UPDATE {' . $table . '} 
                 SET ' . $field . 'new = 
                 (SELECT id FROM {activity_type} t where ' . $field . ' = t.name)';
             execute_sql($sql);
-            $xmldbfield->setAttributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+            $xmldbfield->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
             change_field_notnull($xmldbtable, $xmldbfield);
             drop_field($xmldbtable, new XMLDBField($field));
             rename_field($xmldbtable, $xmldbfield, $field);
             $xmldbkey = new XMLDBKey($field . 'fk');
             $xmldbkey->setAttributes(XMLDB_KEY_FOREIGN, array($field), 'activity_type', array('id'));
             add_key($xmldbtable, $xmldbkey);
+        }
+
+        // MySQL hasn't dropped the primary key at this point, despite one of the fields disappearing
+        if (is_mysql()) {
+            $xmldbtable = new XMLDBTable('usr_activity_preference');
+            $xmldbkey = new XMLDBKey('primary');
+            $xmldbkey->setAttributes(XMLDB_KEY_PRIMARY, array('usr'));
+            drop_key($xmldbtable, $xmldbkey);
         }
 
         // special case... 
@@ -604,24 +619,24 @@ function xmldb_core_upgrade($oldversion=0) {
     if ($oldversion < 2007121002) {
 
         $table = new XMLDBTable('usr_institution');
-        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFieldInfo('institution', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('institution', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
         $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null);
         $table->addFieldInfo('expiry', XMLDB_TYPE_DATETIME, null, null);
         $table->addFieldInfo('studentid', XMLDB_TYPE_TEXT, null);
-        $table->addFieldInfo('staff', XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
-        $table->addFieldInfo('admin', XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
-        $table->addFieldInfo('expirymailsent', XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+        $table->addFieldInfo('staff', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        $table->addFieldInfo('admin', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        $table->addFieldInfo('expirymailsent', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
         $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
         $table->addKeyInfo('institutionfk', XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
         $table->addKeyInfo('usrinstitutionuk', XMLDB_KEY_PRIMARY, array('usr', 'institution'));
         create_table($table);
 
         $table = new XMLDBTable('usr_institution_request');
-        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFieldInfo('institution', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFieldInfo('confirmedusr', XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
-        $table->addFieldInfo('confirmedinstitution', XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('institution', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('confirmedusr', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        $table->addFieldInfo('confirmedinstitution', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
         $table->addFieldInfo('studentid', XMLDB_TYPE_TEXT, null);
         $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null);
         $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
@@ -634,9 +649,9 @@ function xmldb_core_upgrade($oldversion=0) {
         // mapping from remote usernames to local usr records will be
         // stored in auth_remote_user
         $table = new XMLDBTable('auth_remote_user');
-        $table->addFieldInfo('authinstance', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFieldInfo('remoteusername', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFieldInfo('localusr', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('authinstance', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('remoteusername', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('localusr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('authinstance', 'remoteusername'));
         $table->addKeyInfo('authinstancefk', XMLDB_KEY_FOREIGN, array('authinstance'), 'auth_instance', array('id'));
         $table->addKeyInfo('localusrfk', XMLDB_KEY_FOREIGN, array('localusr'), 'usr', array('id'));
@@ -710,9 +725,15 @@ function xmldb_core_upgrade($oldversion=0) {
             }
         }
 
-        execute_sql('DROP INDEX {usr_useaut_uix};');
-        execute_sql('CREATE UNIQUE INDEX {usr_use_uix} ON {usr} (username);');
-        execute_sql('ALTER TABLE {usr} DROP COLUMN institution;');
+        if (is_postgres()) {
+            execute_sql('DROP INDEX {usr_useaut_uix}');
+        }
+        else {
+            execute_sql('DROP INDEX {usr_useaut_uix} ON {usr}');
+            //execute_sql('DROP INDEX {usr_ins_ix} ON {usr}'); // this must be manually dropped for mysql
+        }
+        execute_sql('CREATE UNIQUE INDEX {usr_use_uix} ON {usr} (username)');
+        //execute_sql('ALTER TABLE {usr} DROP COLUMN institution');
 
 
         // Rename users
@@ -775,15 +796,22 @@ function xmldb_core_upgrade($oldversion=0) {
         // New columns for institution table
         execute_sql('ALTER TABLE {institution} ADD COLUMN theme varchar(255)');
         set_field('institution', 'theme', get_config('theme'));
-        execute_sql('ALTER TABLE {institution} ADD COLUMN defaultmembershipperiod bigint');
-        execute_sql('ALTER TABLE {institution} ADD COLUMN maxuseraccounts bigint');
+
+        if (is_mysql()) {
+            $type = 'BIGINT(10)';
+        }
+        else {
+            $type = 'INTEGER';
+        }
+        execute_sql('ALTER TABLE {institution} ADD COLUMN defaultmembershipperiod ' . $type);
+        execute_sql('ALTER TABLE {institution} ADD COLUMN maxuseraccounts ' . $type);
 
     }
 
     if ($oldversion < 2008011400) {
         $table = new XMLDBTable('group');
         $field = new XMLDBField('deleted');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
         add_field($table, $field);
     }
 
@@ -814,16 +842,23 @@ function xmldb_core_upgrade($oldversion=0) {
 
     if ($oldversion < 2008012500) {
         // _Really_ remove the institution field this time (also from install.xml!)
-        $table = new XMLDBTable('usr');
-        $field = new XMLDBField('institution');
-        $field->setAttributes(XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 'mahara');
-        drop_field($table, $field);
+        if (is_mysql()) {
+            // MySQL isn't smart enough to drop the FK first
+            execute_sql('ALTER TABLE {usr} DROP FOREIGN KEY {usr_ins_fk}');
+            execute_sql('ALTER TABLE {usr} DROP COLUMN institution');
+        }
+        else {
+            $table = new XMLDBTable('usr');
+            $field = new XMLDBField('institution');
+            $field->setAttributes(XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL, null, null, null, 'mahara');
+            drop_field($table, $field);
+        }
 
         // Remove the updateuserinfoonlogin column from the institution table. 
         // It's copied from Moodle, and not used by Mahara
         $table = new XMLDBTable('institution');
         $field = new XMLDBField('updateuserinfoonlogin');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, null, null, null, null, 0);
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, null, null, null, null, 0);
         drop_field($table, $field);
     }
 

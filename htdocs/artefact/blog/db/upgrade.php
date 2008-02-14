@@ -96,7 +96,16 @@ function xmldb_artefact_blog_upgrade($oldversion=0) {
         $table = new XMLDBTable('artefact_blog_blog');
         drop_table($table);
 
-        if (is_postgres()) {
+        if (is_mysql()) {
+            execute_sql('DROP INDEX {arteblogblog_blo2_ix} ON {artefact_blog_blogpost}');
+            execute_sql('CREATE INDEX {arteblogblog_blo_ix} ON {artefact_blog_blogpost} (blogpost)');
+            execute_sql('ALTER TABLE {artefact_blog_blogpost} DROP FOREIGN KEY {arteblogblog_blo2_fk}');
+            // I can't quite get mysql to name this key correctly, so there 
+            // will be a difference in the database if you upgrade from 0.9 
+            // compared with installing from 1.0
+            execute_sql('ALTER TABLE {artefact_blog_blogpost} ADD FOREIGN KEY (blogpost) REFERENCES {artefact} (id)');
+        }
+        else {
             // Rename indexes to keep things the same regardless of whether the 
             // user installed or upgraded to this release
             execute_sql('DROP INDEX {arteblogblog_blo2_ix}');

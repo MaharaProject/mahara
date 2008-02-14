@@ -31,6 +31,12 @@ function xmldb_artefact_resume_upgrade($oldversion=0) {
     $status = true;
 
     if ($oldversion < 2008012200) {
+        if (is_mysql()) {
+            $inttype = 'BIGINT(10)';
+        }
+        else {
+            $inttype = 'INTEGER';
+        }
         foreach (array(
             'artefact_resume_employmenthistory',
             'artefact_resume_educationhistory',
@@ -39,11 +45,21 @@ function xmldb_artefact_resume_upgrade($oldversion=0) {
             // Sigh. table_column is screwed beyond belief. We let it do its 
             // work (in the case of start and stopdate at least because it does 
             // cast the columns OK), then fix its bugs
-            execute_sql('ALTER TABLE {' . $table . '} ADD displayorder INTEGER');
+            execute_sql('ALTER TABLE {' . $table . '} ADD displayorder ' . $inttype);
             table_column($table, 'startdate', 'startdate', 'text', null, null, '', 'not null');
-            execute_sql('ALTER TABLE {' . $table . '} ALTER COLUMN startdate DROP DEFAULT');
             table_column($table, 'enddate', 'enddate', 'text', null, null, '', '');
-            execute_sql('ALTER TABLE {' . $table . '} ALTER COLUMN enddate DROP DEFAULT');
+
+            // MySQL docs say:
+            //  * BLOB and TEXT columns cannot have DEFAULT values.
+            // It turns out they do - a default of ''. And dropping this results in:
+            // mysql> ALTER TABLE "artefact_resume_employmenthistory" ALTER COLUMN startdate DROP DEFAULT;
+            // ERROR 1101 (42000): BLOB/TEXT column 'startdate' can't have a default value
+            //
+            if (is_postgres()) {
+                execute_sql('ALTER TABLE {' . $table . '} ALTER COLUMN startdate DROP DEFAULT');
+                execute_sql('ALTER TABLE {' . $table . '} ALTER COLUMN enddate DROP DEFAULT');
+            }
+
             if (!empty($records)) {
                 foreach ($records as $k => $r) {
                     set_field($table, 'displayorder', $k, 'id', $r->id);
@@ -55,16 +71,24 @@ function xmldb_artefact_resume_upgrade($oldversion=0) {
                               'id', $r->id);
                 }
             }
-            execute_sql('ALTER TABLE {' . $table . '} ALTER displayorder SET NOT NULL');
-            execute_sql('ALTER TABLE {' . $table . '} ALTER COLUMN startdate SET NOT NULL');
+            if (is_mysql()) {
+                execute_sql('ALTER TABLE {' . $table .'} MODIFY displayorder ' . $inttype . ' NOT NULL');
+                execute_sql('ALTER TABLE {' . $table .'} MODIFY startdate TEXT NOT NULL');
+            }
+            else {
+                execute_sql('ALTER TABLE {' . $table . '} ALTER displayorder SET NOT NULL');
+                execute_sql('ALTER TABLE {' . $table . '} ALTER COLUMN startdate SET NOT NULL');
+            }
         }
         foreach (array(
             'artefact_resume_certification',
             'artefact_resume_book') as $table) {
             $records = get_records_array($table, '', '', 'date DESC', 'id,date');
-            execute_sql('ALTER TABLE {' . $table . '} ADD displayorder INTEGER');
+            execute_sql('ALTER TABLE {' . $table . '} ADD displayorder ' . $inttype);
             table_column($table, 'date', 'date', 'text', null, null, '', 'not null');
-            execute_sql('ALTER TABLE {' . $table . '} ALTER COLUMN date DROP DEFAULT');
+            if (is_postgres()) {
+                execute_sql('ALTER TABLE {' . $table . '} ALTER COLUMN date DROP DEFAULT');
+            }
             if (!empty($records)) {
                 foreach ($records as $k => $r) {
                     set_field($table, 'displayorder', $k, 'id', $r->id);
@@ -73,8 +97,13 @@ function xmldb_artefact_resume_upgrade($oldversion=0) {
                               'id', $r->id);
                 }
             }
-            execute_sql('ALTER TABLE {' . $table . '} ALTER displayorder SET NOT NULL');
-            execute_sql('ALTER TABLE {' . $table . '} ALTER COLUMN date SET NOT NULL');
+            if (is_mysql()) {
+                execute_sql('ALTER TABLE {' . $table . '} MODIFY displayorder ' . $inttype . ' NOT NULL');
+            }
+            else {
+                execute_sql('ALTER TABLE {' . $table . '} ALTER displayorder SET NOT NULL');
+                execute_sql('ALTER TABLE {' . $table . '} ALTER COLUMN date SET NOT NULL');
+            }
         }
     }
 
