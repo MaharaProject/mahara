@@ -62,7 +62,7 @@ function formStopProcessing(form, btn) {
     processingStop();
 }
 function formError(form, data) {
-    var errMsg = DIV({'id': 'messages'}, makeMessage(data.message.message, 'error'));
+    var errMsg = DIV({'id': 'messages'}, makeMessage(data.message, 'error'));
     swapDOM('messages', errMsg);
     scrollTo(0, 0);
 }
