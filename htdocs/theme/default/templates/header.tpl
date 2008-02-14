@@ -81,7 +81,7 @@
 
                 
                 <div id="logo"><a href="{$WWWROOT}"><img src="{theme_path location='images/logo_mahara.gif'}" border="0" alt=""></a></div>
-                <h1 class="hidden"><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
+                <h1 class="hidden"><a href="{$WWWROOT}">{$hiddenheading|default:"Mahara"|escape}</a></h1>
             </div>
         </div>
         <div id="mainwrapper">

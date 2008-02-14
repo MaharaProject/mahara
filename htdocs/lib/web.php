@@ -332,7 +332,7 @@ EOF;
 
     $sitename = get_config('sitename');
     $smarty->assign('title', $sitename);
-    $smarty->assign('heading', $sitename);
+    $smarty->assign('hiddenheading', $sitename);
 
     if (defined('PUBLIC')) {
         $smarty->assign('PUBLIC', true);
