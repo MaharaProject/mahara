@@ -31,26 +31,6 @@
 	<div id="container">
         <div id="loading_box" class="hidden"></div>
         <div id="topwrapper">
-{if $LOGGEDIN}
-            <div id="globalTabs">
-                <ul>
-                    <li id="globalnav-logout"><a href="{$WWWROOT}?logout">Logout</a></li>
-{if $USER->get('admin') || $USER->is_institutional_admin()}
-{if $ADMIN || $INSTITUTIONALADMIN}
-                    <li id="globalnav-returntosite"><a href="{$WWWROOT}">Return to Site</a></li>
-{elseif $USER->get('admin')}
-                    <li id="globalnav-siteadmin"><a href="{$WWWROOT}admin/">Site Administration</a></li>
-{else}
-                    <li id="globalnav-siteadmin"><a href="{$WWWROOT}admin/users/search.php">User Administration</a></li>
-{/if}
-                    {* <li><a href="" onclick="createLoggingPane(); return false;">Create Logging Pane</a></li> *}
-{/if}
-                </ul>
-            </div>
-{/if}
-            <div id="header">
-                <div class="fr"><img src="{theme_path location='images/header_corner_topright.gif'}" border="0" alt=""></div>
-
                 <table cellspacing="0" class="searchbox fr">
 {if !$nosearch && $LOGGEDIN}
                     <tr>
@@ -58,35 +38,28 @@
                     </tr>
 {/if}
 {if defined('MENUITEM') && MENUITEM == '' && !$LOGGEDIN && (count($LANGUAGES) > 1)}
-<tr class="headerlanguage">
-  <td>
-    <form method="post">
-      <label>{str tag=language}: </label>
-      <select name="lang">
-        <option value="default" selected="selected">{$sitedefaultlang}</option>
+					<tr class="headerlanguage">
+  						<td>
+    					<form method="post">
+      					<label>{str tag=language}: </label>
+      					<select name="lang">
+        				<option value="default" selected="selected">{$sitedefaultlang}</option>
 {foreach from=$LANGUAGES key=k item=i}
-        <option value="{$k|escape}">{$i|escape}</option>
+        				<option value="{$k|escape}">{$i|escape}</option>
 {/foreach}
-      </select>
-      <input type="submit" class="submit" name="changelang" value="{str tag=change}" />
-    </form>
-  </td>
-</tr>
+      					</select>
+      					<input type="submit" class="submit" name="changelang" value="{str tag=change}" />
+    					</form>
+  						</td>
+					</tr>
 {/if}
-
-					<tr>
-						<td><div id="loggedinstring">{$LOGGEDINSTR}</div></td>
-					</tr>	
                 </table>
-
                 
-                <div id="logo"><a href="{$WWWROOT}"><img src="{theme_path location='images/logo_mahara.gif'}" border="0" alt=""></a></div>
+                <div id="logo"><a href="{$WWWROOT}"><img src="{theme_path location='images/logo.gif'}" border="0" alt=""></a></div>
                 <h1 class="hidden"><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
-            </div>
-        </div>
-        <div id="mainwrapper">
 {if $MAINNAV}
-            <ul id="mainnav"><div class="mainnavright"><img src="{theme_path location='images/navbg_right.gif'}" border="0" alt=""></div>
+			<div id="mainnav">
+            <ul>
 {foreach from=$MAINNAV item=item}
 {if $item.selected}{assign var=MAINNAVSELECTED value=$item}
                 <li class="selected"><a href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>
@@ -94,15 +67,31 @@
                 <li><a href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>
 {/if}
 {/foreach}
+{if $LOGGEDIN}
+{if $USER->get('admin') || $USER->is_institutional_admin()}
+{if $ADMIN || $INSTITUTIONALADMIN}
+                <li><a href="{$WWWROOT}">Return to Site</a></li>
+{elseif $USER->get('admin')}
+                <li><a href="{$WWWROOT}admin/">Site Administration</a></li>
+{else}
+                <li><a href="{$WWWROOT}admin/users/search.php">User Administration</a></li>
+{/if}
+                {* <li><a href="" onclick="createLoggingPane(); return false;">Create Logging Pane</a></li> *}
+{/if}
+                <li><a href="{$WWWROOT}?logout">Logout</a></li>
+{/if}
             </ul>
+			</div>
+        </div>
+        <div id="subnav">
 {if $MAINNAVSELECTED.submenu}
-            
-            <ul id="subnav"><div class="subnavright"><img src="{theme_path location='images/subnavbg_right.gif'}" border="0" alt=""></div>
+            <ul>
 {foreach from=$MAINNAVSELECTED.submenu item=item}
                 <li{if $item.selected} class="selected"{/if}><a href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>
 {/foreach}
             </ul>
 {/if}
 {/if}
+		</div>
+        <div id="mainwrapper">
             {insert name="messages"}
-            <div id="maincontentwrapper">
