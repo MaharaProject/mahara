@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 {include file="columnfullstart.tpl"}
-            <table>
+            <table id="notificationstable">
                 <tr>
                     <th>&nbsp;</th>
                     <th></th>
@@ -11,7 +11,7 @@
 {/foreach}
                 </tr>
 {foreach from=$users item='user' key='userid'}
-                <tr>
+                <tr class="{cycle values="r0,r1"}">
                     <td><img src="{$WWWROOT}thumb.php?type=profileicon&size=40x40&id={$userid}" alt="profile icon"/></td>
                     <td>{display_name user=$user.user}</td>
                     <td>
