@@ -347,7 +347,6 @@ EOF;
     $smarty->assign('LOGGEDIN', $USER->is_logged_in());
     if ($USER->is_logged_in()) {
         $smarty->assign('MAINNAV', main_nav());
-        $smarty->assign('LOGGEDINSTR', get_loggedin_string());
     }
     else {
         $smarty->assign('sitedefaultlang', get_string('sitedefault', 'admin') . ' (' . 
@@ -1796,37 +1795,6 @@ function searchform() {
             )
         )
     ));
-}
-
-function get_loggedin_string() {
-    global $USER;
-
-    $str = get_string('youareloggedinas', 'mahara', display_name($USER));
-
-    safe_require('notification', 'internal');
-    $count = call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'));
-    if ($count == 1) {
-        $key = 'unreadmessage';
-    }
-    else {
-        $key = 'unreadmessages';
-    }
-
-    if ($count > 0) {
-        // these spans are here so that on the ajax page that marks messages as read, the contents can be updated.
-        $str .=
-            ' (<a href="' . get_config('wwwroot') . 'account/activity/">'  . 
-            '<span class="unreadmessagescontainer"><span class="unreadmessagecount">' . $count . '</span> ' .
-            '<span class="unreadmessages">' . get_string($key) . '</span></span></a>)';
-    }
-
-    $saveduser = $USER->get('parentuser');
-    if (!empty($saveduser) && $saveduser->name) {
-        $str .= ' (<a href="' . get_config('wwwroot') . 'admin/users/changeuser.php?restore=1">'
-            . get_string('becomeadminagain', 'admin', $saveduser->name) . '</a>)';
-    }
-
-    return $str;
 }
 
 
