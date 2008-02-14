@@ -27,7 +27,7 @@
 function pieform_element_captcha(Pieform $form, $element) {
     $id = $form->get_name() . '_' . $element['name'];
     $image = '<img src="' . get_config('wwwroot') . 'captcha.php?name=' . $id . '" alt="' . get_string('captchaimage') . '" style="padding: 2px 0;"><br>';
-    $input = '<input type="text" class="text required" id="' . $id . '" name="' . $element['name'] . '" style="width: 137px;" tabindex="4">';
+    $input = '<input type="text" class="text required" id="' . $id . '" name="' . $element['name'] . '" style="width: 137px;" tabindex="' . $form->get_property('tabindex') . '">';
     return $image . ' ' . $input;
 }
 
