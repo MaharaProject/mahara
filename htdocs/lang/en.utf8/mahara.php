@@ -415,6 +415,7 @@ $string['users'] = 'Users';
 // artefact
 $string['artefact'] = 'artefact';
 $string['Artefact'] = 'Artefact';
+$string['Artefacts'] = 'Artefacts';
 $string['artefactnotfound'] = 'Artefact with id %s not found';
 $string['artefactnotrendered'] = 'Artefact not rendered';
 

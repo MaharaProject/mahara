@@ -46,7 +46,7 @@
         {/if}
         {if $data.artefacts}
         <li>
-            {str tag="artefacts"}:
+            {str tag="Artefacts"}:
             <ul>
             {foreach from=$data.artefacts item=artefact}
                 {if $artefact->artefacttype == 'blog'}
