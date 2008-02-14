@@ -317,7 +317,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
         },
         IMG({'src': config.theme['images/loading.gif']})
     );
-    appendChildNodes($('header'), contextualHelpContainer);
+    appendChildNodes($('messages'), contextualHelpContainer);
 
     var position = getElementPosition(ref);
     var dimensions = getElementDimensions(contextualHelpContainer);
