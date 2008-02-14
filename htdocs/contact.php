@@ -95,14 +95,13 @@ $elements['userid'] = array(
 );
 $elements['submit'] = array(
     'type'  => 'submit',
-    'value' => get_string('sendmessage')
+    'value' => get_string('sendmessage'),
 );
 
 $contactform = pieform(array(
     'name'     => 'contactus',
     'method'   => 'post',
     'action'   => '',
-    'jsform' => true,
     'elements' => $elements
 ));
 
@@ -114,6 +113,7 @@ function contactus_validate(Pieform $form, $values) {
 }
 
 function contactus_submit(Pieform $form, $values) {
+    global $SESSION;
     $data = new StdClass;
     $data->fromname    = $values['name'];
     $data->fromemail   = $values['email'];
@@ -124,7 +124,8 @@ function contactus_submit(Pieform $form, $values) {
     }
     require_once('activity.php');
     activity_occurred('contactus', $data);
-    $form->json_reply(PIEFORM_OK, get_string('messagesent'));
+    $SESSION->add_ok_msg(get_string('messagesent'));
+    redirect();
 }
 
 $smarty = smarty();
