@@ -96,17 +96,17 @@ if ($groups['data']) {
         LEFT JOIN {group_member} gm ON (gm.group = g.id)
         LEFT JOIN {group_member_request} gmr ON (gmr.group = g.id)
         LEFT JOIN (
-            SELECT g.id, CAST(\'owner\' AS CHAR(7)) AS type
+            SELECT g.id, CAST(\'owner\' AS VARCHAR(7)) AS type
             FROM {group} g
             WHERE g.owner = ?
-            UNION SELECT g.id, CAST(\'member\' AS CHAR(7)) AS type
+            UNION SELECT g.id, CAST(\'member\' AS VARCHAR(7)) AS type
             FROM {group} g
             INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ?)
             WHERE g.owner != gm.member
-            UNION SELECT g.id, CAST(\'invite\' AS CHAR(7)) AS type
+            UNION SELECT g.id, CAST(\'invite\' AS VARCHAR(7)) AS type
             FROM {group} g
             INNER JOIN {group_member_invite} gmi ON (gmi.group = g.id AND gmi.member = ?)
-            UNION SELECT g.id, CAST(\'request\' AS CHAR(7)) AS type
+            UNION SELECT g.id, CAST(\'request\' AS VARCHAR(7)) AS type
             FROM {group} g
             INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
         ) t ON t.id = g.id

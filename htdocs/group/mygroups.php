@@ -43,7 +43,7 @@ $offset = (int)($offset / $groupsperpage) * $groupsperpage;
 if ($filter == 'owner') {
     $sql = '
         INNER JOIN (
-            SELECT g.id, CAST(\'owner\' AS CHAR(7)) AS type
+            SELECT g.id, CAST(\'owner\' AS VARCHAR(7)) AS type
             FROM {group} g
             WHERE g.owner = ?
         ) t ON t.id = g.id';
@@ -52,10 +52,10 @@ if ($filter == 'owner') {
 else if ($filter == 'member') {
     $sql = '
         INNER JOIN (
-            SELECT g.id, CAST(\'owner\' AS CHAR(7)) AS type
+            SELECT g.id, CAST(\'owner\' AS VARCHAR(7)) AS type
             FROM {group} g
             WHERE g.owner = ?
-            UNION SELECT g.id, CAST(\'member\' AS CHAR(7)) AS type
+            UNION SELECT g.id, CAST(\'member\' AS VARCHAR(7)) AS type
             FROM {group} g
             INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ?)
             WHERE g.owner != gm.member
@@ -65,7 +65,7 @@ else if ($filter == 'member') {
 else if ($filter == 'invite') {
     $sql = '
         INNER JOIN (
-            SELECT g.id, CAST(\'invite\' AS CHAR(7)) AS type
+            SELECT g.id, CAST(\'invite\' AS VARCHAR(7)) AS type
             FROM {group} g
             INNER JOIN {group_member_invite} gmi ON (gmi.group = g.id AND gmi.member = ?)
         ) t ON t.id = g.id';
@@ -74,7 +74,7 @@ else if ($filter == 'invite') {
 else if ($filter == 'request') {
     $sql = '
         INNER JOIN (
-            SELECT g.id, CAST(\'request\' AS CHAR(7)) AS type
+            SELECT g.id, CAST(\'request\' AS VARCHAR(7)) AS type
             FROM {group} g
             INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
         ) t ON t.id = g.id';
@@ -84,17 +84,17 @@ else { // all or some other text
     $filter = 'all';
     $sql = '
         INNER JOIN (
-            SELECT g.id, CAST(\'owner\' AS CHAR(7)) AS type
+            SELECT g.id, CAST(\'owner\' AS VARCHAR(7)) AS type
             FROM {group} g
             WHERE g.owner = ?
-            UNION SELECT g.id, CAST(\'member\' AS CHAR(7)) AS type
+            UNION SELECT g.id, CAST(\'member\' AS VARCHAR(7)) AS type
             FROM {group} g
             INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ?)
             WHERE g.owner != gm.member
-            UNION SELECT g.id, CAST(\'invite\' AS CHAR(7)) AS type
+            UNION SELECT g.id, CAST(\'invite\' AS VARCHAR(7)) AS type
             FROM {group} g
             INNER JOIN {group_member_invite} gmi ON (gmi.group = g.id AND gmi.member = ?)
-            UNION SELECT g.id, CAST(\'request\' AS CHAR(7)) AS type
+            UNION SELECT g.id, CAST(\'request\' AS VARCHAR(7)) AS type
             FROM {group} g
             INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
         ) t ON t.id = g.id';
