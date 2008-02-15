@@ -453,6 +453,12 @@ function jsstrings() {
                 'pendingfriend',
                 'pendingfriends',
                 'couldnotgethelp',
+                'password',
+                'username',
+                'login',
+                'sessiontimedout',
+                'loginfailed',
+                'home',
             ),
         ),
         'tablerenderer' => array(
@@ -516,6 +522,7 @@ function themepaths() {
                 'images/failure.gif',
                 'images/loading.gif',
                 'images/success.gif',
+                'images/icon_problem.gif',
                 'images/icon_help.gif',
             ),
         );
