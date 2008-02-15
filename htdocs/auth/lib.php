@@ -683,7 +683,7 @@ function auth_check_required_fields() {
     $elements = array();
 
     foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
-        if (get_profile_field($USER->get('id'), $field) != null) {
+        if ($field == 'email' || get_profile_field($USER->get('id'), $field) != null) {
             continue;
         }
 
