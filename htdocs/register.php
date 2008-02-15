@@ -32,6 +32,7 @@ define('SECTION_PAGE', 'register');
 require('init.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('register'));
+$key = param_alphanum('key', null);
 
 /*
  * This page handles three different tasks:
@@ -45,9 +46,15 @@ if (!session_id()) {
     session_start();
 }
 
-// Logged in people can't register
+// Logged in people can't register. If someone passes a key however, log the 
+// user out and see if this key registers someone
 if (is_logged_in()) {
-    redirect();
+    if ($key) {
+        $USER->logout();
+    }
+    else {
+        redirect();
+    }
 }
 
 // Step two of registration (first as it's the easiest): the user has
@@ -57,7 +64,6 @@ if (!empty($_SESSION['registered'])) {
     die_info(get_string('registeredok', 'auth.internal'));
 }
 
-$key = param_alphanum('key', null);
 // Step three of registration - given a key register the user
 if (isset($key)) {
 
