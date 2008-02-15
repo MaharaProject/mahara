@@ -83,6 +83,7 @@ $string['parentfolder'] = 'Parent folder';
 $string['Preview'] = 'Preview';
 $string['savechanges'] = 'Save changes';
 $string['Size'] = 'Size';
+$string['timeouterror'] = 'File upload failed: try uploading the file again';
 $string['title'] = 'Name';
 $string['titlefieldisrequired'] = 'The name field is required';
 $string['Type'] = 'Type';

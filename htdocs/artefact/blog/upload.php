@@ -25,6 +25,7 @@
  */
 
 define('INTERNAL', 1);
+define('IFRAME', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 // Upload a temporary file to attach to a blog post.
@@ -39,7 +40,6 @@ $createid               = param_variable('createid');
 
 // Ignore possible file name clashes; they should be dealt with in the
 // javascript on the edit blog post page.
-
 safe_require('artefact', 'blog');
 $attach = ArtefactTypeBlogPost::save_attachment_temporary('userfile', session_id() . $createid,
                                                           $result->uploadnumber);

@@ -126,6 +126,7 @@ class PluginArtefactFile extends PluginArtefact {
                     'nofilesfound',
                     'overwrite',
                     'savechanges',
+                    'timeouterror',
                     'title',
                     'titlefieldisrequired',
                     'unlinkthisfilefromblogposts?',
