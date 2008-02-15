@@ -374,6 +374,7 @@ class ArtefactTypeProfile extends ArtefactType {
     public function in_view_list() {
         return false;
     }
+
     public function display_title($maxlen=null) {
         return get_string($this->get('artefacttype'), 'artefact.internal');
     }
@@ -456,11 +457,7 @@ class ArtefactTypeEmail extends ArtefactTypeProfileField {
 }
 
 class ArtefactTypeStudentid extends ArtefactTypeProfileField {}
-class ArtefactTypeIntroduction extends ArtefactTypeProfileField {
-    public function in_view_list() {
-        return true;
-    }
-}
+class ArtefactTypeIntroduction extends ArtefactTypeProfileField {}
 class ArtefactTypeWebAddress extends ArtefactTypeProfileField {
 
     public function render_self($options) {
