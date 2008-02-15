@@ -25,6 +25,7 @@
  */
 
 define('INTERNAL', 1);
+define('IFRAME', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
 global $USER;
@@ -94,7 +95,7 @@ $result->quota = $USER->get('quota');
 $result->quotaused = $USER->get('quotaused');
 
 $r = json_encode($result);
-
+log_debug($r);
 $frame = <<< EOF
 <html><head><script>
 <!--

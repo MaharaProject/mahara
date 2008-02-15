@@ -378,9 +378,14 @@ function auth_setup () {
     else if ($sessionlogouttime > 0) {
         // The session timed out
         $USER->logout();
-
         if (defined('JSON')) {
             json_reply('global', get_string('sessiontimedoutreload'), 1);
+        }
+        if (defined('IFRAME')) {
+            $frame = '<html><head></head><body onload="parent.show_login_form(\'ajaxlogin_iframe\')"></body></html>';
+            header('Content-type: text/html');
+            echo $frame;
+            exit;
         }
 
         // If the page the user is viewing is public, inform them that they can

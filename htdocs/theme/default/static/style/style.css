@@ -639,6 +639,26 @@ div.sidebar p {
     float: left;
 }
 
+/* AJAX LOGIN */
+#ajax-login-form {
+    border: 5px solid green;
+    background-color: #fff;
+    position: fixed;
+    top: 150px;
+    left: 20%;
+    width: 250px;
+    z-index: 1000;
+    text-align: left;
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url(../images/overlay.png) repeat;
+}
 
 /* system messages between nav and main content */
 #messages {

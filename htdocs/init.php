@@ -204,7 +204,7 @@ if (!get_config('installed')
     redirect('/admin/');
 }
 
-if (defined('JSON')) {
+if (defined('JSON') && !defined('NOSESSKEY')) {
     $sesskey = param_variable('sesskey', null);
     global $USER;
     if ($sesskey === null || $USER->get('sesskey') != $sesskey) {
