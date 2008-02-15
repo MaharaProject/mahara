@@ -33,24 +33,25 @@ var real_sesskey = '';
 function globalErrorHandler(data) {
     if (data.returnCode == 1) {
         // Logged out!
-        show_login_form();
+        show_login_form('ajaxlogin');
     }
     else {
         displayMessage(data.message, 'error');
     }
 }
 
-function show_login_form() {
-    var loginForm = DIV({
-        style: 'border: 5px solid green; background-color: #fff; position: absolute; top: 150px; left: 40%; width: 200px; z-index: 1000;text-align: left;',
-        id: 'ajax-login-form'
-    });
-    loginForm.innerHTML = '<form class="pieform" name="login" method="post" action="" id="login" onsubmit="ajaxlogin(this, 42); return false;"><table cellspacing="0" border="0" class="maharatable"><tbody><tr id="login_login_username_header" class="required text"><th><label for="login_login_username">Username:<\/label><\/th><\/tr><tr id="login_login_username_container"><td><input type="text" class="required text autofocus" id="login_login_username" name="login_username" tabindex="2" value=""><\/td><\/tr><tr><td class="description"> <\/td><\/tr><tr id="login_login_password_header" class="required password"><th><label for="login_login_password">Password:<\/label><\/th><\/tr><tr id="login_login_password_container"><td><input type="password" class="required password" id="login_login_password" name="login_password" tabindex="2" value=""><\/td><\/tr><tr><td class="description"> <\/td><\/tr><tr id="login_submit_container"><td><input type="submit" class="submit" id="login_submit" name="submit" tabindex="2" value="Login"><\/td><\/tr><\/tbody><\/table><input type="hidden" name="sesskey" value=""><input type="hidden" name="pieform_login" value=""><\/form><script type="text\/javascript">var login_btn = null;addLoadEvent(function() {    connect($(\'login_submit\'), \'onclick\', function() { login_btn = \'login_submit\'; });});connect(\'login\', \'onsubmit\', function() { formStartProcessing(\'login\', login_btn); });<\/script>';
-    appendChildNodes(document.body, DIV({
-        'style': 'position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.5; background-color: white;',
-        'id': 'overlay'
-    }));
-    appendChildNodes(document.body, loginForm);
+function show_login_form(submit) {
+    if($('ajax-login-form') == null) {
+        var loginForm = DIV({id: 'ajax-login-form'});
+        loginForm.innerHTML = '<h2>' + get_string('login') + '</h2><a href="/">&laquo; ' + get_string('home') + '<\/a><div id="loginmessage">' + get_string('sessiontimedout') + '</div><form class="pieform" name="login" method="post" action="" id="login" onsubmit="' + submit + '(this, 42); return false;"><table cellspacing="0" border="0" class="maharatable"><tbody><tr id="login_login_username_header" class="required text"><th><label for="login_login_username">' + get_string('username') + ':<\/label><\/th><\/tr><tr id="login_login_username_container"><td><input type="text" class="required text autofocus" id="login_login_username" name="login_username" tabindex="2" value=""><\/td><\/tr><tr><td class="description"> <\/td><\/tr><tr id="login_login_password_header" class="required password"><th><label for="login_login_password">' + get_string('password') + ':<\/label><\/th><\/tr><tr id="login_login_password_container"><td><input type="password" class="required password" id="login_login_password" name="login_password" tabindex="2" value=""><\/td><\/tr><tr><td class="description"> <\/td><\/tr><tr id="login_submit_container"><td><input type="submit" class="submit" id="login_submit" name="submit" tabindex="2" value="' + get_string('login') + '"><\/td><\/tr><\/tbody><\/table><div id="homepage"><\/div><input type="hidden" name="sesskey" value=""><input type="hidden" name="pieform_login" value=""><\/form><script type="text\/javascript">var login_btn = null;addLoadEvent(function() {    connect($(\'login_submit\'), \'onclick\', function() { login_btn = \'login_submit\'; });});connect(\'login\', \'onsubmit\', function() { formStartProcessing(\'login\', login_btn); });<\/script>';
+        appendChildNodes(document.body, DIV({id: 'overlay'}));
+        appendChildNodes(document.body, loginForm);
+        $('login_login_username').focus();
+    }
+    else {
+        $('loginmessage').innerHTML = get_string('loginfailed');
+        $('login_login_username').focus();
+    }
 }
 
 function ajaxlogin(form, crap) {
@@ -62,13 +63,8 @@ function ajaxlogin(form, crap) {
         function(data) {
             removeElement('ajax-login-form');
             removeElement('overlay');
-            if (data.message != '') {
-                config.sesskey = data.message;
-                sendjsonrequest.apply(orig_caller, orig_arguments);
-            }
-            else {
-                alert('login attempt FAILED');
-            }
+            config.sesskey = data.message;
+            sendjsonrequest.apply(orig_caller, orig_arguments);
         },
         function() {},
         true
