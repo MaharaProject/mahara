@@ -654,6 +654,18 @@ function auth_get_available_auth_types($institution=null) {
         return array();
     }
 
+    foreach ($result as &$row) {
+        $row->title       = get_string('title', 'auth.' . $row->name);
+        safe_require('auth', $row->name);
+        if ($row->is_usable = call_static_method('PluginAuth' . $row->name, 'is_usable')) {
+            $row->description = get_string('description', 'auth.' . $row->name);
+        }
+        else {
+            $row->description = get_string('notusable', 'auth.' . $row->name);
+        }
+    }
+    usort($result, create_function('$a, $b', 'return strnatcasecmp($a->title, $b->title);'));
+
     return $result;
 }
 /**
@@ -1422,6 +1434,14 @@ class PluginAuth extends Plugin {
         $subscriptions[] = clone $activecheck;
 
         return $subscriptions;
+    }
+
+    /**
+     * Can be overridden by plugins to assert when they are able to be used. 
+     * For example, a plugin might check that a certain PHP extension is loaded
+     */
+    public static function is_usable() {
+        return true;
     }
 
     public static function update_active_flag($event, $user) {

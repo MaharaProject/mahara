@@ -128,6 +128,10 @@ class PluginAuthImap extends PluginAuth {
         return true;
     }
 
+    public static function is_usable() {
+        return extension_loaded('imap');
+    }
+
     public static function get_instance_config_options($institution, $instance = 0) {
         // TODO: put these strings in a lang file
         $options['/imap'] = 'IMAP';

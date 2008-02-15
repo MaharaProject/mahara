@@ -26,6 +26,10 @@
 
 defined('INTERNAL') || die();
 
+$string['title'] = 'LDAP';
+$string['description'] = 'Authenticate against an LDAP server';
+$string['notusable'] = 'Please install the PHP LDAP extension';
+
 $string['contexts'] = 'Contexts';
 $string['distinguishedname'] = 'Distinguished name';
 $string['hosturl'] = 'Host URL';

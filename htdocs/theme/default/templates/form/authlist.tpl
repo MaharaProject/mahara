@@ -177,7 +177,8 @@ section name=mysec loop=$instancelist
 }}<div class="authInstance" id="instanceDiv{{$instancelist[mysec]->id}}">
         <label class="authLabel">
             <a href="" onclick="editinstance({{$instancelist[mysec]->id}},'{{$instancelist[mysec]->authname}}'); return false;">
-            {{$instancelist[mysec]->instancename}}</a>
+            {{assign var=section value=$instancelist[mysec]->authname}}
+            {{str tag="title" section="auth.$section"}}</a>
         </label>
         <span class="authIcons" id="arrows{{$instancelist[mysec]->id}}">
             {{ if $instancelist[mysec]->index + 1 < $instancelist[mysec]->total }}
@@ -194,7 +195,7 @@ section name=mysec loop=$instancelist
 <br>
 <select name="dummy" id="dummySelect" {{if $institution eq ''}}disabled{{/if}}>
 {{section name=mysec2 loop=$authtypes}}
-    <option>{{$authtypes[mysec2]->name}}</option>
+    <option value="{{$authtypes[mysec2]->name|escape}}"{{if !$authtypes[mysec2]->is_usable}} disabled="disabled"{{/if}}>{{$authtypes[mysec2]->title|escape}} - {{$authtypes[mysec2]->description|escape}}</option>
 {{/section}}
 </select>
 <a href="" onclick="addinstance(); return false;">[+]</a>

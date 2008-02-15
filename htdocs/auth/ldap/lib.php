@@ -401,6 +401,10 @@ class PluginAuthLdap extends PluginAuth {
         return true;
     }
 
+    public static function is_usable() {
+        return extension_loaded('ldap');
+    }
+
     public static function get_instance_config_options($institution, $instance = 0) {
         // list of user_type
         $utopt = array();

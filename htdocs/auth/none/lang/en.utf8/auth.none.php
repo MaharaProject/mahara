@@ -26,6 +26,7 @@
 
 defined('INTERNAL') || die();
 
-$string['none'] = 'None';
+$string['title'] = 'None';
+$string['description'] = 'Anyone can log in. Use for testing only!';
 
 ?>

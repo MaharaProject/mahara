@@ -27,6 +27,8 @@
 defined('INTERNAL') || die();
 
 $string['internal'] = 'Internal';
+$string['title'] = 'Internal';
+$string['description'] = 'Authenticate against Mahara\'s database';
 
 $string['completeregistration'] = 'Complete Registration';
 $string['emailalreadytaken'] = 'This e-mail address has already registered here';
