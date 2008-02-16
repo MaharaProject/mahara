@@ -1,7 +1,7 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Donal McMullan <donal@catalyst.net.nz>
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -43,6 +43,7 @@
 define('INTERNAL', 1);
 define('PUBLIC', 1);
 define('XMLRPC', 1);
+define('TITLE', '');
 require(dirname(__FILE__).'/lib.php');
 
 // Catch anything that goes wrong in init.php

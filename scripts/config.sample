@@ -1,7 +1,0 @@
-# Sample configuration for bootstrap.pl
-{
-    url => 'http://mahara.freud.wgtn.cat-it.co.nz',
-    password => '1234567',
-    email => 'nigel@catalyst.net.nz',
-    debug => 1,
-}

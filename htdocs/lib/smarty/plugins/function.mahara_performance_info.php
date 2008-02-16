@@ -13,7 +13,7 @@
  * Name:     mahara_performance_info<br>
  * Date:     June 22, 2006<br>
  * Purpose:  Fetch internationalized strings
- * @author   Penny Leach <penny@catalyst.net.nz>
+ * @author   Catalyst IT Ltd
  * @version  1.0
  * @param array
  * @param Smarty

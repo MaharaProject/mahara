@@ -1,7 +1,7 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -218,4 +218,5 @@ $smarty->assign('views', $data);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('heading', get_string('myviews'));
 $smarty->display('view/index.tpl');
+
 ?>

@@ -1,7 +1,7 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -399,6 +399,10 @@ class PluginAuthLdap extends PluginAuth {
 
     public static function has_instance_config() {
         return true;
+    }
+
+    public static function is_usable() {
+        return extension_loaded('ldap');
     }
 
     public static function get_instance_config_options($institution, $instance = 0) {

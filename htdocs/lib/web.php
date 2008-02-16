@@ -1,7 +1,7 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Penny Leach <penny@catalyst.net.nz>
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  * @copyright  (C) portions from Moodle, (C) Martin Dougiamas http://dougiamas.com
  */
 
@@ -332,7 +332,7 @@ EOF;
 
     $sitename = get_config('sitename');
     $smarty->assign('title', $sitename);
-    $smarty->assign('heading', $sitename);
+    $smarty->assign('hiddenheading', $sitename);
 
     if (defined('PUBLIC')) {
         $smarty->assign('PUBLIC', true);
@@ -452,6 +452,12 @@ function jsstrings() {
                 'pendingfriend',
                 'pendingfriends',
                 'couldnotgethelp',
+                'password',
+                'username',
+                'login',
+                'sessiontimedout',
+                'loginfailed',
+                'home',
             ),
         ),
         'tablerenderer' => array(
@@ -515,6 +521,7 @@ function themepaths() {
                 'images/failure.gif',
                 'images/loading.gif',
                 'images/success.gif',
+                'images/icon_problem.gif',
                 'images/icon_help.gif',
             ),
         );
@@ -650,7 +657,7 @@ function theme_get_path($location, $pluginlocation='') {
  *
  */
 function json_headers() {
-    // @todo martyn This should be changed, but for now it's useful for debugging
+    // @todo Catalyst IT Ltd
     // header('Content-type: text/x-json');
     header('Content-type: text/plain');
     header('Pragma: no-cache');

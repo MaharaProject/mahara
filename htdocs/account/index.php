@@ -1,7 +1,7 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Penny Leach <penny@catalyst.net.nz>
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -31,6 +31,7 @@ define('SECTION_PLUGINNAME', 'account');
 define('SECTION_PAGE', 'preferences');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
+define('TITLE', get_string('preferences'));
 require_once('pieforms/pieform.php');
 
 // load up user preferences

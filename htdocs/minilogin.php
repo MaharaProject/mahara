@@ -1,7 +1,7 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,23 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage core or plugintype-pluginname
- * @author     Your Name <you@example.org>
+ * @subpackage core
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 define('INTERNAL', 1);
-// uncomment if this page is public (doesn't require login)
-// define('PUBLIC', 1);
-// uncomment if the page is in the admin section
-// define('ADMIN', 1);
-// uncomment and specify the particular item if this page is part of a menu hierarchy
-// define('MENUITEM', 'TODO');
-// uncomment and specify the particular item if this page is a submenu item as well
-// define('SUBMENUITEM', 'TODO');
+define('JSON', 1);
+define('NOSESSKEY', 1);
+
 require('init.php');
 
-// Your code here
+json_reply(false, $USER->get('sesskey'));
+
 ?>

@@ -1,7 +1,7 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
  *
  * @package    mahara
  * @subpackage auth
- * @author     Nigel McNie <nigel@catalyst.net.nz>
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -378,9 +378,14 @@ function auth_setup () {
     else if ($sessionlogouttime > 0) {
         // The session timed out
         $USER->logout();
-
         if (defined('JSON')) {
             json_reply('global', get_string('sessiontimedoutreload'), 1);
+        }
+        if (defined('IFRAME')) {
+            $frame = '<html><head></head><body onload="parent.show_login_form(\'ajaxlogin_iframe\')"></body></html>';
+            header('Content-type: text/html');
+            echo $frame;
+            exit;
         }
 
         // If the page the user is viewing is public, inform them that they can
@@ -654,6 +659,18 @@ function auth_get_available_auth_types($institution=null) {
         return array();
     }
 
+    foreach ($result as &$row) {
+        $row->title       = get_string('title', 'auth.' . $row->name);
+        safe_require('auth', $row->name);
+        if ($row->is_usable = call_static_method('PluginAuth' . $row->name, 'is_usable')) {
+            $row->description = get_string('description', 'auth.' . $row->name);
+        }
+        else {
+            $row->description = get_string('notusable', 'auth.' . $row->name);
+        }
+    }
+    usort($result, create_function('$a, $b', 'return strnatcasecmp($a->title, $b->title);'));
+
     return $result;
 }
 /**
@@ -666,7 +683,7 @@ function auth_check_required_fields() {
     $elements = array();
 
     foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
-        if (get_profile_field($USER->get('id'), $field) != null) {
+        if ($field == 'email' || get_profile_field($USER->get('id'), $field) != null) {
             continue;
         }
 
@@ -980,6 +997,15 @@ function auth_get_login_form() {
  * @private
  */
 function get_login_form_js($form) {
+    // Add the autofocus class to the username input. This is because Mahara 
+    // doesn't always render the login form when it is built. Sometimes, the 
+    // form is built to process a login attempt, and then built again when that 
+    // attempt fails. This makes sure that every time the login form is 
+    // actually displayed it has the autofocus class.
+    $form = str_replace(
+        'class="required text" id="login_login_username"',
+        'class="required text autofocus" id="login_login_username"',
+        $form);
     $form = str_replace('/', '\/', str_replace("'", "\'", (str_replace(array("\n", "\t"), '', $form))));
     $strcookiesnotenabled    = json_encode(get_string('cookiesnotenabled'));
     $cookiename = get_config('cookieprefix') . 'ctest';
@@ -1422,6 +1448,14 @@ class PluginAuth extends Plugin {
         $subscriptions[] = clone $activecheck;
 
         return $subscriptions;
+    }
+
+    /**
+     * Can be overridden by plugins to assert when they are able to be used. 
+     * For example, a plugin might check that a certain PHP extension is loaded
+     */
+    public static function is_usable() {
+        return true;
     }
 
     public static function update_active_flag($event, $user) {

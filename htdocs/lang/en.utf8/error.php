@@ -1,7 +1,7 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
  *
  * @package    mahara
  * @subpackage lang
- * @author     Nigel McNie <nigel@catalyst.net.nz>
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -36,9 +36,6 @@ $string['unknowndbtype'] = 'Your server configuration references an unknown data
 $string['libxmlextensionnotloaded'] = 'Your server configuration does not include the libxml extension. Mahara requires this in order to parse XML data for the installer and for backups. Please make sure that it is loaded in php.ini, or install it if it is not installed.';
 $string['gdextensionnotloaded'] = 'Your server configuration does not include the gd extension. Mahara requires this in order to perform resizes and other operations on uploaded images. Please make sure that it is loaded in php.ini, or install it if it is not installed.';
 $string['sessionextensionnotloaded'] = 'Your server configuration does not include the session extension. Mahara requires this in order to support users logging in. Please make sure that it is loaded in php.ini, or install it if it is not installed.';
-$string['opensslextensionnotloaded'] = 'Your server configuration does not include the openssl extension. Mahara does not require this, but it is necessary if you wish to enable networking support.';
-$string['curlextensionnotloaded'] = 'Your server configuration does not include the curl extension. Mahara does not require this, but it is necessary if you wish to enable networking support.';
-$string['xmlrpcextensionnotloaded'] = 'Your server configuration does not include the xmlrpc extension. Mahara does not require this, but it is necessary if you wish to enable networking support.';
 $string['registerglobals'] = 'You have dangerous PHP settings, register_globals is on. Mahara is trying to work around this, but you should really fix it';
 $string['magicquotesgpc'] = 'You have dangerous PHP settings, magic_quotes_gpc is on. Mahara is trying to work around this, but you should really fix it';
 $string['magicquotesruntime'] = 'You have dangerous PHP settings, magic_quotes_runtime is on. Mahara is trying to work around this, but you should really fix it';

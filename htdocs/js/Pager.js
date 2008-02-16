@@ -1,3 +1,9 @@
+/**
+ * Pager module for MochiKit
+ *
+ * Copyright: 2006-2008 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
+ */
 try {
     if (
         typeof(MochiKit.Base)   == 'undefined' ||

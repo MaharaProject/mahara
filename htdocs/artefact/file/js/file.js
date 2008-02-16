@@ -1,4 +1,27 @@
-// file.js
+/**
+ * File manager for Mahara
+ *
+ * Copyright: 2006-2008 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
+ */
+
+function ajaxlogin_iframe(form, crap) {
+    save_orig_data = false;
+    sendjsonrequest(
+        config.wwwroot + 'minilogin.php',
+        {'login_username': form.elements['login_username'].value, 'login_password': form.elements['login_password'].value, 'pieform_login': ''},
+        'POST',
+        function(data) {
+            removeElement('ajax-login-form');
+            removeElement('overlay');
+            config.sesskey = data.message;
+            uploader.getresult({"uploadnumber":$('uploadnumber').value,"message": get_string('timeouterror'),"problem": true});
+        },
+        function() {},
+        true
+    );
+    save_orig_data = true;
+}
 
 // The file browser part needs to be kept relatively separated from
 // the file uploader because they are used slightly differently in the
@@ -608,7 +631,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
         appendChildNodes(self.form, 
                          INPUT({'type':'hidden', 'name':'parentfoldername', 'value':self.foldername}),
                          INPUT({'type':'hidden', 'name':'collideaction', 'value':collideaction}),
-                         INPUT({'type':'hidden', 'name':'uploadnumber', 'value':self.nextupload}));
+                         INPUT({'type':'hidden', 'id' : 'uploadnumber', 'name':'uploadnumber', 'value':self.nextupload}));
 
         appendChildNodes(self.form, 
                          INPUT({'type':'hidden', 'name':'parentfolder', 'value':self.folderid}));
@@ -630,7 +653,10 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
     }
 
     this.getresult = function(data) {
-        if (!data.error) {
+        if (data.problem) {
+            var image = 'images/icon_problem.gif';
+        }
+        else if (!data.error) {
             var image = 'images/success.gif';
         }
         else {

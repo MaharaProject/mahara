@@ -1,3 +1,9 @@
+/**
+ * Adds keystroke navigation to Mahara.
+ *
+ * Copyright: 2006-2008 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
+ */
 addLoadEvent(function() {
     connect(window,'onkeypress',function(e) {
         var targetType = e.target().nodeName;

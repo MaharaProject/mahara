@@ -4,7 +4,7 @@
  * -------------------------------------------------------------
  * Type:     resource
  * Name:     artefact
- * Author:   Martyn Smith <martyn@catalyst.net.nz>
+ * Author:   Catalyst IT Ltd
  * Purpose:  Look up artefact templates for Mahara
  *
  * Examples: $smarty->display ("artefact:internal:index.tpl")

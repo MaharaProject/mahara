@@ -13,7 +13,7 @@
  * Name:     loadquota<br>
  * Date:     June 22, 2006<br>
  * Purpose:  Set quota related variables for the quota template
- * @author   Martyn Smith <martyn@catalyst.net.nz>
+ * @author   Catalyst IT Ltd
  * @version  1.0
  * @param array
  * @param Smarty

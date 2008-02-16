@@ -4,7 +4,7 @@
  * -------------------------------------------------------------
  * Type:     resource
  * Name:     blocktype
- * Author:   Nigel McNie <nigel@catalyst.net.nz>
+ * Author:   Catalyst IT Ltd
  * Purpose:  Look up blocktype templates for Mahara
  *
  * Examples: $smarty->display ("blocktype:blocktypename:.tpl")

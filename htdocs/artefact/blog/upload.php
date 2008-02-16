@@ -1,7 +1,7 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,13 +18,14 @@
  *
  * @package    mahara
  * @subpackage artefact-blog
- * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 define('INTERNAL', 1);
+define('IFRAME', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 // Upload a temporary file to attach to a blog post.
@@ -39,7 +40,6 @@ $createid               = param_variable('createid');
 
 // Ignore possible file name clashes; they should be dealt with in the
 // javascript on the edit blog post page.
-
 safe_require('artefact', 'blog');
 $attach = ArtefactTypeBlogPost::save_attachment_temporary('userfile', session_id() . $createid,
                                                           $result->uploadnumber);

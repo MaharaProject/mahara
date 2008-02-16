@@ -11,7 +11,6 @@
 {include file="columnleftstart.tpl"}
         <h2>{str section="artefact.blog" tag=$pagetitle}</h2>
         {$textinputform}
-        <div id='insertimage'></div>
         <div id='uploader'></div>
         <div id='browsebuttonstuff'>
           <input id='browsebutton' type='button' class='button' value='{str tag=browsemyfiles section=artefact.blog}'>

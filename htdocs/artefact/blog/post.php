@@ -1,7 +1,7 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
  *
  * @package    mahara
  * @subpackage artefact-blog
- * @author     Alastair Pharo <alastair@catalyst.net.nz>
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -370,9 +370,9 @@ function canceledit() {  // Uploaded files will deleted by cron cleanup.
 
 
 // Override the image button on the tinyMCE editor.  Rather than the
-// normal image popup, open up a form below the blogpost body form
-// which allows the user to select an image from the list of image
-// files attached to the post.
+// normal image popup, open up a modified popup which allows the user
+// to select an image from the list of image files attached to the
+// post.
 
 // The contents of this function is stolen straight out of the tinyMCE
 // code in tinymce/themes/advanced/editor_template_src.js
@@ -447,7 +447,8 @@ function getSelectedImgAttributes (editorid) {
 
 
 // Get all the files in the attached files list that have been
-// recognised as images.
+// recognised as images.  This function is called by the the popup
+// window, but needs access to the attachment list on this page
 function attachedImageList() {
     // All the rows in the attached files list:
     var attachrows = getElementsByTagAndClassName('tbody', null, 'attachedfiles')[0].childNodes;

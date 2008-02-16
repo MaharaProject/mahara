@@ -1,3 +1,11 @@
+/**
+ * 'Speeds up' the user search if the user has javascript enabled in their
+ * browser
+ *
+ * Copyright: 2006-2008 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
+ */
+
 function UserSearch() {
     var self = this;
 

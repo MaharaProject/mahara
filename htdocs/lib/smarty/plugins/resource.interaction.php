@@ -4,7 +4,7 @@
  * -------------------------------------------------------------
  * Type:     resource
  * Name:     interaction
- * Author:   Nigel McNie <nigel@catalyst.net.nz>
+ * Author:   Catalyst IT Ltd
  * Purpose:  Look up interaction templates for Mahara
  *
  * Examples: $smarty->display ("interaction:forum:index.tpl")

@@ -1,4 +1,11 @@
 /**
+ * Javascript side of the accessible pagination for Mahara.
+ *
+ * Copyright: 2006-2008 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
+ */
+
+/**
  * Hooks into pagination built with the smarty function 'mahara_pagination',
  * and rewrites it to be javascript aware
  *

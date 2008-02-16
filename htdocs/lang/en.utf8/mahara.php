@@ -1,7 +1,7 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
  *
  * @package    mahara
  * @subpackage lang
- * @author     Nigel McNie <nigel@catalyst.net.nz>
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -199,7 +199,7 @@ $string['emailtoolong'] = 'E-mail addresses cannot be longer that 255 characters
 $string['mustspecifyoldpassword'] = 'You must specify your current password';
 $string['captchatitle'] = 'CAPTCHA Image';
 $string['captchaimage'] = 'CAPTCHA Image';
-$string['captchadescription'] = 'Enter the characters you see in the picture to the right. Letters are not case sensitive';
+$string['captchadescription'] = 'Enter the characters you see in the picture. Letters are not case sensitive';
 $string['captchaincorrect'] = 'Enter the letters as they are shown in the image';
 
 // Misc. register stuff that could be used elsewhere

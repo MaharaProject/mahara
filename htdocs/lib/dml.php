@@ -819,7 +819,7 @@ function set_field($table, $newfield, $newvalue, $field1=null, $value1=null, $fi
 function set_field_select($table, $newfield, $newvalue, $select, $values) {
     global $db;
 
-    // @todo penny This is an ugly solution, we can talk about it later
+    // @todo Catalyst IT Ltd
     if (!empty($select) && !preg_match('/^\s*where/i', $select)) {
         $select = ' WHERE ' . $select;
     }

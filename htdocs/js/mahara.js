@@ -1,3 +1,9 @@
+/**
+ * General javascript routines for Mahara
+ *
+ * Copyright: 2006-2008 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
+ */
 // @todo: Pack it down.
 
 // Expects strings array
@@ -25,15 +31,51 @@ function get_themeurl(s) {
     return config.theme[s];
 }
 
+var save_orig_data = true;
+var orig_caller;
+var orig_arguments;
+var real_sesskey = '';
+
 function globalErrorHandler(data) {
     if (data.returnCode == 1) {
         // Logged out!
-        // Later - ajaxlogin
-        displayMessage(data.message, 'error');
+        show_login_form('ajaxlogin');
     }
     else {
         displayMessage(data.message, 'error');
     }
+}
+
+function show_login_form(submit) {
+    if($('ajax-login-form') == null) {
+        var loginForm = DIV({id: 'ajax-login-form'});
+        loginForm.innerHTML = '<h2>' + get_string('login') + '</h2><a href="/">&laquo; ' + get_string('home') + '<\/a><div id="loginmessage">' + get_string('sessiontimedout') + '</div><form class="pieform" name="login" method="post" action="" id="login" onsubmit="' + submit + '(this, 42); return false;"><table cellspacing="0" border="0" class="maharatable"><tbody><tr id="login_login_username_header" class="required text"><th><label for="login_login_username">' + get_string('username') + ':<\/label><\/th><\/tr><tr id="login_login_username_container"><td><input type="text" class="required text autofocus" id="login_login_username" name="login_username" tabindex="2" value=""><\/td><\/tr><tr><td class="description"> <\/td><\/tr><tr id="login_login_password_header" class="required password"><th><label for="login_login_password">' + get_string('password') + ':<\/label><\/th><\/tr><tr id="login_login_password_container"><td><input type="password" class="required password" id="login_login_password" name="login_password" tabindex="2" value=""><\/td><\/tr><tr><td class="description"> <\/td><\/tr><tr id="login_submit_container"><td><input type="submit" class="submit" id="login_submit" name="submit" tabindex="2" value="' + get_string('login') + '"><\/td><\/tr><\/tbody><\/table><div id="homepage"><\/div><input type="hidden" name="sesskey" value=""><input type="hidden" name="pieform_login" value=""><\/form><script type="text\/javascript">var login_btn = null;addLoadEvent(function() {    connect($(\'login_submit\'), \'onclick\', function() { login_btn = \'login_submit\'; });});connect(\'login\', \'onsubmit\', function() { formStartProcessing(\'login\', login_btn); });<\/script>';
+        appendChildNodes(document.body, DIV({id: 'overlay'}));
+        appendChildNodes(document.body, loginForm);
+        $('login_login_username').focus();
+    }
+    else {
+        $('loginmessage').innerHTML = get_string('loginfailed');
+        $('login_login_username').focus();
+    }
+}
+
+function ajaxlogin(form, crap) {
+    save_orig_data = false;
+    sendjsonrequest(
+        config.wwwroot + 'minilogin.php',
+        {'login_username': form.elements['login_username'].value, 'login_password': form.elements['login_password'].value, 'pieform_login': ''},
+        'POST',
+        function(data) {
+            removeElement('ajax-login-form');
+            removeElement('overlay');
+            config.sesskey = data.message;
+            sendjsonrequest.apply(orig_caller, orig_arguments);
+        },
+        function() {},
+        true
+    );
+    save_orig_data = true;
 }
 
 // Form related functions
@@ -62,7 +104,7 @@ function formStopProcessing(form, btn) {
     processingStop();
 }
 function formError(form, data) {
-    var errMsg = DIV({'id': 'messages'}, makeMessage(data.message.message, 'error'));
+    var errMsg = DIV({'id': 'messages'}, makeMessage(data.message, 'error'));
     swapDOM('messages', errMsg);
     scrollTo(0, 0);
 }
@@ -149,6 +191,11 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
             break;
     }
 
+    if (save_orig_data) {
+        orig_caller = this;
+        orig_arguments = arguments;
+    }
+
     var d = doXHR(script, xhrOptions);
 
     d.addCallbacks(function (result) {
@@ -161,7 +208,9 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
             errtype = 'error';
         }
         else {
-            logWarning('invoking globalErrorHandler(', data, ')');
+            logWarning('invoking globalErrorHandler(', data, this, arguments, ')');
+            // Trying something ninja. The call failed, but in the event that the global error
+            // handler can recover, maybe it can be called
             globalErrorHandler(data);
         }
         if (errtype) {

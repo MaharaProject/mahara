@@ -1,7 +1,7 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Penny Leach <penny@catalyst.net.nz>
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  * @copyright  (C) portions from Moodle, (C) Martin Dougiamas http://dougiamas.com
  */
 
@@ -67,17 +67,6 @@ function ensure_sanity() {
     }
     if (!extension_loaded('session')) {
         throw new ConfigSanityException(get_string('sessionextensionnotloaded', 'error'));
-    }
-
-    // Various optional extensions
-    if (!extension_loaded('openssl')) {
-        log_environ(get_string('opensslextensionnotloaded', 'error'));
-    }
-    if (!extension_loaded('curl')) {
-        log_environ(get_string('curlextensionnotloaded', 'error'));
-    }
-    if (!extension_loaded('xmlrpc')) {
-        log_environ(get_string('xmlrpcextensionnotloaded', 'error'));
     }
 
     // register globals workaround
