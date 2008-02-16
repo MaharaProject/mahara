@@ -18,7 +18,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Donal McMullan <donal@catalyst.net.nz>
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  *
@@ -43,6 +43,7 @@
 define('INTERNAL', 1);
 define('PUBLIC', 1);
 define('XMLRPC', 1);
+define('TITLE', '');
 require(dirname(__FILE__).'/lib.php');
 
 // Catch anything that goes wrong in init.php

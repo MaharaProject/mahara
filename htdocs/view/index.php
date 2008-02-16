@@ -218,4 +218,5 @@ $smarty->assign('views', $data);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('heading', get_string('myviews'));
 $smarty->display('view/index.tpl');
+
 ?>

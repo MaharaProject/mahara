@@ -75,4 +75,3 @@ echo json_encode(array(
     'type' => $type));
 
 ?>
-

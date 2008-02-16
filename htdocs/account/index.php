@@ -31,6 +31,7 @@ define('SECTION_PLUGINNAME', 'account');
 define('SECTION_PAGE', 'preferences');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
+define('TITLE', get_string('preferences'));
 require_once('pieforms/pieform.php');
 
 // load up user preferences

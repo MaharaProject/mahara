@@ -75,4 +75,3 @@ if (isset($neworder)) {
 json_reply(null, true);
 
 ?>
-

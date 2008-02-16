@@ -17,14 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage auth-internal
- * @author     Donal McMullan <donal@catalyst.net.nz>
+ * @subpackage core
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-// TODO lib 
 class Application {
 
     const   UNINITIALIZED           = 0;

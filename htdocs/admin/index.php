@@ -29,6 +29,7 @@ define('ADMIN', 1);
 define('MENUITEM', 'adminhome');
 
 require(dirname(dirname(__FILE__)).'/init.php');
+define('TITLE', get_string('administration', 'admin'));
 require(get_config('libroot') . 'upgrade.php');
 
 $smarty = smarty();

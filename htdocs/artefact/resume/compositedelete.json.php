@@ -53,4 +53,3 @@ else {
 json_reply(null, get_string('compositedeleted', 'artefact.resume'));
 
 ?>
-

@@ -31,6 +31,7 @@ define('SECTION_PLUGINNAME', 'account');
 define('SECTION_PAGE', 'activity');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+define('TITLE', get_string('notifications'));
 
 $types = get_records_assoc('activity_type', 'admin', 0, 'plugintype,pluginname,name', 'id,name,plugintype,pluginname');
 $types = array_map(create_function('$a', '

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage lang
+ * @subpackage search-solr
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
@@ -31,3 +31,5 @@ $string['indexcontrol'] = 'Index Control';
 $string['reindexusers'] = 'Re-Index Users';
 $string['reindexartefacts'] = 'Re-Index Artefacts';
 $string['reindexviews'] = 'Re-Index Views';
+
+?>

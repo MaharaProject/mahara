@@ -31,6 +31,7 @@ define('SECTION_PLUGINNAME', 'account');
 define('SECTION_PAGE', 'activitypreferences');
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
+define('TITLE', get_string('activityprefs'));
 require_once('pieforms/pieform.php');
 
 $activitytypes = get_records_array('activity_type', 'admin', 0);
