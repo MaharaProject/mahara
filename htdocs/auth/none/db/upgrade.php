@@ -18,7 +18,7 @@
  *
  * @package    mahara
  * @subpackage auth-none
- * @author     Nigel McNie <nigel@catalyst.net.nz>
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  *

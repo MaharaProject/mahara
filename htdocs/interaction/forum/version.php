@@ -18,7 +18,7 @@
  *
  * @package    mahara
  * @subpackage interaction-forum
- * @author     Clare Lenihan <clare@catalyst.net.nz>
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *

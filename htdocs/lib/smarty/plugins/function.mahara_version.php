@@ -13,7 +13,7 @@
  * Name:     mahara_version<br>
  * Date:     July 10, 2007<br>
  * Purpose:  Fetch the mahara version number if in the admin section
- * @author   Nigel McNie <nigel@catalyst.net.nz>
+ * @author   Catalyst IT Ltd
  * @version  1.0
  * @param array
  * @param Smarty

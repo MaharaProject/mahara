@@ -18,7 +18,7 @@
  *
  * @package    mahara
  * @subpackage form-element
- * @author     Nigel McNie <nigel@catalyst.net.nz>
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *

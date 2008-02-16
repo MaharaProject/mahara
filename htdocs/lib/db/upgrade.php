@@ -18,7 +18,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Penny Leach <penny@catalyst.net.nz>
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  *
@@ -333,7 +333,7 @@ function xmldb_core_upgrade($oldversion=0) {
         // These fields will be dropped after the template migration. However, 
         // given that the table needs to be used by block instances being 
         // created, make the fields nullable during that time.
-        // Note - XMLDB - you are a whore. Hate, Nigel
+        // Note - XMLDB - you are a whore. Hate, Catalyst IT Ltd
         if (is_postgres()) {
             execute_sql('ALTER TABLE {view_artefact} ALTER ctime DROP NOT NULL');
             execute_sql('ALTER TABLE {view_artefact} ALTER format DROP NOT NULL');

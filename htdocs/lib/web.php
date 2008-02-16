@@ -18,7 +18,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Penny Leach <penny@catalyst.net.nz>
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  * @copyright  (C) portions from Moodle, (C) Martin Dougiamas http://dougiamas.com
@@ -658,7 +658,7 @@ function theme_get_path($location, $pluginlocation='') {
  *
  */
 function json_headers() {
-    // @todo martyn This should be changed, but for now it's useful for debugging
+    // @todo Catalyst IT Ltd
     // header('Content-type: text/x-json');
     header('Content-type: text/plain');
     header('Pragma: no-cache');

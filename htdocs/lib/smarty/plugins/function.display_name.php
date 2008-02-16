@@ -13,7 +13,7 @@
  * Name:     str<br>
  * Date:     June 22, 2006<br>
  * Purpose:  Display a user's name according to mahara rules
- * @author   Penny <penny@catalyst.net.nz>
+ * @author   Catalyst IT Ltd
  * @version  1.0
  * @param array
  * @param Smarty
