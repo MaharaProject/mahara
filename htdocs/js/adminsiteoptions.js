@@ -1,9 +1,8 @@
 /**
  * Forces full reload of the page if certain site options have been changed
  *
- * Author: Nigel McNie
- * Copyright: (C) 2008 Catalyst IT Ltd.
- * Licensed under the GNU GPL 3.0 or later
+ * Copyright: 2006-2008 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
  */
 
 // Add here as appropriate

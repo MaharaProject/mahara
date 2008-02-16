@@ -1,3 +1,12 @@
+/**
+ * Javascript based display of tabular data.
+ *
+ * NOTE: use of this is deprecated in Mahara - it's not accessable. See
+ * paginator.js and talk to the developers for more information
+ *
+ * Copyright: 2006-2008 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
+ */
 TableRendererPageLoaded = false;
 addLoadEvent(function() { TableRendererPageLoaded = true });
 document.write('<script type="text/javascript" src="' + config.wwwroot + 'js/Pager.js"></script>');

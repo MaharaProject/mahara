@@ -2,9 +2,8 @@
  * Automatically populates the WYSIWYG box on the site pages screen with the
  * content of the appropriate page
  *
- * Author: Nigel McNie
- * Copyright: (C) 2008 Catalyst IT Ltd.
- * Licensed under the GNU GPL 3.0 or later
+ * Copyright: 2006-2008 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
  */
 
 var oldPageContent = '';

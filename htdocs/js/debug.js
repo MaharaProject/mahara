@@ -6,6 +6,8 @@
  *
  * This file will only be included if the configuration setting 'developermode'
  * is enabled. You can enable this in config.php
+ *
+ * This file is licensed under the same terms as Mahara itself.
  */
 
 /*
