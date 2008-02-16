@@ -1,8 +1,7 @@
 Mahara Readme
 -------------
 
-Thanks for downloading Mahara! Currently, things are very much in a development
-phase. To install, please follow the instructions here:
+Thanks for downloading Mahara! To install, please follow the instructions here:
 
   http://www.mahara.org/wiki/En/Sysadmin_Guide/Installing_Mahara
 
@@ -10,7 +9,9 @@ If you already have a Mahara you wish to upgrade, follow the instructions here:
 
   http://www.mahara.org/wiki/En/Sysadmin_Guide/Upgrading_Mahara
 
-Lots of chat is happening right now in #mahara on freenode. If you have
-questions, suggestions or ideas, please join us!
+The best ways of obtaining support are:
+
+ * #mahara on freenode (IRC) - live chat with other users and developers
+ * http://www.mahara.org/forum - the Mahara project forums
 
   -- the Mahara Development Team 
