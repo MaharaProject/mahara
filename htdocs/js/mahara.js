@@ -1,3 +1,9 @@
+/**
+ * General javascript routines for Mahara
+ *
+ * Copyright: 2006-2008 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
+ */
 // @todo: Pack it down.
 
 // Expects strings array

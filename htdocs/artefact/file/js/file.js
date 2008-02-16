@@ -1,4 +1,9 @@
-// file.js
+/**
+ * File manager for Mahara
+ *
+ * Copyright: 2006-2008 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
+ */
 
 function ajaxlogin_iframe(form, crap) {
     save_orig_data = false;

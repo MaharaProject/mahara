@@ -1,3 +1,10 @@
+/**
+ * Javascript for moving things around with drag&drop
+ *
+ * Copyright: 2006-2008 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
+ */
+
 var MoveSources = {
     sources: [],
     register: function(movesource) {

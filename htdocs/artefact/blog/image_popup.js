@@ -1,3 +1,10 @@
+/**
+ * TinyMCE plugin to provide a popup for inserting an image that has been
+ * uploaded or attached to a blog post
+ *
+ * Copyright: 2006-2008 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
+ */
 function insertImage() {
 	var src = document.forms[0].src.value;
 	var alt = document.forms[0].alt.value;

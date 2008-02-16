@@ -1,7 +1,8 @@
 /**
- * Javascript for the new views interface
+ * Javascript for the views interface
  *
- * Author: Nigel McNie
+ * Copyright: 2006-2008 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
  */
 
 function ViewManager() {
