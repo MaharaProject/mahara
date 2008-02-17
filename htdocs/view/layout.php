@@ -31,7 +31,7 @@ define('MENUITEM', 'viewlayout');
 require_once(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('view.php');
-define('TITLE', get_string('viewlayout', 'view'));
+define('TITLE', get_string('changemyviewlayout', 'view'));
 
 $id = param_integer('id');
 $new = param_boolean('new');

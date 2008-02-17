@@ -194,13 +194,13 @@ $string['moveblockright'] = 'Move this block right';
 $string['configureblock'] = 'Configure this block';
 $string['removeblock'] = 'Remove this block';
 
-$string['viewlayout'] = 'View layout';
-$string['viewlayoutdescription'] = 'You can change the widths of the columns in your view.';
+$string['changemyviewlayout'] = 'Change My View Layout';
+$string['viewcolumnspagedescription'] = 'First, select the number of columns in your view. In the next step, you will be able to change the widths of the columns.';
+$string['viewlayoutpagedescription'] = 'Select how you would like the columns in your view to be layed out.';
 $string['changeviewlayout'] = 'Change my view layout';
 $string['backtoyourview'] = 'Back to my view';
 $string['viewlayoutchanged'] = 'View layout changed';
-$string['selectnumberofcolumns'] = 'Select the number of columns in your view';
-$string['changeviewcolumns'] = 'Change my view columns';
+$string['numberofcolumns'] = 'Number of columns';
 
 
 $string['by'] = 'by';
