@@ -74,9 +74,10 @@ else {
             . ($public ? ' AND (public = 1 OR author = ' . $userid . ')' : ''));
     $feedback = get_records_sql_array('
         SELECT
-            f.id, f.author, f.ctime, f.message, f.public, f.attachment, a.title
+            f.id, f.author, f.ctime, f.message, f.public, f.attachment, a.title, af.size
         FROM {view_feedback} f
         LEFT OUTER JOIN {artefact} a ON f.attachment = a.id
+        LEFT OUTER JOIN {artefact_file_files} af ON af.artefact = a.id
         WHERE view = ' . $view 
             . ($public ? ' AND (f.public = 1 OR f.author = ' . $userid . ')' : '') . '
         ORDER BY id DESC', '', $offset, $limit);
@@ -90,13 +91,15 @@ if ($feedback) {
             'table'           => $table,
             'ownedbythisuser' => ( $owner == $userid ? true : false ),
             'name'            => display_name($record->author),
-            'date'            => format_date(strtotime($record->ctime), 'strftimedate'),
+            'date'            => format_date(strtotime($record->ctime), 'strftimedatetime'),
             'message'         => format_whitespace($record->message),
-            'ispublic'        => $record->public
+            'ispublic'        => $record->public,
+            'author'          => $record->author,
         );
         if (!empty($record->attachment)) {
-            $d['attachid'] = $record->attachment;
+            $d['attachid']    = $record->attachment;
             $d['attachtitle'] = $record->title;
+            $d['attachsize']  = display_size($record->size);
         }
         $data[] = $d;
     }

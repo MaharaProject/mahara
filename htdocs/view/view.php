@@ -55,7 +55,7 @@ if ($submittedgroup
     // The user is a tutor of the group that this view has
     // been submitted to, and is entitled to upload an additional
     // file when submitting feedback.
-    $tutorfilefeedbackformrow = "TR(null, TH(null, LABEL(null, '" . get_string('attachfile') . "'))),"
+    $tutorfilefeedbackformrow = "TR(null, TH(null, LABEL(null, '" . get_string('attachfile', 'view') . "'))),"
         . "TR(null, TD(null, INPUT({'type':'file', 'name':'attachment'}))),";
 }
 $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
@@ -64,7 +64,8 @@ $getstring = quotestrings(array(
     'mahara' => array('message', 'cancel'),
     'view' => array('makepublic', 'placefeedback', 'complaint',
         'feedbackonthisartefactwillbeprivate', 'notifysiteadministrator',
-        'nopublicfeedback', 'reportobjectionablematerial', 'print')
+        'nopublicfeedback', 'reportobjectionablematerial', 'print',
+        'thisfeedbackispublic', 'thisfeedbackisprivate', 'attachment')
 ));
 
 $getstring['addtowatchlist'] = json_encode(get_string('addtowatchlist', 'view'));
@@ -187,56 +188,53 @@ function view_menu() {
 addLoadEvent(view_menu);
 
 // The list of existing feedback.
-var feedbacklist = new TableRenderer(
-    'feedbacktable',
-    'getfeedback.json.php',
-    [
-        function (r) {
-            var td = TD(null);
-            td.innerHTML = r.message;
-            if (r.attachid && r.ownedbythisuser) {
-                appendChildNodes(td, DIV(null, {$getstring['feedbackattachmessage']}));
-                return td;
-            }
-            return td;
-        },
-        'name',
-        'date', 
-        function (r) {
-            if (r.ispublic == 1) {
-                var makePrivate = null;
-                if (r.ownedbythisuser) {
-                    makePrivate = A({'href': ''}, get_string('makeprivate'));
-                    connect(makePrivate, 'onclick', function (e) {
-                        sendjsonrequest(
-                            'changefeedback.json.php',
-                            r,
-                            'POST',
-                            function (data) {
-                                if (!data.error) {
-                                    replaceChildNodes(makePrivate.parentNode, '(' + get_string('private') + ')');
-                                }
-                            }
-                        );
-
-                        e.stop();
-                    });
-                }
-                return TD(null, '(' + get_string('public') + ') ', makePrivate);
-            }
-            return TD(null, '(' + get_string('private') + ')');
-        },
-        function (r) {
-            if (r.attachid) {
-                return TD(null, A({'href':config.wwwroot + 'artefact/file/download.php?file=' + r.attachid},
-                                  r.attachtitle));
-            }
-            return TD(null);
-        }
-    ]
-);
+var feedbacklist = new TableRenderer('feedbacktable', 'getfeedback.json.php', []);
 
 feedbacklist.limit = 10;
+feedbacklist.rowfunction = function(r, n, d) {
+    var td = TD(null);
+    td.innerHTML = r.message;
+    if (r.attachid && r.ownedbythisuser) {
+        appendChildNodes(td, DIV(null, {$getstring['feedbackattachmessage']}));
+    }
+
+    var publicPrivate = null;
+    if (r.ispublic == 1) {
+        var makePrivate = null;
+        if (r.ownedbythisuser) {
+            makePrivate = A({'href': ''}, get_string('makeprivate'));
+            connect(makePrivate, 'onclick', function (e) {
+                sendjsonrequest(
+                    'changefeedback.json.php',
+                    r,
+                    'POST',
+                    function (data) {
+                        if (!data.error) {
+                            replaceChildNodes(makePrivate.parentNode, '(' + {$getstring['private']} + ')');
+                        }
+                    }
+                );
+
+                e.stop();
+            });
+            makePrivate = [' - ', makePrivate];
+        }
+        publicPrivate = SPAN(null, {$getstring['thisfeedbackispublic']}, makePrivate);
+    }
+    else {
+        publicPrivate = {$getstring['thisfeedbackisprivate']};
+    }
+
+    var attachment = null;
+    if (r.attachid) {
+        attachment = [' | ', {$getstring['attachment']}, ': ', A({'href':config.wwwroot + 'artefact/file/download.php?file=' + r.attachid}, r.attachtitle), ' (', r.attachsize, ')'];
+    }
+
+    var icon = A({'href': config.wwwroot + 'user/view.php?id=' + r.author}, IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&id=' + r.author + '&maxsize=20', 'valign': 'middle'}));
+    appendChildNodes(td, DIV({'class': 'details'}, DIV({'class': 'icon'}, icon), A({'href': config.wwwroot + 'user/view.php?id=' + r.author}, r.name), ' | ', r.date, ' | ', publicPrivate, attachment));
+
+    return TR({'class': 'r' + (n % 2)}, td);
+};
 feedbacklist.view = view;
 feedbacklist.statevars.push('view');
 feedbacklist.emptycontent = {$getstring['nopublicfeedback']};

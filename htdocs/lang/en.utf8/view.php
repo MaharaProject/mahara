@@ -84,6 +84,7 @@ $string['addusertogroup'] = 'Add this user to a group';
 
 // view view
 $string['addedtowatchlist'] = 'This view has been added to your watchlist';
+$string['attachment'] = 'Attachment';
 $string['removedfromwatchlist'] = 'This view has been removed from your watchlist';
 $string['addfeedbackfailed'] = 'Add feedback failed';
 $string['addtowatchlist'] = 'Add view to watchlist';
@@ -106,7 +107,8 @@ $string['nopublicfeedback'] = 'No public feedback';
 $string['notifysiteadministrator'] = 'Notify site administrator';
 $string['placefeedback'] = 'Place feedback';
 $string['print'] = 'Print';
-$string['private'] = 'Private';
+$string['thisfeedbackispublic'] = 'This feedback is public';
+$string['thisfeedbackisprivate'] = 'This feedback is private';
 $string['makeprivate'] = 'Change to Private';
 $string['reportobjectionablematerial'] = 'Report objectionable material';
 $string['reportsent'] = 'Your report has been sent';
