@@ -53,7 +53,7 @@ function pieform_element_tags(Pieform $form, $element) {
     }
 
     if (!isset($element['size'])) {
-        $element['size'] = 70;
+        $element['size'] = 60;
     }
 
     $smarty->assign('name', $element['name']);

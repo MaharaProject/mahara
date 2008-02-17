@@ -623,14 +623,16 @@ function augment_tags_control(elem, returnContainer) {
             });
         });
     });
-    
+
     if (typeof(returnContainer) == 'boolean' && returnContainer) {
         return tagContainer;
     }
 
+    var help = getFirstElementByTagAndClassName('span', 'help', elem.parentNode);
+    
     var newNode = DIV();
     swapDOM(elem, newNode);
-    appendChildNodes(newNode, tagContainer, elem);
+    appendChildNodes(newNode, tagContainer, elem, ' ', help);
 };
 
 function quotaUpdate(quotaused, quota) {
