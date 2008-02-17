@@ -394,7 +394,10 @@ function auth_setup () {
             // @todo this links to ?login - later it should do magic to make
             // sure that whatever GET string is made it includes the old data
             // correctly
-            $SESSION->add_info_msg(get_string('sessiontimedoutpublic'), false);
+            $loginurl = $_SERVER['REQUEST_URI'];
+            $loginurl .= (false === strpos($loginurl, '?')) ? '?' : '&';
+            $loginurl .= 'login';
+            $SESSION->add_info_msg(get_string('sessiontimedoutpublic', 'mahara', hsc($loginurl)), false);
             return;
         }
 
