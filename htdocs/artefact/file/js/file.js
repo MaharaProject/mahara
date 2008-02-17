@@ -15,7 +15,7 @@ function ajaxlogin_iframe(form, crap) {
             removeElement('ajax-login-form');
             removeElement('overlay');
             config.sesskey = data.message;
-            uploader.getresult({"uploadnumber":$('uploadnumber').value,"message": get_string('timeouterror'),"problem": true});
+            uploader.getresult({"uploadnumber":$('uploadnumber').value, "message": get_string('timeouterror'), "error":"local", "problem": true});
         },
         function() {},
         true
