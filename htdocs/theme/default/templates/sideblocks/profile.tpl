@@ -1,6 +1,6 @@
-    <h3><a style="color:white" href="{$WWWROOT}user/view.php?id={$data.id}">{$data.id|display_name|escape}</a></h3>
+    <h3><a href="{$WWWROOT}user/view.php?id={$data.id}">{$data.id|display_name|escape}</a></h3>
     <div class="fr"><a href="{$WWWROOT}user/view.php?id={$data.id}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=50&amp;id={$data.id}" alt=""></a></div>
-    <ul>
+    <ul class="sidebar-ul-title">
         {if $data.unreadnotifications}
         <li>
         <a href="{$WWWROOT}account/activity/">
@@ -62,11 +62,11 @@
         {/if}
     </ul>
     <div class="center">
-    <a href="{$WWWROOT}?logout">{str tag="logout"}</a>
-    | <a href="{$WWWROOT}account/">{str tag="settings"}</a>
+    <a href="{$WWWROOT}?logout" id="btn-logout">{str tag="logout"}</a>
+    <a href="{$WWWROOT}account/" id="btn-settings">{str tag="settings"}</a>
     </div>
     {if $data.realuser}
-    <div>
+    <div id="changeuser">
     <a href="{$WWWROOT}admin/users/changeuser.php?restore=1">{str tag=becomeadminagain section=admin args=$data.realuser}</a>
     </div>
     {/if}
