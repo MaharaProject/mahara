@@ -73,7 +73,7 @@ $string['select'] = 'Select';
 
 $string['tags'] = 'Tags';
 $string['tagsdesc'] = 'Enter comma separated tags for this item.';
-$string['tagsdescprofile'] = 'Enter comma separated tags for this item. Items tagged with \'profile\' are displayed in the sidebar.';
+$string['tagsdescprofile'] = 'Enter comma separated tags for this item. Items tagged with \'profile\' are displayed in your sidebar.';
 
 $string['selfsearch'] = 'Search My Portfolio';
 $string['ssopeers'] = 'SSO Peers';
