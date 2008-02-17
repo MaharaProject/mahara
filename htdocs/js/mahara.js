@@ -196,9 +196,12 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
         orig_arguments = arguments;
     }
 
+    document.documentElement.style.cursor = 'wait';
+
     var d = doXHR(script, xhrOptions);
 
     d.addCallbacks(function (result) {
+        document.documentElement.style.cursor = '';
         var data = evalJSONRequest(result);
         var errtype = false;
         if (!data.error) { 
@@ -236,6 +239,7 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
         }
     },
     function (e) {
+        document.documentElement.style.cursor = '';
         if (e instanceof MochiKit.Async.XMLHttpRequestError) {
             log(e);
         }
