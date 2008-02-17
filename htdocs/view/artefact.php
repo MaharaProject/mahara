@@ -97,26 +97,12 @@ foreach ($artefactpath as $item) {
 	}
 }
 
-$tutorfilefeedbackformrow = '';
-$submittedgroup = $view->get('submittedto');
-if ($submittedgroup 
-    && record_exists('group_member', 
-                     'group', $submittedgroup,
-                     'member', $USER->get('id'),
-                     'tutor', 1)) {
-    // The user is a tutor of the group that this view has
-    // been submitted to, and is entitled to upload an additional
-    // file when submitting feedback.
-    $tutorfilefeedbackformrow = "TR(null, TH(null, LABEL(null, '" . get_string('attachfile', 'view') . "'))),"
-        . "TR(null, TD(null, INPUT({'type':'file', 'name':'attachment'}))),";
-}
-
-$getstring = quotestrings(array('mahara' => array(
-        'cancel', 'message',
-     ),
-     'view' => array('print', 'makepublic', 'placefeedback', 'complaint',
+$getstring = quotestrings(array(
+    'mahara' => array('message', 'cancel'),
+    'view' => array('makepublic', 'placefeedback', 'complaint',
         'feedbackonthisartefactwillbeprivate', 'notifysiteadministrator',
-        'nopublicfeedback', 'reportobjectionablematerial')
+        'nopublicfeedback', 'reportobjectionablematerial', 'print',
+        'thisfeedbackispublic', 'thisfeedbackisprivate', 'attachment')
 ));
 
 $getstring['feedbackattachmessage'] = "'(" . get_string('feedbackattachmessage', 'view', get_string('feedbackattachdirname', 'view')) . ")'";
@@ -143,28 +129,17 @@ function feedbackform() {
     }
     var form = FORM({'id':'menuform','method':'post'});
     submitfeedback = function () {
-        if (form.attachment && form.attachment.value) {
-            updateNodeAttributes(form, {'enctype':'multipart/form-data',
-                                        'encoding':'multipart/form-data',
-                                        'action':'feedbackattachment.php', 'target':''});
-            appendChildNodes(form, INPUT({'type':'hidden', 'name':'view', 'value':view}));
-            appendChildNodes(form, INPUT({'type':'hidden', 'name':'filename', 
-                                          'value':basename(form.attachment.value)}));
-            form.submit();
+        var data = {'view':view, 
+                    'public':form.ispublic.checked,
+                    'message':form.message.value};
+        if (artefact) {
+            data.artefact = artefact;
         }
-        else {
-            var data = {'view':view, 
-                        'public':form.ispublic.checked,
-                        'message':form.message.value};
-            if (artefact) {
-                data.artefact = artefact;
-            }
-            sendjsonrequest('addfeedback.json.php', data, 'POST', function () { 
-                removeElement('menuform');
-                feedbacklist.doupdate();
-            });
-            return false;
-        }
+        sendjsonrequest('addfeedback.json.php', data, 'POST', function () { 
+            removeElement('menuform');
+            feedbacklist.doupdate();
+        });
+        return false;
     }
     appendChildNodes(form, 
         TABLE({'border':0, 'cellspacing':0, 'id':'feedback'},
@@ -172,7 +147,6 @@ function feedbackform() {
         TR(null, TH(null, LABEL(null, {$getstring['message']}))),
         TR(null, TD(null, TEXTAREA({'rows':5, 'cols':80, 'name':'message'}))),
         {$makepublic}
-        {$tutorfilefeedbackformrow}
         TR(null, TD(null,
                     INPUT({'type':'button', 'class':'button', 
                                'value':{$getstring['placefeedback']},
@@ -235,7 +209,7 @@ addLoadEvent(view_menu);
 var feedbacklist = new TableRenderer(
     'feedbacktable',
     'getfeedback.json.php',
-    [
+    [/*
         function (r) {
             var td = TD(null);
             td.innerHTML = r.message;
@@ -278,9 +252,48 @@ var feedbacklist = new TableRenderer(
             }
             return TD(null);
         }
-    ]
+    */]
 );
 
+feedbacklist.rowfunction = function(r, n, d) {
+    var td = TD(null);
+    td.innerHTML = r.message;
+    if (r.attachid && r.ownedbythisuser) {
+        appendChildNodes(td, DIV(null, {$getstring['feedbackattachmessage']}));
+    }
+
+    var publicPrivate = null;
+    if (r.ispublic == 1) {
+        var makePrivate = null;
+        if (r.ownedbythisuser) {
+            makePrivate = A({'href': ''}, get_string('makeprivate'));
+            connect(makePrivate, 'onclick', function (e) {
+                sendjsonrequest(
+                    'changefeedback.json.php',
+                    r,
+                    'POST',
+                    function (data) {
+                        if (!data.error) {
+                            replaceChildNodes(makePrivate.parentNode, '(' + {$getstring['private']} + ')');
+                        }
+                    }
+                );
+
+                e.stop();
+            });
+            makePrivate = [' - ', makePrivate];
+        }
+        publicPrivate = SPAN(null, {$getstring['thisfeedbackispublic']}, makePrivate);
+    }
+    else {
+        publicPrivate = {$getstring['thisfeedbackisprivate']};
+    }
+
+    var icon = A({'href': config.wwwroot + 'user/view.php?id=' + r.author}, IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&id=' + r.author + '&maxsize=20', 'valign': 'middle'}));
+    appendChildNodes(td, DIV({'class': 'details'}, DIV({'class': 'icon'}, icon), A({'href': config.wwwroot + 'user/view.php?id=' + r.author}, r.name), ' | ', r.date, ' | ', publicPrivate));
+
+    return TR({'class': 'r' + (n % 2)}, td);
+};
 feedbacklist.limit = 10;
 feedbacklist.view = view;
 feedbacklist.artefact = artefact;
