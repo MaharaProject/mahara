@@ -23,7 +23,7 @@
               <th>{str section=artefact.file tag=Name}</th>
               <th>{str section=artefact.file tag=Description}</th>
               <th>{str section=artefact.file tag=Size}</th>
-              <th>{str section=mahara tag=date}</th>
+              <th>{str section=artefact.file tag=Date}</th>
               <th></th>
             </tr></thead>
             <tbody><tr><td></td></tr></tbody>
