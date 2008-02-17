@@ -196,9 +196,12 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
         orig_arguments = arguments;
     }
 
+    document.documentElement.style.cursor = 'wait';
+
     var d = doXHR(script, xhrOptions);
 
     d.addCallbacks(function (result) {
+        document.documentElement.style.cursor = '';
         var data = evalJSONRequest(result);
         var errtype = false;
         if (!data.error) { 
@@ -236,6 +239,7 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
         }
     },
     function (e) {
+        document.documentElement.style.cursor = '';
         if (e instanceof MochiKit.Async.XMLHttpRequestError) {
             log(e);
         }
@@ -591,7 +595,6 @@ function create_tags_control(name, value, options) {
 // this function takes an existing input element and augments it
 function augment_tags_control(elem, returnContainer) {
     elem = getElement(elem);
-    log('augment_tags_control(', elem, ')');
 
     var tagContainer = DIV();
     // setElementDimensions(tagContainer, {'w': getElementDimensions(elem).w});
@@ -603,34 +606,53 @@ function augment_tags_control(elem, returnContainer) {
         replaceChildNodes(tagContainer, get_string('loading') + ' ', IMG({'src':get_themeurl('images/loading.gif')}));
         sendjsonrequest(config.wwwroot + 'json/taglist.php', {}, 'GET', function (data) {
             replaceChildNodes(tagContainer);
-            forEach(data, function(tag) {
-                var tagLink = A({'href':''}, tag.tag);
-                connect(tagLink, 'onclick', function(e) {
-                    e.stop();
+            if (data.length == 0) {
+                appendChildNodes(tagContainer, get_string('youhavenottaggedanythingyet'));
+            }
+            else {
+                var tagData = [];
+                forEach(data, function(tag) {
+                    var tagLink = A({'href':''}, tag.tag);
+                    connect(tagLink, 'onclick', function(e) {
+                        e.stop();
 
-                    if (some(elem.value.split(/ *, */), function(t) { return t == tag.tag; })) {
-                        return;
-                    }
+                        if (some(elem.value.split(/ *, */), function(t) { return t == tag.tag; })) {
+                            // If at the start of the string, remove it and the comma/spaces after
+                            elem.value = elem.value.replace(new RegExp('^' + tag.tag + ',? *'), '');
+                            // Otherwise, remove the comma/spaces before it
+                            elem.value = elem.value.replace(new RegExp(', *' + tag.tag), '');
+                            return;
+                        }
 
-                    if (elem.value.match(/^ *$/) || elem.value.match(/, *$/)) {
-                        elem.value += tag.tag;
-                    }
-                    else {
-                        elem.value += ', ' + tag.tag;
-                    }
+                        if (elem.value.match(/^ *$/) || elem.value.match(/, *$/)) {
+                            elem.value += tag.tag;
+                        }
+                        else {
+                            elem.value += ', ' + tag.tag;
+                        }
+                    });
+                    tagData.push([tagLink, '\u00A0(', tag.count, ')']);
+                    tagData.push(', ');
+                    //appendChildNodes(tagContainer, tagLink, '\u00A0(', tag.count, ')');
                 });
-                appendChildNodes(tagContainer, tagLink, '\u00A0(', tag.count, '), ');
-            });
+                // Remove the last comma
+                tagData.pop();
+                forEach(tagData, function(i) {
+                    appendChildNodes(tagContainer, i);
+                });
+            }
         });
     });
-    
+
     if (typeof(returnContainer) == 'boolean' && returnContainer) {
         return tagContainer;
     }
 
+    var help = getFirstElementByTagAndClassName('span', 'help', elem.parentNode);
+    
     var newNode = DIV();
     swapDOM(elem, newNode);
-    appendChildNodes(newNode, tagContainer, elem);
+    appendChildNodes(newNode, tagContainer, elem, ' ', help);
 };
 
 function quotaUpdate(quotaused, quota) {

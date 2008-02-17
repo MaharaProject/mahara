@@ -2,9 +2,9 @@
 
 {include file="columnfullstart.tpl"}
 
-        <h2>{str tag='viewlayout' section='view'}</h2>
+        <h2>{str tag='changemyviewlayout' section='view'}</h2>
 
-        <p>{str tag='viewlayoutdescription' section='view'}</p>
+        <p>{str tag='viewlayoutpagedescription' section='view'}</p>
 
         {$form_start_tag}
 

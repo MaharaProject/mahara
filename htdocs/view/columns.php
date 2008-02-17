@@ -29,7 +29,7 @@ define('MENUITEM', 'viewlayout');
 require_once(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('view.php');
-define('TITLE', get_string('changeviewcolumns', 'view'));
+define('TITLE', get_string('changemyviewlayout', 'view'));
 
 $id = param_integer('id');
 $new = param_boolean('new');
@@ -50,7 +50,7 @@ $columnsform = pieform(array(
     'elements' => array(
         'numcolumns' => array(
             'type' => 'select',
-            'title' => get_string('selectnumberofcolumns', 'view'),
+            'title' => get_string('numberofcolumns', 'view'),
             'options' => array( 1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5'),
             'defaultvalue' => $numcolumns,
         ),

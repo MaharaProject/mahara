@@ -143,7 +143,7 @@ EOF;
     mode: "textareas",
     editor_selector: 'tinywysiwyg',
     theme: "advanced",
-    plugins: "fullscreen",
+    plugins: "fullscreen,inlinepopups",
     theme_advanced_buttons1 : "bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull",
     theme_advanced_buttons2 : "bullist,numlist,separator,link,unlink,separator,code,fullscreen",
     theme_advanced_buttons3 : "",
@@ -458,6 +458,7 @@ function jsstrings() {
                 'sessiontimedout',
                 'loginfailed',
                 'home',
+                'youhavenottaggedanythingyet',
             ),
         ),
         'tablerenderer' => array(
