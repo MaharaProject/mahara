@@ -458,6 +458,7 @@ function jsstrings() {
                 'sessiontimedout',
                 'loginfailed',
                 'home',
+                'youhavenottaggedanythingyet',
             ),
         ),
         'tablerenderer' => array(
