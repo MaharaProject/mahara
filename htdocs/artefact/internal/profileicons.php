@@ -143,6 +143,7 @@ function postSubmit(form, data) {
     quotaUpdate();
     if (!data.error) {
         $(form).reset();
+        $('upload_title').value = '';
     }
 }
 
