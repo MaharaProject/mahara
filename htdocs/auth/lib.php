@@ -958,7 +958,7 @@ function auth_get_login_form() {
         } else {
             $action = '?';
             foreach ($_GET as $key => $value) {
-                if ($key != 'logout') {
+                if ($key != 'logout' && $key != 'login') {
                     $action .= hsc($key) . '=' . hsc($value) . '&amp;';
                 }
             }

@@ -763,6 +763,13 @@ class AccessDeniedException extends UserException {
     }
 
     public function render_exception() {
+        global $USER;
+        if (defined('PUBLIC') && !$USER->is_logged_in()) {
+            $loginurl = $_SERVER['REQUEST_URI'];
+            $loginurl .= (false === strpos($loginurl, '?')) ? '?' : '&';
+            $loginurl .= 'login';
+            redirect($loginurl);
+        }
         header("HTTP/1.0 403 Forbidden", true);
         return parent::render_exception();
     }
