@@ -134,8 +134,8 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
     theme_advanced_buttons2 : "bullist,numlist,separator,tablecontrols,separator,cut,copy,paste,pasteword",
     theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect",
     theme_advanced_toolbar_location : "top",
-    theme_advanced_toolbar_align : "center",
-    width: '512',
+    theme_advanced_toolbar_align : "left",
+    //width: '512',
 EOF;
                     }
                     else {
@@ -148,7 +148,7 @@ EOF;
     theme_advanced_buttons2 : "bullist,numlist,separator,link,unlink,separator,code,fullscreen",
     theme_advanced_buttons3 : "",
     theme_advanced_toolbar_location : "top",
-    theme_advanced_toolbar_align : "center",
+    theme_advanced_toolbar_align : "left",
     fullscreen_new_window: true,
     fullscreen_settings: {
         theme: "advanced",
@@ -1636,7 +1636,7 @@ function main_nav() {
             array(
                 'path' => 'settings/institutions',
                 'url' => 'account/institutions.php',
-                'title' => get_string('institution'),
+                'title' => get_string('institutionmembership'),
                 'weight' => 40,
             ),
         );
