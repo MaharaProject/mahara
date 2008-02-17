@@ -35,6 +35,11 @@ $string['mandatory'] = 'Mandatory';
 $string['public'] = 'Public';
 $string['profileiconsize'] = 'Icon size';
 
+$string['aboutdescription'] = 'Enter your real first and last name here. If you want to show a different name to people in the system, put that name in as your preferred name.';
+$string['contactdescription'] = 'All of this information is private, unless you choose to put it in a view.';
+$string['messagingdescription'] = 'Like your contact information, this information is private.';
+$string['viewmyprofile'] = 'View my profile';
+
 // profile categories
 $string['aboutme'] = 'About me';
 $string['contact'] = 'Contact information';

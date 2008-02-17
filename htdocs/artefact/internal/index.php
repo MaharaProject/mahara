@@ -31,7 +31,7 @@ define('SECTION_PLUGINNAME', 'internal');
 define('SECTION_PAGE', 'index');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('profile','artefact.internal'));
+define('TITLE', get_string('editprofile','artefact.internal'));
 require_once('pieforms/pieform.php');
 safe_require('artefact', 'internal');
 
@@ -124,21 +124,21 @@ $elements = array(
         'legend' => get_string('aboutme', 'artefact.internal'),
         'collapsible' => true,
         'collapsed' => $fieldset != 'aboutme',
-        'elements' => get_desired_fields(&$items, array('firstname', 'lastname', 'studentid', 'preferredname', 'introduction')),
+        'elements' => get_desired_fields(&$items, array('firstname', 'lastname', 'studentid', 'preferredname', 'introduction'), 'about'),
     ),
     'contact' => array(
         'type' => 'fieldset',
         'legend' => get_string('contact', 'artefact.internal'),
         'collapsible' => true,
         'collapsed' => $fieldset != 'contact',
-        'elements' => get_desired_fields(&$items, array('email', 'officialwebsite', 'personalwebsite', 'blogaddress', 'address', 'town', 'city', 'country', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber')),
+        'elements' => get_desired_fields(&$items, array('email', 'officialwebsite', 'personalwebsite', 'blogaddress', 'address', 'town', 'city', 'country', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber'), 'contact'),
     ),
     'messaging' => array(
         'type' => 'fieldset',
         'legend' => get_string('messaging', 'artefact.internal'),
         'collapsible' => true,
         'collapsed' => $fieldset != 'messaging',
-        'elements' => get_desired_fields(&$items, array('icqnumber', 'msnnumber', 'aimscreenname', 'yahoochat', 'skypeusername', 'jabberusername')),
+        'elements' => get_desired_fields(&$items, array('icqnumber', 'msnnumber', 'aimscreenname', 'yahoochat', 'skypeusername', 'jabberusername'), 'messaging'),
     ),
     'general' => array(
         'type' => 'fieldset',
@@ -163,8 +163,13 @@ $profileform = pieform(array(
     'autofocus'  => false,
 ));
 
-function get_desired_fields($allfields, $desiredfields) {
-    $return = array();
+function get_desired_fields($allfields, $desiredfields, $section) {
+    $return = array(
+        "{$section}description" => array(
+            'type'  => 'html',
+            'value' => get_string("{$section}description", 'artefact.internal')
+        )
+    );
     foreach ($desiredfields as $field) {
         if (isset($allfields[$field])) {
             $return[$field] = $allfields[$field];
@@ -380,7 +385,7 @@ $smarty = smarty(array(), array(), array(
 
 
 $smarty->assign('profileform', $profileform);
-$smarty->assign('heading', get_string('profile', 'artefact.internal'));
+$smarty->assign('heading', get_string('editprofile', 'artefact.internal'));
 $smarty->display('artefact:internal:index.tpl');
 
 
