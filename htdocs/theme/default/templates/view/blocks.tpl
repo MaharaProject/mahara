@@ -24,7 +24,7 @@
                 <strong><a href="view.php?id={$view}&amp;new={$new}">{str tag=displaymyview section=view} &raquo;</a></strong>
             </div>
 
-            <strong><a id="layout-link" href="columns.php?id={$view}&amp;c={$category}&amp;new={$new}"{if !$can_change_layout} class="disabled"{/if}>{str tag='changeviewlayout' section='view'}</a></strong>
+            <strong><a id="layout-link" href="columns.php?id={$view}&amp;c={$category}&amp;new={$new}"{if !$can_change_layout} class="disabled"{/if}>{str tag='changeviewlayout' section='view'}</a></strong> {contextualhelp plugintype="core" pluginname="view" section="changeviewlayout"}
 
             <div id="bottom-pane">
                 <div id="column-container">
