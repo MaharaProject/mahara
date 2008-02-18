@@ -331,6 +331,8 @@ abstract class ArtefactType {
             }
         }
 
+        artefact_watchlist_notification($this->id);
+
         handle_event('saveartefact', $this);
 
         if (!empty($this->parentdirty)) {
@@ -372,6 +374,8 @@ abstract class ArtefactType {
                 $child->delete();
             }
         }
+
+        artefact_watchlist_notification($this->id);
 
         // Delete any references to this artefact from non-artefact places.
         delete_records_select('artefact_parent_cache', 'artefact = ? OR parent = ?', array($this->id, $this->id));
@@ -739,5 +743,14 @@ function artefact_instance_from_type($artefact_type, $user_id=null) {
 
     throw new ArtefactNotFoundException("Artefact of type '${artefact_type}' doesn't exist");
 }
-        
+
+function artefact_watchlist_notification($artefactid) {
+    // gets all the views containing this artefact or a parent of this artefact and creates a watchlist activity for each view
+    if ($views = get_column_sql('SELECT DISTINCT view FROM {view_artefact} WHERE artefact IN (' . implode(',', array_merge(array_keys(artefact_get_parents_for_cache($artefactid)), array($artefactid))) . ')')) {
+        foreach ($views as $view) {
+            activity_occurred('watchlist', (object)array('view' => $view));
+        }
+    }
+}
+
 ?>
