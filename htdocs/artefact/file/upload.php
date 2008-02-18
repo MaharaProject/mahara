@@ -95,7 +95,6 @@ $result->quota = $USER->get('quota');
 $result->quotaused = $USER->get('quotaused');
 
 $r = json_encode($result);
-log_debug($r);
 $frame = <<< EOF
 <html><head><script>
 <!--
