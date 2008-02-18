@@ -26,7 +26,7 @@
         {/if}
         {if $data.groups}
         <li>
-            <a href="{$WWWROOT}group/mygroups.php?filter=owned">{str tag="groups"}:</a>
+            <a href="{$WWWROOT}group/mygroups.php?filter=owner">{str tag="groups"}:</a>
             <ul>
             {foreach from=$data.groups item=group}
                 <li><a href="{$WWWROOT}group/view.php?id={$group->id}">{$group->name|escape}</a></li>
