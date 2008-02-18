@@ -270,7 +270,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         if ($this->id && ($filedata = get_record('artefact_file_files', 'artefact', $this->id))) {
             foreach($filedata as $name => $value) {
                 if (property_exists($this, $name)) {
-                    $this->set($name, $value);
+                    $this->{$name} = $value;
                 }
             }
         }
@@ -908,7 +908,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         if ($this->id && ($filedata = get_record('artefact_file_image', 'artefact', $this->id))) {
             foreach($filedata as $name => $value) {
                 if (property_exists($this, $name)) {
-                    $this->set($name, $value);
+                    $this->{$name} = $value;
                 }
             }
         }
