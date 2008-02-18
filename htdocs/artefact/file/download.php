@@ -40,25 +40,9 @@ if ($forcedl) {
     $options['forcedownload'] = true;
 }
 else {
-    $downloadurl = get_config('wwwroot') . 'artefact/file/download.php?file=' . $fileid;
-    if (!empty($viewid)) {
-        $downloadurl .= '&amp;view=' . $viewid;
-    }
-    if (!empty($size)) {
-        if (is_string($size)) {
-            $downloadurl .= '&amp;size=' . $size;
-            $size = array('size' => $size);
-        } else if (is_array($size)) {
-            $sizeparam = array('w' => 'width', 'h' => 'height', 'maxw' => 'maxwidth', 'maxh' => 'maxheight');
-            foreach ($sizeparam as $k => $v) {
-                if (isset($size[$k])) {
-                    $downloadurl .= '&' . $v . '=' . $size[$k];
-                }
-            }
-        }
-    }
-    $downloadurl .= '&amp;download=1';
-    $options['downloadurl'] = $downloadurl;
+    $options['downloadurl'] = get_config('wwwroot')
+        . substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], 'artefact/file/download.php'))
+        . '&download=1';
 }
 
 if ($viewid && $fileid) {
