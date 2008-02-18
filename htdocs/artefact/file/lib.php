@@ -975,7 +975,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
             $url .= '&size=' . $options['size'];
         }
         else {
-            $url .= '&size=20x20';
+            $url .= '&maxheight=20&maxwidth=20';
         }
 
         return $url;
@@ -983,8 +983,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
 
     public function get_path($data=array()) {
         require_once('file.php');
-        $size = (isset($data['size'])) ? $data['size'] : null;
-        $result = get_dataroot_image_path('artefact/file/', $this->id, $size);
+        $result = get_dataroot_image_path('artefact/file/', $this->id, $data);
         return $result;
     }
 
@@ -999,7 +998,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     public function render_self($options) {
         $result = parent::render_self($options);
         $result['html'] = '<div class="fr filedata-icon" style="text-align: center;"><h4>' . get_string('Preview', 'artefact.file') . '</h4><img src="'
-            . hsc(get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id . '&view=' . $options['viewid'] . '&maxwidth=400')
+            . hsc(get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id . '&view=' . $options['viewid'] . '&maxwidth=400&maxheight=180')
             . '" alt=""></div>' . $result['html'];
         return $result;
     }

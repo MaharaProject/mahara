@@ -985,6 +985,7 @@ function get_imagesize_parameters($sizeparam='size', $widthparam='width', $heigh
         }
         return array('h' => $height);
     }
+    $max = array();
     if ($maxwidth) {
         if ($maxwidth > $imagemaxwidth) {
             throw new ParameterException('Requested image size is too big');
@@ -992,7 +993,7 @@ function get_imagesize_parameters($sizeparam='size', $widthparam='width', $heigh
         if ($maxwidth < 16) {
             throw new ParameterException('Requested image size is too small');
         }
-        return array('maxw' => $maxwidth);
+        $max['maxw'] = $maxwidth;
     }
     if ($maxheight) {
         if ($maxheight > $imagemaxheight) {
@@ -1001,7 +1002,10 @@ function get_imagesize_parameters($sizeparam='size', $widthparam='width', $heigh
         if ($maxheight < 16) {
             throw new ParameterException('Requested image size is too small');
         }
-        return array('maxh' => $maxheight);
+        $max['maxh'] = $maxheight;
+    }
+    if (!empty($max)) {
+        return $max;
     }
     return null;
 }

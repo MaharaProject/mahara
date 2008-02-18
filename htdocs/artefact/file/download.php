@@ -45,7 +45,17 @@ else {
         $downloadurl .= '&amp;view=' . $viewid;
     }
     if (!empty($size)) {
-        $downloadurl .= '&amp;size=' . $size;
+        if (is_string($size)) {
+            $downloadurl .= '&amp;size=' . $size;
+            $size = array('size' => $size);
+        } else if (is_array($size)) {
+            $sizeparam = array('w' => 'width', 'h' => 'height', 'maxw' => 'maxwidth', 'maxh' => 'maxheight');
+            foreach ($sizeparam as $k => $v) {
+                if (isset($size[$k])) {
+                    $downloadurl .= '&' . $v . '=' . $size[$k];
+                }
+            }
+        }
     }
     $downloadurl .= '&amp;download=1';
     $options['downloadurl'] = $downloadurl;
@@ -96,7 +106,7 @@ else {
     }
 }
 
-$path  = $file->get_path(array('size' => $size));
+$path  = $file->get_path($size);
 $title = $file->download_title();
 if ($contenttype = $file->override_content_type()) {
     $options['overridecontenttype'] = $contenttype;

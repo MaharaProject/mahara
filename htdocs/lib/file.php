@@ -512,6 +512,11 @@ function image_get_new_dimensions($oldx, $oldy, $size) {
         $newy = $size['h'];
         $newx = ($oldx * $newy) / $oldy;
     }
+    else if (isset($size['maxw']) && isset($size['maxh'])) {
+        $scale = min(min($size['maxw'], $oldx) / $oldx, min($size['maxh'], $oldy) / $oldy);
+        $newx = $oldx * $scale;
+        $newy = $oldy * $scale;
+    }
     else if (isset($size['maxw'])) {
         // Else if just maximum width
         if ($oldx > $size['maxw']) {
