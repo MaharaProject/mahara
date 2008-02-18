@@ -1,6 +1,9 @@
 {include file="header.tpl"}
 
 {include file="columnfullstart.tpl"}
+
+<h2>{$heading}</h2>
+
 {if $can_edit}
 <div class="fr editview">
     <span class="settingsicon">

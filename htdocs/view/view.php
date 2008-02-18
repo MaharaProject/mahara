@@ -42,7 +42,13 @@ if (!can_view_view($viewid)) {
 }
 
 define('TITLE', $view->get('title') . ' ' . get_string('by', 'view') . ' ' . $view->formatted_owner());
-$heading = '<a href="' . get_config('wwwroot') . 'view/view.php?id=' . $view->get('id') .'">' . hsc($view->get('title')) . '</a> ' . get_string('by', 'view') . ' <a href="' . get_config('wwwroot') .'user/view.php?id=' . $view->get('owner'). '">' . $view->formatted_owner() . '</a>';
+if ($new) {
+    $heading = hsc($view->get('title'));
+}
+else {
+    $heading = '<a href="' . get_config('wwwroot') . 'view/view.php?id=' . $view->get('id') .'">' . hsc($view->get('title')) . '</a>';
+}
+$heading .= ' ' . get_string('by', 'view') . ' <a href="' . get_config('wwwroot') .'user/view.php?id=' . $view->get('owner'). '">' . $view->formatted_owner() . '</a>';
 
 
 $tutorfilefeedbackformrow = '';
@@ -181,6 +187,10 @@ function view_menu() {
             e.stop();
         });
         appendChildNodes('viewmenu', ' | ', link);
+
+        var helpIcon = contextualHelpIcon(null, null, 'core', 'view', null, 'viewmenu');
+        appendChildNodes('viewmenu', ' ', helpIcon);
+
      }
 
 }
@@ -258,7 +268,6 @@ $smarty = smarty(
     )
 );
 $smarty->assign('heading', $heading);
-$smarty->assign('noheadingescape', true);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('viewid', $viewid);
 $smarty->assign('viewtitle', $view->get('title'));
