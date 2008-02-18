@@ -95,7 +95,6 @@ $editview = pieform(array(
             'title'        => get_string('title','view'),
             'defaultvalue' => isset($view) ? $view->get('title') : null,
             'rules'        => array( 'required' => true ),
-            'help'         => true,
         ),
         'description' => array(
             'type'         => 'wysiwyg',
@@ -103,14 +102,13 @@ $editview = pieform(array(
             'rows'         => 10,
             'cols'         => 70,
             'defaultvalue' => isset($view) ? $view->get('description') : null,
-            'help'         => true,
         ),
         'tags'        => array(
             'type'         => 'tags',
             'title'        => get_string('tags'),
             'description'  => get_string('tagsdescprofile'),
             'defaultvalue' => isset($view) ? $view->get('tags') : null,
-            'help'        => true,
+            'help'         => true,
         ),
         'ownerformat' => array(
             'type'         => 'select',
@@ -119,7 +117,6 @@ $editview = pieform(array(
             'options'      => $ownerformatoptions,
             'defaultvalue' => isset($view) ? $view->get('ownerformat') : FORMAT_NAME_DISPLAYNAME,
             'rules'        => array('required' => true),
-            'help'         => true,
         ),
         'submit'   => array(
             'type'  => 'submitcancel',
