@@ -120,9 +120,10 @@ $string['profileiconuploadexceedsquota'] = 'Uploading this profile icon would ex
 $string['profileiconimagetoobig'] = 'The image you uploaded was too big (%sx%s pixels). It must not be larger than %sx%s pixels';
 $string['uploadingfile'] = 'uploading file...';
 $string['uploadprofileicon'] = 'Upload Profile Icon';
-$string['profileiconsiconsizenotice'] = 'You may upload up to <strong>five</strong> profile icons here, and choose one to be displayed as your default icon at any one time. Your icons must be between 16x16 and %sx%s pixels';
+$string['profileiconsiconsizenotice'] = 'You may upload up to <strong>five</strong> profile icons here, and choose one to be displayed as your default icon at any one time. Your icons must be between 16x16 and %sx%s pixels in size.';
 $string['setdefault'] = 'Set Default';
 $string['Title'] = 'Title';
+$string['imagetitle'] = 'Image Title';
 $string['usenodefault'] = 'Use no default';
 $string['usingnodefaultprofileicon'] = 'Now using no default profile icon';
 

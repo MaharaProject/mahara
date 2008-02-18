@@ -6,7 +6,7 @@
             <table id="profileicons" class="hidden tablerenderer">
                 <thead>
                     <th>{str tag="image"}</th>
-                    <th>{str tag="Title" section=artefact.internal}</th>
+                    <th>{str tag="imagetitle" section=artefact.internal}</th>
                     <th>{str tag="Default" section=artefact.internal}</th>
                     <th>{str tag="delete"}</th>
                 </thead>

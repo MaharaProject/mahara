@@ -83,8 +83,7 @@ $uploadform = pieform(array(
         ),
         'title' => array(
             'type' => 'text',
-            'title' => get_string('Title', 'artefact.internal'),
-            'help'  => true,
+            'title' => get_string('imagetitle', 'artefact.internal'),
         ),
         'submit' => array(
             'type' => 'submit',
