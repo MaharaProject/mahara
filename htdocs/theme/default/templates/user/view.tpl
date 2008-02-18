@@ -11,7 +11,7 @@
             </h2>
             <div>
                 <div class="fr">
-                    <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=100&amp;id={$USERID}" alt="">
+                    <div class="center" style="width: 50px; height: 50px;"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=100&amp;maxheight=100&amp;id={$USERID}" alt=""></div>
                     {if $canmessage}
                         <br>
                         <a href="{$WWWROOT}user/sendmessage.php?id={$USERID}&amp;returnto=view">{str tag='sendmessage' section='group'}</a>
@@ -92,7 +92,7 @@
                     {foreach from=$row item=friend}
                         <td class="friendcell">
                             <a href="{$WWWROOT}user/view.php?id={$friend}">
-                               <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=60&amp;id={$friend}" alt="">
+                               <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=60&amp;maxheight=60&amp;id={$friend}" alt="">
                                <br>{$friend|display_name|escape}
                             </a>
                         </td>

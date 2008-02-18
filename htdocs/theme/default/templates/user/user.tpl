@@ -1,7 +1,9 @@
 {if $user->pending}
 <td class="pending">
     <div class="fl">
-        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;size=40x40&amp;id={$user->id}" alt="">
+      <div class="center" style="width: 40px; height: 40px;">
+        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=40&amp;maxheight=40&amp;id={$user->id}" alt="">
+      </div>
     </div>
     <table class="friendinfo">
         <tr>
@@ -51,7 +53,9 @@
 {elseif $user->friend}
 <td>
     <div class="fl">
-        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;size=40x40&amp;id={$user->id}" alt="">
+      <div class="center" style="width: 40px; height: 40px;">
+        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=40&amp;maxheight=40&amp;id={$user->id}" alt="">
+      </div>
     </div>
     <table class="friendinfo">
         <tr>
@@ -117,7 +121,9 @@
 {elseif $user->requestedfriendship}
 <td>
     <div class="fl">
-        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;size=40x40&amp;id={$user->id}" alt="">
+      <div class="center" style="width: 40px; height: 40px;">
+        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=40&amp;maxheight=40&amp;id={$user->id}" alt="">
+      </div>
     </div>
     <table class="friendinfo">
         <tr>
@@ -155,7 +161,9 @@
 {else}
 <td>
     <div class="fl">
-        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;size=40x40&amp;id={$user->id}" alt="">
+      <div class="center" style="width: 40px; height: 40px;">
+        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=40&amp;maxheight=40&amp;id={$user->id}" alt="">
+      </div>
     </div>
     <table class="friendinfo">
         <tr>

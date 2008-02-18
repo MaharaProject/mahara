@@ -206,7 +206,7 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
 
     var profileIcon, tutorAddButton = null;
     if (rowdata.type == 'user') {
-        profileIcon = IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&size=40x40&id=' + rowdata.id});
+        profileIcon = IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&maxwidth=40&maxheight=40&id=' + rowdata.id});
     }
     else if (rowdata.type == 'group') {
         tutorAddButton = BUTTON({'type': 'button', 'class': 'button'}, '{{str tag=addtutors section=view}}');
