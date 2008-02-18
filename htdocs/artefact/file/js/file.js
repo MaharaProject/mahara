@@ -128,7 +128,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
             self.element,
             self.source,
             [
-                function (r) { return TD(null, self.icon(r.artefacttype)); },
+                function (r) { return TD(null, self.icon(r.id, r.artefacttype)); },
                 self.formatname,
                 'description',
                 function (r) { return TD(null, (r.artefacttype != 'folder') ? self.showsize(r.size) : null); },
@@ -356,8 +356,10 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
         return Math.floor((bytes / 1048576) * 10 + 0.5) / 10 + 'M';
     }
 
-    this.icon = function (type) {
-        // TODO: for images, you can get a thumbnail by hitting artefact/file/download.php?file=[id]&size=[width]x[height]
+    this.icon = function (id, type) {
+        if (type == 'image') {
+            return IMG({'src':config.wwwroot+'artefact/file/download.php?file='+id+'&size=20x20'});
+        }
         return IMG({'src':get_themeurl('images/'+type+'.gif')});
     }
 
