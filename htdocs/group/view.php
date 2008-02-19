@@ -185,8 +185,9 @@ EOF;
 EOF;
     }
     $javascript .= <<<EOF
-
-         return TD(null, SELECT({'name': 'member-' + r.id, 'class': 'member'}, options));
+         if (r.id != $group->owner) {
+             return TD(null, SELECT({'name': 'member-' + r.id, 'class': 'member'}, options));
+         }
      }
 EOF;
 }
