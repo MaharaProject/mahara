@@ -203,7 +203,7 @@ if ($institution || $add) {
             'instancestring' => $instancestring,
             'institution' => $institution,
             'help'   => true,
-            'ignore' => count($authtypes) == 0
+            'ignore' => count($authtypes) == 0 || $institution == ''
         ),
         'registerallowed' => array(
             'type'         => 'checkbox',
@@ -237,7 +237,11 @@ if ($institution || $add) {
                 'title'        => get_string('maxuseraccounts','admin'),
                 'description'  => get_string('maxuseraccountsdescription','admin'),
                 'defaultvalue' => empty($data->maxuseraccounts) ? '' : $data->maxuseraccounts,
-                'rules'        => array('regex' => '/^\d*$/'),
+                'rules'        => array(
+                    'regex'     => '/^\d*$/',
+                    'maxlength' => 8,
+                ),
+                'size'         => 5,
             );
         }
     }
