@@ -634,6 +634,14 @@ function delete_user($userid) {
     $deleterec->id = $userid;
     $deleterec->deleted = 1;
     $deleterec->email = get_field('usr', 'email', 'id', $userid) . $emailsuffix;
+
+    // Set authinstance to default internal, otherwise the old authinstance can be blocked from deletion
+    // by deleted users.
+    $authinst = get_field('auth_instance', 'id', 'institution', 'mahara', 'instancename', 'internal');
+    if ($authinst) {
+        $deleterec->authinstance = $authinst;
+    }
+
     update_record('usr', $deleterec);
 
     // Because the user is being deleted, but their email address may be wanted 
