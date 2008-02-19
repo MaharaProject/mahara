@@ -84,6 +84,7 @@ $requested = get_record('group_member_request', 'group', $id, 'member', $USER->g
 $userview = get_config('wwwroot') . 'user/view.php?id=';
 $viewview = get_config('wwwroot') . 'view/view.php?id=';
 $commview = get_config('wwwroot') . 'group/view.php';
+$profilepic = get_config('wwwroot') . 'thumb.php?type=profileicon&maxsize=25&id=';
 
 // strings that are used in the js
 $releaseviewstr  = get_string('releaseview', 'group');
@@ -147,7 +148,7 @@ memberlist = new TableRenderer(
     'view.json.php',
     [
      function (r) {
-         return TD(null, A({'href': '{$userview}' + r.id}, r.displayname));
+         return TD(null, A({'href': '{$userview}' + r.id}, IMG({'alt': '', 'src': '{$profilepic}' + r.id}), r.displayname));
      },
 EOF;
 if ($canupdate) {
