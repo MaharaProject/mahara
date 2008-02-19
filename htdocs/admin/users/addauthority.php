@@ -116,13 +116,17 @@ function auth_config_validate(Pieform $form, $values) {
 }
 
 function auth_config_submit(Pieform $form, $values) {
+    global $SESSION;
     $plugin = $values['authname'];
     $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
     safe_require('auth', strtolower($plugin));
     try {
         $values = call_static_method($classname, 'save_config_options', $values, $form);
     } catch (Exception $e) {
-        $form->set_error('instancename', "An unknown error occurred while processing this form");
+        log_info($e->getMessage());
+        log_info($e->getTrace());
+        $SESSION->add_error_msg("An error occurred while processing this form: " . $e->getMessage());
+        redirect($_SERVER['REQUEST_URI']);
     }
 
     if (false == $form->has_errors()) {
@@ -133,6 +137,7 @@ function auth_config_submit(Pieform $form, $values) {
         }
         exit;
     }
+    redirect($_SERVER['REQUEST_URI']);
 }
 
 // TODO: move to lib if people want this:
