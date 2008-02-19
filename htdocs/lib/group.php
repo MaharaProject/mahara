@@ -282,15 +282,15 @@ function user_can_access_group($group, $user=null) {
     }
 
     $membertypes = 0;
-
+    // admins/staff/owners can do whatever tutors can do
     if ($user->get('admin')) {
-        $membertypes = GROUP_MEMBERSHIP_ADMIN;
+        $membertypes = GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_TUTOR;
     }
     if ($user->get('staff') || $user->is_institutional_admin() || $user->is_institutional_staff()) {
-        $membertypes = $membertypes | GROUP_MEMBERSHIP_STAFF;
+        $membertypes = $membertypes | GROUP_MEMBERSHIP_STAFF | GROUP_MEMBERSHIP_TUTOR;
     }
     if ($group->owner == $user->get('id')) {
-        $membertypes = $membertypes | GROUP_MEMBERSHIP_OWNER;
+        $membertypes = $membertypes | GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_TUTOR;
     }
 
     if (!$membership = get_record('group_member', 'group', $group->id, 'member', $user->get('id'))) {
