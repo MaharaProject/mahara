@@ -136,8 +136,9 @@ $string['deleteviewconfirm'] = 'Do you really want to delete this view? It canno
 $string['editaccesspagedescription'] = '<p>You can control who can see your view, and when they can do so. By default, only you can see your views.</p>
     <p>You can grant access to your view to your friends, all logged in users, or only to the certain users and groups you choose.</p>
     <p>All dates are optional. If you wish, you can use them to restrict the time in which people can see your view.</p>';
-$string['startdatedescription'] = 'If set, no one can access your view before this time, even if you have given them access to your view in some other way.';
-$string['stopdatedescription'] = 'If set, no one can access your view after this time, even if you have given them access to your view in some other way.';
+
+$string['overridingstartstopdate'] = 'Overriding Start/Stop Dates';
+$string['overridingstartstopdatesdescription'] = 'If you want, you can set an overriding start and/or stop date. Other people will not be able to see your view before the start date and after the end date, regardless of any other access you have granted.';
 
 $string['emptylabel'] = 'Click here to enter text for this label';
 $string['empty_block'] = 'Select an artefact from the tree on the left to place here';

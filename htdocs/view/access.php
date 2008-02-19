@@ -81,27 +81,35 @@ $form = array(
             'type'         => 'viewacl',
             'defaultvalue' => isset($view) ? $view->get_access() : null
         ),
-        'startdate'        => array(
-            'type'         => 'calendar',
-            'title'        => get_string('startdate','view'),
-            'description'  => get_string('startdatedescription', 'view'),
-            'defaultvalue' => isset($view) ? strtotime($view->get('startdate')) : null,
-            'caloptions'   => array(
-                'showsTime'      => true,
-                'ifFormat'       => '%Y/%m/%d %H:%M'
+        'overrides' => array(
+            'type' => 'fieldset',
+            'legend' => get_string('overridingstartstopdate', 'view'),
+            'elements' => array(
+                'description' => array(
+                    'type' => 'html',
+                    'value' => get_string('overridingstartstopdatesdescription', 'view'),
+                ),
+                'startdate'        => array(
+                    'type'         => 'calendar',
+                    'title'        => get_string('startdate','view'),
+                    'defaultvalue' => isset($view) ? strtotime($view->get('startdate')) : null,
+                    'caloptions'   => array(
+                        'showsTime'      => true,
+                        'ifFormat'       => '%Y/%m/%d %H:%M'
+                    ),
+                    'help'         => true,
+                ),
+                'stopdate'  => array(
+                    'type'         => 'calendar',
+                    'title'        => get_string('stopdate','view'),
+                    'defaultvalue' => isset($view) ? strtotime($view->get('stopdate')) : null,
+                    'caloptions'   => array(
+                        'showsTime'      => true,
+                        'ifFormat'       => '%Y/%m/%d %H:%M'
+                    ),
+                    'help'         => true,
+                ),
             ),
-            'help'         => true,
-        ),
-        'stopdate'  => array(
-            'type'         => 'calendar',
-            'title'        => get_string('stopdate','view'),
-            'description'  => get_string('stopdatedescription', 'view'),
-            'defaultvalue' => isset($view) ? strtotime($view->get('stopdate')) : null,
-            'caloptions'   => array(
-                'showsTime'      => true,
-                'ifFormat'       => '%Y/%m/%d %H:%M'
-            ),
-            'help'         => true,
         ),
         'submit'   => array(
             'type'  => !empty($new) ? 'cancelbackcreate' : 'submitcancel',

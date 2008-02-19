@@ -12,7 +12,7 @@
             <thead>
                 <tr>
                     <th></th>
-                    <th>{{str tag=name}}</th>
+                    <th class="fullwidth">{{str tag=name}}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -204,22 +204,26 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
     });
     appendChildNodes(buttonTD, addButton);
 
-    var profileIcon, tutorAddButton = null;
+    var identityNodes = [], profileIcon = null, tutorAddButton = null;
     if (rowdata.type == 'user') {
         profileIcon = IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&maxwidth=40&maxheight=40&id=' + rowdata.id});
+        identityNodes.push(A({'href': config.wwwroot + 'user/view.php?id=' + rowdata.id}, rowdata.name));
     }
     else if (rowdata.type == 'group') {
-        tutorAddButton = BUTTON({'type': 'button', 'class': 'button'}, '{{str tag=addtutors section=view}}');
-        connect(tutorAddButton, 'onclick', function() {
-            rowdata.tutoronly = 1;
-            appendChildNodes('accesslist', renderAccessListItem(rowdata));
-        });
-        appendChildNodes(buttonTD, tutorAddButton);
+        if (rowdata.jointype == 'controlled') {
+            tutorAddButton = BUTTON({'type': 'button', 'class': 'button'}, '{{str tag=addtutors section=view}}');
+            connect(tutorAddButton, 'onclick', function() {
+                rowdata.tutoronly = 1;
+                appendChildNodes('accesslist', renderAccessListItem(rowdata));
+            });
+            appendChildNodes(buttonTD, tutorAddButton);
+        }
+        identityNodes.push(A({'href': config.wwwroot + 'group/view.php?id=' + rowdata.id}, rowdata.name));
     }
 
     return TR({'class': 'r' + (rownumber % 2)},
         buttonTD,
-        TD({'class': 'fullwidth'}, rowdata.name),
+        TD({'class': 'fullwidth', 'style': 'vertical-align: middle;'}, identityNodes),
         TD({'class': 'center', 'style': 'width:40px'}, profileIcon)
     );
 }
