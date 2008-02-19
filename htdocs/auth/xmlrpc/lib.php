@@ -582,6 +582,25 @@ class PluginAuthXmlrpc extends PluginAuth {
             'value' => 'xmlrpc'
         );
 
+        if ($instance) {
+            $elements['publickey'] = array(
+                'type' => 'textarea',
+                'title' => get_string('publickey', 'admin'),
+                'defaultvalue' => get_field('host', 'publickey', 'wwwroot', self::$default_config['wwwroot']),
+                'rules' => array(
+                    'required' => true,
+                ),
+                'rows' => 15,
+                'cols' => 70,
+            );
+
+            $elements['publickeyexpires']= array(
+                'type' => 'html',
+                'title' => get_string('publickeyexpires', 'admin'),
+                'value' => format_date(get_field('host', 'publickeyexpires', 'wwwroot', self::$default_config['wwwroot'])),
+            );
+        }
+
         $elements['name'] = array(
             'type' => 'text',
             'title' => get_string('name', 'auth'),
@@ -676,6 +695,15 @@ class PluginAuthXmlrpc extends PluginAuth {
             }
         }
 
+        if (isset($values['publickey'])) {
+            try {
+                new PublicKey($values['publickey'], $peer->wwwroot);
+            }
+            catch (CryptException $e) {
+                $form->set_error('publickey', $e->getMessage());
+            }
+        }
+
         //TODO: test values and set appropriate errors on form
     }
 
@@ -720,11 +748,13 @@ class PluginAuthXmlrpc extends PluginAuth {
         $peer->portno               = $values['portno'];
         $peer->appname              = $values['appname'];
         $peer->institution          = $values['institution'];
+        if (isset($values['publickey'])) {
+            $peer->publickey            = new PublicKey($values['publickey'], $peer->wwwroot);
+            $peer->publickeyexpires     = $peer->publickey->expires;
+        }
 
         /**
          * The following properties are not user-updatable
-        $peer->publickey            = $values['publickey'];
-        $peer->publickeyexpires     = $values['publickeyexpires'];
         $peer->lastconnecttime      = $values['lastconnecttime'];
          */
 
