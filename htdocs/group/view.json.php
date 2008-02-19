@@ -81,6 +81,9 @@ switch ($type) {
                 $where .= ' OR v.submittedto = ?';
                 $values[] = $id;
             }
+            else if ($membership) {
+                $where .= ' AND tutoronly = 0';
+            }
         }
 
         $count = count_records_sql('
@@ -95,7 +98,7 @@ switch ($type) {
             SELECT DISTINCT v.*, u.username, u.firstname, u.lastname, u.preferredname, u.id AS usr 
             FROM {view} v
             LEFT OUTER JOIN {view_access_group} a ON a.view=v.id
-            INNER JOIN {usr} u ON v.owner = u.id ' . $where, 
+            INNER JOIN {usr} u ON v.owner = u.id ' . $where . ' ORDER BY v.title, v.id',
             $values,
             $offset,
             $limit
@@ -113,7 +116,8 @@ switch ($type) {
         $select = 'SELECT u.*,g.tutor ';
         $sql = '    FROM {usr} u JOIN {group_member} g
                         ON g.member = u.id 
-                    WHERE g.group = ?';
+                    WHERE g.group = ?
+                    ORDER BY firstname, lastname, u.id';
         if (empty($pending)) { // default behaviour - actual members
             $count = count_records('group_member', 'group', $id);
             $data = get_records_sql_array($select . $sql, array($id), $offset, $limit);
@@ -129,10 +133,13 @@ switch ($type) {
         }
         if (empty($data)) {
             $data = array();
-        }        
+        }
         foreach ($data as $d) {
             $d->displayname = display_name($d);
-            if (!empty($d->tutor) && $membership == GROUP_MEMBERSHIP_MEMBER) {
+            if ($d->id == $group->owner && $membership == GROUP_MEMBERSHIP_MEMBER) {
+                $d->displayname .= ' (' . get_string('owner', 'group') . ')';
+            }
+            else if (!empty($d->tutor) && $membership == GROUP_MEMBERSHIP_MEMBER) {
                 $d->displayname .= ' (' . get_string('tutor', 'group') . ')';
             }
         }
@@ -148,8 +155,13 @@ switch ($type) {
                  try {
                      switch ($v) {
                          case 'remove':
-                             group_remove_user($id, $user);
-                             $changed = true;
+                             if ($id == $group->id) {
+                                 json_reply(true, get_string('memberchangefailed', 'group'));
+                             }
+                             else {
+                                 group_remove_user($id, $user);
+                                 $changed = true;
+                             }
                              break;
                          case 'member':
                          case 'tutor':
