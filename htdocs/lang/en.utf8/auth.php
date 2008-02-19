@@ -56,7 +56,9 @@ $string['theyssoin'] = 'They SSO in';
 $string['application'] = 'Application';
 $string['cantretrievekey'] = 'An error occurred while retrieving the public key from the remote server.<br>Please ensure that the Application and WWW Root fields are correct, and that networking is enabled on the remote host.';
 
+$string['errorcertificateinvalidwwwroot'] = 'This certificate claims to be for %s, but you are trying to use it for %s.';
 $string['errnoauthinstances']   = 'We don\'t seem to have any authentication plugin instances configured for the host at ';
+$string['errornotvalidsslcertificate'] = 'This is not a valid SSL Certificate';
 $string['errnoxmlrcpinstances'] = 'We don\'t seem to have any XMLRPC authentication plugin instances configured for the host at ';
 $string['errnoxmlrcpwwwroot']   = 'We don\'t have a record for any host at ';
 $string['errnoxmlrpcuser']      = "We were unable to authenticate you at this time. Possible reasons might be:
