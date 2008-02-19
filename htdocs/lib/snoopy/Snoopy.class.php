@@ -41,8 +41,8 @@ class Snoopy
 	
 	/* user definable vars */
 
-	var $host			=	"www.php.net";		// host name we are connecting to
-	var $port			=	80;					// port we are connecting to
+	var $host		=	"www.php.net";				// host name we are connecting to
+	var $port		=	null;					// port we are connecting to
 	var $proxy_host		=	"";					// proxy host to use
 	var $proxy_port		=	"";					// proxy port to use
 	var $proxy_user		=	"";					// proxy user to use
@@ -1135,7 +1135,7 @@ class Snoopy
 		else
 		{
 			$host = $this->host;
-			$port = $this->port;
+			$port = isset($this->port) ? $this->port : 80;
 		}
 	
 		$this->status = 0;
