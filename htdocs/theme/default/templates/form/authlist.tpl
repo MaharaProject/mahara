@@ -192,8 +192,7 @@ section name=mysec loop=$instancelist
     </div>{{
     /section
 }}</div>
-<br>
-<select name="dummy" id="dummySelect" {{if $institution eq ''}}disabled{{/if}}>
+<select name="dummy" id="dummySelect">
 {{section name=mysec2 loop=$authtypes}}
     <option value="{{$authtypes[mysec2]->name|escape}}"{{if !$authtypes[mysec2]->is_usable}} disabled="disabled"{{/if}}>{{$authtypes[mysec2]->title|escape}} - {{$authtypes[mysec2]->description|escape}}</option>
 {{/section}}
