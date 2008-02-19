@@ -900,10 +900,10 @@ class PublicKey {
         $this->certificate = $keystring;
 
         if ($this->credentials == false) {
-            throw new CryptException('This is not a valid SSL Certificate: '.$keystring, 1);
+            throw new CryptException(get_string('errornotvalidsslcertificate', 'auth'), 1);
             return false;
         } elseif ($this->credentials['subject']['CN'] != $this->wwwroot) {
-            throw new CryptException('This certificate does not match the server it claims to represent: '.$this->credentials['subject']['CN'] .', '. $this->wwwroot, 1);
+            throw new CryptException(get_string('errorcertificateinvalidwwwroot', 'auth', $this->credentials['subject']['CN'], $this->wwwroot), 1);
             return false;
         } else {
             return $this->credentials;
