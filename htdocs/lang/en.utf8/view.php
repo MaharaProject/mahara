@@ -136,8 +136,8 @@ $string['deleteviewconfirm'] = 'Do you really want to delete this view? It canno
 $string['editaccesspagedescription'] = '<p>You can control who can see your view, and when they can do so. By default, only you can see your views.</p>
     <p>You can grant access to your view to your friends, all logged in users, or only to the certain users and groups you choose.</p>
     <p>All dates are optional. If you wish, you can use them to restrict the time in which people can see your view.</p>';
-$string['startdatedescription'] = 'If set, no one can access your view before this time, even if you give them access.';
-$string['stopdatedescription'] = 'If set, no one can access your view after this time, even if you give them access.';
+$string['startdatedescription'] = 'If set, no one can access your view before this time, even if you have given them access to your view in some other way.';
+$string['stopdatedescription'] = 'If set, no one can access your view after this time, even if you have given them access to your view in some other way.';
 
 $string['emptylabel'] = 'Click here to enter text for this label';
 $string['empty_block'] = 'Select an artefact from the tree on the left to place here';
@@ -147,13 +147,6 @@ $string['viewinformationsaved'] = 'View information saved successfully';
 $string['canteditdontown'] = 'You can\'t edit this view because you don\'t own it';
 $string['canteditdontownfeedback'] = 'You can\'t edit this feedback because you don\'t own it';
 $string['feedbackchangedtoprivate'] = 'Feedback changed to private';
-
-$string['chooseformat'] = 'Select how you would like to display this artefact in this block ...';
-
-$string['format.listself']       = 'List item (you can put multiple artefacts in this block like this)';
-$string['format.listchildren']   = 'List children of this Artefact';
-$string['format.renderfull']     = 'Display entire artefact';
-$string['format.rendermetadata'] = 'Display metadata for this Artefact';
 
 $string['addtutors'] = 'Add Tutors';
 $string['viewcreatedsuccessfully'] = 'View created successfully';
