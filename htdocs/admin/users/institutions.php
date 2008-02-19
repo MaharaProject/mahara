@@ -286,7 +286,7 @@ else {
     // Get a list of institutions
     if (!$USER->get('admin')) { // Filter the list for institutional admins
         $where = '
-        WHERE i.name IN (' . join(',', array_map('db_quote', $USER->get('admininstitutions'))) . ')';
+        AND i.name IN (' . join(',', array_map('db_quote', $USER->get('admininstitutions'))) . ')';
     }
     else {
         $where = '';
@@ -302,7 +302,8 @@ else {
             COUNT(ui.usr) AS members, SUM(ui.staff) AS staff, SUM(ui.admin) AS admins
         FROM {institution} i
         LEFT OUTER JOIN {usr_institution} ui ON (ui.institution = i.name)
-        LEFT OUTER JOIN {usr} u ON (u.id = ui.usr AND u.deleted = 0) ' . $where . '
+        LEFT OUTER JOIN {usr} u ON (u.id = ui.usr) 
+        WHERE (u.deleted = 0 OR u.id IS NULL) ' . $where . '
         GROUP BY
             i.name, i.displayname, i.maxuseraccounts
         ORDER BY i.name = \'mahara\', i.displayname', array());
