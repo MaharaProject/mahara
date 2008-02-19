@@ -133,9 +133,7 @@ $string['cantdeleteview'] = 'You cannot delete this view';
 $string['deletespecifiedview'] = 'Delete View "%s"';
 $string['deleteviewconfirm'] = 'Do you really want to delete this view? It cannot be undone.';
 
-$string['editaccesspagedescription'] = '<p>You can control who can see your view, and when they can do so. By default, only you can see your views.</p>
-    <p>You can grant access to your view to your friends, all logged in users, or only to the certain users and groups you choose.</p>
-    <p>All dates are optional. If you wish, you can use them to restrict the time in which people can see your view.</p>';
+$string['editaccesspagedescription'] = '<p>By default, only you can see your view. Here you can choose who else you would like to be able to see your view.</p>';
 
 $string['overridingstartstopdate'] = 'Overriding Start/Stop Dates';
 $string['overridingstartstopdatesdescription'] = 'If you want, you can set an overriding start and/or stop date. Other people will not be able to see your view before the start date and after the end date, regardless of any other access you have granted.';
