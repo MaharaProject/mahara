@@ -3,9 +3,8 @@
 
 {include file="columnleftstart.tpl"}
                 <h2>{$group->name|escape}</h2>
-                
-                {if $group->description} <p>{$group->description}</p> {/if}
-                <p>{str tag='owner' section='group'}: {$group->ownername|escape}</p>
+                <h3>{str tag='owner' section='group'}: {$group->ownername|escape}</h3>
+                {if $group->description} {$group->description}{/if}
 	        {assign var="jointype" value=$group->jointype}
 	        {assign var="joinstr" value=groupjointype$jointype}
                 {if !$member}<p>{str tag=$joinstr section='group'}</p>{/if}
