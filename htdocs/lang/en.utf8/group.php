@@ -206,6 +206,7 @@ $string['Friends'] = 'Friends';
 $string['friendlistfailure'] = 'Failed to modify your friends list';
 $string['userdoesntwantfriends'] = 'This user doesn\'t want any new friends';
 $string['cannotrequestfriendshipwithself'] = 'You cannot request a friendship with yourself';
+$string['cantrequestfriendship'] = 'You cannot request friendship with this user';
 
 // Messaging between users
 $string['messagebody'] = 'Send message'; // wtf
