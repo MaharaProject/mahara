@@ -827,7 +827,10 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
 }
 
 /**
- * This function returns the list of plugintypes we currently care about
+ * This function returns the list of plugintypes we currently care about.
+ *
+ * NOTE: use plugin_types_installed if you just want the installed ones.
+ *
  * @return array of names
  */
 function plugin_types() {
@@ -837,6 +840,22 @@ function plugin_types() {
         $pluginstocheck = array('artefact', 'auth', 'notification', 'search', 'blocktype', 'interaction');
     }
     return $pluginstocheck;
+}
+
+/**
+ * Returns plugin types that are actually installed
+ */
+function plugin_types_installed() {
+    static $plugins = array();
+    if (empty($plugins)) {
+        require_once('ddl.php');
+        foreach (plugin_types() as $plugin) {
+            if (table_exists(new XMLDBTable("{$plugin}_installed"))) {
+                $plugins[] = $plugin;
+            }
+        }
+    }
+    return $plugins;
 }
 
 /** 
@@ -915,7 +934,7 @@ function handle_event($event, $data) {
         activity_set_defaults($data['id']);
     }
 
-    $plugintypes = plugin_types();
+    $plugintypes = plugin_types_installed();
     foreach ($plugintypes as $name) {
         if ($subs = get_records_array($name . '_event_subscription', 'event', $event)) {
             foreach ($subs as $sub) {
