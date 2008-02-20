@@ -115,8 +115,9 @@ function set_account_preference($userid, $field, $value) {
 
 /** 
  * Change language-specific stuff in the db for a user.  Currently
- * just changes the name of the 'blogfiles' and 'assessmentfiles'
- * folders in the user's files area.
+ * changes the name of the 'blogfiles', 'assessmentfiles'
+ * folders in the user's files area and the views and artefacts tagged for the profile
+ * sideblock
  *
  * @param int $userid user id to set preference for
  * @param string $oldlang old language
@@ -131,6 +132,8 @@ function change_language($userid, $oldlang, $newlang) {
         safe_require('artefact', 'file');
         ArtefactTypeFolder::change_language($userid, $oldlang, $newlang);
     }
+    set_field_select('artefact_tag', 'tag', get_string_from_language($newlang, 'profile'), 'WHERE tag = ? AND artefact IN (SELECT id FROM {artefact} WHERE owner = ?)', array(get_string_from_language($oldlang, 'profile'), $userid));
+    set_field_select('view_tag', 'tag', get_string_from_language($newlang, 'profile'), 'WHERE tag = ? AND view IN (SELECT id FROM {view} WHERE owner = ?)', array(get_string_from_language($oldlang, 'profile'), $userid));
 }
 
 /** 
