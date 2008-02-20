@@ -186,6 +186,7 @@ switch ($type) {
                              break;
                          case 'declinerequest':
                              delete_records('group_member_request', 'member', $user, 'group', $id);
+                             $changed = true;
                              break;
                      }
                  }
