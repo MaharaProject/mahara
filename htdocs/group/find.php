@@ -80,8 +80,6 @@ $groups = search_group($query, $groupsperpage, $offset, $type);
 // gets more data about the groups found by search_group
 // including type if the user is associated with the group in some way
 // and the first three members by id
-// does this by finding the lowest id, then the next lowest, then the third lowest in subselects
-// which is just horrible :(
 if ($groups['data']) {
     $groupids = array();
     foreach ($groups['data'] as $group) {
@@ -89,9 +87,9 @@ if ($groups['data']) {
     }
     $groups['data'] =  get_records_sql_array(
         'SELECT g.id, g.name, g.description, g.owner, g.jointype, t.type, COUNT(gm.member) AS membercount, COUNT(gmr.member) AS requests,
-        (SELECT gm.member FROM {group_member} gm WHERE gm.group = g.id ORDER BY member LIMIT 1) AS member1,
-        (SELECT gm.member FROM {group_member} gm WHERE gm.group = g.id ORDER BY member LIMIT 1 OFFSET 1) AS member2,
-        (SELECT gm.member FROM {group_member} gm WHERE gm.group = g.id ORDER BY member LIMIT 1 OFFSET 2) AS member3
+        (SELECT gm.member FROM {group_member} gm JOIN {usr} u ON (u.id = gm.member AND u.deleted = 0) WHERE gm.group = g.id ORDER BY member LIMIT 1) AS member1,
+        (SELECT gm.member FROM {group_member} gm JOIN {usr} u ON (u.id = gm.member AND u.deleted = 0) WHERE gm.group = g.id ORDER BY member LIMIT 1 OFFSET 1) AS member2,
+        (SELECT gm.member FROM {group_member} gm JOIN {usr} u ON (u.id = gm.member AND u.deleted = 0) WHERE gm.group = g.id ORDER BY member LIMIT 1 OFFSET 2) AS member3
         FROM {group} g
         LEFT JOIN {group_member} gm ON (gm.group = g.id)
         LEFT JOIN {group_member_request} gmr ON (gmr.group = g.id)
