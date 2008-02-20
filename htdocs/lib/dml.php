@@ -931,11 +931,18 @@ function delete_records_sql($sql, $values=null) {
  * @throws SQLException
  */
 function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) {
-    global $db;
+    // $INSERTRECORD_NOCACHE is yet another work around of dmllib/adodb's ineptitude.
+    // It's all nice to cache the table columns lookup, but what if the table 
+    // columns change over the life of the page load? This happens when an 
+    // upgrade is running. All of a sudden, the table_column cache is out of 
+    // date and we can't insert new data properly.
+    // Temporary solution: set INSERTRECORD_NOCACHE to true before your calls 
+    // that need a new lookup, and unset it afterwards
+    global $db, $INSERTRECORD_NOCACHE;
     static $table_columns;
     
     // Determine all the fields in the table
-    if (is_array($table_columns) && array_key_exists($table, $table_columns)) {
+    if (empty($INSERTRECORD_NOCACHE) && is_array($table_columns) && array_key_exists($table, $table_columns)) {
         $columns = $table_columns[$table];
     }
     else {

@@ -830,10 +830,8 @@ function xmldb_core_upgrade($oldversion=0) {
             WHERE name IN (\'file\', \'images\', \'multimedia\')'
         );
 
-        insert_record('blocktype_category', array('name' => 'fileimagevideo'));
-        foreach ($blocktypes as $bt) {
-            insert_record('blocktype_installed_category', array('blocktype' => $bt, 'category' => 'fileimagevideo'));
-        }
+        // Force the install of the new 'fileimagevideo' blocktype
+        install_blocktype_categories();
     }
 
     if ($oldversion < 2008012401) {

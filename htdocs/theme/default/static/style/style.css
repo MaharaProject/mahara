@@ -1294,6 +1294,9 @@ a.folderhover {
 #accesslistitems table.preset {
     background-color: #f5f8da;
 }
+#accesslistitems table.group-container {
+    background-color: #e6e6ff;
+}
 #accesslistitems div div {
     background: none;
     width: 220px;
