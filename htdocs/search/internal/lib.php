@@ -253,10 +253,9 @@ class PluginSearchInternal extends PluginSearch {
                     )
                     ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
                 ORDER BY u.firstname, u.lastname, u.id';
-            get_records_sql_array($sql, array($query_string, $query_string, $query_string),
+            $data = get_records_sql_array($sql, array($query_string, $query_string, $query_string),
             $offset,
             $limit);
-
             if ($data) {
                 foreach ($data as &$item) {
                     $item = (array)$item;
