@@ -71,7 +71,7 @@ $getstring = quotestrings(array(
     'view' => array('makepublic', 'placefeedback', 'complaint',
         'feedbackonthisartefactwillbeprivate', 'notifysiteadministrator',
         'nopublicfeedback', 'reportobjectionablematerial', 'print',
-        'thisfeedbackispublic', 'thisfeedbackisprivate', 'attachment')
+        'thisfeedbackispublic', 'thisfeedbackisprivate', 'attachment', 'private')
 ));
 
 $getstring['addtowatchlist'] = json_encode(get_string('addtowatchlist', 'view'));
