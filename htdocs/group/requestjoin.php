@@ -58,7 +58,7 @@ $form = pieform(array(
         ),
         'submit' => array(
             'type' => 'submitcancel',
-            'value' => array(get_string('yes'), get_string('no')),
+            'value' => array(get_string('request', 'group'), get_string('cancel')),
             'goto' => get_config('wwwroot') . ($returnto == 'find' ? 'group/find.php' : 'group/mygroups.php')
         ),
         'returnto' => array(
