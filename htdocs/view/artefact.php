@@ -102,7 +102,8 @@ $getstring = quotestrings(array(
     'view' => array('makepublic', 'placefeedback', 'complaint',
         'feedbackonthisartefactwillbeprivate', 'notifysiteadministrator',
         'nopublicfeedback', 'reportobjectionablematerial', 'print',
-        'thisfeedbackispublic', 'thisfeedbackisprivate', 'attachment')
+        'thisfeedbackispublic', 'thisfeedbackisprivate', 'attachment',
+        'makeprivate')
 ));
 
 $getstring['feedbackattachmessage'] = "'(" . get_string('feedbackattachmessage', 'view', get_string('feedbackattachdirname', 'view')) . ")'";
@@ -266,22 +267,22 @@ feedbacklist.rowfunction = function(r, n, d) {
     if (r.ispublic == 1) {
         var makePrivate = null;
         if (r.ownedbythisuser) {
-            makePrivate = A({'href': ''}, get_string('makeprivate'));
-            connect(makePrivate, 'onclick', function (e) {
+            makePrivateLink = A({'href': ''}, {$getstring['makeprivate']});
+            connect(makePrivateLink, 'onclick', function (e) {
                 sendjsonrequest(
                     'changefeedback.json.php',
                     r,
                     'POST',
                     function (data) {
                         if (!data.error) {
-                            replaceChildNodes(makePrivate.parentNode, '(' + {$getstring['private']} + ')');
+                            replaceChildNodes(makePrivateLink.parentNode, {$getstring['thisfeedbackisprivate']});
                         }
                     }
                 );
 
                 e.stop();
             });
-            makePrivate = [' - ', makePrivate];
+            makePrivate = [' - ', makePrivateLink];
         }
         publicPrivate = SPAN(null, {$getstring['thisfeedbackispublic']}, makePrivate);
     }
@@ -307,13 +308,7 @@ EOF;
 $smarty = smarty(
     array('tablerenderer'),
     array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
-    array(
-        'view' => array(
-            'public',
-            'private',
-            'makeprivate',
-        ),
-    ),
+    array(),
     array(
         'stylesheets' => array('style/views.css')
     )
