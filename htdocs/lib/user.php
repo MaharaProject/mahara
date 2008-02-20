@@ -639,7 +639,7 @@ function delete_user($userid) {
     // by deleted users.
     $authinst = get_field('auth_instance', 'id', 'institution', 'mahara', 'instancename', 'internal');
     if ($authinst) {
-        $deleterec->authinstance = $authinst;
+        $deleterec->authinstance = $deleterec->lastauthinstance = $authinst;
     }
 
     update_record('usr', $deleterec);
