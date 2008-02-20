@@ -54,7 +54,7 @@ else { // edit post
 }
 
 $parent = get_record_sql(
-    'SELECT p.subject, p.body, p.topic, p.parent, p.poster, ' . db_format_tsfield('p.ctime', 'ctime') . ', m.user AS moderator, t.id AS topic, t.forum, t.closed AS topicclosed, p2.subject AS topicsubject, f.group AS group, f.title AS forumtitle, g.name AS groupname, g.owner AS groupowner, COUNT(p3.id)
+    'SELECT p.subject, p.body, p.topic, p.parent, p.poster, ' . db_format_tsfield('p.ctime', 'ctime') . ', m.user AS moderator, t.id AS topic, t.forum, t.closed AS topicclosed, p2.subject AS topicsubject, f.group AS "group", f.title AS forumtitle, g.name AS groupname, g.owner AS groupowner, COUNT(p3.id)
     FROM {interaction_forum_post} p
     INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
     INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.parent IS NULL)
