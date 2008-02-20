@@ -60,10 +60,15 @@ function renderAccessListItem(item) {
     if (item.preset) {
         cssClass += '  preset';
     }
+    cssClass += ' ' + item.type + '-container';
+    var name = item.name;
+    if (item.type == 'user') {
+        name = [IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&id=' + item.id + '&maxwidth=20&maxheight=20'}), ' ', name];
+    }
     var row = TABLE({'class': cssClass},
         TBODY(null, 
             TR(null,
-                TH(null, item.name + (item.tutoronly ? ' ' + '{{str tag=tutors section=view}}' : '')),
+                TH(null, name,  (item.tutoronly ? ' ' + '{{str tag=tutors section=view}}' : '')),
                 TD({'class': 'right'}, removeButton)
             ),
             TR(null,
