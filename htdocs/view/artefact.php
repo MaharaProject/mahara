@@ -102,7 +102,7 @@ $getstring = quotestrings(array(
     'view' => array('makepublic', 'placefeedback', 'complaint',
         'feedbackonthisartefactwillbeprivate', 'notifysiteadministrator',
         'nopublicfeedback', 'reportobjectionablematerial', 'print',
-        'thisfeedbackispublic', 'thisfeedbackisprivate', 'attachment', 'private')
+        'thisfeedbackispublic', 'thisfeedbackisprivate', 'attachment')
 ));
 
 $getstring['feedbackattachmessage'] = "'(" . get_string('feedbackattachmessage', 'view', get_string('feedbackattachdirname', 'view')) . ")'";
