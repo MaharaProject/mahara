@@ -42,7 +42,7 @@
                         {$requestform}
                     </div>
                 {/if}
-                <h5>{str section=mahara tag=views}</h6>
+                <h6>{str section=mahara tag=views}</h6>
                 {if $VIEWS}
                     <table>
                     {foreach from=$VIEWS item=item name=view}
@@ -66,7 +66,6 @@
                 {else}
                     {str tag='noviewstosee' section='group'}
                 {/if}
-                    </ul>
                 <h6>{str section=mahara tag=groups}</h6>
                 {if $USERGROUPS}
                 <table>
