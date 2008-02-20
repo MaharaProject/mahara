@@ -203,7 +203,10 @@ class PluginSearchInternal extends PluginSearch {
         $sql .= 'WHERE
                 u.id <> 0 AND u.active = 1
                 AND ((
-                        u.preferredname IS NULL
+                        u.preferredname LIKE \'%\' || ? || \'%\'
+                    )
+                    OR (
+                        (u.preferredname IS NULL OR u.preferredname = \'\')
                         AND (
                             u.firstname LIKE \'%\' || ? || \'%\'
                             OR u.lastname LIKE \'%\' || ? || \'%\'
@@ -216,8 +219,8 @@ class PluginSearchInternal extends PluginSearch {
                 )
                 ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
             ';
-        $count = get_field_sql($sql, array($query_string, $query_string, $query_string));
 
+        $count = get_field_sql($sql, array($query_string, $query_string, $query_string, $query_string));
         if ($count > 0) {
             // @todo This is quite possibly not correct. See the postgres 
             // query. It should be DISTINCT ON the fields as specified by the 
@@ -240,7 +243,10 @@ class PluginSearchInternal extends PluginSearch {
             $sql .= 'WHERE
                     u.id <> 0 AND u.active = 1
                     AND ((
-                            u.preferredname IS NULL
+                            u.preferredname LIKE \'%\' || ? || \'%\'
+                        )
+                        OR (
+                            (u.preferredname IS NULL OR u.preferredname = \'\')
                             AND (
                                 u.firstname LIKE \'%\' || ? || \'%\'
                                 OR u.lastname LIKE \'%\' || ? || \'%\'
@@ -253,7 +259,7 @@ class PluginSearchInternal extends PluginSearch {
                     )
                     ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
                 ORDER BY u.firstname, u.lastname, u.id';
-            $data = get_records_sql_array($sql, array($query_string, $query_string, $query_string),
+            $data = get_records_sql_array($sql, array($query_string, $query_string, $query_string, $query_string),
             $offset,
             $limit);
             if ($data) {
