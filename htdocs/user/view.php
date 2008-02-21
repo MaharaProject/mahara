@@ -182,6 +182,9 @@ if ($records) {
         }
     }
 }
+else {
+    $friends = false;
+}
 
 $smarty = smarty();
 $allusergroups = get_associated_groups($userid);
