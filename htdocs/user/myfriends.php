@@ -43,8 +43,8 @@ $data = array();
 if ($filter == 'current') {
     $count = count_records_select('usr_friend', 'usr1 = ? OR usr2 = ?', array($userid, $userid));
     $data = get_column_sql(
-        'SELECT usr1 AS id, firstname, lastname FROM {usr_friend} JOIN {usr} u ON u.id = usr1 WHERE usr1 = ?
-        UNION SELECT usr2 AS id, firstname, lastname FROM {usr_friend} JOIN {usr} u ON u.id = usr2 WHERE usr2 = ?
+        'SELECT usr1 AS id, firstname, lastname FROM {usr_friend} JOIN {usr} u ON u.id = usr1 WHERE usr2 = ?
+        UNION SELECT usr2 AS id, firstname, lastname FROM {usr_friend} JOIN {usr} u ON u.id = usr2 WHERE usr1 = ?
         ORDER BY firstname, lastname, id
         LIMIT ?
         OFFSET ?', array($userid, $userid, $limit, $offset)
