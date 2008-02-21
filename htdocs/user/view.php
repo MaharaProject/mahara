@@ -166,16 +166,18 @@ else {
     $friendsmessage = get_string('Friends', 'group');
 }
 // get the friends into a 4x4 array
-$friends = array();
-for ($i = 0; $i < 4; $i++) {
-    $friends[$i] = array();
-    for($j = 4 * $i; $j < ($i + 1 ) * 4; $j++) {
-        if (isset($records[$j])) {
-            if ($records[$j]->usr1 == $userid) {
-                $friends[$i][] = $records[$j]->usr2;
-            }
-            else {
-                $friends[$i][] = $records[$j]->usr1;
+if ($records) {
+    $friends = array();
+    for ($i = 0; $i < 4; $i++) {
+        $friends[$i] = array();
+        for($j = 4 * $i; $j < ($i + 1 ) * 4; $j++) {
+            if (isset($records[$j])) {
+                if ($records[$j]->usr1 == $userid) {
+                    $friends[$i][] = $records[$j]->usr2;
+                }
+                else {
+                    $friends[$i][] = $records[$j]->usr1;
+                }
             }
         }
     }

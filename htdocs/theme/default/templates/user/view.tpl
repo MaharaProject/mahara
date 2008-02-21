@@ -85,20 +85,24 @@
                 {/if}
                 <h6>{$friendsmessage}</h6>
                 <div class="friends">
-                <table>
-                {foreach from=$friends item=row}
-                    <tr>
-                    {foreach from=$row item=friend}
-                        <td class="friendcell">
-                            <a href="{$WWWROOT}user/view.php?id={$friend}">
-                               <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=60&amp;maxheight=60&amp;id={$friend}" alt="">
-                               <br>{$friend|display_name|escape}
-                            </a>
-                        </td>
+                {if $friends}
+                    <table>
+                    {foreach from=$friends item=row}
+                        <tr>
+                        {foreach from=$row item=friend}
+                            <td class="friendcell">
+                                <a href="{$WWWROOT}user/view.php?id={$friend}">
+                                   <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=60&amp;maxheight=60&amp;id={$friend}" alt="">
+                                   <br>{$friend|display_name|escape}
+                                </a>
+                            </td>
+                        {/foreach}
+                        </tr>
                     {/foreach}
-                    </tr>
-                {/foreach}
-                </table>
+                    </table>
+                {else}
+                    {str tag='nofriends' section='group'}
+                {/if}
                 </div>
             </div>
         </div>
