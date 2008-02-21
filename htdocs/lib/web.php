@@ -2020,8 +2020,10 @@ function str_shorten($str, $maxlen=100, $truncate=false, $newlines=true) {
     if (strlen($str) > $maxlen) {
         $str =  substr($str, 0, floor($maxlen / 2) - 1) . '...' . substr($str, -(floor($maxlen / 2) - 2));
     }
-
-    return nl2br(hsc($str));
+    $str = nl2br(hsc($str));
+    // this should be ok, because the string gets checked before going into the database
+    $str = str_replace('&amp;', '&', $str);
+    return $str;
 }
 
 /**
