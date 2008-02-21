@@ -36,7 +36,7 @@ define('SECTION_PAGE', 'myfriends');
 
 $filter = param_alpha('filter', 'all');
 $offset = param_integer('offset', 0);
-$limit = 25;
+$limit = 10;
 
 $userid = $USER->get('id');
 $data = array();

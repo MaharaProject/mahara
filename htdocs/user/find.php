@@ -33,8 +33,8 @@ require('searchlib.php');
 safe_require('search', 'internal');
 
 $query = param_variable('query', '');
-$limit  = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
+$limit  = 10;
 
 $data = search_user($query, $limit, $offset, array('exclude' => $USER->get('id')));
 
