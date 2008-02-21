@@ -35,11 +35,11 @@ safe_require('search', 'internal');
 $id = param_integer('id');
 $returnto = param_alpha('returnto', 'myfriends');
 
-if (!record_exists('usr_friend_request', 'owner', $USER->get('id'), 'requester', $id)) {
+if (!record_exists('usr_friend_request', 'owner', $USER->get('id'), 'requester', $id)
+    || !($user = get_record('usr', 'id', $id, 'deleted', 0))) {
     throw new AccessDeniedException(get_string('cantdenyrequest', 'group'));
 }
 
-$user = get_record('usr', 'id', $id);
 $user->introduction = get_field('artefact', 'title', 'artefacttype', 'introduction', 'owner', $id);
 
 $form = pieform(array(

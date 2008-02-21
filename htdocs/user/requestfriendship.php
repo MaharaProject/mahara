@@ -35,11 +35,11 @@ $returnto = param_alpha('returnto', 'myfriends');
 if (is_friend($id, $USER->get('id'))
     || get_friend_request($id, $USER->get('id'))
     || get_account_preference($id, 'friendscontrol') != 'auth'
-    || $id == $USER->get('id')) {
+    || $id == $USER->get('id')
+    || !($user = get_record('usr', 'id', $id, 'deleted', 0))) {
     throw new AccessDeniedException(get_string('cantrequestfriendship', 'group'));
 }
 
-$user = get_record('usr', 'id', $id);
 $user->introduction = get_field('artefact', 'title', 'artefacttype', 'introduction', 'owner', $id);
 
 define('TITLE', get_string('sendfriendshiprequest', 'group', display_name($id)));
