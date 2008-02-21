@@ -34,7 +34,7 @@ safe_require('search', 'internal');
 $id = param_integer('id');
 $returnto = param_alpha('returnto', 'myfriends');
 
-$user = get_record('usr', 'id', $id);
+$user = get_record('usr', 'id', $id, 'deleted', 0);
 
 if (!$user || !can_send_message($USER, $id)) {
 	throw new AccessDeniedException(get_string('cantmessageuser', 'group'));
