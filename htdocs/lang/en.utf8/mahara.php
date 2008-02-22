@@ -101,7 +101,7 @@ $string['linksandresources'] = 'Links and Resources';
 
 // auth
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section';
-$string['accountdeleted'] = 'Sorry, your account has been deletd';
+$string['accountdeleted'] = 'Sorry, your account has been deleted';
 $string['accountexpired'] = 'Sorry, your account has expired';
 $string['accountexpirywarning'] = 'Account expiry warning';
 $string['accountexpirywarningtext'] = 'Dear %s,
