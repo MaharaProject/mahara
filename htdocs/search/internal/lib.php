@@ -107,7 +107,7 @@ class PluginSearchInternal extends PluginSearch {
             }
         }
         $sql .= 'WHERE
-                u.id <> 0 AND u.active = 1
+                u.id <> 0 AND u.active = 1 AND u.deleted = 0
                 AND ((
                         u.preferredname ILIKE \'%\' || ? || \'%\'
                     )
@@ -142,7 +142,7 @@ class PluginSearchInternal extends PluginSearch {
                     }
             }
             $sql .= 'WHERE
-                    u.id <> 0 AND u.active = 1
+                    u.id <> 0 AND u.active = 1 AND u.deleted = 0
                     AND ((
                             u.preferredname ILIKE \'%\' || ? || \'%\'
                         )
@@ -201,7 +201,7 @@ class PluginSearchInternal extends PluginSearch {
             }
         }
         $sql .= 'WHERE
-                u.id <> 0 AND u.active = 1
+                u.id <> 0 AND u.active = 1 AND u.deleted = 0
                 AND ((
                         u.preferredname LIKE \'%\' || ? || \'%\'
                     )
@@ -241,7 +241,7 @@ class PluginSearchInternal extends PluginSearch {
                     }
             }
             $sql .= 'WHERE
-                    u.id <> 0 AND u.active = 1
+                    u.id <> 0 AND u.active = 1 AND u.deleted = 0
                     AND ((
                             u.preferredname LIKE \'%\' || ? || \'%\'
                         )
