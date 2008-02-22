@@ -91,7 +91,7 @@ $string['artefactnotfound'] = 'Artefact with id %s not found';
 $string['notartefactowner'] = 'You do not own this artefact';
 
 $string['blockinstancednotfound'] = 'Block instance with id %s not found';
-$string['interactioninstancenotfound'] = 'Interaction instance with id %s not found';
+$string['interactioninstancenotfound'] = 'Activity instance with id %s not found';
 
 $string['invalidviewaction'] = 'Invalid view control action: %s';
 

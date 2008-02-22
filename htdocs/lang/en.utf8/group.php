@@ -233,11 +233,11 @@ $string['cannotinvitetogroup'] = 'You can\'t invite this user to this group';
 $string['removefriend'] = 'Remove friend';
 $string['denyfriendrequestlower'] = 'Deny friend request';
 
-// Group interactions
-$string['groupinteractions'] = 'Group Interactions';
-$string['nointeractions'] = 'There are no interactions in this group';
-$string['notallowedtoeditinteractions'] = 'You are not allowed to add or edit interactions in this group';
-$string['notallowedtodeleteinteractions'] = 'You are not allowed to delete interactions in this group';
+// Group interactions (activities)
+$string['groupinteractions'] = 'Group Activities';
+$string['nointeractions'] = 'There are no activities in this group';
+$string['notallowedtoeditinteractions'] = 'You are not allowed to add or edit activities in this group';
+$string['notallowedtodeleteinteractions'] = 'You are not allowed to delete activities in this group';
 $string['interactionsaved'] = '%s saved successfully';
 $string['deleteinteraction'] = 'Delete %s \'%s\'';
 $string['deleteinteractionsure'] = 'Are you sure you want to do this? It cannot be undone.';
