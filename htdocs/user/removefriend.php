@@ -32,11 +32,10 @@ require_once('pieforms/pieform.php');
 $id = param_integer('id');
 $returnto = param_alpha('returnto', 'myfriends');
 
-if (!is_friend($id, $USER->get('id'))) {
+if (!is_friend($id, $USER->get('id')) || !$user = get_record('usr', 'id', $id, 'deleted', 0)) {
     throw new AccessDeniedException(get_string('cantremovefriend', 'group'));
 }
 
-$user = get_record('usr', 'id', $id);
 $user->introduction = get_field('artefact', 'title', 'artefacttype', 'introduction', 'owner', $id);
 
 define('TITLE', get_string('removefromfriends', 'group', display_name($id)));

@@ -157,8 +157,21 @@ if (is_postgres()) {
 else if (is_mysql()) {
     $random = 'RAND()';
 }
-$records = get_records_select_array('usr_friend', 'usr1 = ? OR usr2 = ?', array($userid, $userid), $random, 'usr1, usr2', 0, 16);
-$numberoffriends = count_records_select('usr_friend', 'usr1 = ? OR usr2 = ?', array($userid, $userid));
+
+$records = get_records_sql_array('SELECT usr1, usr2 FROM {usr_friend}
+    JOIN {usr} u1 ON (u1.id = usr1 AND u1.deleted = 0)
+    JOIN {usr} u2 ON (u2.id = usr2 AND u2.deleted = 0)
+    WHERE usr1 = ? OR usr2 = ?
+    ORDER BY ' . $random . '
+    LIMIT ?',
+    array($userid, $userid, 16)
+);
+$numberoffriends = count_records_sql('SELECT COUNT(usr1) FROM {usr_friend}
+    JOIN {usr} u1 ON (u1.id = usr1 AND u1.deleted = 0)
+    JOIN {usr} u2 ON (u2.id = usr2 AND u2.deleted = 0)
+    WHERE usr1 = ? OR usr2 = ?',
+    array($userid, $userid)
+);
 if ($numberoffriends > 16) {
     $friendsmessage = get_string('numberoffriends', 'group', $records ? count($records) : 0, $numberoffriends);
 }
