@@ -98,7 +98,7 @@ switch ($type) {
             SELECT DISTINCT v.*, u.username, u.firstname, u.lastname, u.preferredname, u.id AS usr 
             FROM {view} v
             LEFT OUTER JOIN {view_access_group} a ON a.view=v.id
-            INNER JOIN {usr} u ON v.owner = u.id ' . $where . ' ORDER BY v.title, v.id',
+            INNER JOIN {usr} u ON (v.owner = u.id AND u.deleted = 0) ' . $where . ' ORDER BY v.title, v.id',
             $values,
             $offset,
             $limit
@@ -116,7 +116,7 @@ switch ($type) {
         $select = 'SELECT u.*,g.tutor ';
         $sql = '    FROM {usr} u JOIN {group_member} g
                         ON g.member = u.id 
-                    WHERE g.group = ?
+                    WHERE g.group = ? AND u.deleted = 0
                     ORDER BY firstname, lastname, u.id';
         if (empty($pending)) { // default behaviour - actual members
             $count = count_records('group_member', 'group', $id);
