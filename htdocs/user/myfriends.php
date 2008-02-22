@@ -41,22 +41,34 @@ $limit = 10;
 $userid = $USER->get('id');
 $data = array();
 if ($filter == 'current') {
-    $count = count_records_select('usr_friend', 'usr1 = ? OR usr2 = ?', array($userid, $userid));
-    $data = get_column_sql(
-        'SELECT usr1 AS id, firstname, lastname FROM {usr_friend} JOIN {usr} u ON u.id = usr1 WHERE usr2 = ?
-        UNION SELECT usr2 AS id, firstname, lastname FROM {usr_friend} JOIN {usr} u ON u.id = usr2 WHERE usr1 = ?
+    $count = count_records_sql('SELECT COUNT(usr1) FROM {usr_friend}
+        JOIN {usr} u1 ON (u1.id = usr1 AND u1.deleted = 0)
+        JOIN {usr} u2 ON (u2.id = usr2 AND u2.deleted = 0)
+        WHERE usr1 = ? OR usr2 = ?',
+        array($userid, $userid)
+    );
+    $data = get_column_sql('SELECT u.id, u.firstname, u.lastname
+        FROM (
+            SELECT usr1 AS id FROM {usr_friend} WHERE usr2 = ?
+            UNION SELECT usr2 AS id FROM {usr_friend} WHERE usr1 = ?
+        ) f
+        JOIN {usr} u ON f.id = u.id AND u.deleted = 0
         ORDER BY firstname, lastname, id
-        LIMIT ?
-        OFFSET ?', array($userid, $userid, $limit, $offset)
+        LIMIT ? OFFSET ?', array($userid, $userid, $limit, $offset)
     );
     if (!$data || !$views = get_views(array_keys($data), null, null)) {
         $views = array();
     }
 }
 else if ($filter == 'pending') {
-    $count = count_records('usr_friend_request', 'owner', array($userid));
+	$count = count_records_sql('SELECT COUNT(owner) FROM {usr_friend_request}
+	    JOIN {usr} u ON (u.id = requester AND u.deleted = 0)
+	    WHERE requester = ?',
+	    array($userid)
+	);
     $data = get_column_sql(
-        'SELECT requester FROM {usr_friend_request} JOIN {usr} ON requester = id WHERE owner = ?
+        'SELECT requester FROM {usr_friend_request}
+        JOIN {usr} ON (requester = id AND deleted = 0) WHERE owner = ?
         ORDER BY firstname, lastname, id
         LIMIT ?
         OFFSET ?', array($userid, $limit, $offset)
@@ -64,15 +76,24 @@ else if ($filter == 'pending') {
 }
 else {
 	$filter = 'all';
-    $count = count_records_select('usr_friend_request', 'owner = ?', array($userid))
-        + count_records_select('usr_friend', 'usr1 = ? OR usr2 = ?', array($userid, $userid));
+    $count = count_records_sql('SELECT COUNT(usr1) FROM {usr_friend}
+            JOIN {usr} u1 ON (u1.id = usr1 AND u1.deleted = 0)
+            JOIN {usr} u2 ON (u2.id = usr2 AND u2.deleted = 0)
+            WHERE usr1 = ? OR usr2 = ?',
+            array($userid, $userid)
+        )
+        + $count = count_records_sql('SELECT COUNT(owner) FROM {usr_friend_request}
+	        JOIN {usr} u ON (u.id = requester AND u.deleted = 0)
+	        WHERE requester = ?',
+	        array($userid)
+	    );
     $data = get_column_sql(
         'SELECT f.id FROM (
             SELECT requester AS id, \'1\' AS status FROM {usr_friend_request} WHERE owner = ?
             UNION SELECT usr2 AS id, \'2\' AS status FROM {usr_friend} WHERE usr1 = ?
             UNION SELECT usr1 AS id, \'2\' AS status FROM {usr_friend} WHERE usr2 = ?
         ) f
-        JOIN {usr} u ON f.id = u.id
+        JOIN {usr} u ON (f.id = u.id AND u.deleted = 0)
         ORDER BY status, firstname, lastname, u.id
         LIMIT ?
         OFFSET ?', array($userid, $userid, $userid, $limit, $offset)
