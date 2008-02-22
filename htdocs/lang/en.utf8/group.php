@@ -167,6 +167,7 @@ $string['confirmremovefriend'] = 'Are you sure you want to remove this user from
 $string['removedfromfriendslistsubject'] = 'Removed from friends list';
 $string['removedfromfriendslistmessage'] = '%s has removed you from their friends list.';
 $string['removedfromfriendslistmessagereason'] = '%s has removed you from their friends list.  Their reason was: ';
+$string['cantremovefriend'] = 'You cannot remove this user from your friends list';
 
 $string['friendshipalreadyrequested'] = 'You have requested to be added to %s\'s friends list';
 $string['friendshipalreadyrequestedowner'] = '%s has requested to be added to your friends list';
