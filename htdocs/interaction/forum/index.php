@@ -65,7 +65,11 @@ $breadcrumbs = array(
 $forums = get_records_sql_array(
     'SELECT f.id, f.title, f.description, m.user AS moderator, COUNT(t.id), s.forum AS subscribed
     FROM {interaction_instance} f
-    LEFT JOIN {interaction_forum_moderator} m ON m.forum = f.id
+    LEFT JOIN (
+        SELECT m.forum, m.user
+        FROM {interaction_forum_moderator} m
+        INNER JOIN {usr} u ON (m.user = u.id AND u.deleted = 0)
+    ) m ON m.forum = f.id
     LEFT JOIN {interaction_forum_topic} t ON (t.forum = f.id AND t.deleted != 1)
     INNER JOIN {interaction_forum_instance_config} c ON (c.forum = f.id AND c.field = \'weight\')
     LEFT JOIN {interaction_forum_subscription_forum} s ON (s.forum = f.id AND s."user" = ?)

@@ -29,7 +29,12 @@ class PluginInteractionForum extends PluginInteraction {
     public static function instance_config_form($group, $instance=null) {
         if (isset($instance)) {
             $weight = get_field('interaction_forum_instance_config', 'value', 'field', 'weight', 'forum', $instance->get('id'));
-            $moderators = get_column('interaction_forum_moderator', '"user"', 'forum', $instance->get('id'));
+            $moderators = get_column_sql(
+                'SELECT fm.user FROM {interaction_forum_moderator} fm
+                JOIN {usr} u ON (fm.user = u.id AND u.deleted = 0)
+                WHERE fm.forum = ?',
+                array($instance->get('id'))
+            );
         }
 
         if ($instance === null) {

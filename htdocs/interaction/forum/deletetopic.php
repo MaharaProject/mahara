@@ -41,7 +41,11 @@ $topic = get_record_sql(
     INNER JOIN {interaction_instance} f ON (f.id = t.forum AND f.deleted != 1)
     INNER JOIN {group} g ON (g.id = f.group AND g.deleted = ?)
     INNER JOIN {interaction_forum_post} p ON (p.topic = t.id AND p.parent IS NULL)
-    LEFT JOIN {interaction_forum_moderator} m ON (m.user = p.poster AND m.forum = t.forum)
+    LEFT JOIN (
+        SELECT m.forum, m.user
+        FROM {interaction_forum_moderator} m
+        INNER JOIN {usr} u ON (m.user = u.id AND u.deleted = 0)
+    ) m ON (m.forum = t.forum AND m.user = p.poster)
     INNER JOIN {interaction_forum_post} p2 ON (p.poster = p2.poster AND p2.deleted != 1)
     INNER JOIN {interaction_forum_topic} t2 ON (t2.deleted != 1 AND p2.topic = t2.id)
     INNER JOIN {interaction_instance} f2 ON (t2.forum = f2.id AND f2.deleted != 1 AND f2.group = f.group)
