@@ -1212,6 +1212,7 @@ function can_view_view($view_id, $user_id=null) {
         FROM
             {view} v
             LEFT OUTER JOIN {view_access} a ON v.id=a.view
+            INNER JOIN {usr} u ON (u.id = v.owner AND u.deleted = 0)
         WHERE v.id=?
     ', array($view_id));
 
