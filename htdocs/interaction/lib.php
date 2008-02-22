@@ -256,9 +256,10 @@ function delete_interaction_submit(Pieform $form, $values) {
  * creates the information for the interaction_sideblock
  *
  * @param int $groupid the group the sideblock is for
+ * @param boolean (optional) $membership whether the user is a member
  * @return array containing indices 'name', 'weight', 'data'
  */
-function interaction_sideblock($groupid) {
+function interaction_sideblock($groupid, $membership=true) {
     $interactiontypes = array_flip(
         array_map(
             create_function('$a', 'return $a->name;'),
@@ -292,7 +293,8 @@ function interaction_sideblock($groupid) {
 
     $data = array(
         'group' => $groupid,
-        'interactiontypes' => $interactiontypes
+        'interactiontypes' => $interactiontypes,
+        'membership' => $membership,
     );
 
     // Add a sideblock for group interactions

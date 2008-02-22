@@ -258,7 +258,7 @@ addLoadEvent(function () { switchPending(1) });
 EOF;
 }
 
-$smarty = smarty(array('tablerenderer'), array(), array(), array('sideblocks' => array(interaction_sideblock($id))));
+$smarty = smarty(array('tablerenderer'), array(), array(), array('sideblocks' => array(interaction_sideblock($id, $membership))));
 
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('member', $membership);
