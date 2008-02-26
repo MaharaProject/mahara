@@ -10,20 +10,21 @@
             {/if}
             </h2>
             <div>
-                <div class="fr">
-                    <div class="center" style="width: 50px; height: 50px;"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=100&amp;maxheight=100&amp;id={$USERID}" alt=""></div>
+                {$introduction}
+                <div class="fr user-icon">
+                    <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=100&amp;maxheight=100&amp;id={$USERID}" alt="">
                     {if $canmessage}
                         <br>
-                        <a href="{$WWWROOT}user/sendmessage.php?id={$USERID}&amp;returnto=view">{str tag='sendmessage' section='group'}</a>
+                        <a href="{$WWWROOT}user/sendmessage.php?id={$USERID}&amp;returnto=view" id="btn-sendmessage">{str tag='sendmessage' section='group'}</a>
                     {/if}
                     {if $relationship == 'existingfriend'}
                         <br>
-                        <a href="{$WWWROOT}user/removefriend.php?id={$USERID}&amp;returnto=view">{str tag='removefromfriendslist' section='group'}</a>
+                        <a href="{$WWWROOT}user/removefriend.php?id={$USERID}&amp;returnto=view" id="btn-delete">{str tag='removefromfriendslist' section='group'}</a>
                     {elseif $relationship == 'none' && $friendscontrol == 'auto'}
                         {$newfriendform}
                     {elseif $relationship == 'none' && $friendscontrol == 'auth'}
                         <br>
-                        <a href="{$WWWROOT}user/requestfriendship.php?id={$USERID}&amp;returnto=view">{str tag='requestfriendship' section='group'}</a>
+                        <a href="{$WWWROOT}user/requestfriendship.php?id={$USERID}&amp;returnto=view" id="btn-request">{str tag='requestfriendship' section='group'}</a>
                     {/if}
                     {if $inviteform}
                         {$inviteform}
@@ -32,23 +33,24 @@
                         {$addform}
                     {/if}
                 </div>
-                {$introduction}
+				<ul id="user-info">
                 {foreach from=$USERFIELDS name=userfields key=key item=item}
-                    <p><strong>{str section=artefact.internal tag=$key}:</strong> {$item}</p>
+                    <li><label>{str section=artefact.internal tag=$key}:</label> {$item}</li>
                 {/foreach}
+				</ul>
                 {if $relationship == 'pending'}
                     <div class="message">
                         {str tag='whymakemeyourfriend' section='group'} {$reason}
                         {$requestform}
                     </div>
                 {/if}
-                <h6>{str section=mahara tag=views}</h6>
+                <h3>{str section=mahara tag=views}</h3>
                 {if $VIEWS}
-                    <table>
+                    <table id="userviewstable">
                     {foreach from=$VIEWS item=item name=view}
                         <tr>
-                            <td>
-                                <h6><a href="{$WWWROOT}view/view.php?id={$item->id}">{$item->title|escape}</a></h6>
+                            <td class="r{cycle values=0,1}">
+                                <h4><a href="{$WWWROOT}view/view.php?id={$item->id}">{$item->title|escape}</a></h4>
                                 <span>
                                 {if $item->description}
                                     {$item->description}
@@ -56,7 +58,7 @@
                                 {if $item->description && $item->artefacts}<br>{/if}
                                 {if $item->artefacts}
                                     <strong>{str tag="artefacts" section="view"}:</strong>
-                                    {foreach from=$item->artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$item->id}">{$artefact.title|escape}</a>{if !$smarty.foreach.artefacts.last}, {/if}{/foreach}
+                                    {foreach from=$item->artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$item->id}" class="link-artefacts">{$artefact.title|escape}</a>{if !$smarty.foreach.artefacts.last}, {/if}{/foreach}
                                 {/if}
                                 </span>
                             </td>
@@ -66,13 +68,13 @@
                 {else}
                     {str tag='noviewstosee' section='group'}
                 {/if}
-                <h6>{str section=mahara tag=groups}</h6>
+                <h3>{str section=mahara tag=groups}</h3>
                 {if $USERGROUPS}
-                <table>
+                <table id="usergroupstable">
                 {foreach from=$USERGROUPS item=item}
                     <tr>
-                        <td>
-                            <h6><a href="{$WWWROOT}group/view.php?id={$item->id}">{$item->name|escape}</a> - {str tag=$item->type section=group}</h6>
+                        <td class="r{cycle values=0,1}">
+                            <h4><a href="{$WWWROOT}group/view.php?id={$item->id}">{$item->name|escape}</a> - {str tag=$item->type section=group}</h4>
                             {if $item->description}
                                 {$item->description}
                             {/if}
@@ -83,14 +85,14 @@
                 {else}
                     {str tag='notinanygroups' section='group'}
                 {/if}
-                <h6>{$friendsmessage}</h6>
+                <h3>{$friendsmessage}</h3>
                 <div class="friends">
                 {if $friends}
-                    <table>
+                    <table id="userfriendstable">
                     {foreach from=$friends item=row}
                         <tr>
                         {foreach from=$row item=friend}
-                            <td class="friendcell">
+                            <td class="r{cycle values=0,1} friendcell">
                                 <a href="{$WWWROOT}user/view.php?id={$friend}">
                                    <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=60&amp;maxheight=60&amp;id={$friend}" alt="">
                                    <br>{$friend|display_name|escape}

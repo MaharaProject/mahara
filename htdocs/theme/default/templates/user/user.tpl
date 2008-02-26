@@ -1,10 +1,5 @@
 {if $user->pending}
 <td class="pending">
-    <div class="fl">
-      <div class="center" style="width: 40px; height: 40px;">
-        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=40&amp;maxheight=40&amp;id={$user->id}" alt="">
-      </div>
-    </div>
     <table class="friendinfo">
         <tr>
             <th>
@@ -21,7 +16,10 @@
         </tr>
         <tr>
             <td id="friendinfo_{$user->id}">
-                {if $user->introduction}
+            	<div class="fl">
+					<img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=40&amp;maxheight=40&amp;id={$user->id}" alt="">
+				</div>
+    {if $user->introduction}
                 {$user->introduction}
                 {/if}
                 <div class="pending">
@@ -33,13 +31,13 @@
                 <div>
                     <ul>
                         <li>
-                            <a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}">
+                            <a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}" id="btn-denyrequest">
                                 {str tag='denyrequest' section='group'}
                             </a>
                         </li>
                         {if $user->messages}
                         <li>
-                            <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}">
+                            <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}" id="btn-sendmessage">
                                 {str tag='sendmessage' section='group'}
                             </a>
                         </li>
@@ -52,11 +50,6 @@
 </td>
 {elseif $user->friend}
 <td>
-    <div class="fl">
-      <div class="center" style="width: 40px; height: 40px;">
-        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=40&amp;maxheight=40&amp;id={$user->id}" alt="">
-      </div>
-    </div>
     <table class="friendinfo">
         <tr>
             <th>
@@ -95,6 +88,9 @@
         </tr>
         <tr>
             <td id="friendinfo_{$user->id}">
+    			<div class="fl">
+    			    <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=40&amp;maxheight=40&amp;id={$user->id}" alt="">
+			    </div>
                 {if $user->introduction}
                 <p>
                     {$user->introduction}
@@ -103,13 +99,13 @@
                 <ul>
                 {if $user->messages}
                     <li>
-                        <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}">
+                        <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}" id="btn-sendmessage">
                             {str tag='sendmessage' section='group'}
                         </a>
                     </li>
                 {/if}
                     <li>
-                        <a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}">
+                        <a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}" id="btn-delete">
                             {str tag='removefromfriendslist' section='group'}
                         </a>
                     </li>
@@ -120,11 +116,6 @@
 </td>
 {elseif $user->requestedfriendship}
 <td>
-    <div class="fl">
-      <div class="center" style="width: 40px; height: 40px;">
-        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=40&amp;maxheight=40&amp;id={$user->id}" alt="">
-      </div>
-    </div>
     <table class="friendinfo">
         <tr>
             <th>
@@ -140,6 +131,9 @@
         </tr>
         <tr>
             <td id="friendinfo_{$user->id}">
+    <div class="fl">
+        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=40&amp;maxheight=40&amp;id={$user->id}" alt="">
+    </div>
                 {if $user->introduction}
                 {$user->introduction}
                 {/if}
@@ -147,7 +141,7 @@
                     <ul>
                         {if $user->messages}
                         <li>
-                            <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}">
+                            <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}" id="btn-sendmessage">
                                 {str tag='sendmessage' section='group'}
                             </a>
                         </li>
@@ -160,17 +154,12 @@
 </td>
 {else}
 <td>
-    <div class="fl">
-      <div class="center" style="width: 40px; height: 40px;">
-        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=40&amp;maxheight=40&amp;id={$user->id}" alt="">
-      </div>
-    </div>
     <table class="friendinfo">
         <tr>
             <th>
                 <div class="fr">
                     {if $user->friendscontrol == 'auth'}
-                    <a href="{$WWWROOT}user/requestfriendship.php?id={$user->id}&amp;returnto={$page}">
+                    <a href="{$WWWROOT}user/requestfriendship.php?id={$user->id}&amp;returnto={$page}" id="btn-request">
                         {str tag='sendfriendrequest' section='group'}
                     </a>
                     {elseif $user->friendscontrol == 'auto'}
@@ -188,6 +177,9 @@
         </tr>
         <tr>
             <td id="friendinfo_{$user->id}">
+    <div class="fl">
+        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=40&amp;maxheight=40&amp;id={$user->id}" alt="">
+    </div>
                 {if $user->introduction}
                 {$user->introduction}
                 {/if}
@@ -195,7 +187,7 @@
                     <ul>
                         {if $user->messages}
                         <li>
-                            <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}">
+                            <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}" id="btn-sendmessage">
                                 {str tag='sendmessage' section='group'}
                             </a>
                         </li>

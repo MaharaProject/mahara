@@ -12,7 +12,7 @@
 #view h3 {
     margin-top: .25em;
 }
-#view p.view-description {
+p.view-description {
     margin: .5em .25em;
 }
 div.editview {
@@ -29,27 +29,29 @@ div.editview {
 }
 #view table.filedata th {
     width: 8em;
-    padding: 3px 0 0 0;
+    padding: 5px 0 0 0;
 }
 
 #top-pane {
-    background: #acc067 url(../images/toppane_corner_topright.gif) no-repeat right top;
+    background-color: #95a8b7;
 }
 #category-list {
-    background: #acc067 url(../images/toppane_corner_topleft.gif) no-repeat left top;
 }
 #category-list li {
-    background-color: #bacc7b;
+    background-color: #e0e8ee;
     margin-right: 5px;
     line-height: 25px;
     padding: 5px 10px;
 }
+#category-list li a {
+	color: #1e6297;
+}
 #category-list li.current {
     font-weight: bold;
-    background-color: #eef4da;
+    background-color: #f4f7f9;
 }
 #blocktype-list {
-    background-color: #eef4da;
+    background-color: #f4f7f9;
     padding: 5px 5px 10px 5px;
     margin-left: 5px;
 }
@@ -78,18 +80,31 @@ div.editview {
 }
 
 #layout-link {
-    font-size: smaller;
+    font-size: 11px;
+	background: url(../images/icon-change.png) no-repeat;
+	padding-left: 18px;
 }
 #layout-link.disabled {
     color: #aaa;
 }
+#btn-displaymyview {
+    font-size: 11px;
+	background: url(../images/icon-display.png) no-repeat;
+	padding-left: 18px;
+}
 
-#bottom-pane {
+#page #bottom-pane {
     margin-top: 10px;
-    background: #eef4da url(../images/bottompane_corner_botright.gif) no-repeat right bottom;
+	border: 1px solid #ebebeb;
 }
 #column-container {
-    background: url(../images/bottompane_corner_botleft.gif) no-repeat left bottom;
+	padding: 0;
+	margin: 0;
+}
+#blocksinstruction {
+	padding: 5px 10px;
+	background: #ebebeb;
+	color: #8e8e8e;
 }
 
 .add-column-center {
@@ -123,17 +138,16 @@ div.editview {
     font-size: 12px;
 }
 .maincontent .blockinstance table {
-    font-size: 12px;
+    font-size: 11px;
 }
 .blockinstance-header h4 {
     margin: 0;
     padding: 3px 5px;
-    border-bottom: 1px solid #acc067;
-    background-color: #fff;
+    border-bottom: 1px solid #d2d2d2;
+    background-color: #FFF;
 }
 .blockinstance-header h4 a {
     text-decoration: none;
-    color: inherit;
 }
 
 .blockinstance-controls input {
@@ -147,12 +161,18 @@ div.editview {
 
 .blockinstance-content {
     padding: 5px;
+	font-size: 11px;
 }
-.blockinstance-content .maharatable td {
-    padding: 0;
-}
-.blockinstance-content p {
-    margin: .25em 0 .5em;
+/* This rule is incredibly annoying, as it enforces the widths on a whole bunch of tables that don't need to be forced - like the blog attachments table and any tables the user generates by the wysiwyg editor. Can it be made more specific? */
+.blockinstance-content table {
+	width: 100%;
+}*/
+.blockinstance-content table,
+.blockinstance-content table th,
+.blockinstance-content table td {
+	margin: 0;
+    padding: 2px;
+	text-align: left;
 }
 .blockinstance-content h1,
 .blockinstance-content h2,
@@ -160,7 +180,44 @@ div.editview {
 .blockinstance-content h4,
 .blockinstance-content h5,
 .blockinstance-content h6 {
-    margin: .25em 0 0;
+    margin: 15px 0 0 0;
+}
+.blockinstance-content h2 {
+	font-size: 16px;
+	margin-top: 5px !important;
+}
+.blockinstance-content h3 {
+	font-size: 14px;
+	margin-top: 5px !important;
+}
+.blockinstance-content .tablerenderer,
+.blockinstance-content table {
+	margin-top: 5px;
+}
+
+.blockinstance-content table tr.submitcancel td input.submit,
+.blockinstance-content table tr.submitcancel td input.cancel {
+	height: 22px !important;
+	margin: 0;
+	padding: 0 10px;
+}
+.blockinstance-content table.cb,
+.blockinstance-content table.cb th,
+.blockinstance-content table.cb td {
+    padding: 2px 4px;
+	text-align: left;
+	margin: 0;
+}
+
+#artefactchooser-body table,
+#artefactchooser-body table th,
+#artefactchooser-body table td {
+    padding: 2px 0;
+	text-align: left;
+	color: #474220;
+}
+#artefactchooser-body table th label {
+	color: #95a8b6;
 }
 
 .column-content .add-button {
@@ -181,7 +238,7 @@ body:last-child:not(:root:root) .newblockhere {
 }
 
 #block-placeholder {
-    border: 2px dashed #94BC62;
+    border: 2px dashed #bfbfbf;
     margin-top: 1em;
 }
 
@@ -196,22 +253,31 @@ body:last-child:not(:root:root) .newblockhere {
 }
 
 /* styling the tabs for the artefact chooser */
+.maincontent ul.artefactchooser-tabs {
+	list-style-type:none;
+	margin: 0 0 3px 0;
+	padding: 0;
+	text-align: left;
+}
+.maincontent ul.artefactchooser-tabs li {
+	margin: 0 3px 0 0;
+	padding: 0;
+}
 .maincontent ul.artefactchooser-tabs li a {
-    background-color: #BACC7B;
-    padding: 3px 1em;
+    background-color: #bfbfbf;
+    padding: 2px 1em;
     text-decoration: none;
+	color: #FFF;
+	border-color: #D9DFEA #b2b2b2 #b2b2b2 #D9DFEA !important;
+	border-style: solid;
+	border-width: 1px;
 }
 .maincontent ul.artefactchooser-tabs li.current a {
-    background-color: #EEF4DA;
 }
 .maincontent div.artefactchooser-splitter {
-    border-top: 1px solid #e0e0e0;
-    background-color: #EEF4DA;
-    margin-top: 3px;
-    padding: .25em 0 .25em .5em;
+    padding: 0;
 }
 .blockinstance-content p.noartefacts {
-    background-color: #EEF4DA;
     color: #808080;
     text-align: center;
     margin-top: 0;
@@ -220,6 +286,9 @@ body:last-child:not(:root:root) .newblockhere {
 .maincontent table.artefactchooser-data {
     border: none;
     margin-top: 0;
-    background-color: #EEF4DA;
     padding: .5em .5em 0;
+}
+
+.blockinstance-content table p img {
+	padding: 10px 20px;
 }

@@ -11,9 +11,10 @@
     </span>
 </div>
 {/if}
-<div id="view">
-        <p class="view-description">{$viewdescription}</p>
-	
+
+<p class="view-description">{$viewdescription}</p>
+
+<div id="view" class="cb">
         <div id="bottom-pane">
             <div id="column-container">
                {$viewcontent}

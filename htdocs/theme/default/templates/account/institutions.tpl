@@ -7,7 +7,7 @@
 {$requestedform}
 {$invitedform}
 {if !empty($joinform)}
-  <h6>{str tag="requestmembershipofaninstitution"}</h6>
+  <h3>{str tag="requestmembershipofaninstitution"}</h3>
   {$joinform}
 {/if}
 {include file="columnleftend.tpl"}

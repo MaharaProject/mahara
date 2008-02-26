@@ -23,6 +23,7 @@
     {$message}
 </div>
 {/if}
+</div>
 
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

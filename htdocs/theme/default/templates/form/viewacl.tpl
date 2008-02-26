@@ -12,7 +12,7 @@
             <thead>
                 <tr>
                     <th></th>
-                    <th class="fullwidth">{{str tag=name}}</th>
+                    <th>{{str tag=name}}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -21,6 +21,7 @@
         </table>
     </div>
 </div>
+<h3>Added</h3>
 <div id="accesslistitems">
 </div>
 
@@ -229,7 +230,7 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
 
     return TR({'class': 'r' + (rownumber % 2)},
         buttonTD,
-        TD({'class': 'fullwidth', 'style': 'vertical-align: middle;'}, identityNodes),
+        TD({'style': 'vertical-align: middle;'}, identityNodes),
         TD({'class': 'center', 'style': 'width:40px'}, profileIcon)
     );
 }

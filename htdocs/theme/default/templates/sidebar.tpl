@@ -10,8 +10,6 @@
 
     {assign var="sideblock_name" value=$sideblock.name}
     {include file="sideblocks/$sideblock_name.tpl" data=$sideblock.data}
-
-        <div class="sidebar-botcorners"><img src="{theme_path location='images/sidebox_bot.gif'}" border="0" alt=""></div>
     </div>
 {/foreach}
 </div>

@@ -7,7 +7,7 @@
 {$form}
 
 {if $groups}
-<table>
+<table id="findgroups">
 {foreach from=$groups item=group name=groups}
 <tr class="r{cycle values=0,1}">
 <td>

@@ -9,7 +9,7 @@
 <div id="runupgrade">
 <div class="fr"><span class="upgradeicon"><a href="upgrade.php">{str tag=runupgrade section=admin}</a></span></div>
 <h4>{str tag=thefollowingupgradesareready section=admin}</h4>
-<table cellspacing="0">
+<table cellspacing="0" id="upgradestable">
     <tr>
         <th>{str tag=Plugin section=admin}</th>
         <th>{str tag=From}</th>

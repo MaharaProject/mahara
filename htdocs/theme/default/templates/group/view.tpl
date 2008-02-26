@@ -3,8 +3,9 @@
 
 {include file="columnleftstart.tpl"}
                 <h2>{$group->name|escape}</h2>
-                <h3>{str tag='owner' section='group'}: {$group->ownername|escape}</h3>
-                {if $group->description} {$group->description}{/if}
+                
+                {if $group->description} <p>{$group->description}</p> {/if}
+                <ul id="groupsviewlist"><li><label>{str tag='owner' section='group'}:</label> {$group->ownername|escape}</li></ul>
 	        {assign var="jointype" value=$group->jointype}
 	        {assign var="joinstr" value=groupjointype$jointype}
                 {if !$member}<p>{str tag=$joinstr section='group'}</p>{/if}
@@ -14,7 +15,7 @@
                 {elseif $canacceptinvite} <p>{str tag='grouphaveinvite' section='group'} <a href="view.php?id={$group->id}&amp;joincontrol=acceptinvite">{str tag='acceptinvitegroup' section='group'}</a> | <a href="view.php?id={$group->id}&amp;joincontrol=declineinvite">{str tag='declineinvitegroup' section='group'}</a></p>{/if}
                 {if $member}
                     <div class="groupviews">
-                        <h5>{str tag='views'}</h5>
+                        <h3>{str tag='views'}</h3>
                         {if ($tutor || $staff || $admin) && $controlled}
                             <form>
                                 <select name="submitted" onChange="viewlist.submitted=this.options[this.selectedIndex].value;viewlist.doupdate();">
@@ -28,6 +29,7 @@
                                 <tr>
                                     <th>{str tag='name'}</th>
                                     <th>{str tag='owner' section='group'}</th>
+									<th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -36,7 +38,7 @@
                     </div>                   
                     <div class="groupmembers">
                     <a name="members"></a>
-                        <h5>{str tag='members' section='group'}</h5>
+                        <h3>{str tag='members' section='group'}</h3>
                         {if $canupdate && $request}
                             <form>
                                 <select id="pendingselect" name="pending" onChange="switchPending();">
@@ -50,6 +52,8 @@
                                  <tr>
                                      <th>{str tag='name'}</th>
                                      <th id="pendingreasonheader">{str tag='reason'}</th>
+									 <th></th>
+									 <th></th>
                                  </tr>
                              </thead>
                              <tbody>

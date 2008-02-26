@@ -3,13 +3,13 @@
 
 {include file="columnleftstart.tpl"}
 <div class="addgrouplink">
-<span class="addicon">
+<span class="addicon fr">
 <a href="{$WWWROOT}group/create.php">{str tag="creategroup" section="group"}</a>
 </span>
 </div>
 {$form}
 {if $groups}
-<table>
+<table id="mygroupstable">
 {foreach from=$groups item=group}
 <tr class="r{cycle values=0,1}">
 <td>

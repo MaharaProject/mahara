@@ -20,7 +20,7 @@
                 <div id="blocktype-footer"></div>
             </div>
 
-            <div class="fr" style="font-size: smaller; padding-right: 5px;">
+            <div class="fr" id="btn-displaymyview">
                 <strong><a href="view.php?id={$view}&amp;new={$new}">{str tag=displaymyview section=view} &raquo;</a></strong>
             </div>
 

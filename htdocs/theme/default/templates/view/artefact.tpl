@@ -1,6 +1,9 @@
 {include file="header.tpl"}
 
 {include file="columnfullstart.tpl"}
+
+        <h2>{$heading}</h2>
+
         <div id="view">
             <div id="bottom-pane">
                 <div id="column-container">

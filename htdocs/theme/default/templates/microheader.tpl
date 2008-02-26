@@ -26,26 +26,15 @@
         <link rel="stylesheet" type="text/css" href="{$cssurl}">
 {/foreach}
         <link rel="stylesheet" type="text/css" href="{theme_path location='style/print.css'}" media="print">
-        <style type="text/css">
-            {literal}
-            body { background: white; }
-            .micro_footer { position: fixed; bottom: 3px; }
-            {/literal}
-        </style>
     </head>
     <body>
     <div id="containerX">
         <div id="loading_box" style="display: none;"></div>
-        <div id="topwrapperX">
-
-            <div id="header">
-                <div class="frX"></div>
-                <div id="logo"><a href="{$WWWROOT}"><img src="{theme_path location='images/logo_mahara.gif'}" border="0" alt=""></a></div>
+        <div id="topwrapper">
+                <div id="logo"><a href="{$WWWROOT}"><img src="{theme_path location='images/logo.gif'}" border="0" alt=""></a></div>
                 <h1 class="hidden"><a href="{$WWWROOT}">{$hiddenheading|default:"Mahara"|escape}</a></h1>
-            </div>
         </div>
-        <div id="mainwrapperX">
+        <div id="mainwrapper">
             {insert name="messages"}
-            <div id="maincontentwrapper">
             <div class="maincontent">
                 {if $PAGEHELPNAME && $heading} <h2>{$heading|escape}<span id="{$PAGEHELPNAME}_container" class="pagehelpicon">{$PAGEHELPICON}</span></h2>{/if}
