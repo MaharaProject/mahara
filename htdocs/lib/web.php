@@ -96,7 +96,9 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
     $smarty = smarty_core();
 
     $wwwroot = get_config('wwwroot');
-    $jswwwroot = json_encode($wwwroot);
+    // NOTE: commented out jswwwroot - it seems to wreck image paths if you 
+    // drag them around the wysiwyg editor
+    //$jswwwroot = json_encode($wwwroot);
 
     $theme_list = array();
 
@@ -168,7 +170,7 @@ tinyMCE.init({
     {$execcommand}
     language: '{$language}',
     content_css : {$content_css},
-    document_base_url: {$jswwwroot},
+    //document_base_url: {$jswwwroot},
     relative_urls: false
 });
 </script>
