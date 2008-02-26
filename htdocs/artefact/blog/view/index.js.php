@@ -68,7 +68,7 @@ postlist.rowfunction = function(d, n, gd) {
     else {
         status.innerHTML = {$enc_draft};
         pub = INPUT(
-            { 'type' : 'button' , 'class' : 'button', 'value' : {$enc_publish}}
+            { 'type' : 'button' , 'class' : 'button publish', 'value' : {$enc_publish}}
         );
         pubhelp = SPAN(null); pubhelp.innerHTML = {$enc_publish_help};
 
@@ -101,13 +101,13 @@ postlist.rowfunction = function(d, n, gd) {
             }
         ),
         INPUT(
-            { 'type' : 'submit', 'class' : 'submit',
+            { 'type' : 'submit', 'class' : 'submit edit',
               'value' : {$enc_edit}
             }
         )
     );
     var del = INPUT(
-        { 'type' : 'button', 'class' : 'button', 'value': {$enc_delete} }
+        { 'type' : 'button', 'class' : 'button delete', 'value': {$enc_delete} }
     );
 
     var desctd = TD({'colSpan':3});
@@ -124,7 +124,7 @@ postlist.rowfunction = function(d, n, gd) {
     ];
 
     if (d.files) {
-        var filerows = [TR(null, TD({'colSpan':3}, {$enc_files}))];
+        var filerows = [TR(null, TH({'colSpan':3}, {$enc_files}))];
         for (var i = 0; i < d.files.length; i++) {
             filerows.push(TR({'class':'r'+((i+1)%2)}, 
                              TD(null, IMG({'src':get_themeurl('images/' + d.files[i].artefacttype + '.gif')})),
@@ -133,14 +133,14 @@ postlist.rowfunction = function(d, n, gd) {
                              TD(null, d.files[i].description)));
         }
         rows.push(TR(null, TD({'colSpan':3}, 
-                              TABLE(null, 
+                              TABLE({'class': 'blogpost-attachments'}, 
                                     createDOM('col', {'width':'5%'}),
                                     createDOM('col', {'width':'40%'}),
                                     createDOM('col', {'width':'55%'}),
                                     TBODY(null, filerows)))));
     }
 
-    rows.push(TR(null, TD({'colSpan':2}, {$enc_postedon}, ' ', d.ctime)));
+    rows.push(TR(null, TD({'colspan':2, 'class': 'postdetails'}, {$enc_postedon}, ' ', d.ctime)));
 
     connect(del, 'onclick', function(e) {
         if (!confirm({$enc_delete_confirm})) {
