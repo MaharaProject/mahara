@@ -105,7 +105,6 @@ $string['subscribetotopic'] = 'Subscribe to topic';
 $string['Subject'] = 'Subject';
 $string['Topic'] = 'Topic';
 $string['topiclower'] = 'topic';
-$string['topics'] = 'Topics: %s';
 $string['topicslower'] = 'topics';
 $string['topicclosedsuccess'] = 'Topics closed successfully';
 $string['topicisclosed'] = 'This topic is closed. Only moderators and the group owner can post new replies';
