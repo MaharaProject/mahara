@@ -171,14 +171,9 @@ $profileform = pieform(array(
 function get_desired_fields($allfields, $desiredfields, $section) {
     global $USER;
     $return = array();
-    if ($section == 'about') {
-        $return['userprofileicon'] = array(
-            'type' => 'markup',
-            'value' => '<div id="profileicon"><a href="' . get_config('wwwroot') . 'artefact/internal/profileicons.php"><img src="' . get_config('wwwroot') . 'thumb.php?type=profileicon&maxsize=100&id=' . $USER->get('id') . '" alt=""></a></div>',
-        );
-    }
     $return["{$section}description"] = array(
         'type'  => 'html',
+        'labelhtml' => ($section == 'about') ? '<div id="profileicon"><a href="' . get_config('wwwroot') . 'artefact/internal/profileicons.php"><img src="' . get_config('wwwroot') . 'thumb.php?type=profileicon&maxsize=100&id=' . $USER->get('id') . '" alt=""></a></div>' : '',
         'value' => get_string("{$section}description", 'artefact.internal')
     );
     foreach ($desiredfields as $field) {
