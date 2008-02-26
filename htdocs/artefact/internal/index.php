@@ -116,8 +116,10 @@ if ($items['firstname']) {
 // build form elements
 $elements = array(
     'topsubmit' => array(
-        'type'  => 'submit',
-        'value' => get_string('saveprofile','artefact.internal'),
+        'type'  => 'submitcancel',
+        'value' => array(get_string('saveprofile','artefact.internal'), get_string('viewmyprofile', 'artefact.internal')),
+        'confirm' => array(null, 'Lose your changes?'),
+        'goto' => get_config('wwwroot') . 'user/view.php?id=' . $USER->get('id'),
     ),
     'profile' => array(
         'type' => 'fieldset',
@@ -148,8 +150,10 @@ $elements = array(
         'elements' => $items
     ),
     'submit' => array(
-        'type'  => 'submit',
-        'value' => get_string('saveprofile','artefact.internal'),
+        'type'  => 'submitcancel',
+        'value' => array(get_string('saveprofile','artefact.internal'), get_string('viewmyprofile', 'artefact.internal')),
+        'confirm' => array(null, 'Lose your changes?'),
+        'goto' => get_config('wwwroot') . 'user/view.php?id=' . $USER->get('id'),
     )
 );
 
@@ -157,18 +161,25 @@ $profileform = pieform(array(
     'name'       => 'profileform',
     'plugintype' => 'artefact',
     'pluginname' => 'internal',
-    'jsform'     => true,
+    // will be uncommented when js for tabbed interface is called again after form submit
+    //'jsform'     => true,
     'method'     => 'post',
     'elements'   => $elements,
     'autofocus'  => false,
 ));
 
 function get_desired_fields($allfields, $desiredfields, $section) {
-    $return = array(
-        "{$section}description" => array(
-            'type'  => 'html',
-            'value' => get_string("{$section}description", 'artefact.internal')
-        )
+    global $USER;
+    $return = array();
+    if ($section == 'about') {
+        $return['userprofileicon'] = array(
+            'type' => 'markup',
+            'value' => '<div id="profileicon"><a href="' . get_config('wwwroot') . 'artefact/internal/profileicons.php"><img src="' . get_config('wwwroot') . 'thumb.php?type=profileicon&maxsize=100&id=' . $USER->get('id') . '" alt=""></a></div>',
+        );
+    }
+    $return["{$section}description"] = array(
+        'type'  => 'html',
+        'value' => get_string("{$section}description", 'artefact.internal')
     );
     foreach ($desiredfields as $field) {
         if (isset($allfields[$field])) {
@@ -376,7 +387,7 @@ function profileform_reply($form, $code, $message) {
 }
 
 
-$smarty = smarty(array(), array(), array(
+$smarty = smarty(array('artefact/internal/js/profile.js'), array(), array(
     'mahara' => array(
         'cannotremovedefaultemail',
         'emailtoolong'
