@@ -62,7 +62,7 @@ if (!$blogpost) {
     $description = '';
     $checked = '';
     $tags = array();
-    $pagetitle = 'newblogpost';
+    $pagetitle = get_string('newblogpost', 'artefact.blog', get_field('artefact', 'title', 'id', $blog));
     $focuselement = 'title';
     define('TITLE', get_string('newblogpost','artefact.blog'));
 }
@@ -74,7 +74,7 @@ else {
     $description = $blogpostobj->get('description');
     $tags = $blogpostobj->get('tags');
     $checked = !$blogpostobj->get('published');
-    $pagetitle = 'editblogpost';
+    $pagetitle = get_string('editblogpost', 'artefact.blog');
     $focuselement = 'description'; // Doesn't seem to work with tinyMCE.
     define('TITLE', get_string('editblogpost','artefact.blog'));
 }
@@ -105,7 +105,6 @@ $textinputform = pieform(array(
         'title' => array(
             'type' => 'text',
             'title' => get_string('posttitle', 'artefact.blog'),
-            'description' => get_string('posttitledesc', 'artefact.blog'),
             'rules' => array(
                 'required' => true
             ),
@@ -271,7 +270,7 @@ function attachtopost(data) {
                     IMG({'src':get_themeurl('images/'+data.artefacttype+'.gif'), 'alt':data.artefacttype}), 
                     data.title,
                     data.description,
-                    data.tags,
+                    data.tags.join(', '),
                     [SPAN({'style':'display: none;'}, ext),
                      INPUT(
                         {'type':'button', 'class':'button', 'value':{$getstring['remove']},
