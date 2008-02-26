@@ -206,7 +206,7 @@ if ($loggedinid != $userid) {
     if ($groups = get_owned_groups($loggedinid, 'invite')) {
         $invitelist = array();
         foreach ($groups as $group) {
-            if (array_key_exists($group->id, $allusergroups)) {
+            if ($allusergroups && array_key_exists($group->id, $allusergroups)) {
                 continue;
             }
             $invitelist[$group->id] = $group->name;
