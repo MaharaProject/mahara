@@ -426,6 +426,7 @@ class BlockInstance {
 
         $form = array(
             'name' => 'cb_' . $this->get('id'),
+            'renderer' => 'maharatable',
             'validatecallback' => array(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_validate'),
             'successcallback'  => array($this, 'instance_config_store'),
             'elements' => $elements,
