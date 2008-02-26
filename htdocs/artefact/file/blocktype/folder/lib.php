@@ -59,14 +59,14 @@ class PluginBlocktypeFolder extends PluginBlocktype {
         require_once(get_config('docroot') . 'artefact/lib.php');
         $configdata = $instance->get('configdata');
         $configdata['viewid'] = $instance->get('view');
-        $configdata['hidetitle'] = true;
+        $configdata['simpledisplay'] = true;
 
         // This can be either an image or profileicon. They both implement 
         // render_self
         $result = '';
         if (isset($configdata['artefactid'])) {
             $folder = artefact_instance_from_id($configdata['artefactid']);
-            $result = $folder->render_self($configdata);;
+            $result = $folder->render_self($configdata);
             $result = $result['html'];
         }
 

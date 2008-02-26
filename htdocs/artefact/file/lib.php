@@ -748,7 +748,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         $smarty->assign('title', $this->get('title'));
         $smarty->assign('description', $this->get('description'));
         $smarty->assign('viewid', $options['viewid']);
-        $smarty->assign('hidetitle', isset($options['hidetitle']) ? $options['hidetitle'] : false);
+        $smarty->assign('simpledisplay', isset($options['simpledisplay']) ? $options['simpledisplay'] : false);
 
         if ($childrecords = $this->folder_contents()) {
             $this->add_to_render_path($options);
@@ -756,7 +756,10 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             $children = array();
             foreach ($childrecords as &$child) {
                 $c = artefact_instance_from_id($child->id);
-                $child->title = $c->get('title');
+                $child->title = $child->hovertitle = $c->get('title');
+                if (!empty($options['simpledisplay'])) {
+                    $child->title = str_shorten($child->title, 20);
+                }
                 $child->date = format_date(strtotime($child->mtime), 'strfdaymonthyearshort');
                 $child->iconsrc = call_static_method(generate_artefact_class_name($child->artefacttype), 'get_icon', array('id' => $child->id, 'viewid' => $options['viewid']));
             }
