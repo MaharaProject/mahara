@@ -389,6 +389,10 @@ function display_name($user, $userto=null, $nameonly=false) {
         }
         return $user->firstname . ' ' . $user->lastname;
     }
+    else if ($user->id == $userto->id) {
+        // If viewing our own name, show it how we like it
+        return $user->preferredname;
+    }
 
     if (($userto->admin || $userto->staff) && !$nameonly) {
         return $user->preferredname . ' (' . $user->firstname . ' ' . $user->lastname . ' - ' . $user->username . ')';
