@@ -17,6 +17,10 @@
     cursor: default;
 }
 
+.blocktype-radio {
+    display: none;
+}
+
 /* This will be hidden until loading is finished */
 #bottom-pane {
     display: none;
