@@ -9,7 +9,7 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-        <h2>{str section="artefact.blog" tag=$pagetitle}</h2>
+        <h2>{$pagetitle}</h2>
         {$textinputform}
         <div id='uploader'></div>
         <div id='browsebuttonstuff'>
