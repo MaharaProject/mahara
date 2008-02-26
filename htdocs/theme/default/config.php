@@ -26,5 +26,6 @@
 $theme = new StdClass;
 
 $theme->name   = 'Default';
+$theme->formrenderer = 'table';
 
 ?>
