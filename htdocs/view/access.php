@@ -66,6 +66,7 @@ EOF;
 // @todo need a rule here that prevents stopdate being smaller than startdate
 $form = array(
     'name' => 'editaccess',
+    'renderer' => 'div',
     'plugintype' => 'core',
     'pluginname' => 'view',
     'elements' => array(
