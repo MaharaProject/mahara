@@ -20,13 +20,21 @@
 {$groupowner|display_name|escape}</a>
 </div>
 {if $forums}
-<ul>
+<table id="forumslist">
+	<tr>
+		<th>Forum Name</th>
+		<th>Description</th>
+		<th>Topics</th>
+		<th></th>
+		<th></th>
+	</tr>
     {foreach from=$forums item=forum}
-    <li>
-        <h4><a href="{$WWWROOT}interaction/forum/view.php?id={$forum->id|escape}">{$forum->title|escape}</a></h4>
+    <tr class="r{cycle values=0,1}">
+        <td class="nowrap"><h4><a href="{$WWWROOT}interaction/forum/view.php?id={$forum->id|escape}">{$forum->title|escape}</a></h4>
+        </td>
+		<td>
         {$forum->description}
         {if $forum->moderators}
-        <br>
         {str tag="moderatorslist" section="interaction.forum"}
         {foreach from=$forum->moderators item=mod name=moderators}
             <a href="{$WWWROOT}user/view.php?id={$mod}" class="moderator">
@@ -34,17 +42,18 @@
             {$mod|display_name|escape}</a>{if !$smarty.foreach.moderators.last}, {/if}
         {/foreach}
         {/if}
-        <div class="fr">{str tag=topics section=interaction.forum args=$forum->count}</div>
+		</td>
+        <td align="center">{$forum->count}</td>
         {if $admin}
-        <div>
-        <a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}&amp;returnto=index">{str tag=edit}</a>
-         | <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}&amp;returnto=index">{str tag=delete}</a>
-        </div>
+        <td class="nowrap">
+        <a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}&amp;returnto=index" id="btn-edit">{str tag=edit}</a>
+        <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}&amp;returnto=index" id="btn-delete">{str tag=delete}</a>
+        </td>
         {/if}
-        {$forum->subscribe}
-    </li>
+        <td>{$forum->subscribe}</td>
+	</tr>
     {/foreach}
-</ul>
+</table>
 {else}
 <div class="message">{str tag=noforums section=interaction.forum}</div>
 {/if}

@@ -5,20 +5,22 @@
 
 <h2>{$heading|escape}</h2>
 {include file="interaction:forum:breadcrumbs.tpl" breadcrumbs=$breadcrumbs}
-<div>
-<div class="fr">
-<span class="addicon">
+<div id="viewforum">
+<table id="forumdescription">
+<tr>
+	<td>{$forum->description}</td>
+{if $admin}
+	<td align="right" class="nowrap">
+	<a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}" class="btn-editdk">{str tag="edittitle" section="interaction.forum"}</a></td>
+	<td align="right" class="nowrap"><a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}" class="btn-deletedk">{str tag="deleteforum" section="interaction.forum"}</a></td>
+{/if}
+	<td align="right" class="subscribetoforum">{$forum->subscribe}</td>
+</tr>
+</table>
+<span class="addicon fr">
 <a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id|escape}">{str tag="newtopic" section="interaction.forum}</a>
 </span>
-</div>
-{$forum->description}
-{if $admin}
-<div>
-<a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}">{str tag="edittitle" section="interaction.forum"}</a>
- | <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}">{str tag="deleteforum" section="interaction.forum"}</a>
-</div>
-{/if}
-<br>
+
 {str tag="groupownerlist" section="interaction.forum"}
 <a href="{$WWWROOT}user/view.php?id={$groupowner}" class="groupowner">
 <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupowner}" alt="">
@@ -34,7 +36,6 @@
 {/foreach}
 {/if}
 </div>
-{$forum->subscribe}
 {if $stickytopics || $regulartopics}
 <form action="" method="post">
     {if !$forum->subscribed || $moderator}
@@ -58,20 +59,20 @@
         {contextualhelp plugintype='interaction' pluginname='forum' section='update'}
     {/if}
     {/if}
-    <table>
+    <table id="forumtopicstable">
         <tr>
         <th></th>
         {if !$forum->subscribed || $moderator}<th></th>{/if}
         <th>{str tag="Topic" section="interaction.forum"}</th>
         <th>{str tag="Poster" section="interaction.forum"}</th>
-        <th>{str tag="Posts" section="interaction.forum"}</th>
+        <th class="postscount">{str tag="Posts" section="interaction.forum"}</th>
         <th>{str tag="lastpost" section="interaction.forum"}</th>
         {if $moderator}<th></th>{/if}
     </tr>
     {if $stickytopics}
     {include file="interaction:forum:topics.tpl" topics=$stickytopics moderator=$moderator forum=$forum sticky=true}
     {/if}
-    {if $stickytopics && $regulartopics}<tr><td colspan="0"><hr></td></tr>{/if}
+    {if $stickytopics && $regulartopics}<tr><td colspan="0"></td></tr>{/if}
     {if $regulartopics}
     {include file="interaction:forum:topics.tpl" topics=$regulartopics moderator=$moderator forum=$forum sticky=false}
     {/if}
@@ -103,7 +104,7 @@
 </form>
 
 <h4>{str tag="Key" section="interaction.forum"}:</h4>
-<ul>
+<ul id="forumkeylist">
     <li><img src="{$closedicon|escape}" alt="{str tag="Closed" section="interaction.forum"}"> {str tag="Closed" section="interaction.forum"}</li>
     <li><img src="{$subscribedicon|escape}" alt="{str tag="Subscribed" section="interaction.forum"}"> {str tag="Subscribed" section="interaction.forum"}</li>
     <li><span class="groupowner">{str tag="groupowner" section="interaction.forum"}</span></li>

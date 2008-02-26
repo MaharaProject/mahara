@@ -145,6 +145,7 @@ $breadcrumbs = array(
 
 $forum->subscribe = pieform(array(
     'name' => 'subscribe_forum',
+    'renderer' => 'div',
     'plugintype' => 'interaction',
     'pluginname' => 'forum',
     'autofocus' => false,

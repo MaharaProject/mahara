@@ -6,11 +6,11 @@
 {else}
 {include file="interaction:forum:simplepost.tpl" post=$post groupowner=$groupowner nosubject=true}
 {/if}
-<div>
-{if $moderator || !$closed}<a href="{$WWWROOT}interaction/forum/editpost.php?parent={$post->id|escape}">{str tag="Reply" section=interaction.forum}</a>{/if}
+<div class="postbtns">
+{if $moderator || !$closed}<a href="{$WWWROOT}interaction/forum/editpost.php?parent={$post->id|escape}" id="btn-reply">{str tag="Reply" section=interaction.forum}</a>{/if}
 {if ($moderator || !$closed) && $post->canedit} | {/if}
-{if $post->canedit}<a href="{$WWWROOT}interaction/forum/editpost.php?id={$post->id|escape}"> {str tag="edit"}</a>{/if}
-{if $moderator && $post->parent} | <a href="{$WWWROOT}interaction/forum/deletepost.php?id={$post->id|escape}"> {str tag="delete"}</a>{/if}
+{if $post->canedit}<a href="{$WWWROOT}interaction/forum/editpost.php?id={$post->id|escape}" id="btn-edit"> {str tag="edit"}</a>{/if}
+{if $moderator && $post->parent} | <a href="{$WWWROOT}interaction/forum/deletepost.php?id={$post->id|escape}" id="btn-delete"> {str tag="delete"}</a>{/if}
 </div>
 {if $post->edit}
 <h5>{str tag="editstothispost" section="interaction.forum}</h5>
@@ -32,7 +32,7 @@
 {/if}
 {/if}
 {if $children}
-<ul>
+<ul class="postreply">
 {foreach from=$children item=child}
     <li>
         {$child}

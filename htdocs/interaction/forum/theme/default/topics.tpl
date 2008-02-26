@@ -1,8 +1,8 @@
 {foreach from=$topics item=topic}
 {if $sticky}
-<tr class="r1">
+<tr class="stickytopic">
 {else}
-<tr class="r0">
+<tr class="r{cycle values=0,1}">
 {/if}
     <td>
     {if $topic->closed}<img src="{$closedicon|escape}" alt="{str tag="Closed" section="interaction.forum"}">{/if}
@@ -15,9 +15,9 @@
     {/if}
     <td>
     <a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id|escape}">{$topic->subject|escape}</a>
-    <div>{$topic->body}</div>
+    <div class="forumtopicdescription">{$topic->body}</div>
     </td>
-    <td>
+    <td class="forumposter">
     <a href="{$WWWROOT}user/view.php?id={$topic->poster}"
     {if $topic->poster == $groupowner} class="groupowner"
     {elseif $topic->moderator} class="moderator"
@@ -27,8 +27,8 @@
     {$topic->poster|display_name|escape}
     </a>
     </td>
-    <td>{$topic->count|escape}</td>
-    <td>
+    <td class="postscount">{$topic->count|escape}</td>
+    <td class="lastpost">
     {if !$topic->lastpostdeleted}
     <a href="{$WWWROOT}user/view.php?id={$topic->lastposter}"
     {if $topic->lastposter == $groupowner} class="groupowner"
@@ -42,8 +42,8 @@
     </td>
     {if $moderator}
     <td>
-    <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}&amp;returnto=view">{str tag="edit"}</a>
-    <br><a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id|escape}&amp;returnto=view">{str tag="delete"}</a></td>
+    <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}&amp;returnto=view" id="btn-edit">{str tag="edit"}</a>
+    <br><a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id|escape}&amp;returnto=view" id="btn-delete">{str tag="delete"}</a></td>
     {/if}
 </tr>
 {/foreach}

@@ -83,6 +83,7 @@ $breadcrumbs = array(
 if (!$topic->forumsubscribed) {
     $topic->subscribe = pieform(array(
         'name'     => 'subscribe_topic',
+        'renderer' => 'div',
         'plugintype' => 'interaction',
         'pluginname' => 'forum',
         'autofocus' => false,
