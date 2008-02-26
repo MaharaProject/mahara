@@ -1,5 +1,7 @@
 {if !$options.hidetitle}<h2>{$artefacttitle}</h2>{/if}
 
+{$description}
+
 <table id="blog_renderfull{$blockid}">
     <thead></thead>
     <tbody></tbody>
