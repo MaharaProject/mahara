@@ -219,6 +219,7 @@ class ArtefactTypeBlog extends ArtefactType {
         $smarty->assign('enc_id', json_encode($this->id));
         $smarty->assign('limit', self::pagination);
         $smarty->assign('loading_img', theme_get_url('images/loading.gif'));
+        $smarty->assign('description', $this->get('description'));
 
         // Remove unnecessary options for blog posts
         unset($options['hidetitle']);
