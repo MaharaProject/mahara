@@ -39,8 +39,10 @@ function pieform_element_submitcancel(Pieform $form, $element) {/*{{{*/
     $form->include_plugin('element', 'submit');
     $form->include_plugin('element', 'cancel');
     $submitelement = $element;
+    $submitelement['class'] = (isset($submitelement['class'])) ? $submitelement['class'] . ' submit' : 'submit';
     $submitelement['value'] = $element['value'][0];
     $cancelelement = $element;
+    $cancelelement['class'] = (isset($cancelelement['class'])) ? $cancelelement['class'] . ' cancel' : 'cancel';
     $cancelelement['value'] = $element['value'][1];
     if (isset($element['confirm']) && isset($element['confirm'][0])) {
         $submitelement['confirm'] = $element['confirm'][0];

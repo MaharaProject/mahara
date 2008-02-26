@@ -80,7 +80,12 @@ function pieform_renderer_table(Pieform $form, $element) {/*{{{*/
     // Description - optional description of the element, or other note that should be visible
     // on the form itself (without the user having to hover over contextual help 
     if ((!$form->has_errors() || $form->get_property('showdescriptiononerror')) && !empty($element['description'])) {
-        $result .= "\t<tr>\n\t\t<td colspan=\"2\" class=\"description\">";
+        if ($form->get_property('descriptionintwocells')) {
+            $result .= "\t<tr>\n\t\t<td></td><td class=\"description\">";
+        }
+        else {
+            $result .= "\t<tr>\n\t\t<td colspan=\"2\" class=\"description\">";
+        }
         $result .= $element['description'];
         $result .= "</td>\n\t</tr>\n";
     }
