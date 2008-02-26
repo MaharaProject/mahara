@@ -202,6 +202,8 @@ function view_menu() {
             {$getstring['print']})
     );
 
+    var helpIcon = contextualHelpIcon(null, null, 'core', 'view', null, 'viewmenu');
+    appendChildNodes('viewmenu', ' ', helpIcon);
 }
 
 addLoadEvent(view_menu);
