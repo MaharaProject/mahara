@@ -39,7 +39,10 @@ $blog = new ArtefactTypeBlog($id);
 $blog->check_permission();
 
 // This javascript is used to generate a list of blog posts.
-$js = require('index.js.php'); 
+$js = '';
+if ($blog->count_children()) {
+    $js = require('index.js.php'); 
+}
 
 $images = array('themepaths' => array('images/file.gif', 'images/image.gif'));
 
@@ -48,6 +51,9 @@ $smarty->assign_by_ref('blog', $blog);
 $smarty->assign_by_ref('editform', $form);
 $smarty->assign_by_ref('INLINEJAVASCRIPT', $js);
 $smarty->assign('heading', get_string('viewblog', 'artefact.blog') . ' - ' . $blog->get('title'));
+$smarty->assign('strnopostsaddone',
+    get_string('nopostsaddone', 'artefact.blog',
+    '<a href="' . get_config('wwwroot') . 'artefact/blog/post.php?blog=' . $blog->get('id') . '">', '</a>'));
 $smarty->display('artefact:blog:view.tpl');
 
 ?>
