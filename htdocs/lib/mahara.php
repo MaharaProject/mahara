@@ -1099,14 +1099,17 @@ function get_random_key($length=16) {
  */
 function pieform_configure() {
     global $USER;
+    $theme = ($USER->get('theme')) ? $USER->get('theme') : 'default';
+    require(get_config('docroot') . 'theme/' . $theme . '/config.php');
     return array(
         'method'    => 'post',
         'action'    => '',
         'language'  => current_language(),
         'autofocus' => true,
-        'renderer'  => 'maharatable',
+        'renderer'  => (isset($theme->formrenderer)) ? $theme->formrenderer : 'table',
         'requiredmarker' => true,
         'elementclasses' => true,
+        'descriptionintwocells' => true,
         'jsdirectory'    => get_config('wwwroot') . 'lib/pieforms/static/core/',
         'replycallback'  => 'pieform_reply',
         'jserrorcallback'       => 'formError',
