@@ -330,7 +330,7 @@ function institution_submit(Pieform $form, $values) {
     }
 
     $newinstitution->displayname                  = $values['displayname'];
-    $newinstitution->authplugin                   = $values['authplugin'];
+    $newinstitution->authplugin                   = empty($values['authplugin']) ? null : $values['authplugin'];
     $newinstitution->registerallowed              = ($values['registerallowed']) ? 1 : 0;
     $newinstitution->theme                        = empty($values['theme']) ? null : $values['theme'];
     if ($institution != 'mahara') {
@@ -340,35 +340,37 @@ function institution_submit(Pieform $form, $values) {
         }
     }
 
-    $allinstances = array_merge($values['authplugin']['instancearray'], $values['authplugin']['deletearray']);
+    if (!empty($values['authplugin'])) {
+        $allinstances = array_merge($values['authplugin']['instancearray'], $values['authplugin']['deletearray']);
 
-    if (array_diff($allinstances, $instancearray)) {
-        // TODO wrong exception type
-        throw new Exception('Attempt to delete or update another institution\'s auth instance');
-    }
-
-    if (array_diff($instancearray, $allinstances)) {
-        // TODO wrong exception type
-        throw new Exception('One of your instances is unaccounted for in this transaction');
-    }
-
-    foreach($values['authplugin']['instancearray'] as $priority => $instanceid) {
-        if (in_array($instanceid, $values['authplugin']['deletearray'])) {
-            // Should never happen:
+        if (array_diff($allinstances, $instancearray)) {
             // TODO wrong exception type
-            throw new Exception('Attempt to update AND delete an auth instance');
+            throw new Exception('Attempt to delete or update another institution\'s auth instance');
         }
-        $record = new StdClass;
-        $record->priority = $priority;
-        $record->id = $instanceid;
-        update_record('auth_instance', $record,  array('id' => $instanceid));
-    }
 
-    foreach($values['authplugin']['deletearray'] as $instanceid) {
-        execute_sql('UPDATE {usr} SET lastauthinstance = NULL WHERE lastauthinstance = ?', array(db_quote($instanceid)));
-        delete_records('auth_remote_user', 'authinstance', $instanceid);
-        delete_records('auth_instance_config', 'instance', $instanceid);
-        delete_records('auth_instance', 'id', $instanceid);
+        if (array_diff($instancearray, $allinstances)) {
+            // TODO wrong exception type
+            throw new Exception('One of your instances is unaccounted for in this transaction');
+        }
+
+        foreach($values['authplugin']['instancearray'] as $priority => $instanceid) {
+            if (in_array($instanceid, $values['authplugin']['deletearray'])) {
+                // Should never happen:
+                // TODO wrong exception type
+                throw new Exception('Attempt to update AND delete an auth instance');
+            }
+            $record = new StdClass;
+            $record->priority = $priority;
+            $record->id = $instanceid;
+            update_record('auth_instance', $record,  array('id' => $instanceid));
+        }
+
+        foreach($values['authplugin']['deletearray'] as $instanceid) {
+            execute_sql('UPDATE {usr} SET lastauthinstance = NULL WHERE lastauthinstance = ?', array(db_quote($instanceid)));
+            delete_records('auth_remote_user', 'authinstance', $instanceid);
+            delete_records('auth_instance_config', 'instance', $instanceid);
+            delete_records('auth_instance', 'id', $instanceid);
+        }
     }
 
     if ($add) {
