@@ -195,7 +195,6 @@ span.addicon a {
 	border-width: 1px;
 	font-size: 11px;
 	color: #FFF;
-	display: block;
 }
 #btn-logout:hover,
 span.addicon a:hover {
@@ -1090,9 +1089,6 @@ fieldset {
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
-fieldset iframe {
-	display: none;
-}
 fieldset.collapsible {
 	padding: 15px 10px;
 }
@@ -1281,6 +1277,7 @@ fieldset.collapsed legend a {
 	height: 22px;
 	padding: 2px 10px;
 	margin: 0 0 15px 0;
+	float: left;
 }
 /* Form background when add button is pressed */
 #addemploymenthistory,
@@ -1573,6 +1570,7 @@ button#dosearch {
 }
 #myblogs .addiconcontainer {
     margin: 0;
+	float: right;
 }
 #myblogs .blogsettingscontainer {
 	margin-top: 10px;
