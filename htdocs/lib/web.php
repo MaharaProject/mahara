@@ -588,7 +588,15 @@ function theme_setup() {
     }
 
     // always put the default theme at the top of the tree, unless we're already it
-    if ($theme->theme != 'default') {
+    // Logic here: If you want your theme to be _completely_ independent (e.g. 
+    // you are happy to write/copy the templates etc), then set $theme->parent 
+    // = null; in your theme config.php.
+    //
+    // If you don't set $theme->parent to anything, then the default theme will 
+    // be assumed to be the parent.
+    //
+    // You can of course set $theme->parent to be another theme if you want
+    if (!is_null($parent) && $theme->theme != 'default') {
         $theme->template_dir[] = get_config('docroot')  . 'theme/default/templates/';
         $theme->inheritance[] = 'default';
     }
@@ -604,10 +612,13 @@ function theme_setup() {
 function theme_get_parent($currtheme) {
 
     // look for a config file 
-    if (is_readable(get_config('docroot') . 'theme/ ' . $currtheme. '/config.php')) {
-        require_once(get_config('docroot') . 'theme/ ' . $currtheme. '/config.php');
-        if (!empty($theme->parent) && is_dir(get_config('docroot') . 'theme/ ' . $theme->parent)) {
+    if (is_readable(get_config('docroot') . 'theme/' . $currtheme . '/config.php')) {
+        require(get_config('docroot') . 'theme/' . $currtheme. '/config.php');
+        if (!empty($theme->parent) && is_dir(get_config('docroot') . 'theme/' . $theme->parent)) {
             return $theme->parent;
+        }
+        if (array_key_exists('parent', $theme) && is_null($theme->parent)) {
+            return null;
         }
     }
     return false;
