@@ -28,7 +28,6 @@ defined('INTERNAL') || die();
 
 
 function &smarty_core() {
-
     require_once(get_config('libroot') . 'smarty/Smarty.class.php');
     $smarty =& new Smarty();
     
@@ -37,8 +36,10 @@ function &smarty_core() {
 
     $smarty->template_dir = $theme->template_dir;
 
-    $smarty->compile_dir  = get_config('dataroot').'smarty/compile';
-    $smarty->cache_dir    = get_config('dataroot').'smarty/cache';
+    check_dir_exists(get_config('dataroot') . 'smarty/compile/' . $theme->theme);
+    check_dir_exists(get_config('dataroot') . 'smarty/cache/' . $theme->theme);
+    $smarty->compile_dir  = get_config('dataroot').'smarty/compile/' . $theme->theme;
+    $smarty->cache_dir    = get_config('dataroot').'smarty/cache/' . $theme->theme;
 
     $smarty->assign('THEMEURL', get_config('themeurl'));
     $smarty->assign('WWWROOT', get_config('wwwroot'));
