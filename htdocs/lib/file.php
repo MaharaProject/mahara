@@ -56,7 +56,7 @@ function serve_file($path, $filename, $options=array()) {
         'lifetime' => 86400
     ), $options);
 
-    if (substr($path, 0, strlen($dataroot)) != $dataroot) {
+    if (!get_config('insecuredataroot') && substr($path, 0, strlen($dataroot)) != $dataroot) {
         throw new AccessDeniedException();
     }
 

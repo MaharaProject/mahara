@@ -48,6 +48,17 @@ $cfg->dbprefix = '';
 // this is a big security hole.
 $cfg->dataroot = '/path/to/uploaddir';
 
+// insecuredataroot - whether to enforce checking that files being served have 
+// come from dataroot. You would only want to turn this on if you were running 
+// more than one Mahara against the same dataroot. If you are doing that, make 
+// sure you create separate dataroots for each installation, but symlink the 
+// artefact directory from all of them to one of them, and turn on 
+// 'insecuredataroot' on all the ones you created symlinks for.
+//
+// If you don't know what you're doing/didn't understand the paragraph above, 
+// then leave this setting alone!
+//$cfg->insecuredataroot = false;
+
 // system mail address. emails out come from this address.
 // if not specified, will default to noreply@ automatically detected host.
 // if that doesn't work or you want something else, then specify it here.
