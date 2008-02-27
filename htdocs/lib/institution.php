@@ -85,8 +85,8 @@ class Institution {
                 throw new ParamOutOfRangeException("'registerallowed' should be zero or one");
             }
         } elseif ($name == 'theme') {
-            if (!is_string($value) || empty($value) || strlen($value) > 255) {
-                throw new ParamOutOfRangeException("'theme' ($value) should be a string between 1 and 255 characters in length");
+            if (!empty($value) && is_string($value) && strlen($value) > 255) {
+                throw new ParamOutOfRangeException("'theme' ($value) should be less than 255 characters in length");
             }
         } elseif ($name == 'defaultmembershipperiod') {
             if (!empty($value) && (!is_numeric($value) || $value < 0 || $value > 9999999999)) {
