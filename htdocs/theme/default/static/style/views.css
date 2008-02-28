@@ -81,7 +81,7 @@ div.editview {
 
 #layout-link {
     font-size: 11px;
-	background: url(../images/icon-change.png) no-repeat;
+	background: url(../images/icon-change.gif) no-repeat;
 	padding-left: 18px;
 }
 #layout-link.disabled {
@@ -89,7 +89,7 @@ div.editview {
 }
 #btn-displaymyview {
     font-size: 11px;
-	background: url(../images/icon-display.png) no-repeat;
+	background: url(../images/icon-display.gif) no-repeat;
 	padding-left: 18px;
 }
 
@@ -166,7 +166,8 @@ div.editview {
 /* This rule is incredibly annoying, as it enforces the widths on a whole bunch of tables that don't need to be forced - like the blog attachments table and any tables the user generates by the wysiwyg editor. Can it be made more specific? */
 .blockinstance-content table {
 	width: 100%;
-}*/
+	* width: 99%;
+}
 .blockinstance-content table,
 .blockinstance-content table th,
 .blockinstance-content table td {

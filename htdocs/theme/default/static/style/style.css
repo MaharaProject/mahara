@@ -194,11 +194,12 @@ span.addicon a {
 	border-style: solid;
 	border-width: 1px;
 	font-size: 11px;
-	color: #FFF;
+	color: #FFF !important;
 }
 #btn-logout:hover,
 span.addicon a:hover {
 	text-decoration: none;
+	color: #FFF;
 }
 /* links that should show as big dark buttons */
 #btn-settings {
@@ -240,7 +241,7 @@ input.text, input.password, textarea, input, submit {
 }
 input.radio, input.checkbox,
 input[type=radio], input[type=checkbox] {
-    border: none;
+    border: 0;
 }
 
 
@@ -288,10 +289,12 @@ a.pieform-calendar-toggle img {
 
 /* STUFF THAT I'VE YET TO WORK OUT WHERE THEY COME FROM */
 table.tablerenderer th.asc { 
-    background: #e5e8da url(../images/down.png) no-repeat right;
+	background: transparent url(../images/down.gif) no-repeat right;
+	padding-right: 20px;
 }
 table.tablerenderer th.desc { 
-    background: #e5e8da url(../images/up.png) no-repeat right;
+    background: transparent url(../images/up.gif) no-repeat right;
+	padding-right: 20px;
 }
 #installer tr {
     height: 2em;
@@ -403,7 +406,13 @@ body:last-child:not(:root:root) input.button {
 #edit_interaction #edit_interaction_submit_container input,
 #edittopic #edittopic_submit_container input,
 #institution #institution_submit_container input,
-#auth_config #auth_config_submit_container input {
+#auth_config #auth_config_submit_container input,
+#employmenthistory #employmenthistory_submit_container input,
+#educationhistory #educationhistory_submit_container input,
+#certification #certification_submit_container input,
+#book #book_submit_container input,
+#membership #membership_submit_container input,
+#removefriend #removefriend_submit_container input  {
 	margin: 0;
 }
 input#cancel_profileform_topsubmit,
@@ -422,7 +431,13 @@ input#cancel_profileform_submit,
 #edit_interaction #edit_interaction_submit_container input#cancel_edit_interaction_submit,
 #edittopic #edittopic_submit_container input#cancel_edittopic_submit,
 #institution #institution_submit_container input#cancel_institution_submit,
-#auth_config #auth_config_submit_container input#cancel_auth_config_submit  {
+#auth_config #auth_config_submit_container input#cancel_auth_config_submit,
+#employmenthistory #employmenthistory_submit_container input#cancel_employmenthistory_submit,
+#educationhistory #educationhistory_submit_container input#cancel_educationhistory_submit,
+#certification #certification_submit_container input#cancel_certification_submit,
+#book #book_submit_container input#cancel_book_submit,
+#membership #membership_submit_container input#cancel_membership_submit,
+#removefriend #removefriend_submit_container input#cancel_removefriend_submit {
 	background-color: #7d9728 !important;
 	padding: 2px 10px !important;
 	height: 24px !important;
@@ -567,7 +582,8 @@ tr.required th,
     padding: 5px 0;
     margin: 0;
     text-transform: capitalize;
-	height: 25px;
+	height: 15px;
+	white-space: nowrap;
 }
 #mainnav ul {
 	padding: 5px 0;
@@ -621,7 +637,7 @@ tr.required th,
     text-transform: capitalize;
 }
 #subnav ul {
-	height: 25px;
+	height: 15px;
 	padding: 5px 0;
 	margin: 0;
 }
@@ -1064,6 +1080,7 @@ fieldset table,
 #upgradestable,
 #forumslist {
 	width: 100%;
+	* width: 98%;
 }
 /* Tables that are inside MCE Editors */
 .mceEditor td {
@@ -1246,6 +1263,8 @@ fieldset.collapsed legend a {
 }
 .profile-tabs li a:hover {
 	text-decoration: none;
+    color: #FFF;
+    background-color: #607a8e;
 }
 .profile-fieldsets {
     clear: left;
@@ -1254,6 +1273,9 @@ fieldset.collapsed legend a {
 }
 .profile-fieldsets fieldset {
 	margin-top: 2px;
+}
+fieldset.safe-hidden .mceEditor {
+	display: none;
 }
 
 
@@ -1276,8 +1298,7 @@ fieldset.collapsed legend a {
 	background-color: #92B328;
 	height: 22px;
 	padding: 2px 10px;
-	margin: 0 0 15px 0;
-	float: left;
+	margin: 0;
 }
 /* Form background when add button is pressed */
 #addemploymenthistory,
@@ -1306,6 +1327,12 @@ fieldset.collapsed legend a {
 #personalinformation_maritalstatus_container td,
 #personalinformation_save_container td {
 	padding: 2px 10px;
+}
+fieldset.collapsed .mceEditor {
+	display: none;
+}
+fieldset.collapsed .mceEditor td {
+	border: 0;
 }
 
 
@@ -1344,7 +1371,7 @@ fieldset.collapsed legend a {
 #editviewdetails,
 #editviewaccess {
 	padding-left: 15px;
-	background: url(../images/edit.png) no-repeat left 2px;
+	background: url(../images/edit.gif) no-repeat left 2px;
 	font-size: 12px !important;
 	font-weight: bold;
 }
@@ -1376,8 +1403,10 @@ fieldset.collapsed legend a {
 }
 #editaccess table {
 	width: 100%;
+	* width: 98%;
 }
-#viewacl_lhs {
+#viewacl_lhs #results {
+	border-bottom: 1px solid #95a8b7;
 }
 #potentialpresetitems button {
 	height: 18px;
@@ -1529,6 +1558,10 @@ button#dosearch {
 #filelist {
 	border-bottom: 1px solid #95a8b7;
 }
+#filelist tr.r0.folder td,
+#filelist tr.r1.folder td {
+    background-color: #e0e4e8 !important;
+}
 #filelist tr.r0 td {
     background-color: #e0e8ee !important;
 	border-top: none;
@@ -1606,9 +1639,11 @@ button#dosearch {
 }
 .settingsicon a:hover {
 	text-decoration: none;
+	color: #FFF !important;
 }
 .blogpost-attachments {
 	width: 100%;
+	* width: 98%;
 	border: 1px solid #95a8b7;
 	background-color: #95a8b7;
     padding: 0 !important;
@@ -1656,7 +1691,7 @@ span.viewicon {
 	float: right;
 }
 #editblog table th {
-	text-align: left;
+	text-align: right;
 	padding: 2px 10px;
 }
 #editblog table td {
@@ -1739,14 +1774,16 @@ span.viewicon {
 	padding-top: 5px !important;
 	padding-bottom: 5px !important;
 }
-/* this rule breaks the icons in the folder listing blocktype, they appear really tiny
-#view .blockinstance-content img {
-	max-width: 100%;
-}*/
-
-.iconwrap {
-border: 1px solid red;
+.blockinstance-content .maharatable th {
+	text-align: left !important;
 }
+#feedback th,
+#objection th {
+	padding: 2px 10px;
+	text-align: left;
+}
+
+
 
 /* GROUPS */
 #userview h4 {
@@ -1916,6 +1953,10 @@ border: 1px solid red;
 	height: 20px;
 	font-size: 11px;
 }
+#group_viewlist,
+#memberlist {
+	border-bottom: 1px solid #95a8b7;
+}
 
 
 /* FORUMS */
@@ -1971,11 +2012,12 @@ span.breadcrumbs a {
 	margin-top: 10px;
 	background-color: #ececec;
 	padding: 10px 10px;
-	width: 100%;
+	* width: 98%;
 	border: 1px solid #d7d7d7;
 }
 #forumtopicstable {
 	width: 100%;
+	* width: 98%;
 	border-bottom: 1px solid #95a8b7;
 }
 #forumtopicstable th {
@@ -1988,6 +2030,7 @@ span.breadcrumbs a {
 }
 #forumtopicbtnwrap {
 	width: 100%;
+	* width: 98%;
 	margin-bottom: 0;
 }
 #subscribe_forum_submit_container input,
@@ -2055,6 +2098,7 @@ span.breadcrumbs a {
 #forumpost {
 	background-color: #f4f7f9;
 	width: 100%;
+	* width: 98%;
 	border-top: 1px solid #95a8b7;
 	border-bottom: 1px solid #95a8b7;
 	margin-bottom: 0;
@@ -2097,7 +2141,36 @@ span.breadcrumbs a {
 
 
 /* FORUM > EDIT FORUM */
-
+#edit_interaction table {
+	margin:0;
+}
+#edit_interaction_moderator_container table {
+	margin: 0;
+	padding: 0;
+}
+#edit_interaction_moderator_container table td {
+	margin: 0;
+	padding: 0 5px;
+}
+#edit_interaction_moderator_container table th {
+	text-align: left;
+	padding: 2px 5px;
+	color: #555555;
+}
+#edit_interaction_moderator_container table td label {
+	padding-right: 5px;
+}
+#edit_interaction_moderator_container table td button {
+	height: 20px;
+	background-color: #92b328;
+}
+#edit_interaction_moderator_container button#moderator_search_btn {
+	background: url(../images/btn_search_off.gif) no-repeat !important;
+	border: none;
+	padding-left: 25px;
+	height: 24px;
+	color: #fff;
+}
 
 /* FORUM > EDIT TOPIC */
 
@@ -2135,6 +2208,7 @@ span.breadcrumbs a {
 }
 #activitylist td div {
 	font-size: 11px;
+	padding: 2px 5px;
 }
 #activitylist td.markasreadtd {
 	text-align: right;
@@ -2219,7 +2293,10 @@ span.breadcrumbs a {
 
 
 /* CONFIGURE SITE > SITE OPTIONS */
-
+#siteoptions td,
+#siteoptions th {
+	padding: 2px 5px;
+}
 
 
 /* MANAGE USERS > USER SEARCH */
@@ -2255,6 +2332,14 @@ table#initials .initial-letters {
 }
 
 
+
+/* CONFIGURE SITE > NETWORKING */
+#networkingform td,
+#networkingform th {
+	padding: 2px 5px;
+}
+
+
 /* MANAGE USER > ADMIN NOTIFICATIONS */
 
 
@@ -2287,10 +2372,6 @@ table#initials .initial-letters {
 
 
 /* MANAGE USERS > USER SEARCH */
-#searchresults thead tr th.asc {
-	background: transparent url(../images/down.png) no-repeat right;
-	padding-right: 20px;
-}
 #results div{
 	padding: 10px 15px;
 }
@@ -2393,9 +2474,16 @@ table#initials .initial-letters {
 #adminstitutionslist {
 	border-bottom: 1px solid #95a8b7;
 }
-#institution fieldset table th,
+#institution fieldset table tr {
+	display: inline;
+}
+#institution fieldset table th {
+	width: 180px;
+	padding: 2px;
+}
 #institution fieldset table td {
-	padding: 2px 5px;
+	padding: 2px;
+	width: 8px;
 }
 .institutioneditbuttons form,
 .institutionedituserbuttons {
