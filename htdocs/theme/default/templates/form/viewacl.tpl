@@ -119,7 +119,7 @@ function makeCalendarInput(item, type) {
         'name': 'accesslist[' + count + '][' + type + 'date]',
         'id'  :  type + 'date_' + count,
         'value': item[type + 'date'] ? item[type + 'date'] : '',
-        'size': '15',
+        'size': '15'
     });
 }
 
