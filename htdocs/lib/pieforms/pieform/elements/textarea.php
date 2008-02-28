@@ -25,6 +25,7 @@
  */
 
 // TODO: plugins as classes...
+global $_PIEFORM_TEXTAREAS;
 $_PIEFORM_TEXTAREAS = array();
 
 /**
