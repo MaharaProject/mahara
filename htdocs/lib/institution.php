@@ -293,6 +293,21 @@ class Institution {
         }
     }
 
+    public function declineRequestFromUser($userid) {
+        $lang = get_user_language($userid);
+        $message = (object) array(
+            'users' => array($userid),
+            'subject' => get_string_from_language($lang, 'institutionmemberrejectsubject'),
+            'message' => get_string_from_language($lang, 'institutionmemberrejectmessage', 'mahara', $this->displayname),
+        );
+        db_begin();
+        delete_records('usr_institution_request', 'usr', $userid, 'institution', $this->name,
+                       'confirmedusr', 1);
+        activity_occurred('maharamessage', $message);
+        handle_event('updateuser', $userid);
+        db_commit();
+    }
+
     public function inviteUser($user) {
         $userid = is_object($user) ? $user->id : $user;
         db_begin();

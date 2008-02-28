@@ -76,7 +76,7 @@ if ($usertype == 'requesters') {
     $userlistelement = array(
         'title' => get_string('addnewmembers', 'admin'),
         'lefttitle' => get_string('usersrequested', 'admin'),
-        'righttitle' => get_string('userstobeadded', 'admin'),
+        'righttitle' => get_string('userstoaddorreject', 'admin'),
         'searchparams' => array('requested' => 1),
     );
     $submittext = get_string('addmembers', 'admin');
@@ -110,7 +110,7 @@ $userlistelement['searchparams']['limit'] = 100;
 $userlistelement['searchparams']['query'] = '';
 $userlistelement['searchparams']['institution'] = $institution;
 
-$userlistform = pieform(array(
+$userlistform = array(
     'name' => 'institutionusers',
     'elements' => array(
         'users' => $userlistelement,
@@ -129,7 +129,16 @@ $userlistform = pieform(array(
             'value' => $submittext
         )
     )
-));
+);
+
+if ($usertype == 'requesters') {
+    $userlistform['elements']['reject'] = array(
+        'type' => 'submit',
+        'value' => get_string('declinerequests', 'admin'),
+    );
+}
+
+$userlistform = pieform($userlistform);
 
 function institutionusers_submit(Pieform $form, $values) {
     global $SESSION, $USER;
@@ -158,31 +167,39 @@ function institutionusers_submit(Pieform $form, $values) {
         redirect($url);
     }
 
+    if ($values['usertype'] == 'members') {
+        $action = 'removeMembers';
+    } else if ($values['usertype'] == 'requesters') {
+        $action = !empty($values['reject']) ? 'declineRequestFromUser' : 'addUserAsMember';
+    } else {
+        $action = 'inviteUser';
+    }
+
+
     $institution = new Institution($values['institution']);
     $maxusers = $institution->maxuseraccounts;
     if (!empty($maxusers)) {
         $members = $institution->countMembers();
-        if ($values['usertype'] == 'requesters' && $members + count($values['users']) >= $maxusers) {
+        if ($action == 'addUserAsMember' && $members + count($values['users']) >= $maxusers) {
             $SESSION->add_error_msg(get_string('institutionuserserrortoomanyusers', 'admin'));
             redirect($url);
         }
-        if ($values['usertype'] == 'nonmembers' 
+        if ($action == 'inviteUser'
             && $members + $institution->countInvites() + count($values['users']) >= $maxusers) {
             $SESSION->add_error_msg(get_string('institutionuserserrortoomanyinvites', 'admin'));
             redirect($url);
         }
     }
     db_begin();
-    if ($values['usertype'] == 'members') {
+    if ($action == 'removeMembers') {
         $institution->removeMembers($values['users']);
-    } else {
-        $update = $values['usertype'] == 'requesters' ? 'addUserAsMember' : 'inviteUser';
+    } else if (!empty($values['users'])) {
         foreach ($values['users'] as $id) {
-            $institution->{$update}($id);
+            $institution->{$action}($id);
         }
     }
     db_commit();
-    $SESSION->add_ok_msg(get_string('institutionusersupdated'.$values['usertype'], 'admin'));
+    $SESSION->add_ok_msg(get_string('institutionusersupdated_'.$action, 'admin'));
     if (!$USER->get('admin') && !$USER->is_institutional_admin()) {
         redirect(get_config('wwwroot'));
     }

@@ -344,6 +344,7 @@ $string['addnewmembers'] = 'Add new members';
 $string['addnewmembersdescription'] = '';
 $string['usersrequested'] = 'Users who have requested membership';
 $string['userstobeadded'] = 'Users to be added as members';
+$string['userstoaddorreject'] = 'Users to be added/rejected';
 $string['addmembers'] = 'Add members';
 $string['inviteuserstojoin'] = 'Invite users to join the institution';
 $string['Non-members'] = 'Non-members';
@@ -353,10 +354,12 @@ $string['removeusersfrominstitution'] = 'Remove users from the institution';
 $string['currentmembers'] = 'Current Members';
 $string['userstoberemoved'] = 'Users to be removed';
 $string['removeusers'] = 'Remove Users';
+$string['declinerequests'] = 'Decline requests';
 
-$string['institutionusersupdatedrequesters'] = 'Users added';
-$string['institutionusersupdatedmembers'] = 'Users removed';
-$string['institutionusersupdatednonmembers'] = 'Invitations sent';
+$string['institutionusersupdated_addUserAsMember'] = 'Users added';
+$string['institutionusersupdated_declineRequestFromUser'] = 'Requests declined';
+$string['institutionusersupdated_removeMembers'] = 'Users removed';
+$string['institutionusersupdated_inviteUser'] = 'Invitations sent';
 
 $string['maxuseraccounts'] = 'Maximum User Accounts Allowed';
 $string['maxuseraccountsdescription'] = 'The maximum number of user accounts that can be associated with the institution.  If there is no limit, this field should be left blank.';

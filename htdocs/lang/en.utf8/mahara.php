@@ -372,6 +372,8 @@ $string['requestmembershipofaninstitution'] = 'Request membership of an institut
 $string['optionalinstitutionid'] = 'Institution ID (optional)';
 $string['institutionmemberconfirmsubject'] = 'Institution membership confirmation';
 $string['institutionmemberconfirmmessage'] = 'You have been added as a member of %s.';
+$string['institutionmemberrejectsubject'] = 'Institution membership request declined';
+$string['institutionmemberrejectmessage'] = 'Your request for membership of %s was declined.';
 
 $string['emailname'] = 'Mahara System'; // robot! 
 
