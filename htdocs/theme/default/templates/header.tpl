@@ -28,6 +28,7 @@
 	<link rel="stylesheet" type="text/css" href="{$cssurl}">
 {/foreach}
 	<link rel="stylesheet" type="text/css" href="{theme_path location='style/print.css'}" media="print">
+    <link rel="shortcut icon" href="{$WWWROOT}favicon.ico" type="image/vnd.microsoft.icon">
 </head>
 <body>
 <div id="container">
