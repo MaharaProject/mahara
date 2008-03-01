@@ -197,6 +197,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         require_once('snoopy/Snoopy.class.php');
 
         $snoopy = new Snoopy();
+        $snoopy->curl_path = '/usr/bin/curl'; // TODO: make configurable later. This is the default for debian
         $success = true;
 
         if (!$snoopy->fetch($source)) {
