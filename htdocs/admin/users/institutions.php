@@ -146,7 +146,7 @@ if ($institution || $add) {
         $data = new StdClass;
         $data->displayname = '';
         $data->registerallowed = 1;
-        $data->theme = 'default';
+        $data->theme = 'sitedefault';
         $data->defaultmembershipperiod = null;
         $lockedprofilefields = array();
         $smarty->assign('add', true);
@@ -154,6 +154,7 @@ if ($institution || $add) {
         $authtypes = auth_get_available_auth_types();
     }
     $themeoptions = get_themes();
+    $themeoptions['sitedefault'] = get_string('sitedefault', 'admin');
     
     safe_require('artefact', 'internal');
     $elements = array(
@@ -226,7 +227,7 @@ if ($institution || $add) {
             'type'         => 'select',
             'title'        => get_string('theme','admin'),
             'description'  => get_string('sitethemedescription','admin'),
-            'defaultvalue' => $data->theme,
+            'defaultvalue' => $data->theme ? $data->theme : 'sitedefault',
             'collapseifoneoption' => true,
             'options'      => $themeoptions,
             'help'         => true,
@@ -332,7 +333,7 @@ function institution_submit(Pieform $form, $values) {
     $newinstitution->displayname                  = $values['displayname'];
     $newinstitution->authplugin                   = empty($values['authplugin']) ? null : $values['authplugin'];
     $newinstitution->registerallowed              = ($values['registerallowed']) ? 1 : 0;
-    $newinstitution->theme                        = empty($values['theme']) ? null : $values['theme'];
+    $newinstitution->theme                        = (empty($values['theme']) || $values['theme'] == 'sitedefault') ? null : $values['theme'];
     if ($institution != 'mahara') {
         $newinstitution->defaultmembershipperiod  = ($values['defaultmembershipperiod']) ? intval($values['defaultmembershipperiod']) : null;
         if ($USER->get('admin')) {

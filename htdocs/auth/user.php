@@ -486,7 +486,7 @@ class User {
                 $staffinstitutions[$i->institution] = $i->institution;
             }
             if (empty($this->theme)) {
-                $this->theme = $i->theme;
+                $this->theme = empty($i->theme) ? get_config('theme') : $i->theme;
             }
         }
         $this->institutions       = $institutions;
