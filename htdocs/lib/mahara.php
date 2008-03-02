@@ -413,7 +413,7 @@ function get_themes() {
 
             $config_path = $themebase . $subdir . '/config.php';
             if (is_readable($config_path)) {
-                require_once($config_path);
+                require($config_path);
                 if (isset($theme->name)) {
                     $themes[$subdir] = $theme->name;
                 }
