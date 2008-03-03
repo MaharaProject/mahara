@@ -111,8 +111,14 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                 $form->set_error('url', get_string('invalidurl', 'blocktype.externalfeed'));
             }
         }
-        if (!$form->get_error('url') && !record_exists('blocktype_externalfeed_data', 'url', $values['url']) && !self::parse_feed($values['url'])) {
-            $form->set_error('url', get_string('invalidurl', 'blocktype.externalfeed'));
+        if (!$form->get_error('url') && !record_exists('blocktype_externalfeed_data', 'url', $values['url'])) {
+            try {
+                self::parse_feed($values['url']);
+                return;
+            }
+            catch (XML_Feed_Parser_Exception $e) {
+                $form->set_error('url', get_string('invalidfeed', 'blocktype.externalfeed',  $e->getMessage()));
+            }
         }
     }
 
@@ -127,6 +133,8 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             unset($values['url']);
             return $values;
         }
+        // We know this is safe because self::parse_feed caches its result and 
+        // the validate method would have failed if the feed was invalid
         $data = self::parse_feed($values['url']);
         $data->content  = serialize($data->content);
         $data->lastupdate = db_format_timestamp(time());
@@ -158,11 +166,18 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             return;
         }
         foreach ($feeds as $feed) {
-            $data = self::parse_feed($feed->url);
-            $data->id = $feed->id;
-            $data->lastupdate = db_format_timestamp(time());
-            $data->content = serialize($data->content);
-            update_record('blocktype_externalfeed_data', $data);
+            try {
+                $data = self::parse_feed($feed->url);
+                $data->id = $feed->id;
+                $data->lastupdate = db_format_timestamp(time());
+                $data->content = serialize($data->content);
+                update_record('blocktype_externalfeed_data', $data);
+            }
+            catch (XML_Feed_Parser_Exception $e) {
+                // The feed must have changed in such a way as to become 
+                // invalid since it was added. We ignore this case in the hope 
+                // the feed will become valid some time later
+            }
         }
     }
 
@@ -182,7 +197,13 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         delete_records_select('blocktype_externalfeed_data', 'id NOT IN ( ' . $usedids . ' )');
     }
 
-
+    /**
+     * Parses the RSS feed given by $source. Throws an exception if the feed 
+     * isn't able to be parsed
+     *
+     * @param string $source The URI for the feed
+     * @throws XML_Feed_Parser_Exception
+     */
     public static function parse_feed($source) {
 
         static $cache;
@@ -198,19 +219,26 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
 
         $snoopy = new Snoopy();
         $snoopy->curl_path = '/usr/bin/curl'; // TODO: make configurable later. This is the default for debian
-        $success = true;
 
-        if (!$snoopy->fetch($source)) {
-            $cache[$source] = false;
-            return false;
+        // This is to disable warnings from snoopy while it performs its work. 
+        // By all means, comment out while debugging any problems
+        $oldlevel = error_reporting(0);
+        $result = $snoopy->fetch($source);
+        error_reporting($oldlevel);
+
+        if (!$result) {
+            $cache[$source] = new XML_Feed_Parser_Exception($snoopy->error);
+            throw $cache[$source];
         }
 
         try {
             $feed = new XML_Feed_Parser($snoopy->results, false, true, false);
         }
         catch (XML_Feed_Parser_Exception $e) {
-            $cache[$source] = false;
-            return false;
+            $cache[$source] = $e;
+            throw $e;
+            // Don't catch other exceptions, they're an indication something 
+            // really bad happened
         }
         
         $data = new StdClass;

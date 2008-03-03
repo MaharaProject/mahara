@@ -30,6 +30,7 @@ $string['title'] = 'External Feed';
 $string['description'] = 'Embed an external RSS or ATOM feed';
 $string['feedlocation'] = 'Feed location';
 $string['feedlocationdesc'] = 'URL of a valid RSS or ATOM feed';
-$string['invalidurl'] = 'That URL is either invalid or the feed there won\'t parse';
+$string['invalidurl'] = 'That URL is invalid. You can only view feeds for http and https URLs.';
+$string['invalidfeed'] = 'The feed appears to be invalid. The error reported was: %s';
 $string['lastupdatedon'] = 'Last updated on %s';
 ?>
