@@ -421,7 +421,6 @@ $smarty->assign('heading', get_string('admininstitutions', 'admin'));
 $smarty->display('admin/users/institutions.tpl');
 
 function theme_sort($a, $b) {
-    log_debug("$a, $b");
     if ($a == 'sitedefault') {
         return -1;
     }
