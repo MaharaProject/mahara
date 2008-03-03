@@ -154,7 +154,8 @@ if ($institution || $add) {
         $authtypes = auth_get_available_auth_types();
     }
     $themeoptions = get_themes();
-    $themeoptions['sitedefault'] = get_string('sitedefault', 'admin');
+    $themeoptions['sitedefault'] = '- ' . get_string('sitedefault', 'admin') . ' -';
+    uksort($themeoptions, 'theme_sort');
     
     safe_require('artefact', 'internal');
     $elements = array(
@@ -418,5 +419,16 @@ function institution_cancel_submit() {
 
 $smarty->assign('heading', get_string('admininstitutions', 'admin'));			
 $smarty->display('admin/users/institutions.tpl');
+
+function theme_sort($a, $b) {
+    log_debug("$a, $b");
+    if ($a == 'sitedefault') {
+        return -1;
+    }
+    if ($b == 'sitedefault') {
+        return 1;
+    }
+    return $a > $b;
+}
 
 ?>
