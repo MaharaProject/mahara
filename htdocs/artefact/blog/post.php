@@ -260,6 +260,14 @@ function attachtopost(data) {
         return;
     }
     var ext = data.oldextension ? data.oldextension : '';
+    var tags;
+    if (typeof(data.tags) == "string") {
+        tags = data.tags;
+    }
+    else {
+        tags = data.tags.join(', ');
+    }
+
     appendChildNodes(
         attached.tbody,
         TR(
@@ -270,7 +278,7 @@ function attachtopost(data) {
                     IMG({'src':get_themeurl('images/'+data.artefacttype+'.gif'), 'alt':data.artefacttype}), 
                     data.title,
                     data.description,
-                    data.tags.join(', '),
+                    tags,
                     [SPAN({'style':'display: none;'}, ext),
                      INPUT(
                         {'type':'button', 'class':'button', 'value':{$getstring['remove']},
