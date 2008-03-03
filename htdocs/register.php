@@ -226,6 +226,7 @@ if (count($institutions) > 1) {
     foreach ($institutions as $institution) {
         $options[$institution->name] = $institution->displayname;
     }
+    natcasesort($options);
     $elements['institution'] = array(
         'type' => 'select',
         'title' => get_string('institution'),
