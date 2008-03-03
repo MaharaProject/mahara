@@ -64,7 +64,7 @@ if (!$blogpost) {
     $tags = array();
     $pagetitle = get_string('newblogpost', 'artefact.blog', get_field('artefact', 'title', 'id', $blog));
     $focuselement = 'title';
-    define('TITLE', get_string('newblogpost','artefact.blog'));
+    define('TITLE', $pagetitle);
 }
 else {
     $blogpostobj = new ArtefactTypeBlogPost($blogpost);
