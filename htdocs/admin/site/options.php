@@ -166,6 +166,7 @@ function siteoptions_submit(Pieform $form, $values) {
                     'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn', 
                     'allowpublicviews', 'searchplugin');
     $oldlanguage = get_config('lang');
+    $oldtheme = get_config('theme');
     foreach ($fields as $field) {
         if (!set_config($field, $values[$field])) {
             siteoptions_fail($form, $field);
@@ -186,7 +187,11 @@ function siteoptions_submit(Pieform $form, $values) {
             siteoptions_fail($form, $checkbox);
         }
     }
-    $form->reply(PIEFORM_OK, array('message' => get_string('siteoptionsset', 'admin'), 'goto' => '/admin/site/options.php'));
+    $message = get_string('siteoptionsset', 'admin');
+    if ($oldtheme != $values['theme']) {
+        $message .= '  ' . get_string('usersseenewthemeonlogin', 'admin');
+    }
+    $form->reply(PIEFORM_OK, array('message' => $message, 'goto' => '/admin/site/options.php'));
 }
 
 $thispage = json_encode(get_config('wwwroot') . 'admin/site/options.php');

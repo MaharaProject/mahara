@@ -380,6 +380,7 @@ function institution_submit(Pieform $form, $values) {
     else {
         $where = new StdClass;
         $where->name = $institution;
+        $oldtheme = get_field('institution', 'theme', 'name', $institution);
         update_record('institution', $newinstitution, $where);
     }
 
@@ -395,15 +396,19 @@ function institution_submit(Pieform $form, $values) {
     db_commit();
 
     if ($add) {
-        $message = 'institutionaddedsuccessfully';
+        $message = get_string('institutionaddedsuccessfully', 'admin');
         $nexturl = '/admin/users/institutions.php?i='.urlencode($institution);
     }
     else {
-        $message = 'institutionupdatedsuccessfully';
+        $message = get_string('institutionupdatedsuccessfully', 'admin');
+        if ($oldtheme != $values['theme']
+            && (!empty($oldtheme) || $values['theme'] != 'sitedefault')) {
+            $message .= '  ' . get_string('usersseenewthemeonlogin', 'admin');
+        }
         $nexturl = '/admin/users/institutions.php';
     }
 
-    $SESSION->add_ok_msg(get_string($message, 'admin'));
+    $SESSION->add_ok_msg($message);
     redirect($nexturl);
 }
 
