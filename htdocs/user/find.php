@@ -67,6 +67,11 @@ $pagination = build_pagination(array(
     'resultcounttextplural' => get_string('users', 'group'),
 ));
 
+if ($query && !$data['count']) {
+    // Search run, no results
+    $message = get_string('nosearchresultsfound', 'group');
+}
+
 $smarty = smarty(array(), array(), array(), array('sideblocks' => array(friends_control_sideblock('find'))));
 $smarty->assign('heading', TITLE);
 $smarty->assign('users', $data['data']);

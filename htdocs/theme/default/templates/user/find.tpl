@@ -19,9 +19,11 @@
     {$pagination}
 {else}
 </div>
+{if $message}
 <div class="message">
     {$message}
 </div>
+{/if}
 {/if}
 </div>
 
