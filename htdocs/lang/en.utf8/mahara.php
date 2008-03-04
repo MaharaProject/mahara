@@ -103,6 +103,34 @@ $string['linksandresources'] = 'Links and Resources';
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section';
 $string['accountdeleted'] = 'Sorry, your account has been deleted';
 $string['accountexpired'] = 'Sorry, your account has expired';
+$string['accountcreated'] = get_config('sitename') . ': New account';
+$string['accountcreatedtext'] = 'Dear %s,
+
+A new account has been created for you on %s. Your details are as follows:
+
+Username: %s
+Password: %s
+
+Once you log in for the first time, you will be asked to change your password.
+
+Visit ' . get_config('wwwroot') . ' to get started!
+
+Regards, %s Site Administrator';
+$string['accountcreatedhtml'] = '<p>Dear %s</p>
+
+<p>A new account has been created for you on <a href="' . get_config('wwwroot') . '">%s</a>. Your details are as follows:</p>
+
+<ul>
+    <li><strong>Username:</strong> %s</li>
+    <li><strong>Password:</strong> %s</li>
+</ul>
+
+<p>Once you log in for the first time, you will be asked to change your password.</p>
+
+<p>Visit <a href="' . get_config('wwwroot') . '">' . get_config('wwwroot') . '</a> to get started!</p>
+
+<p>Regards, %s Site Administrator</p>
+';
 $string['accountexpirywarning'] = 'Account expiry warning';
 $string['accountexpirywarningtext'] = 'Dear %s,
 

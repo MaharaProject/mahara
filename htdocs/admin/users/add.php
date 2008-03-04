@@ -179,7 +179,7 @@ function adduser_validate(Pieform $form, $values) {
     }
 
     if (method_exists($authobj, 'is_password_valid') && !$authobj->is_password_valid($password)) {
-        $form->set_error('password', get_string('addusererrorinvalidpassword', 'admin'));
+        $form->set_error('password', get_string('passwordinvalidform', 'auth.' . $authobj->type));
         return;
     }
 
@@ -242,6 +242,11 @@ function adduser_submit(Pieform $form, $values) {
     }
     handle_event('createuser', $user);
     db_commit();
+
+    email_user($user, $USER, get_string('accountcreated'),
+        get_string('accountcreatedtext', 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('sitename')),
+        get_string('accountcreatedhtml', 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('sitename'))
+    );
 
     redirect('/admin/users/edit.php?id='.$id);
 }

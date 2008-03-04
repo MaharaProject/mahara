@@ -285,6 +285,7 @@ $string['confirmremoveuserfrominstitution'] = 'Are you sure you want to remove t
 // Add User
 $string['adduser'] = 'Add User';
 $string['adduserdescription'] = 'Create a new user';
+$string['adduserpagedescription'] = '<p>Here you may add a new user to the system. Once added, they will be sent an e-mail informing them of their new account, including their username and password. They will be asked to change their password upon first log in.</p>';
 $string['createuser'] = 'Create User';
 
 // Login as
