@@ -70,3 +70,5 @@
     <a href="{$WWWROOT}admin/users/changeuser.php?restore=1">{str tag=becomeadminagain section=admin args=$data.realuser}</a>
     </div>
     {/if}
+    {* This makes sure the profile block still appears to contain the profile image, even if the profile block is pretty much empty otherwise *}
+    <div class="cb"></div>
