@@ -570,6 +570,14 @@ function xmldb_core_upgrade($oldversion=0) {
             add_key($typetable, $typekey);
         }
 
+        // MySQL hasn't dropped the primary key at this point, despite one of the fields disappearing
+        if (is_mysql()) {
+            $xmldbtable = new XMLDBTable('usr_activity_preference');
+            $xmldbkey = new XMLDBKey('primary');
+            $xmldbkey->setAttributes(XMLDB_KEY_PRIMARY, array('usr'));
+            drop_key($xmldbtable, $xmldbkey);
+        }
+
         foreach ($fks as $table => $field) {
             $xmldbtable = new XMLDBTable($table);
             $xmldbfield = new XMLDBField($field . 'new');
@@ -586,14 +594,6 @@ function xmldb_core_upgrade($oldversion=0) {
             $xmldbkey = new XMLDBKey($field . 'fk');
             $xmldbkey->setAttributes(XMLDB_KEY_FOREIGN, array($field), 'activity_type', array('id'));
             add_key($xmldbtable, $xmldbkey);
-        }
-
-        // MySQL hasn't dropped the primary key at this point, despite one of the fields disappearing
-        if (is_mysql()) {
-            $xmldbtable = new XMLDBTable('usr_activity_preference');
-            $xmldbkey = new XMLDBKey('primary');
-            $xmldbkey->setAttributes(XMLDB_KEY_PRIMARY, array('usr'));
-            drop_key($xmldbtable, $xmldbkey);
         }
 
         // special case... 
