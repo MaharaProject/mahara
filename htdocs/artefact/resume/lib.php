@@ -234,7 +234,8 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
         parent::__construct($id, $data);
         $this->composites = ArtefactTypePersonalinformation::get_composite_fields();
         if (!empty($id)) {
-            $this->composites = (array)get_record('artefact_resume_personal_information', 'artefact', $id);
+            $this->composites = (array)get_record('artefact_resume_personal_information', 'artefact', $id,
+                null, null, null, null, '*, ' . db_format_tsfield('dateofbirth'));
         }
     }
 
@@ -248,9 +249,6 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
         // only set it to dirty if it's changed
         $this->dirty = true;
         $this->mtime = time();
-        if ($field == 'dateofbirth' && !empty($value)) {
-            $value = db_format_timestamp($value);
-        }
         $this->composites[$field] = $value;
     }   
 
@@ -267,6 +265,9 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
 
         $data = new StdClass;
         foreach ($this->composites as $field => $value) {
+            if ($field == 'dateofbirth' && !empty($value)) {
+                $value = db_format_timestamp($value);
+            }
             $data->{$field} = $value;
         }   
         $inserting = empty($this->id);
@@ -299,12 +300,15 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
     }
 
     public function render_self($options) {
-        $smarty = smarty();
+        $smarty = smarty_core();
         $fields = array();
         foreach (array_keys(ArtefactTypePersonalInformation::get_composite_fields()) as $field) {
             $value = $this->get_composite($field);
             if ($field == 'gender' && !empty($value)) {
                 $value = get_string($value, 'artefact.resume');
+            }
+            if ($field == 'dateofbirth' && !empty($value)) {
+                $value = strftime(get_string('strftimedate'), $value);
             }
             $fields[get_string($field, 'artefact.resume')] = $value;
         }
@@ -450,7 +454,7 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
 
     public function render_self($options) {
         $suffix = '_' . substr(md5(microtime()), 0, 4);
-        $smarty = smarty();
+        $smarty = smarty_core();
         $smarty->assign('hidetitle', true);
         $smarty->assign('suffix', $suffix);
         $type = $this->get('artefacttype');
