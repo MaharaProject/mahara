@@ -53,4 +53,22 @@ addLoadEvent(function() {
     removeElement(
         getFirstElementByTagAndClassName('table', null, 'profileform')
     );
+
+    // Now unhide the profile form
+    hideElement('profile-loading');
+    $('profileform').style.position = 'static';
+    $('profileform').style.visibility = 'visible';
 });
+
+// Add a stylesheet for styling in JS only
+// See http://www.phpied.com/dynamic-script-and-style-elements-in-ie/
+var styleNode = createDOM('style', {'type': 'text/css'});
+var rule = '#profileform { visibility: hidden; position: absolute; top: 0; }';
+// Stupid IE workaround
+if (document.all && !window.opera) {
+    styleNode.styleSheet.cssText = rule;
+}
+else {
+    appendChildNodes(styleNode, rule);
+}
+appendChildNodes(getFirstElementByTagAndClassName('head'), styleNode);
