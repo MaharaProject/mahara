@@ -134,9 +134,6 @@ if (isset($key)) {
             set_profile_field($user->id, $field, $profilefields[$field]);
         }
 
-        $registration->quotaused = 0;
-        $registration->quota = get_config_plugin('artefact', 'file', 'defaultquota');
-
         db_commit();
         handle_event('createuser', $registration);
 
