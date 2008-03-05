@@ -239,16 +239,20 @@ function settings_submit_delete(Pieform $form, $values) {
     $icons = param_variable('icons', array());
     $icons = array_keys($icons);
 
-    $icons = join(',', array_map('intval', $icons));
     if ($icons) {
         db_begin();
-        delete_records_select('view_artefact', "artefact IN ($icons)");
-        delete_records_select('artefact', "
-            artefacttype = 'profileicon' AND
-            owner = ? AND
-            id IN($icons)", array($USER->id));
+        foreach ($icons as $icon) {
+            $iconartefact = artefact_instance_from_id($icon);
+            // Just to be sure
+            if ($iconartefact->get('artefacttype') == 'profileicon' && $iconartefact->get('owner') == $USER->get('id')) {
+                $iconartefact->delete();
+            }
+            else {
+                throw new AccessDeniedException();
+            }
+        }
 
-        if (in_array($USER->get('profileicon'), explode(',', $icons))) {
+        if (in_array($USER->get('profileicon'), $icons)) {
             $USER->profileicon = null;
         }
 
@@ -256,7 +260,7 @@ function settings_submit_delete(Pieform $form, $values) {
 
         // Now all the database manipulation has happened successfully, remove 
         // all of the images
-        foreach (explode(',', $icons) as $icon) {
+        foreach ($icons as $icon) {
             $USER->quota_remove(filesize(get_config('dataroot') . 'artefact/internal/profileicons/originals/' . ($icon % 256) . '/' . $icon));
             $USER->commit();
             delete_image('artefact/internal/profileicons', $icon);
