@@ -54,7 +54,7 @@ foreach ($activitytypes as $type) {
         if (!empty($type->admin) && $USER->get('admin')) {
             $dv = 'none';
         } else {
-            $dv = 'internal';
+            $dv = 'email';
         }
     }
     if (!empty($type->plugintype)) {
