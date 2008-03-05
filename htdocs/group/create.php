@@ -54,7 +54,7 @@ $creategroup = pieform(array(
             'type'         => 'wysiwyg',
             'title'        => get_string('groupdescription', 'group'),
             'rows'         => 10,
-            'cols'         => 80,
+            'cols'         => 55,
         ),
         'membershiptype' => array(
             'type'         => 'select',

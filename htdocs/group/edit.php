@@ -64,7 +64,7 @@ $editgroup = pieform(array(
             'type'         => 'wysiwyg',
             'title'        => get_string('groupdescription', 'group'),
             'rows'         => 10,
-            'cols'         => 70,
+            'cols'         => 55,
             'defaultvalue' => $group_data->description,
         ),
         'membershiptype' => array(
