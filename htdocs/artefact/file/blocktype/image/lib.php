@@ -49,16 +49,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
         // render_self
         $result = '';
         if (isset($configdata['artefactid'])) {
-            try {
-                $image = artefact_instance_from_id($configdata['artefactid']);
-            }
-            catch (NotFoundException $e) {
-                // Whoops - where did the image go? There is possibly a bug 
-                // somewhere else that meant that this blockinstance wasn't 
-                // told that the image was previously deleted. But the block 
-                // instance is not allowed to treat this as a failure
-                return '';
-            }
+            $image = artefact_instance_from_id($configdata['artefactid']);
 
             if ($image instanceof ArtefactTypeProfileIcon) {
                 $src = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $configdata['artefactid'];

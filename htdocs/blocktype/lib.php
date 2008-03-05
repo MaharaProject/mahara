@@ -299,7 +299,20 @@ class BlockInstance {
             list($content, $js) = array_values($this->build_configure_form($new));
         }
         else {
-            $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this);
+            try {
+                $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this);
+            }
+            catch (ArtefactNotFoundException $e) {
+                // Whoops - where did the image go? There is possibly a bug 
+                // somewhere else that meant that this blockinstance wasn't 
+                // told that the image was previously deleted. But the block 
+                // instance is not allowed to treat this as a failure
+                log_debug('Artefact not found when rendering a block instance. '
+                    . 'There might be a bug with deleting artefacts of this type? '
+                    . 'Original error follows:');
+                log_debug($e->getMessage());
+                $content = '';
+            }
         }
 
         $movecontrols = array();
@@ -360,7 +373,20 @@ class BlockInstance {
     public function render_viewing() {
 
         safe_require('blocktype', $this->get('blocktype'));
-        $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this);
+        try {
+            $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this);
+        }
+        catch (ArtefactNotFoundException $e) {
+            // Whoops - where did the image go? There is possibly a bug 
+            // somewhere else that meant that this blockinstance wasn't 
+            // told that the image was previously deleted. But the block 
+            // instance is not allowed to treat this as a failure
+            log_debug('Artefact not found when rendering a block instance. '
+                . 'There might be a bug with deleting artefacts of this type? '
+                . 'Original error follows:');
+            log_debug($e->getMessage());
+            $content = '';
+        }
 
         $smarty = smarty_core();
         $smarty->assign('id',     $this->get('id'));
