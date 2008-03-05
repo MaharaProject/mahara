@@ -87,13 +87,13 @@ a img {
     font-weight: normal;
 }
 .description {
-    font-size: 9px;
-    color: #a3a3a3;
+    font-size: 12px;
+    color: #838383;
     padding-bottom: 5px;
 }
 td.description {
 	padding-top: 0 !important;
-	font-size: 9px;
+	font-size: 12px;
 }
 acronym {
     color: #474220;
@@ -1128,6 +1128,10 @@ fieldset.collapsed legend a {
     background: url(../images/icon_fieldset_left.gif) 2px center no-repeat;
 }
 
+.tags {
+    font-size: 11px;
+}
+
 /* Alternative row background colours */
 .r0 {
     background-color: #e0e8ee;
@@ -1138,8 +1142,10 @@ fieldset.collapsed legend a {
 
 
 /* REGISTER */
-#register th {
-    color: #c87e14; /* cos SOMEONE left out a required class on one of the headings! */
+#register_tandc_container th {
+    /* special case rule required because pieforms outputs labels for each of
+       the radio options rather than the header itself */
+    color: #c87e14;
 }
 #register td label {
 	color: #474220; /* Yes & No need to be normal colour */
@@ -1612,9 +1618,6 @@ button#dosearch {
 #myblogs .blogsettingscontainer {
 	margin-top: 10px;
 }
-#newblog td {
-	font-size: 11px;
-}
 #myblogs #postlist p img {
 	padding: 10px 20px;
 }
@@ -1668,7 +1671,6 @@ button#dosearch {
 }
 #editpost td {
 	padding: 2px 10px;
-	font-size: 11px;
 }
 #browsebutton {
 	background-color: #7d9728;
