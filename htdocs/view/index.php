@@ -163,6 +163,8 @@ else {
     $i = 0;
     foreach ($data as &$view) {
         if (empty($view['submittedto'])) {
+            // This form sucks from a language string point of view. It should 
+            // use pieforms' form template feature
             $view['submitto'] = pieform(array(
                 'name' => 'submitto' . $i++,
                 'method' => 'post',
@@ -172,7 +174,7 @@ else {
                 'elements' => array(
                     'text1' => array(
                         'type' => 'html',
-                        'value' => 'Submit this view to '
+                        'value' => get_string('submitthisviewto', 'view') . ' ',
                     ),
                     'options' => array(
                         'type' => 'select',
@@ -181,11 +183,11 @@ else {
                     ),
                     'text2' => array(
                         'type' => 'html',
-                        'value' => ' for assessment',
+                        'value' => get_string('forassessment', 'view'),
                     ),
                     'submit' => array(
                         'type' => 'submit',
-                        'value' => get_string('go')
+                        'value' => get_string('submit')
                     ),
                     'view' => array(
                         'type' => 'hidden',
