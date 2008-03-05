@@ -33,7 +33,6 @@ $createid     = param_variable('createid');
 
 safe_require('artefact', 'blog');
 $path = ArtefactTypeBlogPost::get_temp_file_path($createid, $uploadnumber);
-log_debug($path);
 serve_file($path, '');
 
 ?>
