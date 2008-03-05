@@ -369,7 +369,10 @@ $string['findfriends']        = 'Find Friends';
 $string['groups']             = 'Groups';
 $string['mygroups']           = 'My Groups';
 $string['findgroups']         = 'Find Groups';
-$string['youareloggedinas']   = 'You are logged in as %s';
+$string['returntosite']       = 'Return to Site';
+$string['siteadministration'] = 'Site Administration';
+$string['useradministration'] = 'User Administration';
+
 $string['unreadmessages'] = 'unread messages';
 $string['unreadmessage'] = 'unread message';
 

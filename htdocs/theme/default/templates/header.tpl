@@ -67,15 +67,15 @@
 {if $LOGGEDIN}
 {if $USER->get('admin') || $USER->is_institutional_admin()}
 {if $ADMIN || $INSTITUTIONALADMIN}
-<li><a href="{$WWWROOT}">Return to Site</a></li>
+<li><a href="{$WWWROOT}">{str tag="returntosite"}</a></li>
 {elseif $USER->get('admin')}
-<li><a href="{$WWWROOT}admin/">Site Administration</a></li>
+<li><a href="{$WWWROOT}admin/">{str tag="siteadministration"}</a></li>
 {else}
-<li><a href="{$WWWROOT}admin/users/search.php">User Administration</a></li>
+<li><a href="{$WWWROOT}admin/users/search.php">{str tag="useradministration"}</a></li>
 {/if}
 {* <li><a href="" onclick="createLoggingPane(); return false;">Create Logging Pane</a></li> *}
 {/if}
-<li><a href="{$WWWROOT}?logout">Logout</a></li>
+<li><a href="{$WWWROOT}?logout">{str tag="logout"}</a></li>
 {/if}
 		</ul>
 		</div>
