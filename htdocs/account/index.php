@@ -84,9 +84,6 @@ $elements['friendscontrol'] = array(
         'auth'   => get_string('friendsauth', 'account'),
         'auto'   => get_string('friendsauto', 'account')
     ),
-   'rules' => array(
-        'required' => true
-    ),
     'help' => true
 );
 $elements['wysiwyg'] = array(
@@ -96,9 +93,6 @@ $elements['wysiwyg'] = array(
     'options' => array(
         1 => get_string('on', 'account'),
         0 => get_string('off', 'account'),
-    ),
-   'rules' => array(
-        'required' => true
     ),
     'help' => true,
 );
@@ -112,9 +106,6 @@ $elements['messages'] = array(
         'friends' => get_string('messagesfriends', 'account'),
         'allow' => get_string('messagesallow', 'account'),
     ),
-   'rules' => array(
-       'required' => true
-    ),
     'help' => true,
 );
 $elements['lang'] = array(
@@ -122,9 +113,6 @@ $elements['lang'] = array(
     'defaultvalue' => $prefs->lang,
     'title' => get_string('language', 'account'),
     'options' => array_merge(array('default' => get_string('sitedefault', 'admin')), get_languages()),
-    'rules' => array(
-        'required' => true
-    ),
     'help' => true,
     'ignore' => count(get_languages()) < 2,
 );
@@ -136,7 +124,6 @@ $elements['addremovecolumns'] = array(
     ),
     'defaultvalue' => $prefs->addremovecolumns,
     'title' => get_string('showviewcolumns', 'account'),
-    'rules' => array('required' => true),
     'help' => 'true'
 );
 $elements['submit'] = array(
