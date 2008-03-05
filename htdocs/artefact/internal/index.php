@@ -118,7 +118,7 @@ $elements = array(
     'topsubmit' => array(
         'type'  => 'submitcancel',
         'value' => array(get_string('saveprofile','artefact.internal'), get_string('viewmyprofile', 'artefact.internal')),
-        'confirm' => array(null, 'Lose your changes?'),
+        'confirm' => array(null, get_string('loseyourchanges', 'artefact.internal')),
         'goto' => get_config('wwwroot') . 'user/view.php?id=' . $USER->get('id'),
     ),
     'profile' => array(
@@ -152,7 +152,7 @@ $elements = array(
     'submit' => array(
         'type'  => 'submitcancel',
         'value' => array(get_string('saveprofile','artefact.internal'), get_string('viewmyprofile', 'artefact.internal')),
-        'confirm' => array(null, 'Lose your changes?'),
+        'confirm' => array(null, get_string('loseyourchanges', 'artefact.internal')),
         'goto' => get_config('wwwroot') . 'user/view.php?id=' . $USER->get('id'),
     )
 );
