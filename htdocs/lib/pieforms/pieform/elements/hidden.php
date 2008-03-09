@@ -39,8 +39,16 @@ function pieform_element_hidden(Pieform $form, $element) {/*{{{*/
     if (is_array($value)) {
         $result = '';
         foreach ($value as $k => $v) {
-            $result .= '<input type="hidden" name="' . Pieform::hsc($element['name'])
-                . '[' . Pieform::hsc($k) . ']" value="' . Pieform::hsc($v) . "\">\n";
+            if (is_array($v)) {
+                foreach ($v as $subk => $subv) {
+                    $result .= '<input type="hidden" name="' . Pieform::hsc($element['name'])
+                        . '[' . Pieform::hsc($k) . '][' . Pieform::hsc($subk) . ']" value="' . Pieform::hsc($subv) . "\">\n";
+                }
+            }
+            else {
+                $result .= '<input type="hidden" name="' . Pieform::hsc($element['name'])
+                    . '[' . Pieform::hsc($k) . ']" value="' . Pieform::hsc($v) . "\">\n";
+            }
         }
         return $result;
     }
