@@ -75,7 +75,9 @@ class PluginArtefactBlog extends PluginArtefact {
 
         $bloguploadbase = get_config('dataroot') . ArtefactTypeBlogPost::$blogattachmentroot;
         if (!$basedir = opendir($bloguploadbase)) {
-            throw new Exception('Unable to read blog upload directory '.$bloguploadbase);
+            // If the directory doesn't exist, it's likely that it hasn't been 
+            // created yet (i.e. nobody has uploaded any files)
+            return;
         }
 
         $currenttime = time();
