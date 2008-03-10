@@ -384,7 +384,7 @@ function display_name($user, $userto=null, $nameonly=false) {
 
     // if they don't have a preferred name set, just return here
     if (empty($user->preferredname)) {
-        if (($userto->admin || $userto->staff) && !$nameonly) {
+        if ((!empty($userto->admin) || !empty($userto->staff)) && !$nameonly) {
             return $user->firstname . ' ' . $user->lastname . ' (' . $user->username . ')';
         }
         return $user->firstname . ' ' . $user->lastname;
