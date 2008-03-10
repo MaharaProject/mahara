@@ -1426,6 +1426,17 @@ button#dosearch {
 	padding-left: 20px;
 	border: 0;
 }
+
+#viewacl_lhs {
+    float: left;
+    border-right: 1px solid #95a8b7;
+    padding-right: 1em;
+    margin-right: 1em;
+}
+.ai-container {
+    border-right: 1px solid #95a8b7;
+}
+
 #editaccess #results {
 	width: auto;
 	margin-top: 5px;
