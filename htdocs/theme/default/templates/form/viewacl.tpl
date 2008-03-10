@@ -48,13 +48,15 @@ function renderPotentialPresetItem(item) {
 function renderAccessListItem(item) {
     var removeButton = BUTTON({'type': 'button'}, '{{str tag=remove}}');
     var dateInfo = TABLE(null,
-        TR(null,
-            TH(null, get_string('From') + ':'),
-            TD(null, makeCalendarInput(item, 'start'), makeCalendarLink(item, 'start'))
-        ),
-        TR(null,
-            TH(null, get_string('To') + ':'),
-            TD(null, makeCalendarInput(item, 'stop'), makeCalendarLink(item, 'stop'))
+        TBODY(null,
+            TR(null,
+                TH(null, get_string('From') + ':'),
+                TD(null, makeCalendarInput(item, 'start'), makeCalendarLink(item, 'start'))
+            ),
+            TR(null,
+                TH(null, get_string('To') + ':'),
+                TD(null, makeCalendarInput(item, 'stop'), makeCalendarLink(item, 'stop'))
+            )
         )
     );
     var cssClass = 'ai-container';
@@ -214,7 +216,7 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
     var identityNodes = [], profileIcon = null, tutorAddButton = null;
     if (rowdata.type == 'user') {
         profileIcon = IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&maxwidth=40&maxheight=40&id=' + rowdata.id});
-        identityNodes.push(A({'href': config.wwwroot + 'user/view.php?id=' + rowdata.id}, rowdata.name));
+        identityNodes.push(A({'href': config.wwwroot + 'user/view.php?id=' + rowdata.id, 'target': '_blank'}, rowdata.name));
     }
     else if (rowdata.type == 'group') {
         if (rowdata.jointype == 'controlled') {
