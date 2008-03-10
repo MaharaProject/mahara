@@ -227,7 +227,7 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
             });
             appendChildNodes(buttonTD, tutorAddButton);
         }
-        identityNodes.push(A({'href': config.wwwroot + 'group/view.php?id=' + rowdata.id}, rowdata.name));
+        identityNodes.push(A({'href': config.wwwroot + 'group/view.php?id=' + rowdata.id, 'target': '_blank'}, rowdata.name));
     }
 
     return TR({'class': 'r' + (rownumber % 2)},
