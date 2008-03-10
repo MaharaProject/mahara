@@ -20,7 +20,8 @@
  * @return html to display in the footer.
  */
 function smarty_function_mahara_version($params, &$smarty) {
-    if (!defined('ADMIN')) {
+    global $USER;
+    if (!defined('ADMIN') || !$USER->get('admin')) {
         return '';
     }
     return '<div class="center">Mahara version ' . get_config('release') . ' (' . get_config('version') . ')</div>';
