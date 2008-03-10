@@ -196,6 +196,10 @@ $string['wwwrootdescription'] = 'This is the URL at which your users access this
 
 // Upload CSV
 $string['csvfile'] = 'CSV File';
+$string['emailusersaboutnewaccount'] = 'E-mail users about their account?';
+$string['emailusersaboutnewaccountdescription'] = 'Whether an e-mail should be sent to users informing them of their new account details';
+$string['forceuserstochangepassword'] = 'Force password change?';
+$string['forceuserstochangepassworddescription'] = 'Whether users should be forced to change their password when they log in for the first time';
 $string['uploadcsvinstitution'] = 'The institution and authentication method for the new users';
 $string['uploadcsvconfigureauthplugin'] = 'You must configure an authentication plugin before you can add users by CSV';
 $string['csvfiledescription'] = 'The file containing users to add';

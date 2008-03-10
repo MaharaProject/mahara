@@ -244,8 +244,8 @@ function adduser_submit(Pieform $form, $values) {
     db_commit();
 
     email_user($user, $USER, get_string('accountcreated'),
-        get_string('accountcreatedtext', 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('sitename')),
-        get_string('accountcreatedhtml', 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('sitename'))
+        get_string('accountcreatedchangepasswordtext', 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('sitename')),
+        get_string('accountcreatedchangepasswordhtml', 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('sitename'))
     );
 
     redirect('/admin/users/edit.php?id='.$id);

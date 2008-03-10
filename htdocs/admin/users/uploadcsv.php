@@ -120,6 +120,18 @@ $form = array(
                 'required' => true
             )
         ),
+        'forcepasswordchange' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('forceuserstochangepassword', 'admin'),
+            'description'  => get_string('forceuserstochangepassworddescription', 'admin'),
+            'defaultvalue' => true,
+        ),
+        'emailusers' => array(
+            'type' => 'checkbox',
+            'title' => get_string('emailusersaboutnewaccount', 'admin'),
+            'description' => get_string('emailusersaboutnewaccountdescription', 'admin'),
+            'defaultvalue' => true,
+        ),
         'submit' => array(
             'type' => 'submit',
             'value' => get_string('uploadcsv', 'admin')
@@ -284,11 +296,14 @@ function uploadcsv_submit(Pieform $form, $values) {
     log_info('Inserting users from the CSV file');
     db_begin();
 
+    $addedusers = array();
     foreach ($CSVDATA as $record) {
         log_debug('adding user ' . $record[$formatkeylookup['username']]);
         $user = new StdClass;
         $user->authinstance = $authinstance;
         $user->username     = $record[$formatkeylookup['username']];
+        $user->firstname    = $record[$formatkeylookup['firstname']];
+        $user->lastname     = $record[$formatkeylookup['lastname']];
         $user->password     = $record[$formatkeylookup['password']];
         $user->email        = $record[$formatkeylookup['email']];
 
@@ -298,7 +313,7 @@ function uploadcsv_submit(Pieform $form, $values) {
         if (isset($formatkeylookup['preferredname'])) {
             $user->preferredname = $record[$formatkeylookup['preferredname']];
         }
-        $user->passwordchange = 1;
+        $user->passwordchange = (int)$values['forcepasswordchange'];
         $id = insert_record('usr', $user, 'id', true);
         $user->id = $id;
         if ($institution->name != 'mahara') {
@@ -322,8 +337,25 @@ function uploadcsv_submit(Pieform $form, $values) {
         }
 
         handle_event('createuser', $user);
+        if ($values['emailusers']) {
+            $addedusers[] = $user;
+        }
     }
     db_commit();
+
+    // Only send e-mail to users after we're sure they have been inserted 
+    // successfully
+    $straccountcreatedtext = ($values['forcepasswordchange']) ? 'accountcreatedchangepasswordtext' : 'accountcreatedtext';
+    $straccountcreatedhtml = ($values['forcepasswordchange']) ? 'accountcreatedchangepasswordhtml' : 'accountcreatedhtml';
+    if ($values['emailusers'] && $addedusers) {
+        foreach ($addedusers as $user) {
+            email_user($user, null, get_string('accountcreated'),
+                get_string($straccountcreatedtext, 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('sitename')),
+                get_string($straccountcreatedhtml, 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('sitename'))
+            );
+        }
+    }
+
     log_info('Inserted ' . count($CSVDATA) . ' records');
 
     $SESSION->add_ok_msg(get_string('uploadcsvusersaddedsuccessfully', 'admin'));
