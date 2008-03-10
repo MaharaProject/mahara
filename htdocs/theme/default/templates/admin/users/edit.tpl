@@ -10,8 +10,10 @@
       <h3>{str tag="suspenduser" section="admin"}</h3>
     {else}
       <h4>{$suspendedby|escape}</h4>
+      {if $user->suspendedreason}
       <div><strong>{str tag="suspendedreason" section="admin"}:</strong></div>
       <div>{$user->suspendedreason}</div>
+      {/if}
     {/if}
     {$suspendform}
     <h3>{str tag="siteaccountsettings" section="admin"}</h3>
