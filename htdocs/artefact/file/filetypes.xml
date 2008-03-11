@@ -115,6 +115,7 @@
         <enabled>1</enabled>
         <mimetypes>
             <mimetype>video/x-ms-wm</mimetype>
+            <mimetype>video/x-msvideo</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
