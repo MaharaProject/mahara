@@ -361,6 +361,7 @@ $string['currentmembers'] = 'Current Members';
 $string['userstoberemoved'] = 'Users to be removed';
 $string['removeusers'] = 'Remove Users';
 $string['declinerequests'] = 'Decline requests';
+$string['nousersupdated'] = 'No users were updated';
 
 $string['institutionusersupdated_addUserAsMember'] = 'Users added';
 $string['institutionusersupdated_declineRequestFromUser'] = 'Requests declined';

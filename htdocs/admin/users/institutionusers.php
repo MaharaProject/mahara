@@ -165,6 +165,9 @@ function institutionusers_submit(Pieform $form, $values) {
     if ($dataerror) {
         $SESSION->add_error_msg(get_string('errorupdatinginstitutionusers', 'admin'));
         redirect($url);
+    } else if (empty($values['users'])) {
+        $SESSION->add_ok_msg(get_string('nousersupdated', 'admin'));
+        redirect($url);
     }
 
     if ($values['usertype'] == 'members') {
@@ -193,7 +196,7 @@ function institutionusers_submit(Pieform $form, $values) {
     db_begin();
     if ($action == 'removeMembers') {
         $institution->removeMembers($values['users']);
-    } else if (!empty($values['users'])) {
+    } else {
         foreach ($values['users'] as $id) {
             $institution->{$action}($id);
         }
