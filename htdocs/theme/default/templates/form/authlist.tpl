@@ -39,7 +39,7 @@
         // adding the clone to the displayArray list
         for (i = 0; i < outputArray.length; i++) {
             var myDiv =  document.getElementById('instanceDiv' + outputArray[i]);
-            emptyThisNode(myDiv.childNodes[3]);
+            replaceChildNodes(getFirstElementByTagAndClassName('span', 'authIcons', 'instanceDiv' + outputArray[i]));
             displayArray.push(myDiv.cloneNode(true));
         }
 
@@ -48,13 +48,15 @@
         for(i = 0; i < displayArray.length; i++) {
             if(displayArray.length > 1) {
                 if (i + 1 != displayArray.length) {
-                    displayArray[i].childNodes[3].innerHTML += '<a href="" onclick="move_down('+outputArray[i]+'); return false;">[&darr;]</a>'+"\n";
+                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a href="" onclick="move_down('+outputArray[i]+'); return false;">[&darr;]</a>'+"\n";
                 }
                 if(i != 0) {
-                    displayArray[i].childNodes[3].innerHTML += '<a href="" onclick="move_up('+outputArray[i]+'); return false;">[&uarr;]</a>'+"\n";
+                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a href="" onclick="move_up('+outputArray[i]+'); return false;">[&uarr;]</a>'+"\n";
                 }
             }
-            displayArray[i].childNodes[3].innerHTML += '<a href="" onclick="removeAuth('+outputArray[i]+'); return false;">[x]</a>'+"\n";
+
+            getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a href="" onclick="removeAuth('+outputArray[i]+'); return false;">[x]</a>'+"\n";
+
             instanceListDiv.appendChild(displayArray[i]);
         }
         document.getElementById('instancePriority').value = outputArray.join(',');
