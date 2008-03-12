@@ -334,7 +334,7 @@ if ($loggedinid != $userid) {
 if (isset($introduction)) {
     $smarty->assign('introduction', $introduction);
 }
-$smarty->assign('canmessage', can_send_message($userid, $loggedinid));
+$smarty->assign('canmessage', can_send_message($loggedinid, $userid));
 $smarty->assign('NAME',$name);
 $smarty->assign('USERID', $userid);
 $smarty->assign('USERFIELDS',$userfields);

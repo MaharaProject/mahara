@@ -36,7 +36,7 @@ $returnto = param_alpha('returnto', 'myfriends');
 
 $user = get_record('usr', 'id', $id, 'deleted', 0);
 
-if (!$user || !can_send_message($USER, $id)) {
+if (!$user || !can_send_message($USER->to_stdclass(), $id)) {
 	throw new AccessDeniedException(get_string('cantmessageuser', 'group'));
 }
 

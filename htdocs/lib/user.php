@@ -783,7 +783,7 @@ function can_send_message($from, $to) {
         return false;
     }
     $messagepref = get_account_preference($to, 'messages');
-    return (is_friend($from->id, $to) && $messagepref == 'friends') || $messagepref == 'allow' || $from->get('admin');
+    return (is_friend($from->id, $to) && $messagepref == 'friends') || $messagepref == 'allow' || $from->admin;
 }
 
 function load_user_institutions($userid) {
