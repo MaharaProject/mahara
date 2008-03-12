@@ -478,6 +478,7 @@ class User {
         $institutions             = load_user_institutions($this->id);
         $admininstitutions = array();
         $staffinstitutions = array();
+        $this->theme = get_config('theme');
         foreach ($institutions as $i) {
             if ($i->admin) {
                 $admininstitutions[$i->institution] = $i->institution;
@@ -485,8 +486,8 @@ class User {
             if ($i->staff) {
                 $staffinstitutions[$i->institution] = $i->institution;
             }
-            if (empty($this->theme)) {
-                $this->theme = empty($i->theme) ? get_config('theme') : $i->theme;
+            if (!empty($i->theme) && $i->theme != get_config('theme')) {
+                $this->theme = $i->theme;
             }
         }
         $this->institutions       = $institutions;
