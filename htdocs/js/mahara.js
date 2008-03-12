@@ -587,7 +587,7 @@ function create_tags_control(name, value, options) {
     var tagControl = INPUT({'name': name, 'size': options.size, 'value': value});
     var tagshelp = SPAN(null); tagshelp.innerHTML = get_string('tags.help');
     elements.push(augment_tags_control(tagControl, true));
-    elements.push(TABLE({'class': 'help-wrapper'}, TR(null, TD(null, tagControl), TD({'class': 'helpcontainer'}, tagshelp))));
+    elements.push(TABLE({'class': 'help-wrapper'}, TBODY(null, TR(null, TD(null, tagControl), TD({'class': 'helpcontainer'}, tagshelp)))));
 
     return DIV(null, elements);
 }
