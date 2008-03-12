@@ -353,7 +353,7 @@ EOF;
     }
     else {
         $smarty->assign('sitedefaultlang', get_string('sitedefault', 'admin') . ' (' . 
-                        get_string_from_language('default', 'thislanguage') . ')');
+                        get_string_from_language(get_config('lang'), 'thislanguage') . ')');
         $smarty->assign('LANGUAGES', get_languages());
     }
 
