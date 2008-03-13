@@ -67,8 +67,10 @@ class PluginArtefactFile extends PluginArtefact {
         return $subscriptions;
     }
 
-    public static function postinst() {
-        set_config_plugin('artefact', 'file', 'defaultquota', 10485760);
+    public static function postinst($prevversion) {
+        if ($prevversion == 0) {
+            set_config_plugin('artefact', 'file', 'defaultquota', 10485760);
+        }
         self::resync_filetype_list();
     }
 
