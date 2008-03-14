@@ -144,9 +144,10 @@ function activity_set_defaults($user_id) {
     $haveemail = in_array('email', array_map(create_function('$a', 'return $a->name;'),
                                              plugins_installed('notification')));
     foreach ($activitytypes as $type) {
-        if ($type->name == 'institutionmessage' && $haveemail) {
+        if ($haveemail) {
             $method = 'email';
-        } else {
+        }
+        else {
             $method = 'internal';
         }
         insert_record('usr_activity_preference', (object)array(
