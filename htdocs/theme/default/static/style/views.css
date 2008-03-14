@@ -255,28 +255,32 @@ body:last-child:not(:root:root) .newblockhere {
 
 /* styling the tabs for the artefact chooser */
 .maincontent ul.artefactchooser-tabs {
-	list-style-type:none;
-	margin: 0 0 3px 0;
-	padding: 0;
-	text-align: left;
+    border-bottom: 1px solid #d9dfea;
+    margin: 0.5em 0 0;
+    padding-left: 0.5em;
 }
 .maincontent ul.artefactchooser-tabs li {
 	margin: 0 3px 0 0;
 	padding: 0;
 }
 .maincontent ul.artefactchooser-tabs li a {
-    background-color: #bfbfbf;
+    background-color: #b2b2b2;
     padding: 2px 1em;
     text-decoration: none;
 	color: #FFF;
 	border-color: #D9DFEA #b2b2b2 #b2b2b2 #D9DFEA !important;
 	border-style: solid;
 	border-width: 1px;
+    border-bottom-width: 0;
 }
 .maincontent ul.artefactchooser-tabs li.current a {
+    background-color: #888;
+}
+#artefactchooser-searchsubmit {
+    margin: 0;
 }
 .maincontent div.artefactchooser-splitter {
-    padding: 0;
+    padding: .25em 0 0;
 }
 .blockinstance-content p.noartefacts {
     color: #808080;
