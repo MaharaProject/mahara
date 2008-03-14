@@ -320,11 +320,11 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
         $mail->IsHTML(true);
         $mail->Encoding = 'quoted-printable';
         $mail->Body    =  $messagehtml;
-        $mail->AltBody =  "\n$messagetext\n";
+        $mail->AltBody =  $messagetext;
     } 
     else {
         $mail->IsHTML(false);
-        $mail->Body =  "\n$messagetext\n";
+        $mail->Body =  $messagetext;
     }
 
     if ($mail->Send()) {
