@@ -28,7 +28,7 @@ defined('INTERNAL') || die();
 
 
 function &smarty_core() {
-    require_once(get_config('libroot') . 'smarty/Smarty.class.php');
+    require_once('smarty/libs/Smarty.class.php');
     $smarty =& new Smarty();
     
     $theme = theme_setup();
@@ -38,8 +38,9 @@ function &smarty_core() {
 
     check_dir_exists(get_config('dataroot') . 'smarty/compile/' . $theme->theme);
     check_dir_exists(get_config('dataroot') . 'smarty/cache/' . $theme->theme);
-    $smarty->compile_dir  = get_config('dataroot').'smarty/compile/' . $theme->theme;
-    $smarty->cache_dir    = get_config('dataroot').'smarty/cache/' . $theme->theme;
+    $smarty->compile_dir   = get_config('dataroot') . 'smarty/compile/' . $theme->theme;
+    $smarty->cache_dir     = get_config('dataroot') . 'smarty/cache/' . $theme->theme;
+    $smarty->plugins_dir[] = get_config('libroot') . 'smarty/mahara/';
 
     $smarty->assign('THEMEURL', get_config('themeurl'));
     $smarty->assign('WWWROOT', get_config('wwwroot'));
