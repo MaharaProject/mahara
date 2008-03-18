@@ -124,7 +124,7 @@ $string['profileicon'] = 'Profile Icon';
 // general views stuff
 $string['allviews'] = 'All views';
 
-$string['submitviewconfirm'] = 'If you submit \'%s\' to \'%s\' for assessment, you will not be able to edit the view or any of its associated artefacts until your tutor has finished marking the view.  Are you sure you want to submit this view now?';
+$string['submitviewconfirm'] = 'If you submit \'%s\' to \'%s\' for assessment, you will not be able to edit the view until your tutor has finished marking the view.  Are you sure you want to submit this view now?';
 $string['viewsubmitted'] = 'View submitted';
 $string['submitviewtogroup'] = 'Submit \'%s\' to \'%s\' for assessment';
 $string['cantsubmitviewtogroup'] = 'You cannot submit this view to this group for assessment';
