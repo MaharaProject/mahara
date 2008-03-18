@@ -1916,6 +1916,7 @@ span.viewicon {
 }
 #friendslist td.viewlist {
 	padding-top: 25px;
+    width: 200px;
 }
 #friendslist td.viewlist h3 {
 	font-size: 14px;
