@@ -4,6 +4,7 @@
 
 <h2>{str tag="institutionmembers" section="admin"}</h2>
 <p>{str tag="institutionmemberspagedescription" section="admin"}</p>
+<p>{$instructions}</p>
 {$usertypeselector}
 {$institutionusersform}
 

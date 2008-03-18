@@ -228,6 +228,7 @@ EOF;
 
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('usertypeselector', $usertypeselector);
+$smarty->assign('instructions', get_string('institutionusersinstructions'.$usertype, 'admin'));
 $smarty->assign('institutionusersform', $userlistform);
 $smarty->display('admin/users/institutionusers.tpl');
 

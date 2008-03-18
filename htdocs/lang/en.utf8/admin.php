@@ -333,6 +333,11 @@ $string['institutionadministration'] = 'Institution Administration';
 $string['institutionmembers'] = 'Institution Members';
 $string['notadminforinstitution'] = 'You are not an administrator for that institution';
 $string['institutionmemberspagedescription'] = 'On this page you can see users who have requested membership of your institution and add them as members.  You can also remove users from your institution, and invite users to join.';
+
+$string['institutionusersinstructionsrequesters'] = 'The list of users on the left shows all users who have asked to join your institution.  You can use the search box to reduce the number of users displayed.  If you would like to add users to the institution, or decline their membership requests, first move some users to the right hand side by selecting one or more users and then clicking on the right arrow.  The "Add members" button will add all the users on the right to the institution.  The "Decline requests" button will remove the membership requests of the users on the right.';
+$string['institutionusersinstructionsnonmembers'] = 'The list of users on the left shows all users who are not yet members of your institution.  You can use the search box to reduce the number of users displayed.  To invite users to join the institution, first move some users to the right hand side by selecting one or more users and then clicking on the right arrow to move those users to the list on the right.  The "Invite Users" button will send invitations to all the users on the right.  These users will not be associated with the institution until they accept the invitation.';
+$string['institutionusersinstructionsmembers'] = 'The list of users on the left shows all members of the institution.  You can use the search box to reduce the number of users displayed.  To remove users from the institution, first move some users to the right hand side by selecting one or more users on the left and then clicking on the right arrow.  The users you selected will move to the right hand side.  The "Remove Users" button will remove all the users on the right from the institution.  The users on the left will remain in the institution.';
+
 $string['editmembers'] = 'Edit Members';
 $string['editstaff'] = 'Edit Staff';
 $string['editadmins'] = 'Edit Admins';
