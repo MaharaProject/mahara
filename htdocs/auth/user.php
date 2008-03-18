@@ -61,7 +61,7 @@ class User {
             'deleted'          => 0,
             'expiry'           => null,
             'expirymailsent'   => 0,
-            'lastlogin'        => 0,
+            'lastlogin'        => null,
             'lastauthinstance' => null,
             'inactivemailsent' => 0,
             'staff'            => 0,
