@@ -28,6 +28,7 @@ define('INTERNAL', 1);
 define('ADMIN', 1);
 define('MENUITEM', 'configextensions/pluginadmin');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+ini_set('memory_limit', '32M');
 define('TITLE', get_string('pluginadmin', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
