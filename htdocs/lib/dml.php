@@ -1361,7 +1361,9 @@ function execute_sql_arr($sqlarr, $continue=true, $feedback=true) {
 function db_format_timestamp($ts) {
     global $db;
 
-    if ($ts === null || $ts === '') {
+    // Otherwise $db->BindTimeStamp() returns the string 'null', which is not 
+    // what we want
+    if (empty($ts)) {
         return null;
     }
     return $db->BindTimeStamp($ts);
