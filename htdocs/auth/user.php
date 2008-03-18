@@ -75,7 +75,7 @@ class User {
             'suspendedctime'   => null,
             'suspendedreason'  => null,
             'suspendedcusr'    => null,
-            'quota'            => 10485760,
+            'quota'            => null,
             'quotaused'        => 0,
             'authinstance'     => 1,
             'sessionid'        => '', /* The real session ID that PHP knows about */
