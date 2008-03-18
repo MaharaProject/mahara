@@ -439,7 +439,7 @@ function buildContextualHelpBox(content) {
     result += content;
     result += '</div>';
     contextualHelpContainer.innerHTML = result;
-    connect('helpstop', 'onclick', function(e) { e.stop(); });
+    connect('helpstop', 'onclick', function(e) { if (e.target().nodeName != "A") { e.stop(); } });
 }
 
 /*
