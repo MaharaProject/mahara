@@ -36,6 +36,7 @@ $data = new StdClass;
 $data->view       = param_integer('view');
 $data->artefact   = param_integer('artefact', null);
 $data->message    = param_variable('message');
+$data->reporter   = $USER->get('id');
 
 activity_occurred('objectionable', $data);
 

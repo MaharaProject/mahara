@@ -84,13 +84,11 @@ $string['newviewaccessmessage'] = 'You have been added to the access list for th
 $string['newviewaccesssubject'] = 'New view access';
 
 $string['viewmodified'] = 'has changed their view';
-$string['onview'] = 'on View';
-$string['onartefact'] = 'on Artefact';
 $string['ongroup'] = 'on Group';
 $string['ownedby'] = 'owned by';
 
-$string['objectionablecontentview'] = 'Objectionable content';
-$string['objectionablecontentartefact'] = 'Objectionable content';
+$string['objectionablecontentview'] = 'Objectionable content on View "%s" reported by %s';
+$string['objectionablecontentartefact'] = 'Objectionable content on Artefact "%s" reported by %s';
 
 $string['newgroupmembersubj'] = '%s is now a group member!';
 $string['removedgroupmembersubj'] = '%s is no longer a group member';

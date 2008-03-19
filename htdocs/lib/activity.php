@@ -404,6 +404,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
 
     protected $view;
     protected $artefact;
+    protected $reporter;
 
     function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
@@ -420,20 +421,20 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
             throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
         }
         if (empty($this->artefact)) {
-            return get_string_from_language($user->lang, 'objectionablecontentview', 'activity') 
-                . ' ' . get_string_from_language($user->lang, 'onview', 'activity') . ' ' . $viewtitle;
+            return get_string_from_language($user->lang, 'objectionablecontentview', 'activity',
+                                            $viewtitle, display_name($this->reporter, $user));
         }
         else {
             if (!$artefacttitle = get_field('artefact', 'title', 'id', $this->artefact)) {
                 throw new ArtefactNotFoundException(get_string('artefactnotfound', 'error', $this->artefact));
             }
-            return get_string_from_language($user->lang, 'objectionablecontentartefact', 'activity') 
-                . ' '  . get_string_from_language($user->lang, 'onartefact', 'activity') . ' ' . $artefacttitle;
+            return get_string_from_language($user->lang, 'objectionablecontentartefact', 'activity',
+                                            $artefacttitle, display_name($this->reporter, $user));
         }
     }
 
     public function get_required_parameters() {
-        return array('message', 'view');
+        return array('message', 'view', 'reporter');
     }
 
 }
