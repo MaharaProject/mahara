@@ -413,6 +413,7 @@ $string['activityprefs'] = 'Activity preferences';
 $string['changepassword'] = 'Change password';
 $string['notifications'] = 'Notifications';
 $string['institutionmembership'] = 'Institution Membership';
+$string['institutionmembershipdescription'] = 'If you are a member of any institutions, they will be listed here.  You may also request membership of an institution, and if any institutions have invited you to join, you can accept or decline the invitation.';
 $string['youareamemberof'] = 'You are a member of %s';
 $string['leaveinstitution'] = 'Leave institution';
 $string['reallyleaveinstitution'] = 'Are you sure you want to leave this institution?';

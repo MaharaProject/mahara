@@ -3,6 +3,7 @@
 
 {include file="columnleftstart.tpl"}
 <h2>{str tag="institutionmembership"}</h2>
+<p>{str tag="institutionmembershipdescription"}</p>
 {$memberform}
 {$requestedform}
 {$invitedform}
