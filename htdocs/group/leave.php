@@ -61,12 +61,12 @@ $views = count_records_sql(
 
 $form = pieform(array(
     'name' => 'leavegroup',
+    'renderer' => 'div',
     'autofocus' => false,
     'method' => 'post',
     'elements' => array(
         'submit' => array(
             'type' => 'submitcancel',
-            'title' => $views ? get_string('groupconfirmleavehasviews', 'group') : get_string('groupconfirmleave', 'group'),
             'value' => array(get_string('yes'), get_string('no')),
             'goto' => get_config('wwwroot') . ($returnto == 'find' ? 'group/find.php' : 'group/mygroups.php')
         ),
@@ -80,6 +80,7 @@ $form = pieform(array(
 $smarty = smarty();
 $smarty->assign('heading', TITLE);
 $smarty->assign('form', $form);
+$smarty->assign('message', $views ? get_string('groupconfirmleavehasviews', 'group') : get_string('groupconfirmleave', 'group'));
 $smarty->assign('group', $group);
 $smarty->display('group/leave.tpl');
 

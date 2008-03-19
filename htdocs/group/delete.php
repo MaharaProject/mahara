@@ -48,12 +48,12 @@ $views = count_records_sql(
 
 $form = pieform(array(
     'name' => 'deletegroup',
+    'renderer' => 'div',
     'autofocus' => false,
     'method' => 'post',
     'elements' => array(
         'submit' => array(
             'type' => 'submitcancel',
-            'title' => $views ? get_string('groupconfirmdeletehasviews', 'group') : get_string('groupconfirmdelete', 'group'),
             'value' => array(get_string('yes'), get_string('no')),
             'goto' => get_config('wwwroot') . 'group/view.php?id=' . $groupid
         )
@@ -62,6 +62,7 @@ $form = pieform(array(
 
 $smarty = smarty();
 $smarty->assign('heading', TITLE);
+$smarty->assign('message', $views ? get_string('groupconfirmdeletehasviews', 'group') : get_string('groupconfirmdelete', 'group'));
 $smarty->assign('form', $form);
 $smarty->display('group/delete.tpl');
 

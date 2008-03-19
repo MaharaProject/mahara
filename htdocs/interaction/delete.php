@@ -53,10 +53,8 @@ $returnto = param_alpha('returnto', 'view');
 
 $form = pieform(array(
     'name'     => 'delete_interaction',
+    'renderer' => 'div',
     'elements' => array(
-        'title' => array(
-            'value' => get_string('deleteinteractionsure', 'group'),
-        ),
         'id' => array(
             'type'  => 'hidden',
             'value' => $id,
@@ -73,6 +71,7 @@ $form = pieform(array(
 $smarty = smarty(array('tablerenderer'), array(), array(), array('sideblocks' => array(interaction_sideblock($group->id))));
 $smarty->assign('form', $form);
 $smarty->assign('heading', TITLE);
+$smarty->assign('message', get_string('deleteinteractionsure', 'group'));
 $smarty->assign('group', $group);
 $smarty->display('interaction/delete.tpl');
 

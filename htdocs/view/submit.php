@@ -47,8 +47,6 @@ $group = get_record_sql(
 );
 
 if (!$view || !$group || $view->submittedto) {
-    log_debug($view);
-    log_debug($group);
     throw new AccessDeniedException(get_string('cantsubmitviewtogroup', 'view'));
 }
 
@@ -56,12 +54,12 @@ define('TITLE', get_string('submitviewtogroup', 'view', $view->title, $group->na
 
 $form = pieform(array(
     'name' => 'submitview',
+    'renderer' => 'div',
     'autofocus' => false,
     'method' => 'post',
     'elements' => array(
         'submit' => array(
             'type' => 'submitcancel',
-            'title' => get_string('submitviewconfirm', 'view', $view->title, $group->name),
             'value' => array(get_string('yes'), get_string('no')),
             'goto' => get_config('wwwroot') . 'view/'
         )
@@ -70,6 +68,7 @@ $form = pieform(array(
 
 $smarty = smarty();
 $smarty->assign('heading', TITLE);
+$smarty->assign('message', get_string('submitviewconfirm', 'view', $view->title, $group->name));
 $smarty->assign('form', $form);
 $smarty->display('view/submit.tpl');
 

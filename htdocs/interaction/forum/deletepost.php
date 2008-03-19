@@ -98,6 +98,7 @@ $breadcrumbs = array(
 
 $form = pieform(array(
     'name'     => 'deletepost',
+    'renderer' => 'div',
     'autofocus' => false,
     'elements' => array(
         'title' => array(
