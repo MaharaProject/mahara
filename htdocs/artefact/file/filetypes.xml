@@ -126,7 +126,7 @@
         </mimetypes>
     </filetype>
     <filetype>
-        <description>sgi-movie</description>
+        <description>sgi_movie</description>
         <enabled>1</enabled>
         <mimetypes>
             <mimetype>video/x-sgi-movie</mimetype>
@@ -144,6 +144,13 @@
         <enabled>1</enabled>
         <mimetypes>
             <mimetype>video/mpeg</mimetype>
+        </mimetypes>
+    </filetype>
+    <filetype>
+        <description>mp4_video</description>
+        <enabled>1</enabled>
+        <mimetypes>
+            <mimetype>video/mp4</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
@@ -192,7 +199,7 @@
         </mimetypes>
     </filetype>
     <filetype>
-        <description>mp4</description>
+        <description>mp4_audio</description>
         <enabled>1</enabled>
         <mimetypes>
             <mimetype>audio/mp4</mimetype>

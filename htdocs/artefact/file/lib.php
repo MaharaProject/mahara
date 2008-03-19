@@ -540,7 +540,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         $size = $um->file['size'];
         global $USER;
         if (!$USER->quota_allowed($size) && !$data->adminfiles) {
-            return get_string('uploadexceedsquota');
+            return get_string('uploadexceedsquota', 'artefact.file');
         }
         $f = self::new_file($um->file['tmp_name'], $data);
         $f->set('owner', $USER->id);
