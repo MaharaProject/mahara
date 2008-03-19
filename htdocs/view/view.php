@@ -32,6 +32,7 @@ define('SECTION_PAGE', 'view');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'view.php');
+require('group.php');
 
 $viewid = param_integer('id');
 $new = param_boolean('new');
@@ -52,12 +53,8 @@ $heading .= ' ' . get_string('by', 'view') . ' <a href="' . get_config('wwwroot'
 
 
 $tutorfilefeedbackformrow = '';
-$submittedgroup = $view->get('submittedto');
-if ($submittedgroup 
-    && record_exists('group_member', 
-                     'group', $submittedgroup,
-                     'member', $USER->get('id'),
-                     'tutor', 1)) {
+$submittedgroup = (int)$view->get('submittedto');
+if ($submittedgroup && (user_can_access_group($submittedgroup) & GROUP_MEMBERSHIP_TUTOR)) {
     // The user is a tutor of the group that this view has
     // been submitted to, and is entitled to upload an additional
     // file when submitting feedback.
