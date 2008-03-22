@@ -326,11 +326,16 @@ EOF;
         $smarty->assign('THEMELIST', json_encode(array_merge((array)json_decode($smarty->get_template_vars('THEMELIST')),  $theme_list))); 
     }
 
+    $sitename = get_config('sitename');
+    if (!$sitename) {
+       $sitename = 'Mahara';
+    }
+
     if (defined('TITLE')) {
-        $smarty->assign('PAGETITLE', TITLE . ' - ' . get_config('sitename'));
+        $smarty->assign('PAGETITLE', TITLE . ' - ' . $sitename);
     }
     else {
-        $smarty->assign('PAGETITLE', get_config('sitename'));
+        $smarty->assign('PAGETITLE', $sitename);
     }
 
 
