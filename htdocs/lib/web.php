@@ -1666,7 +1666,7 @@ function main_nav() {
             ),
             array(
                 'path' => 'profile/editprofilepage',
-                'url' => 'user/editprofile.php',
+                'url' => 'view/blocks.php?profile=1',
                 'title' => get_string('editmyprofilepage'),
                 'weight' => 9
             ),

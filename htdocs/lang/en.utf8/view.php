@@ -42,6 +42,8 @@ $string['stopdate']               = 'Access End Date/Time';
 $string['startdatemustbebeforestopdate'] = 'The start date must be before the stop date';
 $string['ownerformat']            = 'Name display format';
 $string['ownerformatdescription'] = 'How do you want people who look at your View to see your name?';
+$string['profileviewtitle']       = 'Profile view';
+$string['editprofileview']        = 'Edit profile view';
 
 // my views
 $string['artefacts'] = 'Artefacts';

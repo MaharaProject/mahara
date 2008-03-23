@@ -33,10 +33,39 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'group.php');
 
-$id = param_integer('id');
+$id = param_integer('id', 0); // if 0, we're editing our profile.
 $new = param_boolean('new', false);
+$profile = param_boolean('profile');
 
-$view = new View($id);
+if (empty($id)) {
+    if (!empty($profile)) {
+        try {
+            $view = View::profile_view($USER->get('id'));
+            $id = $view->get('id');
+        }
+        catch (ViewNotFoundException $_e) {
+            throw new ParameterException("Missing parameter $id and couldn't find default user profile view");
+        }
+    }
+}
+if (!empty($id) && empty($view)) {
+    $view = new View($id);
+}
+
+if ($view->get('type') == 'profile') {
+    $profile = true;
+    define('TITLE', get_string('editprofileview', 'view'));
+    define('MENUITEM', 'profile/editprofilepage');
+}
+else if ($new) {
+     define('TITLE', get_string('createviewsteptwo', 'view'));
+    define('MENUITEM', 'myportfolio/views');
+ }
+ else {
+    define('TITLE', get_string('editblocksforview', 'view', $view->get('title')));
+    define('MENUITEM', 'myportfolio/views');
+}
+
 if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
 }
@@ -120,6 +149,7 @@ $smarty->assign('heading', TITLE);
 $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
 $smarty->assign('category', $category);
 $smarty->assign('new', $new);
+$smarty->assign('profile', $profile);
 $smarty->assign('view', $view->get('id'));
 $smarty->assign('groupid', $group);
 $smarty->assign('institution', $institution);

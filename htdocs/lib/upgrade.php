@@ -602,6 +602,7 @@ function core_install_lastcoredata_defaults() {
     set_profile_field($user->id, 'firstname', $user->firstname);
     set_profile_field($user->id, 'lastname', $user->lastname);
     set_config('installed', true);
+    handle_event('createuser', $user->id);
     db_commit();
 
     // if we're installing, set up the block categories here and then poll the plugins.
@@ -664,7 +665,11 @@ function core_install_firstcoredata_defaults() {
         array(
             'event'        => 'createuser',
             'callfunction' => 'activity_set_defaults',
-        )
+        ),
+        array(
+            'event'        => 'createuser',
+            'callfunction' => 'install_default_profile_view'
+        ),
     );
 
     foreach ($subs as $sub) {

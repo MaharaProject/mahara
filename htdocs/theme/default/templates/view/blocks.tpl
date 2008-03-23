@@ -57,6 +57,10 @@
             <input type="hidden" name="new" value="1">
             <input type="submit" class="submit" value="{str tag='next'}">
         </form>
+{elseif $profile}
+        <form action="{$WWWROOT}user/view.php" method="GET">
+            <input class="submit" type="submit" value="{str tag='done'}">
+        </form>
 {else}
         <form action="{$WWWROOT}view/{if $groupid}groupviews.php{elseif $institution}institutionviews.php{/if}" method="GET">
     {if $groupid}

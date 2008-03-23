@@ -732,6 +732,12 @@ class InteractionInstanceNotFoundException extends NotFoundException {}
 class ViewNotFoundException extends NotFoundException {}
 
 /**
+ * Exception - view limit exceeded
+ * for example, multiple profile views
+ */
+class ViewLimitExceededException extends UserException {}
+
+/**
  * Exception - user not found
  */
 class UserNotFoundException extends NotFoundException {}

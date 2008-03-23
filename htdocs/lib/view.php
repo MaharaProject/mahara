@@ -59,6 +59,7 @@ class View {
     private $copynewuser = 0;
     private $copynewgroups;
     private $copyconfig;
+    private $type;
 
     public function __construct($id=0, $data=null) {
         if (!empty($id)) {
@@ -162,6 +163,10 @@ class View {
         db_begin();
 
         if (empty($this->id)) {
+            // users are only allowed one profile view
+            if ($this->type == 'profile' && record_exists('view', 'owner', $this->owner, 'type', 'profile')) {
+                throw new ViewLimitException(get_string('onlonlyyoneprofileviewallowed', 'error'));
+            }
             $this->id = insert_record('view', $fordb, 'id', true);
         }
         else {
@@ -1348,7 +1353,14 @@ class View {
         }
     }
 
-
+    /**
+     * Return the profile view object for the given userid 
+     *
+     * @param int $userid the user id to fetch the profile view for 
+     */
+    public static function profile_view($userid) {
+        return new View(get_field('view', 'id', 'type', 'profile', 'owner', $userid));
+    }
 
     public static function get_myviews_data($limit=5, $offset=0, $groupid=null, $institution=null) {
 
@@ -1375,6 +1387,7 @@ class View {
                 FROM {view} v
                 LEFT OUTER JOIN {group} g ON (v.submittedto = g.id AND g.deleted = 0)
                 WHERE v.owner = ' . $userid . '
+                AND v.type = \'portfolio\'
                 ORDER BY v.title, v.id', '', $offset, $limit);
         }
 

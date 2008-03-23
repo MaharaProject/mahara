@@ -41,7 +41,7 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
     }
 
     public static function get_viewtypes() {
-        return array('portfolio');
+        return array('portfolio', 'profile');
     }
 
     public static function render_instance(BlockInstance $instance) {

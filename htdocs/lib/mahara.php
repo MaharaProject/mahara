@@ -1285,6 +1285,11 @@ function pieform_element_textarea_configure($element) {
  * @returns boolean Wether the specified user can look at the specified view.
  */
 function can_view_view($view_id, $user_id=null) {
+    /*
+    TODO PENNY PROFILEVIEW MERGE
+        I couldn't figure out this patch and needed to continue:
+        http://paste.dollyfish.net.nz/0e6800
+    */
     global $USER;
     $now = time();
     $dbnow = db_format_timestamp($now);

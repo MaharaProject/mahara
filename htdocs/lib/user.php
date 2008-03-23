@@ -810,6 +810,9 @@ function send_user_message($to, $message, $from=null) {
  * @return boolean whether userfrom is allowed to send messages to userto
  */
 function can_send_message($from, $to) {
+    if (empty($from)) {
+        return false; // not logged in
+    }
 	if (!is_object($from)) {
 	    $from = get_record('usr', 'id', $from);
 	}
@@ -1171,5 +1174,35 @@ function copy_views_for_user($userid, $templateids) {
         $v->commit();
     }
 }
+
+/**
+ *
+ * This function installs the default profile view for a user
+ * upon the createuser event (and a migration upgrade)
+ *
+ * @param mixed eventdata data that is passed to handle_event
+ */
+function install_default_profile_view($eventdata) {
+    require_once(get_config('libroot') . 'view.php');
+    
+    $view = new View(0, array(
+        'type'        => 'profile',
+        'owner'       => $eventdata['id'],
+        'numcolumns'  => 2,
+        'ownerformat' => FORMAT_NAME_PREFERREDNAME,
+        'title'       => get_string('profileviewtitle', 'view'),
+        'description' => '',
+    ));
+    $view->commit();
+    // #TODO add blocks here
+    $view->set_access(array(
+        array(
+            'type'      => 'loggedin',
+            'startdate' => null,
+            'stopdate'  => null,
+        ),
+    ));
+}
+
 
 ?>

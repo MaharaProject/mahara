@@ -172,7 +172,7 @@ function siteoptions_fail(Pieform $form, $field) {
 function siteoptions_submit(Pieform $form, $values) {
     $fields = array('sitename','lang','theme','pathtofile', 'pathtoclam',
                     'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn', 
-                    'allowpublicviews', 'searchplugin');
+                    'allowpublicviews', 'allowpublicprofiles', 'searchplugin');
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');
     foreach ($fields as $field) {

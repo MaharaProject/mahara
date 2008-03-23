@@ -1569,4 +1569,13 @@ function db_ilike() {
     return 'ILIKE';
 }
 
+function db_random() {
+    if (is_postgres()) {
+        return 'RANDOM()';
+    }
+    else if (is_mysql()) {
+        return 'RAND()';
+    }
+}
+
 ?>

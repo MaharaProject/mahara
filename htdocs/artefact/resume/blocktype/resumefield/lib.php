@@ -41,7 +41,7 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
     }
 
     public static function get_viewtypes() {
-        return array('portfolio');
+        return array('portfolio', 'profile');
     }
 
      /**
