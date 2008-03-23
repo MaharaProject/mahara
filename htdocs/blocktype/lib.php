@@ -131,13 +131,15 @@ abstract class PluginBlocktype extends Plugin {
         return get_string('pluginname', 'artefact.' . $name);
     }
 
-    public static function get_blocktypes_for_category($category) {
+    public static function get_blocktypes_for_category_and_viewtype($category, $viewtype) {
         $sql = 'SELECT bti.name, bti.artefactplugin
             FROM {blocktype_installed} bti 
             JOIN {blocktype_installed_category} btic ON btic.blocktype = bti.name
+            JOIN {blocktype_installed_viewtype} bivt ON bivt.blocktype = bti.name
             WHERE btic.category = ?
+            AND bivt.viewtype = ?
             ORDER BY bti.name';
-        if (!$bts = get_records_sql_array($sql, array($category))) {
+        if (!$bts = get_records_sql_array($sql, array($category, $viewtype))) {
             return false;
         }
 

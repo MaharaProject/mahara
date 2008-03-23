@@ -53,7 +53,7 @@ if ($change) {
 switch ($action) {
 case 'blocktype_list':
     $category = param_alpha('c');
-    $data = View::build_blocktype_list($category, true);
+    $data = $view->build_blocktype_list($category, true);
     json_reply(false, array('message' => false, 'data' => $data));
     break;
 }

@@ -439,8 +439,15 @@ class View {
         $cats = get_records_sql_array('SELECT bc.name, COUNT(*) AS "count"
             FROM {blocktype_category} bc
             INNER JOIN {blocktype_installed_category} bic ON (bc.name = bic.category)
+            WHERE EXISTS (
+                SELECT 1 
+                    FROM {blocktype_installed_viewtype} bivt
+                    JOIN {blocktype_installed} bi ON bi.name = bivt.blocktype
+                    WHERE bivt.viewtype = ?
+                    AND bic.blocktype = bi.name
+            )
             GROUP BY bc.name
-            ORDER BY bc.name', array());
+            ORDER BY bc.name', array($view->get('type')));
         $categories = array_map(
             create_function(
                 '$a', 
@@ -489,9 +496,9 @@ class View {
      *                           meaning that nothing for the standard HTML version 
      *                           alone should be output
      */
-    public static function build_blocktype_list($category, $javascript=false) {
+    public function build_blocktype_list($category, $javascript=false) {
         require_once(get_config('docroot') . 'blocktype/lib.php');
-        $blocktypes = PluginBlockType::get_blocktypes_for_category($category);
+        $blocktypes = PluginBlockType::get_blocktypes_for_category_and_viewtype($category, $this->get('type'));
 
         $smarty = smarty_core();
         $smarty->assign_by_ref('blocktypes', $blocktypes);

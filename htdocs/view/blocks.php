@@ -119,7 +119,7 @@ $smarty = smarty(array('views', 'tinytinymce', 'paginator', 'tablerenderer'), ar
 $smarty->assign('category_list', View::build_category_list($category, $view, $new));
 
 // The list of blocktypes for the default category
-$smarty->assign('blocktype_list', View::build_blocktype_list($category));
+$smarty->assign('blocktype_list', $view->build_blocktype_list($category));
 
 // The HTML for the columns in the view
 $smarty->assign('columns', $columns);
