@@ -139,7 +139,8 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
  * this function inserts a default set of activity preferences for a given user
  * id
  */
-function activity_set_defaults($user_id) {
+function activity_set_defaults($eventdata) {
+    $user_id = $eventdata['id'];
     $activitytypes = get_records_array('activity_type', 'admin', 0);
     $haveemail = in_array('email', array_map(create_function('$a', 'return $a->name;'),
                                              plugins_installed('notification')));

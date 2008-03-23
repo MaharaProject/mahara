@@ -659,6 +659,18 @@ function core_install_firstcoredata_defaults() {
         insert_record('event_type', $e);
     }
 
+    // install the core event subscriptions
+    $subs = array(
+        array(
+            'event'        => 'createuser',
+            'callfunction' => 'activity_set_defaults',
+        )
+    );
+
+    foreach ($subs as $sub) {
+        insert_record('event_subscription', (object)$sub);
+    }
+    
     // install the activity types
     $activitytypes = array(
         array('maharamessage', 0, 0),

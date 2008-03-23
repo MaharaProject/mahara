@@ -1013,10 +1013,16 @@ function handle_event($event, $data) {
         $data = array('id' => $data);
     }
 
-    // this is here because the core can't listen to events
-    // @todo, this is VERY ugly, and someone should fix it
-    if ($event == 'createuser') {
-        activity_set_defaults($data['id']);
+    if ($coreevents = get_records_array('event_subscription', 'event', $event)) {
+        foreach ($coreevents as $ce) {
+            if (function_exists($ce->callfunction)) {
+                call_user_func($ce->callfunction, $data);
+            }
+            else {
+                log_warn("Event $event caused a problem with a core subscription "
+                . " $ce->callfunction, which wasn't callable.  Continuing with event handlers");
+            }
+        }
     }
 
     $plugintypes = plugin_types_installed();
