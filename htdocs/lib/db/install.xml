@@ -511,6 +511,25 @@
                 <KEY NAME="columnwidthuk" TYPE="unique" FIELDS="columns,widths"/>
             </KEYS>
         </TABLE>
+        <TABLE NAME="view_type">
+            <FIELDS>
+                <FIELD NAME="type" TYPE="char" LENGTH="50" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="type" />
+            </KEYS>
+        </TABLE>
+        <!-- this should really be with the rest of the blocktype plugin subsystem but can't because of ordering -->
+        <TABLE NAME="blocktype_installed_viewtype">
+            <FIELDS>
+                <FIELD NAME="blocktype" TYPE="char" LENGTH="50" NOTNULL="true" />
+                <FIELD NAME="viewtype" TYPE="char" LENGTH="50" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="blocktypefk" TYPE="foreign" FIELDS="blocktype" REFTABLE="blocktype_installed" REFFIELDS="name"  />
+                <KEY NAME="viewtypefk" TYPE="foreign" FIELDS="viewtype" REFTABLE="view_type" REFFIELDS="type"  />
+            </KEYS>
+        </TABLE>
         <TABLE NAME="view">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
@@ -530,6 +549,7 @@
                 <FIELD NAME="layout" TYPE="int" LENGTH="10"/>
                 <FIELD NAME="template" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
                 <FIELD NAME="copynewuser" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
+                <FIELD NAME="type" TYPE="char" LENGTH="50" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -538,6 +558,7 @@
                 <KEY NAME="layoutfk" TYPE="foreign" FIELDS="layout" REFTABLE="view_layout" REFFIELDS="id"/>
                 <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
                 <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name" />
+                <KEY NAME="typefk" TYPE="foreign" FIELDS="type" REFTABLE="view_type" REFFIELDS="type" />
             </KEYS>
         </TABLE>
         <TABLE NAME="view_tag">

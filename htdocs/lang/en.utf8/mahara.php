@@ -398,6 +398,8 @@ $string['findgroups']         = 'Find Groups';
 $string['returntosite']       = 'Return to Site';
 $string['siteadministration'] = 'Site Administration';
 $string['useradministration'] = 'User Administration';
+$string['viewmyprofilepage']  = 'View profile page';
+$string['editmyprofilepage']  = 'Edit profile page';
 
 $string['unreadmessages'] = 'unread messages';
 $string['unreadmessage'] = 'unread message';

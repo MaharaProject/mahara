@@ -40,6 +40,10 @@ class PluginBlocktypeTextbox extends SystemBlocktype {
         return array('general');
     }
 
+    public static function get_viewtypes() {
+        return array('portfolio', 'profile');
+    }
+
     public static function render_instance(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
         $text = (isset($configdata['text'])) ? $configdata['text'] : '';

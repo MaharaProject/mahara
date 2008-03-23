@@ -345,7 +345,7 @@ function xmldb_core_upgrade($oldversion=0) {
 
         // Install all the blocktypes and their categories now, as they'll be 
         // needed for the template migration
-        install_blocktype_categories();
+        install_blocktype_extras();
         foreach(array(
             'textbox', 'externalfeed', 'externalvideo',
             'file/image', 'file/filedownload', 'file/folder', 'file/internalmedia',
@@ -831,7 +831,7 @@ function xmldb_core_upgrade($oldversion=0) {
         );
 
         // Force the install of the new 'fileimagevideo' blocktype
-        install_blocktype_categories();
+        install_blocktype_extras();
     }
 
     if ($oldversion < 2008012401) {

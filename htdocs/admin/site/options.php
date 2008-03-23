@@ -119,6 +119,14 @@ $siteoptionform = pieform(array(
             'options'      => $yesno,
             'help'         => true,
         ),
+        'allowpublicprofiles' => array(
+            'type'         => 'select',
+            'title'        => get_string('allowpublicprofiles', 'admin'),
+            'description'  => get_string('allowpublicprofilesdescription', 'admin'),
+            'defaultvalue' => get_config('allowpublicprofiles'),
+            'options'      => $yesno,
+            'help'         => true,
+        ),
         'defaultaccountlifetime' => array(
             'type'         => 'expiry',
             'title'        => get_string('defaultaccountlifetime', 'admin'),

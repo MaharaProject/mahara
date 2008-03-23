@@ -54,6 +54,10 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
         return array('fileimagevideo');
     }
 
+    public static function get_viewtypes() {
+        return array('portfolio');
+    }
+
     public static function render_instance(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
         $result = '';

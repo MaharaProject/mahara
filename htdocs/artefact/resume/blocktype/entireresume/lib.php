@@ -40,6 +40,10 @@ class PluginBlocktypeEntireresume extends PluginBlocktype {
         return array('resume');
     }
 
+    public static function get_viewtypes() {
+        return array('portfolio');
+    }
+
     public static function render_instance(BlockInstance $instance) {
         require_once(get_config('docroot') . 'artefact/lib.php');
         $smarty = smarty_core();

@@ -28,8 +28,16 @@ require(dirname(dirname(__FILE__)).'/init.php');
 require_once('group.php');
 require_once('pieforms/pieform.php');
 
-$userid = param_integer('id','');
 $loggedinid = $USER->get('id');
+if (!empty($loggedinid)) {
+    $userid = param_integer('id', $loggedinid);
+}
+else {
+    $userid = param_integer('id');
+}
+if ($userid == $loggedinid) {
+    define('MENUITEM', 'profile/view');
+}
 
 // Get the user's details
 

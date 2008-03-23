@@ -55,6 +55,10 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
         return array('blog');
     }
 
+    public static function get_viewtypes() {
+        return array('portfolio', 'profile');
+    }
+
     public static function render_instance(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
 

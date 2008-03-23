@@ -51,6 +51,8 @@ abstract class PluginBlocktype extends Plugin {
 
     public static abstract function get_categories();
 
+    public static abstract function get_viewtypes();
+
     public static abstract function render_instance(BlockInstance $instance);
 
     /**

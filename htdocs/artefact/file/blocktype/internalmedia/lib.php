@@ -40,6 +40,10 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         return array('fileimagevideo');
     }
 
+    public static function get_viewtypes() {
+        return array('portfolio', 'profile');
+    }
+
     public static function has_config() {
         return true;
     }
