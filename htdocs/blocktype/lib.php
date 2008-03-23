@@ -45,6 +45,14 @@ abstract class PluginBlocktype extends Plugin {
         );
     }
 
+    /** 
+     * override this to return true if the blocktype 
+     * can only reasonably be placed once in a view
+    */
+    public static function single_only() {
+        return false;
+    }
+
     public static abstract function get_title();
 
     public static abstract function get_description();
@@ -152,6 +160,7 @@ abstract class PluginBlocktype extends Plugin {
                 'name'           => $bt->name,
                 'title'          => call_static_method(generate_class_name('blocktype', $namespaced), 'get_title'),
                 'description'    => call_static_method(generate_class_name('blocktype', $namespaced), 'get_description'),
+                'singleonly'     => call_static_method(generate_class_name('blocktype', $namespaced), 'single_only'),
                 'artefactplugin' => $bt->artefactplugin,
                 'thumbnail_path' => get_config('wwwroot') . 'thumb.php?type=blocktype&bt=' . $bt->name . ((!empty($bt->artefactplugin)) ? '&ap=' . $bt->artefactplugin : ''),
             );

@@ -36,6 +36,10 @@ class PluginBlocktypeMyGroups extends SystemBlocktype {
         return get_string('description', 'blocktype.mygroups');
     }
 
+    public static function single_only() {
+        return true;
+    }
+
     public static function get_categories() {
         return array('internal');
     }

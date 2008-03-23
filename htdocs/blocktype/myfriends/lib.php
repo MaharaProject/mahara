@@ -36,6 +36,10 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
         return get_string('description', 'blocktype.myfriends');
     }
 
+    public static function single_only() {
+        return true;
+    }
+
     public static function get_categories() {
         return array('internal');
     }
