@@ -862,14 +862,17 @@ function xmldb_core_upgrade($oldversion=0) {
 
     if ($oldversion < 2008021200) {
         // Install the new auth plugins and the group forums
-        $data = check_upgrades('auth.none');
-        upgrade_plugin($data);
+        if ($data = check_upgrades('auth.none')) {
+            upgrade_plugin($data);
+        }
 
-        $data = check_upgrades('auth.ldap');
-        upgrade_plugin($data);
+        if ($data = check_upgrades('auth.ldap')) {
+            upgrade_plugin($data);
+        }
 
-        $data = check_upgrades('interaction.forum');
-        upgrade_plugin($data);
+        if ($data = check_upgrades('interaction.forum')) {
+            upgrade_plugin($data);
+        }
     }
 
     return $status;
