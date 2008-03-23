@@ -45,7 +45,7 @@ if (!$opensslext || !$curlext || !$xmlrpcext) {
     !$curlext    && $missingextensions[] = 'curl';
     !$xmlrpcext  && $missingextensions[] = 'xmlrpc';
     $smarty->assign('missingextensions', $missingextensions);
-    $smarty->display('admin/networking.tpl');
+    $smarty->display('admin/site/networking.tpl');
     exit;
 }
 
