@@ -1317,6 +1317,54 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('event_subscription', (object)array('event' => 'createuser', 'callfunction' => 'activity_set_defaults'));
      }
 
+    if ($oldversion < 2008032400) {
+        $table = new XMLDBTable('view_type');
+        $table->addFieldInfo('type', XMLDB_TYPE_CHAR, 50, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('type'));
+
+        create_table($table);
+
+        $table = new XMLDBTable('blocktype_installed_viewtype');
+        $table->addFieldInfo('blocktype', XMLDB_TYPE_CHAR, 50, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('viewtype', XMLDB_TYPE_CHAR, 50, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('blocktype', 'viewtype'));
+        $table->addKeyInfo('blocktypefk', XMLDB_KEY_FOREIGN, array('blocktype'), 'blocktype_installed', array('name'));
+        $table->addKeyInfo('viewtypefk', XMLDB_KEY_FOREIGN, array('viewtype'), 'view_type', array('type'));
+
+        create_table($table);
+
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('type');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 50, XMLDB_UNSIGNED, null);
+        add_field($table, $field);
+        $key = new XMLDBKey('typefk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('type'), 'view_type', array('type'));
+        add_key($table, $key);
+        set_field('view', 'type', 'portfolio');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 50, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        change_field_notnull($table, $field);
+
+        $viewtypes = array('portfolio', 'profile');
+        foreach ($viewtypes as $vt) {
+            insert_record('view_type', (object)array(
+                'type' => $vt,
+            ));
+        }
+
+        if ($blocktypes = plugins_installed('blocktype')) {
+            foreach ($blocktypes as $bt) {
+                install_blocktype_viewtypes_for_plugin(blocktype_single_to_namespaced($bt->name, $bt->artefactplugin));
+            }
+        }
+
+        // migrate all users to their default profile view
+        if ($userids = get_column('usr', 'id')) {
+            foreach ($userids as $user) {
+                install_default_profile_view(array('id' => $user));
+            }
+        }
+    }
+
     return $status;
 
 }
