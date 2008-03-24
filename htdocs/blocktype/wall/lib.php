@@ -94,6 +94,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
     public static function wallpost_form($replyid=0, $replyuser=0) {
         return pieform(array(
             'name'     => 'wallpost',
+            'renderer' => 'maharatable',
             'action'   => get_config('wwwroot') . 'blocktype/wall/post.php',
             'elements' => array(
                 'text' => array(
@@ -101,6 +102,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
                     'rows' => 3,
                     'cols' => 50,
                     'defaultvalue' => '',
+                    'width' => '100%',
                 ),
                 'private' => array(
                     'type' => 'checkbox',
