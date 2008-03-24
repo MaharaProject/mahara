@@ -78,7 +78,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
 
         $returnstr = '';
         if (!$editing && $userid != 0) {
-            $returnstr .= self::wallpost_form();
+            $returnstr .= self::wallpost_form($instance);
         }
         return $returnstr . $smarty->fetch('blocktype:wall:inlineposts.tpl');
     }
@@ -91,11 +91,18 @@ class PluginBlocktypeWall extends SystemBlocktype {
         return delete_records('blocktype_wall_post', 'instance', $instance->get('id'));
     }
 
-    public static function wallpost_form($replyid=0, $replyuser=0) {
+    public function wallpost_form(BlockInstance $instance, $replyto='', $replyuser='') {
+        if ($replyuser) {
+            $walltoreplyto = self::get_wall_id_for_user($replyuser);
+        }
+        else {
+            $walltoreplyto = $instance->get('id');
+        }
         return pieform(array(
             'name'     => 'wallpost',
             'renderer' => 'maharatable',
             'action'   => get_config('wwwroot') . 'blocktype/wall/post.php',
+            'successcallback' => array('PluginBlocktypeWall', 'wallpost_submit'),
             'elements' => array(
                 'text' => array(
                     'type' => 'textarea',
@@ -108,6 +115,14 @@ class PluginBlocktypeWall extends SystemBlocktype {
                     'type' => 'checkbox',
                     'title' => get_string('makeprivate', 'blocktype.wall'),
                 ),
+                'instance' => array(
+                    'type' => 'hidden',
+                    'value' => $walltoreplyto,
+                ),
+                'replyto' => array(
+                    'type' => 'hidden',
+                    'value' => $replyto,
+                ),
                 'submit' => array(
                     'type' => 'submit',
                     'value' => 'post',
@@ -116,6 +131,22 @@ class PluginBlocktypeWall extends SystemBlocktype {
         ));
         // TODO if replying here, add select element for replyto other wall or own wall
         // depending on if the user we're replying to has a wall
+    }
+
+    public static function wallpost_submit(Pieform $form, $values) {
+        global $USER;
+        log_debug("Inserting a new wall post!");
+        log_debug($values);
+        $record = (object)array(
+            'instance' => $values['instance'],
+            'from'     => $USER->get('id'),
+            'replyto'  => ($values['replyto']) ? $values['replyto'] : null,
+            'private'  => (int)(bool)$values['private'],
+            'postdate' => db_format_timestamp(time()),
+            'text'     => $values['text'],
+        );
+        insert_record('blocktype_wall_post', $record);
+        redirect('/user/view.php');
     }
 }
 
