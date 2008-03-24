@@ -59,7 +59,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         }
     }
 
-    public static function render_instance(BlockInstance $instance) {
+    public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
 
         if (empty($configdata['artefactid'])) {

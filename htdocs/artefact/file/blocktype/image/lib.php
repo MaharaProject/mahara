@@ -44,7 +44,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
         return array('portfolio', 'profile');
     }
 
-    public static function render_instance(BlockInstance $instance) {
+    public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata'); // this will make sure to unserialize it for us
         $configdata['viewid'] = $instance->get('view');
 

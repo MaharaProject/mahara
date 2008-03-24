@@ -48,7 +48,7 @@ class PluginBlocktypeMyGroups extends SystemBlocktype {
         return array('profile');
     }
 
-    public static function render_instance(BlockInstance $instance) {
+    public static function render_instance(BlockInstance $instance, $editing=false) {
         $userid = $instance->get_view()->get('owner');
         $smarty = smarty_core();
         require_once('group.php');

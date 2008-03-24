@@ -48,7 +48,7 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
         return array('profile');
     }
 
-    public static function render_instance(BlockInstance $instance) {
+    public static function render_instance(BlockInstance $instance, $editing=false) {
         $userid = $instance->get_view()->get('owner');
         $smarty = smarty_core();
         $records = get_records_sql_array('SELECT usr1, usr2 FROM {usr_friend}

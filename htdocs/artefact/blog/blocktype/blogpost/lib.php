@@ -59,7 +59,7 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
         return array('portfolio', 'profile');
     }
 
-    public static function render_instance(BlockInstance $instance) {
+    public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
 
         $result = '';

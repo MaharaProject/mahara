@@ -58,7 +58,7 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
         return array('portfolio', 'profile');
     }
 
-    public static function render_instance(BlockInstance $instance) {
+    public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
         $result = '';
         $url    = hsc(self::make_video_url($configdata['videoid']));

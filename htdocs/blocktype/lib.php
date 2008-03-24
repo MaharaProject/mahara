@@ -61,7 +61,7 @@ abstract class PluginBlocktype extends Plugin {
 
     public static abstract function get_viewtypes();
 
-    public static abstract function render_instance(BlockInstance $instance);
+    public static abstract function render_instance(BlockInstance $instance, $editing=false);
 
     /**
      * If this blocktype contains artefacts, and uses the artefactchooser 
@@ -332,7 +332,7 @@ class BlockInstance {
         }
         else {
             try {
-                $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this);
+                $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this, true);
             }
             catch (ArtefactNotFoundException $e) {
                 // Whoops - where did the image go? There is possibly a bug 
@@ -627,13 +627,13 @@ class BlockInstance {
             $this->dirty = false;
             return;
         }
+        safe_require('blocktype', $this->get('blocktype'));
+        call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'delete_instance', $this);
         
         delete_records('view_artefact', 'block', $this->id);
         delete_records('block_instance', 'id', $this->id);
 
         $this->dirty = false;
-        safe_require('blocktype', $this->get('blocktype'));
-        call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'delete_instance', $this);
     }
 
     /**
