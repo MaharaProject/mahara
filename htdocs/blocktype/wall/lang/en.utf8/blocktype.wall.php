@@ -30,5 +30,9 @@ $string['title'] = 'Wall';
 $string['description'] = 'Display an area where people can leave you comments';
 $string['noposts'] = 'No wall posts to display';
 $string['makeprivate'] = 'Private?';
+$string['viewwall'] = 'View wall';
+$string['backtoprofile'] = 'Back to profile';
+$string['wall'] = 'Wall';
+$string['wholewall'] = 'View whole wall';
 
 ?>

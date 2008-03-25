@@ -49,28 +49,10 @@ class PluginBlocktypeWall extends SystemBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
-        global $USER;
-        $owner = $instance->get_view()->get('owner');
-        $userid = (!empty($USER) ? $USER->get('id') : 0);
-
-        $sql = '
-            SELECT bwp.*,u.firstname,u.lastname,u.preferredname
-                FROM {blocktype_wall_post} bwp 
-                JOIN {usr} u ON bwp.from = u.id
-                WHERE bwp.instance = ? AND u.deleted = 0
-        ' . (($owner != $userid)  ? ' 
-                AND bwp.private = 0 ' : '' ) . '
-                ORDER BY bwp.postdate DESC
-        ';
-        $params = array($instance->get('id'));
-
         $smarty = smarty_core();
-        if ($records = get_records_sql_array($sql, $params, 0, 10)) {
-            $smarty->assign('wallposts', array_map(
-                create_function(
-                    '$item', 
-                    '$item->displayname = display_name($item); return $item;'), 
-                $records));
+        $smarty->assign('instanceid', $instance->get('id'));
+        if ($posts = self::wallpost_fetch_posts($instance)) { 
+            $smarty->assign('wallposts', $posts);
         }
         else {
             $smarty->assign('wallmessage', get_string('noposts', 'blocktype.wall'));
@@ -135,8 +117,6 @@ class PluginBlocktypeWall extends SystemBlocktype {
 
     public static function wallpost_submit(Pieform $form, $values) {
         global $USER;
-        log_debug("Inserting a new wall post!");
-        log_debug($values);
         $record = (object)array(
             'instance' => $values['instance'],
             'from'     => $USER->get('id'),
@@ -147,6 +127,37 @@ class PluginBlocktypeWall extends SystemBlocktype {
         );
         insert_record('blocktype_wall_post', $record);
         redirect('/user/view.php');
+    }
+
+    public static function wallpost_fetch_posts(BlockInstance $instance ) {
+        global $USER;
+        $owner = $instance->get_view()->get('owner');
+        $userid = (!empty($USER) ? $USER->get('id') : 0);
+
+        $sql = '
+            SELECT bwp.*,' . db_format_tsfield('postdate') . ',
+                u.firstname,u.lastname,u.preferredname
+                FROM {blocktype_wall_post} bwp 
+                JOIN {usr} u ON bwp.from = u.id
+                WHERE bwp.instance = ? AND u.deleted = 0
+        ' . (($owner != $userid)  ? ' 
+                AND bwp.private = 0 ' : '' ) . '
+                ORDER BY bwp.postdate DESC
+        ';
+        $params = array($instance->get('id'));
+
+        $smarty = smarty_core();
+        $smarty->assign('instanceid', $instance->get('id'));
+        if ($records = get_records_sql_array($sql, $params, 0, 10)) {
+            return array_map(
+                create_function(
+                    '$item', 
+                    '$item->displayname = display_name($item); return $item;'), 
+                $records
+            );
+            return $records;
+        }
+        return false;
     }
 }
 

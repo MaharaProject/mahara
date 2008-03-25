@@ -40,6 +40,7 @@ $owner->displayname = display_name($owner);
 
 $smarty = smarty();
 $smarty->assign('owner', $owner);
+$smarty->assign('wholewall', true);
 if ($posts = PluginBlocktypeWall::wallpost_fetch_posts($block)) {
     $smarty->assign('wallposts', $posts);
 }

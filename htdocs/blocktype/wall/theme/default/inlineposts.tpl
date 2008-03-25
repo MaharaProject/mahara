@@ -5,11 +5,14 @@
     {if $wallposts}
         {foreach from=$wallposts item=wallpost}
             <div id="wallpost">
-                <div id="icon"><img src="{$WWWROOT}/thumb.php?type=profileicon&maxwidth=50&maxheight=50&id={$wallpost->from}" /></div>
+                <div id="icon"><img src="{$WWWROOT}thumb.php?type=profileicon&maxwidth=50&maxheight=50&id={$wallpost->from}" /></div>
                 <div id="text">{$wallpost->text|escape}</div>
                 <div id="postedon">{$wallpost->postdate|format_date}</div>
                 <div id="controls">controls</div>
             </div>
         {/foreach}
+        {if !$wholewall}
+            <a href="{$WWWROOT}blocktype/wall/wall.php?id={$instanceid}">{str tag='wholewall' section='blocktype.wall'}</a>
+        {/if}
     {/if}
 </div>
