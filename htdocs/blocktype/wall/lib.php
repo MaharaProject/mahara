@@ -51,7 +51,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $smarty = smarty_core();
         $smarty->assign('instanceid', $instance->get('id'));
-        if ($posts = self::wallpost_fetch_posts($instance)) { 
+        if ($posts = self::fetch_posts($instance)) { 
             $smarty->assign('wallposts', $posts);
         }
         else {
@@ -129,7 +129,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
         redirect('/user/view.php');
     }
 
-    public static function wallpost_fetch_posts(BlockInstance $instance ) {
+    public static function fetch_posts(BlockInstance $instance ) {
         global $USER;
         $owner = $instance->get_view()->get('owner');
         $userid = (!empty($USER) ? $USER->get('id') : 0);
