@@ -115,23 +115,36 @@ function markread(form, action) {
         if (!data.error) {
             if (data.count > 0) {
                 activitylist.doupdate();
-                forEach(getElementsByTagAndClassName('span', 'unreadmessagescontainer'), function(message) {
-                    var countnode = message.firstChild;
-                    var oldcount = parseInt(countnode.innerHTML);
-                    var newcount = (oldcount - data.count);
-                    var messagenode = message.lastChild;
-                    if (newcount == 1) { // jump through hoops to change between plural and singular
-                        messagenode.innerHTML = get_string('unreadmessage');
-                    }
-                    else {
-                        messagenode.innerHTML = get_string('unreadmessages');
-                    }
-                    countnode.innerHTML = newcount;
-                });
+                if (data.newunreadcount && typeof(data.newunreadcount) != 'undefined') {
+                    updateUnreadCount(data.newunreadcount, 'reset');
+                } else {
+                    updateUnreadCount(data.count, 'decrement');
+                }
             }
         }
     }, function () {
         activitylist.doupdate();
+    });
+}
+
+function updateUnreadCount(n, decrement) {
+    forEach(getElementsByTagAndClassName('span', 'unreadmessagescontainer'), function(message) {
+        var countnode = message.firstChild;
+        if (decrement == 'decrement') {
+            var oldcount = parseInt(countnode.innerHTML);
+            var newcount = (oldcount - n);
+        }
+        else {
+            var newcount = n;
+        }
+        var messagenode = message.lastChild;
+        if (newcount == 1) { // jump through hoops to change between plural and singular
+            messagenode.innerHTML = get_string('unreadmessage');
+        }
+        else {
+            messagenode.innerHTML = get_string('unreadmessages');
+        }
+        countnode.innerHTML = newcount;
     });
 }
 
@@ -146,6 +159,7 @@ function showHideMessage(id) {
                 return !!data.error;
             });
             swapDOM(unread, IMG({'src' : {$star}, 'alt' : {$unread}}));
+            updateUnreadCount(1, 'decrement');
         }
         showElement('message-' + id);
     }

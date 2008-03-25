@@ -72,8 +72,14 @@ else if ($delete) {
         json_reply('local', get_string('failedtodeletenotifications', 'activity') . ': ' . $e->getMessage());
     }
     db_commit();
-    json_reply(false, array('message' => get_string('deletednotifications', 'activity', $count),
-                            'count' => $count));
+    
+    safe_require('notification', 'internal');
+
+    json_reply(false, array(
+        'message' => get_string('deletednotifications', 'activity', $count),
+        'count' => $count,
+        'newunreadcount' => call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'))
+    ));
 }
 
 // normal processing
