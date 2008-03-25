@@ -34,7 +34,7 @@
  */
 function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
     $result = "\n<fieldset";
-    if (!empty($element['collapsible'])) {
+    if (!empty($element['collapsible']) || !empty($element['class'])) {
         if (!isset($element['legend']) || $element['legend'] === '') {
             Pieform::info('Collapsible fieldsets should have a legend so they can be toggled');
         }
@@ -49,6 +49,9 @@ function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
         }
         if (!empty($element['collapsed']) && !$error) {
             $classes[] = 'collapsed';
+        }
+        if (!empty($element['class'])) {
+            $classes[] = $element['class'];
         }
         $result .= ' class="' . implode(' ', $classes) . '"';
     }
