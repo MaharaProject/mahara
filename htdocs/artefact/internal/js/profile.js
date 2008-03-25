@@ -54,6 +54,25 @@ addLoadEvent(function() {
         getFirstElementByTagAndClassName('table', null, 'profileform')
     );
 
+    // Connect events to each form element to check if they're changed and set
+    // a dirty flag
+    var formDirty = false;
+    forEach(getElementsByTagAndClassName(null, null, 'profileform'), function(i) {
+        if (i.tagName != 'INPUT' && i.tagName != 'TEXTAREA') return;
+        if (!hasElementClass(i, 'text') && !hasElementClass(i, 'textarea')) return;
+        connect(i, 'onchange', function(e) {
+            formDirty = true;
+        });
+    });
+
+    connect('cancel_profileform_submit', 'onclick', function(e) {
+        if (formDirty) {
+            if (!confirm(get_string('loseyourchanges'))) {
+                e.stop();
+            }
+        }
+    });
+
     // Now unhide the profile form
     hideElement('profile-loading');
     $('profileform').style.position = 'static';
