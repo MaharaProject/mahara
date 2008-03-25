@@ -49,8 +49,13 @@ class PluginBlocktypeWall extends SystemBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
+        global $USER;
+        $owner = $instance->get_view()->get('owner');
+        $userid = (!empty($USER) ? $USER->get('id') : 0);
+        
         $smarty = smarty_core();
         $smarty->assign('instanceid', $instance->get('id'));
+        $smarty->assign('ownwall', (!empty($USER) && $USER->get('id') == $owner));
         if ($posts = self::fetch_posts($instance)) { 
             $smarty->assign('wallposts', $posts);
         }
@@ -136,7 +141,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
 
         $sql = '
             SELECT bwp.*,' . db_format_tsfield('postdate') . ',
-                u.firstname,u.lastname,u.preferredname
+                u.username,firstname,u.lastname,u.preferredname
                 FROM {blocktype_wall_post} bwp 
                 JOIN {usr} u ON bwp.from = u.id
                 WHERE bwp.instance = ? AND u.deleted = 0

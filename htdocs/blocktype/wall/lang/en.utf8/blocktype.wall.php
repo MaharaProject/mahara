@@ -34,5 +34,6 @@ $string['viewwall'] = 'View wall';
 $string['backtoprofile'] = 'Back to profile';
 $string['wall'] = 'Wall';
 $string['wholewall'] = 'View whole wall';
-
+$string['reply'] = 'reply';
+$string['delete'] = 'delete post';
 ?>
