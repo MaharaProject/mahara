@@ -534,7 +534,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
             self.form.userfile.value = '';
             self.form.title.value = '';
             self.form.description.value = '';
-            swapDOM(self.form.tags.parentNode.parentNode.parentNode.parentNode, create_tags_control('tags'));
+            swapDOM('tagcontrol-tags', create_tags_control('tags'));
             hideElement(self.form.replace);
             hideElement(self.form);
             showElement(self.openbutton);
