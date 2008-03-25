@@ -59,7 +59,7 @@ if ($submittedgroup && (user_can_access_group($submittedgroup) & GROUP_MEMBERSHI
     // been submitted to, and is entitled to upload an additional
     // file when submitting feedback.
     $tutorfilefeedbackformrow = "TR(null, TH(null, LABEL(null, '" . get_string('attachfile', 'view') . "'))),"
-        . "TR(null, TD(null, INPUT({'type':'file', 'name':'attachment'}))),";
+        . "TR(null, TD(null, INPUT({'type':'file', 'name':'attachment', 'onchange': 'process_public_checkbox(this)'}))),";
 }
 $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
 
@@ -83,7 +83,7 @@ if (!empty($feedbackisprivate)) {
 }
 else {
     $makepublic = "TR(null, TH(null, LABEL(null, " . $getstring['makepublic'] . " ), " 
-        . "INPUT({'type':'checkbox', 'class':'checkbox', 'name':'ispublic'}))),";
+        . "INPUT({'type':'checkbox', 'class':'checkbox', 'name':'ispublic', 'id': 'ispublic'}))),";
 }
 
 $javascript = <<<EOF
@@ -248,6 +248,19 @@ feedbacklist.statevars.push('view');
 feedbacklist.emptycontent = {$getstring['nopublicfeedback']};
 feedbacklist.updateOnLoad();
 
+
+function process_public_checkbox(input) {
+    var checkbox = $('ispublic');
+    if (input.value != '') {
+        log('making public checkbox not checked and disabled');
+        checkbox.checked = false;
+        checkbox.disabled = 'disabled';
+    }
+    else {
+        log('making public checkbox enabled');
+        checkbox.disabled = '';
+    }
+}
 
 EOF;
 
