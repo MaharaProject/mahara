@@ -7,10 +7,9 @@ addLoadEvent(function() {
 
     var tabs = [];
     forEach(legends, function(legend) {
-        var a = legend.firstChild;
+        var a = A({'href': ''}, legend.firstChild);
         legend.parentNode.tabLink = a;
         a.id = legend.id + '_a';
-        disconnectAll(a);
         connect(a, 'onclick', function(e) {
             forEach(fieldsets, function(fieldset) {
                 if (fieldset == legend.parentNode) {

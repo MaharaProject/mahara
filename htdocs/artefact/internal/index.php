@@ -123,29 +123,25 @@ $elements = array(
     'profile' => array(
         'type' => 'fieldset',
         'legend' => get_string('aboutme', 'artefact.internal'),
-        'collapsible' => true,
-        'collapsed' => $fieldset != 'aboutme',
+        'class' => $fieldset != 'aboutme' ? 'collapsed' : '',
         'elements' => get_desired_fields(&$items, array('firstname', 'lastname', 'studentid', 'preferredname', 'introduction'), 'about'),
     ),
     'contact' => array(
         'type' => 'fieldset',
         'legend' => get_string('contact', 'artefact.internal'),
-        'collapsible' => true,
-        'collapsed' => $fieldset != 'contact',
+        'class' => $fieldset != 'contact' ? 'collapsed' : '',
         'elements' => get_desired_fields(&$items, array('email', 'officialwebsite', 'personalwebsite', 'blogaddress', 'address', 'town', 'city', 'country', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber'), 'contact'),
     ),
     'messaging' => array(
         'type' => 'fieldset',
         'legend' => get_string('messaging', 'artefact.internal'),
-        'collapsible' => true,
-        'collapsed' => $fieldset != 'messaging',
+        'class' => $fieldset != 'messaging' ? 'collapsed' : '',
         'elements' => get_desired_fields(&$items, array('icqnumber', 'msnnumber', 'aimscreenname', 'yahoochat', 'skypeusername', 'jabberusername'), 'messaging'),
     ),
     'general' => array(
         'type' => 'fieldset',
         'legend' => get_string('general', 'artefact.internal'),
-        'collapsible' => true,
-        'collapsed' => $fieldset != 'general',
+        'class' => $fieldset != 'general' ? 'collapsed' : '',
         'elements' => $items
     ),
     'submit' => array(
