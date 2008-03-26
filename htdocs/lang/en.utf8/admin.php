@@ -29,6 +29,7 @@ defined('INTERNAL') || die();
 $string['administration'] = 'Administration';
 
 // Installer
+$string['installation'] = 'Installation';
 $string['release'] = 'Release %s (%s)';
 $string['copyright'] = 'Copyright &copy; 2006 onwards, Catalyst IT Ltd';
 $string['agreelicense'] = 'I agree';
