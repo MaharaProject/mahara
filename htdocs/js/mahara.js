@@ -589,7 +589,7 @@ function create_tags_control(name, value, options) {
     elements.push(augment_tags_control(tagControl, true));
     elements.push(TABLE({'class': 'help-wrapper'}, TBODY(null, TR(null, TD(null, tagControl), TD({'class': 'helpcontainer'}, tagshelp)))));
 
-    return DIV({'id': 'tagcontrol-' + name}, elements);
+    return DIV(null, elements);
 }
 
 // this function takes an existing input element and augments it
