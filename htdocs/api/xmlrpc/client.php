@@ -120,8 +120,7 @@ class Client {
             if (!empty($remote_timestamp)) {
                 $remote_timestamp = $remote_timestamp - $hysteresis;
                 $time_offset      = $remote_timestamp - $timestamp_send;
-                // We've set the maximum time drift between servers to 15 seconds
-                if ($time_offset > 15) {
+                if ($time_offset > self::get_max_server_time_difference()) {
                     throw new XmlrpcClientException('Time drift ('.$margin_of_error.', '.$time_offset.') is too large.');
                 }
             }
@@ -218,6 +217,19 @@ class Client {
         xmlrpc_set_type($argument, $type);
         $this->params[] = $argument;
         return $this;
+    }
+
+    private static function get_max_server_time_difference() {
+        $max_time_difference = (int)get_config('xmlrpcmaxservertimedifference');
+        if ($max_time_difference < 15) {
+            log_warn('Minimum value allowed for "max_server_time_difference" is 15 seconds');
+            $max_time_difference = 15;
+        }
+        if ($max_time_difference > 300) {
+            log_warn('Maximum value allowed for "max_server_time_difference" is 300 seconds');
+            $max_time_difference = 300;
+        }
+        return $max_time_difference;
     }
 }
 ?>
