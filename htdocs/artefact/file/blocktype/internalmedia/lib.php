@@ -66,7 +66,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $artefact = artefact_instance_from_id($configdata['artefactid']);
         $width  = (!empty($configdata['width'])) ? hsc($configdata['width']) : '300';
         $height = (!empty($configdata['height'])) ? hsc($configdata['height']) : '300';
-        $extn = $artefact->get('oldextension');
+        $extn = strtolower($artefact->get('oldextension'));
         if (!in_array($extn, self::get_allowed_extensions())) {
             return get_string('typeremoved', 'blocktype.file/internalmedia');
         }
