@@ -20,6 +20,9 @@
 .blocktype-radio {
     display: none;
 }
+* html .blocktype-radio {
+    display: block;
+}
 
 /* This will be hidden until loading is finished */
 #bottom-pane {

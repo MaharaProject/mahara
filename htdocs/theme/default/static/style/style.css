@@ -32,6 +32,7 @@ body {
 #loading_box {
     display: none;
     position: fixed;
+    * position: absolute;
     top: 0;
     left: 0;
     background-color: #fff8cf;
@@ -235,9 +236,15 @@ span.addicon a:hover {
 form {
    margin: 0;
 }
-input.text, input.password, textarea, input, submit {
+input.text, input.password, textarea, input {
     border: 1px solid #b2b2b2;
     padding: 1px 2px 1px 2px;
+}
+* html input {
+    border: 0;
+}
+* html input.file {
+    border: 1px solid #b2b2b2;
 }
 input.radio, input.checkbox,
 input[type=radio], input[type=checkbox] {
