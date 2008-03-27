@@ -24,7 +24,6 @@ div.editview {
 }
 #view table.filedata {
     margin-top: 1em;
-    width: 95%;
     border: none;
 }
 #view table.filedata th {

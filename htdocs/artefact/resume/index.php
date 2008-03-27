@@ -35,6 +35,10 @@ define('TITLE', get_string('myresume', 'artefact.resume'));
 require_once('pieforms/pieform.php');
 require_once(get_config('docroot') . 'artefact/lib.php');
 
+// There is a problem with collapsible fieldsets in pieforms that mean they 
+// don't work properly in IE. This is a hack until that problem is fixed
+$collapsedfieldsets = (isset($_SERVER['HTTP_USER_AGENT']) && false === stripos($_SERVER['HTTP_USER_AGENT'], 'msie'));
+
 // load up all the artefacts this user already has....
 $coverletter = null;
 $personalinformation = null;
@@ -73,8 +77,8 @@ $coverletterform = pieform(array(
         'coverletterfs' => array(
             'type' => 'fieldset',
             'legend' => get_string('coverletter', 'artefact.resume'),
-            'collapsible' => true,
-            'collapsed' => true,
+            'collapsible' => $collapsedfieldsets,
+            'collapsed' => $collapsedfieldsets,
             'elements' => array(
                 'coverletter' => array(
                     'type'  => 'wysiwyg',
@@ -103,8 +107,8 @@ $interestsform = pieform(array(
         'interestsfs' => array(
             'type' => 'fieldset',
             'legend' => get_string('interest', 'artefact.resume'),
-            'collapsible' => true,
-            'collapsed' => true,
+            'collapsible' => $collapsedfieldsets,
+            'collapsed' => $collapsedfieldsets,
             'elements' => array(
                 'interest' => array(
                     'type' => 'wysiwyg',
@@ -133,8 +137,8 @@ $contactinformationform = pieform(array(
         'contactinformationfs' => array(
             'type' => 'fieldset',
             'legend' => get_string('contactinformation', 'artefact.resume'),
-            'collapsible' => true,
-            'collapsed' => true,
+            'collapsible' => $collapsedfieldsets,
+            'collapsed' => $collapsedfieldsets,
             'elements' => array(
                 'contactinformation' => array(
                     'type'  => 'html',
@@ -157,8 +161,8 @@ $personalinformationform = pieform(array(
         'personalinformation' => array(
             'type'        => 'fieldset',
             'legend'      => get_string('personalinformation', 'artefact.resume'),
-            'collapsible' => true,
-            'collapsed'   => true,
+            'collapsible' => $collapsedfieldsets,
+            'collapsed'   => $collapsedfieldsets,
             'elements'    => array(
                'dateofbirth' => array(
                     'type'       => 'calendar',

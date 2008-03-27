@@ -1128,6 +1128,14 @@ fieldset.collapsed legend a {
     background: url(../images/icon_fieldset_left.gif) 2px center no-repeat;
 }
 
+#coverletter fieldset,
+#interests fieldset,
+#contactinformation fieldset,
+#personalinformation fieldset,
+{
+    border: 0;
+}
+
 .tags {
     font-size: 11px;
 }
