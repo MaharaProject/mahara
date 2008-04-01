@@ -917,12 +917,30 @@ function get_users_data($userlist) {
                 'elements' => array(
                     'submit' => array(
                         'type' => 'submit',
-                        'value' => get_string('addtofriendslist', 'group')
+                        'value' => get_string('addtofriendslist', 'group'),
                     ),
                     'id' => array(
                         'type' => 'hidden',
-                        'value' => $friend->id
-                    )
+                        'value' => $friend->id,
+                    ),
+                    // These two fields pass on any query that was running on a 
+                    // user search screen. This is so when the form is 
+                    // submitted, the correct user search is run again and so 
+                    // this pieform will definitely be created and ready to be 
+                    // submitted.
+                    //
+                    // A bit of a hack caused by having one form for each user. 
+                    // It would be nice at some point to put the entire 'find 
+                    // friends' page into one form and toggle on the submit 
+                    // button to work out which friend to add.
+                    'query' => array(
+                        'type' => 'hidden',
+                        'value' => param_variable('query', ''),
+                    ),
+                    'offset' => array(
+                        'type' => 'hidden',
+                        'value' => param_integer('offset', 0),
+                    ),
                 )
             ));
         }
