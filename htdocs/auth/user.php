@@ -279,7 +279,7 @@ class User {
      */
     public function get_activity_preference($key) {
         $activityprefs = $this->get('activityprefs');
-        return isset($activityprefs[$key]) ? $activityprefs[$key] : 'email';
+        return isset($activityprefs[$key]) ? $activityprefs[$key] : null;
     }
 
     /** @todo document this method */
