@@ -1037,7 +1037,7 @@ function addfriend_submit(Pieform $form, $values) {
     $n->message = get_string_from_language($lang, 'addedtofriendslistmessage', 'group', $displayname, $displayname);
 
     activity_occurred('maharamessage', $n);
-    $SESSION->add_ok_msg(get_string('friendformaddsuccess', 'group', $displayname));
+    $SESSION->add_ok_msg(get_string('friendformaddsuccess', 'group', display_name($user)));
     redirect('/user/view.php?id=' . $values['id']);
 }
 
