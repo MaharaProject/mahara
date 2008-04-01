@@ -63,17 +63,6 @@ class PluginBlocktypeTextbox extends SystemBlocktype {
         );
     }
 
-    public static function instance_config_save($values) {
-        global $USER;
-        if (!get_account_preference($USER->get('id'), 'wysiwyg')) {
-            $values['text'] = format_whitespace($values['text']);
-        }
-        else {
-            $values['text'] = clean_text($values['text']);
-        }
-        return $values;
-    }
-
 }
 
 ?>
