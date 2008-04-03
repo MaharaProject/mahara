@@ -224,7 +224,8 @@ $addstr = get_string('add');
 $editstr = get_string('edit');
 $delstr = get_string('delete');
 $confirmdelstr = get_string('compositedeleteconfirm', 'artefact.resume');
-$imagepath = theme_get_url('images');
+$imagemoveblockup   = json_encode(theme_get_url('images/move-block-up.png'));
+$imagemoveblockdown = json_encode(theme_get_url('images/move-block-down.png'));
 $upstr = get_string('moveup', 'artefact.resume');
 $downstr = get_string('movedown', 'artefact.resume');
 
@@ -323,7 +324,7 @@ EOF;
         function (r, d) {
             var buttons = [];
             if (r._rownumber > 1) {
-                var up = A({'href': ''}, IMG({'src': '{$imagepath}/move-block-up.png', 'alt':'{$upstr}'}));
+                var up = A({'href': ''}, IMG({'src': {$imagemoveblockup}, 'alt':'{$upstr}'}));
                 connect(up, 'onclick', function (e) {
                     e.stop();
                     return moveComposite(d.type, r.id, r.artefact, 'up');
@@ -331,7 +332,7 @@ EOF;
                 buttons.push(up);
             }
             if (!r._last) {
-                var down = A({'href': ''}, IMG({'src': '{$imagepath}/move-block-down.png', 'alt':'{$downstr}'}));
+                var down = A({'href': ''}, IMG({'src': {$imagemoveblockdown}, 'alt':'{$downstr}'}));
                 connect(down, 'onclick', function (e) {
                     e.stop();
                     return moveComposite(d.type, r.id, r.artefact, 'down');
