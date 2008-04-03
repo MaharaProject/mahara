@@ -27,6 +27,10 @@
 define('INTERNAL', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
+if (param_integer('login_submitted', 0)) {
+    redirect(get_config('wwwroot'));
+}
+
 if (param_integer('restore', 0)) {
     $id = $USER->restore_identity();
     redirect(get_config('wwwroot') . 'admin/users/edit.php?id=' . $id);

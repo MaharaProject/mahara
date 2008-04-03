@@ -942,6 +942,10 @@ function auth_get_login_form() {
             'type'  => 'submit',
             'value' => get_string('login')
         ),
+        'login_submitted' => array(
+            'type'  => 'hidden',
+            'value' => 1
+        ),
     );
 
     // The login page is completely transient, and it is smart because it
