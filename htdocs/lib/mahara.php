@@ -753,9 +753,9 @@ function check_dir_exists($dir, $create=true, $recursive=true) {
         if (!$create) {
             $status = false;
         } else {
-            umask(0000); 
-            $status = @mkdir($dir, 0777, true);
-            // @todo has the umask been clobbered at this point, and is this a bad thing?
+            $mask = umask(0000);
+            $status = @mkdir($dir, get_config('directorypermissions'), true);
+            umask($mask);
         }
     }
     return $status;
