@@ -62,6 +62,11 @@ foreach (array('docroot', 'dataroot') as $path) {
 $CFG->xmldbdisablenextprevchecking = true;
 $CFG->xmldbdisablecommentchecking = true;
 
+// ensure directorypermissions is set
+if (empty($CFG->directorypermissions)) {
+    $CFG->directorypermissions = 0700;
+}
+
 // core libraries
 require('mahara.php');
 ensure_sanity();

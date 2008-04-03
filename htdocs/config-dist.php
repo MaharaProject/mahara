@@ -48,6 +48,13 @@ $cfg->dbprefix = '';
 // this is a big security hole.
 $cfg->dataroot = '/path/to/uploaddir';
 
+// directorypermissions - what permissions to use for files and directories in 
+// dataroot. The default allows only the web server user to read the data. If 
+// you're on shared hosting and might want to download the contents of your 
+// dataroot later (e.g. for backup purposes), set this to 0777. Otherwise, 
+// leave it as is!
+//$cfg->directorypermissions = 0700;
+
 // insecuredataroot - whether to enforce checking that files being served have 
 // come from dataroot. You would only want to turn this on if you were running 
 // more than one Mahara against the same dataroot. If you are doing that, make 
