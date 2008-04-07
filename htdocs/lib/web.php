@@ -1980,6 +1980,20 @@ function clean_text($text) {
     require_once('htmlpurifier/HTMLPurifier.auto.php');
     $config = HTMLPurifier_Config::createDefault();
     $config->set('Cache', 'SerializerPath', get_config('dataroot') . 'htmlpurifier');
+
+    $config->set('HTML', 'DefinitionID', 'Mahara customisations to default config');
+    // NOTE: this MUST be incremented if you change the configuration 
+    // definition - Talk to Nigel about it
+    $config->set('HTML', 'DefinitionRev', 1);
+
+    // This disables caching of HTMLPurifier objects. Worth having off for 
+    // development, but see note above once you're done messing with things
+    //$config->set('Core', 'DefinitionCache', null);
+
+    $config->set('Core', 'Encoding', 'UTF-8');
+    $config->set('HTML', 'Doctype', 'XHTML 1.0 Transitional');
+    $def =& $config->getHTMLDefinition(true);
+    $def->addAttribute('a', 'target', 'Enum#_blank,_self,_target,_top');
     $purifier = new HTMLPurifier($config);
     return $purifier->purify($text);
 }
