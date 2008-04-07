@@ -124,19 +124,19 @@ $elements = array(
         'type' => 'fieldset',
         'legend' => get_string('aboutme', 'artefact.internal'),
         'class' => $fieldset != 'aboutme' ? 'collapsed' : '',
-        'elements' => get_desired_fields(&$items, array('firstname', 'lastname', 'studentid', 'preferredname', 'introduction'), 'about'),
+        'elements' => get_desired_fields($items, array('firstname', 'lastname', 'studentid', 'preferredname', 'introduction'), 'about'),
     ),
     'contact' => array(
         'type' => 'fieldset',
         'legend' => get_string('contact', 'artefact.internal'),
         'class' => $fieldset != 'contact' ? 'collapsed' : '',
-        'elements' => get_desired_fields(&$items, array('email', 'officialwebsite', 'personalwebsite', 'blogaddress', 'address', 'town', 'city', 'country', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber'), 'contact'),
+        'elements' => get_desired_fields($items, array('email', 'officialwebsite', 'personalwebsite', 'blogaddress', 'address', 'town', 'city', 'country', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber'), 'contact'),
     ),
     'messaging' => array(
         'type' => 'fieldset',
         'legend' => get_string('messaging', 'artefact.internal'),
         'class' => $fieldset != 'messaging' ? 'collapsed' : '',
-        'elements' => get_desired_fields(&$items, array('icqnumber', 'msnnumber', 'aimscreenname', 'yahoochat', 'skypeusername', 'jabberusername'), 'messaging'),
+        'elements' => get_desired_fields($items, array('icqnumber', 'msnnumber', 'aimscreenname', 'yahoochat', 'skypeusername', 'jabberusername'), 'messaging'),
     ),
     'general' => array(
         'type' => 'fieldset',
@@ -162,7 +162,7 @@ $profileform = pieform(array(
     'autofocus'  => false,
 ));
 
-function get_desired_fields($allfields, $desiredfields, $section) {
+function get_desired_fields(&$allfields, $desiredfields, $section) {
     global $USER;
     $return = array();
     $return["{$section}description"] = array(
