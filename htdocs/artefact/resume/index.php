@@ -258,7 +258,13 @@ function compositeSaveCallback(form, data) {
     key = form.id.substr(3);
     tableRenderers[key].doupdate(); 
     toggleCompositeForm(key);
-    $('add' + key).reset();
+    // Can't reset() the form here, because its values are what were just submitted, 
+    // thanks to pieforms
+    forEach(form.elements, function(element) {
+        if (hasElementClass(element, 'text') || hasElementClass(element, 'textarea')) {
+            element.value = '';
+        }
+    });
 }
 
 function deleteComposite(type, id, artefact) {
