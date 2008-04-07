@@ -226,6 +226,7 @@ $string['uploadcsvpagedescription'] = '<p>You may use this facility to upload ne
 <p>Your CSV file may include any other profile fields as you require. The full list of fields is:</p>
 
 %s';
+$string['uploadcsvsomeuserscouldnotbeemailed'] = 'Some users could not be e-mailed. Their e-mail addresses may be invalid, or the server Mahara is running on might not be configured to send e-mail properly. The server error log has more details. For now, you may want to contact these people manually:';
 $string['uploadcsvusersaddedsuccessfully'] = 'The users in the file have been added successfully';
 $string['uploadcsvfailedusersexceedmaxallowed'] = 'No users have been added because there are too many users in your file.  The number of users in the institution would have exceeded the maximum number allowed.';
 
