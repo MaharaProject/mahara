@@ -395,6 +395,10 @@ function get_languages() {
     return $langs;
 }
 
+function language_installed($lang) {
+    return is_readable(get_config('docroot') . 'lang/' . $lang . '/langconfig.php');
+}
+
 /**
  * Return a list of available themes
  * Need to add the theme names sometime; for now use get_string().
@@ -694,7 +698,10 @@ function current_language() {
     if ($USER instanceof User) {
         $lang = $USER->get_account_preference('lang');
         if ($lang !== null && $lang != 'default') {
-            return $lang;
+            if (language_installed($lang)) {
+                return $lang;
+            }
+            $USER->set_account_preference('lang', 'default');
         }
     }
 
