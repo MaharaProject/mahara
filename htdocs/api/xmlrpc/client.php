@@ -222,7 +222,10 @@ class Client {
     private static function get_max_server_time_difference() {
         $max_time_difference = (int)get_config('xmlrpcmaxservertimedifference');
         if ($max_time_difference < 15) {
-            log_warn('Minimum value allowed for "max_server_time_difference" is 15 seconds');
+            if ($max_time_difference != 0) {
+                // Someone deliberately set it to less than 15 seconds
+                log_warn('Minimum value allowed for "max_server_time_difference" is 15 seconds');
+            }
             $max_time_difference = 15;
         }
         if ($max_time_difference > 300) {
