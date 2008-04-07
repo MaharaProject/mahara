@@ -560,6 +560,7 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
                     'required' => true,
                 ),
                 'title' => get_string('startdate', 'artefact.resume'),
+                'help' => true,
             ),
             'enddate' => array(
                 'type' => 'text', 
@@ -626,6 +627,7 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
                     'required' => true,
                 ),
                 'title' => get_string('startdate', 'artefact.resume'),
+                'help' => true,
             ),
             'enddate' => array(
                 'type' => 'text', 
@@ -693,6 +695,7 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
                     'required' => true,
                 ),
                 'title' => get_string('date', 'artefact.resume'),
+                'help' => true,
             ),
             'title' => array(
                 'type' => 'text',
@@ -743,6 +746,7 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
                     'required' => true,
                 ),
                 'title' => get_string('date', 'artefact.resume'),
+                'help' => true,
             ),
             'title' => array(
                 'type' => 'text',
@@ -801,6 +805,7 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
                     'required' => true,
                 ),
                 'title' => get_string('startdate', 'artefact.resume'),
+                'help' => true,
             ),
             'enddate' => array(
                 'type' => 'text', 
