@@ -289,7 +289,7 @@ END;
         $q = join(' AND ', array_merge($q, $neg));
 
         $results = self::send_query($q, $limit, 0, array('type' => 'user'), $fields);
-        self::remove_key_prefix(&$results);
+        self::remove_key_prefix($results);
         return $results;
         
     }

@@ -3,6 +3,7 @@ php_flag magic_quotes_runtime off
 php_flag magic_quotes_sybase off
 php_flag magic_quotes_gpc off
 php_flag log_errors on
+php_flag allow_call_time_pass_reference off
 <Files config.php>
     Order deny,allow
     deny from all
