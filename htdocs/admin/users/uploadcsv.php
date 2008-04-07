@@ -349,10 +349,26 @@ function uploadcsv_submit(Pieform $form, $values) {
     $straccountcreatedhtml = ($values['forcepasswordchange']) ? 'accountcreatedchangepasswordhtml' : 'accountcreatedhtml';
     if ($values['emailusers'] && $addedusers) {
         foreach ($addedusers as $user) {
-            email_user($user, null, get_string('accountcreated'),
-                get_string($straccountcreatedtext, 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('sitename')),
-                get_string($straccountcreatedhtml, 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('sitename'))
-            );
+            $failedusers = array();
+            try {
+                email_user($user, null, get_string('accountcreated'),
+                    get_string($straccountcreatedtext, 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('sitename')),
+                    get_string($straccountcreatedhtml, 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('sitename'))
+                );
+            }
+            catch (EmailException $e) {
+                log_info($e->getMessage());
+                $failedusers[] = $user;
+            }
+        }
+
+        if ($failedusers) {
+            $message = get_string('uploadcsvsomeuserscouldnotbeemailed', 'admin') . "\n<ul>\n";
+            foreach ($failedusers as $user) {
+                $message .= '<li>' . full_name($user) . ' &lt;' . hsc($user->email) . "&gt;</li>\n";
+            }
+            $message .= "</ul>\n";
+            $SESSION->add_info_msg($message, false);
         }
     }
 
