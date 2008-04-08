@@ -419,16 +419,6 @@ class PluginSearchInternal extends PluginSearch {
 
 
     public static function institutional_admin_search_user($query, $institution, $limit) {
-        if (is_postgres()) {
-            return self::institutional_admin_search_user_pg($query, $institution, $limit);
-        } 
-        else {
-            throw new SQLException('institutional_admin_search_user() is not implemented for your database engine (' . get_config('dbtype') . ')');
-        }
-    }
-
-
-    public static function institutional_admin_search_user_pg($query, $institution, $limit) {
         $sql = '
             FROM {usr} u ';
 
@@ -438,8 +428,8 @@ class PluginSearchInternal extends PluginSearch {
         $values = array();
         if (!empty($query)) {
             $where .= '
-                AND (u.firstname ILIKE \'%\' || ? || \'%\'
-                     OR u.lastname ILIKE \'%\' || ? || \'%\') ';
+                AND (u.firstname ' . db_ilike() . ' \'%\' || ? || \'%\'
+                     OR u.lastname ' . db_ilike() . ' \'%\' || ? || \'%\') ';
             $values = array($query,$query);
         }
 
