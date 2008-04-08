@@ -35,7 +35,7 @@ define('MENUITEM', 'manageinstitutions/institutionstaff');
 $smarty = smarty();
 
 require_once('institution.php');
-$institution = add_institution_selector_to_page(&$smarty, param_alphanum('institution', false), 
+$institution = add_institution_selector_to_page($smarty, param_alphanum('institution', false),
                                                 get_config('wwwroot') . 'admin/users/institutionstaff.php');
 
 if ($institution === false) {
