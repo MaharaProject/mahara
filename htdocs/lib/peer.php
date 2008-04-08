@@ -200,8 +200,28 @@ class Peer {
 
             if (null == $institution) {
                 $institution = new Institution;
-                $iname = preg_replace('/\s+/', '', $this->name);
-                $institution->name = preg_replace('/\s+/', '', $this->name);
+                $institution->name = preg_replace('/[^a-zA-Z]/', '', $this->name);
+
+                // Check that the institution name has not already been taken. 
+                // If it has, we change it until we find a name that works
+                $existinginstitutionnames = get_column('institution', 'name');
+                if (in_array($institution->name, $existinginstitutionnames)) {
+                    $success = false;
+                    foreach (range('a', 'z') as $character) {
+                        $testname = $institution->name . $character;
+                        if (!in_array($testname, $existinginstitutionnames)) {
+                            $success = true;
+                            $institution->name = $testname;
+                            break;
+                        }
+                    }
+
+                    if (!$success) {
+                        // We couldn't find a unique name. Noes!
+                        throw new RemoteServerException('Could not create a unique institution name');
+                    }
+                }
+
                 $institution->displayname = $this->name;
                 $institution->commit();
                 $this->institution = $institution->name;
