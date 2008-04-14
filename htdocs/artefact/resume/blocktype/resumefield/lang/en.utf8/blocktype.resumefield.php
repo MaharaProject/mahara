@@ -26,10 +26,10 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'One Resume Field';
-$string['description'] = 'Display any resume information';
+$string['title'] = 'One Resumé Field';
+$string['description'] = 'Display any resumé information';
 
 $string['fieldtoshow'] = 'Field to show';
-$string['filloutyourresume'] = '%sFill out your resume%s in order to add more fields!';
+$string['filloutyourresume'] = '%sFill out your resumé%s in order to add more fields!';
 
 ?>
