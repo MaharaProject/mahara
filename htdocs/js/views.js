@@ -548,10 +548,16 @@ function ViewManager() {
 
             // The border rule is required for IE7 to behave - and it needs the
             // semi-colon!
-            setStyle(clone, {
-                'border': '0px dotted transparent;',
-                'position': 'absolute'
-            });
+            if (self.isIE7) {
+                clone.style.border = '0px dotted transparent;';
+                clone.style.cssPosition = 'absolute';
+            }
+            else {
+                setStyle(clone, {
+                    'border': '0px dotted transparent;',
+                    'position': 'absolute'
+                });
+            }
 
 
             if (self.isIE7 || self.isIE6) {
