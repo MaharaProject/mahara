@@ -101,9 +101,10 @@ div.editview {
 	margin: 0;
 }
 #blocksinstruction {
-	padding: 5px 10px;
-	background: #ebebeb;
-	color: #8e8e8e;
+    padding: 5px 10px;
+    background: #ebebeb;
+    color: #6e6e6e;
+    font-weight: bold;
 }
 
 .add-column-center {
