@@ -41,31 +41,31 @@ $string['startdate']              = 'Access Start Date/Time';
 $string['stopdate']               = 'Access End Date/Time';
 $string['startdatemustbebeforestopdate'] = 'The start date must be before the stop date';
 $string['ownerformat']            = 'Name display format';
-$string['ownerformatdescription'] = 'How do you want people who look at your view to see your name?';
+$string['ownerformatdescription'] = 'How do you want people who look at your View to see your name?';
 
 // my views
 $string['artefacts'] = 'Artefacts';
 $string['myviews'] = 'My Views';
-$string['reallyaddaccesstoemptyview'] = 'Your view contains no artefacts.  Do you really want to give these users access to the view?';
+$string['reallyaddaccesstoemptyview'] = 'Your View contains no artefacts.  Do you really want to give these users access to the View?';
 $string['viewdeleted'] = 'View deleted';
 $string['viewsubmitted'] = 'View submitted';
-$string['editviewnameanddescription'] = 'Edit view details';
-$string['editviewaccess'] = 'Edit view access';
-$string['deletethisview'] = 'Delete this view';
-$string['submitthisviewto'] = 'Submit this view to';
+$string['editviewnameanddescription'] = 'Edit View details';
+$string['editviewaccess'] = 'Edit View access';
+$string['deletethisview'] = 'Delete this View';
+$string['submitthisviewto'] = 'Submit this View to';
 $string['forassessment'] = 'for assessment';
-$string['accessfromdate'] = 'Nobody can see this view before %s';
-$string['accessuntildate'] = 'Nobody can see this view after %s';
-$string['accessbetweendates'] = 'Nobody can see this view before %s or after %s';
-$string['artefactsinthisview'] = 'Artefacts in this view';
-$string['whocanseethisview'] = 'Who can see this view';
+$string['accessfromdate'] = 'Nobody can see this View before %s';
+$string['accessuntildate'] = 'Nobody can see this View after %s';
+$string['accessbetweendates'] = 'Nobody can see this View before %s or after %s';
+$string['artefactsinthisview'] = 'Artefacts in this View';
+$string['whocanseethisview'] = 'Who can see this View';
 $string['view'] = 'view';
 $string['views'] = 'views';
 $string['View'] = 'View';
 $string['Views'] = 'Views';
-$string['viewsubmittedtogroup'] = 'This view has been submitted to <a href="' . get_config('wwwroot') . 'group/view.php?id=%s">%s</a>';
-$string['nobodycanseethisview'] = 'Nobody can see this view';
-$string['noviews'] = 'You have no views.';
+$string['viewsubmittedtogroup'] = 'This View has been submitted to <a href="' . get_config('wwwroot') . 'group/view.php?id=%s">%s</a>';
+$string['nobodycanseethisview'] = 'Nobody can see this View';
+$string['noviews'] = 'You have no Views.';
 
 // access levels
 $string['public'] = 'Public';
@@ -84,20 +84,20 @@ $string['inviteusertojoingroup'] = 'Invite this user to join a group';
 $string['addusertogroup'] = 'Add this user to a group';
 
 // view view
-$string['addedtowatchlist'] = 'This view has been added to your watchlist';
+$string['addedtowatchlist'] = 'This View has been added to your watchlist';
 $string['attachment'] = 'Attachment';
-$string['removedfromwatchlist'] = 'This view has been removed from your watchlist';
+$string['removedfromwatchlist'] = 'This View has been removed from your watchlist';
 $string['addfeedbackfailed'] = 'Add feedback failed';
-$string['addtowatchlist'] = 'Add view to watchlist';
-$string['removefromwatchlist'] = 'Remove view from watchlist';
-$string['alreadyinwatchlist'] = 'This view is already in your watchlist';
+$string['addtowatchlist'] = 'Add View to watchlist';
+$string['removefromwatchlist'] = 'Remove View from watchlist';
+$string['alreadyinwatchlist'] = 'This View is already in your watchlist';
 $string['attachedfileaddedtofolder'] = "The attached file %s has been added to your '%s' folder.";
 $string['attachfile'] = "Attach file";
 $string['complaint'] = 'Complaint';
 $string['date'] = 'Date';
 $string['feedback'] = 'Feedback';
 $string['feedbackattachdirname'] = 'assessmentfiles';
-$string['feedbackattachdirdesc'] = 'Files attached to view assessments';
+$string['feedbackattachdirdesc'] = 'Files attached to View assessments';
 $string['feedbackattachmessage'] = 'The attached file has been added to your %s folder';
 $string['feedbackonthisartefactwillbeprivate'] = 'Feedback on this artefact will only be visible to the owner.';
 $string['feedbackonviewbytutorofgroup'] = 'Feedback on %s by %s of %s';
@@ -113,37 +113,36 @@ $string['makeprivate'] = 'Change to Private';
 $string['reportobjectionablematerial'] = 'Report objectionable material';
 $string['reportsent'] = 'Your report has been sent';
 $string['updatewatchlistfailed'] = 'Update of watchlist failed';
-$string['View'] = 'View';
 $string['watchlistupdated'] = 'Your watchlist has been updated';
-$string['editmyview'] = 'Edit my view';
-$string['backtocreatemyview'] = 'Back to create my view';
+$string['editmyview'] = 'Edit my View';
+$string['backtocreatemyview'] = 'Back to create my View';
 
 $string['friend'] = 'Friend';
 $string['profileicon'] = 'Profile Icon';
 
 // general views stuff
-$string['allviews'] = 'All views';
+$string['allviews'] = 'All Views';
 
-$string['submitviewconfirm'] = 'If you submit \'%s\' to \'%s\' for assessment, you will not be able to edit the view until your tutor has finished marking the view.  Are you sure you want to submit this view now?';
+$string['submitviewconfirm'] = 'If you submit \'%s\' to \'%s\' for assessment, you will not be able to edit the View until your tutor has finished marking the View.  Are you sure you want to submit this View now?';
 $string['viewsubmitted'] = 'View submitted';
 $string['submitviewtogroup'] = 'Submit \'%s\' to \'%s\' for assessment';
-$string['cantsubmitviewtogroup'] = 'You cannot submit this view to this group for assessment';
+$string['cantsubmitviewtogroup'] = 'You cannot submit this View to this group for assessment';
 
-$string['cantdeleteview'] = 'You cannot delete this view';
+$string['cantdeleteview'] = 'You cannot delete this View';
 $string['deletespecifiedview'] = 'Delete View "%s"';
-$string['deleteviewconfirm'] = 'Do you really want to delete this view? It cannot be undone.';
+$string['deleteviewconfirm'] = 'Do you really want to delete this View? It cannot be undone.';
 
-$string['editaccesspagedescription'] = '<p>By default, only you can see your view. Here you can choose who else you would like to be able to see your view.</p>';
+$string['editaccesspagedescription'] = '<p>By default, only you can see your View. Here you can choose who else you would like to be able to see your View.</p>';
 
 $string['overridingstartstopdate'] = 'Overriding Start/Stop Dates';
-$string['overridingstartstopdatesdescription'] = 'If you want, you can set an overriding start and/or stop date. Other people will not be able to see your view before the start date and after the end date, regardless of any other access you have granted.';
+$string['overridingstartstopdatesdescription'] = 'If you want, you can set an overriding start and/or stop date. Other people will not be able to see your View before the start date and after the end date, regardless of any other access you have granted.';
 
 $string['emptylabel'] = 'Click here to enter text for this label';
 $string['empty_block'] = 'Select an artefact from the tree on the left to place here';
 
 $string['viewinformationsaved'] = 'View information saved successfully';
 
-$string['canteditdontown'] = 'You can\'t edit this view because you don\'t own it';
+$string['canteditdontown'] = 'You can\'t edit this View because you don\'t own it';
 $string['canteditdontownfeedback'] = 'You can\'t edit this feedback because you don\'t own it';
 $string['feedbackchangedtoprivate'] = 'Feedback changed to private';
 
@@ -154,15 +153,15 @@ $string['viewsavedsuccessfully'] = 'View saved successfully';
 
 $string['invalidcolumn'] = 'Column %s out of range';
 
-$string['confirmcancelcreatingview'] = 'This view has not been completed. Do you really want to cancel?';
+$string['confirmcancelcreatingview'] = 'This View has not been completed. Do you really want to cancel?';
 
 // view control stuff
 
-$string['displaymyview'] = 'Display my view';
-$string['editthisview'] = 'Edit this view';
+$string['displaymyview'] = 'Display my View';
+$string['editthisview'] = 'Edit this View';
 
 $string['success.addblocktype'] = 'Added block successfully';
-$string['err.addblocktype'] = 'Could not add the block to your view';
+$string['err.addblocktype'] = 'Could not add the block to your View';
 $string['success.moveblockinstance'] = 'Moved block successfully';
 $string['err.moveblockinstance'] = 'Could not move the block to the specified position';
 $string['success.removeblockinstance'] = 'Deleted block successfully';
@@ -175,8 +174,8 @@ $string['err.removecolumn'] = 'Failed to delete column';
 $string['confirmdeleteblockinstance'] = 'Are you sure you wish to delete this block?';
 $string['blockinstanceconfiguredsuccessfully'] = 'Block configured successfully';
 
-$string['blocksintructionnoajax'] = 'Select a block and choose where to add it to your view. You can position a block using the arrow buttons in its titlebar';
-$string['blocksinstructionajax'] = 'Drag blocks here to add them to your view. You can drag blocks around your view to position them.';
+$string['blocksintructionnoajax'] = 'Select a block and choose where to add it to your View. You can position a block using the arrow buttons in its titlebar';
+$string['blocksinstructionajax'] = 'Drag blocks here to add them to your View. You can drag blocks around your View to position them.';
 
 $string['addnewblockhere'] = 'Add new block here';
 $string['add'] = 'Add';
@@ -190,10 +189,10 @@ $string['configureblock'] = 'Configure this block';
 $string['removeblock'] = 'Remove this block';
 
 $string['changemyviewlayout'] = 'Change My View Layout';
-$string['viewcolumnspagedescription'] = 'First, select the number of columns in your view. In the next step, you will be able to change the widths of the columns.';
-$string['viewlayoutpagedescription'] = 'Select how you would like the columns in your view to be layed out.';
-$string['changeviewlayout'] = 'Change my view layout';
-$string['backtoyourview'] = 'Back to my view';
+$string['viewcolumnspagedescription'] = 'First, select the number of columns in your View. In the next step, you will be able to change the widths of the columns.';
+$string['viewlayoutpagedescription'] = 'Select how you would like the columns in your View to be layed out.';
+$string['changeviewlayout'] = 'Change my View layout';
+$string['backtoyourview'] = 'Back to my View';
 $string['viewlayoutchanged'] = 'View layout changed';
 $string['numberofcolumns'] = 'Number of columns';
 
@@ -209,7 +208,7 @@ $string['33,67'] = 'Larger right column';
 $string['25,50,25'] = 'Larger centre column';
 $string['15,70,15'] = 'Much larger centre column';
 $string['20,30,30,20'] = 'Larger centre columns';
-$string['noviewlayouts'] = 'There are no view layouts for a %s column view';
+$string['noviewlayouts'] = 'There are no View layouts for a %s column View';
 
 $string['blocktypecategory.feeds'] = 'External feeds';
 $string['blocktypecategory.fileimagevideo'] = 'Files, images and video';
