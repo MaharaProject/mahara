@@ -221,6 +221,9 @@ div.editview {
 	color: #95a8b6;
 }
 
+.column-content {
+    min-height: 18px;
+}
 .column-content .add-button {
     margin: 5px 0;
 }
