@@ -30,7 +30,7 @@ $string['pluginname'] = 'Resumé';
 
 $string['myresume'] = 'My Resumé';
 $string['mygoals'] = 'My Goals';
-$string['myskills'] = 'My skills';
+$string['myskills'] = 'My Skills';
 $string['coverletter'] = 'Cover Letter';
 $string['interest'] = 'Interests';
 $string['contactinformation'] = 'Contact Information';
