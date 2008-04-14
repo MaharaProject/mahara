@@ -26,7 +26,7 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Embedded media';
+$string['title'] = 'Embedded Media';
 $string['description'] = 'Select files for embedded viewing';
 
 $string['media'] = 'Media';

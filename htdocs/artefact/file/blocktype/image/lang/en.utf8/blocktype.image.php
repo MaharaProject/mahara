@@ -26,7 +26,7 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'An image';
+$string['title'] = 'An Image';
 $string['description'] = 'A single image from your Files area';
 
 $string['showdescription'] = 'Show Description?';
