@@ -26,7 +26,7 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'A folder';
+$string['title'] = 'A Folder';
 $string['description'] = 'A single folder from your Files area';
 
 ?>
