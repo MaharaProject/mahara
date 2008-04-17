@@ -157,6 +157,7 @@ $string['confirmcancelcreatingview'] = 'This View has not been completed. Do you
 
 // view control stuff
 
+$string['editblockspagedescription'] = '<p>Choose from the tabs below to see what blocks you can display in your view. You can drag and drop the blocks in to your View layout. Select the ? Icon for more information.</p>';
 $string['displaymyview'] = 'Display my View';
 $string['editthisview'] = 'Edit this View';
 
@@ -175,7 +176,7 @@ $string['confirmdeleteblockinstance'] = 'Are you sure you wish to delete this bl
 $string['blockinstanceconfiguredsuccessfully'] = 'Block configured successfully';
 
 $string['blocksintructionnoajax'] = 'Select a block and choose where to add it to your View. You can position a block using the arrow buttons in its titlebar';
-$string['blocksinstructionajax'] = 'Drag blocks below this line to add them to your View. You can drag blocks around your View to position them.';
+$string['blocksinstructionajax'] = 'Drag blocks below this line to add them to your View layout. You can drag blocks around your View layout to position them.';
 
 $string['addnewblockhere'] = 'Add new block here';
 $string['add'] = 'Add';
