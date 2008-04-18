@@ -122,14 +122,30 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
 
     private static function make_video_url($url) {
         static $embedsources = array(
+            // www.youtube.com
             array(
                 'match' => '#.*youtube\.com.*v(=|\/)([a-zA-Z0-9_-]+).*#',
                 'url'   => 'http://www.youtube.com/v/$2'
             ),
+            // video.google.com
             array(
                 'match' => '#.*video.google.com.*docid=(\-?[0-9]+).*#',
                 'url'   => 'http://video.google.com/googleplayer.swf?docId=$1',
-            )
+            ),
+            // www.teachertube.com
+            array(
+                'match' => '#.*teachertube.com/flvideo/([0-9]+)\.flv.*#',
+                'url'   => 'http://www.teachertube.com/skin-p/mediaplayer.swf?file=http://www.teachertube.com/flvideo/$1.flv'
+            ),
+            // www.scivee.tv
+            array(
+                'match' => '#.*scivee.tv/node/([0-9]+).*#',
+                'url'   => 'http://scivee.tv/flash/embedPlayer.swf?id=$1&type=3',
+            ),
+            array(
+                'match' => '#.*scivee.tv.*id=([0-9]+).*#',
+                'url'   => 'http://scivee.tv/flash/embedPlayer.swf?id=$1&type=3',
+            ),
         );
 
         foreach ($embedsources as $source) {
