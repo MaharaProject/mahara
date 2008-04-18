@@ -44,12 +44,34 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         $configdata = $instance->get('configdata');
         if ($configdata['feedid']) {
             $data = get_record('blocktype_externalfeed_data', 'id', $configdata['feedid']);
-            unserialize($data->content);
+
+            $data->content = unserialize($data->content);
+            $data->image   = unserialize($data->image);
+
+            // Attempt to fix relative URLs in the feeds
+            if (!empty($data->image['link'])) {
+                $data->description = preg_replace(
+                    '/src="(\/[^"]+)"/',
+                    'src="' . $data->image['link'] . '$1"',
+                    $data->description
+                );
+                foreach ($data->content as &$entry) {
+                    $entry->description = preg_replace(
+                        '/src="(\/[^"]+)"/',
+                        'src="' . $data->image['link'] . '$1"',
+                        $entry->description
+                    );
+                }
+            }
+
             $smarty = smarty_core();
             $smarty->assign('title', $data->title);
             $smarty->assign('description', $data->description);
+            $smarty->assign('url', $data->url);
+            $smarty->assign('full', $configdata['full']);
             $smarty->assign('link', $data->link);
-            $smarty->assign('entries', unserialize($data->content));
+            $smarty->assign('entries', $data->content);
+            $smarty->assign('feedimage', self::make_feed_image_tag($data->image));
             $smarty->assign('lastupdated', get_string('lastupdatedon', 'blocktype.externalfeed', format_date(time($data->lastupdate))));
             return $smarty->fetch('blocktype:externalfeed:feed.tpl');
         }
@@ -70,6 +92,13 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             $url = '';
         }
 
+        if (isset($configdata['full'])) {
+            $full = $configdata['full'];
+        }
+        else {
+            $full = false;
+        }
+
         return array(
             'url' => array(
                 'type'  => 'text',
@@ -81,6 +110,12 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                     'required' => true,
                     'maxlength' => 255, // mysql hack, see install.xml for this plugin
                 ),
+            ),
+            'full' => array(
+                'type'         => 'checkbox',
+                'title'        => get_string('showfeeditemsinfull', 'blocktype.externalfeed'),
+                'description'  => get_string('showfeeditemsinfulldesc', 'blocktype.externalfeed'),
+                'defaultvalue' => (bool)$full,
             ),
         );
     }
@@ -137,6 +172,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         // the validate method would have failed if the feed was invalid
         $data = self::parse_feed($values['url']);
         $data->content  = serialize($data->content);
+        $data->image    = serialize($data->image);
         $data->lastupdate = db_format_timestamp(time());
         $id = ensure_record_exists('blocktype_externalfeed_data', array('url' => $values['url']), $data, 'id', true);
         $values['feedid'] = $id;
@@ -171,6 +207,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                 $data->id = $feed->id;
                 $data->lastupdate = db_format_timestamp(time());
                 $data->content = serialize($data->content);
+                $data->image   = serialize($data->image);
                 update_record('blocktype_externalfeed_data', $data);
             }
             catch (XML_Feed_Parser_Exception $e) {
@@ -242,21 +279,84 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             // Don't catch other exceptions, they're an indication something 
             // really bad happened
         }
-        
+
         $data = new StdClass;
         $data->title = $feed->title;
         $data->url = $source;
         $data->link = $feed->link;
         $data->description = $feed->description;
+
+        // Work out the icon for the feed depending on whether it's RSS or ATOM
+        $data->image = $feed->image;
+        if (!$data->image) {
+            // ATOM feed. These are simple strings
+            $data->image = $feed->logo ? $feed->logo : null;
+        }
+
         $data->content = array();
         foreach ($feed as $count => $item) {
-            if ($count == 11) { // it starts at one!
+            if ($count == 10) {
                 break;
             }
-            $data->content[] = (object)array('title' => $item->title, 'link' => $item->link);
+            $description = $item->description;
+            if (!$description && ($item->content || $item->summary)) {
+                // ATOM feed
+                $description = $item->content ? $item->content : ($item->summary ? $item->summary : null);
+            }
+            $data->content[] = (object)array('title' => $item->title, 'link' => $item->link, 'description' => $description);
         }
         $cache[$source] = $data;
         return $data;
+    }
+
+    /**
+     * Returns the HTML for the feed icon (not the little RSS one, but the 
+     * actual logo associated with the feed)
+     */
+    private static function make_feed_image_tag($image) {
+        $result = '';
+
+        if (is_string($image)) {
+            // Easy!
+            return '<img src="' . hsc($image) . '">';
+        }
+
+        if (!empty($image['link'])) {
+            $result .= '<a href="' . hsc($image['link']) . '">';
+        }
+
+        $url = $image['url'];
+        // Try and fix URLs that aren't absolute. The standards all say URLs 
+        // are supposed to be absolute in RSS feeds, yet still some people 
+        // can't even get the basics right...
+        if (substr($url, 0, 1) == '/' && !empty($image['link'])) {
+            $url = $image['link'] . $image['url'];
+        }
+
+        $result .= '<img src="' . hsc($url) . '"';
+        // Required by the specification, but we can't count on it...
+        if (!empty($image['title'])) {
+            $result .= ' alt="' . hsc($image['title']) . '"';
+        }
+
+        if (!empty($image['width']) || !empty($image['height'])) {
+            $result .= ' style="';
+            if (!empty($image['width'])) {
+                $result .= 'width: ' . hsc($image['width']) . 'px;"';
+            }
+            if (!empty($image['height'])) {
+                $result .= 'height: ' . hsc($image['height']) . 'px;"';
+            }
+            $result .= '"';
+        }
+
+        $result .= '>';
+
+        if (!empty($image['link'])) {
+            $result .= '</a>';
+        }
+
+        return $result;
     }
 }
 
