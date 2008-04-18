@@ -86,7 +86,7 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
             'videoid' => array(
                 'type'  => 'text',
                 'title' => get_string('videourl','blocktype.externalvideo'),
-                'description' => get_string('videourldescription','blocktype.externalvideo'),
+                'description' => get_string('videourldescription2','blocktype.externalvideo') . self::get_html_of_supported_websites(),
                 'width' => '90%',
                 'defaultvalue' => $configdata['videoid'],
                 'rules' => array(
@@ -154,6 +154,21 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
             }
         }
         // TODO handle failure case
+    }
+
+    /**
+     * Returns a block of HTML that the external video block can use to list 
+     * which video sites are supported.
+     */
+    private static function get_html_of_supported_websites() {
+        return <<<EOF
+<ul style="list-style-type: none;">
+    <li><a href="http://www.youtube.com/"><img src="http://www.youtube.com/favicon.ico" alt="YouTube"> youtube.com</a></li>
+    <li><a href="http://video.google.com/"><img src="http://video.google.com/favicon.ico" alt="Google Video"> video.google.com</a></li>
+    <li><a href="http://www.teachertube.com/"><img src="http://www.teachertube.com/images/favicon.ico" alt="TeacherTube"> teachertube.com</a></li>
+    <li><a href="http://www.scivee.tv/"><img src="http://www.scivee.tv/favicon.ico" alt="SciVee"> scivee.tv</a></li>
+</ul>';
+EOF;
     }
 }
 
