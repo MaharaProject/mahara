@@ -37,6 +37,11 @@ defined('INTERNAL') || die();
  */
 class PluginBlocktypeExternalvideo extends SystemBlocktype {
 
+    // Default width and height for video players
+    private static $default_width = 250;
+
+    private static $default_height = 250;
+
     public static function get_title() {
         return get_string('title', 'blocktype.externalvideo');
     }
@@ -53,8 +58,8 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
         $configdata = $instance->get('configdata');
         $result = '';
         $url    = hsc(self::make_video_url($configdata['videoid']));
-        $width  = (!empty($configdata['width'])) ? hsc($configdata['width']) : '100%';
-        $height = (!empty($configdata['height'])) ? hsc($configdata['height']) : '';
+        $width  = (!empty($configdata['width'])) ? hsc($configdata['width']) : self::$default_width;
+        $height = (!empty($configdata['height'])) ? hsc($configdata['height']) : self::$default_height;
 
         if (isset($configdata['videoid'])) {
             $result  = '<div class="center">';
@@ -92,21 +97,25 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
                 'type' => 'text',
                 'title' => get_string('width','blocktype.externalvideo'),
                 'size' => 3,
-                //'rules' => array(
-                //    'minvalue' => 100,
-                //    'maxvalue' => 800,
-                //),
-                'defaultvalue' => (isset($configdata['width'])) ? $configdata['width'] : '',
+                'rules' => array(
+                    'required' => true,
+                    'integer'  => true,
+                    'minvalue' => 100,
+                    'maxvalue' => 800,
+                ),
+                'defaultvalue' => (!empty($configdata['width'])) ? $configdata['width'] : self::$default_width,
             ),
             'height' => array(
                 'type' => 'text',
                 'title' => get_string('height','blocktype.externalvideo'),
                 'size' => 3,
-                //'rules' => array(
-                //    'minvalue' => 100,
-                //    'maxvalue' => 800,
-                //),
-                'defaultvalue' => (isset($configdata['height'])) ? $configdata['height'] : '',
+                'rules' => array(
+                    'required' => true,
+                    'integer'  => true,
+                    'minvalue' => 100,
+                    'maxvalue' => 800,
+                ),
+                'defaultvalue' => (!empty($configdata['height'])) ? $configdata['height'] : self::$default_height,
             ),
         );
     }
