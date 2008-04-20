@@ -45,6 +45,12 @@ else {
     if ($view->get('owner') != $USER->get('id')) {
         throw new AccessDeniedException(get_string('canteditdontown', 'view'));
     }
+
+    // If the view has been submitted to a group, disallow editing
+    $submittedto = $view->get('submittedto');
+    if ($submittedto) {
+        throw new AccessDeniedException(get_string('canteditsubmitted', 'view', get_field('group', 'name', 'id', $submittedto)));
+    }
 }
 
 if ($new || empty($id)) {
