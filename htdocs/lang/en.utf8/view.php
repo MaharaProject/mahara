@@ -144,6 +144,7 @@ $string['viewinformationsaved'] = 'View information saved successfully';
 
 $string['canteditdontown'] = 'You can\'t edit this View because you don\'t own it';
 $string['canteditdontownfeedback'] = 'You can\'t edit this feedback because you don\'t own it';
+$string['canteditsubmitted'] = 'You can\'t edit this View because it has been submitted for assessment to group "%s". You will have to wait until a tutor releases your view.';
 $string['feedbackchangedtoprivate'] = 'Feedback changed to private';
 
 $string['addtutors'] = 'Add Tutors';

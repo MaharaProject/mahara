@@ -33,6 +33,12 @@ $view = new View(param_integer('id'));
 $change = param_boolean('change', false);
 $action = param_alphanumext('action', '');
 
+// If the view has been submitted to a group, disallow editing
+$submittedto = $view->get('submittedto');
+if ($submittedto) {
+    throw new AccessDeniedException(get_string('canteditsubmitted', 'view', get_field('group', 'name', 'id', $submittedto)));
+}
+
 // we actually ned to process stuff
 if ($change) {
     try {

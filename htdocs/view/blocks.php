@@ -34,6 +34,12 @@ require('view.php');
 
 $view = new View(param_integer('id'));
 
+// If the view has been submitted to a group, disallow editing
+$submittedto = $view->get('submittedto');
+if ($submittedto) {
+    throw new AccessDeniedException(get_string('canteditsubmitted', 'view', get_field('group', 'name', 'id', $submittedto)));
+}
+
 $new = param_boolean('new');
 
 if ($new) {
