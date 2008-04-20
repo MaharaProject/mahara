@@ -120,6 +120,19 @@ function editgroup_submit(Pieform $form, $values) {
         'id'
     );
 
+    // Ensure the user is marked a tutor of the group if necessary
+    if ($values['membershiptype'] == 'controlled' && $USER->can_create_controlled_groups()) {
+        update_record(
+            'group_member',
+            (object) array(
+                'group'  => $values['id'],
+                'member' => $USER->get('id'),
+                'tutor'  => 1
+            ),
+            array('group', 'member')
+        );
+    }
+
     $SESSION->add_ok_msg(get_string('groupsaved', 'group'));
 
     db_commit();
