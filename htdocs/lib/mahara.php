@@ -915,6 +915,30 @@ function blocktype_single_to_namespaced($blocktype, $artefact='') {
     return $artefact . '/' . $blocktype;
 }
 
+/**
+ * Given a blocktype name, convert it to the namespaced version.
+ *
+ * This will be $artefacttype/$blocktype, or just plain $blocktype for system 
+ * blocktypes.
+ *
+ * This is useful for language strings
+ */
+function blocktype_name_to_namespaced($blocktype) {
+    static $resultcache = array();
+
+    if (!isset($resultcache[$blocktype])) {
+        $artefactplugin = get_field('blocktype_installed', 'artefactplugin', 'name', $blocktype);
+        if ($artefactplugin) {
+            $resultcache[$blocktype] = "$artefactplugin/$blocktype";
+        }
+        else {
+            $resultcache[$blocktype] = $blocktype;
+        }
+    }
+
+    return $resultcache[$blocktype];
+}
+
 
 /**
  * Fires an event which can be handled by different parts of the system
