@@ -29,4 +29,6 @@ defined('INTERNAL') || die();
 $string['title'] = 'Blog Post';
 $string['description'] = 'Display one blog post';
 
+$string['defaulttitledescription'] = 'If you leave this blank, the title of the blog post will be used';
+
 ?>

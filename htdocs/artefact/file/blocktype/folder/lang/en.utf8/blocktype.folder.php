@@ -29,4 +29,6 @@ defined('INTERNAL') || die();
 $string['title'] = 'A Folder';
 $string['description'] = 'A single folder from your Files area';
 
+$string['defaulttitledescription'] = 'If you leave this blank, the title of the folder will be used';
+
 ?>

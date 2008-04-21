@@ -269,8 +269,8 @@ class BlockInstance {
         $this->set('configdata', $values);
 
         $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
-        if (method_exists($blocktypeclass, 'get_instance_title')) {
-            // Get the explicitly set instance title
+        if (!$title && $title !== '0' && method_exists($blocktypeclass, 'get_instance_title')) {
+            // Get the default title for the block if one isn't set
             $title = call_static_method($blocktypeclass, 'get_instance_title', $this);
         }
 
@@ -416,23 +416,33 @@ class BlockInstance {
         $elements = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_form', $this);
 
         $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
-        if (method_exists($blocktypeclass, 'get_instance_title')) {
-            // Get the explicitly set instance title
+        if ($this->get('title') != call_static_method($blocktypeclass, 'get_title')) {
+            // If the title for this block has been set to something other than 
+            // the block title, use it unconditionally
+            $title = $this->get('title');
+        }
+        else if (method_exists($blocktypeclass, 'get_instance_title')) {
+            // Block types can specify a default title for a block
             $title = call_static_method($blocktypeclass, 'get_instance_title', $this);
         }
         else {
-            // Use the blocktype title as a default
-            $elements = array_merge(
-                array(
-                    'title' => array(
-                        'type' => 'text',
-                        'title' => 'Block Title',
-                        'defaultvalue' => $this->get('title')
-                    ),
-                ),
-                $elements
-            );
+            // A block that doesn't have a method for setting an instance 
+            // title, and hasn't had its title changed (e.g. a new textbox)
+            $title = $this->get('title');
         }
+
+        $elements = array_merge(
+            array(
+                'title' => array(
+                    'type' => 'text',
+                    'title' => get_string('blocktitle', 'view'),
+                    'description' => (method_exists($blocktypeclass, 'get_instance_title'))
+                        ? get_string('defaulttitledescription', 'blocktype.' . blocktype_name_to_namespaced($this->get('blocktype'))) : null,
+                    'defaultvalue' => $title,
+                ),
+            ),
+            $elements
+        );
 
         if ($new) {
             $cancel = get_string('remove');

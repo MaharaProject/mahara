@@ -189,6 +189,7 @@ $string['moveblockup'] = 'Move this block up';
 $string['moveblockright'] = 'Move this block right';
 $string['configureblock'] = 'Configure this block';
 $string['removeblock'] = 'Remove this block';
+$string['blocktitle'] = 'Block Title';
 
 $string['changemyviewlayout'] = 'Change My View Layout';
 $string['viewcolumnspagedescription'] = 'First, select the number of columns in your View. In the next step, you will be able to change the widths of the columns.';

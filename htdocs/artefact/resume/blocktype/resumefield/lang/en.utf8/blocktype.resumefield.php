@@ -32,4 +32,6 @@ $string['description'] = 'Display any resumé information';
 $string['fieldtoshow'] = 'Field to show';
 $string['filloutyourresume'] = '%sFill out your resumé%s in order to add more fields!';
 
+$string['defaulttitledescription'] = 'If you leave this blank, the name of the field will be used';
+
 ?>

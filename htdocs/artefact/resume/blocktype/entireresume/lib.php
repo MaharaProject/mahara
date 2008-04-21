@@ -32,13 +32,6 @@ class PluginBlocktypeEntireresume extends PluginBlocktype {
         return get_string('title', 'blocktype.resume/entireresume');
     }
 
-    /**
-     * Entire resume blocks never have titles
-     */
-    public static function get_instance_title(BlockInstance $bi) {
-        return '';
-    }
-
     public static function get_description() {
         return get_string('description', 'blocktype.resume/entireresume');
     }
@@ -74,8 +67,15 @@ class PluginBlocktypeEntireresume extends PluginBlocktype {
         return $smarty->fetch('blocktype:entireresume:content.tpl');
     }
 
+    // Yes, we do have instance config. People are allowed to specify the title 
+    // of the block, nothing else at this time. So in the next two methods we 
+    // say yes and return no fields, so the title will be configurable.
     public static function has_instance_config() {
-        return false;
+        return true;
+    }
+
+    public static function instance_config_form() {
+        return array();
     }
 
     // TODO: make decision on whether this should be abstract or not. PROBABLY SHOULD BE
