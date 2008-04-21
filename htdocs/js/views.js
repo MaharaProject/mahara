@@ -546,13 +546,9 @@ function ViewManager() {
             makePositioned(i);
             var clone = DIV({'class': 'blocktype-clone'});
 
-            // The border rule is required for IE7 to behave - and it needs the
-            // semi-colon!
-            if (self.isIE7) {
-                clone.style.border = '0px dotted transparent;';
-                clone.style.cssPosition = 'absolute';
-            }
-            else {
+            // IE doesn't think that this div has a style object, probably
+            // because it's not in the DOM yet
+            if (!self.isIE7) {
                 setStyle(clone, {
                     'border': '0px dotted transparent;',
                     'position': 'absolute'
