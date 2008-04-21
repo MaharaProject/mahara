@@ -316,6 +316,10 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
     private static function make_feed_image_tag($image) {
         $result = '';
 
+        if (!$image['url']) {
+            return '';
+        }
+
         if (is_string($image)) {
             // Easy!
             return '<img src="' . hsc($image) . '">';
