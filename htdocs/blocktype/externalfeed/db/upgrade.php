@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage blocktype-rssfeed
+ * @subpackage blocktype-externalfeed
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
@@ -26,8 +26,18 @@
 
 defined('INTERNAL') || die();
 
-$config = new StdClass;
-$config->version = 2008042100;
-$config->release = '1.0.1';
+function xmldb_blocktype_externalfeed_upgrade($oldversion=0) {
+
+    if ($oldversion < 2008042100) {
+        // Add the 'image' column so that information about a feed's image can 
+        // be stored
+        $table = new XMLDBTable('blocktype_externalfeed_data');
+        $field = new XMLDBField('image');
+        $field->setAttributes(XMLDB_TYPE_TEXT);
+        add_field($table, $field);
+    }
+    
+    return true;
+}
 
 ?>
