@@ -283,7 +283,7 @@ $smarty->assign('formattedowner', $view->formatted_owner());
 $smarty->assign('streditviewbutton', ($new) ? get_string('backtocreatemyview', 'view') : get_string('editmyview', 'view'));
 
 if ($USER->get('id') == $view->get('owner')) {
-    $smarty->assign('can_edit', true);
+    $smarty->assign('can_edit', !$view->get('submittedto'));
     $smarty->assign('new', $new);
 }
 $smarty->display('view/view.tpl');
