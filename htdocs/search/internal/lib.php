@@ -106,9 +106,8 @@ class PluginSearchInternal extends PluginSearch {
                     ';
             }
         }
-        $sql .= 'WHERE
-                u.id <> 0 AND u.active = 1 AND u.deleted = 0
-                AND ((
+        $querydata = split(' ', preg_replace('/\s\s+/', ' ', strtolower(trim($query_string))));
+        $namesql = '(
                         u.preferredname ILIKE \'%\' || ? || \'%\'
                     )
                     OR (
@@ -121,11 +120,20 @@ class PluginSearchInternal extends PluginSearch {
                     OR (
                         a.artefacttype IN ' . $fieldlist . '
                         AND ( a.title ILIKE \'%\' || ? || \'%\')
-                    )
+                    )';
+        $namesql = join(' OR ', array_fill(0, count($querydata), $namesql));
+        $values = array();
+        foreach ($querydata as $w) {
+            $values = array_pad($values, count($values) + 4, $w);
+        }
+
+        $sql .= 'WHERE
+                u.id <> 0 AND u.active = 1 AND u.deleted = 0
+                AND ( ' . $namesql . '
                 )
                 ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
             ';
-        $count = get_field_sql($sql, array($query_string, $query_string, $query_string, $query_string));
+        $count = get_field_sql($sql, $values);
 
         if ($count > 0) {
             $sql = 'SELECT DISTINCT ON (u.firstname, u.lastname, u.id)
@@ -143,27 +151,11 @@ class PluginSearchInternal extends PluginSearch {
             }
             $sql .= 'WHERE
                     u.id <> 0 AND u.active = 1 AND u.deleted = 0
-                    AND ((
-                            u.preferredname ILIKE \'%\' || ? || \'%\'
-                        )
-                        OR (
-                            (u.preferredname IS NULL OR u.preferredname = \'\')
-                            AND (
-                                u.firstname ILIKE \'%\' || ? || \'%\'
-                                OR u.lastname ILIKE \'%\' || ? || \'%\'
-                            )
-                        )
-                        OR (
-                            a.artefacttype IN ' . $fieldlist . '
-                            AND ( a.title ILIKE \'%\' || ? || \'%\')
-                        )
+                    AND (' . $namesql . '
                     )
                     ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
                 ORDER BY u.firstname, u.lastname, u.id';
-            $data = get_records_sql_array($sql,
-            array($query_string, $query_string, $query_string, $query_string),
-            $offset,
-            $limit);
+            $data = get_records_sql_array($sql, $values, $offset, $limit);
 
             if ($data) {
                 foreach ($data as &$item) {
@@ -200,9 +192,8 @@ class PluginSearchInternal extends PluginSearch {
                     ';
             }
         }
-        $sql .= 'WHERE
-                u.id <> 0 AND u.active = 1 AND u.deleted = 0
-                AND ((
+        $querydata = split(' ', preg_replace('/\s\s+/', ' ', strtolower(trim($query_string))));
+        $namesql = '(
                         u.preferredname LIKE \'%\' || ? || \'%\'
                     )
                     OR (
@@ -215,12 +206,21 @@ class PluginSearchInternal extends PluginSearch {
                     OR (
                         a.artefacttype IN ' . $fieldlist . '
                         AND ( a.title LIKE \'%\' || ? || \'%\')
-                    )
+                    )';
+        $namesql = join(' OR ', array_fill(0, count($querydata), $namesql));
+        $values = array();
+        foreach ($querydata as $w) {
+            $values = array_pad($values, count($values) + 4, $w);
+        }
+
+        $sql .= 'WHERE
+                u.id <> 0 AND u.active = 1 AND u.deleted = 0
+                AND (' . $namesql . '
                 )
                 ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
             ';
 
-        $count = get_field_sql($sql, array($query_string, $query_string, $query_string, $query_string));
+        $count = get_field_sql($sql, $values);
         if ($count > 0) {
             // @todo This is quite possibly not correct. See the postgres 
             // query. It should be DISTINCT ON the fields as specified by the 
@@ -242,26 +242,11 @@ class PluginSearchInternal extends PluginSearch {
             }
             $sql .= 'WHERE
                     u.id <> 0 AND u.active = 1 AND u.deleted = 0
-                    AND ((
-                            u.preferredname LIKE \'%\' || ? || \'%\'
-                        )
-                        OR (
-                            (u.preferredname IS NULL OR u.preferredname = \'\')
-                            AND (
-                                u.firstname LIKE \'%\' || ? || \'%\'
-                                OR u.lastname LIKE \'%\' || ? || \'%\'
-                            )
-                        )
-                        OR (
-                            a.artefacttype IN ' . $fieldlist . '
-                            AND ( a.title LIKE \'%\' || ? || \'%\')
-                        )
+                    AND ( ' . $namesql . '
                     )
                     ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
                 ORDER BY u.firstname, u.lastname, u.id';
-            $data = get_records_sql_array($sql, array($query_string, $query_string, $query_string, $query_string),
-            $offset,
-            $limit);
+            $data = get_records_sql_array($sql, $values, $offset, $limit);
             if ($data) {
                 foreach ($data as &$item) {
                     $item = (array)$item;
