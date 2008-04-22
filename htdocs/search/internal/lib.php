@@ -427,10 +427,15 @@ class PluginSearchInternal extends PluginSearch {
 
         $values = array();
         if (!empty($query)) {
+            $query = preg_replace('/\s\s+/', ' ', $query);
+            $words = explode(' ', $query);
+            foreach ($words as &$word) {
+                $values[] = $word;
+                $values[] = $word;
+                $word = 'u.firstname ' . db_ilike() . ' \'%\' || ? || \'%\' OR u.lastname ' . db_ilike() . ' \'%\' || ? || \'%\'';
+            }
             $where .= '
-                AND (u.firstname ' . db_ilike() . ' \'%\' || ? || \'%\'
-                     OR u.lastname ' . db_ilike() . ' \'%\' || ? || \'%\') ';
-            $values = array($query,$query);
+                AND (' . join(' OR ', $words) . ') ';
         }
 
         $studentid = '';

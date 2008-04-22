@@ -153,7 +153,41 @@ function institutional_admin_user_search($query, $institution, $limit) {
 }
 
 
+/**
+ * Pull two-word phrases out of a query for matching against first,last names.
+ *
+ * This function comes from Drupal's search module, with some small changes.
+ */
 
+function parse_name_query($text) {
+  $words = array();
+  $fullnames = array();
+
+  // Tokenize query string
+  preg_match_all('/ ("[^"]+"|[^" ]+)/i', ' '. $text, $matches, PREG_SET_ORDER);
+
+  if (count($matches) < 1) {
+    return NULL;
+  }
+
+  // Classify tokens
+  foreach ($matches as $match) {
+    // Strip off phrase quotes
+    if ($match[1]{0} == '"') {
+      $phrase = preg_replace('/\s\s+/', ' ', strtolower(substr($match[1], 1, -1)));
+      $phraselist = split(' ', $phrase);
+      if (count($phraselist) == 2) {
+        $fullnames[] = $phraselist;
+      } else {
+        $words = array_merge($words, array($phrase));
+      }
+    } else {
+      $words = array_merge($words, array(strtolower($match[1])));
+    }
+  }
+  return array($words, $fullnames);
+
+}
 
 function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir) {
     // In admin search, the search string is interpreted as either a
@@ -161,17 +195,28 @@ function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortd
     $queries = array();
     $constraints = array();
     if (!empty($search->query)) {
-        if (strpos($search->query, '@') !== false) {
-            $queries[] = array('field' => 'email',
-                               'type' => 'contains',
-                               'string' => $search->query);
-        } else {
-            $queries = array(array('field' => 'firstname',
+        list($words, $fullnames) = parse_name_query($search->query);
+        foreach ($words as $word) {
+            if (strpos($word, '@') !== false) {
+                $queries[] = array('field' => 'email',
                                    'type' => 'contains',
-                                   'string' => $search->query),
-                             array('field' => 'lastname',
+                                   'string' => $word);
+            } else {
+                $queries[] = array('field' => 'firstname',
                                    'type' => 'contains',
-                                   'string' => $search->query));
+                                   'string' => $word);
+                $queries[] = array('field' => 'lastname',
+                                   'type' => 'contains',
+                                   'string' => $word);
+            }
+        }
+        foreach ($fullnames as $n) {
+            $constraints[] = array('field' => 'firstname',
+                                   'type' => 'contains',
+                                   'string' => $n[0]);
+            $constraints[] = array('field' => 'lastname',
+                                   'type' => 'contains',
+                                   'string' => $n[1]);
         }
     }
     if (!empty($search->f)) {
