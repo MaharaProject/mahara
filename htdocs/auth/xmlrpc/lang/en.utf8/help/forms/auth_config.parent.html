@@ -1,2 +1,4 @@
 <h3>Parent Authority</h3>
-<p>If this XMLRPC authority authenticates users against another authority that your system knows about, you should select it from this list.</p>
+<p>If you set a parent authority, users will be able to log in using that authority as well as via SSO.</p>
+<p>For example, you could set up LDAP authentication and have that be the parent of this authority. That means that users will be able to log in via Mahara's inbuilt login forms using their LDAP details, as well as via SSO from an external authentication.</p>
+<p>You do not have to set a parent authority. If you do not, users using this authority will only be able to access Mahara by SSO.</p>
