@@ -156,7 +156,9 @@ class User {
                     FROM {usr} u
                     INNER JOIN {auth_remote_user} r ON u.id = r.localusr
                     WHERE
-                        LOWER(r.remoteusername) = ? AND ' . $where;
+                        LOWER(r.remoteusername) = ?
+                        AND u.deleted = 0
+                        AND ' . $where;
         } else {
             if ($parentid = get_field('auth_instance_config', 'value', 'field', 'parent', 'instance', $instanceid)) {
                 // See the comment above about checking for the child or parent
@@ -174,6 +176,7 @@ class User {
                         {usr}
                     WHERE
                         LOWER(username) = ? AND
+                        u.deleted = 0 AND
                         authinstance = ' . db_quote($instanceid);
         }
 

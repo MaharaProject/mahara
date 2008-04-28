@@ -176,6 +176,13 @@ class AuthXmlrpc extends Auth {
             $user->username           = get_new_username($remoteuser->username);
             $user->commit();
 
+            // Make sure that there's no remote user record for this user. This 
+            // can happen when a user has SSOed in, and then been deleted from 
+            // Mahara.
+            //
+            // This makes undeleting the old user record "interesting", because 
+            // now we don't have the remoteuser record for them...
+            delete_records('auth_remote_user', 'authinstance', $user->authinstance, 'remoteusername', $remoteuser->username);
             insert_record('auth_remote_user', (object) array(
                 'authinstance'   => $user->authinstance,
                 'remoteusername' => $remoteuser->username,
