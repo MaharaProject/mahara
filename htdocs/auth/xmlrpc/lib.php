@@ -132,7 +132,7 @@ class AuthXmlrpc extends Auth {
             $user = new User;
             $user->find_by_instanceid_username($this->instanceid, $remoteuser->username, true);
             if ($user->get('suspendedcusr')) {
-                die_info(get_string('accountsuspended', 'mahara', $user->get('suspendedctime'), $user->get('suspendedreason')));
+                die_info(get_string('accountsuspended', 'mahara', strftime(get_string('strftimedaydate'), $user->get('suspendedctime')), $user->get('suspendedreason')));
             }
             if ('1' == $this->config['updateuserinfoonlogin']) {
                 $update = true;
