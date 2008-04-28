@@ -208,6 +208,11 @@ class AuthXmlrpc extends Auth {
             handle_event('createuser', $userarray);
             db_commit();
 
+            // Now we have fired the create event, we need to re-get the data 
+            // for this user
+            $user = new User;
+            $user->find_by_id($userobj->id);
+
         } elseif ($update) {
             $simplefieldstoimport = array('firstname', 'lastname', 'email');
             foreach ($simplefieldstoimport as $field) {
@@ -250,7 +255,7 @@ class AuthXmlrpc extends Auth {
                     $icons = get_records_select_array('artefact', 'artefacttype = \'profileicon\' AND owner = ? ', array($user->id), '', 'id');
                     if (false != $icons) {
                         foreach ($icons as $icon) {
-                            $iconfile = get_config('dataroot') . 'artefact/internal/profileicons/' . ($icon->id % 256) . '/'.$icon->id;
+                            $iconfile = get_config('dataroot') . 'artefact/internal/profileicons/originals/' . ($icon->id % 256) . '/'.$icon->id;
                             $checksum = sha1_file($iconfile);
                             if ($newchecksum == $checksum) {
                                 $imageexists = true;
@@ -300,7 +305,7 @@ class AuthXmlrpc extends Auth {
                     $id = $artefact->get('id');
 
                     // Move the file into the correct place.
-                    $directory = get_config('dataroot') . 'artefact/internal/profileicons/' . ($id % 256) . '/';
+                    $directory = get_config('dataroot') . 'artefact/internal/profileicons/originals/' . ($id % 256) . '/';
                     check_dir_exists($directory);
                     rename($filename, $directory . $id);
                     if ($create || empty($icons)) {
