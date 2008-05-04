@@ -302,11 +302,11 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     }
 
     // Define the locations of language strings for this section
-    $docroot = get_config('docroot');
-    $locations = array();
+    $langstringroot = get_language_root();
+    $langdirectory  = ''; // The directory in which the language file for this string should ideally reside, if the language has implemented it
     
     if (false === strpos($section, '.')) {
-        $locations[] = $docroot . 'lang/';
+        $langdirectory = 'lang/';
     }
     else {
         $extras = plugin_types(); // more later..
@@ -316,24 +316,21 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
                 if ($tocheck == 'blocktype' && 
                     strpos($pluginname, '/') !== false) { // it belongs to an artefact plugin
                     $bits = explode('/', $pluginname);
-                    $locations[] = $docroot . 'artefact/' . $bits[0] . '/blocktype/' . $bits[1] . '/lang/';
+                    $langdirectory = 'artefact/' . $bits[0] . '/blocktype/' . $bits[1] . '/lang/';
                     $section = 'blocktype.' . $bits[1];
                 }
                 else {
-                    $locations[] = $docroot . $tocheck . '/' . $pluginname . '/lang/';
+                    $langdirectory = $tocheck . '/' . $pluginname . '/lang/';
                 }
             }
         }
     }
 
     // First check all the normal locations for the string in the current language
-    foreach ($locations as $location) {
-        //if local directory not found, or particular string does not exist in local direcotry
-        $langfile = $location . $lang . '/' . $section . '.php';
-        if (is_readable($langfile)) {
-            if ($result = get_string_from_file($identifier, $langfile)) {
-                return $replacefunc($result, $variables);
-            }
+    $langfile = $langstringroot . $langdirectory . $lang . '/' . $section . '.php';
+    if (is_readable($langfile)) {
+        if ($result = get_string_from_file($identifier, $langfile)) {
+            return $replacefunc($result, $variables);
         }
     }
 
@@ -344,28 +341,23 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     }
 
     // Is a parent language defined?  If so, try to find this string in a parent language file
-    foreach ($locations as $location) {
-        $langfile = $location . $lang . '/langconfig.php';
-        if (is_readable($langfile)) {
-            if ($parentlang = get_string_from_file('parentlanguage', $langfile)) {
-                $langfile = $location . $parentlang . '/' . $section . '.php';
-                if (is_readable($langfile)) {
-                    if ($result = get_string_from_file($identifier, $langfile)) {
-                        return $replacefunc($result, $variables);
-                    }
+    $langfile = $langstringroot . 'lang/' . $lang . '/langconfig.php';
+    if (is_readable($langfile)) {
+        if ($parentlang = get_string_from_file('parentlanguage', $langfile)) {
+            $langfile = get_language_root($parentlang) . 'lang/' . $parentlang . '/' . $section . '.php';
+            if (is_readable($langfile)) {
+                if ($result = get_string_from_file($identifier, $langfile)) {
+                    return $replacefunc($result, $variables);
                 }
             }
         }
     }
 
     /// Our only remaining option is to try English
-    foreach ($locations as $location) {
-        //if local_en not found, or string not found in local_en
-        $langfile = $location . 'en.utf8/' . $section . '.php';
-        if (is_readable($langfile)) {
-            if ($result = get_string_from_file($identifier, $langfile)) {
-                return $replacefunc($result, $variables);
-            }
+    $langfile = get_config('docroot') . $langdirectory . 'en.utf8/' . $section . '.php';
+    if (is_readable($langfile)) {
+        if ($result = get_string_from_file($identifier, $langfile)) {
+            return $replacefunc($result, $variables);
         }
     }
 
@@ -379,24 +371,79 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
  */
 function get_languages() {
     $langs = array();
-    $langbase = get_config('docroot') . 'lang/';
-    if (!$langdir = opendir($langbase)) {
-        throw new SystemException('Unable to read language directory '.$langbase);
-    }
-    while (false !== ($subdir = readdir($langdir))) {
-        $langfile = $langbase . $subdir . '/langconfig.php';
-        if ($subdir != "." && $subdir != ".." && is_readable($langfile)) {
-            if ($langname = get_string_from_file('thislanguage',$langfile)) {
-                $langs[$subdir] = $langname;
+
+    foreach (language_get_searchpaths() as $searchpath) {
+        $langbase = $searchpath . '/lang/';
+        if (!$langdir = opendir($langbase)) {
+            throw new SystemException('Unable to read language directory '.$langbase);
+        }
+        while (false !== ($subdir = readdir($langdir))) {
+            $langfile = $langbase . $subdir . '/langconfig.php';
+            if ($subdir != "." && $subdir != ".." && is_readable($langfile)) {
+                if ($langname = get_string_from_file('thislanguage',$langfile)) {
+                    $langs[$subdir] = $langname;
+                }
             }
         }
+        closedir($langdir);
     }
-    closedir($langdir);
+
     return $langs;
 }
 
 function language_installed($lang) {
     return is_readable(get_config('docroot') . 'lang/' . $lang . '/langconfig.php');
+}
+
+/**
+ * Returns a list of directories in which to search for language packs.
+ *
+ * This is influenced by the configuration variable 'langpacksearchpaths'
+ */
+function language_get_searchpaths() {
+    static $searchpaths = array();
+
+    if (!$searchpaths) {
+        $searchpaths = array(get_config('docroot'));
+        $langpacksearchpaths = get_config('langpacksearchpaths');
+        foreach ($langpacksearchpaths as $path) {
+            $searchpaths[] = (substr($path, -1) == '/') ? $path : "$path/";
+        }
+    }
+
+    return $searchpaths;
+}
+
+/**
+ * Get the directory in which the specified language pack resides.
+ *
+ * Defaults to getting the directory for the current_language() - i.e. the 
+ * language the user is using
+ *
+ * Returns null if the language can't be found
+ *
+ * @param string $language The language to look for
+ */
+function get_language_root($language=null) {
+    static $language_root_cache = array();
+
+    if (!isset($language_root_cache[$language])) {
+        if ($language == null) {
+            $language = current_language();
+        }
+
+        foreach (language_get_searchpaths() as $path) {
+            if (is_dir("$path/lang/$language")) {
+                return $language_root_cache[$language] = $path;
+            }
+        }
+
+        // Oh noes, can't be found
+        $language_root_cache[$language] = null;
+
+    }
+
+    return $language_root_cache[$language];
 }
 
 /**
