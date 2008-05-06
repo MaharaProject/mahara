@@ -48,15 +48,20 @@ switch ($type) {
                 if ($mimetype) {
                     header('Content-type: ' . $mimetype);
 
-                    // We can't cache 'profileicon' because it might change, 
-                    // but 'profileiconbyid' never changes...
+                    // We can't cache 'profileicon' for as long, because the 
+                    // user can change it at any time. But we can cache 
+                    // 'profileiconbyid' for quite a while, because it will 
+                    // never change
                     if ($type == 'profileiconbyid') {
-                        // 1 week
-                        $maxage = 604800;
-                        header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
-                        header('Cache-Control: max-age=' . $maxage);
-                        header('Pragma: public');
+                        $maxage = 604800; // 1 week
                     }
+                    else {
+                        $maxage = 600; // 10 minutes
+                    }
+                    header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
+                    header('Cache-Control: max-age=' . $maxage);
+                    header('Pragma: public');
+
                     readfile($path);
                     exit;
                 }
