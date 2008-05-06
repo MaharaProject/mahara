@@ -44,9 +44,19 @@ switch ($type) {
 
         if ($id) {
             if ($path = get_dataroot_image_path('artefact/internal/profileicons', $id, $size)) {
-                $type = get_mime_type($path);
-                if ($type) {
-                    header('Content-type: ' . $type);
+                $mimetype = get_mime_type($path);
+                if ($mimetype) {
+                    header('Content-type: ' . $mimetype);
+
+                    // We can't cache 'profileicon' because it might change, 
+                    // but 'profileiconbyid' never changes...
+                    if ($type == 'profileiconbyid') {
+                        // 1 week
+                        $maxage = 604800;
+                        header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
+                        header('Cache-Control: max-age=' . $maxage);
+                        header('Pragma: public');
+                    }
                     readfile($path);
                     exit;
                 }
@@ -98,6 +108,10 @@ switch ($type) {
             $basepath = 'artefact/' . $ap . '/' . $basepath;
         }
         header('Content-type: image/png');
+        $maxage = 604800;
+        header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
+        header('Cache-Control: max-age=' . $maxage);
+        header('Pragma: public');
         $path = get_config('docroot') . $basepath . '/thumb.png';
         if (is_readable($path)) {
             readfile($path);
