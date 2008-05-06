@@ -65,7 +65,13 @@ switch ($type) {
 
         // We couldn't find an image for this user. Attempt to use the 'no user 
         // photo' image for the current theme
-        //
+
+        // We can cache such images
+        $maxage = 604800;
+        header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
+        header('Cache-Control: max-age=' . $maxage);
+        header('Pragma: public');
+
         // NOTE: the institutional admin branch allows the theme to be locked 
         // down. This means that $USER->get('theme') should be used here 
         // instead, when that branch is merged. And don't forget to change it 
