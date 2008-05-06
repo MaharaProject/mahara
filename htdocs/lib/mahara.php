@@ -1787,7 +1787,7 @@ function profile_sideblock() {
     require_once('group.php');
     $data = array(
         'id' => $USER->get('id'),
-        'profileicon' => $USER->get('profileicon'),
+        'profileicon' => $USER->get('profileicon') ? $USER->get('profileicon') : 0,
     );
     $saveduser = $USER->get('parentuser');
     if (!empty($saveduser) && $saveduser->name) {
