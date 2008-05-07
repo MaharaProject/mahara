@@ -405,9 +405,10 @@ function language_get_searchpaths() {
 
     if (!$searchpaths) {
         $searchpaths = array(get_config('docroot'));
-        $langpacksearchpaths = get_config('langpacksearchpaths');
-        foreach ($langpacksearchpaths as $path) {
-            $searchpaths[] = (substr($path, -1) == '/') ? $path : "$path/";
+        if ($langpacksearchpaths = get_config('langpacksearchpaths')) {
+            foreach ($langpacksearchpaths as $path) {
+                $searchpaths[] = (substr($path, -1) == '/') ? $path : "$path/";
+            }
         }
     }
 
