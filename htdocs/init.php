@@ -38,6 +38,11 @@ else {
 }
 set_include_path($CFG->libroot . PATH_SEPARATOR . $CFG->libroot . 'pear/' . PATH_SEPARATOR . get_include_path());
 
+// Ensure that, by default, the response is not cached
+header('Cache-Control: private, must-revalidate, pre-check=0, post-check=0, max-age=0');
+header('Expires: '. gmdate('D, d M Y H:i:s', 507686400) .' GMT');
+header('Pragma: no-cache');
+
 // Set up error handling
 require('errors.php');
 
