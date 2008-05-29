@@ -44,9 +44,24 @@ switch ($type) {
 
         if ($id) {
             if ($path = get_dataroot_image_path('artefact/internal/profileicons', $id, $size)) {
-                $type = get_mime_type($path);
-                if ($type) {
-                    header('Content-type: ' . $type);
+                $mimetype = get_mime_type($path);
+                if ($mimetype) {
+                    header('Content-type: ' . $mimetype);
+
+                    // We can't cache 'profileicon' for as long, because the 
+                    // user can change it at any time. But we can cache 
+                    // 'profileiconbyid' for quite a while, because it will 
+                    // never change
+                    if ($type == 'profileiconbyid') {
+                        $maxage = 604800; // 1 week
+                    }
+                    else {
+                        $maxage = 600; // 10 minutes
+                    }
+                    header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
+                    header('Cache-Control: max-age=' . $maxage);
+                    header('Pragma: public');
+
                     readfile($path);
                     exit;
                 }
@@ -55,7 +70,13 @@ switch ($type) {
 
         // We couldn't find an image for this user. Attempt to use the 'no user 
         // photo' image for the current theme
-        //
+
+        // We can cache such images
+        $maxage = 604800;
+        header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
+        header('Cache-Control: max-age=' . $maxage);
+        header('Pragma: public');
+
         // NOTE: the institutional admin branch allows the theme to be locked 
         // down. This means that $USER->get('theme') should be used here 
         // instead, when that branch is merged. And don't forget to change it 
@@ -98,6 +119,10 @@ switch ($type) {
             $basepath = 'artefact/' . $ap . '/' . $basepath;
         }
         header('Content-type: image/png');
+        $maxage = 604800;
+        header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
+        header('Cache-Control: max-age=' . $maxage);
+        header('Pragma: public');
         $path = get_config('docroot') . $basepath . '/thumb.png';
         if (is_readable($path)) {
             readfile($path);

@@ -132,7 +132,7 @@ class AuthXmlrpc extends Auth {
             $user = new User;
             $user->find_by_instanceid_username($this->instanceid, $remoteuser->username, true);
             if ($user->get('suspendedcusr')) {
-                die_info(get_string('accountsuspended', 'mahara', $user->get('suspendedctime'), $user->get('suspendedreason')));
+                die_info(get_string('accountsuspended', 'mahara', strftime(get_string('strftimedaydate'), $user->get('suspendedctime')), $user->get('suspendedreason')));
             }
             if ('1' == $this->config['updateuserinfoonlogin']) {
                 $update = true;
@@ -176,6 +176,13 @@ class AuthXmlrpc extends Auth {
             $user->username           = get_new_username($remoteuser->username);
             $user->commit();
 
+            // Make sure that there's no remote user record for this user. This 
+            // can happen when a user has SSOed in, and then been deleted from 
+            // Mahara.
+            //
+            // This makes undeleting the old user record "interesting", because 
+            // now we don't have the remoteuser record for them...
+            delete_records('auth_remote_user', 'authinstance', $user->authinstance, 'remoteusername', $remoteuser->username);
             insert_record('auth_remote_user', (object) array(
                 'authinstance'   => $user->authinstance,
                 'remoteusername' => $remoteuser->username,
@@ -200,6 +207,11 @@ class AuthXmlrpc extends Auth {
             $userarray = (array)$userobj;
             handle_event('createuser', $userarray);
             db_commit();
+
+            // Now we have fired the create event, we need to re-get the data 
+            // for this user
+            $user = new User;
+            $user->find_by_id($userobj->id);
 
         } elseif ($update) {
             $simplefieldstoimport = array('firstname', 'lastname', 'email');
@@ -243,7 +255,7 @@ class AuthXmlrpc extends Auth {
                     $icons = get_records_select_array('artefact', 'artefacttype = \'profileicon\' AND owner = ? ', array($user->id), '', 'id');
                     if (false != $icons) {
                         foreach ($icons as $icon) {
-                            $iconfile = get_config('dataroot') . 'artefact/internal/profileicons/' . ($icon->id % 256) . '/'.$icon->id;
+                            $iconfile = get_config('dataroot') . 'artefact/internal/profileicons/originals/' . ($icon->id % 256) . '/'.$icon->id;
                             $checksum = sha1_file($iconfile);
                             if ($newchecksum == $checksum) {
                                 $imageexists = true;
@@ -293,7 +305,7 @@ class AuthXmlrpc extends Auth {
                     $id = $artefact->get('id');
 
                     // Move the file into the correct place.
-                    $directory = get_config('dataroot') . 'artefact/internal/profileicons/' . ($id % 256) . '/';
+                    $directory = get_config('dataroot') . 'artefact/internal/profileicons/originals/' . ($id % 256) . '/';
                     check_dir_exists($directory);
                     rename($filename, $directory . $id);
                     if ($create || empty($icons)) {

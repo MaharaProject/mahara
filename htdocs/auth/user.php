@@ -123,7 +123,11 @@ class User {
     }
 
     /**
-     * 
+     * Finds details for a user given a username and their authentication 
+     * instance.
+     *
+     * If the authentication instance is a child or a parent, its relation is 
+     * checked too, because the user can enter the system by either method.
      */
     public function find_by_instanceid_username($instanceid, $username, $remoteuser=false) {
 
@@ -131,11 +135,19 @@ class User {
             throw new InvalidArgumentException('parameter must be a positive integer to create a User object');
         }
 
-        if ($parentid = get_field('auth_instance_config', 'value', 'field', 'parent', 'instance', $instanceid)) {
-            $instanceid = $parentid;
-        }
-
         if ($remoteuser) {
+            if ($parentid = get_field('auth_instance_config', 'value', 'field', 'parent', 'instance', $instanceid)) {
+                // See if the user has either the child or the parent authinstance. 
+                // Most of the time, it's the parent auth instance that is 
+                // stored with the user, but if they were created by (for 
+                // example) SSO with no parent, then it will be the child that 
+                // is stored. Nevertheless, a parent could be added later, and 
+                // that should not matter in finding the user
+                $where = '(r.authinstance = ' . db_quote($instanceid) . ' OR r.authinstance = ' . db_quote($parentid) . ')';
+            }
+            else {
+                $where = 'r.authinstance = ' . db_quote($instanceid);
+            }
             $sql = 'SELECT
                         u.*, 
                         ' . db_format_tsfield('u.expiry', 'expiry') . ', 
@@ -144,9 +156,17 @@ class User {
                     FROM {usr} u
                     INNER JOIN {auth_remote_user} r ON u.id = r.localusr
                     WHERE
-                        LOWER(r.remoteusername) = ? AND
-                        r.authinstance = ?';
+                        LOWER(r.remoteusername) = ?
+                        AND u.deleted = 0
+                        AND ' . $where;
         } else {
+            if ($parentid = get_field('auth_instance_config', 'value', 'field', 'parent', 'instance', $instanceid)) {
+                // See the comment above about checking for the child or parent
+                $where = '(authinstance = ' . db_quote($instanceid) . ' OR authinstance = ' . db_quote($parentid) . ')';
+            }
+            else {
+                $where = 'authinstance = ' . db_quote($instanceid);
+            }
             $sql = 'SELECT
                         *, 
                         ' . db_format_tsfield('expiry') . ', 
@@ -156,11 +176,12 @@ class User {
                         {usr}
                     WHERE
                         LOWER(username) = ? AND
-                        authinstance = ?';
+                        u.deleted = 0 AND
+                        authinstance = ' . db_quote($instanceid);
         }
 
 
-        $user = get_record_sql($sql, array($username, $instanceid));
+        $user = get_record_sql($sql, array($username));
 
         if (false == $user) {
             throw new AuthUnknownUserException("User with username \"$username\" is not known at auth instance \"$instanceid\"");
@@ -539,7 +560,22 @@ class LiveUser extends User {
             throw new AuthUnknownUserException("\"$username\" is not known");
         }
 
-        $auth = AuthFactory::create($user->authinstance);
+        // Authentication instances that have parents do so because they cannot 
+        // use Mahara's normal login mechanism - for example, XMLRPC. If the 
+        // user is using one of these authentication instances, we look and try 
+        // to use the parent.
+        //
+        // There's no code here that prevents the authinstance being tried if 
+        // it has no parent, mainly because that's an extra database lookup for 
+        // the general case, and the authentication will probably just fail 
+        // anyway. (XMLRPC, for example, leaves implementation of 
+        // authenticate_user_account to the parent Auth class, which says 'not 
+        // authorised' by default).
+        $instanceid = $user->authinstance;
+        if ($parentid = get_field('auth_instance_config', 'value', 'field', 'parent', 'instance', $instanceid)) {
+            $instanceid = $parentid;
+        }
+        $auth = AuthFactory::create($instanceid);
         if ($auth->authenticate_user_account($user, $password)) {
             $user->lastauthinstance = $auth->instanceid;
             $this->authenticate($user);
