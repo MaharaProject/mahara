@@ -114,10 +114,9 @@ class AuthInternal extends Auth {
     }
 
     /**
-     * For internal authentication, usernames can only contain alphanumeric
-     * characters, and the symbols underscore, full stop and the @ symbol.
-     *
-     * The username must also be between three and thirty characters in length.
+     * Internal authentication allows most standard us-keyboard-typable characters
+     * for username, as long as the username is between three and thirty 
+     * characters in length.
      *
      * This method is NOT part of the authentication API. Other authentication
      * methods never have to do anything regarding usernames being validated on
@@ -127,7 +126,7 @@ class AuthInternal extends Auth {
      * @return bool            Whether the username is valid
      */
     public function is_username_valid($username) {
-        return preg_match('/^[a-zA-Z0-9\._@]{3,30}$/', $username);
+        return preg_match('/^[a-zA-Z0-9!@#$%^&*()\-_=+\[{\]}\\|;:\'",<\.>\/?`]{3,30}$/', $username);
     }
 
     /*
