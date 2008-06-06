@@ -155,7 +155,7 @@ switch ($type) {
                  try {
                      switch ($v) {
                          case 'remove':
-                             if ($id == $group->id) {
+                             if ($user == $group->group) {
                                  json_reply(true, get_string('memberchangefailed', 'group'));
                              }
                              else {
