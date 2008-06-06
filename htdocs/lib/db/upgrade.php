@@ -875,6 +875,98 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    // We discovered that username case insensitivity was not being enforced at 
+    // most of the entry points to the system at which users can be created. 
+    // This problem manifested itself as users who had the same LOWER(username) 
+    // as another not being able to log in. The fix is to implement the checks, 
+    // rename the "duplicate" users and add a constraint on the database so it 
+    // can't happen again
+    if ($oldversion < 2008040203) {
+        $renamed = $newusernames = $oldusernames = array();
+        $allusers = get_records_array('usr', '', '', 'id', 'id, username');
+
+        $usernamemapping = array();
+        foreach ($allusers as $user) {
+            $oldusernames[] = $user->username;
+            $usernamemapping[strtolower($user->username)][] = array('id' => $user->id, 'username' => $user->username);
+        }
+
+        foreach ($usernamemapping as $lcname => $users) {
+            if (count($users) == 1) {
+                continue;
+            }
+
+            // Uhohes. Rename the user(s) who were created last
+            $skippedfirst = false;
+            foreach ($users as $user) {
+                if (!$skippedfirst) {
+                    $skippedfirst = true;
+                    continue;
+                }
+
+                $userobj = new User();
+                $userobj->find_by_id($user['id']);
+
+                // Append digits keeping total length <= 30
+                $i = 1;
+                $newname = substr($user['username'], 0, 29) . $i;
+                while (isset($newusernames[$newname]) || isset($oldusernames[$newname])) {
+                    $i++;
+                    $newname = substr($user['username'], 0, 30 - floor(log10($i)+1)) . $i;
+                }
+                set_field('usr', 'username', $newname, 'id', $user['id']);
+                $newusernames[$newname] = true;
+
+                $renamed[$newname] = $userobj;
+                log_debug(" * Renamed {$user['username']} to $newname");
+            }
+        }
+
+        if (!empty($renamed)) {
+            // Notify changed usernames to administrator
+            $report = '# Each line in this file is in the form "old_username new_username"'."\n";
+            $message = "Mahara now requires usernames to be unique, case insensitively.\n";
+            $message .= "Some usernames on your site were changed during the upgrade:\n\n";
+            foreach ($renamed as $newname => $olduser) {
+                $report .= "$olduser->username $newname\n";
+                $message .= "Old username: $olduser->username\n"
+                    . "New username: $newname\n\n";
+            }
+            $sitename = get_config('sitename');
+            $file = get_config('dataroot') . 'user_migration_report_2.txt';
+            if (file_put_contents($file, $report)) {
+                $message .= "\n" . 'A copy of this list has been saved to the file ' . $file;
+            }
+            global $USER;
+            email_user($USER, null, $sitename . ': User migration', $message);
+            // Notify changed usernames to users
+            $usermessagestart = "Your username at $sitename has been changed:\n\n";
+            $usermessageend = "\n\nNext time you visit the site, please login using your new username.";
+            foreach ($renamed as $newname => $olduser) {
+                if ($olduser->email == '') {
+                    continue;
+                }
+                log_debug("Attempting to notify $newname ($olduser->email) of their new username...");
+                email_user($olduser, null, $sitename . ': User name changed', $usermessagestart
+                           . "Old username: $olduser->username\nNew username: $newname"
+                           . $usermessageend);
+            }
+        }
+
+        // Now we know all usernames are unique over their lowercase values, we 
+        // can put an index in so data doesn't get all inconsistent next time
+        if (is_postgres()) {
+            execute_sql('DROP INDEX {usr_use_uix}');
+            execute_sql('CREATE UNIQUE INDEX {usr_use_uix} ON {usr}(LOWER(username))');
+        }
+        else {
+            // MySQL cannot create indexes over functions of columns. Too bad 
+            // for it. We won't drop the existing index because that offers a 
+            // large degree of protection, but when MySQL finally supports this 
+            // we will be able to add it
+        }
+    }
+
     return $status;
 
 }

@@ -536,6 +536,15 @@ function core_postinst() {
     set_config('searchplugin', 'internal');
 
     set_config('lang', 'en.utf8');
+
+    // PostgreSQL supports indexes over functions of columns, MySQL does not. 
+    // So we can improve the index on the username field of the usr table for 
+    // Postgres
+    if (is_postgres()) {
+        execute_sql('DROP INDEX {usr_use_uix}');
+        execute_sql('CREATE UNIQUE INDEX {usr_use_uix} ON {usr}(LOWER(username))');
+    }
+
     return $status;
 }
 
