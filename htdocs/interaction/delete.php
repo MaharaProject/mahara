@@ -37,7 +37,7 @@ $id = param_integer('id');
 
 $instance = interaction_instance_from_id($id);
 
-if (!$group = get_record('group', 'id', $id, 'deleted', 0)) {
+if (!$group = get_record('group', 'id', $instance->get('group'), 'deleted', 0)) {
     throw new GroupNotFoundException(get_string('groupnotfound', 'group', $id));
 }
 
