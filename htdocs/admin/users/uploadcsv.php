@@ -389,12 +389,22 @@ foreach (array_keys(ArtefactTypeProfile::get_all_fields()) as $type) {
 }
 $fields .= "</ul>\n";
 
+if ($USER->get('admin')) {
+    $uploadcsvpagedescription = get_string('uploadcsvpagedescription2', 'admin',
+        get_config('wwwroot') . 'admin/extensions/pluginconfig.php?plugintype=artefact&pluginname=internal&type=profile',
+        get_config('wwwroot') . 'admin/users/institutions.php',
+        $fields
+    );
+}
+else {
+    $uploadcsvpagedescription = get_string('uploadcsvpagedescription2institutionaladmin', 'admin',
+        get_config('wwwroot') . 'admin/users/institutions.php',
+        $fields
+    );
+}
+
 $smarty = smarty();
-$smarty->assign('uploadcsvpagedescription', get_string('uploadcsvpagedescription', 'admin',
-    get_config('wwwroot') . 'admin/extensions/pluginconfig.php?plugintype=artefact&pluginname=internal&type=profile',
-    get_config('wwwroot') . 'admin/users/institutions.php',
-    $fields
-));
+$smarty->assign('uploadcsvpagedescription', $uploadcsvpagedescription);
 $smarty->assign('uploadcsvform', pieform($form));
 $smarty->display('admin/users/uploadcsv.tpl');
 
