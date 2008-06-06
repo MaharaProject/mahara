@@ -40,7 +40,7 @@ if (!$group) {
 define('TITLE', get_string('deletespecifiedgroup', 'group', $group->name));
 
 $views = count_records_sql(
-    'SELECT COUNT(a.*)
+    'SELECT COUNT(*)
     FROM {view_access_group} a
     WHERE a.group = ?',
     array($groupid)
