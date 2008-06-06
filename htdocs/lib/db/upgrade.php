@@ -965,6 +965,17 @@ function xmldb_core_upgrade($oldversion=0) {
             // large degree of protection, but when MySQL finally supports this 
             // we will be able to add it
         }
+
+
+        // Install a cron job to delete old session files
+        $cron = new StdClass;
+        $cron->callfunction = 'auth_remove_old_session_files';
+        $cron->minute       = '30';
+        $cron->hour         = '20';
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
+        insert_record('cron', $cron);
     }
 
     return $status;

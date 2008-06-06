@@ -1340,6 +1340,19 @@ function auth_handle_account_expiries() {
 
 }
 
+/**
+ * Clears out old session files
+ *
+ * This should be run once every now and then (once a day is good), to clean 
+ * out session files of users whose sessions have timed out.
+ */
+function auth_remove_old_session_files() {
+    // Note: read the manpage for find and xargs to understand what is going on 
+    // here. In particular, -mtime +1 means files older than about two days 
+    // will be removed
+    exec('find ' . escapeshellarg(get_config('dataroot') . 'sessions') . ' -type f -mtime +1 | xargs -n 1000 -r rm');
+}
+
 function auth_generate_login_form() {
     if (!get_config('installed')) {
         return;
