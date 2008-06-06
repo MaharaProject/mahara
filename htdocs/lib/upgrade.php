@@ -688,6 +688,7 @@ function core_install_firstcoredata_defaults() {
         'auth_clean_partial_registrations'       => array('5', '0', '*', '*', '*'),
         'auth_handle_account_expiries'           => array('5', '10', '*', '*', '*'),
         'activity_process_queue'                 => array('*/5', '*', '*', '*', '*'),
+        'auth_remove_old_session_files'          => array('30', '20', '*', '*', '*'),
     );
     foreach ($cronjobs as $callfunction => $times) {
         $cron = new StdClass;
