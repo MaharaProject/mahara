@@ -59,8 +59,11 @@ function ensure_sanity() {
     default:
         throw new ConfigSanityException(get_string('unknowndbtype', 'error'));
     }
+    if (!extension_loaded('xml')) {
+        throw new ConfigSanityException(get_string('xmlextensionnotloaded', 'error', 'xml'));
+    }
     if (!extension_loaded('libxml')) {
-        throw new ConfigSanityException(get_string('libxmlextensionnotloaded', 'error'));
+        throw new ConfigSanityException(get_string('xmlextensionnotloaded', 'error', 'libxml'));
     }
     if (!extension_loaded('gd')) {
         throw new ConfigSanityException(get_string('gdextensionnotloaded', 'error'));
