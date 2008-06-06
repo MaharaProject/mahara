@@ -161,7 +161,7 @@ function adduser_validate(Pieform $form, $values) {
         $form->set_error('username', get_string('addusererrorinvalidusername', 'admin'));
         return;
     }
-    if (record_exists('usr', 'username', $username)) {
+    if (!$form->get_error('username') && record_exists_select('usr', 'LOWER(username) = ?', strtolower($username))) {
         $form->set_error('username', get_string('usernamealreadytaken', 'auth.internal'));
         return;
     }

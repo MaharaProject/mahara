@@ -233,7 +233,7 @@ function uploadcsv_validate(Pieform $form, $values) {
                 $form->set_error('file', get_string('uploadcsverrorinvalidusername', 'admin', $i));
                 return;
             }
-            if (record_exists('usr', 'username', $username)) {
+            if (record_exists_select('usr', 'LOWER(username) = ?', strtolower($username))) {
                 $form->set_error('file', get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
                 return;
             }
