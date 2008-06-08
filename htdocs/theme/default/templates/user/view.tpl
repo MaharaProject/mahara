@@ -13,8 +13,11 @@
                 {$introduction}
                 <div class="fr user-icon">
                     <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=100&amp;maxheight=100&amp;id={$USERID}" alt="">
+                    <div>
+                    {if !empty($loginas)}
+                      <div class="center"><strong><a href="{$WWWROOT}admin/users/changeuser.php?id={$USERID}">{$loginas}</a></strong></div>
+                    {/if}
                     {if $canmessage}
-                        <br>
                         <a href="{$WWWROOT}user/sendmessage.php?id={$USERID}&amp;returnto=view" id="btn-sendmessage">{str tag='sendmessage' section='group'}</a>
                     {/if}
                     {if $relationship == 'existingfriend'}
@@ -32,6 +35,7 @@
                     {if $addform}
                         {$addform}
                     {/if}
+                    </div>
                 </div>
 				<ul id="user-info">
                 {foreach from=$USERFIELDS name=userfields key=key item=item}

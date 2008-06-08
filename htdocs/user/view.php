@@ -331,6 +331,13 @@ if ($loggedinid != $userid) {
 
 }
 
+if ($id != $USER->get('id') && is_null($USER->get('parentuser'))) {
+    $loginas = get_string('loginasuser', 'admin', $user->username);
+} else {
+    $loginas = null;
+}
+$smarty->assign('loginas', $loginas);
+
 if (isset($introduction)) {
     $smarty->assign('introduction', $introduction);
 }
