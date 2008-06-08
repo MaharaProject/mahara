@@ -386,8 +386,8 @@ class View {
         require_once('activity.php');
         activity_occurred('maharamessage', 
                   array('users'   => array($this->get('owner')),
-                  'subject' => get_string_from_language($ownerlang, 'viewreleasedsubject'),
-                  'message' => get_string_from_language($ownerlang, 'viewreleasedmessage', 'mahara', 
+                  'subject' => get_string_from_language($ownerlang, 'viewreleasedsubject', 'group'),
+                  'message' => get_string_from_language($ownerlang, 'viewreleasedmessage', 'group',
                        get_field('group', 'name', 'id', $groupid), 
                        display_name($releaseuser, $this->get_owner_object()))));
     }
