@@ -50,7 +50,7 @@ if (!group_user_can_leave($group)) {
 }
 
 $views = count_records_sql(
-    'SELECT COUNT(v.*)
+    'SELECT COUNT(*)
     FROM {view} v
     INNER JOIN {view_access_group} a
     ON a.group = ?
