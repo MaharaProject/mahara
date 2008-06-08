@@ -65,10 +65,6 @@
     <a href="{$WWWROOT}?logout" id="btn-logout">{str tag="logout"}</a>
     <a href="{$WWWROOT}account/" id="btn-settings">{str tag="settings"}</a>
     </div>
-    {if $data.realuser}
-    <div id="changeuser">
-    <a href="{$WWWROOT}admin/users/changeuser.php?restore=1">{str tag=becomeadminagain section=admin args=$data.realuser}</a>
-    </div>
-    {/if}
+    {if $USERMASQUERADING}<div id="changeuser">{$becomeyouagain}</div>{/if}
     {* This makes sure the profile block still appears to contain the profile image, even if the profile block is pretty much empty otherwise *}
     <div class="cb"></div>
