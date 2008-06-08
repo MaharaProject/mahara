@@ -765,7 +765,7 @@ class AccessDeniedException extends UserException {
     public function render_exception() {
         global $USER;
         if (defined('PUBLIC') && !$USER->is_logged_in()) {
-            $loginurl = $_SERVER['REQUEST_URI'];
+            $loginurl = substr($_SERVER['REQUEST_URI'], strlen(get_mahara_install_subdirectory()) - 1);
             $loginurl .= (false === strpos($loginurl, '?')) ? '?' : '&';
             $loginurl .= 'login';
             redirect($loginurl);
