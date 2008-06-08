@@ -331,7 +331,7 @@ if ($loggedinid != $userid) {
 
 }
 
-if ($id != $USER->get('id') && is_null($USER->get('parentuser'))) {
+if ($userid != $USER->get('id') && is_null($USER->get('parentuser'))) {
     $loginas = get_string('loginasuser', 'admin', $user->username);
 } else {
     $loginas = null;
