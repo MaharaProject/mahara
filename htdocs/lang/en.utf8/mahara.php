@@ -243,6 +243,7 @@ $string['username'] = 'Username';
 $string['preferredname'] = 'Preferred Name';
 $string['usernamedescription'] = ' ';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
+$string['youaremasqueradingas'] = 'You are masquerading as %s.';
 $string['yournewpassword'] = 'Your new password';
 $string['yournewpasswordagain'] = 'Your new password again';
 $string['invalidsesskey'] = 'Invalid session key';

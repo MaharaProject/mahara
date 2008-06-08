@@ -436,6 +436,15 @@ EOF;
 
         $smarty->assign('userauthinstance', $USER->lastauthinstance);
         $smarty->assign('SIDEBLOCKS', $SIDEBLOCKS);
+
+        if ($USER->get('parentuser')) {
+            $smarty->assign('USERMASQUERADING', true);
+            $smarty->assign('masqueradedetails', get_string('youaremasqueradingas', 'mahara', display_name($USER)));
+            $smarty->assign('becomeyouagain',
+                ' <a href="' . hsc($wwwroot) . 'admin/users/changeuser.php?restore=1">'
+                . get_string('becomeadminagain', 'admin', $USER->get('parentuser')->name)
+                . '</a>');
+        }
     }
 
     return $smarty;
