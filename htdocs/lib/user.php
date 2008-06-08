@@ -270,7 +270,8 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
 
     $mail = new phpmailer();
 
-    $mail->Version = 'Mahara ' . get_config('release'); 
+    // Leaving this commented out - there's no reason for people to know this
+    //$mail->Version = 'Mahara ' . get_config('release');
     $mail->PluginDir = get_config('libroot')  . 'phpmailer/';
     
     $mail->CharSet = 'UTF-8';
