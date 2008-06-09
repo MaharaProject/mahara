@@ -86,6 +86,7 @@ class User {
             'admininstitutions' => array(),
             'staffinstitutions' => array(),
             'parentuser'       => null,
+            'loginanyway'       => false,
             'sesskey'          => ''
         );
         $this->attributes = array();
@@ -665,7 +666,7 @@ class LiveUser extends User {
      */
     public function get($key) {
         if (!array_key_exists($key, $this->defaults)) {
-            throw new InvalidArgumentException($key);
+            throw new InvalidArgumentException("Invalid key: $key");
         }
         if (null !== ($value = $this->SESSION->get("user/$key"))) {
             return $value;
@@ -728,6 +729,7 @@ class LiveUser extends User {
 
         $this->reloadLiveUser($olduser->id);
         $this->set('parentuser', null);
+        $this->set('loginanyway', false);
 
         return $id;
     }

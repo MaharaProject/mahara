@@ -312,6 +312,7 @@ $string['becomeadminagain'] = 'Become %s again';
 $string['loginasdenied'] = 'Attempt to login as another user without permission';
 $string['loginastwice'] = 'Attempt to login as another user when already logged in as another user';
 $string['loginasrestorenodata'] = 'No user data to restore';
+$string['loginasoverridepasswordchange'] = 'As you are masquerading as another user, you may choose to %slog in anyway%s, ignoring the password change screen.';
 
 // Institutions
 $string['admininstitutions'] = 'Admininster Institutions';

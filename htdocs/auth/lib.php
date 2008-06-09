@@ -755,7 +755,17 @@ function requiredfields_submit(Pieform $form, $values) {
  */
 function auth_check_password_change() {
     global $USER;
-    if (!$USER->get('passwordchange')) {
+    if (
+        !$USER->get('passwordchange')                                // User doesn't need to change their password
+        || ($USER->get('parentuser') && $USER->get('loginanyway'))   // User is masquerading and wants to log in anyway
+        || defined('NOCHECKPASSWORDCHANGE')                          // The page wants to skip this hassle
+        ) {
+        return;
+    }
+
+    // Check if the user wants to log in anyway
+    if ($USER->get('passwordchange') && $USER->get('parentuser') && isset($_GET['loginanyway'])) {
+        $USER->loginanyway = true;
         return;
     }
 
@@ -810,6 +820,9 @@ function auth_check_password_change() {
 
         $smarty = smarty();
         $smarty->assign('change_password_form', pieform($form));
+        $smarty->assign('loginasoverridepasswordchange',
+            get_string('loginasoverridepasswordchange', 'admin',
+                '<a href="' . get_config('wwwroot') . '?loginanyway">', '</a>'));
         $smarty->display('change_password.tpl');
         exit;
     }
