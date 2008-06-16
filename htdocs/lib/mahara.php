@@ -451,9 +451,9 @@ function get_language_root($language=null) {
 }
 
 /**
- * Return a list of available themes
- * Need to add the theme names sometime; for now use get_string().
+ * Return a list of available themes.
  *
+ * Themes _must_ have a config.php, and it should specify a theme name.
  */
 function get_themes() {
     $themes = array();
@@ -463,8 +463,6 @@ function get_themes() {
     }
     while (false !== ($subdir = readdir($themedir))) {
         if ($subdir != "." && $subdir != ".." && is_dir($themebase . $subdir)) {
-            $themes[$subdir] = $subdir;
-
             $config_path = $themebase . $subdir . '/config.php';
             if (is_readable($config_path)) {
                 require($config_path);
