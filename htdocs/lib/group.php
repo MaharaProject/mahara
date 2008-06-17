@@ -113,9 +113,10 @@ function get_owned_groups($userid=0, $jointype=null) {
 
     $userid = optional_userid($userid);
 
+    // TODO: select groups where role in group is admin
     $sql = 'SELECT g.* FROM {group} g 
-             WHERE g.owner = ? AND g.deleted = ?';
-    $values = array($userid, 0);
+             WHERE g.deleted = ? LIMIT 1';
+    $values = array(0);
 
     if (!empty($jointype)) {
         $sql .= ' AND jointype = ?';
@@ -417,6 +418,48 @@ function group_invite_submit(Pieform $form, $values) {
             redirect($values['returnto'] == 'find' ? '/group/find.php' : '/group/mygroups.php');
         }
     }
+}
+
+/**
+ * Where is the syntax error?
+ */
+abstract class GroupType {
+
+    public static abstract function allowed_join_types();
+
+    /**
+     * Returns whether the currently logged in user can create a group of this 
+     * grouptype
+     */
+    public static function can_be_created_by_user() {
+        return true;
+    }
+
+}
+
+/**
+ * Returns a list of available grouptypes
+ */
+function group_get_grouptypes() {
+    static $grouptypes = null;
+
+    if (is_null($grouptypes)) {
+        $grouptypes = array();
+        $grouptypedir = get_config('libroot') . 'grouptype/';
+
+        if ($dh = opendir($grouptypedir)) {
+            while (false !== ($file = readdir($dh))) {
+                if (!preg_match('/^[a-zA-Z0-9-]+\.php$/', $file)) {
+                    continue;
+                }
+                if (is_file("$grouptypedir$file")) {
+                    $grouptypes[] = substr($file, 0, -4);
+                }
+            }
+        }
+    }
+
+    return $grouptypes;
 }
 
 ?>

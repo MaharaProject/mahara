@@ -978,6 +978,19 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $cron);
     }
 
+    if ($oldversion < 2008061700) {
+        // Group type refactor part one: changes to the group table
+        // TODO: write this xmldb style, with upgrade path!
+
+        // ALTER TABLE "group" DROP owner;
+        // ALTER TABLE "group" ADD grouptype CHARACTER VARYING(20) NOT NULL;
+        // ALTER TABLE "group_member" DROP tutor;
+        //
+        // unperformed yet:
+        // ALTER TABLE "group_member" ADD roleinstance FK group_role_instance(id);
+        // ?? ALTER TABLE "group_member" RENAME member TO usr;
+    }
+
     return $status;
 
 }

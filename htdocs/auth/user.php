@@ -425,15 +425,6 @@ class User {
         return isset($a[$institution]);
     }
 
-    /**
-     * There is currently no difference in privileges of site staff
-     * and institutional staff
-     */
-    public function can_create_controlled_groups() {
-        return $this->get('admin') || $this->get('staff') || $this->is_institutional_admin()
-            || $this->is_institutional_staff();
-    }
-
     public function can_edit_institution($institution = null) {
         return $this->get('admin') || $this->is_institutional_admin($institution);
     }
