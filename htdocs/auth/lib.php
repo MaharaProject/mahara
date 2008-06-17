@@ -820,9 +820,11 @@ function auth_check_password_change() {
 
         $smarty = smarty();
         $smarty->assign('change_password_form', pieform($form));
-        $smarty->assign('loginasoverridepasswordchange',
-            get_string('loginasoverridepasswordchange', 'admin',
-                '<a href="' . get_config('wwwroot') . '?loginanyway">', '</a>'));
+        if ($USER->get('parentuser')) {
+            $smarty->assign('loginasoverridepasswordchange',
+                get_string('loginasoverridepasswordchange', 'admin',
+                    '<a href="' . get_config('wwwroot') . '?loginanyway">', '</a>'));
+        }
         $smarty->display('change_password.tpl');
         exit;
     }

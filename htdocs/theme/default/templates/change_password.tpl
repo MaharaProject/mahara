@@ -6,7 +6,7 @@
 			
 	<p>{str tag="changepasswordinfo"}</p>
 
-    <div class="message">{$loginasoverridepasswordchange}</div>
+    {if $loginasoverridepasswordchange}<div class="message">{$loginasoverridepasswordchange}</div>{/if}
 
 	{$change_password_form}
 	</div>
