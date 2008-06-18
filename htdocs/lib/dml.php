@@ -947,7 +947,7 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
     }
     else {
         if (!$columns = $db->MetaColumns(get_config('dbprefix') . $table)) {
-            return false;
+            throw new SQLException('Table "' . get_config('dbprefix') . $table . '" does not appear to exist');
         }
         $table_columns[$table] = $columns;
     }

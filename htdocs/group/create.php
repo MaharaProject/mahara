@@ -99,13 +99,15 @@ function creategroup_submit(Pieform $form, $values) {
 
     $now = db_format_timestamp(time());
 
+    list($grouptype, $jointype) = explode('.', $values['grouptype']);
+
     $id = insert_record(
         'group',
         (object) array(
             'name'           => $values['name'],
             'description'    => $values['description'],
-            'grouptype'      => $values['grouptype'],
-            'jointype'       => $values['membershiptype'],
+            'grouptype'      => $grouptype,
+            'jointype'       => $jointype,
             'ctime'          => $now,
             'mtime'          => $now,
         ),
@@ -114,18 +116,32 @@ function creategroup_submit(Pieform $form, $values) {
     );
 
     // Clone role instances for group type and put in the right table
-    // TODO
+    foreach (call_static_method('GroupType' . $grouptype, 'get_role_types') as $roletype) {
+        $roleinstanceid = insert_record(
+            'group_role_instance',
+            (object) array(
+                'group'    => $id,
+                'roletype' => $roletype,
+            ),
+            'id',
+            true
+        );
+
+        if ($roletype == 'admin') {
+            $adminroleinstance = $roleinstanceid;
+        }
+    }
 
     // Make the user an admin (must have some way of establishing the 'admin' role instance)
-    //insert_record(
-    //    'group_member',
-    //    (object) array(
-    //        'group'  => $id,
-    //        'member' => $USER->get('id'),
-    //        'roleinstance' => ?
-    //        'ctime'  => $now,
-    //    )
-    //);
+    insert_record(
+        'group_member',
+        (object) array(
+            'group'  => $id,
+            'member' => $USER->get('id'),
+            'roleinstance' => $adminroleinstance,
+            'ctime'  => $now,
+        )
+    );
 
     $SESSION->add_ok_msg(get_string('groupsaved', 'group'));
 

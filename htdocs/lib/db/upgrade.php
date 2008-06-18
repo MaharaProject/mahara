@@ -985,8 +985,14 @@ function xmldb_core_upgrade($oldversion=0) {
         // ALTER TABLE "group" DROP owner;
         // ALTER TABLE "group" ADD grouptype CHARACTER VARYING(20) NOT NULL;
         // ALTER TABLE "group_member" DROP tutor;
+        // CREATE TABLE "group_role_instance" (
+        //     id SERIAL,
+        //     "group" INTEGER NOT NULL REFERENCES "group"(id),
+        //     roletype TEXT NOT NULL
+        // );
         //
         // unperformed yet:
+        //
         // ALTER TABLE "group_member" ADD roleinstance FK group_role_instance(id);
         // ?? ALTER TABLE "group_member" RENAME member TO usr;
     }

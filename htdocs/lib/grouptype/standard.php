@@ -32,6 +32,10 @@ class GroupTypeStandard extends GroupType {
         return array('open', 'request', 'invite');
     }
 
+    public static function get_role_types() {
+        return array('member', 'admin');
+    }
+
 }
 
 ?>

@@ -435,6 +435,11 @@ abstract class GroupType {
         return true;
     }
 
+    /**
+     * Returns the role types this group type implements
+     */
+    public static abstract function get_role_types();
+
 }
 
 /**
