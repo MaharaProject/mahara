@@ -535,7 +535,7 @@ class PluginSearchInternal extends PluginSearch {
         global $USER;
         $sql = "
             SELECT
-                id, name, description, jointype, owner, ctime, mtime
+                id, name, description, jointype, ctime, mtime
             FROM
                 {group}
             WHERE (
@@ -545,20 +545,18 @@ class PluginSearchInternal extends PluginSearch {
         $values = array($query_string, $query_string, 0);
         if ($type == 'member') {
             $sql .=  'AND (
-                owner = ? OR id IN (
+                id IN (
                     SELECT "group" FROM {group_member} WHERE member = ?
                 )
             )';
-            $values[] = $USER->get('id');
             $values[] = $USER->get('id');
         }
         else if ($type == 'notmember') {
             $sql .=  'AND (
-                owner != ? AND id NOT IN (
+                id NOT IN (
                     SELECT "group" FROM {group_member} WHERE member = ?
                 )
             )';
-            $values[] = $USER->get('id');
             $values[] = $USER->get('id');
         }
         $sql .= 'ORDER BY name';
@@ -575,7 +573,7 @@ class PluginSearchInternal extends PluginSearch {
             ) AND deleted = ? ";
         if ($type == 'member') {
             $sql .= 'AND (
-                    owner = ? OR id IN (
+                    id IN (
                         SELECT "group" FROM {group_member} WHERE member = ?
                     )
                 )
@@ -583,7 +581,7 @@ class PluginSearchInternal extends PluginSearch {
         }
         else if ($type == 'notmember') {
             $sql .= 'AND (
-                    owner != ? AND id NOT IN (
+                    id NOT IN (
                         SELECT "group" FROM {group_member} WHERE member = ?
                     )
                 )
@@ -603,7 +601,7 @@ class PluginSearchInternal extends PluginSearch {
         global $USER;
         $sql = "
             SELECT
-                id, name, description, jointype, owner, ctime, mtime
+                id, name, description, jointype, ctime, mtime
             FROM
                 {group}
             WHERE (
@@ -613,20 +611,18 @@ class PluginSearchInternal extends PluginSearch {
         $values = array($query_string, $query_string, 0);
         if ($type == 'member') {
             $sql .=  'AND (
-                owner = ? OR id IN (
+                id IN (
                     SELECT gm.group FROM {group_member} gm WHERE gm.member = ?
                 )
             )';
             $values[] = $USER->get('id');
-            $values[] = $USER->get('id');
         }
         else if ($type == 'notmember') {
             $sql .=  "AND (
-                owner != ? AND id NOT IN (
+                id NOT IN (
                     SELECT gm.group FROM {group_member} gm WHERE gm.member = ?
                 )
             )";
-            $values[] = $USER->get('id');
             $values[] = $USER->get('id');
         }
         $sql .= 'ORDER BY name';
@@ -643,7 +639,7 @@ class PluginSearchInternal extends PluginSearch {
             ) AND deleted = ? ";
         if ($type == 'member') {
             $sql .= 'AND (
-                    owner = ? OR id IN (
+                    id IN (
                         SELECT gm.group FROM {group_member} gm WHERE gm.member = ?
                     )
                 )
@@ -651,7 +647,7 @@ class PluginSearchInternal extends PluginSearch {
         }
         else if ($type == 'notmember') {
             $sql .= "AND (
-                    owner != ? AND id NOT IN (
+                    id NOT IN (
                         SELECT gm.group FROM {group_member} gm WHERE gm.member = ?
                     )
                 )
