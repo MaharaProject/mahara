@@ -44,9 +44,7 @@ function group_user_can_leave($group, $userid=null) {
         }
     }
     
-    if ($group->owner == $userid) {
-        return false;
-    }
+    // TODO: disallow users from leaving if they are the only administrator in the group
     
     if ($group->jointype == 'controlled') {
         return false;
@@ -336,18 +334,39 @@ function delete_group($groupid) {
 }
 
 /**
- * function to set up groups for display in mygroups.php and find.php
+ * Sets up groups for display in mygroups.php and find.php
  *
- * @param array $groups
+ * @param array $groups    Initial group data, including the current user's 
+ *                         membership type in each group. See mygroups.php for
+ *                         the query to build this information.
+ * @param string $returnto Where forms generated for display should be told to return to
  */
-function setup_groups($groups, $returnto='mygroups') {
+function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
     if (!$groups) {
         return;
     }
+
+    // Retrieve a list of all the group admins, for placing in each $group object
+    $groupadmins = array();
+    $groupids = array_map(create_function('$a', 'return $a->id;'), $groups);
+    if ($groupids) {
+        $groupadmins = get_records_sql_array("SELECT gm.group, gm.member
+            FROM {group_member} gm
+            INNER JOIN {group_role_instance} gri ON (gri.group = gm.group AND gri.id = gm.roleinstance)
+            WHERE gm.group IN (" . implode(',', db_array_to_ph($groupids)) . ")
+            AND gri.roletype = 'admin'", $groupids);
+    }
+
     $i = 0;
     foreach ($groups as $group) {
+        $group->admins = array();
+        foreach ($groupadmins as $admin) {
+            if ($admin->group == $group->id) {
+                $group->admins[] = $admin->member;
+            }
+        }
         $group->description = str_shorten($group->description, 100, true);
-        if ($group->type == 'member') {
+        if ($group->membershiptype == 'member') {
             $group->canleave = group_user_can_leave($group->id);
         }
         else if ($group->jointype == 'open') {
@@ -366,7 +385,7 @@ function setup_groups($groups, $returnto='mygroups') {
                 )
             ));
         }
-        else if ($group->type == 'invite') {
+        else if ($group->membershiptype == 'invite') {
            $group->invite = pieform(array(
                'name'     => 'invite' . $i++,
                'renderer' => 'oneline',
@@ -391,7 +410,7 @@ function setup_groups($groups, $returnto='mygroups') {
                 )
             ));
         }
-        else if ($group->type == 'owner' && $group->requests > 1) {
+        else if ($group->membershiptype == 'admin' && $group->requests > 1) {
             $group->requests = array($group->requests);
         }
     }

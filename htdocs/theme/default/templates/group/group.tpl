@@ -1,5 +1,5 @@
 <h3><a href="{$WWWROOT}group/view.php?id={$group->id|escape}">{$group->name|escape}</a></h3>
-<h6><a href="{$WWWROOT}user/view.php?id={$group->owner|escape}">{$group->owner|display_name|escape}</a></h6>
+<h6>{foreach name=admins from=$group->admins item=id}<a href="{$WWWROOT}user/view.php?id={$id|escape}">{$id|display_name|escape}</a>{if !$smarty.foreach.admins.last}, {/if}{/foreach}</h6>
 {$group->description}
 <ul>
 <li id="groupmembers">{str tag="memberslist" section="group"}

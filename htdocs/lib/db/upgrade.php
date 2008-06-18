@@ -990,10 +990,19 @@ function xmldb_core_upgrade($oldversion=0) {
         //     "group" INTEGER NOT NULL REFERENCES "group"(id),
         //     roletype TEXT NOT NULL
         // );
+        // ALTER TABLE "group_member" ADD roleinstance;
+        //
+        // -- this is for safety, this table is populated at group create time only
+        // alter table group_role_instance add unique (id, "group", roletype);
+        //
+        // -- this is for the next foreign key
+        // alter table group_role_instance add unique (id, "group");
+        //
+        // -- this makes sure a user can't be in group 1 with a roleinstance from group 2
+        // alter table group_member add foreign key ("group", roleinstance) references group_role_instance ("group", id);
         //
         // unperformed yet:
         //
-        // ALTER TABLE "group_member" ADD roleinstance FK group_role_instance(id);
         // ?? ALTER TABLE "group_member" RENAME member TO usr;
     }
 
