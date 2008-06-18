@@ -66,7 +66,7 @@ if ($filter == 'admin') {
 else if ($filter == 'member') {
     $sql = "
         INNER JOIN (
-            SELECT g.id, 'owner' AS membershiptype
+            SELECT g.id, 'admin' AS membershiptype
             FROM {group} g
             INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ?)
             INNER JOIN {group_role_instance} gri ON (gri.group = g.id AND gri.roletype = 'admin' AND gri.id = gm.roleinstance)
