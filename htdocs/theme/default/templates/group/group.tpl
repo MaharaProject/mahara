@@ -9,13 +9,13 @@
 {if $group->membercount > 3}<a href="{$WWWROOT}group/view.php?id={$group->id|escape}&amp;#members" class="links-members">...</a>{/if}
 </li>
 
-{if $group->type == 'member'}
+{if $group->membershiptype == 'member'}
 <li>{str tag="youaregroupmember" section="group"}</li>
 {if $group->canleave}
     <li><a href = "{$WWWROOT}group/leave.php?id={$group->id|escape}&amp;returnto={$returnto}" id="btn-leavegroup">{str tag="leavegroup" section="group"}</a></li>
 {/if}
 
-{elseif $group->type == 'owner'}
+{elseif $group->membershiptype == 'admin'}
 <li><a href="{$WWWROOT}group/edit.php?id={$group->id|escape}" id="btn-edit">{str tag="edit"}</a></li>
 <li><a href="{$WWWROOT}group/delete.php?id={$group->id|escape}" id="btn-delete">{str tag="delete"}</a></li>
 {if $group->jointype == 'request' && $group->requests}
@@ -28,13 +28,13 @@
     </li>
 {/if}
 
-{elseif $group->type == 'invite'}
+{elseif $group->membershiptype == 'invite'}
 <li>
 {str tag="grouphaveinvite" section="group"}
 {$group->invite}
 </li>
 
-{elseif $group->type == 'request'}
+{elseif $group->membershiptype == 'request'}
 <li>{str tag="requestedtojoin" section="group"}</li>
 
 {elseif $group->jointype == 'open'}
