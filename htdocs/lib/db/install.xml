@@ -269,8 +269,8 @@
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="name" TYPE="char" LENGTH="128" NOTNULL="true" />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="grouptype" TYPE="char" LENGTH="20" NOTNULL="true"/>
                 <FIELD NAME="jointype" TYPE="char" LENGTH="20" NOTNULL="true" ENUM="true" ENUMVALUES="'controlled', 'invite', 'request', 'open'"  DEFAULT="open" />
-                <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
@@ -278,15 +278,14 @@
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="nameuk" TYPE="unique" FIELDS="name" />
-                <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <TABLE NAME="group_member">
             <FIELDS>
                 <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="member" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="role" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
-                <FIELD NAME="tutor" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="group,member" />
