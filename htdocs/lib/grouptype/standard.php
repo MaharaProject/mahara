@@ -26,6 +26,8 @@
 
 defined('INTERNAL') || die();
 
+require_once('group.php');
+
 class GroupTypeStandard extends GroupType {
 
     public static function allowed_join_types() {
