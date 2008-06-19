@@ -1006,10 +1006,28 @@ function xmldb_core_upgrade($oldversion=0) {
                 // Insert roleinstances for each role type for the group
                 foreach (call_static_method('GroupType' . $group->grouptype, 'get_role_types') as $roletype) {
                     if ($roletype == 'admin') {
-                        execute_sql('UPDATE {group_member}
-                            SET roletype = \'admin\'
-                            WHERE "group" = ?
-                            AND member = ?', array($group->id, $group->owner));
+                        // It would be nice to use ensure_record_exists here, 
+                        // but because ctime is not null we have to provide it 
+                        // as data, which means the ctime would be updated if 
+                        // the record _did_ exist
+                        if (get_record('group_member', 'group', $group->id, 'member', $group->owner)) {
+                            execute_sql("UPDATE {group_member}
+                                SET roletype = 'admin'
+                                WHERE group = ?
+                                AND member = ?", array($group->id, $group->owner));
+                        }
+                        else {
+                            // In old versions of Mahara, there did not need to 
+                            // be a record in the group_member table for the 
+                            // owner
+                            $data = (object) array(
+                                'group'  => $group->id,
+                                'member' => $group->owner,
+                                'ctime'  => db_format_timestamp(time()),
+                                'roletype' => 'admin',
+                            );
+                            insert_record('group_member', $data);
+                        }
                         log_debug(" * marked user {$group->owner} as having the admin roletype");
                     }
                     else {
