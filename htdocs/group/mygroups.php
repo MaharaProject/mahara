@@ -58,8 +58,7 @@ if ($filter == 'admin') {
         INNER JOIN (
             SELECT g.id, $adminsql AS membershiptype
             FROM {group} g
-            INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ?)
-            INNER JOIN {group_role_instance} gri ON (gri.group = g.id AND gri.roletype = 'admin' AND gri.id = gm.roleinstance)
+            INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.roletype = 'admin')
         ) t ON t.id = g.id";
     $values = array($USER->get('id'));
 }
@@ -68,12 +67,11 @@ else if ($filter == 'member') {
         INNER JOIN (
             SELECT g.id, 'admin' AS membershiptype
             FROM {group} g
-            INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ?)
-            INNER JOIN {group_role_instance} gri ON (gri.group = g.id AND gri.roletype = 'admin' AND gri.id = gm.roleinstance)
-            UNION SELECT g.id, 'member' AS type
+            INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.roletype = 'admin')
+            UNION
+            SELECT g.id, 'member' AS type
             FROM {group} g
-            INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ?)
-            INNER JOIN {group_role_instance} gri ON (gri.group = g.id AND gri.roletype != 'admin' AND gri.id = gm.roleinstance)
+            INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.roletype != 'admin')
         ) t ON t.id = g.id";
     $values = array($USER->get('id'), $USER->get('id'));
 }
@@ -101,13 +99,11 @@ else { // all or some other text
         INNER JOIN (
             SELECT g.id, 'admin' AS membershiptype
             FROM {group} g
-            INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ?)
-            INNER JOIN {group_role_instance} gri ON (gri.group = g.id AND gri.roletype = 'admin' AND gri.id = gm.roleinstance)
+            INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.roletype = 'admin')
             UNION
             SELECT g.id, 'member' AS membershiptype
             FROM {group} g
-            INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ?)
-            INNER JOIN {group_role_instance} gri ON (gri.group = g.id AND gri.roletype != 'admin' AND gri.id = gm.roleinstance)
+            INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ? AND gm.roletype != 'admin')
             UNION
             SELECT g.id, 'invite' AS membershiptype
             FROM {group} g
