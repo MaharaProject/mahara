@@ -96,18 +96,17 @@ if ($groups['data']) {
         LEFT JOIN (
             SELECT g.id, 'admin' AS membershiptype
             FROM {group} g
-            INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ?)
-            INNER JOIN {group_role_instance} gri ON (gri.group = g.id AND gri.roletype = 'admin' AND gri.id = gm.roleinstance)
+            INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
             UNION
             SELECT g.id, 'member' AS membershiptype
             FROM {group} g
-            INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ?)
-            INNER JOIN {group_role_instance} gri ON (gri.group = g.id AND gri.roletype != 'admin' AND gri.id = gm.roleinstance)
+            INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ? AND gm.role != 'admin')
             UNION
             SELECT g.id, 'invite' AS membershiptype
             FROM {group} g
             INNER JOIN {group_member_invite} gmi ON (gmi.group = g.id AND gmi.member = ?)
-            UNION SELECT g.id, 'request' AS membershiptype
+            UNION
+            SELECT g.id, 'request' AS membershiptype
             FROM {group} g
             INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
         ) t ON t.id = g.id

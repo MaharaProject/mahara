@@ -331,7 +331,7 @@ function group_user_access($groupid, $userid=null) {
         throw new InvalidArgumentException("group_user_access: user argument appears to be invalid: $userid");
     }
 
-    return get_field('group_member', 'roletype', 'group', $groupid, 'member', $userid);
+    return get_field('group_member', 'role', 'group', $groupid, 'member', $userid);
 }
 
 /**
@@ -384,7 +384,7 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
         $groupadmins = (array)get_records_sql_array('SELECT "group", member
             FROM {group_member}
             WHERE "group" IN (' . implode(',', db_array_to_ph($groupids)) . ")
-            AND roletype = 'admin'", $groupids);
+            AND role = 'admin'", $groupids);
     }
 
     $i = 0;
@@ -485,9 +485,9 @@ abstract class GroupType {
     }
 
     /**
-     * Returns the role types this group type implements
+     * Returns the roles this group type implements
      */
-    public static abstract function get_role_types();
+    public static abstract function get_roles();
 
 }
 

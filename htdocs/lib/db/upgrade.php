@@ -983,7 +983,7 @@ function xmldb_core_upgrade($oldversion=0) {
         log_debug('GROUP TYPE REFACTOR');
 
         execute_sql('ALTER TABLE {group} ADD grouptype CHARACTER VARYING(20)');
-        execute_sql('ALTER TABLE {group_member} ADD roletype TEXT');
+        execute_sql('ALTER TABLE {group_member} ADD role TEXT');
 
         $groups = get_records_array('group');
         if ($groups) {
@@ -1003,17 +1003,17 @@ function xmldb_core_upgrade($oldversion=0) {
                 execute_sql('UPDATE {group} SET grouptype = ? WHERE id = ?', array($group->grouptype, $group->id));
                 log_debug(' * new group type is ' . $group->grouptype);
 
-                // Insert roleinstances for each role type for the group
-                foreach (call_static_method('GroupType' . $group->grouptype, 'get_role_types') as $roletype) {
-                    if ($roletype == 'admin') {
+                // Convert group membership information to roles
+                foreach (call_static_method('GroupType' . $group->grouptype, 'get_roles') as $role) {
+                    if ($role == 'admin') {
                         // It would be nice to use ensure_record_exists here, 
                         // but because ctime is not null we have to provide it 
                         // as data, which means the ctime would be updated if 
                         // the record _did_ exist
                         if (get_record('group_member', 'group', $group->id, 'member', $group->owner)) {
                             execute_sql("UPDATE {group_member}
-                                SET roletype = 'admin'
-                                WHERE group = ?
+                                SET role = 'admin'
+                                WHERE \"group\" = ?
                                 AND member = ?", array($group->id, $group->owner));
                         }
                         else {
@@ -1024,17 +1024,17 @@ function xmldb_core_upgrade($oldversion=0) {
                                 'group'  => $group->id,
                                 'member' => $group->owner,
                                 'ctime'  => db_format_timestamp(time()),
-                                'roletype' => 'admin',
+                                'role' => 'admin',
                             );
                             insert_record('group_member', $data);
                         }
-                        log_debug(" * marked user {$group->owner} as having the admin roletype");
+                        log_debug(" * marked user {$group->owner} as having the admin role");
                     }
                     else {
                         // Setting role instances for tutors and members
-                        $tutorflag = ($roletype == 'tutor') ? 1 : 0;
+                        $tutorflag = ($role == 'tutor') ? 1 : 0;
                         execute_sql('UPDATE {group_member}
-                            SET roletype = ?
+                            SET role = ?
                             WHERE "group" = ?
                             AND member != ?
                             AND member IN (
@@ -1042,8 +1042,8 @@ function xmldb_core_upgrade($oldversion=0) {
                                     FROM {group_member}
                                     WHERE "group" = ?
                                     AND tutor = ?
-                            )', array($roletype, $group->id, $group->owner, $group->id, $tutorflag));
-                        log_debug(" * marked appropriate users as being {$roletype}s");
+                            )', array($role, $group->id, $group->owner, $group->id, $tutorflag));
+                        log_debug(" * marked appropriate users as being {$role}s");
                     }
                 }
             }
@@ -1051,7 +1051,7 @@ function xmldb_core_upgrade($oldversion=0) {
 
 
         execute_sql('ALTER TABLE {group} ALTER grouptype SET NOT NULL');
-        execute_sql('ALTER TABLE {group_member} ALTER roletype SET NOT NULL');
+        execute_sql('ALTER TABLE {group_member} ALTER role SET NOT NULL');
         execute_sql('ALTER TABLE {group} DROP owner');
         execute_sql('ALTER TABLE {group_member} DROP tutor');
     }

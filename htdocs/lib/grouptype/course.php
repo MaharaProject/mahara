@@ -40,7 +40,7 @@ class GroupTypeCourse extends GroupType {
             || $USER->is_institutional_staff();
     }
 
-    public static function get_role_types() {
+    public static function get_roles() {
         return array('member', 'tutor', 'admin');
     }
 
