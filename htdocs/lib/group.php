@@ -381,11 +381,10 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
     $groupadmins = array();
     $groupids = array_map(create_function('$a', 'return $a->id;'), $groups);
     if ($groupids) {
-        $groupadmins = get_records_sql_array("SELECT gm.group, gm.member
-            FROM {group_member} gm
-            INNER JOIN {group_role_instance} gri ON (gri.group = gm.group AND gri.id = gm.roleinstance)
-            WHERE gm.group IN (" . implode(',', db_array_to_ph($groupids)) . ")
-            AND gri.roletype = 'admin'", $groupids);
+        $groupadmins = (array)get_records_sql_array('SELECT "group", member
+            FROM {group_member}
+            WHERE "group" IN (' . implode(',', db_array_to_ph($groupids)) . ")
+            AND roletype = 'admin'", $groupids);
     }
 
     $i = 0;
