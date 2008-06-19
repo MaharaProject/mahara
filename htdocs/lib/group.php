@@ -256,6 +256,7 @@ define('GROUP_MEMBERSHIP_MEMBER', 16);
  * @returns constant access level or FALSE
  */
 function user_can_access_group($group, $user=null) {
+    log_warn("user_can_access_group is deprecated: please use group_user_access instead");
 
     if (empty($userid)) {
         global $USER;
@@ -301,6 +302,36 @@ function user_can_access_group($group, $user=null) {
     }
     
     return ($membertypes | GROUP_MEMBERSHIP_MEMBER);
+}
+
+/**
+ * Establishes what role a user has in a given group.
+ *
+ * If the user is not in the group, this returns false.
+ *
+ * @param mixed $groupid  ID of the group to check
+ * @param mixed $userid   ID of the user to check. Defaults to the logged in 
+ *                        user.
+ * @return mixed          The role the user has in the group, or false if they 
+ *                        have no role in the group
+ */
+function group_user_access($groupid, $userid=null) {
+    // TODO: caching
+
+    if (!is_int($groupid) || $groupid == 0) {
+        throw new InvalidArgumentException("group_user_access: group argument appears to be invalid: $groupid");
+    }
+
+    if (is_null($userid)) {
+        global $USER;
+        $userid = (int)$USER->get('id');
+    }
+
+    if (!is_int($userid) || $userid == 0) {
+        throw new InvalidArgumentException("group_user_access: user argument appears to be invalid: $userid");
+    }
+
+    return get_field('group_member', 'roletype', 'group', $groupid, 'member', $userid);
 }
 
 /**
