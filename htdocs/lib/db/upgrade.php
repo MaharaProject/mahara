@@ -979,31 +979,63 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2008061700) {
-        // Group type refactor part one: changes to the group table
-        // TODO: write this xmldb style, with upgrade path!
+        // Group type refactor
+        log_debug('GROUP TYPE REFACTOR');
 
-        // ALTER TABLE "group" DROP owner;
-        // ALTER TABLE "group" ADD grouptype CHARACTER VARYING(20) NOT NULL;
-        // ALTER TABLE "group_member" DROP tutor;
-        // CREATE TABLE "group_role_instance" (
-        //     id SERIAL,
-        //     "group" INTEGER NOT NULL REFERENCES "group"(id),
-        //     roletype TEXT NOT NULL
-        // );
-        // ALTER TABLE "group_member" ADD roleinstance;
-        //
-        // -- this is for safety, this table is populated at group create time only
-        // alter table group_role_instance add unique (id, "group", roletype);
-        //
-        // -- this is for the next foreign key
-        // alter table group_role_instance add unique (id, "group");
-        //
-        // -- this makes sure a user can't be in group 1 with a roleinstance from group 2
-        // alter table group_member add foreign key ("group", roleinstance) references group_role_instance ("group", id);
-        //
-        // unperformed yet:
-        //
-        // ?? ALTER TABLE "group_member" RENAME member TO usr;
+        execute_sql('ALTER TABLE {group} ADD grouptype CHARACTER VARYING(20)');
+        execute_sql('ALTER TABLE {group_member} ADD roletype TEXT');
+
+        $groups = get_records_array('group');
+        if ($groups) {
+            require_once('grouptype/standard.php');
+            require_once('grouptype/course.php');
+            foreach ($groups as $group) {
+                log_debug("Migrating group {$group->name} ({$group->id})");
+
+                // Establish the new group type
+                if ($group->jointype == 'controlled') {
+                    $group->grouptype = 'course';
+                }
+                else {
+                    $group->grouptype = 'standard';
+                }
+
+                execute_sql('UPDATE {group} SET grouptype = ? WHERE id = ?', array($group->grouptype, $group->id));
+                log_debug(' * new group type is ' . $group->grouptype);
+
+                // Insert roleinstances for each role type for the group
+                foreach (call_static_method('GroupType' . $group->grouptype, 'get_role_types') as $roletype) {
+                    if ($roletype == 'admin') {
+                        execute_sql('UPDATE {group_member}
+                            SET roletype = \'admin\'
+                            WHERE "group" = ?
+                            AND member = ?', array($group->id, $group->owner));
+                        log_debug(" * marked user {$group->owner} as having the admin roletype");
+                    }
+                    else {
+                        // Setting role instances for tutors and members
+                        $tutorflag = ($roletype == 'tutor') ? 1 : 0;
+                        execute_sql('UPDATE {group_member}
+                            SET roletype = ?
+                            WHERE "group" = ?
+                            AND member != ?
+                            AND member IN (
+                                SELECT member
+                                    FROM {group_member}
+                                    WHERE "group" = ?
+                                    AND tutor = ?
+                            )', array($roletype, $group->id, $group->owner, $group->id, $tutorflag));
+                        log_debug(" * marked appropriate users as being {$roletype}s");
+                    }
+                }
+            }
+        }
+
+
+        execute_sql('ALTER TABLE {group} ALTER grouptype SET NOT NULL');
+        execute_sql('ALTER TABLE {group_member} ALTER roletype SET NOT NULL');
+        execute_sql('ALTER TABLE {group} DROP owner');
+        execute_sql('ALTER TABLE {group_member} DROP tutor');
     }
 
     return $status;
