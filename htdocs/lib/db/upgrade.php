@@ -881,7 +881,7 @@ function xmldb_core_upgrade($oldversion=0) {
     // as another not being able to log in. The fix is to implement the checks, 
     // rename the "duplicate" users and add a constraint on the database so it 
     // can't happen again
-    if ($oldversion < 2008040203) {
+    if ($oldversion < 2008040202) {
         $renamed = $newusernames = $oldusernames = array();
         $allusers = get_records_array('usr', '', '', 'id', 'id, username');
 
