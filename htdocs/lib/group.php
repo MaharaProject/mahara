@@ -469,6 +469,41 @@ function group_invite_submit(Pieform $form, $values) {
     }
 }
 
+function group_get_membersearch_data($group, $query, $offset, $limit) {
+    $results = get_group_user_search_results($group, $query, $offset, $limit);
+
+    $params = array();
+    if (!empty($query)) {
+        $params[] = 'query=' . $query;
+    }
+    $params[] = 'limit=' . $limit;
+    $searchurl = get_config('wwwroot') . 'group/view.php?' . join('&amp;', $params);
+
+    $smarty = smarty_core();
+    $smarty->assign_by_ref('results', $results);
+    $smarty->assign('searchurl', $searchurl);
+    $smarty->assign('pagebaseurl', $searchurl);
+    $html = $smarty->fetch('group/membersearchresults.tpl');
+
+    $pagination = build_pagination(array(
+        'id' => 'member_pagination',
+        'class' => 'center',
+        'url' => get_config('wwwroot') . 'group/view.php?id=' . $group,
+        'count' => $results['count'],
+        'limit' => $limit,
+        'offset' => $offset,
+        'datatable' => 'membersearchresults',
+        'jsonscript' => 'group/membersearchresults.php',
+        'firsttext' => '',
+        'previoustext' => '',
+        'nexttext' => '',
+        'lasttext' => '',
+        'numbersincludefirstlast' => false,
+    ));
+
+    return array($html, $pagination, $results['count'], $offset);
+}
+
 /**
  * Where is the syntax error?
  */

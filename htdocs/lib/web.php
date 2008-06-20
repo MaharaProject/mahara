@@ -2072,7 +2072,7 @@ function str_shorten($str, $maxlen=100, $truncate=false, $newlines=true) {
 /**
  * Builds pagination links for HTML display.
  *
- * The pagination is quite configurable, but at the same time gives a consitent 
+ * The pagination is quite configurable, but at the same time gives a consistent 
  * look and feel to all pagination.
  *
  * This function takes one array that contains the options to configure the 

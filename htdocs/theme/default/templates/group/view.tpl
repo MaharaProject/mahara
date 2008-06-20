@@ -3,66 +3,63 @@
 
 {include file="columnleftstart.tpl"}
                 <h2>{$group->name|escape}</h2>
+
+                <div style="border: 1px solid #006600;">
                 
                 {if $group->description} <p>{$group->description}</p> {/if}
-                <ul id="groupsviewlist"><li><label>{str tag='owner' section='group'}:</label> {$group->ownername|escape}</li></ul>
-	        {assign var="jointype" value=$group->jointype}
-	        {assign var="joinstr" value=groupjointype$jointype}
-                {if !$member}<p>{str tag=$joinstr section='group'}</p>{/if}
-                {if $canleave} <p><a href="{$WWWROOT}group/leave.php?id={$group->id}">{str tag='leavegroup' section='group'}</a></p>
-                {elseif $canrequestjoin} <p id="joinrequest"><a href="{$WWWROOT}group/requestjoin.php?id={$group->id}">{str tag='requestjoingroup' section='group'}</a></p>
-                {elseif $canjoin} <p><a href="view.php?id={$group->id}&amp;joincontrol=join"">{str tag='joingroup' section='group'}</a></p>
-                {elseif $canacceptinvite} <p>{str tag='grouphaveinvite' section='group'} <a href="view.php?id={$group->id}&amp;joincontrol=acceptinvite">{str tag='acceptinvitegroup' section='group'}</a> | <a href="view.php?id={$group->id}&amp;joincontrol=declineinvite">{str tag='declineinvitegroup' section='group'}</a></p>{/if}
-                {if $member}
-                    <div class="groupviews">
-                        <h3>{str tag='views'}</h3>
-                        {if ($tutor || $staff || $admin) && $controlled}
-                            <form>
-                                <select name="submitted" onChange="viewlist.submitted=this.options[this.selectedIndex].value;viewlist.doupdate();">
-                                    <option value="0">{str tag='allviews' section='view'}</option>
-                                    <option value="1">{str tag='submittedviews' section='group'}</option>
-                                </select>
+
+                <ul>
+                    <li>{str tag=groupadmins section=group}: {foreach name=admins from=$group->admins item=id}
+                    <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$id|escape}" alt="">
+                    <a href="{$WWWROOT}user/view.php?id={$id|escape}">{$id|display_name|escape}</a>{if !$smarty.foreach.admins.last}, {/if}
+                    {/foreach}</li>
+                    <li>{str tag=created section=group}: {$group->ctime}</li>
+                    {if $strgroupviews}<li>{$strgroupviews}</li>{/if}
+                    {if $strcontent}<li>{$strcontent}</li>{/if}
+                </ul>
+
+                <table>
+                    <tr>
+                        <td>
+                            <h3>{str tag=Members section=group}</h3>
+                            <form action="{$WWWROOT}group/view.php" method="post">
+                                <input type="hidden" name="id" value="{$group->id|escape}">
+                                <div class="searchform center" style="margin-bottom: .5em;">
+                                    <label>{str tag='Query' section='admin'}:
+                                        <input type="text" name="query" id="query" value="{$query|escape}">
+                                    </label>
+                                    <button id="query-button" type="submit">{str tag="go"}</button>
+                                </div>
+                                <div id="results">
+                                    <table id="membersearchresults" class="tablerenderer">
+                                        <tbody>
+                                        {$results}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {$pagination}
+                                <script type="text/javascript">{$pagination_js}</script>
                             </form>
-                        {/if}
-                        <table id="group_viewlist">
-                            <thead>
+
+                            <input type="submit" class="submit" value="Update Membership">
+                        </td>
+                        <td>
+                            <h3>Latest Forum Posts</h3>
+                            <table>
                                 <tr>
-                                    <th>{str tag='name'}</th>
-                                    <th>{str tag='owner' section='group'}</th>
-									<th></th>
+                                    <th>Thread/Thread Starter</th>
+                                    <th>Latest Post</th>
                                 </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>                   
-                    <div class="groupmembers">
-                    <a name="members"></a>
-                        <h3>{str tag='members' section='group'}</h3>
-                        {if $canupdate && $request}
-                            <form>
-                                <select id="pendingselect" name="pending" onChange="switchPending();">
-                                    <option value="0">{str tag='members' section='group'}</option>
-                                    <option value="1">{str tag='memberrequests' section='group'}</option>
-                                </select>
-                            </form>
-                         {/if}
-                         <table id="memberlist">
-                             <thead>
-                                 <tr>
-                                     <th>{str tag='name'}</th>
-                                     <th id="pendingreasonheader">{str tag='reason'}</th>
-									 <th></th>
-									 <th></th>
-                                 </tr>
-                             </thead>
-                             <tbody>
-                             </tbody>
-                         </table>
-	                 {if $canupdate && $hasmembers}
-                             <input type="button" class="button" value="{str tag='updatemembership' section='group'}" onclick="return updateMembership();" id="groupmembers_update">
-                         {/if}
-                     </div>
-                {/if}
+                                <tr>
+                                    <td><a href="">Whatever</a><br><a href="">Mike</a></td>
+                                    <td>This is some content of some post...</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+
+                </div>
+
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

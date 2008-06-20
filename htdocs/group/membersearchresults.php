@@ -25,38 +25,28 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups');
+define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
-define('TITLE', get_string('groups'));
-require_once('group.php');
-require_once('searchlib.php');
-require_once(get_config('docroot') . 'interaction/lib.php');
+require('group.php');
+require('searchlib.php');
 
-$id = param_integer('id');
-
-if (!$group = get_record('group', 'id', $id, 'deleted', 0)) {
-    throw new GroupNotFoundException("Couldn't find group with id $id");
-}
-
-$group->admins = get_column_sql("SELECT member
-    FROM {group_member}
-    WHERE \"group\" = ?
-    AND role = 'admin'", array($id));
-
-$role = group_user_access($id);
-
-// Search related stuff for member pager
+$id     = param_integer('id');
 $query  = trim(param_variable('query', ''));
 $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 5);
+
 list($html, $pagination, $count, $offset) = group_get_membersearch_data($id, $query, $offset, $limit);
 
-$smarty = smarty(array('paginator', 'groupmembersearch'), array(), array(), array('sideblocks' => array(interaction_sideblock($id, $role))));
-$smarty->assign('group', $group);
-$smarty->assign('query', $query);
-$smarty->assign('results', $html);
-$smarty->assign('pagination', $pagination['html']);
-$smarty->assign('pagination_js', $pagination['javascript']);
-$smarty->display('group/view.tpl');
+json_reply(false, array(
+    'message' => null,
+    'data' => array(
+        'tablerows' => $html,
+        'pagination' => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+        'count' => $count,
+        'results' => $count . ' ' . ($count == 1 ? get_string('result') : get_string('results')),
+        'offset' => $offset,
+    )
+));
 
 ?>

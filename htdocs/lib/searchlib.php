@@ -332,6 +332,64 @@ function admin_user_search($queries, $constraints, $offset, $limit, $sortfield, 
 
 
 /**
+ * Returns search results for users in a particular group
+ *
+ * The search term is applied against first and last names of the users in the group
+ *
+ * @param int    $group  The group to build results for
+ * @param string $query  A search string to filter by
+ * @param int    $offset What result to start showing paginated results from
+ * @param int    $limit  How many results to show
+ */
+function get_group_user_search_results($group, $query, $offset, $limit) {
+    $queries = array();
+    $constraints = array();
+    if (!empty($query)) {
+        list($words, $fullnames) = parse_name_query($query);
+        foreach ($words as $word) {
+            $queries[] = array('field' => 'firstname',
+                               'type' => 'contains',
+                               'string' => $word);
+            $queries[] = array('field' => 'lastname',
+                               'type' => 'contains',
+                               'string' => $word);
+        }
+        foreach ($fullnames as $n) {
+            $constraints[] = array('field' => 'firstname',
+                                   'type' => 'contains',
+                                   'string' => $n[0]);
+            $constraints[] = array('field' => 'lastname',
+                                   'type' => 'contains',
+                                   'string' => $n[1]);
+        }
+    }
+
+    $results = group_user_search($group, $queries, $constraints, $offset, $limit);
+    if ($results['count']) {
+        $userids = array_map(create_function('$a', 'return $a["id"];'), $results['data']);
+        $introductions = get_records_sql_assoc("SELECT owner, title
+            FROM {artefact}
+            WHERE artefacttype = 'introduction'
+            AND owner IN (" . implode(',', db_array_to_ph($userids)) . ')',
+            $userids);
+        foreach ($results['data'] as &$result) {
+            $result['name'] = display_name($result);
+            $result['introduction'] = isset($introductions[$result['id']]) ? $introductions[$result['id']]->title : '';
+            $result['jointime'] = strftime(get_string('strfdaymonthyearshort'), $result['jointime']);
+        }
+    }
+    return $results;
+}
+
+
+function group_user_search($group, $queries, $constraints, $offset, $limit) {
+    $plugin = get_config('searchplugin');
+    safe_require('search', $plugin);
+    return call_static_method(generate_class_name('search', $plugin), 'group_search_user', 
+                              $group, $queries, $constraints, $offset, $limit);
+}
+
+/**
  * Given a query string and limits, return an array of matching groups using the
  * search plugin defined in config.php
  *

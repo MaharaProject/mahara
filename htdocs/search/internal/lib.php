@@ -402,6 +402,58 @@ class PluginSearchInternal extends PluginSearch {
     }
 
 
+    public static function group_search_user($group, $queries, $constraints, $offset, $limit) {
+        $where = 'WHERE gm.group = ?';
+        $values = array($group);
+
+        // Get the correct keyword for case insensitive LIKE
+        $ilike = db_ilike();
+
+        // Only handle OR/AND expressions at the top level.  Eventually we may need subexpressions.
+
+        if (!empty($queries)) {
+            $where .= ' AND ( ';
+            $str = array();
+            foreach ($queries as $f) {
+                $str[] = 'u.' . $f['field'] 
+                    . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
+            }
+            $where .= join(' OR ', $str) . ') ';
+        }
+
+        $count = get_field_sql('SELECT COUNT(*) FROM {usr} u INNER JOIN {group_member} gm ON (gm.member = u.id) ' . $where, $values);
+
+        if ($count > 0) {
+            $data = get_records_sql_assoc('
+                SELECT
+                    u.id, u.firstname, u.lastname, u.username, u.email, u.staff, ' . db_format_tsfield('gm.ctime', 'jointime') . '
+                FROM
+                    {usr} u
+                INNER JOIN {group_member} gm ON (gm.member = u.id) ' . $where . '
+                ORDER BY gm.ctime, u.firstname, u.lastname, u.id',
+                $values,
+                $offset,
+                $limit);
+
+            if ($data) {
+                foreach ($data as &$item) {
+                    $item = (array)$item;
+                }
+                $data = array_values($data);
+            }
+        }
+        else {
+            $data = false;
+        }
+
+        return array(
+            'count'   => $count,
+            'limit'   => $limit,
+            'offset'  => $offset,
+            'data'    => $data,
+        );
+    }
+
 
     public static function institutional_admin_search_user($query, $institution, $limit) {
         $sql = '
