@@ -508,6 +508,10 @@ class User {
         $this->staffinstitutions  = $staffinstitutions;
     }
 
+    public function can_view_artefact($a) {
+        return $this->get('admin') || $this->get('id') == $a->get('owner');
+    }
+
 }
 
 
