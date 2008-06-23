@@ -28,24 +28,31 @@ define('INTERNAL', 1);
 define('MENUITEM', 'groups/groupsiown');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
+require_once('group.php');
 define('TITLE', get_string('editgroup', 'group'));
 
 $id = param_integer('id');
 
-$group_data = get_record('group', 'id', $id, 'owner', $USER->get('id'), 'deleted', 0);
+$group_data = get_record_sql("SELECT g.name, g.description, g.grouptype, g.jointype
+    FROM {group} g
+    INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
+    WHERE g.id = ?
+    AND g.deleted = 0", array($USER->get('id'), $id));
 
 if (!$group_data) {
     $SESSION->add_error_msg(get_string('canteditdontown'));
     redirect('/group/mygroups.php');
 }
 
-$joinoptions = array(
-    'invite'     => get_string('membershiptype.invite', 'group'),
-    'request'    => get_string('membershiptype.request', 'group'),
-    'open'       => get_string('membershiptype.open', 'group'),
-);
-if ($USER->can_create_controlled_groups()) {
-    $joinoptions['controlled'] = get_string('membershiptype.controlled', 'group');
+$groupoptions = array();
+foreach (group_get_grouptypes() as $grouptype) {
+    require_once('grouptype/' . $grouptype . '.php');
+    if (call_static_method('GroupType' . $grouptype, 'can_be_created_by_user')) {
+        $grouptypename = get_string('name', 'group.' . $grouptype);
+        foreach (call_static_method('GroupType' . $grouptype, 'allowed_join_types') as $jointype) {
+            $groupoptions["$grouptype.$jointype"] = $grouptypename . ': ' . get_string($jointype, 'group');
+        }
+    }
 }
 
 $editgroup = pieform(array(
@@ -67,11 +74,11 @@ $editgroup = pieform(array(
             'cols'         => 55,
             'defaultvalue' => $group_data->description,
         ),
-        'membershiptype' => array(
+        'grouptype' => array(
             'type'         => 'select',
-            'title'        => get_string('membershiptype', 'group'),
-            'options'      => $joinoptions,
-            'defaultvalue' => $group_data->jointype,
+            'title'        => get_string('grouptype', 'group'),
+            'options'      => $groupoptions,
+            'defaultvalue' => $group_data->grouptype . '.' . $group_data->jointype,
             'help'         => true,
         ),
         'id'          => array(
@@ -86,10 +93,7 @@ $editgroup = pieform(array(
 ));
 
 function editgroup_validate(Pieform $form, $values) {
-    global $USER;
-    global $SESSION;
-
-    $cid = get_field('group', 'id', 'owner', $USER->get('id'), 'name', $values['name']);
+    $cid = get_field('group', 'id', 'name', $values['name']);
 
     if ($cid && $cid != $values['id']) {
         $form->set_error('name', get_string('groupalreadyexists', 'group'));
@@ -108,30 +112,20 @@ function editgroup_submit(Pieform $form, $values) {
 
     $now = db_format_timestamp(time());
 
+    list($grouptype, $jointype) = explode('.', $values['grouptype']);
+
     update_record(
         'group',
         (object) array(
             'id'             => $values['id'],
             'name'           => $values['name'],
             'description'    => $values['description'],
-            'jointype'       => $values['membershiptype'],
+            'grouptype'      => $grouptype,
+            'jointype'       => $jointype,
             'mtime'          => $now,
         ),
         'id'
     );
-
-    // Ensure the user is marked a tutor of the group if necessary
-    if ($values['membershiptype'] == 'controlled' && $USER->can_create_controlled_groups()) {
-        update_record(
-            'group_member',
-            (object) array(
-                'group'  => $values['id'],
-                'member' => $USER->get('id'),
-                'tutor'  => 1
-            ),
-            array('group', 'member')
-        );
-    }
 
     $SESSION->add_ok_msg(get_string('groupsaved', 'group'));
 
