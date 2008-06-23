@@ -1070,6 +1070,21 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql('ALTER TABLE {artefact} ADD CONSTRAINT {arte_gro_fk} FOREIGN KEY ("group") REFERENCES {group}(id)');
     }
 
+    if ($oldversion < 2008062301) {
+        execute_sql('CREATE TABLE {artefact_access_role} (
+            role TEXT NOT NULL,
+            artefact INTEGER NOT NULL REFERENCES {artefact}(id),
+            can_view SMALLINT NOT NULL,
+            can_edit SMALLINT NOT NULL,
+            can_republish SMALLINT NOT NULL
+        );');
+        execute_sql('CREATE TABLE {artefact_access_usr} (
+            usr INTEGER NOT NULL REFERENCES {usr}(id),
+            artefact INTEGER NOT NULL REFERENCES {artefact}(id),
+            can_republish SMALLINT
+        );');
+    }
+
     return $status;
 
 }

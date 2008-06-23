@@ -509,7 +509,19 @@ class User {
     }
 
     public function can_view_artefact($a) {
-        return $this->get('admin') || $this->get('id') == $a->get('owner');
+        if ($this->get('admin')
+            || $this->get('id') == $a->get('owner')
+            || $this->is_institutional_admin($a->get('institution'))) {
+            return true;
+        }
+        if ($a->get('group')) {
+            // Only group artefacts can have artefact_access_role & artefact_access_usr records
+            return (bool) count_records_sql("SELECT COUNT(*) FROM {artefact_access_role} ar
+                INNER JOIN {group_member} g ON ar.role = g.role
+                WHERE ar.artefact = ? AND g.member = ? AND ar.can_view = 1", array($a->get('id'), $this->get('id')))
+                || record_exists('artefact_access_usr', 'usr', $this->get('id'), 'artefact', $a->get('id'));
+        }
+        return false;
     }
 
 }

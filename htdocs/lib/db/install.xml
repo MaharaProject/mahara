@@ -268,6 +268,31 @@
                 <KEY NAME="parentfk" TYPE="foreign" FIELDS="parent" REFTABLE="artefact" REFFIELDS="id" />
             </KEYS>
         </TABLE>
+        <TABLE NAME="artefact_access_usr">
+            <FIELDS>
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="can_republish" TYPE="int" LENGTH="1" NOTNULL="false" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="usr,artefact" />
+                <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="artefact_access_role">
+            <FIELDS>
+                <FIELD NAME="role" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="can_view" TYPE="int" LENGTH="1" NOTNULL="true" />
+                <FIELD NAME="can_edit" TYPE="int" LENGTH="1" NOTNULL="true" />
+                <FIELD NAME="can_republish" TYPE="int" LENGTH="1" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="role,artefact" />
+                <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
         <TABLE NAME="group">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
