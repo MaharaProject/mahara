@@ -31,7 +31,11 @@ require_once('pieforms/pieform.php');
 require('group.php');
 $groupid = param_integer('id');
 
-$group = get_record('group', 'id', $groupid, 'owner', $USER->get('id'), 'deleted', 0);
+$group = get_record_sql("SELECT g.name
+    FROM {group} g
+    INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
+    WHERE g.id = ?
+    AND g.deleted = 0", array($USER->get('id'), $groupid));
 
 if (!$group) {
     throw new AccessDeniedException(get_string('cantdeletegroup', 'group'));
