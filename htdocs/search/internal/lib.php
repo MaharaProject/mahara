@@ -99,12 +99,11 @@ class PluginSearchInternal extends PluginSearch {
                 LEFT JOIN {artefact} a ON u.id=a.owner
                 ';
         if (isset($data['group'])) {
-            $sql .= 'INNER JOIN {group_member} gm ON (gm.member = u.id AND gm.group = ' . (int)$data['group'] . ')
-                ';
-            if (isset($data['owner']) && !$data['owner']) {
-                $sql .= 'INNER JOIN {group} g ON (g.id = gm.group AND g.owner != u.id)
-                    ';
+            $groupadminsql = '';
+            if (isset($data['includeadmins']) and !$data['includeadmins']) {
+                $groupadminsql = " AND gm.role != 'admin'";
             }
+            $sql .= 'INNER JOIN {group_member} gm ON (gm.member = u.id AND gm.group = ' . (int)$data['group'] . $groupadminsql . ")\n";
         }
         $querydata = split(' ', preg_replace('/\s\s+/', ' ', strtolower(trim($query_string))));
         $namesql = '(
@@ -142,12 +141,11 @@ class PluginSearchInternal extends PluginSearch {
                     INNER JOIN {usr} u ON u.id = a.owner
                 ';
             if (isset($data['group'])) {
-                $sql .= 'INNER JOIN {group_member} gm ON (gm.member = u.id AND gm.group = ' . (int)$data['group'] . ')
-                    ';
-                if (isset($data['owner']) && !$data['owner']) {
-                    $sql .= 'INNER JOIN {group} g ON (g.id = gm.group AND g.owner != u.id)
-                        ';
-                    }
+                $groupadminsql = '';
+                if (isset($data['includeadmins']) and !$data['includeadmins']) {
+                    $groupadminsql = " AND gm.role != 'admin'";
+                }
+                $sql .= 'INNER JOIN {group_member} gm ON (gm.member = u.id AND gm.group = ' . (int)$data['group'] . $groupadminsql . ")\n";
             }
             $sql .= 'WHERE
                     u.id <> 0 AND u.active = 1 AND u.deleted = 0

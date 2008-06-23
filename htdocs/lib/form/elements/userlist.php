@@ -71,7 +71,7 @@ function pieform_element_userlist(Pieform $form, $element) {
 
     if (!empty($element['group'])) {
         $smarty->assign('group', $element['group']);
-        $smarty->assign('owner', !isset($element['owner']) || $element['owner'] ? 1 : 0);
+        $smarty->assign('includeadmins', !isset($element['includeadmins']) || $element['includeadmins'] ? 1 : 0);
     }
     if (empty($element['searchscript'])) {
         $element['searchscript'] = 'json/usersearch.php';
