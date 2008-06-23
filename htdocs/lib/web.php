@@ -2018,7 +2018,11 @@ function clean_text($text) {
 function display_cleaned_html($html, $filename, $params) {
     $smarty = smarty_core();
     $smarty->assign('params', $params);
-    $smarty->assign('htmlremovedmessage', get_string('htmlremovedmessage', 'artefact.file', $filename, get_config('wwwroot') . 'user/view.php?id=' . $params['owner'], display_name($params['owner'])));
+    if ($params['owner']) {
+        $smarty->assign('htmlremovedmessage', get_string('htmlremovedmessage', 'artefact.file', $filename, get_config('wwwroot') . 'user/view.php?id=' . $params['owner'], display_name($params['owner'])));
+    } else {
+        $smarty->assign('htmlremovedmessage', get_string('htmlremovedmessagenoowner', 'artefact.file', $filename));
+    }
     $smarty->assign('content', clean_text($html));
     $smarty->display('cleanedhtml.tpl');
     exit;

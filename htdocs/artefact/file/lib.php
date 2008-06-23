@@ -255,7 +255,6 @@ class PluginArtefactFile extends PluginArtefact {
 
 abstract class ArtefactTypeFileBase extends ArtefactType {
 
-    protected $adminfiles = 0;
     protected $size;
     // The original filename extension (when the file is first
     // uploaded) is saved here.  This is used as a workaround for IE's
@@ -334,7 +333,6 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $data = (object)array(
             'artefact'      => $this->get('id'),
             'size'          => $this->get('size'),
-            'adminfiles'    => $this->get('adminfiles'),
             'oldextension'  => $this->get('oldextension')
         );
 
@@ -380,14 +378,22 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
 
     // Check if something exists in the db with a given title and parent,
     // either in adminfiles or with a specific owner.
-    public static function file_exists($title, $owner, $folder, $adminfiles=false) {
+    public static function file_exists($title, $owner, $folder, $institution=null) {
         $filetypesql = "('" . join("','", PluginArtefactFile::get_artefact_types()) . "')";
+        $phvals = array($title);
+        if ($institution) {
+            $ownersql = 'a.institution = ? AND a.owner IS NULL';
+            $phvals[] = $institution;
+        } else {
+            $ownersql = 'a.institution IS NULL AND a.owner = ?';
+            $phvals[] = $owner;
+        }
         return get_field_sql('SELECT a.id FROM {artefact} a
             LEFT OUTER JOIN {artefact_file_files} f ON f.artefact = a.id
-            WHERE ' . ($adminfiles ? 'f.adminfiles = 1' : 'f.adminfiles <> 1 AND a.owner = ' . $owner) . '
-            AND a.title = ?
+            WHERE a.title = ?
+            AND ' . $ownersql . '
             AND a.parent ' . (empty($folder) ? ' IS NULL' : ' = ' . $folder) . '
-            AND a.artefacttype IN ' . $filetypesql, array($title));
+            AND a.artefacttype IN ' . $filetypesql, $phvals);
     }
 
 
@@ -398,13 +404,21 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     }
 
 
-    public static function get_my_files_data($parentfolderid, $userid, $adminfiles=false) {
+    public static function get_my_files_data($parentfolderid, $userid, $institution=null) {
 
         $foldersql = $parentfolderid ? ' = ' . $parentfolderid : ' IS NULL';
 
+        if ($institution) {
+            $ownersql = 'a.institution = ? AND a.owner IS NULL';
+            $phvals = array($institution);
+        } else {
+            $ownersql = 'a.institution IS NULL AND a.owner = ?';
+            $phvals = array($userid);
+        }
+
         // if blogs are installed then also return the number of blog
         // posts each file is attached to
-        $bloginstalled = !$adminfiles && get_field('artefact_installed', 'active', 'name', 'blog');
+        $bloginstalled = get_field('artefact_installed', 'active', 'name', 'blog');
 
         $filetypesql = "('" . join("','", PluginArtefactFile::get_artefact_types()) . "')";
         $filedata = get_records_sql_array('
@@ -418,10 +432,10 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 . ($bloginstalled ? ('LEFT OUTER JOIN
                                      {artefact_blog_blogpost_file} b ON b.file = a.id') : '') . '
             WHERE a.parent' . $foldersql . '
-                AND ' . ($adminfiles ? 'f.adminfiles = 1' : ('f.adminfiles = 0 AND a.owner = ' . $userid)) . '
+                AND ' . $ownersql . '
                 AND a.artefacttype IN ' . $filetypesql . '
             GROUP BY
-                1, 2, 3, 4, 5, 6;', '');
+                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description;', $phvals);
 
         if (!$filedata) {
             $filedata = array();
@@ -539,11 +553,10 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
         $size = $um->file['size'];
         global $USER;
-        if (!$USER->quota_allowed($size) && !$data->adminfiles) {
+        if (!$USER->quota_allowed($size) && !$data->institution) {
             return get_string('uploadexceedsquota', 'artefact.file');
         }
         $f = self::new_file($um->file['tmp_name'], $data);
-        $f->set('owner', $USER->id);
         $f->set('size', $size);
         $f->set('oldextension', $um->original_filename_extension());
         $f->commit();
@@ -575,12 +588,12 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
     public static function get_admin_files($public) {
         $pubfolder = ArtefactTypeFolder::admin_public_folder_id();
-        $artefacts = get_records_sql_assoc('
+        $artefacts = get_records_sql_assoc("
             SELECT
                 a.id, a.title, a.parent, a.artefacttype
             FROM {artefact} a
                 INNER JOIN {artefact_file_files} f ON f.artefact = a.id
-            WHERE f.adminfiles = 1', array());
+            WHERE a.institution = 'mahara'", array());
 
         $files = array();
         if (!empty($artefacts)) {
@@ -617,7 +630,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             unlink($file);
             global $USER;
             // Deleting other users' files won't lower their quotas yet...
-            if (!$this->adminfiles && $USER->id == $this->get('owner')) {
+            if (!$this->institution && $USER->id == $this->get('owner')) {
                 $USER->quota_remove($size);
                 $USER->commit();
             }
@@ -790,15 +803,15 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         // name of the directory uses the site language rather than
         // the language of the admin who first creates it.
         $name = get_string_from_language(get_config('lang'), 'adminpublicdirname', 'admin');
-        $folderid = get_field_sql('
+        $folderid = get_field_sql("
            SELECT
              a.id
            FROM {artefact} a
              INNER JOIN {artefact_file_files} f ON a.id = f.artefact
            WHERE a.title = ?
              AND a.artefacttype = ?
-             AND f.adminfiles = 1
-             AND a.parent IS NULL', array($name, 'folder'));
+             AND a.institution = 'mahara'
+             AND a.parent IS NULL", array($name, 'folder'));
         if (!$folderid) {
             global $USER;
             if (get_field('usr', 'admin', 'id', $USER->id)) {
@@ -807,7 +820,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
                 $data = (object) array('title' => $name,
                                        'description' => $description,
                                        'owner' => $USER->id,
-                                       'adminfiles' => 1);
+                                       'institution' => 'mahara');
                 $f = new ArtefactTypeFolder(0, $data);
                 $f->commit();
                 $folderid = $f->get('id');
@@ -820,15 +833,15 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
     public static function change_public_folder_name($oldlang, $newlang) {
         $oldname = get_string_from_language($oldlang, 'adminpublicdirname', 'admin');
-        $folderid = get_field_sql('
+        $folderid = get_field_sql("
            SELECT
              a.id
            FROM {artefact} a
              INNER JOIN {artefact_file_files} f ON a.id = f.artefact
            WHERE a.title = ?
              AND a.artefacttype = ?
-             AND f.adminfiles = 1
-             AND a.parent IS NULL', array($oldname, 'folder'));
+             AND a.institution = 'mahara'
+             AND a.parent IS NULL", array($oldname, 'folder'));
 
         if (!$folderid) {
             return;

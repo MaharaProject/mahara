@@ -37,7 +37,7 @@ $description      = param_variable('description', null);
 $tags             = param_variable('tags', null);
 $uploadnumber     = param_integer('uploadnumber'); // id of target iframe
 $collideaction    = param_variable('collideaction', 'fail');
-$adminfiles       = param_boolean('adminfiles', false);
+$institution      = param_alpha('institution', null);
 
 $data = new StdClass;
 if ($parentfolder) {
@@ -46,15 +46,18 @@ if ($parentfolder) {
 $data->title = $title;
 $data->description = $description;
 $data->tags = $tags;
-$data->owner = $USER->get('id');
-$data->adminfiles = (int) $adminfiles;
+if ($institution) {
+    $data->institution = $institution;
+} else {
+    $data->owner = $USER->get('id');
+}
 $data->container = 0;
 $data->locked = 0;
 
 $result = new StdClass;
 $result->uploadnumber = $uploadnumber;
 
-if ($oldid = ArtefactTypeFileBase::file_exists($title, $data->owner, $parentfolder, $adminfiles)) {
+if ($oldid = ArtefactTypeFileBase::file_exists($title, $data->owner, $parentfolder, $institution)) {
     if ($collideaction == 'replace') {
         $obj = artefact_instance_from_id($oldid);
         $obj->delete();

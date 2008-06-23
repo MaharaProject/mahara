@@ -68,13 +68,13 @@ else {
 
     // If the file is in the public directory, it's fine to serve
     $fileispublic = $file->get('parent') == ArtefactTypeFolder::admin_public_folder_id();
-    $fileispublic &= $file->get('adminfiles');
+    $fileispublic &= $file->get('institution') == 'mahara';
     $fileispublic &= record_exists('site_menu', 'file', $fileid, 'public', 1);
 
     if (!$fileispublic) {
         // If the file is in the logged in menu and the user is logged in then
         // they can view it
-        $fileinloggedinmenu = $file->get('adminfiles');
+        $fileinloggedinmenu = $file->get('institution') == 'mahara';
         $fileinloggedinmenu &= $file->get('parent') == null;
         $fileinloggedinmenu &= record_exists('site_menu', 'file', $fileid, 'public', 0);
         $fileinloggedinmenu &= $USER->is_logged_in();

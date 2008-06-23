@@ -94,6 +94,7 @@ abstract class ArtefactType {
     protected $description;
     protected $note;
     protected $tags = array();
+    protected $institution;
 
     protected $viewsinstances;
     protected $viewsmetadata;

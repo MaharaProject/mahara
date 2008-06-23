@@ -1056,6 +1056,15 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql('ALTER TABLE {group_member} DROP tutor');
     }
 
+    if ($oldversion < 2008062000) {
+        execute_sql("
+        ALTER TABLE {artefact} ADD COLUMN institution CHARACTER VARYING(255);
+        ALTER TABLE {artefact} ALTER COLUMN owner DROP NOT NULL;
+        ALTER TABLE {artefact} ADD CONSTRAINT {arte_ins_fk} FOREIGN KEY (institution) REFERENCES {institution}(name);
+        UPDATE {artefact} SET institution = 'mahara', owner = NULL WHERE id IN (SELECT artefact FROM {artefact_file_files} WHERE adminfiles = 1)");
+        execute_sql("ALTER TABLE {artefact_file_files} DROP COLUMN adminfiles");
+    }
+
     return $status;
 
 }
