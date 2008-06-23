@@ -39,22 +39,24 @@ $folder_id = param_integer('folder', null);
 if ($folder_id) {
     $folder_list = array();
 
-    $current_folder = get_record('artefact', 'id', $folder_id);
+    $current_folder = artefact_instance_from_id($folder_id);
 
-    if ($current_folder->artefacttype == 'folder') {
-        $folder_list[] = array(
-            'id'   => $current_folder->id,
-            'name' => $current_folder->title,
-        );
-    }
+    if ($USER->can_view_artefact($current_folder)) {
+        if ($current_folder->get('artefacttype') == 'folder') {
+            $folder_list[] = array(
+                'id'   => $current_folder->get('id'),
+                'name' => $current_folder->get('title'),
+            );
+        }
 
-    while ($current_folder->parent) {
-        $current_folder = get_record('artefact', 'id', $current_folder->parent);
+        while ($p = $current_folder->get('parent')) {
+            $current_folder = artefact_instance_from_id($p);
 
-        $folder_list[] = array(
-            'id'   => $current_folder->id,
-            'name' => $current_folder->title,
-        );
+            $folder_list[] = array(
+                'id'   => $current_folder->get('id'),
+                'name' => $current_folder->get('title'),
+            );
+        }
     }
 
     $enc_folders = json_encode(array_reverse($folder_list));
