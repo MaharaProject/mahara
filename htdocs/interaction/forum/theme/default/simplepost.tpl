@@ -12,7 +12,7 @@
 	<td class="forumpostleft">
 	<div class="posttime">{$post->ctime}</div>
 	<h5><a href="{$WWWROOT}user/view.php?id={$post->poster}"
-{if $post->poster == $groupowner} class="groupowner"
+{if in_array($post->poster, $groupadmins)} class="groupadmin"
 {elseif $post->moderator} class="moderator"
 {/if}
 >

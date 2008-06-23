@@ -19,7 +19,7 @@
     </td>
     <td class="forumposter">
     <a href="{$WWWROOT}user/view.php?id={$topic->poster}"
-    {if $topic->poster == $groupowner} class="groupowner"
+    {if in_array($topic->poster, $groupadmins)} class="groupadmin"
     {elseif $topic->moderator} class="moderator"
     {/if}
     >
@@ -31,7 +31,7 @@
     <td class="lastpost">
     {if !$topic->lastpostdeleted}
     <a href="{$WWWROOT}user/view.php?id={$topic->lastposter}"
-    {if $topic->lastposter == $groupowner} class="groupowner"
+    {if in_array($topic->lastposter, $groupadmins)} class="groupadmin"
     {elseif $topic->lastpostermoderator} class="moderator"
     {/if}
     >

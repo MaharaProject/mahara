@@ -2012,7 +2012,7 @@ span.breadcrumbs a {
 	font-size: 11px;
 	padding: 0 5px;
 }
-.groupowner, a.groupowner {
+.groupadmin, a.groupadmin {
     color: #d32a8a;
 }
 .moderator, a.moderator{

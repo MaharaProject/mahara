@@ -14,10 +14,10 @@
 </div>
 {/if}
 <br>
-{str tag="groupownerlist" section="interaction.forum"}
-<a href="{$WWWROOT}user/view.php?id={$groupowner}" class="groupowner">
-<img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupowner}" alt="">
-{$groupowner|display_name|escape}</a>
+{str tag="groupadminlist" section="interaction.forum"}
+{foreach name=groupadmins from=$groupadmins item=groupadmin}<a href="{$WWWROOT}user/view.php?id={$groupadmin}" class="groupadmin">
+<img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupadmin}" alt="">
+{$groupadmin|display_name|escape}</a>{if !$smarty.foreach.groupadmins.last}, {/if}{/foreach}
 </div>
 {if $forums}
 <table id="forumslist">
