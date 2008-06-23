@@ -365,6 +365,19 @@ function delete_group($groupid) {
 }
 
 /**
+ * Returns a list of user IDs who are admins for a group
+ *
+ * @param int
+ * @return array
+ */
+function group_get_admin_ids($group) {
+    return (array)get_column_sql("SELECT member
+        FROM {group_member}
+        WHERE \"group\" = ?
+        AND role = 'admin'", $group);
+}
+
+/**
  * Sets up groups for display in mygroups.php and find.php
  *
  * @param array $groups    Initial group data, including the current user's 
