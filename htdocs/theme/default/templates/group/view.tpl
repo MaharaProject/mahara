@@ -23,7 +23,7 @@
                         <td>
                             <h3>{str tag=Members section=group}</h3>
                             <form action="{$WWWROOT}group/view.php" method="post">
-                                <input type="hidden" name="id" value="{$group->id|escape}">
+                                <input type="hidden" id="groupid" name="id" value="{$group->id|escape}">
                                 <div class="searchform center" style="margin-bottom: .5em;">
                                     <label>{str tag='Query' section='admin'}:
                                         <input type="text" name="query" id="query" value="{$query|escape}">
@@ -40,8 +40,6 @@
                                 {$pagination}
                                 <script type="text/javascript">{$pagination_js}</script>
                             </form>
-
-                            <input type="submit" class="submit" value="Update Membership">
                         </td>
                         <td>
                             <h3>Latest Forum Posts</h3>
