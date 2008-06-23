@@ -1065,6 +1065,11 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("ALTER TABLE {artefact_file_files} DROP COLUMN adminfiles");
     }
 
+    if ($oldversion < 2008062300) {
+        execute_sql('ALTER TABLE {artefact} ADD COLUMN "group" BIGINT');
+        execute_sql('ALTER TABLE {artefact} ADD CONSTRAINT {arte_gro_fk} FOREIGN KEY ("group") REFERENCES {group}(id)');
+    }
+
     return $status;
 
 }

@@ -228,6 +228,7 @@
                 <FIELD NAME="parent" TYPE="int" LENGTH="10" NOTNULL="false"  />
                 <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="false" />
+                <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true"  />
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true"  />
                 <FIELD NAME="atime" TYPE="datetime" NOTNULL="true"  />
@@ -242,6 +243,7 @@
                 <KEY NAME="parentfk" TYPE="foreign" FIELDS="parent" REFTABLE="artefact" REFFIELDS="id" />
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name" />
+                <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <TABLE NAME="artefact_tag">
