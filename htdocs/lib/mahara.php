@@ -1843,7 +1843,7 @@ function recalculate_quota() {
 
     foreach ($userquotas as $user => $quota) {
         $data = (object) array(
-            'quota' => $quota
+            'quotaused' => $quota
         );
         $where = (object) array(
             'id' => $user
