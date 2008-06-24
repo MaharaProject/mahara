@@ -38,7 +38,7 @@ require_once('pieforms/pieform.php');
 $smarty = smarty();
 
 // Get users who are currently staff
-$staffusers = get_column('usr', 'id', 'staff', 1);
+$staffusers = get_column('usr', 'id', 'staff', 1, 'deleted', 0);
 
 $form = array(
     'name' => 'staffusers',

@@ -39,7 +39,7 @@ $smarty = smarty();
 
 // Get users who are currently administrators
 // @todo later, exclude the user with uid 1
-$adminusers = get_column('usr', 'id', 'admin', 1);
+$adminusers = get_column('usr', 'id', 'admin', 1, 'deleted', 0);
 
 $form = array(
     'name' => 'adminusers',
