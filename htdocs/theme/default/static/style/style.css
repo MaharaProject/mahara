@@ -1397,18 +1397,19 @@ fieldset.collapsed .mceEditor td {
 	color: #3986c3 !important;
 }
 #myviewstable .viewitem a#editviewdetails,
+#myviewstable .viewitem a#editthisview,
 #myviewstable .viewitem a#editviewaccess {
 	color: #7f9d16 !important;
 }
 #editviewdetails,
+#editthisview,
 #editviewaccess {
 	padding-left: 15px;
 	background: url(../images/edit.gif) no-repeat left 2px;
 	font-size: 12px !important;
 	font-weight: bold;
 }
-#btn-edit,
-#btn-editthisview {
+#btn-edit {
 	padding-left: 12px;
 	font-size: 11px;
 	background: url(../images/icon-edit.gif) no-repeat left 4px;
@@ -1418,13 +1419,11 @@ fieldset.collapsed .mceEditor td {
 	font-size: 11px;
 	background: url(../images/icon-reply.gif) no-repeat left 4px;
 }
-#btn-editthisview:hover {
-	text-decoration: none;
-}
 #btn-deletethisview {
 	margin-left: 10px;
 	padding-left: 12px;
-	font-size: 11px;
+	font-size: 13px;
+    font-weight: bold;
 	background: url(../images/icon-delete.gif) no-repeat left 6px;
 }
 #btn-deletethisview:hover {
