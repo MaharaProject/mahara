@@ -44,7 +44,12 @@ if ($institution === false) {
 }
 
 // Get users who are currently staff
-$staffusers = get_column('usr_institution', 'usr', 'staff', 1, 'institution', $institution);
+$staffusers = get_column_sql('SELECT ui.usr
+    FROM {usr_institution} ui
+    LEFT JOIN  {usr} u ON ui.usr = u.id
+    WHERE ui.staff = 1
+    AND ui.institution = ?
+    AND u.deleted = 0', array($institution));
 
 $form = array(
     'name' => 'staffusers',

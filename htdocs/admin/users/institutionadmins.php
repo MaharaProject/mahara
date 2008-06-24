@@ -44,7 +44,12 @@ if ($institution === false) {
 }
 
 // Get users who are currently admins
-$adminusers = get_column('usr_institution', 'usr', 'admin', 1, 'institution', $institution);
+$adminusers = get_column_sql('SELECT ui.usr
+    FROM {usr_institution} ui
+    LEFT JOIN  {usr} u ON ui.usr = u.id
+    WHERE ui.admin = 1
+    AND ui.institution = ?
+    AND u.deleted = 0', array($institution));
 
 $form = array(
     'name' => 'adminusers',
