@@ -307,15 +307,15 @@ else {
             COALESCE(a.staff, 0) AS staff,
             COALESCE(a.admins, 0) AS admins
         FROM
-            institution ii
+            {institution} ii
             LEFT JOIN
                 (SELECT
                     i.name, i.displayname, i.maxuseraccounts,
                     COUNT(ui.usr) AS members, SUM(ui.staff) AS staff, SUM(ui.admin) AS admins
                 FROM
-                    institution i
-                    LEFT OUTER JOIN usr_institution ui ON (ui.institution = i.name)
-                    LEFT OUTER JOIN usr u ON (u.id = ui.usr)
+                    {institution} i
+                    LEFT OUTER JOIN {usr_institution} ui ON (ui.institution = i.name)
+                    LEFT OUTER JOIN {usr} u ON (u.id = ui.usr)
                 WHERE
                     (u.deleted = 0 OR u.id IS NULL)' . $where . '
                 GROUP BY
