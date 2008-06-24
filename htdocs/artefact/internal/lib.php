@@ -552,6 +552,11 @@ class ArtefactTypeProfileIcon extends ArtefactTypeProfileField {
     public function in_view_list() {
         return true;
     }
+
+    public static function get_quota_usage($artefact) {
+        return filesize(get_config('dataroot') . 'artefact/internal/profileicons/originals/'
+            . ($artefact % 256) . '/' . $artefact);
+    }
 }
 
 
