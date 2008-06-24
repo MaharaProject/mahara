@@ -754,8 +754,7 @@ fieldset.collapsed .mceEditor td {
 	font-size: 12pt !important;
 	font-weight: bold;
 }
-#btn-edit,
-#btn-editthisview {
+#btn-edit {
 	padding-left: 12px;
 }
 #btn-reply {

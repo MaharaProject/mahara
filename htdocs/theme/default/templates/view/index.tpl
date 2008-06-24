@@ -13,7 +13,6 @@
     <td>
     {if !$view.submittedto}
         <a href="{$WWWROOT}view/delete.php?id={$view.id}" class="fr" id="btn-deletethisview">{str tag="deletethisview" section="view"}</a>
-        <a href="{$WWWROOT}view/blocks.php?id={$view.id}" class="fr" id="btn-editthisview">{str tag ="editthisview" section="view"}</a>
     {/if}
     <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a></h3>
     <div class="viewitem">
@@ -26,8 +25,9 @@
     {/if}
     </div>
     <div class="viewitem">
+        {if !$view.submittedto}<a href="{$WWWROOT}view/blocks.php?id={$view.id}" id="editthisview">{str tag ="editthisview" section="view"}</a><br>{/if}
     {if $view.artefacts}
-        <strong>{str tag="artefacts" section="view"}:</strong><br />
+        {str tag="artefacts" section="view"}:
         {foreach from=$view.artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$view.id}" id="link-artefacts">{$artefact.title|escape}</a>{if !$smarty.foreach.artefacts.last}, {/if}{/foreach}
     {/if}
     </div>
