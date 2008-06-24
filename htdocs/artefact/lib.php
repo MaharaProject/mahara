@@ -245,6 +245,18 @@ abstract class ArtefactType {
         return get_record('artefact','id',$this->parent);
     }
 
+    /**
+     * Returns how much quota this artefact has used.
+     *
+     * It should try to not instantiate the artefact, because it is normally 
+     * called as part of an expensive cron job
+     *
+     * @return int Size in bytes that the artefact is taking up in quota
+     */
+    public static function get_quota_usage($artefact) {
+        return 0;
+    }
+
     public function get($field) {
         if (!property_exists($this, $field)) {
             throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));

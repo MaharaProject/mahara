@@ -978,6 +978,18 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $cron);
     }
 
+    if ($oldversion < 2008040203) {
+        // Install a cron job to recalculate user quotas
+        $cron = new StdClass;
+        $cron->callfunction = 'recalculate_quota';
+        $cron->minute       = '15';
+        $cron->hour         = '2';
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
+        insert_record('cron', $cron);
+    }
+
     return $status;
 
 }

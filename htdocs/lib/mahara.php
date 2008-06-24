@@ -1818,4 +1818,38 @@ function profile_sideblock() {
     return $data;
 }
 
+/**
+ * Cronjob to recalculate how much quota each user is using and update it as 
+ * appropriate.
+ *
+ * This gives a backstop for the possibility that there is a bug elsewhere that 
+ * has caused the quota count to get out of sync
+ */
+function recalculate_quota() {
+    if (!$artefacts = get_records_array('artefact', '', '', '', 'id, artefacttype, owner')) {
+        // Nothing to do
+        return;
+    }
+
+    $userquotas = array();
+
+    foreach ($artefacts as $artefact) {
+        safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact->artefacttype));
+        if (!isset($userquotas[$artefact->owner])) {
+            $userquotas[$artefact->owner] = 0;
+        }
+        $userquotas[$artefact->owner] += call_static_method(generate_artefact_class_name($artefact->artefacttype), 'get_quota_usage', $artefact->id);
+    }
+
+    foreach ($userquotas as $user => $quota) {
+        $data = (object) array(
+            'quota' => $quota
+        );
+        $where = (object) array(
+            'id' => $user
+        );
+        update_record('usr', $data, $where);
+    }
+}
+
 ?>

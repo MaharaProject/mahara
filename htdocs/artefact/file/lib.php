@@ -728,6 +728,10 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
         return false;
     }
+
+    public static function get_quota_usage($artefact) {
+        return get_field('artefact_file_files', 'size', 'artefact', $artefact);
+    }
 }
 
 class ArtefactTypeFolder extends ArtefactTypeFileBase {
