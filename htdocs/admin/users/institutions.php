@@ -300,17 +300,33 @@ else {
     }
     $institutions = get_records_sql_assoc('
         SELECT
-            i.name, i.displayname, i.maxuseraccounts, 
-            COUNT(ui.usr) AS members, SUM(ui.staff) AS staff, SUM(ui.admin) AS admins
-        FROM {institution} i
-        LEFT OUTER JOIN {usr_institution} ui ON (ui.institution = i.name)
-        LEFT OUTER JOIN {usr} u ON (u.id = ui.usr) 
-        WHERE (u.deleted = 0 OR u.id IS NULL) ' . $where . '
-        GROUP BY
-            i.name, i.displayname, i.maxuseraccounts
-        ORDER BY i.name = \'mahara\', i.displayname', array());
+            ii.name,
+            ii.displayname,
+            ii.maxuseraccounts,
+            COALESCE(a.members, 0) AS members,
+            COALESCE(a.staff, 0) AS staff,
+            COALESCE(a.admins, 0) AS admins
+        FROM
+            institution ii
+            LEFT JOIN
+                (SELECT
+                    i.name, i.displayname, i.maxuseraccounts,
+                    COUNT(ui.usr) AS members, SUM(ui.staff) AS staff, SUM(ui.admin) AS admins
+                FROM
+                    institution i
+                    LEFT OUTER JOIN usr_institution ui ON (ui.institution = i.name)
+                    LEFT OUTER JOIN usr u ON (u.id = ui.usr)
+                WHERE
+                    (u.deleted = 0 OR u.id IS NULL)' . $where . '
+                GROUP BY
+                    i.name, i.displayname, i.maxuseraccounts
+                ORDER BY
+                    i.name = \'mahara\', i.displayname
+             ) a ON (a.name = ii.name)', array());
     if (isset($defaultinstmembers)) {
         $institutions['mahara']->members = $defaultinstmembers;
+        $institutions['mahara']->staff   = '';
+        $institutions['mahara']->admins  = '';
     }
     $smarty->assign('institutions', $institutions);
 }
