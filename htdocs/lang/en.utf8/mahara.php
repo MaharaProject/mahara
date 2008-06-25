@@ -478,6 +478,7 @@ $string['Artefact'] = 'Artefact';
 $string['Artefacts'] = 'Artefacts';
 $string['artefactnotfound'] = 'Artefact with id %s not found';
 $string['artefactnotrendered'] = 'Artefact not rendered';
+$string['nodeletepermission'] = 'You do not have permission to delete this artefact';
 $string['noeditpermission'] = 'You do not have permission to edit this artefact';
 $string['Permissions'] = 'Permissions';
 $string['republish'] = 'Publish';

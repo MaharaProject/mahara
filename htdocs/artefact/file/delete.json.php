@@ -36,9 +36,10 @@ $fileid = param_integer('id');
 require_once(get_config('docroot') . 'artefact/lib.php');
 
 $artefact = artefact_instance_from_id($fileid);
+if (!$USER->can_edit_artefact($artefact)) {
+    json_reply('local', get_string('nodeletepermission', 'mahara'));
+}
 $artefact->delete();
-
-global $USER;
 
 json_reply(false, array('message' => get_string('filethingdeleted', 'artefact.file', 
                                                 get_string($artefact->get('artefacttype'),

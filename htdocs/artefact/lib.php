@@ -403,6 +403,8 @@ abstract class ArtefactType {
         delete_records('view_artefact', 'artefact', $this->id);
         delete_records('artefact_feedback', 'artefact', $this->id);
         delete_records('artefact_tag', 'artefact', $this->id);
+        delete_records('artefact_access_role', 'artefact', $this->id);
+        delete_records('artefact_access_usr', 'artefact', $this->id);
       
         // Delete the record itself.
         delete_records('artefact', 'id', $this->id);
