@@ -244,4 +244,5 @@ $string['deleteinteractionsure'] = 'Are you sure you want to do this? It cannot 
 $string['interactiondeleted'] = '%s deleted successfully';
 $string['addnewinteraction'] = 'Add new %s';
 $string['title'] = 'Title';
+$string['Role'] = 'Role';
 ?>

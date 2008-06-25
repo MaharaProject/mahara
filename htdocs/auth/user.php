@@ -524,6 +524,24 @@ class User {
         return false;
     }
 
+    public function can_edit_artefact($a) {
+        if ($this->get('admin')
+            || $this->get('id') === $a->get('owner')
+            || $this->is_institutional_admin($a->get('institution'))) {
+            return true;
+        }
+        $group = $a->get('group');
+        if ($group) {
+            // @todo: Call group_user_access function once it's fixed up
+            $role = get_field('group_member', 'role', 'group', $group, 'member', $this->get('id'));
+            if ($role) {
+                $aperms = $a->get('rolepermissions');
+                return $aperms->{$role}->edit;
+            }
+        }
+        return false;
+    }
+
 }
 
 

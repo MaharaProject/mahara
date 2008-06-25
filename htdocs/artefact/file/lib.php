@@ -109,7 +109,10 @@ class PluginArtefactFile extends PluginArtefact {
                     'cancel',
                     'delete',
                     'edit',
+                    'Permissions',
+                    'republish',
                     'tags',
+                    'view',
                 ),
                 'artefact.file' => array(
                     'copyrightnotice',
@@ -139,6 +142,9 @@ class PluginArtefactFile extends PluginArtefact {
                     'uploadfileexistsoverwritecancel',
                     'uploadingfiletofolder',
                     'youmustagreetothecopyrightnotice',
+                ),
+                'group' => array(
+                    'Role',
                 ),
             ),
         );
@@ -378,13 +384,18 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
 
     // Check if something exists in the db with a given title and parent,
     // either in adminfiles or with a specific owner.
-    public static function file_exists($title, $owner, $folder, $institution=null) {
+    public static function file_exists($title, $owner, $folder, $institution=null, $group=null) {
         $filetypesql = "('" . join("','", PluginArtefactFile::get_artefact_types()) . "')";
         $phvals = array($title);
         if ($institution) {
             $ownersql = 'a.institution = ? AND a.owner IS NULL';
             $phvals[] = $institution;
-        } else {
+        }
+        else if ($group) {
+            $ownersql = 'a.group = ? AND a.owner IS NULL';
+            $phvals[] = $group;
+        }
+        else {
             $ownersql = 'a.institution IS NULL AND a.owner = ?';
             $phvals[] = $owner;
         }
@@ -404,50 +415,93 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     }
 
 
-    public static function get_my_files_data($parentfolderid, $userid, $institution=null) {
+    public static function get_my_files_data($parentfolderid, $userid, $institution=null, $group=null) {
 
-        $foldersql = $parentfolderid ? ' = ' . $parentfolderid : ' IS NULL';
-
-        if ($institution) {
-            $ownersql = 'a.institution = ? AND a.owner IS NULL';
-            $phvals = array($institution);
-        } else {
-            $ownersql = 'a.institution IS NULL AND a.owner = ?';
-            $phvals = array($userid);
-        }
-
-        // if blogs are installed then also return the number of blog
-        // posts each file is attached to
-        $bloginstalled = get_field('artefact_installed', 'active', 'name', 'blog');
-
-        $filetypesql = "('" . join("','", PluginArtefactFile::get_artefact_types()) . "')";
-        $filedata = get_records_sql_array('
+        $select = '
             SELECT
                 a.id, a.artefacttype, a.mtime, f.size, a.title, a.description,
-                COUNT(c.id) AS childcount ' 
-                . ($bloginstalled ? ', COUNT (b.blogpost) AS attachcount' : '') . '
+                COUNT(c.id) AS childcount, COUNT (b.blogpost) AS attachcount';
+        $from = '
             FROM {artefact} a
                 LEFT OUTER JOIN {artefact_file_files} f ON f.artefact = a.id
-                LEFT OUTER JOIN {artefact} c ON c.parent = a.id '
-                . ($bloginstalled ? ('LEFT OUTER JOIN
-                                     {artefact_blog_blogpost_file} b ON b.file = a.id') : '') . '
-            WHERE a.parent' . $foldersql . '
-                AND ' . $ownersql . '
-                AND a.artefacttype IN ' . $filetypesql . '
+                LEFT OUTER JOIN {artefact} c ON c.parent = a.id 
+                LEFT OUTER JOIN {artefact_blog_blogpost_file} b ON b.file = a.id';
+        $where = "
+            WHERE a.artefacttype IN ('" . join("','", PluginArtefactFile::get_artefact_types()) . "')";
+        $groupby = '
             GROUP BY
-                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description;', $phvals);
+                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description';
 
+        $phvals = array();
+
+        if ($institution) {
+            $where .= '
+            AND a.institution = ? AND a.owner IS NULL';
+            $phvals[] = $institution;
+        }
+        else if ($group) {
+            global $USER;
+            $select .= ',
+                r.can_edit, r.can_view';
+            $from .= '
+                LEFT OUTER JOIN (
+                    SELECT ar.artefact, ar.can_edit, ar.can_view
+                    FROM {artefact_access_role} ar
+                    INNER JOIN {group_member} gm ON ar.role = gm.role
+                    WHERE gm.group = ? AND gm.member = ? 
+                ) r ON r.artefact = a.id';
+            $phvals[] = $group;
+            $phvals[] = $USER->get('id');
+            $where .= '
+            AND a.group = ? AND a.owner IS NULL AND r.can_view = 1';
+            $phvals[] = $group;
+            $groupby .= ', r.can_edit, r.can_view';
+        }
+        else {
+            $where .= '
+            AND a.institution IS NULL AND a.owner = ?';
+            $phvals[] = $userid;
+        }
+
+        if ($parentfolderid) {
+            $where .= '
+            AND a.parent = ? ';
+            $phvals[] = $parentfolderid;
+        }
+        else {
+            $where .= '
+            AND a.parent IS NULL';
+        }
+
+        $filedata = get_records_sql_assoc($select . $from . $where . $groupby, $phvals);
         if (!$filedata) {
             $filedata = array();
         }
         else {
             foreach ($filedata as $item) {
                 $item->mtime = format_date(strtotime($item->mtime), 'strfdaymonthyearshort');
-                $item->tags = get_column('artefact_tag', 'tag', 'artefact', $item->id);
-                if (!is_array($item->tags)) {
-                    $item->tags = array();
+                $item->tags = array();
+            }
+            $where = 'artefact IN (' . join(',', array_keys($filedata)) . ')';
+            $tags = get_records_select_array('artefact_tag', $where);
+            if ($tags) {
+                foreach ($tags as $t) {
+                    $filedata[$t->artefact]->tags[] = $t->tag;
                 }
             }
+            if ($group) {  // Fetch permissions for each artefact
+                $perms = get_records_select_array('artefact_access_role', $where);
+                if ($perms) {
+                    foreach ($perms as $perm) {
+                        $filedata[$perm->artefact]->permissions[$perm->role] = array(
+                            'view' => $perm->can_view,
+                            'edit' => $perm->can_edit,
+                            'republish' => $perm->can_republish
+                        );
+                    }
+                }
+            }
+            $filedata = array_values($filedata);
         }
 
         // Add parent folder to the list

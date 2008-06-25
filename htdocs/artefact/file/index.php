@@ -77,22 +77,53 @@ browser.changedircallback = uploader.updatedestination;
 
 JAVASCRIPT;
 
-$smarty = smarty(
-    array('tablerenderer', 'artefact/file/js/file.js'),
-    array(),
-    array(),
-    array(
-        'sideblocks' => array(
-            array(
-                'name'   => 'quota',
-                'weight' => -10,
-                'data'   => array(),
+$groupid = param_integer('group', null);
+if ($groupid and
+    $group = get_record_sql('
+        SELECT g.id, g.name, g.grouptype, m.role AS userrole
+        FROM {group} g INNER JOIN {group_member} m ON g.id = m.group
+        WHERE g.id = ' . $groupid . ' AND m.member = ' . $USER->get('id'))) {
+
+    require_once(get_config('docroot') . 'interaction/lib.php');
+    require_once(get_config('docroot') . 'lib/grouptype/' . $group->grouptype . '.php');
+    $groupdata = json_encode($group);
+    $grouproles = json_encode(call_static_method('GroupType' . $group->grouptype, 'get_roles'));
+    $javascript .= <<<GROUPJS
+var group = {$groupdata};
+group.roles = {$grouproles};
+browser.setgroup({$groupid});
+uploader.setgroup({$groupid});
+GROUPJS;
+    $smarty = smarty(
+        array('tablerenderer', 'artefact/file/js/file.js'),
+        array(),
+        array(),
+        array(
+            'sideblocks' => array(
+                interaction_sideblock($groupid),
             ),
-        ),
-    )
-);
+        )
+    );
+    $smarty->assign('heading', get_string('filesfor', 'artefact.file', $group->name));
+}
+else {
+    $smarty = smarty(
+        array('tablerenderer', 'artefact/file/js/file.js'),
+        array(),
+        array(),
+        array(
+            'sideblocks' => array(
+                array(
+                    'name'   => 'quota',
+                    'weight' => -10,
+                    'data'   => array(),
+                ),
+            ),
+        )
+    );
+    $smarty->assign('heading', get_string('myfiles', 'artefact.file'));
+}
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->assign('heading', get_string('myfiles', 'artefact.file'));
 $smarty->display('artefact:file:index.tpl');
 
 ?>

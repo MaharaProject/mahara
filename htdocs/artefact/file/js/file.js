@@ -23,6 +23,53 @@ function ajaxlogin_iframe(form, crap) {
     save_orig_data = true;
 }
 
+var group = 0;
+
+function getpermissions(formid) {
+    var result = {};
+    var perms = getElementsByTagAndClassName('input', 'permission', formid);
+    for (var i = 0; i < perms.length; i++) {
+        var parts = perms[i].name.split(":");
+        if (!result[parts[1]]) {
+            result[parts[1]] = {};
+        }
+        result[parts[1]][parts[2]] = perms[i].checked;
+    }
+    return result;
+}
+
+var permissiontypes = ['view', 'edit', 'republish'];
+
+function permissionform_inputs(permissions, role) {
+    var cells = [TD(null, get_string(role))];
+    for (var i = 0; i < permissiontypes.length; i++) {
+        var properties = {
+            'type':'checkbox',
+            'class':'permission',
+            'name':'permission:'+role+':'+permissiontypes[i], 
+        };
+        if (role == 'admin' || permissions.all || permissions[role] && permissions[role][permissiontypes[i]] == 1) {
+            properties.checked = true;
+            if (role == 'admin') {
+                properties.disabled = true;
+            }
+        }
+        cells.push(TD(null, INPUT(properties)));
+    }
+    return cells;
+}
+
+function permissionform_row(permissions) {
+    if (!group) {
+        return null;
+    }
+    var rows = map(partial(TR, null), map(partial(permissionform_inputs, permissions), group.roles));
+    return TR(null, TH(null, LABEL(null, get_string('Permissions'))), TD(null,
+            TABLE({'class':'editpermissions'}, TBODY(null, 
+             TR(null, TH(null, get_string('Role')), map(partial(TH, null), map(get_string, permissiontypes))),
+             rows))));
+}
+
 // The file browser part needs to be kept relatively separated from
 // the file uploader because they are used slightly differently in the
 // my files screen and the edit blog post screen
@@ -86,7 +133,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
     }
     else {
         this.lastcolumnfunc = function (r) {
-            if (r.isparent) {
+            if (r.isparent || r.can_edit == 0) {
                 return TD(null);
             }
             var editb = INPUT({'type':'button', 'class':'button', 'value':get_string('edit')});
@@ -106,6 +153,11 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
             return TD(null, editb, deleteb);
         }
     }
+
+    this.setgroup = function(gid) {
+        self.source += '?group=' + gid;
+        self.createfolderscript += '?group=' + gid;
+    };
 
     this.init = function() {
 
@@ -255,6 +307,10 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
         data['description'] = $(formid).description.value;
         data['tags'] = $(formid).tags.value;
 
+        if (group) {
+            data['permissions'] = serializeJSON(getpermissions(formid));
+        }
+
         if (fileid) {
             var script = self.updatemetadatascript;
             data['id'] = fileid;
@@ -284,8 +340,14 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
         var cancelbutton = INPUT({'type':'button', 'class':'button', 
                                   'value':get_string('cancel'), 'onclick':cancelform});
         var editformtitle = get_string(fileinfo.artefacttype == 'folder' ? 'editfolder' : 'editfile');
-        var edittable = TABLE({'align':'center'},TBODY(null,
-                         TR(null,TH({'colspan':2},LABEL(editformtitle))),
+        if (group) {
+            var perm = permissionform_row(fileinfo.permissions);
+        }
+        else {
+            var perm = null;
+        }
+        var edittable = TABLE(null, TBODY(null,
+                         TR(null,TH({'colSpan':2},LABEL(editformtitle))),
                          TR(null,TH(null,LABEL(get_string('Name'))),
                           TD(null,INPUT({'type':'text','class':'text','name':'name',
                                          'value':fileinfo.title,'size':40}))),
@@ -294,8 +356,9 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                                          'value':fileinfo.description,'size':40}))),
                          TR(null, TH(null, LABEL(null, get_string('tags'))),
                             TD(null, create_tags_control('tags', fileinfo.tags))),
-                         TR(null,TD({'colspan':2},SPAN({'id':formid+'message'}))),
-                         TR(null,TD({'colspan':2}, savebutton, replacebutton, cancelbutton))));
+                         perm,
+                         TR(null,TD({'colSpan':2},SPAN({'id':formid+'message'}))),
+                         TR(null,TD({'colSpan':2}, savebutton, replacebutton, cancelbutton))));
         hideElement(rowid);
         insertSiblingNodesBefore(rowid, TR({'id':editid},
                                            TD({'colSpan':6},
@@ -329,6 +392,12 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                 cancelcreateform();
             }
         }});
+        if (group) {
+            var perm = permissionform_row({'all':1});
+        }
+        else {
+            var perm = null;
+        }
         return FORM({'method':'post', 'id':formid, 'style':'display: none;'},
                 TABLE(null,
                  TBODY(null,
@@ -342,6 +411,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                      TD(null,INPUT({'type':'text','class':'text','name':'description',
                                     'value':'','size':40}))),
                   TR(null, TH(null, LABEL(null, get_string('tags'))), TD({'colspan':'2'}, create_tags_control('tags'))),
+                  perm,
                   TR(null,TD({'colspan':2},SPAN({'id':formid+'message'}))),
                   TR(null,TD({'colspan':2},createbutton,replacebutton,cancelbutton)))));
     };
@@ -504,6 +574,10 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
         this.fileexists = function (filename) { alert(filename); };
     }
 
+    this.setgroup = function(gid) {
+        self.uploadscript += '?group=' + gid;
+    };
+
     this.init = function() {
         self.nextupload = 1;
 
@@ -542,6 +616,12 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
         var notice = SPAN(null);
         notice.innerHTML = copyrightnotice + get_string('notice.help');
         var destinationattributes = (self.folderid === false) ? {'style':'display: none;'} : null;
+        if (group) {
+            var perm = permissionform_row({'all':1});
+        }
+        else {
+            var perm = null;
+        }
         appendChildNodes(form,
             TABLE(null,
             TBODY(null, 
@@ -560,6 +640,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
                 TD(null, INPUT({'type':'text', 'class':'text', 'name':'description', 'size':40}))),
              TR(null, TH(null, LABEL(null, get_string('tags'))),
                 TD({'colspan': 2}, create_tags_control('tags'))),
+             perm,
              TR(null,TD({'colspan':2, 'id':'uploadformmessage'})),
              TR(null,TD({'colspan':2},
               INPUT({'name':'upload','type':'button','class':'button',
@@ -641,6 +722,14 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
         if (self.createid) {
             appendChildNodes(self.form, 
                              INPUT({'type':'hidden', 'name':'createid', 'value':self.createid}));
+        }
+
+        if (group) {
+            appendChildNodes(self.form, INPUT({
+                'type':'hidden',
+                'name':'permissions', 
+                'value':serializeJSON(getpermissions('uploadform'))
+            }));
         }
 
         self.form.submit();

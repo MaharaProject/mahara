@@ -96,6 +96,7 @@ abstract class ArtefactType {
     protected $tags = array();
     protected $institution;
     protected $group;
+    protected $rolepermissions;
 
     protected $viewsinstances;
     protected $viewsmetadata;
@@ -146,6 +147,11 @@ abstract class ArtefactType {
             if (is_array($tags)) {
                 $this->tags = $tags;
             }
+        }
+
+        // load group permissions
+        if ($this->group) {
+            $this->load_rolepermissions();
         }
 
         $this->atime = time();
@@ -315,6 +321,10 @@ abstract class ArtefactType {
         }
         else {
             update_record('artefact', $fordb, 'id');
+        }
+
+        if (!empty($this->group)) {
+            $this->save_rolepermissions();
         }
 
         delete_records('artefact_tag', 'artefact', $this->id);
@@ -550,6 +560,44 @@ abstract class ArtefactType {
     public static function collapse_config() {
         return false;
     }
+
+    private function save_rolepermissions() {
+        $group = $this->get('group');
+        if (!$group) {
+            return;
+        }
+        $type = get_field('group', 'grouptype', 'id', $group);
+        require_once(get_config('docroot') . 'lib/grouptype/' . $type . '.php');
+        $roles = call_static_method('GroupType' . $type, 'get_roles');
+        $id = $this->get('id');
+        db_begin();
+        delete_records('artefact_access_role', 'artefact', $id);
+        foreach ($roles as $role) {
+            insert_record('artefact_access_role', (object) array(
+                'artefact'      => $id,
+                'role'          => $role,
+                'can_view'      => (int) $this->rolepermissions->{$role}->view,
+                'can_edit'      => (int) $this->rolepermissions->{$role}->edit,
+                'can_republish' => (int) $this->rolepermissions->{$role}->republish,
+            ));
+        }
+        db_commit();
+    }
+
+    private function load_rolepermissions() {
+        $records = get_records_array('artefact_access_role', 'artefact', $this->get('id'));
+        if ($records) {
+            $this->rolepermissions = new StdClass;
+            foreach ($records as $r) {
+                $this->rolepermissions->{$r->role} = (object) array(
+                    'view' => (bool) $r->can_view,
+                    'edit' => (bool) $r->can_edit,
+                    'republish' => (bool) $r->can_republish,
+                );
+            }
+        }
+    }
+
 }
 
 /**

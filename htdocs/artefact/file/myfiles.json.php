@@ -35,10 +35,11 @@ $limit = param_integer('limit', null);
 $offset = param_integer('offset', 0);
 $folder = param_integer('folder', null);
 $institution = param_alpha('institution', null);
+$group = param_integer('group', null);
 $userid = $USER->get('id');
 
 safe_require('artefact', 'file');
-$filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $institution);
+$filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $institution, $group);
 
 $result = array(
     'count'       => count($filedata),

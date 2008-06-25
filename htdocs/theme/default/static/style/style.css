@@ -1642,6 +1642,19 @@ button#dosearch {
 	padding: 2px 10px;
 	float: right;
 }
+#filelist table table.editpermissions {
+	text-align: left;
+}
+#filelist table table.editpermissions th {
+	padding: 3px 10px 3px 0;
+}
+#filelist table table.editpermissions td {
+	font-size: 11px;
+	padding: 3px 0;
+}
+#filelist table table.editpermissions th label {
+	color: #646464;
+}
 
 
 /* MY PORTFOLIO > MY BLOGS */

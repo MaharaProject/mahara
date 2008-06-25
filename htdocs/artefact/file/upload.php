@@ -28,7 +28,6 @@ define('INTERNAL', 1);
 define('IFRAME', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
-global $USER;
 
 $parentfolder     = param_variable('parentfolder', null);    // id of parent artefact
 $parentfoldername = param_variable('parentfoldername', '');  // path to parent folder
@@ -38,6 +37,7 @@ $tags             = param_variable('tags', null);
 $uploadnumber     = param_integer('uploadnumber'); // id of target iframe
 $collideaction    = param_variable('collideaction', 'fail');
 $institution      = param_alpha('institution', null);
+$group            = param_integer('group', null);
 
 $data = new StdClass;
 if ($parentfolder) {
@@ -48,6 +48,16 @@ $data->description = $description;
 $data->tags = $tags;
 if ($institution) {
     $data->institution = $institution;
+} else if ($group) {
+    require_once(get_config('docroot') . 'artefact/lib.php');
+    require_once(get_config('docroot') . 'lib/group.php');
+    if ($parentfolder && !$USER->can_edit_artefact(artefact_instance_from_id($parentfolder))) {
+        json_reply('local', get_string('cannoteditfolder', 'artefact.file'));
+    } else if (!$parentfolder && !user_can_access_group($group)) {
+        json_reply('local', get_string('usernotingroup', 'mahara'));
+    }
+    $data->group = $group;
+    $data->rolepermissions = json_decode(param_variable('permissions'));
 } else {
     $data->owner = $USER->get('id');
 }
@@ -57,7 +67,7 @@ $data->locked = 0;
 $result = new StdClass;
 $result->uploadnumber = $uploadnumber;
 
-if ($oldid = ArtefactTypeFileBase::file_exists($title, $data->owner, $parentfolder, $institution)) {
+if ($oldid = ArtefactTypeFileBase::file_exists($title, $data->owner, $parentfolder, $institution, $group)) {
     if ($collideaction == 'replace') {
         $obj = artefact_instance_from_id($oldid);
         $obj->delete();
