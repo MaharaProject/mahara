@@ -532,8 +532,8 @@ class User {
         }
         $group = $a->get('group');
         if ($group) {
-            // @todo: Call group_user_access function once it's fixed up
-            $role = get_field('group_member', 'role', 'group', $group, 'member', $this->get('id'));
+            require_once(get_config('docroot') . 'lib/group.php');
+            $role = group_user_access($group, $this->get('id'));
             if ($role) {
                 $aperms = $a->get('rolepermissions');
                 return $aperms->{$role}->edit;

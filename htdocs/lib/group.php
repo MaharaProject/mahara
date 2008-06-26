@@ -318,7 +318,9 @@ function user_can_access_group($group, $user=null) {
 function group_user_access($groupid, $userid=null) {
     // TODO: caching
 
-    if (!is_int($groupid) || $groupid == 0) {
+    $groupid = (int)$groupid;
+
+    if ($groupid == 0) {
         throw new InvalidArgumentException("group_user_access: group argument appears to be invalid: $groupid");
     }
 
@@ -326,8 +328,11 @@ function group_user_access($groupid, $userid=null) {
         global $USER;
         $userid = (int)$USER->get('id');
     }
+    else {
+        $userid = (int)$userid;
+    }
 
-    if (!is_int($userid) || $userid == 0) {
+    if ($userid == 0) {
         throw new InvalidArgumentException("group_user_access: user argument appears to be invalid: $userid");
     }
 
