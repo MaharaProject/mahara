@@ -65,6 +65,7 @@ $string['filetypes'] = 'Configure Uploadable File Types';
 $string['filetypedescription'] = '<p>You may configure the allowed file types that users can upload here. This grants you more control over what can be uploaded. This checking is performed in addition to virus checking, if you have virus checking turned on.</p><p>Note that &quot;Unknown Application&quot; may be necessary for some movies and archive files (such as gzip) to work.<p>';
 $string['folder'] = 'Folder';
 $string['foldercreated'] = 'Folder created';
+$string['groupfiles'] = 'Group Files';
 $string['home'] = 'Home';
 $string['htmlremovedmessage'] = 'You are viewing <strong>%s</strong> by <a href="%s">%s</a>. The file displayed below has been filtered to remove malicious content, and is only a rough representation of the original.';
 $string['htmlremovedmessagenoowner'] = 'You are viewing <strong>%s</strong>. The file displayed below has been filtered to remove malicious content, and is only a rough representation of the original.';

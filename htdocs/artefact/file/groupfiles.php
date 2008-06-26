@@ -25,16 +25,39 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myportfolio/files');
+define('MENUITEM', 'groups/mygroups');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'file');
-define('SECTION_PAGE', 'index');
+define('SECTION_PAGE', 'groupfiles');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('myfiles', 'artefact.file'));
+define('TITLE', get_string('groupfiles', 'artefact.file'));
 safe_require('artefact', 'file');
 
 $javascript = ArtefactTypeFileBase::get_my_files_js(param_integer('folder', null));
+
+$groupid = param_integer('group');
+$group = get_record_sql('
+    SELECT g.id, g.name, g.grouptype, m.role AS userrole
+    FROM {group} g INNER JOIN {group_member} m ON g.id = m.group
+    WHERE g.id = ' . $groupid . ' AND m.member = ' . $USER->get('id'));
+
+if (!$group) {
+    throw new AccessDeniedException();
+}
+
+require_once(get_config('docroot') . 'interaction/lib.php');
+require_once(get_config('docroot') . 'lib/grouptype/' . $group->grouptype . '.php');
+
+$groupdata = json_encode($group);
+$grouproles = json_encode(call_static_method('GroupType' . $group->grouptype, 'get_roles'));
+
+$javascript .= <<<GROUPJS
+var group = {$groupdata};
+group.roles = {$grouproles};
+browser.setgroup({$groupid});
+uploader.setgroup({$groupid});
+GROUPJS;
 
 $smarty = smarty(
     array('tablerenderer', 'artefact/file/js/file.js'),
@@ -42,15 +65,11 @@ $smarty = smarty(
     array(),
     array(
         'sideblocks' => array(
-            array(
-                'name'   => 'quota',
-                'weight' => -10,
-                'data'   => array(),
-            ),
+            interaction_sideblock($groupid),
         ),
     )
 );
-$smarty->assign('heading', get_string('myfiles', 'artefact.file'));
+$smarty->assign('heading', get_string('filesfor', 'artefact.file', $group->name));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('artefact:file:index.tpl');
 

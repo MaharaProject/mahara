@@ -519,6 +519,55 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         usort($filedata, array("ArtefactTypeFileBase", "my_files_cmp"));
         return $filedata;
     }
+
+
+    public static function get_my_files_js($folder_id=null) {
+
+        global $USER;
+
+        if ($folder_id) {
+            $folder_list = array();
+
+            $current_folder = artefact_instance_from_id($folder_id);
+
+            if ($USER->can_view_artefact($current_folder)) {
+
+                if ($current_folder->get('artefacttype') == 'folder') {
+                    $folder_list[] = array(
+                        'id'   => $current_folder->get('id'),
+                        'name' => $current_folder->get('title'),
+                    );
+                }
+
+                while ($p = $current_folder->get('parent')) {
+                    $current_folder = artefact_instance_from_id($p);
+
+                    $folder_list[] = array(
+                        'id'   => $current_folder->get('id'),
+                        'name' => $current_folder->get('title'),
+                    );
+                }
+            }
+
+            $enc_folders = json_encode(array_reverse($folder_list));
+        }
+        else {
+            $enc_folders = json_encode(array());
+        }
+
+        $copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
+
+        $javascript = <<<JAVASCRIPT
+var copyrightnotice = '{$copyright}';
+var browser = new FileBrowser('filelist', 'myfiles.json.php', null, null, null, null, {$enc_folders});
+var uploader = new FileUploader('uploader', 'upload.php', {}, null, null, browser.refresh, browser.fileexists);
+browser.changedircallback = uploader.updatedestination;
+
+JAVASCRIPT;
+
+        return $javascript;
+    }
+
 }
 
 class ArtefactTypeFile extends ArtefactTypeFileBase {
