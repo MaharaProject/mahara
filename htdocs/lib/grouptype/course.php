@@ -44,6 +44,10 @@ class GroupTypeCourse extends GroupType {
         return array('member', 'tutor', 'admin');
     }
 
+    public static function takes_view_submissions() {
+        return true;
+    }
+
 }
 
 ?>

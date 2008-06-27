@@ -1085,6 +1085,29 @@ function xmldb_core_upgrade($oldversion=0) {
         );');
     }
 
+    if ($oldversion < 2008062302) {
+        execute_sql('CREATE TABLE {grouptype} (
+            name VARCHAR(20) PRIMARY KEY,
+            usercancreate SMALLINT NOT NULL,
+            submittableto SMALLINT NOT NULL
+        );');
+        execute_sql("INSERT INTO {grouptype} (name,usercancreate,submittableto) VALUES ('standard',1,0)");
+        execute_sql("INSERT INTO {grouptype} (name,usercancreate,submittableto) VALUES ('course',0,1)");
+        execute_sql('CREATE TABLE {grouptype_roles} (
+            grouptype VARCHAR(20) NOT NULL REFERENCES {grouptype}(name),
+            role TEXT NOT NULL
+        );');
+        execute_sql("INSERT INTO {grouptype_roles} (grouptype,role) VALUES ('standard','admin')");
+        execute_sql("INSERT INTO {grouptype_roles} (grouptype,role) VALUES ('standard','member')");
+        execute_sql("INSERT INTO {grouptype_roles} (grouptype,role) VALUES ('course','admin')");
+        execute_sql("INSERT INTO {grouptype_roles} (grouptype,role) VALUES ('course','tutor')");
+        execute_sql("INSERT INTO {grouptype_roles} (grouptype,role) VALUES ('course','member')");
+        $table = new XMLDBTable('group');
+        $key = new XMLDBKey('grouptypefk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('grouptype'), 'grouptype', array('name'));
+        add_key($table, $key);
+    }
+
     return $status;
 
 }

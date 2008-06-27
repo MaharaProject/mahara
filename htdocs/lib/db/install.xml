@@ -293,6 +293,26 @@
                 <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
             </KEYS>
         </TABLE>
+        <TABLE NAME="grouptype">
+            <FIELDS>
+                <FIELD NAME="name" TYPE="char" LENGTH="20" NOTNULL="true" />
+                <FIELD NAME="usercancreate" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
+                <FIELD NAME="takesviewsubmissions" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="grouptype_roles">
+            <FIELDS>
+                <FIELD NAME="grouptype" TYPE="char" LENGTH="20" NOTNULL="true" />
+                <FIELD NAME="role" TYPE="text" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="grouptype,role" />
+                <KEY NAME="grouptypefk" TYPE="foreign" FIELDS="grouptype" REFTABLE="grouptype" REFFIELDS="name" />
+            </KEYS>
+        </TABLE>
         <TABLE NAME="group">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
@@ -307,6 +327,7 @@
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="nameuk" TYPE="unique" FIELDS="name" />
+                <KEY NAME="grouptypefk" TYPE="foreign" FIELDS="grouptype" REFTABLE="grouptype" REFFIELDS="name" />
             </KEYS>
         </TABLE>
         <TABLE NAME="group_member">

@@ -527,6 +527,26 @@ function group_get_membersearch_data($group, $query, $offset, $limit) {
  */
 abstract class GroupType {
 
+    public function install() {
+        $classname = get_class($this);
+        $type = strtolower(substr($classname, strlen('GroupType')));
+        insert_record('grouptype', (object) array(
+            'name' => $type,
+            'usercancreate' => $this->can_be_created_by_user(),
+            'submittableto' => $this->takes_view_submissions(),
+        ));
+        $roles = $this->get_roles();
+        if (!in_array($roles, 'admin')) {
+            $roles[] = 'admin';
+        }
+        foreach ($roles as $r) {
+            insert_record('grouptype_roles', (object) array(
+                'grouptype' => $type,
+                'role' => $r,
+            ));
+        }
+    }
+
     public static abstract function allowed_join_types();
 
     /**
@@ -541,6 +561,10 @@ abstract class GroupType {
      * Returns the roles this group type implements
      */
     public static abstract function get_roles();
+
+    public static function takes_view_submissions() {
+        return false;
+    }
 
 }
 

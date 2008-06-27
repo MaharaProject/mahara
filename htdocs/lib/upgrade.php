@@ -585,6 +585,14 @@ function core_install_lastcoredata_defaults() {
         insert_record('usr', $user);
     }
 
+    // add standard and course group types
+    require_once(get_config('docroot') . 'lib/grouptype/standard.php');
+    $gt = new GroupTypeStandard;
+    $gt->install();
+    require_once(get_config('docroot') . 'lib/grouptype/course.php');
+    $gt = new GroupTypeCourse;
+    $gt->install();
+
     // Insert the admin user
     $user = new StdClass;
     $user->username = 'admin';
