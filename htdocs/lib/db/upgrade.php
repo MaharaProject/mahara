@@ -1108,6 +1108,15 @@ function xmldb_core_upgrade($oldversion=0) {
         add_key($table, $key);
     }
 
+    if ($oldversion < 2008062303) {
+        execute_sql('ALTER TABLE {view} ADD COLUMN "group" BIGINT');
+        execute_sql('ALTER TABLE {view} ADD CONSTRAINT {view_gro_fk} FOREIGN KEY ("group") REFERENCES {group}(id)');
+        execute_sql('ALTER TABLE {view} ALTER COLUMN owner DROP NOT NULL');
+        execute_sql('ALTER TABLE {view_access_group} ADD COLUMN role TEXT');
+        execute_sql("UPDATE {view_access_group} SET role = 'tutor' WHERE tutoronly = 1");
+        execute_sql('ALTER TABLE {view_access_group} DROP COLUMN tutoronly');
+    }
+
     return $status;
 
 }

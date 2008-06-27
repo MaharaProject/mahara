@@ -494,8 +494,9 @@
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="title" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
-                <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="ownerformat" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="startdate" TYPE="datetime" />
                 <FIELD NAME="stopdate" TYPE="datetime" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
@@ -510,6 +511,7 @@
                 <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="submittedtofk" TYPE="foreign" FIELDS="submittedto" REFTABLE="group" REFFIELDS="id" />
                 <KEY NAME="layoutfk" TYPE="foreign" FIELDS="layout" REFTABLE="view_layout" REFFIELDS="id"/>
+                <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <TABLE NAME="view_tag">
@@ -602,7 +604,7 @@
             <FIELDS>
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="tutoronly" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="role" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="startdate" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
             </FIELDS>
