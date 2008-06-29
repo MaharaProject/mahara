@@ -296,7 +296,6 @@
         <TABLE NAME="grouptype">
             <FIELDS>
                 <FIELD NAME="name" TYPE="char" LENGTH="20" NOTNULL="true" />
-                <FIELD NAME="usercancreate" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
                 <FIELD NAME="takesviewsubmissions" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             </FIELDS>
             <KEYS>

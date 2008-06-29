@@ -532,7 +532,6 @@ abstract class GroupType {
         $type = strtolower(substr($classname, strlen('GroupType')));
         insert_record('grouptype', (object) array(
             'name' => $type,
-            'usercancreate' => $this->can_be_created_by_user(),
             'submittableto' => $this->takes_view_submissions(),
         ));
         $roles = $this->get_roles();

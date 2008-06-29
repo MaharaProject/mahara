@@ -1117,6 +1117,10 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql('ALTER TABLE {view_access_group} DROP COLUMN tutoronly');
     }
 
+    if ($oldversion < 2008062304) {
+        execute_sql('ALTER TABLE {grouptype} DROP COLUMN usercancreate');
+    }
+
     return $status;
 
 }
