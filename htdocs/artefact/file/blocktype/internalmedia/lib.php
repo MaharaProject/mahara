@@ -130,6 +130,11 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         );
     }
 
+    public static function artefactchooser_get_element_data($artefact) {
+        $artefact->icon = call_static_method(generate_artefact_class_name($artefact->artefacttype), 'get_icon', array('id' => $artefact->id));
+        return $artefact;
+    }
+
     public static function save_config_options($values) {
         $enabledtypes = array();
         foreach ($values as $type => $enabled) {
