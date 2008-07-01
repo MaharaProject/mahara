@@ -7,6 +7,7 @@
 </span>
 <h2>{$heading}</h2>
 
+{if $groupid}{include file="group/tabstart.tpl" current="views"}{/if}
 {if $views}
 <table id="myviewstable">
 
@@ -77,6 +78,7 @@
 {else}
 <div class="message">{str tag="noviews" section="view"}</div>
 {/if}
+{if $groupid}{include file="group/tabend.tpl"}{/if}
 
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

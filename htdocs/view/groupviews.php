@@ -56,7 +56,7 @@ $pagination = build_pagination(array(
 ));
 
 $smarty = smarty();
-$smarty->assign('group', $group);
+$smarty->assign('groupid', $group);
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('heading', get_string('groupviews'));

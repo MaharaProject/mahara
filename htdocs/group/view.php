@@ -74,6 +74,7 @@ $foruminfo = get_records_sql_array('
     ', array($id));
 $smarty = smarty(array('paginator', 'groupmembersearch'), array(), array(), array('sideblocks' => array(interaction_sideblock($id, $role))));
 $smarty->assign('group', $group);
+$smarty->assign('groupid', $id);
 $smarty->assign('query', $query);
 $smarty->assign('results', $html);
 $smarty->assign('pagination', $pagination['html']);

@@ -1854,6 +1854,37 @@ span.viewicon {
 }
 
 
+/* GROUPS > VIEWING A GROUP */
+#grouppage-container {
+    border: 1px solid #bbb;
+    clear: left;
+    padding: .5em;
+}
+#grouppage-tabs {
+    list-style-type: none;
+}
+#grouppage-tabs li {
+    float: left;
+    margin: 0 0 0 1em;
+    padding: 2px 5px;
+    border: 1px solid #bbb;
+    border-bottom-width: 0;
+    background-color: #ccc;
+    min-width: 5em;
+    text-align: center;
+}
+#grouppage-tabs a {
+    text-decoration: none;
+    font-weight: bold;
+}
+#grouppage-tabs li.current {
+    background-color: #fff;
+}
+
+#group-description {
+    margin-top: 0;
+}
+
 
 /* GROUPS > MY GROUPS */
 #mygroupstable {

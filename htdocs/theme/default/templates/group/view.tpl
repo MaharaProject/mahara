@@ -4,9 +4,9 @@
 {include file="columnleftstart.tpl"}
                 <h2>{$group->name|escape}</h2>
 
-                <div style="border: 1px solid #006600;">
-                
-                {if $group->description} <p>{$group->description}</p> {/if}
+{include file="group/tabstart.tpl" current="info"}
+
+                {if $group->description}<p id="group-description">{$group->description}</p> {/if}
 
                 <ul>
                     <li>{str tag=groupadmins section=group}: {foreach name=admins from=$group->admins item=id}
@@ -55,7 +55,7 @@
                     </tr>
                 </table>
 
-                </div>
+{include file="group/tabend.tpl"}
 
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}
