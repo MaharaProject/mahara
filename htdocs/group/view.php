@@ -51,12 +51,34 @@ $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 5);
 list($html, $pagination, $count, $offset) = group_get_membersearch_data($id, $query, $offset, $limit);
 
+// Latest forums posts
+// NOTE: it would be nicer if there was some generic way to get information 
+// from any installed interaction. But the only interaction plugin is forum, 
+// and group info pages might be replaced with views anyway...
+$foruminfo = get_records_sql_array('
+    SELECT
+        p.id, p.subject, p.body, p.poster, p.topic, t.forum, pt.subject AS topicname
+    FROM
+        {interaction_forum_post} p
+        INNER JOIN {interaction_forum_topic} t ON (t.id = p.topic)
+        INNER JOIN {interaction_instance} i ON (i.id = t.forum)
+        INNER JOIN {interaction_forum_post} pt ON (pt.topic = p.topic AND pt.parent IS NULL)
+    WHERE
+        i.group = ?
+        AND i.deleted = 0
+        AND t.deleted = 0
+        AND p.deleted = 0
+    ORDER BY
+        p.ctime DESC
+    LIMIT 5;
+    ', array($id));
 $smarty = smarty(array('paginator', 'groupmembersearch'), array(), array(), array('sideblocks' => array(interaction_sideblock($id, $role))));
 $smarty->assign('group', $group);
 $smarty->assign('query', $query);
 $smarty->assign('results', $html);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('pagination_js', $pagination['javascript']);
+$smarty->assign('foruminfo', $foruminfo);
 $smarty->display('group/view.tpl');
 
 ?>

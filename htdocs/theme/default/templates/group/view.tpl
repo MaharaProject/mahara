@@ -42,17 +42,15 @@
                             </form>
                         </td>
                         <td>
-                            <h3>Latest Forum Posts</h3>
-                            <table>
-                                <tr>
-                                    <th>Thread/Thread Starter</th>
-                                    <th>Latest Post</th>
-                                </tr>
-                                <tr>
-                                    <td><a href="">Whatever</a><br><a href="">Mike</a></td>
-                                    <td>This is some content of some post...</td>
-                                </tr>
-                            </table>
+                            <h3>{str tag=latestforumposts section=group}</h3>
+                            {foreach from=$foruminfo item=postinfo}
+                            <div>
+                              <h4><a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic|escape}#post{$postinfo->id|escape}">{$postinfo->topicname|escape}</a></h4>
+                              <div><a href="{$WWWROOT}user/view.php?id={$postinfo->poster|escape}">{$postinfo->poster|display_name|escape}</a></div>
+                              <p>{$postinfo->body|str_shorten:100:true}</p>
+                            </div>
+                            {/foreach}
+                            <p><a href="{$WWWROOT}interaction/forum/?group={$group->id|escape}">{str tag=gotoforums} &raquo;</a></p>
                         </td>
                     </tr>
                 </table>
