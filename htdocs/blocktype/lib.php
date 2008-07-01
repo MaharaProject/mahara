@@ -466,6 +466,7 @@ class BlockInstance {
             'validatecallback' => array(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_validate'),
             'successcallback'  => array($this, 'instance_config_store'),
             'elements' => $elements,
+            'viewgroup' => $this->get_view()->get('group'),
         );
 
         if (param_variable('action_acsearch_id_' . $this->get('id'), false)) {

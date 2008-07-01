@@ -82,6 +82,7 @@ class User {
             'accountprefs'     => array(),
             'activityprefs'    => array(),
             'institutions'     => array(),
+            'grouproles'       => array(),
             'theme'            => null,
             'admininstitutions' => array(),
             'staffinstitutions' => array(),
@@ -120,6 +121,7 @@ class User {
 
         $this->populate($user);
         $this->reset_institutions();
+        $this->reset_grouproles();
         return $this;
     }
 
@@ -508,6 +510,17 @@ class User {
         $this->staffinstitutions  = $staffinstitutions;
     }
 
+    public function reset_grouproles() {
+        $memberships = get_records_array('group_member', 'member', $this->get('id'));
+        $roles = array();
+        if ($memberships) {
+            foreach ($memberships as $m) {
+                $roles[$m->group] = $m->role;
+            }
+        }
+        $this->set('grouproles', $roles);
+    }
+
     public function can_view_artefact($a) {
         if ($this->get('admin')
             || $this->get('id') == $a->get('owner')
@@ -538,6 +551,22 @@ class User {
                 $aperms = $a->get('rolepermissions');
                 return $aperms->{$role}->edit;
             }
+        }
+        return false;
+    }
+
+    public function can_edit_view($v) {
+        if ($this->get('admin')) {
+            return true;
+        }
+        $owner = $v->get('owner');
+        if ($owner == $this->get('id')) {
+            return true;
+        }
+        $group = $v->get('group');
+        if ($group) {
+            $editroles = $v->get('editingroles');
+            return in_array($this->grouproles[$group], $editroles);
         }
         return false;
     }
@@ -662,6 +691,7 @@ class LiveUser extends User {
         $this->activityprefs      = load_activity_preferences($user->id);
         $this->accountprefs       = load_account_preferences($user->id);
         $this->reset_institutions();
+        $this->reset_grouproles();
         $this->commit();
     }
 

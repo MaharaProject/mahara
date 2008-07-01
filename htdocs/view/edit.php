@@ -33,16 +33,18 @@ define('SECTION_PAGE', 'edit');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('docroot') . 'lib/view.php');
+require_once(get_config('docroot') . 'lib/group.php');
 
 $id = param_integer('id', 0); // if 0, we're creating a new view
 $new = param_boolean('new');
 
 if (empty($id)) {
     $new = true;
+    $group = param_integer('group', 0);
 }
 else {
     $view = new View($id);
-    if ($view->get('owner') != $USER->get('id')) {
+    if (!$USER->can_edit_view($view)) {
         throw new AccessDeniedException(get_string('canteditdontown', 'view'));
     }
 
@@ -51,6 +53,15 @@ else {
     if ($submittedto) {
         throw new AccessDeniedException(get_string('canteditsubmitted', 'view', get_field('group', 'name', 'id', $submittedto)));
     }
+
+    $group = $view->get('group');
+    if (empty($group)) {
+        $group = 0;
+    }
+}
+
+if ($group && !group_user_access($group)) {
+    throw new AccessDeniedException();
 }
 
 if ($new || empty($id)) {
@@ -96,6 +107,10 @@ $editview = pieform(array(
             'type' => 'hidden',
             'value' => $new,
         ),
+        'group' => array(
+            'type'  => 'hidden',
+            'value' => $group,
+        ),
         'title' => array(
             'type'         => 'text',
             'title'        => get_string('title','view'),
@@ -133,10 +148,13 @@ $editview = pieform(array(
 ));
 
 function editview_cancel_submit() {
-	global $view, $new;
+	global $view, $new, $group;
 	if (isset($view) && $new) {
 	    $view->delete();
 	}
+        if ($group) {
+            redirect('/view/groupviews.php?group='.$group);
+        }
     redirect('/view');
 }
 
@@ -146,11 +164,20 @@ function editview_submit(Pieform $form, $values) {
 
     $editing = !empty($values['id']);
     $view = new View($values['id'], $values);
-
+    $group = (int) $values['group'];
+    if ($group && !group_user_access($group)) {
+        $SESSION->add_error_msg(get_string('notamember', 'group'));
+        redirect('/view/groupviews.php?group='.$group);
+    }
 
     if (empty($editing)) {
         $view->set('numcolumns', 3); // default
-        $view->set('owner', $USER->get('id'));
+        if ($group) {
+            $view->set('group', $group);
+        }
+        else {
+            $view->set('owner', $USER->get('id'));
+        }
     }
     else {
         $view->set('dirty', true);
@@ -162,8 +189,13 @@ function editview_submit(Pieform $form, $values) {
         $redirecturl = '/view/blocks.php?id=' . $view->get('id') . '&new=1';
     } 
     else {
-        $redirecturl = '/view/index.php';
         $SESSION->add_ok_msg(get_string('viewsavedsuccessfully', 'view'));
+        if ($group) {
+            $redirecturl = '/view/groupviews.php?group='.$group;
+        }
+        else {
+            $redirecturl = '/view/index.php';
+        }
     }
 
     redirect($redirecturl);

@@ -2,7 +2,9 @@
 {include file="sidebar.tpl"}
 {include file="columnleftstart.tpl"}
 
-<span class="addicon fr"><a href="{$WWWROOT}view/edit.php">{str tag="createview" section="view"}</a></span>
+<span class="addicon fr">
+<a href="{$WWWROOT}view/edit.php{if $group}?group={$group}{/if}">{str tag="createview" section="view"}</a>
+</span>
 <h2>{$heading}</h2>
 
 {if $views}

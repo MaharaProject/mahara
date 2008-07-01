@@ -33,6 +33,7 @@ class View {
     private $id;
     private $owner;
     private $ownerformat;
+    private $group;
     private $ctime;
     private $mtime;
     private $atime;
@@ -51,6 +52,7 @@ class View {
     private $columns;
     private $dirtycolumns; // for when we change stuff
     private $tags;
+    private $editingroles;
 
     public function __construct($id=0, $data=null) {
         if (!empty($id)) {
@@ -83,6 +85,11 @@ class View {
         $this->atime = time();
         $this->columns = array();
         $this->dirtycolumns = array();
+        if ($this->group) {
+            $group = get_record('group', 'id', $this->group);
+            require_once(get_config('docroot') . 'lib/grouptype/' . $group->grouptype . '.php');
+            $this->editingroles = call_static_method('GroupType' . $group->grouptype, 'get_view_editing_roles');
+        }
     }
 
     public function get($field) {
@@ -474,7 +481,7 @@ class View {
         // Security
         // TODO this might need to be moved below the requestdata check below, to prevent non owners of the view being 
         // rejected
-        if ($USER->get('id') != $this->get('owner')) {
+        if (!$USER->can_edit_view($this)) {
             throw new AccessDeniedException(get_string('canteditdontown', 'view'));
         }
 
@@ -1135,9 +1142,8 @@ class View {
      * - Pagination HTML and Javascript
      * - The total number of artefacts found
      */
-    public static function build_artefactchooser_data($data) {
+    public static function build_artefactchooser_data($data, $group=null) {
         global $USER;
-
         $search = '';
         if (!empty($data['search']) && param_boolean('s')) {
             $search = param_variable('search', '');
@@ -1147,7 +1153,7 @@ class View {
             //    $search = '';
             //}
         }
-
+        //log_debug($data);
         $artefacttypes = $data['artefacttypes'];
         $offset        = $data['offset'];
         $limit         = $data['limit'];
@@ -1162,7 +1168,11 @@ class View {
         safe_require('blocktype', $data['blocktype']);
         $blocktypeclass = generate_class_name('blocktype', $data['blocktype']);
 
-        $select = 'owner = ' . $USER->get('id');
+        if ($group) {
+            $select = '"group" = ' . $group;
+        } else {
+            $select = 'owner = ' . $USER->get('id');
+        }
         if (!empty($artefacttypes)) {
             $select .= ' AND artefacttype IN(' . implode(',', array_map('db_quote', $artefacttypes)) . ')';
         }
@@ -1239,6 +1249,7 @@ class View {
             'extradata' => array(
                 'value'     => $value,
                 'blocktype' => $data['blocktype'],
+                'group'     => $group,
             ),
         ));
 
@@ -1303,7 +1314,7 @@ class View {
                 $data[$i]['id'] = $viewdata[$i]->id;
                 $data[$i]['title'] = $viewdata[$i]->title;
                 $data[$i]['description'] = $viewdata[$i]->description;
-                if ($viewdata[$i]->name) {
+                if (!empty($viewdata[$i]->name)) {
                     $data[$i]['submittedto'] = array('name' => $viewdata[$i]->name, 'id' => $viewdata[$i]->groupid);
                 }
                 $data[$i]['artefacts'] = array();

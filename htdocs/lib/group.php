@@ -542,6 +542,7 @@ abstract class GroupType {
             insert_record('grouptype_roles', (object) array(
                 'grouptype' => $type,
                 'role' => $r,
+                'edit_views' => $this->role_can_edit_views($r),
             ));
         }
     }
@@ -561,8 +562,14 @@ abstract class GroupType {
      */
     public static abstract function get_roles();
 
+    public static abstract function get_view_editing_roles();
+
     public static function takes_view_submissions() {
         return false;
+    }
+
+    public static function role_can_edit_views($role) {
+        return in_array($this->get_view_editing_roles(), $role);
     }
 
 }

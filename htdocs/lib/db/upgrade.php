@@ -1121,6 +1121,11 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql('ALTER TABLE {grouptype} DROP COLUMN usercancreate');
     }
 
+    if ($oldversion < 2008062305) {
+        execute_sql('ALTER TABLE {grouptype_roles} ADD COLUMN edit_views SMALLINT NOT NULL DEFAULT 1');
+        execute_sql("UPDATE {grouptype_roles} SET edit_views = 0 WHERE grouptype = 'course' AND role = 'member'");
+    }
+
     return $status;
 
 }
