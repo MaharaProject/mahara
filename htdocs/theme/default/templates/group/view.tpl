@@ -13,7 +13,7 @@
                     <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$id|escape}" alt="">
                     <a href="{$WWWROOT}user/view.php?id={$id|escape}">{$id|display_name|escape}</a>{if !$smarty.foreach.admins.last}, {/if}
                     {/foreach}</li>
-                    <li>{str tag=created section=group}: {$group->ctime}</li>
+                    <li>{str tag=Created section=group}: {$group->ctime}</li>
                     {if $strgroupviews}<li>{$strgroupviews}</li>{/if}
                     {if $strcontent}<li>{$strcontent}</li>{/if}
                 </ul>
@@ -42,7 +42,8 @@
                             </form>
                         </td>
                         <td>
-                            <h3>{str tag=latestforumposts section=group}</h3>
+                            <h3>{str tag=latestforumposts section=interaction.forum}</h3>
+                            {if $foruminfo}
                             {foreach from=$foruminfo item=postinfo}
                             <div>
                               <h4><a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic|escape}#post{$postinfo->id|escape}">{$postinfo->topicname|escape}</a></h4>
@@ -50,7 +51,10 @@
                               <p>{$postinfo->body|str_shorten:100:true}</p>
                             </div>
                             {/foreach}
-                            <p><a href="{$WWWROOT}interaction/forum/?group={$group->id|escape}">{str tag=gotoforums} &raquo;</a></p>
+                            {else}
+                            <p>{str tag=noforumpostsyet section=interaction.forum}</p>
+                            {/if}
+                            <p><a href="{$WWWROOT}interaction/forum/?group={$group->id|escape}">{str tag=gotoforums section=interaction.forum} &raquo;</a></p>
                         </td>
                     </tr>
                 </table>
