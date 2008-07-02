@@ -485,6 +485,11 @@ class MaharaException extends Exception {
             exit;
         }
 
+        if (headers_sent()) {
+            echo '<span style="color: red;">ERROR - something bad happened after headers have been sent. Check the error log for more information.</span>';
+            die();
+        }
+
         $outputtitle = $this->get_string('title');
         $outputmessage = trim($this->render_exception());
 
