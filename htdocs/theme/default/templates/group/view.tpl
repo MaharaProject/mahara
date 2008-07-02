@@ -8,12 +8,12 @@
 
                 {if $group->description}<p id="group-description">{$group->description}</p> {/if}
 
-                <ul>
-                    <li>{str tag=groupadmins section=group}: {foreach name=admins from=$group->admins item=id}
+                <ul id="group-info">
+                    <li><strong>{str tag=groupadmins section=group}:</strong> {foreach name=admins from=$group->admins item=id}
                     <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$id|escape}" alt="">
                     <a href="{$WWWROOT}user/view.php?id={$id|escape}">{$id|display_name|escape}</a>{if !$smarty.foreach.admins.last}, {/if}
                     {/foreach}</li>
-                    <li>{str tag=Created section=group}: {$group->ctime}</li>
+                    <li><strong>{str tag=Created section=group}:</strong> {$group->ctime}</li>
                     {if $strgroupviews}<li>{$strgroupviews}</li>{/if}
                     {if $strcontent}<li>{$strcontent}</li>{/if}
                 </ul>

@@ -1884,7 +1884,23 @@ span.viewicon {
 #group-description {
     margin-top: 0;
 }
-
+#group-info {
+    list-style-type: none;
+}
+#grouppage-container h3 {
+    margin-top: 0;
+}
+#membersearchresults {
+    width: 24em;
+	border-top: 1px solid #95a8b7;
+	border-bottom: 1px solid #95a8b7;
+}
+#membersearchresults h4 {
+    margin: 0;
+}
+#membersearchresults p {
+    margin: .25em 0 0 65px;
+}
 
 /* GROUPS > MY GROUPS */
 #mygroupstable {

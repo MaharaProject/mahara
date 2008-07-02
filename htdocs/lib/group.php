@@ -459,6 +459,8 @@ function group_get_membersearch_data($group, $query, $offset, $limit) {
         'nexttext' => '',
         'lasttext' => '',
         'numbersincludefirstlast' => false,
+        'resultcounttextsingular' => get_string('member', 'group'),
+        'resultcounttextplural' => get_string('members', 'group'),
     ));
 
     return array($html, $pagination, $results['count'], $offset);
