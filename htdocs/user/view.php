@@ -143,12 +143,21 @@ if ($views) {
 }
 
 // Group stuff
-if (!$userassocgroups = get_associated_groups($userid, false)) {
-    $userassocgroups = array();
-}
+$sql = "SELECT
+    g.*, gm.role
+FROM
+    {group} g
+    JOIN {group_member} gm ON (gm.group = g.id)
+WHERE
+    gm.member = ?
+    AND g.deleted = 0
+ORDER BY
+    g.name";
+$userassocgroups = (array) get_records_sql_assoc($sql, array($userid));
 
 foreach ($userassocgroups as $group) {
     $group->description = str_shorten($group->description, 100, true);
+    $group->roledesc    = get_string($group->role, 'grouptype.' . $group->grouptype);
 }
 
 if (is_postgres()) {
@@ -200,13 +209,28 @@ else {
 }
 
 $smarty = smarty();
-$allusergroups = get_associated_groups($userid);
+
+$sql = "SELECT g.*, a.type FROM {group} g JOIN (
+SELECT gm.group, 'invite' AS type
+    FROM {group_member_invite} gm WHERE gm.member = ?
+UNION
+SELECT gm.group, 'request' AS type
+    FROM {group_member_request} gm WHERE gm.member = ?
+UNION
+SELECT gm.group, gm.role AS type
+    FROM {group_member} gm
+    WHERE gm.member = ?
+) AS a ON a.group = g.id
+WHERE g.deleted = 0
+ORDER BY g.name";
+$allusergroups = (array)get_records_sql_assoc($sql, array($userid, $userid, $userid));
+
 if ($loggedinid != $userid) {
     // Get the logged in user's "invite only" groups
     if ($groups = get_owned_groups($loggedinid, 'invite')) {
         $invitelist = array();
         foreach ($groups as $group) {
-            if ($allusergroups && array_key_exists($group->id, $allusergroups)) {
+            if (array_key_exists($group->id, $allusergroups)) {
                 continue;
             }
             $invitelist[$group->id] = $group->name;

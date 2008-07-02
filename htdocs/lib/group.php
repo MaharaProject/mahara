@@ -157,64 +157,6 @@ function get_requested_group($userid=0) {
               WHERE gmr.member = ? AND g.deleted = ?', array($userid, 0));
 }
 
-/**
- * all groups this user is associated with at all
- * either member, invited or requested.
- * 
- * @param int $userid (optional, defaults to $USER id)
- * @param boolean $all (optional defaults to true) whether to include requested and invited groups
- * @return array of group db rows (with type=member|invite|request)
- */
-
-function get_associated_groups($userid=0, $all=true) {
-
-    $userid = optional_userid($userid);
-    
-    if (!$all) {
-        $sql = "SELECT g.*, a.type FROM {group} g JOIN (
-        SELECT gm.group, 'member' AS type
-            FROM {group_member} gm
-            JOIN {group} ON owner != ? AND id = gm.group
-            WHERE gm.member = ? AND gm.tutor = 0
-        UNION
-        SELECT gm.group, 'member' AS type
-            FROM {group_member} gm
-            JOIN {group} ON owner != ? AND id = gm.group
-            WHERE gm.member = ? AND gm.tutor = 1
-        UNION
-            SELECT g.id, 'owner' AS type
-            FROM {group} g WHERE g.owner = ?
-        ) AS a ON a.group = g.id
-        WHERE g.deleted = 0
-        ORDER BY g.name";
-        return get_records_sql_assoc($sql, array($userid, $userid, $userid, $userid, $userid));
-    }
-    $sql = "SELECT g.*, a.type FROM {group} g JOIN (
-    SELECT gm.group, 'invite' AS type
-        FROM {group_member_invite} gm WHERE gm.member = ?
-    UNION
-    SELECT gm.group, 'request' AS type
-        FROM {group_member_request} gm WHERE gm.member = ?
-    UNION
-    SELECT gm.group, 'member' AS type
-        FROM {group_member} gm
-        JOIN {group} ON owner != ? AND id = gm.group
-        WHERE gm.member = ? AND gm.tutor = 0
-    UNION
-    SELECT gm.group, 'member' AS type
-        FROM {group_member} gm
-        JOIN {group} ON owner != ? AND id = gm.group
-        WHERE gm.member = ? AND gm.tutor = 1
-    UNION
-    SELECT g.id, 'owner' AS type
-        FROM {group} g WHERE g.owner = ?
-    ) AS a ON a.group = g.id
-    WHERE g.deleted = 0
-    ORDER BY g.name";
-    
-    return get_records_sql_assoc($sql, array($userid, $userid, $userid, $userid, $userid, $userid, $userid));
-}
-
 
 /**
  * gets groups the user is a tutor in, or the user owns
