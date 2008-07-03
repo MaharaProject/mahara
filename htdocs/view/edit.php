@@ -40,7 +40,7 @@ $new = param_boolean('new');
 
 if (empty($id)) {
     $new = true;
-    $group = param_integer('group', 0);
+    $group = param_integer('group', null);
 }
 else {
     $view = new View($id);
@@ -55,9 +55,6 @@ else {
     }
 
     $group = $view->get('group');
-    if (empty($group)) {
-        $group = 0;
-    }
 }
 
 if ($group && !group_user_access($group)) {
@@ -92,7 +89,7 @@ if ($studentid !== '') {
 }
 $ownerformatoptions[FORMAT_NAME_DISPLAYNAME] = sprintf($formatstring, get_string('displayname'), display_name($USER));
 
-$editview = pieform(array(
+$editview = array(
     'name'     => 'editview',
     'method'   => 'post',
     'autofocus' => 'title',
@@ -106,10 +103,6 @@ $editview = pieform(array(
         'new' => array(
             'type' => 'hidden',
             'value' => $new,
-        ),
-        'group' => array(
-            'type'  => 'hidden',
-            'value' => $group,
         ),
         'title' => array(
             'type'         => 'text',
@@ -145,7 +138,16 @@ $editview = pieform(array(
             'confirm' => $new && isset($view) ? array(null, get_string('confirmcancelcreatingview', 'view')) : null,
         )
     ),
-));
+);
+
+if ($group) {
+    $editview['elements']['group'] = array(
+        'type'  => 'hidden',
+        'value' => $group
+    );
+}
+
+$editview = pieform($editview);
 
 function editview_cancel_submit() {
 	global $view, $new, $group;
@@ -164,7 +166,7 @@ function editview_submit(Pieform $form, $values) {
 
     $editing = !empty($values['id']);
     $view = new View($values['id'], $values);
-    $group = (int) $values['group'];
+    $group = isset($values['group']) ? (int)$values['group'] : null;
     if ($group && !group_user_access($group)) {
         $SESSION->add_error_msg(get_string('notamember', 'group'));
         redirect('/view/groupviews.php?group='.$group);
