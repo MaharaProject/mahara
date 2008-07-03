@@ -380,7 +380,7 @@ function addmember_submit(Pieform $form, $values) {
         $SESSION->add_ok_msg(get_string('useradded', 'group'));
     }
     catch (SQLException $e) {
-        $SESSION->ad_ok_msg(get_string('adduserfailed', 'group'));
+        $SESSION->add_error_msg(get_string('adduserfailed', 'group'));
     }
     redirect('/user/view.php?id=' . $userid);
 }
