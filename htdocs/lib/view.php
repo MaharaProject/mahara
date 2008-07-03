@@ -1290,18 +1290,18 @@ class View {
                 WHERE va.view IN (' . $viewidlist . ')
                 GROUP BY va.view, va.artefact, a.title, a.artefacttype, t.plugin
                 ORDER BY a.title, va.artefact', '');
-            $accessgroups = get_records_sql_array('SELECT view, accesstype, id, name, startdate, stopdate
+            $accessgroups = get_records_sql_array('SELECT view, accesstype, grouptype, role, id, name, startdate, stopdate
                 FROM (
-                    SELECT view, \'group\' AS accesstype, vg.role, g.id, g.name, startdate, stopdate
+                    SELECT view, \'group\' AS accesstype, g.grouptype, vg.role, g.id, g.name, startdate, stopdate
                     FROM {view_access_group} vg
                     INNER JOIN {group} g ON g.id = vg.group AND g.deleted = 0
-                    UNION SELECT view, \'user\' AS accesstype, NULL AS role, usr AS id, \'\' AS name, startdate, stopdate
+                    UNION SELECT view, \'user\' AS accesstype, NULL AS grouptype, NULL AS role, usr AS id, \'\' AS name, startdate, stopdate
                     FROM {view_access_usr} vu
-                    UNION SELECT view, accesstype, NULL AS role, 0 AS id, \'\' AS name, startdate, stopdate
+                    UNION SELECT view, accesstype, NULL AS grouptype, NULL AS role, 0 AS id, \'\' AS name, startdate, stopdate
                     FROM {view_access} va
                 ) AS a
                 WHERE view in (' . $viewidlist . ')
-                ORDER BY view, accesstype, role, name, id
+                ORDER BY view, accesstype, grouptype, role, name, id
             ', array());
         }
     

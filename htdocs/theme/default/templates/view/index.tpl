@@ -49,8 +49,9 @@
                 {str tag="loggedinlower" section="view"}{elseif $accessgroup.accesstype == 'public'}
                 {str tag="publiclower" section="view"}{elseif $accessgroup.accesstype == 'friends'}
                 <a href="{$WWWROOT}user/myfriends.php" id="link-myfriends">{str tag="friendslower" section="view"}</a>{elseif $accessgroup.accesstype == 'group'}
-                <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name|escape}</a>{elseif $accessgroup.accesstype == 'tutorgroup'}
-                <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name|escape}</a> ({str tag="tutors" section="view"}){elseif $accessgroup.accesstype == 'user'}
+                <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name|escape}</a>{if !empty($accessgroup.role)}
+                    {assign var="role" value=$accessgroup.role}{assign var="grouptype" value=$accessgroup.grouptype}
+                    ({str tag="$role" section="$grouptype"}){/if}{elseif $accessgroup.accesstype == 'user'}
                 <a href="{$WWWROOT}user/view.php?id={$accessgroup.id}">{$accessgroup.id|display_name|escape}</a>{/if}{if !$smarty.foreach.artefacts.last},{/if}
         {/foreach}
     {else}
