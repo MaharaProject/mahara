@@ -62,7 +62,7 @@ if (!$group) {
 
 $tutorfilefeedbackformrow = '';
 $submittedgroup = (int)$view->get('submittedto');
-if ($submittedgroup && (user_can_access_group($submittedgroup) & GROUP_MEMBERSHIP_TUTOR)) {
+if ($submittedgroup && can_assess_submitted_views($USER->get('id'), $submittedgroup)) {
     // The user is a tutor of the group that this view has
     // been submitted to, and is entitled to upload an additional
     // file when submitting feedback.

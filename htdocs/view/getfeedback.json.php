@@ -30,15 +30,13 @@ define('JSON', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 
-json_headers();
-
 $view     = param_integer('view');
 $artefact = param_integer('artefact', null);
 $limit    = param_integer('limit', 5);
 $offset   = param_integer('offset', 0);
 
 if (!can_view_view($view)) {
-    throw new AccessDeniedException();
+    json_reply('local', get_string('noaccesstoview', 'view'));
 }
 
 $userid = $USER->get('id');

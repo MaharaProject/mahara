@@ -1331,18 +1331,12 @@ function can_view_view($view_id, $user_id=null) {
         return true;
     }
 
-    if ($view_record['submittedto'] && get_field_sql('
-        SELECT
-            r.see_submitted_views
-        FROM
-            group_member m 
-            INNER JOIN group g ON (m.group = g.id AND g.deleted = 0)
-            INNER JOIN grouptype_roles r ON (g.grouptype = r.grouptype AND r.role = m.role)
-        WHERE
-            m.member = ?
-            AND m.group = ?', array($user_id, $view_record['submittedto']))) {
-        //log_debug('Yes - View is submitted for assesment to a group you are a tutor in');
-        return true;
+    if ($view_record['submittedto']) {
+        require_once(get_config('docroot') . 'lib/group.php');
+        if (can_assess_submitted_views($user_id, $view_record['submittedto'])) {
+            //log_debug('Yes - View is submitted for assesment to a group you are a tutor in');
+            return true;
+        }
     }
 
     // check public

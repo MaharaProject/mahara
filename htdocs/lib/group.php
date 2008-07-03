@@ -493,4 +493,19 @@ function group_get_grouptypes() {
     return $grouptypes;
 }
 
+
+function can_assess_submitted_views($userid, $groupid) {
+    return get_field_sql('
+        SELECT
+            r.see_submitted_views
+        FROM
+            {group_member} m 
+            INNER JOIN {group} g ON (m.group = g.id AND g.deleted = 0)
+            INNER JOIN {grouptype_roles} r ON (g.grouptype = r.grouptype AND r.role = m.role)
+        WHERE
+            m.member = ?
+            AND m.group = ?', array($userid, $groupid));
+}
+
+
 ?>
