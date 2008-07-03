@@ -37,7 +37,7 @@ $id = param_integer('id');
 if (!$group = get_record_select('group', 'id = ? AND deleted = 0', array($id), '*, ' . db_format_tsfield('ctime'))) {
     throw new GroupNotFoundException("Couldn't find group with id $id");
 }
-$group->ctime = strftime('%e %B %Y', $group->ctime);
+$group->ctime = strftime(get_string('strftimedate'), $group->ctime);
 
 $group->admins = get_column_sql("SELECT member
     FROM {group_member}
