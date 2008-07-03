@@ -48,8 +48,8 @@ class GroupTypeCourse extends GroupType {
         return array('tutor', 'admin');
     }
 
-    public static function takes_view_submissions() {
-        return true;
+    public static function get_view_assessing_roles() {
+        return array('tutor');
     }
 
 }

@@ -42,6 +42,10 @@ class GroupTypeStandard extends GroupType {
         return array('member', 'admin');
     }
 
+    public static function get_view_assessing_roles() {
+        return array();
+    }
+
 }
 
 ?>

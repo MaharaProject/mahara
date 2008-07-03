@@ -1285,6 +1285,7 @@ function can_view_view($view_id, $user_id=null) {
         SELECT
             v.title,
             v.owner,
+            v.group,
             ' . db_format_tsfield('v.startdate','startdate') . ',
             ' . db_format_tsfield('v.stopdate','stopdate') . ',
             a.accesstype,
@@ -1294,7 +1295,8 @@ function can_view_view($view_id, $user_id=null) {
         FROM
             {view} v
             LEFT OUTER JOIN {view_access} a ON v.id=a.view
-            INNER JOIN {usr} u ON (u.id = v.owner AND u.deleted = 0)
+            LEFT OUTER JOIN {usr} u ON (u.id = v.owner AND u.deleted = 0)
+            LEFT OUTER JOIN {group} g ON (g.id = v.group AND g.deleted = 0)
         WHERE v.id=?
     ', array($view_id));
 
@@ -1309,6 +1311,7 @@ function can_view_view($view_id, $user_id=null) {
     foreach ( $view_data as $row ) {
         $view_record['title'] = $row->title;
         $view_record['owner'] = $row->owner;
+        $view_record['group'] = $row->group;
         $view_record['startdate'] = $row->startdate;
         $view_record['stopdate'] = $row->stopdate;
         $view_record['submittedto'] = $row->submittedto;
@@ -1328,7 +1331,16 @@ function can_view_view($view_id, $user_id=null) {
         return true;
     }
 
-    if ($view_record['submittedto'] && record_exists('group_member', 'group', $view_record['submittedto'], 'member', $user_id, 'tutor', 1)) {
+    if ($view_record['submittedto'] && get_field_sql('
+        SELECT
+            r.see_submitted_views
+        FROM
+            group_member m 
+            INNER JOIN group g ON (m.group = g.id AND g.deleted = 0)
+            INNER JOIN grouptype_roles r ON (g.grouptype = r.grouptype AND r.role = m.role)
+        WHERE
+            m.member = ?
+            AND m.group = ?', array($user_id, $view_record['submittedto']))) {
         //log_debug('Yes - View is submitted for assesment to a group you are a tutor in');
         return true;
     }
@@ -1425,9 +1437,9 @@ function can_view_view($view_id, $user_id=null) {
             a.view = ? 
             AND ( a.startdate < ? OR a.startdate IS NULL )
             AND ( a.stopdate > ?  OR a.stopdate  IS NULL )
-            AND ( ( m.member = ? AND (a.tutoronly = 0 OR m.tutor = 1 ) ) OR g.owner = ?)
+            AND ( m.member = ? AND ( a.role IS NULL OR a.role = m.role ) )
         LIMIT 1',
-        array(0, $view_id, $dbnow, $dbnow, $user_id, $user_id  )
+        array(0, $view_id, $dbnow, $dbnow, $user_id)
         )
     ) {
         //log_debug('Yes - View is available to a specific group');

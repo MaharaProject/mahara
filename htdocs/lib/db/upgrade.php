@@ -1126,6 +1126,11 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("UPDATE {grouptype_roles} SET edit_views = 0 WHERE grouptype = 'course' AND role = 'member'");
     }
 
+    if ($oldversion < 2008062306) {
+        execute_sql('ALTER TABLE {grouptype_roles} ADD COLUMN see_submitted_views SMALLINT NOT NULL DEFAULT 0');
+        execute_sql("UPDATE {grouptype_roles} SET see_submitted_views = 1 WHERE grouptype = 'course' AND role = 'tutor'");
+    }
+
     return $status;
 
 }

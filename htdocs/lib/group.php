@@ -474,19 +474,22 @@ abstract class GroupType {
     public function install() {
         $classname = get_class($this);
         $type = strtolower(substr($classname, strlen('GroupType')));
+        $assessingroles = $this->get_view_assessing_roles();
         insert_record('grouptype', (object) array(
             'name' => $type,
-            'submittableto' => $this->takes_view_submissions(),
+            'submittableto' => !empty($assessingroles),
         ));
         $roles = $this->get_roles();
         if (!in_array($roles, 'admin')) {
             $roles[] = 'admin';
         }
+        $editingroles = $this->get_view_editing_roles();
         foreach ($roles as $r) {
             insert_record('grouptype_roles', (object) array(
                 'grouptype' => $type,
                 'role' => $r,
-                'edit_views' => $this->role_can_edit_views($r),
+                'edit_views' => in_array($r, $editingroles),
+                'see_submitted_views' => in_array($r, $assessingroles),
             ));
         }
     }
@@ -508,13 +511,7 @@ abstract class GroupType {
 
     public static abstract function get_view_editing_roles();
 
-    public static function takes_view_submissions() {
-        return false;
-    }
-
-    public static function role_can_edit_views($role) {
-        return in_array($this->get_view_editing_roles(), $role);
-    }
+    public static abstract function get_view_assessing_roles();
 
 }
 

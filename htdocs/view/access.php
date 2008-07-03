@@ -34,8 +34,10 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
 require_once(get_config('docroot') . 'lib/view.php');
+require_once(get_config('docroot') . 'lib/group.php');
 
 $view = new View(param_integer('id'));
+$group = $view->get('group');
 $new = param_boolean('new');
 
 if ($new) {
@@ -43,6 +45,10 @@ if ($new) {
 }
 else {
     define('TITLE', get_string('editaccessforview', 'view', $view->get('title')));
+}
+
+if ($group && !group_user_access($group)) {
+    throw new AccessDeniedException();
 }
 
 $smarty = smarty(array('tablerenderer'), pieform_element_calendar_get_headdata(pieform_element_calendar_configure(array())), array('mahara' => array('From', 'To')));
@@ -129,19 +135,27 @@ function editaccess_validate(Pieform $form, $values) {
 }
 
 function editaccess_cancel_submit() {
-	global $view, $new;
+	global $view, $new, $group;
 	if ($new) {
 	    $view->delete();
 	}
-    redirect('/view/');
+        if ($group) {
+            redirect('/view/groupviews.php?group='.$group);
+        }
+    redirect('/view');
 }
 
 
 function editaccess_submit(Pieform $form, $values) {
-    global $SESSION, $view, $new; 
+    global $SESSION, $view, $new, $group; 
 
     if (param_boolean('back')) {
         redirect('/view/blocks.php?id=' . $view->get('id') . '&new=' . $new);
+    }
+
+    if ($group && !group_user_access($group)) {
+        $SESSION->add_error_msg(get_string('notamember', 'group'));
+        redirect('/view/groupviews.php?group='.$group);
     }
 
     $view->set_access($values['accesslist']);
@@ -157,7 +171,11 @@ function editaccess_submit(Pieform $form, $values) {
         $str = get_string('viewaccesseditedsuccessfully', 'view');
     }
     $SESSION->add_ok_msg($str);
+    if ($group) {
+        redirect('/view/groupviews.php?group='.$group);
+    }
     redirect('/view/');
+
 }
 
 

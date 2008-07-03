@@ -213,17 +213,13 @@ function activity_get_viewaccess_users($view, $owner, $type) {
                     FROM {group_member} m
                     JOIN {view_access_group} vg ON vg.group = m.group
                     JOIN {group} g ON (g.id = vg.group AND g.deleted = 0)
-                        WHERE vg.view = ? AND (vg.tutoronly = ? OR m.tutor = ?)
-                UNION SELECT g.owner
-                    FROM {group} g
-                    JOIN {view_access_group} ag ON ag.group = g.id
-                        WHERE ag.view = ? AND g.deleted = 0
+                        WHERE vg.view = ? AND (vg.role IS NULL OR vg.role = m.role)
                 ) AS userlist
                 JOIN {usr} u ON u.id = userlist.userid
                 LEFT JOIN {usr_activity_preference} p ON p.usr = u.id
                 LEFT OUTER JOIN {usr_account_preference} ap ON (ap.usr = u.id AND ap.field = \'lang\')
             WHERE p.activity = ?';
-    $values = array($owner, $owner, $owner, 'friends', $view, $view, $view, 0, 1, $view, $type->id);
+    $values = array($owner, $owner, $owner, 'friends', $view, $view, $view, $type->id);
     if (!$u = get_records_sql_assoc($sql, $values)) {
         $u = array();
     }

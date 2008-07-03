@@ -31,8 +31,10 @@ define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'blocks');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require('view.php');
+require_once(get_config('docroot') . 'lib/group.php');
 
 $view = new View(param_integer('id'));
+$group = $view->get('group');
 
 // If the view has been submitted to a group, disallow editing
 $submittedto = $view->get('submittedto');
@@ -49,9 +51,16 @@ else {
     define('TITLE', get_string('editblocksforview', 'view', $view->get('title')));
 }
 
+if ($group && !group_user_access($group)) {
+    throw new AccessDeniedException();
+}
+
 // check if cancel was selected
 if ($new && isset($_POST['cancel'])) {
     $view->delete();
+    if ($group) {
+        redirect(get_config('wwwroot') . '/view/groupviews.php?group='.$group);
+    }
     redirect(get_config('wwwroot') . '/view/');
 }
 

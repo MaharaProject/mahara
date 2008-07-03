@@ -265,17 +265,16 @@ class View {
 
         // Get access for users and groups
         $extradata = get_records_sql_array("
-            SELECT 'user' AS type, usr AS id, 0 AS tutoronly, startdate, stopdate
+            SELECT 'user' AS type, usr AS id, NULL AS role, startdate, stopdate
                 FROM {view_access_usr}
                 WHERE view = ?
         UNION
-            SELECT 'group', \"group\", tutoronly, startdate, stopdate FROM {view_access_group}
+            SELECT 'group', \"group\", role, startdate, stopdate FROM {view_access_group}
                 INNER JOIN {group} g ON (\"group\" = g.id AND g.deleted = ?)
                 WHERE view = ?", array($this->id, 0, $this->id));
         if ($extradata) {
             foreach ($extradata as &$extraitem) {
                 $extraitem = (array)$extraitem;
-                $extraitem['tutoronly'] = (int)$extraitem['tutoronly'];
             }
             $data = array_merge($data, $extradata);
         }
@@ -363,7 +362,7 @@ class View {
                         break;
                     case 'group':
                         $accessrecord->group = $item['id'];
-                        $accessrecord->tutoronly = $item['tutoronly'];
+                        $accessrecord->role = $item['role'];
                         insert_record('view_access_group', $accessrecord);
                         break;
                 }

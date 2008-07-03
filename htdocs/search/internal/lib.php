@@ -585,7 +585,7 @@ class PluginSearchInternal extends PluginSearch {
         global $USER;
         $sql = "
             SELECT
-                id, name, description, jointype, ctime, mtime
+                id, name, description, grouptype, jointype, ctime, mtime
             FROM
                 {group}
             WHERE (
@@ -651,7 +651,7 @@ class PluginSearchInternal extends PluginSearch {
         global $USER;
         $sql = "
             SELECT
-                id, name, description, jointype, ctime, mtime
+                id, name, description, grouptype, jointype, ctime, mtime
             FROM
                 {group}
             WHERE (

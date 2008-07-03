@@ -307,6 +307,7 @@
                 <FIELD NAME="grouptype" TYPE="char" LENGTH="20" NOTNULL="true" />
                 <FIELD NAME="role" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="edit_views" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
+                <FIELD NAME="see_submitted_views" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="grouptype,role" />
