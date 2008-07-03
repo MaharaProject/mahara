@@ -153,7 +153,9 @@ WHERE
     AND g.deleted = 0
 ORDER BY
     g.name";
-$userassocgroups = (array) get_records_sql_assoc($sql, array($userid));
+if (!$userassocgroups = get_records_sql_assoc($sql, array($userid))) {
+    $userassocgroups = array();
+}
 
 foreach ($userassocgroups as $group) {
     $group->description = str_shorten($group->description, 100, true);
@@ -223,11 +225,19 @@ SELECT gm.group, gm.role AS type
 ) AS a ON a.group = g.id
 WHERE g.deleted = 0
 ORDER BY g.name";
-$allusergroups = (array)get_records_sql_assoc($sql, array($userid, $userid, $userid));
+if (!$allusergroups = get_records_sql_assoc($sql, array($userid, $userid, $userid))) {
+    $allusergroups = array();
+}
 
 if ($loggedinid != $userid) {
     // Get the logged in user's "invite only" groups
-    if ($groups = get_owned_groups($loggedinid, 'invite')) {
+    if ($groups = get_records_sql_array("SELECT g.*
+        FROM {group} g
+        JOIN {group_member} gm ON (gm.group = g.id)
+        WHERE gm.member = ?
+        AND g.jointype = 'invite'
+        AND gm.role = 'admin'
+        AND g.deleted = 0", array($loggedinid))) {
         $invitelist = array();
         foreach ($groups as $group) {
             if (array_key_exists($group->id, $allusergroups)) {
@@ -264,8 +274,17 @@ if ($loggedinid != $userid) {
         }
     }
 
-    // Get the "controlled membership" groups in which the logged in user is a tutor
-    if ($groups = get_tutor_groups($loggedinid, 'controlled')) {
+    // Get the controlled membership groups of which the logged in user is either:
+    // 1. an admin of, or;
+    // 2. has a role in the list of roles who are allowed to assess submitted views for the given grouptype
+    if ($groups = get_records_sql_array("SELECT g.*, gm.ctime
+          FROM {group} g
+          JOIN {group_member} gm ON (gm.group = g.id)
+          JOIN {grouptype_roles} gtr ON (gtr.grouptype = g.grouptype AND gtr.role = gm.role)
+          WHERE gm.member = ?
+          AND g.jointype = 'controlled'
+          AND (gm.role = 'admin' OR gtr.see_submitted_views = 1)
+          AND g.deleted = 0", array($loggedinid))) {
         $controlledlist = array();
         foreach ($groups as $group) {
             if (array_key_exists($group->id, $userassocgroups)) {
@@ -389,7 +408,7 @@ function addmember_submit(Pieform $form, $values) {
     $data->group  = $values['group'];
     $data->member = $userid;
     $data->ctime  = db_format_timestamp(time());
-    $data->tutor  = 0;
+    $data->role  = 'member'; // TODO: modify the dropdown to allow the role to be chosen
     $ctitle = get_field('group', 'name', 'id', $data->group);
     $adduser = get_record('usr', 'id', $data->member);
 

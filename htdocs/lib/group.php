@@ -101,30 +101,6 @@ function get_member_groups($userid=0, $offset=0, $limit=0) {
 
 
 /**
- * all groups the user owns
- * 
- * @param int userid (optional, defaults to $USER id) 
- * @param string $jointype (optional), will filter by jointype.
- * @return array of group db rows
- */
-function get_owned_groups($userid=0, $jointype=null) {
-
-    $userid = optional_userid($userid);
-
-    // TODO: select groups where role in group is admin
-    $sql = 'SELECT g.* FROM {group} g 
-             WHERE g.deleted = ? LIMIT 1';
-    $values = array(0);
-
-    if (!empty($jointype)) {
-        $sql .= ' AND jointype = ?';
-        $values[] = $jointype;
-    }
-       
-    return get_records_sql_array($sql, $values);
-}
-
-/**
  * all groups the user has pending invites to
  * 
  * @param int userid (optional, defaults to $USER id)
@@ -157,29 +133,6 @@ function get_requested_group($userid=0) {
               WHERE gmr.member = ? AND g.deleted = ?', array($userid, 0));
 }
 
-
-/**
- * gets groups the user is a tutor in, or the user owns
- * 
- * @param int $userid (optional, defaults to $USER id)
- * @param string $jointype (optional, will filter by jointype
- */
-function get_tutor_groups($userid=0, $jointype=null) {
-
-    $userid = optional_userid($userid);
-
-    $sql = 'SELECT DISTINCT g.*, gm.ctime
-              FROM {group} g 
-              LEFT JOIN {group_member} gm ON gm.group = g.id
-              WHERE (g.owner = ? OR (gm.member = ? AND gm.tutor = ?)) AND g.deleted = ?';
-    $values = array($userid, $userid, 1, 0);
-    
-    if (!empty($jointype)) {
-        $sql .= ' AND g.jointype = ? ';
-        $values[] = $jointype;
-    }
-    return get_records_sql_array($sql, $values);
-}
 
 // constants for group membership type
 define('GROUP_MEMBERSHIP_ADMIN', 1);

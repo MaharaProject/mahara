@@ -1810,7 +1810,7 @@ function profile_sideblock() {
     $data['invitedgroupsmessage'] = $data['invitedgroups'] == 1 ? get_string('invitedgroup') : get_string('invitedgroups');
     $data['pendingfriends'] = count_records('usr_friend_request', 'owner', $USER->get('id'));
     $data['pendingfriendsmessage'] = $data['pendingfriends'] == 1 ? get_string('pendingfriend') : get_string('pendingfriends');
-    $data['groups'] = get_owned_groups();
+    $data['groups'] = array();
     $data['views'] = get_records_sql_array(
         'SELECT v.id, v.title
         FROM {view} v
