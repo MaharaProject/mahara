@@ -42,14 +42,22 @@ if (!can_view_view($viewid)) {
     throw new AccessDeniedException();
 }
 
-define('TITLE', $view->get('title') . ' ' . get_string('by', 'view') . ' ' . $view->formatted_owner());
+$group = $view->get('group');
+
+$title = $view->get('title');
+define('TITLE', $title);
+
 if ($new) {
-    $heading = hsc($view->get('title'));
+    $heading = hsc($title);
 }
 else {
-    $heading = '<a href="' . get_config('wwwroot') . 'view/view.php?id=' . $view->get('id') .'">' . hsc($view->get('title')) . '</a>';
+    $heading = '<a href="' . get_config('wwwroot') . 'view/view.php?id=' . $view->get('id') .'">' . hsc($title) . '</a>';
 }
-$heading .= ' ' . get_string('by', 'view') . ' <a href="' . get_config('wwwroot') .'user/view.php?id=' . $view->get('owner'). '">' . $view->formatted_owner() . '</a>';
+
+if (!$group) { 
+    $title .= ' ' . get_string('by', 'view') . ' ' . $view->formatted_owner();
+    $heading .= ' ' . get_string('by', 'view') . ' <a href="' . get_config('wwwroot') .'user/view.php?id=' . $view->get('owner'). '">' . $view->formatted_owner() . '</a>';
+}
 
 
 $tutorfilefeedbackformrow = '';
@@ -278,8 +286,6 @@ $smarty->assign('viewid', $viewid);
 $smarty->assign('viewtitle', $view->get('title'));
 $smarty->assign('viewdescription', $view->get('description'));
 $smarty->assign('viewcontent', $view->build_columns());
-$smarty->assign('viewowner', $view->get('owner'));
-$smarty->assign('formattedowner', $view->formatted_owner());
 $smarty->assign('streditviewbutton', ($new) ? get_string('backtocreatemyview', 'view') : get_string('editmyview', 'view'));
 
 if ($USER->get('id') == $view->get('owner')) {
