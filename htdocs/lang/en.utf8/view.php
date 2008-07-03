@@ -46,6 +46,7 @@ $string['ownerformatdescription'] = 'How do you want people who look at your Vie
 // my views
 $string['artefacts'] = 'Artefacts';
 $string['myviews'] = 'My Views';
+$string['groupviewsfor'] = 'Group Views for %s';
 $string['reallyaddaccesstoemptyview'] = 'Your View contains no artefacts.  Do you really want to give these users access to the View?';
 $string['viewdeleted'] = 'View deleted';
 $string['viewsubmitted'] = 'View submitted';

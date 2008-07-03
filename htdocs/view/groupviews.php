@@ -59,7 +59,7 @@ $smarty = smarty();
 $smarty->assign('groupid', $group);
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
-$smarty->assign('heading', get_string('groupviews'));
+$smarty->assign('heading', get_string('groupviewsfor', 'view', get_field('group', 'name', 'id', $group)));
 $smarty->display('view/index.tpl');
 
 ?>

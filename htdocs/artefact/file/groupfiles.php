@@ -73,7 +73,7 @@ $smarty = smarty(
         ),
     )
 );
-$smarty->assign('heading', get_string('filesfor', 'artefact.file', $group->name));
+$smarty->assign('heading', get_string('groupfilesfor', 'artefact.file', $group->name));
 $smarty->assign('groupid', $groupid);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('artefact:file:index.tpl');
