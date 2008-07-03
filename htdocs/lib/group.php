@@ -234,6 +234,37 @@ function group_user_access($groupid, $userid=null) {
     return get_field('group_member', 'role', 'group', $groupid, 'member', $userid);
 }
 
+function group_user_can_edit_views($groupid, $userid=null) {
+    $groupid = (int)$groupid;
+
+    if ($groupid == 0) {
+        throw new InvalidArgumentException("group_user_access: group argument appears to be invalid: $groupid");
+    }
+
+    if (is_null($userid)) {
+        global $USER;
+        $userid = (int)$USER->get('id');
+    }
+    else {
+        $userid = (int)$userid;
+    }
+
+    if ($userid == 0) {
+        throw new InvalidArgumentException("group_user_access: user argument appears to be invalid: $userid");
+    }
+
+    return get_field_sql('
+        SELECT
+            r.edit_views
+        FROM
+            {group_member} m
+            INNER JOIN {group} g ON (m.group = g.id AND g.deleted = 0)
+            INNER JOIN {grouptype_roles} r ON (g.grouptype = r.grouptype AND m.role = r.role)
+        WHERE
+            m.group = ?
+            AND m.member = ?', array($groupid, $userid));
+}
+
 /**
  * function to add a member to a group
  * doesn't do any jointype checking, that should be handled by the caller

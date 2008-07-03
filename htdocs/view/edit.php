@@ -57,7 +57,7 @@ else {
     $group = $view->get('group');
 }
 
-if ($group && !group_user_access($group)) {
+if ($group && !group_user_can_edit_views($group)) {
     throw new AccessDeniedException();
 }
 

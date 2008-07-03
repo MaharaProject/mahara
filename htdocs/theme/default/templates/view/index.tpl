@@ -2,9 +2,11 @@
 {include file="sidebar.tpl"}
 {include file="columnleftstart.tpl"}
 
+{if (!$groupid || $caneditgroupview)}
 <span class="addicon fr">
-<a href="{$WWWROOT}view/edit.php{if $group}?group={$group}{/if}">{str tag="createview" section="view"}</a>
+<a href="{$WWWROOT}view/edit.php{if $groupid}?group={$groupid}{/if}">{str tag="createview" section="view"}</a>
 </span>
+{/if}
 <h2>{$heading}</h2>
 
 {if $groupid}{include file="group/tabstart.tpl" current="views"}{/if}
