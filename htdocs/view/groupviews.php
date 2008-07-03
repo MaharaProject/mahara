@@ -59,7 +59,7 @@ $pagination = build_pagination(array(
 $smarty = smarty();
 $smarty->assign('groupid', $group);
 $smarty->assign('views', $data->data);
-$smarty->assign('caneditgroupviews', group_user_can_edit_views($group));
+$smarty->assign('caneditgroupview', group_user_can_edit_views($group));
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('heading', get_string('groupviewsfor', 'view', get_field('group', 'name', 'id', $group)));
 $smarty->display('view/index.tpl');

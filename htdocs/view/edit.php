@@ -186,6 +186,17 @@ function editview_submit(Pieform $form, $values) {
     }
 
     $view->commit();
+    if (empty($editing) && $group) {
+        // By default, group views should be visible to the group
+        $view->set_access(array(array(
+            'type' => 'group',
+            'id' => $group,
+            'startdate' => null,
+            'stopdate' => null,
+            'role' => null
+        )));
+        $view->commit();
+    }
 
     if ($values['new']) {
         $redirecturl = '/view/blocks.php?id=' . $view->get('id') . '&new=1';
