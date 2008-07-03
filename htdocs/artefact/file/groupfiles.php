@@ -50,7 +50,11 @@ require_once(get_config('docroot') . 'interaction/lib.php');
 require_once(get_config('docroot') . 'lib/grouptype/' . $group->grouptype . '.php');
 
 $groupdata = json_encode($group);
-$grouproles = json_encode(call_static_method('GroupType' . $group->grouptype, 'get_roles'));
+$grouproles = array();
+foreach (call_static_method('GroupType' . $group->grouptype, 'get_roles') as $role) {
+    $grouproles[] = array('name' => $role, 'display' => get_string($role, 'grouptype.'.$group->grouptype));
+}
+$grouproles = json_encode($grouproles);
 
 $javascript .= <<<GROUPJS
 var group = {$groupdata};

@@ -41,16 +41,16 @@ function getpermissions(formid) {
 var permissiontypes = ['view', 'edit', 'republish'];
 
 function permissionform_inputs(permissions, role) {
-    var cells = [TD(null, get_string(role))];
+    var cells = [TD(null, role.display)];
     for (var i = 0; i < permissiontypes.length; i++) {
         var properties = {
             'type':'checkbox',
             'class':'permission',
-            'name':'permission:'+role+':'+permissiontypes[i], 
+            'name':'permission:'+role.name+':'+permissiontypes[i], 
         };
-        if (role == 'admin' || permissions.all || permissions[role] && permissions[role][permissiontypes[i]] == 1) {
+        if (role.name == 'admin' || permissions.all || permissions[role.name] && permissions[role.name][permissiontypes[i]] == 1) {
             properties.checked = true;
-            if (role == 'admin') {
+            if (role.name == 'admin') {
                 properties.disabled = true;
             }
         }
