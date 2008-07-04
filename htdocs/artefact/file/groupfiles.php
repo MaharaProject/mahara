@@ -31,20 +31,19 @@ define('SECTION_PLUGINNAME', 'file');
 define('SECTION_PAGE', 'groupfiles');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('groupfiles', 'artefact.file'));
+require_once(get_config('libroot') . 'group.php');
 safe_require('artefact', 'file');
 
 $javascript = ArtefactTypeFileBase::get_my_files_js(param_integer('folder', null));
 
 $groupid = param_integer('group');
-$group = get_record_sql('
-    SELECT g.id, g.name, g.grouptype, m.role AS userrole
-    FROM {group} g INNER JOIN {group_member} m ON g.id = m.group
-    WHERE g.id = ' . $groupid . ' AND m.member = ' . $USER->get('id'));
-
-if (!$group) {
+if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
+    throw new GroupNotFoundException("Couldn't find group with id $groupid");
+}
+if (!group_user_access($groupid)) {
     throw new AccessDeniedException();
 }
+define('TITLE', $group->name . ' - ' . get_string('groupfiles', 'artefact.file'));
 
 require_once(get_config('docroot') . 'interaction/lib.php');
 require_once(get_config('docroot') . 'lib/grouptype/' . $group->grouptype . '.php');
