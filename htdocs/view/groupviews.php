@@ -35,15 +35,18 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('docroot') . 'lib/view.php');
 require_once(get_config('docroot') . 'lib/group.php');
 require_once('pieforms/pieform.php');
-define('TITLE', get_string('groupviews', 'view'));
 
 //@todo: group menu; group sideblock
 
-$limit = param_integer('limit', 5);
-$offset = param_integer('offset', 0);
-$group = param_integer('group');
+$limit   = param_integer('limit', 5);
+$offset  = param_integer('offset', 0);
+$groupid = param_integer('group');
+if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
+    throw new GroupNotFoundException("Couldn't find group with id $groupid");
+}
+define('TITLE', $group->name . ' - ' . get_string('groupviews', 'view'));
 
-$data = View::get_myviews_data($limit, $offset, $group);
+$data = View::get_myviews_data($limit, $offset, $groupid);
 
 $userid = $USER->get('id');
 
@@ -57,11 +60,11 @@ $pagination = build_pagination(array(
 ));
 
 $smarty = smarty();
-$smarty->assign('groupid', $group);
+$smarty->assign('groupid', $groupid);
 $smarty->assign('views', $data->data);
-$smarty->assign('caneditgroupview', group_user_can_edit_views($group));
+$smarty->assign('caneditgroupview', group_user_can_edit_views($groupid));
 $smarty->assign('pagination', $pagination['html']);
-$smarty->assign('heading', get_string('groupviewsfor', 'view', get_field('group', 'name', 'id', $group)));
+$smarty->assign('heading', get_string('groupviewsfor', 'view', get_field('group', 'name', 'id', $groupid)));
 $smarty->display('view/index.tpl');
 
 ?>
