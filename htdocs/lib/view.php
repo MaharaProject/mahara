@@ -362,7 +362,9 @@ class View {
                         break;
                     case 'group':
                         $accessrecord->group = $item['id'];
-                        $accessrecord->role = $item['role'];
+                        if ($item['role']) {
+                            $accessrecord->role = $item['role'];
+                        }
                         insert_record('view_access_group', $accessrecord);
                         break;
                 }
@@ -1255,6 +1257,82 @@ class View {
         return array($result, $pagination, $totalartefacts, $offset);
     }
 
+    public static function owner_name($ownerformat, $user) {
+
+        switch ($ownerformat) {
+            case FORMAT_NAME_FIRSTNAME:
+                return $user->firstname;
+            case FORMAT_NAME_LASTNAME:
+                return $user->lastname;
+            case FORMAT_NAME_FIRSTNAMELASTNAME:
+                return $user->firstname . ' ' . $user->lastname;
+            case FORMAT_NAME_PREFERREDNAME:
+                return $user->preferredname;
+            case FORMAT_NAME_STUDENTID:
+                return $user->studentid;
+            case FORMAT_NAME_DISPLAYNAME:
+            default:
+                return display_name($user);
+        }
+    }
+
+
+
+    public static function get_sharedviews_data($limit=10, $offset=0, $groupid) {
+        global $USER;
+        $userid = $USER->get('id');
+        require_once(get_config('libroot') . 'group.php');
+        if (!group_user_access($groupid)) {
+            throw new AccessDeniedException();
+        }
+        $from = '
+            FROM {view} v
+            INNER JOIN {view_access_group} a ON (a.view = v.id)
+            INNER JOIN {group_member} m ON (a.group = m.group AND (a.role = m.role OR a.role IS NULL))
+            WHERE a.group = ? AND m.member = ? AND a.group <> v.group';
+        $ph = array($groupid, $userid);
+
+        $count = count_records_sql('SELECT COUNT(*) ' . $from, $ph);
+        $viewdata = get_records_sql_array('
+            SELECT v.id,v.title,v.startdate,v.stopdate,v.description,v.group,v.owner,v.ownerformat ' . $from . '
+            ORDER BY v.title, v.id',
+            $ph, $offset, $limit
+        );
+
+        if ($viewdata) {
+            // Get view owner details for display
+            $owners = array();
+            $groups = array();
+            foreach ($viewdata as $v) {
+                if ($v->owner && !isset($owners[$v->owner])) {
+                    $owners[$v->owner] = $v->owner;
+                } else if ($v->group && !isset($groups[$v->group])) {
+                    $groups[$v->group] = $v->group;
+                }
+            }
+            if (!empty($owners)) {
+                $owners = get_records_select_assoc('usr', 'id IN (' . join(',', $owners) . ')', null, '', 
+                                                   'id,username,firstname,lastname,preferredname,admin,staff,studentid');
+            }
+            if (!empty($groups)) {
+                $groups = get_records_select_assoc('group', 'id IN (' . join(',', $groups) . ')', null, '', 'id,name');
+            }
+            foreach ($viewdata as &$v) {
+                if ($v->owner) {
+                    $v->sharedby = View::owner_name($v->ownerformat, $owners[$v->owner]);
+                } else if ($v->group) {
+                    $v->sharedby = $groups[$v->group]->name;
+                }
+                $v = (array)$v;
+            }
+        }
+
+        return (object) array(
+            'data' => $viewdata,
+            'count' => $count,
+        );
+    }
+
 
     public static function get_myviews_data($limit=5, $offset=0, $groupid=null) {
 
@@ -1262,10 +1340,6 @@ class View {
         $userid = $USER->get('id');
 
         if ($groupid) {
-            require_once(get_config('docroot') . 'lib/group.php');
-            if (!group_user_access($groupid)) {
-                throw new AccessDeniedException();
-            }
             $count = count_records('view', 'group', $groupid);
             $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description
                 FROM {view} v

@@ -189,11 +189,11 @@ function editview_submit(Pieform $form, $values) {
     if (empty($editing) && $group) {
         // By default, group views should be visible to the group
         $view->set_access(array(array(
-            'type' => 'group',
-            'id' => $group,
+            'type'      => 'group',
+            'id'        => $group,
             'startdate' => null,
-            'stopdate' => null,
-            'role' => null
+            'stopdate'  => null,
+            'role'      => null
         )));
         $view->commit();
     }

@@ -2,14 +2,26 @@
 {include file="sidebar.tpl"}
 {include file="columnleftstart.tpl"}
 
-{if (!$groupid || $caneditgroupview)}
 <span class="addicon fr">
 <a href="{$WWWROOT}view/edit.php{if $groupid}?group={$groupid}{/if}">{str tag="createview" section="view"}</a>
 </span>
-{/if}
 <h2>{$heading}</h2>
 
-{if $groupid}{include file="group/tabstart.tpl" current="views"}{/if}
+{if $groupid}
+  {include file="group/tabstart.tpl" current="views"}
+  <ul>
+    <li>
+    {if $shared}<a href="groupviews.php?group={$groupid}">{str tag="viewsownedbygroup" section="view"}</a>
+    {else}{str tag="viewsownedbygroup" section="view"}
+    {/if}
+    </li>
+    <li>
+    {if $shared}{str tag="viewssharedtogroup" section="view"}
+    {else}<a href="groupviews.php?group={$groupid}&shared=1">{str tag="viewssharedtogroup" section="view"}</a>
+    {/if}
+    </li>
+  </ul>
+{/if}
 {if $views}
 <table id="myviewstable">
 

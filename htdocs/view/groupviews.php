@@ -32,8 +32,8 @@ define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'groupviews');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-require_once(get_config('docroot') . 'lib/view.php');
-require_once(get_config('docroot') . 'lib/group.php');
+require_once(get_config('libroot') . 'view.php');
+require_once(get_config('libroot') . 'group.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('groupviews', 'view'));
 
@@ -43,7 +43,14 @@ $limit = param_integer('limit', 5);
 $offset = param_integer('offset', 0);
 $group = param_integer('group');
 
-$data = View::get_myviews_data($limit, $offset, $group);
+$member = group_user_access($group);
+$shared = param_boolean('shared', 0) && $member;
+
+if ($shared) {
+    $data = View::get_sharedviews_data($limit, $offset, $group);
+} else {
+    $data = View::get_myviews_data($limit, $offset, $group);
+}
 
 $userid = $USER->get('id');
 
@@ -56,12 +63,20 @@ $pagination = build_pagination(array(
     'resultcounttextplural' => get_string('views', 'view')
 ));
 
+$groupname = get_field('group', 'name', 'id', $group);
+
 $smarty = smarty();
 $smarty->assign('groupid', $group);
+$smarty->assign('groupname', $groupname);
+$smarty->assign('shared', $shared);
+$smarty->assign('member', $member);
 $smarty->assign('views', $data->data);
-$smarty->assign('caneditgroupview', group_user_can_edit_views($group));
 $smarty->assign('pagination', $pagination['html']);
-$smarty->assign('heading', get_string('groupviewsfor', 'view', get_field('group', 'name', 'id', $group)));
-$smarty->display('view/index.tpl');
+$smarty->assign('heading', get_string('groupviews', 'view'));
+if (group_user_can_edit_views($group) && !$shared) {
+    $smarty->display('view/index.tpl');
+} else {
+    $smarty->display('view/sharedviews.tpl');
+}
 
 ?>
