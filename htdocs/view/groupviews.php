@@ -35,21 +35,29 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'group.php');
 require_once('pieforms/pieform.php');
-define('TITLE', get_string('groupviews', 'view'));
 
 //@todo: group menu; group sideblock
 
-$limit = param_integer('limit', 5);
-$offset = param_integer('offset', 0);
-$group = param_integer('group');
+$limit   = param_integer('limit', 5);
+$offset  = param_integer('offset', 0);
+$groupid = param_integer('group');
+if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
+    throw new GroupNotFoundException("Couldn't find group with id $groupid");
+}
+define('TITLE', $group->name . ' - ' . get_string('groupviews', 'view'));
 
-$member = group_user_access($group);
+$member = group_user_access($groupid);
 $shared = param_boolean('shared', 0) && $member;
 
+$smarty = smarty();
+
 if ($shared) {
-    $data = View::get_sharedviews_data($limit, $offset, $group);
+    $data = View::get_sharedviews_data($limit, $offset, $groupid);
+    $smarty->assign('shared', true);
+    $smarty->assign('heading', get_string('viewssharedto', 'view', $group->name));
 } else {
-    $data = View::get_myviews_data($limit, $offset, $group);
+    $data = View::get_myviews_data($limit, $offset, $groupid);
+    $smarty->assign('heading', get_string('viewsownedby', 'view', $group->name));
 }
 
 $userid = $USER->get('id');
@@ -63,17 +71,13 @@ $pagination = build_pagination(array(
     'resultcounttextplural' => get_string('views', 'view')
 ));
 
-$groupname = get_field('group', 'name', 'id', $group);
-
-$smarty = smarty();
-$smarty->assign('groupid', $group);
-$smarty->assign('groupname', $groupname);
-$smarty->assign('shared', $shared);
+$smarty->assign('groupid', $groupid);
+$smarty->assign('groupname', $group->name);
 $smarty->assign('member', $member);
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
-$smarty->assign('heading', get_string('groupviews', 'view'));
-if (group_user_can_edit_views($group) && !$shared) {
+
+if (group_user_can_edit_views($groupid) && !$shared) {
     $smarty->display('view/index.tpl');
 } else {
     $smarty->display('view/sharedviews.tpl');

@@ -70,6 +70,8 @@ $string['nobodycanseethisview'] = 'Nobody can see this View';
 $string['noviews'] = 'You have no Views.';
 $string['viewsownedbygroup'] = 'Views owned by this group';
 $string['viewssharedtogroup'] = 'Views shared to this group';
+$string['viewsownedby'] = 'Views owned by %s';
+$string['viewssharedto'] = 'Views shared to %s';
 
 // access levels
 $string['public'] = 'Public';
