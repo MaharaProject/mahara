@@ -27,7 +27,6 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'groups');
 require(dirname(dirname(__FILE__)) . '/init.php');
-define('TITLE', get_string('groups'));
 require_once('group.php');
 require_once('searchlib.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
@@ -37,6 +36,7 @@ $id = param_integer('id');
 if (!$group = get_record('group', 'id', $id, 'deleted', 0)) {
     throw new GroupNotFoundException("Couldn't find group with id $id");
 }
+define('TITLE', $group->name . ' - ' . get_string('Members', 'group'));
 
 $group->admins = get_column_sql("SELECT member
     FROM {group_member}
