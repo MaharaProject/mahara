@@ -1278,62 +1278,6 @@ class View {
 
 
 
-    public static function get_sharedviews_data($limit=10, $offset=0, $groupid) {
-        global $USER;
-        $userid = $USER->get('id');
-        require_once(get_config('libroot') . 'group.php');
-        if (!group_user_access($groupid)) {
-            throw new AccessDeniedException();
-        }
-        $from = '
-            FROM {view} v
-            INNER JOIN {view_access_group} a ON (a.view = v.id)
-            INNER JOIN {group_member} m ON (a.group = m.group AND (a.role = m.role OR a.role IS NULL))
-            WHERE a.group = ? AND m.member = ? AND a.group <> v.group';
-        $ph = array($groupid, $userid);
-
-        $count = count_records_sql('SELECT COUNT(*) ' . $from, $ph);
-        $viewdata = get_records_sql_array('
-            SELECT v.id,v.title,v.startdate,v.stopdate,v.description,v.group,v.owner,v.ownerformat ' . $from . '
-            ORDER BY v.title, v.id',
-            $ph, $offset, $limit
-        );
-
-        if ($viewdata) {
-            // Get view owner details for display
-            $owners = array();
-            $groups = array();
-            foreach ($viewdata as $v) {
-                if ($v->owner && !isset($owners[$v->owner])) {
-                    $owners[$v->owner] = $v->owner;
-                } else if ($v->group && !isset($groups[$v->group])) {
-                    $groups[$v->group] = $v->group;
-                }
-            }
-            if (!empty($owners)) {
-                $owners = get_records_select_assoc('usr', 'id IN (' . join(',', $owners) . ')', null, '', 
-                                                   'id,username,firstname,lastname,preferredname,admin,staff,studentid');
-            }
-            if (!empty($groups)) {
-                $groups = get_records_select_assoc('group', 'id IN (' . join(',', $groups) . ')', null, '', 'id,name');
-            }
-            foreach ($viewdata as &$v) {
-                if ($v->owner) {
-                    $v->sharedby = View::owner_name($v->ownerformat, $owners[$v->owner]);
-                } else if ($v->group) {
-                    $v->sharedby = $groups[$v->group]->name;
-                }
-                $v = (array)$v;
-            }
-        }
-
-        return (object) array(
-            'data' => $viewdata,
-            'count' => $count,
-        );
-    }
-
-
     public static function get_myviews_data($limit=5, $offset=0, $groupid=null) {
 
         global $USER;
@@ -1378,7 +1322,6 @@ class View {
                 ORDER BY view, accesstype, grouptype, role, name, id
             ', array());
         }
-    
     
         $data = array();
         if ($viewdata) {
@@ -1436,14 +1379,209 @@ class View {
                 }
             }
         }
-    
+
         return (object) array(
-            'data' => $data,
+            'data'  => $data,
             'count' => $count,
         );
     }
 
+
+    /**
+     * Get all views visible to a user.  Complicated because a view v
+     * is visible to a user u at time t if any of the following are
+     * true:
+     *
+     * - u is a site admin
+     * - v is owned by u
+     * - v is owned by a group g, and u has a role (within g) with view editing permission
+     * - v is publically visible at t (in view_access)
+     * - v is visible to logged in users at t (in view_access)
+     * - v is visible to friends at t, and u is a friend of the view owner (in view_access)
+     * - v is visible to u at t (in view_access_usr)
+     * - v is visible to all roles of group g at t, and u is a member of g (view_access_group)
+     * - v is visible to users with role r of group g at t, and u is a member of g with role r (view_access_group)
+     *
+     * @param integer $ownerid   Only return views owned by this user.
+     * @param integer $groupid   Only return views owned by this group.
+     *
+     */
+    public static function view_search($ownerid=null, $groupid=null, $limit=10, $offset=0) {
+        global $USER;
+        $admin = $USER->get('admin');
+        $loggedin = $USER->is_logged_in();
+        $viewerid = $USER->get('id');
+
+        $where = '
+            WHERE TRUE';
+        $ph = array();
+        if ($ownerid) {
+            $where .= '
+                AND v.owner = ?';
+            $ph[] = $ownerid;
+        } else if ($groupid) {
+            $where .= '
+                AND v.group = ?';
+            $ph[] = $groupid;
+        }
+
+        if ($admin) {
+            $from = '
+            FROM {view} v';
+        }
+        else if (!$loggedin) {
+            // Unreachable and not tested yet:
+            $from = '
+            FROM {view} v
+                INNER JOIN {view_access} va ON (va.view = v.id)
+            ';
+            $where .= "
+                AND (v.startdate IS NULL OR v.startdate < current_timestamp)
+                AND (v.stopdate IS NULL OR v.stopdate < current_timestamp)
+                AND va.accesstype = 'public'
+                AND (va.startdate IS NULL OR va.startdate < current_timestamp)
+                AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)";
+        }
+        else {
+            $from = '
+            FROM {view} v
+            LEFT OUTER JOIN (
+                SELECT
+                    gtr.edit_views, gm.group AS groupid
+                FROM {group} g
+                INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ?)
+                INNER JOIN {grouptype_roles} gtr ON (g.grouptype = gtr.grouptype AND gtr.role = gm.role)
+            ) AS vg ON (vg.groupid = v.group)
+            LEFT OUTER JOIN {view_access} va ON (
+                va.view = v.id
+                AND (va.startdate IS NULL OR va.startdate < current_timestamp)
+                AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
+            )
+            LEFT OUTER JOIN {usr_friend} f ON (usr1 = v.owner AND usr2 = ?)
+            LEFT OUTER JOIN {view_access_usr} vau ON (
+                vau.view = v.id
+                AND (vau.startdate IS NULL OR vau.startdate < current_timestamp)
+                AND (vau.stopdate IS NULL OR vau.stopdate > current_timestamp)
+                AND vau.usr = ?
+            )
+            LEFT OUTER JOIN (
+                SELECT
+                    vag.view, vagm.member
+                FROM {view_access_group} vag
+                INNER JOIN {group_member} vagm ON (vag.group = vagm.group AND (vag.role = vagm.role OR vag.role IS NULL))
+                WHERE
+                    (vag.startdate IS NULL OR vag.startdate < current_timestamp)
+                    AND (vag.stopdate IS NULL OR vag.stopdate > current_timestamp)
+                    AND vagm.member = ?
+            ) AS ag ON (
+                ag.view = v.id
+            )';
+            $where .= "
+                AND (
+                    v.owner = ?
+                    OR vg.edit_views = 1
+                    OR ((v.startdate IS NULL OR v.startdate < current_timestamp)
+                        AND (v.stopdate IS NULL OR v.stopdate < current_timestamp)
+                        AND (va.accesstype = 'public'
+                            OR va.accesstype = 'loggedin'
+                            OR (va.accesstype = 'friends' AND f.usr2 = ?)
+                            OR (vau.usr = ?)
+                            OR (ag.member = ?)
+                        )
+                    )
+                )";
+            $ph = array_merge(array($viewerid,$viewerid,$viewerid,$viewerid), $ph, array($viewerid,$viewerid,$viewerid,$viewerid));
+        }
+
+        $count = count_records_sql('SELECT COUNT (DISTINCT v.id) ' . $from . $where, $ph);
+        $viewdata = get_records_sql_array('
+            SELECT * FROM (
+                SELECT
+                    DISTINCT ON (v.id)
+                    v.id, v.title, v.description, v.owner, v.ownerformat, v.group
+                ' . $from . $where . '
+            ) a
+            ORDER BY a.title, a.id ',
+            $ph, $offset, $limit
+        );
+
+        View::get_view_owner_info($viewdata);
+
+        return (object) array(
+            'data'  => $viewdata,
+            'count' => $count,
+        );
+
+    }
+
+
+    /** 
+     * Get views which have been explicitly shared to a group and are
+     * not owned by the group
+     */
+    public static function get_sharedviews_data($limit=10, $offset=0, $groupid) {
+        global $USER;
+        $userid = $USER->get('id');
+        require_once(get_config('libroot') . 'group.php');
+        if (!group_user_access($groupid)) {
+            throw new AccessDeniedException();
+        }
+        $from = '
+            FROM {view} v
+            INNER JOIN {view_access_group} a ON (a.view = v.id)
+            INNER JOIN {group_member} m ON (a.group = m.group AND (a.role = m.role OR a.role IS NULL))
+            WHERE a.group = ? AND m.member = ? AND (v.group IS NULL OR v.group != ?)';
+        $ph = array($groupid, $userid, $groupid);
+
+        $count = count_records_sql('SELECT COUNT(*) ' . $from, $ph);
+        $viewdata = get_records_sql_array('
+            SELECT v.id,v.title,v.startdate,v.stopdate,v.description,v.group,v.owner,v.ownerformat ' . $from . '
+            ORDER BY v.title, v.id',
+            $ph, $offset, $limit
+        );
+
+        View::get_view_owner_info($viewdata);
+
+        return (object) array(
+            'data'  => $viewdata,
+            'count' => $count,
+        );
+    }
+
+
+    public static function get_view_owner_info(&$viewdata) {
+        if ($viewdata) {
+            // Get view owner details for display
+            $owners = array();
+            $groups = array();
+            foreach ($viewdata as $v) {
+                if ($v->owner && !isset($owners[$v->owner])) {
+                    $owners[$v->owner] = $v->owner;
+                } else if ($v->group && !isset($groups[$v->group])) {
+                    $groups[$v->group] = $v->group;
+                }
+            }
+            if (!empty($owners)) {
+                $owners = get_records_select_assoc('usr', 'id IN (' . join(',', $owners) . ')', null, '', 
+                                                   'id,username,firstname,lastname,preferredname,admin,staff,studentid');
+            }
+            if (!empty($groups)) {
+                $groups = get_records_select_assoc('group', 'id IN (' . join(',', $groups) . ')', null, '', 'id,name');
+            }
+            foreach ($viewdata as &$v) {
+                if ($v->owner) {
+                    $v->sharedby = View::owner_name($v->ownerformat, $owners[$v->owner]);
+                } else if ($v->group) {
+                    $v->sharedby = $groups[$v->group]->name;
+                }
+                $v = (array)$v;
+            }
+        }
+    }
+
+
 }
+
 
 /**
  * display format for author names in views - firstname

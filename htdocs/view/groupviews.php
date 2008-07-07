@@ -48,6 +48,7 @@ define('TITLE', $group->name . ' - ' . get_string('groupviews', 'view'));
 
 $member = group_user_access($groupid);
 $shared = param_boolean('shared', 0) && $member;
+$can_edit = group_user_can_edit_views($groupid);
 
 $smarty = smarty();
 
@@ -55,9 +56,15 @@ if ($shared) {
     $data = View::get_sharedviews_data($limit, $offset, $groupid);
     $smarty->assign('shared', true);
     $smarty->assign('heading', get_string('viewssharedto', 'view', $group->name));
-} else {
-    $data = View::get_myviews_data($limit, $offset, $groupid);
+}
+else {
     $smarty->assign('heading', get_string('viewsownedby', 'view', $group->name));
+    if ($can_edit) {
+        $data = View::get_myviews_data($limit, $offset, $groupid);
+    }
+    else {
+        $data = View::view_search(null, $groupid, $limit, $offset);
+    }
 }
 
 $userid = $USER->get('id');
@@ -77,7 +84,7 @@ $smarty->assign('member', $member);
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
 
-if (group_user_can_edit_views($groupid) && !$shared) {
+if ($can_edit && !$shared) {
     $smarty->display('view/index.tpl');
 } else {
     $smarty->display('view/sharedviews.tpl');
