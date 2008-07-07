@@ -1902,6 +1902,27 @@ span.viewicon {
     margin: .25em 0 0 65px;
 }
 
+/* GROUPS > GROUP VIEWS */
+ul#groupviewoptions {
+    list-style-type: none;
+    margin: 8px 0 0 10px;
+}
+#groupviewoptions li {
+    display: inline;
+    border: 1px solid #bbb;
+    margin: 0 0 0 5px;
+    padding: 2px 5px 2px 5px;
+    background-color: #ccc;
+}
+#groupviewoptions li.current {
+    background-color: #fff;
+}
+table#myviewstable.groupviews{
+    margin-top: 1px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
 /* GROUPS > MY GROUPS */
 #mygroupstable {
 	border-top: 1px solid #95a8b7;

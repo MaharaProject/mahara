@@ -11,39 +11,47 @@
 
 {include file="group/tabstart.tpl" current="views"}
 {if $member}
-  <ul>
-    <li>
-    {if $shared}<a href="groupviews.php?group={$groupid}">{str tag="viewsownedbygroup" section="view"}</a>
-    {else}{str tag="viewsownedbygroup" section="view"}
-    {/if}
+  <ul id="groupviewoptions">
+    <li{if !$shared} class="current"{/if}>
+      <a href="groupviews.php?group={$groupid}">{str tag="viewsownedbygroup" section="view"}</a>
     </li>
-    <li>
-    {if $shared}{str tag="viewssharedtogroup" section="view"}
-    {else}<a href="groupviews.php?group={$groupid}&shared=1">{str tag="viewssharedtogroup" section="view"}</a>
-    {/if}
+    <li{if $shared} class="current"{/if}>
+      <a href="groupviews.php?group={$groupid}&shared=1">{str tag="viewssharedtogroup" section="view"}</a>
     </li>
   </ul>
 {/if}
 {if $views}
-<table id="myviewstable">
-
-{foreach from=$views item=view}
-    <tr class="{cycle values=r0,r1}">
-    <td><h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a></h3></td>
-    <td>
-        by <a href="{$WWWROOT}{if $view.group}group{else}user{/if}/view.php?id={if $view.group}{$view.group}{else}{$view.owner}{/if}">{if $view.sharedby}{$view.sharedby}{else}{$groupname}{/if}</a>
-    </td>
-    <td>{$view.description}</td>
-    </tr>
-{/foreach}
-
-</table>
-
-<div class="center">{$pagination}</div>
-
+    <table id="myviewstable" class="groupviews">
+    {foreach from=$views item=view}
+        <tr>
+            <td class="r{cycle values=0,1}">
+                <h5><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a> {str tag=by section=view}
+                    <a href="{$WWWROOT}{if $view.group}group{else}user{/if}/view.php?id={if $view.group}{$view.group}{else}{$view.owner}{/if}">{if $view.sharedby}{$view.sharedby}{else}{$groupname}{/if}</a>
+                </h5>
+                <span>
+                {if $view.description}
+                    {$view.description}
+                {/if}
+                {if $view.description && $view.artefacts}<br>{/if}
+                {if $view.artefacts}
+                    <strong>{str tag="artefacts" section="view"}:</strong>
+                    {foreach from=$view.artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$view.id}" class="link-artefacts">{$artefact.title|escape}</a>{if !$smarty.foreach.artefacts.last}, {/if}{/foreach}
+                {/if}
+                </span>
+            </td>
+        </tr>
+    {/foreach}
+    </table>
+    <div class="center">{$pagination}</div>
 {else}
-<div class="message">{str tag="noviews" section="view"}</div>
+<table id="myviewstable" class="{if $member}groupviews{else}noviews{/if}">
+  <tr>
+    <td>{str tag="noviewstosee" section="group"}</td>
+  </tr>
+</table>
 {/if}
+
+
 {include file="group/tabend.tpl"}
 
 {include file="columnleftend.tpl"}

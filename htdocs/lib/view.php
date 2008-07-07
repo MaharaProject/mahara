@@ -1505,10 +1505,10 @@ class View {
             $ph, $offset, $limit
         );
 
-        View::get_view_owner_info($viewdata);
+        View::get_extra_view_info($viewdata);
 
         return (object) array(
-            'data'  => $viewdata,
+            'data'  => array_values($viewdata),
             'count' => $count,
         );
 
@@ -1534,22 +1534,22 @@ class View {
         $ph = array($groupid, $userid, $groupid);
 
         $count = count_records_sql('SELECT COUNT(*) ' . $from, $ph);
-        $viewdata = get_records_sql_array('
+        $viewdata = get_records_sql_assoc('
             SELECT v.id,v.title,v.startdate,v.stopdate,v.description,v.group,v.owner,v.ownerformat ' . $from . '
             ORDER BY v.title, v.id',
             $ph, $offset, $limit
         );
 
-        View::get_view_owner_info($viewdata);
+        View::get_extra_view_info($viewdata);
 
         return (object) array(
-            'data'  => $viewdata,
+            'data'  => array_values($viewdata),
             'count' => $count,
         );
     }
 
 
-    public static function get_view_owner_info(&$viewdata) {
+    public static function get_extra_view_info(&$viewdata) {
         if ($viewdata) {
             // Get view owner details for display
             $owners = array();
@@ -1559,6 +1559,27 @@ class View {
                     $owners[$v->owner] = $v->owner;
                 } else if ($v->group && !isset($groups[$v->group])) {
                     $groups[$v->group] = $v->group;
+                }
+            }
+            $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
+                FROM {view_artefact} va
+                INNER JOIN {artefact} a ON va.artefact = a.id
+                INNER JOIN {artefact_installed_type} t ON a.artefacttype = t.name
+                WHERE va.view IN (' . join(',', array_keys($viewdata)) . ')
+                GROUP BY va.view, va.artefact, a.title, a.artefacttype, t.plugin
+                ORDER BY a.title, va.artefact', '');
+            foreach ($artefacts as $artefactrec) {
+                safe_require('artefact', $artefactrec->plugin);
+                $classname = generate_artefact_class_name($artefactrec->artefacttype);
+                $artefactobj = new $classname(0, array('title' => $artefactrec->title));
+                $artefactobj->set('dirty', false);
+                if (!$artefactobj->in_view_list()) {
+                    continue;
+                }
+                $artname = $artefactobj->display_title(30);
+                if (strlen($artname)) {
+                    $viewdata[$artefactrec->view]->artefacts[] = array('id'    => $artefactrec->artefact,
+                                                                       'title' => $artname);
                 }
             }
             if (!empty($owners)) {

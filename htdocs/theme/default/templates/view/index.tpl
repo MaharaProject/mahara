@@ -9,21 +9,17 @@
 
 {if $groupid}
   {include file="group/tabstart.tpl" current="views"}
-  <ul>
-    <li>
-    {if $shared}<a href="groupviews.php?group={$groupid}">{str tag="viewsownedbygroup" section="view"}</a>
-    {else}{str tag="viewsownedbygroup" section="view"}
-    {/if}
+  <ul id="groupviewoptions">
+    <li{if !$shared} class="current"{/if}>
+      <a href="groupviews.php?group={$groupid}">{str tag="viewsownedbygroup" section="view"}</a>
     </li>
-    <li>
-    {if $shared}{str tag="viewssharedtogroup" section="view"}
-    {else}<a href="groupviews.php?group={$groupid}&shared=1">{str tag="viewssharedtogroup" section="view"}</a>
-    {/if}
+    <li{if $shared} class="current"{/if}>
+      <a href="groupviews.php?group={$groupid}&shared=1">{str tag="viewssharedtogroup" section="view"}</a>
     </li>
   </ul>
 {/if}
 {if $views}
-<table id="myviewstable">
+<table id="myviewstable" class="groupviews">
 
 {foreach from=$views item=view}
     <tr class="{cycle values=r0,r1}">
@@ -91,7 +87,11 @@
 <div class="center">{$pagination}</div>
 
 {else}
-<div class="message">{str tag="noviews" section="view"}</div>
+<table id="myviewstable" class="noviews">
+  <tr>
+    <td>{str tag="noviewstosee" section="group"}</td>
+  </tr>
+</table>
 {/if}
 {if $groupid}{include file="group/tabend.tpl"}{/if}
 
