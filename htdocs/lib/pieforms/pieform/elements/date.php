@@ -116,7 +116,7 @@ EOF;
 function pieform_element_date_get_value(Pieform $form, $element) {/*{{{*/
     $name = $element['name'];
     $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
-    if ( isset($global[$name . '_day']) && isset($global[$name . '_month']) && isset($global[$name . '_year']) ) {
+    if ($form->is_submitted() && isset($global[$name . '_day']) && isset($global[$name . '_month']) && isset($global[$name . '_year'])) {
         $time = mktime(0, 0, 0, $global[$name . '_month'], $global[$name . '_day'], $global[$name . '_year']);
         if (false === $time) {
             return null;

@@ -42,7 +42,7 @@ function pieform_element_password_get_value(Pieform $form, $element) {/*{{{*/
     if (isset($global[$element['name']])) {
         return $global[$element['name']];
     }
-    if (isset($element['value'])) {
+    if ($form->is_submitted() && isset($element['value'])) {
         return $element['value'];
     }
     return null;
