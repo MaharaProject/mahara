@@ -311,6 +311,10 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     if (false === strpos($section, '.')) {
         $langdirectory = 'lang/';
     }
+    else if (strpos($section, 'grouptype.') === 0) {
+        $grouptypename = substr($section ,strlen('grouptype.'));
+        $langdirectory = 'lib/grouptype/lang/';
+    }
     else {
         $extras = plugin_types(); // more later..
         foreach ($extras as $tocheck) {
