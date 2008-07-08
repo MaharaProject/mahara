@@ -1169,10 +1169,33 @@ class View {
         safe_require('blocktype', $data['blocktype']);
         $blocktypeclass = generate_class_name('blocktype', $data['blocktype']);
 
+        $sql = ' FROM {artefact} a ';
         if ($group) {
-            $select = '"group" = ' . $group;
+            // Get group-owned artefacts that the user has view
+            // permission on.
+            $sql .= '
+            INNER JOIN {artefact_access_role} r ON a.id = r.artefact
+            INNER JOIN {group_member} m ON r.role = m.role';
+            $select = 'a."group" = ' . $group . '
+            AND m."group" = ' . $group . '
+            AND m.member = ' . $USER->get('id') . '
+            AND can_view = 1';
         } else {
-            $select = 'owner = ' . $USER->get('id');
+            // Get artefacts owned by the user and group-owned
+            // artefacts the user has republish permission on.
+            $sql .= '
+            LEFT OUTER JOIN {artefact_access_usr} aau ON (a.id = aau.artefact AND aau.usr = ' . $USER->get('id') . ')
+            LEFT OUTER JOIN (
+                SELECT
+                    aar.artefact, aar.can_republish, m.group
+                FROM
+                    {artefact_access_role} aar
+                    INNER JOIN {group_member} m ON aar.role = m.role
+                WHERE
+                    m.member = ' . $USER->get('id') . '
+                    AND aar.can_republish = 1
+            ) ra ON (a.id = ra.artefact AND a.group = ra.group)';
+            $select = '(owner = ' . $USER->get('id') . ' OR ra.can_republish = 1 OR aau.can_republish = 1) ';
         }
         if (!empty($artefacttypes)) {
             $select .= ' AND artefacttype IN(' . implode(',', array_map('db_quote', $artefacttypes)) . ')';
@@ -1189,8 +1212,8 @@ class View {
         if (method_exists($blocktypeclass, 'artefactchooser_get_sort_order')) {
             $sortorder = call_static_method($blocktypeclass, 'artefactchooser_get_sort_order');
         }
-        $artefacts = get_records_select_array('artefact', $select, null, $sortorder, '*', $offset, $limit);
-        $totalartefacts = count_records_select('artefact', $select);
+        $artefacts = get_records_sql_array('SELECT a.* ' . $sql . ' WHERE ' . $select . ' ORDER BY ' . $sortorder, null, $offset, $limit);
+        $totalartefacts = count_records_sql('SELECT COUNT(*) ' . $sql . ' WHERE ' . $select);
 
         $result = '';
         if ($artefacts) {
