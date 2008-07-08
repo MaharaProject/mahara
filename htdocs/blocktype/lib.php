@@ -640,6 +640,26 @@ class BlockInstance {
         }
     }
 
+
+    /** 
+     * Get an artefact instance, checking republish permissions
+     */
+    public function get_artefact_instance($id) {
+        require_once(get_config('docroot') . 'artefact/lib.php');
+        $a = artefact_instance_from_id($id);
+        $viewowner = $this->get_view()->get('owner');
+        $group = $a->get('group');
+        if ($viewowner && $group) {
+            // Only group artefacts can have artefact_access_role & artefact_access_usr records
+            if (!count_records_sql("SELECT COUNT(ar.can_republish) FROM {artefact_access_role} ar
+                INNER JOIN {group_member} g ON ar.role = g.role
+                WHERE ar.artefact = ? AND g.member = ? AND g.group = ? AND ar.can_republish = 1", array($a->get('id'), $viewowner, $group))
+                and !record_exists('artefact_access_usr', 'usr', $viewowner, 'artefact', $a->get('id'), 'can_republish', 1)) {
+                throw new ArtefactNotFoundException(get_string('artefactnotpublishable', 'mahara', $id, $this->get_view()->get('id')));
+            }
+        }
+        return $a;
+    }
 }
 
 

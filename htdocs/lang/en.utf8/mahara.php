@@ -483,6 +483,7 @@ $string['noeditpermission'] = 'You do not have permission to edit this artefact'
 $string['Permissions'] = 'Permissions';
 $string['republish'] = 'Publish';
 $string['view'] = 'View';
+$string['artefactnotpublishable'] = 'Artefact %s is not publishable in view %s';
 
 $string['belongingto'] = 'Belonging to';
 $string['allusers'] = 'All users';
