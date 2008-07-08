@@ -114,6 +114,7 @@ $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
 $smarty->assign('category', $category);
 $smarty->assign('new', $new);
 $smarty->assign('view', $view->get('id'));
+$smarty->assign('groupid', $view->get('group'));
 $smarty->assign('can_change_layout', (!$USER->get_account_preference('addremovecolumns') || ($view->get('numcolumns') > 1 && $view->get('numcolumns') < 5)));
 $smarty->display('view/blocks.tpl');
 

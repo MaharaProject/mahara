@@ -63,7 +63,10 @@
             <input class="submit" type="submit" value="{str tag='next'}">
         </form>
 {else}
-        <form action="{$WWWROOT}view/" method="GET">
+        <form action="{$WWWROOT}view/{if $groupid}groupviews.php{/if}" method="GET">
+    {if $groupid}
+            <input type="hidden" name="group" value="{$groupid}">
+    {/if}
             <input class="submit" type="submit" value="{str tag='done'}">
         </form>
 {/if}
