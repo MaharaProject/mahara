@@ -464,7 +464,7 @@ abstract class GroupType {
             'submittableto' => !empty($assessingroles),
         ));
         $roles = $this->get_roles();
-        if (!in_array($roles, 'admin')) {
+        if (!in_array('admin', $roles)) {
             $roles[] = 'admin';
         }
         $editingroles = $this->get_view_editing_roles();
@@ -472,8 +472,8 @@ abstract class GroupType {
             insert_record('grouptype_roles', (object) array(
                 'grouptype' => $type,
                 'role' => $r,
-                'edit_views' => in_array($r, $editingroles),
-                'see_submitted_views' => in_array($r, $assessingroles),
+                'edit_views' => (int)in_array($r, $editingroles),
+                'see_submitted_views' => (int)in_array($r, $assessingroles),
             ));
         }
     }
