@@ -6,7 +6,25 @@
 
 {include file="group/tabstart.tpl" current="members"}
 
-                <p>Member listing goes here!</p>
+<form action="{$WWWROOT}group/members.php" method="post">
+    <input type="hidden" id="groupid" name="id" value="{$group->id|escape}">
+    <div class="searchform center" style="margin-bottom: .5em;">
+        <label>{str tag='Query' section='admin'}:
+            <input type="text" name="query" id="query" value="{$query|escape}">
+        </label>
+        <button id="query-button" type="submit">{str tag="go"}</button>
+    </div>
+    <div id="results">
+        <table id="membersearchresults" class="tablerenderer">
+            <tbody>
+            {$results}
+            </tbody>
+        </table>
+    </div>
+    {$pagination}
+    <script type="text/javascript">{$pagination_js}</script>
+</form>
+
 
 {include file="group/tabend.tpl"}
 

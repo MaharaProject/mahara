@@ -42,6 +42,7 @@ function UserSearch() {
     this.newQuery = function(e) {
         self.params = {};
         self.params.query = $('query').value;
+        self.params.id = $('groupid').value;
         self.doSearch();
         e.stop();
     }

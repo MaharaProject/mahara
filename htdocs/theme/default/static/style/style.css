@@ -1901,6 +1901,9 @@ span.viewicon {
 #membersearchresults p {
     margin: .25em 0 0 65px;
 }
+.group-info-para {
+    margin: 15px 0 0 10px;
+}
 
 /* GROUPS > GROUP VIEWS */
 ul#groupviewoptions {

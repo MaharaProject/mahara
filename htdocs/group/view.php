@@ -46,11 +46,6 @@ $group->admins = get_column_sql("SELECT member
 
 $role = group_user_access($id);
 
-// Search related stuff for member pager
-$query  = trim(param_variable('query', ''));
-$offset = param_integer('offset', 0);
-$limit  = param_integer('limit', 5);
-list($html, $pagination, $count, $offset) = group_get_membersearch_data($id, $query, $offset, $limit);
 
 // Latest forums posts
 // NOTE: it would be nicer if there was some generic way to get information 
@@ -73,13 +68,9 @@ $foruminfo = get_records_sql_array('
         p.ctime DESC
     LIMIT 5;
     ', array($id));
-$smarty = smarty(array('paginator', 'groupmembersearch'), array(), array(), array('sideblocks' => array(interaction_sideblock($id, $role))));
+$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($id, $role))));
 $smarty->assign('group', $group);
 $smarty->assign('groupid', $id);
-$smarty->assign('query', $query);
-$smarty->assign('results', $html);
-$smarty->assign('pagination', $pagination['html']);
-$smarty->assign('pagination_js', $pagination['javascript']);
 $smarty->assign('foruminfo', $foruminfo);
 $smarty->display('group/view.tpl');
 

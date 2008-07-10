@@ -45,9 +45,19 @@ $group->admins = get_column_sql("SELECT member
 
 $role = group_user_access($id);
 
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($id, $role))));
+// Search related stuff for member pager
+$query  = trim(param_variable('query', ''));
+$offset = param_integer('offset', 0);
+$limit  = param_integer('limit', 5);
+list($html, $pagination, $count, $offset) = group_get_membersearch_data($id, $query, $offset, $limit);
+
+$smarty = smarty(array('paginator', 'groupmembersearch'), array(), array(), array('sideblocks' => array(interaction_sideblock($id, $role))));
 $smarty->assign('group', $group);
 $smarty->assign('groupid', $id);
+$smarty->assign('query', $query);
+$smarty->assign('results', $html);
+$smarty->assign('pagination', $pagination['html']);
+$smarty->assign('pagination_js', $pagination['javascript']);
 $smarty->display('group/members.tpl');
 
 ?>
