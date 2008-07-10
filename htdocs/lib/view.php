@@ -1394,6 +1394,7 @@ class View {
                   $data[$index[$access->view]]['accessgroups'][] = array(
                       'accesstype' => $access->accesstype, // friends, group, loggedin, public, tutorsgroup, user
                       'role' => $access->role,
+                      'roledisplay' => $access->role ? get_string($access->role, 'grouptype.' . $access->grouptype) : null,
                       'id' => $access->id,
                       'name' => $access->name,
                       'startdate' => $access->startdate,
@@ -1402,7 +1403,7 @@ class View {
                 }
             }
         }
-
+        log_debug($data);
         return (object) array(
             'data'  => $data,
             'count' => $count,
