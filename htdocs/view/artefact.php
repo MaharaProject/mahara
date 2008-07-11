@@ -87,7 +87,7 @@ $artefactpath[] = array(
     'title' => $artefact->display_title(),
 );
 
-$heading = '<a href="' . get_config('wwwroot') . 'view/view.php?id=' . $view->get('id') .'">' . hsc($view->get('title')) . '</a> ' . get_string('by', 'view') . ' <a href="' . get_config('wwwroot') .'user/view.php?id=' . $view->get('owner'). '">' . $view->formatted_owner() . '</a>';
+$heading = $view->formatted_heading();
 foreach ($artefactpath as $item) {
 	if (empty($item['url'])) {
 	    $heading .= ': ' . $item['title'];

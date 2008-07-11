@@ -47,6 +47,7 @@ class View {
     private $artefact_instances;
     private $artefact_metadata;
     private $ownerobj;
+    private $groupobj;
     private $numcolumns;
     private $layout;
     private $columns;
@@ -232,6 +233,13 @@ class View {
             $this->ownerobj = get_record('usr', 'id', $this->get('owner'));
         }
         return $this->ownerobj;
+    }
+
+    public function get_group_object() {
+        if (!isset($this->groupobj)) {
+            $this->groupobj = get_record('group', 'id', $this->get('group'));
+        }
+        return $this->groupobj;
     }
 
     
@@ -1103,9 +1111,10 @@ class View {
      */
     public function formatted_owner() {
 
-        $user = $this->get_owner_object();
+        if ($this->get('owner')) {
+            $user = $this->get_owner_object();
 
-        switch ($this->ownerformat) {
+            switch ($this->ownerformat) {
             case FORMAT_NAME_FIRSTNAME:
                 return $user->firstname;
             case FORMAT_NAME_LASTNAME:
@@ -1119,7 +1128,26 @@ class View {
             case FORMAT_NAME_DISPLAYNAME:
             default:
                 return display_name($user);
+            }
+        } else if ($this->get('group')) {
+            $group = $this->get_group_object();
+            return $group->name;
         }
+        return null;
+    }
+
+
+    public function formatted_heading() {
+        if ($this->get('owner')) {
+            $link = 'user/view.php?id='.$this->get('owner');
+        }
+        else if ($this->get('group')) {
+            $link = 'group/view.php?id='.$this->get('group');
+        }
+        else {
+            $link = '';
+        }
+        return '<a href="' . get_config('wwwroot') . 'view/view.php?id=' . $this->get('id') .'">' . hsc($this->get('title')) . '</a> ' . get_string('by', 'view') . ' <a href="' . get_config('wwwroot') . $link . '">' . $this->formatted_owner() . '</a>';
     }
 
     /**

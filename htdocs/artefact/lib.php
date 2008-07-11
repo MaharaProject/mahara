@@ -533,6 +533,17 @@ abstract class ArtefactType {
         return $this->get('title');
     }
 
+    public function display_owner() {
+        if ($owner = $this->get('owner')) {
+            return display_name($owner);
+        }
+        if ($group = $this->get('group')) {
+            return get_field('group', 'name', 'id', $group);
+        }
+        return null;
+    }
+
+
     // ******************** HELPER FUNCTIONS ******************** //
 
     protected function get_artefact_type() {
