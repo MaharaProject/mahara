@@ -983,7 +983,7 @@ function xmldb_core_upgrade($oldversion=0) {
         log_debug('GROUP TYPE REFACTOR');
 
         execute_sql('ALTER TABLE {group} ADD grouptype CHARACTER VARYING(20)');
-        execute_sql('ALTER TABLE {group_member} ADD role TEXT');
+        execute_sql('ALTER TABLE {group_member} ADD role CHARACTER VARYING(255)');
 
         $groups = get_records_array('group');
         if ($groups) {
@@ -1072,7 +1072,7 @@ function xmldb_core_upgrade($oldversion=0) {
 
     if ($oldversion < 2008062301) {
         execute_sql('CREATE TABLE {artefact_access_role} (
-            role TEXT NOT NULL,
+            role VARCHAR(255) NOT NULL,
             artefact INTEGER NOT NULL REFERENCES {artefact}(id),
             can_view SMALLINT NOT NULL,
             can_edit SMALLINT NOT NULL,
@@ -1095,7 +1095,7 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("INSERT INTO {grouptype} (name,usercancreate,submittableto) VALUES ('course',0,1)");
         execute_sql('CREATE TABLE {grouptype_roles} (
             grouptype VARCHAR(20) NOT NULL REFERENCES {grouptype}(name),
-            role TEXT NOT NULL
+            role VARCHAR(255) NOT NULL
         );');
         execute_sql("INSERT INTO {grouptype_roles} (grouptype,role) VALUES ('standard','admin')");
         execute_sql("INSERT INTO {grouptype_roles} (grouptype,role) VALUES ('standard','member')");
@@ -1112,7 +1112,7 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql('ALTER TABLE {view} ADD COLUMN "group" BIGINT');
         execute_sql('ALTER TABLE {view} ADD CONSTRAINT {view_gro_fk} FOREIGN KEY ("group") REFERENCES {group}(id)');
         execute_sql('ALTER TABLE {view} ALTER COLUMN owner DROP NOT NULL');
-        execute_sql('ALTER TABLE {view_access_group} ADD COLUMN role TEXT');
+        execute_sql('ALTER TABLE {view_access_group} ADD COLUMN role VARCHAR(255)');
         execute_sql("UPDATE {view_access_group} SET role = 'tutor' WHERE tutoronly = 1");
         execute_sql('ALTER TABLE {view_access_group} DROP COLUMN tutoronly');
     }
