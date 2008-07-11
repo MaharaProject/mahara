@@ -57,6 +57,7 @@ $string['reject']                    = 'Reject';
 $string['groupalreadyexists'] = 'A Group by this name already exists';
 $string['Created'] = 'Created';
 $string['groupadmins'] = 'Group admins';
+$string['grouptype'] = 'Group Type';
 
 // Used to refer to all the members of a group - NOT a "member" group role!
 $string['member'] = 'member';

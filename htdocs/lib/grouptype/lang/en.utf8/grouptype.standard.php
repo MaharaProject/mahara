@@ -26,6 +26,7 @@
 
 defined('INTERNAL') || die();
 
+$string['name'] = 'Standard';
 $string['admin'] = 'Admin';
 $string['member'] = 'Member';
 
