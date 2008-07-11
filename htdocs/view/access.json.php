@@ -47,7 +47,7 @@ switch ($type) {
         $roles = get_records_array('grouptype_roles');
         $data['roles'] = array();
         foreach ($roles as $r) {
-            $data['roles'][$r->grouptype][] = array('name' => $r->role, 'display' => get_string($r->role));
+            $data['roles'][$r->grouptype][] = array('name' => $r->role, 'display' => get_string($r->role, 'grouptype.'.$r->grouptype));
         }
         break;
 }

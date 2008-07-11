@@ -71,7 +71,7 @@ function renderAccessListItem(item) {
     var row = TABLE({'class': cssClass},
         TBODY(null, 
             TR(null,
-                TH(null, name,  (item.role ? ' ' + item.role : '')),
+                TH(null, name,  (item.role ? ' - ' + item.roledisplay : '')),
                 TD({'class': 'right'}, removeButton)
             ),
             TR(null,
@@ -219,16 +219,20 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
     }
     else if (rowdata.type == 'group') {
         rowdata.role = null;
-        var options = [OPTION({'value':null, 'selected':true}, '{{str tag=all}}')];
+        var options = [OPTION({'value':null, 'selected':true}, '{{str tag=everyoneingroup section=view}}')];
         for (r in globaldata.roles[rowdata.grouptype]) {
             options.push(OPTION({'value':globaldata.roles[rowdata.grouptype][r].name}, globaldata.roles[rowdata.grouptype][r].display));
         }
         roleSelector = SELECT({'name':'role'}, options);
         connect(roleSelector, 'onchange', function() {
             rowdata.role = this.value;
+            if (this.value) {
+                rowdata.roledisplay = scrapeText(this.childNodes[this.selectedIndex]);
+            }
         });
-        appendChildNodes(buttonTD, roleSelector);
         identityNodes.push(A({'href': config.wwwroot + 'group/view.php?id=' + rowdata.id, 'target': '_blank'}, rowdata.name));
+        identityNodes.push(" - ");
+        identityNodes.push(roleSelector);
     }
 
     return TR({'class': 'r' + (rownumber % 2)},

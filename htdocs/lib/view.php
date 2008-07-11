@@ -265,16 +265,19 @@ class View {
 
         // Get access for users and groups
         $extradata = get_records_sql_array("
-            SELECT 'user' AS type, usr AS id, NULL AS role, startdate, stopdate
+            SELECT 'user' AS type, usr AS id, NULL AS role, NULL AS grouptype, startdate, stopdate
                 FROM {view_access_usr}
                 WHERE view = ?
         UNION
-            SELECT 'group', \"group\", role, startdate, stopdate FROM {view_access_group}
+            SELECT 'group', \"group\", role, grouptype, startdate, stopdate FROM {view_access_group}
                 INNER JOIN {group} g ON (\"group\" = g.id AND g.deleted = ?)
                 WHERE view = ?", array($this->id, 0, $this->id));
         if ($extradata) {
             foreach ($extradata as &$extraitem) {
                 $extraitem = (array)$extraitem;
+                if ($extraitem['role']) {
+                    $extraitem['roledisplay'] = get_string($extraitem['role'], 'grouptype.'.$extraitem['grouptype']);
+                }
             }
             $data = array_merge($data, $extradata);
         }
