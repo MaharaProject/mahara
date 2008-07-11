@@ -88,7 +88,7 @@
 {else}
 <table id="myviewstable" class="noviews">
   <tr>
-    <td>{str tag="noviewstosee" section="group"}</td>
+    <td>{if $groupid}{str tag="noviewstosee" section="group"}{else}{str tag="noviews" section="view"}{/if}</td>
   </tr>
 </table>
 {/if}
