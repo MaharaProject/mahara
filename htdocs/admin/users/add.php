@@ -197,7 +197,7 @@ function adduser_submit(Pieform $form, $values) {
     $user->quota          = $values['quota'];
     $user->passwordchange = 1;
 
-    global $USER;
+    global $USER, $SESSION;
     if ($USER->get('admin')) {  // Not editable by institutional admins
         $user->staff = (int) ($values['staff'] == 'on');
         $user->admin = (int) ($values['admin'] == 'on');
@@ -243,10 +243,15 @@ function adduser_submit(Pieform $form, $values) {
     handle_event('createuser', $user);
     db_commit();
 
-    email_user($user, $USER, get_string('accountcreated'),
-        get_string('accountcreatedchangepasswordtext', 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('sitename')),
-        get_string('accountcreatedchangepasswordhtml', 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('sitename'))
-    );
+    try {
+        email_user($user, $USER, get_string('accountcreated'),
+            get_string('accountcreatedchangepasswordtext', 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('sitename')),
+            get_string('accountcreatedchangepasswordhtml', 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('sitename'))
+        );
+    }
+    catch (EmailException $e) {
+        $SESSION->add_error_msg(get_string('newuseremailnotsent', 'admin'));
+    }
 
     redirect('/admin/users/edit.php?id='.$id);
 }
