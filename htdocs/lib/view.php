@@ -1403,7 +1403,7 @@ class View {
                 }
             }
         }
-        log_debug($data);
+
         return (object) array(
             'data'  => $data,
             'count' => $count,

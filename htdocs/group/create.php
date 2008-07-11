@@ -126,6 +126,8 @@ function creategroup_submit(Pieform $form, $values) {
         )
     );
 
+    $USER->reset_grouproles();
+
     $SESSION->add_ok_msg(get_string('groupsaved', 'group'));
 
     db_commit();
