@@ -55,7 +55,7 @@ class PluginBlocktypeEntireresume extends PluginBlocktype {
             WHERE va.view = ?
             AND va.block = ?', array($instance->get('view'), $instance->get('id')))) {
             foreach ($artefacts as $artefact) {
-                $resumefield = artefact_instance_from_id($artefact->artefact);
+                $resumefield = $instance->get_artefact_instance($artefact->artefact);
                 $rendered = $resumefield->render_self(array('viewid' => $instance->get('view')));
                 $result = $rendered['html'];
                 if (!empty($rendered['javascript'])) {

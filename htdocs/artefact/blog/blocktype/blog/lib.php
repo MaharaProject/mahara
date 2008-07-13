@@ -61,7 +61,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         $result = '';
         if (!empty($configdata['artefactid'])) {
             require_once(get_config('docroot') . 'artefact/lib.php');
-            $blog = artefact_instance_from_id($configdata['artefactid']);
+            $blog = $instance->get_artefact_instance($configdata['artefactid']);
             $configdata['hidetitle'] = true;
             $configdata['viewid'] = $instance->get('view');
             $result = $blog->render_self($configdata);

@@ -65,7 +65,7 @@ class PluginBlocktypeFolder extends PluginBlocktype {
         // render_self
         $result = '';
         if (isset($configdata['artefactid'])) {
-            $folder = artefact_instance_from_id($configdata['artefactid']);
+            $folder = $instance->get_artefact_instance($configdata['artefactid']);
             $result = $folder->render_self($configdata);
             $result = $result['html'];
         }
