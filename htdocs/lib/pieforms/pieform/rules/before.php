@@ -54,6 +54,9 @@ function pieform_rule_before_i18n() {/*{{{*/
         'fr.utf8' => array(
             'before' => 'Ceci ne peut pas être placé après le champ "%s"'
         ),
+        'ja.utf8' => array(
+            'before' => 'フィールド「 %s 」の後に設定することはできません'
+        ),
     );
 }/*}}}*/
 

@@ -161,6 +161,9 @@ function pieform_element_calendar_i18n() {/*{{{*/
          'fr.utf8' => array(
             'invalidvalue' => 'Date/Heure indiquée invalide'
         ),
+        'ja.utf8' => array(
+            'invalidvalue' => '無効な日付/時間が指定されました'
+        ),
     );
 }/*}}}*/
 

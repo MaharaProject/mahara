@@ -139,6 +139,12 @@ function pieform_element_bytes_i18n() {/*{{{*/
             'megabytes'    => 'Mégaoctets',
             'invalidvalue' => 'Valeur doit être un nombre',
         ),
+        'ja.utf8' => array(
+            'bytes'        => 'バイト',
+            'kilobytes'    => 'キロバイト',
+            'megabytes'    => 'メガバイト',
+            'invalidvalue' => '値は数値にしてください',
+        ),
     );
 }/*}}}*/
 

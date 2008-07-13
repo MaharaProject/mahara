@@ -50,6 +50,9 @@ function pieform_rule_required_i18n() {/*{{{*/
         'fr.utf8' => array(
             'required' => 'Ce champ est obligatoire'
         ),
+        'ja.utf8' => array(
+            'required' => 'このフィールドは、必須入力フィールドです。'
+        ),
     );
 }/*}}}*/
 
