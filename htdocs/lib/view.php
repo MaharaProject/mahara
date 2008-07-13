@@ -1243,7 +1243,7 @@ class View {
         if (method_exists($blocktypeclass, 'artefactchooser_get_sort_order')) {
             $sortorder = call_static_method($blocktypeclass, 'artefactchooser_get_sort_order');
         }
-        $artefacts = get_records_sql_array('SELECT a.* ' . $sql . ' WHERE ' . $select . ' ORDER BY ' . $sortorder, null, $offset, $limit);
+        $artefacts = get_records_sql_array('SELECT a.* ' . $sql . ' WHERE ' . $select . ($sortorder ? (' ORDER BY ' . $sortorder) : ''), null, $offset, $limit);
         $totalartefacts = count_records_sql('SELECT COUNT(*) ' . $sql . ' WHERE ' . $select);
 
         $result = '';
