@@ -50,6 +50,9 @@ function pieform_rule_maxlength_i18n() {/*{{{*/
          'fr.utf8' => array(
             'maxlength' => 'Ce champ ne peut pas contenir plus de %d signes'
         ),
+        'ja.utf8' => array(
+            'maxlength' => 'このフィールドは、最大半角 %d 文字にしてください'
+        ),
     );
 }/*}}}*/
 

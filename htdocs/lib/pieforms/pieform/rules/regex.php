@@ -51,6 +51,9 @@ function pieform_rule_regex_i18n() {/*{{{*/
         'fr.utf8' => array(
             'regex' => 'Ce champ n\'a pas une forme correcte'
         ),
+        'ja.utf8' => array(
+            'regex' => 'このフィールドは正しい形式ではありません'
+        ),
     );
 }/*}}}*/
 

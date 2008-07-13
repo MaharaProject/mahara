@@ -53,6 +53,9 @@ function pieform_rule_email_i18n() {/*{{{*/
         'fr.utf8' => array(
             'email' => 'Cette adresse de courriel n\'est pas valide'
         ),
+        'ja.utf8' => array(
+            'email' => 'メールアドレスが有効ではありません'
+        ),
     );
 }/*}}}*/
 

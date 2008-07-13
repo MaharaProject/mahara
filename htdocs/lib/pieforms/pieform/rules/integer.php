@@ -50,6 +50,9 @@ function pieform_rule_integer_i18n() {/*{{{*/
          'fr.utf8' => array(
             'integer'   => 'Ce champ doit être un nombre entier'
         ),
+        'ja.utf8' => array(
+            'integer'   => 'フィールドは整数にしてください'
+        ),
     );
 }/*}}}*/
 
