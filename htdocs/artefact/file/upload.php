@@ -46,6 +46,7 @@ if ($parentfolder) {
 $data->title = $title;
 $data->description = $description;
 $data->tags = $tags;
+$data->owner = null;
 if ($institution) {
     $data->institution = $institution;
 } else if ($group) {
@@ -53,7 +54,7 @@ if ($institution) {
     require_once(get_config('docroot') . 'lib/group.php');
     if ($parentfolder && !$USER->can_edit_artefact(artefact_instance_from_id($parentfolder))) {
         json_reply('local', get_string('cannoteditfolder', 'artefact.file'));
-    } else if (!$parentfolder && !user_can_access_group($group)) {
+    } else if (!$parentfolder && !group_user_access($group)) {
         json_reply('local', get_string('usernotingroup', 'mahara'));
     }
     $data->group = $group;
