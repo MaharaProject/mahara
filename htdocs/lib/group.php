@@ -432,6 +432,7 @@ function group_get_membersearch_data($group, $query, $offset, $limit) {
     }
     $params[] = 'limit=' . $limit;
     $searchurl = get_config('wwwroot') . 'group/view.php?' . join('&amp;', $params);
+    $results['cdata'] = array_chunk($results['data'], 2);
     $results['roles'] = group_get_role_info($group);
     $smarty = smarty_core();
     $smarty->assign_by_ref('results', $results);

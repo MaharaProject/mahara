@@ -33,7 +33,7 @@ require('searchlib.php');
 $id     = param_integer('id');
 $query  = trim(param_variable('query', ''));
 $offset = param_integer('offset', 0);
-$limit  = param_integer('limit', 5);
+$limit  = param_integer('limit', 10);
 
 list($html, $pagination, $count, $offset) = group_get_membersearch_data($id, $query, $offset, $limit);
 
