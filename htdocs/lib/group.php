@@ -413,6 +413,16 @@ function group_invite_submit(Pieform $form, $values) {
     }
 }
 
+function group_get_role_info($groupid) {
+    $roles = get_records_sql_assoc('SELECT role, edit_views, see_submitted_views, gr.grouptype FROM {grouptype_roles} gr
+        INNER JOIN {group} g ON g.grouptype = gr.grouptype
+        WHERE g.id = ?', array($groupid));
+    foreach ($roles as $role) {
+        $role->display = get_string($role->role, 'grouptype.'.$role->grouptype);
+    }
+    return $roles;
+}
+
 function group_get_membersearch_data($group, $query, $offset, $limit) {
     $results = get_group_user_search_results($group, $query, $offset, $limit);
 
@@ -422,7 +432,7 @@ function group_get_membersearch_data($group, $query, $offset, $limit) {
     }
     $params[] = 'limit=' . $limit;
     $searchurl = get_config('wwwroot') . 'group/view.php?' . join('&amp;', $params);
-
+    $results['roles'] = group_get_role_info($group);
     $smarty = smarty_core();
     $smarty->assign_by_ref('results', $results);
     $smarty->assign('searchurl', $searchurl);

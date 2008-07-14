@@ -38,11 +38,6 @@ if (!$group = get_record('group', 'id', $id, 'deleted', 0)) {
 }
 define('TITLE', $group->name . ' - ' . get_string('Members', 'group'));
 
-$group->admins = get_column_sql("SELECT member
-    FROM {group_member}
-    WHERE \"group\" = ?
-    AND role = 'admin'", array($id));
-
 $role = group_user_access($id);
 
 // Search related stuff for member pager

@@ -424,11 +424,12 @@ class PluginSearchInternal extends PluginSearch {
         if ($count > 0) {
             $data = get_records_sql_assoc('
                 SELECT
-                    u.id, u.firstname, u.lastname, u.username, u.email, u.staff, ' . db_format_tsfield('gm.ctime', 'jointime') . '
+                    u.id, u.firstname, u.lastname, u.username, u.email, u.staff, ' . db_format_tsfield('gm.ctime', 'jointime') . ',
+                    gm.role
                 FROM
                     {usr} u
                 INNER JOIN {group_member} gm ON (gm.member = u.id) ' . $where . '
-                ORDER BY gm.ctime, u.firstname, u.lastname, u.id',
+                ORDER BY gm.role = \'admin\' DESC, gm.ctime, u.firstname, u.lastname, u.id',
                 $values,
                 $offset,
                 $limit);
