@@ -253,4 +253,6 @@ $string['changeroleofuseringroup'] = 'Change role of %s in %s';
 $string['currentrole'] = 'Current role';
 $string['changeroleto'] = 'Change role to';
 $string['rolechanged'] = 'Role changed';
+$string['removefromgroup'] = 'Remove from group';
+$string['userremoved'] = 'User removed';
 ?>

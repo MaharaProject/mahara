@@ -33,6 +33,7 @@ require_once(get_config('docroot') . 'interaction/lib.php');
 $groupid = param_integer('group');
 $userid = param_integer('user');
 $newrole = param_alpha('role', null);
+$remove = param_integer('remove', null);
 
 if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
     throw new GroupNotFoundException("Couldn't find group with id $groupid");
@@ -52,6 +53,11 @@ if ($role != 'admin') {
 if ($newrole && $newrole != $userrole) {
     set_field('group_member', 'role', $newrole, 'group', $groupid, 'member', $userid);
     $SESSION->add_ok_msg(get_string('rolechanged', 'group'));
+    redirect('/group/members.php?id='.$groupid);
+}
+else if ($remove) {
+    delete_records('group_member', 'group', $groupid, 'member', $userid);
+    $SESSION->add_ok_msg(get_string('userremoved', 'group'));
     redirect('/group/members.php?id='.$groupid);
 }
 
