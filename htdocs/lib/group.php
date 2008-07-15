@@ -438,6 +438,8 @@ function group_get_membersearch_data($group, $query, $offset, $limit) {
     $smarty->assign_by_ref('results', $results);
     $smarty->assign('searchurl', $searchurl);
     $smarty->assign('pagebaseurl', $searchurl);
+    $smarty->assign('caneditroles', group_user_access($group) == 'admin');
+    $smarty->assign('group', $group);
     $html = $smarty->fetch('group/membersearchresults.tpl');
 
     $pagination = build_pagination(array(

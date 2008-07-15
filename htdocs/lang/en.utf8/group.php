@@ -248,4 +248,9 @@ $string['interactiondeleted'] = '%s deleted successfully';
 $string['addnewinteraction'] = 'Add new %s';
 $string['title'] = 'Title';
 $string['Role'] = 'Role';
+$string['changerole'] = 'Change role';
+$string['changeroleofuseringroup'] = 'Change role of %s in %s';
+$string['currentrole'] = 'Current role';
+$string['changeroleto'] = 'Change role to';
+$string['rolechanged'] = 'Role changed';
 ?>

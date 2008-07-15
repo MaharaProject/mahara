@@ -36,7 +36,7 @@ $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);
 
 list($html, $pagination, $count, $offset) = group_get_membersearch_data($id, $query, $offset, $limit);
-
+log_debug($USER);
 json_reply(false, array(
     'message' => null,
     'data' => array(
