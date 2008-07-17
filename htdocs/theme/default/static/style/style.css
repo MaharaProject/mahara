@@ -599,7 +599,6 @@ tr.required th,
 #mainnav {
     padding: 5px 0;
     margin: 0;
-    text-transform: capitalize;
 	height: 15px;
 	white-space: nowrap;
 }
@@ -652,7 +651,6 @@ tr.required th,
     text-align: left;
     background: url(../images/submenu-bg.gif) repeat-x;
     height: 25px;
-    text-transform: capitalize;
 }
 #subnav ul {
 	height: 15px;
