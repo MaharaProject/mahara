@@ -1187,6 +1187,12 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2008062308) {
+        execute_sql('ALTER TABLE {grouptype} ADD COLUMN defaultrole VARCHAR(255)');
+        execute_sql("UPDATE {grouptype} SET defaultrole = 'member'");
+        execute_sql('ALTER TABLE {grouptype} ALTER COLUMN defaultrole SET NOT NULL');
+    }
+
     return $status;
 
 }

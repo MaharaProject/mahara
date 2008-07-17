@@ -60,6 +60,10 @@ class GroupTypeCourse extends GroupType {
         return array('tutor');
     }
 
+    public static function default_role() {
+        return 'member';
+    }
+
 }
 
 ?>

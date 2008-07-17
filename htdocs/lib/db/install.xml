@@ -223,7 +223,8 @@
         <TABLE NAME="grouptype">
             <FIELDS>
                 <FIELD NAME="name" TYPE="char" LENGTH="20" NOTNULL="true" />
-                <FIELD NAME="takesviewsubmissions" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="submittableto" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="defaultrole" TYPE="char" LENGTH="255" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />

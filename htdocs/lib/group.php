@@ -271,13 +271,18 @@ function group_user_can_edit_views($groupid, $userid=null) {
  *
  * @param int $groupid
  * @param int $userid
+ * @param string $role
  */
-function group_add_member($groupid, $userid) {
+function group_add_member($groupid, $userid, $role=null) {
     $cm = new StdClass;
     $cm->member = $userid;
     $cm->group = $groupid;
     $cm->ctime =  db_format_timestamp(time());
     $cm->tutor = 0;
+    if (!$role) {
+        $role = get_field_sql('SELECT gt.defaultrole FROM {grouptype} gt, {group} g WHERE g.id = ? AND g.grouptype = gt.name', array($groupid));
+    }
+    $cm->role = $role;
     insert_record('group_member', $cm);
     $user = optional_userobj($userid);
 }

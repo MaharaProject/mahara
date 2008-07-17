@@ -54,6 +54,10 @@ class GroupTypeStandard extends GroupType {
         return array();
     }
 
+    public static function default_role() {
+        return 'member';
+    }
+
 }
 
 ?>

@@ -55,6 +55,7 @@ abstract class GroupType {
         insert_record('grouptype', (object) array(
             'name' => $type,
             'submittableto' => !empty($assessingroles),
+            'defaultrole' => $this->default_role(),
         ));
         $roles = $this->get_roles();
         if (!in_array('admin', $roles)) {
