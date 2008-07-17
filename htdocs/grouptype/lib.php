@@ -28,12 +28,9 @@ defined('INTERNAL') || die();
 
 abstract class PluginGrouptype extends Plugin {
 
-    public static function postinst($prevversion) {
-        if ($prevversion == 0) {
-            $classname = get_class($this);
-            $type = substr($classname, strlen('PluginGrouptype'));
-            call_static_method('GroupType'.$type, 'install');
-        }
+    public static function installgrouptype($type) {
+        $grouptype = new $type();
+        $grouptype->install();
     }
 
 }

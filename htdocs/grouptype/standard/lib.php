@@ -27,6 +27,13 @@
 defined('INTERNAL') || die();
 
 class PluginGrouptypeStandard extends PluginGrouptype {
+
+    public static function postinst($prevversion) {
+        if ($prevversion == 0) {
+            parent::installgrouptype('GroupTypeStandard');
+        }
+    }
+
 }
 
 class GroupTypeStandard extends GroupType {

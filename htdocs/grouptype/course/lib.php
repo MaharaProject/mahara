@@ -27,6 +27,13 @@
 defined('INTERNAL') || die();
 
 class PluginGrouptypeCourse extends PluginGrouptype {
+
+    public static function postinst($prevversion) {
+        if ($prevversion == 0) {
+            parent::installgrouptype('GroupTypeCourse');
+        }
+    }
+
 }
 
 class GroupTypeCourse extends GroupType {
