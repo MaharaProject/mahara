@@ -17,20 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage core
+ * @subpackage grouptype-course
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-defined('INTERNAL') || die();
-
-$config = new StdClass;
 $config->version = 2008062307;
-$config->release = '1.1.0alpha';
-$config->minupgradefrom = 2007080700;
-$config->minupgraderelease = '0.8.0 (release tag 0.8.0_RELEASE)';
-$config->disablelogin = true;
+$config->release = '0.1';
 
 ?>

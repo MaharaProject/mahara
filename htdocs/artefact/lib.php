@@ -580,8 +580,8 @@ abstract class ArtefactType {
             return;
         }
         $type = get_field('group', 'grouptype', 'id', $group);
-        require_once(get_config('docroot') . 'lib/grouptype/' . $type . '.php');
-        $roles = call_static_method('GroupType' . $type, 'get_roles');
+        require_once(get_config('libroot') . 'group.php');
+        $roles = array_keys(group_get_role_info($group));
         $id = $this->get('id');
         db_begin();
         delete_records('artefact_access_role', 'artefact', $id);

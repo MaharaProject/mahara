@@ -311,10 +311,6 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     if (false === strpos($section, '.')) {
         $langdirectory = 'lang/';
     }
-    else if (strpos($section, 'grouptype.') === 0) {
-        $grouptypename = substr($section ,strlen('grouptype.'));
-        $langdirectory = 'lib/grouptype/lang/';
-    }
     else {
         $extras = plugin_types(); // more later..
         foreach ($extras as $tocheck) {
@@ -896,7 +892,7 @@ function plugin_types() {
     static $pluginstocheck;
     if (empty($pluginstocheck)) {
         // ORDER MATTERS! artefact has to be first!
-        $pluginstocheck = array('artefact', 'auth', 'notification', 'search', 'blocktype', 'interaction');
+        $pluginstocheck = array('artefact', 'auth', 'notification', 'search', 'blocktype', 'interaction', 'grouptype');
     }
     return $pluginstocheck;
 }

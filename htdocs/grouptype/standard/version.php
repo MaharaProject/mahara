@@ -17,41 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage core
+ * @subpackage grouptype-standard
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-defined('INTERNAL') || die();
-
-require_once('group.php');
-
-class GroupTypeCourse extends GroupType {
-
-    public static function allowed_join_types() {
-        return array('controlled');
-    }
-
-    public static function can_be_created_by_user() {
-        global $USER;
-        return $USER->get('admin') || $USER->get('staff') || $USER->is_institutional_admin()
-            || $USER->is_institutional_staff();
-    }
-
-    public static function get_roles() {
-        return array('member', 'tutor', 'admin');
-    }
-
-    public static function get_view_editing_roles() {
-        return array('tutor', 'admin');
-    }
-
-    public static function get_view_assessing_roles() {
-        return array('tutor');
-    }
-
-}
+$config->version = 2008062307;
+$config->release = '0.1';
 
 ?>

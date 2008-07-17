@@ -33,7 +33,7 @@ define('TITLE', get_string('creategroup', 'group'));
 
 $groupoptions = array();
 foreach (group_get_grouptypes() as $grouptype) {
-    require_once('grouptype/' . $grouptype . '.php');
+    safe_require('grouptype', $grouptype);
     if (call_static_method('GroupType' . $grouptype, 'can_be_created_by_user')) {
         $grouptypename = get_string('name', 'grouptype.' . $grouptype);
         foreach (call_static_method('GroupType' . $grouptype, 'allowed_join_types') as $jointype) {

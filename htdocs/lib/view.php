@@ -88,7 +88,7 @@ class View {
         $this->dirtycolumns = array();
         if ($this->group) {
             $group = get_record('group', 'id', $this->group);
-            require_once(get_config('docroot') . 'lib/grouptype/' . $group->grouptype . '.php');
+            safe_require('grouptype', $group->grouptype);
             $this->editingroles = call_static_method('GroupType' . $group->grouptype, 'get_view_editing_roles');
         }
     }

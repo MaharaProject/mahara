@@ -46,14 +46,9 @@ if (!group_user_access($groupid)) {
 define('TITLE', $group->name . ' - ' . get_string('groupfiles', 'artefact.file'));
 
 require_once(get_config('docroot') . 'interaction/lib.php');
-require_once(get_config('docroot') . 'lib/grouptype/' . $group->grouptype . '.php');
 
 $groupdata = json_encode($group);
-$grouproles = array();
-foreach (call_static_method('GroupType' . $group->grouptype, 'get_roles') as $role) {
-    $grouproles[] = array('name' => $role, 'display' => get_string($role, 'grouptype.'.$group->grouptype));
-}
-$grouproles = json_encode($grouproles);
+$grouproles = json_encode(array_values(group_get_role_info($groupid)));
 
 $javascript .= <<<GROUPJS
 var group = {$groupdata};

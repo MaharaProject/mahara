@@ -419,6 +419,7 @@ function group_get_role_info($groupid) {
         WHERE g.id = ?', array($groupid));
     foreach ($roles as $role) {
         $role->display = get_string($role->role, 'grouptype.'.$role->grouptype);
+        $role->name = $role->role;
     }
     return $roles;
 }
@@ -463,54 +464,6 @@ function group_get_membersearch_data($group, $query, $offset, $limit) {
     return array($html, $pagination, $results['count'], $offset);
 }
 
-/**
- * Where is the syntax error?
- */
-abstract class GroupType {
-
-    public function install() {
-        $classname = get_class($this);
-        $type = strtolower(substr($classname, strlen('GroupType')));
-        $assessingroles = $this->get_view_assessing_roles();
-        insert_record('grouptype', (object) array(
-            'name' => $type,
-            'submittableto' => !empty($assessingroles),
-        ));
-        $roles = $this->get_roles();
-        if (!in_array('admin', $roles)) {
-            $roles[] = 'admin';
-        }
-        $editingroles = $this->get_view_editing_roles();
-        foreach ($roles as $r) {
-            insert_record('grouptype_roles', (object) array(
-                'grouptype' => $type,
-                'role' => $r,
-                'edit_views' => (int)in_array($r, $editingroles),
-                'see_submitted_views' => (int)in_array($r, $assessingroles),
-            ));
-        }
-    }
-
-    public static abstract function allowed_join_types();
-
-    /**
-     * Returns whether the currently logged in user can create a group of this 
-     * grouptype
-     */
-    public static function can_be_created_by_user() {
-        return true;
-    }
-
-    /**
-     * Returns the roles this group type implements
-     */
-    public static abstract function get_roles();
-
-    public static abstract function get_view_editing_roles();
-
-    public static abstract function get_view_assessing_roles();
-
-}
 
 /**
  * Returns a list of available grouptypes
@@ -519,19 +472,7 @@ function group_get_grouptypes() {
     static $grouptypes = null;
 
     if (is_null($grouptypes)) {
-        $grouptypes = array();
-        $grouptypedir = get_config('libroot') . 'grouptype/';
-
-        if ($dh = opendir($grouptypedir)) {
-            while (false !== ($file = readdir($dh))) {
-                if (!preg_match('/^[a-zA-Z0-9-]+\.php$/', $file)) {
-                    continue;
-                }
-                if (is_file("$grouptypedir$file")) {
-                    $grouptypes[] = substr($file, 0, -4);
-                }
-            }
-        }
+        $grouptypes = get_column('grouptype', 'name');
     }
 
     return $grouptypes;
