@@ -553,7 +553,6 @@ class PluginAuthLdap extends PluginAuth {
                 'title' => get_string('ldapfieldforemail', 'auth.ldap'),
                 'defaultvalue' => self::$default_config['emailfield'],
                 'help' => true,
-                'rules' => array('required' => true),
             ),
         );
 

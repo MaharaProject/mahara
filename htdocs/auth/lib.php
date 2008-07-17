@@ -686,8 +686,14 @@ function auth_check_required_fields() {
     $elements = array();
 
     foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
-        if ($field == 'email' || get_profile_field($USER->get('id'), $field) != null) {
+        if (get_profile_field($USER->get('id'), $field) != null) {
             continue;
+        }
+
+        if ($field == 'email') {
+            // Use a text field for their first e-mail address, not the 
+            // emaillist element
+            $type = 'text';
         }
 
         $elements[$field] = array(
@@ -708,6 +714,10 @@ function auth_check_required_fields() {
         if ($field == 'country') {
             $elements[$field]['options'] = getoptions_country();
             $elements[$field]['defaultvalue'] = 'nz';
+        }
+
+        if ($field == 'email') {
+            $elements[$field]['rules']['email'] = true;
         }
     }
 
@@ -1147,7 +1157,7 @@ function login_submit(Pieform $form, $values) {
                 $USER->authinstance = $authinstance->id;
                 $userdata = $auth->get_user_info($username);
 
-                if (empty($userdata) || empty($userdata->email)) {
+                if (empty($userdata)) {
                     throw new AuthUnknownUserException("\"$username\" is not known");
                 }
                 // We have the data - create the user
@@ -1158,7 +1168,13 @@ function login_submit(Pieform $form, $values) {
                 if (isset($userdata->lastname)) {
                     $USER->lastname = $userdata->lastname;
                 }
-                $USER->email = $userdata->email;
+                if (isset($userdata->email)) {
+                    $USER->email = $userdata->email;
+                }
+                else {
+                    // The user will be asked to populate this when they log in.
+                    $USER->email = null;
+                }
                 try {
                     db_begin();
                     $USER->commit();
@@ -1168,7 +1184,9 @@ function login_submit(Pieform $form, $values) {
                     if (isset($userdata->lastname)) {
                         set_profile_field($USER->id, 'lastname', $USER->lastname);
                     }
-                    set_profile_field($USER->id, 'email', $USER->email);
+                    if (isset($userdata->email)) {
+                        set_profile_field($USER->id, 'email', $USER->email);
+                    }
                     if ($authinstance->institution !== 'mahara') {
                         $USER->join_institution($authinstance->institution);
                     }
