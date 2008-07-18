@@ -46,8 +46,6 @@
 define('INTERNAL', 1);
 define('PUBLIC', 1);
 
-
-
 require(dirname(dirname(dirname(__FILE__))).'/init.php');
 
 // If networking is turned off, it's safer to die immediately
