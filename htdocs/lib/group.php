@@ -320,10 +320,11 @@ function joingroup_submit(Pieform $form, $values) {
 
 function group_invite_submit(Pieform $form, $values) {
     global $SESSION, $USER;
-    if (get_record('group_member_invite', 'member', $USER->get('id'), 'group', $values['group'])) {
+    $inviterecord = get_record('group_member_invite', 'member', $USER->get('id'), 'group', $values['group']);
+    if ($inviterecord) {
         delete_records('group_member_invite', 'group', $values['group'], 'member', $USER->get('id'));
         if (isset($values['accept'])) {
-            group_add_member($values['group'], $USER->get('id'));
+            group_add_member($values['group'], $USER->get('id'), $inviterecord->role);
             $SESSION->add_ok_msg(get_string('groupinviteaccepted', 'group'));
             redirect('/group/view.php?id=' . $values['group']);
         }

@@ -1193,6 +1193,10 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql('ALTER TABLE {grouptype} ALTER COLUMN defaultrole SET NOT NULL');
     }
 
+    if ($oldversion < 2008062309) {
+        execute_sql('ALTER TABLE {group_member_invite} ADD COLUMN role VARCHAR(255)');
+    }
+
     return $status;
 
 }
