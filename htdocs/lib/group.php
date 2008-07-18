@@ -81,24 +81,6 @@ function group_remove_user($group, $userid) {
     }
 }
 
-/**
- * all groups the user is a member of
- * 
- * @param int userid (optional, defaults to $USER id) 
- * @return array of group db rows
- */
-function get_member_groups($userid=0, $offset=0, $limit=0) {
-
-    $userid = optional_userid($userid);
-
-    return get_records_sql_array('SELECT g.id, g.name, g.description, g.jointype, g.owner, g.ctime, g.mtime, gm.ctime, gm.tutor, COUNT(v.view) AS hasviews
-              FROM {group} g 
-              JOIN {group_member} gm ON gm.group = g.id
-              LEFT JOIN {view_access_group} v ON v.group = g.id
-              WHERE g.owner != ? AND gm.member = ? AND g.deleted = ?
-              GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9', array($userid, $userid, 0), $offset, $limit);
-}
-
 
 /**
  * all groups the user has pending invites to
@@ -213,7 +195,6 @@ function group_add_member($groupid, $userid, $role=null) {
     $cm->member = $userid;
     $cm->group = $groupid;
     $cm->ctime =  db_format_timestamp(time());
-    $cm->tutor = 0;
     if (!$role) {
         $role = get_field_sql('SELECT gt.defaultrole FROM {grouptype} gt, {group} g WHERE g.id = ? AND g.grouptype = gt.name', array($groupid));
     }
