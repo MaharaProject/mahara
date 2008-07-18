@@ -39,9 +39,7 @@ if (!$group) {
 
 define('TITLE', get_string('leavespecifiedgroup', 'group', $group->name));
 
-$membership = user_can_access_group($group);
-
-if (!($membership & GROUP_MEMBERSHIP_MEMBER)) {
+if (!group_user_access($group->id)) {
     throw new AccessDeniedException(get_string('notamember', 'group'));
 }
 
