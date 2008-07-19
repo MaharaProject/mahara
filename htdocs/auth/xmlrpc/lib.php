@@ -698,6 +698,9 @@ class PluginAuthXmlrpc extends PluginAuth {
     }
 
     public static function validate_config_options($values, $form) {
+        if (false === strpos($values['wwwroot'], '://')) {
+            $values['wwwroot'] = 'http://' . $values['wwwroot'];
+        }
 
         $authinstance = new stdClass();
         $peer = new Peer();
@@ -723,6 +726,9 @@ class PluginAuthXmlrpc extends PluginAuth {
     }
 
     public static function save_config_options($values, $form) {
+        if (false === strpos($values['wwwroot'], '://')) {
+            $values['wwwroot'] = 'http://' . $values['wwwroot'];
+        }
 
         db_begin();
         $authinstance = new stdClass();
