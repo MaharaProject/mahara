@@ -57,10 +57,10 @@ class AuthXmlrpc extends Auth {
         $this->config['portno']                = 80;
         $this->config['xmlrpcserverurl']       = '';
         $this->config['changepasswordurl']     = '';
-        $this->config['updateuserinfoonlogin'] = 1;
+        $this->config['updateuserinfoonlogin'] = 0;
         $this->config['weautocreateusers']     = 0;
         $this->config['theyautocreateusers']   = 0;
-        $this->config['wessoout']              = 1;
+        $this->config['wessoout']              = 0;
         $this->config['theyssoin']             = 0;
         $this->config['parent']                = null;
         $this->file = fopen('/tmp/out.txt', 'w');
