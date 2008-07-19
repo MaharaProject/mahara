@@ -68,7 +68,7 @@ $string['errnoxmlrpcuser']      = "We were unable to authenticate you at this ti
 
 $string['unabletosigninviasso'] = 'Unable to sign in via SSO';
 $string['xmlrpccouldnotlogyouin'] = 'Sorry, could not log you in :(';
-$string['xmlrpccouldnotlogyouindetail'] = 'Sorry, we could not log you into Mahara at this time. Please tryin again shortly, and if the problem persists, contact your administrator';
+$string['xmlrpccouldnotlogyouindetail'] = 'Sorry, we could not log you into Mahara at this time. Please try again shortly, and if the problem persists, contact your administrator';
 
 $string['requiredfields'] = 'Required profile fields';
 $string['requiredfieldsset'] = 'Required profile fields set';
