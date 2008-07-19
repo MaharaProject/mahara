@@ -137,37 +137,43 @@ class User {
         }
 
         if ($remoteuser) {
+            // See if the user has either the child or the parent authinstance. 
+            // Most of the time, it's the parent auth instance that is 
+            // stored with the user, but if they were created by (for 
+            // example) SSO with no parent, then it will be the child that 
+            // is stored. Nevertheless, a parent could be added later, and 
+            // that should not matter in finding the user
+            $parentwhere = '';
             if ($parentid = get_field('auth_instance_config', 'value', 'field', 'parent', 'instance', $instanceid)) {
-                // See if the user has either the child or the parent authinstance. 
-                // Most of the time, it's the parent auth instance that is 
-                // stored with the user, but if they were created by (for 
-                // example) SSO with no parent, then it will be the child that 
-                // is stored. Nevertheless, a parent could be added later, and 
-                // that should not matter in finding the user
-                $where = '(r.authinstance = ' . db_quote($instanceid) . ' OR r.authinstance = ' . db_quote($parentid) . ')';
+                $parentwhere = '
+                            OR
+                            (
+                                LOWER(username) = ' . db_quote($username) . '
+                                AND u.authinstance = ' . db_quote($parentid) . '
+                            )
+                    ';
             }
-            else {
-                $where = 'r.authinstance = ' . db_quote($instanceid);
-            }
+
             $sql = 'SELECT
                         u.*, 
                         ' . db_format_tsfield('u.expiry', 'expiry') . ', 
                         ' . db_format_tsfield('u.lastlogin', 'lastlogin') . ', 
                         ' . db_format_tsfield('u.suspendedctime', 'suspendedctime') . '
                     FROM {usr} u
-                    INNER JOIN {auth_remote_user} r ON u.id = r.localusr
+                    LEFT JOIN {auth_remote_user} r ON u.id = r.localusr
                     WHERE
-                        LOWER(r.remoteusername) = ?
-                        AND u.deleted = 0
-                        AND ' . $where;
-        } else {
-            if ($parentid = get_field('auth_instance_config', 'value', 'field', 'parent', 'instance', $instanceid)) {
-                // See the comment above about checking for the child or parent
-                $where = '(authinstance = ' . db_quote($instanceid) . ' OR authinstance = ' . db_quote($parentid) . ')';
-            }
-            else {
-                $where = 'authinstance = ' . db_quote($instanceid);
-            }
+                        (
+                            (
+                                LOWER(r.remoteusername) = ?
+                                AND r.authinstance = ?
+                            )'
+                            . $parentwhere
+                            . '
+                        )
+                        AND u.deleted = 0';
+            $user = get_record_sql($sql, array($username, $instanceid));
+        }
+        else {
             $sql = 'SELECT
                         *, 
                         ' . db_format_tsfield('expiry') . ', 
@@ -179,10 +185,8 @@ class User {
                         LOWER(username) = ? AND
                         u.deleted = 0 AND
                         authinstance = ' . db_quote($instanceid);
+            $user = get_record_sql($sql, array($username));
         }
-
-
-        $user = get_record_sql($sql, array($username));
 
         if (false == $user) {
             throw new AuthUnknownUserException("User with username \"$username\" is not known at auth instance \"$instanceid\"");
