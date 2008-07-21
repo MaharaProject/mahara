@@ -44,17 +44,6 @@ if (!$group_data) {
     redirect('/group/mygroups.php');
 }
 
-$groupoptions = array();
-foreach (group_get_grouptypes() as $grouptype) {
-    safe_require('grouptype', $grouptype);
-    if (call_static_method('GroupType' . $grouptype, 'can_be_created_by_user')) {
-        $grouptypename = get_string('name', 'grouptype.' . $grouptype);
-        foreach (call_static_method('GroupType' . $grouptype, 'allowed_join_types') as $jointype) {
-            $groupoptions["$grouptype.$jointype"] = $grouptypename . ': ' . get_string('membershiptype.'.$jointype, 'group');
-        }
-    }
-}
-
 $editgroup = pieform(array(
     'name'     => 'editgroup',
     'method'   => 'post',
@@ -77,7 +66,7 @@ $editgroup = pieform(array(
         'grouptype' => array(
             'type'         => 'select',
             'title'        => get_string('grouptype', 'group'),
-            'options'      => $groupoptions,
+            'options'      => get_grouptype_options(),
             'defaultvalue' => $group_data->grouptype . '.' . $group_data->jointype,
             'help'         => true,
         ),

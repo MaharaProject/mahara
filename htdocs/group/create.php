@@ -31,17 +31,6 @@ require_once('pieforms/pieform.php');
 require_once('group.php');
 define('TITLE', get_string('creategroup', 'group'));
 
-$groupoptions = array();
-foreach (group_get_grouptypes() as $grouptype) {
-    safe_require('grouptype', $grouptype);
-    if (call_static_method('GroupType' . $grouptype, 'can_be_created_by_user')) {
-        $grouptypename = get_string('name', 'grouptype.' . $grouptype);
-        foreach (call_static_method('GroupType' . $grouptype, 'allowed_join_types') as $jointype) {
-            $groupoptions["$grouptype.$jointype"] = $grouptypename . ': ' . get_string('membershiptype.'.$jointype, 'group');
-        }
-    }
-}
-
 $creategroup = pieform(array(
     'name'     => 'creategroup',
     'method'   => 'post',
@@ -62,7 +51,7 @@ $creategroup = pieform(array(
         'grouptype' => array(
             'type'         => 'select',
             'title'        => get_string('grouptype', 'group'),
-            'options'      => $groupoptions,
+            'options'      => get_grouptype_options(),
             'defaultvalue' => 'standard.open',
             'help'         => true,
         ),

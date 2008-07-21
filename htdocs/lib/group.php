@@ -415,4 +415,32 @@ function can_assess_submitted_views($userid, $groupid) {
 }
 
 
+/**
+ * Returns a list of grouptype & jointype options to be used in create
+ * group/edit group drop-downs.
+ * 
+ * If there is more than one group type with the same join type,
+ * prefix the join types with the group type for display.
+ */
+function get_grouptype_options() {
+    $groupoptions = array();
+    $jointypecount = array('open' => 0, 'invite' => 0, 'request' => 0, 'controlled' => 0);
+    foreach (group_get_grouptypes() as $grouptype) {
+        safe_require('grouptype', $grouptype);
+        if (call_static_method('GroupType' . $grouptype, 'can_be_created_by_user')) {
+            $grouptypename = get_string('name', 'grouptype.' . $grouptype);
+            foreach (call_static_method('GroupType' . $grouptype, 'allowed_join_types') as $jointype) {
+                $jointypecount[$jointype]++;
+                $groupoptions['jointype']["$grouptype.$jointype"] = get_string('membershiptype.'.$jointype, 'group');
+                $groupoptions['grouptype']["$grouptype.$jointype"] = $grouptypename . ': ' . get_string('membershiptype.'.$jointype, 'group');
+            }
+        }
+    }
+    $duplicates = array_reduce($jointypecount, create_function('$a, $b', 'return $a || $b > 1;'));
+    if ($duplicates) {
+        return $groupoptions['grouptype'];
+    }
+    return $groupoptions['jointype'];
+}
+
 ?>
