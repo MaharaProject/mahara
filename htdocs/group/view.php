@@ -30,6 +30,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('group.php');
 require_once('searchlib.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
+safe_require('artefact', 'file');
 
 $id = param_integer('id');
 
@@ -46,6 +47,7 @@ $group->admins = get_column_sql("SELECT member
 
 $role = group_user_access($id);
 
+$filecounts = ArtefactTypeFileBase::count_user_files(null, null, $group->id);
 
 // Latest forums posts
 // NOTE: it would be nicer if there was some generic way to get information 
@@ -72,6 +74,8 @@ $smarty = smarty(array(), array(), array(), array('sideblocks' => array(interact
 $smarty->assign('group', $group);
 $smarty->assign('groupid', $id);
 $smarty->assign('foruminfo', $foruminfo);
+$smarty->assign('strgroupviews', get_string('groupviewscount', 'group', count_records('view', 'group', $group->id)));
+$smarty->assign('strcontent', get_string('groupfilescount', 'group', $filecounts->files, $filecounts->folders));
 $smarty->display('group/view.tpl');
 
 ?>

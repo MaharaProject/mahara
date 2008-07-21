@@ -14,8 +14,8 @@
                     <a href="{$WWWROOT}user/view.php?id={$id|escape}">{$id|display_name|escape}</a>{if !$smarty.foreach.admins.last}, {/if}
                     {/foreach}</li>
                     <li><strong>{str tag=Created section=group}:</strong> {$group->ctime}</li>
-                    {if $strgroupviews}<li>{$strgroupviews}</li>{/if}
-                    {if $strcontent}<li>{$strcontent}</li>{/if}
+                    {if $strgroupviews}<li><strong>{str tag=Views section=group}:</strong> {$strgroupviews}</li>{/if}
+                    {if $strcontent}<li><strong>{str tag=Files section=group}:</strong> {$strcontent}</li>{/if}
                 </ul>
 
                 <div class="group-info-para">

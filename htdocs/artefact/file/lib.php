@@ -568,6 +568,38 @@ JAVASCRIPT;
         return $javascript;
     }
 
+    public static function count_user_files($owner=null, $institution=null, $group=null) {
+        $filetypes = PluginArtefactFile::get_artefact_types();
+        foreach ($filetypes as $k => $v) {
+            if ($v == 'folder') {
+                unset($filetypes[$k]);
+            }
+        }
+        $filetypesql = "('" . join("','", $filetypes) . "')";
+
+        $phvals = array();
+        if ($institution) {
+            $ownersql = 'institution = ? AND "group" IS NULL AND owner IS NULL';
+            $phvals[] = $institution;
+        }
+        else if ($group) {
+            $ownersql = '"group" = ? AND institution IS NULL AND owner IS NULL';
+            $phvals[] = $group;
+        }
+        else {
+            if (!$owner) {
+                global $USER;
+                $owner = $USER->get('id');
+            }
+            $ownersql = 'institution IS NULL AND "group" IS NULL AND owner = ?';
+            $phvals[] = $owner;
+        }
+        return (object) array(
+            'files'   => count_records_select('artefact', "artefacttype IN $filetypesql AND $ownersql", $phvals),
+            'folders' => 1+count_records_select('artefact', "artefacttype = 'folder' AND $ownersql", $phvals)
+        );
+    }
+
 }
 
 class ArtefactTypeFile extends ArtefactTypeFileBase {

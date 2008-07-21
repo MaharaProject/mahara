@@ -189,6 +189,7 @@ $string['pendingfriends'] = 'Pending friends';
 $string['backtofriendslist'] = 'Back to Friends List';
 $string['findnewfriends'] = 'Find New Friends';
 $string['Views']          = 'Views';
+$string['Files']          = 'Files';
 $string['seeallviews']    = 'See all %s views...';
 $string['noviewstosee']   = 'None that you can see :(';
 $string['whymakemeyourfriend'] = 'This is why you should make me your friend:';
@@ -256,4 +257,7 @@ $string['changeroleto'] = 'Change role to';
 $string['rolechanged'] = 'Role changed';
 $string['removefromgroup'] = 'Remove from group';
 $string['userremoved'] = 'User removed';
+
+$string['groupviewscount'] = 'This group has %s views';
+$string['groupfilescount'] = 'This group has %s files in %s folders';
 ?>
