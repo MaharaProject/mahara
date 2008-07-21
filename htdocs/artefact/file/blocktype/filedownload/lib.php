@@ -47,7 +47,12 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
         $result = '';
         if (isset($configdata['artefactids']) && is_array($configdata['artefactids'])) {
             foreach ($configdata['artefactids'] as $artefactid) {
-                $artefact = $instance->get_artefact_instance($artefactid);
+                try {
+                    $artefact = $instance->get_artefact_instance($artefactid);
+                }
+                catch (ArtefactNotFoundException $e) {
+                    continue;
+                }
 
                 $icondata = array(
                     'id'     => $artefactid,
