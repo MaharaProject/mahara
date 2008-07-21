@@ -87,6 +87,7 @@ $string['leavegroup'] = 'Leave this group';
 $string['joingroup'] = 'Join this group';
 $string['requestjoingroup'] = 'Request to join this group';
 $string['grouphaveinvite'] = 'You have been invited to join this group';
+$string['grouphaveinvitewithrole'] = 'You have been invited to join this group with the role';
 $string['groupnotinvited'] = 'You have not been invited to join this group';
 $string['groupinviteaccepted'] = 'Invite accepted successfully! You are now a group member';
 $string['groupinvitedeclined'] = 'Invite declined successfully!';

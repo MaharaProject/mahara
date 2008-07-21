@@ -45,18 +45,20 @@ if (is_mysql()) {
     $invitesql  = "'invite'";
     $requestsql = "'request'";
     $adminsql   = "'admin'";
+    $empty      = "''";
 }
 else {
     $invitesql  = "CAST('invite' AS TEXT)";
     $requestsql = "CAST('request' AS TEXT)";
     $adminsql   = "CAST('admin' AS TEXT)";
+    $empty      = "CAST('' AS TEXT)";
 }
 
 // Different filters join on the different kinds of association
 if ($filter == 'admin') {
     $sql = "
         INNER JOIN (
-            SELECT g.id, $adminsql AS membershiptype
+            SELECT g.id, $adminsql AS membershiptype, $empty AS reason, $empty AS role
             FROM {group} g
             INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
         ) t ON t.id = g.id";
@@ -65,11 +67,11 @@ if ($filter == 'admin') {
 else if ($filter == 'member') {
     $sql = "
         INNER JOIN (
-            SELECT g.id, 'admin' AS membershiptype
+            SELECT g.id, 'admin' AS membershiptype, $empty AS reason, $empty AS role
             FROM {group} g
             INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
             UNION
-            SELECT g.id, 'member' AS type
+            SELECT g.id, 'member' AS type, $empty AS reason, $empty AS role
             FROM {group} g
             INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role != 'admin')
         ) t ON t.id = g.id";
@@ -78,7 +80,7 @@ else if ($filter == 'member') {
 else if ($filter == 'invite') {
     $sql = "
         INNER JOIN (
-            SELECT g.id, $invitesql AS membershiptype
+            SELECT g.id, $invitesql AS membershiptype, gmi.reason, gmi.role
             FROM {group} g
             INNER JOIN {group_member_invite} gmi ON (gmi.group = g.id AND gmi.member = ?)
         ) t ON t.id = g.id";
@@ -87,7 +89,7 @@ else if ($filter == 'invite') {
 else if ($filter == 'request') {
     $sql = "
         INNER JOIN (
-            SELECT g.id, $requestsql AS membershiptype
+            SELECT g.id, $requestsql AS membershiptype, gmr.reason, $empty AS role
             FROM {group} g
             INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
         ) t ON t.id = g.id";
@@ -97,18 +99,18 @@ else { // all or some other text
     $filter = 'all';
     $sql = "
         INNER JOIN (
-            SELECT g.id, 'admin' AS membershiptype
+            SELECT g.id, 'admin' AS membershiptype, '' AS reason, '' AS role
             FROM {group} g
             INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
             UNION
-            SELECT g.id, 'member' AS membershiptype
+            SELECT g.id, 'member' AS membershiptype, '' AS reason, '' AS role
             FROM {group} g
             INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ? AND gm.role != 'admin')
             UNION
-            SELECT g.id, 'invite' AS membershiptype
+            SELECT g.id, 'invite' AS membershiptype, gmi.reason, gmi.role
             FROM {group} g
             INNER JOIN {group_member_invite} gmi ON (gmi.group = g.id AND gmi.member = ?)
-            UNION SELECT g.id, 'request' AS membershiptype
+            UNION SELECT g.id, 'request' AS membershiptype, gmr.reason, '' AS role
             FROM {group} g
             INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
         ) t ON t.id = g.id";
@@ -146,7 +148,7 @@ $count = count_records_sql('SELECT COUNT(*) FROM {group} g ' . $sql . ' WHERE g.
 // gets the groups filtered by above
 // and the first three members by id
 
-$sql = 'SELECT g.id, g.name, g.description, g.jointype, t.membershiptype, COUNT(gm.member) AS membercount, COUNT(gmr.member) AS requests,
+$sql = 'SELECT g.id, g.name, g.description, g.jointype, g.grouptype, t.membershiptype, t.reason, t.role, COUNT(gm.member) AS membercount, COUNT(gmr.member) AS requests,
 	(SELECT gm.member FROM {group_member} gm JOIN {usr} u ON (u.id = gm.member AND u.deleted = 0) WHERE gm.group = g.id ORDER BY member LIMIT 1) AS member1,
 	(SELECT gm.member FROM {group_member} gm JOIN {usr} u ON (u.id = gm.member AND u.deleted = 0) WHERE gm.group = g.id ORDER BY member LIMIT 1 OFFSET 1) AS member2,
 	(SELECT gm.member FROM {group_member} gm JOIN {usr} u ON (u.id = gm.member AND u.deleted = 0) WHERE gm.group = g.id ORDER BY member LIMIT 1 OFFSET 2) AS member3
@@ -155,7 +157,7 @@ $sql = 'SELECT g.id, g.name, g.description, g.jointype, t.membershiptype, COUNT(
     LEFT JOIN {group_member_request} gmr ON (gmr.group = g.id)' .
     $sql . '
     WHERE g.deleted = ?
-    GROUP BY 1, 2, 3, 4, 5, 8, 9
+    GROUP BY g.id, g.name, g.description, g.jointype, g.grouptype, t.membershiptype, t.reason, t.role
     ORDER BY g.name';
 
 $groups = get_records_sql_array($sql, $values, $offset, $groupsperpage);

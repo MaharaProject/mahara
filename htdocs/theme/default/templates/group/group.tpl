@@ -30,7 +30,13 @@
 
 {elseif $group->membershiptype == 'invite'}
 <li>
-{str tag="grouphaveinvite" section="group"}
+  {if $group->role}
+    {assign var=grouptype value=$group->grouptype}
+    {assign var=grouprole value=$group->role}
+    {str tag="grouphaveinvitewithrole" section="group"}: {str tag="$grouprole" section="grouptype.$grouptype"}
+  {else}
+    {str tag="grouphaveinvite" section="group"}
+  {/if}
 {$group->invite}
 </li>
 
