@@ -41,8 +41,8 @@ if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
 if (!$user = get_record('usr', 'id', $userid, 'deleted', 0)) {
     throw new UserNotFoundException("Couldn't find user with id $userid");
 }
-$userrole = group_user_access($groupid, $userid);
-if (!$userrole) {
+$currentrole = group_user_access($groupid, $userid);
+if (!$currentrole) {
     throw new UserNotFoundException("Couldn't find user with id $userid in group $groupid");
 }
 $role = group_user_access($groupid);
@@ -50,28 +50,68 @@ if ($role != 'admin') {
     throw new AccessDeniedException();
 }
 
-if ($newrole && $newrole != $userrole) {
-    set_field('group_member', 'role', $newrole, 'group', $groupid, 'member', $userid);
-    $SESSION->add_ok_msg(get_string('rolechanged', 'group'));
-    redirect('/group/members.php?id='.$groupid);
+$roles = group_get_role_info($groupid);
+foreach ($roles as &$r) {
+    $r = $r->display;
 }
-else if ($remove) {
-    delete_records('group_member', 'group', $groupid, 'member', $userid);
+
+$changeform = pieform(array(
+    'name'        => 'changerole',
+    'method'      => 'post',
+    'renderer'    => 'oneline',
+    'elements'    => array(
+        'role' => array(
+            'title' => get_string('changeroleto', 'group') . ':',
+            'type' => 'select',
+            'collapseifoneoption' => false,
+            'options' => $roles,
+            'defaultvalue' => $currentrole,
+        ),
+        'submit' => array(
+            'type' => 'submit',
+            'value' => get_string('submit'),
+        )
+    )
+));
+
+function changerole_submit(Pieform $form, $values) {
+    global $user, $group, $currentrole, $SESSION;
+    if ($values['role'] && $values['role'] != $currentrole) {
+        set_field('group_member', 'role', $values['role'], 'group', $group->id, 'member', $user->id);
+        $SESSION->add_ok_msg(get_string('rolechanged', 'group'));
+        redirect('/group/members.php?id='.$group->id);
+    }
+}
+
+$removeform = pieform(array(
+    'name'        => 'removeuser',
+    'method'      => 'post',
+    'renderer'    => 'oneline',
+    'elements'    => array(
+        'submit' => array(
+            'title' => get_string('removefromgroup', 'group'),
+            'type' => 'submit',
+            'value' => get_string('submit'),
+        ),
+    )
+));
+
+
+function removeuser_submit(Pieform $form, $values) {
+    global $user, $group, $SESSION;
+    delete_records('group_member', 'group', $group->id, 'member', $user->id);
     $SESSION->add_ok_msg(get_string('userremoved', 'group'));
-    redirect('/group/members.php?id='.$groupid);
+    redirect('/group/members.php?id='.$group->id);
 }
 
-define('TITLE', $group->name . ' - ' . get_string('Changerole', 'group'));
-
-$roleinfo = group_get_role_info($groupid);
+define('TITLE', $group->name . ' - ' . get_string('changerole', 'group'));
 
 $smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($groupid, $role))));
 $smarty->assign('group', $group);
 $smarty->assign('groupid', $groupid);
-$smarty->assign('userid', $userid);
-$smarty->assign('userrole', $userrole);
 $smarty->assign('subtitle', get_string('changeroleofuseringroup', 'group', display_name($user), $group->name));
-$smarty->assign('roles', $roleinfo);
+$smarty->assign('changeform', $changeform);
+$smarty->assign('removeform', $removeform);
 
 $smarty->display('group/changerole.tpl');
 
