@@ -881,6 +881,15 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         return $record->id;
     }
 
+    // append the view id to to the end of image and anchor urls so they are visible to logged out users also
+    public static function append_view_url($postcontent, $view_id) {
+        $postcontent = preg_replace('#(<a[^>]+href="[^>]+artefact/file/download\.php\?file=\d+)#', '\1&amp;view=' . $view_id , $postcontent);
+        $postcontent = preg_replace('#(<img[^>]+src="[^>]+artefact/file/download\.php\?file=\d+)#', '\1&amp;view=' . $view_id, $postcontent);
+        $postcontent = preg_replace('#(<img[^>]+src="([^>]+artefact/file/download\.php\?file=\d+&amp;view=\d+)"[^>]*>)#', '<a href="\2">\1</a>', $postcontent);
+
+        return $postcontent;
+    }
+
     public static function get_links($id) {
         $wwwroot = get_config('wwwroot');
 
