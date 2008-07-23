@@ -605,7 +605,7 @@ JAVASCRIPT;
         }
         return (object) array(
             'files'   => count_records_select('artefact', "artefacttype IN $filetypesql AND $ownersql", $phvals),
-            'folders' => 1+count_records_select('artefact', "artefacttype = 'folder' AND $ownersql", $phvals)
+            'folders' => count_records_select('artefact', "artefacttype = 'folder' AND $ownersql", $phvals)
         );
     }
 

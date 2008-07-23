@@ -64,6 +64,7 @@ $string['filethingdeleted'] = '%s deleted';
 $string['filetypes'] = 'Configure Uploadable File Types';
 $string['filetypedescription'] = '<p>You may configure the allowed file types that users can upload here. This grants you more control over what can be uploaded. This checking is performed in addition to virus checking, if you have virus checking turned on.</p><p>Note that &quot;Unknown Application&quot; may be necessary for some movies and archive files (such as gzip) to work.<p>';
 $string['folder'] = 'Folder';
+$string['Folders'] = 'Folders';
 $string['foldercreated'] = 'Folder created';
 $string['groupfiles'] = 'Group Files';
 $string['groupfilesfor'] = 'Group Files for %s';

@@ -75,8 +75,9 @@ $smarty->assign('group', $group);
 $smarty->assign('groupid', $id);
 $smarty->assign('grouptabs', group_get_menu_tabs($group));
 $smarty->assign('foruminfo', $foruminfo);
-$smarty->assign('strgroupviews', get_string('groupviewscount', 'group', count_records('view', 'group', $group->id)));
-$smarty->assign('strcontent', get_string('groupfilescount', 'group', $filecounts->files, $filecounts->folders));
+$smarty->assign('viewcount', count_records('view', 'group', $group->id));
+$smarty->assign('filecount', $filecounts->files);
+$smarty->assign('foldercount', $filecounts->folders);
 $smarty->display('group/view.tpl');
 
 ?>

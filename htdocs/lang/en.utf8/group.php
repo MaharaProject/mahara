@@ -257,9 +257,5 @@ $string['changeroleto'] = 'Change role to';
 $string['rolechanged'] = 'Role changed';
 $string['removefromgroup'] = 'Remove from group';
 $string['userremoved'] = 'User removed';
-
-$string['groupviewscount'] = 'This group has %s views';
-$string['groupfilescount'] = 'This group has %s files in %s folders';
-
 $string['About'] = 'About';
 ?>
