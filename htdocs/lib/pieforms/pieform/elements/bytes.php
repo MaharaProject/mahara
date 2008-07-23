@@ -140,9 +140,9 @@ function pieform_element_bytes_i18n() {/*{{{*/
             'invalidvalue' => 'Valeur doit être un nombre',
         ),
         'ja.utf8' => array(
-            'bytes'        => 'バイト',
-            'kilobytes'    => 'キロバイト',
-            'megabytes'    => 'メガバイト',
+            'bytes'        => 'B',
+            'kilobytes'    => 'KB',
+            'megabytes'    => 'MB',
             'invalidvalue' => '値は数値にしてください',
         ),
     );
