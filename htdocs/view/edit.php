@@ -124,14 +124,6 @@ $editview = array(
             'defaultvalue' => isset($view) ? $view->get('tags') : null,
             'help'         => true,
         ),
-        'ownerformat' => array(
-            'type'         => 'select',
-            'title'        => get_string('ownerformat','view'),
-            'description'  => get_string('ownerformatdescription','view'),
-            'options'      => $ownerformatoptions,
-            'defaultvalue' => isset($view) ? $view->get('ownerformat') : FORMAT_NAME_DISPLAYNAME,
-            'rules'        => array('required' => true),
-        ),
         'submit'   => array(
             'type'  => 'submitcancel',
             'value' => array(empty($new) ? get_string('save') : get_string('next'), get_string('cancel')),
@@ -144,6 +136,16 @@ if ($group) {
     $editview['elements']['group'] = array(
         'type'  => 'hidden',
         'value' => $group
+    );
+}
+else {
+    $editview['elements']['ownerformat'] = array(
+        'type'         => 'select',
+        'title'        => get_string('ownerformat','view'),
+        'description'  => get_string('ownerformatdescription','view'),
+        'options'      => $ownerformatoptions,
+        'defaultvalue' => isset($view) ? $view->get('ownerformat') : FORMAT_NAME_DISPLAYNAME,
+        'rules'        => array('required' => true),
     );
 }
 
