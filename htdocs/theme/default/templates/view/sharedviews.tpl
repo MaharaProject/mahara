@@ -44,7 +44,7 @@
     </table>
     <div class="center">{$pagination}</div>
 {else}
-<table id="myviewstable" class="{if $member}groupviews{else}noviews{/if}">
+<table id="myviewstable"{if $member} class="groupviews"{/if}>
   <tr>
     <td>{str tag="noviewstosee" section="group"}</td>
   </tr>

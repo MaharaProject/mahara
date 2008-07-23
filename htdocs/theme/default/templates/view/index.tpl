@@ -86,7 +86,7 @@
 <div class="center">{$pagination}</div>
 
 {else}
-<table id="myviewstable" class="noviews">
+<table id="myviewstable"{if $member} class="groupviews"{/if}>
   <tr>
     <td>{if $groupid}{str tag="noviewstosee" section="group"}{else}{str tag="noviews" section="view"}{/if}</td>
   </tr>
