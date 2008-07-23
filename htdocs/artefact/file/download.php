@@ -81,9 +81,8 @@ else {
 
         if (!$fileinloggedinmenu) {
             // Alternatively, if you own the file or you are an admin, it should always work
-            $fileisavailable = $USER->get('admin') || $file->get('owner') == $USER->get('id');
 
-            if (!$fileisavailable) {
+            if (!$USER->can_view_artefact($file)) {
                 throw new AccessDeniedException();
             }
         }
