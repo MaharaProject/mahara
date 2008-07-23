@@ -1891,7 +1891,9 @@ span.viewicon {
     margin-top: 0;
 }
 #membersearchresults {
-    width: 48em;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
 	border-top: 1px solid #95a8b7;
 	border-bottom: 1px solid #95a8b7;
 }
@@ -1900,6 +1902,9 @@ span.viewicon {
 }
 #membersearchresults p {
     margin: .1em 0 0 65px;
+}
+#membersearchresults td {
+  width: 50%;
 }
 .group-info-para {
     margin: 15px 0 0 10px;
