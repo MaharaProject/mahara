@@ -55,6 +55,15 @@ class PluginArtefactFile extends PluginArtefact {
         );
     }
 
+    public static function group_tabs($groupid) {
+        return array(
+            'files' => array(
+                'url' => 'artefact/file/groupfiles.php?group='.$groupid,
+                'title' => get_string('Files', 'artefact.file'),
+            ),
+        );
+    }
+
     public static function get_event_subscriptions() {
         $subscriptions = array(
             (object)array(

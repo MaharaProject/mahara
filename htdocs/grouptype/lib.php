@@ -91,6 +91,9 @@ abstract class GroupType {
 
     public static abstract function get_view_assessing_roles();
 
+    public static function get_group_artefact_plugins() {
+        return array('file');
+    }
 }
 
 ?>

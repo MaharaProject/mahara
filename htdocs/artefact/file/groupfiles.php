@@ -69,6 +69,7 @@ $smarty = smarty(
 );
 $smarty->assign('heading', get_string('groupfilesfor', 'artefact.file', $group->name));
 $smarty->assign('groupid', $groupid);
+$smarty->assign('grouptabs', group_get_menu_tabs($group));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('artefact:file:index.tpl');
 

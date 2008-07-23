@@ -73,6 +73,7 @@ $foruminfo = get_records_sql_array('
 $smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($id, $role))));
 $smarty->assign('group', $group);
 $smarty->assign('groupid', $id);
+$smarty->assign('grouptabs', group_get_menu_tabs($group));
 $smarty->assign('foruminfo', $foruminfo);
 $smarty->assign('strgroupviews', get_string('groupviewscount', 'group', count_records('view', 'group', $group->id)));
 $smarty->assign('strcontent', get_string('groupfilescount', 'group', $filecounts->files, $filecounts->folders));

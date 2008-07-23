@@ -109,6 +109,7 @@ define('TITLE', $group->name . ' - ' . get_string('changerole', 'group'));
 $smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($groupid, $role))));
 $smarty->assign('group', $group);
 $smarty->assign('groupid', $groupid);
+$smarty->assign('grouptabs', group_get_menu_tabs($group));
 $smarty->assign('subtitle', get_string('changeroleofuseringroup', 'group', display_name($user), $group->name));
 $smarty->assign('changeform', $changeform);
 $smarty->assign('removeform', $removeform);

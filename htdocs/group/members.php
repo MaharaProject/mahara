@@ -49,6 +49,7 @@ list($html, $pagination, $count, $offset) = group_get_membersearch_data($id, $qu
 $smarty = smarty(array('paginator', 'groupmembersearch'), array(), array(), array('sideblocks' => array(interaction_sideblock($id, $role))));
 $smarty->assign('group', $group);
 $smarty->assign('groupid', $id);
+$smarty->assign('grouptabs', group_get_menu_tabs($group));
 $smarty->assign('query', $query);
 $smarty->assign('results', $html);
 $smarty->assign('pagination', $pagination['html']);

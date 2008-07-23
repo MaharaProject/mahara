@@ -260,4 +260,6 @@ $string['userremoved'] = 'User removed';
 
 $string['groupviewscount'] = 'This group has %s views';
 $string['groupfilescount'] = 'This group has %s files in %s folders';
+
+$string['About'] = 'About';
 ?>

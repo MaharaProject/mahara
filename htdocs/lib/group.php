@@ -443,4 +443,38 @@ function get_grouptype_options() {
     return $groupoptions['jointype'];
 }
 
+
+function group_get_menu_tabs($group) {
+    $menu = array(
+        'info' => array(
+            'url' => 'group/view.php?id='.$group->id,
+            'title' => get_string('About', 'group'),
+        ),
+        'members' => array(
+            'url' => 'group/members.php?id='.$group->id,
+            'title' => get_string('Members', 'group'),
+        ),
+        'views' => array(
+            'url' => 'view/groupviews.php?group='.$group->id,
+            'title' => get_string('Views', 'group'),
+        ),
+    );
+    if (!group_user_access($group->id)) {
+        return $menu;
+    }
+    safe_require('grouptype', $group->grouptype);
+    $artefactplugins = call_static_method('GroupType' . $grouptype, 'get_group_artefact_plugins');
+    if ($plugins = get_records_array('artefact_installed', 'active', 1)) {
+        foreach ($plugins as &$plugin) {
+            if (!in_array($plugin->name, $artefactplugins)) {
+                continue;
+            }
+            safe_require('artefact', $plugin->name);
+            $plugin_menu = call_static_method(generate_class_name('artefact',$plugin->name), 'group_tabs', $group->id);
+            $menu = array_merge($menu, $plugin_menu);
+        }
+    }
+    return $menu;
+}
+
 ?>
