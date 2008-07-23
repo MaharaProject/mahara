@@ -1137,19 +1137,6 @@ class View {
     }
 
 
-    public function formatted_heading() {
-        if ($this->get('owner')) {
-            $link = 'user/view.php?id='.$this->get('owner');
-        }
-        else if ($this->get('group')) {
-            $link = 'group/view.php?id='.$this->get('group');
-        }
-        else {
-            $link = '';
-        }
-        return '<a href="' . get_config('wwwroot') . 'view/view.php?id=' . $this->get('id') .'">' . hsc($this->get('title')) . '</a> ' . get_string('by', 'view') . ' <a href="' . get_config('wwwroot') . $link . '">' . $this->formatted_owner() . '</a>';
-    }
-
     /**
      * Makes a URL for a view block editing page
      */
