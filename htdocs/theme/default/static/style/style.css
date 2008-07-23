@@ -1861,6 +1861,7 @@ span.viewicon {
     padding: .5em;
 }
 #grouppage-tabs {
+    margin-top: 25px;
     list-style-type: none;
 }
 #grouppage-tabs li {
