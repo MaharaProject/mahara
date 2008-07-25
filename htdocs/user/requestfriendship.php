@@ -48,9 +48,9 @@ $form = pieform(array(
     'name' => 'requestfriendship',
     'autofocus' => false,
     'elements' => array(
-        'reason' => array(
+        'message' => array(
             'type'  => 'textarea',
-            'title' => get_string('reason'),
+            'title' => get_string('message'),
             'cols'  => 50,
             'rows'  => 4,       
         ),
@@ -87,11 +87,11 @@ function requestfriendship_submit(Pieform $form, $values) {
 
     $f->owner     = $id;
     $f->requester = $loggedinid;
-    $f->reason    = $values['reason'];
+    $f->message    = $values['message'];
     insert_record('usr_friend_request', $f);
     $n->subject = get_string_from_language($lang, 'requestedfriendlistsubject', 'group');
-    if (isset($values['reason']) && !empty($values['reason'])) {
-        $n->message = get_string_from_language($lang, 'requestedfriendlistmessagereason', 'group', $displayname) . $values['reason'];
+    if (isset($values['message']) && !empty($values['message'])) {
+        $n->message = get_string_from_language($lang, 'requestedfriendlistmessagereason', 'group', $displayname) . $values['message'];
     }
     else {
         $n->message = get_string_from_language($lang, 'requestedfriendlistmessage', 'group', $displayname);

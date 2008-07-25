@@ -848,7 +848,7 @@ function get_users_data($userlist) {
                 NULL AS friend,
                 NULL AS requestedfriendship,
                 (SELECT title FROM {artefact} WHERE artefacttype = \'introduction\' AND owner = u.id) AS introduction,
-                reason
+                message
                 FROM {usr} u
                 JOIN {usr_friend_request} fr ON fr.requester = u.id
                 WHERE fr.owner = ?

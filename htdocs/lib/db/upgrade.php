@@ -990,6 +990,15 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $cron);
     }
 
+    if ($oldversion < 2008040204) {
+        if (is_postgres()) {
+            execute_sql('ALTER TABLE {usr_friend_request} RENAME COLUMN reason TO message');
+        }
+        else if (is_mysql()) {
+              execute_sql('ALTER TABLE {usr_friend_request} CHANGE reason message TEXT');
+        }
+    }
+
     return $status;
 
 }
