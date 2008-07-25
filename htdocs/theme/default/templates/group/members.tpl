@@ -13,7 +13,10 @@
             <input type="text" name="query" id="query" value="{$query|escape}">
         </label>
         <button id="query-button" type="submit">{str tag="go"}</button>
+        {if $membershiptype}<input type="hidden" name="membershiptype" value="{$membershiptype|escape}" />{/if}
     </div>
+</form>
+    {if $membershiptype}<h3>{str tag=pendingmembers section=group}</h3>{/if}
     <div id="results">
         <table id="membersearchresults" class="tablerenderer">
             <tbody>
@@ -23,7 +26,6 @@
     </div>
     {$pagination}
     <script type="text/javascript">{$pagination_js}</script>
-</form>
 
 
 {include file="group/tabend.tpl"}

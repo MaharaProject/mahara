@@ -340,8 +340,10 @@ function admin_user_search($queries, $constraints, $offset, $limit, $sortfield, 
  * @param string $query  A search string to filter by
  * @param int    $offset What result to start showing paginated results from
  * @param int    $limit  How many results to show
+ * @param array  $extra  User membershiptype
+ *
  */
-function get_group_user_search_results($group, $query, $offset, $limit) {
+function get_group_user_search_results($group, $query, $offset, $limit, $membershiptype) {
     $queries = array();
     $constraints = array();
     if (!empty($query)) {
@@ -364,7 +366,7 @@ function get_group_user_search_results($group, $query, $offset, $limit) {
         }
     }
 
-    $results = group_user_search($group, $queries, $constraints, $offset, $limit);
+    $results = group_user_search($group, $queries, $constraints, $offset, $limit, $membershiptype);
     if ($results['count']) {
         $userids = array_map(create_function('$a', 'return $a["id"];'), $results['data']);
         $introductions = get_records_sql_assoc("SELECT owner, title
@@ -382,11 +384,11 @@ function get_group_user_search_results($group, $query, $offset, $limit) {
 }
 
 
-function group_user_search($group, $queries, $constraints, $offset, $limit) {
+function group_user_search($group, $queries, $constraints, $offset, $limit, $membershiptype) {
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
     return call_static_method(generate_class_name('search', $plugin), 'group_search_user', 
-                              $group, $queries, $constraints, $offset, $limit);
+                              $group, $queries, $constraints, $offset, $limit, $membershiptype);
 }
 
 /**

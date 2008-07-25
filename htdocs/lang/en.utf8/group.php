@@ -59,6 +59,11 @@ $string['Created'] = 'Created';
 $string['groupadmins'] = 'Group admins';
 $string['grouptype'] = 'Group Type';
 
+$string['hasrequestedmembership'] = 'has requested membership of this group';
+$string['hasbeeninvitedtojoin'] = 'has been invited to join this group';
+$string['groupinvitesfrom'] = 'Invited to join:';
+$string['requestedmembershipin'] = 'Requested membership in:';
+
 // Used to refer to all the members of a group - NOT a "member" group role!
 $string['member'] = 'member';
 $string['members'] = 'members';

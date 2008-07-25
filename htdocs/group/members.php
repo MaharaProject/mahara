@@ -32,6 +32,7 @@ require_once('searchlib.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
 
 $id = param_integer('id');
+$membershiptype = param_alpha('membershiptype', null);
 
 if (!$group = get_record('group', 'id', $id, 'deleted', 0)) {
     throw new GroupNotFoundException("Couldn't find group with id $id");
@@ -40,11 +41,15 @@ define('TITLE', $group->name . ' - ' . get_string('Members', 'group'));
 
 $role = group_user_access($id);
 
+if (!empty($membershiptype) && $role != 'admin') {
+    throw new AccessDeniedException();
+}
+
 // Search related stuff for member pager
 $query  = trim(param_variable('query', ''));
 $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);
-list($html, $pagination, $count, $offset) = group_get_membersearch_data($id, $query, $offset, $limit);
+list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersearch_data($id, $query, $offset, $limit, $membershiptype);
 
 $smarty = smarty(array('paginator', 'groupmembersearch'), array(), array(), array('sideblocks' => array(interaction_sideblock($id, $role))));
 $smarty->assign('group', $group);
@@ -54,6 +59,7 @@ $smarty->assign('query', $query);
 $smarty->assign('results', $html);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('pagination_js', $pagination['javascript']);
+$smarty->assign('membershiptype', $membershiptype);
 $smarty->display('group/members.tpl');
 
 ?>

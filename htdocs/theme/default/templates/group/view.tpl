@@ -20,6 +20,11 @@
                 </ul>
 
                 <div class="group-info-para">
+                    <ul>
+                    {include file="group/groupuserstatus.tpl" group=$group returnto='view'}
+                    </ul>
+                </div>
+                <div class="group-info-para">
                 <h3>{str tag=latestforumposts section=interaction.forum}</h3>
                 {if $foruminfo}
                 {foreach from=$foruminfo item=postinfo}

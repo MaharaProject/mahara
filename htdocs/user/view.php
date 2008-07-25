@@ -230,6 +230,10 @@ if (!$allusergroups = get_records_sql_assoc($sql, array($userid, $userid, $useri
 }
 
 if ($loggedinid != $userid) {
+
+    $invitedlist = array();   // Groups admin'ed by the logged in user that the displayed user has been invited to
+    $requestedlist = array(); // Groups admin'ed by the logged in user that the displayed user has requested membership of
+
     // Get the logged in user's "invite only" groups
     if ($groups = get_records_sql_array("SELECT g.*
         FROM {group} g
@@ -241,10 +245,12 @@ if ($loggedinid != $userid) {
         $invitelist = array();
         foreach ($groups as $group) {
             if (array_key_exists($group->id, $allusergroups)) {
+                $invitedlist[$group->id] = $group->name;
                 continue;
             }
             $invitelist[$group->id] = $group->name;
         }
+        $smarty->assign('invitedlist', join(', ', $invitedlist));
         if (count($invitelist) > 0) {
             $default = array_keys($invitelist);
             $default = $default[0];
@@ -274,24 +280,31 @@ if ($loggedinid != $userid) {
         }
     }
 
-    // Get the controlled membership groups of which the logged in user is either:
-    // 1. an admin of, or;
+    // Get (a) controlled membership groups,
+    //     (b) request membership groups where the displayed user has requested membership,
+    // where the logged in user either:
+    // 1. is a group admin, or;
     // 2. has a role in the list of roles who are allowed to assess submitted views for the given grouptype
     if ($groups = get_records_sql_array("SELECT g.*, gm.ctime
           FROM {group} g
           JOIN {group_member} gm ON (gm.group = g.id)
           JOIN {grouptype_roles} gtr ON (gtr.grouptype = g.grouptype AND gtr.role = gm.role)
+          LEFT JOIN {group_member_request} gmr ON (gmr.member = ? AND gmr.group = g.id)
           WHERE gm.member = ?
-          AND g.jointype = 'controlled'
+          AND (g.jointype = 'controlled' OR (g.jointype = 'request' AND gmr.member = ?))
           AND (gm.role = 'admin' OR gtr.see_submitted_views = 1)
-          AND g.deleted = 0", array($loggedinid))) {
+          AND g.deleted = 0", array($userid,$loggedinid,$userid))) {
         $controlledlist = array();
         foreach ($groups as $group) {
             if (array_key_exists($group->id, $userassocgroups)) {
                 continue;
             }
+            if ($group->jointype == 'request') {
+                $requestedlist[$group->id] = $group->name;
+            }
             $controlledlist[$group->id] = $group->name;
         }
+        $smarty->assign('requestedlist', join(', ', $requestedlist));
         if (count($controlledlist) > 0) {
             $default = array_keys($controlledlist);
             $default = $default[0];
@@ -307,12 +320,16 @@ if ($loggedinid != $userid) {
                         'options' => $controlledlist,
                         'defaultvalue' => $default,
                     ),
+                    'member' => array(
+                        'type'  => 'hidden',
+                        'value' => $userid, 
+                    ),
                     'submit' => array(
                         'type'  => 'submit',
                         'value' => get_string('add'),
                     ),
                 ),
-           ));
+            ));
             $smarty->assign('addform',$addform);
         } 
     }
@@ -414,6 +431,7 @@ function addmember_submit(Pieform $form, $values) {
 
     try {
         insert_record('group_member', $data);
+        delete_records('group_member_request', 'member', $userid, 'group', $data->group);
         $lang = get_user_language($userid);
         activity_occurred('maharamessage', 
             array('users'   => array($userid),

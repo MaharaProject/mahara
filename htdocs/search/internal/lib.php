@@ -400,7 +400,7 @@ class PluginSearchInternal extends PluginSearch {
     }
 
 
-    public static function group_search_user($group, $queries, $constraints, $offset, $limit) {
+    public static function group_search_user($group, $queries, $constraints, $offset, $limit, $membershiptype) {
         $where = 'WHERE gm.group = ?';
         $values = array($group);
 
@@ -419,17 +419,27 @@ class PluginSearchInternal extends PluginSearch {
             $where .= join(' OR ', $str) . ') ';
         }
 
-        $count = get_field_sql('SELECT COUNT(*) FROM {usr} u INNER JOIN {group_member} gm ON (gm.member = u.id) ' . $where, $values);
+        $group_member = 'group_member';
+        if (!empty($membershiptype) && in_array($membershiptype, array('request', 'invite'))) {
+            $group_member .= '_' . $membershiptype;
+            $gm_role = '';
+            $gm_role_order = '';
+        }
+        else {
+            $gm_role = ', gm.role';
+            $gm_role_order = "gm.role = 'admin' DESC, ";
+        }
+
+        $count = get_field_sql('SELECT COUNT(*) FROM {usr} u INNER JOIN {' . $group_member . '} gm ON (gm.member = u.id) ' . $where, $values);
 
         if ($count > 0) {
             $data = get_records_sql_assoc('
                 SELECT
-                    u.id, u.firstname, u.lastname, u.username, u.email, u.staff, ' . db_format_tsfield('gm.ctime', 'jointime') . ',
-                    gm.role
+                    u.id, u.firstname, u.lastname, u.username, u.email, u.staff, ' . db_format_tsfield('gm.ctime', 'jointime') . $gm_role . '
                 FROM
                     {usr} u
-                INNER JOIN {group_member} gm ON (gm.member = u.id) ' . $where . '
-                ORDER BY gm.role = \'admin\' DESC, gm.ctime, u.firstname, u.lastname, u.id',
+                INNER JOIN {' . $group_member . '} gm ON (gm.member = u.id) ' . $where . '
+                ORDER BY ' . $gm_role_order . 'gm.ctime, u.firstname, u.lastname, u.id',
                 $values,
                 $offset,
                 $limit);
@@ -442,7 +452,7 @@ class PluginSearchInternal extends PluginSearch {
             }
         }
         else {
-            $data = false;
+            $data = array();
         }
 
         return array(

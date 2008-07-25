@@ -200,6 +200,7 @@ function group_add_member($groupid, $userid, $role=null) {
     }
     $cm->role = $role;
     insert_record('group_member', $cm);
+    delete_records('group_member_request', 'group', $groupid, 'member', $userid);
     $user = optional_userobj($userid);
 }
 
@@ -227,6 +228,72 @@ function group_get_admin_ids($group) {
         FROM {group_member}
         WHERE \"group\" = ?
         AND role = 'admin'", $group);
+}
+
+
+function group_get_join_form($name, $groupid) {
+    return pieform(array(
+        'name' => $name,
+        'successcallback' => 'joingroup_submit',
+        'elements' => array(
+            'join' => array(
+                'type' => 'submit',
+                'value' => get_string('joingroup', 'group')
+            ),
+            'group' => array(
+                'type' => 'hidden',
+                'value' => $groupid
+            )
+        )
+    ));
+}
+
+function group_get_accept_form($name, $groupid, $returnto) {
+    return pieform(array(
+       'name'     => $name,
+       'renderer' => 'oneline',
+       'successcallback' => 'group_invite_submit',
+       'elements' => array(
+            'accept' => array(
+                'type'  => 'submit',
+                'value' => get_string('acceptinvitegroup', 'group')
+            ),
+            'decline' => array(
+                'type'  => 'submit',
+                'value' => get_string('declineinvitegroup', 'group')
+            ),
+            'group' => array(
+                'type' => 'hidden',
+                'value' => $groupid
+            ),
+            'returnto' => array(
+                'type' => 'hidden',
+                'value' => $returnto
+            )
+        )
+    ));
+}
+
+function group_get_addmember_form($userid, $groupid) {
+    return pieform(array(
+        'name'                => 'addmember',
+        'successcallback'     => 'group_addmember_submit',
+        'renderer'            => 'div',
+        'elements'            => array(
+            'group' => array(
+                'type'    => 'hidden',
+                'value' => $groupid,
+            ),
+            'member' => array(
+                'type'  => 'hidden',
+                'value' => $userid,
+            ),
+            'submit' => array(
+                'type'  => 'submit',
+                'value' => get_string('add'),
+            ),
+        ),
+    ));
 }
 
 /**
@@ -265,45 +332,10 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
             $group->canleave = group_user_can_leave($group->id);
         }
         else if ($group->jointype == 'open') {
-            $group->groupjoin = pieform(array(
-                'name' => 'joingroup' . $i++,
-                'successcallback' => 'joingroup_submit',
-                'elements' => array(
-                    'join' => array(
-                        'type' => 'submit',
-                        'value' => get_string('joingroup', 'group')
-                    ),
-                    'group' => array(
-                        'type' => 'hidden',
-                        'value' => $group->id
-                    )
-                )
-            ));
+            $group->groupjoin = group_get_join_form('joingroup' . $i++, $group->id);
         }
         else if ($group->membershiptype == 'invite') {
-           $group->invite = pieform(array(
-               'name'     => 'invite' . $i++,
-               'renderer' => 'oneline',
-               'successcallback' => 'group_invite_submit',
-               'elements' => array(
-                    'accept' => array(
-                        'type'  => 'submit',
-                        'value' => get_string('acceptinvitegroup', 'group')
-                    ),
-                    'decline' => array(
-                        'type'  => 'submit',
-                        'value' => get_string('declineinvitegroup', 'group')
-                    ),
-                    'group' => array(
-                        'type' => 'hidden',
-                        'value' => $group->id
-                    ),
-                    'returnto' => array(
-                        'type' => 'hidden',
-                        'value' => $returnto
-                    )
-                )
-            ));
+            $group->invite = group_get_accept_form('invite' . $i++, $group->id, $returnto);
         }
         else if ($group->membershiptype == 'admin' && $group->requests > 1) {
             $group->requests = array($group->requests);
@@ -335,6 +367,21 @@ function group_invite_submit(Pieform $form, $values) {
     }
 }
 
+function group_addmember_submit(Pieform $form, $values) {
+    global $SESSION;
+    $group = (int)$values['group'];
+    if (group_user_access($group) != 'admin') {
+        $SESSION->add_error_msg(get_string('accessdenied', 'error'));
+        redirect('/group/members.php?id=' . $group . '&membershiptype=request');
+    }
+    group_add_member($group, $values['member']);
+    $SESSION->add_ok_msg(get_string('useradded', 'group'));
+    if (count_records('group_member_request', 'group', $group)) {
+        redirect('/group/members.php?id=' . $group . '&membershiptype=request');
+    }
+    redirect('/group/members.php?id=' . $group);
+}
+
 function group_get_role_info($groupid) {
     $roles = get_records_sql_assoc('SELECT role, edit_views, see_submitted_views, gr.grouptype FROM {grouptype_roles} gr
         INNER JOIN {group} g ON g.grouptype = gr.grouptype
@@ -346,18 +393,32 @@ function group_get_role_info($groupid) {
     return $roles;
 }
 
-function group_get_membersearch_data($group, $query, $offset, $limit) {
-    $results = get_group_user_search_results($group, $query, $offset, $limit);
+function group_get_membersearch_data($group, $query, $offset, $limit, $membershiptype) {
+    $results = get_group_user_search_results($group, $query, $offset, $limit, $membershiptype);
 
     $params = array();
     if (!empty($query)) {
         $params[] = 'query=' . $query;
     }
     $params[] = 'limit=' . $limit;
-    $searchurl = get_config('wwwroot') . 'group/view.php?' . join('&amp;', $params);
+    if (!empty($membershiptype)) {
+        $params[] = 'membershiptype=' . $membershiptype;
+    }
+    $searchurl = get_config('wwwroot') . 'group/members.php?id=' . $group . '&amp;' . join('&amp;', $params);
+
+    $smarty = smarty_core();
+
+    if (!empty($membershiptype)) {
+        if ($membershiptype == 'request') {
+            foreach ($results['data'] as &$r) {
+                $r['addform'] = group_get_addmember_form($r['id'], $group);
+            }
+        }
+        $smarty->assign('membershiptype', $membershiptype);
+    }
+
     $results['cdata'] = array_chunk($results['data'], 2);
     $results['roles'] = group_get_role_info($group);
-    $smarty = smarty_core();
     $smarty->assign_by_ref('results', $results);
     $smarty->assign('searchurl', $searchurl);
     $smarty->assign('pagebaseurl', $searchurl);
@@ -368,7 +429,7 @@ function group_get_membersearch_data($group, $query, $offset, $limit) {
     $pagination = build_pagination(array(
         'id' => 'member_pagination',
         'class' => 'center',
-        'url' => get_config('wwwroot') . 'group/view.php?id=' . $group,
+        'url' => $searchurl,
         'count' => $results['count'],
         'limit' => $limit,
         'offset' => $offset,
@@ -383,7 +444,7 @@ function group_get_membersearch_data($group, $query, $offset, $limit) {
         'resultcounttextplural' => get_string('members', 'group'),
     ));
 
-    return array($html, $pagination, $results['count'], $offset);
+    return array($html, $pagination, $results['count'], $offset, $membershiptype);
 }
 
 
@@ -463,7 +524,7 @@ function group_get_menu_tabs($group) {
         return $menu;
     }
     safe_require('grouptype', $group->grouptype);
-    $artefactplugins = call_static_method('GroupType' . $grouptype, 'get_group_artefact_plugins');
+    $artefactplugins = call_static_method('GroupType' . $group->grouptype, 'get_group_artefact_plugins');
     if ($plugins = get_records_array('artefact_installed', 'active', 1)) {
         foreach ($plugins as &$plugin) {
             if (!in_array($plugin->name, $artefactplugins)) {

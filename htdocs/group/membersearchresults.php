@@ -35,7 +35,15 @@ $query  = trim(param_variable('query', ''));
 $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);
 
-list($html, $pagination, $count, $offset) = group_get_membersearch_data($id, $query, $offset, $limit);
+$membershiptype = param_alpha('membershiptype', null);
+
+if (!empty($membershiptype)) {
+    if (group_user_access($id) != 'admin') {
+        json_reply('local', get_string('accessdenied', 'error'));
+    }
+}
+
+list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersearch_data($id, $query, $offset, $limit, $membershiptype);
 log_debug($USER);
 json_reply(false, array(
     'message' => null,
@@ -46,6 +54,7 @@ json_reply(false, array(
         'count' => $count,
         'results' => $count . ' ' . ($count == 1 ? get_string('result') : get_string('results')),
         'offset' => $offset,
+        'membershiptype' => $membershiptype,
     )
 ));
 

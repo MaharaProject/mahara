@@ -342,9 +342,10 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
  * Both parameters should be objects containing id, preferredname, firstname,
  * lastname, admin
  *
- * @param object the user that you're trying to format to a string
- * @param object the user that is looking at the string representation (if left
+ * @param object $user the user that you're trying to format to a string
+ * @param object $userto the user that is looking at the string representation (if left
  * blank, will default to the currently logged in user).
+ * @param boolean $nameonly do not append the user's username even if $userto can see it.
  *
  * @returns string name to display
  */
