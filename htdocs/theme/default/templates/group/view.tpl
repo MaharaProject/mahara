@@ -18,12 +18,10 @@
                         <strong>{str tag=Files section=artefact.file}:</strong> {$filecount}&nbsp;
                         <strong>{str tag=Folders section=artefact.file}:</strong> {$foldercount}</li>
                 </ul>
-
-                <div class="group-info-para">
-                    <ul>
+                <ul id="group-controls">
                     {include file="group/groupuserstatus.tpl" group=$group returnto='view'}
-                    </ul>
-                </div>
+                </ul><br style="clear: left;"/>
+
                 <div class="group-info-para">
                 <h3>{str tag=latestforumposts section=interaction.forum}</h3>
                 {if $foruminfo}

@@ -1885,8 +1885,12 @@ span.viewicon {
 #group-description {
     margin-top: 0;
 }
+#group-controls,
 #group-info {
     list-style-type: none;
+}
+#group-controls li {
+    float: left;
 }
 #grouppage-container h3 {
     margin-top: 0;
