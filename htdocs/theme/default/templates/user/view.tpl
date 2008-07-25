@@ -44,7 +44,7 @@
 				</ul>
                 {if $relationship == 'pending'}
                     <div class="message">
-                        {str tag='whymakemeyourfriend' section='group'} {$reason}
+                        {str tag='whymakemeyourfriend' section='group'} {$message}
                         {$requestform}
                     </div>
                 {/if}

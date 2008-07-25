@@ -25,7 +25,7 @@
                 <div class="pending">
                     <strong>
                         {str tag='whymakemeyourfriend' section='group'}
-                        {$user->reason}
+                        {$user->message}
                     </strong>
                 </div>
                 <div>

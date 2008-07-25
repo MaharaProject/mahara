@@ -301,7 +301,7 @@ if ($loggedinid != $userid) {
                 )
             )
         ));
-        $smarty->assign('reason', $record->reason);
+        $smarty->assign('message', $record->message);
         $smarty->assign('requestform', $requestform);
     }
     else {
