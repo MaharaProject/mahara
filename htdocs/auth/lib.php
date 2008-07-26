@@ -336,7 +336,42 @@ function auth_setup () {
     // not have a session, this time will be 0.
     $sessionlogouttime = $USER->get('logout_time');
     if ($sessionlogouttime && isset($_GET['logout'])) {
+        $userid = $USER->get('id');
+        $authinstance = $SESSION->get('mnetauthinstance');
+
         $USER->logout();
+
+        // TODO: This should probably be handled by some kind of logout hook 
+        // that the users' authinstance can implement
+        if ($authinstance) {
+            // Send them back to their remote application. We send them back to 
+            // the remote host they originally logged in from.
+            //
+            // TODO: We are not handling the case where Mahara is an IDP
+            $authobj = AuthFactory::create($authinstance);
+
+            if (get_config('usersuniquebyusername')) {
+                // The auth_remote_user will have a row for the institution in 
+                // which the user SSOed into first. However, they could have 
+                // been coming from somewhere else this time, which is why we 
+                // can't use auth_remote_user for the lookup. Their username 
+                // won't change for their Mahara account anyway, so just grab 
+                // it out of the usr table.
+                $remoteusername = get_field('usr', 'username', 'id', $userid);
+            }
+            else {
+                // Check the auth_remote_user table for what the remote 
+                // application thinks the username is
+                $remoteusername = get_field('auth_remote_user', 'remoteusername', 'localusr', $userid, 'authinstance', $authinstance);
+                if (!$remoteusername && $authobj->parent) {
+                    $remoteusername = get_field('auth_remote_user', 'remoteusername', 'localusr', $userid, 'authinstance', $authobj->parent);
+                }
+            }
+            $authobj->kill_parent($remoteusername);
+
+            redirect($authobj->wwwroot);
+        }
+
         $SESSION->add_ok_msg(get_string('loggedoutok'));
         redirect();
     }
