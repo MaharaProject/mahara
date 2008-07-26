@@ -50,12 +50,7 @@ require(dirname(dirname(dirname(__FILE__))).'/init.php');
 
 // If networking is turned off, it's safer to die immediately
 if (!get_config('enablenetworking')) {
-    $protocol = strtoupper($_SERVER['SERVER_PROTOCOL']);
-    if ($protocol != 'HTTP/1.1') {
-        $protocol = 'HTTP/1.0';
-    }
-    header($protocol.' 403 Forbidden');
-    exit;
+    throw new AccessDeniedException(get_string('networkingdisabledonthissite', 'auth.xmlrpc'));
 }
 
 require_once(get_config('docroot') .'api/xmlrpc/client.php');
