@@ -366,9 +366,19 @@ class AuthXmlrpc extends Auth {
 
         // We know who our user is now. Bring her back to life.
         $USER->reanimate($user->id, $this->instanceid);
+
+        // Set session variables to let the application know this session was 
+        // initiated by MNET. Don't forget that users could initiate their 
+        // sessions without MNET sometimes, which is why this data is stored in 
+        // the session object.
+        //
+        // Note that if you add/remove something from the session here, you 
+        // must do the same in the User->logout method in auth/user.php!
         $SESSION->set('mnetuser', true);
+        $SESSION->set('mnetauthinstance', $this->instanceid);
         $SESSION->set('mnetwwwroot', $peer->wwwroot);
         $SESSION->set('mnetsitename', $peer->name);
+
         return true;
     }
 
