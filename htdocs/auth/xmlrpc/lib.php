@@ -100,7 +100,7 @@ class AuthXmlrpc extends Auth {
      * Grab a delegate object for auth stuff
      */
     public function request_user_authorise($token, $remotewwwroot) {
-        global $USER;
+        global $USER, $SESSION;
         $this->must_be_ready();
         $peer = get_peer($remotewwwroot);
 
@@ -366,6 +366,9 @@ class AuthXmlrpc extends Auth {
 
         // We know who our user is now. Bring her back to life.
         $USER->reanimate($user->id, $this->instanceid);
+        $SESSION->set('mnetuser', true);
+        $SESSION->set('mnetwwwroot', $peer->wwwroot);
+        $SESSION->set('mnetsitename', $peer->name);
         return true;
     }
 

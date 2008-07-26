@@ -29,5 +29,7 @@ defined('INTERNAL') || die();
 $string['title'] = 'XMLRPC';
 $string['description'] = 'Authenticate by SSO from an external application';
 $string['notusable'] = 'Please install the XMLRPC, Curl and OpenSSL PHP extensions';
+$string['networkingdisabledonthissite'] = 'Networking is disabled on this site';
+$string['youhaveloggedinfrom'] = 'You have logged in from <a href="%s">%s</a>.';
 
 ?>
