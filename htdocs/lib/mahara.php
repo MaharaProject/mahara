@@ -1784,13 +1784,18 @@ function display_size($size) {
  * creates the profile sideblock
  */
 function profile_sideblock() {
-    global $USER;
+    global $USER, $SESSION;
     safe_require('notification', 'internal');
     require_once('group.php');
     $data = array(
-        'id' => $USER->get('id'),
+        'id'          => $USER->get('id'),
         'profileicon' => $USER->get('profileicon') ? $USER->get('profileicon') : 0,
     );
+
+    if ($SESSION->get('mnetuser')) {
+        $data['mnetloggedinfrom'] = get_string('youhaveloggedinfrom', 'auth.xmlrpc',
+            $SESSION->get('mnetwwwroot'), $SESSION->get('mnetsitename'));
+    }
     $data['unreadnotifications'] = call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'));
     $data['unreadnotificationsmessage'] = $data['unreadnotifications'] == 1 ? get_string('unreadmessage') : get_string('unreadmessages');
     $invitedgroups = get_invited_groups();
