@@ -124,6 +124,40 @@ class User {
     }
 
     /**
+     * Populates this object with the user record identified by the given 
+     * username
+     *
+     * @throws AuthUnknownUserException If the user cannot be found. Note that 
+     *                                  deleted users _can_ be found
+     */
+    public function find_by_username($username) {
+
+        if (!is_string($username)) {
+            throw new InvalidArgumentException('username parameter must be a string to create a User object');
+        }
+
+        $sql = 'SELECT
+                    *,
+                    ' . db_format_tsfield('expiry') . ',
+                    ' . db_format_tsfield('lastlogin') . ',
+                    ' . db_format_tsfield('suspendedctime') . '
+                FROM
+                    {usr}
+                WHERE
+                    username = ?';
+
+        $user = get_record_sql($sql, $username);
+
+        if (false == $user) {
+            throw new AuthUnknownUserException("User with username \"$username\" is not known");
+        }
+
+        $this->populate($user);
+        $this->reset_institutions();
+        return $this;
+    }
+
+    /**
      * Finds details for a user given a username and their authentication 
      * instance.
      *
@@ -169,8 +203,7 @@ class User {
                             )'
                             . $parentwhere
                             . '
-                        )
-                        AND u.deleted = 0';
+                        )';
             $user = get_record_sql($sql, array($username, $instanceid));
         }
         else {
@@ -183,7 +216,6 @@ class User {
                         {usr}
                     WHERE
                         LOWER(username) = ? AND
-                        u.deleted = 0 AND
                         authinstance = ' . db_quote($instanceid);
             $user = get_record_sql($sql, array($username));
         }

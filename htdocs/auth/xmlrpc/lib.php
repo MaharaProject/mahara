@@ -130,10 +130,50 @@ class AuthXmlrpc extends Auth {
         // Retrieve a $user object. If that fails, create a blank one.
         try {
             $user = new User;
-            $user->find_by_instanceid_username($this->instanceid, $remoteuser->username, true);
+            if (get_config('usersuniquebyusername')) {
+                // When turned on, this setting means that it doesn't matter 
+                // which other application the user SSOs from, they will be 
+                // given the same account in Mahara.
+                //
+                // This setting is one that has security implications unless 
+                // only turned on by people who know what they're doing. In 
+                // particular, every system linked to Mahara should be making 
+                // sure that same username == same person.  This happens for 
+                // example if two Moodles are using the same LDAP server for 
+                // authentication.
+                //
+                // If this setting is on, it must NOT be possible to self 
+                // register on the site for ANY institution - otherwise users 
+                // could simply pick usernames of people's accounts they wished 
+                // to steal.
+                if ($institutions = get_column('institution', 'name', 'registerallowed', '1')) {
+                    log_warn("usersuniquebyusername is turned on but registration is allowed for an institution. "
+                        . "No institution can have registration allowed for it, for security reasons.\n"
+                        . "The following institutions have registration enabled:\n  " . join("\n  ", $institutions));
+                    throw new AccessDeniedException();
+                }
+
+                if (!get_config('usersallowedmultipleinstitutions')) {
+                    log_warn("usersuniquebyusername is turned on but usersallowedmultipleinstitutions is off. "
+                        . "This makes no sense, as users will then change institution every time they log in from "
+                        . "somewhere else. Please turn this setting on in Site Options");
+                    throw new AccessDeniedException();
+                }
+
+                $user->find_by_username($remoteuser->username);
+            }
+            else {
+                $user->find_by_instanceid_username($this->instanceid, $remoteuser->username, true);
+            }
+
+            if ($user->get('deleted')) {
+                die_info(get_string('accountdeleted', 'mahara'));
+            }
+
             if ($user->get('suspendedcusr')) {
                 die_info(get_string('accountsuspended', 'mahara', strftime(get_string('strftimedaydate'), $user->get('suspendedctime')), $user->get('suspendedreason')));
             }
+
             if ('1' == $this->config['updateuserinfoonlogin']) {
                 $update = true;
             }
@@ -229,6 +269,11 @@ class AuthXmlrpc extends Auth {
             //TODO: import institution's per-user-quota?:
             //$user->quota              = $userrecord->quota;
             $user->commit();
+        }
+
+        if (get_config('usersuniquebyusername')) {
+            // Add them to the institution they have SSOed in by
+            $user->join_institution($peer->institution);
         }
 
 
