@@ -633,6 +633,14 @@ class LiveUser extends User {
         if ($this->authenticated === true) {
             $this->SESSION->set('messages', array());
         }
+
+        // Unset all mnet related variables. These are set in 
+        // auth/xmlrpc/lib.php
+        $this->SESSION->set('mnetuser', null);
+        $this->SESSION->set('mnetauthinstance', null);
+        $this->SESSION->set('mnetwwwroot', null);
+        $this->SESSION->set('mnetsitename', null);
+
         reset($this->defaults);
         foreach (array_keys($this->defaults) as $key) {
             $this->set($key, $this->defaults[$key]);
