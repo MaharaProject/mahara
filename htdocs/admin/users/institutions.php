@@ -418,7 +418,7 @@ function institution_submit(Pieform $form, $values) {
     }
     else {
         $message = get_string('institutionupdatedsuccessfully', 'admin');
-        if ($oldtheme != $values['theme']
+        if (isset($values['theme']) && $oldtheme != $values['theme']
             && (!empty($oldtheme) || $values['theme'] != 'sitedefault')) {
             $message .= '  ' . get_string('usersseenewthemeonlogin', 'admin');
         }
