@@ -434,7 +434,7 @@ EOF;
 
         usort($SIDEBLOCKS, create_function('$a,$b', 'if ($a["weight"] == $b["weight"]) return 0; return ($a["weight"] < $b["weight"]) ? -1 : 1;'));
 
-        $smarty->assign('userauthinstance', $USER->lastauthinstance);
+        $smarty->assign('userauthinstance', $SESSION->get('authinstance'));
         $smarty->assign('SIDEBLOCKS', $SIDEBLOCKS);
 
         if ($USER->get('parentuser')) {
