@@ -296,6 +296,29 @@ abstract class Auth {
         return true;
     }
 
+    /**
+     * Called when a user is being logged out, either by clicking a logout 
+     * link, their session timing out or some other method where their session 
+     * is explicitly being ended with no more processing to take place on this 
+     * page load.
+     *
+     * You can use $USER->logout() to log a user out but continue page 
+     * processing if necessary. register.php is an example of such a place 
+     * where this happens.
+     *
+     * If you define this hook, you can call $USER->logout() in it if you need 
+     * to before redirecting. Otherwise, it will be called for you once your 
+     * hook has run.
+     *
+     * If you do not explicitly redirect yourself, once this hook is finished 
+     * the user will be redirected to the homepage with a message saying they 
+     * have been logged out successfully.
+     *
+     * This method has no parameters and needs no return value
+     */
+    public function logout() {
+    }
+
 }
 
 
@@ -336,42 +359,12 @@ function auth_setup () {
     // not have a session, this time will be 0.
     $sessionlogouttime = $USER->get('logout_time');
     if ($sessionlogouttime && isset($_GET['logout'])) {
-        $userid = $USER->get('id');
-        $authinstance = $SESSION->get('mnetauthinstance');
+        // Call the authinstance' logout hook
+        $authinstance = $SESSION->get('authinstance');
+        $authobj = AuthFactory::create($authinstance);
+        $authobj->logout();
 
         $USER->logout();
-
-        // TODO: This should probably be handled by some kind of logout hook 
-        // that the users' authinstance can implement
-        if ($authinstance) {
-            // Send them back to their remote application. We send them back to 
-            // the remote host they originally logged in from.
-            //
-            // TODO: We are not handling the case where Mahara is an IDP
-            $authobj = AuthFactory::create($authinstance);
-
-            if (get_config('usersuniquebyusername')) {
-                // The auth_remote_user will have a row for the institution in 
-                // which the user SSOed into first. However, they could have 
-                // been coming from somewhere else this time, which is why we 
-                // can't use auth_remote_user for the lookup. Their username 
-                // won't change for their Mahara account anyway, so just grab 
-                // it out of the usr table.
-                $remoteusername = get_field('usr', 'username', 'id', $userid);
-            }
-            else {
-                // Check the auth_remote_user table for what the remote 
-                // application thinks the username is
-                $remoteusername = get_field('auth_remote_user', 'remoteusername', 'localusr', $userid, 'authinstance', $authinstance);
-                if (!$remoteusername && $authobj->parent) {
-                    $remoteusername = get_field('auth_remote_user', 'remoteusername', 'localusr', $userid, 'authinstance', $authobj->parent);
-                }
-            }
-            $authobj->kill_parent($remoteusername);
-
-            redirect($authobj->wwwroot);
-        }
-
         $SESSION->add_ok_msg(get_string('loggedoutok'));
         redirect();
     }
@@ -412,7 +405,25 @@ function auth_setup () {
     }
     else if ($sessionlogouttime > 0) {
         // The session timed out
+
+        $authinstance = $SESSION->get('authinstance');
+        $authobj = AuthFactory::create($authinstance);
+
+        $mnetuser = 0;
+        if ($SESSION->get('mnetuser') && $authobj->parent) {
+            // We wish to remember that the user is an MNET user - even though 
+            // they're using the local login form
+            $mnetuser = $USER->get('id');
+        }
+
+        $authobj->logout();
         $USER->logout();
+
+        if ($mnetuser != 0) {
+            $SESSION->set('mnetuser', $mnetuser);
+            $SESSION->set('authinstance', $authinstance);
+        }
+
         if (defined('JSON')) {
             json_reply('global', get_string('sessiontimedoutreload'), 1);
         }
