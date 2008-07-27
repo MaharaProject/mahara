@@ -479,7 +479,6 @@ class AuthXmlrpc extends Auth {
 
     public function kill_parent($username) {
         require_once(get_config('docroot') . 'api/xmlrpc/client.php');
-        $peer = get_peer($this->wwwroot);
 
         // Note: We are not bothering to check whether this succeeds or fails.  
         // There's not much we can do about it anyhow. We might need to catch 
