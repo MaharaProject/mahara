@@ -490,6 +490,52 @@ class AuthXmlrpc extends Auth {
                ->send($this->wwwroot);
     }
 
+    /**
+     * Overrides the default logout mechanism to do proper single singout
+     */
+    public function logout() {
+        global $USER, $SESSION;
+
+        if (get_config('usersuniquebyusername')) {
+            // The auth_remote_user will have a row for the institution in 
+            // which the user SSOed into first. However, they could have 
+            // been coming from somewhere else this time, which is why we 
+            // can't use auth_remote_user for the lookup. Their username 
+            // won't change for their Mahara account anyway, so just grab 
+            // it out of the usr table.
+            $remoteusername = get_field('usr', 'username', 'id', $USER->get('id'));
+        }
+        else {
+            // Check the auth_remote_user table for what the remote 
+            // application thinks the username is
+            $remoteusername = get_field('auth_remote_user', 'remoteusername', 'localusr', $USER->get('id'), 'authinstance', $this->instanceid);
+            if (!$remoteusername && $this->parent) {
+                $remoteusername = get_field('auth_remote_user', 'remoteusername', 'localusr', $USER->get('id'), 'authinstance', $this->parent);
+            }
+        }
+
+        $USER->logout();
+
+        if (isset($_GET['logout'])) {
+            // Explicit logout request
+            $this->kill_parent($remoteusername);
+            redirect($this->wwwroot);
+        }
+        elseif (!$this->parent) {
+            $this->kill_parent($remoteusername);
+            // Redirect back to their IDP if they don't have a parent auth method set 
+            // (aka: they can't log in at Mahara's log in form)
+            $peer = get_peer($this->wwwroot);
+            // TODO: This should be stored in the application config table
+            $jumpurl = str_replace('land', 'jump', $peer->application->ssolandurl);
+            redirect($this->wwwroot . $jumpurl . '?hostwwwroot=' . dropslash(get_config('wwwroot')) . '&wantsurl=' . urlencode($_SERVER['REQUEST_URI']));
+        }
+
+        // Anything else is a session timeout
+
+        $SESSION->set('mnetuser', null);
+    }
+
 }
 
 /**
