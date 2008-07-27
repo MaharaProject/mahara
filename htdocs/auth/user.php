@@ -182,8 +182,19 @@ class User {
                 $parentwhere = '
                             OR
                             (
-                                LOWER(username) = ' . db_quote($username) . '
-                                AND u.authinstance = ' . db_quote($parentid) . '
+                                LOWER(username) = (
+                                    SELECT
+                                        username
+                                    FROM
+                                        {usr} us
+                                    JOIN
+                                        {auth_remote_user} aru ON (us.id = aru.localusr)
+                                    WHERE
+                                        aru.remoteusername = ' . db_quote($username) . '
+                                        AND us.authinstance = ' . db_quote($parentid) . '
+                                )
+                                AND
+                                u.authinstance = ' . db_quote($parentid) . '
                             )
                     ';
             }
