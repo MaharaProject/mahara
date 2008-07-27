@@ -615,7 +615,7 @@ class LiveUser extends User {
         $auth = AuthFactory::create($instanceid);
         if ($auth->authenticate_user_account($user, $password)) {
             $user->lastauthinstance = $auth->instanceid;
-            $this->authenticate($user);
+            $this->authenticate($user, $auth->instanceid);
             return true;
         }
 
@@ -634,12 +634,8 @@ class LiveUser extends User {
             $this->SESSION->set('messages', array());
         }
 
-        // Unset all mnet related variables. These are set in 
-        // auth/xmlrpc/lib.php
-        $this->SESSION->set('mnetuser', null);
-        $this->SESSION->set('mnetauthinstance', null);
-        $this->SESSION->set('mnetwwwroot', null);
-        $this->SESSION->set('mnetsitename', null);
+        // Unset session variables related to authentication
+        $this->SESSION->set('authinstance', null);
 
         reset($this->defaults);
         foreach (array_keys($this->defaults) as $key) {
@@ -664,11 +660,23 @@ class LiveUser extends User {
      * When a user creates a security context by whatever method, we do some 
      * standard stuff
      *
-     * @param  object $user     Record from the usr table
+     * @param  object $user          Record from the usr table
+     * @param  integer $authinstance The ID of the authinstance that the user 
+     *                               signed in with
      * @return void
      */
-    protected function authenticate($user) {
+    protected function authenticate($user, $authinstance) {
         $this->authenticated  = true;
+
+        // If the user has reauthenticated and they were an MNET user, we 
+        // don't set these variables, because we wish to remember that they 
+        // originally SSO-ed in from their other authinstance. See the 
+        // session timeout code in auth_setup() for more info.
+        if ($this->SESSION->get('mnetuser') != $user->id) {
+            $this->SESSION->set('mnetuser', null);
+            $this->SESSION->set('authinstance', $authinstance);
+        }
+
         $this->populate($user);
         session_regenerate_id(true);
         $this->lastlogin          = time();
@@ -695,7 +703,7 @@ class LiveUser extends User {
     public function reanimate($id, $instanceid) {
         if ($user = get_record('usr','id',$id)) {
             $user->lastauthinstance = $instanceid;
-            $this->authenticate($user);
+            $this->authenticate($user, $instanceid);
             return true;
         }
         return false;
