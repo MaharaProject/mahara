@@ -1793,8 +1793,11 @@ function profile_sideblock() {
     );
 
     if ($SESSION->get('mnetuser')) {
+        $authinstance = $SESSION->get('authinstance');
+        $authobj = AuthFactory::create($authinstance);
+        $peer = get_peer($authobj->wwwroot);
         $data['mnetloggedinfrom'] = get_string('youhaveloggedinfrom', 'auth.xmlrpc',
-            $SESSION->get('mnetwwwroot'), $SESSION->get('mnetsitename'));
+            $authobj->wwwroot, $peer->name);
     }
     $data['unreadnotifications'] = call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'));
     $data['unreadnotificationsmessage'] = $data['unreadnotifications'] == 1 ? get_string('unreadmessage') : get_string('unreadmessages');
