@@ -44,13 +44,12 @@ if (!empty($membershiptype)) {
 }
 
 list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersearch_data($id, $query, $offset, $limit, $membershiptype);
-log_debug($USER);
+
 json_reply(false, array(
     'message' => null,
     'data' => array(
         'tablerows' => $html,
         'pagination' => $pagination['html'],
-        'pagination_js' => $pagination['javascript'],
         'count' => $count,
         'results' => $count . ' ' . ($count == 1 ? get_string('result') : get_string('results')),
         'offset' => $offset,

@@ -30,7 +30,7 @@ function UserSearch() {
     }
 
     this.rewritePaging = function() {
-        forEach(getElementsByTagAndClassName('span', 'pagination', 'membersearchresults'), function(i) {
+        forEach(getElementsByTagAndClassName('span', 'pagination', 'pagination'), function(i) {
             connect(i, 'onclick', self.changePage);
         });
     }
@@ -50,8 +50,9 @@ function UserSearch() {
     this.doSearch = function() {
         self.params.action = 'search';
         sendjsonrequest('membersearchresults.php', self.params, 'POST', function(data) {
-            $('results').innerHTML = data.data;
-            if ($('searchresults')) {
+            getElementsByTagAndClassName('tbody', null,'results')[0].innerHTML = data.data.tablerows;
+            $('pagination').innerHTML = data.data.pagination;
+            if (data.data.count) {
                 self.rewritePaging();
             }
         });

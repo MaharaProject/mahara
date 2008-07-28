@@ -24,7 +24,7 @@
             </tbody>
         </table>
     </div>
-    {$pagination}
+    <div id="pagination">{$pagination}</div>
     <script type="text/javascript">{$pagination_js}</script>
 
 
