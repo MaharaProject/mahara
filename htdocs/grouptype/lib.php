@@ -42,19 +42,20 @@ abstract class GroupType {
 
     public function install() {
 
+        $classname = get_class($this);
+        $type = strtolower(substr($classname, strlen('GroupType')));
+
         // These tables may already be populated if the site is being
         // upgraded from before grouptypes became plugins, so check
         // before inserting these records.
-        if (record_exists('grouptype', 'name', 'standard')) {
+        if (record_exists('grouptype', 'name', $type)) {
             return;
         }
 
-        $classname = get_class($this);
-        $type = strtolower(substr($classname, strlen('GroupType')));
         $assessingroles = $this->get_view_assessing_roles();
         insert_record('grouptype', (object) array(
             'name' => $type,
-            'submittableto' => !empty($assessingroles),
+            'submittableto' => (int)!empty($assessingroles),
             'defaultrole' => $this->default_role(),
         ));
         $roles = $this->get_roles();
