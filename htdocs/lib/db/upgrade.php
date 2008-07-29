@@ -1198,7 +1198,12 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2008062310) {
-        execute_sql('ALTER TABLE {view} ALTER COLUMN ownerformat DROP NOT NULL');
+        if (is_postgres()) {
+            execute_sql('ALTER TABLE {view} ALTER COLUMN ownerformat DROP NOT NULL');
+        }
+        else if (is_mysql()) {
+            execute_sql('ALTER TABLE {view} MODIFY ownerformat TEXT NULL');
+        }
     }
 
     return $status;
