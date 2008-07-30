@@ -570,6 +570,7 @@ class User {
         $group = $v->get('group');
         if ($group) {
             $editroles = $v->get('editingroles');
+            $this->reset_grouproles();
             return in_array($this->grouproles[$group], $editroles);
         }
         return false;

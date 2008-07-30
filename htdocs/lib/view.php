@@ -89,7 +89,7 @@ class View {
         if ($this->group) {
             $group = get_record('group', 'id', $this->group);
             safe_require('grouptype', $group->grouptype);
-            $this->editingroles = call_static_method('GroupType' . $group->grouptype, 'get_view_editing_roles');
+            $this->editingroles = call_static_method('GroupType' . ucfirst($group->grouptype), 'get_view_editing_roles');
         }
     }
 
@@ -259,35 +259,28 @@ class View {
 
     public function get_access() {
 
-        $data = get_records_sql_array('SELECT va.accesstype AS type, va.startdate, va.stopdate
-            FROM {view_access} va
-            LEFT JOIN {view} v ON (va.view = v.id)
-            WHERE v.id = ?
-            ORDER BY va.accesstype', array($this->id));
-        if (!$data) {
-            $data = array();
-        }
-        foreach ($data as &$item) {
-            $item = (array)$item;
-        }
-
-        // Get access for users and groups
-        $extradata = get_records_sql_array("
+        $data = get_records_sql_array("
+            SELECT accesstype AS type, NULL AS id, NULL AS role, NULL AS grouptype, startdate, stopdate
+                FROM {view_access}
+                WHERE view = ?
+        UNION
             SELECT 'user' AS type, usr AS id, NULL AS role, NULL AS grouptype, startdate, stopdate
                 FROM {view_access_usr}
                 WHERE view = ?
         UNION
             SELECT 'group', \"group\", role, grouptype, startdate, stopdate FROM {view_access_group}
                 INNER JOIN {group} g ON (\"group\" = g.id AND g.deleted = ?)
-                WHERE view = ?", array($this->id, 0, $this->id));
-        if ($extradata) {
-            foreach ($extradata as &$extraitem) {
-                $extraitem = (array)$extraitem;
-                if ($extraitem['role']) {
-                    $extraitem['roledisplay'] = get_string($extraitem['role'], 'grouptype.'.$extraitem['grouptype']);
+                WHERE view = ?", array($this->id, $this->id, 0, $this->id));
+        if ($data) {
+            foreach ($data as &$item) {
+                $item = (array)$item;
+                if ($item['role']) {
+                    $item['roledisplay'] = get_string($item['role'], 'grouptype.'.$item['grouptype']);
                 }
             }
-            $data = array_merge($data, $extradata);
+        }
+        else {
+            $data = array();
         }
         return $data;
     }

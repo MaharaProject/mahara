@@ -1281,173 +1281,71 @@ function can_view_view($view_id, $user_id=null) {
         $user_id = $USER->get('id');
     }
 
-    $view_data = get_records_sql_array('
-        SELECT
-            v.title,
-            v.owner,
-            v.group,
-            ' . db_format_tsfield('v.startdate','startdate') . ',
-            ' . db_format_tsfield('v.stopdate','stopdate') . ',
-            a.accesstype,
-            v.submittedto,
-            ' . db_format_tsfield('a.startdate','access_startdate') . ',
-            ' . db_format_tsfield('a.stopdate','access_stopdate') . '
-        FROM
-            {view} v
-            LEFT OUTER JOIN {view_access} a ON v.id=a.view
-            LEFT OUTER JOIN {usr} u ON (u.id = v.owner AND u.deleted = 0)
-            LEFT OUTER JOIN {group} g ON (g.id = v.group AND g.deleted = 0)
-        WHERE v.id=?
-    ', array($view_id));
-
-    if(!$view_data) {
-        throw new ViewNotFoundException("View id=$view_id doesn't exist");
-    }
-
-    $view_record = array( 'access' => array() );
-
-    //log_debug('Can you look at this view? (you are user ' . $user_id . ' trying to look at view ' . $view_id . ')');
-
-    foreach ( $view_data as $row ) {
-        $view_record['title'] = $row->title;
-        $view_record['owner'] = $row->owner;
-        $view_record['group'] = $row->group;
-        $view_record['startdate'] = $row->startdate;
-        $view_record['stopdate'] = $row->stopdate;
-        $view_record['submittedto'] = $row->submittedto;
-
-        if (!isset($row->accesstype)) {
-            continue;
+    if (!$USER->is_logged_in()) {
+        // check public
+        if (get_config('allowpublicviews') == '1') {
+            $public = get_record('view_access', 'view', $view_id, 'accesstype', 'public');
+            return ($public
+                    && ( $public->startdate == null || $public->startdate < $now )
+                    && ( $public->stopdate == null || $public->stopdate > $now ));
         }
-        
-        $view_record['access'][$row->accesstype] = array(
-            'startdate' => $row->access_startdate,
-            'stopdate' => $row->access_stopdate,
-        );
+        return false;
     }
 
-    if ($USER->is_logged_in() && $view_record['owner'] == $user_id) {
-        //log_debug('Yes - you own this view');
+    // The user is logged in; they can see the view if
+    // - they can edit it, or
+    // - it has been submitted to them for assessment, or
+    // - they have been granted access via the edit view access page.
+
+    require_once(get_config('docroot') . 'lib/view.php');
+    $view = new View($view_id);
+
+    if ($USER->can_edit_view($view)) {
         return true;
     }
 
-    if ($view_record['submittedto']) {
+    if ($submitgroup = $view->get('submittedto')) {
         require_once(get_config('docroot') . 'lib/group.php');
-        if (can_assess_submitted_views($user_id, $view_record['submittedto'])) {
-            //log_debug('Yes - View is submitted for assesment to a group you are a tutor in');
+        if (can_assess_submitted_views($user_id, $submitgroup)) {
             return true;
         }
     }
 
-    // check public
-    if (
-        get_config('allowpublicviews') == '1'
-        &&
-        isset($view_record['access']['public'])
-        && (    
-            $view_record['access']['public']['startdate'] == null
-            || $view_record['access']['public']['startdate'] < $now
-        )
-        && (
-            $view_record['access']['public']['stopdate'] == null
-            || $view_record['access']['public']['stopdate'] > $now
-        )
-    ) {
+    // Check access for loggedin, friends, user, group
+    $access = get_records_sql_array('
+            SELECT accesstype AS type, ' . db_format_tsfield('startdate') . ', ' . db_format_tsfield('stopdate') . '
+            FROM {view_access}
+            WHERE view = ?
+        UNION
+            SELECT \'user\' AS type, ' . db_format_tsfield('startdate') . ', ' . db_format_tsfield('stopdate') . '
+            FROM {view_access_usr}
+            WHERE view = ? AND usr = ?
+        UNION
+            SELECT \'group\' AS type, ' . db_format_tsfield('startdate') . ', ' . db_format_tsfield('stopdate') . '
+            FROM
+                {view_access_group} vg
+                INNER JOIN {group} g ON (vg.group = g.id AND g.deleted = 0)
+                INNER JOIN {group_member} m ON (g.id = m.group AND (vg.role IS NULL OR vg.role = m.role))
+            WHERE vg.view = ? AND m.member = ?
+        ORDER BY type = \'group\', type = \'user\', type = \'friends\' ', array($view_id, $view_id, $user_id, $view_id, $user_id));
 
-        //log_debug('Yes - View is public');
-        return true;
-    }
-
-    // everything below this point requires that you be logged in
-    if (!$USER->is_logged_in()) {
-        //log_debug('No - you are not logged in');
+    if (empty($access)) {
         return false;
     }
 
-    // check logged in
-    if (
-        isset($view_record['access']['loggedin'])
-        && (    
-            $view_record['access']['loggedin']['startdate'] == null
-            || $view_record['access']['loggedin']['startdate'] < $now
-        )
-        && (
-            $view_record['access']['loggedin']['stopdate'] == null
-            || $view_record['access']['loggedin']['stopdate'] > $now
-        )
-    ) {
-
-        //log_debug('Yes - View is available to logged in users');
-        return true;
+    foreach ($access as $a) {
+        if ($a->type == 'friends') {
+            $owner = $view->get('owner');
+            if (!get_field_sql('SELECT COUNT(*) FROM {usr_friend} f WHERE (usr1=? AND usr2=?) OR (usr1=? AND usr2=?)',
+                               array( $owner, $user_id, $user_id, $owner ))) {
+                continue;
+            }
+        }
+        if (($a->startdate == null || $a->startdate < $now) && ($a->stopdate == null || $a->stopdate > $now)) {
+            return true;
+        }
     }
 
-    // check friends access
-    if (
-        isset($view_record['access']['friends'])
-        && (    
-            $view_record['access']['friends']['startdate'] == null
-            || $view_record['access']['friends']['startdate'] < $now
-        )
-        && (
-            $view_record['access']['friends']['stopdate'] == null
-            || $view_record['access']['friends']['stopdate'] > $now
-        )
-        && get_field_sql(
-            'SELECT COUNT(*) FROM {usr_friend} f WHERE (usr1=? AND usr2=?) OR (usr1=? AND usr2=?)',
-            array( $view_record['owner'], $user_id, $user_id, $view_record['owner'] )
-        )
-    ) {
-        //log_debug('Yes - View is available to friends of the owner');
-        return true;
-    }
-
-    // check user access
-    if (get_field_sql(
-        'SELECT
-            a.view
-        FROM 
-            {view_access_usr} a
-        WHERE
-            a.view=? AND a.usr=?
-            AND ( a.startdate < ? OR a.startdate IS NULL )
-            AND ( a.stopdate > ?  OR a.stopdate  IS NULL )
-        LIMIT 1',
-        array( $view_id, $user_id, $dbnow, $dbnow )
-        )
-    ) {
-        //log_debug('Yes - View is available to your user');
-        return true;
-    }
-
-    // check group access
-    if (get_field_sql(
-        'SELECT
-            a.view
-        FROM
-            {view_access_group} a
-            INNER JOIN {group} g ON (a.group = g.id AND g.deleted = ?)
-            INNER JOIN {group_member} m ON g.id=m.group
-        WHERE
-            a.view = ? 
-            AND ( a.startdate < ? OR a.startdate IS NULL )
-            AND ( a.stopdate > ?  OR a.stopdate  IS NULL )
-            AND ( m.member = ? AND ( a.role IS NULL OR a.role = m.role ) )
-        LIMIT 1',
-        array(0, $view_id, $dbnow, $dbnow, $user_id)
-        )
-    ) {
-        //log_debug('Yes - View is available to a specific group');
-        return true;
-    }
-
-    // check admin
-    if (get_field('usr', 'admin', 'id', $user_id)) {
-        //log_debug('Yes - You are a site administrator');
-        return true;
-    }
-
-
-    //log_debug('No - nothing matched');
     return false;
 }
 
