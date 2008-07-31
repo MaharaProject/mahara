@@ -2,7 +2,10 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-{if $groupid}{include file="group/tabstart.tpl" current="files"}{/if}
+{if $groupid}
+  <h2>{$heading}</h2>
+  {include file="group/tabstart.tpl" current="files"}
+{/if}
 			{str tag='fileinstructions' section='artefact.file'}
 			<div id="myfiles">
 				<div id="uploader"></div>

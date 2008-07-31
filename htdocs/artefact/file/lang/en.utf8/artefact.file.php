@@ -67,7 +67,6 @@ $string['folder'] = 'Folder';
 $string['Folders'] = 'Folders';
 $string['foldercreated'] = 'Folder created';
 $string['groupfiles'] = 'Group Files';
-$string['groupfilesfor'] = 'Group Files for %s';
 $string['home'] = 'Home';
 $string['htmlremovedmessage'] = 'You are viewing <strong>%s</strong> by <a href="%s">%s</a>. The file displayed below has been filtered to remove malicious content, and is only a rough representation of the original.';
 $string['htmlremovedmessagenoowner'] = 'You are viewing <strong>%s</strong>. The file displayed below has been filtered to remove malicious content, and is only a rough representation of the original.';

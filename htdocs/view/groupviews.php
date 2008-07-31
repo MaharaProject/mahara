@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups/mygroups');
+define('MENUITEM', 'groups');
 
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'view');
@@ -51,14 +51,13 @@ $shared = param_boolean('shared', 0) && $member;
 $can_edit = group_user_can_edit_views($groupid);
 
 $smarty = smarty();
+$smarty->assign('heading', $group->name);
 
 if ($shared) {
     $data = View::get_sharedviews_data($limit, $offset, $groupid);
     $smarty->assign('shared', true);
-    $smarty->assign('heading', get_string('viewssharedto', 'view', $group->name));
 }
 else {
-    $smarty->assign('heading', get_string('viewsownedby', 'view', $group->name));
     if ($can_edit) {
         $data = View::get_myviews_data($limit, $offset, $groupid);
     }

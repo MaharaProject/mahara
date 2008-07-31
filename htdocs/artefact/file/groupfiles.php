@@ -25,10 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups/mygroups');
-define('SECTION_PLUGINTYPE', 'artefact');
-define('SECTION_PLUGINNAME', 'file');
-define('SECTION_PAGE', 'groupfiles');
+define('MENUITEM', 'groups');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('libroot') . 'group.php');
@@ -67,7 +64,7 @@ $smarty = smarty(
         ),
     )
 );
-$smarty->assign('heading', get_string('groupfilesfor', 'artefact.file', $group->name));
+$smarty->assign('heading', $group->name);
 $smarty->assign('groupid', $groupid);
 $smarty->assign('grouptabs', group_get_menu_tabs($group));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
