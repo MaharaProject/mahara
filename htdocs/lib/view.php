@@ -1532,9 +1532,9 @@ class View {
         $viewdata = get_records_sql_array('
             SELECT * FROM (
                 SELECT
-                    DISTINCT ON (v.id)
                     v.id, v.title, v.description, v.owner, v.ownerformat, v.group
                 ' . $from . $where . '
+                GROUP BY v.id, v.title, v.description, v.owner, v.ownerformat, v.group
             ) a
             ORDER BY a.title, a.id ',
             $ph, $offset, $limit
