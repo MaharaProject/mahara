@@ -1855,31 +1855,53 @@ span.viewicon {
 
 
 /* GROUPS > VIEWING A GROUP */
-#grouppage-container {
-    border: 1px solid #bbb;
-    clear: left;
-    padding: .5em;
-}
 #grouppage-tabs {
-    margin-top: 25px;
-    list-style-type: none;
+  padding: 0;
+  height: 35px;
+  margin-top: 25px;
+  font-size: 12px;
+  font-weight: bold;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
 }
-#grouppage-tabs li {
-    float: left;
-    margin: 0 0 0 1em;
-    padding: 2px 5px;
-    border: 1px solid #bbb;
-    border-bottom-width: 0;
-    background-color: #ccc;
-    min-width: 5em;
-    text-align: center;
+#grouppage-tabs ul {
+  list-style: none;
+  height: 25px;
+  margin: 0;
+  padding: 0;
+  background: url(../images/submenu-bg.gif) repeat-x;
 }
-#grouppage-tabs a {
-    text-decoration: none;
-    font-weight: bold;
+#grouppage-tabs ul li {
+  float: left;
+  height: 25px;
+  margin: 0 0 0 0;
+  padding: 5px 13px 5px 8px;
+  background: url(../images/submenu-divider.gif) no-repeat top right;
 }
-#grouppage-tabs li.current {
-    background-color: #fff;
+#grouppage-tabs ul li.current {
+  float: left;
+  margin: 0 0 0 0;
+  padding: 5px 13px 5px 8px;
+  background: url(../images/submenu-over-bg.gif) repeat-x top right;
+}
+#grouppage-tabs li a {
+  color: #474220;
+  text-decoration: none;
+}
+#grouppage-tabs li.current a {
+  color: #4c711d;
+  text-decoration: none;
+}
+
+#grouppage-container {
+  padding: .5em;
+  clear: left;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+#grouppage-container h3 {
+    margin-top: 0;
 }
 
 #group-description {
@@ -1891,9 +1913,6 @@ span.viewicon {
 }
 #group-controls li {
     float: left;
-}
-#grouppage-container h3 {
-    margin-top: 0;
 }
 #membersearchresults {
   width: 100%;
@@ -1918,17 +1937,22 @@ span.viewicon {
 /* GROUPS > GROUP VIEWS */
 ul#groupviewoptions {
     list-style-type: none;
-    margin: 8px 0 0 10px;
+    font-weight: bold;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
 }
 #groupviewoptions li {
     display: inline;
-    border: 1px solid #bbb;
-    margin: 0 0 0 5px;
-    padding: 2px 5px 2px 5px;
-    background-color: #ccc;
+    margin: 0;
+    padding: 5px;
 }
 #groupviewoptions li.current {
-    background-color: #fff;
+}
+#groupviewoptions li.current a {
+    color: #4c711d;
+}
+#groupviewoptions li a {
+    color: #474220;
 }
 table#myviewstable.groupviews{
     margin-top: 1px;

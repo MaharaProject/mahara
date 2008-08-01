@@ -10,16 +10,6 @@
 <h2>{$heading}</h2>
 
 {include file="group/tabstart.tpl" current="views"}
-{if $member}
-  <ul id="groupviewoptions">
-    <li{if !$shared} class="current"{/if}>
-      <a href="groupviews.php?group={$groupid}">{str tag="viewsownedbygroup" section="view"}</a>
-    </li>
-    <li{if $shared} class="current"{/if}>
-      <a href="groupviews.php?group={$groupid}&shared=1">{str tag="viewssharedtogroup" section="view"}</a>
-    </li>
-  </ul>
-{/if}
 {if $views}
     <table id="myviewstable" class="groupviews">
     {foreach from=$views item=view}

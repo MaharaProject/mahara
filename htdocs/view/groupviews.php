@@ -78,6 +78,7 @@ $pagination = build_pagination(array(
 ));
 
 $smarty->assign('groupid', $groupid);
+$smarty->assign('groupviews', 1);
 $smarty->assign('groupname', $group->name);
 $smarty->assign('grouptabs', group_get_menu_tabs($group));
 $smarty->assign('member', $member);
