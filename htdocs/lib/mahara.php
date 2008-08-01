@@ -1313,21 +1313,23 @@ function can_view_view($view_id, $user_id=null) {
 
     // Check access for loggedin, friends, user, group
     $access = get_records_sql_array('
-            SELECT accesstype AS type, ' . db_format_tsfield('startdate') . ', ' . db_format_tsfield('stopdate') . '
+            SELECT accesstype AS type,
+                CASE WHEN accesstype = \'friends\' THEN 4 ELSE 1 END AS typeorder,
+                ' . db_format_tsfield('startdate') . ', ' . db_format_tsfield('stopdate') . '
             FROM {view_access}
             WHERE view = ?
         UNION
-            SELECT \'user\' AS type, ' . db_format_tsfield('startdate') . ', ' . db_format_tsfield('stopdate') . '
+            SELECT \'user\' AS type, 2 AS typeorder, ' . db_format_tsfield('startdate') . ', ' . db_format_tsfield('stopdate') . '
             FROM {view_access_usr}
             WHERE view = ? AND usr = ?
         UNION
-            SELECT \'group\' AS type, ' . db_format_tsfield('startdate') . ', ' . db_format_tsfield('stopdate') . '
+            SELECT \'group\' AS type, 3 AS typeorder, ' . db_format_tsfield('startdate') . ', ' . db_format_tsfield('stopdate') . '
             FROM
                 {view_access_group} vg
                 INNER JOIN {group} g ON (vg.group = g.id AND g.deleted = 0)
                 INNER JOIN {group_member} m ON (g.id = m.group AND (vg.role IS NULL OR vg.role = m.role))
             WHERE vg.view = ? AND m.member = ?
-        ORDER BY type = \'group\', type = \'user\', type = \'friends\' ', array($view_id, $view_id, $user_id, $view_id, $user_id));
+        ORDER BY typeorder ', array($view_id, $view_id, $user_id, $view_id, $user_id));
 
     if (empty($access)) {
         return false;
