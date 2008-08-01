@@ -46,7 +46,7 @@ function permissionform_inputs(permissions, role) {
         var properties = {
             'type':'checkbox',
             'class':'permission',
-            'name':'permission:'+role.name+':'+permissiontypes[i], 
+            'name':'permission:'+role.name+':'+permissiontypes[i]
         };
         if (role.name == 'admin' || permissions.all || permissions[role.name] && permissions[role.name][permissiontypes[i]] == 1) {
             properties.checked = true;
