@@ -241,7 +241,16 @@ function set_profile_field($userid, $field, $value) {
  * @todo, this needs to be better (fix email behaviour)
  */
 function get_profile_field($userid, $field) {
-    $value = get_field('artefact', 'title', 'owner', $userid, 'artefacttype', $field);
+    if ($field == 'email') {
+        $value = get_field_sql("
+            SELECT a.title
+            FROM {usr} u
+            JOIN {artefact} a ON (a.title = u.email AND a.owner = u.id)
+            WHERE a.artefacttype = 'email' AND u.id = ?", array($userid));
+    }
+    else {
+        $value = get_field('artefact', 'title', 'owner', $userid, 'artefacttype', $field);
+    }
 
     if ($value) {
         return $value;
