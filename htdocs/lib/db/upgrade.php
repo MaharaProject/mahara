@@ -1059,12 +1059,7 @@ function xmldb_core_upgrade($oldversion=0) {
                             SET role = ?
                             WHERE "group" = ?
                             AND member != ?
-                            AND member IN (
-                                SELECT member
-                                    FROM {group_member}
-                                    WHERE "group" = ?
-                                    AND tutor = ?
-                            )', array($role, $group->id, $group->owner, $group->id, $tutorflag));
+                            AND tutor = ?', array($role, $group->id, $group->owner, $tutorflag));
                         log_debug(" * marked appropriate users as being {$role}s");
                     }
                 }
@@ -1072,18 +1067,35 @@ function xmldb_core_upgrade($oldversion=0) {
         }
 
 
-        execute_sql('ALTER TABLE {group} ALTER grouptype SET NOT NULL');
-        execute_sql('ALTER TABLE {group_member} ALTER role SET NOT NULL');
+        if (is_postgres()) {
+            execute_sql('ALTER TABLE {group} ALTER grouptype SET NOT NULL');
+            execute_sql('ALTER TABLE {group_member} ALTER role SET NOT NULL');
+        }
+        else if (is_mysql()) {
+            execute_sql('ALTER TABLE {group} MODIFY grouptype CHARACTER VARYING(20) NOT NULL');
+            execute_sql('ALTER TABLE {group_member} MODIFY role CHARACTER VARYING(255) NOT NULL');
+        }
+
+        if (is_mysql()) {
+            execute_sql('ALTER TABLE {group} DROP FOREIGN KEY {grou_own_fk}');
+        }
+
         execute_sql('ALTER TABLE {group} DROP owner');
         execute_sql('ALTER TABLE {group_member} DROP tutor');
 
 
         // Adminfiles become "institution-owned artefacts"
-        execute_sql("
-        ALTER TABLE {artefact} ADD COLUMN institution CHARACTER VARYING(255);
-        ALTER TABLE {artefact} ALTER COLUMN owner DROP NOT NULL;
-        ALTER TABLE {artefact} ADD CONSTRAINT {arte_ins_fk} FOREIGN KEY (institution) REFERENCES {institution}(name);
-        UPDATE {artefact} SET institution = 'mahara', owner = NULL WHERE id IN (SELECT artefact FROM {artefact_file_files} WHERE adminfiles = 1)");
+        execute_sql("ALTER TABLE {artefact} ADD COLUMN institution CHARACTER VARYING(255);");
+
+        if (is_postgres()) {
+            execute_sql("ALTER TABLE {artefact} ALTER COLUMN owner DROP NOT NULL;");
+        }
+        else if (is_mysql()) {
+            execute_sql("ALTER TABLE {artefact} MODIFY owner BIGINT(10) NULL;");
+        }
+
+        execute_sql("ALTER TABLE {artefact} ADD CONSTRAINT {arte_ins_fk} FOREIGN KEY (institution) REFERENCES {institution}(name);");
+        execute_sql("UPDATE {artefact} SET institution = 'mahara', owner = NULL WHERE id IN (SELECT artefact FROM {artefact_file_files} WHERE adminfiles = 1)");
         execute_sql("ALTER TABLE {artefact_file_files} DROP COLUMN adminfiles");
         execute_sql('ALTER TABLE {artefact} ADD COLUMN "group" BIGINT');
         execute_sql('ALTER TABLE {artefact} ADD CONSTRAINT {arte_gro_fk} FOREIGN KEY ("group") REFERENCES {group}(id)');
@@ -1124,20 +1136,29 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("INSERT INTO {grouptype_roles} (grouptype,edit_views,see_submitted_views,role) VALUES ('course',1,0,'admin')");
         execute_sql("INSERT INTO {grouptype_roles} (grouptype,edit_views,see_submitted_views,role) VALUES ('course',1,1,'tutor')");
         execute_sql("INSERT INTO {grouptype_roles} (grouptype,edit_views,see_submitted_views,role) VALUES ('course',0,0,'member')");
-        $table = new XMLDBTable('group');
-        $key = new XMLDBKey('grouptypefk');
-        $key->setAttributes(XMLDB_KEY_FOREIGN, array('grouptype'), 'grouptype', array('name'));
-        add_key($table, $key);
+
+        if (is_postgres()) {
+            $table = new XMLDBTable('group');
+            $key = new XMLDBKey('grouptypefk');
+            $key->setAttributes(XMLDB_KEY_FOREIGN, array('grouptype'), 'grouptype', array('name'));
+            add_key($table, $key);
+        }
+        else if (is_mysql()) {
+            // Seems to refuse to create foreign key, not sure why yet
+            execute_sql("ALTER TABLE {group} ADD INDEX {grou_gro_ix} (grouptype);");
+            // execute_sql("ALTER TABLE {group} ADD CONSTRAINT {grou_gro_fk} FOREIGN KEY (grouptype) REFERENCES {grouptype} (name);");
+        }
 
 
         // Group views
         execute_sql('ALTER TABLE {view} ADD COLUMN "group" BIGINT');
         execute_sql('ALTER TABLE {view} ADD CONSTRAINT {view_gro_fk} FOREIGN KEY ("group") REFERENCES {group}(id)');
-        execute_sql('ALTER TABLE {view} ALTER COLUMN owner DROP NOT NULL');
         if (is_postgres()) {
+            execute_sql('ALTER TABLE {view} ALTER COLUMN owner DROP NOT NULL');
             execute_sql('ALTER TABLE {view} ALTER COLUMN ownerformat DROP NOT NULL');
         }
         else if (is_mysql()) {
+            execute_sql('ALTER TABLE {view} MODIFY owner BIGINT(10) NULL');
             execute_sql('ALTER TABLE {view} MODIFY ownerformat TEXT NULL');
         }
         execute_sql('ALTER TABLE {view_access_group} ADD COLUMN role VARCHAR(255)');
