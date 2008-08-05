@@ -38,9 +38,8 @@ function pieform_element_artefactchooser(Pieform $form, $element) {
     global $USER, $pagination_js;
 
     $value = $form->get_value($element);
-
     $element['offset'] = param_integer('offset', 0);
-    list($html, $pagination, $count) = View::build_artefactchooser_data($element);
+    list($html, $pagination, $count) = View::build_artefactchooser_data($element, $form->get_property('viewgroup'));
 
     $smarty = smarty_core();
     $smarty->assign('datatable', $element['name'] . '_data');

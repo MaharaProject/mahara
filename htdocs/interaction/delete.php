@@ -41,8 +41,8 @@ if (!$group = get_record('group', 'id', $instance->get('group'), 'deleted', 0)) 
     throw new GroupNotFoundException(get_string('groupnotfound', 'group', $id));
 }
 
-$membership = user_can_access_group((int)$group->id);
-if (!(bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF))) {
+$membership = group_user_access((int)$group->id);
+if ($membership != 'admin') {
     throw new AccessDeniedException(get_string('notallowedtodeleteinteractions', 'group'));
 }
 

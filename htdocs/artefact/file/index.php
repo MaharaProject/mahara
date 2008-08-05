@@ -34,46 +34,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('myfiles', 'artefact.file'));
 safe_require('artefact', 'file');
 
-$folder_id = param_integer('folder', null);
-
-if ($folder_id) {
-    $folder_list = array();
-
-    $current_folder = get_record('artefact', 'id', $folder_id);
-
-    if ($current_folder->artefacttype == 'folder') {
-        $folder_list[] = array(
-            'id'   => $current_folder->id,
-            'name' => $current_folder->title,
-        );
-    }
-
-    while ($current_folder->parent) {
-        $current_folder = get_record('artefact', 'id', $current_folder->parent);
-
-        $folder_list[] = array(
-            'id'   => $current_folder->id,
-            'name' => $current_folder->title,
-        );
-    }
-
-    $enc_folders = json_encode(array_reverse($folder_list));
-}
-else {
-    $enc_folders = json_encode(array());
-}
-
-$copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
-
-$javascript = <<<JAVASCRIPT
-
-var copyrightnotice = '{$copyright}';
-var browser = new FileBrowser('filelist', 'myfiles.json.php', null, null, null, null, {$enc_folders});
-var uploader = new FileUploader('uploader', 'upload.php', {}, null, null,
-                                browser.refresh, browser.fileexists);
-browser.changedircallback = uploader.updatedestination;
-
-JAVASCRIPT;
+$javascript = ArtefactTypeFileBase::get_my_files_js(param_integer('folder', null));
 
 $smarty = smarty(
     array('tablerenderer', 'artefact/file/js/file.js'),
@@ -89,8 +50,8 @@ $smarty = smarty(
         ),
     )
 );
-$smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('heading', get_string('myfiles', 'artefact.file'));
+$smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('artefact:file:index.tpl');
 
 ?>

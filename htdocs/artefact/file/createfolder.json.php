@@ -29,7 +29,6 @@ define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
-global $USER;
 
 json_headers();
 
@@ -38,7 +37,8 @@ $title          = param_variable('name');
 $description    = param_variable('description', null);
 $tags           = param_variable('tags', null);
 $collideaction  = param_variable('collideaction', 'fail');
-$adminfiles     = param_boolean('adminfiles', false);
+$institution    = param_alpha('institution', null);
+$group          = param_integer('group', null);
 
 $data = new StdClass;
 if ($parentfolder) {
@@ -47,10 +47,24 @@ if ($parentfolder) {
 $data->title = $title;
 $data->description = $description;
 $data->tags = $tags;
-$data->owner = $USER->get('id');
-$data->adminfiles = (int)$adminfiles;
+$data->owner = null;
+if ($institution) {
+    $data->institution = $institution;
+} else if ($group) {
+    require_once(get_config('docroot') . 'artefact/lib.php');
+    require_once(get_config('docroot') . 'lib/group.php');
+    if ($parentfolder && !$USER->can_edit_artefact(artefact_instance_from_id($parentfolder))) {
+        json_reply('local', get_string('cannoteditfolder', 'artefact.file'));
+    } else if (!$parentfolder && !group_user_access($group)) {
+        json_reply('local', get_string('usernotingroup', 'mahara'));
+    }
+    $data->group = $group;
+    $data->rolepermissions = json_decode(param_variable('permissions'));
+} else {
+    $data->owner = $USER->get('id');
+}
 
-if ($oldid = ArtefactTypeFileBase::file_exists($data->title, $data->owner, $parentfolder, $adminfiles)) {
+if ($oldid = ArtefactTypeFileBase::file_exists($data->title, $data->owner, $parentfolder, $institution, $group)) {
     if ($collideaction == 'replace') {
         require_once(get_config('docroot') . 'artefact/lib.php');
         $obj = artefact_instance_from_id($oldid);

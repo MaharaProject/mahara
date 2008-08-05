@@ -38,14 +38,11 @@ if (!record_exists('group', 'id', $groupid, 'deleted', 0)) {
     throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
 }
 
-$membership = user_can_access_group((int)$groupid);
-$admin = (bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF));
+$membership = group_user_access($groupid);
 
 if (!$membership) {
     throw new AccessDeniedException(get_string('cantviewforums', 'interaction.forum'));
 }
-
-$admin = (bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF));
 
 $group = get_record('group', 'id', $groupid);
 
@@ -138,9 +135,9 @@ if ($forums) {
 $smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($groupid))));
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('groupid', $groupid);
-$smarty->assign('groupowner', $group->owner);
 $smarty->assign('heading', TITLE);
-$smarty->assign('admin', $admin);
+$smarty->assign('admin', $membership == 'admin');
+$smarty->assign('groupadmins', group_get_admin_ids($groupid));
 $smarty->assign('forums', $forums);
 $smarty->display('interaction:forum:index.tpl');
 

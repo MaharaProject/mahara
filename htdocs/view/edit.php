@@ -33,16 +33,18 @@ define('SECTION_PAGE', 'edit');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('docroot') . 'lib/view.php');
+require_once(get_config('docroot') . 'lib/group.php');
 
 $id = param_integer('id', 0); // if 0, we're creating a new view
 $new = param_boolean('new');
 
 if (empty($id)) {
     $new = true;
+    $group = param_integer('group', null);
 }
 else {
     $view = new View($id);
-    if ($view->get('owner') != $USER->get('id')) {
+    if (!$USER->can_edit_view($view)) {
         throw new AccessDeniedException(get_string('canteditdontown', 'view'));
     }
 
@@ -51,6 +53,12 @@ else {
     if ($submittedto) {
         throw new AccessDeniedException(get_string('canteditsubmitted', 'view', get_field('group', 'name', 'id', $submittedto)));
     }
+
+    $group = $view->get('group');
+}
+
+if ($group && !group_user_can_edit_views($group)) {
+    throw new AccessDeniedException();
 }
 
 if ($new || empty($id)) {
@@ -81,7 +89,7 @@ if ($studentid !== '') {
 }
 $ownerformatoptions[FORMAT_NAME_DISPLAYNAME] = sprintf($formatstring, get_string('displayname'), display_name($USER));
 
-$editview = pieform(array(
+$editview = array(
     'name'     => 'editview',
     'method'   => 'post',
     'autofocus' => 'title',
@@ -116,27 +124,41 @@ $editview = pieform(array(
             'defaultvalue' => isset($view) ? $view->get('tags') : null,
             'help'         => true,
         ),
-        'ownerformat' => array(
-            'type'         => 'select',
-            'title'        => get_string('ownerformat','view'),
-            'description'  => get_string('ownerformatdescription','view'),
-            'options'      => $ownerformatoptions,
-            'defaultvalue' => isset($view) ? $view->get('ownerformat') : FORMAT_NAME_DISPLAYNAME,
-            'rules'        => array('required' => true),
-        ),
         'submit'   => array(
             'type'  => 'submitcancel',
             'value' => array(empty($new) ? get_string('save') : get_string('next'), get_string('cancel')),
             'confirm' => $new && isset($view) ? array(null, get_string('confirmcancelcreatingview', 'view')) : null,
         )
     ),
-));
+);
+
+if ($group) {
+    $editview['elements']['group'] = array(
+        'type'  => 'hidden',
+        'value' => $group
+    );
+}
+else {
+    $editview['elements']['ownerformat'] = array(
+        'type'         => 'select',
+        'title'        => get_string('ownerformat','view'),
+        'description'  => get_string('ownerformatdescription','view'),
+        'options'      => $ownerformatoptions,
+        'defaultvalue' => isset($view) ? $view->get('ownerformat') : FORMAT_NAME_DISPLAYNAME,
+        'rules'        => array('required' => true),
+    );
+}
+
+$editview = pieform($editview);
 
 function editview_cancel_submit() {
-	global $view, $new;
+	global $view, $new, $group;
 	if (isset($view) && $new) {
 	    $view->delete();
 	}
+        if ($group) {
+            redirect('/view/groupviews.php?group='.$group);
+        }
     redirect('/view');
 }
 
@@ -146,24 +168,49 @@ function editview_submit(Pieform $form, $values) {
 
     $editing = !empty($values['id']);
     $view = new View($values['id'], $values);
-
+    $group = isset($values['group']) ? (int)$values['group'] : null;
+    if ($group && !group_user_access($group)) {
+        $SESSION->add_error_msg(get_string('notamember', 'group'));
+        redirect('/view/groupviews.php?group='.$group);
+    }
 
     if (empty($editing)) {
         $view->set('numcolumns', 3); // default
-        $view->set('owner', $USER->get('id'));
+        if ($group) {
+            $view->set('group', $group);
+        }
+        else {
+            $view->set('owner', $USER->get('id'));
+        }
     }
     else {
         $view->set('dirty', true);
     }
 
     $view->commit();
+    if (empty($editing) && $group) {
+        // By default, group views should be visible to the group
+        $view->set_access(array(array(
+            'type'      => 'group',
+            'id'        => $group,
+            'startdate' => null,
+            'stopdate'  => null,
+            'role'      => null
+        )));
+        $view->commit();
+    }
 
     if ($values['new']) {
         $redirecturl = '/view/blocks.php?id=' . $view->get('id') . '&new=1';
     } 
     else {
-        $redirecturl = '/view/index.php';
         $SESSION->add_ok_msg(get_string('viewsavedsuccessfully', 'view'));
+        if ($group) {
+            $redirecturl = '/view/groupviews.php?group='.$group;
+        }
+        else {
+            $redirecturl = '/view/index.php';
+        }
     }
 
     redirect($redirecturl);

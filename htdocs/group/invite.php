@@ -45,11 +45,16 @@ if (!$user) {
 if ($group->jointype != 'invite'
     || record_exists('group_member', 'group', $groupid, 'member', $userid)
     || record_exists('group_member_invite', 'group', $groupid, 'member', $userid)
-    || $group->owner != $USER->get('id')) {
+    || group_user_access($groupid) != 'admin') {
     throw new AccessDeniedException(get_string('cannotinvitetogroup', 'group'));
 }
 
 define('TITLE', get_string('invitemembertogroup', 'group', display_name($userid), $group->name));
+
+$roles = group_get_role_info($groupid);
+foreach ($roles as $k => &$v) {
+    $v = $v->display;
+}
 
 $form = pieform(array(
     'name' => 'invitetogroup',
@@ -61,6 +66,11 @@ $form = pieform(array(
             'cols'  => 50,
             'rows'  => 4,
             'title' => get_string('reason'),
+        ),
+        'role' => array(
+            'type'    => 'select',
+            'options' => $roles,
+            'title'   => get_string('Role', 'group'),
         ),
         'submit' => array(
             'type' => 'submitcancel',
@@ -83,7 +93,7 @@ function invitetogroup_submit(Pieform $form, $values) {
     $data->group = $group->id;
     $data->member= $user->id;
     $data->ctime = db_format_timestamp(time());
-    $data->tutor = 0;
+    $data->role = $values['role'];
     insert_record('group_member_invite', $data);
     $lang = get_user_language($user->id);
     activity_occurred('maharamessage', 

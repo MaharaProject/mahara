@@ -41,8 +41,8 @@ $wwwroot = get_config('wwwroot');
 $javascript = <<<JAVASCRIPT
 
 var copyrightnotice = '{$copyright}';
-var browser = new FileBrowser('filelist', '{$wwwroot}artefact/file/myfiles.json.php', {'adminfiles':true});
-var uploader = new FileUploader('uploader', '{$wwwroot}artefact/file/upload.php', {'adminfiles':true}, 
+var browser = new FileBrowser('filelist', '{$wwwroot}artefact/file/myfiles.json.php', {'institution':'mahara'});
+var uploader = new FileUploader('uploader', '{$wwwroot}artefact/file/upload.php', {'institution':'mahara'}, 
                                 null, null, browser.refresh, browser.fileexists);
 browser.changedircallback = uploader.updatedestination;
 

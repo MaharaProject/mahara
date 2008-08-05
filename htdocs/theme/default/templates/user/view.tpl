@@ -29,9 +29,11 @@
                         <br>
                         <a href="{$WWWROOT}user/requestfriendship.php?id={$USERID}&amp;returnto=view" id="btn-request">{str tag='requestfriendship' section='group'}</a>
                     {/if}
+                    {if $invitedlist}<div>{str tag=groupinvitesfrom section=group}{$invitedlist}</div>{/if}
                     {if $inviteform}
                         {$inviteform}
                     {/if}
+                    {if $requestedlist}<div>{str tag=requestedmembershipin section=group}{$requestedlist}</div>{/if}
                     {if $addform}
                         {$addform}
                     {/if}
@@ -78,7 +80,7 @@
                 {foreach from=$USERGROUPS item=item}
                     <tr>
                         <td class="r{cycle values=0,1}">
-                            <h4><a href="{$WWWROOT}group/view.php?id={$item->id}">{$item->name|escape}</a> - {str tag=$item->type section=group}</h4>
+                            <h4><a href="{$WWWROOT}group/view.php?id={$item->id}">{$item->name|escape}</a> - {$item->roledesc}</h4>
                             {if $item->description}
                                 {$item->description}
                             {/if}

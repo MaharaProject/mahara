@@ -70,6 +70,19 @@ abstract class PluginArtefact extends Plugin {
     public static function menu_items() {
         return array();
     }
+
+
+    /**
+     * This function returns an array of menu items to be displayed
+     * on a group page when viewed by group members.
+     * Each item should be a StdClass object containing -
+     * - title language pack key
+     * - url relative to wwwroot
+     * @return array
+     */
+    public static function group_tabs($groupid) {
+        return array();
+    }
 }
 
 /** 
@@ -94,6 +107,9 @@ abstract class ArtefactType {
     protected $description;
     protected $note;
     protected $tags = array();
+    protected $institution;
+    protected $group;
+    protected $rolepermissions;
 
     protected $viewsinstances;
     protected $viewsmetadata;
@@ -144,6 +160,11 @@ abstract class ArtefactType {
             if (is_array($tags)) {
                 $this->tags = $tags;
             }
+        }
+
+        // load group permissions
+        if ($this->group) {
+            $this->load_rolepermissions();
         }
 
         $this->atime = time();
@@ -327,6 +348,10 @@ abstract class ArtefactType {
             update_record('artefact', $fordb, 'id');
         }
 
+        if (!empty($this->group)) {
+            $this->save_rolepermissions();
+        }
+
         delete_records('artefact_tag', 'artefact', $this->id);
         if (is_array($this->tags)) {
             foreach (array_unique($this->tags) as $tag) {
@@ -403,6 +428,8 @@ abstract class ArtefactType {
         delete_records('view_artefact', 'artefact', $this->id);
         delete_records('artefact_feedback', 'artefact', $this->id);
         delete_records('artefact_tag', 'artefact', $this->id);
+        delete_records('artefact_access_role', 'artefact', $this->id);
+        delete_records('artefact_access_usr', 'artefact', $this->id);
       
         // Delete the record itself.
         delete_records('artefact', 'id', $this->id);
@@ -531,6 +558,17 @@ abstract class ArtefactType {
         return $this->get('title');
     }
 
+    public function display_owner() {
+        if ($owner = $this->get('owner')) {
+            return display_name($owner);
+        }
+        if ($group = $this->get('group')) {
+            return get_field('group', 'name', 'id', $group);
+        }
+        return null;
+    }
+
+
     // ******************** HELPER FUNCTIONS ******************** //
 
     protected function get_artefact_type() {
@@ -560,6 +598,44 @@ abstract class ArtefactType {
     public static function collapse_config() {
         return false;
     }
+
+    private function save_rolepermissions() {
+        $group = $this->get('group');
+        if (!$group) {
+            return;
+        }
+        $type = get_field('group', 'grouptype', 'id', $group);
+        require_once(get_config('libroot') . 'group.php');
+        $roles = array_keys(group_get_role_info($group));
+        $id = $this->get('id');
+        db_begin();
+        delete_records('artefact_access_role', 'artefact', $id);
+        foreach ($roles as $role) {
+            insert_record('artefact_access_role', (object) array(
+                'artefact'      => $id,
+                'role'          => $role,
+                'can_view'      => (int) $this->rolepermissions->{$role}->view,
+                'can_edit'      => (int) $this->rolepermissions->{$role}->edit,
+                'can_republish' => (int) $this->rolepermissions->{$role}->republish,
+            ));
+        }
+        db_commit();
+    }
+
+    private function load_rolepermissions() {
+        $records = get_records_array('artefact_access_role', 'artefact', $this->get('id'));
+        if ($records) {
+            $this->rolepermissions = new StdClass;
+            foreach ($records as $r) {
+                $this->rolepermissions->{$r->role} = (object) array(
+                    'view' => (bool) $r->can_view,
+                    'edit' => (bool) $r->can_edit,
+                    'republish' => (bool) $r->can_republish,
+                );
+            }
+        }
+    }
+
 }
 
 /**

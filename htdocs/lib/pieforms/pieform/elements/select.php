@@ -136,7 +136,7 @@ function pieform_element_select_get_value(Pieform $form, $element) {/*{{{*/
         if (isset($element['value'])) {
             $values = (array) $element['value'];
         }
-        else if (isset($global[$element['name']])) {
+        else if ($form->is_submitted() && isset($global[$element['name']])) {
             $values = (array) $global[$element['name']];
         }
         else if (isset($element['defaultvalue'])) {
@@ -157,7 +157,7 @@ function pieform_element_select_get_value(Pieform $form, $element) {/*{{{*/
         if (isset($element['value'])) {
             $values = (array) $element['value'];
         }
-        else if (isset($global[$element['name']])) {
+        else if ($form->is_submitted() && isset($global[$element['name']])) {
             $values = (array) $global[$element['name']];
         }
         else if (!$form->is_submitted() && isset($element['defaultvalue'])) {

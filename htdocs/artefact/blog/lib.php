@@ -652,7 +652,6 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $data->description = $description;
         $data->tags = $tags;
         $data->owner = $USER->get('id');
-        $data->adminfiles = 0; // No admin blogs yet...
         $data->parent = $blogfilesid;
         $data->oldextension = $oldextension;
         

@@ -39,7 +39,7 @@ $id = param_integer('id', 0);
 if (!empty($id)) {
     $instance = interaction_instance_from_id($id);
     $plugin = $instance->get('plugin');
-    $groupid = $instance->get('group');
+    $groupid = (int)$instance->get('group');
     define('TITLE', get_string('edittitle', 'interaction.' . $plugin));
 }
 else {
@@ -53,8 +53,8 @@ safe_require('interaction', $plugin);
 if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
     throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
 }
-$membership = user_can_access_group((int)$groupid);
-if (!(bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF))) {
+$membership = group_user_access($groupid);
+if ($membership != 'admin') {
     throw new AccessDeniedException(get_string('notallowedtoeditinteractions', 'group'));
 }
 
@@ -85,8 +85,5 @@ $smarty->assign('form', $form);
 $smarty->assign('heading', TITLE);
 $smarty->assign('group', $group);
 $smarty->display('interaction/edit.tpl');
-
-
-
 
 ?>

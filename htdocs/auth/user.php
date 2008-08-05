@@ -82,6 +82,7 @@ class User {
             'accountprefs'     => array(),
             'activityprefs'    => array(),
             'institutions'     => array(),
+            'grouproles'       => array(),
             'theme'            => null,
             'admininstitutions' => array(),
             'staffinstitutions' => array(),
@@ -120,6 +121,7 @@ class User {
 
         $this->populate($user);
         $this->reset_institutions();
+        $this->reset_grouproles();
         return $this;
     }
 
@@ -472,15 +474,6 @@ class User {
         return isset($a[$institution]);
     }
 
-    /**
-     * There is currently no difference in privileges of site staff
-     * and institutional staff
-     */
-    public function can_create_controlled_groups() {
-        return $this->get('admin') || $this->get('staff') || $this->is_institutional_admin()
-            || $this->is_institutional_staff();
-    }
-
     public function can_edit_institution($institution = null) {
         return $this->get('admin') || $this->is_institutional_admin($institution);
     }
@@ -562,6 +555,72 @@ class User {
         $this->institutions       = $institutions;
         $this->admininstitutions  = $admininstitutions;
         $this->staffinstitutions  = $staffinstitutions;
+    }
+
+    public function reset_grouproles() {
+        $memberships = get_records_array('group_member', 'member', $this->get('id'));
+        $roles = array();
+        if ($memberships) {
+            foreach ($memberships as $m) {
+                $roles[$m->group] = $m->role;
+            }
+        }
+        $this->set('grouproles', $roles);
+    }
+
+    public function can_view_artefact($a) {
+        if ($this->get('admin')
+            || ($this->get('id') and $this->get('id') == $a->get('owner'))
+            || $this->is_institutional_admin($a->get('institution'))) {
+            return true;
+        }
+        if ($a->get('group')) {
+            // Only group artefacts can have artefact_access_role & artefact_access_usr records
+            return (bool) count_records_sql("SELECT COUNT(*) FROM {artefact_access_role} ar
+                INNER JOIN {group_member} g ON ar.role = g.role
+                WHERE ar.artefact = ? AND g.member = ? AND ar.can_view = 1 AND g.group = ?", array($a->get('id'), $this->get('id'), $a->get('group')))
+                || record_exists('artefact_access_usr', 'usr', $this->get('id'), 'artefact', $a->get('id'));
+        }
+        return false;
+    }
+
+    public function can_edit_artefact($a) {
+        if ($this->get('admin')
+            || ($this->get('id') and $this->get('id') == $a->get('owner'))
+            || $this->is_institutional_admin($a->get('institution'))) {
+            return true;
+        }
+        $group = $a->get('group');
+        if ($group) {
+            return count_records_sql("SELECT COUNT(*) FROM {artefact_access_role} ar
+                INNER JOIN {group_member} g ON ar.role = g.role
+                WHERE ar.artefact = ? AND g.member = ? AND ar.can_edit = 1 AND g.group = ?", array($a->get('id'), $this->get('id'), $group));
+            /*
+            require_once(get_config('docroot') . 'lib/group.php');
+            $role = group_user_access($group, $this->get('id'));
+            if ($role) {
+                $aperms = $a->get('rolepermissions');
+                return $aperms->{$role}->edit;
+            } */
+        }
+        return false;
+    }
+
+    public function can_edit_view($v) {
+        if ($this->get('admin')) {
+            return true;
+        }
+        $owner = $v->get('owner');
+        if ($owner == $this->get('id')) {
+            return true;
+        }
+        $group = $v->get('group');
+        if ($group) {
+            $editroles = $v->get('editingroles');
+            $this->reset_grouproles();
+            return in_array($this->grouproles[$group], $editroles);
+        }
+        return false;
     }
 
 }
@@ -700,6 +759,7 @@ class LiveUser extends User {
         $this->activityprefs      = load_activity_preferences($user->id);
         $this->accountprefs       = load_account_preferences($user->id);
         $this->reset_institutions();
+        $this->reset_grouproles();
         $this->commit();
     }
 

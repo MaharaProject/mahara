@@ -39,15 +39,15 @@ if (!$group) {
 
 define('TITLE', get_string('leavespecifiedgroup', 'group', $group->name));
 
-$membership = user_can_access_group($group);
-
-if (!($membership & GROUP_MEMBERSHIP_MEMBER)) {
+if (!group_user_access($group->id)) {
     throw new AccessDeniedException(get_string('notamember', 'group'));
 }
 
 if (!group_user_can_leave($group)) {
     throw new AccessDeniedException(get_string('cantleavegroup', 'group'));
 }
+
+$goto = get_config('wwwroot') . 'group/' . $returnto . '.php' . ($returnto == 'view' ? ('?id=' . $groupid) : '');
 
 $views = count_records_sql(
     'SELECT COUNT(*)
@@ -68,7 +68,7 @@ $form = pieform(array(
         'submit' => array(
             'type' => 'submitcancel',
             'value' => array(get_string('yes'), get_string('no')),
-            'goto' => get_config('wwwroot') . ($returnto == 'find' ? 'group/find.php' : 'group/mygroups.php')
+            'goto' => $goto
         ),
         'returnto' => array(
             'type' => 'hidden',
@@ -85,9 +85,9 @@ $smarty->assign('group', $group);
 $smarty->display('group/leave.tpl');
 
 function leavegroup_submit(Pieform $form, $values) {
-    global $USER, $SESSION, $groupid;
+    global $USER, $SESSION, $groupid, $goto;
     group_remove_user($groupid, $USER->get('id'));
     $SESSION->add_ok_msg(get_string('leftgroup', 'group'));
-    redirect($values['returnto'] == 'find' ? '/group/find.php' : '/group/mygroups.php');
+    redirect($goto);
 }
 ?>

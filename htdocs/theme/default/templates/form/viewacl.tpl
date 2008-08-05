@@ -71,7 +71,7 @@ function renderAccessListItem(item) {
     var row = TABLE({'class': cssClass},
         TBODY(null, 
             TR(null,
-                TH(null, name,  (item.tutoronly ? ' ' + '{{str tag=tutors section=view}}' : '')),
+                TH(null, name,  (item.role ? ' - ' + item.roledisplay : '')),
                 TD({'class': 'right'}, removeButton)
             ),
             TR(null,
@@ -91,11 +91,11 @@ function renderAccessListItem(item) {
                     :
                     null
                     ),
-                    (typeof(item.tutoronly) != 'undefined' ?
+                    (typeof(item.role) != 'undefined' ?
                     INPUT({
                         'type': 'hidden',
-                        'name': 'accesslist[' + count + '][tutoronly]',
-                        'value': item.tutoronly
+                        'name': 'accesslist[' + count + '][role]',
+                        'value': item.role
                     })
                     :
                     null
@@ -208,26 +208,31 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
 
     var addButton = BUTTON({'type': 'button', 'class': 'button'}, '{{str tag=add}}');
     connect(addButton, 'onclick', function() {
-        rowdata.tutoronly = 0;
         appendChildNodes('accesslist', renderAccessListItem(rowdata));
     });
     appendChildNodes(buttonTD, addButton);
 
-    var identityNodes = [], profileIcon = null, tutorAddButton = null;
+    var identityNodes = [], profileIcon = null, roleSelector = null;
     if (rowdata.type == 'user') {
         profileIcon = IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&maxwidth=40&maxheight=40&id=' + rowdata.id});
         identityNodes.push(A({'href': config.wwwroot + 'user/view.php?id=' + rowdata.id, 'target': '_blank'}, rowdata.name));
     }
     else if (rowdata.type == 'group') {
-        if (rowdata.jointype == 'controlled') {
-            tutorAddButton = BUTTON({'type': 'button', 'class': 'button'}, '{{str tag=addtutors section=view}}');
-            connect(tutorAddButton, 'onclick', function() {
-                rowdata.tutoronly = 1;
-                appendChildNodes('accesslist', renderAccessListItem(rowdata));
-            });
-            appendChildNodes(buttonTD, tutorAddButton);
+        rowdata.role = null;
+        var options = [OPTION({'value':null, 'selected':true}, '{{str tag=everyoneingroup section=view}}')];
+        for (r in globaldata.roles[rowdata.grouptype]) {
+            options.push(OPTION({'value':globaldata.roles[rowdata.grouptype][r].name}, globaldata.roles[rowdata.grouptype][r].display));
         }
+        roleSelector = SELECT({'name':'role'}, options);
+        connect(roleSelector, 'onchange', function() {
+            rowdata.role = this.value;
+            if (this.value) {
+                rowdata.roledisplay = scrapeText(this.childNodes[this.selectedIndex]);
+            }
+        });
         identityNodes.push(A({'href': config.wwwroot + 'group/view.php?id=' + rowdata.id, 'target': '_blank'}, rowdata.name));
+        identityNodes.push(" - ");
+        identityNodes.push(roleSelector);
     }
 
     return TR({'class': 'r' + (rownumber % 2)},

@@ -43,10 +43,10 @@ $limit = param_integer('limit', 20);
 $offset = param_integer('offset', 0);
 $allfields = param_boolean('allfields');
 $group = param_integer('group', 0);
-$owner = param_boolean('owner', true);
+$includeadmins = param_boolean('includeadmins', true);
 
 if ($group) {
-    $data = array('group' => $group, 'owner' => $owner);
+    $data = array('group' => $group, 'includeadmins' => $includeadmins);
     $data = search_user($query, $limit, $offset, $data);
 }
 else {

@@ -63,7 +63,7 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
 
         // Get data about the resume field in this blockinstance
         if (!empty($configdata['artefactid'])) {
-            $resumefield = artefact_instance_from_id($configdata['artefactid']);
+            $resumefield = $instance->get_artefact_instance($configdata['artefactid']);
             $rendered = $resumefield->render_self($configdata);
             $result = $rendered['html'];
             if (!empty($rendered['javascript'])) {

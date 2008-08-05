@@ -45,6 +45,8 @@ if ($group->jointype != 'request'
 
 define('TITLE', get_string('requestjoinspecifiedgroup', 'group', $group->name));
 
+$goto = get_config('wwwroot') . 'group/' . $returnto . '.php' . ($returnto == 'view' ? ('?id=' . $groupid) : '');
+
 $form = pieform(array(
     'name' => 'requestjoingroup',
     'autofocus' => false,
@@ -59,7 +61,7 @@ $form = pieform(array(
         'submit' => array(
             'type' => 'submitcancel',
             'value' => array(get_string('request', 'group'), get_string('cancel')),
-            'goto' => get_config('wwwroot') . ($returnto == 'find' ? 'group/find.php' : 'group/mygroups.php')
+            'goto' => $goto
         ),
         'returnto' => array(
             'type' => 'hidden',
@@ -75,7 +77,7 @@ $smarty->assign('group', $group);
 $smarty->display('group/requestjoin.tpl');
 
 function requestjoingroup_submit(Pieform $form, $values) {
-    global $SESSION, $USER, $group;
+    global $SESSION, $USER, $group, $goto;
     insert_record(
         'group_member_request',
         (object)array(
@@ -85,20 +87,24 @@ function requestjoingroup_submit(Pieform $form, $values) {
             'reason' => isset($values['reason']) ? $values['reason'] : null            
         )
     );
-    $ownerlang = get_user_language($group->owner);
-    if (isset($values['reason']) && $values['reason'] != '') {
-        $message = get_string_from_language($ownerlang, 'grouprequestmessagereason', 'group', display_name($USER, get_record('usr', 'id', $group->owner)), $group->name, $values['reason']);
-    } 
-    else {
-        $message = get_string_from_language($ownerlang, 'grouprequestmessage', 'group', display_name($USER, get_record('usr', 'id', $group->owner)), $group->name);
-    }
+    // Send request to all group admins
     require_once('activity.php');
-    activity_occurred('maharamessage', 
-        array('users'   => array($group->owner),
-        'subject' => get_string_from_language($ownerlang, 'grouprequestsubject', 'group'),
-        'message' => $message,
-        'url'     => get_config('wwwroot') . 'group/view.php?id=' . $group->id));
+    $groupadmins = get_column('group_member', 'member', 'group', $group->id, 'role', 'admin');
+    foreach ($groupadmins as $groupadmin) {
+        $adminlang = get_user_language($groupadmin);
+        if (isset($values['reason']) && $values['reason'] != '') {
+            $message = get_string_from_language($adminlang, 'grouprequestmessagereason', 'group', display_name($USER, get_record('usr', 'id', $groupadmin)), $group->name, $values['reason']);
+        } 
+        else {
+            $message = get_string_from_language($adminlang, 'grouprequestmessage', 'group', display_name($USER, get_record('usr', 'id', $groupadmin)), $group->name);
+        }
+        activity_occurred('maharamessage', array(
+            'users'   => array($groupadmin),
+            'subject' => get_string_from_language($adminlang, 'grouprequestsubject', 'group'),
+            'message' => $message,
+            'url'     => get_config('wwwroot') . 'group/view.php?id=' . $group->id));
+    }
     $SESSION->add_ok_msg(get_string('grouprequestsent', 'group'));
-    redirect($values['returnto'] == 'find' ? '/group/find.php' : '/group/mygroups.php');
+    redirect($goto);
 }
 ?>

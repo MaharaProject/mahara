@@ -2,11 +2,16 @@
 {include file="sidebar.tpl"}
 {include file="columnleftstart.tpl"}
 
-<span class="addicon fr"><a href="{$WWWROOT}view/edit.php">{str tag="createview" section="view"}</a></span>
+<span class="addicon fr">
+<a href="{$WWWROOT}view/edit.php{if $groupid}?group={$groupid}{/if}">{str tag="createview" section="view"}</a>
+</span>
 <h2>{$heading}</h2>
 
+{if $groupid}
+  {include file="group/tabstart.tpl" current="views"}
+{/if}
 {if $views}
-<table id="myviewstable">
+<table id="myviewstable" class="groupviews">
 
 {foreach from=$views item=view}
     <tr class="{cycle values=r0,r1}">
@@ -46,8 +51,8 @@
                 {str tag="loggedinlower" section="view"}{elseif $accessgroup.accesstype == 'public'}
                 {str tag="publiclower" section="view"}{elseif $accessgroup.accesstype == 'friends'}
                 <a href="{$WWWROOT}user/myfriends.php" id="link-myfriends">{str tag="friendslower" section="view"}</a>{elseif $accessgroup.accesstype == 'group'}
-                <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name|escape}</a>{elseif $accessgroup.accesstype == 'tutorgroup'}
-                <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name|escape}</a> ({str tag="tutors" section="view"}){elseif $accessgroup.accesstype == 'user'}
+                <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name|escape}</a>{if !empty($accessgroup.role)}
+                    ({$accessgroup.roledisplay}){/if}{elseif $accessgroup.accesstype == 'user'}
                 <a href="{$WWWROOT}user/view.php?id={$accessgroup.id}">{$accessgroup.id|display_name|escape}</a>{/if}{if !$smarty.foreach.artefacts.last},{/if}
         {/foreach}
     {else}
@@ -73,8 +78,13 @@
 <div class="center">{$pagination}</div>
 
 {else}
-<div class="message">{str tag="noviews" section="view"}</div>
+<table id="myviewstable"{if $member} class="groupviews"{/if}>
+  <tr>
+    <td>{if $groupid}{str tag="noviewstosee" section="group"}{else}{str tag="noviews" section="view"}{/if}</td>
+  </tr>
+</table>
 {/if}
+{if $groupid}{include file="group/tabend.tpl"}{/if}
 
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

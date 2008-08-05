@@ -87,16 +87,6 @@ $artefactpath[] = array(
     'title' => $artefact->display_title(),
 );
 
-$heading = '<a href="' . get_config('wwwroot') . 'view/view.php?id=' . $view->get('id') .'">' . hsc($view->get('title')) . '</a> ' . get_string('by', 'view') . ' <a href="' . get_config('wwwroot') .'user/view.php?id=' . $view->get('owner'). '">' . $view->formatted_owner() . '</a>';
-foreach ($artefactpath as $item) {
-	if (empty($item['url'])) {
-	    $heading .= ': ' . $item['title'];
-	}
-	else {
-        $heading .= ': <a href="' . $item['url'] . '">' . $item['title'] . '</a>';
-	}
-}
-
 $getstring = quotestrings(array(
     'mahara' => array('message', 'cancel'),
     'view' => array('makepublic', 'placefeedback', 'complaint',
@@ -315,16 +305,23 @@ $smarty = smarty(
         'stylesheets' => array('style/views.css')
     )
 );
-$smarty->assign('heading', $heading);
-$smarty->assign('noheadingescape', true);
+
 $smarty->assign('artefact', $content);
 $smarty->assign('artefactpath', $artefactpath);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 
 $smarty->assign('viewid', $viewid);
-$smarty->assign('viewowner', $view->get('owner'));
 $smarty->assign('viewtitle', $view->get('title'));
-$smarty->assign('formattedowner', $view->formatted_owner());
+
+$viewowner = $view->get('owner');
+if ($viewowner) {
+    $smarty->assign('ownerlink', 'user/view.php?id=' . $viewowner);
+}
+else if ($view->get('group')) {
+    $smarty->assign('ownerlink', 'group/view.php?id=' . $view->get('group'));
+}
+
+$smarty->assign('ownername', $view->formatted_owner());
 
 $smarty->display('view/artefact.tpl');
 

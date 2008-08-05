@@ -79,7 +79,7 @@ function pieform_element_textarea_get_value(Pieform $form, $element) {/*{{{*/
     }
 
     $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
-    if (isset($global[$element['name']])) {
+    if ($form->is_submitted() && isset($global[$element['name']])) {
         return str_replace("\r\n", "\n", $global[$element['name']]);
     }
 

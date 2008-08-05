@@ -1,0 +1,49 @@
+{include file="header.tpl"}
+{include file="sidebar.tpl"}
+{include file="columnleftstart.tpl"}
+
+{if ($caneditgroupview)}
+<span class="addicon fr">
+<a href="{$WWWROOT}view/edit.php?group={$groupid}">{str tag="createview" section="view"}</a>
+</span>
+{/if}
+<h2>{$heading}</h2>
+
+{include file="group/tabstart.tpl" current="views"}
+{if $views}
+    <table id="myviewstable" class="groupviews">
+    {foreach from=$views item=view}
+        <tr>
+            <td class="r{cycle values=0,1}">
+                <h5><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a> {str tag=by section=view}
+                    <a href="{$WWWROOT}{if $view.group}group{else}user{/if}/view.php?id={if $view.group}{$view.group}{else}{$view.owner}{/if}">{if $view.sharedby}{$view.sharedby}{else}{$groupname}{/if}</a>
+                </h5>
+                <span>
+                {if $view.description}
+                    {$view.description}
+                {/if}
+                {if $view.description && $view.artefacts}<br>{/if}
+                {if $view.artefacts}
+                    <strong>{str tag="artefacts" section="view"}:</strong>
+                    {foreach from=$view.artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$view.id}" class="link-artefacts">{$artefact.title|escape}</a>{if !$smarty.foreach.artefacts.last}, {/if}{/foreach}
+                {/if}
+                </span>
+            </td>
+        </tr>
+    {/foreach}
+    </table>
+    <div class="center">{$pagination}</div>
+{else}
+<table id="myviewstable"{if $member} class="groupviews"{/if}>
+  <tr>
+    <td>{str tag="noviewstosee" section="group"}</td>
+  </tr>
+</table>
+{/if}
+
+
+{include file="group/tabend.tpl"}
+
+{include file="columnleftend.tpl"}
+{include file="footer.tpl"}
+

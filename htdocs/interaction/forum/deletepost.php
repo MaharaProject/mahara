@@ -34,7 +34,7 @@ require_once('pieforms/pieform.php');
 
 $postid = param_integer('id');
 $post = get_record_sql(
-    'SELECT p.subject, p.body, p.topic, p.parent, p.poster, ' . db_format_tsfield('p.ctime', 'ctime') . ', m.user AS moderator, t.forum, p2.subject AS topicsubject, f.group, f.title AS forumtitle, g.name AS groupname, g.owner AS groupowner, COUNT(p3.id)
+    'SELECT p.subject, p.body, p.topic, p.parent, p.poster, ' . db_format_tsfield('p.ctime', 'ctime') . ', m.user AS moderator, t.forum, p2.subject AS topicsubject, f.group, f.title AS forumtitle, g.name AS groupname, COUNT(p3.id)
     FROM {interaction_forum_post} p
     INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
     INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.parent IS NULL)
@@ -50,7 +50,7 @@ $post = get_record_sql(
     INNER JOIN {interaction_instance} f2 ON (t2.forum = f2.id AND f2.deleted != 1 AND f2.group = f.group)
     WHERE p.id = ?
     AND p.deleted != 1
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13',
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12',
     array(0, $postid)
 );
 
@@ -140,7 +140,7 @@ $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
 $smarty->assign('post', $post);
 $smarty->assign('deleteform', $form);
-$smarty->assign('groupowner', $post->groupowner);
+$smarty->assign('groupadmins', group_get_admin_ids($post->group));
 $smarty->display('interaction:forum:deletepost.tpl');
 
 ?>

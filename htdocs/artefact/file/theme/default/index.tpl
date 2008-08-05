@@ -2,6 +2,10 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
+{if $groupid}
+  <h2>{$heading}</h2>
+  {include file="group/tabstart.tpl" current="files"}
+{/if}
 			{str tag='fileinstructions' section='artefact.file'}
 			<div id="myfiles">
 				<div id="uploader"></div>
@@ -17,5 +21,6 @@
 				<tbody><tr><th></th></tr></tbody>
 			</table>
 			</div>
+{if $groupid}{include file="group/tabend.tpl"}{/if}
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

@@ -35,7 +35,7 @@ require_once('pieforms/pieform.php');
 $topicid = param_integer('id');
 
 $topic = get_record_sql(
-    'SELECT p.subject, p.poster, p.id AS firstpost, ' . db_format_tsfield('p.ctime', 'ctime') . ', t.id, f.group AS groupid, g.name AS groupname, f.id AS forumid, f.title AS forumtitle, t.closed, sf.forum AS forumsubscribed, st.topic AS topicsubscribed, g.owner
+    'SELECT p.subject, p.poster, p.id AS firstpost, ' . db_format_tsfield('p.ctime', 'ctime') . ', t.id, f.group AS groupid, g.name AS groupname, f.id AS forumid, f.title AS forumtitle, t.closed, sf.forum AS forumsubscribed, st.topic AS topicsubscribed
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
     INNER JOIN {group} g ON (g.id = f.group AND g.deleted = ?)
@@ -60,6 +60,8 @@ if (!$membership) {
 $topic->canedit = $moderator || user_can_edit_post($topic->poster, $topic->ctime);
 
 define('TITLE', $topic->forumtitle . ' - ' . $topic->subject);
+
+$groupadmins = group_get_admin_ids($topic->groupid);
 
 $breadcrumbs = array(
     array(
@@ -174,7 +176,7 @@ $smarty->display('interaction:forum:topic.tpl');
  */
 
 function buildpost($postindex, $parentsubject, &$posts){
-    global $moderator, $topic;
+    global $moderator, $topic, $groupadmins;
     $localposts = $posts;
     if ($posts[$postindex]->subject) {
         $parentsubject = $posts[$postindex]->subject;
@@ -190,7 +192,7 @@ function buildpost($postindex, $parentsubject, &$posts){
     }
     $smarty = smarty_core();
     $smarty->assign('post', $posts[$postindex]);
-    $smarty->assign('groupowner', $topic->owner);
+    $smarty->assign('groupadmins', $groupadmins);
     $smarty->assign('children', $children);
     $smarty->assign('moderator', $moderator);
     $smarty->assign('closed', $topic->closed);

@@ -41,14 +41,14 @@ $topicsperpage = 25;
 $offset = (int)($offset / $topicsperpage) * $topicsperpage;
 
 $forum = get_record_sql(
-    'SELECT f.title, f.description, f.id, COUNT(t.id) AS topiccount, s.forum AS subscribed, g.id AS groupid, g.name AS groupname, g.owner as groupowner
+    'SELECT f.title, f.description, f.id, COUNT(t.id) AS topiccount, s.forum AS subscribed, g.id AS groupid, g.name AS groupname
     FROM {interaction_instance} f
     INNER JOIN {group} g ON (g.id = f."group" AND g.deleted = ?)
     LEFT JOIN {interaction_forum_topic} t ON (t.forum = f.id AND t.deleted != 1 AND t.sticky != 1)
     LEFT JOIN {interaction_forum_subscription_forum} s ON (s.forum = f.id AND s."user" = ?)
     WHERE f.id = ?
     AND f.deleted != 1
-    GROUP BY 1, 2, 3, 5, 6, 7, 8',
+    GROUP BY 1, 2, 3, 5, 6, 7',
     array(0, $userid, $forumid)
 );
 
@@ -251,10 +251,10 @@ $smarty->assign('heading', TITLE);
 $smarty->assign('forum', $forum);
 $smarty->assign('moderator', $moderator);
 $smarty->assign('admin', $admin);
+$smarty->assign('groupadmins', group_get_admin_ids($forum->groupid));
 $smarty->assign('stickytopics', $stickytopics);
 $smarty->assign('regulartopics', $regulartopics);
 $smarty->assign('moderators', $moderators);
-$smarty->assign('groupowner', $forum->groupowner);
 $smarty->assign('closedicon', theme_get_url('images/closed.gif', 'interaction/forum/'));
 $smarty->assign('subscribedicon', theme_get_url('images/subscribed.gif', 'interaction/forum/'));
 $smarty->assign('pagination', $pagination['html']);

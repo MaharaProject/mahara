@@ -33,6 +33,7 @@ class View {
     private $id;
     private $owner;
     private $ownerformat;
+    private $group;
     private $ctime;
     private $mtime;
     private $atime;
@@ -46,11 +47,13 @@ class View {
     private $artefact_instances;
     private $artefact_metadata;
     private $ownerobj;
+    private $groupobj;
     private $numcolumns;
     private $layout;
     private $columns;
     private $dirtycolumns; // for when we change stuff
     private $tags;
+    private $editingroles;
 
     public function __construct($id=0, $data=null) {
         if (!empty($id)) {
@@ -83,6 +86,11 @@ class View {
         $this->atime = time();
         $this->columns = array();
         $this->dirtycolumns = array();
+        if ($this->group) {
+            $group = get_record('group', 'id', $this->group);
+            safe_require('grouptype', $group->grouptype);
+            $this->editingroles = call_static_method('GroupType' . ucfirst($group->grouptype), 'get_view_editing_roles');
+        }
     }
 
     public function get($field) {
@@ -227,6 +235,13 @@ class View {
         return $this->ownerobj;
     }
 
+    public function get_group_object() {
+        if (!isset($this->groupobj)) {
+            $this->groupobj = get_record('group', 'id', $this->get('group'));
+        }
+        return $this->groupobj;
+    }
+
     
     public function delete() {
         delete_records('artefact_feedback','view',$this->id);
@@ -244,33 +259,28 @@ class View {
 
     public function get_access() {
 
-        $data = get_records_sql_array('SELECT va.accesstype AS type, va.startdate, va.stopdate
-            FROM {view_access} va
-            LEFT JOIN {view} v ON (va.view = v.id)
-            WHERE v.id = ?
-            ORDER BY va.accesstype', array($this->id));
-        if (!$data) {
-            $data = array();
-        }
-        foreach ($data as &$item) {
-            $item = (array)$item;
-        }
-
-        // Get access for users and groups
-        $extradata = get_records_sql_array("
-            SELECT 'user' AS type, usr AS id, 0 AS tutoronly, startdate, stopdate
+        $data = get_records_sql_array("
+            SELECT accesstype AS type, NULL AS id, NULL AS role, NULL AS grouptype, startdate, stopdate
+                FROM {view_access}
+                WHERE view = ?
+        UNION
+            SELECT 'user' AS type, usr AS id, NULL AS role, NULL AS grouptype, startdate, stopdate
                 FROM {view_access_usr}
                 WHERE view = ?
         UNION
-            SELECT 'group', \"group\", tutoronly, startdate, stopdate FROM {view_access_group}
+            SELECT 'group', \"group\", role, grouptype, startdate, stopdate FROM {view_access_group}
                 INNER JOIN {group} g ON (\"group\" = g.id AND g.deleted = ?)
-                WHERE view = ?", array($this->id, 0, $this->id));
-        if ($extradata) {
-            foreach ($extradata as &$extraitem) {
-                $extraitem = (array)$extraitem;
-                $extraitem['tutoronly'] = (int)$extraitem['tutoronly'];
+                WHERE view = ?", array($this->id, $this->id, 0, $this->id));
+        if ($data) {
+            foreach ($data as &$item) {
+                $item = (array)$item;
+                if ($item['role']) {
+                    $item['roledisplay'] = get_string($item['role'], 'grouptype.'.$item['grouptype']);
+                }
             }
-            $data = array_merge($data, $extradata);
+        }
+        else {
+            $data = array();
         }
         return $data;
     }
@@ -356,7 +366,9 @@ class View {
                         break;
                     case 'group':
                         $accessrecord->group = $item['id'];
-                        $accessrecord->tutoronly = $item['tutoronly'];
+                        if ($item['role']) {
+                            $accessrecord->role = $item['role'];
+                        }
                         insert_record('view_access_group', $accessrecord);
                         break;
                 }
@@ -474,7 +486,7 @@ class View {
         // Security
         // TODO this might need to be moved below the requestdata check below, to prevent non owners of the view being 
         // rejected
-        if ($USER->get('id') != $this->get('owner')) {
+        if (!$USER->can_edit_view($this)) {
             throw new AccessDeniedException(get_string('canteditdontown', 'view'));
         }
 
@@ -1092,9 +1104,10 @@ class View {
      */
     public function formatted_owner() {
 
-        $user = $this->get_owner_object();
+        if ($this->get('owner')) {
+            $user = $this->get_owner_object();
 
-        switch ($this->ownerformat) {
+            switch ($this->ownerformat) {
             case FORMAT_NAME_FIRSTNAME:
                 return $user->firstname;
             case FORMAT_NAME_LASTNAME:
@@ -1108,8 +1121,14 @@ class View {
             case FORMAT_NAME_DISPLAYNAME:
             default:
                 return display_name($user);
+            }
+        } else if ($this->get('group')) {
+            $group = $this->get_group_object();
+            return $group->name;
         }
+        return null;
     }
+
 
     /**
      * Makes a URL for a view block editing page
@@ -1135,9 +1154,8 @@ class View {
      * - Pagination HTML and Javascript
      * - The total number of artefacts found
      */
-    public static function build_artefactchooser_data($data) {
+    public static function build_artefactchooser_data($data, $group=null) {
         global $USER;
-
         $search = '';
         if (!empty($data['search']) && param_boolean('s')) {
             $search = param_variable('search', '');
@@ -1147,7 +1165,7 @@ class View {
             //    $search = '';
             //}
         }
-
+        //log_debug($data);
         $artefacttypes = $data['artefacttypes'];
         $offset        = $data['offset'];
         $limit         = $data['limit'];
@@ -1162,7 +1180,34 @@ class View {
         safe_require('blocktype', $data['blocktype']);
         $blocktypeclass = generate_class_name('blocktype', $data['blocktype']);
 
-        $select = 'owner = ' . $USER->get('id');
+        $sql = ' FROM {artefact} a ';
+        if ($group) {
+            // Get group-owned artefacts that the user has view
+            // permission on.
+            $sql .= '
+            INNER JOIN {artefact_access_role} r ON a.id = r.artefact
+            INNER JOIN {group_member} m ON r.role = m.role';
+            $select = 'a."group" = ' . $group . '
+            AND m."group" = ' . $group . '
+            AND m.member = ' . $USER->get('id') . '
+            AND can_view = 1';
+        } else {
+            // Get artefacts owned by the user and group-owned
+            // artefacts the user has republish permission on.
+            $sql .= '
+            LEFT OUTER JOIN {artefact_access_usr} aau ON (a.id = aau.artefact AND aau.usr = ' . $USER->get('id') . ')
+            LEFT OUTER JOIN (
+                SELECT
+                    aar.artefact, aar.can_republish, m.group
+                FROM
+                    {artefact_access_role} aar
+                    INNER JOIN {group_member} m ON aar.role = m.role
+                WHERE
+                    m.member = ' . $USER->get('id') . '
+                    AND aar.can_republish = 1
+            ) ra ON (a.id = ra.artefact AND a.group = ra.group)';
+            $select = '(owner = ' . $USER->get('id') . ' OR ra.can_republish = 1 OR aau.can_republish = 1) ';
+        }
         if (!empty($artefacttypes)) {
             $select .= ' AND artefacttype IN(' . implode(',', array_map('db_quote', $artefacttypes)) . ')';
         }
@@ -1178,8 +1223,8 @@ class View {
         if (method_exists($blocktypeclass, 'artefactchooser_get_sort_order')) {
             $sortorder = call_static_method($blocktypeclass, 'artefactchooser_get_sort_order');
         }
-        $artefacts = get_records_select_array('artefact', $select, null, $sortorder, '*', $offset, $limit);
-        $totalartefacts = count_records_select('artefact', $select);
+        $artefacts = get_records_sql_array('SELECT a.* ' . $sql . ' WHERE ' . $select . ($sortorder ? (' ORDER BY ' . $sortorder) : ''), null, $offset, $limit);
+        $totalartefacts = count_records_sql('SELECT COUNT(*) ' . $sql . ' WHERE ' . $select);
 
         $result = '';
         if ($artefacts) {
@@ -1239,12 +1284,360 @@ class View {
             'extradata' => array(
                 'value'     => $value,
                 'blocktype' => $data['blocktype'],
+                'group'     => $group,
             ),
         ));
 
         return array($result, $pagination, $totalartefacts, $offset);
     }
+
+    public static function owner_name($ownerformat, $user) {
+
+        switch ($ownerformat) {
+            case FORMAT_NAME_FIRSTNAME:
+                return $user->firstname;
+            case FORMAT_NAME_LASTNAME:
+                return $user->lastname;
+            case FORMAT_NAME_FIRSTNAMELASTNAME:
+                return $user->firstname . ' ' . $user->lastname;
+            case FORMAT_NAME_PREFERREDNAME:
+                return $user->preferredname;
+            case FORMAT_NAME_STUDENTID:
+                return $user->studentid;
+            case FORMAT_NAME_DISPLAYNAME:
+            default:
+                return display_name($user);
+        }
+    }
+
+
+
+    public static function get_myviews_data($limit=5, $offset=0, $groupid=null) {
+
+        global $USER;
+        $userid = $USER->get('id');
+
+        if ($groupid) {
+            $count = count_records('view', 'group', $groupid);
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description
+                FROM {view} v
+                WHERE v.group = ' . $groupid . '
+                ORDER BY v.title, v.id', '', $offset, $limit);
+        }
+        else {
+            $count = count_records('view', 'owner', $userid);
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, g.id AS groupid, g.name
+                FROM {view} v
+                LEFT OUTER JOIN {group} g ON (v.submittedto = g.id AND g.deleted = 0)
+                WHERE v.owner = ' . $userid . '
+                ORDER BY v.title, v.id', '', $offset, $limit);
+        }
+
+        if ($viewdata) {
+            $viewidlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $viewdata));
+            $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
+                FROM {view_artefact} va
+                INNER JOIN {artefact} a ON va.artefact = a.id
+                INNER JOIN {artefact_installed_type} t ON a.artefacttype = t.name
+                WHERE va.view IN (' . $viewidlist . ')
+                GROUP BY va.view, va.artefact, a.title, a.artefacttype, t.plugin
+                ORDER BY a.title, va.artefact', '');
+            $accessgroups = get_records_sql_array('SELECT view, accesstype, grouptype, role, id, name, startdate, stopdate
+                FROM (
+                    SELECT view, \'group\' AS accesstype, g.grouptype, vg.role, g.id, g.name, startdate, stopdate
+                    FROM {view_access_group} vg
+                    INNER JOIN {group} g ON g.id = vg.group AND g.deleted = 0
+                    UNION SELECT view, \'user\' AS accesstype, NULL AS grouptype, NULL AS role, usr AS id, \'\' AS name, startdate, stopdate
+                    FROM {view_access_usr} vu
+                    UNION SELECT view, accesstype, NULL AS grouptype, NULL AS role, 0 AS id, \'\' AS name, startdate, stopdate
+                    FROM {view_access} va
+                ) AS a
+                WHERE view in (' . $viewidlist . ')
+                ORDER BY view, accesstype, grouptype, role, name, id
+            ', array());
+        }
+    
+        $data = array();
+        if ($viewdata) {
+            for ($i = 0; $i < count($viewdata); $i++) {
+                $index[$viewdata[$i]->id] = $i;
+                $data[$i]['id'] = $viewdata[$i]->id;
+                $data[$i]['title'] = $viewdata[$i]->title;
+                $data[$i]['description'] = $viewdata[$i]->description;
+                if (!empty($viewdata[$i]->name)) {
+                    $data[$i]['submittedto'] = array('name' => $viewdata[$i]->name, 'id' => $viewdata[$i]->groupid);
+                }
+                $data[$i]['artefacts'] = array();
+                $data[$i]['accessgroups'] = array();
+                if ($viewdata[$i]->startdate && $viewdata[$i]->stopdate) {
+                    $data[$i]['access'] = get_string('accessbetweendates', 'view', format_date(strtotime($viewdata[$i]->startdate), 'strftimedate'),
+                        format_date(strtotime($viewdata[$i]->stopdate), 'strftimedate'));
+                }
+                else if ($viewdata[$i]->startdate) {
+                    $data[$i]['access'] = get_string('accessfromdate', 'view', format_date(strtotime($viewdata[$i]->startdate), 'strftimedate'));
+                }
+                else if ($viewdata[$i]->stopdate) {
+                    $data[$i]['access'] = get_string('accessuntildate', 'view', format_date(strtotime($viewdata[$i]->stopdate), 'strftimedate'));
+                }
+            }
+            // Go through all the artefact records and put them in with the
+            // views they belong to.
+            if ($artefacts) {
+                foreach ($artefacts as $artefactrec) {
+                    safe_require('artefact', $artefactrec->plugin);
+                    // Perhaps I shouldn't have to construct the entire
+                    // artefact object to render the name properly.
+                    $classname = generate_artefact_class_name($artefactrec->artefacttype);
+                    $artefactobj = new $classname(0, array('title' => $artefactrec->title));
+                    $artefactobj->set('dirty', false);
+                    if (!$artefactobj->in_view_list()) {
+                      continue;
+                    }
+                    $artname = $artefactobj->display_title(30);
+                    if (strlen($artname)) {
+                      $data[$index[$artefactrec->view]]['artefacts'][] = array('id'    => $artefactrec->artefact,
+                                                                               'title' => $artname);
+                    }
+                }
+            }
+            if ($accessgroups) {
+                foreach ($accessgroups as $access) {
+                  $data[$index[$access->view]]['accessgroups'][] = array(
+                      'accesstype' => $access->accesstype, // friends, group, loggedin, public, tutorsgroup, user
+                      'role' => $access->role,
+                      'roledisplay' => $access->role ? get_string($access->role, 'grouptype.' . $access->grouptype) : null,
+                      'id' => $access->id,
+                      'name' => $access->name,
+                      'startdate' => $access->startdate,
+                      'stopdate' => $access->stopdate
+                      );
+                }
+            }
+        }
+
+        return (object) array(
+            'data'  => $data,
+            'count' => $count,
+        );
+    }
+
+
+    /**
+     * Get all views visible to a user.  Complicated because a view v
+     * is visible to a user u at time t if any of the following are
+     * true:
+     *
+     * - u is a site admin
+     * - v is owned by u
+     * - v is owned by a group g, and u has a role (within g) with view editing permission
+     * - v is publically visible at t (in view_access)
+     * - v is visible to logged in users at t (in view_access)
+     * - v is visible to friends at t, and u is a friend of the view owner (in view_access)
+     * - v is visible to u at t (in view_access_usr)
+     * - v is visible to all roles of group g at t, and u is a member of g (view_access_group)
+     * - v is visible to users with role r of group g at t, and u is a member of g with role r (view_access_group)
+     *
+     * @param integer $ownerid   Only return views owned by this user.
+     * @param integer $groupid   Only return views owned by this group.
+     *
+     */
+    public static function view_search($ownerid=null, $groupid=null, $limit=10, $offset=0) {
+        global $USER;
+        $admin = $USER->get('admin');
+        $loggedin = $USER->is_logged_in();
+        $viewerid = $USER->get('id');
+
+        $where = '
+            WHERE TRUE';
+        $ph = array();
+        if ($ownerid) {
+            $where .= '
+                AND v.owner = ?';
+            $ph[] = $ownerid;
+        } else if ($groupid) {
+            $where .= '
+                AND v.group = ?';
+            $ph[] = $groupid;
+        }
+
+        if ($admin) {
+            $from = '
+            FROM {view} v';
+        }
+        else if (!$loggedin) {
+            // Unreachable and not tested yet:
+            $from = '
+            FROM {view} v
+                INNER JOIN {view_access} va ON (va.view = v.id)
+            ';
+            $where .= "
+                AND (v.startdate IS NULL OR v.startdate < current_timestamp)
+                AND (v.stopdate IS NULL OR v.stopdate < current_timestamp)
+                AND va.accesstype = 'public'
+                AND (va.startdate IS NULL OR va.startdate < current_timestamp)
+                AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)";
+        }
+        else {
+            $from = '
+            FROM {view} v
+            LEFT OUTER JOIN (
+                SELECT
+                    gtr.edit_views, gm.group AS groupid
+                FROM {group} g
+                INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ?)
+                INNER JOIN {grouptype_roles} gtr ON (g.grouptype = gtr.grouptype AND gtr.role = gm.role)
+            ) AS vg ON (vg.groupid = v.group)
+            LEFT OUTER JOIN {view_access} va ON (
+                va.view = v.id
+                AND (va.startdate IS NULL OR va.startdate < current_timestamp)
+                AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
+            )
+            LEFT OUTER JOIN {usr_friend} f ON (usr1 = v.owner AND usr2 = ?)
+            LEFT OUTER JOIN {view_access_usr} vau ON (
+                vau.view = v.id
+                AND (vau.startdate IS NULL OR vau.startdate < current_timestamp)
+                AND (vau.stopdate IS NULL OR vau.stopdate > current_timestamp)
+                AND vau.usr = ?
+            )
+            LEFT OUTER JOIN (
+                SELECT
+                    vag.view, vagm.member
+                FROM {view_access_group} vag
+                INNER JOIN {group_member} vagm ON (vag.group = vagm.group AND (vag.role = vagm.role OR vag.role IS NULL))
+                WHERE
+                    (vag.startdate IS NULL OR vag.startdate < current_timestamp)
+                    AND (vag.stopdate IS NULL OR vag.stopdate > current_timestamp)
+                    AND vagm.member = ?
+            ) AS ag ON (
+                ag.view = v.id
+            )';
+            $where .= "
+                AND (
+                    v.owner = ?
+                    OR vg.edit_views = 1
+                    OR ((v.startdate IS NULL OR v.startdate < current_timestamp)
+                        AND (v.stopdate IS NULL OR v.stopdate < current_timestamp)
+                        AND (va.accesstype = 'public'
+                            OR va.accesstype = 'loggedin'
+                            OR (va.accesstype = 'friends' AND f.usr2 = ?)
+                            OR (vau.usr = ?)
+                            OR (ag.member = ?)
+                        )
+                    )
+                )";
+            $ph = array_merge(array($viewerid,$viewerid,$viewerid,$viewerid), $ph, array($viewerid,$viewerid,$viewerid,$viewerid));
+        }
+
+        $count = count_records_sql('SELECT COUNT (DISTINCT v.id) ' . $from . $where, $ph);
+        $viewdata = get_records_sql_array('
+            SELECT * FROM (
+                SELECT
+                    v.id, v.title, v.description, v.owner, v.ownerformat, v.group
+                ' . $from . $where . '
+                GROUP BY v.id, v.title, v.description, v.owner, v.ownerformat, v.group
+            ) a
+            ORDER BY a.title, a.id ',
+            $ph, $offset, $limit
+        );
+
+        View::get_extra_view_info($viewdata);
+
+        return (object) array(
+            'data'  => array_values($viewdata),
+            'count' => $count,
+        );
+
+    }
+
+
+    /** 
+     * Get views which have been explicitly shared to a group and are
+     * not owned by the group
+     */
+    public static function get_sharedviews_data($limit=10, $offset=0, $groupid) {
+        global $USER;
+        $userid = $USER->get('id');
+        require_once(get_config('libroot') . 'group.php');
+        if (!group_user_access($groupid)) {
+            throw new AccessDeniedException();
+        }
+        $from = '
+            FROM {view} v
+            INNER JOIN {view_access_group} a ON (a.view = v.id)
+            INNER JOIN {group_member} m ON (a.group = m.group AND (a.role = m.role OR a.role IS NULL))
+            WHERE a.group = ? AND m.member = ? AND (v.group IS NULL OR v.group != ?)';
+        $ph = array($groupid, $userid, $groupid);
+
+        $count = count_records_sql('SELECT COUNT(*) ' . $from, $ph);
+        $viewdata = get_records_sql_assoc('
+            SELECT v.id,v.title,v.startdate,v.stopdate,v.description,v.group,v.owner,v.ownerformat ' . $from . '
+            ORDER BY v.title, v.id',
+            $ph, $offset, $limit
+        );
+
+        View::get_extra_view_info($viewdata);
+
+        return (object) array(
+            'data'  => array_values($viewdata),
+            'count' => $count,
+        );
+    }
+
+
+    public static function get_extra_view_info(&$viewdata) {
+        if ($viewdata) {
+            // Get view owner details for display
+            $owners = array();
+            $groups = array();
+            foreach ($viewdata as $v) {
+                if ($v->owner && !isset($owners[$v->owner])) {
+                    $owners[$v->owner] = $v->owner;
+                } else if ($v->group && !isset($groups[$v->group])) {
+                    $groups[$v->group] = $v->group;
+                }
+            }
+            $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
+                FROM {view_artefact} va
+                INNER JOIN {artefact} a ON va.artefact = a.id
+                INNER JOIN {artefact_installed_type} t ON a.artefacttype = t.name
+                WHERE va.view IN (' . join(',', array_keys($viewdata)) . ')
+                GROUP BY va.view, va.artefact, a.title, a.artefacttype, t.plugin
+                ORDER BY a.title, va.artefact', '');
+            foreach ($artefacts as $artefactrec) {
+                safe_require('artefact', $artefactrec->plugin);
+                $classname = generate_artefact_class_name($artefactrec->artefacttype);
+                $artefactobj = new $classname(0, array('title' => $artefactrec->title));
+                $artefactobj->set('dirty', false);
+                if (!$artefactobj->in_view_list()) {
+                    continue;
+                }
+                $artname = $artefactobj->display_title(30);
+                if (strlen($artname)) {
+                    $viewdata[$artefactrec->view]->artefacts[] = array('id'    => $artefactrec->artefact,
+                                                                       'title' => $artname);
+                }
+            }
+            if (!empty($owners)) {
+                $owners = get_records_select_assoc('usr', 'id IN (' . join(',', $owners) . ')', null, '', 
+                                                   'id,username,firstname,lastname,preferredname,admin,staff,studentid');
+            }
+            if (!empty($groups)) {
+                $groups = get_records_select_assoc('group', 'id IN (' . join(',', $groups) . ')', null, '', 'id,name');
+            }
+            foreach ($viewdata as &$v) {
+                if ($v->owner) {
+                    $v->sharedby = View::owner_name($v->ownerformat, $owners[$v->owner]);
+                } else if ($v->group) {
+                    $v->sharedby = $groups[$v->group]->name;
+                }
+                $v = (array)$v;
+            }
+        }
+    }
+
+
 }
+
 
 /**
  * display format for author names in views - firstname

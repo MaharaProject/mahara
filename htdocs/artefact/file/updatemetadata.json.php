@@ -32,18 +32,21 @@ safe_require('artefact', 'file');
 
 json_headers();
 
-global $USER;
-
 $parentfolder = param_variable('parentfolder', null); // id of parent artefact
 $id = param_integer('id');
 $name = param_variable('name');
 $description = param_variable('description');
 $tags = param_variable('tags');
 $collideaction = param_variable('collideaction', 'fail');
-$adminfiles = param_boolean('adminfiles', false);
-$owner = $USER->get('id');
 
-if ($existingid = ArtefactTypeFileBase::file_exists($name, $owner, $parentfolder, $adminfiles)) {
+$artefact = artefact_instance_from_id($id);
+$group = $artefact->get('group');
+if ($group && !$USER->can_edit_artefact($artefact)) {
+    json_reply('local', get_string('noeditpermission', 'mahara'));
+}
+
+if ($existingid = ArtefactTypeFileBase::file_exists($name, $artefact->get('owner'), $parentfolder,
+                                                    $artefact->get('institution'), $group)) {
     if ($existingid != $id) {
         if ($collideaction == 'replace') {
             log_debug('deleting ' . $existingid);
@@ -56,12 +59,12 @@ if ($existingid = ArtefactTypeFileBase::file_exists($name, $owner, $parentfolder
     }
 }
 
-$artefact = artefact_instance_from_id($id);
 $artefact->set('title', $name);
 $artefact->set('description', $description);
 $artefact->set('tags', preg_split("/\s*,\s*/", trim($tags)));
-$artefact->set('adminfiles', (int) $adminfiles);
-$artefact->set('owner', $owner);
+if ($group) {
+    $artefact->set('rolepermissions', json_decode(param_variable('permissions')));
+}
 $artefact->commit();
 
 json_reply(false, get_string('changessaved', 'artefact.file'));

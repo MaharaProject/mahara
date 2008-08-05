@@ -41,7 +41,6 @@ class PluginBlocktypeImage extends PluginBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance) {
-        require_once(get_config('docroot') . 'artefact/lib.php');
         $configdata = $instance->get('configdata'); // this will make sure to unserialize it for us
         $configdata['viewid'] = $instance->get('view');
 
@@ -49,7 +48,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
         // render_self
         $result = '';
         if (isset($configdata['artefactid'])) {
-            $image = artefact_instance_from_id($configdata['artefactid']);
+            $image = $instance->get_artefact_instance($configdata['artefactid']);
 
             if ($image instanceof ArtefactTypeProfileIcon) {
                 $src = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $configdata['artefactid'];

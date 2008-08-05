@@ -37,12 +37,10 @@ $group = get_record_sql(
     'SELECT g.id, g.name
        FROM {group_member} u
        INNER JOIN {group} g ON (u.group = g.id AND g.deleted = 0)
-       INNER JOIN {group_member} t ON t.group = g.id 
+       INNER JOIN {grouptype} gt ON gt.name = g.grouptype
        WHERE u.member = ?
-       AND t.tutor = 1
-       AND t.member != u.member
        AND g.id = ?
-       GROUP BY g.id, g.name',
+       AND gt.submittableto = 1',
     array($USER->get('id'), $groupid)
 );
 

@@ -31,13 +31,14 @@ require_once('pieforms/pieform.php');
 require_once('view.php');
 $viewid = param_integer('id');
 
-$view = get_record('view', 'id', $viewid, 'owner', $USER->get('id'));
+$view = new View($viewid, null);
 
-if (!$view) {
+if (!$view || !$USER->can_edit_view($view)) {
     throw new AccessDeniedException(get_string('cantdeleteview', 'view'));
 }
+$groupid = $view->get('group');
 
-define('TITLE', get_string('deletespecifiedview', 'view', $view->title));
+define('TITLE', get_string('deletespecifiedview', 'view', $view->get('title')));
 
 $form = pieform(array(
     'name' => 'deleteview',
@@ -59,11 +60,14 @@ $smarty->assign('form', $form);
 $smarty->display('view/delete.tpl');
 
 function deleteview_submit(Pieform $form, $values) {
-	global $SESSION, $viewid;
+	global $SESSION, $viewid, $groupid;
     $view = new View($viewid, null);
     $view->delete();
     handle_event('deleteview', $viewid);
     $SESSION->add_ok_msg(get_string('viewdeleted', 'view'));
+    if ($groupid) {
+        redirect('/view/groupviews.php?group='.$groupid);
+    }
     redirect('/view/');
 }
 ?>

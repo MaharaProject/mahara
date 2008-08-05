@@ -478,6 +478,12 @@ $string['Artefact'] = 'Artefact';
 $string['Artefacts'] = 'Artefacts';
 $string['artefactnotfound'] = 'Artefact with id %s not found';
 $string['artefactnotrendered'] = 'Artefact not rendered';
+$string['nodeletepermission'] = 'You do not have permission to delete this artefact';
+$string['noeditpermission'] = 'You do not have permission to edit this artefact';
+$string['Permissions'] = 'Permissions';
+$string['republish'] = 'Publish';
+$string['view'] = 'View';
+$string['artefactnotpublishable'] = 'Artefact %s is not publishable in view %s';
 
 $string['belongingto'] = 'Belonging to';
 $string['allusers'] = 'All users';

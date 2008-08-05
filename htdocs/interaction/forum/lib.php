@@ -86,7 +86,7 @@ class PluginInteractionForum extends PluginInteraction {
                         'description' => get_string('moderatorsdescription', 'interaction.forum'),
                         'defaultvalue' => isset($moderators) ? $moderators : null,
                         'group' => $group->id,
-                        'owner' => false,
+                        'includeadmins' => false,
                         'filter' => false,
                         'lefttitle' => get_string('potentialmoderators', 'interaction.forum'),
                         'righttitle' => get_string('currentmoderators', 'interaction.forum')
@@ -334,16 +334,16 @@ function user_can_access_forum($forumid, $userid=null) {
     $membership = 0;
 
     $groupid = get_field('interaction_instance', '"group"', 'id', $forumid);
-    $groupmembership = user_can_access_group((int)$groupid, (int)$userid);
+    $groupmembership = group_user_access((int)$groupid, (int)$userid);
 
     if (!$groupmembership) {
         return $membership;
     }
     $membership = $membership | INTERACTION_FORUM_MEMBER;
-    if ($groupmembership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF)) {
+    if ($groupmembership == 'admin') {
         $membership = $membership | INTERACTION_FORUM_ADMIN | INTERACTION_FORUM_MOD;
     }
-    if(record_exists('interaction_forum_moderator', 'forum', $forumid, 'user', $userid)) {
+    if (record_exists('interaction_forum_moderator', 'forum', $forumid, 'user', $userid)) {
         $membership = $membership | INTERACTION_FORUM_MOD;
     }
     return $membership;

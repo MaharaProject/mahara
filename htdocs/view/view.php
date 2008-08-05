@@ -42,19 +42,19 @@ if (!can_view_view($viewid)) {
     throw new AccessDeniedException();
 }
 
-define('TITLE', $view->get('title') . ' ' . get_string('by', 'view') . ' ' . $view->formatted_owner());
-if ($new) {
-    $heading = hsc($view->get('title'));
+$group = $view->get('group');
+
+$title = $view->get('title');
+define('TITLE', $title);
+
+if (!$group) { 
+    $title .= ' ' . get_string('by', 'view') . ' ' . $view->formatted_owner();
 }
-else {
-    $heading = '<a href="' . get_config('wwwroot') . 'view/view.php?id=' . $view->get('id') .'">' . hsc($view->get('title')) . '</a>';
-}
-$heading .= ' ' . get_string('by', 'view') . ' <a href="' . get_config('wwwroot') .'user/view.php?id=' . $view->get('owner'). '">' . $view->formatted_owner() . '</a>';
 
 
 $tutorfilefeedbackformrow = '';
 $submittedgroup = (int)$view->get('submittedto');
-if ($submittedgroup && (user_can_access_group($submittedgroup) & GROUP_MEMBERSHIP_TUTOR)) {
+if ($submittedgroup && can_assess_submitted_views($USER->get('id'), $submittedgroup)) {
     // The user is a tutor of the group that this view has
     // been submitted to, and is entitled to upload an additional
     // file when submitting feedback.
@@ -272,20 +272,28 @@ $smarty = smarty(
         'stylesheets' => array('style/views.css'),
     )
 );
-$smarty->assign('heading', $heading);
+
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
+$smarty->assign('new', $new);
 $smarty->assign('viewid', $viewid);
 $smarty->assign('viewtitle', $view->get('title'));
+
+$owner = $view->get('owner');
+if ($owner) {
+    $smarty->assign('ownerlink', 'user/view.php?id=' . $owner);
+    if ($USER->get('id') == $owner) {
+        $smarty->assign('can_edit', !$view->get('submittedto'));
+    }
+}
+else if ($group) {
+    $smarty->assign('ownerlink', 'group/view.php?id=' . $group);
+}
+
+$smarty->assign('ownername', $view->formatted_owner());
+$smarty->assign('streditviewbutton', ($new) ? get_string('backtocreatemyview', 'view') : get_string('editmyview', 'view'));
 $smarty->assign('viewdescription', $view->get('description'));
 $smarty->assign('viewcontent', $view->build_columns());
-$smarty->assign('viewowner', $view->get('owner'));
-$smarty->assign('formattedowner', $view->formatted_owner());
-$smarty->assign('streditviewbutton', ($new) ? get_string('backtocreatemyview', 'view') : get_string('editmyview', 'view'));
 
-if ($USER->get('id') == $view->get('owner')) {
-    $smarty->assign('can_edit', !$view->get('submittedto'));
-    $smarty->assign('new', $new);
-}
 $smarty->display('view/view.tpl');
 
 ?>

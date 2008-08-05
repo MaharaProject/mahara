@@ -46,6 +46,8 @@ $string['ownerformatdescription'] = 'How do you want people who look at your Vie
 // my views
 $string['artefacts'] = 'Artefacts';
 $string['myviews'] = 'My Views';
+$string['groupviews'] = 'Group Views';
+$string['groupviewsfor'] = 'Group Views for %s';
 $string['reallyaddaccesstoemptyview'] = 'Your View contains no artefacts.  Do you really want to give these users access to the View?';
 $string['viewdeleted'] = 'View deleted';
 $string['viewsubmitted'] = 'View submitted';
@@ -66,6 +68,8 @@ $string['Views'] = 'Views';
 $string['viewsubmittedtogroup'] = 'This View has been submitted to <a href="' . get_config('wwwroot') . 'group/view.php?id=%s">%s</a>';
 $string['nobodycanseethisview'] = 'Nobody can see this View';
 $string['noviews'] = 'You have no Views.';
+$string['viewsownedbygroup'] = 'Views owned by this group';
+$string['viewssharedtogroup'] = 'Views shared to this group';
 
 // access levels
 $string['public'] = 'Public';
@@ -78,6 +82,7 @@ $string['grouplower'] = 'group';
 $string['tutors'] = 'tutors';
 $string['loggedinlower'] = 'logged in users';
 $string['publiclower'] = 'public';
+$string['everyoneingroup'] = 'Everyone in Group';
 
 // view user
 $string['inviteusertojoingroup'] = 'Invite this user to join a group';
@@ -226,5 +231,6 @@ $string['Search'] = 'Search';
 $string['noartefactstochoosefrom'] = 'Sorry, no artefacts to choose from';
 
 $string['access'] = 'Access';
+$string['noaccesstoview'] = 'You do not have permission to access this view';
 
 ?>

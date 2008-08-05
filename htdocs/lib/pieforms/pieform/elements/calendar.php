@@ -126,7 +126,7 @@ function pieform_element_calendar_get_value(Pieform $form, $element) {/*{{{*/
         return $element['value'];
     }
 
-    if (isset($global[$name])) {
+    if ($form->is_submitted() && isset($global[$name])) {
         if (trim($global[$name]) == '') {
             return null;
         }

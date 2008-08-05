@@ -28,16 +28,8 @@ define('INTERNAL', 1);
 define('MENUITEM', 'groups/groupsiown');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
+require_once('group.php');
 define('TITLE', get_string('creategroup', 'group'));
-
-$joinoptions = array(
-    'invite'     => get_string('membershiptype.invite', 'group'),
-    'request'    => get_string('membershiptype.request', 'group'),
-    'open'       => get_string('membershiptype.open', 'group'),
-);
-if ($USER->can_create_controlled_groups()) {
-    $joinoptions['controlled'] = get_string('membershiptype.controlled', 'group');
-}
 
 $creategroup = pieform(array(
     'name'     => 'creategroup',
@@ -56,11 +48,11 @@ $creategroup = pieform(array(
             'rows'         => 10,
             'cols'         => 55,
         ),
-        'membershiptype' => array(
+        'grouptype' => array(
             'type'         => 'select',
-            'title'        => get_string('membershiptype', 'group'),
-            'options'      => $joinoptions,
-            'defaultvalue' => 'open',
+            'title'        => get_string('grouptype', 'group'),
+            'options'      => get_grouptype_options(),
+            'defaultvalue' => 'standard.open',
             'help'         => true,
         ),
         'submit'   => array(
@@ -70,13 +62,16 @@ $creategroup = pieform(array(
     ),
 ));
 
+$smarty = smarty();
+$smarty->assign('creategroup', $creategroup);
+$smarty->display('group/create.tpl');
+
+
 function creategroup_validate(Pieform $form, $values) {
-    global $USER;
-    global $SESSION;
+    //global $USER;
+    //global $SESSION;
 
-    $cid = get_field('group', 'id', 'name', $values['name']);
-
-    if ($cid) {
+    if (get_field('group', 'id', 'name', $values['name'])) {
         $form->set_error('name', get_string('groupalreadyexists', 'group'));
     }
 }
@@ -93,13 +88,15 @@ function creategroup_submit(Pieform $form, $values) {
 
     $now = db_format_timestamp(time());
 
+    list($grouptype, $jointype) = explode('.', $values['grouptype']);
+
     $id = insert_record(
         'group',
         (object) array(
             'name'           => $values['name'],
             'description'    => $values['description'],
-            'jointype'       => $values['membershiptype'],
-            'owner'          => $USER->get('id'),
+            'grouptype'      => $grouptype,
+            'jointype'       => $jointype,
             'ctime'          => $now,
             'mtime'          => $now,
         ),
@@ -107,29 +104,18 @@ function creategroup_submit(Pieform $form, $values) {
         true
     );
 
-    // If the user is a staff member, they should be added as a tutor automatically
-    if ($values['membershiptype'] == 'controlled' && $USER->can_create_controlled_groups()) {
-        insert_record(
-            'group_member',
-            (object) array(
-                'group'  => $id,
-                'member' => $USER->get('id'),
-                'ctime'  => $now,
-                'tutor'  => 1
-            )
-        );
-    }
-    else {
-        insert_record(
-            'group_member',
-            (object) array(
-                'group'  => $id,
-                'member' => $USER->get('id'),
-                'ctime'  => $now,
-                'tutor'  => 0
-            )
-        );
-    }
+    // Make the user an admin
+    insert_record(
+        'group_member',
+        (object) array(
+            'group'  => $id,
+            'member' => $USER->get('id'),
+            'role'   => 'admin',
+            'ctime'  => $now,
+        )
+    );
+
+    $USER->reset_grouproles();
 
     $SESSION->add_ok_msg(get_string('groupsaved', 'group'));
 
@@ -137,11 +123,5 @@ function creategroup_submit(Pieform $form, $values) {
 
     redirect('/group/mygroups.php');
 }
-
-$smarty = smarty();
-
-$smarty->assign('creategroup', $creategroup);
-
-$smarty->display('group/create.tpl');
 
 ?>

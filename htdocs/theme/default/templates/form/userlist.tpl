@@ -9,7 +9,7 @@
 
         {{if $group}}
         {{$name}}_searchparams['group'] = {{$group}};
-        {{$name}}_searchparams['owner'] = {{$owner}};
+        {{$name}}_searchparams['includeadmins'] = {{$includeadmins}};
         {{/if}}
 
         for (var p in params) {

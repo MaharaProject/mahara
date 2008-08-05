@@ -716,7 +716,7 @@ class Pieform {/*{{{*/
         if (isset($element['value'])) {
             return $element['value'];
         }
-        else if (isset($global[$element['name']]) && $element['type'] != 'submit') {
+        else if ($this->submitted && isset($global[$element['name']]) && $element['type'] != 'submit') {
             return $global[$element['name']];
         }
         else if (isset($element['defaultvalue'])) {

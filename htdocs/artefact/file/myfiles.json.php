@@ -34,11 +34,12 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 $limit = param_integer('limit', null);
 $offset = param_integer('offset', 0);
 $folder = param_integer('folder', null);
-$adminfiles = param_boolean('adminfiles', false);
+$institution = param_alpha('institution', null);
+$group = param_integer('group', null);
 $userid = $USER->get('id');
 
 safe_require('artefact', 'file');
-$filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $adminfiles);
+$filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $institution, $group);
 
 $result = array(
     'count'       => count($filedata),

@@ -21,11 +21,10 @@
 <a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id|escape}">{str tag="newtopic" section="interaction.forum}</a>
 </span>
 
-{str tag="groupownerlist" section="interaction.forum"}
-<a href="{$WWWROOT}user/view.php?id={$groupowner}" class="groupowner">
-<img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupowner}" alt="">
-{$groupowner|display_name|escape}
-</a>
+{str tag="groupadminlist" section="interaction.forum"}
+{foreach name=groupadmins from=$groupadmins item=groupadmin}<a href="{$WWWROOT}user/view.php?id={$groupadmin}" class="groupadmin">
+<img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupadmin}" alt="">
+{$groupadmin|display_name|escape}</a>{if !$smarty.foreach.groupadmins.last}, {/if}{/foreach}
 {if $moderators}
 <br>
 {str tag="moderatorslist" section="interaction.forum"}
@@ -107,7 +106,7 @@
 <ul id="forumkeylist">
     <li><img src="{$closedicon|escape}" alt="{str tag="Closed" section="interaction.forum"}"> {str tag="Closed" section="interaction.forum"}</li>
     <li><img src="{$subscribedicon|escape}" alt="{str tag="Subscribed" section="interaction.forum"}"> {str tag="Subscribed" section="interaction.forum"}</li>
-    <li><span class="groupowner">{str tag="groupowner" section="interaction.forum"}</span></li>
+    <li><span class="groupadmin">{str tag="groupadmins" section="interaction.forum"}</span></li>
     <li><span class="moderator">{str tag="Moderators" section="interaction.forum"}</span></li>
 </ul>
 

@@ -2018,7 +2018,11 @@ function clean_text($text) {
 function display_cleaned_html($html, $filename, $params) {
     $smarty = smarty_core();
     $smarty->assign('params', $params);
-    $smarty->assign('htmlremovedmessage', get_string('htmlremovedmessage', 'artefact.file', $filename, get_config('wwwroot') . 'user/view.php?id=' . $params['owner'], display_name($params['owner'])));
+    if ($params['owner']) {
+        $smarty->assign('htmlremovedmessage', get_string('htmlremovedmessage', 'artefact.file', $filename, get_config('wwwroot') . 'user/view.php?id=' . $params['owner'], display_name($params['owner'])));
+    } else {
+        $smarty->assign('htmlremovedmessage', get_string('htmlremovedmessagenoowner', 'artefact.file', $filename));
+    }
     $smarty->assign('content', clean_text($html));
     $smarty->display('cleanedhtml.tpl');
     exit;
@@ -2072,7 +2076,7 @@ function str_shorten($str, $maxlen=100, $truncate=false, $newlines=true) {
 /**
  * Builds pagination links for HTML display.
  *
- * The pagination is quite configurable, but at the same time gives a consitent 
+ * The pagination is quite configurable, but at the same time gives a consistent 
  * look and feel to all pagination.
  *
  * This function takes one array that contains the options to configure the 

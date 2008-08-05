@@ -3,66 +3,42 @@
 
 {include file="columnleftstart.tpl"}
                 <h2>{$group->name|escape}</h2>
-                
-                {if $group->description} <p>{$group->description}</p> {/if}
-                <ul id="groupsviewlist"><li><label>{str tag='owner' section='group'}:</label> {$group->ownername|escape}</li></ul>
-	        {assign var="jointype" value=$group->jointype}
-	        {assign var="joinstr" value=groupjointype$jointype}
-                {if !$member}<p>{str tag=$joinstr section='group'}</p>{/if}
-                {if $canleave} <p><a href="{$WWWROOT}group/leave.php?id={$group->id}">{str tag='leavegroup' section='group'}</a></p>
-                {elseif $canrequestjoin} <p id="joinrequest"><a href="{$WWWROOT}group/requestjoin.php?id={$group->id}">{str tag='requestjoingroup' section='group'}</a></p>
-                {elseif $canjoin} <p><a href="view.php?id={$group->id}&amp;joincontrol=join"">{str tag='joingroup' section='group'}</a></p>
-                {elseif $canacceptinvite} <p>{str tag='grouphaveinvite' section='group'} <a href="view.php?id={$group->id}&amp;joincontrol=acceptinvite">{str tag='acceptinvitegroup' section='group'}</a> | <a href="view.php?id={$group->id}&amp;joincontrol=declineinvite">{str tag='declineinvitegroup' section='group'}</a></p>{/if}
-                {if $member}
-                    <div class="groupviews">
-                        <h3>{str tag='views'}</h3>
-                        {if ($tutor || $staff || $admin) && $controlled}
-                            <form>
-                                <select name="submitted" onChange="viewlist.submitted=this.options[this.selectedIndex].value;viewlist.doupdate();">
-                                    <option value="0">{str tag='allviews' section='view'}</option>
-                                    <option value="1">{str tag='submittedviews' section='group'}</option>
-                                </select>
-                            </form>
-                        {/if}
-                        <table id="group_viewlist">
-                            <thead>
-                                <tr>
-                                    <th>{str tag='name'}</th>
-                                    <th>{str tag='owner' section='group'}</th>
-									<th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>                   
-                    <div class="groupmembers">
-                    <a name="members"></a>
-                        <h3>{str tag='members' section='group'}</h3>
-                        {if $canupdate && $request}
-                            <form>
-                                <select id="pendingselect" name="pending" onChange="switchPending();">
-                                    <option value="0">{str tag='members' section='group'}</option>
-                                    <option value="1">{str tag='memberrequests' section='group'}</option>
-                                </select>
-                            </form>
-                         {/if}
-                         <table id="memberlist">
-                             <thead>
-                                 <tr>
-                                     <th>{str tag='name'}</th>
-                                     <th id="pendingreasonheader">{str tag='reason'}</th>
-									 <th></th>
-									 <th></th>
-                                 </tr>
-                             </thead>
-                             <tbody>
-                             </tbody>
-                         </table>
-	                 {if $canupdate && $hasmembers}
-                             <input type="button" class="button" value="{str tag='updatemembership' section='group'}" onclick="return updateMembership();" id="groupmembers_update">
-                         {/if}
-                     </div>
+
+{include file="group/tabstart.tpl" current="info"}
+
+                {if $group->description}<p id="group-description">{$group->description}</p> {/if}
+
+                <ul id="group-info">
+                    <li><strong>{str tag=groupadmins section=group}:</strong> {foreach name=admins from=$group->admins item=id}
+                    <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$id|escape}" alt="">
+                    <a href="{$WWWROOT}user/view.php?id={$id|escape}">{$id|display_name|escape}</a>{if !$smarty.foreach.admins.last}, {/if}
+                    {/foreach}</li>
+                    <li><strong>{str tag=Created section=group}:</strong> {$group->ctime}</li>
+                    <li><strong>{str tag=Views section=view}:</strong> {$viewcount}&nbsp;
+                        <strong>{str tag=Files section=artefact.file}:</strong> {$filecount}&nbsp;
+                        <strong>{str tag=Folders section=artefact.file}:</strong> {$foldercount}</li>
+                </ul>
+                <ul id="group-controls">
+                    {include file="group/groupuserstatus.tpl" group=$group returnto='view'}
+                </ul><br style="clear: left;"/>
+
+                <div class="group-info-para">
+                <h3>{str tag=latestforumposts section=interaction.forum}</h3>
+                {if $foruminfo}
+                {foreach from=$foruminfo item=postinfo}
+                <div>
+                  <h4><a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic|escape}#post{$postinfo->id|escape}">{$postinfo->topicname|escape}</a></h4>
+                  <div><a href="{$WWWROOT}user/view.php?id={$postinfo->poster|escape}">{$postinfo->poster|display_name|escape}</a></div>
+                  <p>{$postinfo->body|str_shorten:100:true}</p>
+                </div>
+                {/foreach}
+                {else}
+                <p>{str tag=noforumpostsyet section=interaction.forum}</p>
                 {/if}
+                <p><a href="{$WWWROOT}interaction/forum/?group={$group->id|escape}">{str tag=gotoforums section=interaction.forum} &raquo;</a></p>
+                </div>
+
+{include file="group/tabend.tpl"}
+
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

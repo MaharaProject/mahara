@@ -143,12 +143,23 @@ if ($views) {
 }
 
 // Group stuff
-if (!$userassocgroups = get_associated_groups($userid, false)) {
+$sql = "SELECT
+    g.*, gm.role
+FROM
+    {group} g
+    JOIN {group_member} gm ON (gm.group = g.id)
+WHERE
+    gm.member = ?
+    AND g.deleted = 0
+ORDER BY
+    g.name";
+if (!$userassocgroups = get_records_sql_assoc($sql, array($userid))) {
     $userassocgroups = array();
 }
 
 foreach ($userassocgroups as $group) {
     $group->description = str_shorten($group->description, 100, true);
+    $group->roledesc    = get_string($group->role, 'grouptype.' . $group->grouptype);
 }
 
 if (is_postgres()) {
@@ -200,17 +211,46 @@ else {
 }
 
 $smarty = smarty();
-$allusergroups = get_associated_groups($userid);
+
+$sql = "SELECT g.*, a.type FROM {group} g JOIN (
+SELECT gm.group, 'invite' AS type
+    FROM {group_member_invite} gm WHERE gm.member = ?
+UNION
+SELECT gm.group, 'request' AS type
+    FROM {group_member_request} gm WHERE gm.member = ?
+UNION
+SELECT gm.group, gm.role AS type
+    FROM {group_member} gm
+    WHERE gm.member = ?
+) AS a ON a.group = g.id
+WHERE g.deleted = 0
+ORDER BY g.name";
+if (!$allusergroups = get_records_sql_assoc($sql, array($userid, $userid, $userid))) {
+    $allusergroups = array();
+}
+
 if ($loggedinid != $userid) {
+
+    $invitedlist = array();   // Groups admin'ed by the logged in user that the displayed user has been invited to
+    $requestedlist = array(); // Groups admin'ed by the logged in user that the displayed user has requested membership of
+
     // Get the logged in user's "invite only" groups
-    if ($groups = get_owned_groups($loggedinid, 'invite')) {
+    if ($groups = get_records_sql_array("SELECT g.*
+        FROM {group} g
+        JOIN {group_member} gm ON (gm.group = g.id)
+        WHERE gm.member = ?
+        AND g.jointype = 'invite'
+        AND gm.role = 'admin'
+        AND g.deleted = 0", array($loggedinid))) {
         $invitelist = array();
         foreach ($groups as $group) {
-            if ($allusergroups && array_key_exists($group->id, $allusergroups)) {
+            if (array_key_exists($group->id, $allusergroups)) {
+                $invitedlist[$group->id] = $group->name;
                 continue;
             }
             $invitelist[$group->id] = $group->name;
         }
+        $smarty->assign('invitedlist', join(', ', $invitedlist));
         if (count($invitelist) > 0) {
             $default = array_keys($invitelist);
             $default = $default[0];
@@ -240,15 +280,31 @@ if ($loggedinid != $userid) {
         }
     }
 
-    // Get the "controlled membership" groups in which the logged in user is a tutor
-    if ($groups = get_tutor_groups($loggedinid, 'controlled')) {
+    // Get (a) controlled membership groups,
+    //     (b) request membership groups where the displayed user has requested membership,
+    // where the logged in user either:
+    // 1. is a group admin, or;
+    // 2. has a role in the list of roles who are allowed to assess submitted views for the given grouptype
+    if ($groups = get_records_sql_array("SELECT g.*, gm.ctime
+          FROM {group} g
+          JOIN {group_member} gm ON (gm.group = g.id)
+          JOIN {grouptype_roles} gtr ON (gtr.grouptype = g.grouptype AND gtr.role = gm.role)
+          LEFT JOIN {group_member_request} gmr ON (gmr.member = ? AND gmr.group = g.id)
+          WHERE gm.member = ?
+          AND (g.jointype = 'controlled' OR (g.jointype = 'request' AND gmr.member = ?))
+          AND (gm.role = 'admin' OR gtr.see_submitted_views = 1)
+          AND g.deleted = 0", array($userid,$loggedinid,$userid))) {
         $controlledlist = array();
         foreach ($groups as $group) {
             if (array_key_exists($group->id, $userassocgroups)) {
                 continue;
             }
+            if ($group->jointype == 'request') {
+                $requestedlist[$group->id] = $group->name;
+            }
             $controlledlist[$group->id] = $group->name;
         }
+        $smarty->assign('requestedlist', join(', ', $requestedlist));
         if (count($controlledlist) > 0) {
             $default = array_keys($controlledlist);
             $default = $default[0];
@@ -264,12 +320,16 @@ if ($loggedinid != $userid) {
                         'options' => $controlledlist,
                         'defaultvalue' => $default,
                     ),
+                    'member' => array(
+                        'type'  => 'hidden',
+                        'value' => $userid, 
+                    ),
                     'submit' => array(
                         'type'  => 'submit',
                         'value' => get_string('add'),
                     ),
                 ),
-           ));
+            ));
             $smarty->assign('addform',$addform);
         } 
     }
@@ -365,12 +425,13 @@ function addmember_submit(Pieform $form, $values) {
     $data->group  = $values['group'];
     $data->member = $userid;
     $data->ctime  = db_format_timestamp(time());
-    $data->tutor  = 0;
+    $data->role  = 'member'; // TODO: modify the dropdown to allow the role to be chosen
     $ctitle = get_field('group', 'name', 'id', $data->group);
     $adduser = get_record('usr', 'id', $data->member);
 
     try {
         insert_record('group_member', $data);
+        delete_records('group_member_request', 'member', $userid, 'group', $data->group);
         $lang = get_user_language($userid);
         activity_occurred('maharamessage', 
             array('users'   => array($userid),

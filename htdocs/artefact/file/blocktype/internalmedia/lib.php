@@ -63,7 +63,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         }
         $result = self::get_js_source();
         require_once(get_config('docroot') . 'artefact/lib.php');
-        $artefact = artefact_instance_from_id($configdata['artefactid']);
+        $artefact = $instance->get_artefact_instance($configdata['artefactid']);
         $width  = (!empty($configdata['width'])) ? hsc($configdata['width']) : '300';
         $height = (!empty($configdata['height'])) ? hsc($configdata['height']) : '300';
         $extn = strtolower($artefact->get('oldextension'));

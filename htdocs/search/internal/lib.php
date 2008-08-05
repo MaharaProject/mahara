@@ -99,12 +99,11 @@ class PluginSearchInternal extends PluginSearch {
                 LEFT JOIN {artefact} a ON u.id=a.owner
                 ';
         if (isset($data['group'])) {
-            $sql .= 'INNER JOIN {group_member} gm ON (gm.member = u.id AND gm.group = ' . (int)$data['group'] . ')
-                ';
-            if (isset($data['owner']) && !$data['owner']) {
-                $sql .= 'INNER JOIN {group} g ON (g.id = gm.group AND g.owner != u.id)
-                    ';
+            $groupadminsql = '';
+            if (isset($data['includeadmins']) and !$data['includeadmins']) {
+                $groupadminsql = " AND gm.role != 'admin'";
             }
+            $sql .= 'INNER JOIN {group_member} gm ON (gm.member = u.id AND gm.group = ' . (int)$data['group'] . $groupadminsql . ")\n";
         }
         $querydata = split(' ', preg_replace('/\s\s+/', ' ', strtolower(trim($query_string))));
         $namesql = '(
@@ -142,12 +141,11 @@ class PluginSearchInternal extends PluginSearch {
                     INNER JOIN {usr} u ON u.id = a.owner
                 ';
             if (isset($data['group'])) {
-                $sql .= 'INNER JOIN {group_member} gm ON (gm.member = u.id AND gm.group = ' . (int)$data['group'] . ')
-                    ';
-                if (isset($data['owner']) && !$data['owner']) {
-                    $sql .= 'INNER JOIN {group} g ON (g.id = gm.group AND g.owner != u.id)
-                        ';
-                    }
+                $groupadminsql = '';
+                if (isset($data['includeadmins']) and !$data['includeadmins']) {
+                    $groupadminsql = " AND gm.role != 'admin'";
+                }
+                $sql .= 'INNER JOIN {group_member} gm ON (gm.member = u.id AND gm.group = ' . (int)$data['group'] . $groupadminsql . ")\n";
             }
             $sql .= 'WHERE
                     u.id <> 0 AND u.active = 1 AND u.deleted = 0
@@ -402,6 +400,69 @@ class PluginSearchInternal extends PluginSearch {
     }
 
 
+    public static function group_search_user($group, $queries, $constraints, $offset, $limit, $membershiptype) {
+        $where = 'WHERE gm.group = ?';
+        $values = array($group);
+
+        // Get the correct keyword for case insensitive LIKE
+        $ilike = db_ilike();
+
+        // Only handle OR/AND expressions at the top level.  Eventually we may need subexpressions.
+
+        if (!empty($queries)) {
+            $where .= ' AND ( ';
+            $str = array();
+            foreach ($queries as $f) {
+                $str[] = 'u.' . $f['field'] 
+                    . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
+            }
+            $where .= join(' OR ', $str) . ') ';
+        }
+
+        $group_member = 'group_member';
+        if (!empty($membershiptype) && in_array($membershiptype, array('request', 'invite'))) {
+            $group_member .= '_' . $membershiptype;
+            $gm_role = '';
+            $gm_role_order = '';
+        }
+        else {
+            $gm_role = ', gm.role';
+            $gm_role_order = "gm.role = 'admin' DESC, ";
+        }
+
+        $count = get_field_sql('SELECT COUNT(*) FROM {usr} u INNER JOIN {' . $group_member . '} gm ON (gm.member = u.id) ' . $where, $values);
+
+        if ($count > 0) {
+            $data = get_records_sql_assoc('
+                SELECT
+                    u.id, u.firstname, u.lastname, u.username, u.email, u.staff, ' . db_format_tsfield('gm.ctime', 'jointime') . $gm_role . '
+                FROM
+                    {usr} u
+                INNER JOIN {' . $group_member . '} gm ON (gm.member = u.id) ' . $where . '
+                ORDER BY ' . $gm_role_order . 'gm.ctime, u.firstname, u.lastname, u.id',
+                $values,
+                $offset,
+                $limit);
+
+            if ($data) {
+                foreach ($data as &$item) {
+                    $item = (array)$item;
+                }
+                $data = array_values($data);
+            }
+        }
+        else {
+            $data = array();
+        }
+
+        return array(
+            'count'   => $count,
+            'limit'   => $limit,
+            'offset'  => $offset,
+            'data'    => $data,
+        );
+    }
+
 
     public static function institutional_admin_search_user($query, $institution, $limit) {
         $sql = '
@@ -535,7 +596,7 @@ class PluginSearchInternal extends PluginSearch {
         global $USER;
         $sql = "
             SELECT
-                id, name, description, jointype, owner, ctime, mtime
+                id, name, description, grouptype, jointype, ctime, mtime
             FROM
                 {group}
             WHERE (
@@ -545,20 +606,18 @@ class PluginSearchInternal extends PluginSearch {
         $values = array($query_string, $query_string, 0);
         if ($type == 'member') {
             $sql .=  'AND (
-                owner = ? OR id IN (
+                id IN (
                     SELECT "group" FROM {group_member} WHERE member = ?
                 )
             )';
-            $values[] = $USER->get('id');
             $values[] = $USER->get('id');
         }
         else if ($type == 'notmember') {
             $sql .=  'AND (
-                owner != ? AND id NOT IN (
+                id NOT IN (
                     SELECT "group" FROM {group_member} WHERE member = ?
                 )
             )';
-            $values[] = $USER->get('id');
             $values[] = $USER->get('id');
         }
         $sql .= 'ORDER BY name';
@@ -575,7 +634,7 @@ class PluginSearchInternal extends PluginSearch {
             ) AND deleted = ? ";
         if ($type == 'member') {
             $sql .= 'AND (
-                    owner = ? OR id IN (
+                    id IN (
                         SELECT "group" FROM {group_member} WHERE member = ?
                     )
                 )
@@ -583,7 +642,7 @@ class PluginSearchInternal extends PluginSearch {
         }
         else if ($type == 'notmember') {
             $sql .= 'AND (
-                    owner != ? AND id NOT IN (
+                    id NOT IN (
                         SELECT "group" FROM {group_member} WHERE member = ?
                     )
                 )
@@ -603,7 +662,7 @@ class PluginSearchInternal extends PluginSearch {
         global $USER;
         $sql = "
             SELECT
-                id, name, description, jointype, owner, ctime, mtime
+                id, name, description, grouptype, jointype, ctime, mtime
             FROM
                 {group}
             WHERE (
@@ -613,20 +672,18 @@ class PluginSearchInternal extends PluginSearch {
         $values = array($query_string, $query_string, 0);
         if ($type == 'member') {
             $sql .=  'AND (
-                owner = ? OR id IN (
+                id IN (
                     SELECT gm.group FROM {group_member} gm WHERE gm.member = ?
                 )
             )';
             $values[] = $USER->get('id');
-            $values[] = $USER->get('id');
         }
         else if ($type == 'notmember') {
             $sql .=  "AND (
-                owner != ? AND id NOT IN (
+                id NOT IN (
                     SELECT gm.group FROM {group_member} gm WHERE gm.member = ?
                 )
             )";
-            $values[] = $USER->get('id');
             $values[] = $USER->get('id');
         }
         $sql .= 'ORDER BY name';
@@ -643,7 +700,7 @@ class PluginSearchInternal extends PluginSearch {
             ) AND deleted = ? ";
         if ($type == 'member') {
             $sql .= 'AND (
-                    owner = ? OR id IN (
+                    id IN (
                         SELECT gm.group FROM {group_member} gm WHERE gm.member = ?
                     )
                 )
@@ -651,7 +708,7 @@ class PluginSearchInternal extends PluginSearch {
         }
         else if ($type == 'notmember') {
             $sql .= "AND (
-                    owner != ? AND id NOT IN (
+                    id NOT IN (
                         SELECT gm.group FROM {group_member} gm WHERE gm.member = ?
                     )
                 )

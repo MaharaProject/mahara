@@ -995,8 +995,210 @@ function xmldb_core_upgrade($oldversion=0) {
             execute_sql('ALTER TABLE {usr_friend_request} RENAME COLUMN reason TO message');
         }
         else if (is_mysql()) {
-              execute_sql('ALTER TABLE {usr_friend_request} CHANGE reason message TEXT');
+            execute_sql('ALTER TABLE {usr_friend_request} CHANGE reason message TEXT');
         }
+    }
+
+    if ($oldversion < 2008080400) {
+        // Group type refactor
+        log_debug('GROUP TYPE REFACTOR');
+
+        execute_sql('ALTER TABLE {group} ADD grouptype CHARACTER VARYING(20)');
+        execute_sql('ALTER TABLE {group_member} ADD role CHARACTER VARYING(255)');
+
+        $groups = get_records_array('group');
+        if ($groups) {
+            require_once(get_config('docroot') . 'grouptype/lib.php');
+            require_once(get_config('docroot') . 'grouptype/standard/lib.php');
+            require_once(get_config('docroot') . 'grouptype/course/lib.php');
+            foreach ($groups as $group) {
+                log_debug("Migrating group {$group->name} ({$group->id})");
+
+                // Establish the new group type
+                if ($group->jointype == 'controlled') {
+                    $group->grouptype = 'course';
+                }
+                else {
+                    $group->grouptype = 'standard';
+                }
+
+                execute_sql('UPDATE {group} SET grouptype = ? WHERE id = ?', array($group->grouptype, $group->id));
+                log_debug(' * new group type is ' . $group->grouptype);
+
+                // Convert group membership information to roles
+                foreach (call_static_method('GroupType' . $group->grouptype, 'get_roles') as $role) {
+                    if ($role == 'admin') {
+                        // It would be nice to use ensure_record_exists here, 
+                        // but because ctime is not null we have to provide it 
+                        // as data, which means the ctime would be updated if 
+                        // the record _did_ exist
+                        if (get_record('group_member', 'group', $group->id, 'member', $group->owner)) {
+                            execute_sql("UPDATE {group_member}
+                                SET role = 'admin'
+                                WHERE \"group\" = ?
+                                AND member = ?", array($group->id, $group->owner));
+                        }
+                        else {
+                            // In old versions of Mahara, there did not need to 
+                            // be a record in the group_member table for the 
+                            // owner
+                            $data = (object) array(
+                                'group'  => $group->id,
+                                'member' => $group->owner,
+                                'ctime'  => db_format_timestamp(time()),
+                                'role' => 'admin',
+                            );
+                            insert_record('group_member', $data);
+                        }
+                        log_debug(" * marked user {$group->owner} as having the admin role");
+                    }
+                    else {
+                        // Setting role instances for tutors and members
+                        $tutorflag = ($role == 'tutor') ? 1 : 0;
+                        execute_sql('UPDATE {group_member}
+                            SET role = ?
+                            WHERE "group" = ?
+                            AND member != ?
+                            AND member IN (
+                                SELECT member
+                                    FROM {group_member}
+                                    WHERE "group" = ?
+                                    AND tutor = ?
+                            )', array($role, $group->id, $group->owner, $group->id, $tutorflag));
+                        log_debug(" * marked appropriate users as being {$role}s");
+                    }
+                }
+            }
+        }
+
+
+        execute_sql('ALTER TABLE {group} ALTER grouptype SET NOT NULL');
+        execute_sql('ALTER TABLE {group_member} ALTER role SET NOT NULL');
+        execute_sql('ALTER TABLE {group} DROP owner');
+        execute_sql('ALTER TABLE {group_member} DROP tutor');
+
+
+        // Adminfiles become "institution-owned artefacts"
+        execute_sql("
+        ALTER TABLE {artefact} ADD COLUMN institution CHARACTER VARYING(255);
+        ALTER TABLE {artefact} ALTER COLUMN owner DROP NOT NULL;
+        ALTER TABLE {artefact} ADD CONSTRAINT {arte_ins_fk} FOREIGN KEY (institution) REFERENCES {institution}(name);
+        UPDATE {artefact} SET institution = 'mahara', owner = NULL WHERE id IN (SELECT artefact FROM {artefact_file_files} WHERE adminfiles = 1)");
+        execute_sql("ALTER TABLE {artefact_file_files} DROP COLUMN adminfiles");
+        execute_sql('ALTER TABLE {artefact} ADD COLUMN "group" BIGINT');
+        execute_sql('ALTER TABLE {artefact} ADD CONSTRAINT {arte_gro_fk} FOREIGN KEY ("group") REFERENCES {group}(id)');
+
+
+        // New artefact permissions for use with group-owned artefacts
+        execute_sql('CREATE TABLE {artefact_access_role} (
+            role VARCHAR(255) NOT NULL,
+            artefact INTEGER NOT NULL REFERENCES {artefact}(id),
+            can_view SMALLINT NOT NULL,
+            can_edit SMALLINT NOT NULL,
+            can_republish SMALLINT NOT NULL
+        );');
+        execute_sql('CREATE TABLE {artefact_access_usr} (
+            usr INTEGER NOT NULL REFERENCES {usr}(id),
+            artefact INTEGER NOT NULL REFERENCES {artefact}(id),
+            can_republish SMALLINT
+        );');
+
+
+        // grouptype tables
+        execute_sql("CREATE TABLE {grouptype} (
+            name VARCHAR(20) PRIMARY KEY,
+            submittableto SMALLINT NOT NULL,
+            defaultrole VARCHAR(255) NOT NULL DEFAULT 'member'
+        );");
+        execute_sql("INSERT INTO {grouptype} (name,submittableto) VALUES ('standard',0)");
+        execute_sql("INSERT INTO {grouptype} (name,submittableto) VALUES ('course',1)");
+
+        execute_sql('CREATE TABLE {grouptype_roles} (
+            grouptype VARCHAR(20) NOT NULL REFERENCES {grouptype}(name),
+            edit_views SMALLINT NOT NULL DEFAULT 1,
+            see_submitted_views SMALLINT NOT NULL DEFAULT 0,
+            role VARCHAR(255) NOT NULL
+        );');
+        execute_sql("INSERT INTO {grouptype_roles} (grouptype,edit_views,see_submitted_views,role) VALUES ('standard',1,0,'admin')");
+        execute_sql("INSERT INTO {grouptype_roles} (grouptype,edit_views,see_submitted_views,role) VALUES ('standard',1,0,'member')");
+        execute_sql("INSERT INTO {grouptype_roles} (grouptype,edit_views,see_submitted_views,role) VALUES ('course',1,0,'admin')");
+        execute_sql("INSERT INTO {grouptype_roles} (grouptype,edit_views,see_submitted_views,role) VALUES ('course',1,1,'tutor')");
+        execute_sql("INSERT INTO {grouptype_roles} (grouptype,edit_views,see_submitted_views,role) VALUES ('course',0,0,'member')");
+        $table = new XMLDBTable('group');
+        $key = new XMLDBKey('grouptypefk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('grouptype'), 'grouptype', array('name'));
+        add_key($table, $key);
+
+
+        // Group views
+        execute_sql('ALTER TABLE {view} ADD COLUMN "group" BIGINT');
+        execute_sql('ALTER TABLE {view} ADD CONSTRAINT {view_gro_fk} FOREIGN KEY ("group") REFERENCES {group}(id)');
+        execute_sql('ALTER TABLE {view} ALTER COLUMN owner DROP NOT NULL');
+        if (is_postgres()) {
+            execute_sql('ALTER TABLE {view} ALTER COLUMN ownerformat DROP NOT NULL');
+        }
+        else if (is_mysql()) {
+            execute_sql('ALTER TABLE {view} MODIFY ownerformat TEXT NULL');
+        }
+        execute_sql('ALTER TABLE {view_access_group} ADD COLUMN role VARCHAR(255)');
+        execute_sql("UPDATE {view_access_group} SET role = 'tutor' WHERE tutoronly = 1");
+        execute_sql('ALTER TABLE {view_access_group} DROP COLUMN tutoronly');
+
+
+        // grouptype plugin tables
+        $table = new XMLDBTable('grouptype_installed');
+        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('version', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('release', XMLDB_TYPE_TEXT, 'small', null, XMLDB_NOTNULL);
+        $table->addFieldInfo('active', XMLDB_TYPE_INTEGER,  1, null, XMLDB_NOTNULL, null, null, null, 1);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('name'));
+        create_table($table);
+       
+        $table = new XMLDBTable('grouptype_cron');
+        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('callfunction', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('minute', XMLDB_TYPE_CHAR, 25, null, XMLDB_NOTNULL, null, null, null, '*');
+        $table->addFieldInfo('hour', XMLDB_TYPE_CHAR, 25, null, XMLDB_NOTNULL, null, null, null, '*');
+        $table->addFieldInfo('day', XMLDB_TYPE_CHAR, 25, null, XMLDB_NOTNULL, null, null, null, '*');
+        $table->addFieldInfo('dayofweek', XMLDB_TYPE_CHAR, 25, null, XMLDB_NOTNULL, null, null, null, '*');
+        $table->addFieldInfo('month', XMLDB_TYPE_CHAR, 25, null, XMLDB_NOTNULL, null, null, null, '*');
+        $table->addFieldInfo('nextrun', XMLDB_TYPE_DATETIME, null, null);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('plugin', 'callfunction'));
+        $table->addKeyInfo('pluginfk', XMLDB_KEY_FOREIGN, array('plugin'), 'grouptype_installed', array('name'));
+        create_table($table); 
+
+        $table = new XMLDBTable('grouptype_config');
+        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 100, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('field', XMLDB_TYPE_CHAR, 100, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('value', XMLDB_TYPE_TEXT, 'small', null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('plugin', 'field'));
+        $table->addKeyInfo('pluginfk', XMLDB_KEY_FOREIGN, array('plugin'), 'grouptype_installed', array('name'));
+        create_table($table);
+
+        $table = new XMLDBTable('grouptype_event_subscription');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, 
+            XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
+        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('event', XMLDB_TYPE_CHAR, 50, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('callfunction', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('pluginfk', XMLDB_KEY_FOREIGN, array('plugin'), 'grouptype_installed', array('name'));
+        $table->addKeyInfo('eventfk', XMLDB_KEY_FOREIGN, array('event'), 'event_type', array('name'));
+        $table->addKeyInfo('subscruk', XMLDB_KEY_UNIQUE, array('plugin', 'event', 'callfunction'));
+        create_table($table);
+
+        if ($data = check_upgrades('grouptype.standard')) {
+            upgrade_plugin($data);
+        }
+        if ($data = check_upgrades('grouptype.course')) {
+            upgrade_plugin($data);
+        }
+
+
+        // Group invitations take a role
+        execute_sql('ALTER TABLE {group_member_invite} ADD COLUMN role VARCHAR(255)');
+
+
     }
 
     return $status;

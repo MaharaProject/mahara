@@ -44,6 +44,11 @@ switch ($type) {
         break;
     case 'group':
         $data = search_group($query, $limit, $offset);
+        $roles = get_records_array('grouptype_roles');
+        $data['roles'] = array();
+        foreach ($roles as $r) {
+            $data['roles'][$r->grouptype][] = array('name' => $r->role, 'display' => get_string($r->role, 'grouptype.'.$r->grouptype));
+        }
         break;
 }
 

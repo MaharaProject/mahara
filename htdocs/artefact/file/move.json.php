@@ -37,10 +37,7 @@ $newparentid = param_integer('newparent');   // Folder to move it to
 require_once(get_config('docroot') . 'artefact/lib.php');
 $artefact = artefact_instance_from_id($artefactid);
 
-global $USER;
-$userid = $USER->get('id');
-
-if ($userid != $artefact->get('owner')) {
+if (!$USER->can_edit_artefact($artefact)) {
     json_reply(true, get_string('movefailednotowner', 'artefact.file'));
 }
 if (!in_array($artefact->get('artefacttype'), PluginArtefactFile::get_artefact_types())) {
@@ -55,7 +52,11 @@ if ($newparentid > 0) {
         json_reply(false, get_string('filealreadyindestination', 'artefact.file'));
     }
     $newparent = artefact_instance_from_id($newparentid);
-    if ($userid != $newparent->get('owner')) {
+    if (!$USER->can_edit_artefact($newparent)) {
+        json_reply(true, get_string('movefailednotowner', 'artefact.file'));
+    }
+    $group = $artefact->get('group');
+    if ($group && $group !== $newparent->get('group')) {
         json_reply(true, get_string('movefailednotowner', 'artefact.file'));
     }
     if ($newparent->get('artefacttype') != 'folder') {

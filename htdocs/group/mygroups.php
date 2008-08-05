@@ -39,91 +39,96 @@ $offset = param_integer('offset', 'all');
 $groupsperpage = 20;
 $offset = (int)($offset / $groupsperpage) * $groupsperpage;
 
-// casting is only needed for invite, request and owner and only in postgres
+// Strangely, casting is only needed for invite, request and admin and only in 
+// postgres
 if (is_mysql()) {
-    $invitesql = "'invite'";
+    $invitesql  = "'invite'";
     $requestsql = "'request'";
-    $ownersql = "'owner'";
+    $adminsql   = "'admin'";
+    $empty      = "''";
 }
 else {
-    $invitesql = "CAST('invite' AS TEXT)";
+    $invitesql  = "CAST('invite' AS TEXT)";
     $requestsql = "CAST('request' AS TEXT)";
-    $ownersql = "CAST('owner' AS TEXT)";
+    $adminsql   = "CAST('admin' AS TEXT)";
+    $empty      = "CAST('' AS TEXT)";
 }
-// different filters join on the different kinds of association
-if ($filter == 'owner') {
-    $sql = '
+
+// Different filters join on the different kinds of association
+if ($filter == 'admin') {
+    $sql = "
         INNER JOIN (
-            SELECT g.id, ' . $ownersql . ' AS type
+            SELECT g.id, $adminsql AS membershiptype, $empty AS reason, $empty AS role
             FROM {group} g
-            WHERE g.owner = ?
-        ) t ON t.id = g.id';
+            INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
+        ) t ON t.id = g.id";
     $values = array($USER->get('id'));
 }
 else if ($filter == 'member') {
-    $sql = '
+    $sql = "
         INNER JOIN (
-            SELECT g.id, \'owner\' AS type
+            SELECT g.id, 'admin' AS membershiptype, $empty AS reason, $empty AS role
             FROM {group} g
-            WHERE g.owner = ?
-            UNION SELECT g.id, \'member\' AS type
+            INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
+            UNION
+            SELECT g.id, 'member' AS type, $empty AS reason, $empty AS role
             FROM {group} g
-            INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ?)
-            WHERE g.owner != gm.member
-        ) t ON t.id = g.id';
+            INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role != 'admin')
+        ) t ON t.id = g.id";
     $values = array($USER->get('id'), $USER->get('id'));
 }
 else if ($filter == 'invite') {
-    $sql = '
+    $sql = "
         INNER JOIN (
-            SELECT g.id, ' . $invitesql . ' AS type
+            SELECT g.id, $invitesql AS membershiptype, gmi.reason, gmi.role
             FROM {group} g
             INNER JOIN {group_member_invite} gmi ON (gmi.group = g.id AND gmi.member = ?)
-        ) t ON t.id = g.id';
+        ) t ON t.id = g.id";
     $values = array($USER->get('id'));
 }
 else if ($filter == 'request') {
-    $sql = '
+    $sql = "
         INNER JOIN (
-            SELECT g.id, ' . $requestsql . ' AS type
+            SELECT g.id, $requestsql AS membershiptype, gmr.reason, $empty AS role
             FROM {group} g
             INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
-        ) t ON t.id = g.id';
+        ) t ON t.id = g.id";
     $values = array($USER->get('id'));
 }
 else { // all or some other text
     $filter = 'all';
-    $sql = '
+    $sql = "
         INNER JOIN (
-            SELECT g.id, \'owner\' AS type
+            SELECT g.id, 'admin' AS membershiptype, '' AS reason, '' AS role
             FROM {group} g
-            WHERE g.owner = ?
-            UNION SELECT g.id, \'member\' AS type
+            INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
+            UNION
+            SELECT g.id, 'member' AS membershiptype, '' AS reason, '' AS role
             FROM {group} g
-            INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ?)
-            WHERE g.owner != gm.member
-            UNION SELECT g.id, \'invite\' AS type
+            INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ? AND gm.role != 'admin')
+            UNION
+            SELECT g.id, 'invite' AS membershiptype, gmi.reason, gmi.role
             FROM {group} g
             INNER JOIN {group_member_invite} gmi ON (gmi.group = g.id AND gmi.member = ?)
-            UNION SELECT g.id, \'request\' AS type
+            UNION SELECT g.id, 'request' AS membershiptype, gmr.reason, '' AS role
             FROM {group} g
             INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
-        ) t ON t.id = g.id';
+        ) t ON t.id = g.id";
     $values = array($USER->get('id'), $USER->get('id'), $USER->get('id'), $USER->get('id'));
 }
 
 $form = pieform(array(
-    'name' => 'filter',
+    'name'   => 'filter',
     'method' => 'post',
     'renderer' => 'oneline',
     'elements' => array(
         'options' => array(
             'type' => 'select',
             'options' => array(
-                'all' => get_string('allmygroups', 'group'),
-                'owner' => get_string('groupsiown', 'group'),
-                'member' => get_string('groupsimin', 'group'),
-                'invite' => get_string('groupsiminvitedto', 'group'),
+                'all'     => get_string('allmygroups', 'group'),
+                'admin'   => get_string('groupsiown', 'group'),
+                'member'  => get_string('groupsimin', 'group'),
+                'invite'  => get_string('groupsiminvitedto', 'group'),
                 'request' => get_string('groupsiwanttojoin', 'group')
             ),
             'defaultvalue' => $filter
@@ -143,7 +148,7 @@ $count = count_records_sql('SELECT COUNT(*) FROM {group} g ' . $sql . ' WHERE g.
 // gets the groups filtered by above
 // and the first three members by id
 
-$sql = 'SELECT g.id, g.name, g.description, g.owner, g.jointype, t.type, COUNT(gm.member) AS membercount, COUNT(gmr.member) AS requests,
+$sql = 'SELECT g.id, g.name, g.description, g.jointype, g.grouptype, t.membershiptype, t.reason, t.role, COUNT(gm.member) AS membercount, COUNT(gmr.member) AS requests,
 	(SELECT gm.member FROM {group_member} gm JOIN {usr} u ON (u.id = gm.member AND u.deleted = 0) WHERE gm.group = g.id ORDER BY member LIMIT 1) AS member1,
 	(SELECT gm.member FROM {group_member} gm JOIN {usr} u ON (u.id = gm.member AND u.deleted = 0) WHERE gm.group = g.id ORDER BY member LIMIT 1 OFFSET 1) AS member2,
 	(SELECT gm.member FROM {group_member} gm JOIN {usr} u ON (u.id = gm.member AND u.deleted = 0) WHERE gm.group = g.id ORDER BY member LIMIT 1 OFFSET 2) AS member3
@@ -152,7 +157,7 @@ $sql = 'SELECT g.id, g.name, g.description, g.owner, g.jointype, t.type, COUNT(g
     LEFT JOIN {group_member_request} gmr ON (gmr.group = g.id)' .
     $sql . '
     WHERE g.deleted = ?
-    GROUP BY 1, 2, 3, 4, 5, 6, 9, 10
+    GROUP BY g.id, g.name, g.description, g.jointype, g.grouptype, t.membershiptype, t.reason, t.role
     ORDER BY g.name';
 
 $groups = get_records_sql_array($sql, $values, $offset, $groupsperpage);
@@ -166,7 +171,7 @@ $pagination = build_pagination(array(
     'resultcounttextplural' => get_string('groups', 'group'),
 ));
 
-setup_groups($groups, 'mygroups');
+group_prepare_usergroups_for_display($groups, 'mygroups');
 
 $smarty = smarty();
 $smarty->assign('groups', $groups);

@@ -2,9 +2,9 @@
 <h4>{str tag="deletedpost" section="interaction.forum}</h4>
 {else}
 {if $post->parent}
-{include file="interaction:forum:simplepost.tpl" post=$post groupowner=$groupowner}
+{include file="interaction:forum:simplepost.tpl" post=$post groupadmins=$groupadmins}
 {else}
-{include file="interaction:forum:simplepost.tpl" post=$post groupowner=$groupowner nosubject=true}
+{include file="interaction:forum:simplepost.tpl" post=$post groupadmins=$groupadmins nosubject=true}
 {/if}
 <div class="postbtns">
 {if $moderator || !$closed}<a href="{$WWWROOT}interaction/forum/editpost.php?parent={$post->id|escape}" id="btn-reply">{str tag="Reply" section=interaction.forum}</a>{/if}
@@ -18,7 +18,7 @@
     {foreach from=$post->edit item=edit}
     <li>
         <a href="{$WWWROOT}user/view.php?id={$edit.editor}"
-        {if $edit.editor == $groupowner} class="groupowner"
+        {if in_array($edit.editor, $groupadmins)} class="groupadmin"
         {elseif $edit.moderator} class="moderator"
         {/if}
         >

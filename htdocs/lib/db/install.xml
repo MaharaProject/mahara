@@ -220,48 +220,26 @@
                 <KEY NAME="typefk" TYPE="foreign" FIELDS="type" REFTABLE="activity_type" REFFIELDS="id" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="artefact">
+        <TABLE NAME="grouptype">
             <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="artefacttype" TYPE="char" LENGTH="255" NOTNULL="true"  />
-                <FIELD NAME="container" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"  />
-                <FIELD NAME="parent" TYPE="int" LENGTH="10" NOTNULL="false"  />
-                <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true"  />
-                <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true"  />
-                <FIELD NAME="atime" TYPE="datetime" NOTNULL="true"  />
-                <FIELD NAME="locked" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"  />
-                <FIELD NAME="title" TYPE="text" NOTNULL="true"  />
-                <FIELD NAME="description" TYPE="text" NOTNULL="false"  />
-                <FIELD NAME="note" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="name" TYPE="char" LENGTH="20" NOTNULL="true" />
+                <FIELD NAME="submittableto" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="defaultrole" TYPE="char" LENGTH="255" NOTNULL="true" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="typefk" TYPE="foreign" FIELDS="artefacttype" REFTABLE="artefact_installed_type" REFFIELDS="name"  />
-                <KEY NAME="parentfk" TYPE="foreign" FIELDS="parent" REFTABLE="artefact" REFFIELDS="id" />
-                <KEY NAME="usrfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="artefact_tag">
+        <TABLE NAME="grouptype_roles">
             <FIELDS>
-                <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="tag" TYPE="char" LENGTH="128" NOTNULL="true" />
+                <FIELD NAME="grouptype" TYPE="char" LENGTH="20" NOTNULL="true" />
+                <FIELD NAME="role" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="edit_views" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
+                <FIELD NAME="see_submitted_views" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="artefact,tag" />
-                <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="artefact_parent_cache">
-            <FIELDS>
-                <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="parent" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="dirty" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="artefact,parent" />
-                <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
-                <KEY NAME="parentfk" TYPE="foreign" FIELDS="parent" REFTABLE="artefact" REFFIELDS="id" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="grouptype,role" />
+                <KEY NAME="grouptypefk" TYPE="foreign" FIELDS="grouptype" REFTABLE="grouptype" REFFIELDS="name" />
             </KEYS>
         </TABLE>
         <TABLE NAME="group">
@@ -269,8 +247,8 @@
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="name" TYPE="char" LENGTH="128" NOTNULL="true" />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="grouptype" TYPE="char" LENGTH="20" NOTNULL="true"/>
                 <FIELD NAME="jointype" TYPE="char" LENGTH="20" NOTNULL="true" ENUM="true" ENUMVALUES="'controlled', 'invite', 'request', 'open'"  DEFAULT="open" />
-                <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
@@ -278,15 +256,15 @@
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="nameuk" TYPE="unique" FIELDS="name" />
-                <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="grouptypefk" TYPE="foreign" FIELDS="grouptype" REFTABLE="grouptype" REFFIELDS="name" />
             </KEYS>
         </TABLE>
         <TABLE NAME="group_member">
             <FIELDS>
                 <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="member" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="role" TYPE="char" LENGTH="255" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
-                <FIELD NAME="tutor" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="group,member" />
@@ -313,11 +291,85 @@
                 <FIELD NAME="member" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="reason" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="role" TYPE="char" LENGTH="255" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="group,member" />
                 <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
                 <KEY NAME="memberfk" TYPE="foreign" FIELDS="member" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="artefact">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="artefacttype" TYPE="char" LENGTH="255" NOTNULL="true"  />
+                <FIELD NAME="container" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"  />
+                <FIELD NAME="parent" TYPE="int" LENGTH="10" NOTNULL="false"  />
+                <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="false" />
+                <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true"  />
+                <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true"  />
+                <FIELD NAME="atime" TYPE="datetime" NOTNULL="true"  />
+                <FIELD NAME="locked" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"  />
+                <FIELD NAME="title" TYPE="text" NOTNULL="true"  />
+                <FIELD NAME="description" TYPE="text" NOTNULL="false"  />
+                <FIELD NAME="note" TYPE="text" NOTNULL="false" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="typefk" TYPE="foreign" FIELDS="artefacttype" REFTABLE="artefact_installed_type" REFFIELDS="name"  />
+                <KEY NAME="parentfk" TYPE="foreign" FIELDS="parent" REFTABLE="artefact" REFFIELDS="id" />
+                <KEY NAME="usrfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name" />
+                <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="artefact_tag">
+            <FIELDS>
+                <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="tag" TYPE="char" LENGTH="128" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="artefact,tag" />
+                <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="artefact_parent_cache">
+            <FIELDS>
+                <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="parent" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="dirty" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="artefact,parent" />
+                <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
+                <KEY NAME="parentfk" TYPE="foreign" FIELDS="parent" REFTABLE="artefact" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="artefact_access_usr">
+            <FIELDS>
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="can_republish" TYPE="int" LENGTH="1" NOTNULL="false" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="usr,artefact" />
+                <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="artefact_access_role">
+            <FIELDS>
+                <FIELD NAME="role" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="can_view" TYPE="int" LENGTH="1" NOTNULL="true" />
+                <FIELD NAME="can_edit" TYPE="int" LENGTH="1" NOTNULL="true" />
+                <FIELD NAME="can_republish" TYPE="int" LENGTH="1" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="role,artefact" />
+                <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <TABLE NAME="interaction_instance">
@@ -445,8 +497,9 @@
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="title" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
-                <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="ownerformat" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="ownerformat" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="startdate" TYPE="datetime" />
                 <FIELD NAME="stopdate" TYPE="datetime" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
@@ -461,6 +514,7 @@
                 <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="submittedtofk" TYPE="foreign" FIELDS="submittedto" REFTABLE="group" REFFIELDS="id" />
                 <KEY NAME="layoutfk" TYPE="foreign" FIELDS="layout" REFTABLE="view_layout" REFFIELDS="id"/>
+                <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <TABLE NAME="view_tag">
@@ -553,7 +607,7 @@
             <FIELDS>
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="tutoronly" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="role" TYPE="char" LENGTH="255" NOTNULL="false" />
                 <FIELD NAME="startdate" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
             </FIELDS>
