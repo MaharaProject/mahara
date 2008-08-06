@@ -85,11 +85,10 @@ if ($groups['data']) {
     foreach ($groups['data'] as $group) {
         $groupids[] = $group->id;
     }
-    $groups['data'] =  get_records_sql_array(
-        "SELECT g.id, g.name, g.description, g.jointype, t.membershiptype, COUNT(gm.member) AS membercount, COUNT(gmr.member) AS requests,
-        (SELECT gm.member FROM {group_member} gm JOIN {usr} u ON (u.id = gm.member AND u.deleted = 0) WHERE gm.group = g.id ORDER BY member LIMIT 1) AS member1,
-        (SELECT gm.member FROM {group_member} gm JOIN {usr} u ON (u.id = gm.member AND u.deleted = 0) WHERE gm.group = g.id ORDER BY member LIMIT 1 OFFSET 1) AS member2,
-        (SELECT gm.member FROM {group_member} gm JOIN {usr} u ON (u.id = gm.member AND u.deleted = 0) WHERE gm.group = g.id ORDER BY member LIMIT 1 OFFSET 2) AS member3
+    $groups['data'] =  get_records_sql_assoc(
+        "SELECT g.id, g.name, g.description, g.jointype, t.membershiptype,
+        COUNT(gm.member) AS membercount,
+        COUNT(gmr.member) AS requests
         FROM {group} g
         LEFT JOIN {group_member} gm ON (gm.group = g.id)
         LEFT JOIN {group_member_request} gmr ON (gmr.group = g.id)
@@ -111,10 +110,26 @@ if ($groups['data']) {
             INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
         ) t ON t.id = g.id
         WHERE g.id IN (" . implode($groupids, ',') . ')
-        GROUP BY 1, 2, 3, 4, 5, 8, 9
+        GROUP BY g.id, g.name, g.description, g.jointype, t.membershiptype
         ORDER BY g.name',
         array($USER->get('id'), $USER->get('id'), $USER->get('id'), $USER->get('id'))
     );
+    if ($groups['data']) {
+        // Get 3 members from each group in a separate query -- mysql doesn't like including them as subqueries with limit 1 in the above query
+        $members = get_records_sql_array("
+            SELECT m1.group, m1.member, u.* FROM {group_member} m1
+            INNER JOIN {usr} u ON (m1.member = u.id AND u.deleted = 0)
+            WHERE 3 > (
+                SELECT COUNT(m2.member)
+                FROM {group_member} m2
+                WHERE m1.group = m2.group AND m2.member < m1.member
+            )
+            AND m1.group IN (" . implode($groupids, ',') . ')', array());
+        foreach ($members as $m) {
+            $groups['data'][$m->group]->members[] = (object) array('id' => $m->id, 'name' => display_name($m));
+        }
+    }
+    $groups['data'] = array_values($groups['data']);
 }
 
 group_prepare_usergroups_for_display($groups['data'], 'find');

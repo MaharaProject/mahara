@@ -148,10 +148,7 @@ $count = count_records_sql('SELECT COUNT(*) FROM {group} g ' . $sql . ' WHERE g.
 // gets the groups filtered by above
 // and the first three members by id
 
-$sql = 'SELECT g.id, g.name, g.description, g.jointype, g.grouptype, t.membershiptype, t.reason, t.role, COUNT(gm.member) AS membercount, COUNT(gmr.member) AS requests,
-	(SELECT gm.member FROM {group_member} gm JOIN {usr} u ON (u.id = gm.member AND u.deleted = 0) WHERE gm.group = g.id ORDER BY member LIMIT 1) AS member1,
-	(SELECT gm.member FROM {group_member} gm JOIN {usr} u ON (u.id = gm.member AND u.deleted = 0) WHERE gm.group = g.id ORDER BY member LIMIT 1 OFFSET 1) AS member2,
-	(SELECT gm.member FROM {group_member} gm JOIN {usr} u ON (u.id = gm.member AND u.deleted = 0) WHERE gm.group = g.id ORDER BY member LIMIT 1 OFFSET 2) AS member3
+$sql = 'SELECT g.id, g.name, g.description, g.jointype, g.grouptype, t.membershiptype, t.reason, t.role, COUNT(gm.member) AS membercount, COUNT(gmr.member) AS requests
     FROM {group} g
     LEFT JOIN {group_member} gm ON (gm.group = g.id)
     LEFT JOIN {group_member_request} gmr ON (gmr.group = g.id)' .
@@ -160,7 +157,25 @@ $sql = 'SELECT g.id, g.name, g.description, g.jointype, g.grouptype, t.membershi
     GROUP BY g.id, g.name, g.description, g.jointype, g.grouptype, t.membershiptype, t.reason, t.role
     ORDER BY g.name';
 
-$groups = get_records_sql_array($sql, $values, $offset, $groupsperpage);
+$groups = get_records_sql_assoc($sql, $values, $offset, $groupsperpage);
+
+if ($groups) {
+    // Get 3 members from each group in a separate query -- mysql doesn't like including them as subqueries with limit 1 in the above query
+    $members = get_records_sql_array("
+        SELECT m1.group, m1.member, u.* FROM {group_member} m1
+        INNER JOIN {usr} u ON (m1.member = u.id AND u.deleted = 0)
+        WHERE 3 > (
+            SELECT COUNT(m2.member)
+            FROM {group_member} m2
+            WHERE m1.group = m2.group AND m2.member < m1.member
+        )
+        AND m1.group IN (" . join(',', array_keys($groups)) . ")", array());
+    foreach ($members as $m) {
+        $groups[$m->group]->members[] = (object) array('id' => $m->id, 'name' => display_name($m));
+    }
+}
+
+$groups = array_values($groups);
 
 $pagination = build_pagination(array(
     'url' => get_config('wwwroot') . 'group/mygroups.php?filter=' . $filter,
