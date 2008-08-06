@@ -6,6 +6,7 @@
                 {/foreach}
                 </ul>
                 </div>
+{*
 {if $groupviews && $member}
   <ul id="groupviewoptions">
     <li{if !$shared} class="current"{/if}>
@@ -16,4 +17,5 @@
     </li>
   </ul>
 {/if}
+*}
                 <div id="grouppage-container">
