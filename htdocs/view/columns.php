@@ -29,6 +29,7 @@ define('MENUITEM', 'viewlayout');
 require_once(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('view.php');
+require_once(get_config('libroot') . 'group.php');
 define('TITLE', get_string('changemyviewlayout', 'view'));
 
 $id = param_integer('id');
@@ -36,8 +37,13 @@ $new = param_boolean('new');
 $category = param_alpha('c', '');
 $view = new View($id);
 $numcolumns = $view->get('numcolumns');
+$group = $view->get('group');
+$owner = $view->get('owner');
 
-if ($view->get('owner') != $USER->get('id')) {
+if ($group && !group_user_can_edit_views($group)) {
+    throw new AccessDeniedException(get_string('canteditdontown', 'view'));
+}
+else if ($owner && $owner != $USER->get('id')) {
     throw new AccessDeniedException(get_string('canteditdontown', 'view'));
 }
 

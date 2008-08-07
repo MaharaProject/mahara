@@ -31,6 +31,7 @@ define('MENUITEM', 'viewlayout');
 require_once(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('view.php');
+require_once(get_config('libroot') . 'group.php');
 define('TITLE', get_string('changemyviewlayout', 'view'));
 
 $id = param_integer('id');
@@ -40,10 +41,16 @@ $view = new View($id);
 $numcolumns = $view->get('numcolumns');
 $currentlayout = $view->get('layout');
 $back = !$USER->get_account_preference('addremovecolumns');
+$group = $view->get('group');
+$owner = $view->get('owner');
 
-if ($view->get('owner') != $USER->get('id')) {
+if ($group && !group_user_can_edit_views($group)) {
     throw new AccessDeniedException(get_string('canteditdontown', 'view'));
 }
+else if ($owner && $owner != $USER->get('id')) {
+    throw new AccessDeniedException(get_string('canteditdontown', 'view'));
+}
+
 // if not set, use equal width layout for that number of columns
 if (!$currentlayout) {
     $currentlayout = ($numcolumns == 2 ? 1 : ($numcolumns == 3 ? 4 : 7));
