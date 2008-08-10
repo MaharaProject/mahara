@@ -962,12 +962,11 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
              AND a.parent IS NULL", array($name, 'folder'));
         if (!$folderid) {
             global $USER;
-            if (get_field('usr', 'admin', 'id', $USER->id)) {
+            if ($USER->get('admin')) {
                 $description = get_string_from_language(get_config('lang'), 
                                                         'adminpublicdirdescription', 'admin');
                 $data = (object) array('title' => $name,
                                        'description' => $description,
-                                       'owner' => $USER->id,
                                        'institution' => 'mahara');
                 $f = new ArtefactTypeFolder(0, $data);
                 $f->commit();
