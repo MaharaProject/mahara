@@ -27,7 +27,6 @@
 // TODO fix title of this page
 // TODO check security of this page
 define('INTERNAL', 1);
-define('MENUITEM', 'viewlayout');
 require_once(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('view.php');
@@ -43,7 +42,7 @@ $currentlayout = $view->get('layout');
 $back = !$USER->get_account_preference('addremovecolumns');
 $group = $view->get('group');
 $institution = $view->get('institution');
-$owner = $view->get('owner');
+View::set_nav($group, $institution);
 
 if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();

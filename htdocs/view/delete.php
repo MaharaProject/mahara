@@ -25,7 +25,6 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myportfolio/views');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('view.php');
@@ -38,6 +37,7 @@ if (!$view || !$USER->can_edit_view($view)) {
 }
 $groupid = $view->get('group');
 $institution = $view->get('institution');
+View::set_nav($groupid, $institution);
 
 define('TITLE', get_string('deletespecifiedview', 'view', $view->get('title')));
 

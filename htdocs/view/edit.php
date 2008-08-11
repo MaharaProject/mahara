@@ -25,15 +25,14 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myportfolio/views');
 
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'edit');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-require_once(get_config('docroot') . 'lib/view.php');
-require_once(get_config('docroot') . 'lib/group.php');
+require_once(get_config('libroot') . 'view.php');
+require_once(get_config('libroot') . 'group.php');
 
 $id = param_integer('id', 0); // if 0, we're creating a new view
 $new = param_boolean('new');
@@ -42,11 +41,16 @@ if (empty($id)) {
     $new = true;
     $group = param_integer('group', null);
     $institution = param_alphanum('institution', null);
+
+    if ($group && !group_user_can_edit_views($group)
+        || $institution && !$USER->can_edit_institution($institution)) {
+        throw new AccessDeniedException();
+    }
 }
 else {
     $view = new View($id);
     if (!$USER->can_edit_view($view)) {
-        throw new AccessDeniedException(get_string('canteditdontown', 'view'));
+        throw new AccessDeniedException();
     }
 
     // If the view has been submitted to a group, disallow editing
@@ -59,10 +63,7 @@ else {
     $institution = $view->get('institution');
 }
 
-if ($group && !group_user_can_edit_views($group)
-    || $institution && !$USER->can_edit_institution($institution)) {
-    throw new AccessDeniedException();
-}
+View::set_nav($group, $institution);
 
 if ($new || empty($id)) {
     define('TITLE', get_string('createviewstepone', 'view'));

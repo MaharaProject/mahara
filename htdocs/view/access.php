@@ -25,7 +25,6 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myportfolio/views');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'editaccess');
@@ -39,6 +38,7 @@ require_once(get_config('docroot') . 'lib/group.php');
 $view = new View(param_integer('id'));
 $group = $view->get('group');
 $institution = $view->get('institution');
+View::set_nav($group, $institution);
 $new = param_boolean('new');
 
 if ($new) {

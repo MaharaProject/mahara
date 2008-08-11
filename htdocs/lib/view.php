@@ -1643,6 +1643,18 @@ class View {
         }
     }
 
+    public static function set_nav($group, $institution) {
+        if ($group) {
+            define('MENUITEM', 'groups');
+        }
+        else if ($institution) {
+            define('INSTITUTIONALADMIN', 1);
+            define('MENUITEM', $institution == 'mahara' ? 'configsite/siteviews' : 'manageinstitutions/institutionviews');
+        }
+        else {
+            define('MENUITEM', 'myportfolio/views');
+        }
+    }
 
 }
 

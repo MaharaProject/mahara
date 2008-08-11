@@ -25,7 +25,6 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'viewlayout');
 require_once(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('view.php');
@@ -39,7 +38,7 @@ $view = new View($id);
 $numcolumns = $view->get('numcolumns');
 $group = $view->get('group');
 $institution = $view->get('institution');
-$owner = $view->get('owner');
+View::set_nav($group, $institution);
 
 if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
