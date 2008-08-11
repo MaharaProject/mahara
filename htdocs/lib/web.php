@@ -1492,13 +1492,13 @@ function admin_nav() {
         array(
             'path'   => 'manageinstitutions/institutionviews',
             'url'    => 'view/institutionviews.php',
-            'title'  => get_string('institutionviews', 'admin'),
+            'title'  => get_string('views'),
             'weight' => 50,
         ),
         array(
             'path'   => 'manageinstitutions/institutionfiles',
             'url'    => 'artefact/file/institutionfiles.php',
-            'title'  => get_string('institutionfiles', 'admin'),
+            'title'  => get_string('Files', 'artefact.file'),
             'weight' => 60,
         ),
         array(
