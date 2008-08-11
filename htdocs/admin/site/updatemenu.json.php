@@ -39,7 +39,7 @@ $itemid   = param_variable('itemid');
 $public   = (int) param_boolean('public');
 
 $data = new StdClass;
-if ($type == 'adminfile') {
+if ($type == 'sitefile') {
     // Get file id.
     $data->file = $linkedto;
 }

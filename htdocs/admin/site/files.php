@@ -26,14 +26,14 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'configsite/adminfiles');
+define('MENUITEM', 'configsite/sitefiles');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
-define('SECTION_PAGE', 'adminfiles');
+define('SECTION_PAGE', 'sitefiles');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
-define('TITLE', get_string('adminfiles', 'admin'));
+define('TITLE', get_string('sitefiles', 'admin'));
 
 $copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
 $wwwroot = get_config('wwwroot');
@@ -52,7 +52,7 @@ $smarty = smarty(array('tablerenderer',
                        'artefact/file/js/file.js'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('descriptionstrargs', array('<a href="' . get_config('wwwroot') . 'admin/site/menu.php">', '</a>'));
-$smarty->assign('heading', get_string('adminfiles', 'admin'));
+$smarty->assign('heading', get_string('sitefiles', 'admin'));
 $smarty->display('admin/site/files.tpl');
 
 ?>

@@ -70,8 +70,8 @@ $string['editsitepages']     = 'Edit site pages';
 $string['editsitepagesdescription'] = 'Edit the content of various pages around the site';
 $string['linksandresourcesmenu'] = 'Links and Resources Menu';
 $string['linksandresourcesmenudescription'] = 'Manage the links and files within the Links and Resources Menu';
-$string['adminfiles']          = 'Admin Files';
-$string['adminfilesdescription'] = 'Upload and administer files that can be put in the Links and Resources Menu';
+$string['sitefiles']          = 'Site Files';
+$string['sitefilesdescription'] = 'Upload and administer files that can be put in the Links and Resources Menu';
 $string['networking']          = 'Networking';
 $string['networkingdescription'] = 'Configure networking for Mahara';
 
@@ -150,7 +150,7 @@ $string['termsandconditions']  = 'Terms and Conditions';
 $string['uploadcopyright']     = 'Upload Copyright Statement';
 
 // Links and resources menu editor
-$string['adminfile']           = 'Admin file';
+$string['sitefile']            = 'Site file';
 $string['adminpublicdirname']  = 'public';  // Name of the directory in which to store public admin files
 $string['adminpublicdirdescription'] = 'Files accessible by logged out users';
 $string['badmenuitemtype']     = 'Unknown item type';
@@ -169,7 +169,7 @@ $string['menuitemdeleted']     = 'Item deleted';
 $string['menuitemsaved']       = 'Item saved';
 $string['menuitemsloaded']     = 'Items loaded';
 $string['name']                = 'Name';
-$string['noadminfiles']        = 'No admin files available';
+$string['nositefiles']         = 'No site files available';
 $string['public']              = 'public';
 $string['savingmenuitem']      = 'Saving item';
 $string['type']                = 'Type';
