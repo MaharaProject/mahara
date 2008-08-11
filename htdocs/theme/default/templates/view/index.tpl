@@ -3,12 +3,14 @@
 {include file="columnleftstart.tpl"}
 
 <span class="addicon fr">
-<a href="{$WWWROOT}view/edit.php{if $groupid}?group={$groupid}{/if}">{str tag="createview" section="view"}</a>
+<a href="{$WWWROOT}view/edit.php{if $groupid}?group={$groupid}{else if $institution}?institution={$institution}{/if}">{str tag="createview" section="view"}</a>
 </span>
 <h2>{$heading}</h2>
 
 {if $groupid}
   {include file="group/tabstart.tpl" current="views"}
+{else if $institution}
+  {$institutionselector}
 {/if}
 {if $views}
 <table id="myviewstable" class="groupviews">
@@ -80,7 +82,7 @@
 {else}
 <table id="myviewstable"{if $member} class="groupviews"{/if}>
   <tr>
-    <td>{if $groupid}{str tag="noviewstosee" section="group"}{else}{str tag="noviews" section="view"}{/if}</td>
+    <td>{if $groupid}{str tag="noviewstosee" section="group"}{elseif $institution}{str tag="noviews"}{else}{str tag="noviews" section="view"}{/if}</td>
   </tr>
 </table>
 {/if}

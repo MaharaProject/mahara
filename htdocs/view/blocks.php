@@ -35,6 +35,7 @@ require_once(get_config('docroot') . 'lib/group.php');
 
 $view = new View(param_integer('id'));
 $group = $view->get('group');
+$institution = $view->get('institution');
 
 // If the view has been submitted to a group, disallow editing
 $submittedto = $view->get('submittedto');
@@ -51,7 +52,8 @@ else {
     define('TITLE', get_string('editblocksforview', 'view', $view->get('title')));
 }
 
-if ($group && !group_user_can_edit_views($group)) {
+if ($group && !group_user_can_edit_views($group)
+    || $institution && !$USER->can_edit_institution($institution)) {
     throw new AccessDeniedException();
 }
 
@@ -60,6 +62,9 @@ if ($new && isset($_POST['cancel'])) {
     $view->delete();
     if ($group) {
         redirect(get_config('wwwroot') . '/view/groupviews.php?group='.$group);
+    }
+    if ($group) {
+        redirect(get_config('wwwroot') . '/view/institutionviews.php?institution='.$institution);
     }
     redirect(get_config('wwwroot') . '/view/');
 }
@@ -114,7 +119,8 @@ $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
 $smarty->assign('category', $category);
 $smarty->assign('new', $new);
 $smarty->assign('view', $view->get('id'));
-$smarty->assign('groupid', $view->get('group'));
+$smarty->assign('groupid', $group);
+$smarty->assign('institution', $institution);
 $smarty->assign('can_change_layout', (!$USER->get_account_preference('addremovecolumns') || ($view->get('numcolumns') > 1 && $view->get('numcolumns') < 5)));
 $smarty->display('view/blocks.tpl');
 

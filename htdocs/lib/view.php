@@ -34,6 +34,7 @@ class View {
     private $owner;
     private $ownerformat;
     private $group;
+    private $institution;
     private $ctime;
     private $mtime;
     private $atime;
@@ -1312,7 +1313,7 @@ class View {
 
 
 
-    public static function get_myviews_data($limit=5, $offset=0, $groupid=null) {
+    public static function get_myviews_data($limit=5, $offset=0, $groupid=null, $institution=null) {
 
         global $USER;
         $userid = $USER->get('id');
@@ -1323,6 +1324,13 @@ class View {
                 FROM {view} v
                 WHERE v.group = ' . $groupid . '
                 ORDER BY v.title, v.id', '', $offset, $limit);
+        }
+        else if ($institution) {
+            $count = count_records('view', 'institution', $institution);
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description
+                FROM {view} v
+                WHERE v.institution = ?
+                ORDER BY v.title, v.id', array($institution), $offset, $limit);
         }
         else {
             $count = count_records('view', 'owner', $userid);

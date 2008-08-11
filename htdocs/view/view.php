@@ -47,11 +47,6 @@ $group = $view->get('group');
 $title = $view->get('title');
 define('TITLE', $title);
 
-if (!$group) { 
-    $title .= ' ' . get_string('by', 'view') . ' ' . $view->formatted_owner();
-}
-
-
 $tutorfilefeedbackformrow = '';
 $submittedgroup = (int)$view->get('submittedto');
 if ($submittedgroup && can_assess_submitted_views($USER->get('id'), $submittedgroup)) {

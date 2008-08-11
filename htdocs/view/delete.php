@@ -37,6 +37,7 @@ if (!$view || !$USER->can_edit_view($view)) {
     throw new AccessDeniedException(get_string('cantdeleteview', 'view'));
 }
 $groupid = $view->get('group');
+$institution = $view->get('institution');
 
 define('TITLE', get_string('deletespecifiedview', 'view', $view->get('title')));
 
@@ -60,13 +61,16 @@ $smarty->assign('form', $form);
 $smarty->display('view/delete.tpl');
 
 function deleteview_submit(Pieform $form, $values) {
-	global $SESSION, $viewid, $groupid;
+	global $SESSION, $viewid, $groupid, $insitution;
     $view = new View($viewid, null);
     $view->delete();
     handle_event('deleteview', $viewid);
     $SESSION->add_ok_msg(get_string('viewdeleted', 'view'));
     if ($groupid) {
         redirect('/view/groupviews.php?group='.$groupid);
+    }
+    if ($institution) {
+        redirect('/view/institutionviews.php?institution='.$institution);
     }
     redirect('/view/');
 }

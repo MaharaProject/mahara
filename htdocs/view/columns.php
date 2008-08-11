@@ -38,12 +38,12 @@ $category = param_alpha('c', '');
 $view = new View($id);
 $numcolumns = $view->get('numcolumns');
 $group = $view->get('group');
+$institution = $view->get('institution');
 $owner = $view->get('owner');
 
-if ($group && !group_user_can_edit_views($group)) {
-    throw new AccessDeniedException(get_string('canteditdontown', 'view'));
-}
-else if ($owner && $owner != $USER->get('id')) {
+if ($group && !group_user_can_edit_views($group)
+    || $institution && !$USER->can_edit_institution($institution)
+    || $owner && $owner != $USER->get('id')) {
     throw new AccessDeniedException(get_string('canteditdontown', 'view'));
 }
 

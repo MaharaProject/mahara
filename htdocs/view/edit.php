@@ -41,6 +41,7 @@ $new = param_boolean('new');
 if (empty($id)) {
     $new = true;
     $group = param_integer('group', null);
+    $institution = param_alphanum('institution', null);
 }
 else {
     $view = new View($id);
@@ -55,9 +56,11 @@ else {
     }
 
     $group = $view->get('group');
+    $institution = $view->get('institution');
 }
 
-if ($group && !group_user_can_edit_views($group)) {
+if ($group && !group_user_can_edit_views($group)
+    || $institution && !$USER->can_edit_institution($institution)) {
     throw new AccessDeniedException();
 }
 
@@ -138,6 +141,12 @@ if ($group) {
         'value' => $group
     );
 }
+else if ($institution) {
+    $editview['elements']['institution'] = array(
+        'type'  => 'hidden',
+        'value' => $institution
+    );
+}
 else {
     $editview['elements']['ownerformat'] = array(
         'type'         => 'select',
@@ -152,32 +161,33 @@ else {
 $editview = pieform($editview);
 
 function editview_cancel_submit() {
-	global $view, $new, $group;
-	if (isset($view) && $new) {
-	    $view->delete();
-	}
-        if ($group) {
-            redirect('/view/groupviews.php?group='.$group);
-        }
+    global $view, $new, $group, $institution;
+    if (isset($view) && $new) {
+        $view->delete();
+    }
+    if ($group) {
+        redirect('/view/groupviews.php?group='.$group);
+    }
+    if ($institution) {
+        redirect('/view/institutionviews.php?institution='.$institution);
+    }
     redirect('/view');
 }
 
 function editview_submit(Pieform $form, $values) {
 
-    global $USER, $SESSION;
+    global $USER, $SESSION, $group, $institution;
 
     $editing = !empty($values['id']);
     $view = new View($values['id'], $values);
-    $group = isset($values['group']) ? (int)$values['group'] : null;
-    if ($group && !group_user_access($group)) {
-        $SESSION->add_error_msg(get_string('notamember', 'group'));
-        redirect('/view/groupviews.php?group='.$group);
-    }
 
     if (empty($editing)) {
         $view->set('numcolumns', 3); // default
         if ($group) {
             $view->set('group', $group);
+        }
+        else if ($institution) {
+            $view->set('institution', $institution);
         }
         else {
             $view->set('owner', $USER->get('id'));
@@ -207,6 +217,9 @@ function editview_submit(Pieform $form, $values) {
         $SESSION->add_ok_msg(get_string('viewsavedsuccessfully', 'view'));
         if ($group) {
             $redirecturl = '/view/groupviews.php?group='.$group;
+        }
+        else if ($institution) {
+            $redirecturl = '/view/institutionviews.php?institution=' . $institution;
         }
         else {
             $redirecturl = '/view/index.php';

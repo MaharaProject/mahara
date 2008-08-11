@@ -71,7 +71,9 @@ $string['editsitepagesdescription'] = 'Edit the content of various pages around 
 $string['linksandresourcesmenu'] = 'Links and Resources Menu';
 $string['linksandresourcesmenudescription'] = 'Manage the links and files within the Links and Resources Menu';
 $string['sitefiles']          = 'Site Files';
-$string['sitefilesdescription'] = 'Upload and administer files that can be put in the Links and Resources Menu';
+$string['sitefilesdescription'] = 'Upload and administer files that can be put in the Links and Resources Menu and in Site Views';
+$string['siteviews']          = 'Site Views';
+$string['siteviewsdescription'] = 'Create and administer Views and View Templates for the entire site';
 $string['networking']          = 'Networking';
 $string['networkingdescription'] = 'Configure networking for Mahara';
 
@@ -94,6 +96,10 @@ $string['usersearchinstructions'] = 'You can search for users by clicking on the
 $string['institutionmembersdescription'] = 'Associate users with institutions';
 $string['institutionstaffdescription'] = 'Assign users Staff permissions';
 $string['institutionadminsdescription'] = 'Assign Institution Administrator access rights';
+$string['institutionviews']          = 'Institution Views';
+$string['institutionviewsdescription'] = 'Create and administer Views and View Templates for an Institution';
+$string['institutionfiles']          = 'Institution Files';
+$string['institutionfilesdescription'] = 'Upload and manage files for use in Institution Views';
 
 $string['pluginadmin'] = 'Plugin Administration';
 $string['pluginadmindescription'] = 'Install and configure plugins';

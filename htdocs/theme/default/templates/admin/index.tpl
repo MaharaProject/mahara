@@ -32,8 +32,9 @@
         <li><strong><a href="{$WWWROOT}admin/site/options.php">{str tag=siteoptions section=admin}</a></strong> - {str tag=siteoptionsdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/site/pages.php">{str tag=editsitepages section=admin}</a></strong> - {str tag=editsitepagesdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/site/menu.php">{str tag=linksandresourcesmenu section=admin}</a></strong> - {str tag=linksandresourcesmenudescription section=admin}</li>
-        <li><strong><a href="{$WWWROOT}admin/site/files.php">{str tag=sitefiles section=admin}</a></strong> - {str tag=sitefilesdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/site/networking.php">{str tag=networking section=admin}</a></strong> - {str tag=networkingdescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}admin/site/views.php">{str tag=siteviews section=admin}</a></strong> - {str tag=siteviewsdescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}admin/site/files.php">{str tag=sitefiles section=admin}</a></strong> - {str tag=sitefilesdescription section=admin}</li>
     </ul>
     </li>
     <li><h3>{str tag=configusers section=admin}</h3>
@@ -53,6 +54,8 @@
         <li><strong><a href="{$WWWROOT}admin/users/institutionusers.php">{str tag=institutionmembers section=admin}</a></strong> - {str tag=institutionmembersdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/users/institutionstaff.php">{str tag=institutionstaff section=admin}</a></strong> - {str tag=institutionstaffdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/users/institutionadmins.php">{str tag=institutionadmins section=admin}</a></strong> - {str tag=institutionadminsdescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}view/institutionviews.php">{str tag=institutionviews section=admin}</a></strong> - {str tag=institutionviewsdescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}artefact/file/institutionfiles.php">{str tag=institutionfiles section=admin}</a></strong> - {str tag=institutionfilesdescription section=admin}</li>
     </ul>
     </li>
     <li><h3>{str tag=configextensions section=admin}</h3>

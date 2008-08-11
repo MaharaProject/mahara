@@ -1490,6 +1490,18 @@ function admin_nav() {
             'weight' => 40,
         ),
         array(
+            'path'   => 'manageinstitutions/institutionviews',
+            'url'    => 'view/institutionviews.php',
+            'title'  => get_string('institutionviews', 'admin'),
+            'weight' => 50,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutionfiles',
+            'url'    => 'artefact/file/institutionfiles.php',
+            'title'  => get_string('institutionfiles', 'admin'),
+            'weight' => 60,
+        ),
+        array(
             'path'   => 'configextensions',
             'url'    => 'admin/extensions/plugins.php',
             'title'  => get_string('configextensions', 'admin'),
