@@ -48,8 +48,7 @@ else {
     define('TITLE', get_string('editaccessforview', 'view', $view->get('title')));
 }
 
-if ($group && !group_user_can_edit_views($group)
-    || $institution && !$USER->can_edit_institution($institution)) {
+if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
 }
 

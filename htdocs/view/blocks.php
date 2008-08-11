@@ -42,6 +42,9 @@ $submittedto = $view->get('submittedto');
 if ($submittedto) {
     throw new AccessDeniedException(get_string('canteditsubmitted', 'view', get_field('group', 'name', 'id', $submittedto)));
 }
+if (!$USER->can_edit_view($view)) {
+    throw new AccessDeniedException();
+}
 
 $new = param_boolean('new');
 
@@ -50,11 +53,6 @@ if ($new) {
 }
 else {
     define('TITLE', get_string('editblocksforview', 'view', $view->get('title')));
-}
-
-if ($group && !group_user_can_edit_views($group)
-    || $institution && !$USER->can_edit_institution($institution)) {
-    throw new AccessDeniedException();
 }
 
 // check if cancel was selected
