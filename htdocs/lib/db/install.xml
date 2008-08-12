@@ -509,6 +509,7 @@
                 <FIELD NAME="submittedto" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="numcolumns" TYPE="int" LENGTH="2" NOTNULL="true" />
                 <FIELD NAME="layout" TYPE="int" LENGTH="10"/>
+                <FIELD NAME="template" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
