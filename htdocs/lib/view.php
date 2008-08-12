@@ -1447,11 +1447,13 @@ class View {
      * - v is visible to all roles of group g at t, and u is a member of g (view_access_group)
      * - v is visible to users with role r of group g at t, and u is a member of g with role r (view_access_group)
      *
-     * @param integer $ownerid   Only return views owned by this user.
-     * @param integer $groupid   Only return views owned by this group.
+     * @param integer $ownerid     Only return views owned by this user.
+     * @param integer $groupid     Only return views owned by this group.
+     * @param string  $institution Only return views owned by this institution.
+     * @param bool    $template    Only return views marked as templates.
      *
      */
-    public static function view_search($ownerid=null, $groupid=null, $limit=10, $offset=0) {
+    public static function view_search($ownerid=null, $groupid=null, $institution=null, $template=null, $limit=10, $offset=0) {
         global $USER;
         $admin = $USER->get('admin');
         $loggedin = $USER->is_logged_in();
@@ -1464,10 +1466,20 @@ class View {
             $where .= '
                 AND v.owner = ?';
             $ph[] = $ownerid;
-        } else if ($groupid) {
+        }
+        else if ($groupid) {
             $where .= '
                 AND v.group = ?';
             $ph[] = $groupid;
+        }
+        else if ($institution) {
+            $where .= '
+                AND v.institution = ?';
+            $ph[] = $institution;
+        }
+        if ($template == true) {
+            $where .= '
+                AND v.template = 1';
         }
 
         if ($admin) {
@@ -1542,15 +1554,20 @@ class View {
         $viewdata = get_records_sql_array('
             SELECT * FROM (
                 SELECT
-                    v.id, v.title, v.description, v.owner, v.ownerformat, v.group
+                    v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution, v.template
                 ' . $from . $where . '
-                GROUP BY v.id, v.title, v.description, v.owner, v.ownerformat, v.group
+                GROUP BY v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution, v.template
             ) a
             ORDER BY a.title, a.id ',
             $ph, $offset, $limit
         );
 
-        View::get_extra_view_info($viewdata);
+        if ($viewdata) {
+            View::get_extra_view_info($viewdata);
+        }
+        else {
+            $viewdata = array();
+        }
 
         return (object) array(
             'data'  => array_values($viewdata),

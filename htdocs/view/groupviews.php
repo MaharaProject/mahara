@@ -62,7 +62,7 @@ $smarty->assign('heading', $group->name);
         $data = View::get_myviews_data($limit, $offset, $groupid);
     }
     else {
-        $data = View::view_search(null, $groupid, $limit, $offset);
+        $data = View::view_search(null, $groupid, null, null, $limit, $offset);
     }
 //}
 
