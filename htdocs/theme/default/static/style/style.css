@@ -1378,6 +1378,11 @@ fieldset.collapsed .mceEditor td {
 #myviewstable h3 a {
 	color: #1e6297 !important;
 }
+#myviewstable .template {
+  color: #000;
+  font-weight: normal;
+  font-size: 13px;
+}
 #myviewstable .viewitem {
 	margin-bottom: 5px;
 	font-size: 11px;

@@ -1321,21 +1321,21 @@ class View {
 
         if ($groupid) {
             $count = count_records('view', 'group', $groupid);
-            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template
                 FROM {view} v
                 WHERE v.group = ' . $groupid . '
                 ORDER BY v.title, v.id', '', $offset, $limit);
         }
         else if ($institution) {
             $count = count_records('view', 'institution', $institution);
-            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template
                 FROM {view} v
                 WHERE v.institution = ?
                 ORDER BY v.title, v.id', array($institution), $offset, $limit);
         }
         else {
             $count = count_records('view', 'owner', $userid);
-            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, g.id AS groupid, g.name
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, g.id AS groupid, g.name
                 FROM {view} v
                 LEFT OUTER JOIN {group} g ON (v.submittedto = g.id AND g.deleted = 0)
                 WHERE v.owner = ' . $userid . '
@@ -1388,6 +1388,7 @@ class View {
                 else if ($viewdata[$i]->stopdate) {
                     $data[$i]['access'] = get_string('accessuntildate', 'view', format_date(strtotime($viewdata[$i]->stopdate), 'strftimedate'));
                 }
+                $data[$i]['template'] = $viewdata[$i]->template;
             }
             // Go through all the artefact records and put them in with the
             // views they belong to.
