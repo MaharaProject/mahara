@@ -1630,18 +1630,20 @@ class View {
                 WHERE va.view IN (' . join(',', array_keys($viewdata)) . ')
                 GROUP BY va.view, va.artefact, a.title, a.artefacttype, t.plugin
                 ORDER BY a.title, va.artefact', '');
-            foreach ($artefacts as $artefactrec) {
-                safe_require('artefact', $artefactrec->plugin);
-                $classname = generate_artefact_class_name($artefactrec->artefacttype);
-                $artefactobj = new $classname(0, array('title' => $artefactrec->title));
-                $artefactobj->set('dirty', false);
-                if (!$artefactobj->in_view_list()) {
-                    continue;
-                }
-                $artname = $artefactobj->display_title(30);
-                if (strlen($artname)) {
-                    $viewdata[$artefactrec->view]->artefacts[] = array('id'    => $artefactrec->artefact,
-                                                                       'title' => $artname);
+            if ($artefacts) {
+                foreach ($artefacts as $artefactrec) {
+                    safe_require('artefact', $artefactrec->plugin);
+                    $classname = generate_artefact_class_name($artefactrec->artefacttype);
+                    $artefactobj = new $classname(0, array('title' => $artefactrec->title));
+                    $artefactobj->set('dirty', false);
+                    if (!$artefactobj->in_view_list()) {
+                        continue;
+                    }
+                    $artname = $artefactobj->display_title(30);
+                    if (strlen($artname)) {
+                        $viewdata[$artefactrec->view]->artefacts[] = array('id'    => $artefactrec->artefact,
+                                                                           'title' => $artname);
+                    }
                 }
             }
             if (!empty($owners)) {
