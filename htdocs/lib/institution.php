@@ -467,14 +467,13 @@ function get_institution_selector($includedefault = true) {
 
 /* The institution selector does exactly the same thing in both
    institutionadmins.php and institutionstaff.php (in /admin/users/).
-   This function creates the form for the page, setting
-   $institutionselector and $INLINEJAVASCRIPT in the smarty object. */
-function add_institution_selector_to_page(&$smarty, $institution, $page) {
+   This function creates the form for the page. */
+function institution_selector_for_page($institution, $page) {
     require_once('pieforms/pieform.php');
     $institutionelement = get_institution_selector(false);
 
     if (empty($institutionelement)) {
-        return false;
+        return array('institution' => false, 'institutionselector' => null, 'institutionselectorjs' => '');
     }
 
     global $USER;
@@ -507,9 +506,10 @@ addLoadEvent(function() {
 });
 EOF;
     
-    $smarty->assign('institutionselector', $institutionselector);
-    $smarty->assign('INLINEJAVASCRIPT', $js);
-
-    return $institution;
+    return array(
+        'institution'           => $institution,
+        'institutionselector'   => $institutionselector,
+        'institutionselectorjs' => $js
+    );
 }
 ?>

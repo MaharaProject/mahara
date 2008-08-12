@@ -45,10 +45,12 @@ if ($institution == 'mahara') {
     redirect('/admin/site/views.php');
 }
 
-$smarty = smarty();
-$institution = add_institution_selector_to_page($smarty, $institution,
-                                                get_config('wwwroot') . 'view/institutionviews.php');
+$s = institution_selector_for_page($institution,
+                                   get_config('wwwroot') . 'view/institutionviews.php');
 
+$institution = $s['institution'];
+
+$smarty = smarty();
 if ($institution === false) {
     $smarty->display('admin/users/noinstitutions.tpl');
     exit;
@@ -70,6 +72,8 @@ $pagination = build_pagination(array(
     'resultcounttextplural' => get_string('views', 'view')
 ));
 
+$smarty->assign('institutionselector', $s['institutionselector']);
+$smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs']);
 $smarty->assign('views', $data->data);
 $smarty->assign('institution', $institution);
 $smarty->assign('pagination', $pagination['html']);
