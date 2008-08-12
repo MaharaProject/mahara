@@ -172,6 +172,8 @@ function uploadcsv_validate(Pieform $form, $values) {
         return;
     }
 
+    $usernames = array();
+    $emails = array();
     $conf = File_CSV::discoverFormat($values['file']['tmp_name']);
     $i = 0;
     while ($line = File_CSV::readQuoted($values['file']['tmp_name'], $conf)) {
@@ -233,11 +235,11 @@ function uploadcsv_validate(Pieform $form, $values) {
                 $form->set_error('file', get_string('uploadcsverrorinvalidusername', 'admin', $i));
                 return;
             }
-            if (record_exists_select('usr', 'LOWER(username) = ?', strtolower($username))) {
+            if (record_exists_select('usr', 'LOWER(username) = ?', strtolower($username)) || isset($usernames[strtolower($username)])) {
                 $form->set_error('file', get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
                 return;
             }
-            if (record_exists('usr', 'email', $email)) {
+            if (record_exists('usr', 'email', $email) || isset($emails[$email])) {
                 $form->set_error('file', get_string('uploadcsverroremailaddresstaken', 'admin', $i, $email));
             }
 
@@ -248,6 +250,9 @@ function uploadcsv_validate(Pieform $form, $values) {
                 $form->set_error('file', get_string('uploadcsverrorinvalidpassword', 'admin', $i));
                 return;
             }
+
+            $usernames[strtolower($username)] = 1;
+            $emails[$email] = 1;
 
             // All OK!
             $CSVDATA[] = $line;
