@@ -138,6 +138,7 @@ $string['deletespecifiedview'] = 'Delete View "%s"';
 $string['deleteviewconfirm'] = 'Do you really want to delete this View? It cannot be undone.';
 
 $string['editaccesspagedescription2'] = '<p>By default, only you can see your View. Here you can choose who else you would like to be able to see the information in your View. Click Add to grant access to Public, Logged in Users or Friends. Use the search box to add individual Users or Groups. All those added will appear in the right hand pane, under Added.</p>
+<p>If you designate your View as a Template, others who have access to your View will be able to create their own copy of it.  They will also be able to copy some of the blocks in your View and any files or folders that you have placed within it.</p>
 <p>Once you are done, scroll down and click Save to continue.</p>';
 
 $string['overridingstartstopdate'] = 'Overriding Start/Stop Dates';
