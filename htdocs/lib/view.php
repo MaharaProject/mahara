@@ -55,6 +55,7 @@ class View {
     private $dirtycolumns; // for when we change stuff
     private $tags;
     private $editingroles;
+    private $template;
 
     public function __construct($id=0, $data=null) {
         if (!empty($id)) {

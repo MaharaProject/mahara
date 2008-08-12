@@ -85,6 +85,12 @@ $form = array(
             'type' => 'hidden',
             'value' => $new,
         ),
+        'template' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('Template', 'view'),
+            'description'  => get_string('templatedescription', 'view'),
+            'defaultvalue' => $view->get('template'),
+        ),
         'accesslist' => array(
             'type'         => 'viewacl',
             'defaultvalue' => isset($view) ? $view->get_access() : null
@@ -161,6 +167,7 @@ function editaccess_submit(Pieform $form, $values) {
 
     $view->set('startdate', $values['startdate']);
     $view->set('stopdate', $values['stopdate']);
+    $view->set('template', (int) $values['template']);
     $view->commit();
 
     if ($values['new']) {

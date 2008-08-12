@@ -233,4 +233,8 @@ $string['noartefactstochoosefrom'] = 'Sorry, no artefacts to choose from';
 $string['access'] = 'Access';
 $string['noaccesstoview'] = 'You do not have permission to access this view';
 
+// Templates
+$string['Template'] = 'Template';
+$string['templatedescription'] = 'If you would like the people who can see your view to be able to make their own copies of it, check the Template box.';
+
 ?>
