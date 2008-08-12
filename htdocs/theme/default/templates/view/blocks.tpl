@@ -63,10 +63,10 @@
             <input class="submit" type="submit" value="{str tag='next'}">
         </form>
 {else}
-        <form action="{$WWWROOT}view/{if $groupid}groupviews.php{else if $institution}institutionviews.php{/if}" method="GET">
+        <form action="{$WWWROOT}view/{if $groupid}groupviews.php{elseif $institution}institutionviews.php{/if}" method="GET">
     {if $groupid}
             <input type="hidden" name="group" value="{$groupid}">
-    {else if $institution}
+    {elseif $institution}
             <input type="hidden" name="institution" value="{$institution}">
     {/if}
             <input class="submit" type="submit" value="{str tag='done'}">

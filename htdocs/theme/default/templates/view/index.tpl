@@ -3,13 +3,13 @@
 {include file="columnleftstart.tpl"}
 
 <span class="addicon fr">
-<a href="{$WWWROOT}view/edit.php{if $groupid}?group={$groupid}{else if $institution}?institution={$institution}{/if}">{str tag="createview" section="view"}</a>
+<a href="{$WWWROOT}view/edit.php{if $groupid}?group={$groupid}{elseif $institution}?institution={$institution}{/if}">{str tag="createview" section="view"}</a>
 </span>
 <h2>{$heading}</h2>
 
 {if $groupid}
   {include file="group/tabstart.tpl" current="views"}
-{else if $institution}
+{elseif $institution}
   {$institutionselector}
 {/if}
 {if $views}
