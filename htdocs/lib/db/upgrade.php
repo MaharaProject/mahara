@@ -1222,6 +1222,21 @@ function xmldb_core_upgrade($oldversion=0) {
 
     }
 
+    if ($oldversion < 2008081300) {
+        $table = new XMLDBTable('incoming_queue');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
+        $table->addFieldInfo('host', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('queue', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, '1');
+        $table->addFieldInfo('ready', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, '0');
+        $table->addFieldInfo('expirytime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+        $table->addKeyInfo('hostfk', XMLDB_KEY_FOREIGN, array('host'), 'host', array('wwwroot'));
+
+        create_table($table);
+    }
+
     return $status;
 
 }
