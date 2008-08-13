@@ -46,6 +46,20 @@ if (empty($id)) {
         || $institution && !$USER->can_edit_institution($institution)) {
         throw new AccessDeniedException();
     }
+
+    // Get templates visible to the user and non-templates owned by
+    // the owner of the view being created
+    $templates = View::view_search(null, null, null, true, null, 0, false);
+    $ownerid = ($group || $institution) ? null : $USER->get('id');
+    $nontemplates = View::view_search($ownerid, $group, $institution, false, null, 0, false);
+
+    $templateoptions = array(0 => 'None');
+    foreach ($templates->data as $t) {
+        $templateoptions[$t->id] = $t->title;
+    }
+    foreach ($nontemplates->data as $t) {
+        $templateoptions[$t->id] = $t->title;
+    }
 }
 else {
     $view = new View($id);
@@ -128,11 +142,6 @@ $editview = array(
             'defaultvalue' => isset($view) ? $view->get('tags') : null,
             'help'         => true,
         ),
-        'submit'   => array(
-            'type'  => 'submitcancel',
-            'value' => array(empty($new) ? get_string('save') : get_string('next'), get_string('cancel')),
-            'confirm' => $new && isset($view) ? array(null, get_string('confirmcancelcreatingview', 'view')) : null,
-        )
     ),
 );
 
@@ -158,6 +167,21 @@ else {
         'rules'        => array('required' => true),
     );
 }
+
+if ($new && count($templateoptions)) {
+    $editview['elements']['template'] = array(
+        'type'         => 'select',
+        'title'        => get_string('Template','view'),
+        'description'  => get_string('createfromtemplatedescription','view'),
+        'options'      => $templateoptions,
+    );
+}
+
+$editview['elements']['submit'] = array(
+    'type'  => 'submitcancel',
+    'value' => array(empty($new) ? get_string('save') : get_string('next'), get_string('cancel')),
+    'confirm' => $new && isset($view) ? array(null, get_string('confirmcancelcreatingview', 'view')) : null,
+);
 
 $editview = pieform($editview);
 

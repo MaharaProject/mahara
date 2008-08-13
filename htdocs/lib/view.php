@@ -1451,9 +1451,12 @@ class View {
      * @param integer $groupid     Only return views owned by this group.
      * @param string  $institution Only return views owned by this institution.
      * @param bool    $template    Only return views marked as templates.
+     * @param integer $limit
+     * @param integer $offset
+     * @param bool    $extra
      *
      */
-    public static function view_search($ownerid=null, $groupid=null, $institution=null, $template=null, $limit=10, $offset=0) {
+    public static function view_search($ownerid=null, $groupid=null, $institution=null, $template=null, $limit=null, $offset=0, $extra=true) {
         global $USER;
         $admin = $USER->get('admin');
         $loggedin = $USER->is_logged_in();
@@ -1477,9 +1480,13 @@ class View {
                 AND v.institution = ?';
             $ph[] = $institution;
         }
-        if ($template == true) {
+        if ($template) {
             $where .= '
                 AND v.template = 1';
+        }
+        else if ($template === false) {
+            $where .= '
+                AND v.template = 0';
         }
 
         if ($admin) {
@@ -1563,7 +1570,9 @@ class View {
         );
 
         if ($viewdata) {
-            View::get_extra_view_info($viewdata);
+            if ($extra) {
+                View::get_extra_view_info($viewdata);
+            }
         }
         else {
             $viewdata = array();
