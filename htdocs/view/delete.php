@@ -61,7 +61,7 @@ $smarty->assign('form', $form);
 $smarty->display('view/delete.tpl');
 
 function deleteview_submit(Pieform $form, $values) {
-	global $SESSION, $viewid, $groupid, $insitution;
+    global $SESSION, $viewid, $groupid, $institution;
     $view = new View($viewid, null);
     $view->delete();
     handle_event('deleteview', $viewid);

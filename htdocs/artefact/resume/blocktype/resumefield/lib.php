@@ -123,6 +123,15 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
     public static function artefactchooser_get_sort_order() {
         return '';
     }
+
+    public static function copy_allowed($newowner=null) {
+        return $newowner['type'] == 'user';
+    }
+
+    public static function copy_artefacts_allowed($newowner=null) {
+        return false;
+    }
+
 }
 
 ?>

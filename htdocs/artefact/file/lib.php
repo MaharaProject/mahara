@@ -889,6 +889,25 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     public static function get_quota_usage($artefact) {
         return get_field('artefact_file_files', 'size', 'artefact', $artefact);
     }
+
+    public function copy_extra($new) {
+        $oldid = $this->get('id');
+        $dataroot = get_config('dataroot');
+        $oldfile = $dataroot . self::get_file_directory($oldid) . '/' . $oldid;
+        $newid = $new->get('id');
+        $newdir = $dataroot . self::get_file_directory($newid);
+        check_dir_exists($newdir);
+        if (!copy($oldfile, $newdir . '/' . $newid)) {
+            throw new SystemException('failed copying file artefact');
+        }
+        global $USER;
+        if ($new->get('owner') && $new->get('owner') == $USER->get('id')) {
+            $USER->quota_add($new->get('size'));
+            $USER->commit();
+        }
+        return;
+    }
+
 }
 
 class ArtefactTypeFolder extends ArtefactTypeFileBase {

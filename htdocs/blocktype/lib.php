@@ -155,6 +155,15 @@ abstract class PluginBlocktype extends Plugin {
         }
         return $blocktypes;
     }
+
+    public static function copy_allowed($newowner=null) {
+        return true;
+    }
+
+    public static function copy_artefacts_allowed($newowner=null) {
+        return true;
+    }
+
 }
 
 abstract class SystemBlockType extends PluginBlockType {
@@ -660,6 +669,15 @@ class BlockInstance {
         }
         return $a;
     }
+
+    public function copy_allowed($newowner=null) {
+        return call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'copy_allowed', $newowner);
+    }
+
+    public function copy_artefacts_allowed($newowner=null) {
+        return call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'copy_artefacts_allowed', $newowner);
+    }
+
 }
 
 

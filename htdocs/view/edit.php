@@ -53,7 +53,7 @@ if (empty($id)) {
     $ownerid = ($group || $institution) ? null : $USER->get('id');
     $nontemplates = View::view_search($ownerid, $group, $institution, false, null, 0, false);
 
-    $templateoptions = array(0 => 'None');
+    $templateoptions = array(0 => get_string('none'));
     foreach ($templates->data as $t) {
         $templateoptions[$t->id] = $t->title;
     }
@@ -169,7 +169,7 @@ else {
 }
 
 if ($new && count($templateoptions)) {
-    $editview['elements']['template'] = array(
+    $editview['elements']['usetemplate'] = array(
         'type'         => 'select',
         'title'        => get_string('Template','view'),
         'description'  => get_string('createfromtemplatedescription','view'),
@@ -208,6 +208,7 @@ function editview_submit(Pieform $form, $values) {
 
     if (empty($editing)) {
         $view->set('numcolumns', 3); // default
+        $view->set('template', 0);
         if ($group) {
             $view->set('group', $group);
         }
@@ -223,15 +224,25 @@ function editview_submit(Pieform $form, $values) {
     }
 
     $view->commit();
-    if (empty($editing) && $group) {
-        // By default, group views should be visible to the group
-        $view->set_access(array(array(
-            'type'      => 'group',
-            'id'        => $group,
-            'startdate' => null,
-            'stopdate'  => null,
-            'role'      => null
-        )));
+
+    if (!$editing) {
+        if ($values['usetemplate']) {
+            $template = new View($values['usetemplate']);
+            if (!$template->get('deleted') && ($template->get('template') && can_view_view($values['usetemplate'])) || $USER->can_edit_view($template)) {
+                $view->set('dirty', true);
+                $view->copy_contents($template);
+            }
+        }
+        if ($group) {
+            // By default, group views should be visible to the group
+            $view->set_access(array(array(
+                'type'      => 'group',
+                'id'        => $group,
+                'startdate' => null,
+                'stopdate'  => null,
+                'role'      => null
+            )));
+        }
         $view->commit();
     }
 

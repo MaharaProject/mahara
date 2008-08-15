@@ -147,7 +147,7 @@ abstract class ArtefactType {
                 if (in_array($field, array('atime', 'ctime', 'mtime'))) {
                     $value = strtotime($value);
                 } 
-                if ($field == 'tags' && !is_array($field)) {
+                if ($field == 'tags' && !is_array($value)) {
                     $value = preg_split("/\s*,\s*/", trim($value));
                 }
                 $this->{$field} = $value;
@@ -636,6 +636,50 @@ abstract class ArtefactType {
         }
     }
 
+    public function copy_data() {
+        $ignore = array(
+            'dirty' => 1,
+            'parentdirty' => 1,
+            'deleted' => 1,
+            'id' => 1,
+            'ctime' => 1,
+            'mtime' => 1,
+            'atime' => 1,
+            'locked' => 1,
+            'rolepermissions' => 1,
+            'viewsinstances' => 1,
+            'viewsmetadata' => 1,
+            'childreninstances' => 1,
+            'childrenmetadata' => 1,
+            'parentinstance' => 1,
+            'parentmetadata' => 1
+        );
+        $data = array();
+        foreach (get_object_vars($this) as $k => $v) {
+            if (!isset($ignore[$k])) {
+                $data[$k] = $v;
+            }
+        }
+        return $data;
+    }
+
+    public function copy_extra($new) {
+        return;
+    }
+
+    public function copy_for_new_owner($user, $group, $institution) {
+        $data = $this->copy_data();
+        $data['owner'] = $user;
+        $data['group'] = $group;
+        $data['institution'] = $institution;
+        $data['parent'] = null;
+        $classname = generate_artefact_class_name($data['artefacttype']);
+        safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $data['artefacttype']));
+        $copy = new $classname(0, $data);
+        $copy->commit();
+        $this->copy_extra($copy);
+        return $copy->get('id');
+    }
 }
 
 /**
@@ -839,6 +883,20 @@ function artefact_watchlist_notification($artefactid) {
             activity_occurred('watchlist', (object)array('view' => $view));
         }
     }
+}
+
+function artefact_get_descendants($new) {
+    $seen = array();
+    while ($n = array_shift($new)) {
+        $seen[] = $n;
+        $children = get_column_sql('SELECT id FROM {artefact} WHERE parent = ? AND id NOT IN (' . implode(',', $seen) . ')', array($n));
+        if ($children) {
+            foreach ($children as $c) {
+                $new[] = $c;
+            }
+        }
+    }
+    return $seen;
 }
 
 ?>

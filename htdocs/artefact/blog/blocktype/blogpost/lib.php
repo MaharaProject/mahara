@@ -129,6 +129,15 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
     public static function artefactchooser_get_sort_order() {
         return 'parent, ctime DESC';
     }
+
+    public static function copy_allowed($newowner=null) {
+        return false;
+    }
+
+    public static function copy_artefacts_allowed($newowner=null) {
+        return false;
+    }
+
 }
 
 ?>
