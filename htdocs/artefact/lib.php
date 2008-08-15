@@ -634,6 +634,12 @@ abstract class ArtefactType {
                 );
             }
         }
+        else {
+            $roles = group_get_role_info($this->get('group'));
+            foreach ($roles as $r) {
+                $this->rolepermissions->{$r->name} = (object) array('view' => true, 'edit' => true, 'republish' => true);
+            }
+        }
     }
 
     public function copy_data() {
