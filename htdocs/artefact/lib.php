@@ -893,16 +893,22 @@ function artefact_watchlist_notification($artefactid) {
 
 function artefact_get_descendants($new) {
     $seen = array();
-    while ($n = array_shift($new)) {
-        $seen[] = $n;
-        $children = get_column_sql('SELECT id FROM {artefact} WHERE parent = ? AND id NOT IN (' . implode(',', $seen) . ')', array($n));
+    $new = array_combine($new, $new);
+    while (!empty($new)) {
+        $seen = $seen + $new;
+        $children = get_column_sql('
+            SELECT id
+            FROM {artefact}
+            WHERE parent IN (' . implode(',', $new) . ') AND id NOT IN (' . implode(',', $seen) . ')', array());
         if ($children) {
-            foreach ($children as $c) {
-                $new[] = $c;
-            }
+            $new = array_diff($children, $seen);
+            $new = array_combine($new, $new);
+        }
+        else {
+            $new = array();
         }
     }
-    return $seen;
+    return array_values($seen);
 }
 
 ?>
