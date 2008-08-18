@@ -1761,12 +1761,29 @@ class View {
                 }
             }
             // Go back and fix up the parents of the new artefacts so
-            // they also point to new artefacts
-            foreach ($artefactcopies as $c) {
-                if (isset($artefactcopies[$c->oldparent])) {
+            // they also point to new artefacts.
+            // Create parent folder for files that have no parent
+            if ($artefactcopies) {
+                safe_require('artefact', 'file');
+                $data = (object) array(
+                    'title'       => get_string('templatefiles', 'view') . '.' . $template->get('id'),
+                    'description' => get_string('filescopiedfromviewtemplate', 'view', $template->get('title')),
+                    'owner'       => $this->get('owner'),
+                    'group'       => $this->get('group'),
+                    'institution' => $this->get('institution'),
+                );
+                $folder = new ArtefactTypeFolder(0, $data);
+                $folder->commit();
+                foreach ($artefactcopies as $c) {
                     $a = artefact_instance_from_id($c->newid);
-                    $a->set('parent', $artefactcopies[$c->oldparent]->newid);
-                    $a->commit();
+                    if (isset($artefactcopies[$c->oldparent])) {
+                        $a->set('parent', $artefactcopies[$c->oldparent]->newid);
+                        $a->commit();
+                    }
+                    else if (in_array($a->get('artefacttype'), PluginArtefactFile::get_artefact_types())) {
+                        $a->set('parent', $folder->get('id'));
+                        $a->commit();
+                    }
                 }
             }
             $numcopied['artefacts'] = count($artefactcopies);
