@@ -1705,6 +1705,7 @@ class View {
         $this->set('numcolumns', $template->get('numcolumns'));
         $this->set('layout', $template->get('layout'));
         $blocks = get_records_array('block_instance', 'view', $template->get('id'));
+        $numcopied = array('blocks' => 0, 'artefacts' => 0);
         if ($blocks) {
             $newowner = $this->ownership();
             $oldowner = $template->ownership();
@@ -1756,6 +1757,7 @@ class View {
                     }
                     $newblock->set('configdata', $configdata);
                     $newblock->commit();
+                    $numcopied['blocks']++;
                 }
             }
             // Go back and fix up the parents of the new artefacts so
@@ -1767,7 +1769,9 @@ class View {
                     $a->commit();
                 }
             }
+            $numcopied['artefacts'] = count($artefactcopies);
         }
+        return $numcopied;
     }
 
 }

@@ -230,7 +230,8 @@ function editview_submit(Pieform $form, $values) {
             $template = new View($values['usetemplate']);
             if (!$template->get('deleted') && ($template->get('template') && can_view_view($values['usetemplate'])) || $USER->can_edit_view($template)) {
                 $view->set('dirty', true);
-                $view->copy_contents($template);
+                $copystatus = $view->copy_contents($template);
+                $SESSION->add_ok_msg(get_string('copiedblocksandartefactsfromtemplate', 'view', $copystatus['blocks'], $copystatus['artefacts'], $template->get('title')));
             }
         }
         if ($group) {
