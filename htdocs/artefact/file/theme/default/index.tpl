@@ -5,7 +5,7 @@
 {if $groupid}
   <h2>{$heading}</h2>
   {include file="group/tabstart.tpl" current="files"}
-{else if $institution}
+{elseif $institution}
   <h2>{$heading}</h2>
   {$institutionselector}
 {/if}
