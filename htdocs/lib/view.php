@@ -1156,7 +1156,7 @@ class View {
      * - Pagination HTML and Javascript
      * - The total number of artefacts found
      */
-    public static function build_artefactchooser_data($data, $group=null) {
+    public static function build_artefactchooser_data($data, $group=null, $institution=null) {
         global $USER;
         $search = '';
         if (!empty($data['search']) && param_boolean('s')) {
@@ -1185,17 +1185,29 @@ class View {
         $sql = ' FROM {artefact} a ';
         if ($group) {
             // Get group-owned artefacts that the user has view
-            // permission on.
+            // permission on, and site-owned artefacts
             $sql .= '
-            INNER JOIN {artefact_access_role} r ON a.id = r.artefact
-            INNER JOIN {group_member} m ON r.role = m.role';
-            $select = 'a."group" = ' . $group . '
-            AND m."group" = ' . $group . '
-            AND m.member = ' . $USER->get('id') . '
-            AND can_view = 1';
-        } else {
-            // Get artefacts owned by the user and group-owned
-            // artefacts the user has republish permission on.
+            LEFT OUTER JOIN (
+                SELECT
+                    r.artefact, r.can_view, m.group
+                FROM
+                    {artefact_access_role} r
+                    INNER JOIN {group_member} m ON r.role = m.role
+                WHERE
+                    m."group" = ' . $group . '
+                    AND m.member = ' . $USER->get('id') . '
+                    AND r.can_view = 1
+            ) ga ON (ga.group = a.group AND a.id = ga.artefact)';
+            $select = "(a.institution = 'mahara' OR ga.can_view = 1)";
+        }
+        else if ($institution) {
+            // Site artefacts & artefacts owned by this institution
+            $select = "(a.institution = 'mahara' OR a.institution = '$institution')";
+        }
+        else { // The view is owned by a normal user
+            // Get artefacts owned by the user, group-owned artefacts
+            // the user has republish permission on, artefacts owned
+            // by the user's institutions.
             $sql .= '
             LEFT OUTER JOIN {artefact_access_usr} aau ON (a.id = aau.artefact AND aau.usr = ' . $USER->get('id') . ')
             LEFT OUTER JOIN (
@@ -1208,7 +1220,14 @@ class View {
                     m.member = ' . $USER->get('id') . '
                     AND aar.can_republish = 1
             ) ra ON (a.id = ra.artefact AND a.group = ra.group)';
-            $select = '(owner = ' . $USER->get('id') . ' OR ra.can_republish = 1 OR aau.can_republish = 1) ';
+            $institutions = array_keys($USER->get('institutions'));
+            $institutions[] = 'mahara';
+            $select = '(
+                owner = ' . $USER->get('id') . '
+                OR ra.can_republish = 1
+                OR aau.can_republish = 1
+                OR a.institution IN (' . join(',', array_map('db_quote', $institutions)) . ')
+            )';
         }
         if (!empty($artefacttypes)) {
             $select .= ' AND artefacttype IN(' . implode(',', array_map('db_quote', $artefacttypes)) . ')';
@@ -1284,9 +1303,10 @@ class View {
             'lasttext' => '',
             'numbersincludefirstlast' => false,
             'extradata' => array(
-                'value'     => $value,
-                'blocktype' => $data['blocktype'],
-                'group'     => $group,
+                'value'       => $value,
+                'blocktype'   => $data['blocktype'],
+                'group'       => $group,
+                'institution' => $institution,
             ),
         ));
 

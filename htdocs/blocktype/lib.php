@@ -476,6 +476,7 @@ class BlockInstance {
             'successcallback'  => array($this, 'instance_config_store'),
             'elements' => $elements,
             'viewgroup' => $this->get_view()->get('group'),
+            'viewinstitution' => $this->get_view()->get('institution'),
         );
 
         if (param_variable('action_acsearch_id_' . $this->get('id'), false)) {
