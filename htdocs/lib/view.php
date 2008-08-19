@@ -1785,12 +1785,28 @@ class View {
             // Create parent folder for files that have no parent
             if ($artefactcopies) {
                 safe_require('artefact', 'file');
+                $viewfilesfolder = ArtefactTypeFolder::get_folder_id(get_string('viewfilesdirname', 'view'), get_string('viewfilesdirdesc', 'view'),
+                                                                     null, true, $this->get('owner'), $this->get('group'), $this->get('institution'));
+                $foldername = $template->get('id');
+                $existing = get_column_sql("
+                    SELECT title
+                    FROM {artefact}
+                    WHERE parent = ? AND title LIKE ? || '%'", array($viewfilesfolder, $foldername));
+                $sep = '';
+                $ext = '';
+                if ($existing) {
+                    while (in_array($foldername . $sep . $ext, $existing)) {
+                        $sep = '-';
+                        $ext++;
+                    }
+                }
                 $data = (object) array(
-                    'title'       => get_string('templatefiles', 'view') . '.' . $template->get('id'),
+                    'title'       => $foldername . $sep . $ext,
                     'description' => get_string('filescopiedfromviewtemplate', 'view', $template->get('title')),
                     'owner'       => $this->get('owner'),
                     'group'       => $this->get('group'),
                     'institution' => $this->get('institution'),
+                    'parent'      => $viewfilesfolder,
                 );
                 $folder = new ArtefactTypeFolder(0, $data);
                 $folder->commit();

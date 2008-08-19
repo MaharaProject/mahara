@@ -911,4 +911,17 @@ function artefact_get_descendants($new) {
     return array_values($seen);
 }
 
+function artefact_owner_sql($userid=null, $groupid=null, $institution=null) {
+    if ($institution) {
+        return 'institution = ' . db_quote($institution);
+    }
+    if ($groupid) {
+        return '"group" = ' . (int)$groupid;
+    }
+    if ($userid) {
+        return 'owner = ' . (int)$userid;
+    }
+    return null;
+}
+
 ?>

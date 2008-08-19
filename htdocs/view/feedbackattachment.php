@@ -63,7 +63,7 @@ $ownerlang = get_user_language($viewdata->owner);
 safe_require('artefact', 'file');
 $folderid = ArtefactTypeFolder::get_folder_id(get_string_from_language($ownerlang, 'feedbackattachdirname', 'view'),
                                               get_string_from_language($ownerlang, 'feedbackattachdirdesc', 'view'),
-                                              null, $viewdata->owner);
+                                              null, true, $viewdata->owner);
 
 // Create a new file object
 $data = (object) array('owner' => $viewdata->owner,
