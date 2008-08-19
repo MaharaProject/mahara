@@ -400,6 +400,8 @@ $string['useradministration'] = 'User Administration';
 $string['unreadmessages'] = 'unread messages';
 $string['unreadmessage'] = 'unread message';
 
+$string['siteclosed'] = 'The site is temporarily closed for a database upgrade.  Site administrators may log in.';
+
 // footer
 $string['termsandconditions'] = 'Terms and Conditions';
 $string['privacystatement']   = 'Privacy Statement';

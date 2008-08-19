@@ -206,6 +206,20 @@ if (!defined('INSTALLER')) {
     auth_setup();
 }
 
+if (get_config('siteclosed')) {
+    if ($USER->admin && !defined('INSTALLER')) {
+        redirect('/admin/upgrade.php');
+    }
+    if (!$USER->admin) {
+        if ($USER->is_logged_in()) {
+            $USER->logout();
+        }
+        if (!defined('HOME')) {
+            redirect();
+        }
+    }
+}
+
 // check to see if we're installed...
 if (!get_config('installed')
     && false === strpos($_SERVER['SCRIPT_FILENAME'], 'admin/index.php')

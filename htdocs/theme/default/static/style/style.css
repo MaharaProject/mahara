@@ -566,6 +566,10 @@ tr.required th,
 #logo {
     padding: 0;
 }
+.sitemessage {
+    text-align: center;
+    color: #cc0000;
+}
 /* search box in header */
 .searchbox {
     font-size: 11px;
