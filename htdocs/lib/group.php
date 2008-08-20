@@ -54,8 +54,7 @@ function group_user_can_leave($group, $userid=null) {
         return ($result[$group->id][$userid] = false);
     }
 
-    if (group_user_access($group->id, $userid) == 'admin'
-        && count_records('group_member', 'group', $group->id, 'role', 'admin') == 1) {
+    if (group_is_only_admin($group->id, $userid)) {
         return ($result[$group->id][$userid] = false);
     }
 
@@ -162,6 +161,66 @@ function group_user_access($groupid, $userid=null) {
     }
 
     return get_field('group_member', 'role', 'group', $groupid, 'member', $userid);
+}
+
+/**
+ * Returns whether the given user is the only administrator in the given group.
+ *
+ * If the user isn't in the group, or they're not an admin, or there is another admin, false 
+ * is returned.
+ *
+ * @param int $group The ID of the group to check
+ * @param int $user  The ID of the user to check
+ * @returns boolean
+ */
+function group_is_only_admin($group, $user) {
+    return group_user_access($group, $user) == 'admin'
+        && count_records('group_member', 'group', $group, 'role', 'admin') == 1;
+}
+
+/**
+ * Returns whether the given user is allowed to change their role to the 
+ * requested role in the given group.
+ *
+ * This function is checking whether _role changes_ are allowed, not if a user 
+ * is allowed to be added to a group.
+ *
+ * @param int $group The ID of the group to check
+ * @param int $user  The ID of the user to check
+ * @param string $role The role the user wishes to switch to
+ * @returns boolean
+ */
+function group_can_change_role($group, $user, $role) {
+    if (!group_user_access($group, $user)) {
+        return false;
+    }
+
+    // Sole remaining admins can never change their role
+    if (group_is_only_admin($group, $user)) {
+        return false;
+    }
+
+    // Maybe one day more checks will be needed - they go here
+
+    return true;
+}
+
+/**
+ * Changes a user role in a group, if this is allowed.
+ *
+ * @param int $group The ID of the group
+ * @param int $user  The ID of the user whose role needs changing
+ * @param string $role The role the user wishes to switch to
+ * @throws AccessDeniedException If the specified role change is not allowed. 
+ *                               Check with group_can_change_role first if you 
+ *                               need to.
+ */
+function group_change_role($group, $user, $role) {
+    if (!group_can_change_role($group, $user, $role)) {
+        throw new AccessDeniedException('TODO');
+    }
+
+    set_field('group_member', 'role', $role, 'group', $group, 'member', $user);
 }
 
 function group_user_can_edit_views($groupid, $userid=null) {
@@ -467,6 +526,14 @@ function group_get_membersearch_data($group, $query, $offset, $limit, $membershi
         if (group_user_can_leave($group, $r['id'])) {
             $r['removeform'] = group_get_removeuser_form($r['id'], $group);
         }
+        // NOTE: this is a quick approximation. We should really check whether, 
+        // for each role in the group, that the user can change to it (using 
+        // group_can_change_role).  This only controls whether the 'change 
+        // role' link appears though, so it doesn't matter too much. If the 
+        // user clicks on this link, changerole.php does the full check and 
+        // sends them back here saying that the user has no roles they can 
+        // change to anyway.
+        $r['canchangerole'] = !group_is_only_admin($group, $r['id']);
     }
 
     if (!empty($membershiptype)) {

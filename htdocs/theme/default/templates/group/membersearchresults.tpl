@@ -7,7 +7,7 @@
                 <h4><a href="{$WWWROOT}user/view.php?id={$r.id|escape}">{$r.name|escape}</a></h4>
                 {if $r.role}
                 <div class="removeform">
-                {$results.roles[$r.role]->display}{if $caneditroles} (<a href="{$WWWROOT}group/changerole.php?group={$group}&amp;user={$r.id}">{str tag=changerole section=group}</a>){/if}
+                {$results.roles[$r.role]->display}{if $caneditroles && $r.canchangerole} (<a href="{$WWWROOT}group/changerole.php?group={$group}&amp;user={$r.id}">{str tag=changerole section=group}</a>){/if}
                 {$r.removeform}
                 </div>
                 <p><strong>Joined:</strong> {$r.jointime}</p>

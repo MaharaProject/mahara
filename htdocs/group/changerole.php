@@ -50,11 +50,21 @@ if ($role != 'admin') {
 }
 
 $roles = group_get_role_info($groupid);
+$rolechange_available = false;
 foreach ($roles as &$r) {
+    $disabled = ($r->role == $currentrole) || (!group_can_change_role($groupid, $userid, $r->role));
+    if (!$disabled) {
+        $rolechange_available = true;
+    }
     $r = array(
-        'value' => $r->display,
-        'disabled' => $r->role == $currentrole,
+        'value'    => $r->display,
+        'disabled' => $disabled,
     );
+}
+
+if (!$rolechange_available) {
+    $SESSION->add_info_msg('This user has no roles they can change to');
+    redirect('/group/members.php?id=' . $groupid);
 }
 
 $changeform = pieform(array(
@@ -75,12 +85,17 @@ $changeform = pieform(array(
     )
 ));
 
-function changerole_submit(Pieform $form, $values) {
-    global $user, $group, $currentrole, $SESSION;
-    if ($values['role'] && $values['role'] != $currentrole) {
-        set_field('group_member', 'role', $values['role'], 'group', $group->id, 'member', $user->id);
-        $SESSION->add_ok_msg(get_string('rolechanged', 'group'));
+function changerole_validate(Pieform $form, $values) {
+    global $user, $group;
+    if (!group_can_change_role($group->id, $user->id, $values['role'])) {
+        $form->set_error('role', get_string('usercannotchangetothisrole', 'group'));
     }
+}
+
+function changerole_submit(Pieform $form, $values) {
+    global $user, $group, $SESSION;
+    group_change_role($group->id, $user->id, $values['role']);
+    $SESSION->add_ok_msg(get_string('rolechanged', 'group'));
     redirect('/group/members.php?id='.$group->id);
 }
 

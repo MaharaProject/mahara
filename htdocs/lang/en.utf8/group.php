@@ -130,6 +130,7 @@ $string['groupconfirmleave'] = 'Are you sure you want to leave this group?';
 $string['groupconfirmleavehasviews'] = 'Are you sure you want to leave this group? Some of your views use this group for access control, leaving this group would mean that the members of the group would not have access to the views';
 $string['cantleavegroup'] = 'You can\'t leave this group';
 $string['usercantleavegroup'] = 'This user cannot leave this group';
+$string['usercannotchangetothisrole'] = 'The user cannot change to this role';
 $string['leavespecifiedgroup'] = 'Leave group \'%s\'';
 $string['memberslist'] = 'Members: ';
 $string['nogroups'] = 'No groups';
