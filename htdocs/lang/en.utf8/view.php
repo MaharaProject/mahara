@@ -236,11 +236,12 @@ $string['noaccesstoview'] = 'You do not have permission to access this view';
 
 // Templates
 $string['Template'] = 'Template';
-$string['templatedescription'] = 'If you would like the people who can see your view to be able to make their own copies of it, check the Template box.';
+$string['allowcopying'] = 'Allow copying';
+$string['templatedescription'] = 'Check this box if you would like the people who can see your view to be able to make their own copies of it.';
 $string['copiedblocksandartefactsfromtemplate'] = 'Copied %d blocks and %d artefacts from %s';
 $string['filescopiedfromviewtemplate'] = 'Files copied from %s';
 $string['viewfilesdirname'] = 'viewfiles';
 $string['viewfilesdirdesc'] = 'Files from copied views';
-
+$string['thisviewmaybecopied'] = 'Copying is allowed';
 
 ?>

@@ -87,7 +87,7 @@ $form = array(
         ),
         'template' => array(
             'type'         => 'checkbox',
-            'title'        => get_string('Template', 'view'),
+            'title'        => get_string('allowcopying', 'view'),
             'description'  => get_string('templatedescription', 'view'),
             'defaultvalue' => $view->get('template'),
         ),

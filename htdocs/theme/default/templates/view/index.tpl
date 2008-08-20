@@ -21,7 +21,7 @@
     {if !$view.submittedto}
         <a href="{$WWWROOT}view/delete.php?id={$view.id}" class="fr" id="btn-deletethisview">{str tag="deletethisview" section="view"}</a>
     {/if}
-    <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a>{if $view.template} <span class="template">({str tag=Template section=view})</span>{/if}</h3>
+    <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a></h3>
     <div class="viewitem">
     {if !$view.submittedto}
         <a href="{$WWWROOT}view/edit.php?id={$view.id}" id="editviewdetails">{str tag="editviewnameanddescription" section="view"}</a>
@@ -57,6 +57,7 @@
                     ({$accessgroup.roledisplay}){/if}{elseif $accessgroup.accesstype == 'user'}
                 <a href="{$WWWROOT}user/view.php?id={$accessgroup.id}">{$accessgroup.id|display_name|escape}</a>{/if}{if !$smarty.foreach.artefacts.last},{/if}
         {/foreach}
+        {if $view.template}<br>{str tag=thisviewmaybecopied section=view}{/if}
     {else}
         {str tag="nobodycanseethisview" section="view"}
     {/if}
