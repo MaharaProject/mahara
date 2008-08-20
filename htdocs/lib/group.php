@@ -111,24 +111,6 @@ function get_invited_groups($userid=0) {
 }
 
 /**
- * all groups the user has pending requests for 
- * 
- * @param int $userid (optional, defaults to $USER id)
- * @return array of group db rows
- */
-
-function get_requested_group($userid=0) {
-
-    $userid = optional_userid($userid);
-
-    return get_records_sql_array('SELECT g.*, gmr.ctime, gmr.reason 
-              FROM {group} g 
-              JOIN {group_member_request} gmr ON gmr.group = g.id
-              WHERE gmr.member = ? AND g.deleted = ?', array($userid, 0));
-}
-
-
-/**
  * Establishes what role a user has in a given group.
  *
  * If the user is not in the group, this returns false.
