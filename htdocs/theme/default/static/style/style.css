@@ -39,12 +39,12 @@ body {
 	padding: 5px 10px;
 }
 
-#masquerading-message {
+.sitemessage {
     background-color: #f99;
     font-weight: bold;
     padding: .5em;
 }
-#masquerading-message img {
+.sitemessage img {
     float: left;
     margin-top: -1px;
     padding-right: .5em;
@@ -566,10 +566,7 @@ tr.required th,
 #logo {
     padding: 0;
 }
-.sitemessage {
-    text-align: center;
-    color: #cc0000;
-}
+
 /* search box in header */
 .searchbox {
     font-size: 11px;

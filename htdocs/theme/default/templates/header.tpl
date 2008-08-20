@@ -31,7 +31,8 @@
     <link rel="shortcut icon" href="{$WWWROOT}favicon.ico" type="image/vnd.microsoft.icon">
 </head>
 <body>
-{if $USERMASQUERADING}<div id="masquerading-message"><img src="{theme_path location='images/icon_problem.gif'}" alt="">{$masqueradedetails} {$becomeyouagain}</div>{/if}
+{if $USERMASQUERADING}<div class="sitemessage"><img src="{theme_path location='images/icon_problem.gif'}" alt="">{$masqueradedetails} {$becomeyouagain}</div>{/if}
+{if $SITECLOSED}<div class="sitemessage center">{str tag=siteclosed}</div>{/if}
 <div id="container">
 	<div id="loading_box" class="hidden"></div>
 	<div id="topwrapper">
@@ -59,7 +60,6 @@
 {/if}
 	</table>
 		<div id="logo"><a href="{$WWWROOT}"><img src="{theme_path location='images/logo.gif'}" border="0" alt=""></a></div>
-{if $SITECLOSED}<div class="sitemessage">{str tag=siteclosed}</div>{/if}
 	<h1 class="hidden"><a href="{$WWWROOT}">{$hiddenheading|default:"Mahara"|escape}</a></h1>
 {if $MAINNAV}
 		<div id="mainnav">
