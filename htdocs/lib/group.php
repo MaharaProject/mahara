@@ -28,11 +28,12 @@ defined('INTERNAL') || die();
 
 
 /**
- * is a user allowed to leave a group? 
- * checks if they're the owner and the membership type
+ * Checks whether a user is allowed to leave a group.
  *
- * @param object $group (corresponds to db record). if an id is given, record will be fetched.
- * @param int $userid (optional, will default to logged in user)
+ * This checks things like if they're the owner and the group membership type
+ *
+ * @param mixed $group  DB record or ID of group to check
+ * @param int   $userid (optional, will default to logged in user)
  */
 function group_user_can_leave($group, $userid=null) {
     static $result;
