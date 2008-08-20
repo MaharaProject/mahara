@@ -203,7 +203,7 @@ function group_user_can_edit_views($groupid, $userid=null) {
  * @param int $userid
  * @param string $role
  */
-function group_add_member($groupid, $userid, $role=null) {
+function group_add_user($groupid, $userid, $role=null) {
     $cm = new StdClass;
     $cm->member = $userid;
     $cm->group = $groupid;
@@ -287,10 +287,10 @@ function group_get_accept_form($name, $groupid, $returnto) {
     ));
 }
 
-function group_get_addmember_form($userid, $groupid) {
+function group_get_adduser_form($userid, $groupid) {
     return pieform(array(
-        'name'                => 'addmember',
-        'successcallback'     => 'group_addmember_submit',
+        'name'                => 'adduser', // TODO: is this safe? how many of these forms are shown on a page?
+        'successcallback'     => 'group_adduser_submit',
         'renderer'            => 'div',
         'elements'            => array(
             'group' => array(
@@ -358,7 +358,7 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
 
 function joingroup_submit(Pieform $form, $values) {
     global $SESSION, $USER;
-    group_add_member($values['group'], $USER->get('id'));
+    group_add_user($values['group'], $USER->get('id'));
     $SESSION->add_ok_msg(get_string('joinedgroup', 'group'));
     redirect('/group/view.php?id=' . $values['group']);
 }
@@ -369,7 +369,7 @@ function group_invite_submit(Pieform $form, $values) {
     if ($inviterecord) {
         delete_records('group_member_invite', 'group', $values['group'], 'member', $USER->get('id'));
         if (isset($values['accept'])) {
-            group_add_member($values['group'], $USER->get('id'), $inviterecord->role);
+            group_add_user($values['group'], $USER->get('id'), $inviterecord->role);
             $SESSION->add_ok_msg(get_string('groupinviteaccepted', 'group'));
             redirect('/group/view.php?id=' . $values['group']);
         }
@@ -380,14 +380,14 @@ function group_invite_submit(Pieform $form, $values) {
     }
 }
 
-function group_addmember_submit(Pieform $form, $values) {
+function group_adduser_submit(Pieform $form, $values) {
     global $SESSION;
     $group = (int)$values['group'];
     if (group_user_access($group) != 'admin') {
         $SESSION->add_error_msg(get_string('accessdenied', 'error'));
         redirect('/group/members.php?id=' . $group . '&membershiptype=request');
     }
-    group_add_member($group, $values['member']);
+    group_add_user($group, $values['member']);
     $SESSION->add_ok_msg(get_string('useradded', 'group'));
     if (count_records('group_member_request', 'group', $group)) {
         redirect('/group/members.php?id=' . $group . '&membershiptype=request');
@@ -424,7 +424,7 @@ function group_get_membersearch_data($group, $query, $offset, $limit, $membershi
     if (!empty($membershiptype)) {
         if ($membershiptype == 'request') {
             foreach ($results['data'] as &$r) {
-                $r['addform'] = group_get_addmember_form($r['id'], $group);
+                $r['addform'] = group_get_adduser_form($r['id'], $group);
             }
         }
         $smarty->assign('membershiptype', $membershiptype);
