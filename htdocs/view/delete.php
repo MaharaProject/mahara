@@ -39,6 +39,16 @@ $groupid = $view->get('group');
 $institution = $view->get('institution');
 View::set_nav($groupid, $institution);
 
+if ($groupid) {
+    $goto = 'groupviews.php?group=' . $groupid;
+}
+else if ($institution) {
+    $goto = 'institutionviews.php?institution=' . $institution;
+}
+else {
+    $goto = 'index.php';
+}
+
 define('TITLE', get_string('deletespecifiedview', 'view', $view->get('title')));
 
 $form = pieform(array(
@@ -50,7 +60,7 @@ $form = pieform(array(
             'type' => 'submitcancel',
             'title' => get_string('deleteviewconfirm', 'view'),
             'value' => array(get_string('yes'), get_string('no')),
-            'goto' => get_config('wwwroot') . 'view/'
+            'goto' => get_config('wwwroot') . 'view/' . $goto,
         )
     ),
 ));
