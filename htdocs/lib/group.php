@@ -199,7 +199,7 @@ function group_can_change_role($group, $user, $role) {
  */
 function group_change_role($group, $user, $role) {
     if (!group_can_change_role($group, $user, $role)) {
-        throw new AccessDeniedException('TODO');
+        throw new AccessDeniedException(get_string('usercannotchangetothisrole', 'group'));
     }
 
     set_field('group_member', 'role', $role, 'group', $group, 'member', $user);
