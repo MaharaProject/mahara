@@ -135,13 +135,33 @@ function group_user_access($groupid, $userid=null) {
  * If the user isn't in the group, or they're not an admin, or there is another admin, false 
  * is returned.
  *
- * @param int $group The ID of the group to check
- * @param int $user  The ID of the user to check
+ * @param int $groupid The ID of the group to check
+ * @param int $userid  The ID of the user to check
  * @returns boolean
  */
-function group_is_only_admin($group, $user) {
-    return group_user_access($group, $user) == 'admin'
-        && count_records('group_member', 'group', $group, 'role', 'admin') == 1;
+function group_is_only_admin($groupid, $userid=null) {
+    // TODO: caching
+
+    $groupid = (int)$groupid;
+
+    if ($groupid == 0) {
+        throw new InvalidArgumentException("group_is_only_admin: group argument should be an integer");
+    }
+
+    if (is_null($userid)) {
+        global $USER;
+        $userid = (int)$USER->get('id');
+    }
+    else {
+        $userid = (int)$userid;
+    }
+
+    if ($userid == 0) {
+        throw new InvalidArgumentException("group_is_only_admin: user argument should be an integer");
+    }
+
+    return group_user_access($groupid, $userid) == 'admin'
+        && count_records('group_member', 'group', $groupid, 'role', 'admin') == 1;
 }
 
 /**
