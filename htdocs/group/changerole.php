@@ -78,8 +78,8 @@ function changerole_submit(Pieform $form, $values) {
     if ($values['role'] && $values['role'] != $currentrole) {
         set_field('group_member', 'role', $values['role'], 'group', $group->id, 'member', $user->id);
         $SESSION->add_ok_msg(get_string('rolechanged', 'group'));
-        redirect('/group/members.php?id='.$group->id);
     }
+    redirect('/group/members.php?id='.$group->id);
 }
 
 define('TITLE', $group->name . ' - ' . get_string('changerole', 'group'));
