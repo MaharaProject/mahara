@@ -35,21 +35,31 @@ defined('INTERNAL') || die();
  * @param int $userid (optional, will default to logged in user)
  */
 function group_user_can_leave($group, $userid=null) {
+    static $result;
 
     $userid = optional_userid($userid);
-    
+
     if (is_numeric($group)) {
         if (!$group = get_record('group', 'id', $group, 'deleted', 0)) {
             return false;
         }
     }
-    
-    // TODO: disallow users from leaving if they are the only administrator in the group
+
+    // Return cached value if we have it
+    if (isset($result[$group->id][$userid])) {
+        return $result[$group->id][$userid];
+    }
     
     if ($group->jointype == 'controlled') {
-        return false;
+        return ($result[$group->id][$userid] = false);
     }
-    return true;
+
+    if (group_user_access($group->id, $userid) == 'admin'
+        && count_records('group_member', 'group', $group->id, 'role', 'admin') == 1) {
+        return ($result[$group->id][$userid] = false);
+    }
+
+    return ($result[$group->id][$userid] = true);
 }
 
 /**
@@ -60,6 +70,9 @@ function group_user_can_leave($group, $userid=null) {
  * @param int $user id of user to remove
  */
 function group_remove_user($group, $userid) {    
+    if (!group_user_can_leave($group, $userid)) {
+        throw new AccessDeniedException(get_string('usercantleavegroup', 'group'));
+    }
     db_begin();
     delete_records('group_member', 'group', $group, 'member', $userid);
     delete_records_sql(
