@@ -51,7 +51,10 @@ if ($role != 'admin') {
 
 $roles = group_get_role_info($groupid);
 foreach ($roles as &$r) {
-    $r = $r->display;
+    $r = array(
+        'value' => $r->display,
+        'disabled' => $r->role == $currentrole,
+    );
 }
 
 $changeform = pieform(array(
@@ -64,7 +67,6 @@ $changeform = pieform(array(
             'type' => 'select',
             'collapseifoneoption' => false,
             'options' => $roles,
-            'defaultvalue' => $currentrole,
         ),
         'submit' => array(
             'type' => 'submit',
