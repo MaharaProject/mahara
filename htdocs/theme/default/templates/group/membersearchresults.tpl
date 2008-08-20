@@ -17,6 +17,7 @@
                 {/if}
             </td>
             {/foreach}
+            {if count($row) == 1}<td></td>{/if}
           </tr>
         {/foreach}
 {else}
