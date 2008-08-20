@@ -111,7 +111,7 @@ function group_user_access($groupid, $userid=null) {
     $groupid = (int)$groupid;
 
     if ($groupid == 0) {
-        throw new InvalidArgumentException("group_user_access: group argument appears to be invalid: $groupid");
+        throw new InvalidArgumentException("group_user_access: group argument should be an integer");
     }
 
     if (is_null($userid)) {
@@ -123,7 +123,7 @@ function group_user_access($groupid, $userid=null) {
     }
 
     if ($userid == 0) {
-        throw new InvalidArgumentException("group_user_access: user argument appears to be invalid: $userid");
+        throw new InvalidArgumentException("group_user_access: user argument should be an integer");
     }
 
     return get_field('group_member', 'role', 'group', $groupid, 'member', $userid);
