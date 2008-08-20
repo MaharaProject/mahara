@@ -10,9 +10,6 @@
                 <div class="group-info-para">
                     {$changeform}
                 </div>
-                <div class="group-info-para">
-                    {$removeform}
-                </div>
                 <br />
 
 

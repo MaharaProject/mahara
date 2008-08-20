@@ -33,7 +33,6 @@ require_once(get_config('docroot') . 'interaction/lib.php');
 $groupid = param_integer('group');
 $userid = param_integer('user');
 $newrole = param_alpha('role', null);
-$remove = param_integer('remove', null);
 
 if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
     throw new GroupNotFoundException("Couldn't find group with id $groupid");
@@ -83,27 +82,6 @@ function changerole_submit(Pieform $form, $values) {
     }
 }
 
-$removeform = pieform(array(
-    'name'        => 'removeuser',
-    'method'      => 'post',
-    'renderer'    => 'oneline',
-    'elements'    => array(
-        'submit' => array(
-            'title' => get_string('removefromgroup', 'group'),
-            'type' => 'submit',
-            'value' => get_string('submit'),
-        ),
-    )
-));
-
-
-function removeuser_submit(Pieform $form, $values) {
-    global $user, $group, $SESSION;
-    delete_records('group_member', 'group', $group->id, 'member', $user->id);
-    $SESSION->add_ok_msg(get_string('userremoved', 'group'));
-    redirect('/group/members.php?id='.$group->id);
-}
-
 define('TITLE', $group->name . ' - ' . get_string('changerole', 'group'));
 
 $smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($groupid, $role))));
@@ -112,7 +90,6 @@ $smarty->assign('groupid', $groupid);
 $smarty->assign('grouptabs', group_get_menu_tabs($group));
 $smarty->assign('subtitle', get_string('changeroleofuseringroup', 'group', display_name($user), $group->name));
 $smarty->assign('changeform', $changeform);
-$smarty->assign('removeform', $removeform);
 
 $smarty->display('group/changerole.tpl');
 
