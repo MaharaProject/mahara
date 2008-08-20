@@ -309,6 +309,29 @@ function group_get_adduser_form($userid, $groupid) {
     ));
 }
 
+function group_get_removeuser_form($userid, $groupid) {
+    return pieform(array(
+        'name'                => 'removeuser' . $userid,
+        'validatecallback'    => 'group_removeuser_validate',
+        'successcallback'     => 'group_removeuser_submit',
+        'renderer'            => 'oneline',
+        'elements'            => array(
+            'group' => array(
+                'type'    => 'hidden',
+                'value' => $groupid,
+            ),
+            'member' => array(
+                'type'  => 'hidden',
+                'value' => $userid,
+            ),
+            'submit' => array(
+                'type'  => 'submit',
+                'value' => get_string('removefromgroup', 'group'),
+            ),
+        ),
+    ));
+}
+
 /**
  * Sets up groups for display in mygroups.php and find.php
  *
@@ -380,6 +403,13 @@ function group_invite_submit(Pieform $form, $values) {
     }
 }
 
+function group_removeuser_validate(Pieform $form, $values) {
+    global $user, $group, $SESSION;
+    if (!group_user_can_leave($values['group'], $values['member'])) {
+        $form->set_error('submit', get_string('usercantleavegroup', 'group'));
+    }
+}
+
 function group_adduser_submit(Pieform $form, $values) {
     global $SESSION;
     $group = (int)$values['group'];
@@ -392,6 +422,18 @@ function group_adduser_submit(Pieform $form, $values) {
     if (count_records('group_member_request', 'group', $group)) {
         redirect('/group/members.php?id=' . $group . '&membershiptype=request');
     }
+    redirect('/group/members.php?id=' . $group);
+}
+
+function group_removeuser_submit(Pieform $form, $values) {
+    global $SESSION;
+    $group = (int)$values['group'];
+    if (group_user_access($group) != 'admin') {
+        $SESSION->add_error_msg(get_string('accessdenied', 'error'));
+        redirect('/group/members.php?id=' . $group);
+    }
+    group_remove_user($group, $values['member']);
+    $SESSION->add_ok_msg(get_string('userremoved', 'group'));
     redirect('/group/members.php?id=' . $group);
 }
 
@@ -420,6 +462,12 @@ function group_get_membersearch_data($group, $query, $offset, $limit, $membershi
     $searchurl = get_config('wwwroot') . 'group/members.php?id=' . $group . '&amp;' . join('&amp;', $params);
 
     $smarty = smarty_core();
+
+    foreach ($results['data'] as &$r) {
+        if (group_user_can_leave($group, $r['id'])) {
+            $r['removeform'] = group_get_removeuser_form($r['id'], $group);
+        }
+    }
 
     if (!empty($membershiptype)) {
         if ($membershiptype == 'request') {

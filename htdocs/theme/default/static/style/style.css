@@ -1928,6 +1928,24 @@ span.viewicon {
 #membersearchresults td {
   width: 50%;
 }
+#membersearchresults .removeform {
+    padding: 0;
+}
+#membersearchresults .removeform form,
+#membersearchresults .removeform form div {
+    display: inline;
+    padding: 0;
+    margin: 0;
+}
+#membersearchresults .removeform input {
+	background: url(../images/icon-delete.gif) no-repeat left 3px;
+	padding-left: 10px;
+	font-size: 11px;
+    border: none;
+    color: #7f9d16;
+    margin: 0 0 0 20px;
+    height: auto;
+}
 .group-info-para {
     margin: 15px 0 0 10px;
 }
