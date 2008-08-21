@@ -355,14 +355,16 @@ function group_user_can_leave($group, $userid=null) {
 }
 
 /**
- * removes a user from a group
- * removed view access given by the user to the group
+ * Removes a user from a group.
  *
- * @param int $group id of group
- * @param int $user id of user to remove
+ * Also removes view access given by the user to the group
+ *
+ * @param int $groupid ID of group
+ * @param int $userid  ID of user to remove
  */
-function group_remove_user($group, $userid) {
-    if (!group_user_can_leave($group, $userid)) {
+function group_remove_user($groupid, $userid=null) {
+    // group_user_can_leave checks the validity of groupid and userid
+    if (!group_user_can_leave($groupid, $userid)) {
         throw new AccessDeniedException(get_string('usercantleavegroup', 'group'));
     }
     db_begin();
