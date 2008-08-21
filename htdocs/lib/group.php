@@ -26,6 +26,7 @@
 
 defined('INTERNAL') || die();
 
+// Role related functions
 
 /**
  * Establishes what role a user has in a given group.
@@ -229,6 +230,8 @@ function group_user_can_assess_submitted_views($groupid, $userid) {
             m.member = ?
             AND m.group = ?', array($userid, $groupid));
 }
+
+// Functions for creation/deletion of groups, and adding/removing users to groups
 
 /**
  * Creates a group.
@@ -592,6 +595,7 @@ function group_removeuser_submit(Pieform $form, $values) {
     redirect('/group/members.php?id=' . $group);
 }
 
+// Miscellaneous group related functions
 
 /**
  * Returns a list of user IDs who are admins for a group
@@ -763,7 +767,7 @@ function group_get_grouptypes() {
  * If there is more than one group type with the same join type,
  * prefix the join types with the group type for display.
  */
-function get_grouptype_options() {
+function group_get_grouptype_options() {
     $groupoptions = array();
     $jointypecount = array('open' => 0, 'invite' => 0, 'request' => 0, 'controlled' => 0);
     foreach (group_get_grouptypes() as $grouptype) {
