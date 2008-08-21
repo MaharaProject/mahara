@@ -153,11 +153,18 @@ function group_change_role($groupid, $userid, $role) {
     set_field('group_member', 'role', $role, 'group', $groupid, 'member', $userid);
 }
 
+/**
+ * Returns whether a user is allowed to edit views in a given group
+ *
+ * @param int $groupid The ID of the group
+ * @param int $userid The ID of the user
+ * @returns boolean
+ */
 function group_user_can_edit_views($groupid, $userid=null) {
     $groupid = (int)$groupid;
 
     if ($groupid == 0) {
-        throw new InvalidArgumentException("group_user_access: group argument appears to be invalid: $groupid");
+        throw new InvalidArgumentException("group_user_can_edit_views: group argument should be an integer");
     }
 
     if (is_null($userid)) {
@@ -169,7 +176,7 @@ function group_user_can_edit_views($groupid, $userid=null) {
     }
 
     if ($userid == 0) {
-        throw new InvalidArgumentException("group_user_access: user argument appears to be invalid: $userid");
+        throw new InvalidArgumentException("group_user_can_edit_views: user argument should be an integer");
     }
 
     return get_field_sql('
