@@ -84,42 +84,19 @@ function creategroup_submit(Pieform $form, $values) {
     global $USER;
     global $SESSION;
 
-    db_begin();
-
-    $now = db_format_timestamp(time());
-
     list($grouptype, $jointype) = explode('.', $values['grouptype']);
 
-    $id = insert_record(
-        'group',
-        (object) array(
-            'name'           => $values['name'],
-            'description'    => $values['description'],
-            'grouptype'      => $grouptype,
-            'jointype'       => $jointype,
-            'ctime'          => $now,
-            'mtime'          => $now,
-        ),
-        'id',
-        true
-    );
-
-    // Make the user an admin
-    insert_record(
-        'group_member',
-        (object) array(
-            'group'  => $id,
-            'member' => $USER->get('id'),
-            'role'   => 'admin',
-            'ctime'  => $now,
-        )
-    );
+    group_create(array(
+        'name'        => $values['name'],
+        'description' => $values['description'],
+        'grouptype'   => $grouptype,
+        'jointype'    => $jointype,
+        'members'     => array($USER->get('id') => 'admin'),
+    ));
 
     $USER->reset_grouproles();
 
     $SESSION->add_ok_msg(get_string('groupsaved', 'group'));
-
-    db_commit();
 
     redirect('/group/mygroups.php');
 }

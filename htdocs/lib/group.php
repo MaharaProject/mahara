@@ -192,6 +192,92 @@ function group_user_can_edit_views($groupid, $userid=null) {
 }
 
 /**
+ * Creates a group.
+ *
+ * All group creation should be done through this function, as the 
+ * implementation of group creation may change over time.
+ *
+ * @param array $data Data required to create the group. The following 
+ * key/value pairs can be specified:
+ *
+ * - name: The group name [required, must be unique]
+ * - description: The group description [optional, defaults to empty string]
+ * - grouptype: The grouptype for the new group. Must be an installed grouptype.
+ * - jointype: The jointype for the new group. One of 'open', 'invite', 
+ *             'request' or 'controlled'
+ * - ctime: The unix timestamp of the time the group will be recorded as having 
+ *          been created. Defaults to the current time.
+ * - members: Array of users who should be in the group, structured like this:
+ *            array(
+ *                userid => role,
+ *                userid => role,
+ *                ...
+ *            )
+ */
+function group_create($data) {
+    if (!is_array($data)) {
+        throw new InvalidArgumentException("group_create: data must be an array, see the doc comment for this "
+            . "function for details on its format");
+    }
+
+    if (!isset($data['name'])) {
+        throw new InvalidArgumentException("group_create: must specify a name for the group");
+    }
+
+    if (!isset($data['grouptype']) || !in_array($data['grouptype'], group_get_grouptypes())) {
+        throw new InvalidArgumentException("group_create: grouptype specified must be an installed grouptype");
+    }
+
+    if (isset($data['jointype'])) {
+        if (!in_array($data['jointype'], call_static_method('GroupType' . $data['grouptype'], 'allowed_join_types'))) {
+            throw new InvalidArgumentException("group_create: jointype specified is not allowed by the grouptype specified");
+        }
+    }
+    else {
+        throw new InvalidArgumentException("group_create: jointype specified must be one of the valid join types");
+    }
+
+    if (!isset($data['ctime'])) {
+        $data['ctime'] = time();
+    }
+    $data['ctime'] = db_format_timestamp($data['ctime']);
+
+    if (!is_array($data['members']) || count($data['members']) == 0) {
+        throw new InvalidArgumentException("group_create: at least one member must be specified for adding to the group");
+    }
+
+    db_begin();
+
+    $id = insert_record(
+        'group',
+        (object) array(
+            'name'        => $data['name'],
+            'description' => $data['description'],
+            'grouptype'   => $data['grouptype'],
+            'jointype'    => $data['jointype'],
+            'ctime'       => $data['ctime'],
+            'mtime'       => $data['ctime'],
+        ),
+        'id',
+        true
+    );
+
+    foreach ($data['members'] as $userid => $role) {
+        insert_record(
+            'group_member',
+            (object) array(
+                'group'  => $id,
+                'member' => $userid,
+                'role'   => $role,
+                'ctime'  => $data['ctime'],
+            )
+        );
+    }
+
+    db_commit();
+}
+
+/**
  * Deletes a group.
  *
  * All group deleting should be done through this function, even though it is 
