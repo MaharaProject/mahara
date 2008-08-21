@@ -77,6 +77,7 @@ $smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs']);
 $smarty->assign('views', $data->data);
 $smarty->assign('institution', $institution);
 $smarty->assign('pagination', $pagination['html']);
+$smarty->assign('createviewform', pieform(create_view_form(null, $institution)));
 
 $smarty->display('view/index.tpl');
 

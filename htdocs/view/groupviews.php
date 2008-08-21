@@ -84,6 +84,7 @@ $smarty->assign('grouptabs', group_get_menu_tabs($group));
 $smarty->assign('member', $member);
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
+$smarty->assign('createviewform', pieform(create_view_form($groupid)));
 
 if ($can_edit) { // && !$shared) {
     $smarty->display('view/index.tpl');

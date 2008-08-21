@@ -1916,7 +1916,7 @@ function createview_submit(Pieform $form, $values) {
     global $USER, $SESSION;
 
     $group = isset($values['group']) ? (int) $values['group'] : null;
-    $institution = isset($values['institution']) ? (int) $values['institution'] : null;
+    $institution = isset($values['institution']) ? $values['institution'] : null;
     $templateid = isset($values['usetemplate']) ? (int) $values['usetemplate'] : null;
 
     $owner = ($group || $institution) ? null : $USER->get('id');
