@@ -72,7 +72,7 @@ $smarty->display('group/delete.tpl');
 
 function deletegroup_submit(Pieform $form, $values) {
     global $SESSION, $USER, $groupid;
-    delete_group($groupid);
+    group_delete($groupid);
     $SESSION->add_ok_msg(get_string('deletegroup', 'group'));
     redirect('/group/mygroups.php');
 }

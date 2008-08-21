@@ -30,6 +30,9 @@ function smarty_function_mahara_performance_info($params, &$smarty) {
     $smarty = smarty_core();
 
     foreach ($info as $key => $value) {
+        if ($key == 'realtime') {
+            $value = round($value, 3);
+        }
         $smarty->assign('perf_' . $key, $value);
     }
 

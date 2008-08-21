@@ -14,7 +14,8 @@
                     <a href="{$WWWROOT}user/view.php?id={$id|escape}">{$id|display_name|escape}</a>{if !$smarty.foreach.admins.last}, {/if}
                     {/foreach}</li>
                     <li><strong>{str tag=Created section=group}:</strong> {$group->ctime}</li>
-                    <li><strong>{str tag=Views section=view}:</strong> {$viewcount}&nbsp;
+                    <li><strong>{str tag=Members section=group}:</strong> {$membercount}&nbsp;
+                        <strong>{str tag=Views section=view}:</strong> {$viewcount}&nbsp;
                         <strong>{str tag=Files section=artefact.file}:</strong> {$filecount}&nbsp;
                         <strong>{str tag=Folders section=artefact.file}:</strong> {$foldercount}</li>
                 </ul>
@@ -28,7 +29,10 @@
                 {foreach from=$foruminfo item=postinfo}
                 <div>
                   <h4><a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic|escape}#post{$postinfo->id|escape}">{$postinfo->topicname|escape}</a></h4>
-                  <div><a href="{$WWWROOT}user/view.php?id={$postinfo->poster|escape}">{$postinfo->poster|display_name|escape}</a></div>
+                  <div>
+                    <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$postinfo->poster|escape}" alt="">
+                    <a href="{$WWWROOT}user/view.php?id={$postinfo->poster|escape}">{$postinfo->poster|display_name|escape}</a>
+                  </div>
                   <p>{$postinfo->body|str_shorten:100:true}</p>
                 </div>
                 {/foreach}

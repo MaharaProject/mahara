@@ -66,7 +66,7 @@ $editgroup = pieform(array(
         'grouptype' => array(
             'type'         => 'select',
             'title'        => get_string('grouptype', 'group'),
-            'options'      => get_grouptype_options(),
+            'options'      => group_get_grouptype_options(),
             'defaultvalue' => $group_data->grouptype . '.' . $group_data->jointype,
             'help'         => true,
         ),

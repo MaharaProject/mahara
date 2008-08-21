@@ -26,40 +26,334 @@
 
 defined('INTERNAL') || die();
 
+// Role related functions
 
 /**
- * is a user allowed to leave a group? 
- * checks if they're the owner and the membership type
+ * Establishes what role a user has in a given group.
  *
- * @param object $group (corresponds to db record). if an id is given, record will be fetched.
- * @param int $userid (optional, will default to logged in user)
+ * If the user is not in the group, this returns false.
+ *
+ * @param mixed $groupid  ID of the group to check
+ * @param mixed $userid   ID of the user to check. Defaults to the logged in 
+ *                        user.
+ * @return mixed          The role the user has in the group, or false if they 
+ *                        have no role in the group
+ */
+function group_user_access($groupid, $userid=null) {
+    static $result;
+
+    $groupid = group_param_groupid($groupid);
+    $userid  = group_param_userid($userid);
+
+    if (isset($result[$groupid][$userid])) {
+        return $result[$groupid][$userid];
+    }
+
+    return $result[$groupid][$userid] = get_field('group_member', 'role', 'group', $groupid, 'member', $userid);
+}
+
+/**
+ * Returns whether the given user is the only administrator in the given group.
+ *
+ * If the user isn't in the group, or they're not an admin, or there is another admin, false 
+ * is returned.
+ *
+ * @param int $groupid The ID of the group to check
+ * @param int $userid  The ID of the user to check
+ * @returns boolean
+ */
+function group_is_only_admin($groupid, $userid=null) {
+    static $result;
+
+    $groupid = group_param_groupid($groupid);
+    $userid  = group_param_userid($userid);
+
+    if (isset($result[$groupid][$userid])) {
+        return $result[$groupid][$userid];
+    }
+
+    return $result[$groupid][$userid] = (group_user_access($groupid, $userid) == 'admin'
+        && count_records('group_member', 'group', $groupid, 'role', 'admin') == 1);
+}
+
+/**
+ * Returns whether the given user is allowed to change their role to the 
+ * requested role in the given group.
+ *
+ * This function is checking whether _role changes_ are allowed, not if a user 
+ * is allowed to be added to a group.
+ *
+ * @param int $groupid The ID of the group to check
+ * @param int $userid  The ID of the user to check
+ * @param string $role The role the user wishes to switch to
+ * @returns boolean
+ */
+function group_can_change_role($groupid, $userid, $role) {
+    $groupid = group_param_groupid($groupid);
+    $userid  = group_param_userid($userid);
+
+    if (!group_user_access($groupid, $userid)) {
+        return false;
+    }
+
+    // Sole remaining admins can never change their role
+    if (group_is_only_admin($groupid, $userid)) {
+        return false;
+    }
+
+    // Maybe one day more checks will be needed - they go here
+
+    return true;
+}
+
+/**
+ * Changes a user role in a group, if this is allowed.
+ *
+ * @param int $groupid The ID of the group
+ * @param int $userid  The ID of the user whose role needs changing
+ * @param string $role The role the user wishes to switch to
+ * @throws AccessDeniedException If the specified role change is not allowed. 
+ *                               Check with group_can_change_role first if you 
+ *                               need to.
+ */
+function group_change_role($groupid, $userid, $role) {
+    // group_can_change_role checks whether the group and user parameters are valid
+    if (!group_can_change_role($groupid, $userid, $role)) {
+        throw new AccessDeniedException(get_string('usercannotchangetothisrole', 'group'));
+    }
+
+    set_field('group_member', 'role', $role, 'group', $groupid, 'member', $userid);
+}
+
+/**
+ * Returns whether a user is allowed to edit views in a given group
+ *
+ * @param int $groupid The ID of the group
+ * @param int $userid The ID of the user
+ * @returns boolean
+ */
+function group_user_can_edit_views($groupid, $userid=null) {
+    $groupid = group_param_groupid($groupid);
+    $userid  = group_param_userid($userid);
+
+    return get_field_sql('
+        SELECT
+            r.edit_views
+        FROM
+            {group_member} m
+            INNER JOIN {group} g ON (m.group = g.id AND g.deleted = 0)
+            INNER JOIN {grouptype_roles} r ON (g.grouptype = r.grouptype AND m.role = r.role)
+        WHERE
+            m.group = ?
+            AND m.member = ?', array($groupid, $userid));
+}
+
+/**
+ * Returns whether a user is allowed to assess views that have been submitted 
+ * to the given group.
+ *
+ * @param int $groupid ID of group
+ * @param int $userid  ID of user
+ * @return boolean
+ */
+function group_user_can_assess_submitted_views($groupid, $userid) {
+    $groupid = group_param_groupid($groupid);
+    $userid  = group_param_userid($userid);
+
+    return get_field_sql('
+        SELECT
+            r.see_submitted_views
+        FROM
+            {group_member} m
+            INNER JOIN {group} g ON (m.group = g.id AND g.deleted = 0)
+            INNER JOIN {grouptype_roles} r ON (g.grouptype = r.grouptype AND r.role = m.role)
+        WHERE
+            m.member = ?
+            AND m.group = ?', array($userid, $groupid));
+}
+
+// Functions for creation/deletion of groups, and adding/removing users to groups
+
+/**
+ * Creates a group.
+ *
+ * All group creation should be done through this function, as the 
+ * implementation of group creation may change over time.
+ *
+ * @param array $data Data required to create the group. The following 
+ * key/value pairs can be specified:
+ *
+ * - name: The group name [required, must be unique]
+ * - description: The group description [optional, defaults to empty string]
+ * - grouptype: The grouptype for the new group. Must be an installed grouptype.
+ * - jointype: The jointype for the new group. One of 'open', 'invite', 
+ *             'request' or 'controlled'
+ * - ctime: The unix timestamp of the time the group will be recorded as having 
+ *          been created. Defaults to the current time.
+ * - members: Array of users who should be in the group, structured like this:
+ *            array(
+ *                userid => role,
+ *                userid => role,
+ *                ...
+ *            )
+ */
+function group_create($data) {
+    if (!is_array($data)) {
+        throw new InvalidArgumentException("group_create: data must be an array, see the doc comment for this "
+            . "function for details on its format");
+    }
+
+    if (!isset($data['name'])) {
+        throw new InvalidArgumentException("group_create: must specify a name for the group");
+    }
+
+    if (!isset($data['grouptype']) || !in_array($data['grouptype'], group_get_grouptypes())) {
+        throw new InvalidArgumentException("group_create: grouptype specified must be an installed grouptype");
+    }
+
+    if (isset($data['jointype'])) {
+        if (!in_array($data['jointype'], call_static_method('GroupType' . $data['grouptype'], 'allowed_join_types'))) {
+            throw new InvalidArgumentException("group_create: jointype specified is not allowed by the grouptype specified");
+        }
+    }
+    else {
+        throw new InvalidArgumentException("group_create: jointype specified must be one of the valid join types");
+    }
+
+    if (!isset($data['ctime'])) {
+        $data['ctime'] = time();
+    }
+    $data['ctime'] = db_format_timestamp($data['ctime']);
+
+    if (!is_array($data['members']) || count($data['members']) == 0) {
+        throw new InvalidArgumentException("group_create: at least one member must be specified for adding to the group");
+    }
+
+    db_begin();
+
+    $id = insert_record(
+        'group',
+        (object) array(
+            'name'        => $data['name'],
+            'description' => $data['description'],
+            'grouptype'   => $data['grouptype'],
+            'jointype'    => $data['jointype'],
+            'ctime'       => $data['ctime'],
+            'mtime'       => $data['ctime'],
+        ),
+        'id',
+        true
+    );
+
+    foreach ($data['members'] as $userid => $role) {
+        insert_record(
+            'group_member',
+            (object) array(
+                'group'  => $id,
+                'member' => $userid,
+                'role'   => $role,
+                'ctime'  => $data['ctime'],
+            )
+        );
+    }
+
+    db_commit();
+}
+
+/**
+ * Deletes a group.
+ *
+ * All group deleting should be done through this function, even though it is 
+ * simple. What is required to perform group deletion may change over time.
+ *
+ * @param int $groupid The group to delete
+ *
+ * {{@internal Maybe later we can have a group_can_be_deleted function if 
+ * necessary}}
+ */
+function group_delete($groupid) {
+    $groupid = group_param_groupid($groupid);
+    update_record('group', array('deleted' => 1), array('id' => $groupid));
+}
+
+/**
+ * Adds a member to a group.
+ *
+ * Doesn't do any jointype checking, that should be handled by the caller.
+ *
+ * TODO: it should though. We should probably have group_user_can_be_added
+ *
+ * @param int $groupid
+ * @param int $userid
+ * @param string $role
+ */
+function group_add_user($groupid, $userid, $role=null) {
+    $groupid = group_param_groupid($groupid);
+    $userid  = group_param_userid($userid);
+
+    $cm = new StdClass;
+    $cm->member = $userid;
+    $cm->group = $groupid;
+    $cm->ctime =  db_format_timestamp(time());
+    if (!$role) {
+        $role = get_field_sql('SELECT gt.defaultrole FROM {grouptype} gt, {group} g WHERE g.id = ? AND g.grouptype = gt.name', array($groupid));
+    }
+    $cm->role = $role;
+
+    db_begin();
+    insert_record('group_member', $cm);
+    delete_records('group_member_request', 'group', $groupid, 'member', $userid);
+    db_commit();
+}
+
+/**
+ * Checks whether a user is allowed to leave a group.
+ *
+ * This checks things like if they're the owner and the group membership type
+ *
+ * @param mixed $group  DB record or ID of group to check
+ * @param int   $userid (optional, will default to logged in user)
  */
 function group_user_can_leave($group, $userid=null) {
+    static $result;
 
     $userid = optional_userid($userid);
-    
+
     if (is_numeric($group)) {
         if (!$group = get_record('group', 'id', $group, 'deleted', 0)) {
             return false;
         }
     }
-    
-    // TODO: disallow users from leaving if they are the only administrator in the group
-    
-    if ($group->jointype == 'controlled') {
-        return false;
+
+    // Return cached value if we have it
+    if (isset($result[$group->id][$userid])) {
+        return $result[$group->id][$userid];
     }
-    return true;
+
+    if ($group->jointype == 'controlled') {
+        return ($result[$group->id][$userid] = false);
+    }
+
+    if (group_is_only_admin($group->id, $userid)) {
+        return ($result[$group->id][$userid] = false);
+    }
+
+    return ($result[$group->id][$userid] = true);
 }
 
 /**
- * removes a user from a group
- * removed view access given by the user to the group
+ * Removes a user from a group.
  *
- * @param int $group id of group
- * @param int $user id of user to remove
+ * Also removes view access given by the user to the group
+ *
+ * @param int $groupid ID of group
+ * @param int $userid  ID of user to remove
  */
-function group_remove_user($group, $userid) {    
+function group_remove_user($groupid, $userid=null) {
+    // group_user_can_leave checks the validity of groupid and userid
+    if (!group_user_can_leave($groupid, $userid)) {
+        throw new AccessDeniedException(get_string('usercantleavegroup', 'group'));
+    }
     db_begin();
     delete_records('group_member', 'group', $group, 'member', $userid);
     delete_records_sql(
@@ -81,156 +375,11 @@ function group_remove_user($group, $userid) {
     }
 }
 
+// Pieforms for various operations on groups
 
 /**
- * all groups the user has pending invites to
- * 
- * @param int userid (optional, defaults to $USER id)
- * @return array of group db rows
+ * Form for users to join a given group
  */
-function get_invited_groups($userid=0) {
-
-    $userid = optional_userid($userid);
-
-    return get_records_sql_array('SELECT g.*, gmi.ctime, gmi.reason
-             FROM {group} g 
-             JOIN {group_member_invite} gmi ON gmi.group = g.id
-             WHERE gmi.member = ? AND g.deleted = ?', array($userid, 0));
-}
-
-/**
- * all groups the user has pending requests for 
- * 
- * @param int $userid (optional, defaults to $USER id)
- * @return array of group db rows
- */
-
-function get_requested_group($userid=0) {
-
-    $userid = optional_userid($userid);
-
-    return get_records_sql_array('SELECT g.*, gmr.ctime, gmr.reason 
-              FROM {group} g 
-              JOIN {group_member_request} gmr ON gmr.group = g.id
-              WHERE gmr.member = ? AND g.deleted = ?', array($userid, 0));
-}
-
-
-/**
- * Establishes what role a user has in a given group.
- *
- * If the user is not in the group, this returns false.
- *
- * @param mixed $groupid  ID of the group to check
- * @param mixed $userid   ID of the user to check. Defaults to the logged in 
- *                        user.
- * @return mixed          The role the user has in the group, or false if they 
- *                        have no role in the group
- */
-function group_user_access($groupid, $userid=null) {
-    // TODO: caching
-
-    $groupid = (int)$groupid;
-
-    if ($groupid == 0) {
-        throw new InvalidArgumentException("group_user_access: group argument appears to be invalid: $groupid");
-    }
-
-    if (is_null($userid)) {
-        global $USER;
-        $userid = (int)$USER->get('id');
-    }
-    else {
-        $userid = (int)$userid;
-    }
-
-    if ($userid == 0) {
-        throw new InvalidArgumentException("group_user_access: user argument appears to be invalid: $userid");
-    }
-
-    return get_field('group_member', 'role', 'group', $groupid, 'member', $userid);
-}
-
-function group_user_can_edit_views($groupid, $userid=null) {
-    $groupid = (int)$groupid;
-
-    if ($groupid == 0) {
-        throw new InvalidArgumentException("group_user_access: group argument appears to be invalid: $groupid");
-    }
-
-    if (is_null($userid)) {
-        global $USER;
-        $userid = (int)$USER->get('id');
-    }
-    else {
-        $userid = (int)$userid;
-    }
-
-    if ($userid == 0) {
-        throw new InvalidArgumentException("group_user_access: user argument appears to be invalid: $userid");
-    }
-
-    return get_field_sql('
-        SELECT
-            r.edit_views
-        FROM
-            {group_member} m
-            INNER JOIN {group} g ON (m.group = g.id AND g.deleted = 0)
-            INNER JOIN {grouptype_roles} r ON (g.grouptype = r.grouptype AND m.role = r.role)
-        WHERE
-            m.group = ?
-            AND m.member = ?', array($groupid, $userid));
-}
-
-/**
- * function to add a member to a group
- * doesn't do any jointype checking, that should be handled by the caller
- *
- * @param int $groupid
- * @param int $userid
- * @param string $role
- */
-function group_add_member($groupid, $userid, $role=null) {
-    $cm = new StdClass;
-    $cm->member = $userid;
-    $cm->group = $groupid;
-    $cm->ctime =  db_format_timestamp(time());
-    if (!$role) {
-        $role = get_field_sql('SELECT gt.defaultrole FROM {grouptype} gt, {group} g WHERE g.id = ? AND g.grouptype = gt.name', array($groupid));
-    }
-    $cm->role = $role;
-    insert_record('group_member', $cm);
-    delete_records('group_member_request', 'group', $groupid, 'member', $userid);
-    $user = optional_userobj($userid);
-}
-
-function group_has_members($groupid) {
-    $sql = 'SELECT (
-        (SELECT COUNT(*) FROM {group_member} WHERE "group" = ?)
-        +
-        (SELECT COUNT(*) FROM {group_member_request} WHERE "group" = ?)
-    )';
-    return count_records_sql($sql, array($groupid, $groupid));
-}
-
-function delete_group($groupid) {
-    update_record('group', array('deleted' => 1), array('id' => $groupid));
-}
-
-/**
- * Returns a list of user IDs who are admins for a group
- *
- * @param int
- * @return array
- */
-function group_get_admin_ids($group) {
-    return (array)get_column_sql("SELECT member
-        FROM {group_member}
-        WHERE \"group\" = ?
-        AND role = 'admin'", $group);
-}
-
-
 function group_get_join_form($name, $groupid) {
     return pieform(array(
         'name' => $name,
@@ -248,6 +397,9 @@ function group_get_join_form($name, $groupid) {
     ));
 }
 
+/**
+ * Form for accepting/declining a group invite
+ */
 function group_get_accept_form($name, $groupid, $returnto) {
     return pieform(array(
        'name'     => $name,
@@ -274,10 +426,13 @@ function group_get_accept_form($name, $groupid, $returnto) {
     ));
 }
 
-function group_get_addmember_form($userid, $groupid) {
+/**
+ * Form for adding a user to a group
+ */
+function group_get_adduser_form($userid, $groupid) {
     return pieform(array(
-        'name'                => 'addmember',
-        'successcallback'     => 'group_addmember_submit',
+        'name'                => 'adduser' . $userid,
+        'successcallback'     => 'group_adduser_submit',
         'renderer'            => 'div',
         'elements'            => array(
             'group' => array(
@@ -290,10 +445,128 @@ function group_get_addmember_form($userid, $groupid) {
             ),
             'submit' => array(
                 'type'  => 'submit',
-                'value' => get_string('add'),
+                'value' => get_string('add') . ' ' . display_name($userid),
             ),
         ),
     ));
+}
+
+/**
+ * Form for removing a user from a group
+ */
+function group_get_removeuser_form($userid, $groupid) {
+    return pieform(array(
+        'name'                => 'removeuser' . $userid,
+        'validatecallback'    => 'group_removeuser_validate',
+        'successcallback'     => 'group_removeuser_submit',
+        'renderer'            => 'oneline',
+        'elements'            => array(
+            'group' => array(
+                'type'    => 'hidden',
+                'value' => $groupid,
+            ),
+            'member' => array(
+                'type'  => 'hidden',
+                'value' => $userid,
+            ),
+            'submit' => array(
+                'type'  => 'submit',
+                'value' => get_string('removefromgroup', 'group'),
+            ),
+        ),
+    ));
+}
+
+// Functions for handling submission of group related forms
+
+function joingroup_submit(Pieform $form, $values) {
+    global $SESSION, $USER;
+    group_add_user($values['group'], $USER->get('id'));
+    $SESSION->add_ok_msg(get_string('joinedgroup', 'group'));
+    redirect('/group/view.php?id=' . $values['group']);
+}
+
+function group_invite_submit(Pieform $form, $values) {
+    global $SESSION, $USER;
+    $inviterecord = get_record('group_member_invite', 'member', $USER->get('id'), 'group', $values['group']);
+    if ($inviterecord) {
+        delete_records('group_member_invite', 'group', $values['group'], 'member', $USER->get('id'));
+        if (isset($values['accept'])) {
+            group_add_user($values['group'], $USER->get('id'), $inviterecord->role);
+            $SESSION->add_ok_msg(get_string('groupinviteaccepted', 'group'));
+            redirect('/group/view.php?id=' . $values['group']);
+        }
+        else {
+            $SESSION->add_ok_msg(get_string('groupinvitedeclined', 'group'));
+            redirect($values['returnto'] == 'find' ? '/group/find.php' : '/group/mygroups.php');
+        }
+    }
+}
+
+function group_adduser_submit(Pieform $form, $values) {
+    global $SESSION;
+    $group = (int)$values['group'];
+    if (group_user_access($group) != 'admin') {
+        $SESSION->add_error_msg(get_string('accessdenied', 'error'));
+        redirect('/group/members.php?id=' . $group . '&membershiptype=request');
+    }
+    group_add_user($group, $values['member']);
+    $SESSION->add_ok_msg(get_string('useradded', 'group'));
+    if (count_records('group_member_request', 'group', $group)) {
+        redirect('/group/members.php?id=' . $group . '&membershiptype=request');
+    }
+    redirect('/group/members.php?id=' . $group);
+}
+
+function group_removeuser_validate(Pieform $form, $values) {
+    global $user, $group, $SESSION;
+    if (!group_user_can_leave($values['group'], $values['member'])) {
+        $form->set_error('submit', get_string('usercantleavegroup', 'group'));
+    }
+}
+
+function group_removeuser_submit(Pieform $form, $values) {
+    global $SESSION;
+    $group = (int)$values['group'];
+    if (group_user_access($group) != 'admin') {
+        $SESSION->add_error_msg(get_string('accessdenied', 'error'));
+        redirect('/group/members.php?id=' . $group);
+    }
+    group_remove_user($group, $values['member']);
+    $SESSION->add_ok_msg(get_string('userremoved', 'group'));
+    redirect('/group/members.php?id=' . $group);
+}
+
+// Miscellaneous group related functions
+
+/**
+ * Returns a list of user IDs who are admins for a group
+ *
+ * @param int ID of group
+ * @return array
+ */
+function group_get_admin_ids($groupid) {
+    return (array)get_column_sql("SELECT member
+        FROM {group_member}
+        WHERE \"group\" = ?
+        AND role = 'admin'", $groupid);
+}
+
+/**
+ * Gets information about what the roles in a given group are able to do
+ *
+ * @param int $groupid ID of group to get role information for
+ * @return array
+ */
+function group_get_role_info($groupid) {
+    $roles = get_records_sql_assoc('SELECT role, edit_views, see_submitted_views, gr.grouptype FROM {grouptype_roles} gr
+        INNER JOIN {group} g ON g.grouptype = gr.grouptype
+        WHERE g.id = ?', array($groupid));
+    foreach ($roles as $role) {
+        $role->display = get_string($role->role, 'grouptype.'.$role->grouptype);
+        $role->name = $role->role;
+    }
+    return $roles;
 }
 
 /**
@@ -343,55 +616,6 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
     }
 }
 
-function joingroup_submit(Pieform $form, $values) {
-    global $SESSION, $USER;
-    group_add_member($values['group'], $USER->get('id'));
-    $SESSION->add_ok_msg(get_string('joinedgroup', 'group'));
-    redirect('/group/view.php?id=' . $values['group']);
-}
-
-function group_invite_submit(Pieform $form, $values) {
-    global $SESSION, $USER;
-    $inviterecord = get_record('group_member_invite', 'member', $USER->get('id'), 'group', $values['group']);
-    if ($inviterecord) {
-        delete_records('group_member_invite', 'group', $values['group'], 'member', $USER->get('id'));
-        if (isset($values['accept'])) {
-            group_add_member($values['group'], $USER->get('id'), $inviterecord->role);
-            $SESSION->add_ok_msg(get_string('groupinviteaccepted', 'group'));
-            redirect('/group/view.php?id=' . $values['group']);
-        }
-        else {
-            $SESSION->add_ok_msg(get_string('groupinvitedeclined', 'group'));
-            redirect($values['returnto'] == 'find' ? '/group/find.php' : '/group/mygroups.php');
-        }
-    }
-}
-
-function group_addmember_submit(Pieform $form, $values) {
-    global $SESSION;
-    $group = (int)$values['group'];
-    if (group_user_access($group) != 'admin') {
-        $SESSION->add_error_msg(get_string('accessdenied', 'error'));
-        redirect('/group/members.php?id=' . $group . '&membershiptype=request');
-    }
-    group_add_member($group, $values['member']);
-    $SESSION->add_ok_msg(get_string('useradded', 'group'));
-    if (count_records('group_member_request', 'group', $group)) {
-        redirect('/group/members.php?id=' . $group . '&membershiptype=request');
-    }
-    redirect('/group/members.php?id=' . $group);
-}
-
-function group_get_role_info($groupid) {
-    $roles = get_records_sql_assoc('SELECT role, edit_views, see_submitted_views, gr.grouptype FROM {grouptype_roles} gr
-        INNER JOIN {group} g ON g.grouptype = gr.grouptype
-        WHERE g.id = ?', array($groupid));
-    foreach ($roles as $role) {
-        $role->display = get_string($role->role, 'grouptype.'.$role->grouptype);
-        $role->name = $role->role;
-    }
-    return $roles;
-}
 
 function group_get_membersearch_data($group, $query, $offset, $limit, $membershiptype) {
     $results = get_group_user_search_results($group, $query, $offset, $limit, $membershiptype);
@@ -408,10 +632,27 @@ function group_get_membersearch_data($group, $query, $offset, $limit, $membershi
 
     $smarty = smarty_core();
 
+    foreach ($results['data'] as &$r) {
+        if (group_user_can_leave($group, $r['id'])) {
+            $r['removeform'] = group_get_removeuser_form($r['id'], $group);
+        }
+        // NOTE: this is a quick approximation. We should really check whether, 
+        // for each role in the group, that the user can change to it (using 
+        // group_can_change_role).  This only controls whether the 'change 
+        // role' link appears though, so it doesn't matter too much. If the 
+        // user clicks on this link, changerole.php does the full check and 
+        // sends them back here saying that the user has no roles they can 
+        // change to anyway.
+        $r['canchangerole'] = !group_is_only_admin($group, $r['id']);
+    }
+
     if (!empty($membershiptype)) {
         if ($membershiptype == 'request') {
             foreach ($results['data'] as &$r) {
-                $r['addform'] = group_get_addmember_form($r['id'], $group);
+                $r['addform'] = group_get_adduser_form($r['id'], $group);
+                // TODO: this will suck when there's quite a few on the page, 
+                // would be better to grab all the reasons in one go
+                $r['reason']  = get_field('group_member_request', 'reason', 'group', $group, 'member', $r['id']);
             }
         }
         $smarty->assign('membershiptype', $membershiptype);
@@ -450,6 +691,8 @@ function group_get_membersearch_data($group, $query, $offset, $limit, $membershi
 
 /**
  * Returns a list of available grouptypes
+ *
+ * @return array
  */
 function group_get_grouptypes() {
     static $grouptypes = null;
@@ -462,20 +705,6 @@ function group_get_grouptypes() {
 }
 
 
-function can_assess_submitted_views($userid, $groupid) {
-    return get_field_sql('
-        SELECT
-            r.see_submitted_views
-        FROM
-            {group_member} m 
-            INNER JOIN {group} g ON (m.group = g.id AND g.deleted = 0)
-            INNER JOIN {grouptype_roles} r ON (g.grouptype = r.grouptype AND r.role = m.role)
-        WHERE
-            m.member = ?
-            AND m.group = ?', array($userid, $groupid));
-}
-
-
 /**
  * Returns a list of grouptype & jointype options to be used in create
  * group/edit group drop-downs.
@@ -483,7 +712,7 @@ function can_assess_submitted_views($userid, $groupid) {
  * If there is more than one group type with the same join type,
  * prefix the join types with the group type for display.
  */
-function get_grouptype_options() {
+function group_get_grouptype_options() {
     $groupoptions = array();
     $jointypecount = array('open' => 0, 'invite' => 0, 'request' => 0, 'controlled' => 0);
     foreach (group_get_grouptypes() as $grouptype) {
@@ -504,7 +733,12 @@ function get_grouptype_options() {
     return $groupoptions['jointype'];
 }
 
-
+/**
+ * Returns a datastructure describing the tabs that appear on a group page
+ *
+ * @param object $group Database record of group to get tabs for
+ * @return array
+ */
 function group_get_menu_tabs($group) {
     $menu = array(
         'info' => array(
@@ -536,6 +770,46 @@ function group_get_menu_tabs($group) {
         }
     }
     return $menu;
+}
+
+/**
+ * Used by this file to perform validation of group ID function arguments
+ *
+ * @param int $groupid
+ * @return int
+ * @throws InvalidArgumentException
+ */
+function group_param_groupid($groupid) {
+    $groupid = (int)$groupid;
+
+    if ($groupid == 0) {
+        throw new InvalidArgumentException("group_user_access: group argument should be an integer");
+    }
+
+    return $groupid;
+}
+
+/**
+ * Used by this file to perform validation of user ID function arguments
+ *
+ * @param int $userid
+ * @return int
+ * @throws InvalidArgumentException
+ */
+function group_param_userid($userid) {
+    if (is_null($userid)) {
+        global $USER;
+        $userid = (int)$USER->get('id');
+    }
+    else {
+        $userid = (int)$userid;
+    }
+
+    if ($userid == 0) {
+        throw new InvalidArgumentException("group_user_access: user argument should be an integer");
+    }
+
+    return $userid;
 }
 
 ?>
