@@ -78,7 +78,7 @@ function group_user_access($groupid, $userid=null) {
  * @returns boolean
  */
 function group_is_only_admin($groupid, $userid=null) {
-    // TODO: caching
+    static $result;
 
     $groupid = (int)$groupid;
 
@@ -98,8 +98,12 @@ function group_is_only_admin($groupid, $userid=null) {
         throw new InvalidArgumentException("group_is_only_admin: user argument should be an integer");
     }
 
-    return group_user_access($groupid, $userid) == 'admin'
-        && count_records('group_member', 'group', $groupid, 'role', 'admin') == 1;
+    if (isset($result[$groupid][$userid])) {
+        return $result[$groupid][$userid];
+    }
+
+    return $result[$groupid][$userid] = (group_user_access($groupid, $userid) == 'admin'
+        && count_records('group_member', 'group', $groupid, 'role', 'admin') == 1);
 }
 
 /**
