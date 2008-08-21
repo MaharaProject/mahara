@@ -28,32 +28,27 @@ define('INTERNAL', 1);
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'blocks');
-require(dirname(dirname(__FILE__)) . '/init.php');
-require('view.php');
-require_once(get_config('docroot') . 'lib/group.php');
 
-$view = new View(param_integer('id'));
-$group = $view->get('group');
-$institution = $view->get('institution');
-View::set_nav($group, $institution);
+require(dirname(dirname(__FILE__)) . '/init.php');
+require_once(get_config('libroot') . 'view.php');
+require_once(get_config('libroot') . 'group.php');
+
+$id = param_integer('id');
+$new = param_boolean('new', false);
+
+$view = new View($id);
+if (!$USER->can_edit_view($view)) {
+    throw new AccessDeniedException();
+}
 
 // If the view has been submitted to a group, disallow editing
 $submittedto = $view->get('submittedto');
 if ($submittedto) {
     throw new AccessDeniedException(get_string('canteditsubmitted', 'view', get_field('group', 'name', 'id', $submittedto)));
 }
-if (!$USER->can_edit_view($view)) {
-    throw new AccessDeniedException();
-}
 
-$new = param_boolean('new');
-
-if ($new) {
-    define('TITLE', get_string('createviewsteptwo', 'view'));
-}
-else {
-    define('TITLE', get_string('editblocksforview', 'view', $view->get('title')));
-}
+$group = $view->get('group');
+$institution = $view->get('institution');
 
 // check if cancel was selected
 if ($new && isset($_POST['cancel'])) {
@@ -61,10 +56,19 @@ if ($new && isset($_POST['cancel'])) {
     if ($group) {
         redirect(get_config('wwwroot') . '/view/groupviews.php?group='.$group);
     }
-    if ($group) {
+    if ($institution) {
         redirect(get_config('wwwroot') . '/view/institutionviews.php?institution='.$institution);
     }
     redirect(get_config('wwwroot') . '/view/');
+}
+
+View::set_nav($group, $institution);
+
+if ($new) {
+    define('TITLE', get_string('createviewstepone', 'view'));
+}
+else {
+    define('TITLE', get_string('editblocksforview', 'view', $view->get('title')));
 }
 
 $category = param_alpha('c', '');

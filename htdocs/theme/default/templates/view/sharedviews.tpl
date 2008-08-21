@@ -2,11 +2,6 @@
 {include file="sidebar.tpl"}
 {include file="columnleftstart.tpl"}
 
-{if ($caneditgroupview)}
-<span class="addicon fr">
-<a href="{$WWWROOT}view/edit.php?group={$groupid}">{str tag="createview" section="view"}</a>
-</span>
-{/if}
 <h2>{$heading}</h2>
 
 {include file="group/tabstart.tpl" current="views"}
@@ -16,7 +11,7 @@
         <tr>
             <td class="r{cycle values=0,1}">
                 <h5><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a> {str tag=by section=view}
-                    <a href="{$WWWROOT}{if $view.group}group{else}user{/if}/view.php?id={if $view.group}{$view.group}{else}{$view.owner}{/if}">{if $view.sharedby}{$view.sharedby}{else}{$groupname}{/if}{if $view.template} <span class="template">({str tag=Template section=view})</span>{/if}</a>
+                    <a href="{$WWWROOT}{if $view.group}group{else}user{/if}/view.php?id={if $view.group}{$view.group}{else}{$view.owner}{/if}">{if $view.sharedby}{$view.sharedby}{else}{$groupname}{/if}</a>
                 </h5>
                 <span>
                 {if $view.description}
@@ -26,6 +21,9 @@
                 {if $view.artefacts}
                     <strong>{str tag="artefacts" section="view"}:</strong>
                     {foreach from=$view.artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$view.id}" class="link-artefacts">{$artefact.title|escape}</a>{if !$smarty.foreach.artefacts.last}, {/if}{/foreach}
+                {/if}
+                {if $view.template}
+                    <a href="">{str tag=copythisview section=view}</a>
                 {/if}
                 </span>
             </td>

@@ -1452,6 +1452,21 @@ class View {
     }
 
 
+    public static function owner_sql($userid=null, $groupid=null, $institution=null) {
+        if ($institution) {
+            return 'institution = ' . db_quote($institution);
+        }
+        if ($groupid) {
+            return '"group" = ' . (int)$groupid;
+        }
+        if ($userid) {
+            return 'owner = ' . (int)$userid;
+        }
+        return '';
+    }
+
+
+
     /**
      * Get all views visible to a user.  Complicated because a view v
      * is visible to a user u at time t if any of the following are
@@ -1484,22 +1499,12 @@ class View {
 
         $where = '
             WHERE TRUE';
+
+        if ($ownerid || $groupid || $institution) {
+            $where .= ' AND v.' . self::owner_sql($ownerid, $groupid, $institution);
+        }
+
         $ph = array();
-        if ($ownerid) {
-            $where .= '
-                AND v.owner = ?';
-            $ph[] = $ownerid;
-        }
-        else if ($groupid) {
-            $where .= '
-                AND v.group = ?';
-            $ph[] = $groupid;
-        }
-        else if ($institution) {
-            $where .= '
-                AND v.institution = ?';
-            $ph[] = $institution;
-        }
         if ($template) {
             $where .= '
                 AND v.template = 1';
@@ -1827,6 +1832,143 @@ class View {
         return $numcopied;
     }
 
+    public static function new_title($user, $group, $institution) {
+        $title = get_string('Untitled', 'view');
+        $taken = get_column_sql('
+            SELECT title
+            FROM {view}
+            WHERE ' . self::owner_sql($user, $group, $institution) . "
+                AND title LIKE ? || '%'", array($title));
+        $ext = ''; $i = 0;
+        if ($taken) {
+            while (in_array($title . $ext, $taken)) {
+                $ext = ' (' . ++$i . ')';
+            }
+        }
+        return $title . $ext;
+    }
+
+}
+
+
+function create_view_form($group=null, $institution=null, $templatechooser=null) {
+    global $USER;
+    $form = array(
+        'name'     => 'createview',
+        'method'   => 'post',
+        'plugintype' => 'core',
+        'pluginname' => 'view',
+        'elements' => array(
+            'new' => array(
+                'type' => 'hidden',
+                'value' => true,
+            ),
+        )
+    );
+    if ($group) {
+        $form['elements']['group'] = array(
+            'type' => 'hidden',
+            'value' => $group,
+        );
+    }
+    else if ($institution) {
+        $form['elements']['institution'] = array(
+            'type' => 'hidden',
+            'value' => $institution,
+        );
+    }
+    if ($templatechooser) {
+        // Get templates visible to the user and non-templates owned by
+        // the owner of the view being created
+        $templates = View::view_search(null, null, null, true, null, 0, false);
+        $ownerid = ($group || $institution) ? null : $USER->get('id');
+        $nontemplates = View::view_search($ownerid, $group, $institution, false, null, 0, false);
+
+        $templateoptions = array(0 => get_string('none'));
+        foreach ($templates->data as $t) {
+            $templateoptions[$t->id] = $t->title;
+        }
+        foreach ($nontemplates->data as $t) {
+            $templateoptions[$t->id] = $t->title;
+        }
+        $form['elements']['usetemplate'] = array(
+            'type'         => 'select',
+            'title'        => get_string('Template','view'),
+            'description'  => get_string('createfromtemplatedescription','view'),
+            'options'      => $templateoptions,
+        );
+        $form['elements']['submit'] = array(
+            'type'  => 'submitcancel',
+            'value' => array(get_string('createview', 'view'), get_string('cancel')),
+        );
+    }
+    else {
+        $form['renderer'] = 'oneline';
+        $form['elements']['submit'] = array(
+            'type'  => 'submit',
+            'value' => get_string('createview', 'view'),
+        );
+    }
+    return $form;
+}
+
+function createview_submit(Pieform $form, $values) {
+    global $USER, $SESSION;
+
+    $group = isset($values['group']) ? (int) $values['group'] : null;
+    $institution = isset($values['institution']) ? (int) $values['institution'] : null;
+    $templateid = isset($values['usetemplate']) ? (int) $values['usetemplate'] : null;
+
+    $owner = ($group || $institution) ? null : $USER->get('id');
+
+    if ($group && !group_user_can_edit_views($group)
+        || $institution && !$USER->can_edit_institution($institution)) {
+        throw new AccessDeniedException();
+    }
+
+    // Create a new view
+    $data = (object) array(
+        'numcolumns'  => 3,
+        'template'    => 0,
+        'group'       => $group,
+        'institution' => $institution,
+        'owner'       => $owner,
+        'title'       => View::new_title($owner, $group, $institution),
+    );
+    $view = new View(0, $data);
+    $view->commit();  // copy_contents call below needs a view id
+
+    if ($templateid) {
+        $template = new View($templateid);
+        if (!$template->get('deleted') && ($template->get('template') && can_view_view($templateid)) || $USER->can_edit_view($template)) {
+            $view->set('dirty', true);
+            $copystatus = $view->copy_contents($template);
+            $SESSION->add_ok_msg(get_string('copiedblocksandartefactsfromtemplate', 'view', $copystatus['blocks'], $copystatus['artefacts'], $template->get('title')));
+        }
+    }
+    if ($group) {
+        // By default, group views should be visible to the group
+        $view->set_access(array(array(
+            'type'      => 'group',
+            'id'        => $group,
+            'startdate' => null,
+            'stopdate'  => null,
+            'role'      => null
+        )));
+    }
+    $view->commit();
+
+    redirect(get_config('wwwroot') . 'view/blocks.php?new=1&id=' . $view->get('id'));
+}
+
+function createview_cancel_submit(Pieform $form, $values) {
+    if (isset($values['group'])) {
+        redirect(get_config('wwwroot') . 'view/groupviews.php?group=' . $values['group']);
+    }
+    if (isset($values['institution'])) {
+        redirect(get_config('wwwroot') . 'view/institutionviews.php?institution=' . $values['institution']);
+    }
+    redirect(get_config('wwwroot') . 'view/');
 }
 
 

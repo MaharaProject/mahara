@@ -34,53 +34,26 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'group.php');
 
-$id = param_integer('id', 0); // if 0, we're creating a new view
-$new = param_boolean('new');
+$view = new View(param_integer('id'));
 
-if (empty($id)) {
-    $new = true;
-    $group = param_integer('group', null);
-    $institution = param_alphanum('institution', null);
-
-    if ($group && !group_user_can_edit_views($group)
-        || $institution && !$USER->can_edit_institution($institution)) {
-        throw new AccessDeniedException();
-    }
-
-    // Get templates visible to the user and non-templates owned by
-    // the owner of the view being created
-    $templates = View::view_search(null, null, null, true, null, 0, false);
-    $ownerid = ($group || $institution) ? null : $USER->get('id');
-    $nontemplates = View::view_search($ownerid, $group, $institution, false, null, 0, false);
-
-    $templateoptions = array(0 => get_string('none'));
-    foreach ($templates->data as $t) {
-        $templateoptions[$t->id] = $t->title;
-    }
-    foreach ($nontemplates->data as $t) {
-        $templateoptions[$t->id] = $t->title;
-    }
-}
-else {
-    $view = new View($id);
-    if (!$USER->can_edit_view($view)) {
-        throw new AccessDeniedException();
-    }
-
-    // If the view has been submitted to a group, disallow editing
-    $submittedto = $view->get('submittedto');
-    if ($submittedto) {
-        throw new AccessDeniedException(get_string('canteditsubmitted', 'view', get_field('group', 'name', 'id', $submittedto)));
-    }
-
-    $group = $view->get('group');
-    $institution = $view->get('institution');
+if (!$USER->can_edit_view($view)) {
+    throw new AccessDeniedException();
 }
 
+// If the view has been submitted to a group, disallow editing
+$submittedto = $view->get('submittedto');
+if ($submittedto) {
+    throw new AccessDeniedException(get_string('canteditsubmitted', 'view', get_field('group', 'name', 'id', $submittedto)));
+}
+
+$group = $view->get('group');
+$institution = $view->get('institution');
 View::set_nav($group, $institution);
 
-if ($new || empty($id)) {
-    define('TITLE', get_string('createviewstepone', 'view'));
+$new = param_boolean('new', 0);
+
+if ($new) {
+    define('TITLE', get_string('createviewsteptwo', 'view'));
 }
 else {
     define('TITLE', get_string('editviewdetails', 'view', $view->get('title')));
@@ -116,7 +89,7 @@ $editview = array(
     'elements' => array(
         'id' => array(
             'type'  => 'hidden',
-            'value' => $id,
+            'value' => $view->get('id'),
         ),
         'new' => array(
             'type' => 'hidden',
@@ -125,7 +98,7 @@ $editview = array(
         'title' => array(
             'type'         => 'text',
             'title'        => get_string('title','view'),
-            'defaultvalue' => isset($view) ? $view->get('title') : null,
+            'defaultvalue' => $view->get('title'),
             'rules'        => array( 'required' => true ),
         ),
         'description' => array(
@@ -133,61 +106,52 @@ $editview = array(
             'title'        => get_string('description','view'),
             'rows'         => 10,
             'cols'         => 70,
-            'defaultvalue' => isset($view) ? $view->get('description') : null,
+            'defaultvalue' => $view->get('description'),
         ),
         'tags'        => array(
             'type'         => 'tags',
             'title'        => get_string('tags'),
             'description'  => get_string('tagsdescprofile'),
-            'defaultvalue' => isset($view) ? $view->get('tags') : null,
+            'defaultvalue' => $view->get('tags'),
             'help'         => true,
         ),
     ),
 );
 
-if ($group) {
-    $editview['elements']['group'] = array(
-        'type'  => 'hidden',
-        'value' => $group
-    );
-}
-else if ($institution) {
-    $editview['elements']['institution'] = array(
-        'type'  => 'hidden',
-        'value' => $institution
-    );
-}
-else {
+if (!($group || $institution)) {
+    $default = $view->get('ownerformat');
+    if (!$default) {
+        $default = FORMAT_NAME_DISPLAYNAME;
+    }
     $editview['elements']['ownerformat'] = array(
         'type'         => 'select',
         'title'        => get_string('ownerformat','view'),
         'description'  => get_string('ownerformatdescription','view'),
         'options'      => $ownerformatoptions,
-        'defaultvalue' => isset($view) ? $view->get('ownerformat') : FORMAT_NAME_DISPLAYNAME,
+        'defaultvalue' => $default,
         'rules'        => array('required' => true),
     );
 }
 
-if ($new && count($templateoptions)) {
-    $editview['elements']['usetemplate'] = array(
-        'type'         => 'select',
-        'title'        => get_string('Template','view'),
-        'description'  => get_string('createfromtemplatedescription','view'),
-        'options'      => $templateoptions,
+if ($new) {
+    $editview['elements']['submit'] = array(
+        'type'  => 'cancelbackcreate',
+        'value' => array(get_string('cancel'), get_string('back','view'), get_string('next')),
+        'confirm' => array(get_string('confirmcancelcreatingview', 'view'), null, null),
     );
 }
-
-$editview['elements']['submit'] = array(
-    'type'  => 'submitcancel',
-    'value' => array(empty($new) ? get_string('save') : get_string('next'), get_string('cancel')),
-    'confirm' => $new && isset($view) ? array(null, get_string('confirmcancelcreatingview', 'view')) : null,
-);
+else {
+    $editview['elements']['submit'] = array(
+        'type'  => 'submit',
+        'value' => get_string('done'),
+    );
+}
 
 $editview = pieform($editview);
 
 function editview_cancel_submit() {
     global $view, $new, $group, $institution;
-    if (isset($view) && $new) {
+    if ($new) {
         $view->delete();
     }
     if ($group) {
@@ -201,62 +165,31 @@ function editview_cancel_submit() {
 
 function editview_submit(Pieform $form, $values) {
 
-    global $USER, $SESSION, $group, $institution;
+    global $view, $SESSION;
 
-    $editing = !empty($values['id']);
-    $view = new View($values['id'], $values);
-
-    if (empty($editing)) {
-        $view->set('numcolumns', 3); // default
-        $view->set('template', 0);
-        if ($group) {
-            $view->set('group', $group);
-        }
-        else if ($institution) {
-            $view->set('institution', $institution);
-        }
-        else {
-            $view->set('owner', $USER->get('id'));
-        }
+    if (param_boolean('back')) {
+        redirect('/view/blocks.php?id=' . $view->get('id') . '&new=' . $new);
     }
-    else {
-        $view->set('dirty', true);
+
+    $view->set('title', $values['title']);
+    $view->set('description', $values['description']);
+    $view->set('tags', $values['tags']);
+    if (isset($values['ownerformat']) && $view->get('owner')) {
+        $view->set('ownerformat', $values['ownerformat']);
     }
 
     $view->commit();
 
-    if (!$editing) {
-        if ($values['usetemplate']) {
-            $template = new View($values['usetemplate']);
-            if (!$template->get('deleted') && ($template->get('template') && can_view_view($values['usetemplate'])) || $USER->can_edit_view($template)) {
-                $view->set('dirty', true);
-                $copystatus = $view->copy_contents($template);
-                $SESSION->add_ok_msg(get_string('copiedblocksandartefactsfromtemplate', 'view', $copystatus['blocks'], $copystatus['artefacts'], $template->get('title')));
-            }
-        }
-        if ($group) {
-            // By default, group views should be visible to the group
-            $view->set_access(array(array(
-                'type'      => 'group',
-                'id'        => $group,
-                'startdate' => null,
-                'stopdate'  => null,
-                'role'      => null
-            )));
-        }
-        $view->commit();
-    }
-
     if ($values['new']) {
-        $redirecturl = '/view/blocks.php?id=' . $view->get('id') . '&new=1';
+        $redirecturl = '/view/access.php?id=' . $view->get('id') . '&new=1';
     } 
     else {
         $SESSION->add_ok_msg(get_string('viewsavedsuccessfully', 'view'));
-        if ($group) {
-            $redirecturl = '/view/groupviews.php?group='.$group;
+        if ($view->get('group')) {
+            $redirecturl = '/view/groupviews.php?group='.$view->get('group');
         }
-        else if ($institution) {
-            $redirecturl = '/view/institutionviews.php?institution=' . $institution;
+        else if ($view->get('institution')) {
+            $redirecturl = '/view/institutionviews.php?institution=' . $view->get('institution');
         }
         else {
             $redirecturl = '/view/index.php';

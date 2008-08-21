@@ -27,8 +27,8 @@
 defined('INTERNAL') || die();
 
 $string['createview']             = 'Create View';
-$string['createviewstepone']      = 'Create View Step One: Details';
-$string['createviewsteptwo']      = 'Create View Step Two: Layout';
+$string['createviewstepone']      = 'Create View Step One: Layout';
+$string['createviewsteptwo']      = 'Create View Step Two: Details';
 $string['createviewstepthree']    = 'Create View Step Three: Access';
 $string['editviewdetails']        = 'Edit Details for View "%s"';
 $string['editblocksforview']      = 'Edit View "%s"';
@@ -243,5 +243,9 @@ $string['filescopiedfromviewtemplate'] = 'Files copied from %s';
 $string['viewfilesdirname'] = 'viewfiles';
 $string['viewfilesdirdesc'] = 'Files from copied views';
 $string['thisviewmaybecopied'] = 'Copying is allowed';
+$string['copythisview'] = 'Copy this View';
+$string['createemptyview'] = 'Create Empty View';
+$string['copyaview'] = 'Copy a View';
+$string['Untitled'] = 'Untitled';
 
 ?>

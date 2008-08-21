@@ -3,7 +3,8 @@
 {include file="columnleftstart.tpl"}
 
 <span class="addicon fr">
-<a href="{$WWWROOT}view/edit.php{if $groupid}?group={$groupid}{elseif $institution}?institution={$institution}{/if}">{str tag="createview" section="view"}</a>
+{$createviewform}
+<a href="{$WWWROOT}view/choosetemplate.php{if $groupid}?group={$groupid}{elseif $institution}?institution={$institution}{/if}">{str tag="copyaview" section="view"}</a>
 </span>
 <h2>{$heading}</h2>
 

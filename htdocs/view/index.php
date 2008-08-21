@@ -119,6 +119,7 @@ $smarty = smarty();
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('heading', get_string('myviews'));
+$smarty->assign('createviewform', pieform(create_view_form()));
 $smarty->display('view/index.tpl');
 
 ?>
