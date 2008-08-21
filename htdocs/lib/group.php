@@ -489,7 +489,7 @@ function group_get_accept_form($name, $groupid, $returnto) {
  */
 function group_get_adduser_form($userid, $groupid) {
     return pieform(array(
-        'name'                => 'adduser', // TODO: is this safe? how many of these forms are shown on a page?
+        'name'                => 'adduser' . $userid,
         'successcallback'     => 'group_adduser_submit',
         'renderer'            => 'div',
         'elements'            => array(
