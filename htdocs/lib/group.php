@@ -503,7 +503,7 @@ function group_get_adduser_form($userid, $groupid) {
             ),
             'submit' => array(
                 'type'  => 'submit',
-                'value' => get_string('add'),
+                'value' => get_string('add') . ' ' . display_name($userid),
             ),
         ),
     ));
