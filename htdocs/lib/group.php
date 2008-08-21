@@ -337,8 +337,11 @@ function group_delete($groupid) {
 }
 
 /**
- * function to add a member to a group
- * doesn't do any jointype checking, that should be handled by the caller
+ * Adds a member to a group.
+ *
+ * Doesn't do any jointype checking, that should be handled by the caller.
+ *
+ * TODO: it should though. We should probably have group_user_can_be_added
  *
  * @param int $groupid
  * @param int $userid
@@ -427,20 +430,11 @@ function group_remove_user($groupid, $userid=null) {
     }
 }
 
+// Pieforms for various operations on groups
+
 /**
- * Returns a list of user IDs who are admins for a group
- *
- * @param int
- * @return array
+ * Form for users to join a given group
  */
-function group_get_admin_ids($group) {
-    return (array)get_column_sql("SELECT member
-        FROM {group_member}
-        WHERE \"group\" = ?
-        AND role = 'admin'", $group);
-}
-
-
 function group_get_join_form($name, $groupid) {
     return pieform(array(
         'name' => $name,
@@ -458,6 +452,9 @@ function group_get_join_form($name, $groupid) {
     ));
 }
 
+/**
+ * Form for accepting/declining a group invite
+ */
 function group_get_accept_form($name, $groupid, $returnto) {
     return pieform(array(
        'name'     => $name,
@@ -484,6 +481,9 @@ function group_get_accept_form($name, $groupid, $returnto) {
     ));
 }
 
+/**
+ * Form for adding a user to a group
+ */
 function group_get_adduser_form($userid, $groupid) {
     return pieform(array(
         'name'                => 'adduser', // TODO: is this safe? how many of these forms are shown on a page?
@@ -506,6 +506,9 @@ function group_get_adduser_form($userid, $groupid) {
     ));
 }
 
+/**
+ * Form for removing a user from a group
+ */
 function group_get_removeuser_form($userid, $groupid) {
     return pieform(array(
         'name'                => 'removeuser' . $userid,
@@ -527,6 +530,97 @@ function group_get_removeuser_form($userid, $groupid) {
             ),
         ),
     ));
+}
+
+// Functions for handling submission of group related forms
+
+function joingroup_submit(Pieform $form, $values) {
+    global $SESSION, $USER;
+    group_add_user($values['group'], $USER->get('id'));
+    $SESSION->add_ok_msg(get_string('joinedgroup', 'group'));
+    redirect('/group/view.php?id=' . $values['group']);
+}
+
+function group_invite_submit(Pieform $form, $values) {
+    global $SESSION, $USER;
+    $inviterecord = get_record('group_member_invite', 'member', $USER->get('id'), 'group', $values['group']);
+    if ($inviterecord) {
+        delete_records('group_member_invite', 'group', $values['group'], 'member', $USER->get('id'));
+        if (isset($values['accept'])) {
+            group_add_user($values['group'], $USER->get('id'), $inviterecord->role);
+            $SESSION->add_ok_msg(get_string('groupinviteaccepted', 'group'));
+            redirect('/group/view.php?id=' . $values['group']);
+        }
+        else {
+            $SESSION->add_ok_msg(get_string('groupinvitedeclined', 'group'));
+            redirect($values['returnto'] == 'find' ? '/group/find.php' : '/group/mygroups.php');
+        }
+    }
+}
+
+function group_adduser_submit(Pieform $form, $values) {
+    global $SESSION;
+    $group = (int)$values['group'];
+    if (group_user_access($group) != 'admin') {
+        $SESSION->add_error_msg(get_string('accessdenied', 'error'));
+        redirect('/group/members.php?id=' . $group . '&membershiptype=request');
+    }
+    group_add_user($group, $values['member']);
+    $SESSION->add_ok_msg(get_string('useradded', 'group'));
+    if (count_records('group_member_request', 'group', $group)) {
+        redirect('/group/members.php?id=' . $group . '&membershiptype=request');
+    }
+    redirect('/group/members.php?id=' . $group);
+}
+
+function group_removeuser_validate(Pieform $form, $values) {
+    global $user, $group, $SESSION;
+    if (!group_user_can_leave($values['group'], $values['member'])) {
+        $form->set_error('submit', get_string('usercantleavegroup', 'group'));
+    }
+}
+
+function group_removeuser_submit(Pieform $form, $values) {
+    global $SESSION;
+    $group = (int)$values['group'];
+    if (group_user_access($group) != 'admin') {
+        $SESSION->add_error_msg(get_string('accessdenied', 'error'));
+        redirect('/group/members.php?id=' . $group);
+    }
+    group_remove_user($group, $values['member']);
+    $SESSION->add_ok_msg(get_string('userremoved', 'group'));
+    redirect('/group/members.php?id=' . $group);
+}
+
+
+/**
+ * Returns a list of user IDs who are admins for a group
+ *
+ * @param int ID of group
+ * @return array
+ */
+function group_get_admin_ids($groupid) {
+    return (array)get_column_sql("SELECT member
+        FROM {group_member}
+        WHERE \"group\" = ?
+        AND role = 'admin'", $groupid);
+}
+
+/**
+ * Gets information about what the roles in a given group are able to do
+ *
+ * @param int $groupid ID of group to get role information for
+ * @return array
+ */
+function group_get_role_info($groupid) {
+    $roles = get_records_sql_assoc('SELECT role, edit_views, see_submitted_views, gr.grouptype FROM {grouptype_roles} gr
+        INNER JOIN {group} g ON g.grouptype = gr.grouptype
+        WHERE g.id = ?', array($groupid));
+    foreach ($roles as $role) {
+        $role->display = get_string($role->role, 'grouptype.'.$role->grouptype);
+        $role->name = $role->role;
+    }
+    return $roles;
 }
 
 /**
@@ -576,74 +670,6 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
     }
 }
 
-function joingroup_submit(Pieform $form, $values) {
-    global $SESSION, $USER;
-    group_add_user($values['group'], $USER->get('id'));
-    $SESSION->add_ok_msg(get_string('joinedgroup', 'group'));
-    redirect('/group/view.php?id=' . $values['group']);
-}
-
-function group_invite_submit(Pieform $form, $values) {
-    global $SESSION, $USER;
-    $inviterecord = get_record('group_member_invite', 'member', $USER->get('id'), 'group', $values['group']);
-    if ($inviterecord) {
-        delete_records('group_member_invite', 'group', $values['group'], 'member', $USER->get('id'));
-        if (isset($values['accept'])) {
-            group_add_user($values['group'], $USER->get('id'), $inviterecord->role);
-            $SESSION->add_ok_msg(get_string('groupinviteaccepted', 'group'));
-            redirect('/group/view.php?id=' . $values['group']);
-        }
-        else {
-            $SESSION->add_ok_msg(get_string('groupinvitedeclined', 'group'));
-            redirect($values['returnto'] == 'find' ? '/group/find.php' : '/group/mygroups.php');
-        }
-    }
-}
-
-function group_removeuser_validate(Pieform $form, $values) {
-    global $user, $group, $SESSION;
-    if (!group_user_can_leave($values['group'], $values['member'])) {
-        $form->set_error('submit', get_string('usercantleavegroup', 'group'));
-    }
-}
-
-function group_adduser_submit(Pieform $form, $values) {
-    global $SESSION;
-    $group = (int)$values['group'];
-    if (group_user_access($group) != 'admin') {
-        $SESSION->add_error_msg(get_string('accessdenied', 'error'));
-        redirect('/group/members.php?id=' . $group . '&membershiptype=request');
-    }
-    group_add_user($group, $values['member']);
-    $SESSION->add_ok_msg(get_string('useradded', 'group'));
-    if (count_records('group_member_request', 'group', $group)) {
-        redirect('/group/members.php?id=' . $group . '&membershiptype=request');
-    }
-    redirect('/group/members.php?id=' . $group);
-}
-
-function group_removeuser_submit(Pieform $form, $values) {
-    global $SESSION;
-    $group = (int)$values['group'];
-    if (group_user_access($group) != 'admin') {
-        $SESSION->add_error_msg(get_string('accessdenied', 'error'));
-        redirect('/group/members.php?id=' . $group);
-    }
-    group_remove_user($group, $values['member']);
-    $SESSION->add_ok_msg(get_string('userremoved', 'group'));
-    redirect('/group/members.php?id=' . $group);
-}
-
-function group_get_role_info($groupid) {
-    $roles = get_records_sql_assoc('SELECT role, edit_views, see_submitted_views, gr.grouptype FROM {grouptype_roles} gr
-        INNER JOIN {group} g ON g.grouptype = gr.grouptype
-        WHERE g.id = ?', array($groupid));
-    foreach ($roles as $role) {
-        $role->display = get_string($role->role, 'grouptype.'.$role->grouptype);
-        $role->name = $role->role;
-    }
-    return $roles;
-}
 
 function group_get_membersearch_data($group, $query, $offset, $limit, $membershiptype) {
     $results = get_group_user_search_results($group, $query, $offset, $limit, $membershiptype);
@@ -716,6 +742,8 @@ function group_get_membersearch_data($group, $query, $offset, $limit, $membershi
 
 /**
  * Returns a list of available grouptypes
+ *
+ * @return array
  */
 function group_get_grouptypes() {
     static $grouptypes = null;
@@ -756,7 +784,12 @@ function get_grouptype_options() {
     return $groupoptions['jointype'];
 }
 
-
+/**
+ * Returns a datastructure describing the tabs that appear on a group page
+ *
+ * @param object $group Database record of group to get tabs for
+ * @return array
+ */
 function group_get_menu_tabs($group) {
     $menu = array(
         'info' => array(
