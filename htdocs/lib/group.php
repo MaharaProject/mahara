@@ -28,73 +28,6 @@ defined('INTERNAL') || die();
 
 
 /**
- * Checks whether a user is allowed to leave a group.
- *
- * This checks things like if they're the owner and the group membership type
- *
- * @param mixed $group  DB record or ID of group to check
- * @param int   $userid (optional, will default to logged in user)
- */
-function group_user_can_leave($group, $userid=null) {
-    static $result;
-
-    $userid = optional_userid($userid);
-
-    if (is_numeric($group)) {
-        if (!$group = get_record('group', 'id', $group, 'deleted', 0)) {
-            return false;
-        }
-    }
-
-    // Return cached value if we have it
-    if (isset($result[$group->id][$userid])) {
-        return $result[$group->id][$userid];
-    }
-    
-    if ($group->jointype == 'controlled') {
-        return ($result[$group->id][$userid] = false);
-    }
-
-    if (group_is_only_admin($group->id, $userid)) {
-        return ($result[$group->id][$userid] = false);
-    }
-
-    return ($result[$group->id][$userid] = true);
-}
-
-/**
- * removes a user from a group
- * removed view access given by the user to the group
- *
- * @param int $group id of group
- * @param int $user id of user to remove
- */
-function group_remove_user($group, $userid) {    
-    if (!group_user_can_leave($group, $userid)) {
-        throw new AccessDeniedException(get_string('usercantleavegroup', 'group'));
-    }
-    db_begin();
-    delete_records('group_member', 'group', $group, 'member', $userid);
-    delete_records_sql(
-        'DELETE FROM {view_access_group}
-        WHERE "group" = ?
-        AND view IN (
-            SELECT v.id
-            FROM {view} v
-            WHERE v.owner = ?
-        )',
-        array($group, $userid)
-    );
-    db_commit();
-
-    require_once(get_config('docroot') . 'interaction/lib.php');
-    $interactions = get_column('interaction_instance', 'id', 'group', $group);
-    foreach ($interactions as $interaction) {
-        interaction_instance_from_id($interaction)->interaction_remove_user($userid);
-    }
-}
-
-/**
  * Establishes what role a user has in a given group.
  *
  * If the user is not in the group, this returns false.
@@ -271,6 +204,73 @@ function group_add_user($groupid, $userid, $role=null) {
     insert_record('group_member', $cm);
     delete_records('group_member_request', 'group', $groupid, 'member', $userid);
     $user = optional_userobj($userid);
+}
+
+/**
+ * Checks whether a user is allowed to leave a group.
+ *
+ * This checks things like if they're the owner and the group membership type
+ *
+ * @param mixed $group  DB record or ID of group to check
+ * @param int   $userid (optional, will default to logged in user)
+ */
+function group_user_can_leave($group, $userid=null) {
+    static $result;
+
+    $userid = optional_userid($userid);
+
+    if (is_numeric($group)) {
+        if (!$group = get_record('group', 'id', $group, 'deleted', 0)) {
+            return false;
+        }
+    }
+
+    // Return cached value if we have it
+    if (isset($result[$group->id][$userid])) {
+        return $result[$group->id][$userid];
+    }
+
+    if ($group->jointype == 'controlled') {
+        return ($result[$group->id][$userid] = false);
+    }
+
+    if (group_is_only_admin($group->id, $userid)) {
+        return ($result[$group->id][$userid] = false);
+    }
+
+    return ($result[$group->id][$userid] = true);
+}
+
+/**
+ * removes a user from a group
+ * removed view access given by the user to the group
+ *
+ * @param int $group id of group
+ * @param int $user id of user to remove
+ */
+function group_remove_user($group, $userid) {
+    if (!group_user_can_leave($group, $userid)) {
+        throw new AccessDeniedException(get_string('usercantleavegroup', 'group'));
+    }
+    db_begin();
+    delete_records('group_member', 'group', $group, 'member', $userid);
+    delete_records_sql(
+        'DELETE FROM {view_access_group}
+        WHERE "group" = ?
+        AND view IN (
+            SELECT v.id
+            FROM {view} v
+            WHERE v.owner = ?
+        )',
+        array($group, $userid)
+    );
+    db_commit();
+
+    require_once(get_config('docroot') . 'interaction/lib.php');
+    $interactions = get_column('interaction_instance', 'id', 'group', $group);
+    foreach ($interactions as $interaction) {
+        interaction_instance_from_id($interaction)->interaction_remove_user($userid);
+    }
 }
 
 function group_has_members($groupid) {
