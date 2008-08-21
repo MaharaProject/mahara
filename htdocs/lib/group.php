@@ -299,9 +299,11 @@ function group_add_user($groupid, $userid, $role=null) {
         $role = get_field_sql('SELECT gt.defaultrole FROM {grouptype} gt, {group} g WHERE g.id = ? AND g.grouptype = gt.name', array($groupid));
     }
     $cm->role = $role;
+
+    db_begin();
     insert_record('group_member', $cm);
     delete_records('group_member_request', 'group', $groupid, 'member', $userid);
-    $user = optional_userobj($userid);
+    db_commit();
 }
 
 /**
