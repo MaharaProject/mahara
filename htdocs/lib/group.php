@@ -708,6 +708,9 @@ function group_get_membersearch_data($group, $query, $offset, $limit, $membershi
         if ($membershiptype == 'request') {
             foreach ($results['data'] as &$r) {
                 $r['addform'] = group_get_adduser_form($r['id'], $group);
+                // TODO: this will suck when there's quite a few on the page, 
+                // would be better to grab all the reasons in one go
+                $r['reason']  = get_field('group_member_request', 'reason', 'group', $group, 'member', $r['id']);
             }
         }
         $smarty->assign('membershiptype', $membershiptype);

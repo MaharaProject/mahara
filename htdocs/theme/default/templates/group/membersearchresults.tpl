@@ -13,7 +13,7 @@
                 <p><strong>Joined:</strong> {$r.jointime}</p>
                 <p>{$r.introduction|str_shorten:80:true}</p>
                 {elseif $membershiptype == 'request'}
-                <p>{str tag=hasrequestedmembership section=group}</p>
+                <p>{str tag=hasrequestedmembership section=group}.{if $r.reason} {str tag=reason}:<br> {$r.reason|format_whitespace}{/if}</p>
                 <p>{$r.addform}</p>
                 {elseif $membershiptype == 'invite'}
                 <p>{str tag=hasbeeninvitedtojoin section=group}</p>
