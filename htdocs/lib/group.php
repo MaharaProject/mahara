@@ -171,18 +171,28 @@ function group_is_only_admin($groupid, $userid=null) {
  * This function is checking whether _role changes_ are allowed, not if a user 
  * is allowed to be added to a group.
  *
- * @param int $group The ID of the group to check
- * @param int $user  The ID of the user to check
+ * @param int $groupid The ID of the group to check
+ * @param int $userid  The ID of the user to check
  * @param string $role The role the user wishes to switch to
  * @returns boolean
  */
-function group_can_change_role($group, $user, $role) {
-    if (!group_user_access($group, $user)) {
+function group_can_change_role($groupid, $userid, $role) {
+    $groupid = (int)$groupid;
+
+    if ($groupid == 0) {
+        throw new InvalidArgumentException("group_can_change_role: group argument should be an integer");
+    }
+
+    if ($userid == 0) {
+        throw new InvalidArgumentException("group_can_change_role: user argument should be an integer");
+    }
+
+    if (!group_user_access($groupid, $userid)) {
         return false;
     }
 
     // Sole remaining admins can never change their role
-    if (group_is_only_admin($group, $user)) {
+    if (group_is_only_admin($groupid, $userid)) {
         return false;
     }
 
