@@ -204,19 +204,20 @@ function group_can_change_role($groupid, $userid, $role) {
 /**
  * Changes a user role in a group, if this is allowed.
  *
- * @param int $group The ID of the group
- * @param int $user  The ID of the user whose role needs changing
+ * @param int $groupid The ID of the group
+ * @param int $userid  The ID of the user whose role needs changing
  * @param string $role The role the user wishes to switch to
  * @throws AccessDeniedException If the specified role change is not allowed. 
  *                               Check with group_can_change_role first if you 
  *                               need to.
  */
-function group_change_role($group, $user, $role) {
-    if (!group_can_change_role($group, $user, $role)) {
+function group_change_role($groupid, $userid, $role) {
+    // group_can_change_role checks whether the group and user parameters are valid
+    if (!group_can_change_role($groupid, $userid, $role)) {
         throw new AccessDeniedException(get_string('usercannotchangetothisrole', 'group'));
     }
 
-    set_field('group_member', 'role', $role, 'group', $group, 'member', $user);
+    set_field('group_member', 'role', $role, 'group', $groupid, 'member', $userid);
 }
 
 function group_user_can_edit_views($groupid, $userid=null) {
