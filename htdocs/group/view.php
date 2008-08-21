@@ -100,6 +100,7 @@ $smarty->assign('group', $group);
 $smarty->assign('groupid', $id);
 $smarty->assign('grouptabs', group_get_menu_tabs($group));
 $smarty->assign('foruminfo', $foruminfo);
+$smarty->assign('membercount', count_records('group_member', 'group', $group->id));
 $smarty->assign('viewcount', count_records('view', 'group', $group->id));
 $smarty->assign('filecount', $filecounts->files);
 $smarty->assign('foldercount', $filecounts->folders);
