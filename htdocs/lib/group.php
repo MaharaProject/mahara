@@ -192,6 +192,45 @@ function group_user_can_edit_views($groupid, $userid=null) {
 }
 
 /**
+ * Returns whether a user is allowed to assess views that have been submitted 
+ * to the given group.
+ *
+ * @param int $groupid ID of group
+ * @param int $userid  ID of user
+ * @return boolean
+ */
+function group_user_can_assess_submitted_views($groupid, $userid) {
+    $groupid = (int)$groupid;
+
+    if ($groupid == 0) {
+        throw new InvalidArgumentException("group_user_can_assess_submitted_views: group argument should be an integer");
+    }
+
+    if (is_null($userid)) {
+        global $USER;
+        $userid = (int)$USER->get('id');
+    }
+    else {
+        $userid = (int)$userid;
+    }
+
+    if ($userid == 0) {
+        throw new InvalidArgumentException("group_user_can_assess_submitted_views: user argument should be an integer");
+    }
+
+    return get_field_sql('
+        SELECT
+            r.see_submitted_views
+        FROM
+            {group_member} m
+            INNER JOIN {group} g ON (m.group = g.id AND g.deleted = 0)
+            INNER JOIN {grouptype_roles} r ON (g.grouptype = r.grouptype AND r.role = m.role)
+        WHERE
+            m.member = ?
+            AND m.group = ?', array($userid, $groupid));
+}
+
+/**
  * Creates a group.
  *
  * All group creation should be done through this function, as the 
@@ -686,20 +725,6 @@ function group_get_grouptypes() {
     }
 
     return $grouptypes;
-}
-
-
-function can_assess_submitted_views($userid, $groupid) {
-    return get_field_sql('
-        SELECT
-            r.see_submitted_views
-        FROM
-            {group_member} m 
-            INNER JOIN {group} g ON (m.group = g.id AND g.deleted = 0)
-            INNER JOIN {grouptype_roles} r ON (g.grouptype = r.grouptype AND r.role = m.role)
-        WHERE
-            m.member = ?
-            AND m.group = ?', array($userid, $groupid));
 }
 
 

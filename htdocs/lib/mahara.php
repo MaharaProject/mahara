@@ -1306,7 +1306,7 @@ function can_view_view($view_id, $user_id=null) {
 
     if ($submitgroup = $view->get('submittedto')) {
         require_once(get_config('docroot') . 'lib/group.php');
-        if (can_assess_submitted_views($user_id, $submitgroup)) {
+        if (group_user_can_assess_submitted_views($submitgroup, $user_id)) {
             return true;
         }
     }
