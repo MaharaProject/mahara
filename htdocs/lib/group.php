@@ -192,6 +192,26 @@ function group_user_can_edit_views($groupid, $userid=null) {
 }
 
 /**
+ * Deletes a group.
+ *
+ * All group deleting should be done through this function, even though it is 
+ * simple. What is required to perform group deletion may change over time.
+ *
+ * @param int $groupid The group to delete
+ *
+ * {{@internal Maybe later we can have a group_can_be_deleted function if 
+ * necessary}}
+ */
+function group_delete($groupid) {
+    $groupid = (int)$groupid;
+
+    if ($groupid == 0) {
+        throw new InvalidArgumentException("group_delete: group argument should be an integer");
+    }
+    update_record('group', array('deleted' => 1), array('id' => $groupid));
+}
+
+/**
  * function to add a member to a group
  * doesn't do any jointype checking, that should be handled by the caller
  *
@@ -278,10 +298,6 @@ function group_remove_user($group, $userid) {
     foreach ($interactions as $interaction) {
         interaction_instance_from_id($interaction)->interaction_remove_user($userid);
     }
-}
-
-function delete_group($groupid) {
-    update_record('group', array('deleted' => 1), array('id' => $groupid));
 }
 
 /**
