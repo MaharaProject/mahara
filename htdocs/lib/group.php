@@ -40,7 +40,7 @@ defined('INTERNAL') || die();
  *                        have no role in the group
  */
 function group_user_access($groupid, $userid=null) {
-    // TODO: caching
+    static $result;
 
     $groupid = (int)$groupid;
 
@@ -60,7 +60,11 @@ function group_user_access($groupid, $userid=null) {
         throw new InvalidArgumentException("group_user_access: user argument should be an integer");
     }
 
-    return get_field('group_member', 'role', 'group', $groupid, 'member', $userid);
+    if (isset($result[$groupid][$userid])) {
+        return $result[$groupid][$userid];
+    }
+
+    return $result[$groupid][$userid] = get_field('group_member', 'role', 'group', $groupid, 'member', $userid);
 }
 
 /**
