@@ -42,23 +42,8 @@ defined('INTERNAL') || die();
 function group_user_access($groupid, $userid=null) {
     static $result;
 
-    $groupid = (int)$groupid;
-
-    if ($groupid == 0) {
-        throw new InvalidArgumentException("group_user_access: group argument should be an integer");
-    }
-
-    if (is_null($userid)) {
-        global $USER;
-        $userid = (int)$USER->get('id');
-    }
-    else {
-        $userid = (int)$userid;
-    }
-
-    if ($userid == 0) {
-        throw new InvalidArgumentException("group_user_access: user argument should be an integer");
-    }
+    $groupid = group_param_groupid($groupid);
+    $userid  = group_param_userid($userid);
 
     if (isset($result[$groupid][$userid])) {
         return $result[$groupid][$userid];
@@ -80,23 +65,8 @@ function group_user_access($groupid, $userid=null) {
 function group_is_only_admin($groupid, $userid=null) {
     static $result;
 
-    $groupid = (int)$groupid;
-
-    if ($groupid == 0) {
-        throw new InvalidArgumentException("group_is_only_admin: group argument should be an integer");
-    }
-
-    if (is_null($userid)) {
-        global $USER;
-        $userid = (int)$USER->get('id');
-    }
-    else {
-        $userid = (int)$userid;
-    }
-
-    if ($userid == 0) {
-        throw new InvalidArgumentException("group_is_only_admin: user argument should be an integer");
-    }
+    $groupid = group_param_groupid($groupid);
+    $userid  = group_param_userid($userid);
 
     if (isset($result[$groupid][$userid])) {
         return $result[$groupid][$userid];
@@ -119,15 +89,8 @@ function group_is_only_admin($groupid, $userid=null) {
  * @returns boolean
  */
 function group_can_change_role($groupid, $userid, $role) {
-    $groupid = (int)$groupid;
-
-    if ($groupid == 0) {
-        throw new InvalidArgumentException("group_can_change_role: group argument should be an integer");
-    }
-
-    if ($userid == 0) {
-        throw new InvalidArgumentException("group_can_change_role: user argument should be an integer");
-    }
+    $groupid = group_param_groupid($groupid);
+    $userid  = group_param_userid($userid);
 
     if (!group_user_access($groupid, $userid)) {
         return false;
@@ -170,23 +133,8 @@ function group_change_role($groupid, $userid, $role) {
  * @returns boolean
  */
 function group_user_can_edit_views($groupid, $userid=null) {
-    $groupid = (int)$groupid;
-
-    if ($groupid == 0) {
-        throw new InvalidArgumentException("group_user_can_edit_views: group argument should be an integer");
-    }
-
-    if (is_null($userid)) {
-        global $USER;
-        $userid = (int)$USER->get('id');
-    }
-    else {
-        $userid = (int)$userid;
-    }
-
-    if ($userid == 0) {
-        throw new InvalidArgumentException("group_user_can_edit_views: user argument should be an integer");
-    }
+    $groupid = group_param_groupid($groupid);
+    $userid  = group_param_userid($userid);
 
     return get_field_sql('
         SELECT
@@ -209,23 +157,8 @@ function group_user_can_edit_views($groupid, $userid=null) {
  * @return boolean
  */
 function group_user_can_assess_submitted_views($groupid, $userid) {
-    $groupid = (int)$groupid;
-
-    if ($groupid == 0) {
-        throw new InvalidArgumentException("group_user_can_assess_submitted_views: group argument should be an integer");
-    }
-
-    if (is_null($userid)) {
-        global $USER;
-        $userid = (int)$USER->get('id');
-    }
-    else {
-        $userid = (int)$userid;
-    }
-
-    if ($userid == 0) {
-        throw new InvalidArgumentException("group_user_can_assess_submitted_views: user argument should be an integer");
-    }
+    $groupid = group_param_groupid($groupid);
+    $userid  = group_param_userid($userid);
 
     return get_field_sql('
         SELECT
@@ -339,11 +272,7 @@ function group_create($data) {
  * necessary}}
  */
 function group_delete($groupid) {
-    $groupid = (int)$groupid;
-
-    if ($groupid == 0) {
-        throw new InvalidArgumentException("group_delete: group argument should be an integer");
-    }
+    $groupid = group_param_groupid($groupid);
     update_record('group', array('deleted' => 1), array('id' => $groupid));
 }
 
@@ -359,6 +288,9 @@ function group_delete($groupid) {
  * @param string $role
  */
 function group_add_user($groupid, $userid, $role=null) {
+    $groupid = group_param_groupid($groupid);
+    $userid  = group_param_userid($userid);
+
     $cm = new StdClass;
     $cm->member = $userid;
     $cm->group = $groupid;
@@ -836,6 +768,46 @@ function group_get_menu_tabs($group) {
         }
     }
     return $menu;
+}
+
+/**
+ * Used by this file to perform validation of group ID function arguments
+ *
+ * @param int $groupid
+ * @return int
+ * @throws InvalidArgumentException
+ */
+function group_param_groupid($groupid) {
+    $groupid = (int)$groupid;
+
+    if ($groupid == 0) {
+        throw new InvalidArgumentException("group_user_access: group argument should be an integer");
+    }
+
+    return $groupid;
+}
+
+/**
+ * Used by this file to perform validation of user ID function arguments
+ *
+ * @param int $userid
+ * @return int
+ * @throws InvalidArgumentException
+ */
+function group_param_userid($userid) {
+    if (is_null($userid)) {
+        global $USER;
+        $userid = (int)$USER->get('id');
+    }
+    else {
+        $userid = (int)$userid;
+    }
+
+    if ($userid == 0) {
+        throw new InvalidArgumentException("group_user_access: user argument should be an integer");
+    }
+
+    return $userid;
 }
 
 ?>
