@@ -280,15 +280,6 @@ function group_remove_user($group, $userid) {
     }
 }
 
-function group_has_members($groupid) {
-    $sql = 'SELECT (
-        (SELECT COUNT(*) FROM {group_member} WHERE "group" = ?)
-        +
-        (SELECT COUNT(*) FROM {group_member_request} WHERE "group" = ?)
-    )';
-    return count_records_sql($sql, array($groupid, $groupid));
-}
-
 function delete_group($groupid) {
     update_record('group', array('deleted' => 1), array('id' => $groupid));
 }
