@@ -671,6 +671,14 @@ function delete_user($userid) {
     // mark all groups the user owns as deleted
     set_field('group', 'deleted', '1', 'owner', $userid);
 
+    // Remove any friend relationships the user is in
+    execute_sql('DELETE FROM {usr_friend}
+        WHERE usr1 = ?
+        OR usr2 = ?', array($userid, $userid));
+    execute_sql('DELETE FROM {usr_friend_request}
+        WHERE owner = ?
+        OR requester = ?', array($userid, $userid));
+
     db_commit();
 
     handle_event('deleteuser', $userid);
