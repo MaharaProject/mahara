@@ -1611,6 +1611,64 @@ class View {
     }
 
 
+    /**
+     * Search view owners.
+     */
+    public static function search_view_owners($query=null, $template=null, $limit=null, $offset=0) {
+        if ($template) {
+            $tsql = ' AND v.template = 1';
+        }
+        else if ($template === false) {
+            $tsql = ' AND v.template = 0';
+        }
+        else {
+            $tsql = '';
+        }
+
+        $query = '';
+
+        if ($query) {
+            $ph = array($query);
+            $qsql = ' WHERE display ' . db_ilike() . " '%' || ? || '%' ";
+        }
+        else {
+            $ph = array();
+            $qsql = '';
+        }
+
+        $sql = "
+                SELECT
+                    'user' AS type,
+                    CASE WHEN u.preferredname IS NULL OR u.preferredname = '' THEN u.firstname || ' ' || u.lastname
+                    ELSE u.preferredname END AS display,
+                    CAST (u.id AS TEXT), COUNT(v.id)
+                FROM {usr} u INNER JOIN {view} v ON (v.owner = u.id)
+                WHERE u.deleted = 0 $tsql
+                GROUP BY type, display, u.id
+            UNION
+                SELECT 'group' AS type, g.name AS display, CAST (g.id AS TEXT), COUNT(v.id)
+                FROM {group} g INNER JOIN {view} v ON (g.id = v.group)
+                WHERE g.deleted = 0 $tsql
+                GROUP BY type, display, g.id
+            UNION
+                SELECT 'institution' AS type, i.displayname AS display, i.name AS id, COUNT(v.id)
+                FROM {institution} i INNER JOIN {view} v ON (i.name = v.institution) 
+                WHERE TRUE $tsql
+                GROUP BY type, display, i.name";
+
+        $count = count_records_sql("SELECT COUNT(*) FROM ($sql) q $qsql", $ph);
+        $data = get_records_sql_array("SELECT * FROM ($sql) q $qsql", $ph, $offset, $limit);
+
+        return (object) array(
+            'data'  => array_values($data),
+            'count' => $count,
+            'limit' => $limit,
+            'offset' => $offset,
+        );
+
+    }
+
+
     /** 
      * Get views which have been explicitly shared to a group and are
      * not owned by the group
