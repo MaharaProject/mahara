@@ -43,7 +43,7 @@ switch ($type) {
         $data = search_user($query, $limit, $offset, array('exclude' => $USER->get('id')));
         break;
     case 'group':
-        $data = search_group($query, $limit, $offset);
+        $data = search_group($query, $limit, $offset, '');
         $roles = get_records_array('grouptype_roles');
         $data['roles'] = array();
         foreach ($roles as $r) {
