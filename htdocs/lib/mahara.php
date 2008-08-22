@@ -48,9 +48,6 @@ function ensure_sanity() {
             throw new ConfigSanityException(get_string('pgsqldbextensionnotloaded', 'error'));
         }
         break;
-    case 'mysql': // NOTE: mysql to be phased out. This should be log_environ() in 1.0 and removed in 1.1
-        log_environ(get_string('mysqldbtypedeprecated', 'error'));
-        // intentionally no break here
     case 'mysql5':
         if (!extension_loaded('mysql')) {
             throw new ConfigSanityException(get_string('mysqldbextensionnotloaded', 'error'));
