@@ -4,7 +4,15 @@
 
 <span class="addicon fr">
 {$createviewform}
-<a href="{$WWWROOT}view/choosetemplate.php{if $groupid}?group={$groupid}{elseif $institution}?institution={$institution}{/if}">{str tag="copyaview" section="view"}</a>
+<form method="post" action="{$WWWROOT}view/choosetemplate.php">
+<input type="submit" class="submit" value="{str tag="copyaview" section="view"}">
+{if $groupid}
+<input type="hidden" name="group" value="{$groupid}">
+{$groupid}
+{elseif $institution}
+<input type="hidden" name="institution" value="{$institution}">
+{/if}
+</form>
 </span>
 <h2>{$heading}</h2>
 
