@@ -500,6 +500,7 @@
                 <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="ownerformat" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="false" />
                 <FIELD NAME="startdate" TYPE="datetime" />
                 <FIELD NAME="stopdate" TYPE="datetime" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
@@ -508,6 +509,7 @@
                 <FIELD NAME="submittedto" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="numcolumns" TYPE="int" LENGTH="2" NOTNULL="true" />
                 <FIELD NAME="layout" TYPE="int" LENGTH="10"/>
+                <FIELD NAME="template" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -515,6 +517,7 @@
                 <KEY NAME="submittedtofk" TYPE="foreign" FIELDS="submittedto" REFTABLE="group" REFFIELDS="id" />
                 <KEY NAME="layoutfk" TYPE="foreign" FIELDS="layout" REFTABLE="view_layout" REFFIELDS="id"/>
                 <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
+                <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name" />
             </KEYS>
         </TABLE>
         <TABLE NAME="view_tag">

@@ -25,30 +25,26 @@
  */
 
 define('INTERNAL', 1);
-define('JSON', 1);
+
 require(dirname(dirname(__FILE__)) . '/init.php');
-require('view.php');
-require('form/elements/artefactchooser.php');
+require_once(get_config('libroot') . 'view.php');
+require_once(get_config('libroot') . 'group.php');
 
-$extradata = json_decode(param_variable('extradata'));
+$group = param_integer('group', null);
+$institution = param_alphanum('institution', null);
 
-safe_require('blocktype', $extradata->blocktype);
-$data = pieform_element_artefactchooser_set_attributes(
-    call_static_method(generate_class_name('blocktype', $extradata->blocktype), 'artefactchooser_element', $extradata->value)
-);
-$data['offset'] = param_integer('offset', 0);
-list($html, $pagination, $count, $offset) = View::build_artefactchooser_data($data, $extradata->group, $extradata->institution);
+if ($group && !group_user_can_edit_views($group)
+    || $institution && !$USER->can_edit_institution($institution)) {
+    throw new AccessDeniedException();
+}
 
-json_reply(false, array(
-    'message' => null,
-    'data' => array(
-        'tablerows' => $html,
-        'pagination' => $pagination['html'],
-        'pagination_js' => $pagination['javascript'],
-        'count' => $count,
-        'results' => $count . ' ' . ($count == 1 ? get_string('result') : get_string('results')),
-        'offset' => $offset,
-    )
-));
+define('TITLE', get_string('copyaview', 'view'));
+
+$choosetemplate = pieform(create_view_form($group, $institution, true));
+
+$smarty = smarty();
+$smarty->assign('heading', TITLE);
+$smarty->assign('choosetemplate', $choosetemplate);
+$smarty->display('view/choosetemplate.tpl');
 
 ?>

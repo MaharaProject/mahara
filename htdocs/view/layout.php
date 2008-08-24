@@ -27,7 +27,6 @@
 // TODO fix title of this page
 // TODO check security of this page
 define('INTERNAL', 1);
-define('MENUITEM', 'viewlayout');
 require_once(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('view.php');
@@ -42,13 +41,11 @@ $numcolumns = $view->get('numcolumns');
 $currentlayout = $view->get('layout');
 $back = !$USER->get_account_preference('addremovecolumns');
 $group = $view->get('group');
-$owner = $view->get('owner');
+$institution = $view->get('institution');
+View::set_nav($group, $institution);
 
-if ($group && !group_user_can_edit_views($group)) {
-    throw new AccessDeniedException(get_string('canteditdontown', 'view'));
-}
-else if ($owner && $owner != $USER->get('id')) {
-    throw new AccessDeniedException(get_string('canteditdontown', 'view'));
+if (!$USER->can_edit_view($view)) {
+    throw new AccessDeniedException();
 }
 
 // if not set, use equal width layout for that number of columns

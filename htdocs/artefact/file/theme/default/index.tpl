@@ -5,6 +5,9 @@
 {if $groupid}
   <h2>{$heading}</h2>
   {include file="group/tabstart.tpl" current="files"}
+{elseif $institution}
+  <h2>{$heading}</h2>
+  {$institutionselector}
 {/if}
 			{str tag='fileinstructions' section='artefact.file'}
 			<div id="myfiles">

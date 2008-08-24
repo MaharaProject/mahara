@@ -614,11 +614,15 @@ class User {
         if ($owner == $this->get('id')) {
             return true;
         }
+        $institution = $v->get('institution');
+        if ($institution && $institution != 'mahara' && $this->can_edit_institution($institution)) {
+            return true;
+        }
         $group = $v->get('group');
         if ($group) {
             $editroles = $v->get('editingroles');
             $this->reset_grouproles();
-            return in_array($this->grouproles[$group], $editroles);
+            return isset($this->grouproles[$group]) && in_array($this->grouproles[$group], $editroles);
         }
         return false;
     }

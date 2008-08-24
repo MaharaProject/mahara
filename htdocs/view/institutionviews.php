@@ -25,48 +25,43 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups');
 
+define('INSTITUTIONALADMIN', 1);
+define('MENUITEM', 'manageinstitutions/institutionviews');
 define('SECTION_PLUGINTYPE', 'core');
-define('SECTION_PLUGINNAME', 'view');
-define('SECTION_PAGE', 'groupviews');
+define('SECTION_PLUGINNAME', 'admin');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
-require_once(get_config('libroot') . 'group.php');
+require_once(get_config('libroot') . 'institution.php');
 require_once('pieforms/pieform.php');
-
-//@todo: group menu; group sideblock
 
 $limit   = param_integer('limit', 5);
 $offset  = param_integer('offset', 0);
-$groupid = param_integer('group');
-if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
-    throw new GroupNotFoundException("Couldn't find group with id $groupid");
-}
-define('TITLE', $group->name . ' - ' . get_string('groupviews', 'view'));
 
-$member = group_user_access($groupid);
-$shared = param_boolean('shared', 0) && $member;
-$can_edit = group_user_can_edit_views($groupid);
+$institution = param_alpha('institution', false);
+
+if ($institution == 'mahara') {
+    redirect('/admin/site/views.php');
+}
+
+$s = institution_selector_for_page($institution,
+                                   get_config('wwwroot') . 'view/institutionviews.php');
+
+$institution = $s['institution'];
 
 $smarty = smarty();
-$smarty->assign('heading', $group->name);
+if ($institution === false) {
+    $smarty->display('admin/users/noinstitutions.tpl');
+    exit;
+}
 
-//if ($shared) {
-//    $data = View::get_sharedviews_data($limit, $offset, $groupid);
-//    $smarty->assign('shared', true);
-//}
-//else {
-    if ($can_edit) {
-        $data = View::get_myviews_data($limit, $offset, $groupid);
-    }
-    else {
-        $data = View::view_search(null, $groupid, null, null, $limit, $offset);
-    }
-//}
+$title = get_string('institutionviews', 'view');
+define('TITLE', $title);
 
-$userid = $USER->get('id');
+$smarty->assign('heading', $title);
+
+$data = View::get_myviews_data($limit, $offset, null, $institution);
 
 $pagination = build_pagination(array(
     'url' => get_config('wwwroot') . 'view/?',
@@ -77,19 +72,13 @@ $pagination = build_pagination(array(
     'resultcounttextplural' => get_string('views', 'view')
 ));
 
-$smarty->assign('groupid', $groupid);
-$smarty->assign('groupviews', 1);
-$smarty->assign('groupname', $group->name);
-$smarty->assign('grouptabs', group_get_menu_tabs($group));
-$smarty->assign('member', $member);
+$smarty->assign('institutionselector', $s['institutionselector']);
+$smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs']);
 $smarty->assign('views', $data->data);
+$smarty->assign('institution', $institution);
 $smarty->assign('pagination', $pagination['html']);
-$smarty->assign('createviewform', pieform(create_view_form($groupid)));
+$smarty->assign('createviewform', pieform(create_view_form(null, $institution)));
 
-if ($can_edit) { // && !$shared) {
-    $smarty->display('view/index.tpl');
-} else {
-    $smarty->display('view/sharedviews.tpl');
-}
+$smarty->display('view/index.tpl');
 
 ?>

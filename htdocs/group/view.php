@@ -72,7 +72,7 @@ else if ($group->jointype == 'open') {
     $group->groupjoin = group_get_join_form('joingroup', $group->id);
 }
 
-$filecounts = ArtefactTypeFileBase::count_user_files(null, null, $group->id);
+$filecounts = ArtefactTypeFileBase::count_user_files(null, $group->id, null);
 
 // Latest forums posts
 // NOTE: it would be nicer if there was some generic way to get information 

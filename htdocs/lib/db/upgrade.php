@@ -1222,6 +1222,14 @@ function xmldb_core_upgrade($oldversion=0) {
 
     }
 
+    if ($oldversion < 2008081100) {
+        execute_sql("ALTER TABLE {view} ADD COLUMN institution CHARACTER VARYING(255);");
+        execute_sql("ALTER TABLE {view} ADD CONSTRAINT {view_ins_fk} FOREIGN KEY (institution) REFERENCES {institution}(name);");
+    }
+    if ($oldversion < 2008081101) {
+        execute_sql("ALTER TABLE {view} ADD COLUMN template SMALLINT NOT NULL DEFAULT 0;");
+    }
+
     return $status;
 
 }

@@ -25,7 +25,6 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myportfolio/views');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'editaccess');
@@ -38,6 +37,8 @@ require_once(get_config('docroot') . 'lib/group.php');
 
 $view = new View(param_integer('id'));
 $group = $view->get('group');
+$institution = $view->get('institution');
+View::set_nav($group, $institution);
 $new = param_boolean('new');
 
 if ($new) {
@@ -47,7 +48,7 @@ else {
     define('TITLE', get_string('editaccessforview', 'view', $view->get('title')));
 }
 
-if ($group && !group_user_can_edit_views($group)) {
+if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
 }
 
@@ -83,6 +84,12 @@ $form = array(
         'new' => array(
             'type' => 'hidden',
             'value' => $new,
+        ),
+        'template' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('allowcopying', 'view'),
+            'description'  => get_string('templatedescription', 'view'),
+            'defaultvalue' => $view->get('template'),
         ),
         'accesslist' => array(
             'type'         => 'viewacl',
@@ -135,33 +142,32 @@ function editaccess_validate(Pieform $form, $values) {
 }
 
 function editaccess_cancel_submit() {
-	global $view, $new, $group;
-	if ($new) {
-	    $view->delete();
-	}
-        if ($group) {
-            redirect('/view/groupviews.php?group='.$group);
-        }
+    global $view, $new, $group, $institution;
+    if ($new) {
+        $view->delete();
+    }
+    if ($group) {
+        redirect('/view/groupviews.php?group='.$group);
+    }
+    if ($institution) {
+        redirect('/view/institutionviews.php?group='.$institution);
+    }
     redirect('/view');
 }
 
 
 function editaccess_submit(Pieform $form, $values) {
-    global $SESSION, $view, $new, $group; 
+    global $SESSION, $view, $new, $group, $institution;
 
     if (param_boolean('back')) {
         redirect('/view/blocks.php?id=' . $view->get('id') . '&new=' . $new);
-    }
-
-    if ($group && !group_user_access($group)) {
-        $SESSION->add_error_msg(get_string('notamember', 'group'));
-        redirect('/view/groupviews.php?group='.$group);
     }
 
     $view->set_access($values['accesslist']);
 
     $view->set('startdate', $values['startdate']);
     $view->set('stopdate', $values['stopdate']);
+    $view->set('template', (int) $values['template']);
     $view->commit();
 
     if ($values['new']) {
@@ -173,6 +179,9 @@ function editaccess_submit(Pieform $form, $values) {
     $SESSION->add_ok_msg($str);
     if ($group) {
         redirect('/view/groupviews.php?group='.$group);
+    }
+    if ($institution) {
+        redirect('/view/institutionviews.php?group='.$institution);
     }
     redirect('/view/');
 

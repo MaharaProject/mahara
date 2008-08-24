@@ -27,8 +27,8 @@
 defined('INTERNAL') || die();
 
 $string['createview']             = 'Create View';
-$string['createviewstepone']      = 'Create View Step One: Details';
-$string['createviewsteptwo']      = 'Create View Step Two: Layout';
+$string['createviewstepone']      = 'Create View Step One: Layout';
+$string['createviewsteptwo']      = 'Create View Step Two: Details';
 $string['createviewstepthree']    = 'Create View Step Three: Access';
 $string['editviewdetails']        = 'Edit Details for View "%s"';
 $string['editblocksforview']      = 'Edit View "%s"';
@@ -47,7 +47,7 @@ $string['ownerformatdescription'] = 'How do you want people who look at your Vie
 $string['artefacts'] = 'Artefacts';
 $string['myviews'] = 'My Views';
 $string['groupviews'] = 'Group Views';
-$string['groupviewsfor'] = 'Group Views for %s';
+$string['institutionviews'] = 'Institution Views';
 $string['reallyaddaccesstoemptyview'] = 'Your View contains no artefacts.  Do you really want to give these users access to the View?';
 $string['viewdeleted'] = 'View deleted';
 $string['viewsubmitted'] = 'View submitted';
@@ -138,6 +138,7 @@ $string['deletespecifiedview'] = 'Delete View "%s"';
 $string['deleteviewconfirm'] = 'Do you really want to delete this View? It cannot be undone.';
 
 $string['editaccesspagedescription2'] = '<p>By default, only you can see your View. Here you can choose who else you would like to be able to see the information in your View. Click Add to grant access to Public, Logged in Users or Friends. Use the search box to add individual Users or Groups. All those added will appear in the right hand pane, under Added.</p>
+<p>You can also give other users permission to copy your View into their own portfolios.  When users copy a View, they will automatically get their own copies all of the files and folders within it.</p>
 <p>Once you are done, scroll down and click Save to continue.</p>';
 
 $string['overridingstartstopdate'] = 'Overriding Start/Stop Dates';
@@ -232,5 +233,19 @@ $string['noartefactstochoosefrom'] = 'Sorry, no artefacts to choose from';
 
 $string['access'] = 'Access';
 $string['noaccesstoview'] = 'You do not have permission to access this view';
+
+// Templates
+$string['Template'] = 'Template';
+$string['allowcopying'] = 'Allow copying';
+$string['templatedescription'] = 'Check this box if you would like the people who can see your view to be able to make their own copies of it.';
+$string['copiedblocksandartefactsfromtemplate'] = 'Copied %d blocks and %d artefacts from %s';
+$string['filescopiedfromviewtemplate'] = 'Files copied from %s';
+$string['viewfilesdirname'] = 'viewfiles';
+$string['viewfilesdirdesc'] = 'Files from copied views';
+$string['thisviewmaybecopied'] = 'Copying is allowed';
+$string['copythisview'] = 'Copy this View';
+$string['createemptyview'] = 'Create Empty View';
+$string['copyaview'] = 'Copy a View';
+$string['Untitled'] = 'Untitled';
 
 ?>

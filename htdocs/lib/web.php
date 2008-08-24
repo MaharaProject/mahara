@@ -1395,16 +1395,22 @@ function admin_nav() {
             'weight' => 30,
         ),
         array(
-            'path'   => 'configsite/adminfiles',
-            'url'    => 'admin/site/files.php',
-            'title'  => get_string('adminfiles', 'admin'),
-            'weight' => 40,
-        ),
-        array(
             'path'   => 'configsite/networking',
             'url'    => 'admin/site/networking.php',
             'title'  => get_string('networking', 'admin'),
+            'weight' => 40,
+        ),
+        array(
+            'path'   => 'configsite/siteviews',
+            'url'    => 'admin/site/views.php',
+            'title'  => get_string('siteviews', 'admin'),
             'weight' => 50,
+        ),
+        array(
+            'path'   => 'configsite/sitefiles',
+            'url'    => 'admin/site/files.php',
+            'title'  => get_string('sitefiles', 'admin'),
+            'weight' => 60,
         ),
         array(
             'path'   => 'configusers',
@@ -1485,6 +1491,18 @@ function admin_nav() {
             'weight' => 40,
         ),
         array(
+            'path'   => 'manageinstitutions/institutionviews',
+            'url'    => 'view/institutionviews.php',
+            'title'  => get_string('views'),
+            'weight' => 50,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutionfiles',
+            'url'    => 'artefact/file/institutionfiles.php',
+            'title'  => get_string('Files', 'artefact.file'),
+            'weight' => 60,
+        ),
+        array(
             'path'   => 'configextensions',
             'url'    => 'admin/extensions/plugins.php',
             'title'  => get_string('configextensions', 'admin'),
@@ -1548,13 +1566,13 @@ function institutional_admin_nav() {
         array(
             'path'   => 'manageinstitutions/institutions',
             'url'    => 'admin/users/institutions.php',
-            'title'  => get_string('institutionsettings', 'admin'),
+            'title'  => get_string('settings'),
             'weight' => 10,
         ),
         array(
             'path'   => 'manageinstitutions/institutionusers',
             'url'    => 'admin/users/institutionusers.php',
-            'title'  => get_string('institutionmembers', 'admin'),
+            'title'  => get_string('Members', 'admin'),
             'weight' => 20,
         ),
         array(
@@ -1574,6 +1592,18 @@ function institutional_admin_nav() {
             'url'    => 'admin/users/notifications.php',
             'title'  => get_string('adminnotifications', 'admin'),
             'weight' => 50,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutionviews',
+            'url'    => 'view/institutionviews.php',
+            'title'  => get_string('views'),
+            'weight' => 60,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutionfiles',
+            'url'    => 'artefact/file/institutionfiles.php',
+            'title'  => get_string('Files', 'artefact.file'),
+            'weight' => 70,
         ),
     );
 

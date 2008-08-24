@@ -147,7 +147,7 @@ abstract class ArtefactType {
                 if (in_array($field, array('atime', 'ctime', 'mtime'))) {
                     $value = strtotime($value);
                 } 
-                if ($field == 'tags' && !is_array($field)) {
+                if ($field == 'tags' && !is_array($value)) {
                     $value = preg_split("/\s*,\s*/", trim($value));
                 }
                 $this->{$field} = $value;
@@ -634,8 +634,58 @@ abstract class ArtefactType {
                 );
             }
         }
+        else {
+            $roles = group_get_role_info($this->get('group'));
+            foreach ($roles as $r) {
+                $this->rolepermissions->{$r->name} = (object) array('view' => true, 'edit' => true, 'republish' => true);
+            }
+        }
     }
 
+    public function copy_data() {
+        $ignore = array(
+            'dirty' => 1,
+            'parentdirty' => 1,
+            'deleted' => 1,
+            'id' => 1,
+            'ctime' => 1,
+            'mtime' => 1,
+            'atime' => 1,
+            'locked' => 1,
+            'rolepermissions' => 1,
+            'viewsinstances' => 1,
+            'viewsmetadata' => 1,
+            'childreninstances' => 1,
+            'childrenmetadata' => 1,
+            'parentinstance' => 1,
+            'parentmetadata' => 1
+        );
+        $data = array();
+        foreach (get_object_vars($this) as $k => $v) {
+            if (!isset($ignore[$k])) {
+                $data[$k] = $v;
+            }
+        }
+        return $data;
+    }
+
+    public function copy_extra($new) {
+        return;
+    }
+
+    public function copy_for_new_owner($user, $group, $institution) {
+        $data = $this->copy_data();
+        $data['owner'] = $user;
+        $data['group'] = $group;
+        $data['institution'] = $institution;
+        $data['parent'] = null;
+        $classname = generate_artefact_class_name($data['artefacttype']);
+        safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $data['artefacttype']));
+        $copy = new $classname(0, $data);
+        $copy->commit();
+        $this->copy_extra($copy);
+        return $copy->get('id');
+    }
 }
 
 /**
@@ -839,6 +889,39 @@ function artefact_watchlist_notification($artefactid) {
             activity_occurred('watchlist', (object)array('view' => $view));
         }
     }
+}
+
+function artefact_get_descendants($new) {
+    $seen = array();
+    $new = array_combine($new, $new);
+    while (!empty($new)) {
+        $seen = $seen + $new;
+        $children = get_column_sql('
+            SELECT id
+            FROM {artefact}
+            WHERE parent IN (' . implode(',', $new) . ') AND id NOT IN (' . implode(',', $seen) . ')', array());
+        if ($children) {
+            $new = array_diff($children, $seen);
+            $new = array_combine($new, $new);
+        }
+        else {
+            $new = array();
+        }
+    }
+    return array_values($seen);
+}
+
+function artefact_owner_sql($userid=null, $groupid=null, $institution=null) {
+    if ($institution) {
+        return 'institution = ' . db_quote($institution);
+    }
+    if ($groupid) {
+        return '"group" = ' . (int)$groupid;
+    }
+    if ($userid) {
+        return 'owner = ' . (int)$userid;
+    }
+    return null;
 }
 
 ?>

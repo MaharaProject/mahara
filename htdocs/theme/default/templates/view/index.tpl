@@ -3,12 +3,22 @@
 {include file="columnleftstart.tpl"}
 
 <span class="addicon fr">
-<a href="{$WWWROOT}view/edit.php{if $groupid}?group={$groupid}{/if}">{str tag="createview" section="view"}</a>
+{$createviewform}
+<form method="post" action="{$WWWROOT}view/choosetemplate.php">
+<input type="submit" class="submit" value="{str tag="copyaview" section="view"}">
+{if $groupid}
+<input type="hidden" name="group" value="{$groupid}" />
+{elseif $institution}
+<input type="hidden" name="institution" value="{$institution}">
+{/if}
+</form>
 </span>
 <h2>{$heading}</h2>
 
 {if $groupid}
   {include file="group/tabstart.tpl" current="views"}
+{elseif $institution}
+  {$institutionselector}
 {/if}
 {if $views}
 <table id="myviewstable" class="groupviews">
@@ -55,6 +65,7 @@
                     ({$accessgroup.roledisplay}){/if}{elseif $accessgroup.accesstype == 'user'}
                 <a href="{$WWWROOT}user/view.php?id={$accessgroup.id}">{$accessgroup.id|display_name|escape}</a>{/if}{if !$smarty.foreach.artefacts.last},{/if}
         {/foreach}
+        {if $view.template}<br>{str tag=thisviewmaybecopied section=view}{/if}
     {else}
         {str tag="nobodycanseethisview" section="view"}
     {/if}
@@ -80,7 +91,7 @@
 {else}
 <table id="myviewstable"{if $member} class="groupviews"{/if}>
   <tr>
-    <td>{if $groupid}{str tag="noviewstosee" section="group"}{else}{str tag="noviews" section="view"}{/if}</td>
+    <td>{if $groupid}{str tag="noviewstosee" section="group"}{elseif $institution}{str tag="noviews"}{else}{str tag="noviews" section="view"}{/if}</td>
   </tr>
 </table>
 {/if}

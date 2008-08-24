@@ -25,30 +25,40 @@
  */
 
 define('INTERNAL', 1);
-define('JSON', 1);
-require(dirname(dirname(__FILE__)) . '/init.php');
-require('view.php');
-require('form/elements/artefactchooser.php');
+define('ADMIN', 1);
+define('MENUITEM', 'configsite/siteviews');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'admin');
+define('SECTION_PAGE', 'siteviews');
 
-$extradata = json_decode(param_variable('extradata'));
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require_once(get_config('libroot') . 'view.php');
+require_once('pieforms/pieform.php');
 
-safe_require('blocktype', $extradata->blocktype);
-$data = pieform_element_artefactchooser_set_attributes(
-    call_static_method(generate_class_name('blocktype', $extradata->blocktype), 'artefactchooser_element', $extradata->value)
-);
-$data['offset'] = param_integer('offset', 0);
-list($html, $pagination, $count, $offset) = View::build_artefactchooser_data($data, $extradata->group, $extradata->institution);
+$limit   = param_integer('limit', 5);
+$offset  = param_integer('offset', 0);
 
-json_reply(false, array(
-    'message' => null,
-    'data' => array(
-        'tablerows' => $html,
-        'pagination' => $pagination['html'],
-        'pagination_js' => $pagination['javascript'],
-        'count' => $count,
-        'results' => $count . ' ' . ($count == 1 ? get_string('result') : get_string('results')),
-        'offset' => $offset,
-    )
+$title = get_string('siteviews', 'admin');
+define('TITLE', $title);
+
+$smarty = smarty();
+$smarty->assign('heading', $title);
+
+$data = View::get_myviews_data($limit, $offset, null, 'mahara');
+
+$pagination = build_pagination(array(
+    'url' => get_config('wwwroot') . 'view/?',
+    'count' => $data->count,
+    'limit' => $limit,
+    'offset' => $offset,
+    'resultcounttextsingular' => get_string('view', 'view'),
+    'resultcounttextplural' => get_string('views', 'view')
 ));
+
+$smarty->assign('views', $data->data);
+$smarty->assign('institution', 'mahara');
+$smarty->assign('pagination', $pagination['html']);
+
+$smarty->display('view/index.tpl');
 
 ?>
