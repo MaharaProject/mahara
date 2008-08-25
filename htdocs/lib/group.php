@@ -382,7 +382,7 @@ function group_remove_user($groupid, $userid=null) {
         throw new AccessDeniedException(get_string('usercantleavegroup', 'group'));
     }
     db_begin();
-    delete_records('group_member', 'group', $group, 'member', $userid);
+    delete_records('group_member', 'group', $groupid, 'member', $userid);
     delete_records_sql(
         'DELETE FROM {view_access_group}
         WHERE "group" = ?
@@ -391,12 +391,12 @@ function group_remove_user($groupid, $userid=null) {
             FROM {view} v
             WHERE v.owner = ?
         )',
-        array($group, $userid)
+        array($groupid, $userid)
     );
     db_commit();
 
     require_once(get_config('docroot') . 'interaction/lib.php');
-    $interactions = get_column('interaction_instance', 'id', 'group', $group);
+    $interactions = get_column('interaction_instance', 'id', 'group', $groupid);
     foreach ($interactions as $interaction) {
         interaction_instance_from_id($interaction)->interaction_remove_user($userid);
     }
@@ -645,6 +645,7 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
 
 
 function group_get_membersearch_data($group, $query, $offset, $limit, $membershiptype) {
+    global $USER;
     $results = get_group_user_search_results($group, $query, $offset, $limit, $membershiptype);
 
     $params = array();
@@ -659,8 +660,10 @@ function group_get_membersearch_data($group, $query, $offset, $limit, $membershi
 
     $smarty = smarty_core();
 
+    $role = group_user_access($group);
+    $userid = $USER->get('id');
     foreach ($results['data'] as &$r) {
-        if (group_user_can_leave($group, $r['id'])) {
+        if ($role == 'admin' && ($r['id'] != $userid || group_user_can_leave($group, $r['id']))) {
             $r['removeform'] = group_get_removeuser_form($r['id'], $group);
         }
         // NOTE: this is a quick approximation. We should really check whether, 
