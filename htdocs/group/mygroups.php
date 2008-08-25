@@ -173,9 +173,11 @@ if ($groups) {
     foreach ($members as $m) {
         $groups[$m->group]->members[] = (object) array('id' => $m->id, 'name' => display_name($m));
     }
+    $groups = array_values($groups);
 }
-
-$groups = array_values($groups);
+else {
+    $groups = array();
+}
 
 $pagination = build_pagination(array(
     'url' => get_config('wwwroot') . 'group/mygroups.php?filter=' . $filter,
