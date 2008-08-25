@@ -257,6 +257,33 @@ function group_create($data) {
         );
     }
 
+    // Copy views for the new group
+    $templates = get_column('view_autocreate_grouptype', 'view', 'grouptype', $data['grouptype']);
+    if ($templates) {
+        require_once(get_config('libroot') . 'view.php');
+        foreach ($templates as $tid) {
+            $template = new View($tid);
+            $data = (object) array(
+                'template'    => 0,
+                'numcolumns'  => 3,
+                'group'       => $id,
+                'title'       => $template->get('title'),
+                'description' => $template->get('description'),
+            );
+            $v = new View(0, $data);
+            $v->commit();
+            $v->copy_contents($template);
+            $v->set_access(array(array(
+                'type'      => 'group',
+                'id'        => $id,
+                'startdate' => null,
+                'stopdate'  => null,
+                'role'      => null
+            )));
+            $v->commit();
+        }
+    }
+
     db_commit();
 }
 
