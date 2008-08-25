@@ -247,5 +247,11 @@ $string['copythisview'] = 'Copy this View';
 $string['createemptyview'] = 'Create Empty View';
 $string['copyaview'] = 'Copy a View';
 $string['Untitled'] = 'Untitled';
+$string['copyfornewusers'] = 'Copy for new users';
+$string['copyfornewusersdescription'] = 'Whenever a new user is created, automatically make a personal copy of this View in the user\'s portfolio.';
+$string['copyfornewmembers'] = 'Copy for new institution members';
+$string['copyfornewmembersdescription'] = 'Automatically make a personal copy of this View for all new members of %s.';
+$string['copyfornewgroups'] = 'Copy for new groups';
+$string['copyfornewgroupsdescription'] = 'Make a copy of this view in all new groups with these Group Types:';
 
 ?>

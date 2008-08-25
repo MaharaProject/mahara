@@ -56,6 +56,8 @@ class View {
     private $tags;
     private $editingroles;
     private $template;
+    private $copynewuser;
+    private $copynewgroups;
 
     public function __construct($id=0, $data=null) {
         if (!empty($id)) {
@@ -168,6 +170,13 @@ class View {
         delete_records('view_tag', 'view', $this->get('id'));
         foreach ($this->get_tags() as $tag) {
             insert_record('view_tag', (object)array( 'view' => $this->get('id'), 'tag' => $tag));
+        }
+
+        if (isset($this->copynewgroups)) {
+            delete_records('view_autocreate_grouptype', 'view', $this->get('id'));
+            foreach ($this->copynewgroups as $grouptype) {
+                insert_record('view_autocreate_grouptype', (object)array( 'view' => $this->get('id'), 'grouptype' => $grouptype));
+            }
         }
 
         db_commit();
@@ -387,6 +396,12 @@ class View {
         db_commit();
     }
 
+    public function get_autocreate_grouptypes() {
+        if (!isset($this->copynewgroups)) {
+            $this->copynewgroups = get_column('view_autocreate_grouptype', 'grouptype', 'view', $this->id);
+        }
+        return $this->copynewgroups;
+    }
 
     public function release($groupid, $releaseuser=null) {
         if ($this->get('submittedto') != $groupid) {

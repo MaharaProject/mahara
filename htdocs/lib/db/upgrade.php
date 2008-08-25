@@ -1228,6 +1228,14 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("ALTER TABLE {view} ADD COLUMN template SMALLINT NOT NULL DEFAULT 0;");
     }
 
+    if ($oldversion < 2008081102) {
+        execute_sql("ALTER TABLE {view} ADD COLUMN copynewuser SMALLINT NOT NULL DEFAULT 0;");
+        execute_sql('CREATE TABLE {view_autocreate_grouptype} (
+            view INTEGER NOT NULL REFERENCES {view}(id),
+            grouptype VARCHAR(20) NOT NULL REFERENCES {grouptype}(name)
+        );');
+    }
+
     return $status;
 
 }
