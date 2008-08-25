@@ -600,13 +600,16 @@ abstract class ArtefactType {
     }
 
     private function save_rolepermissions() {
-        $group = $this->get('group');
-        if (!$group) {
+        if (!$this->group) {
             return;
         }
-        $type = get_field('group', 'grouptype', 'id', $group);
         require_once(get_config('libroot') . 'group.php');
-        $roles = array_keys(group_get_role_info($group));
+        $roles = array_keys(group_get_role_info($this->group));
+        if (!isset($this->rolepermissions)) {
+            foreach ($roles as $r) {
+                $this->rolepermissions->{$r} = (object) array('view' => true, 'edit' => true, 'republish' => true);
+            }
+        }
         $id = $this->get('id');
         db_begin();
         delete_records('artefact_access_role', 'artefact', $id);
@@ -623,6 +626,9 @@ abstract class ArtefactType {
     }
 
     private function load_rolepermissions() {
+        if (!$this->group) {
+            return;
+        }
         $records = get_records_array('artefact_access_role', 'artefact', $this->get('id'));
         if ($records) {
             $this->rolepermissions = new StdClass;
