@@ -1450,6 +1450,15 @@ fieldset.collapsed .mceEditor td {
 #viewacl_lhs #results {
 	border-bottom: 1px solid #95a8b7;
 }
+#viewacl_lhs #results .button {
+        margin-top: 0;
+        height: 20px;
+	border: 0;
+	background: url(../images/icon-add.gif) no-repeat left 7px;
+	padding-left: 10px;
+	color: #7f9d16;
+	font-weight: bold;
+}
 #potentialpresetitems button {
 	border: 0;
 	background: url(../images/icon-add.gif) no-repeat left 7px;
