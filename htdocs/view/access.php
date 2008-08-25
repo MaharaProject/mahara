@@ -181,7 +181,7 @@ function editaccess_submit(Pieform $form, $values) {
         redirect('/view/groupviews.php?group='.$group);
     }
     if ($institution) {
-        redirect('/view/institutionviews.php?group='.$institution);
+        redirect('/view/institutionviews.php?institution='.$institution);
     }
     redirect('/view/');
 
