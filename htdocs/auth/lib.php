@@ -365,8 +365,13 @@ function auth_setup () {
     if ($sessionlogouttime && isset($_GET['logout'])) {
         // Call the authinstance' logout hook
         $authinstance = $SESSION->get('authinstance');
-        $authobj = AuthFactory::create($authinstance);
-        $authobj->logout();
+        if ($authinstance) {
+            $authobj = AuthFactory::create($authinstance);
+            $authobj->logout();
+        }
+        else {
+            log_debug("Strange: user " . $USER->get('username') . " had no authinstance set in their session");
+        }
 
         $USER->logout();
         $SESSION->add_ok_msg(get_string('loggedoutok'));
@@ -411,21 +416,26 @@ function auth_setup () {
         // The session timed out
 
         $authinstance = $SESSION->get('authinstance');
-        $authobj = AuthFactory::create($authinstance);
+        if ($authinstance) {
+            $authobj = AuthFactory::create($authinstance);
 
-        $mnetuser = 0;
-        if ($SESSION->get('mnetuser') && $authobj->parent) {
-            // We wish to remember that the user is an MNET user - even though 
-            // they're using the local login form
-            $mnetuser = $USER->get('id');
+            $mnetuser = 0;
+            if ($SESSION->get('mnetuser') && $authobj->parent) {
+                // We wish to remember that the user is an MNET user - even though 
+                // they're using the local login form
+                $mnetuser = $USER->get('id');
+            }
+
+            $authobj->logout();
+            $USER->logout();
+
+            if ($mnetuser != 0) {
+                $SESSION->set('mnetuser', $mnetuser);
+                $SESSION->set('authinstance', $authinstance);
+            }
         }
-
-        $authobj->logout();
-        $USER->logout();
-
-        if ($mnetuser != 0) {
-            $SESSION->set('mnetuser', $mnetuser);
-            $SESSION->set('authinstance', $authinstance);
+        else {
+            log_debug("Strange: user " . $USER->get('username') . " had no authinstance set in their session");
         }
 
         if (defined('JSON')) {
