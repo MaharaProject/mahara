@@ -301,6 +301,7 @@ function uploadcsv_submit(Pieform $form, $values) {
     log_info('Inserting users from the CSV file');
     db_begin();
 
+    $authobj = get_record('auth_instance', 'id', $authinstance);
     $addedusers = array();
     foreach ($CSVDATA as $record) {
         log_debug('adding user ' . $record[$formatkeylookup['username']]);
@@ -319,29 +320,17 @@ function uploadcsv_submit(Pieform $form, $values) {
             $user->preferredname = $record[$formatkeylookup['preferredname']];
         }
         $user->passwordchange = (int)$values['forcepasswordchange'];
-        $id = insert_record('usr', $user, 'id', true);
-        $user->id = $id;
-        if ($institution->name != 'mahara') {
-            $institution->addUserAsMember($user);
-        }
-        if (get_field('auth_instance', 'authname', 'id', $authinstance) != 'internal') {
-            // Assume the admin knows what they're doing when they choose the external auth instance.
-            delete_records('auth_remote_user', 'authinstance', $authinstance, 'remoteusername', $user->username);
-            insert_record('auth_remote_user', (object) array(
-                'authinstance'   => $authinstance,
-                'remoteusername' => $user->username,
-                'localusr'       => $id,
-            ));
-        }
 
+        $profilefields = new StdClass;
         foreach ($FORMAT as $field) {
             if ($field == 'username' || $field == 'password') {
                 continue;
             }
-            set_profile_field($id, $field, $record[$formatkeylookup[$field]]);
+            $profilefields->{$field} = $record[$formatkeylookup[$field]];
         }
 
-        handle_event('createuser', $user);
+        $user->id = create_user($user, $profilefields, $institution, $authobj);
+
         if ($values['emailusers']) {
             $addedusers[] = $user;
         }

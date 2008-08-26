@@ -1236,23 +1236,7 @@ function login_submit(Pieform $form, $values) {
                     $USER->email = null;
                 }
                 try {
-                    db_begin();
-                    $USER->commit();
-                    if (isset($userdata->firstname)) {
-                        set_profile_field($USER->id, 'firstname', $USER->firstname);
-                    }
-                    if (isset($userdata->lastname)) {
-                        set_profile_field($USER->id, 'lastname', $USER->lastname);
-                    }
-                    if (isset($userdata->email)) {
-                        set_profile_field($USER->id, 'email', $USER->email);
-                    }
-                    if ($authinstance->institution !== 'mahara') {
-                        $USER->join_institution($authinstance->institution);
-                    }
-
-                    handle_event('createuser', $USER->to_stdclass());
-                    db_commit();
+                    create_user($USER, array(), $institution);
                     $USER->reanimate($USER->id, $authinstance->id);
                 }
                 catch (Exception $e) {

@@ -1080,4 +1080,55 @@ function addfriend_submit(Pieform $form, $values) {
     redirect('/user/view.php?id=' . $values['id']);
 }
 
+
+function create_user($user, $profile=array(), $institution=null, $remoteauth=null, $remotename=null) {
+    db_begin();
+
+    if ($user instanceof User) {
+        $user->commit();
+        $user = $user->to_stdclass();
+    }
+    else {
+        $user->id = insert_record('usr', $user, 'id', true);
+    }
+
+    set_profile_field($user->id, 'email', $user->email);
+    set_profile_field($user->id, 'firstname', $user->firstname);
+    set_profile_field($user->id, 'lastname', $user->lastname);
+    foreach ($profile as $k => $v) {
+        if (in_array($k, array('firstname', 'lastname', 'email'))) {
+            continue;
+        }
+        set_profile_field($user->id, $k, $v);
+    }
+
+    if (!empty($institution) && $institution != 'mahara') {
+        if (is_string($institution)) {
+            $institution = new Institution($institution);
+        }
+        if ($institution->name != 'mahara') {
+            $institution->addUserAsMember($user);
+        }
+    }
+
+    if (!empty($remoteauth) && $remoteauth->authname != 'internal') {
+        if (isset($remotename) && strlen($remotename) > 0) {
+            $un = $remotename;
+        }
+        else {
+            $un = $user->username;
+        }
+        delete_records('auth_remote_user', 'authinstance', $user->authinstance, 'remoteusername', $un);
+        insert_record('auth_remote_user', (object) array(
+            'authinstance'   => $user->authinstance,
+            'remoteusername' => $un,
+            'localusr'       => $user->id,
+        ));
+    }
+
+    handle_event('createuser', $user);
+    db_commit();
+    return $user->id;
+}
+
 ?>

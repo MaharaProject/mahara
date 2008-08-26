@@ -214,43 +214,19 @@ function adduser_submit(Pieform $form, $values) {
     }
 
     $authinstance = get_record('auth_instance', 'id', $values['authinstance']);
-    $institution = new Institution($authinstance->institution);
 
     db_begin();
 
-    $id = insert_record('usr', $user, 'id', true);
-    $user->id = $id;
+    $user->id = create_user($user, array(), $authinstance->institution, $authinstance, $values['remoteusername']);
 
     if (isset($user->admin) && $user->admin) {
         activity_add_admin_defaults(array($user->id));
     }
 
-    if ($institution->name != 'mahara') {
-        $institution->addUserAsMember($user);
-        if ($values['institutionadmin']) {
-            set_field('usr_institution', 'admin', 1, 'usr', $user->id);
-        }
+    if ($values['institutionadmin']) {
+        set_field('usr_institution', 'admin', 1, 'usr', $user->id, 'institution', $authinstance->institution);
     }
 
-    if ($authinstance->authname != 'internal') {
-        if (isset($values['remoteusername']) && strlen($values['remoteusername']) > 0) {
-            $un = $values['remoteusername'];
-        }
-        else {
-            $un = $user->username;
-        }
-        insert_record('auth_remote_user', (object) array(
-            'authinstance'   => $authinstance->id,
-            'remoteusername' => $un,
-            'localusr'       => $user->id,
-        ));
-    }
-
-    // Set profile fields
-    foreach (array('firstname', 'lastname', 'email') as $field) {
-        set_profile_field($id, $field, $user->{$field});
-    }
-    handle_event('createuser', $user);
     db_commit();
 
     try {
@@ -263,7 +239,7 @@ function adduser_submit(Pieform $form, $values) {
         $SESSION->add_error_msg(get_string('newuseremailnotsent', 'admin'));
     }
 
-    redirect('/admin/users/edit.php?id='.$id);
+    redirect('/admin/users/edit.php?id='.$user->id);
 }
 
 $smarty = smarty();
