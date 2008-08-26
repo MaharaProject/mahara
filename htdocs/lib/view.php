@@ -56,7 +56,7 @@ class View {
     private $tags;
     private $editingroles;
     private $template;
-    private $copynewuser;
+    private $copynewuser = 0;
     private $copynewgroups;
 
     public function __construct($id=0, $data=null) {
