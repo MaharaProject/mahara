@@ -259,6 +259,8 @@ class Institution {
         }
         insert_record('usr_institution', $userinst);
         delete_records('usr_institution_request', 'usr', $userinst->usr, 'institution', $this->name);
+        // Copy institution views to the user's portfolio
+        copy_views_for_user($user->id, get_column('view', 'id', 'institution', $this->name, 'copynewuser', 1));
         activity_occurred('maharamessage', $message);
         handle_event('updateuser', $userinst->usr);
         db_commit();

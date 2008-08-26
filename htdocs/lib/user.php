@@ -1126,9 +1126,34 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
         ));
     }
 
+    // Copy site views to the new user's profile
+    copy_views_for_user($user->id, get_column('view', 'id', 'institution', 'mahara', 'copynewuser', 1));
+
     handle_event('createuser', $user);
     db_commit();
     return $user->id;
+}
+
+
+
+function copy_views_for_user($userid, $templateids) {
+    if (!$templateids) {
+        return;
+    }
+    require_once(get_config('libroot') . 'view.php');
+    foreach ($templateids as $tid) {
+        $template = new View($tid);
+        $v = new View(0, (object) array(
+            'template'    => 0,
+            'numcolumns'  => 3,
+            'owner'       => $userid,
+            'title'       => $template->get('title'),
+            'description' => $template->get('description'),
+        ));
+        $v->commit();
+        $v->copy_contents($template);
+        $v->commit();
+    }
 }
 
 ?>
