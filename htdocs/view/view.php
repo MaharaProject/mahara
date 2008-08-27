@@ -55,7 +55,37 @@ if ($submittedgroup && group_user_can_assess_submitted_views($submittedgroup, $U
     // file when submitting feedback.
     $tutorfilefeedbackformrow = "TR(null, TH(null, LABEL(null, '" . get_string('attachfile', 'view') . "'))),"
         . "TR(null, TD(null, INPUT({'type':'file', 'name':'attachment', 'onchange': 'process_public_checkbox(this)'}))),";
+    $submittedgroup = get_record('group', 'id', $submittedgroup);
+    $releaseform = pieform(array(
+        'name'     => 'releaseview',
+        'method'   => 'post',
+        'plugintype' => 'core',
+        'pluginname' => 'view',
+        'elements' => array(
+            'submittedview' => array(
+                'type'  => 'html',
+                'value' => get_string('viewsubmittedtogroup', 'view', $submittedgroup->id, $submittedgroup->name),
+            ),
+            'submit' => array(
+                'type'  => 'submit',
+                'value' => get_string('releaseview', 'group'),
+            ),
+        ),
+    ));
 }
+else {
+    $releaseform = '';
+}
+
+
+function releaseview_submit() {
+    global $USER, $SESSION, $view;
+    $view->release($view->get('submittedto'), $USER);
+    $SESSION->add_ok_msg(get_string('viewreleasedsuccess', 'group'));
+    redirect(get_config('wwwroot') . 'view/view.php?id='.$view->get('id'));
+}
+
+  
 $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
 
 $getstring = quotestrings(array(
@@ -288,6 +318,7 @@ $smarty->assign('ownername', $view->formatted_owner());
 $smarty->assign('streditviewbutton', ($new) ? get_string('backtocreatemyview', 'view') : get_string('editmyview', 'view'));
 $smarty->assign('viewdescription', $view->get('description'));
 $smarty->assign('viewcontent', $view->build_columns());
+$smarty->assign('releaseform', $releaseform);
 
 $smarty->display('view/view.tpl');
 

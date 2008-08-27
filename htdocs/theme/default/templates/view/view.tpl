@@ -22,6 +22,7 @@
                 </div>
             </div>
         </div>
+        <div>{$releaseform}</div>
 	<div id="publicfeedback">
 	<table id="feedbacktable" class="fullwidth">
 		<thead>
