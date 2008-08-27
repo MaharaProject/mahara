@@ -1991,7 +1991,8 @@ ul#groupviewoptions {
 #groupviewoptions li a {
     color: #474220;
 }
-table#myviewstable.groupviews{
+table.groupviews{
+    width: 100%;
     margin-top: 1px;
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;

@@ -45,7 +45,8 @@
 {if $sharedviews}
     <div class="group-info-para">
     <h3>{str tag="viewssharedtogroupbyothers" section="view"}</h3>
-    <table id="myviewstable" class="groupviews">
+    <p>
+    <table class="groupviews">
     {foreach from=$sharedviews item=view}
         <tr class="r{cycle values=0,1}">
             <td>
@@ -67,13 +68,15 @@
     {/foreach}
     </table>
     <div class="center">{$pagination}</div>
+    </p>
     </div>
 {/if}
 
 {if $submittedviews}
     <div class="group-info-para">
     <h3>{str tag="viewssubmittedtogroup" section="view"}</h3>
-    <table id="myviewstable" class="groupviews">
+    <p>
+    <table class="groupviews">
     {foreach from=$submittedviews item=view}
         <tr class="r{cycle values=0,1}">
             <td>
@@ -92,6 +95,7 @@
     {/foreach}
     </table>
     <div class="center">{$pagination}</div>
+    </p>
     </div>
 {/if}
 
