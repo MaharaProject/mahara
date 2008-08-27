@@ -53,18 +53,12 @@ $can_edit = group_user_can_edit_views($groupid);
 $smarty = smarty();
 $smarty->assign('heading', $group->name);
 
-//if ($shared) {
-//    $data = View::get_sharedviews_data($limit, $offset, $groupid);
-//    $smarty->assign('shared', true);
-//}
-//else {
-    if ($can_edit) {
-        $data = View::get_myviews_data($limit, $offset, $groupid);
-    }
-    else {
-        $data = View::view_search(null, $groupid, null, null, $limit, $offset);
-    }
-//}
+if ($can_edit) {
+    $data = View::get_myviews_data($limit, $offset, $groupid);
+}
+else {
+    $data = View::view_search(null, $groupid, null, null, $limit, $offset);
+}
 
 $userid = $USER->get('id');
 

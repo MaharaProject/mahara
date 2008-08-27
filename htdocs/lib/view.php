@@ -1709,12 +1709,37 @@ class View {
             $ph, $offset, $limit
         );
 
-        View::get_extra_view_info($viewdata);
+        if ($viewdata) {
+            View::get_extra_view_info($viewdata);
+        }
+        else {
+            $viewdata = array();
+        }
 
         return (object) array(
             'data'  => array_values($viewdata),
             'count' => $count,
         );
+    }
+
+
+    /** 
+     * Get views submitted to a group
+     */
+    public static function get_submitted_views($groupid) {
+        $viewdata = get_records_sql_assoc('
+            SELECT id, title, description, owner, ownerformat
+            FROM {view}
+            WHERE submittedto = ?
+            ORDER BY title, id',
+            array($groupid), $offset, $limit
+        );
+
+        if ($viewdata) {
+            View::get_extra_view_info($viewdata);
+            return array_values($viewdata);
+        }
+        return false;
     }
 
 
@@ -1761,6 +1786,7 @@ class View {
                 $groups = get_records_select_assoc('group', 'id IN (' . join(',', $groups) . ')', null, '', 'id,name');
             }
             foreach ($viewdata as &$v) {
+                $v->shortdescription = clean_text(str_shorten(str_replace('<br />', ' ', $v->description), 100, true));
                 if ($v->owner) {
                     $v->sharedby = View::owner_name($v->ownerformat, $owners[$v->owner]);
                 } else if ($v->group) {

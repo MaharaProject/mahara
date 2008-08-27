@@ -42,6 +42,59 @@
                 <p><a href="{$WWWROOT}interaction/forum/?group={$group->id|escape}">{str tag=gotoforums section=interaction.forum} &raquo;</a></p>
                 </div>
 
+{if $sharedviews}
+    <div class="group-info-para">
+    <h3>{str tag="viewssharedtogroupbyothers" section="view"}</h3>
+    <table id="myviewstable" class="groupviews">
+    {foreach from=$sharedviews item=view}
+        <tr class="r{cycle values=0,1}">
+            <td>
+                <a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a>
+                {if $view.sharedby}
+                    {str tag=by section=view}
+                    {if $view.group}
+                        <a href="{$WWWROOT}group/view.php?id={$view.group}">{$view.sharedby}</a>
+                    {else}
+                        <a href="{$WWWROOT}user/view.php?id={$view.owner}">{$view.sharedby}</a>
+                    {/if}
+                {/if}
+                <div>{$view.shortdescription}</div>
+                {if $view.template}
+                <div><a href="">{str tag=copythisview section=view}</a></div>
+                {/if}
+            </td>
+        </tr>
+    {/foreach}
+    </table>
+    <div class="center">{$pagination}</div>
+    </div>
+{/if}
+
+{if $submittedviews}
+    <div class="group-info-para">
+    <h3>{str tag="viewssubmittedtogroup" section="view"}</h3>
+    <table id="myviewstable" class="groupviews">
+    {foreach from=$submittedviews item=view}
+        <tr class="r{cycle values=0,1}">
+            <td>
+                <a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a>
+                {if $view.sharedby}
+                    {str tag=by section=view}
+                    {if $view.group}
+                        <a href="{$WWWROOT}group/view.php?id={$view.group}">{$view.sharedby}</a>
+                    {else}
+                        <a href="{$WWWROOT}user/view.php?id={$view.owner}">{$view.sharedby}</a>
+                    {/if}
+                {/if}
+                <div>{$view.shortdescription}</div>
+            </td>
+        </tr>
+    {/foreach}
+    </table>
+    <div class="center">{$pagination}</div>
+    </div>
+{/if}
+
 {include file="group/tabend.tpl"}
 
 {include file="columnleftend.tpl"}

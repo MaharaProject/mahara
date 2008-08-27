@@ -30,6 +30,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('group.php');
 require_once('searchlib.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
+require_once(get_config('libroot') . 'view.php');
 safe_require('artefact', 'file');
 
 $id = param_integer('id');
@@ -104,6 +105,16 @@ $smarty->assign('membercount', count_records('group_member', 'group', $group->id
 $smarty->assign('viewcount', count_records('view', 'group', $group->id));
 $smarty->assign('filecount', $filecounts->files);
 $smarty->assign('foldercount', $filecounts->folders);
+if ($role) {
+    // For group members, display a list of views that others have
+    // shared to the group
+    $viewdata = View::get_sharedviews_data(null, 0, $group->id);
+    $smarty->assign('sharedviews', $viewdata->data);
+    if (group_user_can_assess_submitted_views($group->id, $USER->get('id'))) {
+        // Display a list of views submitted to the group
+        $smarty->assign('submittedviews', View::get_submitted_views($group->id));
+    }
+}
 $smarty->display('group/view.tpl');
 
 ?>
