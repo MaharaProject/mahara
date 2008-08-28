@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups');
+define('MENUITEM', 'groups/views');
 
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'view');
@@ -50,7 +50,7 @@ $member = group_user_access($groupid);
 $shared = param_boolean('shared', 0) && $member;
 $can_edit = group_user_can_edit_views($groupid);
 
-$smarty = smarty();
+$smarty = smarty(array(), array(), array(), array('group' => $group));
 $smarty->assign('heading', $group->name);
 
 if ($can_edit) {

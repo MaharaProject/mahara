@@ -4,8 +4,6 @@
 {include file="columnleftstart.tpl"}
                 <h2>{$group->name|escape}</h2>
 
-{include file="group/tabstart.tpl" current="members"}
-
 <form action="{$WWWROOT}group/members.php" method="post">
     <input type="hidden" id="groupid" name="id" value="{$group->id|escape}">
     <div class="searchform center" style="margin-bottom: .5em;">
@@ -27,8 +25,6 @@
     <div id="pagination">{$pagination}</div>
     <script type="text/javascript">{$pagination_js}</script>
 
-
-{include file="group/tabend.tpl"}
 
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups');
+define('MENUITEM', 'groups/members');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('group.php');
 require_once('searchlib.php');
@@ -37,6 +37,7 @@ $membershiptype = param_alpha('membershiptype', null);
 if (!$group = get_record('group', 'id', $id, 'deleted', 0)) {
     throw new GroupNotFoundException("Couldn't find group with id $id");
 }
+define('GROUPNAME', str_shorten($group->name, 20, true));
 define('TITLE', $group->name . ' - ' . get_string('Members', 'group'));
 
 $role = group_user_access($id);
@@ -51,7 +52,10 @@ $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);
 list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersearch_data($id, $query, $offset, $limit, $membershiptype);
 
-$smarty = smarty(array('groupmembersearch'), array(), array(), array('sideblocks' => array(interaction_sideblock($id, $role))));
+$smarty = smarty(array('groupmembersearch'), array(), array(), array(
+    'sideblocks' => array(interaction_sideblock($id, $role)),
+    'group' => $group,
+));
 $smarty->assign('group', $group);
 $smarty->assign('groupid', $id);
 $smarty->assign('grouptabs', group_get_menu_tabs($group));

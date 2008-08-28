@@ -4,8 +4,6 @@
 {include file="columnleftstart.tpl"}
                 <h2>{$group->name|escape}</h2>
 
-{include file="group/tabstart.tpl" current="info"}
-
                 {if $group->description}<p id="group-description">{$group->description}</p> {/if}
 
                 <ul id="group-info">
@@ -98,8 +96,6 @@
     </p>
     </div>
 {/if}
-
-{include file="group/tabend.tpl"}
 
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

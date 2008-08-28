@@ -771,17 +771,29 @@ function group_get_grouptype_options() {
  */
 function group_get_menu_tabs($group) {
     $menu = array(
-        'info' => array(
+        array(
+            'path' => 'groups',
+            'url' => 'group/view.php?id='.$group->id,
+            'title' => get_string('groups'),
+            'weight' => 40
+        ),
+        array(
+            'path' => 'groups/info',
             'url' => 'group/view.php?id='.$group->id,
             'title' => get_string('About', 'group'),
+            'weight' => 20
         ),
-        'members' => array(
+        array(
+            'path' => 'groups/members',
             'url' => 'group/members.php?id='.$group->id,
             'title' => get_string('Members', 'group'),
+            'weight' => 30
         ),
-        'views' => array(
+        array(
+            'path' => 'groups/views',
             'url' => 'view/groupviews.php?group='.$group->id,
             'title' => get_string('Views', 'group'),
+            'weight' => 40
         ),
     );
     if (!group_user_access($group->id)) {

@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups');
+define('MENUITEM', 'groups/files');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('libroot') . 'group.php');
@@ -62,6 +62,7 @@ $smarty = smarty(
         'sideblocks' => array(
             interaction_sideblock($groupid),
         ),
+        'group' => $group,
     )
 );
 $smarty->assign('heading', $group->name);

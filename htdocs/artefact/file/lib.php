@@ -57,9 +57,11 @@ class PluginArtefactFile extends PluginArtefact {
 
     public static function group_tabs($groupid) {
         return array(
-            'files' => array(
+            array(
+                'path' => 'groups/files',
                 'url' => 'artefact/file/groupfiles.php?group='.$groupid,
                 'title' => get_string('Files', 'artefact.file'),
+                'weight' => 50,
             ),
         );
     }

@@ -3,17 +3,8 @@
 
 {include file="columnleftstart.tpl"}
                 <h2>{$group->name|escape}</h2>
-
-{include file="group/tabstart.tpl" current="members"}
-
-                <div class="group-info-para"><h3>{$subtitle}</h3><div>
-                <div class="group-info-para">
-                    {$changeform}
-                </div>
-                <br />
-
-
-{include file="group/tabend.tpl"}
+                <h3>{$subtitle|escape}</h3>
+                {$changeform}
 
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

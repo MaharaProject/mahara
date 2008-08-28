@@ -15,9 +15,7 @@
 </span>
 <h2>{$heading}</h2>
 
-{if $groupid}
-  {include file="group/tabstart.tpl" current="views"}
-{elseif $institution}
+{if $institution}
   {$institutionselector}
 {/if}
 {if $views}
@@ -95,7 +93,6 @@
   </tr>
 </table>
 {/if}
-{if $groupid}{include file="group/tabend.tpl"}{/if}
 
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

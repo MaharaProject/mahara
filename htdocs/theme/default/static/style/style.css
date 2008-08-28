@@ -660,6 +660,9 @@ tr.required th,
     background: url(../images/submenu-bg.gif) repeat-x;
     height: 25px;
 }
+#subnav.group {
+    padding: 0;
+}
 #subnav ul {
 	height: 15px;
 	padding: 5px 0;
@@ -695,8 +698,9 @@ tr.required th,
 #subnav li.selected a:active {
     color: #4c711d;
 }
-
-
+#subnav li.groupname {
+    color: #000;
+}
 
 /* RIGHT SIDE COLUMN */
 div.sidebar {

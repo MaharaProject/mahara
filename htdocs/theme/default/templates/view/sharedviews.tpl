@@ -4,7 +4,6 @@
 
 <h2>{$heading}</h2>
 
-{include file="group/tabstart.tpl" current="views"}
 {if $views}
     <table id="myviewstable" class="groupviews">
     {foreach from=$views item=view}
@@ -39,8 +38,6 @@
 </table>
 {/if}
 
-
-{include file="group/tabend.tpl"}
 
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

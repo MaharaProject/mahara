@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups');
+define('MENUITEM', 'groups/info');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('group.php');
 require_once('searchlib.php');
@@ -96,7 +96,7 @@ $foruminfo = get_records_sql_array('
         p.ctime DESC
     LIMIT 5;
     ', array($id));
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($id, $role))));
+$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($id, $role)), 'group' => $group));
 $smarty->assign('group', $group);
 $smarty->assign('groupid', $id);
 $smarty->assign('grouptabs', group_get_menu_tabs($group));

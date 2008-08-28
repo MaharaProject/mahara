@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups');
+define('MENUITEM', 'groups/members');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('group.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
@@ -101,7 +101,7 @@ function changerole_submit(Pieform $form, $values) {
 
 define('TITLE', $group->name . ' - ' . get_string('changerole', 'group'));
 
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($groupid, $role))));
+$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($groupid, $role)), 'group' => $group));
 $smarty->assign('group', $group);
 $smarty->assign('groupid', $groupid);
 $smarty->assign('grouptabs', group_get_menu_tabs($group));
