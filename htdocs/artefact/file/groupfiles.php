@@ -65,7 +65,7 @@ $smarty = smarty(
         'group' => $group,
     )
 );
-$smarty->assign('heading', $group->name);
+$smarty->assign('heading', $group->name . ' - ' . get_string('Files', 'artefact.file'));
 $smarty->assign('groupid', $groupid);
 $smarty->assign('grouptabs', group_get_menu_tabs($group));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
