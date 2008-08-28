@@ -773,7 +773,7 @@ function group_get_menu_tabs($group) {
     $menu = array(
         array(
             'path' => 'groups',
-            'url' => 'group/view.php?id='.$group->id,
+            'url' => 'group/mygroups.php',
             'title' => get_string('groups'),
             'weight' => 40
         ),
