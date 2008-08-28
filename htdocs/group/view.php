@@ -34,10 +34,10 @@ require_once(get_config('libroot') . 'view.php');
 safe_require('artefact', 'file');
 
 $id = param_integer('id');
+define('INGROUP', $id);
 
-if (!$group = get_record_select('group', 'id = ? AND deleted = 0', array($id), '*, ' . db_format_tsfield('ctime'))) {
-    throw new GroupNotFoundException("Couldn't find group with id $id");
-}
+$group = group_current_group();
+
 define('TITLE', $group->name);
 $group->ctime = strftime(get_string('strftimedate'), $group->ctime);
 
@@ -96,10 +96,9 @@ $foruminfo = get_records_sql_array('
         p.ctime DESC
     LIMIT 5;
     ', array($id));
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($id, $role)), 'group' => $group));
+$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($id, $role))));
 $smarty->assign('group', $group);
 $smarty->assign('groupid', $id);
-$smarty->assign('grouptabs', group_get_menu_tabs($group));
 $smarty->assign('foruminfo', $foruminfo);
 $smarty->assign('membercount', count_records('group_member', 'group', $group->id));
 $smarty->assign('viewcount', count_records('view', 'group', $group->id));

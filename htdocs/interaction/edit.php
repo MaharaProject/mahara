@@ -48,6 +48,7 @@ else {
     $groupid = param_integer('group');
     define('TITLE', get_string('addtitle', 'interaction.' . $plugin));
 }
+define('INGROUP', $groupid);
 
 safe_require('interaction', $plugin);
 if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {

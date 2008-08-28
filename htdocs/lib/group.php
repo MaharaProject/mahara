@@ -769,7 +769,8 @@ function group_get_grouptype_options() {
  * @param object $group Database record of group to get tabs for
  * @return array
  */
-function group_get_menu_tabs($group) {
+function group_get_menu_tabs() {
+    $group = group_current_group();
     $menu = array(
         array(
             'path' => 'groups',
@@ -859,5 +860,23 @@ function group_param_userid($userid) {
 
     return $userid;
 }
+
+
+function group_current_group() {
+    static $group;
+
+    if (defined('INGROUP')) {
+        $group = get_record_select('group', 'id = ? AND deleted = 0', array(INGROUP), '*, ' . db_format_tsfield('ctime'));
+        if (!$group) {
+            throw new GroupNotFoundException(get_string('groupnotfound', 'group', INGROUP));
+        }
+    }
+    else {
+        $group = null;
+    }
+
+    return $group;
+}
+
 
 ?>

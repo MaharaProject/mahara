@@ -54,7 +54,7 @@ else { // edit post
 }
 
 $parent = get_record_sql(
-    'SELECT p.subject, p.body, p.topic, p.parent, p.poster, ' . db_format_tsfield('p.ctime', 'ctime') . ', m.user AS moderator, t.id AS topic, t.forum, t.closed AS topicclosed, p2.subject AS topicsubject, f.group AS "group", f.title AS forumtitle, g.name AS groupname, g.grouptype, COUNT(p3.id)
+    'SELECT p.subject, p.body, p.topic, p.parent, p.poster, ' . db_format_tsfield('p.ctime', 'ctime') . ', m.user AS moderator, t.id AS topic, t.forum, t.closed AS topicclosed, p2.subject AS topicsubject, f.group AS "group", f.title AS forumtitle, g.name AS groupname, COUNT(p3.id)
     FROM {interaction_forum_post} p
     INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
     INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.parent IS NULL)
@@ -70,13 +70,15 @@ $parent = get_record_sql(
     INNER JOIN {interaction_instance} f2 ON (t2.forum = f2.id AND f2.deleted != 1 AND f2.group = f.group)
     WHERE p.id = ?
     AND p.deleted != 1
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15',
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14',
     array(0, $parentid)
 );
 
 if (!$parent) {
     throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $parentid));
 }
+
+define('INGROUP', $parent->group);
 
 $breadcrumbs = array(
     array(
@@ -241,7 +243,6 @@ function addpost_submit(Pieform $form, $values) {
 
 $smarty = smarty(array(), array(), array(), array(
     'sideblocks' => array(interaction_sideblock($parent->group)),
-    'group' => (object) array('id' => $parent->group, 'name' => $parent->groupname, 'grouptype' => $parent->grouptype),
 ));
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);

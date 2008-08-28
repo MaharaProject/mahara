@@ -34,9 +34,9 @@ safe_require('artefact', 'file');
 $javascript = ArtefactTypeFileBase::get_my_files_js(param_integer('folder', null));
 
 $groupid = param_integer('group');
-if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
-    throw new GroupNotFoundException("Couldn't find group with id $groupid");
-}
+define('INGROUP', $groupid);
+$group = group_current_group();
+
 if (!group_user_access($groupid)) {
     throw new AccessDeniedException();
 }
@@ -62,12 +62,10 @@ $smarty = smarty(
         'sideblocks' => array(
             interaction_sideblock($groupid),
         ),
-        'group' => $group,
     )
 );
 $smarty->assign('heading', $group->name . ' - ' . get_string('Files', 'artefact.file'));
 $smarty->assign('groupid', $groupid);
-$smarty->assign('grouptabs', group_get_menu_tabs($group));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('artefact:file:index.tpl');
 

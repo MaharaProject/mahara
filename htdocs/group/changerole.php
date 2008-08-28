@@ -33,10 +33,9 @@ require_once(get_config('docroot') . 'interaction/lib.php');
 $groupid = param_integer('group');
 $userid = param_integer('user');
 $newrole = param_alpha('role', null);
+define('INGROUP', $groupid);
 
-if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
-    throw new GroupNotFoundException("Couldn't find group with id $groupid");
-}
+$group = group_current_group();
 if (!$user = get_record('usr', 'id', $userid, 'deleted', 0)) {
     throw new UserNotFoundException("Couldn't find user with id $userid");
 }
@@ -101,10 +100,9 @@ function changerole_submit(Pieform $form, $values) {
 
 define('TITLE', $group->name . ' - ' . get_string('changerole', 'group'));
 
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($groupid, $role)), 'group' => $group));
+$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($groupid, $role))));
 $smarty->assign('group', $group);
 $smarty->assign('groupid', $groupid);
-$smarty->assign('grouptabs', group_get_menu_tabs($group));
 $smarty->assign('subtitle', get_string('changeroleofuseringroup', 'group', display_name($user), $group->name));
 $smarty->assign('changeform', $changeform);
 

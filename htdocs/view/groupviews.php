@@ -41,16 +41,15 @@ require_once('pieforms/pieform.php');
 $limit   = param_integer('limit', 5);
 $offset  = param_integer('offset', 0);
 $groupid = param_integer('group');
-if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
-    throw new GroupNotFoundException("Couldn't find group with id $groupid");
-}
+define('INGROUP', $groupid);
+$group = group_current_group();
 define('TITLE', $group->name . ' - ' . get_string('groupviews', 'view'));
 
 $member = group_user_access($groupid);
 $shared = param_boolean('shared', 0) && $member;
 $can_edit = group_user_can_edit_views($groupid);
 
-$smarty = smarty(array(), array(), array(), array('group' => $group));
+$smarty = smarty();
 $smarty->assign('heading', $group->name . ' - ' . get_string('views'));
 
 if ($can_edit) {
@@ -74,7 +73,6 @@ $pagination = build_pagination(array(
 $smarty->assign('groupid', $groupid);
 $smarty->assign('groupviews', 1);
 $smarty->assign('groupname', $group->name);
-$smarty->assign('grouptabs', group_get_menu_tabs($group));
 $smarty->assign('member', $member);
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);

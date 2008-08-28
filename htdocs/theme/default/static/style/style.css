@@ -699,7 +699,8 @@ tr.required th,
     color: #4c711d;
 }
 #subnav li.groupname {
-    color: #000;
+    background: url(../images/menu-over-bg.gif) repeat-x left;
+    color: #feef45;
 }
 
 /* RIGHT SIDE COLUMN */

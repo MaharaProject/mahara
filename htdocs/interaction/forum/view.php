@@ -41,16 +41,18 @@ $topicsperpage = 25;
 $offset = (int)($offset / $topicsperpage) * $topicsperpage;
 
 $forum = get_record_sql(
-    'SELECT f.title, f.description, f.id, COUNT(t.id) AS topiccount, s.forum AS subscribed, g.id AS groupid, g.name AS groupname, g.grouptype
+    'SELECT f.title, f.description, f.id, COUNT(t.id) AS topiccount, s.forum AS subscribed, g.id AS groupid, g.name AS groupname
     FROM {interaction_instance} f
     INNER JOIN {group} g ON (g.id = f."group" AND g.deleted = ?)
     LEFT JOIN {interaction_forum_topic} t ON (t.forum = f.id AND t.deleted != 1 AND t.sticky != 1)
     LEFT JOIN {interaction_forum_subscription_forum} s ON (s.forum = f.id AND s."user" = ?)
     WHERE f.id = ?
     AND f.deleted != 1
-    GROUP BY 1, 2, 3, 5, 6, 7, 8',
+    GROUP BY 1, 2, 3, 5, 6, 7',
     array(0, $userid, $forumid)
 );
+
+define('INGROUP', $forum->groupid);
 
 if (!$forum) {
     throw new InteractionInstanceNotFoundException(get_string('cantfindforum', 'interaction.forum', $forumid));
@@ -247,7 +249,6 @@ EOF;
 
 $smarty = smarty(array(), array(), array(), array(
     'sideblocks' => array(interaction_sideblock($forum->groupid)),
-    'group' => (object) array('id' => $forum->groupid, 'name' => $forum->groupname, 'grouptype' => $forum->grouptype)
 ));
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);

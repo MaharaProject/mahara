@@ -34,10 +34,9 @@ require_once(get_config('docroot') . 'interaction/lib.php');
 $id = param_integer('id');
 $membershiptype = param_alpha('membershiptype', null);
 
-if (!$group = get_record('group', 'id', $id, 'deleted', 0)) {
-    throw new GroupNotFoundException("Couldn't find group with id $id");
-}
-define('GROUPNAME', str_shorten($group->name, 20, true));
+define('INGROUP', $id);
+$group = group_current_group();
+
 define('TITLE', $group->name . ' - ' . get_string('Members', 'group'));
 
 $role = group_user_access($id);
@@ -54,11 +53,9 @@ list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersea
 
 $smarty = smarty(array('groupmembersearch'), array(), array(), array(
     'sideblocks' => array(interaction_sideblock($id, $role)),
-    'group' => $group,
 ));
 $smarty->assign('group', $group);
 $smarty->assign('groupid', $id);
-$smarty->assign('grouptabs', group_get_menu_tabs($group));
 $smarty->assign('query', $query);
 $smarty->assign('results', $html);
 $smarty->assign('pagination', $pagination['html']);

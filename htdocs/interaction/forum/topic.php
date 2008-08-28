@@ -35,7 +35,7 @@ require_once('pieforms/pieform.php');
 $topicid = param_integer('id');
 
 $topic = get_record_sql(
-    'SELECT p.subject, p.poster, p.id AS firstpost, ' . db_format_tsfield('p.ctime', 'ctime') . ', t.id, f.group AS groupid, g.name AS groupname, g.grouptype, f.id AS forumid, f.title AS forumtitle, t.closed, sf.forum AS forumsubscribed, st.topic AS topicsubscribed
+    'SELECT p.subject, p.poster, p.id AS firstpost, ' . db_format_tsfield('p.ctime', 'ctime') . ', t.id, f.group AS groupid, g.name AS groupname, f.id AS forumid, f.title AS forumtitle, t.closed, sf.forum AS forumsubscribed, st.topic AS topicsubscribed
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
     INNER JOIN {group} g ON (g.id = f.group AND g.deleted = ?)
@@ -46,6 +46,8 @@ $topic = get_record_sql(
     AND t.deleted != 1',
     array(0, $USER->get('id'), $USER->get('id'), $topicid)
 );
+
+define('INGROUP', $topic->groupid);
 
 if (!$topic) {
     throw new NotFoundException(get_string('cantfindtopic', 'interaction.forum', $topicid));
@@ -159,7 +161,6 @@ $posts = buildpost(0, '', $posts);
 
 $smarty = smarty(array(), array(), array(), array(
     'sideblocks' => array(interaction_sideblock($topic->groupid)),
-    'group' => (object) array('id' => $topic->groupid, 'name' => $topic->groupname, 'grouptype' => $topic->grouptype),
 ));
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);

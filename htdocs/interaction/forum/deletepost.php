@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups');
+define('MENUITEM', 'groups/forums');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction' ,'forum');
 require_once('group.php');
@@ -53,6 +53,8 @@ $post = get_record_sql(
     GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12',
     array(0, $postid)
 );
+
+define('INGROUP', $post->group);
 
 
 if (!$post) {

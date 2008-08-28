@@ -355,7 +355,7 @@ EOF;
 
     $smarty->assign('LOGGEDIN', $USER->is_logged_in());
     if ($USER->is_logged_in()) {
-        $smarty->assign('MAINNAV', main_nav(isset($extraconfig['group']) ? $extraconfig['group'] : null));
+        $smarty->assign('MAINNAV', main_nav());
     }
     else {
         $smarty->assign('sitedefaultlang', get_string('sitedefault', 'admin') . ' (' . 
@@ -374,8 +374,8 @@ EOF;
         $smarty->assign('PAGEHELPNAME', $help[0]);
         $smarty->assign('PAGEHELPICON', $help[1]);
     }
-    if (isset($extraconfig['group'])) {
-        $smarty->assign('GROUPNAME', str_shorten($extraconfig['group']->name, 20, true));
+    if (defined('INGROUP')) {
+        $smarty->assign('INGROUP', INGROUP);
     }
 
     // ---------- sideblock stuff ----------
@@ -1615,7 +1615,7 @@ function institutional_admin_nav() {
 /**
  * Builds a data structure representing the menu for Mahara.
  */
-function main_nav($group=null) {
+function main_nav() {
     if (defined('ADMIN') || defined('INSTITUTIONALADMIN')) {
         global $USER;
         $menu = $USER->get('admin') ? admin_nav() : institutional_admin_nav();
@@ -1679,8 +1679,9 @@ function main_nav($group=null) {
             ),
         );
 
-        if ($group) {
-            foreach (group_get_menu_tabs($group) as $k => $v) {
+        if (defined('INGROUP')) {
+            require_once('group.php');
+            foreach (group_get_menu_tabs() as $k => $v) {
                 $menu[] = $v;
             }
         }

@@ -143,6 +143,7 @@ $string['allgroups'] = 'All groups';
 $string['trysearchingforgroups'] = 'Try %ssearching for groups%s to join!';
 $string['nogroupsfound'] = 'No groups found :(';
 $string['group'] = 'group';
+$string['Group'] = 'Group';
 $string['groups'] = 'groups';
 $string['notamember'] = 'You are not a member of this group';
 

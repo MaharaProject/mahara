@@ -33,18 +33,14 @@ require_once('pieforms/pieform.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
 
 $groupid = param_integer('group');
-
-if (!record_exists('group', 'id', $groupid, 'deleted', 0)) {
-    throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
-}
+define('INGROUP', $groupid);
+$group = group_current_group();
 
 $membership = group_user_access($groupid);
 
 if (!$membership) {
     throw new AccessDeniedException(get_string('cantviewforums', 'interaction.forum'));
 }
-
-$group = get_record('group', 'id', $groupid);
 
 define('TITLE', $group->name . ' - ' . get_string('nameplural', 'interaction.forum'));
 
@@ -132,7 +128,7 @@ if ($forums) {
     }
 }
 
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($groupid)), 'group' => $group));
+$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($groupid))));
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('groupid', $groupid);
 $smarty->assign('heading', TITLE);
