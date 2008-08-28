@@ -1997,7 +1997,7 @@ ul#groupviewoptions {
 }
 table.groupviews{
     width: 100%;
-    margin-top: 1px;
+    margin-top: 10px;
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
 }
