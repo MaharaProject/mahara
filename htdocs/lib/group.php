@@ -789,11 +789,17 @@ function group_get_menu_tabs($group) {
             'title' => get_string('Members', 'group'),
             'weight' => 30
         ),
+        array(  // @todo: get this from a function in the interaction plugin (or better, make forums an artefact plugin)
+            'path' => 'groups/forums',
+            'url' => 'interaction/forum/index.php?group='.$group->id,
+            'title' => get_string('nameplural', 'interaction.forum'),
+            'weight' => 40
+        ),
         array(
             'path' => 'groups/views',
             'url' => 'view/groupviews.php?group='.$group->id,
             'title' => get_string('Views', 'group'),
-            'weight' => 40
+            'weight' => 50
         ),
     );
     if (!group_user_access($group->id)) {

@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups');
+define('MENUITEM', 'groups/forums');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('group.php');
 safe_require('interaction', 'forum');
@@ -132,7 +132,7 @@ if ($forums) {
     }
 }
 
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($groupid))));
+$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($groupid)), 'group' => $group));
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('groupid', $groupid);
 $smarty->assign('heading', TITLE);
