@@ -17,11 +17,7 @@
 <ul>
     {foreach from=$post->edit item=edit}
     <li>
-        <a href="{$WWWROOT}user/view.php?id={$edit.editor}"
-        {if in_array($edit.editor, $groupadmins)} class="groupadmin"
-        {elseif $edit.moderator} class="moderator"
-        {/if}
-        >
+        <a href="{$WWWROOT}user/view.php?id={$edit.editor}"{if in_array($edit.editor, $groupadmins)} class="groupadmin"{elseif $edit.moderator} class="moderator"{/if}>
         <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$edit.editor}" alt="">
         {$edit.editor|display_name|escape}
         </a>
