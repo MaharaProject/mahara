@@ -32,10 +32,8 @@ require('group.php');
 $groupid = param_integer('id');
 $userid = param_integer('user');
 
-$group = get_record('group', 'id', $groupid, 'deleted', 0);
-if (!$group) {
-    throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
-}
+define('GROUP', $groupid);
+$group = group_current_group();
 
 $user = get_record('usr', 'id', $userid, 'deleted', 0);
 if (!$user) {
@@ -83,7 +81,6 @@ $form = pieform(array(
 $smarty = smarty();
 $smarty->assign('heading', TITLE);
 $smarty->assign('form', $form);
-$smarty->assign('group', $group);
 $smarty->display('group/invite.tpl');
 
 function invitetogroup_submit(Pieform $form, $values) {

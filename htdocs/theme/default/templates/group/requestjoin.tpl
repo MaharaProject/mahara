@@ -3,7 +3,7 @@
 
 {include file="columnleftstart.tpl"}
 <h2>{$heading|escape}</h2>
-{include file="group/simplegroup.tpl" group=$group}
+{include file="group/simplegroup.tpl" group=$GROUP}
 {$form}
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

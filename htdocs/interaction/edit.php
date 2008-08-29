@@ -49,11 +49,10 @@ else {
     define('TITLE', get_string('addtitle', 'interaction.' . $plugin));
 }
 define('GROUP', $groupid);
+$group = group_current_group();
 
 safe_require('interaction', $plugin);
-if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
-    throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
-}
+
 $membership = group_user_access($groupid);
 if ($membership != 'admin') {
     throw new AccessDeniedException(get_string('notallowedtoeditinteractions', 'group'));
@@ -84,7 +83,6 @@ $form = pieform(array(
 $smarty = smarty(array('tablerenderer'), array(), array(), array('sideblocks' => array(interaction_sideblock($groupid))));
 $smarty->assign('form', $form);
 $smarty->assign('heading', TITLE);
-$smarty->assign('group', $group);
 $smarty->display('interaction/edit.tpl');
 
 ?>

@@ -36,10 +36,8 @@ require_once('group.php');
 $id = param_integer('id');
 
 $instance = interaction_instance_from_id($id);
-
-if (!$group = get_record('group', 'id', $instance->get('group'), 'deleted', 0)) {
-    throw new GroupNotFoundException(get_string('groupnotfound', 'group', $id));
-}
+define('GROUP', $instance->get('group'));
+$group = group_current_group();
 
 $membership = group_user_access((int)$group->id);
 if ($membership != 'admin') {
@@ -72,7 +70,6 @@ $smarty = smarty(array('tablerenderer'), array(), array(), array('sideblocks' =>
 $smarty->assign('form', $form);
 $smarty->assign('heading', TITLE);
 $smarty->assign('message', get_string('deleteinteractionsure', 'group'));
-$smarty->assign('group', $group);
 $smarty->display('interaction/delete.tpl');
 
 ?>

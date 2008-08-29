@@ -32,6 +32,7 @@ require_once('group.php');
 define('TITLE', get_string('editgroup', 'group'));
 
 $id = param_integer('id');
+define('GROUP', $id);
 
 $group_data = get_record_sql("SELECT g.name, g.description, g.grouptype, g.jointype
     FROM {group} g
