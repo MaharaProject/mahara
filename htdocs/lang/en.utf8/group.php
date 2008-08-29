@@ -57,6 +57,7 @@ $string['reject']                    = 'Reject';
 $string['groupalreadyexists'] = 'A Group by this name already exists';
 $string['Created'] = 'Created';
 $string['groupadmins'] = 'Group admins';
+$string['Admin'] = 'Admin';
 $string['grouptype'] = 'Group Type';
 
 $string['hasrequestedmembership'] = 'has requested membership of this group';
