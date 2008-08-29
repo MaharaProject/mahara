@@ -54,7 +54,7 @@ $post = get_record_sql(
     array(0, $postid)
 );
 
-define('INGROUP', $post->group);
+define('GROUP', $post->group);
 
 
 if (!$post) {

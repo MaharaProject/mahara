@@ -78,7 +78,7 @@ if (!$parent) {
     throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $parentid));
 }
 
-define('INGROUP', $parent->group);
+define('GROUP', $parent->group);
 
 $breadcrumbs = array(
     array(

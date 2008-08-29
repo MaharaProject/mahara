@@ -2,7 +2,7 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-{if $groupid}
+{if $GROUP}
   <h2>{$heading}</h2>
 {elseif $institution}
   <h2>{$heading}</h2>

@@ -47,7 +47,7 @@ $topic = get_record_sql(
     array(0, $USER->get('id'), $USER->get('id'), $topicid)
 );
 
-define('INGROUP', $topic->groupid);
+define('GROUP', $topic->groupid);
 
 if (!$topic) {
     throw new NotFoundException(get_string('cantfindtopic', 'interaction.forum', $topicid));

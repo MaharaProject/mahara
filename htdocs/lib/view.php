@@ -1800,7 +1800,7 @@ class View {
     public static function set_nav($group, $institution) {
         if ($group) {
             define('MENUITEM', 'groups/views');
-            define('INGROUP', $group);
+            define('GROUP', $group);
         }
         else if ($institution) {
             define('INSTITUTIONALADMIN', 1);

@@ -6,8 +6,8 @@
 {$createviewform}
 <form method="post" action="{$WWWROOT}view/choosetemplate.php">
 <input type="submit" class="submit" value="{str tag="copyaview" section="view"}">
-{if $groupid}
-<input type="hidden" name="group" value="{$groupid}" />
+{if $GROUP}
+<input type="hidden" name="group" value="{$GROUP->id}" />
 {elseif $institution}
 <input type="hidden" name="institution" value="{$institution}">
 {/if}
@@ -89,7 +89,7 @@
 {else}
 <table id="myviewstable"{if $member} class="groupviews"{/if}>
   <tr>
-    <td>{if $groupid}{str tag="noviewstosee" section="group"}{elseif $institution}{str tag="noviews"}{else}{str tag="noviews" section="view"}{/if}</td>
+    <td>{if $GROUP}{str tag="noviewstosee" section="group"}{elseif $institution}{str tag="noviews"}{else}{str tag="noviews" section="view"}{/if}</td>
   </tr>
 </table>
 {/if}

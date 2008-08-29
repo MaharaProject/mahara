@@ -374,8 +374,8 @@ EOF;
         $smarty->assign('PAGEHELPNAME', $help[0]);
         $smarty->assign('PAGEHELPICON', $help[1]);
     }
-    if (defined('INGROUP')) {
-        $smarty->assign('INGROUP', INGROUP);
+    if (defined('GROUP')) {
+        $smarty->assign('GROUP', group_current_group());
     }
 
     // ---------- sideblock stuff ----------
@@ -1679,7 +1679,7 @@ function main_nav() {
             ),
         );
 
-        if (defined('INGROUP')) {
+        if (defined('GROUP')) {
             require_once('group.php');
             foreach (group_get_menu_tabs() as $k => $v) {
                 $menu[] = $v;

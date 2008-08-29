@@ -2,9 +2,9 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-                <h2>{$group->name|escape}</h2>
+                <h2>{$GROUP->name|escape}</h2>
 
-                {if $group->description}<p id="group-description">{$group->description}</p> {/if}
+                {if $GROUP->description}<p id="group-description">{$GROUP->description}</p> {/if}
 
                 <ul id="group-info">
                     <li><strong>{str tag=groupadmins section=group}:</strong> {foreach name=admins from=$group->admins item=id}

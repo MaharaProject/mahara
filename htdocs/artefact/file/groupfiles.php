@@ -33,11 +33,10 @@ safe_require('artefact', 'file');
 
 $javascript = ArtefactTypeFileBase::get_my_files_js(param_integer('folder', null));
 
-$groupid = param_integer('group');
-define('INGROUP', $groupid);
+define('GROUP', param_integer('group'));
 $group = group_current_group();
 
-if (!group_user_access($groupid)) {
+if (!group_user_access($group->id)) {
     throw new AccessDeniedException();
 }
 define('TITLE', $group->name . ' - ' . get_string('groupfiles', 'artefact.file'));
@@ -45,13 +44,13 @@ define('TITLE', $group->name . ' - ' . get_string('groupfiles', 'artefact.file')
 require_once(get_config('docroot') . 'interaction/lib.php');
 
 $groupdata = json_encode($group);
-$grouproles = json_encode(array_values(group_get_role_info($groupid)));
+$grouproles = json_encode(array_values(group_get_role_info($group->id)));
 
 $javascript .= <<<GROUPJS
 var group = {$groupdata};
 group.roles = {$grouproles};
-browser.setgroup({$groupid});
-uploader.setgroup({$groupid});
+browser.setgroup({$group->id});
+uploader.setgroup({$group->id});
 GROUPJS;
 
 $smarty = smarty(
@@ -60,12 +59,11 @@ $smarty = smarty(
     array(),
     array(
         'sideblocks' => array(
-            interaction_sideblock($groupid),
+            interaction_sideblock($group->id),
         ),
     )
 );
 $smarty->assign('heading', $group->name . ' - ' . get_string('Files', 'artefact.file'));
-$smarty->assign('groupid', $groupid);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('artefact:file:index.tpl');
 

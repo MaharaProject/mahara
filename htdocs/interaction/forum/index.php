@@ -33,7 +33,7 @@ require_once('pieforms/pieform.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
 
 $groupid = param_integer('group');
-define('INGROUP', $groupid);
+define('GROUP', $groupid);
 $group = group_current_group();
 
 $membership = group_user_access($groupid);

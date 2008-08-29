@@ -40,23 +40,23 @@ require_once('pieforms/pieform.php');
 
 $limit   = param_integer('limit', 5);
 $offset  = param_integer('offset', 0);
-$groupid = param_integer('group');
-define('INGROUP', $groupid);
+define('GROUP', param_integer('group'));
 $group = group_current_group();
+
 define('TITLE', $group->name . ' - ' . get_string('groupviews', 'view'));
 
-$member = group_user_access($groupid);
+$member = group_user_access($group->id);
 $shared = param_boolean('shared', 0) && $member;
-$can_edit = group_user_can_edit_views($groupid);
+$can_edit = group_user_can_edit_views($group->id);
 
 $smarty = smarty();
 $smarty->assign('heading', $group->name . ' - ' . get_string('views'));
 
 if ($can_edit) {
-    $data = View::get_myviews_data($limit, $offset, $groupid);
+    $data = View::get_myviews_data($limit, $offset, $group->id);
 }
 else {
-    $data = View::view_search(null, $groupid, null, null, $limit, $offset);
+    $data = View::view_search(null, $group->id, null, null, $limit, $offset);
 }
 
 $userid = $USER->get('id');
@@ -70,13 +70,11 @@ $pagination = build_pagination(array(
     'resultcounttextplural' => get_string('views', 'view')
 ));
 
-$smarty->assign('groupid', $groupid);
 $smarty->assign('groupviews', 1);
-$smarty->assign('groupname', $group->name);
 $smarty->assign('member', $member);
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
-$smarty->assign('createviewform', pieform(create_view_form($groupid)));
+$smarty->assign('createviewform', pieform(create_view_form($group->id)));
 
 if ($can_edit) { // && !$shared) {
     $smarty->display('view/index.tpl');

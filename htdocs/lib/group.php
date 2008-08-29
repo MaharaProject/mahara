@@ -865,10 +865,10 @@ function group_param_userid($userid) {
 function group_current_group() {
     static $group;
 
-    if (defined('INGROUP')) {
-        $group = get_record_select('group', 'id = ? AND deleted = 0', array(INGROUP), '*, ' . db_format_tsfield('ctime'));
+    if (defined('GROUP')) {
+        $group = get_record_select('group', 'id = ? AND deleted = 0', array(GROUP), '*, ' . db_format_tsfield('ctime'));
         if (!$group) {
-            throw new GroupNotFoundException(get_string('groupnotfound', 'group', INGROUP));
+            throw new GroupNotFoundException(get_string('groupnotfound', 'group', GROUP));
         }
     }
     else {

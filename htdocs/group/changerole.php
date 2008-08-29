@@ -30,28 +30,28 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('group.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
 
-$groupid = param_integer('group');
+define('GROUP', param_integer('group'));
+$group = group_current_group();
+
 $userid = param_integer('user');
 $newrole = param_alpha('role', null);
-define('INGROUP', $groupid);
 
-$group = group_current_group();
 if (!$user = get_record('usr', 'id', $userid, 'deleted', 0)) {
     throw new UserNotFoundException("Couldn't find user with id $userid");
 }
-$currentrole = group_user_access($groupid, $userid);
+$currentrole = group_user_access($group->id, $userid);
 if (!$currentrole) {
-    throw new UserNotFoundException("Couldn't find user with id $userid in group $groupid");
+    throw new UserNotFoundException("Couldn't find user with id $userid in group $group->id");
 }
-$role = group_user_access($groupid);
+$role = group_user_access($group->id);
 if ($role != 'admin') {
     throw new AccessDeniedException();
 }
 
-$roles = group_get_role_info($groupid);
+$roles = group_get_role_info($group->id);
 $rolechange_available = false;
 foreach ($roles as &$r) {
-    $disabled = ($r->role == $currentrole) || (!group_can_change_role($groupid, $userid, $r->role));
+    $disabled = ($r->role == $currentrole) || (!group_can_change_role($group->id, $userid, $r->role));
     if (!$disabled) {
         $rolechange_available = true;
     }
@@ -63,7 +63,7 @@ foreach ($roles as &$r) {
 
 if (!$rolechange_available) {
     $SESSION->add_info_msg('This user has no roles they can change to');
-    redirect('/group/members.php?id=' . $groupid);
+    redirect('/group/members.php?id=' . $group->id);
 }
 
 $changeform = pieform(array(
@@ -100,9 +100,7 @@ function changerole_submit(Pieform $form, $values) {
 
 define('TITLE', $group->name . ' - ' . get_string('changerole', 'group'));
 
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($groupid, $role))));
-$smarty->assign('group', $group);
-$smarty->assign('groupid', $groupid);
+$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($group->id, $role))));
 $smarty->assign('subtitle', get_string('changeroleofuseringroup', 'group', display_name($user), $group->name));
 $smarty->assign('changeform', $changeform);
 

@@ -52,7 +52,7 @@ $forum = get_record_sql(
     array(0, $userid, $forumid)
 );
 
-define('INGROUP', $forum->groupid);
+define('GROUP', $forum->groupid);
 
 if (!$forum) {
     throw new InteractionInstanceNotFoundException(get_string('cantfindforum', 'interaction.forum', $forumid));
