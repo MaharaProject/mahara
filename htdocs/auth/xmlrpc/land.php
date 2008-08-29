@@ -60,6 +60,7 @@ require_once(get_config('libroot') .'institution.php');
 $token         = param_variable('token');
 $remotewwwroot = param_variable('idp');
 $wantsurl      = param_variable('wantsurl', '/');
+$remoteurl     = param_boolean('remoteurl');
 
 $institution = new Institution();
 
@@ -106,6 +107,9 @@ if ($res == true) {
     // Everything's ok - we have an authenticated User object
     // confirm the MNET session
     // redirect
+    if ($remoteurl) {
+        redirect($remotewwwroot . $wantsurl);
+    }
     redirect(get_config('wwwroot') . $wantsurl);
     // Redirect exits
 }

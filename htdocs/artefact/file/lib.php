@@ -656,13 +656,14 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      * Takes the name of a file outside the myfiles area.
      * Returns a boolean indicating success or failure.
      */
-    public static function save_file($pathname, $data) {
+    public static function save_file($pathname, $data, User &$user=null) {
         // This is only used when blog posts are saved: Files which
         // have been uploaded to the post are moved to a permanent
         // location in the files area using this function. 
         $dataroot = get_config('dataroot');
         $pathname = $dataroot . $pathname;
         if (!$size = filesize($pathname)) {
+            log_debug(1);
             return false;
         }
         $f = self::new_file($pathname, $data);
@@ -675,13 +676,25 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         $newname = $newdir . '/' . $id;
         if (!rename($pathname, $newname)) {
             $f->delete();
+            log_debug(2);
             return false;
         }
-        global $USER;
-        $USER->quota_add($size);
-        $USER->commit();
-        return $id;
+        if (empty($user)) {
+            global $USER;
+            $user = $USER;
+        }
+        try {
+            $user->quota_add($size);
+            $user->commit();
+            return $id;
+        }
+        catch (QuotaExceededException $e) {
+            $f->delete();
+            log_debug(3);
+            return false;
+        }
     }
+
 
     /**
      * Processes a newly uploaded file, copies it to disk, and creates

@@ -774,4 +774,9 @@ $string['done'] = 'Done';
 $string['back'] = 'Back';
 $string['alphabet'] = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z';
 
+// import related strings (maybe separated later)
+$string['importedfrom'] = 'Imported from %s';
+$string['incomingfolderdesc'] = 'Files imported from other networked hosts';
+$string['remotehost'] = 'Remote host %s';
+
 ?>
