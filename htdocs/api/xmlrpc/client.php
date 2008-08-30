@@ -91,7 +91,6 @@ class Client {
             $xml = new SimpleXMLElement($this->rawresponse);
         }
         catch (Exception $e) {
-            log_debug($this->rawresponse);
             throw new XmlrpcClientException('Payload is not a valid XML document (payload is above)', 6001);
         }
 

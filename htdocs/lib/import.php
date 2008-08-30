@@ -28,7 +28,7 @@ defined('INTERNAL') || die();
 function import_process_queue() {
 
     if (!$ready = get_records_array('import_queue',
-        'ready', 1, null, null, null, null,
+        'ready', 1, '',
         '*,' . db_format_tsfield('expirytime', 'ex'))) {
         return true;
     }
@@ -42,13 +42,14 @@ function import_process_queue() {
             $processed[] = $item->id;
             continue;
         }
-        $importer = new MnetImporter($item->id, $item);
+        $importer = Importer::create_importer($item->id, $item);
         try {
+            $importer->prepare();
             $importer->process();
             $processed[] = $item->id;
         }
         catch (Exception $e) {
-            $importer->cleanup();
+            $importer->get('importertransport')->cleanup();
         }
     }
 
@@ -57,17 +58,11 @@ function import_process_queue() {
     }
 
     delete_records_select(
-        'incoming_queue',
+        'import_queue',
         'id IN ( ' . implode(',', db_array_to_ph($processed)) . ')',
         $processed
     );
 }
-
-function import_file($queue) {
-    $importer = new MnetImporter($queue->id, $queue);
-    $importer->process();
-}
-
 
 abstract class Importer {
 
@@ -164,8 +159,9 @@ abstract class Importer {
                 throw new NotFoundException("Failed to find import queue record with id $id");
             }
         }
-        switch ($record->format) {
+        switch (trim($record->format)) {
             case 'file':
+            case 'files':
                 return new FilesImporter($id, $record);
             default:
                 // @todo more laterz (like mahara native and/or leap)
@@ -234,8 +230,6 @@ class FilesImporter extends Importer {
         $output = array();
         exec($command, $output, $returnvar);
         if ($returnvar != 0) {
-            log_debug($output);
-            log_debug("return var $returnvar");
             throw new ImportException('Failed to unzip the file recieved from the transport object');
         }
     }
@@ -303,7 +297,6 @@ class FilesImporter extends Importer {
                 if (empty($id)) {
                     throw new ImportException("Failed to create new artefact for $f->sha1");
                 }
-                log_debug('actually saved one!');
                 $savedfiles[] = $id;
             }
             catch (Exception $e) {
@@ -314,9 +307,7 @@ class FilesImporter extends Importer {
                 throw new ImportException('Failed to create some new artefacts');
             }
         }
-        log_debug($savedfiles);
     }
-
 }
 
 class MnetImporterTransport extends ImporterTransport {
@@ -337,15 +328,23 @@ class MnetImporterTransport extends ImporterTransport {
     }
 
     public function cleanup() {
+        if (empty($this->tempdir)) {
+            return;
+        }
         rmdir($this->tempdir);
     }
 
     public function prepare_files() {
         require_once(get_config('docroot') . 'api/xmlrpc/client.php');
         $client = new Client();
-        $client->set_method('portfolio/mahara/lib.php/fetch_file')
-                ->add_param($this->token)
-                ->send($this->host->wwwroot);
+        try {
+            $client->set_method('portfolio/mahara/lib.php/fetch_file')
+                    ->add_param($this->token)
+                    ->send($this->host->wwwroot);
+        } catch (XmlrpcClientException $e) {
+            log_debug($e);
+            throw new ImportException('Failed to retrieve zipfile from remote server');
+        }
         if (!$filecontents = base64_decode($client->response)) {
             throw new ImportException('Failed to retrieve zipfile from remote server');
         }

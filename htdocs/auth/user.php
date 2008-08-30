@@ -120,7 +120,6 @@ class User {
         }
 
         $this->populate($user);
-        log_debug("after populate, quota is " . $this->get('quota') . ' and used is ' . $this->get('quotaused'));
         $this->reset_institutions();
         $this->reset_grouproles();
         return $this;
@@ -429,7 +428,6 @@ class User {
     }
 
     public function quota_allowed($bytes) {
-        log_debug("testing for " . $this->get('quotaused') . ' + ' . $bytes . ' being > than ' . $this->get('quota'));
         if ($this->get('quotaused') + $bytes > $this->get('quota')) {
             return false;
         }

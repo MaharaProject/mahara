@@ -278,7 +278,7 @@ function send_content_intent($username) {
 
     // check whatever config values we have to check
     // generate a token, insert it into the queue table
-    $usequeue = 0; // @todo change this (check whatever)
+    $usequeue = 1; // @todo change this (check whatever)
 
     $queue = new StdClass;
     $queue->token = generate_token();
@@ -305,7 +305,7 @@ function send_content_ready($token, $username, $format, $filesmanifest, $fetchno
 
     // go verify the token
     if (!$queue = get_record('import_queue', 'token', $token, 'host', $REMOTEWWWROOT)) {
-        throw new ImportException("Could not find queue record with token for username $username for $REMOTEWWWROOT");
+        throw new ImportException("Could not find queue record with given token for username $username for $REMOTEWWWROOT");
     }
 
     if (strtotime($queue->expirytime) < time()) {
