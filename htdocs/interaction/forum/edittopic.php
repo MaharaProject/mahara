@@ -69,6 +69,7 @@ if (!$forum) {
     throw new NotFoundException(get_string('cantfindforum', 'interaction.forum', $forumid));
 }
 
+define('GROUP', $forum->groupid);
 $membership = user_can_access_forum((int)$forumid);
 $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 

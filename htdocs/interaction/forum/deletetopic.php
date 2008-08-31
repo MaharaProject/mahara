@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups');
+define('MENUITEM', 'groups/forums');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction' ,'forum');
 require('group.php');
@@ -58,6 +58,8 @@ $topic = get_record_sql(
 if (!$topic) {
     throw new NotFoundException(get_string('cantfindtopic', 'interaction.forum', $topicid));
 }
+
+define('GROUP', $topic->group);
 
 $membership = user_can_access_forum((int)$topic->forumid);
 
