@@ -50,9 +50,7 @@ $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);
 list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersearch_data($group->id, $query, $offset, $limit, $membershiptype);
 
-$smarty = smarty(array('groupmembersearch'), array(), array(), array(
-    'sideblocks' => array(interaction_sideblock($group->id, $role)),
-));
+$smarty = smarty(array('groupmembersearch'));
 $smarty->assign('query', $query);
 $smarty->assign('results', $html);
 $smarty->assign('pagination', $pagination['html']);

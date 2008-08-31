@@ -80,7 +80,7 @@ $form = pieform(array(
     )
 );
 
-$smarty = smarty(array('tablerenderer'), array(), array(), array('sideblocks' => array(interaction_sideblock($groupid))));
+$smarty = smarty(array('tablerenderer'));
 $smarty->assign('form', $form);
 $smarty->assign('heading', TITLE);
 $smarty->display('interaction/edit.tpl');

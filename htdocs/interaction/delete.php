@@ -66,7 +66,7 @@ $form = pieform(array(
     )
 ));
 
-$smarty = smarty(array('tablerenderer'), array(), array(), array('sideblocks' => array(interaction_sideblock($group->id))));
+$smarty = smarty(array('tablerenderer'));
 $smarty->assign('form', $form);
 $smarty->assign('heading', TITLE);
 $smarty->assign('message', get_string('deleteinteractionsure', 'group'));

@@ -253,10 +253,7 @@ function edittopic_submit(Pieform $form, $values) {
     }
 }
 
-$smarty = smarty(array(), array(), array(), array(
-    'sideblocks' => array(interaction_sideblock($forum->groupid)),
-    'group' => (object) array('id' => $forum->groupid, 'name' => $forum->groupname, 'grouptype' => $forum->grouptype),
-));
+$smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
 $smarty->assign('editform', $editform);

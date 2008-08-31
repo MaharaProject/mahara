@@ -241,9 +241,7 @@ function addpost_submit(Pieform $form, $values) {
     redirect('/interaction/forum/topic.php?id=' . $values['topic'] . '#post' . $postid);
 }
 
-$smarty = smarty(array(), array(), array(), array(
-    'sideblocks' => array(interaction_sideblock($parent->group)),
-));
+$smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
 $smarty->assign('editform', $editform);

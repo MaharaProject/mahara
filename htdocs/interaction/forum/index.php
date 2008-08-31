@@ -128,7 +128,7 @@ if ($forums) {
     }
 }
 
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($groupid))));
+$smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('groupid', $groupid);
 $smarty->assign('heading', TITLE);

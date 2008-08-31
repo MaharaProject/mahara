@@ -247,9 +247,7 @@ addLoadEvent(function() {
 });
 EOF;
 
-$smarty = smarty(array(), array(), array(), array(
-    'sideblocks' => array(interaction_sideblock($forum->groupid)),
-));
+$smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
 $smarty->assign('forum', $forum);

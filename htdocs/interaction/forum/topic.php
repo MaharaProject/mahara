@@ -159,9 +159,7 @@ for ($i = 0; $i < $count; $i++) {
 // builds the first post (with index 0) which has as children all the posts in the topic
 $posts = buildpost(0, '', $posts);
 
-$smarty = smarty(array(), array(), array(), array(
-    'sideblocks' => array(interaction_sideblock($topic->groupid)),
-));
+$smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
 $smarty->assign('topic', $topic);

@@ -100,7 +100,7 @@ function changerole_submit(Pieform $form, $values) {
 
 define('TITLE', $group->name . ' - ' . get_string('changerole', 'group'));
 
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($group->id, $role))));
+$smarty = smarty();
 $smarty->assign('subtitle', get_string('changeroleofuseringroup', 'group', display_name($user), $group->name));
 $smarty->assign('changeform', $changeform);
 

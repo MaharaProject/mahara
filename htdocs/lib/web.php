@@ -408,7 +408,15 @@ EOF;
             );
         }
 
-       if (!$USER->is_logged_in()) {
+        if(defined('GROUP')) {
+            $SIDEBLOCKS[] = array(
+                'name'   => 'group',
+                'weight' => -10,
+                'data'   => group_sideblock()
+            );
+        }
+
+        if (!$USER->is_logged_in()) {
             $SIDEBLOCKS[] = array(
                 'name'   => 'login',
                 'weight' => -10,

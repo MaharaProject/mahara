@@ -770,6 +770,8 @@ function group_get_grouptype_options() {
  * @return array
  */
 function group_get_menu_tabs() {
+    static $menu;
+
     $group = group_current_group();
     $menu = array(
         array(
@@ -818,6 +820,7 @@ function group_get_menu_tabs() {
             $menu = array_merge($menu, $plugin_menu);
         }
     }
+
     return $menu;
 }
 
@@ -876,6 +879,34 @@ function group_current_group() {
     }
 
     return $group;
+}
+
+
+/**
+ * creates the group sideblock
+ */
+function group_sideblock() {
+    require_once('group.php');
+    $data['group'] = group_current_group();
+    $data['menu'] = group_get_menu_tabs();
+    // @todo either: remove this if interactions become group
+    // artefacts, or: do this in interaction/lib.php if we leave them
+    // as interactions
+    $data['forums'] = get_records_select_array(
+        'interaction_instance',
+        '"group" = ? AND deleted = ? AND plugin = ?',
+        array(GROUP, 0, 'forum'),
+        'ctime',
+        'id, plugin, title'
+    );
+    if (!$data['forums']) {
+        $data['forums'] = array();
+    }
+    else {
+        safe_require('interaction', 'forum');
+        $data['forums'] = PluginInteractionForum::sideblock_sort($data['forums']);
+    }
+    return $data;
 }
 
 

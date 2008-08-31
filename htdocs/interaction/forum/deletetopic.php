@@ -126,7 +126,7 @@ function deletetopic_submit(Pieform $form, $values) {
     redirect('/interaction/forum/view.php?id=' . $values['forum']);
 }
 
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($topic->group))));
+$smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('forum', $topic->title);
 $smarty->assign('heading', TITLE);

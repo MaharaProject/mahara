@@ -94,7 +94,7 @@ $foruminfo = get_records_sql_array('
         p.ctime DESC
     LIMIT 5;
     ', array($group->id));
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($group->id, $role))));
+$smarty = smarty();
 $smarty->assign('group', $group);
 $smarty->assign('groupid', $group->id);
 $smarty->assign('foruminfo', $foruminfo);
