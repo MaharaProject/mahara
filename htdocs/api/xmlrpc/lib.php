@@ -268,17 +268,17 @@ function user_authorise($token, $useragent) {
 
 function send_content_intent($username) {
     global $REMOTEWWWROOT;
+    require_once('import.php');
 
     if (!$user = find_remote_user($username, $REMOTEWWWROOT)) {
-        // @todo return an error message we can understand
-        return false;
+        throw new ImportException("Could not find user $username for $REMOTEWWWROOT");
     }
 
     // @todo penny check for zip libraries here
 
     // check whatever config values we have to check
     // generate a token, insert it into the queue table
-    $usequeue = 1; // @todo change this (check whatever)
+    $usequeue = (int)!(Importer::import_immediately_allowed());
 
     $queue = new StdClass;
     $queue->token = generate_token();
@@ -296,8 +296,9 @@ function send_content_intent($username) {
     );
 }
 
-function send_content_ready($token, $username, $format, $filesmanifest, $fetchnow=false) {
+function send_content_ready($token, $username, $format, $importdata, $fetchnow=false) {
     global $REMOTEWWWROOT;
+    require_once('import.php');
 
     if (!$user = find_remote_user($username, $REMOTEWWWROOT)) {
         throw new ImportException("Could not find user $username for $REMOTEWWWROOT");
@@ -312,18 +313,25 @@ function send_content_ready($token, $username, $format, $filesmanifest, $fetchno
         throw new ImportException("Queue record has expired");
     }
 
-    // @todo penny verify format and filesmanifest
-
     $queue->format = $format;
-    $queue->data = serialize(array('filesmanifest' => $filesmanifest));
+    $class = null;
+    try {
+        $class = Importer::class_from_format($format);
+    } catch (Exception $e) {
+        throw new ImportException('Invalid format $format');
+    }
+    try {
+        call_static_method($class, 'validate_import_data', $importdata);
+    } catch (Exception $e) {
+        throw new ImportException('Invalid importdata: ' . $e->getMessage());
+    }
+
+    $queue->data = serialize($importdata);
 
     update_record('import_queue', $queue);
 
     $result = new StdClass;
-    // @todo penny change whatever we need here to match
-    // send_content_intent
-    if ($fetchnow && true) {
-        require_once('import.php');
+    if ($fetchnow && Importer::import_immediately_allowed()) {
         // either immediately spawn a curl request to go fetch the file
         $importer = Importer::create_importer($queue->id, $queue);
         $importer->prepare();
@@ -335,7 +343,6 @@ function send_content_ready($token, $username, $format, $filesmanifest, $fetchno
         $result->status = set_field('import_queue', 'ready', 1, 'id', $queue->id);
         $result->type = 'queued';
     }
-    log_debug($result);
     return $result;
 }
 

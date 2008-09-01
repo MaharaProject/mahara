@@ -49,6 +49,7 @@ function import_process_queue() {
             $processed[] = $item->id;
         }
         catch (Exception $e) {
+            log_debug('an error occured on import: ' . $e->getMessage());
             $importer->get('importertransport')->cleanup();
         }
     }
@@ -153,21 +154,35 @@ abstract class Importer {
         );
     }
 
+    public static function class_from_format($format) {
+        switch (trim($format)) {
+            case 'file':
+            case 'files':
+                return 'FilesImporter';
+            default:
+                // @todo more laterz (like mahara native and/or leap)
+                throw new ParamException("unknown import format $format");
+
+        }
+    }
+
     public static function create_importer($id, $record=null) {
         if (empty($record)) {
             if (!$record = get_record('import_queue', 'id', $id)) {
                 throw new NotFoundException("Failed to find import queue record with id $id");
             }
         }
-        switch (trim($record->format)) {
-            case 'file':
-            case 'files':
-                return new FilesImporter($id, $record);
-            default:
-                // @todo more laterz (like mahara native and/or leap)
-                throw new ImportException("unknown import format $record->format");
-        }
+        $class = self::class_from_format($record->format);
+        return new $class($id,$record);
     }
+
+    public static abstract function validate_import_data($importdata);
+
+    public function import_immediately_allowed() {
+    // @todo change this (check whatever)
+        return false;
+    }
+
 }
 
 abstract class ImporterTransport {
@@ -198,14 +213,19 @@ class FilesImporter extends Importer {
     public function __construct($id, $record=null) {
         parent::__construct($id, $record);
         $data = $this->get('data');
-        if (empty($data) ||
-            !is_array($data) ||
-            !array_key_exists('filesmanifest', $data) ||
-            !is_array($data['filesmanifest']) ||
-            count($data['filesmanifest']) == 0) {
+        self::validate_import_data($data);
+        $this->manifest = $data['filesmanifest'];
+    }
+
+    public static function validate_import_data($importdata) {
+        if (empty($importdata) ||
+            !is_array($importdata) ||
+            !array_key_exists('filesmanifest', $importdata) ||
+            !is_array($importdata['filesmanifest']) ||
+            count($importdata['filesmanifest']) == 0) {
             throw new ImportException('Missing files manifest in import data');
         }
-        $this->manifest = $data['filesmanifest'];
+        return true;
     }
 
     public function process() {
@@ -225,8 +245,12 @@ class FilesImporter extends Importer {
             throw new ImportException('Failed to create the temporary directories to work in');
         }
 
-        // @todo penny maybe later replace this with a zip library
-        $command = "unzip " . escapeshellarg(get_config('dataroot') . '/' . $this->relativepath . '/' . $this->zipfile) . ' -d ' . escapeshellarg($this->unzipdir);
+        $command = sprintf('%s %s %s %s',
+            get_config('pathtounzip'),
+            escapeshellarg(get_config('dataroot') . '/' . $this->relativepath . '/' . $this->zipfile),
+            get_config('unzipdirarg'),
+            escapeshellarg($this->unzipdir)
+        );
         $output = array();
         exec($command, $output, $returnvar);
         if ($returnvar != 0) {
@@ -342,8 +366,7 @@ class MnetImporterTransport extends ImporterTransport {
                     ->add_param($this->token)
                     ->send($this->host->wwwroot);
         } catch (XmlrpcClientException $e) {
-            log_debug($e);
-            throw new ImportException('Failed to retrieve zipfile from remote server');
+            throw new ImportException('Failed to retrieve zipfile from remote server: ' . $e->getMessage());
         }
         if (!$filecontents = base64_decode($client->response)) {
             throw new ImportException('Failed to retrieve zipfile from remote server');

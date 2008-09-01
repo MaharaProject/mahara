@@ -91,6 +91,7 @@ class Client {
             $xml = new SimpleXMLElement($this->rawresponse);
         }
         catch (Exception $e) {
+            log_debug($this->rawresponse);
             throw new XmlrpcClientException('Payload is not a valid XML document (payload is above)', 6001);
         }
 
@@ -155,6 +156,7 @@ class Client {
                         throw new XmlrpcClientException('Remote site claims to have sent a public key, but they LIE');
                     }
                 }
+                throw new XmlrpcClientException('Unknown error occured: ' . $this->response['faultCode'] . ': ' . $this->response['faultString']);
             }
 
             // Clean up so object can be re-used.
