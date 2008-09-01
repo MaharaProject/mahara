@@ -1936,11 +1936,13 @@ span.viewicon {
     list-style-type: none;
 }
 #group-info li {
-    margin-left: 0;
+  margin-left: 0;
+  margin-right: 8px;
 }
 #group-controls li {
-    margin-left: 0;
-    float: left;
+  margin-left: 0;
+  margin-right: 8px;
+  float: left;
 }
 #membersearchresults {
   width: 100%;
