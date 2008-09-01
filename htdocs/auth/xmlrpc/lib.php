@@ -461,14 +461,25 @@ class AuthXmlrpc extends Auth {
     public function kill_parent($username) {
         require_once(get_config('docroot') . 'api/xmlrpc/client.php');
 
-        // Note: We are not bothering to check whether this succeeds or fails.  
-        // There's not much we can do about it anyhow. We might need to catch 
-        // XmlrpcClientExceptions though.
-        $client = new Client();
-        $client->set_method('auth/mnet/auth.php/kill_children')
-               ->add_param($username)
-               ->add_param(sha1($_SERVER['HTTP_USER_AGENT']))
-               ->send($this->wwwroot);
+        // For some people, the call to kill_children fails (when the remote 
+        // site is a Moodle). We still haven't worked out why that is, but it's 
+        // not a problem on the Mahara site
+        try {
+            $client = new Client();
+            $client->set_method('auth/mnet/auth.php/kill_children')
+                   ->add_param($username)
+                   ->add_param(sha1($_SERVER['HTTP_USER_AGENT']))
+                   ->send($this->wwwroot);
+        }
+        catch (XmlrpcClientException $e) {
+            log_debug("XMLRPC error occured while calling MNET method kill_children on $this->wwwroot");
+            log_debug("This means that single-signout probably didn't work properly, but the problem "
+                . "is at the remote application");
+            log_debug("If the remote application is Moodle, and you're happy with a Mahara developer "
+                . "getting access to your system so they can try and debug the problem, get in touch with dev@mahara.org");
+            log_debug("Exception message follows:");
+            log_debug($e->getMessage());
+        }
     }
 
     /**
