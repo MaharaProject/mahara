@@ -32,10 +32,8 @@ require('group.php');
 $groupid = param_integer('id');
 $returnto = param_alpha('returnto', 'mygroups');
 
-$group = get_record('group', 'id', $groupid, 'deleted', 0);
-if (!$group) {
-	throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
-}
+define('GROUP', $groupid);
+$group = group_current_group();
 
 if ($group->jointype != 'request'
     || record_exists('group_member', 'group', $groupid, 'member', $USER->get('id'))
@@ -73,7 +71,6 @@ $form = pieform(array(
 $smarty = smarty();
 $smarty->assign('heading', TITLE);
 $smarty->assign('form', $form);
-$smarty->assign('group', $group);
 $smarty->display('group/requestjoin.tpl');
 
 function requestjoingroup_submit(Pieform $form, $values) {

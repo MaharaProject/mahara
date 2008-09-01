@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups');
+define('MENUITEM', 'groups/files');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('libroot') . 'group.php');
@@ -33,11 +33,10 @@ safe_require('artefact', 'file');
 
 $javascript = ArtefactTypeFileBase::get_my_files_js(param_integer('folder', null));
 
-$groupid = param_integer('group');
-if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
-    throw new GroupNotFoundException("Couldn't find group with id $groupid");
-}
-if (!group_user_access($groupid)) {
+define('GROUP', param_integer('group'));
+$group = group_current_group();
+
+if (!group_user_access($group->id)) {
     throw new AccessDeniedException();
 }
 define('TITLE', $group->name . ' - ' . get_string('groupfiles', 'artefact.file'));
@@ -45,28 +44,17 @@ define('TITLE', $group->name . ' - ' . get_string('groupfiles', 'artefact.file')
 require_once(get_config('docroot') . 'interaction/lib.php');
 
 $groupdata = json_encode($group);
-$grouproles = json_encode(array_values(group_get_role_info($groupid)));
+$grouproles = json_encode(array_values(group_get_role_info($group->id)));
 
 $javascript .= <<<GROUPJS
 var group = {$groupdata};
 group.roles = {$grouproles};
-browser.setgroup({$groupid});
-uploader.setgroup({$groupid});
+browser.setgroup({$group->id});
+uploader.setgroup({$group->id});
 GROUPJS;
 
-$smarty = smarty(
-    array('tablerenderer', 'artefact/file/js/file.js'),
-    array(),
-    array(),
-    array(
-        'sideblocks' => array(
-            interaction_sideblock($groupid),
-        ),
-    )
-);
-$smarty->assign('heading', $group->name);
-$smarty->assign('groupid', $groupid);
-$smarty->assign('grouptabs', group_get_menu_tabs($group));
+$smarty = smarty(array('tablerenderer', 'artefact/file/js/file.js'));
+$smarty->assign('heading', $group->name . ' - ' . get_string('Files', 'artefact.file'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('artefact:file:index.tpl');
 

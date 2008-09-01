@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups');
+define('MENUITEM', 'groups/forums');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction', 'forum');
 require_once('group.php');
@@ -46,6 +46,8 @@ $topic = get_record_sql(
     AND t.deleted != 1',
     array(0, $USER->get('id'), $USER->get('id'), $topicid)
 );
+
+define('GROUP', $topic->groupid);
 
 if (!$topic) {
     throw new NotFoundException(get_string('cantfindtopic', 'interaction.forum', $topicid));
@@ -157,7 +159,7 @@ for ($i = 0; $i < $count; $i++) {
 // builds the first post (with index 0) which has as children all the posts in the topic
 $posts = buildpost(0, '', $posts);
 
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($topic->groupid))));
+$smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
 $smarty->assign('topic', $topic);

@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups');
+define('MENUITEM', 'groups/forums');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('group.php');
 safe_require('interaction', 'forum');
@@ -51,6 +51,8 @@ $forum = get_record_sql(
     GROUP BY 1, 2, 3, 5, 6, 7',
     array(0, $userid, $forumid)
 );
+
+define('GROUP', $forum->groupid);
 
 if (!$forum) {
     throw new InteractionInstanceNotFoundException(get_string('cantfindforum', 'interaction.forum', $forumid));
@@ -245,7 +247,7 @@ addLoadEvent(function() {
 });
 EOF;
 
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($forum->groupid))));
+$smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
 $smarty->assign('forum', $forum);

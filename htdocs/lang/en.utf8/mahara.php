@@ -254,6 +254,7 @@ $string['captchatitle'] = 'CAPTCHA Image';
 $string['captchaimage'] = 'CAPTCHA Image';
 $string['captchadescription'] = 'Enter the characters you see in the picture. Letters are not case sensitive';
 $string['captchaincorrect'] = 'Enter the letters as they are shown in the image';
+$string['Site'] = 'Site';
 
 // Misc. register stuff that could be used elsewhere
 $string['emailaddress'] = 'Email address';

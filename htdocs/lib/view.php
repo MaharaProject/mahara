@@ -34,6 +34,7 @@ class View {
     private $owner;
     private $ownerformat;
     private $group;
+    private $institution;
     private $ctime;
     private $mtime;
     private $atime;
@@ -54,6 +55,9 @@ class View {
     private $dirtycolumns; // for when we change stuff
     private $tags;
     private $editingroles;
+    private $template;
+    private $copynewuser = 0;
+    private $copynewgroups;
 
     public function __construct($id=0, $data=null) {
         if (!empty($id)) {
@@ -166,6 +170,13 @@ class View {
         delete_records('view_tag', 'view', $this->get('id'));
         foreach ($this->get_tags() as $tag) {
             insert_record('view_tag', (object)array( 'view' => $this->get('id'), 'tag' => $tag));
+        }
+
+        if (isset($this->copynewgroups)) {
+            delete_records('view_autocreate_grouptype', 'view', $this->get('id'));
+            foreach ($this->copynewgroups as $grouptype) {
+                insert_record('view_autocreate_grouptype', (object)array( 'view' => $this->get('id'), 'grouptype' => $grouptype));
+            }
         }
 
         db_commit();
@@ -385,6 +396,12 @@ class View {
         db_commit();
     }
 
+    public function get_autocreate_grouptypes() {
+        if (!isset($this->copynewgroups)) {
+            $this->copynewgroups = get_column('view_autocreate_grouptype', 'grouptype', 'view', $this->id);
+        }
+        return $this->copynewgroups;
+    }
 
     public function release($groupid, $releaseuser=null) {
         if ($this->get('submittedto') != $groupid) {
@@ -1154,7 +1171,7 @@ class View {
      * - Pagination HTML and Javascript
      * - The total number of artefacts found
      */
-    public static function build_artefactchooser_data($data, $group=null) {
+    public static function build_artefactchooser_data($data, $group=null, $institution=null) {
         global $USER;
         $search = '';
         if (!empty($data['search']) && param_boolean('s')) {
@@ -1183,17 +1200,29 @@ class View {
         $sql = ' FROM {artefact} a ';
         if ($group) {
             // Get group-owned artefacts that the user has view
-            // permission on.
+            // permission on, and site-owned artefacts
             $sql .= '
-            INNER JOIN {artefact_access_role} r ON a.id = r.artefact
-            INNER JOIN {group_member} m ON r.role = m.role';
-            $select = 'a."group" = ' . $group . '
-            AND m."group" = ' . $group . '
-            AND m.member = ' . $USER->get('id') . '
-            AND can_view = 1';
-        } else {
-            // Get artefacts owned by the user and group-owned
-            // artefacts the user has republish permission on.
+            LEFT OUTER JOIN (
+                SELECT
+                    r.artefact, r.can_view, m.group
+                FROM
+                    {artefact_access_role} r
+                    INNER JOIN {group_member} m ON r.role = m.role
+                WHERE
+                    m."group" = ' . $group . '
+                    AND m.member = ' . $USER->get('id') . '
+                    AND r.can_view = 1
+            ) ga ON (ga.group = a.group AND a.id = ga.artefact)';
+            $select = "(a.institution = 'mahara' OR ga.can_view = 1)";
+        }
+        else if ($institution) {
+            // Site artefacts & artefacts owned by this institution
+            $select = "(a.institution = 'mahara' OR a.institution = '$institution')";
+        }
+        else { // The view is owned by a normal user
+            // Get artefacts owned by the user, group-owned artefacts
+            // the user has republish permission on, artefacts owned
+            // by the user's institutions.
             $sql .= '
             LEFT OUTER JOIN {artefact_access_usr} aau ON (a.id = aau.artefact AND aau.usr = ' . $USER->get('id') . ')
             LEFT OUTER JOIN (
@@ -1206,7 +1235,14 @@ class View {
                     m.member = ' . $USER->get('id') . '
                     AND aar.can_republish = 1
             ) ra ON (a.id = ra.artefact AND a.group = ra.group)';
-            $select = '(owner = ' . $USER->get('id') . ' OR ra.can_republish = 1 OR aau.can_republish = 1) ';
+            $institutions = array_keys($USER->get('institutions'));
+            $institutions[] = 'mahara';
+            $select = '(
+                owner = ' . $USER->get('id') . '
+                OR ra.can_republish = 1
+                OR aau.can_republish = 1
+                OR a.institution IN (' . join(',', array_map('db_quote', $institutions)) . ')
+            )';
         }
         if (!empty($artefacttypes)) {
             $select .= ' AND artefacttype IN(' . implode(',', array_map('db_quote', $artefacttypes)) . ')';
@@ -1282,9 +1318,10 @@ class View {
             'lasttext' => '',
             'numbersincludefirstlast' => false,
             'extradata' => array(
-                'value'     => $value,
-                'blocktype' => $data['blocktype'],
-                'group'     => $group,
+                'value'       => $value,
+                'blocktype'   => $data['blocktype'],
+                'group'       => $group,
+                'institution' => $institution,
             ),
         ));
 
@@ -1312,21 +1349,28 @@ class View {
 
 
 
-    public static function get_myviews_data($limit=5, $offset=0, $groupid=null) {
+    public static function get_myviews_data($limit=5, $offset=0, $groupid=null, $institution=null) {
 
         global $USER;
         $userid = $USER->get('id');
 
         if ($groupid) {
             $count = count_records('view', 'group', $groupid);
-            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template
                 FROM {view} v
                 WHERE v.group = ' . $groupid . '
                 ORDER BY v.title, v.id', '', $offset, $limit);
         }
+        else if ($institution) {
+            $count = count_records('view', 'institution', $institution);
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template
+                FROM {view} v
+                WHERE v.institution = ?
+                ORDER BY v.title, v.id', array($institution), $offset, $limit);
+        }
         else {
             $count = count_records('view', 'owner', $userid);
-            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, g.id AS groupid, g.name
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, g.id AS groupid, g.name
                 FROM {view} v
                 LEFT OUTER JOIN {group} g ON (v.submittedto = g.id AND g.deleted = 0)
                 WHERE v.owner = ' . $userid . '
@@ -1379,6 +1423,7 @@ class View {
                 else if ($viewdata[$i]->stopdate) {
                     $data[$i]['access'] = get_string('accessuntildate', 'view', format_date(strtotime($viewdata[$i]->stopdate), 'strftimedate'));
                 }
+                $data[$i]['template'] = $viewdata[$i]->template;
             }
             // Go through all the artefact records and put them in with the
             // views they belong to.
@@ -1422,6 +1467,21 @@ class View {
     }
 
 
+    public static function owner_sql($userid=null, $groupid=null, $institution=null) {
+        if ($institution) {
+            return 'institution = ' . db_quote($institution);
+        }
+        if ($groupid) {
+            return '"group" = ' . (int)$groupid;
+        }
+        if ($userid) {
+            return 'owner = ' . (int)$userid;
+        }
+        return '';
+    }
+
+
+
     /**
      * Get all views visible to a user.  Complicated because a view v
      * is visible to a user u at time t if any of the following are
@@ -1437,11 +1497,16 @@ class View {
      * - v is visible to all roles of group g at t, and u is a member of g (view_access_group)
      * - v is visible to users with role r of group g at t, and u is a member of g with role r (view_access_group)
      *
-     * @param integer $ownerid   Only return views owned by this user.
-     * @param integer $groupid   Only return views owned by this group.
+     * @param integer $ownerid     Only return views owned by this user.
+     * @param integer $groupid     Only return views owned by this group.
+     * @param string  $institution Only return views owned by this institution.
+     * @param bool    $template    Only return views marked as templates.
+     * @param integer $limit
+     * @param integer $offset
+     * @param bool    $extra
      *
      */
-    public static function view_search($ownerid=null, $groupid=null, $limit=10, $offset=0) {
+    public static function view_search($ownerid=null, $groupid=null, $institution=null, $template=null, $limit=null, $offset=0, $extra=true) {
         global $USER;
         $admin = $USER->get('admin');
         $loggedin = $USER->is_logged_in();
@@ -1449,15 +1514,19 @@ class View {
 
         $where = '
             WHERE TRUE';
+
+        if ($ownerid || $groupid || $institution) {
+            $where .= ' AND v.' . self::owner_sql($ownerid, $groupid, $institution);
+        }
+
         $ph = array();
-        if ($ownerid) {
+        if ($template) {
             $where .= '
-                AND v.owner = ?';
-            $ph[] = $ownerid;
-        } else if ($groupid) {
+                AND v.template = 1';
+        }
+        else if ($template === false) {
             $where .= '
-                AND v.group = ?';
-            $ph[] = $groupid;
+                AND v.template = 0';
         }
 
         if ($admin) {
@@ -1532,19 +1601,84 @@ class View {
         $viewdata = get_records_sql_array('
             SELECT * FROM (
                 SELECT
-                    v.id, v.title, v.description, v.owner, v.ownerformat, v.group
+                    v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution, v.template
                 ' . $from . $where . '
-                GROUP BY v.id, v.title, v.description, v.owner, v.ownerformat, v.group
+                GROUP BY v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution, v.template
             ) a
             ORDER BY a.title, a.id ',
             $ph, $offset, $limit
         );
 
-        View::get_extra_view_info($viewdata);
+        if ($viewdata) {
+            if ($extra) {
+                View::get_extra_view_info($viewdata);
+            }
+        }
+        else {
+            $viewdata = array();
+        }
 
         return (object) array(
             'data'  => array_values($viewdata),
             'count' => $count,
+        );
+
+    }
+
+
+    /**
+     * Search view owners.
+     */
+    public static function search_view_owners($query=null, $template=null, $limit=null, $offset=0) {
+        if ($template) {
+            $tsql = ' AND v.template = 1';
+        }
+        else if ($template === false) {
+            $tsql = ' AND v.template = 0';
+        }
+        else {
+            $tsql = '';
+        }
+
+        $query = '';
+
+        if ($query) {
+            $ph = array($query);
+            $qsql = ' WHERE display ' . db_ilike() . " '%' || ? || '%' ";
+        }
+        else {
+            $ph = array();
+            $qsql = '';
+        }
+
+        $sql = "
+                SELECT
+                    'user' AS type,
+                    CASE WHEN u.preferredname IS NULL OR u.preferredname = '' THEN u.firstname || ' ' || u.lastname
+                    ELSE u.preferredname END AS display,
+                    CAST (u.id AS TEXT), COUNT(v.id)
+                FROM {usr} u INNER JOIN {view} v ON (v.owner = u.id)
+                WHERE u.deleted = 0 $tsql
+                GROUP BY type, display, u.id
+            UNION
+                SELECT 'group' AS type, g.name AS display, CAST (g.id AS TEXT), COUNT(v.id)
+                FROM {group} g INNER JOIN {view} v ON (g.id = v.group)
+                WHERE g.deleted = 0 $tsql
+                GROUP BY type, display, g.id
+            UNION
+                SELECT 'institution' AS type, i.displayname AS display, i.name AS id, COUNT(v.id)
+                FROM {institution} i INNER JOIN {view} v ON (i.name = v.institution) 
+                WHERE TRUE $tsql
+                GROUP BY type, display, i.name";
+
+        $count = count_records_sql("SELECT COUNT(*) FROM ($sql) q $qsql", $ph);
+        $data = get_records_sql_array("SELECT * FROM ($sql) q $qsql", $ph, $offset, $limit);
+
+        return (object) array(
+            'data'  => array_values($data),
+            'count' => $count,
+            'limit' => $limit,
+            'offset' => $offset,
         );
 
     }
@@ -1575,12 +1709,37 @@ class View {
             $ph, $offset, $limit
         );
 
-        View::get_extra_view_info($viewdata);
+        if ($viewdata) {
+            View::get_extra_view_info($viewdata);
+        }
+        else {
+            $viewdata = array();
+        }
 
         return (object) array(
             'data'  => array_values($viewdata),
             'count' => $count,
         );
+    }
+
+
+    /** 
+     * Get views submitted to a group
+     */
+    public static function get_submitted_views($groupid) {
+        $viewdata = get_records_sql_assoc('
+            SELECT id, title, description, owner, ownerformat
+            FROM {view}
+            WHERE submittedto = ?
+            ORDER BY title, id',
+            array($groupid), $offset, $limit
+        );
+
+        if ($viewdata) {
+            View::get_extra_view_info($viewdata);
+            return array_values($viewdata);
+        }
+        return false;
     }
 
 
@@ -1603,18 +1762,20 @@ class View {
                 WHERE va.view IN (' . join(',', array_keys($viewdata)) . ')
                 GROUP BY va.view, va.artefact, a.title, a.artefacttype, t.plugin
                 ORDER BY a.title, va.artefact', '');
-            foreach ($artefacts as $artefactrec) {
-                safe_require('artefact', $artefactrec->plugin);
-                $classname = generate_artefact_class_name($artefactrec->artefacttype);
-                $artefactobj = new $classname(0, array('title' => $artefactrec->title));
-                $artefactobj->set('dirty', false);
-                if (!$artefactobj->in_view_list()) {
-                    continue;
-                }
-                $artname = $artefactobj->display_title(30);
-                if (strlen($artname)) {
-                    $viewdata[$artefactrec->view]->artefacts[] = array('id'    => $artefactrec->artefact,
-                                                                       'title' => $artname);
+            if ($artefacts) {
+                foreach ($artefacts as $artefactrec) {
+                    safe_require('artefact', $artefactrec->plugin);
+                    $classname = generate_artefact_class_name($artefactrec->artefacttype);
+                    $artefactobj = new $classname(0, array('title' => $artefactrec->title));
+                    $artefactobj->set('dirty', false);
+                    if (!$artefactobj->in_view_list()) {
+                        continue;
+                    }
+                    $artname = $artefactobj->display_title(30);
+                    if (strlen($artname)) {
+                        $viewdata[$artefactrec->view]->artefacts[] = array('id'    => $artefactrec->artefact,
+                                                                           'title' => $artname);
+                    }
                 }
             }
             if (!empty($owners)) {
@@ -1625,6 +1786,7 @@ class View {
                 $groups = get_records_select_assoc('group', 'id IN (' . join(',', $groups) . ')', null, '', 'id,name');
             }
             foreach ($viewdata as &$v) {
+                $v->shortdescription = clean_text(str_shorten(str_replace('<br />', ' ', $v->description), 100, true));
                 if ($v->owner) {
                     $v->sharedby = View::owner_name($v->ownerformat, $owners[$v->owner]);
                 } else if ($v->group) {
@@ -1635,7 +1797,278 @@ class View {
         }
     }
 
+    public static function set_nav($group, $institution) {
+        if ($group) {
+            define('MENUITEM', 'groups/views');
+            define('GROUP', $group);
+        }
+        else if ($institution) {
+            define('INSTITUTIONALADMIN', 1);
+            define('MENUITEM', $institution == 'mahara' ? 'configsite/siteviews' : 'manageinstitutions/institutionviews');
+        }
+        else {
+            define('MENUITEM', 'myportfolio/views');
+        }
+    }
 
+
+    public function ownership() {
+        if ($this->group) {
+            return array('type' => 'group', 'id' => $this->group);
+        }
+        if ($this->owner) {
+            return array('type' => 'user', 'id' => $this->owner);
+        }
+        if ($this->institution) {
+            return array('type' => 'institution', 'id' => $this->institution);
+        }
+        return null;
+    }
+
+
+    public function copy_contents($template) {
+        $this->set('numcolumns', $template->get('numcolumns'));
+        $this->set('layout', $template->get('layout'));
+        $blocks = get_records_array('block_instance', 'view', $template->get('id'));
+        $numcopied = array('blocks' => 0, 'artefacts' => 0);
+        if ($blocks) {
+            $newowner = $this->ownership();
+            $oldowner = $template->ownership();
+            $sameowner = $newowner['type'] == $oldowner['type'] && $newowner['id'] == $oldowner['id'];
+            $artefactcopies = array(); // Correspondence between original artefact ids and id of the copy
+            foreach ($blocks as $b) {
+                safe_require('blocktype', $b->blocktype);
+                $oldblock = new BlockInstance($b->id, $b);
+                if ($sameowner || $oldblock->copy_allowed($newowner)) {
+                    $newblock = new BlockInstance(0, array(
+                        'blocktype'  => $oldblock->get('blocktype'),
+                        'title'      => $oldblock->get('title'),
+                        'view'       => $this->get('id'),
+                        'column'     => $oldblock->get('column'),
+                        'order'      => $oldblock->get('order'),
+                    ));
+                    $configdata = $oldblock->get('configdata');
+                    $artefactids = PluginBlockType::get_artefacts($oldblock);
+                    if (!$sameowner && !empty($artefactids)) {
+                        if ($oldblock->copy_artefacts_allowed($newowner)) {
+                            // Copy artefacts & put the new artefact
+                            // ids into the new block
+                            // Get all children of the artefacts
+                            $descendants = artefact_get_descendants($artefactids);
+                            foreach ($descendants as $aid) {
+                                if (!isset($artefactcopies[$aid])) {
+                                    // Copy the artefact
+                                    $a = artefact_instance_from_id($aid);
+                                    // Save the id of the original artefact's parent
+                                    $artefactcopies[$aid] = (object) array('oldid' => $aid, 'oldparent' => $a->get('parent'));
+                                    $artefactcopies[$aid]->newid = $a->copy_for_new_owner($this->owner, $this->group, $this->institution);
+                                }
+                            }
+                            if (isset($configdata['artefactid'])) {
+                                $configdata['artefactid'] = $artefactcopies[$configdata['artefactid']]->newid;
+                            }
+                            else {
+                                foreach ($configdata['artefactids'] as &$oldid) {
+                                    $oldid = $artefactcopies[$oldid]->newid;
+                                }
+                            }
+                        }
+                        else if (isset($configdata['artefactid'])) {
+                            $configdata['artefactid'] = null;
+                        }
+                        else if (isset($configdata['artefactids'])) {
+                            $configdata['artefactids'] = array();
+                        }
+                    }
+                    $newblock->set('configdata', $configdata);
+                    $newblock->commit();
+                    $numcopied['blocks']++;
+                }
+            }
+            // Go back and fix up the parents of the new artefacts so
+            // they also point to new artefacts.
+            // Create parent folder for files that have no parent
+            if ($artefactcopies) {
+                safe_require('artefact', 'file');
+                $viewfilesfolder = ArtefactTypeFolder::get_folder_id(get_string('viewfilesdirname', 'view'), get_string('viewfilesdirdesc', 'view'),
+                                                                     null, true, $this->get('owner'), $this->get('group'), $this->get('institution'));
+                $foldername = $template->get('id');
+                $existing = get_column_sql("
+                    SELECT title
+                    FROM {artefact}
+                    WHERE parent = ? AND title LIKE ? || '%'", array($viewfilesfolder, $foldername));
+                $sep = '';
+                $ext = '';
+                if ($existing) {
+                    while (in_array($foldername . $sep . $ext, $existing)) {
+                        $sep = '-';
+                        $ext++;
+                    }
+                }
+                $data = (object) array(
+                    'title'       => $foldername . $sep . $ext,
+                    'description' => get_string('filescopiedfromviewtemplate', 'view', $template->get('title')),
+                    'owner'       => $this->get('owner'),
+                    'group'       => $this->get('group'),
+                    'institution' => $this->get('institution'),
+                    'parent'      => $viewfilesfolder,
+                );
+                $folder = new ArtefactTypeFolder(0, $data);
+                $folder->commit();
+                foreach ($artefactcopies as $c) {
+                    $a = artefact_instance_from_id($c->newid);
+                    if (isset($artefactcopies[$c->oldparent])) {
+                        $a->set('parent', $artefactcopies[$c->oldparent]->newid);
+                        $a->commit();
+                    }
+                    else if (in_array($a->get('artefacttype'), PluginArtefactFile::get_artefact_types())) {
+                        $a->set('parent', $folder->get('id'));
+                        $a->commit();
+                    }
+                }
+            }
+            $numcopied['artefacts'] = count($artefactcopies);
+        }
+        return $numcopied;
+    }
+
+    public static function new_title($user, $group, $institution) {
+        $title = get_string('Untitled', 'view');
+        $taken = get_column_sql('
+            SELECT title
+            FROM {view}
+            WHERE ' . self::owner_sql($user, $group, $institution) . "
+                AND title LIKE ? || '%'", array($title));
+        $ext = ''; $i = 0;
+        if ($taken) {
+            while (in_array($title . $ext, $taken)) {
+                $ext = ' (' . ++$i . ')';
+            }
+        }
+        return $title . $ext;
+    }
+
+}
+
+
+function create_view_form($group=null, $institution=null, $templatechooser=null) {
+    global $USER;
+    $form = array(
+        'name'     => 'createview',
+        'method'   => 'post',
+        'plugintype' => 'core',
+        'pluginname' => 'view',
+        'elements' => array(
+            'new' => array(
+                'type' => 'hidden',
+                'value' => true,
+            ),
+        )
+    );
+    if ($group) {
+        $form['elements']['group'] = array(
+            'type' => 'hidden',
+            'value' => $group,
+        );
+    }
+    else if ($institution) {
+        $form['elements']['institution'] = array(
+            'type' => 'hidden',
+            'value' => $institution,
+        );
+    }
+    if ($templatechooser) {
+        // Get templates visible to the user and non-templates owned by
+        // the owner of the view being created
+        $templates = View::view_search(null, null, null, true, null, 0, false);
+        $ownerid = ($group || $institution) ? null : $USER->get('id');
+        $nontemplates = View::view_search($ownerid, $group, $institution, false, null, 0, false);
+
+        $templateoptions = array(0 => get_string('none'));
+        foreach ($templates->data as $t) {
+            $templateoptions[$t->id] = $t->title;
+        }
+        foreach ($nontemplates->data as $t) {
+            $templateoptions[$t->id] = $t->title;
+        }
+        $form['elements']['usetemplate'] = array(
+            'type'         => 'select',
+            'title'        => get_string('Template','view'),
+            'description'  => get_string('createfromtemplatedescription','view'),
+            'options'      => $templateoptions,
+        );
+        $form['elements']['submit'] = array(
+            'type'  => 'submitcancel',
+            'value' => array(get_string('createview', 'view'), get_string('cancel')),
+        );
+    }
+    else {
+        $form['renderer'] = 'oneline';
+        $form['elements']['submit'] = array(
+            'type'  => 'submit',
+            'value' => get_string('createview', 'view'),
+        );
+    }
+    return $form;
+}
+
+function createview_submit(Pieform $form, $values) {
+    global $USER, $SESSION;
+
+    $group = isset($values['group']) ? (int) $values['group'] : null;
+    $institution = isset($values['institution']) ? $values['institution'] : null;
+    $templateid = isset($values['usetemplate']) ? (int) $values['usetemplate'] : null;
+
+    $owner = ($group || $institution) ? null : $USER->get('id');
+
+    if ($group && !group_user_can_edit_views($group)
+        || $institution && !$USER->can_edit_institution($institution)) {
+        throw new AccessDeniedException();
+    }
+
+    // Create a new view
+    $data = (object) array(
+        'numcolumns'  => 3,
+        'template'    => 0,
+        'group'       => $group,
+        'institution' => $institution,
+        'owner'       => $owner,
+        'title'       => View::new_title($owner, $group, $institution),
+    );
+    $view = new View(0, $data);
+    $view->commit();  // copy_contents call below needs a view id
+
+    if ($templateid) {
+        $template = new View($templateid);
+        if (!$template->get('deleted') && ($template->get('template') && can_view_view($templateid)) || $USER->can_edit_view($template)) {
+            $view->set('dirty', true);
+            $copystatus = $view->copy_contents($template);
+            $SESSION->add_ok_msg(get_string('copiedblocksandartefactsfromtemplate', 'view', $copystatus['blocks'], $copystatus['artefacts'], $template->get('title')));
+        }
+    }
+    if ($group) {
+        // By default, group views should be visible to the group
+        $view->set_access(array(array(
+            'type'      => 'group',
+            'id'        => $group,
+            'startdate' => null,
+            'stopdate'  => null,
+            'role'      => null
+        )));
+    }
+    $view->commit();
+
+    redirect(get_config('wwwroot') . 'view/blocks.php?new=1&id=' . $view->get('id'));
+}
+
+function createview_cancel_submit(Pieform $form, $values) {
+    if (isset($values['group'])) {
+        redirect(get_config('wwwroot') . 'view/groupviews.php?group=' . $values['group']);
+    }
+    if (isset($values['institution'])) {
+        redirect(get_config('wwwroot') . 'view/institutionviews.php?institution=' . $values['institution']);
+    }
+    redirect(get_config('wwwroot') . 'view/');
 }
 
 

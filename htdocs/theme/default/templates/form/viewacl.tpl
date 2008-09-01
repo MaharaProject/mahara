@@ -214,7 +214,7 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
 
     var identityNodes = [], profileIcon = null, roleSelector = null;
     if (rowdata.type == 'user') {
-        profileIcon = IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&maxwidth=40&maxheight=40&id=' + rowdata.id});
+        profileIcon = IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&maxwidth=20&maxheight=20&id=' + rowdata.id});
         identityNodes.push(A({'href': config.wwwroot + 'user/view.php?id=' + rowdata.id, 'target': '_blank'}, rowdata.name));
     }
     else if (rowdata.type == 'group') {
@@ -238,7 +238,7 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
     return TR({'class': 'r' + (rownumber % 2)},
         buttonTD,
         TD({'style': 'vertical-align: middle;'}, identityNodes),
-        TD({'class': 'center', 'style': 'width:40px'}, profileIcon)
+        TD({'class': 'center', 'style': 'vertical-align: middle;width:20px;'}, profileIcon)
     );
 }
 searchTable.updateOnLoad();

@@ -50,7 +50,7 @@ if ($menuitems) {
         $r['id'] = $i->id;
         $r['name'] = $i->title;
         if (empty($i->url) && !empty($i->file)) {
-            $r['type'] = 'adminfile';
+            $r['type'] = 'sitefile';
             $r['linkedto'] = get_config('wwwroot') . 'artefact/file/download.php?file=' . $i->file; 
             $r['linktext'] = $i->filename; 
             $r['file'] = $i->file; 

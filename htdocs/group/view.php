@@ -25,27 +25,26 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups');
+define('MENUITEM', 'groups/info');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('group.php');
 require_once('searchlib.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
+require_once(get_config('libroot') . 'view.php');
 safe_require('artefact', 'file');
 
-$id = param_integer('id');
+define('GROUP', param_integer('id'));
+$group = group_current_group();
 
-if (!$group = get_record_select('group', 'id = ? AND deleted = 0', array($id), '*, ' . db_format_tsfield('ctime'))) {
-    throw new GroupNotFoundException("Couldn't find group with id $id");
-}
 define('TITLE', $group->name);
 $group->ctime = strftime(get_string('strftimedate'), $group->ctime);
 
 $group->admins = get_column_sql("SELECT member
     FROM {group_member}
     WHERE \"group\" = ?
-    AND role = 'admin'", array($id));
+    AND role = 'admin'", array($group->id));
 
-$role = group_user_access($id);
+$role = group_user_access($group->id);
 if ($role) {
     if ($role == 'admin') {
         $group->membershiptype = 'admin';
@@ -72,7 +71,7 @@ else if ($group->jointype == 'open') {
     $group->groupjoin = group_get_join_form('joingroup', $group->id);
 }
 
-$filecounts = ArtefactTypeFileBase::count_user_files(null, null, $group->id);
+$filecounts = ArtefactTypeFileBase::count_user_files(null, $group->id, null);
 
 // Latest forums posts
 // NOTE: it would be nicer if there was some generic way to get information 
@@ -94,16 +93,25 @@ $foruminfo = get_records_sql_array('
     ORDER BY
         p.ctime DESC
     LIMIT 5;
-    ', array($id));
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($id, $role))));
+    ', array($group->id));
+$smarty = smarty();
 $smarty->assign('group', $group);
-$smarty->assign('groupid', $id);
-$smarty->assign('grouptabs', group_get_menu_tabs($group));
+$smarty->assign('groupid', $group->id);
 $smarty->assign('foruminfo', $foruminfo);
 $smarty->assign('membercount', count_records('group_member', 'group', $group->id));
 $smarty->assign('viewcount', count_records('view', 'group', $group->id));
 $smarty->assign('filecount', $filecounts->files);
 $smarty->assign('foldercount', $filecounts->folders);
+if ($role) {
+    // For group members, display a list of views that others have
+    // shared to the group
+    $viewdata = View::get_sharedviews_data(null, 0, $group->id);
+    $smarty->assign('sharedviews', $viewdata->data);
+    if (group_user_can_assess_submitted_views($group->id, $USER->get('id'))) {
+        // Display a list of views submitted to the group
+        $smarty->assign('submittedviews', View::get_submitted_views($group->id));
+    }
+}
 $smarty->display('group/view.tpl');
 
 ?>

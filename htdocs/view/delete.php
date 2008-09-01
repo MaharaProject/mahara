@@ -25,7 +25,6 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myportfolio/views');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('view.php');
@@ -37,6 +36,18 @@ if (!$view || !$USER->can_edit_view($view)) {
     throw new AccessDeniedException(get_string('cantdeleteview', 'view'));
 }
 $groupid = $view->get('group');
+$institution = $view->get('institution');
+View::set_nav($groupid, $institution);
+
+if ($groupid) {
+    $goto = 'groupviews.php?group=' . $groupid;
+}
+else if ($institution) {
+    $goto = 'institutionviews.php?institution=' . $institution;
+}
+else {
+    $goto = 'index.php';
+}
 
 define('TITLE', get_string('deletespecifiedview', 'view', $view->get('title')));
 
@@ -49,7 +60,7 @@ $form = pieform(array(
             'type' => 'submitcancel',
             'title' => get_string('deleteviewconfirm', 'view'),
             'value' => array(get_string('yes'), get_string('no')),
-            'goto' => get_config('wwwroot') . 'view/'
+            'goto' => get_config('wwwroot') . 'view/' . $goto,
         )
     ),
 ));
@@ -60,13 +71,16 @@ $smarty->assign('form', $form);
 $smarty->display('view/delete.tpl');
 
 function deleteview_submit(Pieform $form, $values) {
-	global $SESSION, $viewid, $groupid;
+    global $SESSION, $viewid, $groupid, $institution;
     $view = new View($viewid, null);
     $view->delete();
     handle_event('deleteview', $viewid);
     $SESSION->add_ok_msg(get_string('viewdeleted', 'view'));
     if ($groupid) {
         redirect('/view/groupviews.php?group='.$groupid);
+    }
+    if ($institution) {
+        redirect('/view/institutionviews.php?institution='.$institution);
     }
     redirect('/view/');
 }

@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups');
+define('MENUITEM', 'groups/forums');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction', 'forum');
 require_once('group.php');
@@ -58,7 +58,7 @@ else { // edit topic
 }
 
 $forum = get_record_sql(
-    'SELECT f.group AS groupid, f.title, g.name AS groupname
+    'SELECT f.group AS groupid, f.title, g.name AS groupname, g.grouptype
     FROM {interaction_instance} f
     INNER JOIN {group} g ON (g.id = f.group AND g.deleted = ?)
     WHERE f.id = ?
@@ -69,6 +69,7 @@ if (!$forum) {
     throw new NotFoundException(get_string('cantfindforum', 'interaction.forum', $forumid));
 }
 
+define('GROUP', $forum->groupid);
 $membership = user_can_access_forum((int)$forumid);
 $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
@@ -253,7 +254,7 @@ function edittopic_submit(Pieform $form, $values) {
     }
 }
 
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($forum->groupid))));
+$smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
 $smarty->assign('editform', $editform);

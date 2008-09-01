@@ -32,12 +32,13 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('adminusers', 'admin'));
 require_once('pieforms/pieform.php');
 define('MENUITEM', 'manageinstitutions/institutionadmins');
-$smarty = smarty();
 
 require_once('institution.php');
-$institution = add_institution_selector_to_page($smarty, param_alphanum('institution', false),
-                                                get_config('wwwroot') . 'admin/users/institutionadmins.php');
+$s = institution_selector_for_page(param_alphanum('institution', false),
+                                   get_config('wwwroot') . 'admin/users/institutionadmins.php');
+$institution = $s['institution'];
 
+$smarty = smarty();
 if ($institution === false) {
     $smarty->display('admin/users/noinstitutions.tpl');
     exit;
@@ -100,6 +101,8 @@ function adminusers_submit(Pieform $form, $values) {
     redirect('/admin/users/institutionadmins.php?institution=' . $inst);
 }
 
+$smarty->assign('institutionselector', $s['institutionselector']);
+$smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs']);
 $smarty->assign('adminusersform', pieform($form));
 $smarty->display('admin/users/institutionadmins.tpl');
 

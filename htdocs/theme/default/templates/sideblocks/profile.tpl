@@ -30,7 +30,7 @@
             <a href="{$WWWROOT}group/mygroups.php">{str tag="groups"}:</a>
             <ul>
             {foreach from=$data.groups item=group}
-                <li><a href="{$WWWROOT}group/view.php?id={$group->id}">{$group->name|escape}</a>{if $group->role == 'admin'} (admin){/if}</li>
+                <li><a href="{$WWWROOT}group/view.php?id={$group->id}">{$group->name|escape}</a>{if $group->role == 'admin'} ({str tag=Admin section=group}){/if}</li>
             {/foreach}
             </ul>
         </li>

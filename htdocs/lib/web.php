@@ -374,6 +374,9 @@ EOF;
         $smarty->assign('PAGEHELPNAME', $help[0]);
         $smarty->assign('PAGEHELPICON', $help[1]);
     }
+    if (defined('GROUP')) {
+        $smarty->assign('GROUP', group_current_group());
+    }
 
     // ---------- sideblock stuff ----------
     if (!defined('INSTALLER') && (!defined('MENUITEM') || substr(MENUITEM, 0, 5) != 'admin')) {
@@ -405,7 +408,15 @@ EOF;
             );
         }
 
-       if (!$USER->is_logged_in()) {
+        if(defined('GROUP')) {
+            $SIDEBLOCKS[] = array(
+                'name'   => 'group',
+                'weight' => -10,
+                'data'   => group_sideblock()
+            );
+        }
+
+        if (!$USER->is_logged_in()) {
             $SIDEBLOCKS[] = array(
                 'name'   => 'login',
                 'weight' => -10,
@@ -1395,16 +1406,22 @@ function admin_nav() {
             'weight' => 30,
         ),
         array(
-            'path'   => 'configsite/adminfiles',
-            'url'    => 'admin/site/files.php',
-            'title'  => get_string('adminfiles', 'admin'),
-            'weight' => 40,
-        ),
-        array(
             'path'   => 'configsite/networking',
             'url'    => 'admin/site/networking.php',
             'title'  => get_string('networking', 'admin'),
+            'weight' => 40,
+        ),
+        array(
+            'path'   => 'configsite/siteviews',
+            'url'    => 'admin/site/views.php',
+            'title'  => get_string('siteviews', 'admin'),
             'weight' => 50,
+        ),
+        array(
+            'path'   => 'configsite/sitefiles',
+            'url'    => 'admin/site/files.php',
+            'title'  => get_string('sitefiles', 'admin'),
+            'weight' => 60,
         ),
         array(
             'path'   => 'configusers',
@@ -1485,6 +1502,18 @@ function admin_nav() {
             'weight' => 40,
         ),
         array(
+            'path'   => 'manageinstitutions/institutionviews',
+            'url'    => 'view/institutionviews.php',
+            'title'  => get_string('views'),
+            'weight' => 50,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutionfiles',
+            'url'    => 'artefact/file/institutionfiles.php',
+            'title'  => get_string('Files', 'artefact.file'),
+            'weight' => 60,
+        ),
+        array(
             'path'   => 'configextensions',
             'url'    => 'admin/extensions/plugins.php',
             'title'  => get_string('configextensions', 'admin'),
@@ -1548,13 +1577,13 @@ function institutional_admin_nav() {
         array(
             'path'   => 'manageinstitutions/institutions',
             'url'    => 'admin/users/institutions.php',
-            'title'  => get_string('institutionsettings', 'admin'),
+            'title'  => get_string('settings'),
             'weight' => 10,
         ),
         array(
             'path'   => 'manageinstitutions/institutionusers',
             'url'    => 'admin/users/institutionusers.php',
-            'title'  => get_string('institutionmembers', 'admin'),
+            'title'  => get_string('Members', 'admin'),
             'weight' => 20,
         ),
         array(
@@ -1574,6 +1603,18 @@ function institutional_admin_nav() {
             'url'    => 'admin/users/notifications.php',
             'title'  => get_string('adminnotifications', 'admin'),
             'weight' => 50,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutionviews',
+            'url'    => 'view/institutionviews.php',
+            'title'  => get_string('views'),
+            'weight' => 60,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutionfiles',
+            'url'    => 'artefact/file/institutionfiles.php',
+            'title'  => get_string('Files', 'artefact.file'),
+            'weight' => 70,
         ),
     );
 
@@ -1615,36 +1656,6 @@ function main_nav() {
                 'weight' => 10
             ),
             array(
-                'path' => 'groups',
-                'url' => 'group/mygroups.php',
-                'title' => get_string('groups'),
-                'weight' => 40,
-            ),
-            array(
-                'path' => 'groups/mygroups',
-                'url' => 'group/mygroups.php',
-                'title' => get_string('mygroups'),
-                'weight' => 10
-            ),
-            array(
-                'path' => 'groups/find',
-                'url' => 'group/find.php',
-                'title' => get_string('findgroups'),
-                'weight' => 20
-            ),
-            array(
-                'path' => 'groups/myfriends',
-                'url' => 'user/myfriends.php',
-                'title' => get_string('myfriends'),
-                'weight' => 30
-            ),
-            array(
-                'path' => 'groups/findfriends',
-                'url' => 'user/find.php',
-                'title' => get_string('findfriends'),
-                'weight' => 40
-            ),
-            array(
                 'path' => 'settings',
                 'url' => 'account/',
                 'title' => get_string('settings'),
@@ -1675,6 +1686,45 @@ function main_nav() {
                 'weight' => 40,
             ),
         );
+
+        if (defined('GROUP')) {
+            require_once('group.php');
+            foreach (group_get_menu_tabs() as $k => $v) {
+                $menu[] = $v;
+            }
+        }
+        else {
+            $menu[] = array(
+                'path' => 'groups',
+                'url' => 'group/mygroups.php',
+                'title' => get_string('groups'),
+                'weight' => 40,
+            );
+            $menu[] = array(
+                'path' => 'groups/mygroups',
+                'url' => 'group/mygroups.php',
+                'title' => get_string('mygroups'),
+                'weight' => 10
+            );
+            $menu[] = array(
+                'path' => 'groups/find',
+                'url' => 'group/find.php',
+                'title' => get_string('findgroups'),
+                'weight' => 20
+            );
+            $menu[] = array(
+                'path' => 'groups/myfriends',
+                'url' => 'user/myfriends.php',
+                'title' => get_string('myfriends'),
+                'weight' => 30
+            );
+            $menu[] = array(
+                'path' => 'groups/findfriends',
+                'url' => 'user/find.php',
+                'title' => get_string('findfriends'),
+                'weight' => 40
+            );
+        }
 
         if ($plugins = get_records_array('artefact_installed', 'active', 1)) {
             foreach ($plugins as &$plugin) {

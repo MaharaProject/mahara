@@ -2,12 +2,10 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-                <h2>{$group->name|escape}</h2>
-
-{include file="group/tabstart.tpl" current="members"}
+                <h2>{$GROUP->name|escape} - {str tag='Members' section='group'}</h2>
 
 <form action="{$WWWROOT}group/members.php" method="post">
-    <input type="hidden" id="groupid" name="id" value="{$group->id|escape}">
+    <input type="hidden" id="groupid" name="id" value="{$GROUP->id|escape}">
     <div class="searchform center" style="margin-bottom: .5em;">
         <label>{str tag='Query' section='admin'}:
             <input type="text" name="query" id="query" value="{$query|escape}">
@@ -27,8 +25,6 @@
     <div id="pagination">{$pagination}</div>
     <script type="text/javascript">{$pagination_js}</script>
 
-
-{include file="group/tabend.tpl"}
 
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

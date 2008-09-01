@@ -36,8 +36,8 @@ define('TITLE', get_string('linksandresourcesmenu', 'admin'));
 
 $strings = array('edit','delete','update','cancel','add','name','unknownerror');
 $adminstrings = array('confirmdeletemenuitem', 'deletefailed','deletingmenuitem','savingmenuitem',
-                      'noadminfiles','loggedinmenu','loggedoutmenu','linkedto','externallink','adminfile',
-                      'loadingmenuitems','menuitemsloaded','failedloadingadminfiles',
+                      'nositefiles','loggedinmenu','loggedoutmenu','linkedto','externallink','sitefile',
+                      'loadingmenuitems','menuitemsloaded','failedloadingsitefiles',
                       'failedloadingmenuitems');
 foreach ($strings as $string) {
     $getstring[$string] = json_encode(get_string($string));
@@ -49,7 +49,7 @@ foreach ($adminstrings as $string) {
 $thead = array(json_encode(get_string('type', 'admin')), json_encode(get_string('name', 'admin')), json_encode(get_string('linkedto', 'admin')), '""');
 $ijs = "var thead = TR(null,map(partial(TH,null),[" . implode($thead,",") . "]));\n";
 $ijs .= "var externallink = " . json_encode(get_string('externallink', 'admin')) . ";\n";
-$ijs .= "var adminfile = " . json_encode(get_string('adminfile','admin')) . ";\n";
+$ijs .= "var sitefile = " . json_encode(get_string('sitefile','admin')) . ";\n";
 
 $ijs .= <<< EOJS
 // Request a list of menu items from the server
@@ -115,7 +115,7 @@ function editform(item) {
     // item has id, type, name, link, linkedto
     // The form has two radio buttons to select the type, external link or admin file
     var elink = INPUT({'type':'radio','class':'radio','name':'type'+item.id,'value':'externallink'});
-    var afile = INPUT({'type':'radio','class':'radio','name':'type'+item.id,'value':'adminfile'});
+    var afile = INPUT({'type':'radio','class':'radio','name':'type'+item.id,'value':'sitefile'});
 
     // Either a save, a cancel button, or both.
     var savecancel = [];
@@ -135,7 +135,7 @@ function editform(item) {
         item.linkedto = '';
         item.name = '';
         connect(elink, 'onclick', function () { changeaddform('externallink'); });
-        connect(afile, 'onclick', function () { changeaddform('adminfile'); });
+        connect(afile, 'onclick', function () { changeaddform('sitefile'); });
         // The save button says 'add', and there's no cancel button.
         setNodeAttribute(save,'value',{$getstring['add']});
         savecancel = [save];
@@ -148,16 +148,16 @@ function editform(item) {
         connect(cancel, 'onclick', closeopenedits);
         savecancel = [save,cancel];
         connect(elink, 'onclick', function () { changeeditform(item,'externallink'); });
-        connect(afile, 'onclick', function () { changeeditform(item,'adminfile'); });
+        connect(afile, 'onclick', function () { changeeditform(item,'sitefile'); });
     }
 
     // A text field for the name
     var name = INPUT({'type':'text','class':'text','id':'name'+item.id,'value':item.name});
 
-    if (item.type == 'adminfile') {
+    if (item.type == 'sitefile') {
         if (adminfiles == null) {
             // There are no admin files, we don't need the select or save button
-            linkedto = {$getstring['noadminfiles']};
+            linkedto = {$getstring['nositefiles']};
             savecancel = [cancel];
         }
         else {
@@ -180,7 +180,7 @@ function editform(item) {
         setNodeAttribute(elink,'checked',true);
     }
     var radios = [DIV(null, LABEL(null,elink,{$getstring['externallink']}), contextualHelpIcon(null, null, 'core', 'admin', null, 'adminexternallink')),
-                  DIV(null, LABEL(null,afile,{$getstring['adminfile']}), contextualHelpIcon(null, null, 'core', 'admin', null, 'adminadminfile'))];
+                  DIV(null, LABEL(null,afile,{$getstring['sitefile']}), contextualHelpIcon(null, null, 'core', 'admin', null, 'adminsitefile'))];
     var row = TR({'id':'row'+item.id, 'class':rowtype},
                  map(partial(TD,null),[radios,name,linkedto,savecancel]));
     return row;
@@ -242,7 +242,7 @@ function saveitem(itemid) {
         return false;
     }
 
-    var data = {'type':eval('f.type'+itemid+'[0].checked') ? 'externallink' : 'adminfile',
+    var data = {'type':eval('f.type'+itemid+'[0].checked') ? 'externallink' : 'sitefile',
                 'name':name,
                 'linkedto':linkedto,
                 'itemid':itemid,

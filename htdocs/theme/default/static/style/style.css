@@ -199,6 +199,13 @@ a:hover {
 	font-size: 11px;
 	color: #FFF;
 }
+.addicon form,
+.addicon form div {
+  display: inline;
+}
+.addicon input.submit {
+  height: 20px;
+}
 span.addicon a {
 	background-color: #92b328;
 	padding: 2px 10px;
@@ -653,6 +660,9 @@ tr.required th,
     background: url(../images/submenu-bg.gif) repeat-x;
     height: 25px;
 }
+#subnav.group {
+    padding: 0;
+}
 #subnav ul {
 	height: 15px;
 	padding: 5px 0;
@@ -688,8 +698,10 @@ tr.required th,
 #subnav li.selected a:active {
     color: #4c711d;
 }
-
-
+#subnav li.groupname {
+    background: url(../images/menu-over-bg.gif) repeat-x left;
+    color: #feef45;
+}
 
 /* RIGHT SIDE COLUMN */
 div.sidebar {
@@ -1379,6 +1391,11 @@ fieldset.collapsed .mceEditor td {
 #myviewstable h3 a {
 	color: #1e6297 !important;
 }
+#myviewstable .template {
+  color: #000;
+  font-weight: normal;
+  font-size: 13px;
+}
 #myviewstable .viewitem {
 	margin-bottom: 5px;
 	font-size: 11px;
@@ -1437,6 +1454,15 @@ fieldset.collapsed .mceEditor td {
 }
 #viewacl_lhs #results {
 	border-bottom: 1px solid #95a8b7;
+}
+#viewacl_lhs #results .button {
+        margin-top: 0;
+        height: 20px;
+	border: 0;
+	background: url(../images/icon-add.gif) no-repeat left 7px;
+	padding-left: 10px;
+	color: #7f9d16;
+	font-weight: bold;
 }
 #potentialpresetitems button {
 	border: 0;
@@ -1909,7 +1935,11 @@ span.viewicon {
 #group-info {
     list-style-type: none;
 }
+#group-info li {
+    margin-left: 0;
+}
 #group-controls li {
+    margin-left: 0;
     float: left;
 }
 #membersearchresults {
@@ -1947,7 +1977,7 @@ span.viewicon {
     height: auto;
 }
 .group-info-para {
-    margin: 15px 0 0 10px;
+    margin: 15px 0;
 }
 
 /* GROUPS > GROUP VIEWS */
@@ -1970,8 +2000,9 @@ ul#groupviewoptions {
 #groupviewoptions li a {
     color: #474220;
 }
-table#myviewstable.groupviews{
-    margin-top: 1px;
+table.groupviews{
+    width: 100%;
+    margin-top: 10px;
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
 }

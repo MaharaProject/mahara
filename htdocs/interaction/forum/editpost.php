@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups');
+define('MENUITEM', 'groups/forums');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction', 'forum');
 require('group.php');
@@ -77,6 +77,8 @@ $parent = get_record_sql(
 if (!$parent) {
     throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $parentid));
 }
+
+define('GROUP', $parent->group);
 
 $breadcrumbs = array(
     array(
@@ -239,7 +241,7 @@ function addpost_submit(Pieform $form, $values) {
     redirect('/interaction/forum/topic.php?id=' . $values['topic'] . '#post' . $postid);
 }
 
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($parent->group))));
+$smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
 $smarty->assign('editform', $editform);

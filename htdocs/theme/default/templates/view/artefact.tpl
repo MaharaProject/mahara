@@ -3,8 +3,8 @@
 {include file="columnfullstart.tpl"}
 
         <h2>
-            <a href="{$WWWROOT}view/view.php?id={$viewid}">{$viewtitle}</a> {str tag=by section=view}
-            <a href="{$WWWROOT}{$ownerlink}">{$ownername}</a>{foreach from=$artefactpath item=a}:
+            <a href="{$WWWROOT}view/view.php?id={$viewid}">{$viewtitle}</a>{if $ownername} {str tag=by section=view}
+            <a href="{$WWWROOT}{$ownerlink}">{$ownername}</a>{/if}{foreach from=$artefactpath item=a}:
                 {if $a.url}<a href="{$a.url}">{/if}{$a.title}{if $a.url}</a>{/if}
             {/foreach}
         </h2>

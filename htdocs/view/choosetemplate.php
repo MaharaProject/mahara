@@ -24,13 +24,27 @@
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
 
-$config = new StdClass;
-$config->version = 2008090200;
-$config->release = '1.1.0alpha';
-$config->minupgradefrom = 2007080700;
-$config->minupgraderelease = '0.8.0 (release tag 0.8.0_RELEASE)';
-$config->disablelogin = true;
+require(dirname(dirname(__FILE__)) . '/init.php');
+require_once(get_config('libroot') . 'view.php');
+require_once(get_config('libroot') . 'group.php');
+
+$group = param_integer('group', null);
+$institution = param_alphanum('institution', null);
+
+if ($group && !group_user_can_edit_views($group)
+    || $institution && !$USER->can_edit_institution($institution)) {
+    throw new AccessDeniedException();
+}
+
+define('TITLE', get_string('copyaview', 'view'));
+
+$choosetemplate = pieform(create_view_form($group, $institution, true));
+
+$smarty = smarty();
+$smarty->assign('heading', TITLE);
+$smarty->assign('choosetemplate', $choosetemplate);
+$smarty->display('view/choosetemplate.tpl');
 
 ?>

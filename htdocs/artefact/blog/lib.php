@@ -666,17 +666,18 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
     public static function blogfiles_folder_id($create = true) {
+        global $USER;
         $name = get_string('blogfilesdirname', 'artefact.blog');
         $description = get_string('blogfilesdirdescription', 'artefact.blog');
         safe_require('artefact', 'file');
-        return ArtefactTypeFolder::get_folder_id($name, $description, null, null, $create);
+        return ArtefactTypeFolder::get_folder_id($name, $description, null, $create, $USER->get('id'));
     }
 
     // Change the name & description of a user's blogfiles folder when the user changes language pref
     public static function change_language($userid, $oldlang, $newlang) {
         $oldname = get_string_from_language($oldlang, 'blogfilesdirname', 'artefact.blog');
         safe_require('artefact', 'file');
-        $blogfiles = ArtefactTypeFolder::get_folder_by_name($oldname, null, $userid);
+        $blogfiles = ArtefactTypeFolder::get_folder_by_name($oldname, null, $userid, null, null);
         if (empty($blogfiles)) {
             return;
         }

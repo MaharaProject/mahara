@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage admin
+ * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
@@ -26,33 +26,40 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'configsite/sitefiles');
+define('MENUITEM', 'configsite/siteviews');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
-define('SECTION_PAGE', 'sitefiles');
+define('SECTION_PAGE', 'siteviews');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-safe_require('artefact', 'file');
-define('TITLE', get_string('sitefiles', 'admin'));
+require_once(get_config('libroot') . 'view.php');
+require_once('pieforms/pieform.php');
 
-$copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
-$wwwroot = get_config('wwwroot');
+$limit   = param_integer('limit', 5);
+$offset  = param_integer('offset', 0);
 
-$javascript = <<<JAVASCRIPT
+$title = get_string('siteviews', 'admin');
+define('TITLE', $title);
 
-var copyrightnotice = '{$copyright}';
-var browser = new FileBrowser('filelist', '{$wwwroot}artefact/file/myfiles.json.php', {'institution':'mahara'});
-var uploader = new FileUploader('uploader', '{$wwwroot}artefact/file/upload.php', {'institution':'mahara'}, 
-                                null, null, browser.refresh, browser.fileexists);
-browser.changedircallback = uploader.updatedestination;
+$smarty = smarty();
+$smarty->assign('heading', $title);
 
-JAVASCRIPT;
+$data = View::get_myviews_data($limit, $offset, null, 'mahara');
 
-$smarty = smarty(array('tablerenderer', 
-                       'artefact/file/js/file.js'));
-$smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->assign('descriptionstrargs', array('<a href="' . get_config('wwwroot') . 'admin/site/menu.php">', '</a>'));
-$smarty->assign('heading', get_string('sitefiles', 'admin'));
-$smarty->display('admin/site/files.tpl');
+$pagination = build_pagination(array(
+    'url' => get_config('wwwroot') . 'view/?',
+    'count' => $data->count,
+    'limit' => $limit,
+    'offset' => $offset,
+    'resultcounttextsingular' => get_string('view', 'view'),
+    'resultcounttextplural' => get_string('views', 'view')
+));
+
+$smarty->assign('views', $data->data);
+$smarty->assign('institution', 'mahara');
+$smarty->assign('pagination', $pagination['html']);
+$smarty->assign('createviewform', pieform(create_view_form(null, 'mahara')));
+
+$smarty->display('view/index.tpl');
 
 ?>

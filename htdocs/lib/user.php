@@ -669,8 +669,18 @@ function delete_user($userid) {
     SET email = email || ?
     WHERE owner = ?', array($emailsuffix, $userid));
 
-    // mark all groups the user owns as deleted
-    set_field('group', 'deleted', '1', 'owner', $userid);
+    // Remove user from any groups they're in, invited to or want to be in
+    delete_records('group_member', 'member', $userid);
+    delete_records('group_member_request', 'member', $userid);
+    delete_records('group_member_invite', 'member', $userid);
+
+    // Remove any friend relationships the user is in
+    execute_sql('DELETE FROM {usr_friend}
+        WHERE usr1 = ?
+        OR usr2 = ?', array($userid, $userid));
+    execute_sql('DELETE FROM {usr_friend_request}
+        WHERE owner = ?
+        OR requester = ?', array($userid, $userid));
 
     db_commit();
 
@@ -1068,6 +1078,82 @@ function addfriend_submit(Pieform $form, $values) {
     activity_occurred('maharamessage', $n);
     $SESSION->add_ok_msg(get_string('friendformaddsuccess', 'group', display_name($user)));
     redirect('/user/view.php?id=' . $values['id']);
+}
+
+
+function create_user($user, $profile=array(), $institution=null, $remoteauth=null, $remotename=null) {
+    db_begin();
+
+    if ($user instanceof User) {
+        $user->commit();
+        $user = $user->to_stdclass();
+    }
+    else {
+        $user->id = insert_record('usr', $user, 'id', true);
+    }
+
+    set_profile_field($user->id, 'email', $user->email);
+    set_profile_field($user->id, 'firstname', $user->firstname);
+    set_profile_field($user->id, 'lastname', $user->lastname);
+    foreach ($profile as $k => $v) {
+        if (in_array($k, array('firstname', 'lastname', 'email'))) {
+            continue;
+        }
+        set_profile_field($user->id, $k, $v);
+    }
+
+    if (!empty($institution) && $institution != 'mahara') {
+        if (is_string($institution)) {
+            $institution = new Institution($institution);
+        }
+        if ($institution->name != 'mahara') {
+            $institution->addUserAsMember($user);
+        }
+    }
+
+    if (!empty($remoteauth) && $remoteauth->authname != 'internal') {
+        if (isset($remotename) && strlen($remotename) > 0) {
+            $un = $remotename;
+        }
+        else {
+            $un = $user->username;
+        }
+        delete_records('auth_remote_user', 'authinstance', $user->authinstance, 'remoteusername', $un);
+        insert_record('auth_remote_user', (object) array(
+            'authinstance'   => $user->authinstance,
+            'remoteusername' => $un,
+            'localusr'       => $user->id,
+        ));
+    }
+
+    // Copy site views to the new user's profile
+    copy_views_for_user($user->id, get_column('view', 'id', 'institution', 'mahara', 'copynewuser', 1));
+
+    handle_event('createuser', $user);
+    db_commit();
+    return $user->id;
+}
+
+
+
+function copy_views_for_user($userid, $templateids) {
+    if (!$templateids) {
+        return;
+    }
+    require_once(get_config('libroot') . 'view.php');
+    foreach ($templateids as $tid) {
+        $template = new View($tid);
+        $v = new View(0, (object) array(
+            'template'    => 0,
+            'numcolumns'  => 3,
+            'owner'       => $userid,
+            'title'       => $template->get('title'),
+            'description' => $template->get('description'),
+        ));
+        $v->commit();
+        $v->copy_contents($template);
+        $v->commit();
+    }
 }
 
 ?>

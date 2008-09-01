@@ -107,6 +107,15 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
     public static function artefactchooser_get_sort_order() {
         return 'title';
     }
+
+    public static function copy_allowed($newowner=null) {
+        return false;
+    }
+
+    public static function copy_artefacts_allowed($newowner=null) {
+        return false;
+    }
+
 }
 
 ?>

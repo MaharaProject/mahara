@@ -1,0 +1,141 @@
+<?php
+/**
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @package    mahara
+ * @subpackage core
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
+ * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ *
+ */
+
+$cfg = new StdClass;
+
+
+// database connection details
+// valid values for dbtype are 'postgres8' and 'mysql5'
+$cfg->dbtype   = 'postgres8';
+$cfg->dbhost   = 'localhost';
+$cfg->dbport   = null;
+$cfg->dbname   = '';
+$cfg->dbuser   = '';
+$cfg->dbpass   = '';
+$cfg->dbprefix = '';
+
+// wwwroot - the web-visible path to your Mahara installation
+// Normally, this is automatically detected - if it doesn't work for you
+// then try specifying it here
+//$cfg->wwwroot = 'http://myhost.com/mahara/';
+
+// dataroot - uploaded files are stored here
+// must be writable by the webserver and outside document root.
+// Mahara will NOT RUN if this is inside your document root, because
+// this is a big security hole.
+$cfg->dataroot = '/path/to/uploaddir';
+
+// directorypermissions - what permissions to use for files and directories in 
+// dataroot. The default allows only the web server user to read the data. If 
+// you're on shared hosting and might want to download the contents of your 
+// dataroot later (e.g. for backup purposes), set this to 0777. Otherwise, 
+// leave it as is!
+//$cfg->directorypermissions = 0700;
+
+// insecuredataroot - whether to enforce checking that files being served have 
+// come from dataroot. You would only want to turn this on if you were running 
+// more than one Mahara against the same dataroot. If you are doing that, make 
+// sure you create separate dataroots for each installation, but symlink the 
+// artefact directory from all of them to one of them, and turn on 
+// 'insecuredataroot' on all the ones you created symlinks for.
+//
+// If you don't know what you're doing/didn't understand the paragraph above, 
+// then leave this setting alone!
+//$cfg->insecuredataroot = false;
+
+// system mail address. emails out come from this address.
+// if not specified, will default to noreply@ automatically detected host.
+// if that doesn't work or you want something else, then specify it here.
+// $cfg->noreplyaddress = 'noreply@myhost.com'
+
+// Logging configuration
+// For each log level, you can specify where the messages are displayed.
+// LOG_TARGET_SCREEN makes the error messages go to the screen - useful
+// when debugging but not on a live site!
+// LOG_TARGET_ERRORLOG makes the error messages go to the log as specified
+// by the apache ErrorLog directive. It's probably useful to have this on
+// for all log levels.
+// You can combine them with bitwise operations,
+// e.g. LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG
+//
+// This configuration is suitable for people running Mahara for the first
+// time. You will immediately see environment errors, and so can correct
+// them. You will be able to see other debugging information in your error
+// logs. Once your site is up and running you might want to remove the
+// environment level logging completely, and just log everything else to
+// the error log.
+$cfg->log_dbg_targets     = LOG_TARGET_ERRORLOG;
+$cfg->log_info_targets    = LOG_TARGET_ERRORLOG;
+$cfg->log_warn_targets    = LOG_TARGET_ERRORLOG;
+$cfg->log_environ_targets = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
+// This configuration is suitable for developers. You will see all errors
+// and they will also be in the logs.
+//$cfg->log_dbg_targets     = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
+//$cfg->log_info_targets    = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
+//$cfg->log_warn_targets    = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
+//$cfg->log_environ_targets = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
+
+// The log levels that will generate backtraces. Useful for development,
+// but probably only warnings are useful on a live site.
+$cfg->log_backtrace_levels = LOG_LEVEL_WARN | LOG_LEVEL_ENVIRON;
+
+// Developer mode
+// When set, the following things (among others) will happen:
+//
+// * 'debug.js' will be included on each page. You can edit this file to add 
+//   debugging javascript at your discretion
+// * 'debug.css' will be included on each page. You can edit this file to add 
+//   debugging CSS at your discretion
+// * firebuglite will be included, if you are not using Firefox
+// * the unpacked version of MochiKit will be used
+//
+// These options are a performance hit otherwise, enable when you are 
+// developing for Mahara
+$cfg->developermode = false;
+
+// capture performance information and print it
+// $cfg->perftofoot = true; // needs a call to mahara_performance_info (smarty callback) - see default theme's footer.tpl
+// $cfg->perftolog = true;
+// if neither are set, performance info wont be captured.
+
+// mail handling
+// if you want mahara to use smtp servers to send mail, enter one or more here
+// blank means mahara will use the default PHP method.
+// $cfg->smtphosts = 'mail.a.com;mail.b.com';
+// If you have specified an smtp server above, and the server requires authentication, 
+// enter them here
+// $cfg->smtpuser = '';
+// $cfg->smtppass = '';
+
+// maximum allowed size of uploaded images
+// NOTE: the scalable resize might result in images with one dimesion larger than one of these sizes, but not both
+$cfg->imagemaxwidth = 1024;
+$cfg->imagemaxheight = 1024;
+
+// paths and arguments for various system commands
+$cfg->pathtounzip = '/usr/bin/unzip';
+$cfg->unzipdirarg = '-d';
+?>

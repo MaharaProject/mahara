@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups');
+define('MENUITEM', 'groups/forums');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction' ,'forum');
 require_once('group.php');
@@ -53,6 +53,8 @@ $post = get_record_sql(
     GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12',
     array(0, $postid)
 );
+
+define('GROUP', $post->group);
 
 
 if (!$post) {
@@ -135,7 +137,7 @@ function deletepost_submit(Pieform $form, $values) {
     redirect('/interaction/forum/topic.php?id=' . $values['topic'] . '#post' . $values['parent']);
 }
 
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($post->group))));
+$smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
 $smarty->assign('post', $post);

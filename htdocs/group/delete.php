@@ -30,6 +30,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require('group.php');
 $groupid = param_integer('id');
+define('GROUP', $groupid);
 
 $group = get_record_sql("SELECT g.name
     FROM {group} g

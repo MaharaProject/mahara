@@ -57,9 +57,11 @@ class PluginArtefactFile extends PluginArtefact {
 
     public static function group_tabs($groupid) {
         return array(
-            'files' => array(
+            array(
+                'path' => 'groups/files',
                 'url' => 'artefact/file/groupfiles.php?group='.$groupid,
                 'title' => get_string('Files', 'artefact.file'),
+                'weight' => 60,
             ),
         );
     }
@@ -395,25 +397,13 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     // either in adminfiles or with a specific owner.
     public static function file_exists($title, $owner, $folder, $institution=null, $group=null) {
         $filetypesql = "('" . join("','", PluginArtefactFile::get_artefact_types()) . "')";
-        $phvals = array($title);
-        if ($institution) {
-            $ownersql = 'a.institution = ? AND a.owner IS NULL';
-            $phvals[] = $institution;
-        }
-        else if ($group) {
-            $ownersql = 'a.group = ? AND a.owner IS NULL';
-            $phvals[] = $group;
-        }
-        else {
-            $ownersql = 'a.institution IS NULL AND a.owner = ?';
-            $phvals[] = $owner;
-        }
+        $ownersql = artefact_owner_sql($owner, $group, $institution);
         return get_field_sql('SELECT a.id FROM {artefact} a
             LEFT OUTER JOIN {artefact_file_files} f ON f.artefact = a.id
             WHERE a.title = ?
-            AND ' . $ownersql . '
+            AND a.' . $ownersql . '
             AND a.parent ' . (empty($folder) ? ' IS NULL' : ' = ' . $folder) . '
-            AND a.artefacttype IN ' . $filetypesql, $phvals);
+            AND a.artefacttype IN ' . $filetypesql, array($title));
     }
 
 
@@ -577,7 +567,7 @@ JAVASCRIPT;
         return $javascript;
     }
 
-    public static function count_user_files($owner=null, $institution=null, $group=null) {
+    public static function count_user_files($owner=null, $group=null, $institution=null) {
         $filetypes = PluginArtefactFile::get_artefact_types();
         foreach ($filetypes as $k => $v) {
             if ($v == 'folder') {
@@ -586,27 +576,81 @@ JAVASCRIPT;
         }
         $filetypesql = "('" . join("','", $filetypes) . "')";
 
-        $phvals = array();
-        if ($institution) {
-            $ownersql = 'institution = ? AND "group" IS NULL AND owner IS NULL';
-            $phvals[] = $institution;
-        }
-        else if ($group) {
-            $ownersql = '"group" = ? AND institution IS NULL AND owner IS NULL';
-            $phvals[] = $group;
+        $ownersql = artefact_owner_sql($owner, $group, $institution);
+        return (object) array(
+            'files'   => count_records_select('artefact', "artefacttype IN $filetypesql AND $ownersql", array()),
+            'folders' => count_records_select('artefact', "artefacttype = 'folder' AND $ownersql", array())
+        );
+    }
+
+    public static function artefactchooser_get_file_data($artefact) {
+        $artefact->icon = call_static_method(generate_artefact_class_name($artefact->artefacttype), 'get_icon', array('id' => $artefact->id));
+        if ($artefact->artefacttype == 'profileicon') {
+            $artefact->hovertitle  =  $artefact->note;
+            if ($artefact->title) {
+                $artefact->hovertitle .= ': ' . $artefact->title;
+            }
         }
         else {
-            if (!$owner) {
-                global $USER;
-                $owner = $USER->get('id');
+            $artefact->hovertitle  =  $artefact->title;
+            if ($artefact->description) {
+                $artefact->hovertitle .= ': ' . $artefact->description;
             }
-            $ownersql = 'institution IS NULL AND "group" IS NULL AND owner = ?';
-            $phvals[] = $owner;
         }
-        return (object) array(
-            'files'   => count_records_select('artefact', "artefacttype IN $filetypesql AND $ownersql", $phvals),
-            'folders' => count_records_select('artefact', "artefacttype = 'folder' AND $ownersql", $phvals)
-        );
+
+        $folderdata = self::artefactchooser_folder_data(&$artefact);
+
+        if ($artefact->artefacttype == 'profileicon') {
+            $artefact->description = str_shorten($artefact->title, 30);
+        }
+        else {
+            $path = $artefact->parent ? self::get_full_path($artefact->parent, $folderdata->data) : '';
+            $artefact->description = str_shorten($folderdata->ownername . $path . $artefact->title, 30);
+        }
+
+        return $artefact;
+    }
+
+    public static function artefactchooser_folder_data($artefact) {
+        // Grab data about all folders the artefact owner has, so we
+        // can make full paths to them, and show the artefact owner if
+        // it's a group or institution.
+        static $folderdata = array();
+
+        $ownerkey = $artefact->owner . '::' . $artefact->group . '::' . $artefact->institution;
+        if (!isset($folderdata[$ownerkey])) {
+            $ownersql = artefact_owner_sql($artefact->owner, $artefact->group, $artefact->institution);
+            $folderdata[$ownerkey]->data = get_records_select_assoc('artefact', "artefacttype='folder' AND $ownersql", array(), '', 'id, title, parent');
+            if ($artefact->group) {
+                $folderdata[$ownerkey]->ownername = get_field('group', 'name', 'id', $artefact->group) . ':';
+            }
+            else if ($artefact->institution) {
+                if ($artefact->institution == 'mahara') {
+                    $folderdata[$ownerkey]->ownername = get_string('Site') . ':';
+                }
+                else {
+                    $folderdata[$ownerkey]->ownername = get_field('institution', 'displayname', 'name', $artefact->institution) . ':';
+                }
+            }
+            else {
+                $folderdata[$ownerkey]->ownername = '';
+            }
+        }
+
+        return $folderdata[$ownerkey];
+    }
+
+    /**
+     * Works out a full path to a folder, given an ID. Implemented this way so 
+     * only one query is made.
+     */
+    public static function get_full_path($id, $folderdata) {
+        $path = '';
+        while (!empty($id)) {
+            $path = $folderdata[$id]->title . '/' . $path;
+            $id = $folderdata[$id]->parent;
+        }
+        return $path;
     }
 
 }
@@ -902,6 +946,25 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     public static function get_quota_usage($artefact) {
         return get_field('artefact_file_files', 'size', 'artefact', $artefact);
     }
+
+    public function copy_extra($new) {
+        $oldid = $this->get('id');
+        $dataroot = get_config('dataroot');
+        $oldfile = $dataroot . self::get_file_directory($oldid) . '/' . $oldid;
+        $newid = $new->get('id');
+        $newdir = $dataroot . self::get_file_directory($newid);
+        check_dir_exists($newdir);
+        if (!copy($oldfile, $newdir . '/' . $newid)) {
+            throw new SystemException('failed copying file artefact');
+        }
+        global $USER;
+        if ($new->get('owner') && $new->get('owner') == $USER->get('id')) {
+            $USER->quota_add($new->get('size'));
+            $USER->commit();
+        }
+        return;
+    }
+
 }
 
 class ArtefactTypeFolder extends ArtefactTypeFileBase {
@@ -1017,33 +1080,28 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         }
     }
 
-    public static function get_folder_by_name($name, $parentfolderid=null, $userid=null) {
-        if (empty($userid)) {
-            global $USER;
-            $userid = $USER->id;
-        }
+    public static function get_folder_by_name($name, $parentfolderid=null, $userid=null, $groupid=null, $institution=null) {
         $parentclause = $parentfolderid ? 'parent = ' . $parentfolderid : 'parent IS NULL';
+        $ownerclause = artefact_owner_sql($userid, $groupid, $institution);
         return get_record_sql('SELECT * FROM {artefact}
-           WHERE title = ? AND ' . $parentclause . ' AND owner = ' . $userid . "
+           WHERE title = ? AND ' . $parentclause . ' AND ' . $ownerclause . "
            AND artefacttype = 'folder'", array($name));
     }
 
     // Get the id of a folder, creating the folder if necessary
-    public static function get_folder_id($name, $description, $parentfolderid=null, $userid=null, $create=true) {
-        if (empty($userid)) {
-            global $USER;
-            $userid = $USER->id;
-        }
-        if (!$record = self::get_folder_by_name($name, $parentfolderid, $userid)) {
+    public static function get_folder_id($name, $description, $parentfolderid=null, $create=true, $userid=null, $groupid=null, $institution=null) {
+        if (!$record = self::get_folder_by_name($name, $parentfolderid, $userid, $groupid, $institution)) {
             if (!$create) {
                 return false;
             }
             $data = new StdClass;
             $data->title = $name;
             $data->description = $description;
+            $data->owner = $userid;
+            $data->group = $groupid;
+            $data->institution = $institution;
+            $data->parent = $parentfolderid;
             $f = new ArtefactTypeFolder(0, $data);
-            $f->set('owner', $userid);
-            $f->set('parent', $parentfolderid);
             $f->commit();
             return $f->get('id');
         }

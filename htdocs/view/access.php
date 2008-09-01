@@ -25,7 +25,6 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myportfolio/views');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'editaccess');
@@ -33,11 +32,13 @@ define('SECTION_PAGE', 'editaccess');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
-require_once(get_config('docroot') . 'lib/view.php');
-require_once(get_config('docroot') . 'lib/group.php');
+require_once(get_config('libroot') . 'view.php');
+require_once(get_config('libroot') . 'group.php');
 
 $view = new View(param_integer('id'));
 $group = $view->get('group');
+$institution = $view->get('institution');
+View::set_nav($group, $institution);
 $new = param_boolean('new');
 
 if ($new) {
@@ -47,7 +48,7 @@ else {
     define('TITLE', get_string('editaccessforview', 'view', $view->get('title')));
 }
 
-if ($group && !group_user_can_edit_views($group)) {
+if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
 }
 
@@ -84,48 +85,93 @@ $form = array(
             'type' => 'hidden',
             'value' => $new,
         ),
-        'accesslist' => array(
-            'type'         => 'viewacl',
-            'defaultvalue' => isset($view) ? $view->get_access() : null
-        ),
-        'overrides' => array(
-            'type' => 'fieldset',
-            'legend' => get_string('overridingstartstopdate', 'view'),
-            'elements' => array(
-                'description' => array(
-                    'type' => 'html',
-                    'value' => get_string('overridingstartstopdatesdescription', 'view'),
-                ),
-                'startdate'        => array(
-                    'type'         => 'calendar',
-                    'title'        => get_string('startdate','view'),
-                    'defaultvalue' => isset($view) ? strtotime($view->get('startdate')) : null,
-                    'caloptions'   => array(
-                        'showsTime'      => true,
-                        'ifFormat'       => '%Y/%m/%d %H:%M'
-                    ),
-                    'help'         => true,
-                ),
-                'stopdate'  => array(
-                    'type'         => 'calendar',
-                    'title'        => get_string('stopdate','view'),
-                    'defaultvalue' => isset($view) ? strtotime($view->get('stopdate')) : null,
-                    'caloptions'   => array(
-                        'showsTime'      => true,
-                        'ifFormat'       => '%Y/%m/%d %H:%M'
-                    ),
-                    'help'         => true,
-                ),
-            ),
-        ),
-        'submit'   => array(
-            'type'  => !empty($new) ? 'cancelbackcreate' : 'submitcancel',
-            'value' => !empty($new) 
-                ? array(get_string('cancel'), get_string('back','view'), get_string('save'))
-                : array(get_string('save'), get_string('cancel')),
-            'confirm' => !empty($new) ? array(get_string('confirmcancelcreatingview', 'view'), null, null) : null,
+        'template' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('allowcopying', 'view'),
+            'description'  => get_string('templatedescription', 'view'),
+            'defaultvalue' => $view->get('template'),
         ),
     )
+);
+
+if ($institution) {
+    if ($institution == 'mahara') {
+        $form['elements']['copynewuser'] = array(
+            'type'         => 'checkbox',
+            'title'        => get_string('copyfornewusers', 'view'),
+            'description'  => get_string('copyfornewusersdescription', 'view'),
+            'defaultvalue' => $view->get('copynewuser'),
+        );
+        $form['elements']['copyfornewgroups'] = array(
+            'type'         => 'html',
+            'value'        => '<label>' . get_string('copyfornewgroups', 'view') . '</label>',
+        );
+        $form['elements']['copyfornewgroupsdescription'] = array(
+            'type'         => 'html',
+            'value'        => '<div class="description">' . get_string('copyfornewgroupsdescription', 'view') . '</div>',
+        );
+        $createfor = $view->get_autocreate_grouptypes();
+        foreach (group_get_grouptypes() as $grouptype) {
+            safe_require('grouptype', $grouptype);
+            $form['elements']['copyfornewgroups_'.$grouptype] = array(
+                'type'         => 'checkbox',
+                'title'        => get_string('name', 'grouptype.' . $grouptype),
+                'defaultvalue' => in_array($grouptype, $createfor),
+            );
+        }
+    }
+    else {
+        $form['elements']['copynewuser'] = array(
+            'type'         => 'checkbox',
+            'title'        => get_string('copyfornewmembers', 'view'),
+            'description'  => get_string('copyfornewmembersdescription', 'view', get_field('institution', 'displayname', 'name', $institution)),
+            'defaultvalue' => $view->get('copynewuser'),
+        );
+    }
+}
+
+$form['elements']['accesslist'] = array(
+    'type'         => 'viewacl',
+    'defaultvalue' => isset($view) ? $view->get_access() : null
+);
+
+$form['elements']['overrides'] = array(
+    'type' => 'fieldset',
+    'legend' => get_string('overridingstartstopdate', 'view'),
+    'elements' => array(
+        'description' => array(
+            'type' => 'html',
+            'value' => get_string('overridingstartstopdatesdescription', 'view'),
+        ),
+        'startdate'        => array(
+            'type'         => 'calendar',
+            'title'        => get_string('startdate','view'),
+            'defaultvalue' => isset($view) ? strtotime($view->get('startdate')) : null,
+            'caloptions'   => array(
+                'showsTime'      => true,
+                'ifFormat'       => '%Y/%m/%d %H:%M'
+            ),
+            'help'         => true,
+        ),
+        'stopdate'  => array(
+            'type'         => 'calendar',
+            'title'        => get_string('stopdate','view'),
+            'defaultvalue' => isset($view) ? strtotime($view->get('stopdate')) : null,
+            'caloptions'   => array(
+                'showsTime'      => true,
+                'ifFormat'       => '%Y/%m/%d %H:%M'
+            ),
+            'help'         => true,
+        ),
+    ),
+);
+
+$form['elements']['submit'] = array(
+    'type'  => !empty($new) ? 'cancelbackcreate' : 'submitcancel',
+    'value' => !empty($new) 
+        ? array(get_string('cancel'), get_string('back','view'), get_string('save'))
+        : array(get_string('save'), get_string('cancel')),
+    'confirm' => !empty($new) ? array(get_string('confirmcancelcreatingview', 'view'), null, null) : null,
 );
 
 function editaccess_validate(Pieform $form, $values) {
@@ -135,33 +181,43 @@ function editaccess_validate(Pieform $form, $values) {
 }
 
 function editaccess_cancel_submit() {
-	global $view, $new, $group;
-	if ($new) {
-	    $view->delete();
-	}
-        if ($group) {
-            redirect('/view/groupviews.php?group='.$group);
-        }
+    global $view, $new, $group, $institution;
+    if ($new) {
+        $view->delete();
+    }
+    if ($group) {
+        redirect('/view/groupviews.php?group='.$group);
+    }
+    if ($institution) {
+        redirect('/view/institutionviews.php?institution='.$institution);
+    }
     redirect('/view');
 }
 
 
 function editaccess_submit(Pieform $form, $values) {
-    global $SESSION, $view, $new, $group; 
+    global $SESSION, $view, $new, $group, $institution;
 
     if (param_boolean('back')) {
         redirect('/view/blocks.php?id=' . $view->get('id') . '&new=' . $new);
-    }
-
-    if ($group && !group_user_access($group)) {
-        $SESSION->add_error_msg(get_string('notamember', 'group'));
-        redirect('/view/groupviews.php?group='.$group);
     }
 
     $view->set_access($values['accesslist']);
 
     $view->set('startdate', $values['startdate']);
     $view->set('stopdate', $values['stopdate']);
+    $view->set('template', (int) $values['template']);
+    $view->set('copynewuser', (int) $values['copynewuser']);
+    if ($institution == 'mahara') {
+        $createfor = array();
+        foreach (group_get_grouptypes() as $grouptype) {
+            if ($values['copyfornewgroups_'.$grouptype]) {
+                $createfor[] = $grouptype;
+            }
+        }
+        $view->set('copynewgroups', $createfor);
+    }
+
     $view->commit();
 
     if ($values['new']) {
@@ -173,6 +229,9 @@ function editaccess_submit(Pieform $form, $values) {
     $SESSION->add_ok_msg($str);
     if ($group) {
         redirect('/view/groupviews.php?group='.$group);
+    }
+    if ($institution) {
+        redirect('/view/institutionviews.php?institution='.$institution);
     }
     redirect('/view/');
 

@@ -214,26 +214,8 @@ class AuthXmlrpc extends Auth {
 
             db_begin();
             $user->username           = get_new_username($remoteuser->username);
-            $user->commit();
 
-            // Make sure that there's no remote user record for this user. This 
-            // can happen when a user has SSOed in, and then been deleted from 
-            // Mahara.
-            //
-            // This makes undeleting the old user record "interesting", because 
-            // now we don't have the remoteuser record for them...
-            delete_records('auth_remote_user', 'authinstance', $user->authinstance, 'remoteusername', $remoteuser->username);
-            insert_record('auth_remote_user', (object) array(
-                'authinstance'   => $user->authinstance,
-                'remoteusername' => $remoteuser->username,
-                'localusr'       => $user->id,
-            ));
-
-            $user->join_institution($peer->institution);
-
-            set_profile_field($user->id, 'firstname', $user->firstname);
-            set_profile_field($user->id, 'lastname', $user->lastname);
-            set_profile_field($user->id, 'email', $user->email);
+            $user->id = create_user($user, array(), $peer->institution, $this, $remoteuser->username);
 
             $this->import_user_settings($user, $remoteuser);
 
@@ -245,7 +227,6 @@ class AuthXmlrpc extends Auth {
              */
             $userobj = $user->to_stdclass();
             $userarray = (array)$userobj;
-            handle_event('createuser', $userarray);
             db_commit();
 
             // Now we have fired the create event, we need to re-get the data 

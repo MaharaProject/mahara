@@ -80,6 +80,7 @@ if (isset($key)) {
 
     function create_registered_user($profilefields=array()) {
         global $registration, $SESSION, $USER;
+        require_once(get_config('libroot') . 'user.php');
 
         db_begin();
 
@@ -108,16 +109,11 @@ if (isset($key)) {
         $user->firstname        = $registration->firstname;
         $user->lastname         = $registration->lastname;
         $user->email            = $registration->email;
-        $user->commit();
+
+        create_user($user, $profilefields);
 
         $user->add_institution_request($registration->institution);
 
-        $registration->id = $user->id;
-
-        // Insert standard stuff as artefacts
-        set_profile_field($user->id, 'email', $registration->email);
-        set_profile_field($user->id, 'firstname', $registration->firstname);
-        set_profile_field($user->id, 'lastname', $registration->lastname);
         if (!empty($registration->lang) && $registration->lang != 'default') {
             set_account_preference($user->id, 'lang', $registration->lang);
         }
@@ -125,17 +121,7 @@ if (isset($key)) {
         // Delete the old registration record
         delete_records('usr_registration', 'id', $registrationid);
 
-        // Set mandatory profile fields 
-        foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
-            // @todo here and above, use the method for getting "always mandatory" fields
-            if (in_array($field, array('firstname', 'lastname', 'email'))) {
-                continue;
-            }
-            set_profile_field($user->id, $field, $profilefields[$field]);
-        }
-
         db_commit();
-        handle_event('createuser', $registration);
 
         // Log the user in and send them to the homepage
         $USER = new LiveUser();

@@ -257,6 +257,33 @@ function group_create($data) {
         );
     }
 
+    // Copy views for the new group
+    $templates = get_column('view_autocreate_grouptype', 'view', 'grouptype', $data['grouptype']);
+    if ($templates) {
+        require_once(get_config('libroot') . 'view.php');
+        foreach ($templates as $tid) {
+            $template = new View($tid);
+            $data = (object) array(
+                'template'    => 0,
+                'numcolumns'  => 3,
+                'group'       => $id,
+                'title'       => $template->get('title'),
+                'description' => $template->get('description'),
+            );
+            $v = new View(0, $data);
+            $v->commit();
+            $v->copy_contents($template);
+            $v->set_access(array(array(
+                'type'      => 'group',
+                'id'        => $id,
+                'startdate' => null,
+                'stopdate'  => null,
+                'role'      => null
+            )));
+            $v->commit();
+        }
+    }
+
     db_commit();
 }
 
@@ -355,7 +382,7 @@ function group_remove_user($groupid, $userid=null) {
         throw new AccessDeniedException(get_string('usercantleavegroup', 'group'));
     }
     db_begin();
-    delete_records('group_member', 'group', $group, 'member', $userid);
+    delete_records('group_member', 'group', $groupid, 'member', $userid);
     delete_records_sql(
         'DELETE FROM {view_access_group}
         WHERE "group" = ?
@@ -364,12 +391,12 @@ function group_remove_user($groupid, $userid=null) {
             FROM {view} v
             WHERE v.owner = ?
         )',
-        array($group, $userid)
+        array($groupid, $userid)
     );
     db_commit();
 
     require_once(get_config('docroot') . 'interaction/lib.php');
-    $interactions = get_column('interaction_instance', 'id', 'group', $group);
+    $interactions = get_column('interaction_instance', 'id', 'group', $groupid);
     foreach ($interactions as $interaction) {
         interaction_instance_from_id($interaction)->interaction_remove_user($userid);
     }
@@ -618,6 +645,7 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
 
 
 function group_get_membersearch_data($group, $query, $offset, $limit, $membershiptype) {
+    global $USER;
     $results = get_group_user_search_results($group, $query, $offset, $limit, $membershiptype);
 
     $params = array();
@@ -632,8 +660,10 @@ function group_get_membersearch_data($group, $query, $offset, $limit, $membershi
 
     $smarty = smarty_core();
 
+    $role = group_user_access($group);
+    $userid = $USER->get('id');
     foreach ($results['data'] as &$r) {
-        if (group_user_can_leave($group, $r['id'])) {
+        if ($role == 'admin' && ($r['id'] != $userid || group_user_can_leave($group, $r['id']))) {
             $r['removeform'] = group_get_removeuser_form($r['id'], $group);
         }
         // NOTE: this is a quick approximation. We should really check whether, 
@@ -739,19 +769,40 @@ function group_get_grouptype_options() {
  * @param object $group Database record of group to get tabs for
  * @return array
  */
-function group_get_menu_tabs($group) {
+function group_get_menu_tabs() {
+    static $menu;
+
+    $group = group_current_group();
     $menu = array(
-        'info' => array(
+        array(
+            'path' => 'groups',
+            'url' => 'group/mygroups.php',
+            'title' => get_string('groups'),
+            'weight' => 40
+        ),
+        array(
+            'path' => 'groups/info',
             'url' => 'group/view.php?id='.$group->id,
             'title' => get_string('About', 'group'),
+            'weight' => 20
         ),
-        'members' => array(
+        array(
+            'path' => 'groups/members',
             'url' => 'group/members.php?id='.$group->id,
             'title' => get_string('Members', 'group'),
+            'weight' => 30
         ),
-        'views' => array(
+        array(  // @todo: get this from a function in the interaction plugin (or better, make forums an artefact plugin)
+            'path' => 'groups/forums',
+            'url' => 'interaction/forum/index.php?group='.$group->id,
+            'title' => get_string('nameplural', 'interaction.forum'),
+            'weight' => 40
+        ),
+        array(
+            'path' => 'groups/views',
             'url' => 'view/groupviews.php?group='.$group->id,
             'title' => get_string('Views', 'group'),
+            'weight' => 50
         ),
     );
     if (!group_user_access($group->id)) {
@@ -769,6 +820,7 @@ function group_get_menu_tabs($group) {
             $menu = array_merge($menu, $plugin_menu);
         }
     }
+
     return $menu;
 }
 
@@ -811,5 +863,51 @@ function group_param_userid($userid) {
 
     return $userid;
 }
+
+
+function group_current_group() {
+    static $group;
+
+    if (defined('GROUP')) {
+        $group = get_record_select('group', 'id = ? AND deleted = 0', array(GROUP), '*, ' . db_format_tsfield('ctime'));
+        if (!$group) {
+            throw new GroupNotFoundException(get_string('groupnotfound', 'group', GROUP));
+        }
+    }
+    else {
+        $group = null;
+    }
+
+    return $group;
+}
+
+
+/**
+ * creates the group sideblock
+ */
+function group_sideblock() {
+    require_once('group.php');
+    $data['group'] = group_current_group();
+    $data['menu'] = group_get_menu_tabs();
+    // @todo either: remove this if interactions become group
+    // artefacts, or: do this in interaction/lib.php if we leave them
+    // as interactions
+    $data['forums'] = get_records_select_array(
+        'interaction_instance',
+        '"group" = ? AND deleted = ? AND plugin = ?',
+        array(GROUP, 0, 'forum'),
+        'ctime',
+        'id, plugin, title'
+    );
+    if (!$data['forums']) {
+        $data['forums'] = array();
+    }
+    else {
+        safe_require('interaction', 'forum');
+        $data['forums'] = PluginInteractionForum::sideblock_sort($data['forums']);
+    }
+    return $data;
+}
+
 
 ?>

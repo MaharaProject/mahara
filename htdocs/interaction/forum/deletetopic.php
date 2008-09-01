@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups');
+define('MENUITEM', 'groups/forums');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction' ,'forum');
 require('group.php');
@@ -58,6 +58,8 @@ $topic = get_record_sql(
 if (!$topic) {
     throw new NotFoundException(get_string('cantfindtopic', 'interaction.forum', $topicid));
 }
+
+define('GROUP', $topic->group);
 
 $membership = user_can_access_forum((int)$topic->forumid);
 
@@ -126,7 +128,7 @@ function deletetopic_submit(Pieform $form, $values) {
     redirect('/interaction/forum/view.php?id=' . $values['forum']);
 }
 
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($topic->group))));
+$smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('forum', $topic->title);
 $smarty->assign('heading', TITLE);

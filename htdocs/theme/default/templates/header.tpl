@@ -82,10 +82,11 @@
 		</ul>
 		</div>
 	</div>
-	<div id="subnav">
+	<div id="subnav"{if $GROUP} class="group"{/if}>
 {if $MAINNAVSELECTED.submenu}
 	<ul>
-{foreach from=$MAINNAVSELECTED.submenu item=item}<li{if $item.selected} class="selected"{/if}><a href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a>{/foreach}
+{if $GROUP}<li class="groupname">{str tag="Group" section="group"}: </li>{/if}
+{foreach from=$MAINNAVSELECTED.submenu item=item}<li{if $item.selected} class="selected"{/if}><a href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>{/foreach}
 	</ul>
 {/if}
 {/if}

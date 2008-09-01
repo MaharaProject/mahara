@@ -25,7 +25,6 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'viewlayout');
 require_once(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('view.php');
@@ -38,13 +37,11 @@ $category = param_alpha('c', '');
 $view = new View($id);
 $numcolumns = $view->get('numcolumns');
 $group = $view->get('group');
-$owner = $view->get('owner');
+$institution = $view->get('institution');
+View::set_nav($group, $institution);
 
-if ($group && !group_user_can_edit_views($group)) {
-    throw new AccessDeniedException(get_string('canteditdontown', 'view'));
-}
-else if ($owner && $owner != $USER->get('id')) {
-    throw new AccessDeniedException(get_string('canteditdontown', 'view'));
+if (!$USER->can_edit_view($view)) {
+    throw new AccessDeniedException();
 }
 
 if ($USER->get_account_preference('addremovecolumns')) {

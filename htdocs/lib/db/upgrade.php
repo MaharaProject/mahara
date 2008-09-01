@@ -1222,7 +1222,21 @@ function xmldb_core_upgrade($oldversion=0) {
 
     }
 
-    if ($oldversion < 2008081300) {
+    if ($oldversion < 2008081101) {
+        execute_sql("ALTER TABLE {view} ADD COLUMN institution CHARACTER VARYING(255);");
+        execute_sql("ALTER TABLE {view} ADD CONSTRAINT {view_ins_fk} FOREIGN KEY (institution) REFERENCES {institution}(name);");
+        execute_sql("ALTER TABLE {view} ADD COLUMN template SMALLINT NOT NULL DEFAULT 0;");
+    }
+
+    if ($oldversion < 2008081102) {
+        execute_sql("ALTER TABLE {view} ADD COLUMN copynewuser SMALLINT NOT NULL DEFAULT 0;");
+        execute_sql('CREATE TABLE {view_autocreate_grouptype} (
+            view INTEGER NOT NULL REFERENCES {view}(id),
+            grouptype VARCHAR(20) NOT NULL REFERENCES {grouptype}(name)
+        );');
+    }
+
+    if ($oldversion < 2008090100) {
         $table = new XMLDBTable('import_queue');
         $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
         $table->addFieldInfo('host', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);

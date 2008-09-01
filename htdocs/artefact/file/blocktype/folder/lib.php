@@ -103,45 +103,21 @@ class PluginBlocktypeFolder extends PluginBlocktype {
     /**
      * Optional method. If specified, allows the blocktype class to munge the 
      * artefactchooser element data before it's templated
-     *
-     * Note: this method is the same as the one for the 'filedownload' blocktype
      */
     public static function artefactchooser_get_element_data($artefact) {
-        global $USER;
-
-        // Grab data about all folders this user has, so we can make full paths to them
-        static $folderdata = null;
-        if ($folderdata === null) {
-            $folderdata = get_records_select_assoc('artefact', "artefacttype='folder' AND owner = ?", array($USER->get('id')), '', 'id, title, parent');
-        }
+        $folderdata = ArtefactTypeFileBase::artefactchooser_folder_data(&$artefact);
 
         $artefact->icon = call_static_method(generate_artefact_class_name($artefact->artefacttype), 'get_icon', array('id' => $artefact->id));
         $artefact->hovertitle = $artefact->description;
-        $artefact->description = self::get_full_folder_path($artefact->id, $folderdata);
+
+        $path = $artefact->parent ? ArtefactTypeFileBase::get_full_path($artefact->parent, $folderdata->data) : '';
+        $artefact->description = str_shorten($folderdata->ownername . $path . $artefact->title, 30);
 
         return $artefact;
     }
 
     public static function artefactchooser_get_sort_order() {
         return 'parent, title';
-    }
-
-    /**
-     * Works out a full path to a folder, given an ID. Implemented this way so 
-     * only one query is made.
-     */
-    private static function get_full_folder_path($id, $folderdata) {
-        $path = '';
-        foreach ($folderdata as $folder) {
-            if ($folder->id == $id) {
-                $path = $folder->title;
-                while ($folder->parent !== null) {
-                    $folder = $folderdata[$folder->parent];
-                    $path = $folder->title . '/' . $path;
-                }
-            }
-        }
-        return $path;
     }
 
 }

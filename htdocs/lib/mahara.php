@@ -48,9 +48,6 @@ function ensure_sanity() {
             throw new ConfigSanityException(get_string('pgsqldbextensionnotloaded', 'error'));
         }
         break;
-    case 'mysql': // NOTE: mysql to be phased out. This should be log_environ() in 1.0 and removed in 1.1
-        log_environ(get_string('mysqldbtypedeprecated', 'error'));
-        // intentionally no break here
     case 'mysql5':
         if (!extension_loaded('mysql')) {
             throw new ConfigSanityException(get_string('mysqldbextensionnotloaded', 'error'));
@@ -546,6 +543,15 @@ function load_config() {
         }
         $CFG->{$cfg->field} = $cfg->value;
     }
+
+    return true;
+}
+
+function load_default_config() {
+    global $CFG;
+
+    require_once(get_config('docroot') . 'config-defaults.php');
+    $CFG = (object)array_merge((array)$cfg, (array)$CFG);
 
     return true;
 }
@@ -1700,10 +1706,12 @@ function profile_sideblock() {
 
     if ($SESSION->get('mnetuser')) {
         $authinstance = $SESSION->get('authinstance');
-        $authobj = AuthFactory::create($authinstance);
-        $peer = get_peer($authobj->wwwroot);
-        $data['mnetloggedinfrom'] = get_string('youhaveloggedinfrom', 'auth.xmlrpc',
-            $authobj->wwwroot, $peer->name);
+        if ($authinstance) {
+            $authobj = AuthFactory::create($authinstance);
+            $peer = get_peer($authobj->wwwroot);
+            $data['mnetloggedinfrom'] = get_string('youhaveloggedinfrom', 'auth.xmlrpc',
+                $authobj->wwwroot, $peer->name);
+        }
     }
     $data['unreadnotifications'] = call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'));
     $data['unreadnotificationsmessage'] = $data['unreadnotifications'] == 1 ? get_string('unreadmessage') : get_string('unreadmessages');
