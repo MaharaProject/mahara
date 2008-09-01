@@ -601,11 +601,11 @@ JAVASCRIPT;
         $folderdata = self::artefactchooser_folder_data(&$artefact);
 
         if ($artefact->artefacttype == 'profileicon') {
-            $artefact->description = $artefact->title;
+            $artefact->description = str_shorten($artefact->title, 30);
         }
         else {
             $path = $artefact->parent ? self::get_full_path($artefact->parent, $folderdata->data) : '';
-            $artefact->description = $folderdata->ownername . $path . $artefact->title;
+            $artefact->description = str_shorten($folderdata->ownername . $path . $artefact->title, 30);
         }
 
         return $artefact;

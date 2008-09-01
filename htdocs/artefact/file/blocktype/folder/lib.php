@@ -109,7 +109,9 @@ class PluginBlocktypeFolder extends PluginBlocktype {
 
         $artefact->icon = call_static_method(generate_artefact_class_name($artefact->artefacttype), 'get_icon', array('id' => $artefact->id));
         $artefact->hovertitle = $artefact->description;
-        $artefact->description = $folderdata->ownername . ArtefactTypeFileBase::get_full_path($artefact->id, $folderdata->data);
+
+        $path = $artefact->parent ? ArtefactTypeFileBase::get_full_path($artefact->parent, $folderdata->data) : '';
+        $artefact->description = str_shorten($folderdata->ownername . $path . $artefact->title, 30);
 
         return $artefact;
     }
