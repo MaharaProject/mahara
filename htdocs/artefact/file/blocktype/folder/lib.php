@@ -105,7 +105,7 @@ class PluginBlocktypeFolder extends PluginBlocktype {
      * artefactchooser element data before it's templated
      */
     public static function artefactchooser_get_element_data($artefact) {
-        $folderdata = ArtefactTypeFileBase::artefactchooser_folder_data(&$artefact);
+        $folderdata = ArtefactTypeFileBase::artefactchooser_folder_data($artefact);
 
         $artefact->icon = call_static_method(generate_artefact_class_name($artefact->artefacttype), 'get_icon', array('id' => $artefact->id));
         $artefact->hovertitle = $artefact->description;

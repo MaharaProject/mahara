@@ -126,7 +126,7 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
      * artefactchooser element data before it's templated
      */
     public static function artefactchooser_get_element_data($artefact) {
-        return ArtefactTypeFileBase::artefactchooser_get_file_data(&$artefact);
+        return ArtefactTypeFileBase::artefactchooser_get_file_data($artefact);
     }
 }
 

@@ -598,7 +598,7 @@ JAVASCRIPT;
             }
         }
 
-        $folderdata = self::artefactchooser_folder_data(&$artefact);
+        $folderdata = self::artefactchooser_folder_data($artefact);
 
         if ($artefact->artefacttype == 'profileicon') {
             $artefact->description = str_shorten($artefact->title, 30);
@@ -611,7 +611,7 @@ JAVASCRIPT;
         return $artefact;
     }
 
-    public static function artefactchooser_folder_data($artefact) {
+    public static function artefactchooser_folder_data(&$artefact) {
         // Grab data about all folders the artefact owner has, so we
         // can make full paths to them, and show the artefact owner if
         // it's a group or institution.
@@ -644,7 +644,7 @@ JAVASCRIPT;
      * Works out a full path to a folder, given an ID. Implemented this way so 
      * only one query is made.
      */
-    public static function get_full_path($id, $folderdata) {
+    public static function get_full_path($id, &$folderdata) {
         $path = '';
         while (!empty($id)) {
             $path = $folderdata[$id]->title . '/' . $path;
