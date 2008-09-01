@@ -124,27 +124,9 @@ class PluginBlocktypeImage extends PluginBlocktype {
     /**
      * Optional method. If specified, allows the blocktype class to munge the 
      * artefactchooser element data before it's templated
-     *
-     * Note: this method is the same as the one for the 'filedownload' blocktype
      */
     public static function artefactchooser_get_element_data($artefact) {
-        $artefact->icon = call_static_method(generate_artefact_class_name($artefact->artefacttype), 'get_icon', array('id' => $artefact->id));
-        if ($artefact->artefacttype == 'profileicon') {
-            $artefact->hovertitle  =  $artefact->note;
-            if ($artefact->title) {
-                $artefact->hovertitle .= ': ' . $artefact->title;
-            }
-        }
-        else {
-            $artefact->hovertitle  =  $artefact->title;
-            if ($artefact->description) {
-                $artefact->hovertitle .= ': ' . $artefact->description;
-            }
-        }
-        $artefact->title       = str_shorten($artefact->title, 20);
-        $artefact->description = ($artefact->artefacttype == 'profileicon') ? $artefact->title : $artefact->description;
-
-        return $artefact;
+        return ArtefactTypeFileBase::artefactchooser_get_file_data(&$artefact);
     }
 
 }

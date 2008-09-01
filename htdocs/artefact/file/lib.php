@@ -583,6 +583,76 @@ JAVASCRIPT;
         );
     }
 
+    public static function artefactchooser_get_file_data($artefact) {
+        $artefact->icon = call_static_method(generate_artefact_class_name($artefact->artefacttype), 'get_icon', array('id' => $artefact->id));
+        if ($artefact->artefacttype == 'profileicon') {
+            $artefact->hovertitle  =  $artefact->note;
+            if ($artefact->title) {
+                $artefact->hovertitle .= ': ' . $artefact->title;
+            }
+        }
+        else {
+            $artefact->hovertitle  =  $artefact->title;
+            if ($artefact->description) {
+                $artefact->hovertitle .= ': ' . $artefact->description;
+            }
+        }
+
+        $folderdata = self::artefactchooser_folder_data(&$artefact);
+
+        if ($artefact->artefacttype == 'profileicon') {
+            $artefact->description = $artefact->title;
+        }
+        else {
+            $path = $artefact->parent ? self::get_full_path($artefact->parent, $folderdata->data) : '';
+            $artefact->description = $folderdata->ownername . $path . $artefact->title;
+        }
+
+        return $artefact;
+    }
+
+    public static function artefactchooser_folder_data($artefact) {
+        // Grab data about all folders the artefact owner has, so we
+        // can make full paths to them, and show the artefact owner if
+        // it's a group or institution.
+        static $folderdata = array();
+
+        $ownerkey = $artefact->owner . '::' . $artefact->group . '::' . $artefact->institution;
+        if (!isset($folderdata[$ownerkey])) {
+            $ownersql = artefact_owner_sql($artefact->owner, $artefact->group, $artefact->institution);
+            $folderdata[$ownerkey]->data = get_records_select_assoc('artefact', "artefacttype='folder' AND $ownersql", array(), '', 'id, title, parent');
+            if ($artefact->group) {
+                $folderdata[$ownerkey]->ownername = get_field('group', 'name', 'id', $artefact->group) . ':';
+            }
+            else if ($artefact->institution) {
+                if ($artefact->institution == 'mahara') {
+                    $folderdata[$ownerkey]->ownername = get_string('Site') . ':';
+                }
+                else {
+                    $folderdata[$ownerkey]->ownername = get_field('institution', 'displayname', 'name', $artefact->institution) . ':';
+                }
+            }
+            else {
+                $folderdata[$ownerkey]->ownername = '';
+            }
+        }
+
+        return $folderdata[$ownerkey];
+    }
+
+    /**
+     * Works out a full path to a folder, given an ID. Implemented this way so 
+     * only one query is made.
+     */
+    public static function get_full_path($id, $folderdata) {
+        $path = '';
+        while (!empty($id)) {
+            $path = $folderdata[$id]->title . '/' . $path;
+            $id = $folderdata[$id]->parent;
+        }
+        return $path;
+    }
+
 }
 
 class ArtefactTypeFile extends ArtefactTypeFileBase {
