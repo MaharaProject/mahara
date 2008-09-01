@@ -180,7 +180,7 @@ abstract class Importer {
 
     public function import_immediately_allowed() {
     // @todo change this (check whatever)
-        return false;
+        return true;
     }
 
 }
@@ -209,12 +209,14 @@ class FilesImporter extends Importer {
     private $manifest;
     private $files;
     private $unzipdir;
+    private $zipfilesha1;
 
     public function __construct($id, $record=null) {
         parent::__construct($id, $record);
         $data = $this->get('data');
         self::validate_import_data($data);
         $this->manifest = $data['filesmanifest'];
+        $this->zipfilesha1 = $data['zipfilesha1'];
     }
 
     public static function validate_import_data($importdata) {
@@ -224,6 +226,9 @@ class FilesImporter extends Importer {
             !is_array($importdata['filesmanifest']) ||
             count($importdata['filesmanifest']) == 0) {
             throw new ImportException('Missing files manifest in import data');
+        }
+        if (!array_key_exists('zipfilesha1', $importdata)) {
+            throw new ImportException('Missing zipfile sha1 in import data');
         }
         return true;
     }
@@ -239,6 +244,10 @@ class FilesImporter extends Importer {
         // this contains relativepath and zipfile name
         $this->relativepath = $filesinfo['relativepath'];
         $this->zipfile = $filesinfo['zipfile'];
+
+        if (sha1_file(get_config('dataroot') . '/' . $this->relativepath . '/' . $this->zipfile) != $this->zipfilesha1) {
+            throw new ImportException('sha1 of recieved zipfile didn\'t match expected sha1');
+        }
 
         $this->unzipdir = get_config('dataroot') .  '/' . $this->relativepath . 'extract/';
         if (!check_dir_exists($this->unzipdir)) {
@@ -297,7 +306,7 @@ class FilesImporter extends Importer {
         // we're just adding them as files into an 'incoming' directory in the user's file area.
         safe_require('artefact', 'file');
         try {
-            $dir = ArtefactTypeFolder::get_folder_id('incoming', get_string('incomingfolderdesc'), null, $this->get('usr'));
+            $dir = ArtefactTypeFolder::get_folder_id('incoming', get_string('incomingfolderdesc'), null, true, $this->get('usr'));
         } catch (Exception $e) {
             throw new ImportException($e->getMessage());
         }
