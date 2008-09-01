@@ -1935,7 +1935,11 @@ span.viewicon {
 #group-info {
     list-style-type: none;
 }
+#group-info li {
+    margin-left: 0;
+}
 #group-controls li {
+    margin-left: 0;
     float: left;
 }
 #membersearchresults {
@@ -1973,7 +1977,7 @@ span.viewicon {
     height: auto;
 }
 .group-info-para {
-    margin: 15px 0 0 10px;
+    margin: 15px 0;
 }
 
 /* GROUPS > GROUP VIEWS */
