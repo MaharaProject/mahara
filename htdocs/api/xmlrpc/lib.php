@@ -132,6 +132,7 @@ function find_remote_user($username, $wwwroot) {
 
     $authinstances = auth_get_auth_instances_for_institution($institution);
     $candidates    = array();
+    $auths         = array();
 
     $sql = 'SElECT
                 ai.*
@@ -158,8 +159,8 @@ function find_remote_user($username, $wwwroot) {
         try {
             $user = new User;
             $user->find_by_instanceid_username($authinstance->id, $username, true);
-            $user->xmlrpccurrentauth = $authinstance->id;
             $candidates[$user->id] = $user;
+            $auths[] = $authinstance->id;
         } catch (Exception $e) {
             // we don't care
             continue;
@@ -170,13 +171,15 @@ function find_remote_user($username, $wwwroot) {
         return false;
     }
 
-    return array_pop($candidates);
+    safe_require('auth', 'xmlrpc');
+    return array(array_pop($candidates), new AuthXmlrpc(array_pop($auths)));
 }
 
 function fetch_user_image($username) {
     global $REMOTEWWWROOT;
 
-    if (!$user = find_remote_user($user, $REMOTEWWWROOT)) {
+    list ($user, $authinstance) = find_remote_user($username, $REMOTEWWWROOT);
+    if (!$user) {
         return false;
     }
 
@@ -271,17 +274,13 @@ function send_content_intent($username) {
     global $REMOTEWWWROOT;
     require_once('import.php');
 
-    if (!$user = find_remote_user($username, $REMOTEWWWROOT)) {
+    list ($user, $authinstance) = find_remote_user($username, $REMOTEWWWROOT);
+    if (!$user) {
         throw new ImportException("Could not find user $username for $REMOTEWWWROOT");
     }
 
     if (!is_executable(get_config('pathtounzip'))) {
         throw new ImportException("Cannot find unzip executable");
-    }
-
-    safe_require('auth', 'xmlrpc');
-    if (!$authinstance = new AuthXmlrpc($user->xmlrpccurrentauth)) {
-        throw new ImportException('XMLRPC auth is misconfigured');
     }
 
     if (!$authinstance->weimportcontent) {

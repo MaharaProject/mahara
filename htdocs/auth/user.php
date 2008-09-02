@@ -89,7 +89,6 @@ class User {
             'parentuser'       => null,
             'loginanyway'       => false,
             'sesskey'          => '',
-            'xmlrpccurrentauth' => null, /* used temporarily during xmlrpc pings (we don't want it written do the database!) */
         );
         $this->attributes = array();
 
