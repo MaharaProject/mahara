@@ -347,6 +347,7 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
         $importer = Importer::create_importer($queue->id, $queue);
         $importer->prepare();
         $importer->process();
+        delete_records('import_queue', 'id', $queue->id);
         $result->status = true;
         $result->type = 'complete';
     } else {
