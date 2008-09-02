@@ -780,5 +780,14 @@ class AccessDeniedException extends UserException {
     }
 }
 
+/**
+* something has happened during import.
+* either: the user is there, in which case they get the bug screen,
+*         it's a spawned request during an xmlrpc server ping (content_ready) in which case XMLRPC will be defined
+*         or it's a queued fetch, in which case CRON will be defined.
+* @todo maybe refactor at the point that we have something other than importing over mnet (eg userland)
+*/
+class ImportException extends SystemException { }
+
 
 ?>

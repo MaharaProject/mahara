@@ -690,6 +690,7 @@ function core_install_firstcoredata_defaults() {
         'activity_process_queue'                 => array('*/5', '*', '*', '*', '*'),
         'auth_remove_old_session_files'          => array('30', '20', '*', '*', '*'),
         'recalculate_quota'                      => array('15', '2', '*', '*', '*'),
+        'import_process_queue'                   => array('*/5', '*', '*', '*', '*'),
     );
     foreach ($cronjobs as $callfunction => $times) {
         $cron = new StdClass;

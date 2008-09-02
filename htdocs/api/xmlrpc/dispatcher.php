@@ -52,7 +52,16 @@ class Dispatcher {
             'auth/mnet/auth.php/keepalive_server' => 'xmlrpc_not_implemented',
             'auth/mnet/auth.php/kill_children' => 'xmlrpc_not_implemented',
             'auth/mnet/auth.php/kill_child' => 'xmlrpc_not_implemented',
-            )
+            ),
+        'portfolio_in' => array(
+            'portfolio/mahara/lib.php/send_content_intent' => 'send_content_intent',
+            'portfolio/mahara/lib.php/send_content_ready' => 'send_content_ready',
+            ),
+        /* later...
+        'portfolio_out' => array(
+
+        ),
+        */
     );
 
     private $methodhelp = array(
@@ -84,7 +93,14 @@ class Dispatcher {
                                           'description' => 'username - The id of the user.'
                                           )
                                       )
-                               )
+                               ),
+        'send_content_intent' => array(
+                                array(
+                                    array('type' => 'string',
+                                          'description' => 'The username of the user on the remote system (previously sent in jump/land request)'
+                                        ),
+                                    )
+                                ),
     );
 
     function __construct($payload, $payload_signed, $payload_encrypted) {

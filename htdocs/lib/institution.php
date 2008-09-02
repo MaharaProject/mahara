@@ -121,7 +121,7 @@ class Institution {
     function findByWwwroot($wwwroot) {
 
         if (!is_string($wwwroot) || strlen($wwwroot) < 1 || strlen($wwwroot) > 255) {
-            throw new SystemException();
+            throw new SystemException('Invalid wwwroot: ' . $wwwroot);
         }
 
         $this->hostset = new HostSet();

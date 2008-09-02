@@ -121,10 +121,8 @@ function api_dummy_method($methodname, $argsarray, $functionname) {
     return call_user_func_array($functionname, $argsarray);
 }
 
-function fetch_user_image($username) {
-    global $REMOTEWWWROOT;
-
-    $institution = get_field('host', 'institution', 'wwwroot', $REMOTEWWWROOT);
+function find_remote_user($username, $wwwroot) {
+    $institution = get_field('host', 'institution', 'wwwroot', $wwwroot);
 
     if (false == $institution) {
         // This should never happen, because if we don't know the host we'll
@@ -164,15 +162,23 @@ function fetch_user_image($username) {
         } catch (Exception $e) {
             // we don't care
             continue;
-        } 
+        }
     }
 
     if (count($candidates) != 1) {
         return false;
     }
 
-    $user = array_pop($candidates);
-    
+    return array_pop($candidates);
+}
+
+function fetch_user_image($username) {
+    global $REMOTEWWWROOT;
+
+    if (!$user = find_remote_user($user, $REMOTEWWWROOT)) {
+        return false;
+    }
+
     $ic = $user->profileicon;
     if (!empty($ic)) {
         $filename = get_config('dataroot') . 'artefact/internal/profileicons/' . ($user->profileicon % 256) . '/'.$user->profileicon;
@@ -258,6 +264,86 @@ function user_authorise($token, $useragent) {
     $userdata['myhosts'] = array();
 
     return $userdata;
+}
+
+function send_content_intent($username) {
+    global $REMOTEWWWROOT;
+    require_once('import.php');
+
+    if (!$user = find_remote_user($username, $REMOTEWWWROOT)) {
+        throw new ImportException("Could not find user $username for $REMOTEWWWROOT");
+    }
+
+    // @todo penny check for zip libraries here
+
+    // check whatever config values we have to check
+    // generate a token, insert it into the queue table
+    $usequeue = (int)!(Importer::import_immediately_allowed());
+
+    $queue = new StdClass;
+    $queue->token = generate_token();
+    $queue->host = $REMOTEWWWROOT;
+    $queue->usr = $user->id;
+    $queue->queue = $usequeue;
+    $queue->ready = 0;
+    $queue->expirytime = db_format_timestamp(time()+(60*60*24));
+
+    insert_record('import_queue', $queue);
+
+    return array(
+        'sendtype' => (($usequeue) ? 'queue' : 'immediate'),
+        'token' => $queue->token,
+    );
+}
+
+function send_content_ready($token, $username, $format, $importdata, $fetchnow=false) {
+    global $REMOTEWWWROOT;
+    require_once('import.php');
+
+    if (!$user = find_remote_user($username, $REMOTEWWWROOT)) {
+        throw new ImportException("Could not find user $username for $REMOTEWWWROOT");
+    }
+
+    // go verify the token
+    if (!$queue = get_record('import_queue', 'token', $token, 'host', $REMOTEWWWROOT)) {
+        throw new ImportException("Could not find queue record with given token for username $username for $REMOTEWWWROOT");
+    }
+
+    if (strtotime($queue->expirytime) < time()) {
+        throw new ImportException("Queue record has expired");
+    }
+
+    $queue->format = $format;
+    $class = null;
+    try {
+        $class = Importer::class_from_format($format);
+    } catch (Exception $e) {
+        throw new ImportException('Invalid format $format');
+    }
+    try {
+        call_static_method($class, 'validate_import_data', $importdata);
+    } catch (Exception $e) {
+        throw new ImportException('Invalid importdata: ' . $e->getMessage());
+    }
+
+    $queue->data = serialize($importdata);
+
+    update_record('import_queue', $queue);
+
+    $result = new StdClass;
+    if ($fetchnow && Importer::import_immediately_allowed()) {
+        // either immediately spawn a curl request to go fetch the file
+        $importer = Importer::create_importer($queue->id, $queue);
+        $importer->prepare();
+        $importer->process();
+        $result->status = true;
+        $result->type = 'complete';
+    } else {
+        // or set ready to 1 for the next cronjob to go fetch it.
+        $result->status = set_field('import_queue', 'ready', 1, 'id', $queue->id);
+        $result->type = 'queued';
+    }
+    return $result;
 }
 
 function xmlrpc_not_implemented() {
@@ -453,7 +539,7 @@ function get_peer($wwwroot, $cache=true) {
 
     if (!$peer->findByWwwroot($wwwroot)) {
         // Bootstrap unknown hosts?
-        throw new MaharaException('We don\'t have a record for your webserver in our database', 6003);
+        throw new MaharaException("We don't have a record for your webserver ($wwwroot) in our database", 6003);
     }
     $peers[$wwwroot] = $peer;
     return $peers[$wwwroot];

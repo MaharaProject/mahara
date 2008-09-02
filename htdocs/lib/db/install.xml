@@ -692,5 +692,23 @@
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
             </KEYS>
         </TABLE>
+        <TABLE NAME="import_queue">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="host" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="queue" TYPE="int" LENGTH="1" NOTNULL="true" default="1" />
+                <FIELD NAME="ready" TYPE="int" LENGTH="1" NOTNULL="true" default="0" />
+                <FIELD NAME="expirytime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="format" TYPE="char" LENGTH="50" NOTNULL="false" />
+                <FIELD NAME="data" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="token" TYPE="char" LENGTH="40" NOTNULL="true"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="hostfk" TYPE="foreign" FIELDS="host" REFTABLE="host" REFFIELDS="wwwroot" />
+            </KEYS>
+        </TABLE>
     </TABLES>
 </XMLDB>

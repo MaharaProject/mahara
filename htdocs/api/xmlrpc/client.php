@@ -156,6 +156,7 @@ class Client {
                         throw new XmlrpcClientException('Remote site claims to have sent a public key, but they LIE');
                     }
                 }
+                throw new XmlrpcClientException('Unknown error occured: ' . $this->response['faultCode'] . ': ' . $this->response['faultString']);
             }
 
             // Clean up so object can be re-used.
