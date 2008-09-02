@@ -787,7 +787,13 @@ class AccessDeniedException extends UserException {
 *         or it's a queued fetch, in which case CRON will be defined.
 * @todo maybe refactor at the point that we have something other than importing over mnet (eg userland)
 */
-class ImportException extends SystemException { }
+class ImportException extends SystemException {
+    
+    public function render_exception() {
+        return $this->getMessage();
+    }
+
+}
 
 
 ?>
