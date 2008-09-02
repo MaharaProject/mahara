@@ -285,7 +285,9 @@ function send_content_intent($username) {
     }
 
     if (!$authinstance->weimportcontent) {
-        throw new ImportException('Importing content is disabled');
+        $e = new ImportException('Importing content is disabled');
+        $e->set_log_off(); // we don't want these ones.
+        throw $e;
     }
 
     // generate a token, insert it into the queue table
