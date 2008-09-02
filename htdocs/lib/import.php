@@ -116,44 +116,6 @@ abstract class Importer {
         return $this->{$field};
     }
 
-    public static function process_queue() {
-        if (!$ready = get_records_array('import_queue',
-            'ready', 1, null, null, null, null,
-            '*,' . db_format_tsfield('expirytime', 'ex'))) {
-            return true;
-        }
-
-        $now = time();
-
-        $processed = array();
-        foreach ($ready as $item) {
-            if ($item->ex < $now) {
-                log_debug('deleting expired import record', $item);
-                $processed[] = $item->id;
-                continue;
-            }
-            $importer = Importer::create_importer($item->id, $item);
-            try {
-                $importer->prepare();
-                $importer->process();
-                $processed[] = $item->id;
-            }
-            catch (Exception $e) {
-                $importer->cleanup();
-            }
-        }
-
-        if (empty($processed)) {
-            return true;
-        }
-
-        delete_records_select(
-            'incoming_queue',
-            'id IN ( ' . implode(',', db_array_to_ph($processed)) . ')',
-            $processed
-        );
-    }
-
     public static function class_from_format($format) {
         switch (trim($format)) {
             case 'file':
