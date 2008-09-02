@@ -707,7 +707,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         $dataroot = get_config('dataroot');
         $pathname = $dataroot . $pathname;
         if (!$size = filesize($pathname)) {
-            log_debug(1);
             return false;
         }
         $f = self::new_file($pathname, $data);
@@ -720,7 +719,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         $newname = $newdir . '/' . $id;
         if (!rename($pathname, $newname)) {
             $f->delete();
-            log_debug(2);
             return false;
         }
         if (empty($user)) {
@@ -734,7 +732,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
         catch (QuotaExceededException $e) {
             $f->delete();
-            log_debug(3);
             return false;
         }
     }
