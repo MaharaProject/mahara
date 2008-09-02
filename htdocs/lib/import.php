@@ -27,9 +27,9 @@ defined('INTERNAL') || die();
 
 function import_process_queue() {
 
-    if (!$ready = get_records_array('import_queue',
-        'ready', 1, '',
-        '*,' . db_format_tsfield('expirytime', 'ex'))) {
+    if (!$ready = get_records_select_array('import_queue',
+        'ready = ? OR expirytime <  ?', array(1, db_format_timestamp(time())),
+        '', '*,' . db_format_tsfield('expirytime', 'ex'))) {
         return true;
     }
 
