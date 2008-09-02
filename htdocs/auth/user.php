@@ -88,7 +88,8 @@ class User {
             'staffinstitutions' => array(),
             'parentuser'       => null,
             'loginanyway'       => false,
-            'sesskey'          => ''
+            'sesskey'          => '',
+            'xmlrpccurrentauth' => null, /* used temporarily during xmlrpc pings (we don't want it written do the database!) */
         );
         $this->attributes = array();
 

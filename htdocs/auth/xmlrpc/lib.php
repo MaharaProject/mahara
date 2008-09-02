@@ -62,6 +62,7 @@ class AuthXmlrpc extends Auth {
         $this->config['theyautocreateusers']   = 0;
         $this->config['wessoout']              = 0;
         $this->config['theyssoin']             = 0;
+        $this->config['weimportcontent']       = 0;
         $this->config['parent']                = null;
         $this->file = fopen('/tmp/out.txt', 'w');
         if (!empty($id)) {
@@ -547,6 +548,7 @@ class PluginAuthXmlrpc extends PluginAuth {
         'theyautocreateusers'   => 0,
         'wessoout'              => 0,
         'theyssoin'             => 0,
+        'weimportcontent'       => 0,
         'parent'                => null
     );
 
@@ -794,7 +796,14 @@ class PluginAuthXmlrpc extends PluginAuth {
             'defaultvalue' => self::$default_config['theyautocreateusers'],
             'help'   => true
         );
-        
+
+        $elements['weimportcontent'] = array(
+            'type'         => 'checkbox',
+            'title'        => get_string('weimportcontent', 'auth'),
+            'defaultvalue' => self::$default_config['weimportcontent'],
+            'help'         => true,
+        );
+
         return array(
             'elements' => $elements,
             'renderer' => 'table'
@@ -905,7 +914,8 @@ class PluginAuthXmlrpc extends PluginAuth {
                                         'theyautocreateusers'   => $values['theyautocreateusers'],
                                         'parent'                => $values['parent'],
                                         'wessoout'              => $values['wessoout'],
-                                        'theyssoin'             => $values['theyssoin']
+                                        'theyssoin'             => $values['theyssoin'],
+                                        'weimportcontent'       => $values['weimportcontent'],
                                         );
 
         foreach(self::$default_config as $field => $value) {

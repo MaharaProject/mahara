@@ -158,6 +158,7 @@ function find_remote_user($username, $wwwroot) {
         try {
             $user = new User;
             $user->find_by_instanceid_username($authinstance->id, $username, true);
+            $user->xmlrpccurrentauth = $authinstance->id;
             $candidates[$user->id] = $user;
         } catch (Exception $e) {
             // we don't care
@@ -274,24 +275,32 @@ function send_content_intent($username) {
         throw new ImportException("Could not find user $username for $REMOTEWWWROOT");
     }
 
-    // @todo penny check for zip libraries here
+    if (!is_executable(get_config('pathtounzip'))) {
+        throw new ImportException("Cannot find unzip executable");
+    }
 
-    // check whatever config values we have to check
+    safe_require('auth', 'xmlrpc');
+    if (!$authinstance = new AuthXmlrpc($user->xmlrpccurrentauth)) {
+        throw new ImportException('XMLRPC auth is misconfigured');
+    }
+
+    if (!$authinstance->weimportcontent) {
+        throw new ImportException('Importing content is disabled');
+    }
+
     // generate a token, insert it into the queue table
-    $usequeue = (int)!(Importer::import_immediately_allowed());
-
     $queue = new StdClass;
     $queue->token = generate_token();
     $queue->host = $REMOTEWWWROOT;
     $queue->usr = $user->id;
-    $queue->queue = $usequeue;
+    $queue->queue = (int)!(Importer::import_immediately_allowed());
     $queue->ready = 0;
     $queue->expirytime = db_format_timestamp(time()+(60*60*24));
 
     insert_record('import_queue', $queue);
 
     return array(
-        'sendtype' => (($usequeue) ? 'queue' : 'immediate'),
+        'sendtype' => (($queue->queue) ? 'queue' : 'immediate'),
         'token' => $queue->token,
     );
 }

@@ -52,6 +52,7 @@ $string['weautocreateusers'] = 'We auto-create users';
 $string['theyautocreateusers'] = 'They auto-create users';
 $string['parent'] = 'Parent authority';
 $string['wessoout'] = 'We SSO out';
+$string['weimportcontent'] = 'We import content (some applications only)';
 $string['theyssoin'] = 'They SSO in';
 $string['application'] = 'Application';
 $string['cantretrievekey'] = 'An error occurred while retrieving the public key from the remote server.<br>Please ensure that the Application and WWW Root fields are correct, and that networking is enabled on the remote host.';
