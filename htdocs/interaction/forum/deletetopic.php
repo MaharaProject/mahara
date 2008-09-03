@@ -129,9 +129,9 @@ function deletetopic_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
-$smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('forum', $topic->title);
-$smarty->assign('heading', TITLE);
+$smarty->assign('heading', $topic->groupname);
+$smarty->assign('subheading', TITLE);
 $smarty->assign('topic', $topic);
 $smarty->assign('groupadmins', group_get_admin_ids($topic->group));
 $smarty->assign('deleteform', $form);

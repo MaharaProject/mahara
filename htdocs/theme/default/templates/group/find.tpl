@@ -3,7 +3,6 @@
 
 {include file="columnleftstart.tpl"}
 
-<h2>{$heading}</h2>
 {$form}
 
 {if $groups}

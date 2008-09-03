@@ -51,6 +51,7 @@ $limit  = param_integer('limit', 10);
 list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersearch_data($group->id, $query, $offset, $limit, $membershiptype);
 
 $smarty = smarty(array('groupmembersearch'));
+$smarty->assign('heading', $group->name);
 $smarty->assign('query', $query);
 $smarty->assign('results', $html);
 $smarty->assign('pagination', $pagination['html']);

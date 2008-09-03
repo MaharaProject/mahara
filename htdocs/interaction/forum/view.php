@@ -130,21 +130,6 @@ if (isset($_POST['checked'])) {
     redirect('/interaction/forum/view.php?id=' . $forumid . '&offset=' . $offset);
 }
 
-$breadcrumbs = array(
-    array(
-        get_config('wwwroot') . 'group/view.php?id=' . $forum->groupid,
-        $forum->groupname
-    ),
-    array(
-        get_config('wwwroot') . 'interaction/forum/index.php?group=' . $forum->groupid,
-        get_string('nameplural', 'interaction.forum')
-    ),
-    array(
-        get_config('wwwroot') . 'interaction/forum/view.php?id=' . $forumid,
-        $forum->title
-    )
-);
-
 $forum->subscribe = pieform(array(
     'name' => 'subscribe_forum',
     'renderer' => 'div',
@@ -248,8 +233,8 @@ addLoadEvent(function() {
 EOF;
 
 $smarty = smarty();
-$smarty->assign('breadcrumbs', $breadcrumbs);
-$smarty->assign('heading', TITLE);
+$smarty->assign('heading', $forum->groupname);
+$smarty->assign('subheading', $forum->title);
 $smarty->assign('forum', $forum);
 $smarty->assign('moderator', $moderator);
 $smarty->assign('admin', $admin);

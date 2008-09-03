@@ -326,6 +326,7 @@ EOF;
         $smarty->assign('THEMELIST', json_encode(array_merge((array)json_decode($smarty->get_template_vars('THEMELIST')),  $theme_list))); 
     }
 
+
     $sitename = get_config('sitename');
     if (!$sitename) {
        $sitename = 'Mahara';
@@ -333,11 +334,11 @@ EOF;
 
     if (defined('TITLE')) {
         $smarty->assign('PAGETITLE', TITLE . ' - ' . $sitename);
+        $smarty->assign('heading', TITLE);
     }
     else {
         $smarty->assign('PAGETITLE', $sitename);
     }
-
 
     $sitename = get_config('sitename');
     $smarty->assign('title', $sitename);
@@ -375,7 +376,9 @@ EOF;
         $smarty->assign('PAGEHELPICON', $help[1]);
     }
     if (defined('GROUP')) {
+        require_once('group.php');
         $smarty->assign('GROUP', group_current_group());
+        $smarty->assign('GROUPNAV', group_get_menu_tabs());
     }
 
     // ---------- sideblock stuff ----------
@@ -1656,6 +1659,36 @@ function main_nav() {
                 'weight' => 10
             ),
             array(
+                'path' => 'groups',
+                'url' => 'group/mygroups.php',
+                'title' => get_string('groups'),
+                'weight' => 40,
+            ),
+            array(
+                'path' => 'groups/mygroups',
+                'url' => 'group/mygroups.php',
+                'title' => get_string('mygroups'),
+                'weight' => 10
+            ),
+            array(
+                'path' => 'groups/find',
+                'url' => 'group/find.php',
+                'title' => get_string('findgroups'),
+                'weight' => 20
+            ),
+            array(
+                'path' => 'groups/myfriends',
+                'url' => 'user/myfriends.php',
+                'title' => get_string('myfriends'),
+                'weight' => 30
+            ),
+            array(
+                'path' => 'groups/findfriends',
+                'url' => 'user/find.php',
+                'title' => get_string('findfriends'),
+                'weight' => 40
+            ),
+            array(
                 'path' => 'settings',
                 'url' => 'account/',
                 'title' => get_string('settings'),
@@ -1686,45 +1719,6 @@ function main_nav() {
                 'weight' => 40,
             ),
         );
-
-        if (defined('GROUP')) {
-            require_once('group.php');
-            foreach (group_get_menu_tabs() as $k => $v) {
-                $menu[] = $v;
-            }
-        }
-        else {
-            $menu[] = array(
-                'path' => 'groups',
-                'url' => 'group/mygroups.php',
-                'title' => get_string('groups'),
-                'weight' => 40,
-            );
-            $menu[] = array(
-                'path' => 'groups/mygroups',
-                'url' => 'group/mygroups.php',
-                'title' => get_string('mygroups'),
-                'weight' => 10
-            );
-            $menu[] = array(
-                'path' => 'groups/find',
-                'url' => 'group/find.php',
-                'title' => get_string('findgroups'),
-                'weight' => 20
-            );
-            $menu[] = array(
-                'path' => 'groups/myfriends',
-                'url' => 'user/myfriends.php',
-                'title' => get_string('myfriends'),
-                'weight' => 30
-            );
-            $menu[] = array(
-                'path' => 'groups/findfriends',
-                'url' => 'user/find.php',
-                'title' => get_string('findfriends'),
-                'weight' => 40
-            );
-        }
 
         if ($plugins = get_records_array('artefact_installed', 'active', 1)) {
             foreach ($plugins as &$plugin) {

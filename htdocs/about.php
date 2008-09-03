@@ -31,6 +31,7 @@ define('TITLE', get_string('about'));
 
 $smarty = smarty();
 $smarty->assign('page_content', get_site_page_content('about'));
+$smarty->assign('heading', null);
 $smarty->assign('searchform', searchform());
 $smarty->display('sitepage.tpl');
 

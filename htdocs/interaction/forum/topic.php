@@ -67,14 +67,6 @@ $groupadmins = group_get_admin_ids($topic->groupid);
 
 $breadcrumbs = array(
     array(
-        get_config('wwwroot') . 'group/view.php?id=' . $topic->groupid,
-        $topic->groupname
-    ),
-    array(
-        get_config('wwwroot') . 'interaction/forum/index.php?group=' . $topic->groupid,
-        get_string('nameplural', 'interaction.forum')
-    ),
-    array(
         get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forumid,
         $topic->forumtitle
     ),
@@ -161,7 +153,8 @@ $posts = buildpost(0, '', $posts);
 
 $smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
-$smarty->assign('heading', TITLE);
+$smarty->assign('heading', $topic->groupname);
+$smarty->assign('subheading', TITLE);
 $smarty->assign('topic', $topic);
 $smarty->assign('moderator', $moderator);
 $smarty->assign('posts', $posts);

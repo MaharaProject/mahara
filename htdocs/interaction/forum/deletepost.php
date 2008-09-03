@@ -77,14 +77,6 @@ $post->ctime = relative_date(get_string('strftimerecentfullrelative', 'interacti
 
 $breadcrumbs = array(
     array(
-        get_config('wwwroot') . 'group/view.php?id=' . $post->group,
-        $post->groupname,
-    ),
-    array(
-        get_config('wwwroot') . 'interaction/forum/index.php?group=' . $post->group,
-        get_string('nameplural', 'interaction.forum')
-    ),
-    array(
         get_config('wwwroot') . 'interaction/forum/view.php?id=' . $post->forum,
         $post->forumtitle
     ),
@@ -139,7 +131,8 @@ function deletepost_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
-$smarty->assign('heading', TITLE);
+$smarty->assign('heading', $post->groupname);
+$smarty->assign('subheading', TITLE);
 $smarty->assign('post', $post);
 $smarty->assign('deleteform', $form);
 $smarty->assign('groupadmins', group_get_admin_ids($post->group));

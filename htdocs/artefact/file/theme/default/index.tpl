@@ -2,10 +2,7 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-{if $GROUP}
-  <h2>{$heading}</h2>
-{elseif $institution}
-  <h2>{$heading}</h2>
+{if $institution}
   {$institutionselector}
 {/if}
 			{str tag='fileinstructions' section='artefact.file'}

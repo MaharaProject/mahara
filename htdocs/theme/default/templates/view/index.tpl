@@ -13,7 +13,6 @@
 {/if}
 </form>
 </span>
-<h2>{$heading}</h2>
 
 {if $institution}
   {$institutionselector}

@@ -54,7 +54,7 @@ uploader.setgroup({$group->id});
 GROUPJS;
 
 $smarty = smarty(array('tablerenderer', 'artefact/file/js/file.js'));
-$smarty->assign('heading', $group->name . ' - ' . get_string('Files', 'artefact.file'));
+$smarty->assign('heading', $group->name);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('artefact:file:index.tpl');
 

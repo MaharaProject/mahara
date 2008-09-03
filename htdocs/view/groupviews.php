@@ -50,7 +50,7 @@ $shared = param_boolean('shared', 0) && $member;
 $can_edit = group_user_can_edit_views($group->id);
 
 $smarty = smarty();
-$smarty->assign('heading', $group->name . ' - ' . get_string('views'));
+$smarty->assign('heading', $group->name);
 
 if ($can_edit) {
     $data = View::get_myviews_data($limit, $offset, $group->id);

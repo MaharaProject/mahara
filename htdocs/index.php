@@ -46,6 +46,7 @@ else {
 
 $smarty = smarty();
 $smarty->assign('page_content', get_site_page_content($pagename));
+$smarty->assign('heading', null);
 $smarty->display('index.tpl');
 
 ?>

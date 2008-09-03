@@ -68,7 +68,8 @@ $form = pieform(array(
 
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('form', $form);
-$smarty->assign('heading', TITLE);
+$smarty->assign('heading', $group->name);
+$smarty->assign('subheading', TITLE);
 $smarty->assign('message', get_string('deleteinteractionsure', 'group'));
 $smarty->display('interaction/delete.tpl');
 

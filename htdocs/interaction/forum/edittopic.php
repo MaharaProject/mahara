@@ -77,35 +77,12 @@ if (!$membership) {
     throw new AccessDeniedException(get_string('cantaddtopic', 'interaction.forum'));
 }
 
-$breadcrumbs = array(
-    array(
-        get_config('wwwroot') . 'group/view.php?id=' . $forum->groupid,
-        $forum->groupname
-    ),
-    array(
-        get_config('wwwroot') . 'interaction/forum/index.php?group=' . $forum->groupid,
-        get_string('nameplural', 'interaction.forum')
-    ),
-    array(
-        get_config('wwwroot') . 'interaction/forum/view.php?id=' . $forumid,
-        $forum->title
-    )
-);
-
 if (!isset($topicid)) { // new topic
     define('TITLE', $forum->title . ' - ' . get_string('addtopic','interaction.forum'));
-    $breadcrumbs[] = array(
-        get_config('wwwroot') . 'interaction/forum/edittopic.php?forum=' . $forumid,
-        get_string('addtopic', 'interaction.forum')
-    );
 }
 
 else { // edit topic
     define('TITLE', $forum->title . ' - ' . get_string('edittopic','interaction.forum'));
-    $breadcrumbs[] = array(
-        get_config('wwwroot') . 'interaction/forum/edittopic.php?id=' . $topicid,
-        get_string('edittopic', 'interaction.forum')
-    );
 
     // no record for edits to own posts with 30 minutes
     if (user_can_edit_post($topic->poster, $topic->ctime)) {
@@ -255,8 +232,8 @@ function edittopic_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
-$smarty->assign('breadcrumbs', $breadcrumbs);
-$smarty->assign('heading', TITLE);
+$smarty->assign('heading', $forum->groupname);
+$smarty->assign('subheading', TITLE);
 $smarty->assign('editform', $editform);
 $smarty->display('interaction:forum:edittopic.tpl');
 

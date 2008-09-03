@@ -2,7 +2,6 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-                <h2>{$GROUP->name|escape} - {str tag='Members' section='group'}</h2>
 
 <form action="{$WWWROOT}group/members.php" method="post">
     <input type="hidden" id="groupid" name="id" value="{$GROUP->id|escape}">

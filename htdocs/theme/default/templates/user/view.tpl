@@ -3,12 +3,6 @@
 
 {include file="columnleftstart.tpl"}
         <div id="userview">
-            <h2>
-            {$NAME|escape}
-            {if $relationship && $relationship != 'none'}
-            - {str tag=$relationship section='group'}
-            {/if}
-            </h2>
             <div>
                 {$introduction}
                 <div class="fr user-icon">

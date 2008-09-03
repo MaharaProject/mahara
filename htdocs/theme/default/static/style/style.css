@@ -557,6 +557,11 @@ tr.required th,
     padding: 10px 25px 25px 25px;
 	background: url(../images/dot-vert.gif) repeat-y top right;
 }
+.maincontent.group {
+    line-height: 18px;
+    padding: 0 15px 25px 15px;
+	background: url(../images/dot-vert.gif) repeat-y top right;
+}
 
 /* HEADER ELEMENTS */
 #topwrapper {
@@ -1882,7 +1887,7 @@ span.viewicon {
 #grouppage-tabs {
   padding: 0;
   height: 35px;
-  margin-top: 25px;
+  margin-top: 12px;
   font-size: 12px;
   font-weight: bold;
   border-left: 1px solid #ddd;
@@ -1902,19 +1907,15 @@ span.viewicon {
   padding: 5px 13px 5px 8px;
   background: url(../images/submenu-divider.gif) no-repeat top right;
 }
-#grouppage-tabs ul li.current {
-  float: left;
-  margin: 0 0 0 0;
-  padding: 5px 13px 5px 8px;
+#grouppage-tabs ul li.selected {
   background: url(../images/submenu-over-bg.gif) repeat-x top right;
 }
 #grouppage-tabs li a {
   color: #474220;
   text-decoration: none;
 }
-#grouppage-tabs li.current a {
+#grouppage-tabs li.selected a {
   color: #4c711d;
-  text-decoration: none;
 }
 
 #grouppage-container {

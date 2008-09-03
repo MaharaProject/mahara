@@ -3,9 +3,7 @@
 
 {include file="columnleftstart.tpl"}
 
-<h2>{$heading|escape}</h2>
 <div>
-{include file="interaction:forum:breadcrumbs.tpl" breadcrumbs=$breadcrumbs}
 {if $admin}
 <div class="fr">
 <span class="addicon">

@@ -82,14 +82,6 @@ define('GROUP', $parent->group);
 
 $breadcrumbs = array(
     array(
-        get_config('wwwroot') . 'group/view.php?id=' . $parent->group,
-        $parent->groupname
-    ),
-    array(
-        get_config('wwwroot') . 'interaction/forum/index.php?group=' . $parent->group,
-        get_string('nameplural', 'interaction.forum')
-    ),
-    array(
         get_config('wwwroot') . 'interaction/forum/view.php?id=' . $parent->forum,
         $parent->forumtitle
     ),
@@ -243,7 +235,8 @@ function addpost_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
-$smarty->assign('heading', TITLE);
+$smarty->assign('heading', $parent->groupname);
+$smarty->assign('subheading', TITLE);
 $smarty->assign('editform', $editform);
 $smarty->assign('parent', $parent);
 $smarty->assign('groupadmins', group_get_admin_ids($parent->group));

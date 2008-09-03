@@ -2,9 +2,7 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-
-<h2>{$heading|escape}</h2>
-{include file="interaction:forum:breadcrumbs.tpl" breadcrumbs=$breadcrumbs}
+<h2>{$subheading}</h2>
 <div id="viewforum">
 <table id="forumdescription">
 <tr>

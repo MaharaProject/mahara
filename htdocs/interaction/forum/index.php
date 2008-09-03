@@ -129,9 +129,8 @@ if ($forums) {
 }
 
 $smarty = smarty();
-$smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('groupid', $groupid);
-$smarty->assign('heading', TITLE);
+$smarty->assign('heading', $group->name);
 $smarty->assign('admin', $membership == 'admin');
 $smarty->assign('groupadmins', group_get_admin_ids($groupid));
 $smarty->assign('forums', $forums);

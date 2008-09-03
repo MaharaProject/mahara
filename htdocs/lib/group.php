@@ -774,31 +774,25 @@ function group_get_menu_tabs() {
 
     $group = group_current_group();
     $menu = array(
-        array(
-            'path' => 'groups',
-            'url' => 'group/mygroups.php',
-            'title' => get_string('groups'),
-            'weight' => 40
-        ),
-        array(
+        'info' => array(
             'path' => 'groups/info',
             'url' => 'group/view.php?id='.$group->id,
             'title' => get_string('About', 'group'),
             'weight' => 20
         ),
-        array(
+        'members' => array(
             'path' => 'groups/members',
             'url' => 'group/members.php?id='.$group->id,
             'title' => get_string('Members', 'group'),
             'weight' => 30
         ),
-        array(  // @todo: get this from a function in the interaction plugin (or better, make forums an artefact plugin)
+        'forums' => array(  // @todo: get this from a function in the interaction plugin (or better, make forums an artefact plugin)
             'path' => 'groups/forums',
             'url' => 'interaction/forum/index.php?group='.$group->id,
             'title' => get_string('nameplural', 'interaction.forum'),
             'weight' => 40
         ),
-        array(
+        'views' => array(
             'path' => 'groups/views',
             'url' => 'view/groupviews.php?group='.$group->id,
             'title' => get_string('Views', 'group'),
@@ -818,6 +812,13 @@ function group_get_menu_tabs() {
             safe_require('artefact', $plugin->name);
             $plugin_menu = call_static_method(generate_class_name('artefact',$plugin->name), 'group_tabs', $group->id);
             $menu = array_merge($menu, $plugin_menu);
+        }
+    }
+
+    if (defined('MENUITEM')) {
+        $key = substr(MENUITEM, strlen('groups/'));
+        if ($key && isset($menu[$key])) {
+            $menu[$key]['selected'] = true;
         }
     }
 
