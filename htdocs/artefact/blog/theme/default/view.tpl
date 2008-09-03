@@ -13,14 +13,10 @@
 
                 {$blog->get('description')}
 
-                <div class="blogsettingscontainer">
-                    <span class="addicon">
+                    <span class="addicon fr">
                         <a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
-                    </span>
-                    <span class="settingsicon">  
                         <a href="{$WWWROOT}artefact/blog/settings/?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
                     </span>
-                </div>
 		
                 {if $blog->count_children() > 0}
 				<div><table id="postlist" class="hidden tablerenderer">

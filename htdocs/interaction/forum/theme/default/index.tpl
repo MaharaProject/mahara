@@ -2,14 +2,12 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-
+<h2>{str tag="nameplural" section=interaction.forum}</h2>
 <div>
 {if $admin}
-<div class="fr">
-<span class="addicon">
+<span class="addicon fr">
 <a href="{$WWWROOT}interaction/edit.php?group={$groupid|escape}&amp;plugin=forum">{str tag="newforum" section=interaction.forum}</a>
 </span>
-</div>
 {/if}
 <br>
 {str tag="groupadminlist" section="interaction.forum"}

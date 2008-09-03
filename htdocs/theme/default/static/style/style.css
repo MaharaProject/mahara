@@ -199,6 +199,7 @@ a:hover {
 	font-size: 11px;
 	color: #FFF;
 }
+span.addicon { display: block; margin-top: -16px; float: right; }
 .addicon form,
 .addicon form div {
   display: inline;
@@ -206,7 +207,7 @@ a:hover {
 .addicon input.submit {
   height: 20px;
 }
-span.addicon a {
+.addicon a {
 	background-color: #92b328;
 	padding: 2px 10px;
 	border-color: #D9DFEA #b2b2b2 #b2b2b2 #D9DFEA !important;
@@ -216,7 +217,7 @@ span.addicon a {
 	color: #FFF !important;
 }
 #btn-logout:hover,
-span.addicon a:hover {
+.addicon a:hover {
 	text-decoration: none;
 	color: #FFF;
 }
@@ -1689,10 +1690,6 @@ button#dosearch {
 /* MY PORTFOLIO > MY BLOGS */
 #bloglist {
 	border-bottom: 1px solid #95a8b7;
-}
-#myblogs .addiconcontainer {
-    margin: 0;
-	float: right;
 }
 #myblogs .blogsettingscontainer {
 	margin-top: 10px;

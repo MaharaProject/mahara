@@ -107,6 +107,7 @@ $string['subscribetoforum'] = 'Subscribe to forum';
 $string['subscribetotopic'] = 'Subscribe to topic';
 $string['Subject'] = 'Subject';
 $string['Topic'] = 'Topic';
+$string['Topics'] = 'Topics';
 $string['topiclower'] = 'topic';
 $string['topicslower'] = 'topics';
 $string['topicclosedsuccess'] = 'Topics closed successfully';

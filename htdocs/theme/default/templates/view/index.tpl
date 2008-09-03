@@ -2,24 +2,25 @@
 {include file="sidebar.tpl"}
 {include file="columnleftstart.tpl"}
 
+<div>
 <span class="addicon fr">
-{$createviewform}
-<form method="post" action="{$WWWROOT}view/choosetemplate.php">
-<input type="submit" class="submit" value="{str tag="copyaview" section="view"}">
+  {$createviewform}
+  <form method="post" action="{$WWWROOT}view/choosetemplate.php">
+    <input type="submit" class="submit" value="{str tag="copyaview" section="view"}">
 {if $GROUP}
-<input type="hidden" name="group" value="{$GROUP->id}" />
+    <input type="hidden" name="group" value="{$GROUP->id}" />
 {elseif $institution}
-<input type="hidden" name="institution" value="{$institution}">
+    <input type="hidden" name="institution" value="{$institution}">
 {/if}
-</form>
+  </form>
 </span>
 
 {if $institution}
   {$institutionselector}
 {/if}
 {if $views}
-<table id="myviewstable" class="groupviews">
-
+<table id="myviewstable">
+  <tbody>
 {foreach from=$views item=view}
     <tr class="{cycle values=r0,r1}">
     <td>
@@ -80,7 +81,7 @@
     </td>
     </tr>
 {/foreach}
-
+  </tbody>
 </table>
 
 <div class="center">{$pagination}</div>
@@ -92,6 +93,8 @@
   </tr>
 </table>
 {/if}
+
+</div>
 
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

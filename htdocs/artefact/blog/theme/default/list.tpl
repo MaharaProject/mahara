@@ -11,11 +11,9 @@
 
 {include file="columnleftstart.tpl"}
 		<div id="myblogs">
-            <div class="addiconcontainer">
-              <span class="addicon">
+              <span class="addicon fr">
                 <a href="{$WWWROOT}artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
               </span>
-            </div>
 			<table id="bloglist" class="hidden tablerenderer">
 				<thead>
 					<tr>
