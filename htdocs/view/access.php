@@ -207,7 +207,9 @@ function editaccess_submit(Pieform $form, $values) {
     $view->set('startdate', $values['startdate']);
     $view->set('stopdate', $values['stopdate']);
     $view->set('template', (int) $values['template']);
-    $view->set('copynewuser', (int) $values['copynewuser']);
+    if (isset($values['copynewuser'])) {
+        $view->set('copynewuser', (int) $values['copynewuser']);
+    }
     if ($institution == 'mahara') {
         $createfor = array();
         foreach (group_get_grouptypes() as $grouptype) {

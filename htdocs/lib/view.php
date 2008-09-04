@@ -1497,16 +1497,15 @@ class View {
      * - v is visible to all roles of group g at t, and u is a member of g (view_access_group)
      * - v is visible to users with role r of group g at t, and u is a member of g with role r (view_access_group)
      *
-     * @param integer $ownerid     Only return views owned by this user.
-     * @param integer $groupid     Only return views owned by this group.
-     * @param string  $institution Only return views owned by this institution.
-     * @param bool    $template    Only return views marked as templates.
-     * @param integer $limit
-     * @param integer $offset
-     * @param bool    $extra
+     * @param string   $query       Search string
+     * @param StdClass $ownedby     Only return views owned by this owner (user, group, institution)
+     * @param StdClass $copyableby  Only return views copyable by this owner (user, group, institution)
+     * @param integer  $limit
+     * @param integer  $offset
+     * @param bool     $extra       Return full set of properties on each view including an artefact list
      *
      */
-    public static function view_search($ownerid=null, $groupid=null, $institution=null, $template=null, $limit=null, $offset=0, $extra=true) {
+    public static function view_search($query=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0, $extra=true) {
         global $USER;
         $admin = $USER->get('admin');
         $loggedin = $USER->is_logged_in();
@@ -1515,18 +1514,23 @@ class View {
         $where = '
             WHERE TRUE';
 
-        if ($ownerid || $groupid || $institution) {
-            $where .= ' AND v.' . self::owner_sql($ownerid, $groupid, $institution);
+        if ($ownedby) {
+            $where .= ' AND v.' . self::owner_sql($ownedby->user, $ownedby->group, $ownedby->institution);
         }
 
-        $ph = array();
-        if ($template) {
+        if ($copyableby) {
             $where .= '
-                AND v.template = 1';
+                AND (v.template = 1 OR (v.' . self::owner_sql($copyableby->user, $copyableby->group, $copyableby->institution) . '))';
         }
-        else if ($template === false) {
-            $where .= '
-                AND v.template = 0';
+
+        if ($query) {
+            $like = db_ilike();
+            $where .= "
+                AND (v.title $like '%' || ? || '%' OR v.description $like '%' || ? || '%' )";
+            $ph = array($query, $query);
+        }
+        else {
+            $ph = array();
         }
 
         if ($admin) {
@@ -1640,8 +1644,6 @@ class View {
             $tsql = '';
         }
 
-        $query = '';
-
         if ($query) {
             $ph = array($query);
             $qsql = ' WHERE display ' . db_ilike() . " '%' || ? || '%' ";
@@ -1669,12 +1671,18 @@ class View {
                 SELECT 'institution' AS type, i.displayname AS display, i.name AS id, COUNT(v.id)
                 FROM {institution} i INNER JOIN {view} v ON (i.name = v.institution) 
                 WHERE TRUE $tsql
-                GROUP BY type, display, i.name";
+                GROUP BY type, display, i.name ORDER BY display";
 
         $count = count_records_sql("SELECT COUNT(*) FROM ($sql) q $qsql", $ph);
         $data = get_records_sql_array("SELECT * FROM ($sql) q $qsql", $ph, $offset, $limit);
 
-        return (object) array(
+        foreach ($data as &$r) {
+            if ($r->type == 'institution' && $r->id == 'mahara') {
+                $r->display = get_config('sitename');
+            }
+        }
+
+        return array(
             'data'  => array_values($data),
             'count' => $count,
             'limit' => $limit,
@@ -1704,7 +1712,7 @@ class View {
 
         $count = count_records_sql('SELECT COUNT(*) ' . $from, $ph);
         $viewdata = get_records_sql_assoc('
-            SELECT v.id,v.title,v.startdate,v.stopdate,v.description,v.group,v.owner,v.ownerformat ' . $from . '
+            SELECT v.id,v.title,v.startdate,v.stopdate,v.description,v.group,v.owner,v.ownerformat,v.institution ' . $from . '
             ORDER BY v.title, v.id',
             $ph, $offset, $limit
         );
@@ -1748,11 +1756,14 @@ class View {
             // Get view owner details for display
             $owners = array();
             $groups = array();
+            $institutions = array();
             foreach ($viewdata as $v) {
                 if ($v->owner && !isset($owners[$v->owner])) {
                     $owners[$v->owner] = $v->owner;
                 } else if ($v->group && !isset($groups[$v->group])) {
                     $groups[$v->group] = $v->group;
+                } else if ($v->institution && !isset($institutions[$v->institution])) {
+                    $institutions[$v->institution] = $v->institution;
                 }
             }
             $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
@@ -1785,12 +1796,18 @@ class View {
             if (!empty($groups)) {
                 $groups = get_records_select_assoc('group', 'id IN (' . join(',', $groups) . ')', null, '', 'id,name');
             }
+            if (!empty($institutions)) {
+                $institutions = get_records_assoc('institution', '', '', '', 'name,displayname');
+                $institutions['mahara']->displayname = get_config('sitename');
+            }
             foreach ($viewdata as &$v) {
                 $v->shortdescription = clean_text(str_shorten(str_replace('<br />', ' ', $v->description), 100, true));
                 if ($v->owner) {
                     $v->sharedby = View::owner_name($v->ownerformat, $owners[$v->owner]);
                 } else if ($v->group) {
                     $v->sharedby = $groups[$v->group]->name;
+                } else if ($v->institution) {
+                    $v->sharedby = $institutions[$v->institution]->displayname;
                 }
                 $v = (array)$v;
             }
@@ -1948,66 +1965,120 @@ class View {
         return $title . $ext;
     }
 
+    public static function get_viewownersearch_data(&$search) {
+        $results = self::search_view_owners($search->query, $search->template, $search->limit, $search->offset);
+
+        $params = array();
+        if (!empty($search->query)) {
+            $params[] = 'ownerquery=' . $search->query;
+        }
+        $params[] = 'ownerlimit=' . $search->limit;
+
+        $qstring = join('&amp;', $params);
+
+        $smarty = smarty_core();
+        $smarty->assign_by_ref('results', $results);
+        $smarty->assign('viewurl', get_config('wwwroot') . 'view/choosetemplate.php?' . $qstring . '&amp;owneroffset=' . $search->offset);
+        $search->html = $smarty->fetch('view/viewownersearchresults.tpl');
+
+        $search->pagination = build_pagination(array(
+            'id' => 'viewowner_pagination',
+            'class' => 'center',
+            'url' => get_config('wwwroot') . 'view/choosetemplate.php?' . $qstring,
+            'count' => $results['count'],
+            'limit' => $search->limit,
+            'offset' => $search->offset,
+            'offsetname' => 'owneroffset',
+            'datatable' => 'viewownersearchresults',
+            'jsonscript' => 'view/viewownersearchresults.php',
+            'firsttext' => '',
+            'previoustext' => '',
+            'nexttext' => '',
+            'lasttext' => '',
+            'numbersincludefirstlast' => false,
+            'resultcounttextsingular' => get_string('owner', 'view'),
+            'resultcounttextplural' => get_string('owners', 'view'),
+        ));
+    }
+
+    public static function get_templatesearch_data(&$search) {
+        $results = self::view_search($search->query, $search->ownedby, $search->copyableby, $search->limit, $search->offset, true);
+
+        foreach ($results->data as &$r) {
+            $r['form'] = pieform(create_view_form($search->copyableby->group, $search->copyableby->institution, $r['id']));
+        }
+
+        $params = array();
+        if (!empty($search->query)) {
+            $params[] = 'viewquery=' . $search->query;
+        }
+        $params[] = 'viewlimit=' . $search->limit;
+
+        $smarty = smarty_core();
+        $smarty->assign_by_ref('results', $results->data);
+        $search->html = $smarty->fetch('view/templatesearchresults.tpl');
+
+        $search->pagination = build_pagination(array(
+            'id' => 'template_pagination',
+            'class' => 'center',
+            'url' => get_config('wwwroot') . 'view/choosetemplate.php?' . join('&amp;', $params),
+            'count' => $results->count,
+            'limit' => $search->limit,
+            'offset' => $search->offset,
+            'offsetname' => 'viewoffset',
+            'datatable' => 'templatesearchresults',
+            'jsonscript' => 'view/templatesearchresults.php',
+            'firsttext' => '',
+            'previoustext' => '',
+            'nexttext' => '',
+            'lasttext' => '',
+            'numbersincludefirstlast' => false,
+            'resultcounttextsingular' => get_string('view', 'view'),
+            'resultcounttextplural' => get_string('views', 'view'),
+        ));
+    }
+
 }
 
 
-function create_view_form($group=null, $institution=null, $templatechooser=null) {
-    global $USER;
+function create_view_form($group=null, $institution=null, $template=null) {
     $form = array(
-        'name'     => 'createview',
-        'method'   => 'post',
-        'plugintype' => 'core',
-        'pluginname' => 'view',
-        'elements' => array(
+        'name'            => 'createview',
+        'method'          => 'post',
+        'plugintype'      => 'core',
+        'pluginname'      => 'view',
+        'renderer'        => 'oneline',
+        'successcallback' => 'createview_submit',
+        'elements'   => array(
             'new' => array(
                 'type' => 'hidden',
                 'value' => true,
+            ),
+            'submit' => array(
+                'type'  => 'submit',
+                'value' => get_string('createview', 'view'),
             ),
         )
     );
     if ($group) {
         $form['elements']['group'] = array(
-            'type' => 'hidden',
+            'type'  => 'hidden',
             'value' => $group,
         );
     }
     else if ($institution) {
         $form['elements']['institution'] = array(
-            'type' => 'hidden',
+            'type'  => 'hidden',
             'value' => $institution,
         );
     }
-    if ($templatechooser) {
-        // Get templates visible to the user and non-templates owned by
-        // the owner of the view being created
-        $templates = View::view_search(null, null, null, true, null, 0, false);
-        $ownerid = ($group || $institution) ? null : $USER->get('id');
-        $nontemplates = View::view_search($ownerid, $group, $institution, false, null, 0, false);
-
-        $templateoptions = array(0 => get_string('none'));
-        foreach ($templates->data as $t) {
-            $templateoptions[$t->id] = $t->title;
-        }
-        foreach ($nontemplates->data as $t) {
-            $templateoptions[$t->id] = $t->title;
-        }
+    if ($template !== null) {
         $form['elements']['usetemplate'] = array(
-            'type'         => 'select',
-            'title'        => get_string('Template','view'),
-            'description'  => get_string('createfromtemplatedescription','view'),
-            'options'      => $templateoptions,
+            'type'  => 'hidden',
+            'value' => $template,
         );
-        $form['elements']['submit'] = array(
-            'type'  => 'submitcancel',
-            'value' => array(get_string('createview', 'view'), get_string('cancel')),
-        );
-    }
-    else {
-        $form['renderer'] = 'oneline';
-        $form['elements']['submit'] = array(
-            'type'  => 'submit',
-            'value' => get_string('createview', 'view'),
-        );
+        $form['name'] .= $template;
+        $form['elements']['submit']['value'] = get_string('copyview', 'view');
     }
     return $form;
 }

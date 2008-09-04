@@ -32,19 +32,46 @@ require_once(get_config('libroot') . 'group.php');
 
 $group = param_integer('group', null);
 $institution = param_alphanum('institution', null);
+View::set_nav($group, $institution);
 
-if ($group && !group_user_can_edit_views($group)
-    || $institution && !$USER->can_edit_institution($institution)) {
+if ($group && !group_user_can_edit_views($group) || $institution && !$USER->can_edit_institution($institution)) {
     throw new AccessDeniedException();
 }
 
 define('TITLE', get_string('copyaview', 'view'));
 
-$choosetemplate = pieform(create_view_form($group, $institution, true));
+$owners = new StdClass;
+$owners->query    = trim(param_variable('ownerquery', ''));
+$owners->template = null;
+$owners->offset   = param_integer('owneroffset', 0);
+$owners->limit    = param_integer('ownerlimit', 10);
+View::get_viewownersearch_data($owners);
+
+$views = new StdClass;
+$views->query     = trim(param_variable('viewquery', ''));
+$views->offset    = param_integer('viewoffset', 0);
+$views->limit     = param_integer('viewlimit', 10);
+$views->ownedby   = null;
+if ($ownertype = param_alpha('owntype', null)) {
+    $views->ownedby = (object) array($ownertype => param_alphanum('ownid'));
+}
+$views->copyableby = (object) array('group' => $group, 'institution' => $institution);
+if (!($group || $institution)) {
+    $views->copyableby->user = $USER->get('id');
+}
+View::get_templatesearch_data($views);
 
 $smarty = smarty();
 $smarty->assign('heading', TITLE);
+
+if ($template = param_integer('template', 0)) {
+    $smarty->assign('selectedtemplate', get_field('view', 'title', 'id', $template));
+}
+$choosetemplate = pieform(create_view_form($group, $institution, $template));
+
 $smarty->assign('choosetemplate', $choosetemplate);
+$smarty->assign('owners', $owners);
+$smarty->assign('views', $views);
 $smarty->display('view/choosetemplate.tpl');
 
 ?>

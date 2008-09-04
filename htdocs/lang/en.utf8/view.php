@@ -246,6 +246,7 @@ $string['viewfilesdirname'] = 'viewfiles';
 $string['viewfilesdirdesc'] = 'Files from copied views';
 $string['thisviewmaybecopied'] = 'Copying is allowed';
 $string['copythisview'] = 'Copy this View';
+$string['copyview'] = 'Copy View';
 $string['createemptyview'] = 'Create Empty View';
 $string['copyaview'] = 'Copy a View';
 $string['Untitled'] = 'Untitled';
@@ -255,5 +256,16 @@ $string['copyfornewmembers'] = 'Copy for new institution members';
 $string['copyfornewmembersdescription'] = 'Automatically make a personal copy of this View for all new members of %s.';
 $string['copyfornewgroups'] = 'Copy for new groups';
 $string['copyfornewgroupsdescription'] = 'Make a copy of this view in all new groups with these Group Types:';
+$string['searchviews'] = 'Search views';
+$string['searchowners'] = 'Search owners';
+$string['owner'] = 'owner';
+$string['Owner'] = 'Owner';
+$string['owners'] = 'owners';
+$string['show'] = 'Show';
+$string['searchviewsbyowner'] = 'Search for Views by owner:';
+$string['selectaviewtocopy'] = 'Select the View you wish to copy:';
+$string['listviews'] = 'List Views';
+$string['nocopyableviewsfound'] = 'No Views that you can copy';
+$string['noownersfound'] = 'No owners found';
 
 ?>

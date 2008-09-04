@@ -56,7 +56,7 @@ if ($can_edit) {
     $data = View::get_myviews_data($limit, $offset, $group->id);
 }
 else {
-    $data = View::view_search(null, $group->id, null, null, $limit, $offset);
+    $data = View::view_search(null, (object) array('group' => $group->id), null, $limit, $offset);
 }
 
 $userid = $USER->get('id');

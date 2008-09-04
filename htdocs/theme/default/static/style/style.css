@@ -1562,6 +1562,23 @@ button#dosearch {
 	background-color: #92b328 !important;
 }
 
+#copyview .templateresults {
+  width: 100%;
+  margin-top: 5px;
+}
+#copyview .views {
+  float: left;
+  margin-left: 50px;
+  width: 40%;
+}
+#copyview .owners {
+  float: left;
+  width: 40%;
+}
+#copyview .search {
+  text-align: center;
+  margin-top: 10px;
+}
 
 
 /* MY PORTFOLIO > MY FILES */

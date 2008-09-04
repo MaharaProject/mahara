@@ -50,8 +50,10 @@
                     {str tag=by section=view}
                     {if $view.group}
                         <a href="{$WWWROOT}group/view.php?id={$view.group}">{$view.sharedby}</a>
-                    {else}
+                    {elseif $view.owner}
                         <a href="{$WWWROOT}user/view.php?id={$view.owner}">{$view.sharedby}</a>
+                    {else}
+                        {$view.sharedby}
                     {/if}
                 {/if}
                 <div>{$view.shortdescription}</div>
@@ -78,8 +80,10 @@
                     {str tag=by section=view}
                     {if $view.group}
                         <a href="{$WWWROOT}group/view.php?id={$view.group}">{$view.sharedby}</a>
-                    {else}
+                    {elseif $view.owner}
                         <a href="{$WWWROOT}user/view.php?id={$view.owner}">{$view.sharedby}</a>
+                    {else}
+                        {$view.sharedby}
                     {/if}
                 {/if}
                 <div>{$view.shortdescription}</div>
