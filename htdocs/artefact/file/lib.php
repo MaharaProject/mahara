@@ -626,7 +626,7 @@ JAVASCRIPT;
             }
             else if ($artefact->institution) {
                 if ($artefact->institution == 'mahara') {
-                    $folderdata[$ownerkey]->ownername = get_string('Site') . ':';
+                    $folderdata[$ownerkey]->ownername = get_config('sitename') . ':';
                 }
                 else {
                     $folderdata[$ownerkey]->ownername = get_field('institution', 'displayname', 'name', $artefact->institution) . ':';
