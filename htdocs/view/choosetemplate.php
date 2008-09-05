@@ -55,21 +55,39 @@ $views->ownedby   = null;
 if ($ownertype = param_alpha('owntype', null)) {
     $views->ownedby = (object) array($ownertype => param_alphanum('ownid'));
 }
-$views->copyableby = (object) array('group' => $group, 'institution' => $institution);
+$views->copyableby = (object) array('group' => $group, 'institution' => $institution, 'user' => null);
 if (!($group || $institution)) {
     $views->copyableby->user = $USER->get('id');
 }
 View::get_templatesearch_data($views);
 
-$smarty = smarty();
+$js = <<<EOF
+ownerlist = new SearchTable('viewownersearch');
+templatelist = new SearchTable('templatesearch');
+addLoadEvent(function() {
+  ownerlist.rewriteOther = function () {
+    forEach(getElementsByTagAndClassName('td', 'selectowner', 'viewownersearch'), function(i) {
+      disconnectAll(i);
+      connect(i, 'onclick', function (e) {
+        e.stop();
+        var children = getElementsByTagAndClassName('a', null, this);
+        if (children.length == 1) {
+          var href = getNodeAttribute(children[0], 'href');
+          templatelist.params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
+          templatelist.params.viewlimit = {$views->limit};
+          templatelist.params.viewoffset = 0;
+          templatelist.doSearch();
+        }
+      });
+    });
+  };
+  ownerlist.rewriteOther();
+});
+EOF;
+
+$smarty = smarty(array('searchtable'));
+$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('heading', TITLE);
-
-if ($template = param_integer('template', 0)) {
-    $smarty->assign('selectedtemplate', get_field('view', 'title', 'id', $template));
-}
-$choosetemplate = pieform(create_view_form($group, $institution, $template));
-
-$smarty->assign('choosetemplate', $choosetemplate);
 $smarty->assign('owners', $owners);
 $smarty->assign('views', $views);
 $smarty->display('view/choosetemplate.tpl');

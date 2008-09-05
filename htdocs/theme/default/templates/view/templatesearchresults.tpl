@@ -1,8 +1,11 @@
 <table class="templateresults tablerenderer">
   <thead>
-    <th>{str tag=name}</th>
-    <th>{str tag=Owner section=view}</th>
-    <th></th>
+{if ($ownername)}<tr><td colspan="3">{$ownername}</td></tr>{/if}
+    <tr>
+      <th>{str tag=name}</th>
+      <th>{str tag=Owner section=view}</th>
+      <th></th>
+    </tr>
   </thead>
   <tbody>
 {if !empty($results)}

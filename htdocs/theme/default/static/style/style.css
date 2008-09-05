@@ -1566,16 +1566,16 @@ button#dosearch {
   width: 100%;
   margin-top: 5px;
 }
-#copyview .views {
+#copyview #templatesearch {
   float: left;
   margin-left: 50px;
   width: 40%;
 }
-#copyview .owners {
+#copyview #viewownersearch {
   float: left;
   width: 40%;
 }
-#copyview .search {
+#copyview form.searchquery {
   text-align: center;
   margin-top: 10px;
 }
@@ -2549,6 +2549,7 @@ table#initials .initial-letters {
     text-decoration: none;
     font-weight: bold;
 }
+.query-button,
 #query-button {
 	background: url(../images/btn_search_off.gif) no-repeat;
 	border: none;

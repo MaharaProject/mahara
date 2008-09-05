@@ -1980,17 +1980,16 @@ class View {
         $smarty->assign_by_ref('results', $results);
         $smarty->assign('viewurl', get_config('wwwroot') . 'view/choosetemplate.php?' . $qstring . '&amp;owneroffset=' . $search->offset);
         $search->html = $smarty->fetch('view/viewownersearchresults.tpl');
+        $search->count = $results['count'];
 
         $search->pagination = build_pagination(array(
-            'id' => 'viewowner_pagination',
+            'id' => 'viewownersearch_pagination',
             'class' => 'center',
             'url' => get_config('wwwroot') . 'view/choosetemplate.php?' . $qstring,
             'count' => $results['count'],
             'limit' => $search->limit,
             'offset' => $search->offset,
             'offsetname' => 'owneroffset',
-            'datatable' => 'viewownersearchresults',
-            'jsonscript' => 'view/viewownersearchresults.php',
             'firsttext' => '',
             'previoustext' => '',
             'nexttext' => '',
@@ -2016,18 +2015,35 @@ class View {
 
         $smarty = smarty_core();
         $smarty->assign_by_ref('results', $results->data);
+        if ($search->ownedby) {
+            foreach ($search->ownedby as $k => $v) {
+                $params[] = 'owntype=' . $k;
+                $params[] = 'ownid=' . $v;
+                if ($k == 'user') {
+                    $ownername = display_name($v);
+                } else if ($k == 'group') {
+                    $ownername = get_field('group', 'name', 'id', $v);
+                } else if ($k == 'institution') {
+                    if ($v == 'mahara') {
+                        $ownername = get_config('sitename');
+                    } else {
+                        $ownername = get_field('institution', 'displayname', 'name', $v);
+                    }
+                }
+            }
+            $smarty->assign('ownername', get_string('displayingviewsby', 'view', $ownername));
+        }
         $search->html = $smarty->fetch('view/templatesearchresults.tpl');
+        $search->count = $results->count;
 
         $search->pagination = build_pagination(array(
-            'id' => 'template_pagination',
+            'id' => 'templatesearch_pagination',
             'class' => 'center',
             'url' => get_config('wwwroot') . 'view/choosetemplate.php?' . join('&amp;', $params),
             'count' => $results->count,
             'limit' => $search->limit,
             'offset' => $search->offset,
             'offsetname' => 'viewoffset',
-            'datatable' => 'templatesearchresults',
-            'jsonscript' => 'view/templatesearchresults.php',
             'firsttext' => '',
             'previoustext' => '',
             'nexttext' => '',

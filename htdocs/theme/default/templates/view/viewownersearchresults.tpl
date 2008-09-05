@@ -1,8 +1,10 @@
 <table class="templateresults tablerenderer">
   <thead>
-    <th>{str tag=name}</th>
-    <th>{str tag=views}</th>
-    <th></th>
+    <tr>
+      <th>{str tag=name}</th>
+      <th>{str tag=views}</th>
+      <th></th>
+    </tr>
   </thead>
   <tbody>
 {if !empty($results.data)}
@@ -18,7 +20,7 @@
           {/if}
       </td>
       <td style="text-align: center;">{$row->count|escape}</td>
-      <td><a href="{$viewurl}&amp;owntype={$row->type}&amp;ownid={$row->id}">{str tag=listviews section=view}</a>&nbsp;<img src="{theme_path location='images/icon_fieldset_left.gif'}" alt=""></td>
+      <td class="selectowner"><a href="{$viewurl}&amp;owntype={$row->type}&amp;ownid={$row->id}">{str tag=listviews section=view}</a>&nbsp;<img src="{theme_path location='images/icon_fieldset_left.gif'}" alt=""></td>
     </tr>
 {/foreach}
 {else}
