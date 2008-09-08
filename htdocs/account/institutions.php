@@ -47,6 +47,11 @@ if (!empty($member)) {
                                   $institutions[$i->institution]->displayname),
             'value' => get_string('leaveinstitution')
         );
+        $elements[] = array(
+            'type' => 'html',
+            'name' => '_leavehtml_' . $i->institution,
+            'value' => '<br>',
+        );
         unset($institutions[$i->institution]);
     }
     $memberform = pieform(array(
