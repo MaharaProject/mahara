@@ -962,6 +962,10 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return;
     }
 
+    // Only changes to group files get put in the artefact_log table
+    public function can_be_logged() {
+        return (bool) $this->get('group');
+    }
 }
 
 class ArtefactTypeFolder extends ArtefactTypeFileBase {

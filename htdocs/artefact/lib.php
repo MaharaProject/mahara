@@ -340,11 +340,17 @@ abstract class ArtefactType {
         }
         if (empty($this->id)) {
             $this->id = insert_record('artefact', $fordb, 'id', true);
+            if ($this->can_be_logged()) {
+                $this->log('created');
+            }
             if (!empty($this->parent)) {
                 $this->parentdirty = true;
             }
         }
         else {
+            if ($this->can_be_logged()) {
+                $this->log('edited');
+            }
             update_record('artefact', $fordb, 'id');
         }
 
@@ -430,6 +436,10 @@ abstract class ArtefactType {
         delete_records('artefact_tag', 'artefact', $this->id);
         delete_records('artefact_access_role', 'artefact', $this->id);
         delete_records('artefact_access_usr', 'artefact', $this->id);
+
+        if ($this->can_be_logged()) {
+            $this->log('deleted');
+        }
       
         // Delete the record itself.
         delete_records('artefact', 'id', $this->id);
@@ -691,6 +701,43 @@ abstract class ArtefactType {
         $copy->commit();
         $this->copy_extra($copy);
         return $copy->get('id');
+    }
+
+    public function can_be_logged() {
+        return false;
+    }
+
+    public function log($action) {
+        global $USER;
+        $entry = (object) array(
+            'artefact' => $this->id,
+            'usr'      => $USER->get('id'),
+            'time'     => db_format_timestamp($this->mtime),
+            $action    => 1,
+        );
+        if ($action == 'deleted') {
+            insert_record('artefact_log', $entry);
+            return;
+        }
+        $loggedfields = array('title', 'description', 'parent');
+        if ($action == 'edited') {
+            $old = get_record('artefact', 'id', $this->id);
+            foreach ($loggedfields as $key) {
+                if ($this->$key != $old->$key) {
+                    $entry->$key = $this->$key;
+                    $changed = true;
+                }                
+            }
+            if (isset($changed)) {
+                insert_record('artefact_log', $entry);
+            }
+        }
+        if ($action == 'created') {
+            foreach ($loggedfields as $key) {
+                $entry->$key = $this->$key;
+            }
+            insert_record('artefact_log', $entry);
+        }
     }
 }
 

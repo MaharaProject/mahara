@@ -1264,6 +1264,22 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $cron);
     }
 
+    if ($oldversion < 2008090800) {
+        $table = new XMLDBTable('artefact_log');
+        $table->addFieldInfo('artefact', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, null);
+        $table->addFieldInfo('time', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('title', XMLDB_TYPE_TEXT, null);
+        $table->addFieldInfo('description', XMLDB_TYPE_TEXT, null);
+        $table->addFieldInfo('parent', XMLDB_TYPE_INTEGER, 10, null, null);
+        $table->addFieldInfo('created', XMLDB_TYPE_INTEGER, 1, null, null);
+        $table->addFieldInfo('deleted', XMLDB_TYPE_INTEGER, 1, null, null);
+        $table->addFieldInfo('edited', XMLDB_TYPE_INTEGER, 1, null, null);
+        $table->addIndexInfo('artefactix', XMLDB_INDEX_NOTUNIQUE, array('artefact'));
+        $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+        create_table($table);
+    }
+
     return $status;
 
 }

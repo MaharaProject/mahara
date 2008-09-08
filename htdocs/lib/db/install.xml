@@ -372,6 +372,25 @@
                 <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
             </KEYS>
         </TABLE>
+        <TABLE NAME="artefact_log">
+            <FIELDS>
+                <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="time" TYPE="datetime" NOTNULL="true"  />
+                <FIELD NAME="title" TYPE="text" NOTNULL="false"  />
+                <FIELD NAME="description" TYPE="text" NOTNULL="false"  />
+                <FIELD NAME="parent" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="created" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="false" />
+                <FIELD NAME="deleted" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="false" />
+                <FIELD NAME="edited" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="false" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="artefactix" UNIQUE="false" FIELDS="artefact"/>
+            </INDEXES>
+        </TABLE>
         <TABLE NAME="interaction_instance">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
