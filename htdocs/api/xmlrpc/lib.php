@@ -310,7 +310,8 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
     global $REMOTEWWWROOT;
     require_once('import.php');
 
-    if (!$user = find_remote_user($username, $REMOTEWWWROOT)) {
+    list ($user, $authinstance) = find_remote_user($username, $REMOTEWWWROOT);
+    if (!$user) {
         throw new ImportException("Could not find user $username for $REMOTEWWWROOT");
     }
 
@@ -334,6 +335,16 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
         call_static_method($class, 'validate_import_data', $importdata);
     } catch (Exception $e) {
         throw new ImportException('Invalid importdata: ' . $e->getMessage());
+    }
+
+    if (!array_key_exists('totalsize', $importdata)) {
+        throw new ImportException('Invalid importdata: missing totalsize');
+    }
+
+    if (!$user->quota_allowed($importdata['totalsize'])) {
+        $e = new ImportException('Exceeded user quota');
+        $e->set_log_off();
+        throw $e;
     }
 
     $queue->data = serialize($importdata);

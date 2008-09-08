@@ -275,7 +275,7 @@ class FilesImporter extends Importer {
         $savedfiles = array(); // to put files into so we can delete them should we encounter an exception
         foreach ($this->files as $f) {
             try {
-                $data = array(
+                $data = (object)array(
                     'title' => $f->wantsfilename,
                     'description' => $f->wantsfilename . ' (' . get_string('importedfrom', 'mahara', $this->get('importertransport')->get_description()) . ')',
                     'parent' => $dir,
