@@ -78,8 +78,18 @@ $elements['quota'] = array(
     'defaultvalue' => get_config_plugin('artefact', 'file', 'defaultquota'),
 );
 
-$authinstances = auth_get_auth_instances();
-if (count($authinstances) > 1) {
+if ($USER->get('admin')) {
+    $authinstances = auth_get_auth_instances();
+} else {
+    $admininstitutions = $USER->get('admininstitutions');
+    $authinstances = auth_get_auth_instances_for_institutions($admininstitutions);
+    if (empty($authinstances)) {
+        $SESSION->add_info_msg(get_string('configureauthplugin', 'admin'));
+        redirect(get_config('wwwroot').'admin/users/institutions.php?i='.key($admininstitutions).'&amp;edit=1');
+    }
+}
+
+if (count($authinstances) > 0) {
     $options = array();
 
     $external = false;
@@ -109,11 +119,6 @@ if (count($authinstances) > 1) {
             'description'  => get_string('remoteusernamedescription', 'admin'),
         );
     }
-} else if (count($authinstances == 1)) {
-    $elements['authinstance'] = array(
-        'type'         => 'hidden',
-        'value'        => $authinstances[0]->id,
-    );
 }
 
 $elements['submit'] = array(
