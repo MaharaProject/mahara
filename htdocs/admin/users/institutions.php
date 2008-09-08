@@ -288,7 +288,7 @@ else {
     // Get a list of institutions
     if (!$USER->get('admin')) { // Filter the list for institutional admins
         $where = '
-        AND i.name IN (' . join(',', array_map('db_quote', $USER->get('admininstitutions'))) . ')';
+        WHERE ii.name IN (' . join(',', array_map('db_quote', $USER->get('admininstitutions'))) . ')';
     }
     else {
         $where = '';
@@ -317,12 +317,12 @@ else {
                     LEFT OUTER JOIN {usr_institution} ui ON (ui.institution = i.name)
                     LEFT OUTER JOIN {usr} u ON (u.id = ui.usr)
                 WHERE
-                    (u.deleted = 0 OR u.id IS NULL)' . $where . '
+                    (u.deleted = 0 OR u.id IS NULL)
                 GROUP BY
                     i.name, i.displayname, i.maxuseraccounts
                 ORDER BY
                     i.name = \'mahara\', i.displayname
-             ) a ON (a.name = ii.name)', array());
+             ) a ON (a.name = ii.name)' . $where, array());
     if (isset($defaultinstmembers)) {
         $institutions['mahara']->members = $defaultinstmembers;
         $institutions['mahara']->staff   = '';
