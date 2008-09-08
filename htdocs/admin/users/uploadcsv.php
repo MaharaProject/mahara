@@ -79,7 +79,7 @@ if ($USER->get('admin')) {
     }
 }
 
-if (count($authinstances) > 1) {
+if (count($authinstances) > 0) {
     $options = array();
 
     foreach ($authinstances as $authinstance) {
@@ -95,16 +95,6 @@ if (count($authinstances) > 1) {
         'description' => get_string('uploadcsvinstitution', 'admin'),
         'options' => $options,
         'defaultvalue' => $default
-    );
-}
-else {
-    foreach ($authinstances as $authinstance) {
-        $string = $authinstance->id .'_'. $authinstance->name;
-    }
-
-    $authinstanceelement = array(
-        'type' => 'hidden',
-        'value' => $string
     );
 }
 
