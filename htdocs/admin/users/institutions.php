@@ -50,7 +50,7 @@ if (!$USER->get('admin')) {
     }
     if (empty($institution) && count($USER->get('admininstitutions')) == 1) {
         redirect(get_config('wwwroot') . 'admin/users/institutions.php?i='
-                 . key($USER->get('institutions')));
+                 . key($USER->get('admininstitutions')));
     }
 }
 
