@@ -14,9 +14,9 @@
           {if $row->type == 'institution'}
           {$row->display|escape}
           {elseif $row->type == 'group'}
-          <a href="{$WWWROOT}group/view.php?id={$row->id|escape}">{$row->display|escape}</a>
+          <a href="{$WWWROOT}group/view.php?id={$row->id|escape}" target="_blank">{$row->display|escape}</a>
           {else}
-          <a href="{$WWWROOT}user/view.php?id={$row->id|escape}">{$row->display|escape}</a>
+          <a href="{$WWWROOT}user/view.php?id={$row->id|escape}" target="_blank">{$row->display|escape}</a>
           {/if}
       </td>
       <td style="text-align: center;">{$row->count|escape}</td>

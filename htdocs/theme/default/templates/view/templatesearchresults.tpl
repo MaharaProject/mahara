@@ -12,7 +12,7 @@
 {foreach from=$results item=row}
     <tr class="r{cycle values=0,1}">
       <td>
-        <a href="{$WWWROOT}view/view.php?id={$row.id|escape}">{$row.title|escape}</a>
+        <a href="{$WWWROOT}view/view.php?id={$row.id|escape}" target="_blank">{$row.title|escape}</a>
       </td>
       <td>
         {$row.sharedby|escape}
