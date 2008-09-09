@@ -290,7 +290,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
 
     public static function wmp_player($artefact, $block, $width, $height) {
 
-        $url = self::get_download_link($artefact, $block, true);
+        $url = hsc(self::get_download_link($artefact, $block, true));
 
         $size = 'width="' . $width . '" height="' . $height . '"';
         $autosize = 'false';
