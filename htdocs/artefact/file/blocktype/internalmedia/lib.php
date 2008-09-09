@@ -374,8 +374,8 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             return '';
         }
         define('BLOCKTYPE_INTERNALMEDIA_JS_INCLUDED', true);
-        return '<script src="' . get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/swfobject.js"></script>
-             <script defer="true" src="' . get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/eolas_fix.js"></script>';
+        return '<script src="' . get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/swfobject.js" type="text/javascript"></script>
+             <script defer="defer" src="' . get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/eolas_fix.js" type="text/javascript"></script>';
     }
 
 }
