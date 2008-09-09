@@ -233,7 +233,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             $playerurl = $url;
             $params['play'] = 'false';
         }
-        $html =  '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br />
+        $html =  '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>
                <span class="blocktype_internalmedia_mp3" id="' . $id . '">(' 
                . get_string('flash', 'blocktype.file/internalmedia') . ')</span>
                 <script type="text/javascript">
@@ -265,24 +265,24 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $mimetype = get_mime_type($artefact->get_path());
         $autostart = 'false';
 
-        return '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br />'
+        return '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>'
     . '<span class="blocktype_internalmedia_real">
     <script type="text/javascript">
     //<![CDATA[
     document.write(\'<object classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA" width="240" height="180">\\
-      <param name="src" value="' . $url . '" />\\
-      <param name="autostart" value="' . $autostart . '" />\\
-      <param name="controls" value="imagewindow" />\\
-      <param name="console" value="video" />\\
-      <param name="loop" value="true" />\\
-      <embed src="' . $url . '" width=240" height="180" loop="true" type="' . $mimetype . '" controls="imagewindow" console="video" autostart="' . $autostart . '" />\\
-      </object><br />\\
+      <param name="src" value="' . $url . '">\\
+      <param name="autostart" value="' . $autostart . '">\\
+      <param name="controls" value="imagewindow">\\
+      <param name="console" value="video">\\
+      <param name="loop" value="true">\\
+      <embed src="' . $url . '" width=240" height="180" loop="true" type="' . $mimetype . '" controls="imagewindow" console="video" autostart="' . $autostart . '">\\
+      </object><br>\\
       <object classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA" width="240" height="30">\\
-      <param name="src" value="' . $url . '" />\\
-      <param name="autostart" value="' . $autostart . '" />\\
-      <param name="controls" value="ControlPanel" />\\
-      <param name="console" value="video" />\\
-      <embed src="' . $url . '" width="240" height="30" controls="ControlPanel" type="' . $mimetype . '" console="video" autostart="' . $autostart . '" />\\
+      <param name="src" value="' . $url . '">\\
+      <param name="autostart" value="' . $autostart . '">\\
+      <param name="controls" value="ControlPanel">\\
+      <param name="console" value="video">\\
+      <embed src="' . $url . '" width="240" height="30" controls="ControlPanel" type="' . $mimetype . '" console="video" autostart="' . $autostart . '">\\
       </object>\');
     //]]>
     </script></span>';
@@ -298,30 +298,31 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $mimetype = 'video/x-ms-wmv'; // hardcode this
         $autostart = 'false';
 
-        return '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br />'
+        return '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>'
     . '<span class="mediaplugin mediaplugin_wmp">
     <object classid="CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6" ' . $size . '
       standby="Loading Microsoft(R) Windows(R) Media Player components..."
       type="application/x-oleobject">
-     <param name="Filename" value="' . $url . '" />' /* hsc($artefact->get('title')) . '" /> */ . '
-     <param name="src" value="' . $url . '" />
-     <param name="url" value="' . $url . '" />
-     <param name="ShowControls" value="true" />
-     <param name="AutoRewind" value="true" />
-     <param name="AutoStart" value="' . $autostart . '" />
-     <param name="Autosize" value="' . $autosize . '" />
-     <param name="EnableContextMenu" value="true" />
-     <param name="TransparentAtStart" value="false" />
-     <param name="AnimationAtStart" value="false" />
-     <param name="ShowGotoBar" value="false" />
-     <param name="EnableFullScreenControls" value="true" />
+     <param name="Filename" value="' . $url . '">' /* hsc($artefact->get('title')) . '"> */ . '
+     <param name="src" value="' . $url . '">
+     <param name="url" value="' . $url . '">
+     <param name="ShowControls" value="true">
+     <param name="AutoRewind" value="true">
+     <param name="AutoStart" value="' . $autostart . '">
+     <param name="Autosize" value="' . $autosize . '">
+     <param name="EnableContextMenu" value="true">
+     <param name="TransparentAtStart" value="false">
+     <param name="AnimationAtStart" value="false">
+     <param name="ShowGotoBar" value="false">
+     <param name="EnableFullScreenControls" value="true">
     <!--[if !IE]>-->
       <object data="' . $url . '" type="' . $mimetype . '" ' . $size . '>
-       <param name="src" value="' . $url . '" />
-       <param name="controller" value="true" />
-       <param name="autoplay" value="' . $autostart . '" />
-       <param name="autostart" value="' . $autostart . '" />
-       <param name="resize" value="scale" />
+       <param name="src" value="' . $url . '">
+       <param name="url" value="' . $url . '">
+       <param name="controller" value="true">
+       <param name="autoplay" value="' . $autostart . '">
+       <param name="autostart" value="' . $autostart . '">
+       <param name="resize" value="scale">
       </object>
     <!--<![endif]-->
     </object></span>';
@@ -337,26 +338,26 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $mimetype = get_mime_type($artefact->get_path());
         $autostart = 'false';
 
-        return '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br />'
+        return '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>'
     . '<span class="mediaplugin mediaplugin_qt">
     <object classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B"
       codebase="http://www.apple.com/qtactivex/qtplugin.cab" ' . $size . '>
-     <param name="pluginspage" value="http://www.apple.com/quicktime/download/" />
-     <param name="src" value="' . $url . '" />
-     <param name="coltroller" value="true" />
-     <param name="loop" value="false" />
-     <param name="autoplay" value="' . $autostart . '" />
-     <param name="autostart" value="' . $autostart . '" />
-     <param name="scale" value="aspect" />
+     <param name="pluginspage" value="http://www.apple.com/quicktime/download/">
+     <param name="src" value="' . $url . '">
+     <param name="coltroller" value="true">
+     <param name="loop" value="false">
+     <param name="autoplay" value="' . $autostart . '">
+     <param name="autostart" value="' . $autostart . '">
+     <param name="scale" value="aspect">
     <!--[if !IE]>-->
       <object data="' . $url . '" type="' . $mimetype . '" ' . $size . '>
-       <param name="src" value="'.$url.'" />
-       <param name="pluginurl" value="http://www.apple.com/quicktime/download/" />
-       <param name="controller" value="true" />
-       <param name="loop" value="false" />
-       <param name="autoplay" value="' . $autostart . '" />
-       <param name="autostart" value="' . $autostart . '" />
-       <param name="scale" value="aspect" />
+       <param name="src" value="'.$url.'">
+       <param name="pluginurl" value="http://www.apple.com/quicktime/download/">
+       <param name="controller" value="true">
+       <param name="loop" value="false">
+       <param name="autoplay" value="' . $autostart . '">
+       <param name="autostart" value="' . $autostart . '">
+       <param name="scale" value="aspect">
       </object>
     <!--<![endif]-->
     </object></span>';
