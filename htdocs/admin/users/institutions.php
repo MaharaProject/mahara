@@ -196,7 +196,10 @@ if ($institution || $add) {
             ),
             'help'   => true,
         ),
-        'authplugin' => array(
+    );
+
+    if ($USER->get('admin')) {
+        $elements['authplugin'] = array(
             'type'    => 'authlist',
             'title'   => get_string('authplugin', 'admin'),
             'options' => $authinstances,
@@ -206,14 +209,24 @@ if ($institution || $add) {
             'institution' => $institution,
             'help'   => true,
             'ignore' => count($authtypes) == 0 || $institution == ''
-        ),
-        'registerallowed' => array(
-            'type'         => 'checkbox',
-            'title'        => get_string('registrationallowed', 'admin'),
-            'description'  => get_string('registrationalloweddescription', 'admin'),
-            'defaultvalue' => $data->registerallowed,
-            'help'   => true,
-        ),
+        );
+    }
+
+    if (!$add && empty($inuse)) {
+        if ($USER->get('admin')) {
+            $smarty->assign('noauthmessage', get_string('adminnoauthpluginforinstitution', 'admin'));
+        }
+        else {
+            $smarty->assign('noauthmessage', get_string('noauthpluginforinstitution', 'admin'));
+        }
+    }
+
+    $elements['registerallowed'] = array(
+        'type'         => 'checkbox',
+        'title'        => get_string('registrationallowed', 'admin'),
+        'description'  => get_string('registrationalloweddescription', 'admin'),
+        'defaultvalue' => $data->registerallowed,
+        'help'   => true,
     );
 
     if (empty($data->name) || $data->name != 'mahara') {
