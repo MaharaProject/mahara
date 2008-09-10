@@ -67,13 +67,13 @@ $institution = new Institution();
 try {
     $institution->findByWwwroot($remotewwwroot);
 } catch (ParamOutOfRangeException $e) {
-    throw new ParameterException(get_string('errnoxmlrcpwwwroot','auth'). htmlentities($remotewwwroot, ENT_QUOTES, 'UTF-8'));
+    throw new ParameterException(get_string('errnoxmlrpcwwwroot','auth', $remotewwwroot));
 }
 
 $instances = auth_get_auth_instances_for_wwwroot($remotewwwroot);
 
 if (empty($instances)) {
-    throw new ParameterException(get_string('errnoauthinstances','auth'). htmlentities($remotewwwroot, ENT_QUOTES, 'UTF-8'));
+    throw new ParameterException(get_string('errnoauthinstances','auth', $remotewwwroot));
 }
 
 // If the user is already logged in as someone, log them out. That way, if 
@@ -115,7 +115,7 @@ if ($res == true) {
 }
 
 if ($rpcconfigured === false) {
-    throw new XmlrpcUserNotFoundException(get_string('errnoxmlrcpinstances','auth').htmlentities($remotewwwroot, ENT_QUOTES, 'UTF-8'));
+    throw new XmlrpcUserNotFoundException(get_string('errnoxmlrpcinstances','auth', $remotewwwroot));
 } else {
     throw new XmlrpcUserNotFoundException(get_string('errnoxmlrpcuser','auth'));
 }
