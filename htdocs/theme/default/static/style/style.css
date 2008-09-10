@@ -1579,7 +1579,24 @@ button#dosearch {
   text-align: center;
   margin-top: 10px;
 }
-
+#viewpreview {
+  position: absolute;
+  border: 10px solid #eee;
+  background-color: #fff;
+}
+#viewpreviewinner {
+  border: 1px solid #ccc;
+  padding: 5px;
+}
+#viewpreviewclose {
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 5px;
+}
+#viewpreviewcontent {
+  margin-top: 5px;
+}
 
 /* MY PORTFOLIO > MY FILES */
 #uploader {

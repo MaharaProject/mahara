@@ -61,7 +61,9 @@ if (!($group || $institution)) {
 }
 View::get_templatesearch_data($views);
 
+$strclose = json_encode(get_string('closepreview','view'));
 $js = <<<EOF
+preview = DIV({'id':'viewpreview', 'class':'hidden'}, DIV({'id':'viewpreviewinner'}, DIV({'id':'viewpreviewclose'}, A({'href':'','id':'closepreview'}, {$strclose})), DIV({'id':'viewpreviewcontent'})));
 ownerlist = new SearchTable('viewownersearch');
 templatelist = new SearchTable('templatesearch');
 addLoadEvent(function() {
@@ -82,10 +84,37 @@ addLoadEvent(function() {
     });
   };
   ownerlist.rewriteOther();
+  templatelist.rewriteOther = function () {
+    forEach(getElementsByTagAndClassName('a', 'viewlink', 'templatesearch'), function(i) {
+      disconnectAll(i);
+      connect(i, 'onclick', function (e) {
+        e.stop();
+        var href = getNodeAttribute(this, 'href');
+        var params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
+        sendjsonrequest('viewcontent.json.php', params, 'POST', function(data) {
+            $('viewpreviewcontent').innerHTML = data.html;
+            var vdim = getViewportDimensions();
+            var vpos = getViewportPosition();
+            var offset = 16; // Left border & padding of preview container elements (@todo: use getStyle()?)
+            setElementDimensions(preview, {'w':vdim.w - 200});
+            setElementPosition(preview, {'x':vpos.x+100-offset, 'y':vpos.y+200});
+            showElement(preview);
+        });
+      });
+    });
+  };
+  templatelist.rewriteOther();
+  appendChildNodes(getFirstElementByTagAndClassName('body'), preview);
+  connect('closepreview', 'onclick', function (e) {e.stop(); fade(preview, {'duration':0.2});});
 });
 EOF;
 
-$smarty = smarty(array('searchtable'));
+$smarty = smarty(
+    array('searchtable'),
+    array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
+    array(),
+    array('stylesheets' => array('style/views.css'))
+);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('heading', TITLE);
 $smarty->assign('owners', $owners);
