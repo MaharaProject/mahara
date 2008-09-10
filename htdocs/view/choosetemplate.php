@@ -61,6 +61,7 @@ if (!($group || $institution)) {
 }
 View::get_templatesearch_data($views);
 
+$strpreview = json_encode(get_string('Preview','view'));
 $strclose = json_encode(get_string('closepreview','view'));
 $js = <<<EOF
 preview = DIV({'id':'viewpreview', 'class':'hidden'}, DIV({'id':'viewpreviewinner'}, DIV({'id':'viewpreviewclose'}, A({'href':'','id':'closepreview'}, {$strclose})), DIV({'id':'viewpreviewcontent'})));
@@ -87,6 +88,7 @@ addLoadEvent(function() {
   templatelist.rewriteOther = function () {
     forEach(getElementsByTagAndClassName('a', 'viewlink', 'templatesearch'), function(i) {
       disconnectAll(i);
+      setNodeAttribute(i, 'title', {$strpreview});
       connect(i, 'onclick', function (e) {
         e.stop();
         var href = getNodeAttribute(this, 'href');
