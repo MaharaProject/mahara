@@ -199,7 +199,7 @@ function activity_process_queue() {
 
 function activity_get_viewaccess_users($view, $owner, $type) {
     $type = activity_locate_typerecord($type);
-    $sql = 'SELECT userid, u.*, p.method, ap.value AS lang
+    $sql = "SELECT userid, u.*, p.method, ap.value AS lang
                 FROM (
                 SELECT (CASE WHEN usr1 = ? THEN usr2 ELSE usr1 END) AS userid 
                     FROM {usr_friend} f
@@ -216,9 +216,8 @@ function activity_get_viewaccess_users($view, $owner, $type) {
                         WHERE vg.view = ? AND (vg.role IS NULL OR vg.role = m.role)
                 ) AS userlist
                 JOIN {usr} u ON u.id = userlist.userid
-                LEFT JOIN {usr_activity_preference} p ON p.usr = u.id
-                LEFT OUTER JOIN {usr_account_preference} ap ON (ap.usr = u.id AND ap.field = \'lang\')
-            WHERE p.activity = ?';
+                LEFT JOIN {usr_activity_preference} p ON p.usr = u.id AND p.activity = ?
+                LEFT JOIN {usr_account_preference} ap ON ap.usr = u.id AND ap.field = 'lang'";
     $values = array($owner, $owner, $owner, 'friends', $view, $view, $view, $type->id);
     if (!$u = get_records_sql_assoc($sql, $values)) {
         $u = array();
