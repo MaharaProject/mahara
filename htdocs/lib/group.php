@@ -331,7 +331,15 @@ function group_has_members($groupid) {
 }
 
 function delete_group($groupid) {
-    update_record('group', array('deleted' => 1), array('id' => $groupid));
+    update_record('group',
+        array(
+            'deleted' => 1,
+            'name' => get_field('group', 'name', 'id', $groupid) . '.deleted.' . time(),
+        ),
+        array(
+            'id' => $groupid,
+        )
+    );
 }
 
 /**
