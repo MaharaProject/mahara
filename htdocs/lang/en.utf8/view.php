@@ -128,6 +128,7 @@ $string['friend'] = 'Friend';
 $string['profileicon'] = 'Profile Icon';
 
 // general views stuff
+$string['Added'] = 'Added';
 $string['allviews'] = 'All Views';
 
 $string['submitviewconfirm'] = 'If you submit \'%s\' to \'%s\' for assessment, you will not be able to edit the View until your tutor has finished marking the View.  Are you sure you want to submit this View now?';

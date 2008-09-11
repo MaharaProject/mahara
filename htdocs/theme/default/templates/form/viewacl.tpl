@@ -21,7 +21,7 @@
         </table>
     </div>
 </div>
-<h3>Added</h3>
+<h3>{{str tag=Added section=view}}</h3>
 <div id="accesslistitems">
 </div>
 
