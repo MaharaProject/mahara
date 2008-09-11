@@ -300,7 +300,15 @@ function group_create($data) {
  */
 function group_delete($groupid) {
     $groupid = group_param_groupid($groupid);
-    update_record('group', array('deleted' => 1), array('id' => $groupid));
+    update_record('group',
+        array(
+            'deleted' => 1,
+            'name' => get_field('group', 'name', 'id', $groupid) . '.deleted.' . time(),
+        ),
+        array(
+            'id' => $groupid,
+        )
+    );
 }
 
 /**
