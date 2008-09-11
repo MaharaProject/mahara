@@ -1465,7 +1465,7 @@ function auth_generate_login_form() {
             ),
             'register' => array(
                 'value' => '<div><a href="' . get_config('wwwroot') . 'register.php" tabindex="2">' . get_string('register') . '</a>'
-                    . '<br><a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('passwordreminder') . '</a></div>'
+                    . '<br><a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('lostusernamepassword') . '</a></div>'
             )
         )
     )));

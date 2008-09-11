@@ -278,46 +278,47 @@ $string['language'] = 'Language';
 
 // Forgot password
 $string['cantchangepassword'] = 'Sorry, you are unable to change your password through this interface - please use your institution\'s interface instead';
-$string['forgotpassword'] = 'Forgotten your password?';
-$string['forgotpasswordtext'] = 'If you have forgotten your password, enter below the primary email address you have listed in your Profile and we will send you a key you can use to give yourself a new password';
-$string['passwordreminder'] = 'Password Reminder';
+$string['forgotusernamepassword'] = 'Forgotten your username or password?';
+$string['forgotusernamepasswordtext'] = '<p>If you have forgotten your username or password, enter the email address listed in your profile and we will send you a message you can use to give yourself a new password.</p>
+<p>If you know your username and have forgotten your password, you can also enter your username instead.</p>';
+$string['lostusernamepassword'] = 'Lost Username/Password';
+$string['emailaddressorusername'] = 'Email address or username';
 $string['pwchangerequestsent'] = 'You should receive an e-mail shortly with a link you can use to change the password for your account';
-$string['forgotpassemailsubject'] = 'Change password request for %s';
-$string['forgotpassemailmessagetext'] = 'Dear %s,
+$string['forgotusernamepasswordemailsubject'] = 'Username/Password details for %s';
+$string['forgotusernamepasswordemailmessagetext'] = 'Dear %s,
 
-A request to reset your password has been received for your %s account.
+A username/password request has been made for your account on %s.
 
-Please follow the link below to continue the reset process.
+Your username is %s.
 
-' . get_config('wwwroot') . 'forgotpass.php?key=%s
+If you wish to reset your password, please follow the link below:
+
+%s
 
 If you did not request a password reset, please ignore this email.
 
-If you have any questsions regarding the above, please feel free to contact
-us.
+If you have any questions regarding the above, please feel free to contact us:
 
-' . get_config('wwwroot') . 'contact.php
+%s
 
-Regards, %s Site Administrator
+Regards, %s Site Administrator';
+$string['forgotusernamepasswordemailmessagehtml'] = '<p>Dear %s,</p>
 
-' . get_config('wwwroot') . 'forgotpass.php?key=%s';
-$string['forgotpassemailmessagehtml'] = '<p>Dear %s,</p>
+<p>A username/password request has been made for your account on %s.</p>
 
-<p>A request to reset your password has been received for your %s account.</p>
+<p>Your username is <strong>%s</strong>.</p>
 
-<p>Please follow the link below to continue the reset process.</p>
+<p>If you wish to reset your password, please follow the link below:</p>
 
-<p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>
+<p><a href="%s">%s</a></p>
 
 <p>If you did not request a password reset, please ignore this email.</p>
 
-<p>If you have any questsions regarding the above, please feel free to <a href="' . get_config('wwwroot') . 'contact.php">contact us</a>.</p>
+<p>If you have any questions regarding the above, please feel free to <a href="%s">contact us</a>.</p>
 
-<p>Regards, %s Site Administrator</p>
-
-<p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>';
+<p>Regards, %s Site Administrator</p>';
 $string['forgotpassemailsendunsuccessful'] = 'Sorry, it appears that the e-mail could not be sent successfully. This is our fault, please try again shortly';
-$string['forgotpassnosuchemailaddress'] = 'The email address you entered doesn\'t match any users for this site';
+$string['forgotpassnosuchemailaddressorusername'] = 'The email address or username you entered doesn\'t match any users for this site';
 $string['forgotpasswordenternew'] = 'Please enter your new password to continue';
 $string['nosuchpasswordrequest'] = 'No such password request';
 $string['passwordchangedok'] = 'Your password was successfully changed';

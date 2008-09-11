@@ -3,7 +3,7 @@
 {include file="columnfullstart.tpl"}
 
 			{if $forgotpass_form}
-			<p>{str tag="forgotpasswordtext"}</p>
+			{str tag="forgotusernamepasswordtext"}
 	
 			{$forgotpass_form}
 			{/if}

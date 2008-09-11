@@ -85,8 +85,9 @@ if (isset($_GET['key'])) {
     $smarty->assign('heading', get_string('changepassword'));
     $smarty->display('forgotpass.tpl');
     exit;
-} else {
-    define('TITLE', get_string('forgotpassword'));
+}
+else {
+    define('TITLE', get_string('forgotusernamepassword'));
 }
 
 $form = array(
@@ -95,34 +96,36 @@ $form = array(
     'action'    => '',
     'autofocus' => true,
     'elements'  => array(
-        'email' => array(
+        'emailusername' => array(
             'type' => 'text',
-            'title' => get_string('emailaddress'),
+            'title' => get_string('emailaddressorusername'),
             'description' => get_string('emailaddressdescription'),
             'rules' => array(
                 'required' => true,
-                'email' => true
             )
         ),
         'submit' => array(
             'type' => 'submit',
-            'value' => get_string('send')
+            'value' => get_string('sendrequest')
         )
     )
 );
 
 function forgotpass_validate(Pieform $form, $values) {
-    // The e-mail address cannot already be in the system
-    if (!$form->get_error('email') && !($user = get_record('usr', 'email', $values['email']))) {
-        $form->set_error('email', get_string('forgotpassnosuchemailaddress'));
+    // See if the user input an email address or a username. We favour email addresses
+    if (!$form->get_error('emailusername')) {
+        if (!($authinstance = get_field('usr', 'authinstance', 'email', $values['emailusername']))) {
+            if (!($authinstance = get_field('usr', 'authinstance', 'username', $values['emailusername']))) {
+                $form->set_error('emailusername', get_string('forgotpassnosuchemailaddressorusername'));
+            }
+        }
+    }
+
+    if ($form->get_error('emailusername')) {
         return;
     }
 
-    if ($form->get_error('email')) {
-        return;
-    }
-
-    $authobj = AuthFactory::create($user->authinstance);
+    $authobj = AuthFactory::create($authinstance);
     if (!method_exists($authobj, 'change_password')) {
         die_info(get_string('cantchangepassword'));
     }
@@ -132,10 +135,11 @@ function forgotpass_submit(Pieform $form, $values) {
     global $SESSION;
 
     try {
-        if (!$user = get_record('usr', 'email', $values['email'])) {
-            die_info(get_string('forgotpassnosuchemailaddress'));
+        if (!$user = get_record('usr', 'email', $values['emailusername'])) {
+            if (!$user = get_record('usr', 'username', $values['emailusername'])) {
+                die_info(get_string('forgotpassnosuchemailaddressorusername'));
+            }
         }
-
 
         $pwrequest = new StdClass;
         $pwrequest->usr = $user->id;
@@ -144,9 +148,22 @@ function forgotpass_submit(Pieform $form, $values) {
         $sitename = get_config('sitename');
         $fullname = display_name($user);
         email_user($user, null,
-            get_string('forgotpassemailsubject', 'mahara', $sitename),
-            get_string('forgotpassemailmessagetext', 'mahara', $fullname, $sitename, $pwrequest->key, $sitename, $pwrequest->key),
-            get_string('forgotpassemailmessagehtml', 'mahara', $fullname, $sitename, $pwrequest->key, $pwrequest->key, $sitename, $pwrequest->key, $pwrequest->key));
+            get_string('forgotusernamepasswordemailsubject', 'mahara', $sitename),
+            get_string('forgotusernamepasswordemailmessagetext', 'mahara',
+                $fullname,
+                $sitename,
+                $user->username,
+                get_config('wwwroot') . 'forgotpass.php?key=' . $pwrequest->key,
+                get_config('wwwroot') . 'contact.php',
+                $sitename),
+            get_string('forgotusernamepasswordemailmessagehtml', 'mahara',
+                $fullname,
+                $sitename,
+                $user->username,
+                get_config('wwwroot') . 'forgotpass.php?key=' . $pwrequest->key,
+                get_config('wwwroot') . 'forgotpass.php?key=' . $pwrequest->key,
+                get_config('wwwroot') . 'contact.php',
+                $sitename));
         insert_record('usr_password_request', $pwrequest);
     }
     catch (SQLException $e) {
@@ -201,7 +218,7 @@ function forgotpasschange_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('forgotpass_form', pieform($form));
-$smarty->assign('heading', get_string('forgotpassword'));
+$smarty->assign('heading', get_string('forgotusernamepassword'));
 $smarty->display('forgotpass.tpl');
 
 ?>
