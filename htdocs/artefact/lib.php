@@ -698,8 +698,8 @@ abstract class ArtefactType {
         $classname = generate_artefact_class_name($data['artefacttype']);
         safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $data['artefacttype']));
         $copy = new $classname(0, $data);
-        $copy->commit();
         $this->copy_extra($copy);
+        $copy->commit();
         return $copy->get('id');
     }
 

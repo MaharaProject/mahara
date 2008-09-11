@@ -129,6 +129,14 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
 
     }
 
+    if ($oldversion < 2008091100) {
+        $table = new XMLDBTable('artefact_file_files');
+        $field = new XMLDBField('fileid');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null);
+        add_field($table, $field);
+        execute_sql("UPDATE {artefact_file_files} SET fileid = artefact WHERE NOT size IS NULL");
+    }
+
     // everything up to here we pre mysql support.
     return $status;
 }

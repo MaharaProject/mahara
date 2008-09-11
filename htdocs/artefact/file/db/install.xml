@@ -9,6 +9,7 @@
             <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
             <FIELD NAME="size" TYPE="int" LENGTH="10" NOTNULL="false" />
             <FIELD NAME="oldextension" TYPE="text" NOTNULL="false" />
+            <FIELD NAME="fileid" TYPE="int" LENGTH="10" NOTNULL="false" />
         </FIELDS>
         <KEYS>
             <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />

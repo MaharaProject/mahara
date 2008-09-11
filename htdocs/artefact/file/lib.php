@@ -273,12 +273,18 @@ class PluginArtefactFile extends PluginArtefact {
 abstract class ArtefactTypeFileBase extends ArtefactType {
 
     protected $size;
+
     // The original filename extension (when the file is first
     // uploaded) is saved here.  This is used as a workaround for IE's
     // detecting filetypes by extension: when the file is downloaded,
     // the extension can be appended to the name if it's not there
     // already.
     protected $oldextension;
+
+    // The id used for the filename on the filesystem.  Usually this
+    // is the same as the artefact id, but it can be different if the
+    // file is a copy of another file artefact.
+    protected $fileid;
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
@@ -350,10 +356,14 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $data = (object)array(
             'artefact'      => $this->get('id'),
             'size'          => $this->get('size'),
-            'oldextension'  => $this->get('oldextension')
+            'oldextension'  => $this->get('oldextension'),
+            'fileid'        => $this->get('fileid'),
         );
 
         if ($new) {
+            if ($this->get('artefacttype') != 'folder' && empty($data->fileid)) {
+                $data->fileid = $data->artefact;
+            }
             insert_record('artefact_file_files', $data);
         }
         else {
@@ -671,7 +681,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     }
 
     public function get_path() {
-        return get_config('dataroot') . self::get_file_directory($this->id) . '/' .  $this->id;
+        return get_config('dataroot') . self::get_file_directory($this->fileid) . '/' .  $this->fileid;
     }
 
     public static function detect_artefact_type($file) {
@@ -825,7 +835,10 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         set_field('view_feedback', 'attachment', null, 'attachment', $this->id);
         if (is_file($file)) {
             $size = filesize($file);
-            unlink($file);
+            // Only delete the file on disk if no other artefacts point to it
+            if (count_records('artefact_file_files', 'fileid', $this->get('id')) == 1) {
+                unlink($file);
+            }
             global $USER;
             // Deleting other users' files won't lower their quotas yet...
             if (!$this->institution && $USER->id == $this->get('owner')) {
@@ -945,15 +958,9 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     }
 
     public function copy_extra($new) {
-        $oldid = $this->get('id');
-        $dataroot = get_config('dataroot');
-        $oldfile = $dataroot . self::get_file_directory($oldid) . '/' . $oldid;
-        $newid = $new->get('id');
-        $newdir = $dataroot . self::get_file_directory($newid);
-        check_dir_exists($newdir);
-        if (!copy($oldfile, $newdir . '/' . $newid)) {
-            throw new SystemException('failed copying file artefact');
-        }
+        $new->set('fileid', $this->get('fileid'));
+        $new->set('size', $this->get('size'));
+        $new->set('oldextension', $this->get('oldextension'));
         global $USER;
         if ($new->get('owner') && $new->get('owner') == $USER->get('id')) {
             $USER->quota_add($new->get('size'));
