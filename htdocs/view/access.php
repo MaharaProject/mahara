@@ -113,9 +113,13 @@ if ($institution) {
         $createfor = $view->get_autocreate_grouptypes();
         foreach (group_get_grouptypes() as $grouptype) {
             safe_require('grouptype', $grouptype);
+            $jointypestrings = array();
+            foreach (call_static_method('GroupType' . $grouptype, 'allowed_join_types') as $jointype) {
+                $jointypestrings[] = get_string('membershiptype.'.$jointype, 'group');
+            }
             $form['elements']['copyfornewgroups_'.$grouptype] = array(
                 'type'         => 'checkbox',
-                'title'        => get_string('name', 'grouptype.' . $grouptype),
+                'title'        => get_string('name', 'grouptype.' . $grouptype) . ' (' . join(', ', $jointypestrings) . ')',
                 'defaultvalue' => in_array($grouptype, $createfor),
             );
         }
