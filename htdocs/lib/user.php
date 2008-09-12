@@ -646,13 +646,13 @@ function unsuspend_user($userid) {
 function delete_user($userid) {
     db_begin();
 
-    $emailsuffix = '.deleted.' . time();
+    $datasuffix = '.deleted.' . time();
 
     $deleterec = new StdClass;
     $deleterec->id = $userid;
-    $deleterec->username = get_field('usr', 'username', 'id', $userid) . '.deleted.' . time();
+    $deleterec->username = get_field('usr', 'username', 'id', $userid) . $datasuffix;
     $deleterec->deleted = 1;
-    $deleterec->email = get_field('usr', 'email', 'id', $userid) . $emailsuffix;
+    $deleterec->email = get_field('usr', 'email', 'id', $userid) . $datasuffix;
 
     // Set authinstance to default internal, otherwise the old authinstance can be blocked from deletion
     // by deleted users.
