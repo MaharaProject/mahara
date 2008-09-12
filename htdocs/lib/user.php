@@ -650,6 +650,7 @@ function delete_user($userid) {
 
     $deleterec = new StdClass;
     $deleterec->id = $userid;
+    $deleterec->username = get_field('usr', 'username', 'id', $userid) . '.deleted.' . time();
     $deleterec->deleted = 1;
     $deleterec->email = get_field('usr', 'email', 'id', $userid) . $emailsuffix;
 
