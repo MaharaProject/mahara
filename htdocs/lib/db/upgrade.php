@@ -1280,6 +1280,16 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table);
     }
 
+    if ($oldversion < 2008091200) {
+        // Some cleanups for deleted users, based on the new model of handling them
+        if ($userids = get_column('usr', 'id', 'deleted', 1)) {
+            require_once('user.php');
+            foreach ($userids as $userid) {
+                delete_user($userid);
+            }
+        }
+    }
+
     return $status;
 
 }
