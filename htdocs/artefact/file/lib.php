@@ -1238,7 +1238,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
 
     public function get_path($data=array()) {
         require_once('file.php');
-        $result = get_dataroot_image_path('artefact/file/', $this->id, $data);
+        $result = get_dataroot_image_path('artefact/file/', $this->fileid, $data);
         return $result;
     }
 
