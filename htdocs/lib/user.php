@@ -679,7 +679,7 @@ function delete_user($userid) {
     // 'deleted.[timestamp]'
     execute_sql('UPDATE {artefact_internal_profile_email}
     SET email = email || ?
-    WHERE owner = ?', array($emailsuffix, $userid));
+    WHERE owner = ?', array($datasuffix, $userid));
 
     // mark all groups the user owns as deleted
     if ($groupids = get_column('group', 'id', 'owner', $userid)) {
