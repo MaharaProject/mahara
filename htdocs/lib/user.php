@@ -641,18 +641,30 @@ function unsuspend_user($userid) {
 /**
  * Deletes a user
  *
+ * This function ensures that a user is deleted according to how Mahara wants a 
+ * deleted user to be. You can call it multiple times on the same user without 
+ * harm.
+ *
  * @param int $userid The ID of the user to delete
  */
 function delete_user($userid) {
     db_begin();
 
+    // We want to append 'deleted.timestamp' to some unique fields in the usr 
+    // table, so they can be reused by new accounts
+    $fieldstomunge = array('username', 'email');
     $datasuffix = '.deleted.' . time();
+
+    $user = get_record('usr', 'id', $userid, null, null, null, null, implode(', ', $fieldstomunge));
 
     $deleterec = new StdClass;
     $deleterec->id = $userid;
-    $deleterec->username = get_field('usr', 'username', 'id', $userid) . $datasuffix;
     $deleterec->deleted = 1;
-    $deleterec->email = get_field('usr', 'email', 'id', $userid) . $datasuffix;
+    foreach ($fieldstomunge as $field) {
+        if (!preg_match('/\.deleted\.\d+$/', $user->$field)) {
+            $deleterec->$field = $user->$field . $datasuffix;
+        }
+    }
 
     // Set authinstance to default internal, otherwise the old authinstance can be blocked from deletion
     // by deleted users.
