@@ -978,7 +978,7 @@ class OpenSslRepo {
 
         $new_key = openssl_pkey_new();
         $csr_rsc = openssl_csr_new($dn, $new_key, array('private_key_bits',2048));
-        $selfSignedCert = openssl_csr_sign($csr_rsc, null, $new_key, 28 /*days*/);
+        $selfSignedCert = openssl_csr_sign($csr_rsc, null, $new_key, 365 /*days*/);
         unset($csr_rsc); // Free up the resource
 
         // We export our self-signed certificate to a string.
