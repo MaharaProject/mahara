@@ -669,7 +669,12 @@ function delete_user($userid) {
     WHERE owner = ?', array($emailsuffix, $userid));
 
     // mark all groups the user owns as deleted
-    set_field('group', 'deleted', '1', 'owner', $userid);
+    if ($groupids = get_column('group', 'id', 'owner', $userid)) {
+        require_once('group.php');
+        foreach ($groupids as $groupid) {
+            delete_group($groupid);
+        }
+    }
 
     // Remove user from any groups they're in, invited to or want to be in
     delete_records('group_member', 'member', $userid);
