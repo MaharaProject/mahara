@@ -680,7 +680,7 @@ function delete_user($userid) {
     // 'deleted.[timestamp]'
     execute_sql('UPDATE {artefact_internal_profile_email}
     SET email = email || ?
-    WHERE owner = ?', array($emailsuffix, $userid));
+    WHERE owner = ?', array($datasuffix, $userid));
 
     // Remove user from any groups they're in, invited to or want to be in
     delete_records('group_member', 'member', $userid);
