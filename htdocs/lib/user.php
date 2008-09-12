@@ -682,6 +682,9 @@ function delete_user($userid) {
         WHERE owner = ?
         OR requester = ?', array($userid, $userid));
 
+    // Remove remote user records
+    delete_records('auth_remote_user', 'localusr', $userid);
+
     db_commit();
 
     handle_event('deleteuser', $userid);

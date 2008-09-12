@@ -167,10 +167,6 @@ class AuthXmlrpc extends Auth {
                 $user->find_by_instanceid_username($this->instanceid, $remoteuser->username, true);
             }
 
-            if ($user->get('deleted')) {
-                die_info(get_string('accountdeleted', 'mahara'));
-            }
-
             if ($user->get('suspendedcusr')) {
                 die_info(get_string('accountsuspended', 'mahara', strftime(get_string('strftimedaydate'), $user->get('suspendedctime')), $user->get('suspendedreason')));
             }
