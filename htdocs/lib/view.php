@@ -58,6 +58,7 @@ class View {
     private $template;
     private $copynewuser = 0;
     private $copynewgroups;
+    private $copyconfig;
 
     public function __construct($id=0, $data=null) {
         if (!empty($id)) {
@@ -1851,54 +1852,15 @@ class View {
         if ($blocks) {
             $newowner = $this->ownership();
             $oldowner = $template->ownership();
-            $sameowner = $newowner['type'] == $oldowner['type'] && $newowner['id'] == $oldowner['id'];
+            $this->set('copyconfig', (object) array(
+                'ownertype' => $newowner['type'],
+                'sameowner' => $newowner['type'] == $oldowner['type'] && $newowner['id'] == $oldowner['id'],
+            ));
             $artefactcopies = array(); // Correspondence between original artefact ids and id of the copy
             foreach ($blocks as $b) {
                 safe_require('blocktype', $b->blocktype);
                 $oldblock = new BlockInstance($b->id, $b);
-                if ($sameowner || $oldblock->copy_allowed($newowner)) {
-                    $newblock = new BlockInstance(0, array(
-                        'blocktype'  => $oldblock->get('blocktype'),
-                        'title'      => $oldblock->get('title'),
-                        'view'       => $this->get('id'),
-                        'column'     => $oldblock->get('column'),
-                        'order'      => $oldblock->get('order'),
-                    ));
-                    $configdata = $oldblock->get('configdata');
-                    $artefactids = PluginBlockType::get_artefacts($oldblock);
-                    if (!$sameowner && !empty($artefactids)) {
-                        if ($oldblock->copy_artefacts_allowed($newowner)) {
-                            // Copy artefacts & put the new artefact
-                            // ids into the new block
-                            // Get all children of the artefacts
-                            $descendants = artefact_get_descendants($artefactids);
-                            foreach ($descendants as $aid) {
-                                if (!isset($artefactcopies[$aid])) {
-                                    // Copy the artefact
-                                    $a = artefact_instance_from_id($aid);
-                                    // Save the id of the original artefact's parent
-                                    $artefactcopies[$aid] = (object) array('oldid' => $aid, 'oldparent' => $a->get('parent'));
-                                    $artefactcopies[$aid]->newid = $a->copy_for_new_owner($this->owner, $this->group, $this->institution);
-                                }
-                            }
-                            if (isset($configdata['artefactid'])) {
-                                $configdata['artefactid'] = $artefactcopies[$configdata['artefactid']]->newid;
-                            }
-                            else {
-                                foreach ($configdata['artefactids'] as &$oldid) {
-                                    $oldid = $artefactcopies[$oldid]->newid;
-                                }
-                            }
-                        }
-                        else if (isset($configdata['artefactid'])) {
-                            $configdata['artefactid'] = null;
-                        }
-                        else if (isset($configdata['artefactids'])) {
-                            $configdata['artefactids'] = array();
-                        }
-                    }
-                    $newblock->set('configdata', $configdata);
-                    $newblock->commit();
+                if ($oldblock->copy($this, $artefactcopies)) {
                     $numcopied['blocks']++;
                 }
             }

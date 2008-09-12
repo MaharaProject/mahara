@@ -156,11 +156,11 @@ abstract class PluginBlocktype extends Plugin {
         return $blocktypes;
     }
 
-    public static function copy_allowed($newowner=null) {
+    public static function copy_allowed($ownertype=null) {
         return true;
     }
 
-    public static function copy_artefacts_allowed($newowner=null) {
+    public static function copy_artefacts_allowed($ownertype=null) {
         return true;
     }
 
@@ -671,12 +671,63 @@ class BlockInstance {
         return $a;
     }
 
-    public function copy_allowed($newowner=null) {
-        return call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'copy_allowed', $newowner);
+    public function copy_allowed($ownertype=null) {
+        return call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'copy_allowed', $ownertype);
     }
 
-    public function copy_artefacts_allowed($newowner=null) {
-        return call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'copy_artefacts_allowed', $newowner);
+    public function copy_artefacts_allowed($ownertype=null) {
+        return call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'copy_artefacts_allowed', $ownertype);
+    }
+
+    public function set_default_configdata() {
+        return;
+    }
+
+    public function copy(&$view, &$artefactcopies) {
+        $copyconfig = $view->get('copyconfig');
+        if (!$copyconfig->sameowner && !$this->copy_allowed($copyconfig->ownertype)) {
+            return false;
+        }
+        $newblock = new BlockInstance(0, array(
+            'blocktype'  => $this->get('blocktype'),
+            'title'      => $this->get('title'),
+            'view'       => $view->get('id'),
+            'column'     => $this->get('column'),
+            'order'      => $this->get('order'),
+        ));
+
+        $artefactids = PluginBlockType::get_artefacts($this);
+        if (!$copyconfig->sameowner && !empty($artefactids) && $this->copy_artefacts_allowed($copyconfig->ownertype)) {
+            $configdata = $this->get('configdata');
+            // Copy artefacts & put the new artefact ids into the new
+            // block.
+            // Get all children of the artefacts.
+            $descendants = artefact_get_descendants($artefactids);
+            foreach ($descendants as $aid) {
+                if (!isset($artefactcopies[$aid])) {
+                    // Copy the artefact
+                    $a = artefact_instance_from_id($aid);
+                    // Save the id of the original artefact's parent
+                    $artefactcopies[$aid] = (object) array('oldid' => $aid, 'oldparent' => $a->get('parent'));
+                    $artefactcopies[$aid]->newid = $a->copy_for_new_owner($view->get('owner'), $view->get('group'), $view->get('institution'));
+                }
+            }
+            if (isset($configdata['artefactid'])) {
+                $configdata['artefactid'] = $artefactcopies[$configdata['artefactid']]->newid;
+            }
+            else {
+                foreach ($configdata['artefactids'] as &$oldid) {
+                    $oldid = $artefactcopies[$oldid]->newid;
+                }
+            }
+            $newblock->set('configdata', $configdata);
+        }
+        else {
+            $newblock->set_default_configdata();
+        }
+
+        $newblock->commit();
+        return true;
     }
 
 }
