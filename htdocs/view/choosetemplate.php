@@ -34,6 +34,12 @@ $group = param_integer('group', null);
 $institution = param_alphanum('institution', null);
 View::set_nav($group, $institution);
 
+if ($usetemplate = param_integer('usetemplate', null)) {
+    // If a form has been submitted, build it now and pieforms will
+    // call the submit function straight away
+    pieform(create_view_form($group, $institution, $usetemplate));
+}
+
 if ($group && !group_user_can_edit_views($group) || $institution && !$USER->can_edit_institution($institution)) {
     throw new AccessDeniedException();
 }

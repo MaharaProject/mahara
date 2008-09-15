@@ -2069,6 +2069,7 @@ function create_view_form($group=null, $institution=null, $template=null) {
             'value' => $template,
         );
         $form['elements']['submit']['value'] = get_string('copyview', 'view');
+        $form['name'] .= $template;
     }
     return $form;
 }
@@ -2086,7 +2087,6 @@ function createview_submit(Pieform $form, $values) {
         || $institution && !$USER->can_edit_institution($institution)) {
         throw new AccessDeniedException();
     }
-    log_debug($group);
 
     // Create a new view
     $data = (object) array(

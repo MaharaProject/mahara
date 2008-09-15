@@ -135,6 +135,7 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
     public static function default_artefact_config($ownertype=null, $ownerid=null, $configdata) {
         $artefactid = null;
         if ($ownertype == 'user') {
+            $artefacttype = null;
             if (!empty($configdata['artefactid'])) {
                 $artefacttype = get_field('artefact', 'artefacttype', 'id', $configdata['artefactid']);
             }
