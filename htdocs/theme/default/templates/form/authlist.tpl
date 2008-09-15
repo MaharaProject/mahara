@@ -201,6 +201,6 @@ section name=mysec loop=$instancelist
     <option value="{{$authtypes[mysec2]->name|escape}}"{{if !$authtypes[mysec2]->is_usable}} disabled="disabled"{{/if}}>{{$authtypes[mysec2]->title|escape}} - {{$authtypes[mysec2]->description|escape}}</option>
 {{/section}}
 </select>
-<button type="button" onclick="addinstance(); return false;" name="button" value="foo">Add</button>
+<button type="button" onclick="addinstance(); return false;" name="button" value="foo">{{str tag=Add section=admin}}</button>
 <input type="hidden" id="instancePriority" name="instancePriority" value="{{ $instancestring }}" />
 <input type="hidden" id="deleteList" name="deleteList" value="" />
