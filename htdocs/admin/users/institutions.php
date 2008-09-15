@@ -145,7 +145,9 @@ if ($institution || $add) {
     else {
         $data = new StdClass;
         $data->displayname = '';
-        $data->registerallowed = 1;
+        if (!get_config('usersuniquebyusername')) {
+            $data->registerallowed = 1;
+        }
         $data->theme = 'sitedefault';
         $data->defaultmembershipperiod = null;
         $lockedprofilefields = array();
@@ -221,13 +223,15 @@ if ($institution || $add) {
         }
     }
 
-    $elements['registerallowed'] = array(
-        'type'         => 'checkbox',
-        'title'        => get_string('registrationallowed', 'admin'),
-        'description'  => get_string('registrationalloweddescription2', 'admin'),
-        'defaultvalue' => $data->registerallowed,
-        'help'   => true,
-    );
+    if (!get_config('usersuniquebyusername')) {
+        $elements['registerallowed'] = array(
+            'type'         => 'checkbox',
+            'title'        => get_string('registrationallowed', 'admin'),
+            'description'  => get_string('registrationalloweddescription2', 'admin'),
+            'defaultvalue' => $data->registerallowed,
+            'help'   => true,
+        );
+    }
 
     if (empty($data->name) || $data->name != 'mahara') {
         $elements['defaultmembershipperiod'] = array(
@@ -362,7 +366,15 @@ function institution_submit(Pieform $form, $values) {
 
     $newinstitution->displayname                  = $values['displayname'];
     $newinstitution->authplugin                   = empty($values['authplugin']) ? null : $values['authplugin'];
-    $newinstitution->registerallowed              = ($values['registerallowed']) ? 1 : 0;
+    if (get_config('usersuniquebyusername')) {
+        // Registering absolutely not allowed when this setting is on, it's a 
+        // security risk. See the documentation for the usersuniquebyusername 
+        // setting for more information
+        $newinstitution->registerallowed = 0;
+    }
+    else {
+        $newinstitution->registerallowed              = ($values['registerallowed']) ? 1 : 0;
+    }
     $newinstitution->theme                        = (empty($values['theme']) || $values['theme'] == 'sitedefault') ? null : $values['theme'];
     if ($institution != 'mahara') {
         $newinstitution->defaultmembershipperiod  = ($values['defaultmembershipperiod']) ? intval($values['defaultmembershipperiod']) : null;
