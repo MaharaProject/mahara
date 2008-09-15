@@ -202,5 +202,5 @@ section name=mysec loop=$instancelist
 {{/section}}
 </select>
 <button type="button" onclick="addinstance(); return false;" name="button" value="foo">Add</button>
-<input type="hidden" id="instancePriority" name="instancePriority" value="{{ $instancestring }}" /><br>
-<input type="hidden" id="deleteList" name="deleteList" value="" /><br>
+<input type="hidden" id="instancePriority" name="instancePriority" value="{{ $instancestring }}" />
+<input type="hidden" id="deleteList" name="deleteList" value="" />
