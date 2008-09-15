@@ -214,10 +214,10 @@ if ($institution || $add) {
 
     if (!$add && empty($authinstances)) {
         if ($USER->get('admin')) {
-            $smarty->assign('noauthmessage', get_string('adminnoauthpluginforinstitution', 'admin'));
+            $SESSION->add_error_msg(get_string('adminnoauthpluginforinstitution', 'admin'));
         }
         else {
-            $smarty->assign('noauthmessage', get_string('noauthpluginforinstitution', 'admin'));
+            $SESSION->add_error_msg(get_string('noauthpluginforinstitution', 'admin'));
         }
     }
 
