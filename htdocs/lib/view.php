@@ -1468,15 +1468,15 @@ class View {
     }
 
 
-    public static function owner_sql($userid=null, $groupid=null, $institution=null) {
-        if ($institution) {
-            return 'institution = ' . db_quote($institution);
+    public static function owner_sql($ownerobj) {
+        if (!empty($ownerobj->institution)) {
+            return 'institution = ' . db_quote($ownerobj->institution);
         }
-        if ($groupid) {
-            return '"group" = ' . (int)$groupid;
+        if (!empty($ownerobj->group)) {
+            return '"group" = ' . (int)$ownerobj->group;
         }
-        if ($userid) {
-            return 'owner = ' . (int)$userid;
+        if (!empty($ownerobj->user)) {
+            return 'owner = ' . (int)$ownerobj->user;
         }
         return '';
     }
@@ -1516,12 +1516,12 @@ class View {
             WHERE TRUE';
 
         if ($ownedby) {
-            $where .= ' AND v.' . self::owner_sql($ownedby->user, $ownedby->group, $ownedby->institution);
+            $where .= ' AND v.' . self::owner_sql($ownedby);
         }
 
         if ($copyableby) {
             $where .= '
-                AND (v.template = 1 OR (v.' . self::owner_sql($copyableby->user, $copyableby->group, $copyableby->institution) . '))';
+                AND (v.template = 1 OR (v.' . self::owner_sql($copyableby) . '))';
         }
 
         if ($query) {
@@ -1917,7 +1917,7 @@ class View {
         $taken = get_column_sql('
             SELECT title
             FROM {view}
-            WHERE ' . self::owner_sql($user, $group, $institution) . "
+            WHERE ' . self::owner_sql((object) array('user' => $user, 'group' => $group, 'institution' => $institution)) . "
                 AND title LIKE ? || '%'", array($title));
         $ext = ''; $i = 0;
         if ($taken) {
@@ -1934,6 +1934,12 @@ class View {
         $params = array();
         if (!empty($search->query)) {
             $params[] = 'ownerquery=' . $search->query;
+        }
+        if (!empty($search->group)) {
+            $params[] = 'group=' . $search->group;
+        }
+        if (!empty($search->institution)) {
+            $params[] = 'institution=' . $search->institution;
         }
         $params[] = 'ownerlimit=' . $search->limit;
 
@@ -1973,6 +1979,12 @@ class View {
         $params = array();
         if (!empty($search->query)) {
             $params[] = 'viewquery=' . $search->query;
+        }
+        if (!empty($search->group)) {
+            $params[] = 'group=' . $search->group;
+        }
+        if (!empty($search->institution)) {
+            $params[] = 'institution=' . $search->institution;
         }
         $params[] = 'viewlimit=' . $search->limit;
 
@@ -2056,7 +2068,6 @@ function create_view_form($group=null, $institution=null, $template=null) {
             'type'  => 'hidden',
             'value' => $template,
         );
-        $form['name'] .= $template;
         $form['elements']['submit']['value'] = get_string('copyview', 'view');
     }
     return $form;
@@ -2075,6 +2086,7 @@ function createview_submit(Pieform $form, $values) {
         || $institution && !$USER->can_edit_institution($institution)) {
         throw new AccessDeniedException();
     }
+    log_debug($group);
 
     // Create a new view
     $data = (object) array(

@@ -30,10 +30,12 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 
 $owners = new StdClass;
-$owners->query    = trim(param_variable('ownerquery', ''));
-$owners->template = null;
-$owners->offset   = param_integer('owneroffset', 0);
-$owners->limit    = param_integer('ownerlimit', 10);
+$owners->query       = trim(param_variable('ownerquery', ''));
+$owners->template    = null;
+$owners->offset      = param_integer('owneroffset', 0);
+$owners->limit       = param_integer('ownerlimit', 10);
+$owners->group       = param_integer('group', null);
+$owners->institution = param_alphanum('institution', null);
 View::get_viewownersearch_data($owners);
 
 json_reply(false, array(

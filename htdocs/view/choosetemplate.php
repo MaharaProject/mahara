@@ -45,6 +45,12 @@ $owners->query    = trim(param_variable('ownerquery', ''));
 $owners->template = null;
 $owners->offset   = param_integer('owneroffset', 0);
 $owners->limit    = param_integer('ownerlimit', 10);
+if ($group) {
+    $owners->group = $group;
+}
+else if ($institution) {
+    $owners->institution = $institution;
+}
 View::get_viewownersearch_data($owners);
 
 $views = new StdClass;
@@ -56,7 +62,13 @@ if ($ownertype = param_alpha('owntype', null)) {
     $views->ownedby = (object) array($ownertype => param_alphanum('ownid'));
 }
 $views->copyableby = (object) array('group' => $group, 'institution' => $institution, 'user' => null);
-if (!($group || $institution)) {
+if ($group) {
+    $views->group = $group;
+}
+else if ($institution) {
+    $views->institution = $institution;
+}
+else {
     $views->copyableby->user = $USER->get('id');
 }
 View::get_templatesearch_data($views);

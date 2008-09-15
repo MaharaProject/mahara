@@ -33,9 +33,11 @@ $group = param_integer('group', null);
 $institution = param_alphanum('institution', null);
 
 $views = new StdClass;
-$views->query     = trim(param_variable('viewquery', ''));
-$views->offset    = param_integer('viewoffset', 0);
-$views->limit     = param_integer('viewlimit', 10);
+$views->query       = trim(param_variable('viewquery', ''));
+$views->offset      = param_integer('viewoffset', 0);
+$views->limit       = param_integer('viewlimit', 10);
+$views->group       = param_integer('group', null);
+$views->institution = param_alphanum('institution', null);
 $views->ownedby   = null;
 if ($ownertype = param_alpha('owntype', null)) {
     $views->ownedby = (object) array($ownertype => param_alphanum('ownid'));
