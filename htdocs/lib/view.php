@@ -1835,7 +1835,7 @@ class View {
         }
     }
 
-    public static function set_nav($group, $institution) {
+    public static function set_nav($group, $institution, $profile=false) {
         if ($group) {
             define('MENUITEM', 'groups/views');
             define('GROUP', $group);
@@ -1843,6 +1843,9 @@ class View {
         else if ($institution) {
             define('INSTITUTIONALADMIN', 1);
             define('MENUITEM', $institution == 'mahara' ? 'configsite/siteviews' : 'manageinstitutions/institutionviews');
+        }
+        else if ($profile) {
+            define('MENUITEM', 'profile/editprofilepage');
         }
         else {
             define('MENUITEM', 'myportfolio/views');

@@ -48,6 +48,13 @@ if (!$user = get_record('usr', 'id', $userid, 'deleted', 0)) {
 }
 $is_friend = is_friend($userid, $loggedinid);
 
+$view = View::profile_view($userid);
+# access will either be logged in (always) or public as well
+if (!can_view_view($view->get('id'))) {
+    log_debug('throwing access denied exception');
+    throw new AccessDeniedException();
+}
+
 $name = display_name($user);
 define('TITLE', $name);
 $smarty = smarty(

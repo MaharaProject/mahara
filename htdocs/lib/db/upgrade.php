@@ -1301,7 +1301,7 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
-    if ($oldversion < 2008091600) {
+    if ($oldversion < 2008091601) {
         $table = new XMLDBTable('event_subscription');
         $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED,
             XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
@@ -1317,7 +1317,7 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('event_subscription', (object)array('event' => 'createuser', 'callfunction' => 'activity_set_defaults'));
      }
 
-    if ($oldversion < 2008032400) {
+    if ($oldversion < 2008091601) {
         $table = new XMLDBTable('view_type');
         $table->addFieldInfo('type', XMLDB_TYPE_CHAR, 50, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('type'));

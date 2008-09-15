@@ -52,20 +52,6 @@ if (!empty($id) && empty($view)) {
     $view = new View($id);
 }
 
-if ($view->get('type') == 'profile') {
-    $profile = true;
-    define('TITLE', get_string('editprofileview', 'view'));
-    define('MENUITEM', 'profile/editprofilepage');
-}
-else if ($new) {
-     define('TITLE', get_string('createviewsteptwo', 'view'));
-    define('MENUITEM', 'myportfolio/views');
- }
- else {
-    define('TITLE', get_string('editblocksforview', 'view', $view->get('title')));
-    define('MENUITEM', 'myportfolio/views');
-}
-
 if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
 }
@@ -91,9 +77,13 @@ if ($new && isset($_POST['cancel'])) {
     redirect(get_config('wwwroot') . '/view/');
 }
 
-View::set_nav($group, $institution);
+View::set_nav($group, $institution, ($view->get('type') == 'profile'));
 
-if ($new) {
+if ($view->get('type') == 'profile') {
+    $profile = true;
+    define('TITLE', get_string('editprofileview', 'view'));
+}
+else if ($new) {
     define('TITLE', get_string('createviewstepone', 'view'));
 }
 else {
