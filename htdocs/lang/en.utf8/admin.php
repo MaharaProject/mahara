@@ -106,7 +106,9 @@ $string['pluginadmindescription'] = 'Install and configure plugins';
 
 // Site options
 $string['allowpublicviews'] = 'Allow public views';
-$string['allowpublicviewsdescription'] = 'If set to yes, users will be able to create Views that are accessable to the public rather than only to logged in users';
+$string['allowpublicviewsdescription'] = 'If set to yes, users will be able to create portfolio Views that are accessable to the public rather than only to logged in users';
+$string['allowpublicprofiles'] = 'Allow public profiles';
+$string['allowpublicprofilesdescription'] = 'If set to yes, users will be able to set their profile Views to be accessable to the public rather than only to logged in users';
 $string['defaultaccountinactiveexpire'] = 'Default account inactivity time';
 $string['defaultaccountinactiveexpiredescription'] = 'How long a user account will remain active without the user logging in';
 $string['defaultaccountinactivewarn'] = 'Warning time for inactivity/expiry';

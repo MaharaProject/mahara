@@ -457,6 +457,7 @@ function upgrade_plugin($upgrade) {
     // install blocktype categories.
     if ($plugintype == 'blocktype' && get_config('installed')) {
         install_blocktype_categories_for_plugin($pluginname);
+        install_blocktype_viewtypes_for_plugin($pluginname);
     }
 
     $prevversion = (empty($upgrade->install)) ? $upgrade->from : 0;
@@ -601,14 +602,14 @@ function core_install_lastcoredata_defaults() {
     set_profile_field($user->id, 'firstname', $user->firstname);
     set_profile_field($user->id, 'lastname', $user->lastname);
     set_config('installed', true);
+    handle_event('createuser', $user->id);
     db_commit();
 
     // if we're installing, set up the block categories here and then poll the plugins.
     // if we're upgrading this happens somewhere else.  This is because of dependency issues around 
     // the order of installation stuff.
 
-    install_blocktype_categories();
-
+    install_blocktype_extras();
 }
 
 function core_install_firstcoredata_defaults() {
@@ -659,6 +660,22 @@ function core_install_firstcoredata_defaults() {
         insert_record('event_type', $e);
     }
 
+    // install the core event subscriptions
+    $subs = array(
+        array(
+            'event'        => 'createuser',
+            'callfunction' => 'activity_set_defaults',
+        ),
+        array(
+            'event'        => 'createuser',
+            'callfunction' => 'install_default_profile_view'
+        ),
+    );
+
+    foreach ($subs as $sub) {
+        insert_record('event_subscription', (object)$sub);
+    }
+    
     // install the activity types
     $activitytypes = array(
         array('maharamessage', 0, 0),
@@ -706,6 +723,12 @@ function core_install_firstcoredata_defaults() {
     // install the view column widths
     install_view_column_widths();
 
+    $viewtypes = array('portfolio', 'profile');
+    foreach ($viewtypes as $vt) {
+        insert_record('view_type', (object)array(
+            'type' => $vt,
+        ));
+    }
     db_commit();
 }
 
@@ -833,7 +856,23 @@ function install_blocktype_categories_for_plugin($blocktype) {
     db_commit();
 }
 
-function install_blocktype_categories() {
+function install_blocktype_viewtypes_for_plugin($blocktype) {
+    safe_require('blocktype', $blocktype);
+    $blocktype = blocktype_namespaced_to_single($blocktype);
+    db_begin();
+    delete_records('blocktype_installed_viewtype', 'blocktype', $blocktype);
+    if ($viewtypes = call_static_method(generate_class_name('blocktype', $blocktype), 'get_viewtypes')) {
+        foreach($viewtypes as $vt) {
+            insert_record('blocktype_installed_viewtype', (object)array(
+                'blocktype' => $blocktype,
+                'viewtype'  => $vt,
+            ));
+        }
+    }
+    db_commit();
+}
+
+function install_blocktype_extras() {
     db_begin();
 
     $categories = get_blocktype_categories();
@@ -852,6 +891,7 @@ function install_blocktype_categories() {
     if ($blocktypes = plugins_installed('blocktype')) {
         foreach ($blocktypes as $bt) {
             install_blocktype_categories_for_plugin(blocktype_single_to_namespaced($bt->name, $bt->artefactplugin));
+            install_blocktype_viewtypes_for_plugin(blocktype_single_to_namespaced($bt->name, $bt->artefactplugin));
         }
     }
 }

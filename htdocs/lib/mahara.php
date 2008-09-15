@@ -1013,10 +1013,16 @@ function handle_event($event, $data) {
         $data = array('id' => $data);
     }
 
-    // this is here because the core can't listen to events
-    // @todo, this is VERY ugly, and someone should fix it
-    if ($event == 'createuser') {
-        activity_set_defaults($data['id']);
+    if ($coreevents = get_records_array('event_subscription', 'event', $event)) {
+        foreach ($coreevents as $ce) {
+            if (function_exists($ce->callfunction)) {
+                call_user_func($ce->callfunction, $data);
+            }
+            else {
+                log_warn("Event $event caused a problem with a core subscription "
+                . " $ce->callfunction, which wasn't callable.  Continuing with event handlers");
+            }
+        }
     }
 
     $plugintypes = plugin_types_installed();
@@ -1279,6 +1285,11 @@ function pieform_element_textarea_configure($element) {
  * @returns boolean Wether the specified user can look at the specified view.
  */
 function can_view_view($view_id, $user_id=null) {
+    /*
+    TODO PENNY PROFILEVIEW MERGE
+        I couldn't figure out this patch and needed to continue:
+        http://paste.dollyfish.net.nz/0e6800
+    */
     global $USER;
     $now = time();
     $dbnow = db_format_timestamp($now);

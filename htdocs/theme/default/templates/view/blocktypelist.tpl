@@ -1,6 +1,7 @@
 {if $blocktypes}
 <ul>
 {foreach from=$blocktypes item=blocktype}
+{* TODO at this point we have now $blocktype.singleonly *}
     <li>
         <div class="blocktype">
             {* The width and height are required so that the javascript that places the clones knows how

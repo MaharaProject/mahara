@@ -24,193 +24,47 @@
  *
  */
 define('INTERNAL', 1);
+define('PUBLIC', 1);
 require(dirname(dirname(__FILE__)).'/init.php');
 require_once('group.php');
 require_once('pieforms/pieform.php');
+require_once(get_config('libroot') . 'view.php');
 
-$userid = param_integer('id','');
 $loggedinid = $USER->get('id');
+if (!empty($loggedinid)) {
+    $userid = param_integer('id', $loggedinid);
+}
+else {
+    $userid = param_integer('id');
+}
+if ($userid == $loggedinid) {
+    define('MENUITEM', 'profile/view');
+}
 
 // Get the user's details
 
-$profile = array();
-$userfields = array();
 if (!$user = get_record('usr', 'id', $userid, 'deleted', 0)) {
     throw new UserNotFoundException("User with id $userid not found");
 }
 $is_friend = is_friend($userid, $loggedinid);
 
+$view = View::profile_view($userid);
+# access will either be logged in (always) or public as well
+if (!can_view_view($view->get('id'))) {
+    log_debug('throwing access denied exception');
+    throw new AccessDeniedException();
+}
+
 $name = display_name($user);
 define('TITLE', $name);
-
-// If the logged in user is on staff, get full name, institution, id number, email address
-if ($USER->is_staff_for_user($user)) {
-    $userfields['fullname']     = $user->firstname . ' ' . $user->lastname;
-    $institutions = get_column_sql('
-        SELECT i.displayname
-        FROM {institution} i, {usr_institution} ui 
-        WHERE ui.usr = ? AND ui.institution = i.name', array($user->id));
-    if (!empty($institutions)) {
-        $userfields['institution'] = join(', ', $institutions);
-    } else {
-        $userfields['institution'] = get_field('institution', 'displayname', 'name', 'mahara');
-    }
-    $userfields['studentid']    = get_profile_field($user->id, 'studentid');
-    $userfields['principalemailaddress'] = $user->email;
-}
-
-// Get public profile fields:
-safe_require('artefact', 'internal');
-if ($USER->is_admin_for_user($user)) {
-    $publicfields = call_static_method(generate_artefact_class_name('profile'),'get_all_fields');
-}
-else {
-    $publicfields = call_static_method(generate_artefact_class_name('profile'),'get_public_fields');
-}
-foreach (array_keys($publicfields) as $field) {
-    $classname = generate_artefact_class_name($field);
-    if ($field == 'email') {  // There may be multiple email records
-        if ($emails = get_records_array('artefact_internal_profile_email', 'owner', $userid)) {
-            foreach ($emails as $email) {
-                $fieldname = $email->principal ? 'principalemailaddress' : 'emailaddress';
-                $userfields[$fieldname] = $email->email;
-            }
-        }
-    }
-    else {
-        $value = get_profile_field($userid, $field);
-        if (!empty($value)) {
-            $userfields[$field] = $value;
-        }
-    }
-}
-if (isset($userfields['country'])) {
-    $userfields['country'] = get_string('country.' . $userfields['country']);
-}
-
-if (isset($userfields['firstname'])) {
-    unset($userfields['firstname']);
-}
-
-if (isset($userfields['lastname'])) {
-    unset($userfields['lastname']);
-}
-
-if (isset($userfields['introduction'])) {
-    $introduction = $userfields['introduction'];
-    unset($userfields['introduction']);
-}
-
-// Get viewable views
-$views = array();
-if ($allviews = get_records_array('view', 'owner', $userid)) {
-    foreach ($allviews as $view) {
-        if (can_view_view($view->id)) {
-            $views[$view->id] = $view;
-            $view->artefacts = array();
-            $view->description = str_shorten($view->description, 100, true);
-        }
-    }
-}
-
-if ($views) {
-    $viewidlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $views));
-    $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
-        FROM {view_artefact} va
-        INNER JOIN {artefact} a ON va.artefact = a.id
-        INNER JOIN {artefact_installed_type} t ON a.artefacttype = t.name
-        WHERE va.view IN (' . $viewidlist . ')
-        GROUP BY 1, 2, 3, 4, 5
-        ORDER BY a.title, va.artefact', '');
-    if ($artefacts) {
-        foreach ($artefacts as $artefactrec) {
-            safe_require('artefact', $artefactrec->plugin);
-            // Perhaps I shouldn't have to construct the entire
-            // artefact object to render the name properly.
-            $classname = generate_artefact_class_name($artefactrec->artefacttype);
-            $artefactobj = new $classname(0, array('title' => $artefactrec->title));
-            $artefactobj->set('dirty', false);
-            if (!$artefactobj->in_view_list()) {
-                continue;
-            }
-            $artname = $artefactobj->display_title(30);
-            if (strlen($artname)) {
-                $views[$artefactrec->view]->artefacts[] = array('id'    => $artefactrec->artefact,
-                                                                'title' => $artname);
-            }
-        }
-    }
-}
-
-// Group stuff
-$sql = "SELECT
-    g.*, gm.role
-FROM
-    {group} g
-    JOIN {group_member} gm ON (gm.group = g.id)
-WHERE
-    gm.member = ?
-    AND g.deleted = 0
-ORDER BY
-    g.name";
-if (!$userassocgroups = get_records_sql_assoc($sql, array($userid))) {
-    $userassocgroups = array();
-}
-
-foreach ($userassocgroups as $group) {
-    $group->description = str_shorten($group->description, 100, true);
-    $group->roledesc    = get_string($group->role, 'grouptype.' . $group->grouptype);
-}
-
-if (is_postgres()) {
-    $random = 'RANDOM()';
-}
-else if (is_mysql()) {
-    $random = 'RAND()';
-}
-
-$records = get_records_sql_array('SELECT usr1, usr2 FROM {usr_friend}
-    JOIN {usr} u1 ON (u1.id = usr1 AND u1.deleted = 0)
-    JOIN {usr} u2 ON (u2.id = usr2 AND u2.deleted = 0)
-    WHERE usr1 = ? OR usr2 = ?
-    ORDER BY ' . $random . '
-    LIMIT ?',
-    array($userid, $userid, 16)
+$smarty = smarty(
+    array('tablerenderer'),
+    array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
+    array(),
+    array(
+        'stylesheets' => array('style/views.css'),
+    )
 );
-$numberoffriends = count_records_sql('SELECT COUNT(usr1) FROM {usr_friend}
-    JOIN {usr} u1 ON (u1.id = usr1 AND u1.deleted = 0)
-    JOIN {usr} u2 ON (u2.id = usr2 AND u2.deleted = 0)
-    WHERE usr1 = ? OR usr2 = ?',
-    array($userid, $userid)
-);
-if ($numberoffriends > 16) {
-    $friendsmessage = get_string('numberoffriends', 'group', $records ? count($records) : 0, $numberoffriends);
-}
-else {
-    $friendsmessage = get_string('Friends', 'group');
-}
-// get the friends into a 4x4 array
-if ($records) {
-    $friends = array();
-    for ($i = 0; $i < 4; $i++) {
-        $friends[$i] = array();
-        for($j = 4 * $i; $j < ($i + 1 ) * 4; $j++) {
-            if (isset($records[$j])) {
-                if ($records[$j]->usr1 == $userid) {
-                    $friends[$i][] = $records[$j]->usr2;
-                }
-                else {
-                    $friends[$i][] = $records[$j]->usr1;
-                }
-            }
-        }
-    }
-}
-else {
-    $friends = false;
-}
-
-$smarty = smarty();
 
 $sql = "SELECT g.*, a.type FROM {group} g JOIN (
 SELECT gm.group, 'invite' AS type
@@ -228,8 +82,7 @@ ORDER BY g.name";
 if (!$allusergroups = get_records_sql_assoc($sql, array($userid, $userid, $userid))) {
     $allusergroups = array();
 }
-
-if ($loggedinid != $userid) {
+if (!empty($loggedinid) && $loggedinid != $userid) {
 
     $invitedlist = array();   // Groups admin'ed by the logged in user that the displayed user has been invited to
     $requestedlist = array(); // Groups admin'ed by the logged in user that the displayed user has requested membership of
@@ -390,6 +243,32 @@ if ($loggedinid != $userid) {
     $smarty->assign('relationship', $relationship);
 
 }
+else if (!empty($loggedinid)) {
+    if (get_config('allowpublicprofiles')) {
+        $public = array_filter($view->get_access(), 
+            create_function(
+                '$item', 
+                'return $item[\'type\'] == \'public\';'
+            )
+        );
+        $togglepublic = pieform(array(
+            'name'      => 'togglepublic',
+            'autofocus' => false,
+            'renderer'  => 'div',
+            'elements'  => array(
+                'changeto' => array(
+                    'type'  => 'hidden',
+                    'value' => ($public) ? 'loggedin' : 'public'
+                ),
+                'submit' => array(
+                    'type' => 'submit',
+                    'value' => ($public) ? 'Logged in users only' : 'Allow public (non logged in) access',
+                ),
+            ),
+        ));
+        $smarty->assign('togglepublic', $togglepublic);
+    }
+}
 
 if ($userid != $USER->get('id') && $USER->is_admin_for_user($user) && is_null($USER->get('parentuser'))) {
     $loginas = get_string('loginasuser', 'admin', $user->username);
@@ -404,11 +283,7 @@ if (isset($introduction)) {
 $smarty->assign('canmessage', can_send_message($loggedinid, $userid));
 $smarty->assign('NAME',$name);
 $smarty->assign('USERID', $userid);
-$smarty->assign('USERFIELDS',$userfields);
-$smarty->assign('USERGROUPS',$userassocgroups);
-$smarty->assign('VIEWS',$views);
-$smarty->assign('friends', $friends);
-$smarty->assign('friendsmessage', $friendsmessage);
+$smarty->assign('viewcontent', $view->build_columns());
 $smarty->display('user/view.tpl');
 
 // Send an invitation to the user to join a group
@@ -453,6 +328,29 @@ function approve_deny_friendrequest_submit(Pieform $form, $values) {
     else {
         acceptfriend_submit($form, $values);
     }
+}
+
+function togglepublic_submit(Pieform $form, $values) {
+    global $SESSION, $userid, $view;
+    $access = array(
+        array(
+            'type'      => 'loggedin',
+            'startdate' => null,
+            'stopdate'  => null,
+        ),
+    );
+
+    if ($values['changeto'] == 'public') {
+        $access[] = array(
+            'type'      => 'public',
+            'startdate' => null,
+            'stopdate'  => null,
+        );
+    }
+    $view->set_access($access);
+    $SESSION->add_ok_msg(get_string('viewaccesseditedsuccessfully', 'view'));
+
+    redirect('/user/view.php?id=' . $userid);
 }
 
 ?>

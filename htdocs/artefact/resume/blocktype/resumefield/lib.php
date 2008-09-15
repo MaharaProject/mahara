@@ -40,6 +40,10 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
         return array('resume');
     }
 
+    public static function get_viewtypes() {
+        return array('portfolio', 'profile');
+    }
+
      /**
      * Optional method. If exists, allows this class to decide the title for
      * all blockinstances of this type
@@ -55,7 +59,7 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
         return '';
     }
 
-    public static function render_instance(BlockInstance $instance) {
+    public static function render_instance(BlockInstance $instance, $editing=false) {
         require_once(get_config('docroot') . 'artefact/lib.php');
         $smarty = smarty_core();
         $configdata = $instance->get('configdata');

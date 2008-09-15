@@ -91,6 +91,10 @@ $editview = array(
             'type'  => 'hidden',
             'value' => $view->get('id'),
         ),
+        'type' => array(
+            'type'  => 'hidden',
+            'value' => 'portfolio'
+        ),
         'new' => array(
             'type' => 'hidden',
             'value' => $new,

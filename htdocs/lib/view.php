@@ -59,6 +59,7 @@ class View {
     private $copynewuser = 0;
     private $copynewgroups;
     private $copyconfig;
+    private $type;
 
     public function __construct($id=0, $data=null) {
         if (!empty($id)) {
@@ -162,6 +163,10 @@ class View {
         db_begin();
 
         if (empty($this->id)) {
+            // users are only allowed one profile view
+            if ($this->type == 'profile' && record_exists('view', 'owner', $this->owner, 'type', 'profile')) {
+                throw new ViewLimitException(get_string('onlonlyyoneprofileviewallowed', 'error'));
+            }
             $this->id = insert_record('view', $fordb, 'id', true);
         }
         else {
@@ -434,8 +439,15 @@ class View {
         $cats = get_records_sql_array('SELECT bc.name, COUNT(*) AS "count"
             FROM {blocktype_category} bc
             INNER JOIN {blocktype_installed_category} bic ON (bc.name = bic.category)
+            WHERE EXISTS (
+                SELECT 1 
+                    FROM {blocktype_installed_viewtype} bivt
+                    JOIN {blocktype_installed} bi ON bi.name = bivt.blocktype
+                    WHERE bivt.viewtype = ?
+                    AND bic.blocktype = bi.name
+            )
             GROUP BY bc.name
-            ORDER BY bc.name', array());
+            ORDER BY bc.name', array($view->get('type')));
         $categories = array_map(
             create_function(
                 '$a', 
@@ -484,9 +496,9 @@ class View {
      *                           meaning that nothing for the standard HTML version 
      *                           alone should be output
      */
-    public static function build_blocktype_list($category, $javascript=false) {
+    public function build_blocktype_list($category, $javascript=false) {
         require_once(get_config('docroot') . 'blocktype/lib.php');
-        $blocktypes = PluginBlockType::get_blocktypes_for_category($category);
+        $blocktypes = PluginBlockType::get_blocktypes_for_category_and_viewtype($category, $this->get('type'));
 
         $smarty = smarty_core();
         $smarty->assign_by_ref('blocktypes', $blocktypes);
@@ -1348,7 +1360,14 @@ class View {
         }
     }
 
-
+    /**
+     * Return the profile view object for the given userid 
+     *
+     * @param int $userid the user id to fetch the profile view for 
+     */
+    public static function profile_view($userid) {
+        return new View(get_field('view', 'id', 'type', 'profile', 'owner', $userid));
+    }
 
     public static function get_myviews_data($limit=5, $offset=0, $groupid=null, $institution=null) {
 
@@ -1375,6 +1394,7 @@ class View {
                 FROM {view} v
                 LEFT OUTER JOIN {group} g ON (v.submittedto = g.id AND g.deleted = 0)
                 WHERE v.owner = ' . $userid . '
+                AND v.type = \'portfolio\'
                 ORDER BY v.title, v.id', '', $offset, $limit);
         }
 
@@ -1815,7 +1835,7 @@ class View {
         }
     }
 
-    public static function set_nav($group, $institution) {
+    public static function set_nav($group, $institution, $profile=false) {
         if ($group) {
             define('MENUITEM', 'groups/views');
             define('GROUP', $group);
@@ -1823,6 +1843,9 @@ class View {
         else if ($institution) {
             define('INSTITUTIONALADMIN', 1);
             define('MENUITEM', $institution == 'mahara' ? 'configsite/siteviews' : 'manageinstitutions/institutionviews');
+        }
+        else if ($profile) {
+            define('MENUITEM', 'profile/editprofilepage');
         }
         else {
             define('MENUITEM', 'myportfolio/views');

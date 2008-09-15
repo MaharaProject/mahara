@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="lib/db" VERSION="20060926" COMMENT="XMLDB file for core Mahara tables"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../lib/xmldb/xmldb.xsd"
+>
+    <TABLES>
+        <TABLE NAME="blocktype_wall_post">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
+                <FIELD NAME="instance" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="from" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="replyto" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="private" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
+                <FIELD NAME="postdate" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="text" TYPE="text" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="instancefk" TYPE="foreign" FIELDS="instance" REFTABLE="block_instance" REFFIELDS="id" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="from" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="replytofk" TYPE="foreign" FIELDS="replyto" REFTABLE="blocktype_wall_post" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+    </TABLES>
+</XMLDB>
+

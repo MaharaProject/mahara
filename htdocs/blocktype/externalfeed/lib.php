@@ -40,7 +40,11 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         return array('feeds');
     }
 
-    public static function render_instance(BlockInstance $instance) {
+    public static function get_viewtypes() {
+        return array('portfolio', 'profile');
+    }
+
+    public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
         if ($configdata['feedid']) {
             $data = get_record('blocktype_externalfeed_data', 'id', $configdata['feedid']);

@@ -45,13 +45,23 @@ abstract class PluginBlocktype extends Plugin {
         );
     }
 
+    /** 
+     * override this to return true if the blocktype 
+     * can only reasonably be placed once in a view
+    */
+    public static function single_only() {
+        return false;
+    }
+
     public static abstract function get_title();
 
     public static abstract function get_description();
 
     public static abstract function get_categories();
 
-    public static abstract function render_instance(BlockInstance $instance);
+    public static abstract function get_viewtypes();
+
+    public static abstract function render_instance(BlockInstance $instance, $editing=false);
 
     /**
      * If this blocktype contains artefacts, and uses the artefactchooser 
@@ -129,13 +139,15 @@ abstract class PluginBlocktype extends Plugin {
         return get_string('pluginname', 'artefact.' . $name);
     }
 
-    public static function get_blocktypes_for_category($category) {
+    public static function get_blocktypes_for_category_and_viewtype($category, $viewtype) {
         $sql = 'SELECT bti.name, bti.artefactplugin
             FROM {blocktype_installed} bti 
             JOIN {blocktype_installed_category} btic ON btic.blocktype = bti.name
+            JOIN {blocktype_installed_viewtype} bivt ON bivt.blocktype = bti.name
             WHERE btic.category = ?
+            AND bivt.viewtype = ?
             ORDER BY bti.name';
-        if (!$bts = get_records_sql_array($sql, array($category))) {
+        if (!$bts = get_records_sql_array($sql, array($category, $viewtype))) {
             return false;
         }
 
@@ -148,6 +160,7 @@ abstract class PluginBlocktype extends Plugin {
                 'name'           => $bt->name,
                 'title'          => call_static_method(generate_class_name('blocktype', $namespaced), 'get_title'),
                 'description'    => call_static_method(generate_class_name('blocktype', $namespaced), 'get_description'),
+                'singleonly'     => call_static_method(generate_class_name('blocktype', $namespaced), 'single_only'),
                 'artefactplugin' => $bt->artefactplugin,
                 'thumbnail_path' => get_config('wwwroot') . 'thumb.php?type=blocktype&bt=' . $bt->name . ((!empty($bt->artefactplugin)) ? '&ap=' . $bt->artefactplugin : ''),
             );
@@ -319,7 +332,7 @@ class BlockInstance {
         }
         else {
             try {
-                $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this);
+                $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this, true);
             }
             catch (ArtefactNotFoundException $e) {
                 // Whoops - where did the image go? There is possibly a bug 
@@ -614,13 +627,13 @@ class BlockInstance {
             $this->dirty = false;
             return;
         }
+        safe_require('blocktype', $this->get('blocktype'));
+        call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'delete_instance', $this);
         
         delete_records('view_artefact', 'block', $this->id);
         delete_records('block_instance', 'id', $this->id);
 
         $this->dirty = false;
-        safe_require('blocktype', $this->get('blocktype'));
-        call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'delete_instance', $this);
     }
 
     /**
