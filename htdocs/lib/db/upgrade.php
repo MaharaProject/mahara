@@ -1280,6 +1280,17 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table);
     }
 
+    if ($oldversion < 2008091500) {
+        // NOTE: Yes, this number is bigger than the number for the next upgrade
+        // The next upgrade got committed first. It deletes all users properly, 
+        // but the usr table has a 30 character limit on username, which can be 
+        // violated when people with long usernames are deleted
+        $table = new XMLDBTable('usr');
+        $field = new XMLDBField('username');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 100, null, XMLDB_NOTNULL);
+        change_field_precision($table, $field);
+    }
+
     if ($oldversion < 2008091200) {
         // Some cleanups for deleted users, based on the new model of handling them
         if ($userids = get_column('usr', 'id', 'deleted', 1)) {
