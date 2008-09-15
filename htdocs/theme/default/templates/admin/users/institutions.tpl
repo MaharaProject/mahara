@@ -10,8 +10,6 @@
 			{if $institution_form}
 			{if $add}
 			<h3>{str tag="addinstitution" section="admin"}</h3>
-			{elseif ($noauthmessage)}
-                        <div class="error">{$noauthmessage}</div>
 			{/if}
 			{$institution_form}
 			{else}
