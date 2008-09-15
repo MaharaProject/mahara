@@ -224,7 +224,7 @@ if ($institution || $add) {
     $elements['registerallowed'] = array(
         'type'         => 'checkbox',
         'title'        => get_string('registrationallowed', 'admin'),
-        'description'  => get_string('registrationalloweddescription', 'admin'),
+        'description'  => get_string('registrationalloweddescription2', 'admin'),
         'defaultvalue' => $data->registerallowed,
         'help'   => true,
     );
