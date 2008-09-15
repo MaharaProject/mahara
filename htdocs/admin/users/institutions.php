@@ -406,6 +406,17 @@ function institution_submit(Pieform $form, $values) {
 
     if ($add) {
         insert_record('institution', $newinstitution);
+        // If registration has been turned on, then we automatically insert an 
+        // internal authentication authinstance
+        if ($newinstitution->registerallowed) {
+            $authinstance = (object)array(
+                'instancename' => 'internal',
+                'priority'     => 0,
+                'institution'  => $newinstitution->name,
+                'authname'     => 'internal',
+            );
+            insert_record('auth_instance', $authinstance);
+        }
     }
     else {
         $where = new StdClass;
@@ -426,7 +437,12 @@ function institution_submit(Pieform $form, $values) {
     db_commit();
 
     if ($add) {
-        $message = get_string('institutionaddedsuccessfully', 'admin');
+        if ($newinstitution->registerallowed) {
+            // If registration is not allowed, then an authinstance will not 
+            // have been created, and thus cause the institution page to add 
+            // its own error message on the next page load
+            $SESSION->add_ok_msg(get_string('institutionaddedsuccessfully2', 'admin'));
+        }
         $nexturl = '/admin/users/institutions.php?i='.urlencode($institution);
     }
     else {
@@ -435,10 +451,10 @@ function institution_submit(Pieform $form, $values) {
             && (!empty($oldtheme) || $values['theme'] != 'sitedefault')) {
             $message .= '  ' . get_string('usersseenewthemeonlogin', 'admin');
         }
+        $SESSION->add_ok_msg($message);
         $nexturl = '/admin/users/institutions.php';
     }
 
-    $SESSION->add_ok_msg($message);
     redirect($nexturl);
 }
 
