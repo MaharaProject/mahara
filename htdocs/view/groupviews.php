@@ -62,7 +62,7 @@ else {
 $userid = $USER->get('id');
 
 $pagination = build_pagination(array(
-    'url' => get_config('wwwroot') . 'view/?',
+    'url' => get_config('wwwroot') . 'view/groupviews.php?group='.$group->id,
     'count' => $data->count,
     'limit' => $limit,
     'offset' => $offset,

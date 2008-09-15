@@ -47,7 +47,7 @@ $smarty->assign('heading', $title);
 $data = View::get_myviews_data($limit, $offset, null, 'mahara');
 
 $pagination = build_pagination(array(
-    'url' => get_config('wwwroot') . 'view/?',
+    'url' => get_config('wwwroot') . 'admin/site/views.php',
     'count' => $data->count,
     'limit' => $limit,
     'offset' => $offset,
