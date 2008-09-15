@@ -1854,6 +1854,7 @@ class View {
             $oldowner = $template->ownership();
             $this->set('copyconfig', (object) array(
                 'ownertype' => $newowner['type'],
+                'ownerid'   => $newowner['id'],
                 'sameowner' => $newowner['type'] == $oldowner['type'] && $newowner['id'] == $oldowner['id'],
             ));
             $artefactcopies = array(); // Correspondence between original artefact ids and id of the copy

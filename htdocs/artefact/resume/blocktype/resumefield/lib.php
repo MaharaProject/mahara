@@ -132,6 +132,21 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
         return false;
     }
 
+    public static function default_artefact_config($ownertype=null, $ownerid=null, $configdata) {
+        $artefactid = null;
+        if ($ownertype == 'user') {
+            if (!empty($configdata['artefactid'])) {
+                $artefacttype = get_field('artefact', 'artefacttype', 'id', $configdata['artefactid']);
+            }
+            // @todo get artefacttype from a different field when copying from institution or group view.
+            if ($artefacttype) {
+                $artefactid = get_field('artefact', 'id', 'artefacttype', $artefacttype, 'owner', $ownerid);
+            }
+        }
+        $configdata['artefactid'] = $artefactid;
+        return $configdata;
+    }
+
 }
 
 ?>

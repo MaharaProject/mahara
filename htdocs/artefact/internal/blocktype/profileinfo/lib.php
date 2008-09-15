@@ -209,6 +209,20 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
         return false;
     }
 
+    public static function default_artefact_config($ownertype=null, $ownerid=null, $configdata) {
+        if ($ownertype == 'user') {
+            $artefacttypes = array_diff(PluginArtefactInternal::get_artefact_types(), array('profileicon', 'email'));
+            $artefactids = get_column_sql('
+                SELECT id FROM {artefact}
+                WHERE owner = ? AND artefacttype IN (' . join(',', array_map('db_quote', $artefacttypes)) . ')', array($ownerid));
+            $configdata['artefactids'] = $artefactids;
+        }
+        else {
+            $configdata['artefactids'] = array();
+        }
+        return $configdata;
+    }
+
 }
 
 ?>

@@ -164,6 +164,16 @@ abstract class PluginBlocktype extends Plugin {
         return true;
     }
 
+    public static function default_artefact_config($ownertype=null, $ownerid=null, $configdata) {
+        if (isset($configdata['artefactid'])) {
+            $configdata['artefactid'] = null;
+        }
+        if (isset($configdata['artefactids'])) {
+            $configdata['artefactids'] = array();
+        }
+        return $configdata;
+    }
+
 }
 
 abstract class SystemBlockType extends PluginBlockType {
@@ -671,21 +681,12 @@ class BlockInstance {
         return $a;
     }
 
-    public function copy_allowed($ownertype=null) {
-        return call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'copy_allowed', $ownertype);
-    }
-
-    public function copy_artefacts_allowed($ownertype=null) {
-        return call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'copy_artefacts_allowed', $ownertype);
-    }
-
-    public function set_default_configdata() {
-        return;
-    }
 
     public function copy(&$view, &$artefactcopies) {
+        $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
+
         $copyconfig = $view->get('copyconfig');
-        if (!$copyconfig->sameowner && !$this->copy_allowed($copyconfig->ownertype)) {
+        if (!$copyconfig->sameowner && !call_static_method($blocktypeclass, 'copy_allowed', $copyconfig->ownertype)) {
             return false;
         }
         $newblock = new BlockInstance(0, array(
@@ -696,9 +697,14 @@ class BlockInstance {
             'order'      => $this->get('order'),
         ));
 
+        $configdata = $this->get('configdata');
+        if ($copyconfig->sameowner) {
+            $newblock->set('configdata', $configdata);
+            $newblock->commit();
+            return true;
+        }
         $artefactids = PluginBlockType::get_artefacts($this);
-        if (!$copyconfig->sameowner && !empty($artefactids) && $this->copy_artefacts_allowed($copyconfig->ownertype)) {
-            $configdata = $this->get('configdata');
+        if (!empty($artefactids) && call_static_method($blocktypeclass, 'copy_artefacts_allowed', $copyconfig->ownertype)) {
             // Copy artefacts & put the new artefact ids into the new
             // block.
             // Get all children of the artefacts.
@@ -720,12 +726,11 @@ class BlockInstance {
                     $oldid = $artefactcopies[$oldid]->newid;
                 }
             }
-            $newblock->set('configdata', $configdata);
         }
         else {
-            $newblock->set_default_configdata();
+            $configdata = call_static_method($blocktypeclass, 'default_artefact_config', $copyconfig->ownertype, $copyconfig->ownerid, $configdata);
         }
-
+        $newblock->set('configdata', $configdata);
         $newblock->commit();
         return true;
     }
