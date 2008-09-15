@@ -159,6 +159,8 @@
         }
         instanceArray.push(id);
         rebuildInstanceList(instanceArray);
+
+        replaceChildNodes('messages');
     }
 
 </script>
