@@ -322,6 +322,7 @@ $string['loginasrestorenodata'] = 'No user data to restore';
 $string['loginasoverridepasswordchange'] = 'As you are masquerading as another user, you may choose to %slog in anyway%s, ignoring the password change screen.';
 
 // Institutions
+$string['Add'] = 'Add';
 $string['admininstitutions'] = 'Administer Institutions';
 $string['adminauthorities'] = 'Administer Authorities';
 $string['addinstitution'] = 'Add Institution';
