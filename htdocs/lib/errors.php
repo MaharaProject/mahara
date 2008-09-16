@@ -775,5 +775,22 @@ class AccessDeniedException extends UserException {
     }
 }
 
+/**
+ * Exception - Access totally denied, the user won't be able to access it even if they log in 
+ * as the administrator
+ */
+class AccessTotallyDeniedException extends UserException {
+    public function strings() {
+        return array_merge(parent::strings(), 
+                           array('message' => get_string('accessdeniedexception', 'error'),
+                                 'title'   => get_string('accessdenied', 'error')));
+    }
+
+    public function render_exception() {
+        header("HTTP/1.0 403 Forbidden", true);
+        return parent::render_exception();
+    }
+}
+
 
 ?>
