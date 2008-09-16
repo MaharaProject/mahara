@@ -182,7 +182,10 @@ class AuthXmlrpc extends Auth {
                 }
                 $user = new User;
                 $create = true;
-            } else {
+            }
+            else {
+                log_debug("User authorisation request from $remotewwwroot failed - "
+                    . "remote user '$remoteuser->username' is unknown to us and auto creation of users is turned off");
                 return false;
             }
         }
