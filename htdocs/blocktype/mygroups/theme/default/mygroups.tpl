@@ -3,7 +3,7 @@
 {foreach from=$USERGROUPS item=item}
     <tr>
         <td class="r{cycle values=0,1}">
-            <h4><a href="{$WWWROOT}group/view.php?id={$item->id}">{$item->name|escape}</a> - {str tag=$item->type section=group}</h4>
+            <h4><a href="{$WWWROOT}group/view.php?id={$item->id}">{$item->name|escape}</a> - {$item->roledisplay|escape}</h4>
             {if $item->description}
                 {$item->description}
             {/if}

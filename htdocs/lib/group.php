@@ -940,7 +940,7 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
     if ($filter == 'admin') {
         $sql = "
             INNER JOIN (
-                SELECT g.id, $adminsql AS membershiptype, $empty AS reason, $empty AS role
+                SELECT g.id, $adminsql AS membershiptype, $empty AS reason, $adminsql AS role
                 FROM {group} g
                 INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
             ) t ON t.id = g.id";
@@ -949,11 +949,11 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
     else if ($filter == 'member') {
         $sql = "
             INNER JOIN (
-                SELECT g.id, 'admin' AS membershiptype, $empty AS reason, $empty AS role
+                SELECT g.id, 'admin' AS membershiptype, $empty AS reason, $adminsql AS role
                 FROM {group} g
                 INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
                 UNION
-                SELECT g.id, 'member' AS type, $empty AS reason, $empty AS role
+                SELECT g.id, 'member' AS type, $empty AS reason, gm.role AS role
                 FROM {group} g
                 INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role != 'admin')
             ) t ON t.id = g.id";
@@ -981,11 +981,11 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
         $filter = 'all';
         $sql = "
             INNER JOIN (
-                SELECT g.id, 'admin' AS membershiptype, '' AS reason, '' AS role
+                SELECT g.id, 'admin' AS membershiptype, '' AS reason, 'admin' AS role
                 FROM {group} g
                 INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
                 UNION
-                SELECT g.id, 'member' AS membershiptype, '' AS reason, '' AS role
+                SELECT g.id, 'member' AS membershiptype, '' AS reason, gm.role AS role
                 FROM {group} g
                 INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ? AND gm.role != 'admin')
                 UNION
