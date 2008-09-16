@@ -1389,7 +1389,7 @@ class View {
                 ORDER BY v.title, v.id', array($institution), $offset, $limit);
         }
         else {
-            $count = count_records('view', 'owner', $userid);
+            $count = count_records('view', 'owner', $userid, 'type', 'portfolio');
             $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, g.id AS groupid, g.name
                 FROM {view} v
                 LEFT OUTER JOIN {group} g ON (v.submittedto = g.id AND g.deleted = 0)
