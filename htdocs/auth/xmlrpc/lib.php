@@ -758,6 +758,7 @@ class PluginAuthXmlrpc extends PluginAuth {
                 'integer'  => true
             ),
             'defaultvalue' => $peer->portno,
+            'size'   => 4,
             'help'   => true
         );
 
