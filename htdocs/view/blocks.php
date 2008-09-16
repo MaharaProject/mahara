@@ -69,12 +69,12 @@ $institution = $view->get('institution');
 if ($new && isset($_POST['cancel'])) {
     $view->delete();
     if ($group) {
-        redirect(get_config('wwwroot') . '/view/groupviews.php?group='.$group);
+        redirect(get_config('wwwroot') . 'view/groupviews.php?group='.$group);
     }
     if ($institution) {
-        redirect(get_config('wwwroot') . '/view/institutionviews.php?institution='.$institution);
+        redirect(get_config('wwwroot') . 'view/institutionviews.php?institution='.$institution);
     }
-    redirect(get_config('wwwroot') . '/view/');
+    redirect(get_config('wwwroot') . 'view/');
 }
 
 View::set_nav($group, $institution, ($view->get('type') == 'profile'));
