@@ -73,9 +73,10 @@ class Client {
     
         if ('2' != $response_code_prefix) {
             if ('4' == $response_code_prefix) {
-                throw new XmlrpcClientException('Client error code: ', $response_code);
-            } elseif ('5' == $response_code_prefix) {
-                throw new XmlrpcClientException('An error occurred at the remote server. Code: ', $response_code);
+                throw new XmlrpcClientException('Client error code: '. $response_code);
+            }
+            else if ('5' == $response_code_prefix) {
+                throw new XmlrpcClientException('An error occurred at the remote server. Code: '. $response_code);
             }
         }
 
