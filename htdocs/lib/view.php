@@ -1674,17 +1674,26 @@ class View {
             $qsql = '';
         }
 
+        if (is_mysql()) {
+            $uid = 'u.id';
+            $gid = 'g.id';
+        }
+        else {
+            $uid = 'CAST (u.id AS TEXT)';
+            $gid = 'CAST (g.id AS TEXT)';
+        }
+
         $sql = "
                 SELECT
                     'user' AS ownertype,
                     CASE WHEN u.preferredname IS NULL OR u.preferredname = '' THEN u.firstname || ' ' || u.lastname
                     ELSE u.preferredname END AS display,
-                    CAST (u.id AS TEXT), COUNT(v.id)
+                    $uid, COUNT(v.id)
                 FROM {usr} u INNER JOIN {view} v ON (v.owner = u.id AND v.type = 'portfolio')
                 WHERE u.deleted = 0 $tsql
                 GROUP BY ownertype, display, u.id
             UNION
-                SELECT 'group' AS ownertype, g.name AS display, CAST (g.id AS TEXT), COUNT(v.id)
+                SELECT 'group' AS ownertype, g.name AS display, $gid, COUNT(v.id)
                 FROM {group} g INNER JOIN {view} v ON (g.id = v.group)
                 WHERE g.deleted = 0 $tsql
                 GROUP BY ownertype, display, g.id
