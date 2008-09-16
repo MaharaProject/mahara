@@ -746,7 +746,7 @@ class PluginAuthXmlrpc extends PluginAuth {
             'collapseifoneoption' => true,
             'multiple'            => false,
             'options'             => $apparray,
-            'defaultvalue'        => empty($tmpappname)? key($apparray) : $tmpappname,
+            'defaultvalue'        => empty($tmpappname)? 'moodle' : $tmpappname,
             'help'                => true
         );
 
