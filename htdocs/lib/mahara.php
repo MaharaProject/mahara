@@ -1305,16 +1305,15 @@ function can_view_view($view_id, $user_id=null) {
         if ($publicviews || $publicprofiles) {
             $public = get_record_sql("
                 SELECT
-                    v.id, v.type, va.*
+                    v.id, v.type, a.*
                 FROM
                     {view} v
                     LEFT OUTER JOIN {view_access} a ON v.id = a.view
                 WHERE
-                    v.id = ?
-                    AND (a.accesstype = 'public' OR v.type = 'profile')
+                    v.id = ? AND a.accesstype = 'public'
             ", array($view_id));
             return $public && 
-                ( ( $publicviews && $public->accesstype == 'public'
+                ( ( $publicviews
                     && ( $public->startdate == null || $public->startdate < $now )
                     && ( $public->stopdate == null || $public->stopdate > $now )
                     )
