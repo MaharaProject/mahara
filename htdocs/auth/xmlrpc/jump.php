@@ -55,7 +55,7 @@ $instanceid    = param_variable('ins');
 $wantsurl      = param_variable('wantsurl');
 
 if (!get_config('enablenetworking')) {
-    throw new XmlrpcClientException('Sorry - networking has been disabled for this Mahara site.');
+    throw new AccessTotallyDeniedException(get_string('networkingdisabledonthissite', 'auth.xmlrpc'));
 }
 
 $peer = new Peer();
