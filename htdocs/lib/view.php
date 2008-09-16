@@ -2115,6 +2115,7 @@ function createview_submit(Pieform $form, $values) {
     $data = (object) array(
         'numcolumns'  => 3,
         'template'    => 0,
+        'type'        => 'portfolio',
         'group'       => $group,
         'institution' => $institution,
         'owner'       => $owner,
