@@ -1680,7 +1680,7 @@ class View {
                     CASE WHEN u.preferredname IS NULL OR u.preferredname = '' THEN u.firstname || ' ' || u.lastname
                     ELSE u.preferredname END AS display,
                     CAST (u.id AS TEXT), COUNT(v.id)
-                FROM {usr} u INNER JOIN {view} v ON (v.owner = u.id)
+                FROM {usr} u INNER JOIN {view} v ON (v.owner = u.id AND v.type = 'portfolio')
                 WHERE u.deleted = 0 $tsql
                 GROUP BY ownertype, display, u.id
             UNION
@@ -1698,7 +1698,7 @@ class View {
         $data = get_records_sql_array("SELECT * FROM ($sql) q $qsql", $ph, $offset, $limit);
 
         foreach ($data as &$r) {
-            if ($r->type == 'institution' && $r->id == 'mahara') {
+            if ($r->ownertype == 'institution' && $r->id == 'mahara') {
                 $r->display = get_config('sitename');
             }
         }
