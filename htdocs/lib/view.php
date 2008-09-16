@@ -1532,8 +1532,8 @@ class View {
         $loggedin = $USER->is_logged_in();
         $viewerid = $USER->get('id');
 
-        $where = '
-            WHERE TRUE';
+        $where = "
+            WHERE v.type != 'profile'";
 
         if ($ownedby) {
             $where .= ' AND v.' . self::owner_sql($ownedby);
