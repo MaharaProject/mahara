@@ -188,7 +188,7 @@ $string['adminfilespagedescription'] = 'Here you can upload files that can be in
 // Networking options
 $string['networkingextensionsmissing'] = 'Sorry, you cannot configure Mahara networking because your PHP installation is missing one or more required extensions:';
 $string['publickey'] = 'Public key';
-$string['publickeydescription'] = 'This public key is automatically generated, and rotated every 28 days';
+$string['publickeydescription2'] = 'This public key is automatically generated, and rotated every %s days';
 $string['publickeyexpires'] = 'Public key expires';
 $string['enablenetworkingdescription'] = 'Allow your Mahara server to communicate with servers running Moodle and other applications';
 $string['enablenetworking'] = 'Enable networking';
