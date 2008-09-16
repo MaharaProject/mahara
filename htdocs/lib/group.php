@@ -919,4 +919,127 @@ function group_sideblock() {
 }
 
 
+function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=0) {
+
+    // Strangely, casting is only needed for invite, request and admin and only in 
+    // postgres
+    if (is_mysql()) {
+        $invitesql  = "'invite'";
+        $requestsql = "'request'";
+        $adminsql   = "'admin'";
+        $empty      = "''";
+    }
+    else {
+        $invitesql  = "CAST('invite' AS TEXT)";
+        $requestsql = "CAST('request' AS TEXT)";
+        $adminsql   = "CAST('admin' AS TEXT)";
+        $empty      = "CAST('' AS TEXT)";
+    }
+
+    // Different filters join on the different kinds of association
+    if ($filter == 'admin') {
+        $sql = "
+            INNER JOIN (
+                SELECT g.id, $adminsql AS membershiptype, $empty AS reason, $empty AS role
+                FROM {group} g
+                INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
+            ) t ON t.id = g.id";
+        $values = array($userid);
+    }
+    else if ($filter == 'member') {
+        $sql = "
+            INNER JOIN (
+                SELECT g.id, 'admin' AS membershiptype, $empty AS reason, $empty AS role
+                FROM {group} g
+                INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
+                UNION
+                SELECT g.id, 'member' AS type, $empty AS reason, $empty AS role
+                FROM {group} g
+                INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role != 'admin')
+            ) t ON t.id = g.id";
+        $values = array($userid, $userid);
+    }
+    else if ($filter == 'invite') {
+        $sql = "
+            INNER JOIN (
+                SELECT g.id, $invitesql AS membershiptype, gmi.reason, gmi.role
+                FROM {group} g
+                INNER JOIN {group_member_invite} gmi ON (gmi.group = g.id AND gmi.member = ?)
+            ) t ON t.id = g.id";
+        $values = array($userid);
+    }
+    else if ($filter == 'request') {
+        $sql = "
+            INNER JOIN (
+                SELECT g.id, $requestsql AS membershiptype, gmr.reason, $empty AS role
+                FROM {group} g
+                INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
+            ) t ON t.id = g.id";
+        $values = array($userid);
+    }
+    else { // all or some other text
+        $filter = 'all';
+        $sql = "
+            INNER JOIN (
+                SELECT g.id, 'admin' AS membershiptype, '' AS reason, '' AS role
+                FROM {group} g
+                INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
+                UNION
+                SELECT g.id, 'member' AS membershiptype, '' AS reason, '' AS role
+                FROM {group} g
+                INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ? AND gm.role != 'admin')
+                UNION
+                SELECT g.id, 'invite' AS membershiptype, gmi.reason, gmi.role
+                FROM {group} g
+                INNER JOIN {group_member_invite} gmi ON (gmi.group = g.id AND gmi.member = ?)
+                UNION SELECT g.id, 'request' AS membershiptype, gmr.reason, '' AS role
+                FROM {group} g
+                INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
+            ) t ON t.id = g.id";
+        $values = array($userid, $userid, $userid, $userid);
+    }
+    
+    $values[] = 0;
+    
+    $count = count_records_sql('SELECT COUNT(*) FROM {group} g ' . $sql . ' WHERE g.deleted = ?', $values);
+    
+    // almost the same as query used in find - common parts should probably be pulled out
+    // gets the groups filtered by above
+    // and the first three members by id
+    
+    $sql = 'SELECT g.id, g.name, g.description, g.jointype, g.grouptype, t.membershiptype, t.reason, t.role, COUNT(gm.member) AS membercount, COUNT(gmr.member) AS requests
+        FROM {group} g
+        LEFT JOIN {group_member} gm ON (gm.group = g.id)
+        LEFT JOIN {group_member_request} gmr ON (gmr.group = g.id)' .
+        $sql . '
+        WHERE g.deleted = ?
+        GROUP BY g.id, g.name, g.description, g.jointype, g.grouptype, t.membershiptype, t.reason, t.role
+        ORDER BY g.name';
+    
+    $groups = get_records_sql_assoc($sql, $values, $offset, $limit);
+    
+    if ($groups) {
+        // Get 3 members from each group in a separate query -- mysql doesn't like including them as subqueries with limit 1 in the above query
+        $members = get_records_sql_array("
+            SELECT m1.group, m1.member, u.* FROM {group_member} m1
+            INNER JOIN {usr} u ON (m1.member = u.id AND u.deleted = 0)
+            WHERE 3 > (
+                SELECT COUNT(m2.member)
+                FROM {group_member} m2
+                WHERE m1.group = m2.group AND m2.member < m1.member
+            )
+            AND m1.group IN (" . join(',', array_keys($groups)) . ")", array());
+        foreach ($members as $m) {
+            $groups[$m->group]->members[] = (object) array('id' => $m->id, 'name' => display_name($m));
+        }
+        $groups = array_values($groups);
+    }
+    else {
+        $groups = array();
+    }
+
+    return array('groups' => $groups, 'count' => $count);
+
+}
+
 ?>

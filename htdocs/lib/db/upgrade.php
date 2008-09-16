@@ -1315,14 +1315,19 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table);
  
         insert_record('event_subscription', (object)array('event' => 'createuser', 'callfunction' => 'activity_set_defaults'));
-     }
 
-    if ($oldversion < 2008091601) {
         $table = new XMLDBTable('view_type');
         $table->addFieldInfo('type', XMLDB_TYPE_CHAR, 50, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('type'));
 
         create_table($table);
+
+        $viewtypes = array('portfolio', 'profile');
+        foreach ($viewtypes as $vt) {
+            insert_record('view_type', (object)array(
+                'type' => $vt,
+            ));
+        }
 
         $table = new XMLDBTable('blocktype_installed_viewtype');
         $table->addFieldInfo('blocktype', XMLDB_TYPE_CHAR, 50, XMLDB_UNSIGNED, XMLDB_NOTNULL);
@@ -1343,13 +1348,6 @@ function xmldb_core_upgrade($oldversion=0) {
         set_field('view', 'type', 'portfolio');
         $field->setAttributes(XMLDB_TYPE_CHAR, 50, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         change_field_notnull($table, $field);
-
-        $viewtypes = array('portfolio', 'profile');
-        foreach ($viewtypes as $vt) {
-            insert_record('view_type', (object)array(
-                'type' => $vt,
-            ));
-        }
 
         if ($blocktypes = plugins_installed('blocktype')) {
             foreach ($blocktypes as $bt) {

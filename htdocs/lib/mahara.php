@@ -1300,11 +1300,27 @@ function can_view_view($view_id, $user_id=null) {
 
     if (!$USER->is_logged_in()) {
         // check public
-        if (get_config('allowpublicviews') == '1') {
-            $public = get_record('view_access', 'view', $view_id, 'accesstype', 'public');
-            return ($public
+        $publicviews = get_config('allowpublicviews');
+        $publicprofiles = get_config('allowpublicprofiles');
+        if ($publicviews || $publicprofiles) {
+            $public = get_record_sql("
+                SELECT
+                    v.id, v.type, va.*
+                FROM
+                    {view} v
+                    LEFT OUTER JOIN {view_access} a ON v.id = a.view
+                WHERE
+                    v.id = ?
+                    AND (a.accesstype = 'public' OR v.type = 'profile')
+            ", array($view_id));
+            return $public && 
+                ( ( $publicviews && $public->accesstype == 'public'
                     && ( $public->startdate == null || $public->startdate < $now )
-                    && ( $public->stopdate == null || $public->stopdate > $now ));
+                    && ( $public->stopdate == null || $public->stopdate > $now )
+                    )
+                  ||
+                  ( $publicprofiles && $public->type == 'profile' )
+                );
         }
         return false;
     }

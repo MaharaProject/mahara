@@ -53,15 +53,12 @@ class PluginBlocktypeMyGroups extends SystemBlocktype {
         $smarty = smarty_core();
         require_once('group.php');
         // Group stuff
-//        if (!$userassocgroups = get_associated_groups($userid, false)) {
-        if (true) { // TODO RICHARDM!
-            $userassocgroups = array();
-        }
+        $results = group_get_associated_groups($userid, 'member');
 
-        foreach ($userassocgroups as $group) {
+        foreach ($results['groups'] as $group) {
             $group->description = str_shorten($group->description, 100, true);
         }
-        $smarty->assign('USERGROUPS',$userassocgroups);
+        $smarty->assign('USERGROUPS',$results['groups']);
         return $smarty->fetch('blocktype:mygroups:mygroups.tpl');
     }
 
