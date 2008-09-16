@@ -2038,7 +2038,7 @@ class View {
                     }
                 }
             }
-            $smarty->assign('ownername', get_string('displayingviewsby', 'view', $ownername));
+            $smarty->assign('ownername', get_string('viewsby', 'view', $ownername));
         }
         $search->html = $smarty->fetch('view/templatesearchresults.tpl');
         $search->count = $results->count;
