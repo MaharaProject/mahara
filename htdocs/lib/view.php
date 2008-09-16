@@ -1695,7 +1695,7 @@ class View {
                 GROUP BY ownertype, display, i.name ORDER BY display";
 
         $count = count_records_sql("SELECT COUNT(*) FROM ($sql) q $qsql", $ph);
-        $data = get_records_sql_array("SELECT * FROM ($sql) q $qsql", $ph, $offset, $limit);
+        $data = get_records_sql_array("SELECT * FROM ($sql) q $qsql ORDER BY ownertype != 'institution', id != 'mahara', ownertype", $ph, $offset, $limit);
 
         foreach ($data as &$r) {
             if ($r->ownertype == 'institution' && $r->id == 'mahara') {
