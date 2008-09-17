@@ -1179,7 +1179,6 @@ function copy_views_for_user($userid, $templateids) {
     if (!$templateids) {
         return;
     }
-    require_once(get_config('libroot') . 'view.php');
     foreach ($templateids as $tid) {
         copy_view_for_user($userid, $tid);
     }
@@ -1195,11 +1194,7 @@ function copy_views_for_user($userid, $templateids) {
 function install_default_profile_view($eventdata) {
     require_once(get_config('libroot') . 'view.php');
 
-    $viewid = get_field('view', 'id', 'owner', 0, 'type', 'profile');
-
-    if (!$viewid) {
-        $viewid = install_system_profile_view();
-    }
+    $viewid = install_system_profile_view();
     $view = copy_view_for_user($eventdata['id'], $viewid);
     $view->set_access(array(
         array(
@@ -1217,6 +1212,10 @@ function install_default_profile_view($eventdata) {
  *
  */
 function install_system_profile_view() {
+    $viewid = get_field('view', 'id', 'owner', 0, 'type', 'profile');
+    if ($viewid) {
+        return $viewid;
+    }
     require_once(get_config('libroot') . 'view.php');
     require_once(get_config('docroot') . 'blocktype/lib.php');
     $view = new View(0, array(

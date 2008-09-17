@@ -1373,7 +1373,7 @@ function xmldb_core_upgrade($oldversion=0) {
 
         // Delete all the empty profile views & recreate them from the
         // site template.
-        $viewids = get_column('view', 'type', 'profile');
+        $viewids = get_column('view', 'id', 'type', 'profile');
         if ($viewids) {
             require_once(get_config('libroot') . 'view.php');
             foreach ($viewids as $id) {
@@ -1386,7 +1386,9 @@ function xmldb_core_upgrade($oldversion=0) {
 
         if ($userids = get_column('usr', 'id')) {
             foreach ($userids as $user) {
-                install_default_profile_view(array('id' => $user));
+                if ($user > 0) {
+                    install_default_profile_view(array('id' => $user));
+                }
             }
         }
 
