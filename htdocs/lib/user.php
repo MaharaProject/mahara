@@ -1218,6 +1218,7 @@ function install_default_profile_view($eventdata) {
  */
 function install_system_profile_view() {
     require_once(get_config('libroot') . 'view.php');
+    require_once(get_config('docroot') . 'blocktype/lib.php');
     $view = new View(0, array(
         'type'        => 'profile',
         'owner'       => 0,
