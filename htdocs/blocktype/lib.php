@@ -627,11 +627,13 @@ class BlockInstance {
             $this->dirty = false;
             return;
         }
+        db_begin();
         safe_require('blocktype', $this->get('blocktype'));
         call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'delete_instance', $this);
         
         delete_records('view_artefact', 'block', $this->id);
         delete_records('block_instance', 'id', $this->id);
+        db_commit();
 
         $this->dirty = false;
     }
