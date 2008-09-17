@@ -1377,7 +1377,9 @@ function xmldb_core_upgrade($oldversion=0) {
             $systemview->delete();
         }
         install_system_profile_view();
-        insert_record('event_subscription', (object)array('event' => 'createuser', 'callfunction' => 'install_default_profile_view'));
+        if (!record_exists('event_subscription', 'event', 'createuser', 'callfunction', 'install_default_profile_view')) {
+            insert_record('event_subscription', (object)array('event' => 'createuser', 'callfunction' => 'install_default_profile_view'));
+        }
     }
 
     return $status;
