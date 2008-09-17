@@ -15,7 +15,10 @@
 {elseif $row->ownertype == 'group'}
       <td><a class="grouplink" href="{$WWWROOT}group/view.php?id={$row->id|escape}" target="_blank">{$row->display|escape}</a></td>
 {else}
-      <td><a class="userlink" href="{$WWWROOT}user/view.php?id={$row->id|escape}" target="_blank">{$row->display|escape}</a></td>
+      <td>
+        <img src="{$WWWROOT}thumb.php?type=profileicon&maxwidth=20&maxheight=20&id={$row->id|escape}" />
+        <a class="userlink" href="{$WWWROOT}user/view.php?id={$row->id|escape}" target="_blank">{$row->display|escape}</a>
+      </td>
 {/if}
       <td style="text-align: center;">{$row->count|escape}</td>
       <td class="selectowner"><a href="{$viewurl}&amp;owntype={$row->ownertype}&amp;ownid={$row->id}">{str tag=listviews section=view}</a>&nbsp;<img src="{theme_path location='images/icon_fieldset_left.gif'}" alt=""></td>

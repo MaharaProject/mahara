@@ -27,21 +27,13 @@
 define('INTERNAL', 1);
 define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
-require_once(get_config('libroot') . 'view.php');
 
 $id = param_integer('id');
-if (!can_view_view($id)) {
-    json_reply('local', get_string('accessdenied', 'error'));
-}
-$view = new View($id);
 
 $smarty = smarty_core();
-$smarty->assign('viewtitle', $view->get('title'));
-$smarty->assign('ownername', $view->formatted_owner());
-$smarty->assign('viewdescription', $view->get('description'));
-$smarty->assign('viewcontent', $view->build_columns());
+$smarty->assign('user', (object) array('id' => $id, 'introduction' => get_field('artefact', 'title', 'artefacttype', 'introduction', 'owner', $id)));
 ob_start();
-$smarty->display('view/viewcontent.tpl');
+$smarty->display('user/simpleuser.tpl');
 $html = ob_get_contents();
 ob_end_clean();
 

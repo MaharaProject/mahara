@@ -80,17 +80,22 @@ else {
 View::get_templatesearch_data($views);
 
 $strpreview = json_encode(get_string('Preview','view'));
-$strclose = json_encode(get_string('closepreview','view'));
+$strclose = json_encode(get_string('close','view'));
 $js = <<<EOF
 
 preview = DIV({'id':'viewpreview', 'class':'hidden'}, DIV({'id':'viewpreviewinner'}, DIV({'id':'viewpreviewclose'}, A({'href':'','id':'closepreview'}, {$strclose})), DIV({'id':'viewpreviewcontent'})));
 
-function showPreview(data) {
+function showPreview(size, data) {
     $('viewpreviewcontent').innerHTML = data.html;
     var vdim = getViewportDimensions();
     var vpos = getViewportPosition();
     var offset = 16; // Left border & padding of preview container elements (@todo: use getStyle()?)
-    setElementDimensions(preview, {'w':vdim.w - 200});
+    if (size == 'small') {
+        var width = 400;
+    } else { 
+        var width = vdim.w - 200;
+    }
+    setElementDimensions(preview, {'w':width});
     setElementPosition(preview, {'x':vpos.x+100-offset, 'y':vpos.y+200});
     showElement(preview);
 }
@@ -119,7 +124,7 @@ addLoadEvent(function() {
         e.stop();
         var href = getNodeAttribute(this, 'href');
         var params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
-        sendjsonrequest(config.wwwroot + 'group/groupinfo.json.php', params, 'POST', showPreview);
+        sendjsonrequest(config.wwwroot + 'group/groupinfo.json.php', params, 'POST', partial(showPreview, 'small'));
       });
     });
     forEach(getElementsByTagAndClassName('a', 'userlink', 'viewownersearch'), function(i) {
@@ -127,7 +132,7 @@ addLoadEvent(function() {
         e.stop();
         var href = getNodeAttribute(this, 'href');
         var params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
-        sendjsonrequest('viewcontent.json.php', {'user':params.id}, 'POST', showPreview);
+        sendjsonrequest(config.wwwroot + 'user/userdetail.json.php', params, 'POST', partial(showPreview, 'small'));
       });
     });
   };
@@ -140,13 +145,14 @@ addLoadEvent(function() {
         e.stop();
         var href = getNodeAttribute(this, 'href');
         var params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
-        sendjsonrequest('viewcontent.json.php', params, 'POST', showPreview);
+        sendjsonrequest('viewcontent.json.php', params, 'POST', partial(showPreview, 'big'));
       });
     });
   };
   templatelist.rewriteOther();
   appendChildNodes(getFirstElementByTagAndClassName('body'), preview);
   connect('closepreview', 'onclick', function (e) {e.stop(); fade(preview, {'duration':0.2});});
+  connect('viewpreviewcontent', 'onclick', function (e) {e.stop(); return false;});
 });
 EOF;
 

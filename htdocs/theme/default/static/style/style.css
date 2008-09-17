@@ -1571,6 +1571,9 @@ button#dosearch {
 	background-color: #92b328 !important;
 }
 
+#copyview .searchlist {
+  margin-bottom: 20px;
+}
 #copyview .templateresults {
   width: 100%;
   margin-top: 5px;
@@ -1591,8 +1594,17 @@ button#dosearch {
 #copyview .selectowner {
   font-weight: bold;
 }
+#copyview #viewownersearch td img {
+  vertical-align: bottom;
+}
+#copyview #viewownersearch td.selectowner img {
+  vertical-align: middle;
+}
 .preview-group {
-  margin: 5px 40px 0;
+  margin: 10px;
+}
+.preview-group ul#group-info {
+  padding: 0;
 }
 #viewpreview {
   position: absolute;

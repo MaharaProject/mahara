@@ -273,6 +273,6 @@ $string['nocopyableviewsfound'] = 'No Views that you can copy';
 $string['noownersfound'] = 'No owners found';
 $string['viewsby'] = 'Views by %s';
 $string['Preview'] = 'Preview';
-$string['closepreview'] = 'Close Preview';
+$string['close'] = 'Close';
 
 ?>
