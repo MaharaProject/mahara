@@ -122,6 +122,14 @@ addLoadEvent(function() {
         sendjsonrequest(config.wwwroot + 'group/groupinfo.json.php', params, 'POST', showPreview);
       });
     });
+    forEach(getElementsByTagAndClassName('a', 'userlink', 'viewownersearch'), function(i) {
+      connect(i, 'onclick', function (e) {
+        e.stop();
+        var href = getNodeAttribute(this, 'href');
+        var params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
+        sendjsonrequest('viewcontent.json.php', {'user':params.id}, 'POST', showPreview);
+      });
+    });
   };
   ownerlist.rewriteOther();
   templatelist.rewriteOther = function () {

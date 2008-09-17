@@ -29,15 +29,25 @@ define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 
-$id = param_integer('id');
+if ($user = param_integer('user', null)) {
+    $id = get_field('view', 'id', 'type', 'profile', 'owner', $user);
+}
+else {
+    $id = param_integer('id');
+}
 if (!can_view_view($id)) {
     json_reply('local', get_string('accessdenied', 'error'));
 }
 $view = new View($id);
 
 $smarty = smarty_core();
-$smarty->assign('viewtitle', $view->get('title'));
-$smarty->assign('ownername', $view->formatted_owner());
+if ($user) {
+    $smarty->assign('viewtitle', $view->formatted_owner());
+}
+else {
+    $smarty->assign('viewtitle', $view->get('title'));
+    $smarty->assign('ownername', $view->formatted_owner());
+}
 $smarty->assign('viewdescription', $view->get('description'));
 $smarty->assign('viewcontent', $view->build_columns());
 ob_start();
