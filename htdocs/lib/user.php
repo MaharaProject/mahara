@@ -1155,23 +1155,33 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
 
 
 
+function copy_view_for_user($userid, $templateid) {
+    if (!$templateid) {
+        return;
+    }
+    $template = new View($templateid);
+    $v = new View(0, (object) array(
+        'template'    => 0,
+        'numcolumns'  => 3,
+        'owner'       => $userid,
+        'title'       => $template->get('title'),
+        'description' => $template->get('description'),
+        'type'        => $template->get('type'),
+    ));
+    $v->commit();
+    $v->copy_contents($template);
+    $v->commit();
+    return $v;
+}
+
+
 function copy_views_for_user($userid, $templateids) {
     if (!$templateids) {
         return;
     }
     require_once(get_config('libroot') . 'view.php');
     foreach ($templateids as $tid) {
-        $template = new View($tid);
-        $v = new View(0, (object) array(
-            'template'    => 0,
-            'numcolumns'  => 3,
-            'owner'       => $userid,
-            'title'       => $template->get('title'),
-            'description' => $template->get('description'),
-        ));
-        $v->commit();
-        $v->copy_contents($template);
-        $v->commit();
+        copy_view_for_user($userid, $tid);
     }
 }
 
@@ -1184,17 +1194,13 @@ function copy_views_for_user($userid, $templateids) {
  */
 function install_default_profile_view($eventdata) {
     require_once(get_config('libroot') . 'view.php');
-    
-    $view = new View(0, array(
-        'type'        => 'profile',
-        'owner'       => $eventdata['id'],
-        'numcolumns'  => 2,
-        'ownerformat' => FORMAT_NAME_PREFERREDNAME,
-        'title'       => get_string('profileviewtitle', 'view'),
-        'description' => '',
-    ));
-    $view->commit();
-    // #TODO add blocks here
+
+    $viewid = get_field('view', 'id', 'owner', 0, 'type', 'profile');
+
+    if (!$viewid) {
+        $viewid = install_system_profile_view();
+    }
+    $view = copy_view_for_user($eventdata['id'], $viewid);
     $view->set_access(array(
         array(
             'type'      => 'loggedin',
@@ -1202,6 +1208,42 @@ function install_default_profile_view($eventdata) {
             'stopdate'  => null,
         ),
     ));
+}
+
+
+/**
+ *
+ * This function installs the site's default profile view
+ *
+ */
+function install_system_profile_view() {
+    require_once(get_config('libroot') . 'view.php');
+    $view = new View(0, array(
+        'type'        => 'profile',
+        'owner'       => 0,
+        'numcolumns'  => 2,
+        'ownerformat' => FORMAT_NAME_PREFERREDNAME,
+        'title'       => get_string('profileviewtitle', 'view'),
+        'description' => '',
+    ));
+    $view->commit();
+    $blocktypes = array('myviews' => 1, 'mygroups' => 1, 'myfriends' => 2, 'wall' => 2);  // column ids
+    $installed = get_column_sql('SELECT name FROM {blocktype_installed} WHERE name IN (' . join(',', array_map('db_quote', array_keys($blocktypes))) . ')');
+    $weights = array(1 => 0, 2 => 0);
+    foreach (array_keys($blocktypes) as $blocktype) {
+        if (in_array($blocktype, $installed)) {
+            $weights[$blocktypes[$blocktype]]++;
+            $newblock = new BlockInstance(0, array(
+                'blocktype'  => $blocktype,
+                'title'      => get_string('title', 'blocktype.' . $blocktype),
+                'view'       => $view->get('id'),
+                'column'     => $blocktypes[$blocktype],
+                'order'      => $weights[$blocktypes[$blocktype]],
+            ));
+            $newblock->commit();
+        }
+    }
+    return $view->get('id');
 }
 
 

@@ -37,6 +37,9 @@ if (!empty($loggedinid)) {
 else {
     $userid = param_integer('id');
 }
+if ($userid == 0) {
+    redirect();
+}
 if ($userid == $loggedinid) {
     define('MENUITEM', 'profile/view');
 }

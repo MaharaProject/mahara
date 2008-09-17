@@ -1363,6 +1363,23 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2008091603) {
+        foreach(array('myviews', 'mygroups', 'myfriends', 'wall') as $blocktype) {
+            $data = check_upgrades("blocktype.$blocktype");
+            if ($data) {
+                upgrade_plugin($data);
+            }
+        }
+        $viewid = get_field('view', 'id', 'owner', 0, 'type', 'profile');
+        if ($viewid) {
+            require_once(get_config('libroot') . 'view.php');
+            $systemview = new View($viewid);
+            $systemview->delete();
+        }
+        install_system_profile_view();
+        insert_record('event_subscription', (object)array('event' => 'createuser', 'callfunction' => 'install_default_profile_view'));
+    }
+
     return $status;
 
 }
