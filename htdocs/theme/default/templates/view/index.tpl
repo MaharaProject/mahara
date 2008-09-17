@@ -89,7 +89,7 @@
 {else}
 <table id="myviewstable"{if $member} class="groupviews"{/if}>
   <tr>
-    <td>{if $GROUP}{str tag="noviewstosee" section="group"}{elseif $institution}{str tag="noviews"}{else}{str tag="noviews" section="view"}{/if}</td>
+    <td>{if $GROUP}{str tag="noviewstosee" section="group"}{elseif $institution}{str tag="noviews" section="view"}{else}{str tag="youhavenoviews" section="view"}{/if}</td>
   </tr>
 </table>
 {/if}
