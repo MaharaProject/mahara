@@ -1588,6 +1588,9 @@ button#dosearch {
   text-align: center;
   margin-top: 10px;
 }
+#copyview .selectowner {
+  font-weight: bold;
+}
 .preview-group {
   margin: 5px 40px 0;
 }
