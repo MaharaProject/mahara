@@ -81,6 +81,7 @@
                 <FIELD NAME="expiry" TYPE="datetime" NOTNULL="false"/>
                 <FIELD NAME="expirymailsent" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
                 <FIELD NAME="lastlogin" TYPE="datetime" NOTNULL="false"/>
+                <FIELD NAME="lastlastlogin" TYPE="datetime" NOTNULL="false"/>
                 <FIELD NAME="inactivemailsent" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
                 <FIELD NAME="staff" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
                 <FIELD NAME="admin" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>

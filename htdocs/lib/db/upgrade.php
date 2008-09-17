@@ -1363,6 +1363,13 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2008091602) {
+        $table = new XMLDBTable('usr');
+        $field = new XMLDBField('lastlastlogin');
+        $field->setAttributes(XMLDB_TYPE_DATETIME, null, null);
+        add_field($table, $field);
+    }
+
     return $status;
 
 }

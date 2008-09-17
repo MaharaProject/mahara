@@ -245,6 +245,7 @@ class AuthXmlrpc extends Auth {
 
             $this->import_user_settings($user, $remoteuser);
 
+            $user->lastlastlogin      = $user->lastlogin;
             $user->lastlogin          = time();
 
             //TODO: import institution's per-user-quota?:

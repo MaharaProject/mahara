@@ -62,6 +62,7 @@ class User {
             'expiry'           => null,
             'expirymailsent'   => 0,
             'lastlogin'        => null,
+            'lastlastlogin'    => null,
             'lastauthinstance' => null,
             'inactivemailsent' => 0,
             'staff'            => 0,
@@ -107,6 +108,7 @@ class User {
                     *, 
                     ' . db_format_tsfield('expiry') . ', 
                     ' . db_format_tsfield('lastlogin') . ', 
+                    ' . db_format_tsfield('lastlastlogin') . ', 
                     ' . db_format_tsfield('suspendedctime') . '
                 FROM
                     {usr}
@@ -142,6 +144,7 @@ class User {
                     *,
                     ' . db_format_tsfield('expiry') . ',
                     ' . db_format_tsfield('lastlogin') . ',
+                    ' . db_format_tsfield('lastlastlogin') . ',
                     ' . db_format_tsfield('suspendedctime') . '
                 FROM
                     {usr}
@@ -205,6 +208,7 @@ class User {
                         u.*, 
                         ' . db_format_tsfield('u.expiry', 'expiry') . ', 
                         ' . db_format_tsfield('u.lastlogin', 'lastlogin') . ', 
+                        ' . db_format_tsfield('u.lastlastlogin', 'lastlastlogin') . ', 
                         ' . db_format_tsfield('u.suspendedctime', 'suspendedctime') . '
                     FROM {usr} u
                     LEFT JOIN {auth_remote_user} r ON u.id = r.localusr
@@ -224,6 +228,7 @@ class User {
                         *, 
                         ' . db_format_tsfield('expiry') . ', 
                         ' . db_format_tsfield('lastlogin') . ', 
+                        ' . db_format_tsfield('lastlastlogin') . ', 
                         ' . db_format_tsfield('suspendedctime') . '
                     FROM
                         {usr}
@@ -394,7 +399,7 @@ class User {
         $this->stdclass = new StdClass;
         reset($this->defaults);
         foreach (array_keys($this->defaults) as $k) {
-            if ($k == 'expiry' || $k == 'lastlogin' || $k == 'suspendedctime') {
+            if ($k == 'expiry' || $k == 'lastlogin' || $k == 'lastlastlogin' || $k == 'suspendedctime') {
                 $this->stdclass->{$k} = db_format_timestamp($this->get($k));
             } else {
                 $this->stdclass->{$k} = $this->get($k);//(is_null($this->get($k))? 'NULL' : $this->get($k));
@@ -660,6 +665,7 @@ class LiveUser extends User {
                     *, 
                     ' . db_format_tsfield('expiry') . ', 
                     ' . db_format_tsfield('lastlogin') . ', 
+                    ' . db_format_tsfield('lastlastlogin') . ', 
                     ' . db_format_tsfield('suspendedctime') . '
                 FROM
                     {usr}
@@ -753,6 +759,7 @@ class LiveUser extends User {
 
         $this->populate($user);
         session_regenerate_id(true);
+        $this->lastlastlogin      = $this->lastlogin;
         $this->lastlogin          = time();
         $this->sessionid          = session_id();
         $this->logout_time        = time() + get_config('session_timeout');
