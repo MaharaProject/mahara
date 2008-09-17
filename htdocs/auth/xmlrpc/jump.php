@@ -52,7 +52,7 @@ require_once(get_config('libroot') .'institution.php');
 
 $remotewwwroot = param_variable('wr');
 $instanceid    = param_variable('ins');
-$wantsurl      = param_variable('wantsurl');
+$wantsurl      = param_variable('wantsurl', '/');
 
 if (!get_config('enablenetworking')) {
     throw new AccessTotallyDeniedException(get_string('networkingdisabledonthissite', 'auth.xmlrpc'));
