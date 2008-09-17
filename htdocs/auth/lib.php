@@ -244,36 +244,6 @@ abstract class Auth {
     }
 
     /**
-     * Given a username, return information about the user from the database.
-     * This object must_be_ready, which means it will have an authinstanceid. 
-     * This is used to disambiguate between users with the same username.
-     *
-     * The information retrieved must be all rows in the user table, with the
-     * timestamps formatted as unix timestamps. An example (taken from the
-     * internal authentication mechanism, which allows usernames to be case
-     * insensitive):
-     *
-     * <code>
-     * get_record('usr', 'LOWER(username)', strtolower($username), null, null, null, null,
-     *    '*, ' . db_format_tsfield('expiry') . ', ' . db_format_tsfield('lastlogin'));
-     * </code>
-     *
-     * @param string $username The username to get information for
-     * @return array           Data that can be used to populate the session
-     * @throws AuthUnknownUserException If the user is unknown to the
-     *                                  authentication method
-     */
-    public function get_user_info_cached($username) {
-        $this->must_be_ready();
-        if (!$result = get_record('usr', 'LOWER(username)', strtolower($username), null, null, null, null,
-                    '*, ' . db_format_tsfield('expiry') . ', ' . db_format_tsfield('lastlogin'))) {
-            throw new AuthUnknownUserException("\"$username\" is not known to AuthInternal");
-        }
-        $cache[$result->username] = $result;
-        return $result;
-    }
-
-    /**
      * Given a password, returns whether it is in a valid format for this
      * authentication method.
      *
