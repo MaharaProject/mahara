@@ -617,9 +617,6 @@ class User {
     }
 
     public function can_edit_view($v) {
-        if ($this->get('admin')) {
-            return true;
-        }
         $owner = $v->get('owner');
         if ($owner == $this->get('id')) {
             return true;
