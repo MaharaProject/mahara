@@ -1370,13 +1370,28 @@ function xmldb_core_upgrade($oldversion=0) {
                 upgrade_plugin($data);
             }
         }
-        $viewid = get_field('view', 'id', 'owner', 0, 'type', 'profile');
-        if ($viewid) {
+
+        // Delete all the empty profile views & recreate them from the
+        // site template.
+        $viewids = get_column('view', 'type', 'profile');
+        if ($viewids) {
             require_once(get_config('libroot') . 'view.php');
-            $systemview = new View($viewid);
-            $systemview->delete();
+            foreach ($viewids as $id) {
+                $view = new View($id);
+                $view->delete();
+            }
         }
+
         install_system_profile_view();
+
+        if ($userids = get_column('usr', 'id')) {
+            foreach ($userids as $user) {
+                install_default_profile_view(array('id' => $user));
+            }
+        }
+
+        // This record already exists on an install from scratch, but
+        // not on an upgrade
         if (!record_exists('event_subscription', 'event', 'createuser', 'callfunction', 'install_default_profile_view')) {
             insert_record('event_subscription', (object)array('event' => 'createuser', 'callfunction' => 'install_default_profile_view'));
         }
