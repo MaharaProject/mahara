@@ -586,6 +586,8 @@ function core_install_lastcoredata_defaults() {
         insert_record('usr', $user);
     }
 
+    install_system_profile_view();
+
     // Insert the admin user
     $user = new StdClass;
     $user->username = 'admin';

@@ -270,7 +270,7 @@ $string['selectaviewtocopy'] = 'Select the View you wish to copy:';
 $string['listviews'] = 'List Views';
 $string['nocopyableviewsfound'] = 'No Views that you can copy';
 $string['noownersfound'] = 'No owners found';
-$string['displayingviewsby'] = 'Displaying Views by %s';
+$string['viewsby'] = 'Views by %s';
 $string['Preview'] = 'Preview';
 $string['closepreview'] = 'Close Preview';
 

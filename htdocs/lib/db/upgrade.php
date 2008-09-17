@@ -1356,6 +1356,7 @@ function xmldb_core_upgrade($oldversion=0) {
         }
 
         // migrate all users to their default profile view
+        // These profile views are deleted in the next upgrade.
         if ($userids = get_column('usr', 'id')) {
             foreach ($userids as $user) {
                 install_default_profile_view(array('id' => $user));
@@ -1363,7 +1364,44 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
-    if ($oldversion < 2008091602) {
+    if ($oldversion < 2008091603) {
+        foreach(array('myviews', 'mygroups', 'myfriends', 'wall') as $blocktype) {
+            $data = check_upgrades("blocktype.$blocktype");
+            if ($data) {
+                upgrade_plugin($data);
+            }
+        }
+
+        // Delete all the empty profile views & recreate them from the
+        // site template.
+
+        $viewids = get_column('view', 'id', 'type', 'profile');
+        if ($viewids) {
+            require_once(get_config('libroot') . 'view.php');
+            foreach ($viewids as $id) {
+                $view = new View($id);
+                $view->delete();
+            }
+        }
+
+        install_system_profile_view();
+
+        if ($userids = get_column('usr', 'id')) {
+            foreach ($userids as $user) {
+                if ($user > 0) {
+                    install_default_profile_view(array('id' => $user));
+                }
+            }
+        }
+
+        // This record already exists on an install from scratch, but
+        // not in an upgrade
+        if (!record_exists('event_subscription', 'event', 'createuser', 'callfunction', 'install_default_profile_view')) {
+            insert_record('event_subscription', (object)array('event' => 'createuser', 'callfunction' => 'install_default_profile_view'));
+        }
+    }
+
+    if ($oldversion < 2008091604) {
         $table = new XMLDBTable('usr');
         $field = new XMLDBField('lastlastlogin');
         $field->setAttributes(XMLDB_TYPE_DATETIME, null, null);

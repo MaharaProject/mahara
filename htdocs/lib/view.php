@@ -1532,8 +1532,8 @@ class View {
         $loggedin = $USER->is_logged_in();
         $viewerid = $USER->get('id');
 
-        $where = '
-            WHERE TRUE';
+        $where = "
+            WHERE v.type != 'profile'";
 
         if ($ownedby) {
             $where .= ' AND v.' . self::owner_sql($ownedby);
@@ -2038,7 +2038,7 @@ class View {
                     }
                 }
             }
-            $smarty->assign('ownername', get_string('displayingviewsby', 'view', $ownername));
+            $smarty->assign('ownername', get_string('viewsby', 'view', $ownername));
         }
         $search->html = $smarty->fetch('view/templatesearchresults.tpl');
         $search->count = $results->count;
