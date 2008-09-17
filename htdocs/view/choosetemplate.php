@@ -82,9 +82,22 @@ View::get_templatesearch_data($views);
 $strpreview = json_encode(get_string('Preview','view'));
 $strclose = json_encode(get_string('closepreview','view'));
 $js = <<<EOF
+
 preview = DIV({'id':'viewpreview', 'class':'hidden'}, DIV({'id':'viewpreviewinner'}, DIV({'id':'viewpreviewclose'}, A({'href':'','id':'closepreview'}, {$strclose})), DIV({'id':'viewpreviewcontent'})));
+
+function showPreview(data) {
+    $('viewpreviewcontent').innerHTML = data.html;
+    var vdim = getViewportDimensions();
+    var vpos = getViewportPosition();
+    var offset = 16; // Left border & padding of preview container elements (@todo: use getStyle()?)
+    setElementDimensions(preview, {'w':vdim.w - 200});
+    setElementPosition(preview, {'x':vpos.x+100-offset, 'y':vpos.y+200});
+    showElement(preview);
+}
+
 ownerlist = new SearchTable('viewownersearch');
 templatelist = new SearchTable('templatesearch');
+
 addLoadEvent(function() {
   ownerlist.rewriteOther = function () {
     forEach(getElementsByTagAndClassName('td', 'selectowner', 'viewownersearch'), function(i) {
@@ -101,6 +114,14 @@ addLoadEvent(function() {
         }
       });
     });
+    forEach(getElementsByTagAndClassName('a', 'grouplink', 'viewownersearch'), function(i) {
+      connect(i, 'onclick', function (e) {
+        e.stop();
+        var href = getNodeAttribute(this, 'href');
+        var params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
+        sendjsonrequest(config.wwwroot + 'group/groupinfo.json.php', params, 'POST', showPreview);
+      });
+    });
   };
   ownerlist.rewriteOther();
   templatelist.rewriteOther = function () {
@@ -111,15 +132,7 @@ addLoadEvent(function() {
         e.stop();
         var href = getNodeAttribute(this, 'href');
         var params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
-        sendjsonrequest('viewcontent.json.php', params, 'POST', function(data) {
-            $('viewpreviewcontent').innerHTML = data.html;
-            var vdim = getViewportDimensions();
-            var vpos = getViewportPosition();
-            var offset = 16; // Left border & padding of preview container elements (@todo: use getStyle()?)
-            setElementDimensions(preview, {'w':vdim.w - 200});
-            setElementPosition(preview, {'x':vpos.x+100-offset, 'y':vpos.y+200});
-            showElement(preview);
-        });
+        sendjsonrequest('viewcontent.json.php', params, 'POST', showPreview);
       });
     });
   };
