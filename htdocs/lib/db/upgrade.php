@@ -1356,6 +1356,7 @@ function xmldb_core_upgrade($oldversion=0) {
         }
 
         // migrate all users to their default profile view
+        // These profile views are deleted in the next upgrade.
         if ($userids = get_column('usr', 'id')) {
             foreach ($userids as $user) {
                 install_default_profile_view(array('id' => $user));
@@ -1373,6 +1374,7 @@ function xmldb_core_upgrade($oldversion=0) {
 
         // Delete all the empty profile views & recreate them from the
         // site template.
+
         $viewids = get_column('view', 'id', 'type', 'profile');
         if ($viewids) {
             require_once(get_config('libroot') . 'view.php');
@@ -1393,7 +1395,7 @@ function xmldb_core_upgrade($oldversion=0) {
         }
 
         // This record already exists on an install from scratch, but
-        // not on an upgrade
+        // not in an upgrade
         if (!record_exists('event_subscription', 'event', 'createuser', 'callfunction', 'install_default_profile_view')) {
             insert_record('event_subscription', (object)array('event' => 'createuser', 'callfunction' => 'install_default_profile_view'));
         }
