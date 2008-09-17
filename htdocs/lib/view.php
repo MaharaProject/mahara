@@ -261,17 +261,23 @@ class View {
 
     
     public function delete() {
+        db_begin();
         delete_records('artefact_feedback','view',$this->id);
         delete_records('view_feedback','view',$this->id);
-        delete_records('view_artefact','view',$this->id);
         delete_records('view_access','view',$this->id);
         delete_records('view_access_group','view',$this->id);
         delete_records('view_access_usr','view',$this->id);
         delete_records('view_tag','view',$this->id);
         delete_records('usr_watchlist_view','view',$this->id);
-        delete_records('block_instance', 'view', $this->id);
+        if ($blockinstanceids = get_column('block_instance', 'id', 'view', $this->id)) {
+            foreach ($blockinstanceids as $id) {
+                $bi = new BlockInstance($id);
+                $bi->delete();
+            }
+        }
         delete_records('view','id',$this->id);
         $this->deleted = true;
+        db_commit();
     }
 
     public function get_access() {
