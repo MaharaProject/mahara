@@ -888,24 +888,22 @@ class OpenSslRepo {
      * @return bool     
      * @access private
      */
-    private function get_keypair($regenerate = null) {
+    public function get_keypair($regenerate = null) {
         $this->keypair = array();
         $records       = null;
         
-        if (empty($regenerate)) {
-            $records = get_records_select_menu('config', "field IN ('openssl_keypair', 'openssl_keypair_expires')", 'field', 'field, value');
-            if (!empty($records)) {
-                list($this->keypair['certificate'], $this->keypair['keypair_PEM']) = explode('@@@@@@@@', $records['openssl_keypair']);
-                $this->keypair['expires'] = $records['openssl_keypair_expires'];
-                if ($this->keypair['expires'] <= time()) {
-                    $openssl_history = $this->get_history();
-                    array_unshift($openssl_history, $this->keypair);
-                    $this->save_history($openssl_history);
-                } else {
-                    return true;
-                }
+        if ($records = get_records_select_menu('config', "field IN ('openssl_keypair', 'openssl_keypair_expires')", 'field', 'field, value')) {
+            list($this->keypair['certificate'], $this->keypair['keypair_PEM']) = explode('@@@@@@@@', $records['openssl_keypair']);
+            $this->keypair['expires'] = $records['openssl_keypair_expires'];
+            if (empty($regenerate) && $this->keypair['expires'] > time()) {
+                return true;
             }
         }
+
+        // Save out the old key
+        $openssl_history = $this->get_history();
+        array_unshift($openssl_history, $this->keypair);
+        $this->save_history($openssl_history);
 
         // Initialize a new set of SSL keys
         $this->keypair = array();
@@ -928,12 +926,18 @@ class OpenSslRepo {
         }
 
         if (empty($records)) {
-                   $result = insert_record('config', $keyrecord);
-            return $result & insert_record('config', $expiresrecord);
-        } else {
-                   $result = update_record('config', $keyrecord,     array('field' => 'openssl_keypair'));
-            return $result & update_record('config', $expiresrecord, array('field' => 'openssl_keypair_expires'));
+            db_begin();
+            insert_record('config', $keyrecord);
+            insert_record('config', $expiresrecord);
+            db_commit();
         }
+        else {
+            db_begin();
+            update_record('config', $keyrecord,     array('field' => 'openssl_keypair'));
+            update_record('config', $expiresrecord, array('field' => 'openssl_keypair_expires'));
+            db_commit();
+        }
+        return true;
     }
 
     /**
