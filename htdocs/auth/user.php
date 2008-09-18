@@ -622,7 +622,7 @@ class User {
             return true;
         }
         $institution = $v->get('institution');
-        if ($institution && $institution != 'mahara' && $this->can_edit_institution($institution)) {
+        if ($institution && $this->can_edit_institution($institution)) {
             return true;
         }
         $group = $v->get('group');
