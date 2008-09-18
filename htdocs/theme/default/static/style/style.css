@@ -1571,21 +1571,42 @@ button#dosearch {
 	background-color: #92b328 !important;
 }
 
+#copyview {
+  padding: 0;
+  margin: 0;
+}
 #copyview .searchlist {
+  margin: 0;
   margin-bottom: 20px;
+  padding: 10px;
+}
+#copyview .searchlist h3,
+#copyview .searchlist h4 {
+  margin-top: 0;
 }
 #copyview .templateresults {
   width: 100%;
   margin-top: 5px;
 }
 #copyview #templatesearch {
+  border: 1px solid #bbb;
   float: left;
-  margin-left: 50px;
-  width: 40%;
+  width: 500px;
 }
 #copyview #viewownersearch {
+  border: 1px solid #e7e7e7;
+  margin-top: 10px;
   float: left;
-  width: 40%;
+  margin-right: 10px;
+  width: 35%;
+}
+#copyview #openviewownersearch {
+  margin-top: 10px;
+  padding: 5px;
+  width: 100px;
+}
+#copyview #closeviewownersearch {
+  float: right;
 }
 #copyview form.searchquery {
   text-align: center;

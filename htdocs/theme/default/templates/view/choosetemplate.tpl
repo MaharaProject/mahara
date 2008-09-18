@@ -4,10 +4,14 @@
                         <h2>{$heading}</h2>
 <div id="copyview">
 
+ <div id="openviewownersearch" class="hidden">
+   <a href="">{str tag="searchowners" section="view"}</a>
+ </div>
  <div id="viewownersearch" class="searchlist">
-  <h3>{str tag="searchviewsbyowner" section="view"}</h3>
+  <span id="closeviewownersearch" class="hidden"> [<a href="">x</a>]</span>
+  <h4>{str tag="searchviewsbyowner" section="view"}</h4>
   <form class="searchquery" action="{$WWWROOT}view/choosetemplate.php" method="post">
-    <label>{str tag="searchowners" section="view"}:
+    <label>{str tag="name"}:
       <input type="text" name="ownerquery" id="ownerquery" class="query" value="{$owners->query|escape}">
     </label>
     <button class="query-button" type="submit">{str tag="go"}</button>

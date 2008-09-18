@@ -100,10 +100,27 @@ function showPreview(size, data) {
     showElement(preview);
 }
 
+function toggleOwnerSearch() {
+    if (getStyle('viewownersearch', 'display') != 'none') {
+      hideElement('viewownersearch');
+      setElementDimensions('templatesearch', {'w':getElementDimensions('templatesearch', false).w * 3 / 2});
+      showElement('openviewownersearch');
+    } else {
+      showElement('viewownersearch');
+      setElementDimensions('templatesearch', {'w': 500});
+      hideElement('openviewownersearch');
+    }
+}
+
 ownerlist = new SearchTable('viewownersearch');
 templatelist = new SearchTable('templatesearch');
 
 addLoadEvent(function() {
+
+  connect('openviewownersearch', 'onclick', function (e) {e.stop(); toggleOwnerSearch();});
+  setStyle('closeviewownersearch', {'display': 'inline'});
+  connect('closeviewownersearch', 'onclick', function (e) {e.stop(); toggleOwnerSearch();});
+
   ownerlist.rewriteOther = function () {
     forEach(getElementsByTagAndClassName('td', 'selectowner', 'viewownersearch'), function(i) {
       disconnectAll(i);
