@@ -96,16 +96,21 @@ class Client {
             throw new XmlrpcClientException('Payload is not a valid XML document (payload is above)', 6001);
         }
 
-        if ($xml->getName() == 'encryptedMessage') {
-            $payload_encrypted = true;
-            $wwwroot           = (string)$xml->wwwroot;
-            $payload           = xmlenc_envelope_strip($xml);
-        }
+        try {
+            if ($xml->getName() == 'encryptedMessage') {
+                $payload_encrypted = true;
+                $wwwroot           = (string)$xml->wwwroot;
+                $payload           = xmlenc_envelope_strip($xml);
+            }
 
-        if ($xml->getName() == 'signedMessage') {
-            $payload_signed   = true;
-            $remote_timestamp = $xml->timestamp;
-            $payload          = xmldsig_envelope_strip($xml);
+            if ($xml->getName() == 'signedMessage') {
+                $payload_signed   = true;
+                $remote_timestamp = $xml->timestamp;
+                $payload          = xmldsig_envelope_strip($xml);
+            }
+        }
+        catch (CryptException $e) {
+            throw new XmlrpcClientException("An error occured while decrypting a message sent by $wwwroot. Unable to authenticate the user.");
         }
 
         if ($xml->getName() == 'methodResponse') {

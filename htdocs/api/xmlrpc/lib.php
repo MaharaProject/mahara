@@ -787,7 +787,7 @@ class OpenSslRepo {
                 }
             }
         }
-        throw new CryptException('Invalid certificate', 7025);
+        throw new CryptException('We know nothing about the key used to encrypt this message', 7025);
     }
 
     /**
