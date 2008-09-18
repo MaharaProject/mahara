@@ -99,16 +99,37 @@ try {
 }
 
 // Cascading switch. Kinda.
-if ($xml->getName() == 'encryptedMessage') {
-    $payload_encrypted = true;
-    $REMOTEWWWROOT     = (string)$xml->wwwroot;
-    $payload           = xmlenc_envelope_strip($xml);
-}
+try {
+    if ($xml->getName() == 'encryptedMessage') {
+        $payload_encrypted = true;
+        $REMOTEWWWROOT     = (string)$xml->wwwroot;
+        $payload           = xmlenc_envelope_strip($xml);
+    }
 
-if ($xml->getName() == 'signedMessage') {
-    $payload_signed = true;
-    $REMOTEWWWROOT  = (string)$xml->wwwroot;
-    $payload        = xmldsig_envelope_strip($xml);
+    if ($xml->getName() == 'signedMessage') {
+        $payload_signed = true;
+        $REMOTEWWWROOT  = (string)$xml->wwwroot;
+        $payload        = xmldsig_envelope_strip($xml);
+    }
+}
+catch (CryptException $e) {
+    if ($e->getCode() == 7025) {
+        // The key they used to contact us is old, respond with the new key correctly
+
+        // This sucks. Error handling of our mnet code needs to improve
+        ob_start();
+        xmlrpc_error($e->getMessage(), $e->getCode());
+        $response = ob_get_contents();
+        ob_end_clean();
+
+        // Sign and encrypt our response, even though we don't know if the 
+        // request was signed and encrypted
+        $response = xmldsig_envelope($response);
+        $peer     = get_peer($REMOTEWWWROOT);
+        $response = xmlenc_envelope($response, $peer->certificate);
+        echo $response;
+        exit;
+    }
 }
 
 if ($xml->getName() == 'methodCall') {
