@@ -1,4 +1,4 @@
-    <h3>{str tag="ssopeers"}{contextualhelp plugintype='core' pluginname='core' section='ssopeers'}</h3>
+    <h3>{str tag="networkservers" section="auth.xmlrpc"}{contextualhelp plugintype='auth' pluginname='xmlrpc' section='networkservers'}</h3>
 {if $data}
     <ul id="sitemenu">
 {foreach from=$data item=peer}

@@ -77,7 +77,6 @@ $string['tagsdescprofile'] = 'Enter comma separated tags for this item. Items ta
 $string['youhavenottaggedanythingyet'] = 'You have not tagged anything yet';
 
 $string['selfsearch'] = 'Search My Portfolio';
-$string['ssopeers'] = 'SSO Peers';
 
 // Quota strings
 $string['quota'] = 'Quota';
