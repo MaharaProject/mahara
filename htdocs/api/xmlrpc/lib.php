@@ -664,9 +664,33 @@ function xmldsig_envelope_strip(&$xml) {
         } catch (Exception $e) {
             throw new MaharaException('Signed payload is not a valid XML document', 6007);
         }
-    } else {
-        throw new MaharaException('An error occurred while trying to verify your message signature', 6004);
     }
+    else if ($signature_verified == 0) {
+        // Maybe the remote host is using a new key?
+        //$new_public_key = get_public_key($wwwroot, $peer->application->name);
+        // Make a dummy request so we'll be given a new key
+        log_info("Signature verification for message from $wwwroot failed, checking to see if they have a new signature for us");
+        require_once(get_config('docroot') . 'api/xmlrpc/client.php');
+        $client = new Client();
+        $client->set_method('system/listServices')
+               ->send($wwwroot);
+
+        // Now use the new key and re-try verification
+        $peer = get_peer($wwwroot, false);
+        $signature_verified = openssl_verify($payload, $signature, $peer->certificate);
+        if ($signature_verified == 1) {
+            log_info("Succefully retrieved a new key for $wwwroot");
+            // Parse the XML
+            try {
+                $xml = new SimpleXMLElement($payload);
+                return $payload;
+            } catch (Exception $e) {
+                throw new MaharaException('Signed payload is not a valid XML document', 6007);
+            }
+        }
+    }
+
+    throw new MaharaException('An error occurred while trying to verify your message signature', 6004);
 }
 
 /**
