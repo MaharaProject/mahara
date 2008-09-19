@@ -100,7 +100,9 @@ class Client {
             if ($xml->getName() == 'encryptedMessage') {
                 $payload_encrypted = true;
                 $wwwroot           = (string)$xml->wwwroot;
-                $payload           = xmlenc_envelope_strip($xml);
+                // Strip encryption, using an older code is OK, because we're the client. 
+                // The server is able to respond with the correct key, be we're not
+                $payload           = xmlenc_envelope_strip($xml, true);
             }
 
             if ($xml->getName() == 'signedMessage') {
