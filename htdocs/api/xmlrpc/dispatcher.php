@@ -50,7 +50,7 @@ class Dispatcher {
             'auth/mnet/auth.php/fetch_user_image' => 'fetch_user_image',
             'auth/mnet/auth.php/update_enrolments' => 'xmlrpc_not_implemented',
             'auth/mnet/auth.php/keepalive_server' => 'xmlrpc_not_implemented',
-            'auth/mnet/auth.php/kill_children' => 'xmlrpc_not_implemented',
+            'auth/mnet/auth.php/kill_children' => 'kill_children',
             'auth/mnet/auth.php/kill_child' => 'xmlrpc_not_implemented',
             ),
         'portfolio_in' => array(

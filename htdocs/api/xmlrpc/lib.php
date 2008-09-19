@@ -368,6 +368,80 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
     return $result;
 }
 
+/**
+ * If we're an IDP, kill_children will kill the session of the given user here, 
+ * as well as at any other children
+ *
+ * NOTE: well, currently it doesn't call kill_child on any other children, but 
+ * it will kill the local sessions for the user
+ *
+ * @param   string  $username       Username for session to kill
+ * @param   string  $useragent      SHA1 hash of user agent to look for
+ * @return  string                  A plaintext report of what has happened
+ */
+function kill_children($username, $useragent) {
+    global $REMOTEWWWROOT; // comes from server.php
+    //require_once(get_config('docroot') .'api/xmlrpc/client.php');
+
+    // We've received a logout request for user X. In Mahara, usernames are unique. So we check that user X 
+    // has an authinstance that would have been able to SSO to the remote site.
+    $userid = get_field('usr', 'id', 'username', $username);
+    $providers = get_service_providers(get_field('usr', 'authinstance', 'username', $username));
+
+    $approved = false;
+    foreach ($providers as $provider) {
+        if ($provider['wwwroot'] == $REMOTEWWWROOT) {
+            $approved = true;
+            break;
+        }
+    }
+
+    if (false == $approved) {
+        return 'This host is not permitted to kill sessions for this username';
+    }
+
+    $mnetsessions = get_records_select_array('sso_session', 'userid = ? AND useragent = ?', array($userid, $useragent));
+
+    // Prepare to destroy local sessions associated with the user
+    $start = ob_start();
+    $uc = ini_get('session.use_cookies');
+    ini_set('session.use_cookies', false);
+    $sesscache = isset($_SESSION) ? clone($_SESSION) : null;
+    $sessidcache = session_id();
+    session_write_close();
+    unset($_SESSION);
+
+    foreach($mnetsessions as $mnetsession) {
+        // Kills all local sessions associated with this user
+        // TODO: We should send kill_child requests to the remote servers too
+        session_id($mnetsession->sessionid);
+        session_start();
+        session_unregister("USER");
+        session_unregister("SESSION");
+        unset($_SESSION);
+        $_SESSION = array();
+        session_destroy();
+        session_write_close();
+    }
+
+    // We're done destroying local sessions
+    ini_set('session.use_cookies', $uc);
+    if ($sessidcache) {
+        session_name(get_config('cookieprefix') . 'mahara');
+        session_id($sessidcache);
+        session_start();
+        $_SESSION = ($sesscache) ? clone($sesscache) : null;
+        session_write_close();
+    }
+    $end = ob_end_clean();
+
+    delete_records('sso_session',
+                   'useragent', $useragent,
+                   'userid',    $userid);
+
+    return true;
+}
+
 function xmlrpc_not_implemented() {
     return true;
 }
