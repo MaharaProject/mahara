@@ -528,13 +528,13 @@ function xmlrpc_error($message, $code) {
 EOF;
 }
 
-function xmlenc_envelope_strip(&$xml) {
+function xmlenc_envelope_strip(&$xml, $oldkeyok=false) {
     $openssl           = OpenSslRepo::singleton();
     $payload_encrypted = true;
     $data              = base64_decode($xml->EncryptedData->CipherData->CipherValue);
     $key               = base64_decode($xml->EncryptedKey->CipherData->CipherValue);
     $payload           = '';    // Initialize payload var
-    $payload           = $openssl->openssl_open($data, $key);
+    $payload           = $openssl->openssl_open($data, $key, $oldkeyok);
     $xml               = parse_payload($payload);
     return $payload;
 }
@@ -765,10 +765,13 @@ class OpenSslRepo {
      *
      * @param string   $data
      * @param string   $key
+     * @param bool     $oldkeyok If true, we will simply return the data rather 
+     *                           than complaining about the key being old (if 
+     *                           we could decrypt it with an older key)
      * @return string
      * @access public
      */
-    public function openssl_open($data, $key) {
+    public function openssl_open($data, $key, $oldkeyok=false) {
         $payload = '';
         $isOpen = openssl_open($data, $payload, $key, $this->keypair['privatekey']);
 
@@ -782,8 +785,13 @@ class OpenSslRepo {
                 $isOpen      = openssl_open($data, $payload, $key, $keyresource);
                 if ($isOpen) {
                     // It's an older code, sir, but it checks out
-                    // We notify the remote host that the key has changed
-                    throw new CryptException($this->keypair['certificate'], 7025);
+                    if ($oldkeyok) {
+                        return $payload;
+                    }
+                    else {
+                        // We notify the remote host that the key has changed
+                        throw new CryptException($this->keypair['certificate'], 7025);
+                    }
                 }
             }
         }
