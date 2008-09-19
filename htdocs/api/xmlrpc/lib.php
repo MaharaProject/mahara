@@ -1043,6 +1043,7 @@ class OpenSslRepo {
             update_record('config', $expiresrecord, array('field' => 'openssl_keypair_expires'));
             db_commit();
         }
+        log_info("New public key has been generated. It expires " . date('Y/m/d h:i:s', $credentials['validTo_time_t']));
         return true;
     }
 
