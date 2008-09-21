@@ -57,7 +57,7 @@ if ($artefact) {
         FROM {artefact_feedback}
         WHERE view = ' . $view . ' AND artefact = ' . $artefact
             . ($public ? ' AND (public = 1 OR author = ' . $userid . ')' : '') . '
-        ORDER BY id DESC', '', $offset, $limit);
+        ORDER BY id', '', $offset, $limit);
 
 }
 else {
@@ -78,7 +78,7 @@ else {
         LEFT OUTER JOIN {artefact_file_files} af ON af.artefact = a.id
         WHERE view = ' . $view 
             . ($public ? ' AND (f.public = 1 OR f.author = ' . $userid . ')' : '') . '
-        ORDER BY id DESC', '', $offset, $limit);
+        ORDER BY id', '', $offset, $limit);
 }
 
 $data = array();
