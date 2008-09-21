@@ -560,7 +560,7 @@ tr.required th,
 }
 .maincontent.group {
     line-height: 18px;
-    padding: 0 15px 25px 15px;
+    padding: 10px 15px 25px 15px;
 	background: url(../images/dot-vert.gif) repeat-y top right;
 }
 
@@ -930,7 +930,7 @@ ul#onlineusers {
 }
 /* system messages between nav and main content */
 #messages {
-    margin: 10px 0 20px 0;
+    margin: 10px 0;
 }
 #messages .ok {
     color: #547c22;
