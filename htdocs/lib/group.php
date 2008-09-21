@@ -196,6 +196,7 @@ function group_user_can_assess_submitted_views($groupid, $userid) {
  *                userid => role,
  *                ...
  *            )
+ * @return int The ID of the created group
  */
 function group_create($data) {
     if (!is_array($data)) {
@@ -285,6 +286,8 @@ function group_create($data) {
     }
 
     db_commit();
+
+    return $id;
 }
 
 /**

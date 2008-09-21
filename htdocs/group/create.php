@@ -86,7 +86,7 @@ function creategroup_submit(Pieform $form, $values) {
 
     list($grouptype, $jointype) = explode('.', $values['grouptype']);
 
-    group_create(array(
+    $id = group_create(array(
         'name'        => $values['name'],
         'description' => $values['description'],
         'grouptype'   => $grouptype,
@@ -98,7 +98,7 @@ function creategroup_submit(Pieform $form, $values) {
 
     $SESSION->add_ok_msg(get_string('groupsaved', 'group'));
 
-    redirect('/group/mygroups.php');
+    redirect('/group/view.php?id=' . $id);
 }
 
 ?>
