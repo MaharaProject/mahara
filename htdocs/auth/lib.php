@@ -327,7 +327,13 @@ function auth_setup () {
 
     // Lock the site until core upgrades are done
     require_once(get_config('libroot') . 'version.php');
-    set_config('siteclosed', $config->version > get_config('version'));
+    $siteclosed    = $config->version > get_config('version');
+    $cfgsiteclosed = get_config('siteclosed');
+    if (
+        ($siteclosed && !$cfgsiteclosed)
+        || (!$siteclosed && $cfgsiteclosed)) {
+        set_config('siteclosed', $siteclosed);
+    }
 
     // Check the time that the session is set to log out. If the user does
     // not have a session, this time will be 0.
