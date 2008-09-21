@@ -1776,6 +1776,44 @@ function profile_sideblock() {
 }
 
 /**
+ * Gets data about users who have been online in the last while.
+ *
+ * The time is configured by setting the 'accessidletimeout' configuration 
+ * option.
+ *
+ * NOTE: currently returns all online users, this might not be desirable on a 
+ * really busy site.
+ */
+function onlineusers_sideblock() {
+    global $USER;
+
+    $onlineusers = get_records_select_array('usr', 'lastaccess > ?',
+        array(db_format_timestamp(time() - get_config('accessidletimeout'))), 'lastaccess DESC');
+
+    foreach ($onlineusers as &$user) {
+        // Use 'profileiconbyid' for the current user, just in case they change their profile icon
+        if ($user->id == $USER->get('id')) {
+            $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . (int)$user->profileicon . '&size=20x20';
+        }
+        else {
+            $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileicon&id=' . $user->id . '&size=20x20';
+        }
+
+        // If the user is an MNET user, show where they've come from
+        $authobj = AuthFactory::create($user->authinstance);
+        if ($authobj->authname == 'xmlrpc') {
+            $peer = get_peer($authobj->wwwroot);
+            $user->loggedinfrom = $peer->name;
+        }
+    }
+    return array(
+        'users' => $onlineusers,
+        'count' => count($onlineusers),
+        'lastminutes' => floor(get_config('accessidletimeout') / 60),
+    );
+}
+
+/**
  * Cronjob to recalculate how much quota each user is using and update it as 
  * appropriate.
  *

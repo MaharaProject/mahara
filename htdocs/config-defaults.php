@@ -145,4 +145,12 @@ $cfg->unzipdirarg = '-d';
 // Setting it to zero means the access time will be updated every request
 $cfg->accesstimeupdatefrequency = 300;
 
+// How long since their last request before a user is considered to be logged 
+// out. Note that it makes no sense for this to be less than the 
+// accesstimeupdatefrequency.
+$cfg->accessidletimeout = 600;
+
+// Whether to show the onlineusers sideblock
+$cfg->showonlineuserssideblock = true;
+
 ?>

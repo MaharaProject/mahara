@@ -409,6 +409,13 @@ EOF;
                 'weight' => -20,
                 'data'   => profile_sideblock()
             );
+            if (get_config('showonlineuserssideblock')) {
+                $SIDEBLOCKS[] = array(
+                    'name'   => 'onlineusers',
+                    'weight' => -10,
+                    'data'   => onlineusers_sideblock(),
+                );
+            }
         }
 
         if(defined('GROUP')) {

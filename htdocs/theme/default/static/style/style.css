@@ -787,6 +787,15 @@ div.sidebar ul.sidebar-ul-title ul a {
     text-align: center;
     font-weight: bold;
 }
+/* Online users sideblock */
+ul#onlineusers {
+    list-style-type: none;
+}
+#lastminutes {
+    float: right;
+    margin-top: 2px;
+}
+
 /* Side Quota Bar */
 #quota_message {
     text-align: center;

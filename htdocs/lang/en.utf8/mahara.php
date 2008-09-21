@@ -95,6 +95,10 @@ $string['pendingfriends'] = 'pending friends';
 $string['profile'] = 'profile';
 $string['views'] = 'Views';
 
+// Online users sideblock strings
+$string['onlineusers'] = 'Online users';
+$string['lastminutes'] = 'Last %s minutes';
+
 // Links and resources sideblock
 $string['linksandresources'] = 'Links and Resources';
 
