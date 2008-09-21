@@ -727,7 +727,15 @@ function auth_check_required_fields() {
     require_once('pieforms/pieform.php');
     $elements = array();
 
+    $alwaysmandatoryfields = array_keys(ArtefactTypeProfile::get_always_mandatory_fields());
     foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
+        // Always mandatory fields are stored in the usr table, so are part of 
+        // the user session object. We can save a query by grabbing them from 
+        // the session.
+        if (in_array($field, $alwaysmandatoryfields) && $USER->get($field) != null) {
+            continue;
+        }
+        // Not cached? Get value the standard way.
         if (get_profile_field($USER->get('id'), $field) != null) {
             continue;
         }
