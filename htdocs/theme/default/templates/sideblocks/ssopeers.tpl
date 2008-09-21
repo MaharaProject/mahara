@@ -3,7 +3,9 @@
     <ul id="sitemenu">
 {foreach from=$data item=peer}
 {if $peer.instance != $userauthinstance}
-        <li><a href="{$WWWROOT}auth/xmlrpc/jump.php?wr={$peer.wwwroot|escape}&ins={$peer.instance|escape}">{$peer.name|escape}</a></li>
+{if !$MNETUSER}
+        <li><a href="{$WWWROOT}auth/xmlrpc/jump.php?wr={$peer.wwwroot|escape}&amp;ins={$peer.instance|escape}">{$peer.name|escape}</a></li>
+{/if}
 {else}
         <li><a href="{$peer.wwwroot|escape}">{$peer.name|escape}</a></li>
 {/if}
