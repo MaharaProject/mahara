@@ -63,6 +63,7 @@ class User {
             'expirymailsent'   => 0,
             'lastlogin'        => null,
             'lastlastlogin'    => null,
+            'lastaccess'       => null, /* Is not necessarily updated every request, see accesstimeupdatefrequency config variable */
             'lastauthinstance' => null,
             'inactivemailsent' => 0,
             'staff'            => 0,
@@ -108,7 +109,8 @@ class User {
                     *, 
                     ' . db_format_tsfield('expiry') . ', 
                     ' . db_format_tsfield('lastlogin') . ', 
-                    ' . db_format_tsfield('lastlastlogin') . ', 
+                    ' . db_format_tsfield('lastlastlogin') . ',
+                    ' . db_format_tsfield('lastaccess') . ',
                     ' . db_format_tsfield('suspendedctime') . '
                 FROM
                     {usr}
@@ -145,6 +147,7 @@ class User {
                     ' . db_format_tsfield('expiry') . ',
                     ' . db_format_tsfield('lastlogin') . ',
                     ' . db_format_tsfield('lastlastlogin') . ',
+                    ' . db_format_tsfield('lastaccess') . ',
                     ' . db_format_tsfield('suspendedctime') . '
                 FROM
                     {usr}
@@ -206,9 +209,10 @@ class User {
 
             $sql = 'SELECT
                         u.*, 
-                        ' . db_format_tsfield('u.expiry', 'expiry') . ', 
-                        ' . db_format_tsfield('u.lastlogin', 'lastlogin') . ', 
-                        ' . db_format_tsfield('u.lastlastlogin', 'lastlastlogin') . ', 
+                        ' . db_format_tsfield('u.expiry', 'expiry') . ',
+                        ' . db_format_tsfield('u.lastlogin', 'lastlogin') . ',
+                        ' . db_format_tsfield('u.lastlastlogin', 'lastlastlogin') . ',
+                        ' . db_format_tsfield('u.lastaccess', 'lastaccess') . ',
                         ' . db_format_tsfield('u.suspendedctime', 'suspendedctime') . '
                     FROM {usr} u
                     LEFT JOIN {auth_remote_user} r ON u.id = r.localusr
@@ -226,9 +230,10 @@ class User {
         else {
             $sql = 'SELECT
                         *, 
-                        ' . db_format_tsfield('expiry') . ', 
-                        ' . db_format_tsfield('lastlogin') . ', 
-                        ' . db_format_tsfield('lastlastlogin') . ', 
+                        ' . db_format_tsfield('expiry') . ',
+                        ' . db_format_tsfield('lastlogin') . ',
+                        ' . db_format_tsfield('lastlastlogin') . ',
+                        ' . db_format_tsfield('lastaccess') . ',
                         ' . db_format_tsfield('suspendedctime') . '
                     FROM
                         {usr}
@@ -399,7 +404,7 @@ class User {
         $this->stdclass = new StdClass;
         reset($this->defaults);
         foreach (array_keys($this->defaults) as $k) {
-            if ($k == 'expiry' || $k == 'lastlogin' || $k == 'lastlastlogin' || $k == 'suspendedctime') {
+            if ($k == 'expiry' || $k == 'lastlogin' || $k == 'lastlastlogin' || $k == 'lastaccess' || $k == 'suspendedctime') {
                 $this->stdclass->{$k} = db_format_timestamp($this->get($k));
             } else {
                 $this->stdclass->{$k} = $this->get($k);//(is_null($this->get($k))? 'NULL' : $this->get($k));
@@ -663,9 +668,10 @@ class LiveUser extends User {
     public function login($username, $password) {
         $sql = 'SELECT
                     *, 
-                    ' . db_format_tsfield('expiry') . ', 
-                    ' . db_format_tsfield('lastlogin') . ', 
-                    ' . db_format_tsfield('lastlastlogin') . ', 
+                    ' . db_format_tsfield('expiry') . ',
+                    ' . db_format_tsfield('lastlogin') . ',
+                    ' . db_format_tsfield('lastlastlogin') . ',
+                    ' . db_format_tsfield('lastaccess') . ',
                     ' . db_format_tsfield('suspendedctime') . '
                 FROM
                     {usr}
@@ -726,14 +732,25 @@ class LiveUser extends User {
     }
 
     /**
-     * Assuming that a session is already active for a user, this method
-     * retrieves the information from the session and creates a user object
-     * that the script can use
-     *
-     * @return object
+     * Updates information in a users' session once we know their session is 
+     * continuing
      */
     public function renew() {
-        $this->set('logout_time', time() + get_config('session_timeout'));
+        $time = time();
+        $this->set('logout_time', $time + get_config('session_timeout'));
+        $oldlastaccess = $this->get('lastaccess');
+        // If there is an access time update frequency, we use a cookie to 
+        // prevent updating before this time has expired.
+        // If it is set to zero, we always update the accesstime.
+        $accesstimeupdatefrequency = get_config('accesstimeupdatefrequency');
+        if ($accesstimeupdatefrequency == 0) {
+            $this->set('lastaccess', $time);
+            $this->commit();
+        }
+        else if ($oldlastaccess + $accesstimeupdatefrequency < $time) {
+            $this->set('lastaccess', $time);
+            $this->commit();
+        }
     }
 
     /**
@@ -761,6 +778,7 @@ class LiveUser extends User {
         session_regenerate_id(true);
         $this->lastlastlogin      = $this->lastlogin;
         $this->lastlogin          = time();
+        $this->lastaccess         = time();
         $this->sessionid          = session_id();
         $this->logout_time        = time() + get_config('session_timeout');
         $this->sesskey            = get_random_key();

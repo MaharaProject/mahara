@@ -138,4 +138,11 @@ $cfg->imagemaxheight = 1024;
 // paths and arguments for various system commands
 $cfg->pathtounzip = '/usr/bin/unzip';
 $cfg->unzipdirarg = '-d';
+
+// How often Mahara should update the last access time for users. Setting this 
+// lower means the field will be updated more regularly, but means a database 
+// write will be required for more requests.
+// Setting it to zero means the access time will be updated every request
+$cfg->accesstimeupdatefrequency = 300;
+
 ?>

@@ -1408,6 +1408,13 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2008092000) {
+        $table = new XMLDBTable('usr');
+        $field = new XMLDBField('lastaccess');
+        $field->setAttributes(XMLDB_TYPE_DATETIME, null, null);
+        add_field($table, $field);
+    }
+
     return $status;
 
 }
