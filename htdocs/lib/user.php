@@ -360,7 +360,9 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
  */
 function display_name($user, $userto=null, $nameonly=false) {
     global $USER;
-    
+    static $resultcache = array();
+    static $usercache   = array();
+
     if (empty($userto)) {
         $userto = new StdClass;
         $userto->id            = $USER->get('id');
@@ -375,7 +377,23 @@ function display_name($user, $userto=null, $nameonly=false) {
         $user = (object)$user;
     }
     else if (is_numeric($user)) {
-        $user = get_record('usr', 'id', $user);
+        if (isset($usercache[$user])) {
+            $user = $usercache[$user];
+        }
+        else if ($user == $USER->get('id')) {
+            $user = new StdClass;
+            $user->id            = $USER->get('id');
+            $user->username      = $USER->get('username');
+            $user->preferredname = $USER->get('preferredname');
+            $user->firstname     = $USER->get('firstname');
+            $user->lastname      = $USER->get('lastname');
+            $user->admin         = $USER->get('admin') || $USER->is_institutional_admin();
+            $user->staff         = $USER->get('staff') || $USER->is_institutional_staff();
+            $usercache[$user->id] = $user;
+        }
+        else {
+            $user = $usercache[$user] = get_record('usr', 'id', $user);
+        }
     }
     if (!is_object($user)) {
         throw new InvalidArgumentException("Invalid user passed to display_name");
@@ -393,20 +411,28 @@ function display_name($user, $userto=null, $nameonly=false) {
         $user->staff         = $userObj->get('staff');
     }
 
+    if (isset($resultcache[$user->id][$userto->id][$nameonly])) {
+        return $resultcache[$user->id][$userto->id][$nameonly];
+    }
+
     // if they don't have a preferred name set, just return here
     if (empty($user->preferredname)) {
         if ((!empty($userto->admin) || !empty($userto->staff)) && !$nameonly) {
-            return $user->firstname . ' ' . $user->lastname . ' (' . $user->username . ')';
+            return ($resultcache[$user->id][$userto->id][$nameonly]
+                = $user->firstname . ' ' . $user->lastname . ' (' . $user->username . ')');
         }
-        return $user->firstname . ' ' . $user->lastname;
+        return ($resultcache[$user->id][$userto->id][$nameonly]
+            = $user->firstname . ' ' . $user->lastname);
     }
     else if ($user->id == $userto->id) {
         // If viewing our own name, show it how we like it
-        return $user->preferredname;
+        return ($resultcache[$user->id][$userto->id][$nameonly]
+            = $user->preferredname);
     }
 
     if ((!empty($userto->admin) || !empty($userto->staff)) && !$nameonly) {
-        return $user->preferredname . ' (' . $user->firstname . ' ' . $user->lastname . ' - ' . $user->username . ')';
+        return ($resultcache[$user->id][$userto->id][$nameonly]
+            = $user->preferredname . ' (' . $user->firstname . ' ' . $user->lastname . ' - ' . $user->username . ')');
     }
 
     $sql = "SELECT g1.member
@@ -416,9 +442,11 @@ function display_name($user, $userto=null, $nameonly=false) {
             JOIN {group} g ON (g.id = g1.group AND g.deleted = 0)
             WHERE g1.member = ? AND g2.member = ? AND g2.role = 'tutor'";
     if (record_exists_sql($sql, array($user->id, $userto->id))) {
-        return $user->preferredname . ($nameonly ? '' : ' (' . $user->firstname . ' ' . $user->lastname . ')');
+        return ($resultcache[$user->id][$userto->id][$nameonly]
+            = $user->preferredname . ($nameonly ? '' : ' (' . $user->firstname . ' ' . $user->lastname . ')'));
     }
-    return  $user->preferredname;
+    return ($resultcache[$user->id][$userto->id][$nameonly]
+        = $user->preferredname);
 }
 
 /**
