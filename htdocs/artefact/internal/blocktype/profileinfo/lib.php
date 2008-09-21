@@ -155,7 +155,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
             'title'   => get_string('profileicon', 'artefact.internal'),
             'options' => $iconoptions,
             'defaultvalue' => (isset($configdata['profileicon'])) ? $configdata['profileicon'] : 0,
-            'separator' => HTML_BR,
+            'separator' => '<br>',
         );
 
         $form['email'] = array(
@@ -163,7 +163,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
             'title'   => get_string('email', 'artefact.internal'),
             'options' => $emailoptions,
             'defaultvalue' => (isset($configdata['email'])) ? $configdata['email'] : 0,
-            'separator' => HTML_BR,
+            'separator' => '<br>',
         );
 
         // Introduction

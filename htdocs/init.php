@@ -77,7 +77,6 @@ require('mahara.php');
 ensure_sanity();
 require('dml.php');
 require('ddl.php');
-require('constants.php');
 require('web.php');
 require('activity.php');
 require('user.php');
