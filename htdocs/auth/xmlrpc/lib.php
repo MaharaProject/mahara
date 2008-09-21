@@ -80,6 +80,9 @@ class AuthXmlrpc extends Auth {
         if (array_key_exists($name, $this->config)) {
             return $this->config[$name];
         }
+        if (isset($this->$name)) {
+            return $this->$name;
+        }
     }
 
     /**
