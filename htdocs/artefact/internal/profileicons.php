@@ -125,6 +125,18 @@ var table = new TableRenderer(
 table.updateOnLoad();
 table.emptycontent = {$strnoimagesfound};
 table.paginate = false;
+table.updatecallback = function(response) {
+    var defaultIcon = filter(function (i) { return i.isdefault == 't'; }, response.data);
+
+    if (defaultIcon.length) {
+        defaultIcon = defaultIcon[0].id;
+        forEach(getElementsByTagAndClassName('img', null, 'column-right'), function(i) {
+            if (i.src.match(/thumb\.php\?type=profileiconbyid/)) {
+                i.src = i.src.replace(/id=[0-9]+/, 'id=' + String(defaultIcon));
+            }
+        });
+    }
+};
 
 var uploadingMessage = TR(null,
     TD(null, {$struploadingfile})
