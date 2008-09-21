@@ -717,6 +717,12 @@ function auth_get_available_auth_types($institution=null) {
  */
 function auth_check_required_fields() {
     global $USER;
+
+    if (defined('JSON')) {
+        // Don't need to check this for json requests
+        return;
+    }
+
     safe_require('artefact', 'internal');
     require_once('pieforms/pieform.php');
     $elements = array();
