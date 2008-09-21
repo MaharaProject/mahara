@@ -855,10 +855,8 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
            $fullpath = get_config('docroot') . 'artefact/' . $bits[0] . '/blocktype/' . $bits[1] . '/' . $filename;
         }
         else {
-            if (table_exists(new XMLDBTable('blocktype_installed'))) {
-                if ($artefactplugin = get_field('blocktype_installed', 'artefactplugin', 'name', $pluginname)) {
-                    $fullpath = get_config('docroot') . 'artefact/' . $artefactplugin . '/blocktype/' . $pluginname . '/'. $filename;
-                }
+            if ($artefactplugin = get_field('blocktype_installed', 'artefactplugin', 'name', $pluginname)) {
+                $fullpath = get_config('docroot') . 'artefact/' . $artefactplugin . '/blocktype/' . $pluginname . '/'. $filename;
             }
         }
     } 
