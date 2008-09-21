@@ -24,6 +24,8 @@
  *
  */
 
+require_once('activity.php');
+
 class PluginInteractionForum extends PluginInteraction {
 
     public static function instance_config_form($group, $instance=null) {
