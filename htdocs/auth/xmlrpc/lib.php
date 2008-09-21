@@ -38,8 +38,6 @@ require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
  */
 class AuthXmlrpc extends Auth {
 
-    public $file = null;
-
     /**
      * Get the party started with an optional id
      * TODO: appraise
@@ -64,7 +62,6 @@ class AuthXmlrpc extends Auth {
         $this->config['theyssoin']             = 0;
         $this->config['weimportcontent']       = 0;
         $this->config['parent']                = null;
-        $this->file = fopen('/tmp/out.txt', 'w');
         if (!empty($id)) {
             return $this->init($id);
         }
