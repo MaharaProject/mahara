@@ -126,7 +126,7 @@ viewlist = new TableRenderer(
          return TD(null, A({'href': '{$userview}' + r.owner}, r.ownername));
      },
      function (r,d) {
-         if (r.submittedto && {$tutor} == 1) {
+         if (r.submittedto == $id && {$tutor} == 1) {
              return TD(null, A({'href': '', 'onclick': 'return releaseView(' + r.id + ');'}, '{$releaseviewstr}'));
          }
          return TD(null);
