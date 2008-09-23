@@ -44,8 +44,11 @@ if (empty($id)) {
             $id = $view->get('id');
         }
         catch (ViewNotFoundException $_e) {
-            throw new ParameterException("Missing parameter $id and couldn't find default user profile view");
+            throw new ParameterException("Missing parameter id and couldn't find default user profile view");
         }
+    }
+    else {
+        throw new ParameterException("Missing parameter id");
     }
 }
 if (!empty($id) && empty($view)) {
