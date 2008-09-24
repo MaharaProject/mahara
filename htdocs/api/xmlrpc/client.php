@@ -63,7 +63,7 @@ class Client {
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mahara');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->encryptedrequest);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml charset=UTF-8"));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml charset=UTF-8", 'Expect: '));
 
         $timestamp_send    = time();
         $this->rawresponse = curl_exec($ch);
