@@ -534,7 +534,7 @@ function get_public_key($uri, $application=null) {
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Moodle');
     curl_setopt($ch, CURLOPT_POSTFIELDS, $rq);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml charset=UTF-8"));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml charset=UTF-8", 'Expect: '));
 
     $raw = curl_exec($ch);
     if (empty($raw)) {
