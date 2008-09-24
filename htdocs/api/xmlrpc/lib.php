@@ -461,7 +461,7 @@ function get_service_providers($instance) {
         return $cache[$instance];
     }
 
-    $query = '
+    $query = "
         SELECT
             h.name,
             a.ssolandurl,
@@ -474,20 +474,20 @@ function get_service_providers($instance) {
             {host} h,
             {application} a
         WHERE
-          ((aic.value = 1 AND
-            aic.field = \'theyautocreateusers\' ) OR
+          ((aic.value = '1' AND
+            aic.field = 'theyautocreateusers' ) OR
            (aic.value = ?  AND
-            aic.field = \'parent\')) AND
+            aic.field = 'parent')) AND
 
             aic.instance = aic2.instance AND
-            aic2.field = \'wwwroot\' AND
+            aic2.field = 'wwwroot' AND
             aic2.value = h.wwwroot AND
 
             aic.instance = aic3.instance AND
-            aic3.field = \'wessoout\' AND
-            aic3.value = \'1\' AND
+            aic3.field = 'wessoout' AND
+            aic3.value = '1' AND
 
-            a.name = h.appname';
+            a.name = h.appname";
     try {
         $results = get_records_sql_assoc($query, array('value' => $instance));
     } catch (SQLException $e) {
