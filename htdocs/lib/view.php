@@ -603,7 +603,7 @@ class View {
             default:
                 throw new InvalidArgumentException(get_string('noviewcontrolaction', 'error', $action));
         }
-       
+
         $message = '';
         $success = false;
         try {
@@ -790,9 +790,13 @@ class View {
         }
         $blockcontent = '';
         foreach($data['blockinstances'] as $blockinstance) {
-            $result = $blockinstance->$renderfunction($blockinstance->get('id') == $this->blockinstance_currently_being_configured);
+            $configure = ($blockinstance->get('id') == $this->blockinstance_currently_being_configured);
+            $result = $blockinstance->$renderfunction($configure, false, $jsconfig);
             if ($editing) {
                 $blockcontent .= $result['html'];
+                if ($configure) {
+                    $blockcontent .= '<script type="text/javascript">' . $result['javascript'] . '</script>';
+                }
                 // NOTE: build_column is always called in the context of column
                 // operations, so the javascript returned, which is currently
                 // for configuring block instances only, is not necessary

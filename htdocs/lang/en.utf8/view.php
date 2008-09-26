@@ -200,6 +200,7 @@ $string['moveblockleft'] = 'Move this block left';
 $string['moveblockdown'] = 'Move this block down';
 $string['moveblockup'] = 'Move this block up';
 $string['moveblockright'] = 'Move this block right';
+$string['Configure'] = 'Configure';
 $string['configureblock'] = 'Configure this block';
 $string['removeblock'] = 'Remove this block';
 $string['blocktitle'] = 'Block Title';

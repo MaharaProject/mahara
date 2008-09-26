@@ -10,7 +10,7 @@
         {if $configurable}    <input type="image" src="{theme_path location=images/configure-block.png}" class="submit configurebutton" name="action_configureblockinstance_id_{$id}" alt="&bull;" title="{str tag='configureblock' section='view'}">{/if}
             <input type="image" src="{theme_path location=images/remove-block.png}" class="submit deletebutton" name="action_removeblockinstance_id_{$id}" alt="X" title="{str tag='removeblock' section='view'}">
         </div>
-        <div class="blockinstance-content">
+        <div class="blockinstance-content{if $configure} configure{/if}">
             {$content}
         </div>
     </div>

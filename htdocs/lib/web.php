@@ -539,6 +539,7 @@ function jsstrings() {
             'view' => array(
                 'confirmdeleteblockinstance',
                 'blocksinstructionajax',
+                'Configure',
             ),
         ),
         'adminusersearch' => array(

@@ -80,6 +80,47 @@ function ViewManager() {
         // Now we're done, remove the loading message and display the page
         removeElement('views-loading');
         showElement(self.bottomPane);
+
+        // If there is a block already in configure mode, make it wider, and get the normal content
+        var configblockcontent = getFirstElementByTagAndClassName('div', 'configure');
+        if (configblockcontent) {
+            var blockinstance = getFirstParentByTagAndClassName(configblockcontent, 'div', 'blockinstance');
+            var blockinstanceId = blockinstance.id.substr(blockinstance.id.lastIndexOf('_') + 1);
+            var button = getFirstElementByTagAndClassName('input', 'configurebutton', blockinstance);
+            setNodeAttribute(button, 'disabled', 'disabled');
+
+            var configform = configblockcontent.innerHTML;
+
+            // Put a loading message in place while the content downloads
+            insertSiblingNodesBefore(configblockcontent, DIV({'id':'block-loading'}, IMG({'src': config.theme['images/loading.gif']}), ' ', get_string('loading')));
+            hideElement(configblockcontent);
+
+            sendjsonrequest('blockcontentediting.json.php', {'id':blockinstanceId}, 'POST', function(data) {
+                showElement(configblockcontent);
+                self.currentConfigureData = {
+                    'contentdiv': configblockcontent,
+                    'oldcontent': data.data,
+                    'button'    : button
+                };
+
+                removeElement($('block-loading'));
+                self.growBlock(blockinstance);
+
+                // Make the cancel button be supersmart
+                var cancelButton = $('cancel_cb_' + blockinstanceId + '_action_configureblockinstance_id_' + blockinstanceId);
+                connect(cancelButton, 'onclick', function(e) {
+                    e.stop();
+                    configblockcontent.innerHTML = data.data;
+                    self.currentConfigureData = null;
+                    removeNodeAttribute(button, 'disabled');
+                    self.shrinkBlock(blockinstance);
+                });
+            }, function() {
+                removeElement($('block-loading'));
+                showElement(configblockcontent);
+                self.growBlock(blockinstance);
+            });
+        }
     }
 
     /**
@@ -256,53 +297,110 @@ function ViewManager() {
     this.rewriteConfigureButton = function(button) {
         connect(button, 'onclick', function(e) {
             e.stop();
-            setNodeAttribute(button, 'disabled', 'disabled');
-
-            // If there is a configuration form open, close it. This is because
-            // each one shares the same form tag - the one for the entire form.
-            // We might be able to support having more than one form open at
-            // any one time, as long as we can detect precisely which form was
-            // submitted
-            if (self.currentConfigureData) {
-                self.currentConfigureData['contentdiv'].innerHTML = self.currentConfigureData['oldcontent'];
-                removeNodeAttribute(self.currentConfigureData['button'], 'disabled');
-                self.currentConfigureData = null;
-            }
-
-            var pd = {'id': $('viewid').value, 'change': 1};
-            pd[getNodeAttribute(e.src(), 'name')] = 1;
-
-            var blockinstance = getFirstParentByTagAndClassName(button, 'div', 'blockinstance');
-            var blockinstanceId = blockinstance.id.substr(blockinstance.id.lastIndexOf('_') + 1);
-            var contentDiv = getFirstElementByTagAndClassName('div', 'blockinstance-content', blockinstance);
-            var oldContent = contentDiv.innerHTML;
-
-            // Put a loading message in place while the form downloads
-            replaceChildNodes(contentDiv, IMG({'src': config.theme['images/loading.gif']}), ' ', get_string('loading'));
-
-            sendjsonrequest('blocks.json.php', pd, 'POST', function(data) {
-                self.currentConfigureData = {
-                    'contentdiv': contentDiv,
-                    'oldcontent': oldContent,
-                    'button'    : button
-                };
-                contentDiv.innerHTML = data.data['html'];
-                eval(data.data.javascript);
-                $('action-dummy').name = getNodeAttribute(e.src(), 'name');
-
-                // Make the cancel button be supersmart
-                var cancelButton = $('cancel_cb_' + blockinstanceId + '_action_configureblockinstance_id_' + blockinstanceId);
-                connect(cancelButton, 'onclick', function(e) {
-                    e.stop();
-                    contentDiv.innerHTML = oldContent;
-                    self.currentConfigureData = null;
-                    removeNodeAttribute(button, 'disabled');
-                });
-
-            }, function() {
-                removeNodeAttribute(button, 'disabled');
-            });
+            self.getConfigureForm(getFirstParentByTagAndClassName(button, 'div', 'blockinstance'));
         });
+    }
+
+
+    this.getConfigureForm = function(blockinstance) {
+        var button = getFirstElementByTagAndClassName('input', 'configurebutton', blockinstance);
+        setNodeAttribute(button, 'disabled', 'disabled');
+
+        // If there is a configuration form open, close it. This is because
+        // each one shares the same form tag - the one for the entire form.
+        // We might be able to support having more than one form open at
+        // any one time, as long as we can detect precisely which form was
+        // submitted
+        if (self.currentConfigureData) {
+            self.currentConfigureData['contentdiv'].innerHTML = self.currentConfigureData['oldcontent'];
+            removeNodeAttribute(self.currentConfigureData['button'], 'disabled');
+            self.shrinkBlock(getFirstParentByTagAndClassName(self.currentConfigureData['contentdiv'], 'div', 'blockinstance'));
+            self.currentConfigureData = null;
+        }
+
+        var blockinstanceId = blockinstance.id.substr(blockinstance.id.lastIndexOf('_') + 1);
+        var contentDiv = getFirstElementByTagAndClassName('div', 'blockinstance-content', blockinstance);
+
+        var pd = {'id': $('viewid').value, 'change': 1};
+        pd[getNodeAttribute(button, 'name')] = 1;
+
+        var oldContent = contentDiv.innerHTML;
+
+        // Put a loading message in place while the form downloads
+        replaceChildNodes(contentDiv, IMG({'src': config.theme['images/loading.gif']}), ' ', get_string('loading'));
+
+        sendjsonrequest('blocks.json.php', pd, 'POST', function(data) {
+            self.currentConfigureData = {
+                'contentdiv': contentDiv,
+                'oldcontent': oldContent,
+                'button'    : button
+            };
+
+            self.growBlock(blockinstance);
+
+            contentDiv.innerHTML = data.data['html'];
+            eval(data.data.javascript);
+            $('action-dummy').name = getNodeAttribute(button, 'name');
+
+            // Make the cancel button be supersmart
+            var cancelButton = $('cancel_cb_' + blockinstanceId + '_action_configureblockinstance_id_' + blockinstanceId);
+            connect(cancelButton, 'onclick', function(e) {
+                e.stop();
+                contentDiv.innerHTML = oldContent;
+                self.currentConfigureData = null;
+                removeNodeAttribute(button, 'disabled');
+                self.shrinkBlock(blockinstance);
+            });
+
+        }, function() {
+            removeNodeAttribute(button, 'disabled');
+        });
+    }
+
+
+    this.growBlock = function(blockinstance) {
+        var width = getElementDimensions(blockinstance).w;
+        var left = getElementPosition(blockinstance).x;
+        hideElement(blockinstance);
+        var newwidth = 500;
+        var blockheader = getFirstElementByTagAndClassName('div', 'blockinstance-header', blockinstance);
+        var blockcontrols = getFirstElementByTagAndClassName('div', 'blockinstance-controls', blockinstance);
+        hideElement(blockheader);
+        insertSiblingNodesAfter(blockheader, DIV({'id':'blockconfig-header'}, scrapeText(blockheader) + ': ' + get_string('Configure')));
+        setStyle(blockinstance, {
+            'border': '2px solid #a0a0a0',
+            'z-index': 1,
+            'width': newwidth + 'px'
+        });
+        // Move the block to the left to keep it above the old block
+        var newleft = (width - newwidth) / 2;
+        if (left + newleft < 0) {
+            newleft = 0;
+        } else if (left + newwidth > getViewportDimensions().w) {
+            newleft = width - newwidth;
+        }
+        setStyle(blockinstance, {'left': newleft + 'px'});
+        showElement(blockinstance);
+        keepElementInViewport(blockinstance);
+    }
+
+
+    this.shrinkBlock = function(blockinstance) {
+        hideElement(blockinstance);
+        setStyle(blockinstance, {
+            'left': 0,
+            'width': 'auto',
+            'border': 0,
+            'z-index': 0
+        });
+        var blockheader = getFirstElementByTagAndClassName('div', 'blockinstance-header', blockinstance);
+        var blockcontrols = getFirstElementByTagAndClassName('div', 'blockinstance-controls', blockinstance);
+        var configheader = $('blockconfig-header');
+        if (configheader) {
+            removeElement(configheader);
+        }
+        showElement(blockheader);
+        showElement(blockinstance);
     }
 
     /**
@@ -860,6 +958,7 @@ function ViewManager() {
                         if (self.currentConfigureData) {
                             self.currentConfigureData['contentdiv'].innerHTML = self.currentConfigureData['oldcontent'];
                             removeNodeAttribute(self.currentConfigureData['button'], 'disabled');
+                            self.shrinkBlock(getFirstParentByTagAndClassName(self.currentConfigureData['contentdiv'], 'div', 'blockinstance'));
                             self.currentConfigureData = null;
                         }
                         self.currentConfigureData = {
@@ -877,6 +976,9 @@ function ViewManager() {
                     removeElement(self.blockPlaceholder);
                     eval(data.data.javascript);
 
+                    if (configureButton) {
+                        self.growBlock(blockinstance);
+                    }
                 });
 
             };

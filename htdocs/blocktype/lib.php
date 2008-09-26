@@ -395,6 +395,7 @@ class BlockInstance {
 
         $smarty->assign('movecontrols', $movecontrols);
         $smarty->assign('configurable', call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'has_instance_config'));
+        $smarty->assign('configure', $configure); // Used by the javascript to rewrite the block, wider.
         $smarty->assign('content', $content);
         $smarty->assign('javascript', defined('JSON'));
         $smarty->assign('strnotitle', get_string('notitle', 'view'));
@@ -444,6 +445,12 @@ class BlockInstance {
      *               javascript to run
      */
     public function build_configure_form($new=false) {
+
+        static $renderedform;
+        if (!empty($renderedform)) {
+            return $renderedform;
+        }
+
         safe_require('blocktype', $this->get('blocktype'));
         $elements = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_form', $this);
 
@@ -471,6 +478,17 @@ class BlockInstance {
                     'description' => (method_exists($blocktypeclass, 'get_instance_title'))
                         ? get_string('defaulttitledescription', 'blocktype.' . blocktype_name_to_namespaced($this->get('blocktype'))) : null,
                     'defaultvalue' => $title,
+                ),
+                'blockconfig' => array(
+                    'type'  => 'hidden',
+                    'value' => $this->get('id'),
+                ),
+                // This form is never submitted by js, but if it was
+                // created by a json script, remember that in case the
+                // block is rendered again after a form error.
+                'js' => array(
+                    'type'  => 'hidden',
+                    'value' => (bool) defined('JSON'),
                 ),
             ),
             $elements
@@ -539,7 +557,8 @@ class BlockInstance {
             }
         }
 
-        return array('html' => $html, 'javascript' => $js);
+        $renderedform = array('html' => $html, 'javascript' => $js);
+        return $renderedform;
     }
 
     public function commit() {

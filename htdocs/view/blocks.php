@@ -80,6 +80,17 @@ if ($new && isset($_POST['cancel'])) {
     redirect(get_config('wwwroot') . 'view/');
 }
 
+// If a block was configured & submitted, build the form now so it can
+// be processed without having to render the other blocks.
+if ($blockid = param_integer('blockconfig', 0)) {
+    // However, if removing a newly placed block, let it fall through to process_changes
+    if (!isset($_POST['cancel_action_configureblockinstance_id_' . $blockid]) || !param_integer('removeoncancel', 0)) {
+        require_once(get_config('docroot') . 'blocktype/lib.php');
+        $bi = new BlockInstance($blockid);
+        $bi->build_configure_form();
+    }
+}
+
 View::set_nav($group, $institution, ($view->get('type') == 'profile'));
 
 if ($view->get('type') == 'profile') {

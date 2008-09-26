@@ -1941,6 +1941,10 @@ span.viewicon {
 .blockinstance-content .maharatable th {
 	text-align: left !important;
 }
+#blockconfig-header {
+  font-weight: bold;
+  padding: 5px 5px 0;
+}
 #feedback th,
 #objection th {
 	padding: 2px 10px;
