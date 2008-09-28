@@ -31,6 +31,11 @@ require_once(get_config('docroot') . 'blocktype/lib.php');
 
 $bi = new BlockInstance(param_integer('id'));
 safe_require('blocktype', $bi->get('blocktype'));
+
+if (!can_view_view($bi->get('view'))) {
+    json_reply('local', get_string('accessdenied', 'error'));
+}
+
 $content = call_static_method(generate_class_name('blocktype', $bi->get('blocktype')), 'render_instance', $bi, true);
 json_reply(false, array('message' => false, 'data' => $content));
 
