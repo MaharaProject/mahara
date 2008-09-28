@@ -668,8 +668,9 @@ class Pieform {/*{{{*/
         // form has been submitted the javascript from the first page load is 
         // still active in the document
         // 2) The form is NOT a JS form, but has a presubmitcallback
-        if (($this->data['jsform'] && !$this->submitted)
-            || (!$this->data['jsform'] && $this->data['presubmitcallback'])) {
+        if ($outputformtags &&
+            (($this->data['jsform'] && !$this->submitted)
+             || (!$this->data['jsform'] && $this->data['presubmitcallback']))) {
             // Establish which buttons in the form are submit buttons. This is 
             // used to detect which button was pressed to cause the form 
             // submission
