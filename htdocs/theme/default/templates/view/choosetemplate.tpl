@@ -5,7 +5,7 @@
 <div id="copyview">
 
  <div id="templatesearch" class="searchlist">
-  <h3>{str tag="selectaviewtocopy" section="view"}</h3>
+
   <form class="searchquery" action="{$WWWROOT}view/choosetemplate.php" method="post">
 
     <label>{str tag="searchviews" section="view"}:
