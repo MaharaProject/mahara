@@ -76,11 +76,13 @@ function showPreview(size, data) {
     var offset = 16; // Left border & padding of preview container elements (@todo: use getStyle()?)
     if (size == 'small') {
         var width = 400;
+        var xpos = (vdim.w - width - offset) / 2;
     } else { 
         var width = vdim.w - 200;
+        var xpos = vpos.x+100-offset;
     }
     setElementDimensions(preview, {'w':width});
-    setElementPosition(preview, {'x':vpos.x+100-offset, 'y':vpos.y+200});
+    setElementPosition(preview, {'x':xpos, 'y':vpos.y+200});
     showElement(preview);
 }
 
