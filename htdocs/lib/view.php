@@ -1566,11 +1566,7 @@ class View {
             $ph = array();
         }
 
-        if ($admin) {
-            $from = '
-            FROM {view} v';
-        }
-        else if (!$loggedin) {
+        if (!$loggedin) {
             // Unreachable and not tested yet:
             $from = '
             FROM {view} v
