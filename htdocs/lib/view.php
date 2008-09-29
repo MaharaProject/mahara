@@ -310,6 +310,7 @@ class View {
 
     public function set_access($accessdata) {
         global $USER;
+        require_once(get_config('libroot') . 'activity.php');
 
         // For users who are being removed from having access to this view, they
         // need to have the view and any attached artefacts removed from their
