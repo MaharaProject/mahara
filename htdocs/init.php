@@ -210,7 +210,7 @@ if (get_config('siteclosed')) {
         if (get_config('disablelogin')) {
             $USER->logout();
         }
-        if (!defined('INSTALLER')) {
+        else if (!defined('INSTALLER')) {
             redirect('/admin/upgrade.php');
         }
     }
