@@ -784,6 +784,9 @@ function group_get_menu_tabs() {
     static $menu;
 
     $group = group_current_group();
+    if (!$group) {
+        return null;
+    }
     $menu = array(
         'info' => array(
             'path' => 'groups/info',
@@ -880,9 +883,16 @@ function group_param_userid($userid) {
 function group_current_group() {
     static $group;
 
-    if (defined('GROUP')) {
+    // This function sometimes gets called by the smarty function
+    // during the execution of a GroupNotFound exception.  This
+    // variable prevents a 2nd exception from being thrown.  Perhaps
+    // better achieved with a global in the exception handler?
+    static $dying;
+
+    if (defined('GROUP') && !$dying) {
         $group = get_record_select('group', 'id = ? AND deleted = 0', array(GROUP), '*, ' . db_format_tsfield('ctime'));
         if (!$group) {
+            $dying = 1;
             throw new GroupNotFoundException(get_string('groupnotfound', 'group', GROUP));
         }
     }
@@ -900,6 +910,9 @@ function group_current_group() {
 function group_sideblock() {
     require_once('group.php');
     $data['group'] = group_current_group();
+    if (!$data['group']) {
+        return null;
+    }
     $data['menu'] = group_get_menu_tabs();
     // @todo either: remove this if interactions become group
     // artefacts, or: do this in interaction/lib.php if we leave them
