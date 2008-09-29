@@ -206,8 +206,13 @@ if (!defined('INSTALLER')) {
 }
 
 if (get_config('siteclosed')) {
-    if ($USER->admin && !defined('INSTALLER')) {
-        redirect('/admin/upgrade.php');
+    if ($USER->admin) {
+        if (get_config('disablelogin')) {
+            $USER->logout();
+        }
+        if (!defined('INSTALLER')) {
+            redirect('/admin/upgrade.php');
+        }
     }
     if (!$USER->admin) {
         if ($USER->is_logged_in()) {
