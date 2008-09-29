@@ -333,7 +333,7 @@ function auth_setup () {
         ($siteclosed && !$cfgsiteclosed)
         || (!$siteclosed && $cfgsiteclosed)) {
         set_config('siteclosed', $siteclosed);
-        if ($config->disablelogin) {
+        if ($config->disablelogin && $siteclosed) {
             set_config('disablelogin', 1);
         }
     }
