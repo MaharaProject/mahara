@@ -86,6 +86,7 @@ $js = <<<EOF
 preview = DIV({'id':'viewpreview', 'class':'hidden'}, DIV({'id':'viewpreviewinner'}, DIV({'id':'viewpreviewclose'}, A({'href':'','id':'closepreview'}, {$strclose})), DIV({'id':'viewpreviewcontent'})));
 
 function showPreview(size, data) {
+    hideElement('viewownersearch');
     $('viewpreviewcontent').innerHTML = data.html;
     var vdim = getViewportDimensions();
     var vpos = getViewportPosition();
@@ -100,16 +101,15 @@ function showPreview(size, data) {
     showElement(preview);
 }
 
-function toggleOwnerSearch() {
-    if (getStyle('viewownersearch', 'display') != 'none') {
-      hideElement('viewownersearch');
-      setElementDimensions('templatesearch', {'w':getElementDimensions('templatesearch', false).w * 3 / 2});
-      showElement('openviewownersearch');
-    } else {
-      showElement('viewownersearch');
-      setElementDimensions('templatesearch', {'w': 500});
-      hideElement('openviewownersearch');
-    }
+function showOwnerSearch() {
+    hideElement(preview);
+    var vpos = getViewportPosition();
+    var offset = 16; // Left border & padding of preview container elements (@todo: use getStyle()?)
+    setElementPosition('viewownersearch', {
+        'x':vpos.x+100-offset,
+        'y':vpos.y+150
+    });
+    showElement('viewownersearch');
 }
 
 ownerlist = new SearchTable('viewownersearch');
@@ -117,9 +117,20 @@ templatelist = new SearchTable('templatesearch');
 
 addLoadEvent(function() {
 
-  connect('openviewownersearch', 'onclick', function (e) {e.stop(); toggleOwnerSearch();});
-  setStyle('closeviewownersearch', {'display': 'inline'});
-  connect('closeviewownersearch', 'onclick', function (e) {e.stop(); toggleOwnerSearch();});
+  hideElement('viewownersearch');
+  showElement('closeviewownersearch');
+  setStyle('viewownersearch', {
+    'position': 'absolute',
+    'background': '#fff',
+    'width': '500px',
+    'border': '10px solid #eee',
+    'padding': '0'
+  });
+  setStyle('viewownersearchinner', {
+    'border': '1px solid #ccc',
+    'padding': '5px'
+  });
+  setStyle('templatesearch', {'width':'auto'});
 
   ownerlist.rewriteOther = function () {
     forEach(getElementsByTagAndClassName('td', 'selectowner', 'viewownersearch'), function(i) {
@@ -134,6 +145,7 @@ addLoadEvent(function() {
           templatelist.params.viewoffset = 0;
           templatelist.doSearch();
         }
+        hideElement('viewownersearch');
       });
     });
     forEach(getElementsByTagAndClassName('a', 'grouplink', 'viewownersearch'), function(i) {
@@ -167,9 +179,16 @@ addLoadEvent(function() {
     });
   };
   templatelist.rewriteOther();
+
   appendChildNodes(getFirstElementByTagAndClassName('body'), preview);
+
   connect('closepreview', 'onclick', function (e) {e.stop(); fade(preview, {'duration':0.2});});
   connect('viewpreviewcontent', 'onclick', function (e) {e.stop(); return false;});
+
+  setStyle('openviewownersearch', {'display': 'inline'});
+  connect('openviewownersearch', 'onclick', function (e) {e.stop(); showOwnerSearch();});
+  connect('closeviewownersearch', 'onclick', function (e) {e.stop(); fade('viewownersearch', {'duration':0.2});});
+
 });
 EOF;
 

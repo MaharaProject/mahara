@@ -4,22 +4,21 @@
                         <h2>{$heading}</h2>
 <div id="copyview">
 
- <div id="openviewownersearch" class="hidden">
-   <a href="">{str tag="searchowners" section="view"}</a>
- </div>
  <div id="viewownersearch" class="searchlist">
-  <span id="closeviewownersearch" class="hidden"> [<a href="">x</a>]</span>
-  <h4>{str tag="searchviewsbyowner" section="view"}</h4>
-  <form class="searchquery" action="{$WWWROOT}view/choosetemplate.php" method="post">
+  <div id="viewownersearchinner">
+   <div id="closeviewownersearch" class="hidden"> <a href="">Close</a></div>
+   <h4>{str tag="searchviewsbyowner" section="view"}</h4>
+   <form class="searchquery" action="{$WWWROOT}view/choosetemplate.php" method="post">
     <label>{str tag="name"}:
       <input type="text" name="ownerquery" id="ownerquery" class="query" value="{$owners->query|escape}">
     </label>
     <button class="query-button" type="submit">{str tag="go"}</button>
     <input type="hidden" name="ownerlimit" value="{$owners->limit|escape}">
     <input type="hidden" name="owneroffset" value="0">
-  </form>
-  <div id="viewownersearch_table">{$owners->html}</div>
-  <div id="viewownersearch_pagination">{$owners->pagination.html}</div>
+   </form>
+   <div id="viewownersearch_table">{$owners->html}</div>
+   <div id="viewownersearch_pagination">{$owners->pagination.html}</div>
+  </div>
  </div>
 
  <div id="templatesearch" class="searchlist">
@@ -31,6 +30,9 @@
     <button class="query-button" type="submit">{str tag="go"}</button>
     <input type="hidden" name="viewlimit" value="{$views->limit|escape}">
     <input type="hidden" name="viewoffset" value="0">
+  <span id="openviewownersearch" class="hidden">
+   <a href="">{str tag="searchowners" section="view"}</a>
+  </span>
   </form>
   <div id="templatesearch_table">{$views->html}</div>
   <div id="templatesearch_pagination">{$views->pagination.html}</div>
