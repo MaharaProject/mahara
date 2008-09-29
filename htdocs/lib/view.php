@@ -1529,6 +1529,7 @@ class View {
      * - v is visible to users with role r of group g at t, and u is a member of g with role r (view_access_group)
      *
      * @param string   $query       Search string
+     * @param string   $ownerquery  Search string for owner
      * @param StdClass $ownedby     Only return views owned by this owner (user, group, institution)
      * @param StdClass $copyableby  Only return views copyable by this owner (user, group, institution)
      * @param integer  $limit
@@ -1536,7 +1537,7 @@ class View {
      * @param bool     $extra       Return full set of properties on each view including an artefact list
      *
      */
-    public static function view_search($query=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0, $extra=true) {
+    public static function view_search($query=null, $ownerquery=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0, $extra=true) {
         global $USER;
         $admin = $USER->get('admin');
         $loggedin = $USER->is_logged_in();
@@ -1554,8 +1555,8 @@ class View {
                 AND (v.template = 1 OR (v.' . self::owner_sql($copyableby) . '))';
         }
 
+        $like = db_ilike();
         if ($query) {
-            $like = db_ilike();
             $where .= "
                 AND (v.title $like '%' || ? || '%' OR v.description $like '%' || ? || '%' )";
             $ph = array($query, $query);
@@ -1630,6 +1631,29 @@ class View {
                     )
                 )";
             $ph = array_merge(array($viewerid,$viewerid,$viewerid,$viewerid), $ph, array($viewerid,$viewerid,$viewerid,$viewerid));
+        }
+
+        if (!$ownedby && $ownerquery) {
+            $from .= '
+            LEFT OUTER JOIN {usr} qu ON (v.owner = qu.id)
+            LEFT OUTER JOIN {group} qg ON (v.group = qg.id)
+            LEFT OUTER JOIN {institution} qi ON (v.institution = qi.name)';
+            if (strpos(strtolower(get_config('sitename')), strtolower($ownerquery)) !== false) {
+                $sitequery = " OR qi.name = 'mahara'";
+            }
+            else {
+                $sitequery = '';
+            }
+            $where .= "
+                AND (
+                    qu.preferredname $like '%' || ? || '%'
+                    OR qu.firstname $like '%' || ? || '%'
+                    OR qu.lastname $like '%' || ? || '%'
+                    OR qg.name $like '%' || ? || '%'
+                    OR qi.displayname $like '%' || ? || '%'
+                    $sitequery
+                )";
+            $ph = array_merge($ph, array($ownerquery,$ownerquery,$ownerquery,$ownerquery,$ownerquery));
         }
 
         $count = count_records_sql('SELECT COUNT (DISTINCT v.id) ' . $from . $where, $ph);
@@ -1970,49 +1994,8 @@ class View {
         return $title . $ext;
     }
 
-    public static function get_viewownersearch_data(&$search) {
-        $results = self::search_view_owners($search->query, $search->template, $search->limit, $search->offset);
-
-        $params = array();
-        if (!empty($search->query)) {
-            $params[] = 'ownerquery=' . $search->query;
-        }
-        if (!empty($search->group)) {
-            $params[] = 'group=' . $search->group;
-        }
-        if (!empty($search->institution)) {
-            $params[] = 'institution=' . $search->institution;
-        }
-        $params[] = 'ownerlimit=' . $search->limit;
-
-        $qstring = join('&amp;', $params);
-
-        $smarty = smarty_core();
-        $smarty->assign_by_ref('results', $results);
-        $smarty->assign('viewurl', get_config('wwwroot') . 'view/choosetemplate.php?' . $qstring . '&amp;owneroffset=' . $search->offset);
-        $search->html = $smarty->fetch('view/viewownersearchresults.tpl');
-        $search->count = $results['count'];
-
-        $search->pagination = build_pagination(array(
-            'id' => 'viewownersearch_pagination',
-            'class' => 'center',
-            'url' => get_config('wwwroot') . 'view/choosetemplate.php?' . $qstring,
-            'count' => $results['count'],
-            'limit' => $search->limit,
-            'offset' => $search->offset,
-            'offsetname' => 'owneroffset',
-            'firsttext' => '',
-            'previoustext' => '',
-            'nexttext' => '',
-            'lasttext' => '',
-            'numbersincludefirstlast' => false,
-            'resultcounttextsingular' => get_string('owner', 'view'),
-            'resultcounttextplural' => get_string('owners', 'view'),
-        ));
-    }
-
     public static function get_templatesearch_data(&$search) {
-        $results = self::view_search($search->query, $search->ownedby, $search->copyableby, $search->limit, $search->offset, true);
+        $results = self::view_search($search->query, $search->ownerquery, null, $search->copyableby, $search->limit, $search->offset, true);
 
         foreach ($results->data as &$r) {
             $r['form'] = pieform(create_view_form($search->copyableby->group, $search->copyableby->institution, $r['id']));
@@ -2021,6 +2004,9 @@ class View {
         $params = array();
         if (!empty($search->query)) {
             $params[] = 'viewquery=' . $search->query;
+        }
+        if (!empty($search->ownerquery)) {
+            $params[] = 'ownerquery=' . $search->query;
         }
         if (!empty($search->group)) {
             $params[] = 'group=' . $search->group;
@@ -2032,24 +2018,6 @@ class View {
 
         $smarty = smarty_core();
         $smarty->assign_by_ref('results', $results->data);
-        if ($search->ownedby) {
-            foreach ($search->ownedby as $k => $v) {
-                $params[] = 'owntype=' . $k;
-                $params[] = 'ownid=' . $v;
-                if ($k == 'user') {
-                    $ownername = display_name($v);
-                } else if ($k == 'group') {
-                    $ownername = get_field('group', 'name', 'id', $v);
-                } else if ($k == 'institution') {
-                    if ($v == 'mahara') {
-                        $ownername = get_config('sitename');
-                    } else {
-                        $ownername = get_field('institution', 'displayname', 'name', $v);
-                    }
-                }
-            }
-            $smarty->assign('ownername', get_string('viewsby', 'view', $ownername));
-        }
         $search->html = $smarty->fetch('view/templatesearchresults.tpl');
         $search->count = $results->count;
 

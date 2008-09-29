@@ -1588,28 +1588,12 @@ button#dosearch {
   width: 100%;
   margin-top: 5px;
 }
-#copyview #templatesearch {
-  float: left;
-  width: 500px;
-}
-#copyview #viewownersearch {
-  margin-top: 10px;
-  float: left;
-  margin-right: 10px;
-  width: 35%;
-}
 #copyview form.searchquery {
   text-align: center;
   margin-top: 10px;
 }
-#copyview .selectowner {
-  font-weight: bold;
-}
-#copyview #viewownersearch td img {
+#copyview #templatesearch td img {
   vertical-align: bottom;
-}
-#copyview #viewownersearch td.selectowner img {
-  vertical-align: middle;
 }
 .preview-group {
   margin: 10px;
@@ -1626,15 +1610,11 @@ button#dosearch {
   border: 1px solid #ccc;
   padding: 5px;
 }
-#viewpreviewclose,
-#closeviewownersearch {
+#viewpreviewclose {
   width: 100%;
   text-align: center;
   border-bottom: 1px solid #ccc;
   padding-bottom: 5px;
-}
-#closeviewownersearch {
-  margin-bottom: 5px;
 }
 #viewpreviewcontent {
   margin-top: 5px;

@@ -46,27 +46,11 @@ if ($group && !group_user_can_edit_views($group) || $institution && !$USER->can_
 
 define('TITLE', get_string('copyaview', 'view'));
 
-$owners = new StdClass;
-$owners->query    = trim(param_variable('ownerquery', ''));
-$owners->template = null;
-$owners->offset   = param_integer('owneroffset', 0);
-$owners->limit    = param_integer('ownerlimit', 10);
-if ($group) {
-    $owners->group = $group;
-}
-else if ($institution) {
-    $owners->institution = $institution;
-}
-View::get_viewownersearch_data($owners);
-
 $views = new StdClass;
-$views->query     = trim(param_variable('viewquery', ''));
-$views->offset    = param_integer('viewoffset', 0);
-$views->limit     = param_integer('viewlimit', 10);
-$views->ownedby   = null;
-if ($ownertype = param_alpha('owntype', null)) {
-    $views->ownedby = (object) array($ownertype => param_alphanum('ownid'));
-}
+$views->query      = trim(param_variable('viewquery', ''));
+$views->ownerquery = trim(param_variable('ownerquery', ''));
+$views->offset     = param_integer('viewoffset', 0);
+$views->limit      = param_integer('viewlimit', 10);
 $views->copyableby = (object) array('group' => $group, 'institution' => $institution, 'user' => null);
 if ($group) {
     $views->group = $group;
@@ -86,7 +70,6 @@ $js = <<<EOF
 preview = DIV({'id':'viewpreview', 'class':'hidden'}, DIV({'id':'viewpreviewinner'}, DIV({'id':'viewpreviewclose'}, A({'href':'','id':'closepreview'}, {$strclose})), DIV({'id':'viewpreviewcontent'})));
 
 function showPreview(size, data) {
-    hideElement('viewownersearch');
     $('viewpreviewcontent').innerHTML = data.html;
     var vdim = getViewportDimensions();
     var vpos = getViewportPosition();
@@ -101,54 +84,12 @@ function showPreview(size, data) {
     showElement(preview);
 }
 
-function showOwnerSearch() {
-    hideElement(preview);
-    var vpos = getViewportPosition();
-    var offset = 16; // Left border & padding of preview container elements (@todo: use getStyle()?)
-    setElementPosition('viewownersearch', {
-        'x':vpos.x+100-offset,
-        'y':vpos.y+150
-    });
-    showElement('viewownersearch');
-}
-
-ownerlist = new SearchTable('viewownersearch');
 templatelist = new SearchTable('templatesearch');
 
 addLoadEvent(function() {
 
-  hideElement('viewownersearch');
-  showElement('closeviewownersearch');
-  setStyle('viewownersearch', {
-    'position': 'absolute',
-    'background': '#fff',
-    'width': '500px',
-    'border': '10px solid #eee',
-    'padding': '0'
-  });
-  setStyle('viewownersearchinner', {
-    'border': '1px solid #ccc',
-    'padding': '5px'
-  });
-  setStyle('templatesearch', {'width':'auto'});
-
-  ownerlist.rewriteOther = function () {
-    forEach(getElementsByTagAndClassName('td', 'selectowner', 'viewownersearch'), function(i) {
-      disconnectAll(i);
-      connect(i, 'onclick', function (e) {
-        e.stop();
-        var children = getElementsByTagAndClassName('a', null, this);
-        if (children.length == 1) {
-          var href = getNodeAttribute(children[0], 'href');
-          templatelist.params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
-          templatelist.params.viewlimit = {$views->limit};
-          templatelist.params.viewoffset = 0;
-          templatelist.doSearch();
-        }
-        hideElement('viewownersearch');
-      });
-    });
-    forEach(getElementsByTagAndClassName('a', 'grouplink', 'viewownersearch'), function(i) {
+  templatelist.rewriteOther = function () {
+    forEach(getElementsByTagAndClassName('a', 'grouplink', 'templatesearch'), function(i) {
       connect(i, 'onclick', function (e) {
         e.stop();
         var href = getNodeAttribute(this, 'href');
@@ -156,7 +97,7 @@ addLoadEvent(function() {
         sendjsonrequest(config.wwwroot + 'group/groupinfo.json.php', params, 'POST', partial(showPreview, 'small'));
       });
     });
-    forEach(getElementsByTagAndClassName('a', 'userlink', 'viewownersearch'), function(i) {
+    forEach(getElementsByTagAndClassName('a', 'userlink', 'templatesearch'), function(i) {
       connect(i, 'onclick', function (e) {
         e.stop();
         var href = getNodeAttribute(this, 'href');
@@ -164,9 +105,6 @@ addLoadEvent(function() {
         sendjsonrequest(config.wwwroot + 'user/userdetail.json.php', params, 'POST', partial(showPreview, 'small'));
       });
     });
-  };
-  ownerlist.rewriteOther();
-  templatelist.rewriteOther = function () {
     forEach(getElementsByTagAndClassName('a', 'viewlink', 'templatesearch'), function(i) {
       disconnectAll(i);
       setNodeAttribute(i, 'title', {$strpreview});
@@ -178,16 +116,13 @@ addLoadEvent(function() {
       });
     });
   };
+
   templatelist.rewriteOther();
 
   appendChildNodes(getFirstElementByTagAndClassName('body'), preview);
 
   connect('closepreview', 'onclick', function (e) {e.stop(); fade(preview, {'duration':0.2});});
   connect('viewpreviewcontent', 'onclick', function (e) {e.stop(); return false;});
-
-  setStyle('openviewownersearch', {'display': 'inline'});
-  connect('openviewownersearch', 'onclick', function (e) {e.stop(); showOwnerSearch();});
-  connect('closeviewownersearch', 'onclick', function (e) {e.stop(); fade('viewownersearch', {'duration':0.2});});
 
 });
 EOF;
@@ -200,7 +135,6 @@ $smarty = smarty(
 );
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('heading', TITLE);
-$smarty->assign('owners', $owners);
 $smarty->assign('views', $views);
 $smarty->display('view/choosetemplate.tpl');
 
