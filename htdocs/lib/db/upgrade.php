@@ -1415,6 +1415,10 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    // The previous upgrade forces the user to be logged out.  The
+    // next upgrade should probably set disablelogin = false and
+    // minupgradefrom = 2008092000 in version.php.
+
     return $status;
 
 }
