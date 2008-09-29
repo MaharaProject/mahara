@@ -791,7 +791,7 @@ class View {
         $blockcontent = '';
         foreach($data['blockinstances'] as $blockinstance) {
             $configure = ($blockinstance->get('id') == $this->blockinstance_currently_being_configured);
-            $result = $blockinstance->$renderfunction($configure, false, $jsconfig);
+            $result = $blockinstance->$renderfunction($configure, false);
             if ($editing) {
                 $blockcontent .= $result['html'];
                 if ($configure) {
