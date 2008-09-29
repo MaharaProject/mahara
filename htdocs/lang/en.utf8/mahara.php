@@ -408,6 +408,7 @@ $string['unreadmessages'] = 'unread messages';
 $string['unreadmessage'] = 'unread message';
 
 $string['siteclosed'] = 'The site is temporarily closed for a database upgrade.  Site administrators may log in.';
+$string['siteclosedlogindisabled'] = 'The site is temporarily closed for a database upgrade.  <a href="%s">Perform the upgrade now.</a>';
 
 // footer
 $string['termsandconditions'] = 'Terms and Conditions';

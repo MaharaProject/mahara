@@ -333,6 +333,9 @@ function auth_setup () {
         ($siteclosed && !$cfgsiteclosed)
         || (!$siteclosed && $cfgsiteclosed)) {
         set_config('siteclosed', $siteclosed);
+        if ($config->disablelogin) {
+            set_config('disablelogin', 1);
+        }
     }
 
     // Check the time that the session is set to log out. If the user does

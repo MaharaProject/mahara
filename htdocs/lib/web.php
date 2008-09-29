@@ -368,7 +368,14 @@ EOF;
     $smarty->assign('SESSKEY', $USER->get('sesskey'));
     $smarty->assign_by_ref('JAVASCRIPT', $javascript_array);
     $smarty->assign_by_ref('HEADERS', $headers);
-    $smarty->assign('SITECLOSED', get_config('siteclosed'));
+    if (get_config('siteclosed')) {
+        if (get_config('disablelogin')) {
+            $smarty->assign('SITECLOSED', get_string('siteclosedlogindisabled', 'mahara', get_config('wwwroot') . 'admin/upgrade.php'));
+        }
+        else {
+            $smarty->assign('SITECLOSED', get_string('siteclosed'));
+        }
+    }
 
     if ((!isset($extraconfig['pagehelp']) || $extraconfig['pagehelp'] !== false)
         and $help = has_page_help()) {

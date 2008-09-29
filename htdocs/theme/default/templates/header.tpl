@@ -32,7 +32,7 @@
 </head>
 <body>
 {if $USERMASQUERADING}<div class="sitemessage"><img src="{theme_path location='images/icon_problem.gif'}" alt="">{$masqueradedetails} {$becomeyouagain}</div>{/if}
-{if $SITECLOSED}<div class="sitemessage center">{str tag=siteclosed}</div>{/if}
+{if $SITECLOSED}<div class="sitemessage center">{$SITECLOSED}</div>{/if}
 <div id="container">
 	<div id="loading_box" class="hidden"></div>
 	<div id="topwrapper">

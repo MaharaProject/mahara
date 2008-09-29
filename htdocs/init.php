@@ -213,7 +213,7 @@ if (get_config('siteclosed')) {
         if ($USER->is_logged_in()) {
             $USER->logout();
         }
-        if (!defined('HOME')) {
+        if (!defined('HOME') && !defined('INSTALLER')) {
             redirect();
         }
     }
