@@ -1409,6 +1409,10 @@ function db_format_tsfield($field, $as = null) {
  */
 function configure_dbconnection() {
     global $db;
+    global $dbgenerator;
+
+    $classname = 'XMLDB' . get_config('dbtype');
+    $dbgenerator = new $classname();
 
     increment_perf_db_writes();
     $db->Execute("SET NAMES 'utf8'");

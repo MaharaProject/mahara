@@ -43,7 +43,6 @@
  */
 
 // Mahara hacks
-global $CFG;
 $CFG->libdir = get_config('libroot');
 $CFG->prefix = (isset($CFG->dbprefix)) ? $CFG->dbprefix : '';
 if (is_postgres()) {
