@@ -1184,6 +1184,7 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
 
 
 function copy_view_for_user($userid, $templateid) {
+    require_once(get_config('libroot') . 'view.php');
     if (!$templateid) {
         return;
     }
