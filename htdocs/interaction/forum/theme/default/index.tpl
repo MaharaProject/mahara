@@ -18,9 +18,9 @@
 {if $forums}
 <table id="forumslist">
 	<tr>
-		<th>Forum Name</th>
-		<th>Description</th>
-		<th>Topics</th>
+		<th>{str tag="forumname" section="interaction.forum"}</th>
+		<th>{str tag="description"}</th>
+		<th>{str tag="Topics" section="interaction.forum"}</th>
 		<th></th>
 		<th></th>
 	</tr>

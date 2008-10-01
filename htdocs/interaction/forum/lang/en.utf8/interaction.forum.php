@@ -64,6 +64,7 @@ $string['editstothispost'] = 'Edits to this post:';
 $string['edittitle'] = 'Edit forum';
 $string['edittopic'] = 'Edit topic';
 $string['edittopicsuccess'] = 'Topic edited successfully';
+$string['forumname'] = 'Forum Name';
 $string['forumsuccessfulsubscribe'] = 'Forum subscribed successfully';
 $string['forumsuccessfulunsubscribe'] = 'Forum unsubscribed successfully';
 $string['gotoforums'] = 'Go to forums';
