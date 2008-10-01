@@ -54,9 +54,6 @@ $post = get_record_sql(
     array(0, $postid)
 );
 
-define('GROUP', $post->group);
-
-
 if (!$post) {
     throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $postid));
 }
@@ -71,6 +68,8 @@ if (!$moderator) {
 if (!$post->parent) {
     throw new AccessDeniedException(get_string('cantdeletethispost', 'interaction.forum'));
 }
+
+define('GROUP', $post->group);
 
 define('TITLE', $post->topicsubject . ' - ' . get_string('deletepost', 'interaction.forum'));
 $post->ctime = relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $post->ctime);
