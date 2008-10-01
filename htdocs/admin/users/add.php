@@ -210,6 +210,10 @@ function adduser_submit(Pieform $form, $values) {
 
     $authinstance = get_record('auth_instance', 'id', $values['authinstance']);
 
+    if(!isset($values['remoteusername'])){
+        $values['remoteusername'] = null;
+    }
+
     db_begin();
 
     $user->id = create_user($user, array(), $authinstance->institution, $authinstance, $values['remoteusername']);
