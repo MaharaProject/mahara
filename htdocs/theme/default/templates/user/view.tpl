@@ -40,7 +40,7 @@
                     </div>
                 {/if}
             </div>
-    <div id="view" class="cb">
+    <div id="view" class="cl">
         <div id="bottom-pane">
             <div id="column-container">
                {$viewcontent}
