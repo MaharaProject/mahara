@@ -162,8 +162,8 @@ function setupCalendar(item, type) {
         return;
     }
     Calendar.setup({
-        "ifFormat"  :"%Y\/%m\/%d %H:%M",
-        "daFormat"  :"%Y\/%m\/%d %H:%M",
+        "ifFormat"  :"{{str tag=strftimedatetimeshort}}",
+        "daFormat"  :"{{str tag=strftimedatetimeshort}}",
         "inputField": type + 'date_' + count,
         "button"    : type + 'date_' + count + '_btn',
         //"dateStatusFunc" : dateStatusFunc,

@@ -136,7 +136,7 @@ if ($institution) {
 
 $form['elements']['accesslist'] = array(
     'type'         => 'viewacl',
-    'defaultvalue' => isset($view) ? $view->get_access() : null
+    'defaultvalue' => isset($view) ? $view->get_access(get_string('strftimedatetimeshort')) : null
 );
 
 $form['elements']['overrides'] = array(
@@ -153,7 +153,7 @@ $form['elements']['overrides'] = array(
             'defaultvalue' => isset($view) ? strtotime($view->get('startdate')) : null,
             'caloptions'   => array(
                 'showsTime'      => true,
-                'ifFormat'       => '%Y/%m/%d %H:%M'
+                'ifFormat'       => get_string('strftimedatetimeshort'),
             ),
             'help'         => true,
         ),
@@ -163,7 +163,7 @@ $form['elements']['overrides'] = array(
             'defaultvalue' => isset($view) ? strtotime($view->get('stopdate')) : null,
             'caloptions'   => array(
                 'showsTime'      => true,
-                'ifFormat'       => '%Y/%m/%d %H:%M'
+                'ifFormat'       => get_string('strftimedatetimeshort'),
             ),
             'help'         => true,
         ),

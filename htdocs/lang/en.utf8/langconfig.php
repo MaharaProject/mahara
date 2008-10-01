@@ -30,6 +30,7 @@ $string['parentlanguage'] = '';
 $string['strftimedate'] = '%%e %%B %%Y';
 $string['strftimedateshort'] = '%%d %%B';
 $string['strftimedatetime'] = '%%d %%B %%Y, %%l:%%M %%p';
+$string['strftimedatetimeshort'] = '%%Y/%%m/%%d %%H:%%M';
 $string['strftimedaydate'] = '%%A, %%d %%B %%Y';
 $string['strftimedaydatetime'] = '%%A, %%d %%B %%Y, %%l:%%M %%p';
 $string['strftimedayshort'] = '%%A, %%d %%B';

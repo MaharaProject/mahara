@@ -280,7 +280,7 @@ class View {
         db_commit();
     }
 
-    public function get_access() {
+    public function get_access($timeformat=null) {
 
         $data = get_records_sql_array("
             SELECT accesstype AS type, NULL AS id, NULL AS role, NULL AS grouptype, startdate, stopdate
@@ -299,6 +299,14 @@ class View {
                 $item = (array)$item;
                 if ($item['role']) {
                     $item['roledisplay'] = get_string($item['role'], 'grouptype.'.$item['grouptype']);
+                }
+                if ($timeformat) {
+                    if ($item['startdate']) {
+                        $item['startdate'] = strftime($timeformat, strtotime($item['startdate']));
+                    }
+                    if ($item['stopdate']) {
+                        $item['stopdate'] = strftime($timeformat, strtotime($item['stopdate']));
+                    }
                 }
             }
         }

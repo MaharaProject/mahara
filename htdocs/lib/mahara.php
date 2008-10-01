@@ -288,7 +288,7 @@ function get_raw_string($identifier, $section='mahara') {
  */
 function get_string_location($identifier, $section, $variables, $replacefunc='format_langstring', $lang='') {
 
-    $langconfigstrs = array('parentlanguage', 'strftimedate', 'strftimedateshort', 'strftimedatetime',
+    $langconfigstrs = array('parentlanguage', 'strftimedate', 'strftimedateshort', 'strftimedatetime', 'strftimedatetimeshort',
                             'strftimedaydate', 'strftimedaydatetime', 'strftimedayshort', 'strftimedaytime',
                             'strftimemonthyear', 'strftimerecent', 'strftimerecentfull', 'strftimetime',
                             'strfdaymonthyearshort', 'thislanguage');
