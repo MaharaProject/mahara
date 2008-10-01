@@ -48,7 +48,7 @@ function ensure_sanity() {
             throw new ConfigSanityException(get_string('pgsqldbextensionnotloaded', 'error'));
         }
         break;
-    case 'mysql':
+    case 'mysql5':
         if (!extension_loaded('mysql')) {
             throw new ConfigSanityException(get_string('mysqldbextensionnotloaded', 'error'));
         }
