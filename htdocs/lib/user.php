@@ -1224,6 +1224,9 @@ function install_default_profile_view($eventdata) {
     require_once(get_config('libroot') . 'view.php');
 
     $viewid = install_system_profile_view();
+    if ($eventdata['id'] == 0) {
+        return;
+    }
     $view = copy_view_for_user($eventdata['id'], $viewid);
     $view->set_access(array(
         array(
