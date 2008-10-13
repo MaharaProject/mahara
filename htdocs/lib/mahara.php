@@ -846,8 +846,15 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
            $fullpath = get_config('docroot') . 'artefact/' . $bits[0] . '/blocktype/' . $bits[1] . '/' . $filename;
         }
         else {
-            if ($artefactplugin = get_field('blocktype_installed', 'artefactplugin', 'name', $pluginname)) {
-                $fullpath = get_config('docroot') . 'artefact/' . $artefactplugin . '/blocktype/' . $pluginname . '/'. $filename;
+            try {
+                if ($artefactplugin = get_field('blocktype_installed', 'artefactplugin', 'name', $pluginname)) {
+                    $fullpath = get_config('docroot') . 'artefact/' . $artefactplugin . '/blocktype/' . $pluginname . '/'. $filename;
+                }
+            }
+            catch (SQLException $e) {
+                if (get_config('installed')) {
+                    throw $e;
+                }
             }
         }
     } 
