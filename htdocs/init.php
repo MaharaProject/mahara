@@ -90,6 +90,13 @@ try {
     // fails for some reason, so we use output buffering to catch whatever
     // the error is instead.
     ob_start();
+
+    if (is_postgres()) {
+        $CFG->dbtype = 'postgres7';
+    }
+    else if (is_mysql()) {
+        $CFG->dbtype = 'mysql';
+    }
     
     $db = &ADONewConnection($CFG->dbtype);
     if (empty($CFG->dbhost)) {

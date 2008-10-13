@@ -46,12 +46,6 @@
 global $CFG;
 $CFG->libdir = get_config('libroot');
 $CFG->prefix = (isset($CFG->dbprefix)) ? $CFG->dbprefix : '';
-if (is_postgres()) {
-    $CFG->dbtype = 'postgres7';
-}
-else if (is_mysql()) {
-    $CFG->dbtype = 'mysql';
-}
 // Mahara hacks end
 
 
