@@ -54,6 +54,7 @@ $string['dbconnfailed'] = 'Mahara could not connect to the application database.
 
 The error received was:
 ';
+$string['dbversioncheckfailed'] = 'Your database server version is not new enough to successfully run Mahara. Your server is %s %s, but Mahara requires at least version %s.';
 
 // general exception error messages
 $string['blocktypenametaken'] = "Block type %s is already taken by another plugin (%s)";

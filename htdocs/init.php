@@ -112,6 +112,20 @@ try {
         $dbconnected = $db->Connect($CFG->dbhost,$CFG->dbuser,$CFG->dbpass,$CFG->dbname);
     }
 
+    // Now we have a connection, verify the server is a new enough version
+    $dbversion = $db->ServerInfo();
+    if (is_postgres()) {
+        $okversion = '8.1';
+        $dbfriendlyname = 'PostgreSQL';
+    }
+    else if (is_mysql()) {
+        $okversion = '5.0.25';
+        $dbfriendlyname = 'MySQL';
+    }
+    if ($dbversion['version'] < $okversion) {
+        throw new ConfigSanityException(get_string('dbversioncheckfailed', 'error', $dbfriendlyname, $dbversion['version'], $okversion));
+    }
+
     $db->SetFetchMode(ADODB_FETCH_ASSOC);
     configure_dbconnection();
     ensure_internal_plugins_exist();
@@ -119,6 +133,9 @@ try {
     ob_end_clean();
 }
 catch (Exception $e) {
+    if ($e instanceof ConfigSanityException) {
+        throw $e;
+    }
     $errormessage = ob_get_contents();
     if (!$errormessage) {
         $errormessage = $e->getMessage();
