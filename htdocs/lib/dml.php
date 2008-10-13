@@ -1410,7 +1410,6 @@ function db_format_tsfield($field, $as = null) {
 function configure_dbconnection() {
     global $db;
 
-    increment_perf_db_writes();
     $db->Execute("SET NAMES 'utf8'");
 
     if (is_mysql()) {
