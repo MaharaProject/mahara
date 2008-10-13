@@ -31,6 +31,7 @@ defined('INTERNAL') || die();
  */
 class InstallationException extends SystemException {}
 
+require_once('ddl.php');
 
 /**
  * This function checks core and plugins for which need to be upgraded/installed

@@ -76,9 +76,7 @@ if (empty($CFG->directorypermissions)) {
 require('mahara.php');
 ensure_sanity();
 require('dml.php');
-require('ddl.php');
 require('web.php');
-require('activity.php');
 require('user.php');
 
 // Database access functions
@@ -92,7 +90,6 @@ try {
     ob_start();
     
     $db = &ADONewConnection($CFG->dbtype);
-    $dbgenerator = null;
     if (empty($CFG->dbhost)) {
         $CFG->dbhost = '';
     }
