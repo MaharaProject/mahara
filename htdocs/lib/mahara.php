@@ -547,15 +547,6 @@ function load_config() {
     return true;
 }
 
-function load_default_config() {
-    global $CFG;
-
-    require_once(get_config('docroot') . 'config-defaults.php');
-    $CFG = (object)array_merge((array)$cfg, (array)$CFG);
-
-    return true;
-}
-
 /**
  * This function returns a value from $CFG
  * or null if it is not found

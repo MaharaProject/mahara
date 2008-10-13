@@ -57,6 +57,8 @@ init_performance_info();
 
 require('config.php');
 $CFG = (object)array_merge((array)$cfg, (array)$CFG);
+require_once('config-defaults.php');
+$CFG = (object)array_merge((array)$cfg, (array)$CFG);
 
 // Fix up paths in $CFG
 foreach (array('docroot', 'dataroot') as $path) {
@@ -126,9 +128,6 @@ try {
 catch (SQLException $e) {
     db_ignore_sql_exceptions(false);
 }
-// now that we've gotten through the database config
-// (or not, for a new install), load the config-defaults.php config.
-load_default_config();
 
 // Make sure wwwroot is set and available, either in the database or int the
 // config file. Cron requires it for some purposes.
