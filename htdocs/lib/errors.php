@@ -585,15 +585,15 @@ class SystemException extends MaharaException implements MaharaThrowable {
 class ConfigException extends MaharaException  implements MaharaThrowable {
      
     public function render_exception () {
-        return $this->getMessage();
+        return $this->get_string('message') . "\n\n" . $this->getMessage();
     }
 
     public function strings() {
         return array_merge(parent::strings(), 
-                           array('message' => $this->get_sitename() 
-                           . ' is misconfigured and this is causing problems. '
-                           . 'You probably need to contact an administrator to get this fixed.  '
-                           . ' Details, if any, follow:'));
+                           array('message' => 'The environment where ' . $this->get_sitename() 
+                           . ' is running is misconfigured and this is causing problems. '
+                           . 'You probably need to contact a server administrator to get this fixed. '
+                           . 'Details, if any, follow:'));
     }
 }
 
