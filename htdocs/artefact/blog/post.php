@@ -250,6 +250,8 @@ function redrawAttachList() {
 
 // Add a newly uploaded file to the attached files list.
 
+var uploaddata = {};
+
 // Currently this function does not check whether names of files
 // attached from my files clash with files already in the attached
 // files list.  This should be done here if names of attached files
@@ -279,14 +281,12 @@ function attachtopost(data) {
                     data.title,
                     data.description,
                     tags,
-                    [SPAN({'style':'display: none;'}, ext),
-                     INPUT(
-                        {'type':'button', 'class':'button', 'value':{$getstring['remove']},
-                        'onclick':"removefrompost('"+rowid+"')"})]
+                    INPUT({'type':'button', 'class':'button', 'value':{$getstring['remove']}, 'onclick':"removefrompost('"+rowid+"')"})
                 ]
             )
         )
     );
+    uploaddata[rowid] = data;
     redrawAttachList();
 }
 
@@ -334,10 +334,7 @@ function saveblogpost() {
         else { // uploaded file
             var record = {
                 'id':idparts[1],
-                'title':scrapeText(attached.tbody.childNodes[i].childNodes[1]),
-                'description':scrapeText(attached.tbody.childNodes[i].childNodes[2]),
-                'extn':scrapeText(attached.tbody.childNodes[i].childNodes[4].childNodes[0]),
-                'tags':scrapeText(attached.tbody.childNodes[i].childNodes[3])
+                'data':uploaddata[attached.tbody.childNodes[i].id],
             };
             uploads.push(record);
         }

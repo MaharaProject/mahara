@@ -115,9 +115,7 @@ $uploadartefact = array();
 
 if (!empty($uploads)) {
     foreach ($uploads as $upload) {
-        if (!$fileid = $postobj->save_attachment(session_id() . $createid, $upload->id,
-                                                 $upload->title, $upload->description, $upload->extn,
-                                                 $upload->tags)) {
+        if (!$fileid = $postobj->save_attachment(session_id() . $createid, $upload->id, $upload->data)) {
             json_reply('local', get_string('errorsavingattachments', 'artefact.blog'));
             // Things could be in a bad state.
         }

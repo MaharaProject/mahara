@@ -293,6 +293,8 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     // file is a copy of another file artefact.
     protected $fileid;
 
+    protected $filetype; // Mime type
+
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
         
@@ -365,6 +367,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             'size'          => $this->get('size'),
             'oldextension'  => $this->get('oldextension'),
             'fileid'        => $this->get('fileid'),
+            'filetype'      => $this->get('filetype'),
         );
 
         if ($new) {
@@ -728,6 +731,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
         $f = self::new_file($pathname, $data);
         $f->set('size', $size);
+        // @todo: Set mime type! (and old extension)
         $f->commit();
         $id = $f->get('id');
 
@@ -774,6 +778,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         $f = self::new_file($um->file['tmp_name'], $data);
         $f->set('size', $size);
         $f->set('oldextension', $um->original_filename_extension());
+        $f->set('filetype', $um->file['type']);
         $f->commit();
         $id = $f->get('id');
         // Save the file using its id as the filename, and use its id modulo
@@ -1003,6 +1008,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         $new->set('fileid', $this->get('fileid'));
         $new->set('size', $this->get('size'));
         $new->set('oldextension', $this->get('oldextension'));
+        $new->set('filetype', $this->get('filetype'));
         global $USER;
         if ($new->get('owner') && $new->get('owner') == $USER->get('id')) {
             $USER->quota_add($new->get('size'));
