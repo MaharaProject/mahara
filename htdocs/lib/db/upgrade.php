@@ -1426,6 +1426,15 @@ function xmldb_core_upgrade($oldversion=0) {
         set_field('artefact_installed_type', 'plugin', 'file', 'name', 'profileicon');
         set_field('artefact_config', 'plugin', 'file', 'field', 'profileiconwidth');
         set_field('artefact_config', 'plugin', 'file', 'field', 'profileiconheight');
+
+        // Insert artefact_file_files records for all profileicons
+        $profileicons = get_column('artefact', 'id', 'artefacttype', 'profileicon');
+        if ($profileicons) {
+            foreach ($profileicons as $a) {
+                $size = filesize($artefactdata . 'file/profileicons/originals/' . ($a % 256) . '/' . $a);
+                insert_record('artefact_file_files', (object) array('artefact' => $a, 'fileid' => $a, 'size' => $size));
+            }
+        }
     }
 
     return $status;
