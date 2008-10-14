@@ -282,7 +282,7 @@ class AuthXmlrpc extends Auth {
                     $icons = get_records_select_array('artefact', 'artefacttype = \'profileicon\' AND owner = ? ', array($user->id), '', 'id');
                     if (false != $icons) {
                         foreach ($icons as $icon) {
-                            $iconfile = get_config('dataroot') . 'artefact/internal/profileicons/originals/' . ($icon->id % 256) . '/'.$icon->id;
+                            $iconfile = get_config('dataroot') . 'artefact/file/profileicons/originals/' . ($icon->id % 256) . '/'.$icon->id;
                             $checksum = sha1_file($iconfile);
                             if ($newchecksum == $checksum) {
                                 $imageexists = true;
@@ -296,7 +296,7 @@ class AuthXmlrpc extends Auth {
                 if (false == $imageexists) {
                     $filesize = filesize($filename);
                     if (!$user->quota_allowed($filesize)) {
-                        $error = get_string('profileiconuploadexceedsquota', 'artefact.internal', get_config('wwwroot'));
+                        $error = get_string('profileiconuploadexceedsquota', 'artefact.file', get_config('wwwroot'));
                     }
 
                     require_once('file.php');
@@ -309,18 +309,18 @@ class AuthXmlrpc extends Auth {
                     $imagemaxwidth  = get_config('imagemaxwidth');
                     $imagemaxheight = get_config('imagemaxheight');
                     if ($width > $imagemaxwidth || $height > $imagemaxheight) {
-                        $error = get_string('profileiconimagetoobig', 'artefact.internal', $width, $height, $imagemaxwidth, $imagemaxheight);
+                        $error = get_string('profileiconimagetoobig', 'artefact.file', $width, $height, $imagemaxwidth, $imagemaxheight);
                     }
 
                     try {
                         $user->quota_add($filesize);
                     }
                     catch (QuotaException $qe) {
-                        $error =  get_string('profileiconuploadexceedsquota', 'artefact.internal', get_config('wwwroot'));
+                        $error =  get_string('profileiconuploadexceedsquota', 'artefact.file', get_config('wwwroot'));
                     }
 
                     require_once(get_config('docroot') .'/artefact/lib.php');
-                    require_once(get_config('docroot') .'/artefact/internal/lib.php');
+                    require_once(get_config('docroot') .'/artefact/file/lib.php');
 
                     // Entry in artefact table
                     $artefact = new ArtefactTypeProfileIcon();
@@ -332,7 +332,7 @@ class AuthXmlrpc extends Auth {
                     $id = $artefact->get('id');
 
                     // Move the file into the correct place.
-                    $directory = get_config('dataroot') . 'artefact/internal/profileicons/originals/' . ($id % 256) . '/';
+                    $directory = get_config('dataroot') . 'artefact/file/profileicons/originals/' . ($id % 256) . '/';
                     check_dir_exists($directory);
                     rename($filename, $directory . $id);
                     if ($create || empty($icons)) {

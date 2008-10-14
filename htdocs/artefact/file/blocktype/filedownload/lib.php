@@ -67,7 +67,7 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
                 if ($artefact instanceof ArtefactTypeProfileIcon) {
                     require_once('file.php');
                     $downloadurl = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $artefactid;
-                    $size = filesize(get_dataroot_image_path('artefact/internal/profileicons/', $artefactid));
+                    $size = filesize(get_dataroot_image_path('artefact/file/profileicons/', $artefactid));
                 }
                 else if ($artefact instanceof ArtefactTypeFile) {
                     $downloadurl = get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactid . '&view=' . $icondata['viewid'];

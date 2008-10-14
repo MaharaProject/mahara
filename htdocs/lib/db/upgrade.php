@@ -1419,6 +1419,15 @@ function xmldb_core_upgrade($oldversion=0) {
     // next upgrade should probably set disablelogin = false and
     // minupgradefrom = 2008092000 in version.php.
 
+    if ($oldversion < 2008101300) {
+        // Move artefact/internal/profileicons directory to artefact/file
+        $artefactdata = get_config('dataroot') . 'artefact/';
+        rename($artefactdata . 'internal/profileicons', $artefactdata . 'file/profileicons');
+        set_field('artefact_installed_type', 'plugin', 'file', 'name', 'profileicon');
+        set_field('artefact_config', 'plugin', 'file', 'field', 'profileiconwidth');
+        set_field('artefact_config', 'plugin', 'file', 'field', 'profileiconheight');
+    }
+
     return $status;
 
 }

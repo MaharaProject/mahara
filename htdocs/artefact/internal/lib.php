@@ -55,7 +55,6 @@ class PluginArtefactInternal extends PluginArtefact {
             'jabberusername',
             'occupation',
             'industry',
-            'profileicon'
         );
     }
 
@@ -103,12 +102,6 @@ class PluginArtefactInternal extends PluginArtefact {
                 'url' => 'artefact/internal/',
                 'title' => get_string('editprofile', 'artefact.internal'),
                 'weight' => 10,
-            ),
-            array(
-                'path' => 'profile/icons',
-                'url' => 'artefact/internal/profileicons.php',
-                'title' => get_string('profileicons', 'artefact.internal'),
-                'weight' => 11,
             ),
         );
     }
@@ -309,37 +302,6 @@ class ArtefactTypeProfile extends ArtefactType {
             }
         }
 
-        $form['elements']['emptyrow'] = array(
-            'title' => '    ',
-            'type' => 'html',
-            'value' => '&nbsp;',
-        );
-        $currentwidth = get_config_plugin('artefact', 'internal', 'profileiconwidth');
-        $form['elements']['profileiconwidth'] = array(
-            'type' => 'text',
-            'size' => 4,
-            'suffix' => get_string('widthshort'),
-            'title' => get_string('profileiconsize', 'artefact.internal'),
-            'defaultvalue' => ((!empty($currentwidth)) ? $currentwidth : 100),
-            'rules' => array(
-                'required' => true,
-                'integer'  => true,
-            )
-        );
-        $currentheight = get_config_plugin('artefact', 'internal', 'profileiconheight');
-        $form['elements']['profileiconheight'] = array(
-            'type' => 'text',
-            'suffix' => get_string('heightshort'),
-            'size' => 4,
-            'title' => get_string('profileiconsize', 'artefact.internal'),
-            'defaultvalue' => ((!empty($currentheight)) ? $currentheight : 100),
-            'rules' => array(
-                'required' => true,
-                'integer'  => true,
-            ),
-            'help' => true,
-        );
-
         return $form;
     }
 
@@ -359,8 +321,6 @@ class ArtefactTypeProfile extends ArtefactType {
         }
         set_config_plugin('artefact', 'internal', 'profilepublic', $public);
         set_config_plugin('artefact', 'internal', 'profilemandatory', $mandatory);
-        set_config_plugin('artefact', 'internal', 'profileiconwidth', $values['profileiconwidth']);
-        set_config_plugin('artefact', 'internal', 'profileiconheight', $values['profileiconheight']);
     }
 
     public static function get_links($id) {
@@ -499,65 +459,6 @@ class ArtefactTypeJabberusername extends ArtefactTypeProfileField {}
 class ArtefactTypeOccupation extends ArtefactTypeProfileField {}
 class ArtefactTypeIndustry extends ArtefactTypeProfileField {}
 
-class ArtefactTypeProfileIcon extends ArtefactTypeProfileField {
-    public static function is_note_private() {
-        return true;
-    }
-
-    public function render_self($options) {
-        $options['id'] = $this->get('id');
-
-        $size = filesize(get_config('dataroot') . 'artefact/internal/profileicons/originals/'
-            . ($this->get('id') % 256) . '/' . $this->get('id'));
-
-        $downloadpath = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $this->id;
-        if (isset($options['viewid'])) {
-            $downloadpath .= '&id=' . $options['viewid'];
-        }
-        $smarty = smarty_core();
-        $smarty->assign('iconpath', $this->get_icon($options));
-        $smarty->assign('downloadpath', $downloadpath);
-        $smarty->assign('owner', display_name($this->get('owner')));
-        $smarty->assign('title', $this->get('note'));
-        $smarty->assign('description', $this->get('title'));
-        $smarty->assign('artefacttype', $this->get('artefacttype'));
-        $smarty->assign('created', strftime(get_string('strftimedaydatetime'), $this->get('ctime')));
-        $smarty->assign('modified', strftime(get_string('strftimedaydatetime'), $this->get('mtime')));
-        $smarty->assign('size', display_size($size) . ' (' . $size . ' ' . get_string('bytes') . ')');
-        $smarty->assign('previewpath', get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $this->get('id') . '&maxwidth=400');
-        return array('html' => $smarty->fetch('artefact:internal:profileicon_render_self.tpl'), 'javascript' => '');
-    }
-
-    public static function get_links($id) {
-        $wwwroot = get_config('wwwroot');
-
-        return array(
-            '_default' => $wwwroot . 'artefact/internal/profileicons.php',
-        );
-    }
-
-    public static function get_icon($options=null) {
-        $url = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . hsc($options['id']);
-
-        if (isset($options['size'])) {
-            $url .= '&size=' . $options['size'];
-        }
-        else {
-            $url .= '&size=20x20';
-        }
-
-        return $url;
-    }
-
-    public function in_view_list() {
-        return true;
-    }
-
-    public static function get_quota_usage($artefact) {
-        return filesize(get_config('dataroot') . 'artefact/internal/profileicons/originals/'
-            . ($artefact % 256) . '/' . $artefact);
-    }
-}
 
 
 ?>

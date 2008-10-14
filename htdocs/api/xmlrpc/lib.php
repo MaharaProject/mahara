@@ -185,7 +185,7 @@ function fetch_user_image($username) {
 
     $ic = $user->profileicon;
     if (!empty($ic)) {
-        $filename = get_config('dataroot') . 'artefact/internal/profileicons/' . ($user->profileicon % 256) . '/'.$user->profileicon;
+        $filename = get_config('dataroot') . 'artefact/file/profileicons/' . ($user->profileicon % 256) . '/'.$user->profileicon;
         $return = array();
         try {
             $fi = file_get_contents($filename);
@@ -196,7 +196,7 @@ function fetch_user_image($username) {
         $return['f1'] = base64_encode($fi);
 
         require_once('file.php');
-        $im = get_dataroot_image_path('artefact/internal/profileicons' , $user->profileicon, 100);
+        $im = get_dataroot_image_path('artefact/file/profileicons' , $user->profileicon, 100);
         $fi = file_get_contents($im);
         $return['f2'] = base64_encode($fi);
         return $return;
@@ -256,7 +256,7 @@ function user_authorise($token, $useragent) {
     $userdata['country']                 = array_key_exists('country', $profile_data) ? $profile_data['country']->title : '';
 
     if (is_numeric($user->profileicon)) {
-        $filename = get_config('dataroot') . 'artefact/internal/profileicons/' . ($user->profileicon % 256) . '/'.$user->profileicon;
+        $filename = get_config('dataroot') . 'artefact/file/profileicons/' . ($user->profileicon % 256) . '/'.$user->profileicon;
         if (file_exists($filename) && is_readable($filename)) {
             $userdata['imagehash'] = sha1_file($filename);
         }

@@ -27,11 +27,11 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'profile/icons');
 define('SECTION_PLUGINTYPE', 'artefact');
-define('SECTION_PLUGINNAME', 'internal');
+define('SECTION_PLUGINNAME', 'file');
 define('SECTION_PAGE', 'profileicons');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('profileicons', 'artefact.internal'));
+define('TITLE', get_string('profileicons', 'artefact.file'));
 $smarty = smarty(
     array('tablerenderer'),
     array(),
@@ -55,15 +55,15 @@ $settingsform = new Pieform(array(
     'elements' => array(
         'default' => array(
             'type'  => 'submit',
-            'value' => get_string('Default', 'artefact.internal'),
+            'value' => get_string('Default', 'artefact.file'),
         ),
         'delete' => array(
             'type'  => 'submit', 
-            'value' => get_string('Delete', 'artefact.internal'),
+            'value' => get_string('Delete', 'artefact.file'),
         ),
         'unsetdefault' => array(
             'type' => 'submit',
-            'value' => get_string('usenodefault', 'artefact.internal'),
+            'value' => get_string('usenodefault', 'artefact.file'),
         ),
     )
 ));
@@ -74,16 +74,16 @@ $uploadform = pieform(array(
     'presubmitcallback'  => 'preSubmit',
     'postsubmitcallback' => 'postSubmit',
     'plugintype' => 'artefact',
-    'pluginname' => 'internal',
+    'pluginname' => 'file',
     'elements' => array(
         'file' => array(
             'type' => 'file',
-            'title' => get_string('profileicon', 'artefact.internal'),
+            'title' => get_string('profileicon', 'artefact.file'),
             'rules' => array('required' => true)
         ),
         'title' => array(
             'type' => 'text',
-            'title' => get_string('imagetitle', 'artefact.internal'),
+            'title' => get_string('imagetitle', 'artefact.file'),
         ),
         'submit' => array(
             'type' => 'submit',
@@ -92,8 +92,8 @@ $uploadform = pieform(array(
     )
 ));
 
-$strnoimagesfound = json_encode(get_string('noimagesfound', 'artefact.internal'));
-$struploadingfile = json_encode(get_string('uploadingfile', 'artefact.internal'));
+$strnoimagesfound = json_encode(get_string('noimagesfound', 'artefact.file'));
+$struploadingfile = json_encode(get_string('uploadingfile', 'artefact.file'));
 $wwwroot = get_config('wwwroot');
 $smarty->assign('INLINEJAVASCRIPT', <<<EOF
 var table = new TableRenderer(
@@ -170,12 +170,12 @@ function upload_validate(Pieform $form, $values) {
     }
 
     if (get_field('artefact', 'COUNT(*)', 'artefacttype', 'profileicon', 'owner', $USER->id) >= 5) {
-        $form->set_error('file', get_string('onlyfiveprofileicons', 'artefact.internal'));
+        $form->set_error('file', get_string('onlyfiveprofileicons', 'artefact.file'));
     }
 
     $filesize = filesize($values['file']['tmp_name']);
     if (!$USER->quota_allowed($filesize)) {
-        $form->set_error('file', get_string('profileiconuploadexceedsquota', 'artefact.internal', get_config('wwwroot')));
+        $form->set_error('file', get_string('profileiconuploadexceedsquota', 'artefact.file', get_config('wwwroot')));
     }
 
     // Check the file isn't greater than the max allowable size
@@ -183,7 +183,7 @@ function upload_validate(Pieform $form, $values) {
     $imagemaxwidth  = get_config('imagemaxwidth');
     $imagemaxheight = get_config('imagemaxheight');
     if ($width > $imagemaxwidth || $height > $imagemaxheight) {
-        $form->set_error('file', get_string('profileiconimagetoobig', 'artefact.internal', $width, $height, $imagemaxwidth, $imagemaxheight));
+        $form->set_error('file', get_string('profileiconimagetoobig', 'artefact.file', $width, $height, $imagemaxwidth, $imagemaxheight));
     }
 }
 
@@ -202,7 +202,7 @@ function upload_submit(Pieform $form, $values) {
     }
     catch (QuotaException $qe) {
         $form->json_reply(PIEFORM_ERR, array(
-            'message' => get_string('profileiconuploadexceedsquota', 'artefact.internal', get_config('wwwroot'))
+            'message' => get_string('profileiconuploadexceedsquota', 'artefact.file', get_config('wwwroot'))
         ));
     }
 
@@ -216,7 +216,7 @@ function upload_submit(Pieform $form, $values) {
     $id = $artefact->get('id');
 
     // Move the file into the correct place.
-    $directory = get_config('dataroot') . 'artefact/internal/profileicons/originals/' . ($id % 256) . '/';
+    $directory = get_config('dataroot') . 'artefact/file/profileicons/originals/' . ($id % 256) . '/';
     check_dir_exists($directory);
     move_uploaded_file($values['file']['tmp_name'], $directory . $id);
 
@@ -226,7 +226,7 @@ function upload_submit(Pieform $form, $values) {
 
     $USER->commit();
 
-    $form->json_reply(PIEFORM_OK, get_string('uploadedprofileiconsuccessfully', 'artefact.internal'));
+    $form->json_reply(PIEFORM_OK, get_string('uploadedprofileiconsuccessfully', 'artefact.file'));
 }
 
 function settings_submit_default(Pieform $form, $values) {
@@ -235,13 +235,13 @@ function settings_submit_default(Pieform $form, $values) {
     $default = param_integer('d');
 
     if (1 != get_field('artefact', 'COUNT(*)', 'id', $default, 'artefacttype', 'profileicon', 'owner', $USER->id)) {
-        throw new UserException(get_string('profileiconsetdefaultnotvalid', 'artefact.internal'));
+        throw new UserException(get_string('profileiconsetdefaultnotvalid', 'artefact.file'));
     }
 
     $USER->profileicon = $default;
     $USER->commit();
-    $SESSION->add_ok_msg(get_string('profileiconsdefaultsetsuccessfully', 'artefact.internal'));
-    redirect('/artefact/internal/profileicons.php');
+    $SESSION->add_ok_msg(get_string('profileiconsdefaultsetsuccessfully', 'artefact.file'));
+    redirect('/artefact/file/profileicons.php');
 }
 
 function settings_submit_delete(Pieform $form, $values) {
@@ -273,25 +273,25 @@ function settings_submit_delete(Pieform $form, $values) {
         // Now all the database manipulation has happened successfully, remove 
         // all of the images
         foreach ($icons as $icon) {
-            $USER->quota_remove(filesize(get_config('dataroot') . 'artefact/internal/profileicons/originals/' . ($icon % 256) . '/' . $icon));
+            $USER->quota_remove(filesize(get_config('dataroot') . 'artefact/file/profileicons/originals/' . ($icon % 256) . '/' . $icon));
             $USER->commit();
-            delete_image('artefact/internal/profileicons', $icon);
+            delete_image('artefact/file/profileicons', $icon);
         }
 
-        $SESSION->add_ok_msg(get_string('profileiconsdeletedsuccessfully', 'artefact.internal'));
+        $SESSION->add_ok_msg(get_string('profileiconsdeletedsuccessfully', 'artefact.file'));
     }
     else {
-        $SESSION->add_info_msg(get_string('profileiconsnoneselected', 'artefact.internal'));
+        $SESSION->add_info_msg(get_string('profileiconsnoneselected', 'artefact.file'));
     }
 
-    redirect('/artefact/internal/profileicons.php');
+    redirect('/artefact/file/profileicons.php');
 }
 
 function settings_submit_unsetdefault(Pieform $form, $values) {
     global $USER, $SESSION;
     $USER->profileicon = null;
     $USER->commit();
-    $SESSION->add_info_msg(get_string('usingnodefaultprofileicon', 'artefact.internal'));
+    $SESSION->add_info_msg(get_string('usingnodefaultprofileicon', 'artefact.file'));
 }
 
 $smarty->assign('uploadform', $uploadform);
@@ -300,7 +300,7 @@ $smarty->assign('uploadform', $uploadform);
 // the buttons need to be inside the tablerenderer.
 $smarty->assign('settingsformtag', $settingsform->get_form_tag());
 $smarty->assign('imagemaxdimensions', array(get_config('imagemaxwidth'), get_config('imagemaxheight')));
-$smarty->assign('heading', get_string('profileicons', 'artefact.internal'));
-$smarty->display('artefact:internal:profileicons.tpl');
+$smarty->assign('heading', get_string('profileicons', 'artefact.file'));
+$smarty->display('artefact:file:profileicons.tpl');
 
 ?>

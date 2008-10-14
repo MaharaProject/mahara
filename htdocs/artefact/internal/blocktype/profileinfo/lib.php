@@ -152,7 +152,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
 
         $form['profileicon'] = array(
             'type'    => 'radio',
-            'title'   => get_string('profileicon', 'artefact.internal'),
+            'title'   => get_string('profileicon', 'artefact.file'),
             'options' => $iconoptions,
             'defaultvalue' => (isset($configdata['profileicon'])) ? $configdata['profileicon'] : 0,
             'separator' => '<br>',
@@ -191,7 +191,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
             'limit'     => 655360, // 640K profile fields is enough for anyone!
             'selectone' => false,
             'search'    => false,
-            'artefacttypes' => array_diff(PluginArtefactInternal::get_artefact_types(), array('profileicon', 'email')),
+            'artefacttypes' => array_diff(PluginArtefactInternal::get_artefact_types(), array('email')),
             'template'  => 'artefact:internal:artefactchooser-element.tpl',
         );
     }
@@ -215,7 +215,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
 
     public static function default_artefact_config($ownertype=null, $ownerid=null, $configdata) {
         if ($ownertype == 'user') {
-            $artefacttypes = array_diff(PluginArtefactInternal::get_artefact_types(), array('profileicon', 'email'));
+            $artefacttypes = array_diff(PluginArtefactInternal::get_artefact_types(), array('email'));
             $artefactids = get_column_sql('
                 SELECT id FROM {artefact}
                 WHERE owner = ? AND artefacttype IN (' . join(',', array_map('db_quote', $artefacttypes)) . ')', array($ownerid));

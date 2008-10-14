@@ -33,6 +33,7 @@ class PluginArtefactFile extends PluginArtefact {
             'file',
             'folder',
             'image',
+            'profileicon',
         );
     }
     
@@ -51,6 +52,12 @@ class PluginArtefactFile extends PluginArtefact {
                 'url' => 'artefact/file/',
                 'title' => get_string('myfiles', 'artefact.file'),
                 'weight' => 20,
+            ),
+            array(
+                'path' => 'profile/icons',
+                'url' => 'artefact/file/profileicons.php',
+                'title' => get_string('profileicons', 'artefact.file'),
+                'weight' => 11,
             ),
         );
     }
@@ -406,7 +413,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     // Check if something exists in the db with a given title and parent,
     // either in adminfiles or with a specific owner.
     public static function file_exists($title, $owner, $folder, $institution=null, $group=null) {
-        $filetypesql = "('" . join("','", PluginArtefactFile::get_artefact_types()) . "')";
+        $filetypesql = "('" . join("','", array_diff(PluginArtefactFile::get_artefact_types(), array('profileicon'))) . "')";
         $ownersql = artefact_owner_sql($owner, $group, $institution);
         return get_field_sql('SELECT a.id FROM {artefact} a
             LEFT OUTER JOIN {artefact_file_files} f ON f.artefact = a.id
@@ -436,7 +443,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 LEFT OUTER JOIN {artefact} c ON c.parent = a.id 
                 LEFT OUTER JOIN {artefact_blog_blogpost_file} b ON b.file = a.id';
         $where = "
-            WHERE a.artefacttype IN ('" . join("','", PluginArtefactFile::get_artefact_types()) . "')";
+            WHERE a.artefacttype IN ('" . join("','", array_diff(PluginArtefactFile::get_artefact_types(), array('profileicon'))) . "')";
         $groupby = '
             GROUP BY
                 a.id, a.artefacttype, a.mtime, f.size, a.title, a.description';
@@ -578,7 +585,7 @@ JAVASCRIPT;
     }
 
     public static function count_user_files($owner=null, $group=null, $institution=null) {
-        $filetypes = PluginArtefactFile::get_artefact_types();
+        $filetypes = array_diff(PluginArtefactFile::get_artefact_types(), array('profileicon'));
         foreach ($filetypes as $k => $v) {
             if ($v == 'folder') {
                 unset($filetypes[$k]);
@@ -879,6 +886,39 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             'collapsible' => true
         );
 
+        // Profile icon size
+        $currentwidth = get_config_plugin('artefact', 'file', 'profileiconwidth');
+        $currentheight = get_config_plugin('artefact', 'file', 'profileiconheight');
+        $elements['profileiconsize'] = array(
+            'type' => 'fieldset',
+            'legend' => get_string('profileiconsize', 'artefact.file'),
+            'elements' => array(
+                'profileiconwidth' => array(
+                    'type' => 'text',
+                    'size' => 4,
+                    'suffix' => get_string('widthshort'),
+                    'title' => get_string('width'),
+                    'defaultvalue' => ((!empty($currentwidth)) ? $currentwidth : 100),
+                    'rules' => array(
+                        'required' => true,
+                        'integer'  => true,
+                    )
+                ),
+                'profileiconheight' => array(
+                    'type' => 'text',
+                    'suffix' => get_string('heightshort'),
+                    'size' => 4,
+                    'title' => get_string('height'),
+                    'defaultvalue' => ((!empty($currentheight)) ? $currentheight : 100),
+                    'rules' => array(
+                        'required' => true,
+                        'integer'  => true,
+                    ),
+                    'help' => true,
+                ),
+            ),
+            'collapsible' => true
+        );
 
         // Allowed file types
         $filetypes = array();
@@ -912,6 +952,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
     public static function save_config_options($values) {
         set_config_plugin('artefact', 'file', 'defaultquota', $values['defaultquota']);
+        set_config_plugin('artefact', 'file', 'profileiconwidth', $values['profileiconwidth']);
+        set_config_plugin('artefact', 'file', 'profileiconheight', $values['profileiconheight']);
         foreach (get_records_array('artefact_file_file_types') as $filetype) {
             $key = preg_replace('/[^a-zA-Z0-9_]/', '_', $filetype->description);
             $filetype->enabled = intval($values[$key]);
@@ -1256,6 +1298,63 @@ class ArtefactTypeImage extends ArtefactTypeFile {
             . hsc(get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id . '&view=' . $options['viewid'] . '&maxwidth=400&maxheight=180')
             . '" alt=""></div>' . $result['html'];
         return $result;
+    }
+}
+
+class ArtefactTypeProfileIcon extends ArtefactTypeImage {
+
+    public function render_self($options) {
+        $options['id'] = $this->get('id');
+
+        $size = filesize(get_config('dataroot') . 'artefact/file/profileicons/originals/'
+            . ($this->get('id') % 256) . '/' . $this->get('id'));
+
+        $downloadpath = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $this->id;
+        if (isset($options['viewid'])) {
+            $downloadpath .= '&id=' . $options['viewid'];
+        }
+        $smarty = smarty_core();
+        $smarty->assign('iconpath', $this->get_icon($options));
+        $smarty->assign('downloadpath', $downloadpath);
+        $smarty->assign('owner', display_name($this->get('owner')));
+        $smarty->assign('title', $this->get('note'));
+        $smarty->assign('description', $this->get('title'));
+        $smarty->assign('artefacttype', $this->get('artefacttype'));
+        $smarty->assign('created', strftime(get_string('strftimedaydatetime'), $this->get('ctime')));
+        $smarty->assign('modified', strftime(get_string('strftimedaydatetime'), $this->get('mtime')));
+        $smarty->assign('size', display_size($size) . ' (' . $size . ' ' . get_string('bytes') . ')');
+        $smarty->assign('previewpath', get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $this->get('id') . '&maxwidth=400');
+        return array('html' => $smarty->fetch('artefact:file:profileicon_render_self.tpl'), 'javascript' => '');
+    }
+
+    public static function get_links($id) {
+        $wwwroot = get_config('wwwroot');
+
+        return array(
+            '_default' => $wwwroot . 'artefact/file/profileicons.php',
+        );
+    }
+
+    public static function get_icon($options=null) {
+        $url = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . hsc($options['id']);
+
+        if (isset($options['size'])) {
+            $url .= '&size=' . $options['size'];
+        }
+        else {
+            $url .= '&size=20x20';
+        }
+
+        return $url;
+    }
+
+    public function in_view_list() {
+        return true;
+    }
+
+    public static function get_quota_usage($artefact) {
+        return filesize(get_config('dataroot') . 'artefact/file/profileicons/originals/'
+            . ($artefact % 256) . '/' . $artefact);
     }
 }
 

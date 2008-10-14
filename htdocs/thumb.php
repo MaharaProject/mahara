@@ -43,7 +43,7 @@ switch ($type) {
         }
 
         if ($id) {
-            if ($path = get_dataroot_image_path('artefact/internal/profileicons', $id, $size)) {
+            if ($path = get_dataroot_image_path('artefact/file/profileicons', $id, $size)) {
                 $mimetype = get_mime_type($path);
                 if ($mimetype) {
                     header('Content-type: ' . $mimetype);
@@ -81,7 +81,7 @@ switch ($type) {
         // down. This means that $USER->get('theme') should be used here 
         // instead, when that branch is merged. And don't forget to change it 
         // below at the other get_config('theme') call!
-        if ($path = get_dataroot_image_path('artefact/internal/profileicons/no_userphoto/' . get_config('theme'), 0, $size)) {
+        if ($path = get_dataroot_image_path('artefact/file/profileicons/no_userphoto/' . get_config('theme'), 0, $size)) {
             header('Content-type: ' . 'image/png');
             readfile($path);
             exit;
@@ -92,11 +92,11 @@ switch ($type) {
         $nouserphotopic = theme_get_path('images/no_userphoto.png');
         if ($nouserphotopic) {
             // Move the file into the correct place.
-            $directory = get_config('dataroot') . 'artefact/internal/profileicons/no_userphoto/' . get_config('theme') . '/originals/0/';
+            $directory = get_config('dataroot') . 'artefact/file/profileicons/no_userphoto/' . get_config('theme') . '/originals/0/';
             check_dir_exists($directory);
             copy($nouserphotopic, $directory . '0');
             // Now we can try and get the image in the correct size
-            if ($path = get_dataroot_image_path('artefact/internal/profileicons/no_userphoto/' . get_config('theme'), 0, $size)) {
+            if ($path = get_dataroot_image_path('artefact/file/profileicons/no_userphoto/' . get_config('theme'), 0, $size)) {
                 header('Content-type: ' . 'image/png');
                 readfile($path);
                 exit;

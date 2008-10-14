@@ -37,6 +37,10 @@ function xmldb_artefact_internal_upgrade($oldversion=0) {
 
     }
 
+    if ($oldversion < 2008101300) {
+        execute_sql("DROP TABLE {artefact_internal_profile_icon}");
+    }
+
     // everything up to here we pre mysql support.
     return $status;
 }

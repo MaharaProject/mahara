@@ -1972,7 +1972,7 @@ class View {
                         $a->set('parent', $artefactcopies[$c->oldparent]->newid);
                         $a->commit();
                     }
-                    else if (in_array($a->get('artefacttype'), PluginArtefactFile::get_artefact_types())) {
+                    else if (in_array($a->get('artefacttype'), array_diff(PluginArtefactFile::get_artefact_types(), array('profileicon')))) {
                         $a->set('parent', $folder->get('id'));
                         $a->commit();
                     }

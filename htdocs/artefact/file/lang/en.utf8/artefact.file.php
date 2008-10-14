@@ -160,4 +160,30 @@ $string['rpm'] = 'RPM Real Player Movie';
 $string['rm'] = 'RM Real Player Movie';
 
 
+// Profile icons
+$string['profileiconsize'] = 'Profile Icon Size';
+$string['profileicons'] = 'Profile Icons';
+$string['Default'] = 'Default';
+$string['deleteselectedicons'] = 'Delete selected icons';
+$string['profileicon'] = 'Profile Icon';
+$string['noimagesfound'] = 'No images found';
+$string['uploadedprofileiconsuccessfully'] = 'Uploaded new profile icon successfully';
+$string['profileiconsetdefaultnotvalid'] = 'Could not set the default profile icon, the choice was not valid';
+$string['profileiconsdefaultsetsuccessfully'] = 'Default profile icon set successfully';
+$string['profileiconsdeletedsuccessfully'] = 'Profile icon(s) deleted successfully';
+$string['profileiconsnoneselected'] = 'No profile icons were selected to be deleted';
+$string['onlyfiveprofileicons'] = 'You may upload only five profile icons';
+$string['or'] = 'or';
+$string['profileiconuploadexceedsquota'] = 'Uploading this profile icon would exceed your disk quota. Try deleting some files you have uploaded';
+$string['profileiconimagetoobig'] = 'The image you uploaded was too big (%sx%s pixels). It must not be larger than %sx%s pixels';
+$string['uploadingfile'] = 'uploading file...';
+$string['uploadprofileicon'] = 'Upload Profile Icon';
+$string['profileiconsiconsizenotice'] = 'You may upload up to <strong>five</strong> profile icons here, and choose one to be displayed as your default icon at any one time. Your icons must be between 16x16 and %sx%s pixels in size.';
+$string['setdefault'] = 'Set Default';
+$string['Title'] = 'Title';
+$string['imagetitle'] = 'Image Title';
+$string['usenodefault'] = 'Use no default';
+$string['usingnodefaultprofileicon'] = 'Now using no default profile icon';
+
+
 ?>
