@@ -137,6 +137,44 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         execute_sql("UPDATE {artefact_file_files} SET fileid = artefact WHERE NOT size IS NULL");
     }
 
+    if ($oldversion < 2008101400) {
+        $table = new XMLDBTable('artefact_file_files');
+        $field = new XMLDBField('filetype');
+        $field->setAttributes(XMLDB_TYPE_TEXT);
+        add_field($table, $field);
+        // Guess mime type for existing files
+        $fileartefacts = get_records_sql_array('
+            SELECT
+                a.artefacttype, f.artefact, f.oldextension, f.fileid
+            FROM
+                {artefact} a,
+                {artefact_file_files} f
+            WHERE
+                a.id = f.artefact
+        ', array());
+        require_once(get_config('libroot') . 'file.php');
+        if ($fileartefacts) {
+            foreach ($fileartefacts as $a) {
+                $type = null;
+                if ($a->artefacttype == 'image') {
+                    $size = getimagesize(get_config('dataroot') . 'artefact/file/originals/' . ($a->fileid % 256) . '/' . $a->fileid);
+                    $type = $size['mime'];
+                }
+                else if ($a->artefacttype == 'profileicon') {
+                    $size = getimagesize(get_config('dataroot') . 'artefact/file/profileicons/originals/' . ($a->fileid % 256) . '/' . $a->fileid);
+                    $type = $size['mime'];
+                }
+                else if ($a->artefacttype == 'file') {
+                    $type = get_mime_type(get_config('dataroot') . 'artefact/file/originals/' . ($a->fileid % 256) . '/' . $a->fileid);
+                }
+                if ($type) {
+                    set_field('artefact_file_files', 'filetype', $type, 'artefact', $a->artefact);
+                }
+            }
+        }
+
+    }
+
     // everything up to here we pre mysql support.
     return $status;
 }
