@@ -69,6 +69,7 @@ $folderid = ArtefactTypeFolder::get_folder_id(get_string_from_language($ownerlan
 $data = (object) array('owner' => $viewdata->owner,
                        'parent' => $folderid,
                        'size' => $size,
+                       'filetype' => $um->file['type'],
                        'title' => $filename,
                        'description' => get_string_from_language($ownerlang, 'feedbackonviewbytutorofgroup', 'view',
                                                    $viewdata->title, display_name($USER), $viewdata->name));
