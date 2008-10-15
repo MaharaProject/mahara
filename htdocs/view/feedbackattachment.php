@@ -73,6 +73,9 @@ $data = (object) array('owner' => $viewdata->owner,
                        'title' => $filename,
                        'description' => get_string_from_language($ownerlang, 'feedbackonviewbytutorofgroup', 'view',
                                                    $viewdata->title, display_name($USER), $viewdata->name));
+if (preg_match("/\.([^\.]+)$/", $um->file['name'], $saved)) {
+    $data->oldextension = $saved[1];
+}
 $f = ArtefactTypeFile::new_file($um->file['tmp_name'], $data);
 $f->commit();
 $fileid = $f->get('id');
