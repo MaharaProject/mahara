@@ -1245,14 +1245,14 @@ function install_profile_view($userid) {
 
 
 /**
- *
  * This function installs the site's default profile view
  *
+ * @throws SystemException if the system profile view is already installed
  */
 function install_system_profile_view() {
     $viewid = get_field('view', 'id', 'owner', 0, 'type', 'profile');
     if ($viewid) {
-        return $viewid;
+        throw new SystemException('A system profile view already seems to be installed');
     }
     require_once(get_config('libroot') . 'view.php');
     require_once(get_config('docroot') . 'blocktype/lib.php');
