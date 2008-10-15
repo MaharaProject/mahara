@@ -96,6 +96,7 @@ function requestfriendship_submit(Pieform $form, $values) {
     else {
         $n->message = get_string_from_language($lang, 'requestedfriendlistmessage', 'group', $displayname);
     }
+    require_once('activity.php');
     activity_occurred('maharamessage', $n);
 
     $SESSION->add_ok_msg(get_string('friendformrequestsuccess', 'group', display_name($id)));

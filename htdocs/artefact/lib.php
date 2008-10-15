@@ -938,6 +938,7 @@ function artefact_instance_from_type($artefact_type, $user_id=null) {
 function artefact_watchlist_notification($artefactid) {
     // gets all the views containing this artefact or a parent of this artefact and creates a watchlist activity for each view
     if ($views = get_column_sql('SELECT DISTINCT view FROM {view_artefact} WHERE artefact IN (' . implode(',', array_merge(array_keys(artefact_get_parents_for_cache($artefactid)), array($artefactid))) . ')')) {
+        require_once('activity.php');
         foreach ($views as $view) {
             activity_occurred('watchlist', (object)array('view' => $view));
         }

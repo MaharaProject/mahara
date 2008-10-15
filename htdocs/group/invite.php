@@ -41,10 +41,13 @@ if (!$user) {
 }
 
 if ($group->jointype != 'invite'
-    || record_exists('group_member', 'group', $groupid, 'member', $userid)
-    || record_exists('group_member_invite', 'group', $groupid, 'member', $userid)
     || group_user_access($groupid) != 'admin') {
     throw new AccessDeniedException(get_string('cannotinvitetogroup', 'group'));
+}
+
+if (record_exists('group_member', 'group', $groupid, 'member', $userid)
+    || record_exists('group_member_invite', 'group', $groupid, 'member', $userid)) {
+    throw new UserException(get_string('useralreadyinvitedtogroup', 'group'));
 }
 
 define('TITLE', get_string('invitemembertogroup', 'group', display_name($userid), $group->name));
@@ -54,6 +57,7 @@ foreach ($roles as $k => &$v) {
     $v = $v->display;
 }
 
+safe_require('grouptype', $group->grouptype);
 $form = pieform(array(
     'name' => 'invitetogroup',
     'autofocus' => false,
@@ -69,6 +73,7 @@ $form = pieform(array(
             'type'    => 'select',
             'options' => $roles,
             'title'   => get_string('Role', 'group'),
+            'defaultvalue' => call_static_method('GroupType' . $group->grouptype, 'default_role'),
         ),
         'submit' => array(
             'type' => 'submitcancel',
@@ -93,6 +98,7 @@ function invitetogroup_submit(Pieform $form, $values) {
     $data->role = $values['role'];
     insert_record('group_member_invite', $data);
     $lang = get_user_language($user->id);
+    require_once('activity.php');
     activity_occurred('maharamessage', 
         array('users'   => array($user->id), 
               'subject' => get_string_from_language($lang, 'invitetogroupsubject', 'group'),

@@ -219,6 +219,7 @@ function adduser_submit(Pieform $form, $values) {
     $user->id = create_user($user, array(), $authinstance->institution, $authinstance, $values['remoteusername']);
 
     if (isset($user->admin) && $user->admin) {
+        require_once('activity.php');
         activity_add_admin_defaults(array($user->id));
     }
 
