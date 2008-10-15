@@ -318,7 +318,7 @@ class View {
 
     public function set_access($accessdata) {
         global $USER;
-        require_once(get_config('libroot') . 'activity.php');
+        require_once('activity.php');
 
         // For users who are being removed from having access to this view, they
         // need to have the view and any attached artefacts removed from their
@@ -623,6 +623,7 @@ class View {
             $data = (object)array(
                 'view' => $this->get('id'),
             );
+            require_once('activity.php');
             activity_occurred('watchlist', $data);
 
             if (!defined('JSON')) {

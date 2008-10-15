@@ -261,6 +261,7 @@ class Institution {
         delete_records('usr_institution_request', 'usr', $userinst->usr, 'institution', $this->name);
         // Copy institution views to the user's portfolio
         copy_views_for_user($user->id, get_column('view', 'id', 'institution', $this->name, 'copynewuser', 1));
+        require_once('activity.php');
         activity_occurred('maharamessage', $message);
         handle_event('updateuser', $userinst->usr);
         db_commit();
@@ -287,6 +288,7 @@ class Institution {
                 delete_records('usr_institution_request', 'usr', $user->id);
             }
             insert_record('usr_institution_request', $request);
+            require_once('activity.php');
             activity_occurred('institutionmessage', $message);
             handle_event('updateuser', $user->id);
             db_commit();
@@ -305,6 +307,7 @@ class Institution {
         db_begin();
         delete_records('usr_institution_request', 'usr', $userid, 'institution', $this->name,
                        'confirmedusr', 1);
+        require_once('activity.php');
         activity_occurred('maharamessage', $message);
         handle_event('updateuser', $userid);
         db_commit();
@@ -319,6 +322,7 @@ class Institution {
             'confirmedinstitution' => 1,
             'ctime' => db_format_timestamp(time())
         ));
+        require_once('activity.php');
         activity_occurred('institutionmessage', (object) array(
             'messagetype' => 'invite',
             'users' => array($userid),

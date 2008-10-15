@@ -638,6 +638,7 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
     $message->users = array($suspendeduserid);
     $message->subject = get_string_from_language($lang, 'youraccounthasbeensuspended');
     $message->message = get_string_from_language($lang, 'youraccounthasbeensuspendedtext');
+    require_once('activity.php');
     activity_occurred('maharamessage', $message);
 
     handle_event('suspenduser', $suspendeduserid);
@@ -661,6 +662,7 @@ function unsuspend_user($userid) {
     $message->users = array($userid);
     $message->subject = get_string_from_language($lang, 'youraccounthasbeenunsuspended');
     $message->message = get_string_from_language($lang, 'youraccounthasbeenunsuspendedtext');
+    require_once('activity.php');
     activity_occurred('maharamessage', $message);
 
     handle_event('unsuspenduser', $userid);
@@ -818,6 +820,7 @@ function send_user_message($to, $message, $from=null) {
 
     $messagepref = get_account_preference($to->id, 'messages');
     if ((is_friend($from->id, $to->id) && $messagepref == 'friends') || $messagepref == 'allow' || $from->get('admin')) {
+        require_once('activity.php');
         activity_occurred('usermessage', 
             array(
                 'userto'   => $to->id, 
@@ -1122,6 +1125,7 @@ function addfriend_submit(Pieform $form, $values) {
     $n->subject = get_string_from_language($lang, 'addedtofriendslistsubject', 'group');
     $n->message = get_string_from_language($lang, 'addedtofriendslistmessage', 'group', $displayname, $displayname);
 
+    require_once('activity.php');
     activity_occurred('maharamessage', $n);
     $SESSION->add_ok_msg(get_string('friendformaddsuccess', 'group', display_name($user)));
     redirect('/user/view.php?id=' . $values['id']);

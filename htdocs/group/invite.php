@@ -93,6 +93,7 @@ function invitetogroup_submit(Pieform $form, $values) {
     $data->role = $values['role'];
     insert_record('group_member_invite', $data);
     $lang = get_user_language($user->id);
+    require_once('activity.php');
     activity_occurred('maharamessage', 
         array('users'   => array($user->id), 
               'subject' => get_string_from_language($lang, 'invitetogroupsubject', 'group'),

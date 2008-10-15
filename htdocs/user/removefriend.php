@@ -91,6 +91,7 @@ function removefriend_submit(Pieform $form, $values) {
     else {
         $n->message = get_string_from_language($lang, 'removedfromfriendslistmessage', 'group', $displayname);
     }
+    require_once('activity.php');
     activity_occurred('maharamessage', $n);
 
     $SESSION->add_ok_msg(get_string('friendformremovesuccess', 'group', display_name($id)));

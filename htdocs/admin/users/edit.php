@@ -32,6 +32,7 @@ define('TITLE', get_string('accountsettings', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 require_once('pieforms/pieform.php');
+require_once('activity.php');
 
 $id = param_integer('id');
 $user = new User;
