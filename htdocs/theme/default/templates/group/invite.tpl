@@ -2,7 +2,6 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-<h2>{$heading|escape}</h2>
 {include file="group/simplegroup.tpl" group=$GROUP}
 {$form}
 {include file="columnleftend.tpl"}
