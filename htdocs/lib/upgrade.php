@@ -670,10 +670,6 @@ function core_install_firstcoredata_defaults() {
             'event'        => 'createuser',
             'callfunction' => 'activity_set_defaults',
         ),
-        array(
-            'event'        => 'createuser',
-            'callfunction' => 'install_default_profile_view'
-        ),
     );
 
     foreach ($subs as $sub) {

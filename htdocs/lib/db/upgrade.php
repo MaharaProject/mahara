@@ -1354,14 +1354,6 @@ function xmldb_core_upgrade($oldversion=0) {
                 install_blocktype_viewtypes_for_plugin(blocktype_single_to_namespaced($bt->name, $bt->artefactplugin));
             }
         }
-
-        // migrate all users to their default profile view
-        // These profile views are deleted in the next upgrade.
-        if ($userids = get_column('usr', 'id')) {
-            foreach ($userids as $user) {
-                install_default_profile_view(array('id' => $user));
-            }
-        }
     }
 
     if ($oldversion < 2008091603) {
@@ -1372,33 +1364,7 @@ function xmldb_core_upgrade($oldversion=0) {
             }
         }
 
-        // Delete all the empty profile views & recreate them from the
-        // site template.
-
-        $viewids = get_column('view', 'id', 'type', 'profile');
-        if ($viewids) {
-            require_once(get_config('libroot') . 'view.php');
-            foreach ($viewids as $id) {
-                $view = new View($id);
-                $view->delete();
-            }
-        }
-
         install_system_profile_view();
-
-        if ($userids = get_column('usr', 'id')) {
-            foreach ($userids as $user) {
-                if ($user > 0) {
-                    install_default_profile_view(array('id' => $user));
-                }
-            }
-        }
-
-        // This record already exists on an install from scratch, but
-        // not in an upgrade
-        if (!record_exists('event_subscription', 'event', 'createuser', 'callfunction', 'install_default_profile_view')) {
-            insert_record('event_subscription', (object)array('event' => 'createuser', 'callfunction' => 'install_default_profile_view'));
-        }
     }
 
     if ($oldversion < 2008091604) {
@@ -1418,6 +1384,12 @@ function xmldb_core_upgrade($oldversion=0) {
     // The previous upgrade forces the user to be logged out.  The
     // next upgrade should probably set disablelogin = false and
     // minupgradefrom = 2008092000 in version.php.
+
+    if ($oldversion < 2008101500) {
+        // Remove event subscription for new user accounts to have a default 
+        // profile view created, they're now created on demand
+        execute_sql("DELETE FROM {event_subscription} WHERE event = 'createuser' AND callfunction = 'install_default_profile_view';");
+    }
 
     return $status;
 
