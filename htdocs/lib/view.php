@@ -1386,7 +1386,11 @@ class View {
      * @param int $userid the user id to fetch the profile view for 
      */
     public static function profile_view($userid) {
-        return new View(get_field('view', 'id', 'type', 'profile', 'owner', $userid));
+        $viewid = get_field('view', 'id', 'type', 'profile', 'owner', $userid);
+        if (!$viewid) {
+            $viewid = install_profile_view($userid);
+        }
+        return new View($viewid);
     }
 
     public static function get_myviews_data($limit=5, $offset=0, $groupid=null, $institution=null) {

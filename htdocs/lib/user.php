@@ -1218,20 +1218,19 @@ function copy_views_for_user($userid, $templateids) {
 }
 
 /**
+ * Installs a user's profile view.
  *
- * This function installs the default profile view for a user
- * upon the createuser event (and a migration upgrade)
- *
- * @param mixed eventdata data that is passed to handle_event
+ * @param id $userid ID of user to create the profile view for
  */
-function install_default_profile_view($eventdata) {
-    require_once(get_config('libroot') . 'view.php');
+function install_profile_view($userid) {
+    static $systemprofileviewid = null;
 
-    $viewid = install_system_profile_view();
-    if ($eventdata['id'] == 0) {
-        return;
+    if (is_null($systemprofileviewid)) {
+        $systemprofileviewid = get_field('view', 'id', 'owner', 0, 'type', 'profile');
     }
-    $view = copy_view_for_user($eventdata['id'], $viewid);
+
+    require_once(get_config('libroot') . 'view.php');
+    $view = copy_view_for_user($userid, $systemprofileviewid);
     $view->set_access(array(
         array(
             'type'      => 'loggedin',
@@ -1239,6 +1238,9 @@ function install_default_profile_view($eventdata) {
             'stopdate'  => null,
         ),
     ));
+    $id = $view->get('id');
+    unset($view);
+    return $id;
 }
 
 
