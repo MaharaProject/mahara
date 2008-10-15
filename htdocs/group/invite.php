@@ -57,6 +57,7 @@ foreach ($roles as $k => &$v) {
     $v = $v->display;
 }
 
+safe_require('grouptype', $group->grouptype);
 $form = pieform(array(
     'name' => 'invitetogroup',
     'autofocus' => false,
@@ -72,6 +73,7 @@ $form = pieform(array(
             'type'    => 'select',
             'options' => $roles,
             'title'   => get_string('Role', 'group'),
+            'defaultvalue' => call_static_method('GroupType' . $group->grouptype, 'default_role'),
         ),
         'submit' => array(
             'type' => 'submitcancel',
