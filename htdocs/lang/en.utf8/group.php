@@ -244,6 +244,7 @@ $string['addusertogroup'] = 'Add to ';
 $string['inviteusertojoingroup'] = 'Invite to ';
 $string['invitemembertogroup'] = 'Invite %s to join \'%s\'';
 $string['cannotinvitetogroup'] = 'You can\'t invite this user to this group';
+$string['useralreadyinvitedtogroup'] = 'This user has already been invited to, or is already a member of, this group.';
 $string['removefriend'] = 'Remove friend';
 $string['denyfriendrequestlower'] = 'Deny friend request';
 

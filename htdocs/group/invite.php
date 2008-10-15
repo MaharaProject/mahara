@@ -41,10 +41,13 @@ if (!$user) {
 }
 
 if ($group->jointype != 'invite'
-    || record_exists('group_member', 'group', $groupid, 'member', $userid)
-    || record_exists('group_member_invite', 'group', $groupid, 'member', $userid)
     || group_user_access($groupid) != 'admin') {
     throw new AccessDeniedException(get_string('cannotinvitetogroup', 'group'));
+}
+
+if (record_exists('group_member', 'group', $groupid, 'member', $userid)
+    || record_exists('group_member_invite', 'group', $groupid, 'member', $userid)) {
+    throw new UserException(get_string('useralreadyinvitedtogroup', 'group'));
 }
 
 define('TITLE', get_string('invitemembertogroup', 'group', display_name($userid), $group->name));
