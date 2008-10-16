@@ -1403,8 +1403,10 @@ function xmldb_core_upgrade($oldversion=0) {
         $profileicons = get_column('artefact', 'id', 'artefacttype', 'profileicon');
         if ($profileicons) {
             foreach ($profileicons as $a) {
-                $size = filesize($artefactdata . 'file/profileicons/originals/' . ($a % 256) . '/' . $a);
-                insert_record('artefact_file_files', (object) array('artefact' => $a, 'fileid' => $a, 'size' => $size));
+                $filesize = filesize($artefactdata . 'file/profileicons/originals/' . ($a % 256) . '/' . $a);
+                $imagesize = getimagesize($artefactdata . 'file/profileicons/originals/' . ($a % 256) . '/' . $a);
+                insert_record('artefact_file_files', (object) array('artefact' => $a, 'fileid' => $a, 'size' => $filesize));
+                insert_record('artefact_file_image', (object) array('artefact' => $a, 'width' => $imagesize[0], 'height' => $imagesize[1]));
             }
         }
     }

@@ -760,7 +760,12 @@ function artefact_check_plugin_sanity($pluginname) {
         if (get_config('installed')) {
             if ($taken = get_record_select('artefact_installed_type', 'name = ? AND plugin != ?', 
                                            array($type, $pluginname))) {
-                throw new InstallationException(get_string('artefacttypenametaken', 'error', $type, $taken->plugin));
+                // Check the other plugin's code in case the duplicate type is being removed from it at the same time
+                $otherclass = generate_class_name('artefact', $taken->plugin);
+                safe_require('artefact', $taken->plugin);
+                if (in_array($type, call_static_method($otherclass, 'get_artefact_types'))) {
+                    throw new InstallationException(get_string('artefacttypenametaken', 'error', $type, $taken->plugin));
+                }
             }
         }
         if (!class_exists($typeclassname)) {
