@@ -172,7 +172,7 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
                 }
             }
         }
-
+        delete_records('config', 'field', 'pathtofile');
     }
 
     // everything up to here we pre mysql support.
