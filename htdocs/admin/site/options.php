@@ -82,13 +82,6 @@ $siteoptionform = pieform(array(
             'options'      => $searchpluginoptions,
             'help'         => true,
         ),
-        'pathtofile' => array(
-            'type'         => 'text',
-            'title'        => get_string('pathtofile', 'admin'),
-            'description'  => get_string('pathtofiledescription', 'admin'),
-            'defaultvalue' => get_config('pathtofile'),
-            'help'         => true,
-        ),
         'viruschecking' => array(
             'type'         => 'checkbox',
             'title'        => get_string('viruschecking', 'admin'),
@@ -170,7 +163,7 @@ function siteoptions_fail(Pieform $form, $field) {
 }
 
 function siteoptions_submit(Pieform $form, $values) {
-    $fields = array('sitename','lang','theme','pathtofile', 'pathtoclam',
+    $fields = array('sitename','lang','theme', 'pathtoclam',
                     'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn', 
                     'allowpublicviews', 'allowpublicprofiles', 'searchplugin');
     $oldlanguage = get_config('lang');
