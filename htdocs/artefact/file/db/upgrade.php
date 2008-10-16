@@ -175,6 +175,11 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         delete_records('config', 'field', 'pathtofile');
     }
 
+    if ($oldversion < 2008101700) {
+        execute_sql("UPDATE {artefact_file_mime_types} SET mimetype = 'application/vnd.ms-powerpoint' WHERE mimetype = 'application/vnt.ms-powerpoint'");
+    }
+
+
     // everything up to here we pre mysql support.
     return $status;
 }

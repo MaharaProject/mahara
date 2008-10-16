@@ -310,7 +310,7 @@
         <description>ppt</description>
         <enabled>1</enabled>
         <mimetypes>
-            <mimetype>application/vnt.ms-powerpoint</mimetype>
+            <mimetype>application/vnd.ms-powerpoint</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
