@@ -114,6 +114,17 @@ function xmldb_artefact_blog_upgrade($oldversion=0) {
             execute_sql('ALTER TABLE {artefact_blog_blogpost} ADD CONSTRAINT {arteblogblog_blo_fk} FOREIGN KEY (blogpost) REFERENCES {artefact}(id)');
         }
     }
+
+    if ($oldversion < 2008101600) {
+        $table = new XMLDBTable('artefact_blog_blogpost_file_pending');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
+        $table->addFieldInfo('oldextension', XMLDB_TYPE_TEXT, null);
+        $table->addFieldInfo('filetype', XMLDB_TYPE_TEXT, null);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        create_table($table);
+    }
+
+
     return $status;
 }
 

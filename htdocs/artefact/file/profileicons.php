@@ -207,15 +207,18 @@ function upload_submit(Pieform $form, $values) {
     }
 
     // Entry in artefact table
-    $artefact = new ArtefactTypeProfileIcon();
-    $artefact->set('owner', $USER->id);
-    $artefact->set('title', ($values['title']) ? $values['title'] : $values['file']['name']);
-    $artefact->set('note', $values['file']['name']);
-    $artefact->set('filetype', $values['file']['type']);
+    $data = (object) array(
+        'owner'    => $USER->id,
+        'title'    => $values['title'] ? $values['title'] : $values['file']['name'],
+        'note'     => $values['file']['name'],
+        'filetype' => $values['file']['type'],
+        'size'     => $filesize,
+    );
+    list($data->width, $data->height) = getimagesize($values['file']['tmp_name']);
+    $artefact = new ArtefactTypeProfileIcon(0, $data);
     if (preg_match("/\.([^\.]+)$/", $values['file']['name'], $saved)) {
         $artefact->set('oldextension', $saved[1]);
     }
-    $artefact->set('size', $filesize);
     $artefact->commit();
 
     $id = $artefact->get('id');

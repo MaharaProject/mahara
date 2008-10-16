@@ -300,12 +300,14 @@ class AuthXmlrpc extends Auth {
                     }
 
                     require_once('file.php');
-                    $mime = get_mime_type($filename);
+                    $imagesize = getimagesize($filename);
+                    $mime = $imagesize['mime'];
                     if (!is_image_mime_type($mime)) {
                         $error = get_string('filenotimage');
                     }
 
-                    list($width, $height) = getimagesize($filename);
+                    $width = $imagesize[0];
+                    $height = $imagesize[1];
                     $imagemaxwidth  = get_config('imagemaxwidth');
                     $imagemaxheight = get_config('imagemaxheight');
                     if ($width > $imagemaxwidth || $height > $imagemaxheight) {
@@ -327,6 +329,10 @@ class AuthXmlrpc extends Auth {
                     $artefact->set('owner', $user->id);
                     $artefact->set('title', 'Profile Icon');
                     $artefact->set('note', 'Profile Icon');
+                    $artefact->set('size', $filesize);
+                    $artefact->set('filetype', $mime);
+                    $artefact->set('width', $width);
+                    $artefact->set('height', $height);
                     $artefact->commit();
 
                     $id = $artefact->get('id');

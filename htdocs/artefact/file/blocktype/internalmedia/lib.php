@@ -266,7 +266,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $url = self::get_download_link($artefact, $block);
 
         require_once('file.php');
-        $mimetype = get_mime_type($artefact->get_path());
+        $mimetype = $artefact->get('filetype');
         $autostart = 'false';
 
         return '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>'
@@ -339,7 +339,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $size = 'width="' . $width . '" height="' . $height . '"';
 
         require_once('file.php');
-        $mimetype = get_mime_type($artefact->get_path());
+        $mimetype = $artefact->get('filetype');
         $autostart = 'false';
 
         return '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>'

@@ -95,6 +95,6 @@ if ($contenttype = $file->override_content_type()) {
     $options['overridecontenttype'] = $contenttype;
 }
 $options['owner'] = $file->get('owner');
-serve_file($path, $title, $options);
+serve_file($path, $title, $file->get('filetype'), $options);
 
 ?>

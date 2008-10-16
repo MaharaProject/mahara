@@ -43,13 +43,14 @@ define('BYTESERVING_BOUNDARY', 'm1i2k3e40516'); //unique string constant
  * @param string $path     The file to send. Must include the dataroot path.
  * @param string $filename The name of the file as the browser should use to
  *                         serve it.
+ * @param string $mimetype Mime type to be sent in header
  * @param array  $options  Any options to use when serving the file. Currently
  *                         lifetime = 0 for no cache
  *                         forcedownload - force application rather than inline
  *                         overridecontenttype - send this instead of the mimetype
  *                         there are none.
  */
-function serve_file($path, $filename, $options=array()) {
+function serve_file($path, $filename, $mimetype, $options=array()) {
     $dataroot = get_config('dataroot');
     $path = realpath($path);
     $options = array_merge(array(
@@ -66,7 +67,6 @@ function serve_file($path, $filename, $options=array()) {
 
     session_write_close(); // unlock session during fileserving
 
-    $mimetype     = get_mime_type($path);
     $lastmodified = filemtime($path);
     $filesize     = filesize($path);
 
@@ -278,6 +278,14 @@ function byteserving_send_file($filename, $mimetype, $ranges) {
  * Sometimes file will be unable to detect the mimetype, in which case
  * it will return the empty string.
  *
+ *
+ * This function should no longer be required.  Mime types are now
+ * stored along with files in the artefact tables, and passed directly
+ * to serve_file.  Left in place for the upgrade to initially populate
+ * the mime type of existing files.
+ * See htdocs/artefact/file/db/upgrade.php.
+ *
+ *
  * @param string $file The file to check
  * @return string      The mime type of the file, or false if file is not available.
  */
@@ -397,7 +405,8 @@ function get_dataroot_image_path($path, $id, $size=null) {
         // it, we can make one however.
         if (is_readable($originalimage)) {
 
-            $originalmimetype = get_mime_type($originalimage);
+            $imageinfo = getimagesize($originalimage);
+            $originalmimetype = $imageinfo['mime'];
             switch ($originalmimetype) {
                 case 'image/jpeg':
                 case 'image/jpg':

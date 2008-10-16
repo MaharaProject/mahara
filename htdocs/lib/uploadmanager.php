@@ -83,13 +83,8 @@ class upload_manager {
             return get_string('notphpuploadedfile');
         }
 
-        // Check the file type is allowed. If the type cannot be detected,
-        // then the file is ALLOWED through (the type can often not be detected
-        // for MS word documents). Maybe later that can be configurable. If
-        // the path to the file program is empty in the configuration, the file
-        // will not be checked.
-        require_once('file.php');
-        $type = get_mime_type($file['tmp_name']);
+        // Check the file type is allowed.
+        $type = $file['type'];
         if ($type) {
             if ($type != 'application/x-empty' && substr($type, 0, 5) != 'text/') {
                 $validtypes = get_column_sql('SELECT mimetype

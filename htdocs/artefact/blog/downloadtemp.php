@@ -28,11 +28,10 @@ define('INTERNAL', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('file.php');
 
-$uploadnumber = param_integer('uploadnumber');
-$createid     = param_variable('createid');
+$uploadnumber = param_integer('tempfile');
 
 safe_require('artefact', 'blog');
-$path = ArtefactTypeBlogPost::get_temp_file_path($createid, $uploadnumber);
-serve_file($path, '');
+$path = ArtefactTypeBlogPost::get_temp_file_path($uploadnumber);
+serve_file($path, '', get_field('artefact_blog_blogpost_file_pending', 'filetype', 'id', $uploadnumber));
 
 ?>

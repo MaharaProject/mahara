@@ -719,11 +719,6 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
         appendChildNodes(self.form, 
                          INPUT({'type':'hidden', 'name':'parentfolder', 'value':self.folderid}));
 
-        if (self.createid) {
-            appendChildNodes(self.form, 
-                             INPUT({'type':'hidden', 'name':'createid', 'value':self.createid}));
-        }
-
         if (group) {
             appendChildNodes(self.form, INPUT({
                 'type':'hidden',

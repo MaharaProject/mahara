@@ -694,9 +694,9 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return get_config('dataroot') . self::get_file_directory($this->fileid) . '/' .  $this->fileid;
     }
 
-    public static function detect_artefact_type($file) {
+    public static function detect_artefact_type($mimetype) {
         require_once('file.php');
-        if (ArtefactTypeImage::is_image_mime_type(get_mime_type(get_config('dataroot') . $file))) {
+        if (is_image_mime_type($mimetype)) {
             return 'image';
         }
         return 'file';
@@ -706,9 +706,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      * Test file type and return a new Image or File.
      */
     public static function new_file($path, $data) {
-        require_once('file.php');
-        $type = get_mime_type($path);
-        if (ArtefactTypeImage::is_image_mime_type($type)) {
+        if ($data->filetype && self::detect_artefact_type($data->filetype) == 'image') {
             list($data->width, $data->height) = getimagesize($path);
             return new ArtefactTypeImage(0, $data);
         }
@@ -775,10 +773,10 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         if (!$USER->quota_allowed($size) && !$data->institution) {
             return get_string('uploadexceedsquota', 'artefact.file');
         }
+        $data->size         = $size;
+        $data->filetype     = $um->file['type'];
+        $data->oldextension = $um->original_filename_extension();
         $f = self::new_file($um->file['tmp_name'], $data);
-        $f->set('size', $size);
-        $f->set('oldextension', $um->original_filename_extension());
-        $f->set('filetype', $um->file['type']);
         $f->commit();
         $id = $f->get('id');
         // Save the file using its id as the filename, and use its id modulo

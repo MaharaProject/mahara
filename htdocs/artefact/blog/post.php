@@ -31,19 +31,6 @@ require_once('pieforms/pieform.php');
 
 safe_require('artefact', 'blog');
 
-/*
- * Files uploaded to blog posts will be stored temporarily in the
- * artefact/blog directory under the dataroot until the blog post is
- * saved.  This createid is used to ensure that all of these newly
- * uploaded files get unique filenames.
- */
-$createid = $SESSION->get('createid');
-if (empty($createid)) {
-    $createid = 1;
-}
-$SESSION->set('createid', $createid + 1);
-
-
 /* 
  * For a new post, the 'blog' parameter will be set to the blog's
  * artefact id.  For an existing post, the 'blogpost' parameter will
@@ -175,8 +162,6 @@ var copyrightnotice = '{$copyright}';
 // "Uploading file to blog post" in the upload status line.
 var uploader = new FileUploader('uploader', 'upload.php', null, {$getstring['blogpost']}, false, 
                                 attachtopost, fileattached);
-uploader.createid = {$createid};
-
 
 
 // File browser instance allows users to attach files from the my files area
@@ -257,11 +242,10 @@ var uploaddata = {};
 // files list.  This should be done here if names of attached files
 // need to be unique.
 function attachtopost(data) {
-    var rowid = data.uploadnumber ? 'uploaded:' + data.uploadnumber : 'artefact:' + data.id;
+    var rowid = data.tempfilename ? 'uploaded:' + data.tempfilename : 'artefact:' + data.id;
     if (fileattached_id(rowid) || data.error) {
         return;
     }
-    var ext = data.oldextension ? data.oldextension : '';
     var tags;
     if (typeof(data.tags) == "string") {
         tags = data.tags;
@@ -320,7 +304,6 @@ function saveblogpost() {
     }
     var data = {'title' : $('editpost_title').value,
                 'draft' : $('draftpost_thisisdraft').checked,
-                'createid'  : {$createid},
                 'blog'  : {$blog},
                 'blogpost'  : {$blogpost}};
     // attachments
@@ -470,8 +453,7 @@ function imageSrcFromId(imageid) {
         return config.wwwroot + 'artefact/file/download.php?file=' + idparts[1];
     }
     if (idparts[0] == 'uploaded') {
-        return config.wwwroot + 'artefact/blog/downloadtemp.php?uploadnumber=' + idparts[1] + 
-            '&createid=' + {$createid};
+        return config.wwwroot + 'artefact/blog/downloadtemp.php?tempfile=' + idparts[1];
     }
     return '';
 }
@@ -482,7 +464,7 @@ function imageIdFromSrc(src) {
     if (ind != -1) {
         return 'artefact:' + src.substring(ind+artefactstring.length, src.length);
     }
-    var uploadstring = 'downloadtemp.php?uploadnumber=';
+    var uploadstring = 'downloadtemp.php?tempfile=';
     ind = src.indexOf(uploadstring);
     if (ind != -1) {
         return 'uploaded:' + src.substring(ind+uploadstring.length, src.length).split('&')[0];

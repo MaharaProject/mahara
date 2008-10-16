@@ -36,19 +36,16 @@ $result->title          = param_variable('title');
 $result->description    = param_variable('description', null);
 $result->tags           = param_variable('tags', null);
 $result->uploadnumber   = param_integer('uploadnumber'); // id of target iframe
-$createid               = param_variable('createid');
 
 // Ignore possible file name clashes; they should be dealt with in the
 // javascript on the edit blog post page.
 safe_require('artefact', 'blog');
-$attach = ArtefactTypeBlogPost::save_attachment_temporary('userfile', session_id() . $createid,
-                                                          $result->uploadnumber);
+$attach = ArtefactTypeBlogPost::save_attachment_temporary('userfile');
 
 if (!$attach->error) {
     $result->error = false;
     $result->artefacttype = $attach->type;
-    $result->oldextension = $attach->oldextension;
-    $result->filetype     = $attach->filetype;
+    $result->tempfilename = $attach->tempfilename;
     $result->message = get_string('uploadoffilecomplete', 'artefact.file', $result->title);
 }
 else {

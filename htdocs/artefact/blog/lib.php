@@ -600,35 +600,49 @@ class ArtefactTypeBlogPost extends ArtefactType {
     static $blogattachmentroot = 'artefact/blog/uploads/';
 
 
-    public static function get_temp_file_path($createid, $uploadnumber) {
-        return get_config('dataroot') . self::$blogattachmentroot 
-            . session_id() . $createid . '/' . $uploadnumber;
+    public static function get_temp_file_path($uploadnumber) {
+        return get_config('dataroot') . self::$blogattachmentroot . ($uploadnumber % 256) . '/' . $uploadnumber;
     }
 
 
     /**
      * Returns the size of a temporary attachment
      */
-    public static function temp_attachment_size($createid, $uploadnumber) {
-        return filesize(self::get_temp_file_path($createid, $uploadnumber));
+    public static function temp_attachment_size($uploadnumber) {
+        return filesize(self::get_temp_file_path($uploadnumber));
     }
 
 
     /** 
      * This function saves an uploaded file to a temporary directory in dataroot
-     *
+     * and saves the mime type info in the db for downloadtemp.php to read from.
      */
-    public static function save_attachment_temporary($inputname, $dirname, $filename) {
+    public static function save_attachment_temporary($inputname) {
         require_once('uploadmanager.php');
         $um = new upload_manager($inputname);
+        db_begin();
+        $record = new StdClass;
         $result = new StdClass;
-        $tempdir = self::$blogattachmentroot . $dirname;
-        $result->error = $um->process_file_upload($tempdir, $filename);
-        $result->oldextension = $um->original_filename_extension();
-        $result->filetype = $um->file['type'];
-        $tempfile = $tempdir . '/' . $filename;
+        $result->tempfilename = insert_record('artefact_blog_blogpost_file_pending', $record, 'id', true);
+
+        $tempdir = self::$blogattachmentroot . ($result->tempfilename % 256);
+        $result->error = $um->process_file_upload($tempdir, $result->tempfilename);
+
+        if ($result->error) {
+            delete_records('artefact_blog_blogpost_file_pending', 'id', $result->tempfilename);
+        }
+        else {
+            $record = (object) array(
+                'id'           => $result->tempfilename,
+                'oldextension' => $um->original_filename_extension(),
+                'filetype'     => $um->file['type'],
+            );
+            update_record('artefact_blog_blogpost_file_pending', $record);
+        }
+
+        db_commit();
         safe_require('artefact', 'file');
-        $result->type = ArtefactTypeFile::detect_artefact_type($tempfile);
+        $result->type = ArtefactTypeFile::detect_artefact_type($um->file['type']);
         return $result;
     }
 
@@ -636,7 +650,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
     /**
      * Save a temporary uploaded file to the myfiles area.
      */
-    public function save_attachment($directory, $filename, $uploaddata) {
+    public function save_attachment($uploaddata) {
 
         // Create the blogfiles folder if it doesn't exist yet.
         $blogfilesid = self::blogfiles_folder_id();
@@ -654,16 +668,19 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $data->tags = $uploaddata->tags;
         $data->owner = $USER->get('id');
         $data->parent = $blogfilesid;
-        $data->oldextension = $uploaddata->oldextension;
-        $data->filetype = $uploaddata->filetype;
+
+        $filedata = get_record('artefact_blog_blogpost_file_pending', 'id', $uploaddata->tempfilename);
+        $data->oldextension = $filedata->oldextension;
+        $data->filetype = $filedata->filetype;
         
-        $path = self::$blogattachmentroot . $directory . '/' . $filename;
+        $path = self::$blogattachmentroot . ($uploaddata->tempfilename % 256) . '/' . $uploaddata->tempfilename;
 
         if (!$fileid = ArtefactTypeFile::save_file($path, $data)) {
             return false;
         }
 
         $this->attach_file($fileid);
+        delete_records('artefact_blog_blogpost_file_pending', 'id', $uploaddata->tempfilename);
         return $fileid;
     }
 

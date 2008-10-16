@@ -34,7 +34,6 @@ json_headers();
 
 $title      = param_variable('title');
 $draft      = param_boolean('draft');
-$createid   = param_integer('createid');
 $blog       = param_integer('blog');
 $blogpost   = param_integer('blogpost');
 $uploads    = json_decode(param_variable('uploads'));
@@ -56,7 +55,7 @@ safe_require('artefact', 'blog');
 if (!empty($uploads)) {
     $uploadsize = 0;
     foreach ($uploads as $upload) {
-        $uploadsize += ArtefactTypeBlogPost::temp_attachment_size($createid, $upload->id);
+        $uploadsize += ArtefactTypeBlogPost::temp_attachment_size($upload->data->tempfilename);
     }
     if (!$USER->quota_allowed($uploadsize)) {
         json_reply('local', get_string('newattachmentsexceedquota', 'artefact.blog'));
@@ -115,7 +114,7 @@ $uploadartefact = array();
 
 if (!empty($uploads)) {
     foreach ($uploads as $upload) {
-        if (!$fileid = $postobj->save_attachment(session_id() . $createid, $upload->id, $upload->data)) {
+        if (!$fileid = $postobj->save_attachment($upload->data)) {
             json_reply('local', get_string('errorsavingattachments', 'artefact.blog'));
             // Things could be in a bad state.
         }
@@ -130,7 +129,7 @@ if (!empty($uploads)) {
 if (!empty($uploadartefact)) {
     $originalbody = $body;
     foreach ($uploadartefact as $k => $v) {
-        $regexps = array('/<img([^>]+)src="([^>]+)downloadtemp.php\?uploadnumber=' . $k .'&amp;createid=\d+/',
+        $regexps = array('/<img([^>]+)src="([^>]+)downloadtemp.php\?tempfile=' . $k .'/',
                          '/alt="uploaded:' . $k . '"/');
         $subs = array('<img$1src="' . get_config('wwwroot') . 'artefact/file/download.php?file=' . $v,
                       'alt="artefact:' . $v . '"');

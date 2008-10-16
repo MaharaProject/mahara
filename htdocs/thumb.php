@@ -39,12 +39,21 @@ switch ($type) {
 
         if ($type == 'profileicon') {
             // Convert ID of user to the ID of a profileicon
-            $id = get_field('usr', 'profileicon', 'id', $id);
+            $data = get_record_sql('
+                SELECT u.profileicon, f.filetype
+                FROM {usr} u INNER JOIN {artefact_file_files} f ON u.profileicon = f.artefact
+                WHERE u.id = ?', array($id));
+            if ($data) {
+                $id = $data->profileicon;
+                $mimetype = $data->filetype;
+            }
+        }
+        else {
+            $mimetype = get_field('artefact_file_files', 'filetype', 'artefact', $id);
         }
 
         if ($id) {
             if ($path = get_dataroot_image_path('artefact/file/profileicons', $id, $size)) {
-                $mimetype = get_mime_type($path);
                 if ($mimetype) {
                     header('Content-type: ' . $mimetype);
 
