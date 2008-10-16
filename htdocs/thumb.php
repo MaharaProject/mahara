@@ -47,6 +47,9 @@ switch ($type) {
                 $id = $data->profileicon;
                 $mimetype = $data->filetype;
             }
+            else {
+                $id = null;
+            }
         }
         else {
             $mimetype = get_field('artefact_file_files', 'filetype', 'artefact', $id);
