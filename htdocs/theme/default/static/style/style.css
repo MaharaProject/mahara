@@ -49,6 +49,11 @@ body {
     margin-top: -1px;
     padding-right: .5em;
 }
+.sitemessage a,
+.sitemessage a:link {
+    color: #00f;
+    text-decoration: underline;
+}
 
 .hidden {
     display: none;

@@ -115,7 +115,7 @@ function xmldb_artefact_blog_upgrade($oldversion=0) {
         }
     }
 
-    if ($oldversion < 2008101600) {
+    if ($oldversion < 2008101602) {
         $table = new XMLDBTable('artefact_blog_blogpost_file_pending');
         $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
         $table->addFieldInfo('oldextension', XMLDB_TYPE_TEXT, null);

@@ -137,7 +137,7 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         execute_sql("UPDATE {artefact_file_files} SET fileid = artefact WHERE NOT size IS NULL");
     }
 
-    if ($oldversion < 2008101400) {
+    if ($oldversion < 2008101602) {
         $table = new XMLDBTable('artefact_file_files');
         $field = new XMLDBField('filetype');
         $field->setAttributes(XMLDB_TYPE_TEXT);
