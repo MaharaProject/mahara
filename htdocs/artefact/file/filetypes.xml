@@ -162,9 +162,16 @@
     </filetype>
     <filetype>
         <description>swf</description>
-        <enabled>0</enabled>
+        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/x-shockwave-flash</mimetype>
+        </mimetypes>
+    </filetype>
+    <filetype>
+        <description>flv</description>
+        <enabled>1</enabled>
+        <mimetypes>
+            <mimetype>application/x-flash-video</mimetype>
         </mimetypes>
     </filetype>
 

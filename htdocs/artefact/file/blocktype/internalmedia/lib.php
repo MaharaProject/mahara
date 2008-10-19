@@ -50,12 +50,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
 
     public static function postinst($oldversion) {
         if ($oldversion == 0) {
-            $enabledtypes = array_map(
-                create_function('$a', 'return 1;'),
-                self::get_all_extensions());
-            unset($enabledtypes['swf']); // disable by default
-            $enabledtypes = array_keys($enabledtypes);
-            set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize($enabledtypes));
+            set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize(self::get_all_filetypes()));
         }
     }
 
@@ -70,12 +65,13 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $artefact = $instance->get_artefact_instance($configdata['artefactid']);
         $width  = (!empty($configdata['width'])) ? hsc($configdata['width']) : '300';
         $height = (!empty($configdata['height'])) ? hsc($configdata['height']) : '300';
-        $extn = strtolower($artefact->get('oldextension'));
-        if (!in_array($extn, self::get_allowed_extensions())) {
+        $mimetype = $artefact->get('filetype');
+        $mimetypefiletypes = self::get_allowed_mimetype_filetypes();
+        if (!isset($mimetypefiletypes[$mimetype])) {
             return get_string('typeremoved', 'blocktype.file/internalmedia');
         }
-        $callbacks = self::get_all_extensions();
-        $result .= call_static_method('PluginBlocktypeInternalmedia', $callbacks[$extn], $artefact, $instance, $width, $height);
+        $callbacks = self::get_all_filetype_players();
+        $result .= call_static_method('PluginBlocktypeInternalmedia', $callbacks[$mimetypefiletypes[$mimetype]], $artefact, $instance, $width, $height);
         return $result;
     }
 
@@ -112,10 +108,8 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
     }
 
     public static function artefactchooser_element($default=null) {
-        $extraselect = '(' . implode(' OR ', array_map(
-            create_function('$a', 'return "title LIKE \'%.$a\'";'),
-            self::get_allowed_extensions())
-        ) . ')';
+        $extraselect = 'filetype IN (' . join(',', array_map('db_quote', self::get_allowed_mimetypes())) . ')';
+        $extrajoin   = ' JOIN {artefact_file_files} ON artefact_file_files.artefact = a.id ';
 
         return array(
             'name' => 'artefactid',
@@ -130,6 +124,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             'selectone' => true,
             'artefacttypes' => array('file'),
             'extraselect' => $extraselect,
+            'extrajoin' => $extrajoin,
             'template' => 'artefact:file:artefactchooser-element.tpl',
         );
     }
@@ -142,7 +137,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
     public static function save_config_options($values) {
         $enabledtypes = array();
         foreach ($values as $type => $enabled) {
-            if (!in_array($type, array_keys(self::get_all_extensions()))) {
+            if (!in_array($type, self::get_all_filetypes())) {
                 continue;
             }
             if (!empty($enabled)) {
@@ -156,14 +151,14 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $elements = array();
         // Allowed file types
         $filetypes = array();
-        $currenttypes = self::get_allowed_extensions();
+        $currenttypes = self::get_allowed_filetypes();
 
         if (!$plugindisabled = get_column_sql('SELECT description
             FROM {artefact_file_file_types} 
             WHERE enabled = 0')) {
             $plugindisabled = array();
         }
-        foreach (array_keys(self::get_all_extensions()) as $filetype) {
+        foreach (self::get_all_filetypes() as $filetype) {
             if (in_array($filetype, $plugindisabled)) {
                 $filetypes[$filetype] = array(
                     'type'  => 'checkbox',
@@ -196,23 +191,52 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         );
     }
 
-    private static function get_allowed_extensions() {
+
+    private static function get_allowed_filetypes() {
         if ($data = get_config_plugin('blocktype', 'internalmedia', 'enabledtypes')) {
             return unserialize($data);
         }
         return array();
     }
 
-    private static function get_all_extensions() {
+
+    private static function get_allowed_mimetypes() {
+        return array_keys(self::get_allowed_mimetype_filetypes());
+    }
+
+
+    private static function get_allowed_mimetype_filetypes() {
+        if ($data = self::get_allowed_filetypes()) {
+            if ($mimetypes = get_records_sql_assoc('
+                SELECT mimetype, description
+                FROM {artefact_file_mime_types}
+                WHERE description IN (' . join(',', array_map('db_quote', $data)) . ')', array())) {
+                foreach ($mimetypes as &$m) {
+                    $m = $m->description;
+                }
+                return $mimetypes;
+            }
+        }
+        return array();
+    }
+
+
+    private static function get_all_filetypes() {
+        return array_keys(self::get_all_filetype_players());
+    }
+
+
+    private static function get_all_filetype_players() {
+        /* Keyed by the file type descriptions from the artefact_file_mime_types table */
         return array(
-            'mp3'   => 'flash_player', // tested
-            'swf'   => 'flash_player', // tested
-            'flv'   => 'flash_player', // tested
-            'mov'   => 'qt_player',  // tested
-            'wmv'   => 'wmp_player', // tested
-            'mpeg'  => 'qt_player',  // tested
-            'mpg'   => 'qt_player',  // tested
-            'avi'   => 'wmp_player', // tested
+            'mp3'       => 'flash_player', // tested
+            'swf'       => 'flash_player', // tested
+            'flv'       => 'flash_player', // tested
+            'quicktime' => 'qt_player',  // tested
+            'wmv'       => 'wmp_player', // tested
+            'mpeg'      => 'qt_player',  // tested
+            'avi'       => 'wmp_player', // tested
+            'mp4_video' => 'qt_player', // tested
             /* commenting out for now
             'ram'   => 'real_player',
             'rm'    => 'real_player',

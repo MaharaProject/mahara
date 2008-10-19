@@ -175,8 +175,23 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         delete_records('config', 'field', 'pathtofile');
     }
 
-    if ($oldversion < 2008101700) {
-        execute_sql("UPDATE {artefact_file_mime_types} SET mimetype = 'application/vnd.ms-powerpoint' WHERE mimetype = 'application/vnt.ms-powerpoint'");
+    if ($oldversion < 2008101701) {
+        if ($data = get_config_plugin('blocktype', 'internalmedia', 'enabledtypes')) {
+            $olddata = unserialize($data);
+            $newdata = array();
+            foreach ($olddata as $d) {
+                if ($d == 'mov') {
+                    $newdata[] = 'quicktime';
+                }
+                else if ($d == 'mp4') {
+                    $newdata[] = 'mp4_video';
+                }
+                else if ($d != 'mpg') {
+                    $newdata[] = $d;
+                }
+            }
+            set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize($newdata));
+        }
     }
 
 

@@ -1231,6 +1231,9 @@ class View {
         $blocktypeclass = generate_class_name('blocktype', $data['blocktype']);
 
         $sql = ' FROM {artefact} a ';
+        if (isset($data['extrajoin'])) {
+            $sql .= $data['extrajoin'];
+        }
         if ($group) {
             // Get group-owned artefacts that the user has view
             // permission on, and site-owned artefacts
