@@ -71,7 +71,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             return get_string('typeremoved', 'blocktype.file/internalmedia');
         }
         $callbacks = self::get_all_filetype_players();
-        $result .= call_static_method('PluginBlocktypeInternalmedia', $callbacks[$mimetypefiletypes[$mimetype]], $artefact, $instance, $width, $height);
+        $result .= '<div class="mediaplayer-container"><div class="mediaplayer">' . call_static_method('PluginBlocktypeInternalmedia', $callbacks[$mimetypefiletypes[$mimetype]], $artefact, $instance, $width, $height) . '</div></div>';
         return $result;
     }
 

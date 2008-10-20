@@ -2879,3 +2879,7 @@ table#initials .initial-letters {
 .performanceinfo br {
 	display: none;
 }
+
+.grey {
+  background: url(../images/grey.png) repeat;
+}

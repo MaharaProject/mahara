@@ -113,6 +113,7 @@ function ViewManager() {
                     configblockcontent.innerHTML = data.data;
                     self.currentConfigureData = null;
                     removeNodeAttribute(button, 'disabled');
+                    self.showMediaPlayers();
                     self.shrinkBlock(blockinstance);
                 });
             }, function() {
@@ -349,6 +350,7 @@ function ViewManager() {
                 contentDiv.innerHTML = oldContent;
                 self.currentConfigureData = null;
                 removeNodeAttribute(button, 'disabled');
+                self.showMediaPlayers();
                 self.shrinkBlock(blockinstance);
             });
 
@@ -358,7 +360,29 @@ function ViewManager() {
     }
 
 
+    this.hideMediaPlayers = function () {
+        var cols = $('column-container');
+        forEach(getElementsByTagAndClassName(null, 'mediaplayer-container', cols), function (e) {
+            var d = getElementDimensions(e);
+            setStyle(e, {'height': d.h+'px'});
+            hideElement(getFirstElementByTagAndClassName(null, 'mediaplayer', e));
+        });
+        addElementClass(cols, 'grey');
+    }
+
+
+    this.showMediaPlayers = function () {
+        var cols = $('column-container');
+        forEach(getElementsByTagAndClassName(null, 'mediaplayer-container', cols), function (e) {
+            showElement(getFirstElementByTagAndClassName(null, 'mediaplayer', e));
+            setStyle(e, {'height': 'auto'});
+        });
+        removeElementClass(cols, 'grey');
+    }
+
+
     this.growBlock = function(blockinstance) {
+        self.hideMediaPlayers();
         var width = getElementDimensions(blockinstance).w;
         var left = getElementPosition(blockinstance).x;
         hideElement(blockinstance);
@@ -367,9 +391,8 @@ function ViewManager() {
         var blockcontrols = getFirstElementByTagAndClassName('div', 'blockinstance-controls', blockinstance);
         hideElement(blockheader);
         insertSiblingNodesAfter(blockheader, DIV({'id':'blockconfig-header'}, scrapeText(blockheader) + ': ' + get_string('Configure')));
+        addElementClass(blockinstance, 'configure');
         setStyle(blockinstance, {
-            'border': '2px solid #a0a0a0',
-            'z-index': 1,
             'width': newwidth + 'px'
         });
         // Move the block to the left to keep it above the old block
@@ -387,11 +410,10 @@ function ViewManager() {
 
     this.shrinkBlock = function(blockinstance) {
         hideElement(blockinstance);
+        removeElementClass(blockinstance, 'configure');
         setStyle(blockinstance, {
             'left': 0,
             'width': 'auto',
-            'border': 0,
-            'z-index': 0
         });
         var blockheader = getFirstElementByTagAndClassName('div', 'blockinstance-header', blockinstance);
         var blockcontrols = getFirstElementByTagAndClassName('div', 'blockinstance-controls', blockinstance);
@@ -424,6 +446,13 @@ function ViewManager() {
                 sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
                     removeElement(getFirstParentByTagAndClassName(button, 'div', 'blockinstance'));
                     removeNodeAttribute(button, 'disabled');
+                    if (self.currentConfigureData) {
+                        self.currentConfigureData['contentdiv'].innerHTML = self.currentConfigureData['oldcontent'];
+                        removeNodeAttribute(self.currentConfigureData['button'], 'disabled');
+                        self.showMediaPlayers();
+                        self.shrinkBlock(getFirstParentByTagAndClassName(self.currentConfigureData['contentdiv'], 'div', 'blockinstance'));
+                        self.currentConfigureData = null;
+                    }
                 }, function() {
                     removeNodeAttribute(button, 'disabled');
                 });
