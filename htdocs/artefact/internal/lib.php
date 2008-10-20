@@ -511,9 +511,6 @@ class ArtefactTypeProfileIcon extends ArtefactTypeProfileField {
             . ($this->get('id') % 256) . '/' . $this->get('id'));
 
         $downloadpath = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $this->id;
-        if (isset($options['viewid'])) {
-            $downloadpath .= '&id=' . $options['viewid'];
-        }
         $smarty = smarty_core();
         $smarty->assign('iconpath', $this->get_icon($options));
         $smarty->assign('downloadpath', $downloadpath);
