@@ -34,7 +34,12 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('myfiles', 'artefact.file'));
 safe_require('artefact', 'file');
 
-$javascript = ArtefactTypeFileBase::get_my_files_js(param_integer('folder', null));
+$highlight = null;
+if ($file = param_integer('file', 0)) {
+    $highlight = array($file); // todo convert to file1=1&file2=2 etc
+}
+
+$javascript = ArtefactTypeFileBase::get_my_files_js(param_integer('folder', null), $highlight);
 
 $smarty = smarty(
     array('tablerenderer', 'artefact/file/js/file.js'),

@@ -200,6 +200,9 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
             var row = TR({'class': 'r' + (n%2),'id':'row_' + r.id});
             addElementClass(row, 'directory-item');
             addElementClass(row, r.artefacttype);
+            if (highlightfiles[r.id]) {
+                addElementClass(row, 'highlight-file');
+            }
             if (self.canmodify) {
                 self.makeRowDraggable(row);
             }

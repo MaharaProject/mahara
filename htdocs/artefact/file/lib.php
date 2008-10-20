@@ -540,7 +540,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     }
 
 
-    public static function get_my_files_js($folder_id=null) {
+    public static function get_my_files_js($folder_id=null, $highlightfiles=null) {
 
         global $USER;
 
@@ -574,6 +574,12 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             $enc_folders = json_encode(array());
         }
 
+        if ($highlightfiles) {
+            $enc_files = json_encode(array_fill_keys($highlightfiles, 1));
+        } else {
+            $enc_files = json_encode(array());
+        }
+
         $copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
 
         $javascript = <<<JAVASCRIPT
@@ -581,7 +587,7 @@ var copyrightnotice = '{$copyright}';
 var browser = new FileBrowser('filelist', 'myfiles.json.php', null, null, null, null, {$enc_folders});
 var uploader = new FileUploader('uploader', 'upload.php', {}, null, null, browser.refresh, browser.fileexists);
 browser.changedircallback = uploader.updatedestination;
-
+var highlightfiles = {$enc_files};
 JAVASCRIPT;
 
         return $javascript;
