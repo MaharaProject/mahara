@@ -1010,6 +1010,7 @@ function handle_event($event, $data) {
     }
 
     if ($coreevents = get_records_array('event_subscription', 'event', $event)) {
+        require_once('activity.php'); // core events can generate activity.
         foreach ($coreevents as $ce) {
             if (function_exists($ce->callfunction)) {
                 call_user_func($ce->callfunction, $data);
