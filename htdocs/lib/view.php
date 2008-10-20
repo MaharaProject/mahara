@@ -1462,17 +1462,18 @@ class View {
                 $data[$i]['artefacts'] = array();
                 $data[$i]['accessgroups'] = array();
                 if ($viewdata[$i]->startdate && $viewdata[$i]->stopdate) {
-                    $data[$i]['access'] = get_string('accessbetweendates', 'view', format_date(strtotime($viewdata[$i]->startdate), 'strftimedate'),
+                    $data[$i]['access'] = get_string('accessbetweendates2', 'view', format_date(strtotime($viewdata[$i]->startdate), 'strftimedate'),
                         format_date(strtotime($viewdata[$i]->stopdate), 'strftimedate'));
                 }
                 else if ($viewdata[$i]->startdate) {
-                    $data[$i]['access'] = get_string('accessfromdate', 'view', format_date(strtotime($viewdata[$i]->startdate), 'strftimedate'));
+                    $data[$i]['access'] = get_string('accessfromdate2', 'view', format_date(strtotime($viewdata[$i]->startdate), 'strftimedate'));
                 }
                 else if ($viewdata[$i]->stopdate) {
-                    $data[$i]['access'] = get_string('accessuntildate', 'view', format_date(strtotime($viewdata[$i]->stopdate), 'strftimedate'));
+                    $data[$i]['access'] = get_string('accessuntildate2', 'view', format_date(strtotime($viewdata[$i]->stopdate), 'strftimedate'));
                 }
                 $data[$i]['template'] = $viewdata[$i]->template;
             }
+            log_debug($data);
             // Go through all the artefact records and put them in with the
             // views they belong to.
             if ($artefacts) {

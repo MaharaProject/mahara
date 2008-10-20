@@ -65,7 +65,7 @@
         {/foreach}
         {if $view.template}<br>{str tag=thisviewmaybecopied section=view}{/if}
     {else}
-        {str tag="nobodycanseethisview" section="view"}
+        {str tag="nobodycanseethisview2" section="view"}
     {/if}
     </div>
     {if $view.submittedto}
