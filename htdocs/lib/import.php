@@ -145,6 +145,15 @@ abstract class Importer {
         return true;
     }
 
+    /**
+    * if we're sending stuff back to wherever we were called from
+    * use this method
+    * at the moment, the only implementation is for mnet
+    * sending back a list of file ids.
+    */
+    public function get_return_data() {
+        return array();
+    }
 }
 
 abstract class ImporterTransport {
@@ -172,6 +181,8 @@ class FilesImporter extends Importer {
     private $files;
     private $unzipdir;
     private $zipfilesha1;
+    private $artefacts;
+    private $importdir;
 
     public function __construct($id, $record=null) {
         parent::__construct($id, $record);
@@ -268,7 +279,7 @@ class FilesImporter extends Importer {
         // we're just adding them as files into an 'incoming' directory in the user's file area.
         safe_require('artefact', 'file');
         try {
-            $dir = ArtefactTypeFolder::get_folder_id('incoming', get_string('incomingfolderdesc'), null, true, $this->get('usr'));
+            $this->importdir = ArtefactTypeFolder::get_folder_id('incoming', get_string('incomingfolderdesc'), null, true, $this->get('usr'));
         } catch (Exception $e) {
             throw new ImportException($e->getMessage());
         }
@@ -278,11 +289,16 @@ class FilesImporter extends Importer {
                 $data = (object)array(
                     'title' => $f->wantsfilename,
                     'description' => $f->wantsfilename . ' (' . get_string('importedfrom', 'mahara', $this->get('importertransport')->get_description()) . ')',
-                    'parent' => $dir,
+                    'parent' => $this->importdir,
                     'owner' => $this->get('usr'),
                     'container' => 0,
                     'locked' => 0,
                 );
+
+                if ($imagesize = getimagesize(get_config('dataroot') . $this->relativepath . 'extract/' . $f->actualfilename)) {
+                    $mime = $imagesize['mime'];
+                    $data->filetype = $mime;
+                }
 
                 $id = ArtefactTypeFile::save_file(
                     $this->relativepath . 'extract/' . $f->actualfilename,
@@ -302,6 +318,11 @@ class FilesImporter extends Importer {
                 throw new ImportException('Failed to create some new artefacts');
             }
         }
+        $this->artefacts = $savedfiles;
+    }
+
+    public function get_return_data() {
+        return array('folder' => $this->importdir, 'file' => (count($this->artefacts) == 1) ? $this->artefacts[0] : 0);
     }
 }
 

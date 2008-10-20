@@ -360,6 +360,11 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
         delete_records('import_queue', 'id', $queue->id);
         $result->status = true;
         $result->type = 'complete';
+        $returndata = $importer->get_return_data();
+        $result->querystring = '?';
+        foreach ($importer->get_return_data() as $k => $v) {
+            $result->querystring .= $k . '=' . $v . '&';
+        }
     } else {
         // or set ready to 1 for the next cronjob to go fetch it.
         $result->status = set_field('import_queue', 'ready', 1, 'id', $queue->id);
