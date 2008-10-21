@@ -205,13 +205,17 @@ function accountprefs_submit(Pieform $form, $values) {
         }
     }
 
+    $returndata = array();
+
     if (isset($values['username']) && $values['username'] != $USER->get('username')) {
         $USER->username = $values['username'];
         $USER->commit();
+        $returndata['username'] = $values['username'];
     }
 
     db_commit();
-    $form->json_reply(PIEFORM_OK, get_string('prefssaved', 'account'));
+    $returndata['message'] = get_string('prefssaved', 'account');
+    $form->json_reply(PIEFORM_OK, $returndata);
 }
 
 
@@ -227,7 +231,12 @@ function clearPasswords(form, data) {
         $('accountprefs_password1').value = '';
         $('accountprefs_password2').value = '';
     }
-}");
+    if (data.username) {
+        var username = getFirstElementByTagAndClassName('a', null, 'profile-sideblock-username');
+        replaceChildNodes(username, data.username);
+    }
+}
+");
 $smarty->assign('heading', get_string('preferences'));
 $smarty->display('account/index.tpl');
 
