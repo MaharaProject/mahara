@@ -1,4 +1,4 @@
-    <h3><a href="{$WWWROOT}user/view.php?id={$data.id}">{$data.id|display_name|escape}</a></h3>
+    <h3><a href="{$WWWROOT}user/view.php?id={$data.id}">{$data.myname|escape}</a>  <span class="s">(<a href="{$WWWROOT}user/view.php?id={$data.id}">{$data.username|escape}</a>)</span></h3>
     <div class="fr"><a href="{$WWWROOT}user/view.php?id={$data.id}"><div class="center" style="width: 50px; height: 50px;"><img src="{$WWWROOT}thumb.php?type=profileiconbyid&amp;maxwidth=50&amp;maxheight=50&amp;id={$data.profileicon}" alt=""></div></a></div>
     {if $data.mnetloggedinfrom}<p>{$data.mnetloggedinfrom}</p>{/if}
     <ul class="sidebar-ul-title">

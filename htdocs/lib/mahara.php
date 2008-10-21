@@ -1718,6 +1718,8 @@ function profile_sideblock() {
     require_once('group.php');
     $data = array(
         'id'          => $USER->get('id'),
+        'myname'      => display_name($USER, null, true),
+        'username'    => $USER->get('username'),
         'profileicon' => $USER->get('profileicon') ? $USER->get('profileicon') : 0,
     );
 
