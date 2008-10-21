@@ -71,6 +71,18 @@ else {
     $elements = array();
 }
 
+if ($authobj->authname == 'internal') {
+    $elements['changeusernameheading'] = array(
+        'value' => '<tr><td colspan="2"><p>' . get_string('changeusernameheading', 'account') . '</p></td></tr>'
+    );
+    $elements['username'] = array(
+        'type' => 'text',
+        'defaultvalue' => $USER->get('username'),
+        'title' => get_string('changeusername', 'account'),
+        'description' => get_string('changeusernamedesc', 'account', get_config('sitename')),
+    );
+}
+
 $elements['accountoptionsdesc'] = array(
     'value' => '<tr><td colspan="2"><p>' . get_string('accountoptionsdesc', 'account') . '</p></td></tr>'
 );
@@ -160,6 +172,15 @@ function accountprefs_validate(Pieform $form, $values) {
             $form->set_error('oldpassword', get_string('mustspecifyoldpassword'));
         }
     }
+
+    if ($authobj->authname == 'internal' && $values['username'] != $USER->get('username')) {
+        if (!AuthInternal::is_username_valid($values['username'])) {
+            $form->set_error('username', get_string('usernameinvalidform', 'auth.internal'));
+        }
+        if (!$form->get_error('username') && record_exists_select('usr', 'LOWER(username) = ?', strtolower($values['username']))) {
+            $form->set_error('username', get_string('usernamealreadytaken', 'auth.internal'));
+        }
+    }
 }
 
 function accountprefs_submit(Pieform $form, $values) {
@@ -182,6 +203,11 @@ function accountprefs_submit(Pieform $form, $values) {
         if (isset($values[$pref])) {
             $USER->set_account_preference($pref, $values[$pref]);
         }
+    }
+
+    if (isset($values['username']) && $values['username'] != $USER->get('username')) {
+        $USER->username = $values['username'];
+        $USER->commit();
     }
 
     db_commit();

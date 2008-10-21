@@ -58,7 +58,7 @@ $string['registeredok'] = '<p>You have successfully registered. Please check you
 $string['registrationnosuchkey'] = 'Sorry, there does not seem to be a registration with this key. Perhaps you waited longer than 24 hours to complete your registration? Otherwise, it might be our fault.';
 $string['registrationunsuccessful'] = 'Sorry, your registration attempt was unsuccessful. This is our fault, not yours. Please try again later.';
 $string['usernamealreadytaken'] = 'Sorry, this username is already taken';
-$string['usernameinvalidform'] = 'Your username may only include alphanumeric characters, full stops, underscores and @ symbols. Also, it must be between 3 and 30 characters long.';
+$string['usernameinvalidform'] = 'Usernames may contain letters, numbers and most common symbols, and must be from 3 to 30 characters in length.  Spaces are not allowed.';
 $string['youmaynotregisterwithouttandc'] = 'You may not register unless you agree to abide by the <a href="terms.php">Terms and Conditions</a>';
 $string['youmustagreetothetermsandconditions'] = 'You must agree to the <a href="terms.php">Terms and Conditions</a>';
 

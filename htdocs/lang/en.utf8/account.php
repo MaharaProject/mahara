@@ -30,6 +30,10 @@ $string['changepassworddesc'] = 'If you wish to change your password, please ent
 $string['changepasswordotherinterface'] = 'You may  <a href="%s">change your password</a> through a different interface</a>';
 $string['oldpasswordincorrect'] = 'This is not your current password';
 
+$string['changeusernameheading'] = 'Change username';
+$string['changeusername'] = 'New username';
+$string['changeusernamedesc'] = 'The username you use to log into %s.  Usernames are 3-30 characters long, and may contain letters, numbers, and most common symbols excuding spaces.';
+
 $string['accountoptionsdesc'] = 'You can set general account options here';
 $string['friendsnobody'] = 'Nobody may add me as a friend';
 $string['friendsauth'] = 'New friends require my authorisation';

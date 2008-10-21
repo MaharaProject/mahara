@@ -320,10 +320,6 @@ class User {
             throw new InvalidArgumentException('quotaused should be set via the quota_* methods');
         }
 
-        if ($key == 'username' && $this->id != 0) {
-            throw new InvalidArgumentException('We cannot change the username of an existing user');
-        }
-
         $this->set($key, $value);
     }
 
