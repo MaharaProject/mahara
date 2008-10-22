@@ -1780,7 +1780,7 @@ function profile_sideblock() {
 function onlineusers_sideblock() {
     global $USER;
 
-    $onlineusers = get_records_select_array('usr', 'lastaccess > ?',
+    $onlineusers = get_records_select_array('usr', 'deleted = 0 AND lastaccess > ?',
         array(db_format_timestamp(time() - get_config('accessidletimeout'))), 'lastaccess DESC');
 
     foreach ($onlineusers as &$user) {
