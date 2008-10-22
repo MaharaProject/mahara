@@ -605,7 +605,6 @@ function core_install_lastcoredata_defaults() {
     set_profile_field($user->id, 'firstname', $user->firstname);
     set_profile_field($user->id, 'lastname', $user->lastname);
     set_config('installed', true);
-    require_once('activity.php');
     handle_event('createuser', $user->id);
     db_commit();
 
