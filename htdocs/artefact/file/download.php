@@ -47,7 +47,7 @@ else {
 
 if ($viewid && $fileid) {
     if (!artefact_in_view($fileid, $viewid)) {
-        throw new UserException('Artefact ' . $fileid . ' is not in view ' . $viewid);
+        throw new AccessDeniedException();
     }
 
     if (!can_view_view($viewid)) {
