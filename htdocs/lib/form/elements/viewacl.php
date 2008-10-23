@@ -41,7 +41,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
     // Look for the presets and split them into two groups
     $presets = array();
     if (get_config('allowpublicviews') == '1') {
-         $presets = array('public', 'loggedin', 'friends');
+        $presets = array('public', 'loggedin', 'friends', 'token');
     }
     else {
         $presets = array('loggedin', 'friends');
@@ -77,6 +77,8 @@ function pieform_element_viewacl(Pieform $form, $element) {
     
     $smarty->assign('potentialpresets', json_encode($potentialpresets));
     $smarty->assign('accesslist', json_encode($value));
+    $smarty->assign('viewid', $form->get_property('viewid'));
+    $smarty->assign('formname', $form->get_property('name'));
     return $smarty->fetch('form/viewacl.tpl');
 }
 
@@ -109,7 +111,7 @@ function pieform_element_viewacl_get_value(Pieform $form, $element) {
     }
     if (get_config('allowpublicviews') != '1' && $values) {
         foreach ($values as $key => $value) {
-            if ($value['type'] == 'public') {
+            if ($value['type'] == 'public' || $value['type'] == 'token') {
                 unset($values[$key]);
             }
         }

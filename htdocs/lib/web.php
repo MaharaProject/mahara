@@ -1090,9 +1090,10 @@ function get_cookie($name) {
  * @param int    $expires The unix timestamp of the time the cookie should expire
  * @todo path/domain/secure: should be set automatically by this function if possible (?)
  */
-function set_cookie($name, $value='', $expires=0, $path='', $domain='', $secure=false) {
+function set_cookie($name, $value='', $expires=0) {
     $name = get_config('cookieprefix') . $name;
-    setcookie($name, $value, $expires, $path, $domain, $secure);
+    $url = parse_url(get_config('wwwroot'));
+    setcookie($name, $value, $expires, $url['path'], $url['host'], false);
 }
 
 /**

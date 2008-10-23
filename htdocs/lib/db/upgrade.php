@@ -1411,6 +1411,17 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2008102200) {
+        $table = new XMLDBTable('view_access_token');
+        $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+        $table->addFieldInfo('token', XMLDB_TYPE_CHAR, 100, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('startdate', XMLDB_TYPE_DATETIME, null, null);
+        $table->addFieldInfo('stopdate', XMLDB_TYPE_DATETIME, null, null);
+        $table->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('token'));
+        create_table($table);
+    }
+
     return $status;
 
 }

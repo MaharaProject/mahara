@@ -76,6 +76,7 @@ $form = array(
     'renderer' => 'div',
     'plugintype' => 'core',
     'pluginname' => 'view',
+    'viewid' => $view->get('id'),
     'elements' => array(
         'id' => array(
             'type' => 'hidden',

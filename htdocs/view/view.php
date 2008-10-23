@@ -34,13 +34,24 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'view.php');
 require('group.php');
 
-$viewid = param_integer('id');
+$viewtoken = get_config('allowpublicviews') ? param_alphanum('t', null) : null;
+if ($viewtoken) {
+    if (!$viewid = get_view_from_token($viewtoken)) {
+        throw new AccessDeniedException();
+    }
+    if ($viewtoken != get_cookie('viewaccess:'.$viewid)) {
+        set_cookie('viewaccess:'.$viewid, $viewtoken);
+    }
+}
+else {
+    $viewid = param_integer('id');
+}
 $new = param_boolean('new');
 
-$view = new View($viewid);
-if (!can_view_view($viewid)) {
+if (!can_view_view($viewid, null, $viewtoken)) {
     throw new AccessDeniedException();
 }
+$view = new View($viewid);
 
 $group = $view->get('group');
 

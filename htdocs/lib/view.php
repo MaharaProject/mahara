@@ -282,18 +282,32 @@ class View {
 
     public function get_access($timeformat=null) {
 
+        if (is_mysql()) {
+            $uid = 'usr';
+            $gid = '"group"';
+        }
+        else {
+            $uid = 'CAST (usr AS TEXT)';
+            $gid = 'CAST ("group" AS TEXT)';
+        }
+
         $data = get_records_sql_array("
             SELECT accesstype AS type, NULL AS id, NULL AS role, NULL AS grouptype, startdate, stopdate
                 FROM {view_access}
                 WHERE view = ?
         UNION
-            SELECT 'user' AS type, usr AS id, NULL AS role, NULL AS grouptype, startdate, stopdate
+            SELECT 'user' AS type, $uid AS id, NULL AS role, NULL AS grouptype, startdate, stopdate
                 FROM {view_access_usr}
                 WHERE view = ?
         UNION
-            SELECT 'group', \"group\", role, grouptype, startdate, stopdate FROM {view_access_group}
+            SELECT 'group', $gid, role, grouptype, startdate, stopdate FROM {view_access_group}
                 INNER JOIN {group} g ON (\"group\" = g.id AND g.deleted = ?)
-                WHERE view = ?", array($this->id, $this->id, 0, $this->id));
+                WHERE view = ?
+        UNION
+            SELECT 'token', token, NULL AS role, NULL AS grouptype, startdate, stopdate
+                FROM {view_access_token}
+                WHERE view = ?
+        ", array($this->id, $this->id, 0, $this->id, $this->id));
         if ($data) {
             foreach ($data as &$item) {
                 $item = (array)$item;
@@ -376,6 +390,7 @@ class View {
         delete_records('view_access', 'view', $this->get('id'));
         delete_records('view_access_usr', 'view', $this->get('id'));
         delete_records('view_access_group', 'view', $this->get('id'));
+        delete_records('view_access_token', 'view', $this->get('id'));
         $time = db_format_timestamp(time());
 
         // View access
@@ -402,6 +417,10 @@ class View {
                             $accessrecord->role = $item['role'];
                         }
                         insert_record('view_access_group', $accessrecord);
+                        break;
+                    case 'token':
+                        $accessrecord->token = $item['id'];
+                        insert_record('view_access_token', $accessrecord);
                         break;
                 }
             }

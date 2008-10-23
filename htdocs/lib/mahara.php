@@ -1281,12 +1281,7 @@ function pieform_element_textarea_configure($element) {
  *
  * @returns boolean Wether the specified user can look at the specified view.
  */
-function can_view_view($view_id, $user_id=null) {
-    /*
-    TODO PENNY PROFILEVIEW MERGE
-        I couldn't figure out this patch and needed to continue:
-        http://paste.dollyfish.net.nz/0e6800
-    */
+function can_view_view($view_id, $user_id=null, $token=null) {
     global $USER;
     $now = time();
     $dbnow = db_format_timestamp($now);
@@ -1295,9 +1290,18 @@ function can_view_view($view_id, $user_id=null) {
         $user_id = $USER->get('id');
     }
 
+    $publicviews = get_config('allowpublicviews');
+    if ($publicviews) {
+        if (!$token) {
+            $token = get_cookie('viewaccess:'.$view_id);
+        }
+        if ($token && (!$user_id || $user_id == $USER->get('id')) && $view_id == get_view_from_token($token)) {
+            return true;
+        }
+    }
+
     if (!$USER->is_logged_in()) {
         // check public
-        $publicviews = get_config('allowpublicviews');
         $publicprofiles = get_config('allowpublicprofiles');
         if ($publicviews || $publicprofiles) {
             $public = get_record_sql("
@@ -1379,6 +1383,22 @@ function can_view_view($view_id, $user_id=null) {
 
     return false;
 }
+
+
+/* return the view associated with a given token */
+function get_view_from_token($token) {
+    if (!$token) {
+        return false;
+    }
+    return get_field_sql('
+        SELECT view
+        FROM {view_access_token}
+        WHERE token = ?
+            AND (startdate IS NULL OR startdate < current_timestamp)
+            AND (stopdate IS NULL OR stopdate > current_timestamp)
+        ', array($token));
+}
+
 
 /**
  * get the views that a user can see belonging
@@ -1838,6 +1858,17 @@ function recalculate_quota() {
         );
         update_record('usr', $data, $where);
     }
+}
+
+function random_string($length=15) {
+    $pool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    $poollen = strlen($pool);
+    mt_srand ((double) microtime() * 1000000);
+    $string = '';
+    for ($i = 0; $i < $length; $i++) {
+        $string .= substr($pool, (mt_rand()%($poollen)), 1);
+    }
+    return $string;
 }
 
 ?>

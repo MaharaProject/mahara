@@ -24,13 +24,20 @@
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+define('JSON', 1);
 
-$config = new StdClass;
-$config->version = 2008102200;
-$config->release = '1.1.0beta2dev';
-$config->minupgradefrom = 2007080700;
-$config->minupgraderelease = '0.8.0 (release tag 0.8.0_RELEASE)';
-$config->disablelogin = true;
+require(dirname(dirname(__FILE__)) . '/init.php');
+
+$data = new StdClass;
+$data->view  = param_integer('view');
+$data->token = random_string(20);
+while (record_exists('view_access_token', 'token', $data->token)) {
+    $data->token = random_string(20);
+}
+if (!insert_record('view_access_token', $data)) {
+    json_reply(true, get_string('createviewtokenfailed', 'view'));
+}
+json_reply(false, array('message' => null, 'data' => $data));
 
 ?>

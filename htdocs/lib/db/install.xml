@@ -698,6 +698,18 @@
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
         </TABLE>
+        <TABLE NAME="view_access_token">
+            <FIELDS>
+                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="token" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="startdate" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="token" />
+            </KEYS>
+        </TABLE>
         <!-- site content stuff -->
         <!-- 
         <TABLE NAME="site_file">

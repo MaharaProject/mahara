@@ -36,9 +36,20 @@ function renderPotentialPresetItem(item) {
     var row = DIV(null, addButton, ' ', item.name);
     item.preset = true;
 
-    connect(addButton, 'onclick', function() {
-        appendChildNodes('accesslist', renderAccessListItem(item));
-    });
+    if (item.type == 'token') {
+        connect(addButton, 'onclick', function() {
+            sendjsonrequest('newviewtoken.json.php', {'view': {{$viewid}}}, 'POST', function(data) {
+                item.id = data.data.token;
+                appendChildNodes('accesslist', renderAccessListItem(item));
+            });
+        });
+        appendChildNodes(row, contextualHelpIcon('{{$formname}}', 'secreturl', 'core', 'view', null, null));
+    }
+    else {
+        connect(addButton, 'onclick', function() {
+            appendChildNodes('accesslist', renderAccessListItem(item));
+        });
+    }
     appendChildNodes('potentialpresetitems', row);
 
     return row;
@@ -64,6 +75,9 @@ function renderAccessListItem(item) {
         cssClass += '  preset';
     }
     cssClass += ' ' + item.type + '-container';
+    if (item.type == 'token') {
+        item.name = config.wwwroot + 'view/view.php?t=' + item.id;
+    }
     var name = item.name;
     if (item.type == 'user') {
         name = [IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&id=' + item.id + '&maxwidth=20&maxheight=20'}), ' ', name];
