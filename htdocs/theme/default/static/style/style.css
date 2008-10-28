@@ -356,7 +356,7 @@ table#installer {
     text-align: left;
 }
 #overlay {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -2931,8 +2931,4 @@ table#initials .initial-letters {
 }
 .performanceinfo br {
 	display: none;
-}
-
-.grey {
-  background: url(../images/grey.png) repeat;
 }

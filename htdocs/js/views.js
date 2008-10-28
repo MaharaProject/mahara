@@ -367,7 +367,7 @@ function ViewManager() {
             setStyle(e, {'height': d.h+'px'});
             hideElement(getFirstElementByTagAndClassName(null, 'mediaplayer', e));
         });
-        addElementClass(cols, 'grey');
+        appendChildNodes(document.body, DIV({'id': 'overlay'}));
     }
 
 
@@ -377,7 +377,7 @@ function ViewManager() {
             showElement(getFirstElementByTagAndClassName(null, 'mediaplayer', e));
             setStyle(e, {'height': 'auto'});
         });
-        removeElementClass(cols, 'grey');
+        removeElement('overlay');
     }
 
 
