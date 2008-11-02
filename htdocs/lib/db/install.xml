@@ -632,7 +632,8 @@
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="author" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="author" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="authorname" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="message" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="attachment" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
@@ -650,7 +651,8 @@
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="author" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="author" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="authorname" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="message" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="public" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />

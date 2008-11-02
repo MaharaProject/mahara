@@ -30,7 +30,11 @@
 		</thead>
 	</table>
 	</div>
-	<div id="viewmenu"></div>
+	<div id="viewmenu">
+        {include file="view/viewmenu.tpl"}
+        </div>
+        <div>{$addfeedbackform}</div>
+        <div>{$objectionform}</div>
 </div>
 {include file="columnfullend.tpl"}
 

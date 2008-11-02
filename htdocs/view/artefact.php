@@ -87,218 +87,17 @@ $artefactpath[] = array(
     'title' => $artefact->display_title(),
 );
 
-$getstring = quotestrings(array(
-    'mahara' => array('message', 'cancel'),
-    'view' => array('makepublic', 'placefeedback', 'complaint',
-        'feedbackonthisartefactwillbeprivate', 'notifysiteadministrator',
-        'nopublicfeedback', 'reportobjectionablematerial', 'print',
-        'thisfeedbackispublic', 'thisfeedbackisprivate', 'attachment',
-        'makeprivate')
-));
 
-$getstring['feedbackattachmessage'] = "'(" . get_string('feedbackattachmessage', 'view', get_string('feedbackattachdirname', 'view')) . ")'";
-
-// Safari doesn't seem to like these inputs to be called 'public', so call them 'ispublic' instead.
-$feedbackisprivate = !$artefact->public_feedback_allowed();
-if (!empty($feedbackisprivate)) {
-    $makepublic = "TR(null, INPUT({'type':'hidden','name':'ispublic','value':'false'}), TD({'colspan':2}, " 
-        . $getstring['feedbackonthisartefactwillbeprivate'] . ")),";
-}
-else {
-    $makepublic = "TR(null, TH(null, LABEL(null, " . $getstring['makepublic'] . " ), " 
-        . "INPUT({'type':'checkbox', 'class':'checkbox', 'name':'ispublic'}))),";
-}
-
+// Feedback
 $javascript = <<<EOF
-
-var view = {$viewid};
-var artefact = {$artefactid};
-
-function feedbackform() {
-    if ($('menuform')) {
-        removeElement('menuform');
-    }
-    var form = FORM({'id':'menuform','method':'post'});
-    submitfeedback = function () {
-        var data = {'view':view, 
-                    'public':form.ispublic.checked,
-                    'message':form.message.value};
-        if (artefact) {
-            data.artefact = artefact;
-        }
-        sendjsonrequest('addfeedback.json.php', data, 'POST', function () { 
-            removeElement('menuform');
-            feedbacklist.doupdate();
-        });
-        return false;
-    }
-    appendChildNodes(form, 
-        TABLE({'border':0, 'cellspacing':0, 'id':'feedback'},
-        TBODY(null,
-        TR(null, TH(null, LABEL(null, {$getstring['message']}))),
-        TR(null, TD(null, TEXTAREA({'rows':5, 'cols':80, 'name':'message'}))),
-        {$makepublic}
-        TR(null, TD(null,
-                    INPUT({'type':'button', 'class':'button', 
-                               'value':{$getstring['placefeedback']},
-                               'onclick':'submitfeedback();'}),
-                    INPUT({'type':'button', 'class':'button', 'value':{$getstring['cancel']},
-                               'onclick':"removeElement('menuform');"}))))));
-    appendChildNodes('viewmenu', DIV(null, form));
-    form.message.focus();
-    return false;
-}
-
-function objectionform() {
-    if ($('menuform')) {
-        removeElement('menuform');
-    }
-    var form = FORM({'id':'menuform','method':'post'});
-    submitobjection = function () {
-        var data = {'view':view, 'message':form.message.value};
-        if (artefact) {
-            data.artefact = artefact;
-        }
-        sendjsonrequest('objectionable.json.php', data, 'POST', function () { removeElement('menuform'); });
-        return false;
-    }
-    appendChildNodes(form, 
-        TABLE({'border':0, 'cellspacing':0, 'id':'objection'},
-        TBODY(null,
-        TR(null, TH(null, LABEL(null, {$getstring['complaint']}))),
-        TR(null, TD(null, TEXTAREA({'rows':5, 'cols':80, 'name':'message'}))),
-        TR(null, TD(null,
-                    INPUT({'type':'button', 'class':'button', 
-                               'value':{$getstring['notifysiteadministrator']},
-                               'onclick':'submitobjection();'}),
-                    INPUT({'type':'button', 'class':'button', 'value':{$getstring['cancel']},
-                               'onclick':"removeElement('menuform');"}))))));
-    appendChildNodes('viewmenu', DIV(null, form));
-    form.message.focus();
-    return false;
-}
-
-function view_menu() {
-    if (config.loggedin) {
-        appendChildNodes('viewmenu',
-            A({'href':'', 'onclick':"return feedbackform();"}, 
-                {$getstring['placefeedback']}), ' | ',
-            A({'href':'', 'onclick':'return objectionform();'},
-               {$getstring['reportobjectionablematerial']}), ' | '
-        );
-    }
-    appendChildNodes('viewmenu',
-        A({'href':'', 'onclick':'window.print();return false;'}, 
-            {$getstring['print']})
-    );
-
-    var helpIcon = contextualHelpIcon(null, null, 'core', 'view', null, 'viewmenu');
-    appendChildNodes('viewmenu', ' ', helpIcon);
-}
-
-addLoadEvent(view_menu);
-
-// The list of existing feedback.
-var feedbacklist = new TableRenderer(
-    'feedbacktable',
-    'getfeedback.json.php',
-    [/*
-        function (r) {
-            var td = TD(null);
-            td.innerHTML = r.message;
-            if (r.attachid && r.ownedbythisuser) {
-                appendChildNodes(td, DIV(null, {$getstring['feedbackattachmessage']}));
-                return td;
-            }
-            return td;
-        },
-        'name',
-        'date', 
-        function (r) {
-            if (r.ispublic == 1) {
-                var makePrivate = null;
-                if (r.ownedbythisuser) {
-                    makePrivate = A({'href': ''}, get_string('makeprivate'));
-                    connect(makePrivate, 'onclick', function (e) {
-                        sendjsonrequest(
-                            'changefeedback.json.php',
-                            r,
-                            'POST',
-                            function (data) {
-                                if (!data.error) {
-                                    replaceChildNodes(makePrivate.parentNode, '(' + get_string('private') + ')');
-                                }
-                            }
-                        );
-
-                        e.stop();
-                    });
-                }
-                return TD(null, '(' + get_string('public') + ') ', makePrivate);
-            }
-            return TD(null, '(' + get_string('private') + ')');
-        },
-        function (r) {
-            if (r.attachid) {
-                return TD(null, A({'href':config.wwwroot + 'artefact/file/download.php?file=' + r.attachid},
-                                  r.attachtitle));
-            }
-            return TD(null);
-        }
-    */]
-);
-
-feedbacklist.rowfunction = function(r, n, d) {
-    var td = TD(null);
-    td.innerHTML = r.message;
-    if (r.attachid && r.ownedbythisuser) {
-        appendChildNodes(td, DIV(null, {$getstring['feedbackattachmessage']}));
-    }
-
-    var publicPrivate = null;
-    if (r.ispublic == 1) {
-        var makePrivate = null;
-        if (r.ownedbythisuser) {
-            makePrivateLink = A({'href': ''}, {$getstring['makeprivate']});
-            connect(makePrivateLink, 'onclick', function (e) {
-                sendjsonrequest(
-                    'changefeedback.json.php',
-                    r,
-                    'POST',
-                    function (data) {
-                        if (!data.error) {
-                            replaceChildNodes(makePrivateLink.parentNode, {$getstring['thisfeedbackisprivate']});
-                        }
-                    }
-                );
-
-                e.stop();
-            });
-            makePrivate = [' - ', makePrivateLink];
-        }
-        publicPrivate = SPAN(null, {$getstring['thisfeedbackispublic']}, makePrivate);
-    }
-    else {
-        publicPrivate = {$getstring['thisfeedbackisprivate']};
-    }
-
-    var icon = A({'href': config.wwwroot + 'user/view.php?id=' + r.author}, IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&id=' + r.author + '&maxsize=20', 'valign': 'middle'}));
-    appendChildNodes(td, DIV({'class': 'details'}, DIV({'class': 'icon'}, icon), A({'href': config.wwwroot + 'user/view.php?id=' + r.author}, r.name), ' | ', r.date, ' | ', publicPrivate));
-
-    return TR({'class': 'r' + (n % 2)}, td);
-};
-feedbacklist.limit = 10;
-feedbacklist.view = view;
-feedbacklist.artefact = artefact;
-feedbacklist.statevars.push('view','artefact');
-feedbacklist.emptycontent = {$getstring['nopublicfeedback']};
+feedbacklist.view = {$viewid};
+feedbacklist.artefact = {$artefactid};
+feedbacklist.statevars.push('view', 'artefact');
 feedbacklist.updateOnLoad();
-
-
 EOF;
 
 $smarty = smarty(
-    array('tablerenderer'),
+    array('mahara', 'tablerenderer', 'feedbacklist'),
     array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
     array(),
     array(
@@ -322,6 +121,9 @@ else if ($view->get('group')) {
 }
 
 $smarty->assign('ownername', $view->formatted_owner());
+$smarty->assign('addfeedbackform', pieform(add_feedback_form(false)));
+$smarty->assign('objectionform', pieform(objection_form()));
+$smarty->assign('anonfeedback', !$USER->is_logged_in() && $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid)));
 
 $smarty->display('view/artefact.tpl');
 

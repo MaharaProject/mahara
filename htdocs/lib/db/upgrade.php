@@ -1422,6 +1422,28 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table);
     }
 
+    if ($oldversion < 2008102400) {
+        // Feedback can be left by anon users with a view token, so feedback author must be nullable
+        $table = new XMLDBTable('view_feedback');
+        $field = new XMLDBField('author');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED);
+        change_field_notnull($table, $field);
+        $key = new XMLDBKEY('authorfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('author'), 'usr', array('id'));
+        add_key($table, $key);
+
+        $table = new XMLDBTable('artefact_feedback');
+        $field = new XMLDBField('author');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED);
+        change_field_notnull($table, $field);
+        $key = new XMLDBKEY('authorfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('author'), 'usr', array('id'));
+        add_key($table, $key);
+
+        table_column('view_feedback', null, 'authorname', 'text', null, null, null, '');
+        table_column('artefact_feedback', null, 'authorname', 'text', null, null, null, '');
+    }
+
     return $status;
 
 }

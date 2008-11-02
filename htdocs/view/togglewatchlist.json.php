@@ -36,17 +36,25 @@ $data->view = $view;
 $data->usr = $USER->get('id');
 $data->ctime = db_format_timestamp(time());
 
+$result = new StdClass;
+
 if (get_record('usr_watchlist_view', 'usr', $data->usr, 'view', $view)) {
     if (!delete_records('usr_watchlist_view', 'usr', $data->usr, 'view', $view)) {
-        json_reply('local', get_string('updatewatchlistfailed', 'view'));
+        $result->message = get_string('updatewatchlistfailed', 'view');
+        json_reply('local', $result);
     }
-    json_reply(false, get_string('removedfromwatchlist', 'view'));
+    $result->message = get_string('removedfromwatchlist', 'view');
+    $result->newtext = get_string('addtowatchlist', 'view');
+    json_reply(false, $result);
 }
 
 if (!insert_record('usr_watchlist_view', $data)) {
-    json_reply('local', get_string('updatewatchlistfailed', 'view'));
+    $result->message = get_string('updatewatchlistfailed', 'view');
+    json_reply('local', $result);
 }
 
-json_reply(false, get_string('addedtowatchlist', 'view'));
+$result->message = get_string('addedtowatchlist', 'view');
+$result->newtext = get_string('removefromwatchlist', 'view');
+json_reply(false, $result);
 
 ?>

@@ -117,6 +117,7 @@ $string['makepublic'] = 'Make public';
 $string['nopublicfeedback'] = 'No public feedback';
 $string['notifysiteadministrator'] = 'Notify site administrator';
 $string['placefeedback'] = 'Place feedback';
+$string['placefeedbacknotallowed'] = 'You are not allowed to place feedback on this View';
 $string['print'] = 'Print';
 $string['thisfeedbackispublic'] = 'This feedback is public';
 $string['thisfeedbackisprivate'] = 'This feedback is private';

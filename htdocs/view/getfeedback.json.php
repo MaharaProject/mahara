@@ -53,7 +53,7 @@ if ($artefact) {
             . ($public ? ' AND (public = 1 OR author = ' . $userid . ')' : ''));
     $feedback = get_records_sql_array('
         SELECT 
-            id, author, ctime, message, public
+            id, author, authorname, ctime, message, public
         FROM {artefact_feedback}
         WHERE view = ' . $view . ' AND artefact = ' . $artefact
             . ($public ? ' AND (public = 1 OR author = ' . $userid . ')' : '') . '
@@ -72,7 +72,7 @@ else {
             . ($public ? ' AND (public = 1 OR author = ' . $userid . ')' : ''));
     $feedback = get_records_sql_array('
         SELECT
-            f.id, f.author, f.ctime, f.message, f.public, f.attachment, a.title, af.size
+            f.id, f.author, f.authorname, f.ctime, f.message, f.public, f.attachment, a.title, af.size
         FROM {view_feedback} f
         LEFT OUTER JOIN {artefact} a ON f.attachment = a.id
         LEFT OUTER JOIN {artefact_file_files} af ON af.artefact = a.id
@@ -88,7 +88,7 @@ if ($feedback) {
             'id'              => $record->id,
             'table'           => $table,
             'ownedbythisuser' => ( $owner == $userid ? true : false ),
-            'name'            => display_name($record->author),
+            'name'            => $record->author ? display_name($record->author) : $record->authorname,
             'date'            => format_date(strtotime($record->ctime), 'strftimedatetime'),
             'message'         => format_whitespace($record->message),
             'ispublic'        => $record->public,

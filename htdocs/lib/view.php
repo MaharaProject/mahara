@@ -2178,6 +2178,128 @@ function createview_cancel_submit(Pieform $form, $values) {
 }
 
 
+function add_feedback_form($attachments=false) {
+    global $USER;
+    $form = array(
+        'name'            => 'add_feedback_form',
+        'method'          => 'post',
+        'plugintype'      => 'core',
+        'pluginname'      => 'view',
+        'elements'        => array(),
+    );
+    if (!$USER->is_logged_in()) {
+        $form['elements']['authorname'] = array(
+            'type'  => 'text',
+            'title' => get_string('name'),
+        );
+    }
+    $form['elements']['message'] = array(
+        'type'  => 'textarea',
+        'title' => get_string('message'),
+        'rows'  => 5,
+        'cols'  => 80,
+    );
+    $form['elements']['ispublic'] = array(
+        'type'  => 'checkbox',
+        'title' => get_string('makepublic', 'view'),
+    );
+    if ($attachments) {
+        $form['elements']['attachment'] = array(
+            'type'  => 'file',
+            'title' => get_string('attachfile', 'view'),
+        );
+    }
+    $form['elements']['submit'] = array(
+        'type'  => 'submitcancel',
+        'value' => array(get_string('placefeedback', 'view'), get_string('cancel')),
+    );
+    return $form;
+}
+
+function add_feedback_form_validate(Pieform $form, $values) {
+    global $USER, $view;
+    if (!$USER->get('id')) {
+        if (empty($values['authorname'])) {
+            $form->set_error(get_string('pleaseenteryourname', 'view'));
+        }
+        $token = get_cookie('viewaccess:'.$view->get('id'));
+        if (!$token || get_view_from_token($token) != $view->get('id')) {
+            $form->set_error(get_string('placefeedbacknotallowed', 'view'));
+        }
+    }
+}
+
+function add_feedback_form_submit(Pieform $form, $values) {
+    global $view, $artefact, $SESSION, $USER;
+    $data = new StdClass;
+    $data->view = $view->get('id');
+    if ($artefact) {
+        $data->artefact = $artefact->get('id');
+        $table = 'artefact_feedback';
+    }
+    else {
+        $table = 'view_feedback';
+    }
+    $data->message = $values['message'];
+    $data->public = (int) $values['ispublic'];
+    $data->author = $USER->get('id');
+    if (!$data->author) {
+        unset($data->author);
+        $data->authorname = $values['authorname'];
+    }
+    $data->ctime = db_format_timestamp(time());
+    insert_record($table, $data, 'id', true);
+    require_once('activity.php');
+    activity_occurred('feedback', $data);
+    $SESSION->add_ok_msg(get_string('feedbacksubmitted', 'view'));
+    if ($artefact) {
+        redirect(get_config('wwwroot') . 'view/artefact.php?artefact=' . $artefact->get('id') . '&view='.$view->get('id'));
+    }
+    redirect(get_config('wwwroot') . 'view/view.php?id='.$view->get('id'));
+}
+
+function objection_form() {
+    $form = array(
+        'name'            => 'objection_form',
+        'method'          => 'post',
+        'plugintype'      => 'core',
+        'pluginname'      => 'view',
+        'elements'        => array(),
+    );
+    $form['elements']['message'] = array(
+        'type'  => 'textarea',
+        'title' => get_string('complaint', 'view'),
+        'rows'  => 5,
+        'cols'  => 80,
+    );
+    $form['elements']['submit'] = array(
+        'type'  => 'submitcancel',
+        'value' => array(get_string('notifysiteadministrator', 'view'), get_string('cancel')),
+    );
+    return $form;
+}
+
+function objection_form_submit(Pieform $form, $values) {
+    global $USER, $SESSION, $view, $artefact;
+    require_once('activity.php');
+
+    $data = new StdClass;
+    $data->view       = $view->get('id');
+    $data->message    = $values['message'];
+    $data->reporter   = $USER->get('id');
+    if ($artefact) {
+        $data->artefact = $artefact->get('id');
+    }
+
+    activity_occurred('objectionable', $data);
+    $SESSION->add_ok_msg(get_string('reportsent', 'view'));
+    if ($artefact) {
+        redirect(get_config('wwwroot') . 'view/artefact.php?artefact=' . $artefact->get('id') . '&view='.$view->get('id'));
+    }
+    redirect(get_config('wwwroot') . 'view/view.php?id='.$view->get('id'));
+}
+
+
 /**
  * display format for author names in views - firstname
  */

@@ -18,13 +18,17 @@
         </div>
 
         <div id="publicfeedback">
-            <table id="feedbacktable" class="fullwidth">
-                <thead>
-                    <tr><th>{str tag="feedback" section="view"}</th></tr>
-                </thead>
-            </table>
+        <table id="feedbacktable" class="fullwidth">
+          <thead>
+            <tr><th>{str tag="feedback" section="view"}</th></tr>
+          </thead>
+        </table>
         </div>
-        <div id="viewmenu"></div>
+        <div id="viewmenu">
+{include file="view/viewmenu.tpl"}
+        </div>
+        <div>{$addfeedbackform}</div>
+        <div>{$objectionform}</div>
 
 {include file="columnfullend.tpl"}
 

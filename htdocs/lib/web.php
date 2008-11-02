@@ -558,6 +558,16 @@ function jsstrings() {
                 'cancel',
             ),
         ),
+        'feedbacklist' => array(
+            'view' => array(
+                'feedbackattachmessage',
+                'makeprivate',
+                'thisfeedbackisprivate',
+                'thisfeedbackispublic',
+                'attachment',
+                'nopublicfeedback',
+            ),
+        ),
     );
 }
 
