@@ -1,3 +1,8 @@
+RELEASE NOTE: v1.2.4
+October 22, 2008
+
+https fetches were not properly escaping shell args for curl binary execution. This is fixed.
+
 RELEASE NOTE: v1.2.3
 November 7, 2005
 
