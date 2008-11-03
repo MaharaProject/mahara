@@ -1,7 +1,5 @@
 <?php
 
-require_once 'HTMLPurifier/ChildDef.php';
-
 /**
  * Definition that allows a set of elements, but disallows empty children.
  */
@@ -57,10 +55,7 @@ class HTMLPurifier_ChildDef_Required extends HTMLPurifier_ChildDef
         $escape_invalid_children = $config->get('Core', 'EscapeInvalidChildren');
         
         // generator
-        static $gen = null;
-        if ($gen === null) {
-            $gen = new HTMLPurifier_Generator();
-        }
+        $gen = new HTMLPurifier_Generator($config, $context);
         
         foreach ($tokens_of_children as $token) {
             if (!empty($token->is_whitespace)) {
@@ -71,9 +66,9 @@ class HTMLPurifier_ChildDef_Required extends HTMLPurifier_ChildDef
             
             $is_child = ($nesting == 0);
             
-            if ($token->type == 'start') {
+            if ($token instanceof HTMLPurifier_Token_Start) {
                 $nesting++;
-            } elseif ($token->type == 'end') {
+            } elseif ($token instanceof HTMLPurifier_Token_End) {
                 $nesting--;
             }
             
@@ -81,22 +76,22 @@ class HTMLPurifier_ChildDef_Required extends HTMLPurifier_ChildDef
                 $is_deleting = false;
                 if (!isset($this->elements[$token->name])) {
                     $is_deleting = true;
-                    if ($pcdata_allowed && $token->type == 'text') {
+                    if ($pcdata_allowed && $token instanceof HTMLPurifier_Token_Text) {
                         $result[] = $token;
                     } elseif ($pcdata_allowed && $escape_invalid_children) {
                         $result[] = new HTMLPurifier_Token_Text(
-                            $gen->generateFromToken($token, $config)
+                            $gen->generateFromToken($token)
                         );
                     }
                     continue;
                 }
             }
-            if (!$is_deleting || ($pcdata_allowed && $token->type == 'text')) {
+            if (!$is_deleting || ($pcdata_allowed && $token instanceof HTMLPurifier_Token_Text)) {
                 $result[] = $token;
             } elseif ($pcdata_allowed && $escape_invalid_children) {
                 $result[] =
                     new HTMLPurifier_Token_Text(
-                        $gen->generateFromToken( $token, $config )
+                        $gen->generateFromToken($token)
                     );
             } else {
                 // drop silently

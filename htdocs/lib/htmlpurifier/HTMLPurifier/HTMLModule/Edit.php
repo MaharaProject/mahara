@@ -1,8 +1,5 @@
 <?php
 
-require_once 'HTMLPurifier/HTMLModule.php';
-require_once 'HTMLPurifier/ChildDef/Chameleon.php';
-
 /**
  * XHTML 1.1 Edit Module, defines editing-related elements. Text Extension
  * Module.
@@ -12,14 +9,14 @@ class HTMLPurifier_HTMLModule_Edit extends HTMLPurifier_HTMLModule
     
     public $name = 'Edit';
     
-    public function __construct() {
+    public function setup($config) {
         $contents = 'Chameleon: #PCDATA | Inline ! #PCDATA | Flow';
         $attr = array(
             'cite' => 'URI',
             // 'datetime' => 'Datetime', // not implemented
         );
-        $this->addElement('del', true, 'Inline', $contents, 'Common', $attr);
-        $this->addElement('ins', true, 'Inline', $contents, 'Common', $attr);
+        $this->addElement('del', 'Inline', $contents, 'Common', $attr);
+        $this->addElement('ins', 'Inline', $contents, 'Common', $attr);
     }
     
     // HTML 4.01 specifies that ins/del must not contain block

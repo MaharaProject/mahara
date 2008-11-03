@@ -72,12 +72,34 @@ class HTMLPurifier_HTMLModule
     public $info_attr_transform_post = array();
     
     /**
+     * List of HTMLPurifier_Injector to be performed during well-formedness fixing.
+     * An injector will only be invoked if all of it's pre-requisites are met;
+     * if an injector fails setup, there will be no error; it will simply be
+     * silently disabled.
+     */
+    public $info_injector = array();
+    
+    /**
      * Boolean flag that indicates whether or not getChildDef is implemented.
      * For optimization reasons: may save a call to a function. Be sure
      * to set it if you do implement getChildDef(), otherwise it will have
      * no effect!
      */
     public $defines_child_def = false;
+    
+    /**
+     * Boolean flag whether or not this module is safe. If it is not safe, all
+     * of its members are unsafe. Modules are safe by default (this might be
+     * slightly dangerous, but it doesn't make much sense to force HTML Purifier,
+     * which is based off of safe HTML, to explicitly say, "This is safe," even
+     * though there are modules which are "unsafe")
+     * 
+     * @note Previously, safety could be applied at an element level granularity.
+     *       We've removed this ability, so in order to add "unsafe" elements
+     *       or attributes, a dedicated module with this property set to false
+     *       must be used.
+     */
+    public $safe = true;
     
     /**
      * Retrieves a proper HTMLPurifier_ChildDef subclass based on 
@@ -94,7 +116,6 @@ class HTMLPurifier_HTMLModule
     /**
      * Convenience function that sets up a new element
      * @param $element Name of element to add
-     * @param $safe Is element safe for untrusted users to use?
      * @param $type What content set should element be registered to?
      *              Set as false to skip this step.
      * @param $contents Allowed children in form of:
@@ -103,10 +124,10 @@ class HTMLPurifier_HTMLModule
      *              element?
      * @param $attr What unique attributes does the element define?
      * @note See ElementDef for in-depth descriptions of these parameters.
-     * @return Reference to created element definition object, so you 
+     * @return Created element definition object, so you 
      *         can set advanced parameters
      */
-    public function &addElement($element, $safe, $type, $contents, $attr_includes = array(), $attr = array()) {
+    public function addElement($element, $type, $contents, $attr_includes = array(), $attr = array()) {
         $this->elements[] = $element;
         // parse content_model
         list($content_model_type, $content_model) = $this->parseContents($contents);
@@ -116,7 +137,7 @@ class HTMLPurifier_HTMLModule
         if ($type) $this->addElementToContentSet($element, $type);
         // create element
         $this->info[$element] = HTMLPurifier_ElementDef::create(
-            $safe, $content_model, $content_model_type, $attr
+            $content_model, $content_model_type, $attr
         );
         // literal object $contents means direct child manipulation
         if (!is_string($contents)) $this->info[$element]->child = $contents;
@@ -127,9 +148,9 @@ class HTMLPurifier_HTMLModule
      * Convenience function that creates a totally blank, non-standalone
      * element.
      * @param $element Name of element to create
-     * @return Reference to created element
+     * @return Created element
      */
-    public function &addBlankElement($element) {
+    public function addBlankElement($element) {
         if (!isset($this->info[$element])) {
             $this->elements[] = $element;
             $this->info[$element] = new HTMLPurifier_ElementDef();
@@ -209,5 +230,14 @@ class HTMLPurifier_HTMLModule
         }
         return $ret;
     }
+    
+    /**
+     * Lazy load construction of the module after determining whether
+     * or not it's needed, and also when a finalized configuration object
+     * is available.
+     * @param $config Instance of HTMLPurifier_Config
+     */
+    public function setup($config) {}
+    
 }
 

@@ -1,7 +1,5 @@
 <?php
 
-require_once 'HTMLPurifier/AttrDef.php';
-
 /**
  * Validates the value for the CSS property text-decoration
  * @note This class could be generalized into a version that acts sort of
@@ -15,10 +13,13 @@ class HTMLPurifier_AttrDef_CSS_TextDecoration extends HTMLPurifier_AttrDef
         static $allowed_values = array(
             'line-through' => true,
             'overline' => true,
-            'underline' => true
+            'underline' => true,
         );
         
         $string = strtolower($this->parseCDATA($string));
+        
+        if ($string === 'none') return $string;
+        
         $parts = explode(' ', $string);
         $final = '';
         foreach ($parts as $part) {

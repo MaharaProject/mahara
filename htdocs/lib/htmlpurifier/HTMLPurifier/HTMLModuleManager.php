@@ -1,109 +1,5 @@
 <?php
 
-require_once 'HTMLPurifier/HTMLModule.php';
-require_once 'HTMLPurifier/ElementDef.php';
-require_once 'HTMLPurifier/Doctype.php';
-require_once 'HTMLPurifier/DoctypeRegistry.php';
-
-require_once 'HTMLPurifier/ContentSets.php';
-require_once 'HTMLPurifier/AttrTypes.php';
-require_once 'HTMLPurifier/AttrCollections.php';
-
-require_once 'HTMLPurifier/AttrDef.php';
-require_once 'HTMLPurifier/AttrDef/Enum.php';
-
-// W3C modules
-require_once 'HTMLPurifier/HTMLModule/CommonAttributes.php';
-require_once 'HTMLPurifier/HTMLModule/Text.php';
-require_once 'HTMLPurifier/HTMLModule/Hypertext.php';
-require_once 'HTMLPurifier/HTMLModule/List.php';
-require_once 'HTMLPurifier/HTMLModule/Presentation.php';
-require_once 'HTMLPurifier/HTMLModule/Edit.php';
-require_once 'HTMLPurifier/HTMLModule/Bdo.php';
-require_once 'HTMLPurifier/HTMLModule/Tables.php';
-require_once 'HTMLPurifier/HTMLModule/Image.php';
-require_once 'HTMLPurifier/HTMLModule/StyleAttribute.php';
-require_once 'HTMLPurifier/HTMLModule/Legacy.php';
-require_once 'HTMLPurifier/HTMLModule/Target.php';
-require_once 'HTMLPurifier/HTMLModule/Scripting.php';
-require_once 'HTMLPurifier/HTMLModule/XMLCommonAttributes.php';
-require_once 'HTMLPurifier/HTMLModule/NonXMLCommonAttributes.php';
-require_once 'HTMLPurifier/HTMLModule/Ruby.php';
-require_once 'HTMLPurifier/HTMLModule/Object.php';
-
-// tidy modules
-require_once 'HTMLPurifier/HTMLModule/Tidy.php';
-require_once 'HTMLPurifier/HTMLModule/Tidy/XHTMLAndHTML4.php';
-require_once 'HTMLPurifier/HTMLModule/Tidy/XHTML.php';
-require_once 'HTMLPurifier/HTMLModule/Tidy/Proprietary.php';
-
-HTMLPurifier_ConfigSchema::define(
-    'HTML', 'Doctype', '', 'string',
-    'Doctype to use during filtering. '.
-    'Technically speaking this is not actually a doctype (as it does '.
-    'not identify a corresponding DTD), but we are using this name '.
-    'for sake of simplicity. When non-blank, this will override any older directives '.
-    'like %HTML.XHTML or %HTML.Strict.'
-);
-HTMLPurifier_ConfigSchema::defineAllowedValues('HTML', 'Doctype', array(
-    '', 'HTML 4.01 Transitional', 'HTML 4.01 Strict',
-    'XHTML 1.0 Transitional', 'XHTML 1.0 Strict',
-    'XHTML 1.1'
-));
-
-HTMLPurifier_ConfigSchema::define(
-    'HTML', 'CustomDoctype', null, 'string/null',
-'
-A custom doctype for power-users who defined there own document
-type. This directive only applies when %HTML.Doctype is blank.
-This directive has been available since 2.0.1.
-'
-);
-
-HTMLPurifier_ConfigSchema::define(
-    'HTML', 'Trusted', false, 'bool',
-    'Indicates whether or not the user input is trusted or not. If the '.
-    'input is trusted, a more expansive set of allowed tags and attributes '.
-    'will be used. This directive has been available since 2.0.0.'
-);
-
-HTMLPurifier_ConfigSchema::define(
-    'HTML', 'AllowedModules', null, 'lookup/null', '
-<p>
-    A doctype comes with a set of usual modules to use. Without having
-    to mucking about with the doctypes, you can quickly activate or
-    disable these modules by specifying which modules you wish to allow
-    with this directive. This is most useful for unit testing specific
-    modules, although end users may find it useful for their own ends.
-</p>
-<p>
-    If you specify a module that does not exist, the manager will silently
-    fail to use it, so be careful! User-defined modules are not affected
-    by this directive. Modules defined in %HTML.CoreModules are not
-    affected by this directive. This directive has been available since 2.0.0.
-</p>
-');
-
-HTMLPurifier_ConfigSchema::define(
-    'HTML', 'CoreModules', array(
-        'Structure' => true,
-        'Text' => true,
-        'Hypertext' => true,
-        'List' => true,
-        'NonXMLCommonAttributes' => true,
-        'XMLCommonAttributes' => true,
-        'CommonAttributes' => true
-     ), 'lookup', '
-<p>
-    Certain modularized doctypes (XHTML, namely), have certain modules
-    that must be included for the doctype to be an conforming document
-    type: put those modules here. By default, XHTML\'s core modules
-    are used. You can set this to a blank array to disable core module
-    protection, but this is not recommended. This directive has been
-    available since 2.0.0.
-</p>
-');
-
 class HTMLPurifier_HTMLModuleManager
 {
     
@@ -163,18 +59,21 @@ class HTMLPurifier_HTMLModuleManager
         $this->attrTypes = new HTMLPurifier_AttrTypes();
         $this->doctypes  = new HTMLPurifier_DoctypeRegistry();
         
-        // setup default HTML doctypes
-        
-        // module reuse
+        // setup basic modules
         $common = array(
             'CommonAttributes', 'Text', 'Hypertext', 'List',
             'Presentation', 'Edit', 'Bdo', 'Tables', 'Image',
-            'StyleAttribute', 'Scripting', 'Object'
+            'StyleAttribute',
+            // Unsafe:
+            'Scripting', 'Object',  'Forms',
+            // Sorta legacy, but present in strict:
+            'Name', 
         );
         $transitional = array('Legacy', 'Target');
         $xml = array('XMLCommonAttributes');
         $non_xml = array('NonXMLCommonAttributes');
         
+        // setup basic doctypes
         $this->doctypes->register(
             'HTML 4.01 Transitional', false,
             array_merge($common, $transitional, $non_xml),
@@ -187,7 +86,7 @@ class HTMLPurifier_HTMLModuleManager
         $this->doctypes->register(
             'HTML 4.01 Strict', false,
             array_merge($common, $non_xml),
-            array('Tidy_Strict', 'Tidy_Proprietary'),
+            array('Tidy_Strict', 'Tidy_Proprietary', 'Tidy_Name'),
             array(),
             '-//W3C//DTD HTML 4.01//EN',
             'http://www.w3.org/TR/html4/strict.dtd'
@@ -196,7 +95,7 @@ class HTMLPurifier_HTMLModuleManager
         $this->doctypes->register(
             'XHTML 1.0 Transitional', true,
             array_merge($common, $transitional, $xml, $non_xml),
-            array('Tidy_Transitional', 'Tidy_XHTML', 'Tidy_Proprietary'),
+            array('Tidy_Transitional', 'Tidy_XHTML', 'Tidy_Proprietary', 'Tidy_Name'),
             array(),
             '-//W3C//DTD XHTML 1.0 Transitional//EN',
             'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'
@@ -205,7 +104,7 @@ class HTMLPurifier_HTMLModuleManager
         $this->doctypes->register(
             'XHTML 1.0 Strict', true,
             array_merge($common, $xml, $non_xml),
-            array('Tidy_Strict', 'Tidy_XHTML', 'Tidy_Strict', 'Tidy_Proprietary'),
+            array('Tidy_Strict', 'Tidy_XHTML', 'Tidy_Strict', 'Tidy_Proprietary', 'Tidy_Name'),
             array(),
             '-//W3C//DTD XHTML 1.0 Strict//EN',
             'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'
@@ -214,7 +113,7 @@ class HTMLPurifier_HTMLModuleManager
         $this->doctypes->register(
             'XHTML 1.1', true,
             array_merge($common, $xml, array('Ruby')),
-            array('Tidy_Strict', 'Tidy_XHTML', 'Tidy_Proprietary', 'Tidy_Strict'), // Tidy_XHTML1_1
+            array('Tidy_Strict', 'Tidy_XHTML', 'Tidy_Proprietary', 'Tidy_Strict', 'Tidy_Name'), // Tidy_XHTML1_1
             array(),
             '-//W3C//DTD XHTML 1.1//EN',
             'http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd'
@@ -228,6 +127,9 @@ class HTMLPurifier_HTMLModuleManager
      * @param $module Mixed: string module name, with or without
      *                HTMLPurifier_HTMLModule prefix, or instance of
      *                subclass of HTMLPurifier_HTMLModule.
+     * @param $overload Boolean whether or not to overload previous modules.
+     *                  If this is not set, and you do overload a module,
+     *                  HTML Purifier will complain with a warning.
      * @note This function will not call autoload, you must instantiate
      *       (and thus invoke) autoload outside the method.
      * @note If a string is passed as a module name, different variants
@@ -239,25 +141,22 @@ class HTMLPurifier_HTMLModuleManager
      *       If your object name collides with an internal class, specify
      *       your module manually. All modules must have been included
      *       externally: registerModule will not perform inclusions for you!
-     * @warning If your module has the same name as an already loaded
-     *          module, your module will overload the old one WITHOUT
-     *          warning.
      */
-    public function registerModule($module) {
+    public function registerModule($module, $overload = false) {
         if (is_string($module)) {
             // attempt to load the module
             $original_module = $module;
             $ok = false;
             foreach ($this->prefixes as $prefix) {
                 $module = $prefix . $original_module;
-                if ($this->_classExists($module)) {
+                if (class_exists($module)) {
                     $ok = true;
                     break;
                 }
             }
             if (!$ok) {
                 $module = $original_module;
-                if (!$this->_classExists($module)) {
+                if (!class_exists($module)) {
                     trigger_error($original_module . ' module does not exist',
                         E_USER_ERROR);
                     return;
@@ -269,16 +168,10 @@ class HTMLPurifier_HTMLModuleManager
             trigger_error('Module instance of ' . get_class($module) . ' must have name');
             return;
         }
+        if (!$overload && isset($this->registeredModules[$module->name])) {
+            trigger_error('Overloading ' . $module->name . ' without explicit overload parameter', E_USER_WARNING);
+        }
         $this->registeredModules[$module->name] = $module;
-    }
-    
-    /**
-     * Safely tests for class existence without invoking __autoload in PHP5
-     * or greater.
-     * @param $name String class name to test
-     */
-    private function _classExists($name) {
-        return class_exists($name, false);
     }
     
     /**
@@ -323,18 +216,44 @@ class HTMLPurifier_HTMLModuleManager
             }
         }
         
+        // add proprietary module (this gets special treatment because
+        // it is completely removed from doctypes, etc.)
+        if ($config->get('HTML', 'Proprietary')) {
+            $modules[] = 'Proprietary';
+        }
+        
+        // add SafeObject/Safeembed modules
+        if ($config->get('HTML', 'SafeObject')) {
+            $modules[] = 'SafeObject';
+        }
+        if ($config->get('HTML', 'SafeEmbed')) {
+            $modules[] = 'SafeEmbed';
+        }
+        
         // merge in custom modules
         $modules = array_merge($modules, $this->userModules);
         
         foreach ($modules as $module) {
             $this->processModule($module);
+            $this->modules[$module]->setup($config);
         }
         
         foreach ($this->doctype->tidyModules as $module) {
             $this->processModule($module);
-            if (method_exists($this->modules[$module], 'construct')) {
-                $this->modules[$module]->construct($config);
+            $this->modules[$module]->setup($config);
+        }
+        
+        // prepare any injectors
+        foreach ($this->modules as $module) {
+            $n = array();
+            foreach ($module->info_injector as $i => $injector) {
+                if (!is_object($injector)) {
+                    $class = "HTMLPurifier_Injector_$injector";
+                    $injector = new $class;
+                }
+                $n[$injector->name] = $injector;
             }
+            $module->info_injector = $n;
         }
         
         // setup lookup table based on all valid modules
@@ -381,10 +300,9 @@ class HTMLPurifier_HTMLModuleManager
         
         $elements = array();
         foreach ($this->modules as $module) {
+            if (!$this->trusted && !$module->safe) continue;
             foreach ($module->info as $name => $v) {
                 if (isset($elements[$name])) continue;
-                // if element is not safe, don't use it
-                if (!$this->trusted && ($v->safe === false)) continue;
                 $elements[$name] = $this->getElement($name);
             }
         }
@@ -405,43 +323,45 @@ class HTMLPurifier_HTMLModuleManager
      * @param $trusted Boolean trusted overriding parameter: set to true
      *                 if you want the full version of an element
      * @return Merged HTMLPurifier_ElementDef
+     * @note You may notice that modules are getting iterated over twice (once
+     *       in getElements() and once here). This
+     *       is because 
      */
     public function getElement($name, $trusted = null) {
-        
-        $def = false;
-        if ($trusted === null) $trusted = $this->trusted;
-        
-        $modules = $this->modules;
         
         if (!isset($this->elementLookup[$name])) {
             return false;
         }
         
+        // setup global state variables
+        $def = false;
+        if ($trusted === null) $trusted = $this->trusted;
+        
+        // iterate through each module that has registered itself to this
+        // element
         foreach($this->elementLookup[$name] as $module_name) {
             
-            $module = $modules[$module_name];
+            $module = $this->modules[$module_name];
             
-            // copy is used because, ideally speaking, the original
-            // definition should not be modified. Usually, this will
-            // make no difference, but for consistency's sake
-            $new_def = $module->info[$name]->copy();
-            
-            // refuse to create/merge in a definition that is deemed unsafe
-            if (!$trusted && ($new_def->safe === false)) {
-                $def = false;
+            // refuse to create/merge from a module that is deemed unsafe--
+            // pretend the module doesn't exist--when trusted mode is not on.
+            if (!$trusted && !$module->safe) {
                 continue;
             }
             
+            // clone is used because, ideally speaking, the original
+            // definition should not be modified. Usually, this will
+            // make no difference, but for consistency's sake
+            $new_def = clone $module->info[$name];
+            
             if (!$def && $new_def->standalone) {
-                // element with unknown safety is not to be trusted.
-                // however, a merge-in definition with undefined safety
-                // is fine
-                if (!$trusted && !$new_def->safe) continue;
                 $def = $new_def;
             } elseif ($def) {
+                // This will occur even if $new_def is standalone. In practice,
+                // this will usually result in a full replacement.
                 $def->mergeIn($new_def);
             } else {
-                // could "save it for another day":
+                // :TODO:
                 // non-standalone definitions that don't have a standalone
                 // to merge into could be deferred to the end
                 continue;
@@ -462,7 +382,11 @@ class HTMLPurifier_HTMLModuleManager
             
             $this->contentSets->generateChildDef($def, $module);
         }
-            
+        
+        // This can occur if there is a blank definition, but no base to
+        // mix it in with
+        if (!$def) return false;
+        
         // add information on required attributes
         foreach ($def->attr as $attr_name => $attr_def) {
             if ($attr_def->required) {

@@ -1,41 +1,5 @@
 <?php
 
-require_once 'HTMLPurifier/Definition.php';
-
-require_once 'HTMLPurifier/AttrDef/CSS/AlphaValue.php';
-require_once 'HTMLPurifier/AttrDef/CSS/Background.php';
-require_once 'HTMLPurifier/AttrDef/CSS/BackgroundPosition.php';
-require_once 'HTMLPurifier/AttrDef/CSS/Border.php';
-require_once 'HTMLPurifier/AttrDef/CSS/Color.php';
-require_once 'HTMLPurifier/AttrDef/CSS/Composite.php';
-require_once 'HTMLPurifier/AttrDef/CSS/Filter.php';
-require_once 'HTMLPurifier/AttrDef/CSS/Font.php';
-require_once 'HTMLPurifier/AttrDef/CSS/FontFamily.php';
-require_once 'HTMLPurifier/AttrDef/CSS/Length.php';
-require_once 'HTMLPurifier/AttrDef/CSS/ListStyle.php';
-require_once 'HTMLPurifier/AttrDef/CSS/Multiple.php';
-require_once 'HTMLPurifier/AttrDef/CSS/Percentage.php';
-require_once 'HTMLPurifier/AttrDef/CSS/TextDecoration.php';
-require_once 'HTMLPurifier/AttrDef/CSS/URI.php';
-require_once 'HTMLPurifier/AttrDef/Enum.php';
-
-HTMLPurifier_ConfigSchema::define(
-    'CSS', 'DefinitionRev', 1, 'int', '
-<p>
-    Revision identifier for your custom definition. See
-    %HTML.DefinitionRev for details. This directive has been available
-    since 2.0.0.
-</p>
-');
-
-HTMLPurifier_ConfigSchema::define(
-    'CSS', 'Proprietary', false, 'bool', '
-<p>
-    Whether or not to allow safe, proprietary CSS values. This directive
-    has been available since 3.0.0.
-</p>
-');
-
 /**
  * Defines allowed CSS attributes and what their values are.
  * @see HTMLPurifier_HTMLDefinition
@@ -126,7 +90,7 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
         $this->info['border-left-width'] = 
         $this->info['border-right-width'] = new HTMLPurifier_AttrDef_CSS_Composite(array(
             new HTMLPurifier_AttrDef_Enum(array('thin', 'medium', 'thick')),
-            new HTMLPurifier_AttrDef_CSS_Length(true) //disallow negative
+            new HTMLPurifier_AttrDef_CSS_Length('0') //disallow negative
         ));
         
         $this->info['border-width'] = new HTMLPurifier_AttrDef_CSS_Multiple($border_width);
@@ -152,7 +116,7 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
         $this->info['line-height'] = new HTMLPurifier_AttrDef_CSS_Composite(array(
             new HTMLPurifier_AttrDef_Enum(array('normal')),
             new HTMLPurifier_AttrDef_CSS_Number(true), // no negatives
-            new HTMLPurifier_AttrDef_CSS_Length(true),
+            new HTMLPurifier_AttrDef_CSS_Length('0'),
             new HTMLPurifier_AttrDef_CSS_Percentage(true)
         ));
         
@@ -174,7 +138,7 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
         $this->info['padding-bottom'] = 
         $this->info['padding-left'] = 
         $this->info['padding-right'] = new HTMLPurifier_AttrDef_CSS_Composite(array(
-            new HTMLPurifier_AttrDef_CSS_Length(true),
+            new HTMLPurifier_AttrDef_CSS_Length('0'),
             new HTMLPurifier_AttrDef_CSS_Percentage(true)
         ));
         
@@ -185,13 +149,26 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
             new HTMLPurifier_AttrDef_CSS_Percentage()
         ));
         
-        $this->info['width'] =
-        $this->info['height'] = 
-        new HTMLPurifier_AttrDef_CSS_Composite(array(
-            new HTMLPurifier_AttrDef_CSS_Length(true),
+        $trusted_wh = new HTMLPurifier_AttrDef_CSS_Composite(array(
+            new HTMLPurifier_AttrDef_CSS_Length('0'),
             new HTMLPurifier_AttrDef_CSS_Percentage(true),
             new HTMLPurifier_AttrDef_Enum(array('auto'))
         ));
+        $max = $config->get('CSS', 'MaxImgLength');
+        
+        $this->info['width'] =
+        $this->info['height'] =
+            $max === null ?
+            $trusted_wh : 
+            new HTMLPurifier_AttrDef_Switch('img',
+                // For img tags:
+                new HTMLPurifier_AttrDef_CSS_Composite(array(
+                    new HTMLPurifier_AttrDef_CSS_Length('0', $max),
+                    new HTMLPurifier_AttrDef_Enum(array('auto'))
+                )),
+                // For everyone else:
+                $trusted_wh
+            );
         
         $this->info['text-decoration'] = new HTMLPurifier_AttrDef_CSS_TextDecoration();
         
@@ -238,6 +215,17 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
             $this->doSetupProprietary($config);
         }
         
+        if ($config->get('CSS', 'AllowTricky')) {
+            $this->doSetupTricky($config);
+        }
+        
+        $allow_important = $config->get('CSS', 'AllowImportant');
+        // wrap all attr-defs with decorator that handles !important
+        foreach ($this->info as $k => $v) {
+            $this->info[$k] = new HTMLPurifier_AttrDef_CSS_ImportantDecorator($v, $allow_important);
+        }
+        
+        $this->setupConfigStuff($config);
     }
     
     protected function doSetupProprietary($config) {
@@ -259,5 +247,44 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
         
     }
     
+    protected function doSetupTricky($config) {
+        $this->info['display'] = new HTMLPurifier_AttrDef_Enum(array(
+            'inline', 'block', 'list-item', 'run-in', 'compact',
+            'marker', 'table', 'inline-table', 'table-row-group',
+            'table-header-group', 'table-footer-group', 'table-row',
+            'table-column-group', 'table-column', 'table-cell', 'table-caption', 'none'
+        ));
+        $this->info['visibility'] = new HTMLPurifier_AttrDef_Enum(array(
+            'visible', 'hidden', 'collapse'
+        ));
+    }
+    
+    
+    /**
+     * Performs extra config-based processing. Based off of
+     * HTMLPurifier_HTMLDefinition.
+     * @todo Refactor duplicate elements into common class (probably using
+     *       composition, not inheritance).
+     */
+    protected function setupConfigStuff($config) {
+        
+        // setup allowed elements
+        $support = "(for information on implementing this, see the ".
+                   "support forums) ";
+        $allowed_attributes = $config->get('CSS', 'AllowedProperties');
+        if ($allowed_attributes !== null) {
+            foreach ($this->info as $name => $d) {
+                if(!isset($allowed_attributes[$name])) unset($this->info[$name]);
+                unset($allowed_attributes[$name]);
+            }
+            // emit errors
+            foreach ($allowed_attributes as $name => $d) {
+                // :TODO: Is this htmlspecialchars() call really necessary?
+                $name = htmlspecialchars($name);
+                trigger_error("Style attribute '$name' is not supported $support", E_USER_WARNING);
+            }
+        }
+        
+    }
 }
 

@@ -1,22 +1,6 @@
 <?php
 
-require_once 'HTMLPurifier/HTMLModule/Tidy.php';
-
-require_once 'HTMLPurifier/TagTransform/Simple.php';
-require_once 'HTMLPurifier/TagTransform/Font.php';
-
-require_once 'HTMLPurifier/AttrTransform/BgColor.php';
-require_once 'HTMLPurifier/AttrTransform/BoolToCSS.php';
-require_once 'HTMLPurifier/AttrTransform/Border.php';
-require_once 'HTMLPurifier/AttrTransform/Name.php';
-require_once 'HTMLPurifier/AttrTransform/Length.php';
-require_once 'HTMLPurifier/AttrTransform/ImgSpace.php';
-require_once 'HTMLPurifier/AttrTransform/EnumToCSS.php';
-
-require_once 'HTMLPurifier/ChildDef/StrictBlockquote.php';
-
-class HTMLPurifier_HTMLModule_Tidy_XHTMLAndHTML4 extends
-      HTMLPurifier_HTMLModule_Tidy
+class HTMLPurifier_HTMLModule_Tidy_XHTMLAndHTML4 extends HTMLPurifier_HTMLModule_Tidy
 {
     
     public function makeFixes() {
@@ -119,10 +103,6 @@ class HTMLPurifier_HTMLModule_Tidy_XHTMLAndHTML4 extends
         // @hspace for img ------------------------------------------------
         $r['img@hspace'] = new HTMLPurifier_AttrTransform_ImgSpace('hspace');
         
-        // @name for img, a -----------------------------------------------
-        $r['img@name'] = 
-        $r['a@name'] = new HTMLPurifier_AttrTransform_Name();
-        
         // @noshade for hr ------------------------------------------------
         // this transformation is not precise but often good enough.
         // different browsers use different styles to designate noshade
@@ -176,31 +156,5 @@ class HTMLPurifier_HTMLModule_Tidy_XHTMLAndHTML4 extends
         
     }
     
-}
-
-class HTMLPurifier_HTMLModule_Tidy_Transitional extends
-      HTMLPurifier_HTMLModule_Tidy_XHTMLAndHTML4
-{
-    public $name = 'Tidy_Transitional';
-    public $defaultLevel = 'heavy';
-}
-
-class HTMLPurifier_HTMLModule_Tidy_Strict extends
-      HTMLPurifier_HTMLModule_Tidy_XHTMLAndHTML4
-{
-    public $name = 'Tidy_Strict';
-    public $defaultLevel = 'light';
-    
-    public function makeFixes() {
-        $r = parent::makeFixes();
-        $r['blockquote#content_model_type'] = 'strictblockquote';
-        return $r;
-    }
-    
-    public $defines_child_def = true;
-    public function getChildDef($def) {
-        if ($def->content_model_type != 'strictblockquote') return parent::getChildDef($def);
-        return new HTMLPurifier_ChildDef_StrictBlockquote($def->content_model);
-    }
 }
 

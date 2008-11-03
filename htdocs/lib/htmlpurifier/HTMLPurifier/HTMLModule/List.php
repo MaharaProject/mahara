@@ -1,7 +1,5 @@
 <?php
 
-require_once 'HTMLPurifier/HTMLModule.php';
-
 /**
  * XHTML 1.1 List Module, defines list-oriented elements. Core Module.
  */
@@ -21,15 +19,15 @@ class HTMLPurifier_HTMLModule_List extends HTMLPurifier_HTMLModule
     
     public $content_sets = array('Flow' => 'List');
     
-    public function __construct() {
-        $this->addElement('ol', true, 'List', 'Required: li', 'Common');
-        $this->addElement('ul', true, 'List', 'Required: li', 'Common');
-        $this->addElement('dl', true, 'List', 'Required: dt | dd', 'Common');
+    public function setup($config) {
+        $this->addElement('ol', 'List', 'Required: li', 'Common');
+        $this->addElement('ul', 'List', 'Required: li', 'Common');
+        $this->addElement('dl', 'List', 'Required: dt | dd', 'Common');
         
-        $this->addElement('li', true, false, 'Flow', 'Common');
+        $this->addElement('li', false, 'Flow', 'Common');
         
-        $this->addElement('dd', true, false, 'Flow', 'Common');
-        $this->addElement('dt', true, false, 'Inline', 'Common');
+        $this->addElement('dd', false, 'Flow', 'Common');
+        $this->addElement('dt', false, 'Inline', 'Common');
     }
     
 }

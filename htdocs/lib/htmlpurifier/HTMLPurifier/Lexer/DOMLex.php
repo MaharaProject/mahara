@@ -1,8 +1,5 @@
 <?php
 
-require_once 'HTMLPurifier/Lexer.php';
-require_once 'HTMLPurifier/TokenFactory.php';
-
 /**
  * Parser that uses PHP 5's DOM extension (part of the core).
  * 
@@ -48,7 +45,10 @@ class HTMLPurifier_Lexer_DOMLex extends HTMLPurifier_Lexer
             $char = '[^a-z!\/]';
             $comment = "/<!--(.*?)(-->|\z)/is";
             $html = preg_replace_callback($comment, array($this, 'callbackArmorCommentEntities'), $html);
-            $html = preg_replace("/<($char)/i", '&lt;\\1', $html);
+            do {
+                $old = $html;
+                $html = preg_replace("/<($char)/i", '&lt;\\1', $html);
+            } while ($html !== $old);
             $html = preg_replace_callback($comment, array($this, 'callbackUndoCommentSubst'), $html); // fix comments
         }
         
@@ -90,10 +90,27 @@ class HTMLPurifier_Lexer_DOMLex extends HTMLPurifier_Lexer
             $tokens[] = $this->factory->createText($node->data);
             return;
         } elseif ($node->nodeType === XML_CDATA_SECTION_NODE) {
-            // undo DOM's special treatment of <script> tags
-            $tokens[] = $this->factory->createText($this->parseData($node->data));
+            // undo libxml's special treatment of <script> and <style> tags
+            $last = end($tokens);
+            $data = $node->data;
+            // (note $node->tagname is already normalized)
+            if ($last instanceof HTMLPurifier_Token_Start && ($last->name == 'script' || $last->name == 'style')) {
+                $new_data = trim($data);
+                if (substr($new_data, 0, 4) === '<!--') {
+                    $data = substr($new_data, 4);
+                    if (substr($data, -3) === '-->') {
+                        $data = substr($data, 0, -3);
+                    } else {
+                        // Highly suspicious! Not sure what to do...
+                    }
+                }
+            }
+            $tokens[] = $this->factory->createText($this->parseData($data));
             return;
         } elseif ($node->nodeType === XML_COMMENT_NODE) {
+            // this is code is only invoked for comments in script/style in versions
+            // of libxml pre-2.6.28 (regular comments, of course, are still
+            // handled regularly)
             $tokens[] = $this->factory->createComment($node->data);
             return;
         } elseif (

@@ -1,29 +1,5 @@
 <?php
 
-require_once 'HTMLPurifier/ConfigSchema.php';
-
-// member variables
-require_once 'HTMLPurifier/HTMLDefinition.php';
-require_once 'HTMLPurifier/CSSDefinition.php';
-require_once 'HTMLPurifier/URIDefinition.php';
-require_once 'HTMLPurifier/Doctype.php';
-require_once 'HTMLPurifier/DefinitionCacheFactory.php';
-
-// accomodations for versions earlier than 4.3.10 and 5.0.2
-// borrowed from PHP_Compat, LGPL licensed, by Aidan Lister <aidan@php.net>
-if (!defined('PHP_EOL')) {
-    switch (strtoupper(substr(PHP_OS, 0, 3))) {
-        case 'WIN':
-            define('PHP_EOL', "\r\n");
-            break;
-        case 'DAR':
-            define('PHP_EOL', "\r");
-            break;
-        default:
-            define('PHP_EOL', "\n");
-    }
-}
-
 /**
  * Configuration object that triggers customizable behavior.
  *
@@ -44,7 +20,7 @@ class HTMLPurifier_Config
     /**
      * HTML Purifier's version
      */
-    public $version = '3.0.0';
+    public $version = '3.2.0';
     
     /**
      * Bool indicator whether or not to automatically finalize 
@@ -71,6 +47,11 @@ class HTMLPurifier_Config
     protected $conf;
     
     /**
+     * Parser for variables
+     */
+    protected $parser;
+    
+    /**
      * Reference HTMLPurifier_ConfigSchema for value checking
      * @note This is public for introspective purposes. Please don't
      *       abuse!
@@ -91,9 +72,10 @@ class HTMLPurifier_Config
      * @param $definition HTMLPurifier_ConfigSchema that defines what directives
      *                    are allowed.
      */
-    public function __construct(&$definition) {
+    public function __construct($definition) {
         $this->conf = $definition->defaults; // set up, copy in defaults
         $this->def  = $definition; // keep a copy around for checking
+        $this->parser = new HTMLPurifier_VarParser_Flexible();
     }
     
     /**
@@ -102,14 +84,19 @@ class HTMLPurifier_Config
      *                      object. Can be: a HTMLPurifier_Config() object,
      *                      an array of directives based on loadArray(),
      *                      or a string filename of an ini file.
+     * @param HTMLPurifier_ConfigSchema Schema object
      * @return Configured HTMLPurifier_Config object
      */
-    public static function create($config) {
+    public static function create($config, $schema = null) {
         if ($config instanceof HTMLPurifier_Config) {
             // pass-through
             return $config;
         }
-        $ret = HTMLPurifier_Config::createDefault();
+        if (!$schema) {
+            $ret = HTMLPurifier_Config::createDefault();
+        } else {
+            $ret = new HTMLPurifier_Config($schema);
+        }
         if (is_string($config)) $ret->loadIni($config);
         elseif (is_array($config)) $ret->loadArray($config);
         return $ret;
@@ -120,7 +107,7 @@ class HTMLPurifier_Config
      * @return Default HTMLPurifier_Config object.
      */
     public static function createDefault() {
-        $definition =& HTMLPurifier_ConfigSchema::instance();
+        $definition = HTMLPurifier_ConfigSchema::instance();
         $config = new HTMLPurifier_Config($definition);
         return $config;
     }
@@ -138,7 +125,7 @@ class HTMLPurifier_Config
                 E_USER_WARNING);
             return;
         }
-        if ($this->def->info[$namespace][$key]->class == 'alias') {
+        if (isset($this->def->info[$namespace][$key]->isAlias)) {
             $d = $this->def->info[$namespace][$key];
             trigger_error('Cannot get value from aliased directive, use real name ' . $d->namespace . '.' . $d->name,
                 E_USER_ERROR);
@@ -209,38 +196,49 @@ class HTMLPurifier_Config
                 E_USER_WARNING);
             return;
         }
-        if ($this->def->info[$namespace][$key]->class == 'alias') {
+        $def = $this->def->info[$namespace][$key];
+        
+        if (isset($def->isAlias)) {
             if ($from_alias) {
                 trigger_error('Double-aliases not allowed, please fix '.
-                    'ConfigSchema bug with' . "$namespace.$key");
+                    'ConfigSchema bug with' . "$namespace.$key", E_USER_ERROR);
+                return;
             }
-            $this->set($this->def->info[$namespace][$key]->namespace,
-                       $this->def->info[$namespace][$key]->name,
+            $this->set($new_ns  = $def->namespace,
+                       $new_dir = $def->name,
                        $value, true);
+            trigger_error("$namespace.$key is an alias, preferred directive name is $new_ns.$new_dir", E_USER_NOTICE);
             return;
         }
-        $value = $this->def->validate(
-                    $value,
-                    $type = $this->def->info[$namespace][$key]->type,
-                    $this->def->info[$namespace][$key]->allow_null
-                 );
-        if (is_string($value)) {
+        
+        // Raw type might be negative when using the fully optimized form
+        // of stdclass, which indicates allow_null == true
+        $rtype = is_int($def) ? $def : $def->type;
+        if ($rtype < 0) {
+            $type = -$rtype;
+            $allow_null = true;
+        } else {
+            $type = $rtype;
+            $allow_null = isset($def->allow_null);
+        }
+        
+        try {
+            $value = $this->parser->parse($value, $type, $allow_null);
+        } catch (HTMLPurifier_VarParserException $e) {
+            trigger_error('Value for ' . "$namespace.$key" . ' is of invalid type, should be ' . HTMLPurifier_VarParser::getTypeName($type), E_USER_WARNING);
+            return;
+        }
+        if (is_string($value) && is_object($def)) {
             // resolve value alias if defined
-            if (isset($this->def->info[$namespace][$key]->aliases[$value])) {
-                $value = $this->def->info[$namespace][$key]->aliases[$value];
+            if (isset($def->aliases[$value])) {
+                $value = $def->aliases[$value];
             }
-            if ($this->def->info[$namespace][$key]->allowed !== true) {
-                // check to see if the value is allowed
-                if (!isset($this->def->info[$namespace][$key]->allowed[$value])) {
-                    trigger_error('Value not supported, valid values are: ' .
-                        $this->_listify($this->def->info[$namespace][$key]->allowed), E_USER_WARNING);
-                    return;
-                }
+            // check to see if the value is allowed
+            if (isset($def->allowed) && !isset($def->allowed[$value])) {
+                trigger_error('Value not supported, valid values are: ' .
+                    $this->_listify($def->allowed), E_USER_WARNING);
+                return;
             }
-        }
-        if ($this->def->isError($value)) {
-            trigger_error('Value for ' . "$namespace.$key" . ' is of invalid type, should be ' . $type, E_USER_WARNING);
-            return;
         }
         $this->conf[$namespace][$key] = $value;
         
@@ -264,21 +262,21 @@ class HTMLPurifier_Config
     }
     
     /**
-     * Retrieves reference to the HTML definition.
+     * Retrieves object reference to the HTML definition.
      * @param $raw Return a copy that has not been setup yet. Must be
      *             called before it's been setup, otherwise won't work.
      */
-    public function &getHTMLDefinition($raw = false) {
-        $def =& $this->getDefinition('HTML', $raw);
-        return $def; // prevent PHP 4.4.0 from complaining
+    public function getHTMLDefinition($raw = false) {
+        return $this->getDefinition('HTML', $raw);
     }
     
     /**
-     * Retrieves reference to the CSS definition
+     * Retrieves object reference to the CSS definition
+     * @param $raw Return a copy that has not been setup yet. Must be
+     *             called before it's been setup, otherwise won't work.
      */
-    public function &getCSSDefinition($raw = false) {
-        $def =& $this->getDefinition('CSS', $raw);
-        return $def;
+    public function getCSSDefinition($raw = false) {
+        return $this->getDefinition('CSS', $raw);
     }
     
     /**
@@ -286,7 +284,7 @@ class HTMLPurifier_Config
      * @param $type Type of definition: HTML, CSS, etc
      * @param $raw  Whether or not definition should be returned raw
      */
-    public function &getDefinition($type, $raw = false) {
+    public function getDefinition($type, $raw = false) {
         if (!$this->finalized && $this->autoFinalize) $this->finalize();
         $factory = HTMLPurifier_DefinitionCacheFactory::instance();
         $cache = $factory->create($type, $this);
@@ -320,17 +318,13 @@ class HTMLPurifier_Config
         } elseif ($type == 'URI') {
             $this->definitions[$type] = new HTMLPurifier_URIDefinition();
         } else {
-            trigger_error("Definition of $type type not supported");
-            $false = false;
-            return $false;
+            throw new HTMLPurifier_Exception("Definition of $type type not supported");
         }
         // quick abort if raw
         if ($raw) {
             if (is_null($this->get($type, 'DefinitionID'))) {
                 // fatally error out if definition ID not set
-                trigger_error("Cannot retrieve raw version without specifying %$type.DefinitionID", E_USER_ERROR);
-                $false = new HTMLPurifier_Error();
-                return $false;
+                throw new HTMLPurifier_Exception("Cannot retrieve raw version without specifying %$type.DefinitionID");
             }
             return $this->definitions[$type];
         }
@@ -370,8 +364,10 @@ class HTMLPurifier_Config
      * namespaces/directives list.
      * @param $allowed List of allowed namespaces/directives
      */
-    public static function getAllowedDirectivesForForm($allowed) {
-        $schema = HTMLPurifier_ConfigSchema::instance();
+    public static function getAllowedDirectivesForForm($allowed, $schema = null) {
+        if (!$schema) {
+            $schema = HTMLPurifier_ConfigSchema::instance();
+        }
         if ($allowed !== true) {
              if (is_string($allowed)) $allowed = array($allowed);
              $allowed_ns = array();
@@ -398,7 +394,7 @@ class HTMLPurifier_Config
                     if (isset($blacklisted_directives["$ns.$directive"])) continue;
                     if (!isset($allowed_directives["$ns.$directive"]) && !isset($allowed_ns[$ns])) continue;
                 }
-                if ($def->class == 'alias') continue;
+                if (isset($def->isAlias)) continue;
                 if ($directive == 'DefinitionID' || $directive == 'DefinitionRev') continue;
                 $ret[] = array($ns, $directive);
             }
@@ -413,10 +409,11 @@ class HTMLPurifier_Config
      * @param $index Index/name that the config variables are in
      * @param $allowed List of allowed namespaces/directives 
      * @param $mq_fix Boolean whether or not to enable magic quotes fix
+     * @param $schema Instance of HTMLPurifier_ConfigSchema to use, if not global copy
      */
-    public static function loadArrayFromForm($array, $index, $allowed = true, $mq_fix = true) {
-        $ret = HTMLPurifier_Config::prepareArrayFromForm($array, $index, $allowed, $mq_fix);
-        $config = HTMLPurifier_Config::create($ret);
+    public static function loadArrayFromForm($array, $index = false, $allowed = true, $mq_fix = true, $schema = null) {
+        $ret = HTMLPurifier_Config::prepareArrayFromForm($array, $index, $allowed, $mq_fix, $schema);
+        $config = HTMLPurifier_Config::create($ret, $schema);
         return $config;
     }
     
@@ -424,8 +421,8 @@ class HTMLPurifier_Config
      * Merges in configuration values from $_GET/$_POST to object. NOT STATIC.
      * @note Same parameters as loadArrayFromForm
      */
-    public function mergeArrayFromForm($array, $index, $allowed = true, $mq_fix = true) {
-         $ret = HTMLPurifier_Config::prepareArrayFromForm($array, $index, $allowed, $mq_fix);
+    public function mergeArrayFromForm($array, $index = false, $allowed = true, $mq_fix = true) {
+         $ret = HTMLPurifier_Config::prepareArrayFromForm($array, $index, $allowed, $mq_fix, $this->def);
          $this->loadArray($ret);
     }
     
@@ -433,11 +430,11 @@ class HTMLPurifier_Config
      * Prepares an array from a form into something usable for the more
      * strict parts of HTMLPurifier_Config
      */
-    public static function prepareArrayFromForm($array, $index, $allowed = true, $mq_fix = true) {
-        $array = (isset($array[$index]) && is_array($array[$index])) ? $array[$index] : array();
-        $mq = get_magic_quotes_gpc() && $mq_fix;
+    public static function prepareArrayFromForm($array, $index = false, $allowed = true, $mq_fix = true, $schema = null) {
+        if ($index !== false) $array = (isset($array[$index]) && is_array($array[$index])) ? $array[$index] : array();
+        $mq = $mq_fix && function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc();
         
-        $allowed = HTMLPurifier_Config::getAllowedDirectivesForForm($allowed);
+        $allowed = HTMLPurifier_Config::getAllowedDirectivesForForm($allowed, $schema);
         $ret = array();
         foreach ($allowed as $key) {
             list($ns, $directive) = $key;

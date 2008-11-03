@@ -1,18 +1,5 @@
 <?php
 
-require_once 'HTMLPurifier/AttrDef/Lang.php';
-require_once 'HTMLPurifier/AttrDef/Enum.php';
-require_once 'HTMLPurifier/AttrDef/HTML/Bool.php';
-require_once 'HTMLPurifier/AttrDef/HTML/ID.php';
-require_once 'HTMLPurifier/AttrDef/HTML/Length.php';
-require_once 'HTMLPurifier/AttrDef/HTML/MultiLength.php';
-require_once 'HTMLPurifier/AttrDef/HTML/Nmtokens.php';
-require_once 'HTMLPurifier/AttrDef/HTML/Pixels.php';
-require_once 'HTMLPurifier/AttrDef/HTML/Color.php';
-require_once 'HTMLPurifier/AttrDef/Integer.php';
-require_once 'HTMLPurifier/AttrDef/Text.php';
-require_once 'HTMLPurifier/AttrDef/URI.php';
-
 /**
  * Provides lookup array of attribute types to HTMLPurifier_AttrDef objects
  */
@@ -21,7 +8,7 @@ class HTMLPurifier_AttrTypes
     /**
      * Lookup array of attribute string identifiers to concrete implementations
      */
-    public $info = array();
+    protected $info = array();
     
     /**
      * Constructs the info array, supplying default implementations for attribute
@@ -45,6 +32,9 @@ class HTMLPurifier_AttrTypes
         
         // unimplemented aliases
         $this->info['ContentType'] = new HTMLPurifier_AttrDef_Text();
+        $this->info['ContentTypes'] = new HTMLPurifier_AttrDef_Text();
+        $this->info['Charsets'] = new HTMLPurifier_AttrDef_Text();
+        $this->info['Character'] = new HTMLPurifier_AttrDef_Text();
         
         // number is really a positive integer (one or more digits)
         // FIXME: ^^ not always, see start and value of list items

@@ -1,7 +1,9 @@
 <?php
 
-require_once 'HTMLPurifier/LanguageFactory.php';
-
+/**
+ * Represents a language and defines localizable string formatting and
+ * other functions, as well as the localized messages for HTML Purifier.
+ */
 class HTMLPurifier_Language
 {
     
@@ -26,6 +28,13 @@ class HTMLPurifier_Language
     public $errorNames = array();
     
     /**
+     * True if no message file was found for this language, so English
+     * is being used instead. Check this if you'd like to notify the
+     * user that they've used a non-supported language.
+     */
+    public $error = false;
+    
+    /**
      * Has the language object been loaded yet?
      * @todo Make it private, fix usage in HTMLPurifier_LanguageTest
      */
@@ -38,7 +47,7 @@ class HTMLPurifier_Language
     
     public function __construct($config, $context) {
         $this->config  = $config;
-        $this->context =& $context;
+        $this->context = $context;
     }
     
     /**
@@ -124,7 +133,7 @@ class HTMLPurifier_Language
                     // could be introduced for all types of tokens. This
                     // may need to be factored out into a dedicated class
                     if (!empty($value->attr)) {
-                        $stripped_token = $value->copy();
+                        $stripped_token = clone $value;
                         $stripped_token->attr = array();
                         $subst['$'.$i.'.Compact'] = $generator->generateFromToken($stripped_token);
                     }

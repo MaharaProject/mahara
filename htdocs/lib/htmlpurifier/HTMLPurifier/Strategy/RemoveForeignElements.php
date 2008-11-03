@@ -1,49 +1,5 @@
 <?php
 
-require_once 'HTMLPurifier/Strategy.php';
-require_once 'HTMLPurifier/HTMLDefinition.php';
-require_once 'HTMLPurifier/Generator.php';
-require_once 'HTMLPurifier/TagTransform.php';
-
-require_once 'HTMLPurifier/AttrValidator.php';
-
-HTMLPurifier_ConfigSchema::define(
-    'Core', 'RemoveInvalidImg', true, 'bool', '
-<p>
-  This directive enables pre-emptive URI checking in <code>img</code> 
-  tags, as the attribute validation strategy is not authorized to 
-  remove elements from the document.  This directive has been available 
-  since 1.3.0, revert to pre-1.3.0 behavior by setting to false.
-</p>
-'
-);
-
-HTMLPurifier_ConfigSchema::define(
-    'Core', 'RemoveScriptContents', null, 'bool/null', '
-<p>
-  This directive enables HTML Purifier to remove not only script tags
-  but all of their contents. This directive has been deprecated since 2.1.0,
-  and when not set the value of %Core.HiddenElements will take
-  precedence. This directive has been available since 2.0.0, and can be used to 
-  revert to pre-2.0.0 behavior by setting it to false.
-</p>
-'
-);
-
-HTMLPurifier_ConfigSchema::define(
-    'Core', 'HiddenElements', array('script' => true, 'style' => true), 'lookup', '
-<p>
-  This directive is a lookup array of elements which should have their
-  contents removed when they are not allowed by the HTML definition.
-  For example, the contents of a <code>script</code> tag are not 
-  normally shown in a document, so if script tags are to be removed,
-  their contents should be removed to. This is opposed to a <code>b</code>
-  tag, which defines some presentational changes but does not hide its
-  contents.
-</p>
-'
-);
-
 /**
  * Removes all unrecognized tags from the list of tokens.
  * 
@@ -57,11 +13,14 @@ class HTMLPurifier_Strategy_RemoveForeignElements extends HTMLPurifier_Strategy
     
     public function execute($tokens, $config, $context) {
         $definition = $config->getHTMLDefinition();
-        $generator = new HTMLPurifier_Generator();
+        $generator = new HTMLPurifier_Generator($config, $context);
         $result = array();
         
         $escape_invalid_tags = $config->get('Core', 'EscapeInvalidTags');
         $remove_invalid_img  = $config->get('Core', 'RemoveInvalidImg');
+        
+        // currently only used to determine if comments should be kept
+        $trusted = $config->get('HTML', 'Trusted');
         
         $remove_script_contents = $config->get('Core', 'RemoveScriptContents');
         $hidden_elements     = $config->get('Core', 'HiddenElements');
@@ -116,7 +75,7 @@ class HTMLPurifier_Strategy_RemoveForeignElements extends HTMLPurifier_Strategy
                     // mostly everything's good, but
                     // we need to make sure required attributes are in order
                     if (
-                        ($token->type === 'start' || $token->type === 'empty') &&
+                        ($token instanceof HTMLPurifier_Token_Start || $token instanceof HTMLPurifier_Token_Empty) &&
                         $definition->info[$token->name]->required_attr &&
                         ($token->name != 'img' || $remove_invalid_img) // ensure config option still works
                     ) {
@@ -135,9 +94,9 @@ class HTMLPurifier_Strategy_RemoveForeignElements extends HTMLPurifier_Strategy
                         $token->armor['ValidateAttributes'] = true;
                     }
                     
-                    if (isset($hidden_elements[$token->name]) && $token->type == 'start') {
+                    if (isset($hidden_elements[$token->name]) && $token instanceof HTMLPurifier_Token_Start) {
                         $textify_comments = $token->name;
-                    } elseif ($token->name === $textify_comments && $token->type == 'end') {
+                    } elseif ($token->name === $textify_comments && $token instanceof HTMLPurifier_Token_End) {
                         $textify_comments = false;
                     }
                     
@@ -145,15 +104,15 @@ class HTMLPurifier_Strategy_RemoveForeignElements extends HTMLPurifier_Strategy
                     // invalid tag, generate HTML representation and insert in
                     if ($e) $e->send(E_WARNING, 'Strategy_RemoveForeignElements: Foreign element to text');
                     $token = new HTMLPurifier_Token_Text(
-                        $generator->generateFromToken($token, $config, $context)
+                        $generator->generateFromToken($token)
                     );
                 } else {
                     // check if we need to destroy all of the tag's children
                     // CAN BE GENERICIZED
                     if (isset($hidden_elements[$token->name])) {
-                        if ($token->type == 'start') {
+                        if ($token instanceof HTMLPurifier_Token_Start) {
                             $remove_until = $token->name;
-                        } elseif ($token->type == 'empty') {
+                        } elseif ($token instanceof HTMLPurifier_Token_Empty) {
                             // do nothing: we're still looking
                         } else {
                             $remove_until = false;
@@ -164,17 +123,34 @@ class HTMLPurifier_Strategy_RemoveForeignElements extends HTMLPurifier_Strategy
                     }
                     continue;
                 }
-            } elseif ($token->type == 'comment') {
+            } elseif ($token instanceof HTMLPurifier_Token_Comment) {
                 // textify comments in script tags when they are allowed
                 if ($textify_comments !== false) {
                     $data = $token->data;
                     $token = new HTMLPurifier_Token_Text($data);
+                } elseif ($trusted) {
+                    // keep, but perform comment cleaning
+                    if ($e) {
+                        // perform check whether or not there's a trailing hyphen
+                        if (substr($token->data, -1) == '-') {
+                            $e->send(E_NOTICE, 'Strategy_RemoveForeignElements: Trailing hyphen in comment removed');
+                        }
+                    }
+                    $token->data = rtrim($token->data, '-');
+                    $found_double_hyphen = false;
+                    while (strpos($token->data, '--') !== false) {
+                        if ($e && !$found_double_hyphen) {
+                            $e->send(E_NOTICE, 'Strategy_RemoveForeignElements: Hyphens in comment collapsed');
+                        }
+                        $found_double_hyphen = true; // prevent double-erroring
+                        $token->data = str_replace('--', '-', $token->data);
+                    }
                 } else {
                     // strip comments
                     if ($e) $e->send(E_NOTICE, 'Strategy_RemoveForeignElements: Comment removed');
                     continue;
                 }
-            } elseif ($token->type == 'text') {
+            } elseif ($token instanceof HTMLPurifier_Token_Text) {
             } else {
                 continue;
             }

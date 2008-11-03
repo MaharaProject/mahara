@@ -1,8 +1,5 @@
 <?php
 
-require_once 'HTMLPurifier/AttrDef.php';
-require_once 'HTMLPurifier/CSSDefinition.php';
-
 /**
  * Validates shorthand CSS property background.
  * @warning Does not support url tokens that have internal spaces.
@@ -30,6 +27,9 @@ class HTMLPurifier_AttrDef_CSS_Background extends HTMLPurifier_AttrDef
         // regular pre-processing
         $string = $this->parseCDATA($string);
         if ($string === '') return false;
+        
+        // munge rgb() decl if necessary
+        $string = $this->mungeRgb($string);
         
         // assumes URI doesn't have spaces in it
         $bits = explode(' ', strtolower($string)); // bits to process

@@ -1,10 +1,7 @@
 <?php
 
-require_once 'HTMLPurifier/Generator.php';
-require_once 'HTMLPurifier/Token.php';
-require_once 'HTMLPurifier/Encoder.php';
-
 // OUT OF DATE, NEEDS UPDATING!
+// USE XMLWRITER!
 
 class HTMLPurifier_Printer
 {
@@ -23,18 +20,15 @@ class HTMLPurifier_Printer
      * Initialize $generator.
      */
     public function __construct() {
-        $this->generator = new HTMLPurifier_Generator();
     }
     
     /**
      * Give generator necessary configuration if possible
      */
     public function prepareGenerator($config) {
-        // hack for smoketests/configForm.php
         $all = $config->getAll();
-        if (empty($all['HTML'])) return;
         $context = new HTMLPurifier_Context();
-        $this->generator->generateFromTokens(array(), $config, $context);
+        $this->generator = new HTMLPurifier_Generator($config, $context);
     }
     
     /**

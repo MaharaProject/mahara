@@ -1,8 +1,5 @@
 <?php
 
-require_once 'HTMLPurifier/AttrDef.php';
-require_once 'HTMLPurifier/CSSDefinition.php';
-
 /**
  * Validates the HTML attribute style, otherwise known as CSS.
  * @note We don't implement the whole CSS specification, so it might be
@@ -31,6 +28,12 @@ class HTMLPurifier_AttrDef_CSS extends HTMLPurifier_AttrDef
         
         $declarations = explode(';', $css);
         $propvalues = array();
+        
+        /**
+         * Name of the current CSS property being validated.
+         */
+        $property = false;
+        $context->register('CurrentCSSProperty', $property);
         
         foreach ($declarations as $declaration) {
             if (!$declaration) continue;
@@ -63,6 +66,8 @@ class HTMLPurifier_AttrDef_CSS extends HTMLPurifier_AttrDef
             if ($result === false) continue;
             $propvalues[$property] = $result;
         }
+        
+        $context->destroy('CurrentCSSProperty');
         
         // procedure does not write the new CSS simultaneously, so it's
         // slightly inefficient, but it's the only way of getting rid of
