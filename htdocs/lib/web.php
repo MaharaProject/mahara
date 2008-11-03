@@ -2085,6 +2085,11 @@ function clean_text($text) {
 
     $config->set('Core', 'Encoding', 'UTF-8');
     $config->set('HTML', 'Doctype', 'XHTML 1.0 Transitional');
+    if (get_config('filters')) {
+        foreach (unserialize(get_config('filters')) as $filter) {
+            $config->set('Filter', $filter, true);
+        }
+    }
     $def =& $config->getHTMLDefinition(true);
     $def->addAttribute('a', 'target', 'Enum#_blank,_self,_target,_top');
     $purifier = new HTMLPurifier($config);

@@ -38,9 +38,18 @@ $themeoptions = get_themes();
 $yesno = array(true  => get_string('yes'),
                false => get_string('no'));
 
+$allowedfilters = array('YouTube');
+$enabledfilters = get_config('filters');
+if ($enabledfilters) {
+    $enabledfilters = unserialize($enabledfilters);
+}
+else {
+    $enabledfilters = array();
+}
+
 $searchpluginoptions = get_search_plugins();
 
-$siteoptionform = pieform(array(
+$siteoptionform = array(
     'name'       => 'siteoptions',
     'jsform'     => true,
     'renderer'   => 'table',
@@ -148,12 +157,35 @@ $siteoptionform = pieform(array(
             'defaultvalue' => get_config('usersallowedmultipleinstitutions'),
             'help'         => true,
         ),
-        'submit' => array(
-            'type'  => 'submit',
-            'value' => get_string('updatesiteoptions', 'admin')
-        ),
     )
-));
+);
+
+// List of HTML Purifier filters to enable
+$siteoptionform['elements']['filters'] = array(
+    'type'        => 'fieldset',
+    'legend'      => get_string('trustedsitesforembeddedcontent', 'admin'),
+    'collapsible' => true,
+    'collapsed'   => true,
+    'elements'    => array(
+        'filters_description' => array(
+            'type' => 'html',
+            'value' => get_string('trustedsitesforembeddedcontentdescription', 'admin'),
+        ),
+        'YouTube' => array(
+            'type'         => 'checkbox',
+            'title'        => 'http://www.youtube.com',
+            'description'  => get_string('htmlfilter_YouTube', 'admin'),
+            'defaultvalue' => in_array('YouTube', $enabledfilters),
+        ),
+    ),
+);
+
+$siteoptionform['elements']['submit'] = array(
+    'type'  => 'submit',
+    'value' => get_string('updatesiteoptions', 'admin')
+);
+
+$siteoptionform = pieform($siteoptionform);
 
 function siteoptions_fail(Pieform $form, $field) {
     $form->reply(PIEFORM_ERR, array(
@@ -163,6 +195,7 @@ function siteoptions_fail(Pieform $form, $field) {
 }
 
 function siteoptions_submit(Pieform $form, $values) {
+    global $allowedfilters;
     $fields = array('sitename','lang','theme', 'pathtoclam',
                     'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn', 
                     'allowpublicviews', 'allowpublicprofiles', 'searchplugin');
@@ -187,6 +220,16 @@ function siteoptions_submit(Pieform $form, $values) {
         if (!set_config($checkbox, (int) ($values[$checkbox] == 'on'))) {
             siteoptions_fail($form, $checkbox);
         }
+    }
+    // List of filters for HTMLPurifier
+    $enabledfilters = array();
+    foreach ($allowedfilters as $filter) {
+        if ($values[$filter] == 'on') {
+            $enabledfilters[] = $filter;
+        }
+    }
+    if (!set_config('filters', serialize($enabledfilters))) {
+        siteoptions_fail($form, 'filters');
     }
     $message = get_string('siteoptionsset', 'admin');
     if ($oldtheme != $values['theme']) {
