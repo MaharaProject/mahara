@@ -1,3 +1,8 @@
+Version 1.2.4
+-------------
+
+    - fix command line escapement vulnerability with execution of curl binary on https fetches (mohrt)
+
 Version 1.2.3
 -----------
     - updated the version variable in the code to reflect the new version number
