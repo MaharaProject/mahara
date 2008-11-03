@@ -55,6 +55,17 @@ feedbacklist.rowfunction = function(r, n, d) {
 };
 feedbacklist.emptycontent = get_string('nopublicfeedback');
 
+function addFeedbackSuccess() {
+    hideElement('add_feedback_form');
+    $('add_feedback_form_message').innerHTML = '';
+    feedbacklist.doupdate();
+}
+
+function objectionSuccess() {
+    hideElement('objection_form');
+    $('objection_form_message').innerHTML = '';
+}
+
 addLoadEvent(function () {
     hideElement('add_feedback_form');
     if ($('add_feedback_link')) {

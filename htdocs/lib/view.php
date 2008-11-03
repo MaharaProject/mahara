@@ -2185,7 +2185,9 @@ function add_feedback_form($attachments=false) {
         'method'          => 'post',
         'plugintype'      => 'core',
         'pluginname'      => 'view',
+        'jsform'          => true,
         'elements'        => array(),
+        'jssuccesscallback' => 'addFeedbackSuccess',
     );
     if (!$USER->is_logged_in()) {
         $form['elements']['authorname'] = array(
@@ -2230,7 +2232,7 @@ function add_feedback_form_validate(Pieform $form, $values) {
 }
 
 function add_feedback_form_submit(Pieform $form, $values) {
-    global $view, $artefact, $SESSION, $USER;
+    global $view, $artefact, $USER;
     $data = new StdClass;
     $data->view = $view->get('id');
     if ($artefact) {
@@ -2251,11 +2253,22 @@ function add_feedback_form_submit(Pieform $form, $values) {
     insert_record($table, $data, 'id', true);
     require_once('activity.php');
     activity_occurred('feedback', $data);
-    $SESSION->add_ok_msg(get_string('feedbacksubmitted', 'view'));
     if ($artefact) {
-        redirect(get_config('wwwroot') . 'view/artefact.php?artefact=' . $artefact->get('id') . '&view='.$view->get('id'));
+        $goto = get_config('wwwroot') . 'view/artefact.php?artefact=' . $artefact->get('id') . '&view='.$view->get('id');
     }
-    redirect(get_config('wwwroot') . 'view/view.php?id='.$view->get('id'));
+    else {
+        $goto = get_config('wwwroot') . 'view/view.php?id='.$view->get('id');
+    }
+    $form->reply(PIEFORM_OK, array(
+        'message' => get_string('feedbacksubmitted', 'view'),
+        'goto' => $goto,
+    ));
+}
+
+function add_feedback_form_cancel_submit(Pieform $form) {
+    $form->reply(PIEFORM_OK, array(
+        'goto' => '',
+    ));
 }
 
 function objection_form() {
@@ -2264,7 +2277,9 @@ function objection_form() {
         'method'          => 'post',
         'plugintype'      => 'core',
         'pluginname'      => 'view',
+        'jsform'          => true,
         'elements'        => array(),
+        'jssuccesscallback' => 'objectionSuccess',
     );
     $form['elements']['message'] = array(
         'type'  => 'textarea',
@@ -2280,7 +2295,7 @@ function objection_form() {
 }
 
 function objection_form_submit(Pieform $form, $values) {
-    global $USER, $SESSION, $view, $artefact;
+    global $USER, $view, $artefact;
     require_once('activity.php');
 
     $data = new StdClass;
@@ -2292,11 +2307,22 @@ function objection_form_submit(Pieform $form, $values) {
     }
 
     activity_occurred('objectionable', $data);
-    $SESSION->add_ok_msg(get_string('reportsent', 'view'));
     if ($artefact) {
-        redirect(get_config('wwwroot') . 'view/artefact.php?artefact=' . $artefact->get('id') . '&view='.$view->get('id'));
+        $goto = get_config('wwwroot') . 'view/artefact.php?artefact=' . $artefact->get('id') . '&view='.$view->get('id');
     }
-    redirect(get_config('wwwroot') . 'view/view.php?id='.$view->get('id'));
+    else {
+        $goto = get_config('wwwroot') . 'view/view.php?id='.$view->get('id');
+    }
+    $form->reply(PIEFORM_OK, array(
+        'message' => get_string('reportsent', 'view'),
+        'goto' => $goto,
+    ));
+}
+
+function objection_form_cancel_submit(Pieform $form) {
+    $form->reply(PIEFORM_OK, array(
+        'goto' => '',
+    ));
 }
 
 
