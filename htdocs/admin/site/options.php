@@ -38,7 +38,7 @@ $themeoptions = get_themes();
 $yesno = array(true  => get_string('yes'),
                false => get_string('no'));
 
-$allowedfilters = array('YouTube');
+$allowedfilters = array('YouTube', 'GoogleVideo');
 $enabledfilters = get_config('filters');
 if ($enabledfilters) {
     $enabledfilters = unserialize($enabledfilters);
@@ -163,19 +163,25 @@ $siteoptionform = array(
 // List of HTML Purifier filters to enable
 $siteoptionform['elements']['filters'] = array(
     'type'        => 'fieldset',
-    'legend'      => get_string('trustedsitesforembeddedcontent', 'admin'),
+    'legend'      => get_string('embeddedcontent', 'admin'),
     'collapsible' => true,
     'collapsed'   => true,
     'elements'    => array(
-        'filters_description' => array(
+        'embeddedcontentdescription' => array(
             'type' => 'html',
-            'value' => get_string('trustedsitesforembeddedcontentdescription', 'admin'),
+            'title' => get_string('trustedsites', 'admin'),
+            'value' => get_string('embeddedcontentdescription', 'admin'),
+            'help' => true,
         ),
         'YouTube' => array(
             'type'         => 'checkbox',
             'title'        => 'http://www.youtube.com',
-            'description'  => get_string('htmlfilter_YouTube', 'admin'),
             'defaultvalue' => in_array('YouTube', $enabledfilters),
+        ),
+        'GoogleVideo' => array(
+            'type'         => 'checkbox',
+            'title'        => 'http://video.google.com',
+            'defaultvalue' => in_array('GoogleVideo', $enabledfilters),
         ),
     ),
 );

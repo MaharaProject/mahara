@@ -115,6 +115,8 @@ $string['defaultaccountinactivewarn'] = 'Warning time for inactivity/expiry';
 $string['defaultaccountinactivewarndescription'] = 'The time before user accounts are to expire or become inactive at which a warning message will be sent to them';
 $string['defaultaccountlifetime'] = 'Default account lifetime';
 $string['defaultaccountlifetimedescription'] = 'If set, user accounts will expire after this period of time from when they have been created';
+$string['embeddedcontent'] = 'Embedded content';
+$string['embeddedcontentdescription'] = 'If you would like users to be able to embed videos or other outside content into their portfolios, you can choose which sites to trust below.';
 $string['language'] = 'Language';
 $string['pathtoclam'] = 'Path to clam';
 $string['pathtoclamdescription'] = 'The filesystem path to clamscan or clamdscan';
@@ -131,16 +133,13 @@ $string['siteoptionspagedescription'] = 'Here you can set some global options th
 $string['siteoptionsset'] = 'Site options have been updated.';
 $string['sitethemedescription'] = 'The default theme for the site';
 $string['theme'] = 'Theme';
-$string['trustedsitesforembeddedcontent'] = 'Trusted sites for embedded content';
-$string['trustedsitesforembeddedcontentdescription'] = 'If you would like to give your users the ability to embed videos from other sites, choose the trusted sites from the list below';
+$string['trustedsites'] = 'Trusted sites';
 $string['updatesiteoptions'] = 'Update site options';
 $string['usersallowedmultipleinstitutions'] = 'Users allowed multiple institutions';
 $string['usersallowedmultipleinstitutionsdescription'] = 'If checked, users can be members of several institutions at the same time';
 $string['usersseenewthemeonlogin'] = 'Users will see the new theme the next time they log in.';
 $string['viruschecking'] = 'Virus checking';
 $string['viruscheckingdescription'] = 'If checked, virus checking will be enabled for all uploaded files using ClamAV';
-
-$string['htmlfilter_YouTube'] = 'Embed code copied from YouTube will be allowed in HTML created by users.';
 
 // Site content
 $string['about']               = 'About';
