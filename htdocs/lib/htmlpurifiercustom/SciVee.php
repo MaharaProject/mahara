@@ -13,11 +13,14 @@ class HTMLPurifier_Filter_SciVee extends HTMLPurifier_Filter
     
     public function postFilter($html, $config, $context) {
         $post_regex = '#<span class="scivee-embed">(id=\d+&(?:amp;)?type=\d+)</span>#';
-        $post_replace = '<object width="480" height="400">'.
+        $post_replace = '<object width="480" height="400" '.
+            'data="http://www.scivee.tv/flash/embedPlayer.swf">'.
             '<param name="movie" value="http://www.scivee.tv/flash/embedPlayer.swf" />'.
             '<param name="allowscriptaccess" value="always" />'.
             '<param name="flashvars" value="\1" />'.
+            '<!--[if IE]>'.
             '<embed src="http://www.scivee.tv/flash/embedPlayer.swf" width="480" height="400" flashvars="\1"></embed>'.
+            '<![endif]-->'.
             '</object>';
         return preg_replace($post_regex, $post_replace, $html);
     }
