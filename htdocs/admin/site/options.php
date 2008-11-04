@@ -38,7 +38,7 @@ $themeoptions = get_themes();
 $yesno = array(true  => get_string('yes'),
                false => get_string('no'));
 
-$allowedfilters = array('YouTube', 'GoogleVideo');
+$allowedfilters = array('YouTube', 'GoogleVideo', 'TeacherTube');
 $enabledfilters = get_config('filters');
 if ($enabledfilters) {
     $enabledfilters = unserialize($enabledfilters);
@@ -182,6 +182,11 @@ $siteoptionform['elements']['filters'] = array(
             'type'         => 'checkbox',
             'title'        => 'http://video.google.com',
             'defaultvalue' => in_array('GoogleVideo', $enabledfilters),
+        ),
+        'TeacherTube' => array(
+            'type'         => 'checkbox',
+            'title'        => 'http://www.teachertube.com',
+            'defaultvalue' => in_array('TeacherTube', $enabledfilters),
         ),
     ),
 );
