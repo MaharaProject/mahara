@@ -139,6 +139,7 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
     theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect",
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "left",
+    extended_valid_elements : "object[width|height|classid|codebase],param[name|value],embed[src|type|width|height|flashvars|wmode]",
     //width: '512',
 EOF;
                     }
@@ -153,6 +154,7 @@ EOF;
     theme_advanced_buttons3 : "",
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "left",
+    extended_valid_elements : "object[width|height|classid|codebase],param[name|value],embed[src|type|width|height|flashvars|wmode]",
     fullscreen_new_window: true,
     fullscreen_settings: {
         theme: "advanced",
