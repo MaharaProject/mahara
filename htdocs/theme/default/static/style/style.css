@@ -2290,8 +2290,19 @@ span.breadcrumbs a {
 	margin-top: 10px;
 	background-color: #ececec;
 	padding: 10px 10px;
+    width: 100%;
 	* width: 98%;
 	border: 1px solid #d7d7d7;
+}
+#viewforum #subscribe_forum {
+    display: inline;
+}
+#viewforum #subscribe_forum div {
+    display: inline;
+    margin-right: 2em; /* makes up for margin on input button, else button is pushed right */
+}
+#viewforum #subscribe_forum input {
+    margin: 0 0 0 2em;
 }
 #forumtopicstable {
 	width: 100%;
