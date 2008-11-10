@@ -38,7 +38,7 @@ $themeoptions = get_themes();
 $yesno = array(true  => get_string('yes'),
                false => get_string('no'));
 
-$allowedfilters = array('YouTube', 'GoogleVideo', 'TeacherTube', 'SciVee', 'Skype');
+$allowedfilters = array('YouTube', 'GoogleVideo', 'TeacherTube', 'SciVee', 'Skype', 'Twitter');  //@todo read from the htmlpurifiercustom directory
 $enabledfilters = get_config('filters');
 if ($enabledfilters) {
     $enabledfilters = unserialize($enabledfilters);
@@ -208,6 +208,11 @@ $siteoptionform['elements']['filters'] = array(
             'type'         => 'checkbox',
             'title'        => 'http://skype.com',
             'defaultvalue' => in_array('Skype', $enabledfilters),
+        ),
+        'Twitter' => array(
+            'type'         => 'checkbox',
+            'title'        => 'http://twitter.com',
+            'defaultvalue' => in_array('Twitter', $enabledfilters),
         ),
     ),
 );

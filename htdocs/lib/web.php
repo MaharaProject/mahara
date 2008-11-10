@@ -170,7 +170,7 @@ tinyMCE.init({
     button_tile_map: true,
     {$tinymce_config}
     {$execcommand}
-    extended_valid_elements : "object[width|height|classid|codebase],param[name|value],embed[src|type|width|height|flashvars|wmode],script[src,type,language]",
+    extended_valid_elements : "object[width|height|classid|codebase],param[name|value],embed[src|type|width|height|flashvars|wmode],script[src,type,language],+ul[id|type|compact]",
     urlconverter_callback : "custom_urlconvert",
     language: '{$language}',
     content_css : {$content_css},
