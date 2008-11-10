@@ -89,7 +89,7 @@ class Client {
         }
 
         try {
-            $xml = new SimpleXMLElement($this->rawresponse);
+            $xml = new SimpleXMLElement(trim($this->rawresponse));
         }
         catch (Exception $e) {
             log_debug($this->rawresponse);
