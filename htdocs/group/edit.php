@@ -133,7 +133,7 @@ function editgroup_submit(Pieform $form, $values) {
 
     db_commit();
 
-    redirect('/group/mygroups.php');
+    redirect('/group/view.php?id=' . $values['id']);
 }
 
 $smarty = smarty();
