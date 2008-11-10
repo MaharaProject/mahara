@@ -105,6 +105,7 @@ $string['pluginadmin'] = 'Plugin Administration';
 $string['pluginadmindescription'] = 'Install and configure plugins';
 
 // Site options
+$string['adminsonly'] = 'Administrators only';
 $string['allowpublicviews'] = 'Allow public views';
 $string['allowpublicviewsdescription'] = 'If set to yes, users will be able to create portfolio Views that are accessable to the public rather than only to logged in users';
 $string['allowpublicprofiles'] = 'Allow public profiles';
@@ -117,6 +118,7 @@ $string['defaultaccountlifetime'] = 'Default account lifetime';
 $string['defaultaccountlifetimedescription'] = 'If set, user accounts will expire after this period of time from when they have been created';
 $string['embeddedcontent'] = 'Embedded content';
 $string['embeddedcontentdescription'] = 'If you would like users to be able to embed videos or other outside content into their portfolios, you can choose which sites to trust below.';
+$string['Everyone'] = 'Everyone';
 $string['language'] = 'Language';
 $string['pathtoclam'] = 'Path to clam';
 $string['pathtoclamdescription'] = 'The filesystem path to clamscan or clamdscan';
@@ -140,6 +142,8 @@ $string['usersallowedmultipleinstitutionsdescription'] = 'If checked, users can 
 $string['usersseenewthemeonlogin'] = 'Users will see the new theme the next time they log in.';
 $string['viruschecking'] = 'Virus checking';
 $string['viruscheckingdescription'] = 'If checked, virus checking will be enabled for all uploaded files using ClamAV';
+$string['whocancreatepublicgroups'] = 'Who can create Public Groups';
+$string['whocancreatepublicgroupsdescription'] = 'If set to yes, users will be able to make groups that are viewable by the general public';
 
 // Site content
 $string['about']               = 'About';

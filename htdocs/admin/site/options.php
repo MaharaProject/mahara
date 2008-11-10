@@ -129,6 +129,17 @@ $siteoptionform = array(
             'options'      => $yesno,
             'help'         => true,
         ),
+        'createpublicgroups' => array(
+            'type'         => 'select',
+            'title'        => get_string('whocancreatepublicgroups', 'admin'),
+            'description'  => get_string('whocancreatepublicgroupsdescription', 'admin'),
+            'defaultvalue' => get_config('createpublicgroups'),
+            'options'      => array(
+                'admins' => get_string('adminsonly', 'admin'),
+                'all' => get_string('Everyone', 'admin'),
+            ),
+            'help'         => true,
+        ),
         'defaultaccountlifetime' => array(
             'type'         => 'expiry',
             'title'        => get_string('defaultaccountlifetime', 'admin'),
@@ -219,7 +230,7 @@ function siteoptions_submit(Pieform $form, $values) {
     global $allowedfilters;
     $fields = array('sitename','lang','theme', 'pathtoclam',
                     'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn', 
-                    'allowpublicviews', 'allowpublicprofiles', 'searchplugin');
+                    'allowpublicviews', 'allowpublicprofiles', 'createpublicgroups', 'searchplugin');
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');
     foreach ($fields as $field) {

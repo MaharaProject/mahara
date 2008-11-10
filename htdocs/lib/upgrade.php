@@ -622,6 +622,7 @@ function core_install_firstcoredata_defaults() {
     set_config('session_timeout', 1800);
     set_config('sitename', 'Mahara');
     set_config('defaultaccountinactivewarn', 604800);
+    set_config('createpublicgroups', 'admins');
 
     // install the applications
     $app = new StdClass;
