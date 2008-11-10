@@ -38,7 +38,7 @@ $themeoptions = get_themes();
 $yesno = array(true  => get_string('yes'),
                false => get_string('no'));
 
-$allowedfilters = array('YouTube', 'GoogleVideo', 'TeacherTube', 'SciVee');
+$allowedfilters = array('YouTube', 'GoogleVideo', 'TeacherTube', 'SciVee', 'Skype');
 $enabledfilters = get_config('filters');
 if ($enabledfilters) {
     $enabledfilters = unserialize($enabledfilters);
@@ -192,6 +192,11 @@ $siteoptionform['elements']['filters'] = array(
             'type'         => 'checkbox',
             'title'        => 'http://www.scivee.tv',
             'defaultvalue' => in_array('SciVee', $enabledfilters),
+        ),
+        'Skype' => array(
+            'type'         => 'checkbox',
+            'title'        => 'http://skype.com',
+            'defaultvalue' => in_array('Skype', $enabledfilters),
         ),
     ),
 );

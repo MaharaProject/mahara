@@ -139,7 +139,6 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
     theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect",
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "left",
-    extended_valid_elements : "object[width|height|classid|codebase],param[name|value],embed[src|type|width|height|flashvars|wmode]",
     //width: '512',
 EOF;
                     }
@@ -154,7 +153,6 @@ EOF;
     theme_advanced_buttons3 : "",
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "left",
-    extended_valid_elements : "object[width|height|classid|codebase],param[name|value],embed[src|type|width|height|flashvars|wmode]",
     fullscreen_new_window: true,
     fullscreen_settings: {
         theme: "advanced",
@@ -172,11 +170,20 @@ tinyMCE.init({
     button_tile_map: true,
     {$tinymce_config}
     {$execcommand}
+    extended_valid_elements : "object[width|height|classid|codebase],param[name|value],embed[src|type|width|height|flashvars|wmode],script[src,type,language]",
+    urlconverter_callback : "custom_urlconvert",
     language: '{$language}',
     content_css : {$content_css},
     //document_base_url: {$jswwwroot},
     relative_urls: false
 });
+function custom_urlconvert (url, node, on_save) {
+  // Don't convert the url on the skype status buttons.
+  if (url.indexOf('skype:') == 0) {
+      return url;
+  }
+  return TinyMCE.prototype.convertURL(url, node, on_save);
+}
 </script>
 
 EOF;
