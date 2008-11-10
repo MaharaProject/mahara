@@ -10,8 +10,8 @@ class HTMLPurifier_Filter_Twitter extends HTMLPurifier_Filter
             '#<div id="twitter_div">\s*<h2 class="sidebar-title">([^<]*)</h2>\s*<ul id="twitter_update_list"></ul>\s*</div>\s*'.
             '<script\b[^>]+?\bsrc="http://twitter.com/javascripts/blogger.js"[^>]*></script>\s*'.
             '<script\b[^>]+?\bsrc="http://twitter.com/statuses/user_timeline/([a-zA-Z0-9_]+).json\?callback=twitterCallback2&(?:amp;)?count=(\d+)"[^>]*></script>#s',
-            '#<embed\b[^>]+\bsrc="http://twitter.com/flash/twitter_badge.swf"[^>]+?\bflashvars="([^"]+)"[^>]*>\s*</embed>#s',
-            '#<embed\b[^>]+\bsrc="http://static.twitter.com/flash/twitter_timeline_badge.swf"[^>]+?\bflashvars="([^"]+)"[^>]*>\s*</embed>#s',
+            '#<embed\s+src="http://twitter.com/flash/twitter_badge.swf"[^>]+?\bflashvars="([^"]+)"[^>]*>\s*(</embed>)?#s',
+            '#<embed\s+src="http://static.twitter.com/flash/twitter_timeline_badge.swf"[^>]+?\bflashvars="([^"]+)"[^>]*>\s*</embed>#s',
         );
         $pre_replace = array(
             '<span class="twitter-updates-js"><span class="title">\1</span><span class="username">\2</span><span class="count">\3</span></span>',
