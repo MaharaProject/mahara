@@ -55,6 +55,16 @@ $creategroup = pieform(array(
             'defaultvalue' => 'standard.open',
             'help'         => true,
         ),
+        'public' => array(
+            'type'         => 'select',
+            'title'        => get_string('publiclyviewablegroup', 'group'),
+            'description'  => get_string('publiclyviewablegroupdescription', 'group'),
+            'options'      => array(true  => get_string('yes'),
+                                    false => get_string('no')),
+            'defaultvalue' => 'no',
+            'help'         => true,
+            'ignore'       => !(get_config('createpublicgroups') == 'all' || get_config('createpublicgroups') == 'admins' && $USER->get('admin')),
+        ),
         'submit'   => array(
             'type'  => 'submitcancel',
             'value' => array(get_string('savegroup', 'group'), get_string('cancel')),
@@ -85,12 +95,14 @@ function creategroup_submit(Pieform $form, $values) {
     global $SESSION;
 
     list($grouptype, $jointype) = explode('.', $values['grouptype']);
+    $values['public'] = (isset($values['public'])) ? $values['public'] : 0;
 
     $id = group_create(array(
         'name'        => $values['name'],
         'description' => $values['description'],
         'grouptype'   => $grouptype,
         'jointype'    => $jointype,
+        'public'      => intval($values['public']),
         'members'     => array($USER->get('id') => 'admin'),
     ));
 

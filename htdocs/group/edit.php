@@ -34,7 +34,7 @@ define('TITLE', get_string('editgroup', 'group'));
 $id = param_integer('id');
 define('GROUP', $id);
 
-$group_data = get_record_sql("SELECT g.name, g.description, g.grouptype, g.jointype
+$group_data = get_record_sql("SELECT g.name, g.description, g.grouptype, g.jointype, g.public
     FROM {group} g
     INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
     WHERE g.id = ?
@@ -71,6 +71,16 @@ $editgroup = pieform(array(
             'defaultvalue' => $group_data->grouptype . '.' . $group_data->jointype,
             'help'         => true,
         ),
+        'public' => array(
+            'type'         => 'select',
+            'title'        => get_string('publiclyviewablegroup', 'group'),
+            'description'  => get_string('publiclyviewablegroupdescription', 'group'),
+            'options'      => array(true  => get_string('yes'),
+                                    false => get_string('no')),
+            'defaultvalue' => $group_data->public,
+            'help'         => true,
+            'ignore'       => !(get_config('createpublicgroups') == 'all' || get_config('createpublicgroups') == 'admins' && $USER->get('admin')),
+        ),
         'id'          => array(
             'type'         => 'hidden',
             'value'        => $id,
@@ -103,6 +113,7 @@ function editgroup_submit(Pieform $form, $values) {
     $now = db_format_timestamp(time());
 
     list($grouptype, $jointype) = explode('.', $values['grouptype']);
+    $values['public'] = (isset($values['public'])) ? $values['public'] : 0;
 
     update_record(
         'group',
@@ -113,6 +124,7 @@ function editgroup_submit(Pieform $form, $values) {
             'grouptype'      => $grouptype,
             'jointype'       => $jointype,
             'mtime'          => $now,
+            'public'         => intval($values['public']),
         ),
         'id'
     );

@@ -1444,6 +1444,15 @@ function xmldb_core_upgrade($oldversion=0) {
         table_column('artefact_feedback', null, 'authorname', 'text', null, null, null, '');
     }
 
+    if ($oldversion < 2008110700) {
+        $table = new XMLDBTable('group');
+        $field = new XMLDBField('public');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+
+        set_config('createpublicgroups', 'admins');
+    }
+
     return $status;
 
 }

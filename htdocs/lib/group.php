@@ -241,6 +241,7 @@ function group_create($data) {
             'jointype'    => $data['jointype'],
             'ctime'       => $data['ctime'],
             'mtime'       => $data['ctime'],
+            'public'      => intval($data['public']),
         ),
         'id',
         true
