@@ -38,6 +38,7 @@ safe_require('artefact', 'blog');
 $wwwroot = get_config('wwwroot');
 $enc_delete = json_encode(get_string('delete', 'artefact.blog'));
 $enc_confirmdelete = json_encode(get_string('deleteblog?', 'artefact.blog'));
+$enc_addpost = json_encode(get_string('addpost', 'artefact.blog'));
 
 // This JavaScript creates a table to display the blog entries.
 $js = <<<EOF
@@ -76,6 +77,9 @@ var bloglist = new TableRenderer(
                 );
             });
             return TD(null, deleteButton);
+        },
+        function(r) {
+            return TD(null, DIV({'class':'addicon fr'}, A({'href':'{$wwwroot}artefact/blog/post.php?blog=' + r.id}, {$enc_addpost})));
         }
     ]
 );
