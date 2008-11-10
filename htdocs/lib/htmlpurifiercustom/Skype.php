@@ -6,7 +6,7 @@ class HTMLPurifier_Filter_Skype extends HTMLPurifier_Filter
     public $name = 'Skype';
     
     public function preFilter($html, $config, $context) {
-        $pre_regex = '#<script\b[^>]+?\bsrc="http://download.skype.com/share/skypebuttons/js/skypeCheck.js"[^>]*>\s*</script>\s*<a\b[^>]+?\bhref="skype:([^?"<>]+)\?call"[^>]*>\s*(<img\b[^>]+?>)\s*</a>#s';
+        $pre_regex = '#<script\b[^>]+?\bsrc="http://download.skype.com/share/skypebuttons/js/skypeCheck.js"[^>]*>\s*</script>\s*<a\b[^>]+?\bhref="skype:([^?"<>]+)\?call"[^>]*>\s*(<img\b[^>]+\bsrc="http://(download|mystatus)\.skype\.com/[^>]+>)\s*</a>#s';
         $pre_replace = '<span class="skype-button"><span class="skype-name">\1</span>\2</span>';
         return preg_replace($pre_regex, $pre_replace, $html);
     }
