@@ -812,22 +812,33 @@ function group_get_menu_tabs() {
             'title' => get_string('Members', 'group'),
             'weight' => 30
         ),
-        'forums' => array(  // @todo: get this from a function in the interaction plugin (or better, make forums an artefact plugin)
+    );
+    if ($group->public || group_user_access($group->id)) {
+        $menu['forums'] = array(  // @todo: get this from a function in the interaction plugin (or better, make forums an artefact plugin)
             'path' => 'groups/forums',
             'url' => 'interaction/forum/index.php?group='.$group->id,
             'title' => get_string('nameplural', 'interaction.forum'),
-            'weight' => 40
-        ),
-        'views' => array(
-            'path' => 'groups/views',
-            'url' => 'view/groupviews.php?group='.$group->id,
-            'title' => get_string('Views', 'group'),
-            'weight' => 50
-        ),
+            'weight' => 40,
+        );
+    }
+    $menu['views'] = array(
+        'path' => 'groups/views',
+        'url' => 'view/groupviews.php?group='.$group->id,
+        'title' => get_string('Views', 'group'),
+        'weight' => 50,
     );
+
+    if (defined('MENUITEM')) {
+        $key = substr(MENUITEM, strlen('groups/'));
+        if ($key && isset($menu[$key])) {
+            $menu[$key]['selected'] = true;
+        }
+    }
+
     if (!group_user_access($group->id)) {
         return $menu;
     }
+
     safe_require('grouptype', $group->grouptype);
     $artefactplugins = call_static_method('GroupType' . $group->grouptype, 'get_group_artefact_plugins');
     if ($plugins = get_records_array('artefact_installed', 'active', 1)) {
@@ -838,13 +849,6 @@ function group_get_menu_tabs() {
             safe_require('artefact', $plugin->name);
             $plugin_menu = call_static_method(generate_class_name('artefact',$plugin->name), 'group_tabs', $group->id);
             $menu = array_merge($menu, $plugin_menu);
-        }
-    }
-
-    if (defined('MENUITEM')) {
-        $key = substr(MENUITEM, strlen('groups/'));
-        if ($key && isset($menu[$key])) {
-            $menu[$key]['selected'] = true;
         }
     }
 
