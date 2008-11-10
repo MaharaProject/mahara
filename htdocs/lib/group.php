@@ -433,6 +433,7 @@ function group_get_join_form($name, $groupid) {
     return pieform(array(
         'name' => $name,
         'successcallback' => 'joingroup_submit',
+        'autofocus' => false,
         'elements' => array(
             'join' => array(
                 'type' => 'submit',
