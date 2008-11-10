@@ -398,6 +398,12 @@ function relative_date($relative, $absolute, $time1, $time2=null) {
 
 }
 
+function subscribe_forum_validate(Pieform $form, $values) {
+    if (!is_logged_in()) {
+        throw new AccessDeniedException();
+    }
+}
+
 function subscribe_forum_submit(Pieform $form, $values) {
     global $USER, $SESSION;
     if ($values['type'] == 'subscribe') {

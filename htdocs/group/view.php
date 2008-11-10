@@ -25,6 +25,7 @@
  */
 
 define('INTERNAL', 1);
+define('PUBLIC', 1);
 define('MENUITEM', 'groups/info');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('group.php');
@@ -35,6 +36,9 @@ safe_require('artefact', 'file');
 
 define('GROUP', param_integer('id'));
 $group = group_current_group();
+if (!is_logged_in() && !$group->public) {
+    throw new AccessDeniedException();
+}
 
 define('TITLE', $group->name);
 $group->ctime = strftime(get_string('strftimedate'), $group->ctime);
@@ -45,30 +49,33 @@ $group->admins = get_column_sql("SELECT member
     AND role = 'admin'", array($group->id));
 
 $role = group_user_access($group->id);
-if ($role) {
-    if ($role == 'admin') {
-        $group->membershiptype = 'admin';
-        $group->requests = count_records('group_member_request', 'group', $group->id);
-        if ($group->requests > 1) {
-            $group->requests = array($group->requests);
+
+if (is_logged_in()) {
+    if ($role) {
+        if ($role == 'admin') {
+            $group->membershiptype = 'admin';
+            $group->requests = count_records('group_member_request', 'group', $group->id);
+            if ($group->requests > 1) {
+                $group->requests = array($group->requests);
+            }
         }
+        else {
+            $group->membershiptype = 'member';
+        }
+        $group->canleave = group_user_can_leave($group->id);
     }
-    else {
-        $group->membershiptype = 'member';
+    else if ($group->jointype == 'invite'
+             and $invite = get_record('group_member_invite', 'group', $group->id, 'member', $USER->get('id'))) {
+        $group->membershiptype = 'invite';
+        $group->invite = group_get_accept_form('invite', $group->id, 'view');
     }
-    $group->canleave = group_user_can_leave($group->id);
-}
-else if ($group->jointype == 'invite'
-         and $invite = get_record('group_member_invite', 'group', $group->id, 'member', $USER->get('id'))) {
-    $group->membershiptype = 'invite';
-    $group->invite = group_get_accept_form('invite', $group->id, 'view');
-}
-else if ($group->jointype == 'request'
-         and $request = get_record('group_member_request', 'group', $group->id, 'member', $USER->get('id'))) {
-    $group->membershiptype = 'request';
-}
-else if ($group->jointype == 'open') {
-    $group->groupjoin = group_get_join_form('joingroup', $group->id);
+    else if ($group->jointype == 'request'
+             and $request = get_record('group_member_request', 'group', $group->id, 'member', $USER->get('id'))) {
+        $group->membershiptype = 'request';
+    }
+    else if ($group->jointype == 'open') {
+        $group->groupjoin = group_get_join_form('joingroup', $group->id);
+    }
 }
 
 $filecounts = ArtefactTypeFileBase::count_user_files(null, $group->id, null);
@@ -77,23 +84,27 @@ $filecounts = ArtefactTypeFileBase::count_user_files(null, $group->id, null);
 // NOTE: it would be nicer if there was some generic way to get information 
 // from any installed interaction. But the only interaction plugin is forum, 
 // and group info pages might be replaced with views anyway...
-$foruminfo = get_records_sql_array('
-    SELECT
-        p.id, p.subject, p.body, p.poster, p.topic, t.forum, pt.subject AS topicname
-    FROM
-        {interaction_forum_post} p
-        INNER JOIN {interaction_forum_topic} t ON (t.id = p.topic)
-        INNER JOIN {interaction_instance} i ON (i.id = t.forum)
-        INNER JOIN {interaction_forum_post} pt ON (pt.topic = p.topic AND pt.parent IS NULL)
-    WHERE
-        i.group = ?
-        AND i.deleted = 0
-        AND t.deleted = 0
-        AND p.deleted = 0
-    ORDER BY
-        p.ctime DESC
-    LIMIT 5;
-    ', array($group->id));
+$foruminfo = null;
+if ($role || $group->public) {
+    $foruminfo = get_records_sql_array('
+        SELECT
+            p.id, p.subject, p.body, p.poster, p.topic, t.forum, pt.subject AS topicname
+        FROM
+            {interaction_forum_post} p
+            INNER JOIN {interaction_forum_topic} t ON (t.id = p.topic)
+            INNER JOIN {interaction_instance} i ON (i.id = t.forum)
+            INNER JOIN {interaction_forum_post} pt ON (pt.topic = p.topic AND pt.parent IS NULL)
+        WHERE
+            i.group = ?
+            AND i.deleted = 0
+            AND t.deleted = 0
+            AND p.deleted = 0
+        ORDER BY
+            p.ctime DESC
+        LIMIT 5;
+        ', array($group->id));
+}
+
 $smarty = smarty();
 $smarty->assign('group', $group);
 $smarty->assign('groupid', $group->id);
@@ -112,6 +123,7 @@ if ($role) {
         $smarty->assign('submittedviews', View::get_submitted_views($group->id));
     }
 }
+$smarty->assign('role', $role);
 $smarty->display('group/view.tpl');
 
 ?>

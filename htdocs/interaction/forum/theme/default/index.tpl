@@ -21,8 +21,8 @@
 		<th>{str tag="forumname" section="interaction.forum"}</th>
 		<th>{str tag="description"}</th>
 		<th>{str tag="Topics" section="interaction.forum"}</th>
-		<th></th>
-		<th></th>
+		{if $admin}<th></th>{/if}
+		{if $forum->subscribe}<th></th>{/if}
 	</tr>
     {foreach from=$forums item=forum}
     <tr class="r{cycle values=0,1}">
@@ -46,7 +46,7 @@
         <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}&amp;returnto=index" id="btn-delete">{str tag=delete}</a>
         </td>
         {/if}
-        <td>{$forum->subscribe}</td>
+        {if $forum->subscribe}<td class="nowrap">{$forum->subscribe}</td>{/if}
 	</tr>
     {/foreach}
 </table>

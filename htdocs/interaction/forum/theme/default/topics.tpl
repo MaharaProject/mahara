@@ -8,7 +8,7 @@
     {if $topic->closed}<img src="{$closedicon|escape}" alt="{str tag="Closed" section="interaction.forum"}">{/if}
     {if $topic->subscribed}<img src="{$subscribedicon|escape}" alt="{str tag="Subscribed" section="interaction.forum"}">{/if}
     </td>
-    {if !$forum->subscribed || $moderator}
+    {if $membership && (!$forum->subscribed || $moderator)}
     <td>
     <input type="checkbox" name="checked[{$topic->id|escape}]" class="topic-checkbox">
     </td>

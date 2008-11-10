@@ -24,6 +24,7 @@
  *
  */
 
+define('PUBLIC', 1);
 define('INTERNAL', 1);
 define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
@@ -34,6 +35,12 @@ $id     = param_integer('id');
 $query  = trim(param_variable('query', ''));
 $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);
+
+define('GROUP', $id);
+$group = group_current_group();
+if (!is_logged_in() && !$group->public) {
+    throw new AccessDeniedException();
+}
 
 $membershiptype = param_alpha('membershiptype', null);
 

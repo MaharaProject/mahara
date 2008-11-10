@@ -24,6 +24,7 @@
  *
  */
 
+define('PUBLIC', 1);
 define('INTERNAL', 1);
 define('MENUITEM', 'groups/forums');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
@@ -38,7 +39,7 @@ $group = group_current_group();
 
 $membership = group_user_access($groupid);
 
-if (!$membership) {
+if (!$membership && !$group->public) {
     throw new AccessDeniedException(get_string('cantviewforums', 'interaction.forum'));
 }
 
@@ -92,12 +93,13 @@ if ($forums) {
 }
 
 $i = 0;
-if ($forums) {
+if ($forums && $membership) {
     foreach ($forums as $forum) {
         $forum->subscribe = pieform(array(
             'name'     => 'subscribe_forum' . ($i == 0 ? '' : $i),
             'plugintype' => 'interaction',
             'pluginname' => 'forum',
+            'validatecallback' => 'subscribe_forum_validate',
             'successcallback' => 'subscribe_forum_submit',
             'autofocus' => false,
             'elements' => array(

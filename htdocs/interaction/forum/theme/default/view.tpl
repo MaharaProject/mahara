@@ -7,12 +7,13 @@
 <table id="forumdescription">
 <tr>
 	<td>{$forum->description}</td>
-{if $admin}
 	<td align="right" class="nowrap">
-	<a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}" class="btn-editdk">{str tag="edittitle" section="interaction.forum"}</a></td>
-	<td align="right" class="nowrap"><a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}" class="btn-deletedk">{str tag="deleteforum" section="interaction.forum"}</a></td>
+{if $admin}
+	<a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}" class="btn-editdk">{str tag="edittitle" section="interaction.forum"}</a>
+	<a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}" class="btn-deletedk">{str tag="deleteforum" section="interaction.forum"}</a>
 {/if}
-	<td align="right" class="subscribetoforum">{$forum->subscribe}</td>
+    {$forum->subscribe}
+	</td>
 </tr>
 </table>
 
@@ -37,7 +38,7 @@
 </div>
 {if $stickytopics || $regulartopics}
 <form action="" method="post">
-    {if !$forum->subscribed || $moderator}
+    {if $membership && (!$forum->subscribed || $moderator)}
     <select name="type1">
         <option value="default" selected="selected">{str tag="chooseanaction" section="interaction.forum"}</option>
         {if !$forum->subscribed}
@@ -61,7 +62,7 @@
     <table id="forumtopicstable">
         <tr>
         <th></th>
-        {if !$forum->subscribed || $moderator}<th></th>{/if}
+        {if $membership && (!$forum->subscribed || $moderator)}<th></th>{/if}
         <th>{str tag="Topic" section="interaction.forum"}</th>
         <th>{str tag="Poster" section="interaction.forum"}</th>
         <th class="postscount">{str tag="Posts" section="interaction.forum"}</th>
@@ -79,7 +80,7 @@
     {if $regulartopics}
     <span class="center">{$pagination}</span>
     {/if}
-    {if !$forum->subscribed || $moderator}
+    {if $membership && (!$forum->subscribed || $moderator)}
     <select name="type2">
         <option value="default" selected="selected">{str tag="chooseanaction" section="interaction.forum"}</option>
         {if !$forum->subscribed}

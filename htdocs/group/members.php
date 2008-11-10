@@ -24,6 +24,7 @@
  *
  */
 
+define('PUBLIC', 1);
 define('INTERNAL', 1);
 define('MENUITEM', 'groups/members');
 require(dirname(dirname(__FILE__)) . '/init.php');
@@ -35,6 +36,9 @@ define('GROUP', param_integer('id'));
 $membershiptype = param_alpha('membershiptype', null);
 
 $group = group_current_group();
+if (!is_logged_in() && !$group->public) {
+    throw new AccessDeniedException();
+}
 
 define('TITLE', $group->name . ' - ' . get_string('Members', 'group'));
 

@@ -6,6 +6,7 @@
 <h2>{$subheading|escape}</h2>
 {include file="interaction:forum:breadcrumbs.tpl" breadcrumbs=$breadcrumbs}
 
+{if $membership}
 <table id="forumtopicbtnwrap">
 <tr>
 {if $topic->canedit}
@@ -21,6 +22,7 @@
 </td>
 </tr>
 </table>
+{/if}
 {if $topic->closed}
 <div class="message">{str tag=topicisclosed section=interaction.forum}</div>
 {/if}

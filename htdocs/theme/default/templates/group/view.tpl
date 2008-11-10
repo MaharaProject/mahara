@@ -9,6 +9,7 @@
                     {include file="group/groupuserstatus.tpl" group=$group returnto='view'}
                 </ul><br style="clear: left;"/>
 
+                {if $group->public || $role}
                 <div class="group-info-para">
                 <h3>{str tag=latestforumposts section=interaction.forum}</h3>
                 {if $foruminfo}
@@ -27,6 +28,7 @@
                 {/if}
                 <p><a href="{$WWWROOT}interaction/forum/?group={$group->id|escape}">{str tag=gotoforums section=interaction.forum} &raquo;</a></p>
                 </div>
+                {/if}
 
 {if $sharedviews}
     <div class="group-info-para">

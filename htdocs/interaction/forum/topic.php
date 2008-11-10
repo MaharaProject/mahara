@@ -25,6 +25,7 @@
  */
 
 define('INTERNAL', 1);
+define('PUBLIC', 1);
 define('MENUITEM', 'groups/forums');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction', 'forum');
@@ -56,7 +57,8 @@ if (!$topic) {
 $membership = user_can_access_forum((int)$topic->forumid);
 $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
-if (!$membership) {
+if (!$membership
+    && !get_field('group', 'public', 'id', $topic->groupid)) {
     throw new AccessDeniedException(get_string('cantviewtopic', 'interaction.forum'));
 }
 $topic->canedit = $moderator || user_can_edit_post($topic->poster, $topic->ctime);
@@ -76,7 +78,7 @@ $breadcrumbs = array(
     )
 );
 
-if (!$topic->forumsubscribed) {
+if ($membership && !$topic->forumsubscribed) {
     $topic->subscribe = pieform(array(
         'name'     => 'subscribe_topic',
         'renderer' => 'div',
@@ -156,6 +158,7 @@ $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', $topic->groupname);
 $smarty->assign('subheading', TITLE);
 $smarty->assign('topic', $topic);
+$smarty->assign('membership', $membership);
 $smarty->assign('moderator', $moderator);
 $smarty->assign('posts', $posts);
 $smarty->display('interaction:forum:topic.tpl');
@@ -192,6 +195,14 @@ function buildpost($postindex, $parentsubject, &$posts){
     $smarty->assign('moderator', $moderator);
     $smarty->assign('closed', $topic->closed);
     return $smarty->fetch('interaction:forum:post.tpl');
+}
+
+function subscribe_topic_validate(Pieform $form, $values) {
+    if (!is_logged_in()) {
+        // This page is public, so the access denied exception will cause a 
+        // login attempt
+        throw new AccessDeniedException();
+    }
 }
 
 function subscribe_topic_submit(Pieform $form, $values) {

@@ -42,6 +42,10 @@ defined('INTERNAL') || die();
 function group_user_access($groupid, $userid=null) {
     static $result;
 
+    if (!is_logged_in()) {
+        return false;
+    }
+
     $groupid = group_param_groupid($groupid);
     $userid  = group_param_userid($userid);
 
@@ -133,6 +137,10 @@ function group_change_role($groupid, $userid, $role) {
  * @returns boolean
  */
 function group_user_can_edit_views($groupid, $userid=null) {
+    if (!is_logged_in()) {
+        return false;
+    }
+
     $groupid = group_param_groupid($groupid);
     $userid  = group_param_userid($userid);
 

@@ -25,6 +25,7 @@
  */
 
 define('INTERNAL', 1);
+define('PUBLIC', 1);
 define('MENUITEM', 'groups/forums');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('group.php');
@@ -62,7 +63,8 @@ $membership = user_can_access_forum((int)$forumid);
 $admin = (bool)($membership & INTERACTION_FORUM_ADMIN);
 $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
-if (!$membership) {
+if (!$membership
+    && !get_field('group', 'public', 'id', $forum->groupid)) {
     throw new AccessDeniedException(get_string('cantviewforums', 'interaction.forum'));
 }
 
@@ -76,7 +78,7 @@ $moderators = get_column_sql(
 );
 
 // updates the selected topics as subscribed/closed/sticky
-if (isset($_POST['checked'])) {
+if ($membership && isset($_POST['checked'])) {
     $checked = array_keys($_POST['checked']);
     // get type based on which button was pressed
     if (isset($_POST['updatetopics1'])) {
@@ -130,36 +132,38 @@ if (isset($_POST['checked'])) {
     redirect('/interaction/forum/view.php?id=' . $forumid . '&offset=' . $offset);
 }
 
-$forum->subscribe = pieform(array(
-    'name' => 'subscribe_forum',
-    'renderer' => 'div',
-    'plugintype' => 'interaction',
-    'pluginname' => 'forum',
-    'autofocus' => false,
-    'elements' => array(
-        'submit' => array(
-            'type' => 'submit',
-            'value' => $forum->subscribed ? get_string('unsubscribefromforum', 'interaction.forum') : get_string('subscribetoforum', 'interaction.forum'),
-            'help' => true
-        ),
-        'forum' => array(
-            'type' => 'hidden',
-            'value' => $forumid
-        ),
-        'redirect' => array(
-            'type' => 'hidden',
-            'value' => 'view'
-        ),
-        'offset' => array(
-            'type' => 'hidden',
-            'value' => $offset
-        ),
-        'type' => array(
-            'type' => 'hidden',
-            'value' => $forum->subscribed ? 'unsubscribe' : 'subscribe'
+if ($membership) {
+    $forum->subscribe = pieform(array(
+        'name' => 'subscribe_forum',
+        'renderer' => 'div',
+        'plugintype' => 'interaction',
+        'pluginname' => 'forum',
+        'autofocus' => false,
+        'elements' => array(
+            'submit' => array(
+                'type' => 'submit',
+                'value' => $forum->subscribed ? get_string('unsubscribefromforum', 'interaction.forum') : get_string('subscribetoforum', 'interaction.forum'),
+                'help' => true
+            ),
+            'forum' => array(
+                'type' => 'hidden',
+                'value' => $forumid
+            ),
+            'redirect' => array(
+                'type' => 'hidden',
+                'value' => 'view'
+            ),
+            'offset' => array(
+                'type' => 'hidden',
+                'value' => $offset
+            ),
+            'type' => array(
+                'type' => 'hidden',
+                'value' => $forum->subscribed ? 'unsubscribe' : 'subscribe'
+            )
         )
-    )
-));
+    ));
+}
 
 // gets the info about topics
 // the last post is found by taking the max id of the posts in a topic with the max post time
@@ -236,6 +240,7 @@ $smarty = smarty();
 $smarty->assign('heading', $forum->groupname);
 $smarty->assign('subheading', $forum->title);
 $smarty->assign('forum', $forum);
+$smarty->assign('membership', $membership);
 $smarty->assign('moderator', $moderator);
 $smarty->assign('admin', $admin);
 $smarty->assign('groupadmins', group_get_admin_ids($forum->groupid));
