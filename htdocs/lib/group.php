@@ -220,6 +220,8 @@ function group_create($data) {
         throw new InvalidArgumentException("group_create: grouptype specified must be an installed grouptype");
     }
 
+    safe_require('grouptype', $data['grouptype']);
+
     if (isset($data['jointype'])) {
         if (!in_array($data['jointype'], call_static_method('GroupType' . $data['grouptype'], 'allowed_join_types'))) {
             throw new InvalidArgumentException("group_create: jointype specified is not allowed by the grouptype specified");
