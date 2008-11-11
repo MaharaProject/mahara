@@ -42,6 +42,7 @@ if (!can_view_view($view)) {
 $userid = $USER->get('id');
 
 if ($artefact) {
+    require_once(get_config('docroot') . 'artefact/lib.php');
     $public = !$USER->can_edit_artefact(artefact_instance_from_id($artefact));
     $table = 'artefact_feedback';
     $count = count_records_sql('
