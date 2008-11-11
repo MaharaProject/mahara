@@ -2,8 +2,6 @@
 {include file="sidebar.tpl"}
 {include file="columnleftstart.tpl"}
 
-<h2>{$heading}</h2>
-
 {if $views}
     <table id="myviewstable" class="groupviews">
     {foreach from=$views item=view}
