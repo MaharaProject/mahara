@@ -61,6 +61,7 @@ if ($artefact) {
 
 }
 else {
+    require_once(get_config('libroot') . 'view.php');
     $public = !$USER->can_edit_view(new View($view));
     $table = 'view_feedback';
     $count = count_records_sql('
