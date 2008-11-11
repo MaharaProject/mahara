@@ -52,7 +52,7 @@ class PluginBlocktypeHtml extends PluginBlocktype {
                 return;
             }
 
-            $result = clean_text(file_get_contents($html->get_path()));
+            $result = clean_html(file_get_contents($html->get_path()));
         }
 
         return $result;

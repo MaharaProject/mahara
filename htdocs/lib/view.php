@@ -1898,7 +1898,7 @@ class View {
                 $institutions['mahara']->displayname = get_config('sitename');
             }
             foreach ($viewdata as &$v) {
-                $v->shortdescription = clean_text(str_shorten(str_replace('<br />', ' ', $v->description), 100, true));
+                $v->shortdescription = clean_html(str_shorten(str_replace('<br />', ' ', $v->description), 100, true));
                 if ($v->owner) {
                     $v->sharedby = View::owner_name($v->ownerformat, $owners[$v->owner]);
                 } else if ($v->group) {

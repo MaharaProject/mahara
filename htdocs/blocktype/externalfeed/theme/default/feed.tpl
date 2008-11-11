@@ -6,7 +6,7 @@
     {$title|escape}
     {if $link}</a>{/if}
     </div>
-    {if $description != $entries[0]->description}<div id="blocktype_externalfeed_desc">{$description|clean_text}</a></div>{/if}
+    {if $description != $entries[0]->description}<div id="blocktype_externalfeed_desc">{$description|clean_html}</a></div>{/if}
     <div id="blocktype_externalfeed_entries">
         {if $full}
             {foreach from=$entries item=entry}
@@ -15,7 +15,7 @@
                 {$entry->title|escape}
                 {if $entry->link}</a>{/if}
                 </h4>
-                {$entry->description|clean_text}
+                {$entry->description|clean_html}
             {/foreach}
         {else}
             <ol>

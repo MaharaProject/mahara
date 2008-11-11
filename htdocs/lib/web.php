@@ -2078,7 +2078,7 @@ function format_whitespace($text) {
  * @param string $text The text to be cleaned
  * @return string The cleaned up text
  */
-function clean_text($text) {
+function clean_html($text) {
     require_once('htmlpurifier/HTMLPurifier.auto.php');
     $config = HTMLPurifier_Config::createDefault();
     $config->set('Cache', 'SerializerPath', get_config('dataroot') . 'htmlpurifier');
@@ -2129,7 +2129,7 @@ function display_cleaned_html($html, $filename, $params) {
     } else {
         $smarty->assign('htmlremovedmessage', get_string('htmlremovedmessagenoowner', 'artefact.file', $filename));
     }
-    $smarty->assign('content', clean_text($html));
+    $smarty->assign('content', clean_html($html));
     $smarty->display('cleanedhtml.tpl');
     exit;
 }
