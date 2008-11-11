@@ -1453,6 +1453,10 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('createpublicgroups', 'admins');
     }
 
+    if ($oldversion < 2008111102) {
+        set_field('grouptype_roles', 'see_submitted_views', 1, 'grouptype', 'course', 'role', 'admin');
+    }
+
     return $status;
 
 }

@@ -57,7 +57,7 @@ class GroupTypeCourse extends GroupType {
     }
 
     public static function get_view_assessing_roles() {
-        return array('tutor');
+        return array('tutor', 'admin');
     }
 
     public static function default_role() {
