@@ -122,9 +122,6 @@ function pieform_element_wysiwyg_get_value(Pieform $form, $element) {
         if (!get_account_preference($USER->get('id'), 'wysiwyg')) {
             $value = format_whitespace($value);
         }
-        else {
-            $value = clean_text($value);
-        }
         return $value;
     }
     else if (isset($element['defaultvalue'])) {
