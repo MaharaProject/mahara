@@ -41,7 +41,7 @@ if ($group->jointype != 'request'
     throw new AccessDeniedException(get_string('cannotrequestjoingroup', 'group'));
 }
 
-define('TITLE', get_string('requestjoinspecifiedgroup', 'group', $group->name));
+define('TITLE', $group->name);
 
 $goto = get_config('wwwroot') . 'group/' . $returnto . '.php' . ($returnto == 'view' ? ('?id=' . $groupid) : '');
 
@@ -69,7 +69,7 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
-$smarty->assign('heading', TITLE);
+$smarty->assign('subheading', get_string('requestjoinspecifiedgroup', 'group', $group->name));
 $smarty->assign('form', $form);
 $smarty->display('group/requestjoin.tpl');
 
