@@ -1,5 +1,5 @@
 // The list of existing feedback.
-var feedbacklist = new TableRenderer('feedbacktable', 'getfeedback.json.php', []);
+var feedbacklist = new TableRenderer('feedbacktable', config.wwwroot + 'view/getfeedback.json.php', []);
 
 feedbacklist.limit = 10;
 feedbacklist.rowfunction = function(r, n, d) {
