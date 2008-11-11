@@ -2,8 +2,7 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-<h2>{$heading|escape}</h2>
-{include file="group/simplegroup.tpl" group=$group}
+<h3>{$subheading|escape}</h3>
 <div class="message">
 <p>{$message}</p>
 {$form}

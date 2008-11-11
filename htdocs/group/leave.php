@@ -35,7 +35,7 @@ $returnto = param_alpha('returnto', 'mygroups');
 define('GROUP', $groupid);
 $group = group_current_group();
 
-define('TITLE', get_string('leavespecifiedgroup', 'group', $group->name));
+define('TITLE', $group->name);
 
 if (!group_user_access($group->id)) {
     throw new AccessDeniedException(get_string('notamember', 'group'));
@@ -76,7 +76,7 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
-$smarty->assign('heading', TITLE);
+$smarty->assign('subheading', get_string('leavespecifiedgroup', 'group', $group->name));
 $smarty->assign('form', $form);
 $smarty->assign('message', $views ? get_string('groupconfirmleavehasviews', 'group') : get_string('groupconfirmleave', 'group'));
 $smarty->assign('group', $group);
