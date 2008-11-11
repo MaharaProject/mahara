@@ -311,6 +311,7 @@ function addmember_submit(Pieform $form, $values) {
         insert_record('group_member', $data);
         delete_records('group_member_request', 'member', $userid, 'group', $data->group);
         $lang = get_user_language($userid);
+        require_once(get_config('libroot') . 'activity.php');
         activity_occurred('maharamessage', 
             array('users'   => array($userid),
                   'subject' => get_string_from_language($lang, 'addedtogroupsubject', 'group'),
