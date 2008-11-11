@@ -1837,7 +1837,7 @@ class View {
             FROM {view}
             WHERE submittedto = ?
             ORDER BY title, id',
-            array($groupid), $offset, $limit
+            array($groupid)
         );
 
         if ($viewdata) {
