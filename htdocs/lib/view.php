@@ -1492,7 +1492,7 @@ class View {
                 }
                 $data[$i]['template'] = $viewdata[$i]->template;
             }
-            log_debug($data);
+
             // Go through all the artefact records and put them in with the
             // views they belong to.
             if ($artefacts) {
