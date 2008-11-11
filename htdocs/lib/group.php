@@ -366,6 +366,7 @@ function group_add_user($groupid, $userid, $role=null) {
  * @param int   $userid (optional, will default to logged in user)
  */
 function group_user_can_leave($group, $userid=null) {
+    global $USER;
     static $result;
 
     $userid = optional_userid($userid);
@@ -381,7 +382,7 @@ function group_user_can_leave($group, $userid=null) {
         return $result[$group->id][$userid];
     }
 
-    if ($group->jointype == 'controlled') {
+    if ($group->jointype == 'controlled' && group_user_access($group->id, $USER->get('id')) != 'admin') {
         return ($result[$group->id][$userid] = false);
     }
 
