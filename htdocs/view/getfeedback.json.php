@@ -42,8 +42,7 @@ if (!can_view_view($view)) {
 $userid = $USER->get('id');
 
 if ($artefact) {
-    $owner = get_field('artefact', 'owner', 'id', $artefact);
-    $public = (int) ($owner != $userid);
+    $public = !$USER->can_edit_artefact(artefact_instance_from_id($artefact));
     $table = 'artefact_feedback';
     $count = count_records_sql('
         SELECT
@@ -61,8 +60,7 @@ if ($artefact) {
 
 }
 else {
-    $owner = get_field('view', 'owner', 'id', $view);
-    $public = ($owner != $userid);
+    $public = !$USER->can_edit_view(new View($view));
     $table = 'view_feedback';
     $count = count_records_sql('
         SELECT
@@ -87,7 +85,7 @@ if ($feedback) {
         $d = array(
             'id'              => $record->id,
             'table'           => $table,
-            'ownedbythisuser' => ( $owner == $userid ? true : false ),
+            'ownedbythisuser' => !$public,
             'name'            => $record->author ? display_name($record->author) : $record->authorname,
             'date'            => format_date(strtotime($record->ctime), 'strftimedatetime'),
             'message'         => format_whitespace($record->message),
