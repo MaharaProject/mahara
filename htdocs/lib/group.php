@@ -240,6 +240,8 @@ function group_create($data) {
         throw new InvalidArgumentException("group_create: at least one member must be specified for adding to the group");
     }
 
+    $data['public'] = (isset($data['public'])) ? intval($data['public']) : 0;
+
     db_begin();
 
     $id = insert_record(
@@ -251,7 +253,7 @@ function group_create($data) {
             'jointype'    => $data['jointype'],
             'ctime'       => $data['ctime'],
             'mtime'       => $data['ctime'],
-            'public'      => intval($data['public']),
+            'public'      => $data['public'],
         ),
         'id',
         true
