@@ -42,9 +42,6 @@ $body       = param_variable('body');
 if (!get_account_preference($USER->get('id'), 'wysiwyg')) {
     $body = format_whitespace($body);
 }
-else {
-    $body = clean_text($body);
-}
 $tags       = param_variable('tags');
 
 safe_require('artefact', 'blog');
