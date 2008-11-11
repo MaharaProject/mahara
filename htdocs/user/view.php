@@ -152,13 +152,15 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
           AND g.deleted = 0", array($userid,$loggedinid,$userid))) {
         $controlledlist = array();
         foreach ($groups as $group) {
-            if (array_key_exists($group->id, $userassocgroups)) {
+            if (array_key_exists($group->id, $allusergroups)) {
                 continue;
             }
             if ($group->jointype == 'request') {
                 $requestedlist[$group->id] = $group->name;
             }
-            $controlledlist[$group->id] = $group->name;
+            else {
+                $controlledlist[$group->id] = $group->name;
+            }
         }
         $smarty->assign('requestedlist', join(', ', $requestedlist));
         if (count($controlledlist) > 0) {
