@@ -61,6 +61,8 @@ $string['Admin'] = 'Admin';
 $string['grouptype'] = 'Group Type';
 $string['publiclyviewablegroup'] = 'Publicly Viewable Group?';
 $string['publiclyviewablegroupdescription'] = 'Allow anyone (including people who aren\'t members of this site) to view this group, including the forums?';
+$string['usersautoadded'] = 'Users auto-added?';
+$string['usersautoaddeddescription'] = 'Automatically put all new users into this group?';
 
 $string['hasrequestedmembership'] = 'has requested membership of this group';
 $string['hasbeeninvitedtojoin'] = 'has been invited to join this group';

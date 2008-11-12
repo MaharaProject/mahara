@@ -81,6 +81,16 @@ $editgroup = pieform(array(
             'help'         => true,
             'ignore'       => !(get_config('createpublicgroups') == 'all' || get_config('createpublicgroups') == 'admins' && $USER->get('admin')),
         ),
+        'usersautoadded' => array(
+            'type'         => 'select',
+            'title'        => get_string('usersautoadded', 'group'),
+            'description'  => get_string('usersautoaddeddescription', 'group'),
+            'options'      => array(true  => get_string('yes'),
+                                    false => get_string('no')),
+            'defaultvalue' => 'no',
+            'help'         => true,
+            'ignore'       => !$USER->get('admin'),
+        ),
         'id'          => array(
             'type'         => 'hidden',
             'value'        => $id,
@@ -114,6 +124,7 @@ function editgroup_submit(Pieform $form, $values) {
 
     list($grouptype, $jointype) = explode('.', $values['grouptype']);
     $values['public'] = (isset($values['public'])) ? $values['public'] : 0;
+    $values['usersautoadded'] = (isset($values['usersautoadded'])) ? $values['usersautoadded'] : 0;
 
     update_record(
         'group',
@@ -124,6 +135,7 @@ function editgroup_submit(Pieform $form, $values) {
             'grouptype'      => $grouptype,
             'jointype'       => $jointype,
             'mtime'          => $now,
+            'usersautoadded' => intval($values['usersautoadded']),
             'public'         => intval($values['public']),
         ),
         'id'

@@ -65,6 +65,16 @@ $creategroup = pieform(array(
             'help'         => true,
             'ignore'       => !(get_config('createpublicgroups') == 'all' || get_config('createpublicgroups') == 'admins' && $USER->get('admin')),
         ),
+        'usersautoadded' => array(
+            'type'         => 'select',
+            'title'        => get_string('usersautoadded', 'group'),
+            'description'  => get_string('usersautoaddeddescription', 'group'),
+            'options'      => array(true  => get_string('yes'),
+                                    false => get_string('no')),
+            'defaultvalue' => 'no',
+            'help'         => true,
+            'ignore'       => !$USER->get('admin'),
+        ),
         'submit'   => array(
             'type'  => 'submitcancel',
             'value' => array(get_string('savegroup', 'group'), get_string('cancel')),
@@ -96,14 +106,16 @@ function creategroup_submit(Pieform $form, $values) {
 
     list($grouptype, $jointype) = explode('.', $values['grouptype']);
     $values['public'] = (isset($values['public'])) ? $values['public'] : 0;
+    $values['usersautoadded'] = (isset($values['usersautoadded'])) ? $values['usersautoadded'] : 0;
 
     $id = group_create(array(
-        'name'        => $values['name'],
-        'description' => $values['description'],
-        'grouptype'   => $grouptype,
-        'jointype'    => $jointype,
-        'public'      => intval($values['public']),
-        'members'     => array($USER->get('id') => 'admin'),
+        'name'           => $values['name'],
+        'description'    => $values['description'],
+        'grouptype'      => $grouptype,
+        'jointype'       => $jointype,
+        'public'         => intval($values['public']),
+        'usersautoadded' => intval($values['usersautoadded']),
+        'members'        => array($USER->get('id') => 'admin'),
     ));
 
     $USER->reset_grouproles();

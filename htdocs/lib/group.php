@@ -241,19 +241,21 @@ function group_create($data) {
     }
 
     $data['public'] = (isset($data['public'])) ? intval($data['public']) : 0;
+    $data['usersautoadded'] = (isset($data['usersautoadded'])) ? intval($data['usersautoadded']) : 0;
 
     db_begin();
 
     $id = insert_record(
         'group',
         (object) array(
-            'name'        => $data['name'],
-            'description' => $data['description'],
-            'grouptype'   => $data['grouptype'],
-            'jointype'    => $data['jointype'],
-            'ctime'       => $data['ctime'],
-            'mtime'       => $data['ctime'],
-            'public'      => $data['public'],
+            'name'           => $data['name'],
+            'description'    => $data['description'],
+            'grouptype'      => $data['grouptype'],
+            'jointype'       => $data['jointype'],
+            'ctime'          => $data['ctime'],
+            'mtime'          => $data['ctime'],
+            'public'         => $data['public'],
+            'usersautoadded' => $data['usersautoadded'],
         ),
         'id',
         true
