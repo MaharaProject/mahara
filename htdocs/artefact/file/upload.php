@@ -58,7 +58,7 @@ if ($institution) {
         json_reply('local', get_string('usernotingroup', 'mahara'));
     }
     $data->group = $group;
-    $data->rolepermissions = json_decode(param_variable('permissions'));
+    $data->rolepermissions = (array) json_decode(param_variable('permissions'));
 } else {
     $data->owner = $USER->get('id');
 }

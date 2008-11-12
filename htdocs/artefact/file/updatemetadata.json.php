@@ -63,7 +63,7 @@ $artefact->set('title', $name);
 $artefact->set('description', $description);
 $artefact->set('tags', preg_split("/\s*,\s*/", trim($tags)));
 if ($group) {
-    $artefact->set('rolepermissions', json_decode(param_variable('permissions')));
+    $artefact->set('rolepermissions', (array) json_decode(param_variable('permissions')));
 }
 $artefact->commit();
 

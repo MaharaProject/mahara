@@ -624,6 +624,12 @@ function group_get_role_info($groupid) {
     return $roles;
 }
 
+function group_get_default_artefact_permissions($groupid) {
+    $type = get_field('group', 'grouptype', 'id', $groupid);
+    safe_require('grouptype', $type);
+    return call_static_method('GroupType' . $type, 'default_artefact_rolepermissions');
+}
+
 /**
  * Sets up groups for display in mygroups.php and find.php
  *

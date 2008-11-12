@@ -36,7 +36,7 @@ $javascript = ArtefactTypeFileBase::get_my_files_js(param_integer('folder', null
 define('GROUP', param_integer('group'));
 $group = group_current_group();
 
-if (!group_user_access($group->id)) {
+if (!$role = group_user_access($group->id)) {
     throw new AccessDeniedException();
 }
 define('TITLE', $group->name . ' - ' . get_string('groupfiles', 'artefact.file'));
@@ -45,10 +45,15 @@ require_once(get_config('docroot') . 'interaction/lib.php');
 
 $groupdata = json_encode($group);
 $grouproles = json_encode(array_values(group_get_role_info($group->id)));
+$defaultperms = group_get_default_artefact_permissions($group->id);
+// By default, users can edit files they upload themselves
+$defaultperms[$role] = (object) array('view' => true, 'edit' => true, 'republish' => true);
+$grouprolepermissions = json_encode($defaultperms);
 
 $javascript .= <<<GROUPJS
 var group = {$groupdata};
 group.roles = {$grouproles};
+group.rolepermissions = {$grouprolepermissions};
 browser.setgroup({$group->id});
 uploader.setgroup({$group->id});
 GROUPJS;

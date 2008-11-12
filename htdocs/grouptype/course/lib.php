@@ -64,6 +64,13 @@ class GroupTypeCourse extends GroupType {
         return 'member';
     }
 
+    public static function default_artefact_rolepermissions() {
+        return array(
+            'member' => (object) array('view' => true, 'edit' => false, 'republish' => false),
+            'tutor'  => (object) array('view' => true, 'edit' => true, 'republish' => true),
+            'admin'  => (object) array('view' => true, 'edit' => true, 'republish' => true),
+        );
+    }
 }
 
 ?>

@@ -95,6 +95,8 @@ abstract class GroupType {
     public static function get_group_artefact_plugins() {
         return array('file');
     }
+
+    public static abstract function default_artefact_rolepermissions();
 }
 
 ?>

@@ -163,7 +163,7 @@ abstract class ArtefactType {
         }
 
         // load group permissions
-        if ($this->group) {
+        if ($this->group && !is_array($this->rolepermissions)) {
             $this->load_rolepermissions();
         }
 
@@ -614,22 +614,19 @@ abstract class ArtefactType {
             return;
         }
         require_once(get_config('libroot') . 'group.php');
-        $roles = array_keys(group_get_role_info($this->group));
         if (!isset($this->rolepermissions)) {
-            foreach ($roles as $r) {
-                $this->rolepermissions->{$r} = (object) array('view' => true, 'edit' => true, 'republish' => true);
-            }
+            $this->rolepermissions = group_get_default_artefact_permissions($this->group);
         }
         $id = $this->get('id');
         db_begin();
         delete_records('artefact_access_role', 'artefact', $id);
-        foreach ($roles as $role) {
+        foreach ($this->rolepermissions as $role => $permissions) {
             insert_record('artefact_access_role', (object) array(
                 'artefact'      => $id,
                 'role'          => $role,
-                'can_view'      => (int) $this->rolepermissions->{$role}->view,
-                'can_edit'      => (int) $this->rolepermissions->{$role}->edit,
-                'can_republish' => (int) $this->rolepermissions->{$role}->republish,
+                'can_view'      => (int) $permissions->view,
+                'can_edit'      => (int) $permissions->edit,
+                'can_republish' => (int) $permissions->republish,
             ));
         }
         db_commit();
@@ -641,9 +638,9 @@ abstract class ArtefactType {
         }
         $records = get_records_array('artefact_access_role', 'artefact', $this->get('id'));
         if ($records) {
-            $this->rolepermissions = new StdClass;
+            $this->rolepermissions = array();
             foreach ($records as $r) {
-                $this->rolepermissions->{$r->role} = (object) array(
+                $this->rolepermissions[$r->role] = (object) array(
                     'view' => (bool) $r->can_view,
                     'edit' => (bool) $r->can_edit,
                     'republish' => (bool) $r->can_republish,
@@ -651,10 +648,7 @@ abstract class ArtefactType {
             }
         }
         else {
-            $roles = group_get_role_info($this->get('group'));
-            foreach ($roles as $r) {
-                $this->rolepermissions->{$r->name} = (object) array('view' => true, 'edit' => true, 'republish' => true);
-            }
+            $this->rolepermissions = group_get_default_artefact_permissions($this->group);
         }
     }
 

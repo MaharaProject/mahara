@@ -396,7 +396,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
             }
         }});
         if (group) {
-            var perm = permissionform_row({'all':1});
+            var perm = permissionform_row(group.rolepermissions);
         }
         else {
             var perm = null;
@@ -620,7 +620,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
         notice.innerHTML = copyrightnotice + get_string('notice.help');
         var destinationattributes = (self.folderid === false) ? {'style':'display: none;'} : null;
         if (group) {
-            var perm = permissionform_row({'all':1});
+            var perm = permissionform_row(group.rolepermissions);
         }
         else {
             var perm = null;
