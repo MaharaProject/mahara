@@ -30,6 +30,7 @@ class PluginInteractionForum extends PluginInteraction {
 
     public static function instance_config_form($group, $instance=null) {
         if (isset($instance)) {
+            $autosubscribe = get_field('interaction_forum_instance_config', 'value', 'field', 'autosubscribe', 'forum', $instance->get('id'));
             $weight = get_field('interaction_forum_instance_config', 'value', 'field', 'weight', 'forum', $instance->get('id'));
             $moderators = get_column_sql(
                 'SELECT fm.user FROM {interaction_forum_moderator} fm
@@ -71,6 +72,18 @@ class PluginInteractionForum extends PluginInteraction {
                 'collapsed' => true,
                 'legend' => get_string('settings'),
                 'elements' => array(
+                    'autosubscribe' => array(
+                        'type'         => 'select',
+                        'title'        => get_string('autosubscribeusers', 'interaction.forum'),
+                        'options'      => array(true  => get_string('yes'),
+                                                false => get_string('no')),
+                        'description'  => get_string('autosubscribeusersdescription', 'interaction.forum'),
+                        'defaultvalue' => isset($autosubscribe) ? $autosubscribe : false,
+                        'rules' => array(
+                            'required' => true,
+                        ),
+                        'help'         => true,
+                    ),
                     'weight' => array(
                         'type' => 'weight',
                         'title' => get_string('Order', 'interaction.forum'),
@@ -100,6 +113,35 @@ class PluginInteractionForum extends PluginInteraction {
 
     public static function instance_config_save($instance, $values){
         db_begin();
+
+        // Autosubscribe
+        delete_records_sql(
+            "DELETE FROM {interaction_forum_instance_config}
+            WHERE field = 'autosubscribe' AND forum = ?",
+            array($instance->get('id'))
+        );
+        insert_record('interaction_forum_instance_config', (object)array(
+            'forum' => $instance->get('id'),
+            'field' => 'autosubscribe',
+            'value' => (bool)$values['autosubscribe'],
+        ));
+
+        if ($values['justcreated']) {
+            // Subscribe all existing users in the group to the forums
+            if ($userids = get_column('group_member', 'member', 'group', $instance->get('group'))) {
+                foreach ($userids as $userid) {
+                    insert_record(
+                        'interaction_forum_subscription_forum',
+                        (object)array(
+                            'forum' => $instance->get('id'),
+                            'user' => $userid,
+                        )
+                    );
+                }
+            }
+        }
+
+        // Moderators
         delete_records(
             'interaction_forum_moderator',
             'forum', $instance->get('id')
