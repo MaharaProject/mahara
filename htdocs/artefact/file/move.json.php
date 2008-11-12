@@ -75,6 +75,16 @@ if ($newparentid > 0) {
     if ($artefact->get('parent') == null) {
         json_reply(false, get_string('filealreadyindestination', 'artefact.file'));
     }
+    $group = $artefact->get('group');
+    if ($group) {
+        // Use default grouptype artefact permissions to check if the
+        // user can move a file to the group's root directory
+        require_once(get_config('libroot') . 'group.php');
+        $permissions = group_get_default_artefact_permissions($group);
+        if (!$permissions[group_user_access($group)]->edit) {
+            json_reply(true, get_string('movefailednotowner', 'artefact.file'));
+        }
+    }
     $newparentid = null;
 }
 

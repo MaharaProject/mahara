@@ -30,6 +30,7 @@ $string['pluginname'] = 'Files';
 
 $string['sitefilesloaded'] = 'Site files loaded';
 $string['bytes'] = 'bytes';
+$string['cannoteditfolder'] = 'You do not have permission to add content to this folder';
 $string['changessaved'] = 'Changes saved';
 $string['contents'] = 'Contents';
 $string['copyrightnotice'] = 'Copyright notice';

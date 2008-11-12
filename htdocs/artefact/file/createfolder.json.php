@@ -52,11 +52,20 @@ if ($institution) {
     $data->institution = $institution;
 } else if ($group) {
     require_once(get_config('docroot') . 'artefact/lib.php');
-    require_once(get_config('docroot') . 'lib/group.php');
+    require_once(get_config('libroot') . 'group.php');
     if ($parentfolder && !$USER->can_edit_artefact(artefact_instance_from_id($parentfolder))) {
         json_reply('local', get_string('cannoteditfolder', 'artefact.file'));
-    } else if (!$parentfolder && !group_user_access($group)) {
-        json_reply('local', get_string('usernotingroup', 'mahara'));
+    } else if (!$parentfolder) {
+        $role = group_user_access($group);
+        if (!$role) {
+            json_reply('local', get_string('usernotingroup', 'mahara'));
+        }
+        // Use default grouptype artefact permissions to check if the
+        // user can create a folder in the group's root directory
+        $permissions = group_get_default_artefact_permissions($group);
+        if (!$permissions[$role]->edit) {
+            json_reply('local', get_string('cannoteditfolder', 'artefact.file'));
+        }
     }
     $data->group = $group;
     $data->rolepermissions = (array) json_decode(param_variable('permissions'));

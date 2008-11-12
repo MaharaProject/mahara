@@ -39,6 +39,9 @@ $collideaction    = param_variable('collideaction', 'fail');
 $institution      = param_alpha('institution', null);
 $group            = param_integer('group', null);
 
+$result = new StdClass;
+$result->uploadnumber = $uploadnumber;
+
 $data = new StdClass;
 if ($parentfolder) {
     $data->parent = (int) $parentfolder;
@@ -51,11 +54,23 @@ if ($institution) {
     $data->institution = $institution;
 } else if ($group) {
     require_once(get_config('docroot') . 'artefact/lib.php');
-    require_once(get_config('docroot') . 'lib/group.php');
+    require_once(get_config('libroot') . 'group.php');
     if ($parentfolder && !$USER->can_edit_artefact(artefact_instance_from_id($parentfolder))) {
-        json_reply('local', get_string('cannoteditfolder', 'artefact.file'));
-    } else if (!$parentfolder && !group_user_access($group)) {
-        json_reply('local', get_string('usernotingroup', 'mahara'));
+        $result->error = 'local';
+        $result->message = get_string('cannoteditfolder', 'artefact.file');
+    } else if (!$parentfolder) {
+        $role = group_user_access($group);
+        if (!$role) {
+            $result->error = 'local';
+            $result->message = get_string('usernotingroup', 'mahara');
+        }
+        // Use default grouptype artefact permissions to check if the
+        // user can upload a file to the group's root directory
+        $permissions = group_get_default_artefact_permissions($group);
+        if (!$permissions[$role]->edit) {
+            $result->error = 'local';
+            $result->message = get_string('cannoteditfolder', 'artefact.file');
+        }
     }
     $data->group = $group;
     $data->rolepermissions = (array) json_decode(param_variable('permissions'));
@@ -65,19 +80,18 @@ if ($institution) {
 $data->container = 0;
 $data->locked = 0;
 
-$result = new StdClass;
-$result->uploadnumber = $uploadnumber;
-
-if ($oldid = ArtefactTypeFileBase::file_exists($title, $data->owner, $parentfolder, $institution, $group)) {
-    if ($collideaction == 'replace') {
-        $obj = artefact_instance_from_id($oldid);
-        $obj->delete();
-    }
-    else {
-        // Hopefully this will happen rarely as filename clashes are
-        // detected in the javascript.
-        $result->error = 'fileexists';
-        $result->message = get_string('fileexistsonserver', 'artefact.file', $title);
+if (!isset($result->error)) {
+    if ($oldid = ArtefactTypeFileBase::file_exists($title, $data->owner, $parentfolder, $institution, $group)) {
+        if ($collideaction == 'replace') {
+            $obj = artefact_instance_from_id($oldid);
+            $obj->delete();
+        }
+        else {
+            // Hopefully this will happen rarely as filename clashes are
+            // detected in the javascript.
+            $result->error = 'fileexists';
+            $result->message = get_string('fileexistsonserver', 'artefact.file', $title);
+        }
     }
 }
 if (!isset($result->error)) {
