@@ -650,6 +650,7 @@ function core_install_firstcoredata_defaults() {
         'unexpireuser',
         'deactivateuser',
         'activateuser',
+        'userjoinsgroup',
         'saveartefact',
         'deleteartefact',
         'saveview',

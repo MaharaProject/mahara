@@ -344,18 +344,19 @@ function group_add_user($groupid, $userid, $role=null) {
     $groupid = group_param_groupid($groupid);
     $userid  = group_param_userid($userid);
 
-    $cm = new StdClass;
-    $cm->member = $userid;
-    $cm->group = $groupid;
-    $cm->ctime =  db_format_timestamp(time());
+    $gm = new StdClass;
+    $gm->member = $userid;
+    $gm->group = $groupid;
+    $gm->ctime =  db_format_timestamp(time());
     if (!$role) {
         $role = get_field_sql('SELECT gt.defaultrole FROM {grouptype} gt, {group} g WHERE g.id = ? AND g.grouptype = gt.name', array($groupid));
     }
-    $cm->role = $role;
+    $gm->role = $role;
 
     db_begin();
-    insert_record('group_member', $cm);
+    insert_record('group_member', $gm);
     delete_records('group_member_request', 'group', $groupid, 'member', $userid);
+    handle_event('userjoinsgroup', $gm);
     db_commit();
 }
 
