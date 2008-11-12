@@ -270,6 +270,7 @@ class View {
         delete_records('view_tag','view',$this->id);
         delete_records('usr_watchlist_view','view',$this->id);
         if ($blockinstanceids = get_column('block_instance', 'id', 'view', $this->id)) {
+            require_once(get_config('docroot') . 'blocktype/lib.php');
             foreach ($blockinstanceids as $id) {
                 $bi = new BlockInstance($id);
                 $bi->delete();
