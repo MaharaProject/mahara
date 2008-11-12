@@ -75,8 +75,10 @@ $elements = array_merge(
 
 // save, validate and cancelhandlers are in interaction/lib.php
 $form = pieform(array(
-    'name'     => 'edit_interaction',
-    'elements' => $elements
+    'name'       => 'edit_interaction',
+    'plugintype' => 'interaction',
+    'pluginname' => $plugin,
+    'elements'   => $elements,
     )
 );
 
