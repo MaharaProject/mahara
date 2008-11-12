@@ -216,6 +216,49 @@ class PluginInteractionForum extends PluginInteraction {
     }
 
     /**
+     * Subscribes the forum plugin to events
+     *
+     * @return array
+     */
+    public static function get_event_subscriptions() {
+        return array(
+            (object)array(
+                'plugin'       => 'forum',
+                'event'        => 'userjoinsgroup',
+                'callfunction' => 'user_joined_group',
+            ),
+        );
+    }
+
+    /**
+     * When a user joins a group, subscribe them automatically to all forums 
+     * that should be subscribable
+     *
+     * @param array $eventdata
+     */
+    public static function user_joined_group($event, $gm) {
+        if ($forumids = get_column_sql("
+            SELECT ii.id
+            FROM {group} g
+            LEFT JOIN {interaction_instance} ii ON g.id = ii.group
+            LEFT JOIN {interaction_forum_instance_config} ific ON ific.forum = ii.id
+            WHERE {group} = ? AND ific.field = 'autosubscribe' and ific.value = '1'",
+            array($gm['group']))) {
+            db_begin();
+            foreach ($forumids as $forumid) {
+                insert_record(
+                    'interaction_forum_subscription_forum',
+                    (object)array(
+                        'forum' => $forumid,
+                        'user' => $gm['member'],
+                    )
+                );
+            }
+            db_commit();
+        }
+    }
+
+    /**
      * Optional method. Takes a list of forums and sorts them according to 
      * their weights for the sideblock
      *
