@@ -64,6 +64,10 @@ abstract class PluginInteraction extends Plugin {
                 'type'  => 'hidden',
                 'value' => $group->id
             ),
+            'justcreated' => array(
+                'type' => 'hidden',
+                'value' => !isset($instance),
+            ),
             'creator' => array(
                 'type' => 'hidden',
                 'value' => (isset($instance) ? $instance->get('creator') : $USER->get('id'))
