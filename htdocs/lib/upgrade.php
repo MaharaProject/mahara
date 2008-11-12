@@ -669,6 +669,10 @@ function core_install_firstcoredata_defaults() {
             'event'        => 'createuser',
             'callfunction' => 'activity_set_defaults',
         ),
+        array(
+            'event'        => 'createuser',
+            'callfunction' => 'add_user_to_autoadd_groups',
+        ),
     );
 
     foreach ($subs as $sub) {

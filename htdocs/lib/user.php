@@ -1208,6 +1208,25 @@ function copy_view_for_user($userid, $templateid) {
 }
 
 
+/**
+ * Given a user, makes sure they have been added to all groups that are marked 
+ * as ones that users should be auto-added to
+ *
+ * @param array $eventdata Event data passed from activity_occured, the key 'id' = userid
+ */
+function add_user_to_autoadd_groups($eventdata) {
+    require_once('group.php');
+    $userid = $eventdata['id'];
+    if ($autoaddgroups = get_column('group', 'id', 'usersautoadded', true)) {
+        foreach ($autoaddgroups as $groupid) {
+            if (!group_user_access($groupid, $userid)) {
+                group_add_user($groupid, $userid);
+            }
+        }
+    }
+}
+
+
 function copy_views_for_user($userid, $templateids) {
     if (!$templateids) {
         return;

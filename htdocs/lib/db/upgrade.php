@@ -1457,6 +1457,16 @@ function xmldb_core_upgrade($oldversion=0) {
         set_field('grouptype_roles', 'see_submitted_views', 1, 'grouptype', 'course', 'role', 'admin');
     }
 
+    if ($oldversion < 2008111200) {
+        // Event subscription for auto adding users to groups
+        insert_record('event_subscription', (object)array('event' => 'createuser', 'callfunction' => 'add_user_to_autoadd_groups'));
+
+        $table = new XMLDBTable('group');
+        $field = new XMLDBField('usersautoadded');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+    }
+
     return $status;
 
 }
