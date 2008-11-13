@@ -544,8 +544,7 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
     }
 
     public static function get_tablerenderer_title_js_string() {
-        $at = get_string('at');
-        return " r.jobtitle + ' {$at} ' + r.employer";
+        return " r.jobtitle + ' : ' + r.employer";
     }
 
     public static function get_tablerenderer_body_js_string() {
