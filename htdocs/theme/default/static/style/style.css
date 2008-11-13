@@ -1734,8 +1734,9 @@ button#dosearch {
 	float: right;
 }
 #filelist tr.highlight-file td {
-    background-color: #efe8d0 !important;
+    background: #fffcd8 url(../images/highlight-bg.gif) repeat left top !important;
     font-weight: bold;
+    color: #837d37;
 }
 #filelist table table.editpermissions {
 	text-align: left;
