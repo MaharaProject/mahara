@@ -435,7 +435,7 @@ function group_remove_user($groupid, $userid=null) {
 /**
  * Form for users to join a given group
  */
-function group_get_join_form($name, $groupid) {
+function group_get_join_form($name, $groupid, $returnto='view') {
     return pieform(array(
         'name' => $name,
         'successcallback' => 'joingroup_submit',
@@ -448,7 +448,11 @@ function group_get_join_form($name, $groupid) {
             'group' => array(
                 'type' => 'hidden',
                 'value' => $groupid
-            )
+            ),
+            'returnto' => array(
+                'type' => 'hidden',
+                'value' => $returnto
+            ),
         )
     ));
 }
@@ -539,7 +543,13 @@ function joingroup_submit(Pieform $form, $values) {
     global $SESSION, $USER;
     group_add_user($values['group'], $USER->get('id'));
     $SESSION->add_ok_msg(get_string('joinedgroup', 'group'));
-    redirect('/group/view.php?id=' . $values['group']);
+    if (substr($values['returnto'], 0, 1) == '/') {
+        $next = $values['returnto'];
+    }
+    else {
+        $next = '/group/view.php?id=' . $values['group'];
+    }
+    redirect($next);
 }
 
 function group_invite_submit(Pieform $form, $values) {
@@ -550,7 +560,13 @@ function group_invite_submit(Pieform $form, $values) {
         if (isset($values['accept'])) {
             group_add_user($values['group'], $USER->get('id'), $inviterecord->role);
             $SESSION->add_ok_msg(get_string('groupinviteaccepted', 'group'));
-            redirect('/group/view.php?id=' . $values['group']);
+            if (substr($values['returnto'], 0, 1) == '/') {
+                $next = $values['returnto'];
+            }
+            else {
+                $next = '/group/view.php?id=' . $values['group'];
+            }
+            redirect($next);
         }
         else {
             $SESSION->add_ok_msg(get_string('groupinvitedeclined', 'group'));

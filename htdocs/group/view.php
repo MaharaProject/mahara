@@ -51,6 +51,7 @@ $group->admins = get_column_sql("SELECT member
 $role = group_user_access($group->id);
 
 if (is_logged_in()) {
+    $afterjoin = param_variable('next', 'view');
     if ($role) {
         if ($role == 'admin') {
             $group->membershiptype = 'admin';
@@ -67,14 +68,14 @@ if (is_logged_in()) {
     else if ($group->jointype == 'invite'
              and $invite = get_record('group_member_invite', 'group', $group->id, 'member', $USER->get('id'))) {
         $group->membershiptype = 'invite';
-        $group->invite = group_get_accept_form('invite', $group->id, 'view');
+        $group->invite = group_get_accept_form('invite', $group->id, $afterjoin);
     }
     else if ($group->jointype == 'request'
              and $request = get_record('group_member_request', 'group', $group->id, 'member', $USER->get('id'))) {
         $group->membershiptype = 'request';
     }
     else if ($group->jointype == 'open') {
-        $group->groupjoin = group_get_join_form('joingroup', $group->id);
+        $group->groupjoin = group_get_join_form('joingroup', $group->id, $afterjoin);
     }
 }
 

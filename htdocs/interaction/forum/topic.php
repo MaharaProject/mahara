@@ -48,18 +48,18 @@ $topic = get_record_sql(
     array(0, $USER->get('id'), $USER->get('id'), $topicid)
 );
 
-define('GROUP', $topic->groupid);
-
 if (!$topic) {
     throw new NotFoundException(get_string('cantfindtopic', 'interaction.forum', $topicid));
 }
+
+define('GROUP', $topic->groupid);
 
 $membership = user_can_access_forum((int)$topic->forumid);
 $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
 if (!$membership
     && !get_field('group', 'public', 'id', $topic->groupid)) {
-    throw new AccessDeniedException(get_string('cantviewtopic', 'interaction.forum'));
+    throw new GroupAccessDeniedException(get_string('cantviewtopic', 'interaction.forum'));
 }
 $topic->canedit = $moderator || user_can_edit_post($topic->poster, $topic->ctime);
 

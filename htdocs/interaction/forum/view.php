@@ -65,7 +65,7 @@ $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
 if (!$membership
     && !get_field('group', 'public', 'id', $forum->groupid)) {
-    throw new AccessDeniedException(get_string('cantviewforums', 'interaction.forum'));
+    throw new GroupAccessDeniedException(get_string('cantviewforums', 'interaction.forum'));
 }
 
 define('TITLE', $forum->groupname . ' - ' . $forum->title);

@@ -40,7 +40,7 @@ $group = group_current_group();
 $membership = group_user_access($groupid);
 
 if (!$membership && !$group->public) {
-    throw new AccessDeniedException(get_string('cantviewforums', 'interaction.forum'));
+    throw new GroupAccessDeniedException(get_string('cantviewforums', 'interaction.forum'));
 }
 
 define('TITLE', $group->name . ' - ' . get_string('nameplural', 'interaction.forum'));

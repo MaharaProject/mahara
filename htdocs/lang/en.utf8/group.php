@@ -151,6 +151,7 @@ $string['group'] = 'group';
 $string['Group'] = 'Group';
 $string['groups'] = 'groups';
 $string['notamember'] = 'You are not a member of this group';
+$string['notmembermayjoin'] = 'You must join the group \'%s\' to see this page.';
 
 // friendslist
 $string['reasonoptional'] = 'Reason (optional)';
