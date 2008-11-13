@@ -795,7 +795,6 @@ class GroupAccessDeniedException extends AccessDeniedException {
         global $USER, $SESSION;
         if (defined('GROUP') && $USER->is_logged_in()) {
             $roles = $USER->get('grouproles');
-            log_debug($roles);
             if (!isset($roles[GROUP])) {
                 $group = group_current_group();
                 if ($group->jointype == 'open'
