@@ -25,7 +25,7 @@ body {
     padding: 0;
     font-family: Arial, Helvetica, sans-serif;
     background: url(../images/background.gif) repeat;
-    font-size: 12px;
+    font-size: 75%;
 	color: #474220;
 }
 
@@ -732,14 +732,14 @@ div.sidebar h3 a:active {
 	color: #7f9d16 !important;
 }
 div.sidebar p {
-    font-size: 11px;
+    font-size: .9em;
 }
 div.sidebar ul {
 	list-style-type:disc;
 	margin: 0;
 	padding: 0 0 0 15px;
 	font-weight: normal;
-    font-size: 11px;
+	font-size: 11px;
 	color: #7f9d16;
 }
 div.sidebar ul a {
@@ -754,7 +754,7 @@ div.sidebar ul ul {
 	margin: 0;
 	padding: 0 0 0 15px;
 	font-weight: normal;
-    font-size: 11px;
+	font-size: 11px;
 	color: #7f9d16;
 }
 div.sidebar ul ul a {
@@ -765,7 +765,7 @@ div.sidebar ul ul a {
 div.sidebar ul.sidebar-ul-title {
 	margin: 0 0 10px 0;
 	padding: 0 0 0 0;
-    font-size: 12px;
+	font-size: 12px;
 	font-weight: bold;
 	list-style-type: none;
 	color: #95a8b6;
@@ -1018,7 +1018,7 @@ ul#onlineusers {
     padding: 2px 5px 0 0;
 }
 .maincontent #loginform_container td {
-       margin: 0;
+    margin: 0;
     padding: 2px 0 0 0;
 }
 .maincontent #login_submit_container {
@@ -1083,7 +1083,7 @@ ul#onlineusers {
     text-align: center;
     font-weight: bold;
     color: #1e6297;
-    font-size: 14px;
+    font-size: 16px;
 }
 /* Tables that need top and bottom margin adjustment */
 fieldset table,
@@ -1140,7 +1140,7 @@ fieldset table,
 legend {
 	color: #1e6297;
 	font-weight: bold;
-	font-size: 16px;
+	font-size: 1.3em;
 }
 legend a, 
 legend a:link, 
@@ -1704,11 +1704,13 @@ button#dosearch {
     background-color: #e0e8ee !important;
 	border-top: none;
 	border-bottom: none;
+	line-height: 2em;
 }
 #filelist tr.r1 td {
     background-color: #f4f7f9 !important;
 	border-top: none;
 	border-bottom: none;
+	line-height: 2em;
 }
 #filelist tr td {
 	background-color: #f9f9f9;
