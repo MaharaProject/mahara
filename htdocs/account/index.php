@@ -48,6 +48,7 @@ if (method_exists($authobj, 'change_password')) {
         'oldpassword' => array( 'type' => 'password',
             'title' => get_string('oldpassword'),
             'help'  => true,
+            'autocomplete' => 'off',
         ),
         'password1' => array(
             'type' => 'password',
