@@ -330,19 +330,17 @@ class ArtefactTypeBlogPost extends ArtefactType {
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
 
-        if (!$data) {
-            if ($this->id) {
-                if ($bpdata = get_record('artefact_blog_blogpost', 'blogpost', $this->id)) {
-                    foreach($bpdata as $name => $value) {
-                        if (property_exists($this, $name)) {
-                            $this->$name = $value;
-                        }
+        if ($this->id) {
+            if ($bpdata = get_record('artefact_blog_blogpost', 'blogpost', $this->id)) {
+                foreach($bpdata as $name => $value) {
+                    if (property_exists($this, $name)) {
+                        $this->$name = $value;
                     }
                 }
-                else {
-                    // This should never happen unless the user is playing around with blog post IDs in the location bar or similar
-                    throw new ArtefactNotFoundException(get_string('blogpostdoesnotexist', 'artefact.blog'));
-                }
+            }
+            else {
+                // This should never happen unless the user is playing around with blog post IDs in the location bar or similar
+                throw new ArtefactNotFoundException(get_string('blogpostdoesnotexist', 'artefact.blog'));
             }
         }
     }
