@@ -680,7 +680,6 @@ abstract class ArtefactType {
     }
 
     public function copy_extra($new) {
-        return;
     }
 
     public function copy_for_new_owner($user, $group, $institution) {
@@ -695,6 +694,31 @@ abstract class ArtefactType {
         $this->copy_extra($copy);
         $copy->commit();
         return $copy->get('id');
+    }
+
+    /**
+     * Called after a view has been copied to rewrite all artefact
+     * references in the new artefact (which still point to the
+     * original artefacts) so that they also point to new artefacts
+     * that were copied during the view copy.
+     *
+     * @param View $view The newly copied view
+     * @param View $template The old view
+     * @param array $artefactcopies The mapping between old artefact ids and new ones (created in blockinstance copy)
+     * @param integer $oldid id of the artefact this artefact was copied from
+     */
+    public function update_artefact_references(&$view, &$template, &$artefactcopies, $oldid) {
+        $copyinfo = $artefactcopies[$oldid];
+        if (isset($artefactcopies[$copyinfo->oldparent])) {
+            $this->set('parent', $artefactcopies[$copyinfo->oldparent]->newid);
+        }
+        else {
+            $this->set('parent', $this->default_parent_for_copy($view, $template));
+        }
+    }
+
+    public function default_parent_for_copy(&$view, &$template) {
+        return null;
     }
 
     public function can_be_logged() {
@@ -732,6 +756,10 @@ abstract class ArtefactType {
             }
             insert_record('artefact_log', $entry);
         }
+    }
+
+    public function attachment_id_list() {
+        return array();
     }
 }
 

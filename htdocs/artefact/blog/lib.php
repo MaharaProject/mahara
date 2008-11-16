@@ -762,6 +762,26 @@ class ArtefactTypeBlogPost extends ArtefactType {
             '_default'                                  => $wwwroot . 'artefact/blog/post.php?blogpost=' . $id,
         );
     }
+
+    public function update_artefact_references(&$view, &$template, &$artefactcopies, $oldid) {
+        parent::update_artefact_references($view, $template, $artefactcopies, $oldid);
+        // Attach copies of the files that were attached to the old post.
+        // Update <img> tags in the post body to refer to the new image artefacts.
+        $regexp = array();
+        $replacetext = array();
+        if (isset($artefactcopies[$oldid]->oldattachments)) {
+            foreach ($artefactcopies[$oldid]->oldattachments as $a) {
+                if (isset($artefactcopies[$a])) {
+                    $this->attach_file($artefactcopies[$a]->newid);
+                }
+                $regexp[] = '#<img([^>]+)src="' . get_config('wwwroot') . 'artefact/file/download.php\?file=' . $a . '"#';
+                $replacetext[] = '<img$1src="' . get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactcopies[$a]->newid . '"';
+            }
+            $this->set('description', preg_replace($regexp, $replacetext, $this->get('description')));
+        }
+    }
+
 }
+
 
 ?>

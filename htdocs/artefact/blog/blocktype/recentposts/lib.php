@@ -113,11 +113,11 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
     }
 
     public static function copy_allowed($newowner=null) {
-        return false;
+        return true;
     }
 
     public static function copy_artefacts_allowed($newowner=null) {
-        return false;
+        return true;
     }
 
 }

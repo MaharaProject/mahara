@@ -739,19 +739,39 @@ class BlockInstance {
         }
         $artefactids = PluginBlockType::get_artefacts($this);
         if (!empty($artefactids) && call_static_method($blocktypeclass, 'copy_artefacts_allowed', $copyconfig->ownertype)) {
-            // Copy artefacts & put the new artefact ids into the new
-            // block.
-            // Get all children of the artefacts.
+            // Copy artefacts & put the new artefact ids into the new block.
+            // Artefacts may have children (defined using the parent column of the artefact table) and attachments (currently
+            // only for blogposts).  If we copy an artefact we must copy all its descendents & attachments too.
+
             $descendants = artefact_get_descendants($artefactids);
-            foreach ($descendants as $aid) {
-                if (!isset($artefactcopies[$aid])) {
-                    // Copy the artefact
-                    $a = artefact_instance_from_id($aid);
-                    // Save the id of the original artefact's parent
-                    $artefactcopies[$aid] = (object) array('oldid' => $aid, 'oldparent' => $a->get('parent'));
-                    $artefactcopies[$aid]->newid = $a->copy_for_new_owner($view->get('owner'), $view->get('group'), $view->get('institution'));
+
+            // We need the artefact instance before we can get its attachments
+            $tocopy = array();
+            $attachmentlists = array();
+            foreach ($descendants as $d) {
+                if (!isset($artefactcopies[$d])) {
+                    $tocopy[$d] = artefact_instance_from_id($d);
+                    // Get attachments.
+                    $attachmentlists[$d] = $tocopy[$d]->attachment_id_list();
+                    foreach ($attachmentlists[$d] as $a) {
+                        if (!isset($artefactcopies[$a]) && !isset($tocopy[$a])) {
+                            $tocopy[$a] = artefact_instance_from_id($a);
+                        }
+                    }
                 }
             }
+
+            // Copy all the artefacts we haven't copied yet
+            foreach ($tocopy as $aid => $a) {
+                // Save the id of the original artefact's parent
+                $artefactcopies[$aid] = (object) array('oldid' => $aid, 'oldparent' => $a->get('parent'));
+                if (!empty($attachmentlists[$aid])) {
+                    $artefactcopies[$aid]->oldattachments = $attachmentlists[$aid];
+                }
+                $artefactcopies[$aid]->newid = $a->copy_for_new_owner($view->get('owner'), $view->get('group'), $view->get('institution'));
+            }
+
+            // Record new artefact ids in the new block
             if (isset($configdata['artefactid'])) {
                 $configdata['artefactid'] = $artefactcopies[$configdata['artefactid']]->newid;
             }

@@ -679,6 +679,44 @@ JAVASCRIPT;
         return $path;
     }
 
+    public function default_parent_for_copy(&$view, &$template) {
+        static $folderid;
+
+        if (!empty($folderid)) {
+            return $folderid;
+        }
+
+        $viewfilesfolder = ArtefactTypeFolder::get_folder_id(get_string('viewfilesdirname', 'view'), get_string('viewfilesdirdesc', 'view'),
+                                                             null, true, $view->get('owner'), $view->get('group'), $view->get('institution'));
+        $foldername = $template->get('id');
+        $existing = get_column_sql("
+            SELECT title
+            FROM {artefact}
+            WHERE parent = ? AND title LIKE ? || '%'", array($viewfilesfolder, $foldername));
+        $sep = '';
+        $ext = '';
+        if ($existing) {
+            while (in_array($foldername . $sep . $ext, $existing)) {
+                $sep = '-';
+                $ext++;
+            }
+        }
+        $data = (object) array(
+            'title'       => $foldername . $sep . $ext,
+            'description' => get_string('filescopiedfromviewtemplate', 'view', $template->get('title')),
+            'owner'       => $view->get('owner'),
+            'group'       => $view->get('group'),
+            'institution' => $view->get('institution'),
+            'parent'      => $viewfilesfolder,
+        );
+        $folder = new ArtefactTypeFolder(0, $data);
+        $folder->commit();
+
+        $folderid = $folder->get('id');
+
+        return $folderid;
+    }
+
 }
 
 class ArtefactTypeFile extends ArtefactTypeFileBase {
@@ -1009,21 +1047,20 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     }
 
     public function copy_extra($new) {
-        $new->set('fileid', $this->get('fileid'));
-        $new->set('size', $this->get('size'));
-        $new->set('oldextension', $this->get('oldextension'));
-        $new->set('filetype', $this->get('filetype'));
         global $USER;
         if ($new->get('owner') && $new->get('owner') == $USER->get('id')) {
             $USER->quota_add($new->get('size'));
             $USER->commit();
         }
-        return;
     }
 
     // Only changes to group files get put in the artefact_log table
     public function can_be_logged() {
         return (bool) $this->get('group');
+    }
+
+    public function default_parent_for_copy(&$view, &$template) {
+        return parent::default_parent_for_copy($view, $template);
     }
 }
 
@@ -1202,6 +1239,9 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         }
     }
 
+    public function default_parent_for_copy(&$view, &$template) {
+        return parent::default_parent_for_copy($view, $template);
+    }
 }
 
 class ArtefactTypeImage extends ArtefactTypeFile {
@@ -1309,6 +1349,10 @@ class ArtefactTypeImage extends ArtefactTypeFile {
             . '" alt=""></div>' . $result['html'];
         return $result;
     }
+
+    public function default_parent_for_copy(&$view, &$template) {
+        return parent::default_parent_for_copy($view, $template);
+    }
 }
 
 class ArtefactTypeProfileIcon extends ArtefactTypeImage {
@@ -1363,6 +1407,11 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
         return filesize(get_config('dataroot') . 'artefact/file/profileicons/originals/'
             . ($artefact % 256) . '/' . $artefact);
     }
+
+    public function default_parent_for_copy(&$view, &$template) {
+        return null;
+    }
+
 }
 
 ?>
