@@ -133,6 +133,10 @@ class PluginBlocktypeImage extends PluginBlocktype {
         return ArtefactTypeFileBase::artefactchooser_get_file_data($artefact);
     }
 
+    public static function default_copy_type() {
+        return 'full';
+    }
+
 }
 
 ?>

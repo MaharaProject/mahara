@@ -66,6 +66,11 @@ class PluginBlocktypeMyGroups extends SystemBlocktype {
     public static function has_instance_config() {
         return false;
     }
+
+    public static function default_copy_type() {
+        return 'shallow';
+    }
+
 }
 
 ?>

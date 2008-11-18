@@ -406,6 +406,10 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
              <script defer="defer" src="' . get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/eolas_fix.js" type="text/javascript"></script>';
     }
 
+    public static function default_copy_type() {
+        return 'full';
+    }
+
 }
 
 ?>

@@ -367,6 +367,11 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
 
         return $result;
     }
+
+    public static function default_copy_type() {
+        return 'full';
+    }
+
 }
 
 ?>

@@ -227,6 +227,10 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
         return $configdata;
     }
 
+    public static function default_copy_type() {
+        return 'shallow';
+    }
+
 }
 
 ?>

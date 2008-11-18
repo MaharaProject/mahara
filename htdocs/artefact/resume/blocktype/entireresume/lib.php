@@ -141,6 +141,10 @@ class PluginBlocktypeEntireresume extends PluginBlocktype {
         return false;
     }
 
+    public static function default_copy_type() {
+        return 'shallow';
+    }
+
 }
 
 ?>

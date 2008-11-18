@@ -126,4 +126,7 @@ $string['absolutebottom'] = 'Absolute bottom';
 $string['left'] = 'Left';
 $string['right'] = 'Right';
 
+$string['copyfull'] = 'Others will get their own copy of your %s';
+$string['copyreference'] = 'Others may display your %s in their View';
+$string['copynocopy'] = 'Skip this block entirely when copying the View';
 ?>

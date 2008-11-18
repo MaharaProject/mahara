@@ -105,6 +105,31 @@ class PluginArtefactBlog extends PluginArtefact {
 
         closedir($basedir);
     }
+
+    public static function block_advanced_options_element($configdata, $artefacttype) {
+        $strartefacttype = get_string($artefacttype, 'artefact.blog');
+        return array(
+            'type' => 'fieldset',
+            'name' => 'advanced',
+            'collapsible' => true,
+            'collapsed' => false,
+            'legend' => get_string('moreoptions', 'view'),
+            'elements' => array(
+                'copytype' => array(
+                    'type' => 'select',
+                    'title' => get_string('blockcopypermission', 'view'),
+                    'description' => get_string('blockcopypermissiondesc', 'view'),
+                    'defaultvalue' => isset($configdata['copytype']) ? $configdata['copytype'] : 'nocopy',
+                    'options' => array(
+                        'nocopy' => get_string('copynocopy', 'artefact.blog'),
+                        'reference' => get_string('copyreference', 'artefact.blog', $strartefacttype),
+                        'full' => get_string('copyfull', 'artefact.blog', $strartefacttype),
+                    ),
+                ),
+            ),
+        );
+    }
+
 }
 
 /**

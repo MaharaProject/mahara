@@ -69,6 +69,10 @@ class PluginBlocktypeTextbox extends SystemBlocktype {
         );
     }
 
+    public static function default_copy_type() {
+        return 'full';
+    }
+
 }
 
 ?>

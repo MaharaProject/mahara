@@ -132,6 +132,11 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
     public static function artefactchooser_get_element_data($artefact) {
         return ArtefactTypeFileBase::artefactchooser_get_file_data($artefact);
     }
+
+    public static function default_copy_type() {
+        return 'full';
+    }
+
 }
 
 ?>

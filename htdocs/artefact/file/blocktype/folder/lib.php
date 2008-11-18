@@ -124,6 +124,10 @@ class PluginBlocktypeFolder extends PluginBlocktype {
         return 'parent, title';
     }
 
+    public static function default_copy_type() {
+        return 'full';
+    }
+
 }
 
 ?>

@@ -164,6 +164,11 @@ class PluginBlocktypeWall extends SystemBlocktype {
         }
         return false;
     }
+
+    public static function default_copy_type() {
+        return 'shallow';
+    }
+
 }
 
 ?>

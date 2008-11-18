@@ -98,6 +98,10 @@ class PluginBlocktypeHtml extends PluginBlocktype {
         return array('portfolio', 'profile');
     }
 
+    public static function default_copy_type() {
+        return 'full';
+    }
+
 }
 
 ?>

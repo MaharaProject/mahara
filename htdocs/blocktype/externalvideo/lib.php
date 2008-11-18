@@ -174,6 +174,11 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
 </ul>
 EOF;
     }
+
+    public static function default_copy_type() {
+        return 'full';
+    }
+
 }
 
 ?>
