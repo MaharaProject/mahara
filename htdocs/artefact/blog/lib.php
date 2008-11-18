@@ -811,6 +811,33 @@ class ArtefactTypeBlogPost extends ArtefactType {
         }
     }
 
+    /**
+     * During the copying of a view, we might be allowed to copy
+     * blogposts but not the containing blog.  We need to create a new
+     * blog to hold the copied posts.
+     */
+    public function default_parent_for_copy(&$view, &$template) {
+        static $blogid;
+
+        if (!empty($blogid)) {
+            return $blogid;
+        }
+
+        $blogname = get_string('viewposts', 'artefact.blog', $view->get('id'));
+        $data = (object) array(
+            'title'       => $blogname,
+            'description' => get_string('postscopiedfromview', 'artefact.blog', $template->get('title')),
+            'owner'       => $view->get('owner'),
+            'group'       => $view->get('group'),
+            'institution' => $view->get('institution'),
+        );
+        $blog = new ArtefactTypeBlog(0, $data);
+        $blog->commit();
+
+        $blogid = $blog->get('id');
+
+        return $blogid;
+    }
 }
 
 

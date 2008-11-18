@@ -80,9 +80,11 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
     }
 
     public static function instance_config_form($instance) {
+        safe_require('artefact', 'blog');
         $configdata = $instance->get('configdata');
         return array(
             self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null),
+            PluginArtefactBlog::block_advanced_options_element($configdata, 'blogpost'),
         );
     }
 
@@ -135,11 +137,11 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
     }
 
     public static function copy_allowed($newowner=null) {
-        return false;
+        return $newowner == 'user';
     }
 
     public static function copy_artefacts_allowed($newowner=null) {
-        return false;
+        return $newowner == 'user';
     }
 
     public static function default_copy_type() {
