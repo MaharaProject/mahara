@@ -686,7 +686,7 @@ JAVASCRIPT;
 
         $viewfilesfolder = ArtefactTypeFolder::get_folder_id(get_string('viewfilesdirname', 'view'), get_string('viewfilesdirdesc', 'view'),
                                                              null, true, $view->get('owner'), $view->get('group'), $view->get('institution'));
-        $foldername = $template->get('id');
+        $foldername = $view->get('id');
         $existing = get_column_sql("
             SELECT title
             FROM {artefact}
