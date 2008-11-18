@@ -354,8 +354,6 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         // We need to keep track of newness before and after.
         $new = empty($this->id);
 
-        $this->mtime = time();
-
         // Commit to the artefact table.
         parent::commit();
 
@@ -1274,8 +1272,6 @@ class ArtefactTypeImage extends ArtefactTypeFile {
       
         // We need to keep track of newness before and after.
         $new = empty($this->id);
-
-        $this->mtime = time();
 
         // Commit to the artefact table.
         parent::commit();

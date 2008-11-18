@@ -658,9 +658,6 @@ abstract class ArtefactType {
             'parentdirty' => 1,
             'deleted' => 1,
             'id' => 1,
-            'ctime' => 1,
-            'mtime' => 1,
-            'atime' => 1,
             'locked' => 1,
             'rolepermissions' => 1,
             'viewsinstances' => 1,
@@ -672,7 +669,10 @@ abstract class ArtefactType {
         );
         $data = array();
         foreach (get_object_vars($this) as $k => $v) {
-            if (!isset($ignore[$k])) {
+            if (in_array($k, array('atime', 'ctime', 'mtime'))) {
+                $data[$k] = db_format_timestamp($v);
+            }
+            else if (!isset($ignore[$k])) {
                 $data[$k] = $v;
             }
         }
