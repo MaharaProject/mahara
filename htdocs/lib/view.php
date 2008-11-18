@@ -1979,8 +1979,7 @@ class View {
         return $numcopied;
     }
 
-    public static function new_title($user, $group, $institution) {
-        $title = get_string('Untitled', 'view');
+    public static function new_title($title, $user, $group, $institution) {
         $taken = get_column_sql('
             SELECT title
             FROM {view}
@@ -2108,7 +2107,7 @@ function createview_submit(Pieform $form, $values) {
         'group'       => $group,
         'institution' => $institution,
         'owner'       => $owner,
-        'title'       => View::new_title($owner, $group, $institution),
+        'title'       => View::new_title(get_string('Untitled', 'view'), $owner, $group, $institution),
     );
     $view = new View(0, $data);
     $view->commit();  // copy_contents call below needs a view id
@@ -2116,6 +2115,7 @@ function createview_submit(Pieform $form, $values) {
     if ($templateid) {
         $template = new View($templateid);
         if (!$template->get('deleted') && ($template->get('template') && can_view_view($templateid)) || $USER->can_edit_view($template)) {
+            $view->set('title', View::new_title(get_string('Copyof', 'view', $template->get('title')), $owner, $group, $institution));
             $view->set('dirty', true);
             $copystatus = $view->copy_contents($template);
             $SESSION->add_ok_msg(get_string('copiedblocksandartefactsfromtemplate', 'view', $copystatus['blocks'], $copystatus['artefacts'], $template->get('title')));
