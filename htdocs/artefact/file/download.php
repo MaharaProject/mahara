@@ -69,7 +69,6 @@ else {
     // If the file is in the public directory, it's fine to serve
     $fileispublic = $file->get('parent') == ArtefactTypeFolder::admin_public_folder_id();
     $fileispublic &= $file->get('institution') == 'mahara';
-    $fileispublic &= record_exists('site_menu', 'file', $fileid, 'public', 1);
 
     if (!$fileispublic) {
         // If the file is in the logged in menu and the user is logged in then
