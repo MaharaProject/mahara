@@ -61,7 +61,7 @@ else {
 }
 
 log_debug('---------- cron running ' . date('r', $now) . ' ----------');
-ini_set('memory_limit', '64M');
+raise_memory_limit('64M');
 
 // for each plugin type
 foreach (plugin_types() as $plugintype) {

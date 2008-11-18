@@ -141,6 +141,8 @@ function ensure_sanity() {
         !check_dir_exists(get_config('dataroot') . 'htmlpurifier')) {
         throw new ConfigSanityException(get_string('couldnotmakedatadirectories', 'error'));
     }
+
+    raise_memory_limit('32M');
 }
 
 /**
@@ -1693,6 +1695,76 @@ function microtime_diff($a, $b) {
     list($a_dec, $a_sec) = explode(' ', $a);
     list($b_dec, $b_sec) = explode(' ', $b);
     return $b_sec - $a_sec + $b_dec - $a_dec;
+}
+
+/**
+ * Function to raise the memory limit to a new value.
+ * Will respect the memory limit if it is higher, thus allowing
+ * settings in php.ini, apache conf or command line switches
+ * to override it
+ *
+ * The memory limit should be expressed with a string (eg:'64M')
+ *
+ * @param string $newlimit the new memory limit
+ * @return bool Whether we were able to raise the limit or not
+ */
+function raise_memory_limit ($newlimit) {
+    if (empty($newlimit)) {
+        return false;
+    }
+
+    $cur = @ini_get('memory_limit');
+    if (empty($cur)) {
+        // If php is compiled without --enable-memory-limits
+        // apparently memory_limit is set to ''
+        $cur=0;
+    }
+    else {
+        if ($cur == -1){
+            return true; // unlimited mem!
+        }
+        $cur = get_real_size($cur);
+    }
+
+    $new = get_real_size($newlimit);
+    if ($new > $cur) {
+        ini_set('memory_limit', $newlimit);
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Converts numbers like 10M into bytes.
+ *
+ * @param string $size The size to be converted
+ * @return integer
+ * @throws SystemException if the string does not have a valid suffix.
+ *                         See the function definition for allowed suffixes.
+ */
+function get_real_size($size=0) {
+    if (!$size) {
+        return 0;
+    }
+    $scan = array(
+        'MB' => 1048576,
+        'Mb' => 1048576,
+        'M'  => 1048576,
+        'm'  => 1048576,
+        'KB' => 1024,
+        'Kb' => 1024,
+        'K'  => 1024,
+        'k'  => 1024,
+    );
+
+    while (list($key) = each($scan)) {
+        if (strlen($size) > strlen($key) && substr($size, -strlen($key)) == $key) {
+            $size = substr($size, 0, -strlen($key)) * $scan[$key];
+            return $size;
+        }
+    }
+
+    throw new SystemException('get_real_size called without valid size suffix');
 }
 
 /**
