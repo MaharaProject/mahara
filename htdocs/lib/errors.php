@@ -365,6 +365,10 @@ function error ($code, $message, $file, $line, $vars) {
         if (E_NOTICE == $code && substr($file, 0, strlen($compiledir)) == $compiledir) {
             return;
         }
+
+        if (E_NOTICE == $code && preg_match('#^' . quotemeta(get_config('docroot') . 'theme/') . '[a-z0-9-]+/pieforms#', $file)) {
+            return;
+        }
     }
 
     // Fix up the message, which is in HTML form

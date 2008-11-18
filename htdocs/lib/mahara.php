@@ -1274,6 +1274,31 @@ function pieform_element_textarea_configure($element) {
 }
 
 /**
+ * Should be used to provide the 'templatedir' directive to pieforms using a 
+ * template for layout.
+ *
+ * This depends on theme_setup(), so potentially should be in lib/web.php, but 
+ * for now it lives with the other pieform functions.
+ *
+ * @param string $file The file to be used as a pieform template, e.g. 
+ *                     "admin/site/files.php". This is the value you used as 
+ *                     the 'template' option for your pieform
+ * @param string $pluginlocation Which plugin to search for the template, e.g. 
+ *                               artefact/file
+ */
+function pieform_template_dir($file, $pluginlocation='') {
+    $theme = theme_setup();
+
+    foreach ($theme->inheritance as $themedir) {
+        $filepath = get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/pieforms/' . $file;
+        if (is_readable($filepath)) {
+            return dirname($filepath);
+        }
+    }
+    throw new SystemException('No pieform template available: ' . $file);
+}
+
+/**
  * Given a view id, and a user id (defaults to currently logged in user if not
  * specified) will return wether this user is allowed to look at this view.
  *
