@@ -95,27 +95,26 @@ if (!isset($result->error)) {
     }
 }
 if (!isset($result->error)) {
-    $errmsg = ArtefactTypeFile::save_uploaded_file('userfile', $data);
-    if (!$errmsg) {
-        $result->error = false;
-        if ($parentfoldername) {
-            $result->message = get_string('uploadoffiletofoldercomplete', 'artefact.file', 
-                                          $title, $parentfoldername);
-        }
-        else {
-            $result->message = get_string('uploadoffilecomplete', 'artefact.file', $title);
-        }
+    try {
+        ArtefactTypeFile::save_uploaded_file('userfile', $data);
+    }
+    catch (QuotaExceededException $e) {
+        prepare_upload_failed_message($result, $e, $parentfoldername, $title);
+    }
+    catch (UploadException $e) {
+        prepare_upload_failed_message($result, $e, $parentfoldername, $title);
+    }
+}
+
+if (!isset($result->error)) {
+    // Upload succeeded
+    $result->error = false;
+    if ($parentfoldername) {
+        $result->message = get_string('uploadoffiletofoldercomplete', 'artefact.file', 
+                                      $title, $parentfoldername);
     }
     else {
-        $result->error = 'local';
-        if ($parentfoldername) {
-            $result->message = get_string('uploadoffiletofolderfailed', 'artefact.file', 
-                                          $title, $parentfoldername);
-        }
-        else {
-            $result->message = get_string('uploadoffilefailed', 'artefact.file',  $title);
-        }
-        $result->message .= ': ' . $errmsg;
+        $result->message = get_string('uploadoffilecomplete', 'artefact.file', $title);
     }
 }
 
@@ -138,5 +137,20 @@ EOF;
 
 header('Content-type: text/html');
 echo $frame;
+
+/**
+ * Helper function used above to minimise code duplication
+ */
+function prepare_upload_failed_message(&$result, $exception, $parentfoldername, $title) {
+    $result->error = 'local';
+    if ($parentfoldername) {
+        $result->message = get_string('uploadoffiletofolderfailed', 'artefact.file', 
+                                      $title, $parentfoldername);
+    }
+    else {
+        $result->message = get_string('uploadoffilefailed', 'artefact.file',  $title);
+    }
+    $result->message .= ': ' . $exception->getMessage();
+}
 
 ?>

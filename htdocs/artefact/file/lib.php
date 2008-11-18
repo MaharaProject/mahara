@@ -808,12 +808,12 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         require_once('uploadmanager.php');
         $um = new upload_manager($inputname);
         if ($error = $um->preprocess_file()) {
-            return $error;
+            throw new UploadException($error);
         }
         $size = $um->file['size'];
         global $USER;
         if (!$USER->quota_allowed($size) && !$data->institution) {
-            return get_string('uploadexceedsquota', 'artefact.file');
+            throw new QuotaExceededException(get_string('uploadexceedsquota', 'artefact.file'));
         }
         $data->size         = $size;
         $data->filetype     = $um->file['type'];
@@ -825,12 +825,13 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         // the number of subdirectories as the directory name.
         if ($error = $um->save_file(self::get_file_directory($id) , $id)) {
             $f->delete();
+            throw new UploadException($error);
         }
         else {
             $USER->quota_add($size);
             $USER->commit();
         }
-        return $error;
+        return $id;
     }
 
 

@@ -138,7 +138,7 @@ class upload_manager {
         }
 
         if (!check_dir_exists($destination, true, true)) {
-            throw new Exception('Unable to create upload directory');
+            throw new UploadException('Unable to create upload directory');
         }
 
         if (file_exists($destination . '/' . $newname) && $this->handlecollisions) {

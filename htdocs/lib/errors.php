@@ -764,6 +764,11 @@ class GroupNotFoundException extends NotFoundException {}
 class QuotaExceededException extends UserException {}
 
 /**
+ * Exception - fired when uploading a file fails
+ */
+class UploadException extends UserException {}
+
+/**
  * Exception - Access denied. Throw this if a user is trying to view something they can't
  */
 class AccessDeniedException extends UserException {
