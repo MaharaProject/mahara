@@ -332,6 +332,11 @@ class ArtefactTypeBlog extends ArtefactType {
             get_string('blogsettings', 'artefact.blog') => $wwwroot . 'artefact/blog/settings/?id=' . $id,
         );
     }
+
+    public function copy_extra($new) {
+        $new->set('title', get_string('Copyof', 'mahara', $this->get('title')));
+    }
+
 }
 
 /**

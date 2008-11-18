@@ -787,4 +787,6 @@ $string['importedfrom'] = 'Imported from %s';
 $string['incomingfolderdesc'] = 'Files imported from other networked hosts';
 $string['remotehost'] = 'Remote host %s';
 
+$string['Copyof'] = 'Copy of %s';
+
 ?>

@@ -2115,7 +2115,7 @@ function createview_submit(Pieform $form, $values) {
     if ($templateid) {
         $template = new View($templateid);
         if (!$template->get('deleted') && ($template->get('template') && can_view_view($templateid)) || $USER->can_edit_view($template)) {
-            $view->set('title', View::new_title(get_string('Copyof', 'view', $template->get('title')), $owner, $group, $institution));
+            $view->set('title', View::new_title(get_string('Copyof', 'mahara', $template->get('title')), $owner, $group, $institution));
             $view->set('dirty', true);
             $copystatus = $view->copy_contents($template);
             $SESSION->add_ok_msg(get_string('copiedblocksandartefactsfromtemplate', 'view', $copystatus['blocks'], $copystatus['artefacts'], $template->get('title')));
