@@ -411,6 +411,9 @@ function display_name($user, $userto=null, $nameonly=false) {
         $user->staff         = $userObj->get('staff');
     }
 
+    $user->id   = (isset($user->id)) ? $user->id : null;
+    $userto->id = (isset($userto->id)) ? $userto->id : null;
+
     if (isset($resultcache[$user->id][$userto->id][$nameonly])) {
         return $resultcache[$user->id][$userto->id][$nameonly];
     }
