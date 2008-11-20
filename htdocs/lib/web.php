@@ -422,12 +422,14 @@ EOF;
         if($USER->is_logged_in()) {
             $SIDEBLOCKS[] = array(
                 'name'   => 'profile',
+                'id'     => 'sb_profile',
                 'weight' => -20,
                 'data'   => profile_sideblock()
             );
             if (get_config('showonlineuserssideblock')) {
                 $SIDEBLOCKS[] = array(
                     'name'   => 'onlineusers',
+                    'id'     => 'sb_onlineusers',
                     'weight' => -10,
                     'data'   => onlineusers_sideblock(),
                 );
@@ -446,7 +448,7 @@ EOF;
             $SIDEBLOCKS[] = array(
                 'name'   => 'login',
                 'weight' => -10,
-                'id'     => 'loginbox',
+                'id'     => 'sb_loginbox',
                 'data'   => array(
                     'loginform' => auth_generate_login_form(),
                 ),

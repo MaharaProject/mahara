@@ -793,7 +793,7 @@ div.sidebar ul.sidebar-ul-title ul a {
     font-weight: bold;
 }
 /* Online users sideblock */
-ul#onlineusers {
+#sb_onlineusers ul {
     list-style-type: none;
 }
 #lastminutes {
