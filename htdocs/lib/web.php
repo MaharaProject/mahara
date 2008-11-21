@@ -439,6 +439,7 @@ EOF;
         if(defined('GROUP')) {
             $SIDEBLOCKS[] = array(
                 'name'   => 'group',
+                'id'     => 'sb_groupnav',
                 'weight' => -10,
                 'data'   => group_sideblock()
             );
