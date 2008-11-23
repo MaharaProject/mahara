@@ -2350,13 +2350,16 @@ function build_pagination_pagelink($class, $url, $offset, $text, $title, $disabl
     $return = '<span class="pagination';
     $return .= ($class) ? " $class" : '';
 
+    $url = (false === strpos($url, '?')) ? $url . '?' : $url . '&amp;';
+    $url .= "$offsetname=$offset";
+
     if ($disabled) {
         $return .= ' disabled">' . $text . '</span>';
     }
     else {
         $return .= '">'
-            . '<a href="' . $url . '&amp;' . $offsetname . '=' . $offset
-            . '" title="' . $title . '">' . $text . '</a></span>';
+            . '<a href="' . $url . '" title="' . $title
+            . '">' . $text . '</a></span>';
     }
 
     return $return;

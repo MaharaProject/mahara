@@ -103,7 +103,7 @@ else {
 }
 
 $pagination = build_pagination(array(
-    'url' => get_config('wwwroot') . 'view/?',
+    'url' => get_config('wwwroot') . 'view/',
     'count' => $data->count,
     'limit' => $limit,
     'offset' => $offset,
