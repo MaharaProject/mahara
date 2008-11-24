@@ -107,7 +107,14 @@ else {
 $category = param_alpha('c', '');
 // Make the default category the first tab if none is set
 if ($category === '') {
-    $category = get_field_sql('SELECT "name" FROM {blocktype_category} ORDER BY "name" LIMIT 1');
+    $category = get_field_sql("
+        SELECT bc.name
+        FROM {blocktype_category} bc
+        JOIN {blocktype_installed_category} bic ON bic.category = bc.name
+        JOIN {blocktype_installed_viewtype} biv ON biv.blocktype = bic.blocktype
+        WHERE biv.viewtype = ?
+        ORDER BY bc.name
+        LIMIT 1", array($view->get('type')));
 }
 
 $view->process_changes($category, $new);
