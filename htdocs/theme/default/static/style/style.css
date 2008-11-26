@@ -394,13 +394,6 @@ input.cancelbackcreate,
     font-size: 11px;
     cursor: pointer;
 }
-/* safari/konqueror workaround to make the button text readable */
-body:last-child:not(:root:root) input.submit,
-body:last-child:not(:root:root) input.submitcancel,
-body:last-child:not(:root:root) input.cancelbackcreate,
-body:last-child:not(:root:root) input.button {
-    color: #547C22;
-}
 /* Ones inside tables should be smaller... */
 .maincontent table input.button, 
 .maincontent table input.submit, 
