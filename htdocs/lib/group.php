@@ -515,6 +515,7 @@ function group_get_adduser_form($userid, $groupid) {
  * Form for removing a user from a group
  */
 function group_get_removeuser_form($userid, $groupid) {
+    require_once('pieforms/pieform.php');
     return pieform(array(
         'name'                => 'removeuser' . $userid,
         'validatecallback'    => 'group_removeuser_validate',
