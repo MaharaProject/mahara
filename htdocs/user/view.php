@@ -54,7 +54,6 @@ $is_friend = is_friend($userid, $loggedinid);
 $view = View::profile_view($userid);
 # access will either be logged in (always) or public as well
 if (!can_view_view($view->get('id'))) {
-    log_debug('throwing access denied exception');
     throw new AccessDeniedException();
 }
 
