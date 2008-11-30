@@ -2155,6 +2155,7 @@ function add_feedback_form($attachments=false) {
         'plugintype'      => 'core',
         'pluginname'      => 'view',
         'jsform'          => true,
+        'autofocus'       => false,
         'elements'        => array(),
         'jssuccesscallback' => 'addFeedbackSuccess',
     );
@@ -2247,6 +2248,7 @@ function objection_form() {
         'plugintype'      => 'core',
         'pluginname'      => 'view',
         'jsform'          => true,
+        'autofocus'       => false,
         'elements'        => array(),
         'jssuccesscallback' => 'objectionSuccess',
     );
