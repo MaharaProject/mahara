@@ -1290,7 +1290,7 @@ function pieform_template_dir($file, $pluginlocation='') {
     $theme = theme_setup();
 
     foreach ($theme->inheritance as $themedir) {
-        $filepath = get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/pieforms/' . $file;
+        $filepath = get_config('docroot') . $pluginlocation . '/theme/' . $themedir . '/pieforms/' . $file;
         if (is_readable($filepath)) {
             return dirname($filepath);
         }
