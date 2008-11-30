@@ -158,8 +158,6 @@ class PluginBlocktypeWall extends SystemBlocktype {
         ';
         $params = array($instance->get('id'));
 
-        $smarty = smarty_core();
-        $smarty->assign('instanceid', $instance->get('id'));
         if ($records = get_records_sql_array($sql, $params, 0, 10)) {
             return array_map(
                 create_function(
@@ -167,7 +165,6 @@ class PluginBlocktypeWall extends SystemBlocktype {
                     '$item->displayname = display_name($item); return $item;'), 
                 $records
             );
-            return $records;
         }
         return false;
     }
