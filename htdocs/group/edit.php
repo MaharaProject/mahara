@@ -34,7 +34,7 @@ define('TITLE', get_string('editgroup', 'group'));
 $id = param_integer('id');
 define('GROUP', $id);
 
-$group_data = get_record_sql("SELECT g.name, g.description, g.grouptype, g.jointype, g.public
+$group_data = get_record_sql("SELECT g.name, g.description, g.grouptype, g.jointype, g.public, g.usersautoadded
     FROM {group} g
     INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
     WHERE g.id = ?
@@ -87,7 +87,7 @@ $editgroup = pieform(array(
             'description'  => get_string('usersautoaddeddescription', 'group'),
             'options'      => array(true  => get_string('yes'),
                                     false => get_string('no')),
-            'defaultvalue' => 'no',
+            'defaultvalue' => $group_data->usersautoadded,
             'help'         => true,
             'ignore'       => !$USER->get('admin'),
         ),
