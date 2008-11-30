@@ -29,11 +29,12 @@ defined('INTERNAL') || die();
 $string['title'] = 'Wall';
 $string['description'] = 'Display an area where people can leave you comments';
 $string['noposts'] = 'No wall posts to display';
-$string['makeprivate'] = 'Private?';
+$string['makeyourpostprivate'] = 'Make your post private?';
 $string['viewwall'] = 'View wall';
 $string['backtoprofile'] = 'Back to profile';
 $string['wall'] = 'Wall';
 $string['wholewall'] = 'View whole wall';
 $string['reply'] = 'reply';
 $string['delete'] = 'delete post';
+$string['Post'] = 'Post';
 ?>

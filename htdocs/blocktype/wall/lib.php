@@ -89,6 +89,8 @@ class PluginBlocktypeWall extends SystemBlocktype {
             'name'     => 'wallpost',
             'renderer' => 'maharatable',
             'action'   => get_config('wwwroot') . 'blocktype/wall/post.php',
+            'template' => 'wallpost.php',
+            'templatedir' => pieform_template_dir('wallpost.php', 'blocktype/wall'),
             'successcallback' => array('PluginBlocktypeWall', 'wallpost_submit'),
             'elements' => array(
                 'text' => array(
@@ -100,7 +102,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
                 ),
                 'private' => array(
                     'type' => 'checkbox',
-                    'title' => get_string('makeprivate', 'blocktype.wall'),
+                    'title' => get_string('makeyourpostprivate', 'blocktype.wall'),
                 ),
                 'instance' => array(
                     'type' => 'hidden',
@@ -112,7 +114,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
                 ),
                 'submit' => array(
                     'type' => 'submit',
-                    'value' => 'post',
+                    'value' => get_string('Post', 'blocktype.wall'),
                 ),
             ),
         ));
