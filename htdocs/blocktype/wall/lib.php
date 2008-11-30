@@ -86,10 +86,11 @@ class PluginBlocktypeWall extends SystemBlocktype {
             $walltoreplyto = $instance->get('id');
         }
         return pieform(array(
-            'name'     => 'wallpost',
-            'renderer' => 'maharatable',
-            'action'   => get_config('wwwroot') . 'blocktype/wall/post.php',
-            'template' => 'wallpost.php',
+            'name'      => 'wallpost',
+            'renderer'  => 'maharatable',
+            'action'    => get_config('wwwroot') . 'blocktype/wall/post.php',
+            'autofocus' => false,
+            'template'  => 'wallpost.php',
             'templatedir' => pieform_template_dir('wallpost.php', 'blocktype/wall'),
             'successcallback' => array('PluginBlocktypeWall', 'wallpost_submit'),
             'elements' => array(
