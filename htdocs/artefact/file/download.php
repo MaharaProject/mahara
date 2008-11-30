@@ -67,7 +67,7 @@ else {
     }
 
     // If the file is in the public directory, it's fine to serve
-    $fileispublic = $file->get('parent') == ArtefactTypeFolder::admin_public_folder_id();
+    $fileispublic = (bool)get_field('artefact_parent_cache', 'artefact', 'artefact', $fileid, 'parent', ArtefactTypeFolder::admin_public_folder_id());
     $fileispublic &= $file->get('institution') == 'mahara';
 
     if (!$fileispublic) {
