@@ -142,9 +142,13 @@ class PluginBlocktypeWall extends SystemBlocktype {
         $owner = $instance->get_view()->get('owner');
         $userid = (!empty($USER) ? $USER->get('id') : 0);
 
+        // We select u.id because display_name uses the 'id' field to get 
+        // information (we really should be passing objects with just user 
+        // information to it, for safety). We select it again as 'userid' to 
+        // avoid confusion in the templates
         $sql = '
-            SELECT bwp.*,' . db_format_tsfield('postdate') . ',
-                u.username,firstname,u.lastname,u.preferredname
+            SELECT bwp.instance, bwp.from, bwp.replyto, bwp.private, bwp.postdate, bwp.text,' . db_format_tsfield('postdate') . ',
+                u.id, u.id AS userid, u.username, u.firstname, u.lastname, u.preferredname, u.staff, u.admin
                 FROM {blocktype_wall_post} bwp 
                 JOIN {usr} u ON bwp.from = u.id
                 WHERE bwp.instance = ? AND u.deleted = 0
