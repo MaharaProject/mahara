@@ -4,13 +4,13 @@
     {/if}
     {if $wallposts}
         {foreach from=$wallposts item=wallpost}
-            <div id="wallpost">
-                {* TODO THIS BADLY NEEDS FORMATTING *}
-                <div id="icon"><img src="{$WWWROOT}thumb.php?type=profileicon&maxwidth=50&maxheight=50&id={$wallpost->from}" /></div>
-                <div id="userinfo">{$wallpost->displayname|escape}</div>
-                <div id="text">{$wallpost->text|escape}</div>
-                <div id="postedon">{$wallpost->postdate|format_date}</div>
-                <div id="controls">
+            <div class="wallpost">
+                <div class="userinfo"><img src="{$WWWROOT}thumb.php?type=profileicon&maxwidth=25&maxheight=25&id={$wallpost->from}" alt="Profile Icon">
+                <div><a href="{$WWWROOT}user/view.php?id={$wallpost->userid|escape}">{$wallpost->displayname|escape}</a>
+                <span class="postedon"> - {$wallpost->postdate|format_date}</span>
+                </div></div>
+                <div class="text">{$wallpost->text|format_whitespace}</div>
+                <div class="controls">
         {if $ownwall}
                     [ <a href="{$WWWROOT}blocktype/wall/wall.php?instance={$instanceid}&replyto={$wallpost->id}">{str tag='reply' section='blocktype.wall'}</a> ]
         {/if}
