@@ -317,7 +317,7 @@ function saveblogpost() {
         else { // uploaded file
             var record = {
                 'id':idparts[1],
-                'data':uploaddata[attached.tbody.childNodes[i].id],
+                'data':uploaddata[attached.tbody.childNodes[i].id]
             };
             uploads.push(record);
         }
