@@ -10,7 +10,7 @@
                 <span class="postedon"> - {$wallpost->postdate|format_date}</span>
                 </div></div>
                 <div class="text">{$wallpost->text|format_whitespace}</div>
-                <div class="controls">
+                {*<div class="controls">
         {if $ownwall}
                     [ <a href="{$WWWROOT}blocktype/wall/wall.php?instance={$instanceid}&replyto={$wallpost->id}">{str tag='reply' section='blocktype.wall'}</a> ]
         {/if}
@@ -19,7 +19,7 @@
                         {str tag='delete' section='blocktype.wall'}
                     </a> ]
         {/if}
-                </div>
+                </div>*}
             </div>
         {/foreach}
         {if !$wholewall}
