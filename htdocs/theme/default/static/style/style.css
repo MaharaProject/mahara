@@ -1253,20 +1253,27 @@ fieldset.collapsed legend a {
 #userview div h3 {
 	clear: both;
 }
-#userview #userviewstable,
-#userview #usergroupstable,
-#userview #userfriendstable {
+#userviewstable,
+#usergroupstable,
+#userfriendstable {
 	border-top: 1px solid #95a8b7;
 	border-bottom: 1px solid #95a8b7;
 }
-#userview #userviewstable td,
-#userview #usergroupstable td,
-#userview #userfriendstable td {
+#userviewstable td,
+#usergroupstable td,
+#userfriendstable td {
 	padding: 7px 15px;
 	font-size: 11px;
 }
-#userview #userfriendstable td {
+#userfriendstable td {
 	text-align: center;
+    vertical-align: bottom;
+}
+#userfriendstable a {
+    display: block;
+}
+#usergroupstable h4 {
+    margin-top: 0;
 }
 #sendmessage input,
 #invitetogroup #invitetogroup_submit_container input {
