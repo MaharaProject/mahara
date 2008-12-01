@@ -413,7 +413,7 @@ function ViewManager() {
         removeElementClass(blockinstance, 'configure');
         setStyle(blockinstance, {
             'left': 0,
-            'width': 'auto',
+            'width': 'auto'
         });
         var blockheader = getFirstElementByTagAndClassName('div', 'blockinstance-header', blockinstance);
         var blockcontrols = getFirstElementByTagAndClassName('div', 'blockinstance-controls', blockinstance);
