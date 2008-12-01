@@ -49,6 +49,7 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
+        global $USER;
         $userid = $instance->get_view()->get('owner');
         $smarty = smarty_core();
         $records = get_records_sql_array('SELECT usr1, usr2 FROM {usr_friend}
@@ -93,6 +94,46 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
         }
         $smarty->assign('friends', $friends);
         $smarty->assign('friendsmessage', $friendsmessage);
+
+        // If the user has no friends, try and display something useful, such 
+        // as a 'request friendship' button
+        $loggedinid = $USER->get('id');
+        $is_friend = is_friend($userid, $loggedinid);
+
+        if ($is_friend) {
+            $relationship = 'existingfriend';
+        }
+        else if (record_exists('usr_friend_request', 'requester', $loggedinid, 'owner', $userid)) {
+            $relationship = 'requestedfriendship';
+        }
+        else {
+            $relationship = 'none';
+            $friendscontrol = get_account_preference($userid, 'friendscontrol');
+            if ($friendscontrol == 'auto') {
+                $newfriendform = pieform(array(
+                    'name' => 'myfriends_addfriend',
+                    'successcallback' => 'addfriend_submit',
+                    'autofocus' => false,
+                    'renderer' => 'div',
+                    'elements' => array(
+                        'add' => array(
+                            'type' => 'submit',
+                            'value' => get_string('addtomyfriends', 'group')
+                        ),
+                        'id' => array(
+                            'type' => 'hidden',
+                            'value' => $userid
+                        )
+                    )
+                ));
+                $smarty->assign('newfriendform', $newfriendform);
+            }
+            $smarty->assign('friendscontrol', $friendscontrol);
+        }
+        $smarty->assign('relationship', $relationship);
+        $smarty->assign_by_ref('USER', $USER);
+        $smarty->assign('USERID', $userid);
+
         return $smarty->fetch('blocktype:myfriends:myfriends.tpl');
     }
 

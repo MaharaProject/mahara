@@ -1214,10 +1214,15 @@ fieldset.collapsed legend a {
 	font-size: 11px;
 	
 }
-#userview .user-icon input#addfriend_add {
+input#addfriend_add,
+input#myfriends_addfriend_add {
 	background: transparent url(../images/icon-add.gif) no-repeat left;
 	border: 0;
-	color: #7f9d16;
+    color: #3092ce;
+    margin: 0;
+}
+input#myfriends_addfriend_add {
+    font-weight: bold;
 }
 #userview .user-icon #invite,
 #userview .user-icon #addmember {
@@ -1241,7 +1246,7 @@ fieldset.collapsed legend a {
 	color: #7f9d16;
 	height: 16px;
 }
-#userview #btn-request {
+.btn-request {
 	background: transparent url(../images/icon-add.gif) no-repeat left;
 	padding: 4px 12px;
 }

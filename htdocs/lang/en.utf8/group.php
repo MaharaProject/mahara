@@ -244,7 +244,6 @@ $string['cantmessageuser'] = 'You cannot send this user a message';
 $string['requestedfriendship'] = 'requested friendship';
 $string['notinanygroups'] = 'Not in any groups';
 $string['numberoffriends'] = 'Friends (%s of %s)';
-$string['nofriends'] = 'No friends :(';
 $string['addusertogroup'] = 'Add to ';
 $string['inviteusertojoingroup'] = 'Invite to ';
 $string['invitemembertogroup'] = 'Invite %s to join \'%s\'';

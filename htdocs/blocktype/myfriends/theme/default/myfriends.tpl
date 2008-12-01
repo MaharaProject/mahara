@@ -15,6 +15,17 @@
     {/foreach}
     </table>
 {else}
-    {str tag='nofriends' section='group'}
+    {if $USERID == $USER->get('id')}
+        <div class="message">Try <a href="{$WWWROOT}user/find.php">searching for friends</a>!</div>
+    {else}
+        {if $relationship == 'none' && $friendscontrol == 'auto'}
+            <div class="message">{$newfriendform}</div>
+        {elseif $relationship == 'none' && $friendscontrol == 'auth'}
+            <div class="message"><a href="{$WWWROOT}user/requestfriendship.php?id={$USERID}&amp;returnto=view" class="btn-request">{str tag='requestfriendship' section='group'}</a></div>
+        {elseif $relationship == 'requestedfriendship'}
+            <div class="message">{str tag=friendshiprequested section=group}</div>
+        {/if}
+        {* Case not covered here: friendscontrol disallows new users. The block will appear empty. *}
+    {/if}
 {/if}
 </div>
