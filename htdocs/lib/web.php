@@ -1662,6 +1662,117 @@ function institutional_admin_nav() {
 
 }
 
+
+/**
+ * Returns the entries in the standard user menu
+ *
+ * @return $standardnav a data structure containing the standard navigation
+ */
+function mahara_standard_nav() {
+    $menu = array(
+        array(
+            'path' => '',
+            'url' => '',
+            'title' => get_string('home'),
+            'weight' => 10,
+        ),
+        array(
+            'path' => 'myportfolio',
+            'url' => 'view/',
+            'title' => get_string('myportfolio'),
+            'weight' => 30,
+        ),
+        array(
+            'path' => 'myportfolio/views',
+            'url' => 'view/',
+            'title' => get_string('myviews'),
+            'weight' => 10,
+        ),
+        array(
+            'path' => 'profile/view',
+            'url' => 'user/view.php',
+            'title' => get_string('viewmyprofilepage'),
+            'weight' => 9,
+        ),
+        array(
+            'path' => 'profile/editprofilepage',
+            'url' => 'view/blocks.php?profile=1',
+            'title' => get_string('editmyprofilepage'),
+            'weight' => 9,
+        ),
+        array(
+            'path' => 'groups',
+            'url' => 'group/mygroups.php',
+            'title' => get_string('groups'),
+            'weight' => 40,
+        ),
+        array(
+            'path' => 'groups/mygroups',
+            'url' => 'group/mygroups.php',
+            'title' => get_string('mygroups'),
+            'weight' => 10,
+        ),
+        array(
+            'path' => 'groups/find',
+            'url' => 'group/find.php',
+            'title' => get_string('findgroups'),
+            'weight' => 20,
+        ),
+        array(
+            'path' => 'groups/myfriends',
+            'url' => 'user/myfriends.php',
+            'title' => get_string('myfriends'),
+            'weight' => 30,
+        ),
+        array(
+            'path' => 'groups/findfriends',
+            'url' => 'user/find.php',
+            'title' => get_string('findfriends'),
+            'weight' => 40,
+        ),
+        array(
+            'path' => 'settings',
+            'url' => 'account/',
+            'title' => get_string('settings'),
+            'weight' => 60,
+        ),
+        array(
+            'path' => 'settings/preferences',
+            'url' => 'account/',
+            'title' => get_string('preferences'),
+            'weight' => 10,
+        ),
+        array(
+            'path' => 'settings/notifications',
+            'url' => 'account/activity/',
+            'title' => get_string('notifications'),
+            'weight' => 20,
+        ),
+        array(
+            'path' => 'settings/activitypreferences',
+            'url' => 'account/activity/preferences/',
+            'title' => get_string('activityprefs'),
+            'weight' => 30,
+        ),
+        array(
+            'path' => 'settings/institutions',
+            'url' => 'account/institutions.php',
+            'title' => get_string('institutionmembership'),
+            'weight' => 40,
+        ),
+    );
+    
+    if ($plugins = get_records_array('artefact_installed', 'active', 1)) {
+        foreach ($plugins as &$plugin) {
+            safe_require('artefact', $plugin->name);
+            $plugin_menu = call_static_method(generate_class_name('artefact',$plugin->name), 'menu_items');
+            $menu = array_merge($menu, $plugin_menu);
+        }
+    }
+    
+    return $menu;
+}
+
 /**
  * Builds a data structure representing the menu for Mahara.
  */
@@ -1678,106 +1789,7 @@ function main_nav() {
         //   url:  The URL to the page, relative to wwwroot. E.g. 'artefact/myplugin/'
         //   title: Translated text to use for the text of the link. E.g. get_string('myplugin', 'artefact.myplugin')
         //   weight: Where in the menu the item should be inserted. Larger number are to the right.
-        $menu = array(
-            array(
-                'path' => '',
-                'url' => '',
-                'title' => get_string('home'),
-                'weight' => 10,
-            ),
-            array(
-                'path' => 'myportfolio',
-                'url' => 'view/',
-                'title' => get_string('myportfolio'),
-                'weight' => 30,
-            ),
-            array(
-                'path' => 'myportfolio/views',
-                'url' => 'view/',
-                'title' => get_string('myviews'),
-                'weight' => 10
-            ),
-            array(
-                'path' => 'profile/view',
-                'url' => 'user/view.php',
-                'title' => get_string('viewmyprofilepage'),
-                'weight' => 9
-            ),
-            array(
-                'path' => 'profile/editprofilepage',
-                'url' => 'view/blocks.php?profile=1',
-                'title' => get_string('editmyprofilepage'),
-                'weight' => 9
-            ),
-            array(
-                'path' => 'groups',
-                'url' => 'group/mygroups.php',
-                'title' => get_string('groups'),
-                'weight' => 40,
-            ),
-            array(
-                'path' => 'groups/mygroups',
-                'url' => 'group/mygroups.php',
-                'title' => get_string('mygroups'),
-                'weight' => 10
-            ),
-            array(
-                'path' => 'groups/find',
-                'url' => 'group/find.php',
-                'title' => get_string('findgroups'),
-                'weight' => 20
-            ),
-            array(
-                'path' => 'groups/myfriends',
-                'url' => 'user/myfriends.php',
-                'title' => get_string('myfriends'),
-                'weight' => 30
-            ),
-            array(
-                'path' => 'groups/findfriends',
-                'url' => 'user/find.php',
-                'title' => get_string('findfriends'),
-                'weight' => 40
-            ),
-            array(
-                'path' => 'settings',
-                'url' => 'account/',
-                'title' => get_string('settings'),
-                'weight' => 60
-            ),
-            array(
-                'path' => 'settings/preferences',
-                'url' => 'account/',
-                'title' => get_string('preferences'),
-                'weight' => 10,
-            ),
-            array(
-                'path' => 'settings/notifications',
-                'url' => 'account/activity/',
-                'title' => get_string('notifications'),
-                'weight' => 20,
-            ),
-            array(
-                'path' => 'settings/activitypreferences',
-                'url' => 'account/activity/preferences/',
-                'title' => get_string('activityprefs'),
-                'weight' => 30,
-            ),
-            array(
-                'path' => 'settings/institutions',
-                'url' => 'account/institutions.php',
-                'title' => get_string('institutionmembership'),
-                'weight' => 40,
-            ),
-        );
-
-        if ($plugins = get_records_array('artefact_installed', 'active', 1)) {
-            foreach ($plugins as &$plugin) {
-                safe_require('artefact', $plugin->name);
-                $plugin_menu = call_static_method(generate_class_name('artefact',$plugin->name), 'menu_items');
-                $menu = array_merge($menu, $plugin_menu);
-            }
-        }
+        $menu = mahara_standard_nav();
     }
 
     $menu_structure = find_menu_children($menu, '');
