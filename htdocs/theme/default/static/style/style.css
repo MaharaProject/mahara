@@ -1267,7 +1267,7 @@ input#myfriends_addfriend_add {
 #userviewstable td,
 #usergroupstable td,
 #userfriendstable td {
-	padding: 7px 15px;
+	padding: 6px;
 	font-size: 11px;
 }
 #userfriendstable td {
