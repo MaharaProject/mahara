@@ -24,4 +24,4 @@ MochiKit modules we use:
 Changes:
 
 * [nigel] Patched hasElementClass to not cause an error if it is passed a text
-  node (no patch sent upstream)
+  node - http://trac.mochikit.com/ticket/330
