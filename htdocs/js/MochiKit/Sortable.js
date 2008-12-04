@@ -6,35 +6,10 @@ See scriptaculous.js for full license.
 
 ***/
 
-if (typeof(dojo) != 'undefined') {
-    dojo.provide('MochiKit.Sortable');
-    dojo.require('MochiKit.Base');
-    dojo.require('MochiKit.DOM');
-    dojo.require('MochiKit.Iter');
-}
-
-if (typeof(JSAN) != 'undefined') {
-    JSAN.use("MochiKit.Base", []);
-    JSAN.use("MochiKit.DOM", []);
-    JSAN.use("MochiKit.Iter", []);
-}
-
-try {
-    if (typeof(MochiKit.Base) == 'undefined' ||
-        typeof(MochiKit.DOM) == 'undefined' ||
-        typeof(MochiKit.Iter) == 'undefined') {
-        throw "";
-    }
-} catch (e) {
-    throw "MochiKit.DragAndDrop depends on MochiKit.Base, MochiKit.DOM and MochiKit.Iter!";
-}
-
-if (typeof(MochiKit.Sortable) == 'undefined') {
-    MochiKit.Sortable = {};
-}
+MochiKit.Base._deps('Sortable', ['Base', 'Iter', 'DOM', 'Position', 'DragAndDrop']);
 
 MochiKit.Sortable.NAME = 'MochiKit.Sortable';
-MochiKit.Sortable.VERSION = '1.4';
+MochiKit.Sortable.VERSION = '1.4.2';
 
 MochiKit.Sortable.__repr__ = function () {
     return '[' + this.NAME + ' ' + this.VERSION + ']';
@@ -64,6 +39,18 @@ MochiKit.Base.update(MochiKit.Sortable, {
                 return element;
             }
             element = element.parentNode;
+        }
+    },
+
+    _createElementId: function(element) {
+        if (element.id == null || element.id == "") {
+            var d = MochiKit.DOM;
+            var id;
+            var count = 1;
+            while (d.getElement(id = "sortable" + count) != null) {
+                count += 1;
+            }
+            d.setNodeAttribute(element, "id", id);
         }
     },
 
@@ -100,6 +87,7 @@ MochiKit.Base.update(MochiKit.Sortable, {
     create: function (element, options) {
         element = MochiKit.DOM.getElement(element);
         var self = MochiKit.Sortable;
+        self._createElementId(element);
 
         /** @id MochiKit.Sortable.options */
         options = MochiKit.Base.update({
@@ -282,8 +270,7 @@ MochiKit.Base.update(MochiKit.Sortable, {
 
     /** @id MochiKit.Sortable.findElements */
     findElements: function (element, options) {
-        return MochiKit.Sortable.findChildren(
-            element, options.only, options.tree ? true : false, options.tag);
+        return MochiKit.Sortable.findChildren(element, options.only, options.tree, options.tag);
     },
 
     /** @id MochiKit.Sortable.findTreeElements */
@@ -323,7 +310,7 @@ MochiKit.Base.update(MochiKit.Sortable, {
 
     /** @id MochiKit.Sortable.onHover */
     onHover: function (element, dropon, overlap) {
-        if (MochiKit.DOM.isParent(dropon, element)) {
+        if (MochiKit.DOM.isChildNode(dropon, element)) {
             return;
         }
         var self = MochiKit.Sortable;
@@ -370,7 +357,7 @@ MochiKit.Base.update(MochiKit.Sortable, {
         var self = MochiKit.Sortable;
         var droponOptions = self.options(dropon);
 
-        if (!MochiKit.DOM.isParent(dropon, element)) {
+        if (!MochiKit.DOM.isChildNode(dropon, element)) {
             var index;
 
             var children = self.findElements(dropon, {tag: droponOptions.tag,
@@ -587,3 +574,16 @@ MochiKit.Base.update(MochiKit.Sortable, {
 
 // trunk compatibility
 MochiKit.Sortable.Sortable = MochiKit.Sortable;
+
+MochiKit.Sortable.__new__ = function () {
+    MochiKit.Base.nameFunctions(this);
+
+    this.EXPORT_TAGS = {
+        ":common": this.EXPORT,
+        ":all": MochiKit.Base.concat(this.EXPORT, this.EXPORT_OK)
+    };
+};
+
+MochiKit.Sortable.__new__();
+
+MochiKit.Base._exportSymbols(this, MochiKit.Sortable);

@@ -1,5 +1,5 @@
 /***
-MochiKit.DragAndDrop 1.4
+MochiKit.DragAndDrop 1.4.2
 
 See <http://mochikit.com/> for documentation, downloads, license, etc.
 
@@ -8,41 +8,10 @@ Copyright (c) 2005 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
 
 ***/
 
-if (typeof(dojo) != 'undefined') {
-    dojo.provide('MochiKit.DragAndDrop');
-    dojo.require('MochiKit.Base');
-    dojo.require('MochiKit.DOM');
-    dojo.require('MochiKit.Iter');
-    dojo.require('MochiKit.Visual');
-    dojo.require('MochiKit.Signal');
-}
-
-if (typeof(JSAN) != 'undefined') {
-    JSAN.use("MochiKit.Base", []);
-    JSAN.use("MochiKit.DOM", []);
-    JSAN.use("MochiKit.Visual", []);
-    JSAN.use("MochiKit.Iter", []);
-    JSAN.use("MochiKit.Signal", []);
-}
-
-try {
-    if (typeof(MochiKit.Base) == 'undefined' ||
-        typeof(MochiKit.DOM) == 'undefined' ||
-        typeof(MochiKit.Visual) == 'undefined' ||
-        typeof(MochiKit.Signal) == 'undefined' ||
-        typeof(MochiKit.Iter) == 'undefined') {
-        throw "";
-    }
-} catch (e) {
-    throw "MochiKit.DragAndDrop depends on MochiKit.Base, MochiKit.DOM, MochiKit.Visual, MochiKit.Signal and MochiKit.Iter!";
-}
-
-if (typeof(MochiKit.DragAndDrop) == 'undefined') {
-    MochiKit.DragAndDrop = {};
-}
+MochiKit.Base._deps('DragAndDrop', ['Base', 'Iter', 'DOM', 'Signal', 'Visual', 'Position']);
 
 MochiKit.DragAndDrop.NAME = 'MochiKit.DragAndDrop';
-MochiKit.DragAndDrop.VERSION = '1.4';
+MochiKit.DragAndDrop.VERSION = '1.4.2';
 
 MochiKit.DragAndDrop.__repr__ = function () {
     return '[' + this.NAME + ' ' + this.VERSION + ']';
@@ -102,7 +71,7 @@ MochiKit.DragAndDrop.Droppables = {
         deepest = drops[0];
 
         for (i = 1; i < drops.length; ++i) {
-            if (MochiKit.DOM.isParent(drops[i].element, deepest.element)) {
+            if (MochiKit.DOM.isChildNode(drops[i].element, deepest.element)) {
                 deepest = drops[i];
             }
         }
@@ -216,7 +185,7 @@ MochiKit.DragAndDrop.Droppable.prototype = {
             /** @id MochiKit.DragAndDrop.containment */
             containment: [],
             tree: false
-        }, options || {});
+        }, options);
 
         // cache containers
         this.options._containers = [];
@@ -224,7 +193,7 @@ MochiKit.DragAndDrop.Droppable.prototype = {
             this.options._containers.push(d.getElement(c));
         }, this), this.options.containment);
 
-        d.makePositioned(this.element); // fix IE
+        MochiKit.Style.makePositioned(this.element); // fix IE
 
         MochiKit.DragAndDrop.Droppables.register(this);
     },
@@ -452,7 +421,7 @@ MochiKit.DragAndDrop.Draggable.prototype = {
 
             /** @id MochiKit.DragAndDrop.snap */
             snap: false
-        }, options || {});
+        }, options);
 
         var d = MochiKit.DOM;
         this.element = d.getElement(element);
@@ -473,7 +442,7 @@ MochiKit.DragAndDrop.Draggable.prototype = {
             this._isScrollChild = MochiKit.DOM.isChildNode(this.element, options.scroll);
         }
 
-        d.makePositioned(this.element);  // fix IE
+        MochiKit.Style.makePositioned(this.element);  // fix IE
 
         this.delta = this.currentDelta();
         this.options = options;
@@ -605,7 +574,7 @@ MochiKit.DragAndDrop.Draggable.prototype = {
         }
 
         // fix AppleWebKit rendering
-        if (/AppleWebKit'/.test(navigator.appVersion)) {
+        if (/AppleWebKit/.test(navigator.appVersion)) {
             window.scrollBy(0, 0);
         }
         event.stop();
@@ -800,7 +769,7 @@ MochiKit.DragAndDrop.Draggable.prototype = {
             w = win.document.body.offsetWidth;
             h = win.document.body.offsetHeight;
         }
-        return {top: vp.x, left: vp.y, width: w, height: h};
+        return {top: vp.y, left: vp.x, width: w, height: h};
     },
 
     /** @id MochiKit.DragAndDrop.repr */

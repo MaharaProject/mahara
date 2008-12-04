@@ -1,6 +1,6 @@
 /***
 
-MochiKit.Async 1.4
+MochiKit.Async 1.4.2
 
 See <http://mochikit.com/> for documentation, downloads, license, etc.
 
@@ -8,28 +8,10 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
-if (typeof(dojo) != 'undefined') {
-    dojo.provide("MochiKit.Async");
-    dojo.require("MochiKit.Base");
-}
-if (typeof(JSAN) != 'undefined') {
-    JSAN.use("MochiKit.Base", []);
-}
-
-try {
-    if (typeof(MochiKit.Base) == 'undefined') {
-        throw "";
-    }
-} catch (e) {
-    throw "MochiKit.Async depends on MochiKit.Base!";
-}
-
-if (typeof(MochiKit.Async) == 'undefined') {
-    MochiKit.Async = {};
-}
+MochiKit.Base._deps('Async', ['Base']);
 
 MochiKit.Async.NAME = "MochiKit.Async";
-MochiKit.Async.VERSION = "1.4";
+MochiKit.Async.VERSION = "1.4.2";
 MochiKit.Async.__repr__ = function () {
     return "[" + this.NAME + " " + this.VERSION + "]";
 };
@@ -216,8 +198,8 @@ MochiKit.Async.Deferred.prototype = {
 
 MochiKit.Base.update(MochiKit.Async, {
     /** @id MochiKit.Async.evalJSONRequest */
-    evalJSONRequest: function (/* req */) {
-        return eval('(' + arguments[0].responseText + ')');
+    evalJSONRequest: function (req) {
+        return MochiKit.Base.evalJSON(req.responseText);
     },
 
     /** @id MochiKit.Async.succeed */
@@ -345,6 +327,16 @@ MochiKit.Base.update(MochiKit.Async, {
 
     /** @id MochiKit.Async.doXHR */
     doXHR: function (url, opts) {
+        /*
+            Work around a Firefox bug by dealing with XHR during
+            the next event loop iteration. Maybe it's this one:
+            https://bugzilla.mozilla.org/show_bug.cgi?id=249843
+        */
+        var self = MochiKit.Async;
+        return self.callLater(0, self._doXHR, url, opts);
+    },
+
+    _doXHR: function (url, opts) {
         var m = MochiKit.Base;
         opts = m.update({
             method: 'GET',
@@ -375,6 +367,7 @@ MochiKit.Base.update(MochiKit.Async, {
         if (req.overrideMimeType && opts.mimeType) {
             req.overrideMimeType(opts.mimeType);
         }
+        req.setRequestHeader("X-Requested-With", "XMLHttpRequest");
         if (opts.headers) {
             var headers = opts.headers;
             if (!m.isArrayLike(headers)) {

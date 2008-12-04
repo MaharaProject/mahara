@@ -1,6 +1,6 @@
 /***
 
-MochiKit.DateTime 1.4
+MochiKit.DateTime 1.4.2
 
 See <http://mochikit.com/> for documentation, downloads, license, etc.
 
@@ -8,20 +8,10 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
-if (typeof(dojo) != 'undefined') {
-    dojo.provide('MochiKit.DateTime');
-}
-
-if (typeof(MochiKit) == 'undefined') {
-    MochiKit = {};
-}
-
-if (typeof(MochiKit.DateTime) == 'undefined') {
-    MochiKit.DateTime = {};
-}
+MochiKit.Base._deps('DateTime', ['Base']);
 
 MochiKit.DateTime.NAME = "MochiKit.DateTime";
-MochiKit.DateTime.VERSION = "1.4";
+MochiKit.DateTime.VERSION = "1.4.2";
 MochiKit.DateTime.__repr__ = function () {
     return "[" + this.NAME + " " + this.VERSION + "]";
 };
@@ -39,7 +29,11 @@ MochiKit.DateTime.isoDate = function (str) {
     if (iso.length === 0) {
         return null;
     }
-    return new Date(iso[0], iso[1] - 1, iso[2]);
+	var date = new Date(iso[0], iso[1] - 1, iso[2]);
+	date.setFullYear(iso[0]);
+	date.setMonth(iso[1] - 1);
+	date.setDate(iso[2]);
+    return date;
 };
 
 MochiKit.DateTime._isoRegexp = /(\d{4,})(?:-(\d{1,2})(?:-(\d{1,2})(?:[T ](\d{1,2}):(\d{1,2})(?::(\d{1,2})(?:\.(\d+))?)?(?:(Z)|([+-])(\d{1,2})(?::(\d{1,2}))?)?)?)?)?/;
@@ -125,8 +119,9 @@ MochiKit.DateTime.toISODate = function (date) {
         return null;
     }
     var _padTwo = MochiKit.DateTime._padTwo;
+	var _padFour = MochiKit.DateTime._padFour;
     return [
-        date.getFullYear(),
+        _padFour(date.getFullYear()),
         _padTwo(date.getMonth() + 1),
         _padTwo(date.getDate())
     ].join("-");
@@ -144,6 +139,17 @@ MochiKit.DateTime.americanDate = function (d) {
 
 MochiKit.DateTime._padTwo = function (n) {
     return (n > 9) ? n : "0" + n;
+};
+
+MochiKit.DateTime._padFour = function(n) {
+	switch(n.toString().length) {
+		case 1: return "000" + n; break;
+		case 2: return "00" + n; break;
+		case 3: return "0" + n; break;
+		case 4:
+		default:
+			return n;
+	}
 };
 
 /** @id MochiKit.DateTime.toPaddedAmericanDate */

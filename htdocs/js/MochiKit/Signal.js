@@ -1,6 +1,6 @@
 /***
 
-MochiKit.Signal 1.4
+MochiKit.Signal 1.4.2
 
 See <http://mochikit.com/> for documentation, downloads, license, etc.
 
@@ -8,48 +8,10 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
-if (typeof(dojo) != 'undefined') {
-    dojo.provide('MochiKit.Signal');
-    dojo.require('MochiKit.Base');
-    dojo.require('MochiKit.DOM');
-    dojo.require('MochiKit.Style');
-}
-if (typeof(JSAN) != 'undefined') {
-    JSAN.use('MochiKit.Base', []);
-    JSAN.use('MochiKit.DOM', []);
-    JSAN.use('MochiKit.Style', []);
-}
-
-try {
-    if (typeof(MochiKit.Base) == 'undefined') {
-        throw '';
-    }
-} catch (e) {
-    throw 'MochiKit.Signal depends on MochiKit.Base!';
-}
-
-try {
-    if (typeof(MochiKit.DOM) == 'undefined') {
-        throw '';
-    }
-} catch (e) {
-    throw 'MochiKit.Signal depends on MochiKit.DOM!';
-}
-
-try {
-    if (typeof(MochiKit.Style) == 'undefined') {
-        throw '';
-    }
-} catch (e) {
-    throw 'MochiKit.Signal depends on MochiKit.Style!';
-}
-
-if (typeof(MochiKit.Signal) == 'undefined') {
-    MochiKit.Signal = {};
-}
+MochiKit.Base._deps('Signal', ['Base', 'DOM', 'Style']);
 
 MochiKit.Signal.NAME = 'MochiKit.Signal';
-MochiKit.Signal.VERSION = '1.4';
+MochiKit.Signal.VERSION = '1.4.2';
 
 MochiKit.Signal._observers = [];
 
@@ -93,15 +55,18 @@ MochiKit.Base.update(MochiKit.Signal.Event.prototype, {
             str += ', mouse(): {page: ' + repr(this.mouse().page) +
                 ', client: ' + repr(this.mouse().client);
 
-            if (this.type() != 'mousemove') {
+            if (this.type() != 'mousemove' && this.type() != 'mousewheel') {
                 str += ', button: {left: ' + repr(this.mouse().button.left) +
                     ', middle: ' + repr(this.mouse().button.middle) +
-                    ', right: ' + repr(this.mouse().button.right) + '}}';
-            } else {
-                str += '}';
+                    ', right: ' + repr(this.mouse().button.right) + '}';
             }
+            if (this.type() == 'mousewheel') {
+                str += ', wheel: ' + repr(this.mouse().wheel);
+            }
+            str += '}';
         }
-        if (this.type() == 'mouseover' || this.type() == 'mouseout') {
+        if (this.type() == 'mouseover' || this.type() == 'mouseout' || 
+            this.type() == 'mouseenter' || this.type() == 'mouseleave') {
             str += ', relatedTarget(): ' + repr(this.relatedTarget());
         }
         str += '}';
@@ -125,7 +90,11 @@ MochiKit.Base.update(MochiKit.Signal.Event.prototype, {
 
     /** @id MochiKit.Signal.Event.prototype.type */
     type: function () {
-        return this._event.type || undefined;
+        if (this._event.type === "DOMMouseScroll") {
+            return "mousewheel";
+        } else {
+            return this._event.type || undefined;
+        }
     },
 
     /** @id MochiKit.Signal.Event.prototype.target */
@@ -141,16 +110,21 @@ MochiKit.Base.update(MochiKit.Signal.Event.prototype, {
         }
 
         var elem = null;
-        if (this.type() == 'mouseover') {
+        if (this.type() == 'mouseover' || this.type() == 'mouseenter') {
             elem = (this._event.relatedTarget ||
                 this._event.fromElement);
-        } else if (this.type() == 'mouseout') {
+        } else if (this.type() == 'mouseout' || this.type() == 'mouseleave') {
             elem = (this._event.relatedTarget ||
                 this._event.toElement);
         }
-        if (elem !== null) {
-            this._relatedTarget = elem;
-            return elem;
+        try {
+            if (elem !== null && elem.nodeType !== null) {
+                this._relatedTarget = elem;
+                return elem;
+            }
+        } catch (ignore) {
+            // Firefox 3 throws a permission denied error when accessing
+            // any property on XUL elements (e.g. scrollbars)...
         }
 
         return undefined;
@@ -273,10 +247,6 @@ MochiKit.Base.update(MochiKit.Signal.Event.prototype, {
                     typeof(this._event.charCode) == 'undefined') { // IE
                     k.code = this._event.keyCode;
                     k.string = String.fromCharCode(k.code);
-                } else if (this._event.keyCode &&
-                    this._event.charCode == 0) { // FF
-                    k.code = this._event.keyCode;
-                    k.string = '';
                 }
 
                 this._key = k;
@@ -333,7 +303,7 @@ MochiKit.Base.update(MochiKit.Signal.Event.prototype, {
                     (de.clientTop || 0);
 
             }
-            if (this.type() != 'mousemove') {
+            if (this.type() != 'mousemove' && this.type() != 'mousewheel') {
                 m.button = {};
                 m.button.left = false;
                 m.button.right = false;
@@ -366,6 +336,17 @@ MochiKit.Base.update(MochiKit.Signal.Event.prototype, {
                     m.button.left = !!(e.button & 1);
                     m.button.right = !!(e.button & 2);
                     m.button.middle = !!(e.button & 4);
+                }
+            }
+            if (this.type() == 'mousewheel') {
+                m.wheel = new MochiKit.Style.Coordinates(0, 0);
+                if (e.wheelDeltaX || e.wheelDeltaY) {
+                    m.wheel.x = e.wheelDeltaX / -40 || 0;
+                    m.wheel.y = e.wheelDeltaY / -40 || 0;
+                } else if (e.wheelDelta) {
+                    m.wheel.y = e.wheelDelta / -40;
+                } else {
+                    m.wheel.y = e.detail || 0;
                 }
             }
             this._mouse = m;
@@ -545,7 +526,12 @@ MochiKit.Base.update(MochiKit.Signal, {
         var self = MochiKit.Signal;
         var E = self.Event;
         if (!isDOM) {
-            return MochiKit.Base.bind(func, obj);
+            /* We don't want to re-bind already bound methods */
+            if (typeof(func.im_self) == 'undefined') {
+                return MochiKit.Base.bindLate(func, obj);
+            } else {
+                return func;
+            }
         }
         obj = obj || src;
         if (typeof(func) == "string") {
@@ -567,7 +553,6 @@ MochiKit.Base.update(MochiKit.Signal, {
             if (sig === 'onload' || sig === 'onunload') {
                 return function (nativeEvent) {
                     func.apply(obj, [new E(src, nativeEvent)]);
-                    MochiKit.Signal.disconnect(src, sig, func);
                     
                     var ident = new MochiKit.Signal.Ident({
                         source: src, signal: sig, objOrFunc: func});
@@ -584,6 +569,10 @@ MochiKit.Base.update(MochiKit.Signal, {
 
     _browserAlreadyHasMouseEnterAndLeave: function () {
         return /MSIE/.test(navigator.userAgent);
+    },
+
+    _browserLacksMouseWheelEvent: function () {
+        return /Gecko\//.test(navigator.userAgent);
     },
 
     _mouseEnterListener: function (src, sig, func, obj) {
@@ -659,6 +648,9 @@ MochiKit.Base.update(MochiKit.Signal, {
             } else {
                 sig = "onmouseout";
             }
+        } else if (isDOM && sig == "onmousewheel" && self._browserLacksMouseWheelEvent()) {
+            var listener = self._listener(src, sig, func, obj, isDOM);
+            sig = "onDOMMouseScroll";
         } else {
             var listener = self._listener(src, sig, func, obj, isDOM);
         }
@@ -694,14 +686,16 @@ MochiKit.Base.update(MochiKit.Signal, {
             return;
         }
         ident.connected = false;
-        // check isDOM
-        if (!ident.isDOM) {
-            return;
-        }
         var src = ident.source;
         var sig = ident.signal;
         var listener = ident.listener;
-
+        // check isDOM
+        if (!ident.isDOM) {
+            if (typeof(src.__disconnect__) == 'function') {
+                src.__disconnect__(ident, sig, ident.objOrFunc, ident.funcOrStr);
+            }
+            return;
+        }
         if (src.removeEventListener) {
             src.removeEventListener(sig.substr(2), listener, false);
         } else if (src.detachEvent) {
@@ -828,7 +822,8 @@ MochiKit.Base.update(MochiKit.Signal, {
         self._lock = true;
         for (var i = 0; i < observers.length; i++) {
             var ident = observers[i];
-            if (ident.source === src && ident.signal === sig) {
+            if (ident.source === src && ident.signal === sig &&
+                    ident.connected) {
                 try {
                     ident.listener.apply(src, args);
                 } catch (e) {

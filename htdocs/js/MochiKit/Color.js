@@ -1,6 +1,6 @@
 /***
 
-MochiKit.Color 1.4
+MochiKit.Color 1.4.2
 
 See <http://mochikit.com/> for documentation, downloads, license, etc.
 
@@ -8,49 +8,10 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
-if (typeof(dojo) != 'undefined') {
-    dojo.provide('MochiKit.Color');
-    dojo.require('MochiKit.Base');
-    dojo.require('MochiKit.DOM');
-    dojo.require('MochiKit.Style');
-}
-
-if (typeof(JSAN) != 'undefined') {
-    JSAN.use("MochiKit.Base", []);
-    JSAN.use("MochiKit.DOM", []);
-    JSAN.use("MochiKit.Style", []);
-}
-
-try {
-    if (typeof(MochiKit.Base) == 'undefined') {
-        throw "";
-    }
-} catch (e) {
-    throw "MochiKit.Color depends on MochiKit.Base";
-}
-
-try {
-    if (typeof(MochiKit.DOM) == 'undefined') {
-        throw "";
-    }
-} catch (e) {
-    throw "MochiKit.Color depends on MochiKit.DOM";
-}
-
-try {
-    if (typeof(MochiKit.Style) == 'undefined') {
-        throw "";
-    }
-} catch (e) {
-    throw "MochiKit.Color depends on MochiKit.Style";
-}
-
-if (typeof(MochiKit.Color) == "undefined") {
-    MochiKit.Color = {};
-}
+MochiKit.Base._deps('Color', ['Base', 'DOM', 'Style']);
 
 MochiKit.Color.NAME = "MochiKit.Color";
-MochiKit.Color.VERSION = "1.4";
+MochiKit.Color.VERSION = "1.4.2";
 
 MochiKit.Color.__repr__ = function () {
     return "[" + this.NAME + " " + this.VERSION + "]";
@@ -476,9 +437,9 @@ MochiKit.Base.update(MochiKit.Color, {
         var green;
         var blue;
         if (saturation === 0) {
-            red = 0;
-            green = 0;
-            blue = 0;
+            red = value;
+            green = value;
+            blue = value;
         } else {
             var i = Math.floor(hue * 6);
             var f = (hue * 6) - i;
@@ -709,7 +670,7 @@ MochiKit.Base.update(MochiKit.Color, {
 
         var isColor = function () {
             for (var i = 0; i < arguments.length; i++) {
-                if (!(arguments[i] instanceof Color)) {
+                if (!(arguments[i] instanceof MochiKit.Color.Color)) {
                     return false;
                 }
             }

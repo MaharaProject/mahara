@@ -1,6 +1,6 @@
 /***
 
-MochiKit.Logging 1.4
+MochiKit.Logging 1.4.2
 
 See <http://mochikit.com/> for documentation, downloads, license, etc.
 
@@ -8,29 +8,10 @@ See <http://mochikit.com/> for documentation, downloads, license, etc.
 
 ***/
 
-if (typeof(dojo) != 'undefined') {
-    dojo.provide('MochiKit.Logging');
-    dojo.require('MochiKit.Base');
-}
-
-if (typeof(JSAN) != 'undefined') {
-    JSAN.use("MochiKit.Base", []);
-}
-
-try {
-    if (typeof(MochiKit.Base) == 'undefined') {
-        throw "";
-    }
-} catch (e) {
-    throw "MochiKit.Logging depends on MochiKit.Base!";
-}
-
-if (typeof(MochiKit.Logging) == 'undefined') {
-    MochiKit.Logging = {};
-}
+MochiKit.Base._deps('Logging', ['Base']);
 
 MochiKit.Logging.NAME = "MochiKit.Logging";
-MochiKit.Logging.VERSION = "1.4";
+MochiKit.Logging.VERSION = "1.4.2";
 MochiKit.Logging.__repr__ = function () {
     return "[" + this.NAME + " " + this.VERSION + "]";
 };
@@ -196,6 +177,19 @@ MochiKit.Logging.Logger.prototype = {
 
     /** @id MochiKit.Logging.Logger.prototype.baseLog */
     baseLog: function (level, message/*, ...*/) {
+        if (typeof(level) == "number") {
+            if (level >= MochiKit.Logging.LogLevel.FATAL) {
+                level = 'FATAL';
+            } else if (level >= MochiKit.Logging.LogLevel.ERROR) {
+                level = 'ERROR';
+            } else if (level >= MochiKit.Logging.LogLevel.WARNING) {
+                level = 'WARNING';
+            } else if (level >= MochiKit.Logging.LogLevel.INFO) {
+                level = 'INFO';
+            } else {
+                level = 'DEBUG';
+            }
+        }
         var msg = new MochiKit.Logging.LogMessage(
             this.counter,
             level,
@@ -204,28 +198,7 @@ MochiKit.Logging.Logger.prototype = {
         this._messages.push(msg);
         this.dispatchListeners(msg);
         if (this.useNativeConsole) {
-            if (typeof(console) == 'object' && console.log) {
-                switch(msg.level) {
-                    case 'DEBUG':
-                        console.debug.apply(console,msg.info);
-                        break;
-                    case 'INFO':
-                        console.info.apply(console,msg.info);
-                        break;
-                    case 'WARNING':
-                        console.warn.apply(console,msg.info);
-                        break;
-                    case 'ERROR':
-                        console.error.apply(console,msg.info);
-                        break;
-                    default:
-                        console.log.apply(console,msg.info);
-                        break;
-                }
-            }
-            else {
-                this.logToConsole(msg.level + ": " + msg.info.join(" "));
-            }
+            this.logToConsole(msg.level + ": " + msg.info.join(" "));
         }
         this.counter += 1;
         while (this.maxSize >= 0 && this._messages.length > this.maxSize) {
