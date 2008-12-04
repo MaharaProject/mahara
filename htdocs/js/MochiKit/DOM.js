@@ -873,7 +873,9 @@ MochiKit.Base.update(MochiKit.DOM, {
         }
         var cls = obj.className;
         if (typeof(cls) != "string") {
-            cls = obj.getAttribute("class");
+            if (typeof(obj.getAttribute) == "function") {
+                cls = obj.getAttribute("class");
+            }
         }
         if (typeof(cls) != "string") {
             return false;

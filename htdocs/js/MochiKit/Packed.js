@@ -2984,7 +2984,9 @@ return false;
 }
 var cls=obj.className;
 if(typeof (cls)!="string"){
+if (typeof(obj.getAttribute) == "function") {
 cls=obj.getAttribute("class");
+}
 }
 if(typeof (cls)!="string"){
 return false;

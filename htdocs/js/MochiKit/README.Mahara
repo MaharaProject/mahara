@@ -2,3 +2,7 @@ MochiKit in Mahara
 ==================
 
 Version of Mochikit: 1.4.2
+
+Changes:
+
+* Patched hasElementClass to not cause an error if it is passed a text node
