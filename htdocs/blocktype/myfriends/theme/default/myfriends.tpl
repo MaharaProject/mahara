@@ -7,7 +7,7 @@
             <td class="r{cycle values=0,1} friendcell">
                 <a href="{$WWWROOT}user/view.php?id={$friend}">
                    <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=60&amp;maxheight=60&amp;id={$friend}" alt="">
-                   <br>{$friend|display_name|escape}
+                   <br>{$friend|display_default_name|escape}
                 </a>
             </td>
         {/foreach}
