@@ -3,6 +3,10 @@ MochiKit in Mahara
 
 Version of Mochikit: 1.4.2
 
+MochiKit is used throughout the Mahara codebase to provide a standard
+javascript library for all javascript-based code.
+
 Changes:
 
-* Patched hasElementClass to not cause an error if it is passed a text node
+* [nigel] Patched hasElementClass to not cause an error if it is passed a text
+  node (no patch sent upstream)
