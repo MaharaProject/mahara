@@ -1694,6 +1694,191 @@ if(MochiKit.__export__){
 reduce=MochiKit.Iter.reduce;
 }
 MochiKit.Base._exportSymbols(this,MochiKit.Iter);
+MochiKit.Base._deps("Logging",["Base"]);
+MochiKit.Logging.NAME="MochiKit.Logging";
+MochiKit.Logging.VERSION="1.4.2";
+MochiKit.Logging.__repr__=function(){
+return "["+this.NAME+" "+this.VERSION+"]";
+};
+MochiKit.Logging.toString=function(){
+return this.__repr__();
+};
+MochiKit.Logging.EXPORT=["LogLevel","LogMessage","Logger","alertListener","logger","log","logError","logDebug","logFatal","logWarning"];
+MochiKit.Logging.EXPORT_OK=["logLevelAtLeast","isLogMessage","compareLogMessage"];
+MochiKit.Logging.LogMessage=function(num,_1f9,info){
+this.num=num;
+this.level=_1f9;
+this.info=info;
+this.timestamp=new Date();
+};
+MochiKit.Logging.LogMessage.prototype={repr:function(){
+var m=MochiKit.Base;
+return "LogMessage("+m.map(m.repr,[this.num,this.level,this.info]).join(", ")+")";
+},toString:MochiKit.Base.forwardCall("repr")};
+MochiKit.Base.update(MochiKit.Logging,{logLevelAtLeast:function(_1fc){
+var self=MochiKit.Logging;
+if(typeof (_1fc)=="string"){
+_1fc=self.LogLevel[_1fc];
+}
+return function(msg){
+var _1ff=msg.level;
+if(typeof (_1ff)=="string"){
+_1ff=self.LogLevel[_1ff];
+}
+return _1ff>=_1fc;
+};
+},isLogMessage:function(){
+var _200=MochiKit.Logging.LogMessage;
+for(var i=0;i<arguments.length;i++){
+if(!(arguments[i] instanceof _200)){
+return false;
+}
+}
+return true;
+},compareLogMessage:function(a,b){
+return MochiKit.Base.compare([a.level,a.info],[b.level,b.info]);
+},alertListener:function(msg){
+alert("num: "+msg.num+"\nlevel: "+msg.level+"\ninfo: "+msg.info.join(" "));
+}});
+MochiKit.Logging.Logger=function(_205){
+this.counter=0;
+if(typeof (_205)=="undefined"||_205===null){
+_205=-1;
+}
+this.maxSize=_205;
+this._messages=[];
+this.listeners={};
+this.useNativeConsole=false;
+};
+MochiKit.Logging.Logger.prototype={clear:function(){
+this._messages.splice(0,this._messages.length);
+},logToConsole:function(msg){
+if(typeof (window)!="undefined"&&window.console&&window.console.log){
+window.console.log(msg.replace(/%/g,"\uff05"));
+}else{
+if(typeof (opera)!="undefined"&&opera.postError){
+opera.postError(msg);
+}else{
+if(typeof (printfire)=="function"){
+printfire(msg);
+}else{
+if(typeof (Debug)!="undefined"&&Debug.writeln){
+Debug.writeln(msg);
+}else{
+if(typeof (debug)!="undefined"&&debug.trace){
+debug.trace(msg);
+}
+}
+}
+}
+}
+},dispatchListeners:function(msg){
+for(var k in this.listeners){
+var pair=this.listeners[k];
+if(pair.ident!=k||(pair[0]&&!pair[0](msg))){
+continue;
+}
+pair[1](msg);
+}
+},addListener:function(_20a,_20b,_20c){
+if(typeof (_20b)=="string"){
+_20b=MochiKit.Logging.logLevelAtLeast(_20b);
+}
+var _20d=[_20b,_20c];
+_20d.ident=_20a;
+this.listeners[_20a]=_20d;
+},removeListener:function(_20e){
+delete this.listeners[_20e];
+},baseLog:function(_20f,_210){
+if(typeof (_20f)=="number"){
+if(_20f>=MochiKit.Logging.LogLevel.FATAL){
+_20f="FATAL";
+}else{
+if(_20f>=MochiKit.Logging.LogLevel.ERROR){
+_20f="ERROR";
+}else{
+if(_20f>=MochiKit.Logging.LogLevel.WARNING){
+_20f="WARNING";
+}else{
+if(_20f>=MochiKit.Logging.LogLevel.INFO){
+_20f="INFO";
+}else{
+_20f="DEBUG";
+}
+}
+}
+}
+}
+var msg=new MochiKit.Logging.LogMessage(this.counter,_20f,MochiKit.Base.extend(null,arguments,1));
+this._messages.push(msg);
+this.dispatchListeners(msg);
+if(this.useNativeConsole){
+this.logToConsole(msg.level+": "+msg.info.join(" "));
+}
+this.counter+=1;
+while(this.maxSize>=0&&this._messages.length>this.maxSize){
+this._messages.shift();
+}
+},getMessages:function(_212){
+var _213=0;
+if(!(typeof (_212)=="undefined"||_212===null)){
+_213=Math.max(0,this._messages.length-_212);
+}
+return this._messages.slice(_213);
+},getMessageText:function(_214){
+if(typeof (_214)=="undefined"||_214===null){
+_214=30;
+}
+var _215=this.getMessages(_214);
+if(_215.length){
+var lst=map(function(m){
+return "\n  ["+m.num+"] "+m.level+": "+m.info.join(" ");
+},_215);
+lst.unshift("LAST "+_215.length+" MESSAGES:");
+return lst.join("");
+}
+return "";
+},debuggingBookmarklet:function(_218){
+if(typeof (MochiKit.LoggingPane)=="undefined"){
+alert(this.getMessageText());
+}else{
+MochiKit.LoggingPane.createLoggingPane(_218||false);
+}
+}};
+MochiKit.Logging.__new__=function(){
+this.LogLevel={ERROR:40,FATAL:50,WARNING:30,INFO:20,DEBUG:10};
+var m=MochiKit.Base;
+m.registerComparator("LogMessage",this.isLogMessage,this.compareLogMessage);
+var _21a=m.partial;
+var _21b=this.Logger;
+var _21c=_21b.prototype.baseLog;
+m.update(this.Logger.prototype,{debug:_21a(_21c,"DEBUG"),log:_21a(_21c,"INFO"),error:_21a(_21c,"ERROR"),fatal:_21a(_21c,"FATAL"),warning:_21a(_21c,"WARNING")});
+var self=this;
+var _21e=function(name){
+return function(){
+self.logger[name].apply(self.logger,arguments);
+};
+};
+this.log=_21e("log");
+this.logError=_21e("error");
+this.logDebug=_21e("debug");
+this.logFatal=_21e("fatal");
+this.logWarning=_21e("warning");
+this.logger=new _21b();
+this.logger.useNativeConsole=true;
+this.EXPORT_TAGS={":common":this.EXPORT,":all":m.concat(this.EXPORT,this.EXPORT_OK)};
+m.nameFunctions(this);
+};
+if(typeof (printfire)=="undefined"&&typeof (document)!="undefined"&&document.createEvent&&typeof (dispatchEvent)!="undefined"){
+printfire=function(){
+printfire.args=arguments;
+var ev=document.createEvent("Events");
+ev.initEvent("printfire",false,true);
+dispatchEvent(ev);
+};
+}
+MochiKit.Logging.__new__();
+MochiKit.Base._exportSymbols(this,MochiKit.Logging);
 MochiKit.Base._deps("Format",["Base"]);
 MochiKit.Format.NAME="MochiKit.Format";
 MochiKit.Format.VERSION="1.4.2";
