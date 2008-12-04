@@ -67,7 +67,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
         if (!$editing && $userid != 0) {
             $returnstr .= self::wallpost_form($instance);
         }
-        return $smarty->fetch('blocktype:wall:inlineposts.tpl') . $returnstr;
+        return $returnstr . $smarty->fetch('blocktype:wall:inlineposts.tpl');
     }
 
     public static function has_instance_config() {
