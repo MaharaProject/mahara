@@ -4,7 +4,7 @@
     {/if}
     {if $wallposts}
         {foreach from=$wallposts item=wallpost}
-            <div class="wallpost">
+            <div class="wallpost{if $wallpost->private} private{/if}">
                 <div class="userinfo"><img src="{$WWWROOT}thumb.php?type=profileicon&maxwidth=25&maxheight=25&id={$wallpost->from}" alt="Profile Icon">
                 <div><a href="{$WWWROOT}user/view.php?id={$wallpost->userid|escape}">{$wallpost->displayname|escape}</a>
                 <span class="postedon"> - {$wallpost->postdate|format_date}</span>

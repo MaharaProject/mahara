@@ -1962,6 +1962,9 @@ span.viewicon {
 .wallpost .postedon {
     color: #888;
 }
+#wall .private {
+    background-color: #ffc;
+}
 
 
 /* GROUPS */
