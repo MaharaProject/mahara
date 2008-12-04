@@ -2098,13 +2098,24 @@ function parse_bbcode($text) {
     return $text;
 }
 
+/**
+ * Given some plain text, adds the appropriate HTML to it to make it appear in 
+ * an HTML document with the same formatting
+ *
+ * This includes escaping entities, replacing newlines etc. It is not 
+ * particularly intelligent about paragraphs, it just adds <br> to every 
+ * newline
+ *
+ * @param string $text The text to format
+ * @return string
+ */
 function format_whitespace($text) {
     $text = str_replace("\r\n", "\n", $text);
     $text = str_replace("\r", "\n", $text);
     $text = hsc($text);
-    $text = str_replace('  ', ' &nbsp;', $text);
     $text = str_replace('  ', '&nbsp; ', $text);
-    $text = nl2br($text);
+    $text = str_replace('  ', ' &nbsp;', $text);
+    $text = str_replace("\n", "<br>\n", $text);
     return $text;
 }
 
