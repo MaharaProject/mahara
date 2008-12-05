@@ -319,7 +319,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
            
     $mail->AddReplyTo($mail->From, $mail->FromName);
 
-    $mail->Subject = substr(stripslashes($subject), 0, 78);
+    $mail->Subject = substr(stripslashes($subject), 0, 900);
 
     $usertoname = display_name($userto, $userto);
     $mail->AddAddress($userto->email, $usertoname );
