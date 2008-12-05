@@ -2192,11 +2192,11 @@ function add_feedback_form_validate(Pieform $form, $values) {
     global $USER, $view;
     if (!$USER->get('id')) {
         if (empty($values['authorname'])) {
-            $form->set_error(get_string('pleaseenteryourname', 'view'));
+            $form->set_error('message', get_string('pleaseenteryourname', 'view'));
         }
         $token = get_cookie('viewaccess:'.$view->get('id'));
         if (!$token || get_view_from_token($token) != $view->get('id')) {
-            $form->set_error(get_string('placefeedbacknotallowed', 'view'));
+            $form->set_error('message', get_string('placefeedbacknotallowed', 'view'));
         }
     }
 }
