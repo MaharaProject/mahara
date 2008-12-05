@@ -126,7 +126,7 @@ class PluginInteractionForum extends PluginInteraction {
             'value' => (bool)$values['autosubscribe'],
         ));
 
-        if ($values['justcreated']) {
+        if ($values['justcreated'] && $values['autosubscribe']) {
             // Subscribe all existing users in the group to the forums
             if ($userids = get_column('group_member', 'member', 'group', $instance->get('group'))) {
                 foreach ($userids as $userid) {
