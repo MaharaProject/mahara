@@ -365,18 +365,25 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
             array()
         );
         $post = get_record_sql(
-            'SELECT p.subject, p.poster, t.id AS topicid, p2.subject AS topicsubject, f.title AS forumtitle
+            'SELECT p.subject, p.body, p.poster, p.parent, t.id AS topicid, p2.subject AS topicsubject, f.title AS forumtitle, g.name AS groupname
             FROM {interaction_forum_post} p
             INNER JOIN {interaction_forum_topic} t ON t.id = p.topic
             INNER JOIN {interaction_forum_post} p2 ON (p2.parent IS NULL AND p2.topic = t.id)
             INNER JOIN {interaction_instance} f ON t.forum = f.id
+            INNER JOIN {group} g ON f.group = g.id
             WHERE p.id = ?',
             array($this->postid)
         );
         $this->url = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid;
-        $this->subject = get_string('newforumpostin', 'interaction.forum', $post->forumtitle);
         foreach ($this->users as &$user) {
-            $user->message = get_string('postedin', 'interaction.forum', display_name($post->poster, $user), $post->topicsubject);
+            if ($post->parent) {
+                $user->subject = get_string('replytotopicby', 'interaction.forum', $post->groupname, $post->forumtitle, $post->topicsubject, display_name($post->poster, $user));
+            }
+            else {
+                $user->subject = get_string('newforumpostby', 'interaction.forum', $post->groupname, $post->forumtitle, display_name($post->poster, $user));
+            }
+            $user->message = ($post->subject ? $post->subject . "\n" . str_repeat('-', strlen($post->subject)) . "\n" : '')
+                . trim(html2text($post->body));
         }
     }
 
