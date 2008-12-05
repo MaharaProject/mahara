@@ -383,6 +383,14 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         }
     }
 
+    public function get_subject($user) {
+        return $user->subject;
+    }
+
+    public function get_message($user) {
+        return $user->message;
+    }
+
     public function get_plugintype(){
         return 'interaction';
     }
