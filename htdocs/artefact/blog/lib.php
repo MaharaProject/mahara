@@ -548,7 +548,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
      */
     public static function get_posts(User $user, $id, $limit = self::pagination, $offset = 0) {
         ($result = get_records_sql_assoc("
-         SELECT a.id, a.title, a.description, a.ctime, a.mtime, bp.published
+         SELECT a.id, a.title, a.description, " . db_format_tsfield('a.ctime', 'ctime') . ', ' . db_format_tsfield('a.mtime', 'mtime') . ", bp.published
          FROM {artefact} a
           LEFT OUTER JOIN {artefact_blog_blogpost} bp
            ON a.id = bp.blogpost
@@ -567,8 +567,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $user->get('id'), 
                                 'artefacttype', 'blogpost', 'parent', $id);
 
-        // Get the attached files.
         if (count($result) > 0) {
+            // Get the attached files.
             $idlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $result));
             $files = get_records_sql_array('
                SELECT
@@ -580,6 +580,12 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 foreach ($files as $file) {
                     $result[$file->blogpost]->files[] = $file;
                 }
+            }
+
+            // Format dates properly
+            foreach ($result as &$post) {
+                $post->ctime = format_date($post->ctime, 'strftimedaydatetime');
+                $post->mtime = format_date($post->mtime);
             }
         }
 
