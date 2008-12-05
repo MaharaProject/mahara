@@ -2132,7 +2132,7 @@ function format_whitespace($text) {
 }
 
 /**
- * Given raw text (eg typed in by a user), this function cleans it up
+ * Given raw html (eg typed in by a user), this function cleans it up
  * and removes any nasty tags that could mess up pages.
  *
  * @param string $text The text to be cleaned
