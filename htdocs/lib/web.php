@@ -2174,6 +2174,19 @@ function clean_html($text) {
 }
 
 /**
+ * Given HTML, converts and formats it as text
+ *
+ * @param string $html The html to be formatted
+ * @return string The formatted text
+ */
+function html2text($html) {
+    require_once('html2text/class.html2text.php');
+    $h2t = new html2text($html);
+    $h2t->set_base_url(get_config('wwwroot'));
+    return $h2t->get_text();
+}
+
+/**
  * Given some text, locates URLs in it and converts them to HTML
  *
  * @param string $text The text to locate URLs in

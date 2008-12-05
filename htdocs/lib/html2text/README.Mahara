@@ -1,0 +1,12 @@
+HTML to Plain Text Conversion in Mahara
+=======================================
+
+Website: http://www.chuggnutt.com/html2text.php
+Version: 1.0.0
+
+This class is used by the html2text function, which in turn is used by some
+notifications to convert user generated HTML into text for e-mails
+
+Changes:
+
+ * File renamed to have .php extension
