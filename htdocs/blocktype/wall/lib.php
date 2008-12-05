@@ -154,7 +154,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
                 JOIN {usr} u ON bwp.from = u.id
                 WHERE bwp.instance = ? AND u.deleted = 0
         ' . (($owner != $userid)  ? ' 
-                AND bwp.private = 0 ' : '' ) . '
+                AND (bwp.private = 0 OR bwp.from = ' . db_quote($userid) . ') ' : '' ) . '
                 ORDER BY bwp.postdate DESC
         ';
         $params = array($instance->get('id'));
