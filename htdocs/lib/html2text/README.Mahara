@@ -12,3 +12,4 @@ Changes:
  * File renamed to have .php extension
  * Added patch to convert images to displaying their ALT attributes (sent
    upstream by contacting the author directly)
+* Patched to not indent <p> at all, and not to indent <li>s with tabs

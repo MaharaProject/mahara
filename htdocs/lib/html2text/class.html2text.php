@@ -204,7 +204,7 @@ class html2text
         //'',                                     // Comments -- which strip_tags might have problem a with
         "strtoupper(\"\n\n\\1\n\n\")",          // H1 - H3
         "ucwords(\"\n\n\\1\n\n\")",             // H4 - H6
-        "\n\n\t",                               // <P>
+        "\n\n",                                 // <P>
         "\n",                                   // <br>
         'strtoupper("\\1")',                    // <b>
         'strtoupper("\\1")',                    // <strong>
@@ -212,8 +212,8 @@ class html2text
         '_\\1_',                                // <em>
         "\n\n",                                 // <ul> and </ul>
         "\n\n",                                 // <ol> and </ol>
-        "\t* \\1\n",                            // <li> and </li>
-        "\n\t* ",                               // <li>
+        "    * \\1\n",                          // <li> and </li>
+        "\n    * ",                             // <li>
         '$this->_build_link_list("\\1", "\\2")',
                                                 // <a href="">
         "\n-------------------------\n",        // <hr>
