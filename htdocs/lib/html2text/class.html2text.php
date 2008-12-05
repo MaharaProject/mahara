@@ -164,6 +164,7 @@ class html2text
         '/<a [^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/ie',
                                                  // <a href="">
         '/<hr[^>]*>/i',                          // <hr>
+        '/<img[^>]*alt="([^"]+)"[^>]*>/i',       // <img>
         '/(<table[^>]*>|<\/table>)/i',           // <table> and </table>
         '/(<tr[^>]*>|<\/tr>)/i',                 // <tr> and </tr>
         '/<td[^>]*>(.*?)<\/td>/i',               // <td> and </td>
@@ -216,6 +217,7 @@ class html2text
         '$this->_build_link_list("\\1", "\\2")',
                                                 // <a href="">
         "\n-------------------------\n",        // <hr>
+        "[\\1]",                                // <img>
         "\n\n",                                 // <table> and </table>
         "\n",                                   // <tr> and </tr>
         "\t\t\\1\n",                            // <td> and </td>

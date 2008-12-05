@@ -10,3 +10,5 @@ notifications to convert user generated HTML into text for e-mails
 Changes:
 
  * File renamed to have .php extension
+ * Added patch to convert images to displaying their ALT attributes (sent
+   upstream by contacting the author directly)
