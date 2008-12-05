@@ -359,12 +359,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
 
     public function __construct($data) {
         parent::__construct($data);
-        $this->users = get_records_sql_array(
-            'SELECT id, username, preferredname, firstname, lastname, admin, staff
-            FROM {usr} u
-            WHERE id IN (' . implode(',', $this->users) . ')',
-            array()
-        );
+        $this->users = activity_get_users($this->get_id(), $this->users);
         $post = get_record_sql(
             'SELECT p.subject, p.body, p.poster, p.parent, t.id AS topicid, p2.subject AS topicsubject, f.title AS forumtitle, g.name AS groupname
             FROM {interaction_forum_post} p
