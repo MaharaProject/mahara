@@ -288,6 +288,7 @@ class PluginInteractionForum extends PluginInteraction {
  */
     public static function interaction_forum_new_post() {
         $currenttime = time();
+        $minpostdelay = $currenttime - 30 * 60;
         $posts = get_records_sql_array(
             'SELECT s.subscriber, s.type, p.id
             FROM (
@@ -303,7 +304,7 @@ class PluginInteractionForum extends PluginInteraction {
             INNER JOIN {group} g ON (g.id = f.group AND g.deleted = ?)
             INNER JOIN {group_member} gm ON (gm.member = s.subscriber AND gm.group = f.group)
             ORDER BY type, p.id',
-            array(db_format_timestamp($currenttime - 30 * 60), 0)
+            array(db_format_timestamp($minpostdelay), 0)
         );
         // query gets a new object for every subscription
         // this combines all the objects for the same post together with an array for the subscribers
@@ -333,7 +334,7 @@ class PluginInteractionForum extends PluginInteraction {
                 );
             }
             set_field_select('interaction_forum_post', 'sent', 1,
-                'ctime < ? AND deleted = 0 AND sent = 0', array(db_format_timestamp($currenttime - 30 * 60)));
+                'ctime < ? AND deleted = 0 AND sent = 0', array(db_format_timestamp($minpostdelay)));
         }
     }
 }
