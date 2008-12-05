@@ -2163,6 +2163,9 @@ function add_feedback_form($attachments=false) {
         $form['elements']['authorname'] = array(
             'type'  => 'text',
             'title' => get_string('name'),
+            'rules' => array(
+                'required' => true,
+            ),
         );
     }
     $form['elements']['message'] = array(
@@ -2190,10 +2193,7 @@ function add_feedback_form($attachments=false) {
 
 function add_feedback_form_validate(Pieform $form, $values) {
     global $USER, $view;
-    if (!$USER->get('id')) {
-        if (empty($values['authorname'])) {
-            $form->set_error('message', get_string('pleaseenteryourname', 'view'));
-        }
+    if (!$USER->is_logged_in()) {
         $token = get_cookie('viewaccess:'.$view->get('id'));
         if (!$token || get_view_from_token($token) != $view->get('id')) {
             $form->set_error('message', get_string('placefeedbacknotallowed', 'view'));
@@ -2236,8 +2236,9 @@ function add_feedback_form_submit(Pieform $form, $values) {
 }
 
 function add_feedback_form_cancel_submit(Pieform $form) {
+    global $view;
     $form->reply(PIEFORM_OK, array(
-        'goto' => '',
+        'goto' => '/view/view.php?id=' . $view->get('id'),
     ));
 }
 
@@ -2291,8 +2292,9 @@ function objection_form_submit(Pieform $form, $values) {
 }
 
 function objection_form_cancel_submit(Pieform $form) {
+    global $view;
     $form->reply(PIEFORM_OK, array(
-        'goto' => '',
+        'goto' => '/view/view.php?id=' . $view->get('id'),
     ));
 }
 
