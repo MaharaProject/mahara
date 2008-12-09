@@ -373,6 +373,26 @@ function display_name($user, $userto=null, $nameonly=false) {
         $userto->admin         = $USER->get('admin') || $USER->is_institutional_admin();
         $userto->staff         = $USER->get('staff') || $USER->is_institutional_staff();
     }
+    else if (is_numeric($userto)) {
+        if (isset($usercache[$userto])) {
+            $userto = $usercache[$userto];
+        }
+        else if ($userto == $USER->get('id')) {
+            $userto = new StdClass;
+            $userto->id            = $USER->get('id');
+            $userto->username      = $USER->get('username');
+            $userto->preferredname = $USER->get('preferredname');
+            $userto->firstname     = $USER->get('firstname');
+            $userto->lastname      = $USER->get('lastname');
+            $userto->admin         = $USER->get('admin') || $USER->is_institutional_admin();
+            $userto->staff         = $USER->get('staff') || $USER->is_institutional_staff();
+            $usercache[$userto->id] = $userto;
+        }
+        else {
+            $userto = $usercache[$userto] = get_record('usr', 'id', $userto);
+        }
+    }
+
     if (is_array($user)) {
         $user = (object)$user;
     }
