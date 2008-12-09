@@ -1474,6 +1474,11 @@ function xmldb_core_upgrade($oldversion=0) {
         ensure_record_exists('event_type', $event, $event);
     }
 
+    if ($oldversion < 2008110400) {
+        // Correct capitalisation of internal authinstance for 'no institution', only if it hasn't changed previously
+        execute_sql("UPDATE {auth_instance} SET instancename = 'Internal' WHERE institution = 'mahara' AND authname = 'internal' AND instancename = 'internal'");
+    }
+
     return $status;
 
 }

@@ -2707,6 +2707,32 @@ table#initials .initial-letters {
 	padding: 0;
 }
 
+/* MANAGE USERS > EDIT USER */
+#edituser hr {
+    height: 1px;
+    border: 1px solid #aaa;
+    border-width: 1px 0 0 0;
+}
+#edituser .message h4 {
+    margin: 0;
+}
+#edituser .message div#suspendreason {
+    text-align: left;
+    width: 50%;
+    margin: 0 auto;
+}
+#edituser table#suspenddelete {
+    width: 90%;
+    margin: 0 auto;
+}
+#edituser table#suspenddelete td#delete {
+    width: 50%;
+    text-align: center;
+}
+#edituser table#suspenddelete h4 {
+    margin-top: 0;
+}
+
 
 /* MANAGE USERS > SUSPENDED USERS */
 #suspendedlist {

@@ -519,9 +519,10 @@ $string['virusrepeatsubject'] = 'Warning: %s is a repeat virus uploader.';
 $string['virusrepeatmessage'] = 'The user %s has uploaded multiple files which have been scanned by a virus checker and found to be infected.';
 
 $string['youraccounthasbeensuspended'] = 'Your account has been suspended';
-$string['youraccounthasbeensuspendedtext'] = 'Your account has been suspended'; // @todo: more info?
+$string['youraccounthasbeensuspendedtext2'] = 'Your account at %s has been suspended by %s.'; // @todo: more info?
+$string['youraccounthasbeensuspendedreasontext'] = "Your account at %s has been suspended by %s. Reason:\n\n%s";
 $string['youraccounthasbeenunsuspended'] = 'Your account has been unsuspended';
-$string['youraccounthasbeenunsuspendedtext'] = 'Your account has been unsuspended'; // @todo: more info?
+$string['youraccounthasbeenunsuspendedtext2'] = 'Your account at %s has been unsuspended. You may once again log in and use the site.'; // can't provide a login link because we don't know how they log in - it might be by xmlrpc
 
 // size of stuff
 $string['sizemb'] = 'MB';

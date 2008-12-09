@@ -640,7 +640,14 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
     $message = new StdClass;
     $message->users = array($suspendeduserid);
     $message->subject = get_string_from_language($lang, 'youraccounthasbeensuspended');
-    $message->message = get_string_from_language($lang, 'youraccounthasbeensuspendedtext');
+    if ($reason == '') {
+        $message->message = get_string_from_language($lang, 'youraccounthasbeensuspendedtext2', 'mahara',
+            get_config('sitename'), display_name($suspendinguserid, $suspendeduserid));
+    }
+    else {
+        $message->message = get_string_from_language($lang, 'youraccounthasbeensuspendedreasontext', 'mahara',
+            get_config('sitename'), display_name($suspendinguserid, $suspendeduserid), $reason);
+    }
     require_once('activity.php');
     activity_occurred('maharamessage', $message);
 
@@ -664,7 +671,7 @@ function unsuspend_user($userid) {
     $message = new StdClass;
     $message->users = array($userid);
     $message->subject = get_string_from_language($lang, 'youraccounthasbeenunsuspended');
-    $message->message = get_string_from_language($lang, 'youraccounthasbeenunsuspendedtext');
+    $message->message = get_string_from_language($lang, 'youraccounthasbeenunsuspendedtext2', 'mahara', get_config('sitename'));
     require_once('activity.php');
     activity_occurred('maharamessage', $message);
 

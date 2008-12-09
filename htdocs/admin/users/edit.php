@@ -42,63 +42,6 @@ if (!$USER->is_admin_for_user($user)) {
     redirect(get_config('wwwroot').'user/view.php?id='.$id);
 }
 
-$suspended = $user->get('suspendedcusr');
-if (empty($suspended)) {
-    $suspendform = pieform(array(
-        'name'       => 'edituser_suspend',
-        'plugintype' => 'core',
-        'pluginname' => 'admin',
-        'elements'   => array(
-            'id' => array(
-                 'type'    => 'hidden',
-                 'value'   => $id,
-            ),
-            'reason' => array(
-                'type'        => 'textarea',
-                'rows'        => 5,
-                'cols'        => 60,
-                'title'       => get_string('reason'),
-                'description' => get_string('suspendedreasondescription', 'admin'),
-            ),
-            'submit' => array(
-                'type'  => 'submit',
-                'value' => get_string('suspenduser','admin'),
-            ),
-        )
-    ));
-} else {
-    $suspendform = pieform(array(
-        'name'       => 'edituser_unsuspend',
-        'plugintype' => 'core',
-        'pluginname' => 'admin',
-        'elements'   => array(
-            'id' => array(
-                 'type'    => 'hidden',
-                 'value'   => $id,
-            ),
-            'submit' => array(
-                'type'  => 'submit',
-                'value' => get_string('unsuspenduser','admin'),
-            ),
-        )
-    ));
-    $suspender = display_name(get_record('usr', 'id', $suspended));
-}
-
-function edituser_suspend_submit(Pieform $form, $values) {
-    global $SESSION;
-    suspend_user($values['id'], $values['reason']);
-    $SESSION->add_ok_msg(get_string('usersuspended', 'admin'));
-    redirect('/admin/users/edit.php?id=' . $values['id']);
-}
-
-function edituser_unsuspend_submit(Pieform $form, $values) {
-    global $SESSION;
-    unsuspend_user($values['id']);
-    $SESSION->add_ok_msg(get_string('userunsuspended', 'admin'));
-    redirect('/admin/users/edit.php?id=' . $values['id']);
-}
-
 
 // Site-wide account settings
 $currentdate = getdate();
@@ -123,14 +66,14 @@ if ($USER->get('admin')) {
     $elements['staff'] = array(
         'type'         => 'checkbox',
         'title'        => get_string('sitestaff','admin'),
-        //'description'  => get_string('sitestaffdescription','admin'),
         'defaultvalue' => $user->staff,
+        'help'         => true,
     );
     $elements['admin'] = array(
         'type'         => 'checkbox',
         'title'        => get_string('siteadmin','admin'),
-        //'description'  => get_string('siteadmindescription','admin'),
         'defaultvalue' => $user->admin,
+        'help'         => true,
     );
 }
 $elements['expiry'] = array(
@@ -153,10 +96,18 @@ $authinstances = auth_get_auth_instances();
 if (count($authinstances) > 1) {
     $options = array();
 
+    // NOTE: This is a little broken at the moment. The "username in the remote 
+    // system" setting is only actively used by the XMLRPC authentication 
+    // plugin, and thus only makes sense when the user is authenticating in 
+    // this manner.
+    //
+    // We hope to one day make it possible for users to get into accounts via 
+    // multiple methods, at which time we can tie the username-in-remote-system 
+    // setting to the XMLRPC plugin only, making the UI a bit more consistent
     $external = false;
     foreach ($authinstances as $authinstance) {
         if ($USER->can_edit_institution($authinstance->name)) {
-            $options[$authinstance->id] = $authinstance->displayname. ': '.$authinstance->instancename;
+            $options[$authinstance->id] = $authinstance->instancename . ' (' . $authinstance->displayname . ')';
             if ($authinstance->authname != 'internal') {
                 $external = true;
             }
@@ -167,9 +118,10 @@ if (count($authinstances) > 1) {
         $elements['authinstance'] = array(
             'type'         => 'select',
             'title'        => get_string('authenticatedby', 'admin'),
-            //'description'  => get_string('authenticatedbydescription', 'admin'),
+            'description'  => get_string('authenticatedbydescription', 'admin'),
             'options'      => $options,
             'defaultvalue' => $user->authinstance,
+            'help'         => true,
         );
         if ($external) {
             $un = get_field('auth_remote_user', 'remoteusername', 'authinstance', $user->authinstance, 'localusr', $user->id);
@@ -258,8 +210,96 @@ function edituser_site_submit(Pieform $form, $values) {
 }
 
 
-// Institution settings form
+// Suspension/deletion controls
+$suspended = $user->get('suspendedcusr');
+if (empty($suspended)) {
+    $suspendform = pieform(array(
+        'name'       => 'edituser_suspend',
+        'plugintype' => 'core',
+        'pluginname' => 'admin',
+        'elements'   => array(
+            'id' => array(
+                 'type'    => 'hidden',
+                 'value'   => $id,
+            ),
+            'reason' => array(
+                'type'        => 'textarea',
+                'rows'        => 5,
+                'cols'        => 60,
+                'title'       => get_string('reason'),
+                'description' => get_string('suspendedreasondescription', 'admin'),
+            ),
+            'submit' => array(
+                'type'  => 'submit',
+                'value' => get_string('suspenduser','admin'),
+            ),
+        )
+    ));
+}
+else {
+    $suspendformdef = array(
+        'name'       => 'edituser_unsuspend',
+        'plugintype' => 'core',
+        'pluginname' => 'admin',
+        'renderer'   => 'oneline',
+        'elements'   => array(
+            'id' => array(
+                 'type'    => 'hidden',
+                 'value'   => $id,
+            ),
+            'submit' => array(
+                'type'  => 'submit',
+                'value' => get_string('unsuspenduser','admin'),
+            ),
+        )
+    );
 
+    // Create two forms for unsuspension - one in the suspend message and the 
+    // other where the 'suspend' button normally goes. This keeps the HTML IDs 
+    // unique
+    $suspendform  = pieform($suspendformdef);
+    $suspendformdef['name'] = 'edituser_suspend2';
+    $suspendformdef['validatecallback'] = 'edituser_unsuspend_validate';
+    $suspendformdef['successcallback'] = 'edituser_unsuspend_submit';
+    $suspendform2 = pieform($suspendformdef);
+
+    $suspender = display_name(get_record('usr', 'id', $suspended));
+}
+
+function edituser_suspend_submit(Pieform $form, $values) {
+    global $SESSION;
+    suspend_user($values['id'], $values['reason']);
+    $SESSION->add_ok_msg(get_string('usersuspended', 'admin'));
+    redirect('/admin/users/edit.php?id=' . $values['id']);
+}
+
+function edituser_unsuspend_submit(Pieform $form, $values) {
+    global $SESSION;
+    unsuspend_user($values['id']);
+    $SESSION->add_ok_msg(get_string('userunsuspended', 'admin'));
+    redirect('/admin/users/edit.php?id=' . $values['id']);
+}
+
+$deleteform = pieform(array(
+    'name' => 'edituser_delete',
+    'plugintype' => 'core',
+    'pluginname' => 'admin',
+    'renderer' => 'oneline',
+    'elements'   => array(
+        'id' => array(
+            'type' => 'hidden',
+            'value' => $id,
+        ),
+        'submit' => array(
+            'type' => 'submit',
+            'value' => get_string('deleteuser', 'admin'),
+            'confirm' => get_string('confirmdeleteuser', 'admin'),
+        ),
+    ),
+));
+
+
+// Institution settings form
 $elements = array(
     'id' => array(
          'type'    => 'hidden',
@@ -302,12 +342,12 @@ foreach ($user->get('institutions') as $i) {
                 'type'  => 'submit',
                 'value' => get_string('update'),
             ),
+            $i->institution.'_remove' => array(
+                'type'  => 'submit',
+                'value' => get_string('removeuserfrominstitution', 'admin'),
+                'confirm' => get_string('confirmremoveuserfrominstitution', 'admin'),
+            ),
         ),
-    );
-    $elements[$i->institution.'_remove'] = array(
-        'type'  => 'submit',
-        'value' => get_string('remove'),
-        'confirm' => get_string('confirmremoveuserfrominstitution', 'admin'),
     );
 }
 
@@ -321,14 +361,18 @@ if ($USER->get('admin')
         }
     }
     if (!empty($options)) {
+        $elements['addinstitutionheader'] = array(
+            'type'  => 'markup',
+            'value' => '<tr><td colspan="2"><h4>' . get_string('addusertoinstitution', 'admin') . '</h4></td></tr>',
+        );
         $elements['addinstitution'] = array(
             'type'         => 'select',
-            'title'        => get_string('addinstitution', 'admin'),
+            'title'        => get_string('institution'),
             'options'      => $options,
         );
         $elements['add'] = array(
             'type'  => 'submit',
-            'value' => get_string('addinstitution','admin'),
+            'value' => get_string('addusertoinstitution', 'admin'),
         );
     }
 }
@@ -427,6 +471,10 @@ if ($suspended) {
     $smarty->assign('suspendedby', get_string('suspendedby', 'admin', $suspender));
 }
 $smarty->assign('suspendform', $suspendform);
+if (isset($suspendform2)) {
+    $smarty->assign('suspendform2', $suspendform2);
+}
+$smarty->assign('deleteform', $deleteform);
 $smarty->assign('siteform', $siteform);
 $smarty->assign('institutions', count($allinstitutions) > 1);
 $smarty->assign('institutionform', $institutionform);

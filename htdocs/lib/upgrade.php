@@ -560,7 +560,7 @@ function core_install_lastcoredata_defaults() {
     insert_record('institution', $institution);
 
     $auth_instance = new StdClass;
-    $auth_instance->instancename  = 'internal';
+    $auth_instance->instancename  = 'Internal';
     $auth_instance->priority='1';
     $auth_instance->institution   = 'mahara';
     $auth_instance->authname      = 'internal';
