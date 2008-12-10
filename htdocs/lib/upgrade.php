@@ -606,6 +606,7 @@ function core_install_lastcoredata_defaults() {
     set_profile_field($user->id, 'lastname', $user->lastname);
     set_config('installed', true);
     handle_event('createuser', $user->id);
+    activity_add_admin_defaults(array($user->id));
     db_commit();
 
     // if we're installing, set up the block categories here and then poll the plugins.
