@@ -438,27 +438,7 @@ function edituser_institution_submit(Pieform $form, $values) {
 
     if (isset($values['add']) && $USER->get('admin')
         && (empty($userinstitutions) || get_config('usersallowedmultipleinstitutions'))) {
-        // Do nothing if the user is already in the institution
-        $addinstitution = get_record('institution', 'name', $values['addinstitution']);
-        if (!$addinstitution || $addinstitution->name == 'mahara'
-            || $user->in_institution($addinstitution->name)) {
-            redirect('/admin/users/edit.php?id='.$user->id);
-        }
-        $now = time();
-        if (!empty($addinstitution->defaultmembershipperiod)) {
-            $expiry = db_format_timestamp($now + $addinstitution->defaultmembershipperiod);
-        } else {
-            $expiry = null;
-        }
-        db_begin();
-        insert_record('usr_institution', (object) array(
-            'usr' => $user->id,
-            'institution' => $addinstitution->name,
-            'ctime' => db_format_timestamp($now),
-            'expiry' => $expiry,
-        ));
-        handle_event('updateuser', $user->id);
-        db_commit();
+        $user->join_institution($values['addinstitution']);
     }
 
     redirect('/admin/users/edit.php?id='.$user->id);
