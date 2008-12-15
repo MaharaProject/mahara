@@ -386,6 +386,51 @@ class User {
         $this->set('accountprefs', $accountprefs);
     }
 
+    /**
+     * Return the profile view object for this user.
+     *
+     * If the user does not yet have a profile view, one is created for them.
+     *
+     * @return View
+     */
+    public function get_profile_view() {
+        $viewid = get_field('view', 'id', 'type', 'profile', 'owner', $this->get('id'));
+        if (!$viewid) {
+            return $this->install_profile_view();
+        }
+        return new View($viewid);
+    }
+
+    /**
+     * Installs a user's profile view.
+     *
+     * @return View
+     */
+    private function install_profile_view() {
+        static $systemprofileviewid = null;
+
+        if (is_null($systemprofileviewid)) {
+            $systemprofileviewid = get_field('view', 'id', 'owner', 0, 'type', 'profile');
+        }
+
+        require_once(get_config('libroot') . 'view.php');
+        list($view) = View::create_from_template(array(
+            'owner' => $this->get('id'),
+            'title' => get_field('view', 'title', 'id', $systemprofileviewid),
+            'type'  => 'profile',
+        ), $systemprofileviewid, $this->get('id'));
+        $view->set_access(array(
+            array(
+                'type'      => 'loggedin',
+                'startdate' => null,
+                'stopdate'  => null,
+            ),
+        ));
+
+        return $view;
+    }
+
+
 
     /**
      * Determines if the user is currently logged in

@@ -51,7 +51,9 @@ if (!$user = get_record('usr', 'id', $userid, 'deleted', 0)) {
 }
 $is_friend = is_friend($userid, $loggedinid);
 
-$view = View::profile_view($userid);
+$userobj = new User();
+$userobj->find_by_id($userid);
+$view = $userobj->get_profile_view();
 # access will either be logged in (always) or public as well
 if (!can_view_view($view->get('id'))) {
     throw new AccessDeniedException();

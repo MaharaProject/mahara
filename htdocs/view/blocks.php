@@ -40,7 +40,7 @@ $profile = param_boolean('profile');
 if (empty($id)) {
     if (!empty($profile)) {
         try {
-            $view = View::profile_view($USER->get('id'));
+            $view = $USER->get_profile_view();
             $id = $view->get('id');
         }
         catch (ViewNotFoundException $_e) {
