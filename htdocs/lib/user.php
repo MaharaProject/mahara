@@ -1218,28 +1218,6 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
 }
 
 
-
-function copy_view_for_user($userid, $templateid) {
-    require_once(get_config('libroot') . 'view.php');
-    if (!$templateid) {
-        return;
-    }
-    $template = new View($templateid);
-    $v = new View(0, (object) array(
-        'template'    => 0,
-        'numcolumns'  => 3,
-        'owner'       => $userid,
-        'title'       => $template->get('title'),
-        'description' => $template->get('description'),
-        'type'        => $template->get('type'),
-    ));
-    $v->commit();
-    $v->copy_contents($template);
-    $v->commit();
-    return $v;
-}
-
-
 /**
  * Given a user, makes sure they have been added to all groups that are marked 
  * as ones that users should be auto-added to
