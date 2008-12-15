@@ -675,6 +675,38 @@ class User {
         return false;
     }
 
+    /**
+     * Makes a literal copy of a list of views for this user.
+     *
+     * @param array $templateids A list of viewids to copy.
+     */
+    public function copy_views($templateids) {
+        if (!$templateids) {
+            // Nothing to do
+            return;
+        }
+        if (!is_array($templateids)) {
+            throw new SystemException('User->copy_views: templateids must be a list of templates to copy for the user');
+        }
+        require_once(get_config('libroot') . 'view.php');
+
+        $views = array();
+        foreach (get_records_select_array('view', 'id IN (' . implode(', ', db_array_to_ph($templateids)) . ')', $templateids, '', 'id, title, description') as $result) {
+            $views[$result->id] = $result;
+        }
+
+        db_begin();
+        foreach ($templateids as $tid) {
+            View::create_from_template(array(
+                'owner' => $this->get('id'),
+                'title' => $views[$tid]->title,
+                'description' => $views[$tid]->description,
+            ), $tid);
+        }
+        db_commit();
+    }
+
+
 }
 
 
