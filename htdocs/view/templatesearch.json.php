@@ -41,7 +41,7 @@ $views->group       = param_integer('group', null);
 $views->institution = param_alphanum('institution', null);
 $views->copyableby = (object) array('group' => $group, 'institution' => $institution);
 if (!($group || $institution)) {
-    $views->copyableby->user = $USER->get('id');
+    $views->copyableby->owner = $USER->get('id');
 }
 
 View::get_templatesearch_data($views);

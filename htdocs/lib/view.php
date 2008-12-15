@@ -1689,17 +1689,25 @@ class View {
     }
 
 
-    public static function owner_sql($ownerobj) {
+    /**
+     * Returns an SQL snippet that can be used in a where clause to get views 
+     * with the given owner.
+     *
+     * @param object $ownerobj An object that has view ownership information - 
+     *                         either the institution, group or owner fields set
+     * @return string
+     */
+    private static function owner_sql($ownerobj) {
         if (!empty($ownerobj->institution)) {
             return 'institution = ' . db_quote($ownerobj->institution);
         }
         if (!empty($ownerobj->group)) {
             return '"group" = ' . (int)$ownerobj->group;
         }
-        if (!empty($ownerobj->user)) {
-            return 'owner = ' . (int)$ownerobj->user;
+        if (!empty($ownerobj->owner)) {
+            return 'owner = ' . (int)$ownerobj->owner;
         }
-        return '';
+        throw new InvalidArgumentException("View::owner_sql: Passed object did not have an institution, group or owner field");
     }
 
 
@@ -1721,8 +1729,8 @@ class View {
      *
      * @param string   $query       Search string
      * @param string   $ownerquery  Search string for owner
-     * @param StdClass $ownedby     Only return views owned by this owner (user, group, institution)
-     * @param StdClass $copyableby  Only return views copyable by this owner (user, group, institution)
+     * @param StdClass $ownedby     Only return views owned by this owner (owner, group, institution)
+     * @param StdClass $copyableby  Only return views copyable by this owner (owner, group, institution)
      * @param integer  $limit
      * @param integer  $offset
      * @param bool     $extra       Return full set of properties on each view including an artefact list
@@ -2132,11 +2140,14 @@ class View {
         return $numcopied;
     }
 
-    public static function new_title($title, $user, $group, $institution) {
+    /**
+     * Generates a title for a newly created View
+     */
+    private static function new_title($title, $ownerdata) {
         $taken = get_column_sql('
             SELECT title
             FROM {view}
-            WHERE ' . self::owner_sql((object) array('user' => $user, 'group' => $group, 'institution' => $institution)) . "
+            WHERE ' . self::owner_sql($ownerdata) . "
                 AND title LIKE ? || '%'", array($title));
         $ext = ''; $i = 0;
         if ($taken) {

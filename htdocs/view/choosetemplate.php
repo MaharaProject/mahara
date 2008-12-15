@@ -51,7 +51,7 @@ $views->query      = trim(param_variable('viewquery', ''));
 $views->ownerquery = trim(param_variable('ownerquery', ''));
 $views->offset     = param_integer('viewoffset', 0);
 $views->limit      = param_integer('viewlimit', 10);
-$views->copyableby = (object) array('group' => $group, 'institution' => $institution, 'user' => null);
+$views->copyableby = (object) array('group' => $group, 'institution' => $institution, 'owner' => null);
 if ($group) {
     $views->group = $group;
 }
@@ -59,7 +59,7 @@ else if ($institution) {
     $views->institution = $institution;
 }
 else {
-    $views->copyableby->user = $USER->get('id');
+    $views->copyableby->owner = $USER->get('id');
 }
 View::get_templatesearch_data($views);
 
