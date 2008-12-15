@@ -1298,15 +1298,18 @@ function install_system_profile_view() {
     }
     require_once(get_config('libroot') . 'view.php');
     require_once(get_config('docroot') . 'blocktype/lib.php');
-    $view = new View(0, array(
+    $view = View::create(array(
         'type'        => 'profile',
         'owner'       => 0,
         'numcolumns'  => 2,
         'ownerformat' => FORMAT_NAME_PREFERREDNAME,
         'title'       => get_string('profileviewtitle', 'view'),
         'description' => '',
+        'template'    => 1,
     ));
-    $view->commit();
+    $view->set_access(array(array(
+        'type' => 'loggedin'
+    )));
     $blocktypes = array('myviews' => 1, 'mygroups' => 1, 'myfriends' => 2, 'wall' => 2);  // column ids
     $installed = get_column_sql('SELECT name FROM {blocktype_installed} WHERE name IN (' . join(',', array_map('db_quote', array_keys($blocktypes))) . ')');
     $weights = array(1 => 0, 2 => 0);
