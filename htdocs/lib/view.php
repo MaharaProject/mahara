@@ -2197,6 +2197,7 @@ class View {
 
 
 function create_view_form($group=null, $institution=null, $template=null) {
+    global $USER;
     $form = array(
         'name'            => 'createview',
         'method'          => 'post',
@@ -2227,6 +2228,12 @@ function create_view_form($group=null, $institution=null, $template=null) {
             'value' => $institution,
         );
     }
+    else {
+        $form['elements']['owner'] = array(
+            'type' => 'hidden',
+            'value' => $USER->get('id'),
+        );
+    }
     if ($template !== null) {
         $form['elements']['usetemplate'] = array(
             'type'  => 'hidden',
@@ -2239,52 +2246,21 @@ function create_view_form($group=null, $institution=null, $template=null) {
 }
 
 function createview_submit(Pieform $form, $values) {
-    global $USER, $SESSION;
+    global $SESSION;
 
-    $group = isset($values['group']) ? (int) $values['group'] : null;
-    $institution = isset($values['institution']) ? $values['institution'] : null;
-    $templateid = isset($values['usetemplate']) ? (int) $values['usetemplate'] : null;
-
-    $owner = ($group || $institution) ? null : $USER->get('id');
-
-    if ($group && !group_user_can_edit_views($group)
-        || $institution && !$USER->can_edit_institution($institution)) {
-        throw new AccessDeniedException();
+    if (isset($values['usetemplate'])) {
+        $templateid = $values['usetemplate'];
+        unset($values['usetemplate']);
+        list($view, $template, $copystatus) = View::create_from_template($values, $templateid);
+        $SESSION->add_ok_msg(get_string('copiedblocksandartefactsfromtemplate', 'view',
+            $copystatus['blocks'],
+            $copystatus['artefacts'],
+            $template->get('title'))
+        );
     }
-
-    // Create a new view
-    $data = (object) array(
-        'numcolumns'  => 3,
-        'template'    => 0,
-        'type'        => 'portfolio',
-        'group'       => $group,
-        'institution' => $institution,
-        'owner'       => $owner,
-        'title'       => View::new_title(get_string('Untitled', 'view'), $owner, $group, $institution),
-    );
-    $view = new View(0, $data);
-    $view->commit();  // copy_contents call below needs a view id
-
-    if ($templateid) {
-        $template = new View($templateid);
-        if (!$template->get('deleted') && ($template->get('template') && can_view_view($templateid)) || $USER->can_edit_view($template)) {
-            $view->set('title', View::new_title(get_string('Copyof', 'mahara', $template->get('title')), $owner, $group, $institution));
-            $view->set('dirty', true);
-            $copystatus = $view->copy_contents($template);
-            $SESSION->add_ok_msg(get_string('copiedblocksandartefactsfromtemplate', 'view', $copystatus['blocks'], $copystatus['artefacts'], $template->get('title')));
-        }
+    else {
+        $view = View::create($values);
     }
-    if ($group) {
-        // By default, group views should be visible to the group
-        $view->set_access(array(array(
-            'type'      => 'group',
-            'id'        => $group,
-            'startdate' => null,
-            'stopdate'  => null,
-            'role'      => null
-        )));
-    }
-    $view->commit();
 
     redirect(get_config('wwwroot') . 'view/blocks.php?new=1&id=' . $view->get('id'));
 }

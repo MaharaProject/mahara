@@ -275,28 +275,26 @@ function group_create($data) {
 
     // Copy views for the new group
     $templates = get_column('view_autocreate_grouptype', 'view', 'grouptype', $data['grouptype']);
+    $templates = get_records_sql_array("
+        SELECT v.id, v.title, v.description 
+        FROM {view} v
+        INNER JOIN {view_autocreate_grouptype} vag ON vag.view = v.id
+        WHERE vag.grouptype = 'standard'", array());
     if ($templates) {
         require_once(get_config('libroot') . 'view.php');
-        foreach ($templates as $tid) {
-            $template = new View($tid);
-            $data = (object) array(
-                'template'    => 0,
-                'numcolumns'  => 3,
+        foreach ($templates as $template) {
+            list($view) = View::create_from_template(array(
                 'group'       => $id,
-                'title'       => $template->get('title'),
-                'description' => $template->get('description'),
-            );
-            $v = new View(0, $data);
-            $v->commit();
-            $v->copy_contents($template);
-            $v->set_access(array(array(
+                'title'       => $template->title,
+                'description' => $template->description,
+            ), $template->id);
+            $view->set_access(array(array(
                 'type'      => 'group',
                 'id'        => $id,
                 'startdate' => null,
                 'stopdate'  => null,
                 'role'      => null
             )));
-            $v->commit();
         }
     }
 
