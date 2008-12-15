@@ -1259,32 +1259,6 @@ function add_user_to_autoadd_groups($eventdata) {
 }
 
 
-/**
- * Installs a user's profile view.
- *
- * @param id $userid ID of user to create the profile view for
- */
-function install_profile_view($userid) {
-    static $systemprofileviewid = null;
-
-    if (is_null($systemprofileviewid)) {
-        $systemprofileviewid = get_field('view', 'id', 'owner', 0, 'type', 'profile');
-    }
-
-    require_once(get_config('libroot') . 'view.php');
-    $view = copy_view_for_user($userid, $systemprofileviewid);
-    $view->set_access(array(
-        array(
-            'type'      => 'loggedin',
-            'startdate' => null,
-            'stopdate'  => null,
-        ),
-    ));
-    $id = $view->get('id');
-    unset($view);
-    return $id;
-}
-
 
 /**
  * This function installs the site's default profile view
