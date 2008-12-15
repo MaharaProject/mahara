@@ -99,6 +99,172 @@ class View {
         }
     }
 
+    /**
+     * Creates a new View for the given user/group/institution.
+     * 
+     * You can specify who the view is being created _by_ with the second 
+     * parameter. This defaults to the current logged in user's ID.
+     *
+     * @param array $viewdata See View::_create
+     * @return View           The newly created View
+     */
+    public static function create($viewdata, $userid=null) {
+        if (is_null($userid)) {
+            global $USER;
+            $userid = $USER->get('id');
+        }
+
+        $view = self::_create($viewdata, $userid);
+        return $view;
+    }
+
+    /**
+     * Creates a View for the given user, based off a given template and other 
+     * View information supplied.
+     *
+     * Will set a default title of 'Copy of $viewtitle' if not title is 
+     * specified in $viewdata.
+     *
+     * @param array $viewdata See View::_create
+     * @param int $templateid The ID of the View to copy
+     * @param int $userid     The user who has issued the command to create the 
+     *                        view. See View::_create
+     * @return array A list consisting of the new view, the template view and 
+     *               information about the copy - i.e. how many blocks and 
+     *               artefacts were copied
+     * @throws SystemException under various circumstances, see the source for 
+     *                         more information
+     */
+    public static function create_from_template($viewdata, $templateid, $userid=null) {
+        if (is_null($userid)) {
+            global $USER;
+            $userid = $USER->get('id');
+        }
+
+        $user = new User();
+        $user->find_by_id($userid);
+
+        db_begin();
+
+        $template = new View($templateid);
+
+        if ($template->get('deleted')) {
+            throw new SystemException("View::create_from_template: This template has been deleted");
+        }
+
+        if (!$template->get('template') && !$user->can_edit_view($template)) {
+            throw new SystemException("View::create_from_template: Attempting to create a View from another View that is not marked as a template");
+        }
+        else if (!can_view_view($templateid, $userid)) {
+            throw new SystemException("View::create_from_template: User $userid is not permitted to copy View $templateid");
+        }
+        log_debug($viewdata);
+
+        $view = self::_create($viewdata, $userid);
+
+        // Set a default title if one wasn't set
+        if (!isset($viewdata['title'])) {
+            $view->set('title', self::new_title(get_string('Copyof', 'mahara', $template->get('title')), (object)$viewdata));
+            $view->set('dirty', true);
+        }
+        $copystatus = $view->copy_contents($template);
+
+        $view->commit();
+        db_commit();
+
+        return array(
+            $view,
+            $template,
+            $copystatus,
+        );
+    }
+
+    /**
+     * Creates a new View for the given user, based on the given information 
+     * about the view.
+     *
+     * Validation of the view data is performed, then the View is created. If 
+     * the View is to be owned by a group, that group is given access to it.
+     *
+     * @param array $viewdata Data about the view. You can pass in most fields 
+     *                        that appear in the view table.
+     *
+     *                        Note that you set who owns the View by setting 
+     *                        either the owner, group or institution field as 
+     *                        approriate.
+     *
+     *                        Currently, you cannot pass in access data. Use 
+     *                        $view->set_access() after retrieving the $view 
+     *                        object.
+     *
+     * @param int $userid The user who has issued the command to create the 
+     *                    View (note: this is different from the "owner" of the 
+     *                    View - a group or institution could be the "owner",
+     *                    but it's a _user_ who requests a View is created for it)
+     * @return View The created View
+     * @throws SystemException if the View data is invalid - mostly this is due 
+     *                         to owner information being specified incorrectly.
+     */
+    private static function _create(&$viewdata, $userid) {
+        // If no owner information is provided, assume that the view is being 
+        // created by the user for themself
+        if (!isset($viewdata['owner']) && !isset($viewdata['group']) && !isset($viewdata['institution'])) {
+            $viewdata['owner'] = $userid;
+        }
+
+        if (isset($viewdata['owner'])) {
+            if ($viewdata['owner'] != $userid) {
+                $userobj = new User();
+                $userobj->find_by_id($userid);
+                if (!$userobj->is_admin_for_user($viewdata['owner'])) {
+                    throw new SystemException("View::_create: User $userid is not allowed to create a view for owner {$viewdata['owner']}");
+                }
+            }
+
+        }
+
+        if (isset($viewdata['group'])) {
+            require_once('group.php');
+            if (!group_user_can_edit_views($viewdata['group'], $userid)) {
+                throw new SystemException("View::_create: User $userid is not permitted to create a view for group {$viewdata['group']}");
+            }
+        }
+
+        if (isset($viewdata['institution'])) {
+            $user = new User();
+            $user->find_by_id($userid);
+            if (!$user->can_edit_institution($viewdata['institution'])) {
+                throw new SystemException("View::_create: User $userid is not permitted to create a view for institution {$viewdata['institution']}");
+            }
+        }
+
+        // Create the view
+        $defaultdata = array(
+            'numcolumns'  => 3,
+            'template'    => 0,
+            'type'        => 'portfolio',
+            'title'       => self::new_title(get_string('Untitled', 'view'), (object)$viewdata),
+        );
+
+        $data = (object)array_merge($defaultdata, $viewdata);
+
+        $view = new View(0, $data);
+        $view->commit();
+
+        if (isset($viewdata['group'])) {
+            // By default, group views should be visible to the group
+            $view->set_access(array(array(
+                'type'      => 'group',
+                'id'        => $viewdata['group'],
+                'startdate' => null,
+                'stopdate'  => null,
+                'role'      => null
+            )));
+        }
+
+        return $view;
+    }
+
     public function get($field) {
         if (!property_exists($this, $field)) {
             throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
