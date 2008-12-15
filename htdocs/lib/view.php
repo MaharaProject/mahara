@@ -331,7 +331,7 @@ class View {
         if (empty($this->id)) {
             // users are only allowed one profile view
             if ($this->type == 'profile' && record_exists('view', 'owner', $this->owner, 'type', 'profile')) {
-                throw new ViewLimitException(get_string('onlonlyyoneprofileviewallowed', 'error'));
+                throw new SystemException(get_string('onlonlyyoneprofileviewallowed', 'error'));
             }
             $this->id = insert_record('view', $fordb, 'id', true);
         }
