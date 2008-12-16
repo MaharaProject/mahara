@@ -54,6 +54,7 @@ class View {
     private $columns;
     private $dirtycolumns; // for when we change stuff
     private $tags;
+    private $categorydata;
     private $editingroles;
     private $template;
     private $copynewuser = 0;
@@ -271,6 +272,9 @@ class View {
         }
         if ($field == 'tags') { // special case
             return $this->get_tags();
+        }
+        if ($field == 'categorydata') {
+            return $this->get_category_data();
         }
         return $this->{$field};
     }
@@ -631,39 +635,10 @@ class View {
     /**
      * Returns HTML for the category list
      *
-     * @param string $defaultcategory The currently selected category
-     * @param View   $view            The view we're currently using
+     * @param string $category The currently selected category
     */
-    public static function build_category_list($defaultcategory, View $view, $new=0) {
-        require_once(get_config('docroot') . '/blocktype/lib.php');
-        // Change to a left join to show tabs with no results
-        $cats = get_records_sql_array('SELECT bc.name, COUNT(*) AS "count"
-            FROM {blocktype_category} bc
-            INNER JOIN {blocktype_installed_category} bic ON (bc.name = bic.category)
-            WHERE EXISTS (
-                SELECT 1 
-                    FROM {blocktype_installed_viewtype} bivt
-                    JOIN {blocktype_installed} bi ON bi.name = bivt.blocktype
-                    WHERE bivt.viewtype = ?
-                    AND bic.blocktype = bi.name
-            )
-            GROUP BY bc.name
-            ORDER BY bc.name', array($view->get('type')));
-        $categories = array_map(
-            create_function(
-                '$a', 
-                'return array(
-                    "name" => $a->name,
-                    "title" => call_static_method("PluginBlocktype", "category_title_from_name", $a->name) . " (" . $a->count . ")",
-                );'
-            ),
-            $cats
-        );
-
-        // The 'internal' plugin is known to the outside world as 'profile', so 
-        // we need to sort on the actual name
-        usort($categories, create_function('$a, $b', 'return strnatcasecmp($a[\'title\'], $b[\'title\']);'));
-
+    public function build_category_list($category, $new=0) {
+        $categories = $this->get_category_data();
         $flag = false;
         foreach ($categories as &$cat) {
             $classes = '';
@@ -671,7 +646,7 @@ class View {
                 $flag = true;
                 $classes[] = 'first';
             }
-            if ($defaultcategory == $cat['name']) {
+            if ($category == $cat['name']) {
                 $classes[] = 'current';
             }
             if ($classes) {
@@ -684,9 +659,64 @@ class View {
 
         $smarty = smarty_core();
         $smarty->assign('categories', $categories);
-        $smarty->assign('viewid', $view->get('id'));
+        $smarty->assign('viewid', $this->get('id'));
         $smarty->assign('new', $new);
         return $smarty->fetch('view/blocktypecategorylist.tpl');
+    }
+
+    /**
+     * Gets the name of the first blocktype category for this View.
+     *
+     * This can change based on what blocktypes allow themselves to be in what 
+     * types of View. For example, in a group View, blog blocktypes aren't 
+     * allowed (yet), so the first blocktype category shown won't be "blog"
+     */
+    public function get_default_category() {
+        $data = $this->get_category_data();
+        return $data[0]['name'];
+    }
+
+    /**
+     * Gets information about blocktype categories for blocks that can be put 
+     * in this View
+     *
+     * For each category, returns its name, a localised title and the number of 
+     * blocktypes in the category that can be put in this View.
+     *
+     * If a category has no blocktypes that can be put in this View, it is not 
+     * returned
+     */
+    private function get_category_data() {
+        if (isset($this->category_data)) {
+            return $this->category_data;
+        }
+
+        require_once(get_config('docroot') . '/blocktype/lib.php');
+        $categories = array();
+        foreach (get_records_array('blocktype_installed_category') as $blocktypecategory) {
+            safe_require('blocktype', $blocktypecategory->blocktype);
+            if ($this->get('template') || call_static_method(generate_class_name("blocktype", $blocktypecategory->blocktype), "allowed_in_view", $this)) {
+                if (!isset($categories[$blocktypecategory->category])) {
+                    $categories[$blocktypecategory->category] = array(
+                        'name'  => $blocktypecategory->category,
+                        'title' => call_static_method("PluginBlocktype", "category_title_from_name", $blocktypecategory->category),
+                        'count' => 0,
+                    );
+                }
+                $categories[$blocktypecategory->category]['count']++;
+            }
+        }
+
+        foreach ($categories as &$category) {
+            $category['title'] .= ' (' . $category['count'] . ')';
+            unset($category['count']);
+        }
+
+        // The 'internal' plugin is known to the outside world as 'profile', so 
+        // we need to sort on the actual name
+        usort($categories, create_function('$a, $b', 'return strnatcasecmp($a[\'title\'], $b[\'title\']);'));
+
+        return $this->category_data = $categories;
     }
 
     /**
@@ -699,7 +729,7 @@ class View {
      */
     public function build_blocktype_list($category, $javascript=false) {
         require_once(get_config('docroot') . 'blocktype/lib.php');
-        $blocktypes = PluginBlockType::get_blocktypes_for_category_and_viewtype($category, $this->get('type'));
+        $blocktypes = PluginBlockType::get_blocktypes_for_category($category, $this);
 
         $smarty = smarty_core();
         $smarty->assign_by_ref('blocktypes', $blocktypes);
@@ -1044,7 +1074,12 @@ class View {
                 throw new ParamOutOfRangeException(get_string('missingparam'. $require, 'error'));
             }
         }
+
         safe_require('blocktype', $values['blocktype']);
+        if (!$this->get('template') && !call_static_method(generate_class_name('blocktype', $values['blocktype']), 'allowed_in_view', $this)) {
+            throw new UserException('[translate] Cannot put ' . $values['blocktype'] . ' blocktypes into this view');
+        }
+
         $bi = new BlockInstance(0,
             array(
                 'blocktype'  => $values['blocktype'],

@@ -139,15 +139,13 @@ abstract class PluginBlocktype extends Plugin {
         return get_string('pluginname', 'artefact.' . $name);
     }
 
-    public static function get_blocktypes_for_category_and_viewtype($category, $viewtype) {
+    public static function get_blocktypes_for_category($category, View $view) {
         $sql = 'SELECT bti.name, bti.artefactplugin
             FROM {blocktype_installed} bti 
             JOIN {blocktype_installed_category} btic ON btic.blocktype = bti.name
-            JOIN {blocktype_installed_viewtype} bivt ON bivt.blocktype = bti.name
             WHERE btic.category = ?
-            AND bivt.viewtype = ?
             ORDER BY bti.name';
-        if (!$bts = get_records_sql_array($sql, array($category, $viewtype))) {
+        if (!$bts = get_records_sql_array($sql, array($category))) {
             return false;
         }
 
@@ -156,15 +154,16 @@ abstract class PluginBlocktype extends Plugin {
         foreach ($bts as $bt) {
             $namespaced = blocktype_single_to_namespaced($bt->name, $bt->artefactplugin);
             safe_require('blocktype', $namespaced); 
-            $temp = array(
-                'name'           => $bt->name,
-                'title'          => call_static_method(generate_class_name('blocktype', $namespaced), 'get_title'),
-                'description'    => call_static_method(generate_class_name('blocktype', $namespaced), 'get_description'),
-                'singleonly'     => call_static_method(generate_class_name('blocktype', $namespaced), 'single_only'),
-                'artefactplugin' => $bt->artefactplugin,
-                'thumbnail_path' => get_config('wwwroot') . 'thumb.php?type=blocktype&bt=' . $bt->name . ((!empty($bt->artefactplugin)) ? '&ap=' . $bt->artefactplugin : ''),
-            );
-            $blocktypes[] = $temp;
+            if ($view->get('template') || call_static_method(generate_class_name('blocktype', $namespaced), 'allowed_in_view', $view)) {
+                $blocktypes[] = array(
+                    'name'           => $bt->name,
+                    'title'          => call_static_method(generate_class_name('blocktype', $namespaced), 'get_title'),
+                    'description'    => call_static_method(generate_class_name('blocktype', $namespaced), 'get_description'),
+                    'singleonly'     => call_static_method(generate_class_name('blocktype', $namespaced), 'single_only'),
+                    'artefactplugin' => $bt->artefactplugin,
+                    'thumbnail_path' => get_config('wwwroot') . 'thumb.php?type=blocktype&bt=' . $bt->name . ((!empty($bt->artefactplugin)) ? '&ap=' . $bt->artefactplugin : ''),
+                );
+            }
         }
         return $blocktypes;
     }
@@ -201,6 +200,28 @@ abstract class PluginBlocktype extends Plugin {
      */
     public static function default_copy_type() {
         return 'shallow';
+    }
+
+    /**
+     * Whether this blocktype is allowed in the given View.
+     *
+     * Some blocktypes may wish to limit whether they're allowed in a View if, 
+     * for example, they make no sense when the view is owned by a certain type 
+     * of owner.
+     *
+     * For example, the 'profile information' blocktype makes no sense in a 
+     * group View.
+     *
+     * Of course, blocktypes could implement stranger rules - e.g. only allow 
+     * when the view has 'ponies' in its description (BTW: such blocktypes 
+     * would be totally awesome).
+     *
+     * @param View     The View to check
+     * @return boolean Whether blocks of this blocktype are allowed in the 
+     *                 given view.
+     */
+    public static function allowed_in_view(View $view) {
+        return true;
     }
 
 }

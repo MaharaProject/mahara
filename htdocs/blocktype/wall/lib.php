@@ -174,6 +174,13 @@ class PluginBlocktypeWall extends SystemBlocktype {
         return 'shallow';
     }
 
+    /**
+     * Wall only makes sense on profile viewtypes
+     */
+    public static function allowed_in_view(View $view) {
+        return $view->get('type') == 'profile';
+    }
+
 }
 
 ?>

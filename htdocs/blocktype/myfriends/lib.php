@@ -147,6 +147,13 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
         return 'shallow';
     }
 
+    /**
+     * Myfriends only makes sense for personal views
+     */
+    public static function allowed_in_view(View $view) {
+        return $view->get('owner') != null;
+    }
+
 }
 
 ?>

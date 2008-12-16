@@ -150,6 +150,14 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         return 'nocopy';
     }
 
+    /**
+     * Blog blocktype is only allowed in personal views, because currently 
+     * there's no such thing as group/site blogs
+     */
+    public static function allowed_in_view(View $view) {
+        return $view->get('owner') != null;
+    }
+
 }
 
 ?>

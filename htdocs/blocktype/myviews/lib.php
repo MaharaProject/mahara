@@ -104,6 +104,13 @@ class PluginBlocktypeMyviews extends SystemBlocktype {
         return 'shallow';
     }
 
+    /**
+     * Myviews only makes sense for personal views
+     */
+    public static function allowed_in_view(View $view) {
+        return $view->get('owner') != null;
+    }
+
 }
 
 ?>

@@ -107,14 +107,7 @@ else {
 $category = param_alpha('c', '');
 // Make the default category the first tab if none is set
 if ($category === '') {
-    $category = get_field_sql("
-        SELECT bc.name
-        FROM {blocktype_category} bc
-        JOIN {blocktype_installed_category} bic ON bic.category = bc.name
-        JOIN {blocktype_installed_viewtype} biv ON biv.blocktype = bic.blocktype
-        WHERE biv.viewtype = ?
-        ORDER BY bc.name
-        LIMIT 1", array($view->get('type')));
+    $category = $view->get_default_category();
 }
 
 $view->process_changes($category, $new);
@@ -127,7 +120,7 @@ $smarty = smarty(array('views', 'tinytinymce', 'paginator', 'tablerenderer'), ar
 
 
 // The list of categories for the tabbed interface
-$smarty->assign('category_list', View::build_category_list($category, $view, $new));
+$smarty->assign('category_list', $view->build_category_list($category, $new));
 
 // The list of blocktypes for the default category
 $smarty->assign('blocktype_list', $view->build_blocktype_list($category));

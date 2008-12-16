@@ -71,6 +71,13 @@ class PluginBlocktypeMyGroups extends SystemBlocktype {
         return 'shallow';
     }
 
+    /**
+     * Mygroups only makes sense for personal views
+     */
+    public static function allowed_in_view(View $view) {
+        return $view->get('owner') != null;
+    }
+
 }
 
 ?>

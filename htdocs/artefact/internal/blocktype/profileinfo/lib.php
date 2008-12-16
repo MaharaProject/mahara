@@ -231,6 +231,14 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
         return 'shallow';
     }
 
+    /**
+     * Profileinfo blocktype is only allowed in personal views, because 
+     * there's no such thing as group/site profiles
+     */
+    public static function allowed_in_view(View $view) {
+        return $view->get('owner') != null;
+    }
+
 }
 
 ?>
