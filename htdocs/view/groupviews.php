@@ -79,6 +79,7 @@ $smarty->assign('member', $member);
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('createviewform', pieform(create_view_form($group->id)));
+$smarty->assign('createtemplateform', pieform(create_template_form($group->id)));
 
 if ($can_edit) { // && !$shared) {
     $smarty->display('view/index.tpl');

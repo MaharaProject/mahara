@@ -2259,6 +2259,8 @@ function create_view_form($group=null, $institution=null, $template=null) {
 function createview_submit(Pieform $form, $values) {
     global $SESSION;
 
+    $values['template'] = !empty($values['istemplate']) ? 1 : 0; // Named 'istemplate' in the form to prevent confusion with 'usetemplate'
+
     if (isset($values['usetemplate'])) {
         $templateid = $values['usetemplate'];
         unset($values['usetemplate']);
@@ -2284,6 +2286,17 @@ function createview_cancel_submit(Pieform $form, $values) {
         redirect(get_config('wwwroot') . 'view/institutionviews.php?institution=' . $values['institution']);
     }
     redirect(get_config('wwwroot') . 'view/');
+}
+
+function create_template_form($group=null, $institution=null) {
+    $form = create_view_form($group, $institution, null);
+    $form['name'] = 'createtemplate';
+    $form['elements']['istemplate'] = array(
+        'type' => 'hidden',
+        'value' => 1,
+    );
+    $form['elements']['submit']['value'] = get_string('createtemplate', 'view');
+    return $form;
 }
 
 

@@ -5,6 +5,7 @@
 <div>
 <span class="addicon fr">
   {$createviewform}
+  {$createtemplateform}
   <form method="post" action="{$WWWROOT}view/choosetemplate.php">
     <input type="submit" class="submit" value="{str tag="copyaview" section="view"}">
 {if $GROUP}
