@@ -128,17 +128,9 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
         return '';
     }
 
-    public static function copy_allowed($ownertype=null) {
-        return $ownertype == 'user';
-    }
-
-    public static function copy_artefacts_allowed($newowner=null) {
-        return false;
-    }
-
-    public static function default_artefact_config($ownertype=null, $ownerid=null, $configdata) {
+    public static function rewrite_resume_config(View $view, $configdata) {
         $artefactid = null;
-        if ($ownertype == 'user') {
+        if ($view->get('owner') !== null) {
             $artefacttype = null;
             if (!empty($configdata['artefactid'])) {
                 $artefacttype = get_field('artefact', 'artefacttype', 'id', $configdata['artefactid']);

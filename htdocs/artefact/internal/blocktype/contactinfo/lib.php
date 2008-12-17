@@ -144,16 +144,8 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
         return '';
     }
 
-    public static function copy_allowed($ownertype=null) {
-        return $ownertype == 'user';
-    }
-
-    public static function copy_artefacts_allowed($ownertype=null) {
-        return false;
-    }
-
-    public static function default_artefact_config($ownertype=null, $ownerid=null, $configdata) {
-        if ($ownertype == 'user') {
+    public static function rewrite_blockinstance_config(View $view, $configdata) {
+        if ($view->get('owner') !== null) {
             $artefacttypes = array_diff(PluginArtefactInternal::get_contactinfo_artefact_types(), array('email'));
             $artefactids = get_column_sql('
                 SELECT id FROM {artefact}

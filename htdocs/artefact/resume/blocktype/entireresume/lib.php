@@ -133,14 +133,6 @@ class PluginBlocktypeEntireresume extends PluginBlocktype {
         }
     }
 
-    public static function copy_allowed($ownertype=null) {
-        return $ownertype == 'user';
-    }
-
-    public static function copy_artefacts_allowed($newowner=null) {
-        return false;
-    }
-
     public static function default_copy_type() {
         return 'shallow';
     }

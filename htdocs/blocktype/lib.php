@@ -168,15 +168,26 @@ abstract class PluginBlocktype extends Plugin {
         return $blocktypes;
     }
 
-    public static function copy_allowed($ownertype=null) {
-        return true;
-    }
-
-    public static function copy_artefacts_allowed($ownertype=null) {
-        return true;
-    }
-
-    public static function default_artefact_config($ownertype=null, $ownerid=null, $configdata) {
+    /**
+     * Takes config data for an existing blockinstance of this class and rewrites it so 
+     * it can be used to configure a block instance being put in a new view
+     *
+     * This is used at view copy time, to give blocktypes the chance to change 
+     * the configuration for a block based on aspects about the new view - for 
+     * example, who will own it.
+     *
+     * As an example - when the profile information blocktype is copied, we 
+     * want it so that all the fields that were configured previously are 
+     * pointing to the new owner's versions of those fields.
+     *
+     * The base method clears out any artefact IDs that are set.
+     *
+     * @param View $view The view that the blocktype will be placed into (e.g. 
+     *                   the View being created as a result of the copy)
+     * @param array $configdata The configuration data for the old blocktype
+     * @return array            The new configuration data.
+     */
+    public static function rewrite_blockinstance_config(View $view, $configdata) {
         if (isset($configdata['artefactid'])) {
             $configdata['artefactid'] = null;
         }
@@ -189,7 +200,8 @@ abstract class PluginBlocktype extends Plugin {
     /*
      * The copy_type of a block affects how it should be copied when its view gets copied.
      * nocopy:    The block doesn't appear in the new view at all.
-     * shallow:   A new block of the same type is created in the new view with a default configuration.
+     * shallow:   A new block of the same type is created in the new view with a configuration as specified by the
+     *            rewrite_blockinstance_config method
      * reference: Block configuration is copied as-is.  If the block contains artefacts, the original artefact ids are
      *            retained in the new block's configuration even though they may have a different owner from the view.
      * full:      All artefacts referenced by the block are copied to the new owner's portfolio, and ids in the new
@@ -753,10 +765,21 @@ class BlockInstance {
     }
 
 
-    public function copy(&$view, &$artefactcopies) {
+    /**
+     * Builds a new block instance as a copy of this one, taking into account 
+     * the Views being copied from and to.
+     *
+     * Blocktypes can decide whether they want to be copied to the new View. The 
+     * return value of this method should indicate whether the blocktype was 
+     * copied or not.
+     *
+     * @param View $view The view that this new blockinstance is being created for
+     * @param View $template The view that this (the old) blockinstance comes from
+     * @param array $artefactcopies Correspondence between original artefact IDs and IDs of copies
+     * @return boolean Whether a new blockinstance was made or not.
+     */
+    public function copy(View $view, View $template, &$artefactcopies) {
         $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
-
-        $copyconfig = $view->get('copyconfig');
 
         $configdata = $this->get('configdata');
         if (isset($configdata['copytype'])) {
@@ -766,8 +789,12 @@ class BlockInstance {
             $copytype = call_static_method($blocktypeclass, 'default_copy_type');
         }
 
-        if (!$copyconfig->sameowner
-            && ($copytype == 'nocopy' || !call_static_method($blocktypeclass, 'copy_allowed', $copyconfig->ownertype))) {
+        $viewowner = $view->ownership();
+        $templateowner = $template->ownership();
+        $sameowner = ($viewowner['type'] == $templateowner['type'] && $viewowner['id'] == $templateowner['id']);
+
+        if (!$sameowner
+            && ($copytype == 'nocopy' || !call_static_method($blocktypeclass, 'allowed_in_view', $view))) {
             return false;
         }
 
@@ -779,15 +806,14 @@ class BlockInstance {
             'order'      => $this->get('order'),
         ));
 
-        if ($copyconfig->sameowner || $copytype == 'reference') {
+        if ($sameowner || $copytype == 'reference') {
             $newblock->set('configdata', $configdata);
             $newblock->commit();
             return true;
         }
         $artefactids = PluginBlockType::get_artefacts($this);
         if (!empty($artefactids)
-            && $copytype == 'full' 
-            && call_static_method($blocktypeclass, 'copy_artefacts_allowed', $copyconfig->ownertype)) {
+            && $copytype == 'full') {
             // Copy artefacts & put the new artefact ids into the new block.
             // Artefacts may have children (defined using the parent column of the artefact table) and attachments (currently
             // only for blogposts).  If we copy an artefact we must copy all its descendents & attachments too.
@@ -831,7 +857,7 @@ class BlockInstance {
             }
         }
         else {
-            $configdata = call_static_method($blocktypeclass, 'default_artefact_config', $copyconfig->ownertype, $copyconfig->ownerid, $configdata);
+            $configdata = call_static_method($blocktypeclass, 'rewrite_blockinstance_config', $view, $configdata);
         }
         $newblock->set('configdata', $configdata);
         $newblock->commit();

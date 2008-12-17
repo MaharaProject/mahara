@@ -59,7 +59,6 @@ class View {
     private $template;
     private $copynewuser = 0;
     private $copynewgroups;
-    private $copyconfig;
     private $type;
 
     public function __construct($id=0, $data=null) {
@@ -2146,18 +2145,11 @@ class View {
         $blocks = get_records_array('block_instance', 'view', $template->get('id'));
         $numcopied = array('blocks' => 0, 'artefacts' => 0);
         if ($blocks) {
-            $newowner = $this->ownership();
-            $oldowner = $template->ownership();
-            $this->set('copyconfig', (object) array(
-                'ownertype' => $newowner['type'],
-                'ownerid'   => $newowner['id'],
-                'sameowner' => $newowner['type'] == $oldowner['type'] && $newowner['id'] == $oldowner['id'],
-            ));
             $artefactcopies = array(); // Correspondence between original artefact ids and id of the copy
             foreach ($blocks as $b) {
                 safe_require('blocktype', $b->blocktype);
                 $oldblock = new BlockInstance($b->id, $b);
-                if ($oldblock->copy($this, $artefactcopies)) {
+                if ($oldblock->copy($this, $template, $artefactcopies)) {
                     $numcopied['blocks']++;
                 }
             }
