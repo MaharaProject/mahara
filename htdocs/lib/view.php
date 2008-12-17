@@ -1733,16 +1733,16 @@ class View {
      * @return string
      */
     private static function owner_sql($ownerobj) {
-        if (!empty($ownerobj->institution)) {
+        if (isset($ownerobj->institution) && is_numeric($ownerobj->group)) {
             return 'institution = ' . db_quote($ownerobj->institution);
         }
-        if (!empty($ownerobj->group)) {
+        if (isset($ownerobj->group) && is_numeric($ownerobj->group)) {
             return '"group" = ' . (int)$ownerobj->group;
         }
-        if (!empty($ownerobj->owner)) {
+        if (isset($ownerobj->owner) && is_numeric($ownerobj->owner)) {
             return 'owner = ' . (int)$ownerobj->owner;
         }
-        throw new InvalidArgumentException("View::owner_sql: Passed object did not have an institution, group or owner field");
+        throw new SystemException("View::owner_sql: Passed object did not have an institution, group or owner field");
     }
 
 
