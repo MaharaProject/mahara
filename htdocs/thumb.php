@@ -56,7 +56,7 @@ switch ($type) {
         }
 
         if ($id) {
-            if ($path = get_dataroot_image_path('artefact/file/profileicons', $id, $size)) {
+            if ($path = get_dataroot_image_path('artefact/file/profileicons', get_field('artefact_file_files', 'fileid', 'artefact', $id), $size)) {
                 if ($mimetype) {
                     header('Content-type: ' . $mimetype);
 
