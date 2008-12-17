@@ -1342,9 +1342,10 @@ class ArtefactTypeImage extends ArtefactTypeFile {
 
     public function render_self($options) {
         $result = parent::render_self($options);
-        $result['html'] = '<div class="fr filedata-icon" style="text-align: center;"><h4>' . get_string('Preview', 'artefact.file') . '</h4><img src="'
+        $result['html'] = '<div class="fr filedata-icon" style="text-align: center;"><h4>' . get_string('Preview', 'artefact.file') . '</h4><a href="'
+            . hsc(get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id . '&view=' . $options['viewid']) . '"><img src="'
             . hsc(get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id . '&view=' . $options['viewid'] . '&maxwidth=400&maxheight=180')
-            . '" alt=""></div>' . $result['html'];
+            . '" alt=""></a></div>' . $result['html'];
         return $result;
     }
 
