@@ -1048,6 +1048,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     public function copy_extra($new) {
         global $USER;
         if ($new->get('owner') && $new->get('owner') == $USER->get('id')) {
+            // TODO test what happens when quota is exceeded!
             $USER->quota_add($new->get('size'));
             $USER->commit();
         }
