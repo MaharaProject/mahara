@@ -1356,27 +1356,6 @@ class ArtefactTypeImage extends ArtefactTypeFile {
 
 class ArtefactTypeProfileIcon extends ArtefactTypeImage {
 
-    public function render_self($options) {
-        $options['id'] = $this->get('id');
-
-        $size = filesize(get_config('dataroot') . 'artefact/file/profileicons/originals/'
-            . ($this->get('id') % 256) . '/' . $this->get('id'));
-
-        $downloadpath = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $this->id;
-        $smarty = smarty_core();
-        $smarty->assign('iconpath', $this->get_icon($options));
-        $smarty->assign('downloadpath', $downloadpath);
-        $smarty->assign('owner', display_name($this->get('owner')));
-        $smarty->assign('title', $this->get('note'));
-        $smarty->assign('description', $this->get('title'));
-        $smarty->assign('artefacttype', $this->get('artefacttype'));
-        $smarty->assign('created', strftime(get_string('strftimedaydatetime'), $this->get('ctime')));
-        $smarty->assign('modified', strftime(get_string('strftimedaydatetime'), $this->get('mtime')));
-        $smarty->assign('size', display_size($size) . ' (' . $size . ' ' . get_string('bytes') . ')');
-        $smarty->assign('previewpath', get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $this->get('id') . '&maxwidth=400');
-        return array('html' => $smarty->fetch('artefact:file:profileicon_render_self.tpl'), 'javascript' => '');
-    }
-
     public static function get_links($id) {
         $wwwroot = get_config('wwwroot');
 
@@ -1396,6 +1375,12 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
         }
 
         return $url;
+    }
+
+    public function get_path($data=array()) {
+        require_once('file.php');
+        $result = get_dataroot_image_path('artefact/file/profileicons/', $this->fileid, $data);
+        return $result;
     }
 
     public function in_view_list() {
