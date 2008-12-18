@@ -367,7 +367,7 @@ function ViewManager() {
             setStyle(e, {'height': d.h+'px'});
             hideElement(getFirstElementByTagAndClassName(null, 'mediaplayer', e));
         });
-        appendChildNodes(document.body, DIV({'id': 'overlay'}));
+        insertSiblingNodesBefore(document.body.firstChild, DIV({'id': 'overlay'}));
     }
 
 
