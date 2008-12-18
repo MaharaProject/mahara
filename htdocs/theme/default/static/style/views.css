@@ -300,6 +300,6 @@ body:last-child:not(:root:root) .newblockhere {
 }
 .configure {
   border: 2px solid #a0a0a0;
-  background: #fff;
+  background-color: #fff;
   z-index: 2;
 }
