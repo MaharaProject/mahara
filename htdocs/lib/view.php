@@ -1481,6 +1481,7 @@ class View {
             // by the user's institutions.
             $sql .= '
             LEFT OUTER JOIN {artefact_access_usr} aau ON (a.id = aau.artefact AND aau.usr = ' . $USER->get('id') . ')
+            LEFT OUTER JOIN {artefact_parent_cache} apc ON (a.id = apc.artefact)
             LEFT OUTER JOIN (
                 SELECT
                     aar.artefact, aar.can_republish, m.group
@@ -1492,13 +1493,24 @@ class View {
                     AND aar.can_republish = 1
             ) ra ON (a.id = ra.artefact AND a.group = ra.group)';
             $institutions = array_keys($USER->get('institutions'));
-            $institutions[] = 'mahara';
             $select = '(
                 owner = ' . $USER->get('id') . '
                 OR ra.can_republish = 1
-                OR aau.can_republish = 1
-                OR a.institution IN (' . join(',', array_map('db_quote', $institutions)) . ')
-            )';
+                OR aau.can_republish = 1';
+            if ($USER->get('admin')) {
+                $institutions[] = 'mahara';
+            }
+            else {
+                safe_require('artefact', 'file');
+                $select .= "
+                OR ( a.institution = 'mahara' AND apc.parent = " . ArtefactTypeFolder::admin_public_folder_id() . ')';
+            }
+            if ($institutions) {
+              $select .= '
+                OR a.institution IN (' . join(',', array_map('db_quote', $institutions)) . ')';
+            }
+            $select .= "
+            )";
         }
         if (!empty($artefacttypes)) {
             $select .= ' AND artefacttype IN(' . implode(',', array_map('db_quote', $artefacttypes)) . ')';
