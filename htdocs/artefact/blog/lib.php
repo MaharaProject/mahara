@@ -113,7 +113,7 @@ class PluginArtefactBlog extends PluginArtefact {
             'name' => 'advanced',
             'collapsible' => true,
             'collapsed' => false,
-            'legend' => get_string('moreoptions', 'view'),
+            'legend' => get_string('moreoptions', 'artefact.blog'),
             'elements' => array(
                 'copytype' => array(
                     'type' => 'select',

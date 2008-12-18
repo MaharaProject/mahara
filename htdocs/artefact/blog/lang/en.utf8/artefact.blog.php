@@ -78,6 +78,7 @@ $string['errorsavingattachments'] = 'An error occurred while saving blog post at
 $string['horizontalspace'] = 'Horizontal space';
 $string['insert'] = 'Insert';
 $string['insertimage'] = 'Insert image';
+$string['moreoptions'] = 'More options';
 $string['mustspecifytitle'] = 'You must specify a title for your post';
 $string['mustspecifycontent'] = 'You must specify some content for your post';
 $string['myblogs'] = 'My Blogs';
