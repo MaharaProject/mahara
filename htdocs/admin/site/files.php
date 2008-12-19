@@ -35,21 +35,14 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
 define('TITLE', get_string('sitefiles', 'admin'));
 
-$copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
-$wwwroot = get_config('wwwroot');
+$javascript = ArtefactTypeFileBase::get_my_files_js(param_integer('folder', null));
+$javascript .= <<<JS
+browser.source += '?institution=mahara';
+browser.createfolderscript += '?institution=mahara';
+uploader.uploadscript += '?institution=mahara';
+JS;
 
-$javascript = <<<JAVASCRIPT
-
-var copyrightnotice = '{$copyright}';
-var browser = new FileBrowser('filelist', '{$wwwroot}artefact/file/myfiles.json.php', {'institution':'mahara'});
-var uploader = new FileUploader('uploader', '{$wwwroot}artefact/file/upload.php', {'institution':'mahara'}, 
-                                null, null, browser.refresh, browser.fileexists);
-browser.changedircallback = uploader.updatedestination;
-
-JAVASCRIPT;
-
-$smarty = smarty(array('tablerenderer', 
-                       'artefact/file/js/file.js'));
+$smarty = smarty(array('tablerenderer', 'artefact/file/js/file.js'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('descriptionstrargs', array('<a href="' . get_config('wwwroot') . 'admin/site/menu.php">', '</a>'));
 $smarty->assign('heading', get_string('sitefiles', 'admin'));
