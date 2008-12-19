@@ -2925,7 +2925,7 @@ table#initials .initial-letters {
 /* FOOTER */
 #footerwrap {
     clear: both;
-    background-color: #696969;
+    background-color: #717277;
     padding: 0 0 10px 0;
     color: #bdb582;
     font-size: 11px;
@@ -2937,7 +2937,7 @@ table#initials .initial-letters {
     font-size: 11px;
     color: #bdb582;
     text-align: center;
-    background-color: #696969;
+    background-color: #717277;
 }
 #footer a,
 #footer a:link,
@@ -2951,6 +2951,10 @@ table#initials .initial-letters {
     color: #bdb582;
     text-decoration: none;
 }
+#poweredby {
+    float: left;
+}
+
 .performanceinfo {
     font-size:9px;
     text-align:center;
