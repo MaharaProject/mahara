@@ -1744,7 +1744,7 @@ class View {
      * @return string
      */
     private static function owner_sql($ownerobj) {
-        if (isset($ownerobj->institution) && is_numeric($ownerobj->group)) {
+        if (isset($ownerobj->institution)) {
             return 'institution = ' . db_quote($ownerobj->institution);
         }
         if (isset($ownerobj->group) && is_numeric($ownerobj->group)) {
