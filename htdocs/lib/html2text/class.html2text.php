@@ -153,8 +153,8 @@ class html2text
         '/<h[456][^>]*>(.*?)<\/h[456]>/ie',      // H4 - H6
         '/<p[^>]*>/i',                           // <P>
         '/<br[^>]*>/i',                          // <br>
-        '/<b[^>]*>(.*?)<\/b>/ie',                // <b>
-        '/<strong[^>]*>(.*?)<\/strong>/ie',      // <strong>
+        '/<b[^>]*>(.*?)<\/b>/i',                 // <b>
+        '/<strong[^>]*>(.*?)<\/strong>/i',       // <strong>
         '/<i[^>]*>(.*?)<\/i>/i',                 // <i>
         '/<em[^>]*>(.*?)<\/em>/i',               // <em>
         '/(<ul[^>]*>|<\/ul>)/i',                 // <ul> and </ul>
@@ -202,12 +202,12 @@ class html2text
         '',                                     // <script>s -- which strip_tags supposedly has problems with
         '',                                     // <style>s -- which strip_tags supposedly has problems with
         //'',                                     // Comments -- which strip_tags might have problem a with
-        "strtoupper(\"\n\n\\1\n\n\")",          // H1 - H3
+        "ucwords(\"\n\n_\\1_\n\n\")",           // H1 - H3
         "ucwords(\"\n\n\\1\n\n\")",             // H4 - H6
         "\n\n",                                 // <P>
         "\n",                                   // <br>
-        'strtoupper("\\1")',                    // <b>
-        'strtoupper("\\1")',                    // <strong>
+        '_\\1_',                                // <b>
+        '_\\1_',                                // <strong>
         '_\\1_',                                // <i>
         '_\\1_',                                // <em>
         "\n\n",                                 // <ul> and </ul>
@@ -221,7 +221,7 @@ class html2text
         "\n\n",                                 // <table> and </table>
         "\n",                                   // <tr> and </tr>
         "\t\t\\1\n",                            // <td> and </td>
-        "strtoupper(\"\t\t\\1\n\")",            // <th> and </th>
+        "ucwords(\"\t\t\\1\n\")",               // <th> and </th>
         ' ',                                    // Non-breaking space
         '"',                                    // Double quotes
         "'",                                    // Single quotes
