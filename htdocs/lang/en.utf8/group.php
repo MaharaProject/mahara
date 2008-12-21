@@ -272,4 +272,6 @@ $string['rolechanged'] = 'Role changed';
 $string['removefromgroup'] = 'Remove from group';
 $string['userremoved'] = 'User removed';
 $string['About'] = 'About';
+
+$string['Joined'] = 'Joined';
 ?>

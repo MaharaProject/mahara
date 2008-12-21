@@ -73,5 +73,6 @@ $string['xmlrpccouldnotlogyouindetail'] = 'Sorry, we could not log you into Maha
 
 $string['requiredfields'] = 'Required profile fields';
 $string['requiredfieldsset'] = 'Required profile fields set';
+$string['noauthpluginconfigoptions'] = 'There are no configuration options associated with this plugin';
 
 ?>

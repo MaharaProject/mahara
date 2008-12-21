@@ -143,7 +143,7 @@
         if (requiresConfig(plugin)) {
             window.open('addauthority.php?id='+id+'&edit=1&i={{$institution}}&p=' + plugin, 'editinstance', 'height=520,width=550,screenx=250,screenY=200,scrollbars=1');
         } else {
-            alert('There are no configuration options associated with this plugin');
+            alert({{$noauthpluginconfigoptions}});
         }
     }
 
