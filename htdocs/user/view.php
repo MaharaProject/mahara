@@ -268,7 +268,7 @@ else if (!empty($loggedinid)) {
                 ),
                 'submit' => array(
                     'type' => 'submit',
-                    'value' => ($public) ? 'Logged in users only' : 'Allow public (non logged in) access',
+                    'value' => ($public) ? get_string('loggedinusersonly') : get_string('allowpublicaccess'),
                 ),
             ),
         ));
