@@ -419,6 +419,8 @@ $string['Admins'] = 'Admins';
 $string['noinstitutions'] = 'No Institutions';
 $string['noinstitutionsdescription'] = 'If you would like to associate users with an institution, you should create the institution first.';
 
+$string['Lockedfields'] = 'Locked fields';
+
 // Admin User Search
 $string['Query'] = 'Query';
 $string['Institution'] = 'Institution';

@@ -267,7 +267,7 @@ if ($institution || $add) {
 
     $elements['lockedfields'] = array(
         'type' => 'fieldset',
-        'legend' => 'Locked fields ',
+        'legend' => get_string('Lockedfields', 'admin'),
         'collapsible' => true,
         'collapsed' => true,
         'elements' => array(),
