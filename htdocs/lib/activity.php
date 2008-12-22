@@ -199,7 +199,14 @@ function activity_process_queue() {
                 }
                 $viewsnotified[$data->view] = true;
             }
-            handle_activity($activity->type, $data, true);
+            try {
+                handle_activity($activity->type, $data, true);
+            }
+            catch (MaharaException $e) {
+                // Exceptions can happen while processing the queue, we just 
+                // log them and continue
+                log_debug($e->getMessage());
+            }
         }
         delete_records('activity_queue');
     }
