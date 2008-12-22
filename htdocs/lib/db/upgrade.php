@@ -1490,6 +1490,12 @@ function xmldb_core_upgrade($oldversion=0) {
         )));
     }
 
+    if ($oldversion < 2008122300) {
+        // Delete all activity_queue entries older than 2 weeks. Designed to 
+        // prevent total spammage caused by the activity queue processing bug
+        delete_records_select('activity_queue', 'ctime < ?', array(db_format_timestamp(time() - (86400 * 14))));
+    }
+
     return $status;
 
 }
