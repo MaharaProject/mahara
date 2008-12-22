@@ -339,7 +339,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         $notice = get_string('debugemail', 'mahara', display_name($userto, $userto), $userto->email);
         $messagetext =  $notice . "\n\n" . $messagetext;
         if ($messagehtml) {
-            $messagehtml = '<p>' . $notice . '</p>' . $messagehtml;
+            $messagehtml = '<p>' . hsc($notice) . '</p>' . $messagehtml;
         }
     }
     else {
