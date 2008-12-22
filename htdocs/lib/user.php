@@ -270,6 +270,11 @@ function get_profile_field($userid, $field) {
  * @throws EmailException
  */ 
 function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='') {
+    if (!get_config('sendemail')) {
+        // You can entirely disable Mahara from sending any e-mail via the 
+        // 'sendemail' configuration variable
+        return true;
+    }
 
     if (empty($userto)) {
         throw new InvalidArgumentException("empty user given to email_user");
@@ -321,8 +326,20 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
 
     $mail->Subject = substr(stripslashes($subject), 0, 900);
 
-    $usertoname = display_name($userto, $userto);
-    $mail->AddAddress($userto->email, $usertoname );
+    if ($to = get_config('sendallemailto')) {
+        // Admins can configure the system to send all email to a given address 
+        // instead of whoever would receive it, useful for debugging.
+        $mail->addAddress($to);
+        $notice = get_string('debugemail', 'mahara', display_name($userto, $userto), $userto->email);
+        $messagetext =  $notice . "\n\n" . $messagetext;
+        if ($messagehtml) {
+            $messagehtml = '<p>' . $notice . '</p>' . $messagehtml;
+        }
+    }
+    else {
+        $usertoname = display_name($userto, $userto);
+        $mail->AddAddress($userto->email, $usertoname );
+    }
 
     $mail->WordWrap = 79;   
 
