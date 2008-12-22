@@ -267,9 +267,10 @@ function get_profile_field($userid, $field) {
  * @param string $subject email subject
  * @param string $messagetext text version of email
  * @param string $messagehtml html version of email (will send both html and text)
+ * @param array  $customheaders email headers
  * @throws EmailException
  */ 
-function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='') {
+function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='', $customheaders=null) {
 
     if (empty($userto)) {
         throw new InvalidArgumentException("empty user given to email_user");
@@ -315,6 +316,11 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
         $mail->Sender = $userfrom->email;
         $mail->From = $mail->Sender;
         $mail->FromName = display_name($userfrom, $userto);
+    }
+    if (!empty($customheaders) && is_array($customheaders)) {
+        foreach ($customheaders as $customheader) {
+            $mail->AddCustomHeader($customheader);
+        }
     }
            
     $mail->AddReplyTo($mail->From, $mail->FromName);

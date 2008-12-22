@@ -55,7 +55,7 @@ class PluginNotificationEmail extends PluginNotification {
 
         $prefurl = get_config('wwwroot') . 'account/activity/preferences/';
         $messagebody .=  "\n\n" . get_string_from_language($lang, 'emailfooter', 'notification.email', $sitename, $prefurl);
-        email_user($user, null, $subject, $messagebody);
+        email_user($user, null, $subject, $messagebody, null, !empty($data->customheaders) ? $data->customheaders : null);
     }
 }
 

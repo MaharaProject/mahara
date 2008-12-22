@@ -371,6 +371,14 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
             array($this->postid)
         );
         $this->url = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid;
+        // When emailing forum posts, create Message-Id headers for threaded display by email clients
+        $urlinfo = parse_url(get_config('wwwroot'));
+        $hostname = $urlinfo['host'];
+        $this->customheaders = array(
+            'Message-ID: <forumpost' . $this->postid . '@' . $hostname . '>',
+            'In-Reply-To: <forumpost' . $post->parent . '@' . $hostname . '>',
+            'References: <forumpost' . $post->parent . '@' . $hostname . '>',
+        );
         foreach ($this->users as &$user) {
             if ($post->parent) {
                 $user->subject = get_string('replytotopicby', 'interaction.forum', $post->groupname, $post->forumtitle, $post->topicsubject, display_name($post->poster, $user));
