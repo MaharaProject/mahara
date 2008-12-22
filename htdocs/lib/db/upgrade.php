@@ -1020,6 +1020,12 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2008040211) {
+        // Set 'sendemail' flag to true. Mahara 1.1 will set this in 
+        // config-defaults.php
+        set_config('sendemail', '1');
+    }
+
     return $status;
 
 }
