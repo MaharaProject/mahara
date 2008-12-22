@@ -175,7 +175,7 @@ $smarty->assign('selectallread', 'toggleChecked(\'tocheckread\'); return false;'
 $smarty->assign('selectalldel', 'toggleChecked(\'tocheckdel\'); return false;');
 $smarty->assign('markread', 'markread(this, \'read\'); return false;');
 $smarty->assign('markdel', 'markread(document.notificationlist, \'del\'); return false;');
-$smarty->assign('typechange', 'activitylist.doupdate({\'type\':this.options[this.selectedIndex].value});');
+$smarty->assign('typechange', 'activitylist.type = this.options[this.selectedIndex].value; activitylist.doupdate();');
 $smarty->assign('types', $types);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('heading', get_string('notifications'));
