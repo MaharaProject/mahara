@@ -43,6 +43,8 @@ complete the signup process:
 
 ' . get_config('wwwroot') . 'register.php?key=%s
 
+The link will expire in 24 hours.
+
 --
 Regards,
 The %s Team';
@@ -51,6 +53,8 @@ $string['registeredemailmessagehtml'] = '<p>Hi %s,</p>
 to complete the signup process:</p>
 <p><a href="' . get_config('wwwroot') . 'register.php?key=%s">'
 . get_config('wwwroot') . 'register.php?key=%s</a></p>
+<p>The link will expire in 24 hours.</p>
+
 <pre>--
 Regards,
 The %s Team</pre>';
