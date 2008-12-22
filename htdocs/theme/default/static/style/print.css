@@ -1275,20 +1275,20 @@ span.breadcrumbs a {
 
 
 /* FORUM > POST */
-#forumpost {
+.forumpost {
 	background: none;
 	width: 100%;
 	border-top: 1px solid #000;
 	border-bottom: 1px solid #000;
 	margin-bottom: 0;
 }
-#forumpost th {
-	text-align: left;
+.forumpost th {
+        line-height: 10px;
 	background: none;
-	padding: 2px 10px;
 }
-#forumpost h4 {
+.forumpost th h4 {
 	margin: 0;
+	text-align: left;
 }
 .forumpostleft {
 	text-align: center;

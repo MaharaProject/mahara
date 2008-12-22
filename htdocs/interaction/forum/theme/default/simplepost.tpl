@@ -2,7 +2,7 @@
 <div>
 
 
-<table id="forumpost">
+<table class="forumpost">
 {if $post->subject && !$nosubject}
 <tr>
 	<th colspan="2"><h4>{$post->subject|escape}</h4></th>
