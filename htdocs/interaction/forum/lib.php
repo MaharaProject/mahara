@@ -370,7 +370,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
             WHERE p.id = ?',
             array($this->postid)
         );
-        $this->url = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid;
+        $this->url = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid;
         foreach ($this->users as &$user) {
             if ($post->parent) {
                 $user->subject = get_string('replytotopicby', 'interaction.forum', $post->groupname, $post->forumtitle, $post->topicsubject, display_name($post->poster, $user));
