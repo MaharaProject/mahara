@@ -116,6 +116,17 @@ $cfg->log_backtrace_levels = LOG_LEVEL_WARN | LOG_LEVEL_ENVIRON;
 // developing for Mahara
 $cfg->developermode = false;
 
+// Whether to send e-mail. If set to false, Mahara will not send any e-mail at 
+// all. This is useful for when setting up development versions of Mahara where 
+// you don't want to accidentally send email to users from this particular 
+// Mahara installation.
+//
+// You can use sendallemailto to have all e-mails from this instance of Mahara 
+// sent to one particular address instead of where they're aimed for. Leave 
+// sendemail = true if you want to use this setting.
+$cfg->sendemail = true;
+// $cfg->sendallemailto = 'you@example.com';
+
 // capture performance information and print it
 // $cfg->perftofoot = true; // needs a call to mahara_performance_info (smarty callback) - see default theme's footer.tpl
 // $cfg->perftolog = true;

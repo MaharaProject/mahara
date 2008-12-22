@@ -359,6 +359,7 @@ $string['noinstitutionsetpassemailmessagehtml'] = '<p>Dear %s,</p>
 <p>Regards, %s Site Administrator</p>
 
 <p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>';
+$string['debugemail'] = 'NOTICE: This e-mail was intended for %s <%s> but has been sent to you as per the "sendallemailto" configuration setting.';
 
 
 // Expiry times
