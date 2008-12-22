@@ -2414,6 +2414,7 @@ function add_feedback_form_submit(Pieform $form, $values) {
     $data->ctime = db_format_timestamp(time());
     insert_record($table, $data, 'id', true);
     require_once('activity.php');
+    unset($data->id);
     activity_occurred('feedback', $data);
     if ($artefact) {
         $goto = get_config('wwwroot') . 'view/artefact.php?artefact=' . $artefact->get('id') . '&view='.$view->get('id');
