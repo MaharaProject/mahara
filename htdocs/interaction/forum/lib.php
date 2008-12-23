@@ -380,9 +380,11 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
             'List-Id: "' . $cleanforumname . '" <forum' . $post->forumid . '@' . $hostname . '>',
             'List-Help: ' . get_config('wwwroot') . 'interaction/forum/view.php?id=' . $post->forumid,
             'Message-ID: <forumpost' . $this->postid . '@' . $hostname . '>',
-            'In-Reply-To: <forumpost' . $post->parent . '@' . $hostname . '>',
-            'References: <forumpost' . $post->parent . '@' . $hostname . '>',
         );
+        if ($post->parent) {
+            $this->customheaders[] = 'In-Reply-To: <forumpost' . $post->parent . '@' . $hostname . '>';
+            $this->customheaders[] = 'References: <forumpost' . $post->parent . '@' . $hostname . '>';
+        }
         foreach ($this->users as &$user) {
             if ($post->parent) {
                 $user->subject = get_string('replytotopicby', 'interaction.forum', $post->groupname, $post->forumtitle, $post->topicsubject, display_name($post->poster, $user));
