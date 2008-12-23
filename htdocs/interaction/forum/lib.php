@@ -361,7 +361,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         parent::__construct($data);
         $this->users = activity_get_users($this->get_id(), $this->users);
         $post = get_record_sql(
-            'SELECT p.subject, p.body, p.poster, p.parent, t.id AS topicid, p2.subject AS topicsubject, f.title AS forumtitle, g.name AS groupname
+            'SELECT p.subject, p.body, p.poster, p.parent, t.id AS topicid, p2.subject AS topicsubject, f.title AS forumtitle, g.name AS groupname, f.id AS forumid
             FROM {interaction_forum_post} p
             INNER JOIN {interaction_forum_topic} t ON t.id = p.topic
             INNER JOIN {interaction_forum_post} p2 ON (p2.parent IS NULL AND p2.topic = t.id)
@@ -374,7 +374,11 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         // When emailing forum posts, create Message-Id headers for threaded display by email clients
         $urlinfo = parse_url(get_config('wwwroot'));
         $hostname = $urlinfo['host'];
+        $cleanforumname = str_replace('"', "'", strip_tags($post->forumtitle));
         $this->customheaders = array(
+            'Precedence: Bulk',
+            'List-Id: "' . $cleanforumname . '" <forum' . $post->forumid . '@' . $hostname . '>',
+            'List-Help: ' . get_config('wwwroot') . 'interaction/forum/view.php?id=' . $post->forumid,
             'Message-ID: <forumpost' . $this->postid . '@' . $hostname . '>',
             'In-Reply-To: <forumpost' . $post->parent . '@' . $hostname . '>',
             'References: <forumpost' . $post->parent . '@' . $hostname . '>',
