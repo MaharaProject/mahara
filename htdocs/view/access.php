@@ -183,6 +183,12 @@ function editaccess_validate(Pieform $form, $values) {
     if ($values['startdate'] && $values['stopdate'] && $values['startdate'] > $values['stopdate']) {
         $form->set_error('startdate', get_string('startdatemustbebeforestopdate', 'view'));
     }
+    foreach ($values['accesslist'] as $item) {
+        if ($item['startdate'] && $item['stopdate'] && $item['startdate'] > $item['stopdate']) {
+            $form->set_error('accesslist', get_string('startdatemustbebeforestopdate', 'view'));
+            break;
+        }
+    }
 }
 
 function editaccess_cancel_submit() {
