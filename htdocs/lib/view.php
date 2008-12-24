@@ -568,8 +568,12 @@ class View {
             foreach ($accessdata as $item) {
                 $accessrecord = new StdClass;
                 $accessrecord->view = $this->get('id');
-                $accessrecord->startdate = db_format_timestamp($item['startdate']);
-                $accessrecord->stopdate  = db_format_timestamp($item['stopdate']);
+                if (isset($item['startdate'])) {
+                    $accessrecord->startdate = db_format_timestamp($item['startdate']);
+                }
+                if (isset($item['stopdate'])) {
+                    $accessrecord->stopdate  = db_format_timestamp($item['stopdate']);
+                }
                 switch ($item['type']) {
                     case 'public':
                     case 'loggedin':
