@@ -32,7 +32,7 @@
  * @return string        The HTML for the element
  */
 function pieform_element_hidden(Pieform $form, $element) {/*{{{*/
-    if (!isset($element['value'])) {
+    if (!array_key_exists('value', $element)) {
         throw new PieformException('The hidden element "' . $element['name'] . '" must have a value set');
     }
     $value = $form->get_value($element);
