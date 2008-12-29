@@ -394,6 +394,11 @@ class ActivityTypeContactus extends ActivityTypeAdmin {
         if (!empty($this->userfrom)) {
             $this->url = get_config('wwwroot') . 'user/view.php?id=' . $this->userfrom;
         }
+        else {
+            $this->customheaders = array(
+                'Reply-to: ' . $this->fromname . ' <' . $this->fromemail . '>',
+            );
+        }
     }
 
     function get_subject($user) {
