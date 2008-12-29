@@ -298,6 +298,13 @@ $deleteform = pieform(array(
     ),
 ));
 
+function edituser_delete_submit(Pieform $form, $values) {
+    global $SESSION;
+    delete_user($values['id']);
+    $SESSION->add_ok_msg(get_string('userdeletedsuccessfully', 'admin'));
+    redirect('/admin/users/search.php');
+}
+
 
 // Institution settings form
 $elements = array(

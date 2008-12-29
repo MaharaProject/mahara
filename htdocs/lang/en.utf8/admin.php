@@ -307,6 +307,7 @@ $string['unsuspenduser'] = 'Unsuspend User';
 $string['thisuserissuspended'] = 'This user has been suspended';
 $string['suspendedby'] = 'This user has been suspended by %s';
 $string['deleteuser'] = 'Delete User';
+$string['userdeletedsuccessfully'] = 'User deleted successfully';
 $string['confirmdeleteuser'] = 'Are you sure you want to delete this user?';
 $string['filequota'] = 'File quota (MB)';
 $string['filequotadescription'] = 'Total storage available in the user\'s files area.';
