@@ -326,7 +326,7 @@ function auth_setup () {
     }
 
     // Lock the site until core upgrades are done
-    require_once(get_config('libroot') . 'version.php');
+    require(get_config('libroot') . 'version.php');
     $siteclosed    = $config->version > get_config('version');
     $cfgsiteclosed = get_config('siteclosed');
     if (
