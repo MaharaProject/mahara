@@ -407,7 +407,7 @@ class ActivityTypeContactus extends ActivityTypeAdmin {
 
     function get_message($user) {
         return get_string_from_language($user->lang, 'newcontactusfrom', 'activity') . ' ' . $this->fromname 
-            . '<' . $this->fromemail .'>' . (isset($this->subject) ? ': ' . $this->subject : '')
+            . ' <' . $this->fromemail .'>' . (isset($this->subject) ? ': ' . $this->subject : '')
             . "\n\n" . $this->message;
     }
 
