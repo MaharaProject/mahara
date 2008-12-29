@@ -350,7 +350,7 @@ abstract class ActivityType {
         }
         if ($user->method != 'internal') {
             $method = $user->method;
-            safe_require('notification', $method, 'lib.php', 'require_once');
+            safe_require('notification', $method);
             try {
                 call_static_method(generate_class_name('notification', $method), 'notify_user', $user, $userdata);
                 $user->markasread = true; // if we're doing something else, don't generate unread internal ones.
@@ -365,7 +365,7 @@ abstract class ActivityType {
     }
 
     public function notify_users() {
-        safe_require('notification', 'internal', 'lib.php', 'require_once');
+        safe_require('notification', 'internal');
         $this->type = $this->get_id();
 
         foreach ($this->get_users() as $user) {
