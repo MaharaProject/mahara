@@ -322,13 +322,19 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         $mail->From = $mail->Sender;
         $mail->FromName = display_name($userfrom, $userto);
     }
+    $replytoset = false;
     if (!empty($customheaders) && is_array($customheaders)) {
         foreach ($customheaders as $customheader) {
             $mail->AddCustomHeader($customheader);
+            if (0 === stripos($customheader, 'reply-to')) {
+                $replytoset = true;
+            }
         }
     }
-           
-    $mail->AddReplyTo($mail->From, $mail->FromName);
+
+    if (!$replytoset) {
+        $mail->AddReplyTo($mail->From, $mail->FromName);
+    }
 
     $mail->Subject = substr(stripslashes($subject), 0, 900);
 
