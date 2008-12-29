@@ -106,6 +106,7 @@ if (count($authinstances) > 0) {
         'type'         => 'select',
         'title'        => get_string('institution'),
         'options'      => $options,
+        'defaultvalue' => 1,
         'rules'        => array('required' => true),
     );
     $elements['institutionadmin'] = array(
