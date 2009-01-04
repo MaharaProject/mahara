@@ -63,6 +63,7 @@ uploader.uploadscript += '?institution={$institution}';
 JS;
 
 
+$smarty->assign('institution', $institution);
 $smarty->assign('institutionselector', $s['institutionselector']);
 $smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs'] . $javascript);
 $smarty->assign('heading', TITLE);
