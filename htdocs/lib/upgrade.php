@@ -61,6 +61,13 @@ function check_upgrades($name=null) {
             $coreversion = 0;
         }
         if (empty($coreversion)) {
+            if (is_mysql()) { // Show a more informative error message if using mysql with skip-innodb
+                global $db;
+                $result = $db->Execute("SHOW VARIABLES LIKE 'have_innodb'");
+                if ($result->fields['Value'] != 'YES') {
+                    throw new ConfigSanityException("Mahara requires InnoDB tables.  Please ensure InnoDB tables are enabled in your MySQL server.");
+                }
+            }
             $core = new StdClass;
             $core->install = true;
             $core->to = $config->version;

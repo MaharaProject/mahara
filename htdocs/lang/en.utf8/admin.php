@@ -37,6 +37,7 @@ $string['component'] = 'Component or plugin';
 $string['continue'] = 'Continue';
 $string['coredata'] = 'core data';
 $string['coredatasuccess'] = 'Successfully installed core data';
+$string['databasenotutf8'] = 'You are not using a UTF-8 database.  UTF-8 is the recommended character encoding for Mahara.';
 $string['fromversion'] = 'From version';
 $string['information'] = 'Information';
 $string['installsuccess'] = 'Successfully installed version ';
