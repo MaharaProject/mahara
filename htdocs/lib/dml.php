@@ -63,6 +63,27 @@ function db_quote_identifier($identifier) {
 }
 
 /**
+ * Check whether the db's default character encoding is utf8
+ *
+ * @return bool
+ */
+function db_is_utf8() {
+    global $db;
+    if (!is_a($db, 'ADOConnection')) {
+        throw new SQLException('Database connection is not available ');
+    }
+    if (is_mysql()) {
+        $result = $db->Execute("SHOW VARIABLES LIKE 'character_set_database'");
+        return $result->fields['Value'] == 'utf8';
+    }
+    if (is_postgres()) {
+        $result = $db->Execute("SHOW SERVER_ENCODING");
+        return $result->fields['server_encoding'] == 'UTF8';
+    }
+    return false;
+}
+
+/**
  * Execute a given sql command string
  *
  * Completely general function - it just runs some SQL and reports success.
