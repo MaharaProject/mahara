@@ -55,6 +55,14 @@ abstract class PluginBlocktype extends Plugin {
 
     public static abstract function get_title();
 
+    /**
+     * Allows block types to override the instance's title.
+     *
+     * For example: My Views, My Groups, My Friends, Wall
+     */
+    public static function override_instance_title(BlockInstance $instance) {
+    }
+
     public static abstract function get_description();
 
     public static abstract function get_categories();
@@ -438,7 +446,8 @@ class BlockInstance {
         $smarty = smarty_core();
 
         $smarty->assign('id',     $this->get('id'));
-        $smarty->assign('title',  $this->get('title'));
+        $title = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'override_instance_title', $this);
+        $smarty->assign('title', $title ? $title : $this->get('title'));
         $smarty->assign('column', $this->get('column'));
         $smarty->assign('order',  $this->get('order'));
 
@@ -472,7 +481,8 @@ class BlockInstance {
 
         $smarty = smarty_core();
         $smarty->assign('id',     $this->get('id'));
-        $smarty->assign('title',  $this->get('title'));
+        $title = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'override_instance_title', $this);
+        $smarty->assign('title', $title ? $title : $this->get('title'));
 
         // If this block is for just one artefact, we set the title of the 
         // block to be a link to view more information about that artefact

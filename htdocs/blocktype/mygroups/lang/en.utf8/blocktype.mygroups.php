@@ -27,5 +27,6 @@
 defined('INTERNAL') || die();
 
 $string['title'] = 'My Groups';
+$string['otherusertitle'] = "%s's Groups";
 $string['description'] = 'Display a list of the groups you belong to';
 ?>

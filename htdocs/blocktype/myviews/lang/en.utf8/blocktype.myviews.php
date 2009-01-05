@@ -27,5 +27,6 @@
 defined('INTERNAL') || die();
 
 $string['title'] = 'My Views';
+$string['otherusertitle'] = "%s's Views";
 $string['description'] = 'Display all your views that are visible to the person viewing your profile';
 ?>

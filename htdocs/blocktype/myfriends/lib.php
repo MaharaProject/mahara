@@ -154,6 +154,15 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
         return $view->get('owner') != null;
     }
 
+    public static function override_instance_title(BlockInstance $instance) {
+        global $USER;
+        $ownerid = $instance->get_view()->get('owner');
+        if ($ownerid == $USER->get('id')) {
+            return get_string('title', 'blocktype.myfriends');
+        }
+        return get_string('otherusertitle', 'blocktype.myfriends', display_name($ownerid, null, true));
+    }
+
 }
 
 ?>

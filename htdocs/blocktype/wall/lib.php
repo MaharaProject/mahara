@@ -181,6 +181,15 @@ class PluginBlocktypeWall extends SystemBlocktype {
         return $view->get('type') == 'profile';
     }
 
+    public static function override_instance_title(BlockInstance $instance) {
+        global $USER;
+        $ownerid = $instance->get_view()->get('owner');
+        if ($ownerid == $USER->get('id')) {
+            return get_string('title', 'blocktype.wall');
+        }
+        return get_string('otherusertitle', 'blocktype.wall', display_name($ownerid, null, true));
+    }
+
 }
 
 ?>

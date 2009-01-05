@@ -78,6 +78,15 @@ class PluginBlocktypeMyGroups extends SystemBlocktype {
         return $view->get('owner') != null;
     }
 
+    public static function override_instance_title(BlockInstance $instance) {
+        global $USER;
+        $ownerid = $instance->get_view()->get('owner');
+        if ($ownerid == $USER->get('id')) {
+            return get_string('title', 'blocktype.mygroups');
+        }
+        return get_string('otherusertitle', 'blocktype.mygroups', display_name($ownerid, null, true));
+    }
+
 }
 
 ?>

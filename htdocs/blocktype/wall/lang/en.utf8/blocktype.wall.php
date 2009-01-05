@@ -27,6 +27,7 @@
 defined('INTERNAL') || die();
 
 $string['title'] = 'Wall';
+$string['otherusertitle'] = "%s's Wall";
 $string['description'] = 'Display an area where people can leave you comments';
 $string['noposts'] = 'No wall posts to display';
 $string['makeyourpostprivate'] = 'Make your post private?';
