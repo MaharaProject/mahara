@@ -26,6 +26,8 @@
 
 defined('INTERNAL') || die();
 
+define('MAXFRIENDDISPLAY', 16);
+
 class PluginBlocktypeMyfriends extends SystemBlocktype {
 
     public static function get_title() {
@@ -58,20 +60,8 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
             WHERE usr1 = ? OR usr2 = ?
             ORDER BY ' . db_random() . '
             LIMIT ?',
-            array($userid, $userid, 16)
+            array($userid, $userid, MAXFRIENDDISPLAY)
         );
-        $numberoffriends = count_records_sql('SELECT COUNT(usr1) FROM {usr_friend}
-            JOIN {usr} u1 ON (u1.id = usr1 AND u1.deleted = 0)
-            JOIN {usr} u2 ON (u2.id = usr2 AND u2.deleted = 0)
-            WHERE usr1 = ? OR usr2 = ?',
-            array($userid, $userid)
-        );
-        if ($numberoffriends > 16) {
-            $friendsmessage = get_string('numberoffriends', 'group', $records ? count($records) : 0, $numberoffriends);
-        }
-        else {
-            $friendsmessage = get_string('Friends', 'group');
-        }
         // get the friends into a 4x4 array
         if ($records) {
             $friends = array();
@@ -95,7 +85,6 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
             $friends = false;
         }
         $smarty->assign('friends', $friends);
-        $smarty->assign('friendsmessage', $friendsmessage);
 
         // If the user has no friends, try and display something useful, such 
         // as a 'request friendship' button
@@ -157,10 +146,25 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
     public static function override_instance_title(BlockInstance $instance) {
         global $USER;
         $ownerid = $instance->get_view()->get('owner');
+
         if ($ownerid == $USER->get('id')) {
-            return get_string('title', 'blocktype.myfriends');
+            $title = get_string('title', 'blocktype.myfriends');
         }
-        return get_string('otherusertitle', 'blocktype.myfriends', display_name($ownerid, null, true));
+        else {
+            $title = get_string('otherusertitle', 'blocktype.myfriends', display_name($ownerid, null, true));
+        }
+
+        $numberoffriends = count_records_sql('SELECT COUNT(usr1) FROM {usr_friend}
+            JOIN {usr} u1 ON (u1.id = usr1 AND u1.deleted = 0)
+            JOIN {usr} u2 ON (u2.id = usr2 AND u2.deleted = 0)
+            WHERE usr1 = ? OR usr2 = ?',
+            array($ownerid, $ownerid)
+        );
+        if ($numberoffriends > MAXFRIENDDISPLAY) {
+            $title .= ' ' . get_string('numberoffriends', 'blocktype.myfriends', MAXFRIENDDISPLAY, $numberoffriends);
+        }
+
+        return $title;
     }
 
 }
