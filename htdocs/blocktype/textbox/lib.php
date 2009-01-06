@@ -52,6 +52,22 @@ class PluginBlocktypeTextbox extends SystemBlocktype {
         return $text;
     }
 
+    /**
+     * Returns a list of artefact IDs that are in this blockinstance.
+     *
+     * People may embed artefacts as images etc. They show up as links to the 
+     * download script, which isn't much to go on, but should be enough for us 
+     * to detect that the artefacts are therefore 'in' this blocktype.
+     */
+    public static function get_artefacts(BlockInstance $instance) {
+        $artefacts = array();
+        $configdata = $instance->get('configdata');
+        if (isset($configdata['text'])) {
+            $artefacts = artefact_get_references_in_html($configdata['text']);
+        }
+        return $artefacts;
+    }
+
     public static function has_instance_config() {
         return true;
     }

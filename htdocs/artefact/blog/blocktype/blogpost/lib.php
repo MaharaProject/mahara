@@ -75,6 +75,36 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
         return $result;
     }
 
+    /**
+     * Returns a list of artefact IDs that are in this blockinstance.
+     *
+     * Normally this would just include the blogpost ID itself (children such 
+     * as attachments don't need to be included here, they're handled by the 
+     * artefact parent cache). But people might just link to artefacts without 
+     * using the attachment facility. There's nothing wrong with them doing 
+     * that, so if they do we should scrape the post looking for such links and 
+     * include those artefacts as being part of this blockinstance.
+     *
+     * @return array List of artefact IDs that are 'in' this blogpost - all 
+     *               the blogpost ID plus links to other artefacts that are 
+     *               part of the blogpost text. Note that proper artefact 
+     *               children, such as blog post attachments, aren't included - 
+     *               the artefact parent cache is used for them
+     * @see PluginBlocktypeBlog::get_artefacts()
+     */
+    public static function get_artefacts(BlockInstance $instance) {
+        $configdata = $instance->get('configdata');
+        $artefacts = array();
+        if (isset($configdata['artefactid'])) {
+            $artefacts[] = $configdata['artefactid'];
+
+            // Add all artefacts found in the blogpost text
+            $blogpost = $instance->get_artefact_instance($configdata['artefactid']);
+            $artefacts = array_unique(array_merge($artefacts, $blogpost->get_referenced_artefacts_from_postbody()));
+        }
+        return $artefacts;
+    }
+
     public static function has_instance_config() {
         return true;
     }

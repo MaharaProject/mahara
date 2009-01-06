@@ -376,14 +376,20 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
     /**
-     * This function extends ArtefactType::commit() by adding additional data
+     * This method extends ArtefactType::commit() by adding additional data
      * into the artefact_blog_blogpost table.
+     *
+     * This method also works out what blockinstances this blogpost is in, and 
+     * informs them that they should re-check what artefacts they have in them.
+     * The post content may now link to different artefacts. See {@link 
+     * PluginBlocktypeBlogPost::get_artefacts for more information}
      */
     public function commit() {
         if (empty($this->dirty)) {
             return;
         }
 
+        db_begin();
         $new = empty($this->id);
       
         parent::commit();
@@ -402,6 +408,26 @@ class ArtefactTypeBlogPost extends ArtefactType {
             update_record('artefact_blog_blogpost', $data, 'blogpost');
         }
 
+        // We want to get all blockinstances that contain this blog post. That is currently:
+        // 1) All blogpost blocktypes with this post in it
+        // 2) All blog blocktypes with this posts's blog in it
+        //
+        // With these, we tell them to rebuild what artefacts they have in them, 
+        // since the post content could have changed and now have links to 
+        // different artefacts in it
+        $blockinstanceids = (array)get_column_sql('SELECT block
+            FROM {view_artefact}
+            WHERE artefact = ?
+            OR artefact = ?', array($this->get('id'), $this->get('parent')));
+        if ($blockinstanceids) {
+            require_once(get_config('docroot') . 'blocktype/lib.php');
+            foreach ($blockinstanceids as $id) {
+                $instance = new BlockInstance($id);
+                $instance->rebuild_artefact_list();
+            }
+        }
+
+        db_commit();
         $this->dirty = false;
     }
 
@@ -843,6 +869,14 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $blogid = $blog->get('id');
 
         return $blogid;
+    }
+
+    /**
+     * Looks through the blog post text for links to download artefacts, and 
+     * returns the IDs of those artefacts.
+     */
+    public function get_referenced_artefacts_from_postbody() {
+        return artefact_get_references_in_html($this->get('description'));
     }
 }
 

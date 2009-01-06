@@ -90,6 +90,42 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         );
     }
 
+    /**
+     * Returns a list of artefact IDs that are in this blockinstance.
+     *
+     * {@internal{Because links to artefacts within blogposts don't count
+     * as making those artefacts 'children' of the blog post, we have to add 
+     * them directly to the blog.}}
+     *
+     * @return array List of artefact IDs that are 'in' this blog - all 
+     *               blogposts in it plus all links to other artefacts that are 
+     *               part of the blogpost text. Note that proper artefact 
+     *               children, such as blog post attachments, aren't included - 
+     *               the artefact parent cache is used for them
+     * @see PluginBlocktypeBlogPost::get_artefacts()
+     */
+    public static function get_artefacts(BlockInstance $instance) {
+        $configdata = $instance->get('configdata');
+        $artefacts = array();
+        if (isset($configdata['artefactid'])) {
+            $artefacts[] = $configdata['artefactid'];
+
+            // Artefacts that are linked to directly in blog post text aren't 
+            // strictly children of blog posts, which means that 
+            // artefact_in_view won't understand that they are "within the 
+            // blog". We have to help it here directly by working out what 
+            // artefacts are linked to in all of this blog's blog posts.
+            $blog = $instance->get_artefact_instance($configdata['artefactid']);
+            if ($blogposts = $blog->get_children_instances()) {
+                foreach ($blogposts as $blogpost) {
+                    $artefacts = array_merge($artefacts, $blogpost->get_referenced_artefacts_from_postbody());
+                }
+                $artefacts = array_unique($artefacts);
+            }
+        }
+        return $artefacts;
+    }
+
     public static function artefactchooser_element($default=null) {
         return array(
             'name'  => 'artefactid',

@@ -1005,4 +1005,26 @@ function artefact_owner_sql($userid=null, $groupid=null, $institution=null) {
     return null;
 }
 
+/**
+ * Given a string of html, look for references to artefacts in it and return a 
+ * list of artefact IDs found
+ *
+ * @return array List of artefact IDs found
+ */
+function artefact_get_references_in_html($html) {
+    $matches = array();
+
+    // Look for links to artefacts
+    preg_match_all('#<a[^>]+href="[^>]+artefact/file/download\.php\?file=(\d+)#', $html, $matches);
+    $artefacts = $matches[1];
+
+    // Look for images sourcing artefacts
+    preg_match_all('#<img[^>]+src="[^>]+artefact/file/download\.php\?file=(\d+)#', $html, $matches);
+    $artefacts = array_unique(array_merge($artefacts, $matches[1]));
+
+    // TODO: might have to look for object tags etc. later
+
+    return $artefacts;
+}
+
 ?>

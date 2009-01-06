@@ -111,10 +111,14 @@ abstract class PluginBlocktype extends Plugin {
     public static function instance_config_validate(Pieform $form, $values) { }
 
     /**
-    * most Blocktype plugins will attach to artefacts.
-    * They should implement this function to keep a list of which ones
-    * note that it should just handle top level artefacts.
-    * the cache rebuilder will figure out the children.
+    * Most blocktype plugins will attach to artefacts.
+    * They should implement this function to keep a list of which ones. The 
+    * result of this method is used to populate the view_artefact table, and 
+    * thus decide whether an artefact is in a view for the purposes of access. 
+    * See {@link artefact_in_view} for more information about this.
+    *
+    * Note that it should just handle top level artefacts.
+    * The cache rebuilder will figure out the children.
     *
     * @return array ids of artefacts in this block instance
     */
@@ -248,7 +252,7 @@ abstract class PluginBlocktype extends Plugin {
 
 abstract class SystemBlockType extends PluginBlockType {
 
-    public final static function get_artefacts(BlockInstance $instance) {
+    public static function get_artefacts(BlockInstance $instance) {
         return array();
     }
 
@@ -679,6 +683,7 @@ class BlockInstance {
      */
     public function get_view() {
         if (empty($this->view_obj)) {
+            require_once('view.php');
             $this->view_obj = new View($this->get('view'));
         }
         return $this->view_obj;
