@@ -36,8 +36,6 @@ $key   = param_variable('key');
 
 $row = get_record('artefact_internal_profile_email', 'email', $email, 'key', $key, null,null,'owner,artefact,email,verified,' . db_format_tsfield('expiry'));
 
-$smarty = smarty();
-
 if ($row && $row->expiry > time()) {
     if ($row->artefact) {
         $artefact = new ArtefactTypeEmail($row->artefact);
@@ -63,14 +61,12 @@ if ($row && $row->expiry > time()) {
             'email' => $row->email,
         )
     );
-
-    set_cookie('validated_email', $row->email);
-    $smarty->assign('message', get_string('emailactivationsucceeded', 'artefact.internal'));
-}
-else {
-    $smarty->assign('message', get_string('emailactivationfailed', 'artefact.internal'));
+    $SESSION->add_ok_msg(get_string('emailactivationsucceeded', 'artefact.internal'));
+    redirect(get_config('wwwroot') . 'artefact/internal/index.php?fs=contact');
 }
 
+$smarty = smarty();
+$smarty->assign('message', get_string('emailactivationfailed', 'artefact.internal'));
 $smarty->display('artefact:internal:validate.tpl');
 
 ?>

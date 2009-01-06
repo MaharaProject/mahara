@@ -75,47 +75,6 @@
 
         removeElement(x.parentNode);
     }
-
-    function {{$name}}_validated(email) {
-        var email = filter(
-                function(elem) { return getNodeAttribute(elem, 'type') == 'hidden' && elem.value == email ; },
-                getElementsByTagAndClassName('input', null, '{{$name}}_list')
-        )[0];
-
-        if (!email) {
-            return;
-        }
-
-        var div = email.parentNode;
-        email = email.value;
-
-        swapDOM(
-            div,
-            DIV(
-                {'class': 'validated'},
-                LABEL(null,
-                    INPUT({'type': 'radio',  'name': '{{$name}}_selected', 'value': email}),
-                    INPUT({'type': 'hidden', 'name': '{{$name}}_valid[]' , 'value': email}),
-                    ' ' + email
-                ),
-                ' ',
-                A({'href': '', 'onclick': '{{$name}}_remove(this); return false'}, '[x]')
-            )
-        );
-    }
-
-    function {{$name}}_cookie_check() {
-        var cookie = getCookie('validated_email');
-
-        if (cookie) {
-            {{$name}}_validated(cookie);
-            clearCookie('validated_email');
-        }
-
-        callLater(1, {{$name}}_cookie_check);
-    }
-
-    addLoadEvent({{$name}}_cookie_check);
 </script>
 <!-- TODO: shouldn't have css inline -->
 <style type="text/css">
