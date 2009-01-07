@@ -121,13 +121,14 @@ $elements['messages'] = array(
     ),
     'help' => true,
 );
+$languages = get_languages();
 $elements['lang'] = array(
     'type' => 'select',
     'defaultvalue' => $prefs->lang,
     'title' => get_string('language', 'account'),
-    'options' => array_merge(array('default' => get_string('sitedefault', 'admin')), get_languages()),
+    'options' => array_merge(array('default' => get_string('sitedefault', 'admin') . ' (' . $languages[get_config('lang')] . ')'), $languages),
     'help' => true,
-    'ignore' => count(get_languages()) < 2,
+    'ignore' => count($languages) < 2,
 );
 $elements['addremovecolumns'] = array(
     'type' => 'radio',
