@@ -373,29 +373,43 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
  *
  */
 function get_languages() {
-    $langs = array();
+    static $langs = array();
 
-    foreach (language_get_searchpaths() as $searchpath) {
-        $langbase = $searchpath . '/lang/';
-        if (!$langdir = opendir($langbase)) {
-            throw new SystemException('Unable to read language directory '.$langbase);
-        }
-        while (false !== ($subdir = readdir($langdir))) {
-            $langfile = $langbase . $subdir . '/langconfig.php';
-            if ($subdir != "." && $subdir != ".." && is_readable($langfile)) {
-                if ($langname = get_string_from_file('thislanguage',$langfile)) {
-                    $langs[$subdir] = $langname;
+    if (!$langs) {
+        foreach (language_get_searchpaths() as $searchpath) {
+            $langbase = $searchpath . 'lang/';
+            if ($langdir = @opendir($langbase)) {
+                while (false !== ($subdir = readdir($langdir))) {
+                    if (preg_match('/\.utf8$/', $subdir) && is_dir($langbase . $subdir)) {
+                        $langfile = $langbase . $subdir . '/langconfig.php';
+                        if (is_readable($langfile)) {
+                            if ($langname = get_string_from_file('thislanguage', $langfile)) {
+                                $langs[$subdir] = $langname;
+                            }
+                        }
+                    }
                 }
+                closedir($langdir);
+            }
+            else {
+                log_warn('Unable to read language directory ' . $langbase);
             }
         }
-        closedir($langdir);
     }
 
     return $langs;
 }
 
+/**
+ * Returns whether the given language is installed/available for use
+ */
 function language_installed($lang) {
-    return is_readable(get_config('docroot') . 'lang/' . $lang . '/langconfig.php');
+    foreach (language_get_searchpaths() as $searchpath) {
+        if (is_readable($searchpath . 'lang/' . $lang . '/langconfig.php')) {
+            return true;
+        }
+    }
+    return false;
 }
 
 /**
