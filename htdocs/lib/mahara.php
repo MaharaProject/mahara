@@ -138,6 +138,7 @@ function ensure_sanity() {
         !check_dir_exists(get_config('dataroot') . 'smarty/compile') ||
         !check_dir_exists(get_config('dataroot') . 'smarty/cache') ||
         !check_dir_exists(get_config('dataroot') . 'sessions') ||
+        !check_dir_exists(get_config('dataroot') . 'langpacks') ||
         !check_dir_exists(get_config('dataroot') . 'htmlpurifier')) {
         throw new ConfigSanityException(get_string('couldnotmakedatadirectories', 'error'));
     }
@@ -406,12 +407,25 @@ function language_get_searchpaths() {
     static $searchpaths = array();
 
     if (!$searchpaths) {
-        $searchpaths = array(get_config('docroot'));
-        if ($langpacksearchpaths = get_config('langpacksearchpaths')) {
-            foreach ($langpacksearchpaths as $path) {
-                $searchpaths[] = (substr($path, -1) == '/') ? $path : "$path/";
+        // Construct the search path
+        $docrootpath = array(get_config('docroot'));
+
+        // Paths to language files in dataroot
+        $datarootpaths = glob(get_config('dataroot') . 'langpacks/*.utf8', GLOB_MARK | GLOB_ONLYDIR);
+
+        // langpacksearchpaths configuration variable - for experts :)
+        $lpsearchpaths = (array)get_config('langpacksearchpaths');
+        $langpacksearchpaths = array();
+        foreach ($lpsearchpaths as $path) {
+            if (is_dir($path)) {
+                $langpacksearchpaths[] = (substr($path, -1) == '/') ? $path : "$path/";
+            }
+            else {
+                log_warn("Path in langpacksearchpaths is not a directory: $path");
             }
         }
+
+        $searchpaths = array_merge($docrootpath, $datarootpaths, $langpacksearchpaths);
     }
 
     return $searchpaths;
