@@ -109,7 +109,7 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
             'title'   => get_string('email', 'artefact.internal'),
             'options' => $options,
             'defaultvalue' => (isset($configdata['email'])) ? $configdata['email'] : 0,
-            'separator' => HTML_BR,
+            'separator' => '<br />',
         );
 
         // Which fields does the user want
