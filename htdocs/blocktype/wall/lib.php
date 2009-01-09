@@ -96,6 +96,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
             'elements' => array(
                 'text' => array(
                     'type' => 'textarea',
+                    'description' => bbcode_format_post_message(),
                     'rows' => 3,
                     'cols' => 50,
                     'defaultvalue' => '',

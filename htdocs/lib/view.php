@@ -2368,6 +2368,7 @@ function add_feedback_form($attachments=false) {
         'title' => get_string('message'),
         'rows'  => 5,
         'cols'  => 80,
+        'description' => bbcode_format_post_message(),
     );
     $form['elements']['ispublic'] = array(
         'type'  => 'checkbox',

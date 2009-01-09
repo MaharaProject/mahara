@@ -783,6 +783,7 @@ $string['system'] = 'System';
 $string['done'] = 'Done';
 $string['back'] = 'Back';
 $string['alphabet'] = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z';
+$string['formatpostbbcode'] = 'You can format your post using BBCode. %sLearn more%s';
 
 // import related strings (maybe separated later)
 $string['importedfrom'] = 'Imported from %s';

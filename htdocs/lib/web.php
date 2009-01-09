@@ -2296,6 +2296,15 @@ function bbcode_img($action, $attributes, $content, $params, $node_object) {
     return '<img src="' . hsc($content) . '" alt="">';
 }
 
+/**
+ * Returns a message that can be used as help text for BBCode
+ *
+ * @return string
+ */
+function bbcode_format_post_message() {
+    return get_string('formatpostbbcode', 'mahara', '<a href="" onclick="contextualHelp(\'\',\'\',\'core\',\'site\',null,\'bbcode\',this); return false;">', '</a>');
+}
+
 
 /**
  * Displays purified html on a page with an explanatory message.
