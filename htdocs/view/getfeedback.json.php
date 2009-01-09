@@ -90,7 +90,7 @@ if ($feedback) {
             'ownedbythisuser' => !$public,
             'name'            => $record->author ? display_name($record->author) : $record->authorname,
             'date'            => format_date(strtotime($record->ctime), 'strftimedatetime'),
-            'message'         => format_whitespace($record->message),
+            'message'         => parse_bbcode($record->message),
             'ispublic'        => $record->public,
             'author'          => $record->author,
         );
