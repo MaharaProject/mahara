@@ -66,10 +66,11 @@ else {
 }
 
 $copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
+$copyright = json_encode($copyright);
 
 $javascript = <<<JAVASCRIPT
 
-var copyrightnotice = '{$copyright}';
+var copyrightnotice = {$copyright};
 var browser = new FileBrowser('filelist', 'myfiles.json.php', null, null, null, null, {$enc_folders});
 var uploader = new FileUploader('uploader', 'upload.php', {}, null, null,
                                 browser.refresh, browser.fileexists);

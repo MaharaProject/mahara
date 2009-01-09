@@ -36,11 +36,12 @@ safe_require('artefact', 'file');
 define('TITLE', get_string('adminfiles', 'admin'));
 
 $copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
+$copyright = json_encode($copyright);
 $wwwroot = get_config('wwwroot');
 
 $javascript = <<<JAVASCRIPT
 
-var copyrightnotice = '{$copyright}';
+var copyrightnotice = {$copyright};
 var browser = new FileBrowser('filelist', '{$wwwroot}artefact/file/myfiles.json.php', {'adminfiles':true});
 var uploader = new FileUploader('uploader', '{$wwwroot}artefact/file/upload.php', {'adminfiles':true}, 
                                 null, null, browser.refresh, browser.fileexists);
