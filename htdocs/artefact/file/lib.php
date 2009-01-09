@@ -579,10 +579,11 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         }
 
         $copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
+        $copyright = json_encode($copyright);
         $wwwroot = get_config('wwwroot');
 
         $javascript = <<<JAVASCRIPT
-var copyrightnotice = '{$copyright}';
+var copyrightnotice = {$copyright};
 var browser = new FileBrowser('filelist', '{$wwwroot}artefact/file/myfiles.json.php', null, null, null, null, {$enc_folders});
 var uploader = new FileUploader('uploader', '{$wwwroot}artefact/file/upload.php', {}, null, null, browser.refresh, browser.fileexists);
 browser.changedircallback = uploader.updatedestination;

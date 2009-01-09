@@ -144,6 +144,7 @@ $getstring = quotestrings(array(
 // These variables are needed by file.js.  They should really be set
 // automatically when file.js is included.
 $copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
+$copyright = json_encode($copyright);
 $wwwroot = get_config('wwwroot');
 
 
@@ -157,7 +158,7 @@ $javascript = <<<EOF
 
 
 // The file uploader uploads files to the list of blog post attachments
-var copyrightnotice = '{$copyright}';
+var copyrightnotice = {$copyright};
 // The fourth parameter below is just a hack so that the user sees
 // "Uploading file to blog post" in the upload status line.
 var uploader = new FileUploader('uploader', 'upload.php', null, {$getstring['blogpost']}, false, 
