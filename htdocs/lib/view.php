@@ -158,7 +158,6 @@ class View {
         else if (!can_view_view($templateid, $userid)) {
             throw new SystemException("View::create_from_template: User $userid is not permitted to copy View $templateid");
         }
-        log_debug($viewdata);
 
         $view = self::_create($viewdata, $userid);
 
