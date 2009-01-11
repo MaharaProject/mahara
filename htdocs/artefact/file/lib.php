@@ -260,7 +260,7 @@ class PluginArtefactFile extends PluginArtefact {
 
             if ((!isset($currentmimetypes[$description]) && $newmimetypes)
                 || ((join('', $currentmimetypes[$description]) != join('', $newmimetypes)))) {
-                log_debug('Need to update mime types for ' . $description);
+                log_debug('Updating mime types for ' . $description);
                 delete_records('artefact_file_mime_types', 'description', $description);
                 foreach ($newmimetypes as $newmimetype) {
                     $record = new StdClass;
