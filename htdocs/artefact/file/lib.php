@@ -814,7 +814,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
         $size = $um->file['size'];
         global $USER;
-        if (!$USER->quota_allowed($size) && !$data->institution) {
+        if (!isset($data->institution) && !$USER->quota_allowed($size)) {
             throw new QuotaExceededException(get_string('uploadexceedsquota', 'artefact.file'));
         }
         $data->size         = $size;
