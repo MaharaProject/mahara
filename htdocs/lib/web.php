@@ -2143,17 +2143,10 @@ function clean_html($text) {
     $config = HTMLPurifier_Config::createDefault();
     $config->set('Cache', 'SerializerPath', get_config('dataroot') . 'htmlpurifier');
 
-    $config->set('HTML', 'DefinitionID', 'Mahara customisations to default config');
-    // NOTE: this MUST be incremented if you change the configuration 
-    // definition - Talk to Nigel about it
-    $config->set('HTML', 'DefinitionRev', 1);
-
-    // This disables caching of HTMLPurifier objects. Worth having off for 
-    // development, but see note above once you're done messing with things
-    //$config->set('Core', 'DefinitionCache', null);
-
     $config->set('Core', 'Encoding', 'UTF-8');
     $config->set('HTML', 'Doctype', 'XHTML 1.0 Transitional');
+    $config->set('AutoFormat', 'Linkify', true);
+
     $customfilters = array();
     if (get_config('filters')) {
         foreach (unserialize(get_config('filters')) as $filter) {
@@ -2167,6 +2160,14 @@ function clean_html($text) {
         }
         $config->set('Filter', 'Custom', $customfilters);
     }
+
+    // These settings help identify the configuration definition. If the 
+    // definition (the $def object below) is changed (e.g. new method calls 
+    // made on it), the DefinitionRev needs to be increased. See
+    // http://htmlpurifier.org/live/configdoc/plain.html#HTML.DefinitionID
+    $config->set('HTML', 'DefinitionID', 'Mahara customisations to default config');
+    $config->set('HTML', 'DefinitionRev', 1);
+
     $def =& $config->getHTMLDefinition(true);
     $def->addAttribute('a', 'target', 'Enum#_blank,_self,_target,_top');
     $purifier = new HTMLPurifier($config);
