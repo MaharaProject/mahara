@@ -1,5 +1,4 @@
 <a name="post{$post->id}"></a>
-<div>
 
 
 <table id="forumpost">
