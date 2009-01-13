@@ -1,5 +1,4 @@
 <a name="post{$post->id}"></a>
-<div>
 
 
 <table class="forumpost">
@@ -18,4 +17,3 @@
 	<td>{$post->body}</td>
 </tr>
 </table>
-</div>
