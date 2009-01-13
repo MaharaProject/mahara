@@ -61,6 +61,10 @@ function pieform_rule_validateoptions_i18n() {/*{{{*/
         'ja.utf8' => array(
             'validateoptions' => 'オプション「 %s 」が正しくありません'
         ),
+        'es.utf8' => array(
+            'validateoptions' => 'La opción "%s" no es válida'
+        ),
+
     );
 }/*}}}*/
 
