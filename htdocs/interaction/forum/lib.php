@@ -242,7 +242,7 @@ class PluginInteractionForum extends PluginInteraction {
             FROM {group} g
             LEFT JOIN {interaction_instance} ii ON g.id = ii.group
             LEFT JOIN {interaction_forum_instance_config} ific ON ific.forum = ii.id
-            WHERE {group} = ? AND ific.field = 'autosubscribe' and ific.value = '1'",
+            WHERE \"group\" = ? AND ific.field = 'autosubscribe' and ific.value = '1'",
             array($gm['group']))) {
             db_begin();
             foreach ($forumids as $forumid) {
