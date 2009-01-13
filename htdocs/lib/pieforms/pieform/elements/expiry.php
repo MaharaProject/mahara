@@ -152,6 +152,14 @@ function pieform_element_expiry_i18n() {/*{{{*/
             'years'     => '年',
             'noenddate' => '終了日なし'
         ),
+        'es.utf8' => array(
+            'days'      => 'Días',
+            'weeks'     => 'Semanas',
+            'months'    => 'Meses',
+            'years'     => 'Años',
+            'noenddate' => 'Sin fecha de finalización'
+        ),
+
     );
 }/*}}}*/
 

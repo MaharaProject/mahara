@@ -53,6 +53,10 @@ function pieform_rule_integer_i18n() {/*{{{*/
         'ja.utf8' => array(
             'integer'   => 'フィールドは整数にしてください'
         ),
+        'es.utf8' => array(
+            'integer'   => 'Este campo debe ser un número entero'
+        ),
+
     );
 }/*}}}*/
 
