@@ -3,7 +3,7 @@
     <span class="memoryused">{str tag="memoryused" section="performance"}: {$perf_memory_total_display}</span><br>
 {/if}
 {if $perf_realtime}
-    <span class="timeused">{str tag="timeused" section="performance"}: {$perf_realtime} {str tag="seconds" section="performance"}</span><br>
+    <span class="timeused">{str tag="timeused" section="performance"}: {$perf_realtime|number_format:3} {str tag="seconds" section="performance"}</span><br>
 {/if}
 {if $perf_includecount}
     <span class="included">{str tag="included" section="performance"}: {$perf_includecount}</span><br>

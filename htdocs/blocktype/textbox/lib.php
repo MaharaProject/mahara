@@ -63,6 +63,7 @@ class PluginBlocktypeTextbox extends SystemBlocktype {
         $artefacts = array();
         $configdata = $instance->get('configdata');
         if (isset($configdata['text'])) {
+            require_once(get_config('docroot') . 'artefact/lib.php');
             $artefacts = artefact_get_references_in_html($configdata['text']);
         }
         return $artefacts;

@@ -649,10 +649,6 @@ function ViewManager() {
 
                 setOpacity(blockinstance, 1);
 
-                if (self.isIE7) {
-                    innerelement = null;
-                }
-
                 // Sadly we have to return an effect, because this requires
                 // something cancellable. Would be good to return nothing
                 return new MochiKit.Visual.Move(innerelement,
@@ -751,10 +747,6 @@ function ViewManager() {
                     hideElement(self.blockPlaceholder);
 
                     self.movingBlockType = false;
-
-                    if (self.isIE7) {
-                        innerelement = null;
-                    }
 
                     // Sadly we have to return an effect, because this requires
                     // something cancellable. Would be good to return nothing

@@ -50,6 +50,10 @@ function pieform_rule_minlength_i18n() {/*{{{*/
         'fr.utf8' => array(
             'minlength' => 'Ce champ doit contenir au moins %d caractères',
         ),
+        'es.utf8' => array(
+            'minlength' => 'Este campo debe tener como mínimo %d caracteres', 
+        ),
+
     );
 }/*}}}*/
 

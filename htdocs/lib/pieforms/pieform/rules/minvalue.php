@@ -53,6 +53,10 @@ function pieform_rule_minvalue_i18n() {/*{{{*/
         'ja.utf8' => array(
             'minvalue' => 'この値は %d 以下にすることはできません'
         ),
+        'es.utf8' => array(
+            'minvalue' => 'Este valor no puede ser inferior a %d'
+        ),
+
     );
 }/*}}}*/
 

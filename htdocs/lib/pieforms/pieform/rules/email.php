@@ -56,6 +56,10 @@ function pieform_rule_email_i18n() {/*{{{*/
         'ja.utf8' => array(
             'email' => 'メールアドレスが有効ではありません'
         ),
+        'es.utf8' => array(
+            'email' => 'Dirección de correo errónea'
+        ),
+
     );
 }/*}}}*/
 

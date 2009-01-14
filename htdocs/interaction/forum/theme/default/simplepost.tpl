@@ -1,5 +1,4 @@
 <a name="post{$post->id}"></a>
-<div>
 
 
 <table class="forumpost">
@@ -15,7 +14,6 @@
 {$post->poster|display_name|escape}</a></h5>
 	<div><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=100&amp;id={$post->poster}" alt=""></div>
 	<h5>{$post->postcount}</h5></td>
-	<td>{$post->body}</td>
+	<td>{$post->body|clean_html}</td>
 </tr>
 </table>
-</div>

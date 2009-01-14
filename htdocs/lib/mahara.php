@@ -69,6 +69,12 @@ function ensure_sanity() {
         throw new ConfigSanityException(get_string('sessionextensionnotloaded', 'error'));
     }
 
+    //Check for freetype in the gd extension
+    $gd_info = gd_info();
+    if (!$gd_info['FreeType Support']) {
+        throw new ConfigSanityException(get_string('gdfreetypenotloaded', 'error'));
+    }
+
     // register globals workaround
     if (ini_get_bool('register_globals')) {
         log_environ(get_string('registerglobals', 'error'));

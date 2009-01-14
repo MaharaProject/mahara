@@ -53,6 +53,10 @@ function pieform_rule_maxlength_i18n() {/*{{{*/
         'ja.utf8' => array(
             'maxlength' => 'このフィールドは、最大半角 %d 文字にしてください'
         ),
+        'es.utf8' => array(
+            'maxlength' => 'Este campo tiene que tener como máximo %d caracteres'
+        ),
+
     );
 }/*}}}*/
 
