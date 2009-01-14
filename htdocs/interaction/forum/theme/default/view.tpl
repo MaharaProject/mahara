@@ -8,7 +8,7 @@
 <div id="viewforum">
 <table id="forumdescription">
 <tr>
-	<td>{$forum->description}</td>
+	<td>{$forum->description|clean_text}</td>
 {if $admin}
 	<td align="right" class="nowrap">
 	<a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}" class="btn-editdk">{str tag="edittitle" section="interaction.forum"}</a></td>
