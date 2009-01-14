@@ -92,7 +92,7 @@ $networkingform = pieform(
             ),
             'proxyfieldset'    => array(
                 'type'         => 'fieldset',
-                'legend'       => get_string('proxylegend', 'admin'),
+                'legend'       => get_string('proxysettings', 'admin'),
                 'elements'     => array(
                     'proxyaddress' => array(
                         'type'          => 'text',
