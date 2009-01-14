@@ -2554,4 +2554,33 @@ function build_pagination_pagelink($class, $url, $offset, $text, $title, $disabl
     return $return;
 }
 
+function http_request($config) {
+    $ch = curl_init();
+
+    // standard curl_setopt stuff; configs passed to the function can override these
+    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    curl_setopt_array($ch, $config);
+
+    if($proxy_address = get_config('proxyaddress')) {
+        curl_setopt($ch, CURLOPT_PROXY, $proxy_address);
+
+        if($proxy_authmodel = get_config('proxyauthmodel') && $proxy_credentials = get_config('proxyauthcredentials')) {
+            // todo: actually do something with $proxy_authmodel
+            curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxy_credentials);
+        }
+    }
+
+    $result = new StdClass();
+    $result->data = curl_exec($ch);
+    $result->info = curl_getinfo($ch);
+    $result->error = curl_error($ch);
+
+
+    curl_close($ch);
+
+    return $result;
+}
+
 ?>

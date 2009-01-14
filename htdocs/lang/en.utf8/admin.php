@@ -208,6 +208,17 @@ $string['promiscuousmodeenabled'] = 'Auto-register has been enabled. ';
 $string['promiscuousmodedescription'] = 'Create an institution record for any host that connects to you, and allow its users to log on to Mahara';
 $string['wwwroot'] = 'WWW Root';
 $string['wwwrootdescription'] = 'This is the URL at which your users access this Mahara installation, and the URL the SSL keys are generated for';
+$string['proxylegend'] = 'Proxy settings';
+$string['proxyaddress'] = 'Proxy address';
+$string['proxyaddressdescription'] = 'If your site uses a proxy server to access the internet, specify the proxies in <em>hostname:portnumber</em> notation';
+$string['proxyaddressset'] = 'Proxy address set';
+$string['proxyauthmodel'] = 'Proxy authenticated model';
+$string['proxyauthmodeldescription'] = 'Select your proxy\'s authentication model, if appropriate';
+$string['proxyauthmodelset'] = 'Proxy authentication model has been set';
+$string['proxyauthcredentials'] = 'Proxy credentials';
+$string['proxyauthcredentialsdescription'] = 'Enter the credentials required for your proxy to authenticate your web server in <em>username:password</em> format';
+$string['proxyauthcredntialsset'] = 'Proxy authentication credentials set';
+
 
 // Upload CSV
 $string['csvfile'] = 'CSV File';

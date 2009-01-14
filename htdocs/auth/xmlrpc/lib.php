@@ -38,7 +38,7 @@ require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
  */
 class AuthXmlrpc extends Auth {
 
-    /**
+    /**findByWwwroot
      * Get the party started with an optional id
      * TODO: appraise
      * @param int $id   The auth instance id

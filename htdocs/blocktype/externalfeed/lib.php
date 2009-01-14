@@ -259,24 +259,20 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         }
 
         require_once('XML/Feed/Parser.php');
-        require_once('snoopy/Snoopy.class.php');
 
-        $snoopy = new Snoopy();
-        $snoopy->curl_path = '/usr/bin/curl'; // TODO: make configurable later. This is the default for debian
+        $config = array(CURLOPT_URL => $source);
 
-        // This is to disable warnings from snoopy while it performs its work. 
-        // By all means, comment out while debugging any problems
-        $oldlevel = error_reporting(0);
-        $result = $snoopy->fetch($source);
-        error_reporting($oldlevel);
+        $result = http_request($config);
 
-        if (!$result) {
-            $cache[$source] = new XML_Feed_Parser_Exception($snoopy->error);
-            throw $cache[$source];
+        if($result->data) {
+            if ($result->error) {
+                $cache[$source] = $result->error;
+                throw $cache[$source];
+            }
         }
 
         try {
-            $feed = new XML_Feed_Parser($snoopy->results, false, true, false);
+            $feed = new XML_Feed_Parser($result->data, false, true, false);
         }
         catch (XML_Feed_Parser_Exception $e) {
             $cache[$source] = $e;

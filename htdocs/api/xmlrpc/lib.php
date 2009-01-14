@@ -532,21 +532,22 @@ function get_public_key($uri, $application=null) {
     $wwwroot = dropslash(get_config('wwwroot'));
 
     $rq = xmlrpc_encode_request('system/keyswap', array($wwwroot, $openssl->certificate), array("encoding" => "utf-8"));
-    $ch = curl_init($uri . $xmlrpcserverurl);
 
-    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_USERAGENT, 'Moodle');
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $rq);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml charset=UTF-8", 'Expect: '));
+    $config = array(
+        CURLOPT_URL => $uri . $xmlrpcserverurl,
+        CURLOPT_POST => true,
+        CURLOPT_USERAGENT => 'Moodle',
+        CURLOPT_POSTFIELDS => $rq,
+        CURLOPT_HTTPHEADER => array("Content-Type: text/xml charset=UTF-8", 'Expect: '),
+    );
 
-    $raw = curl_exec($ch);
-    if (empty($raw)) {
+    $result = http_request($config);
+
+    if (empty($result->data)) {
         throw new XmlrpcClientException('CURL connection failed');
     }
 
-    $response_code        = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $response_code        = $result->info['http_code'];
     $response_code_prefix = substr($response_code, 0, 1);
 
     if ('2' != $response_code_prefix) {
@@ -557,7 +558,7 @@ function get_public_key($uri, $application=null) {
         }
     }
 
-    $res = xmlrpc_decode($raw);
+    $res = xmlrpc_decode($result->data);
     curl_close($ch);
 
     // XMLRPC error messages are returned as an array
