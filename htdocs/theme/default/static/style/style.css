@@ -2463,6 +2463,10 @@ span.breadcrumbs a {
 	text-align: right;
 	padding-right: 10px;
 }
+.postedits {
+    padding-top: 1.5em;
+    padding-left: .5em;
+}
 .deletedpost {
     color: gray;
     margin-top: 0;
