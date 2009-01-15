@@ -1032,6 +1032,14 @@ function xmldb_core_upgrade($oldversion=0) {
         delete_records_select('activity_queue', 'ctime < ?', array(db_format_timestamp(time() - (86400 * 14))));
     }
 
+    if ($oldversion < 2008040217) {
+        // Make the "port" column larger so it can handle any port number
+        $table = new XMLDBTable('host');
+        $field = new XMLDBField('portno');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 80);
+        change_field_precision($table, $field);
+    }
+
     return $status;
 
 }
