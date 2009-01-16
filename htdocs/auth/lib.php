@@ -1442,6 +1442,7 @@ function auth_generate_login_form() {
                 'type'        => 'text',
                 'title'       => get_string('username') . ':',
                 'description' => get_string('usernamedescription'),
+                'defaultvalue' => (isset($_POST['login_username'])) ? $_POST['login_username'] : '',
                 'rules' => array(
                     'required'    => true
                 )
