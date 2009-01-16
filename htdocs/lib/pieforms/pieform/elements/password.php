@@ -38,12 +38,12 @@ function pieform_element_password(Pieform $form, $element) {/*{{{*/
 }/*}}}*/
 
 function pieform_element_password_get_value(Pieform $form, $element) {/*{{{*/
-    $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
-    if (isset($global[$element['name']])) {
-        return $global[$element['name']];
-    }
-    if ($form->is_submitted() && isset($element['value'])) {
+    if (isset($element['value'])) {
         return $element['value'];
+    }
+    $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
+    if ($form->is_submitted() && isset($global[$element['name']])) {
+        return $global[$element['name']];
     }
     return null;
 }/*}}}*/
