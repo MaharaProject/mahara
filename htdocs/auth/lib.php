@@ -1420,6 +1420,12 @@ function auth_remove_old_session_files() {
     exec('find ' . escapeshellarg(get_config('dataroot') . 'sessions') . ' -type f -mtime +1 | xargs -n 1000 -r rm');
 }
 
+/**
+ * Generates the login form for the sideblock
+ *
+ * {@internal{Not sure why this form definition doesn't use 
+ * auth_get_login_form, but keep that in mind when making changes.}}
+ */
 function auth_generate_login_form() {
     if (!get_config('installed')) {
         return;
