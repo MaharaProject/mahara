@@ -1011,10 +1011,7 @@ function auth_get_login_form() {
             'type'        => 'password',
             'title'       => get_string('password') . ':',
             'description' => get_string('passworddescription'),
-            'value'       => '',
-            'rules' => array(
-                'required'    => true
-            )
+            'defaultvalue'       => '',
         ),
         'submit' => array(
             'type'  => 'submit',
@@ -1447,10 +1444,7 @@ function auth_generate_login_form() {
                 'type'        => 'password',
                 'title'       => get_string('password') . ':',
                 'description' => get_string('passworddescription'),
-                'value'       => '',
-                'rules' => array(
-                    'required'    => true
-                )
+                'defaultvalue'       => '',
             ),
             'submit' => array(
                 'type'  => 'submit',
