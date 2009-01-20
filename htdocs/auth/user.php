@@ -117,7 +117,7 @@ class User {
                 WHERE
                     id = ?';
 
-        $user = get_record_sql($sql, $id);
+        $user = get_record_sql($sql, array($id));
 
         if (false == $user) {
             throw new AuthUnknownUserException("User with id \"$id\" is not known");

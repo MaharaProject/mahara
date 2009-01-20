@@ -917,7 +917,7 @@ function can_send_message($from, $to) {
 }
 
 function load_user_institutions($userid) {
-    if (empty($userid)) {
+    if (!is_numeric($userid) || $userid < 0) {
         throw new InvalidArgumentException("couldn't load institutions, no user id specified");
     }
     if ($institutions = get_records_sql_assoc('
