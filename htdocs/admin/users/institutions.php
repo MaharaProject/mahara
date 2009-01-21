@@ -337,9 +337,9 @@ else {
                     (u.deleted = 0 OR u.id IS NULL)
                 GROUP BY
                     i.name, i.displayname, i.maxuseraccounts
+                ) a ON (a.name = ii.name)' . $where . '
                 ORDER BY
-                    i.name = \'mahara\', i.displayname
-             ) a ON (a.name = ii.name)' . $where, array());
+                    ii.name = \'mahara\', ii.displayname', array());
     if (isset($defaultinstmembers)) {
         $institutions['mahara']->members = $defaultinstmembers;
         $institutions['mahara']->staff   = '';
