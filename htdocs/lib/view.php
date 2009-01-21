@@ -435,6 +435,7 @@ class View {
         delete_records('view_access','view',$this->id);
         delete_records('view_access_group','view',$this->id);
         delete_records('view_access_usr','view',$this->id);
+        delete_records('view_autocreate_grouptype', 'view', $this->id);
         delete_records('view_tag','view',$this->id);
         delete_records('usr_watchlist_view','view',$this->id);
         if ($blockinstanceids = get_column('block_instance', 'id', 'view', $this->id)) {
