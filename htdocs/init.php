@@ -55,7 +55,7 @@ if (!is_readable($CFG->docroot . 'config.php')) {
 
 init_performance_info();
 
-require('config.php');
+require($CFG->docroot . 'config.php');
 $CFG = (object)array_merge((array)$cfg, (array)$CFG);
 require_once('config-defaults.php');
 $CFG = (object)array_merge((array)$cfg, (array)$CFG);
