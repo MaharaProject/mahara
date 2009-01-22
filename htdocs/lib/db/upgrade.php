@@ -558,6 +558,7 @@ function xmldb_core_upgrade($oldversion=0) {
         }
         if (!get_record('view', 'owner', 0, 'type', 'profile')) {
             // Install system profile view
+            require_once(get_config('libroot') . 'view.php');
             $dbtime = db_format_timestamp(time());
             $viewdata = (object) array(
                 'type'        => 'profile',
