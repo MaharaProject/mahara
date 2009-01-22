@@ -619,19 +619,28 @@ function xmldb_core_upgrade($oldversion=0) {
     if ($oldversion < 2008101602) {
         // Move artefact/internal/profileicons directory to artefact/file
         $artefactdata = get_config('dataroot') . 'artefact/';
-        rename($artefactdata . 'internal/profileicons', $artefactdata . 'file/profileicons');
-        set_field('artefact_installed_type', 'plugin', 'file', 'name', 'profileicon');
-        set_field('artefact_config', 'plugin', 'file', 'field', 'profileiconwidth');
-        set_field('artefact_config', 'plugin', 'file', 'field', 'profileiconheight');
+        if (is_dir($artefactdata . 'internal/profileicons')) {
+            if (!is_dir($artefactdata . 'file')) {
+                mkdir($artefactdata . 'file');
+            }
+            rename($artefactdata . 'internal/profileicons', $artefactdata . 'file/profileicons');
+            set_field('artefact_installed_type', 'plugin', 'file', 'name', 'profileicon');
+            set_field('artefact_config', 'plugin', 'file', 'field', 'profileiconwidth');
+            set_field('artefact_config', 'plugin', 'file', 'field', 'profileiconheight');
 
-        // Insert artefact_file_files records for all profileicons
-        $profileicons = get_column('artefact', 'id', 'artefacttype', 'profileicon');
-        if ($profileicons) {
-            foreach ($profileicons as $a) {
-                $filesize = filesize($artefactdata . 'file/profileicons/originals/' . ($a % 256) . '/' . $a);
-                $imagesize = getimagesize($artefactdata . 'file/profileicons/originals/' . ($a % 256) . '/' . $a);
-                insert_record('artefact_file_files', (object) array('artefact' => $a, 'fileid' => $a, 'size' => $filesize));
-                insert_record('artefact_file_image', (object) array('artefact' => $a, 'width' => $imagesize[0], 'height' => $imagesize[1]));
+            // Insert artefact_file_files records for all profileicons
+            $profileicons = get_column('artefact', 'id', 'artefacttype', 'profileicon');
+            if ($profileicons) {
+                foreach ($profileicons as $a) {
+                    $filesize = filesize($artefactdata . 'file/profileicons/originals/' . ($a % 256) . '/' . $a);
+                    if ($filesize) {
+                        $imagesize = getimagesize($artefactdata . 'file/profileicons/originals/' . ($a % 256) . '/' . $a);
+                        insert_record('artefact_file_files', (object) array('artefact' => $a, 'fileid' => $a, 'size' => $filesize));
+                        insert_record('artefact_file_image', (object) array('artefact' => $a, 'width' => $imagesize[0], 'height' => $imagesize[1]));
+                    } else {
+                        delete_records('artefact', 'id', $a);
+                    }
+                }
             }
         }
     }
