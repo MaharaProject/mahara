@@ -627,10 +627,11 @@ function core_install_firstcoredata_defaults() {
     // Install the default institution
     db_begin();
     
-    set_config('session_timeout', 1800);
+    set_config('session_timeout', 86400);
     set_config('sitename', 'Mahara');
     set_config('defaultaccountinactivewarn', 604800);
     set_config('createpublicgroups', 'admins');
+    set_config('allowpublicviews', 1);
 
     // install the applications
     $app = new StdClass;
