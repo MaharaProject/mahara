@@ -125,8 +125,10 @@ if ($groups['data']) {
                 WHERE m1.group = m2.group AND m2.member < m1.member
             )
             AND m1.group IN (" . implode($groupids, ',') . ')', array());
-        foreach ($members as $m) {
-            $groups['data'][$m->group]->members[] = (object) array('id' => $m->id, 'name' => display_name($m));
+        if ($members) {
+            foreach ($members as $m) {
+                $groups['data'][$m->group]->members[] = (object) array('id' => $m->id, 'name' => display_name($m));
+            }
         }
     }
     $groups['data'] = array_values($groups['data']);

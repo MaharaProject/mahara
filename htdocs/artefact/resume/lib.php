@@ -316,6 +316,14 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
         return array('html' => $smarty->fetch('artefact:resume:fragments/personalinformation.tpl'));
     }
 
+    public function delete() {
+        db_begin();
+
+        delete_records('artefact_resume_personal_information', 'artefact', $this->id);
+        parent::delete();
+
+        db_commit();
+    }
 }
 
 

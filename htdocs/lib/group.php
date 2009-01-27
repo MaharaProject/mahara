@@ -402,9 +402,9 @@ function group_user_can_leave($group, $userid=null) {
  * @param int $groupid ID of group
  * @param int $userid  ID of user to remove
  */
-function group_remove_user($groupid, $userid=null) {
+function group_remove_user($groupid, $userid=null, $force=false) {
     // group_user_can_leave checks the validity of groupid and userid
-    if (!group_user_can_leave($groupid, $userid)) {
+    if (!$force && !group_user_can_leave($groupid, $userid)) {
         throw new AccessDeniedException(get_string('usercantleavegroup', 'group'));
     }
     db_begin();
@@ -663,10 +663,13 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
     $groupadmins = array();
     $groupids = array_map(create_function('$a', 'return $a->id;'), $groups);
     if ($groupids) {
-        $groupadmins = (array)get_records_sql_array('SELECT "group", member
+        $groupadmins = get_records_sql_array('SELECT "group", member
             FROM {group_member}
             WHERE "group" IN (' . implode(',', db_array_to_ph($groupids)) . ")
             AND role = 'admin'", $groupids);
+        if (!$groupadmins) {
+            $groupadmins = array();
+        }
     }
 
     $i = 0;

@@ -119,6 +119,22 @@ class PluginNotificationEmaildigest extends PluginNotification {
             }
         }
     }
+
+    public static function get_event_subscriptions() {
+        $subscriptions = array(
+            (object)array(
+                'plugin'       => 'emaildigest',
+                'event'        => 'deleteuser',
+                'callfunction' => 'deleteuser',
+            ),
+        );
+        return $subscriptions;
+    }
+
+    public static function deleteuser($event, $user) {
+        delete_records('notification_emaildigest_queue', 'usr', $user['id']);
+    }
+
 }
 
 ?>

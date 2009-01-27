@@ -764,15 +764,14 @@ function delete_user($userid) {
 
     update_record('usr', $deleterec);
 
-    // Because the user is being deleted, but their email address may be wanted 
-    // for a new user, we change their email addresses to add 
-    // 'deleted.[timestamp]'
-    execute_sql('UPDATE {artefact_internal_profile_email}
-    SET email = email || ?
-    WHERE owner = ?', array($datasuffix, $userid));
-
     // Remove user from any groups they're in, invited to or want to be in
-    delete_records('group_member', 'member', $userid);
+    $groupids = get_column('group_member', '"group"', 'member', $userid);
+    if ($groupids) {
+        require_once(get_config('libroot') . 'group.php');
+        foreach ($groupids as $groupid) {
+            group_remove_user($groupid, $userid, true);
+        }
+    }
     delete_records('group_member_request', 'member', $userid);
     delete_records('group_member_invite', 'member', $userid);
 
@@ -784,8 +783,39 @@ function delete_user($userid) {
         WHERE owner = ?
         OR requester = ?', array($userid, $userid));
 
-    // Remove remote user records
+    delete_records('artefact_access_usr', 'usr', $userid);
     delete_records('auth_remote_user', 'localusr', $userid);
+    delete_records('import_queue', 'usr', $userid);
+    delete_records('usr_account_preference', 'usr', $userid);
+    delete_records('usr_activity_preference', 'usr', $userid);
+    delete_records('usr_infectedupload', 'usr', $userid);
+    delete_records('usr_institution', 'usr', $userid);
+    delete_records('usr_institution_request', 'usr', $userid);
+    delete_records('usr_password_request', 'usr', $userid);
+    delete_records('usr_watchlist_view', 'usr', $userid);
+    delete_records('view_access_usr', 'usr', $userid);
+
+    // Remove the user's views & artefacts
+    $viewids = get_column('view', 'id', 'owner', $userid);
+    if ($viewids) {
+        require_once(get_config('libroot') . 'view.php');
+        foreach ($viewids as $viewid) {
+            $view = new View($viewid);
+            $view->delete();
+        }
+    }
+    $artefactids = get_column('artefact', 'id', 'owner', $userid);
+    if ($artefactids) {
+        foreach ($artefactids as $artefactid) {
+            try {
+                $a = artefact_instance_from_id($artefactid);
+                $a->delete();
+            }
+            catch (ArtefactNotFoundException $e) {
+                // Awesome, it's already gone.
+            }
+        }
+    }
 
     db_commit();
 

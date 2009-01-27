@@ -57,6 +57,21 @@ class PluginNotificationInternal extends PluginNotification {
         return count_records('notification_internal_activity', 'usr', $userid, 'read', 0);
     }
 
+    public static function get_event_subscriptions() {
+        $subscriptions = array(
+            (object)array(
+                'plugin'       => 'internal',
+                'event'        => 'deleteuser',
+                'callfunction' => 'deleteuser',
+            ),
+        );
+        return $subscriptions;
+    }
+
+    public static function deleteuser($event, $user) {
+        delete_records('notification_internal_activity', 'usr', $user['id']);
+    }
+
 }
 
 ?>

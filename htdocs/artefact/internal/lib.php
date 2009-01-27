@@ -417,6 +417,11 @@ class ArtefactTypeEmail extends ArtefactTypeProfileField {
             }
         }
     }
+
+    public function delete() {
+        delete_records('artefact_internal_profile_email', 'artefact', $this->id);
+        parent::delete();
+    }
 }
 
 class ArtefactTypeStudentid extends ArtefactTypeProfileField {}
