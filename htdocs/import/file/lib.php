@@ -17,165 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage core
+ * @subpackage import-file
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ *
  */
 
 defined('INTERNAL') || die();
 
-function import_process_queue() {
-
-    if (!$ready = get_records_select_array('import_queue',
-        'ready = ? OR expirytime <  ?', array(1, db_format_timestamp(time())),
-        '', '*,' . db_format_tsfield('expirytime', 'ex'))) {
-        return true;
-    }
-
-    $now = time();
-
-    $processed = array();
-    foreach ($ready as $item) {
-        if ($item->ex < $now) {
-            log_debug('deleting expired import record', $item);
-            $processed[] = $item->id;
-            continue;
-        }
-        $importer = Importer::create_importer($item->id, $item);
-        try {
-            $importer->prepare();
-            $importer->process();
-            $processed[] = $item->id;
-        }
-        catch (Exception $e) {
-            log_debug('an error occured on import: ' . $e->getMessage());
-            $importer->get('importertransport')->cleanup();
-        }
-    }
-
-    if (empty($processed)) {
-        return true;
-    }
-
-    delete_records_select(
-        'import_queue',
-        'id IN ( ' . implode(',', db_array_to_ph($processed)) . ')',
-        $processed
-    );
-}
-
-abstract class Importer {
-
-    private $id;
-    private $data;
-    private $host; // this might move
-    private $expirytime;
-    private $token;
-    private $usr;
-    private $usrobj;
-    private $importertransport;
-
-    public function __construct($id, $record=null) {
-        if (empty($record)) {
-            if (!$record = get_record('import_queue', 'id', $id)) {
-                throw new NotFoundException("Failed to find import queue record with id $id");
-            }
-        }
-        foreach ((array)$record as $field => $value) {
-            if ($field == 'data' && !is_array($value)) {
-                $value = unserialize($value);
-            }
-            $this->{$field} = $value;
-        }
-        $this->usrobj = new User();
-        $this->usrobj->find_by_id($this->usr);
-
-        if (!empty($this->host)) {
-            $this->importertransport = new MnetImporterTransport($this);
-        }
-        else {
-            $this->importertransport = new LocalImporterTransport($this);
-        }
-        // we could do more here later I guess
-    }
-
-    public function prepare() {
-        $this->importertransport->prepare_files();
-    }
-
-    /**
-    * processes the files and adds them to the user's artefact area
-    */
-    public abstract function process();
-
-    public function get($field) {
-        if (!property_exists($this,$field)) {
-            throw new ParamOutOfRangeException("Field $field wasn't found in class " . get_class($this));
-        }
-        return $this->{$field};
-    }
-
-    public static function class_from_format($format) {
-        switch (trim($format)) {
-            case 'file':
-            case 'files':
-                return 'FilesImporter';
-            default:
-                // @todo more laterz (like mahara native and/or leap)
-                throw new ParamException("unknown import format $format");
-
-        }
-    }
-
-    public static function create_importer($id, $record=null) {
-        if (empty($record)) {
-            if (!$record = get_record('import_queue', 'id', $id)) {
-                throw new NotFoundException("Failed to find import queue record with id $id");
-            }
-        }
-        $class = self::class_from_format($record->format);
-        return new $class($id,$record);
-    }
-
-    public static abstract function validate_import_data($importdata);
-
-    public function import_immediately_allowed() {
-    // @todo change this (check whatever)
-        return true;
-    }
-
-    /**
-    * if we're sending stuff back to wherever we were called from
-    * use this method
-    * at the moment, the only implementation is for mnet
-    * sending back a list of file ids.
-    */
-    public function get_return_data() {
-        return array();
-    }
-}
-
-abstract class ImporterTransport {
-
-    /**
-    * this might be a path to a directory containing the files
-    * or an array containing some other info
-    * or the path to a file, depending on the format
-    */
-    public abstract function files_info();
-
-    /**
-    * do whatever is necessary to retrieve the file(s)
-    */
-    public abstract function prepare_files();
-}
-
-/**
-* base case - just import files into the artefact area as files.
-* don't interpret anything or try and create anything other than straight files.
-*/
-class FilesImporter extends Importer {
+class PluginImportFile extends PluginImport {
 
     private $manifest;
     private $files;
@@ -395,7 +246,6 @@ class MnetImporterTransport extends ImporterTransport {
         return get_string('remotehost', 'mahara', $this->host->name);
     }
 }
-
 
 
 ?>
