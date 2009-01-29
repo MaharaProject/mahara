@@ -809,8 +809,11 @@ class BlockInstance {
         $templateowner = $template->ownership();
         $sameowner = ($viewowner['type'] == $templateowner['type'] && $viewowner['id'] == $templateowner['id']);
 
-        if (!$sameowner
-            && ($copytype == 'nocopy' || !call_static_method($blocktypeclass, 'allowed_in_view', $view))) {
+        // Check to see if the block is allowed to be copied into the new View
+        if (!call_static_method($blocktypeclass, 'allowed_in_view', $view)) {
+            return false;
+        }
+        if ($copytype == 'nocopy' && !$sameowner) {
             return false;
         }
 
