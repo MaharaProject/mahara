@@ -154,7 +154,7 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
             $artefacttypes = array_diff(PluginArtefactInternal::get_contactinfo_artefact_types(), array('email'));
             $artefactids = get_column_sql('
                 SELECT id FROM {artefact}
-                WHERE owner = ? AND artefacttype IN (' . join(',', array_map('db_quote', $artefacttypes)) . ')', array($ownerid));
+                WHERE owner = ? AND artefacttype IN (' . join(',', array_map('db_quote', $artefacttypes)) . ')', array($view->get('owner')));
             $configdata['artefactids'] = $artefactids;
         }
         else {
