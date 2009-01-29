@@ -77,7 +77,6 @@ $string['onlyoneprofileviewallowed'] = 'You are only allowed one profile view';
 $string['unrecoverableerror'] = 'A nonrecoverable error occurred.  This probably means that you have encountered a bug in the system.';
 $string['unrecoverableerrortitle'] = '%s - Site Unavailable';
 $string['parameterexception'] = 'A required parameter was missing';
-$string['accessdeniedexception'] = 'You do not have access to view this page';
 
 $string['notfound'] = 'Not Found';
 $string['notfoundexception'] = 'The page you are looking for could not be found';
