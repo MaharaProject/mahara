@@ -48,13 +48,13 @@ foreach (plugin_types()  as $plugin) {
 }
 foreach (array_keys($plugins) as $plugin) {
     if (table_exists(new XMLDBTable($plugin . '_installed'))) {
-        if ($installed = get_records_array($plugin . '_installed')) {
+        if ($installed = plugins_installed($plugin, true)) {
             foreach ($installed as $i) {
                 $key = $i->name;
                 if ($plugin == 'blocktype') {
                     $key = blocktype_single_to_namespaced($i->name, $i->artefactplugin);
                 }
-                $plugins[$plugin]['installed'][$key] = array();
+                $plugins[$plugin]['installed'][$key] = array('active' => $i->active);
                 if ($plugin == 'artefact') {
                     $plugins[$plugin]['installed'][$key]['types'] = array();
                     safe_require('artefact', $key);

@@ -702,7 +702,9 @@ class View {
 
         require_once(get_config('docroot') . '/blocktype/lib.php');
         $categories = array();
-        foreach (get_records_array('blocktype_installed_category') as $blocktypecategory) {
+        $sql = 'SELECT bic.* FROM {blocktype_installed_category} bic
+            JOIN {blocktype_installed} bi  ON bic.blocktype = bi.name WHERE bi.active = 1';
+        foreach (get_records_sql_array($sql, array()) as $blocktypecategory) {
             safe_require('blocktype', $blocktypecategory->blocktype);
             if (call_static_method(generate_class_name("blocktype", $blocktypecategory->blocktype), "allowed_in_view", $this)) {
                 if (!isset($categories[$blocktypecategory->category])) {
@@ -1016,6 +1018,11 @@ class View {
     public function build_column($column, $editing=false) {
         global $USER;
         $data = $this->get_column_datastructure($column);
+        static $installed = array();
+        if (empty($installed)) {
+            $installed = plugins_installed('blocktype');
+            $installed = array_map(create_function('$a', 'return $a->name;'), $installed);
+        }
 
         if ($editing) {
             $renderfunction = 'render_editing';
@@ -1025,6 +1032,9 @@ class View {
         }
         $blockcontent = '';
         foreach($data['blockinstances'] as $blockinstance) {
+            if (!in_array($blockinstance->get('blocktype'), $installed)) {
+                continue; // this plugin has been disabled
+            }
             $configure = ($blockinstance->get('id') == $this->blockinstance_currently_being_configured);
             $result = $blockinstance->$renderfunction($configure, false);
             if ($editing) {

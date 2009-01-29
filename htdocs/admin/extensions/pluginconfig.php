@@ -39,6 +39,23 @@ define('SECTION_PLUGINNAME', $pluginname);
 define('SECTION_PAGE', 'pluginconfig');
 
 safe_require($plugintype, $pluginname);
+if ($sesskey = param_alphanum('sesskey', '')) {
+    if ($sesskey != $USER->get('sesskey')) {
+        throw new UserException('Invalid sesskey');
+    }
+}
+$enable  = param_integer('enable', 0);
+$disable = param_integer('disable', 0);
+
+if ($enable || $disable) {
+    if ($plugintype == 'blocktype') {
+        $pluginname = blocktype_namespaced_to_single($pluginname);
+    }
+    set_field($plugintype . '_installed', 'active', $enable, 'name', $pluginname);
+    $SESSION->add_ok_msg(get_string('plugin' . (($enable) ? 'enabled' : 'disabled')));
+    redirect('/admin/extensions/plugins.php');
+}
+
 if ($plugintype == 'artefact') {
     $type = param_alpha('type');
     $classname = generate_artefact_class_name($type);
