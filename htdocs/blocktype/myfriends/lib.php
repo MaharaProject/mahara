@@ -53,6 +53,11 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
     public static function render_instance(BlockInstance $instance, $editing=false) {
         global $USER;
         $userid = $instance->get_view()->get('owner');
+        if (!$userid) {
+            // 'My Friends' doesn't make sense for group/site views
+            return '';
+        }
+
         $smarty = smarty_core();
         $records = get_records_sql_array('SELECT usr1, usr2 FROM {usr_friend}
             JOIN {usr} u1 ON (u1.id = usr1 AND u1.deleted = 0)
@@ -147,7 +152,7 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
         global $USER;
         $ownerid = $instance->get_view()->get('owner');
 
-        if ($ownerid == $USER->get('id')) {
+        if ($ownerid === null || $ownerid == $USER->get('id')) {
             $title = get_string('title', 'blocktype.myfriends');
         }
         else {

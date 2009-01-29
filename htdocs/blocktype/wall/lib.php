@@ -51,6 +51,9 @@ class PluginBlocktypeWall extends SystemBlocktype {
     public static function render_instance(BlockInstance $instance, $editing=false) {
         global $USER;
         $owner = $instance->get_view()->get('owner');
+        if (!$owner) {
+            return '';
+        }
         $userid = (!empty($USER) ? $USER->get('id') : 0);
         
         $smarty = smarty_core();
@@ -185,7 +188,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
     public static function override_instance_title(BlockInstance $instance) {
         global $USER;
         $ownerid = $instance->get_view()->get('owner');
-        if ($ownerid == $USER->get('id')) {
+        if ($ownerid === null || $ownerid == $USER->get('id')) {
             return get_string('title', 'blocktype.wall');
         }
         return get_string('otherusertitle', 'blocktype.wall', display_name($ownerid, null, true));

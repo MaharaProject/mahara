@@ -50,6 +50,10 @@ class PluginBlocktypeMyGroups extends SystemBlocktype {
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $userid = $instance->get_view()->get('owner');
+        if (!$userid) {
+            return '';
+        }
+
         $smarty = smarty_core();
         require_once('group.php');
         // Group stuff
@@ -81,7 +85,7 @@ class PluginBlocktypeMyGroups extends SystemBlocktype {
     public static function override_instance_title(BlockInstance $instance) {
         global $USER;
         $ownerid = $instance->get_view()->get('owner');
-        if ($ownerid == $USER->get('id')) {
+        if ($ownerid === null || $ownerid == $USER->get('id')) {
             return get_string('title', 'blocktype.mygroups');
         }
         return get_string('otherusertitle', 'blocktype.mygroups', display_name($ownerid, null, true));
