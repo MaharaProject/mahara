@@ -679,7 +679,7 @@ JAVASCRIPT;
         return $path;
     }
 
-    public function default_parent_for_copy(&$view, &$template) {
+    public function default_parent_for_copy(&$view, &$template, $artefactstoignore) {
         static $folderid;
 
         if (!empty($folderid)) {
@@ -687,7 +687,7 @@ JAVASCRIPT;
         }
 
         $viewfilesfolder = ArtefactTypeFolder::get_folder_id(get_string('viewfilesdirname', 'view'), get_string('viewfilesdirdesc', 'view'),
-                                                             null, true, $view->get('owner'), $view->get('group'), $view->get('institution'));
+                                                             null, true, $view->get('owner'), $view->get('group'), $view->get('institution'), $artefactstoignore);
         $foldername = $view->get('id');
         $existing = get_column_sql("
             SELECT title
@@ -1061,9 +1061,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return (bool) $this->get('group');
     }
 
-    public function default_parent_for_copy(&$view, &$template) {
-        return parent::default_parent_for_copy($view, $template);
-    }
 }
 
 class ArtefactTypeFolder extends ArtefactTypeFileBase {
@@ -1179,17 +1176,41 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         }
     }
 
-    public static function get_folder_by_name($name, $parentfolderid=null, $userid=null, $groupid=null, $institution=null) {
+    /**
+     * Retrieves info from the artefact table about the folder with the given 
+     * name, in the specified directory, owned by the specified 
+     * user/group/institution.
+     *
+     * @param string $name        The name of the folder to search for
+     * @param int $parentfolderid The ID of the parent folder in which to look.
+     * @param int $userid         The ID of the user who owns the folder
+     * @param int $groupid        The ID of the group who owns the folder
+     * @param string $institution The name of the institution who owns the folder
+     * @param array $artefactstoignore A list of IDs to not consider as the given folder. See {@link default_parent_for_copy()}
+     */
+    public static function get_folder_by_name($name, $parentfolderid=null, $userid=null, $groupid=null, $institution=null, $artefactstoignore=array()) {
         $parentclause = $parentfolderid ? 'parent = ' . $parentfolderid : 'parent IS NULL';
         $ownerclause = artefact_owner_sql($userid, $groupid, $institution);
+        $ignoreclause = $artefactstoignore ? ' AND id NOT IN(' . implode(', ', array_map('db_quote', $artefactstoignore)) . ')' : '';
         return get_record_sql('SELECT * FROM {artefact}
            WHERE title = ? AND ' . $parentclause . ' AND ' . $ownerclause . "
-           AND artefacttype = 'folder'", array($name));
+           AND artefacttype = 'folder'" . $ignoreclause, array($name));
     }
 
-    // Get the id of a folder, creating the folder if necessary
-    public static function get_folder_id($name, $description, $parentfolderid=null, $create=true, $userid=null, $groupid=null, $institution=null) {
-        if (!$record = self::get_folder_by_name($name, $parentfolderid, $userid, $groupid, $institution)) {
+    /**
+     * Get the id of a folder, creating the folder if necessary
+     *
+     * @param string $name        The name of the folder to search for
+     * @param string $description The description for the folder, should a new folder need creating
+     * @param int $parentfolderid The ID of the parent folder in which to look.
+     * @param boolean $create     Whether to create a new folder if one isn't found
+     * @param int $userid         The ID of the user who owns the folder
+     * @param int $groupid        The ID of the group who owns the folder
+     * @param string $institution The name of the institution who owns the folder
+     * @param array $artefactstoignore A list of IDs to not consider as the given folder. See {@link default_parent_for_copy()}
+     */
+    public static function get_folder_id($name, $description, $parentfolderid=null, $create=true, $userid=null, $groupid=null, $institution=null, $artefactstoignore=array()) {
+        if (!$record = self::get_folder_by_name($name, $parentfolderid, $userid, $groupid, $institution, $artefactstoignore)) {
             if (!$create) {
                 return false;
             }
@@ -1241,9 +1262,6 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         }
     }
 
-    public function default_parent_for_copy(&$view, &$template) {
-        return parent::default_parent_for_copy($view, $template);
-    }
 }
 
 class ArtefactTypeImage extends ArtefactTypeFile {

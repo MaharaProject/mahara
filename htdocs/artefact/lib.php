@@ -713,11 +713,29 @@ abstract class ArtefactType {
             $this->set('parent', $artefactcopies[$copyinfo->oldparent]->newid);
         }
         else {
-            $this->set('parent', $this->default_parent_for_copy($view, $template));
+            $this->set('parent', $this->default_parent_for_copy($view, $template, array_map(create_function('$a', 'return $a->newid;'), $artefactcopies)));
         }
     }
 
-    public function default_parent_for_copy(&$view, &$template) {
+    /**
+     * Returns the ID of the artefact that should be the parent for copied 
+     * artefacts - e.g. the folder that files should be placed in.
+     *
+     * The $artefactstoignore is used to work around bug #3106
+     *
+     * @param View $view The new view being created by the copy
+     * @param View $template The view being copied from
+     * @param array $artefacttoignore A list of artefact IDs to ignore. In 
+     *                                particular, it's a list of artefact IDs 
+     *                                that have been created by a view being 
+     *                                copied. This is so we don't accidentally 
+     *                                try to use a new artefact as the parent 
+     *                                for all of the artefacts, else we can get 
+     *                                into a nasty infinite loop (e.g. when a 
+     *                                folder called 'viewfiles' is being 
+     *                                copied).
+     */
+    public function default_parent_for_copy(&$view, &$template, $artefactstoignore) {
         return null;
     }
 
