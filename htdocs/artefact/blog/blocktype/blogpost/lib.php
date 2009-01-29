@@ -109,16 +109,20 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance) {
+    public static function instance_config_form($instance, $istemplate) {
+        if ($istemplate) {
+            // No configuration when this block is in a template
+            return array();
+        }
         safe_require('artefact', 'blog');
         $configdata = $instance->get('configdata');
         return array(
-            self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null),
+            self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate),
             PluginArtefactBlog::block_advanced_options_element($configdata, 'blogpost'),
         );
     }
 
-    public static function artefactchooser_element($default=null) {
+    public static function artefactchooser_element($default=null, $istemplate=false) {
         return array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',

@@ -79,10 +79,10 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance) {
+    public static function instance_config_form($instance, $istemplate) {
         $configdata = $instance->get('configdata');
         $form = array(
-            self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null),
+            self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate),
         );
         $form['width'] = array(
                 'type' => 'text',
@@ -107,7 +107,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         return false;
     }
 
-    public static function artefactchooser_element($default=null) {
+    public static function artefactchooser_element($default=null, $istemplate=false) {
         $extraselect = 'filetype IN (' . join(',', array_map('db_quote', self::get_allowed_mimetypes())) . ')';
         $extrajoin   = ' JOIN {artefact_file_files} ON artefact_file_files.artefact = a.id ';
 
@@ -116,9 +116,6 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             'type'  => 'artefactchooser',
             'title' => get_string('media', 'blocktype.file/internalmedia'),
             'defaultvalue' => $default,
-            'rules' => array(
-                'required' => true,
-            ),
             'blocktype' => 'internalmedia',
             'limit' => 5,
             'selectone' => true,
@@ -127,6 +124,13 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             'extrajoin' => $extrajoin,
             'template' => 'artefact:file:artefactchooser-element.tpl',
         );
+        if (!$istemplate) {
+            // You don't have to choose a file if this view is a template
+            $element['rules'] = array(
+                'required' => true,
+            );
+        }
+        return $element;
     }
 
     public static function artefactchooser_get_element_data($artefact) {

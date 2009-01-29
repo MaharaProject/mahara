@@ -82,8 +82,7 @@ class PluginBlocktypeEntireresume extends PluginBlocktype {
         return array();
     }
 
-    // TODO: make decision on whether this should be abstract or not. PROBABLY SHOULD BE
-    public static function artefactchooser_element($default=null) {
+    public static function artefactchooser_element($default=null, $istemplate=false) {
     }
 
     /**

@@ -82,13 +82,16 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance) {
+    public static function instance_config_form($instance, $istemplate) {
+        if ($istemplate) {
+            return array();
+        }
         $configdata = $instance->get('configdata');
 
         $form = array();
 
         // Which resume field does the user want
-        $form[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null);
+        $form[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate);
         $form['message'] = array(
             'type' => 'html',
             'value' => get_string('filloutyourresume', 'blocktype.resume/resumefield', '<a href="' . get_config('wwwroot') . 'artefact/resume/">', '</a>'),
@@ -103,7 +106,7 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
     }
 
     // TODO: make decision on whether this should be abstract or not
-    public static function artefactchooser_element($default=null) {
+    public static function artefactchooser_element($default=null, $istemplate=false) {
         safe_require('artefact', 'resume');
         return array(
             'name'  => 'artefactid',

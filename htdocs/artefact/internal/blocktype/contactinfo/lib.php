@@ -80,7 +80,12 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance) {
+    public static function instance_config_form($instance, $istemplate) {
+        if ($istemplate) {
+            // Don't offer any configuration. Profile data needs to be reworked 
+            // so it's not artefacts before this will work
+            return array();
+        }
         $configdata = $instance->get('configdata');
 
         $form = array();
@@ -113,13 +118,13 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
         );
 
         // Which fields does the user want
-        $form[] = self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null);
+        $form[] = self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null, $istemplate);
 
         return $form;
     }
 
     // TODO: make decision on whether this should be abstract or not
-    public static function artefactchooser_element($default=null) {
+    public static function artefactchooser_element($default=null, $istemplate=false) {
         safe_require('artefact', 'internal');
         return array(
             'name'  => 'artefactids',

@@ -86,8 +86,9 @@ abstract class PluginBlocktype extends Plugin {
      * blocktype that the form is for.
      *
      * @param mixed $default The default value for the element
+     * @param boolean $istemplate Whether the View this block is in is a template
      */
-    public static abstract function artefactchooser_element($default=null);
+    public static abstract function artefactchooser_element($default=null, $istemplate=false);
 
     /**
     * subclasses can override this if they need to do something a bit special
@@ -256,7 +257,7 @@ abstract class SystemBlockType extends PluginBlockType {
         return array();
     }
 
-    public final static function artefactchooser_element($default=null) {
+    public final static function artefactchooser_element($default=null, $istemplate=false) {
     }
 
 }
@@ -515,7 +516,7 @@ class BlockInstance {
         }
 
         safe_require('blocktype', $this->get('blocktype'));
-        $elements = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_form', $this);
+        $elements = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_form', $this, $this->get_view()->get('template'));
 
         $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
         if ($this->get('title') != call_static_method($blocktypeclass, 'get_title')) {

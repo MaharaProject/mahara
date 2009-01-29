@@ -86,10 +86,10 @@ class PluginBlocktypeImage extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance) {
+    public static function instance_config_form($instance, $istemplate) {
         $configdata = $instance->get('configdata');
         return array(
-            self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null),
+            self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate),
             'showdescription' => array(
                 'type'  => 'checkbox',
                 'title' => get_string('showdescription', 'blocktype.file/image'),
@@ -109,20 +109,24 @@ class PluginBlocktypeImage extends PluginBlocktype {
         );
     }
 
-    public static function artefactchooser_element($default=null) {
-        return array(
+    public static function artefactchooser_element($default=null, $istemplate=false) {
+        $element = array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
             'title' => get_string('image'),
             'defaultvalue' => $default,
-            'rules' => array(
-                'required' => true,
-            ),
             'blocktype' => 'image',
             'limit' => 10,
             'artefacttypes' => array('image', 'profileicon'),
             'template' => 'artefact:file:artefactchooser-element.tpl',
         );
+        if (!$istemplate) {
+            // You don't have to choose a file if this view is a template
+            $element['rules'] = array(
+                'required' => true,
+            );
+        }
+        return $element;
     }
 
     /**

@@ -101,28 +101,32 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance) {
+    public static function instance_config_form($instance, $istemplate) {
         $configdata = $instance->get('configdata');
         return array(
-            self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null),
+            self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null, $istemplate),
         );
     }
 
-    public static function artefactchooser_element($default=null) {
-        return array(
+    public static function artefactchooser_element($default=null, $istemplate=false) {
+        $element = array(
             'name' => 'artefactids',
             'type'  => 'artefactchooser',
             'title' => get_string('Files', 'blocktype.file/filedownload'),
             'defaultvalue' => $default,
-            'rules' => array(
-                'required' => true,
-            ),
             'blocktype' => 'filedownload',
             'limit' => 10,
             'selectone' => false,
             'artefacttypes' => array('file', 'image', 'profileicon'),
             'template' => 'artefact:file:artefactchooser-element.tpl',
         );
+        if (!$istemplate) {
+            // You don't have to choose a file if this view is a template
+            $element['rules'] = array(
+                'required' => true,
+            );
+        }
+        return $element;
     }
 
     /**

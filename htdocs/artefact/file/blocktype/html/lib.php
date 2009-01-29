@@ -62,10 +62,10 @@ class PluginBlocktypeHtml extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance) {
+    public static function instance_config_form($instance, $istemplate) {
         $configdata = $instance->get('configdata');
         return array(
-            self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null),
+            self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate),
         );
     }
 
@@ -73,25 +73,28 @@ class PluginBlocktypeHtml extends PluginBlocktype {
         return array('html', 'htm');
     }
 
-    public static function artefactchooser_element($default=null) {
+    public static function artefactchooser_element($default=null, $istemplate=false) {
         $extraselect = '(' . implode(' OR ', array_map(
             create_function('$a', 'return "title LIKE \'%.$a\'";'),
             self::get_allowed_extensions())
         ) . ')';
-        return array(
+        $element = array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
             'title' => get_string('file', 'artefact.file'),
             'defaultvalue' => $default,
-            'rules' => array(
-                'required' => true,
-            ),
             'blocktype' => 'html',
             'limit' => 10,
             'artefacttypes' => array('file'),
             'template' => 'artefact:file:artefactchooser-element.tpl',
             'extraselect' => $extraselect,
         );
+        if (!$istemplate) {
+            $element['rules'] = array(
+                'required' => true,
+            );
+        }
+        return $element;
     }
 
     public static function get_viewtypes() {
