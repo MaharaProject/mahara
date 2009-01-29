@@ -960,8 +960,11 @@ function plugin_types_installed() {
  * 
  * @param string $plugintype type of plugin
  */
-function plugins_installed($plugintype) {
-    return get_records_array($plugintype . '_installed');
+function plugins_installed($plugintype, $all=false) {
+    if ($all) {
+        return get_records_array($plugintype . '_installed');
+    }
+    return get_records_array($plugintype . '_installed', 'active', 1);
 }
 
 /**

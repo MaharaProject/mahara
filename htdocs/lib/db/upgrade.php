@@ -541,7 +541,7 @@ function xmldb_core_upgrade($oldversion=0) {
             $field->setAttributes(XMLDB_TYPE_CHAR, 50, XMLDB_UNSIGNED, XMLDB_NOTNULL);
             change_field_notnull($table, $field);
 
-            if ($blocktypes = plugins_installed('blocktype')) {
+            if ($blocktypes = plugins_installed('blocktype', true)) {
                 foreach ($blocktypes as $bt) {
                     install_blocktype_viewtypes_for_plugin(blocktype_single_to_namespaced($bt->name, $bt->artefactplugin));
                 }
