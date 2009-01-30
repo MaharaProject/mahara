@@ -47,6 +47,10 @@ if ($sesskey = param_alphanum('sesskey', '')) {
 $enable  = param_integer('enable', 0);
 $disable = param_integer('disable', 0);
 
+if ($disable && !call_static_method(generate_class_name($plugintype, $pluginname), 'can_be_disabled')) {
+    throw new UserException("Plugin $plugintype $pluginname cannot be disabled");
+}
+
 if ($enable || $disable) {
     if ($plugintype == 'blocktype') {
         $pluginname = blocktype_namespaced_to_single($pluginname);

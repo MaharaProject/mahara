@@ -54,7 +54,11 @@ foreach (array_keys($plugins) as $plugin) {
                 if ($plugin == 'blocktype') {
                     $key = blocktype_single_to_namespaced($i->name, $i->artefactplugin);
                 }
-                $plugins[$plugin]['installed'][$key] = array('active' => $i->active);
+                safe_require($plugin, $key);
+                $plugins[$plugin]['installed'][$key] = array(
+                    'active' => $i->active,
+                    'disableable' => call_static_method(generate_class_name($plugin, $key), 'can_be_disabled'),
+                );
                 if ($plugin == 'artefact') {
                     $plugins[$plugin]['installed'][$key]['types'] = array();
                     safe_require('artefact', $key);

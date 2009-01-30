@@ -97,6 +97,9 @@ class PluginNotificationInternal extends PluginNotification {
         delete_records('notification_internal_activity', 'usr', $user['id']);
     }
 
+    public static function can_be_disabled() {
+        return false;
+    }
 }
 
 ?>

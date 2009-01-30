@@ -1180,6 +1180,15 @@ class Plugin {
     public static function get_activity_types() {
         return array();
     }
+
+    /**
+    * Can this plugin be disabled?
+    * All internal type plugins, and ones in which Mahara won't work should override this.
+    * Probably at least one plugin per plugin-type should override this.
+    */
+    public static function can_be_disabled() {
+        return true;
+    }
 }
 
 /**
