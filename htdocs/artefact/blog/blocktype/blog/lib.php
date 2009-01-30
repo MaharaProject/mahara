@@ -82,16 +82,38 @@ class PluginBlocktypeBlog extends PluginBlocktype {
     }
 
     public static function instance_config_form($instance, $istemplate) {
-        if ($istemplate) {
-            // No configuration when this block is in a template
-            return array();
-        }
+        global $USER;
         safe_require('artefact', 'blog');
         $configdata = $instance->get('configdata');
-        return array(
-            self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate),
-            PluginArtefactBlog::block_advanced_options_element($configdata, 'blog'),
-        );
+
+        if (!empty($configdata['artefactid'])) {
+            $blog = $instance->get_artefact_instance($configdata['artefactid']);
+        }
+
+        $elements = array();
+
+        // If the blog in this block is owned by the owner of the View, then 
+        // the block can be configured. Otherwise, the blog was copied in from 
+        // another View. We won't confuse users by asking them to choose a blog 
+        // to put in this block, when the one that is currently in it isn't 
+        // choosable.
+        //
+        // Note: the owner check will have to change when we do group/site 
+        // blogs
+        if (empty($configdata['artefactid']) || $blog->get('owner') == $USER->get('id')) {
+            $elements[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate);
+            if ($istemplate) {
+                $elements[] = PluginArtefactBlog::block_advanced_options_element($configdata, 'blog');
+            };
+        }
+        else {
+            $elements[] = array(
+                'type' => 'html',
+                'name' => 'notice',
+                'value' => '<div class="message">' . get_string('blogcopiedfromanotherview', 'artefact.blog', get_string('blog', 'artefact.blog')) . '</div>',
+            );
+        }
+        return $elements;
     }
 
     /**
@@ -131,20 +153,23 @@ class PluginBlocktypeBlog extends PluginBlocktype {
     }
 
     public static function artefactchooser_element($default=null, $istemplate=false) {
-        return array(
+        $element = array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
             'title' => get_string('blog', 'artefact.blog'),
             'defaultvalue' => $default,
-            'rules' => array(
-                'required' => true,
-            ),
             'blocktype' => 'blog',
             'limit'     => 10,
             'selectone' => true,
             'artefacttypes' => array('blog'),
             'template'  => 'artefact:blog:artefactchooser-element.tpl',
         );
+        if (!$istemplate) {
+            $element['rules'] = array(
+                'required' => true,
+            );
+        }
+        return $element;
     }
 
     /**
