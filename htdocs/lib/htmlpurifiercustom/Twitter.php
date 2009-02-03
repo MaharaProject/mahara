@@ -24,8 +24,8 @@ class HTMLPurifier_Filter_Twitter extends HTMLPurifier_Filter
     public function postFilter($html, $config, $context) {
         $post_regex = array(
             '#<span class="twitter-updates-js"><span class="title">([^<]+)</span><span class="username">([a-zA-Z0-9_]+)</span><span class="count">(\d+)</span></span>#',
-            '#<span class="twitter-badge-flash">([^"]+)</span>#',
-            '#<span class="twitter-timeline-badge-flash">([^"]+)</span>#',
+            '#<span class="twitter-badge-flash">([a-zA-Z0-9_=&\.,-]+)</span>#',
+            '#<span class="twitter-timeline-badge-flash">([a-zA-Z0-9_=&\.,-]+)</span>#',
         );
         $post_replace = array(
             '<div id="twitter_div"><h2 class="sidebar-title">\1</h2><ul id="twitter_update_list"></ul></div>'.
