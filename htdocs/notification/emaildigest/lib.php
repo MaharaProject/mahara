@@ -61,7 +61,7 @@ class PluginNotificationEmaildigest extends PluginNotification {
                 $type->section = "{$type->plugintype}.{$type->pluginname}";
             }
             else {
-                $$type->section = "activity";
+                $type->section = "activity";
             }
         }
 
