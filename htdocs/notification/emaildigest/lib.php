@@ -55,6 +55,16 @@ class PluginNotificationEmaildigest extends PluginNotification {
         $users = array();
         $sitename = get_config('sitename');
 
+        $types = get_records_assoc('activity_type', 'admin', 0, 'plugintype,pluginname,name', 'id,name,plugintype,pluginname');
+        foreach ($types as &$type) {
+            if (!empty($type->plugintype)) { 
+                $type->section = "{$type->plugintype}.{$type->pluginname}";
+            }
+            else {
+                $$type->section = "activity";
+            }
+        }
+
         $sql = 'SELECT q.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff,
                     p.value AS lang, q.*,' . db_format_tsfield('ctime').'
                 FROM {usr} u 
@@ -82,7 +92,7 @@ class PluginNotificationEmaildigest extends PluginNotification {
                     $users[$queue->usr]->entries = array();
                 }
                 $queue->nicetype = get_string_from_language($users[$queue->usr]->user->lang, 
-                                                            'type' . $queue->type, 'activity');
+                                                            'type' . $types[$queue->type]->name, $types[$queue->type]->section);
                 $users[$queue->usr]->entries[$queue->id] = $queue;
             }
         }
