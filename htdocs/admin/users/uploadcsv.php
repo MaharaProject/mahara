@@ -316,6 +316,8 @@ function uploadcsv_submit(Pieform $form, $values) {
             if ($field == 'username' || $field == 'password') {
                 continue;
             }
+            // Trim non-breaking spaces -- they get left in place by File_CSV
+            $record[$formatkeylookup[$field]] = preg_replace('/^(\s|\xc2\xa0)*(.*?)(\s|\xc2\xa0)*$/', '$2', $record[$formatkeylookup[$field]]);
             $profilefields->{$field} = $record[$formatkeylookup[$field]];
         }
 
