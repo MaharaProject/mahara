@@ -337,7 +337,7 @@ Please follow the link below to continue the reset process.
 
 ' . get_config('wwwroot') . 'forgotpass.php?key=%s
 
-If you have any questsions regarding the above, please feel free to contact
+If you have any questions regarding the above, please feel free to contact
 us.
 
 ' . get_config('wwwroot') . 'contact.php
@@ -354,7 +354,7 @@ $string['noinstitutionsetpassemailmessagehtml'] = '<p>Dear %s,</p>
 
 <p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>
 
-<p>If you have any questsions regarding the above, please feel free to <a href="' . get_config('wwwroot') . 'contact.php">contact us</a>.</p>
+<p>If you have any questions regarding the above, please feel free to <a href="' . get_config('wwwroot') . 'contact.php">contact us</a>.</p>
 
 <p>Regards, %s Site Administrator</p>
 
