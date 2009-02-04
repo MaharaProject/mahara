@@ -93,14 +93,14 @@ class PluginNotificationEmaildigest extends PluginNotification {
             foreach ($user->entries as $entry) {
                 $body .= get_string_from_language($lang, 'type', 'activity') . ': ' . $entry->nicetype 
                     . ' ' . get_string_from_language($lang, 'attime', 'activity')  . ' ' . format_date($entry->ctime) . "\n";
-                if (!empty($queue->subject)) {
-                    $body .= get_string_from_language($lang, 'subject') . $queue->subject ."\n";
+                if (!empty($entry->subject)) {
+                    $body .= get_string_from_language($lang, 'subject') . $entry->subject ."\n";
                 }
-                if (!empty($queue->message)) {
-                    $body .= "\n" . $queue->message;
+                if (!empty($entry->message)) {
+                    $body .= "\n" . $entry->message;
                 }
-                if (!empty($queue->url)) {
-                    $body .= "\n" . $queue->url;
+                if (!empty($entry->url)) {
+                    $body .= "\n" . $entry->url;
                 }
                 $body .= "\n\n";
             }
