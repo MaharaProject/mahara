@@ -210,6 +210,11 @@ function uploadcsv_validate(Pieform $form, $values) {
             log_info($FORMAT);
         }
         else {
+            // Trim non-breaking spaces -- they get left in place by File_CSV
+            foreach ($line as &$field) {
+                $field = preg_replace('/^(\s|\xc2\xa0)*(.*?)(\s|\xc2\xa0)*$/', '$2', $field);
+            }
+
             // We have a line with the correct number of fields, but should validate these fields
             // Note: This validation should really be methods on each profile class, that way
             // it can be used in the profile screen as well.
@@ -316,8 +321,6 @@ function uploadcsv_submit(Pieform $form, $values) {
             if ($field == 'username' || $field == 'password') {
                 continue;
             }
-            // Trim non-breaking spaces -- they get left in place by File_CSV
-            $record[$formatkeylookup[$field]] = preg_replace('/^(\s|\xc2\xa0)*(.*?)(\s|\xc2\xa0)*$/', '$2', $record[$formatkeylookup[$field]]);
             $profilefields->{$field} = $record[$formatkeylookup[$field]];
         }
 
