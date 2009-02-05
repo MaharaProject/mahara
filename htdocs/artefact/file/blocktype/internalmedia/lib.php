@@ -109,7 +109,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
 
     public static function artefactchooser_element($default=null, $istemplate=false) {
         $extraselect = 'filetype IN (' . join(',', array_map('db_quote', self::get_allowed_mimetypes())) . ')';
-        $extrajoin   = ' JOIN {artefact_file_files} ON artefact_file_files.artefact = a.id ';
+        $extrajoin   = ' JOIN {artefact_file_files} ON {artefact_file_files}.artefact = a.id ';
 
         return array(
             'name' => 'artefactid',
