@@ -1571,11 +1571,6 @@ class View {
             }
         }
 
-        $smarty = smarty_core();
-        $smarty->assign('artefacts', $result);
-        $smarty->assign('datatable', $elementname . '_data');
-        $smarty->assign('count', $totalartefacts);
-        $baseurl = View::make_base_url();
         $pagination = build_pagination(array(
             'id' => $elementname . '_pagination',
             'class' => 'ac-pagination',
