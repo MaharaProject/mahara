@@ -528,7 +528,7 @@ function group_get_removeuser_form($userid, $groupid) {
                 'type'  => 'hidden',
                 'value' => $userid,
             ),
-            'submit' => array(
+            'removeuser' => array(
                 'type'  => 'submit',
                 'value' => get_string('removefromgroup', 'group'),
             ),

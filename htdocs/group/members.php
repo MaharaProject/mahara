@@ -48,6 +48,12 @@ if (!empty($membershiptype) && $role != 'admin') {
     throw new AccessDeniedException();
 }
 
+$remove = param_variable('removeuser', null);
+$member = param_integer('member', null);
+if ($remove && $member) {
+    group_get_removeuser_form($member, $group->id);
+}
+
 // Search related stuff for member pager
 $query  = trim(param_variable('query', ''));
 $offset = param_integer('offset', 0);
