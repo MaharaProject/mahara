@@ -559,7 +559,6 @@ function get_public_key($uri, $application=null) {
     }
 
     $res = xmlrpc_decode($result->data);
-    curl_close($ch);
 
     // XMLRPC error messages are returned as an array
     // We are expecting a string
