@@ -2,6 +2,7 @@
 
 {include file="columnfullstart.tpl"}
                         <h2>{$heading}</h2>
+{$helptext}
 <div id="copyview">
 
  <div id="templatesearch" class="searchlist">

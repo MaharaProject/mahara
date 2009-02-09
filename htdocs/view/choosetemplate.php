@@ -54,12 +54,15 @@ $views->limit      = param_integer('viewlimit', 10);
 $views->copyableby = (object) array('group' => $group, 'institution' => $institution, 'owner' => null);
 if ($group) {
     $views->group = $group;
+    $helptext = get_string('choosetemplategrouppagedescription', 'view');
 }
 else if ($institution) {
     $views->institution = $institution;
+    $helptext = get_string('choosetemplateinstitutionpagedescription', 'view');
 }
 else {
     $views->copyableby->owner = $USER->get('id');
+    $helptext = get_string('choosetemplatepagedescription', 'view');
 }
 View::get_templatesearch_data($views);
 
@@ -137,6 +140,7 @@ $smarty = smarty(
 );
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('heading', TITLE);
+$smarty->assign('helptext', $helptext);
 $smarty->assign('views', $views);
 $smarty->display('view/choosetemplate.tpl');
 
