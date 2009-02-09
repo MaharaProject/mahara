@@ -95,7 +95,6 @@ function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
  */
 function pieform_element_fieldset_views_js(Pieform $form, $element) {
     // NOTE: $element['name'] is not set properly at this point
-    $element = pieform_element_artefactchooser_set_attributes($element);
     $blockname = json_encode('blockinstance_' . substr($form->get_name(), 3));
     return <<<EOF
     forEach(getElementsByTagAndClassName('legend', null, $blockname), function(legend) {
