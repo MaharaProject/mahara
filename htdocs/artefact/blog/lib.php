@@ -848,7 +848,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * blogposts but not the containing blog.  We need to create a new
      * blog to hold the copied posts.
      */
-    public function default_parent_for_copy(&$view, &$template) {
+    public function default_parent_for_copy(&$view, &$template, $artefactstoignore) {
         static $blogid;
 
         if (!empty($blogid)) {

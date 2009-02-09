@@ -167,7 +167,20 @@ abstract class PluginBlocktype extends Plugin {
         foreach ($bts as $bt) {
             $namespaced = blocktype_single_to_namespaced($bt->name, $bt->artefactplugin);
             safe_require('blocktype', $namespaced); 
-            if ($view->get('template') || call_static_method(generate_class_name('blocktype', $namespaced), 'allowed_in_view', $view)) {
+            // Note for later: this is Blocktype::allowed_in_view, which 
+            // returns true if the blocktype should be insertable into the 
+            // given view.
+            // e.g. for blogs it returns false when view owner is not set, 
+            // because blogs can't be inserted into group views.
+            // This could be different from whether a blockinstance is allowed 
+            // to be copied into a View (see the other place in this file where 
+            // allowed_in_view is called)
+            //
+            // Note also that if we want templates to be able to have all 
+            // blocktypes, we can add $view->get('template') here as part of 
+            // the condition, and also to View::addblocktype and 
+            // View::get_category_data
+            if (call_static_method(generate_class_name('blocktype', $namespaced), 'allowed_in_view', $view)) {
                 $blocktypes[] = array(
                     'name'           => $bt->name,
                     'title'          => call_static_method(generate_class_name('blocktype', $namespaced), 'get_title'),
@@ -810,6 +823,11 @@ class BlockInstance {
         $sameowner = ($viewowner['type'] == $templateowner['type'] && $viewowner['id'] == $templateowner['id']);
 
         // Check to see if the block is allowed to be copied into the new View
+        //
+        // Note for later: this is Blockinstance->allowed_in_view. This 
+        // determines whether this blockinstance should be copied into a view. 
+        // This could be a different question from BlockType::allowed_in_view! 
+        // But for now they use the same method.
         if (!call_static_method($blocktypeclass, 'allowed_in_view', $view)) {
             return false;
         }

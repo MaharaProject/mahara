@@ -699,7 +699,7 @@ class View {
         $categories = array();
         foreach (get_records_array('blocktype_installed_category') as $blocktypecategory) {
             safe_require('blocktype', $blocktypecategory->blocktype);
-            if ($this->get('template') || call_static_method(generate_class_name("blocktype", $blocktypecategory->blocktype), "allowed_in_view", $this)) {
+            if (call_static_method(generate_class_name("blocktype", $blocktypecategory->blocktype), "allowed_in_view", $this)) {
                 if (!isset($categories[$blocktypecategory->category])) {
                     $categories[$blocktypecategory->category] = array(
                         'name'  => $blocktypecategory->category,
@@ -1080,7 +1080,7 @@ class View {
         }
 
         safe_require('blocktype', $values['blocktype']);
-        if (!$this->get('template') && !call_static_method(generate_class_name('blocktype', $values['blocktype']), 'allowed_in_view', $this)) {
+        if (!call_static_method(generate_class_name('blocktype', $values['blocktype']), 'allowed_in_view', $this)) {
             throw new UserException('[translate] Cannot put ' . $values['blocktype'] . ' blocktypes into this view');
         }
 

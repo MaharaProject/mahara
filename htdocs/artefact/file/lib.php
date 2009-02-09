@@ -1368,10 +1368,6 @@ class ArtefactTypeImage extends ArtefactTypeFile {
             . '" alt=""></a></div>' . $result['html'];
         return $result;
     }
-
-    public function default_parent_for_copy(&$view, &$template) {
-        return parent::default_parent_for_copy($view, $template);
-    }
 }
 
 class ArtefactTypeProfileIcon extends ArtefactTypeImage {
@@ -1412,7 +1408,7 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
             . ($artefact % 256) . '/' . $artefact);
     }
 
-    public function default_parent_for_copy(&$view, &$template) {
+    public function default_parent_for_copy(&$view, &$template, $artefactstoignore) {
         return null;
     }
 
