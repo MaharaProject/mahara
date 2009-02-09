@@ -24,6 +24,16 @@
  *
  */
 
+//
+// MAHARA CONFIGURATION FILE
+//
+// Copy this file from config-dist.php to config.php, and change the values in 
+// it to suit your environment.
+//
+// Information about this file is available on the Mahara wiki:
+// http://wiki.mahara.org/System_Administrator%27s_Guide/Installing_Mahara#Mahara_Configuration
+//
+
 $cfg = new StdClass;
 
 
@@ -35,6 +45,10 @@ $cfg->dbport   = null;
 $cfg->dbname   = '';
 $cfg->dbuser   = '';
 $cfg->dbpass   = '';
+
+// Note: database prefix is NOT required, you don't need to set one except if 
+// you're installing Mahara into a database being shared with other 
+// applications (this happens most often on shared hosting)
 $cfg->dbprefix = '';
 
 // wwwroot - the web-visible path to your Mahara installation
@@ -43,7 +57,18 @@ $cfg->dbprefix = '';
 //$cfg->wwwroot = 'http://myhost.com/mahara/';
 
 // dataroot - uploaded files are stored here
-// must be writable by the webserver and outside document root.
+// This is a ABSOLUTE FILESYSTEM PATH. This is NOT a URL.
+// For example, valid paths are:
+//  * /home/user/maharadata
+//  * /var/lib/mahara
+//  * c:\maharadata
+// INVALID paths:
+//  * http://yoursite/files
+//  * ~/files
+//  * ../data
+//
+// This path must be writable by the webserver and outside document root (the 
+// place where the Mahara files like index.php have been installed).
 // Mahara will NOT RUN if this is inside your document root, because
 // this is a big security hole.
 $cfg->dataroot = '/path/to/uploaddir';
