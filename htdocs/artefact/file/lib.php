@@ -1133,19 +1133,13 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
              AND a.institution = 'mahara'
              AND a.parent IS NULL", array($name, 'folder'));
         if (!$folderid) {
-            global $USER;
-            if ($USER->get('admin')) {
-                $description = get_string_from_language(get_config('lang'), 
-                                                        'adminpublicdirdescription', 'admin');
-                $data = (object) array('title' => $name,
-                                       'description' => $description,
-                                       'institution' => 'mahara');
-                $f = new ArtefactTypeFolder(0, $data);
-                $f->commit();
-                $folderid = $f->get('id');
-            } else {
-                return false;
-            }
+            $description = get_string_from_language(get_config('lang'), 'adminpublicdirdescription', 'admin');
+            $data = (object) array('title' => $name,
+                                   'description' => $description,
+                                   'institution' => 'mahara');
+            $f = new ArtefactTypeFolder(0, $data);
+            $f->commit();
+            $folderid = $f->get('id');
         }
         return $folderid;
     }
