@@ -122,7 +122,7 @@ class View {
      * Creates a View for the given user, based off a given template and other 
      * View information supplied.
      *
-     * Will set a default title of 'Copy of $viewtitle' if not title is 
+     * Will set a default title of 'Copy of $viewtitle' if title is not 
      * specified in $viewdata.
      *
      * @param array $viewdata See View::_create

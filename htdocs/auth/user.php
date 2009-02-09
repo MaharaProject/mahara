@@ -396,6 +396,10 @@ class User {
     public function get_profile_view() {
         $viewid = get_field('view', 'id', 'type', 'profile', 'owner', $this->get('id'));
         if (!$viewid) {
+            global $USER;
+            if (!$USER->get('id')) {
+                return null;
+            }
             return $this->install_profile_view();
         }
         return new View($viewid);
