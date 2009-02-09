@@ -106,7 +106,7 @@ feedbacklist.updateOnLoad();
 EOF;
 
 $smarty = smarty(
-    array('mahara', 'tablerenderer', 'feedbacklist'),
+    array('mahara', 'tablerenderer', 'feedbacklist', 'artefact/resume/resumeshowhide.js'),
     array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
     array(),
     array(

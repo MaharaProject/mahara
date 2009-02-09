@@ -3,7 +3,7 @@
     {contextualhelp plugintype='artefact' pluginname='resume' section='addbook'}
 {/if}
 </h3>{/if}
-<table id="booklist{$suffix}" class="tablerenderer hidden resumefour">
+<table id="booklist{$suffix}" class="tablerenderer resumefour resumecomposite">
     <colgroup width="25%" span="1"></colgroup>
     <thead>
         <tr>
@@ -16,6 +16,14 @@
             {/if}
         </tr>
     </thead>
+    <tbody>
+        {foreach from=$rows item=row}
+        <tr class="r{cycle values=0,1}">
+            <td>{$row->date|escape}</td>
+            <td><div class="jstitle">{$row->title|escape}</div><div class="jsdescription">{$row->description|escape}</div></td>
+        </tr>
+        {/foreach}
+    </tbody>
 </table>
 {if $controls}
 <div>

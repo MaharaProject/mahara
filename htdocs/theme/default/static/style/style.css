@@ -1455,6 +1455,9 @@ fieldset.safe-hidden .mceEditor {
 #personalinformation_save_container td {
 	padding: 2px 10px;
 }
+.resumecomposite .jstitle {
+    font-weight: bold;
+}
 fieldset.collapsed .mceEditor {
 	display: none;
 }

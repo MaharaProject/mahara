@@ -355,6 +355,14 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
 
     public static abstract function get_tablerenderer_body_js_string();
 
+    /**
+     * Can be overridden to format data retrieved from artefact tables for 
+     * display of the resume artefact by render_self
+     */
+    public static function format_render_self_data($data) {
+        return $data;
+    }
+
     /** 
     * This function should return an array suitable to 
     * put into the 'elements' part of a pieform array
@@ -461,34 +469,42 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
     }
 
     public function render_self($options) {
+        global $USER;
         $suffix = '_' . substr(md5(microtime()), 0, 4);
         $smarty = smarty_core();
         $smarty->assign('hidetitle', true);
         $smarty->assign('suffix', $suffix);
         $type = $this->get('artefacttype');
+        $othertable = 'artefact_resume_' . $type;
+        $owner = $USER->get('id');
+
+        $sql = 'SELECT ar.*, a.owner
+            FROM {artefact} a 
+            JOIN {' . $othertable . '} ar ON ar.artefact = a.id
+            WHERE a.owner = ? AND a.artefacttype = ?
+            ORDER BY ar.displayorder';
+
+        if (!empty($options['viewid'])) { 
+            if (!can_view_view($options['viewid'])) {
+                throw new AccessDeniedException();
+            }
+            require_once('view.php');
+            $v = new View($options['viewid']);
+            $owner = $v->get('owner');
+        }
+
+        if (!$data = get_records_sql_array($sql, array($owner, $type))) {
+            $data = array();
+        }
+
+        // Give the artefact type a chance to format the data how it sees fit
+        $data = call_static_method(generate_artefact_class_name($type), 'format_render_self_data', $data);
+        $smarty->assign('rows', $data);
+
         $content = array(
             'html'         => $smarty->fetch('artefact:resume:fragments/' . $type . '.tpl'),
-            'javascript'   =>
-                $this->get_showhide_composite_js()
-                ."
-                var {$type}list{$suffix} = new TableRenderer(
-                   '{$type}list{$suffix}',
-                   '" . get_config('wwwroot') . "artefact/resume/composite.json.php',
-                   [
-                   " . call_static_method(generate_artefact_class_name($type), 'get_tablerenderer_js') ."
-                   ]
-                );
-
-                {$type}list{$suffix}.type = '{$type}';
-                {$type}list{$suffix}.statevars.push('type');
-                " .
-                (( array_key_exists('viewid', $options))
-                    ? "{$type}list{$suffix}.view = " . $options['viewid'] . ";
-                       {$type}list{$suffix}.statevars.push('view');"
-                    : ""
-                ) . "
-                {$type}list{$suffix}.updateOnLoad();
-            ");
+            'javascript'   => $this->get_showhide_composite_js()
+        );
         return $content;
     }
 
@@ -558,7 +574,7 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
     public static function get_tablerenderer_body_js_string() {
         return " r.positiondescription";
     }
-    
+
     public static function get_addform_elements() {
         return array(
             'startdate' => array(
@@ -620,6 +636,14 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
     public static function get_tablerenderer_title_js_string() {
         $at = get_string('at');
         return " r.qualname + ' (' + r.qualtype + ') {$at} ' + r.institution";
+    }
+
+    public static function format_render_self_data($data) {
+        $at = get_string('at');
+        foreach ($data as &$row) {
+            $row->qualification = $row->qualname . ' (' . $row->qualtype . ")  $at " . $row->institution;
+        }
+        return $data;
     }
 
     public static function get_tablerenderer_body_js_string() {
