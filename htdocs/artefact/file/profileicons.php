@@ -278,14 +278,6 @@ function settings_submit_delete(Pieform $form, $values) {
 
         db_commit();
 
-        // Now all the database manipulation has happened successfully, remove 
-        // all of the images
-        foreach ($icons as $icon) {
-            $USER->quota_remove(filesize(get_config('dataroot') . 'artefact/file/profileicons/originals/' . ($icon % 256) . '/' . $icon));
-            $USER->commit();
-            delete_image('artefact/file/profileicons', $icon);
-        }
-
         $SESSION->add_ok_msg(get_string('profileiconsdeletedsuccessfully', 'artefact.file'));
     }
     else {
