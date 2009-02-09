@@ -78,7 +78,7 @@ class AuthInternal extends Auth {
      * @return bool            Whether the password is valid
      */
     public function is_password_valid($password) {
-        if (!preg_match('/^[a-zA-Z0-9 ~!#\$%\^&\*\(\)_\-=\+\,\.<>\/\?;:"\[\]\{\}\\\|`\']{6,}$/', $password)) {
+        if (!preg_match('/^[a-zA-Z0-9 ~!@#\$%\^&\*\(\)_\-=\+\,\.<>\/\?;:"\[\]\{\}\\\|`\']{6,}$/', $password)) {
             return false;
         }
         // The password must have at least one digit and two letters in it
