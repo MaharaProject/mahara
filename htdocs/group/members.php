@@ -51,6 +51,15 @@ if (!empty($membershiptype) && $role != 'admin') {
 $remove = param_variable('removeuser', null);
 $member = param_integer('member', null);
 if ($remove && $member) {
+    // Create the remove user pieform for the user that's being removed.
+    // The form's submit function will be called as soon as the form
+    // is generated.
+    //
+    // We do this now because the user could be on the 2nd page of
+    // results, so their remove form might never get generated on
+    // this page.  And also because generating the rest of the page
+    // would be a waste of time -- the submit function just redirects
+    // back here.
     group_get_removeuser_form($member, $group->id);
 }
 
