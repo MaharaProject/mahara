@@ -393,7 +393,8 @@ function ViewManager() {
         insertSiblingNodesAfter(blockheader, DIV({'id':'blockconfig-header'}, scrapeText(blockheader) + ': ' + get_string('Configure')));
         addElementClass(blockinstance, 'configure');
         setStyle(blockinstance, {
-            'width': newwidth + 'px'
+            'width': newwidth + 'px',
+            'z-index': 1
         });
         // Move the block to the left to keep it above the old block
         var newleft = (width - newwidth) / 2;
