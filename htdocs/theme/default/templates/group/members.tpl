@@ -22,8 +22,6 @@
         </table>
     </div>
     <div id="pagination">{$pagination}</div>
-    <script type="text/javascript">{$pagination_js}</script>
-
 
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

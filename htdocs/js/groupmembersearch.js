@@ -50,7 +50,19 @@ function UserSearch() {
     this.doSearch = function() {
         self.params.action = 'search';
         sendjsonrequest('membersearchresults.php', self.params, 'POST', function(data) {
-            getElementsByTagAndClassName('tbody', null,'results')[0].innerHTML = data.data.tablerows;
+            var tbody = getElementsByTagAndClassName('tbody', null, 'results')[0];
+            if (
+                (document.all && document.documentElement && typeof(document.documentElement.style.maxHeight) != "undefined" && !window.opera)
+                    ||
+                    (/Konqueror|AppleWebKit|KHTML/.test(navigator.userAgent))) {
+                var temp = DIV({'id':'ie-workaround'});
+                temp.innerHTML = '<table><tbody>' + data.data.tablerows + '</tbody></table>';
+                swapDOM(tbody, temp.childNodes[0].childNodes[0]);
+                removeElement(temp);
+            }
+            else {
+                tbody.innerHTML = data.data.tablerows;
+            }
             $('pagination').innerHTML = data.data.pagination;
             if (data.data.count) {
                 self.rewritePaging();
