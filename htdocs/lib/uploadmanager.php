@@ -83,20 +83,6 @@ class upload_manager {
             return get_string('notphpuploadedfile');
         }
 
-        // Check the file type is allowed.
-        $type = $file['type'];
-        if ($type) {
-            if ($type != 'application/x-empty' && substr($type, 0, 5) != 'text/') {
-                $validtypes = get_column_sql('SELECT mimetype
-                    FROM {artefact_file_mime_types} m
-                    LEFT JOIN {artefact_file_file_types} f ON (m.description = f.description)
-                    WHERE f.enabled = 1');
-                if (!in_array($type, $validtypes)) {
-                    return get_string('filetypenotallowed');
-                }
-            }
-        }
-
         if (get_config('viruschecking') && ($errormsg = clam_scan_file($file))) {
             return $errormsg;
         }

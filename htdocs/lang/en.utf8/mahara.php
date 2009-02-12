@@ -515,7 +515,6 @@ $string['uploadedfiletoobig'] = 'The file was too big. Please ask your administr
 $string['notphpuploadedfile'] = 'The file was lost in the upload process. This should not happen, please contact your administrator for more information.';
 $string['virusfounduser'] = 'The file you have uploaded, %s, has been scanned by a virus checker and found to be infected! Your file upload was NOT successful.';
 $string['fileunknowntype'] = 'The type of your uploaded file could not be determined. Your file may be corrupted, or it could be a configuration problem. Please contact your administrator.';
-$string['filetypenotallowed'] = 'You are not allowed to upload files of this type. Please contact your administrator for more information.';
 $string['virusrepeatsubject'] = 'Warning: %s is a repeat virus uploader.';
 $string['virusrepeatmessage'] = 'The user %s has uploaded multiple files which have been scanned by a virus checker and found to be infected.';
 

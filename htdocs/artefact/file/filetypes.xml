@@ -3,42 +3,36 @@
     <!-- Text based formats -->
     <filetype>
         <description>txt</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>text/plain</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>html</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>text/html</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>xml</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>text/xml</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>js</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/x-javascript</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>rtf</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>text/rtf</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>sh</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/x-sh</mimetype>
         </mimetypes>
@@ -47,7 +41,6 @@
     <!-- Archive/compression formats -->
     <filetype>
         <description>zip</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/zip</mimetype>
             <mimetype>application/x-zip</mimetype>
@@ -55,7 +48,6 @@
     </filetype>
     <filetype>
         <description>tar</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/x-tar</mimetype>
             <mimetype>application/x-gtar</mimetype>
@@ -63,14 +55,12 @@
     </filetype>
     <filetype>
         <description>gz</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/g-zip</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>bz2</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/x-bzip2</mimetype>
         </mimetypes>
@@ -79,28 +69,24 @@
     <!-- Image formats -->
     <filetype>
         <description>jpeg</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>image/jpeg</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>gif</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>image/gif</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>png</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>image/png</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>bmp</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>image/bmp</mimetype>
             <mimetype>image/x-bmp</mimetype>
@@ -112,7 +98,6 @@
     <!-- Movie formats -->
     <filetype>
         <description>avi</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>video/x-ms-wm</mimetype>
             <mimetype>video/x-ms-wmv</mimetype>
@@ -122,56 +107,48 @@
     </filetype>
     <filetype>
         <description>quicktime</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>video/quicktime</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>sgi_movie</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>video/x-sgi-movie</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>m3u</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>audio/x-mpegurl</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>mpeg</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>video/mpeg</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>mp4_video</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>video/mp4</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>wmv</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>video/ms-wmv</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>swf</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/x-shockwave-flash</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>flv</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/x-flash-video</mimetype>
         </mimetypes>
@@ -180,28 +157,24 @@
     <!-- Audio types -->
     <filetype>
         <description>aiff</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>audio/x-aiff</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>au</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>audio/au</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>dss</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>video/unknown</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>mp3</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>audio/mp3</mimetype>
             <mimetype>audio/mpeg</mimetype>
@@ -209,14 +182,12 @@
     </filetype>
     <filetype>
         <description>mp4_audio</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>audio/mp4</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>ra</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>audio/x-realaudio</mimetype>
             <mimetype>audio/x-pn-realaudio</mimetype>
@@ -224,7 +195,6 @@
     </filetype>
     <filetype>
         <description>wav</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>audio/wav</mimetype>
         </mimetypes>
@@ -233,112 +203,96 @@
     <!-- Office document/presentation formats -->
     <filetype>
         <description>odt</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/vnd.oasis.opendocument.text</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>ott</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/vnd.oasis.opendocument.text-template</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>oth</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/vnd.oasis.opendocument.text-web</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>odm</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/vnd.oasis.opendocument.text-master</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>odg</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/vnd.oasis.opendocument.graphics</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>odp</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/vnd.oasis.opendocument.presentation</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>ods</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/vnd.oasis.opendocument.spreadsheet</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>odc</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/vnd.oasis.opendocument.chart</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>odf</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/vnd.oasis.opendocument.formula</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>odb</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/vnd.oasis.opendocument.database</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>odi</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/vnd.oasis.opendocument.image</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>doc</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/msword</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>ppt</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/vnd.ms-powerpoint</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>ai</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/postscript</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>latex</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/x-latex</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>pdf</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/pdf</mimetype>
         </mimetypes>
@@ -347,7 +301,6 @@
     <!-- General types -->
     <filetype>
         <description>application</description>
-        <enabled>1</enabled>
         <mimetypes>
             <mimetype>application/octet-stream</mimetype>
         </mimetypes>

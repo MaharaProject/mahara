@@ -195,84 +195,44 @@ class PluginArtefactFile extends PluginArtefact {
         db_begin();
         log_info('Beginning resync of filetype list');
 
-        $currentlist = get_column('artefact_file_file_types', 'description');
+        $currentlist = get_records_assoc('artefact_file_mime_types');
         $newlist     = xmlize(file_get_contents(get_config('docroot') . 'artefact/file/filetypes.xml'));
-        $filetypes = $newlist['filetypes']['#']['filetype'];
-        $newfiletypes = array();
+        $filetypes   = $newlist['filetypes']['#']['filetype'];
+        $newtypes    = array();
 
-        // Step one: if a filetype is in the new list that is not in the current
+        // Step one: if a mimetype is in the new list that is not in the current
         // list, add it to the current list.
         foreach ($filetypes as $filetype) {
-            $type = $filetype['#']['description'][0]['#'];
-            if (!in_array($type, $currentlist)) {
-                log_debug('Adding filetype: ' . $type);
-                $currentlist[] = $type;
-                $record = new StdClass;
-                $record->description = $type;
-                $record->enabled     = $filetype['#']['enabled'][0]['#'];
-                insert_record('artefact_file_file_types', $record);
+            $description = $filetype['#']['description'][0]['#'];
+            foreach ($filetype['#']['mimetypes'][0]['#']['mimetype'] as $type) {
+                $mimetype = $type['#'];
+                if (!isset($currentlist[$mimetype])) {
+                    log_debug('Adding mimetype: ' . $mimetype . ' (' . $description . ')');
+                    execute_sql("INSERT INTO {artefact_file_mime_types} (mimetype, description) VALUES (?,?)", array($mimetype, $description));
+                    $newtypes[$mimetype] = true;
+                }
+                else if ($currentlist[$mimetype]->description != $description) {
+                    log_debug('Updating mimetype: ' . $mimetype . ' (' . $description . ')');
+                    execute_sql("UPDATE {artefact_file_mime_types} SET description = ? WHERE mimetype = ?", array($description, $mimetype));
+                    $newtypes[$mimetype] = true;
+                }
+                $currentlist[$mimetype] = (object) array(
+                    'mimetype'    => $mimetype,
+                    'description' => $description,
+                );
             }
-            $newfiletypes[] = $type;
         }
 
-        // Step two: If a filetype is in the current list that is not in the
+        // Step two: If a mimetype is in the current list that is not in the
         // new list, remove it from the current list.
-        foreach ($currentlist as $key => $type) {
-            if (!in_array($type, $newfiletypes)) {
-                log_debug('Removing filetype: ' . $type);
-                unset($currentlist[$key]);
-                delete_records('artefact_file_mime_types', 'description', $type);
-                delete_records('artefact_file_file_types', 'description', $type);
-            }
-        }
-
-
-        // Get a list of all current mimetypes for each file type
-        $currentmimetypes = array();
-        $dbmimetypes = get_records_array('artefact_file_mime_types');
-        if ($dbmimetypes) {
-            foreach ($dbmimetypes as $mimetype) {
-                $currentmimetypes[$mimetype->description][] = $mimetype->mimetype;
-            }
-        }
-        unset($dbmimetypes);
-
-        // Step three: For each filetype in the current list, update the mime
-        // types allowed for it if necessary
-        foreach ($currentlist as $description) {
-            // Get the new mime types
-            $newmimetypes = array();
-            foreach ($filetypes as $filetype) {
-                if ($filetype['#']['description'][0]['#'] == $description) {
-                    foreach ($filetype['#']['mimetypes'][0]['#']['mimetype'] as $mimetype) {
-                        $newmimetypes[] = $mimetype['#'];
-                    }
-                }
-            }
-
-            // Roll up roll up to see the famous array_equals implementation!
-            // You'd think PHP would have a way to do this, but I couldn't find
-            // it...
-            sort($newmimetypes);
-            if (isset($currentmimetypes[$description])) {
-                sort($currentmimetypes[$description]);
-            }
-
-            if ((!isset($currentmimetypes[$description]) && $newmimetypes)
-                || ((join('', $currentmimetypes[$description]) != join('', $newmimetypes)))) {
-                log_debug('Updating mime types for ' . $description);
-                delete_records('artefact_file_mime_types', 'description', $description);
-                foreach ($newmimetypes as $newmimetype) {
-                    $record = new StdClass;
-                    $record->mimetype    = $newmimetype;
-                    $record->description = $description;
-                    insert_record('artefact_file_mime_types', $record);
-                }
+        foreach ($currentlist as $mimetype => $type) {
+            if (!isset($newtypes[$mimetype])) {
+                log_debug('Removing mimetype: ' . $mimetype);
+                delete_records('artefact_file_mime_types', 'mimetype', $mimetype);
             }
         }
        
         db_commit();
-        //db_rollback();
     }
 
 }
@@ -968,30 +928,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             'collapsible' => true
         );
 
-        // Allowed file types
-        $filetypes = array();
-        foreach (get_records_array('artefact_file_file_types', null, null, 'description') as $filetype) {
-            $filetype->description = preg_replace('/[^a-zA-Z0-9_]/', '_', $filetype->description);
-            $filetypes[$filetype->description] = array(
-                'type'  => 'checkbox',
-                'title' => get_string($filetype->description, 'artefact.file'),
-                'defaultvalue' => $filetype->enabled
-            );
-        }
-        uasort($filetypes, create_function('$a, $b', 'return $a["title"] > $b["title"];'));
-        $filetypes = array_merge(array(
-            'filetypedescription' => array(
-                'value' => '<tr><td colspan="2">' . get_string('filetypedescription', 'artefact.file') . '</td></tr>'
-            )
-        ), $filetypes);
-        $elements['filetypes'] = array(
-            'type' => 'fieldset',
-            'legend' => get_string('filetypes', 'artefact.file'),
-            'elements' => $filetypes,
-            'collapsible' => true,
-            'collapsed' => true
-        );
- 
         return array(
             'elements' => $elements,
             'renderer' => 'table'
@@ -1002,11 +938,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         set_config_plugin('artefact', 'file', 'defaultquota', $values['defaultquota']);
         set_config_plugin('artefact', 'file', 'profileiconwidth', $values['profileiconwidth']);
         set_config_plugin('artefact', 'file', 'profileiconheight', $values['profileiconheight']);
-        foreach (get_records_array('artefact_file_file_types') as $filetype) {
-            $key = preg_replace('/[^a-zA-Z0-9_]/', '_', $filetype->description);
-            $filetype->enabled = intval($values[$key]);
-            update_record('artefact_file_file_types', $filetype, 'description');
-        }
     }
 
     public function describe_size() {
