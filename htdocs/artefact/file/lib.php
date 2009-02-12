@@ -698,20 +698,18 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return get_config('dataroot') . self::get_file_directory($this->fileid) . '/' .  $this->fileid;
     }
 
-    public static function detect_artefact_type($mimetype) {
-        require_once('file.php');
-        if (is_image_mime_type($mimetype)) {
-            return 'image';
-        }
-        return 'file';
-    }
 
     /**
      * Test file type and return a new Image or File.
      */
     public static function new_file($path, $data) {
-        if ($data->filetype && self::detect_artefact_type($data->filetype) == 'image') {
-            list($data->width, $data->height) = getimagesize($path);
+        require_once('file.php');
+        if (is_image_file($path)) {
+            // If it's detected as an image, overwrite the browser mime type
+            $imageinfo      = getimagesize($path);
+            $data->filetype = $imageinfo['mime'];
+            $data->width    = $imageinfo[0];
+            $data->height   = $imageinfo[1];
             return new ArtefactTypeImage(0, $data);
         }
         return new ArtefactTypeFile(0, $data);
@@ -1245,14 +1243,6 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     public static function collapse_config() {
         return 'file';
    } 
-
-    /**
-     * err... wtf. Let's find where this method is called and change the call eh?
-     */
-    public static function is_image_mime_type($type) {
-        require_once('file.php');
-        return is_image_mime_type($type);
-    }
 
     public static function get_icon($options=null) {
         $url = get_config('wwwroot') . 'artefact/file/download.php?';

@@ -328,6 +328,43 @@ function is_image_mime_type($type) {
     return in_array($type, $supported);
 }
 
+
+/**
+ * Given an image type returned by getimagesize or exif_imagetype, returns whether
+ * Mahara thinks it is a valid image type.
+ *
+ * Not all image types are valid for Mahara. Mahara supports JPEG, PNG, GIF
+ * and BMP.
+ *
+ * @param string $type The type to check
+ * @return boolean     Whether the type is a valid image type for Mahara
+ */
+function is_image_type($type) {
+    $supported = array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG);
+    if (extension_loaded('imagick')) {
+        $supported[] = IMAGETYPE_BMP;
+    }
+    return $type && in_array($type, $supported);
+}
+
+
+/**
+ * Given path to a file, returns whether Mahara thinks it is a valid image file.
+ *
+ * Not all image types are valid for Mahara. Mahara supports JPEG, PNG, GIF
+ * and BMP.
+ *
+ * @param string $path The file to check
+ * @return boolean     Whether the file is a valid image file for Mahara
+ */
+function is_image_file($path) {
+    if (!$type = exif_imagetype($path)) {
+        return false;
+    }
+    return is_image_type($type);
+}
+
+
 /**
  * Given a path under dataroot, an ID and a size, return the path to a file
  * matching all criteria.

@@ -165,7 +165,8 @@ $filesize = 0;
 function upload_validate(Pieform $form, $values) {
     global $USER, $filesize;
     require_once('file.php');
-    if (!is_image_mime_type($values['file']['type'])) {
+    $imageinfo = getimagesize($values['file']['tmp_name']);
+    if (!$imageinfo || !is_image_type($imageinfo[2])) {
         $form->set_error('file', get_string('filenotimage'));
     }
 
@@ -179,7 +180,8 @@ function upload_validate(Pieform $form, $values) {
     }
 
     // Check the file isn't greater than the max allowable size
-    list($width, $height) = getimagesize($values['file']['tmp_name']);
+    $width          = $imageinfo[0];
+    $height         = $imageinfo[1];
     $imagemaxwidth  = get_config('imagemaxwidth');
     $imagemaxheight = get_config('imagemaxheight');
     if ($width > $imagemaxwidth || $height > $imagemaxheight) {
@@ -211,10 +213,12 @@ function upload_submit(Pieform $form, $values) {
         'owner'    => $USER->id,
         'title'    => $values['title'] ? $values['title'] : $values['file']['name'],
         'note'     => $values['file']['name'],
-        'filetype' => $values['file']['type'],
         'size'     => $filesize,
     );
-    list($data->width, $data->height) = getimagesize($values['file']['tmp_name']);
+    $imageinfo = getimagesize($values['file']['tmp_name']);
+    $data->width    = $imageinfo[0];
+    $data->height   = $imageinfo[1];
+    $data->filetype = $imageinfo['mime'];
     $artefact = new ArtefactTypeProfileIcon(0, $data);
     if (preg_match("/\.([^\.]+)$/", $values['file']['name'], $saved)) {
         $artefact->set('oldextension', $saved[1]);

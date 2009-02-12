@@ -688,6 +688,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $tempdir = self::$blogattachmentroot . ($result->tempfilename % 256);
         $result->error = $um->process_file_upload($tempdir, $result->tempfilename);
 
+        $movedfile = get_config('dataroot') . $tempdir . '/' . $result->tempfilename;
+
         if ($result->error) {
             delete_records('artefact_blog_blogpost_file_pending', 'id', $result->tempfilename);
         }
@@ -701,8 +703,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
         }
 
         db_commit();
-        safe_require('artefact', 'file');
-        $result->type = ArtefactTypeFile::detect_artefact_type($um->file['type']);
+        require_once('file.php');
+        $result->type = is_image_file($movedfile) ? 'image' : 'file';
         return $result;
     }
 
