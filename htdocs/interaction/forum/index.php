@@ -57,7 +57,7 @@ $breadcrumbs = array(
 );
 
 $forums = get_records_sql_array(
-    'SELECT f.id, f.title, f.description, m.user AS moderator, COUNT(t.id), s.forum AS subscribed
+    'SELECT f.id, f.title, f.description, m.user AS moderator, COUNT(t.id) AS topiccount, s.forum AS subscribed
     FROM {interaction_instance} f
     LEFT JOIN (
         SELECT m.forum, m.user
