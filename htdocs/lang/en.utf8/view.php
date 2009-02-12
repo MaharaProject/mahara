@@ -68,7 +68,7 @@ $string['view'] = 'view';
 $string['views'] = 'views';
 $string['View'] = 'View';
 $string['Views'] = 'Views';
-$string['viewsubmittedtogroup'] = 'This View has been submitted to <a href="' . get_config('wwwroot') . 'group/view.php?id=%s">%s</a>';
+$string['viewsubmittedtogroup'] = 'This View has been submitted to <a href="%sgroup/view.php?id=%s">%s</a>';
 $string['nobodycanseethisview2'] = 'Only you can see this View';
 $string['noviews'] = 'No Views.';
 $string['youhavenoviews'] = 'You have no Views.';

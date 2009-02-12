@@ -41,7 +41,7 @@ $string['registeredemailmessagetext'] = 'Hi %s,
 Thank you for registering an account on %s. Please follow this link to
 complete the signup process:
 
-' . get_config('wwwroot') . 'register.php?key=%s
+%sregister.php?key=%s
 
 The link will expire in 24 hours.
 
@@ -51,8 +51,7 @@ The %s Team';
 $string['registeredemailmessagehtml'] = '<p>Hi %s,</p>
 <p>Thank you for registering an account on %s. Please follow this link
 to complete the signup process:</p>
-<p><a href="' . get_config('wwwroot') . 'register.php?key=%s">'
-. get_config('wwwroot') . 'register.php?key=%s</a></p>
+<p><a href="%sregister.php?key=%s">%sregister.php?key=%s</a></p>
 <p>The link will expire in 24 hours.</p>
 
 <pre>--

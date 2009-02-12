@@ -72,7 +72,7 @@ if ($submittedgroup && group_user_can_assess_submitted_views($submittedgroup, $U
         'elements' => array(
             'submittedview' => array(
                 'type'  => 'html',
-                'value' => get_string('viewsubmittedtogroup', 'view', $submittedgroup->id, $submittedgroup->name),
+                'value' => get_string('viewsubmittedtogroup', 'view', get_config('wwwroot'), $submittedgroup->id, $submittedgroup->name),
             ),
             'submit' => array(
                 'type'  => 'submit',

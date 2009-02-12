@@ -106,7 +106,7 @@ $string['linksandresources'] = 'Links and Resources';
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section';
 $string['accountdeleted'] = 'Sorry, your account has been deleted';
 $string['accountexpired'] = 'Sorry, your account has expired';
-$string['accountcreated'] = get_config('sitename') . ': New account';
+$string['accountcreated'] = '%s: New account';
 $string['accountcreatedtext'] = 'Dear %s,
 
 A new account has been created for you on %s. Your details are as follows:
@@ -114,7 +114,7 @@ A new account has been created for you on %s. Your details are as follows:
 Username: %s
 Password: %s
 
-Visit ' . get_config('wwwroot') . ' to get started!
+Visit %s to get started!
 
 Regards, %s Site Administrator';
 $string['accountcreatedchangepasswordtext'] = 'Dear %s,
@@ -126,25 +126,25 @@ Password: %s
 
 Once you log in for the first time, you will be asked to change your password.
 
-Visit ' . get_config('wwwroot') . ' to get started!
+Visit %s to get started!
 
 Regards, %s Site Administrator';
 $string['accountcreatedhtml'] = '<p>Dear %s</p>
 
-<p>A new account has been created for you on <a href="' . get_config('wwwroot') . '">%s</a>. Your details are as follows:</p>
+<p>A new account has been created for you on <a href="%s">%s</a>. Your details are as follows:</p>
 
 <ul>
     <li><strong>Username:</strong> %s</li>
     <li><strong>Password:</strong> %s</li>
 </ul>
 
-<p>Visit <a href="' . get_config('wwwroot') . '">' . get_config('wwwroot') . '</a> to get started!</p>
+<p>Visit <a href="%s">%s</a> to get started!</p>
 
 <p>Regards, %s Site Administrator</p>
 ';
 $string['accountcreatedchangepasswordhtml'] = '<p>Dear %s</p>
 
-<p>A new account has been created for you on <a href="' . get_config('wwwroot') . '">%s</a>. Your details are as follows:</p>
+<p>A new account has been created for you on <a href="%s">%s</a>. Your details are as follows:</p>
 
 <ul>
     <li><strong>Username:</strong> %s</li>
@@ -153,7 +153,7 @@ $string['accountcreatedchangepasswordhtml'] = '<p>Dear %s</p>
 
 <p>Once you log in for the first time, you will be asked to change your password.</p>
 
-<p>Visit <a href="' . get_config('wwwroot') . '">' . get_config('wwwroot') . '</a> to get started!</p>
+<p>Visit <a href="%s">%s</a> to get started!</p>
 
 <p>Regards, %s Site Administrator</p>
 ';
@@ -270,7 +270,7 @@ $string['studentid'] = 'ID number';
 $string['displayname'] = 'Display name';
 $string['fullname'] = 'Full name';
 $string['registerstep1description'] = 'Welcome! To use this site you must first register. You must also agree to the <a href="terms.php">terms and conditions</a>. The data we collect here will be stored according to our <a href="privacy.php">privacy statement</a>.';
-$string['registerstep3fieldsoptional'] = '<h3>Choose an Optional Profile Image</h3><p>You have now successfully registered with ' . get_config('sitename') . '! You may now choose an optional profile icon to be displayed as your avatar.</p>';
+$string['registerstep3fieldsoptional'] = '<h3>Choose an Optional Profile Image</h3><p>You have now successfully registered with %s! You may now choose an optional profile icon to be displayed as your avatar.</p>';
 $string['registerstep3fieldsmandatory'] = '<h3>Fill Out Mandatory Profile Fields</h3><p>The following fields are required. You must fill them out before your registration is complete.</p>';
 $string['registeringdisallowed'] = 'Sorry, you cannot register for this system at this time';
 $string['membershipexpiry'] = 'Membership expires';
@@ -335,16 +335,16 @@ You may continue to use %s with your current username %s, but you must set a new
 
 Please follow the link below to continue the reset process.
 
-' . get_config('wwwroot') . 'forgotpass.php?key=%s
+%sforgotpass.php?key=%s
 
 If you have any questions regarding the above, please feel free to contact
 us.
 
-' . get_config('wwwroot') . 'contact.php
+%scontact.php
 
 Regards, %s Site Administrator
 
-' . get_config('wwwroot') . 'forgotpass.php?key=%s';
+%sforgotpass.php?key=%s';
 $string['noinstitutionsetpassemailmessagehtml'] = '<p>Dear %s,</p>
 
 <p>You are no longer a member of %s.</p>
@@ -352,13 +352,13 @@ $string['noinstitutionsetpassemailmessagehtml'] = '<p>Dear %s,</p>
 
 <p>Please follow the link below to continue the reset process.</p>
 
-<p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>
+<p><a href="%sforgotpass.php?key=%s">%sforgotpass.php?key=%s</a></p>
 
-<p>If you have any questions regarding the above, please feel free to <a href="' . get_config('wwwroot') . 'contact.php">contact us</a>.</p>
+<p>If you have any questions regarding the above, please feel free to <a href="%scontact.php">contact us</a>.</p>
 
 <p>Regards, %s Site Administrator</p>
 
-<p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>';
+<p><a href="%sforgotpass.php?key=%s">%sforgotpass.php?key=%s</a></p>';
 $string['debugemail'] = 'NOTICE: This e-mail was intended for %s <%s> but has been sent to you as per the "sendallemailto" configuration setting.';
 
 

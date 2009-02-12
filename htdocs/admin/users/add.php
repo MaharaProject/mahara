@@ -231,9 +231,9 @@ function adduser_submit(Pieform $form, $values) {
     db_commit();
 
     try {
-        email_user($user, $USER, get_string('accountcreated'),
-            get_string('accountcreatedchangepasswordtext', 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('sitename')),
-            get_string('accountcreatedchangepasswordhtml', 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('sitename'))
+        email_user($user, $USER, get_string('accountcreated', 'mahara', get_config('sitename')),
+            get_string('accountcreatedchangepasswordtext', 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('wwwroot'), get_config('sitename')),
+            get_string('accountcreatedchangepasswordhtml', 'mahara', $user->firstname, get_config('wwwroot'), get_config('sitename'), $user->username, $user->password, get_config('wwwroot'), get_config('wwwroot'), get_config('sitename'))
         );
     }
     catch (EmailException $e) {

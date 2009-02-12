@@ -359,15 +359,15 @@ function register_submit(Pieform $form, $values) {
         insert_record('usr_registration', $values);
 
         $f = fopen('/tmp/donal.txt','w');
-        fwrite($f, get_string('registeredemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), $values['key'], get_config('sitename')));
+        fwrite($f, get_string('registeredemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('sitename')));
 
         $user =(object) $values;
         $user->admin = 0;
         $user->staff = 0;
         email_user($user, null,
             get_string('registeredemailsubject', 'auth.internal', get_config('sitename')),
-            get_string('registeredemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), $values['key'], get_config('sitename')),
-            get_string('registeredemailmessagehtml', 'auth.internal', $values['firstname'], get_config('sitename'), $values['key'], $values['key'], get_config('sitename')));
+            get_string('registeredemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('sitename')),
+            get_string('registeredemailmessagehtml', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('wwwroot'), $values['key'], get_config('sitename')));
     }
     catch (EmailException $e) {
         log_warn($e);

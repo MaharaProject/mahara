@@ -340,9 +340,9 @@ function uploadcsv_submit(Pieform $form, $values) {
         foreach ($addedusers as $user) {
             $failedusers = array();
             try {
-                email_user($user, null, get_string('accountcreated'),
-                    get_string($straccountcreatedtext, 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('sitename')),
-                    get_string($straccountcreatedhtml, 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('sitename'))
+                email_user($user, null, get_string('accountcreated', 'mahara', get_config('sitename')),
+                    get_string($straccountcreatedtext, 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('wwwroot'), get_config('sitename')),
+                    get_string($straccountcreatedhtml, 'mahara', $user->firstname, get_config('wwwroot'), get_config('sitename'), $user->username, $user->password, get_config('wwwroot'), get_config('wwwroot'), get_config('sitename'))
                 );
             }
             catch (EmailException $e) {
