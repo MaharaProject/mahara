@@ -27,7 +27,7 @@
     {$topic->poster|display_name|escape}
     </a>
     </td>
-    <td class="postscount">{$topic->count|escape}</td>
+    <td class="postscount">{$topic->postcount|escape}</td>
     <td class="lastpost">
     {if !$topic->lastpostdeleted}
     <a href="{$WWWROOT}user/view.php?id={$topic->lastposter}"
