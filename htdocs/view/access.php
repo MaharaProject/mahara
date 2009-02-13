@@ -111,6 +111,7 @@ if ($institution) {
             'value'        => '<div class="description">' . get_string('copyfornewgroupsdescription', 'view') . '</div>',
         );
         $copyoptions = array('copynewuser', 'copyfornewgroups', 'copyfornewgroupsdescription');
+        $needsaccess = array('copynewuser');
         $createfor = $view->get_autocreate_grouptypes();
         foreach (group_get_grouptypes() as $grouptype) {
             safe_require('grouptype', $grouptype);
@@ -124,6 +125,7 @@ if ($institution) {
                 'defaultvalue' => $view->get('template') && in_array($grouptype, $createfor),
             );
             $copyoptions[] = 'copyfornewgroups_'.$grouptype;
+            $needsaccess[] = 'copyfornewgroups_'.$grouptype;
         }
     }
     else {
@@ -134,26 +136,43 @@ if ($institution) {
             'defaultvalue' => $view->get('template') && $view->get('copynewuser'),
         );
         $copyoptions = array('copynewuser');
+        $needsaccess = array('copynewuser');
     }
-    if (isset($form['elements']['copynewuser'])) {
-        $copyoptionstr = json_encode($copyoptions);
-        $js .= <<<EOF
+    $copyoptionstr = json_encode($copyoptions);
+    $needsaccessstr = json_encode($needsaccess);
+    $js .= <<<EOF
 function update_copy_options() {
-    forEach({$copyoptionstr}, function (id) {
-        if ($('editaccess_template').checked) {
+    if ($('editaccess_template').checked) {
+        forEach({$copyoptionstr}, function (id) {
             removeElementClass($('editaccess_'+id+'_container'), 'hidden');
-        }
-        else {
+        });
+    }
+    else {
+        forEach({$copyoptionstr}, function (id) {
             addElementClass($('editaccess_'+id+'_container'), 'hidden');
-        }
-    });
+        });
+        forEach({$needsaccessstr}, function (id) {
+            $('editaccess_'+id).checked = false;
+        });
+        update_loggedin_access();
+    }
+}
+function update_loggedin_access() {
+    if (some({$needsaccessstr}, function (id) { return $('editaccess_'+id).checked; })) {
+        ensure_loggedin_access();
+    }
+    else {
+        relax_loggedin_access();
+    }
 }
 addLoadEvent(function() {
     update_copy_options();
     connect('editaccess_template', 'onchange', update_copy_options);
+    forEach({$needsaccessstr}, function (id) {
+        connect('editaccess_'+id, 'onchange', update_loggedin_access);
+    });
 });
 EOF;
-    }
 }
 
 $form['elements']['accesslist'] = array(
