@@ -205,6 +205,16 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         PluginArtefactFile::resync_filetype_list();
     }
 
+    if ($oldversion < 2009021301) {
+        // IE has been uploading jpegs with the image/pjpeg mimetype,
+        // which is not recognised as an image by the download script.
+        // Fix all existing jpegs in the db:
+        set_field('artefact_file_files', 'filetype', 'image/jpeg', 'filetype', 'image/pjpeg');
+        // This won't happen again because we now read the contents of the
+        // uploaded file to detect image artefacts, and overwrite the mime
+        // type declared by the browser if we see an image.
+    }
+
     return $status;
 }
 
