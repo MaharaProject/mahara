@@ -54,9 +54,10 @@ if (!$USER->can_edit_view($view)) {
 
 $smarty = smarty(array('tablerenderer'), pieform_element_calendar_get_headdata(pieform_element_calendar_configure(array())), array('mahara' => array('From', 'To')));
 
+$js = '';
 if (!count_records('block_instance', 'view', $view->get('id'))) {
     $confirmmessage = get_string('reallyaddaccesstoemptyview', 'view');
-    $js = <<<EOF
+    $js .= <<<EOF
 addLoadEvent(function() {
     connect('editaccess_submit', 'onclick', function () {
         var accesslistrows = getElementsByTagAndClassName('tr', null, 'accesslistitems');
@@ -66,7 +67,6 @@ addLoadEvent(function() {
     });
 });
 EOF;
-    $smarty->assign('INLINEJAVASCRIPT', $js);
 }
 
 // @todo need a rule here that prevents stopdate being smaller than startdate
@@ -100,7 +100,7 @@ if ($institution) {
             'type'         => 'checkbox',
             'title'        => get_string('copyfornewusers', 'view'),
             'description'  => get_string('copyfornewusersdescription', 'view'),
-            'defaultvalue' => $view->get('copynewuser'),
+            'defaultvalue' => $view->get('template') && $view->get('copynewuser'),
         );
         $form['elements']['copyfornewgroups'] = array(
             'type'         => 'html',
@@ -110,6 +110,7 @@ if ($institution) {
             'type'         => 'html',
             'value'        => '<div class="description">' . get_string('copyfornewgroupsdescription', 'view') . '</div>',
         );
+        $copyoptions = array('copynewuser', 'copyfornewgroups', 'copyfornewgroupsdescription');
         $createfor = $view->get_autocreate_grouptypes();
         foreach (group_get_grouptypes() as $grouptype) {
             safe_require('grouptype', $grouptype);
@@ -120,8 +121,9 @@ if ($institution) {
             $form['elements']['copyfornewgroups_'.$grouptype] = array(
                 'type'         => 'checkbox',
                 'title'        => get_string('name', 'grouptype.' . $grouptype) . ' (' . join(', ', $jointypestrings) . ')',
-                'defaultvalue' => in_array($grouptype, $createfor),
+                'defaultvalue' => $view->get('template') && in_array($grouptype, $createfor),
             );
+            $copyoptions[] = 'copyfornewgroups_'.$grouptype;
         }
     }
     else {
@@ -129,8 +131,28 @@ if ($institution) {
             'type'         => 'checkbox',
             'title'        => get_string('copyfornewmembers', 'view'),
             'description'  => get_string('copyfornewmembersdescription', 'view', get_field('institution', 'displayname', 'name', $institution)),
-            'defaultvalue' => $view->get('copynewuser'),
+            'defaultvalue' => $view->get('template') && $view->get('copynewuser'),
         );
+        $copyoptions = array('copynewuser');
+    }
+    if (isset($form['elements']['copynewuser'])) {
+        $copyoptionstr = json_encode($copyoptions);
+        $js .= <<<EOF
+function update_copy_options() {
+    forEach({$copyoptionstr}, function (id) {
+        if ($('editaccess_template').checked) {
+            removeElementClass($('editaccess_'+id+'_container'), 'hidden');
+        }
+        else {
+            addElementClass($('editaccess_'+id+'_container'), 'hidden');
+        }
+    });
+}
+addLoadEvent(function() {
+    update_copy_options();
+    connect('editaccess_template', 'onchange', update_copy_options);
+});
+EOF;
     }
 }
 
@@ -216,14 +238,15 @@ function editaccess_submit(Pieform $form, $values) {
 
     $view->set('startdate', $values['startdate']);
     $view->set('stopdate', $values['stopdate']);
-    $view->set('template', (int) $values['template']);
+    $istemplate = (int) $values['template'];
+    $view->set('template', $istemplate);
     if (isset($values['copynewuser'])) {
-        $view->set('copynewuser', (int) $values['copynewuser']);
+        $view->set('copynewuser', (int) ($istemplate && $values['copynewuser']));
     }
     if ($institution == 'mahara') {
         $createfor = array();
         foreach (group_get_grouptypes() as $grouptype) {
-            if ($values['copyfornewgroups_'.$grouptype]) {
+            if ($istemplate && $values['copyfornewgroups_'.$grouptype]) {
                 $createfor[] = $grouptype;
             }
         }
@@ -249,7 +272,7 @@ function editaccess_submit(Pieform $form, $values) {
 
 }
 
-
+$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('pagetitle', TITLE);
 $smarty->assign('heading', TITLE);
 $smarty->assign('form', pieform($form));
