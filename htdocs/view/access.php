@@ -54,8 +54,7 @@ if (!$USER->can_edit_view($view)) {
 
 $smarty = smarty(array('tablerenderer'), pieform_element_calendar_get_headdata(pieform_element_calendar_configure(array())), array('mahara' => array('From', 'To')));
 
-$artefacts = $view->get_artefact_metadata();
-if (empty($artefacts)) {
+if (!count_records('block_instance', 'view', $view->get('id'))) {
     $confirmmessage = get_string('reallyaddaccesstoemptyview', 'view');
     $js = <<<EOF
 addLoadEvent(function() {
