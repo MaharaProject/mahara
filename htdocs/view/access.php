@@ -173,6 +173,8 @@ addLoadEvent(function() {
     });
 });
 EOF;
+} else {
+    $js .= "function update_loggedin_access() {}\n";
 }
 
 $form['elements']['accesslist'] = array(

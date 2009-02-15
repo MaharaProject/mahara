@@ -214,7 +214,6 @@ function ensure_loggedin_access() {
             elem.value = '';
             elem.disabled = true;
         }
-        
     });
 }
 function relax_loggedin_access() {
@@ -304,6 +303,7 @@ addLoadEvent(function () {
             renderAccessListItem(item);
         });
     }
+    update_loggedin_access();
 });
 
 addLoadEvent(function() {
