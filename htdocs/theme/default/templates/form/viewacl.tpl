@@ -209,7 +209,13 @@ function ensure_loggedin_access() {
     var newaccess = getFirstElementByTagAndClassName(null, 'loggedin-container', 'accesslistitems');
     addElementClass(getFirstElementByTagAndClassName(null, 'removebutton', newaccess), 'hidden');
     forEach(getElementsByTagAndClassName(null, 'pieform-calendar-toggle', newaccess), function (elem) { addElementClass(elem, 'hidden'); });
-    forEach(getElementsByTagAndClassName('input', null, newaccess), function (elem) { elem.value = null; elem.disabled = true; });
+    forEach(getElementsByTagAndClassName('input', null, newaccess), function (elem) {
+        if (elem.name.match(/\[st(art|op)date\]$/)) {
+            elem.value = '';
+            elem.disabled = true;
+        }
+        
+    });
 }
 function relax_loggedin_access() {
     forEach(getElementsByTagAndClassName(null, 'loggedin-container', $('accesslistitems')), function (elem) {

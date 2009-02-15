@@ -281,6 +281,9 @@ $string['noownersfound'] = 'No owners found';
 $string['viewsby'] = 'Views by %s';
 $string['Preview'] = 'Preview';
 $string['close'] = 'Close';
+$string['viewscopiedfornewusersmustbecopyable'] = 'You must allow copying before you can set a view to be copied for new users.';
+$string['viewscopiedfornewgroupsmustbecopyable'] = 'You must allow copying before you can set a view to be copied for new groups.';
+$string['copynewusergroupneedsloggedinaccess'] = 'Views copied for new users or groups must give access to logged-in users.';
 
 $string['blockcopypermission'] = 'Block copy permission';
 $string['blockcopypermissiondesc'] = 'If you allow other users to copy this View, you may choose how this block will be copied';

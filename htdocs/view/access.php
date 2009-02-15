@@ -220,14 +220,46 @@ $form['elements']['submit'] = array(
 );
 
 function editaccess_validate(Pieform $form, $values) {
+    global $institution, $group;
+    if ($values['copynewuser'] && !$values['template']) {
+        $form->set_error('copynewuser', get_string('viewscopiedfornewusersmustbecopyable', 'view'));
+    }
+    $createforgroup = false;
+    if ($institution == 'mahara') {
+        foreach (group_get_grouptypes() as $grouptype) {
+            if ($values['copyfornewgroups_'.$grouptype]) {
+                $createforgroup = true;
+                break;
+            }
+        }
+        if ($createforgroup && !$values['template']) {
+            $form->set_error('copyfornewgroups', get_string('viewscopiedfornewgroupsmustbecopyable', 'view'));
+        }
+    }
     if ($values['startdate'] && $values['stopdate'] && $values['startdate'] > $values['stopdate']) {
         $form->set_error('startdate', get_string('startdatemustbebeforestopdate', 'view'));
     }
-    foreach ($values['accesslist'] as $item) {
-        if ($item['startdate'] && $item['stopdate'] && $item['startdate'] > $item['stopdate']) {
-            $form->set_error('accesslist', get_string('startdatemustbebeforestopdate', 'view'));
-            break;
+    $loggedinaccess = false;
+    if ($values['accesslist']) {
+        foreach ($values['accesslist'] as $item) {
+            if (!isset($item['startdate'])) {
+                $item['startdate'] = null;
+            }
+            if (!isset($item['stopdate'])) {
+                $item['stopdate'] = null;
+            }
+            if ($item['type'] == 'loggedin' && !$item['startdate'] && !$item['stopdate']) {
+                $loggedinaccess = true;
+            }
+            if ($item['startdate'] && $item['stopdate'] && $item['startdate'] > $item['stopdate']) {
+                $form->set_error('accesslist', get_string('startdatemustbebeforestopdate', 'view'));
+                break;
+            }
         }
+    }
+    // Must have logged in user access for copy new user/group settings.
+    if (($createforgroup || $values['copynewuser']) && !$loggedinaccess) {
+        $form->set_error('accesslist', get_string('copynewusergroupneedsloggedinaccess', 'view'));
     }
 }
 
