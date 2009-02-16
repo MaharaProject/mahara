@@ -196,6 +196,7 @@ if (!empty($institutions) &&
             $options[$i->name] = $i->displayname;
         }
     }
+    natcasesort($options);
     $joinform = pieform(array(
         'name'        => 'requestmembership',
         'method'      => 'post',
