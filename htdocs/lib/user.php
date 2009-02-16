@@ -1323,7 +1323,7 @@ function install_system_profile_view() {
     )));
     $blocktypes = array('myviews' => 1, 'mygroups' => 1, 'myfriends' => 2, 'wall' => 2);  // column ids
     $installed = get_column_sql('SELECT name FROM {blocktype_installed} WHERE name IN (' . join(',', array_map('db_quote', array_keys($blocktypes))) . ')');
-    $weights = array(1 => 0, 2 => 0);
+    $weights = array(1 => 1, 2 => 0); // Leave a space for About Me in the first column
     foreach (array_keys($blocktypes) as $blocktype) {
         if (in_array($blocktype, $installed)) {
             $weights[$blocktypes[$blocktype]]++;
