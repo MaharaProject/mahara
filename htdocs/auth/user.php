@@ -705,7 +705,7 @@ class User {
                 'owner' => $this->get('id'),
                 'title' => $views[$tid]->title,
                 'description' => $views[$tid]->description,
-            ), $tid);
+            ), $tid, $this->get('id'));
         }
         db_commit();
     }
