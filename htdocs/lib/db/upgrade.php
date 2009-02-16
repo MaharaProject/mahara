@@ -751,6 +751,37 @@ function xmldb_core_upgrade($oldversion=0) {
         change_field_precision($table, $field);
     }
 
+    if ($oldversion < 2009021600) {
+        // Add constraints on view and artefact tables to make sure that of the 
+        // owner/group/institution fields, only one is set at any given time
+
+        // First, we make blind assumptions in order to tweak the data into 
+        // being valid. In theory, there shouldn't be much danger because most 
+        // people will upgrade from 1.0 to 1.1, and thus never have invalid 
+        // data in their tables.
+        execute_sql('UPDATE {artefact} SET owner = NULL WHERE institution IS NOT NULL');
+        execute_sql('UPDATE {artefact} SET "group" = NULL WHERE institution IS NOT NULL');
+        execute_sql('UPDATE {artefact} SET owner = NULL WHERE "group" IS NOT NULL');
+        execute_sql('UPDATE {view} SET owner = NULL WHERE institution IS NOT NULL');
+        execute_sql('UPDATE {view} SET "group" = NULL WHERE institution IS NOT NULL');
+        execute_sql('UPDATE {view} SET owner = NULL WHERE "group" IS NOT NULL');
+
+        // Now add the constraints. MySQL parses check constraints but doesn't 
+        // actually apply them. So these protections will only apply if you use 
+        // Postgres. You did read the installation instruction's 
+        // recommendations that you use postgres, didn't you?
+        execute_sql('ALTER TABLE {artefact} ADD CHECK (
+            (owner IS NOT NULL AND "group" IS NULL     AND institution IS NULL) OR
+            (owner IS NULL     AND "group" IS NOT NULL AND institution IS NULL) OR
+            (owner IS NULL     AND "group" IS NULL     AND institution IS NOT NULL)
+        )');
+        execute_sql('ALTER TABLE {view} ADD CHECK (
+            (owner IS NOT NULL AND "group" IS NULL     AND institution IS NULL) OR
+            (owner IS NULL     AND "group" IS NOT NULL AND institution IS NULL) OR
+            (owner IS NULL     AND "group" IS NULL     AND institution IS NOT NULL)
+        )');
+    }
+
     return $status;
 
 }
