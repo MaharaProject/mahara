@@ -61,6 +61,7 @@
     <li><h3>{str tag=configextensions section=admin}</h3>
     <ul>
         <li><strong><a href="{$WWWROOT}admin/extensions/plugins.php">{str tag=pluginadmin section=admin}</a></strong> - {str tag=pluginadmindescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}admin/extensions/filter.php">{str tag=htmlfilters section=admin}</a></strong> - {str tag=htmlfiltersdescription section=admin}</li>
     </ul>
     </li>
 </ul></div>

@@ -38,15 +38,6 @@ $themeoptions = get_themes();
 $yesno = array(true  => get_string('yes'),
                false => get_string('no'));
 
-$allowedfilters = array('YouTube', 'GoogleVideo', 'TeacherTube', 'SciVee', 'Skype', 'Twitter');  //@todo read from the htmlpurifiercustom directory
-$enabledfilters = get_config('filters');
-if ($enabledfilters) {
-    $enabledfilters = unserialize($enabledfilters);
-}
-else {
-    $enabledfilters = array();
-}
-
 $searchpluginoptions = get_search_plugins();
 
 $siteoptionform = array(
@@ -171,52 +162,6 @@ $siteoptionform = array(
     )
 );
 
-// List of HTML Purifier filters to enable
-$siteoptionform['elements']['filters'] = array(
-    'type'        => 'fieldset',
-    'legend'      => get_string('embeddedcontent', 'admin'),
-    'collapsible' => true,
-    'collapsed'   => true,
-    'elements'    => array(
-        'embeddedcontentdescription' => array(
-            'type' => 'html',
-            'title' => get_string('trustedsites', 'admin'),
-            'value' => get_string('embeddedcontentdescription', 'admin'),
-            'help' => true,
-        ),
-        'YouTube' => array(
-            'type'         => 'checkbox',
-            'title'        => 'http://www.youtube.com',
-            'defaultvalue' => in_array('YouTube', $enabledfilters),
-        ),
-        'GoogleVideo' => array(
-            'type'         => 'checkbox',
-            'title'        => 'http://video.google.com',
-            'defaultvalue' => in_array('GoogleVideo', $enabledfilters),
-        ),
-        'TeacherTube' => array(
-            'type'         => 'checkbox',
-            'title'        => 'http://www.teachertube.com',
-            'defaultvalue' => in_array('TeacherTube', $enabledfilters),
-        ),
-        'SciVee' => array(
-            'type'         => 'checkbox',
-            'title'        => 'http://www.scivee.tv',
-            'defaultvalue' => in_array('SciVee', $enabledfilters),
-        ),
-        'Skype' => array(
-            'type'         => 'checkbox',
-            'title'        => 'http://skype.com',
-            'defaultvalue' => in_array('Skype', $enabledfilters),
-        ),
-        'Twitter' => array(
-            'type'         => 'checkbox',
-            'title'        => 'http://twitter.com',
-            'defaultvalue' => in_array('Twitter', $enabledfilters),
-        ),
-    ),
-);
-
 $siteoptionform['elements']['submit'] = array(
     'type'  => 'submit',
     'value' => get_string('updatesiteoptions', 'admin')
@@ -232,7 +177,6 @@ function siteoptions_fail(Pieform $form, $field) {
 }
 
 function siteoptions_submit(Pieform $form, $values) {
-    global $allowedfilters;
     $fields = array('sitename','lang','theme', 'pathtoclam',
                     'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn', 
                     'allowpublicviews', 'allowpublicprofiles', 'createpublicgroups', 'searchplugin');
@@ -258,16 +202,7 @@ function siteoptions_submit(Pieform $form, $values) {
             siteoptions_fail($form, $checkbox);
         }
     }
-    // List of filters for HTMLPurifier
-    $enabledfilters = array();
-    foreach ($allowedfilters as $filter) {
-        if ($values[$filter] == 'on') {
-            $enabledfilters[] = $filter;
-        }
-    }
-    if (!set_config('filters', serialize($enabledfilters))) {
-        siteoptions_fail($form, 'filters');
-    }
+
     $message = get_string('siteoptionsset', 'admin');
     if ($oldtheme != $values['theme']) {
         $message .= '  ' . get_string('usersseenewthemeonlogin', 'admin');

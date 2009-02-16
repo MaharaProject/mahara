@@ -956,4 +956,24 @@ function install_view_column_widths() {
     db_commit();
 }
 
+/**
+ * Reload htmlpurifier filters from the XML configuration file.
+ */
+function reload_html_filters() {
+    require_once('xmlize.php');
+    log_info('Reading HTML filters');
+
+    $newlist = xmlize(file_get_contents(get_config('libroot') . 'htmlpurifiercustom/filters.xml'));
+    $filters = $newlist['filters']['#']['filter'];
+    foreach ($filters as &$f) {
+        $f = (object) array(
+            'site' => $f['#']['site'][0]['#'],
+            'file' => $f['#']['filename'][0]['#']
+        );
+        log_info('- ' . $f->file);
+    }
+    $filters[] = (object) array('site' => 'http://www.youtube.com', 'file' => 'YouTube');
+    log_info('- YouTube');
+    set_config('filters', serialize($filters));
+}
 ?>

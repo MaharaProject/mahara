@@ -105,6 +105,12 @@ $string['institutionfilesdescription'] = 'Upload and manage files for use in Ins
 $string['pluginadmin'] = 'Plugin Administration';
 $string['pluginadmindescription'] = 'Install and configure plugins';
 
+$string['htmlfilters'] = 'HTML Filters';
+$string['htmlfiltersdescription'] = 'Enable new filters for HTML Purifier';
+$string['newfiltersdescription'] = 'If you have downloaded a new set of HTML filters, you can install them by unzipping the file into the folder %s and then clicking the button below';
+$string['filtersinstalled'] = 'Filters installed.';
+$string['nofiltersinstalled'] = 'No html filters installed.';
+
 // Site options
 $string['adminsonly'] = 'Administrators only';
 $string['allowpublicviews'] = 'Allow public views';

@@ -1567,6 +1567,12 @@ function admin_nav() {
             'title'  => get_string('pluginadmin', 'admin'),
             'weight' => 10,
         ),
+        array(
+            'path'   => 'configextensions/filters',
+            'url'    => 'admin/extensions/filter.php',
+            'title'  => get_string('htmlfilters', 'admin'),
+            'weight' => 20,
+        ),
     );
 
     return $menu;
@@ -2150,11 +2156,11 @@ function clean_html($text) {
     $customfilters = array();
     if (get_config('filters')) {
         foreach (unserialize(get_config('filters')) as $filter) {
-            if ($filter == 'YouTube') {
+            if ($filter->file == 'YouTube') {
                 $config->set('Filter', 'YouTube', true);
             } else {
-                require_once(get_config('libroot') . 'htmlpurifiercustom/' . $filter . '.php');
-                $classname = 'HTMLPurifier_Filter_' . $filter;
+                require_once(get_config('libroot') . 'htmlpurifiercustom/' . $filter->file . '.php');
+                $classname = 'HTMLPurifier_Filter_' . $filter->file;
                 $customfilters[] = new $classname();
             }
         }
