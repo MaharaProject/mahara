@@ -566,6 +566,7 @@ function core_postinst() {
         (owner IS NULL     AND "group" IS NULL     AND institution IS NOT NULL)
     )');
 
+    reload_html_filters();
     return $status;
 }
 

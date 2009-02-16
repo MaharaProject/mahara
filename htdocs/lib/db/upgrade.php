@@ -782,6 +782,10 @@ function xmldb_core_upgrade($oldversion=0) {
         )');
     }
 
+    if ($oldversion < 2009021700) {
+        reload_html_filters();
+    }
+
     return $status;
 
 }
