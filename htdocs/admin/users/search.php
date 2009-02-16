@@ -46,10 +46,10 @@ $offset  = param_integer('offset', 0);
 $limit   = param_integer('limit', 10);
 
 if ($USER->get('admin')) {
-    $institutions = get_records_array('institution');
+    $institutions = get_records_array('institution', '', '', 'displayname');
     $search->institution = param_alphanum('institution', 'all');
 } else {
-    $institutions = get_records_select_array('institution', "name IN ('" . join("','", array_keys($USER->get('admininstitutions'))) . "')");
+    $institutions = get_records_select_array('institution', "name IN ('" . join("','", array_keys($USER->get('admininstitutions'))) . "')", null, 'displayname');
     $search->institution_requested = param_alphanum('institution_requested', 'all');
 }
 
