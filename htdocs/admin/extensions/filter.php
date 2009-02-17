@@ -44,6 +44,7 @@ $reloadform = pieform(array(
     'renderer'   => 'table',
     'plugintype' => 'core',
     'pluginname' => 'admin',
+    'autofocus'  => false,
     'elements'   => array(
         'reload' => array(
             'type'         => 'submit',
