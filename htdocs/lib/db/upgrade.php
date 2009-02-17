@@ -786,6 +786,40 @@ function xmldb_core_upgrade($oldversion=0) {
         reload_html_filters();
     }
 
+    if ($oldversion < 2009021701) {
+        // Make sure that all views that can be copied have loggedin access
+        // This upgrade just fixes potentially corrupt data caused by running a 
+        // beta version then upgrading it
+        if ($views = get_column('view', 'id', 'copynewuser', '1')) {
+            $views[] = 1;
+            require_once('view.php');
+            foreach ($views as $viewid) {
+                $view = new View($viewid);
+                $needsadding = true;
+                foreach ($view->get_access() as $item) {
+                    if ($item['type'] == 'loggedin') {
+                        // We're not checking that access dates are null (aka 
+                        // it can always be accessed), but the chance of people 
+                        // needing this upgrade are slim anyway
+                        $needsadding = false;
+                        break;
+                    }
+                }
+
+                if ($needsadding) {
+                    log_debug("Adding logged in access for view $viewid");
+                    $access = $view->get_access();
+                    $access[] = array(
+                        'type' => 'loggedin',
+                        'startdate' => null,
+                        'stopdate'  => null,
+                    );
+                    $view->set_access($access);
+                }
+            }
+        }
+    }
+
     return $status;
 
 }
