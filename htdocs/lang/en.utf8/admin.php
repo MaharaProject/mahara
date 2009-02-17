@@ -56,6 +56,7 @@ $string['upgradefailure'] = 'Failed to upgrade!';
 $string['noupgrades'] = 'Nothing to upgrade! You are fully up to date!';
 $string['youcanupgrade'] = 'You can upgrade Mahara from %s (%s) to %s (%s)!';
 $string['Plugin'] = 'Plugin';
+$string['jsrequiredforupgrade'] = 'You must enable javascript to perform an install or upgrade.';
 
 // Admin navigation menu
 $string['adminhome']      = 'Admin home';

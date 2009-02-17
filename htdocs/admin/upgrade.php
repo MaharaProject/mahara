@@ -112,6 +112,7 @@ $js = <<< EOJS
                 true);
             }
 
+            addLoadEvent( function () { removeElement('jsrequiredforupgrade'); } );
             addLoadEvent( processNext );
 EOJS;
 
