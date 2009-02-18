@@ -278,6 +278,7 @@ function settings_submit_delete(Pieform $form, $values) {
 
         if (in_array($USER->get('profileicon'), $icons)) {
             $USER->profileicon = null;
+            $USER->commit();
         }
 
         db_commit();
