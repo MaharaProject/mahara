@@ -437,7 +437,7 @@ class User {
             $configdata['artefactids'][] = $intro;
         }
         else {
-            $configdata['introtext'] = display_name($this, null, true);
+            $configdata['introtext'] = get_string('thisistheprofilepagefor', 'mahara', display_name($this, null, true));
         }
         if ($this->get('profileicon')) {
             $configdata['profileicon'] = $this->get('profileicon');

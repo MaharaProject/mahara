@@ -794,4 +794,5 @@ $string['Copyof'] = 'Copy of %s';
 // Profie views
 $string['loggedinusersonly'] = 'Logged in users only';
 $string['allowpublicaccess'] = 'Allow public (non logged in) access';
+$string['thisistheprofilepagefor'] = 'This is the profile page for %s';
 ?>
