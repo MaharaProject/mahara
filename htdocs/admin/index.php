@@ -36,10 +36,12 @@ else {
     define('TITLE', get_string('installation', 'admin'));
 }
 require(get_config('libroot') . 'upgrade.php');
+require(get_config('libroot') . 'register.php');
 
 $smarty = smarty();
 
 $upgrades = check_upgrades();
+$register = register_site();
 
 if (isset($upgrades['core']) && !empty($upgrades['core']->install)) {
     $smarty->assign('installing', true);
@@ -50,6 +52,6 @@ if (isset($upgrades['core']) && !empty($upgrades['core']->install)) {
 
 // normal admin page starts here
 $smarty->assign('upgrades', $upgrades);
-$smarty->display('admin/index.tpl');
+$smarty->assign('register', $register);
 
-?>
+$smarty->display('admin/index.tpl');

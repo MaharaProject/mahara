@@ -26,7 +26,15 @@
 {/foreach}
 </table>
 </div>
-{/if}<ul>
+{/if}
+{if $register}
+<div id="registersite">
+<div class="register">
+    {$register}
+</div>
+</div>
+{/if}
+<ul>
     <li><h3>{str tag=configsite section=admin}</h3>
     <ul>
         <li><strong><a href="{$WWWROOT}admin/site/options.php">{str tag=siteoptions section=admin}</a></strong> - {str tag=siteoptionsdescription section=admin}</li>
@@ -65,6 +73,7 @@
     </ul>
     </li>
 </ul></div>
+{$siteregisterform}
 
 
 {include file="columnfullend.tpl"}

@@ -48,6 +48,7 @@ $string['performinginstallsandupgrades'] = 'Performing installs and upgrades...'
 $string['runupgrade'] = 'Run upgrade';
 $string['successfullyinstalled'] = 'Successfully installed Mahara!';
 $string['thefollowingupgradesareready'] = 'The following upgrades are ready:';
+$string['registerthismaharasite'] = 'Register this Mahara site';
 $string['upgradeloading'] = 'Loading...';
 $string['upgrades'] = 'Upgrades';
 $string['upgradesuccess'] = 'Successfully upgraded';
