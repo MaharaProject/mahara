@@ -157,27 +157,12 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $filetypes = array();
         $currenttypes = self::get_allowed_filetypes();
 
-        if (!$plugindisabled = get_column_sql('SELECT description
-            FROM {artefact_file_file_types} 
-            WHERE enabled = 0')) {
-            $plugindisabled = array();
-        }
         foreach (self::get_all_filetypes() as $filetype) {
-            if (in_array($filetype, $plugindisabled)) {
-                $filetypes[$filetype] = array(
-                    'type'  => 'checkbox',
-                    'title' => get_string($filetype, 'artefact.file'),
-                    'value' => false,
-                    'disabled' => true,
-                );
-            }
-            else {
-                $filetypes[$filetype] = array(
-                    'type'  => 'checkbox',
-                    'title' => get_string($filetype, 'artefact.file'),
-                    'defaultvalue' => in_array($filetype, $currenttypes),
-                );
-            }
+            $filetypes[$filetype] = array(
+                'type'  => 'checkbox',
+                'title' => get_string($filetype, 'artefact.file'),
+                'defaultvalue' => in_array($filetype, $currenttypes),
+            );
         }
         uasort($filetypes, create_function('$a, $b', 'return $a["title"] > $b["title"];'));
         $filetypes = array_merge(

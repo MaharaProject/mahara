@@ -554,6 +554,19 @@ function core_postinst() {
         execute_sql('CREATE UNIQUE INDEX {usr_use_uix} ON {usr}(LOWER(username))');
     }
 
+    // Some more advanced constraints. XMLDB can't handle this in its xml file format
+    execute_sql('ALTER TABLE {artefact} ADD CHECK (
+        (owner IS NOT NULL AND "group" IS NULL     AND institution IS NULL) OR
+        (owner IS NULL     AND "group" IS NOT NULL AND institution IS NULL) OR
+        (owner IS NULL     AND "group" IS NULL     AND institution IS NOT NULL)
+    )');
+    execute_sql('ALTER TABLE {view} ADD CHECK (
+        (owner IS NOT NULL AND "group" IS NULL     AND institution IS NULL) OR
+        (owner IS NULL     AND "group" IS NOT NULL AND institution IS NULL) OR
+        (owner IS NULL     AND "group" IS NULL     AND institution IS NOT NULL)
+    )');
+
+    reload_html_filters();
     return $status;
 }
 
@@ -944,4 +957,24 @@ function install_view_column_widths() {
     db_commit();
 }
 
+/**
+ * Reload htmlpurifier filters from the XML configuration file.
+ */
+function reload_html_filters() {
+    require_once('xmlize.php');
+    log_info('Reading HTML filters');
+
+    $newlist = xmlize(file_get_contents(get_config('libroot') . 'htmlpurifiercustom/filters.xml'));
+    $filters = $newlist['filters']['#']['filter'];
+    foreach ($filters as &$f) {
+        $f = (object) array(
+            'site' => $f['#']['site'][0]['#'],
+            'file' => $f['#']['filename'][0]['#']
+        );
+        log_info('- ' . $f->file);
+    }
+    $filters[] = (object) array('site' => 'http://www.youtube.com', 'file' => 'YouTube');
+    log_info('- YouTube');
+    set_config('filters', serialize($filters));
+}
 ?>

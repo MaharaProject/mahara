@@ -423,6 +423,28 @@ class User {
             'title' => get_field('view', 'title', 'id', $systemprofileviewid),
             'type'  => 'profile',
         ), $systemprofileviewid, $this->get('id'));
+
+        // Add about me block
+        $aboutme = new BlockInstance(0, array(
+            'blocktype'  => 'profileinfo',
+            'title'      => get_string('aboutme', 'blocktype.internal/profileinfo'),
+            'view'       => $view->get('id'),
+            'column'     => 1,
+            'order'      => 0,
+        ));
+        $configdata = array('artefactids' => array());
+        if ($intro = get_field('artefact', 'id', 'owner', $this->get('id'), 'artefacttype', 'introduction')) {
+            $configdata['artefactids'][] = $intro;
+        }
+        else {
+            $configdata['introtext'] = get_string('thisistheprofilepagefor', 'mahara', display_name($this, null, true));
+        }
+        if ($this->get('profileicon')) {
+            $configdata['profileicon'] = $this->get('profileicon');
+        }
+        $aboutme->set('configdata', $configdata);
+        $aboutme->commit();
+
         $view->set_access(array(
             array(
                 'type'      => 'loggedin',
@@ -705,7 +727,7 @@ class User {
                 'owner' => $this->get('id'),
                 'title' => $views[$tid]->title,
                 'description' => $views[$tid]->description,
-            ), $tid);
+            ), $tid, $this->get('id'));
         }
         db_commit();
     }

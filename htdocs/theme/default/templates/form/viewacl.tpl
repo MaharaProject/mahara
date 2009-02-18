@@ -86,7 +86,7 @@ function renderAccessListItem(item) {
         TBODY(null, 
             TR(null,
                 TH(null, name,  (item.role ? ' - ' + item.roledisplay : '')),
-                TD({'class': 'right'}, removeButton)
+                TD({'class': 'right removebutton'}, removeButton)
             ),
             TR(null,
                 TD({'colspan': 2},
@@ -193,6 +193,36 @@ var potentialPresets = {{$potentialpresets}};
 forEach(potentialPresets, function(preset) {
     renderPotentialPresetItem(preset);
 });
+var loggedinindex = {{$loggedinindex}};
+function ensure_loggedin_access() {
+    var oldaccess = getFirstElementByTagAndClassName(null, 'loggedin-container', 'accesslistitems');
+    if (oldaccess) {
+        forEach(getElementsByTagAndClassName(null, 'loggedin-container', 'accesslistitems'), function (elem) {
+            if (oldaccess != elem) {
+                removeElement(elem);
+            }
+        });
+    }
+    else {
+        renderAccessListItem(potentialPresets[loggedinindex]);
+    }
+    var newaccess = getFirstElementByTagAndClassName(null, 'loggedin-container', 'accesslistitems');
+    addElementClass(getFirstElementByTagAndClassName(null, 'removebutton', newaccess), 'hidden');
+    forEach(getElementsByTagAndClassName(null, 'pieform-calendar-toggle', newaccess), function (elem) { addElementClass(elem, 'hidden'); });
+    forEach(getElementsByTagAndClassName('input', null, newaccess), function (elem) {
+        if (elem.name.match(/\[st(art|op)date\]$/)) {
+            elem.value = '';
+            elem.disabled = true;
+        }
+    });
+}
+function relax_loggedin_access() {
+    forEach(getElementsByTagAndClassName(null, 'loggedin-container', $('accesslistitems')), function (elem) {
+        removeElementClass(getElementsByTagAndClassName(null, 'removebutton', elem)[0], 'hidden');
+        forEach(getElementsByTagAndClassName(null, 'pieform-calendar-toggle', elem), function (elem1) { removeElementClass(elem1, 'hidden'); });
+        forEach(getElementsByTagAndClassName('input', null, elem), function (elem1) { elem1.disabled = false; });
+    });
+}
 
 // Left hand side
 var searchTable = new TableRenderer(
@@ -273,6 +303,7 @@ addLoadEvent(function () {
             renderAccessListItem(item);
         });
     }
+    update_loggedin_access();
 });
 
 addLoadEvent(function() {

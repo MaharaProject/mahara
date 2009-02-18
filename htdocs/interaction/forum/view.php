@@ -168,7 +168,7 @@ if ($membership) {
 // gets the info about topics
 // the last post is found by taking the max id of the posts in a topic with the max post time
 // taking the max id is needed because multiple posts can have the same post time
-$sql = 'SELECT t.id, p1.subject, p1.body, p1.poster, p1.deleted, m.user AS moderator, COUNT(p2.id), t.closed, s.topic AS subscribed, p4.id AS lastpost, ' . db_format_tsfield('p4.ctime', 'lastposttime') . ', p4.poster AS lastposter, m2.user AS lastpostermoderator
+$sql = 'SELECT t.id, p1.subject, p1.body, p1.poster, p1.deleted, m.user AS moderator, COUNT(p2.id) AS postcount, t.closed, s.topic AS subscribed, p4.id AS lastpost, ' . db_format_tsfield('p4.ctime', 'lastposttime') . ', p4.poster AS lastposter, m2.user AS lastpostermoderator
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_forum_post} p1 ON (p1.topic = t.id AND p1.parent IS NULL)
     LEFT JOIN (

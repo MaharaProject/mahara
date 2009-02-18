@@ -301,12 +301,12 @@ class AuthXmlrpc extends Auth {
 
                     require_once('file.php');
                     $imagesize = getimagesize($filename);
-                    $mime = $imagesize['mime'];
-                    if (!is_image_mime_type($mime)) {
+                    if (!$imagesize || !is_image_type($imagesize[2])) {
                         $error = get_string('filenotimage');
                     }
 
-                    $width = $imagesize[0];
+                    $mime   = $imagesize['mime'];
+                    $width  = $imagesize[0];
                     $height = $imagesize[1];
                     $imagemaxwidth  = get_config('imagemaxwidth');
                     $imagemaxheight = get_config('imagemaxheight');

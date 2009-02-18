@@ -56,6 +56,7 @@ $string['upgradefailure'] = 'Failed to upgrade!';
 $string['noupgrades'] = 'Nothing to upgrade! You are fully up to date!';
 $string['youcanupgrade'] = 'You can upgrade Mahara from %s (%s) to %s (%s)!';
 $string['Plugin'] = 'Plugin';
+$string['jsrequiredforupgrade'] = 'You must enable javascript to perform an install or upgrade.';
 
 // Admin navigation menu
 $string['adminhome']      = 'Admin home';
@@ -104,6 +105,12 @@ $string['institutionfilesdescription'] = 'Upload and manage files for use in Ins
 
 $string['pluginadmin'] = 'Plugin Administration';
 $string['pluginadmindescription'] = 'Install and configure plugins';
+
+$string['htmlfilters'] = 'HTML Filters';
+$string['htmlfiltersdescription'] = 'Enable new filters for HTML Purifier';
+$string['newfiltersdescription'] = 'If you have downloaded a new set of HTML filters, you can install them by unzipping the file into the folder %s and then clicking the button below';
+$string['filtersinstalled'] = 'Filters installed.';
+$string['nofiltersinstalled'] = 'No html filters installed.';
 
 // Site options
 $string['adminsonly'] = 'Administrators only';

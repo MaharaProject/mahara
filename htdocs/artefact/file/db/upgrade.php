@@ -194,8 +194,27 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2009021200) {
+        $table = new XMLDBTable('artefact_file_mime_types');
+        $key = new XMLDBKey('artefilemimetype_des_fk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('description'), 'artefact_file_file_types', array('description'));
+        drop_key($table, $key);
 
-    // everything up to here we pre mysql support.
+        $table = new XMLDBTable('artefact_file_file_types');
+        drop_table($table);
+        PluginArtefactFile::resync_filetype_list();
+    }
+
+    if ($oldversion < 2009021301) {
+        // IE has been uploading jpegs with the image/pjpeg mimetype,
+        // which is not recognised as an image by the download script.
+        // Fix all existing jpegs in the db:
+        set_field('artefact_file_files', 'filetype', 'image/jpeg', 'filetype', 'image/pjpeg');
+        // This won't happen again because we now read the contents of the
+        // uploaded file to detect image artefacts, and overwrite the mime
+        // type declared by the browser if we see an image.
+    }
+
     return $status;
 }
 

@@ -3,6 +3,7 @@
 {include file="columnfullstart.tpl"}
 	
             <h2 class="center">{str tag=performinginstallsandupgrades section=admin}</h2>
+            <div class="center error" id="jsrequiredforupgrade">{str tag=jsrequiredforupgrade section=admin}</div>
 			<table cellspacing="0" cellpadding="1" id="installer">
                 <thead>
                     <tr>

@@ -39,7 +39,7 @@
         {/foreach}
         {/if}
 		</td>
-        <td align="center">{$forum->count}</td>
+        <td align="center">{$forum->topiccount}</td>
         {if $admin}
         <td class="nowrap">
         <a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}&amp;returnto=index" id="btn-edit">{str tag=edit}</a>

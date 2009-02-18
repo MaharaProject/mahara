@@ -42,9 +42,11 @@ function pieform_element_viewacl(Pieform $form, $element) {
     $presets = array();
     if (get_config('allowpublicviews') == '1') {
         $presets = array('public', 'loggedin', 'friends', 'token');
+        $loggedinindex = 1;
     }
     else {
         $presets = array('loggedin', 'friends');
+        $loggedinindex = 0;
     }
     if ($value) {
         foreach ($value as $key => &$item) {
@@ -76,6 +78,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
     }
     
     $smarty->assign('potentialpresets', json_encode($potentialpresets));
+    $smarty->assign('loggedinindex', $loggedinindex);
     $smarty->assign('accesslist', json_encode($value));
     $smarty->assign('viewid', $form->get_property('viewid'));
     $smarty->assign('formname', $form->get_property('name'));
