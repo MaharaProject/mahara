@@ -75,8 +75,23 @@ class upload_manager {
             return get_string('uploadedfiletoobig');
         }
 
-        if ($file['error'] == 1) {
-            return get_string('uploadedfiletoobig');
+        if ($file['error'] != UPLOAD_ERR_OK) {
+            $errormsg = get_string('phpuploaderror', 'mahara', get_string('phpuploaderror_' . $file['error']), $file['error']);
+            log_debug($errormsg);
+            if ($file['error'] == UPLOAD_ERR_NO_TMP_DIR || $file['error'] == UPLOAD_ERR_CANT_WRITE) {
+                // The admin probably needs to fix this; notify them
+                // @TODO: Create a new activity type for general admin messages.
+                $message = (object) array(
+                    'users' => get_column('usr', 'id', 'admin', 1),
+                    'subject' => get_string('adminphpuploaderror'),
+                    'message' => $errormsg,
+                );
+                require_once('activity.php');
+                activity_occurred('maharamessage', $message);
+            }
+            else if ($file['error'] == UPLOAD_ERR_INI_SIZE || $file['error'] == UPLOAD_ERR_FORM_SIZE) {
+                return get_string('uploadedfiletoobig');
+            }
         }
 
         if (!is_uploaded_file($file['tmp_name'])) {

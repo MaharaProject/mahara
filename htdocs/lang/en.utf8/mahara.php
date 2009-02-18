@@ -519,6 +519,16 @@ $string['filetypenotallowed'] = 'You are not allowed to upload files of this typ
 $string['virusrepeatsubject'] = 'Warning: %s is a repeat virus uploader.';
 $string['virusrepeatmessage'] = 'The user %s has uploaded multiple files which have been scanned by a virus checker and found to be infected.';
 
+$string['phpuploaderror'] = 'An error occurred during file upload: %s (Error code %s)';
+$string['phpuploaderror_1'] = 'The uploaded file exceeds the upload_max_filesize directive in php.ini.';
+$string['phpuploaderror_2'] = 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.';
+$string['phpuploaderror_3'] = 'The uploaded file was only partially uploaded.';
+$string['phpuploaderror_4'] = 'No file was uploaded.';
+$string['phpuploaderror_6'] = 'Missing a temporary folder.';
+$string['phpuploaderror_7'] = 'Failed to write file to disk.';
+$string['phpuploaderror_8'] = 'File upload stopped by extension.';
+$string['adminphpuploaderror'] = 'A file upload error was probably caused by your server configuration.';
+
 $string['youraccounthasbeensuspended'] = 'Your account has been suspended';
 $string['youraccounthasbeensuspendedtext2'] = 'Your account at %s has been suspended by %s.'; // @todo: more info?
 $string['youraccounthasbeensuspendedreasontext'] = "Your account at %s has been suspended by %s. Reason:\n\n%s";
