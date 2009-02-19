@@ -58,3 +58,5 @@ if (!get_config('registration_lastsent')) {
 }
 
 $smarty->display('admin/index.tpl');
+
+?>
