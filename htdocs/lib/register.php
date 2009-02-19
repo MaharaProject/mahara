@@ -22,59 +22,77 @@ class RegistrationException extends SystemException {}
  * @ingroup Registration 
  */
 function register_site()  {
-	//TODO translate
-  $last = get_config('last_registration_success');
-  
-	$info = 'Send the following data to mahara.org: <ul>';
-	$data = registration_data();
-	foreach($data as $key=>$val) {
-		$info .= '<li>'. htmlentities("$key = $val") .'</li>'; 
-	}
-	$info .= '</ul>';
+    $info = <<<EOF
+<table>
+    <tr>
+        <th>Field</th>
+        <th>Value</th>
+    </tr>
+EOF;
+    $data = registration_data();
+    foreach($data as $key => $val) {
+        $info .= '<tr><td>'. hsc($key) . '</td><td>' . hsc($val) . "</td></tr>\n";
+    }
+    $info .= '</table>';
 
-  if ($last) {
-    $info .= '<p>Last sent: '. format_date($last) .'</p>';
-  }
-	
-	$form = array(
-     'name' => 'register',
-     'autofocus' => false,
-     'elements' => array(
-                          'whatsent' => array('type' => 'fieldset', 'legend' => 'Register your mahara site', 'collapsible' => true, 'collapsed' => ($last ? true : false), //collapse if they've sent before
-				'elements' => 
-  						array(
- 							'info' => array('type' => 'markup', 'value'=> $info),
-  						)
-						),
-				'register' => array('type' => 'submit', 'value' => 'Register'),
-         )
-       );
+    $form = array(
+        'name' => 'register',
+        'autofocus' => false,
+        'elements' => array(
+            'whatsent' => array(
+                'type' => 'fieldset',
+                'legend' => 'Data that will be sent',
+                'collapsible' => true,
+                'collapsed' => true,
+                'elements' => array(
+                    'info' => array(
+                        'type' => 'markup',
+                        'value'=> $info
+                    ),
+                )
+            ),
+            'sendweeklyupdates' => array(
+                'type' => 'checkbox',
+                'title' => 'Send weekly updates?',
+                'defaultvalue' => true
+            ),
+            'register' => array(
+                'type' => 'submit',
+                'value' => 'Register'
+            ),
+        )
+     );
      
      return pieform($form);
 }
 /**
  * Runs when registration form is submitted
  */
-function register_submit() {
-	$data = registration_data();
-	$request = array(
-    CURLOPT_URL => 'http://mahara.org.gargi.wgtn.cat-it.co.nz/mahara-registration.php',
-		CURLOPT_POST => 1,
-		CURLOPT_POSTFIELDS => $data,
-	);
-	$result = http_request($request);
+function register_submit(Pieform $form, $values) {
+    global $SESSION;
+    $registrationurl = 'http://mahara.org/mahara-registration.php';
 
-  GLOBAL $SESSION;
+    set_config('registration_sendweeklyupdates', $values['sendweeklyupdates']);
+
+    $data = registration_data();
+    $request = array(
+        CURLOPT_URL        => $registrationurl,
+        CURLOPT_POST       => 1,
+        CURLOPT_POSTFIELDS => $data,
+    );
+    $result = http_request($request);
+
   
-  //TODO Translate needed
-  if ($result->data != '1') {
-  	$SESSION->add_error_msg('Registation failed' . print_r($result, true));
-  }
-  else {
-    set_config('last_registration_success', strtotime('now'));
-    $SESSION->add_ok_msg('Registation successful');
-  }
-	redirect('/admin');
+    //TODO Translate needed
+    if ($result->data != '1') {
+        log_debug($result);
+        $SESSION->add_error_msg('Registation failed with error code '. $result->info['http_code'] . '. Please try again later.');
+    }
+    else {
+        set_config('registration_lastsent', strtotime('now'));
+        $SESSION->add_ok_msg('Registation successful - thanks for registering!');
+    }
+    redirect('/admin/');
 }
 
 
