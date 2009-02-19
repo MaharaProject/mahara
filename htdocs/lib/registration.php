@@ -66,26 +66,48 @@ EOF;
  */
 function register_submit(Pieform $form, $values) {
     global $SESSION;
-    $registrationurl = 'http://mahara.org/mahara-registration.php';
 
-    $data = registration_data();
-    $request = array(
-        CURLOPT_URL        => $registrationurl,
-        CURLOPT_POST       => 1,
-        CURLOPT_POSTFIELDS => $data,
-    );
-    $result = http_request($request);
+    $result = registration_send_data();
 
     if ($result->data != '1') {
         log_info($result);
         $SESSION->add_error_msg(get_string('registrationfailedtrylater', 'admin', $result->info['http_code']));
     }
     else {
-        set_config('registration_lastsent', strtotime('now'));
+        set_config('registration_lastsent', time());
         set_config('registration_sendweeklyupdates', $values['sendweeklyupdates']);
         $SESSION->add_ok_msg(get_string('registrationsuccessfulthanksforregistering'));
     }
     redirect('/admin/');
+}
+
+/**
+ * Cronjob to send an update of site statistics to mahara.org
+ */
+function cron_send_registration_data() {
+    $result = registration_send_data();
+
+    if ($result->data != '1') {
+        log_info($result);
+    }
+    else {
+        set_config('registration_lastsent', time());
+    }
+}
+
+
+/**
+ * Worker - performs sending of registration data to mahara.org
+ */
+function registration_send_data() {
+    $registrationurl = 'http://mahara.org/mahara-registration.php';
+    $data = registration_data();
+    $request = array(
+        CURLOPT_URL        => $registrationurl,
+        CURLOPT_POST       => 1,
+        CURLOPT_POSTFIELDS => $data,
+    );
+    return http_request($request);
 }
 
 

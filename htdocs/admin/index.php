@@ -36,7 +36,7 @@ else {
     define('TITLE', get_string('installation', 'admin'));
 }
 require(get_config('libroot') . 'upgrade.php');
-require(get_config('libroot') . 'register.php');
+require(get_config('libroot') . 'registration.php');
 
 $smarty = smarty();
 
