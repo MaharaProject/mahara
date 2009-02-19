@@ -159,6 +159,13 @@ $siteoptionform = array(
             'defaultvalue' => get_config('usersallowedmultipleinstitutions'),
             'help'         => true,
         ),
+        'registration_sendweeklyupdates' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('sendweeklyupdates', 'admin'),
+            'description'  => get_string('sendweeklyupdatesdescription', 'admin'),
+            'defaultvalue' => get_config('registration_sendweeklyupdates'),
+            'help'         => true,
+        ),
     )
 );
 
@@ -179,7 +186,8 @@ function siteoptions_fail(Pieform $form, $field) {
 function siteoptions_submit(Pieform $form, $values) {
     $fields = array('sitename','lang','theme', 'pathtoclam',
                     'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn', 
-                    'allowpublicviews', 'allowpublicprofiles', 'createpublicgroups', 'searchplugin');
+                    'allowpublicviews', 'allowpublicprofiles', 'createpublicgroups', 'searchplugin',
+                    'registration_sendweeklyupdates');
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');
     foreach ($fields as $field) {

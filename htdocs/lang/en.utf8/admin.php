@@ -118,6 +118,7 @@ $string['Field'] = 'Field';
 $string['Value'] = 'Value';
 $string['datathatwillbesent'] = 'Data that will be sent';
 $string['sendweeklyupdates'] = 'Send weekly updates?';
+$string['sendweeklyupdatesdescription'] = 'If checked, your site will send weekly updates to mahara.org with some statistics about your site';
 $string['Register'] = 'Register';
 $string['registrationfailedtrylater'] = 'Registation failed with error code %s. Please try again later.';
 $string['registrationsuccessfulthanksforregistering'] = 'Registation successful - thanks for registering!';
