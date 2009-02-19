@@ -545,6 +545,7 @@ function core_postinst() {
     set_config('searchplugin', 'internal');
 
     set_config('lang', 'en.utf8');
+    set_config('installation_key', get_random_key());
 
     // PostgreSQL supports indexes over functions of columns, MySQL does not. 
     // So we can improve the index on the username field of the usr table for 
