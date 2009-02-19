@@ -1999,6 +1999,10 @@ function recalculate_quota() {
  * Cronjob to send an update of site statistics to mahara.org
  */
 function cron_send_registration_data() {
+    if (!get_config('registration_sendweeklyupdates')) {
+        return;
+    }
+
     require_once(get_config('libroot') . 'registration.php');
     $result = registration_send_data();
 
