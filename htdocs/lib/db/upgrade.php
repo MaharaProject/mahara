@@ -825,6 +825,18 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('installation_key', get_random_key());
     }
 
+    if ($oldversion < 2009021901) {
+        // Insert a cron job to send registration data to mahara.org
+        $cron = new StdClass;
+        $cron->callfunction = 'cron_send_registration_data';
+        $cron->minute       = rand(0, 59);
+        $cron->hour         = rand(0, 23);
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = rand(0, 6);
+        insert_record('cron', $cron);
+    }
+
     return $status;
 
 }

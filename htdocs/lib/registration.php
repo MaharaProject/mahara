@@ -81,20 +81,6 @@ function register_submit(Pieform $form, $values) {
     redirect('/admin/');
 }
 
-/**
- * Cronjob to send an update of site statistics to mahara.org
- */
-function cron_send_registration_data() {
-    $result = registration_send_data();
-
-    if ($result->data != '1') {
-        log_info($result);
-    }
-    else {
-        set_config('registration_lastsent', time());
-    }
-}
-
 
 /**
  * Worker - performs sending of registration data to mahara.org

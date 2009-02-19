@@ -1995,6 +1995,22 @@ function recalculate_quota() {
     }
 }
 
+/**
+ * Cronjob to send an update of site statistics to mahara.org
+ */
+function cron_send_registration_data() {
+    require_once(get_config('libroot') . 'registration.php');
+    $result = registration_send_data();
+
+    if ($result->data != '1') {
+        log_info($result);
+    }
+    else {
+        set_config('registration_lastsent', time());
+    }
+}
+
+
 function random_string($length=15) {
     $pool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     $poollen = strlen($pool);
