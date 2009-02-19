@@ -96,14 +96,58 @@ function register_submit(Pieform $form, $values) {
 }
 
 
+/**
+ * Builds the data that will be sent by the "register your site" feature
+ */
 function registration_data() {
+    foreach (array(
+        'wwwroot',
+        'installation_key',
+        'sitename',
+        'dbtype',
+        'lang',
+        'theme',
+        'enablenetworking',
+        'allowpublicviews',
+        'allowpublicprofiles',
+        'version',
+        'release') as $key) {
+        $data_to_send[$key] = get_config($key);
+    }
 
-	foreach(array('dbtype', 'sitename', 'lang', 'wwwroot', 'theme', 'release') as $key) {
-		$data_to_send[$key] = get_config($key);
-	}
-	foreach(array('usr', 'view', 'artefact', 'group', 'block_instance', 'institution') as $key) {
-		$data_to_send[$key . '_count'] = count_records($key);
-	}
+    foreach (array(
+        'usr',
+        'usr_friend',
+        'usr_institution',
+        'group',
+        'group_member',
+        'block_instance',
+        'institution',
+        'blocktype_wall_post',
+        'host',
+        'institution') as $key) {
+        $data_to_send['count_' . $key] = count_records($key);
+    }
 
-	return $data_to_send;
+    // Don't include the root user
+    $data_to_send['count_usr']--;
+
+    // Slightly more drilled down information
+    if ($data = get_records_sql_array('SELECT artefacttype, COUNT(*) AS count
+        FROM {artefact}
+        GROUP BY artefacttype', array())) {
+        foreach ($data as $artefacttypeinfo) {
+            $data_to_send['artefact_type_' . $artefacttypeinfo->artefacttype] = $artefacttypeinfo->count;
+        }
+    }
+
+    if ($data = get_records_sql_array('SELECT type, COUNT(*) AS count
+        FROM {view}
+        GROUP BY type', array())) {
+        foreach ($data as $viewtypeinfo) {
+            $data_to_send['view_type_' . $viewtypeinfo->type] = $viewtypeinfo->count;
+        }
+    }
+
+    return $data_to_send;
 }
