@@ -12,12 +12,6 @@ defined('INTERNAL') || die();
 require_once('pieforms/pieform.php');
 
 /**
- * Class to use for registration exceptions
- * @ingroup Registration
- */
-class RegistrationException extends SystemException {}
-
-/**
  * @return string that is the registation form
  * @ingroup Registration 
  */
