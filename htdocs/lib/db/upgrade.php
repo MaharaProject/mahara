@@ -821,7 +821,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2009021900) {
-        // Generate a registration key
+        // Generate a unique installation key
         set_config('installation_key', get_random_key());
     }
 
