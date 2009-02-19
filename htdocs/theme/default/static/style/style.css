@@ -2630,7 +2630,26 @@ span.breadcrumbs a {
 #adminhome ul ul li {
 	font-size: 12px;
 }
-
+#register-site h3 {
+    text-align: center;
+    margin: .25em;
+}
+#register-site p {
+    margin: 10px 0 0;
+}
+#register-site div {
+    width: 75%;
+    margin: 0 auto;
+    text-align: center;
+    font-weight: normal;
+}
+#register-site form table {
+    margin: 0 auto;
+    text-align: left;
+}
+#register-site th {
+    text-align: left;
+}
 
 /* CONFIGURE SITE > SITE OPTIONS */
 #siteoptions td,
