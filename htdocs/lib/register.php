@@ -72,8 +72,6 @@ function register_submit(Pieform $form, $values) {
     global $SESSION;
     $registrationurl = 'http://mahara.org/mahara-registration.php';
 
-    set_config('registration_sendweeklyupdates', $values['sendweeklyupdates']);
-
     $data = registration_data();
     $request = array(
         CURLOPT_URL        => $registrationurl,
@@ -90,6 +88,7 @@ function register_submit(Pieform $form, $values) {
     }
     else {
         set_config('registration_lastsent', strtotime('now'));
+        set_config('registration_sendweeklyupdates', $values['sendweeklyupdates']);
         $SESSION->add_ok_msg('Registation successful - thanks for registering!');
     }
     redirect('/admin/');
