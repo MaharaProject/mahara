@@ -30,11 +30,8 @@
 {if $register}
 <div class="message" id="register-site">
     <div>
-    <h3>Register your Mahara Site</h3>
-    <p>You can choose to register your Mahara Site with <a href="http://mahara.org/">mahara.org</a>. Registration is free, and helps us build up a picture of the Mahara installation base around the world.</p>
-    <p>You can see the information that will be sent to mahara.org - nothing that can personally identify any of your users will be sent.</p>
-    <p>If you tick &quot;send weekly updates&quot;, Mahara will automatically send an update to mahara.org once a week with your updated information.</p>
-    <p>Registering will remove this notice. You will be able to change whether you send weekly updates on the <a href="{$WWWROOT}admin/site/options.php">site options</a> page.</p>
+    <h3>{str tag=registeryourmaharasite section=admin}</h3>
+    {str tag=registeryourmaharasitedetail section=admin args=$WWWROOT}
     {$register}
     </div>
 </div>

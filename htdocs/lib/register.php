@@ -16,11 +16,13 @@ require_once('pieforms/pieform.php');
  * @ingroup Registration 
  */
 function register_site()  {
+    $strfield = get_string('Field', 'admin');
+    $strvalue = get_string('Value', 'admin');
     $info = <<<EOF
 <table>
     <tr>
-        <th>Field</th>
-        <th>Value</th>
+        <th>$strfield</th>
+        <th>$strvalue</th>
     </tr>
 EOF;
     $data = registration_data();
@@ -35,24 +37,24 @@ EOF;
         'elements' => array(
             'whatsent' => array(
                 'type' => 'fieldset',
-                'legend' => 'Data that will be sent',
+                'legend' => get_string('datathatwillbesent', 'admin'),
                 'collapsible' => true,
                 'collapsed' => true,
                 'elements' => array(
                     'info' => array(
                         'type' => 'markup',
-                        'value'=> $info
+                        'value'=> $info,
                     ),
                 )
             ),
             'sendweeklyupdates' => array(
                 'type' => 'checkbox',
-                'title' => 'Send weekly updates?',
-                'defaultvalue' => true
+                'title' => get_string('sendweeklyupdates', 'admin'),
+                'defaultvalue' => true,
             ),
             'register' => array(
                 'type' => 'submit',
-                'value' => 'Register'
+                'value' => get_string('Register', 'admin'),
             ),
         )
      );
@@ -74,16 +76,14 @@ function register_submit(Pieform $form, $values) {
     );
     $result = http_request($request);
 
-  
-    //TODO Translate needed
     if ($result->data != '1') {
-        log_debug($result);
-        $SESSION->add_error_msg('Registation failed with error code '. $result->info['http_code'] . '. Please try again later.');
+        log_info($result);
+        $SESSION->add_error_msg(get_string('registrationfailedtrylater', 'admin', $result->info['http_code']));
     }
     else {
         set_config('registration_lastsent', strtotime('now'));
         set_config('registration_sendweeklyupdates', $values['sendweeklyupdates']);
-        $SESSION->add_ok_msg('Registation successful - thanks for registering!');
+        $SESSION->add_ok_msg(get_string('registrationsuccessfulthanksforregistering'));
     }
     redirect('/admin/');
 }
