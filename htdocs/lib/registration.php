@@ -96,7 +96,7 @@ function register_submit(Pieform $form, $values) {
     else {
         set_config('registration_lastsent', time());
         set_config('registration_sendweeklyupdates', $values['sendweeklyupdates']);
-        $SESSION->add_ok_msg(get_string('registrationsuccessfulthanksforregistering'));
+        $SESSION->add_ok_msg(get_string('registrationsuccessfulthanksforregistering', 'admin'));
     }
     redirect('/admin/');
 }
