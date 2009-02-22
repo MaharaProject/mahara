@@ -81,6 +81,7 @@ if ($institution || $add) {
             db_begin();
             foreach ($authinstanceids as $id) {
                 delete_records('auth_instance_config', 'instance', $id);
+                execute_sql('UPDATE {usr} SET lastauthinstance = NULL WHERE lastauthinstance = ?', array($id));
             }
             delete_records('auth_instance', 'institution', $values['i']);
             delete_records('host', 'institution', $values['i']);
