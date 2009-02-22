@@ -363,7 +363,7 @@ class Institution {
         $oldauth = $user->authinstance;
         if (isset($authinstances[$oldauth]) && $authinstances[$oldauth]->institution == $this->name) {
             foreach ($authinstances as $ai) {
-                if ($ai->instancename == 'internal' && $ai->institution == 'mahara') {
+                if ($ai->authname == 'internal' && $ai->institution == 'mahara') {
                     $user->authinstance = $ai->id;
                     break;
                 }
