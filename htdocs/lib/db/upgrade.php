@@ -619,15 +619,16 @@ function xmldb_core_upgrade($oldversion=0) {
 
     if ($oldversion < 2008101602) {
         // Move artefact/internal/profileicons directory to artefact/file
+        set_field('artefact_installed_type', 'plugin', 'file', 'name', 'profileicon');
+        set_field('artefact_config', 'plugin', 'file', 'field', 'profileiconwidth');
+        set_field('artefact_config', 'plugin', 'file', 'field', 'profileiconheight');
+
         $artefactdata = get_config('dataroot') . 'artefact/';
         if (is_dir($artefactdata . 'internal/profileicons')) {
             if (!is_dir($artefactdata . 'file')) {
                 mkdir($artefactdata . 'file');
             }
             rename($artefactdata . 'internal/profileicons', $artefactdata . 'file/profileicons');
-            set_field('artefact_installed_type', 'plugin', 'file', 'name', 'profileicon');
-            set_field('artefact_config', 'plugin', 'file', 'field', 'profileiconwidth');
-            set_field('artefact_config', 'plugin', 'file', 'field', 'profileiconheight');
 
             // Insert artefact_file_files records for all profileicons
             $profileicons = get_column('artefact', 'id', 'artefacttype', 'profileicon');
