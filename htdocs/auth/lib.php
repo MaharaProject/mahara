@@ -614,53 +614,6 @@ function auth_get_auth_instances_for_wwwroot($wwwroot) {
 }
 
 /**
- * Given an institution, returns the authentication methods used by it, sorted 
- * by priority.
- *
- * @param  string   $institution     Name of the institution
- * @return array                     Array of auth instance records
- */
-function auth_get_auth_instances_for_username($institution, $username) {
-    static $cache = array();
-
-    if (!isset($cache[$institution][$username])) {
-        // Get auth instances in order of priority
-        // DO NOT CHANGE THE SORT ORDER OF THIS RESULT SET
-        // YEAH EINSTEIN - THAT MEANS YOU!!!
-
-        // TODO: work out why this won't accept a placeholder - had to use db_quote
-        $sql ='
-            SELECT DISTINCT
-                i.id,
-                i.instancename,
-                i.priority,
-                i.authname,
-                a.requires_config,
-                a.requires_parent
-            FROM 
-                {auth_instance} i,
-                {auth_installed} a,
-                {usr} u
-            WHERE 
-                a.name = i.authname AND
-                i.institution = ? AND
-                u.username = ? AND
-                u.institution = i.institution
-            ORDER BY
-                i.priority,
-                i.instancename';
-
-        $cache[$institution][$username] = get_records_sql_array($sql, array(array('institution' => $institution), array('username' => $username)));
-
-        if (empty($cache[$institution])) {
-            return false;
-        }
-    }
-
-    return $cache[$institution];
-}
-
-/**
  * Given an institution, get all the auth types EXCEPT those that are already 
  * enabled AND do not require configuration.
  *
