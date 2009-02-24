@@ -208,7 +208,7 @@ function get_helpfile($plugintype, $pluginname, $form, $element, $page=null, $se
 
 function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=null, $section=null) {
 
-    $location = get_config('docroot') ;
+    $location = get_language_root();
     $file = 'help/';
 
     if ($plugintype != 'core') {
@@ -256,12 +256,12 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
 
     // if it's not found, try the parent language if there is one...
     if (empty($data) && empty($trieden)) {
-        $langfile = get_config('docroot') . 'lang/' . $lang . '/langconfig.php';
+        $langfile = get_language_root($lang) . 'lang/' . $lang . '/langconfig.php';
         if ($parentlang = get_string_from_file('parentlanguage', $langfile)) {
             if ($parentlang == 'en.utf8') {
                 $trieden = true;
             }
-            $langfile = get_config('docroot') . 'lang/' . $parentlang . '/' . $file;
+            $langfile = get_language_root($parentlang) . 'lang/' . $parentlang . '/' . $file;
             if (is_readable($langfile)) {
                 return $langfile;
             }
@@ -270,11 +270,12 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
 
     // if it's STILL not found, and we haven't already tried english ...
     if (empty($data) && empty($trieden)) {
-        $langfile = $location .  'en.utf8/' . $file;
+        $langfile = get_language_root('en.utf8') . 'lang/en.utf8/' . $file;
         if (is_readable($langfile)) {
             return $langfile;
         }
     }
+    log_debug("Helpfile not found! $file", true, false);
     return false;
 }
 
