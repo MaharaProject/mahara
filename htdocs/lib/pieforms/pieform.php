@@ -322,15 +322,6 @@ class Pieform {/*{{{*/
                     $element['title'] = '';
                 }
 
-                // Force the form method to post if there is a file to upload
-                if (!empty($element['needsmultipart'])) {
-                    $this->fileupload = true;
-                    if ($this->data['method'] == 'get') {
-                        $this->data['method'] = 'post';
-                        self::info("Your form '$this->name' had the method 'get' and also a file element - it has been converted to 'post'");
-                    }
-                }
-
                 // This function can be defined by the application using Pieforms,
                 // and applies to all elements of this type
                 $function = 'pieform_element_' . $element['type'] . '_configure';
@@ -348,6 +339,15 @@ class Pieform {/*{{{*/
                 $function = 'pieform_element_' . $element['type'] . '_set_attributes';
                 if (function_exists($function)) {
                     $element = $function($element);
+                }
+
+                // Force the form method to post if there is a file to upload
+                if (!empty($element['needsmultipart'])) {
+                    $this->fileupload = true;
+                    if ($this->data['method'] == 'get') {
+                        $this->data['method'] = 'post';
+                        self::info("Your form '$this->name' had the method 'get' and also a file element - it has been converted to 'post'");
+                    }
                 }
 
                 // Add the autofocus flag to the element if required
