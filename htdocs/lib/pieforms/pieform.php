@@ -323,7 +323,7 @@ class Pieform {/*{{{*/
                 }
 
                 // Force the form method to post if there is a file to upload
-                if ($element['type'] == 'file') {
+                if (!empty($element['needsmultipart'])) {
                     $this->fileupload = true;
                     if ($this->data['method'] == 'get') {
                         $this->data['method'] = 'post';

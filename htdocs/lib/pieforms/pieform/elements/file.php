@@ -45,4 +45,9 @@ function pieform_element_file_get_value(Pieform $form, $element) {/*{{{*/
     }
 }/*}}}*/
 
+function pieform_element_file_set_attributes($element) {/*{{{*/
+    $element['needsmultipart'] = true;
+    return $element;
+}/*}}}*/
+
 ?>
