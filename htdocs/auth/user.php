@@ -803,6 +803,13 @@ class LiveUser extends User {
             return true;
         }
 
+        // Display a message to users who are only allowed to login via their
+        // external application.
+        if ($auth->authloginmsg != '') {
+          global $SESSION;
+          $SESSION->add_error_msg($auth->authloginmsg);
+        }
+
         return false;
     }
 

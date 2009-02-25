@@ -157,5 +157,32 @@ function execute_javascript_and_close($js='') {
     exit;
 }
 
+$js = <<<EOF
+function authloginmsgVisibility() {
+    // If Parent authority is 'None'
+    if ($('auth_config_parent').value != 0) {
+      addElementClass('auth_config_authloginmsg_container', 'hidden');
+      addElementClass(nextSiblingTR($('auth_config_authloginmsg_container')), 'hidden');
+    }
+    else {
+      removeElementClass('auth_config_authloginmsg_container', 'hidden');
+      removeElementClass(nextSiblingTR($('auth_config_authloginmsg_container')), 'hidden');
+    }
+}
+function nextSiblingTR(node) {
+    while (node.nextSibling.tagName != 'TR') {
+        node = node.nextSibling;
+    }
+    return node.nextSibling;
+}
+addLoadEvent(
+    function() {
+        connect('auth_config_parent', 'onchange', authloginmsgVisibility);
+        authloginmsgVisibility();
+    }
+);
+EOF;
+
+$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('admin/users/addauthority.tpl');
 ?>
