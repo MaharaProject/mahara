@@ -838,7 +838,7 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $cron);
     }
 
-    if ($oldversion < 2009022500) {
+    if ($oldversion < 2009022700) {
         // Get rid of all blocks with position 0 caused by 'about me' block on profile views
         if (count_records('block_instance', 'order', 0) && !count_records_select('block_instance', '"order" < 0')) {
             execute_sql('UPDATE {block_instance} SET "order" =  -1 * "order" WHERE id IN (
