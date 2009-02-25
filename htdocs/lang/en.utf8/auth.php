@@ -53,6 +53,7 @@ $string['theyautocreateusers'] = 'They auto-create users';
 $string['parent'] = 'Parent authority';
 $string['wessoout'] = 'We SSO out';
 $string['theyssoin'] = 'They SSO in';
+$string['authloginmsg'] = "Enter a message to display when a user tries to log in via Mahara's login form";
 $string['application'] = 'Application';
 $string['cantretrievekey'] = 'An error occurred while retrieving the public key from the remote server.<br>Please ensure that the Application and WWW Root fields are correct, and that networking is enabled on the remote host.';
 

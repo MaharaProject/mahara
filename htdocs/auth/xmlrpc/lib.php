@@ -63,6 +63,7 @@ class AuthXmlrpc extends Auth {
         $this->config['wessoout']              = 0;
         $this->config['theyssoin']             = 0;
         $this->config['parent']                = null;
+        $this->config['authloginmsg']          = '';
         $this->file = fopen('/tmp/out.txt', 'w');
         if (!empty($id)) {
             return $this->init($id);
@@ -565,7 +566,8 @@ class PluginAuthXmlrpc extends PluginAuth {
         'theyautocreateusers'   => 0,
         'wessoout'              => 0,
         'theyssoin'             => 0,
-        'parent'                => null
+        'parent'                => null,
+        'authloginmsg'          => ''
     );
 
     public static function has_config() {
@@ -690,15 +692,6 @@ class PluginAuthXmlrpc extends PluginAuth {
             'value' => 'xmlrpc'
         );
 
-        $elements['parent'] = array(
-            'type'                => 'select',
-            'title'               => get_string('parent','auth'),
-            'collapseifoneoption' => false,
-            'options'             => $options,
-            'defaultvalue'        => self::$default_config['parent'],
-            'help'   => true
-        );
-
         $elements['wwwroot'] = array(
             'type' => 'text',
             'title' => get_string('wwwroot', 'auth'),
@@ -777,6 +770,25 @@ class PluginAuthXmlrpc extends PluginAuth {
             'defaultvalue' => $peer->portno,
             'size'   => 4,
             'help'   => true
+        );
+
+        $elements['parent'] = array(
+            'type'                => 'select',
+            'title'               => get_string('parent','auth'),
+            'collapseifoneoption' => false,
+            'options'             => $options,
+            'defaultvalue'        => self::$default_config['parent'],
+            'help'   => true
+        );
+
+        $elements['authloginmsg'] = array(
+            'type'         => 'textarea',
+            'rows'         => 3,
+            'cols'         => 70,
+            'title'        => '',
+            'description'  => get_string('authloginmsg', 'auth'),
+            'defaultvalue' => self::$default_config['authloginmsg'],
+            'help'         => true,
         );
 
         $elements['wessoout'] = array(
@@ -923,8 +935,9 @@ class PluginAuthXmlrpc extends PluginAuth {
                                         'weautocreateusers'     => $values['weautocreateusers'],
                                         'theyautocreateusers'   => $values['theyautocreateusers'],
                                         'parent'                => $values['parent'],
+                                        'authloginmsg'          => $values['authloginmsg'],
                                         'wessoout'              => $values['wessoout'],
-                                        'theyssoin'             => $values['theyssoin']
+                                        'theyssoin'             => $values['theyssoin'],
                                         );
 
         foreach(self::$default_config as $field => $value) {
