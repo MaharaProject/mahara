@@ -274,7 +274,6 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
             return $langfile;
         }
     }
-    log_debug("Helpfile not found! $file", true, false);
     return false;
 }
 
