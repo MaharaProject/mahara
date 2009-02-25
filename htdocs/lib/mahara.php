@@ -208,14 +208,13 @@ function get_helpfile($plugintype, $pluginname, $form, $element, $page=null, $se
 
 function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=null, $section=null) {
 
-    $location = get_language_root();
     $file = 'help/';
 
     if ($plugintype != 'core') {
-        $location .= $plugintype . '/' . $pluginname . '/lang/';
+        $location = $plugintype . '/' . $pluginname . '/lang/';
     }
     else {
-        $location .= 'lang/';
+        $location = 'lang/';
     }
     if ($page) {
         $page = str_replace('-', '/', $page);
@@ -249,7 +248,7 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
     }
 
     // try the current language
-    $langfile = $location . $lang . '/' . $file;
+    $langfile = get_language_root() . $location . $lang . '/' . $file;
     if (is_readable($langfile)) {
         return $langfile;
     }
@@ -261,7 +260,7 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
             if ($parentlang == 'en.utf8') {
                 $trieden = true;
             }
-            $langfile = get_language_root($parentlang) . 'lang/' . $parentlang . '/' . $file;
+            $langfile = get_language_root($parentlang) . $location . $parentlang . '/' . $file;
             if (is_readable($langfile)) {
                 return $langfile;
             }
@@ -270,7 +269,7 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
 
     // if it's STILL not found, and we haven't already tried english ...
     if (empty($data) && empty($trieden)) {
-        $langfile = get_language_root('en.utf8') . 'lang/en.utf8/' . $file;
+        $langfile = get_language_root('en.utf8') . $location . 'en.utf8/' . $file;
         if (is_readable($langfile)) {
             return $langfile;
         }
