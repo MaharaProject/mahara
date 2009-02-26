@@ -772,8 +772,8 @@ class PluginAuthXmlrpc extends PluginAuth {
         );
 
         $elements['authloginmsg'] = array(
-            'type'         => 'textarea',
-            'rows'         => 3,
+            'type'         => 'wysiwyg',
+            'rows'         => 10,
             'cols'         => 70,
             'title'        => '',
             'description'  => get_string('authloginmsg', 'auth'),
