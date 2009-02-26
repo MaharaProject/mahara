@@ -88,13 +88,14 @@ if ($institution && $plugin) {
         'goto'  => 'addauthority.php?c=1'
     );
 
+    $form = pieform($form);
     $smarty = smarty();
     if ($add) {
         $smarty->assign('PAGETITLE', get_string('addauthority', 'auth'));
     } else {
         $smarty->assign('PAGETITLE', get_string('editauthority', 'auth'));
     }
-    $smarty->assign('auth_imap_form', pieform($form));
+    $smarty->assign('auth_imap_form', $form);
 }
 
 function auth_config_validate(Pieform $form, $values) {
