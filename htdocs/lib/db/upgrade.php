@@ -662,7 +662,7 @@ function xmldb_core_upgrade($oldversion=0) {
         // Feedback can be left by anon users with a view token, so feedback author must be nullable
         $table = new XMLDBTable('view_feedback');
         if (is_mysql()) {
-            execute_sql("ALTER TABLE {view_feedback} DROP FOREIGN KEY viewfeed_aut_fk");
+            execute_sql("ALTER TABLE {view_feedback} DROP FOREIGN KEY {viewfeed_aut_fk}");
             execute_sql('ALTER TABLE {view_feedback} MODIFY author BIGINT(10) NULL');
         }
         else {
@@ -676,7 +676,7 @@ function xmldb_core_upgrade($oldversion=0) {
 
         $table = new XMLDBTable('artefact_feedback');
         if (is_mysql()) {
-            execute_sql("ALTER TABLE {artefact_feedback} DROP FOREIGN KEY artefeed_aut_fk");
+            execute_sql("ALTER TABLE {artefact_feedback} DROP FOREIGN KEY {artefeed_aut_fk}");
             execute_sql('ALTER TABLE {artefact_feedback} MODIFY author BIGINT(10) NULL');
         }
         else {
