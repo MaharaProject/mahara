@@ -1,0 +1,46 @@
+1.1.0 (2009-02-26)
+- raft of new features over the 1.0 series of Mahara
+- ability to copy Views
+- many improvements to Groups
+- ability to import content from other systems (such as Moodle 2.0)
+- user profile pages such as Views
+- many other smaller improvements and bugfixes have been made. 
+
+1.0.9 (2009-01-29)
+- small bugfixes and minor layout improvements
+- fixes the blank screens some people were seeing upon installation
+- filters HTML that is used in the forums
+
+1.0.8 (2009-01-07)
+- fixes a bug that prevented email from being sent
+- makes it much easier to install new language packs
+
+1.0.7 (2008-12-23)
+- increases the memory limit available to Mahara
+- adds a 'powered by mahara' icon and link to the footer
+- a few bugfixes
+
+1.0.6 (2008-11-04)
+- security fixes for vulnerabilities in 3rd party libraries
+
+1.0.5 (2008-09-25)
+- bug and stability fixes around user authentication and MNET
+
+1.0.4 (2008-06-25)
+- bug and stability fixes around the administration section
+
+1.0.3 (2008-06-13)
+- HTTP level performance improvements
+- some MySQL fixes
+- improvement to "login as" functionality
+- some other bugfixes
+
+1.0.2 (2007-04-28)
+- more usability work for the Views interface
+- bugfixes for videos in Views
+- RSS blocktype is greatly improved, with the ability to show the 
+  feed icon and a full view of the feed
+- bugfixes for SSO, authentication, and search. 
+
+1.0.1 (2008-04-09)
+- minor bugfixes to the Resume, SSO, and MySQL support
