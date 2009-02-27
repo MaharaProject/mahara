@@ -413,6 +413,7 @@ class User {
     private function install_profile_view() {
         static $systemprofileviewid = null;
 
+        db_begin();
         if (is_null($systemprofileviewid)) {
             $systemprofileviewid = get_field('view', 'id', 'owner', 0, 'type', 'profile');
         }
@@ -430,7 +431,7 @@ class User {
             'title'      => get_string('aboutme', 'blocktype.internal/profileinfo'),
             'view'       => $view->get('id'),
             'column'     => 1,
-            'order'      => 0,
+            'order'      => 1,
         ));
         $configdata = array('artefactids' => array());
         if ($intro = get_field('artefact', 'id', 'owner', $this->get('id'), 'artefacttype', 'introduction')) {
@@ -443,7 +444,7 @@ class User {
             $configdata['profileicon'] = $this->get('profileicon');
         }
         $aboutme->set('configdata', $configdata);
-        $aboutme->commit();
+        $view->addblockinstance($aboutme);
 
         $view->set_access(array(
             array(
@@ -452,6 +453,7 @@ class User {
                 'stopdate'  => null,
             ),
         ));
+        db_commit();
 
         return $view;
     }

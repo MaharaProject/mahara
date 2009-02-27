@@ -1103,6 +1103,25 @@ class View {
         }
     }
 
+    /**
+     * adds a block instance to a view
+     * @param array $values parameters for this function
+     *                      block     => block to add
+     */
+    public function addblockinstance(BlockInstance $bi) {
+        if (!$bi->get('column')) {
+            $bi->set('column', 1);
+        }
+        if (!$bi->get('order')) {
+            $bi->set('order', 1);
+        }
+        if (!$bi->get('view')) {
+            $bi->set('view', $this->get('id'));
+        }
+        $this->shuffle_column($bi->get('column'), $bi->get('order'));
+        $bi->commit();
+    }
+
     /** 
      * deletes a block instance from the view
      *
