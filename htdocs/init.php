@@ -203,6 +203,11 @@ if (!get_config('theme')) {
     $CFG->theme = 'default'; 
 }
 
+if (defined('INSTALLER')) { 
+    // Custom themes sometimes cause upgrades to fail.
+    $CFG->theme = 'default';
+}
+
 $CFG->themeurl = get_config('wwwroot') . 'theme/' . get_config('theme') . '/static/';
 
 // Make sure the search plugin is configured
