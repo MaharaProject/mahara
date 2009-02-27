@@ -273,7 +273,7 @@ class XMLDBmysql extends XMLDBGenerator {
             'add', 'all', 'alter', 'analyze', 'and', 'as', 'asc',
             'asensitive', 'before', 'between', 'bigint', 'binary',
             'blob', 'both', 'by', 'call', 'cascade', 'case', 'change',
-            'char', 'character', 'check', 'collate', 'column',
+            'char', 'character', 'check', 'collate', 'column', 'columns',
             'condition', 'connection', 'constraint', 'continue',
             'convert', 'create', 'cross', 'current_date', 'current_time',
             'current_timestamp', 'current_user', 'cursor', 'database',
