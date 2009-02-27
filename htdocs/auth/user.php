@@ -805,7 +805,7 @@ class LiveUser extends User {
         // external application.
         if ($auth->authloginmsg != '') {
           global $SESSION;
-          $SESSION->add_error_msg($auth->authloginmsg);
+          $SESSION->add_info_msg(clean_html($auth->authloginmsg), false);
         }
 
         return false;
