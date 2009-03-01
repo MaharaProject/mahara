@@ -541,7 +541,7 @@ function get_public_key($uri, $application=null) {
         CURLOPT_HTTPHEADER => array("Content-Type: text/xml charset=UTF-8", 'Expect: '),
     );
 
-    $result = http_request($config);
+    $result = mahara_http_request($config);
 
     if (empty($result->data)) {
         throw new XmlrpcClientException('CURL connection failed');

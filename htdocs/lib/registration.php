@@ -113,7 +113,7 @@ function registration_send_data() {
         CURLOPT_POST       => 1,
         CURLOPT_POSTFIELDS => $data,
     );
-    return http_request($request);
+    return mahara_http_request($request);
 }
 
 
