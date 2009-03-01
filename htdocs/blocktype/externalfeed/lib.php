@@ -262,7 +262,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
 
         $config = array(CURLOPT_URL => $source);
 
-        $result = http_request($config);
+        $result = mahara_http_request($config);
 
         if($result->data) {
             if ($result->error) {
