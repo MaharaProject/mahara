@@ -149,6 +149,9 @@ $cfg->imagemaxheight = 1024;
 // paths and arguments for various system commands
 $cfg->pathtounzip = '/usr/bin/unzip';
 $cfg->unzipdirarg = '-d';
+// some shared hosts have restrictions on where unzip can be used
+// dataroot is often not allowed; but /tmp is
+// $cfg->unziptempdir = '/tmp/';
 
 // How often Mahara should update the last access time for users. Setting this 
 // lower means the field will be updated more regularly, but means a database 

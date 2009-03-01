@@ -720,12 +720,14 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      * Takes the name of a file outside the myfiles area.
      * Returns a boolean indicating success or failure.
      */
-    public static function save_file($pathname, $data, User &$user=null) {
+    public static function save_file($pathname, $data, User &$user=null, $outsidedataroot=false) {
         // This is only used when blog posts are saved: Files which
         // have been uploaded to the post are moved to a permanent
         // location in the files area using this function. 
         $dataroot = get_config('dataroot');
-        $pathname = $dataroot . $pathname;
+        if (!$outsidedataroot) {
+            $pathname = $dataroot . $pathname;
+        }
         if (!$size = filesize($pathname)) {
             return false;
         }
