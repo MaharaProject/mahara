@@ -349,7 +349,7 @@ class MnetImporterTransport extends ImporterTransport {
         if (empty($this->tempdir)) {
             return;
         }
-        rmdir($this->tempdir);
+        rmdirr($this->tempdir);
     }
 
     public function prepare_files() {
