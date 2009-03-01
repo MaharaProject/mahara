@@ -151,7 +151,9 @@ $cfg->pathtounzip = '/usr/bin/unzip';
 $cfg->unzipdirarg = '-d';
 // some shared hosts have restrictions on where unzip can be used
 // dataroot is often not allowed; but /tmp is
-// $cfg->unziptempdir = '/tmp/';
+// Note that if there is more than one mahara on this host using this setting
+// you must change this to something unique, eg /tmp/mahara1/ and /tmp/mahara2/
+// $cfg->unziptempdir = '/tmp/mahara/';
 
 // How often Mahara should update the last access time for users. Setting this 
 // lower means the field will be updated more regularly, but means a database 
