@@ -373,7 +373,6 @@ class MnetImporterTransport extends ImporterTransport {
         else {
             $this->tempdir = get_config('dataroot') . $this->relativepath;
         }
-        log_debug($this->tempdir);
         if (!check_dir_exists($this->tempdir)) {
             throw new ImportException('Failed to create the temporary directories to work in');
         }
