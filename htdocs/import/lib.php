@@ -272,13 +272,18 @@ class MnetImporterTransport extends ImporterTransport {
         }
 
         $this->relativepath = 'temp/import/' . $this->importer->get('id') . '/';
-        $this->tempdir = get_config('dataroot') . $this->relativepath;
+        if ($tmpdir = get_config('unziptempdir')) {
+            $this->tempdir = $tmpdir . $this->relativepath;
+        }
+        else {
+            $this->tempdir = get_config('dataroot') . $this->relativepath;
+        }
         if (!check_dir_exists($this->tempdir)) {
             throw new ImportException('Failed to create the temporary directories to work in');
         }
 
         $this->zipfilename = 'import.zip';
-        if (!file_put_contents($this->tempdir . '/' . $this->zipfilename, $filecontents)) {
+        if (!file_put_contents($this->tempdir  . $this->zipfilename, $filecontents)) {
             throw new ImportException('Failed to write out the zipfile to local temporary storage');
         }
     }
@@ -286,6 +291,7 @@ class MnetImporterTransport extends ImporterTransport {
     public function files_info() {
         return array(
             'zipfile' => $this->zipfilename,
+            'tempdir' => $this->tempdir,
             'relativepath' => $this->relativepath,
         );
     }
