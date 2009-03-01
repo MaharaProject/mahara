@@ -370,6 +370,7 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
         $result->status = set_field('import_queue', 'ready', 1, 'id', $queue->id);
         $result->type = 'queued';
     }
+    $importer->get('importertransport')->cleanup();
     return $result;
 }
 
