@@ -22,21 +22,21 @@
     {/if}
 
     <h3>{str tag="siteaccountsettings" section="admin"}</h3>
-    <p>Here you can view and set details for this user account. Below, you can also <a href="#suspend">suspend or delete this account</a>, or change settings for this user in the <a href="#institutions">institutions they are in</a>.</p>
+    <p>{str tag="usereditdescription" section="admin"}</p>
     {$siteform}
     <!--<h3>{str tag="suspenduser" section="admin"}</h3>-->
     <hr>
-    <h3 id="suspend">Suspend/Delete User</h3>
-    <p>Here you may suspend or entirely delete a user account. Suspended users are unable to log in until their account is unsuspended. Please note that while a suspension can be undone, deletion <strong>cannot</strong> be undone.</p>
+    <h3 id="suspend">{str tag="suspenddeleteuser" section=admin}</h3>
+    <p>{str tag="suspenddeleteuserdescription" section=admin}</p>
     <table id="suspenddelete">
         <tr>
             <td>
-                <h4>Suspend User</h4>
+                <h4>{str tag="suspenduser" section=admin}</h4>
                 {$suspendform}
             </td>
             <td id="delete">
-                <h4>Delete User</h4>
-                <p>Please note that this operation <strong>cannot be undone</strong>.</p>
+                <h4>{str tag=deleteuser section=admin}</h4>
+                <p>{str tag=deleteusernote section=admin}</p>
                 {$deleteform}
             </td>
         </tr>
@@ -45,7 +45,7 @@
     {if ($institutions)}
     <hr>
     <h3 id="institutions">{str tag="institutionsettings" section="admin"}</h3>
-    <p>Here you can change settings regarding this user's membership with institutions in the system.</p>
+    <p>{str tag="institutionsettingsdescription" section="admin"}</p>
     {$institutionform}
     {/if}
 </div>
