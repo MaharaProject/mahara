@@ -267,10 +267,15 @@ else {
 }
 
 function edituser_suspend_submit(Pieform $form, $values) {
-    global $SESSION;
-    suspend_user($values['id'], $values['reason']);
-    $SESSION->add_ok_msg(get_string('usersuspended', 'admin'));
-    redirect('/admin/users/edit.php?id=' . $values['id']);
+    global $SESSION, $USER, $user;
+    if (!$USER->get('admin') && ($user->get('admin') || $user->get('staff'))) {
+        $SESSION->add_error_msg(get_string('errorwhilesuspending', 'admin'));
+    }
+    else {
+        suspend_user($user->get('id'), $values['reason']);
+        $SESSION->add_ok_msg(get_string('usersuspended', 'admin'));
+    }
+    redirect('/admin/users/edit.php?id=' . $user->get('id'));
 }
 
 function edituser_unsuspend_submit(Pieform $form, $values) {

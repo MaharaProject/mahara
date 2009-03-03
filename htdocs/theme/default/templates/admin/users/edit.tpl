@@ -25,6 +25,7 @@
     <p>{str tag="usereditdescription" section="admin"}</p>
     {$siteform}
     <!--<h3>{str tag="suspenduser" section="admin"}</h3>-->
+    {if $USER->get('admin') || (!$user->get('admin') && !$user->get('staff')) }
     <hr>
     <h3 id="suspend">{str tag="suspenddeleteuser" section=admin}</h3>
     <p>{str tag="suspenddeleteuserdescription" section=admin}</p>
@@ -43,6 +44,7 @@
             {/if}
         </tr>
     </table>
+    {/if}
 
     {if ($institutions)}
     <hr>
