@@ -34,11 +34,13 @@
                 <h4>{str tag="suspenduser" section=admin}</h4>
                 {$suspendform}
             </td>
+            {if $USER->get('admin')}
             <td id="delete">
                 <h4>{str tag=deleteuser section=admin}</h4>
                 <p>{str tag=deleteusernote section=admin}</p>
                 {$deleteform}
             </td>
+            {/if}
         </tr>
     </table>
 
