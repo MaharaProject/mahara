@@ -467,7 +467,7 @@ $smarty->assign('institutions', count($allinstitutions) > 1);
 $smarty->assign('institutionform', $institutionform);
 
 if ($id != $USER->get('id') && is_null($USER->get('parentuser'))) {
-    $loginas = get_string('loginasuser', 'admin', htmlspecialchars($user->username));
+    $loginas = get_string('loginasuser', 'admin', hsc($user->username));
 } else {
     $loginas = null;
 }
