@@ -10,7 +10,7 @@
             {/if}
             </h2>
             <div>
-                {$introduction}
+                {$introduction|clean_text}
                 <div class="fr user-icon">
                     <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=100&amp;maxheight=100&amp;id={$USERID}" alt="">
                     <div>
@@ -39,7 +39,7 @@
                 </div>
 				<ul id="user-info">
                 {foreach from=$USERFIELDS name=userfields key=key item=item}
-                    <li><label>{str section=artefact.internal tag=$key}:</label> {$item}</li>
+                    <li><label>{str section=artefact.internal tag=$key|escape}:</label> {$item|escape}</li>
                 {/foreach}
 				</ul>
                 {if $relationship == 'pending'}
@@ -57,7 +57,7 @@
                                 <h4><a href="{$WWWROOT}view/view.php?id={$item->id}">{$item->title|escape}</a></h4>
                                 <span>
                                 {if $item->description}
-                                    {$item->description}
+                                    {$item->description|clean_text}
                                 {/if}
                                 {if $item->description && $item->artefacts}<br>{/if}
                                 {if $item->artefacts}
@@ -80,7 +80,7 @@
                         <td class="r{cycle values=0,1}">
                             <h4><a href="{$WWWROOT}group/view.php?id={$item->id}">{$item->name|escape}</a> - {str tag=$item->type section=group}</h4>
                             {if $item->description}
-                                {$item->description}
+                                {$item->description|clean_text}
                             {/if}
                         </td>
                     </tr>
