@@ -316,6 +316,10 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         $mail->Sender = get_config('noreplyaddress');
         $mail->From = $mail->Sender;
         $mail->FromName = get_string('emailname');
+        $messagetext .= "\n\nPlease do not reply to this message.\n";
+        if ($messagehtml) {
+            $messagehtml .= "\n\n<p>Please do not reply to this message.</p>\n";
+        }
     }
     else {
         $mail->Sender = $userfrom->email;
