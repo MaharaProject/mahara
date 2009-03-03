@@ -298,10 +298,20 @@ $deleteform = pieform(array(
     ),
 ));
 
+function edituser_delete_validate(Pieform $form, $values) {
+    global $USER, $SESSION;
+    if (!$USER->get('admin')) {
+        $form->set_error('submit', get_string('deletefailed', 'admin'));
+        $SESSION->add_error_msg(get_string('deletefailed', 'admin'));
+    }
+}
+
 function edituser_delete_submit(Pieform $form, $values) {
-    global $SESSION;
-    delete_user($values['id']);
-    $SESSION->add_ok_msg(get_string('userdeletedsuccessfully', 'admin'));
+    global $SESSION, $USER;
+    if ($USER->get('admin')) {
+        delete_user($values['id']);
+        $SESSION->add_ok_msg(get_string('userdeletedsuccessfully', 'admin'));
+    }
     redirect('/admin/users/search.php');
 }
 
