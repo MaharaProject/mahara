@@ -166,6 +166,13 @@ $siteoptionform = array(
             'defaultvalue' => get_config('registration_sendweeklyupdates'),
             'help'         => true,
         ),
+        'institutionexpirynotification' => array(
+            'type'         => 'expiry',
+            'title'        => get_string('institutionexpirynotification', 'admin'),
+            'description'  => get_string('institutionexpirynotificationdescription', 'admin'),
+            'defaultvalue' => is_null(get_config('institutionexpirynotification')) ? '2592000' : get_config('institutionexpirynotification'),
+            'help'         => true,
+        ),
     )
 );
 
@@ -187,7 +194,7 @@ function siteoptions_submit(Pieform $form, $values) {
     $fields = array('sitename','lang','theme', 'pathtoclam',
                     'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn', 
                     'allowpublicviews', 'allowpublicprofiles', 'createpublicgroups', 'searchplugin',
-                    'registration_sendweeklyupdates');
+                    'registration_sendweeklyupdates', 'institutionexpirynotification');
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');
     foreach ($fields as $field) {
