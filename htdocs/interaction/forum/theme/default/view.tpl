@@ -2,7 +2,7 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-<h2>{$subheading}</h2>
+<h2>{$subheading|escape}</h2>
 <div id="viewforum">
 <table id="forumdescription">
 <tr>
