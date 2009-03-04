@@ -805,4 +805,6 @@ $string['Copyof'] = 'Copy of %s';
 $string['loggedinusersonly'] = 'Logged in users only';
 $string['allowpublicaccess'] = 'Allow public (non logged in) access';
 $string['thisistheprofilepagefor'] = 'This is the profile page for %s';
+
+$string['pleasedonotreplytothismessage'] = "Please do not reply to this message.";
 ?>

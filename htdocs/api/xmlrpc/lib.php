@@ -370,6 +370,7 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
         $result->status = set_field('import_queue', 'ready', 1, 'id', $queue->id);
         $result->type = 'queued';
     }
+    $importer->get('importertransport')->cleanup();
     return $result;
 }
 
@@ -541,7 +542,7 @@ function get_public_key($uri, $application=null) {
         CURLOPT_HTTPHEADER => array("Content-Type: text/xml charset=UTF-8", 'Expect: '),
     );
 
-    $result = http_request($config);
+    $result = mahara_http_request($config);
 
     if (empty($result->data)) {
         throw new XmlrpcClientException('CURL connection failed');

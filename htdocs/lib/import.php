@@ -217,19 +217,20 @@ class FilesImporter extends Importer {
         // this contains relativepath and zipfile name
         $this->relativepath = $filesinfo['relativepath'];
         $this->zipfile = $filesinfo['zipfile'];
+        $this->tempdir = $filesinfo['tempdir'];
 
-        if (sha1_file(get_config('dataroot') . '/' . $this->relativepath . '/' . $this->zipfile) != $this->zipfilesha1) {
+        if (sha1_file($this->tempdir . $this->zipfile) != $this->zipfilesha1) {
             throw new ImportException('sha1 of recieved zipfile didn\'t match expected sha1');
         }
 
-        $this->unzipdir = get_config('dataroot') .  '/' . $this->relativepath . 'extract/';
+        $this->unzipdir = $this->tempdir . 'extract/';
         if (!check_dir_exists($this->unzipdir)) {
             throw new ImportException('Failed to create the temporary directories to work in');
         }
 
         $command = sprintf('%s %s %s %s',
             get_config('pathtounzip'),
-            escapeshellarg(get_config('dataroot') . '/' . $this->relativepath . '/' . $this->zipfile),
+            escapeshellarg($this->tempdir . $this->zipfile),
             get_config('unzipdirarg'),
             escapeshellarg($this->unzipdir)
         );
@@ -295,15 +296,16 @@ class FilesImporter extends Importer {
                     'locked' => 0,
                 );
 
-                if ($imagesize = getimagesize(get_config('dataroot') . $this->relativepath . 'extract/' . $f->actualfilename)) {
+                if ($imagesize = getimagesize($this->tempdir . 'extract/' . $f->actualfilename)) {
                     $mime = $imagesize['mime'];
                     $data->filetype = $mime;
                 }
 
                 $id = ArtefactTypeFile::save_file(
-                    $this->relativepath . 'extract/' . $f->actualfilename,
+                    $this->tempdir . 'extract/' . $f->actualfilename,
                     $data,
-                    $this->get('usrobj')
+                    $this->get('usrobj'),
+                    true
                 );
                 if (empty($id)) {
                     throw new ImportException("Failed to create new artefact for $f->sha1");
@@ -347,7 +349,7 @@ class MnetImporterTransport extends ImporterTransport {
         if (empty($this->tempdir)) {
             return;
         }
-        rmdir($this->tempdir);
+        rmdirr($this->tempdir);
     }
 
     public function prepare_files() {
@@ -365,13 +367,18 @@ class MnetImporterTransport extends ImporterTransport {
         }
 
         $this->relativepath = 'temp/import/' . $this->importer->get('id') . '/';
-        $this->tempdir = get_config('dataroot') . $this->relativepath;
+        if ($tmpdir = get_config('unziptempdir')) {
+            $this->tempdir = $tmpdir . $this->relativepath;
+        }
+        else {
+            $this->tempdir = get_config('dataroot') . $this->relativepath;
+        }
         if (!check_dir_exists($this->tempdir)) {
             throw new ImportException('Failed to create the temporary directories to work in');
         }
 
         $this->zipfilename = 'import.zip';
-        if (!file_put_contents($this->tempdir . '/' . $this->zipfilename, $filecontents)) {
+        if (!file_put_contents($this->tempdir  . $this->zipfilename, $filecontents)) {
             throw new ImportException('Failed to write out the zipfile to local temporary storage');
         }
     }
@@ -379,6 +386,7 @@ class MnetImporterTransport extends ImporterTransport {
     public function files_info() {
         return array(
             'zipfile' => $this->zipfilename,
+            'tempdir' => $this->tempdir,
             'relativepath' => $this->relativepath,
         );
     }

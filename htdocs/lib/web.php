@@ -2561,7 +2561,7 @@ function build_pagination_pagelink($class, $url, $offset, $text, $title, $disabl
     return $return;
 }
 
-function http_request($config) {
+function mahara_http_request($config) {
     $ch = curl_init();
 
     // standard curl_setopt stuff; configs passed to the function can override these
