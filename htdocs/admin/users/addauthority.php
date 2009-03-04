@@ -127,18 +127,15 @@ function auth_config_submit(Pieform $form, $values) {
         log_info($e->getMessage());
         log_info($e->getTrace());
         $SESSION->add_error_msg("An error occurred while processing this form: " . $e->getMessage());
-        redirect($_SERVER['REQUEST_URI']);
+        redirect('/admin/users/addauthority.php?'. $_SERVER['QUERY_STRING']);
     }
 
-    if (false == $form->has_errors()) {
-        if (array_key_exists('create', $values) && $values['create']) {
-            execute_javascript_and_close('window.opener.addAuthority('.$values['instance'].', "'.addslashes($values['instancename']).'", "'.$values['authname'].'");');
-        } else {
-            execute_javascript_and_close();
-        }
-        exit;
+    if (array_key_exists('create', $values) && $values['create']) {
+        execute_javascript_and_close('window.opener.addAuthority('.$values['instance'].', "'.addslashes($values['instancename']).'", "'.$values['authname'].'");');
+    } else {
+        execute_javascript_and_close();
     }
-    redirect($_SERVER['REQUEST_URI']);
+    exit;
 }
 
 // TODO: move to lib if people want this:

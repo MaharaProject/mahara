@@ -308,6 +308,7 @@ $string['staffusersupdated'] = 'Staff users updated';
 
 // Suspended Users
 $string['deleteusers'] = 'Delete Users';
+$string['deleteuser'] = 'Delete User';
 $string['confirmdeleteusers'] = 'Are you sure you want to delete the selected users?';
 $string['exportingnotsupportedyet'] = 'Exporting user profiles is not supported yet';
 $string['exportuserprofiles'] = 'Export User Profiles';
@@ -350,6 +351,10 @@ $string['filequotadescription'] = 'Total storage available in the user\'s files 
 $string['addusertoinstitution'] = 'Add User to Institution';
 $string['removeuserfrominstitution'] = 'Remove user from this institution';
 $string['confirmremoveuserfrominstitution'] = 'Are you sure you want to remove the user from this institution?';
+$string['usereditdescription'] = 'Here you can view and set details for this user account. Below, you can also <a href="#suspend">suspend or delete this account</a>, or change settings for this user in the <a href="#institutions">institutions they are in</a>.';
+$string['suspenddeleteuser'] = 'Suspend/Delete User';
+$string['suspenddeleteuserdescription'] = 'Here you may suspend or entirely delete a user account. Suspended users are unable to log in until their account is unsuspended. Please note that while a suspension can be undone, deletion <strong>cannot</strong> be undone.';
+$string['deleteusernote'] = 'Please note that this operation <strong>cannot be undone</strong>.';
 
 // Add User
 $string['adduser'] = 'Add User';
@@ -392,6 +397,7 @@ $string['authenticatedbydescription'] = 'How this user authenticates to Mahara';
 $string['remoteusername'] = 'Username for external authentication';
 $string['remoteusernamedescription'] = 'The username that this user has in the remote system';
 $string['institutionsettings'] = 'Institution Settings';
+$string['institutionsettingsdescription'] = 'Here you can change settings regarding this user\'s membership with institutions in the system.';
 $string['changeinstitution'] = 'Change Institution';
 $string['institutionstaff'] = 'Institution Staff';
 $string['institutionadmins'] = 'Institution Administrators';

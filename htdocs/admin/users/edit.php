@@ -267,10 +267,15 @@ else {
 }
 
 function edituser_suspend_submit(Pieform $form, $values) {
-    global $SESSION;
-    suspend_user($values['id'], $values['reason']);
-    $SESSION->add_ok_msg(get_string('usersuspended', 'admin'));
-    redirect('/admin/users/edit.php?id=' . $values['id']);
+    global $SESSION, $USER, $user;
+    if (!$USER->get('admin') && ($user->get('admin') || $user->get('staff'))) {
+        $SESSION->add_error_msg(get_string('errorwhilesuspending', 'admin'));
+    }
+    else {
+        suspend_user($user->get('id'), $values['reason']);
+        $SESSION->add_ok_msg(get_string('usersuspended', 'admin'));
+    }
+    redirect('/admin/users/edit.php?id=' . $user->get('id'));
 }
 
 function edituser_unsuspend_submit(Pieform $form, $values) {
@@ -298,10 +303,20 @@ $deleteform = pieform(array(
     ),
 ));
 
+function edituser_delete_validate(Pieform $form, $values) {
+    global $USER, $SESSION;
+    if (!$USER->get('admin')) {
+        $form->set_error('submit', get_string('deletefailed', 'admin'));
+        $SESSION->add_error_msg(get_string('deletefailed', 'admin'));
+    }
+}
+
 function edituser_delete_submit(Pieform $form, $values) {
-    global $SESSION;
-    delete_user($values['id']);
-    $SESSION->add_ok_msg(get_string('userdeletedsuccessfully', 'admin'));
+    global $SESSION, $USER;
+    if ($USER->get('admin')) {
+        delete_user($values['id']);
+        $SESSION->add_ok_msg(get_string('userdeletedsuccessfully', 'admin'));
+    }
     redirect('/admin/users/search.php');
 }
 
