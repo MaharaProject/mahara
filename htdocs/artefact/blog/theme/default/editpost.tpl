@@ -9,7 +9,7 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-        <h2>{$pagetitle}</h2>
+        <h2>{$pagetitle|escape}</h2>
         {$textinputform}
         <div id='uploader'></div>
         <div id='browsebuttonstuff'>
