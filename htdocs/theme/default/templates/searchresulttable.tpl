@@ -26,7 +26,7 @@
         {foreach from=$results.data item=r}
           <tr class="{cycle values="r0,r1"}">
           {foreach from=$cols key=f item=c}
-            <td{if (!empty($c.class))} class="{$c.class}"{/if}>{if empty($c.template)}{$r[$f]}{else}{eval var=$c.template}{/if}</td> 
+            <td{if (!empty($c.class))} class="{$c.class}"{/if}>{if empty($c.template)}{$r[$f]|escape}{else}{eval var=$c.template}{/if}</td> 
           {/foreach}
           </tr>
         {/foreach}
