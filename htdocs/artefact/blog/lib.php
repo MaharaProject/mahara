@@ -210,10 +210,10 @@ class ArtefactTypeBlog extends ArtefactType {
         if (isset($options['viewid'])) {
             $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/artefact.php?artefact='
                                              . $this->get('id') . '&view=' . $options['viewid']
-                                             . '">' . $this->get('title') . '</a>');
+                                             . '">' . hsc($this->get('title')) . '</a>');
         }
         else {
-            $smarty->assign('artefacttitle', $this->get('title'));
+            $smarty->assign('artefacttitle', hsc($this->get('title')));
         }
 
         $smarty->assign('blockid', $blockid);
@@ -221,7 +221,7 @@ class ArtefactTypeBlog extends ArtefactType {
         $smarty->assign('enc_id', json_encode($this->id));
         $smarty->assign('limit', self::pagination);
         $smarty->assign('loading_img', theme_get_url('images/loading.gif'));
-        $smarty->assign('description', $this->get('description'));
+        $smarty->assign('description', clean_text($this->get('description')));
 
         // Remove unnecessary options for blog posts
         unset($options['hidetitle']);
@@ -415,15 +415,15 @@ class ArtefactTypeBlogPost extends ArtefactType {
             if (isset($options['viewid'])) {
                 $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/artefact.php?artefact='
                      . $this->get('id') . '&view=' . $options['viewid']
-                     . '">' . $this->get('title') . '</a>');
+                     . '">' . hsc($this->get('title')) . '</a>');
             }
             else {
-                $smarty->assign('artefacttitle', $this->get('title'));
+                $smarty->assign('artefacttitle', hsc($this->get('title')));
             }
         }
 
         // We need to make sure that the images in the post have the right viewid associated with them
-        $postcontent = $this->get('description');
+        $postcontent = clean_text($this->get('description'));
         if (isset($options['viewid'])) {
             safe_require('artefact', 'file');
             $postcontent = ArtefactTypeFolder::append_view_url($postcontent, $options['viewid']);
@@ -552,6 +552,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 foreach ($files as $file) {
                     $result[$file->blogpost]->files[] = $file;
                 }
+            }
+            foreach ($result as &$post) {
+                $post->description = clean_text($post->description);
             }
         }
 
