@@ -74,7 +74,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
 
             $description = (is_a($image, 'ArtefacttypeImage')) ? $image->get('description') : $image->get('title');
             if (!empty($configdata['showdescription']) && $description) {
-                $result .= '<p>' . $description . '</p>';
+                $result .= '<p>' . hsc($description) . '</p>';
             }
             $result .= '</div>';
         }
