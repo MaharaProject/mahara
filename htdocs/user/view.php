@@ -332,7 +332,7 @@ if ($loggedinid != $userid) {
 }
 
 if ($userid != $USER->get('id') && $USER->is_admin_for_user($user) && is_null($USER->get('parentuser'))) {
-    $loginas = get_string('loginasuser', 'admin', $user->username);
+    $loginas = get_string('loginasuser', 'admin', hsc($user->username));
 } else {
     $loginas = null;
 }

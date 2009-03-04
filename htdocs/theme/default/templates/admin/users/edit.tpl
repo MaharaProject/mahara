@@ -2,7 +2,7 @@
 
 {include file="columnfullstart.tpl"}
 <div id="edituser">
-    <h2><a href="{$WWWROOT}user/view.php?id={$user->id}">{$user->firstname} {$user->lastname} ({$user->username})</a></h2>
+    <h2><a href="{$WWWROOT}user/view.php?id={$user->id}">{$user|display_name|escape}</a></h2>
     {if !empty($loginas)}
       <div><a href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">{$loginas}</a></div>
     {/if}
