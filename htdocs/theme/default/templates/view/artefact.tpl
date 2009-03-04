@@ -5,7 +5,7 @@
         <h2>
             <a href="{$WWWROOT}view/view.php?id={$viewid}">{$viewtitle|escape}</a>{if $ownername} {str tag=by section=view}
             <a href="{$WWWROOT}{$ownerlink}">{$ownername|escape}</a>{/if}{foreach from=$artefactpath item=a}:
-                {if $a.url}<a href="{$a.url}">{/if}{$a.title}{if $a.url}</a>{/if}
+                {if $a.url}<a href="{$a.url}">{/if}{$a.title|escape}{if $a.url}</a>{/if}
             {/foreach}
         </h2>
 
