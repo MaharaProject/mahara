@@ -1943,21 +1943,26 @@ function onlineusers_sideblock() {
     $onlineusers = get_records_select_array('usr', 'deleted = 0 AND lastaccess > ?',
         array(db_format_timestamp(time() - get_config('accessidletimeout'))), 'lastaccess DESC');
 
-    foreach ($onlineusers as &$user) {
-        // Use 'profileiconbyid' for the current user, just in case they change their profile icon
-        if ($user->id == $USER->get('id')) {
-            $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . (int)$user->profileicon . '&size=20x20';
-        }
-        else {
-            $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileicon&id=' . $user->id . '&size=20x20';
-        }
+    if ($onlineusers) {
+        foreach ($onlineusers as &$user) {
+            // Use 'profileiconbyid' for the current user, just in case they change their profile icon
+            if ($user->id == $USER->get('id')) {
+                $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . (int)$user->profileicon . '&size=20x20';
+            }
+            else {
+                $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileicon&id=' . $user->id . '&size=20x20';
+            }
 
-        // If the user is an MNET user, show where they've come from
-        $authobj = AuthFactory::create($user->authinstance);
-        if ($authobj->authname == 'xmlrpc') {
-            $peer = get_peer($authobj->wwwroot);
-            $user->loggedinfrom = $peer->name;
+            // If the user is an MNET user, show where they've come from
+            $authobj = AuthFactory::create($user->authinstance);
+            if ($authobj->authname == 'xmlrpc') {
+                $peer = get_peer($authobj->wwwroot);
+                $user->loggedinfrom = $peer->name;
+            }
         }
+    }
+    else {
+        $onlineusers = array();
     }
     return array(
         'users' => $onlineusers,
