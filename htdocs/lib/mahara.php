@@ -905,14 +905,14 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
         if (!empty($nonfatal)) {
             return false;
         }
-        throw new Exception ("File $fullpath did not exist");
+        throw new SystemException ("File $fullpath did not exist");
     }
 
     if (strpos($realpath, get_config('docroot') !== 0)) {
         if (!empty($nonfatal)) {
             return false;
         }
-        throw new Exception ("File $fullpath was outside document root!");
+        throw new SystemException ("File $fullpath was outside document root!");
     }
 
     if ($function == 'require') { return require($realpath); }
