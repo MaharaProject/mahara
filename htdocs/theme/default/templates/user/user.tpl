@@ -20,7 +20,7 @@
 					<img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=40&amp;maxheight=40&amp;id={$user->id}" alt="">
 				</div>
     {if $user->introduction}
-                {$user->introduction}
+                {$user->introduction|clean_html}
                 {/if}
                 <div class="pending">
                     <strong>
