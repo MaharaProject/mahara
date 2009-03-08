@@ -2285,6 +2285,10 @@ table.groupviews{
 #memberlist {
 	border-bottom: 1px solid #95a8b7;
 }
+#friendslist .pending {
+    margin-left: 50px;
+    margin-top: .5em;
+}
 
 
 /* FORUMS */

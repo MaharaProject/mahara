@@ -25,8 +25,8 @@
                 <div class="pending">
                     <strong>
                         {str tag='whymakemeyourfriend' section='group'}
-                        {$user->message}
                     </strong>
+                    <div>{$user->message|format_whitespace}</div>
                 </div>
                 <div>
                     <ul>
