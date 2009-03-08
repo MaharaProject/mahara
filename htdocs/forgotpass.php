@@ -114,8 +114,8 @@ $form = array(
 function forgotpass_validate(Pieform $form, $values) {
     // See if the user input an email address or a username. We favour email addresses
     if (!$form->get_error('emailusername')) {
-        if (!($authinstance = get_field('usr', 'authinstance', 'email', $values['emailusername']))) {
-            if (!($authinstance = get_field('usr', 'authinstance', 'username', $values['emailusername']))) {
+        if (!($authinstance = get_field_sql('SELECT authinstance FROM {usr} WHERE LOWER(email) = ?', array(strtolower($values['emailusername']))))) {
+            if (!($authinstance = get_field_sql('SELECT authinstance FROM {usr} WHERE LOWER(username) = ?', array(strtolower($values['emailusername']))))) {
                 $form->set_error('emailusername', get_string('forgotpassnosuchemailaddressorusername'));
             }
         }
@@ -135,8 +135,8 @@ function forgotpass_submit(Pieform $form, $values) {
     global $SESSION;
 
     try {
-        if (!$user = get_record('usr', 'email', $values['emailusername'])) {
-            if (!$user = get_record('usr', 'username', $values['emailusername'])) {
+        if (!$user = get_record_sql('SELECT * FROM {usr} WHERE LOWER(email) = ?', array(strtolower($values['emailusername'])))) {
+            if (!$user = get_record_sql('SELECT * FROM {usr} WHERE LOWER(username) = ?', array(strtolower($values['emailusername'])))) {
                 die_info(get_string('forgotpassnosuchemailaddressorusername'));
             }
         }
