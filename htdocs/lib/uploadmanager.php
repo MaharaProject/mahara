@@ -98,7 +98,7 @@ class upload_manager {
             return get_string('notphpuploadedfile');
         }
 
-        if (get_config('viruschecking') && ($errormsg = clam_scan_file($file))) {
+        if (get_config('viruschecking') && ($errormsg = mahara_clam_scan_file($file))) {
             return $errormsg;
         }
 
@@ -249,7 +249,7 @@ function clam_handle_infected_file($file) {
  * @param mixed $file The file to scan from $files. or an absolute path to a file.
  * @return false if no errors, or a string if there's an error.
  */ 
-function clam_scan_file(&$file) {
+function mahara_clam_scan_file($file) {
 
     if (is_array($file) && is_uploaded_file($file['tmp_name'])) { // it's from $_FILES
         $fullpath = $file['tmp_name'];
