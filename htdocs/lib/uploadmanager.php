@@ -243,9 +243,8 @@ function clam_handle_infected_file($file) {
 
 
 /**
- * If $CFG->runclamonupload is set, we scan a given file. (called from {@link preprocess_files()})
+ * Scan a file for viruses using clamav.
  *
- * This function will add on a uploadlog index in $file.
  * @param mixed $file The file to scan from $files. or an absolute path to a file.
  * @return false if no errors, or a string if there's an error.
  */ 
@@ -254,11 +253,11 @@ function mahara_clam_scan_file($file) {
     if (is_array($file) && is_uploaded_file($file['tmp_name'])) { // it's from $_FILES
         $fullpath = $file['tmp_name'];
     }
-    else if (file_exists($file)) { // it's a path to somewhere on the filesystem!
+    else if (file_exists($file)) {
         $fullpath = $file;
     }
     else {
-        return get_string('unknownerror'); 
+        throw new SystemException('clam_scan_file: not called correctly, read phpdoc for this function');
     }
 
     $pathtoclam = trim(get_config('pathtoclam'));
@@ -358,8 +357,9 @@ function get_clam_error_code($returncode) {
     $returncodes[64] = 'Can\'t write to temporary directory (please specify another one).';
     $returncodes[70] = 'Can\'t allocate and clear memory (calloc).';
     $returncodes[71] = 'Can\'t allocate memory (malloc).';
-    if ($returncodes[$returncode])
+    if (isset($returncodes[$returncode])) {
        return $returncodes[$returncode];
+    }
     return get_string('clamunknownerror');
 
 }
@@ -382,7 +382,7 @@ function clam_log_infected($oldfilepath='', $newfilepath='', $userid=0) {
            : '. The original file path of the infected file was '. $oldfilepath)
         . ((empty($newfilepath)) ? '. The file has been deleted ' : '. The file has been moved to a quarantine directory and the new path is '. $newfilepath);
 
-    error_log($errorstr);
+    log_debug($errorstr);
 }
 
 ?>
