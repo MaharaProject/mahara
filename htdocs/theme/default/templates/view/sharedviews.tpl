@@ -29,11 +29,7 @@
     </table>
     <div class="center">{$pagination}</div>
 {else}
-<table id="myviewstable"{if $member} class="groupviews"{/if}>
-  <tr>
-    <td>{str tag="noviewstosee" section="group"}</td>
-  </tr>
-</table>
+<div class="message">{str tag="noviewstosee" section="group"}</div>
 {/if}
 
 

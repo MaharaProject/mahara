@@ -204,7 +204,15 @@ a:hover {
 	font-size: 11px;
 	color: #FFF;
 }
-span.addicon { display: block; margin-top: -16px; float: right; }
+span.addicon {
+    display: block;
+    margin-top: -16px;
+    * margin-top: -30px;
+    float: right;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    span.addicon { margin-top: -30px; }
+}
 .addicon form,
 .addicon form div {
   display: inline;
@@ -413,7 +421,8 @@ input.cancelbackcreate,
 }
 /* Unless shouldn't */
 .maincontent .pieform table input.submit,
-.maincontent .pieform table button {
+.maincontent .pieform table button,
+#view-wizard-controls input.submit {
     background-color: #92b328;
     height: 24px;
     margin: 5px 2px 0 0;
@@ -491,7 +500,7 @@ table.mceEditor {
 div.grippie {
     border-color: #b2b2b2;
     border-style: solid;
-    border-width: 0pt 1px 1px;
+    border-width: 0px 1px 1px 1px;
     background: #eeeeee url(../images/grippie.png) no-repeat scroll 100% 50%;
     cursor: s-resize;
     height: 14px;
@@ -623,8 +632,10 @@ tr.required th,
 #mainnav ul {
 	padding: 5px 0;
 	margin: 0;
-    background: url(../images/menu-bg.gif) repeat-x;
 	height: 25px;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	#mainnav ul { padding: 5px 0 6px 0; }
 }
 #mainnav li {
     display: inline;
@@ -633,36 +644,38 @@ tr.required th,
     font-weight: bold;
 	font-size: 12px;
 	margin: 0;
-	padding: 5px 8px 5px 13px;
+	padding: 0;
 	height: 25px;
-	background: url(../images/menu-dividerbg.gif) repeat-x left;
 }
 #mainnav li a,
 #mainnav li a:link,
 #mainnav li a:visited,
 #mainnav li a:active {
 	margin: 0;
-	padding: 0;
+	padding: 5px 10px 5px 12px;
+	background: url(../images/menu-dividerbg.gif) no-repeat left;
     color: #FFF;
 	height: 25px;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	#mainnav li a, #mainnav li a:link, #mainnav li a:visited, #mainnav li a:active { padding: 5px 10px 6px 12px; }
 }
 #mainnav li a:hover {
     color: #e4ffb4;
     text-decoration: none;
 }
 #mainnav li.selected {
-	padding: 5px 8px 5px 13px;
 	height: 25px;
-	background: url(../images/menu-over-bg.gif) repeat-x left;
 }
 #mainnav li.selected a:link,
 #mainnav li.selected a:visited,
 #mainnav li.selected a:active {
     color: #feef45;
+	background: url(../images/menu-over-bg.gif) no-repeat left;
 }
 /* Sub menu */
 #subnav {
-    padding: 0 0 0 15px;
+    padding: 0 0 0 10px;
     margin: 0;
     font-size: 12px;
     font-weight: bold;
@@ -681,16 +694,14 @@ tr.required th,
 #subnav li {
     display: inline;
     height: 25px;
-    padding: 5px 13px 5px 8px;
+    padding: 0;
     margin: 0;
-	background: url(../images/submenu-divider.gif) no-repeat top right;
 }
 #subnav li.selected {
     display: inline;
     height: 25px;
-    padding: 5px 13px 5px 8px;
+    padding: 0;
     margin: 0;
-	background: url(../images/submenu-over-bg.gif) repeat-x top right;
 }
 #subnav li a,
 #subnav li a:link,
@@ -698,7 +709,13 @@ tr.required th,
 #subnav li a:active {
     color: #474220;
 	height: 25px;
+    padding: 5px 12px 5px 10px;
+	background: url(../images/submenu-divider.gif) no-repeat top right;
 }
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	#subnav li a, #subnav li a:link, #subnav li a:visited, #subnav li a:active { padding: 5px 12px 6px 10px; }
+}
+
 #subnav li a:hover {
     color: #7e7327;
     text-decoration: none;
@@ -706,7 +723,12 @@ tr.required th,
 #subnav li.selected a:link,
 #subnav li.selected a:visited,
 #subnav li.selected a:active {
+    padding: 5px 12px 5px 10px;
+	background: url(../images/submenu-over-bg.gif) no-repeat top right;
     color: #4c711d;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	#subnav li.selected a:link, #subnav li.selected a:visited, #subnav li.selected a:active { padding: 5px 12px 6px 10px; }
 }
 #subnav li.groupname {
     background: url(../images/menu-over-bg.gif) repeat-x left;
@@ -801,9 +823,18 @@ div#user_profileicon {
 #sb_onlineusers ul {
     list-style-type: none;
 }
+#onlineusers a img {
+	float: left;
+	margin-right: 3px;
+}
+#onlineusers li {
+	line-height: 20px;
+}
 #lastminutes {
     float: right;
     margin-top: 2px;
+	color: #999999;
+	font-style: italic;
 }
 
 /* Side Quota Bar */
@@ -1157,8 +1188,8 @@ legend a:active {
 fieldset {
     border: 1px solid #95a8b7;
     padding: 0;
-	margin-top: 5px;
-	margin-bottom: 5px;
+	margin: 5px 0;
+	* margin: 0;
 }
 fieldset.collapsible {
 	padding: 15px 10px;
@@ -1166,10 +1197,14 @@ fieldset.collapsible {
 fieldset.collapsed {
 	border: 0;
 	padding: 0;
+	margin: 0;
 }
 fieldset.collapsed table {
     position: absolute;
     visibility: hidden;
+	padding: 0;
+	border: 0;
+	margin: 0;
 }
 fieldset legend a {
     padding-left: 15px;
@@ -1329,11 +1364,12 @@ input#myfriends_addfriend_add {
     padding: 0 !important;
 	font-size: 11px;
 	margin: 0 0 0 10px !important;
+	height: 18px;
 }
 .profile-tabs li a {
     color: #FFF;
     background-color: #758999;
-    padding: 4px 10px;
+    padding: 5px 10px;
 	margin: 0;
 }
 .profile-tabs li a.current-tab {
@@ -1349,10 +1385,11 @@ input#myfriends_addfriend_add {
 .profile-fieldsets {
     clear: left;
 	padding: 0;
-	margin: 0;
+	margin: 2px 0 0 0;
 }
 .profile-fieldsets fieldset {
 	margin-top: 2px;
+	* margin-top: 0;
 }
 fieldset.safe-hidden .mceEditor {
 	display: none;
@@ -1454,6 +1491,10 @@ fieldset.collapsed .mceEditor td {
 #myviewstable .viewitem a#editviewaccess {
 	color: #7f9d16 !important;
 }
+#myviewstable #btn-deletethisview {
+  font-size: 11px;
+  color: #ca0000;
+}
 #editviewdetails,
 #editthisview,
 #editviewaccess {
@@ -1485,6 +1526,9 @@ fieldset.collapsed .mceEditor td {
 #editview td a {
 	font-size: 11px;
 }
+#noviews {
+    margin-top: 24px;
+}
 #editaccess table {
 	width: 100%;
 	* width: 98%;
@@ -1493,13 +1537,13 @@ fieldset.collapsed .mceEditor td {
 	border-bottom: 1px solid #95a8b7;
 }
 #viewacl_lhs #results .button {
-        margin-top: 0;
-        height: 20px;
-	border: 0;
-	background: url(../images/icon-add.gif) no-repeat left 7px;
-	padding-left: 10px;
-	color: #7f9d16;
-	font-weight: bold;
+    margin-top: 0;
+    height: 20px;
+    border: 0;
+    background: url(../images/icon-add.gif) no-repeat left 7px;
+    padding-left: 10px;
+    color: #7f9d16;
+    font-weight: bold;
 }
 #potentialpresetitems button {
 	border: 0;
@@ -2641,24 +2685,37 @@ span.breadcrumbs a {
 	font-size: 12px;
 }
 #register-site h3 {
-    text-align: center;
-    margin: .25em;
+    text-align: left;
+    margin: .25em 0;
 }
 #register-site p {
     margin: 10px 0 0;
 }
 #register-site div {
-    width: 75%;
     margin: 0 auto;
-    text-align: center;
+    text-align: left;
     font-weight: normal;
 }
+#register-site form {
+	margin-top: 10px;
+}
+#register-site form legend {
+	color: #7f9d16;
+	font-size: 1.2em;
+}
+#register-site form legend a {
+	color: #7f9d16 !important;
+}
 #register-site form table {
-    margin: 0 auto;
+    margin: 0;
     text-align: left;
 }
 #register-site th {
     text-align: left;
+	padding: 0 10px;
+}
+#register-site table td {
+	padding: 0 10px;
 }
 
 /* CONFIGURE SITE > SITE OPTIONS */

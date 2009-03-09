@@ -65,20 +65,7 @@
         <div id="mainnav">
         <ul>
 {foreach from=$MAINNAV item=item}
-{if $item.selected}{assign var=MAINNAVSELECTED value=$item}<li class="selected"><a href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>{else}<li><a href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>{/if}{/foreach}
-{if $LOGGEDIN}
-{if $USER->get('admin') || $USER->is_institutional_admin()}
-{if $ADMIN || $INSTITUTIONALADMIN}
-<li><a href="{$WWWROOT}">{str tag="returntosite"}</a></li>
-{elseif $USER->get('admin')}
-<li><a href="{$WWWROOT}admin/">{str tag="siteadministration"}</a></li>
-{else}
-<li><a href="{$WWWROOT}admin/users/search.php">{str tag="useradministration"}</a></li>
-{/if}
-{* <li><a href="" onclick="createLoggingPane(); return false;">Create Logging Pane</a></li> *}
-{/if}
-<li><a href="{$WWWROOT}?logout">{str tag="logout"}</a></li>
-{/if}
+{if $item.selected}{assign var=MAINNAVSELECTED value=$item}<li class="selected"><a href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>{else}<li><a href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>{/if}{/foreach}{if $LOGGEDIN}{if $USER->get('admin') || $USER->is_institutional_admin()}{if $ADMIN || $INSTITUTIONALADMIN}<li><a href="{$WWWROOT}">{str tag="returntosite"}</a></li>{elseif $USER->get('admin')}<li><a href="{$WWWROOT}admin/">{str tag="siteadministration"}</a></li>{else}<li><a href="{$WWWROOT}admin/users/search.php">{str tag="useradministration"}</a></li>{/if}{* <li><a href="" onclick="createLoggingPane(); return false;">Create Logging Pane</a></li> *}{/if}<li><a href="{$WWWROOT}?logout">{str tag="logout"}</a></li>{/if}
         </ul>
         </div>
     </div>
