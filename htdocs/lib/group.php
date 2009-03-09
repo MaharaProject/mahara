@@ -858,27 +858,25 @@ function group_get_menu_tabs() {
         'weight' => 50,
     );
 
+    if (group_user_access($group->id)) {
+        safe_require('grouptype', $group->grouptype);
+        $artefactplugins = call_static_method('GroupType' . $group->grouptype, 'get_group_artefact_plugins');
+        if ($plugins = get_records_array('artefact_installed', 'active', 1)) {
+            foreach ($plugins as &$plugin) {
+                if (!in_array($plugin->name, $artefactplugins)) {
+                    continue;
+                }
+                safe_require('artefact', $plugin->name);
+                $plugin_menu = call_static_method(generate_class_name('artefact',$plugin->name), 'group_tabs', $group->id);
+                $menu = array_merge($menu, $plugin_menu);
+            }
+        }
+    }
+
     if (defined('MENUITEM')) {
         $key = substr(MENUITEM, strlen('groups/'));
         if ($key && isset($menu[$key])) {
             $menu[$key]['selected'] = true;
-        }
-    }
-
-    if (!group_user_access($group->id)) {
-        return $menu;
-    }
-
-    safe_require('grouptype', $group->grouptype);
-    $artefactplugins = call_static_method('GroupType' . $group->grouptype, 'get_group_artefact_plugins');
-    if ($plugins = get_records_array('artefact_installed', 'active', 1)) {
-        foreach ($plugins as &$plugin) {
-            if (!in_array($plugin->name, $artefactplugins)) {
-                continue;
-            }
-            safe_require('artefact', $plugin->name);
-            $plugin_menu = call_static_method(generate_class_name('artefact',$plugin->name), 'group_tabs', $group->id);
-            $menu = array_merge($menu, $plugin_menu);
         }
     }
 
