@@ -2,7 +2,6 @@
 {include file="sidebar.tpl"}
 {include file="columnleftstart.tpl"}
 
-<div>
 <span class="addicon fr">
   {$createviewform}
   {$createtemplateform}
@@ -15,6 +14,7 @@
 {/if}
   </form>
 </span>
+<div>
 
 {if $institution}
   {$institutionselector}
@@ -88,11 +88,7 @@
 <div class="center">{$pagination}</div>
 
 {else}
-<table id="myviewstable"{if $member} class="groupviews"{/if}>
-  <tr>
-    <td>{if $GROUP}{str tag="noviewstosee" section="group"}{elseif $institution}{str tag="noviews" section="view"}{else}{str tag="youhavenoviews" section="view"}{/if}</td>
-  </tr>
-</table>
+<div class="message" id="noviews">{if $GROUP}{str tag="noviewstosee" section="group"}{elseif $institution}{str tag="noviews" section="view"}{else}{str tag="youhavenoviews" section="view"}{/if}</div>
 {/if}
 
 </div>
