@@ -557,6 +557,11 @@ function xmldb_core_upgrade($oldversion=0) {
             }
         }
         if (!get_record('view', 'owner', 0, 'type', 'profile')) {
+            // First ensure system user has id = 0; In older MySQL installations it may be > 0
+            $sysuser = get_record('usr', 'username', 'root');
+            if ($sysuser && $sysuser->id > 0 && !count_records('usr', 'id', 0)) {
+                set_field('usr', 'id', 0, 'id', $sysuser->id);
+            }
             // Install system profile view
             require_once(get_config('libroot') . 'view.php');
             $dbtime = db_format_timestamp(time());
