@@ -1001,7 +1001,7 @@ function get_users_data($userlist) {
                 (SELECT 1 FROM {usr_friend} WHERE ((usr1 = ? AND usr2 = u.id) OR (usr2 = ? AND usr1 = u.id))) AS friend,
                 (SELECT 1 FROM {usr_friend_request} fr WHERE fr.requester = ? AND fr.owner = u.id) AS requestedfriendship,
                 (SELECT title FROM {artefact} WHERE artefacttype = \'introduction\' AND owner = u.id) AS introduction,
-                NULL AS reason
+                NULL AS message
                 FROM {usr} u
                 WHERE u.id IN (' . $userlist . ')
             UNION
