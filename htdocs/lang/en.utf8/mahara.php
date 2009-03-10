@@ -178,8 +178,8 @@ $string['accountexpirywarninghtml'] = '<p>Dear %s,</p>
 <p>If you wish to extend your account access or have any questions regarding the above, please feel free to <a href="%s">Contact Us</a>.</p>
 
 <p>Regards, %s Site Administrator</p>';
-$string['institutionexpirywarning'] = 'Institution membership expiry warning';
-$string['institutionexpirywarningtext'] = 'Dear %s,
+$string['institutionmembershipexpirywarning'] = 'Institution membership expiry warning';
+$string['institutionmembershipexpirywarningtext'] = 'Dear %s,
 
 Your membership of %s on %s will expire within %s.
 
@@ -188,8 +188,8 @@ If you wish to extend your membership or have any questions regarding the above,
 %s
 
 Regards, %s Site Administrator';
-$string['institutionexpirywarninghtml'] = '<p>Dear %s,</p>
-    
+$string['institutionmembershipexpirywarninghtml'] = '<p>Dear %s,</p>
+
 <p>Your membership of %s on %s will expire within %s.</p>
 
 <p>If you wish to extend your membership or have any questions regarding the above, please feel free to <a href="%s">Contact Us</a>.</p>

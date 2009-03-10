@@ -1348,10 +1348,10 @@ function auth_handle_account_expiries() {
         foreach ($users as $user) {
             $displayname  = display_name($user);
             email_user($user, null,
-                get_string('institutionexpirywarning'),
-                get_string('institutionexpirywarningtext', 'mahara', $displayname, $user->institutionname,
+                get_string('institutionmembershipexpirywarning'),
+                get_string('institutionmembershipexpirywarningtext', 'mahara', $displayname, $user->institutionname,
                            $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename),
-                get_string('institutionexpirywarninghtml', 'mahara', $displayname, $user->institutionname,
+                get_string('institutionmembershipexpirywarninghtml', 'mahara', $displayname, $user->institutionname,
                            $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename)
             );
             set_field('usr_institution', 'expirymailsent', 1, 'usr', $user->id,

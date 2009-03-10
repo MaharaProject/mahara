@@ -341,7 +341,7 @@ foreach ($user->get('institutions') as $i) {
                 'description'  => get_string('membershipexpirydescription', 'admin'),
                 'minyear'      => $currentdate['year'],
                 'maxyear'      => $currentdate['year'] + 20,
-                'defaultvalue' => $i->expiry
+                'defaultvalue' => $i->membership_expiry
             ),
             $i->institution.'_studentid' => array(
                 'type'         => 'text',
