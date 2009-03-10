@@ -869,8 +869,23 @@ function xmldb_core_upgrade($oldversion=0) {
         reload_html_filters();
     }
 
-    return $status;
+    if ($oldversion < 2009031300) {
+        $table = new XMLDBTable('institution');
 
+        $expiry = new XMLDBField('expiry');
+        $expiry->setAttributes(XMLDB_TYPE_DATETIME);
+        add_field($table, $expiry);
+
+        $expirymailsent = new XMLDBField('expirymailsent');
+        $expirymailsent->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $expirymailsent);
+
+        $suspended = new XMLDBField('suspended');
+        $suspended->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $suspended);
+    }
+
+    return $status;
 }
 
 ?>

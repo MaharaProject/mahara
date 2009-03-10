@@ -42,6 +42,9 @@
                 <FIELD NAME="theme" TYPE="char" LENGTH="255" NOTNULL="false"/>
                 <FIELD NAME="defaultmembershipperiod" TYPE="int" NOTNULL="false" />
                 <FIELD NAME="maxuseraccounts" TYPE="int" NOTNULL="false" />
+                <FIELD NAME="expiry" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="expirymailsent" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="suspended" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />
