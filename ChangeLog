@@ -1,3 +1,9 @@
+1.1.2 (2009-03-10)
+- minor fixes to portfolio import, html validation, default theme and upgrade
+  path from 1.0
+- added support for embedding slideshare widgets
+1.1.1 (2009-02-27)
+- a few fixes to the upgrade path from 1.0
 1.1.0 (2009-02-26)
 - raft of new features over the 1.0 series of Mahara
 - ability to copy Views
