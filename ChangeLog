@@ -1,3 +1,9 @@
+1.0.10 (2009-03-10)
+- Fixed multiple XSS vulnerabilities in user profile data and blogs
+  (CVE-2009-0660)
+- MNET users who attempt to log in can be shown a custom fail message
+- Minor bug fixes
+
 1.0.9 (2009-01-29)
 - small bugfixes and minor layout improvements
 - fixes the blank screens some people were seeing upon installation
