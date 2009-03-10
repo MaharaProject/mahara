@@ -123,7 +123,7 @@ if ($institution || $add) {
     if (!$add) {
         $data = get_record('institution', 'name', $institution);
         $lockedprofilefields = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
-        
+
         // TODO: Find a better way to work around Smarty's minimal looping logic
         if (!empty($authinstances)) {
             foreach($authinstances as $key => $val) {
@@ -146,6 +146,7 @@ if ($institution || $add) {
     else {
         $data = new StdClass;
         $data->displayname = '';
+        $data->expiry = null;
         if (!get_config('usersuniquebyusername')) {
             $data->registerallowed = 1;
         }
@@ -159,7 +160,9 @@ if ($institution || $add) {
     $themeoptions = get_themes();
     $themeoptions['sitedefault'] = '- ' . get_string('sitedefault', 'admin') . ' (' . $themeoptions[get_config('theme')] . ') -';
     uksort($themeoptions, 'theme_sort');
-    
+
+    $sitename = get_config('sitename');
+
     safe_require('artefact', 'internal');
     $elements = array(
         'name' => array(
@@ -198,6 +201,15 @@ if ($institution || $add) {
                 'maxlength' => 255
             ),
             'help'   => true,
+        ),
+        'expiry' => array(
+            'type'         => 'date',
+            'title'        => get_string('institutionexpiry', 'admin'),
+            'description'  => get_string('institutionexpirydescription', 'admin', $sitename),
+            'defaultvalue' => is_null($data->expiry) ? null : strtotime($data->expiry),
+            'help'         => true,
+            'minyear'      => date('Y') - 2,
+            'maxyear'      => date('Y') + 10,
         ),
     );
 
@@ -366,6 +378,7 @@ function institution_submit(Pieform $form, $values) {
     }
 
     $newinstitution->displayname                  = $values['displayname'];
+    $newinstitution->expiry                       = db_format_timestamp($values['expiry']);
     $newinstitution->authplugin                   = empty($values['authplugin']) ? null : $values['authplugin'];
     if (get_config('usersuniquebyusername')) {
         // Registering absolutely not allowed when this setting is on, it's a 
