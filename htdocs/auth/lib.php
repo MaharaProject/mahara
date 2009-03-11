@@ -1362,6 +1362,78 @@ function auth_handle_account_expiries() {
 }
 
 /**
+ * Sends notification e-mails to site and institutional admins when:
+ *
+ *  - An institution is expiring within the institution expiry warning
+ *    period, set in site options.
+ *
+ * The actual prevention of users logging in is handled by the authentication
+ * code. This cron job sends e-mails to notify users that these events will
+ * happen soon.
+ */
+function auth_handle_institution_expiries() {
+    // The 'expiry' flag on the usr table
+    $sitename = get_config('sitename');
+    $wwwroot  = get_config('wwwroot');
+    $expire   = get_config('institutionautosuspend');
+    $warn     = get_config('institutionexpirynotification');
+
+    $daystoexpire = ceil($warn / 86400) . ' ';
+    $daystoexpire .= ($daystoexpire == 1) ? get_string('day') : get_string('days');
+
+    // Get site administrators
+    $siteadmins = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff FROM {usr} u WHERE u.admin = 1', array());
+
+    // Expiry warning messages
+    if ($institutions = get_records_sql_array(
+      'SELECT i.name, i.displayname FROM {institution} i ' .
+      'WHERE ' . db_format_tsfield('i.expiry', false) . ' < ? AND suspended != 1 AND expirymailsent != 1',
+      array(time() + $warn))) {
+        foreach ($institutions as $institution) {
+            $institution_displayname = $institution->displayname;
+            // Email site administrators
+            foreach ($siteadmins as $user) {
+                $user_displayname  = display_name($user);
+                email_user($user, null,
+                    get_string('institutionexpirywarning'),
+                    get_string('institutionexpirywarningtext_site', 'mahara', $user_displayname, $institution_displayname, $daystoexpire, $sitename, $sitename),
+                    get_string('institutionexpirywarninghtml_site', 'mahara', $user_displayname, $institution_displayname, $daystoexpire, $sitename, $sitename)
+                );
+            }
+
+            // Email institutional administrators
+            $institutionaladmins = get_records_sql_array(
+              'SELECT u.id, u.username, u.expiry, u.staff, u.admin AS siteadmin, ui.admin AS institutionadmin, u.firstname, u.lastname, u.email ' .
+              'FROM {usr_institution} ui JOIN {usr} u ON (ui.usr = u.id) WHERE ui.admin = 1', array()
+            );
+            foreach ($institutionaladmins as $user) {
+                $user_displayname  = display_name($user);
+                email_user($user, null,
+                    get_string('institutionexpirywarning'),
+                    get_string('institutionexpirywarningtext_institution', 'mahara', $user_displayname, $institution_displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename),
+                    get_string('institutionexpirywarninghtml_institution', 'mahara', $user_displayname, $institution_displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename)
+                );
+            }
+            set_field('institution', 'expirymailsent', 1, 'name', $institution->name);
+        }
+    }
+
+    // If we can automatically suspend expired institutions
+    $autosuspend = get_config('institutionautosuspend');
+    if ($autosuspend) {
+        // Actual expired institutions
+        if ($institutions = get_records_sql_array(
+          'SELECT name FROM {institution} ' .
+          'WHERE ' . db_format_tsfield('expiry', false) . ' < ?', array(time()))) {
+            // Institutions have expired!
+            foreach ($institutions as $institution) {
+                set_field('institution', 'suspended', 1, 'name', $institution->name);
+            }
+        }
+    }
+}
+
+/**
  * Clears out old session files
  *
  * This should be run once every now and then (once a day is good), to clean 

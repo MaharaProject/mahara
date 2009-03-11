@@ -196,7 +196,7 @@ $string['institutionmembershipexpirywarninghtml'] = '<p>Dear %s,</p>
 
 <p>Regards, %s Site Administrator</p>';
 $string['institutionexpirywarning'] = 'Institution expiry warning';
-$string['institution_institutionexpirywarningtext'] = 'Dear %s,
+$string['institutionexpirywarningtext_institution'] = 'Dear %s,
 
 %s\'s membership of %s will expire within %s.
 
@@ -205,21 +205,21 @@ If you wish to extend your institution\'s membership or have any questions regar
 %s
 
 Regards, %s Site Administrator';
-$string['institution_institutionexpirywarninghtml'] = '<p>Dear %s,</p>
+$string['institutionexpirywarninghtml_institution'] = '<p>Dear %s,</p>
 
 <p>%s\'s membership of %s will expire within %s.</p>
 
 <p>If you wish to extend your institution\'s membership or have any questions regarding the above, please feel free to <a href="%s">Contact Us</a>.</p>
 
 <p>Regards, %s Site Administrator</p>';
-$string['site_institutionexpirywarningtext'] = 'Dear %s,
+$string['institutionexpirywarningtext_site'] = 'Dear %s,
 
 The institution \'%s\' will expire within %s.
 
 You may wish to contact them to extend their membership of %s.
 
 Regards, %s Site Administrator';
-$string['site_institutionexpirywarninghtml'] = '<p>Dear %s,</p>
+$string['institutionexpirywarninghtml_site'] = '<p>Dear %s,</p>
 
 <p>The institution \'%s\' will expire within %s.</p>
 
