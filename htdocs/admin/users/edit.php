@@ -259,7 +259,6 @@ else {
     // unique
     $suspendform  = pieform($suspendformdef);
     $suspendformdef['name'] = 'edituser_suspend2';
-    $suspendformdef['validatecallback'] = 'edituser_unsuspend_validate';
     $suspendformdef['successcallback'] = 'edituser_unsuspend_submit';
     $suspendform2 = pieform($suspendformdef);
 
