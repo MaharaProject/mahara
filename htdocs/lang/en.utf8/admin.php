@@ -478,6 +478,8 @@ $string['suspendinstitution'] = 'Suspend Institution';
 $string['suspendinstitutiondescription'] = 'Here you may suspend an institution. Users of suspended institutions will be unable to log in until the institution is unsuspended.';
 $string['suspendedinstitutionmessage'] = 'This institution has been suspended';
 $string['unsuspendinstitution'] = 'Unsuspend Institution';
+$string['unsuspendinstitutiondescription'] = 'Here you may unsuspend an institution. Users of suspended institutions will be unable to log in until the institution is unsuspended.<br /><strong>Beware:</strong> Unsuspending an institution without resetting or turning off its expiry date may result in a daily re-suspension.';
+$string['unsuspendinstitutiondescription_top'] = '<em>Beware:</em> Unsuspending an institution without resetting or turning off its expiry date may result in a daily re-suspension.';
 
 
 // Admin User Search

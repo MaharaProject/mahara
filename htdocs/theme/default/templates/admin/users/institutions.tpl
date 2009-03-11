@@ -11,6 +11,9 @@
               {if $suspended}
               <div class="message">
                 <h4>{$suspended|escape}</h4>
+                <div id="suspendedhelp">
+                  <p class="description">{str tag="unsuspendinstitutiondescription_top" section="admin"}</p>
+                </div>
                 <div class="center">{$suspendform_top}</div>
               </div>
               {/if}

@@ -502,8 +502,9 @@ if (empty($suspended)) {
                  'value'   => $institution,
             ),
             'submit' => array(
-                'type'  => 'submit',
-                'value' => get_string('suspendinstitution','admin'),
+                'type'        => 'submit',
+                'value'       => get_string('suspendinstitution','admin'),
+                'description' => get_string('suspendinstitutiondescription','admin'),
             ),
         )
     );
@@ -521,8 +522,9 @@ else {
                  'value'   => $institution,
             ),
             'submit' => array(
-                'type'  => 'submit',
-                'value' => get_string('unsuspendinstitution','admin'),
+                'type'        => 'submit',
+                'value'       => get_string('unsuspendinstitution','admin'),
+                'description' => get_string('unsuspendinstitutiondescription','admin'),
             ),
         )
     );
