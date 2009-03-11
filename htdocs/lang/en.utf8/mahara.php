@@ -195,6 +195,37 @@ $string['institutionmembershipexpirywarninghtml'] = '<p>Dear %s,</p>
 <p>If you wish to extend your membership or have any questions regarding the above, please feel free to <a href="%s">Contact Us</a>.</p>
 
 <p>Regards, %s Site Administrator</p>';
+$string['institutionexpirywarning'] = 'Institution expiry warning';
+$string['institution_institutionexpirywarningtext'] = 'Dear %s,
+
+%s\'s membership of %s will expire within %s.
+
+If you wish to extend your institution\'s membership or have any questions regarding the above, please feel free to contact us:
+
+%s
+
+Regards, %s Site Administrator';
+$string['institution_institutionexpirywarninghtml'] = '<p>Dear %s,</p>
+
+<p>%s\'s membership of %s will expire within %s.</p>
+
+<p>If you wish to extend your institution\'s membership or have any questions regarding the above, please feel free to <a href="%s">Contact Us</a>.</p>
+
+<p>Regards, %s Site Administrator</p>';
+$string['site_institutionexpirywarningtext'] = 'Dear %s,
+
+The institution \'%s\' will expire within %s.
+
+You may wish to contact them to extend their membership of %s.
+
+Regards, %s Site Administrator';
+$string['site_institutionexpirywarninghtml'] = '<p>Dear %s,</p>
+
+<p>The institution \'%s\' will expire within %s.</p>
+
+<p>You may wish to contact them to extend their membership of %s.</p>
+
+<p>Regards, %s Site Administrator</p>';
 $string['accountinactive'] = 'Sorry, your account is currently inactive';
 $string['accountinactivewarning'] = 'Account inactivity warning';
 $string['accountinactivewarningtext'] = 'Dear %s,
