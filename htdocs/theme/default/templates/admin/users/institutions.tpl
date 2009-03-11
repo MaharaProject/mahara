@@ -8,10 +8,21 @@
 			{else}
 			
 			{if $institution_form}
-			{if $add}
-			<h3>{str tag="addinstitution" section="admin"}</h3>
-			{/if}
-			{$institution_form}
+              {if $suspended}
+              <div class="message">
+                <h4>{$suspended|escape}</h4>
+                <div class="center">{$suspendform_top}</div>
+              </div>
+              {/if}
+              {if $add}
+              <h3>{str tag="addinstitution" section="admin"}</h3>
+              {/if}
+              {$institution_form}
+              {if $suspendform}
+                <hr />
+                <h3 id="suspend">{str tag="suspendinstitution" section=admin}</h3>
+                <div class="suspendform">{$suspendform}</div>
+              {/if}
 			{else}
 			
 			<table id="adminstitutionslist">

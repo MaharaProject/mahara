@@ -470,6 +470,16 @@ $string['noinstitutionsdescription'] = 'If you would like to associate users wit
 
 $string['Lockedfields'] = 'Locked fields';
 
+// Suspend Institutions
+$string['errorwhileunsuspending'] = 'An error occured while trying to unsuspend';
+$string['institutionsuspended'] = 'Institution suspended';
+$string['institutionunsuspended'] = 'Institution unsuspended';
+$string['suspendinstitution'] = 'Suspend Institution';
+$string['suspendinstitutiondescription'] = 'Here you may suspend an institution. Users of suspended institutions will be unable to log in until the institution is unsuspended.';
+$string['suspendedinstitutionmessage'] = 'This institution has been suspended';
+$string['unsuspendinstitution'] = 'Unsuspend Institution';
+
+
 // Admin User Search
 $string['Query'] = 'Query';
 $string['Institution'] = 'Institution';
