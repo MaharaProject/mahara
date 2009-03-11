@@ -883,6 +883,16 @@ function xmldb_core_upgrade($oldversion=0) {
         $suspended = new XMLDBField('suspended');
         $suspended->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
         add_field($table, $suspended);
+
+        // Insert a cron job to check for soon expiring and expired institutions
+        $cron = new StdClass;
+        $cron->callfunction = 'auth_handle_institution_expiries';
+        $cron->minute       = '5';
+        $cron->hour         = '9';
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
+        insert_record('cron', $cron);
     }
 
     return $status;
