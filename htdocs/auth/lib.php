@@ -1128,7 +1128,7 @@ function login_submit(Pieform $form, $values) {
             $USER = new LiveUser();
 
             $authinstances = get_records_sql_array('
-                SELECT a.id, a.instancename, a.priority, a.authname, a.institution
+                SELECT a.id, a.instancename, a.priority, a.authname, a.institution, i.suspended, i.displayname
                 FROM {institution} i JOIN {auth_instance} a ON a.institution = i.name
                 ORDER BY a.institution, a.priority, a.instancename', null);
 
@@ -1164,6 +1164,13 @@ function login_submit(Pieform $form, $values) {
                 if (empty($userdata)) {
                     throw new AuthUnknownUserException("\"$username\" is not known");
                 }
+
+                // Check for a suspended institution
+                if ($authinstance->suspended) {
+                    $sitename = get_config('sitename');
+                    throw new AccessTotallyDeniedException(get_string('accesstotallydenied_institutionsuspended', 'mahara', $authinstance->displayname, $sitename));
+                }
+
                 // We have the data - create the user
                 $USER->lastlogin = db_format_timestamp(time());
                 if (isset($userdata->firstname)) {
