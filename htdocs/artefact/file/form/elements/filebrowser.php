@@ -210,7 +210,7 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
         $value['action']           = 'createfolder';
         $value['title']            = $_POST['createfolder_name'];
     }
-    else if ($_POST['upload'] || ($_FILES['userfile'] && $_FILES['userfile']['name'])) {
+    else if (!empty($_POST['upload']) || ($_FILES['userfile'] && $_FILES['userfile']['name'])) {
         $value['action']           = 'upload';
         $value['userfile']         = $_FILES['userfile'];
         $value['filename']         = isset($_FILES['userfile']['name']) ? $_FILES['userfile']['name'] : null;

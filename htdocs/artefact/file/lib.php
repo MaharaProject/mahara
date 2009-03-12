@@ -1455,7 +1455,7 @@ function files_submit(Pieform $form, $values) {
         }
         $result = pieform_element_filebrowser_submit($form->get_element('filebrowser'), $values['filebrowser']);
         $result['action'] = $values['filebrowser']['action'];
-        if ($result['highlight']) {
+        if (!empty($result['highlight'])) {
             $params['file'] = $result['highlight'];
         }
     }
