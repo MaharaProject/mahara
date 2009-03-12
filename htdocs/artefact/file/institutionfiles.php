@@ -68,7 +68,7 @@ if (!$USER->can_edit_institution($institution)) {
 $smarty->assign('institution', $institution);
 $smarty->assign('institutionselector', $s['institutionselector']);
 $smarty->assign('form', $form);
-$smarty->assign('INLINEJAVASCRIPT', $js);
+$smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs'] . $js);
 $smarty->assign('heading', TITLE);
 $smarty->display('artefact:file:files.tpl');
 
