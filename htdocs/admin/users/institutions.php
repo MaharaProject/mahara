@@ -333,6 +333,7 @@ else {
             ii.name,
             ii.displayname,
             ii.maxuseraccounts,
+            ii.suspended,
             COALESCE(a.members, 0) AS members,
             COALESCE(a.staff, 0) AS staff,
             COALESCE(a.admins, 0) AS admins

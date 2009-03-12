@@ -2927,6 +2927,9 @@ table#initials .initial-letters {
 #adminstitutionslist {
 	border-bottom: 1px solid #95a8b7;
 }
+#adminstitutionslist .suspended {
+    color: red;
+}
 #institution fieldset table tr {
 	display: inline;
 }

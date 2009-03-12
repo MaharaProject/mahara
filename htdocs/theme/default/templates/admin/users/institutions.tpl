@@ -37,6 +37,7 @@
 					<th class="center">{str tag="Staff" section="admin"}</th>
 					<th class="center">{str tag="Admins" section="admin"}</th>
 					<th></th>
+					<th></th>
 				</tr>
 				</thead>
 				{foreach from=$institutions item=institution}
@@ -60,6 +61,7 @@
 							{if $siteadmin && !$institution->members && $institution->name != 'mahara'}<input type="submit" class="submit" name="delete" value="{str tag="delete"}" id="admininstitution_delete">{/if}
 						</form>
 					</td>
+                    <td class="center">{if $institution->suspended}<span class="suspended">SUSPENDED</span>{/if}</td>
 				</tr>
 				{/foreach}
 				<tr>
