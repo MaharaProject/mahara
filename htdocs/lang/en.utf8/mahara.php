@@ -103,6 +103,8 @@ $string['lastminutes'] = 'Last %s minutes';
 $string['linksandresources'] = 'Links and Resources';
 
 // auth
+$string['accesstotallydenied_institutionsuspended'] = 'Your institution %s, has been suspended.  Until it is unsuspended, you will be unable to log in to %s.
+Please contact your institution for help.';
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section';
 $string['accountdeleted'] = 'Sorry, your account has been deleted';
 $string['accountexpired'] = 'Sorry, your account has expired';

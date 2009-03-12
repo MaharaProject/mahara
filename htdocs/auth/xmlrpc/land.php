@@ -89,16 +89,22 @@ $rpcconfigured = false;
 $res = false;
 foreach($instances as $instance) {
     if ($instance->authname == 'xmlrpc') {
-        $rpcconfigured = true;
-        try {
-            $auth = new AuthXmlrpc($instance->id);
-            $res = $auth->request_user_authorise($token, $remotewwwroot);
-        } catch (AccessDeniedException $e) {
-            continue;
-            // we don't care - a future plugin might accept the user
+        if (!$instance->suspended) {
+            $rpcconfigured = true;
+            try {
+                $auth = new AuthXmlrpc($instance->id);
+                $res = $auth->request_user_authorise($token, $remotewwwroot);
+            } catch (AccessDeniedException $e) {
+                continue;
+                // we don't care - a future plugin might accept the user
+            }
+            if ($res == true) {
+                break;
+            }
         }
-        if ($res == true) {
-            break;
+        else {
+          $sitename = get_config('sitename');
+          throw new AccessTotallyDeniedException(get_string('accesstotallydenied_institutionsuspended', 'mahara', $instance->displayname, $sitename));
         }
     }
 }
