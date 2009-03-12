@@ -33,7 +33,7 @@ define('SECTION_PAGE', 'institutionfiles');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
-require_once('institution.php');
+require_once(get_config('libroot') . 'institution.php');
 
 $institution = param_alphanum('institution', false);
 
@@ -43,7 +43,18 @@ $s = institution_selector_for_page($institution,
                                    get_config('wwwroot') . 'artefact/file/institutionfiles.php');
 
 $institution = $s['institution'];
-$smarty = smarty(array('tablerenderer', 'artefact/file/js/file.js'));
+
+
+$folder = param_integer('folder', 0);
+$edit = param_integer('edit', 0);
+$highlight = null;
+if ($file = param_integer('file', 0)) {
+    $highlight = array($file); // todo convert to file1=1&file2=2 etc
+}
+$form = pieform(files_form(null, $institution, $folder, $highlight, $edit));
+$js = files_js();
+
+$smarty = smarty();
 
 if ($institution === false) {
     $smarty->display('admin/users/noinstitutions.tpl');
@@ -54,19 +65,11 @@ if (!$USER->can_edit_institution($institution)) {
     throw new AccessDeniedException();
 }
 
-$javascript = ArtefactTypeFileBase::get_my_files_js(param_integer('folder', null));
-$institutionstr = json_encode($institution);
-$javascript .= <<<JS
-browser.source += '?institution={$institution}';
-browser.createfolderscript += '?institution={$institution}';
-uploader.uploadscript += '?institution={$institution}';
-JS;
-
-
 $smarty->assign('institution', $institution);
 $smarty->assign('institutionselector', $s['institutionselector']);
-$smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs'] . $javascript);
+$smarty->assign('form', $form);
+$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('heading', TITLE);
-$smarty->display('artefact:file:index.tpl');
+$smarty->display('artefact:file:files.tpl');
 
 ?>

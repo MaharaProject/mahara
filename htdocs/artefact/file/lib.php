@@ -387,13 +387,12 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
 
     // Sort folders before files; then use nat sort order.
     public static function my_files_cmp($a, $b) {
-        return strnatcasecmp((int)($a->artefacttype != 'folder') . $a->title,
-                             (int)($b->artefacttype != 'folder') . $b->title);
+        return strnatcasecmp((-2 * isset($a->isparent) + ($a->artefacttype != 'folder')) . $a->title,
+                             (-2 * isset($b->isparent) + ($b->artefacttype != 'folder')) . $b->title);
     }
 
 
-    public static function get_my_files_data($parentfolderid, $userid, $institution=null, $group=null) {
-
+    public static function get_my_files_data($parentfolderid, $userid, $group=null, $institution=null, $idkeys=true) {
         $select = '
             SELECT
                 a.id, a.artefacttype, a.mtime, f.size, a.title, a.description,
@@ -458,6 +457,9 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             foreach ($filedata as $item) {
                 $item->mtime = format_date(strtotime($item->mtime), 'strfdaymonthyearshort');
                 $item->tags = array();
+                if ($item->size) { // Doing this here now for non-js users
+                    $item->size = ArtefactTypeFile::short_size($item->size, true);
+                }
             }
             $where = 'artefact IN (' . join(',', array_keys($filedata)) . ')';
             $tags = get_records_select_array('artefact_tag', $where);
@@ -478,22 +480,27 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                     }
                 }
             }
-            $filedata = array_values($filedata);
         }
 
         // Add parent folder to the list
         if (!empty($parentfolderid)) {
-            $grandparentid = get_field('artefact', 'parent', 'id', $parentfolderid);
-            $filedata[] = (object) array(
-                'title'        => '..',
+            $grandparentid = (int) get_field('artefact', 'parent', 'id', $parentfolderid);
+            $filedata[$grandparentid] = (object) array(
+                'title'        => get_string('parentfolder', 'artefact.file'),
                 'artefacttype' => 'folder',
                 'description'  => get_string('parentfolder', 'artefact.file'),
                 'isparent'     => true,
-                'id'           => (int) $grandparentid
+                'id'           => $grandparentid
             );
         }
 
-        usort($filedata, array("ArtefactTypeFileBase", "my_files_cmp"));
+        uasort($filedata, array("ArtefactTypeFileBase", "my_files_cmp"));
+
+        if (!$idkeys) {
+            // Temporary: allow blog attachment stuff to continue to
+            // work with the old file.js & tablerenderer.js
+            return array_values($filedata);
+        }
         return $filedata;
     }
 
@@ -677,6 +684,32 @@ JAVASCRIPT;
         return $folderid;
     }
 
+    /**
+     * Return a unique artefact title for a given owner & parent by appending
+     * digits to a desired title
+     * 
+     * @param string $desired
+     * @param integer $parent
+     * @param integer $owner
+     * @param integer $group
+     * @param string $institution
+     */
+    public static function get_new_file_title($desired, $parent, $owner, $group, $institution) {
+        $where = $parent ? "parent = $parent" : 'parent IS NULL';
+        $where .=  ' AND ' . artefact_owner_sql($owner, $group, $institution);
+        $taken = get_column_sql("
+            SELECT title FROM {artefact}
+            WHERE artefacttype IN ('" . join("','", array_diff(PluginArtefactFile::get_artefact_types(), array('profileicon'))) . "')
+            AND title LIKE ? || '%' AND " . $where, array($desired));
+        $taken = array_flip($taken);
+        $i = '';
+        $newname = $desired;
+        while (isset($taken[$newname])) {
+            $i++;
+            $newname = $desired . '.' . $i;
+        }
+        return $newname;
+    }
 }
 
 class ArtefactTypeFile extends ArtefactTypeFileBase {
@@ -940,15 +973,18 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         set_config_plugin('artefact', 'file', 'profileiconheight', $values['profileiconheight']);
     }
 
-    public function describe_size() {
-        $bytes = $this->get('size');
+    public static function short_size($bytes, $abbr=false) {
         if ($bytes < 1024) {
-            return $bytes <= 0 ? '0' : ($bytes . ' ' . get_string('bytes', 'artefact.file'));
+            return $bytes <= 0 ? '0' : ($bytes . ($abbr ? 'b' : (' ' . get_string('bytes', 'artefact.file'))));
         }
         if ($bytes < 1048576) {
             return floor(($bytes / 1024) * 10 + 0.5) / 10 . 'K';
         }
         return floor(($bytes / 1048576) * 10 + 0.5) / 10 . 'M';
+    }
+
+    public function describe_size() {
+        return ArtefactTypeFile::short_size($this->get('size'));
     }
 
     public static function get_links($id) {
@@ -1329,6 +1365,111 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
         return null;
     }
 
+}
+
+
+function files_form($group=null, $institution=null, $folder=null, $highlight=null, $edit=null) {
+    $form = array(
+        'name'               => 'files',
+        'jsform'             => true,
+        'newiframeonsubmit'  => true,
+        'reloadformonreply'  => false,
+        'dieaftersubmit'     => true,
+        'jssuccesscallback'  => 'files_success',
+        // 'jserrorcallback'    => 'files_error',
+        // 'presubmitcallback'  => 'uploader_presubmit',
+        'renderer'           => 'oneline',
+        'plugintype'         => 'artefact',
+        'pluginname'         => 'file',
+        'configdirs'         => array(get_config('libroot') . 'form/', get_config('docroot') . 'artefact/file/form/'),
+        'elements'           => array(
+            'filebrowser' => array(
+                'type'         => 'filebrowser',
+                'group'        => $group,
+                'institution'  => $institution,
+                'folder'       => $folder,
+                'highlight'    => $highlight,
+                'edit'         => $edit,
+                'config'       => array(
+                    'upload'          => true,
+                    'uploadagreement' => true,
+                    'createfolder'    => true,
+                    'edit'            => true,
+                    'select'          => false,
+                ),
+            ),
+            'group' => array(
+                'type'         => 'hidden',
+                'value'        => $group,
+            ),
+            'institution' => array(
+                'type'         => 'hidden',
+                'value'        => $institution,
+            ),
+        ),
+    );
+    return $form;
+}
+
+function files_js() {
+    return "function files_success(form, data) { if (!files_filebrowser.success(form, data)) { formSuccess(form, data); return false; }; };";
+}
+
+function files_validate(Pieform $form, $values) {
+    global $SESSION;
+    if (!empty($values['filebrowser']['action'])) {
+        $result = pieform_element_filebrowser_validate($values['filebrowser']);
+        if ($result['error']) {
+            if (!$form->submitted_by_js()) {
+                $form->set_error('filebrowser', $result['message']);
+            }
+            $form->reply(PIEFORM_ERR, $result);
+        }
+    }
+}
+
+function files_submit(Pieform $form, $values) {
+    global $SESSION;
+    if ($values['group']) {
+        $redirect = get_config('wwwroot') . 'artefact/file/groupfiles.php';
+        $params = array('group' => $values['group']);
+    } else if ($values['institution']) {
+        if ($values['institution'] == 'mahara') {
+            $redirect = get_config('wwwroot') . 'admin/site/files.php';
+            $params = array();
+        }
+        else {
+            $redirect = get_config('wwwroot') . 'artefact/file/institutionfiles.php';
+            $params = array('institution' => $values['institution']);
+        }
+    } else {
+        $redirect = get_config('wwwroot') . 'artefact/file/index.php';
+        $params = array();
+    }
+    if (!empty($values['filebrowser']['action'])) {
+        if (!empty($values['filebrowser']['folder'])) {
+            $params['folder'] = $values['filebrowser']['folder'];
+        }
+        if ($values['filebrowser']['action'] == 'edit') {
+            $params['edit'] = $values['filebrowser']['artefact'];
+        }
+        $result = pieform_element_filebrowser_submit($form->get_element('filebrowser'), $values['filebrowser']);
+        $result['action'] = $values['filebrowser']['action'];
+        if ($result['highlight']) {
+            $params['file'] = $result['highlight'];
+        }
+    }
+    if ($params) {
+        foreach ($params as $k => $v) {
+            $params[$k] = $k . '=' . $v;
+        }
+        $redirect .= (strpos($redirect, '?') === false ? '?' : '&') . join('&', $params);
+    }
+    if (!empty($values['filebrowser']['action'])) {
+        $result['goto'] = $redirect;
+        $form->reply(empty($result['error']) ? PIEFORM_OK : PIEFORM_ERR, $result);
+    }
+    redirect($redirect);
 }
 
 ?>

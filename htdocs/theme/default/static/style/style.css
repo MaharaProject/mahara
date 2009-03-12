@@ -412,6 +412,7 @@ input.cancelbackcreate,
 .maincontent table input.button, 
 .maincontent table input.submit, 
 .maincontent table input.submitcancel, 
+.maincontent table#filelist button,
 .maincontent table button {
 	font-size: 11px;
 	background-color: #92B328;
@@ -1737,6 +1738,28 @@ button#dosearch {
 #createfolderform table td table.help-wrapper {
 	padding: 0;
 }
+table.fileupload {
+  margin-top: 15px;
+}
+table.fileupload th {
+  text-align: left;
+  vertical-align: middle;
+  padding: 3px 10px 0;
+  color: #646464;
+}
+table.fileupload th label {
+  color: #646464;
+}
+table.fileupload td {
+  padding: 3px 10px 0;
+}
+tr.uploadform {
+  background-color: #f4f8e7;
+}
+tr.uploadform th {
+  vertical-align: top;
+}
+.foldernav,
 #foldernav {
     font-weight: bold;
     margin: 15px 0 0 3px;
@@ -1744,8 +1767,15 @@ button#dosearch {
     font-size: 18px;
     background: url(../images/foldernav.gif) no-repeat left 2px;
 }
-.directory-item.folder a {
+.directory-item.folder td.filename {
 	font-weight: bold;
+}
+.directory-item.parentfolder {
+  font-style: italic;
+  color: #999;
+}
+.directory-item.parentfolder td.filename {
+  font-weight: normal;
 }
 #filelist tr.folderhover.directory-item td {
         background-color: #ffc !important;
@@ -1791,6 +1821,8 @@ button#dosearch {
 #filelist table th label {
 	color: #646464;
 }
+#filelist table td button,
+#filelist table td input.submit,
 #filelist table td input.button {
 	height: 22px;
 	padding: 2px 10px;
@@ -1813,6 +1845,9 @@ button#dosearch {
 }
 #filelist table table.editpermissions th label {
 	color: #646464;
+}
+#filelist .icon-drag img {
+  cursor: move;
 }
 
 

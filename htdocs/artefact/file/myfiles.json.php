@@ -39,7 +39,7 @@ $group = param_integer('group', null);
 $userid = $USER->get('id');
 
 safe_require('artefact', 'file');
-$filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $institution, $group);
+$filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $group, $institution, false);
 
 $result = array(
     'count'       => count($filedata),

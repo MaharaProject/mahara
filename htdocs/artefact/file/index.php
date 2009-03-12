@@ -34,15 +34,17 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('myfiles', 'artefact.file'));
 safe_require('artefact', 'file');
 
+$folder = param_integer('folder', 0);
+$edit = param_integer('edit', 0);
 $highlight = null;
 if ($file = param_integer('file', 0)) {
     $highlight = array($file); // todo convert to file1=1&file2=2 etc
 }
-
-$javascript = ArtefactTypeFileBase::get_my_files_js(param_integer('folder', null), $highlight);
+$form = pieform(files_form(null, null, $folder, $highlight, $edit));
+$js = files_js();
 
 $smarty = smarty(
-    array('tablerenderer', 'artefact/file/js/file.js'),
+    array(),
     array(),
     array(),
     array(
@@ -55,8 +57,10 @@ $smarty = smarty(
         ),
     )
 );
+
 $smarty->assign('heading', get_string('myfiles', 'artefact.file'));
-$smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->display('artefact:file:index.tpl');
+$smarty->assign('form', $form);
+$smarty->assign('INLINEJAVASCRIPT', $js);
+$smarty->display('artefact:file:files.tpl');
 
 ?>

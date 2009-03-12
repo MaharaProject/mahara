@@ -624,9 +624,9 @@ abstract class ArtefactType {
             insert_record('artefact_access_role', (object) array(
                 'artefact'      => $id,
                 'role'          => $role,
-                'can_view'      => (int) $permissions->view,
-                'can_edit'      => (int) $permissions->edit,
-                'can_republish' => (int) $permissions->republish,
+                'can_view'      => (int) !empty($permissions->view),
+                'can_edit'      => (int) !empty($permissions->edit),
+                'can_republish' => (int) !empty($permissions->republish),
             ));
         }
         db_commit();

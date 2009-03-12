@@ -33,6 +33,13 @@ function smarty_function_str($params, &$smarty) {
         }
         $args = array_merge($args,$params['args']);
     }
+    else if (isset($params['arg1'])) {
+        foreach (array('arg1', 'arg2', 'arg3') as $k) {
+            if (isset($params[$k])) {
+                $args[] = $params[$k];
+            }
+        }
+    }
 
     $ret = call_user_func_array('get_string', $args);
 

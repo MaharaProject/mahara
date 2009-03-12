@@ -35,17 +35,21 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
 define('TITLE', get_string('sitefiles', 'admin'));
 
-$javascript = ArtefactTypeFileBase::get_my_files_js(param_integer('folder', null));
-$javascript .= <<<JS
-browser.source += '?institution=mahara';
-browser.createfolderscript += '?institution=mahara';
-uploader.uploadscript += '?institution=mahara';
-JS;
+$folder = param_integer('folder', 0);
+$edit = param_integer('edit', 0);
+$highlight = null;
+if ($file = param_integer('file', 0)) {
+    $highlight = array($file); // todo convert to file1=1&file2=2 etc
+}
+$form = pieform(files_form(null, 'mahara', $folder, $highlight, $edit));
+$js = files_js();
 
-$smarty = smarty(array('tablerenderer', 'artefact/file/js/file.js'));
-$smarty->assign('INLINEJAVASCRIPT', $javascript);
+$smarty = smarty();
 $smarty->assign('descriptionstrargs', array('<a href="' . get_config('wwwroot') . 'admin/site/menu.php">', '</a>'));
 $smarty->assign('heading', get_string('sitefiles', 'admin'));
-$smarty->display('admin/site/files.tpl');
+$smarty->assign('institution', 'mahara');
+$smarty->assign('form', $form);
+$smarty->assign('INLINEJAVASCRIPT', $js);
+$smarty->display('artefact:file:files.tpl');
 
 ?>

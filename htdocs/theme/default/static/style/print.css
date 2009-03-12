@@ -861,6 +861,7 @@ button#dosearch {
 #createfolderform table td table.help-wrapper {
 	padding: 0;
 }
+.foldernav,
 #foldernav {
     font-weight: bold;
     margin: 15px 0 0 3px;

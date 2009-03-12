@@ -32,6 +32,7 @@ $string['sitefilesloaded'] = 'Site files loaded';
 $string['bytes'] = 'bytes';
 $string['cannoteditfolder'] = 'You do not have permission to add content to this folder';
 $string['changessaved'] = 'Changes saved';
+$string['clickanddragtomovefile'] = 'Click and drag to move %s';
 $string['contents'] = 'Contents';
 $string['copyrightnotice'] = 'Copyright notice';
 $string['create'] = 'Create';
@@ -45,6 +46,7 @@ $string['deletefolder?'] = 'Are you sure you want to delete this folder?';
 $string['Description'] = 'Description';
 $string['destination'] = 'Destination';
 $string['Download'] = 'Download';
+$string['downloadfile'] = 'Download %s';
 $string['downloadoriginalversion'] = 'Download the original version';
 $string['editfile'] = 'Edit file';
 $string['editfolder'] = 'Edit folder';
@@ -55,16 +57,18 @@ $string['filealreadyindestination'] = 'The file you moved is already in that fol
 $string['files'] = 'files';
 $string['Files'] = 'Files';
 $string['fileexists'] = 'File exists';
-$string['fileexistsonserver'] = 'A file with the name %s already exists.';
 $string['fileexistsoverwritecancel'] =  'A file with that name already exists.  You can try a different name, or overwrite the existing file.';
 $string['filelistloaded'] = 'File list loaded';
 $string['filemoved'] = 'File moved successfully';
 $string['filenamefieldisrequired'] = 'The file field is required';
 $string['fileinstructions'] = 'Upload your images, documents, or other files for inclusion in views. To move a file or folder, drag and drop it onto a folder.';
 $string['filethingdeleted'] = '%s deleted';
+$string['filewithnameexists'] = 'A file or folder with the name "%s" already exists.';
 $string['folder'] = 'Folder';
 $string['Folders'] = 'Folders';
 $string['foldercreated'] = 'Folder created';
+$string['foldernamerequired'] = 'Please provide a name for the new folder.';
+$string['gotofolder'] = 'Go to %s';
 $string['groupfiles'] = 'Group Files';
 $string['home'] = 'Home';
 $string['htmlremovedmessage'] = 'You are viewing <strong>%s</strong> by <a href="%s">%s</a>. The file displayed below has been filtered to remove malicious content, and is only a rough representation of the original.';
@@ -101,6 +105,8 @@ $string['uploadoffilefailed'] =  'Upload of %s failed';
 $string['uploadoffiletofoldercomplete'] = 'Upload of %s to %s complete';
 $string['uploadoffiletofolderfailed'] = 'Upload of %s to %s failed';
 $string['youmustagreetothecopyrightnotice'] = 'You must agree to the copyright notice';
+$string['fileuploadedtofolderas'] = '%s uploaded to %s as "%s"';
+$string['fileuploadedas'] = '%s uploaded as "%s"';
 
 
 // File types

@@ -31,8 +31,6 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('libroot') . 'group.php');
 safe_require('artefact', 'file');
 
-$javascript = ArtefactTypeFileBase::get_my_files_js(param_integer('folder', null));
-
 define('GROUP', param_integer('group'));
 $group = group_current_group();
 
@@ -43,24 +41,19 @@ define('TITLE', $group->name . ' - ' . get_string('groupfiles', 'artefact.file')
 
 require_once(get_config('docroot') . 'interaction/lib.php');
 
-$groupdata = json_encode($group);
-$grouproles = json_encode(array_values(group_get_role_info($group->id)));
-$defaultperms = group_get_default_artefact_permissions($group->id);
-// By default, users can edit files they upload themselves
-$defaultperms[$role] = (object) array('view' => true, 'edit' => true, 'republish' => true);
-$grouprolepermissions = json_encode($defaultperms);
+$folder = param_integer('folder', 0);
+$edit = param_integer('edit', 0);
+$highlight = null;
+if ($file = param_integer('file', 0)) {
+    $highlight = array($file); // todo convert to file1=1&file2=2 etc
+}
+$form = pieform(files_form($group->id, null, $folder, $highlight, $edit));
+$js = files_js();
 
-$javascript .= <<<GROUPJS
-var group = {$groupdata};
-group.roles = {$grouproles};
-group.rolepermissions = {$grouprolepermissions};
-browser.setgroup({$group->id});
-uploader.setgroup({$group->id});
-GROUPJS;
-
-$smarty = smarty(array('tablerenderer', 'artefact/file/js/file.js'));
+$smarty = smarty();
 $smarty->assign('heading', $group->name);
-$smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->display('artefact:file:index.tpl');
+$smarty->assign('form', $form);
+$smarty->assign('INLINEJAVASCRIPT', $js);
+$smarty->display('artefact:file:files.tpl');
 
 ?>
