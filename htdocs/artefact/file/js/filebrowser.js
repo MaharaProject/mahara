@@ -28,7 +28,7 @@ function FileBrowser(idprefix, folderid, config) {
 
     this.upload_connectbuttons = function () {
         if ($(self.id + '_notice')) {
-            connect(self.id + '_notice', 'onchange', function (e) {
+            connect(self.id + '_notice', 'onclick', function (e) {
                 // error class is too general?
                 forEach(getElementsByTagAndClassName('div', 'error', self.id + '_upload_messages'), removeElement);
                 if (this.checked) {
@@ -79,7 +79,8 @@ function FileBrowser(idprefix, folderid, config) {
         self.upload_presubmit();
         signal(self.form, 'onsubmit');
         self.form.submit();
-        $(self.id + '_userfile').value = '';
+        // $(self.id + '_userfile').value = ''; // Won't work in IE
+        replaceChildNodes(self.id + '_userfile_container', INPUT({'type':'file', 'class':'file', 'id':self.id+'_userfile', 'name':'userfile', 'size':40}));
         return false;
     }
 
@@ -251,7 +252,7 @@ function FileBrowser(idprefix, folderid, config) {
                 setStyle(elem, {
                     'border': '2px solid #000', // doesn't show up in IE6
                     'padding': '4px',
-                    'line-height': '2em',
+                    'line-height': '2em'
                 });
 
                 setOpacity(elem, 0.5);

@@ -23,7 +23,7 @@
   <tr id="{$prefix}_elements" class="uploadform">
     <th><label>{str tag='File' section='artefact.file'}</label></th>
     <td>
-      <input type="file" class="file" id="{$prefix}_userfile" name="userfile" size="40" />
+      <div id="{$prefix}_userfile_container"><input type="file" class="file" id="{$prefix}_userfile" name="userfile" size="40" /></div>
       <noscript><input type="submit" class="submit" name="upload" id="{$prefix}_upload" value="{str tag=upload section=artefact.file}" /></noscript>
       <script>addElementClass('{$prefix}_elements', 'hidden');</script>
     </td>
@@ -37,7 +37,7 @@
   <tr>
     <th><label>{str tag='uploadfile' section='artefact.file'}</label></th>
     <td>
-      <input type="file" class="file" id="{$prefix}_userfile" name="userfile" size="40" />
+      <div id="{$prefix}_userfile_container"><input type="file" class="file" id="{$prefix}_userfile" name="userfile" size="40" /></div>
       <noscript><input type="submit" class="submit" name="upload" id="{$prefix}_upload" value="{str tag=upload section=artefact.file}" /></noscript>
     </td>
   </tr>
