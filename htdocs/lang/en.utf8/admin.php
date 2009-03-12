@@ -474,6 +474,7 @@ $string['Lockedfields'] = 'Locked fields';
 $string['errorwhileunsuspending'] = 'An error occured while trying to unsuspend';
 $string['institutionsuspended'] = 'Institution suspended';
 $string['institutionunsuspended'] = 'Institution unsuspended';
+$string['suspendedinstitution'] = 'SUSPENDED';
 $string['suspendinstitution'] = 'Suspend Institution';
 $string['suspendinstitutiondescription'] = 'Here you may suspend an institution. Users of suspended institutions will be unable to log in until the institution is unsuspended.';
 $string['suspendedinstitutionmessage'] = 'This institution has been suspended';

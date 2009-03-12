@@ -61,7 +61,7 @@
 							{if $siteadmin && !$institution->members && $institution->name != 'mahara'}<input type="submit" class="submit" name="delete" value="{str tag="delete"}" id="admininstitution_delete">{/if}
 						</form>
 					</td>
-                    <td class="center">{if $institution->suspended}<span class="suspended">SUSPENDED</span>{/if}</td>
+                    <td class="center">{if $institution->suspended}<span class="suspended">{str tag="suspendedinstitution" section=admin}</span>{/if}</td>
 				</tr>
 				{/foreach}
 				<tr>
