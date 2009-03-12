@@ -800,6 +800,18 @@ class LiveUser extends User {
         if ($auth->authenticate_user_account($user, $password)) {
             $user->lastauthinstance = $auth->instanceid;
             $this->authenticate($user, $auth->instanceid);
+
+            // Check for a suspended institution
+            $authinstance = get_record_sql('
+                SELECT i.suspended, i.displayname
+                FROM {institution} i JOIN {auth_instance} a ON a.institution = i.name
+                WHERE a.id = ?', array($instanceid));
+            if ($authinstance->suspended) {
+                $sitename = get_config('sitename');
+                throw new AccessTotallyDeniedException(get_string('accesstotallydenied_institutionsuspended', 'mahara', $authinstance->displayname, $sitename));
+                return false;
+            }
+
             return true;
         }
 
