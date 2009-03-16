@@ -200,13 +200,20 @@ function FileBrowser(idprefix, folderid, config) {
                 return false;
             });
             connect(self.id + '_edit_artefact', 'onclick', self.edit_submit);
+
+            // IE doesn't like it when Mochikit has droppables registered without elements attached.
+            forEach(Draggables.drags, function (drag) { drag.destroy(); });
+            forEach(Droppables.drops, function (drop) { drop.destroy(); });
+
             forEach(getElementsByTagAndClassName('div', 'icon-drag', 'filelist'), function (elem) {
                 self.make_icon_draggable(elem);
             });
+            forEach(getElementsByTagAndClassName('tr', 'folder', 'filelist'), self.make_row_droppable);
         }
         forEach(getElementsByTagAndClassName('a', 'changefolder', null), function (elem) {
             connect(elem, 'onclick', function (e) {
-                var params = parseQueryString(getNodeAttribute(this, 'href'));
+                var href = getNodeAttribute(this, 'href');
+                var params = parseQueryString(href.substring(href.indexOf('?')+1));
                 $(self.id + '_folder').value = params.folder;
                 self.browse_submit(e);
             });
@@ -218,11 +225,11 @@ function FileBrowser(idprefix, folderid, config) {
 
     this.make_row_droppable = function(row) {
         new Droppable(row, {
-            accept: ['icon-drag'],
+            accept: ['icon-drag-current'],
             hoverclass: 'folderhover',
             ondrop: function (dragged, dropped) {
-                self.form.move.value = dragged.id.replace(/drag:/, '');
-                self.form.moveto.value = dropped.id.replace(/file:/, '');
+                self.form.move.value = dragged.id.replace(/^.*drag:(\d+)$/, '$1');
+                self.form.moveto.value = dropped.id.replace(/^file:(\d+)$/, '$1');
                 signal(self.form, 'onsubmit');
                 self.form.submit();
                 self.form.move.value = '';
@@ -231,38 +238,49 @@ function FileBrowser(idprefix, folderid, config) {
         });
     };
 
+    this.drag = {};
+
     this.make_icon_draggable = function(elem) {
         new Draggable(elem, {
             starteffect: function(elem) {
-                // self.drag.clone is a copy of the icon which gets left behind.
+                if (!self.drag.clone) {
+                    // Works better in IE if we just drag an empty div around without the child image.
+                    // Otherwise the element seems to get dropped during the drag and we end up with a
+                    // crossed-circle cursor.
 
-                map(self.make_row_droppable, getElementsByTagAndClassName('tr', 'folder', 'filelist'));
+                    self.drag.clone = DIV({'id':elem.id, 'class':'icon-drag'});
+                    setNodeAttribute(elem, 'id', 'copy-of-' + elem.id);
 
-                var row = getFirstParentByTagAndClassName(elem, 'tr', 'directory-item');
-                var rowid = getNodeAttribute(row, 'id');
-                var artefactid = rowid.substr(rowid.indexOf(':')+1);
+                    removeElementClass(elem, 'icon-drag');
+                    addElementClass(elem, 'icon-drag-current');
 
-                self.drag.clone = elem.cloneNode(true);
-                setNodeAttribute(elem, 'id', 'drag:' + artefactid);
-                insertSiblingNodesAfter(elem, self.drag.clone);
-                setStyle(getFirstElementByTagAndClassName('img', null, elem), {'vertical-align':'middle'});
-                // Could read filename from self.filedata, but the one on the page is already shortened for display
-                appendChildNodes(elem, A({'href':''}, scrapeText(getFirstElementByTagAndClassName('td', 'filename', row))));
+                    insertSiblingNodesAfter(elem, self.drag.clone);
 
-                MochiKit.Position.absolutize(elem);
-                setStyle(elem, {
-                    'border': '2px solid #000', // doesn't show up in IE6
-                    'padding': '4px',
-                    'line-height': '2em'
-                });
+                    var child = getFirstElementByTagAndClassName('img', null, elem);
+                    var dimensions = elementDimensions(child);
 
-                setOpacity(elem, 0.5);
+                    removeElement(child);
+                    appendChildNodes(self.drag.clone, child);
+
+                    setStyle(elem, {
+                        'position': 'absolute',
+                        'border': '2px solid #aaa'
+                    });
+                    setElementDimensions(elem, dimensions);
+                }
             },
-            revert: function(element) {
-                // Throw away the element being dragged
-                removeElement(element);
-                element = null;
-                self.make_icon_draggable(self.drag.clone);
+            revert: function (element) {
+                if (self.drag.clone) {
+                    removeElement(element);
+                    forEach(Draggables.drags, function(drag) {
+                        if (drag.element == element) {
+                            drag.destroy();
+                        }
+                    });
+                    element = null;
+                    self.make_icon_draggable(self.drag.clone);
+                    self.drag = {};
+                }
             }
         });
         // Draggable sets position = 'relative', but we set it back
@@ -271,8 +289,6 @@ function FileBrowser(idprefix, folderid, config) {
         // forms are opened on the page.
         elem.style.position = 'static';
     };
-
-    this.drag = {};
 
     this.success = function (form, data) {
         var stop = false; // Whether to call the form's success callback afterwards
