@@ -126,7 +126,7 @@ function FileBrowser(idprefix, folderid, config) {
             if (name == '') {
                 message = get_string('namefieldisrequired');
             }
-            else if (self.fileexists(name, this.value)) {
+            else if (self.fileexists(name, this.name.replace(/^update\[(\d+)\]$/, '$1'))) {
                 message = get_string('filewithnameexists', name);
             }
         }
@@ -162,7 +162,8 @@ function FileBrowser(idprefix, folderid, config) {
 
     this.edit_form = function (e) {
         e.stop();
-        var id = this.value;
+        // In IE, this.value is set to the button text
+        var id = getNodeAttribute(this, 'name').replace(/^edit\[(\d+)\]$/, '$1');
         addElementClass(self.id + '_edit_row', 'hidden');
         $(self.id + '_edit_heading').innerHTML = self.filedata[id].artefacttype == 'folder' ? get_string('editfolder') : get_string('editfile');
         $(self.id + '_edit_title').value = self.filedata[id].title;
@@ -175,7 +176,8 @@ function FileBrowser(idprefix, folderid, config) {
                 elem.checked = true;
             }
         });
-        $(self.id + '_edit_artefact').value = id;
+        // $(self.id + '_edit_artefact').value = id; // Changes button text in IE
+        setNodeAttribute(self.id + '_edit_artefact', 'name', 'update[' + id + ']');
         var edit_row = removeElement(self.id + '_edit_row');
         var this_row = getFirstParentByTagAndClassName(this, 'tr');
         insertSiblingNodesAfter(this_row, edit_row);
@@ -188,8 +190,7 @@ function FileBrowser(idprefix, folderid, config) {
     this.browse_init = function () {
         if (self.config.edit) {
             forEach(getElementsByTagAndClassName('button', null, 'filelist'), function (elem) {
-                var name = getNodeAttribute(elem, 'name');
-                if (name == 'edit') {
+                if (getNodeAttribute(elem, 'name').match(/^edit\[\d+\]$/)) {
                     connect(elem, 'onclick', self.edit_form);
                 }
             });

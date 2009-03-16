@@ -66,7 +66,6 @@ function pieform_element_filebrowser(Pieform $form, $element) {
 
     $folder = $element['folder'];
     $path = pieform_element_filebrowser_get_path($folder);
-
     $smarty->assign('folder', $folder);
     $smarty->assign('foldername', $path[0]->title);
     $smarty->assign('path', array_reverse($path));
@@ -175,17 +174,20 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
         $value['institution']      = $_POST['institution'];
     }
 
-    if (!empty($_POST['delete'])) {
+    if (!empty($_POST['delete']) && is_array($_POST['delete'])) {
         $value['action']           = 'delete';
-        $value['artefact']         = (int) $_POST['delete'];
+        $keys                      = array_keys($_POST['delete']);
+        $value['artefact']         = (int) ($keys[0]);
     }
-    else if (!empty($_POST['edit'])) {
+    else if (!empty($_POST['edit']) && is_array($_POST['edit'])) {
         $value['action']           = 'edit';
-        $value['artefact']         = (int) $_POST['edit'];
+        $keys                      = array_keys($_POST['edit']);
+        $value['artefact']         = (int) ($keys[0]);
     }
-    else if (!empty($_POST['update'])) {
+    else if (!empty($_POST['update']) && is_array($_POST['update'])) {
         $value['action']           = 'update';
-        $value['artefact']         = (int) $_POST['update'];
+        $keys                      = array_keys($_POST['update']);
+        $value['artefact']         = (int) ($keys[0]);
         $value['title']            = $_POST['edit_title'];
         $value['description']      = $_POST['edit_description'];
         $value['tags']             = $_POST['edit_tags'];

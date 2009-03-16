@@ -1369,6 +1369,18 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
 
 
 function files_form($group=null, $institution=null, $folder=null, $highlight=null, $edit=null) {
+    $folder = param_integer('folder', 0);
+    $edit = param_variable('edit', 0);
+    if (is_array($edit)) {
+        $edit = array_keys($edit);
+        $edit = $edit[0];
+    }
+    $edit = (int) $edit;
+    $highlight = null;
+    if ($file = param_integer('file', 0)) {
+        $highlight = array($file); // todo convert to file1=1&file2=2 etc
+    }
+
     $form = array(
         'name'               => 'files',
         'jsform'             => true,

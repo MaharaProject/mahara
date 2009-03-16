@@ -35,13 +35,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
 define('TITLE', get_string('sitefiles', 'admin'));
 
-$folder = param_integer('folder', 0);
-$edit = param_integer('edit', 0);
-$highlight = null;
-if ($file = param_integer('file', 0)) {
-    $highlight = array($file); // todo convert to file1=1&file2=2 etc
-}
-$form = pieform(files_form(null, 'mahara', $folder, $highlight, $edit));
+$form = pieform(files_form(null, 'mahara'));
 $js = files_js();
 
 $smarty = smarty();

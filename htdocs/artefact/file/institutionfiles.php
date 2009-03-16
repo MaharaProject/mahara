@@ -44,14 +44,7 @@ $s = institution_selector_for_page($institution,
 
 $institution = $s['institution'];
 
-
-$folder = param_integer('folder', 0);
-$edit = param_integer('edit', 0);
-$highlight = null;
-if ($file = param_integer('file', 0)) {
-    $highlight = array($file); // todo convert to file1=1&file2=2 etc
-}
-$form = pieform(files_form(null, $institution, $folder, $highlight, $edit));
+$form = pieform(files_form(null, $institution));
 $js = files_js();
 
 $smarty = smarty();

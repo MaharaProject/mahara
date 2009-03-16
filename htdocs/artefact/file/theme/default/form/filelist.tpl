@@ -32,8 +32,8 @@
     <td>{$file->mtime}</td>
     <td>
     {if $config.edit && !$file->isparent}
-      {if !isset($file->can_edit) || $file->can_edit !== 0}<button type="submit" name="edit" value="{$file->id}">{str tag=edit}</button>{/if}
-      {if $file->childcount == 0}<button type="submit" name="delete" value="{$file->id}">{str tag=delete}</button>{/if}
+      {if !isset($file->can_edit) || $file->can_edit !== 0}<button type="submit" name="edit[{$file->id}]" value="{$file->id}">{str tag=edit}</button>{/if}
+      {if $file->childcount == 0}<button type="submit" name="delete[{$file->id}]" value="{$file->id}">{str tag=delete}</button>{/if}
     {/if}
     </td>
   </tr>

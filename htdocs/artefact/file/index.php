@@ -34,13 +34,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('myfiles', 'artefact.file'));
 safe_require('artefact', 'file');
 
-$folder = param_integer('folder', 0);
-$edit = param_integer('edit', 0);
-$highlight = null;
-if ($file = param_integer('file', 0)) {
-    $highlight = array($file); // todo convert to file1=1&file2=2 etc
-}
-$form = pieform(files_form(null, null, $folder, $highlight, $edit));
+$form = pieform(files_form(null, null));
 $js = files_js();
 
 $smarty = smarty(

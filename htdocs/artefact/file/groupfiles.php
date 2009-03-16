@@ -41,13 +41,7 @@ define('TITLE', $group->name . ' - ' . get_string('groupfiles', 'artefact.file')
 
 require_once(get_config('docroot') . 'interaction/lib.php');
 
-$folder = param_integer('folder', 0);
-$edit = param_integer('edit', 0);
-$highlight = null;
-if ($file = param_integer('file', 0)) {
-    $highlight = array($file); // todo convert to file1=1&file2=2 etc
-}
-$form = pieform(files_form($group->id, null, $folder, $highlight, $edit));
+$form = pieform(files_form($group->id, null));
 $js = files_js();
 
 $smarty = smarty();
