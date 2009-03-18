@@ -39,7 +39,7 @@ class PluginGrouptypeCourse extends PluginGrouptype {
 class GroupTypeCourse extends GroupType {
 
     public static function allowed_join_types() {
-        return array('controlled');
+        return array('controlled', 'request');
     }
 
     public static function can_be_created_by_user() {
