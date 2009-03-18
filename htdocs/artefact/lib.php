@@ -776,8 +776,107 @@ abstract class ArtefactType {
         }
     }
 
+    public function can_have_attachments() {
+        return false;
+    }
+
+    public function count_attachments() {
+        return count_records('artefact_attachment', 'artefact', $this->get('id'));
+    }
+
     public function attachment_id_list() {
+        // During view copying, attachment_id_list can get called on artefacts of any type; don't call
+        // get_column here unless it might actually return something.
+        if ($this->can_have_attachments()) {
+            if ($list = get_column('artefact_attachment', 'attachment', 'artefact', $this->get('id'))) {
+                return $list;
+            }
+        }
         return array();
+    }
+
+    public function attachments_from_id_list($artefactids) {
+        if (empty($artefactids)) {
+            return array();
+        }
+        $attachments = get_records_sql_array('
+            SELECT
+                aa.artefact, aa.attachment, a.artefacttype, a.title, a.description
+            FROM {artefact_attachment} aa
+                INNER JOIN {artefact} a ON aa.attachment = a.id
+            WHERE aa.artefact IN (' . join(', ', $artefactids) . ')', '');
+        if (!$attachments) {
+            return array();
+        }
+        return $attachments;
+    }
+
+    public function get_attachments() {
+        $list = get_records_sql_assoc('SELECT a.id, a.artefacttype, a.title, a.description 
+            FROM {artefact_attachment} aa
+            INNER JOIN {artefact} a ON a.id = aa.attachment
+            WHERE aa.artefact = ?
+            ORDER BY a.title', array($this->id));
+
+        // load tags
+        if ($list) {
+            $tags = get_records_select_array('artefact_tag', 'artefact IN (' . join(',', array_keys($list)) . ')');
+            if ($tags) {
+                foreach ($tags as $t) {
+                    $list[$t->artefact]->tags[] = $t->tag;
+                }
+                foreach ($list as &$attachment) {
+                    if (!empty($attachment->tags)) {
+                        $attachment->tags = join(', ', $attachment->tags);
+                    }
+                }
+            }
+        }
+        // return $list;
+        return array_values($list);
+    }
+
+    public function attach($attachmentid) {
+        $data = new StdClass;
+        $data->artefact = $this->get('id');
+        $data->attachment = $attachmentid;
+        insert_record('artefact_attachment', $data);
+
+        $data = new StdClass;
+        $data->artefact = $attachmentid;
+        $data->parent = $this->get('id');
+        $data->dirty = true;
+        insert_record('artefact_parent_cache', $data);
+
+        // Ensure the attachment is recorded as being related to the parent as well
+        if ($this->get('parent')) {
+            $data = new StdClass;
+            $data->artefact = $attachmentid;
+            $data->parent = $this->get('parent');
+            $data->dirty = 0;
+
+            $where = $data;
+            unset($where->dirty);
+            ensure_record_exists('artefact_parent_cache', $where, $data);
+        }
+    }
+
+    public function detach($attachmentid=null) {
+        if (is_null($attachmentid)) {
+            delete_records('artefact_attachment', 'artefact', $this->id);
+            return;
+        }
+        delete_records('artefact_attachment', 'artefact', $this->get('id'), 'attachment', $attachmentid);
+        delete_records('artefact_parent_cache', 'parent', $this->get('id'), 'artefact', $attachmentid);
+        if ($this->get('parent')) {
+            // Remove the record relating the attachment with the parent
+            delete_records('artefact_parent_cache', 'parent', $this->get('parent'), 'artefact', $attachmentid);
+        }
+    }
+
+    // Interface:
+    public static function attached_id_list($attachmentid) {
+        return get_column('artefact_attachment', 'artefact', 'attachment', $attachmentid);
     }
 }
 
@@ -880,10 +979,6 @@ function rebuild_artefact_parent_cache_complete() {
 
 
 function artefact_get_parents_for_cache($artefactid, &$parentids=false) {
-    static $blogsinstalled;
-    if (!isset($blogsinstalled)) {
-        $blogsinstalled = get_field('artefact_installed', 'active', 'name', 'blog');
-    }
     $current = $artefactid;
     if (empty($parentids)) { // first call
         $parentids = array();
@@ -893,8 +988,8 @@ function artefact_get_parents_for_cache($artefactid, &$parentids=false) {
             break;
         }
         // get any blog posts it may be attached to 
-        if (($parent->artefacttype == 'file' || $parent->artefacttype == 'image') && $blogsinstalled
-            && $associated = get_column('artefact_blog_blogpost_file', 'blogpost', 'file', $parent->id)) {
+        if (($parent->artefacttype == 'file' || $parent->artefacttype == 'image')
+            && $associated = ArtefactType::attached_id_list($parent->id)) {
             foreach ($associated as $a) {
                 $parentids[$a] = 1;
                 artefact_get_parents_for_cache($a, $parentids);

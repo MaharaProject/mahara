@@ -344,6 +344,17 @@
                 <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
             </KEYS>
         </TABLE>
+        <TABLE NAME="artefact_attachment">
+            <FIELDS>
+                <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="attachment" TYPE="int" LENGTH="10" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="artefact_attachmentpk" TYPE="primary" FIELDS="artefact,attachment" />
+                <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
+                <KEY NAME="attachmentfk" TYPE="foreign" FIELDS="attachment" REFTABLE="artefact" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
         <TABLE NAME="artefact_tag">
             <FIELDS>
                 <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />

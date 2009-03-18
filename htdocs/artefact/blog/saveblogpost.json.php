@@ -89,7 +89,7 @@ $old = $postobj->attachment_id_list();
 
 foreach ($old as $o) {
     if (!in_array($o, $artefacts)) {
-        $postobj->detach_file($o);
+        $postobj->detach($o);
     }
 }
 
@@ -99,7 +99,7 @@ foreach ($old as $o) {
 
 foreach ($artefacts as $a) {
     if (!in_array($a, $old)) {
-        $postobj->attach_file($a);
+        $postobj->attach($a);
     }
 }
 

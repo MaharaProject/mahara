@@ -898,6 +898,48 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $cron);
     }
 
+    if ($oldversion < 2009031800) {
+
+        // Files can only attach blogpost artefacts, but we would like to be able to attach them
+        // to other stuff.  Rename the existing attachment table artefact_blog_blogpost_file to
+        // artefact_file_attachment so we don't end up with many tables doing the same thing.
+        execute_sql("ALTER TABLE {artefact_blog_blogpost_file} RENAME TO {artefact_attachment}");
+
+        if (is_postgres()) {
+            // Ensure all of the indexes and constraints are renamed
+            execute_sql("
+            ALTER TABLE {artefact_attachment} RENAME {blogpost} TO {artefact};
+            ALTER TABLE {artefact_attachment} RENAME {file} TO {attachment};
+
+            ALTER INDEX {arteblogblogfile_blofil_pk} RENAME TO {arteatta_artatt_pk};
+            ALTER INDEX {arteblogblogfile_blo_ix} RENAME TO {arteatta_art_ix};
+            ALTER INDEX {arteblogblogfile_fil_ix} RENAME TO {arteatta_att_ix};
+
+            ALTER TABLE {artefact_attachment} DROP CONSTRAINT {arteblogblogfile_blo_fk};
+            ALTER TABLE {artefact_attachment} ADD CONSTRAINT {arteatta_art_fk} FOREIGN KEY (artefact) REFERENCES {artefact}(id);
+
+            ALTER TABLE {artefact_attachment} DROP CONSTRAINT {arteblogblogfile_fil_fk};
+            ALTER TABLE {artefact_attachment} ADD CONSTRAINT {arteatta_att_fk} FOREIGN KEY (attachment) REFERENCES {artefact}(id);
+            ");
+        }
+        else if (is_mysql()) {
+            // NOT TESTED YET...
+            execute_sql("ALTER TABLE {artefact_attachment} DROP FOREIGN KEY arteblogblogfile_blo_fk");
+            execute_sql("ALTER TABLE {artefact_attachment} CHANGE blogpost artefact BIGINT(10) DEFAULT NULL");
+            execute_sql("ALTER TABLE {artefact_attachment} ADD FOREIGN KEY(artefact) REFERENCES {artefact}(id)");
+
+            execute_sql("ALTER TABLE {artefact_attachment} DROP FOREIGN KEY arteblogblogfile_fil_fk");
+            execute_sql("ALTER TABLE {artefact_attachment} CHANGE file attachment BIGINT(10) DEFAULT NULL");
+            execute_sql("ALTER TABLE {artefact_attachment} ADD FOREIGN KEY(attachment) REFERENCES {artefact}(id)");
+        }
+
+        // Drop the _pending table. From now on files uploaded as attachments will become artefacts
+        // straight away.  Hopefully changes to the upload/file browser form will make it clear to
+        // the user that these attachments sit in his/her files area as soon as they are uploaded.
+        $table = new XMLDBTable('artefact_blog_blogpost_file_pending');
+        drop_table($table);
+    }
+
     return $status;
 }
 

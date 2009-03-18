@@ -364,7 +364,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             return; 
         }
         try {
-            delete_records('artefact_blog_blogpost_file', 'file', $this->id);
+            delete_records('artefact_attachment', 'attachment', $this->id);
         } 
         catch ( Exception $e ) {}
         delete_records('artefact_file_files', 'artefact', $this->id);
@@ -396,12 +396,12 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $select = '
             SELECT
                 a.id, a.artefacttype, a.mtime, f.size, a.title, a.description,
-                COUNT(c.id) AS childcount, COUNT (b.blogpost) AS attachcount';
+                COUNT(c.id) AS childcount, COUNT (aa.artefact) AS attachcount';
         $from = '
             FROM {artefact} a
                 LEFT OUTER JOIN {artefact_file_files} f ON f.artefact = a.id
                 LEFT OUTER JOIN {artefact} c ON c.parent = a.id 
-                LEFT OUTER JOIN {artefact_blog_blogpost_file} b ON b.file = a.id';
+                LEFT OUTER JOIN {artefact_attachment} aa ON aa.attachment = a.id';
         $where = "
             WHERE a.artefacttype IN ('" . join("','", array_diff(PluginArtefactFile::get_artefact_types(), array('profileicon'))) . "')";
         $groupby = '

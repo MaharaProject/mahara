@@ -440,7 +440,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
             return;
         }
 
-        delete_records('artefact_blog_blogpost_file', 'blogpost', $this->id);
+        $this->detach(); // Detach all file attachments
         delete_records('artefact_blog_blogpost', 'blogpost', $this->id);
       
         parent::delete();
@@ -484,7 +484,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         }
         $smarty->assign('artefactdescription', $postcontent);
         $smarty->assign('artefact', $this);
-        $attachments = $this->get_attached_files();
+        $attachments = $this->get_attachments();
         if ($attachments) {
             $this->add_to_render_path($options);
             require_once(get_config('docroot') . 'artefact/lib.php');
@@ -508,49 +508,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
 
-    /**
-     * Returns an array of IDs of artefacts attached to this blogpost
-     */
-    public function attachment_id_list() {
-        if (!$list = get_column('artefact_blog_blogpost_file', 'file', 'blogpost', $this->get('id'))) {
-            $list = array();
-        }
-        return $list;
-    }
-
-    public function attach_file($artefactid) {
-        $data = new StdClass;
-        $data->blogpost = $this->get('id');
-        $data->file = $artefactid;
-        insert_record('artefact_blog_blogpost_file', $data);
-
-        $data = new StdClass;
-        $data->artefact = $artefactid;
-        $data->parent = $this->get('id');
-        $data->dirty = true;
-        insert_record('artefact_parent_cache', $data);
-
-        // Ensure the attachment is recorded as being related to the blog as well
-        $data = new StdClass;
-        $data->artefact = $artefactid;
-        $data->parent = $this->get('parent');
-        $data->dirty = 0;
-
-        $where = $data;
-        unset($where->dirty);
-        ensure_record_exists('artefact_parent_cache', $where, $data);
-    }
-
-    public function detach_file($artefactid) {
-        delete_records('artefact_blog_blogpost_file', 'blogpost', $this->get('id'), 'file', $artefactid);
-        delete_records('artefact_parent_cache', 'parent', $this->get('id'), 'artefact', $artefactid);
-        // Remove the record relating the attachment with the blog
-        delete_records('artefact_parent_cache', 'parent', $this->get('parent'), 'artefact', $artefactid);
-    }
-
-
-    protected function count_attachments() {
-        return count_records('artefact_blog_blogpost_file', 'blogpost', $this->get('id'));
+    public function can_have_attachments() {
+        return true;
     }
 
 
@@ -595,16 +554,10 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
         if (count($result) > 0) {
             // Get the attached files.
-            $idlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $result));
-            $files = get_records_sql_array('
-               SELECT
-                  bf.blogpost, bf.file, a.artefacttype, a.title, a.description
-               FROM {artefact_blog_blogpost_file} bf
-                  INNER JOIN {artefact} a ON bf.file = a.id
-               WHERE bf.blogpost IN (' . $idlist . ')', '');
+            $files = ArtefactType::attachments_from_id_list(array_map(create_function('$a', 'return $a->id;'), $result));
             if ($files) {
                 foreach ($files as $file) {
-                    $result[$file->blogpost]->files[] = $file;
+                    $result[$file->artefact]->files[] = $file;
                 }
             }
 
@@ -656,7 +609,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         return true;
     }
 
-    // Where to store temporary blog post files under dataroot
+    /* // Where to store temporary blog post files under dataroot
     static $blogattachmentroot = 'artefact/blog/uploads/';
 
 
@@ -668,7 +621,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
     /**
      * Returns the size of a temporary attachment
      */
-    public static function temp_attachment_size($uploadnumber) {
+    /* public static function temp_attachment_size($uploadnumber) {
         return filesize(self::get_temp_file_path($uploadnumber));
     }
 
@@ -677,7 +630,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * This function saves an uploaded file to a temporary directory in dataroot
      * and saves the mime type info in the db for downloadtemp.php to read from.
      */
-    public static function save_attachment_temporary($inputname) {
+    /* public static function save_attachment_temporary($inputname) {
         require_once('uploadmanager.php');
         $um = new upload_manager($inputname);
         db_begin();
@@ -708,11 +661,10 @@ class ArtefactTypeBlogPost extends ArtefactType {
         return $result;
     }
 
-
     /**
      * Save a temporary uploaded file to the myfiles area.
      */
-    public function save_attachment($uploaddata) {
+    /* public function save_attachment($uploaddata) {
 
         // Create the blogfiles folder if it doesn't exist yet.
         $blogfilesid = self::blogfiles_folder_id();
@@ -741,10 +693,11 @@ class ArtefactTypeBlogPost extends ArtefactType {
             return false;
         }
 
-        $this->attach_file($fileid);
+        $this->attach($fileid);
         delete_records('artefact_blog_blogpost_file_pending', 'id', $uploaddata->tempfilename);
         return $fileid;
     }
+    */
 
     public static function blogfiles_folder_id($create = true) {
         global $USER;
@@ -803,7 +756,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
      *
      * @return array
      */
-    public function get_attached_files() {
+    /* public function get_attached_files() {
         $list = get_records_sql_array('SELECT a.id, a.artefacttype, a.title, a.description 
             FROM {artefact_blog_blogpost_file} f
             INNER JOIN {artefact} a ON a.id = f.file
@@ -818,6 +771,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         }
         return $list;
     }
+    */
     
     public static function get_links($id) {
         $wwwroot = get_config('wwwroot');
@@ -836,7 +790,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         if (isset($artefactcopies[$oldid]->oldattachments)) {
             foreach ($artefactcopies[$oldid]->oldattachments as $a) {
                 if (isset($artefactcopies[$a])) {
-                    $this->attach_file($artefactcopies[$a]->newid);
+                    $this->attach($artefactcopies[$a]->newid);
                 }
                 $regexp[] = '#<img([^>]+)src="' . get_config('wwwroot') . 'artefact/file/download.php\?file=' . $a . '"#';
                 $replacetext[] = '<img$1src="' . get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactcopies[$a]->newid . '"';

@@ -37,7 +37,7 @@ $id = param_integer('blogpost', 0);
 if ($id) {
     $blogpost = new ArtefactTypeBlogPost($id);
     $blogpost->check_permission();
-    if (!$filelist = $blogpost->get_attached_files()) {
+    if (!$filelist = $blogpost->get_attachments()) {
         $filelist = array();
     }
 }
