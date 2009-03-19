@@ -108,13 +108,13 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
             p.method, ap.value AS lang
         FROM {usr} u
         LEFT JOIN {usr_activity_preference} p
-            ON p.usr = u.id ' . (empty($admininstitutions) ? '' : '
+            ON (p.usr = u.id AND p.activity = ?)' . (empty($admininstitutions) ? '' : '
         LEFT OUTER JOIN {usr_institution} ui
             ON (u.id = ui.usr
                 AND ui.institution IN ('.join(',',array_map('db_quote',$admininstitutions)).'))') . '
         LEFT OUTER JOIN {usr_account_preference} ap
             ON (ap.usr = u.id AND ap.field = \'lang\')
-        WHERE (p.activity = ? ' . ($adminonly ? '' : ' OR p.activity IS NULL') . ')';
+        WHERE TRUE';
     if (!empty($userobjs) && is_array($userobjs)) {
         $sql .= ' AND u.id IN (' . implode(',',db_array_to_ph($userobjs)) . ')';
         $values = array_merge($values, array_to_fields($userobjs));
