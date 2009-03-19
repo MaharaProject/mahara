@@ -41,8 +41,8 @@ define('TITLE', $group->name . ' - ' . get_string('groupfiles', 'artefact.file')
 
 require_once(get_config('docroot') . 'interaction/lib.php');
 
-$form = pieform(files_form($group->id, null));
-$js = files_js();
+$form = pieform(ArtefactTypeFileBase::files_form($group->id, null));
+$js = ArtefactTypeFileBase::files_js();
 
 $smarty = smarty();
 $smarty->assign('heading', $group->name);

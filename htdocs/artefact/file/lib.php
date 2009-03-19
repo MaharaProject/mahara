@@ -504,60 +504,62 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         return $filedata;
     }
 
-
-    public static function get_my_files_js($folder_id=null, $highlightfiles=null) {
-
-        global $USER;
-
-        if ($folder_id) {
-            $folder_list = array();
-
-            $current_folder = artefact_instance_from_id($folder_id);
-
-            if ($USER->can_view_artefact($current_folder)) {
-
-                if ($current_folder->get('artefacttype') == 'folder') {
-                    $folder_list[] = array(
-                        'id'   => $current_folder->get('id'),
-                        'name' => $current_folder->get('title'),
-                    );
-                }
-
-                while ($p = $current_folder->get('parent')) {
-                    $current_folder = artefact_instance_from_id($p);
-
-                    $folder_list[] = array(
-                        'id'   => $current_folder->get('id'),
-                        'name' => $current_folder->get('title'),
-                    );
-                }
-            }
-
-            $enc_folders = json_encode(array_reverse($folder_list));
+    public static function files_form($group=null, $institution=null, $folder=null, $highlight=null, $edit=null) {
+        $folder = param_integer('folder', 0);
+        $edit = param_variable('edit', 0);
+        if (is_array($edit)) {
+            $edit = array_keys($edit);
+            $edit = $edit[0];
         }
-        else {
-            $enc_folders = json_encode(array());
+        $edit = (int) $edit;
+        $highlight = null;
+        if ($file = param_integer('file', 0)) {
+            $highlight = array($file); // todo convert to file1=1&file2=2 etc
         }
 
-        if ($highlightfiles) {
-            $enc_files = json_encode(array_fill_keys($highlightfiles, 1));
-        } else {
-            $enc_files = json_encode(array());
-        }
+        $form = array(
+            'name'               => 'files',
+            'jsform'             => true,
+            'newiframeonsubmit'  => true,
+            'reloadformonreply'  => false,
+            'jssuccesscallback'  => 'files_success',
+            // 'jserrorcallback'    => 'files_error',
+            // 'presubmitcallback'  => 'uploader_presubmit',
+            'renderer'           => 'oneline',
+            'plugintype'         => 'artefact',
+            'pluginname'         => 'file',
+            'configdirs'         => array(get_config('libroot') . 'form/', get_config('docroot') . 'artefact/file/form/'),
+            'elements'           => array(
+                'filebrowser' => array(
+                    'type'         => 'filebrowser',
+                    'group'        => $group,
+                    'institution'  => $institution,
+                    'folder'       => $folder,
+                    'highlight'    => $highlight,
+                    'edit'         => $edit,
+                    'config'       => array(
+                        'upload'          => true,
+                        'uploadagreement' => true,
+                        'createfolder'    => true,
+                        'edit'            => true,
+                        'select'          => false,
+                    ),
+                ),
+                'group' => array(
+                    'type'         => 'hidden',
+                    'value'        => $group,
+                ),
+                'institution' => array(
+                    'type'         => 'hidden',
+                    'value'        => $institution,
+                ),
+            ),
+        );
+        return $form;
+    }
 
-        $copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
-        $copyright = json_encode($copyright);
-        $wwwroot = get_config('wwwroot');
-
-        $javascript = <<<JAVASCRIPT
-var copyrightnotice = {$copyright};
-var browser = new FileBrowser('filelist', '{$wwwroot}artefact/file/myfiles.json.php', null, null, null, null, {$enc_folders});
-var uploader = new FileUploader('uploader', '{$wwwroot}artefact/file/upload.php', {}, null, null, browser.refresh, browser.fileexists);
-browser.changedircallback = uploader.updatedestination;
-var highlightfiles = {$enc_files};
-JAVASCRIPT;
-
-        return $javascript;
+    public static function files_js() {
+        return "function files_success(form, data) { if (!files_filebrowser.success(form, data)) { formSuccess(form, data); return false; }; };";
     }
 
     public static function count_user_files($owner=null, $group=null, $institution=null) {
@@ -710,6 +712,63 @@ JAVASCRIPT;
         }
         return $newname;
     }
+}
+
+function files_validate(Pieform $form, $values) {
+    global $SESSION;
+    if (!empty($values['filebrowser']['action'])) {
+        $result = pieform_element_filebrowser_validate($values['filebrowser']);
+        if ($result['error']) {
+            if (!$form->submitted_by_js()) {
+                $form->set_error('filebrowser', $result['message']);
+            }
+            $form->reply(PIEFORM_ERR, $result);
+        }
+    }
+}
+
+function files_submit(Pieform $form, $values) {
+    global $SESSION;
+    if ($values['group']) {
+        $redirect = get_config('wwwroot') . 'artefact/file/groupfiles.php';
+        $params = array('group' => $values['group']);
+    } else if ($values['institution']) {
+        if ($values['institution'] == 'mahara') {
+            $redirect = get_config('wwwroot') . 'admin/site/files.php';
+            $params = array();
+        }
+        else {
+            $redirect = get_config('wwwroot') . 'artefact/file/institutionfiles.php';
+            $params = array('institution' => $values['institution']);
+        }
+    } else {
+        $redirect = get_config('wwwroot') . 'artefact/file/index.php';
+        $params = array();
+    }
+    if (!empty($values['filebrowser']['action'])) {
+        if (!empty($values['filebrowser']['folder'])) {
+            $params['folder'] = $values['filebrowser']['folder'];
+        }
+        if ($values['filebrowser']['action'] == 'edit') {
+            $params['edit'] = $values['filebrowser']['artefact'];
+        }
+        $result = pieform_element_filebrowser_submit($form->get_element('filebrowser'), $values['filebrowser']);
+        $result['action'] = $values['filebrowser']['action'];
+        if (!empty($result['highlight'])) {
+            $params['file'] = $result['highlight'];
+        }
+    }
+    if ($params) {
+        foreach ($params as $k => $v) {
+            $params[$k] = $k . '=' . $v;
+        }
+        $redirect .= (strpos($redirect, '?') === false ? '?' : '&') . join('&', $params);
+    }
+    if (!empty($values['filebrowser']['action'])) {
+        $result['goto'] = $redirect;
+        $form->reply(empty($result['error']) ? PIEFORM_OK : PIEFORM_ERR, $result);
+    }
+    redirect($redirect);
 }
 
 class ArtefactTypeFile extends ArtefactTypeFileBase {
@@ -1367,121 +1426,5 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
 
 }
 
-
-function files_form($group=null, $institution=null, $folder=null, $highlight=null, $edit=null) {
-    $folder = param_integer('folder', 0);
-    $edit = param_variable('edit', 0);
-    if (is_array($edit)) {
-        $edit = array_keys($edit);
-        $edit = $edit[0];
-    }
-    $edit = (int) $edit;
-    $highlight = null;
-    if ($file = param_integer('file', 0)) {
-        $highlight = array($file); // todo convert to file1=1&file2=2 etc
-    }
-
-    $form = array(
-        'name'               => 'files',
-        'jsform'             => true,
-        'newiframeonsubmit'  => true,
-        'reloadformonreply'  => false,
-        'dieaftersubmit'     => true,
-        'jssuccesscallback'  => 'files_success',
-        // 'jserrorcallback'    => 'files_error',
-        // 'presubmitcallback'  => 'uploader_presubmit',
-        'renderer'           => 'oneline',
-        'plugintype'         => 'artefact',
-        'pluginname'         => 'file',
-        'configdirs'         => array(get_config('libroot') . 'form/', get_config('docroot') . 'artefact/file/form/'),
-        'elements'           => array(
-            'filebrowser' => array(
-                'type'         => 'filebrowser',
-                'group'        => $group,
-                'institution'  => $institution,
-                'folder'       => $folder,
-                'highlight'    => $highlight,
-                'edit'         => $edit,
-                'config'       => array(
-                    'upload'          => true,
-                    'uploadagreement' => true,
-                    'createfolder'    => true,
-                    'edit'            => true,
-                    'select'          => false,
-                ),
-            ),
-            'group' => array(
-                'type'         => 'hidden',
-                'value'        => $group,
-            ),
-            'institution' => array(
-                'type'         => 'hidden',
-                'value'        => $institution,
-            ),
-        ),
-    );
-    return $form;
-}
-
-function files_js() {
-    return "function files_success(form, data) { if (!files_filebrowser.success(form, data)) { formSuccess(form, data); return false; }; };";
-}
-
-function files_validate(Pieform $form, $values) {
-    global $SESSION;
-    if (!empty($values['filebrowser']['action'])) {
-        $result = pieform_element_filebrowser_validate($values['filebrowser']);
-        if ($result['error']) {
-            if (!$form->submitted_by_js()) {
-                $form->set_error('filebrowser', $result['message']);
-            }
-            $form->reply(PIEFORM_ERR, $result);
-        }
-    }
-}
-
-function files_submit(Pieform $form, $values) {
-    global $SESSION;
-    if ($values['group']) {
-        $redirect = get_config('wwwroot') . 'artefact/file/groupfiles.php';
-        $params = array('group' => $values['group']);
-    } else if ($values['institution']) {
-        if ($values['institution'] == 'mahara') {
-            $redirect = get_config('wwwroot') . 'admin/site/files.php';
-            $params = array();
-        }
-        else {
-            $redirect = get_config('wwwroot') . 'artefact/file/institutionfiles.php';
-            $params = array('institution' => $values['institution']);
-        }
-    } else {
-        $redirect = get_config('wwwroot') . 'artefact/file/index.php';
-        $params = array();
-    }
-    if (!empty($values['filebrowser']['action'])) {
-        if (!empty($values['filebrowser']['folder'])) {
-            $params['folder'] = $values['filebrowser']['folder'];
-        }
-        if ($values['filebrowser']['action'] == 'edit') {
-            $params['edit'] = $values['filebrowser']['artefact'];
-        }
-        $result = pieform_element_filebrowser_submit($form->get_element('filebrowser'), $values['filebrowser']);
-        $result['action'] = $values['filebrowser']['action'];
-        if (!empty($result['highlight'])) {
-            $params['file'] = $result['highlight'];
-        }
-    }
-    if ($params) {
-        foreach ($params as $k => $v) {
-            $params[$k] = $k . '=' . $v;
-        }
-        $redirect .= (strpos($redirect, '?') === false ? '?' : '&') . join('&', $params);
-    }
-    if (!empty($values['filebrowser']['action'])) {
-        $result['goto'] = $redirect;
-        $form->reply(empty($result['error']) ? PIEFORM_OK : PIEFORM_ERR, $result);
-    }
-    redirect($redirect);
-}
 
 ?>

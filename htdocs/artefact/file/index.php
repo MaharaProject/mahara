@@ -34,8 +34,8 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('myfiles', 'artefact.file'));
 safe_require('artefact', 'file');
 
-$form = pieform(files_form(null, null));
-$js = files_js();
+$form = pieform(ArtefactTypeFileBase::files_form(null, null));
+$js = ArtefactTypeFileBase::files_js();
 
 $smarty = smarty(
     array(),

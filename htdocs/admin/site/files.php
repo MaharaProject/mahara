@@ -35,8 +35,8 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
 define('TITLE', get_string('sitefiles', 'admin'));
 
-$form = pieform(files_form(null, 'mahara'));
-$js = files_js();
+$form = pieform(ArtefactTypeFileBase::files_form(null, 'mahara'));
+$js = ArtefactTypeFileBase::files_js();
 
 $smarty = smarty();
 $smarty->assign('descriptionstrargs', array('<a href="' . get_config('wwwroot') . 'admin/site/menu.php">', '</a>'));

@@ -44,8 +44,8 @@ $s = institution_selector_for_page($institution,
 
 $institution = $s['institution'];
 
-$form = pieform(files_form(null, $institution));
-$js = files_js();
+$form = pieform(ArtefactTypeFileBase::files_form(null, $institution));
+$js = ArtefactTypeFileBase::files_js();
 
 $smarty = smarty();
 
