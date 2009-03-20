@@ -314,7 +314,7 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     }
 
     // Define the locations of language strings for this section
-    $langstringroot = get_language_root();
+    $langstringroot = get_language_root($lang);
     $langdirectory  = ''; // The directory in which the language file for this string should ideally reside, if the language has implemented it
     
     if (false === strpos($section, '.')) {
