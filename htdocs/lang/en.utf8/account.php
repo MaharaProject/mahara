@@ -27,7 +27,7 @@
 defined('INTERNAL') || die();
 
 $string['changepassworddesc'] = 'If you wish to change your password, please enter the details here';
-$string['changepasswordotherinterface'] = 'You may  <a href="%s">change your password</a> through a different interface</a>';
+$string['changepasswordotherinterface'] = 'You may <a href="%s">change your password</a> through a different interface';
 $string['oldpasswordincorrect'] = 'This is not your current password';
 
 $string['changeusernameheading'] = 'Change username';
