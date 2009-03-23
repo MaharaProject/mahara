@@ -32,6 +32,25 @@ require('searchlib.php');
 safe_require('search', 'internal');
 
 $id = param_integer('id');
+$replytoid = param_integer('replyto', null);
+if (!is_null($replytoid)) {
+    $replyto = get_record_sql('
+        SELECT
+            a.subject, a.message, a.url
+        FROM {notification_internal_activity} a
+            JOIN {activity_type} t ON a.type = t.id
+        WHERE t.name = ? AND a.id = ? AND a.usr = ?',
+        array('usermessage', $replytoid, $USER->get('id')));
+    if ($replyto) {
+        // Make sure the message was sent by the user being replied to
+        $bits = parse_url($replyto->url);
+        parse_str($bits['query'], $params);
+        if (empty($params['id']) || $params['id'] != $id) {
+            $replyto = false;
+        }
+    }
+}
+
 $returnto = param_alpha('returnto', 'myfriends');
 
 $user = get_record('usr', 'id', $id, 'deleted', 0);
@@ -40,9 +59,20 @@ if (!$user || !can_send_message($USER->to_stdclass(), $id)) {
 	throw new AccessDeniedException(get_string('cantmessageuser', 'group'));
 }
 
-define('TITLE', get_string('sendmessageto', 'group', display_name($id)));
-
 $user->introduction = get_field('artefact', 'title', 'artefacttype', 'introduction', 'owner', $id);
+
+$quote = '';
+if ($replyto) {
+    $replyto->lines = split("\n", $replyto->message);
+    foreach ($replyto->lines as $line) {
+        $quote .= "\n> " . wordwrap($line, 75, "\n> ");
+    }
+    define('TITLE', get_string('viewmessage', 'group'));
+}
+else {
+    define('TITLE', get_string('sendmessageto', 'group', display_name($id)));
+}
+
 
 $form = pieform(array(
     'name' => 'sendmessage',
@@ -50,13 +80,14 @@ $form = pieform(array(
     'elements' => array(
         'message' => array(
             'type'  => 'textarea',
-            'title' => get_string('message'),
-            'cols'  => 50,
-            'rows'  => 4,       
+            'title' => $replyto ? get_string('Reply', 'group') : get_string('message'),
+            'cols'  => 80,
+            'rows'  => 10,
+            'defaultvalue' => $quote,
         ),
         'submit' => array(
             'type' => 'submitcancel',
-            'value' => array(get_string('sendmessage', 'group'), get_string('cancel')),
+            'value' => array($replyto ? get_string('Reply', 'group') : get_string('sendmessage', 'group'), get_string('cancel')),
             'goto' => get_config('wwwroot') . ($returnto == 'find' ? 'user/find.php' : ($returnto == 'view' ? 'user/view.php?id=' . $id : 'user/myfriends.php')),
         )
     )
@@ -66,6 +97,7 @@ $smarty = smarty();
 $smarty->assign('heading', TITLE);
 $smarty->assign('form', $form);
 $smarty->assign('user', $user);
+$smarty->assign('replyto', $replyto);
 $smarty->display('user/sendmessage.tpl');
 
 function sendmessage_submit(Pieform $form, $values) {

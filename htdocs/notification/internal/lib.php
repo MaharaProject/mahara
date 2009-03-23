@@ -46,7 +46,7 @@ class PluginNotificationInternal extends PluginNotification {
             $toinsert->url = $data->url;
         }
         
-        insert_record('notification_internal_activity', $toinsert);
+        return insert_record('notification_internal_activity', $toinsert, 'id', true);
     }
     
     /** 
@@ -57,6 +57,31 @@ class PluginNotificationInternal extends PluginNotification {
         return count_records('notification_internal_activity', 'usr', $userid, 'read', 0);
     }
 
+    public static function update_notification($user, $data) {
+        $toupdate = new StdClass;
+        if (empty($data->internalid)) {
+            throw new Exception("No id passed to internal notifiction update");
+        }
+        $toupdate->id = $data->internalid;
+        $toupdate->type = $data->type;
+        $toupdate->usr = $user->id;
+        if (!empty($user->markasread)) {
+            $toupdate->read = 1;
+        } 
+        else {
+            $toupdate->read = 0;
+        }
+        $toupdate->message = $data->message;
+        $toupdate->subject = $data->subject;
+        $toupdate->ctime = db_format_timestamp(time());
+
+        if (!empty($data->url)) {
+            $toupdate->url = $data->url;
+        }
+        
+        update_record('notification_internal_activity', $toupdate);
+    }
+    
     public static function get_event_subscriptions() {
         $subscriptions = array(
             (object)array(

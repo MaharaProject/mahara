@@ -913,7 +913,7 @@ function send_user_message($to, $message, $from=null) {
     }
 
     $messagepref = get_account_preference($to->id, 'messages');
-    if ((is_friend($from->id, $to->id) && $messagepref == 'friends') || $messagepref == 'allow' || $from->get('admin')) {
+    if ($messagepref == 'allow' || ($messagepref == 'friends' && is_friend($from->id, $to->id)) || $from->get('admin')) {
         require_once('activity.php');
         activity_occurred('usermessage', 
             array(
