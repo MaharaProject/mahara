@@ -57,6 +57,10 @@ class PluginNotificationEmail extends PluginNotification {
             }
         }
 
+        if (isset($data->unsubscribeurl) && isset($data->unsubscribename)) {
+            $messagebody .= "\n\n" . get_string_from_language($lang, 'unsubscribemessage', 'notification.email', $data->unsubscribename, $data->unsubscribeurl);
+        }
+
         $messagebody .= "\n\n$separator";
 
         $prefurl = get_config('wwwroot') . 'account/activity/preferences/';
