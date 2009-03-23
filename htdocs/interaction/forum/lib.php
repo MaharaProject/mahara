@@ -400,6 +400,8 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
             $user->message = ($post->subject ? $post->subject . "\n" . str_repeat('-', strlen($post->subject)) . "\n" : '')
                 . trim(html2text($post->body));
         }
+        $this->unsubscribename = $post->forumtitle;
+        $this->unsubscribeurl = get_config('wwwroot') . 'interaction/forum/view.php?id=' . $post->forumid;
     }
 
     public function get_subject($user) {
