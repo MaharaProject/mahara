@@ -332,6 +332,11 @@ abstract class ActivityType {
         return $this->subject;
     }
 
+    // rewrite the url with the internal notification id?
+    protected function update_url() {
+        return false;
+    }
+
     abstract function get_required_parameters();
 
     public function notify_user($user) {
@@ -348,20 +353,32 @@ abstract class ActivityType {
         if (empty($user->method)) {
             $user->method = 'internal';
         }
+
+        // always do internal
+        $this->internalid = call_static_method('PluginNotificationInternal', 'notify_user', $user, $userdata);
+        if ($this->update_url()) {
+            $userdata->internalid = $this->internalid;
+            $userdata->url = $this->url;
+        }
+
         if ($user->method != 'internal') {
             $method = $user->method;
             safe_require('notification', $method);
             try {
                 call_static_method(generate_class_name('notification', $method), 'notify_user', $user, $userdata);
                 $user->markasread = true; // if we're doing something else, don't generate unread internal ones.
+                $userdata->internalid = $this->internalid;
             }
             catch (Exception $e) {
                 $user->markasread = false; // if we fail (eg email falls over), don't mark it as read...
                 // @todo Catalyst IT Ltd
             }
         }
-        // always do internal
-        call_static_method('PluginNotificationInternal', 'notify_user', $user, $userdata);
+
+        if (isset($userdata->internalid)) {
+            call_static_method('PluginNotificationInternal', 'update_notification', $user, $userdata);
+        }
+
     }
 
     public function notify_users() {
@@ -553,9 +570,6 @@ class ActivityTypeUsermessage extends ActivityType {
     public function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
         $this->users = activity_get_users($this->get_id(), array($this->userto));
-        if (empty($this->url)) {
-            $this->url = get_config('wwwroot') . 'user/view.php?id=' . $this->userfrom;
-        }
     } 
 
     public function get_subject($user) {
@@ -564,6 +578,11 @@ class ActivityTypeUsermessage extends ActivityType {
                                             display_name($this->userfrom));
         }
         return $this->subject;
+    }
+
+    protected function update_url() {
+        $this->url = get_config('wwwroot') . 'user/sendmessage.php?id=' . $this->userfrom . '&replyto=' . $this->internalid;
+        return true;
     }
 
     public function get_required_parameters() {
