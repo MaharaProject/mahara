@@ -633,19 +633,22 @@ function xmldb_core_upgrade($oldversion=0) {
             if (!is_dir($artefactdata . 'file')) {
                 mkdir($artefactdata . 'file');
             }
-            rename($artefactdata . 'internal/profileicons', $artefactdata . 'file/profileicons');
+            if (!rename($artefactdata . 'internal/profileicons', $artefactdata . 'file/profileicons')) {
+                throw new Exception("Failed moving $artefactdata/internal/profileicons to $artefactdata/file/profileicons");
+            }
 
             // Insert artefact_file_files records for all profileicons
             $profileicons = get_column('artefact', 'id', 'artefacttype', 'profileicon');
             if ($profileicons) {
                 foreach ($profileicons as $a) {
-                    $filesize = filesize($artefactdata . 'file/profileicons/originals/' . ($a % 256) . '/' . $a);
-                    if ($filesize) {
+                    $filename = $artefactdata . 'file/profileicons/originals/' . ($a % 256) . '/' . $a;
+                    if (file_exists($filename)) {
+                        $filesize = filesize($filename);
                         $imagesize = getimagesize($artefactdata . 'file/profileicons/originals/' . ($a % 256) . '/' . $a);
                         insert_record('artefact_file_files', (object) array('artefact' => $a, 'fileid' => $a, 'size' => $filesize));
                         insert_record('artefact_file_image', (object) array('artefact' => $a, 'width' => $imagesize[0], 'height' => $imagesize[1]));
                     } else {
-                        delete_records('artefact', 'id', $a);
+                        log_debug("Profile icon artefact $a has no file on disk at $filename");
                     }
                 }
             }
