@@ -634,7 +634,7 @@ function xmldb_core_upgrade($oldversion=0) {
                 mkdir($artefactdata . 'file');
             }
             if (!rename($artefactdata . 'internal/profileicons', $artefactdata . 'file/profileicons')) {
-                throw new Exception("Failed moving $artefactdata/internal/profileicons to $artefactdata/file/profileicons");
+                throw new SystemException("Failed moving $artefactdata/internal/profileicons to $artefactdata/file/profileicons");
             }
 
             // Insert artefact_file_files records for all profileicons
