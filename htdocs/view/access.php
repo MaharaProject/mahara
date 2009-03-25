@@ -223,7 +223,7 @@ $form['elements']['submit'] = array(
 
 function editaccess_validate(Pieform $form, $values) {
     global $institution, $group;
-    if ($values['copynewuser'] && !$values['template']) {
+    if ($institution && $values['copynewuser'] && !$values['template']) {
         $form->set_error('copynewuser', get_string('viewscopiedfornewusersmustbecopyable', 'view'));
     }
     $createforgroup = false;
@@ -260,7 +260,7 @@ function editaccess_validate(Pieform $form, $values) {
         }
     }
     // Must have logged in user access for copy new user/group settings.
-    if (($createforgroup || $values['copynewuser']) && !$loggedinaccess) {
+    if (($createforgroup || ($institution && $values['copynewuser'])) && !$loggedinaccess) {
         $form->set_error('accesslist', get_string('copynewusergroupneedsloggedinaccess', 'view'));
     }
 }
