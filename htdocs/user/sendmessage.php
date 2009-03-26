@@ -33,6 +33,7 @@ safe_require('search', 'internal');
 
 $id = param_integer('id');
 $replytoid = param_integer('replyto', null);
+$replyto = false;
 if (!is_null($replytoid)) {
     $replyto = get_record_sql('
         SELECT
