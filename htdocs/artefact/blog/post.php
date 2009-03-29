@@ -30,13 +30,14 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 
 safe_require('artefact', 'blog');
+safe_require('artefact', 'file');
 
 /* 
  * For a new post, the 'blog' parameter will be set to the blog's
  * artefact id.  For an existing post, the 'blogpost' parameter will
  * be set to the blogpost's artefact id.
  */
-$blogpost = param_integer('blogpost', 0);
+$blogpost = param_integer('blogpost', param_integer('id', 0));
 if (!$blogpost) {
     $blog = param_integer('blog');
     if (!get_record('artefact', 'id', $blog, 'owner', $USER->get('id'))) {
@@ -47,8 +48,8 @@ if (!$blogpost) {
     }
     $title = '';
     $description = '';
-    $checked = '';
     $tags = array();
+    $checked = '';
     $pagetitle = get_string('newblogpost', 'artefact.blog', get_field('artefact', 'title', 'id', $blog));
     $focuselement = 'title';
     define('TITLE', $pagetitle);
@@ -67,25 +68,24 @@ else {
 }
 
 
+$folder = ArtefactTypeBlogpost::blogfiles_folder_id();
 
-/*
- * The main form has the text inputs and no submit button.  The submit
- * and cancel buttons are in their own form at the bottom of the page,
- * with the file upload form appearing in between.
- */
-$textinputform = pieform(array(
-    'name' => 'editpost',
-    'method' => 'post',
-    'action' => '',
-    'autofocus' => $focuselement,
-    'plugintype' => 'artefact',
-    'pluginname' => 'blog',
+$form = pieform(array(
+    'name'               => 'editpost',
+    'method'             => 'post',
+    'autofocus'          => $focuselement,
+    'jsform'             => true,
+    'newiframeonsubmit'  => true,
+    'jssuccesscallback'  => 'editpost_success',
+    'plugintype'         => 'artefact',
+    'pluginname'         => 'blog',
+    'configdirs'         => array(get_config('libroot') . 'form/', get_config('docroot') . 'artefact/file/form/'),
     'elements' => array(
-        'parent' => array(
+        'blog' => array(
             'type' => 'hidden',
             'value' => $blog,
         ),
-        'id' => array(
+        'blogpost' => array(
             'type' => 'hidden',
             'value' => $blogpost,
         ),
@@ -115,245 +115,45 @@ $textinputform = pieform(array(
             'description'  => get_string('tagsdesc'),
             'help' => true,
         ),
+        'filebrowser' => array(
+            'type'         => 'filebrowser',
+            'title'        => get_string('attachments', 'artefact.blog'),
+            'group'        => null,
+            'institution'  => null,
+            'folder'       => $folder,
+            'highlight'    => null,
+            'config'       => array(
+                'upload'          => true,
+                'uploadagreement' => true,
+                'createfolder'    => false,
+                'edit'            => false,
+                'select'          => true,
+            ),
+            'selectlistcallback' => 'load_attachments',
+        ),
+        'draft' => array(
+            'type' => 'checkbox',
+            'title' => get_string('draft', 'artefact.blog'),
+            'description' => get_string('thisisdraftdesc', 'artefact.blog'),
+            'defaultvalue' => $checked,
+            'help' => true,
+        ),
+        'submitpost' => array(
+            'type' => 'submitcancel',
+            'value' => array(get_string('savepost', 'artefact.blog'), get_string('cancel')),
+            'goto' => get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blog,
+        )
     )
 ));
-
-
-
-/*
- * Strings used in the inline javascript for this page.
- */
-$getstring = quotestrings(array(
-    'mahara' => array(
-    ),
-    'artefact.blog' => array(
-        'attach',
-        'blogpost',
-        'cancel',
-        'mustspecifycontent',
-        'mustspecifytitle',
-        'name',
-        'nofilesattachedtothispost',
-        'remove',
-        'update',
-        'noimageshavebeenattachedtothispost',
-    )));
-
-
-
-// These variables are needed by file.js.  They should really be set
-// automatically when file.js is included.
-$copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
-$copyright = json_encode($copyright);
-$wwwroot = get_config('wwwroot');
-
 
 
 /*
  * Javascript specific to this page.  Creates the list of files
  * attached to the blog post.
  */
+$wwwroot = get_config('wwwroot');
+$noimagesmessage = json_encode(get_string('noimageshavebeenattachedtothispost', 'artefact.blog'));
 $javascript = <<<EOF
-
-
-
-// The file uploader uploads files to the list of blog post attachments
-var copyrightnotice = {$copyright};
-// The fourth parameter below is just a hack so that the user sees
-// "Uploading file to blog post" in the upload status line.
-var uploader = new FileUploader('uploader', 'upload.php', null, {$getstring['blogpost']}, false, 
-                                attachtopost, fileattached);
-
-
-// File browser instance allows users to attach files from the my files area
-var browser = null;
-
-function browsemyfiles() {
-    hideElement('browsebuttonstuff');
-    showElement('browsemyfiles');
-    if (!elementDimensions('foldernav')) {
-        browser = new FileBrowser('filebrowser', '{$wwwroot}artefact/file/myfiles.json.php', null, 
-                                  function () {}, {$getstring['attach']}, attachtopost);
-        browser.init();
-        insertSiblingNodesBefore('foldernav', 
-                                 INPUT({'type':'button','class':'button','value':{$getstring['cancel']},
-                                        'onclick':function () {
-                                     hideElement('browsemyfiles');
-                                     showElement('browsebuttonstuff');
-                                 }}));
-    }
-}
-
-addLoadEvent(function () {connect('browsebutton', 'onclick', browsemyfiles);});
-
-
-
-
-
-// List of attachments to the blog post
-var attached = new TableRenderer(
-    'attachedfiles',
-    'attachedfiles.json.php',
-    [
-     function (r) { return TD(null, IMG({'src':get_themeurl('images/' + r.artefacttype + '.gif'),
-                                         'alt':r.artefacttype})); },
-     'title',
-     'description',
-     'tags',
-     function (r) { 
-         return TD(null, INPUT({'type':'button', 'class':'button',
-                                'value':{$getstring['remove']},
-                                'onclick':"removefrompost('artefact:"+r.id+"')"}));
-     }
-    ]
-);
-attached.emptycontent = {$getstring['nofilesattachedtothispost']};
-attached.paginate = false;
-attached.blogpost = {$blogpost};
-attached.statevars.push('blogpost');
-attached.rowfunction = function (r, n) { return TR({'id':'artefact:' + r.id,
-                                                    'class':'r'+(n%2)}); };
-attached.updateOnLoad();
-
-
-// Show/hide the 'no attachments' message if there are no/some attachments
-function redrawAttachList() {
-    if (attached.tbody.hasChildNodes()) {
-        hideElement(attached.table.previousSibling);
-        setDisplayForElement('', attached.table);
-        //showElement(attached.table);
-        // Make sure row classes alternate 'r1', 'r0', 'r1', etc.
-        for (var i = 0; i < attached.tbody.childNodes.length; i++) {
-            setElementClass(attached.tbody.childNodes[i], 'r'+(i+1)%2);
-        }
-    }
-    else {
-        showElement(attached.table.previousSibling);
-        hideElement(attached.table);
-    }
-}
-
-
-// Add a newly uploaded file to the attached files list.
-
-var uploaddata = {};
-
-// Currently this function does not check whether names of files
-// attached from my files clash with files already in the attached
-// files list.  This should be done here if names of attached files
-// need to be unique.
-function attachtopost(data) {
-    var rowid = data.tempfilename ? 'uploaded:' + data.tempfilename : 'artefact:' + data.id;
-    if (fileattached_id(rowid) || data.error) {
-        return;
-    }
-    var tags;
-    if (typeof(data.tags) == "string") {
-        tags = data.tags;
-    }
-    else {
-        tags = data.tags.join(', ');
-    }
-
-    appendChildNodes(
-        attached.tbody,
-        TR(
-            {'id':rowid},
-            map(
-                partial(TD,null), 
-                [
-                    IMG({'src':get_themeurl('images/'+data.artefacttype+'.gif'), 'alt':data.artefacttype}), 
-                    data.title,
-                    data.description,
-                    tags,
-                    INPUT({'type':'button', 'class':'button', 'value':{$getstring['remove']}, 'onclick':"removefrompost('"+rowid+"')"})
-                ]
-            )
-        )
-    );
-    uploaddata[rowid] = data;
-    redrawAttachList();
-}
-
-
-// Remove a row from the attached files list.
-function removefrompost(rowid) {
-    removeElement(rowid);
-    redrawAttachList();
-}
-
-
-// Check if there's already a file attached to the post with the given name
-function fileattached(filename) {
-    return some(map(function (e) { return e.childNodes[1]; }, attached.tbody.childNodes),
-                function (cell) { return scrapeText(cell) == filename; });
-}
-
-
-// Check if there's already a file attached to the post with the given id
-function fileattached_id(id) {
-    return some(attached.tbody.childNodes, function (r) { return getNodeAttribute(r,'id') == id; });
-}
-
-
-// Save the blog post.
-function saveblogpost() {
-    // Hacky inline validation - see bug #380
-    if ($('editpost_title').value == '') {
-        alert({$getstring['mustspecifytitle']});
-        return false;
-    }
-    var data = {'title' : $('editpost_title').value,
-                'draft' : $('draftpost_thisisdraft').checked,
-                'blog'  : {$blog},
-                'blogpost'  : {$blogpost}};
-    // attachments
-    var uploads = [];
-    var artefacts = [];
-    for (var i = 0; i < attached.tbody.childNodes.length; i++) {
-        var idparts = attached.tbody.childNodes[i].id.split(':');
-        if (idparts[0] == 'artefact') {
-            artefacts.push(idparts[1]);
-        }
-        else { // uploaded file
-            var record = {
-                'id':idparts[1],
-                'data':uploaddata[attached.tbody.childNodes[i].id]
-            };
-            uploads.push(record);
-        }
-    }
-    data.uploads = serializeJSON(uploads);
-    data.artefacts = serializeJSON(artefacts);
-    // content
-    if (typeof(tinyMCE) != 'undefined') { 
-        tinyMCE.triggerSave();
-    }
-
-    data.body = $('editpost_description').value;
-    if (data.body == '') {
-        alert({$getstring['mustspecifycontent']});
-        return false;
-    }
-    data.tags = $('editpost_tags').value;
-    sendjsonrequest('saveblogpost.json.php', data, 'POST', function (result) {
-        if (result.error) {
-            // Error messages should appear near the save button so
-            // that users can actually see them.
-            map(removeElement, getElementsByTagAndClassName('div', null, 'savecancel'));
-            appendChildNodes('savecancel', DIV({'class':'error'}, result.message));
-        }
-        else {
-            window.location = '{$wwwroot}artefact/blog/view/?id={$blog}';
-        }
-    });
-}
-
-
-function canceledit() {  // Uploaded files will deleted by cron cleanup.
-     window.location = '{$wwwroot}artefact/blog/view/?id={$blog}';
-}
-
 
 
 
@@ -438,37 +238,26 @@ function getSelectedImgAttributes (editorid) {
 // recognised as images.  This function is called by the the popup
 // window, but needs access to the attachment list on this page
 function attachedImageList() {
-    // All the rows in the attached files list:
-    var attachrows = getElementsByTagAndClassName('tbody', null, 'attachedfiles')[0].childNodes;
-    // Go through the rows, and for all the rows where the first cell
-    // contains an 'image' image, return the row id (id attribute) and
-    // the filename (contents of the second cell)
-    return map(function(r) { return {'id':r.id, 'name':scrapeText(r.childNodes[1])}; },
-               filter(function(r) { return r.firstChild.firstChild.alt == 'image'; }, attachrows));
+    var images = [];
+    var attachments = editpost_filebrowser.selecteddata;
+    for (var a in attachments) {
+        if (attachments[a].artefacttype == 'image') {
+            images.push({'id': attachments[a].id, 'name': attachments[a].title});
+        }
+    }
+    return images;
 }
 
 
 function imageSrcFromId(imageid) {
-    var idparts = imageid.split(':');
-    if (idparts[0] == 'artefact') {
-        return config.wwwroot + 'artefact/file/download.php?file=' + idparts[1];
-    }
-    if (idparts[0] == 'uploaded') {
-        return config.wwwroot + 'artefact/blog/downloadtemp.php?tempfile=' + idparts[1];
-    }
-    return '';
+    return config.wwwroot + 'artefact/file/download.php?file=' + imageid;
 }
 
 function imageIdFromSrc(src) {
     var artefactstring = 'download.php?file=';
     var ind = src.indexOf(artefactstring);
     if (ind != -1) {
-        return 'artefact:' + src.substring(ind+artefactstring.length, src.length);
-    }
-    var uploadstring = 'downloadtemp.php?tempfile=';
-    ind = src.indexOf(uploadstring);
-    if (ind != -1) {
-        return 'uploaded:' + src.substring(ind+uploadstring.length, src.length).split('&')[0];
+        return src.substring(ind+artefactstring.length, src.length);
     }
     return '';
 }
@@ -483,7 +272,7 @@ function blogpostExecCommandHandler(editor_id, elm, command, user_interface, val
 
         imageList = attachedImageList();
         if (imageList.length == 0) {
-            alert({$getstring['noimageshavebeenattachedtothispost']});
+            alert({$noimagesmessage});
             return true;
         }
 
@@ -506,58 +295,30 @@ function blogpostExecCommandHandler(editor_id, elm, command, user_interface, val
 }
 
 
+function editpost_success(form, data) {
+    editpost_filebrowser.success(form, data);
+};
+
 EOF;
 
-
-$draftform = pieform(array(
-    'name' => 'draftpost',
-    'plugintype' => 'artefact',
-    'pluginname' => 'blog',
-    'method' => 'post',
-    'action' => '',
-    'elements' => array(
-        'thisisdraft' => array(
-            'type' => 'checkbox',
-            'title' => get_string('thisisdraft', 'artefact.blog'),
-            'description' => get_string('thisisdraftdesc', 'artefact.blog'),
-            'defaultvalue' => $checked,
-            'help' => true,
+$smarty = smarty(array(), array(), array(), array(
+    'tinymcecommandcallback' => 'blogpostExecCommandHandler',
+    'sideblocks' => array(
+        array(
+            'name'   => 'quota',
+            'weight' => -10,
+            'data'   => array(),
         ),
-    )
+    ),
+    'themepaths' => array(
+        'images/file.gif',
+        'images/image.gif'
+    ),
 ));
-
-
-
-$smarty = smarty(array('tablerenderer', 'artefact/file/js/file.js', 'tinymce'), 
-                 array(), array(), array('tinymcecommandcallback' => 'blogpostExecCommandHandler'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->assign_by_ref('textinputform', $textinputform);
-$smarty->assign_by_ref('draftform', $draftform);
+$smarty->assign_by_ref('form', $form);
 $smarty->assign('pagetitle', $pagetitle);
 $smarty->display('artefact:blog:editpost.tpl');
-
-
-
-/**
- * This function gets called to create a new blog post, and publish it
- * simultaneously.
- *
- * @param array
- */
-function editpost_submit(Pieform $form, array $values) {
-    global $USER;
-
-    $values['published'] = !$values['thisisdraft'];
-    if (
-        (!empty($values['id']) && ArtefactTypeBlogPost::edit_post($USER, $values))
-        || (empty($values['id']) && ArtefactTypeBlogPost::new_post($USER, $values))
-    ) {
-        // Redirect to the blog page.
-        redirect('/artefact/blog/view/?id=' . $values['parent']);
-    }
-
-    redirect('/artefact/blog/');
-}
 
 
 
@@ -566,8 +327,68 @@ function editpost_submit(Pieform $form, array $values) {
  * blog list.
  */
 function editpost_cancel_submit() {
-    $blog = param_integer('parent');
-    redirect('/artefact/blog/view/?id=' . $blog);
+    global $blog;
+    redirect(get_config('wwwroot') . 'artefact/blog/view/?id=' . $blog);
+}
+
+function editpost_submit(Pieform $form, $values) {
+    global $SESSION, $USER, $blogpost, $blog;
+
+    // save the post if the user clicked submit or has no js
+    $submitted = !empty($values['submitpost']);
+    if ($submitted || !$form->submitted_by_js()) {
+        db_begin();
+        $postobj = new ArtefactTypeBlogPost($blogpost, null);
+        $postobj->set('title', $values['title']);
+        $postobj->set('description', $values['description']);
+        $postobj->set('tags', $values['tags']);
+        $postobj->set('published', !$values['draft']);
+        if (!$blogpost) {
+            $postobj->set('parent', $blog);
+            $postobj->set('owner', $USER->id);
+        }
+        $postobj->commit();
+        $blogpost = $postobj->get('id');
+
+        // Attachments
+        if (isset($values['filebrowser']['selected'])) {
+            $old = $postobj->attachment_id_list();
+            foreach ($old as $o) {
+                if (!in_array($o, $values['filebrowser']['selected'])) {
+                    $postobj->detach($o);
+                }
+            }
+            foreach ($values['filebrowser']['selected'] as $a) {
+                if (!in_array($a, $old)) {
+                    $postobj->attach($a);
+                }
+            }
+            $filebrowser['selectedlist'] = $postobj->get_attachments(true);
+        }
+        db_commit();
+        $result['error'] = false;
+        $result['message'] = get_string('blogpostsaved', 'artefact.blog');
+        $result['goto'] = get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blog;
+    }
+
+    // Filebrowser actions should only come through to here if it's not a js submission.
+    if (!empty($values['filebrowser']['action']) && !$form->submitted_by_js()) {
+        if (isset($values['filebrowser']['folder'])) {
+            $params['folder'] = $values['filebrowser']['folder'];
+        }
+        $result = pieform_element_filebrowser_submit($form, $values['filebrowser']);
+        $result['goto'] = get_config('wwwroot') . 'artefact/blog/post.php?id=' . $blogpost;
+    }
+
+    $form->reply(empty($result['error']) ? PIEFORM_OK : PIEFORM_ERR, $result);
+}
+
+function load_attachments() {
+    global $blogpostobj;
+    if ($blogpostobj) {
+        return $blogpostobj->get_attachments(true);
+    }
+    return array();
 }
  
 ?>

@@ -1,7 +1,7 @@
 {if empty($filelist)}
 <p>{str tag=nofilesfound section=artefact.file}</p>
 {else}
-<table id="filelist" class="tablerenderer">
+<table id="filelist" class="tablerenderer filelist">
  <thead>
   <tr>
    <th></th>
@@ -22,7 +22,8 @@
     </td>
     <td class="filename">
     {if $file->artefacttype == 'folder'}
-      <a href="?folder={$file->id}{$queryparams}" class="changefolder" title="{str tag=gotofolder section=artefact.file arg1=$file->title}">{$file->title|str_shorten:34}</a>
+      <!--a href="?folder={$file->id}{$queryparams}" class="changefolder" title="{str tag=gotofolder section=artefact.file arg1=$file->title}">{$file->title|str_shorten:34}</a-->
+      <button type="submit" class="changefolder link" name="changefolder[{$file->id}]" title="{str tag=gotofolder section=artefact.file arg1=$file->title}" value="{$file->id}">{$file->title|str_shorten:34}</button>
     {else}
       <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" title="{str tag=downloadfile section=artefact.file arg1=$file->title}">{$file->title|str_shorten:34}</a>
     {/if}
@@ -31,9 +32,12 @@
     <td>{$file->size}</td>
     <td>{$file->mtime}</td>
     <td>
-    {if $config.edit && !$file->isparent}
+    {if $editable && !$file->isparent}
       {if !isset($file->can_edit) || $file->can_edit !== 0}<button type="submit" name="edit[{$file->id}]" value="{$file->id}">{str tag=edit}</button>{/if}
       {if $file->childcount == 0}<button type="submit" name="delete[{$file->id}]" value="{$file->id}">{str tag=delete}</button>{/if}
+    {/if}
+    {if $selectable && $file->artefacttype != 'folder'}
+      <button type="submit" class="select small" name="select[{$file->id}]" value="{$file->id}">{str tag=select}</button>
     {/if}
     </td>
   </tr>

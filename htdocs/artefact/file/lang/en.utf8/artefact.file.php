@@ -29,6 +29,7 @@ defined('INTERNAL') || die();
 $string['pluginname'] = 'Files';
 
 $string['sitefilesloaded'] = 'Site files loaded';
+$string['addafile'] = 'Add a file';
 $string['bytes'] = 'bytes';
 $string['cannoteditfolder'] = 'You do not have permission to add content to this folder';
 $string['changessaved'] = 'Changes saved';
@@ -89,6 +90,7 @@ $string['Owner'] = 'Owner';
 $string['parentfolder'] = 'Parent folder';
 $string['Preview'] = 'Preview';
 $string['savechanges'] = 'Save changes';
+$string['selectafile'] = 'Select a file';
 $string['Size'] = 'Size';
 $string['timeouterror'] = 'File upload failed: try uploading the file again';
 $string['title'] = 'Name';

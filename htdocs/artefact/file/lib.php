@@ -521,19 +521,16 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             'name'               => 'files',
             'jsform'             => true,
             'newiframeonsubmit'  => true,
-            'reloadformonreply'  => false,
             'jssuccesscallback'  => 'files_success',
-            // 'jserrorcallback'    => 'files_error',
-            // 'presubmitcallback'  => 'uploader_presubmit',
             'renderer'           => 'oneline',
             'plugintype'         => 'artefact',
             'pluginname'         => 'file',
             'configdirs'         => array(get_config('libroot') . 'form/', get_config('docroot') . 'artefact/file/form/'),
+            'group'              => $group,
+            'institution'        => $institution,
             'elements'           => array(
                 'filebrowser' => array(
                     'type'         => 'filebrowser',
-                    'group'        => $group,
-                    'institution'  => $institution,
                     'folder'       => $folder,
                     'highlight'    => $highlight,
                     'edit'         => $edit,
@@ -545,21 +542,13 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                         'select'          => false,
                     ),
                 ),
-                'group' => array(
-                    'type'         => 'hidden',
-                    'value'        => $group,
-                ),
-                'institution' => array(
-                    'type'         => 'hidden',
-                    'value'        => $institution,
-                ),
             ),
         );
         return $form;
     }
 
     public static function files_js() {
-        return "function files_success(form, data) { if (!files_filebrowser.success(form, data)) { formSuccess(form, data); return false; }; };";
+        return "function files_success(form, data) { files_filebrowser.success(form, data); }";
     }
 
     public static function count_user_files($owner=null, $group=null, $institution=null) {
@@ -714,45 +703,39 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     }
 }
 
-function files_validate(Pieform $form, $values) {
-    global $SESSION;
-    if (!empty($values['filebrowser']['action'])) {
-        $result = pieform_element_filebrowser_validate($values['filebrowser']);
-        if ($result['error']) {
-            if (!$form->submitted_by_js()) {
-                $form->set_error('filebrowser', $result['message']);
-            }
-            $form->reply(PIEFORM_ERR, $result);
-        }
-    }
-}
-
+// Pieforms doesn't seem to like a static class method here
 function files_submit(Pieform $form, $values) {
     global $SESSION;
-    if ($values['group']) {
+
+    $group       = $form->get_property('group');
+    $institution = $form->get_property('institution');
+    if ($group) {
         $redirect = get_config('wwwroot') . 'artefact/file/groupfiles.php';
-        $params = array('group' => $values['group']);
-    } else if ($values['institution']) {
-        if ($values['institution'] == 'mahara') {
+        $params = array('group' => $group);
+    } else if ($institution) {
+        if ($institution == 'mahara') {
             $redirect = get_config('wwwroot') . 'admin/site/files.php';
             $params = array();
         }
         else {
             $redirect = get_config('wwwroot') . 'artefact/file/institutionfiles.php';
-            $params = array('institution' => $values['institution']);
+            $params = array('institution' => $institution);
         }
     } else {
         $redirect = get_config('wwwroot') . 'artefact/file/index.php';
         $params = array();
     }
+
     if (!empty($values['filebrowser']['action'])) {
+        // Updates on the filebrowser for non-js users that need to cause a
+        // redirect back to this page.
         if (!empty($values['filebrowser']['folder'])) {
             $params['folder'] = $values['filebrowser']['folder'];
         }
         if ($values['filebrowser']['action'] == 'edit') {
             $params['edit'] = $values['filebrowser']['artefact'];
         }
-        $result = pieform_element_filebrowser_submit($form->get_element('filebrowser'), $values['filebrowser']);
+        // $result = pieform_element_filebrowser_submit($form->get_element('filebrowser'), $values['filebrowser']);
         $result['action'] = $values['filebrowser']['action'];
         if (!empty($result['highlight'])) {
             $params['file'] = $result['highlight'];

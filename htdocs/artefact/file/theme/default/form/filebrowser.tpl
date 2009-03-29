@@ -1,11 +1,23 @@
+{if $config.select}
+{include file="artefact:file:form/selectedlist.tpl" selectedlist=$selectedlist prefix=$prefix}
+{/if}
+
 <script type="text/javascript">
 {$initjs}
 </script>
 
-<input type="hidden" name="group" id="{$prefix}_group" value="{$group}" />
-<input type="hidden" name="institution" id="{$prefix}_institution" value="{$institution}" />
 <input type="hidden" name="folder" id="{$prefix}_folder" value="{$folder}" />
 <input type="hidden" name="foldername" id="{$prefix}_foldername" value="{$foldername}" />
+
+{if $config.select}
+<input type="button" class="buttondk" name="open_upload_browse" value="{if $config.selectone}{str tag=selectafile section=artefact.file}{else}{str tag=addafile section=artefact.file}{/if}" />
+{/if}
+
+<div id="{$prefix}_upload_browse" class="upload_browse{if $config.select} select hidden{/if}">
+
+{if $config.select}
+<input type="button" class="buttondk" name="close_upload_browse" value="{str tag=cancel}" />
+{/if}
 
 <table class="fileupload">
  <tbody>
@@ -64,12 +76,13 @@
 <input type="hidden" name="moveto" value="" />
 {/if}
 
+<!--input type="hidden" name="changefolder" id="{$prefix}_changefolder" value="0" /-->
 <div id="{$prefix}_foldernav" class="foldernav">
 {include file="artefact:file:form/folderpath.tpl" path=$path queryparams=$queryparams}
 </div>
 
 <div id="{$prefix}_filelist_container">
-{include file="artefact:file:form/filelist.tpl" filelist=$filelist config=$config highlight=$highlight edit=$edit queryparams=$queryparams}
+{include file="artefact:file:form/filelist.tpl" filelist=$filelist editable=$config.edit selectable=$config.select highlight=$highlight edit=$edit queryparams=$queryparams}
 </div>
 
 {* Edit form used when js is available *}
@@ -80,3 +93,5 @@
   </tbody>
 </table>
 {/if}
+
+</div>

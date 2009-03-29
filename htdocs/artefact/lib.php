@@ -811,7 +811,7 @@ abstract class ArtefactType {
         return $attachments;
     }
 
-    public function get_attachments() {
+    public function get_attachments($assoc=false) {
         $list = get_records_sql_assoc('SELECT a.id, a.artefacttype, a.title, a.description 
             FROM {artefact_attachment} aa
             INNER JOIN {artefact} a ON a.id = aa.attachment
@@ -832,7 +832,13 @@ abstract class ArtefactType {
                 }
             }
         }
-        // return $list;
+        else {
+            return array();
+        }
+
+        if ($assoc) {          // Remove once tablerenderers are gone.
+            return $list;
+        }
         return array_values($list);
     }
 

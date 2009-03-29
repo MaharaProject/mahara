@@ -204,6 +204,21 @@ a:hover {
 	font-size: 11px;
 	color: #FFF;
 }
+/* buttons that should show as links */
+button.link {
+  color: #7f9d16;
+  background: transparent !important;
+  border: none;
+  display: inline;
+  width: auto;
+  overflow: visible;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+button.link:hover {
+  color: #84aa00;
+  /* text-decoration: underline !important; */
+}
 span.addicon {
     display: block;
     margin-top: -16px;
@@ -395,6 +410,7 @@ input.button, button {
 }
 /* Default dark buttons to the big ones */
 input.submitcancel, 
+input.buttondk,
 input.cancelbackcreate,
 #settings_delete {
     background-color: #7d9728;
@@ -412,7 +428,7 @@ input.cancelbackcreate,
 .maincontent table input.button, 
 .maincontent table input.submit, 
 .maincontent table input.submitcancel, 
-.maincontent table#filelist button,
+.maincontent table.filelist button,
 .maincontent table button {
 	font-size: 11px;
 	background-color: #92B328;
@@ -429,6 +445,14 @@ input.cancelbackcreate,
     margin: 5px 2px 0 0;
     padding: 0 10px;
 	font-size: 11px;
+}
+.maincontent .pieform table button.small,
+button.small {
+	font-size: 11px;
+	background-color: #92B328;
+	height: 20px;
+	padding: 0 5px;
+	margin: 2px;
 }
 /* And buttons in forms that can't get the dark colour all by itself and requires jigging */
 #register #register_submit_container input,
@@ -1153,7 +1177,7 @@ fieldset table,
 #myviewstable,
 #friendslist,
 #friendslistcontainer .friendinfo,
-#filelist,
+.filelist,
 #bloglist,
 #postlist,
 #filebrowser,
@@ -1759,14 +1783,14 @@ tr.uploadform {
 tr.uploadform th {
   vertical-align: top;
 }
-.foldernav,
-#foldernav {
+.foldernav {
     font-weight: bold;
     margin: 15px 0 0 3px;
     padding: 3px 0 3px 25px;
     font-size: 18px;
     background: url(../images/foldernav.gif) no-repeat left 2px;
 }
+.directory-item.folder td.filename button.link,
 .directory-item.folder td.filename {
 	font-weight: bold;
 }
@@ -1777,76 +1801,79 @@ tr.uploadform th {
 .directory-item.parentfolder td.filename {
   font-weight: normal;
 }
-#filelist tr.folderhover.directory-item td {
+.filelist tr.folderhover.directory-item td {
         background-color: #ffc !important;
 }
-#filelist tr.folderhover.directory-item a {
+.filelist tr.folderhover.directory-item a {
         color: #000;
         text-decoration: none;
 }
-#filelist {
+.filelist {
 	border-bottom: 1px solid #95a8b7;
 }
-#filelist tr.r0.folder td,
-#filelist tr.r1.folder td {
+.filelist tr.r0.folder td,
+.filelist tr.r1.folder td {
     background-color: #e0e4e8 !important;
 }
-#filelist tr.r0 td {
+.filelist tr.r0 td {
     background-color: #e0e8ee !important;
 	border-top: none;
 	border-bottom: none;
 	line-height: 2em;
 }
-#filelist tr.r1 td {
+.filelist tr.r1 td {
     background-color: #f4f7f9 !important;
 	border-top: none;
 	border-bottom: none;
 	line-height: 2em;
 }
-#filelist tr td {
+.filelist tr td {
 	background-color: #f9f9f9;
 	border-top: 1px solid #b8c8d5;
 	border-bottom: 1px solid #b8c8d5;
 }
-#filelist table td {
+.filelist table td {
 	border-top: none;
 	border-bottom: none;
 	padding: 3px 0;
 	font-size: 11px;
 }
-#filelist table th {
+table.filelist thead th {
+	text-align: left;
+}
+.filelist table th {
 	text-align: left;
 	padding: 3px 10px 3px 55px;
 }
-#filelist table th label {
+.filelist table th label {
 	color: #646464;
 }
-#filelist table td button,
-#filelist table td input.submit,
-#filelist table td input.button {
+.filelist table td button,
+.filelist table td input.submit,
+.filelist table td input.button {
 	height: 22px;
 	padding: 2px 10px;
 	float: right;
 }
-#filelist tr.highlight-file td {
+tr.highlight-file td {
     background: #fffcd8 url(../images/highlight-bg.gif) repeat left top !important;
     font-weight: bold;
     color: #837d37;
 }
-#filelist table table.editpermissions {
+.filelist table table.editpermissions {
 	text-align: left;
 }
-#filelist table table.editpermissions th {
+.filelist table table.editpermissions th {
 	padding: 3px 10px 3px 0;
 }
-#filelist table table.editpermissions td {
+.filelist table table.editpermissions td {
 	font-size: 11px;
 	padding: 3px 0;
 }
-#filelist table table.editpermissions th label {
+.filelist table table.editpermissions th label {
 	color: #646464;
 }
-#filelist .icon-drag img {
+.filelist .icon-drag img {
   cursor: move;
 }
 
@@ -1896,6 +1923,7 @@ tr.uploadform th {
     padding: 0 !important;
 	margin-bottom: 0 !important;
 }
+.blogpost-attachments thead th,
 .blogpost-attachments tbody th {
 	color: #FFF;
 	font-weight: bold;
@@ -1906,32 +1934,37 @@ tr.uploadform th {
 	color: #474220;
 	font-weight: normal;
 }
-#editpost th {
-	padding: 2px 0;
+.filebrowser .blogpost-attachments {
+  margin: 3px;
 }
-#editpost td {
-	padding: 2px 10px;
+.filebrowser .blogpost-attachments th,
+.filebrowser .blogpost-attachments td {
+  padding: 2px;
 }
-#browsebutton {
-	background-color: #7d9728;
+.upload_browse.select {
+  background-color: #f4f8e7;
+  margin-top: 15px;
+  border: 1px solid #e3ecc2;
+  padding: 5px;
+  font-size: 11px;
 }
-#browsemyfiles {
-	margin-top: 15px;
-    background-color: #e3ecc2;
-	padding: 10px 15px;
+.upload_browse.select .foldernav {
+  margin: 0;
+  padding: 3px 0 3px 10px;
+  font-size: 12px;
+  background-image: none;
 }
-#browsemyfiles h3 {
-	margin-top: 0;
+.upload_browse.select table {
+  margin: 3px;
 }
-#draftpost table {
-	margin: 5px 0;
+.upload_browse.select table.filelist thead {
+  border-bottom: 1px solid #95a8b7;
+  border-top: 1px solid #95a8b7;
+  background-color: #fff;
 }
-#draftpost table th {
-	text-align: left;
-	padding: 2px 10px;
-}
-#draftpost table td {
-	padding: 2px 0;
+.upload_browse.select th,
+.upload_browse.select td {
+  padding: 2px;
 }
 span.viewicon {
 	float: right;

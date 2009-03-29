@@ -37,15 +37,12 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     global $USER;
     $smarty = smarty_core();
 
-    $prefix = $form->get_name() . '_' . $element['name'];
-    $smarty->assign('prefix', $prefix);
+    $group       = $form->get_property('group');
+    $institution = $form->get_property('institution');
+    $userid      = ($group || $institution) ? null : $USER->get('id');
 
-    $group = $element['group'];
-    $institution = $element['institution'];
-    $userid = ($group || $institution) ? null : $USER->get('id');
-
+    $queryparams = '';
     if ($group) {
-        $queryparams = '&group=' . $group;
         $groupinfo = array(
             'roles' => group_get_role_info($group),
             'perms' => group_get_default_artefact_permissions($group),
@@ -56,12 +53,6 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         }
         $smarty->assign('groupinfo', $groupinfo);
     }
-    else if ($institution) {
-        $queryparams = '&institution=' . $institution;
-    }
-    else {
-        $queryparams = '';
-    }
 
 
     $folder = $element['folder'];
@@ -69,27 +60,35 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     $smarty->assign('folder', $folder);
     $smarty->assign('foldername', $path[0]->title);
     $smarty->assign('path', array_reverse($path));
-    $smarty->assign('group', $group);
-    $smarty->assign('institution', $institution);
     $smarty->assign('queryparams', $queryparams);
     $smarty->assign('highlight', $element['highlight'][0]);
-    $smarty->assign('edit', $element['edit'] ? $element['edit'] : -1);
+    $smarty->assign('edit', !empty($element['edit']) ? $element['edit'] : -1);
     $config = array_map('intval', $element['config']);
     $smarty->assign('config', $config);
+    if ($config['select']) {
+        $selected = $element['selectlistcallback']();
+        $smarty->assign('selectedlist', $selected);
+        $selectedliststr = json_encode($selected);
+    }
     $smarty->assign('agreementtext', get_field('site_content', 'content', 'name', 'uploadcopyright'));
     $filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $group, $institution);
     $smarty->assign('filelist', $filedata);
 
-    $formid = $form->get_name();
     $configstr = json_encode($config);
     $fileliststr = json_encode($filedata);
 
-    $initjs = "
-var {$prefix} = new FileBrowser('{$prefix}', {$folder}, {$configstr});
+    $formid = $form->get_name();
+    $prefix = $formid . '_' . $element['name'];
+
+    $smarty->assign('prefix', $prefix);
+
+    $initjs = "var {$prefix} = new FileBrowser('{$prefix}', {$folder}, {$configstr}, config);
 {$prefix}.formname = '{$formid}';
-{$prefix}.filedata = {$fileliststr};
-addLoadEvent({$prefix}.init);
-";
+{$prefix}.filedata = {$fileliststr};";
+    if ($config['select']) {
+        $initjs .= "{$prefix}.selecteddata = {$selectedliststr};";
+    }
+    $initjs .= "addLoadEvent({$prefix}.init);";
 
     $smarty->assign('initjs', $initjs);
 
@@ -112,46 +111,28 @@ function pieform_element_filebrowser_get_path($folder) {
 }
 
 function pieform_element_filebrowser_build_path($element, $folder) {
-    if ($element['group']) {
-        $queryparams = '&group=' . $group;
-    }
-    else if ($element['institution']) {
-        $queryparams = '&institution=' . $institution;
-    }
-    else {
-        $queryparams = '';
-    }
     $path = pieform_element_filebrowser_get_path($folder);
     $foldername = $path[0]->title;
 
     $smarty = smarty_core();
-    $smarty->assign('queryparams', $queryparams);
+    $smarty->assign('queryparams', '');
     $smarty->assign('path', array_reverse($path));
     return array('html' => $smarty->fetch('artefact:file:form/folderpath.tpl'), 'foldername' => $foldername);
 }
 
-function pieform_element_filebrowser_build_filelist($element, $folder, $highlight=null) {
+function pieform_element_filebrowser_build_filelist($form, $element, $folder, $highlight=null) {
     global $USER;
 
-    $group = $element['group'];
-    $institution = $element['institution'];
+    $group = $form->get_property('group');
+    $institution = $form->get_property('institution');
     $userid = ($group || $institution) ? null : $USER->get('id');
-    if ($group) {
-        $queryparams = '&group=' . $group;
-    }
-    else if ($institution) {
-        $queryparams = '&institution=' . $institution;
-    }
-    else {
-        $queryparams = '';
-    }
-
-    $config = array_map('intval', $element['config']);
+    $queryparams = '';
 
     $smarty = smarty_core();
-    $smarty->assign('config', $config);
     $smarty->assign('edit', -1);
     $smarty->assign('highlight', $highlight);
+    $smarty->assign('editable', (int) $element['config']['edit']);
+    $smarty->assign('selectable', (int) $element['config']['select']);
     $smarty->assign('queryparams', $queryparams);
     $filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $group, $institution);
     $smarty->assign('filelist', $filedata);
@@ -162,120 +143,151 @@ function pieform_element_filebrowser_build_filelist($element, $folder, $highligh
     );
 }
 
-function pieform_element_filebrowser_get_value(Pieform $form, $element) {
-    $value = array();
-    if (isset($_POST['folder'])) {
-        $value['folder']           = (int) $_POST['folder'];
-    }
-    if (isset($_POST['group'])) {
-        $value['group']            = $_POST['group'];
-    }
-    if (isset($_POST['institution'])) {
-        $value['institution']      = $_POST['institution'];
-    }
 
-    if (!empty($_POST['delete']) && is_array($_POST['delete'])) {
-        $value['action']           = 'delete';
-        $keys                      = array_keys($_POST['delete']);
-        $value['artefact']         = (int) ($keys[0]);
-    }
-    else if (!empty($_POST['edit']) && is_array($_POST['edit'])) {
+function pieform_element_filebrowser_get_value(Pieform $form, $element) {
+    // This bypasses the rest of the submit process when we're not affecting
+    // the rest of the form
+    $result = pieform_element_filebrowser_doupdate($form, $element);
+
+    $value = array();
+
+    // The following filebrowser update actions are only used when js is not available
+    if (!empty($_POST['edit']) && is_array($_POST['edit'])) {
+        // redirect
         $value['action']           = 'edit';
         $keys                      = array_keys($_POST['edit']);
         $value['artefact']         = (int) ($keys[0]);
     }
-    else if (!empty($_POST['update']) && is_array($_POST['update'])) {
-        $value['action']           = 'update';
-        $keys                      = array_keys($_POST['update']);
-        $value['artefact']         = (int) ($keys[0]);
-        $value['title']            = $_POST['edit_title'];
-        $value['description']      = $_POST['edit_description'];
-        $value['tags']             = $_POST['edit_tags'];
-        if ($element['group']) {
-            $value['permissions']  = array('admin' => (object) array('view' => true, 'edit' => true, 'republish' => true));
-            foreach ($_POST as $k => $v) {
-                if (preg_match('/^permission:([a-z]+):([a-z]+)$/', $k, $m)) {
-                    $value['permissions'][$m[1]]->{$m[2]} = (bool) $v;
-                }
-            }
-        }
-    }
     else if (!empty($_POST['canceledit'])) {
         $value['action']           = 'cancel';
     }
-    else if (!empty($_POST['move'])) {
-        $value['action']           = 'move';
-        $value['artefact']         = (int) $_POST['move'];
-        $value['newparent']        = (int) $_POST['moveto'];
+    else if (!empty($_POST['select']) && is_array($_POST['select'])) {
+        $value['action']           = 'select';
+        $keys                      = array_keys($_POST['select']);
+        $value['artefact']         = (int) ($keys[0]);
     }
-    else if (!empty($_POST['createfolder'])) {
-        $value['action']           = 'createfolder';
-        $value['title']            = $_POST['createfolder_name'];
+    else if (!empty($_POST['unselect']) && is_array($_POST['unselect'])) {
+        $value['action']           = 'unselect';
+        $keys                      = array_keys($_POST['unselect']);
+        $value['artefact']         = (int) ($keys[0]);
     }
-    else if (!empty($_POST['upload']) || ($_FILES['userfile'] && $_FILES['userfile']['name'])) {
-        $value['action']           = 'upload';
-        $value['userfile']         = $_FILES['userfile'];
-        $value['filename']         = isset($_FILES['userfile']['name']) ? $_FILES['userfile']['name'] : null;
-        $value['uploadnumber']     = (int) $_POST['uploadnumber'];
-        $value['uploadfolder']     = $_POST['folder'] ? (int) $_POST['folder'] : null;
-        $value['uploadfoldername'] = $_POST['foldername'];
-        $value['uploadagreement']  = $element['config']['uploadagreement'];
-        if ($element['config']['uploadagreement']) {
-            $value['notice']       = $_POST['notice'];
-        }
-    } else {
-        $value['action']           = 'changefolder';
+
+    // When files are being selected, this element has a real value
+    if (!empty($_POST['selected']) && is_array($_POST['selected'])) {
+        $value['selected']         = array_keys($_POST['selected']);
     }
+
     return $value;
 }
 
 
-function pieform_element_filebrowser_validate($values) {
-    $message = '';
-    if ($values['action'] == 'upload') {
-        if (!isset($values['filename']) || !strlen($values['filename'])) {
-            $message = get_string('filenamefieldisrequired', 'artefact.file');
+function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
+    if (isset($_POST['folder'])) {
+        $folder = (int) $_POST['folder'];
+    }
+
+    $result = null;
+
+    if (!empty($_POST['delete']) && is_array($_POST['delete'])) {
+        $keys = array_keys($_POST['delete']);
+        $result = pieform_element_filebrowser_delete($form, $element, (int) ($keys[0]));
+    }
+    else if (!empty($_POST['update']) && is_array($_POST['update'])) {
+        if (!isset($_POST['edit_title']) || !strlen($_POST['edit_title'])) {
+            return array(
+                'error'   => true,
+                'message' => get_string('filenamefieldisrequired', 'artefact.file')
+            );
         }
-        else if ($values['uploadagreement'] && empty($values['notice'])) {
-            $message = get_string('youmustagreetothecopyrightnotice', 'artefact.file');
+        $keys = array_keys($_POST['update']);
+        $data = array(
+            'artefact'    => (int) ($keys[0]),
+            'title'       => $_POST['edit_title'],
+            'description' => $_POST['edit_description'],
+            'tags'        => $_POST['edit_tags'],
+            'folder'      => $folder,
+        );
+        if ($form->get_property('group')) {
+            $data['permissions']  = array('admin' => (object) array('view' => true, 'edit' => true, 'republish' => true));
+            foreach ($_POST as $k => $v) {
+                if (preg_match('/^permission:([a-z]+):([a-z]+)$/', $k, $m)) {
+                    $data['permissions'][$m[1]]->{$m[2]} = (bool) $v;
+                }
+            }
         }
+        $result = pieform_element_filebrowser_update($form, $element, $data);
     }
-    if (($values['action'] == 'createfolder' || $values['action'] == 'update') && (!isset($values['title']) || !strlen($values['title']))) {
-        $message = get_string('foldernamerequired', 'artefact.file');
+    else if (!empty($_POST['move'])) {
+        $result = pieform_element_filebrowser_move($form, $element, array(
+            'artefact'  => (int) $_POST['move'],
+            'newparent' => (int) $_POST['moveto'],
+            'folder'    => $folder,
+        ));
     }
-    if (($values['action'] == 'delete' || $values['action'] == 'update') && !$values['artefact']) {
-        $message = get_string('nofilespecified', 'artefact.file');
+    else if (!empty($_POST['createfolder'])) {
+        if (!isset($_POST['createfolder_name']) || !strlen($_POST['createfolder_name'])) {
+            return array(
+                'error'   => true,
+                'message' => get_string('foldernamerequired', 'artefact.file'),
+            );
+        }
+        $result = pieform_element_filebrowser_createfolder($form, $element, array(
+            'title'  => $_POST['createfolder_name'],
+            'folder' => $folder,
+        ));
     }
-    return array('error' => (bool) ($message != ''), 'message' => $message);
+    else if (!empty($_POST['upload']) || ($_FILES['userfile'] && $_FILES['userfile']['name'])) {
+        if (!isset($_FILES['userfile']['name'])) {
+            return array(
+                'error'   => true,
+                'message' => get_string('filenamefieldisrequired', 'artefact.file'),
+            );
+        }
+        else if ($element['config']['uploadagreement'] && empty($_POST['notice'])) {
+            return array(
+                'error'   => true,
+                'message' => get_string('youmustagreetothecopyrightnotice', 'artefact.file'),
+            );
+        }
+        $result = pieform_element_filebrowser_upload($form, $element, array(
+            'userfile'         => $_FILES['userfile'],
+            'uploadnumber'     => (int) $_POST['uploadnumber'],
+            'uploadfolder'     => $folder ? $folder : null,
+            'uploadfoldername' => $_POST['foldername'],
+        ));
+    }
+    else if (!empty($_POST['changefolder']) && is_array($_POST['changefolder'])) {
+        $keys = array_keys($_POST['changefolder']);
+        $result = pieform_element_filebrowser_changefolder($form, $element, (int) $keys[0]);
+    }
+
+    if (is_array($result) && $form->submitted_by_js()) {
+        // We have just updated the filebrowser element, and can leave the rest of the form alone
+        $result['folder'] = $folder;
+        // Don't replace the entire form when replying with json data.
+        $replacehtml = false;
+        $form->json_reply(empty($result['error']) ? PIEFORM_OK : PIEFORM_ERR, $result, $replacehtml);
+    }
 }
 
 
-function pieform_element_filebrowser_submit($element, $values) {
-    $function = 'pieform_element_filebrowser_' . $values['action'];
-    if (function_exists($function)) {
-        $result = $function($element, $values);
-        // Return the parent folder here so the page can tell if the user
-        // has changed folder in the meantime.
-        $result['folder'] = $values['folder'];
-        return $result;
-    }
-    return array('error' => false);
+// For non-js users:
+function pieform_element_filebrowser_submit(Pieform $form, $values) {
 }
 
-
-function pieform_element_filebrowser_upload($element, $values) {
+function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     global $USER;
 
-    $parentfolder     = $values['uploadfolder'] ? (int) $values['uploadfolder'] : null;
-    $parentfoldername = $values['uploadfoldername'];
-    $institution      = $values['institution'];
-    $group            = $values['group'] ? (int) $values['group'] : null;
+    $parentfolder     = $data['uploadfolder'] ? (int) $data['uploadfolder'] : null;
+    $parentfoldername = $data['uploadfoldername'];
+    $institution      = $form->get_property('institution');
+    $group            = $form->get_property('group');
 
-    $result = array('error' => false, 'uploadnumber' => (int) $values['uploadnumber']);
+    $result = array('error' => false, 'uploadnumber' => (int) $data['uploadnumber']);
 
-    $data = new StdClass;
-    $data->parent      = $parentfolder;
-    $data->owner       = null;
+    $data             = new StdClass;
+    $data->parent     = $parentfolder;
+    $data->owner      = null;
 
     if ($parentfolder && !$USER->can_edit_artefact(artefact_instance_from_id($parentfolder))) {
         $result['error'] = true;
@@ -345,7 +357,8 @@ function pieform_element_filebrowser_upload($element, $values) {
     }
 
     $result['highlight'] = $newid;
-    $result['newlist'] = pieform_element_filebrowser_build_filelist($element, $parentfolder, $newid);
+    $result['uploaded'] = true;
+    $result['newlist'] = pieform_element_filebrowser_build_filelist($form, $element, $parentfolder, $newid);
     $result['quota'] = $USER->get('quota');
     $result['quotaused'] = $USER->get('quotaused');
     return $result;
@@ -367,19 +380,20 @@ function prepare_upload_failed_message(&$result, $exception, $parentfoldername, 
     $result['message'] .= ': ' . $exception->getMessage();
 }
 
-function pieform_element_filebrowser_createfolder($element, $values) {
+function pieform_element_filebrowser_createfolder(Pieform $form, $element, $data) {
     global $USER;
 
-    $parentfolder     = $values['folder'] ? (int) $values['folder'] : null;
-    $institution      = $values['institution'];
-    $group            = $values['group'] ? (int) $values['group'] : null;
+    $parentfolder     = $data['folder'] ? (int) $data['folder'] : null;
+    $institution      = $form->get_property('institution');
+    $group            = $form->get_property('group');
 
     $result = array();
 
-    $data = new StdClass;
-    $data->parent      = $parentfolder;
-    $data->owner       = null;
-    $data->title       = $values['title'];
+    $data = (object) array(
+        'parent'      => $parentfolder,
+        'owner'       => null,
+        'title'       => $data['title'],
+    );
 
     if ($parentfolder && !$USER->can_edit_artefact(artefact_instance_from_id($parentfolder))) {
         return array('error' => true, 'message' => get_string('cannoteditfolder', 'artefact.file'));
@@ -417,25 +431,23 @@ function pieform_element_filebrowser_createfolder($element, $values) {
         'error'     => false,
         'message'   => get_string('foldercreated', 'artefact.file'),
         'highlight' => $f->get('id'),
-        'newlist'   => pieform_element_filebrowser_build_filelist($element, $parentfolder, $f->get('id')),
+        'newlist'   => pieform_element_filebrowser_build_filelist($form, $element, $parentfolder, $f->get('id')),
     );
 }
 
-function pieform_element_filebrowser_update($element, $values) {
+function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
     global $USER;
-    if (empty($values['collide'])) {
-        $values['collide'] = 'fail';
-    }
+    $collide = $data['collide'] ? $data['collide'] : 'fail';
 
-    $artefact = artefact_instance_from_id($values['artefact']);
+    $artefact = artefact_instance_from_id($data['artefact']);
     if (!$USER->can_edit_artefact($artefact)) {
         return array('error' => true, 'message' => get_string('noeditpermission', 'mahara'));
     }
 
-    if ($existingid = ArtefactTypeFileBase::file_exists($values['title'], $artefact->get('owner'), $values['folder'],
+    if ($existingid = ArtefactTypeFileBase::file_exists($data['title'], $artefact->get('owner'), $data['folder'],
                                                         $artefact->get('institution'), $artefact->get('group'))) {
-        if ($existingid != $values['artefact']) {
-            if ($values['collide'] == 'replace') {
+        if ($existingid != $data['artefact']) {
+            if ($collide == 'replace') {
                 log_debug('deleting ' . $existingid);
                 $copy = artefact_instance_from_id($existingid);
                 $copy->delete();
@@ -446,24 +458,24 @@ function pieform_element_filebrowser_update($element, $values) {
         }
     }
 
-    $artefact->set('title', $values['title']);
-    $artefact->set('description', $values['description']);
-    $artefact->set('tags', preg_split("/\s*,\s*/", trim($values['tags'])));
-    if ($values['group'] && $values['permissions']) {
-        $artefact->set('rolepermissions', $values['permissions']);
+    $artefact->set('title', $data['title']);
+    $artefact->set('description', $data['description']);
+    $artefact->set('tags', preg_split("/\s*,\s*/", trim($data['tags'])));
+    if ($form->get_property('group') && $data['permissions']) {
+        $artefact->set('rolepermissions', $data['permissions']);
     }
     $artefact->commit();
 
     return array(
         'error' => false,
         'message' => get_string('changessaved', 'artefact.file'),
-        'newlist' => pieform_element_filebrowser_build_filelist($element, $artefact->get('parent')),
+        'newlist' => pieform_element_filebrowser_build_filelist($form, $element, $artefact->get('parent')),
     );
 }
 
-function pieform_element_filebrowser_delete($element, $values) {
+function pieform_element_filebrowser_delete(Pieform $form, $element, $artefact) {
     global $USER;
-    $artefact = artefact_instance_from_id($values['artefact']);
+    $artefact = artefact_instance_from_id($artefact);
     if (!$USER->can_edit_artefact($artefact)) {
         return array('error' => true, get_string('nodeletepermission', 'mahara'));
     }
@@ -471,18 +483,19 @@ function pieform_element_filebrowser_delete($element, $values) {
     $artefact->delete();
     return array(
         'error' => false, 
+        'deleted' => true, 
         'message' => get_string('filethingdeleted', 'artefact.file', 
                                 get_string($artefact->get('artefacttype'), 'artefact.file')),
         'quotaused' => $USER->get('quotaused'),
         'quota' => $USER->get('quota'),
-        'newlist' => pieform_element_filebrowser_build_filelist($element, $parentfolder),
+        'newlist' => pieform_element_filebrowser_build_filelist($form, $element, $parentfolder),
     );
 }
 
-function pieform_element_filebrowser_move($element, $values) {
+function pieform_element_filebrowser_move(Pieform $form, $element, $data) {
     global $USER;
-    $artefactid  = $values['artefact'];    // Artefact being moved
-    $newparentid = $values['newparent'];   // Folder to move it to
+    $artefactid  = $data['artefact'];    // Artefact being moved
+    $newparentid = $data['newparent'];   // Folder to move it to
 
     $artefact = artefact_instance_from_id($artefactid);
 
@@ -540,17 +553,18 @@ function pieform_element_filebrowser_move($element, $values) {
     if ($artefact->move($newparentid)) {
         return array(
             'error' => false,
-            'newlist' => pieform_element_filebrowser_build_filelist($element, $values['folder']),
+            'newlist' => pieform_element_filebrowser_build_filelist($form, $element, $data['folder']),
         );
     }
     return array('error' => true, 'message' => get_string('movefailed', 'artefact.file'));
 }
 
-function pieform_element_filebrowser_changefolder($element, $values) {
+function pieform_element_filebrowser_changefolder(Pieform $form, $element, $folder) {
     return array(
-        'error' => false, 
-        'newlist' => pieform_element_filebrowser_build_filelist($element, $values['folder']),
-        'newpath' => pieform_element_filebrowser_build_path($element, $values['folder']),
+        'error'         => false, 
+        'changedfolder' => true,
+        'newlist'       => pieform_element_filebrowser_build_filelist($form, $element, $folder),
+        'newpath'       => pieform_element_filebrowser_build_path($element, $folder),
     );
 }
 
@@ -585,13 +599,34 @@ JAVASCRIPT;
 function pieform_element_filebrowser_get_headdata($element) {
     $headdata = array('<script type="text/javascript" src="' . get_config('wwwroot') . 'artefact/file/js/filebrowser.js"></script>');
 
-    $strings = array('uploadingfiletofolder', 'editfile', 'editfolder', 'filewithnameexists', 'foldernamerequired', 'namefieldisrequired');
-    if ($element['config']['uploadagreement']) {
-        $strings[] = 'youmustagreetothecopyrightnotice';
+    $strings = array();
+    if ($element['config']['edit']) {
+        $strings = array(
+            'artefact.file' => array(
+                'editfile',
+                'editfolder',
+                'filewithnameexists',
+                'namefieldisrequired',
+            ),
+        );
+    }
+    if ($element['config']['upload']) {
+        $strings['artefact.file'][] = 'uploadingfiletofolder';
+        if ($element['config']['uploadagreement']) {
+            $strings['artefact.file'][] = 'youmustagreetothecopyrightnotice';
+        }
+    }
+    if ($element['config']['createfolder']) {
+        $strings['artefact.file'][] = 'foldernamerequired';
+    }
+    if ($element['config']['select']) {
+        $strings['mahara'][] = 'remove';
     }
     $jsstrings = '';
-    foreach ($strings as $s) {
-        $jsstrings .= "strings.$s=" . json_encode(get_raw_string($s, 'artefact.file')) . ';';
+    foreach ($strings as $section => $sectionstrings) {
+        foreach ($sectionstrings as $s) {
+            $jsstrings .= "strings.$s=" . json_encode(get_raw_string($s, $section)) . ';';
+        }
     }
     $headdata[] = '<script type="text/javascript">' . $jsstrings . '</script>';
     return $headdata;

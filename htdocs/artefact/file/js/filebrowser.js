@@ -1,19 +1,27 @@
-function FileBrowser(idprefix, folderid, config) {
+function FileBrowser(idprefix, folderid, config, globalconfig) {
 
     var self = this;
     this.id = idprefix;
     this.folderid = folderid;
     this.config = config;
+    this.config.wwwroot = globalconfig.wwwroot;
+    this.config.theme = globalconfig.theme;
     this.nextupload = 0;
 
     this.init = function () {
         self.form = $(self.formname);
+        if (!self.form) {
+            alert('eek');
+        }
         self.foldername = self.form.foldername.value;
+        if (self.config.select) {
+            self.select_init();
+        }
         if (self.config.upload) {
             self.upload_init();
         }
         self.browse_init();
-        if (self.config.upload) {
+        if (self.config.edit) {
             self.edit_init();
         }
     }
@@ -138,9 +146,9 @@ function FileBrowser(idprefix, folderid, config) {
     }
 
     this.browse_submit = function (e) {
-        e.stop();
         signal(self.form, 'onsubmit');
         self.form.submit();
+        e.stop();
         return false;
     }
 
@@ -210,16 +218,11 @@ function FileBrowser(idprefix, folderid, config) {
             });
             forEach(getElementsByTagAndClassName('tr', 'folder', 'filelist'), self.make_row_droppable);
         }
-        forEach(getElementsByTagAndClassName('a', 'changefolder', null), function (elem) {
-            connect(elem, 'onclick', function (e) {
-                var href = getNodeAttribute(this, 'href');
-                var params = parseQueryString(href.substring(href.indexOf('?')+1));
-                $(self.id + '_folder').value = params.folder;
-                self.browse_submit(e);
-            });
-        });
         if ($(self.id + '_createfolder')) {
             connect($(self.id + '_createfolder'), 'onclick', self.createfolder_submit);
+        }
+        if (self.config.select) {
+            self.connect_select_buttons();
         }
     }
 
@@ -290,33 +293,132 @@ function FileBrowser(idprefix, folderid, config) {
         elem.style.position = 'static';
     };
 
-    this.success = function (form, data) {
-        var stop = false; // Whether to call the form's success callback afterwards
-        if (self.config.upload && data.action == 'upload') {
-            self.upload_success(data);
-            stop = true;
+    this.select_init = function () {
+        connect(self.form.open_upload_browse, 'onclick', function () {
+            removeElementClass(self.id + '_upload_browse', 'hidden');
+            addElementClass(this, 'hidden');
+        });
+        connect(self.form.close_upload_browse, 'onclick', function () {
+            addElementClass(self.id + '_upload_browse', 'hidden');
+            removeElementClass(self.form.open_upload_browse, 'hidden');
+        });
+        forEach(getElementsByTagAndClassName('button', 'unselect', self.id + '_selectlist'), function (elem) {
+            connect(elem, 'onclick', self.unselect);
+        });
+        self.connect_select_buttons();
+    }
+
+    this.connect_select_buttons = function () {
+        forEach(getElementsByTagAndClassName('button', 'select', 'filelist'), function (elem) {
+            connect(elem, 'onclick', function (e) {
+                e.stop();
+                var id = this.name.replace(/^select\[(\d+)\]$/, '$1');
+                if (!self.selecteddata[id]) {
+                    self.add_to_selected_list(id);
+                }
+                return false;
+            });
+        });
+    }
+
+    this.add_to_selected_list = function (id, highlight) {
+        var tbody = getFirstElementByTagAndClassName('tbody', null, self.id + '_selectlist');
+        var rows = getElementsByTagAndClassName('tr', null, tbody);
+        if (rows.length == 0) {
+            removeElementClass(self.id + '_selectlist', 'hidden');
+            addElementClass(self.id + '_empty_selectlist', 'hidden');
         }
-        if (data.newlist && (data.folder == self.folderid || data.action == 'changefolder')) {
+        else if (highlight) {
+            forEach(rows, function (r) { removeElementClass(r, 'highlight-file'); });
+        }
+        var remove = BUTTON({'type':'submit', 'class':'button small unselect', 'name':'unselect[' + id + ']', 'value':id}, get_string('remove'));
+        connect(remove, 'onclick', self.unselect);
+        if (self.filedata[id].artefacttype == 'image') {
+            var imgsrc = self.config.wwwroot + 'artefact/file/download.php?file=' + id + '&size=20x20';
+        }
+        else {
+            var imgsrc = self.config.theme['images/' + self.filedata[id].artefacttype + '.gif'];
+        }
+        appendChildNodes(tbody, TR({'class': 'r' + rows.length % 2 + (highlight ? ' highlight-file' : '')},
+                                   TD(null, IMG({'src':imgsrc})),
+                                   TD(null, self.filedata[id].title),
+                                   TD(null, self.filedata[id].description),
+                                   TD(null, self.filedata[id].tags.join(', ')),
+                                   TD(null, remove, INPUT({'type':'hidden', 'name':'selected[' + id + ']', 'value':id}))
+                                  ));
+        self.selecteddata[id] = {
+            'id': id,
+            'artefacttype': self.filedata[id].artefacttype,
+            'title': self.filedata[id].title,
+            'description': self.filedata[id].description,
+        };
+        if (self.filedata[id].tags) {
+            self.selecteddata[id].tags = self.filedata[id].tags;
+        }
+    }
+
+    this.unselect = function (e) {
+        e.stop();
+        var id = this.name.replace(/^unselect\[(\d+)\]$/, '$1');
+        delete self.selecteddata[id];
+        removeElement(getFirstParentByTagAndClassName(this, 'tr'));
+        var rows = getElementsByTagAndClassName('tr', null, getFirstElementByTagAndClassName('tbody', null, self.id + '_selectlist'));
+        if (rows.length == 0) {
+            addElementClass(self.id + '_selectlist', 'hidden');
+            removeElementClass(self.id + '_empty_selectlist', 'hidden');
+        }
+        else {
+            // Fix row classes
+            for (var r = 0; r < rows.length; r++) {
+                setNodeAttribute(rows[r], 'class', 'r' + r % 2);
+            }
+        }
+        return false;
+    }
+
+    this.success = function (form, data) {
+        if (data.uploaded) {
+            self.upload_success(data);  // Remove uploading message
+        }
+        // Only update the file listing if the user hasn't changed folders yet
+        if (data.newlist && (data.folder == self.folderid || data.changedfolder)) {
             self.filedata = data.newlist.data;
             if (self.config.edit) {
                 replaceChildNodes(self.id + '_edit_placeholder', removeElement(self.id + '_edit_row'));
             }
             $(self.id+'_filelist_container').innerHTML = data.newlist.html;
-            if (data.action == 'changefolder' && data.newpath) {
+            if (data.changedfolder && data.newpath) {
                 $(self.id+'_folder').value = self.folderid = data.folder;
                 $(self.id+'_foldername').value = self.foldername = data.newpath.foldername;
                 $(self.id+'_foldernav').innerHTML = data.newpath.html;
-                stop = true;
             }
-            else if (data.action == 'move') {
+            else if (data.uploaded && self.config.select && data.highlight) {
+                // Newly uploaded files should be automatically selected
+                self.add_to_selected_list(data.highlight, true);
             }
-            stop = true;
+            else if (data.deleted) {
+                quotaUpdate(data.quotaused, data.quota);
+            }
             self.browse_init();
         }
-        if (data.action == 'delete') {
-            quotaUpdate(data.quotaused, data.quota);
+        else if (typeof(data.replaceHTML) == 'string') {
+            formSuccess(form, data);
+            self.init();
         }
-        return stop;
     }
 
 }
+
+/* 
+// Check if there's already a file attached to the post with the given name
+function fileattached(filename) {
+    return some(map(function (e) { return e.childNodes[1]; }, attached.tbody.childNodes),
+                function (cell) { return scrapeText(cell) == filename; });
+}
+
+
+// Check if there's already a file attached to the post with the given id
+function fileattached_id(id) {
+    return some(attached.tbody.childNodes, function (r) { return getNodeAttribute(r,'id') == id; });
+}
+*/
