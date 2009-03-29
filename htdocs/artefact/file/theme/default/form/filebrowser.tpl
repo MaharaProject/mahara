@@ -32,12 +32,12 @@
       {$agreementtext}
     </td>
   </tr>
-  <tr id="{$prefix}_elements" class="uploadform">
+  <tr class="uploadform">
     <th><label>{str tag='File' section='artefact.file'}</label></th>
     <td>
       <div id="{$prefix}_userfile_container"><input type="file" class="file" id="{$prefix}_userfile" name="userfile" size="40" /></div>
       <noscript><input type="submit" class="submit" name="upload" id="{$prefix}_upload" value="{str tag=upload section=artefact.file}" /></noscript>
-      <script>addElementClass('{$prefix}_elements', 'hidden');</script>
+      <script>setNodeAttribute('{$prefix}_userfile', 'disabled', true);</script>
     </td>
   </tr>
   <tr class="uploadform">
@@ -76,7 +76,6 @@
 <input type="hidden" name="moveto" value="" />
 {/if}
 
-<!--input type="hidden" name="changefolder" id="{$prefix}_changefolder" value="0" /-->
 <div id="{$prefix}_foldernav" class="foldernav">
 {include file="artefact:file:form/folderpath.tpl" path=$path queryparams=$queryparams}
 </div>

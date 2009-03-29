@@ -28,7 +28,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
     this.upload_init = function () {
         if ($(self.id + '_notice')) {
-            addElementClass(self.id + '_elements', 'hidden');
+            setNodeAttribute(self.id + '_userfile', 'disabled', true);
             addElementClass(self.id + '_uploadcancel', 'hidden');
         }
         self.upload_connectbuttons();
@@ -40,16 +40,16 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 // error class is too general?
                 forEach(getElementsByTagAndClassName('div', 'error', self.id + '_upload_messages'), removeElement);
                 if (this.checked) {
-                    removeElementClass(self.id + '_elements', 'hidden');
+                    $(self.id + '_userfile').disabled = false; // setNodeAttribute to false doesn't work here.
                 } else {
-                    addElementClass(self.id + '_elements', 'hidden');
+                    setNodeAttribute(self.id + '_userfile', 'disabled', true);
                 }
             });
             connect(self.id + '_uploadcancel', 'onclick', function () {
                 removeElementClass(self.id + '_openbutton', 'hidden');
                 addElementClass(self.id + '_agreement', 'hidden');
                 $(self.id + '_notice').checked = false;
-                addElementClass(self.id + '_elements', 'hidden');
+                setNodeAttribute(self.id + '_userfile', 'disabled', true);
                 addElementClass(this, 'hidden');
             });
         }
