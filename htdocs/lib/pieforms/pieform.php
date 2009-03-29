@@ -692,7 +692,6 @@ class Pieform {/*{{{*/
                 'globalJsErrorCallback' => $this->data['globaljserrorcallback'],
                 'postSubmitCallback'    => $this->data['postsubmitcallback'],
                 'newIframeOnSubmit'     => $this->data['newiframeonsubmit'],
-                'reloadFormOnReply'     => $this->data['reloadformonreply'],
             ));
             $result .= "<script type=\"text/javascript\">new Pieform($data);</script>\n";
         }
@@ -1343,11 +1342,6 @@ EOF;
             // Whether the form will target a new hidden iframe every time it's
             // submitted.
             'newiframeonsubmit' => false,
-
-            // Whether the contents of the form should be reloaded on the page when
-            // a reply is received from the server.  If false, error messages will
-            // not automatically be displayed inside the form.
-            'reloadformonreply' => true,
 
             // The URL where pieforms.js and other related pieforms javascript 
             // files can be accessed. Best specified as an absolute path in 

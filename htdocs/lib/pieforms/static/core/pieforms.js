@@ -170,7 +170,7 @@ function Pieform(data) {//{{{
 
             PieformManager.signal('onreply', self.data.name);
 
-            if (self.data.reloadFormOnReply) {
+            if (typeof(data.replaceHTML) == 'string') {
                 var tmp = DIV();
                 tmp.innerHTML = data.replaceHTML;
 
