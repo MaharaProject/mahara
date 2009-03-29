@@ -89,6 +89,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         self.form.submit();
         // $(self.id + '_userfile').value = ''; // Won't work in IE
         replaceChildNodes(self.id + '_userfile_container', INPUT({'type':'file', 'class':'file', 'id':self.id+'_userfile', 'name':'userfile', 'size':40}));
+        connect(self.id + '_userfile', 'onchange', self.upload_submit);
         return false;
     }
 
