@@ -705,9 +705,10 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
 }
 
 // Pieforms doesn't seem to like a static class method here
+// We only get this far for non-js submissions:
 function files_submit(Pieform $form, $values) {
     global $SESSION;
-
+    log_debug($values);
     $group       = $form->get_property('group');
     $institution = $form->get_property('institution');
     if ($group) {
@@ -727,32 +728,29 @@ function files_submit(Pieform $form, $values) {
         $params = array();
     }
 
-    if (!empty($values['filebrowser']['action'])) {
-        // Updates on the filebrowser for non-js users that need to cause a
-        // redirect back to this page.
-        if (!empty($values['filebrowser']['folder'])) {
-            $params['folder'] = $values['filebrowser']['folder'];
-        }
-        if ($values['filebrowser']['action'] == 'edit') {
-            $params['edit'] = $values['filebrowser']['artefact'];
-        }
-        // $result = pieform_element_filebrowser_submit($form->get_element('filebrowser'), $values['filebrowser']);
-        $result['action'] = $values['filebrowser']['action'];
-        if (!empty($result['highlight'])) {
-            $params['file'] = $result['highlight'];
-        }
+    // Updates on the filebrowser for non-js users that need to cause a
+    // redirect back to this page.
+    if (isset($values['filebrowser']['folder'])) {
+        $params['folder'] = $values['filebrowser']['folder'];
     }
+    if (isset($values['filebrowser']['edit'])) {
+        $params['edit'] = $values['filebrowser']['edit'];
+    }
+    if (isset($values['filebrowser']['highlight'])) {
+        $params['file'] = $values['filebrowser']['highlight'];
+    }
+
     if ($params) {
         foreach ($params as $k => $v) {
             $params[$k] = $k . '=' . $v;
         }
         $redirect .= (strpos($redirect, '?') === false ? '?' : '&') . join('&', $params);
     }
-    if (!empty($values['filebrowser']['action'])) {
-        $result['goto'] = $redirect;
-        $form->reply(empty($result['error']) ? PIEFORM_OK : PIEFORM_ERR, $result);
-    }
-    redirect($redirect);
+
+    $result = $values['filebrowser'];
+    $result['goto'] = $redirect;
+    $form->reply(empty($result['error']) ? PIEFORM_OK : PIEFORM_ERR, $result);
+    
 }
 
 class ArtefactTypeFile extends ArtefactTypeFileBase {

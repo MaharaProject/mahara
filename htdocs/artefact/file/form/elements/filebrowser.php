@@ -117,7 +117,11 @@ function pieform_element_filebrowser_get_path($folder) {
     return $path;
 }
 
-function pieform_element_filebrowser_build_path($element, $folder) {
+function pieform_element_filebrowser_build_path($form, $element, $folder) {
+    if (!$form->submitted_by_js()) {
+        return;
+    }
+
     $path = pieform_element_filebrowser_get_path($folder);
     $foldername = $path[0]->title;
 
@@ -128,6 +132,11 @@ function pieform_element_filebrowser_build_path($element, $folder) {
 }
 
 function pieform_element_filebrowser_build_filelist($form, $element, $folder, $highlight=null) {
+    if (!$form->submitted_by_js()) {
+        // We're going to rebuild the page from scratch anyway.
+        return;
+    }
+
     global $USER;
 
     $group = $form->get_property('group');
@@ -152,47 +161,59 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
 
 
 function pieform_element_filebrowser_get_value(Pieform $form, $element) {
-    // This bypasses the rest of the submit process when we're not affecting
-    // the rest of the form
-    $result = pieform_element_filebrowser_doupdate($form, $element);
+  log_debug($_POST);
 
-    $value = array();
+    // Check if the user tried to make a change to the filebrowser element
+    if ($form->is_submitted()) {
 
-    // The following filebrowser update actions are only used when js is not available
-    if (!empty($_POST['edit']) && is_array($_POST['edit'])) {
-        // redirect
-        $value['action']           = 'edit';
-        $keys                      = array_keys($_POST['edit']);
-        $value['artefact']         = (int) ($keys[0]);
-    }
-    else if (!empty($_POST['canceledit'])) {
-        $value['action']           = 'cancel';
-    }
-    else if (!empty($_POST['select']) && is_array($_POST['select'])) {
-        $value['action']           = 'select';
-        $keys                      = array_keys($_POST['select']);
-        $value['artefact']         = (int) ($keys[0]);
-    }
-    else if (!empty($_POST['unselect']) && is_array($_POST['unselect'])) {
-        $value['action']           = 'unselect';
-        $keys                      = array_keys($_POST['unselect']);
-        $value['artefact']         = (int) ($keys[0]);
-    }
+        if (isset($_POST['folder'])) {
+            $folder = (int) $_POST['folder'];
+        }
 
-    // When files are being selected, this element has a real value
-    if (!empty($_POST['selected']) && is_array($_POST['selected'])) {
-        $value['selected']         = array_keys($_POST['selected']);
-    }
+        $result = pieform_element_filebrowser_doupdate($form, $element, $folder);
 
-    return $value;
+        if (is_array($result)) {
+            // We did something.  If js, replace the filebrowser now and
+            // don't continue form submission.
+            if ($form->submitted_by_js()) {
+                $replacehtml = false; // Don't replace the entire form when replying with json data.
+                $form->json_reply(empty($result['error']) ? PIEFORM_OK : PIEFORM_ERR, $result, $replacehtml);
+            }
+            // Not js. Remember this change and submit it with the
+            // rest of the form.
+            return $result;
+        }
+
+        $result = array('folder' => $folder);
+
+        if (!empty($_POST['select']) && is_array($_POST['select']) && is_callable($element['selectcallback'])) {
+            $keys = array_keys($_POST['select']);
+            // try
+            $element['selectcallback']((int) $keys[0]);
+            $result['message'] = get_string('fileadded', 'artefact.file');
+        }
+        else if (!empty($_POST['unselect']) && is_array($_POST['unselect']) && is_callable($element['unselectcallback'])) {
+            $keys = array_keys($_POST['unselect']);
+            // try
+            $element['unselectcallback']((int) $keys[0]);
+            $result['message'] = get_string('fileremoved', 'artefact.file');
+        }
+        else if (!empty($_POST['edit']) && is_array($_POST['edit'])) {
+            // Non-js update that needs to be passed back as a parameter
+            $keys = array_keys($_POST['edit']);
+            $result['edit'] = (int) $keys[0];
+        }
+        else if (!empty($_POST['selected']) && is_array($_POST['selected'])) {
+            // When files are being selected, this element has a real value
+            $result['selected'] = array_keys($_POST['selected']);
+        }
+
+        return $result;
+    }
 }
 
 
-function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
-    if (isset($_POST['folder'])) {
-        $folder = (int) $_POST['folder'];
-    }
-
+function pieform_element_filebrowser_doupdate(Pieform $form, $element, $folder) {
     $result = null;
 
     if (!empty($_POST['delete']) && is_array($_POST['delete'])) {
@@ -270,19 +291,13 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
         $folder = $newfolder;
     }
 
-    if (is_array($result) && $form->submitted_by_js()) {
-        // We have just updated the filebrowser element, and can leave the rest of the form alone
+    if (is_array($result)) {
         $result['folder'] = $folder;
-        // Don't replace the entire form when replying with json data.
-        $replacehtml = false;
-        $form->json_reply(empty($result['error']) ? PIEFORM_OK : PIEFORM_ERR, $result, $replacehtml);
     }
+
+    return $result;
 }
 
-
-// For non-js users:
-function pieform_element_filebrowser_submit(Pieform $form, $values) {
-}
 
 function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     global $USER;
@@ -572,8 +587,9 @@ function pieform_element_filebrowser_changefolder(Pieform $form, $element, $fold
     return array(
         'error'         => false, 
         'changedfolder' => true,
+        'folder'        => $folder,
         'newlist'       => pieform_element_filebrowser_build_filelist($form, $element, $folder),
-        'newpath'       => pieform_element_filebrowser_build_path($element, $folder),
+        'newpath'       => pieform_element_filebrowser_build_path($form, $element, $folder),
     );
 }
 

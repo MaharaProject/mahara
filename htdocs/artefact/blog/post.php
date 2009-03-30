@@ -130,6 +130,8 @@ $form = pieform(array(
                 'select'          => true,
             ),
             'selectlistcallback' => 'load_attachments',
+            'selectcallback'     => 'add_attachment',
+            'unselectcallback'   => 'delete_attachment',
         ),
         'draft' => array(
             'type' => 'checkbox',
@@ -389,6 +391,20 @@ function load_attachments() {
         return $blogpostobj->get_attachments(true);
     }
     return array();
+}
+
+function add_attachment($attachmentid) {
+    global $blogpostobj;
+    if ($blogpostobj) {
+        $blogpostobj->attach($attachmentid);
+    }
+}
+
+function delete_attachment($attachmentid) {
+    global $blogpostobj;
+    if ($blogpostobj) {
+        $blogpostobj->detach($attachmentid);
+    }
 }
  
 ?>

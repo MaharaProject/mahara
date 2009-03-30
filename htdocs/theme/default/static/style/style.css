@@ -214,6 +214,7 @@ button.link {
   overflow: visible;
   margin: 0 !important;
   padding: 0 !important;
+  font-size: 12px !important;
 }
 button.link:hover {
   color: #84aa00;
@@ -1798,13 +1799,13 @@ tr.uploadform th {
   font-style: italic;
   color: #999;
 }
-.directory-item.parentfolder td.filename {
+.directory-item.parentfolder td.filename button.link {
   font-weight: normal;
 }
 .filelist tr.folderhover.directory-item td {
         background-color: #ffc !important;
 }
-.filelist tr.folderhover.directory-item a {
+.filelist tr.folderhover.directory-item button.changefolder {
         color: #000;
         text-decoration: none;
 }
