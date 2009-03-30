@@ -124,6 +124,27 @@ function xmldb_artefact_blog_upgrade($oldversion=0) {
         create_table($table);
     }
 
+    if ($oldversion < 2009033100) {
+        $bloguploadbase = get_config('dataroot') . 'artefact/blog/uploads/';
+        if ($basedir = opendir($bloguploadbase)) {
+            while (false !== ($sessionupload = readdir($basedir))) {
+                if ($sessionupload != "." && $sessionupload != "..") {
+                    $sessionupload = $bloguploadbase . $sessionupload;
+                    $subdir = opendir($sessionupload);
+
+                    while (false !== ($uploadfile = readdir($subdir))) {
+                        if ($uploadfile != "." && $uploadfile != "..") {
+                            $uploadfile = $sessionupload . '/' . $uploadfile;
+                            unlink($uploadfile);
+                        }
+                    }
+                    closedir($subdir);
+                    rmdir($sessionupload);
+                }
+            }
+        }
+        @rmdir($bloguploadbase);
+    }
 
     return true;
 }
