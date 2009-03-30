@@ -243,7 +243,7 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
             'folder' => $folder,
         ));
     }
-    else if (!empty($_POST['upload']) || ($_FILES['userfile'] && $_FILES['userfile']['name'])) {
+    else if (!empty($_POST['upload']) || (isset($_FILES['userfile']))) {
         if (!isset($_FILES['userfile']['name'])) {
             return array(
                 'error'   => true,
@@ -265,7 +265,9 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
     }
     else if (!empty($_POST['changefolder']) && is_array($_POST['changefolder'])) {
         $keys = array_keys($_POST['changefolder']);
-        $result = pieform_element_filebrowser_changefolder($form, $element, (int) $keys[0]);
+        $newfolder = (int) $keys[0];
+        $result = pieform_element_filebrowser_changefolder($form, $element, $newfolder);
+        $folder = $newfolder;
     }
 
     if (is_array($result) && $form->submitted_by_js()) {
