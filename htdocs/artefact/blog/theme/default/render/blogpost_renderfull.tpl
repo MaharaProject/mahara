@@ -11,12 +11,12 @@
   {foreach from=$attachments item=item}
       <tr class="r{cycle values=1,0}">
         <td style="width: 22px;"><img src="{$item->iconpath|escape}" alt=""></td>
-        <td><a href="{$item->viewpath|escape}">{$item->title}</a> ({$item->size}) - <strong><a href="{$item->downloadpath|escape}">{str tag=Download section=artefact.file}</a></strong>
+        <td><a href="{$item->viewpath|escape}">{$item->title|escape}</a> ({$item->size|escape}) - <strong><a href="{$item->downloadpath|escape}">{str tag=Download section=artefact.file}</a></strong>
         <br><strong>{$item->description|escape}</strong></td>
       </tr>
   {/foreach}
     </tbody>
   </table>
   {/if}
-  <div class="postdetails">{$postedbyon}</div>
+  <div class="postdetails">{$postedbyon|escape}</div>
 </div>
