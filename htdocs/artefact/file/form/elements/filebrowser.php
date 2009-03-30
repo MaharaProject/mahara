@@ -243,7 +243,7 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
             'folder' => $folder,
         ));
     }
-    else if (!empty($_POST['upload']) || (isset($_FILES['userfile']))) {
+    else if (!empty($_POST['upload'])) {
         if (!isset($_FILES['userfile']['name'])) {
             return array(
                 'error'   => true,

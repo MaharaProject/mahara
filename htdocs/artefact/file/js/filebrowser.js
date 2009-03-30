@@ -31,6 +31,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             setNodeAttribute(self.id + '_userfile', 'disabled', true);
             addElementClass(self.id + '_uploadcancel', 'hidden');
         }
+        if (!self.form.upload) {
+            appendChildNodes(self.form, INPUT({'type':'hidden','name':'upload','value':0}));
+        }
         self.upload_connectbuttons();
     }
 
@@ -85,11 +88,13 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         }
 
         self.upload_presubmit();
+        self.form.upload.value = 1;
         signal(self.form, 'onsubmit');
         self.form.submit();
         // $(self.id + '_userfile').value = ''; // Won't work in IE
         replaceChildNodes(self.id + '_userfile_container', INPUT({'type':'file', 'class':'file', 'id':self.id+'_userfile', 'name':'userfile', 'size':40}));
         connect(self.id + '_userfile', 'onchange', self.upload_submit);
+        self.form.upload.value = 0;
         return false;
     }
 
