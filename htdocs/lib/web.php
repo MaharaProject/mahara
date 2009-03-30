@@ -1901,8 +1901,9 @@ function get_site_page_content($pagename) {
  *                         the application home page.
  */     
 function redirect($location='/') {
-    if (headers_sent()) {
-        throw new Exception('Headers already sent when redirect() was called');
+    $file = $line = null;
+    if (headers_sent($file, $line)) {
+        throw new SystemException("Headers already sent when redirect() was called (output started in $file on line $line");
     }
 
     if (substr($location, 0, 4) != 'http') {
