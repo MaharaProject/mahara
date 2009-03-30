@@ -58,53 +58,9 @@ class PluginArtefactBlog extends PluginArtefact {
     }
 
     public static function get_cron() {
-        return array(
-            (object)array(
-                'callfunction' => 'clean_post_files',
-                'hour'         => '4',
-                'minute'       => '40'
-            )
-        );
+        return array();
     }
 
-    /**
-     * This function cleans out any files that have been uploaded, but which
-     * are not associated with a blog, because of an aborted blog creation.
-     */
-    public static function clean_post_files() {
-
-        $bloguploadbase = get_config('dataroot') . ArtefactTypeBlogPost::$blogattachmentroot;
-        if (!$basedir = opendir($bloguploadbase)) {
-            // If the directory doesn't exist, it's likely that it hasn't been 
-            // created yet (i.e. nobody has uploaded any files)
-            return;
-        }
-
-        $currenttime = time();
-
-        // Read through all the upload session directories
-        while (false !== ($sessionupload = readdir($basedir))) {
-            if ($sessionupload != "." && $sessionupload != "..") {
-                $sessionupload = $bloguploadbase . $sessionupload;
-                $subdir = opendir($sessionupload);
-
-                // Remove all files older than the session timeout plus two hours.
-                while (false !== ($uploadfile = readdir($subdir))) {
-                    if ($uploadfile != "." && $uploadfile != "..") {
-                        $uploadfile = $sessionupload . '/' . $uploadfile;
-                        if ($currenttime - filemtime($uploadfile) > get_config('session_timeout') + 7200) {
-                            unlink($uploadfile);
-                        }
-                    }
-                }
-
-                closedir($subdir);
-                rmdir($sessionupload);
-            }
-        }
-
-        closedir($basedir);
-    }
 
     public static function block_advanced_options_element($configdata, $artefacttype) {
         $strartefacttype = get_string($artefacttype, 'artefact.blog');
@@ -609,95 +565,6 @@ class ArtefactTypeBlogPost extends ArtefactType {
         return true;
     }
 
-    /* // Where to store temporary blog post files under dataroot
-    static $blogattachmentroot = 'artefact/blog/uploads/';
-
-
-    public static function get_temp_file_path($uploadnumber) {
-        return get_config('dataroot') . self::$blogattachmentroot . ($uploadnumber % 256) . '/' . $uploadnumber;
-    }
-
-
-    /**
-     * Returns the size of a temporary attachment
-     */
-    /* public static function temp_attachment_size($uploadnumber) {
-        return filesize(self::get_temp_file_path($uploadnumber));
-    }
-
-
-    /** 
-     * This function saves an uploaded file to a temporary directory in dataroot
-     * and saves the mime type info in the db for downloadtemp.php to read from.
-     */
-    /* public static function save_attachment_temporary($inputname) {
-        require_once('uploadmanager.php');
-        $um = new upload_manager($inputname);
-        db_begin();
-        $record = new StdClass;
-        $result = new StdClass;
-        $result->tempfilename = insert_record('artefact_blog_blogpost_file_pending', $record, 'id', true);
-
-        $tempdir = self::$blogattachmentroot . ($result->tempfilename % 256);
-        $result->error = $um->process_file_upload($tempdir, $result->tempfilename);
-
-        $movedfile = get_config('dataroot') . $tempdir . '/' . $result->tempfilename;
-
-        if ($result->error) {
-            delete_records('artefact_blog_blogpost_file_pending', 'id', $result->tempfilename);
-        }
-        else {
-            $record = (object) array(
-                'id'           => $result->tempfilename,
-                'oldextension' => $um->original_filename_extension(),
-                'filetype'     => $um->file['type'],
-            );
-            update_record('artefact_blog_blogpost_file_pending', $record);
-        }
-
-        db_commit();
-        require_once('file.php');
-        $result->type = is_image_file($movedfile) ? 'image' : 'file';
-        return $result;
-    }
-
-    /**
-     * Save a temporary uploaded file to the myfiles area.
-     */
-    /* public function save_attachment($uploaddata) {
-
-        // Create the blogfiles folder if it doesn't exist yet.
-        $blogfilesid = self::blogfiles_folder_id();
-        if (!$blogfilesid) {
-            return false;
-        }
-
-        global $USER;
-
-        safe_require('artefact', 'file');
-
-        $data = new StdClass;
-        $data->title = $uploaddata->title;
-        $data->description = $uploaddata->description;
-        $data->tags = $uploaddata->tags;
-        $data->owner = $USER->get('id');
-        $data->parent = $blogfilesid;
-
-        $filedata = get_record('artefact_blog_blogpost_file_pending', 'id', $uploaddata->tempfilename);
-        $data->oldextension = $filedata->oldextension;
-        $data->filetype = $filedata->filetype;
-        
-        $path = self::$blogattachmentroot . ($uploaddata->tempfilename % 256) . '/' . $uploaddata->tempfilename;
-
-        if (!$fileid = ArtefactTypeFile::save_file($path, $data)) {
-            return false;
-        }
-
-        $this->attach($fileid);
-        delete_records('artefact_blog_blogpost_file_pending', 'id', $uploaddata->tempfilename);
-        return $fileid;
-    }
-    */
 
     public static function blogfiles_folder_id($create = true) {
         global $USER;
@@ -750,28 +617,6 @@ class ArtefactTypeBlogPost extends ArtefactType {
         return true;
     }
 
-    /**
-     * This function returns a list of files attached to a post to use
-     * when displaying or editing a blog post
-     *
-     * @return array
-     */
-    /* public function get_attached_files() {
-        $list = get_records_sql_array('SELECT a.id, a.artefacttype, a.title, a.description 
-            FROM {artefact_blog_blogpost_file} f
-            INNER JOIN {artefact} a ON a.id = f.file
-            WHERE f.blogpost = ?
-            ORDER BY a.title', array($this->id));
-
-        // load tags
-        if ($list) {
-            foreach ( $list as &$attachment ) {
-                $attachment->tags = join(', ', get_column('artefact_tag', 'tag', 'artefact', $attachment->id));
-            }
-        }
-        return $list;
-    }
-    */
     
     public static function get_links($id) {
         $wwwroot = get_config('wwwroot');
