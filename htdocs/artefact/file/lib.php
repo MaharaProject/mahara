@@ -88,6 +88,7 @@ class PluginArtefactFile extends PluginArtefact {
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
             set_config_plugin('artefact', 'file', 'defaultquota', 52428800);
+            set_config_plugin('artefact', 'file', 'uploadagreement', 1);
         }
         self::resync_filetype_list();
     }
@@ -536,7 +537,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                     'edit'         => $edit,
                     'config'       => array(
                         'upload'          => true,
-                        'uploadagreement' => true,
+                        'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
                         'createfolder'    => true,
                         'edit'            => true,
                         'select'          => false,
@@ -969,6 +970,36 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             'collapsible' => true
         );
 
+        // Require user agreement before uploading files
+        // Rework this when/if we provide translatable agreements
+        $uploadagreement = get_config_plugin('artefact', 'file', 'uploadagreement');
+        $usedefaultagreement = get_config_plugin('artefact', 'file', 'usedefaultagreement');
+        $elements['uploadagreementfieldset'] = array(
+            'type' => 'fieldset',
+            'legend' => get_string('uploadagreement', 'artefact.file'),
+            'elements' => array(
+                'uploadagreementdescription' => array(
+                    'value' => '<tr><td colspan="2">' . get_string('uploadagreementdescription', 'artefact.file') . '</td></tr>'
+                ),
+                'uploadagreement' => array(
+                    'title'        => get_string('requireagreement', 'artefact.file'), 
+                    'type'         => 'checkbox',
+                    'defaultvalue' => $uploadagreement,
+                ),
+                'usedefaultagreement' => array(
+                    'title'        => get_string('usedefaulttext', 'artefact.file'), 
+                    'description'  => get_string('usedefaultdescription', 'artefact.file', get_config('wwwroot')),
+                    'type'         => 'checkbox',
+                    'defaultvalue' => $usedefaultagreement,
+                ),
+                'defaulttext' => array(
+                    'type'         => 'html',
+                    'value'        => get_string('uploadcopyrightdefaultcontent', 'install'),
+                ),
+            ),
+            'collapsible' => true
+        );
+
         // Profile icon size
         $currentwidth = get_config_plugin('artefact', 'file', 'profileiconwidth');
         $currentheight = get_config_plugin('artefact', 'file', 'profileiconheight');
@@ -1013,6 +1044,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         set_config_plugin('artefact', 'file', 'defaultquota', $values['defaultquota']);
         set_config_plugin('artefact', 'file', 'profileiconwidth', $values['profileiconwidth']);
         set_config_plugin('artefact', 'file', 'profileiconheight', $values['profileiconheight']);
+        set_config_plugin('artefact', 'file', 'uploadagreement', $values['uploadagreement']);
+        set_config_plugin('artefact', 'file', 'usedefaultagreement', $values['usedefaultagreement']);
     }
 
     public static function short_size($bytes, $abbr=false) {

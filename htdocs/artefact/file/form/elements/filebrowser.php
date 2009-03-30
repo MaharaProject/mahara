@@ -70,7 +70,14 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         $smarty->assign('selectedlist', $selected);
         $selectedliststr = json_encode($selected);
     }
-    $smarty->assign('agreementtext', get_field('site_content', 'content', 'name', 'uploadcopyright'));
+    if ($config['uploadagreement']) {
+        if (get_config_plugin('artefact', 'file', 'usedefaultagreement')) {
+            $smarty->assign('agreementtext', get_string('uploadcopyrightdefaultcontent', 'install'));
+        }
+        else {
+            $smarty->assign('agreementtext', get_field('site_content', 'content', 'name', 'uploadcopyright'));
+        }
+    }
     $filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $group, $institution);
     $smarty->assign('filelist', $filedata);
 
@@ -575,7 +582,7 @@ function pieform_element_filebrowser_changefolder(Pieform $form, $element, $fold
     $js = "var {$prefix} = new Uploader('{$prefix}', {$parentfolder}); {$prefix}.init();";
     $js .= "{$prefix}.uploadscript = '" . get_config('wwwroot') . "artefact/file/upload2.php';";
     $js .= "window.{$prefix} = {$prefix};";
-    if (get_config('uploadagreement')) {
+    if (get_config_plugin('artefact', 'file', 'uploadagreement')) {
         $js .= <<<JAVASCRIPT
 connect('{$prefix}_openbutton', 'onclick', function () {
     addElementClass('{$prefix}_openbutton', 'hidden');

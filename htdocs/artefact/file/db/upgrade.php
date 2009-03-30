@@ -215,6 +215,12 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         // type declared by the browser if we see an image.
     }
 
+    if ($oldversion < 2009033000) {
+        if (!get_record('artefact_config', 'plugin', 'file', 'field', 'uploadagreement')) {
+            insert_record('artefact_config', (object) array('plugin' => 'file', 'field' => 'uploadagreement', 'value' => 1));
+        }
+    }
+
     return $status;
 }
 
