@@ -708,7 +708,7 @@ class User {
      *
      * @param array $templateids A list of viewids to copy.
      */
-    public function copy_views($templateids) {
+    public function copy_views($templateids, $checkviewaccess=true) {
         if (!$templateids) {
             // Nothing to do
             return;
@@ -729,7 +729,7 @@ class User {
                 'owner' => $this->get('id'),
                 'title' => $views[$tid]->title,
                 'description' => $views[$tid]->description,
-            ), $tid, $this->get('id'));
+            ), $tid, $this->get('id'), $checkviewaccess);
         }
         db_commit();
     }

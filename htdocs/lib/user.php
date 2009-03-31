@@ -1236,6 +1236,8 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
     else {
         $user->id = insert_record('usr', $user, 'id', true);
     }
+    // Bypass access check for 'copynewuser' institution/site views, because this user may not be logged in yet
+    $user->newuser = true;
 
     set_profile_field($user->id, 'email', $user->email);
     set_profile_field($user->id, 'firstname', $user->firstname);
@@ -1252,7 +1254,7 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
             $institution = new Institution($institution);
         }
         if ($institution->name != 'mahara') {
-            $institution->addUserAsMember($user);
+            $institution->addUserAsMember($user); // uses $user->newuser
         }
     }
 
@@ -1272,9 +1274,10 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
     }
 
     // Copy site views to the new user's profile
+    $checkviewaccess = !$user->newuser;
     $userobj = new User();
     $userobj->find_by_id($user->id);
-    $userobj->copy_views(get_column('view', 'id', 'institution', 'mahara', 'copynewuser', 1));
+    $userobj->copy_views(get_column('view', 'id', 'institution', 'mahara', 'copynewuser', 1), $checkviewaccess);
 
     handle_event('createuser', $user);
     db_commit();

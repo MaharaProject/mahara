@@ -215,6 +215,7 @@ class Institution {
     }
 
     public function addUserAsMember($user) {
+        global $USER;
         if ($this->isFull()) {
             throw new SystemException('Trying to add a user to an institution that already has a full quota of members');
         }
@@ -260,9 +261,10 @@ class Institution {
         insert_record('usr_institution', $userinst);
         delete_records('usr_institution_request', 'usr', $userinst->usr, 'institution', $this->name);
         // Copy institution views to the user's portfolio
+        $checkviewaccess = empty($user->newuser) && !$USER->get('admin');
         $userobj = new User();
         $userobj->find_by_id($user->id);
-        $userobj->copy_views(get_column('view', 'id', 'institution', $this->name, 'copynewuser', 1));
+        $userobj->copy_views(get_column('view', 'id', 'institution', $this->name, 'copynewuser', 1), $checkviewaccess);
         require_once('activity.php');
         activity_occurred('maharamessage', $message);
         handle_event('updateuser', $userinst->usr);
