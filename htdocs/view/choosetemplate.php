@@ -67,7 +67,7 @@ else {
 View::get_templatesearch_data($views);
 
 $strpreview = json_encode(get_string('Preview','view'));
-$strclose = json_encode(get_string('close','view'));
+$strclose = json_encode(get_string('Close'));
 $js = <<<EOF
 
 preview = DIV({'id':'viewpreview', 'class':'hidden'}, DIV({'id':'viewpreviewinner'}, DIV({'id':'viewpreviewclose'}, A({'href':'','id':'closepreview'}, {$strclose})), DIV({'id':'viewpreviewcontent'})));

@@ -1791,6 +1791,7 @@ tr.uploadform th {
     font-size: 18px;
     background: url(../images/foldernav.gif) no-repeat left 2px;
 }
+.foldernav button.link,
 .directory-item.folder td.filename button.link,
 .directory-item.folder td.filename {
 	font-weight: bold;

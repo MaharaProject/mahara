@@ -11,7 +11,7 @@
  </thead>
  <tbody>
   {foreach from=$selectedlist item=file}
-  <tr class="r{cycle values=0,1}">
+  <tr class="r{cycle values=0,1}{if !empty($highlight) && $highlight == $file->id} highlight-file{/if}">
     <td>
       <img src="{if $file->artefacttype == 'image'}{$WWWROOT}artefact/file/download.php?file={$file->id}&size=20x20{else}{$THEMEURL}images/{$file->artefacttype}.gif{/if}">
     </td>

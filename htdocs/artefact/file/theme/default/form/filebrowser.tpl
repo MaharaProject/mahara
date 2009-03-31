@@ -1,5 +1,5 @@
 {if $config.select}
-{include file="artefact:file:form/selectedlist.tpl" selectedlist=$selectedlist prefix=$prefix}
+{include file="artefact:file:form/selectedlist.tpl" selectedlist=$selectedlist prefix=$prefix highlight=$highlight}
 {/if}
 
 <script type="text/javascript">
@@ -9,14 +9,14 @@
 <input type="hidden" name="folder" id="{$prefix}_folder" value="{$folder}" />
 <input type="hidden" name="foldername" id="{$prefix}_foldername" value="{$foldername}" />
 
-{if $config.select}
-<input type="button" class="buttondk" name="open_upload_browse" value="{if $config.selectone}{str tag=selectafile section=artefact.file}{else}{str tag=addafile section=artefact.file}{/if}" />
+{if $config.select && !$browse}
+<input type="submit" class="buttondk" id="{$prefix}_open_upload_browse" name="browse" value="{if $config.selectone}{str tag=selectafile section=artefact.file}{else}{str tag=addafile section=artefact.file}{/if}" />
 {/if}
 
-<div id="{$prefix}_upload_browse" class="upload_browse{if $config.select} select hidden{/if}">
+<div id="{$prefix}_upload_browse" class="upload_browse{if $config.select} select{if !$browse} hidden{/if}{/if}">
 
 {if $config.select}
-<input type="button" class="buttondk" name="close_upload_browse" value="{str tag=cancel}" />
+<input type="submit" class="buttondk" name="cancelbrowse" id="{$prefix}_close_upload_browse" value="{str tag=Close}" />
 {/if}
 
 <table class="fileupload">
@@ -77,11 +77,11 @@
 {/if}
 
 <div id="{$prefix}_foldernav" class="foldernav">
-{include file="artefact:file:form/folderpath.tpl" path=$path queryparams=$queryparams}
+{include file="artefact:file:form/folderpath.tpl" path=$path}
 </div>
 
 <div id="{$prefix}_filelist_container">
-{include file="artefact:file:form/filelist.tpl" filelist=$filelist editable=$config.edit selectable=$config.select highlight=$highlight edit=$edit queryparams=$queryparams}
+{include file="artefact:file:form/filelist.tpl" filelist=$filelist editable=$config.edit selectable=$config.select highlight=$highlight edit=$edit}
 </div>
 
 {* Edit form used when js is available *}

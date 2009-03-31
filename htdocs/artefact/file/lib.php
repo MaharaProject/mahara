@@ -704,11 +704,16 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     }
 }
 
-// Pieforms doesn't seem to like a static class method here
-// We only get this far for non-js submissions:
+/**
+ * Submit function for My/Group/Institution/Site files
+ *
+ * This function will only be called when javascript is disabled.
+ *
+ * Outside the File class because Pieforms doesn't appear to like
+ * being given static class method as a submit callback.
+ */
 function files_submit(Pieform $form, $values) {
-    global $SESSION;
-    log_debug($values);
+    // @todo: move group/inst stuff to form defn.
     $group       = $form->get_property('group');
     $institution = $form->get_property('institution');
     if ($group) {
@@ -728,7 +733,7 @@ function files_submit(Pieform $form, $values) {
         $params = array();
     }
 
-    // Updates on the filebrowser for non-js users that need to cause a
+    // Some updates on the filebrowser element need to set params and
     // redirect back to this page.
     if (isset($values['filebrowser']['folder'])) {
         $params['folder'] = $values['filebrowser']['folder'];
@@ -750,7 +755,6 @@ function files_submit(Pieform $form, $values) {
     $result = $values['filebrowser'];
     $result['goto'] = $redirect;
     $form->reply(empty($result['error']) ? PIEFORM_OK : PIEFORM_ERR, $result);
-    
 }
 
 class ArtefactTypeFile extends ArtefactTypeFileBase {

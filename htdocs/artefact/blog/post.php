@@ -68,7 +68,13 @@ else {
 }
 
 
-$folder = ArtefactTypeBlogpost::blogfiles_folder_id();
+$folder = param_integer('folder', ArtefactTypeBlogpost::blogfiles_folder_id());
+$browse = (int) param_variable('browse', 0);
+$highlight = null;
+if ($file = param_integer('file', 0)) {
+    $highlight = array($file);
+}
+
 
 $form = pieform(array(
     'name'               => 'editpost',
@@ -121,7 +127,8 @@ $form = pieform(array(
             'group'        => null,
             'institution'  => null,
             'folder'       => $folder,
-            'highlight'    => null,
+            'highlight'    => $highlight,
+            'browse'       => $browse,
             'config'       => array(
                 'upload'          => true,
                 'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
@@ -334,7 +341,7 @@ function editpost_cancel_submit() {
 }
 
 function editpost_submit(Pieform $form, $values) {
-    global $SESSION, $USER, $blogpost, $blog;
+    global $USER, $blogpost, $blog;
 
     // save the post if the user clicked submit or has no js
     $submitted = !empty($values['submitpost']);
@@ -368,20 +375,31 @@ function editpost_submit(Pieform $form, $values) {
             $filebrowser['selectedlist'] = $postobj->get_attachments(true);
         }
         db_commit();
-        $result['error'] = false;
-        $result['message'] = get_string('blogpostsaved', 'artefact.blog');
-        $result['goto'] = get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blog;
-    }
-
-    // Filebrowser actions should only come through to here if it's not a js submission.
-    if (!empty($values['filebrowser']['action']) && !$form->submitted_by_js()) {
-        if (isset($values['filebrowser']['folder'])) {
-            $params['folder'] = $values['filebrowser']['folder'];
+        if ($submitted) {
+            $result = array(
+                'error'   => false,
+                'message' => get_string('blogpostsaved', 'artefact.blog'),
+                'goto'    => get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blog,
+            );
+            $form->reply(PIEFORM_OK, $result);
         }
-        $result = pieform_element_filebrowser_submit($form, $values['filebrowser']);
-        $result['goto'] = get_config('wwwroot') . 'artefact/blog/post.php?id=' . $blogpost;
+
     }
 
+    // Non-js filebrowser submission
+    $result = array(
+        'error'   => false,
+        'goto'    => get_config('wwwroot') . 'artefact/blog/post.php?id=' . $blogpost,
+    );
+    if (isset($values['filebrowser']['browse'])) {
+        $result['goto'] .= '&browse=1';
+    }
+    if (isset($values['filebrowser']['folder'])) {
+        $result['goto'] .= '&folder=' . $values['filebrowser']['folder'];
+    }
+    if (isset($values['filebrowser']['highlight'])) {
+        $result['goto'] .= '&file=' . $values['filebrowser']['highlight'];
+    }
     $form->reply(empty($result['error']) ? PIEFORM_OK : PIEFORM_ERR, $result);
 }
 

@@ -843,6 +843,9 @@ abstract class ArtefactType {
     }
 
     public function attach($attachmentid) {
+        if (record_exists('artefact_attachment', 'artefact', $this->get('id'), 'attachment', $attachmentid)) {
+            return;
+        }
         $data = new StdClass;
         $data->artefact = $this->get('id');
         $data->attachment = $attachmentid;
