@@ -153,7 +153,7 @@ catch (SQLException $e) {
     db_ignore_sql_exceptions(false);
 }
 
-// Make sure wwwroot is set and available, either in the database or int the
+// Make sure wwwroot is set and available, either in the database or in the
 // config file. Cron requires it for some purposes.
 if (!isset($CFG->wwwroot) && isset($_SERVER['HTTP_HOST'])) {
     $proto = (isset($_SERVER['HTTPS'])) ? 'https://' : 'http://';
