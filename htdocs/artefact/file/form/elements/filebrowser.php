@@ -469,7 +469,7 @@ function pieform_element_filebrowser_createfolder(Pieform $form, $element, $data
 
 function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
     global $USER;
-    $collide = $data['collide'] ? $data['collide'] : 'fail';
+    $collide = !empty($data['collide']) ? $data['collide'] : 'fail';
 
     $artefact = artefact_instance_from_id($data['artefact']);
     if (!$USER->can_edit_artefact($artefact)) {

@@ -16,9 +16,13 @@
   {foreach from=$filelist item=file}
   <tr id="file:{$file->id}" class="r{cycle values=0,1} directory-item{if $file->isparent} parentfolder{/if}{if $file->artefacttype == 'folder'} folder{/if}{if !empty($highlight) && $highlight == $file->id} highlight-file{/if}{if $edit == $file->id} hidden{/if}">
     <td>
+      {if $editable}
       <div{if !$file->isparent} class="icon-drag" id="drag:{$file->id}"{/if}>
         <img src="{if $file->artefacttype == 'image'}{$WWWROOT}artefact/file/download.php?file={$file->id}&size=20x20{else}{$THEMEURL}images/{$file->artefacttype}.gif{/if}"{if !$file->isparent} title="{str tag=clickanddragtomovefile section=artefact.file arg1=$file->title}"{/if}>
       </div>
+      {else}
+        <img src="{if $file->artefacttype == 'image'}{$WWWROOT}artefact/file/download.php?file={$file->id}&size=20x20{else}{$THEMEURL}images/{$file->artefacttype}.gif{/if}">
+      {/if}
     </td>
     <td class="filename">
     {if $file->artefacttype == 'folder'}
