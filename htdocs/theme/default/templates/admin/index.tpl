@@ -75,8 +75,6 @@
     </ul>
     </li>
 </ul></div>
-{$siteregisterform}
-
 
 {include file="columnfullend.tpl"}
 
