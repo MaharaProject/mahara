@@ -151,13 +151,6 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         }
     }
 
-    this.browse_submit = function (e) {
-        signal(self.form, 'onsubmit');
-        self.form.submit();
-        e.stop();
-        return false;
-    }
-
     this.upload_success = function (data) {
         if (data.problem) {
             var image = 'images/icon_problem.gif';
@@ -201,6 +194,14 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
     this.edit_init = function () { augment_tags_control(self.id + '_edit_tags'); }
 
+    this.browse_submit = function (e) {
+        signal(self.form, 'onsubmit');
+        self.form.submit();
+        e.stop();
+        $(self.id + '_changefolder').value = '';
+        return false;
+    }
+
     this.browse_init = function () {
         if (self.config.edit) {
             forEach(getElementsByTagAndClassName('button', null, 'filelist'), function (elem) {
@@ -236,6 +237,14 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             });
             forEach(getElementsByTagAndClassName('tr', 'folder', 'filelist'), self.make_row_droppable);
         }
+        forEach(getElementsByTagAndClassName('a', 'changefolder', self.id + '_upload_browse'), function (elem) {
+            connect(elem, 'onclick', function (e) {
+                var href = getNodeAttribute(this, 'href');
+                var params = parseQueryString(href.substring(href.indexOf('?')+1));
+                $(self.id + '_changefolder').value = params.folder;
+                self.browse_submit(e);
+            });
+        });
         if ($(self.id + '_createfolder')) {
             connect($(self.id + '_createfolder'), 'onclick', self.createfolder_submit);
         }
@@ -422,6 +431,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 quotaUpdate(data.quotaused, data.quota);
             }
             self.browse_init();
+        }
+        else if (data.goto) {
+            location.href = data.goto;
         }
         else if (typeof(data.replaceHTML) == 'string') {
             formSuccess(form, data);

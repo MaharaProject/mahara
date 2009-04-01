@@ -35,7 +35,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
 define('TITLE', get_string('sitefiles', 'admin'));
 
-$form = pieform(ArtefactTypeFileBase::files_form(null, 'mahara'));
+$form = pieform(ArtefactTypeFileBase::files_form(get_config('wwwroot') . 'admin/site/files.php', null, 'mahara'));
 $js = ArtefactTypeFileBase::files_js();
 
 $smarty = smarty();

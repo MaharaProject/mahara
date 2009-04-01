@@ -204,22 +204,6 @@ a:hover {
 	font-size: 11px;
 	color: #FFF;
 }
-/* buttons that should show as links */
-button.link {
-  color: #7f9d16;
-  background: transparent !important;
-  border: none;
-  display: inline;
-  width: auto;
-  overflow: visible;
-  margin: 0 !important;
-  padding: 0 !important;
-  font-size: 12px !important;
-}
-button.link:hover {
-  color: #84aa00;
-  /* text-decoration: underline !important; */
-}
 span.addicon {
     display: block;
     margin-top: -16px;
@@ -1791,17 +1775,12 @@ tr.uploadform th {
     font-size: 18px;
     background: url(../images/foldernav.gif) no-repeat left 2px;
 }
-.foldernav button.link,
-.directory-item.folder td.filename button.link,
 .directory-item.folder td.filename {
 	font-weight: bold;
 }
 .directory-item.parentfolder {
   font-style: italic;
   color: #999;
-}
-.directory-item.parentfolder td.filename button.link {
-  font-weight: normal;
 }
 .filelist tr.folderhover.directory-item td {
         background-color: #ffc !important;

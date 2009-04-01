@@ -7,6 +7,7 @@
 </script>
 
 <input type="hidden" name="folder" id="{$prefix}_folder" value="{$folder}" />
+<input type="hidden" name="changefolder" id="{$prefix}_changefolder" value="" />
 <input type="hidden" name="foldername" id="{$prefix}_foldername" value="{$foldername}" />
 
 {if $config.select && !$browse}
@@ -77,11 +78,11 @@
 {/if}
 
 <div id="{$prefix}_foldernav" class="foldernav">
-{include file="artefact:file:form/folderpath.tpl" path=$path}
+{include file="artefact:file:form/folderpath.tpl" path=$path querybase=$querybase}
 </div>
 
 <div id="{$prefix}_filelist_container">
-{include file="artefact:file:form/filelist.tpl" filelist=$filelist editable=$config.edit selectable=$config.select highlight=$highlight edit=$edit}
+{include file="artefact:file:form/filelist.tpl" filelist=$filelist editable=$config.edit selectable=$config.select highlight=$highlight edit=$edit querybase=$querybase}
 </div>
 
 {* Edit form used when js is available *}

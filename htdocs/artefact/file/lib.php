@@ -505,7 +505,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         return $filedata;
     }
 
-    public static function files_form($group=null, $institution=null, $folder=null, $highlight=null, $edit=null) {
+    public static function files_form($page='', $group=null, $institution=null, $folder=null, $highlight=null, $edit=null) {
         $folder = param_integer('folder', 0);
         $edit = param_variable('edit', 0);
         if (is_array($edit)) {
@@ -535,6 +535,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                     'folder'       => $folder,
                     'highlight'    => $highlight,
                     'edit'         => $edit,
+                    'page'         => $page,
                     'config'       => array(
                         'upload'          => true,
                         'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),

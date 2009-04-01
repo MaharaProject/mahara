@@ -127,6 +127,7 @@ $form = pieform(array(
             'folder'       => $folder,
             'highlight'    => $highlight,
             'browse'       => $browse,
+            'page'         => get_config('wwwroot') . 'artefact/blog/post.php?' . ($blogpost ? ('id=' . $blogpost) : ('blog=' . $blog)) . '&browse=1',
             'config'       => array(
                 'upload'          => true,
                 'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
@@ -380,12 +381,10 @@ function editpost_submit(Pieform $form, $values) {
                 'goto'    => get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blog,
             );
             if ($form->submitted_by_js()) {
-                global $SESSION;
                 // Redirect back to the blog page from within the iframe
-                $url = json_encode($result['goto']);
+                global $SESSION;
                 $SESSION->add_ok_msg($result['message']);
-                echo "<html><head></head><body onload='parent.location.href={$url};'></body></html>";
-                exit;
+                $form->json_reply(PIEFORM_OK, $result, false);
             }
             $form->reply(PIEFORM_OK, $result);
         }

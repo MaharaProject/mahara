@@ -100,6 +100,8 @@ function pieform_element_filebrowser(Pieform $form, $element) {
 
     $smarty->assign('initjs', $initjs);
 
+    $smarty->assign('querybase', $element['page'] . (strpos($element['page'], '?') === false ? '?' : '&'));
+
     return $smarty->fetch('artefact:file:form/filebrowser.tpl');
 }
 
@@ -128,6 +130,7 @@ function pieform_element_filebrowser_build_path($form, $element, $folder) {
 
     $smarty = smarty_core();
     $smarty->assign('path', array_reverse($path));
+    $smarty->assign('querybase', $element['page'] . (strpos($element['page'], '?') === false ? '?' : '&'));
     return array('html' => $smarty->fetch('artefact:file:form/folderpath.tpl'), 'foldername' => $foldername);
 }
 
@@ -150,6 +153,7 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     $smarty->assign('selectable', (int) $element['config']['select']);
     $filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $group, $institution);
     $smarty->assign('filelist', $filedata);
+    $smarty->assign('querybase', $element['page'] . (strpos($element['page'], '?') === false ? '?' : '&'));
 
     return array(
         'data' => $filedata,
@@ -291,9 +295,8 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element, $folder) 
             $element['selectcallback']($result['highlight']);
         }
     }
-    else if (!empty($_POST['changefolder']) && is_array($_POST['changefolder'])) {
-        $keys = array_keys($_POST['changefolder']);
-        $newfolder = (int) $keys[0];
+    else if (is_numeric($_POST['changefolder'])) {
+        $newfolder = (int) $_POST['changefolder'];
         $result = pieform_element_filebrowser_changefolder($form, $element, $newfolder);
         $result['browse'] = 1;
         $folder = $newfolder;
