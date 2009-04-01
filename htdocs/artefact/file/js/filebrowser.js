@@ -204,8 +204,20 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
     this.browse_init = function () {
         if (self.config.edit) {
             forEach(getElementsByTagAndClassName('button', null, 'filelist'), function (elem) {
-                if (getNodeAttribute(elem, 'name').match(/^edit\[\d+\]$/)) {
+                var name = getNodeAttribute(elem, 'name');
+                if (name.match(/^edit\[\d+\]$/)) {
                     connect(elem, 'onclick', self.edit_form);
+                }
+                else if (name.match(/^delete\[\d+\]$/)) {
+                    var id = name.replace(/^delete\[(\d+)\]$/, '$1');
+                    if (self.filedata[id].attachcount > 0) {
+                        connect(elem, 'onclick', function (e) {
+                            if (!confirm(get_string('detachfilewarning', self.filedata[id].attachcount))) {
+                                e.stop();
+                                return false;
+                            }
+                        });
+                    }
                 }
             });
             connect(self.id + '_edit_cancel', 'onclick', function (e) {

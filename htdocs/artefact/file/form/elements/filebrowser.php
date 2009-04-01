@@ -61,7 +61,9 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     $smarty->assign('path', array_reverse($path));
     $smarty->assign('highlight', $element['highlight'][0]);
     $smarty->assign('edit', !empty($element['edit']) ? $element['edit'] : -1);
-    $smarty->assign('browse', (int) $element['browse']);
+    if (isset($element['browse'])) {
+        $smarty->assign('browse', (int) $element['browse']);
+    }
     $config = array_map('intval', $element['config']);
     $smarty->assign('config', $config);
     if ($config['select']) {
@@ -157,8 +159,6 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
 
 
 function pieform_element_filebrowser_get_value(Pieform $form, $element) {
-  log_debug($_POST);
-
     // Check if the user tried to make a change to the filebrowser element
     if ($form->is_submitted()) {
 
@@ -640,6 +640,7 @@ function pieform_element_filebrowser_get_headdata($element) {
                 'editfolder',
                 'filewithnameexists',
                 'namefieldisrequired',
+                'detachfilewarning',
             ),
         );
     }
