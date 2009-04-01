@@ -168,9 +168,9 @@ function Pieform(data) {//{{{
                 return;
             }
 
-            PieformManager.signal('onreply', self.data.name);
-
             if (typeof(data.replaceHTML) == 'string') {
+                PieformManager.signal('onreply', self.data.name);
+
                 var tmp = DIV();
                 tmp.innerHTML = data.replaceHTML;
 
