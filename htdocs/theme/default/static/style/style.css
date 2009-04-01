@@ -1785,7 +1785,7 @@ tr.uploadform th {
 .filelist tr.folderhover.directory-item td {
         background-color: #ffc !important;
 }
-.filelist tr.folderhover.directory-item button.changefolder {
+.filelist tr.folderhover.directory-item a.changefolder {
         color: #000;
         text-decoration: none;
 }
