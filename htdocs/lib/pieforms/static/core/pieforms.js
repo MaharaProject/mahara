@@ -189,6 +189,7 @@ function Pieform(data) {//{{{
                 replaceChildNodes($(self.data.name), tmp.childNodes[0].childNodes);
 
                 self.connectSubmitButtons();
+                self.clickedButton = null;
                 PieformManager.signal('onload', self.data.name);
             }
 
