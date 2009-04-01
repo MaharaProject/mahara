@@ -313,7 +313,7 @@ abstract class ArtefactType {
             return;
         }
       
-        if (!empty($this->dirty)) {
+        if (!empty($this->dirty) && !defined('MAHARA_CRASHING')) {
             $this->commit();
         }
     }
