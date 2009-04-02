@@ -36,7 +36,6 @@ defined('INTERNAL') || die();
 function pieform_element_filebrowser(Pieform $form, $element) {
     global $USER;
     $smarty = smarty_core();
-
     $group       = $form->get_property('group');
     $institution = $form->get_property('institution');
     $userid      = ($group || $institution) ? null : $USER->get('id');
@@ -184,34 +183,37 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
             return $result;
         }
 
-        $result = array('folder' => $folder);
+        // We only care about the following when js is off:
+        if (!$form->submitted_by_js()) {
+            if (!empty($_POST['select']) && is_array($_POST['select']) && is_callable($element['selectcallback'])) {
+                $keys = array_keys($_POST['select']);
+                // try
+                $element['selectcallback']((int) $keys[0]);
+                $result['message'] = get_string('fileadded', 'artefact.file');
+                $result['browse'] = 1;
+            }
+            else if (!empty($_POST['unselect']) && is_array($_POST['unselect']) && is_callable($element['unselectcallback'])) {
+                $keys = array_keys($_POST['unselect']);
+                // try
+                $element['unselectcallback']((int) $keys[0]);
+                $result['message'] = get_string('fileremoved', 'artefact.file');
+            }
+            else if (!empty($_POST['edit']) && is_array($_POST['edit'])) {
+                // Non-js update that needs to be passed back as a parameter
+                $keys = array_keys($_POST['edit']);
+                $result['edit'] = (int) $keys[0];
+            }
+            else if (!empty($_POST['browse'])) {
+                $result['browse'] = 1;
+            }
+        }
 
-        if (!empty($_POST['select']) && is_array($_POST['select']) && is_callable($element['selectcallback'])) {
-            $keys = array_keys($_POST['select']);
-            // try
-            $element['selectcallback']((int) $keys[0]);
-            $result['message'] = get_string('fileadded', 'artefact.file');
-            $result['browse'] = 1;
-        }
-        else if (!empty($_POST['unselect']) && is_array($_POST['unselect']) && is_callable($element['unselectcallback'])) {
-            $keys = array_keys($_POST['unselect']);
-            // try
-            $element['unselectcallback']((int) $keys[0]);
-            $result['message'] = get_string('fileremoved', 'artefact.file');
-        }
-        else if (!empty($_POST['edit']) && is_array($_POST['edit'])) {
-            // Non-js update that needs to be passed back as a parameter
-            $keys = array_keys($_POST['edit']);
-            $result['edit'] = (int) $keys[0];
-        }
-        else if (!empty($_POST['browse'])) {
-            $result['browse'] = 1;
-        }
-        else if (!empty($_POST['selected']) && is_array($_POST['selected'])) {
+        if (!is_array($result) && !empty($_POST['selected']) && is_array($_POST['selected'])) {
             // When files are being selected, this element has a real value
             $result['selected'] = array_keys($_POST['selected']);
         }
 
+        $result['folder'] = $folder;
         return $result;
     }
 }

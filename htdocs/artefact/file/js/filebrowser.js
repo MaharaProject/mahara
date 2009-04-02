@@ -362,7 +362,8 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         else if (highlight) {
             forEach(rows, function (r) { removeElementClass(r, 'highlight-file'); });
         }
-        var remove = BUTTON({'type':'submit', 'class':'button small unselect', 'name':'unselect[' + id + ']', 'value':id}, get_string('remove'));
+        // var remove = BUTTON({'type':'submit', 'class':'button small unselect', 'name':'unselect[' + id + ']', 'value':id}, get_string('remove')); // IE problem ?
+        var remove = INPUT({'type': 'submit', 'class':'button small unselect', 'name':'unselect[' + id + ']', 'value':get_string('remove')});
         connect(remove, 'onclick', self.unselect);
         if (self.filedata[id].artefacttype == 'image') {
             var imgsrc = self.config.wwwroot + 'artefact/file/download.php?file=' + id + '&size=20x20';
@@ -381,7 +382,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             'id': id,
             'artefacttype': self.filedata[id].artefacttype,
             'title': self.filedata[id].title,
-            'description': self.filedata[id].description,
+            'description': self.filedata[id].description
         };
         if (self.filedata[id].tags) {
             self.selecteddata[id].tags = self.filedata[id].tags;
