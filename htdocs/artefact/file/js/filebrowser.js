@@ -13,7 +13,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         if (!self.form) {
             alert('eek');
         }
-        self.foldername = self.form.foldername.value;
+        self.foldername = $(self.id + '_foldername').value;
         if (self.config.select) {
             self.select_init();
         }
@@ -31,8 +31,13 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             setNodeAttribute(self.id + '_userfile', 'disabled', true);
             addElementClass(self.id + '_uploadcancel', 'hidden');
         }
-        if (!self.form.upload) {
-            appendChildNodes(self.form, INPUT({'type':'hidden','name':'upload','value':0}));
+        if (!$(self.id + '_upload')) {
+            appendChildNodes(self.form, INPUT({
+                'type': 'hidden',
+                'name': self.id + '_upload',
+                'id' : self.id + '_upload',
+                'value':0
+            }));
         }
         self.upload_connectbuttons();
     }
@@ -88,17 +93,24 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         }
 
         self.upload_presubmit();
-        self.form.upload.value = 1;
+        $(self.id + '_upload').value = 1;
         signal(self.form, 'onsubmit');
         self.form.submit();
         // $(self.id + '_userfile').value = ''; // Won't work in IE
-        replaceChildNodes(self.id + '_userfile_container', INPUT({'type':'file', 'class':'file', 'id':self.id+'_userfile', 'name':'userfile', 'size':40}));
+        replaceChildNodes(self.id + '_userfile_container', INPUT({
+            'type':'file',
+            'class':'file',
+            'id':self.id+'_userfile',
+            'name':'userfile',
+            'size':40
+        }));
         connect(self.id + '_userfile', 'onchange', self.upload_submit);
-        self.form.upload.value = 0;
+        $(self.id + '_upload').value = 0;
         return false;
     }
 
     this.fileexists = function (filename, id) {
+        logDebug(id);
         for (var i in self.filedata) {
             if (self.filedata[i].title == filename && (!id || i != id)) {
                 return true;
@@ -140,7 +152,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             if (name == '') {
                 message = get_string('namefieldisrequired');
             }
-            else if (self.fileexists(name, this.name.replace(/^update\[(\d+)\]$/, '$1'))) {
+            else if (self.fileexists(name, this.name.replace(/.*_update\[(\d+)\]$/, '$1'))) {
                 message = get_string('filewithnameexists', name);
             }
         }
@@ -170,7 +182,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
     this.edit_form = function (e) {
         e.stop();
         // In IE, this.value is set to the button text
-        var id = getNodeAttribute(this, 'name').replace(/^edit\[(\d+)\]$/, '$1');
+        var id = getNodeAttribute(this, 'name').replace(/.*_edit\[(\d+)\]$/, '$1');
         addElementClass(self.id + '_edit_row', 'hidden');
         $(self.id + '_edit_heading').innerHTML = self.filedata[id].artefacttype == 'folder' ? get_string('editfolder') : get_string('editfile');
         $(self.id + '_edit_title').value = self.filedata[id].title;
@@ -184,7 +196,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             }
         });
         // $(self.id + '_edit_artefact').value = id; // Changes button text in IE
-        setNodeAttribute(self.id + '_edit_artefact', 'name', 'update[' + id + ']');
+        setNodeAttribute(self.id + '_edit_artefact', 'name', self.id + '_update[' + id + ']');
         var edit_row = removeElement(self.id + '_edit_row');
         var this_row = getFirstParentByTagAndClassName(this, 'tr');
         insertSiblingNodesAfter(this_row, edit_row);
@@ -205,7 +217,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
     this.browse_init = function () {
         if (self.config.edit) {
             forEach(getElementsByTagAndClassName('button', null, 'filelist'), function (elem) {
-                var name = getNodeAttribute(elem, 'name').match(/^([a-z]+)\[(\d+)\]$/);
+                var name = getNodeAttribute(elem, 'name').match(new RegExp('^' + self.id + "_([a-z]+)\\[(\\d+)\\]$"));
                 if (name[1] == 'edit') {
                     connect(elem, 'onclick', self.edit_form);
                 }
@@ -258,12 +270,12 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             accept: ['icon-drag-current'],
             hoverclass: 'folderhover',
             ondrop: function (dragged, dropped) {
-                self.form.move.value = dragged.id.replace(/^.*drag:(\d+)$/, '$1');
-                self.form.moveto.value = dropped.id.replace(/^file:(\d+)$/, '$1');
+                $(self.id + '_move').value = dragged.id.replace(/^.*drag:(\d+)$/, '$1');
+                $(self.id + '_moveto').value = dropped.id.replace(/^file:(\d+)$/, '$1');
                 signal(self.form, 'onsubmit');
                 self.form.submit();
-                self.form.move.value = '';
-                self.form.moveto.value = '';
+                $(self.id + '_move').value = '';
+                $(self.id + '_moveto').value = '';
             }
         });
     };
@@ -343,7 +355,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         forEach(getElementsByTagAndClassName('button', 'select', 'filelist'), function (elem) {
             connect(elem, 'onclick', function (e) {
                 e.stop();
-                var id = this.name.replace(/^select\[(\d+)\]$/, '$1');
+                var id = this.name.replace(/.*_select\[(\d+)\]$/, '$1');
                 if (!self.selecteddata[id]) {
                     self.add_to_selected_list(id);
                 }
@@ -363,7 +375,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             forEach(rows, function (r) { removeElementClass(r, 'highlight-file'); });
         }
         // var remove = BUTTON({'type':'submit', 'class':'button small unselect', 'name':'unselect[' + id + ']', 'value':id}, get_string('remove')); // IE problem ?
-        var remove = INPUT({'type': 'submit', 'class':'button small unselect', 'name':'unselect[' + id + ']', 'value':get_string('remove')});
+        var remove = INPUT({'type': 'submit', 'class':'button small unselect', 'name':self.id+'_unselect[' + id + ']', 'value':get_string('remove')});
         connect(remove, 'onclick', self.unselect);
         if (self.filedata[id].artefacttype == 'image') {
             var imgsrc = self.config.wwwroot + 'artefact/file/download.php?file=' + id + '&size=20x20';
@@ -376,7 +388,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                                    TD(null, self.filedata[id].title),
                                    TD(null, self.filedata[id].description),
                                    TD(null, self.filedata[id].tags.join(', ')),
-                                   TD(null, remove, INPUT({'type':'hidden', 'name':'selected[' + id + ']', 'value':id}))
+                                   TD(null, remove, INPUT({'type':'hidden', 'name':self.id+'_selected[' + id + ']', 'value':id}))
                                   ));
         self.selecteddata[id] = {
             'id': id,
@@ -391,7 +403,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
     this.unselect = function (e) {
         e.stop();
-        var id = this.name.replace(/^unselect\[(\d+)\]$/, '$1');
+        var id = this.name.replace(/.*_unselect\[(\d+)\]$/, '$1');
         delete self.selecteddata[id];
         removeElement(getFirstParentByTagAndClassName(this, 'tr'));
         var rows = getElementsByTagAndClassName('tr', null, getFirstElementByTagAndClassName('tbody', null, self.id + '_selectlist'));

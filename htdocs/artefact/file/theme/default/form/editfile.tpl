@@ -9,11 +9,11 @@
           </tr>
           <tr>
             <th><label>{str tag=name}</label></th>
-            <td><input type="text" class="text" name="edit_title" id="{$prefix}_edit_title" value="{$fileinfo->title}" size="40" /></td>
+            <td><input type="text" class="text" name="{$prefix}_edit_title" id="{$prefix}_edit_title" value="{$fileinfo->title}" size="40" /></td>
           </tr>
           <tr>
             <th><label>{str tag=description}</label></th>
-            <td><input type="text" class="text" name="edit_description" id="{$prefix}_edit_description" value="{$fileinfo->description}" size="40" /></td>
+            <td><input type="text" class="text" name="{$prefix}_edit_description" id="{$prefix}_edit_description" value="{$fileinfo->description}" size="40" /></td>
           </tr>
           <tr>
             <th><label>{str tag=tags}</label></th>
@@ -22,7 +22,7 @@
                 <table class="help-wrapper">
                   <tbody>
                     <tr>
-                      <td><input name="edit_tags" size="40"  id="{$prefix}_edit_tags" value="{foreach from=$fileinfo->tags item=tag name=tags}{if !$smarty.foreach.tags.first}, {/if}{$tag}{/foreach}" /></td>
+                      <td><input name="{$prefix}_edit_tags" size="40"  id="{$prefix}_edit_tags" value="{foreach from=$fileinfo->tags item=tag name=tags}{if !$smarty.foreach.tags.first}, {/if}{$tag}{/foreach}" /></td>
                       <td class="helpcontainer"><span>{contextualhelp plugintype='artefact' pluginname='file' section='tags'}</span></td>
                     </tr>
                   </tbody>
@@ -47,11 +47,11 @@
                     <td>{$role->display}</td>
     {if $fileinfo}
       {foreach from=$fileinfo->permissions.$r item=permvalue key=permname}
-                    <td><input type="checkbox" class="permission" name="permission:{$r}:{$permname}"{if $permvalue} checked{/if}{if $r == 'admin'} disabled{/if} /></td>
+                    <td><input type="checkbox" class="permission" name="{$prefix}_permission:{$r}:{$permname}"{if $permvalue} checked{/if}{if $r == 'admin'} disabled{/if} /></td>
       {/foreach}
     {else}
       {foreach from=$groupinfo.perms.$r item=permvalue key=permname}
-                    <td><input type="checkbox" class="permission" name="permission:{$r}:{$permname}" {if $r == 'admin'} checked disabled{/if}/></td>
+                    <td><input type="checkbox" class="permission" name="{$prefix}_permission:{$r}:{$permname}" {if $r == 'admin'} checked disabled{/if}/></td>
       {/foreach}
     {/if}
                   </tr>
@@ -63,9 +63,9 @@
 {/if}
           <tr>
             <td colspan=2>
-              <button type="submit" name="update[{$fileinfo->id}]" id="{$prefix}_edit_artefact" value="{$fileinfo->id}">{str tag=savechanges section=artefact.file}</button>
+              <button type="submit" name="{$prefix}_update[{$fileinfo->id}]" id="{$prefix}_edit_artefact" value="{$fileinfo->id}">{str tag=savechanges section=artefact.file}</button>
               <input type="button" class="button hidden" name="replace" value="{str tag=overwrite}" />
-              <input type="submit" class="button" name="canceledit" id="{$prefix}_edit_cancel" value="{str tag=cancel}" />
+              <input type="submit" class="button" name="{$prefix}_canceledit" id="{$prefix}_edit_cancel" value="{str tag=cancel}" />
             </td>
           </tr>
           <tr><td colspan=2 id="{$prefix}_edit_messages"></td></tr>

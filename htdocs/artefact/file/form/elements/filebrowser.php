@@ -152,6 +152,7 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     $filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $group, $institution);
     $smarty->assign('filelist', $filedata);
     $smarty->assign('querybase', $element['page'] . (strpos($element['page'], '?') === false ? '?' : '&'));
+    $smarty->assign('prefix', $form->get_name() . '_' . $element['name']);
 
     return array(
         'data' => $filedata,
@@ -181,11 +182,13 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
             return $result;
         }
 
+        $prefix = $form->get_name() . '_' . $element['name'];
+
         // We only care about the following when js is off:
         if (!$form->submitted_by_js()) {
-            $select   = param_variable('select', null);
-            $unselect = param_variable('unselect', null);
-            $edit     = param_variable('edit', null);
+            $select   = param_variable($prefix . '_select', null);
+            $unselect = param_variable($prefix . '_unselect', null);
+            $edit     = param_variable($prefix . '_edit', null);
             if (is_array($select) && is_callable($element['selectcallback'])) {
                 $keys = array_keys($select);
                 // try
@@ -204,13 +207,13 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
                 $keys = array_keys($edit);
                 $result['edit'] = (int) $keys[0];
             }
-            else if (param_variable('browse', 0) && !param_variable('cancelbrowse', 0)) {
+            else if (param_variable('browse', 0) && !param_variable($prefix . '_cancelbrowse', 0)) {
                 $result['browse'] = 1;
             }
         }
 
         if (!is_array($result)) {
-            $selected = param_variable('selected', null);
+            $selected = param_variable($prefix . '_selected', null);
             if (is_array($selected)) {
                 // When files are being selected, this element has a real value
                 $result['selected'] = array_keys($selected);
@@ -226,15 +229,17 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
 function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
     $result = null;
 
-    $delete = param_variable('delete', null);
+    $prefix = $form->get_name() . '_' . $element['name'];
+
+    $delete = param_variable($prefix . '_delete', null);
     if (is_array($delete)) {
         $keys = array_keys($delete);
         return pieform_element_filebrowser_delete($form, $element, (int) ($keys[0]));
     }
 
-    $update = param_variable('update', null);
+    $update = param_variable($prefix . '_update', null);
     if (is_array($update)) {
-        $edit_title = param_variable('edit_title');
+        $edit_title = param_variable($prefix . '_edit_title');
         if (!strlen($edit_title)) {
             return array(
                 'error'   => true,
@@ -245,14 +250,14 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
         $data = array(
             'artefact'    => (int) ($keys[0]),
             'title'       => $edit_title,
-            'description' => param_variable('edit_description'),
-            'tags'        => param_variable('edit_tags'),
+            'description' => param_variable($prefix . '_edit_description'),
+            'tags'        => param_variable($prefix . '_edit_tags'),
             'folder'      => $element['folder'],
         );
         if ($form->get_property('group')) {
             $data['permissions']  = array('admin' => (object) array('view' => true, 'edit' => true, 'republish' => true));
             foreach ($_POST as $k => $v) {
-                if (preg_match('/^permission:([a-z]+):([a-z]+)$/', $k, $m)) {
+                if (preg_match('/^' . $prefix . '_permission:([a-z]+):([a-z]+)$/', $k, $m)) {
                     $data['permissions'][$m[1]]->{$m[2]} = (bool) $v;
                 }
             }
@@ -260,18 +265,18 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
         return pieform_element_filebrowser_update($form, $element, $data);
     }
 
-    $move = param_variable('move', null);
+    $move = param_variable($prefix . '_move', null);
     if (!empty($move)) {
         return pieform_element_filebrowser_move($form, $element, array(
             'artefact'  => (int) $move,
-            'newparent' => param_integer('moveto'),
+            'newparent' => param_integer($prefix . '_moveto'),
             'folder'    => $element['folder'],
         ));
     }
 
-    $createfolder = param_variable('createfolder', null);
+    $createfolder = param_variable($prefix . '_createfolder', null);
     if (!empty($createfolder)) {
-        $createfolder_name = param_variable('createfolder_name'); 
+        $createfolder_name = param_variable($prefix . '_createfolder_name'); 
         if (!strlen($createfolder_name)) {
             return array(
                 'error'   => true,
@@ -284,7 +289,7 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
         ));
     }
 
-    $upload = param_variable('upload', null);
+    $upload = param_variable($prefix . '_upload', null);
     if (!empty($upload)) {
         if (!isset($_FILES['userfile']['name'])) {
             return array(
@@ -293,7 +298,7 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
                 'browse'  => 1,
             );
         }
-        else if ($element['config']['uploadagreement'] && param_boolean($notice, false)) {
+        else if ($element['config']['uploadagreement'] && param_boolean($prefix . '_notice', false)) {
             return array(
                 'error'   => true,
                 'message' => get_string('youmustagreetothecopyrightnotice', 'artefact.file'),
@@ -302,9 +307,9 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
         }
         $result = pieform_element_filebrowser_upload($form, $element, array(
             'userfile'         => $_FILES['userfile'],
-            'uploadnumber'     => param_integer('uploadnumber'),
+            'uploadnumber'     => param_integer($prefix . '_uploadnumber'),
             'uploadfolder'     => $element['folder'] ? $element['folder'] : null,
-            'uploadfoldername' => param_variable('foldername'),
+            'uploadfoldername' => param_variable($prefix . '_foldername'),
         ));
         // If it's a non-js upload, automatically select the newly uploaded file.
         $result['browse'] = 1;
@@ -314,7 +319,7 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
         return $result;
     }
 
-    $newfolder = param_variable('changefolder', null);
+    $newfolder = param_variable($prefix . '_changefolder', null);
     if (!is_null($newfolder) && is_numeric($newfolder)) {
         $result = pieform_element_filebrowser_changefolder($form, $element, $newfolder);
         $result['browse'] = 1;

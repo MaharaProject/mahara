@@ -19,8 +19,8 @@
     <td>{$file->description}</td>
     <td>{$file->tags}</td>
     <td>
-       <button type="submit" class="button small unselect" name="unselect[{$file->id}]" value="{$file->id}">{str tag=remove}</button>
-       <input type="hidden" name="selected[{$file->id}]" value="{$file->id}">
+       <button type="submit" class="button small unselect" name="{$prefix}_unselect[{$file->id}]" value="{$file->id}">{str tag=remove}</button>
+       <input type="hidden" name="{$prefix}_selected[{$file->id}]" value="{$file->id}">
     </td>
   </tr>
   {/foreach}
