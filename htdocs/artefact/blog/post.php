@@ -340,7 +340,7 @@ function editpost_cancel_submit() {
 }
 
 function editpost_submit(Pieform $form, $values) {
-    global $USER, $blogpost, $blog;
+    global $USER, $SESSION, $blogpost, $blog;
 
     // save the post if the user clicked submit or has no js
     $submitted = !empty($values['submitpost']);
@@ -382,7 +382,6 @@ function editpost_submit(Pieform $form, $values) {
             );
             if ($form->submitted_by_js()) {
                 // Redirect back to the blog page from within the iframe
-                global $SESSION;
                 $SESSION->add_ok_msg($result['message']);
                 $form->json_reply(PIEFORM_OK, $result, false);
             }
