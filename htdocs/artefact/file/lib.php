@@ -976,7 +976,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         // Require user agreement before uploading files
         // Rework this when/if we provide translatable agreements
         $uploadagreement = get_config_plugin('artefact', 'file', 'uploadagreement');
-        $usedefaultagreement = get_config_plugin('artefact', 'file', 'usedefaultagreement');
+        $usecustomagreement = get_config_plugin('artefact', 'file', 'usecustomagreement');
         $elements['uploadagreementfieldset'] = array(
             'type' => 'fieldset',
             'legend' => get_string('uploadagreement', 'artefact.file'),
@@ -989,15 +989,23 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                     'type'         => 'checkbox',
                     'defaultvalue' => $uploadagreement,
                 ),
-                'usedefaultagreement' => array(
-                    'title'        => get_string('usedefaulttext', 'artefact.file'), 
-                    'description'  => get_string('usedefaultdescription', 'artefact.file', get_config('wwwroot')),
-                    'type'         => 'checkbox',
-                    'defaultvalue' => $usedefaultagreement,
-                ),
-                'defaulttext' => array(
+                'defaultagreement' => array(
                     'type'         => 'html',
+                    'title'        => get_string('defaultagreement', 'artefact.file'), 
                     'value'        => get_string('uploadcopyrightdefaultcontent', 'install'),
+                ),
+                'usecustomagreement' => array(
+                    'title'        => get_string('usecustomagreement', 'artefact.file'), 
+                    'type'         => 'checkbox',
+                    'defaultvalue' => $usecustomagreement,
+                ),
+                'customagreement' => array(
+                    'name'         => 'customagreement',
+                    'title'        => get_string('customagreement', 'artefact.file'), 
+                    'type'         => 'wysiwyg',
+                    'rows'         => 10,
+                    'cols'         => 80,
+                    'defaultvalue' => get_field('site_content', 'content', 'name', 'uploadcopyright'),
                 ),
             ),
             'collapsible' => true
@@ -1044,11 +1052,18 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     }
 
     public static function save_config_options($values) {
+        global $USER;
         set_config_plugin('artefact', 'file', 'defaultquota', $values['defaultquota']);
         set_config_plugin('artefact', 'file', 'profileiconwidth', $values['profileiconwidth']);
         set_config_plugin('artefact', 'file', 'profileiconheight', $values['profileiconheight']);
         set_config_plugin('artefact', 'file', 'uploadagreement', $values['uploadagreement']);
-        set_config_plugin('artefact', 'file', 'usedefaultagreement', $values['usedefaultagreement']);
+        set_config_plugin('artefact', 'file', 'usecustomagreement', $values['usecustomagreement']);
+        $data = new StdClass;
+        $data->name    = 'uploadcopyright';
+        $data->content = $values['customagreement'];
+        $data->mtime   = db_format_timestamp(time());
+        $data->mauthor = $USER->get('id');
+        update_record('site_content', $data, 'name');
     }
 
     public static function short_size($bytes, $abbr=false) {

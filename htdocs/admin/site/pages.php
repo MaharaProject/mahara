@@ -35,7 +35,11 @@ require(dirname(dirname(dirname(__FILE__))).'/init.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('editsitepages', 'admin'));
 
-$sitepages = get_records_array('site_content');
+$sitepages = array();
+$sitepagenames = site_content_pages();
+if ($sitepagenames) {
+    $sitepages = get_records_select_array('site_content', 'name IN (' . join(',', array_map('db_quote', $sitepagenames)) . ')');
+}
 $pageoptions = array();
 foreach ($sitepages as $page) {
     $pageoptions[$page->name] = get_string($page->name, 'admin');

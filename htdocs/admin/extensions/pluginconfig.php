@@ -78,8 +78,10 @@ $form['elements']['save'] = array(
     'value' => get_string('save'),
 );
 
+$form = pieform($form);
+
 $smarty = smarty();
-$smarty->assign('form', pieform($form));
+$smarty->assign('form', $form);
 $smarty->assign('plugintype', $plugintype);
 $smarty->assign('pluginname', $pluginname);
 $smarty->assign('type', $type);

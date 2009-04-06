@@ -218,6 +218,7 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
     if ($oldversion < 2009033000) {
         if (!get_record('artefact_config', 'plugin', 'file', 'field', 'uploadagreement')) {
             insert_record('artefact_config', (object) array('plugin' => 'file', 'field' => 'uploadagreement', 'value' => 1));
+            insert_record('artefact_config', (object) array('plugin' => 'file', 'field' => 'usecustomagreement', 'value' => 1));
         }
     }
 
