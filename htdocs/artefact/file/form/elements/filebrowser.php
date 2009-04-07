@@ -62,11 +62,11 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         $selectedliststr = json_encode($selected);
     }
     if ($config['uploadagreement']) {
-        if (get_config_plugin('artefact', 'file', 'usedefaultagreement')) {
-            $smarty->assign('agreementtext', get_string('uploadcopyrightdefaultcontent', 'install'));
+        if (get_config_plugin('artefact', 'file', 'usecustomagreement')) {
+            $smarty->assign('agreementtext', get_field('site_content', 'content', 'name', 'uploadcopyright'));
         }
         else {
-            $smarty->assign('agreementtext', get_field('site_content', 'content', 'name', 'uploadcopyright'));
+            $smarty->assign('agreementtext', get_string('uploadcopyrightdefaultcontent', 'install'));
         }
     }
     $filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $group, $institution);
