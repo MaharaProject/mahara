@@ -261,8 +261,13 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             accept: ['icon-drag-current'],
             hoverclass: 'folderhover',
             ondrop: function (dragged, dropped) {
-                $(self.id + '_move').value = dragged.id.replace(/^.*drag:(\d+)$/, '$1');
-                $(self.id + '_moveto').value = dropped.id.replace(/^file:(\d+)$/, '$1');
+                var dragid = dragged.id.replace(/^.*drag:(\d+)$/, '$1');
+                var dropid = dropped.id.replace(/^file:(\d+)$/, '$1');
+                if (dragid == dropid) {
+                    return;
+                }
+                $(self.id + '_move').value = dragid;
+                $(self.id + '_moveto').value = dropid;
                 signal(self.form, 'onsubmit');
                 self.form.submit();
                 $(self.id + '_move').value = '';
