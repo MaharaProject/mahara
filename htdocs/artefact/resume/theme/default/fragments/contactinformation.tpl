@@ -1,5 +1,6 @@
 {if $hascontent}
 <table>
+<colgroup width="50%" span="2"></colgroup>
 {if $address}
     <tr>
         <th>{str tag='address' section='artefact.internal'}</th>
