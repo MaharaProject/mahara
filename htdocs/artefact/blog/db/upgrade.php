@@ -126,24 +126,26 @@ function xmldb_artefact_blog_upgrade($oldversion=0) {
 
     if ($oldversion < 2009033100) {
         $bloguploadbase = get_config('dataroot') . 'artefact/blog/uploads/';
-        if ($basedir = opendir($bloguploadbase)) {
-            while (false !== ($sessionupload = readdir($basedir))) {
-                if ($sessionupload != "." && $sessionupload != "..") {
-                    $sessionupload = $bloguploadbase . $sessionupload;
-                    $subdir = opendir($sessionupload);
+        if (is_dir($bloguploadbase)) {
+            if ($basedir = opendir($bloguploadbase)) {
+                while (false !== ($sessionupload = readdir($basedir))) {
+                    if ($sessionupload != "." && $sessionupload != "..") {
+                        $sessionupload = $bloguploadbase . $sessionupload;
+                        $subdir = opendir($sessionupload);
 
-                    while (false !== ($uploadfile = readdir($subdir))) {
-                        if ($uploadfile != "." && $uploadfile != "..") {
-                            $uploadfile = $sessionupload . '/' . $uploadfile;
-                            unlink($uploadfile);
+                        while (false !== ($uploadfile = readdir($subdir))) {
+                            if ($uploadfile != "." && $uploadfile != "..") {
+                                $uploadfile = $sessionupload . '/' . $uploadfile;
+                                unlink($uploadfile);
+                            }
                         }
+                        closedir($subdir);
+                        rmdir($sessionupload);
                     }
-                    closedir($subdir);
-                    rmdir($sessionupload);
                 }
             }
+            @rmdir($bloguploadbase);
         }
-        @rmdir($bloguploadbase);
     }
 
     return true;
