@@ -42,13 +42,14 @@ if (!is_null($replytoid)) {
             JOIN {activity_type} t ON a.type = t.id
         WHERE t.name = ? AND a.id = ? AND a.usr = ?',
         array('usermessage', $replytoid, $USER->get('id')));
-    if ($replyto) {
-        // Make sure the message was sent by the user being replied to
-        $bits = parse_url($replyto->url);
-        parse_str($bits['query'], $params);
-        if (empty($params['id']) || $params['id'] != $id) {
-            $replyto = false;
-        }
+    if (!$replyto) {
+        throw new AccessDeniedException(get_string('cantviewmessage', 'group'));
+    }
+    // Make sure the message was sent by the user being replied to
+    $bits = parse_url($replyto->url);
+    parse_str($bits['query'], $params);
+    if (empty($params['id']) || $params['id'] != $id) {
+        throw new AccessDeniedException(get_string('cantviewmessage', 'group'));
     }
 }
 
