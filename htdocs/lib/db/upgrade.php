@@ -923,13 +923,16 @@ function xmldb_core_upgrade($oldversion=0) {
             ");
         }
         else if (is_mysql()) {
-            // NOT TESTED YET...
-            execute_sql("ALTER TABLE {artefact_attachment} DROP FOREIGN KEY arteblogblogfile_blo_fk");
+            execute_sql("ALTER TABLE {artefact_attachment} DROP FOREIGN KEY {arteblogblogfile_blo_fk}");
+            execute_sql("ALTER TABLE {artefact_attachment} DROP INDEX {arteblogblogfile_blo_ix}");
             execute_sql("ALTER TABLE {artefact_attachment} CHANGE blogpost artefact BIGINT(10) DEFAULT NULL");
+            execute_sql("ALTER TABLE {artefact_attachment} ADD INDEX {artefact_attchment_art_ix} (artefact)");
             execute_sql("ALTER TABLE {artefact_attachment} ADD FOREIGN KEY(artefact) REFERENCES {artefact}(id)");
 
-            execute_sql("ALTER TABLE {artefact_attachment} DROP FOREIGN KEY arteblogblogfile_fil_fk");
+            execute_sql("ALTER TABLE {artefact_attachment} DROP FOREIGN KEY {arteblogblogfile_fil_fk}");
+            execute_sql("ALTER TABLE {artefact_attachment} DROP INDEX {arteblogblogfile_fil_ix}");
             execute_sql("ALTER TABLE {artefact_attachment} CHANGE file attachment BIGINT(10) DEFAULT NULL");
+            execute_sql("ALTER TABLE {artefact_attachment} ADD INDEX {artefact_attchment_att_ix} (attachment)");
             execute_sql("ALTER TABLE {artefact_attachment} ADD FOREIGN KEY(attachment) REFERENCES {artefact}(id)");
         }
 
