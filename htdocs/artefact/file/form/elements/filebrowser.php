@@ -298,7 +298,7 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
                 'browse'  => 1,
             );
         }
-        else if ($element['config']['uploadagreement'] && param_boolean($prefix . '_notice', false)) {
+        else if ($element['config']['uploadagreement'] && !param_boolean($prefix . '_notice', false)) {
             return array(
                 'error'   => true,
                 'message' => get_string('youmustagreetothecopyrightnotice', 'artefact.file'),
