@@ -28,7 +28,7 @@
     {if $file->artefacttype == 'folder'}
       <a href="{$querybase}folder={$file->id}" class="changefolder" title="{str tag=gotofolder section=artefact.file arg1=$file->title}">{$file->title|str_shorten:34}</a>
     {else}
-      <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" title="{str tag=downloadfile section=artefact.file arg1=$file->title}">{$file->title|str_shorten:34}</a>
+      <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" target="_blank" title="{str tag=downloadfile section=artefact.file arg1=$file->title}">{$file->title|str_shorten:34}</a>
     {/if}
     </td>
     <td>{$file->description}</td>
