@@ -41,7 +41,7 @@ define('TITLE', $group->name . ' - ' . get_string('groupfiles', 'artefact.file')
 
 require_once(get_config('docroot') . 'interaction/lib.php');
 
-$pagebase = get_config('wwwroot') . 'artefact/file/groupfiles.php?group=' . $group;
+$pagebase = get_config('wwwroot') . 'artefact/file/groupfiles.php?group=' . $group->id;
 $form = pieform(ArtefactTypeFileBase::files_form($pagebase, $group->id));
 $js = ArtefactTypeFileBase::files_js();
 
