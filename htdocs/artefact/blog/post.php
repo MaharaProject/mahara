@@ -68,7 +68,7 @@ else {
 }
 
 
-$folder = param_integer('folder', ArtefactTypeBlogpost::blogfiles_folder_id());
+$folder = param_integer('folder', 0);
 $browse = (int) param_variable('browse', 0);
 $highlight = null;
 if ($file = param_integer('file', 0)) {

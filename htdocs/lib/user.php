@@ -115,8 +115,8 @@ function set_account_preference($userid, $field, $value) {
 
 /** 
  * Change language-specific stuff in the db for a user.  Currently
- * changes the name of the 'blogfiles', 'assessmentfiles'
- * folders in the user's files area and the views and artefacts tagged for the profile
+ * changes the name of the 'assessmentfiles' folder in the user's
+ * files area and the views and artefacts tagged for the profile
  * sideblock
  *
  * @param int $userid user id to set preference for
@@ -124,10 +124,6 @@ function set_account_preference($userid, $field, $value) {
  * @param string $newlang new language
  */
 function change_language($userid, $oldlang, $newlang) {
-    if (get_field('artefact_installed', 'active', 'name', 'blog')) {
-        safe_require('artefact', 'blog');
-        ArtefactTypeBlogPost::change_language($userid, $oldlang, $newlang);
-    }
     if (get_field('artefact_installed', 'active', 'name', 'file')) {
         safe_require('artefact', 'file');
         ArtefactTypeFolder::change_language($userid, $oldlang, $newlang);
