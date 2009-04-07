@@ -262,9 +262,7 @@ function upgrade_core($upgrade) {
     db_begin();
 
     if (!empty($upgrade->install)) {
-        if (!install_from_xmldb_file($location . 'install.xml')) {
-            throw new SQLException("Failed to upgrade core (check logs for xmldb errors)");
-        }
+        install_from_xmldb_file($location . 'install.xml');
     }
     else {
         require_once($location . 'upgrade.php');
@@ -302,29 +300,21 @@ function upgrade_plugin($upgrade) {
     }
 
     $location = get_config('docroot') . $plugintype . '/' . $pluginname . '/db/';
-    $db->StartTrans();
+    db_begin();
 
     if (!empty($upgrade->install)) {
         if (is_readable($location . 'install.xml')) {
-            $status = install_from_xmldb_file($location . 'install.xml');
-        }
-        else {
-            $status = true;
+            install_from_xmldb_file($location . 'install.xml');
         }
     }
     else {
         if (is_readable($location .  'upgrade.php')) {
             require_once($location . 'upgrade.php');
             $function = 'xmldb_' . $plugintype . '_' . $pluginname . '_upgrade';
-            $status = $function($upgrade->from);
+            if (!$function($upgrade->from)) {
+                throw new InstallationException("Failed to run " . $function . " (check logs for errors)");
+            }
         }
-        else {
-            $status = true;
-        }
-    }
-    if (!$status || $db->HasFailedTrans()) {
-        $db->CompleteTrans();
-        throw new SQLException("Failed to upgrade $upgrade->name (check logs for xmldb errors)");
     }
 
     $installed = new StdClass;
@@ -362,11 +352,9 @@ function upgrade_plugin($upgrade) {
         foreach ($crons as $cron) {
             $cron = (object)$cron;
             if (empty($cron->callfunction)) {
-                $db->RollbackTrans();
                 throw new InstallationException("cron for $pcname didn't supply function name");
             }
             if (!is_callable(array($pcname, $cron->callfunction))) {
-                $db->RollbackTrans();
                 throw new InstallationException("cron $cron->callfunction for $pcname supplied but wasn't callable");
             }
             $new = false;
@@ -392,15 +380,12 @@ function upgrade_plugin($upgrade) {
             $event = (object)$event;
 
             if (!record_exists('event_type', 'name', $event->event)) {
-                $db->RollbackTrans();
                 throw new InstallationException("event $event->event for $pcname doesn't exist!");
             }
             if (empty($event->callfunction)) {
-                $db->RollbackTrans();
                 throw new InstallationException("event $event->event for $pcname didn't supply function name");
             }
             if (!is_callable(array($pcname, $event->callfunction))) {
-                $db->RollbackTrans();
                 throw new InstallationException("event $event->event with function $event->callfunction for $pcname supplied but wasn't callable");
             }
             $exists = false;
@@ -430,7 +415,7 @@ function upgrade_plugin($upgrade) {
             $where = $activity;
             unset($where->admin);
             unset($where->delay);
-            // Work around the fact that insert_record cached the columns that 
+            // Work around the fact that insert_record cached the columns that
             // _were_ in the activity_type table before it was upgraded
             global $INSERTRECORD_NOCACHE;
             $INSERTRECORD_NOCACHE = true;
@@ -471,27 +456,8 @@ function upgrade_plugin($upgrade) {
     $prevversion = (empty($upgrade->install)) ? $upgrade->from : 0;
     call_static_method($pcname, 'postinst', $prevversion);
 
-    if ($db->HasFailedTrans()) {
-        $status = false;
-    }
-    $db->CompleteTrans();
-
-    /*  they do themselves already
-    // we have to do this after committing the current transaction because we call ourselves recursively...
-    if ($plugintype == 'artefact' && get_config('installed')) {
-        // only install associated blocktype plugins if we're not in the process of installing
-        if ($blocktypes = call_static_method($pcname, 'get_block_types')) {
-            foreach ($blocktypes as $bt) {
-                if ($upgrade = check_upgrades('blocktype.' . $pluginname . '/' . $bt)) {
-                    upgrade_plugin($upgrade);
-                }
-            }
-        }
-    }
-    */
-
-    return $status;
-
+    db_commit();
+    return true;
 }
 
 function core_postinst() {

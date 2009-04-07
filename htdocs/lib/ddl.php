@@ -548,12 +548,12 @@ function install_from_xmldb_file($file) {
     $xmldb_file = new XMLDBFile($file);
 
     if (!$xmldb_file->fileExists()) {
-        return false;
+        throw new InstallationException($xmldb_file->path . " doesn't exist.");
     }
 
     $loaded = $xmldb_file->loadXMLStructure();
     if (!$loaded || !$xmldb_file->isLoaded()) {
-        return false;
+        throw new InstallationException("Could not load " . $xmldb_file->path);
     }
 
     $structure = $xmldb_file->getStructure();
@@ -562,8 +562,12 @@ function install_from_xmldb_file($file) {
         return true; //Empty array = nothing to do = no error
     }
 
-    $status = $status && execute_sql_arr($sqlarr);
-    return $status;
+    if (!execute_sql_arr($sqlarr)) {
+        log_debug($sqlarr);
+        throw new SQLException("Failed to install (check logs for xmldb errors)");
+    }
+
+    return true;
 }
 
 /**
