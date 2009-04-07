@@ -51,7 +51,6 @@ $string['blogsettings'] = 'Blog Settings';
 $string['blogtitle'] = 'Title';
 $string['blogtitledesc'] = 'e.g., ‘Jill’s Nursing Practicum Journal’.';
 $string['border'] = 'Border';
-$string['browsemyfiles'] = 'Browse my files';
 $string['cancel'] = 'Cancel';
 $string['commentsallowed'] = 'Comments';
 $string['commentsalloweddesc'] = ' ';
