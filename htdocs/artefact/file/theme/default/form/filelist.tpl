@@ -45,7 +45,7 @@
     </td>
   </tr>
   {if $edit == $file->id}
-    {include file="artefact:file:form/editfile.tpl" prefix=$prefix fileinfo=$file}
+    {include file="artefact:file:form/editfile.tpl" prefix=$prefix fileinfo=$file groupinfo=$groupinfo}
   {/if}
   {/foreach}
  </tbody>

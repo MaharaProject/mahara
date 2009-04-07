@@ -102,7 +102,6 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
     }
 
     this.fileexists = function (filename, id) {
-        logDebug(id);
         for (var i in self.filedata) {
             if (self.filedata[i].title == filename && (!id || i != id)) {
                 return true;
@@ -183,7 +182,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         replaceChildNodes($(self.id + '_edit_messages'));
         forEach(getElementsByTagAndClassName('input', 'permission', self.id + '_edit_row'), function (elem) {
             var perm = getNodeAttribute(elem, 'name').split(':');
-            if (self.filedata[id].permissions[perm[1]][perm[2]] == 1) {
+            if (self.filedata[id].permissions[perm[1]] && self.filedata[id].permissions[perm[1]][perm[2]] == 1) {
                 elem.checked = true;
             }
         });

@@ -77,14 +77,14 @@
 </div>
 
 <div id="{$prefix}_filelist_container">
-{include file="artefact:file:form/filelist.tpl" prefix=$prefix filelist=$filelist editable=$config.edit selectable=$config.select highlight=$highlight edit=$edit querybase=$querybase}
+{include file="artefact:file:form/filelist.tpl" prefix=$prefix filelist=$filelist editable=$config.edit selectable=$config.select highlight=$highlight edit=$edit querybase=$querybase groupinfo=$groupinfo}
 </div>
 
 {* Edit form used when js is available *}
 {if $edit <= 0}
 <table class="hidden">
   <tbody id="{$prefix}_edit_placeholder">
-  {include file="artefact:file:form/editfile.tpl" prefix=$prefix}
+  {include file="artefact:file:form/editfile.tpl" prefix=$prefix groupinfo=$groupinfo}
   </tbody>
 </table>
 {/if}

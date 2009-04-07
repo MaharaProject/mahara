@@ -41,15 +41,7 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     $userid      = ($group || $institution) ? null : $USER->get('id');
 
     if ($group) {
-        $groupinfo = array(
-            'roles' => group_get_role_info($group),
-            'perms' => group_get_default_artefact_permissions($group),
-            'perm'  => array(),
-        );
-        foreach (current($groupinfo['perms']) as $k => $v) {
-            $groupinfo['perm'][$k] = get_string($k);
-        }
-        $smarty->assign('groupinfo', $groupinfo);
+        $smarty->assign('groupinfo', pieform_element_filebrowser_get_groupinfo($group));
     }
 
     $folder = $element['folder'];
@@ -102,6 +94,20 @@ function pieform_element_filebrowser(Pieform $form, $element) {
 
     return $smarty->fetch('artefact:file:form/filebrowser.tpl');
 }
+
+
+function pieform_element_filebrowser_get_groupinfo($group) {
+    $groupinfo = array(
+        'roles' => group_get_role_info($group),
+        'perms' => group_get_default_artefact_permissions($group),
+        'perm'  => array(),
+    );
+    foreach (current($groupinfo['perms']) as $k => $v) {
+        $groupinfo['perm'][$k] = get_string($k);
+    }
+    return $groupinfo;
+}
+
 
 function pieform_element_filebrowser_get_path($folder) {
     $path = array();

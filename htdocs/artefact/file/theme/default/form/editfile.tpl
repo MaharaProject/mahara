@@ -30,7 +30,7 @@
               </div>
             </td>
           </tr>
-{if $group}
+{if $groupinfo}
           <tr>
             <th><label>{str tag=Permissions}</label></th>
             <td>
