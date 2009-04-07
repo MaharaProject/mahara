@@ -28,17 +28,15 @@ defined('INTERNAL') || die();
 
 function xmldb_artefact_blog_upgrade($oldversion=0) {
     
-    $status = true;
-
     // There was no database prior to this version.
-    if ($status && $oldversion < 2006120501) {
-        $status = $status && install_from_xmldb_file(
+    if ($oldversion < 2006120501) {
+        install_from_xmldb_file(
             get_config('docroot') .
             'artefact/blog/db/install.xml'
         );
     }
 
-    if ($status && $oldversion < 2006121501) {
+    if ($oldversion < 2006121501) {
         $table = new XMLDBTable('artefact_blog_blogpost_file_pending');
 
         $table->addFieldInfo('file', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
@@ -47,7 +45,9 @@ function xmldb_artefact_blog_upgrade($oldversion=0) {
         $table->addKeyInfo('blogpost_file_pending_pk', XMLDB_KEY_PRIMARY, array('file'));
         $table->addKeyInfo('filefk', XMLDB_KEY_FOREIGN, array('file'), 'artefact', array('id'));
 
-        $status = $status && create_table($table);
+        if (!create_table($table)) {
+            throw new SQLException($table . " could not be created, check log for errors.");
+        }
     }
 
     if ($oldversion < 2008012200) {
@@ -125,7 +125,7 @@ function xmldb_artefact_blog_upgrade($oldversion=0) {
     }
 
 
-    return $status;
+    return true;
 }
 
 ?>
