@@ -678,8 +678,11 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     }
 
     /**
-     * Return a unique artefact title for a given owner & parent by appending
-     * digits to a desired title
+     * Return a unique artefact title for a given owner & parent.
+     *
+     * Try to add digits before the filename extension: If the desired
+     * title contains a ".", add "." plus digits before the final ".",
+     * otherwise append "." and digits.
      * 
      * @param string $desired
      * @param integer $parent
@@ -688,18 +691,30 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
      * @param string $institution
      */
     public static function get_new_file_title($desired, $parent, $owner, $group, $institution) {
+        $bits = split('\.', $desired);
+        if (count($bits) > 1) {
+            $start = join('.', array_slice($bits, 0, count($bits)-1));
+            $end = '.' . end($bits);
+        }
+        else {
+            $start = $desired;
+            $end = '';
+        }
+
         $where = $parent ? "parent = $parent" : 'parent IS NULL';
         $where .=  ' AND ' . artefact_owner_sql($owner, $group, $institution);
+
         $taken = get_column_sql("
             SELECT title FROM {artefact}
             WHERE artefacttype IN ('" . join("','", array_diff(PluginArtefactFile::get_artefact_types(), array('profileicon'))) . "')
-            AND title LIKE ? || '%' AND " . $where, array($desired));
+            AND title LIKE ? || '%' || ? AND " . $where, array($start, $end));
         $taken = array_flip($taken);
-        $i = '';
-        $newname = $desired;
+
+        $i = 0;
+        $newname = $start . $end;
         while (isset($taken[$newname])) {
             $i++;
-            $newname = $desired . '.' . $i;
+            $newname = $start . '.' . $i . $end;
         }
         return $newname;
     }
