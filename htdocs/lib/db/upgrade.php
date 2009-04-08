@@ -872,6 +872,11 @@ function xmldb_core_upgrade($oldversion=0) {
         reload_html_filters();
     }
 
+    if ($oldversion < 2009022608) {
+        // The view access page has been putting the string 'null' in as a group role in IE.
+        set_field('view_access_group', 'role', null, 'role', 'null');
+    }
+
     return $status;
 
 }
