@@ -381,7 +381,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         }
         appendChildNodes(tbody, TR({'class': 'r' + rows.length % 2 + (highlight ? ' highlight-file' : '')},
                                    TD(null, IMG({'src':imgsrc})),
-                                   TD(null, self.filedata[id].title),
+                                   TD(null, A({'href':self.config.wwwroot + 'artefact/file/download.php?file=' + id, 'target':'_blank'}, self.filedata[id].title)),
                                    TD(null, self.filedata[id].description),
                                    TD(null, remove, INPUT({'type':'hidden', 'name':self.id+'_selected[' + id + ']', 'value':id}))
                                   ));
