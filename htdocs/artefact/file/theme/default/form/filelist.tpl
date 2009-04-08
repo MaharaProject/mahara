@@ -40,7 +40,7 @@
       {if $file->childcount == 0}<button type="submit" name="{$prefix}_delete[{$file->id}]" value="{$file->id}">{str tag=delete}</button>{/if}
     {/if}
     {if $selectable && $file->artefacttype != 'folder'}
-      <button type="submit" class="select small" name="{$prefix}_select[{$file->id}]" value="{$file->id}">{str tag=select}</button>
+      <button type="submit" class="select small" name="{$prefix}_select[{$file->id}]" id="{$prefix}_select_{$file->id}" value="{$file->id}">{str tag=select}</button>
     {/if}
     </td>
   </tr>

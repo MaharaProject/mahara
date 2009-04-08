@@ -349,6 +349,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
     this.connect_select_buttons = function () {
         forEach(getElementsByTagAndClassName('button', 'select', 'filelist'), function (elem) {
+            var id = elem.name.replace(/.*_select\[(\d+)\]$/, '$1');
+            if (self.selecteddata[id]) {
+                addElementClass(elem, 'hidden');
+            }
             connect(elem, 'onclick', function (e) {
                 e.stop();
                 var id = this.name.replace(/.*_select\[(\d+)\]$/, '$1');
@@ -392,6 +396,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             'title': self.filedata[id].title,
             'description': self.filedata[id].description
         };
+        if ($(self.id + '_select_' + id)) {
+            addElementClass(self.id + '_select_' + id, 'hidden');
+        }
         if (self.filedata[id].tags) {
             self.selecteddata[id].tags = self.filedata[id].tags;
         }
@@ -412,6 +419,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             for (var r = 0; r < rows.length; r++) {
                 setNodeAttribute(rows[r], 'class', 'r' + r % 2);
             }
+        }
+        if ($(self.id + '_select_' + id)) {
+            removeElementClass(self.id + '_select_' + id, 'hidden');
         }
         return false;
     }
