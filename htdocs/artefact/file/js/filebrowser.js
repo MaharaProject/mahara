@@ -197,14 +197,6 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
     this.edit_init = function () { augment_tags_control(self.id + '_edit_tags'); }
 
-    this.browse_submit = function (e) {
-        signal(self.form, 'onsubmit');
-        self.form.submit();
-        e.stop();
-        $(self.id + '_changefolder').value = '';
-        return false;
-    }
-
     this.browse_init = function () {
         if (self.config.edit) {
             forEach(getElementsByTagAndClassName('button', null, 'filelist'), function (elem) {
@@ -245,7 +237,11 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 var href = getNodeAttribute(this, 'href');
                 var params = parseQueryString(href.substring(href.indexOf('?')+1));
                 $(self.id + '_changefolder').value = params.folder;
-                self.browse_submit(e);
+                signal(self.form, 'onsubmit');
+                self.form.submit();
+                $(self.id + '_changefolder').value = '';
+                e.stop();
+                return false;
             });
         });
         if ($(self.id + '_createfolder')) {
