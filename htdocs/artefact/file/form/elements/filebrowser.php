@@ -68,7 +68,7 @@ function pieform_element_filebrowser(Pieform $form, $element) {
             $smarty->assign('agreementtext', get_string('uploadcopyrightdefaultcontent', 'install'));
         }
     }
-    if ($element['browsehelp']) {
+    if (!empty($element['browsehelp'])) {
         $config['plugintype'] = $form->get_property('plugintype');
         $config['pluginname'] = $form->get_property('pluginname');
         $config['browsehelp'] = $element['browsehelp'];
