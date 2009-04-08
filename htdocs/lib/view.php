@@ -589,6 +589,11 @@ class View {
                     case 'group':
                         $accessrecord->group = $item['id'];
                         if ($item['role']) {
+                            // Don't insert a record for a role the group doesn't have
+                            $roleinfo = group_get_role_info($item['id']);
+                            if (!isset($roleinfo[$item['role']])) {
+                                break;
+                            }
                             $accessrecord->role = $item['role'];
                         }
                         insert_record('view_access_group', $accessrecord);
