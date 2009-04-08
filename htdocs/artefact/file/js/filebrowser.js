@@ -383,7 +383,6 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                                    TD(null, IMG({'src':imgsrc})),
                                    TD(null, self.filedata[id].title),
                                    TD(null, self.filedata[id].description),
-                                   TD(null, self.filedata[id].tags.join(', ')),
                                    TD(null, remove, INPUT({'type':'hidden', 'name':self.id+'_selected[' + id + ']', 'value':id}))
                                   ));
         self.selecteddata[id] = {
