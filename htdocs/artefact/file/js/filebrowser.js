@@ -332,13 +332,13 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         connect(self.id + '_open_upload_browse', 'onclick', function (e) {
             e.stop();
             removeElementClass(self.id + '_upload_browse', 'hidden');
-            addElementClass(this, 'hidden');
+            addElementClass(self.id + '_open_upload_browse_container', 'hidden');
             return false;
         });
         connect(self.id + '_close_upload_browse', 'onclick', function (e) {
             e.stop();
             addElementClass(self.id + '_upload_browse', 'hidden');
-            removeElementClass(self.id + '_open_upload_browse', 'hidden');
+            removeElementClass(self.id + '_open_upload_browse_container', 'hidden');
             return false;
         });
         forEach(getElementsByTagAndClassName('button', 'unselect', self.id + '_selectlist'), function (elem) {

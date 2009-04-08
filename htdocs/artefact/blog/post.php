@@ -128,6 +128,7 @@ $form = pieform(array(
             'highlight'    => $highlight,
             'browse'       => $browse,
             'page'         => get_config('wwwroot') . 'artefact/blog/post.php?' . ($blogpost ? ('id=' . $blogpost) : ('blog=' . $blog)) . '&browse=1',
+            'browsehelp'   => 'browsemyfiles',
             'config'       => array(
                 'upload'          => true,
                 'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),

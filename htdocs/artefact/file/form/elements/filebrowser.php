@@ -55,7 +55,6 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         $smarty->assign('browse', (int) $element['browse']);
     }
     $config = array_map('intval', $element['config']);
-    $smarty->assign('config', $config);
     if ($config['select']) {
         $selected = $element['selectlistcallback']();
         $smarty->assign('selectedlist', $selected);
@@ -69,6 +68,13 @@ function pieform_element_filebrowser(Pieform $form, $element) {
             $smarty->assign('agreementtext', get_string('uploadcopyrightdefaultcontent', 'install'));
         }
     }
+    if ($element['browsehelp']) {
+        $config['plugintype'] = $form->get_property('plugintype');
+        $config['pluginname'] = $form->get_property('pluginname');
+        $config['browsehelp'] = $element['browsehelp'];
+    }
+    $smarty->assign('config', $config);
+
     $filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $group, $institution);
     $smarty->assign('filelist', $filedata);
 
