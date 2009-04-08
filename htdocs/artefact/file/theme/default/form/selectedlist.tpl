@@ -14,7 +14,9 @@
     <td>
       <img src="{if $file->artefacttype == 'image'}{$WWWROOT}artefact/file/download.php?file={$file->id}&size=20x20{else}{$THEMEURL}images/{$file->artefacttype}.gif{/if}">
     </td>
-    <td>{$file->title|str_shorten:34}</td>
+    <td>
+      <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" target="_blank" title="{str tag=downloadfile section=artefact.file arg1=$file->title}">{$file->title|str_shorten:34}</a>
+    </td>
     <td>{$file->description}</td>
     <td>
        <noscript><button type="submit" class="button small unselect" name="{$prefix}_unselect[{$file->id}]" value="{$file->id}">{str tag=remove}</button></noscript>
