@@ -1636,6 +1636,7 @@ button#dosearch {
 }
 #editaccess_overrides_container {
 	clear: both;
+    float: left;
 }
 #editaccess_overrides_container fieldset {
 	padding: 10px;
