@@ -1406,7 +1406,7 @@ function db_format_tsfield($field, $as = null) {
         $tsfield = "FLOOR(EXTRACT(EPOCH FROM $field))";
     }
     else if (is_mysql()) {
-        $tsfield = "UNIX_TIMESTAMP($field)";
+        $tsfield = "IF($field >= '1970-01-01', UNIX_TIMESTAMP($field), TIMESTAMPDIFF(SECOND, '1970-01-01', $field))";
     }
     else {
         throw new SQLException('db_format_tsfield() is not implemented for your database engine (' . get_config('dbtype') . ')');
