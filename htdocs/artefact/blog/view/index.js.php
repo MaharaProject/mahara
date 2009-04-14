@@ -128,7 +128,7 @@ postlist.rowfunction = function(d, n, gd) {
         for (var i = 0; i < d.files.length; i++) {
             filerows.push(TR({'class':'r'+((i+1)%2)}, 
                              TD(null, IMG({'src':get_themeurl('images/' + d.files[i].artefacttype + '.gif')})),
-                             TD(null, A({'href':config.wwwroot+'artefact/file/download.php?file='+d.files[i].file},
+                             TD(null, A({'href':config.wwwroot+'artefact/file/download.php?file='+d.files[i].attachment},
                                         d.files[i].title)),
                              TD(null, d.files[i].description)));
         }

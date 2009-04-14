@@ -15,7 +15,10 @@ function updateWYSIWYGText() {
         $('editsitepage_pagename').value = oldPageName;
         return;
     }
-    checkOldContent = true;
+    if (!tinyMCE.isMSIE) {
+        // Disable changed content check for IE (see below)
+        checkOldContent = true;
+    }
     sendjsonrequest(
         'editchangepage.json.php',
         {'pagename' :$('editsitepage_pagename').value},
@@ -36,7 +39,12 @@ function connectElements() {
 
 function contentSaved(form, data) {
     connectElements();
-    oldPageContent = tinyMCE.getContent();
+    if (!tinyMCE.isMSIE) {
+        // Disabling changed content check for IE; Need to work out
+        // why the getBody() call in getContent fails to return the
+        // body element.
+        oldPageContent = tinyMCE.getContent();
+    }
     formSuccess(form, data);
 }
 

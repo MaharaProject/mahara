@@ -115,8 +115,8 @@ function set_account_preference($userid, $field, $value) {
 
 /** 
  * Change language-specific stuff in the db for a user.  Currently
- * changes the name of the 'blogfiles', 'assessmentfiles'
- * folders in the user's files area and the views and artefacts tagged for the profile
+ * changes the name of the 'assessmentfiles' folder in the user's
+ * files area and the views and artefacts tagged for the profile
  * sideblock
  *
  * @param int $userid user id to set preference for
@@ -124,10 +124,6 @@ function set_account_preference($userid, $field, $value) {
  * @param string $newlang new language
  */
 function change_language($userid, $oldlang, $newlang) {
-    if (get_field('artefact_installed', 'active', 'name', 'blog')) {
-        safe_require('artefact', 'blog');
-        ArtefactTypeBlogPost::change_language($userid, $oldlang, $newlang);
-    }
     if (get_field('artefact_installed', 'active', 'name', 'file')) {
         safe_require('artefact', 'file');
         ArtefactTypeFolder::change_language($userid, $oldlang, $newlang);
@@ -316,6 +312,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         $mail->Sender = get_config('noreplyaddress');
         $mail->From = $mail->Sender;
         $mail->FromName = get_string('emailname');
+        $customheaders[] = 'Precedence: Bulk'; // Try to avoid pesky out of office responses
         $messagetext .= "\n\n" . get_string('pleasedonotreplytothismessage') . "\n";
         if ($messagehtml) {
             $messagehtml .= "\n\n<p>" . get_string('pleasedonotreplytothismessage') . "</p>\n";
@@ -912,7 +909,7 @@ function send_user_message($to, $message, $from=null) {
     }
 
     $messagepref = get_account_preference($to->id, 'messages');
-    if ((is_friend($from->id, $to->id) && $messagepref == 'friends') || $messagepref == 'allow' || $from->get('admin')) {
+    if ($messagepref == 'allow' || ($messagepref == 'friends' && is_friend($from->id, $to->id)) || $from->get('admin')) {
         require_once('activity.php');
         activity_occurred('usermessage', 
             array(
@@ -955,7 +952,7 @@ function load_user_institutions($userid) {
         throw new InvalidArgumentException("couldn't load institutions, no user id specified");
     }
     if ($institutions = get_records_sql_assoc('
-        SELECT u.institution,'.db_format_tsfield('ctime').','.db_format_tsfield('expiry').',u.studentid,u.staff,u.admin,i.theme
+        SELECT u.institution,'.db_format_tsfield('ctime').','.db_format_tsfield('u.expiry', 'membership_expiry').',u.studentid,u.staff,u.admin,i.theme
         FROM {usr_institution} u INNER JOIN {institution} i ON u.institution = i.name
         WHERE u.usr = ?', array($userid))) {
         return $institutions;
@@ -1001,7 +998,7 @@ function get_users_data($userlist) {
                 (SELECT 1 FROM {usr_friend} WHERE ((usr1 = ? AND usr2 = u.id) OR (usr2 = ? AND usr1 = u.id))) AS friend,
                 (SELECT 1 FROM {usr_friend_request} fr WHERE fr.requester = ? AND fr.owner = u.id) AS requestedfriendship,
                 (SELECT title FROM {artefact} WHERE artefacttype = \'introduction\' AND owner = u.id) AS introduction,
-                NULL AS reason
+                NULL AS message
                 FROM {usr} u
                 WHERE u.id IN (' . $userlist . ')
             UNION
@@ -1235,6 +1232,8 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
     else {
         $user->id = insert_record('usr', $user, 'id', true);
     }
+    // Bypass access check for 'copynewuser' institution/site views, because this user may not be logged in yet
+    $user->newuser = true;
 
     set_profile_field($user->id, 'email', $user->email);
     set_profile_field($user->id, 'firstname', $user->firstname);
@@ -1251,7 +1250,7 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
             $institution = new Institution($institution);
         }
         if ($institution->name != 'mahara') {
-            $institution->addUserAsMember($user);
+            $institution->addUserAsMember($user); // uses $user->newuser
         }
     }
 
@@ -1271,9 +1270,10 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
     }
 
     // Copy site views to the new user's profile
+    $checkviewaccess = !$user->newuser;
     $userobj = new User();
     $userobj->find_by_id($user->id);
-    $userobj->copy_views(get_column('view', 'id', 'institution', 'mahara', 'copynewuser', 1));
+    $userobj->copy_views(get_column('view', 'id', 'institution', 'mahara', 'copynewuser', 1), $checkviewaccess);
 
     handle_event('createuser', $user);
     db_commit();

@@ -314,7 +314,7 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     }
 
     // Define the locations of language strings for this section
-    $langstringroot = get_language_root();
+    $langstringroot = get_language_root($lang);
     $langdirectory  = ''; // The directory in which the language file for this string should ideally reside, if the language has implemented it
     
     if (false === strpos($section, '.')) {
@@ -1471,10 +1471,11 @@ function get_view_from_token($token) {
  * @param array $users users to fetch views owned by
  * @param int $userlooking (optional, defaults to logged in user)
  * @param int $limit grab this many views. (setting this null means get all)
+ * @param string $type the type of views to return
  *
  * @return array Associative array keyed by userid, of arrays of view ids
  */
-function get_views($users, $userlooking=null, $limit=5) {
+function get_views($users, $userlooking=null, $limit=5, $type='portfolio') {
     $userlooking = optional_userid($userlooking);
     if (is_int($users)) {
         $users = array($users);
@@ -1507,6 +1508,11 @@ function get_views($users, $userlooking=null, $limit=5) {
         }
     }
 
+    $typesql = '';
+    if ($type != null) {
+        $typesql = 'AND v.type = ' . db_quote($type);
+    }
+
     // public, logged in, or friends' views
     if ($results = get_records_sql_array(
         'SELECT
@@ -1534,7 +1540,7 @@ function get_views($users, $userlooking=null, $limit=5) {
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )
             AND ( v.stopdate IS NULL OR v.stopdate > ? )
-        ',
+        ' . $typesql,
         array( $dbnow, $dbnow )
         )
     ) {
@@ -1562,7 +1568,7 @@ function get_views($users, $userlooking=null, $limit=5) {
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )
             AND ( v.stopdate IS NULL OR v.stopdate > ? )
-        ',
+        ' . $typesql,
         array($userlooking, $dbnow, $dbnow)
         )
     ) {
@@ -1592,7 +1598,7 @@ function get_views($users, $userlooking=null, $limit=5) {
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )
             AND ( v.stopdate IS NULL OR v.stopdate > ? )
-        ',
+        ' . $typesql,
         array($userlooking, 0, $dbnow, $dbnow)
         )
     ) {

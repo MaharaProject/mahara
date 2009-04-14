@@ -85,7 +85,7 @@ function renderAccessListItem(item) {
     var row = TABLE({'class': cssClass},
         TBODY(null, 
             TR(null,
-                TH(null, name,  (item.role ? ' - ' + item.roledisplay : '')),
+                TH(null, name,  (item.role != null ? ' - ' + item.roledisplay : '')),
                 TD({'class': 'right removebutton'}, removeButton)
             ),
             TR(null,
@@ -105,7 +105,7 @@ function renderAccessListItem(item) {
                     :
                     null
                     ),
-                    (typeof(item.role) != 'undefined' ?
+                    (item.role != null ?
                     INPUT({
                         'type': 'hidden',
                         'name': 'accesslist[' + count + '][role]',

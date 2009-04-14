@@ -135,7 +135,7 @@ class View {
      * @throws SystemException under various circumstances, see the source for 
      *                         more information
      */
-    public static function create_from_template($viewdata, $templateid, $userid=null) {
+    public static function create_from_template($viewdata, $templateid, $userid=null, $checkaccess=true) {
         if (is_null($userid)) {
             global $USER;
             $userid = $USER->get('id');
@@ -155,7 +155,7 @@ class View {
         if (!$template->get('template') && !$user->can_edit_view($template)) {
             throw new SystemException("View::create_from_template: Attempting to create a View from another View that is not marked as a template");
         }
-        else if (!can_view_view($templateid, $userid)) {
+        else if ($checkaccess && !can_view_view($templateid, $userid)) {
             throw new SystemException("View::create_from_template: User $userid is not permitted to copy View $templateid");
         }
 
@@ -589,6 +589,11 @@ class View {
                     case 'group':
                         $accessrecord->group = $item['id'];
                         if ($item['role']) {
+                            // Don't insert a record for a role the group doesn't have
+                            $roleinfo = group_get_role_info($item['id']);
+                            if (!isset($roleinfo[$item['role']])) {
+                                break;
+                            }
                             $accessrecord->role = $item['role'];
                         }
                         insert_record('view_access_group', $accessrecord);

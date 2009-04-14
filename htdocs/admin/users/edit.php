@@ -259,7 +259,6 @@ else {
     // unique
     $suspendform  = pieform($suspendformdef);
     $suspendformdef['name'] = 'edituser_suspend2';
-    $suspendformdef['validatecallback'] = 'edituser_unsuspend_validate';
     $suspendformdef['successcallback'] = 'edituser_unsuspend_submit';
     $suspendform2 = pieform($suspendformdef);
 
@@ -341,7 +340,7 @@ foreach ($user->get('institutions') as $i) {
                 'description'  => get_string('membershipexpirydescription', 'admin'),
                 'minyear'      => $currentdate['year'],
                 'maxyear'      => $currentdate['year'] + 20,
-                'defaultvalue' => $i->expiry
+                'defaultvalue' => $i->membership_expiry
             ),
             $i->institution.'_studentid' => array(
                 'type'         => 'text',

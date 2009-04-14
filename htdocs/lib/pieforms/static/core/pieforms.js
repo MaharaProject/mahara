@@ -149,8 +149,9 @@ function Pieform(data) {//{{{
         }
 
         // Ensure the iframe exists and make sure the form targets it
-        self.setupIframe();
-        $(self.data.name).target = self.data.name + '_iframe';
+        // self.data.newIframes = true;
+        var iframeName = self.setupIframe();
+        $(self.data.name).target = iframeName;
 
         appendChildNodes(self.data.name,
             INPUT({
@@ -167,27 +168,30 @@ function Pieform(data) {//{{{
                 return;
             }
 
-            PieformManager.signal('onreply', self.data.name);
+            if (typeof(data.replaceHTML) == 'string') {
+                PieformManager.signal('onreply', self.data.name);
 
-            var tmp = DIV();
-            tmp.innerHTML = data.replaceHTML;
+                var tmp = DIV();
+                tmp.innerHTML = data.replaceHTML;
 
-            // Work out whether the new form tag has the error class on it, for
-            // updating the form in the document
-            if (hasElementClass(tmp.childNodes[0], 'error')) {
-                addElementClass(self.data.name, 'error');
+                // Work out whether the new form tag has the error class on it, for
+                // updating the form in the document
+                if (hasElementClass(tmp.childNodes[0], 'error')) {
+                    addElementClass(self.data.name, 'error');
+                }
+                else {
+                    removeElementClass(self.data.name, 'error');
+                }
+                
+                // The first child node is the form tag. We replace the children of
+                // the current form tag with the new children. This prevents
+                // javascript references being lost
+                replaceChildNodes($(self.data.name), tmp.childNodes[0].childNodes);
+
+                self.connectSubmitButtons();
+                self.clickedButton = null;
+                PieformManager.signal('onload', self.data.name);
             }
-            else {
-                removeElementClass(self.data.name, 'error');
-            }
-
-            // The first child node is the form tag. We replace the children of
-            // the current form tag with the new children. This prevents
-            // javascript references being lost
-            replaceChildNodes($(self.data.name), tmp.childNodes[0].childNodes);
-
-            self.connectSubmitButtons();
-            PieformManager.signal('onload', self.data.name);
 
             if (data.returnCode == 0) {
                 // Call the defined success callback, if there is one
@@ -229,6 +233,13 @@ function Pieform(data) {//{{{
 
     this.setupIframe = function() {//{{{
         var iframeName = self.data.name + '_iframe';
+        if (self.data.newIframeOnSubmit) {
+            if (!self.data.nextIframe) {
+                self.data.nextIframe = 0;
+            }
+            iframeName += '_' + self.data.nextIframe;
+            self.data.nextIframe++;
+        }
         if ($(iframeName)) {
             self.iframe = $(iframeName);
         }
@@ -240,6 +251,7 @@ function Pieform(data) {//{{{
             });
             insertSiblingNodesAfter(self.data.name, self.iframe);
         }
+        return iframeName;
     }//}}}
 
     this.connectSubmitButtons = function() {//{{{

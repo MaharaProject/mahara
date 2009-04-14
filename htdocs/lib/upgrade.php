@@ -56,7 +56,7 @@ function check_upgrades($name=null) {
     if (empty($name) || $name == 'core') {
         try {
             $coreversion = get_config('version');
-        } 
+        }
         catch (Exception $e) {
             $coreversion = 0;
         }
@@ -74,10 +74,10 @@ function check_upgrades($name=null) {
             $core->torelease = $config->release;
             $toupgrade['core'] = $core;
             $installing = true;
-        } 
+        }
         else if ($config->version > $coreversion) {
             $corerelease = get_config('release');
-            if (isset($config->minupgradefrom) && isset($config->minupgraderelease) 
+            if (isset($config->minupgradefrom) && isset($config->minupgraderelease)
                 && $coreversion < $config->minupgradefrom) {
                 throw new ConfigSanityException("Must upgrade to $config->minupgradefrom "
                                           . "($config->minupgraderelease) first "
@@ -139,7 +139,7 @@ function check_upgrades($name=null) {
                     $btlocation = get_config('docroot') . $plugin . '/' . $dir . '/blocktype';
                     if (!is_dir($btlocation)) {
                         continue;
-                    }   
+                    }
                     $btdirhandle = opendir($btlocation);
                     while (false !== ($btdir = readdir($btdirhandle))) {
                         if (strpos($btdir, '.') === 0) {
@@ -262,9 +262,7 @@ function upgrade_core($upgrade) {
     db_begin();
 
     if (!empty($upgrade->install)) {
-        if (!install_from_xmldb_file($location . 'install.xml')) {
-            throw new SQLException("Failed to upgrade core (check logs for xmldb errors)");
-        }
+        install_from_xmldb_file($location . 'install.xml');
     }
     else {
         require_once($location . 'upgrade.php');
@@ -273,7 +271,7 @@ function upgrade_core($upgrade) {
 
     set_config('version', $upgrade->to);
     set_config('release', $upgrade->torelease);
-    
+
     if (!empty($upgrade->install)) {
         core_postinst();
     }
@@ -299,32 +297,24 @@ function upgrade_plugin($upgrade) {
 
     if ($plugintype == 'blocktype' && strpos($pluginname, '/') !== false) {
         list($artefactplugin, $blocktypename) = explode('/', $pluginname);
-    }   
+    }
 
     $location = get_config('docroot') . $plugintype . '/' . $pluginname . '/db/';
-    $db->StartTrans();
+    db_begin();
 
     if (!empty($upgrade->install)) {
         if (is_readable($location . 'install.xml')) {
-            $status = install_from_xmldb_file($location . 'install.xml');
-        }
-        else {
-            $status = true;
+            install_from_xmldb_file($location . 'install.xml');
         }
     }
     else {
         if (is_readable($location .  'upgrade.php')) {
             require_once($location . 'upgrade.php');
             $function = 'xmldb_' . $plugintype . '_' . $pluginname . '_upgrade';
-            $status = $function($upgrade->from);
+            if (!$function($upgrade->from)) {
+                throw new InstallationException("Failed to run " . $function . " (check logs for errors)");
+            }
         }
-        else {
-            $status = true;
-        }
-    }
-    if (!$status || $db->HasFailedTrans()) {
-        $db->CompleteTrans();
-        throw new SQLException("Failed to upgrade $upgrade->name (check logs for xmldb errors)");
     }
 
     $installed = new StdClass;
@@ -349,7 +339,7 @@ function upgrade_plugin($upgrade) {
 
     if (!empty($upgrade->install)) {
         insert_record($installtable,$installed);
-    } 
+    }
     else {
         update_record($installtable, $installed, 'name');
     }
@@ -362,11 +352,9 @@ function upgrade_plugin($upgrade) {
         foreach ($crons as $cron) {
             $cron = (object)$cron;
             if (empty($cron->callfunction)) {
-                $db->RollbackTrans();
                 throw new InstallationException("cron for $pcname didn't supply function name");
             }
             if (!is_callable(array($pcname, $cron->callfunction))) {
-                $db->RollbackTrans();
                 throw new InstallationException("cron $cron->callfunction for $pcname supplied but wasn't callable");
             }
             $new = false;
@@ -386,21 +374,18 @@ function upgrade_plugin($upgrade) {
             }
         }
     }
-    
+
     if ($events = call_static_method($pcname, 'get_event_subscriptions')) {
         foreach ($events as $event) {
             $event = (object)$event;
 
             if (!record_exists('event_type', 'name', $event->event)) {
-                $db->RollbackTrans();
                 throw new InstallationException("event $event->event for $pcname doesn't exist!");
             }
             if (empty($event->callfunction)) {
-                $db->RollbackTrans();
                 throw new InstallationException("event $event->event for $pcname didn't supply function name");
             }
             if (!is_callable(array($pcname, $event->callfunction))) {
-                $db->RollbackTrans();
                 throw new InstallationException("event $event->event with function $event->callfunction for $pcname supplied but wasn't callable");
             }
             $exists = false;
@@ -430,7 +415,7 @@ function upgrade_plugin($upgrade) {
             $where = $activity;
             unset($where->admin);
             unset($where->delay);
-            // Work around the fact that insert_record cached the columns that 
+            // Work around the fact that insert_record cached the columns that
             // _were_ in the activity_type table before it was upgraded
             global $INSERTRECORD_NOCACHE;
             $INSERTRECORD_NOCACHE = true;
@@ -461,7 +446,7 @@ function upgrade_plugin($upgrade) {
                                   array_merge(array($pluginname),$types));
         }
     }
-    
+
     // install blocktype categories.
     if ($plugintype == 'blocktype' && get_config('installed')) {
         install_blocktype_categories_for_plugin($pluginname);
@@ -470,28 +455,9 @@ function upgrade_plugin($upgrade) {
 
     $prevversion = (empty($upgrade->install)) ? $upgrade->from : 0;
     call_static_method($pcname, 'postinst', $prevversion);
-    
-    if ($db->HasFailedTrans()) {
-        $status = false;
-    }
-    $db->CompleteTrans();
 
-    /*  they do themselves already
-    // we have to do this after committing the current transaction because we call ourselves recursively...
-    if ($plugintype == 'artefact' && get_config('installed')) {
-        // only install associated blocktype plugins if we're not in the process of installing 
-        if ($blocktypes = call_static_method($pcname, 'get_block_types')) {
-            foreach ($blocktypes as $bt) {
-                if ($upgrade = check_upgrades('blocktype.' . $pluginname . '/' . $bt)) {
-                    upgrade_plugin($upgrade); 
-                }
-            }
-        }
-    }
-    */
-    
-    return $status;
-
+    db_commit();
+    return true;
 }
 
 function core_postinst() {
@@ -547,8 +513,8 @@ function core_postinst() {
     set_config('lang', 'en.utf8');
     set_config('installation_key', get_random_key());
 
-    // PostgreSQL supports indexes over functions of columns, MySQL does not. 
-    // So we can improve the index on the username field of the usr table for 
+    // PostgreSQL supports indexes over functions of columns, MySQL does not.
+    // So we can improve the index on the username field of the usr table for
     // Postgres
     if (is_postgres()) {
         execute_sql('DROP INDEX {usr_use_uix}');
@@ -631,7 +597,7 @@ function core_install_lastcoredata_defaults() {
     db_commit();
 
     // if we're installing, set up the block categories here and then poll the plugins.
-    // if we're upgrading this happens somewhere else.  This is because of dependency issues around 
+    // if we're upgrading this happens somewhere else.  This is because of dependency issues around
     // the order of installation stuff.
 
     install_blocktype_extras();
@@ -640,7 +606,7 @@ function core_install_lastcoredata_defaults() {
 function core_install_firstcoredata_defaults() {
     // Install the default institution
     db_begin();
-    
+
     set_config('session_timeout', 86400);
     set_config('sitename', 'Mahara');
     set_config('defaultaccountinactivewarn', 604800);
@@ -703,7 +669,7 @@ function core_install_firstcoredata_defaults() {
     foreach ($subs as $sub) {
         insert_record('event_subscription', (object)$sub);
     }
-    
+
     // install the activity types
     $activitytypes = array(
         array('maharamessage', 0, 0),
@@ -732,6 +698,7 @@ function core_install_firstcoredata_defaults() {
         'rebuild_artefact_parent_cache_complete' => array('0', '4', '*', '*', '*'),
         'auth_clean_partial_registrations'       => array('5', '0', '*', '*', '*'),
         'auth_handle_account_expiries'           => array('5', '10', '*', '*', '*'),
+        'auth_handle_institution_expiries'       => array('5', '9', '*', '*', '*'),
         'activity_process_queue'                 => array('*/5', '*', '*', '*', '*'),
         'auth_remove_old_session_files'          => array('30', '20', '*', '*', '*'),
         'recalculate_quota'                      => array('15', '2', '*', '*', '*'),
@@ -748,7 +715,7 @@ function core_install_firstcoredata_defaults() {
         $cron->dayofweek    = $times[4];
         insert_record('cron', $cron);
     }
-    
+
     // install the view column widths
     install_view_column_widths();
 
@@ -762,9 +729,9 @@ function core_install_firstcoredata_defaults() {
 }
 
 
-/** 
-* xmldb will pass us the xml file and we can perform any substitution as necessary
-*/ 
+/**
+ * xmldb will pass us the xml file and we can perform any substitution as necessary
+ */
 function local_xmldb_contents_sub(&$contents) {
     // the main install.xml file needs to sub in plugintype tables.
     $searchstring = '<!-- PLUGIN_TYPE_SUBSTITUTION -->';
@@ -776,12 +743,12 @@ function local_xmldb_contents_sub(&$contents) {
     $plugintables = file_get_contents(get_config('docroot') . 'lib/db/plugintables.xml');
     $tosub = '';
     foreach (plugin_types() as $plugin) {
-        // any that want their own stuff can put it in docroot/plugintype/lib/db/plugintables.xml 
+        // any that want their own stuff can put it in docroot/plugintype/lib/db/plugintables.xml
         //- like auth is a bit special
         $specialcase = get_config('docroot') . $plugin . '/plugintables.xml';
         if (is_readable($specialcase)) {
             $tosub .= file_get_contents($specialcase) . "\n";
-        } 
+        }
         else {
             $replaced = '';
             // look for tables to put at the start...
@@ -926,7 +893,7 @@ function install_blocktype_extras() {
 }
 
 /**
- * Installs all the allowed column widths for views. Used when installing core 
+ * Installs all the allowed column widths for views. Used when installing core
  * defaults, and also when upgrading from 0.8 to 0.9
  */
 function install_view_column_widths() {

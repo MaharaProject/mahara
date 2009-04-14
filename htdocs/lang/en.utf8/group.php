@@ -234,13 +234,19 @@ $string['sendmessage'] = 'Send message';
 $string['messagesent'] = 'Message sent!';
 $string['messagenotsent'] = 'Failed to send message';
 $string['newusermessage'] = 'New message from %s';
+$string['newusermessageemailbody'] = '%s has sent you a message.  To view this message, visit
+
+%s';
 $string['sendmessageto'] = 'Send message to %s';
+$string['viewmessage'] = 'View Message';
+$string['Reply'] = 'Reply';
 
 $string['denyfriendrequest'] = 'Deny Friend Request';
 $string['sendfriendshiprequest'] = 'Send %s a friendship request';
 $string['cantdenyrequest'] = 'That is not a valid friendship request';
 $string['cantrequestfrienship'] = 'You cannot request frienship from this user';
 $string['cantmessageuser'] = 'You cannot send this user a message';
+$string['cantviewmessage'] = 'You cannot view this message';
 $string['requestedfriendship'] = 'requested friendship';
 $string['notinanygroups'] = 'Not in any groups';
 $string['addusertogroup'] = 'Add to ';

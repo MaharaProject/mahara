@@ -30,19 +30,19 @@
     <h3 id="suspend">{str tag="suspenddeleteuser" section=admin}</h3>
     <p>{str tag="suspenddeleteuserdescription" section=admin}</p>
     <table id="suspenddelete">
-        <tr>
-            <td>
-                <h4>{str tag="suspenduser" section=admin}</h4>
-                {$suspendform}
-            </td>
-            {if $USER->get('admin')}
-            <td id="delete">
-                <h4>{str tag=deleteuser section=admin}</h4>
-                <p>{str tag=deleteusernote section=admin}</p>
-                {$deleteform}
-            </td>
-            {/if}
-        </tr>
+      <tr>
+        <td>
+          <h4>{str tag="suspenduser" section=admin}</h4>
+          {$suspendform}
+        </td>
+        {if $USER->get('admin')}
+        <td id="delete">
+          <h4>{str tag=deleteuser section=admin}</h4>
+          <p>{str tag=deleteusernote section=admin}</p>
+          {$deleteform}
+        </td>
+        {/if}
+      </tr>
     </table>
     {/if}
 

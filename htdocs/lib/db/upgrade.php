@@ -557,6 +557,11 @@ function xmldb_core_upgrade($oldversion=0) {
             }
         }
         if (!get_record('view', 'owner', 0, 'type', 'profile')) {
+            // First ensure system user has id = 0; In older MySQL installations it may be > 0
+            $sysuser = get_record('usr', 'username', 'root');
+            if ($sysuser && $sysuser->id > 0 && !count_records('usr', 'id', 0)) {
+                set_field('usr', 'id', 0, 'id', $sysuser->id);
+            }
             // Install system profile view
             require_once(get_config('libroot') . 'view.php');
             $dbtime = db_format_timestamp(time());
@@ -628,19 +633,22 @@ function xmldb_core_upgrade($oldversion=0) {
             if (!is_dir($artefactdata . 'file')) {
                 mkdir($artefactdata . 'file');
             }
-            rename($artefactdata . 'internal/profileicons', $artefactdata . 'file/profileicons');
+            if (!rename($artefactdata . 'internal/profileicons', $artefactdata . 'file/profileicons')) {
+                throw new SystemException("Failed moving $artefactdata/internal/profileicons to $artefactdata/file/profileicons");
+            }
 
             // Insert artefact_file_files records for all profileicons
             $profileicons = get_column('artefact', 'id', 'artefacttype', 'profileicon');
             if ($profileicons) {
                 foreach ($profileicons as $a) {
-                    $filesize = filesize($artefactdata . 'file/profileicons/originals/' . ($a % 256) . '/' . $a);
-                    if ($filesize) {
+                    $filename = $artefactdata . 'file/profileicons/originals/' . ($a % 256) . '/' . $a;
+                    if (file_exists($filename)) {
+                        $filesize = filesize($filename);
                         $imagesize = getimagesize($artefactdata . 'file/profileicons/originals/' . ($a % 256) . '/' . $a);
                         insert_record('artefact_file_files', (object) array('artefact' => $a, 'fileid' => $a, 'size' => $filesize));
                         insert_record('artefact_file_image', (object) array('artefact' => $a, 'width' => $imagesize[0], 'height' => $imagesize[1]));
                     } else {
-                        delete_records('artefact', 'id', $a);
+                        log_debug("Profile icon artefact $a has no file on disk at $filename");
                     }
                 }
             }
@@ -841,18 +849,106 @@ function xmldb_core_upgrade($oldversion=0) {
     if ($oldversion < 2009022700) {
         // Get rid of all blocks with position 0 caused by 'about me' block on profile views
         if (count_records('block_instance', 'order', 0) && !count_records_select('block_instance', '"order" < 0')) {
-            execute_sql('UPDATE {block_instance} SET "order" =  -1 * "order" WHERE id IN (
-                SELECT i.id FROM {block_instance} i
-                INNER JOIN (SELECT view, "column" FROM {block_instance} WHERE "order" = 0) z
-                    ON (z.view = i.view AND z.column = i.column))'
-            );
+            if (is_mysql()) {
+                $ids = get_column_sql('
+                    SELECT i.id FROM {block_instance} i
+                    INNER JOIN (SELECT view, "column" FROM {block_instance} WHERE "order" = 0) z
+                        ON (z.view = i.view AND z.column = i.column)'
+                );
+                execute_sql('UPDATE {block_instance} SET "order" =  -1 * "order" WHERE id IN (' . join(',', $ids) . ')');
+            } else {
+                execute_sql('UPDATE {block_instance} SET "order" =  -1 * "order" WHERE id IN (
+                    SELECT i.id FROM {block_instance} i
+                    INNER JOIN (SELECT view, "column" FROM {block_instance} WHERE "order" = 0) z
+                        ON (z.view = i.view AND z.column = i.column))'
+                );
+            }
             execute_sql('UPDATE {block_instance} SET "order" = 1 WHERE "order" = 0');
             execute_sql('UPDATE {block_instance} SET "order" = -1 * ("order" - 1) WHERE "order" < 0');
         }
     }
 
-    return $status;
+    if ($oldversion < 2009031000) {
+        reload_html_filters();
+    }
 
+    if ($oldversion < 2009031300) {
+        $table = new XMLDBTable('institution');
+
+        $expiry = new XMLDBField('expiry');
+        $expiry->setAttributes(XMLDB_TYPE_DATETIME);
+        add_field($table, $expiry);
+
+        $expirymailsent = new XMLDBField('expirymailsent');
+        $expirymailsent->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $expirymailsent);
+
+        $suspended = new XMLDBField('suspended');
+        $suspended->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $suspended);
+
+        // Insert a cron job to check for soon expiring and expired institutions
+        $cron = new StdClass;
+        $cron->callfunction = 'auth_handle_institution_expiries';
+        $cron->minute       = '5';
+        $cron->hour         = '9';
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
+        insert_record('cron', $cron);
+    }
+
+    if ($oldversion < 2009031800) {
+
+        // Files can only attach blogpost artefacts, but we would like to be able to attach them
+        // to other stuff.  Rename the existing attachment table artefact_blog_blogpost_file to
+        // artefact_file_attachment so we don't end up with many tables doing the same thing.
+        execute_sql("ALTER TABLE {artefact_blog_blogpost_file} RENAME TO {artefact_attachment}");
+
+        if (is_postgres()) {
+            // Ensure all of the indexes and constraints are renamed
+            execute_sql("
+            ALTER TABLE {artefact_attachment} RENAME {blogpost} TO {artefact};
+            ALTER TABLE {artefact_attachment} RENAME {file} TO {attachment};
+
+            ALTER INDEX {arteblogblogfile_blofil_pk} RENAME TO {arteatta_artatt_pk};
+            ALTER INDEX {arteblogblogfile_blo_ix} RENAME TO {arteatta_art_ix};
+            ALTER INDEX {arteblogblogfile_fil_ix} RENAME TO {arteatta_att_ix};
+
+            ALTER TABLE {artefact_attachment} DROP CONSTRAINT {arteblogblogfile_blo_fk};
+            ALTER TABLE {artefact_attachment} ADD CONSTRAINT {arteatta_art_fk} FOREIGN KEY (artefact) REFERENCES {artefact}(id);
+
+            ALTER TABLE {artefact_attachment} DROP CONSTRAINT {arteblogblogfile_fil_fk};
+            ALTER TABLE {artefact_attachment} ADD CONSTRAINT {arteatta_att_fk} FOREIGN KEY (attachment) REFERENCES {artefact}(id);
+            ");
+        }
+        else if (is_mysql()) {
+            execute_sql("ALTER TABLE {artefact_attachment} DROP FOREIGN KEY {arteblogblogfile_blo_fk}");
+            execute_sql("ALTER TABLE {artefact_attachment} DROP INDEX {arteblogblogfile_blo_ix}");
+            execute_sql("ALTER TABLE {artefact_attachment} CHANGE blogpost artefact BIGINT(10) DEFAULT NULL");
+            execute_sql("ALTER TABLE {artefact_attachment} ADD INDEX {artefact_attchment_art_ix} (artefact)");
+            execute_sql("ALTER TABLE {artefact_attachment} ADD FOREIGN KEY(artefact) REFERENCES {artefact}(id)");
+
+            execute_sql("ALTER TABLE {artefact_attachment} DROP FOREIGN KEY {arteblogblogfile_fil_fk}");
+            execute_sql("ALTER TABLE {artefact_attachment} DROP INDEX {arteblogblogfile_fil_ix}");
+            execute_sql("ALTER TABLE {artefact_attachment} CHANGE file attachment BIGINT(10) DEFAULT NULL");
+            execute_sql("ALTER TABLE {artefact_attachment} ADD INDEX {artefact_attchment_att_ix} (attachment)");
+            execute_sql("ALTER TABLE {artefact_attachment} ADD FOREIGN KEY(attachment) REFERENCES {artefact}(id)");
+        }
+
+        // Drop the _pending table. From now on files uploaded as attachments will become artefacts
+        // straight away.  Hopefully changes to the upload/file browser form will make it clear to
+        // the user that these attachments sit in his/her files area as soon as they are uploaded.
+        $table = new XMLDBTable('artefact_blog_blogpost_file_pending');
+        drop_table($table);
+    }
+
+    if ($oldversion < 2009040900) {
+        // The view access page has been putting the string 'null' in as a group role in IE.
+        set_field('view_access_group', 'role', null, 'role', 'null');
+    }
+
+    return $status;
 }
 
 ?>

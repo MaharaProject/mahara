@@ -108,13 +108,13 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
             p.method, ap.value AS lang
         FROM {usr} u
         LEFT JOIN {usr_activity_preference} p
-            ON p.usr = u.id ' . (empty($admininstitutions) ? '' : '
+            ON (p.usr = u.id AND p.activity = ?)' . (empty($admininstitutions) ? '' : '
         LEFT OUTER JOIN {usr_institution} ui
             ON (u.id = ui.usr
                 AND ui.institution IN ('.join(',',array_map('db_quote',$admininstitutions)).'))') . '
         LEFT OUTER JOIN {usr_account_preference} ap
             ON (ap.usr = u.id AND ap.field = \'lang\')
-        WHERE (p.activity = ? ' . ($adminonly ? '' : ' OR p.activity IS NULL') . ')';
+        WHERE TRUE';
     if (!empty($userobjs) && is_array($userobjs)) {
         $sql .= ' AND u.id IN (' . implode(',',db_array_to_ph($userobjs)) . ')';
         $values = array_merge($values, array_to_fields($userobjs));
@@ -332,6 +332,11 @@ abstract class ActivityType {
         return $this->subject;
     }
 
+    // rewrite the url with the internal notification id?
+    protected function update_url() {
+        return false;
+    }
+
     abstract function get_required_parameters();
 
     public function notify_user($user) {
@@ -348,20 +353,32 @@ abstract class ActivityType {
         if (empty($user->method)) {
             $user->method = 'internal';
         }
+
+        // always do internal
+        $this->internalid = call_static_method('PluginNotificationInternal', 'notify_user', $user, $userdata);
+        if ($this->update_url()) {
+            $userdata->internalid = $this->internalid;
+            $userdata->url = $this->url;
+        }
+
         if ($user->method != 'internal') {
             $method = $user->method;
             safe_require('notification', $method);
             try {
                 call_static_method(generate_class_name('notification', $method), 'notify_user', $user, $userdata);
                 $user->markasread = true; // if we're doing something else, don't generate unread internal ones.
+                $userdata->internalid = $this->internalid;
             }
             catch (Exception $e) {
                 $user->markasread = false; // if we fail (eg email falls over), don't mark it as read...
                 // @todo Catalyst IT Ltd
             }
         }
-        // always do internal
-        call_static_method('PluginNotificationInternal', 'notify_user', $user, $userdata);
+
+        if (isset($userdata->internalid)) {
+            call_static_method('PluginNotificationInternal', 'update_notification', $user, $userdata);
+        }
+
     }
 
     public function notify_users() {
@@ -553,9 +570,6 @@ class ActivityTypeUsermessage extends ActivityType {
     public function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
         $this->users = activity_get_users($this->get_id(), array($this->userto));
-        if (empty($this->url)) {
-            $this->url = get_config('wwwroot') . 'user/view.php?id=' . $this->userfrom;
-        }
     } 
 
     public function get_subject($user) {
@@ -564,6 +578,11 @@ class ActivityTypeUsermessage extends ActivityType {
                                             display_name($this->userfrom));
         }
         return $this->subject;
+    }
+
+    protected function update_url() {
+        $this->url = get_config('wwwroot') . 'user/sendmessage.php?id=' . $this->userfrom . '&replyto=' . $this->internalid;
+        return true;
     }
 
     public function get_required_parameters() {

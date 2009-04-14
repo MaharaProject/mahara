@@ -708,7 +708,7 @@ class User {
      *
      * @param array $templateids A list of viewids to copy.
      */
-    public function copy_views($templateids) {
+    public function copy_views($templateids, $checkviewaccess=true) {
         if (!$templateids) {
             // Nothing to do
             return;
@@ -729,7 +729,7 @@ class User {
                 'owner' => $this->get('id'),
                 'title' => $views[$tid]->title,
                 'description' => $views[$tid]->description,
-            ), $tid, $this->get('id'));
+            ), $tid, $this->get('id'), $checkviewaccess);
         }
         db_commit();
     }
@@ -800,14 +800,26 @@ class LiveUser extends User {
         if ($auth->authenticate_user_account($user, $password)) {
             $user->lastauthinstance = $auth->instanceid;
             $this->authenticate($user, $auth->instanceid);
+
+            // Check for a suspended institution
+            $authinstance = get_record_sql('
+                SELECT i.suspended, i.displayname
+                FROM {institution} i JOIN {auth_instance} a ON a.institution = i.name
+                WHERE a.id = ?', array($instanceid));
+            if ($authinstance->suspended) {
+                $sitename = get_config('sitename');
+                throw new AccessTotallyDeniedException(get_string('accesstotallydenied_institutionsuspended', 'mahara', $authinstance->displayname, $sitename));
+                return false;
+            }
+
             return true;
         }
 
         // Display a message to users who are only allowed to login via their
         // external application.
         if ($auth->authloginmsg != '') {
-          global $SESSION;
-          $SESSION->add_info_msg(clean_html($auth->authloginmsg), false);
+            global $SESSION;
+            $SESSION->add_info_msg(clean_html($auth->authloginmsg), false);
         }
 
         return false;

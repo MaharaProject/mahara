@@ -1,0 +1,12 @@
+JSCalendar
+==========
+
+Website: http://www.dynarch.com/projects/calendar/
+Version: 1.0
+
+This calendar is used by Pieforms' calendar element.
+
+Changes:
+
+ * Slovenian language file that ships with jscalendar removed (calendar-si.js),
+ * and new calendar-sl.js put in place, provided thanks to Gregor Anzelj

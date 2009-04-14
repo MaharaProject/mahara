@@ -88,6 +88,7 @@ class PluginArtefactFile extends PluginArtefact {
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
             set_config_plugin('artefact', 'file', 'defaultquota', 52428800);
+            set_config_plugin('artefact', 'file', 'uploadagreement', 1);
         }
         self::resync_filetype_list();
     }
@@ -364,7 +365,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             return; 
         }
         try {
-            delete_records('artefact_blog_blogpost_file', 'file', $this->id);
+            delete_records('artefact_attachment', 'attachment', $this->id);
         } 
         catch ( Exception $e ) {}
         delete_records('artefact_file_files', 'artefact', $this->id);
@@ -387,22 +388,21 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
 
     // Sort folders before files; then use nat sort order.
     public static function my_files_cmp($a, $b) {
-        return strnatcasecmp((int)($a->artefacttype != 'folder') . $a->title,
-                             (int)($b->artefacttype != 'folder') . $b->title);
+        return strnatcasecmp((-2 * isset($a->isparent) + ($a->artefacttype != 'folder')) . $a->title,
+                             (-2 * isset($b->isparent) + ($b->artefacttype != 'folder')) . $b->title);
     }
 
 
-    public static function get_my_files_data($parentfolderid, $userid, $institution=null, $group=null) {
-
+    public static function get_my_files_data($parentfolderid, $userid, $group=null, $institution=null, $idkeys=true) {
         $select = '
             SELECT
                 a.id, a.artefacttype, a.mtime, f.size, a.title, a.description,
-                COUNT(c.id) AS childcount, COUNT (b.blogpost) AS attachcount';
+                COUNT(c.id) AS childcount, COUNT (aa.artefact) AS attachcount';
         $from = '
             FROM {artefact} a
                 LEFT OUTER JOIN {artefact_file_files} f ON f.artefact = a.id
                 LEFT OUTER JOIN {artefact} c ON c.parent = a.id 
-                LEFT OUTER JOIN {artefact_blog_blogpost_file} b ON b.file = a.id';
+                LEFT OUTER JOIN {artefact_attachment} aa ON aa.attachment = a.id';
         $where = "
             WHERE a.artefacttype IN ('" . join("','", array_diff(PluginArtefactFile::get_artefact_types(), array('profileicon'))) . "')";
         $groupby = '
@@ -458,6 +458,9 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             foreach ($filedata as $item) {
                 $item->mtime = format_date(strtotime($item->mtime), 'strfdaymonthyearshort');
                 $item->tags = array();
+                if ($item->size) { // Doing this here now for non-js users
+                    $item->size = ArtefactTypeFile::short_size($item->size, true);
+                }
             }
             $where = 'artefact IN (' . join(',', array_keys($filedata)) . ')';
             $tags = get_records_select_array('artefact_tag', $where);
@@ -478,79 +481,76 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                     }
                 }
             }
-            $filedata = array_values($filedata);
         }
 
         // Add parent folder to the list
         if (!empty($parentfolderid)) {
-            $grandparentid = get_field('artefact', 'parent', 'id', $parentfolderid);
-            $filedata[] = (object) array(
-                'title'        => '..',
+            $grandparentid = (int) get_field('artefact', 'parent', 'id', $parentfolderid);
+            $filedata[$grandparentid] = (object) array(
+                'title'        => get_string('parentfolder', 'artefact.file'),
                 'artefacttype' => 'folder',
                 'description'  => get_string('parentfolder', 'artefact.file'),
                 'isparent'     => true,
-                'id'           => (int) $grandparentid
+                'id'           => $grandparentid
             );
         }
 
-        usort($filedata, array("ArtefactTypeFileBase", "my_files_cmp"));
+        uasort($filedata, array("ArtefactTypeFileBase", "my_files_cmp"));
+
+        if (!$idkeys) {
+            // Temporary: allow blog attachment stuff to continue to
+            // work with the old file.js & tablerenderer.js
+            return array_values($filedata);
+        }
         return $filedata;
     }
 
-
-    public static function get_my_files_js($folder_id=null, $highlightfiles=null) {
-
-        global $USER;
-
-        if ($folder_id) {
-            $folder_list = array();
-
-            $current_folder = artefact_instance_from_id($folder_id);
-
-            if ($USER->can_view_artefact($current_folder)) {
-
-                if ($current_folder->get('artefacttype') == 'folder') {
-                    $folder_list[] = array(
-                        'id'   => $current_folder->get('id'),
-                        'name' => $current_folder->get('title'),
-                    );
-                }
-
-                while ($p = $current_folder->get('parent')) {
-                    $current_folder = artefact_instance_from_id($p);
-
-                    $folder_list[] = array(
-                        'id'   => $current_folder->get('id'),
-                        'name' => $current_folder->get('title'),
-                    );
-                }
-            }
-
-            $enc_folders = json_encode(array_reverse($folder_list));
+    public static function files_form($page='', $group=null, $institution=null, $folder=null, $highlight=null, $edit=null) {
+        $folder = param_integer('folder', 0);
+        $edit = param_variable('edit', 0);
+        if (is_array($edit)) {
+            $edit = array_keys($edit);
+            $edit = $edit[0];
         }
-        else {
-            $enc_folders = json_encode(array());
+        $edit = (int) $edit;
+        $highlight = null;
+        if ($file = param_integer('file', 0)) {
+            $highlight = array($file); // todo convert to file1=1&file2=2 etc
         }
 
-        if ($highlightfiles) {
-            $enc_files = json_encode(array_fill_keys($highlightfiles, 1));
-        } else {
-            $enc_files = json_encode(array());
-        }
+        $form = array(
+            'name'               => 'files',
+            'jsform'             => true,
+            'newiframeonsubmit'  => true,
+            'jssuccesscallback'  => 'files_success',
+            'renderer'           => 'oneline',
+            'plugintype'         => 'artefact',
+            'pluginname'         => 'file',
+            'configdirs'         => array(get_config('libroot') . 'form/', get_config('docroot') . 'artefact/file/form/'),
+            'group'              => $group,
+            'institution'        => $institution,
+            'elements'           => array(
+                'filebrowser' => array(
+                    'type'         => 'filebrowser',
+                    'folder'       => $folder,
+                    'highlight'    => $highlight,
+                    'edit'         => $edit,
+                    'page'         => $page,
+                    'config'       => array(
+                        'upload'          => true,
+                        'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
+                        'createfolder'    => true,
+                        'edit'            => true,
+                        'select'          => false,
+                    ),
+                ),
+            ),
+        );
+        return $form;
+    }
 
-        $copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
-        $copyright = json_encode($copyright);
-        $wwwroot = get_config('wwwroot');
-
-        $javascript = <<<JAVASCRIPT
-var copyrightnotice = {$copyright};
-var browser = new FileBrowser('filelist', '{$wwwroot}artefact/file/myfiles.json.php', null, null, null, null, {$enc_folders});
-var uploader = new FileUploader('uploader', '{$wwwroot}artefact/file/upload.php', {}, null, null, browser.refresh, browser.fileexists);
-browser.changedircallback = uploader.updatedestination;
-var highlightfiles = {$enc_files};
-JAVASCRIPT;
-
-        return $javascript;
+    public static function files_js() {
+        return "function files_success(form, data) { files_filebrowser.success(form, data); }";
     }
 
     public static function count_user_files($owner=null, $group=null, $institution=null) {
@@ -677,6 +677,100 @@ JAVASCRIPT;
         return $folderid;
     }
 
+    /**
+     * Return a unique artefact title for a given owner & parent.
+     *
+     * Try to add digits before the filename extension: If the desired
+     * title contains a ".", add "." plus digits before the final ".",
+     * otherwise append "." and digits.
+     * 
+     * @param string $desired
+     * @param integer $parent
+     * @param integer $owner
+     * @param integer $group
+     * @param string $institution
+     */
+    public static function get_new_file_title($desired, $parent, $owner, $group, $institution) {
+        $bits = split('\.', $desired);
+        if (count($bits) > 1) {
+            $start = join('.', array_slice($bits, 0, count($bits)-1));
+            $end = '.' . end($bits);
+        }
+        else {
+            $start = $desired;
+            $end = '';
+        }
+
+        $where = $parent ? "parent = $parent" : 'parent IS NULL';
+        $where .=  ' AND ' . artefact_owner_sql($owner, $group, $institution);
+
+        $taken = get_column_sql("
+            SELECT title FROM {artefact}
+            WHERE artefacttype IN ('" . join("','", array_diff(PluginArtefactFile::get_artefact_types(), array('profileicon'))) . "')
+            AND title LIKE ? || '%' || ? AND " . $where, array($start, $end));
+        $taken = array_flip($taken);
+
+        $i = 0;
+        $newname = $start . $end;
+        while (isset($taken[$newname])) {
+            $i++;
+            $newname = $start . '.' . $i . $end;
+        }
+        return $newname;
+    }
+}
+
+/**
+ * Submit function for My/Group/Institution/Site files
+ *
+ * This function will only be called when javascript is disabled.
+ *
+ * Outside the File class because Pieforms doesn't appear to like
+ * being given static class method as a submit callback.
+ */
+function files_submit(Pieform $form, $values) {
+    // @todo: move group/inst stuff to form defn.
+    $group       = $form->get_property('group');
+    $institution = $form->get_property('institution');
+    if ($group) {
+        $redirect = get_config('wwwroot') . 'artefact/file/groupfiles.php';
+        $params = array('group' => $group);
+    } else if ($institution) {
+        if ($institution == 'mahara') {
+            $redirect = get_config('wwwroot') . 'admin/site/files.php';
+            $params = array();
+        }
+        else {
+            $redirect = get_config('wwwroot') . 'artefact/file/institutionfiles.php';
+            $params = array('institution' => $institution);
+        }
+    } else {
+        $redirect = get_config('wwwroot') . 'artefact/file/index.php';
+        $params = array();
+    }
+
+    // Some updates on the filebrowser element need to set params and
+    // redirect back to this page.
+    if (isset($values['filebrowser']['folder'])) {
+        $params['folder'] = $values['filebrowser']['folder'];
+    }
+    if (isset($values['filebrowser']['edit'])) {
+        $params['edit'] = $values['filebrowser']['edit'];
+    }
+    if (isset($values['filebrowser']['highlight'])) {
+        $params['file'] = $values['filebrowser']['highlight'];
+    }
+
+    if ($params) {
+        foreach ($params as $k => $v) {
+            $params[$k] = $k . '=' . $v;
+        }
+        $redirect .= (strpos($redirect, '?') === false ? '?' : '&') . join('&', $params);
+    }
+
+    $result = $values['filebrowser'];
+    $result['goto'] = $redirect;
+    $form->reply(empty($result['error']) ? PIEFORM_OK : PIEFORM_ERR, $result);
 }
 
 class ArtefactTypeFile extends ArtefactTypeFileBase {
@@ -894,6 +988,44 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             'collapsible' => true
         );
 
+        // Require user agreement before uploading files
+        // Rework this when/if we provide translatable agreements
+        $uploadagreement = get_config_plugin('artefact', 'file', 'uploadagreement');
+        $usecustomagreement = get_config_plugin('artefact', 'file', 'usecustomagreement');
+        $elements['uploadagreementfieldset'] = array(
+            'type' => 'fieldset',
+            'legend' => get_string('uploadagreement', 'artefact.file'),
+            'elements' => array(
+                'uploadagreementdescription' => array(
+                    'value' => '<tr><td colspan="2">' . get_string('uploadagreementdescription', 'artefact.file') . '</td></tr>'
+                ),
+                'uploadagreement' => array(
+                    'title'        => get_string('requireagreement', 'artefact.file'), 
+                    'type'         => 'checkbox',
+                    'defaultvalue' => $uploadagreement,
+                ),
+                'defaultagreement' => array(
+                    'type'         => 'html',
+                    'title'        => get_string('defaultagreement', 'artefact.file'), 
+                    'value'        => get_string('uploadcopyrightdefaultcontent', 'install'),
+                ),
+                'usecustomagreement' => array(
+                    'title'        => get_string('usecustomagreement', 'artefact.file'), 
+                    'type'         => 'checkbox',
+                    'defaultvalue' => $usecustomagreement,
+                ),
+                'customagreement' => array(
+                    'name'         => 'customagreement',
+                    'title'        => get_string('customagreement', 'artefact.file'), 
+                    'type'         => 'wysiwyg',
+                    'rows'         => 10,
+                    'cols'         => 80,
+                    'defaultvalue' => get_field('site_content', 'content', 'name', 'uploadcopyright'),
+                ),
+            ),
+            'collapsible' => true
+        );
+
         // Profile icon size
         $currentwidth = get_config_plugin('artefact', 'file', 'profileiconwidth');
         $currentheight = get_config_plugin('artefact', 'file', 'profileiconheight');
@@ -935,20 +1067,32 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     }
 
     public static function save_config_options($values) {
+        global $USER;
         set_config_plugin('artefact', 'file', 'defaultquota', $values['defaultquota']);
         set_config_plugin('artefact', 'file', 'profileiconwidth', $values['profileiconwidth']);
         set_config_plugin('artefact', 'file', 'profileiconheight', $values['profileiconheight']);
+        set_config_plugin('artefact', 'file', 'uploadagreement', $values['uploadagreement']);
+        set_config_plugin('artefact', 'file', 'usecustomagreement', $values['usecustomagreement']);
+        $data = new StdClass;
+        $data->name    = 'uploadcopyright';
+        $data->content = $values['customagreement'];
+        $data->mtime   = db_format_timestamp(time());
+        $data->mauthor = $USER->get('id');
+        update_record('site_content', $data, 'name');
     }
 
-    public function describe_size() {
-        $bytes = $this->get('size');
+    public static function short_size($bytes, $abbr=false) {
         if ($bytes < 1024) {
-            return $bytes <= 0 ? '0' : ($bytes . ' ' . get_string('bytes', 'artefact.file'));
+            return $bytes <= 0 ? '0' : ($bytes . ($abbr ? 'b' : (' ' . get_string('bytes', 'artefact.file'))));
         }
         if ($bytes < 1048576) {
             return floor(($bytes / 1024) * 10 + 0.5) / 10 . 'K';
         }
         return floor(($bytes / 1048576) * 10 + 0.5) / 10 . 'M';
+    }
+
+    public function describe_size() {
+        return ArtefactTypeFile::short_size($this->get('size'));
     }
 
     public static function get_links($id) {
@@ -1330,5 +1474,6 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
     }
 
 }
+
 
 ?>

@@ -144,6 +144,10 @@ $string['defaultaccountlifetimedescription'] = 'If set, user accounts will expir
 $string['embeddedcontent'] = 'Embedded content';
 $string['embeddedcontentdescription'] = 'If you would like users to be able to embed videos or other outside content into their portfolios, you can choose which sites to trust below.';
 $string['Everyone'] = 'Everyone';
+$string['institutionautosuspend'] = 'Auto-suspend expired institutions';
+$string['institutionautosuspenddescription'] = 'If checked, expired institutions will be automatically suspended';
+$string['institutionexpirynotification'] = 'Warning time for institution expiry';
+$string['institutionexpirynotificationdescription'] = 'A notification message will be sent to site and institutional admins the long before a site expires';
 $string['language'] = 'Language';
 $string['pathtoclam'] = 'Path to clam';
 $string['pathtoclamdescription'] = 'The filesystem path to clamscan or clamdscan';
@@ -387,6 +391,8 @@ $string['adminnoauthpluginforinstitution'] = 'Please configure an authentication
 $string['institutionname'] = 'Institution name';
 $string['institutionnamealreadytaken'] = 'This institution name is already taken';
 $string['institutiondisplayname'] = 'Institution display name';
+$string['institutionexpiry'] = 'Institution expiry date';
+$string['institutionexpirydescription'] = 'The date at which this institutions membership of %s will be suspended.';
 $string['institutionupdatedsuccessfully'] = 'Institution updated successfully.';
 $string['registrationallowed'] = 'Registration allowed?';
 $string['registrationalloweddescription2'] = 'Whether users can register for your site for this institution using the registration form';
@@ -463,6 +469,19 @@ $string['noinstitutions'] = 'No Institutions';
 $string['noinstitutionsdescription'] = 'If you would like to associate users with an institution, you should create the institution first.';
 
 $string['Lockedfields'] = 'Locked fields';
+
+// Suspend Institutions
+$string['errorwhileunsuspending'] = 'An error occured while trying to unsuspend';
+$string['institutionsuspended'] = 'Institution suspended';
+$string['institutionunsuspended'] = 'Institution unsuspended';
+$string['suspendedinstitution'] = 'SUSPENDED';
+$string['suspendinstitution'] = 'Suspend Institution';
+$string['suspendinstitutiondescription'] = 'Here you may suspend an institution. Users of suspended institutions will be unable to log in until the institution is unsuspended.';
+$string['suspendedinstitutionmessage'] = 'This institution has been suspended';
+$string['unsuspendinstitution'] = 'Unsuspend Institution';
+$string['unsuspendinstitutiondescription'] = 'Here you may unsuspend an institution. Users of suspended institutions will be unable to log in until the institution is unsuspended.<br /><strong>Beware:</strong> Unsuspending an institution without resetting or turning off its expiry date may result in a daily re-suspension.';
+$string['unsuspendinstitutiondescription_top'] = '<em>Beware:</em> Unsuspending an institution without resetting or turning off its expiry date may result in a daily re-suspension.';
+
 
 // Admin User Search
 $string['Query'] = 'Query';

@@ -204,7 +204,15 @@ a:hover {
 	font-size: 11px;
 	color: #FFF;
 }
-span.addicon { display: block; margin-top: -16px; float: right; }
+span.addicon {
+    display: block;
+    margin-top: -16px;
+    * margin-top: -30px;
+    float: right;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    span.addicon { margin-top: -30px; }
+}
 .addicon form,
 .addicon form div {
   display: inline;
@@ -387,6 +395,7 @@ input.button, button {
 }
 /* Default dark buttons to the big ones */
 input.submitcancel, 
+input.buttondk,
 input.cancelbackcreate,
 #settings_delete {
     background-color: #7d9728;
@@ -404,6 +413,7 @@ input.cancelbackcreate,
 .maincontent table input.button, 
 .maincontent table input.submit, 
 .maincontent table input.submitcancel, 
+.maincontent table.filelist button,
 .maincontent table button {
 	font-size: 11px;
 	background-color: #92B328;
@@ -413,12 +423,21 @@ input.cancelbackcreate,
 }
 /* Unless shouldn't */
 .maincontent .pieform table input.submit,
-.maincontent .pieform table button {
+.maincontent .pieform table button,
+#view-wizard-controls input.submit {
     background-color: #92b328;
     height: 24px;
     margin: 5px 2px 0 0;
     padding: 0 10px;
 	font-size: 11px;
+}
+.maincontent .pieform table button.small,
+button.small {
+	font-size: 11px;
+	background-color: #92B328;
+	height: 20px;
+	padding: 0 5px;
+	margin: 2px;
 }
 /* And buttons in forms that can't get the dark colour all by itself and requires jigging */
 #register #register_submit_container input,
@@ -491,7 +510,7 @@ table.mceEditor {
 div.grippie {
     border-color: #b2b2b2;
     border-style: solid;
-    border-width: 0pt 1px 1px;
+    border-width: 0px 1px 1px 1px;
     background: #eeeeee url(../images/grippie.png) no-repeat scroll 100% 50%;
     cursor: s-resize;
     height: 14px;
@@ -623,8 +642,10 @@ tr.required th,
 #mainnav ul {
 	padding: 5px 0;
 	margin: 0;
-    background: url(../images/menu-bg.gif) repeat-x;
 	height: 25px;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	#mainnav ul { padding: 5px 0 6px 0; }
 }
 #mainnav li {
     display: inline;
@@ -633,36 +654,38 @@ tr.required th,
     font-weight: bold;
 	font-size: 12px;
 	margin: 0;
-	padding: 5px 8px 5px 13px;
+	padding: 0;
 	height: 25px;
-	background: url(../images/menu-dividerbg.gif) repeat-x left;
 }
 #mainnav li a,
 #mainnav li a:link,
 #mainnav li a:visited,
 #mainnav li a:active {
 	margin: 0;
-	padding: 0;
+	padding: 5px 10px 5px 12px;
+	background: url(../images/menu-dividerbg.gif) no-repeat left;
     color: #FFF;
 	height: 25px;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	#mainnav li a, #mainnav li a:link, #mainnav li a:visited, #mainnav li a:active { padding: 5px 10px 6px 12px; }
 }
 #mainnav li a:hover {
     color: #e4ffb4;
     text-decoration: none;
 }
 #mainnav li.selected {
-	padding: 5px 8px 5px 13px;
 	height: 25px;
-	background: url(../images/menu-over-bg.gif) repeat-x left;
 }
 #mainnav li.selected a:link,
 #mainnav li.selected a:visited,
 #mainnav li.selected a:active {
     color: #feef45;
+	background: url(../images/menu-over-bg.gif) no-repeat left;
 }
 /* Sub menu */
 #subnav {
-    padding: 0 0 0 15px;
+    padding: 0 0 0 10px;
     margin: 0;
     font-size: 12px;
     font-weight: bold;
@@ -681,16 +704,14 @@ tr.required th,
 #subnav li {
     display: inline;
     height: 25px;
-    padding: 5px 13px 5px 8px;
+    padding: 0;
     margin: 0;
-	background: url(../images/submenu-divider.gif) no-repeat top right;
 }
 #subnav li.selected {
     display: inline;
     height: 25px;
-    padding: 5px 13px 5px 8px;
+    padding: 0;
     margin: 0;
-	background: url(../images/submenu-over-bg.gif) repeat-x top right;
 }
 #subnav li a,
 #subnav li a:link,
@@ -698,7 +719,13 @@ tr.required th,
 #subnav li a:active {
     color: #474220;
 	height: 25px;
+    padding: 5px 12px 5px 10px;
+	background: url(../images/submenu-divider.gif) no-repeat top right;
 }
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	#subnav li a, #subnav li a:link, #subnav li a:visited, #subnav li a:active { padding: 5px 12px 6px 10px; }
+}
+
 #subnav li a:hover {
     color: #7e7327;
     text-decoration: none;
@@ -706,7 +733,12 @@ tr.required th,
 #subnav li.selected a:link,
 #subnav li.selected a:visited,
 #subnav li.selected a:active {
+    padding: 5px 12px 5px 10px;
+	background: url(../images/submenu-over-bg.gif) no-repeat top right;
     color: #4c711d;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	#subnav li.selected a:link, #subnav li.selected a:visited, #subnav li.selected a:active { padding: 5px 12px 6px 10px; }
 }
 #subnav li.groupname {
     background: url(../images/menu-over-bg.gif) repeat-x left;
@@ -776,6 +808,12 @@ div.sidebar ul.sidebar-ul-title ul a {
 	color: #7f9d16;
 	font-weight: bold;
 }
+div#user_profileicon {
+    float: right;
+    text-align: center;
+    width: 50px;
+    height: 50px;
+}
 .unreadmessagecount {
     background: url(../images/email.gif) no-repeat;
     padding: 2px 0 0 18px;
@@ -795,9 +833,18 @@ div.sidebar ul.sidebar-ul-title ul a {
 #sb_onlineusers ul {
     list-style-type: none;
 }
+#onlineusers a img {
+	float: left;
+	margin-right: 3px;
+}
+#onlineusers li {
+	line-height: 20px;
+}
 #lastminutes {
     float: right;
     margin-top: 2px;
+	color: #999999;
+	font-style: italic;
 }
 
 /* Side Quota Bar */
@@ -1115,7 +1162,7 @@ fieldset table,
 #myviewstable,
 #friendslist,
 #friendslistcontainer .friendinfo,
-#filelist,
+.filelist,
 #bloglist,
 #postlist,
 #filebrowser,
@@ -1151,8 +1198,8 @@ legend a:active {
 fieldset {
     border: 1px solid #95a8b7;
     padding: 0;
-	margin-top: 5px;
-	margin-bottom: 5px;
+	margin: 5px 0;
+	* margin: 0;
 }
 fieldset.collapsible {
 	padding: 15px 10px;
@@ -1160,10 +1207,14 @@ fieldset.collapsible {
 fieldset.collapsed {
 	border: 0;
 	padding: 0;
+	margin: 0;
 }
 fieldset.collapsed table {
     position: absolute;
     visibility: hidden;
+	padding: 0;
+	border: 0;
+	margin: 0;
 }
 fieldset legend a {
     padding-left: 15px;
@@ -1323,11 +1374,12 @@ input#myfriends_addfriend_add {
     padding: 0 !important;
 	font-size: 11px;
 	margin: 0 0 0 10px !important;
+	height: 18px;
 }
 .profile-tabs li a {
     color: #FFF;
     background-color: #758999;
-    padding: 4px 10px;
+    padding: 5px 10px;
 	margin: 0;
 }
 .profile-tabs li a.current-tab {
@@ -1343,10 +1395,11 @@ input#myfriends_addfriend_add {
 .profile-fieldsets {
     clear: left;
 	padding: 0;
-	margin: 0;
+	margin: 2px 0 0 0;
 }
 .profile-fieldsets fieldset {
 	margin-top: 2px;
+	* margin-top: 0;
 }
 fieldset.safe-hidden .mceEditor {
 	display: none;
@@ -1448,6 +1501,10 @@ fieldset.collapsed .mceEditor td {
 #myviewstable .viewitem a#editviewaccess {
 	color: #7f9d16 !important;
 }
+#myviewstable #btn-deletethisview {
+  font-size: 11px;
+  color: #ca0000;
+}
 #editviewdetails,
 #editthisview,
 #editviewaccess {
@@ -1479,6 +1536,9 @@ fieldset.collapsed .mceEditor td {
 #editview td a {
 	font-size: 11px;
 }
+#noviews {
+    margin-top: 24px;
+}
 #editaccess table {
 	width: 100%;
 	* width: 98%;
@@ -1487,13 +1547,13 @@ fieldset.collapsed .mceEditor td {
 	border-bottom: 1px solid #95a8b7;
 }
 #viewacl_lhs #results .button {
-        margin-top: 0;
-        height: 20px;
-	border: 0;
-	background: url(../images/icon-add.gif) no-repeat left 7px;
-	padding-left: 10px;
-	color: #7f9d16;
-	font-weight: bold;
+    margin-top: 0;
+    height: 20px;
+    border: 0;
+    background: url(../images/icon-add.gif) no-repeat left 7px;
+    padding-left: 10px;
+    color: #7f9d16;
+    font-weight: bold;
 }
 #potentialpresetitems button {
 	border: 0;
@@ -1576,6 +1636,7 @@ button#dosearch {
 }
 #editaccess_overrides_container {
 	clear: both;
+    float: left;
 }
 #editaccess_overrides_container fieldset {
 	padding: 10px;
@@ -1687,82 +1748,115 @@ button#dosearch {
 #createfolderform table td table.help-wrapper {
 	padding: 0;
 }
-#foldernav {
+table.fileupload {
+  margin-top: 15px;
+}
+table.fileupload th {
+  text-align: left;
+  vertical-align: middle;
+  padding: 3px 10px 0;
+  color: #646464;
+}
+table.fileupload th label {
+  color: #646464;
+}
+table.fileupload td {
+  padding: 3px 10px 0;
+}
+tr.uploadform {
+  background-color: #f4f8e7;
+}
+tr.uploadform th {
+  vertical-align: top;
+}
+.foldernav {
     font-weight: bold;
     margin: 15px 0 0 3px;
     padding: 3px 0 3px 25px;
     font-size: 18px;
     background: url(../images/foldernav.gif) no-repeat left 2px;
 }
-.directory-item.folder a {
+.directory-item.folder td.filename {
 	font-weight: bold;
 }
-#filelist tr.folderhover.directory-item td {
+.directory-item.parentfolder {
+  font-style: italic;
+  color: #999;
+}
+.filelist tr.folderhover.directory-item td {
         background-color: #ffc !important;
 }
-#filelist tr.folderhover.directory-item a {
+.filelist tr.folderhover.directory-item a.changefolder {
         color: #000;
         text-decoration: none;
 }
-#filelist {
+.filelist {
 	border-bottom: 1px solid #95a8b7;
 }
-#filelist tr.r0.folder td,
-#filelist tr.r1.folder td {
+.filelist tr.r0.folder td,
+.filelist tr.r1.folder td {
     background-color: #e0e4e8 !important;
 }
-#filelist tr.r0 td {
+.filelist tr.r0 td {
     background-color: #e0e8ee !important;
 	border-top: none;
 	border-bottom: none;
 	line-height: 2em;
 }
-#filelist tr.r1 td {
+.filelist tr.r1 td {
     background-color: #f4f7f9 !important;
 	border-top: none;
 	border-bottom: none;
 	line-height: 2em;
 }
-#filelist tr td {
+.filelist tr td {
 	background-color: #f9f9f9;
 	border-top: 1px solid #b8c8d5;
 	border-bottom: 1px solid #b8c8d5;
 }
-#filelist table td {
+.filelist table td {
 	border-top: none;
 	border-bottom: none;
 	padding: 3px 0;
 	font-size: 11px;
 }
-#filelist table th {
+table.filelist thead th {
+	text-align: left;
+}
+.filelist table th {
 	text-align: left;
 	padding: 3px 10px 3px 55px;
 }
-#filelist table th label {
+.filelist table th label {
 	color: #646464;
 }
-#filelist table td input.button {
+.filelist table td button,
+.filelist table td input.submit,
+.filelist table td input.button {
 	height: 22px;
 	padding: 2px 10px;
 	float: right;
 }
-#filelist tr.highlight-file td {
+tr.highlight-file td {
     background: #fffcd8 url(../images/highlight-bg.gif) repeat left top !important;
     font-weight: bold;
     color: #837d37;
 }
-#filelist table table.editpermissions {
+.filelist table table.editpermissions {
 	text-align: left;
 }
-#filelist table table.editpermissions th {
+.filelist table table.editpermissions th {
 	padding: 3px 10px 3px 0;
 }
-#filelist table table.editpermissions td {
+.filelist table table.editpermissions td {
 	font-size: 11px;
 	padding: 3px 0;
 }
-#filelist table table.editpermissions th label {
+.filelist table table.editpermissions th label {
 	color: #646464;
+}
+.filelist .icon-drag img {
+  cursor: move;
 }
 
 
@@ -1811,6 +1905,7 @@ button#dosearch {
     padding: 0 !important;
 	margin-bottom: 0 !important;
 }
+.blogpost-attachments thead th,
 .blogpost-attachments tbody th {
 	color: #FFF;
 	font-weight: bold;
@@ -1821,32 +1916,37 @@ button#dosearch {
 	color: #474220;
 	font-weight: normal;
 }
-#editpost th {
-	padding: 2px 0;
+.filebrowser .blogpost-attachments {
+  margin: 3px;
 }
-#editpost td {
-	padding: 2px 10px;
+.filebrowser .blogpost-attachments th,
+.filebrowser .blogpost-attachments td {
+  padding: 2px;
 }
-#browsebutton {
-	background-color: #7d9728;
+.upload_browse.select {
+  background-color: #f4f8e7;
+  margin-top: 15px;
+  border: 1px solid #e3ecc2;
+  padding: 5px;
+  font-size: 11px;
 }
-#browsemyfiles {
-	margin-top: 15px;
-    background-color: #e3ecc2;
-	padding: 10px 15px;
+.upload_browse.select .foldernav {
+  margin: 0;
+  padding: 3px 0 3px 10px;
+  font-size: 12px;
+  background-image: none;
 }
-#browsemyfiles h3 {
-	margin-top: 0;
+.upload_browse.select table {
+  margin: 3px;
 }
-#draftpost table {
-	margin: 5px 0;
+.upload_browse.select table.filelist thead {
+  border-bottom: 1px solid #95a8b7;
+  border-top: 1px solid #95a8b7;
+  background-color: #fff;
 }
-#draftpost table th {
-	text-align: left;
-	padding: 2px 10px;
-}
-#draftpost table td {
-	padding: 2px 0;
+.upload_browse.select th,
+.upload_browse.select td {
+  padding: 2px;
 }
 span.viewicon {
 	float: right;
@@ -2279,6 +2379,10 @@ table.groupviews{
 #memberlist {
 	border-bottom: 1px solid #95a8b7;
 }
+#friendslist .pending {
+    margin-left: 50px;
+    margin-top: .5em;
+}
 
 
 /* FORUMS */
@@ -2631,24 +2735,37 @@ span.breadcrumbs a {
 	font-size: 12px;
 }
 #register-site h3 {
-    text-align: center;
-    margin: .25em;
+    text-align: left;
+    margin: .25em 0;
 }
 #register-site p {
     margin: 10px 0 0;
 }
 #register-site div {
-    width: 75%;
     margin: 0 auto;
-    text-align: center;
+    text-align: left;
     font-weight: normal;
 }
+#register-site form {
+	margin-top: 10px;
+}
+#register-site form legend {
+	color: #7f9d16;
+	font-size: 1.2em;
+}
+#register-site form legend a {
+	color: #7f9d16 !important;
+}
 #register-site form table {
-    margin: 0 auto;
+    margin: 0;
     text-align: left;
 }
 #register-site th {
     text-align: left;
+	padding: 0 10px;
+}
+#register-site table td {
+	padding: 0 10px;
 }
 
 /* CONFIGURE SITE > SITE OPTIONS */
@@ -2859,6 +2976,9 @@ table#initials .initial-letters {
 /* MANAGE INSTITUTIONS > INSTITUTIONS */
 #adminstitutionslist {
 	border-bottom: 1px solid #95a8b7;
+}
+#adminstitutionslist .suspended {
+    color: red;
 }
 #institution fieldset table tr {
 	display: inline;

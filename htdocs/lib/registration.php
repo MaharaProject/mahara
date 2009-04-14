@@ -137,18 +137,22 @@ function registration_data() {
     }
 
     foreach (array(
-        'usr',
         'usr_friend',
         'usr_institution',
-        'group',
         'group_member',
         'block_instance',
         'institution',
         'blocktype_wall_post',
-        'host',
         'institution') as $key) {
         $data_to_send['count_' . $key] = count_records($key);
     }
+
+    foreach (array(
+        'usr',
+        'group',
+        'host') as $key) {
+        $data_to_send['count_' . $key] = count_records_select($key, 'deleted = 0');
+        }
 
     // Don't include the root user
     $data_to_send['count_usr']--;

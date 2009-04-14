@@ -36,19 +36,34 @@ div.editview {
 }
 #category-list {
 }
+#category-list ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
 #category-list li {
-    background-color: #e0e8ee;
-    margin-right: 5px;
-    line-height: 25px;
-    padding: 5px 10px;
+    margin: 0 5px 0 0;
+	height: 25px;
+	padding: 5px 0;
+	line-height: 24px;
+	display: inline;
 }
 #category-list li a {
+    background-color: #e0e8ee;
 	color: #1e6297;
+    padding: 5px 10px;
+	height: 25px;
 }
-#category-list li.current {
+#category-list li a:hover {
+	text-decoration: none;
+	background-color: #d0dee8;
+}
+#category-list li.current a {
     font-weight: bold;
     background-color: #f4f7f9;
 }
+
 #blocktype-list {
     background-color: #f4f7f9;
     padding: 5px 5px 10px 5px;
@@ -299,7 +314,7 @@ body:last-child:not(:root:root) .newblockhere {
 	padding: 10px 20px;
 }
 .configure {
-  border: 2px solid #a0a0a0;
+  border: 4px solid #f4f7f9;
   background-color: #fff;
   z-index: 2;
 }

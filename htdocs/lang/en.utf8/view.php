@@ -280,7 +280,6 @@ $string['nocopyableviewsfound'] = 'No Views that you can copy';
 $string['noownersfound'] = 'No owners found';
 $string['viewsby'] = 'Views by %s';
 $string['Preview'] = 'Preview';
-$string['close'] = 'Close';
 $string['viewscopiedfornewusersmustbecopyable'] = 'You must allow copying before you can set a view to be copied for new users.';
 $string['viewscopiedfornewgroupsmustbecopyable'] = 'You must allow copying before you can set a view to be copied for new groups.';
 $string['copynewusergroupneedsloggedinaccess'] = 'Views copied for new users or groups must give access to logged-in users.';

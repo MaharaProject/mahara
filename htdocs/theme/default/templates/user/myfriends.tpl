@@ -16,8 +16,8 @@
 </div>
 <div class="center">
     {$pagination}
-{else}
 </div>
+{else}
 <div class="message">
     {$message}
 </div>

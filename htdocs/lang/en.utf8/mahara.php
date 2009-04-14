@@ -47,6 +47,7 @@ $string['showtags'] = 'Show my tags';
 $string['errorprocessingform'] = 'There was an error with submitting this form. Please check the marked fields and try again.';
 $string['description'] = 'Description';
 $string['remove']  = 'Remove';
+$string['Close'] = 'Close';
 
 $string['no']     = 'No';
 $string['yes']    = 'Yes';
@@ -103,6 +104,8 @@ $string['lastminutes'] = 'Last %s minutes';
 $string['linksandresources'] = 'Links and Resources';
 
 // auth
+$string['accesstotallydenied_institutionsuspended'] = 'Your institution %s, has been suspended.  Until it is unsuspended, you will be unable to log in to %s.
+Please contact your institution for help.';
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section';
 $string['accountdeleted'] = 'Sorry, your account has been deleted';
 $string['accountexpired'] = 'Sorry, your account has expired';
@@ -178,8 +181,8 @@ $string['accountexpirywarninghtml'] = '<p>Dear %s,</p>
 <p>If you wish to extend your account access or have any questions regarding the above, please feel free to <a href="%s">Contact Us</a>.</p>
 
 <p>Regards, %s Site Administrator</p>';
-$string['institutionexpirywarning'] = 'Institution membership expiry warning';
-$string['institutionexpirywarningtext'] = 'Dear %s,
+$string['institutionmembershipexpirywarning'] = 'Institution membership expiry warning';
+$string['institutionmembershipexpirywarningtext'] = 'Dear %s,
 
 Your membership of %s on %s will expire within %s.
 
@@ -188,11 +191,42 @@ If you wish to extend your membership or have any questions regarding the above,
 %s
 
 Regards, %s Site Administrator';
-$string['institutionexpirywarninghtml'] = '<p>Dear %s,</p>
-    
+$string['institutionmembershipexpirywarninghtml'] = '<p>Dear %s,</p>
+
 <p>Your membership of %s on %s will expire within %s.</p>
 
 <p>If you wish to extend your membership or have any questions regarding the above, please feel free to <a href="%s">Contact Us</a>.</p>
+
+<p>Regards, %s Site Administrator</p>';
+$string['institutionexpirywarning'] = 'Institution expiry warning';
+$string['institutionexpirywarningtext_institution'] = 'Dear %s,
+
+%s\'s membership of %s will expire within %s.
+
+If you wish to extend your institution\'s membership or have any questions regarding the above, please feel free to contact us:
+
+%s
+
+Regards, %s Site Administrator';
+$string['institutionexpirywarninghtml_institution'] = '<p>Dear %s,</p>
+
+<p>%s\'s membership of %s will expire within %s.</p>
+
+<p>If you wish to extend your institution\'s membership or have any questions regarding the above, please feel free to <a href="%s">Contact Us</a>.</p>
+
+<p>Regards, %s Site Administrator</p>';
+$string['institutionexpirywarningtext_site'] = 'Dear %s,
+
+The institution \'%s\' will expire within %s.
+
+You may wish to contact them to extend their membership of %s.
+
+Regards, %s Site Administrator';
+$string['institutionexpirywarninghtml_site'] = '<p>Dear %s,</p>
+
+<p>The institution \'%s\' will expire within %s.</p>
+
+<p>You may wish to contact them to extend their membership of %s.</p>
 
 <p>Regards, %s Site Administrator</p>';
 $string['accountinactive'] = 'Sorry, your account is currently inactive';

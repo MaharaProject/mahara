@@ -58,53 +58,9 @@ class PluginArtefactBlog extends PluginArtefact {
     }
 
     public static function get_cron() {
-        return array(
-            (object)array(
-                'callfunction' => 'clean_post_files',
-                'hour'         => '4',
-                'minute'       => '40'
-            )
-        );
+        return array();
     }
 
-    /**
-     * This function cleans out any files that have been uploaded, but which
-     * are not associated with a blog, because of an aborted blog creation.
-     */
-    public static function clean_post_files() {
-
-        $bloguploadbase = get_config('dataroot') . ArtefactTypeBlogPost::$blogattachmentroot;
-        if (!$basedir = opendir($bloguploadbase)) {
-            // If the directory doesn't exist, it's likely that it hasn't been 
-            // created yet (i.e. nobody has uploaded any files)
-            return;
-        }
-
-        $currenttime = time();
-
-        // Read through all the upload session directories
-        while (false !== ($sessionupload = readdir($basedir))) {
-            if ($sessionupload != "." && $sessionupload != "..") {
-                $sessionupload = $bloguploadbase . $sessionupload;
-                $subdir = opendir($sessionupload);
-
-                // Remove all files older than the session timeout plus two hours.
-                while (false !== ($uploadfile = readdir($subdir))) {
-                    if ($uploadfile != "." && $uploadfile != "..") {
-                        $uploadfile = $sessionupload . '/' . $uploadfile;
-                        if ($currenttime - filemtime($uploadfile) > get_config('session_timeout') + 7200) {
-                            unlink($uploadfile);
-                        }
-                    }
-                }
-
-                closedir($subdir);
-                rmdir($sessionupload);
-            }
-        }
-
-        closedir($basedir);
-    }
 
     public static function block_advanced_options_element($configdata, $artefacttype) {
         $strartefacttype = get_string($artefacttype, 'artefact.blog');
@@ -440,7 +396,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
             return;
         }
 
-        delete_records('artefact_blog_blogpost_file', 'blogpost', $this->id);
+        $this->detach(); // Detach all file attachments
         delete_records('artefact_blog_blogpost', 'blogpost', $this->id);
       
         parent::delete();
@@ -484,7 +440,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         }
         $smarty->assign('artefactdescription', $postcontent);
         $smarty->assign('artefact', $this);
-        $attachments = $this->get_attached_files();
+        $attachments = $this->get_attachments();
         if ($attachments) {
             $this->add_to_render_path($options);
             require_once(get_config('docroot') . 'artefact/lib.php');
@@ -508,49 +464,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
 
-    /**
-     * Returns an array of IDs of artefacts attached to this blogpost
-     */
-    public function attachment_id_list() {
-        if (!$list = get_column('artefact_blog_blogpost_file', 'file', 'blogpost', $this->get('id'))) {
-            $list = array();
-        }
-        return $list;
-    }
-
-    public function attach_file($artefactid) {
-        $data = new StdClass;
-        $data->blogpost = $this->get('id');
-        $data->file = $artefactid;
-        insert_record('artefact_blog_blogpost_file', $data);
-
-        $data = new StdClass;
-        $data->artefact = $artefactid;
-        $data->parent = $this->get('id');
-        $data->dirty = true;
-        insert_record('artefact_parent_cache', $data);
-
-        // Ensure the attachment is recorded as being related to the blog as well
-        $data = new StdClass;
-        $data->artefact = $artefactid;
-        $data->parent = $this->get('parent');
-        $data->dirty = 0;
-
-        $where = $data;
-        unset($where->dirty);
-        ensure_record_exists('artefact_parent_cache', $where, $data);
-    }
-
-    public function detach_file($artefactid) {
-        delete_records('artefact_blog_blogpost_file', 'blogpost', $this->get('id'), 'file', $artefactid);
-        delete_records('artefact_parent_cache', 'parent', $this->get('id'), 'artefact', $artefactid);
-        // Remove the record relating the attachment with the blog
-        delete_records('artefact_parent_cache', 'parent', $this->get('parent'), 'artefact', $artefactid);
-    }
-
-
-    protected function count_attachments() {
-        return count_records('artefact_blog_blogpost_file', 'blogpost', $this->get('id'));
+    public function can_have_attachments() {
+        return true;
     }
 
 
@@ -595,16 +510,10 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
         if (count($result) > 0) {
             // Get the attached files.
-            $idlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $result));
-            $files = get_records_sql_array('
-               SELECT
-                  bf.blogpost, bf.file, a.artefacttype, a.title, a.description
-               FROM {artefact_blog_blogpost_file} bf
-                  INNER JOIN {artefact} a ON bf.file = a.id
-               WHERE bf.blogpost IN (' . $idlist . ')', '');
+            $files = ArtefactType::attachments_from_id_list(array_map(create_function('$a', 'return $a->id;'), $result));
             if ($files) {
                 foreach ($files as $file) {
-                    $result[$file->blogpost]->files[] = $file;
+                    $result[$file->artefact]->files[] = $file;
                 }
             }
 
@@ -657,122 +566,6 @@ class ArtefactTypeBlogPost extends ArtefactType {
         return true;
     }
 
-    // Where to store temporary blog post files under dataroot
-    static $blogattachmentroot = 'artefact/blog/uploads/';
-
-
-    public static function get_temp_file_path($uploadnumber) {
-        return get_config('dataroot') . self::$blogattachmentroot . ($uploadnumber % 256) . '/' . $uploadnumber;
-    }
-
-
-    /**
-     * Returns the size of a temporary attachment
-     */
-    public static function temp_attachment_size($uploadnumber) {
-        return filesize(self::get_temp_file_path($uploadnumber));
-    }
-
-
-    /** 
-     * This function saves an uploaded file to a temporary directory in dataroot
-     * and saves the mime type info in the db for downloadtemp.php to read from.
-     */
-    public static function save_attachment_temporary($inputname) {
-        require_once('uploadmanager.php');
-        $um = new upload_manager($inputname);
-        db_begin();
-        $record = new StdClass;
-        $result = new StdClass;
-        $result->tempfilename = insert_record('artefact_blog_blogpost_file_pending', $record, 'id', true);
-
-        $tempdir = self::$blogattachmentroot . ($result->tempfilename % 256);
-        $result->error = $um->process_file_upload($tempdir, $result->tempfilename);
-
-        $movedfile = get_config('dataroot') . $tempdir . '/' . $result->tempfilename;
-
-        if ($result->error) {
-            delete_records('artefact_blog_blogpost_file_pending', 'id', $result->tempfilename);
-        }
-        else {
-            $record = (object) array(
-                'id'           => $result->tempfilename,
-                'oldextension' => $um->original_filename_extension(),
-                'filetype'     => $um->file['type'],
-            );
-            update_record('artefact_blog_blogpost_file_pending', $record);
-        }
-
-        db_commit();
-        require_once('file.php');
-        $result->type = is_image_file($movedfile) ? 'image' : 'file';
-        return $result;
-    }
-
-
-    /**
-     * Save a temporary uploaded file to the myfiles area.
-     */
-    public function save_attachment($uploaddata) {
-
-        // Create the blogfiles folder if it doesn't exist yet.
-        $blogfilesid = self::blogfiles_folder_id();
-        if (!$blogfilesid) {
-            return false;
-        }
-
-        global $USER;
-
-        safe_require('artefact', 'file');
-
-        $data = new StdClass;
-        $data->title = $uploaddata->title;
-        $data->description = $uploaddata->description;
-        $data->tags = $uploaddata->tags;
-        $data->owner = $USER->get('id');
-        $data->parent = $blogfilesid;
-
-        $filedata = get_record('artefact_blog_blogpost_file_pending', 'id', $uploaddata->tempfilename);
-        $data->oldextension = $filedata->oldextension;
-        $data->filetype = $filedata->filetype;
-        
-        $path = self::$blogattachmentroot . ($uploaddata->tempfilename % 256) . '/' . $uploaddata->tempfilename;
-
-        if (!$fileid = ArtefactTypeFile::save_file($path, $data)) {
-            return false;
-        }
-
-        $this->attach_file($fileid);
-        delete_records('artefact_blog_blogpost_file_pending', 'id', $uploaddata->tempfilename);
-        return $fileid;
-    }
-
-    public static function blogfiles_folder_id($create = true) {
-        global $USER;
-        $name = get_string('blogfilesdirname', 'artefact.blog');
-        $description = get_string('blogfilesdirdescription', 'artefact.blog');
-        safe_require('artefact', 'file');
-        return ArtefactTypeFolder::get_folder_id($name, $description, null, $create, $USER->get('id'));
-    }
-
-    // Change the name & description of a user's blogfiles folder when the user changes language pref
-    public static function change_language($userid, $oldlang, $newlang) {
-        $oldname = get_string_from_language($oldlang, 'blogfilesdirname', 'artefact.blog');
-        safe_require('artefact', 'file');
-        $blogfiles = ArtefactTypeFolder::get_folder_by_name($oldname, null, $userid, null, null);
-        if (empty($blogfiles)) {
-            return;
-        }
-
-        $name = get_string_from_language($newlang, 'blogfilesdirname', 'artefact.blog');
-        $description = get_string_from_language($newlang, 'blogfilesdirdescription', 'artefact.blog');
-        if (!empty($name)) {
-            $blogfiles = artefact_instance_from_id($blogfiles->id);
-            $blogfiles->set('title', $name);
-            $blogfiles->set('description', $description);
-            $blogfiles->commit();
-        }
-    }
 
     /**
      * This function publishes the blog post.
@@ -798,27 +591,6 @@ class ArtefactTypeBlogPost extends ArtefactType {
         return true;
     }
 
-    /**
-     * This function returns a list of files attached to a post to use
-     * when displaying or editing a blog post
-     *
-     * @return array
-     */
-    public function get_attached_files() {
-        $list = get_records_sql_array('SELECT a.id, a.artefacttype, a.title, a.description 
-            FROM {artefact_blog_blogpost_file} f
-            INNER JOIN {artefact} a ON a.id = f.file
-            WHERE f.blogpost = ?
-            ORDER BY a.title', array($this->id));
-
-        // load tags
-        if ($list) {
-            foreach ( $list as &$attachment ) {
-                $attachment->tags = join(', ', get_column('artefact_tag', 'tag', 'artefact', $attachment->id));
-            }
-        }
-        return $list;
-    }
     
     public static function get_links($id) {
         $wwwroot = get_config('wwwroot');
@@ -837,7 +609,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         if (isset($artefactcopies[$oldid]->oldattachments)) {
             foreach ($artefactcopies[$oldid]->oldattachments as $a) {
                 if (isset($artefactcopies[$a])) {
-                    $this->attach_file($artefactcopies[$a]->newid);
+                    $this->attach($artefactcopies[$a]->newid);
                 }
                 $regexp[] = '#<img([^>]+)src="' . get_config('wwwroot') . 'artefact/file/download.php\?file=' . $a . '"#';
                 $replacetext[] = '<img$1src="' . get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactcopies[$a]->newid . '"';

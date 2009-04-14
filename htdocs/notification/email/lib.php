@@ -45,10 +45,20 @@ class PluginNotificationEmail extends PluginNotification {
         $messagebody .= $separator . "\n\n";
 
         $messagebody .= get_string_from_language($lang, 'subject') . ': ' . $data->subject . "\n\n";
-        $messagebody .= $data->message;
+        if ($data->activityname == 'usermessage') {
+            // Do not include the message body in user messages when they are sent by email
+            // because it encourages people to reply to the email.
+            $messagebody .= get_string_from_language($lang, 'newusermessageemailbody', 'group', display_name($data->userfrom), $data->url);
+        }
+        else {
+            $messagebody .= $data->message;
+            if (!empty($data->url)) {
+                $messagebody .= "\n\n" . get_string_from_language($lang, 'referurl', 'notification.email', $data->url);
+            }
+        }
 
-        if (!empty($data->url)) {
-            $messagebody .= "\n\n" . get_string_from_language($lang, 'referurl', 'notification.email', $data->url);
+        if (isset($data->unsubscribeurl) && isset($data->unsubscribename)) {
+            $messagebody .= "\n\n" . get_string_from_language($lang, 'unsubscribemessage', 'notification.email', $data->unsubscribename, $data->unsubscribeurl);
         }
 
         $messagebody .= "\n\n$separator";
