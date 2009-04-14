@@ -49,7 +49,7 @@ class PluginBlocktypeTextbox extends SystemBlocktype {
         $text = (isset($configdata['text'])) ? $configdata['text'] : '';
         safe_require('artefact', 'file');
         $text = ArtefactTypeFolder::append_view_url($text,$instance->get('view'));
-        return $text;
+        return clean_html($text);
     }
 
     /**
