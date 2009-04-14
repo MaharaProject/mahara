@@ -265,7 +265,7 @@ function clam_scan_file(&$file) {
         return get_string('unknownerror'); 
     }
 
-    $pathtoclam = trim(get_config('pathtoclam'));
+    $pathtoclam = escapeshellcmd(trim(get_config('pathtoclam')));
 
     if (!$pathtoclam || !file_exists($pathtoclam) || !is_executable($pathtoclam)) {
         clam_mail_admins(get_string('clamlost', 'mahara', $pathtoclam));
@@ -273,7 +273,7 @@ function clam_scan_file(&$file) {
         return get_string('clambroken');
     }
 
-    $cmd = $pathtoclam .' '. $fullpath ." 2>&1";
+    $cmd = $pathtoclam .' '. escapeshellarg($fullpath) ." 2>&1";
 
     // before we do anything we need to change perms so that clamscan
     // can read the file (clamdscan won't work otherwise)
