@@ -4,6 +4,7 @@
 {/if}
 </h3>{/if}
 <table id="certificationlist{$suffix}" class="tablerenderer hidden resumefour">
+    <colgroup width="25%" span="1"></colgroup>
     <thead>
         <tr>
             <th class="resumedate">{str tag='date' section='artefact.resume'}</th>
