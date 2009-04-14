@@ -360,16 +360,17 @@ function editpost_submit(Pieform $form, $values) {
         $blogpost = $postobj->get('id');
 
         // Attachments
-        if (isset($values['filebrowser']['selected'])) {
-            $old = $postobj->attachment_id_list();
+        $old = $postobj->attachment_id_list();
+        $new = is_array($values['filebrowser']['selected']) ? $values['filebrowser']['selected'] : array();
+        if (!empty($new) || !empty($old)) {
             foreach ($old as $o) {
-                if (!in_array($o, $values['filebrowser']['selected'])) {
+                if (!in_array($o, $new)) {
                     $postobj->detach($o);
                 }
             }
-            foreach ($values['filebrowser']['selected'] as $a) {
-                if (!in_array($a, $old)) {
-                    $postobj->attach($a);
+            foreach ($new as $n) {
+                if (!in_array($n, $old)) {
+                    $postobj->attach($n);
                 }
             }
             $filebrowser['selectedlist'] = $postobj->get_attachments(true);
