@@ -13,7 +13,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         if (!self.form) {
             alert('Filebrowser error 1');
         }
-        if (typeof(self.form.submit) != 'function') {
+        if (self.config.select && typeof(self.form.submit) != 'function') {
             alert('Filebrowser error 2'); // Rename your submit element to something other than "submit".
         }
         self.foldername = $(self.id + '_foldername').value;
