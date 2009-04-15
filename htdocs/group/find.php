@@ -86,32 +86,34 @@ if ($groups['data']) {
         $groupids[] = $group->id;
     }
     $groups['data'] =  get_records_sql_assoc(
-        "SELECT g.id, g.name, g.description, g.jointype, t.membershiptype,
-        COUNT(gm.member) AS membercount,
-        COUNT(gmr.member) AS requests
-        FROM {group} g
-        LEFT JOIN {group_member} gm ON (gm.group = g.id)
-        LEFT JOIN {group_member_request} gmr ON (gmr.group = g.id)
-        LEFT JOIN (
-            SELECT g.id, 'admin' AS membershiptype
+        "SELECT g1.id, g1.name, g1.description, g1.jointype, g1.membershiptype, g1.membercount, COUNT(gmr.member) AS requests
+        FROM (
+            SELECT g.id, g.name, g.description, g.jointype, t.membershiptype, COUNT(gm.member) AS membercount
             FROM {group} g
-            INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
-            UNION
-            SELECT g.id, 'member' AS membershiptype
-            FROM {group} g
-            INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ? AND gm.role != 'admin')
-            UNION
-            SELECT g.id, 'invite' AS membershiptype
-            FROM {group} g
-            INNER JOIN {group_member_invite} gmi ON (gmi.group = g.id AND gmi.member = ?)
-            UNION
-            SELECT g.id, 'request' AS membershiptype
-            FROM {group} g
-            INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
-        ) t ON t.id = g.id
-        WHERE g.id IN (" . implode($groupids, ',') . ')
-        GROUP BY g.id, g.name, g.description, g.jointype, t.membershiptype
-        ORDER BY g.name',
+            LEFT JOIN {group_member} gm ON (gm.group = g.id)
+            LEFT JOIN (
+                SELECT g.id, 'admin' AS membershiptype
+                FROM {group} g
+                INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
+                UNION
+                SELECT g.id, 'member' AS membershiptype
+                FROM {group} g
+                INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ? AND gm.role != 'admin')
+                UNION
+                SELECT g.id, 'invite' AS membershiptype
+                FROM {group} g
+                INNER JOIN {group_member_invite} gmi ON (gmi.group = g.id AND gmi.member = ?)
+                UNION
+                SELECT g.id, 'request' AS membershiptype
+                FROM {group} g
+                INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
+            ) t ON t.id = g.id
+            WHERE g.id IN (" . implode($groupids, ',') . ')
+            GROUP BY g.id, g.name, g.description, g.jointype, t.membershiptype
+            ORDER BY g.name
+        ) g1
+        LEFT JOIN {group_member_request} gmr ON (gmr.group = g1.id)
+        GROUP BY g1.id, g1.name, g1.description, g1.jointype, g1.membershiptype, g1.membercount',
         array($USER->get('id'), $USER->get('id'), $USER->get('id'), $USER->get('id'))
     );
     if ($groups['data']) {
