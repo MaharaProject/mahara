@@ -25,13 +25,14 @@
       {/if}
     </td>
     <td class="filename">
+    {assign var=displaytitle value=$file->title|escape|str_shorten:34}
     {if $file->artefacttype == 'folder'}
-      <a href="{$querybase}folder={$file->id}" class="changefolder" title="{str tag=gotofolder section=artefact.file arg1=$file->title}">{$file->title|str_shorten:34}</a>
+      <a href="{$querybase}folder={$file->id}" class="changefolder" title="{str tag=gotofolder section=artefact.file arg1=$displaytitle}">{$displaytitle}</a>
     {else}
-      <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" target="_blank" title="{str tag=downloadfile section=artefact.file arg1=$file->title}">{$file->title|str_shorten:34}</a>
+      <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" target="_blank" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}">{$displaytitle}</a>
     {/if}
     </td>
-    <td>{$file->description}</td>
+    <td>{$file->description|escape}</td>
     <td>{$file->size}</td>
     <td>{$file->mtime}</td>
     <td>

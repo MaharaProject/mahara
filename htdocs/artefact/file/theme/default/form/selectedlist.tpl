@@ -10,14 +10,15 @@
  </thead>
  <tbody>
   {foreach from=$selectedlist item=file}
+    {assign var=displaytitle value=$file->title|escape|str_shorten:34}
   <tr class="r{cycle values=0,1}{if !empty($highlight) && $highlight == $file->id} highlight-file{/if}">
     <td>
       <img src="{if $file->artefacttype == 'image'}{$WWWROOT}artefact/file/download.php?file={$file->id}&size=20x20{else}{$THEMEURL}images/{$file->artefacttype}.gif{/if}">
     </td>
     <td>
-      <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" target="_blank" title="{str tag=downloadfile section=artefact.file arg1=$file->title}">{$file->title|str_shorten:34}</a>
+      <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" target="_blank" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}">{$displaytitle}</a>
     </td>
-    <td>{$file->description}</td>
+    <td>{$file->description|escape}</td>
     <td>
        <noscript><button type="submit" class="button small unselect" name="{$prefix}_unselect[{$file->id}]" value="{$file->id}">{str tag=remove}</button></noscript>
        <button type="button" class="button small unselect hidden" name="{$prefix}_unselect[{$file->id}]" value="{$file->id}">{str tag=remove}</button>
