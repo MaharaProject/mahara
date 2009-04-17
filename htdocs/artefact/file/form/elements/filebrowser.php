@@ -253,10 +253,17 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
     $update = param_variable($prefix . '_update', null);
     if (is_array($update)) {
         $edit_title = param_variable($prefix . '_edit_title');
-        if (!strlen($edit_title)) {
+        $namelength = strlen($edit_title);
+        if (!$namelength) {
             return array(
                 'error'   => true,
                 'message' => get_string('filenamefieldisrequired', 'artefact.file')
+            );
+        }
+        else if ($namelength > 1024) {
+            return array(
+                'error'   => true,
+                'message' => get_string('nametoolong', 'artefact.file'),
             );
         }
         $keys = array_keys($update);
@@ -289,11 +296,18 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
 
     $createfolder = param_variable($prefix . '_createfolder', null);
     if (!empty($createfolder)) {
-        $createfolder_name = param_variable($prefix . '_createfolder_name'); 
-        if (!strlen($createfolder_name)) {
+        $createfolder_name = param_variable($prefix . '_createfolder_name');
+        $namelength = strlen($createfolder_name);
+        if (!$namelength) {
             return array(
                 'error'   => true,
                 'message' => get_string('foldernamerequired', 'artefact.file'),
+            );
+        }
+        else if ($namelength > 1024) {
+            return array(
+                'error'   => true,
+                'message' => get_string('nametoolong', 'artefact.file'),
             );
         }
         return pieform_element_filebrowser_createfolder($form, $element, array(
@@ -309,6 +323,12 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
                 'error'   => true,
                 'message' => get_string('filenamefieldisrequired', 'artefact.file'),
                 'browse'  => 1,
+            );
+        }
+        else if (strlen($_FILES['userfile']['name']) > 1024) {
+            return array(
+                'error'   => true,
+                'message' => get_string('nametoolong', 'artefact.file'),
             );
         }
         else if ($element['config']['uploadagreement'] && !param_boolean($prefix . '_notice', false)) {
@@ -675,6 +695,7 @@ function pieform_element_filebrowser_get_headdata($element) {
                 'editfile',
                 'editfolder',
                 'filewithnameexists',
+                'nametoolong',
                 'namefieldisrequired',
                 'detachfilewarning',
             ),

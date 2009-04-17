@@ -124,6 +124,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             if (name == '') {
                 message = get_string('foldernamerequired');
             }
+            else if (name.length > 1024) {
+                message = get_string('nametoolong');
+            }
             else if (self.fileexists(name)) {
                 message = get_string('filewithnameexists', name);
             }
@@ -145,6 +148,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             name = name.value;
             if (name == '') {
                 message = get_string('namefieldisrequired');
+            }
+            else if (name.length > 1024) {
+                message = get_string('nametoolong');
             }
             else if (self.fileexists(name, this.name.replace(/.*_update\[(\d+)\]$/, '$1'))) {
                 message = get_string('filewithnameexists', name);

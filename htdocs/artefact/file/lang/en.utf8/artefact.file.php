@@ -87,6 +87,7 @@ $string['movefaileddestinationnotfolder'] = 'You can only move files into folder
 $string['movefailednotfileartefact'] = 'Only file, folder and image artefacts can be moved.';
 $string['movefailednotowner'] = 'You do not have permission to move the file into this folder';
 $string['movefailed'] = 'Move failed.';
+$string['nametoolong'] = 'That name is too long.  Please choose a shorter one.';
 $string['nofilesfound'] = 'No files found';
 $string['overwrite'] = 'Overwrite';
 $string['Owner'] = 'Owner';
