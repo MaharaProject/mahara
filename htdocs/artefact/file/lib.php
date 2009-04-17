@@ -692,7 +692,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
      */
     public static function get_new_file_title($desired, $parent, $owner, $group, $institution) {
         $bits = split('\.', $desired);
-        if (count($bits) > 1) {
+        if (count($bits) > 1 && preg_match('/[^0-9]/', end($bits))) {
             $start = join('.', array_slice($bits, 0, count($bits)-1));
             $end = '.' . end($bits);
         }
