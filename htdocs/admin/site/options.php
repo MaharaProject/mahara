@@ -102,6 +102,7 @@ $siteoptionform = array(
             'title'        => get_string('sessionlifetime', 'admin'),
             'description'  => get_string('sessionlifetimedescription', 'admin'),
             'defaultvalue' => get_config('session_timeout') / 60,
+            'rules'        => array('integer' => true, 'minvalue' => 1, 'maxvalue' => 10000000),
             'help'         => true,
         ),
         'allowpublicviews' => array(
