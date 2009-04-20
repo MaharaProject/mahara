@@ -53,8 +53,8 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
 
         $smarty->assign('sections', $sections);
 
-        $content = $smarty->fetch('export:html/internal:profileinfo.tpl');
-        if (!file_put_contents($this->fileroot . 'profileinfo.html', $content)) {
+        $content = $smarty->fetch('export:html/internal:index.tpl');
+        if (!file_put_contents($this->fileroot . 'index.html', $content)) {
             throw new SystemException("Unable to write profile information page");
         }
     }
