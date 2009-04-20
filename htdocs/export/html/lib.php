@@ -54,6 +54,7 @@ class PluginExportHtml extends PluginExport {
     public function __construct(User $user, $views, $artefacts) {
         parent::__construct($user, $views, $artefacts);
         $this->export_time = time(); // TODO: move into parent class
+        // TODO move this normalisation into a method
         $this->rootdir = 'portfolio-for-' . preg_replace('#[^a-zA-Z0-9_-]+#', '-', $user->get('username'));
 
         // Create basic required directories
@@ -90,13 +91,16 @@ class PluginExportHtml extends PluginExport {
             }
         }
 
+        // Get the view data
+        $this->dump_view_export_data();
+        $summaries['view'] = array(100, $this->get_view_summary());
+
         // Sort by weight (then drop the weight information)
         uasort($summaries, create_function('$a, $b', 'return $a[0] > $b[0];'));
         foreach ($summaries as &$summary) {
             $summary = $summary[1];
         }
 
-        // ask views to dump data
         // build index.html
         $this->build_index_page($summaries);
         
@@ -137,6 +141,52 @@ class PluginExportHtml extends PluginExport {
         $smarty->assign('summaries', $summaries);
         $content = $smarty->fetch('export:html:index.tpl');
         file_put_contents($this->exportdir . '/' . $this->rootdir . '/index.html', $content);
+    }
+
+    /**
+     * Dumps all views into the HTML export
+     *
+     * TODO: respect $this->views
+     */
+    private function dump_view_export_data() {
+        if ($viewids = get_column('view', 'id', 'owner', $this->get('user')->get('id'), 'type', 'portfolio')) {
+            $smarty = $this->get_smarty('../../');
+            foreach ($viewids as $viewid) {
+                $view = new View($viewid);
+
+                $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . preg_replace('#[^a-zA-Z0-9_-]+#', '-', $view->get('title'));
+                if (!check_dir_exists($directory)) {
+                    throw new SystemException("Could not create directory for view $viewid");
+                }
+
+                $smarty->assign('view', $view->build_columns());
+                $content = $smarty->fetch('export:html:view.tpl');
+                if (!file_put_contents("$directory/index.html", $content)) {
+                    throw new SystemException("Could not write view page for view $viewid");
+                }
+            }
+        }
+    }
+
+    private function get_view_summary() {
+        $smarty = $this->get_smarty('../');
+
+        $views = array();
+        foreach ($this->views as $view) {
+            if ($view->get('type') != 'profile') {
+                $views[] = array(
+                    'title' => $view->get('title'),
+                    'folder' => preg_replace('#[^a-zA-Z0-9_-]+#', '-', $view->get('title')),
+                );
+            }
+        }
+        $smarty->assign('views', $views);
+        $smarty->assign('viewcount', count($views));
+
+        return array(
+            'title' => 'Views',
+            'description' => $smarty->fetch('export:html:viewsummary.tpl'),
+        );
     }
 
 }
