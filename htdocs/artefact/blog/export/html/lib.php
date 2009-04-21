@@ -37,7 +37,7 @@ class HtmlExportBlog extends HtmlExportArtefactPlugin {
                 $blog = artefact_instance_from_id($blogid);
 
                 // Create directory for storing the blog
-                $dirname = preg_replace('#[^a-zA-Z0-9_-]+#', '-', $blog->get('title'));
+                $dirname = PluginExportHtml::text_to_path($blog->get('title'));
                 if (!check_dir_exists($this->fileroot . $dirname)) {
                     throw new SystemException("Couldn't create blog directory {$this->fileroot}{$dirname}");
                 }
