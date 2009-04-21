@@ -1,0 +1,86 @@
+/**
+ * Stylesheet for static HTML export
+ *
+ * (C) 2009 Catalyst IT Ltd.
+ *
+ * This file is licensed under the same terms as Mahara itself
+ */
+html {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0;
+}
+body {
+    margin: 0;
+    padding: 0;
+}
+
+a img {
+    border: none;
+}
+
+#mahara-logo {
+    float: right;
+}
+
+h1 {
+    border-bottom: 1px solid #bbb;
+    font-family: Arial, sans-serif;
+    margin: 1em 0 0;
+}
+h1 a {
+    text-decoration: none;
+}
+
+#content {
+    margin: 0 1em;
+    font-family: "Times New Roman", serif;
+}
+
+#breadcrumbs ul {
+    margin: .5em 0 0;
+    padding: 0;
+}
+#breadcrumbs li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+#breadcrumbs a {
+    color: #808080;
+    font-size: smaller;
+    font-family: Arial, sans-serif;
+    float: left;
+}
+#breadcrumbs-footer {
+    clear: both;
+}
+
+h2, h3, h4, h5, h6 {
+    font-family: Arial, sans-serif;
+    margin: 1em 0 .5em;
+}
+
+.summary {
+    border-top: 1px dotted #ccc;
+    clear: both;
+}
+#summary-internal {
+    border: none;
+}
+#summary-internal ul {
+    list-style-position: inside;
+}
+#summary-internal #profile-introduction {
+    font-size: larger;
+}
+#summary-internal #profile-icon {
+    float: left;
+    padding: 0 1em 1em 0;
+}
+
+#footer {
+    border-top: 1px solid #bbb;
+    text-align: center;
+    font-size: smaller;
+}

@@ -103,6 +103,9 @@ class PluginExportHtml extends PluginExport {
 
         // Build index.html
         $this->build_index_page($summaries);
+
+        // Copy all static files into the export
+        $this->copy_static_files();
         
 
         // zip everything up
@@ -187,6 +190,21 @@ class PluginExportHtml extends PluginExport {
             'title' => 'Views',
             'description' => $smarty->fetch('export:html:viewsummary.tpl'),
         );
+    }
+
+    /**
+     * Copies the static files (stylesheets etc.) into the export
+     */
+    private function copy_static_files() {
+        $staticdir = $this->get('exportdir') . '/' . $this->get('rootdir') . '/static/';
+        foreach (new RecursiveDirectoryIterator(get_config('docroot') . 'export/html/static/') as $fileinfo) {
+            if (!$fileinfo->isFile() || substr($fileinfo->getFilename(), 0, 1) == '.') {
+                continue;
+            }
+            if (!copy($fileinfo->getPathname(), $staticdir . $fileinfo->getFilename())) {
+                throw new SystemException("Could not copy static file " . $fileinfo->getPathname());
+            }
+        }
     }
 
 }
