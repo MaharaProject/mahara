@@ -34,6 +34,8 @@ defined('INTERNAL') || die();
 define('LOG_TARGET_SCREEN', 1);
 /** Write the errors to the error log, as specified in your php configuration */
 define('LOG_TARGET_ERRORLOG', 2);
+/** Write the error to stdout (using echo) */
+define('LOG_TARGET_STDOUT', 4);
 
 // Logging levels
 /** Environment type errors, such as register_globals being on */
@@ -44,7 +46,22 @@ define('LOG_LEVEL_DBG', 2);
 define('LOG_LEVEL_INFO', 4);
 /** Warnings */
 define('LOG_LEVEL_WARN', 8);
+
+// developermodes,  also bitmaps
+/** inlude debug.js */
+define('DEVMODE_DEBUGJS', 1);
+/** include debug.css */
+define('DEVMODE_DEBUGCSS', 2);
+/** include firebug lite */
+define('DEVMODE_FIREBUGLITE', 4);
+/** include unpacked mochikit */
+define('DEVMODE_UNPACKEDJS', 8);
+/** send xhtml header (causes xml parse errors) */
+define('DEVMODE_XMLHEADER', 16);
+// more here.. start at 32 :)
+
 /**#@-*/
+
 
 // Tell PHP about our error settings
 error_reporting(E_ALL);
@@ -223,6 +240,15 @@ function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $lin
             foreach ($lines as $line) {
                 error_log($line);
             }
+        }
+    }
+
+    if ($targets & LOG_TARGET_STDOUT) {
+        foreach ($loglines as $line) {
+            echo($prefix . $line . "\n");
+        }
+        if ($backtrace && $textbacktrace) {
+            echo $textbacktrace;
         }
     }
 }
@@ -855,11 +881,23 @@ class AccessTotallyDeniedException extends UserException {
 * @todo maybe refactor at the point that we have something other than importing over mnet (eg userland)
 */
 class ImportException extends SystemException {
-    
+
+    public function __construct($importer, $message=null, $code=0) {
+        parent::__construct($message, $code);
+        $importer->cleanup();
+    }
+
     public function render_exception() {
         return $this->getMessage();
     }
+}
 
+class ExportException extends SystemException {
+
+    public function __construct($exporter, $message=null, $code=0) {
+        parent::__construct($message, $code);
+        $exporter->cleanup();
+    }
 }
 
 

@@ -1159,7 +1159,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         $smarty = smarty_core();
         $smarty->assign('title', $this->get('title'));
         $smarty->assign('description', $this->get('description'));
-        $smarty->assign('viewid', $options['viewid']);
+        $smarty->assign('viewid', isset($options['viewid']) ? $options['viewid'] : 0);
         $smarty->assign('simpledisplay', isset($options['simpledisplay']) ? $options['simpledisplay'] : false);
 
         if ($childrecords = $this->folder_contents()) {
@@ -1173,7 +1173,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
                     $child->title = str_shorten($child->title, 20);
                 }
                 $child->date = format_date(strtotime($child->mtime), 'strfdaymonthyearshort');
-                $child->iconsrc = call_static_method(generate_artefact_class_name($child->artefacttype), 'get_icon', array('id' => $child->id, 'viewid' => $options['viewid']));
+                $child->iconsrc = call_static_method(generate_artefact_class_name($child->artefacttype), 'get_icon', array('id' => $child->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));
             }
             $smarty->assign('children', $childrecords);
         }
@@ -1424,8 +1424,8 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     public function render_self($options) {
         $result = parent::render_self($options);
         $result['html'] = '<div class="fr filedata-icon" style="text-align: center;"><h4>' . get_string('Preview', 'artefact.file') . '</h4><a href="'
-            . hsc(get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id . '&view=' . $options['viewid']) . '"><img src="'
-            . hsc(get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id . '&view=' . $options['viewid'] . '&maxwidth=400&maxheight=180')
+            . hsc(get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id . '&view=' . (isset($options['viewid']) ? $options['viewid'] : 0)) . '"><img src="'
+            . hsc(get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id . '&view=' . (isset($options['viewid']) ? $options['viewid']  : 0). '&maxwidth=400&maxheight=180')
             . '" alt=""></a></div>' . $result['html'];
         return $result;
     }

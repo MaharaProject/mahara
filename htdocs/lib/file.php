@@ -373,7 +373,7 @@ function is_image_file($path) {
  * will make a copy that is resized to the correct size.
  *
  * @param string $path The base path in dataroot where the image is stored. For 
- *                     example, 'artefact/internal/profileicons/' for profile 
+ *                     example, 'artefact/file/profileicons/' for profile 
  *                     icons
  * @param int $id      The ID of the image to return. Is typically the ID of an 
  *                     artefact

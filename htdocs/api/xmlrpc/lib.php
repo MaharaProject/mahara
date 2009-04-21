@@ -272,7 +272,7 @@ function user_authorise($token, $useragent) {
 
 function send_content_intent($username) {
     global $REMOTEWWWROOT;
-    require_once('import.php');
+    require_once(get_config('docroot') . 'import/lib.php');
 
     list ($user, $authinstance) = find_remote_user($username, $REMOTEWWWROOT);
     if (!$user) {
@@ -289,16 +289,7 @@ function send_content_intent($username) {
         throw $e;
     }
 
-    // generate a token, insert it into the queue table
-    $queue = new StdClass;
-    $queue->token = generate_token();
-    $queue->host = $REMOTEWWWROOT;
-    $queue->usr = $user->id;
-    $queue->queue = (int)!(Importer::import_immediately_allowed());
-    $queue->ready = 0;
-    $queue->expirytime = db_format_timestamp(time()+(60*60*24));
-
-    insert_record('import_queue', $queue);
+    $queue = PluginImport::create_new_queue($user->id, null, $REMOTEWWWROOT, 0);
 
     return array(
         'sendtype' => (($queue->queue) ? 'queue' : 'immediate'),
@@ -308,7 +299,7 @@ function send_content_intent($username) {
 
 function send_content_ready($token, $username, $format, $importdata, $fetchnow=false) {
     global $REMOTEWWWROOT;
-    require_once('import.php');
+    require_once(get_config('docroot') . 'import/lib.php');
 
     list ($user, $authinstance) = find_remote_user($username, $REMOTEWWWROOT);
     if (!$user) {
@@ -327,7 +318,7 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
     $queue->format = $format;
     $class = null;
     try {
-        $class = Importer::class_from_format($format);
+        $class = PluginImport::class_from_format($format);
     } catch (Exception $e) {
         throw new ImportException('Invalid format $format');
     }
@@ -352,11 +343,12 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
     update_record('import_queue', $queue);
 
     $result = new StdClass;
-    if ($fetchnow && Importer::import_immediately_allowed()) {
+    if ($fetchnow && PluginImport::import_immediately_allowed()) {
         // either immediately spawn a curl request to go fetch the file
-        $importer = Importer::create_importer($queue->id, $queue);
+        $importer = PluginImport::create_importer($queue->id, $queue);
         $importer->prepare();
         $importer->process();
+        $importer->cleanup();
         delete_records('import_queue', 'id', $queue->id);
         $result->status = true;
         $result->type = 'complete';

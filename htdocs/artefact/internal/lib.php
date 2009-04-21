@@ -123,6 +123,10 @@ class PluginArtefactInternal extends PluginArtefact {
     public static function sort_child_data($a, $b) {
         return strnatcasecmp($a->text, $b->text);
     }
+
+    public static function can_be_disabled() {
+        return false;
+    }
 }
 
 class ArtefactTypeProfile extends ArtefactType {
@@ -429,7 +433,7 @@ class ArtefactTypeIntroduction extends ArtefactTypeProfileField {}
 class ArtefactTypeWebAddress extends ArtefactTypeProfileField {
 
     public function render_self($options) {
-        if ($options['link'] == true) {
+        if (array_key_exists('link', $options) && $options['link'] == true) {
             $html = make_link($this->title);
         }
         else {

@@ -1594,4 +1594,46 @@ function db_random() {
     }
 }
 
+/**
+ * Search and replace strings in the entire database.
+ * Used for xhtml upgrade, but can also be used, for eg, to change links.
+ * This function prints every query
+ * (Adapted from moodle function of same name)
+ *
+ * @param array $replacearray keys = search, values = replacements.
+ */
+function db_replace($replacearray) {
+
+    global $db;
+
+    /// Turn off time limits, sometimes upgrades can be slow.
+    @set_time_limit(0);
+    @ob_implicit_flush(true);
+    while(@ob_end_flush());
+
+    if (!$tables = $db->Metatables() ) {    // No tables yet at all.
+        return false;
+    }
+    foreach ($tables as $table) {
+
+        if (in_array($table, array('config', 'adodb_logsql'))) {      // Don't process these
+            continue;
+        }
+
+        if ($columns = $db->MetaColumns($table, false)) {
+            $db->debug = true;
+            foreach ($columns as $column => $data) {
+                if (in_array($data->type, array('text','mediumtext','longtext','varchar'))) {  // Text stuff only
+                    foreach ($replacearray as $s => $r) {
+                        $db->execute('UPDATE ' . db_quote_table_placeholders('{' . $table . '}') . '
+                            SET ' . db_quote_identifier($column) . ' = REPLACE(' . db_quote_identifier($column) . ', ?, ?)'
+                            , array($s, $r));
+                    }
+                }
+            }
+            $db->debug = false;
+        }
+    }
+}
+
 ?>

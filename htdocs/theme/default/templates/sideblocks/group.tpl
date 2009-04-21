@@ -6,7 +6,7 @@
             {if $item.path == 'groups/forums' && !empty($data.forums)}
             <ul>
                 {foreach from=$data.forums item=forum}
-                <li><a href="{$WWWROOT}interaction/forum/view.php?id={$forum->id}">{$forum->title|escape}</a>
+                <li><a href="{$WWWROOT}interaction/forum/view.php?id={$forum->id}">{$forum->title|escape}</a></li>
                 {/foreach}
             </ul>
             {/if}

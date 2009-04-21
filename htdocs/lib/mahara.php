@@ -300,12 +300,11 @@ function get_raw_string($identifier, $section='mahara') {
  */
 function get_string_location($identifier, $section, $variables, $replacefunc='format_langstring', $lang='') {
 
-    $langconfigstrs = array('parentlanguage', 'strftimedate', 'strftimedateshort', 'strftimedatetime', 'strftimedatetimeshort',
-                            'strftimedaydate', 'strftimedaydatetime', 'strftimedayshort', 'strftimedaytime',
-                            'strftimemonthyear', 'strftimerecent', 'strftimerecentfull', 'strftimetime',
-                            'strfdaymonthyearshort', 'thislanguage');
+    $langconfigstrs = array('parentlanguage', 'thislanguage');
 
-    if (in_array($identifier, $langconfigstrs)) {
+    if (in_array($identifier, $langconfigstrs)
+        || strpos($identifier, 'strftime') === 0
+        || strpos($identifier, 'strfday')  === 0) {
         $section = 'langconfig';
     }
 
@@ -852,12 +851,21 @@ function check_dir_exists($dir, $create=true, $recursive=true) {
     return $status;
 }
 
+
 /**
  * Function to require a plugin file. This is to avoid doing 
  * require and include directly with variables.
  *
  * This function is the one safe point to require plugin files.
  * so USE it :)
+ *
+ * blocktypes are special cases.  eg:
+ *   system blocks: safe_require('blocktype', 'wall');
+ *   artefact blocks: safe_require('blocktype', 'file/html');
+ *
+ * import/export plugins are special cases.  eg:
+ *   main library: safe_require('export', 'leap');
+ *   artefact plugin implementation: safe_require('export', 'leap/file');
  *
  * @param string $plugintype the type of plugin (eg artefact)
  * @param string $pluginname the name of the plugin (eg blog)
@@ -896,7 +904,14 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
                 }
             }
         }
-    } 
+    }
+    // these can have parts living inside artefact directories as well.
+    else if ($plugintype == 'export' || $plugintype == 'import') {
+        $bits = explode('/', $pluginname);
+        if (count($bits) == 2) {
+            $fullpath = get_config('docroot') . 'artefact/' . $bits[1] . '/' . $plugintype . '/' . $bits[0] . '/' . $filename;
+        }
+    }
     if (empty($fullpath)) {
         $fullpath = get_config('docroot') . $plugintype . '/' . $pluginname . '/' . $filename;
     }
@@ -933,7 +948,7 @@ function plugin_types() {
     static $pluginstocheck;
     if (empty($pluginstocheck)) {
         // ORDER MATTERS! artefact has to be first!
-        $pluginstocheck = array('artefact', 'auth', 'notification', 'search', 'blocktype', 'interaction', 'grouptype');
+        $pluginstocheck = array('artefact', 'auth', 'notification', 'search', 'blocktype', 'interaction', 'grouptype', 'import', 'export');
     }
     return $pluginstocheck;
 }
@@ -960,8 +975,15 @@ function plugin_types_installed() {
  * 
  * @param string $plugintype type of plugin
  */
-function plugins_installed($plugintype) {
-    return get_records_array($plugintype . '_installed');
+function plugins_installed($plugintype, $all=false) {
+    $sort = 'name';
+    if ($plugintype == 'blocktype') {
+        $sort = 'artefactplugin,name';
+    }
+    if ($all) {
+        return get_records_array($plugintype . '_installed', '', '', $sort);
+    }
+    return get_records_array($plugintype . '_installed', 'active', 1, $sort);
 }
 
 /**
@@ -1172,6 +1194,15 @@ class Plugin {
     */
     public static function get_activity_types() {
         return array();
+    }
+
+    /**
+    * Can this plugin be disabled?
+    * All internal type plugins, and ones in which Mahara won't work should override this.
+    * Probably at least one plugin per plugin-type should override this.
+    */
+    public static function can_be_disabled() {
+        return true;
     }
 }
 

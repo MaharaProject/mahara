@@ -115,7 +115,7 @@ class ArtefactTypeResume extends ArtefactType {
      * Default render method for resume fields - show their description
      */
     public function render_self($options) {
-        return array('html' => $this->description);
+        return array('html' => clean_html($this->description));
     }
 
     /**
@@ -225,7 +225,7 @@ class ArtefactTypeContactinformation extends ArtefactTypeResume {
 
 class ArtefactTypePersonalinformation extends ArtefactTypeResume {
     
-    private $composites;
+    protected $composites;
 
     public function __construct($id=0, $data=null) {
         if (empty($id)) {

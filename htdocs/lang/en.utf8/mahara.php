@@ -57,6 +57,11 @@ $string['From'] = 'From';
 $string['To'] = 'To';
 $string['All'] = 'All';
 
+$string['enable'] = 'Enable';
+$string['disable'] = 'Disable';
+$string['pluginenabled'] = 'Plugin enabled';
+$string['plugindisabled'] = 'Plugin disabled';
+
 $string['next']      = 'Next';
 $string['nextpage']  = 'Next page';
 $string['previous']  = 'Previous';

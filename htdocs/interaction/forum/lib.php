@@ -337,6 +337,10 @@ class PluginInteractionForum extends PluginInteraction {
                 'ctime < ? AND deleted = 0 AND sent = 0', array(db_format_timestamp($minpostdelay)));
         }
     }
+
+    public static function can_be_disabled() {
+        return false; //TODO until it either becomes an artefact plugin or stops being hardcoded everywhere
+    }
 }
 
 class InteractionForumInstance extends InteractionInstance {

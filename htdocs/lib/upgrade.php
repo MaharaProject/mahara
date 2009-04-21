@@ -884,7 +884,7 @@ function install_blocktype_extras() {
 
 
     // poll all the installed blocktype plugins and ask them what categories they export
-    if ($blocktypes = plugins_installed('blocktype')) {
+    if ($blocktypes = plugins_installed('blocktype', true)) {
         foreach ($blocktypes as $bt) {
             install_blocktype_categories_for_plugin(blocktype_single_to_namespaced($bt->name, $bt->artefactplugin));
             install_blocktype_viewtypes_for_plugin(blocktype_single_to_namespaced($bt->name, $bt->artefactplugin));

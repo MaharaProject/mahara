@@ -49,7 +49,7 @@ define('MAXRUNAGE', 300);
 
 require(dirname(dirname(__FILE__)).'/init.php');
 require_once(get_config('docroot') . 'artefact/lib.php');
-require_once(get_config('docroot') . 'lib/import.php');
+require_once(get_config('docroot') . 'import/lib.php');
 require_once(get_config('docroot') . 'lib/activity.php');
 
 // This is here for debugging purposes, it allows us to fake the time to test

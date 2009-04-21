@@ -110,6 +110,7 @@ abstract class ArtefactType {
     protected $institution;
     protected $group;
     protected $rolepermissions;
+    protected $mtimemanuallyset;
 
     protected $viewsinstances;
     protected $viewsmetadata;
@@ -172,11 +173,24 @@ abstract class ArtefactType {
     }
 
     public function get_views_instances() {
-        // @todo
+        // @todo test this
+        if (!isset($this->viewsinstances)) {
+            $this->viewsinstances = false;
+            if ($views = $this->get_views_metadata()) {
+                $this->viewsinstances = array();
+                foreach ($views as $view) {
+                    $this->viewsinstances[] = new View($view->id, $view);
+                }
+            }
+        }
+        return $this->viewsinstances;
     }
-    
+
     public function get_views_metadata() {
-        // @todo
+        if (!isset($this->viewsmetadata)) {
+            $this->viewsmetadata = get_records_array('view_artefact', 'artefact', $this->id);
+        }
+        return $this->viewsmetadata;
     }
 
     public function count_children() {
@@ -263,6 +277,9 @@ abstract class ArtefactType {
      * @return object - db row
      */
     public function get_parent_metadata() {
+        if (empty($this->parent)) {
+            return false;
+        }
         return get_record('artefact','id',$this->parent);
     }
 
@@ -295,7 +312,12 @@ abstract class ArtefactType {
             if ($field == 'parent') {
                 $this->parentdirty = true;
             }
-            $this->mtime = time();
+            if ($field == 'mtime') {
+                $this->mtimemanuallyset = true;
+            }
+            else if (!$this->mtimemanuallyset) {
+                $this->mtime = time();
+            }
             return true;
         }
         throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));

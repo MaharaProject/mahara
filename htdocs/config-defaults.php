@@ -115,6 +115,7 @@ $cfg->log_backtrace_levels = LOG_LEVEL_WARN | LOG_LEVEL_ENVIRON;
 // These options are a performance hit otherwise, enable when you are 
 // developing for Mahara
 $cfg->developermode = false;
+// $cfg->developermode = DEVMODE_DEBUGJS | DEVMODE_DEBUGCSS | DEVMODE_FIREBUGLITE | DEVMODE_UNPACKEDJS | DEVMODE_XMLHEADER;
 
 // Whether to send e-mail. If set to false, Mahara will not send any e-mail at 
 // all. This is useful for when setting up development versions of Mahara where 
@@ -148,6 +149,8 @@ $cfg->imagemaxheight = 1024;
 
 // paths and arguments for various system commands
 $cfg->pathtounzip = '/usr/bin/unzip';
+$cfg->pathtozip   = '/usr/bin/zip';
+$cfg->ziprecursearg = '-r';
 $cfg->unzipdirarg = '-d';
 // some shared hosts have restrictions on where unzip can be used
 // dataroot is often not allowed; but /tmp is

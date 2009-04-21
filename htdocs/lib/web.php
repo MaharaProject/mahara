@@ -198,7 +198,7 @@ EOF;
         }
     }
 
-    if (get_config('developermode')) {
+    if (get_config('developermode') & DEVMODE_UNPACKEDJS) {
         $javascript_array[] = $jsroot . 'MochiKit/MochiKit.js';
         $javascript_array[] = $jsroot . 'MochiKit/Position.js';
         $javascript_array[] = $jsroot . 'MochiKit/Color.js';
@@ -284,11 +284,12 @@ EOF;
     }
 
     $javascript_array[] = $jsroot . 'mahara.js';
-    if (get_config('developermode')) {
+    if (get_config('developermode') & DEVMODE_DEBUGJS) {
         $javascript_array[] = $jsroot . 'debug.js';
-        if (isset($_SERVER['HTTP_USER_AGENT']) && false === stripos($_SERVER['HTTP_USER_AGENT'], 'gecko')) {
-            $javascript_array[] = $jsroot . 'firebug/firebug.js';
-        }
+    }
+    if ((get_config('developermode') & DEVMODE_FIREBUGLITE)
+        && isset($_SERVER['HTTP_USER_AGENT']) && false === stripos($_SERVER['HTTP_USER_AGENT'], 'gecko')) {
+        $javascript_array[] = $jsroot . 'firebug/firebug.js';
     }
 
     foreach ($jsstrings['mahara'] as $section => $tags) {
@@ -306,7 +307,6 @@ EOF;
     $stringjs .= 'var strings = ' . json_encode($strings) . ';';
     $stringjs .= '</script>';
 
-
     // stylesheet set up - if we're in a plugin also get its stylesheet
     $stylesheets = array_reverse(theme_get_url('style/style.css', null, true));
     if (defined('SECTION_PLUGINTYPE') && defined('SECTION_PLUGINNAME') && SECTION_PLUGINTYPE != 'core') {
@@ -314,7 +314,7 @@ EOF;
             $stylesheets = array_merge($stylesheets, array_reverse($pluginsheets));
         }
     }
-    if (get_config('developermode')) {
+    if (get_config('developermode') & DEVMODE_DEBUGCSS) {
         $stylesheets[] = get_config('wwwroot') . 'theme/debug.css';
     }
 
@@ -1693,6 +1693,18 @@ function mahara_standard_nav() {
             'url' => 'view/',
             'title' => get_string('myviews'),
             'weight' => 10,
+        ),
+        array(
+            'path' => 'myportfolio/export',
+            'url' => 'export/',
+            'title' => get_string('export', 'export'),
+            'weight' => 30,
+        ),
+        array(
+            'path' => 'myportfolio/import',
+            'url' => 'import/',
+            'title' => get_string('import', 'import'),
+            'weight' => 30,
         ),
         array(
             'path' => 'profile/view',

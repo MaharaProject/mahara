@@ -1,0 +1,14 @@
+There's far too many things to do right now to list them all (they're marked with TODO in the source files). Here's a list of the broad strokes that need doing:
+
+* Clean up API to initialise the importer - don't like passing filename as part of the 'data'
+
+* Update docs on wiki as algorithm changes
+
+* Not sure how the interactive import fits into the 'process()' call that importers have currently. Something to think about
+
+* So far there have been a few places where I'm just grabbing elements that I expect to be there - e.g. in the file importing I expect there to be a <title> and <content src="..">... but feeds may be malformed - how should this be handled? We probably need to be systematic about it, perhaps making a helper method that takes xpath and applies it, and throws exceptions if the thing isn't there. Also, we can probably do some things at the beginning to see if the feed looks at least vaguely valid.
+
+
+
+Later:
+* Clean up import transport stuff, it's tied to the importers in a messy way
