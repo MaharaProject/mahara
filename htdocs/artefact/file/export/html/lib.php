@@ -45,6 +45,9 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
             '',
             'id, artefacttype, parent, title'
         );
+        if (!$this->artefactdata) {
+            $this->artefactdata = array();
+        }
 
         $this->populate_profileicons();
         $this->create_index_for_directory($this->fileroot, 0, null);
