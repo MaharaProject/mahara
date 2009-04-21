@@ -2486,6 +2486,11 @@ function objection_form() {
 
 function objection_form_submit(Pieform $form, $values) {
     global $USER, $view, $artefact;
+
+    if (!$USER->is_logged_in()) {
+        throw new AccessDeniedException();
+    }
+
     require_once('activity.php');
 
     $data = new StdClass;
