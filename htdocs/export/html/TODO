@@ -1,0 +1,17 @@
+TODOs for export HTML plugin
+============================
+
+* breadcrumbs
+* summary improvements
+* date in the footer
+* Resume data export
+* blogs - render without javascript
+* rewrite all links and images to point to the right places
+ - blog attachments
+ - smilies
+* views - render in proper structure
+* i18n
+* G&D
+* Documentation
+ - developer
+ - end-user
