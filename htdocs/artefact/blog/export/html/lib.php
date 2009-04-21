@@ -26,6 +26,9 @@
 
 defined('INTERNAL') || die();
 
+/**
+ * Dumps all of the user's blogs as static HTML
+ */
 class HtmlExportBlog extends HtmlExportArtefactPlugin {
 
     private $blogcount;
