@@ -69,12 +69,12 @@ abstract class PluginExport extends Plugin {
     /**
     * Array of artefacts to export. Set up by constructor.
     */
-    protected $artefacts;
+    protected $artefacts = array();
 
     /**
     * Array of views to export. Set up by constructor.
     */
-    protected $views;
+    protected $views = array();
 
     /**
     * User object for the user being exported.
@@ -93,23 +93,26 @@ abstract class PluginExport extends Plugin {
     * @param User $user user the exporting content belongs to
     * @param mixed $views     can be:
     *                         - EXPORT_ALL_VIES
-                              - array, containing:
-                                  - int - view ids
-                                  - stdclass objects - db rows
-                                  - View objects
+    *                         - array, containing:
+    *                             - int - view ids
+    *                             - stdclass objects - db rows
+    *                             - View objects
     * @param mixed $artefacts can be:
-                              - EXPORT_ALL_ARTEFACTS
-                              - EXPORT_ARTEFACTS_FOR_VIEWS
-                                  - int - artefact ids
-                                  - stdclass objects - db rows
-                                  - ArtefactType subclasses
+    *                         - EXPORT_ALL_ARTEFACTS
+    *                         - EXPORT_ARTEFACTS_FOR_VIEWS
+    *                             - int - artefact ids
+    *                             - stdclass objects - db rows
+    *                             - ArtefactType subclasses
     */
     public function __construct(User $user, $views, $artefacts) {
-        $vaextra = '';
         $this->user = $user;
+
+        $vaextra = '';
         $userid = $this->user->get('id');
         $tmpviews = array();
         $tmpartefacts = array();
+
+        // Get the list of views to export
         if ($views == EXPORT_ALL_VIEWS) {
             $tmpviews = get_column('view', 'id', 'owner', $userid);
         }
@@ -134,7 +137,11 @@ abstract class PluginExport extends Plugin {
             $this->views[$view->get('id')] = $view;
         }
 
-        if ($artefacts == EXPORT_ARTEFACTS_FOR_VIEWS) {
+        // Get the list of artefacts to export
+        if ($artefacts == EXPORT_ALL_ARTEFACTS) {
+            $tmpartefacts = get_records_array('artefact', 'owner', $userid);
+        }
+        else if ($artefacts == EXPORT_ARTEFACTS_FOR_VIEWS) {
             $sql = "SELECT va.* from {view_artefact} va
                 LEFT JOIN {view} v ON v.id = va.view
                 WHERE v.owner = ? $vaextra ORDER BY va.view";
@@ -143,9 +150,6 @@ abstract class PluginExport extends Plugin {
                     $tmpartefacts[] = $varecord->artefact;
                 }
             }
-        }
-        else if ($artefacts == EXPORT_ALL_ARTEFACTS) {
-            $tmpartefacts = get_records_array('artefact', 'owner', $userid);
         }
         else {
             $tmpartefacts = $artefacts;
@@ -169,7 +173,8 @@ abstract class PluginExport extends Plugin {
             }
             $this->artefacts[$artefact->get('id')] = $artefact;
         }
-        // and now set up the temporary export directories
+
+        // Now set up the temporary export directories
         $this->exportdir = get_config('dataroot')
             . 'export/temporary/'
             . $this->user->get('id')  . '/'
@@ -177,19 +182,14 @@ abstract class PluginExport extends Plugin {
         if (!check_dir_exists($this->exportdir)) {
             throw new SystemException("Couldn't create the temporary export directory $this->exportdir");
         }
-        if (isset($this->artefacts) &&
-            isset($this->views) &&
-            isset($this->user)) {
-            return true;
-        }
-        throw new ParamOutOfRangeException("Cannot start export without user, artefacts and views set");
     }
 
     /**
-    * Getter
-    *
-    * @param String key
-    */
+     * Accessor
+     *
+     * @param string $field The field to get (see the class definition to find 
+     *                      which fields are available)
+     */
     public function get($field) {
         if (!property_exists($this, $field)) {
             throw new ParamOutOfRangeException("Field $field wasn't found in class " . get_class($this));
@@ -197,24 +197,6 @@ abstract class PluginExport extends Plugin {
         return $this->{$field};
     }
 
-    /**
-    * Setter
-    *
-    * @param String $field key to set
-    * @param mixed $value value to set
-    *
-    * @todo I don't think we need this
-    public function set($field, $value) {
-        if (property_exists($this, $field)) {
-            $this->{$field} = $value;
-            return true;
-        }
-        throw new ParamOutOfRangeException("Field $field wasn't found in class " . get_class($this));
-    }
-    */
-
-
 }
-
 
 ?>
