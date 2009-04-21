@@ -58,15 +58,19 @@ h1 a {
 
 h2, h3, h4, h5, h6 {
     font-family: Arial, sans-serif;
-    margin: 1em 0 .5em;
+    margin: .5em 0 .25em;
 }
 
 .summary {
-    border-top: 1px dotted #ccc;
-    clear: both;
+    float: left;
+    width: 48%;
 }
 #summary-internal {
     border: none;
+    float: none;
+    clear: both;
+    width: auto;
+    border-bottom: 1px dotted #ccc;
 }
 #summary-internal ul {
     list-style-position: inside;
@@ -83,4 +87,5 @@ h2, h3, h4, h5, h6 {
     border-top: 1px solid #bbb;
     text-align: center;
     font-size: smaller;
+    clear: both;
 }
