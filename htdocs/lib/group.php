@@ -795,11 +795,15 @@ function group_get_grouptypes() {
  * If there is more than one group type with the same join type,
  * prefix the join types with the group type for display.
  */
-function group_get_grouptype_options() {
+function group_get_grouptype_options($currentgrouptype=null) {
     $groupoptions = array();
     $jointypecount = array('open' => 0, 'invite' => 0, 'request' => 0, 'controlled' => 0);
+    $grouptypes = group_get_grouptypes();
     $enabled = array_map(create_function('$a', 'return $a->name;'), plugins_installed('grouptype'));
-    foreach (array_intersect($enabled, group_get_grouptypes()) as $grouptype) {
+    if (is_null($currentgrouptype) || in_array($currentgrouptype, $enabled)) {
+        $grouptypes = array_intersect($enabled, $grouptypes);
+    }
+    foreach ($grouptypes as $grouptype) {
         safe_require('grouptype', $grouptype);
         if (call_static_method('GroupType' . $grouptype, 'can_be_created_by_user')) {
             $grouptypename = get_string('name', 'grouptype.' . $grouptype);
