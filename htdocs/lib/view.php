@@ -2030,7 +2030,7 @@ class View {
         $userid = $USER->get('id');
         require_once(get_config('libroot') . 'group.php');
         if (!group_user_access($groupid)) {
-            throw new AccessDeniedException();
+            throw new AccessDeniedException(get_string('accessdenied', 'error'));
         }
         $from = '
             FROM {view} v
@@ -2488,7 +2488,7 @@ function objection_form_submit(Pieform $form, $values) {
     global $USER, $view, $artefact;
 
     if (!$USER->is_logged_in()) {
-        throw new AccessDeniedException();
+        throw new AccessDeniedException(get_string('accessdenied', 'error'));
     }
 
     require_once('activity.php');
