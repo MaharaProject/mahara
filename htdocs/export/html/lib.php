@@ -139,6 +139,17 @@ class PluginExportHtml extends PluginExport {
         return $smarty;
     }
 
+    /**
+     * Converts the passed text, which is assumed to be a reasonably short 
+     * string, into a a form that could be used in a URL.
+     *
+     * @param string $text The text to convert
+     * @return string      The converted text
+     */
+    public static function text_to_path($text) {
+        return preg_replace('#[^a-zA-Z0-9_-]+#', '-', $text);
+    }
+
     private function build_index_page($summaries) {
         $smarty = $this->get_smarty();
         $smarty->assign('summaries', $summaries);
