@@ -72,8 +72,8 @@ class PluginExportHtml extends PluginExport {
     * main export routine
     */
     public function export() {
-        // insert static files
-        // for each artefact plugin, if it implements leap export, ask it to dump out its structure
+        // For each artefact plugin, if it implements leap export, ask it to 
+        // dump out its structure
         $summaries = array();
         foreach (plugins_installed('artefact', true) as $plugin) {
             $plugin = $plugin->name;
@@ -101,7 +101,7 @@ class PluginExportHtml extends PluginExport {
             $summary = $summary[1];
         }
 
-        // build index.html
+        // Build index.html
         $this->build_index_page($summaries);
         
 
