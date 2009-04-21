@@ -208,6 +208,9 @@ function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortd
                 $queries[] = array('field' => 'lastname',
                                    'type' => 'contains',
                                    'string' => $word);
+                $queries[] = array('field' => 'username',
+                                   'type' => 'contains',
+                                   'string' => $word);
             }
         }
         foreach ($fullnames as $n) {
