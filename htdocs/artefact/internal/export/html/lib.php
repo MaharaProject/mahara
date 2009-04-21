@@ -69,7 +69,6 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
             $smarty->assign('icon', '<img src="static/profileicons/200px-' . $icon->get('title') . '" alt="Profile Icon">');
         }
         return array(
-            'title' => 'Profile',
             'description' => $smarty->fetch('export:html/internal:summary.tpl'),
         );
     }
