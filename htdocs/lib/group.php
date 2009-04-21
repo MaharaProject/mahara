@@ -798,7 +798,8 @@ function group_get_grouptypes() {
 function group_get_grouptype_options() {
     $groupoptions = array();
     $jointypecount = array('open' => 0, 'invite' => 0, 'request' => 0, 'controlled' => 0);
-    foreach (group_get_grouptypes() as $grouptype) {
+    $enabled = array_map(create_function('$a', 'return $a->name;'), plugins_installed('grouptype'));
+    foreach (array_intersect($enabled, group_get_grouptypes()) as $grouptype) {
         safe_require('grouptype', $grouptype);
         if (call_static_method('GroupType' . $grouptype, 'can_be_created_by_user')) {
             $grouptypename = get_string('name', 'grouptype.' . $grouptype);
