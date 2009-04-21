@@ -1,10 +1,8 @@
 {include file="export:html:header.tpl"}
 
-<h2>Homepage of exported data</h2>
-
-{foreach from=$summaries item=summary}
-<div>
-    <h3>{$summary.title|escape}</h3>
+{foreach from=$summaries key=plugin item=summary}
+<div class="summary" id="summary-{$plugin|escape}">
+    {if $summary.title}<h2>{$summary.title|escape}</h2>{/if}
     {$summary.description}
 </div>
 {/foreach}
