@@ -56,9 +56,25 @@ class HtmlExportBlog extends HtmlExportArtefactPlugin {
     }
 
     public function get_summary() {
+        $smarty = $this->exporter->get_smarty();
+        if ($blogs = get_records_select_array('artefact', "owner = ? AND artefacttype = 'blog'", array($this->exporter->get('user')->get('id')), 'title')) {
+            foreach ($blogs as &$blog) {
+                $blog->link = 'files/blog/' . PluginExportHtml::text_to_path($blog->title) . '/index.html';
+            }
+            $smarty->assign('blogs', $blogs);
+
+            $stryouhaveblogs = (count($blogs) == 1)
+                ? get_string('youhaveoneblog', 'artefact.blog')
+                : get_string('youhaveblogs', 'artefact.blog', count($blogs));
+        }
+        else {
+            $stryouhaveblogs = get_string('youhavenoblogs', 'artefact.blog');
+        }
+
+        $smarty->assign('stryouhaveblogs', $stryouhaveblogs);
         return array(
-            'title' => 'Blogs',
-            'description' => "<p>You have {$this->blogcount} blogs</p>",
+            'title' => get_string('blogs', 'artefact.blog'),
+            'description' => $smarty->fetch('export:html/blog:summary.tpl'),
         );
     }
 

@@ -130,4 +130,8 @@ $string['copynocopy'] = 'Skip this block entirely when copying the View';
 
 $string['viewposts'] = 'Copied posts (%s)';
 $string['postscopiedfromview'] = 'Posts copied from %s';
+
+$string['youhavenoblogs'] = 'You have no blogs.';
+$string['youhaveoneblog'] = 'You have 1 blog.';
+$string['youhaveblogs'] = 'You have %s blogs.';
 ?>
