@@ -29,8 +29,10 @@ defined('INTERNAL') || die();
 class HtmlExportInternal extends HtmlExportArtefactPlugin {
 
     public function dump_export_data() {
-        // Profile page
         $smarty = $this->exporter->get_smarty('../../');
+
+        // Profile page
+        $smarty->assign('breadcrumbs', array(array('text' => 'Profile page', 'path' => 'profilepage.html')));
         $view = $this->exporter->get('user')->get_profile_view();
         $smarty->assign('view', $view->build_columns());
 
@@ -40,6 +42,8 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
         }
 
         // Generic profile information
+        $smarty->assign('breadcrumbs', array(array('text' => 'Profile information', 'path' => 'index.html')));
+
         $sections = array();
         $elementlist = call_static_method('ArtefactTypeProfile', 'get_all_fields');
         $profilefields = get_column_sql('SELECT id FROM {artefact} WHERE owner=? AND artefacttype IN ('

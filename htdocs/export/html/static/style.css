@@ -38,19 +38,19 @@ h1 a {
 }
 
 #breadcrumbs ul {
-    margin: .5em 0 0;
+    margin: .5em 0 .1em;
     padding: 0;
 }
 #breadcrumbs li {
     list-style-type: none;
     margin: 0;
     padding: 0;
+    display: inline;
 }
 #breadcrumbs a {
     color: #808080;
     font-size: smaller;
     font-family: Arial, sans-serif;
-    float: left;
 }
 #breadcrumbs-footer {
     clear: both;
