@@ -31,8 +31,6 @@ defined('INTERNAL') || die();
  */
 class HtmlExportBlog extends HtmlExportArtefactPlugin {
 
-    private $blogcount;
-
     public function dump_export_data() {
         if ($blogs = get_column('artefact', 'id', 'owner', $this->exporter->get('user')->get('id'), 'artefacttype', 'blog')) {
             foreach ($blogs as $blogid) {
@@ -55,9 +53,6 @@ class HtmlExportBlog extends HtmlExportArtefactPlugin {
                 }
             }
         }
-
-        $this->blogcount = count($blogs);
-
     }
 
     public function get_summary() {
