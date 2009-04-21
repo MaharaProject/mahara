@@ -166,7 +166,7 @@ class PluginExportLeap extends PluginExport {
         exec($command, $output, $returnvar);
         chdir($cwd);
         if ($returnvar != 0) {
-            throw new SystemException('Failed to zip the export file');
+            throw new SystemException('Failed to zip the export file: return code ' . $returnvar);
         }
         return $this->zipfile;
     }
