@@ -220,7 +220,7 @@ abstract class HtmlExportArtefactPlugin {
         $pluginname = strtolower(substr(get_class($this), strlen('HtmlExport')));
         $this->fileroot = $this->exporter->get('exportdir') . '/' . $this->exporter->get('rootdir') . '/files/' . $pluginname . '/';
         if (!check_dir_exists($this->fileroot)) {
-            throw new SystemException("Couldn't create the temporary export directory $this->fileroot");
+            throw new SystemException("Could not create the temporary export directory $this->fileroot");
         }
     }
 
