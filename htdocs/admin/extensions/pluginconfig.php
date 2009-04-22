@@ -53,7 +53,18 @@ if ($disable && !call_static_method(generate_class_name($plugintype, $pluginname
 
 if ($enable || $disable) {
     if ($plugintype == 'blocktype') {
-        $pluginname = blocktype_namespaced_to_single($pluginname);
+        if (strpos($pluginname, '/') !== false) {
+            list($artefact, $pluginname) = split('/', $pluginname);
+            // Don't enable blocktypes unless the artefact plugin that provides them is also enabled
+            if ($enable && !get_field('artefact_installed', 'active', 'name', $artefact)) {
+                $SESSION->add_error_msg(get_string('pluginnotenabled', 'mahara', $artefact));
+                redirect('/admin/extensions/plugins.php');
+            }
+        }
+    }
+    else if ($plugintype == 'artefact' && $disable) {
+        // Disable all the artefact's blocktypes too
+        set_field('blocktype_installed', 'active', 0, 'artefactplugin', $pluginname);
     }
     set_field($plugintype . '_installed', 'active', $enable, 'name', $pluginname);
     $SESSION->add_ok_msg(get_string('plugin' . (($enable) ? 'enabled' : 'disabled')));
