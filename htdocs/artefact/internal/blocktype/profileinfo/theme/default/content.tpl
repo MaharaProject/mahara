@@ -1,5 +1,5 @@
 {if $profileiconpath}<div class="fr"><img src="{$profileiconpath|escape}" alt=""></div>{/if}
-<p>{$profileinfo.introduction}</p>
+<p>{$profileinfo.introduction|clean_html}</p>
 
 <ul>
 {foreach from=$profileinfo key=key item=item}
