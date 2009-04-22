@@ -92,4 +92,11 @@ h2, h3, h4, h5, h6 {
     text-align: center;
     font-size: smaller;
     clear: both;
+    color: #606060;
+}
+#footer p {
+    margin-top: .5em;
+}
+#footer a {
+    color: #606060;
 }
