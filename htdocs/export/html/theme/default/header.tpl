@@ -14,7 +14,7 @@
                 <ul>
                     <li><a href="{$rootpath}index.html">Home</a></li>
 {foreach from=$breadcrumbs item=crumb}
-                    <li>&raquo; <a href="{$crumb.path|escape}">{$crumb.text|escape}</a></li>
+                    <li>&raquo; {if $crumb.path}<a href="{$crumb.path|escape}">{$crumb.text|escape}</a>{else}{$crumb.text|escape}{/if}</li>
 {/foreach}
                 </ul>
             </div>

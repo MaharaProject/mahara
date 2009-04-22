@@ -167,6 +167,10 @@ class PluginExportHtml extends PluginExport {
             $smarty = $this->get_smarty('../../');
             foreach ($viewids as $viewid) {
                 $view = new View($viewid);
+                $smarty->assign('breadcrumbs', array(
+                    array('text' => get_string('Views', 'view')),
+                    array('text' => $view->get('title'), 'path' => 'index.html'),
+                ));
 
                 $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . preg_replace('#[^a-zA-Z0-9_-]+#', '-', $view->get('title'));
                 if (!check_dir_exists($directory)) {

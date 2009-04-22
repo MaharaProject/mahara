@@ -43,7 +43,10 @@ class HtmlExportBlog extends HtmlExportArtefactPlugin {
                 }
 
                 $smarty = $this->exporter->get_smarty('../../../');
-                $smarty->assign('breadcrumbs', array(array('text' => $blog->get('title'), 'path' => 'index.html')));
+                $smarty->assign('breadcrumbs', array(
+                    array('text' => get_string('blogs', 'artefact.blog')),
+                    array('text' => $blog->get('title'), 'path' => 'index.html'),
+                ));
                 $rendered = $blog->render_self(array());
                 $smarty->assign('rendered_blog', $rendered['html']);
                 $content = $smarty->fetch('export:html/blog:index.tpl');
