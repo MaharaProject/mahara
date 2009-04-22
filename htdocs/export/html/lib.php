@@ -172,7 +172,7 @@ class PluginExportHtml extends PluginExport {
                     array('text' => $view->get('title'), 'path' => 'index.html'),
                 ));
 
-                $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . preg_replace('#[^a-zA-Z0-9_-]+#', '-', $view->get('title'));
+                $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . self::text_to_path($view->get('title'));
                 if (!check_dir_exists($directory)) {
                     throw new SystemException("Could not create directory for view $viewid");
                 }
@@ -194,7 +194,7 @@ class PluginExportHtml extends PluginExport {
             if ($view->get('type') != 'profile') {
                 $views[] = array(
                     'title' => $view->get('title'),
-                    'folder' => preg_replace('#[^a-zA-Z0-9_-]+#', '-', $view->get('title')),
+                    'folder' => self::text_to_path($view->get('title')),
                 );
             }
         }
