@@ -179,12 +179,6 @@ class ArtefactTypeBlog extends ArtefactType {
      * @return array  A two key array, 'html' and 'javascript'.
      */
     public function render_self($options) {
-        // This is because if there are multiple blocks on a page, they need separate
-        // js variables.
-        $blockid = isset($options['blockid'])
-            ? $options['blockid']
-            : mt_rand();
-
         $this->add_to_render_path($options);
 
         $smarty = smarty_core();
@@ -197,16 +191,49 @@ class ArtefactTypeBlog extends ArtefactType {
             $smarty->assign('artefacttitle', hsc($this->get('title')));
         }
 
-        $smarty->assign('blockid', $blockid);
         $smarty->assign('options', $options);
-        $smarty->assign('enc_id', json_encode($this->id));
-        $smarty->assign('limit', self::pagination);
-        $smarty->assign('loading_img', theme_get_url('images/loading.gif'));
         $smarty->assign('description', clean_html($this->get('description')));
 
         // Remove unnecessary options for blog posts
         unset($options['hidetitle']);
-        $smarty->assign('enc_options', json_encode(json_encode($options)));
+
+        $page = (isset($options['page'])) ? abs(intval($options['page'])) : abs(param_integer('page', 1));
+        $offset = $page ? $page * self::pagination - self::pagination : 1;
+
+        $postids = get_column_sql("
+            SELECT a.id
+            FROM {artefact} a
+            LEFT JOIN {artefact_blog_blogpost} bp ON a.id = bp.blogpost
+            WHERE a.parent = ?
+            AND bp.published = 1
+            ORDER BY a.ctime DESC
+            LIMIT ? OFFSET ?", array($this->get('id'), self::pagination, $offset));
+        $postcount = $this->count_published_posts();
+
+        $data = array();
+        foreach($postids as $postid) {
+            $blogpost = new ArtefactTypeBlogPost($postid);
+            $data[] = array(
+                'id' => $postid,
+                'content' => $blogpost->render_self($options)
+            );
+        }
+        $smarty->assign('postdata', $data);
+
+        // Pagination
+        if ($postcount > self::pagination) {
+            $baselink = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->get('id');
+            if (isset($options['viewid'])) {
+                $baselink .= '&view=' . $options['viewid'];
+            }
+
+            if ($offset + self::pagination < $postcount) {
+                $smarty->assign('olderpostslink',  $baselink . '&page=' . ($page + 1));
+            }
+            if ($offset > 0) {
+                $smarty->assign('newerpostslink',  $baselink . '&page=' . ($page - 1));
+            }
+        }
 
         return array('html' => $smarty->fetch('blocktype:blog:blog_render_self.tpl'), 'javascript' => '');
     }
@@ -291,6 +318,23 @@ class ArtefactTypeBlog extends ArtefactType {
 
     public function copy_extra($new) {
         $new->set('title', get_string('Copyof', 'mahara', $this->get('title')));
+    }
+
+    /**
+     * Returns the number of posts in this blog that have been published.
+     *
+     * The result of this function looked up from the database each time, so 
+     * cache it if you know it's safe to do so.
+     *
+     * @return int
+     */
+    public function count_published_posts() {
+        return (int)get_field_sql("
+            SELECT COUNT(*)
+            FROM {artefact} a
+            LEFT JOIN {artefact_blog_blogpost} bp ON a.id = bp.blogpost
+            WHERE a.parent = ?
+            AND bp.published = 1", array($this->get('id')));
     }
 
 }
