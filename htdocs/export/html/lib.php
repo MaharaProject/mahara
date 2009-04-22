@@ -53,7 +53,6 @@ class PluginExportHtml extends PluginExport {
     */
     public function __construct(User $user, $views, $artefacts) {
         parent::__construct($user, $views, $artefacts);
-        $this->export_time = time(); // TODO: move into parent class
         // TODO move this normalisation into a method
         $this->rootdir = 'portfolio-for-' . preg_replace('#[^a-zA-Z0-9_-]+#', '-', $user->get('username'));
 

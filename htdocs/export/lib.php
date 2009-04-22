@@ -82,6 +82,13 @@ abstract class PluginExport extends Plugin {
     protected $user;
 
     /**
+     * The time the export was generated.
+     *
+     * Technically, this is the time at which the export object was created.
+     */
+    protected $export_time;
+
+    /**
     * Constructor. Sets up all the artefacts and views correctly
     * Also sets up temporary export directories
     *
@@ -105,6 +112,7 @@ abstract class PluginExport extends Plugin {
     *                             - ArtefactType subclasses
     */
     public function __construct(User $user, $views, $artefacts) {
+        $this->export_time = time();
         $this->user = $user;
 
         $vaextra = '';

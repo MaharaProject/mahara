@@ -69,12 +69,6 @@ class PluginExportLeap extends PluginExport {
     protected $zipfile;
 
     /**
-     * time that the export took place
-     */
-    protected $export_time;
-
-
-    /**
     * special cases - artefact plugins that want to override stuff PER PLUGIN
     * rather than per type or per instance.
     */
@@ -92,7 +86,6 @@ class PluginExportLeap extends PluginExport {
     public function __construct(User $user, $views, $artefacts) {
         parent::__construct($user, $views, $artefacts);
         $this->smarty = smarty_core();
-        $this->export_time = time();
 
         if (!check_dir_exists($this->exportdir . '/' . $this->filedir)) {
             throw new SystemException("Couldn't create the temporary export directory $this->exportdir");
