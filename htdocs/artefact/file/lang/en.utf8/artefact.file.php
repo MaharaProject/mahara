@@ -97,6 +97,7 @@ $string['requireagreement'] = 'Require Agreement';
 $string['savechanges'] = 'Save changes';
 $string['selectafile'] = 'Select a file';
 $string['Size'] = 'Size';
+$string['spaceused'] = 'Space used';
 $string['timeouterror'] = 'File upload failed: try uploading the file again';
 $string['title'] = 'Name';
 $string['titlefieldisrequired'] = 'The name field is required';

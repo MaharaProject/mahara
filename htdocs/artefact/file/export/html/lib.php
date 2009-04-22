@@ -56,11 +56,14 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
     }
 
     public function get_summary() {
-        $filecount   = count(array_filter($this->artefactdata, create_function('$a', 'return $a->artefacttype != "folder";')));
-        $foldercount = count(array_filter($this->artefactdata, create_function('$a', 'return $a->artefacttype == "folder";')));
+        $smarty = $this->exporter->get_smarty();
+        $smarty->assign('filecount', count(array_filter($this->artefactdata, create_function('$a', 'return $a->artefacttype != "folder";'))));
+        $smarty->assign('foldercount', count(array_filter($this->artefactdata, create_function('$a', 'return $a->artefacttype == "folder";'))));
+        $smarty->assign('spaceused', $this->exporter->get('user')->get('quotaused'));
+
         return array(
-            'title' => 'Files',
-            'description' => "<p>You have {$filecount} files in {$foldercount} folders. <a href=\"files/file/index.html\">Browse</a>.</p>",
+            'title' => get_string('Files', 'artefact.file'),
+            'description' => $smarty->fetch('export:html/file:summary.tpl'),
         );
     }
 
