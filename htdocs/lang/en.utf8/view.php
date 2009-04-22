@@ -72,6 +72,8 @@ $string['viewsubmittedtogroup'] = 'This View has been submitted to <a href="%sgr
 $string['nobodycanseethisview2'] = 'Only you can see this View';
 $string['noviews'] = 'No Views.';
 $string['youhavenoviews'] = 'You have no Views.';
+$string['youhaveoneview'] = 'You have 1 View.';
+$string['youhaveviews']   = 'You have %s Views.';
 $string['viewsownedbygroup'] = 'Views owned by this group';
 $string['viewssharedtogroup'] = 'Views shared to this group';
 $string['viewssharedtogroupbyothers'] = 'Views shared to this group by others';

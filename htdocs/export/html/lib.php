@@ -199,10 +199,19 @@ class PluginExportHtml extends PluginExport {
             }
         }
         $smarty->assign('views', $views);
-        $smarty->assign('viewcount', count($views));
+
+        if ($views) {
+            $stryouhaveviews = (count($views) == 1)
+                ? get_string('youhaveoneview', 'view')
+                : get_string('youhaveviews', 'view', count($views));
+        }
+        else {
+            $stryouhaveviews = get_string('youhavenoviews', 'view');
+        }
+        $smarty->assign('stryouhaveviews', $stryouhaveviews);
 
         return array(
-            'title' => 'Views',
+            'title' => get_string('Views', 'view'),
             'description' => $smarty->fetch('export:html:viewsummary.tpl'),
         );
     }
