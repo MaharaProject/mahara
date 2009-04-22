@@ -54,6 +54,21 @@ class HtmlExportBlog extends HtmlExportArtefactPlugin {
                 if (false === file_put_contents($this->fileroot . $dirname . '/index.html', $content)) {
                     throw new SystemException("Unable to create index.html for blog $blogid");
                 }
+
+                // If the blog has many posts, we'll need to write out archive pages
+                $postcount = $blog->count_published_posts();
+                $perpage   = ArtefactTypeBlog::pagination;
+                if ($postcount > $perpage) {
+                    for ($i = 2; $i <= ceil($postcount / $perpage); $i++) {
+                        $rendered = $blog->render_self(array('page' => $i));
+                        $smarty->assign('rendered_blog', $rendered['html']);
+                        $content = $smarty->fetch('export:html/blog:index.tpl');
+
+                        if (false === file_put_contents($this->fileroot . $dirname . "/{$i}.html", $content)) {
+                            throw new SystemException("Unable to create {$i}.html for blog $blogid");
+                        }
+                    }
+                }
             }
         }
     }
