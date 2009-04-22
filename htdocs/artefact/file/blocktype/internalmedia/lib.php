@@ -252,13 +252,13 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         }
         $html =  '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>
                <span class="blocktype_internalmedia_mp3" id="' . $id . '">(' 
-               . get_string('flash', 'blocktype.file/internalmedia') . ')</span>
+               . get_string('flashanimation', 'blocktype.file/internalmedia') . ')</span>
                 <script type="text/javascript">
                     var so = new SWFObject(" ' . $playerurl . '","player","' . $width . '","' . ($height + 20). '","7");
                     so.addParam("allowfullscreen","false");
                     so.addVariable("file","' . urlencode($url) . '");
                     so.addVariable("displayheight"," ' . $height . '");
-                    so.addVariable("type", "' . $artefact->get('oldextension') . '");
+                    so.addVariable("type", "' . $extn . '");
                     so.addVariable("height", "' . $height . '");
                     so.addVariable("width", "' . $width . '");
                 ';

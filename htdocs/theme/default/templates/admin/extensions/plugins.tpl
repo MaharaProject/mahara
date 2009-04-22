@@ -13,14 +13,22 @@
         <ul id="{$plugintype}.installed">
     {foreach from=$installed key='plugin' item='data'}
 	<li id="{$plugintype}.{$plugin}">{$plugin}
+        {if $data.disableable}
+            {if $data.active}
+                [ <a href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;disable=1&amp;sesskey={$SESSKEY}">{str tag='disable'}</a>
+            {else}
+                [ <a href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;enable=1&amp;sesskey={$SESSKEY}">{str tag='enable'}</a>
+            {/if}
+        {/if}
         {if $data.config}
-            (<a href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">{str tag='config'}</a>)
-        {/if}</li>
+            {if !$data.disableable} [ {else} | {/if}
+            <a href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">{str tag='config'}</a>
+        {/if} {if $data.config || $data.disableable} ] {/if} </li>
         {if $data.types} 
 	    <ul>
 	    {foreach from=$data.types key='type' item='config'}
 		<li>{$type} 
-                {if $config} (<a href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;type={$type}">{str tag='config'}</a>){/if}</li>
+                {if $config} [ <a href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;type={$type}">{str tag='config'}</a> ]{/if}</li>
 	    {/foreach}
 	    </ul>
 	{/if}

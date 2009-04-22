@@ -30,5 +30,8 @@ abstract class PluginNotification extends Plugin {
 
     public abstract static function notify_user($user, $data);
 
+    public static function can_be_disabled() {
+        return false;
+    }
 }
 ?>

@@ -32,6 +32,10 @@ defined('INTERNAL') || die();
  */
 class PluginSearchInternal extends PluginSearch {
 
+    public static function can_be_disabled() {
+        return false;
+    }
+
     /**
      * Implement user searching with SQL
      *

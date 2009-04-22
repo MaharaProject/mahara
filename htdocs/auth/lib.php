@@ -1607,6 +1607,9 @@ class PluginAuth extends Plugin {
         }
     }
 
+    public static function can_be_disabled() {
+        return false;
+    }
 }
 
 ?>

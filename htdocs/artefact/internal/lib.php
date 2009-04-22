@@ -123,6 +123,10 @@ class PluginArtefactInternal extends PluginArtefact {
     public static function sort_child_data($a, $b) {
         return strnatcasecmp($a->text, $b->text);
     }
+
+    public static function can_be_disabled() {
+        return false;
+    }
 }
 
 class ArtefactTypeProfile extends ArtefactType {

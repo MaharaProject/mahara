@@ -69,6 +69,7 @@ if ($submittedgroup && group_user_can_assess_submitted_views($submittedgroup, $U
         'method'   => 'post',
         'plugintype' => 'core',
         'pluginname' => 'view',
+        'autofocus' => false,
         'elements' => array(
             'submittedview' => array(
                 'type'  => 'html',

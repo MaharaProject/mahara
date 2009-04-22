@@ -34,6 +34,10 @@ class PluginGrouptypeStandard extends PluginGrouptype {
         }
     }
 
+    public static function can_be_disabled() {
+        return false;
+    }
+
 }
 
 class GroupTypeStandard extends GroupType {

@@ -905,14 +905,14 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
         if (!empty($nonfatal)) {
             return false;
         }
-        throw new Exception ("File $fullpath did not exist");
+        throw new SystemException ("File $fullpath did not exist");
     }
 
     if (strpos($realpath, get_config('docroot') !== 0)) {
         if (!empty($nonfatal)) {
             return false;
         }
-        throw new Exception ("File $fullpath was outside document root!");
+        throw new SystemException ("File $fullpath was outside document root!");
     }
 
     if ($function == 'require') { return require($realpath); }
@@ -960,8 +960,15 @@ function plugin_types_installed() {
  * 
  * @param string $plugintype type of plugin
  */
-function plugins_installed($plugintype) {
-    return get_records_array($plugintype . '_installed');
+function plugins_installed($plugintype, $all=false) {
+    $sort = 'name';
+    if ($plugintype == 'blocktype') {
+        $sort = 'artefactplugin,name';
+    }
+    if ($all) {
+        return get_records_array($plugintype . '_installed', '', '', $sort);
+    }
+    return get_records_array($plugintype . '_installed', 'active', 1, $sort);
 }
 
 /**
@@ -1172,6 +1179,15 @@ class Plugin {
     */
     public static function get_activity_types() {
         return array();
+    }
+
+    /**
+    * Can this plugin be disabled?
+    * All internal type plugins, and ones in which Mahara won't work should override this.
+    * Probably at least one plugin per plugin-type should override this.
+    */
+    public static function can_be_disabled() {
+        return true;
     }
 }
 
@@ -1943,21 +1959,26 @@ function onlineusers_sideblock() {
     $onlineusers = get_records_select_array('usr', 'deleted = 0 AND lastaccess > ?',
         array(db_format_timestamp(time() - get_config('accessidletimeout'))), 'lastaccess DESC');
 
-    foreach ($onlineusers as &$user) {
-        // Use 'profileiconbyid' for the current user, just in case they change their profile icon
-        if ($user->id == $USER->get('id')) {
-            $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . (int)$user->profileicon . '&size=20x20';
-        }
-        else {
-            $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileicon&id=' . $user->id . '&size=20x20';
-        }
+    if ($onlineusers) {
+        foreach ($onlineusers as &$user) {
+            // Use 'profileiconbyid' for the current user, just in case they change their profile icon
+            if ($user->id == $USER->get('id')) {
+                $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . (int)$user->profileicon . '&size=20x20';
+            }
+            else {
+                $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileicon&id=' . $user->id . '&size=20x20';
+            }
 
-        // If the user is an MNET user, show where they've come from
-        $authobj = AuthFactory::create($user->authinstance);
-        if ($authobj->authname == 'xmlrpc') {
-            $peer = get_peer($authobj->wwwroot);
-            $user->loggedinfrom = $peer->name;
+            // If the user is an MNET user, show where they've come from
+            $authobj = AuthFactory::create($user->authinstance);
+            if ($authobj->authname == 'xmlrpc') {
+                $peer = get_peer($authobj->wwwroot);
+                $user->loggedinfrom = $peer->name;
+            }
         }
+    }
+    else {
+        $onlineusers = array();
     }
     return array(
         'users' => $onlineusers,
