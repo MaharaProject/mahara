@@ -36,6 +36,19 @@ class HtmlExportResume extends HtmlExportArtefactPlugin {
         $smarty->assign('breadcrumbs', array(
             array('text' => get_string('resume', 'artefact.resume'), 'path' => 'index.html'),
         ));
+
+        if ($artefacts = get_column_sql("SELECT id
+            FROM {artefact}
+            WHERE owner = ?
+            AND artefacttype IN
+            (SELECT name FROM {artefact_installed_type} WHERE plugin = 'resume')",
+            array($this->exporter->get('user')->get('id')))) {
+            foreach ($artefacts as $id) {
+                $artefact = artefact_instance_from_id($id);
+                $rendered = $artefact->render_self(array());
+                $smarty->assign($artefact->get('artefacttype'), $rendered['html']);
+            }
+        }
         $content = $smarty->fetch('export:html/resume:index.tpl');
 
         if (false === file_put_contents($this->fileroot . 'index.html', $content)) {

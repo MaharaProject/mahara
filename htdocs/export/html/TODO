@@ -1,12 +1,12 @@
 TODOs for export HTML plugin
 ============================
 
-* Resume data export
 * blogs - render without javascript
 * rewrite all links and images to point to the right places
  - blog attachments
  - smilies
 * views - render in proper structure
+* resume display tidyup
 * i18n
 * G&D
 * Documentation
