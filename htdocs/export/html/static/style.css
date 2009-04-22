@@ -46,11 +46,12 @@ h1 a {
     margin: 0;
     padding: 0;
     display: inline;
-}
-#breadcrumbs a {
     color: #808080;
     font-size: smaller;
     font-family: Arial, sans-serif;
+}
+#breadcrumbs a {
+    color: #808080;
 }
 #breadcrumbs-footer {
     clear: both;
