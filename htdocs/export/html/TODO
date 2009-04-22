@@ -1,7 +1,6 @@
 TODOs for export HTML plugin
 ============================
 
-* date in the footer
 * Resume data export
 * blogs - render without javascript
 * rewrite all links and images to point to the right places

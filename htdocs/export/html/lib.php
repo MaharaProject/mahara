@@ -134,6 +134,7 @@ class PluginExportHtml extends PluginExport {
         $smarty = smarty_core();
         $smarty->assign('user', $this->get('user'));
         $smarty->assign('rootpath', $rootpath);
+        $smarty->assign('export_time', $this->export_time);
 
         return $smarty;
     }
