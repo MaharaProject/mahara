@@ -1,3 +1,8 @@
+1.1.3 (2009-04-22)
+- Fixed XSS vulnerabilities in user views (CVE-2009-0664)
+- Prevent arbitrary code execution in html2text library (CVE-2008-5619)
+- Allow course groups with membership by request
+- Many minor improvements and bug fixes
 1.1.2 (2009-03-10)
 - Fixed multiple XSS vulnerabilities in user profile data and blogs
   (CVE-2009-0660)
