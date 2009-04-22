@@ -149,8 +149,6 @@ class html2text
         '/<script[^>]*>.*?<\/script>/i',         // <script>s -- which strip_tags supposedly has problems with
         '/<style[^>]*>.*?<\/style>/i',           // <style>s -- which strip_tags supposedly has problems with
         //'/<!-- .* -->/',                         // Comments -- which strip_tags might have problem a with
-        '/<h[123][^>]*>(.*?)<\/h[123]>/ie',      // H1 - H3
-        '/<h[456][^>]*>(.*?)<\/h[456]>/ie',      // H4 - H6
         '/<p[^>]*>/i',                           // <P>
         '/<br[^>]*>/i',                          // <br>
         '/<b[^>]*>(.*?)<\/b>/i',                 // <b>
@@ -161,14 +159,11 @@ class html2text
         '/(<ol[^>]*>|<\/ol>)/i',                 // <ol> and </ol>
         '/<li[^>]*>(.*?)<\/li>/i',               // <li> and </li>
         '/<li[^>]*>/i',                          // <li>
-        '/<a [^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/ie',
-                                                 // <a href="">
         '/<hr[^>]*>/i',                          // <hr>
         '/<img[^>]*alt="([^"]+)"[^>]*>/i',       // <img>
         '/(<table[^>]*>|<\/table>)/i',           // <table> and </table>
         '/(<tr[^>]*>|<\/tr>)/i',                 // <tr> and </tr>
         '/<td[^>]*>(.*?)<\/td>/i',               // <td> and </td>
-        '/<th[^>]*>(.*?)<\/th>/ie',              // <th> and </th>
         '/&(nbsp|#160);/i',                      // Non-breaking space
         '/&(quot|rdquo|ldquo|#8220|#8221|#147|#148);/i',
 		                                         // Double quotes
@@ -202,8 +197,6 @@ class html2text
         '',                                     // <script>s -- which strip_tags supposedly has problems with
         '',                                     // <style>s -- which strip_tags supposedly has problems with
         //'',                                     // Comments -- which strip_tags might have problem a with
-        "ucwords(\"\n\n_\\1_\n\n\")",           // H1 - H3
-        "ucwords(\"\n\n\\1\n\n\")",             // H4 - H6
         "\n\n",                                 // <P>
         "\n",                                   // <br>
         '_\\1_',                                // <b>
@@ -214,14 +207,11 @@ class html2text
         "\n\n",                                 // <ol> and </ol>
         "    * \\1\n",                          // <li> and </li>
         "\n    * ",                             // <li>
-        '$this->_build_link_list("\\1", "\\2")',
-                                                // <a href="">
         "\n-------------------------\n",        // <hr>
         "[\\1]",                                // <img>
         "\n\n",                                 // <table> and </table>
         "\n",                                   // <tr> and </tr>
         "\t\t\\1\n",                            // <td> and </td>
-        "ucwords(\"\t\t\\1\n\")",               // <th> and </th>
         ' ',                                    // Non-breaking space
         '"',                                    // Double quotes
         "'",                                    // Single quotes
@@ -239,6 +229,21 @@ class html2text
         '',                                     // Unknown/unhandled entities
         ' '                                     // Runs of spaces, post-handling
     );
+
+    /**
+     *  List of preg* regular expression patterns to search for
+     *  and replace using callback function.
+     *
+     *  @var array $callback_search
+     *  @access public
+     */
+    var $callback_search = array(
+        '/<(h[123456])[^>]*>(.*?)<\/h[123456]>/i', // H1 - H6
+        '/<(a) [^>]*href=("|\')([^"\']+)\2[^>]*>(.*?)<\/a>/i',
+                                                   // <a href="">
+        '/<(th)[^>]*>(.*?)<\/th>/i',               // <th> and </th>
+    );
+
 
     /**
      *  Contains a list of HTML tags to allow in the resulting text.
@@ -424,6 +429,7 @@ class html2text
 
         // Run our defined search-and-replace
         $text = preg_replace($this->search, $this->replace, $text);
+        $text = preg_replace_callback($this->callback_search, array('html2text', '_preg_callback'), $text);
 
         // Strip any other HTML tags
         $text = strip_tags($text, $this->allowed_tags);
@@ -484,6 +490,32 @@ class html2text
         }
 
         return $display . $additional;
+    }
+
+    /**
+     *  Callback function for preg_replace_callback use.
+     *
+     *  @param  array PREG matches
+     *  @return string
+     *  @access private
+     */
+    function _preg_callback($matches)
+    {
+        switch($matches[1])
+        {
+            case 'th':
+                return "\t\t" . ucwords($matches[2]) . "\n";
+            case 'h1':
+            case 'h2':
+            case 'h3':
+                return "\n\n_". ucwords($matches[2]) ."_\n\n";
+            case 'h4':
+            case 'h5':
+            case 'h6':
+                return "\n\n". ucwords($matches[2]) ."\n\n";
+            case 'a':
+                return $this->_build_link_list($matches[3], $matches[4]);
+        }
     }
 
 }
