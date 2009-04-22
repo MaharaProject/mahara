@@ -206,10 +206,6 @@ class PluginAuthInternal extends PluginAuth {
     public static function get_instance_config_options() {
         return array();
     }
-
-    public static function can_be_disabled() {
-        return false;
-    }
 }
 
 ?>
