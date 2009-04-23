@@ -468,7 +468,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         if (empty($options['hidetitle'])) {
             if (isset($options['viewid'])) {
                 $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/artefact.php?artefact='
-                     . $this->get('id') . '&view=' . $options['viewid']
+                     . $this->get('id') . '&amp;view=' . $options['viewid']
                      . '">' . hsc($this->get('title')) . '</a>');
             }
             else {
