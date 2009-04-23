@@ -48,7 +48,8 @@ class HtmlExportBlog extends HtmlExportArtefactPlugin {
                     array('text' => $blog->get('title'), 'path' => 'index.html'),
                 ));
                 $rendered = $blog->render_self(array());
-                $smarty->assign('rendered_blog', $rendered['html']);
+                $outputfilter = new HtmlExportOutputFilter('../../../');
+                $smarty->assign('rendered_blog', $outputfilter->filter($rendered['html']));
                 $content = $smarty->fetch('export:html/blog:index.tpl');
 
                 if (false === file_put_contents($this->fileroot . $dirname . '/index.html', $content)) {
@@ -61,7 +62,7 @@ class HtmlExportBlog extends HtmlExportArtefactPlugin {
                 if ($postcount > $perpage) {
                     for ($i = 2; $i <= ceil($postcount / $perpage); $i++) {
                         $rendered = $blog->render_self(array('page' => $i));
-                        $smarty->assign('rendered_blog', $rendered['html']);
+                        $smarty->assign('rendered_blog', $outputfilter->filter($rendered['html']));
                         $content = $smarty->fetch('export:html/blog:index.tpl');
 
                         if (false === file_put_contents($this->fileroot . $dirname . "/{$i}.html", $content)) {
