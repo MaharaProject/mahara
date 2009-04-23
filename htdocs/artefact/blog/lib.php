@@ -495,7 +495,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 $attachment->viewpath = get_config('wwwroot') . 'view/artefact.php?artefact=' . $attachment->id . '&view=' . (isset($options['viewid']) ? $options['viewid'] : 0);
                 $attachment->downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $attachment->id;
                 if (isset($options['viewid'])) {
-                    $attachment->downloadpath .= '&id=' . $options['viewid'];
+                    $attachment->downloadpath .= '&view=' . $options['viewid'];
                 }
             }
             $smarty->assign('attachments', $attachments);
