@@ -67,6 +67,10 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
         );
     }
 
+    public function get_summary_weight() {
+        return 20;
+    }
+
     /**
      * Puts all profile icons in the static/profileicons/ directory
      */
@@ -166,11 +170,6 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
             throw new SystemException("HtmlExportFile::create_index_for_directory: unable to create index.html for directory $id");
         }
     }
-
-    public function get_summary_weight() {
-        return 20;
-    }
-
 }
 
 ?>
