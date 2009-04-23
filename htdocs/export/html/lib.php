@@ -57,7 +57,7 @@ class PluginExportHtml extends PluginExport {
         $this->rootdir = 'portfolio-for-' . preg_replace('#[^a-zA-Z0-9_-]+#', '-', $user->get('username'));
 
         // Create basic required directories
-        foreach (array('files', 'views', 'static') as $directory) {
+        foreach (array('files', 'views', 'static', 'static/smilies') as $directory) {
             $directory = "{$this->exportdir}/{$this->rootdir}/{$directory}/";
             if (!check_dir_exists($directory)) {
                 throw new SystemException("Couldn't create the temporary export directory $directory");
@@ -221,12 +221,20 @@ class PluginExportHtml extends PluginExport {
      */
     private function copy_static_files() {
         $staticdir = $this->get('exportdir') . '/' . $this->get('rootdir') . '/static/';
-        foreach (new RecursiveDirectoryIterator(get_config('docroot') . 'export/html/static/') as $fileinfo) {
-            if (!$fileinfo->isFile() || substr($fileinfo->getFilename(), 0, 1) == '.') {
-                continue;
-            }
-            if (!copy($fileinfo->getPathname(), $staticdir . $fileinfo->getFilename())) {
-                throw new SystemException("Could not copy static file " . $fileinfo->getPathname());
+
+        $directoriestocopy = array(
+            get_config('docroot') . 'export/html/static/' => $staticdir,
+            get_config('docroot') . 'js/tinymce/plugins/emotions/images' => $staticdir . 'smilies/',
+        );
+
+        foreach ($directoriestocopy as $from => $to) {
+            foreach (new RecursiveDirectoryIterator($from) as $fileinfo) {
+                if (!$fileinfo->isFile() || substr($fileinfo->getFilename(), 0, 1) == '.') {
+                    continue;
+                }
+                if (!copy($fileinfo->getPathname(), $to . $fileinfo->getFilename())) {
+                    throw new SystemException("Could not copy static file " . $fileinfo->getPathname());
+                }
             }
         }
     }
