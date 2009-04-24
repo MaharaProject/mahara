@@ -73,7 +73,7 @@ class PluginExportHtml extends PluginExport {
         // For each artefact plugin, if it implements leap export, ask it to 
         // dump out its structure
         $summaries = array();
-        foreach (plugins_installed('artefact', true) as $plugin) {
+        foreach (plugins_installed('artefact') as $plugin) {
             $plugin = $plugin->name;
             if (safe_require('export', 'html/' . $plugin, 'lib.php', 'require_once', true)) {
                 $classname = 'HtmlExport' . ucfirst($plugin);
