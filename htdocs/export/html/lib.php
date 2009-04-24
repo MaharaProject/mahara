@@ -53,8 +53,7 @@ class PluginExportHtml extends PluginExport {
     */
     public function __construct(User $user, $views, $artefacts) {
         parent::__construct($user, $views, $artefacts);
-        // TODO move this normalisation into a method
-        $this->rootdir = 'portfolio-for-' . preg_replace('#[^a-zA-Z0-9_-]+#', '-', $user->get('username'));
+        $this->rootdir = 'portfolio-for-' . self::text_to_path($user->get('username'));
 
         // Create basic required directories
         foreach (array('files', 'views', 'static', 'static/smilies') as $directory) {
