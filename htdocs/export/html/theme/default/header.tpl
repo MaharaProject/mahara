@@ -4,6 +4,7 @@
         <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
         <title>{str tag=usersportfolio section=export.html args=$user|full_name|escape}</title>
         <link rel="stylesheet" type="text/css" href="{$rootpath}static/style.css">
+        <link rel="stylesheet" type="text/css" href="{$rootpath}static/views.css">
     </head>
     <body>
         <div id="mahara-logo">

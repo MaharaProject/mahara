@@ -227,6 +227,9 @@ class PluginExportHtml extends PluginExport {
             get_config('docroot') . 'export/html/static/' => $staticdir,
             get_config('docroot') . 'js/tinymce/plugins/emotions/images' => $staticdir . 'smilies/',
         );
+        $filestocopy = array(
+            get_config('docroot') . 'theme/views.css' => $staticdir . 'views.css',
+        );
 
         foreach ($directoriestocopy as $from => $to) {
             foreach (new RecursiveDirectoryIterator($from) as $fileinfo) {
@@ -236,6 +239,12 @@ class PluginExportHtml extends PluginExport {
                 if (!copy($fileinfo->getPathname(), $to . $fileinfo->getFilename())) {
                     throw new SystemException("Could not copy static file " . $fileinfo->getPathname());
                 }
+            }
+        }
+
+        foreach ($filestocopy as $from => $to) {
+            if (!copy($from, $to)) {
+                throw new SystemException("Could not copy static file $from");
             }
         }
     }
