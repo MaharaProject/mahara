@@ -93,7 +93,7 @@ class PluginExportLeap extends PluginExport {
         $this->zipfile = 'mahara-export-leap-user'
             . $this->get('user')->get('id') . '-' . $this->export_time . '.zip';
         // some plugins might want to do their own special thing
-        foreach (plugins_installed('artefact') as $plugin) {
+        foreach (plugins_installed('artefact', true) as $plugin) {
             $plugin = $plugin->name;
             if (safe_require('export', 'leap/' . $plugin, 'lib.php', 'require_once', true)) {
                 $classname = 'LeapExport' . ucfirst($plugin);
