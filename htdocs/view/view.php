@@ -59,7 +59,7 @@ $title = $view->get('title');
 define('TITLE', $title);
 
 $submittedgroup = (int)$view->get('submittedto');
-if ($submittedgroup && group_user_can_assess_submitted_views($submittedgroup, $USER->get('id'))) {
+if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_views($submittedgroup, $USER->get('id'))) {
     // The user is a tutor of the group that this view has
     // been submitted to, and is entitled to release the view, and to
     // upload an additional file when submitting feedback.

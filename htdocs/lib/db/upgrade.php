@@ -908,8 +908,8 @@ function xmldb_core_upgrade($oldversion=0) {
         if (is_postgres()) {
             // Ensure all of the indexes and constraints are renamed
             execute_sql("
-            ALTER TABLE {artefact_attachment} RENAME {blogpost} TO {artefact};
-            ALTER TABLE {artefact_attachment} RENAME {file} TO {attachment};
+            ALTER TABLE {artefact_attachment} RENAME blogpost TO artefact;
+            ALTER TABLE {artefact_attachment} RENAME file TO attachment;
 
             ALTER INDEX {arteblogblogfile_blofil_pk} RENAME TO {arteatta_artatt_pk};
             ALTER INDEX {arteblogblogfile_blo_ix} RENAME TO {arteatta_art_ix};

@@ -61,6 +61,7 @@ $string['enable'] = 'Enable';
 $string['disable'] = 'Disable';
 $string['pluginenabled'] = 'Plugin enabled';
 $string['plugindisabled'] = 'Plugin disabled';
+$string['pluginnotenabled'] = 'Plugin not enabled.  You must enable the %s plugin first.';
 
 $string['next']      = 'Next';
 $string['nextpage']  = 'Next page';

@@ -236,6 +236,9 @@ class PluginArtefactFile extends PluginArtefact {
         db_commit();
     }
 
+    public static function can_be_disabled() {
+        return false;
+    }
 }
 
 abstract class ArtefactTypeFileBase extends ArtefactType {
