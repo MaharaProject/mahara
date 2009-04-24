@@ -67,8 +67,8 @@ class PluginExportHtml extends PluginExport {
     }
 
     /**
-    * main export routine
-    */
+     * Main export routine
+     */
     public function export() {
         // For each artefact plugin, if it implements leap export, ask it to 
         // dump out its structure
