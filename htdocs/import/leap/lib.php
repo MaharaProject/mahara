@@ -124,13 +124,8 @@ class PluginImportLeap extends PluginImport {
             $entryid = (string)$entry->id;
             $this->trace(" * $entryid ({$entry->title})");
 
-            // TODO: do we need the disabled ones too? Export uses the disabled ones
-            foreach (plugins_installed('artefact', true) as $plugin) {
+            foreach (plugins_installed('artefact') as $plugin) {
                 $plugin = $plugin->name;
-                // TODO: unify this with how export does it. This 
-                // implementation says: if artefact/x/import/leap/lib.php 
-                // exists, it must implement the class. But it doesn't have to 
-                // exist if the plugin doesn't wanna do leap import support.
                 if (safe_require('import', 'leap/' . $plugin, 'lib.php', 'require_once', true)) {
                     $classname = 'LeapImport' . ucfirst($plugin);
                     if (!is_subclass_of($classname, 'LeapImportArtefactPlugin')) {
