@@ -70,25 +70,6 @@ $strpreview = json_encode(get_string('Preview','view'));
 $strclose = json_encode(get_string('Close'));
 $js = <<<EOF
 
-preview = DIV({'id':'viewpreview', 'class':'hidden'}, DIV({'id':'viewpreviewinner'}, DIV({'id':'viewpreviewclose'}, A({'href':'','id':'closepreview'}, {$strclose})), DIV({'id':'viewpreviewcontent'})));
-
-function showPreview(size, data) {
-    $('viewpreviewcontent').innerHTML = data.html;
-    var vdim = getViewportDimensions();
-    var vpos = getViewportPosition();
-    var offset = 16; // Left border & padding of preview container elements (@todo: use getStyle()?)
-    if (size == 'small') {
-        var width = 400;
-        var xpos = (vdim.w - width - offset) / 2;
-    } else { 
-        var width = vdim.w - 200;
-        var xpos = vpos.x+100-offset;
-    }
-    setElementDimensions(preview, {'w':width});
-    setElementPosition(preview, {'x':xpos, 'y':vpos.y+200});
-    showElement(preview);
-}
-
 templatelist = new SearchTable('templatesearch');
 
 addLoadEvent(function() {
@@ -124,16 +105,11 @@ addLoadEvent(function() {
 
   templatelist.rewriteOther();
 
-  appendChildNodes(getFirstElementByTagAndClassName('body'), preview);
-
-  connect('closepreview', 'onclick', function (e) {e.stop(); fade(preview, {'duration':0.2});});
-  connect('viewpreviewcontent', 'onclick', function (e) {e.stop(); return false;});
-
 });
 EOF;
 
 $smarty = smarty(
-    array('searchtable'),
+    array('js/preview.js', 'searchtable'),
     array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
     array(),
     array('stylesheets' => array('style/views.css'))
