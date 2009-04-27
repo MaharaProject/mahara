@@ -26,21 +26,6 @@
 
 defined('INTERNAL') || die();
 
-/**
-* export all views belonging to the user
-*/
-define('EXPORT_ALL_VIEWS',     'allviews');
-
-/**
-* export all artefacts belonging to the user
-*/
-define('EXPORT_ALL_ARTEFACTS', 'allartefacts');
-
-/**
-* just exporting those artefacts that belong to views we selected
-*/
-define('EXPORT_ARTEFACTS_FOR_VIEWS', 'artefactsforviews');
-
 require_once('view.php');
 require_once(get_config('docroot') . '/artefact/lib.php');
 
@@ -52,34 +37,81 @@ require_once(get_config('docroot') . '/artefact/lib.php');
 abstract class PluginExport extends Plugin {
 
     /**
-    * Perform the export and return the path to the resulting file.
-    *
-    * @return String path to the resulting file (relative to dataroot)
-    */
+     * Export all views owned by this user
+     */
+    const EXPORT_ALL_VIEWS = -1;
+
+    /**
+     * Export only certain views - used internally when a list of views is 
+     * passed to the constructor
+     */
+    const EXPORT_LIST_OF_VIEWS = -2;
+
+    /**
+     * Export all artefacts owned by this user
+     */
+    const EXPORT_ALL_ARTEFACTS = -3;
+
+    /**
+     * Export artefacts that are part of the views to be exported
+     */
+    const EXPORT_ARTEFACTS_FOR_VIEWS = -4;
+
+    /**
+     * Export only certain artefacts - used internally when a list of artefacts 
+     * is passed to the constructor
+     */
+    const EXPORT_LIST_OF_ARTEFACTS = -5;
+
+    /**
+     * A human-readable title for the export
+     */
+    abstract public static function get_title();
+
+    /**
+     * A human-readable description for the export
+     */
+    abstract public static function get_description();
+
+    /**
+     * Perform the export and return the path to the resulting file.
+     *
+     * @return String path to the resulting file (relative to dataroot)
+     */
     abstract public function export();
 
     /**
-    *
-    * Clean up after yourself - removing any temp files etc
-    */
+     *
+     * Clean up after yourself - removing any temp files etc
+     */
     abstract public function cleanup();
 
     //  MAIN CLASS DEFINITION
 
     /**
-    * Array of artefacts to export. Set up by constructor.
-    */
+     * Array of artefacts to export. Set up by constructor.
+     */
     protected $artefacts = array();
 
     /**
-    * Array of views to export. Set up by constructor.
-    */
+     * Array of views to export. Set up by constructor.
+     */
     protected $views = array();
 
     /**
-    * User object for the user being exported.
-    */
+     * User object for the user being exported.
+     */
     protected $user;
+
+    /**
+     * Represents the mode for exporting views - one of the class consts defined above
+     */
+    protected $viewexportmode;
+
+    /**
+     * Represents the mode for exporting artefacts - one of the class consts defined above
+     */
+    protected $artefactexportmode;
 
     /**
      * The time the export was generated.
@@ -89,28 +121,27 @@ abstract class PluginExport extends Plugin {
     protected $export_time;
 
     /**
-    * Constructor. Sets up all the artefacts and views correctly
-    * Also sets up temporary export directories
-    *
-    * Subclasses can override this if they need to do anything else
-    * But must call parent::__construct.
-    *
-    * For example, the LEAP export plugin sets up smarty
-    *
-    * @param User $user user the exporting content belongs to
-    * @param mixed $views     can be:
-    *                         - EXPORT_ALL_VIES
-    *                         - array, containing:
-    *                             - int - view ids
-    *                             - stdclass objects - db rows
-    *                             - View objects
-    * @param mixed $artefacts can be:
-    *                         - EXPORT_ALL_ARTEFACTS
-    *                         - EXPORT_ARTEFACTS_FOR_VIEWS
-    *                             - int - artefact ids
-    *                             - stdclass objects - db rows
-    *                             - ArtefactType subclasses
-    */
+     * Establishes exactly what views and artefacts are to be exported, and
+     * sets up temporary export directories
+     *
+     * Subclasses can override this if they need to do anything else, but
+     * they must call parent::__construct.
+     *
+     * @param User $user       The user to export data for
+     * @param mixed $views     can be:
+     *                         - PluginExport::EXPORT_ALL_VIEWS
+     *                         - array, containing:
+     *                             - int - view ids
+     *                             - stdclass objects - db rows
+     *                             - View objects
+     * @param mixed $artefacts can be:
+     *                         - PluginExport::EXPORT_ALL_ARTEFACTS
+     *                         - PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS
+     *                         - array, containing:
+     *                             - int - artefact ids
+     *                             - stdclass objects - db rows
+     *                             - ArtefactType subclasses
+     */
     public function __construct(User $user, $views, $artefacts) {
         $this->export_time = time();
         $this->user = $user;
@@ -121,12 +152,13 @@ abstract class PluginExport extends Plugin {
         $tmpartefacts = array();
 
         // Get the list of views to export
-        if ($views == EXPORT_ALL_VIEWS) {
+        if ($views == self::EXPORT_ALL_VIEWS) {
             $tmpviews = get_column('view', 'id', 'owner', $userid);
+            $this->viewexportmode = $views;
         }
         else if (is_array($views)) {
-            $vaextra = 'AND va.view IN ( ' . implode(',', array_keys($views)) . ')';
             $tmpviews = $views;
+            $this->viewexportmode = self::EXPORT_LIST_OF_VIEWS;
         }
         foreach ($tmpviews as $v) {
             $view = null;
@@ -143,24 +175,26 @@ abstract class PluginExport extends Plugin {
                 throw new ParamOutOfRangeException("Invalid view $v");
             }
             $this->views[$view->get('id')] = $view;
+            $vaextra = 'AND va.view IN ( ' . implode(',', array_keys($this->views)) . ')';
         }
 
         // Get the list of artefacts to export
-        if ($artefacts == EXPORT_ALL_ARTEFACTS) {
-            $tmpartefacts = get_records_array('artefact', 'owner', $userid);
+        if ($artefacts == self::EXPORT_ALL_ARTEFACTS) {
+            $tmpartefacts = get_column('artefact', 'id', 'owner', $userid);
+            $this->artefactexportmode = $artefacts;
         }
-        else if ($artefacts == EXPORT_ARTEFACTS_FOR_VIEWS) {
-            $sql = "SELECT va.* from {view_artefact} va
+        else if ($artefacts == self::EXPORT_ARTEFACTS_FOR_VIEWS) {
+            $sql = "SELECT va.artefact
+                FROM {view_artefact} va
                 LEFT JOIN {view} v ON v.id = va.view
-                WHERE v.owner = ? $vaextra ORDER BY va.view";
-            if ($tmp = get_records_sql_array($sql, array($userid))) {
-                foreach ($tmp as $varecord) {
-                    $tmpartefacts[] = $varecord->artefact;
-                }
-            }
+                WHERE v.owner = ?
+                $vaextra";
+            $tmpartefacts = (array)get_column_sql($sql, array($userid));
+            $this->artefactexportmode = $artefacts;
         }
         else {
             $tmpartefacts = $artefacts;
+            $this->artefactexportmode = self::EXPORT_LIST_OF_ARTEFACTS;
         }
         $typestoplugins = get_records_assoc('artefact_installed_type');
         foreach ($tmpartefacts as $a) {
@@ -168,10 +202,8 @@ abstract class PluginExport extends Plugin {
             if ($a instanceof ArefactType) {
                 $artefact = $a;
             }
-            else if (is_object($a)) {
-                $class = generate_artefact_class_name($a->artefacttype);
-                safe_require('artefact', $typestoplugins[$a->artefacttype]->plugin);
-                $artefact = new $class($a->id, $a);
+            else if (is_object($a) && isset($a->id)) {
+                $artefact = artefact_instance_from_id($a->id);
             }
             else if (is_numeric($a)) {
                 $artefact = artefact_instance_from_id($a);
