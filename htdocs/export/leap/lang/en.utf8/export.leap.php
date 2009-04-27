@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage export.html
+ * @subpackage export.leap
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
@@ -26,8 +26,8 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Standalone HTML Website';
-$string['description'] = 'Creates a self-contained website with your portfolio data. You cannot import this again, but it\'s readable in a standard web browser';
-$string['usersportfolio'] = '%s - Portfolio';
+$string['title'] = 'LEAP2A';
+// TODO: link LEAP2A standard format to a primer document on our wiki about LEAP2A
+$string['description'] = 'Gives you an export in the <a href="">LEAP2A standard format</a>. You can later use this to import your data into <a href="http://wiki.mahara.org/Developer_Area/Import%%2f%%2fExport/Interoperability">other LEAP2A compliant systems</a>, although the export is hard for humans to read.';
 
 ?>

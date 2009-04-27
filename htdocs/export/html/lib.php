@@ -66,6 +66,14 @@ class PluginExportHtml extends PluginExport {
             . $this->get('user')->get('id') . '-' . $this->export_time . '.zip';
     }
 
+    public static function get_title() {
+        return get_string('title', 'export.html');
+    }
+
+    public static function get_description() {
+        return get_string('description', 'export.html');
+    }
+
     /**
      * Main export routine
      */

@@ -104,6 +104,14 @@ class PluginExportLeap extends PluginExport {
         }
     }
 
+    public static function get_title() {
+        return get_string('title', 'export.leap');
+    }
+
+    public static function get_description() {
+        return get_string('description', 'export.leap');
+    }
+
     /**
     * main export routine
     */
