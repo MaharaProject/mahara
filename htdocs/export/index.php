@@ -27,26 +27,59 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'myportfolio/export');
 require(dirname(dirname(__FILE__)) . '/init.php');
-define('TITLE', get_string('export', 'export'));
+define('TITLE', get_string('exportyourportfolio', 'export'));
 require_once('file.php');
+
+$exportoptions = array();
+foreach (plugins_installed('export') as $plugin) {
+    safe_require('export', $plugin->name);
+    $exportoptions[$plugin->name] = array(
+        'text' => call_static_method(generate_class_name('export', $plugin->name), 'get_title'),
+        'description' => call_static_method(generate_class_name('export', $plugin->name), 'get_description'),
+    );
+}
+
+$elements = array(
+    'format' => array(
+        'type' => 'radio',
+        'options' => $exportoptions,
+        'defaultvalue' => 'html',
+        'separator' => '</div><div>',
+    ),
+    'what' => array(
+        'type' => 'radio',
+        'options' => array(
+            'all' => get_string('allmydata', 'export'),
+            'views' => get_string('justsomeviewsanddata', 'export'),
+        ),
+        'separator' => '</div><div>',
+        'defaultvalue' => 'all',
+    ),
+);
+
+if ($viewids = get_column('view', 'id', 'owner', $USER->get('id'))) {
+    foreach ($viewids as $viewid) {
+        $view = new View($viewid);
+        $elements['view_' . $viewid] = array(
+            'type' => 'checkbox',
+            'title' => $view->get('title'),
+            'description' => $view->get('description'),
+            'viewlink' => get_config('wwwroot') . 'view/view.php?id=' . $viewid,
+        );
+    }
+}
+
+$elements['submit'] = array(
+    'type' => 'submit',
+    'value' => get_string('generateexport', 'export'),
+);
 
 $form = pieform(array(
     'name' => 'export',
-    'elements' => array(
-        'format' => array(
-            'type' => 'select',
-            'title' => 'Export format',
-            'options' => array(
-                'leap' => 'LEAP2A',
-                'html' => 'HTML',
-            ),
-            'defaultvalue' => 'html',
-        ),
-        'submit' => array(
-            'type' => 'submit',
-            'value' => 'Get export',
-        ),
-    ),
+    'template' => 'export.php',
+    'templatedir' => pieform_template_dir('export.php'),
+    'autofocus' => false,
+    'elements' => $elements
 ));
 
 
@@ -57,15 +90,37 @@ function export_submit(Pieform $form, $values) {
     $user = new User();
     $user->find_by_id($USER->get('id'));
 
-    $class = 'PluginExport' . ucfirst($values['format']);
-    $exporter = new $class($user, EXPORT_ALL_VIEWS, EXPORT_ALL_ARTEFACTS);
+    $class = generate_class_name('export', $values['format']);
+
+    switch($values['what']) {
+    case 'all':
+        $exporter = new $class($user, PluginExport::EXPORT_ALL_VIEWS, PluginExport::EXPORT_ALL_ARTEFACTS);
+        break;
+    case 'views':
+        $views = array();
+        foreach ($values as $key => $value) {
+            if (substr($key, 0, 5) == 'view_' && $value) {
+                $views[] = intval(substr($key, 5));
+            }
+        }
+        $exporter = new $class($user, $views, PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS);
+        break;
+    default:
+        throw new SystemException("Unable to export a portfolio using those options");
+    }
 
     $zipfile = $exporter->export();
     serve_file($exporter->get('exportdir') . $zipfile, $zipfile, 'application/x-zip', array('lifetime' => 0));
     exit;
 }
 
-$smarty = smarty();
+$smarty = smarty(
+    array('js/preview.js', 'js/export.js'),
+    array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
+    array(),
+    array('stylesheets' => array('style/views.css'))
+);
+$smarty->assign('heading', '');
 $smarty->assign('form', $form);
 $smarty->display('export/index.tpl');
 

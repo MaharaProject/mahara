@@ -2691,6 +2691,42 @@ span.breadcrumbs a {
 	display: block;
 }
 
+/* EXPORT */
+#export h3 {
+    margin: .5em 0;
+}
+#export .radio-description {
+    padding-left: 2em;
+}
+#export fieldset {
+    padding: .5em;
+    margin: .5em;
+}
+#export .element div {
+    padding-bottom: .25em;
+}
+#export .view {
+    float: left;
+    padding-right: 2em;
+    white-space: nowrap;
+}
+#export fieldset {
+    border: none;
+}
+#export fieldset table {
+    width: 95%;
+    margin: 0 auto;
+}
+#export fieldset table div {
+    padding-left: 1.75em;
+}
+#export fieldset label {
+    color: #8598a7;
+}
+#export_submit_container {
+    text-align: center;
+}
+
 
 /* ADMIN HOME */
 /* Administration Home styles */

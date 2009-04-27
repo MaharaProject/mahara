@@ -26,4 +26,14 @@
 
 defined('INTERNAL') || die();
 
-$string['export']     = 'Export';
+$string['allmydata'] = 'All my data';
+$string['chooseanexportformat'] = 'Choose an export format';
+$string['clicktopreview'] = 'Click to preview';
+$string['Export']     = 'Export';
+$string['exportyourportfolio'] = 'Export Your Portfolio';
+$string['generateexport'] = 'Generate export';
+$string['justsomeviewsanddata'] = 'Just some views and their associated data';
+$string['viewstoexport'] = 'Views to export';
+$string['whatdoyouwanttoexport'] = 'What do you want to export?';
+
+?>

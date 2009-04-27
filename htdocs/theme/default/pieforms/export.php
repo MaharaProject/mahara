@@ -1,0 +1,75 @@
+<?php
+
+function export_form_cell_html($element) {
+    $strclicktopreview = get_string('clicktopreview', 'export');
+    $previewimg = theme_get_url('images/icon-display.png');
+    $strpreview = get_string('Preview');
+return <<<EOF
+<td>
+{$element['html']} {$element['labelhtml']}
+<div>{$element['description']}</div>
+<div><a href="{$element['viewlink']}" class="viewlink nojs-hidden-inline" target="_blank">{$strclicktopreview}</a></div>
+</td>
+EOF;
+}
+
+echo $form_tag;
+echo '<h3>' . get_string('chooseanexportformat', 'export') . '</h3>';
+echo '<div class="element">';
+echo '<div>' . $elements['format']['html'] . '</div>';
+echo '</div>';
+echo '<h3>' . get_string('whatdoyouwanttoexport', 'export') . '</h3>';
+echo '<div class="element" id="whattoexport-buttons">';
+echo '<div>'. $elements['what']['html'] . '</div>';
+echo '</div>';
+
+echo '<div id="whatviews" class="js-hidden"><fieldset><legend>' . get_string('viewstoexport', 'export') . "</legend>\n";
+$body = array();
+$row = $col = 0;
+foreach ($elements as $key => $element) {
+    if (substr($key, 0, 5) == 'view_') {
+        $body[$row][$col] = export_form_cell_html($element);
+        $col++;
+        if ($col % 3 == 0) {
+            $row++;
+            $col = 0;
+        }
+    }
+}
+
+if ($body) {
+    echo "<table>\n";
+    foreach ($body as $rownum => $row) {
+        if ($rownum == 0) {
+            switch (count($row)) {
+            case 2:
+                echo '<colgroup><col width="50%"><col width="50%"></colgroup>' . "\n";
+                break;
+            case 3:
+                echo '<colgroup><col width="33%"><col width="33%"><col width="33%"></colgroup>' . "\n";
+                break;
+            }
+        }
+        echo '    <tr class="r' . $rownum % 2 . "\">\n";
+        $i = 0;
+        foreach ($row as $col) {
+            echo $col . "\n";
+            $i++;
+        }
+        for (; $i < 3; $i++) {
+            echo "<td></td>\n";
+        }
+        echo "    </tr>\n";
+    }
+    echo "</table>\n";
+}
+
+echo '</fieldset></div>';
+
+echo '<div id="export_submit_container">';
+echo $elements['submit']['html'];
+echo '</div>';
+echo $hidden_elements;
+echo '</form>';
+
+?>

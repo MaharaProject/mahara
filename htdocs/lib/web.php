@@ -1697,7 +1697,7 @@ function mahara_standard_nav() {
         array(
             'path' => 'myportfolio/export',
             'url' => 'export/',
-            'title' => get_string('export', 'export'),
+            'title' => get_string('Export', 'export'),
             'weight' => 30,
         ),
         array(
