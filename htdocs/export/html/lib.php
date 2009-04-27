@@ -162,7 +162,9 @@ class PluginExportHtml extends PluginExport {
         $smarty = $this->get_smarty();
         $smarty->assign('summaries', $summaries);
         $content = $smarty->fetch('export:html:index.tpl');
-        file_put_contents($this->exportdir . '/' . $this->rootdir . '/index.html', $content);
+        if (!file_put_contents($this->exportdir . '/' . $this->rootdir . '/index.html', $content)) {
+            throw new SystemException("Could not create index.html for the export");
+        }
     }
 
     /**
