@@ -45,14 +45,24 @@ function pieform_element_radio(Pieform $form, $element) {/*{{{*/
         $separator = $element['separator'] . $separator;
     }
 
-    foreach ($element['options'] as $value => $text) {
+    foreach ($element['options'] as $value => $data) {
         $uid = $id . substr(md5(microtime()), 0, 4);
         $element['id'] = $uid;
+        if (is_array($data)) {
+            $text = $data['text'];
+            $description = (isset($data['description'])) ? $data['description'] : '';
+        }
+        else {
+            $text = $data;
+            $description = '';
+        }
         $result .= '<input type="radio"'
             . $form->element_attributes($element)
             . ' value="' . Pieform::hsc($value) . '"'
             . (($form_value == $value) ? ' checked="checked"' : '')
-            . '> <label for="' . $form->get_name() . '_' . $uid . '">' . Pieform::hsc($text) . "</label>$separator";
+            . '> <label for="' . $form->get_name() . '_' . $uid . '">' . Pieform::hsc($text) . "</label>"
+            . ($description != '' ? '<div class="radio-description">' . $description . '</div>' : '')
+            . $separator;
     }
     $result = substr($result, 0, -strlen($separator));
     
