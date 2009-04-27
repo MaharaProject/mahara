@@ -88,6 +88,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
         else {
             $walltoreplyto = $instance->get('id');
         }
+        require_once('pieforms/pieform.php');
         return pieform(array(
             'name'      => 'wallpost',
             'renderer'  => 'maharatable',
