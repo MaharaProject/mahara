@@ -33,20 +33,35 @@ defined('INTERNAL') || die();
  */
 class HtmlExportFile extends HtmlExportArtefactPlugin {
 
-    private $artefactdata;
+    private $artefactdata = array();
 
     public function dump_export_data() {
-        // Get all folders/files
-        $this->artefactdata = get_records_select_assoc(
-            'artefact',
-            "owner = ? AND
-            artefacttype IN ('" . join("','", PluginArtefactFile::get_artefact_types()) . "')",
-            array($this->exporter->get('user')->get('id')),
-            '',
-            'id, artefacttype, parent, title'
-        );
-        if (!$this->artefactdata) {
-            $this->artefactdata = array();
+        foreach ($this->exporter->get('artefacts') as $artefact) {
+            if (in_array($artefact->get('artefacttype'), PluginArtefactFile::get_artefact_types())) {
+                $this->artefactdata[$artefact->get('id')] = $artefact;
+            }
+        }
+
+        // Grab all parent folders of all artefacts selected so we can export 
+        // the files in their correct folder location
+        if ($this->exporter->get('artefactexportmode') != PluginExport::EXPORT_ALL_ARTEFACTS && $this->artefactdata) {
+            $folderids = array();
+            foreach (array_keys($this->artefactdata) as $artefactid) {
+                $folderids = array_merge($folderids, array_keys(artefact_get_parents_for_cache($artefactid)));
+            }
+            $folderids = array_unique($folderids);
+
+            foreach ($folderids as $folderid) {
+                if (!isset($this->artefactdata[$folderid])) {
+                    $artefact = artefact_instance_from_id($folderid);
+                    // We grabbed all parents of the artefacts in the export, 
+                    // but not all parents are folders
+                    if ($artefact->get('artefacttype') == 'folder') {
+                        $this->artefactdata[$folderid] = $artefact;
+                    }
+                }
+            }
+
         }
 
         $this->populate_profileicons();
@@ -57,8 +72,8 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
 
     public function get_summary() {
         $smarty = $this->exporter->get_smarty();
-        $smarty->assign('filecount', count(array_filter($this->artefactdata, create_function('$a', 'return $a->artefacttype != "folder";'))));
-        $smarty->assign('foldercount', count(array_filter($this->artefactdata, create_function('$a', 'return $a->artefacttype == "folder";'))));
+        $smarty->assign('filecount', count(array_filter($this->artefactdata, create_function('$a', 'return $a->get("artefacttype") != "folder";'))));
+        $smarty->assign('foldercount', count(array_filter($this->artefactdata, create_function('$a', 'return $a->get("artefacttype") == "folder";'))));
         $smarty->assign('spaceused', $this->exporter->get('user')->get('quotaused'));
 
         return array(
@@ -78,26 +93,24 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
         $madeprofileiconsdir = false;
         $profileiconsdir = $this->exporter->get('exportdir') . '/' . $this->exporter->get('rootdir') . '/static/profileicons/';
         $removekeys = array();
-        foreach (array_keys($this->artefactdata) as $key) {
-            $artefactdata = $this->artefactdata[$key];
-            if ($artefactdata->artefacttype == 'profileicon') {
-                $removekeys[] = $key;
+        foreach ($this->artefactdata as $artefactid => $artefact) {
+            if ($artefact->get('artefacttype') == 'profileicon') {
+                $removekeys[] = $artefactid;
 
                 if (!$madeprofileiconsdir) {
                     check_dir_exists($profileiconsdir);
                 }
 
                 // TODO: sanitise path for /'s
-                $artefact = artefact_instance_from_id($artefactdata->id);
-                if (!copy($artefact->get_path(), $profileiconsdir . $artefactdata->title)) {
-                    throw new SystemException("Unable to copy profile icon $artefactdata->title into export");
+                if (!copy($artefact->get_path(), $profileiconsdir . $artefact->get('title'))) {
+                    throw new SystemException("Unable to copy profile icon $artefactid into export");
                 }
 
                 // Make sure we grab a nicely resized version too
                 $maxdimension = 200;
-                $resizedpath = get_dataroot_image_path('artefact/file/profileicons/', $artefactdata->id, $maxdimension);
-                if (!copy($resizedpath, $profileiconsdir . $maxdimension . 'px-' . $artefactdata->title)) {
-                    throw new SystemException("Unable to copy resized profile icon {$maxdimension}px-$artefactdata->title into export");
+                $resizedpath = get_dataroot_image_path('artefact/file/profileicons/', $artefactid, $maxdimension);
+                if (!copy($resizedpath, $profileiconsdir . $maxdimension . 'px-' . $artefact->get('title'))) {
+                    throw new SystemException("Unable to copy resized profile icon {$maxdimension}px-{$artefact->get('title')} into export");
                 }
             }
         }
@@ -122,18 +135,18 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
      * @param int    $parentid            The folder to start from - can be null
      */
     private function populate_filedir($filesystemdirectory, $level, $parentid) {
-        foreach ($this->artefactdata as $artefactdata) {
-            if ($artefactdata->parent == $parentid) {
-                if ($artefactdata->artefacttype == 'folder') {
-                    $directory = $filesystemdirectory . $artefactdata->title . '/';
+        foreach ($this->artefactdata as $artefactid => $artefact) {
+            if ($artefact->get('parent') == $parentid) {
+                if ($artefact->get('artefacttype') == 'folder') {
+                    $directory = $filesystemdirectory . $artefact->get('title') . '/';
                     check_dir_exists($directory);
-                    $this->create_index_for_directory($directory, $level + 1, $artefactdata);
-                    $this->populate_filedir($directory, $level + 1, $artefactdata->id);
+                    $this->create_index_for_directory($directory, $level + 1, $artefact);
+                    $this->populate_filedir($directory, $level + 1, $artefactid);
                 }
                 else {
-                    $artefact = artefact_instance_from_id($artefactdata->id);
-                    if (!copy($artefact->get_path(), $filesystemdirectory . $artefactdata->title)) {
-                        throw new SystemException("HtmlExportFile::populate_filedir: unable to copy artefact $artefactdata->id's file");
+                    $artefact = artefact_instance_from_id($artefactid);
+                    if (!copy($artefact->get_path(), $filesystemdirectory . $artefact->get('title'))) {
+                        throw new SystemException("HtmlExportFile::populate_filedir: unable to copy artefact $artefactid's file");
                     }
                 }
             }
@@ -150,24 +163,24 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
      * @param object $artefactdata        Artefact data relating to the folder 
      *                                    represented by this directory
      */
-    private function create_index_for_directory($filesystemdirectory, $level, $artefactdata=null) {
+    private function create_index_for_directory($filesystemdirectory, $level, ArtefactTypeFolder $artefact=null) {
         $smarty = $this->exporter->get_smarty(str_repeat('../', $level + 2));
         $smarty->assign('breadcrumbs', array(array('text' => 'Files', 'path' => 'index.html')));
 
-        if ($artefactdata) {
-            $smarty->assign('folder', ArtefactTypeFileBase::get_full_path($artefactdata->id, $this->artefactdata));
+        if ($artefact) {
+            $smarty->assign('folder', ArtefactTypeFileBase::get_full_path($artefact->get('id'), $this->artefactdata));
         }
         else {
             $smarty->assign('folder', '/');
         }
 
-        $id = ($artefactdata) ? $artefactdata->id : 'null';
-        $smarty->assign('folders', array_filter($this->artefactdata, create_function('$a', 'return $a->parent == ' . $id . ' && $a->artefacttype == "folder";')));
-        $smarty->assign('files',   array_filter($this->artefactdata, create_function('$a', 'return $a->parent == ' . $id . ' && $a->artefacttype != "folder";')));
+        $id = ($artefact) ? $artefact->get('id') : 'null';
+        $smarty->assign('folders', array_filter($this->artefactdata, create_function('$a', 'return $a->get("parent") == ' . $id . ' && $a->get("artefacttype") == "folder";')));
+        $smarty->assign('files',   array_filter($this->artefactdata, create_function('$a', 'return $a->get("parent") == ' . $id . ' && $a->get("artefacttype") != "folder";')));
 
         $content = $smarty->fetch('export:html/file:index.tpl');
         if (false === file_put_contents($filesystemdirectory . 'index.html', $content)) {
-            throw new SystemException("HtmlExportFile::create_index_for_directory: unable to create index.html for directory $id");
+            throw new SystemException("Unable to create index.html for directory $id");
         }
     }
 }
