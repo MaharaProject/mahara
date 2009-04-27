@@ -1,6 +1,10 @@
 TODOs for export HTML plugin
 ============================
 
+* When exporting just views, do we want to show summaries for
+  files/blogs/resume? If so - their summaries will need to be corrected to take
+  the actual artefacts being exported into account
+* Make blog, resume, maybe internal too? support granular export properly
 * i18n
 * G&D
 * Documentation
