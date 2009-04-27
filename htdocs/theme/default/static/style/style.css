@@ -58,6 +58,9 @@ body {
 .hidden {
     display: none;
 }
+.nojs-hidden-inline, .nojs-hidden-block {
+    display: none;
+}
 /* Hides without browsers removing from the dom tree */
 .safe-hidden {
     position: absolute;

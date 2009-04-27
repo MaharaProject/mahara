@@ -1,0 +1,18 @@
+/**
+ * CSS rules to apply only when javascript is available
+ *
+ * Copyright (C) 2009 Catalyst IT
+ * This file is licensed under the same terms as Mahara itself
+ */
+
+.js-hidden {
+    position: absolute;
+    visibility: hidden;
+    top: 0;
+}
+.nojs-hidden-inline {
+    display: inline;
+}
+.nojs-hidden-block {
+    display: block;
+}
