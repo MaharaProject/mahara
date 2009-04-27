@@ -169,30 +169,25 @@ class PluginExportHtml extends PluginExport {
 
     /**
      * Dumps all views into the HTML export
-     *
-     * TODO: respect $this->views
      */
     private function dump_view_export_data() {
-        if ($viewids = get_column('view', 'id', 'owner', $this->get('user')->get('id'), 'type', 'portfolio')) {
-            $smarty = $this->get_smarty('../../');
-            foreach ($viewids as $viewid) {
-                $view = new View($viewid);
-                $smarty->assign('breadcrumbs', array(
-                    array('text' => get_string('Views', 'view')),
-                    array('text' => $view->get('title'), 'path' => 'index.html'),
-                ));
+        $smarty = $this->get_smarty('../../');
+        foreach ($this->views as $viewid => $view) {
+            $smarty->assign('breadcrumbs', array(
+                array('text' => get_string('Views', 'view')),
+                array('text' => $view->get('title'), 'path' => 'index.html'),
+            ));
 
-                $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . self::text_to_path($view->get('title'));
-                if (!check_dir_exists($directory)) {
-                    throw new SystemException("Could not create directory for view $viewid");
-                }
+            $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . self::text_to_path($view->get('title'));
+            if (!check_dir_exists($directory)) {
+                throw new SystemException("Could not create directory for view $viewid");
+            }
 
-                $outputfilter = new HtmlExportOutputFilter('../../');
-                $smarty->assign('view', $outputfilter->filter($view->build_columns()));
-                $content = $smarty->fetch('export:html:view.tpl');
-                if (!file_put_contents("$directory/index.html", $content)) {
-                    throw new SystemException("Could not write view page for view $viewid");
-                }
+            $outputfilter = new HtmlExportOutputFilter('../../');
+            $smarty->assign('view', $outputfilter->filter($view->build_columns()));
+            $content = $smarty->fetch('export:html:view.tpl');
+            if (!file_put_contents("$directory/index.html", $content)) {
+                throw new SystemException("Could not write view page for view $viewid");
             }
         }
     }
