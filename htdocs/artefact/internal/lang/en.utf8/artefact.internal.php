@@ -115,4 +115,7 @@ $string['Preview'] = 'Preview';
 $string['Size'] = 'Size';
 $string['Type'] = 'Type';
 
+$string['viewprofilepage'] = 'View profile page';
+$string['viewallprofileinformation'] = 'View all profile information';
+
 ?>

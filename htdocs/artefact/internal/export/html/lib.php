@@ -28,18 +28,33 @@ defined('INTERNAL') || die();
 
 class HtmlExportInternal extends HtmlExportArtefactPlugin {
 
+    private $profileviewexported = false;
+
     public function dump_export_data() {
+        if ($this->exporter->get('viewexportmode') == PluginExport::EXPORT_LIST_OF_VIEWS
+            && $this->exporter->get('artefactexportmode') == PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS) {
+            // Dont' care about profile information in this case
+            return;
+        }
+
         $smarty = $this->exporter->get_smarty('../../');
 
         // Profile page
-        $smarty->assign('breadcrumbs', array(array('text' => 'Profile page', 'path' => 'profilepage.html')));
-        $view = $this->exporter->get('user')->get_profile_view();
-        $outputfilter = new HtmlExportOutputFilter('../../');
-        $smarty->assign('view', $outputfilter->filter($view->build_columns()));
+        $profileviewid = $this->exporter->get('user')->get_profile_view()->get('id');
+        foreach ($this->exporter->get('views') as $viewid => $view) {
+            if ($profileviewid == $viewid) {
+                $smarty->assign('breadcrumbs', array(array('text' => 'Profile page', 'path' => 'profilepage.html')));
+                $view = $this->exporter->get('user')->get_profile_view();
+                $outputfilter = new HtmlExportOutputFilter('../../');
+                $smarty->assign('view', $outputfilter->filter($view->build_columns()));
 
-        $content = $smarty->fetch('export:html/internal:profilepage.tpl');
-        if (!file_put_contents($this->fileroot . 'profilepage.html', $content)) {
-            throw new SystemException("Unable to write profile page");
+                $content = $smarty->fetch('export:html/internal:profilepage.tpl');
+                if (!file_put_contents($this->fileroot . 'profilepage.html', $content)) {
+                    throw new SystemException("Unable to write profile page");
+                }
+                $this->profileviewexported = true;
+                break;
+            }
         }
 
         // Generic profile information
@@ -67,6 +82,7 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
     public function get_summary() {
         $smarty = $this->exporter->get_smarty();
         $smarty->assign('introduction', get_profile_field($this->exporter->get('user')->get('id'), 'introduction'));
+        $smarty->assign('profileviewexported', $this->profileviewexported);
         $iconid = $this->exporter->get('user')->get('profileicon');
         if ($iconid) {
             $icon = artefact_instance_from_id($iconid);
