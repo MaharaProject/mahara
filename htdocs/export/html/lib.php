@@ -96,7 +96,10 @@ class PluginExportHtml extends PluginExport {
 
                 $artefactexporter = new $classname($this);
                 $artefactexporter->dump_export_data();
-                $summaries[$plugin] = array($artefactexporter->get_summary_weight(), $artefactexporter->get_summary());
+                // If just exporting a list of views, we don't care about the summaries for each artefact plugin
+                if (!($this->viewexportmode == PluginExport::EXPORT_LIST_OF_VIEWS && $this->artefactexportmode == PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS)) {
+                    $summaries[$plugin] = array($artefactexporter->get_summary_weight(), $artefactexporter->get_summary());
+                }
             }
         }
 
