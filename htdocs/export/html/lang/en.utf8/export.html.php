@@ -27,7 +27,7 @@
 defined('INTERNAL') || die();
 
 $string['title'] = 'Standalone HTML Website';
-$string['description'] = 'Creates a self-contained website with your portfolio data. You cannot import this again, but it\'s readable in a standard web browser';
+$string['description'] = 'Creates a self-contained website with your portfolio data. You cannot import this again, but it\'s readable in a standard web browser.';
 $string['usersportfolio'] = '%s - Portfolio';
 
 ?>
