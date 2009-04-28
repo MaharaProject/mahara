@@ -2,8 +2,9 @@
  * JS behaviour for the export UI
  *
  * Copyright (C) 2009 Catalyst IT
- *
  * This file is licensed under the same terms as Mahara itself
+ *
+ * TODO: i18n
  */
 
 addLoadEvent(function() {
