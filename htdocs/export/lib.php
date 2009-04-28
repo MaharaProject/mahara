@@ -118,7 +118,7 @@ abstract class PluginExport extends Plugin {
      *
      * Technically, this is the time at which the export object was created.
      */
-    protected $export_time;
+    protected $exporttime;
 
     /**
      * Establishes exactly what views and artefacts are to be exported, and
@@ -143,7 +143,7 @@ abstract class PluginExport extends Plugin {
      *                             - ArtefactType subclasses
      */
     public function __construct(User $user, $views, $artefacts) {
-        $this->export_time = time();
+        $this->exporttime = time();
         $this->user = $user;
 
         $vaextra = '';
@@ -218,7 +218,7 @@ abstract class PluginExport extends Plugin {
         $this->exportdir = get_config('dataroot')
             . 'export/temporary/'
             . $this->user->get('id')  . '/'
-            . time() .  '/';
+            . $this->exporttime .  '/';
         if (!check_dir_exists($this->exportdir)) {
             throw new SystemException("Couldn't create the temporary export directory $this->exportdir");
         }

@@ -37,11 +37,6 @@ class PluginExportHtml extends PluginExport {
     protected $zipfile;
 
     /**
-     * The time the export occured
-     */
-    protected $export_time;
-
-    /**
      * The name of the directory under which all the other directories and 
      * files will be placed in the export
      */
@@ -63,7 +58,7 @@ class PluginExportHtml extends PluginExport {
             }
         }
         $this->zipfile = 'mahara-export-html-user'
-            . $this->get('user')->get('id') . '-' . $this->export_time . '.zip';
+            . $this->get('user')->get('id') . '-' . $this->exporttime . '.zip';
     }
 
     public static function get_title() {
@@ -141,7 +136,7 @@ class PluginExportHtml extends PluginExport {
         $smarty = smarty_core();
         $smarty->assign('user', $this->get('user'));
         $smarty->assign('rootpath', $rootpath);
-        $smarty->assign('export_time', $this->export_time);
+        $smarty->assign('export_time', $this->exporttime);
         $smarty->assign('sitename', get_config('sitename'));
 
         return $smarty;

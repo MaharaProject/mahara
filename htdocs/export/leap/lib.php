@@ -91,7 +91,7 @@ class PluginExportLeap extends PluginExport {
             throw new SystemException("Couldn't create the temporary export directory $this->exportdir");
         }
         $this->zipfile = 'mahara-export-leap-user'
-            . $this->get('user')->get('id') . '-' . $this->export_time . '.zip';
+            . $this->get('user')->get('id') . '-' . $this->exporttime . '.zip';
         // some plugins might want to do their own special thing
         foreach (plugins_installed('artefact', true) as $plugin) {
             $plugin = $plugin->name;
@@ -181,8 +181,8 @@ class PluginExportLeap extends PluginExport {
         $this->smarty->assign('userid', $this->get('user')->get('id'));
         $this->smarty->assign('name', full_name($this->get('user')));
         $this->smarty->assign('email', $this->get('user')->get('email'));
-        $this->smarty->assign('export_time', $this->export_time);
-        $this->smarty->assign('export_time_rfc3339', PluginExportLeap::format_rfc3339_date($this->export_time));
+        $this->smarty->assign('export_time', $this->exporttime);
+        $this->smarty->assign('export_time_rfc3339', PluginExportLeap::format_rfc3339_date($this->exporttime));
         require(get_config('docroot') . 'export/leap/version.php');
         $this->smarty->assign('leap_export_version', $config->version);
         $this->xml .= $this->smarty->fetch('export:leap:header.tpl');
