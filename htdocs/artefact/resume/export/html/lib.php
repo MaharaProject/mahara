@@ -32,6 +32,11 @@ defined('INTERNAL') || die();
 class HtmlExportResume extends HtmlExportArtefactPlugin {
 
     public function dump_export_data() {
+        if ($this->exporter->get('viewexportmode') == PluginExport::EXPORT_LIST_OF_VIEWS
+            && $this->exporter->get('artefactexportmode') == PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS) {
+            // Dont' care about resume in this case
+            return;
+        }
         $smarty = $this->exporter->get_smarty('../../');
         $smarty->assign('breadcrumbs', array(
             array('text' => get_string('resume', 'artefact.resume'), 'path' => 'index.html'),
