@@ -199,12 +199,17 @@ abstract class PluginExport extends Plugin {
             $this->artefactexportmode = $artefacts;
         }
         else if ($artefacts == self::EXPORT_ARTEFACTS_FOR_VIEWS) {
-            $sql = "SELECT va.artefact
-                FROM {view_artefact} va
-                LEFT JOIN {view} v ON v.id = va.view
-                WHERE v.owner = ?
-                $vaextra";
-            $tmpartefacts = (array)get_column_sql($sql, array($userid));
+            if ($tmpviews) {
+                $sql = "SELECT va.artefact
+                    FROM {view_artefact} va
+                    LEFT JOIN {view} v ON v.id = va.view
+                    WHERE v.owner = ?
+                    $vaextra";
+                $tmpartefacts = (array)get_column_sql($sql, array($userid));
+            }
+            else {
+                $tmpartefacts = array();
+            }
             $this->artefactexportmode = $artefacts;
         }
         else {
