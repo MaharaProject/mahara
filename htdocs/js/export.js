@@ -49,4 +49,28 @@ addLoadEvent(function() {
         });
     });
 
+    // Checkbox helpers
+    var checkboxes = getElementsByTagAndClassName('input', 'checkbox', 'whatviews');
+    var checkboxHelperDiv = DIV();
+
+    var checkboxSelectAll = A({'href': ''}, 'Select all');
+    connect(checkboxSelectAll, 'onclick', function(e) {
+        e.stop();
+        forEach(checkboxes, function(i) {
+            i.checked = true;
+        });
+    });
+
+    var checkboxReverseSelection = A({'href': ''}, 'Reverse selection');
+    connect(checkboxReverseSelection, 'onclick', function(e) {
+        e.stop();
+        forEach(checkboxes, function(i) {
+            i.checked = !i.checked;
+        });
+    });
+
+
+    appendChildNodes(checkboxHelperDiv, checkboxSelectAll, ' | ', checkboxReverseSelection);
+    insertSiblingNodesBefore(getFirstElementByTagAndClassName('table', null, container), checkboxHelperDiv);
+
 });
