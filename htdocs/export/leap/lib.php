@@ -490,7 +490,7 @@ class LeapExportElement {
     public function get_content() {
         //TODO replace this with non-js content
         // can use $this->artefact->get('description'); in most cases to avoid this (for testing) (and the appropriate |escape in the entry template content tag)
-        $rendered = $this->artefact->render_base(array());
+        $rendered = $this->artefact->render_self(array());
         $rendered = $rendered['html'];
         return $this->replace_content_placeholders(clean_html($rendered));
     }
