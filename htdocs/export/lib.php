@@ -121,6 +121,11 @@ abstract class PluginExport extends Plugin {
     protected $exporttime;
 
     /**
+     * Callbacks to notify when progress is made
+     */
+    private $progresscallback = null;
+
+    /**
      * Establishes exactly what views and artefacts are to be exported, and
      * sets up temporary export directories
      *
@@ -142,7 +147,17 @@ abstract class PluginExport extends Plugin {
      *                             - stdclass objects - db rows
      *                             - ArtefactType subclasses
      */
-    public function __construct(User $user, $views, $artefacts) {
+    public function __construct(User $user, $views, $artefacts, $progresscallback) {
+        if (!is_null($progresscallback)) {
+            if (is_callable($progresscallback)) {
+                $this->progresscallback = $progresscallback;
+            }
+            else {
+                throw new SystemException("The specified progress callback isn't callable");
+            }
+        }
+        $this->notify_progress_callback(0, 'Starting');
+
         $this->exporttime = time();
         $this->user = $user;
 
@@ -222,6 +237,8 @@ abstract class PluginExport extends Plugin {
         if (!check_dir_exists($this->exportdir)) {
             throw new SystemException("Couldn't create the temporary export directory $this->exportdir");
         }
+
+        $this->notify_progress_callback(10, 'Setup');
     }
 
     /**
@@ -235,6 +252,14 @@ abstract class PluginExport extends Plugin {
             throw new ParamOutOfRangeException("Field $field wasn't found in class " . get_class($this));
         }
         return $this->{$field};
+    }
+
+    protected function notify_progress_callback($percent, $status) {
+        if ($this->progresscallback) {
+            call_user_func_array($this->progresscallback, array(
+                $percent, $status
+            ));
+        }
     }
 
 }

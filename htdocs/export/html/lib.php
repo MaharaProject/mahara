@@ -46,8 +46,8 @@ class PluginExportHtml extends PluginExport {
     * constructor.  overrides the parent class
     * to set up smarty and the attachment directory
     */
-    public function __construct(User $user, $views, $artefacts) {
-        parent::__construct($user, $views, $artefacts);
+    public function __construct(User $user, $views, $artefacts, $progresscallback=null) {
+        parent::__construct($user, $views, $artefacts, $progresscallback);
         $this->rootdir = 'portfolio-for-' . self::text_to_path($user->get('username'));
 
         // Create basic required directories
@@ -59,6 +59,7 @@ class PluginExportHtml extends PluginExport {
         }
         $this->zipfile = 'mahara-export-html-user'
             . $this->get('user')->get('id') . '-' . $this->exporttime . '.zip';
+        $this->notify_progress_callback(15, 'Setup complete');
     }
 
     public static function get_title() {
@@ -76,8 +77,15 @@ class PluginExportHtml extends PluginExport {
         // For each artefact plugin, if it implements leap export, ask it to 
         // dump out its structure
         $summaries = array();
-        foreach (plugins_installed('artefact', true) as $plugin) {
+        $plugins = plugins_installed('artefact', true);
+        $progressstart = 15;
+        $progressend   = 60;
+        $plugincount   = count($plugins);
+        $i = 0;
+        foreach ($plugins as $plugin) {
             $plugin = $plugin->name;
+            $this->notify_progress_callback(intval($progressstart + ($i++ / $plugincount) * ($progressend - $progressstart)), 'Exporting data for ' . $plugin);
+
             if (safe_require('export', 'html/' . $plugin, 'lib.php', 'require_once', true)) {
                 $classname = 'HtmlExport' . ucfirst($plugin);
                 if (!is_subclass_of($classname, 'HtmlExportArtefactPlugin')) {
@@ -93,10 +101,12 @@ class PluginExportHtml extends PluginExport {
         }
 
         // Get the view data
+        $this->notify_progress_callback(60, 'Exporting Views');
         $this->dump_view_export_data();
         $summaries['view'] = array(100, $this->get_view_summary());
 
         // Sort by weight (then drop the weight information)
+        $this->notify_progress_callback(65, 'Building index page');
         uasort($summaries, create_function('$a, $b', 'return $a[0] > $b[0];'));
         foreach ($summaries as &$summary) {
             $summary = $summary[1];
@@ -106,10 +116,12 @@ class PluginExportHtml extends PluginExport {
         $this->build_index_page($summaries);
 
         // Copy all static files into the export
+        $this->notify_progress_callback(75, 'Copying static files');
         $this->copy_static_files();
         
 
         // zip everything up
+        $this->notify_progress_callback(80, 'Creating zipfile');
         $cwd = getcwd();
         $command = sprintf('%s %s %s %s',
             get_config('pathtozip'),
@@ -124,6 +136,7 @@ class PluginExportHtml extends PluginExport {
         if ($returnvar != 0) {
             throw new SystemException('Failed to zip the export file');
         }
+        $this->notify_progress_callback(100, 'Done');
         return $this->zipfile;
     }
 
