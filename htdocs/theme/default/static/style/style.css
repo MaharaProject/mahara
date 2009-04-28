@@ -2730,6 +2730,42 @@ span.breadcrumbs a {
     text-align: center;
 }
 
+#exportgeneration {
+    text-align: center;
+}
+#progress {
+    border: 2px solid #d0d0d0;
+    height: 40px;
+    width: 600px;
+    margin-top: 1em;
+}
+div.progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #7d9728;
+    height: 40px;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+}
+div.progress-bar a {
+    color: #ffd;
+    text-decoration: underline;
+}
+p.progress-text {
+    position: fixed;
+    top: 0;
+    left: 0;
+    text-align: center;
+    color: #fff;
+    font-weight: bold;
+    width: 100%;
+}
+#progressbar {
+    height: 40px;
+}
+
 
 /* ADMIN HOME */
 /* Administration Home styles */

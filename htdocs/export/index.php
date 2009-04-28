@@ -28,7 +28,9 @@ define('INTERNAL', 1);
 define('MENUITEM', 'myportfolio/export');
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('exportyourportfolio', 'export'));
-require_once('file.php');
+
+$SESSION->set('exportdata', '');
+$SESSION->set('exportfile', '');
 
 $exportoptions = array();
 foreach (plugins_installed('export') as $plugin) {
@@ -50,14 +52,14 @@ $elements = array(
         'type' => 'radio',
         'options' => array(
             'all' => get_string('allmydata', 'export'),
-            'views' => get_string('justsomeviewsanddata', 'export'),
+            'views' => get_string('justsomeviews', 'export'),
         ),
         'separator' => '</div><div>',
         'defaultvalue' => 'all',
     ),
 );
 
-if ($viewids = get_column('view', 'id', 'owner', $USER->get('id'))) {
+if ($viewids = get_column('view', 'id', 'owner', $USER->get('id'), 'type', 'portfolio')) {
     foreach ($viewids as $viewid) {
         $view = new View($viewid);
         $elements['view_' . $viewid] = array(
@@ -84,33 +86,24 @@ $form = pieform(array(
 
 
 function export_submit(Pieform $form, $values) {
-    global $USER;
-    safe_require('export', $values['format']);
-
-    $user = new User();
-    $user->find_by_id($USER->get('id'));
-
-    $class = generate_class_name('export', $values['format']);
-
-    switch($values['what']) {
-    case 'all':
-        $exporter = new $class($user, PluginExport::EXPORT_ALL_VIEWS, PluginExport::EXPORT_ALL_ARTEFACTS);
-        break;
-    case 'views':
-        $views = array();
-        foreach ($values as $key => $value) {
-            if (substr($key, 0, 5) == 'view_' && $value) {
-                $views[] = intval(substr($key, 5));
-            }
+    global $SESSION;
+    $views = array();
+    foreach ($values as $key => $value) {
+        if (substr($key, 0, 5) == 'view_' && $value) {
+            $views[] = intval(substr($key, 5));
         }
-        $exporter = new $class($user, $views, PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS);
-        break;
-    default:
-        throw new SystemException("Unable to export a portfolio using those options");
     }
 
-    $zipfile = $exporter->export();
-    serve_file($exporter->get('exportdir') . $zipfile, $zipfile, 'application/x-zip', array('lifetime' => 0));
+    $exportdata = array(
+        'format' => $values['format'],
+        'what'   => $values['what'],
+        'views'  => $views,
+    );
+    $SESSION->set('exportdata', $exportdata);
+
+    $smarty = smarty();
+    $smarty->assign('heading', '');
+    $smarty->display('export/export.tpl');
     exit;
 }
 

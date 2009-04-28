@@ -30,9 +30,14 @@ $string['allmydata'] = 'All my data';
 $string['chooseanexportformat'] = 'Choose an export format';
 $string['clicktopreview'] = 'Click to preview';
 $string['Export']     = 'Export';
+$string['exportgeneratedsuccessfully'] = 'Export generated successfully. %sClick here to download it%s';
+$string['exportgeneratedsuccessfullyjs'] = 'Export generated successfully. %sContinue%s';
 $string['exportyourportfolio'] = 'Export Your Portfolio';
 $string['generateexport'] = 'Generate export';
-$string['justsomeviewsanddata'] = 'Just some views and their associated data';
+$string['justsomeviews'] = 'Just some of my Views';
+$string['pleasewaitwhileyourexportisbeinggenerated'] = 'Please wait while your export is being generated...';
+$string['unabletoexportportfoliousingoptions'] = 'Unable to export a portfolio using the chosen options';
+$string['unabletogenerateexport'] = 'Unable to generate export';
 $string['viewstoexport'] = 'Views to export';
 $string['whatdoyouwanttoexport'] = 'What do you want to export?';
 
