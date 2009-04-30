@@ -364,7 +364,6 @@ class HtmlExportOutputFilter {
             $html
         );
 
-
         return $html;
     }
 

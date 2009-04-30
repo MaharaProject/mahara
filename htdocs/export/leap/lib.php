@@ -201,9 +201,8 @@ class PluginExportLeap extends PluginExport {
     }
 
     /**
-    * export all the views
-    * @todo later
-    */
+     * Export the views
+     */
     private function export_views() {
         foreach ($this->get('views') as $view) {
             $this->smarty->assign('title', $view->get('title'));
@@ -245,8 +244,8 @@ class PluginExportLeap extends PluginExport {
     }
 
     /**
-    * export all the artefacts
-    */
+     * Export the artefacts
+     */
     private function export_artefacts() {
         $progressstart = 30;
         $progressend   = 70;
