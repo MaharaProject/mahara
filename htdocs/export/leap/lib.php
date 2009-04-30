@@ -211,6 +211,12 @@ class PluginExportLeap extends PluginExport {
             $this->smarty->assign('contenttype', 'html');
             $this->smarty->assign('content', $view->build_columns());
             $this->smarty->assign('type', 'selection');
+            $this->smarty->assign('categories', array(
+                array(
+                    'scheme' => 'selection_type',
+                    'term' => 'Webpage',
+                )
+            ));
             $this->xml .= $this->smarty->fetch("export:leap:entry.tpl");
         }
     }
