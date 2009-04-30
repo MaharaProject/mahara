@@ -10,6 +10,6 @@
     <id>{$WWWROOT}export/{$userid}/{$export_time}</id>
     <title>Mahara LEAP2A Export for {$name}, {$export_time|format_date:"strftimedatetimeshort"}</title>
     <updated>{$export_time_rfc3339}</updated>
-    <generator url="http://mahara.org/" version="{$leap_export_version|escape}">Mahara</generator>
+    <generator uri="http://mahara.org/" version="{$leap_export_version|escape}">Mahara</generator>
 {include file="export:leap:author.tpl"}
 
