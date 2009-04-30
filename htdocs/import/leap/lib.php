@@ -67,6 +67,8 @@ class PluginImportLeap extends PluginImport {
     }
 
     public function process() {
+        db_begin();
+
         $data = $this->get('data');
         $filename = get_config('dataroot') . $data['filename'];
         $this->trace('Loading import from ' . $filename);
@@ -95,6 +97,7 @@ class PluginImportLeap extends PluginImport {
         $this->snapshot('imported data based on load mapping');
         $this->import_completed();
 
+        db_commit();
     }
 
     private function ensure_document_valid() {
