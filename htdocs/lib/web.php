@@ -2164,7 +2164,7 @@ function clean_html($text) {
     $config->set('Cache', 'SerializerPath', get_config('dataroot') . 'htmlpurifier');
 
     $config->set('Core', 'Encoding', 'UTF-8');
-    $config->set('HTML', 'Doctype', 'XHTML 1.0 Transitional');
+    $config->set('HTML', 'Doctype', 'HTML 4.01 Transitional');
     $config->set('AutoFormat', 'Linkify', true);
 
     $customfilters = array();
