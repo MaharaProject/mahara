@@ -210,7 +210,7 @@ class PluginExportLeap extends PluginExport {
             //$this->smarty->assign('summary', $view->get('description'));
             $this->smarty->assign('contenttype', 'html');
             $this->smarty->assign('content', $view->build_columns());
-            $this->smarty->assign('type', 'selection');
+            $this->smarty->assign('leaptype', 'selection');
             $this->smarty->assign('categories', array(
                 array(
                     'scheme' => 'selection_type',
@@ -375,7 +375,7 @@ class LeapExportElement {
         $this->add_links();
         $this->smarty->assign('content', $this->get_content());
         $this->smarty->assign('contenttype', $this->get_content_type());
-        $this->smarty->assign('type', $this->get_leap_type());
+        $this->smarty->assign('leaptype', $this->get_leap_type());
 
         if ($tags = $this->artefact->get('tags')) {
             $tags = array_map(create_function('$a',

@@ -49,7 +49,7 @@ class LeapExportElementInternal extends LeapExportElement {
         $this->smarty->assign('title', display_name($this->get('exporter')->get('user'), $this->get('exporter')->get('user')));
         // If this ID is changed, you'll have to change it in author.tpl too
         $this->smarty->assign('id', 'portfolio:artefactinternal');
-        $this->smarty->assign('type', $this->get_leap_type());
+        $this->smarty->assign('leaptype', $this->get_leap_type());
         $persondata = array();
         $spacialdata = array();
         foreach ($this->artefacts as $a) {

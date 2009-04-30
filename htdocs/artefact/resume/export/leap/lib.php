@@ -270,7 +270,7 @@ abstract class LeapExportElementResumeCompositeChild extends LeapExportElement {
             }
             $this->smarty->assign($field, $value);
         }
-        $this->smarty->assign('type', $this->get_leap_type());
+        $this->smarty->assign('leaptype', $this->get_leap_type());
         $this->smarty->assign('contenttype', 'text');
         $this->add_links();
         $this->smarty->assign('links', $this->links);
