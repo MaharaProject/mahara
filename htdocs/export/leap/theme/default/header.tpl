@@ -4,7 +4,7 @@
     xmlns:leap="http://wiki.cetis.ac.uk/2009-03/LEAP2A_predicates#"
     xmlns:leaptype="http://wiki.cetis.ac.uk/2009-03/LEAP2A_types#"
     xmlns:categories="http://wiki.cetis.ac.uk/2009-03/LEAP2A_categories/"
-    xmlns:portfolio="{$WWWROOT}export/leap/export.php?user={$userid}/"
+    xmlns:portfolio="{$WWWROOT}export/leap/{$userid}/{$export_time}/"
     xmlns:mahara="http://wiki.mahara.org/Developer_Area/Import%2F%2FExport/LEAP_Extensions#"
 >
     <id>{$WWWROOT}export/{$userid}/{$export_time}</id>
