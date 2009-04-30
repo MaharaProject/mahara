@@ -102,6 +102,7 @@ function import_submit(Pieform $form, $values) {
     $filename = substr($filename, strlen(get_config('dataroot')));
     require_once(dirname(dirname(__FILE__)) . '/import/lib.php');
     safe_require('import', 'leap');
+    db_begin();
     $importer = PluginImport::create_importer(null, (object)array(
         'token'      => '',
         //'host'       => '',
@@ -122,6 +123,7 @@ function import_submit(Pieform $form, $values) {
     $email = artefact_instance_from_id(get_field('artefact', 'id', 'title', 'imported@example.org', 'artefacttype', 'email', 'owner', $userid));
     $email->delete();
     execute_sql('UPDATE {artefact_internal_profile_email} SET principal = 1 WHERE "owner" = ?', array($userid));
+    db_commit();
 
     echo "\n\n";
     echo 'Done. You can <a href="' . get_config('wwwroot') . '/admin/users/changeuser.php?id=' . $userid . '">change to this user</a> to inspect the result, ';
