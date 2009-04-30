@@ -172,7 +172,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
             }
             break;
         case self::STRATEGY_IMPORT_AS_ENTRY:
-            self::setup_outoflinecontent_relationship($blogpostentry, $importer);
+            self::setup_outoflinecontent_relationship($entry, $importer);
             break;
         default:
             throw new ImportException($importer, 'TODO: get_string: unknown strategy chosen for importing entry');
