@@ -81,3 +81,5 @@ class LeapExportElementBlog extends LeapExportElement {
         return 'html';
     }
 }
+
+?>
