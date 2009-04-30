@@ -55,7 +55,7 @@ class LeapExportElementInternal extends LeapExportElement {
         foreach ($this->artefacts as $a) {
             if (!$data = $this->data_mapping($a)) {
                 if ($a->get('artefacttype') == 'introduction') {
-                    $this->smarty->assign('contenttype', 'xhtml');
+                    $this->smarty->assign('contenttype', 'html');
                     $this->smarty->assign('content', clean_html($a->get('title')));
                 }
                 continue;
@@ -160,6 +160,10 @@ class LeapExportElementInternalNonPerson extends LeapExportElement {
     public function assign_smarty_vars() {
         parent::assign_smarty_vars();
         $this->smarty->assign('title', ucfirst($this->artefact->get('artefacttype')));
+    }
+
+    public function get_content() {
+        return $this->artefact->get('title');
     }
 }
 

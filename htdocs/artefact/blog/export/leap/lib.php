@@ -45,17 +45,8 @@ class LeapExportElementBlogpost extends LeapExportElement {
         return $content;
     }
 
-    public function assign_smarty_vars() {
-        parent::assign_smarty_vars();
-        $this->smarty->assign('contenttype', 'xhtml');
-    }
-
-    public function get_content() {
-        //$rendered = $this->artefact->render_base(array('icons' => false));
-        //$rendered = $rendered['html'];
-        //return $this->replace_content_placeholders(clean_html($rendered));
-        // Probably need replace content placeholders!
-        return clean_html($this->artefact->get('description'));
+    public function get_content_type() {
+        return 'html';
     }
 
     public function get_categories() {
@@ -86,12 +77,7 @@ class LeapExportElementBlog extends LeapExportElement {
         );
     }
 
-    public function assign_smarty_vars() {
-        parent::assign_smarty_vars();
-        $this->smarty->assign('contenttype', 'xhtml');
-    }
-
-    public function get_content() {
-        return clean_html($this->artefact->get('description'));
+    public function get_content_type() {
+        return 'html';
     }
 }

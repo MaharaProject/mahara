@@ -208,7 +208,7 @@ class PluginExportLeap extends PluginExport {
             $this->smarty->assign('created', self::format_rfc3339_date(strtotime($view->get('ctime'))));
             // TODO this is wrong - view description is HTML, summary should be text
             //$this->smarty->assign('summary', $view->get('description'));
-            $this->smarty->assign('contenttype', 'xhtml');
+            $this->smarty->assign('contenttype', 'html');
             $this->smarty->assign('content', $view->build_columns());
             $this->smarty->assign('type', 'selection');
             $this->xml .= $this->smarty->fetch("export:leap:entry.tpl");
@@ -368,6 +368,7 @@ class LeapExportElement {
         // these are the ones we really need to override
         $this->add_links();
         $this->smarty->assign('content', $this->get_content());
+        $this->smarty->assign('contenttype', $this->get_content_type());
         $this->smarty->assign('type', $this->get_leap_type());
 
         if ($tags = $this->artefact->get('tags')) {
@@ -480,19 +481,37 @@ class LeapExportElement {
     }
 
     /**
-    * The main content of the element.
-    * Goes between <content> tags.
-    * The default is the artefact description
-    * But this can be an XHTML representation
+     * The content type of whatever is going in the <content> element.
+     *
+     * Can only be one of 'text', 'html' or 'xhtml', and we're currently not 
+     * using XHTML in Mahara.
+     *
+     * @return string
+     */
+    public function get_content_type() {
+        return 'text';
+    }
+
+
+    /**
+    * The main content of the element, which goes between <content> tags.
     *
-    * @return XHTML string
+    * Escaping of this value happens in the template, depending on the content 
+    * type, which can be set with {@link get_content_type()}.
+    *
+    * The default is to use the artefact description.
+    *
+    * @return string
     */
     public function get_content() {
-        //TODO replace this with non-js content
-        // can use $this->artefact->get('description'); in most cases to avoid this (for testing) (and the appropriate |escape in the entry template content tag)
-        $rendered = $this->artefact->render_self(array());
-        $rendered = $rendered['html'];
-        return $this->replace_content_placeholders(clean_html($rendered));
+        switch ($this->get_content_type()) {
+        case 'text':
+        case 'html':
+        case 'xhtml':
+            return $this->artefact->get('description');
+        default:
+            throw new SystemException("Unrecognised content type");
+        }
     }
 
     public function replace_content_placeholders($content, $placeholder='ARTEFACTVIEWLINK') {

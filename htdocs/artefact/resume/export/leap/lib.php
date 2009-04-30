@@ -148,9 +148,8 @@ class LeapExportElementPersonalinformation extends LeapExportElement {
 }
 
 class LeapExportElementResumeWysiwygField extends LeapExportElement {
-    public function assign_smarty_vars() {
-        parent::assign_smarty_vars();
-        $this->smarty->assign('contenttype', 'xhtml');
+    public function get_content_type() {
+        return 'html';
     }
 }
 
@@ -272,6 +271,7 @@ abstract class LeapExportElementResumeCompositeChild extends LeapExportElement {
             $this->smarty->assign($field, $value);
         }
         $this->smarty->assign('type', $this->get_leap_type());
+        $this->smarty->assign('contenttype', 'text');
         $this->add_links();
         $this->smarty->assign('links', $this->links);
     }
@@ -315,7 +315,7 @@ class LeapExportElementResumeCompositeChildCertification extends LeapExportEleme
         return array(
             'end'     => $record->date,
             'title'   => $record->title,
-            'content' => hsc($record->description),
+            'content' => $record->description,
         );
     }
 
@@ -330,7 +330,7 @@ class LeapExportElementResumeCompositeChildMembership extends LeapExportElementR
             'start'   => $record->startdate,
             'end'     => $record->enddate,
             'title'   => $record->title,
-            'content' => hsc($record->description),
+            'content' => $record->description,
         );
     }
 
@@ -371,7 +371,7 @@ class LeapExportElementResumeCompositeChildEducationhistory extends LeapExportEl
             'start'   => $record->startdate,
             'end'     => $record->enddate,
             'title'   => $record->qualname . ' (' . $record->qualtype . ')',
-            'content' => hsc($record->qualdescription),
+            'content' => $record->qualdescription,
         );
     }
 
@@ -395,7 +395,7 @@ class LeapExportElementResumeCompositeChildEmploymenthistory extends LeapExportE
             'start'   => $record->startdate,
             'end'     => $record->enddate,
             'title'   => $record->jobtitle,
-            'content' => hsc($record->positiondescription),
+            'content' => $record->positiondescription,
         );
     }
 
@@ -417,7 +417,7 @@ class LeapExportElementResumeCompositeChildBook extends LeapExportElementResumeC
         return array(
             'end'     => $record->date,
             'title'   => $record->title,
-            'content' => hsc($record->description),
+            'content' => $record->description,
         );
     }
 
