@@ -350,7 +350,7 @@ class ArtefactTypeProfileField extends ArtefactTypeProfile {
     }
 
     public function render_self($options) {
-        return array('html' => $this->title, 'javascript' => null);
+        return array('html' => hsc($this->title), 'javascript' => null);
     }
 }
 
