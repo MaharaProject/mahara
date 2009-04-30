@@ -225,7 +225,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
             $file = LeapImportFile::create_file($entry, $importer);
             $createdartefacts[] = $file->get('id');
 
-            $content = '<a href="' . get_config('wwwroot') . 'artefact/file/download.php?file=' . $fileid . '"'
+            $content = '<a href="' . get_config('wwwroot') . 'artefact/file/download.php?file=' . $file->get('id') . '"'
                 . ' title="' . hsc($file->get('title')) . '">';
             if (is_image_mime_type($file->get('filetype'))) {
                 $content .= '<img src="' . get_config('wwwroot') 
