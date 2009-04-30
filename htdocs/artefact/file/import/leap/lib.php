@@ -191,7 +191,7 @@ class LeapImportFile extends LeapImportArtefactPlugin {
             foreach ($children as $childid) {
                 $child = $importer->get_entry_by_id($childid);
                 if (self::is_folder($child, $importer)) {
-                    $children = array_merge($children, self::get_children_of_folder($child, $importer));
+                    $children = array_merge($children, self::get_children_of_folder($child, $importer, true));
                 }
             }
         }
