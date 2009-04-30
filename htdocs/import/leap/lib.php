@@ -488,7 +488,7 @@ class PluginImportLeap extends PluginImport {
             $starttaglength = strlen('<content type="xhtml">');
             $endtaglength   = strlen('</content>');
             return substr((string)$entry->content->asXML(), $starttaglength, -$endtaglength);
-            // TODO: type="html"
+        case 'html':
         case 'text':
             return (string)$entry->content;
         default:
