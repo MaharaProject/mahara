@@ -40,11 +40,6 @@ class LeapExportElementBlogpost extends LeapExportElement {
         }
     }
 
-    public function replace_content_placeholders($content) {
-        $content = parent::replace_content_placeholders($content, 'ARTEFACT(DL|VIEW)LINK');
-        return $content;
-    }
-
     public function get_content_type() {
         return 'html';
     }

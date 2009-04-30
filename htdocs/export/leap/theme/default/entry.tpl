@@ -7,7 +7,7 @@
 {/if}
 {if $summary}        <summary>{$summary}</summary>
 {/if}
-        <content{if $contenttype != 'text'} type="{$contenttype}"{/if}{if $contentsrc} src="{$contentsrc}"{/if}>{if $contenttype == 'xhtml'}<div xmlns="http://www.w3.org/1999/xhtml">{/if}{if $contenttype == 'xhtml'}{$content|clean_html}{elseif $contenttype == 'html'}{$content|clean_html|escape}{else}{$content|escape}{/if}{if $contenttype == 'xhtml'}</div>{/if}</content>
+        <content{if $contenttype != 'text'} type="{$contenttype}"{/if}{if $contentsrc} src="{$contentsrc}"{/if}>{if $contenttype == 'xhtml'}<div xmlns="http://www.w3.org/1999/xhtml">{/if}{if $contenttype == 'xhtml'}{$content|clean_html|export_leap_rewrite_links}{elseif $contenttype == 'html'}{$content|clean_html|export_leap_rewrite_links|escape}{else}{$content|escape}{/if}{if $contenttype == 'xhtml'}</div>{/if}</content>
         <rdf:type rdf:resource="leaptype:{$leaptype}"/>
 {if $artefacttype}        <mahara:artefactplugin mahara:type="{$artefacttype}" mahara:plugin="{$artefactplugin}"/>
 {/if}
