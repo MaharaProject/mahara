@@ -2749,12 +2749,15 @@ div.progress-bar {
     text-align: center;
     font-weight: bold;
 }
+* html div.progress-bar {
+    * height: 45px;
+}
 div.progress-bar a {
-    color: #ffd;
-    text-decoration: underline;
+    color: #ffd !important;
+    text-decoration: underline !important;
 }
 p.progress-text {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     text-align: center;
