@@ -32,7 +32,7 @@ if ($exportfile = $SESSION->get('exportfile')) {
     $SESSION->set('exportdata', '');
     $SESSION->set('exportfile', '');
     require_once('file.php');
-    serve_file($exportfile, basename($exportfile), 'application/x-zip', array('lifetime' => 0));
+    serve_file($exportfile, basename($exportfile), 'application/x-zip', array('lifetime' => 0, 'forcedownload' => true));
     exit;
 }
 
