@@ -55,7 +55,10 @@ $SESSION->set('exportdata', '');
         </style>
     </head>
     <body>
+    <div style="width: 100%; background-color: #808080;" class="progress-bar"></div>
+    <p class="progress-text"><?php echo get_string('Starting', 'export'); ?></p>
 <?php
+flush();
 
 /**
  * Outputs enough HTML to make a pretty error message in the iframe

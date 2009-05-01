@@ -36,6 +36,7 @@ $string['exportyourportfolio'] = 'Export Your Portfolio';
 $string['generateexport'] = 'Generate export';
 $string['justsomeviews'] = 'Just some of my Views';
 $string['pleasewaitwhileyourexportisbeinggenerated'] = 'Please wait while your export is being generated...';
+$string['Starting'] = 'Starting';
 $string['unabletoexportportfoliousingoptions'] = 'Unable to export a portfolio using the chosen options';
 $string['unabletogenerateexport'] = 'Unable to generate export';
 $string['viewstoexport'] = 'Views to export';
