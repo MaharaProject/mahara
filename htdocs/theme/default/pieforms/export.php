@@ -49,6 +49,7 @@ if ($body) {
                 echo '<colgroup><col width="33%"><col width="33%"><col width="33%"></colgroup>' . "\n";
                 break;
             }
+            echo "    <tbody>\n";
         }
         echo '    <tr class="r' . $rownum % 2 . "\">\n";
         $i = 0;
@@ -61,6 +62,7 @@ if ($body) {
         }
         echo "    </tr>\n";
     }
+    echo "    </tbody>\n";
     echo "</table>\n";
 }
 
