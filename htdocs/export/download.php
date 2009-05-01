@@ -123,8 +123,12 @@ $strexportgeneratedsuccessfullyjs = get_string('exportgeneratedsuccessfullyjs', 
 $strexportgeneratedsuccessfully   = get_string('exportgeneratedsuccessfully', 'export', '<a href="download.php" target="_top">', '</a>');
 ?>
         <script type="text/javascript">
-            document.write('<div class="progress-bar" style="width: 100%;"><p><?php echo $strexportgeneratedsuccessfullyjs; ?></p>');
-            document.location = 'download.php';
+            document.write('<div class="progress-bar" style="width: 100%;"><p><?php echo $strexportgeneratedsuccessfullyjs; ?></p></div>');
+            if (!window.opera) {
+                // Opera can't handle this for some reason - it vomits out the 
+                // download inline in the iframe
+                document.location = 'download.php';
+            }
         </script>
         <div class="progress-bar" style="width: 100%;">
             <p><?php echo $strexportgeneratedsuccessfully; ?></p>
