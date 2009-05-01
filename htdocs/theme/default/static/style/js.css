@@ -9,6 +9,8 @@
     position: absolute;
     visibility: hidden;
     top: 0;
+    *display: none;
+    *visibility: visible;
 }
 .nojs-hidden-inline {
     display: inline;
