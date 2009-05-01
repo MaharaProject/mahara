@@ -30,10 +30,16 @@ require_once('view.php');
 require_once(get_config('docroot') . '/artefact/lib.php');
 
 /**
-* Base class for all Export plugins.
-* This is the class that performs all the work for Exports,
-* as well as interfacing with the Mahara Plugin API
-*/
+ * Base class for all Export plugins.
+ *
+ * This class does some basic setup for export plugins, as well as interfacing 
+ * with the Mahara Plugin API. Mostly, the work of generating exports is 
+ * delegated to the plugins themselves.
+ *
+ * TODO: split generation of an archive file from the export() method, 
+ * implement zipping the export in a method in this class to reduce 
+ * duplication.
+ */
 abstract class PluginExport extends Plugin {
 
     /**
@@ -76,25 +82,26 @@ abstract class PluginExport extends Plugin {
     /**
      * Perform the export and return the path to the resulting file.
      *
-     * @return String path to the resulting file (relative to dataroot)
+     * @return string path to the resulting file (relative to dataroot)
      */
     abstract public function export();
 
     /**
-     *
      * Clean up after yourself - removing any temp files etc
+     *
+     * TODO: not used anywhere yet. Cleanup may not need an API method.
      */
     abstract public function cleanup();
 
     //  MAIN CLASS DEFINITION
 
     /**
-     * Array of artefacts to export. Set up by constructor.
+     * List of artefacts to export. Set up by constructor.
      */
     protected $artefacts = array();
 
     /**
-     * Array of views to export. Set up by constructor.
+     * List of views to export. Set up by constructor.
      */
     protected $views = array();
 
@@ -104,24 +111,27 @@ abstract class PluginExport extends Plugin {
     protected $user;
 
     /**
-     * Represents the mode for exporting views - one of the class consts defined above
+     * Represents the mode for exporting views - one of the class consts 
+     * defined above
      */
     protected $viewexportmode;
 
     /**
-     * Represents the mode for exporting artefacts - one of the class consts defined above
+     * Represents the mode for exporting artefacts - one of the class consts 
+     * defined above
      */
     protected $artefactexportmode;
 
     /**
      * The time the export was generated.
      *
-     * Technically, this is the time at which the export object was created.
+     * Technically, this is the time at which the export object was created, 
+     * not the time at which export() was called.
      */
     protected $exporttime;
 
     /**
-     * Callbacks to notify when progress is made
+     * Callback to notify when progress is made
      */
     private $progresscallback = null;
 
@@ -194,6 +204,9 @@ abstract class PluginExport extends Plugin {
         }
 
         // Get the list of artefacts to export
+        // TODO: make sure when exporting views, all artefacts in those views 
+        // are included regardless of whether they've been selected to be 
+        // exported or not
         if ($artefacts == self::EXPORT_ALL_ARTEFACTS) {
             $tmpartefacts = get_column('artefact', 'id', 'owner', $userid);
             $this->artefactexportmode = $artefacts;
@@ -259,6 +272,24 @@ abstract class PluginExport extends Plugin {
         return $this->{$field};
     }
 
+    /**
+     * Notifies the registered progress callback about the progress in generating the export.
+     *
+     * This is provided as exports can take a long time to generate. Export 
+     * plugins are encouraged to call this at least after performing some major 
+     * operation, and should always call it saying when the execution of 
+     * export() is done. However, it is unnecessary to call it too often.
+     *
+     * For testing purposes, you may find it useful to register a progress 
+     * callback that simply log_debug()s the data, so you can check that the 
+     * percentage is always increasing, for example.
+     *
+     * @param int $percent   The total percentage of the way through generating 
+     *                       the export. The base class constructor hands over 
+     *                       control claiming 10% of the work is done.
+     * @param string $status A string describing the current status of the 
+     *                       export - e.g. 'Exporting Artefact (20/75)'
+     */
     protected function notify_progress_callback($percent, $status) {
         if ($this->progresscallback) {
             call_user_func_array($this->progresscallback, array(

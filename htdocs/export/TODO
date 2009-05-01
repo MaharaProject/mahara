@@ -9,4 +9,4 @@ Granular export:
 - check export constructor correctly sets up $this->views and $this->artefacts
   for all possible modes of export
 Clean up exports sitting around on disk
-Developer documentation (api docs will be provided when we get api.mahara.org up)
+Split creation of archives from the export() method so it can be implemented in the base class
