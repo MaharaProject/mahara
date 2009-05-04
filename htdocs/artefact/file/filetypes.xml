@@ -151,6 +151,7 @@
         <description>flv</description>
         <mimetypes>
             <mimetype>application/x-flash-video</mimetype>
+            <mimetype>video/flv</mimetype>
         </mimetypes>
     </filetype>
 
