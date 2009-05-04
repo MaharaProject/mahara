@@ -1,0 +1,10 @@
+/**
+ * Print stylesheet for static HTML export
+ *
+ * (C) 2009 Catalyst IT Ltd.
+ * This file is licensed under the same terms as Mahara itself
+ */
+
+#breadcrumbs {
+    display: none;
+}
