@@ -412,10 +412,13 @@ class HtmlExportOutputFilter {
                 '#<script[^>]*>.*?</script>#si',
                 // Fix simlies from tinymce
                 '#<img src="(' . $wwwroot . ')?/?js/tinymce/plugins/emotions/images/([^"]+)"([^>]+)>#',
+                // No forms
+                '#<form[^>]*>.*?</form>#si',
             ),
             array(
                 '',
                 '<img src="' . $this->basepath . '/static/smilies/$2"$3>',
+                '',
             ),
             $html
         );
