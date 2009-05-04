@@ -429,7 +429,11 @@ class ArtefactTypeEmail extends ArtefactTypeProfileField {
 }
 
 class ArtefactTypeStudentid extends ArtefactTypeProfileField {}
-class ArtefactTypeIntroduction extends ArtefactTypeProfileField {}
+class ArtefactTypeIntroduction extends ArtefactTypeProfileField {
+    public function render_self($options) {
+        return array('html' => clean_html($this->title), 'javascript' => null);
+    }
+}
 class ArtefactTypeWebAddress extends ArtefactTypeProfileField {
 
     public function render_self($options) {
