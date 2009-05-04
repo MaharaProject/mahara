@@ -717,7 +717,6 @@ function theme_get_url($location, $pluginlocation='', $all = false) {
     if ($all) {
         return $list;
     }
-    return;
 }
 
 /** 
@@ -726,13 +725,23 @@ function theme_get_url($location, $pluginlocation='', $all = false) {
  * @param $imagelocation path to image relative to theme/$theme/static/
  * @param $pluginlocation path to plugin relative to docroot
  */
-function theme_get_path($location, $pluginlocation='') {
+function theme_get_path($location, $pluginlocation='', $all=false) {
     $theme = theme_setup();
+    $list = array();
 
     foreach ($theme->inheritance as $themedir) {
         if (is_readable(get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $location)) {
-            return get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $location;
+            if ($all) {
+                $list[$theme->theme] = get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $location;
+            }
+            else {
+                return get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $location;
+            }
         }
+    }
+
+    if ($all) {
+        return $list;
     }
 }
 
