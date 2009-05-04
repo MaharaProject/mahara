@@ -448,7 +448,7 @@ class ArtefactTypeWebAddress extends ArtefactTypeProfileField {
 }
 class ArtefactTypeOfficialwebsite extends ArtefactTypeWebAddress {}
 class ArtefactTypePersonalwebsite extends ArtefactTypeWebAddress {}
-class ArtefactTypeBlogAddress extends ArtefactTypeProfileField {}
+class ArtefactTypeBlogAddress extends ArtefactTypeWebAddress {}
 class ArtefactTypeAddress extends ArtefactTypeProfileField {}
 class ArtefactTypeTown extends ArtefactTypeProfileField {}
 class ArtefactTypeCity extends ArtefactTypeProfileField {}
