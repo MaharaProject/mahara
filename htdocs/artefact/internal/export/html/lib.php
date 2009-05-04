@@ -60,18 +60,44 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
         // Generic profile information
         $smarty->assign('breadcrumbs', array(array('text' => 'Profile information', 'path' => 'index.html')));
 
-        $sections = array();
+        // Organise profile information by sections, ordered how it's ordered 
+        // on the 'edit profile' page
+        $sections = array(
+            'aboutme' => array(),
+            'contact' => array(),
+            'messaging' => array(),
+            'general' => array(),
+        );
         $elementlist = call_static_method('ArtefactTypeProfile', 'get_all_fields');
+        $elementlistlookup = array_flip(array_keys($elementlist));
         $profilefields = get_column_sql('SELECT id FROM {artefact} WHERE owner=? AND artefacttype IN ('
-            . join(",",array_map(create_function('$a','return db_quote($a);'),array_keys($elementlist)))
+            . join(",",array_map(create_function('$a','return db_quote($a);'), array_keys($elementlist)))
             . ")", array($this->exporter->get('user')->get('id')));
         foreach ($profilefields as $id) {
             $artefact = artefact_instance_from_id($id);
-            $rendered = $artefact->render_self(array());
-            $sections[$this->get_category_for_artefacttype($artefact->get('artefacttype'))][$artefact->get('artefacttype')] = $rendered['html'];
+            $rendered = $artefact->render_self(array('link' => true));
+            $sections[$this->get_category_for_artefacttype($artefact->get('artefacttype'))][$artefact->get('artefacttype')] = array(
+                'html' => $rendered['html'],
+                'weight' => $elementlistlookup[$artefact->get('artefacttype')]
+            );
+        }
+
+        // Sort the data and then drop the weighting information
+        foreach ($sections as &$section) {
+            uasort($section, create_function('$a, $b', 'return $a["weight"] > $b["weight"];'));
+            foreach ($section as &$data) {
+                $data = $data['html'];
+            }
         }
 
         $smarty->assign('sections', $sections);
+
+        $iconid = $this->exporter->get('user')->get('profileicon');
+        if ($iconid) {
+            $icon = artefact_instance_from_id($iconid);
+            // TODO: protect title from /'s
+            $smarty->assign('icon', '<img src="../../static/profileicons/200px-' . $icon->get('title') . '" alt="Profile Icon">');
+        }
 
         $content = $smarty->fetch('export:html/internal:index.tpl');
         if (!file_put_contents($this->fileroot . 'index.html', $content)) {
@@ -102,11 +128,32 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
         switch ($artefacttype) {
         case 'firstname':
         case 'lastname':
-            return 'basic';
+        case 'preferredname':
+        case 'studentid':
+        case 'introduction':
+            return 'aboutme';
         case 'email':
+        case 'faxnumber':
+        case 'businessnumber':
+        case 'homenumber':
+        case 'mobilenumber':
+        case 'city':
+        case 'town':
+        case 'address':
+        case 'country':
+        case 'blogaddress':
+        case 'personalwebsite':
+        case 'officialwebsite':
             return 'contact';
+        case 'jabberusername':
+        case 'skypeusername':
+        case 'yahoochat':
+        case 'aimscreenname':
+        case 'msnnumber':
+        case 'icqnumber':
+            return 'messaging';
         default:
-            return 'unclassified';
+            return 'general';
         }
     }
 

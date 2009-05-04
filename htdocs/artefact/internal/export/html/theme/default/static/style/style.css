@@ -1,0 +1,22 @@
+/**
+ * CSS rules for internal artefact plugin HTML export
+ *
+ * Copyright (C) 2009 Catalyst IT
+ * This file is licensed under the same terms as Mahara itself
+ */
+.profileinfo th {
+    text-align: right;
+    vertical-align: top;
+    width: 12em;
+    padding: 0 .25em .5em 0;
+}
+.profileinfo td {
+    vertical-align: top;
+    padding: 0;
+}
+#profile-icon {
+    float: right;
+}
+h3 {
+    margin: 1em 0 0.25em 8em;
+}
