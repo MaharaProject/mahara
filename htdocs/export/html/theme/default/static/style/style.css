@@ -2,7 +2,6 @@
  * Stylesheet for static HTML export
  *
  * (C) 2009 Catalyst IT Ltd.
- *
  * This file is licensed under the same terms as Mahara itself
  */
 html {
@@ -17,6 +16,32 @@ body {
 
 a img {
     border: none;
+}
+.center {
+    text-align: center;
+}
+.right {
+    text-align: right;
+}
+.fullwidth {
+    width: 100%;
+}
+.fl {
+    float: left;
+	padding-right: 10px;
+}
+.fr {
+    float: right;
+	padding-left: 10px;
+}
+.cl {
+    clear: left;
+}
+.cr {
+    clear: right;
+}
+.cb {
+    clear: both;
 }
 
 #mahara-logo {

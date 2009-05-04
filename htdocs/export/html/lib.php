@@ -43,6 +43,17 @@ class PluginExportHtml extends PluginExport {
     protected $rootdir;
 
     /**
+     * List of directories of static files provided by artefact plugins
+     */
+    private $pluginstaticdirs = array();
+
+    /**
+     * List of stylesheets to include in the export, as found in artefact 
+     * plugins
+     */
+    private $stylesheets = array();
+
+    /**
     * constructor.  overrides the parent class
     * to set up smarty and the attachment directory
     */
@@ -59,6 +70,18 @@ class PluginExportHtml extends PluginExport {
         }
         $this->zipfile = 'mahara-export-html-user'
             . $this->get('user')->get('id') . '-' . $this->exporttime . '.zip';
+
+        // Find what stylesheets need to be included
+        $themedirs = theme_get_path('', 'export/html/', true);
+        $stylesheets = array('style.css', 'print.css');
+        foreach ($themedirs as $theme => $themedir) {
+            foreach ($stylesheets as $stylesheet) {
+                if (is_readable($themedir . 'style/' . $stylesheet)) {
+                    $this->stylesheets[] = 'theme/' . $theme . '/static/style/' . $stylesheet;
+                }
+            }
+        }
+
         $this->notify_progress_callback(15, 'Setup complete');
     }
 
@@ -74,19 +97,23 @@ class PluginExportHtml extends PluginExport {
      * Main export routine
      */
     public function export() {
-        // For each artefact plugin, if it implements leap export, ask it to 
-        // dump out its structure
         $summaries = array();
         $plugins = plugins_installed('artefact', true);
+        $exportplugins = array();
         $progressstart = 15;
-        $progressend   = 60;
+        $progressend   = 25;
         $plugincount   = count($plugins);
+
+        // First pass: find out which plugins are exporting like us, and ask 
+        // them about the static data they want to include in every template
         $i = 0;
         foreach ($plugins as $plugin) {
             $plugin = $plugin->name;
-            $this->notify_progress_callback(intval($progressstart + ($i++ / $plugincount) * ($progressend - $progressstart)), 'Exporting data for ' . $plugin);
+            $this->notify_progress_callback(intval($progressstart + (++$i / $plugincount) * ($progressend - $progressstart)), 'Preparing ' . $plugin);
 
             if (safe_require('export', 'html/' . $plugin, 'lib.php', 'require_once', true)) {
+                $exportplugins[] = $plugin;
+
                 $classname = 'HtmlExport' . ucfirst($plugin);
                 if (!is_subclass_of($classname, 'HtmlExportArtefactPlugin')) {
                     throw new SystemException("Class $classname does not extend HtmlExportArtefactPlugin as it should");
@@ -94,22 +121,42 @@ class PluginExportHtml extends PluginExport {
 
                 safe_require('artefact', $plugin);
 
-                $artefactexporter = new $classname($this);
-                $artefactexporter->dump_export_data();
-                // If just exporting a list of views, we don't care about the summaries for each artefact plugin
-                if (!($this->viewexportmode == PluginExport::EXPORT_LIST_OF_VIEWS && $this->artefactexportmode == PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS)) {
-                    $summaries[$plugin] = array($artefactexporter->get_summary_weight(), $artefactexporter->get_summary());
+                // Find out whether the plugin has static data for us
+                $themestaticdirs = theme_get_path('', 'artefact/' . $plugin . '/export/html/', true);
+                foreach ($themestaticdirs as $dir) {
+                    $staticdir = substr($dir, strlen(get_config('docroot') . 'artefact/'));
+                    $this->pluginstaticdirs[] = $staticdir;
+                    foreach (array('style.css', 'print.css') as $stylesheet) {
+                        if (is_readable($dir . 'style/' . $stylesheet)) {
+                            $this->stylesheets[] = $staticdir . 'style/' . $stylesheet;
+                        }
+                    }
                 }
             }
         }
 
+        // Second pass: actually dump data for active export plugins
+        $progressstart = 25;
+        $progressend   = 60;
+        $i = 0;
+        foreach ($exportplugins as $plugin) {
+            $this->notify_progress_callback(intval($progressstart + (++$i / $plugincount) * ($progressend - $progressstart)), 'Exporting data for ' . $plugin);
+            $classname = 'HtmlExport' . ucfirst($plugin);
+            $artefactexporter = new $classname($this);
+            $artefactexporter->dump_export_data();
+            // If just exporting a list of views, we don't care about the summaries for each artefact plugin
+            if (!($this->viewexportmode == PluginExport::EXPORT_LIST_OF_VIEWS && $this->artefactexportmode == PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS)) {
+                $summaries[$plugin] = array($artefactexporter->get_summary_weight(), $artefactexporter->get_summary());
+            }
+        }
+
         // Get the view data
-        $this->notify_progress_callback(60, 'Exporting Views');
+        $this->notify_progress_callback(65, 'Exporting Views');
         $this->dump_view_export_data();
         $summaries['view'] = array(100, $this->get_view_summary());
 
         // Sort by weight (then drop the weight information)
-        $this->notify_progress_callback(65, 'Building index page');
+        $this->notify_progress_callback(75, 'Building index page');
         uasort($summaries, create_function('$a, $b', 'return $a[0] > $b[0];'));
         foreach ($summaries as &$summary) {
             $summary = $summary[1];
@@ -119,12 +166,12 @@ class PluginExportHtml extends PluginExport {
         $this->build_index_page($summaries);
 
         // Copy all static files into the export
-        $this->notify_progress_callback(75, 'Copying static files');
+        $this->notify_progress_callback(80, 'Copying static files');
         $this->copy_static_files();
         
 
         // zip everything up
-        $this->notify_progress_callback(80, 'Creating zipfile');
+        $this->notify_progress_callback(90, 'Creating zipfile');
         $cwd = getcwd();
         $command = sprintf('%s %s %s %s',
             get_config('pathtozip'),
@@ -154,8 +201,25 @@ class PluginExportHtml extends PluginExport {
         $smarty->assign('rootpath', $rootpath);
         $smarty->assign('export_time', $this->exporttime);
         $smarty->assign('sitename', get_config('sitename'));
+        $smarty->assign('stylesheets', $this->stylesheets);
+        $smarty->assign('maharalogo', $rootpath . $this->theme_path('images/logo.png'));
 
         return $smarty;
+    }
+
+    /**
+     * Converts a relative path to a static file that the HTML export theme 
+     * should have, to a path in the static export where the file will reside.
+     *
+     * This returns the path in the most appropriate theme.
+     */
+    private function theme_path($path) {
+        $themestaticdirs = theme_get_path('', 'export/html/', true);
+        foreach ($themestaticdirs as $theme => $dir) {
+            if (is_readable($dir . $path)) {
+                return 'static/theme/' . $theme . '/static/' . $path;
+            }
+        }
     }
 
     /**
@@ -238,23 +302,36 @@ class PluginExportHtml extends PluginExport {
      */
     private function copy_static_files() {
         $staticdir = $this->get('exportdir') . '/' . $this->get('rootdir') . '/static/';
+        $directoriestocopy = array();
 
-        $directoriestocopy = array(
-            get_config('docroot') . 'export/html/static/' => $staticdir,
-            get_config('docroot') . 'js/tinymce/plugins/emotions/images' => $staticdir . 'smilies/',
-        );
+        // Get static directories from each theme for HTML export
+        $themestaticdirs = theme_get_path('', 'export/html/', true);
+        foreach ($themestaticdirs as $theme => $dir) {
+            $themedir = $staticdir . 'theme/' . $theme . '/static/';
+            $directoriestocopy[$dir] = $themedir;
+            log_debug("$dir => $themedir");
+            if (!check_dir_exists($themedir)) {
+                throw new SystemException("Could not create theme directory for theme $theme");
+            }
+        }
+
+        // Smilies
+        $directoriestocopy[get_config('docroot') . 'js/tinymce/plugins/emotions/images'] = $staticdir . 'smilies/';
+
         $filestocopy = array(
             get_config('docroot') . 'theme/views.css' => $staticdir . 'views.css',
         );
 
+        foreach ($this->pluginstaticdirs as $dir) {
+            if (!check_dir_exists($staticdir . $dir)) {
+                throw new SystemException("Could not create static directory $dir");
+            }
+            $directoriestocopy[get_config('docroot') . 'artefact/' . $dir] = $staticdir . $dir;
+        }
+
         foreach ($directoriestocopy as $from => $to) {
-            foreach (new RecursiveDirectoryIterator($from) as $fileinfo) {
-                if (!$fileinfo->isFile() || substr($fileinfo->getFilename(), 0, 1) == '.') {
-                    continue;
-                }
-                if (!copy($fileinfo->getPathname(), $to . $fileinfo->getFilename())) {
-                    throw new SystemException("Could not copy static file " . $fileinfo->getPathname());
-                }
+            if (!copyr($from, $to)) {
+                throw new SystemException("Could not copy $from to $to");
             }
         }
 

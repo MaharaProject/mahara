@@ -3,12 +3,14 @@
     <head>
         <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
         <title>{str tag=usersportfolio section=export.html args=$user|full_name|escape}</title>
-        <link rel="stylesheet" type="text/css" href="{$rootpath}static/style.css">
         <link rel="stylesheet" type="text/css" href="{$rootpath}static/views.css">
+{foreach from=$stylesheets item=sheet}
+        <link rel="stylesheet" type="text/css" href="{$rootpath}static/{$sheet}"{if substr($sheet, -9) == 'print.css'} media="print"{/if}>
+{/foreach}
     </head>
     <body>
         <div id="mahara-logo">
-            <a href="http://mahara.org/"><img src="{$rootpath}static/mahara.png" alt="Mahara export"></a>
+            <a href="http://mahara.org/"><img src="{$maharalogo}" alt="Mahara export"></a>
         </div>
         <h1><a href="{$rootpath}index.html">{$user|full_name|escape}</a></h1>
         <div id="content">
