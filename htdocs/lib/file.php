@@ -358,8 +358,17 @@ function is_image_type($type) {
  * @return boolean     Whether the file is a valid image file for Mahara
  */
 function is_image_file($path) {
-    if (!$type = exif_imagetype($path)) {
-        return false;
+    if (function_exists('exif_imagetype')) {
+        // exif_imagetype is faster
+        if (!$type = exif_imagetype($path)) {
+            return false;
+        }
+    }
+    else {
+        // getimagesize returns the same answer
+        if (!list ($width, $height, $type) = getimagesize($path)) {
+            return false;
+        }
     }
     return is_image_type($type);
 }
