@@ -1123,6 +1123,7 @@ function login_submit(Pieform $form, $values) {
         try {
             // Reset the LiveUser object, since we are attempting to create a 
             // new user
+            $SESSION->destroy_session();
             $USER = new LiveUser();
 
             $authinstances = get_records_sql_array('

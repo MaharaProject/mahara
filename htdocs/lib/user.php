@@ -1235,9 +1235,15 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
     // Bypass access check for 'copynewuser' institution/site views, because this user may not be logged in yet
     $user->newuser = true;
 
-    set_profile_field($user->id, 'email', $user->email);
-    set_profile_field($user->id, 'firstname', $user->firstname);
-    set_profile_field($user->id, 'lastname', $user->lastname);
+    if (isset($user->email) && $user->email != '') {
+        set_profile_field($user->id, 'email', $user->email);
+    }
+    if (isset($user->firstname) && $user->firstname != '') {
+        set_profile_field($user->id, 'firstname', $user->firstname);
+    }
+    if (isset($user->lastname) && $user->lastname != '') {
+        set_profile_field($user->id, 'lastname', $user->lastname);
+    }
     foreach ($profile as $k => $v) {
         if (in_array($k, array('firstname', 'lastname', 'email'))) {
             continue;
