@@ -76,6 +76,10 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
         foreach ($profilefields as $id) {
             $artefact = artefact_instance_from_id($id);
             $rendered = $artefact->render_self(array('link' => true));
+            if ($artefact->get('artefacttype') == 'introduction') {
+                $outputfilter = new HtmlExportOutputFilter('../../');
+                $rendered['html'] = $outputfilter->filter($rendered['html']);
+            }
             $sections[$this->get_category_for_artefacttype($artefact->get('artefacttype'))][$artefact->get('artefacttype')] = array(
                 'html' => $rendered['html'],
                 'weight' => $elementlistlookup[$artefact->get('artefacttype')]
@@ -107,7 +111,8 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
 
     public function get_summary() {
         $smarty = $this->exporter->get_smarty();
-        $smarty->assign('introduction', get_profile_field($this->exporter->get('user')->get('id'), 'introduction'));
+        $outputfilter = new HtmlExportOutputFilter('.');
+        $smarty->assign('introduction', $outputfilter->filter(get_profile_field($this->exporter->get('user')->get('id'), 'introduction')));
         $smarty->assign('profileviewexported', $this->profileviewexported);
         $iconid = $this->exporter->get('user')->get('profileicon');
         if ($iconid) {
