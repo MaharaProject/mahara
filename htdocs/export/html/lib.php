@@ -135,6 +135,9 @@ class PluginExportHtml extends PluginExport {
             }
         }
 
+        // Make sure stylesheets are sorted so parents are first
+        $this->stylesheets = array_reverse($this->stylesheets);
+
         // Second pass: actually dump data for active export plugins
         $progressstart = 25;
         $progressend   = 60;
