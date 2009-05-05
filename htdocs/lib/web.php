@@ -732,7 +732,7 @@ function theme_get_path($location, $pluginlocation='', $all=false) {
     foreach ($theme->inheritance as $themedir) {
         if (is_readable(get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $location)) {
             if ($all) {
-                $list[$theme->theme] = get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $location;
+                $list[$themedir] = get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $location;
             }
             else {
                 return get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $location;
