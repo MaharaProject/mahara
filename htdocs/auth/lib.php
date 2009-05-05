@@ -950,8 +950,6 @@ function auth_draw_login_page($message=null, Pieform $form=null) {
  * @access private
  */
 function auth_get_login_form() {
-    $institutions = get_records_menu('institution', '', '', 'name, displayname');
-
     $elements = array(
         'login_username' => array(
             'type'        => 'text',
