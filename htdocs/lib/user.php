@@ -758,7 +758,7 @@ function delete_user($userid) {
 
     // Set authinstance to default internal, otherwise the old authinstance can be blocked from deletion
     // by deleted users.
-    $authinst = get_field('auth_instance', 'id', 'institution', 'mahara', 'instancename', 'internal');
+    $authinst = get_field('auth_instance', 'id', 'institution', 'mahara', 'authname', 'internal');
     if ($authinst) {
         $deleterec->authinstance = $deleterec->lastauthinstance = $authinst;
     }
