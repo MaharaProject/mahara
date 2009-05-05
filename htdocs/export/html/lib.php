@@ -99,6 +99,8 @@ class PluginExportHtml extends PluginExport {
      * Main export routine
      */
     public function export() {
+        raise_memory_limit('128M');
+
         $summaries = array();
         $plugins = plugins_installed('artefact', true);
         $exportplugins = array();
