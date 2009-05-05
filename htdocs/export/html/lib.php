@@ -132,7 +132,7 @@ class PluginExportHtml extends PluginExport {
                     $this->pluginstaticdirs[] = $staticdir;
                     foreach (array('style.css', 'print.css') as $stylesheet) {
                         if (is_readable($dir . 'style/' . $stylesheet)) {
-                            $this->stylesheets[$plugin][] = $staticdir . 'style/' . $stylesheet;
+                            $this->stylesheets[$plugin][] = str_replace('export/html/', '', $staticdir) . 'style/' . $stylesheet;
                         }
                     }
                 }
@@ -336,10 +336,11 @@ class PluginExportHtml extends PluginExport {
         );
 
         foreach ($this->pluginstaticdirs as $dir) {
-            if (!check_dir_exists($staticdir . $dir)) {
-                throw new SystemException("Could not create static directory $dir");
+            $destinationdir = str_replace('export/html/', '', $dir);
+            if (!check_dir_exists($staticdir . $destinationdir)) {
+                throw new SystemException("Could not create static directory $destinationdir");
             }
-            $directoriestocopy[get_config('docroot') . 'artefact/' . $dir] = $staticdir . $dir;
+            $directoriestocopy[get_config('docroot') . 'artefact/' . $dir] = $staticdir . $destinationdir;
         }
 
         foreach ($directoriestocopy as $from => $to) {
