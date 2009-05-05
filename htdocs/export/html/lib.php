@@ -48,10 +48,12 @@ class PluginExportHtml extends PluginExport {
     private $pluginstaticdirs = array();
 
     /**
-     * List of stylesheets to include in the export, as found in artefact 
-     * plugins
+     * List of stylesheets to include in the export.
+     *
+     * This is keyed by artefact plugin name, the empty string key contains 
+     * stylesheets that will be included on all pages.
      */
-    private $stylesheets = array();
+    private $stylesheets = array('' => array());
 
     /**
     * constructor.  overrides the parent class
@@ -77,7 +79,7 @@ class PluginExportHtml extends PluginExport {
         foreach ($themedirs as $theme => $themedir) {
             foreach ($stylesheets as $stylesheet) {
                 if (is_readable($themedir . 'style/' . $stylesheet)) {
-                    $this->stylesheets[] = 'theme/' . $theme . '/static/style/' . $stylesheet;
+                    array_unshift($this->stylesheets[''], 'theme/' . $theme . '/static/style/' . $stylesheet);
                 }
             }
         }
@@ -122,21 +124,18 @@ class PluginExportHtml extends PluginExport {
                 safe_require('artefact', $plugin);
 
                 // Find out whether the plugin has static data for us
-                $themestaticdirs = theme_get_path('', 'artefact/' . $plugin . '/export/html/', true);
+                $themestaticdirs = array_reverse(theme_get_path('', 'artefact/' . $plugin . '/export/html/', true));
                 foreach ($themestaticdirs as $dir) {
                     $staticdir = substr($dir, strlen(get_config('docroot') . 'artefact/'));
                     $this->pluginstaticdirs[] = $staticdir;
                     foreach (array('style.css', 'print.css') as $stylesheet) {
                         if (is_readable($dir . 'style/' . $stylesheet)) {
-                            $this->stylesheets[] = $staticdir . 'style/' . $stylesheet;
+                            $this->stylesheets[$plugin][] = $staticdir . 'style/' . $stylesheet;
                         }
                     }
                 }
             }
         }
-
-        // Make sure stylesheets are sorted so parents are first
-        $this->stylesheets = array_reverse($this->stylesheets);
 
         // Second pass: actually dump data for active export plugins
         $progressstart = 25;
@@ -198,13 +197,19 @@ class PluginExportHtml extends PluginExport {
         // @todo maybe move the zip file somewhere else - like to files/export or something
     }
 
-    public function get_smarty($rootpath='') {
+    public function get_smarty($rootpath='', $section='') {
+        if ($section && isset($this->stylesheets[$section])) {
+            $stylesheets = array_merge($this->stylesheets[''], $this->stylesheets[$section]);
+        }
+        else {
+            $stylesheets = $this->stylesheets[''];
+        }
         $smarty = smarty_core();
         $smarty->assign('user', $this->get('user'));
         $smarty->assign('rootpath', $rootpath);
         $smarty->assign('export_time', $this->exporttime);
         $smarty->assign('sitename', get_config('sitename'));
-        $smarty->assign('stylesheets', $this->stylesheets);
+        $smarty->assign('stylesheets', $stylesheets);
         $smarty->assign('maharalogo', $rootpath . $this->theme_path('images/logo.png'));
 
         return $smarty;
