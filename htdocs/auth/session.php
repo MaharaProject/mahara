@@ -220,6 +220,24 @@ class Session {
     }
 
     /**
+     * Destroy a session
+     */
+    public function destroy_session() {
+        if ($this->is_live()) {
+            $_SESSION = array();
+            if (isset($_COOKIE[session_name()])) {
+                setcookie(session_name(), '', time() - 65536,
+                    ini_get('session.cookie_path'),
+                    ini_get('session.cookie_domain'),
+                    ini_get('session.cookie_secure'),
+                    ini_get('session.cookie_httponly')
+                );
+            }
+            session_destroy();
+        }
+    }
+
+    /**
      * Find out if the session has been started yet
      */
     public function is_live() {
