@@ -260,6 +260,9 @@ class PluginExportHtml extends PluginExport {
                 array('text' => get_string('Views', 'view')),
                 array('text' => $view->get('title'), 'path' => 'index.html'),
             ));
+            $smarty->assign('viewtitle', $view->get('title'));
+            $smarty->assign('ownername', $view->formatted_owner());
+            $smarty->assign('viewdescription', $view->get('description'));
 
             $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . self::text_to_path($view->get('title'));
             if (!check_dir_exists($directory)) {
