@@ -1,19 +1,51 @@
 {include file="export:html:header.tpl"}
 
-<h2>Index of {$folder}</h2>
+<h2>{str tag=Folder section=artefact.file}: {$folder}</h2>
 
-{if $folder != '/'}<p><a href="../index.html">Parent Folder</a>{/if}
-{if $files || $folders}
-<ul>
+{if $folder == '/' && !$folders && !$files}
+<p>{str tag=nofilesfound section=artefact.file}</p>
+{else}
+<table id="files">
+    <colgroup style="width: 3em;">
+    <colgroup>
+    <colgroup>
+    <colgroup style="width: 3em;">
+    <colgroup style="width: 3em;">
+    <tr>
+        <th></th>
+        <th>{str tag=Name section=artefact.file}</th>
+        <th>{str tag=Description section=artefact.file}</th>
+        <th>{str tag=Size section=artefact.file}</th>
+        <th>{str tag=Date section=artefact.file}</th>
+    </tr>
+{if $folder != '/'}
+    <tr>
+        <td><img src="{$rootpath}static/file/theme/default/static/images/folder.gif" alt="{str tag=Folder section=artefact.file}"></td>
+        <td><a href="../index.html">{str tag=parentfolder section=artefact.file}</a></td>
+        <td>{str tag=parentfolder section=artefact.file}</td>
+        <td></td>
+        <td></td>
+    </tr>
+{/if}
 {foreach from=$folders item=folder}
-    <li>Folder: <a href="{$folder->get('title')|rawurlencode|escape}/index.html">{$folder->get('title')|escape}</a></li>
+    <tr>
+        <td><img src="{$rootpath}static/file/theme/default/static/images/folder.gif" alt="{str tag=Folder section=artefact.file}"></td>
+        <td><a href="{$folder.title|rawurlencode|escape}/index.html">{$folder.title|escape}</a></td>
+        <td>{$folder.description|escape}</td>
+        <td>{$folder.size|escape}</td>
+        <td>{$folder.ctime|escape}</td>
+    </tr>
 {/foreach}
 {foreach from=$files item=file}
-    <li>File: <a href="{$file->get('title')|rawurlencode|escape}">{$file->get('title')|escape}</a></li>
+    <tr>
+        <td><img src="{$rootpath}static/file/theme/default/static/images/file.gif" alt="{str tag=File section=artefact.file}"></td>
+        <td><a href="{$file.title|rawurlencode|escape}">{$file.title|escape}</a></td>
+        <td>{$file.description|escape}</td>
+        <td>{$file.size|escape}</td>
+        <td>{$file.ctime|escape}</td>
+    </tr>
 {/foreach}
-</ul>
-{else}
-<p>This folder is empty.</p>
+</table>
 {/if}
 
 {include file="export:html:footer.tpl"}

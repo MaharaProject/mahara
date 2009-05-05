@@ -69,6 +69,7 @@ $string['fileinstructions'] = 'Upload your images, documents, or other files for
 $string['filethingdeleted'] = '%s deleted';
 $string['filewithnameexists'] = 'A file or folder with the name "%s" already exists.';
 $string['folder'] = 'Folder';
+$string['Folder'] = 'Folder';
 $string['Folders'] = 'Folders';
 $string['foldercreated'] = 'Folder created';
 $string['foldernamerequired'] = 'Please provide a name for the new folder.';

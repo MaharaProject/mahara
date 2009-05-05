@@ -174,14 +174,43 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
             $smarty->assign('folder', '/');
         }
 
-        $id = ($artefact) ? $artefact->get('id') : 'null';
-        $smarty->assign('folders', array_filter($this->artefactdata, create_function('$a', 'return $a->get("parent") == ' . $id . ' && $a->get("artefacttype") == "folder";')));
-        $smarty->assign('files',   array_filter($this->artefactdata, create_function('$a', 'return $a->get("parent") == ' . $id . ' && $a->get("artefacttype") != "folder";')));
+        $id = ($artefact) ? $artefact->get('id') : null;
+        $smarty->assign('folders', $this->prepare_artefacts_for_smarty($id, true));
+        $smarty->assign('files',   $this->prepare_artefacts_for_smarty($id, false));
 
         $content = $smarty->fetch('export:html/file:index.tpl');
         if (false === file_put_contents($filesystemdirectory . 'index.html', $content)) {
             throw new SystemException("Unable to create index.html for directory $id");
         }
+    }
+
+    /**
+     * Helper to convert artefacts into smarty-friendly data
+     *
+     * @param int $parent   The ID of the parent folder for the artefact to 
+     *                      convert
+     * @param bool $folders True to get folders, false to get everything but 
+     *                      folders
+     */
+    private function prepare_artefacts_for_smarty($parent, $folders) {
+        $data = array();
+        $equality = ($folders) ? '==' : '!=';
+        $parent = (is_null($parent)) ? 'null': intval($parent);
+        $artefacts = array_filter($this->artefactdata,
+            create_function('$a', 'return $a->get("parent") == ' . $parent . ' && $a->get("artefacttype") ' . $equality . ' "folder";'));
+        foreach ($artefacts as $artefact) {
+            $size = $artefact->get('size');
+            $size = ($size) ? display_size($size) : '';
+            $data[] = array(
+                'icon'        => '',
+                'title'       => $artefact->get('title'),
+                'description' => $artefact->get('description'),
+                'size'        => $size,
+                'date'        => strftime(get_string('strftimedaydatetime'), $artefact->get('ctime')),
+            );
+        }
+
+        return $data;
     }
 }
 
