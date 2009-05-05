@@ -322,7 +322,6 @@ class PluginExportHtml extends PluginExport {
         foreach ($themestaticdirs as $theme => $dir) {
             $themedir = $staticdir . 'theme/' . $theme . '/static/';
             $directoriestocopy[$dir] = $themedir;
-            log_debug("$dir => $themedir");
             if (!check_dir_exists($themedir)) {
                 throw new SystemException("Could not create theme directory for theme $theme");
             }
