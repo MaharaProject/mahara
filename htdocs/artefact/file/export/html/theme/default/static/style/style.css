@@ -1,0 +1,12 @@
+/**
+ * File area styling for HTML export
+ *
+ * Copyright (C) 2009 Catalyst IT
+ * This file is licensed under the same terms as Mahara itself
+ */
+#files {
+    width: 100%;
+}
+#files th {
+    text-align: left;
+}
