@@ -5,7 +5,7 @@
 {if $folder == '/' && !$folders && !$files}
 <p>{str tag=nofilesfound section=artefact.file}</p>
 {else}
-<table id="files">
+<table id="files" cellspacing="0">
     <colgroup style="width: 3em;">
     <colgroup>
     <colgroup>
@@ -19,7 +19,7 @@
         <th>{str tag=Date section=artefact.file}</th>
     </tr>
 {if $folder != '/'}
-    <tr>
+    <tr class="r{cycle values=0,1}">
         <td><img src="{$rootpath}static/file/theme/default/static/images/folder.gif" alt="{str tag=Folder section=artefact.file}"></td>
         <td><a href="../index.html">{str tag=parentfolder section=artefact.file}</a></td>
         <td>{str tag=parentfolder section=artefact.file}</td>
@@ -28,7 +28,7 @@
     </tr>
 {/if}
 {foreach from=$folders item=folder}
-    <tr>
+    <tr class="r{cycle values=0,1}">
         <td><img src="{$rootpath}static/file/theme/default/static/images/folder.gif" alt="{str tag=Folder section=artefact.file}"></td>
         <td><a href="{$folder.title|rawurlencode|escape}/index.html">{$folder.title|escape}</a></td>
         <td>{$folder.description|escape}</td>
@@ -37,7 +37,7 @@
     </tr>
 {/foreach}
 {foreach from=$files item=file}
-    <tr>
+    <tr class="r{cycle values=0,1}">
         <td><img src="{$rootpath}static/file/theme/default/static/images/file.gif" alt="{str tag=File section=artefact.file}"></td>
         <td><a href="{$file.title|rawurlencode|escape}">{$file.title|escape}</a></td>
         <td>{$file.description|escape}</td>

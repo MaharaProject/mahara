@@ -4,9 +4,17 @@
  * Copyright (C) 2009 Catalyst IT
  * This file is licensed under the same terms as Mahara itself
  */
+h2 {
+    font-size: 1.1em;
+}
 #files {
     width: 100%;
+    margin-bottom: 1em;
 }
 #files th {
     text-align: left;
+    border-bottom: 1px solid #d2d2d2;
+}
+#files td {
+    padding: 2px;
 }
