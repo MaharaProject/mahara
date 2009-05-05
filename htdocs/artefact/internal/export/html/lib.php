@@ -37,7 +37,7 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
             return;
         }
 
-        $smarty = $this->exporter->get_smarty('../../');
+        $smarty = $this->exporter->get_smarty('../../', 'internal');
 
         // Profile page
         $profileviewid = $this->exporter->get('user')->get_profile_view()->get('id');

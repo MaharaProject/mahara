@@ -164,7 +164,7 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
      *                                    represented by this directory
      */
     private function create_index_for_directory($filesystemdirectory, $level, ArtefactTypeFolder $artefact=null) {
-        $smarty = $this->exporter->get_smarty(str_repeat('../', $level + 2));
+        $smarty = $this->exporter->get_smarty(str_repeat('../', $level + 2), 'file');
         $smarty->assign('breadcrumbs', array(array('text' => 'Files', 'path' => 'index.html')));
 
         if ($artefact) {

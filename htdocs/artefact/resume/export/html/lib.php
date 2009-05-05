@@ -37,7 +37,7 @@ class HtmlExportResume extends HtmlExportArtefactPlugin {
             // Dont' care about resume in this case
             return;
         }
-        $smarty = $this->exporter->get_smarty('../../');
+        $smarty = $this->exporter->get_smarty('../../', 'resume');
         $smarty->assign('breadcrumbs', array(
             array('text' => get_string('resume', 'artefact.resume'), 'path' => 'index.html'),
         ));
