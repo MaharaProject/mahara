@@ -14,6 +14,7 @@ body {
     padding: 0;
 }
 
+/* Generic styles */
 a img {
     border: none;
 }
@@ -43,11 +44,14 @@ a img {
 .cb {
     clear: both;
 }
-
-#mahara-logo {
-    float: right;
+.r0 {
+    background-color: #f0f0f0;
+}
+.r1 {
+    background-color: #f8f8f8;
 }
 
+/* Headings */
 h1 {
     border-bottom: 1px solid #bbb;
     font-family: Arial, sans-serif;
@@ -56,12 +60,21 @@ h1 {
 h1 a {
     text-decoration: none;
 }
+#mahara-logo {
+    float: right;
+}
+h2, h3, h4, h5, h6 {
+    font-family: Arial, sans-serif;
+    margin: .5em 0 .25em;
+}
 
+/* Main content */
 #content {
     margin: 0 1em;
     font-family: "Times New Roman", serif;
 }
 
+/* Breadcrumbs */
 #breadcrumbs ul {
     margin: .5em 0 .1em;
     padding: 0;
@@ -82,11 +95,7 @@ h1 a {
     clear: both;
 }
 
-h2, h3, h4, h5, h6 {
-    font-family: Arial, sans-serif;
-    margin: .5em 0 .25em;
-}
-
+/* Homepage summary */
 .summary {
     float: left;
     width: 48%;
@@ -112,6 +121,31 @@ h2, h3, h4, h5, h6 {
     padding: 0 1em 1em 0;
 }
 
+/* Views */
+#view-title {
+    color: #3986c3;
+}
+#view-description {
+    font-family: Arial, sans-serif;
+    font-size: smaller;
+}
+.column {
+    font-family: Arial, sans-serif;
+}
+.blockinstance-header {
+    color: #3986c3;
+    border-bottom: 1px solid #d2d2d2;
+}
+.blockinstance-header a  {
+    color: #3986c3;
+    text-decoration: none;
+}
+.blockinstance-content {
+    padding: .5em .25em;
+    font-size: smaller;
+}
+
+/* Footer */
 #footer {
     border-top: 1px solid #bbb;
     text-align: center;
