@@ -146,7 +146,7 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
                 else {
                     $artefact = artefact_instance_from_id($artefactid);
                     if (!copy($artefact->get_path(), $filesystemdirectory . $artefact->get('title'))) {
-                        throw new SystemException("HtmlExportFile::populate_filedir: unable to copy artefact $artefactid's file");
+                        throw new SystemException("Unable to copy artefact $artefactid's file");
                     }
                 }
             }
