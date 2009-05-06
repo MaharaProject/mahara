@@ -331,6 +331,9 @@ abstract class ArtefactType {
         if (empty($this->dirty)) {
             return;
         }
+
+        db_begin();
+
         $fordb = new StdClass;
         foreach (get_object_vars($this) as $k => $v) {
             $fordb->{$k} = $v;
@@ -392,6 +395,8 @@ abstract class ArtefactType {
         $this->dirty = false;
         $this->deleted = false;
         $this->parentdirty = false;
+
+        db_commit();
     }
 
     /** 
