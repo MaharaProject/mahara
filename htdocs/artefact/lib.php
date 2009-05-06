@@ -353,6 +353,9 @@ abstract class ArtefactType {
         if (empty($this->dirty)) {
             return;
         }
+
+        db_begin();
+
         $fordb = new StdClass;
         foreach (get_object_vars($this) as $k => $v) {
             $fordb->{$k} = $v;
@@ -401,19 +404,28 @@ abstract class ArtefactType {
         handle_event('saveartefact', $this);
 
         if (!empty($this->parentdirty)) {
-            if (!empty($this->parent) && !record_exists('artefact_parent_cache', 'artefact', $this->id)) {
-                $apc = new StdClass;
-                $apc->artefact = $this->id;
-                $apc->parent = $this->parent;
-                $apc->dirty  = 1; // set this so the cronjob will pick it up and go set all the other parents.
-                insert_record('artefact_parent_cache', $apc);
+            if ($this->parent) {
+                // First set anything relating to this artefact as dirty
+                set_field_select('artefact_parent_cache', 'dirty', 1,
+                                 'artefact = ? OR parent = ?', array($this->id, $this->id));
+                // Then make sure we have a clean record for the new parent
+                delete_records('artefact_parent_cache', 'artefact', $this->id, 'parent', $this->parent);
+                insert_record('artefact_parent_cache', (object)array(
+                    'artefact' => $this->id,
+                    'parent'   => $this->parent,
+                    'dirty'    => 0
+                ));
             }
-            set_field_select('artefact_parent_cache', 'dirty', 1,
-                             'artefact = ? OR parent = ?', array($this->id, $this->id));
+            else {
+                // No parent - no need for any records in the apc then
+                delete_records('artefact_parent_cache', 'artefact', $this->id);
+            }
         }
         $this->dirty = false;
         $this->deleted = false;
         $this->parentdirty = false;
+
+        db_commit();
     }
 
     /** 
