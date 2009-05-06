@@ -682,7 +682,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         require_once('uploadmanager.php');
         $um = new upload_manager($inputname);
         db_begin();
-        $record = new StdClass;
+        $record = (object) array('filetype' => '-'); // Temporary junk to stop warnings from insert_record on mysql
         $result = new StdClass;
         $result->tempfilename = insert_record('artefact_blog_blogpost_file_pending', $record, 'id', true);
 
