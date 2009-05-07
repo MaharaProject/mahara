@@ -1038,6 +1038,18 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table);
     }
 
+    if ($oldversion < 2009050700) {
+        if ($data = check_upgrades('export.html')) {
+            upgrade_plugin($data);
+        }
+        if ($data = check_upgrades('export.leap')) {
+            upgrade_plugin($data);
+        }
+        if ($data = check_upgrades('import.leap')) {
+            upgrade_plugin($data);
+        }
+    }
+
     return $status;
 
 }
