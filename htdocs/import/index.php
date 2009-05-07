@@ -29,6 +29,12 @@ define('MENUITEM', 'myportfolio/import');
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('import', 'import'));
 
+$importplugins = plugins_installed('import');
+
+if (!$importplugins) {
+    die_info(get_string('noimportpluginsenabled', 'import'));
+}
+
 $form = pieform(array(
     'name' => 'import',
     'elements' => array(

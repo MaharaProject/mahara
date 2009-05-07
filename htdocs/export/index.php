@@ -34,7 +34,13 @@ $SESSION->set('exportdata', '');
 $SESSION->set('exportfile', '');
 
 $exportoptions = array();
-foreach (plugins_installed('export') as $plugin) {
+$exportplugins = plugins_installed('export');
+
+if (!$exportplugins) {
+    die_info(get_string('noexportpluginsenabled', 'export'));
+}
+
+foreach ($exportplugins as $plugin) {
     safe_require('export', $plugin->name);
     $exportoptions[$plugin->name] = array(
         'text' => call_static_method(generate_class_name('export', $plugin->name), 'get_title'),

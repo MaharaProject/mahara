@@ -34,6 +34,7 @@ $string['exportgeneratedsuccessfully'] = 'Export generated successfully. %sClick
 $string['exportgeneratedsuccessfullyjs'] = 'Export generated successfully. %sContinue%s';
 $string['exportyourportfolio'] = 'Export Your Portfolio';
 $string['generateexport'] = 'Generate export';
+$string['noexportpluginsenabled'] = 'No export plugins have been enabled by the administrator, so you are unable to use this feature';
 $string['justsomeviews'] = 'Just some of my Views';
 $string['pleasewaitwhileyourexportisbeinggenerated'] = 'Please wait while your export is being generated...';
 $string['Starting'] = 'Starting';

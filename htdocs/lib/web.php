@@ -1685,6 +1685,8 @@ function institutional_admin_nav() {
  * @return $standardnav a data structure containing the standard navigation
  */
 function mahara_standard_nav() {
+    $exportenabled = plugins_installed('export');
+    $importenabled = plugins_installed('import');
     $menu = array(
         array(
             'path' => '',
@@ -1709,12 +1711,14 @@ function mahara_standard_nav() {
             'url' => 'export/',
             'title' => get_string('Export', 'export'),
             'weight' => 30,
+            'ignore' => !$exportenabled,
         ),
         array(
             'path' => 'myportfolio/import',
             'url' => 'import/',
             'title' => get_string('import', 'import'),
             'weight' => 30,
+            'ignore' => !$importenabled,
         ),
         array(
             'path' => 'profile/view',
@@ -1789,6 +1793,8 @@ function mahara_standard_nav() {
             'weight' => 40,
         ),
     );
+
+    $menu = array_filter($menu, create_function('$a', 'return empty($a["ignore"]);'));
     
     if ($plugins = get_records_array('artefact_installed', 'active', 1)) {
         foreach ($plugins as &$plugin) {

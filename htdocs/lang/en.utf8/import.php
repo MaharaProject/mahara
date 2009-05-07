@@ -27,3 +27,6 @@
 defined('INTERNAL') || die();
 
 $string['import']     = 'Import';
+$string['noimportpluginsenabled'] = 'No import plugins have been enabled by the administrator, so you are unable to use this feature';
+
+?>
