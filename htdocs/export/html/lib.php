@@ -427,10 +427,13 @@ class HtmlExportOutputFilter {
                 '#<img src="(' . $wwwroot . ')?/?js/tinymce/plugins/emotions/images/([^"]+)"([^>]+)>#',
                 // No forms
                 '#<form[^>]*>.*?</form>#si',
+                // Gratuitous hack for the RSS blocktype
+                '#<div id="blocktype_externalfeed_lastupdate">[^<]*</div>#',
             ),
             array(
                 '',
                 '<img src="' . $this->basepath . '/static/smilies/$2"$3>',
+                '',
                 '',
             ),
             $html
