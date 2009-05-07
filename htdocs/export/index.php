@@ -27,6 +27,7 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'myportfolio/export');
 require(dirname(dirname(__FILE__)) . '/init.php');
+require_once('view.php');
 define('TITLE', get_string('exportyourportfolio', 'export'));
 
 $SESSION->set('exportdata', '');
