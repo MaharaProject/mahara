@@ -73,4 +73,4 @@ $cfg->dbprefix = '';
 // this is a big security hole.
 $cfg->dataroot = '/path/to/uploaddir';
 
-?>
+// closing php tag intentionally omitted to prevent whitespace issues
