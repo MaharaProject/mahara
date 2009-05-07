@@ -1710,14 +1710,14 @@ function mahara_standard_nav() {
             'path' => 'myportfolio/export',
             'url' => 'export/',
             'title' => get_string('Export', 'export'),
-            'weight' => 30,
+            'weight' => 40,
             'ignore' => !$exportenabled,
         ),
         array(
             'path' => 'myportfolio/import',
             'url' => 'import/',
             'title' => get_string('import', 'import'),
-            'weight' => 30,
+            'weight' => 40,
             'ignore' => !$importenabled,
         ),
         array(
