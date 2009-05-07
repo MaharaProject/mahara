@@ -41,11 +41,14 @@ if (!$exportdata = $SESSION->get('exportdata')) {
 }
 $SESSION->set('exportdata', '');
 
+$stylesheets = array_reverse(theme_get_url('style/style.css', null, true));
 ?>
 <html>
     <head>
         <title></title>
-        <link rel="stylesheet" type="text/css" href="<?php echo theme_get_url('style/style.css'); ?>">
+<?php foreach ($stylesheets as $stylesheet) { ?>
+        <link rel="stylesheet" type="text/css" href="<?php echo hsc($stylesheet); ?>">
+<?php } ?>
         <style type="text/css">
             html, body {
                 margin: 0;
