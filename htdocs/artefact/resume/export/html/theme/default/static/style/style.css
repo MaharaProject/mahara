@@ -1,0 +1,51 @@
+/**
+ * CSS rules for resume artefact plugin HTML export
+ *
+ * Copyright (C) 2009 Catalyst IT
+ * This file is licensed under the same terms as Mahara itself
+ */
+h2 {
+    margin: 1em 0 0.25em 0;
+}
+th {
+    text-align: right;
+    vertical-align: top;
+    width: 12em;
+    padding: 0 .25em .5em 0;
+}
+td {
+    vertical-align: top;
+    padding: 0;
+}
+hr {
+    height: 0;
+    border: none;
+    border-top: 1px dotted #d2d2d2;
+    width: 80%;
+    clear: both;
+}
+#contactinformation,
+#personalinformation {
+    width: 50%;
+    float: left;
+}
+#contactinformation h2,
+#personalinformation h2 {
+    margin-left: 6em;
+}
+#composites {
+    margin: 0 auto;
+}
+#composites h2 {
+    text-align: center;
+}
+#composites table {
+    min-width: 70%;
+    margin: 0 auto;
+}
+#composites th {
+    text-align: left;
+}
+#composites .jstitle {
+    font-weight: bold;
+}
