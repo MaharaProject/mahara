@@ -2398,7 +2398,7 @@ function str_shorten($str, $maxlen=100, $truncate=false, $newlines=true) {
     if ($truncate && mb_strlen($str, 'UTF-8') > $maxlen) {
         $str = mb_substr($str, 0, $maxlen-3, 'UTF-8') . '...';
     }
-    if (mb_strlen($str) > $maxlen) {
+    if (mb_strlen($str, 'UTF-8') > $maxlen) {
         $str = mb_substr($str, 0, floor($maxlen / 2) - 1, 'UTF-8') . '...' . mb_substr($str, -(floor($maxlen / 2) - 2), mb_strlen($str, 'UTF-8'), 'UTF-8');
     }
     $str = nl2br(hsc($str));
