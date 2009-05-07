@@ -4,6 +4,7 @@ function export_form_cell_html($element) {
     $strclicktopreview = get_string('clicktopreview', 'export');
     $previewimg = theme_get_url('images/icon-display.png');
     $strpreview = get_string('Preview');
+    $element['description'] = clean_html($element['description']);
 return <<<EOF
 <td>
 {$element['html']} {$element['labelhtml']}
