@@ -421,9 +421,9 @@ class LeapExportElement {
     *
     * @param View $view to link to
     */
-    public function add_view_link(View $view) {
-        if (array_key_exists($view->id, $this->exporter->get('views'))) {
-            $this->add_generic_link('view' . $view->id, $this->get_view_relationship($view));
+    public function add_view_link($viewid) {
+        if (array_key_exists($viewid, $this->exporter->get('views'))) {
+            $this->add_generic_link('view' . $viewid, $this->get_view_relationship($viewid));
         }
     }
 
@@ -473,7 +473,7 @@ class LeapExportElement {
     public function add_links() {
         if ($views = $this->artefact->get_views_metadata()) {
             foreach ($views as $view) {
-                $this->add_view_link($view);
+                $this->add_view_link($view->view);
             }
         }
         if ($parent = $this->artefact->get_parent_instance()) {
