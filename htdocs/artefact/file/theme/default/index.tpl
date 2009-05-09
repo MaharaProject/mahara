@@ -8,7 +8,7 @@
 			{str tag='fileinstructions' section='artefact.file'}
 			<div id="myfiles">
 				<div id="uploader"></div>
-			<table id="filelist" class="hidden tablerenderer">
+			<table id="filelist" class="hidden tablerenderer fullwidth">
 				<thead><tr>
 					<th></th>
 					<th>{str tag=Name section=artefact.file}</th>

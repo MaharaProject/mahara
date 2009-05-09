@@ -9,17 +9,16 @@
 
   <form class="searchquery" action="{$WWWROOT}view/choosetemplate.php" method="post">
 
-    <label>{str tag="searchviews" section="view"}:
-      <input type="text" name="viewquery" id="viewquery" class="query" value="{$views->query|escape}">
-    </label>
+    <label>{str tag="searchviews" section="view"}:</label>
+    <input type="text" name="viewquery" id="viewquery" class="query" value="{$views->query|escape}">
     <button class="query-button" type="submit">{str tag="go"}</button>
 
     <input type="hidden" name="viewlimit" value="{$views->limit|escape}">
     <input type="hidden" name="viewoffset" value="0">
 
-    <label>{str tag="searchowners" section="view"}:
-      <input type="text" name="ownerquery" id="ownerquery" class="query" value="{$owners->query|escape}">
-    </label>
+    <br />
+	<label>{str tag="searchowners" section="view"}:</label>
+    <input type="text" name="ownerquery" id="ownerquery" class="query" value="{$owners->query|escape}">
     <button class="query-button" type="submit">{str tag="go"}</button>
 
   </form>

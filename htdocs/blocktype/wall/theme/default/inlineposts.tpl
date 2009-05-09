@@ -5,10 +5,9 @@
     {if $wallposts}
         {foreach from=$wallposts item=wallpost}
             <div class="wallpost{if $wallpost->private} private{/if}">
-                <div class="userinfo"><img src="{$WWWROOT}thumb.php?type=profileicon&maxwidth=25&maxheight=25&id={$wallpost->from}" alt="Profile Icon" class="fl">
-                <div><a href="{$WWWROOT}user/view.php?id={$wallpost->userid|escape}">{$wallpost->displayname|escape}</a>
-                <span class="postedon"> - {$wallpost->postdate|format_date}</span>
-                </div></div>
+                <div class="userinfo"><img src="{$WWWROOT}thumb.php?type=profileicon&maxwidth=25&maxheight=25&id={$wallpost->from}" alt="Profile Icon"> 
+                	<div class="userinforight"><strong><a href="{$WWWROOT}user/view.php?id={$wallpost->userid|escape}">{$wallpost->displayname|escape}</a></strong><span class="postedon"> - {$wallpost->postdate|format_date}</span></div>
+                </div>
                 <div class="text">{$wallpost->text|parse_bbcode}</div>
                 {*<div class="controls">
         {if $ownwall}
@@ -23,7 +22,7 @@
             </div>
         {/foreach}
         {if !$wholewall}
-            <a href="{$WWWROOT}blocktype/wall/wall.php?id={$instanceid}">{str tag='wholewall' section='blocktype.wall'}</a>
+            <div class="right"><strong><a href="{$WWWROOT}blocktype/wall/wall.php?id={$instanceid}">{str tag='wholewall' section='blocktype.wall'} &raquo;</a></strong></div>
         {/if}
     {/if}
 </div>

@@ -1,22 +1,25 @@
 {if !empty($results.data)}
         {foreach from=$results.cdata item=row}
-          <tr class="r1">
+          <tr class="r{cycle values=0,1}">
             {foreach from=$row item=r}
             <td>
               <div class="fl"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=40&amp;id={$r.id|escape}" alt=""></div>
-                <h4><a href="{$WWWROOT}user/view.php?id={$r.id|escape}">{$r.name|escape}</a></h4>
+                <h3><a href="{$WWWROOT}user/view.php?id={$r.id|escape}">{$r.name|escape}</a></h3>
                 {if $r.role}
-                <div class="removeform">
+                <h5 class="removeform">
                 {$results.roles[$r.role]->display}{if $caneditroles && $r.canchangerole} (<a href="{$WWWROOT}group/changerole.php?group={$group}&amp;user={$r.id}">{str tag=changerole section=group}</a>){/if}
                 {$r.removeform}
-                </div>
-                <p><strong>{str tag="Joined" section="group"}:</strong> {$r.jointime}</p>
-                <p>{$r.introduction|str_shorten:80:true}</p>
+                </h5>
+                <div class="introduction">{$r.introduction|str_shorten:80:true}</div>
+                <label>{str tag="Joined" section="group"}:</label> {$r.jointime}
                 {elseif $membershiptype == 'request'}
-                <p>{str tag=hasrequestedmembership section=group}.{if $r.reason} {str tag=reason}:<br> {$r.reason|format_whitespace}{/if}</p>
-                <p>{$r.addform}</p>
+                <div class="requested">{str tag=hasrequestedmembership section=group}.{if $r.reason}
+				<label>{str tag=reason}:</label> {$r.reason|format_whitespace}{/if}
+				</div>
+                {$r.addform}
+				
                 {elseif $membershiptype == 'invite'}
-                <p>{str tag=hasbeeninvitedtojoin section=group}</p>
+                <div class="invited">{str tag=hasbeeninvitedtojoin section=group}</div>
                 {/if}
             </td>
             {/foreach}

@@ -164,13 +164,6 @@
     }
 
 </script>
-<!-- TODO: shouldn't have css inline -->
-<style type="text/css">
-    .authIcons   { float: right; } 
-    .authLabel   { float: left;  }
-    .authInstance { clear: both; }
-    #dummySelect { margin-top: 5px; }
-</style>
 {{*
 
 IMPORTANT: do not introduce any new whitespace into the instanceList div.

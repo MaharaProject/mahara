@@ -15,11 +15,9 @@
 </div>
 {/if}
 {if $children}
-<ul class="postreply">
+<div class="postreply">
 {foreach from=$children item=child}
-    <li>
         {$child}
-    </li>
 {/foreach}
-</ul>
+</div>
 {/if}

@@ -126,7 +126,7 @@
         $('{{$name}}').value=members.join(',');
     };
 </script>
-<table cellspacing="0" width="100%">
+<table class="userlisttable fullwidth">
     <tr>
         {{if $filter}}
         <td colspan="3">
@@ -149,14 +149,14 @@
         </td>
     </tr>
     <tr>
-        <td style="width: 50%;">
+        <td class="lrfieldlists">
             <select id="{{$name}}_potential" size="10" multiple="true" style="width: 100%;"><option></option></select>
         </td>
-        <td>
+        <td class="lrbuttons">
             <button type="button" onClick="{{$name}}_moveopts('potential','members')">--&gt;</button><br>
             <button type="button" onClick="{{$name}}_moveopts('members','potential')">&lt;--</button>
         </td>
-        <td style="width: 50%;">
+        <td class="lrfieldlists">
             <select size="10" multiple="true" id="{{$name}}_members" style="width: 100%;"><option></option>
 {{foreach from=$options key=id item=user}}
                 <option value="{{$id|escape}}">{{$user|escape}}</option>
@@ -165,8 +165,8 @@
         </td>
     </tr>
     <tr>
-        <td colspan="3">
-            <label for="{{$name}}_search">{{str tag='search'}}:</label><input id="{{$name}}_search" type="text" class="text"> <button id="{{$name}}_search_btn" type="button" class="button">{{str tag="go"}}</button>
+        <td colspan="3" class="searchtd">
+            <label for="{{$name}}_search">{{str tag='search'}}:</label> <input id="{{$name}}_search" type="text" class="text"> <button id="{{$name}}_search_btn" type="button" class="button">{{str tag="go"}}</button>
         </td>
     </tr>
 </table>

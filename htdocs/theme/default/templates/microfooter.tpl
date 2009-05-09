@@ -1,6 +1,6 @@
 			</div>
 			<div id="footerwrap">
-				<div id="footer">
+				<div id="footer" class="center">
         		{mahara_performance_info}
 				</div>
 			</div>

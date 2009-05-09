@@ -6,7 +6,7 @@
 {$form}
 
 {if $groups}
-<table id="findgroups">
+<table id="findgroups" class="fullwidth">
 {foreach from=$groups item=group name=groups}
 <tr class="r{cycle values=0,1}">
 <td>
@@ -16,7 +16,7 @@
 {/foreach}
 </table>
 
-<div class="center">{$pagination}</div>
+{$pagination}
 {else}
 <div class="message">
 {str tag="nogroupsfound" section="group"}

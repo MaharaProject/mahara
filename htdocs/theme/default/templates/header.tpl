@@ -60,7 +60,7 @@
     </tr>
 {/if}
     </table>
-        <div id="logo"><a href="{$WWWROOT}"><img src="{theme_path location='images/logo.gif'}" border="0" alt=""></a></div>
+    <div id="logo"><a href="{$WWWROOT}"><img src="{theme_path location='images/logo.gif'}" border="0" alt=""></a></div>
     <h1 class="hidden"><a href="{$WWWROOT}">{$hiddenheading|default:"Mahara"|escape}</a></h1>
 {if $MAINNAV}
         <div id="mainnav">

@@ -1974,8 +1974,9 @@ function searchform() {
                 'class'          => 'emptyonfocus'
             ),
             'submit' => array(
-                'type' => 'image',
-                'src'  => theme_get_url('images/btn_search_off.gif')
+                'type' => 'submit',
+                'value' => get_string('go'),
+                //'src'  => theme_get_url('images/btn_search_off.gif')
             )
         )
     ));

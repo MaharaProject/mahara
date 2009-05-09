@@ -9,7 +9,7 @@
 <div id="runupgrade">
 <div class="fr"><span class="upgradeicon"><a href="upgrade.php">{str tag=runupgrade section=admin}</a></span></div>
 <h4>{str tag=thefollowingupgradesareready section=admin}</h4>
-<table cellspacing="0" id="upgradestable">
+<table id="upgradestable">
     <tr>
         <th>{str tag=Plugin section=admin}</th>
         <th>{str tag=From}</th>
@@ -29,15 +29,14 @@
 {/if}
 {if $register}
 <div class="message" id="register-site">
-    <div>
+
     <h3>{str tag=registeryourmaharasite section=admin}</h3>
     {str tag=registeryourmaharasitedetail section=admin args=$WWWROOT}
     {$register}
-    </div>
+
 </div>
 {/if}
-<ul>
-    <li><h3>{str tag=configsite section=admin}</h3>
+<h3>{str tag=configsite section=admin}</h3>
     <ul>
         <li><strong><a href="{$WWWROOT}admin/site/options.php">{str tag=siteoptions section=admin}</a></strong> - {str tag=siteoptionsdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/site/pages.php">{str tag=editsitepages section=admin}</a></strong> - {str tag=editsitepagesdescription section=admin}</li>
@@ -46,8 +45,7 @@
         <li><strong><a href="{$WWWROOT}admin/site/views.php">{str tag=siteviews section=admin}</a></strong> - {str tag=siteviewsdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/site/files.php">{str tag=sitefiles section=admin}</a></strong> - {str tag=sitefilesdescription section=admin}</li>
     </ul>
-    </li>
-    <li><h3>{str tag=configusers section=admin}</h3>
+<h3>{str tag=configusers section=admin}</h3>
     <ul>
         <li><strong><a href="{$WWWROOT}admin/users/search.php">{str tag=usersearch section=admin}</a></strong> - {str tag=usersearchdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/users/suspended.php">{str tag=suspendedusers section=admin}</a></strong> - {str tag=suspendedusersdescription section=admin}</li>
@@ -57,8 +55,7 @@
         <li><strong><a href="{$WWWROOT}admin/users/add.php">{str tag=adduser section=admin}</a></strong> - {str tag=adduserdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/users/uploadcsv.php">{str tag=uploadcsv section=admin}</a></strong> - {str tag=uploadcsvdescription section=admin}</li>
     </ul>
-    </li>
-    <li><h3>{str tag=manageinstitutions section=admin}</h3>
+<h3>{str tag=manageinstitutions section=admin}</h3>
     <ul>
         <li><strong><a href="{$WWWROOT}admin/users/institutions.php">{str tag=institutions section=admin}</a></strong> - {str tag=institutionsdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/users/institutionusers.php">{str tag=institutionmembers section=admin}</a></strong> - {str tag=institutionmembersdescription section=admin}</li>
@@ -67,14 +64,12 @@
         <li><strong><a href="{$WWWROOT}view/institutionviews.php">{str tag=institutionviews section=admin}</a></strong> - {str tag=institutionviewsdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}artefact/file/institutionfiles.php">{str tag=institutionfiles section=admin}</a></strong> - {str tag=institutionfilesdescription section=admin}</li>
     </ul>
-    </li>
-    <li><h3>{str tag=configextensions section=admin}</h3>
+<h3>{str tag=configextensions section=admin}</h3>
     <ul>
         <li><strong><a href="{$WWWROOT}admin/extensions/plugins.php">{str tag=pluginadmin section=admin}</a></strong> - {str tag=pluginadmindescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/extensions/filter.php">{str tag=htmlfilters section=admin}</a></strong> - {str tag=htmlfiltersdescription section=admin}</li>
     </ul>
-    </li>
-</ul></div>
+</div>
 
 {include file="columnfullend.tpl"}
 

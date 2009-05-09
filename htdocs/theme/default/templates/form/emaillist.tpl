@@ -76,10 +76,6 @@
         removeElement(x.parentNode);
     }
 </script>
-<!-- TODO: shouldn't have css inline -->
-<style type="text/css">
-    .unvalidated { color: gray; }
-</style>
 <div id="{{$name}}_list">
 {{foreach from=$validated item=email}}
     <div class="validated">

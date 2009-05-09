@@ -4,6 +4,7 @@
 {include file="sidebar.tpl"}
 </div>
 {include file="columnleftstart.tpl"}
+<div id="resumewrap">
 {$coverletterform}
 {$interestsform}
 {$contactinformationform}
@@ -13,5 +14,6 @@
 {include file="artefact:resume:fragments/certification.tpl" controls="true"}
 {include file="artefact:resume:fragments/book.tpl" controls="true"}
 {include file="artefact:resume:fragments/membership.tpl" controls="true"}
+</div>
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

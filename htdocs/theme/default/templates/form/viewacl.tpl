@@ -2,13 +2,13 @@
 <div id="viewacl_lhs">
     <div id="potentialpresetitems"></div>
     <div>
-        {{str tag=search}} <input type="text" name="search" id="search">
+        <label>{{str tag=search}}</label> <input type="text" name="search" id="search">
         <select name="type" id="type">
             <option value="group">{{str tag=groups}}</option>
             <option value="user" selected="selected">{{str tag=users}}</option>
         </select>
         <button id="dosearch" type="button">{{str tag=go}}</button>
-        <table id="results">
+        <table id="results" class="fullwidth">
             <thead>
                 <tr>
                     <th></th>
@@ -282,7 +282,7 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
     return TR({'class': 'r' + (rownumber % 2)},
         buttonTD,
         TD({'style': 'vertical-align: middle;'}, identityNodes),
-        TD({'class': 'center', 'style': 'vertical-align: middle;width:20px;'}, profileIcon)
+        TD({'class': 'center', 'style': 'vertical-align: top;width:20px;'}, profileIcon)
     );
 }
 searchTable.updateOnLoad();

@@ -11,17 +11,17 @@
 {include file="columnleftstart.tpl"}
 			<div id="myblogs">
 
-                {$blog->get('description')}
+				<span class="addicon fr">
+					<a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
+					<a href="{$WWWROOT}artefact/blog/settings/?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
+				</span>
 
-                    <span class="addicon fr">
-                        <a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
-                        <a href="{$WWWROOT}artefact/blog/settings/?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
-                    </span>
+                <p>{$blog->get('description')}</p>
 		
                 {if $blog->count_children() > 0}
-				<div><table id="postlist" class="hidden tablerenderer">
+				<div><table id="postlist" class="hidden tablerenderer fullwidth">
 					<tbody>
-									  <tr><td></td><td></td><td></td></tr>
+							  <tr><td></td><td></td><td></td></tr>
 					</tbody>
 				</table></div>
                 {else}

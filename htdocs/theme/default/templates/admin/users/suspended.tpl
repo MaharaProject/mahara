@@ -3,7 +3,7 @@
 {include file="columnfullstart.tpl"}
             {$buttonformopen}
             {$buttonform}
-            <table id="suspendedlist">
+            <table id="suspendedlist" class="fullwidth">
                 <thead>
                     <tr>
                         <th>{str tag=fullname}</th>

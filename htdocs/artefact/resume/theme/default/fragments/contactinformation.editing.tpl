@@ -1,4 +1,4 @@
-<table>
+<table class="resumecontactinfo">
     <tr>
         <th>{str tag='address' section='artefact.internal'}</th>
         <td>{$address}</td>

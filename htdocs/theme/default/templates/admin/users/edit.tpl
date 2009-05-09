@@ -1,11 +1,11 @@
 {include file="header.tpl"}
 
 {include file="columnfullstart.tpl"}
-<div id="edituser" style="position: relative;">
-    <div style="position: absolute; top: 0; right: 0;"><a href="{$WWWROOT}user/view.php?id={$user->id}"><img src="{$WWWROOT}thumb.php?type=profileiconbyid&amp;maxwidth=100&amp;maxheight=100&amp;id={$user->profileicon}" alt=""></a></div>
-    <h2><a href="{$WWWROOT}user/view.php?id={$user->id}">{$user|display_name|escape}</a></h2>
+<div id="edituser">
+    <div class="fr"><a href="{$WWWROOT}user/view.php?id={$user->id}"><img src="{$WWWROOT}thumb.php?type=profileiconbyid&amp;maxwidth=100&amp;maxheight=100&amp;id={$user->profileicon}" alt=""></a></div>
+    <h2><a href="{$WWWROOT}user/view.php?id={$user->id}">{$user->display_name|escape}</a></h2>
     {if !empty($loginas)}
-      <div><a href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">{$loginas}</a></div>
+      <span class="addicon fr"><a href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">{$loginas}</a></span>
     {/if}
 
     {if $suspended}
@@ -29,22 +29,19 @@
     <hr>
     <h3 id="suspend">{str tag="suspenddeleteuser" section=admin}</h3>
     <p>{str tag="suspenddeleteuserdescription" section=admin}</p>
-    <table id="suspenddelete">
-      <tr>
-        <td>
-          <h4>{str tag="suspenduser" section=admin}</h4>
-          {$suspendform}
-        </td>
-        {if $USER->get('admin')}
-        <td id="delete">
-          <h4>{str tag=deleteuser section=admin}</h4>
-          <p>{str tag=deleteusernote section=admin}</p>
-          {$deleteform}
-        </td>
-        {/if}
-      </tr>
-    </table>
+		{if $USER->get('admin')}
+		<div id="delete">
+			<h4>{str tag=deleteuser section=admin}</h4>
+			<p>{str tag=deleteusernote section=admin}</p>
+			{$deleteform}
+		</div>
+		{/if}
+    	<div id="suspenddelete">
+        	<h4>{str tag="suspenduser" section=admin}</h4>
+                {$suspendform}
+        </div>
     {/if}
+	<div class="clearer"></div>
 
     {if ($institutions)}
     <hr>

@@ -1,7 +1,8 @@
 {include file="header.tpl"}
 
 {include file="columnfullstart.tpl"}
-            <table id="notificationstable">
+            <table id="notificationstable" class="fullwidth">
+			<thead>
                 <tr>
                     <th>&nbsp;</th>
                     <th></th>
@@ -10,6 +11,8 @@
                     <th>{$type}</th>
 {/foreach}
                 </tr>
+			</thead>
+			<tbody>	
 {foreach from=$users item='user' key='userid'}
                 <tr class="{cycle values="r0,r1"}">
                     <td class='center'><img src="{$WWWROOT}thumb.php?type=profileicon&maxwidth=40&maxheight=40&id={$userid}" alt="profile icon"/></td>
@@ -24,7 +27,7 @@
 {/foreach} 
                 </tr>
 {/foreach} 
-
+			</tbody>
             </table>
 {include file="columnfullend.tpl"}
 

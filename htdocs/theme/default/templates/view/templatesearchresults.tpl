@@ -1,4 +1,4 @@
-<table class="templateresults tablerenderer">
+<table class="templateresults tablerenderer fullwidth">
   <thead>
     <tr>
       <th>{str tag=name}</th>

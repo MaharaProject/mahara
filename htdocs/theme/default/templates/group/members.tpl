@@ -5,7 +5,7 @@
 
 <form action="{$WWWROOT}group/members.php" method="post">
     <input type="hidden" id="groupid" name="id" value="{$GROUP->id|escape}">
-    <div class="searchform center" style="margin-bottom: .5em;">
+    <div class="searchform">
         <label>{str tag='Query' section='admin'}:
             <input type="text" name="query" id="query" value="{$query|escape}">
         </label>
@@ -15,13 +15,13 @@
 </form>
     {if $membershiptype}<h3>{str tag=pendingmembers section=group}</h3>{/if}
     <div id="results">
-        <table id="membersearchresults" class="tablerenderer">
+        <table id="membersearchresults" class="tablerenderer fullwidth">
             <tbody>
             {$results}
             </tbody>
         </table>
     </div>
-    <div id="pagination">{$pagination}</div>
+    {$pagination}
 
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

@@ -1,8 +1,8 @@
-{if !$hidetitle}<h3>{str tag='book' section='artefact.resume'}
+<fieldset>{if !$hidetitle}<legend class="resumeh3">{str tag='book' section='artefact.resume'}
 {if $controls}
     {contextualhelp plugintype='artefact' pluginname='resume' section='addbook'}
 {/if}
-</h3>{/if}
+</legend>{/if}
 <table id="booklist{$suffix}" class="tablerenderer resumefour resumecomposite">
     <colgroup width="25%" span="1"></colgroup>
     <thead>
@@ -27,7 +27,8 @@
 </table>
 {if $controls}
 <div>
-    <button id="addbookbutton" onclick="toggleCompositeForm('book');">{str tag='add'}</button>
     <div id="bookform" class="hidden">{$compositeforms.book}</div>
+    <button id="addbookbutton" class="cancel" onclick="toggleCompositeForm('book');">{str tag='add'}</button>
 </div>
 {/if}
+</fieldset>

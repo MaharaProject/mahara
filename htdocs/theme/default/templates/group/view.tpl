@@ -2,33 +2,35 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-                {if $GROUP->description}<p id="group-description">{$GROUP->description}</p> {/if}
+{if $GROUP->description}
+	<div id="group-description">{$GROUP->description}</div>
+{/if}
 
-                {include file="group/info.tpl"}
-                <ul id="group-controls">
-                    {include file="group/groupuserstatus.tpl" group=$group returnto='view'}
-                </ul><br style="clear: left;"/>
+<ul id="group-controls">
+	{include file="group/groupuserstatus.tpl" group=$group returnto='view'}
+</ul><br class="cl"/>
+{include file="group/info.tpl"}
 
-                {if $group->public || $role}
-                <div class="group-info-para">
-                <h3>{str tag=latestforumposts section=interaction.forum}</h3>
-                {if $foruminfo}
-                {foreach from=$foruminfo item=postinfo}
-                <div>
-                  <h4><a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic|escape}#post{$postinfo->id|escape}">{$postinfo->topicname|escape}</a></h4>
-                  <div>
-                    <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$postinfo->poster|escape}" alt="">
-                    <a href="{$WWWROOT}user/view.php?id={$postinfo->poster|escape}">{$postinfo->poster|display_name|escape}</a>
-                  </div>
-                  <p>{$postinfo->body|str_shorten:100:true}</p>
-                </div>
-                {/foreach}
-                {else}
-                <p>{str tag=noforumpostsyet section=interaction.forum}</p>
-                {/if}
-                <p><a href="{$WWWROOT}interaction/forum/?group={$group->id|escape}">{str tag=gotoforums section=interaction.forum} &raquo;</a></p>
-                </div>
-                {/if}
+{if $group->public || $role}
+	<div class="group-info-para">
+		<h3>{str tag=latestforumposts section=interaction.forum}</h3>
+		{if $foruminfo}
+			<table id="latestforumpost" class="fullwidth s">
+			{foreach from=$foruminfo item=postinfo}
+			<tr class="r{cycle values=0,1}">
+			  <td><strong><a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic|escape}#post{$postinfo->id|escape}">{$postinfo->topicname|escape}</a></strong></td>
+			  <td>{$postinfo->body|str_shorten:100:true}</td>
+			  <td><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$postinfo->poster|escape}" alt="">
+				<a href="{$WWWROOT}user/view.php?id={$postinfo->poster|escape}">{$postinfo->poster|display_name|escape}</a></td>
+			</tr>
+			{/foreach}
+			</table>
+			{else}
+			<div class="message">{str tag=noforumpostsyet section=interaction.forum}</div>
+		{/if}
+		<p class="gotoforum"><a href="{$WWWROOT}interaction/forum/?group={$group->id|escape}">{str tag=gotoforums section=interaction.forum} &raquo;</a></p>
+	</div>
+{/if}
 
 {if $sharedviews}
     <div class="group-info-para">
@@ -56,7 +58,7 @@
         </tr>
     {/foreach}
     </table>
-    <div class="center">{$pagination}</div>
+    {$pagination}
     </div>
 {/if}
 
@@ -83,7 +85,7 @@
         </tr>
     {/foreach}
     </table>
-    <div class="center">{$pagination}</div>
+    {$pagination}
     </div>
 {/if}
 

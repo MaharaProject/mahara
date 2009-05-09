@@ -1,5 +1,5 @@
 {if $hascontent}
-<table>
+<table class="resumecontactinfo">
 <colgroup width="50%" span="2"></colgroup>
 {if $address}
     <tr>

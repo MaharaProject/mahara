@@ -41,7 +41,7 @@
     {/if}
     </td>
     {if $moderator}
-    <td>
+    <td class="s">
     <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}&amp;returnto=view" id="btn-edit">{str tag="edit"}</a>
     <br><a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id|escape}&amp;returnto=view" id="btn-delete">{str tag="delete"}</a></td>
     {/if}

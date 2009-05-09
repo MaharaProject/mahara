@@ -6,7 +6,7 @@
 <div id="friendslistcontainer">
     {$form}
 {if $users}
-    <table id="friendslist">
+    <table id="friendslist" class="fullwidth">
     {foreach from=$users item=user}
         <tr class="r{cycle values=1,0}">
         {include file="user/user.tpl" user=$user page='find'}
@@ -14,10 +14,8 @@
     {/foreach}
     </table>
 </div>
-<div class="center">
     {$pagination}
 {else}
-</div>
 {if $message}
 <div class="message">
     {$message}

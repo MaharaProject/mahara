@@ -5,7 +5,7 @@
             <p>{str tag="adminfilespagedescription" section="admin" args=$descriptionstrargs}</p>
 			<div id="myfiles">
 				<div id="uploader"></div>
-			<table id="filelist" class="hidden tablerenderer" cellpadding="0" cellspacing="0">
+			<table id="filelist" class="hidden tablerenderer fullwidth">
 				<thead><tr>
 					<th></th>
 					<th>{str tag=Name section=artefact.file}</th>

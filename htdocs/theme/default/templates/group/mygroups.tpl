@@ -4,12 +4,12 @@
 {include file="columnleftstart.tpl"}
 <div class="addgrouplink">
 <span class="addicon fr">
-<a href="{$WWWROOT}group/create.php">{str tag="creategroup" section="group"}</a>
+<a href="{$WWWROOT}group/create.php" id="btn-creategroup">{str tag="creategroup" section="group"}</a>
 </span>
 </div>
 {$form}
 {if $groups}
-<table id="mygroupstable">
+<table id="mygroupstable" class="fullwidth">
 {foreach from=$groups item=group}
 <tr class="r{cycle values=0,1}">
 <td>
@@ -18,7 +18,7 @@
 </tr>
 {/foreach}
 </table>
-<div class="center">{$pagination}</div>
+{$pagination}
 {else}
 <div class="message">
 {str tag="trysearchingforgroups" section="group" args=$searchingforgroups}

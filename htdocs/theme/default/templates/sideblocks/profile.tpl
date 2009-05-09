@@ -3,14 +3,14 @@
     {if $data.mnetloggedinfrom}<p>{$data.mnetloggedinfrom}</p>{/if}
     <ul class="sidebar-ul-title">
         {if $data.unreadnotifications}
-        <li>
+        <li id="unreadmessages">
         <a href="{$WWWROOT}account/activity/">
             <span class="unreadmessagescontainer"><span class="unreadmessagecount">{$data.unreadnotifications}</span> <span class="unreadmessages">{$data.unreadnotificationsmessage}</span></span>
         </a>
         </li>
         {/if}
         {if $data.invitedgroups}
-        <li>
+        <li id="invitedgroups">
             <a href="{$WWWROOT}group/mygroups.php?filter=invite">
                 <span id="invitedgroupscount">{$data.invitedgroups}</span>
                 <span id="invitedgroupsmessage">{$data.invitedgroupsmessage}</span>
@@ -18,7 +18,7 @@
         </li>
         {/if}
         {if $data.pendingfriends}
-        <li>
+        <li id="pendingfriends">
             <a href="{$WWWROOT}user/myfriends.php?filter=pending">
                 <span id="pendingfriendscount">{$data.pendingfriends}</span>
                 <span id="pendingfriendsmessage">{$data.pendingfriendsmessage}</span>
@@ -26,7 +26,7 @@
         </li>
         {/if}
         {if $data.groups}
-        <li>
+        <li id="groups">
             <a href="{$WWWROOT}group/mygroups.php">{str tag="groups"}:</a>
             <ul>
             {foreach from=$data.groups item=group}
@@ -36,7 +36,7 @@
         </li>
         {/if}
         {if $data.views}
-        <li>
+        <li id="views">
             <a href="{$WWWROOT}view/">{str tag="views"}:</a>
             <ul>
             {foreach from=$data.views item=view}

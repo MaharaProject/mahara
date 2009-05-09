@@ -717,6 +717,7 @@ function ViewManager() {
                         setOpacity(clone, 0.5);
                     }
                     else {
+                        console.log('appending child nodes');
                         appendChildNodes(clone, i.cloneNode(true));
                     }
                 },
@@ -911,8 +912,8 @@ function ViewManager() {
                 var columnContent = getFirstElementByTagAndClassName('div', 'column-content', i);
                 var hotzone = self.createHotzone(columnContent, appendChildNodes, true);
 
-                var footerDimensions = getElementDimensions('footer', self.bottomPane);
-                var footerPosition   = getElementPosition('footer', self.bottomPane);
+                var footerDimensions = getElementDimensions('footerwrap', self.bottomPane);
+                var footerPosition   = getElementPosition('footerwrap', self.bottomPane);
 
                 setElementPosition(hotzone, {x: getElementPosition(columnContent, self.columnContainer).x, y: 0});
                 setElementDimensions(hotzone, {

@@ -54,6 +54,9 @@ if (!$tutorgroupdata = @get_records_sql_array('SELECT g.id, g.name
        AND t.submittableto = 1
        ORDER BY g.name', array($userid))) {
     $tutorgroupdata = array();
+    foreach ($data->data as &$view) {
+       unset($view['submittedto']);
+    }
 }
 else {
 	$options = array();

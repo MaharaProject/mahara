@@ -9,7 +9,7 @@
         {$form_start_tag}
 
             {foreach from=$options key=id item=description}
-            <div class="fl" style="margin: 0 .5em; text-align: center;">
+            <div class="fl">
                 <div><img src="{$WWWROOT}thumb.php?type=viewlayout&amp;vl={$id}" alt=""></div>
                 {if $id == $currentlayout}
                 <div><input type="radio" class="radio" name="layout" value="{$id}" checked="checked"></div>
