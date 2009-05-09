@@ -25,7 +25,7 @@
 
 $theme = new StdClass;
 
-$theme->name   = 'Default';
+$theme->name   = 'Raw';
 $theme->formrenderer = 'table';
 
 ?>

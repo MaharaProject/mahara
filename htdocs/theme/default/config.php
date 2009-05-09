@@ -25,8 +25,7 @@
 
 $theme = new StdClass;
 
-$theme->name   = 'Mahara';
-$theme->formrenderer = 'table';
+$theme->name   = 'Default';
 $theme->parent = null;
 
 ?>
