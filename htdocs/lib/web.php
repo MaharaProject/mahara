@@ -651,24 +651,24 @@ function theme_setup() {
         if (!$parent = theme_get_parent($parent)) {
             break;
         }
-        if ($parent != 'default') {
+        if ($parent != 'raw') {
             $theme->template_dir[] = get_config('docroot') . 'theme/' . $parent . '/templates/';
             $theme->inheritance[] = $parent;
         }
     }
 
-    // always put the default theme at the top of the tree, unless we're already it
+    // always put the raw theme at the top of the tree, unless we're already it
     // Logic here: If you want your theme to be _completely_ independent (e.g. 
     // you are happy to write/copy the templates etc), then set $theme->parent 
     // = null; in your theme config.php.
     //
-    // If you don't set $theme->parent to anything, then the default theme will 
+    // If you don't set $theme->parent to anything, then the raw theme will
     // be assumed to be the parent.
     //
     // You can of course set $theme->parent to be another theme if you want
-    if (!is_null($parent) && $theme->theme != 'default') {
-        $theme->template_dir[] = get_config('docroot')  . 'theme/default/templates/';
-        $theme->inheritance[] = 'default';
+    if (!is_null($parent) && $theme->theme != 'raw') {
+        $theme->template_dir[] = get_config('docroot')  . 'theme/raw/templates/';
+        $theme->inheritance[] = 'raw';
     }
 
     return $theme;
