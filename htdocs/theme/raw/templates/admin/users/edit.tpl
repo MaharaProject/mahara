@@ -3,7 +3,7 @@
 {include file="columnfullstart.tpl"}
 <div id="edituser">
     <div class="fr"><a href="{$WWWROOT}user/view.php?id={$user->id}"><img src="{$WWWROOT}thumb.php?type=profileiconbyid&amp;maxwidth=100&amp;maxheight=100&amp;id={$user->profileicon}" alt=""></a></div>
-    <h2><a href="{$WWWROOT}user/view.php?id={$user->id}">{$user->display_name|escape}</a></h2>
+    <h2><a href="{$WWWROOT}user/view.php?id={$user->id}">{$user|display_name|escape}</a></h2>
     {if !empty($loginas)}
       <span class="addicon fr"><a href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">{$loginas}</a></span>
     {/if}
