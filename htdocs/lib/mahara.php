@@ -1257,7 +1257,7 @@ function get_random_key($length=16) {
  */
 function pieform_configure() {
     global $USER;
-    $theme = ($USER->get('theme')) ? $USER->get('theme') : 'default';
+    $theme = ($USER->get('theme')) ? $USER->get('theme') : 'raw';
     require(get_config('docroot') . 'theme/' . $theme . '/config.php');
     return array(
         'method'    => 'post',
