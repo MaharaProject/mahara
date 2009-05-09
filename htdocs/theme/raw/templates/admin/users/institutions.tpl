@@ -84,6 +84,7 @@
       <input type="submit" class="submit" name="editadmins" value="{str tag="editadmins" section="admin"}">
     </form>
 {/if}</td>
+    <td></td>
 				</tfoot>
 			</table>
 
