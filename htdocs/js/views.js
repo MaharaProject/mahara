@@ -893,8 +893,8 @@ function ViewManager() {
                 var columnContainerPosition   = elementPosition(self.columnContainer);
                 var columnContainerDimensions = elementDimensions(self.columnContainer);
 
-                var footerDimensions = getElementDimensions('footer', self.bottomPane);
-                var footerPosition   = getElementPosition('footer', self.bottomPane);
+                var footerDimensions = getElementDimensions('footerwrap', self.bottomPane);
+                var footerPosition   = getElementPosition('footerwrap', self.bottomPane);
 
                 setElementPosition(hotzone, {x: blockinstancePosition.x, y: previousHotzonePosition.y + previousHotzoneDimensions.h});
                 setElementDimensions(hotzone, {
