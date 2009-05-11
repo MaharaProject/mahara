@@ -141,7 +141,11 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
                 'match' => '#.*teachertube.com/flvideo/([0-9]+)\.flv.*#',
                 'url'   => 'http://www.teachertube.com/skin-p/mediaplayer.swf?file=http://www.teachertube.com/flvideo/$1.flv'
             ),
-            // www.scivee.tv
+            array(
+                'match' => '#.*teachertube\.com/viewVideo\.php\?video_id=(\d+).*#',
+                'url'   => 'http://www.teachertube.com/embed/player.swf?file=http://www.teachertube.com/embedFLV.php?pg=video_$1'
+            ),
+            // www.scivee.tv="
             array(
                 'match' => '#.*scivee.tv/node/([0-9]+).*#',
                 'url'   => 'http://scivee.tv/flash/embedPlayer.swf?id=$1&type=3',
