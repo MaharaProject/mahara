@@ -1,6 +1,6 @@
     <div class="blockinstance" id="blockinstance_{$id}">
         <div class="blockinstance-header">
-            <h3>{$title|default:"[$strnotitle]"|escape}</h3>
+            <h4>{$title|default:"[$strnotitle]"|escape}</h4>
         </div>
         <div class="blockinstance-controls">
         {foreach from=$movecontrols item=item}
