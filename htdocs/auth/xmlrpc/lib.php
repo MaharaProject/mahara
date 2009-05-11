@@ -362,6 +362,7 @@ class AuthXmlrpc extends Auth {
         // the session object.
         $SESSION->set('mnetuser', $user->id);
         $SESSION->set('authinstance', $this->instanceid);
+        $SESSION->set('mnetuserfrom', $_SERVER['HTTP_REFERER']);
 
         return true;
     }

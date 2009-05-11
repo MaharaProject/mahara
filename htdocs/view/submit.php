@@ -44,7 +44,7 @@ $group = get_record_sql(
     array($USER->get('id'), $groupid)
 );
 
-if (!$view || !$group || $view->submittedto) {
+if (!$view || !$group || $view->submittedgroup || $view->submittedhost) {
     throw new AccessDeniedException(get_string('cantsubmitviewtogroup', 'view'));
 }
 
@@ -72,7 +72,7 @@ $smarty->display('view/submit.tpl');
 
 function submitview_submit(Pieform $form, $values) {
 	global $SESSION, $viewid, $groupid;
-    update_record('view', array('submittedto' => $groupid), array('id' => $viewid));
+    update_record('view', array('submittedgroup' => $groupid), array('id' => $viewid));
     $SESSION->add_ok_msg(get_string('viewsubmitted', 'view'));
     redirect('/view/');
 }

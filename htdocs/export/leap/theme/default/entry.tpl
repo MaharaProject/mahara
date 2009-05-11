@@ -1,6 +1,10 @@
 {include file="export:leap:entryheader.tpl"}
         <title>{$title|escape}</title>
         <id>{$id}</id>
+{if $author}        <author>
+            <name>{$author|display_name|escape}</name>
+        </author>
+{/if}
 {if $updated}        <updated>{$updated}</updated>
 {/if}
 {if $created}        <published>{$created}</published>

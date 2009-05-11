@@ -34,13 +34,26 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'view.php');
 require('group.php');
 
-$viewtoken = get_config('allowpublicviews') ? param_alphanum('t', null) : null;
-if ($viewtoken) {
-    if (!$viewid = get_view_from_token($viewtoken)) {
-        throw new AccessDeniedException();
+// access key for roaming teachers
+$mnettoken = $SESSION->get('mnetuser') ? param_alphanum('mt', null) : null;
+
+// access key for logged out users
+$usertoken = (is_null($mnettoken) && get_config('allowpublicviews')) ? param_alphanum('t', null) : null;
+
+if ($mnettoken) {
+    if (!$viewid = get_view_from_token($mnettoken, false)) {
+        throw new AccessDeniedException(get_string('accessdenied', 'error'));
     }
-    if ($viewtoken != get_cookie('viewaccess:'.$viewid)) {
-        set_cookie('viewaccess:'.$viewid, $viewtoken);
+    if ($mnettoken != get_cookie('mviewaccess:'.$viewid)) {
+        set_cookie('mviewaccess:'.$viewid, $mnettoken);
+    }
+}
+else if ($usertoken) {
+    if (!$viewid = get_view_from_token($usertoken, true)) {
+        throw new AccessDeniedException(get_string('accessdenied', 'error'));
+    }
+    if ($usertoken != get_cookie('mviewaccess:'.$viewid)) {
+        set_cookie('mviewaccess:'.$viewid, $usertoken);
     }
 }
 else {
@@ -48,8 +61,8 @@ else {
 }
 $new = param_boolean('new');
 
-if (!can_view_view($viewid, null, $viewtoken)) {
-    throw new AccessDeniedException();
+if (!can_view_view($viewid, null, $usertoken, $mnettoken)) {
+    throw new AccessDeniedException(get_string('accessdenied', 'error'));
 }
 $view = new View($viewid);
 
@@ -58,7 +71,7 @@ $group = $view->get('group');
 $title = $view->get('title');
 define('TITLE', $title);
 
-$submittedgroup = (int)$view->get('submittedto');
+$submittedgroup = (int)$view->get('submittedgroup');
 if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_views($submittedgroup, $USER->get('id'))) {
     // The user is a tutor of the group that this view has
     // been submitted to, and is entitled to release the view, and to
@@ -73,7 +86,7 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
         'elements' => array(
             'submittedview' => array(
                 'type'  => 'html',
-                'value' => get_string('viewsubmittedtogroup', 'view', get_config('wwwroot'), $submittedgroup->id, $submittedgroup->name),
+                'value' => get_string('viewsubmittedtogroup', 'view', get_config('wwwroot') . 'group/view.php?id=' . $submittedgroup->id, $submittedgroup->name),
             ),
             'submit' => array(
                 'type'  => 'submit',
@@ -91,7 +104,7 @@ else {
 
 function releaseview_submit() {
     global $USER, $SESSION, $view;
-    $view->release($view->get('submittedto'), $USER);
+    $view->release($USER);
     $SESSION->add_ok_msg(get_string('viewreleasedsuccess', 'group'));
     redirect(get_config('wwwroot') . 'view/view.php?id='.$view->get('id'));
 }
@@ -123,11 +136,25 @@ $owner = $view->get('owner');
 if ($owner) {
     $smarty->assign('ownerlink', 'user/view.php?id=' . $owner);
     if ($USER->get('id') == $owner) {
-        $smarty->assign('can_edit', !$view->get('submittedto'));
+        $smarty->assign('can_edit', !$submittedgroup && !$view->is_submitted());
     }
 }
 else if ($group) {
     $smarty->assign('ownerlink', 'group/view.php?id=' . $group);
+}
+
+// Provide a link for roaming teachers to return
+if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
+    if (isset($mnetviewlist[$view->get('id')])) {
+        $returnurl = $SESSION->get('mnetuserfrom');
+        require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
+        if ($peer = get_peer_from_instanceid($SESSION->get('authinstance'))) {
+            $smarty->assign('mnethost', array(
+                'name'      => $peer->name,
+                'url'       => $returnurl ? $returnurl : $peer->wwwroot,
+            ));
+        }
+    }
 }
 
 $smarty->assign('ownername', $view->formatted_owner());
@@ -135,7 +162,7 @@ $smarty->assign('streditviewbutton', ($new) ? get_string('backtocreatemyview', '
 $smarty->assign('viewdescription', $view->get('description'));
 $smarty->assign('viewcontent', $view->build_columns());
 $smarty->assign('releaseform', $releaseform);
-$smarty->assign('anonfeedback', !$USER->is_logged_in() && ($viewtoken || $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid))));
+$smarty->assign('anonfeedback', !$USER->is_logged_in() && ($usertoken || $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid))));
 $smarty->assign('addfeedbackform', pieform(add_feedback_form($allowattachments)));
 $smarty->assign('objectionform', pieform(objection_form()));
 $smarty->assign('viewbeingwatched', $viewbeingwatched);

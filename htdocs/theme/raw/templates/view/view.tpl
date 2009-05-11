@@ -2,6 +2,10 @@
 
 {include file="columnfullstart.tpl"}
 
+{if $mnethost}
+<span class="fr"><a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a></span>
+{/if}
+
 <h2>{if !$new}<a href="{$WWWROOT}view/view.php?id={$viewid}">{/if}{$viewtitle|escape}{if !$new}</a>{/if}{if $ownername} {str tag=by section=view} <a href="{$WWWROOT}{$ownerlink}">{$ownername|escape}</a>{/if}</h2>
 
 {if $can_edit}

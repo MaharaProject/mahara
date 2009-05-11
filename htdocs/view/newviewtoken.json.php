@@ -28,14 +28,9 @@ define('INTERNAL', 1);
 define('JSON', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
+require_once(get_config('libroot') . 'view.php');
 
-$data = new StdClass;
-$data->view  = param_integer('view');
-$data->token = random_string(20);
-while (record_exists('view_access_token', 'token', $data->token)) {
-    $data->token = random_string(20);
-}
-if (!insert_record('view_access_token', $data)) {
+if (!$data = View::new_token(param_integer('view'))) {
     json_reply(true, get_string('createviewtokenfailed', 'view'));
 }
 json_reply(false, array('message' => null, 'data' => $data));

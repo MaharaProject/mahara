@@ -444,6 +444,90 @@ function xmlrpc_not_implemented() {
     return true;
 }
 
+function get_views_for_user($username, $query=null) {
+    global $REMOTEWWWROOT, $USER;
+
+    list ($user, $authinstance) = find_remote_user($username, $REMOTEWWWROOT);
+    if (!$user) {
+        return false;
+    }
+
+    $USER->reanimate($user->id, $authinstance->id);
+    require_once('view.php');
+    $data = View::view_search($query, null, (object) array('owner' => $USER->get('id')));
+    $data->displayname = display_name($user);
+    if ($data->count) {
+        foreach ($data->data as &$v) {
+            $v['url'] = '/view/view.php?id=' . $v['id'];
+            $v['fullurl'] = get_config('wwwroot') . 'view/view.php?id=' . $v['id'];
+        }
+    }
+    return $data;
+}
+
+function submit_view_for_assessment($username, $viewid) {
+    global $REMOTEWWWROOT;
+
+    list ($user, $authinstance) = find_remote_user($username, $REMOTEWWWROOT);
+    if (!$user) {
+        return false;
+    }
+
+    $viewid = (int) $viewid;
+    if (!$viewid) {
+        return false;
+    }
+
+    require_once('view.php');
+    $view = new View($viewid);
+
+    $view->set('submittedhost', $authinstance->config['wwwroot']);
+
+    // Create secret key
+    $access = View::new_token($view->get('id'), false);
+
+    $data = array(
+        'id'          => $view->get('id'),
+        'title'       => $view->get('title'),
+        'description' => $view->get('description'),
+        'fullurl'     => get_config('wwwroot') . 'view/view.php?id=' . $view->get('id') . '&mt=' . $access->token,
+        'url'         => '/view/view.php?id=' . $view->get('id') . '&mt=' . $access->token,
+        'accesskey'   => $access->token,
+    );
+
+    foreach (plugins_installed('artefact') as $plugin) {
+        safe_require('artefact', $plugin->name);
+        $classname = generate_class_name('artefact', $plugin->name);
+        if (is_callable($classname . '::view_submit_external_data')) {
+            $data[$plugin->name] = call_static_method($classname, 'view_submit_external_data', $view->get('id'));
+        }
+    }
+
+    return $data;
+}
+
+function release_submitted_view($viewid, $assessmentdata, $teacherusername) {
+    global $REMOTEWWWROOT, $USER;
+
+    require_once('view.php');
+    $view = new View($viewid);
+    list ($teacher, $authinstance) = find_remote_user($teacherusername, $REMOTEWWWROOT);
+
+    db_begin();
+    foreach (plugins_installed('artefact') as $plugin) {
+        safe_require('artefact', $plugin->name);
+        $classname = generate_class_name('artefact', $plugin->name);
+        if (is_callable($classname . '::view_release_external_data')) {
+            call_static_method($classname, 'view_release_external_data', $view, $assessmentdata, $teacher ? $teacher->id : 0);
+        }
+    }
+
+    // Release the view for editing
+    $view->set('submittedhost', null);
+    $view->commit();
+    db_commit();
+}
+
 /**
  * Given a USER, get all Service Providers for that User, based on child auth
  * instances of its canonical auth instance
@@ -637,6 +721,18 @@ function get_peer($wwwroot, $cache=true) {
     }
     $peers[$wwwroot] = $peer;
     return $peers[$wwwroot];
+}
+
+function get_peer_from_instanceid($authinstanceid) {
+    $sql = 'SELECT
+                h.*
+            FROM
+                {auth_instance} ai,
+                {host} h
+            WHERE
+                ai.institution = h.institution AND
+                ai.id = ?';
+    return get_record_sql($sql, array($authinstanceid));
 }
 
 /**

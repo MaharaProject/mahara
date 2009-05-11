@@ -74,7 +74,6 @@ function deleteview_submit(Pieform $form, $values) {
     global $SESSION, $viewid, $groupid, $institution;
     $view = new View($viewid, null);
     $view->delete();
-    handle_event('deleteview', $viewid);
     $SESSION->add_ok_msg(get_string('viewdeleted', 'view'));
     if ($groupid) {
         redirect('/view/groupviews.php?group='.$groupid);

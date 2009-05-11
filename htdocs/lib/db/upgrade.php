@@ -1050,6 +1050,42 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2009051200) {
+        // Rename submittedto column to submittedgroup
+        if (is_postgres()) {
+            execute_sql("ALTER TABLE {view} RENAME submittedto TO submittedgroup");
+        }
+        else if (is_mysql()) {
+            execute_sql("ALTER TABLE {view} DROP FOREIGN KEY {view_sub_fk}");
+            execute_sql("ALTER TABLE {view} DROP INDEX {view_sub_ix}");
+            execute_sql("ALTER TABLE {view} CHANGE submittedto submittedgroup BIGINT(10) DEFAULT NULL");
+            execute_sql("ALTER TABLE {view} ADD CONSTRAINT {view_sub_fk} FOREIGN KEY {view_sub_ix} (submittedgroup) REFERENCES {group}(id)");
+        }
+
+        // Add submittedhost column for views submitted to remote moodle hosts
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('submittedhost');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, null);
+        add_field($table, $field);
+
+        // Do this manually because xmldb tries to create a key with the same name (view_sub_vk) as an existing one, and fails.
+        if (is_postgres()) {
+            execute_sql("ALTER TABLE {view} ADD CONSTRAINT {view_subh_fk} FOREIGN KEY (submittedhost) REFERENCES {host}(wwwroot)");
+            execute_sql("CREATE INDEX {view_subh_ix} ON {view} (submittedhost)");
+        }
+        else if (is_mysql()) {
+            execute_sql("ALTER TABLE {view} ADD CONSTRAINT {view_subh_fk} FOREIGN KEY {view_subh_ix} (submittedhost) REFERENCES {host}(wwwroot)");
+        }
+    }
+
+    if ($oldversion < 2009051201) {
+        // Invisible view access keys for roaming moodle teachers
+        $table = new XMLDBTable('view_access_token');
+        $field = new XMLDBField('visible');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 1);
+        add_field($table, $field);
+    }
+
     return $status;
 
 }

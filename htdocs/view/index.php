@@ -99,9 +99,6 @@ else {
                 ),
             ));
         }
-        else {
-            $view['submittedto'] = get_string('viewsubmittedtogroup', 'view', get_config('wwwroot'), $view['submittedto']['id'], $view['submittedto']['name']);
-        }
     }
 }
 
