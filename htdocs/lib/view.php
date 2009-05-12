@@ -1494,20 +1494,99 @@ class View {
             //    $search = '';
             //}
         }
-        //log_debug($data);
-        $artefacttypes = $data['artefacttypes'];
-        $offset        = $data['offset'];
-        $limit         = $data['limit'];
+
+        $data['search'] = $search;
+        $data['offset'] -= $data['offset'] % $data['limit'];
+
+        safe_require('blocktype', $data['blocktype']);
+        $blocktypeclass = generate_class_name('blocktype', $data['blocktype']);
+
+        $data['sortorder'] = 'title';
+        if (method_exists($blocktypeclass, 'artefactchooser_get_sort_order')) {
+            $data['sortorder'] = call_static_method($blocktypeclass, 'artefactchooser_get_sort_order');
+        }
+
+        list($artefacts, $totalartefacts) = self::get_artefactchooser_artefacts($data, $group, $institution);
+
         $selectone     = $data['selectone'];
         $value         = $data['defaultvalue'];
         $elementname   = $data['name'];
         $template      = $data['template'];
+
+        $result = '';
+        if ($artefacts) {
+            foreach ($artefacts as &$artefact) {
+                safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact->artefacttype));
+
+                if (method_exists($blocktypeclass, 'artefactchooser_get_element_data')) {
+                    $artefact = call_static_method($blocktypeclass, 'artefactchooser_get_element_data', $artefact);
+                }
+
+                // Build the radio button or checkbox for the artefact
+                $formcontrols = '';
+                if ($selectone) {
+                    $formcontrols .= '<input type="radio" class="radio" id="' . hsc($elementname . '_' . $artefact->id)
+                        . '" name="' . hsc($elementname) . '" value="' . hsc($artefact->id) . '"';
+                    if ($value == $artefact->id) {
+                        $formcontrols .= ' checked="checked"';
+                    }
+                    $formcontrols .= '>';
+                }
+                else {
+                    $formcontrols .= '<input type="checkbox" id="' . hsc($elementname . '_' . $artefact->id) . '" name="' . hsc($elementname) . '[' . hsc($artefact->id) . ']"';
+                    if ($value && in_array($artefact->id, $value)) {
+                        $formcontrols .= ' checked="checked"';
+                    }
+                    $formcontrols .= ' class="artefactid-checkbox checkbox">';
+                    $formcontrols .= '<input type="hidden" name="' . hsc($elementname) . '_onpage[]" value="' . hsc($artefact->id) . '" class="artefactid-onpage">';
+                }
+
+                $smarty = smarty_core();
+                $smarty->assign('artefact', $artefact);
+                $smarty->assign('elementname', $elementname);
+                $smarty->assign('formcontrols', $formcontrols);
+                $result .= $smarty->fetch($template) . "\n";
+            }
+        }
+
+        $pagination = build_pagination(array(
+            'id' => $elementname . '_pagination',
+            'class' => 'ac-pagination',
+            'url' => View::make_base_url() . (param_boolean('s') ? '&s=1' : ''),
+            'count' => $totalartefacts,
+            'limit' => $data['limit'],
+            'offset' => $data['offset'],
+            'datatable' => $elementname . '_data',
+            'jsonscript' => 'view/artefactchooser.json.php',
+            'firsttext' => '',
+            'previoustext' => '',
+            'nexttext' => '',
+            'lasttext' => '',
+            'numbersincludefirstlast' => false,
+            'extradata' => array(
+                'value'       => $value,
+                'blocktype'   => $data['blocktype'],
+                'group'       => $group,
+                'institution' => $institution,
+            ),
+        ));
+
+        return array($result, $pagination, $totalartefacts, $data['offset']);
+    }
+
+    /**
+     * Return artefacts available for inclusion in a particular block
+     *
+     */
+    public static function get_artefactchooser_artefacts($data, $group=null, $institution=null) {
+        global $USER;
+
+        $search        = $data['search'];
+        $artefacttypes = $data['artefacttypes'];
+        $offset        = $data['offset'];
+        $limit         = $data['limit'];
+        $sortorder     = $data['sortorder'];
         $extraselect   = (isset($data['extraselect']) ? ' AND ' . $data['extraselect'] : '');
-
-        $offset -= $offset % $limit;
-
-        safe_require('blocktype', $data['blocktype']);
-        $blocktypeclass = generate_class_name('blocktype', $data['blocktype']);
 
         $sql = ' FROM {artefact} a ';
         if (isset($data['extrajoin'])) {
@@ -1582,72 +1661,10 @@ class View {
 
         $select .= $extraselect;
 
-        $sortorder = 'title';
-        if (method_exists($blocktypeclass, 'artefactchooser_get_sort_order')) {
-            $sortorder = call_static_method($blocktypeclass, 'artefactchooser_get_sort_order');
-        }
-        $artefacts = get_records_sql_array('SELECT a.* ' . $sql . ' WHERE ' . $select . ($sortorder ? (' ORDER BY ' . $sortorder) : ''), null, $offset, $limit);
+        $artefacts = get_records_sql_assoc('SELECT a.* ' . $sql . ' WHERE ' . $select . ($sortorder ? (' ORDER BY ' . $sortorder) : ''), null, $offset, $limit);
         $totalartefacts = count_records_sql('SELECT COUNT(*) ' . $sql . ' WHERE ' . $select);
 
-        $result = '';
-        if ($artefacts) {
-            foreach ($artefacts as &$artefact) {
-                safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact->artefacttype));
-
-                if (method_exists($blocktypeclass, 'artefactchooser_get_element_data')) {
-                    $artefact = call_static_method($blocktypeclass, 'artefactchooser_get_element_data', $artefact);
-                }
-
-                // Build the radio button or checkbox for the artefact
-                $formcontrols = '';
-                if ($selectone) {
-                    $formcontrols .= '<input type="radio" class="radio" id="' . hsc($elementname . '_' . $artefact->id)
-                        . '" name="' . hsc($elementname) . '" value="' . hsc($artefact->id) . '"';
-                    if ($value == $artefact->id) {
-                        $formcontrols .= ' checked="checked"';
-                    }
-                    $formcontrols .= '>';
-                }
-                else {
-                    $formcontrols .= '<input type="checkbox" id="' . hsc($elementname . '_' . $artefact->id) . '" name="' . hsc($elementname) . '[' . hsc($artefact->id) . ']"';
-                    if ($value && in_array($artefact->id, $value)) {
-                        $formcontrols .= ' checked="checked"';
-                    }
-                    $formcontrols .= ' class="artefactid-checkbox checkbox">';
-                    $formcontrols .= '<input type="hidden" name="' . hsc($elementname) . '_onpage[]" value="' . hsc($artefact->id) . '" class="artefactid-onpage">';
-                }
-
-                $smarty = smarty_core();
-                $smarty->assign('artefact', $artefact);
-                $smarty->assign('elementname', $elementname);
-                $smarty->assign('formcontrols', $formcontrols);
-                $result .= $smarty->fetch($template) . "\n";
-            }
-        }
-
-        $pagination = build_pagination(array(
-            'id' => $elementname . '_pagination',
-            'class' => 'ac-pagination',
-            'url' => View::make_base_url() . (param_boolean('s') ? '&s=1' : ''),
-            'count' => $totalartefacts,
-            'limit' => $limit,
-            'offset' => $offset,
-            'datatable' => $elementname . '_data',
-            'jsonscript' => 'view/artefactchooser.json.php',
-            'firsttext' => '',
-            'previoustext' => '',
-            'nexttext' => '',
-            'lasttext' => '',
-            'numbersincludefirstlast' => false,
-            'extradata' => array(
-                'value'       => $value,
-                'blocktype'   => $data['blocktype'],
-                'group'       => $group,
-                'institution' => $institution,
-            ),
-        ));
-
-        return array($result, $pagination, $totalartefacts, $offset);
+        return array($artefacts, $totalartefacts);
     }
 
     public static function owner_name($ownerformat, $user) {
