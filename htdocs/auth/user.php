@@ -219,7 +219,7 @@ class User {
                     WHERE
                         (
                             (
-                                LOWER(r.remoteusername) = ?
+                                r.remoteusername = ?
                                 AND r.authinstance = ?
                             )'
                             . $parentwhere
