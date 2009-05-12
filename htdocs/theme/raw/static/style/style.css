@@ -2147,3 +2147,6 @@ table.tablerenderer th.desc {
 #footerwrap p {
 	margin: 0.5em;
 }
+.performanceinfo span {
+    padding-right: 1em;
+}
