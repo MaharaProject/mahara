@@ -171,6 +171,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                 'name'                => 'addmember',
                 'successcallback'     => 'addmember_submit',
                 'renderer'            => 'div',
+                'autofocus'           => false,
                 'elements'            => array(
                     'group' => array(
                         'type'    => 'select',
