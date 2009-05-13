@@ -56,6 +56,9 @@ function pieform_rule_integer_i18n() {/*{{{*/
         'es.utf8' => array(
             'integer'   => 'Este campo debe ser un número entero'
         ),
+        'sl.utf8' => array(
+            'integer'   => 'Vrednost polja mora biti število'
+        ),
 
     );
 }/*}}}*/

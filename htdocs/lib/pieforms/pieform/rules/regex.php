@@ -57,6 +57,9 @@ function pieform_rule_regex_i18n() {/*{{{*/
         'es.utf8' => array(
             'regex' => 'Este campo no tiene un formato válido'
         ),
+        'sl.utf8' => array(
+            'regex' => 'To polje ni v veljavni obliki'
+        ),
 
     );
 }/*}}}*/

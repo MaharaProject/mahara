@@ -56,6 +56,9 @@ function pieform_rule_maxlength_i18n() {/*{{{*/
         'es.utf8' => array(
             'maxlength' => 'Este campo tiene que tener como máximo %d caracteres'
         ),
+        'sl.utf8' => array(
+            'maxlength' => 'To polje mora biti dolgo največ %d znakov'
+        ),
 
     );
 }/*}}}*/

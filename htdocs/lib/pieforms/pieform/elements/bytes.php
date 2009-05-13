@@ -151,6 +151,12 @@ function pieform_element_bytes_i18n() {/*{{{*/
             'megabytes'    => 'Megabytes',
             'invalidvalue' => 'El valor debe ser un número',
         ),
+        'sl.utf8' => array(
+            'bytes'        => 'B',
+            'kilobytes'    => 'kB',
+            'megabytes'    => 'MB',
+            'invalidvalue' => 'Vrednost mora biti število',
+        ),
 
     );
 }/*}}}*/

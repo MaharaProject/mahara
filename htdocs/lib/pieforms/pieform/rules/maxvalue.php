@@ -56,6 +56,9 @@ function pieform_rule_maxvalue_i18n() {/*{{{*/
         'es.utf8' => array(
             'maxvalue' => 'Este valor no puede ser superior a %d'
         ),
+        'sl.utf8' => array(
+            'maxvalue' => 'Ta vrednost ne sme biti večja od %d'
+        ),
 
     );
 }/*}}}*/
