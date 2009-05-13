@@ -159,6 +159,13 @@ function pieform_element_expiry_i18n() {/*{{{*/
             'years'     => 'Años',
             'noenddate' => 'Sin fecha de finalización'
         ),
+        'sl.utf8' => array(
+            'days'      => 'dni',
+            'weeks'     => 'tednov',
+            'months'    => 'mesecev',
+            'years'     => 'let',
+            'noenddate' => 'ni zaključnega datuma'
+        ),
 
     );
 }/*}}}*/

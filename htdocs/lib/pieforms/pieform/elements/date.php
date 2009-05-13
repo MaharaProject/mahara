@@ -149,6 +149,10 @@ function pieform_element_date_i18n() {/*{{{*/
             'or' => 'o',
             'notspecified' => 'Sin valor'
         ),
+        'sl.utf8' => array(
+            'or' => 'ali',
+            'notspecified' => 'Ni določeno'
+        ),
 
     );
 }/*}}}*/

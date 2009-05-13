@@ -53,6 +53,9 @@ function pieform_rule_minlength_i18n() {/*{{{*/
         'es.utf8' => array(
             'minlength' => 'Este campo debe tener como mínimo %d caracteres', 
         ),
+        'sl.utf8' => array(
+            'minlength' => 'To polje mora biti dolgo vsaj %d znakov',
+        ),
 
     );
 }/*}}}*/

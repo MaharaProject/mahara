@@ -64,6 +64,9 @@ function pieform_rule_validateoptions_i18n() {/*{{{*/
         'es.utf8' => array(
             'validateoptions' => 'La opción "%s" no es válida'
         ),
+        'sl.utf8' => array(
+            'validateoptions' => 'Možnost "%s" je neveljavna'
+        ),
 
     );
 }/*}}}*/

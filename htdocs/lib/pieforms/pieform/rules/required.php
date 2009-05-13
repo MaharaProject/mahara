@@ -53,9 +53,13 @@ function pieform_rule_required_i18n() {/*{{{*/
         'ja.utf8' => array(
             'required' => 'このフィールドは、必須入力フィールドです。'
         ),
-	'es.utf8' => array(
-	    'required' => 'Este campo es obligatorio'
-	),
+        'es.utf8' => array(
+            'required' => 'Este campo es obligatorio'
+        ),
+        'sl.utf8' => array(
+            'required' => 'To polje je zahtevano'
+        ),
+
     );
 }/*}}}*/
 

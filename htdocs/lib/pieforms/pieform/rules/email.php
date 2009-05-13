@@ -59,6 +59,9 @@ function pieform_rule_email_i18n() {/*{{{*/
         'es.utf8' => array(
             'email' => 'Dirección de correo errónea'
         ),
+        'sl.utf8' => array(
+            'email' => 'Epoštni naslov je neveljaven'
+        ),
 
     );
 }/*}}}*/
