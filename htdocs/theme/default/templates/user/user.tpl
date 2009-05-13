@@ -30,6 +30,7 @@
                 </div>
                 <div>
                     <ul>
+                        <li>{$user->strinstitutions|escape}</li>
                         <li>
                             <a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}" id="btn-denyrequest">
                                 {str tag='denyrequest' section='group'}
@@ -97,6 +98,7 @@
                 </p>
                 {/if}
                 <ul>
+                    <li>{$user->strinstitutions|escape}</li>
                 {if $user->messages}
                     <li>
                         <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}" id="btn-sendmessage">
@@ -139,6 +141,7 @@
                 {/if}
                 <div>
                     <ul>
+                        <li>{$user->strinstitutions|escape}</li>
                         {if $user->messages}
                         <li>
                             <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}" id="btn-sendmessage">
@@ -185,6 +188,7 @@
                 {/if}
                 <div>
                     <ul>
+                        <li>{$user->strinstitutions|escape}</li>
                         {if $user->messages}
                         <li>
                             <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}" id="btn-sendmessage">

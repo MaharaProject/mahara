@@ -286,6 +286,7 @@ $smarty->assign('loginas', $loginas);
 if (isset($introduction)) {
     $smarty->assign('introduction', $introduction);
 }
+$smarty->assign('institutions', get_string('memberofinstitutions', 'mahara', get_institution_string_for_user($userid)));
 $smarty->assign('canmessage', can_send_message($loggedinid, $userid));
 $smarty->assign('NAME',$name);
 $smarty->assign('USERID', $userid);

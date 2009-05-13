@@ -66,6 +66,7 @@ $string['last']      = 'Last';
 $string['lastpage']  = 'Last page';
 
 $string['accept'] = 'Accept';
+$string['memberofinstitutions'] = 'Member of %s';
 $string['reject'] = 'Reject';
 $string['sendrequest'] = 'Send request';
 $string['reason'] = 'Reason';
