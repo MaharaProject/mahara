@@ -40,10 +40,10 @@ if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
 }
 
-// If the view has been submitted to a group, disallow editing
-$submittedto = $view->get('submittedto');
-if ($submittedto) {
-    throw new AccessDeniedException(get_string('canteditsubmitted', 'view', get_field('group', 'name', 'id', $submittedto)));
+// If the view has been submitted, disallow editing
+if ($view->is_submitted()) {
+    $submittedto = $view->submitted_to();
+    throw new AccessDeniedException(get_string('canteditsubmitted', 'view', $submittedto['name']));
 }
 
 $group = $view->get('group');

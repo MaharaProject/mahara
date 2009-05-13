@@ -861,7 +861,6 @@ button#dosearch {
 #createfolderform table td table.help-wrapper {
 	padding: 0;
 }
-.foldernav,
 #foldernav {
     font-weight: bold;
     margin: 15px 0 0 3px;
@@ -953,6 +952,14 @@ button#dosearch {
 }
 #editpost td {
 	padding: 2px 10px;
+}
+#browsemyfiles {
+	margin-top: 15px;
+    background: none;
+	padding: 10px 15px;
+}
+#browsemyfiles h3 {
+	margin-top: 0;
 }
 #draftpost table {
 	margin: 5px 0;

@@ -101,7 +101,7 @@ var table = new TableRenderer(
     'profileicons.json.php',
     [
         function(rowdata) {
-            return TD(null, IMG({'src': '$wwwroot/thumb.php?type=profileiconbyid&maxsize=100&id=' + rowdata.id, 'alt': rowdata.note}));
+            return TD({'class': 'center', 'width': '120px'}, null, IMG({'src': '$wwwroot/thumb.php?type=profileiconbyid&maxsize=100&id=' + rowdata.id, 'alt': rowdata.note}));
         },
         function(rowdata) {
             return TD(null, rowdata.title ? rowdata.title : rowdata.note);
@@ -115,10 +115,10 @@ var table = new TableRenderer(
             if (rowdata['isdefault'] == 't' || rowdata['isdefault'] == 1) {
                 options.checked = 'checked';
             }
-            return TD({'class': 'center'}, INPUT(options));
+            return TD({'class': 'left', 'width': '110px'}, INPUT(options));
         },
         function(rowdata) {
-            return TD({'class': 'center'}, INPUT({'type': 'checkbox', 'name': 'icons[' + rowdata.id + ']'}));
+            return TD({'class': 'left', 'width': '110px'}, INPUT({'type': 'checkbox', 'name': 'icons[' + rowdata.id + ']'}));
         }
     ]
 );

@@ -40,7 +40,8 @@ class View {
     private $atime;
     private $startdate;
     private $stopdate;
-    private $submittedto;
+    private $submittedgroup;
+    private $submittedhost;
     private $title;
     private $description;
     private $loggedin;
@@ -446,6 +447,7 @@ class View {
                 $bi->delete();
             }
         }
+        handle_event('deleteview', $this->id);
         delete_records('view','id',$this->id);
         $this->deleted = true;
         db_commit();
@@ -477,7 +479,7 @@ class View {
         UNION
             SELECT 'token', token, NULL AS role, NULL AS grouptype, startdate, stopdate
                 FROM {view_access_token}
-                WHERE view = ?
+                WHERE view = ? AND visible = 1
         ", array($this->id, $this->id, 0, $this->id, $this->id));
         if ($data) {
             foreach ($data as &$item) {
@@ -561,7 +563,7 @@ class View {
         delete_records('view_access', 'view', $this->get('id'));
         delete_records('view_access_usr', 'view', $this->get('id'));
         delete_records('view_access_group', 'view', $this->get('id'));
-        delete_records('view_access_token', 'view', $this->get('id'));
+        delete_records('view_access_token', 'view', $this->get('id'), 'visible', 1);
         $time = db_format_timestamp(time());
 
         // View access
@@ -623,21 +625,39 @@ class View {
         return $this->copynewgroups;
     }
 
-    public function release($groupid, $releaseuser=null) {
-        if ($this->get('submittedto') != $groupid) {
-            throw new ParameterException("View with id " . $this->get('id') .
-                                         " has not been submitted to group $groupid");
+    public function is_submitted() {
+        return $this->get('submittedgroup') || $this->get('submittedhost');
+    }
+
+    public function submitted_to() {
+        if ($group = $this->get('submittedgroup')) {
+            return array('type' => 'group', 'id' => $group, 'name' => get_field('group', 'name', 'id', $group));
+        }
+        if ($host = $this->get('submittedhost')) {
+            return array('type' => 'host', 'wwwroot' => $host, 'name' => get_field('host', 'name', 'wwwroot', $host));
+        }
+        return null;
+    }
+
+    public function release($releaseuser=null) {
+        $submitinfo = $this->submitted_to();
+        if (is_null($submitinfo)) {
+            throw new ParameterException("View with id " . $this->get('id') . " has not been submitted");
         }
         $releaseuser = optional_userobj($releaseuser);
-        $this->set('submittedto', null);
+        if ($submitinfo['type'] == 'group') {
+            $this->set('submittedgroup', null);
+        }
+        else if ($submitinfo['type'] == 'host') {
+            $this->set('submittedhost', null);
+        }
         $this->commit();
         $ownerlang = get_user_language($this->get('owner'));
         require_once('activity.php');
         activity_occurred('maharamessage', 
                   array('users'   => array($this->get('owner')),
                   'subject' => get_string_from_language($ownerlang, 'viewreleasedsubject', 'group'),
-                  'message' => get_string_from_language($ownerlang, 'viewreleasedmessage', 'group',
-                       get_field('group', 'name', 'id', $groupid), 
+                  'message' => get_string_from_language($ownerlang, 'viewreleasedmessage', 'group', $submitinfo['name'], 
                        display_name($releaseuser, $this->get_owner_object()))));
     }
 
@@ -1474,20 +1494,99 @@ class View {
             //    $search = '';
             //}
         }
-        //log_debug($data);
-        $artefacttypes = $data['artefacttypes'];
-        $offset        = $data['offset'];
-        $limit         = $data['limit'];
+
+        $data['search'] = $search;
+        $data['offset'] -= $data['offset'] % $data['limit'];
+
+        safe_require('blocktype', $data['blocktype']);
+        $blocktypeclass = generate_class_name('blocktype', $data['blocktype']);
+
+        $data['sortorder'] = 'title';
+        if (method_exists($blocktypeclass, 'artefactchooser_get_sort_order')) {
+            $data['sortorder'] = call_static_method($blocktypeclass, 'artefactchooser_get_sort_order');
+        }
+
+        list($artefacts, $totalartefacts) = self::get_artefactchooser_artefacts($data, $group, $institution);
+
         $selectone     = $data['selectone'];
         $value         = $data['defaultvalue'];
         $elementname   = $data['name'];
         $template      = $data['template'];
+
+        $result = '';
+        if ($artefacts) {
+            foreach ($artefacts as &$artefact) {
+                safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact->artefacttype));
+
+                if (method_exists($blocktypeclass, 'artefactchooser_get_element_data')) {
+                    $artefact = call_static_method($blocktypeclass, 'artefactchooser_get_element_data', $artefact);
+                }
+
+                // Build the radio button or checkbox for the artefact
+                $formcontrols = '';
+                if ($selectone) {
+                    $formcontrols .= '<input type="radio" class="radio" id="' . hsc($elementname . '_' . $artefact->id)
+                        . '" name="' . hsc($elementname) . '" value="' . hsc($artefact->id) . '"';
+                    if ($value == $artefact->id) {
+                        $formcontrols .= ' checked="checked"';
+                    }
+                    $formcontrols .= '>';
+                }
+                else {
+                    $formcontrols .= '<input type="checkbox" id="' . hsc($elementname . '_' . $artefact->id) . '" name="' . hsc($elementname) . '[' . hsc($artefact->id) . ']"';
+                    if ($value && in_array($artefact->id, $value)) {
+                        $formcontrols .= ' checked="checked"';
+                    }
+                    $formcontrols .= ' class="artefactid-checkbox checkbox">';
+                    $formcontrols .= '<input type="hidden" name="' . hsc($elementname) . '_onpage[]" value="' . hsc($artefact->id) . '" class="artefactid-onpage">';
+                }
+
+                $smarty = smarty_core();
+                $smarty->assign('artefact', $artefact);
+                $smarty->assign('elementname', $elementname);
+                $smarty->assign('formcontrols', $formcontrols);
+                $result .= $smarty->fetch($template) . "\n";
+            }
+        }
+
+        $pagination = build_pagination(array(
+            'id' => $elementname . '_pagination',
+            'class' => 'ac-pagination',
+            'url' => View::make_base_url() . (param_boolean('s') ? '&s=1' : ''),
+            'count' => $totalartefacts,
+            'limit' => $data['limit'],
+            'offset' => $data['offset'],
+            'datatable' => $elementname . '_data',
+            'jsonscript' => 'view/artefactchooser.json.php',
+            'firsttext' => '',
+            'previoustext' => '',
+            'nexttext' => '',
+            'lasttext' => '',
+            'numbersincludefirstlast' => false,
+            'extradata' => array(
+                'value'       => $value,
+                'blocktype'   => $data['blocktype'],
+                'group'       => $group,
+                'institution' => $institution,
+            ),
+        ));
+
+        return array($result, $pagination, $totalartefacts, $data['offset']);
+    }
+
+    /**
+     * Return artefacts available for inclusion in a particular block
+     *
+     */
+    public static function get_artefactchooser_artefacts($data, $group=null, $institution=null) {
+        global $USER;
+
+        $search        = $data['search'];
+        $artefacttypes = $data['artefacttypes'];
+        $offset        = $data['offset'];
+        $limit         = $data['limit'];
+        $sortorder     = $data['sortorder'];
         $extraselect   = (isset($data['extraselect']) ? ' AND ' . $data['extraselect'] : '');
-
-        $offset -= $offset % $limit;
-
-        safe_require('blocktype', $data['blocktype']);
-        $blocktypeclass = generate_class_name('blocktype', $data['blocktype']);
 
         $sql = ' FROM {artefact} a ';
         if (isset($data['extrajoin'])) {
@@ -1562,72 +1661,10 @@ class View {
 
         $select .= $extraselect;
 
-        $sortorder = 'title';
-        if (method_exists($blocktypeclass, 'artefactchooser_get_sort_order')) {
-            $sortorder = call_static_method($blocktypeclass, 'artefactchooser_get_sort_order');
-        }
-        $artefacts = get_records_sql_array('SELECT a.* ' . $sql . ' WHERE ' . $select . ($sortorder ? (' ORDER BY ' . $sortorder) : ''), null, $offset, $limit);
+        $artefacts = get_records_sql_assoc('SELECT a.* ' . $sql . ' WHERE ' . $select . ($sortorder ? (' ORDER BY ' . $sortorder) : ''), null, $offset, $limit);
         $totalartefacts = count_records_sql('SELECT COUNT(*) ' . $sql . ' WHERE ' . $select);
 
-        $result = '';
-        if ($artefacts) {
-            foreach ($artefacts as &$artefact) {
-                safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact->artefacttype));
-
-                if (method_exists($blocktypeclass, 'artefactchooser_get_element_data')) {
-                    $artefact = call_static_method($blocktypeclass, 'artefactchooser_get_element_data', $artefact);
-                }
-
-                // Build the radio button or checkbox for the artefact
-                $formcontrols = '';
-                if ($selectone) {
-                    $formcontrols .= '<input type="radio" class="radio" id="' . hsc($elementname . '_' . $artefact->id)
-                        . '" name="' . hsc($elementname) . '" value="' . hsc($artefact->id) . '"';
-                    if ($value == $artefact->id) {
-                        $formcontrols .= ' checked="checked"';
-                    }
-                    $formcontrols .= '>';
-                }
-                else {
-                    $formcontrols .= '<input type="checkbox" id="' . hsc($elementname . '_' . $artefact->id) . '" name="' . hsc($elementname) . '[' . hsc($artefact->id) . ']"';
-                    if ($value && in_array($artefact->id, $value)) {
-                        $formcontrols .= ' checked="checked"';
-                    }
-                    $formcontrols .= ' class="artefactid-checkbox checkbox">';
-                    $formcontrols .= '<input type="hidden" name="' . hsc($elementname) . '_onpage[]" value="' . hsc($artefact->id) . '" class="artefactid-onpage">';
-                }
-
-                $smarty = smarty_core();
-                $smarty->assign('artefact', $artefact);
-                $smarty->assign('elementname', $elementname);
-                $smarty->assign('formcontrols', $formcontrols);
-                $result .= $smarty->fetch($template) . "\n";
-            }
-        }
-
-        $pagination = build_pagination(array(
-            'id' => $elementname . '_pagination',
-            'class' => 'ac-pagination',
-            'url' => View::make_base_url() . (param_boolean('s') ? '&s=1' : ''),
-            'count' => $totalartefacts,
-            'limit' => $limit,
-            'offset' => $offset,
-            'datatable' => $elementname . '_data',
-            'jsonscript' => 'view/artefactchooser.json.php',
-            'firsttext' => '',
-            'previoustext' => '',
-            'nexttext' => '',
-            'lasttext' => '',
-            'numbersincludefirstlast' => false,
-            'extradata' => array(
-                'value'       => $value,
-                'blocktype'   => $data['blocktype'],
-                'group'       => $group,
-                'institution' => $institution,
-            ),
-        ));
-
-        return array($result, $pagination, $totalartefacts, $offset);
+        return array($artefacts, $totalartefacts);
     }
 
     public static function owner_name($ownerformat, $user) {
@@ -1670,9 +1707,11 @@ class View {
         }
         else {
             $count = count_records('view', 'owner', $userid, 'type', 'portfolio');
-            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, g.id AS groupid, g.name
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template,
+                    g.id AS submitgroupid, g.name AS submitgroupname, h.wwwroot AS submithostwwwroot, h.name AS submithostname
                 FROM {view} v
-                LEFT OUTER JOIN {group} g ON (v.submittedto = g.id AND g.deleted = 0)
+                LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
+                LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)
                 WHERE v.owner = ' . $userid . '
                 AND v.type = \'portfolio\'
                 ORDER BY v.title, v.id', '', $offset, $limit);
@@ -1709,8 +1748,13 @@ class View {
                 $data[$i]['id'] = $viewdata[$i]->id;
                 $data[$i]['title'] = $viewdata[$i]->title;
                 $data[$i]['description'] = $viewdata[$i]->description;
-                if (!empty($viewdata[$i]->name)) {
-                    $data[$i]['submittedto'] = array('name' => $viewdata[$i]->name, 'id' => $viewdata[$i]->groupid);
+                if (!empty($viewdata[$i]->submitgroupid)) {
+                    $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view',
+                                                          get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
+                                                          $viewdata[$i]->submitgroupname);
+                }
+                else if (!empty($viewdata[$i]->submithostwwwroot)) {
+                    $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view', $viewdata[$i]->submithostwwwroot, $viewdata[$i]->submithostname);
                 }
                 $data[$i]['artefacts'] = array();
                 $data[$i]['accessgroups'] = array();
@@ -2077,7 +2121,7 @@ class View {
         $viewdata = get_records_sql_assoc('
             SELECT id, title, description, owner, ownerformat
             FROM {view}
-            WHERE submittedto = ?
+            WHERE submittedgroup = ?
             ORDER BY title, id',
             array($groupid)
         );
@@ -2275,6 +2319,27 @@ class View {
             'resultcounttextsingular' => get_string('view', 'view'),
             'resultcounttextplural' => get_string('views', 'view'),
         ));
+    }
+
+    public static function new_token($viewid, $visible=1) {
+        if (!$visible) {
+            // Currently it only makes sense to have one invisible key per view.
+            // They are only used during view submission, and a view can only be
+            // submitted to one group or remote host at any one time.
+            delete_records('view_access_token', 'view', $viewid, 'visible', 0);
+        }
+
+        $data = new StdClass;
+        $data->view    = $viewid;
+        $data->visible = $visible;
+        $data->token   = random_string(20);
+        while (record_exists('view_access_token', 'token', $data->token)) {
+            $data->token = random_string(20);
+        }
+        if (insert_record('view_access_token', $data)) {
+            return $data;
+        }
+        return false;
     }
 
 }

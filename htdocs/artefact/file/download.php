@@ -82,7 +82,7 @@ else {
             // Alternatively, if you own the file or you are an admin, it should always work
 
             if (!$USER->can_view_artefact($file)) {
-                throw new AccessDeniedException();
+                throw new AccessDeniedException(get_string('accessdenied', 'error'));
             }
         }
     }

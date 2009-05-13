@@ -167,6 +167,9 @@ function pieform_element_calendar_i18n() {/*{{{*/
         'es.utf8' => array(
             'invalidvalue' => 'Fecha/hora indicada inválida'
         ),
+        'sl.utf8' => array(
+            'invalidvalue' => 'Datum/čas ni določen pravilno'
+        ),
 
     );
 }/*}}}*/

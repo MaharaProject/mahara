@@ -56,6 +56,9 @@ function pieform_rule_minvalue_i18n() {/*{{{*/
         'es.utf8' => array(
             'minvalue' => 'Este valor no puede ser inferior a %d'
         ),
+        'sl.utf8' => array(
+            'minvalue' => 'Ta vrednost ne sme biti manjša od %d'
+        ),
 
     );
 }/*}}}*/

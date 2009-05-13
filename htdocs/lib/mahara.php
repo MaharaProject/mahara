@@ -1257,7 +1257,7 @@ function get_random_key($length=16) {
  */
 function pieform_configure() {
     global $USER;
-    $theme = ($USER->get('theme')) ? $USER->get('theme') : 'default';
+    $theme = ($USER->get('theme')) ? $USER->get('theme') : 'raw';
     require(get_config('docroot') . 'theme/' . $theme . '/config.php');
     return array(
         'method'    => 'post',
@@ -1373,11 +1373,13 @@ function pieform_template_dir($file, $pluginlocation='') {
  * @param integer $view_id      View ID to check
  * @param integer $user_id      User trying to look at the view (defaults to
  * currently logged in user, or null if user isn't logged in)
+ * @param string $usertoken     Key created by view owner for logged-out user access
+ * @param string $mnettoken     Key created by mahara for teachers roaming from moodle
  *
  * @returns boolean Wether the specified user can look at the specified view.
  */
-function can_view_view($view_id, $user_id=null, $token=null) {
-    global $USER;
+function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null) {
+    global $USER, $SESSION;
     $now = time();
     $dbnow = db_format_timestamp($now);
 
@@ -1387,10 +1389,10 @@ function can_view_view($view_id, $user_id=null, $token=null) {
 
     $publicviews = get_config('allowpublicviews');
     if ($publicviews) {
-        if (!$token) {
-            $token = get_cookie('viewaccess:'.$view_id);
+        if (!$usertoken) {
+            $usertoken = get_cookie('viewaccess:'.$view_id);
         }
-        if ($token && (!$user_id || $user_id == $USER->get('id')) && $view_id == get_view_from_token($token)) {
+        if ($usertoken && (!$user_id || $user_id == $USER->get('id')) && $view_id == get_view_from_token($usertoken)) {
             return true;
         }
     }
@@ -1425,6 +1427,21 @@ function can_view_view($view_id, $user_id=null, $token=null) {
     // - it has been submitted to them for assessment, or
     // - they have been granted access via the edit view access page.
 
+    if ($SESSION->get('mnetuser')) {
+        if (!$mnettoken) {
+            $mnettoken = get_cookie('mviewaccess:'.$view_id);
+        }
+        if ($mnettoken && $view_id == get_view_from_token($mnettoken, false)) {
+            $mnetviewlist = $SESSION->get('mnetviewaccess');
+            if (empty($mnetviewlist)) {
+                $mnetviewlist = array();
+            }
+            $mnetviewlist[$view_id] = true;
+            $SESSION->set('mnetviewaccess', $mnetviewlist);
+            return true;
+        }
+    }
+
     require_once(get_config('docroot') . 'lib/view.php');
     $view = new View($view_id);
 
@@ -1432,7 +1449,7 @@ function can_view_view($view_id, $user_id=null, $token=null) {
         return true;
     }
 
-    if ($submitgroup = $view->get('submittedto')) {
+    if ($submitgroup = $view->get('submittedgroup')) {
         require_once(get_config('docroot') . 'lib/group.php');
         if (group_user_can_assess_submitted_views($submitgroup, $user_id)) {
             return true;
@@ -1481,17 +1498,17 @@ function can_view_view($view_id, $user_id=null, $token=null) {
 
 
 /* return the view associated with a given token */
-function get_view_from_token($token) {
+function get_view_from_token($token, $visible=true) {
     if (!$token) {
         return false;
     }
     return get_field_sql('
         SELECT view
         FROM {view_access_token}
-        WHERE token = ?
+        WHERE token = ? AND visible = ?
             AND (startdate IS NULL OR startdate < current_timestamp)
             AND (stopdate IS NULL OR stopdate > current_timestamp)
-        ', array($token));
+        ', array($token, (int)$visible));
 }
 
 

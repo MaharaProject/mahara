@@ -43,7 +43,7 @@ $viewdata = get_record_sql('
      SELECT
          v.title, v.owner, g.name
      FROM {view} v
-     INNER JOIN {group} g ON v.submittedto = g.id
+     INNER JOIN {group} g ON v.submittedgroup = g.id
      WHERE v.id = ' . $viewid, '');
 
 $page = '/view/view.php?id=' . $viewid;

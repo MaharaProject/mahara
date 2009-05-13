@@ -83,6 +83,17 @@ abstract class PluginArtefact extends Plugin {
     public static function group_tabs($groupid) {
         return array();
     }
+
+
+    /**
+     * Returns any artefacts that are not inside a view
+     * but which need to be exported along with it.
+     * @param array $viewids
+     * @return array of artefact ids
+     */
+    public static function view_export_extra_artefacts($viewids) {
+        return array();
+    }
 }
 
 /** 

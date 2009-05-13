@@ -219,6 +219,9 @@ abstract class PluginExport extends Plugin {
                     WHERE v.owner = ?
                     $vaextra";
                 $tmpartefacts = (array)get_column_sql($sql, array($userid));
+
+                // Some artefacts are not inside the view, but still need to be exported with it
+                $tmpartefacts = array_unique(array_merge($tmpartefacts, $this->get_view_extra_artefacts()));
             }
             else {
                 $tmpartefacts = array();
@@ -298,6 +301,43 @@ abstract class PluginExport extends Plugin {
         }
     }
 
+    /**
+     * Artefact plugins can specify additional artefacts required for view export
+     */
+    protected function get_view_extra_artefacts($indexed=false) {
+        static $data = null;
+
+        if (is_null($data)) {
+            $plugins = plugins_installed('artefact');
+            $viewids = array_keys($this->views);
+            $data = array('byview' => array(), 'artefacts' => array());
+            foreach ($plugins as &$plugin) {
+                safe_require('artefact', $plugin->name);
+                $classname = generate_class_name('artefact', $plugin->name);
+                // @todo: work out why PluginArtefactResume::view_export_extra_artefacts()
+                // cannot be called while all the other PluginArtefactFoobar versions
+                // happily call the PluginArtefact parent version
+                if (is_callable($classname . '::view_export_extra_artefacts')) {
+                    $viewartefact = call_static_method($classname, 'view_export_extra_artefacts', $viewids);
+                    foreach ($viewartefact as &$va) {
+                        if (!isset($data['byview'][$va->view])) {
+                            $data['byview'][$va->view] = array();
+                        }
+                        $data['byview'][$va->view][$va->artefact] = $va->artefact;
+                        if (!isset($data['artefacts'][$va->artefact])) {
+                            $data['artefacts'][$va->artefact] = $va->artefact;
+                        }
+                    }
+                }
+            }
+        }
+
+        if ($indexed) {
+            return $data['byview'];
+        }
+
+        return array_values($data['artefacts']);
+    }
 }
 
 ?>

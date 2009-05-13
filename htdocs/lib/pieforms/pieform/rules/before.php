@@ -60,6 +60,10 @@ function pieform_rule_before_i18n() {/*{{{*/
 	'es.utf8' => array(
             'before' => 'No puede ser posterior al campo "%s"'
         ),
+        'sl.utf8' => array(
+            'before' => 'To ne sme biti za poljem "%s"'
+        ),
+
     );
 }/*}}}*/
 

@@ -52,6 +52,9 @@ class Dispatcher {
             'auth/mnet/auth.php/keepalive_server' => 'xmlrpc_not_implemented',
             'auth/mnet/auth.php/kill_children' => 'kill_children',
             'auth/mnet/auth.php/kill_child' => 'xmlrpc_not_implemented',
+            'mod/assignment/type/mahara/rpclib.php/get_views_for_user' => 'get_views_for_user',
+            'mod/assignment/type/mahara/rpclib.php/submit_view_for_assessment' => 'submit_view_for_assessment',
+            'mod/assignment/type/mahara/rpclib.php/release_submitted_view' => 'release_submitted_view',
             ),
         'portfolio_in' => array(
             'portfolio/mahara/lib.php/send_content_intent' => 'send_content_intent',

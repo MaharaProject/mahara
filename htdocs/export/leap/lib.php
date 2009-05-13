@@ -227,8 +227,12 @@ class PluginExportLeap extends PluginExport {
 
     private function get_links_for_view($viewid) {
         static $viewartefactdata = null;
+        static $vaextra = null;
         if (is_null($viewartefactdata)) {
             $viewartefactdata = get_records_select_array('view_artefact', 'view IN (' . join(', ', array_keys($this->views)) . ')');
+        }
+        if (is_null($vaextra)) {
+            $vaextra = $this->get_view_extra_artefacts(true);
         }
 
         $links = array();
@@ -237,6 +241,15 @@ class PluginExportLeap extends PluginExport {
                 $links[] = (object)array(
                     'type' => 'has_part',
                     'id'   => 'portfolio:artefact' . $va->artefact,
+                );
+            }
+        }
+
+        if (isset($vaextra[$viewid])) {
+            foreach ($vaextra[$viewid] as $artefactid) {
+                $links[] = (object)array(
+                    'type' => 'is_evidence_of', // Fix this
+                    'id'   => 'portfolio:artefact' . $artefactid,
                 );
             }
         }
@@ -398,6 +411,7 @@ class LeapExportElement {
         $this->smarty->assign('content', $this->get_content());
         $this->smarty->assign('contenttype', $this->get_content_type());
         $this->smarty->assign('leaptype', $this->get_leap_type());
+        $this->smarty->assign('author', $this->get_entry_author());
 
         if ($tags = $this->artefact->get('tags')) {
             $tags = array_map(create_function('$a',
@@ -540,6 +554,16 @@ class LeapExportElement {
         default:
             throw new SystemException("Unrecognised content type");
         }
+    }
+
+    /**
+    * The id of the entry's author
+    * Override this if the author is different from the portfolio holder
+    *
+    * @return int
+    */
+    public function get_entry_author() {
+        return;
     }
 
     /**

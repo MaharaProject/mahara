@@ -210,13 +210,12 @@ class PluginArtefactFile extends PluginArtefact {
                 if (!isset($currentlist[$mimetype])) {
                     log_debug('Adding mimetype: ' . $mimetype . ' (' . $description . ')');
                     execute_sql("INSERT INTO {artefact_file_mime_types} (mimetype, description) VALUES (?,?)", array($mimetype, $description));
-                    $newtypes[$mimetype] = true;
                 }
                 else if ($currentlist[$mimetype]->description != $description) {
                     log_debug('Updating mimetype: ' . $mimetype . ' (' . $description . ')');
                     execute_sql("UPDATE {artefact_file_mime_types} SET description = ? WHERE mimetype = ?", array($description, $mimetype));
-                    $newtypes[$mimetype] = true;
                 }
+                $newtypes[$mimetype] = true;
                 $currentlist[$mimetype] = (object) array(
                     'mimetype'    => $mimetype,
                     'description' => $description,

@@ -141,7 +141,11 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
                 'match' => '#.*teachertube.com/flvideo/([0-9]+)\.flv.*#',
                 'url'   => 'http://www.teachertube.com/skin-p/mediaplayer.swf?file=http://www.teachertube.com/flvideo/$1.flv'
             ),
-            // www.scivee.tv
+            array(
+                'match' => '#.*teachertube\.com/viewVideo\.php\?video_id=(\d+).*#',
+                'url'   => 'http://www.teachertube.com/embed/player.swf?file=http://www.teachertube.com/embedFLV.php?pg=video_$1'
+            ),
+            // www.scivee.tv="
             array(
                 'match' => '#.*scivee.tv/node/([0-9]+).*#',
                 'url'   => 'http://scivee.tv/flash/embedPlayer.swf?id=$1&type=3',
@@ -169,7 +173,7 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
 <ul style="list-style-type: none;">
     <li><a href="http://www.youtube.com/" target="_blank"><img src="http://www.youtube.com/favicon.ico" alt="YouTube"> youtube.com</a></li>
     <li><a href="http://video.google.com/" target="_blank"><img src="http://video.google.com/favicon.ico" alt="Google Video"> video.google.com</a></li>
-    <li><a href="http://www.teachertube.com/" target="_blank"><img src="http://www.teachertube.com/images/favicon.ico" alt="TeacherTube"> teachertube.com</a></li>
+    <li><a href="http://www.teachertube.com/" target="_blank"><img src="http://www.teachertube.com/favicon.ico" alt="TeacherTube"> teachertube.com</a></li>
     <li><a href="http://www.scivee.tv/" target="_blank"><img src="http://www.scivee.tv/favicon.ico" alt="SciVee"> scivee.tv</a></li>
 </ul>
 EOF;

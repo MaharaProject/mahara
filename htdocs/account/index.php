@@ -43,7 +43,7 @@ $authobj = AuthFactory::create($USER->authinstance);
 if (method_exists($authobj, 'change_password')) {
     $elements = array(
         'changepassworddesc' => array(
-            'value' => '<tr><td colspan="2"><p>' . get_string('changepassworddesc', 'account') . '</p></td></tr>'
+            'value' => '<tr><td colspan="2"><h3>' . get_string('changepassworddesc', 'account') . '</h3></td></tr>'
         ),
         'oldpassword' => array( 'type' => 'password',
             'title' => get_string('oldpassword'),
@@ -64,7 +64,7 @@ else if ($url = get_config_plugin_instance('auth', $USER->authinstance, 'changep
     // @todo contextual help
     $elements = array(
         'changepasswordotherinterface' => array(
-            'value' => '<tr><td colspan="2"><p>' . get_string('changepasswordotherinterface', 'account', $url) . '</p></td></tr>'
+            'value' => '<tr><td colspan="2"><h3>' . get_string('changepasswordotherinterface', 'account', $url) . '</h3></td></tr>'
         )
     );
 }
@@ -74,7 +74,7 @@ else {
 
 if ($authobj->authname == 'internal') {
     $elements['changeusernameheading'] = array(
-        'value' => '<tr><td colspan="2"><p>' . get_string('changeusernameheading', 'account') . '</p></td></tr>'
+        'value' => '<tr><td colspan="2"><h3>' . get_string('changeusernameheading', 'account') . '</h3></td></tr>'
     );
     $elements['username'] = array(
         'type' => 'text',
@@ -85,7 +85,7 @@ if ($authobj->authname == 'internal') {
 }
 
 $elements['accountoptionsdesc'] = array(
-    'value' => '<tr><td colspan="2"><p>' . get_string('accountoptionsdesc', 'account') . '</p></td></tr>'
+    'value' => '<tr><td colspan="2"><h3>' . get_string('accountoptionsdesc', 'account') . '</h3></td></tr>'
 );
 $elements['friendscontrol'] = array(
     'type' => 'radio',
@@ -103,6 +103,7 @@ $elements['wysiwyg'] = array(
     'type' => 'radio',
     'defaultvalue' => $prefs->wysiwyg,
     'title' => get_string('wysiwygdescr', 'account'),
+    'separator' => '<br>',
     'options' => array(
         1 => get_string('on', 'account'),
         0 => get_string('off', 'account'),
@@ -138,6 +139,7 @@ $elements['addremovecolumns'] = array(
     ),
     'defaultvalue' => $prefs->addremovecolumns,
     'title' => get_string('showviewcolumns', 'account'),
+    'separator' => '<br>',
     'help' => 'true'
 );
 $elements['submit'] = array(

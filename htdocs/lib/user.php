@@ -968,7 +968,7 @@ function load_user_institutions($userid) {
  */
 function get_new_username($desired) {
     $maxlen = 30;
-    $desired = substr($desired, 0, $maxlen);
+    $desired = strtolower(substr($desired, 0, $maxlen));
     $taken = get_column_sql('
         SELECT username FROM {usr}
         WHERE username ' . db_ilike() . " '" . substr($desired, 0, $maxlen - 6) . "%'");
