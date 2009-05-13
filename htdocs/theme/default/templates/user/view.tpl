@@ -8,6 +8,7 @@
                     {if !empty($loginas)}
                       <div class="center"><strong><a href="{$WWWROOT}admin/users/changeuser.php?id={$USERID}">{$loginas}</a></strong></div>
                     {/if}
+                    {if $institutions}{$institutions}<br>{/if}
                     {if $canmessage}
                         <a href="{$WWWROOT}user/sendmessage.php?id={$USERID}&amp;returnto=view" id="btn-sendmessage">{str tag='sendmessage' section='group'}</a>
                     {/if}
