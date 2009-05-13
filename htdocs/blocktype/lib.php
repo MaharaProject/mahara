@@ -848,7 +848,7 @@ class BlockInstance {
             $newblock->commit();
             return true;
         }
-        $artefactids = PluginBlockType::get_artefacts($this);
+        $artefactids = get_column('view_artefact', 'artefact', 'block', $this->get('id'));
         if (!empty($artefactids)
             && $copytype == 'full') {
             // Copy artefacts & put the new artefact ids into the new block.
