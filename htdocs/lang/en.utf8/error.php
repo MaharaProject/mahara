@@ -61,6 +61,7 @@ $string['dbversioncheckfailed'] = 'Your database server version is not new enoug
 // general exception error messages
 $string['blocktypenametaken'] = "Block type %s is already taken by another plugin (%s)";
 $string['artefacttypenametaken'] = "Artefact type %s is already taken by another plugin (%s)";
+$string['artefacttypemismatch'] = "Artefact type mismatch, you are trying to use this %s as a %s";
 $string['classmissing'] = "class %s for type %s in plugin %s was missing";
 $string['artefacttypeclassmissing'] = "Artefact types must all implement a class.  Missing %s";
 $string['artefactpluginmethodmissing'] =  "Artefact plugin %s must implement %s and doesn't";
