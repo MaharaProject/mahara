@@ -1,6 +1,7 @@
 {if $user->pending}
 <td class="pending friendinfo">
 	<ul class="actionlist">
+        {if $user->institutions}<li>{$user->institutions|escape}</li>{/if}
 		<li>{$user->accept}</li>
 		<li>
 			<a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}" id="btn-denyrequest">
@@ -39,6 +40,7 @@
 {elseif $user->friend}
 <td class="friendinfo">
 	<ul class="actionlist">
+    {if $user->institutions}<li>{$user->institutions|escape}</li>{/if}
 	{if $user->messages}
 		<li>
 			<a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}" id="btn-sendmessage">
@@ -95,6 +97,7 @@
 {elseif $user->requestedfriendship}
 <td class="friendinfo">
 	<ul class="actionlist">
+        {if $user->institutions}<li>{$user->institutions|escape}</li>{/if}
 		{if $user->messages}
 		<li>
 			<a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}" id="btn-sendmessage">
@@ -123,6 +126,7 @@
 {else}
 <td class="friendinfo">
 	<ul class="actionlist">
+        {if $user->institutions}<li>{$user->institutions|escape}</li>{/if}
 		{if $user->messages}
 		<li>
 			<a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}" id="btn-sendmessage">
