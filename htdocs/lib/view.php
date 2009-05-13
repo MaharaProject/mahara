@@ -1578,24 +1578,22 @@ class View {
      * Return artefacts available for inclusion in a particular block
      *
      */
-    public static function get_artefactchooser_artefacts($data, $group=null, $institution=null) {
+    public static function get_artefactchooser_artefacts($data, $group=null, $institution=null, $short=false) {
         global $USER;
 
-        $search        = $data['search'];
-        $artefacttypes = $data['artefacttypes'];
-        $offset        = $data['offset'];
-        $limit         = $data['limit'];
-        $sortorder     = $data['sortorder'];
+        $offset        = !empty($data['offset']) ? $data['offset'] : null;
+        $limit         = !empty($data['limit']) ? $data['limit'] : null;
+        $sortorder     = !empty($data['sortorder']) ? $data['sortorder'] : false;
         $extraselect   = (isset($data['extraselect']) ? ' AND ' . $data['extraselect'] : '');
 
-        $sql = ' FROM {artefact} a ';
+        $from = ' FROM {artefact} a ';
         if (isset($data['extrajoin'])) {
-            $sql .= $data['extrajoin'];
+            $from .= $data['extrajoin'];
         }
         if ($group) {
             // Get group-owned artefacts that the user has view
             // permission on, and site-owned artefacts
-            $sql .= '
+            $from .= '
             LEFT OUTER JOIN (
                 SELECT
                     r.artefact, r.can_view, m.group
@@ -1617,7 +1615,7 @@ class View {
             // Get artefacts owned by the user, group-owned artefacts
             // the user has republish permission on, artefacts owned
             // by the user's institutions.
-            $sql .= '
+            $from .= '
             LEFT OUTER JOIN {artefact_access_usr} aau ON (a.id = aau.artefact AND aau.usr = ' . $USER->get('id') . ')
             LEFT OUTER JOIN {artefact_parent_cache} apc ON (a.id = apc.artefact)
             LEFT OUTER JOIN (
@@ -1650,19 +1648,24 @@ class View {
             $select .= "
             )";
         }
-        if (!empty($artefacttypes)) {
-            $select .= ' AND artefacttype IN(' . implode(',', array_map('db_quote', $artefacttypes)) . ')';
+        if (!empty($data['artefacttypes']) && is_array($data['artefacttypes'])) {
+            $select .= ' AND artefacttype IN(' . implode(',', array_map('db_quote', $data['artefacttypes'])) . ')';
         }
 
-        if ($search != '') {
-            $search = db_quote('%' . str_replace('%', '%%', $search) . '%');
+        if (!empty($data['search'])) {
+            $search = db_quote('%' . str_replace('%', '%%', $data['search']) . '%');
             $select .= 'AND (title ' . db_ilike() . '(' . $search . ') OR description ' . db_ilike() . '(' . $search . ') )';
         }
 
         $select .= $extraselect;
 
-        $artefacts = get_records_sql_assoc('SELECT a.* ' . $sql . ' WHERE ' . $select . ($sortorder ? (' ORDER BY ' . $sortorder) : ''), null, $offset, $limit);
-        $totalartefacts = count_records_sql('SELECT COUNT(*) ' . $sql . ' WHERE ' . $select);
+        $cols = $short ? 'a.id, a.id AS b' : 'a.*'; // get_records_sql_assoc wants > 1 column
+
+        $artefacts = get_records_sql_assoc(
+            'SELECT ' . $cols . $from . ' WHERE ' . $select . ($sortorder ? (' ORDER BY ' . $sortorder) : ''),
+            null, $offset, $limit
+        );
+        $totalartefacts = count_records_sql('SELECT COUNT(*) ' . $from . ' WHERE ' . $select);
 
         return array($artefacts, $totalartefacts);
     }
