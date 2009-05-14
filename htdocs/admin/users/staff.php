@@ -50,7 +50,12 @@ $form = array(
             'defaultvalue' => $staffusers,
             'filter' => false,
             'lefttitle' => get_string('potentialstaff', 'admin'),
-            'righttitle' => get_string('currentstaff', 'admin')
+            'righttitle' => get_string('currentstaff', 'admin'),
+            'searchparams' => array(
+                'query' => '',
+                'limit' => 250,
+                'orderby' => 'lastname',
+            ),
         ),
         'submit' => array(
             'type' => 'submit',
