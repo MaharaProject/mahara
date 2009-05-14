@@ -52,6 +52,11 @@ $form = array(
             'filter' => false,
             'lefttitle' => get_string('potentialadmins', 'admin'),
             'righttitle' => get_string('currentadmins', 'admin'),
+            'searchparams' => array(
+                'query' => '',
+                'limit' => 250,
+                'orderby' => 'lastname',
+            ),
             'rules' => array(
                 'required' => true
             )

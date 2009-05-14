@@ -44,13 +44,19 @@ $offset = param_integer('offset', 0);
 $allfields = param_boolean('allfields');
 $group = param_integer('group', 0);
 $includeadmins = param_boolean('includeadmins', true);
+$orderby = param_variable('orderby', 'firstname');
+
+$options = array(
+    'orderby' => $orderby,
+);
 
 if ($group) {
-    $data = array('group' => $group, 'includeadmins' => $includeadmins);
-    $data = search_user($query, $limit, $offset, $data);
+    $options['group'] = $group;
+    $options['includeadmins'] = $includeadmins;
+    $data = search_user($query, $limit, $offset, $options);
 }
 else {
-    $data = search_user($query, $limit, $offset);
+    $data = search_user($query, $limit, $offset, $options);
 }
 
 json_headers();
