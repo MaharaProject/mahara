@@ -245,6 +245,7 @@ class PluginExportHtml extends PluginExport {
 
     private function build_index_page($summaries) {
         $smarty = $this->get_smarty();
+        $smarty->assign('page_heading', full_name($this->get('user')));
         $smarty->assign('summaries', $summaries);
         $content = $smarty->fetch('export:html:index.tpl');
         if (!file_put_contents($this->exportdir . '/' . $this->rootdir . '/index.html', $content)) {
@@ -258,12 +259,11 @@ class PluginExportHtml extends PluginExport {
     private function dump_view_export_data() {
         $smarty = $this->get_smarty('../../');
         foreach ($this->views as $viewid => $view) {
+            $smarty->assign('page_heading', $view->get('title'));
             $smarty->assign('breadcrumbs', array(
                 array('text' => get_string('Views', 'view')),
                 array('text' => $view->get('title'), 'path' => 'index.html'),
             ));
-            $smarty->assign('viewtitle', $view->get('title'));
-            $smarty->assign('ownername', $view->formatted_owner());
             $smarty->assign('viewdescription', $view->get('description'));
 
             $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . self::text_to_path($view->get('title'));

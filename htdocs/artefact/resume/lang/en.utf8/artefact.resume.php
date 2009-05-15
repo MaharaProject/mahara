@@ -82,5 +82,6 @@ $string['current'] = 'Current';
 $string['moveup'] = 'Move Up';
 $string['movedown'] = 'Move Down';
 $string['viewyourresume'] = 'View your Resumé';
+$string['resumeofuser'] = 'Resumé of %s';
 
 ?>

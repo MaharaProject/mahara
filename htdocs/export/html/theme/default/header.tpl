@@ -12,11 +12,11 @@
         <div id="mahara-logo">
             <a href="http://mahara.org/"><img src="{$maharalogo}" alt="Mahara export"></a>
         </div>
-        <h1><a href="{$rootpath}index.html">{$user|full_name|escape}</a></h1>
+        <h1><a href="{$rootpath}index.html">{$page_heading|escape}</a></h1>
         <div id="content">
             <div id="breadcrumbs">
                 <ul>
-                    <li><a href="{$rootpath}index.html">Home</a></li>
+                    <li>{str tag=youarehere section=export}: <a href="{$rootpath}index.html">Home</a></li>
 {foreach from=$breadcrumbs item=crumb}
                     <li>&raquo; {if $crumb.path}<a href="{$crumb.path|escape}">{$crumb.text|escape}</a>{else}{$crumb.text|escape}{/if}</li>
 {/foreach}
