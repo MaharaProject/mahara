@@ -2334,7 +2334,7 @@ class View {
 
         $data = new StdClass;
         $data->view    = $viewid;
-        $data->visible = $visible;
+        $data->visible = (int) $visible;
         $data->token   = random_string(20);
         while (record_exists('view_access_token', 'token', $data->token)) {
             $data->token = random_string(20);
