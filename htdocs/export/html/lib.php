@@ -233,15 +233,25 @@ class PluginExportHtml extends PluginExport {
     }
 
     /**
-     * Converts the passed text, which is assumed to be a reasonably short 
-     * string, into a a form that could be used in a URL.
+     * Converts the passed text into a a form that could be used in a URL.
      *
      * @param string $text The text to convert
      * @return string      The converted text
      */
     public static function text_to_path($text) {
-        return preg_replace('#[^a-zA-Z0-9_-]+#', '-', $text);
+        return substr(preg_replace('#[^a-zA-Z0-9_-]+#', '-', $text), 0, 255);
     }
+
+    /**
+     * Sanitises a string meant to be used as a filesystem path.
+     *
+     * Mahara allows file/folder artefact names to have slashes in them, which 
+     * aren't legal on most real filesystems.
+     */
+    public static function sanitise_path($path) {
+        return substr(str_replace('/', '_', $path), 0, 255);
+    }
+
 
     private function build_index_page($summaries) {
         $smarty = $this->get_smarty();
@@ -491,7 +501,7 @@ class HtmlExportOutputFilter {
         case 'file':
         case 'image':
             $folderpath = $this->get_path_for_file($artefact);
-            return '<a href="' . $this->basepath . '/files/file/' . $folderpath . $artefact->get('title') . '">' . $matches[5] . '</a>';
+            return '<a href="' . $this->basepath . '/files/file/' . $folderpath . PluginExportHtml::sanitise_path($artefact->get('title')) . '">' . $matches[5] . '</a>';
         default:
             return $matches[5];
         }
@@ -526,6 +536,9 @@ class HtmlExportOutputFilter {
     private function get_path_for_file(ArtefactTypeFileBase $file) {
         if ($this->folderdata === null) {
             $this->folderdata = get_records_select_assoc('artefact', "artefacttype = 'folder' AND owner = ?", array($file->get('owner')));
+            foreach ($this->folderdata as &$folder) {
+                $folder->title = PluginExportHtml::sanitise_path($folder->title);
+            }
         }
         $folderpath = ArtefactTypeFileBase::get_full_path($file->get('parent'), $this->folderdata);
         return $folderpath;

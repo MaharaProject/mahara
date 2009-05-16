@@ -28,7 +28,6 @@ defined('INTERNAL') || die();
 
 /**
  * TODO:
- *  - handle filenames with slashes
  *  - handle exporting when there's no files/folders
  */
 class HtmlExportFile extends HtmlExportArtefactPlugin {
@@ -101,15 +100,14 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
                     check_dir_exists($profileiconsdir);
                 }
 
-                // TODO: sanitise path for /'s
-                if (!copy($artefact->get_path(), $profileiconsdir . $artefact->get('title'))) {
+                if (!copy($artefact->get_path(), $profileiconsdir . PluginExportHtml::sanitise_path($artefact->get('title')))) {
                     throw new SystemException("Unable to copy profile icon $artefactid into export");
                 }
 
                 // Make sure we grab a nicely resized version too
                 $maxdimension = 200;
                 $resizedpath = get_dataroot_image_path('artefact/file/profileicons/', $artefactid, $maxdimension);
-                if (!copy($resizedpath, $profileiconsdir . $maxdimension . 'px-' . $artefact->get('title'))) {
+                if (!copy($resizedpath, $profileiconsdir . $maxdimension . 'px-' . PluginExportHtml::sanitise_path($artefact->get('title')))) {
                     throw new SystemException("Unable to copy resized profile icon {$maxdimension}px-{$artefact->get('title')} into export");
                 }
             }
@@ -138,14 +136,14 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
         foreach ($this->artefactdata as $artefactid => $artefact) {
             if ($artefact->get('parent') == $parentid) {
                 if ($artefact->get('artefacttype') == 'folder') {
-                    $directory = $filesystemdirectory . $artefact->get('title') . '/';
+                    $directory = $filesystemdirectory . PluginExportHtml::sanitise_path($artefact->get('title')) . '/';
                     check_dir_exists($directory);
                     $this->create_index_for_directory($directory, $level + 1, $artefact);
                     $this->populate_filedir($directory, $level + 1, $artefactid);
                 }
                 else {
                     $artefact = artefact_instance_from_id($artefactid);
-                    if (!copy($artefact->get_path(), $filesystemdirectory . $artefact->get('title'))) {
+                    if (!copy($artefact->get_path(), $filesystemdirectory . PluginExportHtml::sanitise_path($artefact->get('title')))) {
                         throw new SystemException("Unable to copy artefact $artefactid's file");
                     }
                 }
@@ -205,6 +203,7 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
             $data[] = array(
                 'icon'        => '',
                 'title'       => $artefact->get('title'),
+                'path'        => PluginExportHtml::sanitise_path($artefact->get('title')),
                 'description' => $artefact->get('description'),
                 'size'        => $size,
                 'date'        => strftime(get_string('strftimedaydatetime'), $artefact->get('ctime')),
@@ -213,6 +212,7 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
 
         return $data;
     }
+
 }
 
 ?>

@@ -30,7 +30,7 @@
 {foreach from=$folders item=folder}
     <tr class="r{cycle values=0,1}">
         <td><img src="{$rootpath}static/file/theme/default/static/images/folder.gif" alt="{str tag=Folder section=artefact.file}"></td>
-        <td><a href="{$folder.title|rawurlencode|escape}/index.html">{$folder.title|escape}</a></td>
+        <td><a href="{$folder.path|rawurlencode|escape}/index.html">{$folder.title|escape}</a></td>
         <td>{$folder.description|escape}</td>
         <td>{$folder.size|escape}</td>
         <td>{$folder.ctime|escape}</td>
@@ -39,7 +39,7 @@
 {foreach from=$files item=file}
     <tr class="r{cycle values=0,1}">
         <td><img src="{$rootpath}static/file/theme/default/static/images/file.gif" alt="{str tag=File section=artefact.file}"></td>
-        <td><a href="{$file.title|rawurlencode|escape}">{$file.title|escape}</a></td>
+        <td><a href="{$file.path|rawurlencode|escape}">{$file.title|escape}</a></td>
         <td>{$file.description|escape}</td>
         <td>{$file.size|escape}</td>
         <td>{$file.ctime|escape}</td>
