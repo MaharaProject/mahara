@@ -2015,6 +2015,17 @@ table.groupviews{
 	display: block;
 }
 
+/* EXPORT */
+div.progress-bar {
+    background-color: #7d9728;
+}
+div.progress-bar a {
+    color: #ffd !important;
+}
+p.progress-text {
+    color: #fff;
+}
+
 
 /* ADMIN HOME */
 /* Administration Home styles */
