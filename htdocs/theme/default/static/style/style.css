@@ -1455,10 +1455,11 @@ tr#contactinformation_contactinformation_container td .resumecontactinfo th {
 }
 #myviewstable .submitted-viewitem {
 	float: left;
-	padding: .5em 0 0 0;
+	padding: .5em 1.5em .5em 1.5em;
 	font-style: italic;
 	color: #969696;
-	font-size: 1em;
+    font-size: 1em;
+	width: 60%;
 }
 #myviewstable .viewitem br {
 	display: none;
