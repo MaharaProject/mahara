@@ -14,7 +14,7 @@
         </div>
         <h1><a href="{$rootpath}index.html">{$page_heading|escape}</a></h1>
         <div id="content">
-            <div id="breadcrumbs">
+            {if !$nobreadcrumbs}<div id="breadcrumbs">
                 <ul>
                     <li>{str tag=youarehere section=export}: <a href="{$rootpath}index.html">Home</a></li>
 {foreach from=$breadcrumbs item=crumb}
@@ -22,4 +22,4 @@
 {/foreach}
                 </ul>
             </div>
-            <div id="breadcrumbs-footer"></div>
+            <div id="breadcrumbs-footer"></div>{/if}
