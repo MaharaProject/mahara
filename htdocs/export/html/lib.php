@@ -56,6 +56,13 @@ class PluginExportHtml extends PluginExport {
     private $stylesheets = array('' => array());
 
     /**
+     * Whether the user requested to export just one view. In this case,
+     * the generated export doesn't have the home page - just the View is 
+     * exported (plus artefacts of course)
+     */
+    protected $exportingoneview = false;
+
+    /**
     * constructor.  overrides the parent class
     * to set up smarty and the attachment directory
     */
@@ -83,6 +90,12 @@ class PluginExportHtml extends PluginExport {
                 }
             }
         }
+
+        $this->exportingoneview = (
+            $this->viewexportmode == PluginExport::EXPORT_LIST_OF_VIEWS &&
+            $this->artefactexportmode == PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS &&
+            count($this->views) == 1
+        );
 
         $this->notify_progress_callback(15, 'Setup complete');
     }
@@ -157,17 +170,20 @@ class PluginExportHtml extends PluginExport {
         // Get the view data
         $this->notify_progress_callback(65, 'Exporting Views');
         $this->dump_view_export_data();
-        $summaries['view'] = array(100, $this->get_view_summary());
 
-        // Sort by weight (then drop the weight information)
-        $this->notify_progress_callback(75, 'Building index page');
-        uasort($summaries, create_function('$a, $b', 'return $a[0] > $b[0];'));
-        foreach ($summaries as &$summary) {
-            $summary = $summary[1];
+        if (!$this->exportingoneview) {
+            $summaries['view'] = array(100, $this->get_view_summary());
+
+            // Sort by weight (then drop the weight information)
+            $this->notify_progress_callback(75, 'Building index page');
+            uasort($summaries, create_function('$a, $b', 'return $a[0] > $b[0];'));
+            foreach ($summaries as &$summary) {
+                $summary = $summary[1];
+            }
+
+            // Build index.html
+            $this->build_index_page($summaries);
         }
-
-        // Build index.html
-        $this->build_index_page($summaries);
 
         // Copy all static files into the export
         $this->notify_progress_callback(80, 'Copying static files');
@@ -267,21 +283,28 @@ class PluginExportHtml extends PluginExport {
      * Dumps all views into the HTML export
      */
     private function dump_view_export_data() {
-        $smarty = $this->get_smarty('../../');
+        $rootpath = ($this->exportingoneview) ? './' : '../../';
+        $smarty = $this->get_smarty($rootpath);
         foreach ($this->views as $viewid => $view) {
             $smarty->assign('page_heading', $view->get('title'));
-            $smarty->assign('breadcrumbs', array(
-                array('text' => get_string('Views', 'view')),
-                array('text' => $view->get('title'), 'path' => 'index.html'),
-            ));
             $smarty->assign('viewdescription', $view->get('description'));
 
-            $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . self::text_to_path($view->get('title'));
-            if (!check_dir_exists($directory)) {
-                throw new SystemException("Could not create directory for view $viewid");
+            if ($this->exportingoneview) {
+                $smarty->assign('nobreadcrumbs', true);
+                $directory = $this->exportdir . '/' . $this->rootdir;
+            }
+            else {
+                $smarty->assign('breadcrumbs', array(
+                    array('text' => get_string('Views', 'view')),
+                    array('text' => $view->get('title'), 'path' => 'index.html'),
+                ));
+                $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . self::text_to_path($view->get('title'));
+                if (!check_dir_exists($directory)) {
+                    throw new SystemException("Could not create directory for view $viewid");
+                }
             }
 
-            $outputfilter = new HtmlExportOutputFilter('../../');
+            $outputfilter = new HtmlExportOutputFilter($rootpath);
             $smarty->assign('view', $outputfilter->filter($view->build_columns()));
             $content = $smarty->fetch('export:html:view.tpl');
             if (!file_put_contents("$directory/index.html", $content)) {
