@@ -153,7 +153,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
         // information to it, for safety). We select it again as 'userid' to 
         // avoid confusion in the templates
         $sql = '
-            SELECT bwp.instance, bwp.from, bwp.replyto, bwp.private, bwp.postdate, bwp.text,' . db_format_tsfield('postdate') . ',
+            SELECT bwp.id AS postid, bwp.instance, bwp.from, bwp.replyto, bwp.private, bwp.postdate, bwp.text,' . db_format_tsfield('postdate') . ',
                 u.id, u.id AS userid, u.username, u.firstname, u.lastname, u.preferredname, u.staff, u.admin
                 FROM {blocktype_wall_post} bwp 
                 JOIN {usr} u ON bwp.from = u.id

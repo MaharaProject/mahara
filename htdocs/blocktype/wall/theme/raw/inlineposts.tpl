@@ -9,16 +9,16 @@
                 	<div class="userinforight"><strong><a href="{$WWWROOT}user/view.php?id={$wallpost->userid|escape}">{$wallpost->displayname|escape}</a></strong><span class="postedon"> - {$wallpost->postdate|format_date}</span></div>
                 </div>
                 <div class="text">{$wallpost->text|parse_bbcode}</div>
-                {*<div class="controls">
-        {if $ownwall}
+                <div class="controls">
+       {* {if $ownwall}
                     [ <a href="{$WWWROOT}blocktype/wall/wall.php?instance={$instanceid}&amp;replyto={$wallpost->id}">{str tag='reply' section='blocktype.wall'}</a> ]
-        {/if}
+        {/if}*}
         {if $ownwall || $wallpost->from == $userid}
-                    [ <a href="{$WWWROOT}blocktype/wall/deletepost.php?instance={$instanceid}&amp;return={if $wholewall}wall{else}profile{/if}">
+                    [ <a href="{$WWWROOT}blocktype/wall/deletepost.php?instance={$wallpost->postid}&return={if $wholewall}wall{else}profile{/if}">
                         {str tag='delete' section='blocktype.wall'}
                     </a> ]
         {/if}
-                </div>*}
+                </div>
             </div>
         {/foreach}
         {if !$wholewall}
