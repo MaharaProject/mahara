@@ -347,6 +347,7 @@ class PluginExportHtml extends PluginExport {
      * Copies the static files (stylesheets etc.) into the export
      */
     private function copy_static_files() {
+        require_once('file.php');
         $staticdir = $this->get('exportdir') . '/' . $this->get('rootdir') . '/static/';
         $directoriestocopy = array();
 
