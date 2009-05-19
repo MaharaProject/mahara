@@ -988,21 +988,10 @@ function param_boolean($name) {
  * NOTE: this function is only meant to be used by get_imagesize_parameters(),
  * which you should use in your scripts.
  *
- * This function returns a GET or POST parameter as a two element array 
- * repesenting an allowed width and height value for a resized image. If the 
- * default isn't specified and the parameter hasn't been sent, a 
- * ParameterException is thrown. Likewise, if the parameter isn't a valid size 
- * dimension, a ParameterException is thrown.
+ * It expects the parameter to be a string, in the form /\d+x\d+/ - e.g. 
+ * 200x150.
  *
- * A size parameter is a string, in the form /\d+x\d+/ - e.g. 200x150. The 
- * width and height are not allowed to be greater than the configured allowed
- * maximums - config variables imagemaxwidth and imagemaxheight.
- *
- * You call this function like so:
- *
- * list($width, $height) = param_imagesize('size');
- *
- * @param string The GET or POST parameter you want returned.
+ * @param string The GET or POST parameter you want checked
  * TODO: i18n for the error messages
  */
 function param_imagesize($name) {
@@ -1018,14 +1007,7 @@ function param_imagesize($name) {
         throw new ParameterException('Invalid size for image specified');
     }
 
-    list($width, $height) = explode('x', $value);
-    if ($width > get_config('imagemaxwidth') || $height > get_config('imagemaxheight')) {
-        throw new ParameterException('Requested image size is too big');
-    }
-    if ($width < 16 || $height < 16) {
-        throw new ParameterException('Requested image size is too small');
-    }
-    return array('w' => $width, 'h' => $height);
+    return $value;
 }
 
 /**
@@ -1044,11 +1026,51 @@ function get_imagesize_parameters($sizeparam='size', $widthparam='width', $heigh
     $maxwidth  = param_integer($maxwidthparam, 0);
     $maxheight = param_integer($maxheightparam, 0);
 
+    return imagesize_data_to_internal_form($size, $width, $height, $maxsize, $maxwidth, $maxheight);
+}
+
+/**
+ * Given sizing information, converts it to a form that get_dataroot_image_path 
+ * can use.
+ *
+ * @param mixed $size    either an array with 'w' and 'h' keys, or a string 'WxH'. 
+ *                       Image will be exactly this size
+ * @param int $width     Width. Image will be scaled to be exactly this wide
+ * @param int $height    Height. Image will be scaled to be exactly this high
+ * @param int $maxsize   The longest side will be scaled to be this size
+ * @param int $maxwidth  Use with maxheight - image dimensions will be made as 
+ *                       large as possible but not exceed either one
+ * @param int $maxheight Use with maxwidth - image dimensions will be made as 
+ *                       large as possible but not exceed either one
+ * @return mixed         A sizing parameter that can be used with get_dataroot_image_path()
+ */
+function imagesize_data_to_internal_form($size, $width, $height, $maxsize, $maxwidth, $maxheight) {
     $imagemaxwidth  = get_config('imagemaxwidth');
     $imagemaxheight = get_config('imagemaxheight');
 
     if ($size) {
-        return $size;
+        if (is_array($size)) {
+            if (isset($size['w']) && isset($size['h'])) {
+                $width  = $size['w'];
+                $height = $size['h'];
+            }
+            else {
+                throw new ParameterException('Size parameter is corrupt');
+            }
+        }
+        else if (is_string($size)) {
+            list($width, $height) = explode('x', $size);
+        }
+        else {
+            throw new ParameterException('Size parameter is corrupt');
+        }
+        if ($width > get_config('imagemaxwidth') || $height > get_config('imagemaxheight')) {
+            throw new ParameterException('Requested image size is too big');
+        }
+        if ($width < 16 || $height < 16) {
+            throw new ParameterException('Requested image size is too small');
+        }
+        return array('w' => $width, 'h' => $height);
     }
     if ($maxsize) {
         if ($maxsize > $imagemaxwidth && $maxsize > $imagemaxheight) {
