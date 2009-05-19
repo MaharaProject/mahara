@@ -1,6 +1,6 @@
 {include file="export:html:header.tpl"}
 
-<h2>{str tag=Folder section=artefact.file}: {$folder}</h2>
+<h2>{str tag=Folder section=artefact.file}: {$folder|escape}</h2>
 
 {if $folder == '/' && !$folders && !$files}
 <p>{str tag=nofilesfound section=artefact.file}</p>
