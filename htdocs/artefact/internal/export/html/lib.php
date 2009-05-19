@@ -101,8 +101,7 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
         $iconid = $this->exporter->get('user')->get('profileicon');
         if ($iconid) {
             $icon = artefact_instance_from_id($iconid);
-            // TODO: protect title from /'s
-            $smarty->assign('icon', '<img src="../../static/profileicons/200px-' . $icon->get('title') . '" alt="Profile Icon">');
+            $smarty->assign('icon', '<img src="../../static/profileicons/200px-' . PluginExportHtml::sanitise_path($icon->get('title')) . '" alt="Profile Icon">');
         }
 
         $content = $smarty->fetch('export:html/internal:index.tpl');
@@ -119,8 +118,7 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
         $iconid = $this->exporter->get('user')->get('profileicon');
         if ($iconid) {
             $icon = artefact_instance_from_id($iconid);
-            // TODO: protect title from /'s
-            $smarty->assign('icon', '<img src="static/profileicons/200px-' . $icon->get('title') . '" alt="Profile Icon">');
+            $smarty->assign('icon', '<img src="static/profileicons/200px-' . PluginExportHtml::sanitise_path($icon->get('title')) . '" alt="Profile Icon">');
         }
         return array(
             'description' => $smarty->fetch('export:html/internal:summary.tpl'),
