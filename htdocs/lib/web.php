@@ -2387,16 +2387,20 @@ function display_cleaned_html($html, $filename, $params) {
 
 /**
  * Takes a string and a length, and ensures that the string is no longer than
- * this length, by putting '...' in the middle
- * Strips all tags except <br> and <p>
+ * this length, by putting '...' in it somewhere.
  *
- * @param string $str String to shorten
- * @param int $maxlen The maximum length the new string should be (default 100)
- * @param bool $truncate if true, cut the string at the end rather than in the middle (default false)
- * @param bool $newlines if false, cut off after the first newline (default true)
+ * It also strips all tags except <br> and <p>.
+ *
+ * This version is appropriate for use on HTML. See str_shorten_text() for use 
+ * on text strings.
+ *
+ * @param string $str    The string to shorten
+ * @param int $maxlen    The maximum length the new string should be (default 100)
+ * @param bool $truncate If true, cut the string at the end rather than in the middle (default false)
+ * @param bool $newlines If false, cut off after the first newline (default true)
  * @return string
  */
-function str_shorten($str, $maxlen=100, $truncate=false, $newlines=true) {
+function str_shorten_html($str, $maxlen=100, $truncate=false, $newlines=true) {
     if (empty($str)) {
         return $str;
     }
@@ -2427,6 +2431,31 @@ function str_shorten($str, $maxlen=100, $truncate=false, $newlines=true) {
     $str = nl2br(hsc($str));
     // this should be ok, because the string gets checked before going into the database
     $str = str_replace('&amp;', '&', $str);
+    return $str;
+}
+
+/**
+ * Takes a string and a length, and ensures that the string is no longer than 
+ * this length, by putting '...' in it somewhere.
+ *
+ * This version is appropriate for use on plain text. See str_shorten_html() 
+ * for use on HTML strings.
+ *
+ * @param string $str    The string to shorten
+ * @param int $maxlen    The maximum length the new string should be (default 100)
+ * @param bool $truncate If true, cut the string at the end rather than in the middle (default false)
+ * @return string
+ */
+function str_shorten_text($str, $maxlen=100, $truncate=false) {
+    if (strlen($str) > $maxlen) {
+        if ($truncate) {
+            return substr($str, 0, $maxlen - 3) . '...';
+        }
+        else {
+            return substr($str, 0, floor($maxlen / 2) - 1) . '...' . substr($str, -(floor($maxlen / 2) - 2));
+        }
+    }
+
     return $str;
 }
 
