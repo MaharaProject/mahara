@@ -6,7 +6,7 @@
 {elseif $key == 'country'}
     {str tag=country.$item}
 {elseif in_array($key, array('officialwebsite', 'personalwebsite', 'blogaddress'))}
-    <a href="{$item|escape}">{$item|str_shorten:50}</a>
+    <a href="{$item|escape}">{$item|str_shorten_text:50}</a>
 {else}
     {$item|escape}
 {/if}</li>

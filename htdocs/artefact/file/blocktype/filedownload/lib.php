@@ -80,7 +80,7 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
                     . '" alt=""></a></div>';
                 $result .= '<div style="margin-left: 30px;">';
 
-                $result .= '<h4><a href="' . hsc($detailsurl) . '">' . str_shorten($artefact->get('title'), 20) . '</a></h4>';
+                $result .= '<h4><a href="' . hsc($detailsurl) . '">' . str_shorten_text($artefact->get('title'), 20) . '</a></h4>';
 
                 $description = $artefact->get('description');
                 if ($description) {

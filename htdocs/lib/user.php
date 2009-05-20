@@ -1018,7 +1018,7 @@ function get_users_data($userlist) {
 
     foreach ($data as &$record) {
         if (isset($record->introduction)) {
-            $record->introduction = str_shorten($record->introduction, 100, true);
+            $record->introduction = str_shorten_html($record->introduction, 100, true);
         }
 
         $record->messages = ($record->messages == 'allow' || $record->friend && $record->messages == 'friends' || $USER->get('admin')) ? 1 : 0;

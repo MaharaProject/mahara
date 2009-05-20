@@ -119,7 +119,7 @@ class PluginBlocktypeFolder extends PluginBlocktype {
         $artefact->hovertitle = $artefact->description;
 
         $path = $artefact->parent ? ArtefactTypeFileBase::get_full_path($artefact->parent, $folderdata->data) : '';
-        $artefact->description = str_shorten($folderdata->ownername . $path . $artefact->title, 30);
+        $artefact->description = str_shorten_text($folderdata->ownername . $path . $artefact->title, 30);
 
         return $artefact;
     }

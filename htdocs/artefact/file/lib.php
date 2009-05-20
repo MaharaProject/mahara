@@ -589,11 +589,11 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $folderdata = self::artefactchooser_folder_data($artefact);
 
         if ($artefact->artefacttype == 'profileicon') {
-            $artefact->description = str_shorten($artefact->title, 30);
+            $artefact->description = str_shorten_text($artefact->title, 30);
         }
         else {
             $path = $artefact->parent ? self::get_full_path($artefact->parent, $folderdata->data) : '';
-            $artefact->description = str_shorten($folderdata->ownername . $path . $artefact->title, 30);
+            $artefact->description = str_shorten_text($folderdata->ownername . $path . $artefact->title, 30);
         }
 
         return $artefact;
@@ -1172,7 +1172,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
                 $c = artefact_instance_from_id($child->id);
                 $child->title = $child->hovertitle = $c->get('title');
                 if (!empty($options['simpledisplay'])) {
-                    $child->title = str_shorten($child->title, 20);
+                    $child->title = str_shorten_text($child->title, 20);
                 }
                 $child->date = format_date(strtotime($child->mtime), 'strfdaymonthyearshort');
                 $child->iconsrc = call_static_method(generate_artefact_class_name($child->artefacttype), 'get_icon', array('id' => $child->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));

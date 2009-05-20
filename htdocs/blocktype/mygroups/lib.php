@@ -60,7 +60,7 @@ class PluginBlocktypeMyGroups extends SystemBlocktype {
         $results = group_get_associated_groups($userid, 'member');
 
         foreach ($results['groups'] as $group) {
-            $group->description = str_shorten($group->description, 100, true);
+            $group->description = str_shorten_html($group->description, 100, true);
             $group->roledisplay = get_string($group->role, 'grouptype.'.$group->grouptype);
         }
         $smarty->assign('USERGROUPS',$results['groups']);

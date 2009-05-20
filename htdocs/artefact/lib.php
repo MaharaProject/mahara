@@ -614,7 +614,7 @@ abstract class ArtefactType {
     */
     public function display_title($maxlen=null) {
         if ($maxlen) {
-            return str_shorten($this->get('title'), $maxlen, true);
+            return str_shorten_text($this->get('title'), $maxlen, true);
         }
         return $this->get('title');
     }

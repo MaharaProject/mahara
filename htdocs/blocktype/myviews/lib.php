@@ -63,7 +63,7 @@ class PluginBlocktypeMyviews extends SystemBlocktype {
                 if (can_view_view($view->id)) {
                     $views[$view->id] = $view;
                     $view->artefacts = array();
-                    $view->description = str_shorten($view->description, 100, true);
+                    $view->description = str_shorten_html($view->description, 100, true);
                 }
             }
         }
