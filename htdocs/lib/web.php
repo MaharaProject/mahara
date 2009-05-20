@@ -1437,10 +1437,6 @@ function pieform_get_help(Pieform $form, $element) {
         $form->get_name(), $element['name']);
 }
 
-function make_link($url) {
-    return '<a href="' . $url . '">' . $url . '</a>';
-}
-
 
 /**
  * Returns the entries in the standard admin menu

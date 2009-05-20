@@ -448,7 +448,7 @@ class ArtefactTypeWebAddress extends ArtefactTypeProfileField {
 
     public function render_self($options) {
         if (array_key_exists('link', $options) && $options['link'] == true) {
-            $html = make_link($this->title);
+            $html = '<a href="' . hsc($this->title) . '">' . hsc($this->title) . '</a>';
         }
         else {
             $html = $this->title;
