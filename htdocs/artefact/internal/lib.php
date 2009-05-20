@@ -426,6 +426,16 @@ class ArtefactTypeEmail extends ArtefactTypeProfileField {
         delete_records('artefact_internal_profile_email', 'artefact', $this->id);
         parent::delete();
     }
+
+    public function render_self($options) {
+        if (array_key_exists('link', $options) && $options['link'] == true) {
+            $html = '<a href="mailto:' . hsc($this->title) . '">' . hsc($this->title) . '</a>';
+        }
+        else {
+            $html = $this->title;
+        }
+        return array('html' => $html, 'javascript' => null);
+    }
 }
 
 class ArtefactTypeStudentid extends ArtefactTypeProfileField {}
