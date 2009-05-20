@@ -58,16 +58,13 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
 
         // Get data about the profile fields in this blockinstance
         if (!empty($configdata['artefactids'])) {
-            $artefactids = implode(', ', array_map('db_quote', $configdata['artefactids']));
-            $profiledata = get_records_select_array('artefact',
-                'id IN (' . $artefactids . ') AND owner = (SELECT owner FROM {view} WHERE id = ?)',
-                array($instance->get('view')),
-                '',
-                'artefacttype, title'
-            );
-
-            foreach ($profiledata as $profilefield) {
-                $data[$profilefield->artefacttype] = $profilefield->title;
+            $viewowner = get_field('view', 'owner', 'id', $instance->get('view'));
+            foreach ($configdata['artefactids'] as $id) {
+                $artefact = artefact_instance_from_id($id);
+                if ($artefact->get('owner') == $viewowner) {
+                    $rendered = $artefact->render_self(array('link' => true));
+                    $data[$artefact->get('artefacttype')] = $rendered['html'];
+                }
             }
         }
 
