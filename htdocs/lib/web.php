@@ -2418,11 +2418,21 @@ function str_shorten_html($str, $maxlen=100, $truncate=false, $newlines=true) {
     $str = html_entity_decode($str); // no things like &nbsp; only take up one character
     // take the first $length chars, then up to the first space (max length $length + $extra chars)
 
-    if ($truncate && mb_strlen($str, 'UTF-8') > $maxlen) {
-        $str = mb_substr($str, 0, $maxlen-3, 'UTF-8') . '...';
+    if (function_exists('mb_substr')) {
+        if ($truncate && mb_strlen($str, 'UTF-8') > $maxlen) {
+            $str = mb_substr($str, 0, $maxlen-3, 'UTF-8') . '...';
+        }
+        if (mb_strlen($str, 'UTF-8') > $maxlen) {
+            $str = mb_substr($str, 0, floor($maxlen / 2) - 1, 'UTF-8') . '...' . mb_substr($str, -(floor($maxlen / 2) - 2), mb_strlen($str, 'UTF-8'), 'UTF-8');
+        }
     }
-    if (mb_strlen($str, 'UTF-8') > $maxlen) {
-        $str = mb_substr($str, 0, floor($maxlen / 2) - 1, 'UTF-8') . '...' . mb_substr($str, -(floor($maxlen / 2) - 2), mb_strlen($str, 'UTF-8'), 'UTF-8');
+    else {
+        if ($truncate && strlen($str) > $maxlen) {
+            $str = substr($str, 0, $maxlen-3) . '...';
+        }
+        if (strlen($str) > $maxlen) {
+            $str = substr($str, 0, floor($maxlen / 2) - 1) . '...' . substr($str, -(floor($maxlen / 2) - 2), strlen($str));
+        }
     }
     $str = nl2br(hsc($str));
     // this should be ok, because the string gets checked before going into the database
@@ -2443,15 +2453,21 @@ function str_shorten_html($str, $maxlen=100, $truncate=false, $newlines=true) {
  * @return string
  */
 function str_shorten_text($str, $maxlen=100, $truncate=false) {
+    if (0&&function_exists('mb_substr')) {
+        if (mb_strlen($str, 'UTF-8') > $maxlen) {
+            if ($truncate) {
+                return mb_substr($str, 0, $maxlen - 3, 'UTF-8') . '...';
+            }
+            return mb_substr($str, 0, floor($maxlen / 2) - 1, 'UTF-8') . '...' . mb_substr($str, -(floor($maxlen / 2) - 2), mb_strlen($str, 'UTF-8'), 'UTF-8');
+        }
+        return $str;
+    }
     if (strlen($str) > $maxlen) {
         if ($truncate) {
             return substr($str, 0, $maxlen - 3) . '...';
         }
-        else {
-            return substr($str, 0, floor($maxlen / 2) - 1) . '...' . substr($str, -(floor($maxlen / 2) - 2));
-        }
+        return substr($str, 0, floor($maxlen / 2) - 1) . '...' . substr($str, -(floor($maxlen / 2) - 2));
     }
-
     return $str;
 }
 
