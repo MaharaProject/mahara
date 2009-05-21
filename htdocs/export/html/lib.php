@@ -154,7 +154,7 @@ class PluginExportHtml extends PluginExport {
 
         // Second pass: actually dump data for active export plugins
         $progressstart = 25;
-        $progressend   = 60;
+        $progressend   = 50;
         $i = 0;
         foreach ($exportplugins as $plugin) {
             $this->notify_progress_callback(intval($progressstart + (++$i / $plugincount) * ($progressend - $progressstart)), 'Exporting data for ' . $plugin);
@@ -168,7 +168,7 @@ class PluginExportHtml extends PluginExport {
         }
 
         // Get the view data
-        $this->notify_progress_callback(65, 'Exporting Views');
+        $this->notify_progress_callback(55, 'Exporting Views');
         $this->dump_view_export_data();
 
         if (!$this->exportingoneview) {
@@ -292,9 +292,14 @@ class PluginExportHtml extends PluginExport {
      * Dumps all views into the HTML export
      */
     private function dump_view_export_data() {
+        $progressstart = 55;
+        $progressend   = 75;
+        $i = 0;
+        $viewcount = count($this->views);
         $rootpath = ($this->exportingoneview) ? './' : '../../';
         $smarty = $this->get_smarty($rootpath);
         foreach ($this->views as $viewid => $view) {
+            $this->notify_progress_callback(intval($progressstart + (++$i / $viewcount) * ($progressend - $progressstart)), "Exporting Views ($i/$viewcount)");
             $smarty->assign('page_heading', $view->get('title'));
             $smarty->assign('viewdescription', $view->get('description'));
 
