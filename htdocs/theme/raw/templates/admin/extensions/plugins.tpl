@@ -25,15 +25,15 @@
             <a href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">{str tag='config'}</a>
         {/if} {if $data.config || $data.disableable} ] {/if} </li>
         {if $data.types} 
-	    <ul>
+	    <li><ul>
 	    {foreach from=$data.types key='type' item='config'}
 		<li>{$type} 
                 {if $config} [ <a href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;type={$type}">{str tag='config'}</a> ]{/if}</li>
 	    {/foreach}
-	    </ul>
+	    </ul></li>
 	{/if}
-    {/foreach}</li>
-        </ul>
+    {/foreach}
+        </ul></li>
     {if $notinstalled} 
         <li><b>{str tag='notinstalledplugins'}</b>
         <ul id="{$plugintype}.notinstalled">
@@ -46,8 +46,8 @@
 	{/foreach}</li>
         </ul>
     {/if}
-    </ul>
-{/foreach}</li>
+    </ul></li>
+{/foreach}
 </ul>
 </div>
 {include file="columnfullend.tpl"}
