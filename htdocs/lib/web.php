@@ -2453,7 +2453,7 @@ function str_shorten_html($str, $maxlen=100, $truncate=false, $newlines=true) {
  * @return string
  */
 function str_shorten_text($str, $maxlen=100, $truncate=false) {
-    if (0&&function_exists('mb_substr')) {
+    if (function_exists('mb_substr')) {
         if (mb_strlen($str, 'UTF-8') > $maxlen) {
             if ($truncate) {
                 return mb_substr($str, 0, $maxlen - 3, 'UTF-8') . '...';
