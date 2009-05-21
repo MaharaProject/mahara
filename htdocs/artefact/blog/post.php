@@ -83,6 +83,7 @@ $form = pieform(array(
     'jsform'             => true,
     'newiframeonsubmit'  => true,
     'jssuccesscallback'  => 'editpost_success',
+    'jserrorcallback'    => 'editpost_error',
     'plugintype'         => 'artefact',
     'pluginname'         => 'blog',
     'configdirs'         => array(get_config('libroot') . 'form/', get_config('docroot') . 'artefact/file/form/'),
@@ -306,6 +307,10 @@ function blogpostExecCommandHandler(editor_id, elm, command, user_interface, val
 
 function editpost_success(form, data) {
     editpost_filebrowser.success(form, data);
+};
+
+function editpost_error(form, data) {
+    editpost_filebrowser.init();
 };
 
 EOF;
