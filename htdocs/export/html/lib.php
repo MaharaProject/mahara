@@ -601,7 +601,13 @@ class HtmlExportOutputFilter {
             case 'profileicon':
                 // Convert the user ID to a profile icon ID
                 if (!$options['id'] = get_field_sql('SELECT profileicon FROM {usr} WHERE id = ?', array($options['id']))) {
-                    return '';
+                    // No profile icon, get the default one
+                    list($size, $prefix) = $this->get_size_from_options($options);
+                    if ($from = get_dataroot_image_path('artefact/file/profileicons/no_userphoto/' . get_config('theme'), 0, $size)) {
+                        $to = '/static/profileicons/' . $prefix . 'no_userphoto.png';
+                        $this->htmlexportcopyproxy->add($from, $to);
+                    }
+                    return $this->basepath . $to;
                 }
             case 'profileiconbyid':
                 $icon = artefact_instance_from_id($options['id']);
@@ -658,17 +664,7 @@ class HtmlExportOutputFilter {
         unset($options['view']);
         $prefix = '';
         if ($options) {
-            foreach (array('size', 'width', 'height', 'maxsize', 'maxwidth', 'maxheight') as $param) {
-                if (isset($options[$param])) {
-                    $$param = $options[$param];
-                    $prefix .= $param . '-' . $options[$param] . '-';
-                }
-                else {
-                    $$param = null;
-                }
-            }
-
-            $size = imagesize_data_to_internal_form($size, $width, $height, $maxsize, $maxwidth, $maxheight);
+            list($size, $prefix) = $this->get_size_from_options($options);
             $from = $file->get_path($size);
 
             $to = $basefolder . $prefix . PluginExportHtml::sanitise_path($file->get('title'));
@@ -679,6 +675,24 @@ class HtmlExportOutputFilter {
         }
 
         return $this->basepath . $to;
+    }
+
+    /**
+     * Helper method
+     */
+    private function get_size_from_options($options) {
+        $prefix = '';
+        foreach (array('size', 'width', 'height', 'maxsize', 'maxwidth', 'maxheight') as $param) {
+            if (isset($options[$param])) {
+                $$param = $options[$param];
+                $prefix .= $param . '-' . $options[$param] . '-';
+            }
+            else {
+                $$param = null;
+            }
+        }
+
+        return array(imagesize_data_to_internal_form($size, $width, $height, $maxsize, $maxwidth, $maxheight), $prefix);
     }
 
 }
