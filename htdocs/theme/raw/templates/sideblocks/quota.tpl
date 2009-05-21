@@ -1,5 +1,6 @@
 {loadquota}
     <h3>{str tag="quota"}</h3>
+        <div class="sidebar-content">
     <p id="quota_message">
         {$QUOTA_MESSAGE}
         {contextualhelp plugintype='artefact' pluginname='file' section='quota_message'}
@@ -15,3 +16,4 @@
         <span id="quota_percentage">{$QUOTA_PERCENTAGE}%</span>
     </p>
 {/if}
+</div>
