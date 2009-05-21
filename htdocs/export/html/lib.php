@@ -604,7 +604,7 @@ class HtmlExportOutputFilter {
                     // No profile icon, get the default one
                     list($size, $prefix) = $this->get_size_from_options($options);
                     if ($from = get_dataroot_image_path('artefact/file/profileicons/no_userphoto/' . get_config('theme'), 0, $size)) {
-                        $to = '/static/profileicons/' . $prefix . 'no_userphoto.png';
+                        $to = '/static/profileicons/0-' . $prefix . 'no_userphoto.png';
                         $this->htmlexportcopyproxy->add($from, $to);
                     }
                     return $this->basepath . $to;
@@ -667,7 +667,7 @@ class HtmlExportOutputFilter {
             list($size, $prefix) = $this->get_size_from_options($options);
             $from = $file->get_path($size);
 
-            $to = $basefolder . $prefix . PluginExportHtml::sanitise_path($file->get('title'));
+            $to = $basefolder . $file->get('id') . '-' . $prefix . PluginExportHtml::sanitise_path($file->get('title'));
             $this->htmlexportcopyproxy->add($from, $to);
         }
         else {
