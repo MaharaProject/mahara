@@ -515,6 +515,13 @@ class HtmlExportOutputFilter {
             $html
         );
 
+        // Images out of the theme directory
+        $html = preg_replace_callback(
+            '#(' . preg_quote(get_config('wwwroot')) . ')?/?theme/' . get_config('theme') . '/static/images/([a-z0-9_.-]+)#',
+            array($this, 'replace_theme_image_link'),
+            $html
+        );
+
         return $html;
     }
 
@@ -622,6 +629,18 @@ class HtmlExportOutputFilter {
         }
 
         return '';
+    }
+
+    /**
+     * Callback
+     */
+    private function replace_theme_image_link($matches) {
+        $file = '/theme/' . get_config('theme') . '/static/images/' . $matches[2];
+        $this->htmlexportcopyproxy->add(
+            get_config('docroot') . $file,
+            '/static/' . $file
+        );
+        return $this->basepath . '/static/' . $file;
     }
 
     /**
