@@ -720,6 +720,7 @@ function theme_get_url($location, $pluginlocation='', $all = false) {
     if ($all) {
         return $list;
     }
+    log_debug('nothing to return ' . $location . ' and ' . $pluginlocation); // temporary - until the theming rework is over
 }
 
 /** 
