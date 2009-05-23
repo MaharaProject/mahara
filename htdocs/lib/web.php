@@ -1489,7 +1489,7 @@ function admin_nav() {
         ),
         array(
             'path'   => 'configsite/sitefiles',
-            'url'    => 'admin/site/files.php',
+            'url'    => 'artefact/file/sitefiles.php',
             'title'  => get_string('sitefiles', 'admin'),
             'weight' => 60,
         ),

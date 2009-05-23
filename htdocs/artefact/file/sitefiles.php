@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage admin
+ * @subpackage artefact-file
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
@@ -27,15 +27,15 @@
 define('INTERNAL', 1);
 define('ADMIN', 1);
 define('MENUITEM', 'configsite/sitefiles');
-define('SECTION_PLUGINTYPE', 'core');
-define('SECTION_PLUGINNAME', 'admin');
+define('SECTION_PLUGINTYPE', 'artefact');
+define('SECTION_PLUGINNAME', 'file');
 define('SECTION_PAGE', 'sitefiles');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
 define('TITLE', get_string('sitefiles', 'admin'));
 
-$form = pieform(ArtefactTypeFileBase::files_form(get_config('wwwroot') . 'admin/site/files.php', null, 'mahara'));
+$form = pieform(ArtefactTypeFileBase::files_form(get_config('wwwroot') . 'artefact/file/sitefiles.php', null, 'mahara'));
 $js = ArtefactTypeFileBase::files_js();
 
 $smarty = smarty();
