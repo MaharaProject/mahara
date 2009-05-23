@@ -26,6 +26,10 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'groups/forums');
+define('SECTION_PLUGINTYPE', 'interaction');
+define('SECTION_PLUGINNAME', 'forum');
+define('SECTION_PAGE', 'edittopic');
+
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction', 'forum');
 require_once('group.php');
