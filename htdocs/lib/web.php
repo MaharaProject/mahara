@@ -314,6 +314,9 @@ EOF;
             $stylesheets = array_merge($stylesheets, array_reverse($pluginsheets));
         }
     }
+    if (defined('ADMIN') || defined('INSTITUTIONALADMIN')) {
+        $stylesheets[] = theme_get_url('style/admin.css');
+    }
     if (get_config('developermode') & DEVMODE_DEBUGCSS) {
         $stylesheets[] = get_config('wwwroot') . 'theme/debug.css';
     }
