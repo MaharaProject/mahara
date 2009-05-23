@@ -27,8 +27,8 @@
 define('INTERNAL', 1);
 define('INSTITUTIONALADMIN', 1);
 define('MENUITEM', 'manageinstitutions/institutionfiles');
-define('SECTION_PLUGINTYPE', 'core');
-define('SECTION_PLUGINNAME', 'admin');
+define('SECTION_PLUGINTYPE', 'artefact');
+define('SECTION_PLUGINNAME', 'file');
 define('SECTION_PAGE', 'institutionfiles');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
