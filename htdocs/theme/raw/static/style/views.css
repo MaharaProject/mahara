@@ -36,12 +36,6 @@ p.view-description {
 	padding: 0;
     width: 100%;
 }
-#category-list ul {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	width: 100%;
-}
 #category-list li {
     margin: 0 0 0 .5em;
 	padding: 0;

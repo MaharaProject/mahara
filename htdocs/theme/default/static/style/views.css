@@ -2,46 +2,16 @@
  * Stylesheet for views for the default theme
  */
 
-#views-loading {
-    text-align: center;
-    margin: 1em;
-    font-size: 100%;
-    color: #547C22;
-}
-
-p.view-description {
-    margin: .5em .25em;
-}
-/** When viewing an artefact */
-#view .filedata-icon {
-    margin: 0 .5em;
-}
-#view table.filedata {
-    margin-top: 1em;
-    border: none;
-}
-#view table.filedata th {
-    width: 8em;
-    padding: 5px 0 0 0;
-}
 
 #top-pane {
     background-color: #95a8b7;
-    margin-bottom: .5em;
-    padding: .5em .5em .5em 0;
 }
 #category-list ul {
-	list-style: none;
 	margin: 0 0 0 .5em;
-	padding: 0;
-    width: 100%;
 }
 #category-list li {
-    margin: 0 0 0 .5em;
 	height: 25px;
-	padding: 0;
 	line-height: 25px;
-	display: inline;
 }
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     #category-list li { line-height: 24px; }
@@ -53,97 +23,33 @@ p.view-description {
 	height: 25px;
 }
 #category-list li a:hover {
-	text-decoration: none;
 	background-color: #d0dee8;
 }
 #category-list li.current a {
-    font-weight: bold;
     background-color: #f4f7f9;
-    cursor: default;
 }
 
 #blocktype-list {
     background-color: #f4f7f9;
-    padding: .5em .5em 1em .5em;
     margin-left: .5em;
-    font-size: .8em;
-}
-#blocktype-list .blocktype-radio {
-    border: none;
-    /* ie fix */
-    cursor: default;
-}
-
-/* don't ask... fixing some wierd firefox problem */
-#blocktype-list * {
-    margin: 0;
-}
-#blocktype-list ul li {
-	width: 22%;
-}
-
-#noblocks {
-    font-size: larger;
-    color: #547C22;
-    margin-top: 40px;
-    text-align: center;
-}
-
-#layout-link {
-	background: url(../images/icon-change.gif) no-repeat;
-	padding-left: 1.5em;
-	font-weight: bold;
-}
-#layout-link.disabled {
-    color: #aaa;
-}
-#btn-displaymyview {
-	background: url(../images/icon-display.gif) no-repeat;
-	padding-left: 1.5em;
-	font-weight: bold;
 }
 
 #page #bottom-pane {
-    margin: .5em 0;
 	border: 5px solid #f1f1f1;
 }
-#column-container {
-	padding: 0;
-	margin: 0;
-}
+
 #blocksinstruction {
-    padding: .5em 1em;
     background: #f1f1f1;
     color: #6e6e6e;
     font-weight: bold;
 }
 
-.add-column-center {
-    text-align: right;
-}
 .column-header input {
-    font-family: Verdana, Arial, Helvetica, sans-serif;
-    letter-spacing: -1px;
-    font-weight: normal;
-    height: 16px;
-    width: 42px;
-    color: #FFF;
-    /* konqueror/safari fix */
-    border: none;
-    background: none;
-    padding: 0;
-}
-.remove-column input.removecolumn {
-    width: 50px;
-}
-#column-container .column-header input[disabled="disabled"] {
-    color: #ccc;
-    cursor: default;
+    font-family: Verdana, Arial, Helvetica, sans-serif; /* todo audit */
 }
 
 .blockinstance {
     margin: 1em 0 1em 0;
-    padding: 0;
 }
 .blockinstance-header h4 {
     padding: 0 .25em;
@@ -153,37 +59,13 @@ p.view-description {
     text-decoration: none;
 }
 
-.blockinstance-controls {
-	position: absolute;
-	right: 0;
-	top: 2px;
-}
 .blockinstance-controls input {
-    height: 16px;
-    width: 16px;
     color: #acc067;
-    border: none;
-    background: none;
-    padding: 0;
 }
 
 .blockinstance-content {
     padding: .25em .5em;
-	font-size: .9em;
 }
-/* This rule is incredibly annoying, as it enforces the widths on a whole bunch of tables that don't need to be forced - like the blog attachments table and any tables the user generates by the wysiwyg editor. Can it be made more specific? */
-.blockinstance-content table {
-	width: 100%;
-	* width: 99%;
-}
-
-/*.blockinstance-content table.cb,
-.blockinstance-content table.cb th,
-.blockinstance-content table.cb td {
-    padding: 2px 4px;
-	text-align: left;
-	margin: 0;
-}*/
 
 #artefactchooser-body table,
 #artefactchooser-body table th,
@@ -193,68 +75,22 @@ p.view-description {
 	color: #474220;
 }
 
-.column-content {
-    min-height: 18px;
-}
-.column-content .add-button {
-    margin: 5px 0;
-}
-.add-button .newblockhere {
-    background: url(../images/btn_addblock.gif) repeat-x;
-    font-weight: normal;
-    height: 18px;
-    padding: 1px 5px 2px 5px;
-    color: #FFF;
-    width: 100%;
-    margin: 0;
-}
-/* this rule compresses and centers the buttons better in konqueror and safari */
-body:last-child:not(:root:root) .newblockhere {
-    color: #547C22;
-}
-
-#block-placeholder {
-    border: 2px dashed #bfbfbf;
-    margin-top: 1em;
-}
-
-#artefactids_pagination {
-    text-align: center;
-    white-space: nowrap;
-	margin: 0;
-}
-#artefactids_pagination .results {
-	margin: 0;
-}
-
-.ac-pagination a, .ac-pagination .disabled {
-    padding: 1px 3px;
-    margin: 0 1px;
-}
-
 /* styling the tabs for the artefact chooser */
 .maincontent ul.artefactchooser-tabs {
-  padding: 0;
-  margin: 0 !important;
-  font-size: .9em;
   line-height: 24px;
   font-weight: bold;
-  list-style: none;
   height: 24px;
   background: url(../images/tabs-bg.gif) repeat-x top left;
 }
 .maincontent ul.artefactchooser-tabs li {
   float: left;
   height: 24px;
-  margin: 0 !important;
-  padding: 0;
   background: url(../images/tabs-divider.gif) no-repeat top right;
 }
 .maincontent ul.artefactchooser-tabs li a {
   color: #1E6297;
   padding: 5px 12px 5px 10px;
   * padding: 6px 12px 6px 10px;
-  text-decoration: none;
 }
 .maincontent ul.artefactchooser-tabs li.current a {
   background: url(../images/tabs-over-bg.gif) no-repeat top right;
@@ -273,17 +109,8 @@ td label {
 	color: #474220;
 }
 
-#artefactchooser-searchsubmit {
-    margin: 0;
-}
-.maincontent div.artefactchooser-splitter {
-    padding: .25em 0 0;
-}
 .blockinstance-content p.noartefacts {
-    color: #808080;
-    text-align: center;
     margin-top: 0;
-    padding: .5em;
 }
 .blockinstance-content p {
 	margin: .5em 0;
@@ -296,16 +123,10 @@ td label {
 .blockinstance-content .maharatable th {
 	text-align: left !important;
 }
-.blockinstance-content table p img {
-	padding: 1em 2em;
-}
 .configure {
   border: 4px solid #f4f7f9;
-  background-color: #fff;
-  z-index: 2;
 }
 .configure .blockinstance-content {
-  font-size: 1em;
   border: 4px solid #F4F7F9;
   padding: 0.25em 0.5em;
 }
@@ -317,66 +138,14 @@ td label {
 }
 
 /* VIEWS */
-#feedbacktable .details {
-	margin-top: 10px;
-	color: #9e9e9e;
-}
-#feedbacktable .icon {
-	float: left;
-	margin-right: 5px;
-}
-
-#view #publicfeedback {
-	padding: 1em .5em .5em .5em;
-	border-top: 2px dotted #D2D2D2;
-}
-#viewmenu a {
-	margin: 0 .5em;
-}
-#view .blockinstance-content .postdetails {
-	text-align: right;
-	padding-top: 5px !important;
-	padding-bottom: 5px !important;
-}
 #blockconfig-header {
   font-weight: bold;
   padding: .25em .5em;
   border: 4px solid #F4F7F9;
 }
 
-form#wallpost {
-	margin: 0 0 1em 0;
-}
-form#wallpost .description {
-	padding: 0;
-}
-form#wallpost input.submit {
-	font-size: 1em;
-	margin: 0;
-}
-#wall .private {
-    background: url(../images/privatebg.gif) repeat top left;
-}
 .wallpost {
     border-bottom: 1px dotted #d1d1d1;
 	background-color: #F8FBFD;
     padding: .5em;
-}
-.wallpost .text p {
-    margin: .25em;
-}
-.wallpost .userinfo img {
-	float: left;
-	padding-right: .5em;
-}
-.wallpost .userinforight {
-	padding: .25em;
-}
-.wallpost .postedon {
-    color: #888;
-	font-style: italic;
-}
-
-#userfriendstable td {
-	text-align: center;
 }

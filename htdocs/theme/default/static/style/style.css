@@ -206,7 +206,7 @@ button.cancel,
 #potentialpresetitems button,
 #viewacl_lhs #results .button {
 	border: 0;
-	background: url(../images/icon-add.gif) no-repeat left 6px;
+	background: url(../../../raw/static/images/icon-add.gif) no-repeat left 6px;
 	color: #7f9d16 !important;
     padding-left: 1em;
     font-weight: bold;
@@ -235,7 +235,7 @@ input.delete {
 }
 #admininstitution_edit {
 	padding-left: 1.2em;
-	background: url(../images/icon-edit.gif) no-repeat left 7px;
+	background: url(../../../raw/static/images/icon-edit.gif) no-repeat left 7px;
 	border: none;
 	color: #7f9d16 !important;
 	padding-left: .7em;
@@ -276,7 +276,7 @@ input.edit {
 #search_search,
 #selfsearch button,
 #dosearch {
-	background: url(../images/btn_search_off.gif) no-repeat !important;
+	background: url(../../../raw/static/images/btn_search_off.gif) no-repeat !important;
 	border: none;
 	width: 25px;
 	height: 24px;
@@ -348,7 +348,7 @@ li#pendingfriends a {
     padding: 0;
 }
 #searchform_submit {
-	background: url(../images/btn_search_off.gif) no-repeat;
+	background: url(../../../raw/static/images/btn_search_off.gif) no-repeat;
 	border: none;
 	width: 25px;
 	height: 24px;
