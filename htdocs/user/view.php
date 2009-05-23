@@ -25,6 +25,12 @@
  */
 define('INTERNAL', 1);
 define('PUBLIC', 1);
+// Technically these are lies, but we set them like this to hook in the right 
+// plugin stylesheet. This file should be provided by artefact/internal anyway.
+define('SECTION_PLUGINTYPE', 'artefact');
+define('SECTION_PLUGINNAME', 'internal');
+define('SECTION_PAGE', 'view');
+
 require(dirname(dirname(__FILE__)).'/init.php');
 require_once('group.php');
 require_once('pieforms/pieform.php');
