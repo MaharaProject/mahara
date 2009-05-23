@@ -1391,38 +1391,6 @@ tr#contactinformation_contactinformation_container td .resumecontactinfo th {
   margin-top: 1em;
 }
 
-/* MY PORTFOLIO > MY BLOGS */
-#postlist td.postdetails {
-	padding-bottom: 2em;
-	font-style: italic;
-}
-#postlist p {
-	margin: 0 0 1em 0;
-}
-
-.blogpost-attachments {
-	width: 100%;
-	* width: 98%;
-	border: 1px solid #ddd;
-	background-color: #ddd;
-}
-.blogpost-attachments tbody th {
-	border: none !important;
-	padding: .25em .5em;
-	text-align: left;
-}
-.blogpost-attachments tr.r0 td,
-.blogpost-attachments tr.r1 td {
-	padding: .25em .5em;
-}
-
-#bloglist td .addicon {
-	margin: 0;
-}
-
-
-
-
 /* GROUPS */
 #groupsviewlist {
 	list-style: none;

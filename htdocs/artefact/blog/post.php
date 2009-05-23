@@ -26,6 +26,10 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'myportfolio/blogs');
+define('SECTION_PLUGINTYPE', 'artefact');
+define('SECTION_PLUGINNAME', 'blog');
+define('SECTION_PAGE', 'post');
+
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 
