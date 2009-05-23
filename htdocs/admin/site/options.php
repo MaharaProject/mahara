@@ -27,6 +27,9 @@
 define('INTERNAL', 1);
 define('ADMIN', 1);
 define('MENUITEM', 'configsite/siteoptions');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'admin');
+define('SECTION_PAGE', 'siteoptions');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');

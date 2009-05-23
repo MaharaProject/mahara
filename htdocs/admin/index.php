@@ -27,6 +27,9 @@
 define('INTERNAL', 1);
 define('ADMIN', 1);
 define('MENUITEM', 'adminhome');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'admin');
+define('SECTION_PAGE', 'index');
 
 require(dirname(dirname(__FILE__)).'/init.php');
 if (get_config('installed')) {

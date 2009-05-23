@@ -27,6 +27,9 @@
 define('INTERNAL', 1);
 define('ADMIN', 1);
 define('MENUITEM', 'configsite/networking');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'admin');
+define('SECTION_PAGE', 'networking');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
