@@ -419,14 +419,12 @@ input.delete {
 }
 /***** EDIT ICON LINKS ******/
 #btn-edit {
-	padding-left: 1.2em;
 	background: url(../images/icon-edit.gif) no-repeat left 4px;
 	border: none;
 	padding-left: 1em;
 	font-weight: bold;
 }
 input.edit {
-	padding-left: 1.2em;
 	background: url(../images/icon-edit.gif) no-repeat left 7px;
 	border: none;
 	padding-left: .7em;
