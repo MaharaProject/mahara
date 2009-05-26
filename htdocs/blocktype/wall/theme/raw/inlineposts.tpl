@@ -13,10 +13,8 @@
        {* {if $ownwall}
                     [ <a href="{$WWWROOT}blocktype/wall/wall.php?instance={$instanceid}&amp;replyto={$wallpost->id}">{str tag='reply' section='blocktype.wall'}</a> ]
         {/if}*}
-        {if $ownwall || $wallpost->from == $userid}
-                    [ <a href="{$WWWROOT}blocktype/wall/deletepost.php?instance={$wallpost->postid}&return={if $wholewall}wall{else}profile{/if}">
-                        {str tag='delete' section='blocktype.wall'}
-                    </a> ]
+        {if $wallpost->deletable}
+                    [ <a href="{$WWWROOT}blocktype/wall/deletepost.php?postid={$wallpost->postid}&return={if $wholewall}wall{else}profile{/if}">{str tag='delete' section='blocktype.wall'}</a> ]
         {/if}
                 </div>
             </div>

@@ -1,29 +1,49 @@
 <?php
 /**
- 
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage interaction
+ * @subpackage blocktype-wall
  * @author     Maxime Rigo
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
-
+ * @copyright  (C) 2009 Maxime Rigo
+ * @copyright  (C) 2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-
 define('INTERNAL', 1);
-define('PUBLIC', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('view.php');
 safe_require('blocktype', 'wall');
 
-$instance = param_integer('instance');
-$return = param_alpha('return');
+$postid = param_integer('postid');
+$return = param_variable('return');
 
+$wallpost = get_record('blocktype_wall_post', 'id', $postid);
+$instance = new BlockInstance($wallpost->instance);
+$view = new View($instance->get('view'));
+if (!PluginBlocktypeWall::can_delete_wallpost($wallpost->from, $view->get('owner'))) {
+    throw new AccessDeniedException();
+}
 
+$goto = ($return == 'wall')
+    ? '/blocktype/wall/wall.php?id=' . $instance->get('id')
+    : '/user/view.php?id=' . $view->get('owner');
 
-
-//validation
 $form = pieform(array(
     'name'     => 'deletepost',
     'renderer' => 'div',
@@ -35,26 +55,22 @@ $form = pieform(array(
         'submit' => array(
             'type'  => 'submitcancel',
             'value' => array(get_string('yes'), get_string('no')),
-            'goto'  => get_config('wwwroot').'user/view.php'
-            ),
-       
+            'goto'  => $goto,
+        ),
     )
 ));
 
 
-//smarty
-
 function deletepost_submit(Pieform $form, $values) {
-    global $SESSION;
-    $instance = param_integer('instance');
-delete_records('blocktype_wall_post', 'id', $instance);
+    global $SESSION, $postid, $goto;
+    delete_records('blocktype_wall_post', 'id', $postid);
     $SESSION->add_ok_msg(get_string('deletepostsuccess', 'blocktype.wall'));
-    redirect('/user/view.php');
+    redirect($goto);
 }
 
 
 $smarty = smarty();
 $smarty->assign('deleteform', $form);
-$smarty->display('blocktype:wall:deletepostwall.tpl');
+$smarty->display('blocktype:wall:deletepost.tpl');
 
 ?>

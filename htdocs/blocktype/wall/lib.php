@@ -168,7 +168,9 @@ class PluginBlocktypeWall extends SystemBlocktype {
             return array_map(
                 create_function(
                     '$item', 
-                    '$item->displayname = display_name($item); return $item;'), 
+                    '$item->displayname = display_name($item);
+                    $item->deletable = PluginBlocktypeWall::can_delete_wallpost($item->from, ' . intval($owner) .');
+                    return $item;'),
                 $records
             );
         }
@@ -193,6 +195,13 @@ class PluginBlocktypeWall extends SystemBlocktype {
             return get_string('title', 'blocktype.wall');
         }
         return get_string('otherusertitle', 'blocktype.wall', display_name($ownerid, null, true));
+    }
+
+    public static function can_delete_wallpost($poster, $wallowner) {
+        global $USER;
+        return $USER->is_admin_for_user($wallowner) ||
+            $poster == $USER->get('id') ||
+            $wallowner == $USER->get('id');
     }
 
 }
