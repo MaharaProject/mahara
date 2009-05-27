@@ -157,7 +157,7 @@ abstract class PluginExport extends Plugin {
      *                             - stdclass objects - db rows
      *                             - ArtefactType subclasses
      */
-    public function __construct(User $user, $views, $artefacts, $progresscallback) {
+    public function __construct(User $user, $views, $artefacts, $progresscallback=null) {
         if (!is_null($progresscallback)) {
             if (is_callable($progresscallback)) {
                 $this->progresscallback = $progresscallback;
