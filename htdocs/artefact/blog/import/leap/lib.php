@@ -190,10 +190,9 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
         if (is_null($blogid)) {
             $time = time(); // TODO maybe the importer will get a time field to record time of import
             $blog = new ArtefactTypeBlog();
-            // TODO: i18n
             $title = $importer->get('xml')->xpath('//a:feed/a:title');
-            $blog->set('title', 'Data imported from ' . (string)$title[0]);
-            $blog->set('description', 'Entries imported from a LEAP export, that were not abel to be imported elsewhere');
+            $blog->set('title', get_string('dataimportedfrom', 'artefact.blog', (string)$title[0]));
+            $blog->set('description', get_string('entriesimportedfromleapexport', 'artefact.blog'));
             $blog->set('owner', $importer->get('usr'));
             $blog->set('ctime', $time);
             $blog->set('mtime', $time);
