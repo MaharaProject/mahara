@@ -199,6 +199,9 @@ abstract class PluginExport extends Plugin {
             if (is_null($view)) {
                 throw new ParamOutOfRangeException("Invalid view $v");
             }
+            if ($view->get('owner') != $userid) {
+                throw new UserException("User $userid does not own view " . $view->get('id'));
+            }
             $this->views[$view->get('id')] = $view;
             $vaextra = 'AND va.view IN ( ' . implode(',', array_keys($this->views)) . ')';
         }
@@ -246,6 +249,9 @@ abstract class PluginExport extends Plugin {
             }
             if (is_null($artefact)) {
                 throw new ParamOutOfRangeException("Invalid artefact $a");
+            }
+            if ($artefact->get('owner') != $userid) {
+                throw new UserException("User $userid does not own artefact " . $artefact->get('id'));
             }
             $this->artefacts[$artefact->get('id')] = $artefact;
         }
