@@ -54,7 +54,7 @@ class LeapExportElementContactinformation extends LeapExportElement {
         return array(
             'selection_type' => array(
                 'scheme' => 'selection_type',
-                'term'   => 'grouping',
+                'term'   => 'Grouping',
             ),
         );
     }
@@ -220,7 +220,7 @@ class LeapExportElementResumeComposite extends LeapExportElement {
         return array(
             'selection_type' => array(
                 'scheme' => 'selection_type',
-                'term'   => 'grouping'
+                'term'   => 'Grouping'
             ),
             'life_area' => array(
                 'scheme' => 'life_area',
