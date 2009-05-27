@@ -1,7 +1,6 @@
 TODOs for export HTML plugin
 ============================
 
-* Granular export: Check that we respect $this->views and $this->artefacts correctly
 * i18n
 * G&D
 * Documentation

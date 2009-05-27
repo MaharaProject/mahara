@@ -5,8 +5,5 @@ See individual plugin directories for TODOs relating to them. This list isn't
 exhaustive, it's mostly for Nigel's short term planning benefit.
 
 Admin export UI
-Granular export:
-- check export constructor correctly sets up $this->views and $this->artefacts
-  for all possible modes of export
 Clean up exports sitting around on disk
 Split creation of archives from the export() method so it can be implemented in the base class

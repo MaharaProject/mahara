@@ -207,16 +207,13 @@ abstract class PluginExport extends Plugin {
         }
 
         // Get the list of artefacts to export
-        // TODO: make sure when exporting views, all artefacts in those views 
-        // are included regardless of whether they've been selected to be 
-        // exported or not
         if ($artefacts == self::EXPORT_ALL_ARTEFACTS) {
             $tmpartefacts = get_column('artefact', 'id', 'owner', $userid);
             $this->artefactexportmode = $artefacts;
         }
-        else if ($artefacts == self::EXPORT_ARTEFACTS_FOR_VIEWS) {
+        else {
             if ($tmpviews) {
-                $sql = "SELECT va.artefact
+                $sql = "SELECT DISTINCT va.artefact
                     FROM {view_artefact} va
                     LEFT JOIN {view} v ON v.id = va.view
                     WHERE v.owner = ?
@@ -226,14 +223,13 @@ abstract class PluginExport extends Plugin {
                 // Some artefacts are not inside the view, but still need to be exported with it
                 $tmpartefacts = array_unique(array_merge($tmpartefacts, $this->get_view_extra_artefacts()));
             }
-            else {
-                $tmpartefacts = array();
+            if ($artefacts == self::EXPORT_ARTEFACTS_FOR_VIEWS) {
+                $this->artefactexportmode = $artefacts;
             }
-            $this->artefactexportmode = $artefacts;
-        }
-        else {
-            $tmpartefacts = $artefacts;
-            $this->artefactexportmode = self::EXPORT_LIST_OF_ARTEFACTS;
+            else {
+                $tmpartefacts = array_unique(array_merge($tmpartefacts, $artefacts));
+                $this->artefactexportmode = self::EXPORT_LIST_OF_ARTEFACTS;
+            }
         }
         $typestoplugins = get_records_assoc('artefact_installed_type');
         foreach ($tmpartefacts as $a) {
