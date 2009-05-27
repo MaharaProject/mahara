@@ -43,6 +43,7 @@ $string['unabletogenerateexport'] = 'Unable to generate export';
 $string['viewstoexport'] = 'Views to export';
 $string['whatdoyouwanttoexport'] = 'What do you want to export?';
 $string['youarehere'] = 'You are here';
+$string['youmustselectatleastoneviewtoexport'] = 'You must select at least one View to export';
 $string['zipnotinstalled'] = 'Your system does not have the zip command. Please install zip to enable this feature';
 
 ?>

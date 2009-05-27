@@ -97,6 +97,22 @@ $form = pieform(array(
 ));
 
 
+function export_validate(Pieform $form, $values) {
+    global $SESSION;
+    if ($values['what'] == 'views') {
+        $viewchosen = false;
+        foreach ($values as $key => $value) {
+            if (substr($key, 0, 5) == 'view_' && $value) {
+                $viewchosen = true;
+            }
+        }
+        if (!$viewchosen) {
+            $form->set_error('what', '');
+            $SESSION->add_error_msg(get_string('youmustselectatleastoneviewtoexport', 'export'));
+        }
+    }
+}
+
 function export_submit(Pieform $form, $values) {
     global $SESSION;
     $views = array();
