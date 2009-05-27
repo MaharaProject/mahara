@@ -86,13 +86,6 @@ abstract class PluginExport extends Plugin {
      */
     abstract public function export();
 
-    /**
-     * Clean up after yourself - removing any temp files etc
-     *
-     * TODO: not used anywhere yet. Cleanup may not need an API method.
-     */
-    abstract public function cleanup();
-
     //  MAIN CLASS DEFINITION
 
     /**
@@ -254,7 +247,7 @@ abstract class PluginExport extends Plugin {
 
         // Now set up the temporary export directories
         $this->exportdir = get_config('dataroot')
-            . 'export/temporary/'
+            . 'export/'
             . $this->user->get('id')  . '/'
             . $this->exporttime .  '/';
         if (!check_dir_exists($this->exportdir)) {
@@ -339,6 +332,34 @@ abstract class PluginExport extends Plugin {
         }
 
         return array_values($data['artefacts']);
+    }
+}
+
+/**
+ * Looks in the export staging area in dataroot and deletes old, unneeded 
+ * exports.
+ */
+function export_cleanup_old_exports() {
+    require_once('file.php');
+    $basedir = get_config('dataroot') . 'export/';
+    $exportdir = new DirectoryIterator($basedir);
+    $mintime = time() - (12 * 60 * 60); // delete exports older than 12 hours
+
+    // The export dir contains one directory for each user who has created 
+    // an export, named after their UID
+    foreach ($exportdir as $userdir) {
+        if ($userdir->isDot()) continue;
+
+        // Each user's directory contains one directory for each export 
+        // they made, named as the unix timestamp of the time they 
+        // generated it
+        $udir = new DirectoryIterator($basedir . $userdir->getFilename());
+        foreach ($udir as $dir) {
+            if ($dir->isDot()) continue;
+            if ($dir->getCTime() < $mintime) {
+                rmdirr($basedir . $userdir->getFilename() . '/' . $dir->getFilename());
+            }
+        }
     }
 }
 
