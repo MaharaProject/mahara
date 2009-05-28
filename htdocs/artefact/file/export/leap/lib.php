@@ -90,10 +90,6 @@ class LeapExportElementFolder extends LeapExportElement {
             )
         );
     }
-
-    public function get_content() {
-        return hsc($this->artefact->get('description'));
-    }
 }
 
 class LeapExportElementImage extends LeapExportElementFile { }
