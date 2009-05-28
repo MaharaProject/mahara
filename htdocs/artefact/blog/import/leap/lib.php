@@ -235,7 +235,12 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
             $blogpost->set('description', $content);
         }
         else {
-            $blogpost->set('description', PluginImportLeap::get_entry_content($entry, $importer));
+            $description = PluginImportLeap::get_entry_content($entry, $importer);
+            $type = isset($entry->content['type']) ? (string)$entry->content['type'] : 'text';
+            if ($type == 'text') {
+                $description = format_whitespace($description);
+            }
+            $blogpost->set('description', $description);
         }
         if ($published = strtotime((string)$entry->published)) {
             $blogpost->set('ctime', $published);
