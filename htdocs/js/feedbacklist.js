@@ -67,37 +67,45 @@ function objectionSuccess() {
 }
 
 addLoadEvent(function () {
-    hideElement('add_feedback_form');
-    if ($('add_feedback_link')) {
-        connect('add_feedback_link', 'onclick', function(e) {
-            e.stop();
-            hideElement('objection_form');
-            $('add_feedback_form').reset();
-            showElement('add_feedback_form');
-            return false;
-        });
-    }
-    connect('cancel_add_feedback_form_submit', 'onclick', function (e) {
-        e.stop();
+    if ($('add_feedback_form')) {
         hideElement('add_feedback_form');
-        return false;
-    });
-
-    hideElement('objection_form');
-    if ($('objection_link')) {
-        connect('objection_link', 'onclick', function(e) {
+        if ($('add_feedback_link')) {
+            connect('add_feedback_link', 'onclick', function(e) {
+                e.stop();
+                if ($('objection_form')) {
+                    hideElement('objection_form');
+                }
+                $('add_feedback_form').reset();
+                showElement('add_feedback_form');
+                return false;
+            });
+        }
+        connect('cancel_add_feedback_form_submit', 'onclick', function (e) {
             e.stop();
             hideElement('add_feedback_form');
-            $('objection_form').reset();
-            showElement('objection_form');
             return false;
         });
     }
-    connect('cancel_objection_form_submit', 'onclick', function (e) {
-        e.stop();
+
+    if ($('objection_form')) {
         hideElement('objection_form');
-        return false;
-    });
+        if ($('objection_link')) {
+            connect('objection_link', 'onclick', function(e) {
+                e.stop();
+                if ($('add_feedback_form')) {
+                    hideElement('add_feedback_form');
+                }
+                $('objection_form').reset();
+                showElement('objection_form');
+                return false;
+            });
+        }
+        connect('cancel_objection_form_submit', 'onclick', function (e) {
+            e.stop();
+            hideElement('objection_form');
+            return false;
+        });
+    }
 
     if ($('toggle_watchlist_link')) {
         connect('toggle_watchlist_link', 'onclick', function (e) {
