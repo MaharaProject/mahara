@@ -66,7 +66,7 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
         $height = (!empty($configdata['height'])) ? hsc($configdata['height']) : self::$default_height;
 
         if (isset($configdata['videoid'])) {
-            $result  = '<div class="center">';
+            $result .= '<div class="mediaplayer-container center"><div class="mediaplayer">';
             $result .= '<object width="' . $width . '" height="' . $height . '">';
             $result .= '<param name="movie" value="' . $url . '"></param>';
             $result .= '<param name="wmode" value="transparent"></param>';
@@ -74,7 +74,7 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
             $result .= '<embed src="' . $url . '" ';
             $result .= 'type="application/x-shockwave-flash" wmode="transparent" width="' . $width . '" ';
             $result .= 'height="' . $height . '" allowscriptaccess="never"></embed></object>';
-            $result .= '</div>';
+            $result .= '</div></div>';
         }
 
         return $result;
