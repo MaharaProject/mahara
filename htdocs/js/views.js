@@ -81,47 +81,6 @@ function ViewManager() {
         removeElement('views-loading');
         showElement(self.bottomPane);
 
-        // If there is a block already in configure mode, make it wider, and get the normal content
-        var configblockcontent = getFirstElementByTagAndClassName('div', 'configure');
-        if (configblockcontent) {
-            var blockinstance = getFirstParentByTagAndClassName(configblockcontent, 'div', 'blockinstance');
-            var blockinstanceId = blockinstance.id.substr(blockinstance.id.lastIndexOf('_') + 1);
-            var button = getFirstElementByTagAndClassName('input', 'configurebutton', blockinstance);
-            setNodeAttribute(button, 'disabled', 'disabled');
-
-            var configform = configblockcontent.innerHTML;
-
-            // Put a loading message in place while the content downloads
-            insertSiblingNodesBefore(configblockcontent, DIV({'id':'block-loading'}, IMG({'src': config.theme['images/loading.gif']}), ' ', get_string('loading')));
-            hideElement(configblockcontent);
-
-            sendjsonrequest('blockcontentediting.json.php', {'id':blockinstanceId}, 'POST', function(data) {
-                showElement(configblockcontent);
-                self.currentConfigureData = {
-                    'contentdiv': configblockcontent,
-                    'oldcontent': data.data,
-                    'button'    : button
-                };
-
-                removeElement($('block-loading'));
-                self.growBlock(blockinstance);
-
-                // Make the cancel button be supersmart
-                var cancelButton = $('cancel_cb_' + blockinstanceId + '_action_configureblockinstance_id_' + blockinstanceId);
-                connect(cancelButton, 'onclick', function(e) {
-                    e.stop();
-                    configblockcontent.innerHTML = data.data;
-                    self.currentConfigureData = null;
-                    removeNodeAttribute(button, 'disabled');
-                    self.showMediaPlayers();
-                    self.shrinkBlock(blockinstance);
-                });
-            }, function() {
-                removeElement($('block-loading'));
-                showElement(configblockcontent);
-                self.growBlock(blockinstance);
-            });
-        }
     }
 
     /**
@@ -305,19 +264,6 @@ function ViewManager() {
 
     this.getConfigureForm = function(blockinstance) {
         var button = getFirstElementByTagAndClassName('input', 'configurebutton', blockinstance);
-        setNodeAttribute(button, 'disabled', 'disabled');
-
-        // If there is a configuration form open, close it. This is because
-        // each one shares the same form tag - the one for the entire form.
-        // We might be able to support having more than one form open at
-        // any one time, as long as we can detect precisely which form was
-        // submitted
-        if (self.currentConfigureData) {
-            self.currentConfigureData['contentdiv'].innerHTML = self.currentConfigureData['oldcontent'];
-            removeNodeAttribute(self.currentConfigureData['button'], 'disabled');
-            self.shrinkBlock(getFirstParentByTagAndClassName(self.currentConfigureData['contentdiv'], 'div', 'blockinstance'));
-            self.currentConfigureData = null;
-        }
 
         var blockinstanceId = blockinstance.id.substr(blockinstance.id.lastIndexOf('_') + 1);
         var contentDiv = getFirstElementByTagAndClassName('div', 'blockinstance-content', blockinstance);
@@ -331,31 +277,17 @@ function ViewManager() {
         replaceChildNodes(contentDiv, IMG({'src': config.theme['images/loading.gif']}), ' ', get_string('loading'));
 
         sendjsonrequest('blocks.json.php', pd, 'POST', function(data) {
-            self.currentConfigureData = {
-                'contentdiv': contentDiv,
-                'oldcontent': oldContent,
-                'button'    : button
-            };
-
-            self.growBlock(blockinstance);
-
-            contentDiv.innerHTML = data.data['html'];
-            eval(data.data.javascript);
+            contentDiv.innerHTML = oldContent;
+            self.addConfigureBlock(blockinstance, data.data);
             $('action-dummy').name = getNodeAttribute(button, 'name');
 
-            // Make the cancel button be supersmart
             var cancelButton = $('cancel_cb_' + blockinstanceId + '_action_configureblockinstance_id_' + blockinstanceId);
             connect(cancelButton, 'onclick', function(e) {
                 e.stop();
-                contentDiv.innerHTML = oldContent;
-                self.currentConfigureData = null;
-                removeNodeAttribute(button, 'disabled');
+                self.removeConfigureBlocks();
                 self.showMediaPlayers();
-                self.shrinkBlock(blockinstance);
             });
 
-        }, function() {
-            removeNodeAttribute(button, 'disabled');
         });
     }
 
@@ -381,49 +313,64 @@ function ViewManager() {
     }
 
 
-    this.growBlock = function(blockinstance) {
+    this.addConfigureBlock = function(oldblock, configblock, removeoncancel) {
         self.hideMediaPlayers();
-        var width = getElementDimensions(blockinstance).w;
-        var left = getElementPosition(blockinstance).x;
-        hideElement(blockinstance);
-        var newwidth = 500;
-        var blockheader = getFirstElementByTagAndClassName('div', 'blockinstance-header', blockinstance);
-        var blockcontrols = getFirstElementByTagAndClassName('div', 'blockinstance-controls', blockinstance);
-        hideElement(blockheader);
-        insertSiblingNodesAfter(blockheader, DIV({'id':'blockconfig-header'}, scrapeText(blockheader) + ': ' + get_string('Configure')));
-        addElementClass(blockinstance, 'configure');
-        setStyle(blockinstance, {
-            'width': newwidth + 'px',
+
+        var temp = DIV();
+        temp.innerHTML = configblock.html;
+        var newblock = getFirstElementByTagAndClassName('div', 'blockinstance', temp);
+        hideElement(newblock);
+        appendChildNodes(getFirstElementByTagAndClassName('body'), newblock);
+
+        var d = getElementDimensions(newblock);
+        var vpdim = getViewportDimensions();
+        var newtop = getViewportPosition().y + Math.max((vpdim.h - d.h) / 2, 5);
+        setStyle(newblock, {
+            'width': d.w + 'px',
+            'left': (vpdim.w - d.w) / 2 + 'px',
+            'top': newtop + 'px',
+            'position': 'absolute',
             'z-index': 1
         });
-        // Move the block to the left to keep it above the old block
-        var newleft = (width - newwidth) / 2;
-        if (left + newleft < 0) {
-            newleft = 0;
-        } else if (left + newwidth > getViewportDimensions().w) {
-            newleft = width - newwidth;
+
+        var deletebutton = getFirstElementByTagAndClassName('input', 'deletebutton', newblock);
+        self.rewriteDeleteButton(deletebutton);
+
+        if (removeoncancel) {
+            var oldblockid = newblock.id.substr(0, newblock.id.length - '_configure'.length);
+            var blockinstanceId = oldblockid.substr(oldblockid.lastIndexOf('_') + 1);
+            var cancelbutton = $('cancel_cb_' + blockinstanceId + '_action_configureblockinstance_id_' + blockinstanceId);
+            if (cancelbutton) {
+                setNodeAttribute(cancelbutton, 'name', getNodeAttribute(deletebutton, 'name'));
+                disconnectAll(cancelbutton);
+                self.rewriteCancelButton(cancelbutton, blockinstanceId);
+            }
         }
-        setStyle(blockinstance, {'left': newleft + 'px'});
-        showElement(blockinstance);
-        keepElementInViewport(blockinstance);
+
+        showElement(newblock);
+        eval(configblock.javascript);
     }
 
 
-    this.shrinkBlock = function(blockinstance) {
-        hideElement(blockinstance);
-        removeElementClass(blockinstance, 'configure');
-        setStyle(blockinstance, {
-            'left': 0,
-            'width': 'auto'
-        });
-        var blockheader = getFirstElementByTagAndClassName('div', 'blockinstance-header', blockinstance);
-        var blockcontrols = getFirstElementByTagAndClassName('div', 'blockinstance-controls', blockinstance);
-        var configheader = $('blockconfig-header');
-        if (configheader) {
-            removeElement(configheader);
+    this.replaceConfigureBlock = function(data) {
+        var oldblock = $('blockinstance_' + data.blockid);
+        if (oldblock) {
+            var temp = DIV();
+            temp.innerHTML = data.data.html;
+            var newblock = getFirstElementByTagAndClassName('div', 'blockinstance', temp)
+            swapDOM(oldblock, newblock);
+            eval(data.data.javascript);
+            self.makeBlockinstanceDraggable(newblock);
+            self.rewriteConfigureButton(getFirstElementByTagAndClassName('input', 'configurebutton', newblock));
+            self.rewriteDeleteButton(getFirstElementByTagAndClassName('input', 'deletebutton', newblock));
         }
-        showElement(blockheader);
-        showElement(blockinstance);
+        self.removeConfigureBlocks();
+        self.showMediaPlayers();
+    }
+
+    this.removeConfigureBlocks = function() {
+        // FF3 hangs unless you delay removal of the iframe inside the old configure block
+        callLater(0.0001, function () { forEach(getElementsByTagAndClassName('div', 'configure'), removeElement); });
     }
 
     /**
@@ -445,14 +392,11 @@ function ViewManager() {
                 var pd = {'id': $('viewid').value, 'change': 1};
                 pd[getNodeAttribute(e.src(), 'name')] = 1;
                 sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
-                    removeElement(getFirstParentByTagAndClassName(button, 'div', 'blockinstance'));
-                    removeNodeAttribute(button, 'disabled');
-                    if (self.currentConfigureData) {
-                        self.currentConfigureData['contentdiv'].innerHTML = self.currentConfigureData['oldcontent'];
-                        removeNodeAttribute(self.currentConfigureData['button'], 'disabled');
+                    var blockinstanceId = button.name.substr(button.name.lastIndexOf('_') + 1);
+                    removeElement('blockinstance_' + blockinstanceId);
+                    if ($('blockinstance_' + blockinstanceId + '_configure')) {
+                        self.removeConfigureBlocks();
                         self.showMediaPlayers();
-                        self.shrinkBlock(getFirstParentByTagAndClassName(self.currentConfigureData['contentdiv'], 'div', 'blockinstance'));
-                        self.currentConfigureData = null;
                     }
                 }, function() {
                     removeNodeAttribute(button, 'disabled');
@@ -461,6 +405,25 @@ function ViewManager() {
             else {
                 removeNodeAttribute(button, 'disabled');
             }
+            e.stop();
+        });
+    }
+
+
+    /**
+     * Rewrites cancel button to remove a block
+     */
+    this.rewriteCancelButton = function(button, blockinstanceId) {
+        connect(button, 'onclick', function(e) {
+            var pd = {'id': $('viewid').value, 'change': 1};
+            pd[getNodeAttribute(e.src(), 'name')] = 1;
+            sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
+                removeElement('blockinstance_' + blockinstanceId);
+                if ($('blockinstance_' + blockinstanceId + '_configure')) {
+                    self.removeConfigureBlocks();
+                    self.showMediaPlayers();
+                }
+            });
             e.stop();
         });
     }
@@ -971,36 +934,22 @@ function ViewManager() {
                 pd['action_addblocktype_column_' + whereTo['column'] + '_order_' + whereTo['order']] = true;
                 sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
                     var div = DIV();
-                    div.innerHTML = data.data.html;
+                    div.innerHTML = data.data.display.html;
                     var blockinstance = getFirstElementByTagAndClassName('div', 'blockinstance', div);
-
                     // Make configure button clickable, but disabled as blocks are rendered in configure mode by default
                     var configureButton = getFirstElementByTagAndClassName('input', 'configurebutton', blockinstance);
                     if (configureButton) {
                         self.rewriteConfigureButton(configureButton);
-                        if (self.currentConfigureData) {
-                            self.currentConfigureData['contentdiv'].innerHTML = self.currentConfigureData['oldcontent'];
-                            removeNodeAttribute(self.currentConfigureData['button'], 'disabled');
-                            self.shrinkBlock(getFirstParentByTagAndClassName(self.currentConfigureData['contentdiv'], 'div', 'blockinstance'));
-                            self.currentConfigureData = null;
-                        }
-                        self.currentConfigureData = {
-                            'contentdiv': getFirstElementByTagAndClassName('div', 'blockinstance-content', blockinstance),
-                            'oldcontent': '',
-                            'button'    : configureButton
-                        };
                         $('action-dummy').name = 'action_addblocktype_column_' + whereTo['column'] + '_order_' + whereTo['order'];
-                        setNodeAttribute(configureButton, 'disabled', 'disabled');
                     }
 
                     self.rewriteDeleteButton(getFirstElementByTagAndClassName('input', 'deletebutton', blockinstance));
                     self.makeBlockinstanceDraggable(blockinstance);
                     insertSiblingNodesAfter(self.blockPlaceholder, blockinstance);
                     removeElement(self.blockPlaceholder);
-                    eval(data.data.javascript);
 
-                    if (configureButton) {
-                        self.growBlock(blockinstance);
+                    if (data.data.configure) {
+                        self.addConfigureBlock(blockinstance, data.data.configure, true);
                     }
                 });
 
@@ -1122,10 +1071,6 @@ function ViewManager() {
     // it is dropped. Needs a margin the same as the blockinstances
     this.blockPlaceholder = DIV({'id': 'block-placeholder'});
 
-    // A container for information about the blockinstance current being
-    // configured
-    this.currentConfigureData = null;
-
     // The column container - set in self.init
     this.columnContainer = null;
 
@@ -1143,3 +1088,13 @@ function ViewManager() {
 
 viewManager = new ViewManager();
 viewManager.addCSSRules();
+
+function blockConfigSuccess(form, data) {
+    if (data.formelementsuccess) {
+        eval(data.formelementsuccess + '(form, data)');
+    }
+    if (data.blockid) {
+        viewManager.replaceConfigureBlock(data);
+    }
+}
+

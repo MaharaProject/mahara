@@ -1055,13 +1055,9 @@ class View {
             if (!in_array($blockinstance->get('blocktype'), $installed)) {
                 continue; // this plugin has been disabled
             }
-            $configure = ($blockinstance->get('id') == $this->blockinstance_currently_being_configured);
-            $result = $blockinstance->$renderfunction($configure, false);
+            $result = $blockinstance->$renderfunction();
             if ($editing) {
                 $blockcontent .= $result['html'];
-                if ($configure) {
-                    $blockcontent .= '<script type="text/javascript">' . $result['javascript'] . '</script>';
-                }
                 // NOTE: build_column is always called in the context of column
                 // operations, so the javascript returned, which is currently
                 // for configuring block instances only, is not necessary
@@ -1133,8 +1129,14 @@ class View {
         $this->dirtycolumns[$values['column']] = 1;
 
         if ($values['returndata']) {
-            // Make sure it's in configure mode if it has configuration
-            return $bi->render_editing(call_static_method(generate_class_name('blocktype', $values['blocktype']), 'has_instance_config'), true);
+            // Return new block rendered in both configure mode and (editing) display mode
+            $result = array(
+                'display' => $bi->render_editing(false, true),
+            );
+            if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'has_instance_config')) {
+                $result['configure'] = $bi->render_editing(true, true);
+            }
+            return $result;
         }
     }
 
@@ -1263,7 +1265,7 @@ class View {
     public function configureblockinstance($values) {
         require_once(get_config('docroot') . 'blocktype/lib.php');
         $bi = new BlockInstance($values['id']);
-        return $bi->build_configure_form();
+        return $bi->render_editing(true);
     }
 
     /**

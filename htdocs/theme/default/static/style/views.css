@@ -76,23 +76,23 @@
 }
 
 /* styling the tabs for the artefact chooser */
-.maincontent ul.artefactchooser-tabs {
+ul.artefactchooser-tabs {
   line-height: 24px;
   font-weight: bold;
   height: 24px;
   background: url(../images/tabs-bg.gif) repeat-x top left;
 }
-.maincontent ul.artefactchooser-tabs li {
+ul.artefactchooser-tabs li {
   float: left;
   height: 24px;
   background: url(../images/tabs-divider.gif) no-repeat top right;
 }
-.maincontent ul.artefactchooser-tabs li a {
+ul.artefactchooser-tabs li a {
   color: #1E6297;
   padding: 5px 12px 5px 10px;
   * padding: 6px 12px 6px 10px;
 }
-.maincontent ul.artefactchooser-tabs li.current a {
+ul.artefactchooser-tabs li.current a {
   background: url(../images/tabs-over-bg.gif) no-repeat top right;
   color: #000;
 }
@@ -123,8 +123,21 @@ td label {
 .blockinstance-content .maharatable th {
 	text-align: left !important;
 }
-.configure {
+.blockconfig-background {
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+}
+.blockinstance.configure {
   border: 4px solid #f4f7f9;
+  background: #fff;
+  width: 700px;
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
+}
+.blockinstance.configure .blockinstance-header {
+  padding: .25em .5em;
 }
 .configure .blockinstance-content {
   border: 4px solid #F4F7F9;
