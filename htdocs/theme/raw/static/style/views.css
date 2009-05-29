@@ -263,9 +263,10 @@ div.artefactchooser-splitter {
   text-align: left;
   margin-left: auto;
   margin-right: auto;
-}
-.blockinstance.configure .blockinstance-header {
   padding: .25em .5em;
+}
+.blockinstance.configure th {
+  text-align: left;
 }
 
 /* VIEWS */

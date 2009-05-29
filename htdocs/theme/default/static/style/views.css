@@ -12,6 +12,7 @@
 #category-list li {
 	height: 25px;
 	line-height: 25px;
+	display: inline;
 }
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     #category-list li { line-height: 24px; }
