@@ -636,16 +636,6 @@ class BlockInstance {
             global $SESSION;
             $SESSION->add_error_msg(get_string('errorprocessingform'));
         }
-        else {
-            // This is a bit hacky. Because pieforms will take values from
-            // $_POST before 'defaultvalue's of form elements, we need to nuke
-            // all of the post values for the form. The situation where this
-            // becomes relevant is when someone clicks the configure button for
-            // one block, then immediately configures another block
-            foreach (array_keys($elements) as $name) {
-                unset($_POST[$name]);
-            }
-        }
 
         $html = $pieform->build();
         // We probably need a new version of $pieform->build() that separates out the js
