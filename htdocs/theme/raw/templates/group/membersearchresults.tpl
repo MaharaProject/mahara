@@ -10,7 +10,7 @@
                 {$results.roles[$r.role]->display}{if $caneditroles && $r.canchangerole} (<a href="{$WWWROOT}group/changerole.php?group={$group}&amp;user={$r.id}">{str tag=changerole section=group}</a>){/if}
                 {$r.removeform}
                 </h5>
-                <div class="introduction">{$r.introduction|str_shorten:80:true}</div>
+                <div class="introduction">{$r.introduction|str_shorten_html:80:true}</div>
                 <label>{str tag="Joined" section="group"}:</label> {$r.jointime}
                 {elseif $membershiptype == 'request'}
                 <div class="requested">{str tag=hasrequestedmembership section=group}.{if $r.reason}

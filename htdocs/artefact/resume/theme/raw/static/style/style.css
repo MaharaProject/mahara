@@ -1,6 +1,36 @@
+/**
+ * CSS rules for the resume artefact plugin
+ *
+ * Copyright (C) 2006-2009 Catalyst IT
+ * This file is distributed under the same terms as Mahara itself
+ */
 .tablerenderer th.resumecontrols {
     width:50px; !important;
 }
 
 .tablerenderer th.resumedate {
     width:100px; !important;
+}
+#resumewrap table {
+	width: 100%;
+}
+#resumewrap form table td,
+#resumewrap form table tbody th {
+	padding: 0;
+}
+#resumewrap form table td,
+#resumewrap form table tbody th {
+	padding: .25em;
+}
+fieldset legend.resumeh3 a {
+	background: none;
+	padding: 0;
+}
+
+tr#contactinformation_contactinformation_container th {
+	display: none;
+}
+tr#contactinformation_contactinformation_container td .resumecontactinfo th {
+	width: 30%;
+	display: table-cell;
+}

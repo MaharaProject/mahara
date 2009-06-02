@@ -157,14 +157,20 @@ if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
     }
 }
 
+$anonfeedback = !$USER->is_logged_in() && ($usertoken || $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid)));
+
 $smarty->assign('ownername', $view->formatted_owner());
 $smarty->assign('streditviewbutton', ($new) ? get_string('backtocreatemyview', 'view') : get_string('editmyview', 'view'));
 $smarty->assign('viewdescription', $view->get('description'));
 $smarty->assign('viewcontent', $view->build_columns());
 $smarty->assign('releaseform', $releaseform);
-$smarty->assign('anonfeedback', !$USER->is_logged_in() && ($usertoken || $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid))));
-$smarty->assign('addfeedbackform', pieform(add_feedback_form($allowattachments)));
-$smarty->assign('objectionform', pieform(objection_form()));
+$smarty->assign('anonfeedback', $anonfeedback);
+if ($USER->is_logged_in() || $anonfeedback) {
+    $smarty->assign('addfeedbackform', pieform(add_feedback_form($allowattachments)));
+}
+if ($USER->is_logged_in()) {
+    $smarty->assign('objectionform', pieform(objection_form()));
+}
 $smarty->assign('viewbeingwatched', $viewbeingwatched);
 
 $smarty->display('view/view.tpl');

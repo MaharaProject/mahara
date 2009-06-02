@@ -70,7 +70,9 @@ function pieform_element_tinywysiwyg_get_value(Pieform $form, $element) {
 function pieform_element_tinywysiwyg_views_js(Pieform $form, $element) {
     global $USER;
     if ($USER->get_account_preference('wysiwyg') || defined('PUBLIC')) {
-        return 'tinyMCE.execCommand("mceAddControl", true, ' . json_encode($form->get_name() . '_' . $element['name']) . ');';
+        $formname = json_encode($form->get_name());
+        $editor = json_encode($form->get_name() . '_' . $element['name']);
+        return "\ntinyMCE.idCounter=0;tinyMCE.execCommand('mceAddControl', true, $editor);PieformManager.connect('onsubmit', $formname, tinyMCE.triggerSave);";
     }
     return '';
 }

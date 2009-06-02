@@ -26,6 +26,9 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'groups/files');
+define('SECTION_PLUGINTYPE', 'artefact');
+define('SECTION_PLUGINNAME', 'file');
+define('SECTION_PAGE', 'groupfiles');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('libroot') . 'group.php');

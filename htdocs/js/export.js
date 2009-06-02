@@ -35,6 +35,11 @@ addLoadEvent(function() {
                 slideUp(container, {'duration': 0.5, 'afterFinish': enableRadios});
             }
         });
+        // Open the view selector if the views checkbox is select on page load
+        if (radio.value == 'views' && radio.checked && !containerVisible) {
+            containerVisible = true;
+            removeElementClass(container, 'js-hidden');
+        }
     });
 
     // Hook up 'click to preview' links

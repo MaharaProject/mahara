@@ -589,11 +589,11 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $folderdata = self::artefactchooser_folder_data($artefact);
 
         if ($artefact->artefacttype == 'profileicon') {
-            $artefact->description = str_shorten($artefact->title, 30);
+            $artefact->description = str_shorten_text($artefact->title, 30);
         }
         else {
             $path = $artefact->parent ? self::get_full_path($artefact->parent, $folderdata->data) : '';
-            $artefact->description = str_shorten($folderdata->ownername . $path . $artefact->title, 30);
+            $artefact->description = str_shorten_text($folderdata->ownername . $path . $artefact->title, 30);
         }
 
         return $artefact;
@@ -870,7 +870,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
         $size = $um->file['size'];
         global $USER;
-        if (!isset($data->institution) && !$USER->quota_allowed($size)) {
+        if (!isset($data->institution) && !isset($data->group) && !$USER->quota_allowed($size)) {
             throw new QuotaExceededException(get_string('uploadexceedsquota', 'artefact.file'));
         }
         $data->size         = $size;
@@ -886,8 +886,10 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             throw new UploadException($error);
         }
         else {
-            $USER->quota_add($size);
-            $USER->commit();
+            if (!isset($data->institution) && !isset($data->group)) {
+                $USER->quota_add($size);
+                $USER->commit();
+            }
         }
         return $id;
     }
@@ -1172,7 +1174,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
                 $c = artefact_instance_from_id($child->id);
                 $child->title = $child->hovertitle = $c->get('title');
                 if (!empty($options['simpledisplay'])) {
-                    $child->title = str_shorten($child->title, 20);
+                    $child->title = str_shorten_text($child->title, 20);
                 }
                 $child->date = format_date(strtotime($child->mtime), 'strfdaymonthyearshort');
                 $child->iconsrc = call_static_method(generate_artefact_class_name($child->artefacttype), 'get_icon', array('id' => $child->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));

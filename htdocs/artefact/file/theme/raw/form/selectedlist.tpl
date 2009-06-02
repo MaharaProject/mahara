@@ -10,7 +10,7 @@
  </thead>
  <tbody>
   {foreach from=$selectedlist item=file}
-    {assign var=displaytitle value=$file->title|escape|str_shorten:34}
+    {assign var=displaytitle value=$file->title|str_shorten_text:34|escape}
   <tr class="r{cycle values=0,1}{if !empty($highlight) && $highlight == $file->id} highlight-file{/if}">
     <td>
       <img src="{if $file->artefacttype == 'image'}{$WWWROOT}artefact/file/download.php?file={$file->id}&size=20x20{else}{$THEMEURL}images/{$file->artefacttype}.gif{/if}">

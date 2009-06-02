@@ -314,6 +314,9 @@ EOF;
             $stylesheets = array_merge($stylesheets, array_reverse($pluginsheets));
         }
     }
+    if (defined('ADMIN') || defined('INSTITUTIONALADMIN')) {
+        $stylesheets[] = theme_get_url('style/admin.css');
+    }
     if (get_config('developermode') & DEVMODE_DEBUGCSS) {
         $stylesheets[] = get_config('wwwroot') . 'theme/debug.css';
     }
@@ -717,6 +720,7 @@ function theme_get_url($location, $pluginlocation='', $all = false) {
     if ($all) {
         return $list;
     }
+    log_debug('nothing to return ' . $location . ' and ' . $pluginlocation); // temporary - until the theming rework is over
 }
 
 /** 
@@ -988,21 +992,10 @@ function param_boolean($name) {
  * NOTE: this function is only meant to be used by get_imagesize_parameters(),
  * which you should use in your scripts.
  *
- * This function returns a GET or POST parameter as a two element array 
- * repesenting an allowed width and height value for a resized image. If the 
- * default isn't specified and the parameter hasn't been sent, a 
- * ParameterException is thrown. Likewise, if the parameter isn't a valid size 
- * dimension, a ParameterException is thrown.
+ * It expects the parameter to be a string, in the form /\d+x\d+/ - e.g. 
+ * 200x150.
  *
- * A size parameter is a string, in the form /\d+x\d+/ - e.g. 200x150. The 
- * width and height are not allowed to be greater than the configured allowed
- * maximums - config variables imagemaxwidth and imagemaxheight.
- *
- * You call this function like so:
- *
- * list($width, $height) = param_imagesize('size');
- *
- * @param string The GET or POST parameter you want returned.
+ * @param string The GET or POST parameter you want checked
  * TODO: i18n for the error messages
  */
 function param_imagesize($name) {
@@ -1018,14 +1011,7 @@ function param_imagesize($name) {
         throw new ParameterException('Invalid size for image specified');
     }
 
-    list($width, $height) = explode('x', $value);
-    if ($width > get_config('imagemaxwidth') || $height > get_config('imagemaxheight')) {
-        throw new ParameterException('Requested image size is too big');
-    }
-    if ($width < 16 || $height < 16) {
-        throw new ParameterException('Requested image size is too small');
-    }
-    return array('w' => $width, 'h' => $height);
+    return $value;
 }
 
 /**
@@ -1044,11 +1030,51 @@ function get_imagesize_parameters($sizeparam='size', $widthparam='width', $heigh
     $maxwidth  = param_integer($maxwidthparam, 0);
     $maxheight = param_integer($maxheightparam, 0);
 
+    return imagesize_data_to_internal_form($size, $width, $height, $maxsize, $maxwidth, $maxheight);
+}
+
+/**
+ * Given sizing information, converts it to a form that get_dataroot_image_path 
+ * can use.
+ *
+ * @param mixed $size    either an array with 'w' and 'h' keys, or a string 'WxH'. 
+ *                       Image will be exactly this size
+ * @param int $width     Width. Image will be scaled to be exactly this wide
+ * @param int $height    Height. Image will be scaled to be exactly this high
+ * @param int $maxsize   The longest side will be scaled to be this size
+ * @param int $maxwidth  Use with maxheight - image dimensions will be made as 
+ *                       large as possible but not exceed either one
+ * @param int $maxheight Use with maxwidth - image dimensions will be made as 
+ *                       large as possible but not exceed either one
+ * @return mixed         A sizing parameter that can be used with get_dataroot_image_path()
+ */
+function imagesize_data_to_internal_form($size, $width, $height, $maxsize, $maxwidth, $maxheight) {
     $imagemaxwidth  = get_config('imagemaxwidth');
     $imagemaxheight = get_config('imagemaxheight');
 
     if ($size) {
-        return $size;
+        if (is_array($size)) {
+            if (isset($size['w']) && isset($size['h'])) {
+                $width  = $size['w'];
+                $height = $size['h'];
+            }
+            else {
+                throw new ParameterException('Size parameter is corrupt');
+            }
+        }
+        else if (is_string($size)) {
+            list($width, $height) = explode('x', $size);
+        }
+        else {
+            throw new ParameterException('Size parameter is corrupt');
+        }
+        if ($width > get_config('imagemaxwidth') || $height > get_config('imagemaxheight')) {
+            throw new ParameterException('Requested image size is too big');
+        }
+        if ($width < 16 || $height < 16) {
+            throw new ParameterException('Requested image size is too small');
+        }
+        return array('w' => $width, 'h' => $height);
     }
     if ($maxsize) {
         if ($maxsize > $imagemaxwidth && $maxsize > $imagemaxheight) {
@@ -1415,10 +1441,6 @@ function pieform_get_help(Pieform $form, $element) {
         $form->get_name(), $element['name']);
 }
 
-function make_link($url) {
-    return '<a href="' . $url . '">' . $url . '</a>';
-}
-
 
 /**
  * Returns the entries in the standard admin menu
@@ -1471,7 +1493,7 @@ function admin_nav() {
         ),
         array(
             'path'   => 'configsite/sitefiles',
-            'url'    => 'admin/site/files.php',
+            'url'    => 'artefact/file/sitefiles.php',
             'title'  => get_string('sitefiles', 'admin'),
             'weight' => 60,
         ),
@@ -2365,16 +2387,20 @@ function display_cleaned_html($html, $filename, $params) {
 
 /**
  * Takes a string and a length, and ensures that the string is no longer than
- * this length, by putting '...' in the middle
- * Strips all tags except <br> and <p>
+ * this length, by putting '...' in it somewhere.
  *
- * @param string $str String to shorten
- * @param int $maxlen The maximum length the new string should be (default 100)
- * @param bool $truncate if true, cut the string at the end rather than in the middle (default false)
- * @param bool $newlines if false, cut off after the first newline (default true)
+ * It also strips all tags except <br> and <p>.
+ *
+ * This version is appropriate for use on HTML. See str_shorten_text() for use 
+ * on text strings.
+ *
+ * @param string $str    The string to shorten
+ * @param int $maxlen    The maximum length the new string should be (default 100)
+ * @param bool $truncate If true, cut the string at the end rather than in the middle (default false)
+ * @param bool $newlines If false, cut off after the first newline (default true)
  * @return string
  */
-function str_shorten($str, $maxlen=100, $truncate=false, $newlines=true) {
+function str_shorten_html($str, $maxlen=100, $truncate=false, $newlines=true) {
     if (empty($str)) {
         return $str;
     }
@@ -2396,15 +2422,56 @@ function str_shorten($str, $maxlen=100, $truncate=false, $newlines=true) {
     $str = html_entity_decode($str); // no things like &nbsp; only take up one character
     // take the first $length chars, then up to the first space (max length $length + $extra chars)
 
-    if ($truncate && mb_strlen($str, 'UTF-8') > $maxlen) {
-        $str = mb_substr($str, 0, $maxlen-3, 'UTF-8') . '...';
+    if (function_exists('mb_substr')) {
+        if ($truncate && mb_strlen($str, 'UTF-8') > $maxlen) {
+            $str = mb_substr($str, 0, $maxlen-3, 'UTF-8') . '...';
+        }
+        if (mb_strlen($str, 'UTF-8') > $maxlen) {
+            $str = mb_substr($str, 0, floor($maxlen / 2) - 1, 'UTF-8') . '...' . mb_substr($str, -(floor($maxlen / 2) - 2), mb_strlen($str, 'UTF-8'), 'UTF-8');
+        }
     }
-    if (mb_strlen($str, 'UTF-8') > $maxlen) {
-        $str = mb_substr($str, 0, floor($maxlen / 2) - 1, 'UTF-8') . '...' . mb_substr($str, -(floor($maxlen / 2) - 2), mb_strlen($str, 'UTF-8'), 'UTF-8');
+    else {
+        if ($truncate && strlen($str) > $maxlen) {
+            $str = substr($str, 0, $maxlen-3) . '...';
+        }
+        if (strlen($str) > $maxlen) {
+            $str = substr($str, 0, floor($maxlen / 2) - 1) . '...' . substr($str, -(floor($maxlen / 2) - 2), strlen($str));
+        }
     }
     $str = nl2br(hsc($str));
     // this should be ok, because the string gets checked before going into the database
     $str = str_replace('&amp;', '&', $str);
+    return $str;
+}
+
+/**
+ * Takes a string and a length, and ensures that the string is no longer than 
+ * this length, by putting '...' in it somewhere.
+ *
+ * This version is appropriate for use on plain text. See str_shorten_html() 
+ * for use on HTML strings.
+ *
+ * @param string $str    The string to shorten
+ * @param int $maxlen    The maximum length the new string should be (default 100)
+ * @param bool $truncate If true, cut the string at the end rather than in the middle (default false)
+ * @return string
+ */
+function str_shorten_text($str, $maxlen=100, $truncate=false) {
+    if (function_exists('mb_substr')) {
+        if (mb_strlen($str, 'UTF-8') > $maxlen) {
+            if ($truncate) {
+                return mb_substr($str, 0, $maxlen - 3, 'UTF-8') . '...';
+            }
+            return mb_substr($str, 0, floor($maxlen / 2) - 1, 'UTF-8') . '...' . mb_substr($str, -(floor($maxlen / 2) - 2), mb_strlen($str, 'UTF-8'), 'UTF-8');
+        }
+        return $str;
+    }
+    if (strlen($str) > $maxlen) {
+        if ($truncate) {
+            return substr($str, 0, $maxlen - 3) . '...';
+        }
+        return substr($str, 0, floor($maxlen / 2) - 1) . '...' . substr($str, -(floor($maxlen / 2) - 2));
+    }
     return $str;
 }
 

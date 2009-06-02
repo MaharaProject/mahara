@@ -704,6 +704,7 @@ function core_install_firstcoredata_defaults() {
         'recalculate_quota'                      => array('15', '2', '*', '*', '*'),
         'import_process_queue'                   => array('*/5', '*', '*', '*', '*'),
         'cron_send_registration_data'            => array(rand(0, 59), rand(0, 23), '*', '*', rand(0, 6)),
+        'export_cleanup_old_exports'             => array('0', '3,13', '*', '*', '*'),
     );
     foreach ($cronjobs as $callfunction => $times) {
         $cron = new StdClass;

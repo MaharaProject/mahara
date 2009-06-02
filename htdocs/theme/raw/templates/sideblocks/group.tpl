@@ -1,4 +1,5 @@
     <h3>{$data.group->name|escape}</h3>
+        <div class="sidebar-content">
     <ul>
     {foreach from=$data.menu item=item}
         {if $item.path != 'groups'}
@@ -14,3 +15,4 @@
         {/if}
     {/foreach}
     </ul>
+</div>

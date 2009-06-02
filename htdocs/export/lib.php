@@ -86,13 +86,6 @@ abstract class PluginExport extends Plugin {
      */
     abstract public function export();
 
-    /**
-     * Clean up after yourself - removing any temp files etc
-     *
-     * TODO: not used anywhere yet. Cleanup may not need an API method.
-     */
-    abstract public function cleanup();
-
     //  MAIN CLASS DEFINITION
 
     /**
@@ -157,7 +150,7 @@ abstract class PluginExport extends Plugin {
      *                             - stdclass objects - db rows
      *                             - ArtefactType subclasses
      */
-    public function __construct(User $user, $views, $artefacts, $progresscallback) {
+    public function __construct(User $user, $views, $artefacts, $progresscallback=null) {
         if (!is_null($progresscallback)) {
             if (is_callable($progresscallback)) {
                 $this->progresscallback = $progresscallback;
@@ -199,21 +192,21 @@ abstract class PluginExport extends Plugin {
             if (is_null($view)) {
                 throw new ParamOutOfRangeException("Invalid view $v");
             }
+            if ($view->get('owner') != $userid) {
+                throw new UserException("User $userid does not own view " . $view->get('id'));
+            }
             $this->views[$view->get('id')] = $view;
             $vaextra = 'AND va.view IN ( ' . implode(',', array_keys($this->views)) . ')';
         }
 
         // Get the list of artefacts to export
-        // TODO: make sure when exporting views, all artefacts in those views 
-        // are included regardless of whether they've been selected to be 
-        // exported or not
         if ($artefacts == self::EXPORT_ALL_ARTEFACTS) {
             $tmpartefacts = get_column('artefact', 'id', 'owner', $userid);
             $this->artefactexportmode = $artefacts;
         }
-        else if ($artefacts == self::EXPORT_ARTEFACTS_FOR_VIEWS) {
+        else {
             if ($tmpviews) {
-                $sql = "SELECT va.artefact
+                $sql = "SELECT DISTINCT va.artefact
                     FROM {view_artefact} va
                     LEFT JOIN {view} v ON v.id = va.view
                     WHERE v.owner = ?
@@ -223,14 +216,13 @@ abstract class PluginExport extends Plugin {
                 // Some artefacts are not inside the view, but still need to be exported with it
                 $tmpartefacts = array_unique(array_merge($tmpartefacts, $this->get_view_extra_artefacts()));
             }
-            else {
-                $tmpartefacts = array();
+            if ($artefacts == self::EXPORT_ARTEFACTS_FOR_VIEWS) {
+                $this->artefactexportmode = $artefacts;
             }
-            $this->artefactexportmode = $artefacts;
-        }
-        else {
-            $tmpartefacts = $artefacts;
-            $this->artefactexportmode = self::EXPORT_LIST_OF_ARTEFACTS;
+            else {
+                $tmpartefacts = array_unique(array_merge($tmpartefacts, $artefacts));
+                $this->artefactexportmode = self::EXPORT_LIST_OF_ARTEFACTS;
+            }
         }
         $typestoplugins = get_records_assoc('artefact_installed_type');
         foreach ($tmpartefacts as $a) {
@@ -247,12 +239,15 @@ abstract class PluginExport extends Plugin {
             if (is_null($artefact)) {
                 throw new ParamOutOfRangeException("Invalid artefact $a");
             }
+            if ($artefact->get('owner') != $userid) {
+                throw new UserException("User $userid does not own artefact " . $artefact->get('id'));
+            }
             $this->artefacts[$artefact->get('id')] = $artefact;
         }
 
         // Now set up the temporary export directories
         $this->exportdir = get_config('dataroot')
-            . 'export/temporary/'
+            . 'export/'
             . $this->user->get('id')  . '/'
             . $this->exporttime .  '/';
         if (!check_dir_exists($this->exportdir)) {
@@ -337,6 +332,34 @@ abstract class PluginExport extends Plugin {
         }
 
         return array_values($data['artefacts']);
+    }
+}
+
+/**
+ * Looks in the export staging area in dataroot and deletes old, unneeded 
+ * exports.
+ */
+function export_cleanup_old_exports() {
+    require_once('file.php');
+    $basedir = get_config('dataroot') . 'export/';
+    $exportdir = new DirectoryIterator($basedir);
+    $mintime = time() - (12 * 60 * 60); // delete exports older than 12 hours
+
+    // The export dir contains one directory for each user who has created 
+    // an export, named after their UID
+    foreach ($exportdir as $userdir) {
+        if ($userdir->isDot()) continue;
+
+        // Each user's directory contains one directory for each export 
+        // they made, named as the unix timestamp of the time they 
+        // generated it
+        $udir = new DirectoryIterator($basedir . $userdir->getFilename());
+        foreach ($udir as $dir) {
+            if ($dir->isDot()) continue;
+            if ($dir->getCTime() < $mintime) {
+                rmdirr($basedir . $userdir->getFilename() . '/' . $dir->getFilename());
+            }
+        }
     }
 }
 

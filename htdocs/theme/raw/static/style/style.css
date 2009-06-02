@@ -419,14 +419,12 @@ input.delete {
 }
 /***** EDIT ICON LINKS ******/
 #btn-edit {
-	padding-left: 1.2em;
 	background: url(../images/icon-edit.gif) no-repeat left 4px;
 	border: none;
 	padding-left: 1em;
 	font-weight: bold;
 }
 input.edit {
-	padding-left: 1.2em;
 	background: url(../images/icon-edit.gif) no-repeat left 7px;
 	border: none;
 	padding-left: .7em;
@@ -447,21 +445,7 @@ input.edit {
     background: url(../images/email.gif) no-repeat;
 	padding-left: 1em;
 }
-/****** NEW TOPIC ICON LINKS ********/
-#btn-newforum {
-	background: url(../images/icon-newforum.gif) no-repeat left 3px;
-	padding-left: 1.5em;
-	border: none;
-	font-weight: bold;
-	font-size: 1em;
-}
-#btn-newtopic {
-	background: url(../images/icon-newtopic.gif) no-repeat left 3px;
-	padding-left: 1.5em;
-	border: none;
-	font-weight: bold;
-	font-size: 1em;
-}
+/* TODO these may also belong to forum */
 /********* PENDING ICON LINKS *******/
 #btn-pending {
 	padding-left: 1.2em;
@@ -543,6 +527,9 @@ select.error {
 .errmsg {
     color: #cc0000;
     font-size: .9em;
+}
+.error .filebrowser {
+    color: #333;
 }
 
 
@@ -1169,100 +1156,6 @@ fieldset.collapsed .mceEditor td {
 /****************************** PAGE BY PAGE STYLES **********************************/
 
 
-/* REGISTER */
-
-/* CONTACT US */
-
-
-
-/* PROFILE */
-input#myfriends_addfriend_add {
-    font-weight: bold;
-}
-#userview {
-	margin: 1em 0;
-	padding: .5em 1em;
-	background-color: #F6F6F6;
-}
-#userview .user-icon a {
-	margin-left: 1em;
-}
-#userview .user-icon #invite,
-#userview .user-icon #addmember {
-	margin-top: 1em;
-}
-#userview #user-info {
-	margin-top: 1em;
-	list-style: none;
-	line-height: 22px;
-}
-#userview div h3 {
-	clear: both;
-}
-#userfriendstable a {
-    display: block;
-}
-#sendmessage input,
-#invitetogroup #invitetogroup_submit_container input {
-	margin: 0;
-}
-
-
-/* PROFILE > EDIT PROFILE */
-#email_list {
-  line-height: 2em;
-}
-#email_list a {
-  color: #ca0000;
-  font-size: .9em;
-  margin-left: .5em;
-}
-
-
-.profile-fieldsets {
-  padding: 0;
-  clear: left;
-}
-.profile-fieldsets fieldset {
-	margin: 0 0 1em 0;
-	border: 1px solid #ddd;
-	padding: 1em;
-}
-fieldset.safe-hidden .mceEditor {
-	display: none;
-}
-
-
-/* PROFILE > PROFILE ICONS */
-
-
-
-/* PROFILE > MY RESUME */
-#resumewrap table {
-	width: 100%;
-}
-#resumewrap form table td,
-#resumewrap form table tbody th {
-	padding: 0;
-}
-#resumewrap form table td,
-#resumewrap form table tbody th {
-	padding: .25em;
-}
-fieldset legend.resumeh3 a {
-	background: none;
-	padding: 0;
-}
-
-tr#contactinformation_contactinformation_container th {
-	display: none;
-}
-tr#contactinformation_contactinformation_container td .resumecontactinfo th {
-	width: 30%;
-	display: table-cell;
-}
-
-
 /* MY PORTFOLIO > MY VIEWS */
 
 #myviewstable .viewitem {
@@ -1284,10 +1177,11 @@ tr#contactinformation_contactinformation_container td .resumecontactinfo th {
 }
 #myviewstable .submitted-viewitem {
 	float: left;
-	padding: .5em 0 0 0;
+	padding: .5em 1.5em .5em 1.5em;
 	font-style: italic;
 	color: #969696;
-	font-size: 1em;
+    font-size: 1em;
+	width: 60%;
 }
 #myviewstable .viewitem br {
 	display: none;
@@ -1386,137 +1280,6 @@ tr#contactinformation_contactinformation_container td .resumecontactinfo th {
 #viewpreviewcontent {
   margin-top: 1em;
 }
-
-/* MY PORTFOLIO > MY FILES */
-#myfiles {
-	margin: 1em 0;
-}
-#uploader,
-#browsebuttonstuff {
-	display: inline;
-}
-#uploadform {
-    background-color: #f4f8e7;
-	padding: .5em 1em;
-	margin: 1em 0;
-}
-#uploadform table th,
-#createfolderform table th {
-	text-align: left;
-	padding: .3em 1em .3em 0;
-}
-#uploadform table td,
-#createfolderform table td {
-	font-size: .9em;
-	padding: .3em 0;
-}
-#uploadform table input.button,
-#createfolderform table input.button {
-	font-size: 1em;
-}
-#uploadform table td table.help-wrapper,
-#createfolderform table td table.help-wrapper {
-	padding: 0;
-}
-#uploadform .checkbox {
-	margin-right: .5em;
-}
-#createfolderform,
-#browsemyfiles {
-    background-color: #e3ecc2;
-	margin: 1em 0;
-	padding: .5em 1em;
-}
-#browsemyfiles h3 {
-	margin: 0;
-}
-
-#foldernav {
-    font-weight: bold;
-    margin: 1em 0 0 0;
-    padding: 0 0 0 1.5em;
-    font-size: 1.5em;
-	line-height: 1.5em;
-    background: url(../images/foldernav.gif) no-repeat left 2px;
-}
-
-tr.folderhover.directory-item td {
-    background-color: #ffc !important;
-}
-tr.folderhover.directory-item a {
-    color: #000;
-    text-decoration: none;
-}
-tr.folder td {
-    background-color: #d3e4f2 !important;
-	font-weight: bold;
-}
-tr.folder td a {
-}
-#filelist tr td {
-	line-height: 2em;
-}
-#filelist td {
-	border-bottom: 1px dotted #d1d1d1;
-}
-#filelist table {
-	margin: 0 auto;
-}
-#filelist table td  {
-	border-bottom: none;
-	padding: .25em;
-}
-#filelist table th {
-	text-align: left;
-	padding: .25em;
-}
-#filelist tr.highlight-file td {
-    background: #fffcd8 url(../images/highlight-bg.gif) repeat left top !important;
-    font-weight: bold;
-}
-#filelist table table.editpermissions {
-	text-align: left;
-}
-#filelist table table.editpermissions th {
-	padding: 3px 10px 3px 0;
-}
-#filelist table table.editpermissions td {
-	font-size: 11px;
-	padding: 3px 0;
-}
-
-
-/* MY PORTFOLIO > MY BLOGS */
-#postlist td.postdetails {
-	padding-bottom: 2em;
-	font-style: italic;
-}
-#postlist p {
-	margin: 0 0 1em 0;
-}
-
-.blogpost-attachments {
-	width: 100%;
-	* width: 98%;
-	border: 1px solid #ddd;
-	background-color: #ddd;
-}
-.blogpost-attachments tbody th {
-	border: none !important;
-	padding: .25em .5em;
-	text-align: left;
-}
-.blogpost-attachments tr.r0 td,
-.blogpost-attachments tr.r1 td {
-	padding: .25em .5em;
-}
-
-#bloglist td .addicon {
-	margin: 0;
-}
-
-
-
 
 /* GROUPS */
 #groupsviewlist {
@@ -1678,126 +1441,6 @@ table.groupviews{
 }
 
 
-
-/* FORUMS */
-.breadcrumbs {
-	font-size: .9em;
-	margin-bottom: .5em;
-}
-.groupadmin{
-    color: #d32a8a !important;
-}
-.moderator {
-    color: #2a8bd3 !important;
-}
-.btn-spacer #btn-delete {
-	margin-left: 1em;
-}
-#forumslist {
-	margin: 1em 0;
-}
-#forumslist table th {
-	border: none;
-}
-#forumslist table td {
-	padding: 0;
-}
-#forumdescription {
-	margin: 1em 0;
-}
-#viewforum {
-	padding: .25em;
-}
-#subscribe_forum,
-#subscribe_topic {
-    display: inline;
-	margin: 0 0 0 2em;
-}
-#subscribe_forum div,
-#subscribe_topic div {
-    display: inline;
-}
-
-.nowrap {
-	white-space: nowrap;
-}
-.lastpost {
-	font-size: .9em;
-	color: #aaaaaa;
-}
-.forumselectwrap {
-	padding: .5em 0;
-}
-.forumkey {
-	clear: left;
-	font-size: .9em;
-	padding: .5em;
-}
-#forumkeylist {
-	list-style: none;
-	margin: 0;
-	display: inline;
-}
-#forumkeylist li {
-	display: inline;
-	margin: 0 1.5em 0 0;
-}
-.stickytopic {
-	background-color: #f4fbdc;
-}
-.forumtopicdescription,
-.forumposter {
-	font-size: .9em;
-}
-
-/* FORUM > ADD TOPIC */
-
-
-/* FORUM > POST */
-.forumpost {
-	background-color: #FFF;
-	border: 1px solid #f1f1f1;
-}
-.forumsubject {
-	border-bottom: 1px solid #f1f1f1;
-}
-.forumpostleft {
-	text-align: center;
-	width: 160px;
-	border-right: 1px solid #f1f1f1;
-}
-.forumpostleft h6 {
-	text-align: center;
-	color: #999999;
-}
-.posttime {
-	font-size: .9em;
-	color: #999999;
-}
-.postedits {
-    padding: .5em;
-}
-.postbtns {
-	font-size: .9em;
-	text-align: right;
-	background-color: #f1f1f1;
-	border-bottom: 3px solid #d1d1d1;
-}
-.postbtns a {
-	margin: 0 1em;
-}
-.deletedpost {
-    color: gray;
-    margin-top: 0;
-}
-.postreply {
-	padding: 1px 0 0 1.5em;
-	background-color: #d1d1d1;
-}
-
-
-
-
 /* SETTINGS > PREFERENCES */
 #accountprefs_addremovecolumns_container th {
 	white-space: normal;
@@ -1865,7 +1508,7 @@ div.progress-bar {
     position: absolute;
     top: 0;
     left: 0;
-    background-color: #7d9728;
+    background-color: #999;
     height: 40px;
     color: #fff;
     text-align: center;
@@ -1889,238 +1532,6 @@ p.progress-text {
 }
 #progressbar {
     height: 40px;
-}
-
-
-/* ADMIN HOME */
-/* Administration Home styles */
-#register-site {
-    text-align: left;
-    font-weight: normal;
-	padding: .5em 1.5em 0 1.5em;
-	margin-bottom: 1em;
-}
-#register-site form table th {
-	text-align: left;
-	padding: .25em 0;
-}
-#register-site form table td {
-	padding: .25em 0;
-}
-#register-site form legend a {
-	font-size: .9em;
-}
-
-#runupgrade {
-    padding: 1em;
-    background: #eee;
-    border: 1px solid #ccc;
-}
-#runupgrade h4 {
-    margin-top: 0;
-    padding-bottom: .5em;
-}
-#upgradestable {
-    border: none;
-	font-size: .9em;
-}
-#upgradestable th {
-    padding: .5em 1em;
-    background: #eee;
-	text-align: left;
-}
-#upgradestable td {
-    padding: .5em 1em;
-}
-
-/* CONFIGURE SITE > LINKS AND RESOURCES MENU */
-#menuitemlist {
-	margin: 1em 0;
-}
-#menuitemlist table td {
-	vertical-align: middle;
-    border-bottom: 1px dotted #d1d1d1;
-}
-#menuitemlist #rownew td {
-	line-height: 2em;
-	vertical-align: middle;
-}
-#menuitemlist tr.edit td {
-}
-
-/* CONFIGURE SITE > NETWORKING */
-#networkingform_pubkey_container td {
-	font-size: 1.6em;
-	line-height: .9em;
-}
-
-/* CONFIGURE SITE > SITE VIEWS */
-
-
-
-/* MANAGE USERS > USER SEARCH */
-#initials {
-	font-size: 1.2em;
-	margin: 0 0 1em 0;
-	line-height: 2em;
-}
-#initials span {
-	padding: 0 .25em;
-    font-weight: bold;
-}
-#initials span.selected a {
-    color: #000 !important;
-    text-decoration: none;
-	cursor: default;
-}
-.searchform .institutions {
-	margin-left: 1em;
-}
-/* SEARCH RESULTS TABLE */
-table.tablerenderer th.asc { 
-	background: transparent url(../images/down.gif) no-repeat left;
-	padding-left: 1.5em;
-}
-table.tablerenderer th.desc { 
-    background: transparent url(../images/up.gif) no-repeat left;
-	padding-left: 1.5em;
-}
-.search-results-sort-column {
-	cursor: pointer;
-}
-
-
-.userlisttable .lrbuttons button {
-	margin: .25em 0;
-}
-.userlisttable .lrfieldlists {
-	width: 50%;
-}
-.userlisttable .searchtd {
-	padding: .25em;
-}
-.userlisttable tr th {
-	text-align: left;
-	padding: 0 .25em !important;
-	font-size: .9em;
-	color: #333;
-}
-.userlisttable th,
-.userlisttable td {
-	padding: 0 .25em;
-}
-
-
-/* MANAGE USERS > EDIT USER */
-#edituser hr {
-    border-top: 1px dotted #d1d1d1;
-    border-width: 1px 0 0 0;
-	height: 1px;
-}
-#edituser div#delete {
-	background-color: #fef1f1;
-	padding: 1em;
-	width: 33%;
-    float: right;
-}
-
-
-/* MANAGE USERS > SUSPENDED USERS */
-
-
-
-/* MANAGE USERS > SITE STAFF */
-
-
-/* MANAGE USERS > SITE ADMINS */
-
-
-
-
-/* MANAGE USERS > ADMIN NOTIFICATIONS */
-
-
-/* MANAGE USERS > ADD USER */
-
-
-
-/* MANAGE USERS > ADD USERS BY CSV */
-
-
-
-/* MANAGE INSTITUTIONS  */
-#institutionselect table,
-#usertypeselect table {
-	font-size: 1.4em;
-	font-weight: bold;
-}
-#institutionselect table td,
-#institutionselect table th,
-#usertypeselect table td,
-#usertypeselect table th {
-	padding: 0 .5em .25em 0;
-}
-
-.institutionedituserbuttons form {
-	display: inline;
-}
-#institution_maxuseraccounts_container th {
-	white-space: nowrap;
-}
-
-#instanceList .authIcons a {
-	color: #ca0000;
-	font-size: .9em;
-}
-#institution table table tr {
-	float: left;
-	width: 30%;
-	margin-right: 2em;
-}
-#institution table table th {
-	float: left;
-}
-#institution table table td {
-	float: right;
-}
-
-
-/* MANAGE INSTITUTIONS > INSTITUTION MEMBERS */
-#institutionusers table #institutionusers_users_container th {
-	width: 110px;
-}
-
-/* MANAGE INSTITUTIONS > INSTITUTION STAFF */
-#adminusers table #adminusers_users_container th {
-	width: 90px;
-}
-
-/* MANAGE INSTITUTIONS > INSTITUTION ADMINISTRATORS */
-#staffusers table #staffusers_users_container th {
-	width: 80px;
-}
-
-/* ADMINISTER EXTENSIONS */
-#adminplugin ul.adminpluginstypes,
-#adminplugin ul.adminpluginstypes ul li,
-#adminplugin ul.adminpluginstypes ul ul {
-	margin: 0;
-}
-#adminplugin ul.adminpluginstypes li {
-	float: left;
-	list-style: none;
-	margin: 1em 3em 2em 0;
-	padding: 0;
-}
-#adminplugin ul.adminpluginstypes ul {
-	margin: 0 .5em;
-	padding: 0;
-}
-#adminplugin ul.adminpluginstypes ul ul li {
-	float: none;
-	list-style: disc;
-	margin:0 0 0 1.5em;
-	font-size: .9em;
 }
 
 

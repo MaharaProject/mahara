@@ -56,6 +56,13 @@ class PluginExportHtml extends PluginExport {
     private $stylesheets = array('' => array());
 
     /**
+     * Whether the user requested to export just one view. In this case,
+     * the generated export doesn't have the home page - just the View is 
+     * exported (plus artefacts of course)
+     */
+    protected $exportingoneview = false;
+
+    /**
     * constructor.  overrides the parent class
     * to set up smarty and the attachment directory
     */
@@ -83,6 +90,12 @@ class PluginExportHtml extends PluginExport {
                 }
             }
         }
+
+        $this->exportingoneview = (
+            $this->viewexportmode == PluginExport::EXPORT_LIST_OF_VIEWS &&
+            $this->artefactexportmode == PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS &&
+            count($this->views) == 1
+        );
 
         $this->notify_progress_callback(15, 'Setup complete');
     }
@@ -141,7 +154,7 @@ class PluginExportHtml extends PluginExport {
 
         // Second pass: actually dump data for active export plugins
         $progressstart = 25;
-        $progressend   = 60;
+        $progressend   = 50;
         $i = 0;
         foreach ($exportplugins as $plugin) {
             $this->notify_progress_callback(intval($progressstart + (++$i / $plugincount) * ($progressend - $progressstart)), 'Exporting data for ' . $plugin);
@@ -155,23 +168,35 @@ class PluginExportHtml extends PluginExport {
         }
 
         // Get the view data
-        $this->notify_progress_callback(65, 'Exporting Views');
+        $this->notify_progress_callback(55, 'Exporting Views');
         $this->dump_view_export_data();
-        $summaries['view'] = array(100, $this->get_view_summary());
 
-        // Sort by weight (then drop the weight information)
-        $this->notify_progress_callback(75, 'Building index page');
-        uasort($summaries, create_function('$a, $b', 'return $a[0] > $b[0];'));
-        foreach ($summaries as &$summary) {
-            $summary = $summary[1];
+        if (!$this->exportingoneview) {
+            $summaries['view'] = array(100, $this->get_view_summary());
+
+            // Sort by weight (then drop the weight information)
+            $this->notify_progress_callback(75, 'Building index page');
+            uasort($summaries, create_function('$a, $b', 'return $a[0] > $b[0];'));
+            foreach ($summaries as &$summary) {
+                $summary = $summary[1];
+            }
+
+            // Build index.html
+            $this->build_index_page($summaries);
         }
 
-        // Build index.html
-        $this->build_index_page($summaries);
-
         // Copy all static files into the export
-        $this->notify_progress_callback(80, 'Copying static files');
+        $this->notify_progress_callback(80, 'Copying extra files');
         $this->copy_static_files();
+
+        // Copy all resized images that were found while rewriting the HTML
+        $copyproxy = HtmlExportCopyProxy::singleton();
+        $copydata = $copyproxy->get_copy_data();
+        foreach ($copydata as $from => $to) {
+            if (!copy($from, $this->get('exportdir') . '/' . $this->get('rootdir') . $to)) {
+                throw new SystemException("Could not copy static file $from");
+            }
+        }
         
 
         // zip everything up
@@ -233,18 +258,29 @@ class PluginExportHtml extends PluginExport {
     }
 
     /**
-     * Converts the passed text, which is assumed to be a reasonably short 
-     * string, into a a form that could be used in a URL.
+     * Converts the passed text into a a form that could be used in a URL.
      *
      * @param string $text The text to convert
      * @return string      The converted text
      */
     public static function text_to_path($text) {
-        return preg_replace('#[^a-zA-Z0-9_-]+#', '-', $text);
+        return substr(preg_replace('#[^a-zA-Z0-9_-]+#', '-', $text), 0, 255);
     }
+
+    /**
+     * Sanitises a string meant to be used as a filesystem path.
+     *
+     * Mahara allows file/folder artefact names to have slashes in them, which 
+     * aren't legal on most real filesystems.
+     */
+    public static function sanitise_path($path) {
+        return substr(str_replace('/', '_', $path), 0, 255);
+    }
+
 
     private function build_index_page($summaries) {
         $smarty = $this->get_smarty();
+        $smarty->assign('page_heading', full_name($this->get('user')));
         $smarty->assign('summaries', $summaries);
         $content = $smarty->fetch('export:html:index.tpl');
         if (!file_put_contents($this->exportdir . '/' . $this->rootdir . '/index.html', $content)) {
@@ -256,22 +292,33 @@ class PluginExportHtml extends PluginExport {
      * Dumps all views into the HTML export
      */
     private function dump_view_export_data() {
-        $smarty = $this->get_smarty('../../');
+        $progressstart = 55;
+        $progressend   = 75;
+        $i = 0;
+        $viewcount = count($this->views);
+        $rootpath = ($this->exportingoneview) ? './' : '../../';
+        $smarty = $this->get_smarty($rootpath);
         foreach ($this->views as $viewid => $view) {
-            $smarty->assign('breadcrumbs', array(
-                array('text' => get_string('Views', 'view')),
-                array('text' => $view->get('title'), 'path' => 'index.html'),
-            ));
-            $smarty->assign('viewtitle', $view->get('title'));
-            $smarty->assign('ownername', $view->formatted_owner());
+            $this->notify_progress_callback(intval($progressstart + (++$i / $viewcount) * ($progressend - $progressstart)), "Exporting Views ($i/$viewcount)");
+            $smarty->assign('page_heading', $view->get('title'));
             $smarty->assign('viewdescription', $view->get('description'));
 
-            $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . self::text_to_path($view->get('title'));
-            if (!check_dir_exists($directory)) {
-                throw new SystemException("Could not create directory for view $viewid");
+            if ($this->exportingoneview) {
+                $smarty->assign('nobreadcrumbs', true);
+                $directory = $this->exportdir . '/' . $this->rootdir;
+            }
+            else {
+                $smarty->assign('breadcrumbs', array(
+                    array('text' => get_string('Views', 'view')),
+                    array('text' => $view->get('title'), 'path' => 'index.html'),
+                ));
+                $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . self::text_to_path($view->get('title'));
+                if (!check_dir_exists($directory)) {
+                    throw new SystemException("Could not create directory for view $viewid");
+                }
             }
 
-            $outputfilter = new HtmlExportOutputFilter('../../');
+            $outputfilter = new HtmlExportOutputFilter($rootpath);
             $smarty->assign('view', $outputfilter->filter($view->build_columns()));
             $content = $smarty->fetch('export:html:view.tpl');
             if (!file_put_contents("$directory/index.html", $content)) {
@@ -314,6 +361,7 @@ class PluginExportHtml extends PluginExport {
      * Copies the static files (stylesheets etc.) into the export
      */
     private function copy_static_files() {
+        require_once('file.php');
         $staticdir = $this->get('exportdir') . '/' . $this->get('rootdir') . '/static/';
         $directoriestocopy = array();
 
@@ -400,15 +448,20 @@ class HtmlExportOutputFilter {
     private $viewtitles = array();
 
     /**
-     * A cache of folder data. See get_path_for_file()
+     * A cache of folder data. See get_folder_path_for_file()
      */
     private $folderdata = null;
+
+    /**
+     */
+    private $htmlexportcopyproxy = null;
 
     /**
      * @param string $basepath The relative path to the root of the generated export
      */
     public function __construct($basepath) {
         $this->basepath = preg_replace('#/$#', '', $basepath);
+        $this->htmlexportcopyproxy = HtmlExportCopyProxy::singleton();
     }
 
     /**
@@ -455,8 +508,22 @@ class HtmlExportOutputFilter {
 
         // Links to download files
         $html = preg_replace_callback(
-            '#(' . preg_quote(get_config('wwwroot')) . ')?/?artefact/file/download\.php\?file=(\d+)(&amp;view=\d+)?#',
+            '#(' . preg_quote(get_config('wwwroot')) . ')?/?artefact/file/download\.php\?file=(\d+)((&amp;[a-z]+=[x0-9]+)+)*#',
             array($this, 'replace_download_link'),
+            $html
+        );
+
+        // Thumbnails
+        $html = preg_replace_callback(
+            '#(' . preg_quote(get_config('wwwroot')) . ')?/?thumb\.php\?type=([a-z]+)((&amp;[a-z]+=[x0-9]+)+)*#',
+            array($this, 'replace_thumbnail_link'),
+            $html
+        );
+
+        // Images out of the theme directory
+        $html = preg_replace_callback(
+            '#(' . preg_quote(get_config('wwwroot')) . ')?/?theme/' . get_config('theme') . '/static/images/([a-z0-9_.-]+)#',
+            array($this, 'replace_theme_image_link'),
             $html
         );
 
@@ -490,8 +557,8 @@ class HtmlExportOutputFilter {
             return '<a href="' . $this->basepath . '/files/blog/' . PluginExportHtml::text_to_path($artefact->get('title')) . '/' . $page . '.html">' . $matches[5] . '</a>';
         case 'file':
         case 'image':
-            $folderpath = $this->get_path_for_file($artefact);
-            return '<a href="' . $this->basepath . '/files/file/' . $folderpath . $artefact->get('title') . '">' . $matches[5] . '</a>';
+            $folderpath = $this->get_folder_path_for_file($artefact);
+            return '<a href="' . $this->basepath . '/files/file/' . $folderpath . PluginExportHtml::sanitise_path($artefact->get('title')) . '">' . $matches[5] . '</a>';
         default:
             return $matches[5];
         }
@@ -511,26 +578,175 @@ class HtmlExportOutputFilter {
             return '';
         }
 
-        $folderpath = $this->get_path_for_file($artefact);
-        return $this->basepath . '/files/file/' . $folderpath . $artefact->get('title');
+        $options = array();
+        if (isset($matches[3])) {
+            $parts = explode('&amp;', substr($matches[3], 5));
+            foreach ($parts as $part) {
+                list($key, $value) = explode('=', $part);
+                $options[$key] = $value;
+            }
+        }
+
+        $folderpath = $this->get_folder_path_for_file($artefact);
+        return $this->get_export_path_for_file($artefact, $options, '/files/file/' . $folderpath);
     }
 
     /**
-     * Given a file, returns the folder path in the HTML export for it
+     * Callback to replace links to thumb.php to point to the correct file in 
+     * the HTML export
+     */
+    private function replace_thumbnail_link($matches) {
+        if (isset($matches[3])) {
+            $type = $matches[2];
+
+            $parts = explode('&amp;', substr($matches[3], 5));
+            foreach ($parts as $part) {
+                list($key, $value) = explode('=', $part);
+                $options[$key] = $value;
+            }
+
+            if (!isset($options['id'])) {
+                return '';
+            }
+
+            switch ($type) {
+            case 'profileicon':
+                // Convert the user ID to a profile icon ID
+                if (!$options['id'] = get_field_sql('SELECT profileicon FROM {usr} WHERE id = ?', array($options['id']))) {
+                    // No profile icon, get the default one
+                    list($size, $prefix) = $this->get_size_from_options($options);
+                    if ($from = get_dataroot_image_path('artefact/file/profileicons/no_userphoto/' . get_config('theme'), 0, $size)) {
+                        $to = '/static/profileicons/0-' . $prefix . 'no_userphoto.png';
+                        $this->htmlexportcopyproxy->add($from, $to);
+                    }
+                    return $this->basepath . $to;
+                }
+            case 'profileiconbyid':
+                $icon = artefact_instance_from_id($options['id']);
+                if ($icon->get_plugin_name() != 'file') {
+                    return '';
+                }
+                $folderpath = $this->get_folder_path_for_file($icon);
+                return $this->get_export_path_for_file($icon, $options, '/static/profileicons/');
+            default:
+                return '';
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * Callback
+     */
+    private function replace_theme_image_link($matches) {
+        $file = '/theme/' . get_config('theme') . '/static/images/' . $matches[2];
+        $this->htmlexportcopyproxy->add(
+            get_config('docroot') . $file,
+            '/static/' . $file
+        );
+        return $this->basepath . '/static/' . $file;
+    }
+
+    /**
+     * Given a file, returns the folder path for it in the Mahara files area
      *
-     * TODO: slash escaping in file/folder names
+     * The path is pre-sanitised so it can be used when generating the export
      *
      * @param ArtefactTypeFileBase $file The file to get the folder path for
      * @return string
      */
-    private function get_path_for_file(ArtefactTypeFileBase $file) {
+    private function get_folder_path_for_file(ArtefactTypeFileBase $file) {
         if ($this->folderdata === null) {
             $this->folderdata = get_records_select_assoc('artefact', "artefacttype = 'folder' AND owner = ?", array($file->get('owner')));
+            foreach ($this->folderdata as &$folder) {
+                $folder->title = PluginExportHtml::sanitise_path($folder->title);
+            }
         }
         $folderpath = ArtefactTypeFileBase::get_full_path($file->get('parent'), $this->folderdata);
         return $folderpath;
     }
 
+    /**
+     * Generates a path, relative to the root of the export, that the given 
+     * file will appear in the export.
+     *
+     * If the file is a thumbnail, the copy proxy is informed about it so that 
+     * the image can later be copied in to place.
+     *
+     * @param ArtefactTypeFileBase $file The file to get the exported path for
+     * @param array $options             Options from the URL that was linking 
+     *                                   to the image - most importantly, size 
+     *                                   related options about how the image 
+     *                                   was thumbnailed, if it was.
+     * @param string $basefolder         What folder in the export to dump the 
+     *                                   file in
+     * @return string                    The relative path to where the file 
+     *                                   will be placed
+     */
+    private function get_export_path_for_file(ArtefactTypeFileBase $file, array $options, $basefolder) {
+        unset($options['view']);
+        $prefix = '';
+        if ($options) {
+            list($size, $prefix) = $this->get_size_from_options($options);
+            $from = $file->get_path($size);
+
+            $to = $basefolder . $file->get('id') . '-' . $prefix . PluginExportHtml::sanitise_path($file->get('title'));
+            $this->htmlexportcopyproxy->add($from, $to);
+        }
+        else {
+            $to = $basefolder . PluginExportHtml::sanitise_path($file->get('title'));
+        }
+
+        return $this->basepath . $to;
+    }
+
+    /**
+     * Helper method
+     */
+    private function get_size_from_options($options) {
+        $prefix = '';
+        foreach (array('size', 'width', 'height', 'maxsize', 'maxwidth', 'maxheight') as $param) {
+            if (isset($options[$param])) {
+                $$param = $options[$param];
+                $prefix .= $param . '-' . $options[$param] . '-';
+            }
+            else {
+                $$param = null;
+            }
+        }
+
+        return array(imagesize_data_to_internal_form($size, $width, $height, $maxsize, $maxwidth, $maxheight), $prefix);
+    }
+
+}
+
+/**
+ * Gathers a list of files that need to be copied into the export, as they're 
+ * found by the HtmlExportOutputFilter
+ */
+class HtmlExportCopyProxy {
+
+    private static $instance = null;
+    private $copy = array();
+
+    private function __construct() {
+    }
+
+    public static function singleton() {
+        if (is_null(self::$instance)) {
+            self::$instance = new HtmlExportCopyProxy();
+        }
+        return self::$instance;
+    }
+
+    public function add($from, $to) {
+        $this->copy[$from] = $to;
+    }
+
+    public function get_copy_data() {
+        return $this->copy;
+    }
 }
 
 ?>

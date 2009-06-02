@@ -1,4 +1,5 @@
     <h3><a href="{$WWWROOT}user/view.php?id={$data.id}">{$data.myname|escape}</a>  <span class="s" id="profile-sideblock-username">(<a href="{$WWWROOT}user/view.php?id={$data.id}">{$data.username|escape}</a>)</span></h3>
+    <div class="sidebar-content">
     <div id="user_profileicon"><a href="{$WWWROOT}user/view.php?id={$data.id}"><img src="{$WWWROOT}thumb.php?type=profileiconbyid&amp;maxwidth=50&amp;maxheight=50&amp;id={$data.profileicon}" alt=""></a></div>
     {if $data.mnetloggedinfrom}<p>{$data.mnetloggedinfrom}</p>{/if}
     <ul class="sidebar-ul-title">
@@ -69,3 +70,4 @@
     {if $USERMASQUERADING}<div id="changeuser">{$becomeyouagain}</div>{/if}
     {* This makes sure the profile block still appears to contain the profile image, even if the profile block is pretty much empty otherwise *}
     <div class="cb"></div>
+</div>

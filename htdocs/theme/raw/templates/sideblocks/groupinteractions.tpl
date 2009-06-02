@@ -1,5 +1,6 @@
     <h3>{str tag="groupinteractions" section="group"}</h3>
 
+    <div class="sidebar-content">
     {if $data}
     <ul>
     {foreach from=$data.interactiontypes item=interactions key=plugin}
@@ -28,3 +29,4 @@
     {else}
     <p>{str tag=nointeractions section=group}</p>
     {/if}
+</div>

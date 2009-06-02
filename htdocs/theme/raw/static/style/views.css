@@ -36,12 +36,6 @@ p.view-description {
 	padding: 0;
     width: 100%;
 }
-#category-list ul {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	width: 100%;
-}
 #category-list li {
     margin: 0 0 0 .5em;
 	padding: 0;
@@ -218,23 +212,23 @@ body:last-child:not(:root:root) .newblockhere {
 }
 
 /* styling the tabs for the artefact chooser */
-.maincontent ul.artefactchooser-tabs {
+ul.artefactchooser-tabs {
   padding: 0;
   margin: 0;
   font-size: .9em;
   list-style: none;
 }
-.maincontent ul.artefactchooser-tabs li {
+ul.artefactchooser-tabs li {
   display: inline;
   margin: 0;
   padding: 0;
 }
-.maincontent ul.artefactchooser-tabs li a {
+ul.artefactchooser-tabs li a {
   padding: .3em .5em;
   text-decoration: none;
   background: #eee;
 }
-.maincontent ul.artefactchooser-tabs li.current a {
+ul.artefactchooser-tabs li.current a {
   background: #ddd;
   color: #333;
 }
@@ -246,7 +240,7 @@ body:last-child:not(:root:root) .newblockhere {
 #artefactchooser-searchsubmit {
     margin: 0;
 }
-.maincontent div.artefactchooser-splitter {
+div.artefactchooser-splitter {
     padding: .25em 0 0;
 }
 .blockinstance-content p.noartefacts {
@@ -257,18 +251,22 @@ body:last-child:not(:root:root) .newblockhere {
 .blockinstance-content table p img {
 	padding: 1em 2em;
 }
-.configure {
+.blockconfig-background {
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+}
+.blockinstance.configure {
   border: 4px solid #ddd;
   background: #fff;
-  z-index: 2;
-}
-.configure #blockconfig-header {
-  font-weight: bold;
-  font-size: 1.2em;
+  width: 700px;
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
   padding: .25em .5em;
 }
-.configure .blockinstance-content {
-  font-size: 1em;
+.blockinstance.configure th {
+  text-align: left;
 }
 
 /* VIEWS */

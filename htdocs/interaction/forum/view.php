@@ -27,6 +27,10 @@
 define('INTERNAL', 1);
 define('PUBLIC', 1);
 define('MENUITEM', 'groups/forums');
+define('SECTION_PLUGINTYPE', 'interaction');
+define('SECTION_PLUGINNAME', 'forum');
+define('SECTION_PAGE', 'view');
+
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('group.php');
 safe_require('interaction', 'forum');
@@ -260,7 +264,7 @@ $smarty->display('interaction:forum:view.tpl');
 function setup_topics(&$topics) {
     if ($topics) {
         foreach ($topics as $topic) {
-            $topic->body = str_shorten($topic->body, 50, true, false);
+            $topic->body = str_shorten_html($topic->body, 50, true, false);
             $topic->lastposttime = relative_date(get_string('strftimerecentrelative', 'interaction.forum'), get_string('strftimerecent'), $topic->lastposttime);
         }
     }

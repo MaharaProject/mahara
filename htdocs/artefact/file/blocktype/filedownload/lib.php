@@ -76,11 +76,11 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
 
                 $result .= '<div title="' . hsc($artefact->get('title')) . '">';
                 $result .= '<div class="fl"><a href="' . hsc($downloadurl) . '">';
-                $result .= '<img src="' . call_static_method(generate_artefact_class_name($artefact->get('artefacttype')), 'get_icon', $icondata)
+                $result .= '<img src="' . hsc(call_static_method(generate_artefact_class_name($artefact->get('artefacttype')), 'get_icon', $icondata))
                     . '" alt=""></a></div>';
                 $result .= '<div style="margin-left: 30px;">';
 
-                $result .= '<h4><a href="' . hsc($detailsurl) . '">' . str_shorten($artefact->get('title'), 20) . '</a></h4>';
+                $result .= '<h4><a href="' . hsc($detailsurl) . '">' . str_shorten_text($artefact->get('title'), 20) . '</a></h4>';
 
                 $description = $artefact->get('description');
                 if ($description) {

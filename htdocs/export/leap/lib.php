@@ -333,6 +333,7 @@ class PluginExportLeap extends PluginExport {
         if (empty($newname)) {
             throw new ParamOutOfRangeException("Tried to add non existant file $filepath");
         }
+        $newname = substr(str_replace('/', '_', $newname), 0, 245);
         $this->attachments[] = (object)array('file' => $filepath, 'name' => $newname);
         return (count($this->attachments) -1) . '-' . $newname;
     }

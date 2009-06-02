@@ -19,7 +19,7 @@
 			{foreach from=$foruminfo item=postinfo}
 			<tr class="r{cycle values=0,1}">
 			  <td><strong><a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic|escape}#post{$postinfo->id|escape}">{$postinfo->topicname|escape}</a></strong></td>
-			  <td>{$postinfo->body|str_shorten:100:true}</td>
+			  <td>{$postinfo->body|str_shorten_html:100:true}</td>
 			  <td><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$postinfo->poster|escape}" alt="">
 				<a href="{$WWWROOT}user/view.php?id={$postinfo->poster|escape}">{$postinfo->poster|display_name|escape}</a></td>
 			</tr>

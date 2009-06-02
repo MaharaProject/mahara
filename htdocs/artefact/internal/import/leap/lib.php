@@ -221,7 +221,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
                 }
 
                 if (isset($maharaattributes['type']) && in_array($maharaattributes['type'], $types)) {
-                    $artefactmapping[(string)$entry->id] = array(self::create_artefact($importer, $maharaattributes['type'], (string)$entry->title));
+                    $artefactmapping[(string)$entry->id] = array(self::create_artefact($importer, $maharaattributes['type'], PluginImportLeap::get_entry_content($entry, $importer)));
                 }
             }
             break;
@@ -248,7 +248,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
 
             // The introduction comes from the entry content
             $introduction = new ArtefactTypeIntroduction(0, array('owner' => $importer->get('usr')));
-            $introduction->set('title', $importer->get_entry_content($person, $importer));
+            $introduction->set('title', PluginImportLeap::get_entry_content($person, $importer));
             $introduction->commit();
 
             // Most of the rest of the profile data comes from leap:persondata elements

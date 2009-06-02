@@ -280,6 +280,7 @@ class BlockInstance {
 
     private $id;
     private $blocktype;
+    private $artefactplugin;
     private $title;
     private $configdata;
     private $dirty;
@@ -384,10 +385,22 @@ class BlockInstance {
         $this->set('title', $title);
         $this->commit();
 
-        $SESSION->add_ok_msg(get_string('blockinstanceconfiguredsuccessfully', 'view'));
-        $new = param_boolean('new');
-        $category = param_alpha('c', '');
-        redirect('/view/blocks.php?id=' . $this->get('view') . '&c=' . $category . '&new=' . $new);
+        $result = array(
+            'error'   => false,
+            'message' => get_string('blockinstanceconfiguredsuccessfully', 'view'),
+            'data'    => $this->render_editing(false, false, $form->submitted_by_js()),
+            'blockid' => $this->get('id'),
+        );
+
+        $redirect = '/view/blocks.php?id=' . $this->get('view');
+        if (param_boolean('new')) {
+            $redirect .= '&new=1';
+        }
+        if ($category = param_alpha('c', '')) {
+            $redirect .= '&c='. $category;
+        }
+        $result['goto'] = $redirect;
+        $form->reply(PIEFORM_OK, $result);
     }
 
     /**
@@ -399,9 +412,11 @@ class BlockInstance {
      * @return array Array with two keys: 'html' for raw html, 'javascript' for
      *               javascript to run
      */
-    public function render_editing($configure=false, $new=false) {
+    public function render_editing($configure=false, $new=false, $jsreply=false) {
         safe_require('blocktype', $this->get('blocktype'));
         $js = '';
+        $movecontrols = array();
+
         if ($configure) {
             list($content, $js) = array_values($this->build_configure_form($new));
         }
@@ -420,50 +435,50 @@ class BlockInstance {
                 log_debug($e->getMessage());
                 $content = '';
             }
-        }
 
-        $movecontrols = array();
-        if (!defined('JSON')) {
-            if ($this->get('canmoveleft')) {
-                $movecontrols[] = array(
-                    'column' => $this->get('column') - 1,
-                    'order'  => $this->get('order'),
-                    'title'  => get_string('moveblockleft', 'view'),
-                    'arrow'  => '&larr;',
-                    'dir'    => 'left',
-                );
-            }
-            if ($this->get('canmovedown')) {
-                $movecontrols[] = array(
-                    'column' => $this->get('column'),
-                    'order'  => $this->get('order') + 1,
-                    'title'  => get_string('moveblockdown', 'view'),
-                    'arrow'  => '&darr;',
-                    'dir'    => 'down',
-                );
-            }
-            if ($this->get('canmoveup')) {
-                $movecontrols[] = array(
-                    'column' => $this->get('column'),
-                    'order'  => $this->get('order') - 1,
-                    'title'  => get_string('moveblockup', 'view'),
-                    'arrow'  => '&uarr;',
-                    'dir'    => 'up',
-                );
-            }
-            if ($this->get('canmoveright')) {
-                $movecontrols[] = array(
-                    'column' => $this->get('column') + 1,
-                    'order'  => $this->get('order'),
-                    'title'  => get_string('moveblockright', 'view'),
-                    'arrow'  => '&rarr;',
-                    'dir'    => 'right',
-                );
+            if (!defined('JSON') && !$jsreply) {
+                if ($this->get('canmoveleft')) {
+                    $movecontrols[] = array(
+                        'column' => $this->get('column') - 1,
+                        'order'  => $this->get('order'),
+                        'title'  => get_string('moveblockleft', 'view'),
+                        'arrow'  => '&larr;',
+                        'dir'    => 'left',
+                    );
+                }
+                if ($this->get('canmovedown')) {
+                    $movecontrols[] = array(
+                        'column' => $this->get('column'),
+                        'order'  => $this->get('order') + 1,
+                        'title'  => get_string('moveblockdown', 'view'),
+                        'arrow'  => '&darr;',
+                        'dir'    => 'down',
+                    );
+                }
+                if ($this->get('canmoveup')) {
+                    $movecontrols[] = array(
+                        'column' => $this->get('column'),
+                        'order'  => $this->get('order') - 1,
+                        'title'  => get_string('moveblockup', 'view'),
+                        'arrow'  => '&uarr;',
+                        'dir'    => 'up',
+                    );
+                }
+                if ($this->get('canmoveright')) {
+                    $movecontrols[] = array(
+                        'column' => $this->get('column') + 1,
+                        'order'  => $this->get('order'),
+                        'title'  => get_string('moveblockright', 'view'),
+                        'arrow'  => '&rarr;',
+                        'dir'    => 'right',
+                    );
+                }
             }
         }
         $smarty = smarty_core();
 
         $smarty->assign('id',     $this->get('id'));
+        $smarty->assign('viewid', $this->get('view'));
         $title = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'override_instance_title', $this);
         $smarty->assign('title', $title ? $title : $this->get('title'));
         $smarty->assign('column', $this->get('column'));
@@ -560,12 +575,17 @@ class BlockInstance {
                     'type'  => 'hidden',
                     'value' => $this->get('id'),
                 ),
-                // This form is never submitted by js, but if it was
-                // created by a json script, remember that in case the
-                // block is rendered again after a form error.
-                'js' => array(
+                'id' => array(
                     'type'  => 'hidden',
-                    'value' => (bool) defined('JSON'),
+                    'value' => $this->get('view'),
+                ),
+                'change' => array(
+                    'type'  => 'hidden',
+                    'value' => 1,
+                ),
+                'new' => array(
+                    'type'  => 'hidden',
+                    'value' => $new,
                 ),
             ),
             $elements
@@ -587,14 +607,22 @@ class BlockInstance {
             'goto' => View::make_base_url(),
         );
 
+        $configdirs = array(get_config('libroot') . 'form/');
+        if ($this->get('artefactplugin')) {
+            $configdirs[] = get_config('docroot') . 'artefact/' . $this->get('artefactplugin') . '/form/';
+        }
+
         $form = array(
             'name' => 'cb_' . $this->get('id'),
             'renderer' => 'maharatable',
             'validatecallback' => array(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_validate'),
             'successcallback'  => array($this, 'instance_config_store'),
+            'jsform' => true,
+            'jssuccesscallback' => 'blockConfigSuccess',
             'elements' => $elements,
             'viewgroup' => $this->get_view()->get('group'),
             'viewinstitution' => $this->get_view()->get('institution'),
+            'configdirs' => $configdirs,
         );
 
         if (param_variable('action_acsearch_id_' . $this->get('id'), false)) {
@@ -619,13 +647,21 @@ class BlockInstance {
             }
         }
 
-        $html = $pieform->build(false);
+        $html = $pieform->build();
+        // We probably need a new version of $pieform->build() that separates out the js
+        // Temporary evil hack:
+        if (preg_match('/<script type="text\/javascript">(new Pieform\(.*\);)<\/script>/', $html, $matches)) {
+            $js = "var pf_{$form['name']} = " . $matches[1] . "pf_{$form['name']}.init();";
+        }
+        else {
+            $js = '';
+        }
 
         // We need to load any javascript required for the pieform. We do this
         // by checking for an api function that has been added especially for 
         // the purpose, but that is not part of Pieforms. Maybe one day later 
         // it will be though
-        $js = '';
+        // $js = '';
         foreach ($elements as $key => $element) {
             $element['name'] = $key;
             $function = 'pieform_element_' . $element['type'] . '_views_js';

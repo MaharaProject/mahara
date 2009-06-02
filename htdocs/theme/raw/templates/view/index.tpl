@@ -32,16 +32,16 @@
     {/if}
     <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a></h3>
     
-    {if !$view.submittedto}
+    {if $view.submittedto}
+    <div class="viewitem submitted-viewitem">{$view.submittedto}</div>
+	{else}
 	<div class="viewitem">
         <a href="{$WWWROOT}view/edit.php?id={$view.id}" id="editviewdetails">{str tag="editviewnameanddescription" section="view"}</a> 
 		{if $view.description}
 			<div class="viewitemdesc">{if !$view.submittedto}{/if}
 			{$view.description}</div>
 		{/if}
-    </div>{/if}
-	
-    {if !$view.submittedto}
+    </div>
 	<div class="viewitem">
 		<a href="{$WWWROOT}view/blocks.php?id={$view.id}" id="editthisview">{str tag ="editthisview" section="view"}</a>
     	{if $view.artefacts}
@@ -49,8 +49,8 @@
         	{foreach from=$view.artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$view.id}" id="link-artefacts">{$artefact.title|escape}</a>{if !$smarty.foreach.artefacts.last}, {/if}{/foreach}</div>
 		{/if}
 	</div>
-	{/if}
-	
+    {/if}
+
     <div class="viewitem">
     <a href="{$WWWROOT}view/access.php?id={$view.id}" id="editviewaccess">{str tag="editviewaccess" section="view"}</a>
     <br>
@@ -80,12 +80,6 @@
 		</div>
     {/if}
     </div>
-	
-    {if $view.submittedto}
-        <div class="viewitem submitted-viewitem">
-        {$view.submittedto}
-        </div>
-    {/if}
 	
     {if $view.submitto}
         <div class="viewitem submit-viewitem">

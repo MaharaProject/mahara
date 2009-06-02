@@ -38,6 +38,7 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
         }
 
         $smarty = $this->exporter->get_smarty('../../', 'internal');
+        $smarty->assign('page_heading', get_string('profilepage', 'artefact.internal'));
 
         // Profile page
         $profileviewid = $this->exporter->get('user')->get_profile_view()->get('id');
@@ -58,6 +59,7 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
         }
 
         // Generic profile information
+        $smarty->assign('page_heading', get_string('profileinformation', 'artefact.internal'));
         $smarty->assign('breadcrumbs', array(array('text' => 'Profile information', 'path' => 'index.html')));
 
         // Organise profile information by sections, ordered how it's ordered 
@@ -99,8 +101,7 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
         $iconid = $this->exporter->get('user')->get('profileicon');
         if ($iconid) {
             $icon = artefact_instance_from_id($iconid);
-            // TODO: protect title from /'s
-            $smarty->assign('icon', '<img src="../../static/profileicons/200px-' . $icon->get('title') . '" alt="Profile Icon">');
+            $smarty->assign('icon', '<img src="../../static/profileicons/200px-' . PluginExportHtml::sanitise_path($icon->get('title')) . '" alt="Profile Icon">');
         }
 
         $content = $smarty->fetch('export:html/internal:index.tpl');
@@ -117,8 +118,7 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
         $iconid = $this->exporter->get('user')->get('profileicon');
         if ($iconid) {
             $icon = artefact_instance_from_id($iconid);
-            // TODO: protect title from /'s
-            $smarty->assign('icon', '<img src="static/profileicons/200px-' . $icon->get('title') . '" alt="Profile Icon">');
+            $smarty->assign('icon', '<img src="static/profileicons/200px-' . PluginExportHtml::sanitise_path($icon->get('title')) . '" alt="Profile Icon">');
         }
         return array(
             'description' => $smarty->fetch('export:html/internal:summary.tpl'),

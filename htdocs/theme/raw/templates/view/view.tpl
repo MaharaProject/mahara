@@ -37,8 +37,8 @@
 	<div id="viewmenu">
         {include file="view/viewmenu.tpl"}
     </div>
-	<div>{$addfeedbackform}</div>
-	<div>{$objectionform}</div>
+    {if $addfeedbackform}<div>{$addfeedbackform}</div>{/if}
+    {if $objectionform}<div>{$objectionform}</div>{/if}
 </div>
 {include file="columnfullend.tpl"}
 

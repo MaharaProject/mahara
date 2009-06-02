@@ -2,6 +2,7 @@
 
 {include file="columnfullstart.tpl"}
 
+{if $columns}
     {str tag="editblockspagedescription" section="view"}
 
     <form action="{$formurl}" method="post">
@@ -46,7 +47,7 @@
     </form>
 
     <div id="view-wizard-controls" class="center">
-{if $new}
+    {if $new}
         <form action="" method="POST">
             <input type="hidden" name="id" value="{$view}">
             <input type="hidden" name="new" value="1">
@@ -57,21 +58,30 @@
             <input type="hidden" name="new" value="1">
             <input type="submit" class="submit" value="{str tag='next'}">
         </form>
-{elseif $profile}
+    {elseif $profile}
         <form action="{$WWWROOT}user/view.php" method="GET">
             <input class="submit" type="submit" value="{str tag='done'}">
         </form>
-{else}
+    {else}
         <form action="{$WWWROOT}view/{if $groupid}groupviews.php{elseif $institution}institutionviews.php{/if}" method="GET">
-    {if $groupid}
+        {if $groupid}
             <input type="hidden" name="group" value="{$groupid}">
-    {elseif $institution}
+        {elseif $institution}
             <input type="hidden" name="institution" value="{$institution}">
-    {/if}
+        {/if}
             <input class="submit" type="submit" value="{str tag='done'}">
         </form>
-{/if}
+    {/if}
     </div>
+
+{elseif $block}
+    <div class="blockconfig-background">
+        <div class="blockconfig-container">
+            {$block.html}
+        </div>
+    </div>
+{/if}
+
 {include file="columnfullend.tpl"}
 
 {include file="footer.tpl"}

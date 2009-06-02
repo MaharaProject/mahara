@@ -1018,10 +1018,11 @@ function get_users_data($userlist) {
 
     foreach ($data as &$record) {
         if (isset($record->introduction)) {
-            $record->introduction = str_shorten($record->introduction, 100, true);
+            $record->introduction = str_shorten_html($record->introduction, 100, true);
         }
 
         $record->messages = ($record->messages == 'allow' || $record->friend && $record->messages == 'friends' || $USER->get('admin')) ? 1 : 0;
+        $record->institutions = get_institution_string_for_user($record->id);
     }
 
     if (!$data || !$views = get_views(array_keys($data), null, null)) {
@@ -1114,6 +1115,26 @@ function get_users_data($userlist) {
         }
     }
     return $ordereddata;
+}
+
+function get_institution_string_for_user($userid) {
+    static $institutions = null;
+    if (is_null($institutions)) {
+        $institutions = get_records_assoc('institution', '', '', '', 'name, displayname');
+    }
+
+    $user = new User;
+    $user->find_by_id($userid);
+
+    $userinstitutions = array();
+    foreach ($user->get('institutions') as $institution) {
+        $userinstitutions[] = $institutions[$institution->institution]->displayname;
+    }
+
+    if ($userinstitutions) {
+        return get_string('memberofinstitutions', 'mahara', join(', ', $userinstitutions));
+    }
+    return '';
 }
 
 function friends_control_sideblock($returnto='myfriends') {

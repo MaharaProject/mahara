@@ -1,5 +1,6 @@
 <h3>{str tag="linksandresources"}</h3>
 
+    <div class="sidebar-content">
 {if $data}
     <ul>
 {foreach from=$data item=item}
@@ -8,3 +9,4 @@
     </ul>
 {/if}
 
+</div>

@@ -4,6 +4,7 @@
 {include file="columnleftstart.tpl"}
         <div id="userview">
                 <div class="user-icon right">
+                    {$institutions}
                     {if !empty($loginas)}
                       <strong><a href="{$WWWROOT}admin/users/changeuser.php?id={$USERID}">{$loginas}</a></strong>
                     {/if}

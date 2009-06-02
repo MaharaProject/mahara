@@ -38,4 +38,6 @@ $string['wholewall'] = 'View whole wall';
 $string['reply'] = 'reply';
 $string['delete'] = 'delete post';
 $string['Post'] = 'Post';
+$string['deletepostsure'] = 'Are you sure you want to do this? It cannot be undone.';
+$string['deletepostsuccess'] = 'Post deleted successfully';
 ?>

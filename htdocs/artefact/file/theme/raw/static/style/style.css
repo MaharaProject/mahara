@@ -1,0 +1,103 @@
+/**
+ * CSS rules for the file artefact plugin
+ *
+ * Copyright (C) 2006-2009 Catalyst IT
+ * This file is distributed under the same terms as Mahara itself
+ */
+#myfiles {
+	margin: 1em 0;
+    width: 100%;
+}
+#uploader,
+#browsebuttonstuff {
+	display: inline;
+}
+#uploadform {
+    background-color: #f4f8e7;
+	padding: .5em 1em;
+	margin: 1em 0;
+}
+#uploadform table th,
+#createfolderform table th {
+	text-align: left;
+	padding: .3em 1em .3em 0;
+}
+#uploadform table td,
+#createfolderform table td {
+	font-size: .9em;
+	padding: .3em 0;
+}
+#uploadform table input.button,
+#createfolderform table input.button {
+	font-size: 1em;
+}
+#uploadform table td table.help-wrapper,
+#createfolderform table td table.help-wrapper {
+	padding: 0;
+}
+#uploadform .checkbox {
+	margin-right: .5em;
+}
+#createfolderform,
+#browsemyfiles {
+    background-color: #e3ecc2;
+	margin: 1em 0;
+	padding: .5em 1em;
+}
+#browsemyfiles h3 {
+	margin: 0;
+}
+
+#foldernav {
+    font-weight: bold;
+    margin: 1em 0 0 0;
+    padding: 0 0 0 1.5em;
+    font-size: 1.5em;
+	line-height: 1.5em;
+    background: url(../images/foldernav.gif) no-repeat left 2px;
+}
+
+tr.folderhover.directory-item td {
+    background-color: #ffc !important;
+}
+tr.folderhover.directory-item a {
+    color: #000;
+    text-decoration: none;
+}
+tr.folder td {
+    background-color: #d3e4f2 !important;
+	font-weight: bold;
+}
+tr.folder td a {
+}
+#filelist tr td {
+	line-height: 2em;
+}
+#filelist td {
+	border-bottom: 1px dotted #d1d1d1;
+}
+#filelist table {
+	margin: 0 auto;
+}
+#filelist table td  {
+	border-bottom: none;
+	padding: .25em;
+}
+#filelist table th {
+	text-align: left;
+	padding: .25em;
+}
+#filelist tr.highlight-file td {
+    background: #fffcd8 url(../images/highlight-bg.gif) repeat left top !important;
+    font-weight: bold;
+}
+#filelist table table.editpermissions {
+	text-align: left;
+}
+#filelist table table.editpermissions th {
+	padding: 3px 10px 3px 0;
+}
+#filelist table table.editpermissions td {
+	font-size: 11px;
+	padding: 3px 0;
+}

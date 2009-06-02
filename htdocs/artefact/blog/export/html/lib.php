@@ -43,11 +43,12 @@ class HtmlExportBlog extends HtmlExportArtefactPlugin {
                 // Render the first page of the blog (the only one if there's 
                 // not many posts)
                 $smarty = $this->exporter->get_smarty('../../../', 'blog');
+                $smarty->assign('page_heading', $artefact->get('title'));
                 $smarty->assign('breadcrumbs', array(
                     array('text' => get_string('blogs', 'artefact.blog')),
                     array('text' => $artefact->get('title'), 'path' => 'index.html'),
                 ));
-                $rendered = $artefact->render_self(array());
+                $rendered = $artefact->render_self(array('hidetitle' => true));
                 $outputfilter = new HtmlExportOutputFilter('../../../');
                 $smarty->assign('rendered_blog', $outputfilter->filter($rendered['html']));
                 $content = $smarty->fetch('export:html/blog:index.tpl');

@@ -84,7 +84,7 @@ if ($new && isset($_POST['cancel'])) {
 // be processed without having to render the other blocks.
 if ($blockid = param_integer('blockconfig', 0)) {
     // However, if removing a newly placed block, let it fall through to process_changes
-    if (!isset($_POST['cancel_action_configureblockinstance_id_' . $blockid]) || !param_integer('removeoncancel', 0)) {
+    if (!isset($_POST['cancel_action_configureblockinstance_id_' . $blockid]) || !param_integer('removeoncancel', 0) || param_integer('pieform_jssubmission', 0)) {
         require_once(get_config('docroot') . 'blocktype/lib.php');
         $bi = new BlockInstance($blockid);
         $bi->build_configure_form();
@@ -111,22 +111,18 @@ if ($category === '') {
 }
 
 $view->process_changes($category, $new);
-$columns = $view->build_columns(true);
 
 $extraconfig = array(
     'stylesheets' => array('style/views.css'),
 );
-$smarty = smarty(array('views', 'tinytinymce', 'paginator', 'tablerenderer'), array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'), false, $extraconfig);
 
+$smarty = smarty(array('views', 'tinytinymce', 'paginator', 'tablerenderer'), array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'), false, $extraconfig);
 
 // The list of categories for the tabbed interface
 $smarty->assign('category_list', $view->build_category_list($category, $new));
 
 // The list of blocktypes for the default category
 $smarty->assign('blocktype_list', $view->build_blocktype_list($category));
-
-// The HTML for the columns in the view
-$smarty->assign('columns', $columns);
 
 // Tell smarty we're editing rather than just rendering
 $smarty->assign('editing', true);
@@ -158,6 +154,22 @@ $smarty->assign('view', $view->get('id'));
 $smarty->assign('groupid', $group);
 $smarty->assign('institution', $institution);
 $smarty->assign('can_change_layout', (!$USER->get_account_preference('addremovecolumns') || ($view->get('numcolumns') > 1 && $view->get('numcolumns') < 5)));
+
+$blockid = $view->get_blockinstance_currently_being_configured();
+if (!$blockid) {
+    $blockid = param_integer('block', 0);
+}
+if ($blockid) {
+    // Configuring a single block
+    $bi = new BlockInstance($blockid);
+    $smarty->assign('block', $bi->render_editing(true));
+}
+else {
+    // The HTML for the columns in the view
+    $columns = $view->build_columns(true);
+    $smarty->assign('columns', $columns);
+}
+
 $smarty->display('view/blocks.tpl');
 
 ?>

@@ -166,6 +166,13 @@ abstract class ArtefactType {
             }
         }
 
+        $this->artefacttype = $this->get_artefact_type();
+        if (!empty($data->artefacttype)) {
+            if ($this->artefacttype != $data->artefacttype) {
+                throw new SystemException(get_string('artefacttypemismatch', 'error', $data->artefacttype, $this->artefacttype));
+            }
+        }
+
         // load tags
         if ($this->id) {
             $tags = get_column('artefact_tag', 'tag', 'artefact', $this->id);
@@ -180,7 +187,6 @@ abstract class ArtefactType {
         }
 
         $this->atime = time();
-        $this->artefacttype = $this->get_artefact_type();
     }
 
     public function get_views_instances() {
@@ -608,7 +614,7 @@ abstract class ArtefactType {
     */
     public function display_title($maxlen=null) {
         if ($maxlen) {
-            return str_shorten($this->get('title'), $maxlen, true);
+            return str_shorten_text($this->get('title'), $maxlen, true);
         }
         return $this->get('title');
     }

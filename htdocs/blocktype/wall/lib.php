@@ -153,7 +153,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
         // information to it, for safety). We select it again as 'userid' to 
         // avoid confusion in the templates
         $sql = '
-            SELECT bwp.instance, bwp.from, bwp.replyto, bwp.private, bwp.postdate, bwp.text,' . db_format_tsfield('postdate') . ',
+            SELECT bwp.id AS postid, bwp.instance, bwp.from, bwp.replyto, bwp.private, bwp.postdate, bwp.text,' . db_format_tsfield('postdate') . ',
                 u.id, u.id AS userid, u.username, u.firstname, u.lastname, u.preferredname, u.staff, u.admin
                 FROM {blocktype_wall_post} bwp 
                 JOIN {usr} u ON bwp.from = u.id
@@ -168,7 +168,9 @@ class PluginBlocktypeWall extends SystemBlocktype {
             return array_map(
                 create_function(
                     '$item', 
-                    '$item->displayname = display_name($item); return $item;'), 
+                    '$item->displayname = display_name($item);
+                    $item->deletable = PluginBlocktypeWall::can_delete_wallpost($item->from, ' . intval($owner) .');
+                    return $item;'),
                 $records
             );
         }
@@ -193,6 +195,13 @@ class PluginBlocktypeWall extends SystemBlocktype {
             return get_string('title', 'blocktype.wall');
         }
         return get_string('otherusertitle', 'blocktype.wall', display_name($ownerid, null, true));
+    }
+
+    public static function can_delete_wallpost($poster, $wallowner) {
+        global $USER;
+        return $USER->is_admin_for_user($wallowner) ||
+            $poster == $USER->get('id') ||
+            $wallowner == $USER->get('id');
     }
 
 }

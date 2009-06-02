@@ -1086,6 +1086,18 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2009052700) {
+        // Install a cron job to clean out old exports
+        $cron = new StdClass;
+        $cron->callfunction = 'export_cleanup_old_exports';
+        $cron->minute       = '0';
+        $cron->hour         = '3,13';
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
+        insert_record('cron', $cron);
+    }
+
     return $status;
 
 }

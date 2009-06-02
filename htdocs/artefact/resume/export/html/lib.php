@@ -38,6 +38,7 @@ class HtmlExportResume extends HtmlExportArtefactPlugin {
             return;
         }
         $smarty = $this->exporter->get_smarty('../../', 'resume');
+        $smarty->assign('page_heading', get_string('resumeofuser', 'artefact.resume', full_name($this->exporter->get('user'))));
         $smarty->assign('breadcrumbs', array(
             array('text' => get_string('resume', 'artefact.resume'), 'path' => 'index.html'),
         ));
