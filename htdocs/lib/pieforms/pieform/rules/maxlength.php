@@ -59,6 +59,9 @@ function pieform_rule_maxlength_i18n() {/*{{{*/
         'sl.utf8' => array(
             'maxlength' => 'To polje mora biti dolgo največ %d znakov'
         ),
+        'nl.utf8' => array(
+            'maxlength' => 'Dit veld moet minstens %d tekens lang zijn'
+        ),
 
     );
 }/*}}}*/

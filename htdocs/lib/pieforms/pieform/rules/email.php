@@ -62,6 +62,9 @@ function pieform_rule_email_i18n() {/*{{{*/
         'sl.utf8' => array(
             'email' => 'Epoštni naslov je neveljaven'
         ),
+        'nl.utf8' => array(
+            'email' => 'E-mailadres is ongeldig'
+        ),
 
     );
 }/*}}}*/

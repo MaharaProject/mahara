@@ -60,6 +60,9 @@ function pieform_rule_regex_i18n() {/*{{{*/
         'sl.utf8' => array(
             'regex' => 'To polje ni v veljavni obliki'
         ),
+        'nl.utf8' => array(
+            'regex' => 'Dit veld is niet in een geldige vorm'
+        ),
 
     );
 }/*}}}*/

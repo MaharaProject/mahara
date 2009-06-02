@@ -166,6 +166,13 @@ function pieform_element_expiry_i18n() {/*{{{*/
             'years'     => 'let',
             'noenddate' => 'ni zaključnega datuma'
         ),
+        'nl.utf8' => array(
+            'days'      => 'Dagen',
+            'weeks'     => 'Weken',
+            'months'    => 'Maanden',
+            'years'     => 'Jaren',
+            'noenddate' => 'Geen einddatum'
+        ),
 
     );
 }/*}}}*/
