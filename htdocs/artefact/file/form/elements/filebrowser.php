@@ -205,7 +205,12 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
             if ($form->submitted_by_js()) {
                 $replacehtml = false; // Don't replace the entire form when replying with json data.
                 $result['formelement'] = $prefix;
-                $result['formelementsuccess'] = $prefix . '.success';
+                if ($result['error']) {
+                    $result['formelementerror'] = $prefix . '.success';
+                }
+                else {
+                    $result['formelementsuccess'] = $prefix . '.success';
+                }
                 $form->json_reply(empty($result['error']) ? PIEFORM_OK : PIEFORM_ERR, $result, $replacehtml);
             }
             // Not js. Remember this change and submit it with the
@@ -488,14 +493,15 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     // Upload succeeded
 
     if (isset($element['filters'])) {
-        $artefacttypes = $element['filters']['artefacttype'];
-        $filetypes = $element['filters']['filetype'];
+        $artefacttypes = isset($element['filters']['artefacttype']) ? $element['filters']['artefacttype'] : null;
+        $filetypes = isset($element['filters']['filetype']) ? $element['filters']['filetype'] : null;
         if (!empty($artefacttypes) || !empty($filetypes)) {
             // Need to check the artefacttype or filetype (mimetype) of the uploaded file.
             $file = artefact_instance_from_id($newid);
             if (is_array($artefacttypes) && !in_array($file->get('artefacttype'), $artefacttypes)
                 || is_array($filetypes) && !in_array($file->get('filetype'), $filetypes)) {
                 $result['error'] = true;
+                $result['uploaded'] = true;
                 $result['message'] = get_string('wrongfiletypeforblock', 'artefact.file');
                 return $result;
             }

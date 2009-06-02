@@ -619,6 +619,7 @@ class BlockInstance {
             'successcallback'  => array($this, 'instance_config_store'),
             'jsform' => true,
             'jssuccesscallback' => 'blockConfigSuccess',
+            'jserrorcallback'   => 'blockConfigError',
             'elements' => $elements,
             'viewgroup' => $this->get_view()->get('group'),
             'viewinstitution' => $this->get_view()->get('institution'),

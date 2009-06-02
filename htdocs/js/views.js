@@ -1098,3 +1098,10 @@ function blockConfigSuccess(form, data) {
     }
 }
 
+function blockConfigError(form, data) {
+    if (data.formelementerror) {
+        eval(data.formelementerror + '(form, data)');
+        return;
+    }
+    formError(form, data);
+}
