@@ -229,6 +229,9 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
                 if (isset($element['selectcallback']) && is_callable($element['selectcallback'])) {
                     $element['selectcallback']($add);
                 }
+                else if ($element['config']['selectone']) {
+                    $result['selected'] = array($add);
+                }
                 else {
                     $result['selected'] = is_array($selected) ? $selected : array();
                     $result['selected'][] = $add;
