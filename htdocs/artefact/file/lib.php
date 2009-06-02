@@ -112,7 +112,7 @@ class PluginArtefactFile extends PluginArtefact {
 
     public static function themepaths($type) {
         static $themepaths = array(
-            'file' => array(
+            'filebrowser' => array(
                 'images/file.gif',
                 'images/folder.gif',
                 'images/image.gif',
@@ -166,13 +166,29 @@ class PluginArtefactFile extends PluginArtefact {
                     'Role',
                 ),
             ),
+            'filebrowser' => array(
+                'mahara' => array(
+                    'remove',
+                ),
+                'artefact.file' => array(
+                    'detachfilewarning',
+                    'editfile',
+                    'editfolder',
+                    'filewithnameexists',
+                    'foldernamerequired',
+                    'nametoolong',
+                    'namefieldisrequired',
+                    'uploadingfiletofolder',
+                    'youmustagreetothecopyrightnotice',
+                ),
+            ),
         );
         return $jsstrings[$type];
     }
 
     public static function jshelp($type) {
         static $jshelp = array(
-            'file' => array(
+            'filebrowser' => array(
                 'artefact.file' => array(
                     'notice',
                     'quota_message',

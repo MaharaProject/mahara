@@ -18,7 +18,7 @@
 
 <div id="{$prefix}_upload_browse" class="upload_browse{if $config.select} select{if !$browse} hidden{/if}{/if}">
 
-{if $config.select}
+{if $config.select && !$config.alwaysopen}
 <input type="submit" class="buttondk" name="{$prefix}_cancelbrowse" id="{$prefix}_close_upload_browse" value="{str tag=Close}" />
 {/if}
 

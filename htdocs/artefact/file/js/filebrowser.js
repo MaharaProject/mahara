@@ -5,16 +5,17 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
     this.folderid = folderid;
     this.config = config;
     this.config.wwwroot = globalconfig.wwwroot;
+    this.config.sesskey = globalconfig.sesskey;
     this.config.theme = globalconfig.theme;
     this.nextupload = 0;
 
     this.init = function () {
-        self.form = $(self.formname);
+        self.form = getFirstParentByTagAndClassName(self.id + '_filelist_container', 'form', 'pieform');
         if (!self.form) {
             alert('Filebrowser error 1');
         }
         if (self.config.select && typeof(self.form.submit) != 'function') {
-            alert('Filebrowser error 2'); // Rename your submit element to something other than "submit".
+            // logWarn('Filebrowser error 2'); // Rename your submit element to something other than "submit".
         }
         self.foldername = $(self.id + '_foldername').value;
         if (self.config.select) {
@@ -29,12 +30,17 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         }
     }
 
+    this.submitform = function () {
+        signal(self.form, 'onsubmit');
+        self.form.submit();
+    };
+
     this.upload_init = function () {
         if ($(self.id + '_notice')) {
             setNodeAttribute(self.id + '_userfile', 'disabled', true);
         }
         if (!$(self.id + '_upload')) {
-            appendChildNodes(self.form, INPUT({
+            insertSiblingNodesAfter(self.id + '_uploadnumber', INPUT({
                 'type': 'hidden',
                 'name': self.id + '_upload',
                 'id' : self.id + '_upload',
@@ -89,8 +95,8 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
         self.upload_presubmit();
         $(self.id + '_upload').value = 1;
-        signal(self.form, 'onsubmit');
-        self.form.submit();
+        self.submitform();
+
         // $(self.id + '_userfile').value = ''; // Won't work in IE
         replaceChildNodes(self.id + '_userfile_container', INPUT({
             'type':'file',
@@ -246,8 +252,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 var href = getNodeAttribute(this, 'href');
                 var params = parseQueryString(href.substring(href.indexOf('?')+1));
                 $(self.id + '_changefolder').value = params.folder;
-                signal(self.form, 'onsubmit');
-                self.form.submit();
+                self.submitform();
                 $(self.id + '_changefolder').value = '';
                 e.stop();
                 return false;
@@ -273,8 +278,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 }
                 $(self.id + '_move').value = dragid;
                 $(self.id + '_moveto').value = dropid;
-                signal(self.form, 'onsubmit');
-                self.form.submit();
+                self.submitform();
                 $(self.id + '_move').value = '';
                 $(self.id + '_moveto').value = '';
             }
@@ -334,18 +338,22 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
     };
 
     this.select_init = function () {
-        connect(self.id + '_open_upload_browse', 'onclick', function (e) {
-            e.stop();
-            removeElementClass(self.id + '_upload_browse', 'hidden');
-            addElementClass(self.id + '_open_upload_browse_container', 'hidden');
-            return false;
-        });
-        connect(self.id + '_close_upload_browse', 'onclick', function (e) {
-            e.stop();
-            addElementClass(self.id + '_upload_browse', 'hidden');
-            removeElementClass(self.id + '_open_upload_browse_container', 'hidden');
-            return false;
-        });
+        if ($(self.id + '_open_upload_browse')) {
+            connect(self.id + '_open_upload_browse', 'onclick', function (e) {
+                e.stop();
+                removeElementClass(self.id + '_upload_browse', 'hidden');
+                addElementClass(self.id + '_open_upload_browse_container', 'hidden');
+                return false;
+            });
+        }
+        if ($(self.id + '_close_upload_browse')) {
+            connect(self.id + '_close_upload_browse', 'onclick', function (e) {
+                e.stop();
+                addElementClass(self.id + '_upload_browse', 'hidden');
+                removeElementClass(self.id + '_open_upload_browse_container', 'hidden');
+                return false;
+            });
+        }
         forEach(getElementsByTagAndClassName('button', 'unselect', self.id + '_selectlist'), function (elem) {
             connect(elem, 'onclick', self.unselect);
         });
@@ -431,6 +439,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
     }
 
     this.success = function (form, data) {
+        self.form = form; // ????
         if (data.uploaded) {
             self.upload_success(data);  // Remove uploading message
         }

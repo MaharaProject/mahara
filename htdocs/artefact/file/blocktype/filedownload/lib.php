@@ -103,9 +103,20 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
 
     public static function instance_config_form($instance, $istemplate) {
         $configdata = $instance->get('configdata');
+        safe_require('artefact', 'file');
+        $instance->set('artefactplugin', 'file');
         return array(
-            self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null, $istemplate),
+            // self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null, $istemplate),
+            'filebrowser' => self::filebrowser_element($instance, (isset($configdata['artefactids'])) ? $configdata['artefactids'] : null, $istemplate),
         );
+    }
+
+    public static function instance_config_save($values) {
+        if (isset($values['filebrowser']['selected'])) {
+            $values['artefactids'] = $values['filebrowser']['selected'];
+        }
+        unset($values['filebrowser']);
+        return $values;
     }
 
     public static function artefactchooser_element($default=null, $istemplate=false) {
@@ -135,6 +146,38 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
      */
     public static function artefactchooser_get_element_data($artefact) {
         return ArtefactTypeFileBase::artefactchooser_get_file_data($artefact);
+    }
+
+    public static function filebrowser_element(&$instance, $default=null, $istemplate=false) {
+        $element = array(
+            'name' => 'filebrowser',
+            'type'  => 'filebrowser',
+            'title' => get_string('Files', 'blocktype.file/filedownload'),
+            'folder'       => param_integer('folder', 0),
+            'highlight'    => null,
+            'browse'       => true,
+            'page'         => View::make_base_url(),
+            // 'page'         => get_config('wwwroot') . 'view/blocks.php?id=' . $instance->get('view') . '&block=' . $instance->get('id'),
+            'config'       => array(
+                'upload'          => true,
+                'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
+                'createfolder'    => false,
+                'edit'            => false,
+                'select'          => true,
+                'alwaysopen'      => true,
+            ),
+            'selectlistcallback' => array(
+                'name' => 'artefact_get_records_by_id',
+                'args' => array(empty($default) ? array() : $default),
+            ),
+        );
+        if (!$istemplate) {
+            // You don't have to choose a file if this view is a template
+            $element['rules'] = array(
+                'required' => true,
+            );
+        }
+        return $element;
     }
 
     public static function default_copy_type() {

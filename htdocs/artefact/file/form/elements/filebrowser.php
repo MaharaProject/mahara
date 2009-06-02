@@ -34,7 +34,7 @@ defined('INTERNAL') || die();
  * @return string           The HTML for the element
  */
 function pieform_element_filebrowser(Pieform $form, $element) {
-    global $USER;
+    global $USER, $_PIEFORM_FILEBROWSERS;
     $smarty = smarty_core();
     $group       = $form->get_property('group');
     $institution = $form->get_property('institution');
@@ -56,7 +56,12 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     }
     $config = array_map('intval', $element['config']);
     if ($config['select']) {
-        $selected = $element['selectlistcallback']();
+        if (is_array($element['selectlistcallback'])) {
+            $selected = call_user_func_array($element['selectlistcallback']['name'], $element['selectlistcallback']['args']);
+        }
+        else {
+            $selected = $element['selectlistcallback']();
+        }
         $smarty->assign('selectedlist', $selected);
         $selectedliststr = json_encode($selected);
     }
@@ -86,13 +91,15 @@ function pieform_element_filebrowser(Pieform $form, $element) {
 
     $smarty->assign('prefix', $prefix);
 
-    $initjs = "var {$prefix} = new FileBrowser('{$prefix}', {$folder}, {$configstr}, config);
-{$prefix}.formname = '{$formid}';
+    $initjs = "{$prefix} = new FileBrowser('{$prefix}', {$folder}, {$configstr}, config);
 {$prefix}.filedata = {$fileliststr};";
     if ($config['select']) {
         $initjs .= "{$prefix}.selecteddata = {$selectedliststr};";
         $initjs .= "forEach(getElementsByTagAndClassName('button', 'unselect', '{$prefix}_selectlist'), function (elem) { removeElementClass(elem, 'hidden'); });";
     }
+
+    $_PIEFORM_FILEBROWSERS[$prefix]['views_js'] = $initjs;
+
     $initjs .= "addLoadEvent({$prefix}.init);";
 
     $smarty->assign('initjs', $initjs);
@@ -135,13 +142,14 @@ function pieform_element_filebrowser_build_path($form, $element, $folder) {
     if (!$form->submitted_by_js()) {
         return;
     }
+    $querybase = $element['page'] . (strpos($element['page'], '?') === false ? '?' : '&');
 
     $path = pieform_element_filebrowser_get_path($folder);
     $foldername = $path[0]->title;
 
     $smarty = smarty_core();
     $smarty->assign('path', array_reverse($path));
-    $smarty->assign('querybase', $element['page'] . (strpos($element['page'], '?') === false ? '?' : '&'));
+    $smarty->assign('querybase', $querybase);
     return array('html' => $smarty->fetch('artefact:file:form/folderpath.tpl'), 'foldername' => $foldername);
 }
 
@@ -156,16 +164,21 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     $group = $form->get_property('group');
     $institution = $form->get_property('institution');
     $userid = ($group || $institution) ? null : $USER->get('id');
+    $editable = (int) $element['config']['edit'];
+    $selectable = (int) $element['config']['select'];
+    $querybase = $element['page'] . (strpos($element['page'], '?') === false ? '?' : '&');
+    $prefix = $form->get_name() . '_' . $element['name'];
+
+    $filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $group, $institution);
 
     $smarty = smarty_core();
     $smarty->assign('edit', -1);
     $smarty->assign('highlight', $highlight);
-    $smarty->assign('editable', (int) $element['config']['edit']);
-    $smarty->assign('selectable', (int) $element['config']['select']);
-    $filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $group, $institution);
+    $smarty->assign('editable', $editable);
+    $smarty->assign('selectable', $selectable);
     $smarty->assign('filelist', $filedata);
-    $smarty->assign('querybase', $element['page'] . (strpos($element['page'], '?') === false ? '?' : '&'));
-    $smarty->assign('prefix', $form->get_name() . '_' . $element['name']);
+    $smarty->assign('querybase', $querybase);
+    $smarty->assign('prefix', $prefix);
 
     return array(
         'data' => $filedata,
@@ -180,6 +193,8 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
 
         $result = pieform_element_filebrowser_doupdate($form, $element);
 
+        $prefix = $form->get_name() . '_' . $element['name'];
+
         if (is_array($result)) {
             // We did something.  If js, replace the filebrowser now and
             // don't continue form submission.
@@ -188,6 +203,8 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
             }
             if ($form->submitted_by_js()) {
                 $replacehtml = false; // Don't replace the entire form when replying with json data.
+                $result['formelement'] = $prefix;
+                $result['formelementsuccess'] = $prefix . '.success';
                 $form->json_reply(empty($result['error']) ? PIEFORM_OK : PIEFORM_ERR, $result, $replacehtml);
             }
             // Not js. Remember this change and submit it with the
@@ -195,24 +212,38 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
             return $result;
         }
 
-        $prefix = $form->get_name() . '_' . $element['name'];
+        $selected = param_variable($prefix . '_selected', null);
+        if (is_array($selected)) {
+            $selected = array_keys($selected);
+        }
 
         // We only care about the following when js is off:
         if (!$form->submitted_by_js()) {
             $select   = param_variable($prefix . '_select', null);
             $unselect = param_variable($prefix . '_unselect', null);
             $edit     = param_variable($prefix . '_edit', null);
-            if (is_array($select) && is_callable($element['selectcallback'])) {
+            if (is_array($select)) {
                 $keys = array_keys($select);
-                // try
-                $element['selectcallback']((int) $keys[0]);
+                $add = (int) $keys[0];
+                if (isset($element['selectcallback']) && is_callable($element['selectcallback'])) {
+                    $element['selectcallback']($add);
+                }
+                else {
+                    $result['selected'] = is_array($selected) ? $selected : array();
+                    $result['selected'][] = $add;
+                }
                 $result['message'] = get_string('fileadded', 'artefact.file');
                 $result['browse'] = 1;
             }
-            else if (is_array($unselect) && is_callable($element['unselectcallback'])) {
+            else if (is_array($unselect)) {
                 $keys = array_keys($unselect);
-                // try
-                $element['unselectcallback']((int) $keys[0]);
+                $del = (int) $keys[0];
+                if (isset($element['unselectcallback']) && is_callable($element['unselectcallback'])) {
+                    $element['unselectcallback']($del);
+                }
+                else {
+                    $result['selected'] = is_array($selected) ? array_diff($selected, array($del)) : array();
+                }
                 $result['message'] = get_string('fileremoved', 'artefact.file');
             }
             else if (is_array($edit)) {
@@ -225,12 +256,9 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
             }
         }
 
-        if (!is_array($result)) {
-            $selected = param_variable($prefix . '_selected', null);
-            if (is_array($selected)) {
-                // When files are being selected, this element has a real value
-                $result['selected'] = array_keys($selected);
-            }
+        if (!is_array($result) && is_array($selected)) {
+            // When files are being selected, this element has a real value
+            $result['selected'] = $selected;
         }
 
         $result['folder'] = $element['folder'];
@@ -346,8 +374,15 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
         ));
         // If it's a non-js upload, automatically select the newly uploaded file.
         $result['browse'] = 1;
-        if (!$form->submitted_by_js() && !$result['error'] && !empty($element['config']['select']) && is_callable($element['selectcallback'])) {
-            $element['selectcallback']($result['highlight']);
+        if (!$form->submitted_by_js() && !$result['error'] && !empty($element['config']['select'])) {
+            if (isset($element['selectcallback']) && is_callable($element['selectcallback'])) {
+                $element['selectcallback']($result['highlight']);
+            }
+            else {
+                $selected = param_variable($prefix . '_selected', array());
+                $result['selected'] = array_keys($selected);
+                $result['selected'][] = $result['highlight'];
+            }
         }
         return $result;
     }
@@ -367,22 +402,42 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     global $USER;
 
     $parentfolder     = $data['uploadfolder'] ? (int) $data['uploadfolder'] : null;
-    $parentfoldername = $data['uploadfoldername'];
     $institution      = $form->get_property('institution');
     $group            = $form->get_property('group');
+    $uploadnumber     = (int) $data['uploadnumber'];
+    $editable         = (int) $element['config']['edit'];
+    $selectable       = (int) $element['config']['select'];
+    $querybase        = $element['page'] . (strpos($element['page'], '?') === false ? '?' : '&');
+    $prefix           = $form->get_name() . '_' . $element['name'];
 
-    $result = array('error' => false, 'uploadnumber' => (int) $data['uploadnumber']);
+    $result = array('error' => false, 'uploadnumber' => $uploadnumber);
+
+    if ($parentfolder == 0) {
+        $parentfolder = null;
+    }
 
     $data             = new StdClass;
     $data->parent     = $parentfolder;
     $data->owner      = null;
 
-    if ($parentfolder && !$USER->can_edit_artefact(artefact_instance_from_id($parentfolder))) {
-        $result['error'] = true;
-        $result['message'] = get_string('cannoteditfolder', 'artefact.file');
-        return $result;
+    if ($parentfolder) {
+        $parentartefact = artefact_instance_from_id($parentfolder);
+        if (!$USER->can_edit_artefact($parentartefact)) {
+            $result['error'] = true;
+            $result['message'] = get_string('cannoteditfolder', 'artefact.file');
+            return $result;
+        }
+        $parentfoldername = $parentartefact->get('title');
+    }
+    else {
+        $parentfoldername = null;
     }
     if ($institution) {
+        if (!$USER->can_edit_institution($institution)) {
+            $result['error'] = true;
+            $result['message'] = get_string('notadminforinstitution', 'admin');
+            return $result;
+        }
         $data->institution = $institution;
     } else if ($group) {
         require_once(get_config('libroot') . 'group.php');
@@ -657,24 +712,12 @@ function pieform_element_filebrowser_changefolder(Pieform $form, $element, $fold
     );
 }
 
-/* function pieform_element_filebrowser_views_js(Pieform $form, $element) {
-    $prefix = $form->get_name() . '_' . $element['name'];
-    $parentfolder = json_encode($element['parentfolder']);
-    log_debug($prefix);
-    $js = "var {$prefix} = new Uploader('{$prefix}', {$parentfolder}); {$prefix}.init();";
-    $js .= "{$prefix}.uploadscript = '" . get_config('wwwroot') . "artefact/file/upload2.php';";
-    $js .= "window.{$prefix} = {$prefix};";
-    if (get_config_plugin('artefact', 'file', 'uploadagreement')) {
-        $js .= <<<JAVASCRIPT
-connect('{$prefix}_openbutton', 'onclick', function () {
-    addElementClass('{$prefix}_openbutton', 'hidden');
-    removeElementClass('{$prefix}_elements', 'hidden');
-});
-JAVASCRIPT;
-    }
-    log_debug($js);
-    return $js;
-}*/
+function pieform_element_filebrowser_views_js(Pieform $form, $element) {
+    global $_PIEFORM_FILEBROWSERS;
+    $formname = $form->get_name();
+    $prefix = $formname . '_' . $element['name'];
+    return $_PIEFORM_FILEBROWSERS[$prefix]['views_js'] . " {$prefix}.init();";
+}
 
 
 /**
@@ -688,31 +731,7 @@ JAVASCRIPT;
 function pieform_element_filebrowser_get_headdata($element) {
     $headdata = array('<script type="text/javascript" src="' . get_config('wwwroot') . 'artefact/file/js/filebrowser.js"></script>');
 
-    $strings = array();
-    if ($element['config']['edit']) {
-        $strings = array(
-            'artefact.file' => array(
-                'editfile',
-                'editfolder',
-                'filewithnameexists',
-                'nametoolong',
-                'namefieldisrequired',
-                'detachfilewarning',
-            ),
-        );
-    }
-    if ($element['config']['upload']) {
-        $strings['artefact.file'][] = 'uploadingfiletofolder';
-        if ($element['config']['uploadagreement']) {
-            $strings['artefact.file'][] = 'youmustagreetothecopyrightnotice';
-        }
-    }
-    if ($element['config']['createfolder']) {
-        $strings['artefact.file'][] = 'foldernamerequired';
-    }
-    if ($element['config']['select']) {
-        $strings['mahara'][] = 'remove';
-    }
+    $strings = PluginArtefactFile::jsstrings('filebrowser');
     $jsstrings = '';
     foreach ($strings as $section => $sectionstrings) {
         foreach ($sectionstrings as $s) {
