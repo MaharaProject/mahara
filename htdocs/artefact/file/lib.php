@@ -395,7 +395,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     }
 
 
-    public static function get_my_files_data($parentfolderid, $userid, $group=null, $institution=null, $idkeys=true) {
+    public static function get_my_files_data($parentfolderid, $userid, $group=null, $institution=null) {
         $select = '
             SELECT
                 a.id, a.artefacttype, a.mtime, f.size, a.title, a.description,
@@ -498,12 +498,6 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         }
 
         uasort($filedata, array("ArtefactTypeFileBase", "my_files_cmp"));
-
-        if (!$idkeys) {
-            // Temporary: allow blog attachment stuff to continue to
-            // work with the old file.js & tablerenderer.js
-            return array_values($filedata);
-        }
         return $filedata;
     }
 
