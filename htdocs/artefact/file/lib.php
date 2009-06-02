@@ -421,7 +421,8 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 LEFT OUTER JOIN {artefact_file_files} f ON f.artefact = a.id
                 LEFT OUTER JOIN {artefact} c ON c.parent = a.id 
                 LEFT OUTER JOIN {artefact_attachment} aa ON aa.attachment = a.id';
-        if ($filters && $filters['artefacttype']) {
+
+        if (!empty($filters['artefacttype'])) {
             $artefacttypes = $filters['artefacttype'];
             $artefacttypes[] = 'folder';
         }
@@ -429,7 +430,12 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             $artefacttypes = array_diff(PluginArtefactFile::get_artefact_types(), array('profileicon'));
         }
         $where = "
-            WHERE a.artefacttype IN (" . join(',',  array_map('db_quote', $artefacttypes)). ")";
+            WHERE a.artefacttype IN (" . join(',',  array_map('db_quote', $artefacttypes)) . ")";
+        if (!empty($filters['filetype']) && is_array($filters['filetype'])) {
+            $where .= "
+            AND (a.artefacttype = 'folder' OR f.filetype IN (" . join(',',  array_map('db_quote', $filters['filetype'])) . '))';
+        }
+
         $groupby = '
             GROUP BY
                 a.id, a.artefacttype, a.mtime, f.size, a.title, a.description';

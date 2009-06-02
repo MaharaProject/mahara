@@ -120,31 +120,11 @@ class PluginBlocktypeImage extends PluginBlocktype {
         return $values;
     }
 
-    public static function artefactchooser_element($default=null, $istemplate=false) {
-        $element = array(
-            'name'  => 'artefactid',
-            'type'  => 'artefactchooser',
-            'title' => get_string('image'),
-            'defaultvalue' => $default,
-            'blocktype' => 'image',
-            'limit' => 10,
-            'artefacttypes' => array('image', 'profileicon'),
-            'template' => 'artefact:file:artefactchooser-element.tpl',
-        );
-        if (!$istemplate) {
-            // You don't have to choose a file if this view is a template
-            $element['rules'] = array(
-                'required' => true,
-            );
-        }
-        return $element;
-    }
-
     public static function filebrowser_element(&$instance, $default=null, $istemplate=false) {
         $element = array(
-            'name' => 'filebrowser',
-            'type'  => 'filebrowser',
-            'title' => get_string('image'),
+            'name'         => 'filebrowser',
+            'type'         => 'filebrowser',
+            'title'        => get_string('image'),
             'folder'       => param_integer('folder', 0),
             'highlight'    => null,
             'browse'       => true,
@@ -165,6 +145,26 @@ class PluginBlocktypeImage extends PluginBlocktype {
                 'name' => 'artefact_get_records_by_id',
                 'args' => array(empty($default) ? array() : array($default)),
             ),
+        );
+        if (!$istemplate) {
+            // You don't have to choose a file if this view is a template
+            $element['rules'] = array(
+                'required' => true,
+            );
+        }
+        return $element;
+    }
+
+    public static function artefactchooser_element($default=null, $istemplate=false) {
+        $element = array(
+            'name'  => 'artefactid',
+            'type'  => 'artefactchooser',
+            'title' => get_string('image'),
+            'defaultvalue' => $default,
+            'blocktype' => 'image',
+            'limit' => 10,
+            'artefacttypes' => array('image', 'profileicon'),
+            'template' => 'artefact:file:artefactchooser-element.tpl',
         );
         if (!$istemplate) {
             // You don't have to choose a file if this view is a template
