@@ -64,20 +64,70 @@ class PluginBlocktypeHtml extends PluginBlocktype {
 
     public static function instance_config_form($instance, $istemplate) {
         $configdata = $instance->get('configdata');
+        safe_require('artefact', 'file');
+        $instance->set('artefactplugin', 'file');
         return array(
-            self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate),
+            'filebrowser' => self::filebrowser_element($instance, (isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate),
         );
     }
 
-    private static function get_allowed_extensions() {
-        return array('html', 'htm');
+    public static function instance_config_save($values) {
+        if (isset($values['filebrowser']['selected'])) {
+            $values['artefactid'] = $values['filebrowser']['selected'][0];
+        }
+        unset($values['filebrowser']);
+        return $values;
+    }
+
+    private static function get_allowed_mimetypes() {
+        static $mimetypes = array();
+        if (!$mimetypes) {
+            $mimetypes = get_column('artefact_file_mime_types', 'mimetype', 'description', 'html');
+        }
+        return $mimetypes;
+    }
+
+
+    public static function filebrowser_element(&$instance, $default=null, $istemplate=false) {
+        $element = array(
+            'name'         => 'filebrowser',
+            'type'         => 'filebrowser',
+            'title'        => get_string('file', 'artefact.file'),
+            'folder'       => param_integer('folder', 0),
+            'highlight'    => null,
+            'browse'       => true,
+            'page'         => View::make_base_url(),
+            'config'       => array(
+                'upload'          => true,
+                'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
+                'createfolder'    => false,
+                'edit'            => false,
+                'select'          => true,
+                'selectone'       => true,
+                'alwaysopen'      => true,
+            ),
+            'filters'      => array(
+                'artefacttype'    => array('file'),
+                'filetype'        => self::get_allowed_mimetypes(),
+            ),
+            'selectlistcallback' => array(
+                'name' => 'artefact_get_records_by_id',
+                'args' => array(empty($default) ? array() : array($default)),
+            ),
+        );
+        if (!$istemplate) {
+            // You don't have to choose a file if this view is a template
+            $element['rules'] = array(
+                'required' => true,
+            );
+        }
+        return $element;
     }
 
     public static function artefactchooser_element($default=null, $istemplate=false) {
-        $extraselect = '(' . implode(' OR ', array_map(
-            create_function('$a', 'return "title LIKE \'%.$a\'";'),
-            self::get_allowed_extensions())
-        ) . ')';
+        $extraselect = 'filetype IN (' . join(',', array_map('db_quote', self::get_allowed_mimetypes())) . ')';
+        $extrajoin   = ' JOIN {artefact_file_files} ON {artefact_file_files}.artefact = a.id ';
+
         $element = array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
