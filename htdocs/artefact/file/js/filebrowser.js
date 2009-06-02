@@ -387,6 +387,17 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         else if (highlight) {
             forEach(rows, function (r) { removeElementClass(r, 'highlight-file'); });
         }
+        if (self.config.selectone) {
+            forEach(rows, function (row) {
+                var selectbutton = $(self.id + '_select_' + getFirstElementByTagAndClassName(null, 'unselect', row).name.replace(/.*_unselect\[(\d+)\]$/, '$1'));
+                if (selectbutton) {
+                    removeElementClass(selectbutton, 'hidden');
+                }
+                removeElement(row);
+            });
+            rows = [];
+            self.selecteddata = {};
+        }
         // var remove = BUTTON({'type':'submit', 'class':'button small unselect', 'name':'unselect[' + id + ']', 'value':id}, get_string('remove')); // IE problem ?
         var remove = INPUT({'type': 'submit', 'class':'button small unselect', 'name':self.id+'_unselect[' + id + ']', 'value':get_string('remove')});
         connect(remove, 'onclick', self.unselect);
