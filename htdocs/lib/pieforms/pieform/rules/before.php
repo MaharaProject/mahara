@@ -63,6 +63,9 @@ function pieform_rule_before_i18n() {/*{{{*/
         'sl.utf8' => array(
             'before' => 'To ne sme biti za poljem "%s"'
         ),
+        'nl.utf8' => array(
+            'before' => 'Dit kan niet na het veld "%s" zijn'
+        ),
 
     );
 }/*}}}*/
