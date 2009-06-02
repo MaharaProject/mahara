@@ -486,6 +486,22 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     }
 
     // Upload succeeded
+
+    if (isset($element['filters'])) {
+        $artefacttypes = $element['filters']['artefacttype'];
+        $filetypes = $element['filters']['filetype'];
+        if (!empty($artefacttypes) || !empty($filetypes)) {
+            // Need to check the artefacttype or filetype (mimetype) of the uploaded file.
+            $file = artefact_instance_from_id($newid);
+            if (is_array($artefacttypes) && !in_array($file->get('artefacttype'), $artefacttypes)
+                || is_array($filetypes) && !in_array($file->get('filetype'), $filetypes)) {
+                $result['error'] = true;
+                $result['message'] = get_string('wrongfiletypeforblock', 'artefact.file');
+                return $result;
+            }
+        }
+    }
+
     if ($parentfoldername) {
         if ($data->title == $originalname) {
             $result['message'] = get_string('uploadoffiletofoldercomplete', 'artefact.file', 

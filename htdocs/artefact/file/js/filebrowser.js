@@ -378,6 +378,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
     }
 
     this.add_to_selected_list = function (id, highlight) {
+        if (!self.filedata[id]) {
+            return;
+        }
         var tbody = getFirstElementByTagAndClassName('tbody', null, self.id + '_selectlist');
         var rows = getElementsByTagAndClassName('tr', null, tbody);
         if (rows.length == 0) {

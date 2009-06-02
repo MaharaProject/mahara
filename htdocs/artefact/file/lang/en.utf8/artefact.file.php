@@ -200,6 +200,6 @@ $string['Title'] = 'Title';
 $string['imagetitle'] = 'Image Title';
 $string['usenodefault'] = 'Use no default';
 $string['usingnodefaultprofileicon'] = 'Now using no default profile icon';
-
+$string['wrongfiletypeforblock'] = 'The file you uploaded was not the correct type for this block.';
 
 ?>
