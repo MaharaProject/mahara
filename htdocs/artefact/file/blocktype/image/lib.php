@@ -88,8 +88,11 @@ class PluginBlocktypeImage extends PluginBlocktype {
 
     public static function instance_config_form($instance, $istemplate) {
         $configdata = $instance->get('configdata');
+        safe_require('artefact', 'file');
+        $instance->set('artefactplugin', 'file');
         return array(
-            self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate),
+            // self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate),
+            'filebrowser' => self::filebrowser_element($instance, (isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate),
             'showdescription' => array(
                 'type'  => 'checkbox',
                 'title' => get_string('showdescription', 'blocktype.file/image'),
@@ -109,6 +112,14 @@ class PluginBlocktypeImage extends PluginBlocktype {
         );
     }
 
+    public static function instance_config_save($values) {
+        if (isset($values['filebrowser']['selected'])) {
+            $values['artefactid'] = $values['filebrowser']['selected'][0];
+        }
+        unset($values['filebrowser']);
+        return $values;
+    }
+
     public static function artefactchooser_element($default=null, $istemplate=false) {
         $element = array(
             'name'  => 'artefactid',
@@ -119,6 +130,41 @@ class PluginBlocktypeImage extends PluginBlocktype {
             'limit' => 10,
             'artefacttypes' => array('image', 'profileicon'),
             'template' => 'artefact:file:artefactchooser-element.tpl',
+        );
+        if (!$istemplate) {
+            // You don't have to choose a file if this view is a template
+            $element['rules'] = array(
+                'required' => true,
+            );
+        }
+        return $element;
+    }
+
+    public static function filebrowser_element(&$instance, $default=null, $istemplate=false) {
+        $element = array(
+            'name' => 'filebrowser',
+            'type'  => 'filebrowser',
+            'title' => get_string('image'),
+            'folder'       => param_integer('folder', 0),
+            'highlight'    => null,
+            'browse'       => true,
+            'page'         => View::make_base_url(),
+            'config'       => array(
+                'upload'          => true,
+                'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
+                'createfolder'    => false,
+                'edit'            => false,
+                'select'          => true,
+                'selectone'       => true,
+                'alwaysopen'      => true,
+            ),
+            'filters'      => array(
+                'artefacttype'    => array('image'),
+            ),
+            'selectlistcallback' => array(
+                'name' => 'artefact_get_records_by_id',
+                'args' => array(empty($default) ? array() : array($default)),
+            ),
         );
         if (!$istemplate) {
             // You don't have to choose a file if this view is a template

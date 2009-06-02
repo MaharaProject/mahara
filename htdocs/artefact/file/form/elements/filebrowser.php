@@ -80,7 +80,8 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     }
     $smarty->assign('config', $config);
 
-    $filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $group, $institution);
+    $filters = isset($element['filters']) ? $element['filters'] : null;
+    $filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $group, $institution, $filters);
     $smarty->assign('filelist', $filedata);
 
     $configstr = json_encode($config);
@@ -103,7 +104,6 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     $initjs .= "addLoadEvent({$prefix}.init);";
 
     $smarty->assign('initjs', $initjs);
-
     $smarty->assign('querybase', $element['page'] . (strpos($element['page'], '?') === false ? '?' : '&'));
 
     return $smarty->fetch('artefact:file:form/filebrowser.tpl');
@@ -169,7 +169,8 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     $querybase = $element['page'] . (strpos($element['page'], '?') === false ? '?' : '&');
     $prefix = $form->get_name() . '_' . $element['name'];
 
-    $filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $group, $institution);
+    $filters = isset($element['filters']) ? $element['filters'] : null;
+    $filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $group, $institution, $filters);
 
     $smarty = smarty_core();
     $smarty->assign('edit', -1);

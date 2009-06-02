@@ -411,7 +411,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     }
 
 
-    public static function get_my_files_data($parentfolderid, $userid, $group=null, $institution=null) {
+    public static function get_my_files_data($parentfolderid, $userid, $group=null, $institution=null, $filters=null) {
         $select = '
             SELECT
                 a.id, a.artefacttype, a.mtime, f.size, a.title, a.description,
@@ -421,8 +421,15 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 LEFT OUTER JOIN {artefact_file_files} f ON f.artefact = a.id
                 LEFT OUTER JOIN {artefact} c ON c.parent = a.id 
                 LEFT OUTER JOIN {artefact_attachment} aa ON aa.attachment = a.id';
+        if ($filters && $filters['artefacttype']) {
+            $artefacttypes = $filters['artefacttype'];
+            $artefacttypes[] = 'folder';
+        }
+        else {
+            $artefacttypes = array_diff(PluginArtefactFile::get_artefact_types(), array('profileicon'));
+        }
         $where = "
-            WHERE a.artefacttype IN ('" . join("','", array_diff(PluginArtefactFile::get_artefact_types(), array('profileicon'))) . "')";
+            WHERE a.artefacttype IN (" . join(',',  array_map('db_quote', $artefacttypes)). ")";
         $groupby = '
             GROUP BY
                 a.id, a.artefacttype, a.mtime, f.size, a.title, a.description';
