@@ -46,6 +46,8 @@ $enc_cannotdeleteblogpost = json_encode(get_string('cannotdeleteblogpost', 'arte
 
 $enc_publish_help = json_encode(get_help_icon('artefact', 'blog', null, null, null, 'publish'));
 
+$limit = ArtefactTypeBlog::pagination;
+
 return <<<EOJAVASCRIPT
 
 var postlist = new TableRenderer(
@@ -53,7 +55,7 @@ var postlist = new TableRenderer(
     'index.json.php',
     [undefined, undefined, undefined]
 );
-postlist.limit = 10;
+postlist.limit = $limit;
 
 postlist.rowfunction = function(d, n, gd) {
     
