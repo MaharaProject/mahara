@@ -36,9 +36,26 @@ defined('INTERNAL') || die();
 function pieform_element_filebrowser(Pieform $form, $element) {
     global $USER, $_PIEFORM_FILEBROWSERS;
     $smarty = smarty_core();
-    $group       = $form->get_property('group');
-    $institution = $form->get_property('institution');
-    $userid      = ($group || $institution) ? null : $USER->get('id');
+
+    if (!empty($element['tabs'])) {
+        $tabdata = pieform_element_filebrowser_configure_tabs($element['tabs']);
+        $smarty->assign('tabs', $tabdata);
+        if ($tabdata['owner'] == 'group') {
+            $group = $tabdata['ownerid'];
+        } else if ($tabdata['owner'] == 'institution') {
+            $institution = $tabdata['ownerid'];
+        } else if ($tabdata['owner'] == 'site') {
+            $institution = 'mahara';
+        }
+    }
+
+    if (empty($group)) {
+        $group = $form->get_property('group');
+    }
+    if (empty($institution)) {
+        $institution = $form->get_property('institution');
+    }
+    $userid = ($group || $institution) ? null : $USER->get('id');
 
     if ($group) {
         $smarty->assign('groupinfo', pieform_element_filebrowser_get_groupinfo($group));
@@ -138,7 +155,7 @@ function pieform_element_filebrowser_get_path($folder) {
     return $path;
 }
 
-function pieform_element_filebrowser_build_path($form, $element, $folder) {
+function pieform_element_filebrowser_build_path($form, $element, $folder, $owner=null, $ownerid=null) {
     if (!$form->submitted_by_js()) {
         return;
     }
@@ -149,11 +166,13 @@ function pieform_element_filebrowser_build_path($form, $element, $folder) {
 
     $smarty = smarty_core();
     $smarty->assign('path', array_reverse($path));
+    $smarty->assign('owner', $owner);
+    $smarty->assign('ownerid', $ownerid);
     $smarty->assign('querybase', $querybase);
     return array('html' => $smarty->fetch('artefact:file:form/folderpath.tpl'), 'foldername' => $foldername);
 }
 
-function pieform_element_filebrowser_build_filelist($form, $element, $folder, $highlight=null) {
+function pieform_element_filebrowser_build_filelist($form, $element, $folder, $highlight=null, $group=null, $institution=null) {
     if (!$form->submitted_by_js()) {
         // We're going to rebuild the page from scratch anyway.
         return;
@@ -161,8 +180,22 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
 
     global $USER;
 
-    $group = $form->get_property('group');
-    $institution = $form->get_property('institution');
+    $smarty = smarty_core();
+
+    if (is_null($group)) {
+        $group = $form->get_property('group');
+    }
+    else {
+        $smarty->assign('owner', 'group');
+        $smarty->assign('ownerid', $group);
+    }
+    if (is_null($institution)) {
+        $institution = $form->get_property('institution');
+    }
+    else {
+        $smarty->assign('owner', 'institution');
+        $smarty->assign('ownerid', $institution);
+    }
     $userid = ($group || $institution) ? null : $USER->get('id');
     $editable = (int) $element['config']['edit'];
     $selectable = (int) $element['config']['select'];
@@ -172,7 +205,6 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     $filters = isset($element['filters']) ? $element['filters'] : null;
     $filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $group, $institution, $filters);
 
-    $smarty = smarty_core();
     $smarty->assign('edit', -1);
     $smarty->assign('highlight', $highlight);
     $smarty->assign('editable', $editable);
@@ -187,6 +219,63 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     );
 }
 
+function pieform_element_filebrowser_configure_tabs($viewowner) {
+    if ($viewowner['type'] == 'institution' && $viewowner['id'] == 'mahara') {
+        // No filebrowser tabs for site views
+        return null;
+    }
+
+    $tabs = array();
+    $subtabs = array();
+
+    $upload = null;
+    $selectedsubtab = null;
+    if ($viewowner['type'] == 'institution') {
+        $selectedtab = param_alpha('owner', 'institution');
+        $upload = $selectedtab == 'institution';
+        $tabs['institution'] = get_string('institutionfiles', 'admin');
+    }
+    else if ($viewowner['type'] == 'group') {
+        $selectedtab = param_alpha('owner', 'group');
+        $upload = $selectedtab == 'group';
+        $tabs['group'] = get_string('groupfiles', 'artefact.file');
+    }
+    else { // $viewowner['type'] == 'user'
+        global $USER;
+        $selectedtab = param_alpha('owner', 'user');
+        $upload = $selectedtab == 'user';
+        $tabs['user'] = get_string('myfiles', 'artefact.file');
+        if ($groups = $USER->get('grouproles')) {
+            $tabs['group'] = get_string('groupfiles', 'artefact.file');
+            require_once(get_config('libroot') . 'group.php');
+            $groups = group_get_user_groups($USER->get('id'));
+            if ($selectedtab == 'group') {
+                if (!$selectedsubtab = (int) param_variable('ownerid', 0)) {
+                    $selectedsubtab = $groups[0]->id;
+                }
+                foreach ($groups as &$g) {
+                    $subtabs[$g->id] = $g->name;
+                }
+            }
+        }
+        if ($institutions = $USER->get('institutions')) {
+            $tabs['institution'] = get_string('institutionfiles', 'admin');
+            $institutions = get_records_select_array('institution', 'name IN (' 
+                . join(',', array_map('db_quote', array_keys($institutions))) . ')');
+            if ($selectedtab == 'institution') {
+                if (!$selectedsubtab = param_variable('ownerid', '')) {
+                    $selectedsubtab = $institutions[0]->name;
+                }
+                $selectedsubtab = hsc($selectedsubtab);
+                foreach ($institutions as &$i) {
+                    $subtabs[$i->name] = $i->displayname;
+                }
+            }
+        }
+    }
+    $tabs['site'] = get_string('sitefiles', 'admin');
+    return array('tabs' => $tabs, 'subtabs' => $subtabs, 'owner' => $selectedtab, 'ownerid' => $selectedsubtab, 'upload' => $upload);
+}
 
 function pieform_element_filebrowser_get_value(Pieform $form, $element) {
     // Check if the user tried to make a change to the filebrowser element
@@ -393,6 +482,15 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
                 $result['selected'][] = $result['highlight'];
             }
         }
+        return $result;
+    }
+
+    $changeowner = param_variable($prefix . '_changeowner', null);
+    if (!empty($changeowner)) {
+        // @TODO: drop non-admin users in public folder when they change to site owner.
+        $result = pieform_element_filebrowser_changeowner($form, $element, 0);
+        $result['browse'] = 1;
+        $result['folder'] = 0;
         return $result;
     }
 
@@ -728,13 +826,62 @@ function pieform_element_filebrowser_move(Pieform $form, $element, $data) {
     return array('error' => true, 'message' => get_string('movefailed', 'artefact.file'));
 }
 
+function pieform_element_filebrowser_changeowner(Pieform $form, $element, $folder) {
+
+    $newtabdata = pieform_element_filebrowser_configure_tabs($element['tabs']);
+    $smarty = smarty_core();
+    $smarty->assign('prefix', $form->get_name() . '_' . $element['name']);
+    $smarty->assign('querybase', $element['page'] . (strpos($element['page'], '?') === false ? '?' : '&'));
+    $smarty->assign('tabs', $newtabdata);
+    $newtabhtml = $smarty->fetch('artefact:file:form/ownertabs.tpl');
+    $newsubtabhtml = $smarty->fetch('artefact:file:form/ownersubtabs.tpl');
+
+    $group = null;
+    $institution = null;
+    if ($newtabdata['owner'] == 'site') {
+        $institution = 'mahara';
+    }
+    else if ($newtabdata['owner'] == 'institution') {
+        $institution = $newtabdata['ownerid'];
+    }
+    else if ($newtabdata['owner'] == 'group') {
+        $group = $newtabdata['ownerid'];
+    }
+
+    return array(
+        'error'         => false, 
+        'changedowner'  => true,
+        'changedfolder' => true,
+        'tabupload'     => $newtabdata['upload'],
+        'folder'        => $folder,
+        'newlist'       => pieform_element_filebrowser_build_filelist($form, $element, $folder, null, $group, $institution),
+        'newpath'       => pieform_element_filebrowser_build_path($form, $element, $folder, $newtabdata['owner'], $newtabdata['ownerid']),
+        'newtabs'       => $newtabhtml,
+        'newsubtabs'    => $newsubtabhtml,
+    );
+}
+
 function pieform_element_filebrowser_changefolder(Pieform $form, $element, $folder) {
+    $owner = $ownerid = $group = $institution = null;
+
+    if (isset($element['tabs'])) {
+        if ($owner = param_variable('owner', null)) {
+            if ($ownerid = param_variable('ownerid', null)) {
+                if ($owner == 'group') {
+                    $group = (int) $ownerid;
+                } else if ($owner == 'institution') {
+                    $institution = $ownerid;
+                }
+            }
+        }
+    }
+    
     return array(
         'error'         => false, 
         'changedfolder' => true,
         'folder'        => $folder,
-        'newlist'       => pieform_element_filebrowser_build_filelist($form, $element, $folder),
-        'newpath'       => pieform_element_filebrowser_build_path($form, $element, $folder),
+        'newlist'       => pieform_element_filebrowser_build_filelist($form, $element, $folder, null, $group, $institution),
+        'newpath'       => pieform_element_filebrowser_build_path($form, $element, $folder, $owner, $ownerid),
     );
 }
 

@@ -247,11 +247,34 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             });
             forEach(getElementsByTagAndClassName('tr', 'folder', 'filelist'), self.make_row_droppable);
         }
+        forEach(getElementsByTagAndClassName('a', 'changeowner', self.id + '_upload_browse'), function (elem) {
+            connect(elem, 'onclick', function (e) {
+                var href = getNodeAttribute(this, 'href');
+                var params = parseQueryString(href.substring(href.indexOf('?')+1));
+                $(self.id + '_changeowner').value = 1;
+                $(self.id + '_owner').value = params.owner;
+                if (params.ownerid) {
+                    $(self.id + '_ownerid').value = params.ownerid;
+                }
+                else {
+                    $(self.id + '_ownerid').value = '';
+                }
+                if (params.folder) {
+                    $(self.id + '_changefolder').value = params.folder;
+                }
+                self.submitform();
+                $(self.id + '_changeowner').value = $(self.id + '_changefolder').value = '';
+                e.stop();
+                return false;
+            });
+        });
         forEach(getElementsByTagAndClassName('a', 'changefolder', self.id + '_upload_browse'), function (elem) {
             connect(elem, 'onclick', function (e) {
                 var href = getNodeAttribute(this, 'href');
                 var params = parseQueryString(href.substring(href.indexOf('?')+1));
                 $(self.id + '_changefolder').value = params.folder;
+                $(self.id + '_owner').value = params.owner ? params.owner : '';
+                $(self.id + '_ownerid').value = params.ownerid ? params.ownerid : '';
                 self.submitform();
                 $(self.id + '_changefolder').value = '';
                 e.stop();
@@ -468,6 +491,15 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 $(self.id+'_folder').value = self.folderid = data.folder;
                 $(self.id+'_foldername').value = self.foldername = data.newpath.foldername;
                 $(self.id+'_foldernav').innerHTML = data.newpath.html;
+                if (data.changedowner && data.newtabs) {
+                    $(self.id+'_ownertabs').innerHTML = data.newtabs;
+                    $(self.id+'_ownersubtabs').innerHTML = data.newsubtabs;
+                    if (data.tabupload) {
+                        removeElementClass(self.id + '_upload_container', 'hidden');
+                    } else {
+                        addElementClass(self.id + '_upload_container', 'hidden');
+                    }
+                }
             }
             else if (data.uploaded && self.config.select && data.highlight) {
                 // Newly uploaded files should be automatically selected

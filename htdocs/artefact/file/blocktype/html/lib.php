@@ -93,7 +93,7 @@ class PluginBlocktypeHtml extends PluginBlocktype {
             'name'         => 'filebrowser',
             'type'         => 'filebrowser',
             'title'        => get_string('file', 'artefact.file'),
-            'folder'       => param_integer('folder', 0),
+            'folder'       => (int) param_variable('folder', 0),
             'highlight'    => null,
             'browse'       => true,
             'page'         => View::make_base_url(),
@@ -106,6 +106,7 @@ class PluginBlocktypeHtml extends PluginBlocktype {
                 'selectone'       => true,
                 'alwaysopen'      => true,
             ),
+            'tabs'         => $instance->get_view()->ownership(),
             'filters'      => array(
                 'artefacttype'    => array('file'),
                 'filetype'        => self::get_allowed_mimetypes(),

@@ -27,7 +27,7 @@
     <td class="filename">
     {assign var=displaytitle value=$file->title|str_shorten_text:34|escape}
     {if $file->artefacttype == 'folder'}
-      <a href="{$querybase}folder={$file->id}" class="changefolder" title="{str tag=gotofolder section=artefact.file arg1=$displaytitle}">{$displaytitle}</a>
+      <a href="{$querybase}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" class="changefolder" title="{str tag=gotofolder section=artefact.file arg1=$displaytitle}">{$displaytitle}</a>
     {else}
       <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" target="_blank" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}">{$displaytitle}</a>
     {/if}
