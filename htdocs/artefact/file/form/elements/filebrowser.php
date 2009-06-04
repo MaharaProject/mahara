@@ -37,29 +37,24 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     global $USER, $_PIEFORM_FILEBROWSERS;
     $smarty = smarty_core();
 
+    $group = $form->get_property('group');
+    $institution = $form->get_property('institution');
+
     if (!empty($element['tabs'])) {
         $tabdata = pieform_element_filebrowser_configure_tabs($element['tabs']);
         $smarty->assign('tabs', $tabdata);
-        if ($tabdata['owner'] == 'group') {
+        if (!$group && $tabdata['owner'] == 'group') {
             $group = $tabdata['ownerid'];
-        } else if ($tabdata['owner'] == 'institution') {
-            $institution = $tabdata['ownerid'];
-        } else if ($tabdata['owner'] == 'site') {
-            $institution = 'mahara';
+        } else if (!$institution) {
+            if ($tabdata['owner'] == 'institution') {
+                $institution = $tabdata['ownerid'];
+            } else if ($tabdata['owner'] == 'site') {
+                $institution = 'mahara';
+            }
         }
     }
 
-    if (empty($group)) {
-        $group = $form->get_property('group');
-    }
-    if (empty($institution)) {
-        $institution = $form->get_property('institution');
-    }
     $userid = ($group || $institution) ? null : $USER->get('id');
-
-    if ($group) {
-        $smarty->assign('groupinfo', pieform_element_filebrowser_get_groupinfo($group));
-    }
 
     $folder = $element['folder'];
     $path = pieform_element_filebrowser_get_path($folder);
@@ -71,7 +66,12 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     if (isset($element['browse'])) {
         $smarty->assign('browse', (int) $element['browse']);
     }
+
     $config = array_map('intval', $element['config']);
+    if ($group && $config['edit']) {
+        $smarty->assign('groupinfo', pieform_element_filebrowser_get_groupinfo($group));
+    }
+
     if ($config['select']) {
         if (is_array($element['selectlistcallback'])) {
             $selected = call_user_func_array($element['selectlistcallback']['name'], $element['selectlistcallback']['args']);
@@ -128,6 +128,7 @@ function pieform_element_filebrowser(Pieform $form, $element) {
 
 
 function pieform_element_filebrowser_get_groupinfo($group) {
+    require_once('group.php');
     $groupinfo = array(
         'roles' => group_get_role_info($group),
         'perms' => group_get_default_artefact_permissions($group),

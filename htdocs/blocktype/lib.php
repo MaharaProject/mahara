@@ -622,7 +622,9 @@ class BlockInstance {
             'jserrorcallback'   => 'blockConfigError',
             'elements' => $elements,
             'viewgroup' => $this->get_view()->get('group'),
+            'group' => $this->get_view()->get('group'),
             'viewinstitution' => $this->get_view()->get('institution'),
+            'institution' => $this->get_view()->get('institution'),
             'configdirs' => $configdirs,
         );
 
