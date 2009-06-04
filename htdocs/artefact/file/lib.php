@@ -743,6 +743,39 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         }
         return $newname;
     }
+
+    public static function blockconfig_filebrowser_element(&$instance, $default=array(), $istemplate=false) {
+        $element = array(
+            'name'         => 'filebrowser',
+            'type'         => 'filebrowser',
+            'title'        => get_string('file', 'artefact.file'),
+            'folder'       => (int) param_variable('folder', 0),
+            'highlight'    => null,
+            'browse'       => true,
+            'page'         => View::make_base_url(),
+            'config'       => array(
+                'upload'          => true,
+                'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
+                'createfolder'    => false,
+                'edit'            => false,
+                'select'          => true,
+                'alwaysopen'      => true,
+            ),
+            'tabs'         => $instance->get_view()->ownership(),
+            'selectlistcallback' => array(
+                'name' => 'artefact_get_records_by_id',
+                'args' => array($default),
+            ),
+        );
+        if (!$istemplate) {
+            // You don't have to choose a file if this view is a template
+            $element['rules'] = array(
+                'required' => true,
+            );
+        }
+        return $element;
+    }
+
 }
 
 /**

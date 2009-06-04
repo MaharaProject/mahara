@@ -148,7 +148,7 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
         return ArtefactTypeFileBase::artefactchooser_get_file_data($artefact);
     }
 
-    public static function filebrowser_element(&$instance, $default=null, $istemplate=false) {
+    public static function filebrowser_element(&$instance, $default=array(), $istemplate=false) {
         $element = array(
             'name' => 'filebrowser',
             'type'  => 'filebrowser',
@@ -168,7 +168,7 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
             ),
             'selectlistcallback' => array(
                 'name' => 'artefact_get_records_by_id',
-                'args' => array(empty($default) ? array() : $default),
+                'args' => array($default),
             ),
         );
         if (!$istemplate) {
