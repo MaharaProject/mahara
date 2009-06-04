@@ -91,8 +91,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
         safe_require('artefact', 'file');
         $instance->set('artefactplugin', 'file');
         return array(
-            // self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate),
-            'filebrowser' => self::filebrowser_element($instance, (isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate),
+            'filebrowser' => self::filebrowser_element($instance, (isset($configdata['artefactid'])) ? array($configdata['artefactid']) : null, $istemplate),
             'showdescription' => array(
                 'type'  => 'checkbox',
                 'title' => get_string('showdescription', 'blocktype.file/image'),
@@ -120,38 +119,13 @@ class PluginBlocktypeImage extends PluginBlocktype {
         return $values;
     }
 
-    public static function filebrowser_element(&$instance, $default=null, $istemplate=false) {
-        $element = array(
-            'name'         => 'filebrowser',
-            'type'         => 'filebrowser',
-            'title'        => get_string('image'),
-            'folder'       => param_integer('folder', 0),
-            'highlight'    => null,
-            'browse'       => true,
-            'page'         => View::make_base_url(),
-            'config'       => array(
-                'upload'          => true,
-                'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
-                'createfolder'    => false,
-                'edit'            => false,
-                'select'          => true,
-                'selectone'       => true,
-                'alwaysopen'      => true,
-            ),
-            'filters'      => array(
-                'artefacttype'    => array('image'),
-            ),
-            'selectlistcallback' => array(
-                'name' => 'artefact_get_records_by_id',
-                'args' => array(empty($default) ? array() : array($default)),
-            ),
+    public static function filebrowser_element(&$instance, $default=array(), $istemplate=false) {
+        $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default, $istemplate);
+        $element['title'] = get_string('image');
+        $element['config']['selectone'] = true;
+        $element['filters'] = array(
+            'artefacttype'    => array('image'),
         );
-        if (!$istemplate) {
-            // You don't have to choose a file if this view is a template
-            $element['rules'] = array(
-                'required' => true,
-            );
-        }
         return $element;
     }
 
