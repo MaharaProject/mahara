@@ -106,7 +106,6 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
         safe_require('artefact', 'file');
         $instance->set('artefactplugin', 'file');
         return array(
-            // self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null, $istemplate),
             'filebrowser' => self::filebrowser_element($instance, (isset($configdata['artefactids'])) ? $configdata['artefactids'] : null, $istemplate),
         );
     }
@@ -149,34 +148,9 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
     }
 
     public static function filebrowser_element(&$instance, $default=array(), $istemplate=false) {
-        $element = array(
-            'name' => 'filebrowser',
-            'type'  => 'filebrowser',
-            'title' => get_string('Files', 'blocktype.file/filedownload'),
-            'folder'       => param_integer('folder', 0),
-            'highlight'    => null,
-            'browse'       => true,
-            'page'         => View::make_base_url(),
-            // 'page'         => get_config('wwwroot') . 'view/blocks.php?id=' . $instance->get('view') . '&block=' . $instance->get('id'),
-            'config'       => array(
-                'upload'          => true,
-                'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
-                'createfolder'    => false,
-                'edit'            => false,
-                'select'          => true,
-                'alwaysopen'      => true,
-            ),
-            'selectlistcallback' => array(
-                'name' => 'artefact_get_records_by_id',
-                'args' => array($default),
-            ),
-        );
-        if (!$istemplate) {
-            // You don't have to choose a file if this view is a template
-            $element['rules'] = array(
-                'required' => true,
-            );
-        }
+        $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default, $istemplate);
+        $element['title'] = get_string('Files', 'blocktype.file/filedownload');
+        $element['config']['selectone'] = false;
         return $element;
     }
 
