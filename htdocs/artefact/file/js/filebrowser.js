@@ -273,8 +273,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 var href = getNodeAttribute(this, 'href');
                 var params = parseQueryString(href.substring(href.indexOf('?')+1));
                 $(self.id + '_changefolder').value = params.folder;
-                $(self.id + '_owner').value = params.owner ? params.owner : '';
-                $(self.id + '_ownerid').value = params.ownerid ? params.ownerid : '';
+                if ($(self.id + '_owner')) {
+                    $(self.id + '_owner').value = params.owner ? params.owner : '';
+                    $(self.id + '_ownerid').value = params.ownerid ? params.ownerid : '';
+                }
                 self.submitform();
                 $(self.id + '_changefolder').value = '';
                 e.stop();
