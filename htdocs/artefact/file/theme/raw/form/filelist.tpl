@@ -14,7 +14,8 @@
  </thead>
  <tbody>
   {foreach from=$filelist item=file}
-  <tr id="file:{$file->id}" class="r{cycle values=0,1} directory-item{if $file->isparent} parentfolder{/if}{if $file->artefacttype == 'folder'} folder{/if}{if !empty($highlight) && $highlight == $file->id} highlight-file{/if}{if $edit == $file->id} hidden{/if}">
+    {if !$publishing || !$file->permissions || $file->can_republish}{assign var=publishable value=1}{else}{assign var=publishable value=0}{/if}
+  <tr id="file:{$file->id}" class="r{cycle values=0,1} directory-item{if $file->isparent} parentfolder{/if}{if $file->artefacttype == 'folder'} folder{/if}{if !empty($highlight) && $highlight == $file->id} highlight-file{/if}{if $edit == $file->id} hidden{/if}{if !$publishable && $file->artefacttype != 'folder'} disabled{/if}" {if !$publishable && $file->artefacttype != 'folder'} title="{str tag=notpublishable section=artefact.file}"{/if}>
     <td>
       {if $editable}
       <div{if !$file->isparent} class="icon-drag" id="drag:{$file->id}"{/if}>
@@ -28,6 +29,8 @@
     {assign var=displaytitle value=$file->title|str_shorten_text:34|escape}
     {if $file->artefacttype == 'folder'}
       <a href="{$querybase}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" class="changefolder" title="{str tag=gotofolder section=artefact.file arg1=$displaytitle}">{$displaytitle}</a>
+    {elseif !$publishable}
+      {$displaytitle}
     {else}
       <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" target="_blank" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}">{$displaytitle}</a>
     {/if}
@@ -40,7 +43,7 @@
       {if !isset($file->can_edit) || $file->can_edit !== 0}<button type="submit" name="{$prefix}_edit[{$file->id}]" value="{$file->id}">{str tag=edit}</button>{/if}
       {if $file->childcount == 0}<button type="submit" name="{$prefix}_delete[{$file->id}]" value="{$file->id}">{str tag=delete}</button>{/if}
     {/if}
-    {if $selectable && $file->artefacttype != 'folder'}
+    {if $selectable && $file->artefacttype != 'folder' && $publishable}
       <button type="submit" class="select small" name="{$prefix}_select[{$file->id}]" id="{$prefix}_select_{$file->id}" value="{$file->id}">{str tag=select}</button>
     {/if}
     </td>

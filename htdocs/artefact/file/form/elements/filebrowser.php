@@ -200,6 +200,7 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     $userid = ($group || $institution) ? null : $USER->get('id');
     $editable = (int) $element['config']['edit'];
     $selectable = (int) $element['config']['select'];
+    $publishing = (int) $element['config']['publishing'];
     $querybase = $element['page'] . (strpos($element['page'], '?') === false ? '?' : '&');
     $prefix = $form->get_name() . '_' . $element['name'];
 
@@ -210,6 +211,7 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     $smarty->assign('highlight', $highlight);
     $smarty->assign('editable', $editable);
     $smarty->assign('selectable', $selectable);
+    $smarty->assign('publishing', $publishing);
     $smarty->assign('filelist', $filedata);
     $smarty->assign('querybase', $querybase);
     $smarty->assign('prefix', $prefix);

@@ -450,10 +450,10 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         else if ($group) {
             global $USER;
             $select .= ',
-                r.can_edit, r.can_view';
+                r.can_edit, r.can_view, r.can_republish';
             $from .= '
                 LEFT OUTER JOIN (
-                    SELECT ar.artefact, ar.can_edit, ar.can_view
+                    SELECT ar.artefact, ar.can_edit, ar.can_view, ar.can_republish
                     FROM {artefact_access_role} ar
                     INNER JOIN {group_member} gm ON ar.role = gm.role
                     WHERE gm.group = ? AND gm.member = ? 
@@ -463,7 +463,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             $where .= '
             AND a.group = ? AND a.owner IS NULL AND r.can_view = 1';
             $phvals[] = $group;
-            $groupby .= ', r.can_edit, r.can_view';
+            $groupby .= ', r.can_edit, r.can_view, r.can_republish';
         }
         else {
             $where .= '
@@ -760,6 +760,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 'edit'            => false,
                 'select'          => true,
                 'alwaysopen'      => true,
+                'publishing'      => true,
             ),
             'tabs'         => $instance->get_view()->ownership(),
             'selectlistcallback' => array(

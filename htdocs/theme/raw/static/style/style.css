@@ -531,7 +531,9 @@ select.error {
 .error .filebrowser {
     color: #333;
 }
-
+.disabled {
+	color: #C3C3C3;
+}
 
 .maincontent ul {
 	margin: .5em 0 1em 0;
@@ -581,7 +583,6 @@ div.pagination  {
 .pagination .disabled {
     border: 1px solid #d1d1d1;
 	background-color: #EBEBEB;
-	color: #C3C3C3;
     padding: .5em;
     text-decoration: none;
     margin: 0 .25em;
