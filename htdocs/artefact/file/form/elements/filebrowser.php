@@ -488,10 +488,8 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
 
     $changeowner = param_variable($prefix . '_changeowner', null);
     if (!empty($changeowner)) {
-        // @TODO: drop non-admin users in public folder when they change to site owner.
-        $result = pieform_element_filebrowser_changeowner($form, $element, 0);
+        $result = pieform_element_filebrowser_changeowner($form, $element);
         $result['browse'] = 1;
-        $result['folder'] = 0;
         return $result;
     }
 
@@ -827,8 +825,7 @@ function pieform_element_filebrowser_move(Pieform $form, $element, $data) {
     return array('error' => true, 'message' => get_string('movefailed', 'artefact.file'));
 }
 
-function pieform_element_filebrowser_changeowner(Pieform $form, $element, $folder) {
-
+function pieform_element_filebrowser_changeowner(Pieform $form, $element) {
     $newtabdata = pieform_element_filebrowser_configure_tabs($element['tabs']);
     $smarty = smarty_core();
     $smarty->assign('prefix', $form->get_name() . '_' . $element['name']);
@@ -839,7 +836,12 @@ function pieform_element_filebrowser_changeowner(Pieform $form, $element, $folde
 
     $group = null;
     $institution = null;
+    $folder = 0;
     if ($newtabdata['owner'] == 'site') {
+        global $USER;
+        if (!$USER->get('admin')) {
+            $folder = ArtefactTypeFolder::admin_public_folder_id();
+        }
         $institution = 'mahara';
     }
     else if ($newtabdata['owner'] == 'institution') {
