@@ -393,7 +393,7 @@ class BlockInstance {
         );
 
         $redirect = '/view/blocks.php?id=' . $this->get('view');
-        if (param_boolean('new')) {
+        if (param_boolean('new', false)) {
             $redirect .= '&new=1';
         }
         if ($category = param_alpha('c', '')) {

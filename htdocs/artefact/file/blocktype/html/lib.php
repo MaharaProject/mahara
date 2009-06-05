@@ -71,7 +71,7 @@ class PluginBlocktypeHtml extends PluginBlocktype {
         );
     }
 
-    public static function instance_config_save($values) {
+    public static function instance_config_save(&$values) {
         if (isset($values['filebrowser']['selected'])) {
             $values['artefactid'] = $values['filebrowser']['selected'][0];
         }

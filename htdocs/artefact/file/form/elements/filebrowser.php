@@ -232,18 +232,18 @@ function pieform_element_filebrowser_configure_tabs($viewowner) {
     $upload = null;
     $selectedsubtab = null;
     if ($viewowner['type'] == 'institution') {
-        $selectedtab = param_alpha('owner', 'institution');
+        $selectedtab = param_variable('owner', 'institution');
         $upload = $selectedtab == 'institution';
         $tabs['institution'] = get_string('institutionfiles', 'admin');
     }
     else if ($viewowner['type'] == 'group') {
-        $selectedtab = param_alpha('owner', 'group');
+        $selectedtab = param_variable('owner', 'group');
         $upload = $selectedtab == 'group';
         $tabs['group'] = get_string('groupfiles', 'artefact.file');
     }
     else { // $viewowner['type'] == 'user'
         global $USER;
-        $selectedtab = param_alpha('owner', 'user');
+        $selectedtab = param_variable('owner', 'user');
         $upload = $selectedtab == 'user';
         $tabs['user'] = get_string('myfiles', 'artefact.file');
         if ($groups = $USER->get('grouproles')) {
