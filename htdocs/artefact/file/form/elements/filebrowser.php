@@ -871,7 +871,10 @@ function pieform_element_filebrowser_changefolder(Pieform $form, $element, $fold
 
     if (isset($element['tabs'])) {
         if ($owner = param_variable('owner', null)) {
-            if ($ownerid = param_variable('ownerid', null)) {
+            if ($owner == 'site') {
+                $owner = 'institution';
+                $institution = $ownerid = 'mahara';
+            } else if ($ownerid = param_variable('ownerid', null)) {
                 if ($owner == 'group') {
                     $group = (int) $ownerid;
                 } else if ($owner == 'institution') {
