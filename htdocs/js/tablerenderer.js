@@ -26,6 +26,7 @@ function TableRenderer(target, source, columns, options) {
     this.rowfunction = function(rowdata, rownumber, data) { return TR({'class': 'r' + (rownumber % 2)}); }
     this.updatecallback = function () {};
     this.updateOnLoadFlag = false;
+    this.lastArgs = {};
 
     this.init = function() {
         self.table = getElement(target);
@@ -116,9 +117,8 @@ function TableRenderer(target, source, columns, options) {
     }
 
     this.pageChange = function(n) {
-        self.doupdate({
-            'offset': ( n - 1 ) * self.limit
-        });
+        self.lastArgs.offset = ( n - 1 ) * self.limit;
+        self.doupdate(self.lastArgs);
     }
 
     this.onFirstPage = function () {
@@ -175,6 +175,7 @@ function TableRenderer(target, source, columns, options) {
         if (!request_args) {
             request_args = {};
         }
+        self.lastArgs = request_args;
 
         forEach(self.statevars, function(key) {
             if (typeof(request_args[key]) == 'undefined' && typeof(self[key]) != 'undefined') {
@@ -230,16 +231,19 @@ function TableRenderer(target, source, columns, options) {
     };
 
     this.goFirstPage = function() {
-        self.doupdate({'offset': 0});
+        self.lastArgs.offset = 0;
+        self.doupdate(self.lastArgs);
     };
 
     this.goPrevPage = function() {
         if ( self.offset > 0 ) {
             if ( self.offset - self.limit < 0 ) {
-                self.doupdate({'offset': 0});
+                self.lastArgs.offset = 0;
+                self.doupdate(self.lastArgs);
             }
             else {
-                self.doupdate({'offset': self.offset - self.limit});
+                self.lastArgs.offset = self.offset - self.limit;
+                self.doupdate(self.lastArgs);
             }
         }
         else {
@@ -249,7 +253,8 @@ function TableRenderer(target, source, columns, options) {
 
     this.goNextPage = function() {
         if ( self.offset + self.limit < self.count ) {
-            self.doupdate({'offset': self.offset + self.limit});
+            self.lastArgs.offset = self.offset + self.limit;
+            self.doupdate(self.lastArgs);
         }
         else {
             logWarning('Already on the last page (' + self.offset + ', ' + self.limit + ', ' + self.count + ')');
@@ -257,7 +262,8 @@ function TableRenderer(target, source, columns, options) {
     };
 
     this.goLastPage = function() {
-        self.doupdate({'offset': Math.floor( ( self.count - 1 ) / self.limit) * self.limit});
+        self.lastArgs.offset = Math.floor( ( self.count - 1 ) / self.limit) * self.limit;
+        self.doupdate(self.lastArgs);
     };
 
     this.updateOnLoad = function() {

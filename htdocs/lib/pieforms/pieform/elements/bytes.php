@@ -157,6 +157,12 @@ function pieform_element_bytes_i18n() {/*{{{*/
             'megabytes'    => 'MB',
             'invalidvalue' => 'Vrednost mora biti število',
         ),
+        'nl.utf8' => array(
+            'bytes'        => 'Bytes',
+            'kilobytes'    => 'Kilobytes',
+            'megabytes'    => 'Megabytes',
+            'invalidvalue' => 'Waarde moet een getal zijn',
+        ),
 
     );
 }/*}}}*/

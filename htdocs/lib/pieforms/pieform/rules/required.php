@@ -59,6 +59,9 @@ function pieform_rule_required_i18n() {/*{{{*/
         'sl.utf8' => array(
             'required' => 'To polje je zahtevano'
         ),
+        'nl.utf8' => array(
+            'required' => 'Dit veld is vereist'
+        ),
 
     );
 }/*}}}*/

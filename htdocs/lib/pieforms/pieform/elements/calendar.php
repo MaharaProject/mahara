@@ -170,6 +170,9 @@ function pieform_element_calendar_i18n() {/*{{{*/
         'sl.utf8' => array(
             'invalidvalue' => 'Datum/čas ni določen pravilno'
         ),
+        'nl.utf8' => array(
+            'invalidvalue' => 'Ongeldige tijd/datum opgegeven'
+        ),
 
     );
 }/*}}}*/
