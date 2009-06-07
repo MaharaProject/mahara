@@ -412,6 +412,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
 
 
     public static function get_my_files_data($parentfolderid, $userid, $group=null, $institution=null, $filters=null) {
+        global $USER;
         $select = '
             SELECT
                 a.id, a.artefacttype, a.mtime, f.size, a.title, a.description,
@@ -443,12 +444,20 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $phvals = array();
 
         if ($institution) {
+            if ($institution == 'mahara' && !$USER->get('admin')) {
+                // If non-admins are browsing site files, only let them see the public folder & its contents
+                $publicfolder = ArtefactTypeFolder::admin_public_folder_id();
+                $from .= '
+                LEFT OUTER JOIN {artefact_parent_cache} pub ON (a.id = pub.artefact AND pub.parent = ?)';
+                $where .= '
+                AND (pub.parent = ? OR a.id = ?)';
+                $phvals = array($publicfolder, $publicfolder, $publicfolder);
+            }
             $where .= '
             AND a.institution = ? AND a.owner IS NULL';
             $phvals[] = $institution;
         }
         else if ($group) {
-            global $USER;
             $select .= ',
                 r.can_edit, r.can_view, r.can_republish';
             $from .= '
