@@ -19,10 +19,10 @@
     <td>
       {if $editable}
       <div{if !$file->isparent} class="icon-drag" id="drag:{$file->id}"{/if}>
-        <img src="{if $file->artefacttype == 'image'}{$WWWROOT}artefact/file/download.php?file={$file->id}&size=20x20{else}{$THEMEURL}images/{$file->artefacttype}.gif{/if}"{if !$file->isparent} title="{str tag=clickanddragtomovefile section=artefact.file arg1=$file->title}"{/if}>
+        <img src="{$file->icon}"{if !$file->isparent} title="{str tag=clickanddragtomovefile section=artefact.file arg1=$file->title}"{/if}>
       </div>
       {else}
-        <img src="{if $file->artefacttype == 'image'}{$WWWROOT}artefact/file/download.php?file={$file->id}&size=20x20{else}{$THEMEURL}images/{$file->artefacttype}.gif{/if}">
+        <img src="{$file->icon}">
       {/if}
     </td>
     <td class="filename">

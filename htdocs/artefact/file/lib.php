@@ -509,6 +509,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             foreach ($filedata as $item) {
                 $item->mtime = format_date(strtotime($item->mtime), 'strfdaymonthyearshort');
                 $item->tags = array();
+                $item->icon = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_icon', array('id' => $item->id));
                 if ($item->size) { // Doing this here now for non-js users
                     $item->size = ArtefactTypeFile::short_size($item->size, true);
                 }
@@ -542,7 +543,8 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 'artefacttype' => 'folder',
                 'description'  => get_string('parentfolder', 'artefact.file'),
                 'isparent'     => true,
-                'id'           => $grandparentid
+                'id'           => $grandparentid,
+                'icon'         => ArtefactTypeFolder::get_icon(),
             );
         }
 
