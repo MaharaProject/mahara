@@ -411,6 +411,17 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     }
 
 
+    /**
+     * Gets a list of files in one folder
+     *
+     * @param integer $parentfolderid    Artefact id of the folder
+     * @param integer $userid            Id of the owner, if the owner is a user
+     * @param integer $group             Id of the owner, if the owner is a group
+     * @param string  $institution       Id of the owner, if the owner is a institution
+     * @param array   $filters           Filters to apply to the results. An array with keys 'artefacttype', 'filetype',
+     *                                   where array values are arrays of artefacttype or mimetype strings.
+     * @return array  A list of artefacts
+     */
     public static function get_my_files_data($parentfolderid, $userid, $group=null, $institution=null, $filters=null) {
         global $USER;
         $select = '
@@ -539,6 +550,10 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         return $filedata;
     }
 
+
+    /**
+     * Creates pieforms definition for forms on the my files, group files, etc. pages.
+     */
     public static function files_form($page='', $group=null, $institution=null, $folder=null, $highlight=null, $edit=null) {
         $folder = param_integer('folder', 0);
         $edit = param_variable('edit', 0);
@@ -753,8 +768,8 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         return $newname;
     }
 
-    public static function blockconfig_filebrowser_element(&$instance, $default=array(), $istemplate=false) {
-        $element = array(
+    public static function blockconfig_filebrowser_element(&$instance, $default=array()) {
+        return array(
             'name'         => 'filebrowser',
             'type'         => 'filebrowser',
             'title'        => get_string('file', 'artefact.file'),
@@ -777,69 +792,10 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 'args' => array($default),
             ),
         );
-        if (!$istemplate) {
-            // You don't have to choose a file if this view is a template
-            $element['rules'] = array(
-                'required' => true,
-            );
-        }
-        return $element;
     }
 
 }
 
-/**
- * Submit function for My/Group/Institution/Site files
- *
- * This function will only be called when javascript is disabled.
- *
- * Outside the File class because Pieforms doesn't appear to like
- * being given static class method as a submit callback.
- */
-function files_submit(Pieform $form, $values) {
-    // @todo: move group/inst stuff to form defn.
-    $group       = $form->get_property('group');
-    $institution = $form->get_property('institution');
-    if ($group) {
-        $redirect = get_config('wwwroot') . 'artefact/file/groupfiles.php';
-        $params = array('group' => $group);
-    } else if ($institution) {
-        if ($institution == 'mahara') {
-            $redirect = get_config('wwwroot') . 'admin/site/files.php';
-            $params = array();
-        }
-        else {
-            $redirect = get_config('wwwroot') . 'artefact/file/institutionfiles.php';
-            $params = array('institution' => $institution);
-        }
-    } else {
-        $redirect = get_config('wwwroot') . 'artefact/file/index.php';
-        $params = array();
-    }
-
-    // Some updates on the filebrowser element need to set params and
-    // redirect back to this page.
-    if (isset($values['filebrowser']['folder'])) {
-        $params['folder'] = $values['filebrowser']['folder'];
-    }
-    if (isset($values['filebrowser']['edit'])) {
-        $params['edit'] = $values['filebrowser']['edit'];
-    }
-    if (isset($values['filebrowser']['highlight'])) {
-        $params['file'] = $values['filebrowser']['highlight'];
-    }
-
-    if ($params) {
-        foreach ($params as $k => $v) {
-            $params[$k] = $k . '=' . $v;
-        }
-        $redirect .= (strpos($redirect, '?') === false ? '?' : '&') . join('&', $params);
-    }
-
-    $result = $values['filebrowser'];
-    $result['goto'] = $redirect;
-    $form->reply(empty($result['error']) ? PIEFORM_OK : PIEFORM_ERR, $result);
-}
 
 class ArtefactTypeFile extends ArtefactTypeFileBase {
 

@@ -91,7 +91,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
         safe_require('artefact', 'file');
         $instance->set('artefactplugin', 'file');
         return array(
-            'filebrowser' => self::filebrowser_element($instance, (isset($configdata['artefactid'])) ? array($configdata['artefactid']) : null, $istemplate),
+            'artefactid' => self::filebrowser_element($instance, (isset($configdata['artefactid'])) ? array($configdata['artefactid']) : null),
             'showdescription' => array(
                 'type'  => 'checkbox',
                 'title' => get_string('showdescription', 'blocktype.file/image'),
@@ -111,17 +111,10 @@ class PluginBlocktypeImage extends PluginBlocktype {
         );
     }
 
-    public static function instance_config_save($values) {
-        if (isset($values['filebrowser']['selected'])) {
-            $values['artefactid'] = $values['filebrowser']['selected'][0];
-        }
-        unset($values['filebrowser']);
-        return $values;
-    }
-
-    public static function filebrowser_element(&$instance, $default=array(), $istemplate=false) {
-        $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default, $istemplate);
+    public static function filebrowser_element(&$instance, $default=array()) {
+        $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default);
         $element['title'] = get_string('image');
+        $element['name'] = 'artefactid';
         $element['config']['selectone'] = true;
         $element['filters'] = array(
             'artefacttype'    => array('image'),
