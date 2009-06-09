@@ -1482,7 +1482,7 @@ function auth_generate_login_form() {
                 'value' => get_string('login')
             ),
             'register' => array(
-                'value' => '<div><a href="' . get_config('wwwroot') . 'register.php" tabindex="2">' . get_string('register') . '</a>'
+                'value' => '<div id="login-helplinks"><a href="' . get_config('wwwroot') . 'register.php" tabindex="2">' . get_string('register') . '</a>'
                     . '<br><a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('lostusernamepassword') . '</a></div>'
             )
         )
