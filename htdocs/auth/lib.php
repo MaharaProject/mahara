@@ -1031,15 +1031,6 @@ function auth_get_login_form() {
  * @private
  */
 function get_login_form_js($form) {
-    // Add the autofocus class to the username input. This is because Mahara 
-    // doesn't always render the login form when it is built. Sometimes, the 
-    // form is built to process a login attempt, and then built again when that 
-    // attempt fails. This makes sure that every time the login form is 
-    // actually displayed it has the autofocus class.
-    $form = str_replace(
-        'class="required text" id="login_login_username"',
-        'class="required text autofocus" id="login_login_username"',
-        $form);
     $form = str_replace('/', '\/', str_replace("'", "\'", (str_replace(array("\n", "\t"), '', $form))));
     $strcookiesnotenabled    = json_encode(get_string('cookiesnotenabled'));
     $cookiename = get_config('cookieprefix') . 'ctest';
@@ -1469,6 +1460,7 @@ function auth_generate_login_form() {
         'submit'     => false,
         'plugintype' => 'auth',
         'pluginname' => 'internal',
+        'autofocus'  => false,
         'elements'   => array(
             'login_username' => array(
                 'type'        => 'text',
