@@ -26,6 +26,6 @@
 $theme = new StdClass;
 
 $theme->name   = 'Raw';
-$theme->formrenderer = 'table';
+$theme->rightcolumnwidth = 256;
 
 ?>
