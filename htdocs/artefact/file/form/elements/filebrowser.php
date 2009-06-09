@@ -312,7 +312,7 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
         if ($form->submitted_by_js()) {
             $replacehtml = false; // Don't replace the entire form when replying with json data.
             $result['formelement'] = $prefix;
-            if ($result['error']) {
+            if (!empty($result['error'])) {
                 $result['formelementerror'] = $prefix . '.success';
             }
             else {
@@ -362,7 +362,7 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
     }
 
     if (is_array($selected) && !empty($selected)) {
-        if ($element['config']['selectone']) {
+        if (!empty($element['config']['selectone'])) {
             return $selected[0];
         }
         return $selected;
@@ -489,45 +489,49 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
         return $result;
     }
 
-    $select = param_variable($prefix . '_select', null);
-    if (is_array($select)) {
-        $keys = array_keys($select);
-        $add = (int) $keys[0];
-        if (isset($element['selectcallback']) && is_callable($element['selectcallback'])) {
-            $element['selectcallback']($add);
-        }
-        else {
-            $result['select'] = $add;
-        }
-        $result['message'] = get_string('fileadded', 'artefact.file');
-        $result['browse'] = 1;
-        return $result;
-    }
+    if (!$form->submitted_by_js()) {
 
-    $unselect = param_variable($prefix . '_unselect', null);
-    if (is_array($unselect)) {
-        $keys = array_keys($unselect);
-        $del = (int) $keys[0];
-        if (isset($element['unselectcallback']) && is_callable($element['unselectcallback'])) {
-            $element['unselectcallback']($del);
+        $select = param_variable($prefix . '_select', null);
+        if (is_array($select)) {
+            $keys = array_keys($select);
+            $add = (int) $keys[0];
+            if (isset($element['selectcallback']) && is_callable($element['selectcallback'])) {
+                $element['selectcallback']($add);
+            }
+            else {
+                $result['select'] = $add;
+            }
+            $result['message'] = get_string('fileadded', 'artefact.file');
+            $result['browse'] = 1;
+            return $result;
         }
-        else {
-            $result['unselect'] = $del;
+
+        $unselect = param_variable($prefix . '_unselect', null);
+        if (is_array($unselect)) {
+            $keys = array_keys($unselect);
+            $del = (int) $keys[0];
+            if (isset($element['unselectcallback']) && is_callable($element['unselectcallback'])) {
+                $element['unselectcallback']($del);
+            }
+            else {
+                $result['unselect'] = $del;
+            }
+            $result['message'] = get_string('fileremoved', 'artefact.file');
+            return $result;
         }
-        $result['message'] = get_string('fileremoved', 'artefact.file');
-        return $result;
-    }
 
-    $edit = param_variable($prefix . '_edit', null);
-    if (is_array($edit)) {
-        $keys = array_keys($edit);
-        $result['edit'] = (int) $keys[0];
-        return $result;
-    }
+        $edit = param_variable($prefix . '_edit', null);
+        if (is_array($edit)) {
+            $keys = array_keys($edit);
+            $result['edit'] = (int) $keys[0];
+            return $result;
+        }
 
-    if (param_variable('browse', 0) && !param_variable($prefix . '_cancelbrowse', 0)) {
-        $result['browse'] = 1;
-        return $result;
+        if (param_variable('browse', 0) && !param_variable($prefix . '_cancelbrowse', 0)) {
+            $result['browse'] = 1;
+            return $result;
+        }
+
     }
 
     $changeowner = param_variable($prefix . '_changeowner', null);
