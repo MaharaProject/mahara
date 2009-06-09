@@ -328,10 +328,6 @@ $smarty = smarty(array(), array(), array(), array(
             'data'   => array(),
         ),
     ),
-    'themepaths' => array(
-        'images/file.gif',
-        'images/image.gif'
-    ),
 ));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign_by_ref('form', $form);
