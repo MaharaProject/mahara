@@ -393,7 +393,7 @@ class BlockInstance {
         );
 
         $redirect = '/view/blocks.php?id=' . $this->get('view');
-        if (param_boolean('new')) {
+        if (param_boolean('new', false)) {
             $redirect .= '&new=1';
         }
         if ($category = param_alpha('c', '')) {
@@ -619,9 +619,12 @@ class BlockInstance {
             'successcallback'  => array($this, 'instance_config_store'),
             'jsform' => true,
             'jssuccesscallback' => 'blockConfigSuccess',
+            'jserrorcallback'   => 'blockConfigError',
             'elements' => $elements,
             'viewgroup' => $this->get_view()->get('group'),
+            'group' => $this->get_view()->get('group'),
             'viewinstitution' => $this->get_view()->get('institution'),
+            'institution' => $this->get_view()->get('institution'),
             'configdirs' => $configdirs,
         );
 

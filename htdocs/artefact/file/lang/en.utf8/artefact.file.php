@@ -90,6 +90,7 @@ $string['movefailednotowner'] = 'You do not have permission to move the file int
 $string['movefailed'] = 'Move failed.';
 $string['nametoolong'] = 'That name is too long.  Please choose a shorter one.';
 $string['nofilesfound'] = 'No files found';
+$string['notpublishable'] = 'You do not have permission to publish this file';
 $string['overwrite'] = 'Overwrite';
 $string['Owner'] = 'Owner';
 $string['parentfolder'] = 'Parent folder';
@@ -200,6 +201,6 @@ $string['Title'] = 'Title';
 $string['imagetitle'] = 'Image Title';
 $string['usenodefault'] = 'Use no default';
 $string['usingnodefaultprofileicon'] = 'Now using no default profile icon';
-
+$string['wrongfiletypeforblock'] = 'The file you uploaded was not the correct type for this block.';
 
 ?>

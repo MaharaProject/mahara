@@ -18,11 +18,24 @@
 
 <div id="{$prefix}_upload_browse" class="upload_browse{if $config.select} select{if !$browse} hidden{/if}{/if}">
 
-{if $config.select}
+{if $config.select && !$config.alwaysopen}
 <input type="submit" class="buttondk" name="{$prefix}_cancelbrowse" id="{$prefix}_close_upload_browse" value="{str tag=Close}" />
 {/if}
 
-<table class="fileupload">
+{if $tabs}
+<input type="hidden" name="owner" id="{$prefix}_owner" value="{$tabs.owner}" />
+<input type="hidden" name="ownerid" id="{$prefix}_ownerid" value="{$tabs.ownerid}" />
+<input type="hidden" name="{$prefix}_changeowner" id="{$prefix}_changeowner" value="" />
+<div id="{$prefix}_ownertabs">
+{include file="artefact:file:form/ownertabs.tpl" tabs=$tabs prefix=$prefix querybase=$querybase}
+</div>
+<div id="artefactchooser-body">
+  <div id="{$prefix}_ownersubtabs">
+  {if $tabs.subtabs}{include file="artefact:file:form/ownersubtabs.tpl" tabs=$tabs prefix=$prefix querybase=$querybase}{/if}
+  </div>
+{/if}
+
+<table id="{$prefix}_upload_container" class="fileupload{if $tabs && !$tabs.upload} hidden{/if}">
  <tbody>
 {if $config.upload}
   <tr><td><input type="hidden" name="{$prefix}_uploadnumber" id="{$prefix}_uploadnumber" value="1" /></td></tr>
@@ -75,11 +88,11 @@
 {/if}
 
 <div id="{$prefix}_foldernav" class="foldernav">
-{include file="artefact:file:form/folderpath.tpl" path=$path querybase=$querybase}
+{include file="artefact:file:form/folderpath.tpl" path=$path querybase=$querybase owner=$tabs.owner ownerid=$tabs.ownerid}
 </div>
 
 <div id="{$prefix}_filelist_container">
-{include file="artefact:file:form/filelist.tpl" prefix=$prefix filelist=$filelist editable=$config.edit selectable=$config.select highlight=$highlight edit=$edit querybase=$querybase groupinfo=$groupinfo}
+{include file="artefact:file:form/filelist.tpl" prefix=$prefix filelist=$filelist editable=$config.edit selectable=$config.select highlight=$highlight edit=$edit querybase=$querybase groupinfo=$groupinfo owner=$tabs.owner ownerid=$tabs.ownerid}
 </div>
 
 {* Edit form used when js is available *}
@@ -89,6 +102,10 @@
   {include file="artefact:file:form/editfile.tpl" prefix=$prefix groupinfo=$groupinfo}
   </tbody>
 </table>
+{/if}
+
+{if $tabs}
+</div>
 {/if}
 
 </div>

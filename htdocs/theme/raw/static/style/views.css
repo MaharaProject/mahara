@@ -212,6 +212,9 @@ body:last-child:not(:root:root) .newblockhere {
 }
 
 /* styling the tabs for the artefact chooser */
+ul.artefactchooser-tabs.files {
+  margin-top: 1em;
+}
 ul.artefactchooser-tabs {
   padding: 0;
   margin: 0;
@@ -231,6 +234,24 @@ ul.artefactchooser-tabs li a {
 ul.artefactchooser-tabs li.current a {
   background: #ddd;
   color: #333;
+}
+ul.artefactchooser-subtabs {
+  margin: 2px;
+  padding: 0 0 .2em 0;
+  font-size: .9em;
+  list-style: none;
+  border-bottom: 1px solid #ddd;
+}
+ul.artefactchooser-subtabs li {
+  display: inline;
+}
+ul.artefactchooser-subtabs li a {
+  text-decoration: none;
+  padding: 2px;
+}
+ul.artefactchooser-subtabs li.current a {
+  color: #333;
+  font-weight: bold;
 }
 
 #artefactchooser-body {

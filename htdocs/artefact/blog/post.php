@@ -56,6 +56,7 @@ if (!$blogpost) {
     $checked = '';
     $pagetitle = get_string('newblogpost', 'artefact.blog', get_field('artefact', 'title', 'id', $blog));
     $focuselement = 'title';
+    $attachments = array();
     define('TITLE', $pagetitle);
 }
 else {
@@ -68,6 +69,7 @@ else {
     $checked = !$blogpostobj->get('published');
     $pagetitle = get_string('editblogpost', 'artefact.blog');
     $focuselement = 'description'; // Doesn't seem to work with tinyMCE.
+    $attachments = $blogpostobj->attachment_id_list();
     define('TITLE', get_string('editblogpost','artefact.blog'));
 }
 
@@ -141,7 +143,8 @@ $form = pieform(array(
                 'edit'            => false,
                 'select'          => true,
             ),
-            'selectlistcallback' => 'load_attachments',
+            'defaultvalue'       => $attachments,
+            'selectlistcallback' => 'artefact_get_records_by_id',
             'selectcallback'     => 'add_attachment',
             'unselectcallback'   => 'delete_attachment',
         ),
@@ -328,10 +331,6 @@ $smarty = smarty(array(), array(), array(), array(
             'data'   => array(),
         ),
     ),
-    'themepaths' => array(
-        'images/file.gif',
-        'images/image.gif'
-    ),
 ));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign_by_ref('form', $form);
@@ -352,78 +351,48 @@ function editpost_cancel_submit() {
 function editpost_submit(Pieform $form, $values) {
     global $USER, $SESSION, $blogpost, $blog;
 
-    // save the post if the user clicked submit or has no js
-    $submitted = !empty($values['submitpost']);
-    if ($submitted || !$form->submitted_by_js()) {
-        db_begin();
-        $postobj = new ArtefactTypeBlogPost($blogpost, null);
-        $postobj->set('title', $values['title']);
-        $postobj->set('description', $values['description']);
-        $postobj->set('tags', $values['tags']);
-        $postobj->set('published', !$values['draft']);
-        if (!$blogpost) {
-            $postobj->set('parent', $blog);
-            $postobj->set('owner', $USER->id);
-        }
-        $postobj->commit();
-        $blogpost = $postobj->get('id');
-
-        // Attachments
-        $old = $postobj->attachment_id_list();
-        $new = is_array($values['filebrowser']['selected']) ? $values['filebrowser']['selected'] : array();
-        if (!empty($new) || !empty($old)) {
-            foreach ($old as $o) {
-                if (!in_array($o, $new)) {
-                    $postobj->detach($o);
-                }
-            }
-            foreach ($new as $n) {
-                if (!in_array($n, $old)) {
-                    $postobj->attach($n);
-                }
-            }
-            $filebrowser['selectedlist'] = $postobj->get_attachments(true);
-        }
-        db_commit();
-        if ($submitted) {
-            $result = array(
-                'error'   => false,
-                'message' => get_string('blogpostsaved', 'artefact.blog'),
-                'goto'    => get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blog,
-            );
-            if ($form->submitted_by_js()) {
-                // Redirect back to the blog page from within the iframe
-                $SESSION->add_ok_msg($result['message']);
-                $form->json_reply(PIEFORM_OK, $result, false);
-            }
-            $form->reply(PIEFORM_OK, $result);
-        }
-
+    db_begin();
+    $postobj = new ArtefactTypeBlogPost($blogpost, null);
+    $postobj->set('title', $values['title']);
+    $postobj->set('description', $values['description']);
+    $postobj->set('tags', $values['tags']);
+    $postobj->set('published', !$values['draft']);
+    if (!$blogpost) {
+        $postobj->set('parent', $blog);
+        $postobj->set('owner', $USER->id);
     }
+    $postobj->commit();
+    $blogpost = $postobj->get('id');
 
-    // Non-js filebrowser submission
+    // Attachments
+    $old = $postobj->attachment_id_list();
+    // $new = is_array($values['filebrowser']['selected']) ? $values['filebrowser']['selected'] : array();
+    $new = is_array($values['filebrowser']) ? $values['filebrowser'] : array();
+    if (!empty($new) || !empty($old)) {
+        foreach ($old as $o) {
+            if (!in_array($o, $new)) {
+                $postobj->detach($o);
+            }
+        }
+        foreach ($new as $n) {
+            if (!in_array($n, $old)) {
+                $postobj->attach($n);
+            }
+        }
+    }
+    db_commit();
+
     $result = array(
         'error'   => false,
-        'goto'    => get_config('wwwroot') . 'artefact/blog/post.php?id=' . $blogpost,
+        'message' => get_string('blogpostsaved', 'artefact.blog'),
+        'goto'    => get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blog,
     );
-    if (isset($values['filebrowser']['browse'])) {
-        $result['goto'] .= '&browse=1';
+    if ($form->submitted_by_js()) {
+        // Redirect back to the blog page from within the iframe
+        $SESSION->add_ok_msg($result['message']);
+        $form->json_reply(PIEFORM_OK, $result, false);
     }
-    if (isset($values['filebrowser']['folder'])) {
-        $result['goto'] .= '&folder=' . $values['filebrowser']['folder'];
-    }
-    if (isset($values['filebrowser']['highlight'])) {
-        $result['goto'] .= '&file=' . $values['filebrowser']['highlight'];
-    }
-    $form->reply(empty($result['error']) ? PIEFORM_OK : PIEFORM_ERR, $result);
-}
-
-function load_attachments() {
-    global $blogpostobj;
-    if ($blogpostobj) {
-        return $blogpostobj->get_attachments(true);
-    }
-    return array();
+    $form->reply(PIEFORM_OK, $result);
 }
 
 function add_attachment($attachmentid) {

@@ -112,7 +112,7 @@ class PluginArtefactFile extends PluginArtefact {
 
     public static function themepaths($type) {
         static $themepaths = array(
-            'file' => array(
+            'filebrowser' => array(
                 'images/file.gif',
                 'images/folder.gif',
                 'images/image.gif',
@@ -166,13 +166,29 @@ class PluginArtefactFile extends PluginArtefact {
                     'Role',
                 ),
             ),
+            'filebrowser' => array(
+                'mahara' => array(
+                    'remove',
+                ),
+                'artefact.file' => array(
+                    'detachfilewarning',
+                    'editfile',
+                    'editfolder',
+                    'filewithnameexists',
+                    'foldernamerequired',
+                    'nametoolong',
+                    'namefieldisrequired',
+                    'uploadingfiletofolder',
+                    'youmustagreetothecopyrightnotice',
+                ),
+            ),
         );
         return $jsstrings[$type];
     }
 
     public static function jshelp($type) {
         static $jshelp = array(
-            'file' => array(
+            'filebrowser' => array(
                 'artefact.file' => array(
                     'notice',
                     'quota_message',
@@ -395,7 +411,19 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     }
 
 
-    public static function get_my_files_data($parentfolderid, $userid, $group=null, $institution=null) {
+    /**
+     * Gets a list of files in one folder
+     *
+     * @param integer $parentfolderid    Artefact id of the folder
+     * @param integer $userid            Id of the owner, if the owner is a user
+     * @param integer $group             Id of the owner, if the owner is a group
+     * @param string  $institution       Id of the owner, if the owner is a institution
+     * @param array   $filters           Filters to apply to the results. An array with keys 'artefacttype', 'filetype',
+     *                                   where array values are arrays of artefacttype or mimetype strings.
+     * @return array  A list of artefacts
+     */
+    public static function get_my_files_data($parentfolderid, $userid, $group=null, $institution=null, $filters=null) {
+        global $USER;
         $select = '
             SELECT
                 a.id, a.artefacttype, a.mtime, f.size, a.title, a.description,
@@ -405,8 +433,21 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 LEFT OUTER JOIN {artefact_file_files} f ON f.artefact = a.id
                 LEFT OUTER JOIN {artefact} c ON c.parent = a.id 
                 LEFT OUTER JOIN {artefact_attachment} aa ON aa.attachment = a.id';
+
+        if (!empty($filters['artefacttype'])) {
+            $artefacttypes = $filters['artefacttype'];
+            $artefacttypes[] = 'folder';
+        }
+        else {
+            $artefacttypes = array_diff(PluginArtefactFile::get_artefact_types(), array('profileicon'));
+        }
         $where = "
-            WHERE a.artefacttype IN ('" . join("','", array_diff(PluginArtefactFile::get_artefact_types(), array('profileicon'))) . "')";
+            WHERE a.artefacttype IN (" . join(',',  array_map('db_quote', $artefacttypes)) . ")";
+        if (!empty($filters['filetype']) && is_array($filters['filetype'])) {
+            $where .= "
+            AND (a.artefacttype = 'folder' OR f.filetype IN (" . join(',',  array_map('db_quote', $filters['filetype'])) . '))';
+        }
+
         $groupby = '
             GROUP BY
                 a.id, a.artefacttype, a.mtime, f.size, a.title, a.description';
@@ -414,17 +455,25 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $phvals = array();
 
         if ($institution) {
+            if ($institution == 'mahara' && !$USER->get('admin')) {
+                // If non-admins are browsing site files, only let them see the public folder & its contents
+                $publicfolder = ArtefactTypeFolder::admin_public_folder_id();
+                $from .= '
+                LEFT OUTER JOIN {artefact_parent_cache} pub ON (a.id = pub.artefact AND pub.parent = ?)';
+                $where .= '
+                AND (pub.parent = ? OR a.id = ?)';
+                $phvals = array($publicfolder, $publicfolder, $publicfolder);
+            }
             $where .= '
             AND a.institution = ? AND a.owner IS NULL';
             $phvals[] = $institution;
         }
         else if ($group) {
-            global $USER;
             $select .= ',
-                r.can_edit, r.can_view';
+                r.can_edit, r.can_view, r.can_republish';
             $from .= '
                 LEFT OUTER JOIN (
-                    SELECT ar.artefact, ar.can_edit, ar.can_view
+                    SELECT ar.artefact, ar.can_edit, ar.can_view, ar.can_republish
                     FROM {artefact_access_role} ar
                     INNER JOIN {group_member} gm ON ar.role = gm.role
                     WHERE gm.group = ? AND gm.member = ? 
@@ -434,7 +483,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             $where .= '
             AND a.group = ? AND a.owner IS NULL AND r.can_view = 1';
             $phvals[] = $group;
-            $groupby .= ', r.can_edit, r.can_view';
+            $groupby .= ', r.can_edit, r.can_view, r.can_republish';
         }
         else {
             $where .= '
@@ -460,6 +509,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             foreach ($filedata as $item) {
                 $item->mtime = format_date(strtotime($item->mtime), 'strfdaymonthyearshort');
                 $item->tags = array();
+                $item->icon = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_icon', array('id' => $item->id));
                 if ($item->size) { // Doing this here now for non-js users
                     $item->size = ArtefactTypeFile::short_size($item->size, true);
                 }
@@ -493,7 +543,8 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 'artefacttype' => 'folder',
                 'description'  => get_string('parentfolder', 'artefact.file'),
                 'isparent'     => true,
-                'id'           => $grandparentid
+                'id'           => $grandparentid,
+                'icon'         => ArtefactTypeFolder::get_icon(),
             );
         }
 
@@ -501,6 +552,10 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         return $filedata;
     }
 
+
+    /**
+     * Creates pieforms definition for forms on the my files, group files, etc. pages.
+     */
     public static function files_form($page='', $group=null, $institution=null, $folder=null, $highlight=null, $edit=null) {
         $folder = param_integer('folder', 0);
         $edit = param_variable('edit', 0);
@@ -686,7 +741,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
      * @param integer $group
      * @param string $institution
      */
-    public static function get_new_file_title($desired, $parent, $owner, $group, $institution) {
+    public static function get_new_file_title($desired, $parent, $owner=null, $group=null, $institution=null) {
         $bits = split('\.', $desired);
         if (count($bits) > 1 && preg_match('/[^0-9]/', end($bits))) {
             $start = join('.', array_slice($bits, 0, count($bits)-1));
@@ -714,60 +769,33 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         }
         return $newname;
     }
+
+    public static function blockconfig_filebrowser_element(&$instance, $default=array()) {
+        return array(
+            'name'         => 'filebrowser',
+            'type'         => 'filebrowser',
+            'title'        => get_string('file', 'artefact.file'),
+            'folder'       => (int) param_variable('folder', 0),
+            'highlight'    => null,
+            'browse'       => true,
+            'page'         => View::make_base_url(),
+            'config'       => array(
+                'upload'          => true,
+                'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
+                'createfolder'    => false,
+                'edit'            => false,
+                'select'          => true,
+                'alwaysopen'      => true,
+                'publishing'      => true,
+            ),
+            'tabs'         => $instance->get_view()->ownership(),
+            'defaultvalue' => $default,
+            'selectlistcallback' => 'artefact_get_records_by_id',
+        );
+    }
+
 }
 
-/**
- * Submit function for My/Group/Institution/Site files
- *
- * This function will only be called when javascript is disabled.
- *
- * Outside the File class because Pieforms doesn't appear to like
- * being given static class method as a submit callback.
- */
-function files_submit(Pieform $form, $values) {
-    // @todo: move group/inst stuff to form defn.
-    $group       = $form->get_property('group');
-    $institution = $form->get_property('institution');
-    if ($group) {
-        $redirect = get_config('wwwroot') . 'artefact/file/groupfiles.php';
-        $params = array('group' => $group);
-    } else if ($institution) {
-        if ($institution == 'mahara') {
-            $redirect = get_config('wwwroot') . 'admin/site/files.php';
-            $params = array();
-        }
-        else {
-            $redirect = get_config('wwwroot') . 'artefact/file/institutionfiles.php';
-            $params = array('institution' => $institution);
-        }
-    } else {
-        $redirect = get_config('wwwroot') . 'artefact/file/index.php';
-        $params = array();
-    }
-
-    // Some updates on the filebrowser element need to set params and
-    // redirect back to this page.
-    if (isset($values['filebrowser']['folder'])) {
-        $params['folder'] = $values['filebrowser']['folder'];
-    }
-    if (isset($values['filebrowser']['edit'])) {
-        $params['edit'] = $values['filebrowser']['edit'];
-    }
-    if (isset($values['filebrowser']['highlight'])) {
-        $params['file'] = $values['filebrowser']['highlight'];
-    }
-
-    if ($params) {
-        foreach ($params as $k => $v) {
-            $params[$k] = $k . '=' . $v;
-        }
-        $redirect .= (strpos($redirect, '?') === false ? '?' : '&') . join('&', $params);
-    }
-
-    $result = $values['filebrowser'];
-    $result['goto'] = $redirect;
-    $form->reply(empty($result['error']) ? PIEFORM_OK : PIEFORM_ERR, $result);
-}
 
 class ArtefactTypeFile extends ArtefactTypeFileBase {
 
@@ -811,9 +839,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      * Returns a boolean indicating success or failure.
      */
     public static function save_file($pathname, $data, User &$user=null, $outsidedataroot=false) {
-        // This is only used when blog posts are saved: Files which
-        // have been uploaded to the post are moved to a permanent
-        // location in the files area using this function. 
         $dataroot = get_config('dataroot');
         if (!$outsidedataroot) {
             $pathname = $dataroot . $pathname;
@@ -863,9 +888,18 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             throw new UploadException($error);
         }
         $size = $um->file['size'];
-        global $USER;
-        if (!isset($data->institution) && !isset($data->group) && !$USER->quota_allowed($size)) {
-            throw new QuotaExceededException(get_string('uploadexceedsquota', 'artefact.file'));
+        if (!empty($data->owner)) {
+            global $USER;
+            if ($data->owner == $USER->get('id')) {
+                $owner = $USER;
+            }
+            else {
+                $owner = new User;
+                $owner->find_by_id($data->owner);
+            }
+            if (!$owner->quota_allowed($size)) {
+                throw new QuotaExceededException(get_string('uploadexceedsquota', 'artefact.file'));
+            }
         }
         $data->size         = $size;
         $data->filetype     = $um->file['type'];
@@ -879,11 +913,9 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             $f->delete();
             throw new UploadException($error);
         }
-        else {
-            if (!isset($data->institution) && !isset($data->group)) {
-                $USER->quota_add($size);
-                $USER->commit();
-            }
+        else if ($owner) {
+            $owner->quota_add($size);
+            $owner->commit();
         }
         return $id;
     }

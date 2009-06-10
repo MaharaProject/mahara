@@ -1949,13 +1949,7 @@ function profile_sideblock() {
     $data['invitedgroupsmessage'] = $data['invitedgroups'] == 1 ? get_string('invitedgroup') : get_string('invitedgroups');
     $data['pendingfriends'] = count_records('usr_friend_request', 'owner', $USER->get('id'));
     $data['pendingfriendsmessage'] = $data['pendingfriends'] == 1 ? get_string('pendingfriend') : get_string('pendingfriends');
-    $data['groups'] = get_records_sql_array(
-        "SELECT g.id, g.name, gm.role
-        FROM {group} g
-        JOIN {group_member} gm ON (gm.group = g.id)
-        WHERE gm.member = ?
-        AND g.deleted = 0
-        ORDER BY gm.role = 'admin' DESC, gm.role, g.id", array($USER->get('id')));
+    $data['groups'] = group_get_user_groups($USER->get('id'));
     $data['views'] = get_records_sql_array(
         'SELECT v.id, v.title
         FROM {view} v

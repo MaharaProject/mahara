@@ -64,20 +64,37 @@ class PluginBlocktypeHtml extends PluginBlocktype {
 
     public static function instance_config_form($instance, $istemplate) {
         $configdata = $instance->get('configdata');
+        safe_require('artefact', 'file');
+        $instance->set('artefactplugin', 'file');
         return array(
-            self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate),
+            'artefactid' => self::filebrowser_element($instance, (isset($configdata['artefactid'])) ? array($configdata['artefactid']) : null),
         );
     }
 
-    private static function get_allowed_extensions() {
-        return array('html', 'htm');
+    private static function get_allowed_mimetypes() {
+        static $mimetypes = array();
+        if (!$mimetypes) {
+            $mimetypes = get_column('artefact_file_mime_types', 'mimetype', 'description', 'html');
+        }
+        return $mimetypes;
+    }
+
+    public static function filebrowser_element(&$instance, $default=array()) {
+        $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default);
+        $element['title'] = get_string('file', 'artefact.file');
+        $element['name'] = 'artefactid';
+        $element['config']['selectone'] = true;
+        $element['filters'] = array(
+            'artefacttype'    => array('file'),
+            'filetype'        => self::get_allowed_mimetypes(),
+        );
+        return $element;
     }
 
     public static function artefactchooser_element($default=null, $istemplate=false) {
-        $extraselect = '(' . implode(' OR ', array_map(
-            create_function('$a', 'return "title LIKE \'%.$a\'";'),
-            self::get_allowed_extensions())
-        ) . ')';
+        $extraselect = 'filetype IN (' . join(',', array_map('db_quote', self::get_allowed_mimetypes())) . ')';
+        $extrajoin   = ' JOIN {artefact_file_files} ON {artefact_file_files}.artefact = a.id ';
+
         $element = array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
