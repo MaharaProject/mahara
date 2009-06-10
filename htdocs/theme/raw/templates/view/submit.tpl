@@ -3,7 +3,7 @@
 
 {include file="columnleftstart.tpl"}
 <div class="message">
-<p>{$message}</p>
+<p>{$message|escape}</p>
 {$form}
 </div>
 {include file="columnleftend.tpl"}
