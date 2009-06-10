@@ -54,7 +54,7 @@ function pieform_element_artefactchooser(Pieform $form, $element) {
     // managing stuff.
     $pagination_js = $pagination['javascript'];
 
-    $baseurl = view::make_base_url();
+    $baseurl = View::make_base_url();
     $smarty->assign('browseurl', $baseurl);
     $smarty->assign('searchurl', $baseurl . '&s=1');
     $smarty->assign('searchable', !empty($element['search']));

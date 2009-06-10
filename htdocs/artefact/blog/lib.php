@@ -556,7 +556,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
             // Get the attached files.
             $files = ArtefactType::attachments_from_id_list(array_map(create_function('$a', 'return $a->id;'), $result));
             if ($files) {
-                foreach ($files as $file) {
+                safe_require('artefact', 'file');
+                foreach ($files as &$file) {
+                    $file->icon = call_static_method(generate_artefact_class_name($file->artefacttype), 'get_icon', array('id' => $file->attachment));
                     $result[$file->artefact]->files[] = $file;
                 }
             }

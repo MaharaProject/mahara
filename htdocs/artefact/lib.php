@@ -1200,4 +1200,13 @@ function artefact_get_references_in_html($html) {
     return $artefacts;
 }
 
+function artefact_get_records_by_id($ids) {
+    if (!empty($ids)) {
+        if ($records = get_records_select_assoc('artefact', 'id IN (' . join(',', $ids) . ')')) {
+            return $records;
+        }
+    }
+    return array();
+}
+
 ?>

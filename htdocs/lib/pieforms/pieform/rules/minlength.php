@@ -56,6 +56,9 @@ function pieform_rule_minlength_i18n() {/*{{{*/
         'sl.utf8' => array(
             'minlength' => 'To polje mora biti dolgo vsaj %d znakov',
         ),
+        'nl.utf8' => array(
+            'minlength' => 'Dit veld moet minstens %d tekens lang zijn',
+        ),
 
     );
 }/*}}}*/

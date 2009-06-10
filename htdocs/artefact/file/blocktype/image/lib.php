@@ -88,8 +88,10 @@ class PluginBlocktypeImage extends PluginBlocktype {
 
     public static function instance_config_form($instance, $istemplate) {
         $configdata = $instance->get('configdata');
+        safe_require('artefact', 'file');
+        $instance->set('artefactplugin', 'file');
         return array(
-            self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate),
+            'artefactid' => self::filebrowser_element($instance, (isset($configdata['artefactid'])) ? array($configdata['artefactid']) : null),
             'showdescription' => array(
                 'type'  => 'checkbox',
                 'title' => get_string('showdescription', 'blocktype.file/image'),
@@ -107,6 +109,17 @@ class PluginBlocktypeImage extends PluginBlocktype {
                 'defaultvalue' => (isset($configdata['width'])) ? $configdata['width'] : '',
             ),
         );
+    }
+
+    public static function filebrowser_element(&$instance, $default=array()) {
+        $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default);
+        $element['title'] = get_string('image');
+        $element['name'] = 'artefactid';
+        $element['config']['selectone'] = true;
+        $element['filters'] = array(
+            'artefacttype'    => array('image'),
+        );
+        return $element;
     }
 
     public static function artefactchooser_element($default=null, $istemplate=false) {

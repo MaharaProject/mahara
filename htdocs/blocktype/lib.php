@@ -393,7 +393,7 @@ class BlockInstance {
         );
 
         $redirect = '/view/blocks.php?id=' . $this->get('view');
-        if (param_boolean('new')) {
+        if (param_boolean('new', false)) {
             $redirect .= '&new=1';
         }
         if ($category = param_alpha('c', '')) {
@@ -619,9 +619,12 @@ class BlockInstance {
             'successcallback'  => array($this, 'instance_config_store'),
             'jsform' => true,
             'jssuccesscallback' => 'blockConfigSuccess',
+            'jserrorcallback'   => 'blockConfigError',
             'elements' => $elements,
             'viewgroup' => $this->get_view()->get('group'),
+            'group' => $this->get_view()->get('group'),
             'viewinstitution' => $this->get_view()->get('institution'),
+            'institution' => $this->get_view()->get('institution'),
             'configdirs' => $configdirs,
         );
 
@@ -635,16 +638,6 @@ class BlockInstance {
         if ($pieform->is_submitted()) {
             global $SESSION;
             $SESSION->add_error_msg(get_string('errorprocessingform'));
-        }
-        else {
-            // This is a bit hacky. Because pieforms will take values from
-            // $_POST before 'defaultvalue's of form elements, we need to nuke
-            // all of the post values for the form. The situation where this
-            // becomes relevant is when someone clicks the configure button for
-            // one block, then immediately configures another block
-            foreach (array_keys($elements) as $name) {
-                unset($_POST[$name]);
-            }
         }
 
         $html = $pieform->build();

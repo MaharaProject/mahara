@@ -103,8 +103,10 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
 
     public static function instance_config_form($instance, $istemplate) {
         $configdata = $instance->get('configdata');
+        safe_require('artefact', 'file');
+        $instance->set('artefactplugin', 'file');
         return array(
-            self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null, $istemplate),
+            'artefactids' => self::filebrowser_element($instance, (isset($configdata['artefactids'])) ? $configdata['artefactids'] : null),
         );
     }
 
@@ -135,6 +137,14 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
      */
     public static function artefactchooser_get_element_data($artefact) {
         return ArtefactTypeFileBase::artefactchooser_get_file_data($artefact);
+    }
+
+    public static function filebrowser_element(&$instance, $default=array()) {
+        $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default);
+        $element['title'] = get_string('Files', 'blocktype.file/filedownload');
+        $element['name'] = 'artefactids';
+        $element['config']['selectone'] = false;
+        return $element;
     }
 
     public static function default_copy_type() {

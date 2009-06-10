@@ -81,22 +81,23 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
 
     public static function instance_config_form($instance, $istemplate) {
         $configdata = $instance->get('configdata');
-        $form = array(
-            self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate),
-        );
-        $form['width'] = array(
+        safe_require('artefact', 'file');
+        $instance->set('artefactplugin', 'file');
+        return array(
+            'artefactid' => self::filebrowser_element($instance, (isset($configdata['artefactid'])) ? array($configdata['artefactid']) : null),
+            'width' => array(
                 'type' => 'text',
                 'title' => get_string('width'),
                 'size' => 3,
                 'defaultvalue' => (isset($configdata['width'])) ? $configdata['width'] : '',
-        );
-        $form['height'] = array(
+            ),
+            'height' => array(
                 'type' => 'text',
                 'title' => get_string('height'),
                 'size' => 3,
                 'defaultvalue' => (isset($configdata['height'])) ? $configdata['height'] : '',
+            ),
         );
-        return $form;
     }
 
     public static function get_artefacts(BlockInstance $instance) {
@@ -105,6 +106,18 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             return array($configdata['artefactid']);
         }
         return false;
+    }
+
+    public static function filebrowser_element(&$instance, $default=array()) {
+        $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default);
+        $element['title'] = get_string('media', 'blocktype.file/internalmedia');
+        $element['name'] = 'artefactid';
+        $element['config']['selectone'] = true;
+        $element['filters'] = array(
+            'artefacttype'    => array('file'),
+            'filetype'        => self::get_allowed_mimetypes(),
+        );
+        return $element;
     }
 
     public static function artefactchooser_element($default=null, $istemplate=false) {
