@@ -448,7 +448,7 @@ EOF;
             $SIDEBLOCKS[] = array(
                 'name'   => 'login',
                 'weight' => -10,
-                'id'     => 'sb_loginbox',
+                'id'     => 'sb-loginbox',
                 'data'   => array(
                     'loginform' => auth_generate_login_form(),
                 ),
