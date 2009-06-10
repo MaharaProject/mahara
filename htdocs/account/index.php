@@ -80,7 +80,7 @@ if ($authobj->authname == 'internal') {
         'type' => 'text',
         'defaultvalue' => $USER->get('username'),
         'title' => get_string('changeusername', 'account'),
-        'description' => get_string('changeusernamedesc', 'account', get_config('sitename')),
+        'description' => get_string('changeusernamedesc', 'account', hsc(get_config('sitename'))),
     );
 }
 
