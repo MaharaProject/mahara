@@ -92,6 +92,7 @@ class PluginSearchInternal extends PluginSearch {
 
     public static function search_user_pg($query_string, $limit, $offset, $data, $publicfields) {
         $fieldlist = "('" . join("','", $publicfields) . "')";
+        $data = self::prepare_search_user_options($data);
         $sql = 'SELECT
                 COUNT(DISTINCT u.id)
             FROM
@@ -135,7 +136,7 @@ class PluginSearchInternal extends PluginSearch {
         $count = get_field_sql($sql, $values);
 
         if ($count > 0) {
-            $sql = 'SELECT DISTINCT ON (u.firstname, u.lastname, u.id)
+            $sql = 'SELECT DISTINCT ON (' . $data['orderby'] . ')
                     u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff
                 FROM {artefact} a
                     INNER JOIN {usr} u ON u.id = a.owner
@@ -152,7 +153,7 @@ class PluginSearchInternal extends PluginSearch {
                     AND (' . $namesql . '
                     )
                     ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
-                ORDER BY u.firstname, u.lastname, u.id';
+                ORDER BY ' . $data['orderby'];
             $data = get_records_sql_array($sql, $values, $offset, $limit);
 
             if ($data) {
@@ -261,6 +262,22 @@ class PluginSearchInternal extends PluginSearch {
             'offset'  => $offset,
             'data'    => $data,
         );
+    }
+
+    private static function prepare_search_user_options($options) {
+        if (isset($options['group'])) {
+            $options['group'] = intval($options['group']);
+        }
+        if (isset($options['includeadmins'])) {
+            $options['includeadmins'] = (bool)$options['includeadmins'];
+        }
+        if (isset($options['orderby']) && $options['orderby'] == 'lastname') {
+            $options['orderby'] = 'u.lastname, u.firstname, u.id';
+        }
+        else {
+            $options['orderby'] = 'u.firstname, u.lastname, u.id';
+        }
+        return $options;
     }
     
 

@@ -720,9 +720,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      * Returns a boolean indicating success or failure.
      */
     public static function save_file($pathname, $data, User &$user=null, $outsidedataroot=false) {
-        // This is only used when blog posts are saved: Files which
-        // have been uploaded to the post are moved to a permanent
-        // location in the files area using this function. 
         $dataroot = get_config('dataroot');
         if (!$outsidedataroot) {
             $pathname = $dataroot . $pathname;
@@ -772,9 +769,18 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             throw new UploadException($error);
         }
         $size = $um->file['size'];
-        global $USER;
-        if (!isset($data->institution) && !$USER->quota_allowed($size)) {
-            throw new QuotaExceededException(get_string('uploadexceedsquota', 'artefact.file'));
+        if (!empty($data->owner)) {
+            global $USER;
+            if ($data->owner == $USER->get('id')) {
+                $owner = $USER;
+            }
+            else {
+                $owner = new User;
+                $owner->find_by_id($data->owner);
+            }
+            if (!$owner->quota_allowed($size)) {
+                throw new QuotaExceededException(get_string('uploadexceedsquota', 'artefact.file'));
+            }
         }
         $data->size         = $size;
         $data->filetype     = $um->file['type'];
@@ -788,9 +794,9 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             $f->delete();
             throw new UploadException($error);
         }
-        else {
-            $USER->quota_add($size);
-            $USER->commit();
+        else if ($owner) {
+            $owner->quota_add($size);
+            $owner->commit();
         }
         return $id;
     }

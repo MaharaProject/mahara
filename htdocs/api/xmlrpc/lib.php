@@ -134,6 +134,10 @@ function find_remote_user($username, $wwwroot) {
     $candidates    = array();
     $auths         = array();
 
+    $aiid = 'ai.id';
+    if (!is_mysql()) {
+        $aiid = 'CAST(ai.id AS TEXT)';
+    }
     $sql = 'SElECT
                 ai.*
             FROM
@@ -144,7 +148,7 @@ function find_remote_user($username, $wwwroot) {
                 ai.id = ? AND
                 ai.institution = ? AND
                 ai2.institution = ai.institution AND
-                ai.id = aic.value AND
+                ' . $aiid . ' = aic.value AND
                 aic.field = \'parent\' AND
                 aic.instance = ai2.id AND
                 ai2.authname = \'xmlrpc\'';

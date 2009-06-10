@@ -59,6 +59,9 @@ function pieform_rule_integer_i18n() {/*{{{*/
         'sl.utf8' => array(
             'integer'   => 'Vrednost polja mora biti število'
         ),
+        'nl.utf8' => array(
+            'integer'   => 'Dit veld moet een geheel getal (integer) zijn'
+        ),
 
     );
 }/*}}}*/
