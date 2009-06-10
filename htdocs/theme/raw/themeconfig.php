@@ -25,7 +25,15 @@
 
 $theme = new StdClass;
 
-$theme->name   = 'Raw';
-$theme->rightcolumnwidth = 256;
+$theme->displayname         = 'Raw';
+
+$theme->formrenderer        = 'table';
+
+$theme->columnwidthunits    = 'pixels';
+$theme->leftcolumnwidth     = 256;
+$theme->leftcolumnbgcolor   = '#fff';
+$theme->centercolumnbgcolor = '#fff';
+$theme->rightcolumnwidth    = 256;
+$theme->rightcolumnbgcolor  = '#fff';
 
 ?>
