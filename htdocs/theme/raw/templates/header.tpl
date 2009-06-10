@@ -38,47 +38,52 @@
 {if $USERMASQUERADING}<div class="sitemessage"><img src="{theme_path location='images/icon_problem.gif'}" alt="">{$masqueradedetails} {$becomeyouagain}</div>{/if}
 {if $SITECLOSED}<div class="sitemessage center">{$SITECLOSED}</div>{/if}
 <div id="container">
-    <div id="loading_box" class="hidden"></div>
-    <div id="topwrapper">
-    <table cellspacing="0" class="searchbox fr">
-{if !$nosearch && $LOGGEDIN}
-    <tr>
-        <td>{$searchform}</td>
-    </tr>
-{/if}
+    <div id="loading-box"></div>
+    <div id="top-wrapper">
+        <h1 id="site-logo"><a href="{$WWWROOT}"><img src="{theme_path location='images/site-logo.png'}" alt="{$sitename|escape}"></a></h1>
+{if !$nosearch && $LOGGEDIN}        {$searchform}{/if}
 {if defined('MENUITEM') && MENUITEM == '' && !$LOGGEDIN && (count($LANGUAGES) > 1)}
-    <tr class="headerlanguage">
-        <td>
-        <form method="post">
-        <label>{str tag=language}: </label>
-        <select name="lang">
-        <option value="default" selected="selected">{$sitedefaultlang}</option>
+        <form id="language-select" method="post" action="">
+            <div>
+                <label>{str tag=language}: </label>
+                <select name="lang">
+                    <option value="default" selected="selected">{$sitedefaultlang}</option>
 {foreach from=$LANGUAGES key=k item=i}
-        <option value="{$k|escape}">{$i|escape}</option>
+                    <option value="{$k|escape}">{$i|escape}</option>
 {/foreach}
-        </select>
-        <input type="submit" class="submit" name="changelang" value="{str tag=change}" />
+                </select>
+                <input type="submit" class="submit" name="changelang" value="{str tag=change}">
+            </div>
         </form>
-        </td>
-    </tr>
 {/if}
-    </table>
-    <div id="logo"><a href="{$WWWROOT}"><img src="{theme_path location='images/logo.gif'}" border="0" alt=""></a></div>
-    <h1 class="hidden"><a href="{$WWWROOT}">{$hiddenheading|default:"Mahara"|escape}</a></h1>
 {if $MAINNAV}
-        <div id="mainnav">
-        <ul>
+        <div id="main-nav">
+            <ul>{strip}
 {foreach from=$MAINNAV item=item}
-{if $item.selected}{assign var=MAINNAVSELECTED value=$item}<li class="selected"><a href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>{else}<li><a href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>{/if}{/foreach}{if $LOGGEDIN}{if $USER->get('admin') || $USER->is_institutional_admin()}{if $ADMIN || $INSTITUTIONALADMIN}<li><a href="{$WWWROOT}">{str tag="returntosite"}</a></li>{elseif $USER->get('admin')}<li><a href="{$WWWROOT}admin/">{str tag="siteadministration"}</a></li>{else}<li><a href="{$WWWROOT}admin/users/search.php">{str tag="useradministration"}</a></li>{/if}{* <li><a href="" onclick="createLoggingPane(); return false;">Create Logging Pane</a></li> *}{/if}<li><a href="{$WWWROOT}?logout">{str tag="logout"}</a></li>{/if}
-        </ul>
-        </div>
-    </div>
-    <div id="subnav">
-{if $MAINNAVSELECTED.submenu}
-    <ul>
-{foreach from=$MAINNAVSELECTED.submenu item=item}<li{if $item.selected} class="selected"{/if}><a href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>{/foreach}
-    </ul>
+                <li{if $item.selected}{assign var=MAINNAVSELECTED value=$item} class="selected"{/if}><a href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>
+{/foreach}
+{if $LOGGEDIN}{if $USER->get('admin') || $USER->is_institutional_admin()}
+{if $ADMIN || $INSTITUTIONALADMIN}
+                <li><a href="{$WWWROOT}">{str tag="returntosite"}</a></li>
+{elseif $USER->get('admin')}
+                <li><a href="{$WWWROOT}admin/">{str tag="siteadministration"}</a></li>
+{else}
+                <li><a href="{$WWWROOT}admin/users/search.php">{str tag="useradministration"}</a></li>
 {/if}
+{/if}
+                <li><a href="{$WWWROOT}?logout">{str tag="logout"}</a></li>
+{/if}
+            {/strip}</ul>
+        </div>
+        <div id="sub-nav">
+{if $MAINNAVSELECTED.submenu}
+            <ul>{strip}
+{foreach from=$MAINNAVSELECTED.submenu item=item}
+                <li{if $item.selected} class="selected"{/if}><a href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>
+{/foreach}
+            {/strip}</ul>
+{/if}
+        </div>
 {/if}
     </div>
     <div id="main-wrapper">
