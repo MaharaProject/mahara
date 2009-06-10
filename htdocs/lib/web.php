@@ -342,6 +342,7 @@ EOF;
     if (!$sitename) {
        $sitename = 'Mahara';
     }
+    $smarty->assign('sitename', $sitename);
 
     if (defined('TITLE')) {
         $smarty->assign('PAGETITLE', TITLE . ' - ' . $sitename);
@@ -350,10 +351,6 @@ EOF;
     else {
         $smarty->assign('PAGETITLE', $sitename);
     }
-
-    $sitename = get_config('sitename');
-    $smarty->assign('title', $sitename);
-    $smarty->assign('hiddenheading', $sitename);
 
     if (defined('PUBLIC')) {
         $smarty->assign('PUBLIC', true);
