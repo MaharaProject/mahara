@@ -475,9 +475,31 @@ EOF;
 
         usort($SIDEBLOCKS, create_function('$a,$b', 'if ($a["weight"] == $b["weight"]) return 0; return ($a["weight"] < $b["weight"]) ? -1 : 1;'));
 
+        // Place all sideblocks on the right. If this structure is munged 
+        // appropriately, you can put blocks on the left. In future versions of 
+        // Mahara, we'll make it easy to do this.
+        $tmp = $SIDEBLOCKS;
+        $SIDEBLOCKS = array(
+            'left'  => array(),
+            'right' => $tmp,
+        );
+
         $smarty->assign('userauthinstance', $SESSION->get('authinstance'));
         $smarty->assign('MNETUSER', $SESSION->get('mnetuser'));
         $smarty->assign('SIDEBLOCKS', $SIDEBLOCKS);
+        if ($SIDEBLOCKS['left'] && $SIDEBLOCKS['right']) {
+            $layout = Theme::THREE_COLUMN;
+        }
+        else if ($SIDEBLOCKS['left']) {
+            $layout = Theme::LEFT_COLUMN;
+        }
+        else if ($SIDEBLOCKS['right']) {
+            $layout = Theme::RIGHT_COLUMN;
+        }
+        else {
+            $layout = Theme::ONE_COLUMN;
+        }
+        $smarty->assign('PAGELAYOUT', $layout);
 
         if ($USER->get('parentuser')) {
             $smarty->assign('USERMASQUERADING', true);

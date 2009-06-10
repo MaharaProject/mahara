@@ -1,3 +1,37 @@
+{if $SIDEBLOCKS.left && $SIDEBLOCKS.right}
+{if $THEME->columnwidthunits == 'pixels'}                </div>
+{/if}
+            </div>
+            <div class="col2">
+                {include file="sidebar.tpl" blocks=$SIDEBLOCKS.left}
+            </div>
+            <div class="col3">
+                {include file="sidebar.tpl" blocks=$SIDEBLOCKS.right}
+            </div>
+        </div>
+    </div>
+</div>
+{elseif $SIDEBLOCKS.left}
+{if $THEME->columnwidthunits == 'pixels'}            </div>
+{/if}
+        </div>
+        <div class="col2">
+            {include file="sidebar.tpl" blocks=$SIDEBLOCKS.left}
+        </div>
+    </div>
+</div>
+{elseif $SIDEBLOCKS.right}
+{if $THEME->columnwidthunits == 'pixels'}            </div>
+{/if}
+        </div>
+        <div class="col2">
+            {include file="sidebar.tpl" blocks=$SIDEBLOCKS.right}
+        </div>
+    </div>
+</div>
+{else}
+    TODO: 1 column layout
+{/if}
 	</div>
 	<div id="footerwrap">
 		<div id="poweredby"><a href="http://mahara.org/"><img src="{theme_path location='images/powered-by-mahara.png'}" border="0" alt=""></a></div>

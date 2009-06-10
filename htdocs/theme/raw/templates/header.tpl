@@ -27,6 +27,9 @@
 {foreach from=$STYLESHEETLIST item=cssurl}
     <link rel="stylesheet" type="text/css" href="{$cssurl}">
 {/foreach}
+    <style type="text/css">
+{$THEME->get_column_css($PAGELAYOUT)}
+    </style>
     <link rel="stylesheet" type="text/css" href="{theme_path location='style/print.css'}" media="print">
     <script type="text/javascript" src="{$WWWROOT}js/css.js"></script>
     <link rel="shortcut icon" href="{$WWWROOT}favicon.ico" type="image/vnd.microsoft.icon">
@@ -78,4 +81,26 @@
 {/if}
 {/if}
     </div>
-    <div id="mainwrapper">
+    <div id="main-wrapper">
+{if $SIDEBLOCKS.left && $SIDEBLOCKS.right}
+<div class="colmask threecol">
+    <div class="colmid">
+        <div class="colleft">
+{if $THEME->columnwidthunits == 'pixels'}           <div class="col1wrap">
+    {/if}
+            <div class="col1">
+{elseif $SIDEBLOCKS.left}
+<div class="colmask leftmenu">
+    <div class="col{if $THEME->columnwidthunits == 'pixels'}right{else}left{/if}">
+{if $THEME->columnwidthunits == 'pixels'}        <div class="col1wrap">
+    {/if}
+        <div class="col1">
+{elseif $SIDEBLOCKS.right}
+<div class="colmask rightmenu">
+    <div class="colleft">
+{if $THEME->columnwidthunits == 'pixels'}        <div class="col1wrap">
+    {/if}
+        <div class="col1">
+{else}
+    TODO: 1 column layout
+{/if}
