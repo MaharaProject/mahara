@@ -208,8 +208,6 @@ if (defined('INSTALLER')) {
     $CFG->theme = 'default';
 }
 
-$CFG->themeurl = get_config('wwwroot') . 'theme/' . get_config('theme') . '/static/';
-
 // Make sure the search plugin is configured
 if (!get_config('searchplugin')) {
     try {

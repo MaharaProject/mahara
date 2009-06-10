@@ -61,7 +61,6 @@ function &smarty_core() {
  *
  * The variables that it sets up are:
  *
- * - THEMEURL: The base url for static content
  * - WWWROOT: The base url for the Mahara system
  * - USER: The user object
  * - JAVASCRIPT: A list of javascript files to include in the header.  This
@@ -72,7 +71,7 @@ function &smarty_core() {
  * - MAINNAV: Array defining the main navigation
  *
  * @param $javascript A list of javascript includes.  Each include should be just
- *                    the name of a file, and reside in {$THEMEURL}js/{filename}
+ *                    the name of a file, and reside in js/{filename}
  * @param $headers    A list of additional headers.  These are to be specified as
  *                    actual HTML.
  * @param $strings    A list of language strings required by the javascript code.
