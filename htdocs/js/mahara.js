@@ -152,15 +152,15 @@ function processingStart(msg) {
     }
 
     replaceChildNodes(
-        $('loading_box'),
+        $('loading-box'),
         DIV(msg)
     );
-    showElement('loading_box');
+    showElement('loading-box');
 }
 
 /* Hide the loading notification */
 function processingStop() {
-    hideElement('loading_box');
+    hideElement('loading-box');
 }
 // End message related functions
 
