@@ -56,6 +56,7 @@ if (!$blogpost) {
     $checked = '';
     $pagetitle = get_string('newblogpost', 'artefact.blog', get_field('artefact', 'title', 'id', $blog));
     $focuselement = 'title';
+    $attachments = array();
     define('TITLE', $pagetitle);
 }
 else {
@@ -68,6 +69,7 @@ else {
     $checked = !$blogpostobj->get('published');
     $pagetitle = get_string('editblogpost', 'artefact.blog');
     $focuselement = 'description'; // Doesn't seem to work with tinyMCE.
+    $attachments = $blogpostobj->attachment_id_list();
     define('TITLE', get_string('editblogpost','artefact.blog'));
 }
 
@@ -141,7 +143,8 @@ $form = pieform(array(
                 'edit'            => false,
                 'select'          => true,
             ),
-            'selectlistcallback' => 'load_attachments',
+            'defaultvalue'       => $attachments,
+            'selectlistcallback' => 'artefact_get_records_by_id',
             'selectcallback'     => 'add_attachment',
             'unselectcallback'   => 'delete_attachment',
         ),
@@ -390,14 +393,6 @@ function editpost_submit(Pieform $form, $values) {
         $form->json_reply(PIEFORM_OK, $result, false);
     }
     $form->reply(PIEFORM_OK, $result);
-}
-
-function load_attachments() {
-    global $blogpostobj;
-    if ($blogpostobj) {
-        return $blogpostobj->get_attachments(true);
-    }
-    return array();
 }
 
 function add_attachment($attachmentid) {

@@ -789,10 +789,8 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 'publishing'      => true,
             ),
             'tabs'         => $instance->get_view()->ownership(),
-            'selectlistcallback' => array(
-                'name' => 'artefact_get_records_by_id',
-                'args' => array($default),
-            ),
+            'defaultvalue' => $default,
+            'selectlistcallback' => 'artefact_get_records_by_id',
         );
     }
 

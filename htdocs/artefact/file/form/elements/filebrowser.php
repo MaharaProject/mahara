@@ -73,12 +73,21 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         $smarty->assign('groupinfo', pieform_element_filebrowser_get_groupinfo($group));
     }
 
+    $formid = $form->get_name();
+    $prefix = $formid . '_' . $element['name'];
+
     if ($config['select']) {
-        if (is_array($element['selectlistcallback'])) {
-            $selected = call_user_func_array($element['selectlistcallback']['name'], $element['selectlistcallback']['args']);
-        }
-        else {
-            $selected = $element['selectlistcallback']();
+        if (function_exists($element['selectlistcallback'])) {
+            if ($form->is_submitted() && $form->has_errors() && isset($_POST[$prefix . '_selected']) && is_array($_POST[$prefix . '_selected'])) {
+                $value = array_keys($_POST[$prefix . '_selected']);
+            }
+            else if (isset($element['defaultvalue'])) {
+                $value = $element['defaultvalue'];
+            }
+            else {
+                $value = null;
+            }
+            $selected = $element['selectlistcallback']($value);
         }
         $smarty->assign('selectedlist', $selected);
         $selectedliststr = json_encode($selected);
@@ -107,9 +116,6 @@ function pieform_element_filebrowser(Pieform $form, $element) {
 
     $configstr = json_encode($config);
     $fileliststr = json_encode($filedata);
-
-    $formid = $form->get_name();
-    $prefix = $formid . '_' . $element['name'];
 
     $smarty->assign('prefix', $prefix);
 
