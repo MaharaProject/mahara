@@ -2500,6 +2500,7 @@ function add_feedback_form_validate(Pieform $form, $values) {
 
 function add_feedback_form_submit(Pieform $form, $values) {
     global $view, $artefact, $USER;
+
     $data = new StdClass;
     $data->view = $view->get('id');
     if ($artefact) {
@@ -2517,10 +2518,62 @@ function add_feedback_form_submit(Pieform $form, $values) {
         $data->authorname = $values['authorname'];
     }
     $data->ctime = db_format_timestamp(time());
+
+    db_begin();
+
+    if (is_array($values['attachment'])) {
+        require_once(get_config('libroot') . 'group.php');
+        require_once(get_config('libroot') . 'uploadmanager.php');
+        safe_require('artefact', 'file');
+
+        $groupid = $view->get('submittedgroup');
+        if (group_user_can_assess_submitted_views($groupid, $USER->get('id'))) {
+
+            $um = new upload_manager('attachment');
+            if ($error = $um->preprocess_file()) {
+                throw new UploadException($error);
+            }
+
+            $owner = $view->get('owner');
+            $ownerlang = get_user_language($owner);
+            $folderid = ArtefactTypeFolder::get_folder_id(
+                get_string_from_language($ownerlang, 'feedbackattachdirname', 'view'),
+                get_string_from_language($ownerlang, 'feedbackattachdirdesc', 'view'),
+                null, true, $owner
+            );
+
+            $attachment = (object) array(
+                'owner'       => $owner,
+                'parent'      => $folderid,
+                'title'       => ArtefactTypeFileBase::get_new_file_title($values['attachment']['name'], $folderid, $owner),
+                'size'        => $values['attachment']['size'],
+                'filetype'    => $values['attachment']['type'],
+                'oldextensin' => $um->original_filename_extension(),
+                'description' => get_string_from_language(
+                    $ownerlang,
+                    'feedbackonviewbytutorofgroup',
+                    'view',
+                    $view->get('title'),
+                    display_name($USER),
+                    get_field('group', 'name', 'id', $groupid)
+                ),
+            );
+
+            try {
+                $data->attachment = ArtefactTypeFile::save_uploaded_file('attachment', $attachment);
+            }
+            catch (QuotaExceededException $e) {}
+        }
+    }
+
     insert_record($table, $data, 'id', true);
+
     require_once('activity.php');
     unset($data->id);
     activity_occurred('feedback', $data);
+
+    db_commit();
+
     if ($artefact) {
         $goto = get_config('wwwroot') . 'view/artefact.php?artefact=' . $artefact->get('id') . '&view='.$view->get('id');
     }
