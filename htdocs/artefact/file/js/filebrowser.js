@@ -185,11 +185,26 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         replaceChildNodes($('uploadstatusline'+data.uploadnumber), newmessage);
     }
 
+    this.hide_edit_form = function () {
+        var editrow = $(self.id + '_edit_row');
+        if (!hasElementClass(editrow, 'hidden')) {
+            addElementClass(editrow, 'hidden');
+            // Reconnect the old edit button to open the form
+            forEach(getElementsByTagAndClassName('button', null, editrow.previousSibling), function (elem) {
+                var name = getNodeAttribute(elem, 'name').match(new RegExp('^' + self.id + "_([a-z]+)\\[(\\d+)\\]$"));
+                if (name[1] == 'edit') {
+                    disconnectAll(elem);
+                    connect(elem, 'onclick', self.edit_form);
+                }
+            });
+        }
+    }
+
     this.edit_form = function (e) {
         e.stop();
         // In IE, this.value is set to the button text
         var id = getNodeAttribute(this, 'name').replace(/.*_edit\[(\d+)\]$/, '$1');
-        addElementClass(self.id + '_edit_row', 'hidden');
+        self.hide_edit_form();
         $(self.id + '_edit_heading').innerHTML = self.filedata[id].artefacttype == 'folder' ? get_string('editfolder') : get_string('editfile');
         $(self.id + '_edit_title').value = self.filedata[id].title;
         $(self.id + '_edit_description').value = self.filedata[id].description == null ? '' : self.filedata[id].description;
@@ -207,6 +222,17 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         var this_row = getFirstParentByTagAndClassName(this, 'tr');
         insertSiblingNodesAfter(this_row, edit_row);
         removeElementClass(edit_row, 'hidden');
+
+        // Make the edit button close the form again
+        disconnectAll(this);
+        connect(this, 'onclick', function (e) {
+            e.stop();
+            addElementClass(self.id + '_edit_row', 'hidden');
+            disconnectAll(this);
+            connect(this, 'onclick', self.edit_form);
+            return false;
+        });
+
         return false;
     }
 
@@ -233,7 +259,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             });
             connect(self.id + '_edit_cancel', 'onclick', function (e) {
                 e.stop();
-                addElementClass(self.id + '_edit_row', 'hidden');
+                self.hide_edit_form();
                 return false;
             });
             connect(self.id + '_edit_artefact', 'onclick', self.edit_submit);
