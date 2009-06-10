@@ -1256,15 +1256,14 @@ function get_random_key($length=16) {
  * Configures a default form
  */
 function pieform_configure() {
-    global $USER;
-    $theme = ($USER->get('theme')) ? $USER->get('theme') : 'raw';
-    require(get_config('docroot') . 'theme/' . $theme . '/config.php');
+    global $USER, $THEME;
+    $renderer = $THEME->formrenderer;
     return array(
         'method'    => 'post',
         'action'    => '',
         'language'  => current_language(),
         'autofocus' => true,
-        'renderer'  => (isset($theme->formrenderer)) ? $theme->formrenderer : 'table',
+        'renderer'  => $renderer,
         'requiredmarker' => true,
         'elementclasses' => true,
         'descriptionintwocells' => true,
