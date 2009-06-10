@@ -103,7 +103,7 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
 
     $theme_list = array();
 
-    $smarty->assign('searchform', searchform());
+    $smarty->assign('searchform', user_search_form());
     
     if (function_exists('pieform_get_headdata')) {
         $headers = array_merge($headers, pieform_get_headdata());
@@ -1980,10 +1980,14 @@ function hsc ($text) {
     return htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
 }
 
-function searchform() {
+/**
+ * Builds the pieform for the user search, normally found in the header of most 
+ * themes
+ */
+function user_search_form() {
     require_once('pieforms/pieform.php');
     return pieform(array(
-        'name'                => 'searchform',
+        'name'                => 'usf',
         'action'              => get_config('wwwroot') . 'user/find.php',
         'renderer'            => 'oneline',
         'autofocus'           => false,
@@ -1992,12 +1996,11 @@ function searchform() {
             'query' => array(
                 'type'           => 'text',
                 'defaultvalue'   => get_string('searchusers'),
-                'class'          => 'emptyonfocus'
+                'class'          => 'emptyonfocus',
             ),
             'submit' => array(
                 'type' => 'submit',
                 'value' => get_string('go'),
-                //'src'  => theme_get_url('images/btn_search_off.gif')
             )
         )
     ));
