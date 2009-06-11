@@ -25,7 +25,7 @@
 
 $theme = new StdClass;
 
-$theme->name   = 'Default';
-$theme->parent = 'raw';
+$theme->displayname = 'Default';
+$theme->parent      = 'raw';
 
 ?>
