@@ -129,7 +129,7 @@ function contactus_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('page_content', $contactform);
-$smarty->display('sitepage.tpl');
+$smarty->assign('contactform', $contactform);
+$smarty->display('contact.tpl');
 
 ?>
