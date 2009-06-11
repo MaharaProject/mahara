@@ -420,14 +420,14 @@ EOF;
         if($USER->is_logged_in()) {
             $SIDEBLOCKS[] = array(
                 'name'   => 'profile',
-                'id'     => 'sb_profile',
+                'id'     => 'sb-profile',
                 'weight' => -20,
                 'data'   => profile_sideblock()
             );
             if (get_config('showonlineuserssideblock')) {
                 $SIDEBLOCKS[] = array(
                     'name'   => 'onlineusers',
-                    'id'     => 'sb_onlineusers',
+                    'id'     => 'sb-onlineusers',
                     'weight' => -10,
                     'data'   => onlineusers_sideblock(),
                 );
@@ -437,7 +437,7 @@ EOF;
         if(defined('GROUP')) {
             $SIDEBLOCKS[] = array(
                 'name'   => 'group',
-                'id'     => 'sb_groupnav',
+                'id'     => 'sb-groupnav',
                 'weight' => -10,
                 'data'   => group_sideblock()
             );
