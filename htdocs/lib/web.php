@@ -969,74 +969,10 @@ function quotestrings($strings) {
  * and potentially more stuff later ( like mime header to send (html vs xhtml))
  * @return object
  */
-
 function theme_setup() {
-    
-    static $theme;
-
-    if (!empty($theme)) {
-        return $theme;
-    }
-    
-    $theme = new StdClass;
-    global $USER;
-    if (!empty($USER)) {
-        $theme->theme = $USER->get('theme');
-    }
-    if (empty($theme->theme)) {
-        $theme->theme = get_config('theme');
-    }
-    $theme->path = get_config('docroot') . 'theme/' . $theme->theme . '/';
-    $theme->template_dir = array($theme->path . 'templates/');
-    $theme->inheritance = array($theme->theme);
-
-    $parent = $theme->theme;
-
-    while (true) {
-        if (!$parent = theme_get_parent($parent)) {
-            break;
-        }
-        if ($parent != 'raw') {
-            $theme->template_dir[] = get_config('docroot') . 'theme/' . $parent . '/templates/';
-            $theme->inheritance[] = $parent;
-        }
-    }
-
-    // always put the raw theme at the top of the tree, unless we're already it
-    // Logic here: If you want your theme to be _completely_ independent (e.g. 
-    // you are happy to write/copy the templates etc), then set $theme->parent 
-    // = null; in your theme config.php.
-    //
-    // If you don't set $theme->parent to anything, then the raw theme will
-    // be assumed to be the parent.
-    //
-    // You can of course set $theme->parent to be another theme if you want
-    if (!is_null($parent) && $theme->theme != 'raw') {
-        $theme->template_dir[] = get_config('docroot')  . 'theme/raw/templates/';
-        $theme->inheritance[] = 'raw';
-    }
-
-    return $theme;
-}
-
-/** 
- * helper function to walk up the inheritance tree and find a parent
- * @param $currtheme the name of the theme to find the parent for
- * @return parent name or false
- */
-function theme_get_parent($currtheme) {
-
-    // look for a config file 
-    if (is_readable(get_config('docroot') . 'theme/' . $currtheme . '/config.php')) {
-        require(get_config('docroot') . 'theme/' . $currtheme. '/config.php');
-        if (!empty($theme->parent) && is_dir(get_config('docroot') . 'theme/' . $theme->parent)) {
-            return $theme->parent;
-        }
-        if (array_key_exists('parent', $theme) && is_null($theme->parent)) {
-            return null;
-        }
-    }
-    return false;
+    global $THEME;
+    log_warn("theme_setup() is deprecated - please use the global \$THEME object instead");
+    return $THEME;
 }
 
 /** 
@@ -1046,23 +982,14 @@ function theme_get_parent($currtheme) {
  * @param $pluginlocation path to plugin relative to docroot
  */
 function theme_get_url($location, $pluginlocation='', $all = false) {
-    $theme = theme_setup();
-    $list = array();
-
-    foreach ($theme->inheritance as $themedir) {
-        if (is_readable(get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $location)) {
-            if ($all) {
-                $list[] = get_config('wwwroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $location;
-            }
-            else {
-                return get_config('wwwroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $location;
-            }
-        }
+    global $THEME;
+    log_warn("theme_get_url() is deprecated: Use \$THEME->get_url() instead");
+    $plugintype = $pluginname = '';
+    if ($pluginlocation) {
+        list($plugintype, $pluginname) = explode('/', $pluginlocation);
+        $pluginname = substr($pluginname, 0, -1);
     }
-    if ($all) {
-        return $list;
-    }
-    log_debug('nothing to return ' . $location . ' and ' . $pluginlocation); // temporary - until the theming rework is over
+    return $THEME->get_url($location, $all, $plugintype, $pluginname);
 }
 
 /** 
@@ -1072,23 +999,14 @@ function theme_get_url($location, $pluginlocation='', $all = false) {
  * @param $pluginlocation path to plugin relative to docroot
  */
 function theme_get_path($location, $pluginlocation='', $all=false) {
-    $theme = theme_setup();
-    $list = array();
-
-    foreach ($theme->inheritance as $themedir) {
-        if (is_readable(get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $location)) {
-            if ($all) {
-                $list[$themedir] = get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $location;
-            }
-            else {
-                return get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $location;
-            }
-        }
+    global $THEME;
+    log_warn("theme_get_path() is deprecated: Use \$THEME->get_path() instead");
+    $plugintype = $pluginname = '';
+    if ($pluginlocation) {
+        list($plugintype, $pluginname) = explode('/', $pluginlocation);
+        $pluginname = substr($pluginname, 0, -1);
     }
-
-    if ($all) {
-        return $list;
-    }
+    return $THEME->get_path($location, $all, $plugintype, $pluginname);
 }
 
 /**

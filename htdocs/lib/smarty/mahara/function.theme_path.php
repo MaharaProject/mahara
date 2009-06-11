@@ -20,12 +20,15 @@
  * @return Internationalized string
  */
 function smarty_function_theme_path($params, &$smarty) {
+    global $THEME;
+    log_warn("The smarty modifier theme_path is deprecated: please use theme_url");
     
-    if (!isset($params['pluginlocation'])) {
-        $params['pluginlocation'] = '';
+    $plugintype = $pluginname = '';
+    if (isset($params['pluginlocation'])) {
+        list($plugintype, $pluginname) = explode('/', $params['pluginlocation']);
     }
 
-    return theme_get_url($params['location'], $params['pluginlocation']);
+    return $THEME->get_url($params['location'], false, $plugintype, $pluginname);
 }
 
 ?>
