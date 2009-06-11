@@ -542,6 +542,16 @@ class Theme {
     public $formrenderer = '';
 
     /**
+     * Directories where to look for templates by default
+     */
+    public $templatedirs = array();
+
+    /**
+     * Theme inheritance path from this theme to 'raw'
+     */
+    public $inheritance = array();
+
+    /**
      * What unit the left/center/right column widths are in. 'pixels' or 'percent'
      */
     public $columnwidthunits    = '';
@@ -640,6 +650,9 @@ class Theme {
             $theme->parent = 'raw';
         }
 
+        $this->templatedirs[] = get_config('docroot') . 'theme/' . $this->basename . '/templates/';
+        $this->inheritance[]  = $this->basename;
+
         // Now go through the theme hierarchy assigning variables from the 
         // parent themes
         $currenttheme = $this->basename;
@@ -652,6 +665,8 @@ class Theme {
                     $this->$key = $value;
                 }
             }
+            $this->templatedirs[] = get_config('docroot') . 'theme/' . $currenttheme . '/templates/';
+            $this->inheritance[]  = $currenttheme;
         }
     }
 
