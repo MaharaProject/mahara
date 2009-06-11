@@ -30,12 +30,12 @@
     <style type="text/css">
 {$THEME->get_column_css($PAGELAYOUT)}
     </style>
-    <link rel="stylesheet" type="text/css" href="{theme_path location='style/print.css'}" media="print">
+    <link rel="stylesheet" type="text/css" href="{theme_url filename='style/print.css'}" media="print">
     <script type="text/javascript" src="{$WWWROOT}js/css.js"></script>
     <link rel="shortcut icon" href="{$WWWROOT}favicon.ico" type="image/vnd.microsoft.icon">
 </head>
 <body>
-{if $USERMASQUERADING}<div class="sitemessage"><img src="{theme_path location='images/icon_problem.gif'}" alt="">{$masqueradedetails} {$becomeyouagain}</div>{/if}
+{if $USERMASQUERADING}<div class="sitemessage"><img src="{theme_url filename='images/icon_problem.gif'}" alt="">{$masqueradedetails} {$becomeyouagain}</div>{/if}
 {if $SITECLOSED}<div class="sitemessage center">{$SITECLOSED}</div>{/if}
 <div id="container">
     <div id="loading-box"></div>
