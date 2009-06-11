@@ -661,7 +661,7 @@ class Theme {
             $parentconfigfile = get_config('docroot') . 'theme/' . $currenttheme . '/themeconfig.php';
             require($parentconfigfile);
             foreach (get_object_vars($theme) as $key => $value) {
-                if (!isset($this->$key)) {
+                if (!isset($this->$key) || !$this->$key) {
                     $this->$key = $value;
                 }
             }
