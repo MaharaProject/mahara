@@ -79,7 +79,7 @@ function serve_file($path, $filename, $mimetype, $options=array()) {
         $mimetype = 'application/octet-stream';
     }
 
-    if (!$mimetype || (!is_image_mime_type($mimetype) && (isset($_SERVER['HTTP_USER_AGENT']) && false !== strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE')))) {
+    if (!$mimetype) {
         $mimetype = 'application/forcedownload';
     }
 
