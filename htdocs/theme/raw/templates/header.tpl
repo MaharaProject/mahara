@@ -109,3 +109,7 @@
 {else}
     TODO: 1 column layout
 {/if}
+            {insert name="messages"}
+
+{if $PAGEHEADING}           <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON}</span>{/if}</h1>
+{/if}
