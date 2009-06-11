@@ -26,7 +26,7 @@
 
 defined('INTERNAL') || die();
 
-$string['aboutdefaultcontent'] = '<h2>About Mahara</h2>
+$string['aboutdefaultcontent'] = '<h1>About Mahara</h1>
 
 <p>Established in 2006, Mahara is the result of a collaborative venture funded by New Zealand\'s Tertiary Education Commission\'s e-learning Collaborative Development Fund (eCDF), involving Massey University, Auckland University of Technology, The Open Polytechnic of New Zealand and Victoria University of Wellington.</p>
 
@@ -45,33 +45,33 @@ $string['aboutdefaultcontent'] = '<h2>About Mahara</h2>
 <p>Please feel free to <a href="contact.php">Contact Us</a> if you have any questions regarding Mahara.</p>
 
 <p><a href="http://mahara.org">http://mahara.org</a></p>';
-$string['homedefaultcontent'] = '<h2>Welcome to Mahara</h2>
+$string['homedefaultcontent'] = '<h1>Welcome to Mahara</h1>
 
 <p>Mahara is a fully featured electronic portfolio, weblog, resume builder and social networking system, connecting users and creating online communities.  Mahara provides you with the tools to set up a personal learning and development environment.</p>
 
 <p>For more information you can read <a href="about.php">About</a> Mahara or alternatively please feel free to <a href="contact.php">Contact Us</a>.</p>';
-$string['loggedouthomedefaultcontent'] = '<h2>Welcome to Mahara</h2>
+$string['loggedouthomedefaultcontent'] = '<h1>Welcome to Mahara</h1>
 
 <p>Mahara is a fully featured electronic portfolio, weblog, resume builder and social networking system, connecting users and creating online communities.  Mahara provides you with the tools to set up a personal learning and development environment.</p>
 
 <p>For more information you can read <a href="about.php">About</a> Mahara or alternatively please feel free to <a href="contact.php">Contact Us</a>.</p>';
-$string['privacydefaultcontent'] = '<h2>Privacy Statement</h2>
+$string['privacydefaultcontent'] = '<h1>Privacy Statement</h1>
     
-<h3>Introduction</h3>
+<h2>Introduction</h2>
 
 <p>We are committed to protecting your privacy and providing users with a safe and functional personal learning and development environment. This Statement of Privacy applies to the Mahara site and governs data collection and usage.</p>
 
-<h3>Collection of personal information</h3>
+<h2>Collection of personal information</h2>
 
 <p>By registering on Mahara you will be required to provide us with a certain amount of personal information.  We will not disclose any of your personal information to any other person or organisation without your written consent unless authorised or required by law.</p>
 
-<h3>Cookies</h3>
+<h2>Cookies</h2>
 
 <p>In order to use Mahara you must have cookies enabled within your browser.  Please note that no personal information is stored within the cookies used in Mahara.</p>
 
 <p>A cookie is a data file that is placed on your computer by a webpage server. Cookies are not programs, spyware or viruses and are unable to perform any operation by themselves.</p>
 
-<h3>How we use your personal information</h3>
+<h2>How we use your personal information</h2>
 
 <p>We will only use your personal information for the purpose for which you provided it to us.</p>
 
@@ -79,24 +79,24 @@ $string['privacydefaultcontent'] = '<h2>Privacy Statement</h2>
 
 <p>We may also collect system usage for statistical purposes however this data will not identify any individual.</p>
 
-<h3>Storage and security of your personal information</h3>
+<h2>Storage and security of your personal information</h2>
 
 <p>We will take all reasonable steps to ensure that any personal information we hold is not subject to loss or misuse or unauthorised access, disclosure or alteration.</p>
 
 <p>In order to help protect your personal information, please do not disclose your Username or Password to person other than the Site Administrator.</p>
 
-<h3>Changes to this privacy statement</h3>
+<h2>Changes to this privacy statement</h2>
 
 <p>We may occasionally make adjustments to our privacy statement to reflect changes to the system and in response to customer feedback. As such we suggest you check the Privacy Statement each time you visit this site.</p>
 
-<h3>Contact</h3>
+<h2>Contact</h2>
 
 <p>If you have any questions regarding this Statement or believe we have not adhered to the above criteria, please <a href="contact.php">Contact Us</a> and we will use all reasonable efforts to remedy the issue.</p>';
-$string['termsandconditionsdefaultcontent'] = '<h2>Terms and Conditions</h2>
+$string['termsandconditionsdefaultcontent'] = '<h1>Terms and Conditions</h1>
 
 <p>By using [Mahara] you are agreeing to the Terms and Conditions given below.</p>
 
-<h3>Our obligations</h3>
+<h2>Our obligations</h2>
 
 <p>The [Mahara] Site Administrators will undertake all reasonable steps to provide all users with a safe , secure and operational electronic portfolio system.  If at any time you feel your rights as a user have not been upheld or you have any questions regarding the below, please <a href="contact.php">Contact Us</a> immediately.</p>
 
@@ -106,7 +106,7 @@ $string['termsandconditionsdefaultcontent'] = '<h2>Terms and Conditions</h2>
 
 <p>Site Administrators may access your portfolio and its contents at anytime, however they will avoid doing so unless specifically required to support your use of [Mahara] or as per these Terms and Conditions.</p>
 
-<h3>Your obligations</h3>
+<h2>Your obligations</h2>
 
 <p> The <a href="privacy.php">Privacy Statement</a> should be considered an extension of these Terms and Conditions and be read by all users.</p>
 
