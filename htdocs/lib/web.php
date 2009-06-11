@@ -655,8 +655,6 @@ class Theme {
                 }
             }
         }
-
-        log_debug($this);
     }
 
     /**
