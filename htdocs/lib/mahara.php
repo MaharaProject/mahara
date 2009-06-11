@@ -498,12 +498,10 @@ function get_themes() {
     }
     while (false !== ($subdir = readdir($themedir))) {
         if ($subdir != "." && $subdir != ".." && is_dir($themebase . $subdir)) {
-            $config_path = $themebase . $subdir . '/config.php';
+            $config_path = $themebase . $subdir . '/themeconfig.php';
             if (is_readable($config_path)) {
                 require($config_path);
-                if (isset($theme->name)) {
-                    $themes[$subdir] = $theme->name;
-                }
+                $themes[$subdir] = isset($theme->displayname) ? $theme->displayname : $subdir;
             }
         }
     }
