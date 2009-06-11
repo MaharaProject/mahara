@@ -12,6 +12,7 @@
  */
 
 function smarty_resource_artefact_source ($tpl_name, &$tpl_source, &$smarty_obj) {
+    global $THEME;
     $name = explode(':', $tpl_name);
 
     $plugin_name = $name[0];
@@ -20,7 +21,7 @@ function smarty_resource_artefact_source ($tpl_name, &$tpl_source, &$smarty_obj)
 
     $basedir = get_config('docroot') . 'artefact/' . $plugin_name . '/theme/';
 
-    foreach (theme_setup()->inheritance as $theme) {
+    foreach ($THEME->inheritance as $theme) {
         $filename = $basedir . $theme . '/' . $plugin_path;
         if (is_readable($filename)) {
             $tpl_source = file_get_contents($filename);
@@ -32,6 +33,7 @@ function smarty_resource_artefact_source ($tpl_name, &$tpl_source, &$smarty_obj)
 }
 
 function smarty_resource_artefact_timestamp($tpl_name, &$tpl_timestamp, &$smarty_obj) {
+    global $THEME;
     $name = explode(':', $tpl_name);
 
     $plugin_name = $name[0];
@@ -39,7 +41,7 @@ function smarty_resource_artefact_timestamp($tpl_name, &$tpl_timestamp, &$smarty
 
     $basedir = get_config('docroot') . 'artefact/' . $plugin_name . '/theme/';
 
-    foreach (theme_setup()->inheritance as $theme) {
+    foreach ($THEME->inheritance as $theme) {
         $filename = $basedir . $theme . '/' . $plugin_path;
         if (is_readable($filename)) {
             $tpl_timestamp = filemtime($filename);

@@ -32,15 +32,14 @@ function &smarty_core() {
     require_once('smarty/libs/Smarty.class.php');
     $smarty =& new Smarty();
     
-    $theme = theme_setup();
     $themepaths = themepaths();
 
-    $smarty->template_dir = $theme->template_dir;
+    $smarty->template_dir = $THEME->templatedirs;
 
-    check_dir_exists(get_config('dataroot') . 'smarty/compile/' . $theme->theme);
-    check_dir_exists(get_config('dataroot') . 'smarty/cache/' . $theme->theme);
-    $smarty->compile_dir   = get_config('dataroot') . 'smarty/compile/' . $theme->theme;
-    $smarty->cache_dir     = get_config('dataroot') . 'smarty/cache/' . $theme->theme;
+    check_dir_exists(get_config('dataroot') . 'smarty/compile/' . $THEME->basename);
+    check_dir_exists(get_config('dataroot') . 'smarty/cache/' . $THEME->basename);
+    $smarty->compile_dir   = get_config('dataroot') . 'smarty/compile/' . $THEME->basename;
+    $smarty->cache_dir     = get_config('dataroot') . 'smarty/cache/' . $THEME->basename;
     $smarty->plugins_dir[] = get_config('libroot') . 'smarty/mahara/';
 
     $smarty->assign('THEME', $THEME);
@@ -48,7 +47,7 @@ function &smarty_core() {
 
     $theme_list = array();
     foreach ($themepaths['mahara'] as $themepath) {
-        $theme_list[$themepath] = theme_get_url($themepath);
+        $theme_list[$themepath] = $THEME->get_url($themepath);
     }
     $smarty->assign('THEMELIST', json_encode($theme_list));
 
@@ -81,7 +80,7 @@ function &smarty_core() {
 
 //smarty(array('js/tablerenderer.js', 'artefact/file/js/filebrowser.js'))
 function &smarty($javascript = array(), $headers = array(), $pagestrings = array(), $extraconfig = array()) {
-    global $USER, $SESSION;
+    global $USER, $SESSION, $THEME;
 
     if (!is_array($headers)) {
         $headers = array();
@@ -122,7 +121,7 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
             if (!$found_tinymce) {
                 $found_tinymce = $check[$key];
                 $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
-                $content_css = json_encode(theme_get_url('style/tinymce.css'));
+                $content_css = json_encode($THEME->get_url('style/tinymce.css'));
                 $language = substr(current_language(), 0, 2);
                 $execcommand = '';
                 if (isset($extraconfig['tinymcecommandcallback'])) {
@@ -308,9 +307,9 @@ EOF;
     $stringjs .= '</script>';
 
     // stylesheet set up - if we're in a plugin also get its stylesheet
-    $stylesheets = array_reverse(theme_get_url('style/style.css', null, true));
+    $stylesheets = array_reverse($THEME->get_url('style/style.css', true));
     if (defined('SECTION_PLUGINTYPE') && defined('SECTION_PLUGINNAME') && SECTION_PLUGINTYPE != 'core') {
-        if ($pluginsheets = theme_get_url('style/style.css', SECTION_PLUGINTYPE . '/' . SECTION_PLUGINNAME . '/', true)) {
+        if ($pluginsheets = $THEME->get_url('style/style.css', true, SECTION_PLUGINTYPE, SECTION_PLUGINNAME)) {
             $stylesheets = array_merge($stylesheets, array_reverse($pluginsheets));
         }
     }
@@ -793,6 +792,46 @@ EOF;
         }
 
         return $css;
+    }
+
+    /**
+     * stuff
+     */
+    public function get_url($filename, $all=false, $plugintype='', $pluginname='') {
+        return $this->_get_path($filename, $all, $plugintype, $pluginname, get_config('wwwroot'));
+    }
+
+    public function get_path($filename, $all=false, $plugintype='', $pluginname='') {
+        return $this->_get_path($filename, $all, $plugintype, $pluginname, get_config('docroot'));
+    }
+
+    private function _get_path($filename, $all, $plugintype, $pluginname, $returnprefix) {
+        $list = array();
+        $pluginlocation = '';
+        if ($plugintype && $pluginname) {
+            $pluginlocation = "$plugintype/$pluginname/";
+        }
+
+        foreach ($this->inheritance as $themedir) {
+            if (is_readable(get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $filename)) {
+                if ($all) {
+                    $list[] = $returnprefix . $pluginlocation . 'theme/' . $themedir . '/static/' . $filename;
+                }
+                else {
+                    return $returnprefix . $pluginlocation . 'theme/' . $themedir . '/static/' . $filename;
+                }
+            }
+        }
+        if ($all) {
+            return $list;
+        }
+
+        $extra = '';
+        if ($pluginlocation) {
+            $extra = ", plugin $plugintype/$pluginname";
+        }
+        log_debug("Missing file in theme {$this->basename}{$extra}: $filename");
+        return $returnprefix . $pluginlocation . 'theme/' . $themedir . '/static/' . $filename;
     }
 
 }
@@ -1726,6 +1765,8 @@ function getoptions_country() {
  */
 
 function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $section='') {
+    global $THEME;
+    // TODO: remove the hax for ie, I'm sure we can do this with a PNG file
     // I see no reason why IE has to drag the quality of the interwebs down with it
     $imageext = (isset($_SERVER['HTTP_USER_AGENT']) && false !== stripos($_SERVER['HTTP_USER_AGENT'], 'msie 6.0')) ? 'gif' : 'png';
     return ' <span class="help"><a href="" onclick="'. 
@@ -1735,7 +1776,7 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $sec
             json_encode($pluginname) . ',' . json_encode($page) . ',' . 
             json_encode($section)
             . ',this); return false;'
-        ) . '"><img src="' . theme_get_url('images/icon_help.' . $imageext) . '" alt="?"></a></span>';
+        ) . '"><img src="' . $THEME->get_url('images/icon_help.' . $imageext) . '" alt="?"></a></span>';
 }
 
 function pieform_get_help(Pieform $form, $element) {
