@@ -1,9 +1,3 @@
 {include file="header.tpl"}
-
-{include file="sidebar.tpl"}
-
-{include file="columnleftstart.tpl"}
-    		{$page_content}
-{include file="columnleftend.tpl"}
-
+{$page_content}
 {include file="footer.tpl"}
