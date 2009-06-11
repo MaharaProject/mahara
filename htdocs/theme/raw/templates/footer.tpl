@@ -3,10 +3,10 @@
 {/if}
             </div>
             <div class="col2">
-                {include file="sidebar.tpl" blocks=$SIDEBLOCKS.left}
+{include file="sidebar.tpl" blocks=$SIDEBLOCKS.left}
             </div>
             <div class="col3">
-                {include file="sidebar.tpl" blocks=$SIDEBLOCKS.right}
+{include file="sidebar.tpl" blocks=$SIDEBLOCKS.right}
             </div>
         </div>
     </div>
@@ -16,7 +16,7 @@
 {/if}
         </div>
         <div class="col2">
-            {include file="sidebar.tpl" blocks=$SIDEBLOCKS.left}
+{include file="sidebar.tpl" blocks=$SIDEBLOCKS.left}
         </div>
     </div>
 </div>
@@ -25,7 +25,7 @@
 {/if}
         </div>
         <div class="col2">
-            {include file="sidebar.tpl" blocks=$SIDEBLOCKS.right}
+{include file="sidebar.tpl" blocks=$SIDEBLOCKS.right}
         </div>
     </div>
 </div>
