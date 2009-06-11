@@ -31,8 +31,7 @@ define('SECTION_PLUGINNAME', 'site');
 define('SECTION_PAGE', 'contact');
 require('init.php');
 require_once('pieforms/pieform.php');
-$contactus = get_string('contactus');
-define('TITLE', $contactus);
+define('TITLE', get_string('contactus'));
 
 if ($USER->is_logged_in()) {
     $userid = $USER->get('id');
@@ -129,9 +128,8 @@ function contactus_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('page_content', $contactform);
-$smarty->assign('searchform', searchform());
-$smarty->assign('heading', $contactus);
 $smarty->display('sitepage.tpl');
 
 ?>

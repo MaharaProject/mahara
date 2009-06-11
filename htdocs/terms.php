@@ -31,8 +31,6 @@ define('TITLE', get_string('termsandconditions'));
 
 $smarty = smarty();
 $smarty->assign('page_content', get_site_page_content('termsandconditions'));
-$smarty->assign('heading', null);
-$smarty->assign('searchform', searchform());
 $smarty->display('sitepage.tpl');
 
 ?>

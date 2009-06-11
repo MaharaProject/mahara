@@ -95,6 +95,7 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
     $SIDEBLOCKS = array();
 
     $smarty = smarty_core();
+    $smarty->register_function('user_search_form', 'user_search_form');
 
     $wwwroot = get_config('wwwroot');
     // NOTE: not using jswwwroot - it seems to wreck image paths if you 
@@ -102,8 +103,6 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
     $jswwwroot = json_encode($wwwroot);
 
     $theme_list = array();
-
-    $smarty->assign('searchform', user_search_form());
     
     if (function_exists('pieform_get_headdata')) {
         $headers = array_merge($headers, pieform_get_headdata());

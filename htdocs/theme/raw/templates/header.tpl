@@ -40,9 +40,9 @@
 <div id="container">
     <div id="loading-box"></div>
     <div id="top-wrapper">
-        <h1 id="site-logo"><a href="{$WWWROOT}"><img src="{theme_path location='images/site-logo.png'}" alt="{$sitename|escape}"></a></h1>
-{if !$nosearch && $LOGGEDIN}        {$searchform}{/if}
-{if defined('MENUITEM') && MENUITEM == '' && !$LOGGEDIN && (count($LANGUAGES) > 1)}
+        <h1 id="site-logo"><a href="{$WWWROOT}"><img src="{theme_url filename='images/site-logo.png'}" alt="{$sitename|escape}"></a></h1>
+{if !$nosearch && $LOGGEDIN}        {user_search_form}{/if}
+{if !$nosearch && !$LOGGEDIN && (count($LANGUAGES) > 1)}
         <form id="language-select" method="post" action="">
             <div>
                 <label>{str tag=language}: </label>
