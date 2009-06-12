@@ -123,7 +123,6 @@ function pieform_element_filebrowser(Pieform $form, $element) {
 {$prefix}.filedata = {$fileliststr};";
     if ($config['select']) {
         $initjs .= "{$prefix}.selecteddata = {$selectedliststr};";
-        $initjs .= "forEach(getElementsByTagAndClassName('button', 'unselect', '{$prefix}_selectlist'), function (elem) { removeElementClass(elem, 'hidden'); });";
     }
 
     $_PIEFORM_FILEBROWSERS[$prefix]['views_js'] = $initjs;

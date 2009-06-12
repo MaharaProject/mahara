@@ -190,9 +190,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         if (!hasElementClass(editrow, 'hidden')) {
             addElementClass(editrow, 'hidden');
             // Reconnect the old edit button to open the form
-            forEach(getElementsByTagAndClassName('button', null, editrow.previousSibling), function (elem) {
+            forEach(getElementsByTagAndClassName('input', null, editrow.previousSibling), function (elem) {
                 var name = getNodeAttribute(elem, 'name').match(new RegExp('^' + self.id + "_([a-z]+)\\[(\\d+)\\]$"));
-                if (name[1] == 'edit') {
+                if (name && name[1] && name[1] == 'edit') {
                     disconnectAll(elem);
                     connect(elem, 'onclick', self.edit_form);
                 }
@@ -240,20 +240,22 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
     this.browse_init = function () {
         if (self.config.edit) {
-            forEach(getElementsByTagAndClassName('button', null, 'filelist'), function (elem) {
+            forEach(getElementsByTagAndClassName('input', null, 'filelist'), function (elem) {
                 var name = getNodeAttribute(elem, 'name').match(new RegExp('^' + self.id + "_([a-z]+)\\[(\\d+)\\]$"));
-                if (name[1] == 'edit') {
-                    connect(elem, 'onclick', self.edit_form);
-                }
-                else if (name[1] == 'delete') {
-                    var id = name[2];
-                    if (self.filedata[id].attachcount > 0) {
-                        connect(elem, 'onclick', function (e) {
-                            if (!confirm(get_string('detachfilewarning', self.filedata[id].attachcount))) {
-                                e.stop();
-                                return false;
-                            }
-                        });
+                if (name && name[1]) {
+                    if (name[1] == 'edit') {
+                        connect(elem, 'onclick', self.edit_form);
+                    }
+                    else if (name[1] == 'delete') {
+                        var id = name[2];
+                        if (self.filedata[id].attachcount > 0) {
+                            connect(elem, 'onclick', function (e) {
+                                if (!confirm(get_string('detachfilewarning', self.filedata[id].attachcount))) {
+                                    e.stop();
+                                    return false;
+                                }
+                            });
+                        }
                     }
                 }
             });
@@ -405,14 +407,14 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 return false;
             });
         }
-        forEach(getElementsByTagAndClassName('button', 'unselect', self.id + '_selectlist'), function (elem) {
+        forEach(getElementsByTagAndClassName('input', 'unselect', self.id + '_selectlist'), function (elem) {
             connect(elem, 'onclick', self.unselect);
         });
         self.connect_select_buttons();
     }
 
     this.connect_select_buttons = function () {
-        forEach(getElementsByTagAndClassName('button', 'select', 'filelist'), function (elem) {
+        forEach(getElementsByTagAndClassName('input', 'select', 'filelist'), function (elem) {
             var id = elem.name.replace(/.*_select\[(\d+)\]$/, '$1');
             if (self.selecteddata[id]) {
                 addElementClass(elem, 'hidden');
@@ -452,7 +454,6 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             rows = [];
             self.selecteddata = {};
         }
-        // var remove = BUTTON({'type':'submit', 'class':'button small unselect', 'name':'unselect[' + id + ']', 'value':id}, get_string('remove')); // IE problem ?
         var remove = INPUT({'type': 'submit', 'class':'button small unselect', 'name':self.id+'_unselect[' + id + ']', 'value':get_string('remove')});
         connect(remove, 'onclick', self.unselect);
         appendChildNodes(tbody, TR({'class': 'r' + rows.length % 2 + (highlight ? ' highlight-file' : '')},
@@ -543,16 +544,3 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
 }
 
-/* 
-// Check if there's already a file attached to the post with the given name
-function fileattached(filename) {
-    return some(map(function (e) { return e.childNodes[1]; }, attached.tbody.childNodes),
-                function (cell) { return scrapeText(cell) == filename; });
-}
-
-
-// Check if there's already a file attached to the post with the given id
-function fileattached_id(id) {
-    return some(attached.tbody.childNodes, function (r) { return getNodeAttribute(r,'id') == id; });
-}
-*/

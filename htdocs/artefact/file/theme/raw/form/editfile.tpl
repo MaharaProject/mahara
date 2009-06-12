@@ -63,8 +63,7 @@
 {/if}
           <tr>
             <td colspan=2>
-              <button type="submit" name="{$prefix}_update[{$fileinfo->id}]" id="{$prefix}_edit_artefact" value="{$fileinfo->id}">{str tag=savechanges section=artefact.file}</button>
-              <input type="button" class="button hidden" name="replace" value="{str tag=overwrite}" />
+              <input type="submit" name="{$prefix}_update[{$fileinfo->id}]" id="{$prefix}_edit_artefact" value="{str tag=savechanges section=artefact.file}" />
               <input type="submit" class="button" name="{$prefix}_canceledit" id="{$prefix}_edit_cancel" value="{str tag=cancel}" />
             </td>
           </tr>

@@ -20,7 +20,7 @@
     </td>
     <td>{$file->description|escape}</td>
     <td>
-       <button type="submit" class="button small unselect" name="{$prefix}_unselect[{$file->id}]" value="{$file->id}">{str tag=remove}</button>
+       <input type="submit" class="button small unselect" name="{$prefix}_unselect[{$file->id}]" value="{str tag=remove}" />
        <input type="hidden" name="{$prefix}_selected[{$file->id}]" value="{$file->id}">
     </td>
   </tr>

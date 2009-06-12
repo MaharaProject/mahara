@@ -1094,6 +1094,9 @@ function blockConfigSuccess(form, data) {
         eval(data.formelementsuccess + '(form, data)');
     }
     if (data.blockid) {
+        if (viewManager.isIE6 && data.viewid) {
+            document.location.href = config['wwwroot'] + 'view/blocks.php?id=' + data.viewid;
+        }
         viewManager.replaceConfigureBlock(data);
     }
 }

@@ -390,6 +390,7 @@ class BlockInstance {
             'message' => get_string('blockinstanceconfiguredsuccessfully', 'view'),
             'data'    => $this->render_editing(false, false, $form->submitted_by_js()),
             'blockid' => $this->get('id'),
+            'viewid'  => $this->get('view'),
         );
 
         $redirect = '/view/blocks.php?id=' . $this->get('view');
