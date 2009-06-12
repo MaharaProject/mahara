@@ -157,6 +157,10 @@ function pieform_element_date_i18n() {/*{{{*/
             'or' => 'or',
             'notspecified' => 'Niet gespecifiëerd'
         ),
+        'cs.utf8' => array(
+            'or' => 'nebo',
+            'notspecified' => 'Neurčeno'
+        ),
 
     );
 }/*}}}*/
