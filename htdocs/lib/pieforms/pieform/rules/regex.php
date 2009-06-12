@@ -63,6 +63,9 @@ function pieform_rule_regex_i18n() {/*{{{*/
         'nl.utf8' => array(
             'regex' => 'Dit veld is niet in een geldige vorm'
         ),
+        'cs.utf8' => array(
+            'regex' => 'Neplatný formát'
+        ),
 
     );
 }/*}}}*/

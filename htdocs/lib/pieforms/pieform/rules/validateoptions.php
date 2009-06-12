@@ -70,6 +70,9 @@ function pieform_rule_validateoptions_i18n() {/*{{{*/
         'nl.utf8' => array(
             'validateoptions' => 'De optie "%s" is niet geldig'
         ),
+        'cs.utf8' => array(
+            'validateoptions' => 'Neplatný výběr "%s"'
+        ),
 
     );
 }/*}}}*/

@@ -62,6 +62,9 @@ function pieform_rule_maxlength_i18n() {/*{{{*/
         'nl.utf8' => array(
             'maxlength' => 'Dit veld moet minstens %d tekens lang zijn'
         ),
+        'cs.utf8' => array(
+            'maxlength' => 'Můžete zadat nejvýše %d znaků'
+        ),
 
     );
 }/*}}}*/

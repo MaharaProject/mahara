@@ -66,6 +66,9 @@ function pieform_rule_before_i18n() {/*{{{*/
         'nl.utf8' => array(
             'before' => 'Dit kan niet na het veld "%s" zijn'
         ),
+        'cs.utf8' => array(
+            'before' => 'Zadaná hodnota nemůže být větší než v poli "%s"'
+        ),
 
     );
 }/*}}}*/

@@ -65,6 +65,9 @@ function pieform_rule_email_i18n() {/*{{{*/
         'nl.utf8' => array(
             'email' => 'E-mailadres is ongeldig'
         ),
+        'cs.utf8' => array(
+            'email' => 'Neplatná e-mailová adresa'
+        ),
 
     );
 }/*}}}*/

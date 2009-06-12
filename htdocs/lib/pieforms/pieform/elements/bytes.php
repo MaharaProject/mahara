@@ -163,6 +163,12 @@ function pieform_element_bytes_i18n() {/*{{{*/
             'megabytes'    => 'Megabytes',
             'invalidvalue' => 'Waarde moet een getal zijn',
         ),
+        'cs.utf8' => array(
+            'bytes'        => 'B',
+            'kilobytes'    => 'kB',
+            'megabytes'    => 'MB',
+            'invalidvalue' => 'Hodnota musí být číselná',
+        ),
 
     );
 }/*}}}*/

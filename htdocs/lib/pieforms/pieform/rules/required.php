@@ -62,6 +62,9 @@ function pieform_rule_required_i18n() {/*{{{*/
         'nl.utf8' => array(
             'required' => 'Dit veld is vereist'
         ),
+        'cs.utf8' => array(
+            'required' => 'Povinné pole'
+        ),
 
     );
 }/*}}}*/
