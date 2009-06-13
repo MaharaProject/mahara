@@ -1,11 +1,8 @@
 {include file='header.tpl' nosearch=true}
+            <h3 class="center"><a href="http://mahara.org">Mahara</a> {str section='admin' tag='release' args=$releaseargs} {str tag='copyright' section='admin'}</h3>
 
-{include file="columnfullstart.tpl"}
-
-			<h3 class="center"><a href="http://mahara.org">Mahara</a> {str section='admin' tag='release' args=$releaseargs} {str tag='copyright' section='admin'}</h3>
-
-            <div style="margin: 0 auto 1em; width: 30em;">
-			<h4 class="center">GNU General Public License</h4>
+            <div id="gpl-terms">
+            <h4 class="center">GNU General Public License</h4>
 <p>This program is free software; you can redistribute it and/or modify
 under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 3 of the
@@ -21,7 +18,5 @@ along with this program.  If not, see <a href="http://www.gnu.org/licenses/gpl.h
             </div>
 
             <form action="{$WWWROOT}admin/upgrade.php" method="post" class="center"><input type="submit" class="submit" value="{str tag=agreelicense section=admin}" style="font-weight: bold;"></form>
-
-{include file="columnfullend.tpl"}
 
 {include file='admin/upgradefooter.tpl'}

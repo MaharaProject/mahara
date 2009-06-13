@@ -5,6 +5,39 @@
  * This file is distributed under the same terms as Mahara itself
  */
 
+/* Installer/upgrader */
+#gpl-terms {
+    margin: 0 auto 1em;
+    width: 30em;
+}
+#jsrequiredforupgrade {
+    color: #f00;
+}
+#installer {
+    margin: 0 auto;
+    width: 90%;
+}
+#installer tr {
+    height: 2em;
+}
+#installer th {
+    vertical-align: middle;
+    border-bottom: 1px solid #aaa;
+}
+#installer tr:last-child td {
+    border-bottom: 1px solid #aaa;
+}
+#finished {
+    font-size: larger;
+    font-weight: bold;
+    margin-top: 1em;
+    text-align: center;
+    visibility: hidden;
+}
+#msgscol {
+    width: 50%;
+}
+
 /* ADMIN HOME */
 #register-site {
     text-align: left;

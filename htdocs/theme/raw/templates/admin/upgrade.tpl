@@ -1,10 +1,7 @@
 {include file='header.tpl' nosearch='true'}
-
-{include file="columnfullstart.tpl"}
-	
             <h2 class="center">{str tag=performinginstallsandupgrades section=admin}</h2>
-            <div class="center error" id="jsrequiredforupgrade">{str tag=jsrequiredforupgrade section=admin}</div>
-			<table id="installer">
+            <div class="center js-hidden" id="jsrequiredforupgrade">{str tag=jsrequiredforupgrade section=admin}</div>
+            <table id="installer" class="nojs-hidden-table">
                 <thead>
                     <tr>
                         <th>{str section=admin tag=component}</th>
@@ -28,8 +25,8 @@
                     </tr>
                 {/foreach}
                 </tbody>
-			</table>
-			<div id="finished" style="visibility: hidden; margin-top: 1em; text-align: center;">{str section=admin tag=successfullyinstalled} <a href="{$WWWROOT}">{str section=admin tag=continue}</a></div>
+            </table>
+            <div id="finished" class="nojs-hidden-block">{str section=admin tag=successfullyinstalled} <a href="{$WWWROOT}">{str section=admin tag=continue}</a></div>
 
 {include file="columnfullend.tpl"}
 
