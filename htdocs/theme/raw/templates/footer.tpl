@@ -30,7 +30,7 @@
     </div>
 </div>
 {else}
-    TODO: 1 column layout
+        </div>
 {/if}
     </div>
     <div id="footerwrap">

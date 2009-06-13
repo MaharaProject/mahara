@@ -107,7 +107,7 @@
     {/if}
         <div class="col1">
 {else}
-    TODO: 1 column layout
+        <div class="col1">
 {/if}
             {insert name="messages"}
 

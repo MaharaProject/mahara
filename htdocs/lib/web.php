@@ -804,7 +804,9 @@ EOF;
             break;
         case self::ONE_COLUMN:
             // TODO
-            $css = '';
+            $css = <<<EOF
+.col1{width:100%;}
+EOF;
             break;
         }
 
