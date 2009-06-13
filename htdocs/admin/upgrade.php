@@ -44,9 +44,9 @@ if (!$upgrades) {
     die_info(get_string('noupgrades', 'admin'));
 }
 
-$loadingicon = theme_get_url('images/loading.gif');
-$successicon = theme_get_url('images/success.gif');
-$failureicon = theme_get_url('images/failure.gif');
+$loadingicon = $THEME->get_url('images/loading.gif');
+$successicon = $THEME->get_url('images/success.gif');
+$failureicon = $THEME->get_url('images/failure.gif');
 
 $loadingstring = json_encode(get_string('upgradeloading', 'admin'));
 $installsuccessstring = json_encode(get_string('installsuccess', 'admin'));
