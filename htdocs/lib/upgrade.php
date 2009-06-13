@@ -538,6 +538,7 @@ function core_postinst() {
 }
 
 function core_install_lastcoredata_defaults() {
+    global $USER;
     db_begin();
     $institution = new StdClass;
     $institution->name = 'mahara';
@@ -595,6 +596,7 @@ function core_install_lastcoredata_defaults() {
     handle_event('createuser', $user->id);
     activity_add_admin_defaults(array($user->id));
     db_commit();
+    $USER->login('admin', 'mahara');
 
     // if we're installing, set up the block categories here and then poll the plugins.
     // if we're upgrading this happens somewhere else.  This is because of dependency issues around
