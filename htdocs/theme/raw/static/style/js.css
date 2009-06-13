@@ -5,6 +5,7 @@
  * This file is licensed under the same terms as Mahara itself
  */
 
+/* This class should be applied to things that should be hidden with JS on */
 .js-hidden {
     position: absolute;
     visibility: hidden;
@@ -12,9 +13,17 @@
     *display: none;
     *visibility: visible;
 }
+
+/* These classes should be applied to things that should be shown with JS on -
+   they're hidden by the main stylesheet by default. Pick the one that suits
+   the display type required */
 .nojs-hidden-inline {
     display: inline;
 }
 .nojs-hidden-block {
     display: block;
+}
+.nojs-hidden-table {
+    display: table;
+    /* TODO: probably need ie6/7 hack to use display: block here */
 }
