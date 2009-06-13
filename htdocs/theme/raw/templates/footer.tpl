@@ -33,7 +33,7 @@
         </div>
 {/if}
     </div>
-    <div id="footerwrap">
+    <div id="footer-wrap">
         <div id="poweredby"><a href="http://mahara.org/"><img src="{theme_url filename='images/powered-by-mahara.png'}" border="0" alt=""></a></div>
         <!-- This site is powered by Mahara, an Open Source
              ePortfolio system. Mahara is (C) 2006-2009 Catalyst IT
