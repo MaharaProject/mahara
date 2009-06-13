@@ -395,6 +395,8 @@ EOF;
         $smarty->assign('GROUPNAV', group_get_menu_tabs());
     }
 
+    $PAGELAYOUT = Theme::ONE_COLUMN;
+
     // ---------- sideblock stuff ----------
     if (!defined('INSTALLER') && (!defined('MENUITEM') || substr(MENUITEM, 0, 5) != 'admin')) {
         if (get_config('installed')) {
@@ -486,18 +488,17 @@ EOF;
         $smarty->assign('MNETUSER', $SESSION->get('mnetuser'));
         $smarty->assign('SIDEBLOCKS', $SIDEBLOCKS);
         if ($SIDEBLOCKS['left'] && $SIDEBLOCKS['right']) {
-            $layout = Theme::THREE_COLUMN;
+            $PAGELAYOUT = Theme::THREE_COLUMN;
         }
         else if ($SIDEBLOCKS['left']) {
-            $layout = Theme::LEFT_COLUMN;
+            $PAGELAYOUT = Theme::LEFT_COLUMN;
         }
         else if ($SIDEBLOCKS['right']) {
-            $layout = Theme::RIGHT_COLUMN;
+            $PAGELAYOUT = Theme::RIGHT_COLUMN;
         }
         else {
-            $layout = Theme::ONE_COLUMN;
+            $PAGELAYOUT = Theme::ONE_COLUMN;
         }
-        $smarty->assign('PAGELAYOUT', $layout);
 
         if ($USER->get('parentuser')) {
             $smarty->assign('USERMASQUERADING', true);
@@ -508,6 +509,8 @@ EOF;
                 . '</a>');
         }
     }
+
+    $smarty->assign('PAGELAYOUT', $PAGELAYOUT);
 
     return $smarty;
 }
