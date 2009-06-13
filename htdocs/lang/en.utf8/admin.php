@@ -30,7 +30,7 @@ $string['administration'] = 'Administration';
 
 // Installer
 $string['installation'] = 'Installation';
-$string['release'] = 'Release %s (%s)';
+$string['release'] = 'version %s (%s)';
 $string['copyright'] = 'Copyright &copy; 2006 onwards, Catalyst IT Ltd';
 $string['agreelicense'] = 'I agree';
 $string['component'] = 'Component or plugin';
