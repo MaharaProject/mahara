@@ -1,18 +1,12 @@
 {include file="header.tpl"}
+{if $forgotpass_form}
+            {str tag="forgotusernamepasswordtext"}
 
-{include file="columnfullstart.tpl"}
+            {$forgotpass_form}
+{/if}
+{if $forgotpasschange_form}
+            <p>{str tag="forgotpasswordenternew"}</p>
 
-			{if $forgotpass_form}
-			{str tag="forgotusernamepasswordtext"}
-	
-			{$forgotpass_form}
-			{/if}
-			
-			{if $forgotpasschange_form}
-			<p>{str tag="forgotpasswordenternew"}</p>
-			
-			{$forgotpasschange_form}
-			{/if}
-{include file="columnfullend.tpl"}
-
+            {$forgotpasschange_form}
+{/if}
 {include file="footer.tpl"}
