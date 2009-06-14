@@ -255,8 +255,8 @@ if (is_null($captcharequired) || $captcharequired) {
 }
 
 $elements['submit'] = array(
-    'type' => 'submitcancel',
-    'value' => array(get_string('register'), get_string('cancel'))
+    'type' => 'submit',
+    'value' => get_string('register'),
 );
 
 $form = array(
@@ -382,10 +382,6 @@ function register_submit(Pieform $form, $values) {
     $_SESSION['registered'] = true;
 
     redirect('/register.php');
-}
-
-function register_cancel_submit() {
-    redirect();
 }
 
 $smarty = smarty();
