@@ -386,7 +386,7 @@ function register_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('register_form', pieform($form));
-$smarty->assign('heading', get_string('register'));
+$smarty->assign('PAGEHEADING', hsc(get_string('register')));
 $smarty->display('register.tpl');
 
 ?>
