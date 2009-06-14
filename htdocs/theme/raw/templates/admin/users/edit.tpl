@@ -41,7 +41,7 @@
                 {$suspendform}
         </div>
     {/if}
-	<div class="clearer"></div>
+	<div class="cb"></div>
 
     {if ($institutions)}
     <hr>
