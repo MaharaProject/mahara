@@ -390,7 +390,7 @@ $smarty = smarty(array('artefact/internal/js/profile.js'), array(), array(
 
 
 $smarty->assign('profileform', $profileform);
-$smarty->assign('heading', get_string('editprofile', 'artefact.internal'));
+$smarty->assign('PAGEHEADING', hsc(get_string('editprofile', 'artefact.internal')));
 $smarty->display('artefact:internal:index.tpl');
 
 
