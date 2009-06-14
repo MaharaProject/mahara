@@ -1,6 +1,8 @@
 {include file='header.tpl' nosearch=true}
             <h3 class="center"><a href="http://mahara.org">Mahara</a> {str section='admin' tag='release' args=$releaseargs} {str tag='copyright' section='admin'}</h3>
 
+            <div class="message">Want help? The <a href="http://wiki.mahara.org/System_Administrator%27s_Guide/Installing_Mahara" target="_blank">installation instructions</a> are a useful guide. You also may want to check out the <a href="http://wiki.mahara.org/Release_Notes{if substr($releaseargs[0], -3) != 'dev'}/{$releaseargs[0]|escape}{/if}" target="_blank">release notes</a> for this release.</div>
+
             <div id="gpl-terms">
             <h4 class="center">GNU General Public License</h4>
 <p>This program is free software; you can redistribute it and/or modify
