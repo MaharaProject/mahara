@@ -2274,6 +2274,7 @@ function user_search_form() {
         'renderer'            => 'oneline',
         'autofocus'           => false,
         'validate'            => false,
+        'presubmitcallback'   => '',
         'elements'            => array(
             'query' => array(
                 'type'           => 'text',
