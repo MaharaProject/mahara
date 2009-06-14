@@ -211,7 +211,7 @@ function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $lin
             $message = str_replace('  ', '&nbsp; ', $message);
         }
         $message = nl2br($message);
-        $message = '<div style="font-family: monospace;">' . $prefix . $message . "</div>\n";
+        $message = '<div class="backtrace">' . $prefix . $message . "</div>\n";
         if (is_a($SESSION, 'Session')) {
             $SESSION->$method($message, false);
         }
@@ -323,7 +323,7 @@ function log_build_backtrace($backtrace) {
     }
 
     $textmessage = "Call stack (most recent first):\n";
-    $htmlmessage = "<pre><strong>Call stack (most recent first):</strong>\n<ul>";
+    $htmlmessage = "<div class=\"backtrace\"><strong>Call stack (most recent first):</strong>\n<ul>";
 
     foreach ($calls as $call) {
         $textmessage .= "  * {$call['class']}{$call['type']}{$call['func']}({$call['args']}) at {$call['file']}:{$call['line']}\n";
@@ -331,7 +331,7 @@ function log_build_backtrace($backtrace) {
             . htmlspecialchars($call['type'], ENT_COMPAT, 'UTF-8') . '</span><span style="color:#339;">' . htmlspecialchars($call['func'], ENT_COMPAT, 'UTF-8')
             . '</span><span style="color:#060;">(</span><span style="color:#f00;">' . htmlspecialchars($call['args'], ENT_COMPAT, 'UTF-8') . '</span><span style="color:#060;">)</span> at <strong>' . htmlspecialchars($call['file'], ENT_COMPAT, 'UTF-8') . ':' . $call['line'] . '</strong></li>';
     }
-    $htmlmessage .= "</pre>\n";
+    $htmlmessage .= "</div>\n";
 
     return array($textmessage, $htmlmessage);
 }
