@@ -322,7 +322,7 @@ EOF;
     // look for extra stylesheets
     if (isset($extraconfig['stylesheets']) && is_array($extraconfig['stylesheets'])) {
         foreach ($extraconfig['stylesheets'] as $extrasheet) {
-            if ($sheets = theme_get_url($extrasheet, '', true)) {
+            if ($sheets = $THEME->get_url($extrasheet, true)) {
                 $stylesheets = array_merge($stylesheets, array_reverse($sheets));
             }
         }

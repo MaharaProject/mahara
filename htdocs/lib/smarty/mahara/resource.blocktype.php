@@ -40,6 +40,7 @@ function smarty_resource_blocktype_trusted($tpl_name, &$smarty_obj)
 }
 
 function smarty_resource_blocktype_get_filepath($tpl_name) {
+    global $THEME;
     static $filepaths = array();
     if (isset($filepaths[$tpl_name])) {
         return $filepaths[$tpl_name];
@@ -58,7 +59,7 @@ function smarty_resource_blocktype_get_filepath($tpl_name) {
         $basedir .= 'blocktype/' . $name[0] . '/theme/';
     }
 
-    foreach (theme_setup()->inheritance as $theme) {
+    foreach ($THEME->inheritance as $theme) {
         $filename = $basedir . $theme . '/' . $template_path;
         if (is_readable($filename)) {
             return $filepaths[$tpl_name] = $filename;

@@ -1352,9 +1352,9 @@ function pieform_element_textarea_configure($element) {
  *                               artefact/file
  */
 function pieform_template_dir($file, $pluginlocation='') {
-    $theme = theme_setup();
+    global $THEME;
 
-    foreach ($theme->inheritance as $themedir) {
+    foreach ($THEME->inheritance as $themedir) {
         $filepath = get_config('docroot') . $pluginlocation . '/theme/' . $themedir . '/pieforms/' . $file;
         if (is_readable($filepath)) {
             return dirname($filepath);
