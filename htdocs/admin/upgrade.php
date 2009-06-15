@@ -44,6 +44,18 @@ if (!$upgrades) {
     die_info(get_string('noupgrades', 'admin'));
 }
 
+// Remove all files in the smarty cache
+require_once('file.php');
+$basedir = get_config('dataroot') . 'smarty/compile/';
+$dh = new DirectoryIterator($basedir);
+foreach ($dh as $themedir) {
+    if ($themedir->isDot()) continue;
+    $themedirname = $basedir . $themedir->getFilename();
+    rmdirr($themedirname);
+    clearstatcache();
+    check_dir_exists($themedirname);
+}
+
 $loadingicon = theme_get_url('images/loading.gif');
 $successicon = theme_get_url('images/success.gif');
 $failureicon = theme_get_url('images/failure.gif');
