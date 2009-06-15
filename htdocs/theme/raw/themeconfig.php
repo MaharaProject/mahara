@@ -29,11 +29,8 @@ $theme->displayname         = 'Raw';
 
 $theme->formrenderer        = 'table';
 
-$theme->columnwidthunits    = 'pixels';
-$theme->leftcolumnwidth     = 256;
-$theme->leftcolumnbgcolor   = '#fff';
-$theme->centercolumnbgcolor = '#fff';
-$theme->rightcolumnwidth    = 256;
-$theme->rightcolumnbgcolor  = '#fff';
+$theme->leftcolumncss  = 'width: 256px;';
+$theme->maincolumncss  = '';
+$theme->rightcolumncss = 'width: 256px;';
 
 ?>

@@ -1,38 +1,12 @@
-{if $SIDEBLOCKS.left && $SIDEBLOCKS.right}
-{if $THEME->columnwidthunits == 'pixels'}                </div>
-{/if}
-            </div>
-            <div class="col2">
-{include file="sidebar.tpl" blocks=$SIDEBLOCKS.left}
-            </div>
-            <div class="col3">
+                </td>
+{if $SIDEBLOCKS.right}
+                <td id="right-column" class="sidebar"{if $THEME->rightcolumncss} style="{$THEME->rightcolumncss|escape}"{/if}>
 {include file="sidebar.tpl" blocks=$SIDEBLOCKS.right}
-            </div>
-        </div>
-    </div>
-</div>
-{elseif $SIDEBLOCKS.left}
-{if $THEME->columnwidthunits == 'pixels'}            </div>
+                </td>
 {/if}
-        </div>
-        <div class="col2">
-{include file="sidebar.tpl" blocks=$SIDEBLOCKS.left}
-        </div>
-    </div>
-</div>
-{elseif $SIDEBLOCKS.right}
-{if $THEME->columnwidthunits == 'pixels'}            </div>
-{/if}
-        </div>
-        <div class="col2">
-{include file="sidebar.tpl" blocks=$SIDEBLOCKS.right}
-        </div>
-    </div>
-</div>
-{else}
-        </div>
-{/if}
-    </div>
+            </tr>
+        <tbody>
+    </table>
     <div id="footer-wrap">
         <div id="powered-by"><a href="http://mahara.org/"><img src="{theme_url filename='images/powered-by-mahara.png'}" border="0" alt=""></a></div>
         <!-- This site is powered by Mahara, an Open Source

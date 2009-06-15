@@ -27,9 +27,6 @@
 {foreach from=$STYLESHEETLIST item=cssurl}
     <link rel="stylesheet" type="text/css" href="{$cssurl}">
 {/foreach}
-    <style type="text/css">
-{$THEME->get_column_css($PAGELAYOUT)}
-    </style>
     <link rel="stylesheet" type="text/css" href="{theme_url filename='style/print.css'}" media="print">
     <script type="text/javascript" src="{$WWWROOT}js/css.js"></script>
     <link rel="shortcut icon" href="{$WWWROOT}favicon.ico" type="image/vnd.microsoft.icon">
@@ -86,30 +83,16 @@
         </div>
 {/if}
     </div>
-    <div id="main-wrapper">
-{if $SIDEBLOCKS.left && $SIDEBLOCKS.right}
-<div class="colmask threecol">
-    <div class="colmid">
-        <div class="colleft">
-{if $THEME->columnwidthunits == 'pixels'}           <div class="col1wrap">
-    {/if}
-            <div class="col1">
-{elseif $SIDEBLOCKS.left}
-<div class="colmask leftmenu">
-    <div class="col{if $THEME->columnwidthunits == 'pixels'}right{else}left{/if}">
-{if $THEME->columnwidthunits == 'pixels'}        <div class="col1wrap">
-    {/if}
-        <div class="col1">
-{elseif $SIDEBLOCKS.right}
-<div class="colmask rightmenu">
-    <div class="colleft">
-{if $THEME->columnwidthunits == 'pixels'}        <div class="col1wrap">
-    {/if}
-        <div class="col1">
-{else}
-        <div class="col1">
+    <table id="main-wrapper">
+        <tbody>
+            <tr>
+{if $SIDEBLOCKS.left}
+                <td id="left-column" class="sidebar"{if $THEME->leftcolumncss} style="{$THEME->leftcolumncss|escape}"{/if}>
+{include file="sidebar.tpl" blocks=$SIDEBLOCKS.left}
+                </td>
 {/if}
-            {insert name="messages"}
+                <td id="main-column"{if $THEME->maincolumncss} style="{$THEME->maincolumncss|escape}"{/if}>
+                    {insert name="messages"}
 
-{if $PAGEHEADING}           <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON}</span>{/if}</h1>
+{if $PAGEHEADING}                   <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON}</span>{/if}</h1>
 {/if}

@@ -395,8 +395,6 @@ EOF;
         $smarty->assign('GROUPNAV', group_get_menu_tabs());
     }
 
-    $PAGELAYOUT = Theme::ONE_COLUMN;
-
     // ---------- sideblock stuff ----------
     if (!defined('INSTALLER') && (!defined('MENUITEM') || substr(MENUITEM, 0, 5) != 'admin')) {
         if (get_config('installed')) {
@@ -487,18 +485,6 @@ EOF;
         $smarty->assign('userauthinstance', $SESSION->get('authinstance'));
         $smarty->assign('MNETUSER', $SESSION->get('mnetuser'));
         $smarty->assign('SIDEBLOCKS', $SIDEBLOCKS);
-        if ($SIDEBLOCKS['left'] && $SIDEBLOCKS['right']) {
-            $PAGELAYOUT = Theme::THREE_COLUMN;
-        }
-        else if ($SIDEBLOCKS['left']) {
-            $PAGELAYOUT = Theme::LEFT_COLUMN;
-        }
-        else if ($SIDEBLOCKS['right']) {
-            $PAGELAYOUT = Theme::RIGHT_COLUMN;
-        }
-        else {
-            $PAGELAYOUT = Theme::ONE_COLUMN;
-        }
 
         if ($USER->get('parentuser')) {
             $smarty->assign('USERMASQUERADING', true);
@@ -509,8 +495,6 @@ EOF;
                 . '</a>');
         }
     }
-
-    $smarty->assign('PAGELAYOUT', $PAGELAYOUT);
 
     return $smarty;
 }
@@ -523,11 +507,6 @@ EOF;
  * want to use (e.g. the theme they want has been uninstalled)
  */
 class Theme {
-
-    const THREE_COLUMN = -1;
-    const LEFT_COLUMN  = -2;
-    const RIGHT_COLUMN = -3;
-    const ONE_COLUMN   = -4;
 
     /**
      * The base name of the theme (the name of the directory in which it lives)
@@ -671,146 +650,6 @@ class Theme {
             $this->templatedirs[] = get_config('docroot') . 'theme/' . $currenttheme . '/templates/';
             $this->inheritance[]  = $currenttheme;
         }
-    }
-
-    /**
-     * Given a layout, returns custom CSS that configures the layout given the theme configuration.
-     *
-     * E.g. if $layout is two column, right menu, then this method returns 
-     * configuration that makes sure the right menu is as wide as the theme 
-     * configuration says it should be.
-     */
-    public function get_column_css($layout) {
-        switch ($layout) {
-        case self::THREE_COLUMN:
-            if ($this->columnwidthunits == 'percent') {
-                $leftwidth   = intval($this->leftcolumnwidth);
-                $rightwidth  = intval($this->rightcolumnwidth);
-                $centerwidth = 100 - $leftwidth - $rightwidth;
-                $padding = 2;
-
-                $col1w = $centerwidth - 2 * $padding; // width of center column content (column width minus padding on either side)
-                $col1l = 100 + $padding;              // 100% plus left padding of center column
-                $col2w = $leftwidth - 2 * $padding;   // width of left column content (column width minus padding on either side) 
-                $col2l = $rightwidth + 3 * $padding;  // width of (right column) plus (center column left and right padding) plus (left column left padding)
-                $col3w = $rightwidth - 2 * $padding;  // Width of right column content (column width minus padding on either side)
-                $col3l = (100 - $leftwidth) + (2 * $padding) + (2 * $padding) + $padding; // (100% - left column width) plus (center column left and right padding) plus (left column left and right padding) plus (right column left padding)
-                $css =<<<EOF
-.threecol{background-color:{$this->rightcolumnbgcolor}}
-.threecol .colmid{right:{$rightwidth}%;background-color:{$this->centercolumnbgcolor}}
-.threecol .colleft{right:{$centerwidth}%;background-color:{$this->leftcolumnbgcolor}}
-.threecol .col1{width:{$col1w}%;left:{$col1l}%}
-.threecol .col2{width:{$col2w}%;left:{$col2l}%}
-.threecol .col3{width:{$col3w}%;left:{$col3l}%}
-EOF;
-            }
-            else {
-                $leftwidth   = intval($this->leftcolumnwidth);
-                $rightwidth  = intval($this->rightcolumnwidth);
-                $padding = 15; // px
-
-                $colleftwidth = $leftwidth + $rightwidth;
-                $col1lp = $leftwidth + $padding;    // Left padding = left column width + centre column left padding width
-                $col1rp = $rightwidth + $padding;   // Right padding = right column width + centre column right padding width
-                $col2w = $leftwidth - 2 * $padding; // Width of left column content (left column width minus left and right padding)
-                $col2p = $padding;                  // Width of the left-had side padding on the left column
-                $col3w = $rightwidth - 2 * $padding; // Width of right column content (right column width minus left and right padding)
-                $col3p = 3 * $padding;               // Width of right column right-hand padding + left column left and right padding
-                $css =<<<EOF
-.threecol{background-color:{$this->rightcolumnbgcolor}}
-.threecol .colmid{float:left;width:200%;margin-left:-{$rightwidth}px;position:relative;right:100%;background-color:{$this->centercolumnbgcolor}}
-.threecol .colleft{float:left;width:100%;margin-left:-50%;position:relative;left:{$colleftwidth}px;background-color:{$this->leftcolumnbgcolor}}
-.threecol .col1wrap{float:left;width:50%;position:relative;right:{$leftwidth}px;padding-bottom:1em}
-.threecol .col1{margin:0 {$col1rp}px 0 {$col1lp}px;position:relative;left:200%;overflow:hidden}
-.threecol .col2{float:right;width:{$col2w}px;position:relative;right:{$col2p}px}
-.threecol .col3{float:right;width:{$col3w}px;margin-right:{$col3p}px;position:relative;left:50%}
-EOF;
-            }
-            break;
-        case self::LEFT_COLUMN:
-            if ($this->columnwidthunits == 'percent') {
-                $leftwidth = intval($this->leftcolumnwidth);
-                $rightwidth = 100 - $leftwidth;
-                $padding = 2; // %
-
-                $col1w = $rightwidth - 2 * $padding; // right column content width (right column width minus left and right padding)
-                $col1l = 100 + $padding;             // 100 + plus left column padding
-                $col2w = $leftwidth - 2 * $padding;  // left column content width (column width minus left and right padding)
-                $col2l = $padding * 3;               // (right column left and right padding) plus (left column left padding)
-
-                $css =<<<EOF
-.leftmenu{background-color:{$this->rightcolumnbgcolor}}
-.leftmenu .colleft{background-color:{$this->leftcolumnbgcolor};right:{$rightwidth}%}
-.leftmenu .col1{width:{$col1w}%;left:{$col1l}%}
-.leftmenu .col2{width:{$col2w}%;left:{$col2l}%}
-EOF;
-            }
-            else {
-                // TODO: pixel width
-                $leftwidth = intval($this->leftcolumnwidth);
-                $padding = 15; // px
-                $col1p = $leftwidth + $padding;
-                $col2w = $leftwidth - 2 * $padding;
-                $col2l = $leftwidth - $padding;
-                $css .= <<<EOF
-.leftmenu{background-color:{$this->leftcolumnbgcolor}}
-.leftmenu .colright{float:left;width:200%;position:relative;left:{$leftwidth}px;background-color:{$this->rightcolumnbgcolor}}
-.leftmenu .col1wrap{float:right;width:50%;position:relative;right:{$leftwidth}px;padding-bottom:1em}
-.leftmenu .col1{margin:0 {$padding}px 0 {$col1p}px;right:100%;overflow:hidden;position:relative}
-.leftmenu .col2{float:left;width:{$col2w}px;position:relative;right:{$col2l}px}
-EOF;
-            }
-            break;
-        case self::RIGHT_COLUMN:
-            if ($this->columnwidthunits == 'percent') {
-                $rightwidth = intval($this->rightcolumnwidth);
-                $leftwidth  = 100 - $rightwidth;
-                $padding = 2; // %
-
-                $col1w = $leftwidth - 2 * $padding;  // left column content width (left column width minus left and right padding)
-                $col1l = $rightwidth + $padding;     // (right column width) plus (left column left padding)
-                $col2w = $rightwidth - 2 * $padding; // right column content width (right column width minus left and right padding)
-                $col2l = $rightwidth + 3 * $padding; // (right column width) plus (left column left and right padding) plus (right column left padding)
-                $css = <<<EOF
-.rightmenu{background-color:{$this->rightcolumnbgcolor}}
-.rightmenu .colleft{background-color:{$this->leftcolumnbgcolor};right:{$rightwidth}%}
-.rightmenu .col1{width:{$col1w}%;left:{$col1l}%}
-.rightmenu .col2{width:{$col2w}%;left:{$col2l}%}
-EOF;
-            }
-            else if ($this->columnwidthunits == 'pixels') {
-                $rightwidth = intval($this->rightcolumnwidth);
-                $padding = 15; // px
-                $col1p = $rightwidth + $padding;
-                $col2w = $rightwidth - 2 * $padding;
-                $col2l = $rightwidth - $padding;
-                $css = <<<EOF
-.rightmenu{background-color:{$this->rightcolumnbgcolor}}
-.rightmenu .colleft{float:left;width:200%;margin-left:-{$rightwidth}px;position:relative;right:100%;background-color:{$this->leftcolumnbgcolor}}
-.rightmenu .col1wrap{float:left;width:50%;position:relative;left:50%;padding-bottom:1em}
-.rightmenu .col1{margin:0 {$padding}px 0 {$col1p}px;overflow:hidden}
-.rightmenu .col2{float:right;width:{$col2w}px;position:relative;left:{$col2l}px}
-EOF;
-// TODO: possibly need this for ie6 for all of the pixel based layouts
-//    </style>
-//    <!--[if lt IE 7]>
-//    <style media="screen" type="text/css">
-//    .col1 {
-//        width:100%;
-//    }
-//    </style>
-//    <![endif]-->
-            }
-            break;
-        case self::ONE_COLUMN:
-            // TODO
-            $css = <<<EOF
-.col1{width:100%;}
-EOF;
-            break;
-        }
-
-        return $css;
     }
 
     /**
