@@ -266,6 +266,18 @@ abstract class Auth {
     }
 
     /**
+     * Called when a user is being logged in, after the main authentication routines.
+     *
+     * You can use $USER->login() to perform any additional tasks, for example
+     * to set a cookie that another application can read, or pull some data
+     * from somewhere.
+     *
+     * This method has no parameters and needs no return value
+     */
+    public function login() {
+    }
+
+    /**
      * Called when a user is being logged out, either by clicking a logout 
      * link, their session timing out or some other method where their session 
      * is explicitly being ended with no more processing to take place on this 

@@ -907,6 +907,10 @@ class LiveUser extends User {
         $this->reset_institutions();
         $this->reset_grouproles();
         $this->commit();
+
+        // finally, after all is done, call the (maybe non existant) hook on their auth plugin
+        $authobj = AuthFactory::create($authinstance);
+        $authobj->login();
     }
 
     /**
