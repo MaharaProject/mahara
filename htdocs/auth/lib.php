@@ -128,9 +128,8 @@ abstract class Auth {
         if (in_array($name, $approved_members)) {
             return $this->{$name};
         }
-
-        if (isset($this->config['name'])) {
-            return $this->config['name'];
+        if (isset($this->config[$name])) {
+            return $this->config[$name];
         }
         return null;
     }
