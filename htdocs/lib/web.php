@@ -485,6 +485,7 @@ EOF;
         $smarty->assign('userauthinstance', $SESSION->get('authinstance'));
         $smarty->assign('MNETUSER', $SESSION->get('mnetuser'));
         $smarty->assign('SIDEBLOCKS', $SIDEBLOCKS);
+        $smarty->assign('SIDEBARS', true);
 
         if ($USER->get('parentuser')) {
             $smarty->assign('USERMASQUERADING', true);

@@ -86,7 +86,7 @@
     <table id="main-wrapper">
         <tbody>
             <tr>
-{if $SIDEBLOCKS.left}
+{if $SIDEBARS && $SIDEBLOCKS.left}
                 <td id="left-column" class="sidebar"{if $THEME->leftcolumncss} style="{$THEME->leftcolumncss|escape}"{/if}>
 {include file="sidebar.tpl" blocks=$SIDEBLOCKS.left}
                 </td>
