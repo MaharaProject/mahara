@@ -1,7 +1,4 @@
 {include file="header.tpl"}
-
-{include file="columnfullstart.tpl"}
-
 {if $columns}
     {str tag="editblockspagedescription" section="view"}
 
@@ -81,7 +78,4 @@
         </div>
     </div>
 {/if}
-
-{include file="columnfullend.tpl"}
-
 {include file="footer.tpl"}

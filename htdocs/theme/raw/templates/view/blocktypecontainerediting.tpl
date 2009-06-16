@@ -5,10 +5,10 @@
         <div class="blockinstance-controls">
         {foreach from=$movecontrols item=item}
             {assign var=direction value=$item.dir}
-            <input type="image" src="{theme_path location=images/move-block-$direction.png}" class="submit movebutton" name="action_moveblockinstance_id_{$id}_column_{$item.column}_order_{$item.order}" alt="{$item.arrow}" title="{$item.title}">
+            <input type="image" src="{theme_url filename=images/move-block-$direction.png}" class="submit movebutton" name="action_moveblockinstance_id_{$id}_column_{$item.column}_order_{$item.order}" alt="{$item.arrow}" title="{$item.title}">
         {/foreach}
-        {if $configurable && !$configure}    <input type="image" src="{theme_path location=images/configure-block.png}" class="submit configurebutton" name="action_configureblockinstance_id_{$id}" alt="&bull;" title="{str tag='configurethisblock' section='view'}">{/if}
-            <input type="image" src="{theme_path location=images/remove-block.png}" class="cancel deletebutton" name="action_removeblockinstance_id_{$id}" alt="X" title="{str tag='removeblock' section='view'}">
+        {if $configurable && !$configure}    <input type="image" src="{theme_url filename=images/configure-block.png}" class="submit configurebutton" name="action_configureblockinstance_id_{$id}" alt="&bull;" title="{str tag='configurethisblock' section='view'}">{/if}
+            <input type="image" src="{theme_url filename=images/remove-block.png}" class="cancel deletebutton" name="action_removeblockinstance_id_{$id}" alt="X" title="{str tag='removeblock' section='view'}">
         </div>
         <div class="blockinstance-content">
             {$content}
