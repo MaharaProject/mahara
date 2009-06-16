@@ -178,7 +178,7 @@ class html2text
         '/&(bull|#149|#8226);/i',                // Bullet
         '/&(pound|#163);/i',                     // Pound sign
         '/&(euro|#8364);/i',                     // Euro sign
-        '/&(?!(amp|#38))[^&;]+;/i',              // Unknown/unhandled entities
+        '/&(?!(amp;|#38;))[^&;]+;/i',            // Unknown/unhandled entities
         '/&(amp|#38);/i',                        // Ampersand
         '/[ ]{2,}/'                              // Runs of spaces, post-handling
     );
