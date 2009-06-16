@@ -30,6 +30,7 @@ function xmldb_core_upgrade($oldversion=0) {
     ini_set('max_execution_time', 120); // Let's be safe
     raise_memory_limit('64M');
 
+    $INNODB = (is_mysql()) ? ' TYPE=innodb' : '';
     $status = true;
 
     // We discovered that username case insensitivity was not being enforced at 
@@ -267,12 +268,12 @@ function xmldb_core_upgrade($oldversion=0) {
             can_view SMALLINT NOT NULL,
             can_edit SMALLINT NOT NULL,
             can_republish SMALLINT NOT NULL
-        );');
+        )' . $INNODB);
         execute_sql('CREATE TABLE {artefact_access_usr} (
             usr INTEGER NOT NULL REFERENCES {usr}(id),
             artefact INTEGER NOT NULL REFERENCES {artefact}(id),
             can_republish SMALLINT
-        );');
+        )' . $INNODB);
 
 
         // grouptype tables
@@ -280,7 +281,7 @@ function xmldb_core_upgrade($oldversion=0) {
             name VARCHAR(20) PRIMARY KEY,
             submittableto SMALLINT NOT NULL,
             defaultrole VARCHAR(255) NOT NULL DEFAULT 'member'
-        );");
+        )" . $INNODB);
         execute_sql("INSERT INTO {grouptype} (name,submittableto) VALUES ('standard',0)");
         execute_sql("INSERT INTO {grouptype} (name,submittableto) VALUES ('course',1)");
 
@@ -289,7 +290,7 @@ function xmldb_core_upgrade($oldversion=0) {
             edit_views SMALLINT NOT NULL DEFAULT 1,
             see_submitted_views SMALLINT NOT NULL DEFAULT 0,
             role VARCHAR(255) NOT NULL
-        );');
+        )' . $INNODB);
         execute_sql("INSERT INTO {grouptype_roles} (grouptype,edit_views,see_submitted_views,role) VALUES ('standard',1,0,'admin')");
         execute_sql("INSERT INTO {grouptype_roles} (grouptype,edit_views,see_submitted_views,role) VALUES ('standard',1,0,'member')");
         execute_sql("INSERT INTO {grouptype_roles} (grouptype,edit_views,see_submitted_views,role) VALUES ('course',1,0,'admin')");
@@ -392,7 +393,7 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql('CREATE TABLE {view_autocreate_grouptype} (
             view INTEGER NOT NULL REFERENCES {view}(id),
             grouptype VARCHAR(20) NOT NULL REFERENCES {grouptype}(name)
-        );');
+        )' . $INNODB);
     }
 
     if ($oldversion < 2008090100) {
