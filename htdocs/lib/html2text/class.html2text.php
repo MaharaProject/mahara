@@ -170,7 +170,6 @@ class html2text
         '/&(apos|rsquo|lsquo|#8216|#8217);/i',   // Single quotes
         '/&gt;/i',                               // Greater-than
         '/&lt;/i',                               // Less-than
-        '/&(amp|#38);/i',                        // Ampersand
         '/&(copy|#169);/i',                      // Copyright
         '/&(trade|#8482|#153);/i',               // Trademark
         '/&(reg|#174);/i',                       // Registered
@@ -179,7 +178,8 @@ class html2text
         '/&(bull|#149|#8226);/i',                // Bullet
         '/&(pound|#163);/i',                     // Pound sign
         '/&(euro|#8364);/i',                     // Euro sign
-        '/&[^&;]+;/i',                           // Unknown/unhandled entities
+        '/&(?!(amp|#38))[^&;]+;/i',              // Unknown/unhandled entities
+        '/&(amp|#38);/i',                        // Ampersand
         '/[ ]{2,}/'                              // Runs of spaces, post-handling
     );
 
@@ -217,7 +217,6 @@ class html2text
         "'",                                    // Single quotes
         '>',
         '<',
-        '&',
         '(c)',
         '(tm)',
         '(R)',
@@ -227,6 +226,7 @@ class html2text
         '£',
         'EUR',                                  // Euro sign. € ?
         '',                                     // Unknown/unhandled entities
+        '&',
         ' '                                     // Runs of spaces, post-handling
     );
 
