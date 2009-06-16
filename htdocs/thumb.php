@@ -101,7 +101,7 @@ switch ($type) {
 
         // If we couldn't find the no user photo picture, we put it into 
         // dataroot if we can
-        $nouserphotopic = theme_get_path('images/no_userphoto.png');
+        $nouserphotopic = $THEME->get_path('images/no_userphoto.png');
         if ($nouserphotopic) {
             // Move the file into the correct place.
             $directory = get_config('dataroot') . 'artefact/file/profileicons/no_userphoto/' . get_config('theme') . '/originals/0/';
@@ -118,7 +118,7 @@ switch ($type) {
 
         // Emergency fallback
         header('Content-type: ' . 'image/png');
-        readfile(theme_get_path('images/no_userphoto.png'));
+        readfile($THEME->get_path('images/no_userphoto.png'));
         exit;
         break;
 
@@ -140,18 +140,18 @@ switch ($type) {
             readfile($path);
             exit;
         }
-        readfile(theme_get_path('images/no_thumbnail.png'));
+        readfile($THEME->get_path('images/no_thumbnail.png'));
         break;
     case 'viewlayout':
         header('Content-type: image/png');
         $vl = param_integer('vl');
         if ($widths = get_field('view_layout', 'widths', 'id', $vl)) {
-            if ($path = theme_get_path('images/vl-' . str_replace(',', '-', $widths) . '.png')) {
+            if ($path = $THEME->get_path('images/vl-' . str_replace(',', '-', $widths) . '.png')) {
                 readfile($path);
                 exit;
             }
         }
-        readfile(theme_get_path('images/no_thumbnail.png'));
+        readfile($THEME->get_path('images/no_thumbnail.png'));
         break;
 }
 
