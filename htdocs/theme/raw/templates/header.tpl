@@ -93,6 +93,7 @@
 {/if}
                 <td id="main-column"{if $THEME->maincolumncss} style="{$THEME->maincolumncss|escape}"{/if}>
                     {insert name="messages"}
+                    <div id="main-column-container">
 
 {if $PAGEHEADING}                    <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON}</span>{/if}</h1>
 {/if}

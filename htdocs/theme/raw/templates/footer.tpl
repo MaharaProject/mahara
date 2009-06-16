@@ -1,3 +1,4 @@
+                    </div>
                 </td>
 {if $SIDEBARS && $SIDEBLOCKS.right}
                 <td id="right-column" class="sidebar"{if $THEME->rightcolumncss} style="{$THEME->rightcolumncss|escape}"{/if}>
