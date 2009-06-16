@@ -1,7 +1,4 @@
 {include file="header.tpl"}
-{include file="sidebar.tpl"}
-
-{include file="columnleftstart.tpl"}
             {$settingsformtag}
             <table id="profileicons" class="hidden tablerenderer">
                 <thead>
@@ -23,7 +20,4 @@
             <p>{str tag="profileiconsiconsizenotice" section="artefact.file" args=$imagemaxdimensions}</p>
 
             {$uploadform}
-
-{include file="columnleftend.tpl"}
-
 {include file="footer.tpl"}

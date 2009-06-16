@@ -4,6 +4,11 @@
  * Copyright (C) 2006-2009 Catalyst IT
  * This file is distributed under the same terms as Mahara itself
  */
+
+#profileicons {
+    width: 100%;
+}
+
 #myfiles {
 	margin: 1em 0;
     width: 100%;

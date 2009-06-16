@@ -32,20 +32,6 @@ define('SECTION_PAGE', 'profileicons');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('profileicons', 'artefact.file'));
-$smarty = smarty(
-    array('tablerenderer'),
-    array(),
-    array(),
-    array(
-        'sideblocks' => array(
-            array(
-                'name'   => 'quota',
-                'weight' => -10,
-                'data'   => array(),
-            ),
-        ),
-    )
-);
 
 $settingsform = new Pieform(array(
     'name'      => 'settings',
@@ -95,13 +81,13 @@ $uploadform = pieform(array(
 $strnoimagesfound = json_encode(get_string('noimagesfound', 'artefact.file'));
 $struploadingfile = json_encode(get_string('uploadingfile', 'artefact.file'));
 $wwwroot = get_config('wwwroot');
-$smarty->assign('INLINEJAVASCRIPT', <<<EOF
+$IJS = <<<EOF
 var table = new TableRenderer(
     'profileicons',
     'profileicons.json.php',
     [
         function(rowdata) {
-            return TD({'class': 'center', 'width': '120px'}, null, IMG({'src': '$wwwroot/thumb.php?type=profileiconbyid&maxsize=100&id=' + rowdata.id, 'alt': rowdata.note}));
+            return TD({'class': 'center', 'width': '120px'}, null, IMG({'src': '{$wwwroot}thumb.php?type=profileiconbyid&maxsize=100&id=' + rowdata.id, 'alt': rowdata.note}));
         },
         function(rowdata) {
             return TD(null, rowdata.title ? rowdata.title : rowdata.note);
@@ -152,14 +138,11 @@ function postSubmit(form, data) {
     table.doupdate();
     formStopProcessing(form, data);
     quotaUpdate();
-    if (!data.error) {
-        $(form).reset();
-        $('upload_title').value = '';
-    }
+    $(form).reset();
+    $('upload_title').value = '';
 }
 
-EOF
-);
+EOF;
 
 $filesize = 0;
 function upload_validate(Pieform $form, $values) {
@@ -191,6 +174,7 @@ function upload_validate(Pieform $form, $values) {
 
 function upload_submit(Pieform $form, $values) {
     global $USER, $filesize;
+    safe_require('artefact', 'file');
 
     // If there are no icons, we can set this one that is being uploaded to be
     // the default for the user
@@ -299,13 +283,28 @@ function settings_submit_unsetdefault(Pieform $form, $values) {
     $SESSION->add_info_msg(get_string('usingnodefaultprofileicon', 'artefact.file'));
 }
 
+$smarty = smarty(
+    array('tablerenderer'),
+    array(),
+    array(),
+    array(
+        'sideblocks' => array(
+            array(
+                'name'   => 'quota',
+                'weight' => -10,
+                'data'   => array(),
+            ),
+        ),
+    )
+);
+$smarty->assign('INLINEJAVASCRIPT', $IJS);
 $smarty->assign('uploadform', $uploadform);
 // This is a rare case where we don't actually care about the form, because
 // it only contains submit buttons (which we can just write as HTML), and
 // the buttons need to be inside the tablerenderer.
 $smarty->assign('settingsformtag', $settingsform->get_form_tag());
 $smarty->assign('imagemaxdimensions', array(get_config('imagemaxwidth'), get_config('imagemaxheight')));
-$smarty->assign('heading', get_string('profileicons', 'artefact.file'));
+$smarty->assign('PAGEHEADING', hsc(get_string('profileicons', 'artefact.file')));
 $smarty->display('artefact:file:profileicons.tpl');
 
 ?>
