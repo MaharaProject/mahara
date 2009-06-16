@@ -1323,9 +1323,10 @@ function pieform_reply($code, $data) {
 }
 
 function pieform_element_calendar_configure($element) {
+    global $THEME;
     $element['jsroot'] = get_config('wwwroot') . 'js/jscalendar/';
-    $element['themefile'] = theme_get_url('style/calendar.css');
-    $element['imagefile'] = theme_get_url('images/calendar.gif');
+    $element['themefile'] = $THEME->get_url('style/calendar.css');
+    $element['imagefile'] = $THEME->get_url('images/calendar.gif');
     $language = substr(current_language(), 0, 2);
     $element['language'] = $language;
     return $element;
@@ -1341,9 +1342,6 @@ function pieform_element_textarea_configure($element) {
 /**
  * Should be used to provide the 'templatedir' directive to pieforms using a 
  * template for layout.
- *
- * This depends on theme_setup(), so potentially should be in lib/web.php, but 
- * for now it lives with the other pieform functions.
  *
  * @param string $file The file to be used as a pieform template, e.g. 
  *                     "admin/site/files.php". This is the value you used as 
