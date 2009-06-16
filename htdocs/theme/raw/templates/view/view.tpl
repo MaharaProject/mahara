@@ -1,22 +1,17 @@
 {include file="header.tpl"}
-
-{include file="columnfullstart.tpl"}
-
 {if $mnethost}
 <span class="fr"><a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a></span>
 {/if}
 
-<h2>{if !$new}<a href="{$WWWROOT}view/view.php?id={$viewid}">{/if}{$viewtitle|escape}{if !$new}</a>{/if}{if $ownername} {str tag=by section=view} <a href="{$WWWROOT}{$ownerlink}">{$ownername|escape}</a>{/if}</h2>
+<h1>{if !$new}<a href="{$WWWROOT}view/view.php?id={$viewid}">{/if}{$viewtitle|escape}{if !$new}</a>{/if}{if $ownername} {str tag=by section=view} <a href="{$WWWROOT}{$ownerlink}">{$ownername|escape}</a>{/if}</h1>
 
 {if $can_edit}
-<div class="fr editview">
-    <span class="settingsicon">
-        <a href="blocks.php?id={$viewid}&amp;new={$new}">{$streditviewbutton}</a>
-    </span>
+<div class="page-buttons">
+    <a class="btn" href="blocks.php?id={$viewid}&amp;new={$new}">{$streditviewbutton}</a>
 </div>
 {/if}
 
-<p class="view-description">{$viewdescription}</p>
+<p id="view-description">{$viewdescription}</p>
 
 <div id="view" class="cb">
         <div id="bottom-pane">
@@ -40,6 +35,4 @@
     {if $addfeedbackform}<div>{$addfeedbackform}</div>{/if}
     {if $objectionform}<div>{$objectionform}</div>{/if}
 </div>
-{include file="columnfullend.tpl"}
-
 {include file="footer.tpl"}

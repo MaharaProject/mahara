@@ -159,6 +159,7 @@ if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
 
 $anonfeedback = !$USER->is_logged_in() && ($usertoken || $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid)));
 
+$smarty->assign('SIDEBARS', false);
 $smarty->assign('ownername', $view->formatted_owner());
 $smarty->assign('streditviewbutton', ($new) ? get_string('backtocreatemyview', 'view') : get_string('editmyview', 'view'));
 $smarty->assign('viewdescription', $view->get('description'));

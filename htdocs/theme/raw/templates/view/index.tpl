@@ -1,10 +1,7 @@
 {include file="header.tpl"}
-{include file="sidebar.tpl"}
-{include file="columnleftstart.tpl"}
 
-<div class="addicon">
+<div class="page-buttons">
   {$createviewform}
-  {$createtemplateform}
   <form method="post" action="{$WWWROOT}view/choosetemplate.php">
     <input type="submit" class="submit" value="{str tag="copyaview" section="view"}">
 {if $GROUP}
@@ -14,7 +11,6 @@
 {/if}
   </form>
 </div>
-<div class="cl"></div>
 <div>
 
 {if $institution}
@@ -100,6 +96,5 @@
 
 </div>
 
-{include file="columnleftend.tpl"}
 {include file="footer.tpl"}
 

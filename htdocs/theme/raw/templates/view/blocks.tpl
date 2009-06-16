@@ -16,7 +16,7 @@
                 <div id="blocktype-list">
                     {$blocktype_list}
                 </div>
-                <div id="blocktype-footer"></div>
+                <div class="cl"></div>
             </div>
 
             <div class="fr">

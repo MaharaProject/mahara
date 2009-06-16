@@ -115,7 +115,7 @@ $smarty = smarty(
     array('stylesheets' => array('style/views.css'))
 );
 $smarty->assign('INLINEJAVASCRIPT', $js);
-$smarty->assign('heading', TITLE);
+$smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->assign('helptext', $helptext);
 $smarty->assign('views', $views);
 $smarty->display('view/choosetemplate.tpl');
