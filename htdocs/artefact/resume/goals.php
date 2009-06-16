@@ -87,6 +87,6 @@ $gform = array(
 $goalform = pieform($gform);
 $smarty = smarty();
 $smarty->assign('goalform', $goalform);
-$smarty->assign('heading', get_string('mygoals', 'artefact.resume'));
+$smarty->assign('PAGEHEADING', hsc(get_string('mygoals', 'artefact.resume')));
 $smarty->display('artefact:resume:goals.tpl');
 ?>

@@ -87,6 +87,6 @@ $sform = array(
 $skillform = pieform($sform);
 $smarty = smarty();
 $smarty->assign('skillform', $skillform);
-$smarty->assign('heading', get_string('myskills', 'artefact.resume'));
+$smarty->assign('PAGEHEADING', hsc(get_string('myskills', 'artefact.resume')));
 $smarty->display('artefact:resume:skills.tpl');
 ?>

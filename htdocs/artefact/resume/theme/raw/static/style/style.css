@@ -34,3 +34,8 @@ tr#contactinformation_contactinformation_container td .resumecontactinfo th {
 	width: 30%;
 	display: table-cell;
 }
+
+#personalinformation fieldset th label {
+    font-weight: bold;
+    font-size: 1em;
+}

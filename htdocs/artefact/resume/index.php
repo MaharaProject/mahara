@@ -212,8 +212,8 @@ $addstr = get_string('add');
 $editstr = get_string('edit');
 $delstr = get_string('delete');
 $confirmdelstr = get_string('compositedeleteconfirm', 'artefact.resume');
-$imagemoveblockup   = json_encode(theme_get_url('images/move-block-up.png'));
-$imagemoveblockdown = json_encode(theme_get_url('images/move-block-down.png'));
+$imagemoveblockup   = json_encode($THEME->get_url('images/move-block-up.png'));
+$imagemoveblockdown = json_encode($THEME->get_url('images/move-block-down.png'));
 $upstr = get_string('moveup', 'artefact.resume');
 $downstr = get_string('movedown', 'artefact.resume');
 
@@ -368,7 +368,7 @@ EOF;
 
 $smarty->assign('compositeforms', $compositeforms);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
-$smarty->assign('heading', get_string('myresume', 'artefact.resume'));
+$smarty->assign('PAGEHEADING', hsc(get_string('myresume', 'artefact.resume')));
 $smarty->display('artefact:resume:index.tpl');
 
 function coverletter_submit(Pieform $form, $values) {
