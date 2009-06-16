@@ -298,7 +298,7 @@ $smarty->assign('canmessage', can_send_message($loggedinid, $userid));
 $smarty->assign('NAME',$name);
 $smarty->assign('USERID', $userid);
 $smarty->assign('viewcontent', $view->build_columns());
-$smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('user/view.tpl');
 
 // Send an invitation to the user to join a group

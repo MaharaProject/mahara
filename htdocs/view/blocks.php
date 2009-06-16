@@ -146,7 +146,8 @@ foreach (array_keys($_POST + $_GET) as $key) {
     }
 }
 
-$smarty->assign('heading', TITLE);
+$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('SIDEBARS', false);
 $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
 $smarty->assign('category', $category);
 $smarty->assign('new', $new);
