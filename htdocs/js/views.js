@@ -855,8 +855,8 @@ function ViewManager() {
                 var columnContainerPosition   = elementPosition(self.columnContainer);
                 var columnContainerDimensions = elementDimensions(self.columnContainer);
 
-                var footerDimensions = getElementDimensions('footerwrap', self.bottomPane);
-                var footerPosition   = getElementPosition('footerwrap', self.bottomPane);
+                var footerDimensions = getElementDimensions('footer-wrap', self.bottomPane);
+                var footerPosition   = getElementPosition('footer-wrap', self.bottomPane);
 
                 setElementPosition(hotzone, {x: blockinstancePosition.x, y: previousHotzonePosition.y + previousHotzoneDimensions.h});
                 setElementDimensions(hotzone, {
@@ -874,8 +874,8 @@ function ViewManager() {
                 var columnContent = getFirstElementByTagAndClassName('div', 'column-content', i);
                 var hotzone = self.createHotzone(columnContent, appendChildNodes, true);
 
-                var footerDimensions = getElementDimensions('footerwrap', self.bottomPane);
-                var footerPosition   = getElementPosition('footerwrap', self.bottomPane);
+                var footerDimensions = getElementDimensions('footer-wrap', self.bottomPane);
+                var footerPosition   = getElementPosition('footer-wrap', self.bottomPane);
 
                 setElementPosition(hotzone, {x: getElementPosition(columnContent, self.columnContainer).x, y: 0});
                 setElementDimensions(hotzone, {
