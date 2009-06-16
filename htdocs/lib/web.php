@@ -240,7 +240,7 @@ EOF;
             }
             if (isset($themepaths[$jsfile])) {
                 foreach ($themepaths[$jsfile] as $themepath) {
-                    $theme_list[$themepath] = theme_get_url($themepath);
+                    $theme_list[$themepath] = $THEME->get_url($themepath);
                 }
             }
         }
