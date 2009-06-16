@@ -680,7 +680,6 @@ function ViewManager() {
                         setOpacity(clone, 0.5);
                     }
                     else {
-                        console.log('appending child nodes');
                         appendChildNodes(clone, i.cloneNode(true));
                     }
                 },
