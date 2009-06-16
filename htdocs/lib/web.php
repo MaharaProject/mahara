@@ -274,7 +274,7 @@ EOF;
                 if (is_callable(array($pluginclass, 'themepaths'))) {
                     $tmpthemepaths = call_static_method($pluginclass, 'themepaths', $name);
                     foreach ($tmpthemepaths as $themepath) {
-                        $theme_list[$themepath] = theme_get_url($themepath);
+                        $theme_list[$themepath] = $THEME->get_url($themepath);
                     }
                 }
             }
