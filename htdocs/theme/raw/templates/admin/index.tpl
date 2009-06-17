@@ -43,7 +43,7 @@
         <li><strong><a href="{$WWWROOT}admin/site/menu.php">{str tag=linksandresourcesmenu section=admin}</a></strong> - {str tag=linksandresourcesmenudescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/site/networking.php">{str tag=networking section=admin}</a></strong> - {str tag=networkingdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/site/views.php">{str tag=siteviews section=admin}</a></strong> - {str tag=siteviewsdescription section=admin}</li>
-        <li><strong><a href="{$WWWROOT}admin/site/files.php">{str tag=sitefiles section=admin}</a></strong> - {str tag=sitefilesdescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}artefact/file/sitefiles.php">{str tag=sitefiles section=admin}</a></strong> - {str tag=sitefilesdescription section=admin}</li>
     </ul>
 <h3>{str tag=configusers section=admin}</h3>
     <ul>
