@@ -18,10 +18,11 @@
 </table>
 
 <h3>{str tag=Topics section="interaction.forum"}</h3>
+{if $membership}
 <span class="addicon fr">
 <a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id|escape}">{str tag="newtopic" section="interaction.forum}</a>
 </span>
-
+{/if}
 {str tag="groupadminlist" section="interaction.forum"}
 {foreach name=groupadmins from=$groupadmins item=groupadmin}<a href="{$WWWROOT}user/view.php?id={$groupadmin}" class="groupadmin">
 <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupadmin}" alt="">
