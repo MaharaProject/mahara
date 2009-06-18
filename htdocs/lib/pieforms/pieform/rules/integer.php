@@ -62,6 +62,9 @@ function pieform_rule_integer_i18n() {/*{{{*/
         'nl.utf8' => array(
             'integer'   => 'Dit veld moet een geheel getal (integer) zijn'
         ),
+        'cs.utf8' => array(
+            'integer'   => 'Musíte zadat celé číslo'
+        ),
 
     );
 }/*}}}*/

@@ -16,3 +16,5 @@ Changes:
  * Patched to not uppercase <b>, <strong>, h1-3 or th - it looks horrible and
    messes with the link generation
  * Security patch applied to remove use of /e modifier - see debian bug 524778
+ * Patched to process unknown entities before '&amp;' (stops large amounts of
+   text between a '&amp;' and a subsequent ';' from being removed)
