@@ -123,49 +123,6 @@ class PluginArtefactFile extends PluginArtefact {
 
     public static function jsstrings($type) {
         static $jsstrings = array(
-            'file' => array(
-                'mahara' => array(
-                    'cancel',
-                    'delete',
-                    'edit',
-                    'Permissions',
-                    'republish',
-                    'tags',
-                    'view',
-                ),
-                'artefact.file' => array(
-                    'copyrightnotice',
-                    'create',
-                    'createfolder',
-                    'deletefile?',
-                    'deletefolder?',
-                    'Description',
-                    'destination',
-                    'editfile',
-                    'editfolder',
-                    'File',
-                    'fileexistsoverwritecancel',
-                    'filenamefieldisrequired',
-                    'home',
-                    'Name',
-                    'namefieldisrequired',
-                    'nofilesfound',
-                    'overwrite',
-                    'savechanges',
-                    'timeouterror',
-                    'title',
-                    'titlefieldisrequired',
-                    'unlinkthisfilefromblogposts?',
-                    'upload',
-                    'uploadfile',
-                    'uploadfileexistsoverwritecancel',
-                    'uploadingfiletofolder',
-                    'youmustagreetothecopyrightnotice',
-                ),
-                'group' => array(
-                    'Role',
-                ),
-            ),
             'filebrowser' => array(
                 'mahara' => array(
                     'remove',
