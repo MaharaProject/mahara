@@ -1,10 +1,51 @@
 /**
  * Views stylesheet - common between all themes
+ *
+ * Copyright (C) 2006-2009 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
  */
 
+/* The loading spinner/message that pops up before the view is loaded */
+#views-loading {
+    text-align: center;
+    margin: 1em;
+    font-size: 100%;
+    color: #666;
+}
 
+/* The top part of the page, containing the category selector */
+#top-pane {
+    background-color: #ddd;
+    margin-bottom: .5em;
+    padding: .5em;
+}
 
-/* This needs lots of work, and probably some html changes */
+/* The tabs that allow you to select a blocktype category */
+#category-list ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+#category-list li {
+    display: inline;
+    line-height: 1.8em;
+    margin: 0 0 0 .5em;
+    padding: 0;
+}
+#category-list li a {
+    background-color: #eee;
+    padding: .3em .5em;
+}
+#category-list li.current a {
+    background-color: #FFF;
+    color: #333;
+    cursor: default;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* The panel that contains the blocktype icons */
 #blocktype-list {
     overflow: auto;
     min-height: 95px;
@@ -16,22 +57,55 @@
     float: left;
     text-align: center;
     margin: 1em 1em 0;
+    width: 22%;
+}
+#blocktype-list {
+    background-color: #FFF;
+    padding: .5em .5em 1em .5em;
+    font-size: .8em;
+}
+#blocktype-list .blocktype-radio {
+    border: none;
+    cursor: default; /* ie fix */
+}
+#blocktype-list .blocktype h4 {
+    margin: 0;
+}
+#noblocks {
+    font-size: larger;
+    color: #666;
+    margin-top: 40px;
+    text-align: center;
 }
 
-#blocktype-footer {
-    clear: left;
+/* Bottom half of the page */
+#page #bottom-pane {
+    margin: .5em 0;
+    border: 5px solid #eee;
 }
-
-/* the div containing all the columns */
 #column-container {
     width: 100%;
-    margin-top: 1em;
-    padding: .5em 0 1em 0.2%;
 }
+#blocksinstruction {
+    padding: 0 1em .5em;
+    background: #eee;
+    color: #919191;
+    font-weight: bold;
+}
+
 #column-container input.submit {
     cursor: pointer;
 }
-/* each column div will have a class matching one of these, the number is the number of columns in total, so widths can be made equal */
+.remove-column input.removecolumn {
+    width: 50px;
+}
+#column-container .column-header input[disabled="disabled"] {
+    color: #ccc;
+    cursor: default;
+}
+
+/* each column div will have a class matching one of these, the number is the
+   number of columns in total, so widths can be made equal */
 .columns1 {
     width: 98%;
 }
@@ -57,6 +131,7 @@
 
 /* An explicit height for when there is one column and no remove button */
 .column-header {
+    padding-top: .5em;
     width: 100%;
     position: relative;
     height: 25px;
@@ -64,64 +139,166 @@
 .add-button {
     text-align: center;
 }
-
 /* contains the left-most 'add column' button */
 .add-column-left {
     position: absolute;
-    top: 0;
+    top: .5em;
     left: 0;
 }
 /* contains all add column buttons in the middle of two columns */
 .add-column-center {
     position: absolute;
-    top: 0;
+    top: .5em;
     right: 0;
 }
-/* contains the right most column */
+/* contains the right most 'add column' button */
 .add-column-right {
     position: absolute;
-    top: 0;
+    top: .5em;
     right: 0;
 }
-
 /* contains the 'remove column' buttons */
 .remove-column {
     text-align: center;
 }
-
 /* needed for when there are no add/remove buttons so the column doesn't disappear */
 .column-header-empty {
     height: 1px;
 }
 
+.column-content {
+    min-height: 2em;
+}
+
+#block-placeholder {
+    border: 2px dashed #bfbfbf;
+    margin-top: 1em;
+}
+
 /* block instance styles */
 .blockinstance {
+    margin: 1em 0 2em 0;
+    padding: 0;
     position: relative;
 }
 
 .blockinstance-controls {
     position: absolute;
-    top: 9px;
-    right: 9px;
+	right: 0;
+	top: 2px;
+}
+.blockinstance-controls input {
+    height: 16px;
+    width: 16px;
+    border: none;
+    background: none;
+    padding: 0;
 }
 .blockinstance-controls input.submit {
     margin: 0;
 }
-.blockinstance-content .maharatable {
-    border: 0;
+.blockinstance.configure {
+  border: 4px solid #ddd;
+  background: #fff;
+  width: 700px;
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
+  padding: .25em .5em;
+}
+#main-column .blockinstance-header h4, .blockinstance.configure h4 {
+    margin: 0;
+    cursor: default;
+}
+.blockinstance.configure table {
+    margin: 1em 0;
+    width: 100%;
+}
+.blockinstance.configure td {
+    padding: 0;
+}
+
+
+/* styling the tabs for the artefact chooser */
+ul.artefactchooser-tabs.files {
+  margin-top: 1em;
+}
+ul.artefactchooser-tabs {
+  padding: 0;
+  margin: 0;
+  font-size: .9em;
+  list-style: none;
+}
+ul.artefactchooser-tabs li {
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+ul.artefactchooser-tabs li a {
+  padding: .3em .5em;
+  text-decoration: none;
+  background: #eee;
+}
+ul.artefactchooser-tabs li.current a {
+  background: #ddd;
+  color: #333;
+}
+ul.artefactchooser-subtabs {
+  margin: 2px;
+  padding: 0 0 .2em 0;
+  font-size: .9em;
+  list-style: none;
+  border-bottom: 1px solid #ddd;
+}
+ul.artefactchooser-subtabs li {
+  display: inline;
+}
+ul.artefactchooser-subtabs li a {
+  text-decoration: none;
+  padding: 2px;
+}
+ul.artefactchooser-subtabs li.current a {
+  color: #333;
+  font-weight: bold;
+}
+
+#artefactchooser-body {
+    border: 1px solid #ddd;
+	padding: .25em;
+}
+#artefactchooser-searchsubmit {
+    margin: 0;
+}
+div.artefactchooser-splitter {
+    padding: .25em 0 0;
+}
+.blockinstance-content p.noartefacts {
+    color: #808080;
+    text-align: center;
+    padding: .5em;
+}
+.blockconfig-background {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+}
+#artefactids_pagination {
+    text-align: center;
+    white-space: nowrap;
+	margin: 0;
+}
+#artefactids_pagination .results {
+	margin: 0;
+}
+.ac-pagination a, .ac-pagination .disabled {
+    margin: 0 1px;
+    padding: 1px 3px;
 }
 
 #view-wizard-controls form {
     display: inline;
 }
 
-.maincontent ul.artefactchooser-tabs {
-    list-style-type: none;
-    padding: 0;
-    margin: .5em .5em 0;
-    width: 100%;
-}
-.maincontent ul.artefactchooser-tabs li {
-    display: inline;
-    padding-right: .5em;
+#view-description {
+    margin: .5em .25em;
 }

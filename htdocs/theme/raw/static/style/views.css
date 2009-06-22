@@ -2,16 +2,6 @@
  * Stylesheet for views for the default theme
  */
 
-#views-loading {
-    text-align: center;
-    margin: 1em;
-    font-size: 100%;
-    color: #547C22;
-}
-
-p.view-description {
-    margin: .5em .25em;
-}
 /** When viewing an artefact */
 #view .filedata-icon {
     margin: 0 .5em;
@@ -25,37 +15,9 @@ p.view-description {
     padding: 5px 0 0 0;
 }
 
-#top-pane {
-    background: #ddd;
-    margin-bottom: .5em;
-    padding: .5em .5em .5em 0;
-}
-#category-list ul {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-    width: 100%;
-}
-#category-list li {
-    margin: 0 0 0 .5em;
-	padding: 0;
-	line-height: 1.8em;
-	display: inline;
-}
-#category-list li a {
-    background: #eee;
-    padding: .3em .5em;
-}
 #category-list li a:hover {
-	text-decoration: none;
-	background: #f2f5e6;
-}
-#category-list li.current a {
-    font-weight: bold;
-    background: #FFF;
-	color: #333;
-    cursor: default;
-	text-decoration: none;
+    background-color: #f2f5e6;
+    text-decoration: none;
 }
 
 #layout-link {
@@ -71,110 +33,18 @@ p.view-description {
 	padding-left: 1.5em;
 	font-weight: bold;
 }
-#page #bottom-pane {
-    margin: .5em 0;
-	border: 5px solid #eee;
-}
-
-#blocksinstruction {
-    padding: .5em 1em;
-    background: #eee;
-    color: #919191;
-	font-style: italic;
-}
 
 /* This rule is incredibly annoying, as it enforces the widths on a whole bunch of tables that don't need to be forced - like the blog attachments table and any tables the user generates by the wysiwyg editor. Can it be made more specific? */
-.blockinstance-content table {
+/*.blockinstance-content table {
 	width: 100%;
 	* width: 99%;
-}
+}*/
 
 
 
 
-#column-container {
-	padding: 0;
-	margin: 0;
-}
 
-#blocktype-list {
-    background-color: #FFF;
-    padding: .5em .5em 1em .5em;
-    margin: 0 0 0 .5em;
-    font-size: .8em;
-}
-/* don't ask... fixing some wierd firefox problem */
-#blocktype-list * {
-    margin: 0;
-}
-#blocktype-list .blocktype-radio {
-    border: none;
-    /* ie fix */
-    cursor: default;
-}
-#blocktype-list ul li {
-	width: 22%;
-}
-
-#noblocks {
-    font-size: larger;
-    color: #547C22;
-    margin-top: 40px;
-    text-align: center;
-}
-
-.add-column-center {
-    text-align: right;
-}
-.column-header input {
-    letter-spacing: -1px;
-    font-weight: normal;
-    height: 16px;
-    width: 42px;
-    color: #FFF;
-    /* konqueror/safari fix */
-    border: none;
-    background: none;
-    padding: 0;
-}
-.remove-column input.removecolumn {
-    width: 50px;
-}
-#column-container .column-header input[disabled="disabled"] {
-    color: #ccc;
-    cursor: default;
-}
-
-
-.blockinstance {
-    margin: 1em 0 2em 0;
-    padding: 0;
-}
-.blockinstance-controls {
-	position: absolute;
-	right: 0;
-	top: 2px;
-}
-.blockinstance-controls input {
-    height: 16px;
-    width: 16px;
-    border: none;
-    background: none;
-    padding: 0;
-}
-.blockinstance-content {
-	font-size: .9em;
-}
-
-#artefactchooser-body table,
-#artefactchooser-body table th,
-#artefactchooser-body table td {
-	text-align: left;
-}
-
-.column-content {
-    min-height: 18px;
-}
+/* todo: test this */
 .column-content .add-button {
     margin: 5px 0;
 }
@@ -192,103 +62,6 @@ body:last-child:not(:root:root) .newblockhere {
     color: #547C22;
 }
 
-#block-placeholder {
-    border: 2px dashed #bfbfbf;
-    margin-top: 1em;
-}
-
-#artefactids_pagination {
-    text-align: center;
-    white-space: nowrap;
-	margin: 0;
-}
-#artefactids_pagination .results {
-	margin: 0;
-}
-
-.ac-pagination a, .ac-pagination .disabled {
-    padding: 1px 3px;
-    margin: 0 1px;
-}
-
-/* styling the tabs for the artefact chooser */
-ul.artefactchooser-tabs.files {
-  margin-top: 1em;
-}
-ul.artefactchooser-tabs {
-  padding: 0;
-  margin: 0;
-  font-size: .9em;
-  list-style: none;
-}
-ul.artefactchooser-tabs li {
-  display: inline;
-  margin: 0;
-  padding: 0;
-}
-ul.artefactchooser-tabs li a {
-  padding: .3em .5em;
-  text-decoration: none;
-  background: #eee;
-}
-ul.artefactchooser-tabs li.current a {
-  background: #ddd;
-  color: #333;
-}
-ul.artefactchooser-subtabs {
-  margin: 2px;
-  padding: 0 0 .2em 0;
-  font-size: .9em;
-  list-style: none;
-  border-bottom: 1px solid #ddd;
-}
-ul.artefactchooser-subtabs li {
-  display: inline;
-}
-ul.artefactchooser-subtabs li a {
-  text-decoration: none;
-  padding: 2px;
-}
-ul.artefactchooser-subtabs li.current a {
-  color: #333;
-  font-weight: bold;
-}
-
-#artefactchooser-body {
-    border: 1px solid #ddd;
-	padding: .25em;
-}
-#artefactchooser-searchsubmit {
-    margin: 0;
-}
-div.artefactchooser-splitter {
-    padding: .25em 0 0;
-}
-.blockinstance-content p.noartefacts {
-    color: #808080;
-    text-align: center;
-    padding: .5em;
-}
-.blockinstance-content table p img {
-	padding: 1em 2em;
-}
-.blockconfig-background {
-  width: 100%;
-  text-align: center;
-  margin-top: 20px;
-}
-.blockinstance.configure {
-  border: 4px solid #ddd;
-  background: #fff;
-  width: 700px;
-  text-align: left;
-  margin-left: auto;
-  margin-right: auto;
-  padding: .25em .5em;
-}
-.blockinstance.configure th {
-  text-align: left;
-}
 
 /* VIEWS */
 #feedbacktable .details {

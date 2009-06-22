@@ -1,79 +1,55 @@
 /**
- * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Stylesheet for Mahara's Raw theme.
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @author     Evonne Cheung <evonne@catalyst.net.nz>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
+ * Copyright (C) 2006-2009 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
  */
 
-body {
+/* General rules */
+html {
     margin: 0;
     padding: 0;
+}
+body {
+    color: #333;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 75%;
-	line-height: 1.6em;
-}
-
-/* link colours */
-/* default */
-body,
-label,
-.required .searchtd label,
-.emaillist .validated label,
-#accountprefs td label,
-#personalinformation_gender_container label,
-#register td label,
-.sidebar #friendscontrol label {
-	color: #333;
-}
-
-
-.hidden {
-    display: none;
-}
-.nojs-hidden-inline, .nojs-hidden-block {
-    display: none;
-}
-/* Hides without browsers removing from the dom tree */
-.safe-hidden {
-    position: absolute;
-    visibility: hidden;
-    top: 0;
-}
-
-/* Base styles */
-table {
-	border-collapse: collapse;
-	border-spacing: 0;
-	padding: 0;
-	margin: 0;
-}
-
-img { 
-	border: 0;
-}
-p {
-    margin: 1em 0;
+    line-height: 1.6em;
+    margin: 0;
     padding: 0;
 }
-
-/* Alignments and Floats */
+img {
+    border: 0;
+}
+label {
+    font-weight: bold;
+}
+#main-column h1, #main-column h2, #main-column h3, #main-column h4, #main-column h5, #main-column h6 {
+    margin: 1em 0 .5em;
+}
+#main-column h1 + p, #main-column h2 + p, #main-column h3 + p, #main-column h4 + p, #main-column h5 + p, #main-column h6 + p, #main-column-container h1:first-child {
+    margin-top: 0;
+}
+#main-column h1 {
+    font-size: 2.25em;
+}
+#main-column h2 {
+    font-size: 1.8em;
+}
+#main-column h3 {
+    font-size: 1.4em;
+}
+#main-column h4 {
+    font-size: 1.2em;
+}
+#main-column h5 {
+    font-size: 1em;
+}
+#main-column h6 {
+    font-size: .9em;
+}
 .left {
-	text-align: left;
+    text-align: left;
 }
 .center {
     text-align: center;
@@ -81,22 +57,13 @@ p {
 .right {
     text-align: right;
 }
-
-#staffusers table,
-#adminusers table,
-#institutionusers table,
-#searchresults,
-.fullwidth {
-    width: 100%;
-    * width: 98%;
-}
 .fl {
     float: left;
-	padding-right: 1em;
+/*  padding-right: 1em;*/
 }
 .fr {
     float: right;
-	padding-left: 1em;
+/*  padding-left: 1em;*/
 }
 .cl {
     clear: left;
@@ -106,6 +73,488 @@ p {
 }
 .cb {
     clear: both;
+}
+.fullwidth {
+    width: 100%;
+}
+.hidden {
+    display: none;
+}
+/* Hides without being "destructive" - element + children still have full
+   width/height */
+.safe-hidden {
+    position: absolute;
+    visibility: hidden;
+    top: 0;
+}
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+    background-color: #808080;
+    filter: alpha(opacity=50);
+}
+/** all browsers except ie7 hack to make it at least partially work */
+html>/**/body #overlay {
+    z-index: 1;
+}
+table {
+    border-spacing: 0;
+}
+th {
+    padding: .25em 0;
+    text-align: left;
+    white-space: nowrap;
+    vertical-align: top;
+}
+td {
+    padding: .25em .5em;
+    vertical-align: top;
+}
+.r0 {
+    background-color: #f1f1f1;
+}
+.r1 {
+    background-color: #f7f7f7;
+}
+.nojs-hidden-inline, .nojs-hidden-block, .nojs-hidden-table {
+    display: none;
+}
+
+/* Top of page elements */
+#container {
+    background-color: #fff;
+    margin: 0 auto;
+    max-width: 1400px;
+    min-width: 950px;
+    width: 90%;
+}
+#loading-box {
+    /* TODO: check this rule */
+    background-color: #ddd;
+    display: none;
+    padding: .5em 1em;
+    position: fixed;
+    * position: absolute;
+    top: 0;
+}
+#site-logo {
+    float: left;
+    margin: 0;
+    padding: .5em;
+}
+#language-select, #usf {
+    text-align: right;
+    padding-top: 1em;
+}
+
+
+/* Navigation shared rules */
+#main-nav ul, #sub-nav ul {
+    margin: 0;
+    padding: 0;
+}
+#main-nav li, #sub-nav li {
+    display: inline;
+}
+#main-nav li.selected a, #sub-nav li.selected a {
+    color: #333;
+    cursor: default;
+    text-decoration: none;
+}
+
+/* Main navigation */
+#main-nav {
+    clear: left;
+    font-size: 1.2em;
+    font-weight: bold;
+    height: 1.6em;
+    white-space: nowrap;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) { /* todo: is this needed? should be in safari-specific stylesheet anyway */
+    #main-nav ul { padding: 5px 0 6px 0; }
+}
+#main-nav li a {
+    padding: .4em 1em;
+}
+#main-nav li.selected a {
+    background-color: #ddd;
+}
+
+/* Sub navigation (second row of tabs) */
+#sub-nav {
+    background-color: #ddd;
+    padding: .25em;
+    white-space: nowrap;
+}
+#sub-nav li a {
+    padding: .25em 1em;
+}
+
+/* Main content area */
+#main-wrapper {
+    clear: both;
+    width: 100%;
+}
+#main-column {
+    padding: 0 1.5em 1em;
+    overflow: scroll;
+}
+#main-column-container {
+    position: relative;
+}
+
+/* Informational messages */
+#messages {
+    padding: .5em 0;
+    font-size: larger;
+    font-weight: bold;
+}
+div.ok, div.error, div.info {
+    padding: .4em .5em .4em 2.5em;
+}
+#messages .ok {
+    color: #547c22;
+    background: #e7f1c3 url(../images/success.gif) no-repeat .5em;
+}
+#messages .error {
+    color: #dd0221;
+    background: #ffd3d9 url(../images/failure.gif) no-repeat .5em;
+}
+#messages .info {
+    color: #1666a9;
+    /* TODO: get evonne to look at these icons */
+    background: #d2ebff url(../images/icon_question.gif) no-repeat .5em;
+}
+#messages img {
+    padding-top: .2em;
+}
+.backtrace {
+    font: normal 100% monospace;
+}
+.message {
+	margin: .5em 0;
+    padding: .5em;
+    background: #eee;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+
+/* Tabbed pages */
+/*#grouppage-tabs ul,*/
+ul.profile-tabs {
+  font-size: .9em;
+  font-weight: bold;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/*#grouppage-tabs ul li,*/
+ul.profile-tabs li {
+  display: inline;
+  margin: 0 0 0 .5em;
+}
+/*#grouppage-tabs ul li.selected a,
+#grouppage-tabs ul li.selected a:hover,*/
+ul.profile-tabs li a.current-tab {
+  color: #333;
+  cursor: default;
+  text-decoration: none;
+  background: #ddd;
+}
+/*#grouppage-tabs li a,*/
+ul.profile-tabs li a {
+  padding: .4em 1em .3em 1em;
+}
+/*#grouppage-tabs li a:hover,
+ul.profile-tabs li a:hover {
+}*/
+
+
+/* Forms */
+.required th, div.required label, .requiredmarker {
+    color: #cc6600;
+}
+.pieform td label {
+	font-weight: normal;
+	font-size: .9em;
+}
+div.grippie {
+	border-color: #d1d1d1;
+    border-style: solid;
+    border-width: 0 1px 1px 1px;
+    background: #eeeeee url(../images/grippie.png) no-repeat scroll 100% 50%;
+    cursor: s-resize;
+    height: 14px;
+}
+input.submit {
+    font-weight: bold;
+}
+.errmsg {
+    color: #cc0000;
+    font-size: .9em;
+}
+legend {
+	font-weight: bold;
+	font-size: 1.3em;
+}
+
+
+/* General sideblock rules */
+div.sideblock {
+    clear: both;
+    font-size: .9em;
+    padding: 1em 1.25em;
+}
+div.sideblock h3 {
+    font-size: 1.3em;
+    margin: 0 0 .5em 0;
+}
+
+/* Login sideblock */
+#login_submit_container {
+    display: inline;
+    float: left;
+}
+#login-helplinks a {
+    font-size: .85em;
+    line-height: 1.3em;
+    padding-left: .5em;
+}
+
+/* Profile sideblock */
+#profile-sideblock-username {
+    font-size: .9em;
+    font-weight: normal;
+}
+#user-profileicon {
+    float: right;
+    padding-left: .25em;
+}
+#sb-profile .sideblock-content > ul {
+    padding: 0;
+    list-style: none;
+}
+#sb-profile ul ul {
+    font-size: .9em;
+    list-style-type: disc;
+}
+#changeuser {
+    padding-top: 1em;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Online users sideblock */
+#sb-onlineusers ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+#sb-onlineusers li {
+    line-height: 2em;
+}
+#sb-onlineusers li img {
+    float: left;
+    margin-right: .35em;
+}
+#lastminutes {
+    float: right;
+    margin: 0;
+    color: #999;
+    font-style: italic;
+}
+
+
+/* Help popups & icons */
+.contextualHelp {
+    /* TODO check this rule */
+    padding: 1em;
+    margin: 0;
+    width: 250px;
+    max-height: 30%;
+    overflow: auto;
+    background-color: #f9f9f9;
+    border: 1px solid #b2b2b2;
+    cursor: help;
+    font-size: .9em;
+}
+.help a:focus {
+    outline: none;
+}
+.page-help-icon .help {
+    vertical-align: text-top;
+    font-size: .4em;
+    padding-top: .2em;
+}
+
+
+/* Buttons */
+.btn {
+    background-color: #92b328;
+    border-color: #d5ed8a #496000 #496000 #d5ed8a;
+    border-style: solid;
+    border-width: 1px;
+    color: #FFF;
+    padding: .2em .5em;
+    text-decoration: none;
+}
+div.page-buttons {
+    /* todo: possibly switch to being an ID instead of class */
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+div.page-buttons form,
+div.page-buttons form div {
+    display: inline;
+    padding-left: 1em;
+}
+
+/* Pagination */
+div.pagination  {
+	font-size: .9em;
+	margin: 1em 0;
+	text-align: center;
+}
+.pagination a {
+    border: 1px solid #d1d1d1;
+    margin: 0 .25em;
+    padding: .5em;
+    text-decoration: none;
+}
+.pagination .disabled {
+	background-color: #EBEBEB;
+    border: 1px solid #d1d1d1;
+    margin: 0 .25em;
+    padding: .5em;
+    text-decoration: none;
+}
+.pagination .selected {
+    border: 1px solid #d1d1d1;
+    font-weight: bold;
+    margin: 0 .25em;
+    padding: .5em;
+}
+.pagination .results {
+    color: #838383;
+    margin: 1em;
+    text-align: center;
+}
+
+/* Footer */
+#footer-wrap {
+    clear: both;
+    font-size: .9em;
+    padding: .5em;
+    background: #eee;
+}
+#footer-wrap p {
+    margin: .5em;
+}
+#footer-wrap p a {
+    padding: 0 .5em;
+}
+#powered-by {
+    margin: .5em 1em;
+    float: left;
+}
+#performance-info span {
+    padding-right: 1em;
+}
+
+
+/* Specific page rules */
+
+/* Export */
+#export h3 {
+    margin: .5em 0;
+}
+#export .radio-description {
+    padding-left: 2em;
+}
+#export fieldset {
+    padding: .5em;
+    margin: .5em;
+}
+#export .element div {
+    padding-bottom: .25em;
+}
+#export .view {
+    float: left;
+    padding-right: 2em;
+    white-space: nowrap;
+}
+#export fieldset {
+    border: none;
+}
+#export fieldset table {
+    width: 95%;
+    margin: 0 auto;
+}
+#export fieldset table div {
+    padding-left: 1.75em;
+}
+#export fieldset label {
+    font-size: normal;
+    font-weight: bold;
+}
+#export_submit_container {
+    text-align: center;
+}
+
+#exportgeneration {
+    text-align: center;
+}
+#progress {
+    border: 2px solid #d0d0d0;
+    height: 40px;
+    width: 600px;
+    margin-top: 1em;
+}
+div.progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #999;
+    height: 40px;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+}
+* html div.progress-bar {
+    * height: 45px;
+}
+div.progress-bar a {
+    color: #ffd !important;
+    text-decoration: underline !important;
+}
+p.progress-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: center;
+    color: #fff;
+    font-weight: bold;
+    width: 100%;
+}
+#progressbar {
+    height: 40px;
+}
+
+/*
+
+#staffusers table,
+#adminusers table,
+#institutionusers table,
+#searchresults,
+.fullwidth {
+    width: 100%;
+    * width: 98%;
 }
 .s {
     font-size: .9em;
@@ -130,58 +579,10 @@ pre {
 tt {
 	font-size: 1.2em;
 }
-.unvalidated { 
-}
 
-.hidden {
-    display: none;
-}
-/* Hides without browsers removing from the dom tree */
-.safe-hidden {
-    position: absolute;
-    visibility: hidden;
-    top: 0;
-}
-
-
-/* LINKS */
-a,
-a:link,
-a:active,
-a:visited {
-}
-a:hover {
-}
-
-
-/* TITLES */
-h1, h3, h4, h5, h6 {
-    margin: 0;
-    padding: 0;
-}
-h1 {
-    font-size: 3em;
-}
-h2 {
-    font-size: 1.8em;
-    margin: 0 0 .5em 0;
-}
-h3 {
-    font-size: 1.3em;
-}
-h4 {
-    font-size: 1.2em;
-}
-h5 {
-    font-size: 1em;
-}
-h6 {
-    font-size: .9em;
-}
-.maincontent table h3 a {
-}
 
 /*********************** FORM ELEMENTS ********************************/
+    /*
 form,
 form#login,
 #resumewrap form,
@@ -199,14 +600,7 @@ select {
 }
 
 /* Text fields and such */
-input.text, 
-input.password, 
-input.file,
-textarea,
-input[type=text],
-input[type=password],
-input[type=file] {
-}
+    /*
 input.radio, 
 input.checkbox,
 input[type=radio], 
@@ -224,14 +618,6 @@ table.mceEditor {
 .mceContentBody {
 	padding: .5em 1em !important;
 }
-div.grippie {
-	border-color: #d1d1d1;
-    border-style: solid;
-    border-width: 0 1px 1px 1px;
-    background: #eeeeee url(../images/grippie.png) no-repeat scroll 100% 50%;
-    cursor: s-resize;
-    height: 14px;
-}
 /* td for grippie to work 
 .maincontent #profileform #profileform_address_container td,
 .maincontent #contactus #contactus_message_container td {
@@ -241,6 +627,7 @@ div.grippie {
 
 
 /******************** LABEL *************************/
+/*
 label,
 .required .searchtd label {
     font-weight: bold;
@@ -251,28 +638,12 @@ td label,
 th label {
     margin: 0;
 }
-.required label,
-.required th,
-.required td label,
-.required td,
-.requiredmarker,
-#register_tandc_container th {
-    color: #cc6600;
-}
-/* labels that ended up with required colour but needs to be normal */
-.emaillist .validated label,
-#accountprefs td label,
-#personalinformation_gender_container label,
-#register td label,
-.sidebar #friendscontrol label {
-	font-weight: normal;
-	font-size: .9em;
-}
 
 
 
 /******************** BUTTONS **********************/
 /* Default light buttons to the big ones */
+    /*
 input.submit, 
 input.button, 
 button,
@@ -290,11 +661,13 @@ button,
 	border-style: solid;
 	border-width: 1px;
     color: #FFF;*/
+/*
     cursor: pointer;
 	font-size: .9em;
     padding: .2em .5em;
 }
 /* Default dark buttons to the big ones */
+    /*
 input.cancel,
 input.cancelbackcreate,
 button.cancel,
@@ -308,16 +681,19 @@ button.cancel,
 	border-style: solid;
 	border-width: 1px;
     color: #FFF;*/
+/*
     cursor: pointer;
 	font-size: .9em;
     padding: .2em .5em;
 }
 /* Ones inside tables should be smaller... */
+    /*
 #menuitemlist input.button,
 .viewitem input {
     padding: .1em .3em;
 }
 /* funny hover underlines */
+    /*
 #btn-logout:hover,
 .addicon a:hover,
 #btn-settings:hover,
@@ -329,12 +705,14 @@ button.cancel,
 	text-decoration: none;
 }
 /***** DELETE RED BUTTON ********/
+    /*
 #edituser_delete_submit {
     /*background-color: #ca0000;
 	border-color: #D9DFEA #b2b2b2 #b2b2b2 #D9DFEA;
 	border-style: solid;
 	border-width: 1px;
     color: #FFF;*/
+/*
     margin: 0 .25em;
     cursor: pointer;
 	font-size: .9em;
@@ -342,6 +720,7 @@ button.cancel,
 }
 
 /***** ACCESS ICON LINKS ******/
+    /*
 #togglepublic_submit {
 	background: url(../images/icon-access.gif) no-repeat left 4px;
     padding-left: 1em;
@@ -349,6 +728,7 @@ button.cancel,
 	border: 0;
 }
 /****** ADD ICON LINKS ******/
+    /*
 .btn-request,
 #joinrequest {
 	background: url(../images/icon-add.gif) no-repeat left 4px;
@@ -376,6 +756,7 @@ input#myfriends_addfriend_add {
 	font-weight: bold;
 }
 /***** DELETE ICON LINKS ******/
+    /*
 #btn-deletethisview {
 	font-size: .85em;
 	color: #ca0000;
@@ -403,6 +784,7 @@ input#myfriends_addfriend_add {
 	color: #ca0000;
 }
 /****** DELETE FORUM ICON LINKS ********/
+    /*
 input.delete {
 	background: url(../images/icon-delete.gif) no-repeat left 7px;
 	padding-left: .7em;
@@ -418,6 +800,7 @@ input.delete {
 	font-weight: bold;
 }
 /***** EDIT ICON LINKS ******/
+    /*
 #btn-edit {
 	background: url(../images/icon-edit.gif) no-repeat left 4px;
 	border: none;
@@ -432,6 +815,7 @@ input.edit {
 	font-size: .85em;
 }
 /****** MAIL ICON LINKS *********/
+    /*
 #btn-sendmessage {
 	background: url(../images/icon-mail.gif) no-repeat left 4px;
 	padding-left: 1em;
@@ -447,17 +831,20 @@ input.edit {
 }
 /* TODO these may also belong to forum */
 /********* PENDING ICON LINKS *******/
+    /*
 #btn-pending {
 	padding-left: 1.2em;
 	background: url(../images/icon-pending.gif) no-repeat left 3px;
 }
 /***** REPLY ICON LINKS ******/
+    /*
 #btn-reply {
 	padding-left: 12px;
 	background: url(../images/icon-reply.gif) no-repeat left 4px;
 	font-weight: bold;
 }
 /********* REQUEST ICON LINKS *******/
+    /*
 #btn-requests {
 	border: 0;
 	background: url(../images/icon-add.gif) no-repeat left 3px;
@@ -465,6 +852,7 @@ input.edit {
     font-weight: bold;
 }
 /****** SEARCH BUTTONS *********/
+    /*
 #users_search_btn,
 .query-button,
 #query-button,
@@ -475,6 +863,7 @@ input.edit {
 #dosearch {
 }
 /****** SUBSCRIBE ICON LINKS ********/
+    /*
 #forumslist form tr.submit td input.submit {
 	background: url(../images/icon-subscribe.gif) no-repeat left 5px;
 	padding-left: .8em;
@@ -483,20 +872,12 @@ input.edit {
 	font-size: .87em;
 }
 /********* USER ICON LINKS **********/
+    /*
 li#pendingfriends a {
 	padding-left: 1em;
 	background: url(../images/icon-user.gif) no-repeat 2px 4px;
 }
 
-
-#loading_box {
-    display: none;
-    position: fixed;
-    * position: absolute;
-    top: 0;
-    background-color: #ddd;
-	padding: .5em 1em;
-}
 
 .sitemessage {
     background-color: #f99;
@@ -564,11 +945,13 @@ div.forumaddicon {
 
 
 /* CALENDAR */
+    /*
 a.pieform-calendar-toggle {
     border: 0 !important;
 }
 
 /* PAGINATION */
+    /*
 div.pagination  {
 	margin: 1em 0;
 	font-size: .9em;
@@ -601,24 +984,8 @@ div.pagination  {
 
 
 
-
-#installer tr {
-    height: 2em;
-}
-table#installer {
-    margin: 0 auto;
-    width: 90%;
-}
-#installer th {
-    vertical-align: middle;
-}
-#msgscol {
-    width: 50%;
-}
-
-
-
 /* AJAX LOGIN */
+    /*
 #ajax-login-form {
     border: 5px solid #ddd;
     background-color: #fff;
@@ -640,133 +1007,25 @@ table#installer {
     filter: alpha(opacity=50);
 }
 /** all browsers except ie7 hack to make it at least partially work */
-html>/**/body #overlay {
+    /*
+html>/**//*body #overlay {
     z-index: 1;
 }
 
 
 
 /* CONTENT LAYOUT */
-.clearer {
-	clear: both;
-	height: 0;
-	font-size: 0;
-}
-#container {
-    min-width: 950px;
-    width: 90%;
-    margin: 0 auto;
-	background: #FFF;
-}
-#containerX {
-    width: 90%;
-    margin: 0 auto;
-	background: #FFF;
-}
-#mainwrapper {
-    padding: 0;
-	margin: 0;
-	clear: both;
-}
-
-#column-left {
-    margin-right: 256px;
-}
-#column-full {
-	width: 100%;
-}
-#column-right {
-    width: 256px;
-    float: right;
-}
-.maincontent {
-    padding: 1em 1.5em 1em 1.5em;
-}
+    /*
 .maincontent.group {
     padding: 1em 1.5em 1em 2em;
 }
 
-/* HEADER ELEMENTS */
-#topwrapper {
-}
-#logo {
-	padding: 1em;
-}
 
 
-/* search box in header */
-
-
-/**************** TOP NAVIGATION ****************/
-#mainnav {
-	font-size: 1.2em;
-    font-weight: bold;
-	white-space: nowrap;
-	height: 1.6em;
-}
-#mainnav ul {
-	margin: 0;
-	padding: 0;
-}
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-	#mainnav ul { padding: 5px 0 6px 0; }
-}
-#mainnav li {
-    display: inline;
-}
-#mainnav li a,
-#mainnav li a:link,
-#mainnav li a:visited,
-#mainnav li a:active {
-	padding: .4em 1em;
-}
-#mainnav li a:hover,
-#mainnav li.selected a:hover {
-}
-#mainnav li.selected a,
-#mainnav li.selected a:link,
-#mainnav li.selected a:visited,
-#mainnav li.selected a:active {
-    color: #333;
-	background: #ddd;
-	cursor: default;
-	text-decoration: none;
-}
-
-
-/**************** SUB NAVIGATION ****************/
-#subnav {
-    font-size: 1em;
-	white-space: nowrap;
-	padding: .25em;
-	background: #ddd;
-}
-#subnav ul {
-	margin: 0;
-}
-#subnav li {
-    display: inline;
-}
-#subnav li a,
-#subnav li a:link,
-#subnav li a:visited,
-#subnav li a:active {
-	padding: .25em 1em;
-}
-#subnav li a:hover,
-#subnav li.selected a:hover {
-}
-#subnav li.selected a,
-#subnav li.selected a:link,
-#subnav li.selected a:visited,
-#subnav li.selected a:active {
-    color: #333;
-	cursor: default;
-	text-decoration: none;
-}
 
 
 /**************** IN PAGE TAB NAVIGATION ****************/
+    /*
 #grouppage-tabs ul,
 ul.profile-tabs {
   font-size: .9em;
@@ -796,14 +1055,7 @@ ul.profile-tabs li a:hover {
 }
 
 /**************** RIGHT SIDEBAR START *********/
-div.sidebar {
-    padding: 1em 1.25em;
-}
-div.sidebar h3 {
-    margin: 0 0 .5em 0;
-}
-div.sidebar p {
-}
+    /*
 div.sidebar ul {
 	margin: 0 0 1em 0;
 	padding: 0 0 0 1.5em;
@@ -827,56 +1079,8 @@ div.sidebar ul ul a {
 	font-weight: normal;
 }
 
-/* side profile */
-div.sidebar ul.sidebar-ul-title {
-	padding: 0;
-	list-style: none;
-}
-div.sidebar ul.sidebar-ul-title ul {
-	font-size: .9em;
-	list-style-type: disc;
-}
-div#user_profileicon {
-    float: right;
-    width: 50px;
-    height: 50px;
-	padding-left: .25em;
-	border: 1px solid #eee;
-}
-#changeuser {
-    padding-top: 1em;
-    text-align: center;
-    font-weight: bold;
-}
-
-/* Online users sideblock */
-#sb_onlineusers ul {
-    list-style: none;
-	margin: 0;
-	padding: 0;
-}
-#onlineusers a img {
-	float: left;
-	padding-right: .25em;
-}
-#onlineusers li {
-	line-height: 2em;
-}
-#onlineusers a img {
-	float: left;
-	margin-right: 3px;
-}
-#onlineusers li {
-	line-height: 20px;
-}
-#lastminutes {
-    float: right;
-    margin: 0;
-	color: #999999;
-	font-style: italic;
-}
-
 /* Side Quota Bar */
+    /*
 #quota_message {
     text-align: center;
     margin: 0 0 1em 0;
@@ -917,31 +1121,14 @@ div#user_profileicon {
 
 
 /* Side Friends Control */
+    /*
 .sidebar #friendscontrol label {
 	line-height: 1.8em;
 	vertical-align: top;
 }
 
-/* Side Login */
-#column-right #login_submit_container {
-    float: left;
-    display: inline;
-}
-#column-right input.text,
-#column-right input.password {
-    width: 220px;
-}
-#column-right #login a,
-#column-right #login a:link,
-#column-right #login a:active,
-#column-right #login a:visited {
-    font-size: .75em;
-	line-height: 1.3em;
-	padding-left: .5em;
-}
-
-
 /* Side Search */
+    /*
 .sidebar #selfsearch input {
 	width: 180px;
 }
@@ -950,6 +1137,7 @@ div#user_profileicon {
 
 /**************** MAIN CONTENT START *********/
 /* Message */
+    /*
 .message {
 	margin: .5em 0;
     padding: .5em;
@@ -962,30 +1150,9 @@ div#user_profileicon {
 }
 .message a {
 }
-/* system messages between nav and main content */
-#messages {
-    margin: 1em 0;
-}
-#messages .ok {
-    color: #547c22;
-    background: #e7f1c3 url(../images/icon_goodtogo.gif) no-repeat .5em 7px;
-    padding: .5em .5em .4em 2.5em;
-}
-#messages .error {
-    color: #dd0221;
-    background: #ffd3d9 url(../images/icon_problem.gif) no-repeat .5em 7px;
-    padding: .5em .5em .4em 2.5em;
-}
-#messages .info {
-    color: #1666a9;
-    background: #d2ebff url(../images/icon_question.gif) no-repeat .5em 4px;
-    padding: .5em .5em .4em 2.5em;
-}
-#messages img {
-    border: none;
-}
 
-/* system messages in main content */
+/* system messages in main content: seems to happen on account/activity, need to investigate */
+    /*
 .maincontent #messagediv {
     padding: .25em;
     color: #e3ac03;
@@ -994,44 +1161,7 @@ div#user_profileicon {
     font-style: italic;
 }
 
-/* Help Popup */
-.contextualHelp {
-    padding: 1em;
-    margin: 0;
-    width: 250px;
-    max-height: 30%;
-    overflow: auto;
-    background-color: #f9f9f9;
-    border: 1px solid #b2b2b2;
-    cursor: help;
-	font-size: .9em;
-}
-
-/* Help Icon */
-.help {
-    text-decoration: none;
-}
-.help a,
-.help a:link,
-.help a:active,
-.help a:visited {
-    font-size: 9px !important;
-    font-weight:normal !important;
-	background: none;
-	border: none;
-	padding: 0;
-	margin: none;
-}
-.help a:focus {
-    outline: none;
-}
-.help img {
-    border: none;
-    vertical-align: text-bottom;
-}
-.pagehelpicon .help {
-    vertical-align: text-top;
-}
+/* help
 .maincontent table.help-wrapper {
     border: none !important;
     width: auto !important;
@@ -1048,6 +1178,7 @@ div#user_profileicon {
 
 
 /* Tables */
+    /*
 .maincontent td {
 	padding: .25em .5em;
 	vertical-align: top;
@@ -1064,6 +1195,7 @@ div#user_profileicon {
 	text-align: left;
 }
 /******* TH in tbody that should appear like it's in thead with a line under and left aligned *******/
+    /*
 #menuitemlist table th,
 #postlist th,
 #forumslist th,
@@ -1074,6 +1206,7 @@ div#user_profileicon {
 	padding: .25em .5em;
 }
 /********* Tables that require a bottom border to enclose elements *********/
+    /*
 #filelist,
 #filebrowser,
 #attachedfiles,
@@ -1088,21 +1221,19 @@ div#user_profileicon {
 
 
 /* Tables that are inside MCE Editors */
+    /*
 .mceEditor td {
 	padding: 0 !important;
 }
 
 /* Legend */
+    /*
 legend {
 	font-weight: bold;
 	font-size: 1.3em;
 }
-legend a, 
-legend a:link, 
-legend a:visited, 
-legend a:active {
-}
 /* Fieldset */
+    /*
 fieldset {
 	padding: 1em 1.5em;
 	margin: 5px 0;
@@ -1140,18 +1271,6 @@ fieldset.collapsed .mceEditor td {
 }
 
 
-.tags {
-}
-
-/* Alternative row background colours */
-.r0 {
-    background-color: #f1f1f1;
-}
-.r1 {
-    background-color: #f7f7f7;
-}
-
-
 
 
 /****************************** PAGE BY PAGE STYLES **********************************/
@@ -1159,6 +1278,7 @@ fieldset.collapsed .mceEditor td {
 
 /* MY PORTFOLIO > MY VIEWS */
 
+    /*
 #myviewstable .viewitem {
 	float: left;
 	padding: .5em 1.5em .5em 0;
@@ -1283,6 +1403,7 @@ fieldset.collapsed .mceEditor td {
 }
 
 /* GROUPS */
+    /*
 #groupsviewlist {
 	list-style: none;
 }
@@ -1304,6 +1425,7 @@ fieldset.collapsed .mceEditor td {
 }
 
 /* GROUPS > MY GROUPS */
+    /*
 ul.groupuserstatus {
 	margin: .5em 1em;
 	float: right;
@@ -1328,6 +1450,7 @@ ul.groupuserstatus li.last {
 
 
 /* GROUPS > MY FRIENDS */
+    /*
 #friendslist ul.viewlist {
 	margin: 0;
 	font-size: 1em;
@@ -1367,6 +1490,7 @@ ul.groupuserstatus li.last {
 
 
 /* GROUPS > VIEWING A GROUP */
+    /*
 #grouppage-tabs {
   font-weight: bold;
 }
@@ -1415,6 +1539,7 @@ ul.groupuserstatus li.last {
 
 
 /* GROUPS > GROUP VIEWS */
+    /*
 ul#groupviewoptions {
     list-style-type: none;
     font-weight: bold;
@@ -1443,12 +1568,14 @@ table.groupviews{
 
 
 /* SETTINGS > PREFERENCES */
+    /*
 #accountprefs_addremovecolumns_container th {
 	white-space: normal;
 }
 
 
 /* SETTINGS > NOTIFICATIONS */
+    /*
 #activitylist th {
 	line-height: 1.2em;
 	vertical-align: bottom;
@@ -1461,6 +1588,7 @@ table.groupviews{
 /* SETTINGS > INSTITUTION MENBERSHIP */
 
 /* EXPORT */
+    /*
 #export h3 {
     margin: .5em 0;
 }
@@ -1533,32 +1661,4 @@ p.progress-text {
 }
 #progressbar {
     height: 40px;
-}
-
-
-/* FOOTER */
-#footerwrap {
-    clear: both;
-    font-size: .9em;
-	padding: .5em;
-	background: #eee;
-}
-#footerwrap a,
-#footerwrap a:link,
-#footerwrap a:active,
-#footerwrap a:visited {
-	padding: 0 .5em;
-}
-#poweredby {
-	margin: .5em 1em;
-	float: left;
-}
-#poweredby a {
-	padding: 0 !important;
-}
-#footerwrap p {
-	margin: 0.5em;
-}
-.performanceinfo span {
-    padding-right: 1em;
 }
