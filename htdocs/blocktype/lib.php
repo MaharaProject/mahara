@@ -710,13 +710,27 @@ class BlockInstance {
             return true;
         }
             
+        // Get list of allowed artefacts
+        require_once('view.php');
+        $searchdata = array(
+            'extraselect' => 'id IN (' . join(',', $artefacts) . ')',
+        );
+        list($allowed, $count) = View::get_artefactchooser_artefacts(
+            $searchdata,
+            $this->get_view()->get('group'),
+            $this->get_view()->get('institution'),
+            true
+        );
+
         $va = new StdClass;
         $va->view = $this->get('view');
         $va->block = $this->id;
 
         foreach ($artefacts as $id) {
-            $va->artefact = $id;
-            insert_record('view_artefact', $va);
+            if (isset($allowed[$id])) {
+                $va->artefact = $id;
+                insert_record('view_artefact', $va);
+            }
         }
 
         db_commit();
