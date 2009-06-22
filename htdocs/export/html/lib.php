@@ -67,6 +67,7 @@ class PluginExportHtml extends PluginExport {
     * to set up smarty and the attachment directory
     */
     public function __construct(User $user, $views, $artefacts, $progresscallback=null) {
+        global $THEME;
         parent::__construct($user, $views, $artefacts, $progresscallback);
         $this->rootdir = 'portfolio-for-' . self::text_to_path($user->get('username'));
 
@@ -81,7 +82,7 @@ class PluginExportHtml extends PluginExport {
             . $this->get('user')->get('id') . '-' . $this->exporttime . '.zip';
 
         // Find what stylesheets need to be included
-        $themedirs = theme_get_path('', 'export/html/', true);
+        $themedirs = $THEME->get_path('', true, 'export/html');
         $stylesheets = array('style.css', 'print.css');
         foreach ($themedirs as $theme => $themedir) {
             foreach ($stylesheets as $stylesheet) {
@@ -112,6 +113,7 @@ class PluginExportHtml extends PluginExport {
      * Main export routine
      */
     public function export() {
+        global $THEME;
         raise_memory_limit('128M');
 
         $summaries = array();
@@ -139,7 +141,7 @@ class PluginExportHtml extends PluginExport {
                 safe_require('artefact', $plugin);
 
                 // Find out whether the plugin has static data for us
-                $themestaticdirs = array_reverse(theme_get_path('', 'artefact/' . $plugin . '/export/html/', true));
+                $themestaticdirs = array_reverse($THEME->get_path('', true, 'artefact/' . $plugin . '/export/html'));
                 foreach ($themestaticdirs as $dir) {
                     $staticdir = substr($dir, strlen(get_config('docroot') . 'artefact/'));
                     $this->pluginstaticdirs[] = $staticdir;
@@ -249,7 +251,8 @@ class PluginExportHtml extends PluginExport {
      * This returns the path in the most appropriate theme.
      */
     private function theme_path($path) {
-        $themestaticdirs = theme_get_path('', 'export/html/', true);
+        global $THEME;
+        $themestaticdirs = $THEME->get_path('', true, 'export/html');
         foreach ($themestaticdirs as $theme => $dir) {
             if (is_readable($dir . $path)) {
                 return 'static/theme/' . $theme . '/static/' . $path;
@@ -361,12 +364,13 @@ class PluginExportHtml extends PluginExport {
      * Copies the static files (stylesheets etc.) into the export
      */
     private function copy_static_files() {
+        global $THEME;
         require_once('file.php');
         $staticdir = $this->get('exportdir') . '/' . $this->get('rootdir') . '/static/';
         $directoriestocopy = array();
 
         // Get static directories from each theme for HTML export
-        $themestaticdirs = theme_get_path('', 'export/html/', true);
+        $themestaticdirs = $THEME->get_path('', true, 'export/html');
         foreach ($themestaticdirs as $theme => $dir) {
             $themedir = $staticdir . 'theme/' . $theme . '/static/';
             $directoriestocopy[$dir] = $themedir;

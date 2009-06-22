@@ -41,7 +41,7 @@ if (!$exportdata = $SESSION->get('exportdata')) {
 }
 $SESSION->set('exportdata', '');
 
-$stylesheets = array_reverse(theme_get_url('style/style.css', null, true));
+$stylesheets = array_reverse($THEME->get_url('style/style.css', true));
 ?>
 <html>
     <head>

@@ -141,7 +141,7 @@ $smarty = smarty(
     array(),
     array('stylesheets' => array('style/views.css'))
 );
-$smarty->assign('heading', '');
+$smarty->assign('PAGEHEADING', hsc(get_string('exportyourportfolio', 'export')));
 $smarty->assign('form', $form);
 $smarty->display('export/index.tpl');
 

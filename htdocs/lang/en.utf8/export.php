@@ -32,6 +32,7 @@ $string['clicktopreview'] = 'Click to preview';
 $string['Export']     = 'Export';
 $string['exportgeneratedsuccessfully'] = 'Export generated successfully. %sClick here to download it%s';
 $string['exportgeneratedsuccessfullyjs'] = 'Export generated successfully. %sContinue%s';
+$string['exportpagedescription'] = 'Here you can export your portfolio. This tool exports all of your portfolio information and Views, but it does not export your site settings.';
 $string['exportyourportfolio'] = 'Export Your Portfolio';
 $string['generateexport'] = 'Generate export';
 $string['noexportpluginsenabled'] = 'No export plugins have been enabled by the administrator, so you are unable to use this feature';
