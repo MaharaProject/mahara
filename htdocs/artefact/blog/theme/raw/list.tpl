@@ -1,15 +1,4 @@
-{* 
-
-  This template displays a list of the user's blogs.  The list is populated
-  using javascript.
-
- *}
-
 {include file="header.tpl"}
-
-{include file="sidebar.tpl"}
-
-{include file="columnleftstart.tpl"}
 		<div id="myblogs">
               <span class="addicon">
                 <a href="{$WWWROOT}artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
@@ -28,6 +17,4 @@
 			</table>
 				
         </div>
-{include file="columnleftend.tpl"}
-		
 {include file="footer.tpl"}

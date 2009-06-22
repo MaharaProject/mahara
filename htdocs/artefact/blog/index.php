@@ -91,7 +91,7 @@ EOF;
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign_by_ref('INLINEJAVASCRIPT', $js);
 $smarty->assign_by_ref('blogs', $blogs);
-$smarty->assign('heading', get_string("myblogs", "artefact.blog"));
+$smarty->assign('PAGEHEADING', hsc(get_string("myblogs", "artefact.blog")));
 $smarty->display('artefact:blog:list.tpl');
 
 ?>

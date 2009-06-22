@@ -1,14 +1,4 @@
-{* 
-
-  This template displays a list of the user's blog posts for a particular blog.
-
- *}
-
 {include file="header.tpl"}
-
-{include file="sidebar.tpl"}
-
-{include file="columnleftstart.tpl"}
 			<div id="myblogs">
 
 				<span class="addicon fr">
@@ -29,6 +19,4 @@
                 {/if}
 					
             </div>
-				
-{include file="columnleftend.tpl"}
 {include file="footer.tpl"}
