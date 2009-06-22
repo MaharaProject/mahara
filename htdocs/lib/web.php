@@ -297,7 +297,7 @@ EOF;
     }
     if (isset($extraconfig['themepaths']) && is_array($extraconfig['themepaths'])) {
         foreach ($extraconfig['themepaths'] as $themepath) {
-            $theme_list[$themepath] = theme_get_url($themepath);
+            $theme_list[$themepath] = $THEME->get_url($themepath);
         }
     }
 
@@ -306,7 +306,7 @@ EOF;
     $stringjs .= '</script>';
 
     // stylesheet set up - if we're in a plugin also get its stylesheet
-    $stylesheets = array_reverse($THEME->get_url('style/style.css', true));
+    $stylesheets = array_reverse(array_values($THEME->get_url('style/style.css', true)));
     if (defined('SECTION_PLUGINTYPE') && defined('SECTION_PLUGINNAME') && SECTION_PLUGINTYPE != 'core') {
         if ($pluginsheets = $THEME->get_url('style/style.css', true, SECTION_PLUGINTYPE, SECTION_PLUGINNAME)) {
             $stylesheets = array_merge($stylesheets, array_reverse($pluginsheets));
@@ -323,7 +323,7 @@ EOF;
     if (isset($extraconfig['stylesheets']) && is_array($extraconfig['stylesheets'])) {
         foreach ($extraconfig['stylesheets'] as $extrasheet) {
             if ($sheets = $THEME->get_url($extrasheet, true)) {
-                $stylesheets = array_merge($stylesheets, array_reverse($sheets));
+                $stylesheets = array_merge($stylesheets, array_reverse(array_values($sheets)));
             }
         }
     }
