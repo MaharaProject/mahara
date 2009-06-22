@@ -993,7 +993,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     }
 
     public static function get_icon($options=null) {
-        return theme_get_url('images/file.gif');
+        global $THEME;
+        return $THEME->get_url('images/file.gif');
     }
 
     public static function get_config_options() {
@@ -1216,7 +1217,8 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
     }
 
     public static function get_icon($options=null) {
-        return theme_get_url('images/folder.gif');
+        global $THEME;
+        return $THEME->get_url('images/folder.gif');
     }
 
     public static function collapse_config() {
