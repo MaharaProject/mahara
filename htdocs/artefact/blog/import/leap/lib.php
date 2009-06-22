@@ -161,7 +161,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
                         }
                         $importer->trace("Attaching file $blogpostlink[href] to blog post $blogpostentry->id", PluginImportLeap::LOG_LEVEL_VERBOSE);
                         $artefactids = $importer->get_artefactids_imported_by_entryid((string)$blogpostlink['href']);
-                        $blogpost->attach_file($artefactids[0]);
+                        $blogpost->attach($artefactids[0]);
                     }
                     if ($blogpost) {
                         $blogpost->commit();
@@ -277,7 +277,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
             // importing a blog entry with out-of-line content. We 
             // attach the file to this post.
             $blogpost = new ArtefactTypeBlogPost($artefactids[0]);
-            $blogpost->attach_file($artefactids[1]);
+            $blogpost->attach($artefactids[1]);
             $blogpost->commit();
         }
     }
