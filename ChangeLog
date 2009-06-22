@@ -1,3 +1,9 @@
+1.1.5 (2009-06-22)
+- Czech strings for Pieforms library
+- Bug fixes for embedded media block, multibyte character string handling,
+- public forums, email notifications
+- Security fixes: multiple xss bugs and information disclosure bug for user files.
+
 1.1.4 (2009-06-11)
 - Dutch and Slovenian translations of pieform strings.
 - Spanish translation of TinyMCE.
