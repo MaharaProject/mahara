@@ -2431,17 +2431,6 @@ function createview_cancel_submit(Pieform $form, $values) {
     redirect(get_config('wwwroot') . 'view/');
 }
 
-function create_template_form($group=null, $institution=null) {
-    $form = create_view_form($group, $institution, null);
-    $form['name'] = 'createtemplate';
-    $form['elements']['istemplate'] = array(
-        'type' => 'hidden',
-        'value' => 1,
-    );
-    $form['elements']['submit']['value'] = get_string('createtemplate', 'view');
-    return $form;
-}
-
 
 function add_feedback_form($attachments=false) {
     global $USER;
