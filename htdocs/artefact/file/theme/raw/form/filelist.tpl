@@ -40,11 +40,11 @@
     <td>{$file->mtime}</td>
     <td>
     {if $editable && !$file->isparent}
-      {if !isset($file->can_edit) || $file->can_edit !== 0}<button type="submit" name="{$prefix}_edit[{$file->id}]" value="{$file->id}">{str tag=edit}</button>{/if}
-      {if $file->childcount == 0}<button type="submit" name="{$prefix}_delete[{$file->id}]" value="{$file->id}">{str tag=delete}</button>{/if}
+      {if !isset($file->can_edit) || $file->can_edit !== 0}<input type="submit" name="{$prefix}_edit[{$file->id}]" value="{str tag=edit}" />{/if}
+      {if $file->childcount == 0}<input type="submit" name="{$prefix}_delete[{$file->id}]" value="{str tag=delete}" />{/if}
     {/if}
     {if $selectable && $file->artefacttype != 'folder' && $publishable}
-      <button type="submit" class="select small" name="{$prefix}_select[{$file->id}]" id="{$prefix}_select_{$file->id}" value="{$file->id}">{str tag=select}</button>
+      <input type="submit" class="select small" name="{$prefix}_select[{$file->id}]" id="{$prefix}_select_{$file->id}" value="{str tag=select}" />
     {/if}
     </td>
   </tr>

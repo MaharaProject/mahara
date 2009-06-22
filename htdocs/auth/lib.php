@@ -128,9 +128,8 @@ abstract class Auth {
         if (in_array($name, $approved_members)) {
             return $this->{$name};
         }
-
-        if (isset($this->config['name'])) {
-            return $this->config['name'];
+        if (isset($this->config[$name])) {
+            return $this->config[$name];
         }
         return null;
     }
@@ -264,6 +263,18 @@ abstract class Auth {
      */
     public function is_password_valid($password) {
         return true;
+    }
+
+    /**
+     * Called when a user is being logged in, after the main authentication routines.
+     *
+     * You can use $USER->login() to perform any additional tasks, for example
+     * to set a cookie that another application can read, or pull some data
+     * from somewhere.
+     *
+     * This method has no parameters and needs no return value
+     */
+    public function login() {
     }
 
     /**

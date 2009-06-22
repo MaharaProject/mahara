@@ -89,16 +89,11 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
      * Puts all profile icons in the static/profileicons/ directory
      */
     private function populate_profileicons() {
-        $madeprofileiconsdir = false;
         $profileiconsdir = $this->exporter->get('exportdir') . '/' . $this->exporter->get('rootdir') . '/static/profileicons/';
         $removekeys = array();
         foreach ($this->artefactdata as $artefactid => $artefact) {
             if ($artefact->get('artefacttype') == 'profileicon') {
                 $removekeys[] = $artefactid;
-
-                if (!$madeprofileiconsdir) {
-                    check_dir_exists($profileiconsdir);
-                }
 
                 if (!copy($artefact->get_path(), $profileiconsdir . PluginExportHtml::sanitise_path($artefact->get('title')))) {
                     throw new SystemException("Unable to copy profile icon $artefactid into export");

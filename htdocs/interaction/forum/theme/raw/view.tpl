@@ -13,10 +13,11 @@
 <div id="forumdescription">{$forum->description}</div>
 <div id="viewforum">
 	<h3>{str tag=Topics section="interaction.forum"}</h3>
+    {if $membership}
 	<span class="forumaddicon fr">
 	<a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id|escape}" id="btn-newtopic">{str tag="newtopic" section="interaction.forum}</a>
 	</span>
-	
+	{/if}
 	<label>{str tag="groupadminlist" section="interaction.forum"}</label>
 	{foreach name=groupadmins from=$groupadmins item=groupadmin}<a href="{$WWWROOT}user/view.php?id={$groupadmin}" class="groupadmin s">
 	<img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupadmin}" alt="">

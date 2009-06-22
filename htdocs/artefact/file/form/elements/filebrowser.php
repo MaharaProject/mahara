@@ -123,7 +123,6 @@ function pieform_element_filebrowser(Pieform $form, $element) {
 {$prefix}.filedata = {$fileliststr};";
     if ($config['select']) {
         $initjs .= "{$prefix}.selecteddata = {$selectedliststr};";
-        $initjs .= "forEach(getElementsByTagAndClassName('button', 'unselect', '{$prefix}_selectlist'), function (elem) { removeElementClass(elem, 'hidden'); });";
     }
 
     $_PIEFORM_FILEBROWSERS[$prefix]['views_js'] = $initjs;
@@ -353,16 +352,18 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
 
         // If we got to this point, the doupdate function couldn't select or unselect a file,
         // so we need to let it go through to the form's submit function to deal with.
-        if ($result['select']) {
+        if (!empty($result['select'])) {
             if ($element['config']['selectone']) {
                 $selected = array($result['select']);
             }
             else {
                 $selected = is_array($selected) ? $selected : array();
-                $selected[] = $result['select'];
+                if (!in_array($result['select'], $selected)) {
+                    $selected[] = $result['select'];
+                }
             }
         }
-        else if ($result['unselect']) {
+        else if (!empty($result['unselect'])) {
             $selected = is_array($selected) ? array_diff($selected, array($result['unselect'])) : array();
         }
     }

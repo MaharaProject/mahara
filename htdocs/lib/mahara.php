@@ -302,9 +302,10 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
 
     $langconfigstrs = array('parentlanguage', 'thislanguage');
 
-    if (in_array($identifier, $langconfigstrs)
-        || strpos($identifier, 'strftime') === 0
-        || strpos($identifier, 'strfday')  === 0) {
+    if ($section == 'mahara' &&
+        (in_array($identifier, $langconfigstrs)
+         || strpos($identifier, 'strftime') === 0
+         || strpos($identifier, 'strfday')  === 0)) {
         $section = 'langconfig';
     }
 
@@ -1857,6 +1858,9 @@ function get_real_size($size=0) {
     if (!$size) {
         return 0;
     }
+    // If there is no suffix then assume bytes
+    else if (is_numeric($size)) return (int)$size;
+
     $scan = array(
         'MB' => 1048576,
         'Mb' => 1048576,
@@ -1875,7 +1879,7 @@ function get_real_size($size=0) {
         }
     }
 
-    throw new SystemException('get_real_size called without valid size suffix');
+    throw new SystemException('get_real_size called without valid size');
 }
 
 /**

@@ -257,7 +257,7 @@ function mahara_clam_scan_file($file) {
         $fullpath = $file;
     }
     else {
-        throw new SystemException('clam_scan_file: not called correctly, read phpdoc for this function');
+        throw new SystemException('mahara_clam_scan_file: not called correctly, read phpdoc for this function');
     }
 
     $pathtoclam = escapeshellcmd(trim(get_config('pathtoclam')));

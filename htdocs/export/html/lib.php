@@ -72,7 +72,7 @@ class PluginExportHtml extends PluginExport {
         $this->rootdir = 'portfolio-for-' . self::text_to_path($user->get('username'));
 
         // Create basic required directories
-        foreach (array('files', 'views', 'static', 'static/smilies') as $directory) {
+        foreach (array('files', 'views', 'static', 'static/smilies', 'static/profileicons') as $directory) {
             $directory = "{$this->exportdir}/{$this->rootdir}/{$directory}/";
             if (!check_dir_exists($directory)) {
                 throw new SystemException("Couldn't create the temporary export directory $directory");

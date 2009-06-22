@@ -62,6 +62,9 @@ function pieform_rule_maxvalue_i18n() {/*{{{*/
         'nl.utf8' => array(
             'maxvalue' => 'Deze waarde kan niet groter zijn dan %d'
         ),
+        'cs.utf8' => array(
+            'maxvalue' => 'Hodnota nemůže být větší než %d'
+        ),
 
     );
 }/*}}}*/

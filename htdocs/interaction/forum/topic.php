@@ -192,11 +192,13 @@ function buildpost($postindex, $parentsubject, &$posts){
             $children[] = buildpost($index, $parentsubject, $posts);
         }
     }
+    $membership = user_can_access_forum((int)$topic->forumid);
     $smarty = smarty_core();
     $smarty->assign('post', $posts[$postindex]);
     $smarty->assign('groupadmins', $groupadmins);
     $smarty->assign('children', $children);
     $smarty->assign('moderator', $moderator);
+    $smarty->assign('membership', $membership);
     $smarty->assign('closed', $topic->closed);
     return $smarty->fetch('interaction:forum:post.tpl');
 }
