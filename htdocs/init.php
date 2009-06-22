@@ -218,9 +218,6 @@ if (!get_config('searchplugin')) {
     }
 }
 header('Content-type: text/html; charset=UTF-8');
-if (get_config('developermode') & DEVMODE_XMLHEADER) {
-    header('Content-type: application/xhtml+xml; charset=UTF-8');
-}
 
 // Only do authentication once we know the page theme, so that the login form
 // can have the correct theming.

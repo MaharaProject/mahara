@@ -56,9 +56,7 @@ define('DEVMODE_DEBUGCSS', 2);
 define('DEVMODE_FIREBUGLITE', 4);
 /** include unpacked mochikit */
 define('DEVMODE_UNPACKEDJS', 8);
-/** send xhtml header (causes xml parse errors) */
-define('DEVMODE_XMLHEADER', 16);
-// more here.. start at 32 :)
+// more here.. start at 16 :)
 
 /**#@-*/
 

@@ -104,7 +104,7 @@ $cfg->log_backtrace_levels = LOG_LEVEL_WARN | LOG_LEVEL_ENVIRON;
 // These options are a performance hit otherwise, enable when you are 
 // developing for Mahara
 $cfg->developermode = false;
-// $cfg->developermode = DEVMODE_DEBUGJS | DEVMODE_DEBUGCSS | DEVMODE_FIREBUGLITE | DEVMODE_UNPACKEDJS | DEVMODE_XMLHEADER;
+// $cfg->developermode = DEVMODE_DEBUGJS | DEVMODE_DEBUGCSS | DEVMODE_FIREBUGLITE | DEVMODE_UNPACKEDJS;
 
 // Whether to send e-mail. If set to false, Mahara will not send any e-mail at 
 // all. This is useful for when setting up development versions of Mahara where 
