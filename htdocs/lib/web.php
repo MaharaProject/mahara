@@ -656,28 +656,25 @@ class Theme {
     /**
      * stuff
      */
-    public function get_url($filename, $all=false, $plugintype='', $pluginname='') {
-        return $this->_get_path($filename, $all, $plugintype, $pluginname, get_config('wwwroot'));
+    public function get_url($filename, $all=false, $plugindirectory='') {
+        return $this->_get_path($filename, $all, $plugindirectory, get_config('wwwroot'));
     }
 
-    public function get_path($filename, $all=false, $plugintype='', $pluginname='') {
-        return $this->_get_path($filename, $all, $plugintype, $pluginname, get_config('docroot'));
+    public function get_path($filename, $all=false, $plugindirectory='') {
+        return $this->_get_path($filename, $all, $plugindirectory, get_config('docroot'));
     }
 
-    private function _get_path($filename, $all, $plugintype, $pluginname, $returnprefix) {
+    private function _get_path($filename, $all, $plugindirectory, $returnprefix) {
         $list = array();
-        $pluginlocation = '';
-        if ($plugintype && $pluginname) {
-            $pluginlocation = "$plugintype/$pluginname/";
-        }
+        $plugindirectory = ($plugindirectory && substr($plugindirectory, -1) != DIRECTORY_SEPARATOR) ? $plugindirectory . DIRECTORY_SEPARATOR : $plugindirectory;
 
         foreach ($this->inheritance as $themedir) {
-            if (is_readable(get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $filename)) {
+            if (is_readable(get_config('docroot') . $plugindirectory . 'theme/' . $themedir . '/static/' . $filename)) {
                 if ($all) {
-                    $list[] = $returnprefix . $pluginlocation . 'theme/' . $themedir . '/static/' . $filename;
+                    $list[$themedir] = $returnprefix . $plugindirectory . 'theme/' . $themedir . '/static/' . $filename;
                 }
                 else {
-                    return $returnprefix . $pluginlocation . 'theme/' . $themedir . '/static/' . $filename;
+                    return $returnprefix . $plugindirectory . 'theme/' . $themedir . '/static/' . $filename;
                 }
             }
         }
@@ -686,11 +683,11 @@ class Theme {
         }
 
         $extra = '';
-        if ($pluginlocation) {
-            $extra = ", plugin $plugintype/$pluginname";
+        if ($plugindirectory) {
+            $extra = ", plugindir $plugindirectory";
         }
         log_debug("Missing file in theme {$this->basename}{$extra}: $filename");
-        return $returnprefix . $pluginlocation . 'theme/' . $themedir . '/static/' . $filename;
+        return $returnprefix . $plugindirectory . 'theme/' . $themedir . '/static/' . $filename;
     }
 
 }
