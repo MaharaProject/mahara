@@ -85,7 +85,7 @@ $elements['submit'] = array(
 );
 
 
-$prefsform = array(
+$prefsform = pieform(array(
     'name'        => 'activityprefs',
     'method'      => 'post',
     'jsform'      => true,
@@ -93,11 +93,11 @@ $prefsform = array(
     'plugintype ' => 'core',
     'pluginname'  => 'account',
     'elements'    => $elements,
-);
+));
 
 $smarty = smarty();
 $smarty->assign('prefsdescr', get_string('prefsdescr', 'activity'));
-$smarty->assign('form', pieform($prefsform));
+$smarty->assign('form', $prefsform);
 $smarty->assign('heading', get_string('activityprefs'));
 $smarty->display('account/activity/preferences/index.tpl');
 

@@ -224,9 +224,10 @@ function accountprefs_submit(Pieform $form, $values) {
 
 
 
+$prefsform = pieform($prefsform);
 
 $smarty = smarty();
-$smarty->assign('form', pieform($prefsform));
+$smarty->assign('form', $prefsform);
 $smarty->assign('INLINEJAVASCRIPT', "
 function clearPasswords(form, data) {
     formSuccess(form, data);
