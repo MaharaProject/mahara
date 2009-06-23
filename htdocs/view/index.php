@@ -112,11 +112,13 @@ function submitto_submit(Pieform $form, $values) {
     redirect('/view/submit.php?id=' . $values['view'] . '&group=' . $values['options']);
 }
 
+$createviewform = pieform(create_view_form());
+
 $smarty = smarty();
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('PAGEHEADING', hsc(get_string('myviews')));
-$smarty->assign('createviewform', pieform(create_view_form()));
+$smarty->assign('createviewform', $createviewform);
 $smarty->display('view/index.tpl');
 
 ?>
