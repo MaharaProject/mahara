@@ -41,9 +41,13 @@ else {
 require(get_config('libroot') . 'upgrade.php');
 require(get_config('libroot') . 'registration.php');
 
-$smarty = smarty();
+if (!get_config('registration_lastsent')) {
+    $register = register_site();
+}
 
 $upgrades = check_upgrades();
+
+$smarty = smarty();
 
 if (isset($upgrades['core']) && !empty($upgrades['core']->install)) {
     $smarty->assign('installing', true);
@@ -55,8 +59,7 @@ if (isset($upgrades['core']) && !empty($upgrades['core']->install)) {
 // normal admin page starts here
 $smarty->assign('upgrades', $upgrades);
 
-if (!get_config('registration_lastsent')) {
-    $register = register_site();
+if (isset($register)) {
     $smarty->assign('register', $register);
 }
 
