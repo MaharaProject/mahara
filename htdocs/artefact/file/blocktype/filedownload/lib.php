@@ -40,10 +40,6 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
         return array('fileimagevideo');
     }
 
-    public static function get_viewtypes() {
-        return array('portfolio', 'profile');
-    }
-
     public static function render_instance(BlockInstance $instance, $editing=false) {
         require_once(get_config('docroot') . 'artefact/lib.php');
         $configdata = $instance->get('configdata');

@@ -114,10 +114,6 @@ class PluginBlocktypeHtml extends PluginBlocktype {
         return $element;
     }
 
-    public static function get_viewtypes() {
-        return array('portfolio', 'profile');
-    }
-
     public static function default_copy_type() {
         return 'full';
     }
