@@ -311,7 +311,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
     if (empty($userfrom)) {
         $mail->Sender = get_config('noreplyaddress');
         $mail->From = $mail->Sender;
-        $mail->FromName = get_string('emailname');
+        $mail->FromName = get_config('sitename');
         $customheaders[] = 'Precedence: Bulk'; // Try to avoid pesky out of office responses
         $messagetext .= "\n\n" . get_string('pleasedonotreplytothismessage') . "\n";
         if ($messagehtml) {

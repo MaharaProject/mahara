@@ -483,8 +483,6 @@ $string['institutionmemberconfirmmessage'] = 'You have been added as a member of
 $string['institutionmemberrejectsubject'] = 'Institution membership request declined';
 $string['institutionmemberrejectmessage'] = 'Your request for membership of %s was declined.';
 
-$string['emailname'] = 'Mahara System'; // robot! 
-
 $string['config'] = 'Config';
 
 $string['sendmessage'] = 'Send message';
