@@ -275,6 +275,7 @@ abstract class ActivityType {
     protected $type;
     protected $activityname;
     protected $cron;
+    protected $overridemessagecontents;
    
     public function get_id() {
         if (!isset($this->id)) {
