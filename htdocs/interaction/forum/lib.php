@@ -368,9 +368,11 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
 
     public function __construct($data) {
         parent::__construct($data);
+        $this->overridemessagecontents = true;
         $this->users = activity_get_users($this->get_id(), $this->users);
         $post = get_record_sql(
-            'SELECT p.subject, p.body, p.poster, p.parent, t.id AS topicid, p2.subject AS topicsubject, f.title AS forumtitle, g.name AS groupname, f.id AS forumid
+            'SELECT p.subject, p.body, p.poster, p.parent, ' . db_format_tsfield('p.ctime', 'ctime') . ',
+            t.id AS topicid, p2.subject AS topicsubject, f.title AS forumtitle, g.name AS groupname, f.id AS forumid
             FROM {interaction_forum_post} p
             INNER JOIN {interaction_forum_topic} t ON t.id = p.topic
             INNER JOIN {interaction_forum_post} p2 ON (p2.parent IS NULL AND p2.topic = t.id)
@@ -379,7 +381,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
             WHERE p.id = ?',
             array($this->postid)
         );
-        $this->url = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid;
+
         // When emailing forum posts, create Message-Id headers for threaded display by email clients
         $urlinfo = parse_url(get_config('wwwroot'));
         $hostname = $urlinfo['host'];
@@ -395,17 +397,21 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
             $this->customheaders[] = 'References: <forumpost' . $post->parent . '@' . $hostname . '>';
         }
         foreach ($this->users as &$user) {
+            $lang = (empty($user->lang) || $user->lang == 'default') ? get_config('lang') : $user->lang;
             if ($post->parent) {
-                $user->subject = get_string('replytotopicby', 'interaction.forum', $post->groupname, $post->forumtitle, $post->topicsubject, display_name($post->poster, $user));
+                $user->subject = get_string_from_language($lang, 'replyforumpostnotificationsubject', 'interaction.forum', $post->groupname, $post->topicsubject);
             }
             else {
-                $user->subject = get_string('newforumpostby', 'interaction.forum', $post->groupname, $post->forumtitle, display_name($post->poster, $user));
+                $user->subject = get_string_from_language($lang, 'newforumpostnotificationsubject', 'interaction.forum', $post->groupname, $post->subject);
             }
-            $user->message = ($post->subject ? $post->subject . "\n" . str_repeat('-', strlen($post->subject)) . "\n" : '')
-                . trim(html2text($post->body));
+            $user->message = get_string_from_language($lang, 'forumposttemplate', 'interaction.forum',
+                $post->groupname, $post->forumtitle, $post->subject, display_name($post->poster, $user),
+                strftime(get_string('strftimedaydatetime'), $post->ctime), trim(html2text($post->body)),
+                get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid,
+                'topic',
+                get_config('wwwroot') . 'interaction/forum/unsubscribe.php?topic=' . $post->topicid . '&key=aec9087db'
+            );
         }
-        $this->unsubscribename = $post->forumtitle;
-        $this->unsubscribeurl = get_config('wwwroot') . 'interaction/forum/view.php?id=' . $post->forumid;
     }
 
     public function get_subject($user) {
