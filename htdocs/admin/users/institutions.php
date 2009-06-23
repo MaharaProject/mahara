@@ -32,7 +32,7 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'institutions');
 require_once('pieforms/pieform.php');
 define('MENUITEM', 'manageinstitutions/institutions');
-$smarty = smarty();
+$smarty = smarty(array('lib/pieforms/static/core/pieforms.js'));
 
 $institution = param_variable('i', '');
 $add         = param_boolean('add');
