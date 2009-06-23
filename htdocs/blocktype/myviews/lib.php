@@ -58,7 +58,7 @@ class PluginBlocktypeMyviews extends SystemBlocktype {
 
         // Get viewable views
         $views = array();
-        if ($allviews = get_records_select_array('view', 'owner = ? AND type = ?', array($userid, 'portfolio'))) {
+        if ($allviews = get_records_select_array('view', 'owner = ? AND type != ?', array($userid, 'profile'))) {
             foreach ($allviews as $view) {
                 if (can_view_view($view->id)) {
                     $views[$view->id] = $view;

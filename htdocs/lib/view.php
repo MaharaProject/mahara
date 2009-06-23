@@ -1711,14 +1711,14 @@ class View {
                 ORDER BY v.title, v.id', array($institution), $offset, $limit);
         }
         else {
-            $count = count_records('view', 'owner', $userid, 'type', 'portfolio');
+            $count = count_records_select('view', 'owner = ? AND type != ?', array($userid, 'profile'));
             $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template,
                     g.id AS submitgroupid, g.name AS submitgroupname, h.wwwroot AS submithostwwwroot, h.name AS submithostname
                 FROM {view} v
                 LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
                 LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)
                 WHERE v.owner = ' . $userid . '
-                AND v.type = \'portfolio\'
+                AND v.type != \'profile\'
                 ORDER BY v.title, v.id', '', $offset, $limit);
         }
 

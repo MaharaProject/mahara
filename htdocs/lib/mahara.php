@@ -1515,11 +1515,10 @@ function get_view_from_token($token, $visible=true) {
  * @param array $users users to fetch views owned by
  * @param int $userlooking (optional, defaults to logged in user)
  * @param int $limit grab this many views. (setting this null means get all)
- * @param string $type the type of views to return
  *
  * @return array Associative array keyed by userid, of arrays of view ids
  */
-function get_views($users, $userlooking=null, $limit=5, $type='portfolio') {
+function get_views($users, $userlooking=null, $limit=5, $type=null) {
     $userlooking = optional_userid($userlooking);
     if (is_int($users)) {
         $users = array($users);
@@ -1552,8 +1551,10 @@ function get_views($users, $userlooking=null, $limit=5, $type='portfolio') {
         }
     }
 
-    $typesql = '';
-    if ($type != null) {
+    if (is_null($type)) {
+        $typesql = "AND v.type != 'profile'";
+    }
+    else {
         $typesql = 'AND v.type = ' . db_quote($type);
     }
 
