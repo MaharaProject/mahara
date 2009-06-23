@@ -41,20 +41,21 @@ else {
 require(get_config('libroot') . 'upgrade.php');
 require(get_config('libroot') . 'registration.php');
 
-if (!get_config('registration_lastsent')) {
-    $register = register_site();
-}
-
 $upgrades = check_upgrades();
 
-$smarty = smarty();
-
 if (isset($upgrades['core']) && !empty($upgrades['core']->install)) {
+    $smarty = smarty();
     $smarty->assign('installing', true);
     $smarty->assign('releaseargs', array($upgrades['core']->torelease, $upgrades['core']->to));
     $smarty->display('admin/installgpl.tpl');
     exit;
 }
+
+if (!get_config('registration_lastsent')) {
+    $register = register_site();
+}
+
+$smarty = smarty();
 
 // normal admin page starts here
 $smarty->assign('upgrades', $upgrades);
