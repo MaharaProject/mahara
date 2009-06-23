@@ -41,6 +41,8 @@ $offset  = param_integer('offset', 0);
 $title = get_string('siteviews', 'admin');
 define('TITLE', $title);
 
+$createviewform = pieform(create_view_form(null, 'mahara'));
+
 $smarty = smarty();
 $smarty->assign('heading', $title);
 
@@ -58,7 +60,7 @@ $pagination = build_pagination(array(
 $smarty->assign('views', $data->data);
 $smarty->assign('institution', 'mahara');
 $smarty->assign('pagination', $pagination['html']);
-$smarty->assign('createviewform', pieform(create_view_form(null, 'mahara')));
+$smarty->assign('createviewform', $createviewform);
 
 $smarty->display('view/index.tpl');
 
