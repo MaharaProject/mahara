@@ -128,7 +128,7 @@ foreach ($records as &$r) {
         $section = $r->plugintype . '.' . $r->pluginname;
     }
     $r->type = get_string('type' . $r->type, $section);
-    $r->message = format_whitespace($r->message);
+    $r->message = clean_html(format_whitespace($r->message));
 }
 
 $activity = array(
