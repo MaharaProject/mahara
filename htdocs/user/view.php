@@ -68,7 +68,7 @@ if (!$view || !can_view_view($view->get('id'))) {
 $name = display_name($user);
 define('TITLE', $name);
 $smarty = smarty(
-    array('tablerenderer'),
+    array('lib/pieforms/static/core/pieforms.js'),
     array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
     array(),
     array(
