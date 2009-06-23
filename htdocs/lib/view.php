@@ -2510,7 +2510,7 @@ function add_feedback_form_submit(Pieform $form, $values) {
 
     db_begin();
 
-    if (is_array($values['attachment'])) {
+    if (isset($values['attachment']) && is_array($values['attachment'])) {
         require_once(get_config('libroot') . 'group.php');
         require_once(get_config('libroot') . 'uploadmanager.php');
         safe_require('artefact', 'file');
