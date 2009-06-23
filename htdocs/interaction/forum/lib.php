@@ -301,10 +301,10 @@ class PluginInteractionForum extends PluginInteraction {
             INNER JOIN {interaction_forum_topic} t ON (t.deleted != 1 AND t.id = s.topic)
             INNER JOIN {interaction_forum_post} p ON (p.sent != 1 AND p.ctime < ? AND p.deleted != 1 AND p.topic = t.id)
             INNER JOIN {interaction_instance} f ON (f.id = t.forum AND f.deleted != 1)
-            INNER JOIN {group} g ON (g.id = f.group AND g.deleted = ?)
+            INNER JOIN {group} g ON (g.id = f.group AND g.deleted = 0)
             INNER JOIN {group_member} gm ON (gm.member = s.subscriber AND gm.group = f.group)
             ORDER BY type, p.id',
-            array(db_format_timestamp($minpostdelay), 0)
+            array(db_format_timestamp($minpostdelay))
         );
         // query gets a new object for every subscription
         // this combines all the objects for the same post together with an array for the subscribers
