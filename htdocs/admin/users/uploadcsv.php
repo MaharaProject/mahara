@@ -393,9 +393,11 @@ else {
     );
 }
 
+$form = pieform($form);
+
 $smarty = smarty();
 $smarty->assign('uploadcsvpagedescription', $uploadcsvpagedescription);
-$smarty->assign('uploadcsvform', pieform($form));
+$smarty->assign('uploadcsvform', $form);
 $smarty->display('admin/users/uploadcsv.tpl');
 
 ?>

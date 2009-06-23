@@ -36,12 +36,11 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'staffusers');
 require_once('pieforms/pieform.php');
 require_once('activity.php');
-$smarty = smarty();
 
 // Get users who are currently staff
 $staffusers = get_column('usr', 'id', 'staff', 1, 'deleted', 0);
 
-$form = array(
+$form = pieform(array(
     'name' => 'staffusers',
     'elements' => array(
         'users' => array(
@@ -62,7 +61,7 @@ $form = array(
             'value' => get_string('submit')
         )
     )
-);
+));
 
 function staffusers_submit(Pieform $form, $values) {
     global $SESSION;
@@ -81,7 +80,8 @@ function staffusers_submit(Pieform $form, $values) {
     redirect('/admin/users/staff.php');
 }
 
-$smarty->assign('staffusersform', pieform($form));
+$smarty = smarty();
+$smarty->assign('staffusersform', $form);
 $smarty->assign('heading', get_string('staffusers', 'admin'));
 $smarty->display('admin/users/staff.tpl');
 

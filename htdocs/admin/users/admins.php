@@ -36,13 +36,12 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'adminusers');
 require_once('pieforms/pieform.php');
 require_once('activity.php');
-$smarty = smarty();
 
 // Get users who are currently administrators
 // @todo later, exclude the user with uid 1
 $adminusers = get_column('usr', 'id', 'admin', 1, 'deleted', 0);
 
-$form = array(
+$form = pieform(array(
     'name' => 'adminusers',
     'elements' => array(
         'users' => array(
@@ -66,7 +65,7 @@ $form = array(
             'value' => get_string('submit')
         )
     )
-);
+));
 
 function adminusers_submit(Pieform $form, $values) {
     global $SESSION;
@@ -84,7 +83,8 @@ function adminusers_submit(Pieform $form, $values) {
     redirect('/admin/users/admins.php');
 }
 
-$smarty->assign('adminusersform', pieform($form));
+$smarty = smarty();
+$smarty->assign('adminusersform', $form);
 $smarty->assign('heading', get_string('adminusers', 'admin'));
 $smarty->display('admin/users/admin.tpl');
 

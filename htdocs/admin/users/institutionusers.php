@@ -37,8 +37,9 @@ define('MENUITEM', 'manageinstitutions/institutionusers');
 require_once('pieforms/pieform.php');
 require_once('institution.php');
 $institutionelement = get_institution_selector(false);
-$smarty = smarty();
+
 if (empty($institutionelement)) {
+    $smarty = smarty();
     $smarty->display('admin/users/noinstitutions.tpl');
     exit;
 }
@@ -226,6 +227,7 @@ addLoadEvent(function() {
 });
 EOF;
 
+$smarty = smarty();
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('usertypeselector', $usertypeselector);
 $smarty->assign('instructions', get_string('institutionusersinstructions'.$usertype, 'admin'));
