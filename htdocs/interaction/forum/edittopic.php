@@ -182,6 +182,12 @@ function addtopic_submit(Pieform $form, $values) {
             'ctime' =>  db_format_timestamp(time())
         )
     );
+    if (!record_exists('interaction_forum_subscription_forum', 'user', $USER->get('id'), 'forum', $forumid)) {
+        insert_record('interaction_forum_subscription_topic', (object)array(
+            'user'  => $USER->get('id'),
+            'topic' => $topicid,
+        ));
+    }
     db_commit();
     $SESSION->add_ok_msg(get_string('addtopicsuccess', 'interaction.forum'));
     redirect('/interaction/forum/topic.php?id='.$topicid);
