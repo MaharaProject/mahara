@@ -59,7 +59,6 @@ $smarty->assign('views', $data->data);
 $smarty->assign('institution', 'mahara');
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('createviewform', pieform(create_view_form(null, 'mahara')));
-$smarty->assign('createtemplateform', pieform(create_template_form(null, 'mahara')));
 
 $smarty->display('view/index.tpl');
 
