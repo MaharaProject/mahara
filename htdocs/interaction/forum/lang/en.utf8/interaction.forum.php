@@ -66,6 +66,12 @@ $string['edittitle'] = 'Edit forum';
 $string['edittopic'] = 'Edit topic';
 $string['edittopicsuccess'] = 'Topic edited successfully';
 $string['forumname'] = 'Forum Name';
+$string['forumposttemplate'] = "%s: %s: %s\nBy %s - %s\n\n%s\n\n------------------------------------------------------------------------
+To see the post online, follow this link:
+%s
+
+To unsubscribe from this %s, visit:
+%s";
 $string['forumsuccessfulsubscribe'] = 'Forum subscribed successfully';
 $string['forumsuccessfulunsubscribe'] = 'Forum unsubscribed successfully';
 $string['gotoforums'] = 'Go to forums';
@@ -80,7 +86,7 @@ $string['moderatorsdescription'] = 'Moderators can edit and delete topics and po
 $string['name'] = 'Forum';
 $string['nameplural'] = 'Forums';
 $string['newforum'] = 'New forum';
-$string['newforumpostby'] = '%s: %s: New forum post by %s';
+$string['newforumpostnotificationsubject'] = '%s: %s';
 $string['newpost'] = 'New post: ';
 $string['newtopic'] = 'New topic';
 $string['noforumpostsyet'] = 'There are no posts in this group yet';
@@ -100,8 +106,8 @@ $string['potentialmoderators'] = 'Potential Moderators';
 $string['re'] ='Re: %s';
 $string['regulartopics'] = 'Regular topics';
 $string['Reply'] = 'Reply';
+$string['replyforumpostnotificationsubject'] = 'Re: %s: %s';
 $string['replyto'] = 'Reply to: ';
-$string['replytotopicby'] = '%s: %s: Reply to "%s" by %s';
 $string['Sticky'] = 'Sticky';
 $string['stickydescription'] = 'Sticky topics are at the top of every page';
 $string['stickytopics'] = 'Sticky topics';
