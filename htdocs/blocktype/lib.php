@@ -167,9 +167,10 @@ abstract class PluginBlocktype extends Plugin {
         $sql = 'SELECT bti.name, bti.artefactplugin
             FROM {blocktype_installed} bti 
             JOIN {blocktype_installed_category} btic ON btic.blocktype = bti.name
-            WHERE btic.category = ? AND bti.active = 1
+            JOIN {blocktype_installed_viewtype} btiv ON btiv.blocktype = bti.name
+            WHERE btic.category = ? AND bti.active = 1 AND btiv.viewtype = ?
             ORDER BY bti.name';
-        if (!$bts = get_records_sql_array($sql, array($category))) {
+        if (!$bts = get_records_sql_array($sql, array($category, $view->get('type')))) {
             return false;
         }
 
