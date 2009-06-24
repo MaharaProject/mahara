@@ -130,6 +130,7 @@ class View {
      * @param int $templateid The ID of the View to copy
      * @param int $userid     The user who has issued the command to create the 
      *                        view. See View::_create
+     * @param int $checkaccess Whether to check that the user can see the view before copying it
      * @return array A list consisting of the new view, the template view and 
      *               information about the copy - i.e. how many blocks and 
      *               artefacts were copied
@@ -219,6 +220,11 @@ class View {
                 if (!$userobj->is_admin_for_user($viewdata['owner'])) {
                     throw new SystemException("View::_create: User $userid is not allowed to create a view for owner {$viewdata['owner']}");
                 }
+            }
+
+            // Users can only have one view of each non-portfolio type
+            if ($viewdata['type'] != 'portfolio' && get_record('view', 'owner', $viewdata['owner'], 'type', $viewdata['type'])) {
+                $viewdata['type'] = 'portfolio';
             }
 
         }

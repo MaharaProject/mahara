@@ -719,7 +719,7 @@ class User {
         require_once(get_config('libroot') . 'view.php');
 
         $views = array();
-        foreach (get_records_select_array('view', 'id IN (' . implode(', ', db_array_to_ph($templateids)) . ')', $templateids, '', 'id, title, description') as $result) {
+        foreach (get_records_select_array('view', 'id IN (' . implode(', ', db_array_to_ph($templateids)) . ')', $templateids, '', 'id, title, description, type') as $result) {
             $views[$result->id] = $result;
         }
 
@@ -729,6 +729,7 @@ class User {
                 'owner' => $this->get('id'),
                 'title' => $views[$tid]->title,
                 'description' => $views[$tid]->description,
+                'type' => $views[$tid]->type == 'profile' && $checkviewaccess ? 'portfolio' : $views[$tid]->type,
             ), $tid, $this->get('id'), $checkviewaccess);
         }
         db_commit();
