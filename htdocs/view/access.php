@@ -52,8 +52,6 @@ if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
 }
 
-$smarty = smarty(array('tablerenderer'), pieform_element_calendar_get_headdata(pieform_element_calendar_configure(array())), array('mahara' => array('From', 'To')));
-
 $js = '';
 if (!count_records('block_instance', 'view', $view->get('id'))) {
     $confirmmessage = get_string('reallyaddaccesstoemptyview', 'view');
@@ -325,10 +323,13 @@ function editaccess_submit(Pieform $form, $values) {
 
 }
 
+$form = pieform($form);
+
+$smarty = smarty(array('tablerenderer'), pieform_element_calendar_get_headdata(pieform_element_calendar_configure(array())), array('mahara' => array('From', 'To')));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('pagetitle', TITLE);
 $smarty->assign('heading', TITLE);
-$smarty->assign('form', pieform($form));
+$smarty->assign('form', $form);
 $smarty->display('view/access.tpl');
 
 ?>

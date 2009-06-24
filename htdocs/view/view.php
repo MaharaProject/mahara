@@ -118,6 +118,16 @@ feedbacklist.statevars.push('view');
 feedbacklist.updateOnLoad();
 EOF;
 
+
+$anonfeedback = !$USER->is_logged_in() && ($usertoken || $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid)));
+if ($USER->is_logged_in() || $anonfeedback) {
+    $addfeedbackform = pieform(add_feedback_form($allowattachments));
+}
+if ($USER->is_logged_in()) {
+    $objectionform = pieform(objection_form());
+}
+
+
 $smarty = smarty(
     array('mahara', 'tablerenderer', 'feedbacklist', 'artefact/resume/resumeshowhide.js'),
     array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
@@ -157,8 +167,6 @@ if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
     }
 }
 
-$anonfeedback = !$USER->is_logged_in() && ($usertoken || $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid)));
-
 $smarty->assign('SIDEBARS', false);
 $smarty->assign('ownername', $view->formatted_owner());
 $smarty->assign('streditviewbutton', ($new) ? get_string('backtocreatemyview', 'view') : get_string('editmyview', 'view'));
@@ -166,11 +174,11 @@ $smarty->assign('viewdescription', $view->get('description'));
 $smarty->assign('viewcontent', $view->build_columns());
 $smarty->assign('releaseform', $releaseform);
 $smarty->assign('anonfeedback', $anonfeedback);
-if ($USER->is_logged_in() || $anonfeedback) {
-    $smarty->assign('addfeedbackform', pieform(add_feedback_form($allowattachments)));
+if (isset($addfeedbackform)) {
+    $smarty->assign('addfeedbackform', $addfeedbackform);
 }
-if ($USER->is_logged_in()) {
-    $smarty->assign('objectionform', pieform(objection_form()));
+if (isset($objectionform)) {
+    $smarty->assign('objectionform', $objectionform);
 }
 $smarty->assign('viewbeingwatched', $viewbeingwatched);
 
