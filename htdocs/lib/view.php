@@ -729,8 +729,9 @@ class View {
         require_once(get_config('docroot') . '/blocktype/lib.php');
         $categories = array();
         $sql = 'SELECT bic.* FROM {blocktype_installed_category} bic
-            JOIN {blocktype_installed} bi  ON bic.blocktype = bi.name WHERE bi.active = 1';
-        foreach (get_records_sql_array($sql, array()) as $blocktypecategory) {
+            JOIN {blocktype_installed} bi ON (bic.blocktype = bi.name AND bi.active = 1)
+            JOIN {blocktype_installed_viewtype} biv ON (bi.name = biv.blocktype AND biv.viewtype = ?)';
+        foreach (get_records_sql_array($sql, array($this->get('type'))) as $blocktypecategory) {
             safe_require('blocktype', $blocktypecategory->blocktype);
             if (call_static_method(generate_class_name("blocktype", $blocktypecategory->blocktype), "allowed_in_view", $this)) {
                 if (!isset($categories[$blocktypecategory->category])) {
