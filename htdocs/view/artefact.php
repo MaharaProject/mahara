@@ -96,6 +96,9 @@ feedbacklist.statevars.push('view', 'artefact');
 feedbacklist.updateOnLoad();
 EOF;
 
+$feedbackform = pieform(add_feedback_form(false));
+$objectionform = pieform(objection_form());
+
 $smarty = smarty(
     array('mahara', 'tablerenderer', 'feedbacklist'),
     array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
@@ -121,8 +124,8 @@ else if ($view->get('group')) {
 }
 
 $smarty->assign('ownername', $view->formatted_owner());
-$smarty->assign('addfeedbackform', pieform(add_feedback_form(false)));
-$smarty->assign('objectionform', pieform(objection_form()));
+$smarty->assign('addfeedbackform', $feedbackform);
+$smarty->assign('objectionform', $objectionform);
 $smarty->assign('anonfeedback', !$USER->is_logged_in() && $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid)));
 
 $smarty->display('view/artefact.tpl');
