@@ -125,6 +125,7 @@ $string['topicisclosed'] = 'This topic is closed. Only moderators and the group 
 $string['topicopenedsuccess'] = 'Topics opened successfully';
 $string['topicstickysuccess'] = 'Topics set as sticky successfully';
 $string['topicsubscribesuccess'] = 'Topics subscribed successfully';
+$string['topicsuccessfulunsubscribe'] = 'Topic unsubscribed successfully';
 $string['topicunstickysuccess'] = 'Topic unset as sticky successfully';
 $string['topicunsubscribesuccess'] = 'Topics unsubscribed successfully';
 $string['topicupdatefailed'] = 'Topics update failed';
@@ -134,6 +135,9 @@ $string['Unsubscribe'] = 'Unsubscribe';
 $string['unsubscribefromforum'] = 'Unsubscribe from forum';
 $string['unsubscribefromtopic'] = 'Unsubscribe from topic';
 $string['updateselectedtopics'] = 'Update selected topics';
+$string['youcannotunsubscribeotherusers'] = 'You cannot unsubscribe other users';
+$string['youarenotsubscribedtothisforum'] = 'You are not subscribed to this forum';
+$string['youarenotsubscribedtothistopic'] = 'You are not subscribed to this topic';
 
 $string['today'] = 'Today';
 $string['yesterday'] = 'Yesterday';

@@ -218,7 +218,8 @@ function subscribe_topic_submit(Pieform $form, $values) {
             'interaction_forum_subscription_topic',
             (object)array(
                 'topic' => $values['topic'],
-                'user' => $USER->get('id')
+                'user'  => $USER->get('id'),
+                'key'   => dechex(mt_rand()),
             )
         );
     }

@@ -290,11 +290,11 @@ class PluginInteractionForum extends PluginInteraction {
         $currenttime = time();
         $minpostdelay = $currenttime - 30 * 60;
         $posts = get_records_sql_array(
-            'SELECT s.subscriber, s.type, p.id
+            'SELECT s.subscriber, s.type, s.key, p.id
             FROM (
-                SELECT st."user" AS subscriber, st.topic AS topic, \'topic\' AS type
+                SELECT st."user" AS subscriber, st.topic AS topic, st.key AS key, \'topic\' AS type
                 FROM {interaction_forum_subscription_topic} st
-                UNION SELECT sf."user" AS subscriber, t.id AS topic, \'forum\' AS type
+                UNION SELECT sf."user" AS subscriber, t.id AS topic, sf.key AS key, \'forum\' AS type
                 FROM {interaction_forum_subscription_forum} sf
                 INNER JOIN {interaction_forum_topic} t ON t.forum = sf.forum
             ) s
@@ -326,6 +326,7 @@ class PluginInteractionForum extends PluginInteraction {
                     'newpost',
                     array(
                         'type' => $post->type,
+                        'key'  => $post->key,
                         'postid' => $post->id,
                         'users' => $post->users
                     ),
@@ -404,12 +405,17 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
             else {
                 $user->subject = get_string_from_language($lang, 'newforumpostnotificationsubject', 'interaction.forum', $post->groupname, $post->subject);
             }
+
+            $unsubscribeid = $post->{$data->type . 'id'};
+
             $user->message = get_string_from_language($lang, 'forumposttemplate', 'interaction.forum',
-                $post->groupname, $post->forumtitle, $post->subject, display_name($post->poster, $user),
+                $post->groupname, $post->forumtitle,
+                $post->subject ? $post->subject : get_string_from_language($lang, 're', 'interaction.forum', $post->topicsubject),
+                display_name($post->poster, $user),
                 strftime(get_string('strftimedaydatetime'), $post->ctime), trim(html2text($post->body)),
                 get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid,
-                'topic',
-                get_config('wwwroot') . 'interaction/forum/unsubscribe.php?topic=' . $post->topicid . '&key=aec9087db'
+                $data->type,
+                get_config('wwwroot') . 'interaction/forum/unsubscribe.php?' . $data->type . '=' . $unsubscribeid . '&key=' . $data->key
             );
         }
     }
@@ -539,7 +545,8 @@ function subscribe_forum_submit(Pieform $form, $values) {
             'interaction_forum_subscription_forum',
             (object)array(
                 'forum' => $values['forum'],
-                'user' => $USER->get('id')
+                'user'  => $USER->get('id'),
+                'key'   => dechex(mt_rand()),
             )
         );
         delete_records_sql(
