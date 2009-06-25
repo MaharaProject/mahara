@@ -157,6 +157,17 @@ function ensure_sanity() {
 }
 
 /**
+ * Check sanity of things that we only check at installation time - not on 
+ * every request, like ensure_sanity() does
+ */
+function ensure_install_sanity() {
+    // Must must must be a UTF8 database!
+    if (!db_is_utf8()) {
+        throw new ConfigSanityException(get_string('dbnotutf8', 'error'));
+    }
+}
+
+/**
  * Check to see if the internal plugins are installed. Die if they are not.
  */
 function ensure_internal_plugins_exist() {

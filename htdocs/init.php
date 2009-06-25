@@ -252,11 +252,14 @@ if (get_config('siteclosed')) {
 
 // check to see if we're installed...
 $scriptfilename = str_replace('\\', '/', $_SERVER['SCRIPT_FILENAME']);
-if (!get_config('installed')
-    && false === strpos($scriptfilename, 'admin/index.php')
+if (!get_config('installed')) {
+    ensure_install_sanity();
+
+    if (false === strpos($scriptfilename, 'admin/index.php')
     && false === strpos($scriptfilename, 'admin/upgrade.php')
     && false === strpos($scriptfilename, 'admin/upgrade.json.php')) {
-    redirect('/admin/');
+        redirect('/admin/');
+    }
 }
 
 if (defined('JSON') && !defined('NOSESSKEY')) {

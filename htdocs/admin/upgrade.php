@@ -71,10 +71,6 @@ $coresuccess   = json_encode(get_string('coredatasuccess', 'admin'));
 if (!empty($upgrades['core']->install)) {
     $upgrades['firstcoredata'] = true;
     $upgrades['lastcoredata'] = true;
-    if (!db_is_utf8()) {
-        global $SESSION;
-        $SESSION->add_info_msg(get_string('databasenotutf8', 'admin'));
-    }
     $smarty->assign('install', true);
 }                   
 
