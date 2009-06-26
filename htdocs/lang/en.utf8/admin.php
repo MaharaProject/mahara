@@ -247,7 +247,7 @@ $string['proxyauthcredentialsdescription'] = 'Enter the credentials required for
 $string['proxyauthcredntialsset'] = 'Proxy authentication credentials set';
 
 
-// Upload CSV
+// Upload CSV and CSV errors
 $string['csvfile'] = 'CSV File';
 $string['emailusersaboutnewaccount'] = 'E-mail users about their account?';
 $string['emailusersaboutnewaccountdescription'] = 'Whether an e-mail should be sent to users informing them of their new account details';
@@ -256,6 +256,8 @@ $string['forceuserstochangepassworddescription'] = 'Whether users should be forc
 $string['uploadcsvinstitution'] = 'The institution and authentication method for the new users';
 $string['configureauthplugin'] = 'You must configure an authentication plugin before you can add users';
 $string['csvfiledescription'] = 'The file containing users to add';
+$string['csverroremptyfile'] = 'The csv file is empty.';
+$string['invalidfilename'] = 'The file "%s" does not exist';
 $string['uploadcsverrorinvalidfieldname'] = 'The field name "%s" is invalid';
 $string['uploadcsverrorrequiredfieldnotspecified'] = 'A required field "%s" has not been specified in the format line';
 $string['uploadcsverrornorecords'] = 'The file appears to contain no records (although the header is fine)';

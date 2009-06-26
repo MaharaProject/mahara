@@ -151,8 +151,7 @@ function uploadcsv_validate(Pieform $form, $values) {
         return;
     }
 
-    require_once('pear/File.php');
-    require_once('pear/File/CSV.php');
+    require_once('csvfile.php');
 
     // Don't be tempted to use 'explode' here. There may be > 1 underscore.
     $break = strpos($values['authinstance'], '_');
@@ -165,107 +164,76 @@ function uploadcsv_validate(Pieform $form, $values) {
 
     $usernames = array();
     $emails = array();
-    $conf = File_CSV::discoverFormat($values['file']['tmp_name']);
-    $i = 0;
-    while ($line = File_CSV::readQuoted($values['file']['tmp_name'], $conf)) {
-        $i++;
-        if (!is_array($line)) {
-            // Note: the CSV parser returns true on some errors and false on
-            // others! Yes that's retarded. No I didn't write it :(
-            $form->set_error('file', get_string('uploadcsverrorincorrectnumberoffields', 'admin', $i));
-            return;
-        }
 
-        // Get the format of the file
-        if ($i == 1) {
-            foreach ($line as &$potentialkey) {
-                $potentialkey = trim($potentialkey);
-                if (!in_array($potentialkey, $ALLOWEDKEYS)) {
-                    $form->set_error('file', get_string('uploadcsverrorinvalidfieldname', 'admin', $potentialkey));
-                    return;
-                }
-            }
+    $csvusers = new CsvFile($values['file']['tmp_name']);
+    $csvusers->set('allowedkeys', $ALLOWEDKEYS);
 
-            // Now we know all of the field names are valid, we need to make
-            // sure that the required fields are included
-            $mandatoryfields = array(
-                'username',
-                'password'
-            );
-            $mandatoryfields = array_merge($mandatoryfields, array_keys(ArtefactTypeProfile::get_mandatory_fields()));
-            if ($lockedprofilefields = get_column('institution_locked_profile_field', 'profilefield', 'name', $institution)) {
-                $mandatoryfields = array_merge($mandatoryfields, $lockedprofilefields);
-            }
-            
-            // Add in the locked profile fields for this institution
-            foreach ($mandatoryfields as $field) {
-                if (!in_array($field, $line)) {
-                    $form->set_error('file', get_string('uploadcsverrorrequiredfieldnotspecified', 'admin', $field));
-                    return;
-                }
-            }
-
-            // The format line is valid
-            $FORMAT = $line;
-            log_info('FORMAT:');
-            log_info($FORMAT);
-        }
-        else {
-            // Trim non-breaking spaces -- they get left in place by File_CSV
-            foreach ($line as &$field) {
-                $field = preg_replace('/^(\s|\xc2\xa0)*(.*?)(\s|\xc2\xa0)*$/', '$2', $field);
-            }
-
-            // We have a line with the correct number of fields, but should validate these fields
-            // Note: This validation should really be methods on each profile class, that way
-            // it can be used in the profile screen as well.
-
-            $formatkeylookup = array_flip($FORMAT);
-            $username = $line[$formatkeylookup['username']];
-            $password = $line[$formatkeylookup['password']];
-            $email    = $line[$formatkeylookup['email']];
-
-            $authobj = AuthFactory::create($authinstance);
-
-            if (method_exists($authobj, 'is_username_valid') && !$authobj->is_username_valid($username)) {
-                $form->set_error('file', get_string('uploadcsverrorinvalidusername', 'admin', $i));
-                return;
-            }
-            if (record_exists_select('usr', 'LOWER(username) = ?', strtolower($username)) || isset($usernames[strtolower($username)])) {
-                $form->set_error('file', get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
-                return;
-            }
-            if (record_exists('usr', 'email', $email) || isset($emails[$email])) {
-                $form->set_error('file', get_string('uploadcsverroremailaddresstaken', 'admin', $i, $email));
-            }
-
-            // Note: only checks for valid form are done here, none of the checks
-            // like whether the password is too easy. The user is going to have to
-            // change their password on first login anyway.
-            if (method_exists($authobj, 'is_password_valid') && !$authobj->is_password_valid($password)) {
-                $form->set_error('file', get_string('uploadcsverrorinvalidpassword', 'admin', $i));
-                return;
-            }
-
-            $usernames[strtolower($username)] = 1;
-            $emails[$email] = 1;
-
-            // All OK!
-            $CSVDATA[] = $line;
-        }
-
+    // Now we know all of the field names are valid, we need to make
+    // sure that the required fields are included
+    $mandatoryfields = array(
+        'username',
+        'password'
+    );
+    $mandatoryfields = array_merge($mandatoryfields, array_keys(ArtefactTypeProfile::get_mandatory_fields()));
+    if ($lockedprofilefields = get_column('institution_locked_profile_field', 'profilefield', 'name', $institution)) {
+        $mandatoryfields = array_merge($mandatoryfields, $lockedprofilefields);
     }
 
-    if ($i == 1) {
-        // There was only the title row :(
-        $form->set_error('file', get_string('uploadcsverrornorecords', 'admin'));
+    $csvusers->set('mandatoryfields', $mandatoryfields);
+    $csvdata = $csvusers->get_data();
+
+    if (!empty($csvdata->errors['file'])) {
+        $form->set_error('file', $csvdata->errors['file']);
         return;
     }
 
-    if ($CSVDATA === null) {
-        // Oops! Couldn't get CSV data for some reason
-        $form->set_error('file', get_string('uploadcsverrorunspecifiedproblem', 'admin'));
+    foreach ($csvdata->data as $key => $line) {
+        // If headers exists, increment i = key + 1 for actual line number
+        $i = ($csvusers->get('headerExists')) ? ($key + 1) : $key;
+
+        // Trim non-breaking spaces -- they get left in place by File_CSV
+        foreach ($line as &$field) {
+            $field = preg_replace('/^(\s|\xc2\xa0)*(.*?)(\s|\xc2\xa0)*$/', '$2', $field);
+        }
+
+        // We have a line with the correct number of fields, but should validate these fields
+        // Note: This validation should really be methods on each profile class, that way
+        // it can be used in the profile screen as well.
+
+        $formatkeylookup = array_flip($csvdata->format);
+        $username = $line[$formatkeylookup['username']];
+        $password = $line[$formatkeylookup['password']];
+        $email    = $line[$formatkeylookup['email']];
+
+        $authobj = AuthFactory::create($authinstance);
+
+        if (method_exists($authobj, 'is_username_valid') && !$authobj->is_username_valid($username)) {
+            $form->set_error('file', get_string('uploadcsverrorinvalidusername', 'admin', $i));
+            return;
+        }
+        if (record_exists_select('usr', 'LOWER(username) = ?', strtolower($username)) || isset($usernames[strtolower($username)])) {
+            $form->set_error('file', get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
+            return;
+        }
+        if (record_exists('usr', 'email', $email) || record_exists('artefact_internal_profile_email', 'email', $email) || isset($emails[$email])) {
+            $form->set_error('file', get_string('uploadcsverroremailaddresstaken', 'admin', $i, $email));
+            return;
+        }
+
+        // Note: only checks for valid form are done here, none of the checks
+        // like whether the password is too easy. The user is going to have to
+        // change their password on first login anyway.
+        if (method_exists($authobj, 'is_password_valid') && !$authobj->is_password_valid($password)) {
+            $form->set_error('file', get_string('uploadcsverrorinvalidpassword', 'admin', $i));
+            return;
+        }
+
+        $usernames[strtolower($username)] = 1;
+        $emails[$email] = 1;
     }
+
+    $FORMAT = $csvdata->format;
+    $CSVDATA = $csvdata->data;
 }
 
 /**
