@@ -56,7 +56,7 @@
 {/if}
         </ul>
         <div class="center">
-            <a href="{$WWWROOT}?logout" class="btn">{str tag="logout"}</a>
+            <a href="{$WWWROOT}?logout" class="btn" id="btn-logout">{str tag="logout"}</a>
             <a href="{$WWWROOT}account/" class="btn">{str tag="settings"}</a>
         </div>
 {if $USERMASQUERADING}        <div id="changeuser">{$becomeyouagain}</div>
