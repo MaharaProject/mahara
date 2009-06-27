@@ -308,7 +308,7 @@ EOF;
     // stylesheet set up - if we're in a plugin also get its stylesheet
     $stylesheets = array_reverse(array_values($THEME->get_url('style/style.css', true)));
     if (defined('SECTION_PLUGINTYPE') && defined('SECTION_PLUGINNAME') && SECTION_PLUGINTYPE != 'core') {
-        if ($pluginsheets = $THEME->get_url('style/style.css', true, SECTION_PLUGINTYPE, SECTION_PLUGINNAME)) {
+        if ($pluginsheets = $THEME->get_url('style/style.css', true, SECTION_PLUGINTYPE . '/' . SECTION_PLUGINNAME)) {
             $stylesheets = array_merge($stylesheets, array_reverse($pluginsheets));
         }
     }
