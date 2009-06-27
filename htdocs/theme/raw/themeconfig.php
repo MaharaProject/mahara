@@ -25,12 +25,7 @@
 
 $theme = new StdClass;
 
-$theme->displayname         = 'Raw';
-
-$theme->formrenderer        = 'table';
-
-$theme->leftcolumncss  = 'width: 256px;';
-$theme->maincolumncss  = '';
-$theme->rightcolumncss = 'width: 256px;';
+$theme->displayname  = 'Raw';
+$theme->formrenderer = 'table';
 
 ?>

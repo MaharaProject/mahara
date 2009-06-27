@@ -304,6 +304,10 @@ legend {
 	font-size: 1.3em;
 }
 
+/* Left/right columns */
+#left-column, #right-column {
+    width: 256px;
+}
 
 /* General sideblock rules */
 div.sideblock {
