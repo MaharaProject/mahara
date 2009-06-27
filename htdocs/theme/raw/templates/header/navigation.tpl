@@ -17,13 +17,13 @@
 {/if}
             {/strip}</ul>
         </div>
-{if $MAINNAVSELECTED.submenu}
         <div id="sub-nav">
+{if $MAINNAVSELECTED.submenu}
             <ul>{strip}
 {foreach from=$MAINNAVSELECTED.submenu item=item}
                 <li{if $item.selected} class="selected"{/if}><a href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>
 {/foreach}
             {/strip}</ul>
-        </div>
 {/if}
+        </div>
 {/if}
