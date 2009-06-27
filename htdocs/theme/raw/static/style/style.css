@@ -475,6 +475,37 @@ div.pagination  {
 
 /* Specific page rules */
 
+/* My Views */
+#myviews .btn-d {
+    font-size: .85em;
+}
+#myviews .vi {
+    font-size: .9em;
+    float: left;
+    line-height: 1.2em;
+    padding: .5em 1.5em .5em 0;
+    width: 30%;
+}
+#myviews .videsc {
+    font-size: .9em;
+}
+/* todo: check the below three rules */
+#myviews .submit-viewitem {
+    float: left;
+    padding: .25em 0;
+}
+#myviews .submit-viewitem select {
+    font-size: .9em;
+}
+#myviews .submitted-viewitem {
+    float: left;
+    padding: .5em 1.5em .5em 1.5em;
+    font-style: italic;
+    color: #969696;
+    font-size: 1em;
+    width: 60%;
+}
+
 /* Export */
 #export h3 {
     margin: .5em 0;
