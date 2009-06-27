@@ -15,11 +15,11 @@
         <tbody>
             <tr>
 {if $SIDEBARS && $SIDEBLOCKS.left}
-                <td id="left-column" class="sidebar"{if $THEME->leftcolumncss} style="{$THEME->leftcolumncss|escape}"{/if}>
+                <td id="left-column" class="sidebar">
 {include file="sidebar.tpl" blocks=$SIDEBLOCKS.left}
                 </td>
 {/if}
-                <td id="main-column"{if $THEME->maincolumncss} style="{$THEME->maincolumncss|escape}"{/if}>
+                <td id="main-column">
                     {insert name="messages"}
                     <div id="main-column-container">
 

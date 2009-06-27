@@ -1,7 +1,7 @@
                     </div>
                 </td>
 {if $SIDEBARS && $SIDEBLOCKS.right}
-                <td id="right-column" class="sidebar"{if $THEME->rightcolumncss} style="{$THEME->rightcolumncss|escape}"{/if}>
+                <td id="right-column" class="sidebar">
 {include file="sidebar.tpl" blocks=$SIDEBLOCKS.right}
                 </td>
 {/if}
