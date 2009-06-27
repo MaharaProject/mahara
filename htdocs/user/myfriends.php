@@ -151,7 +151,7 @@ function filter_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty(array(), array(), array(), array('sideblocks' => array(friends_control_sideblock())));
-$smarty->assign('heading', TITLE);
+$smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->assign('users', $data);
 $smarty->assign('form', $filterform);
 $smarty->assign('pagination', $pagination['html']);

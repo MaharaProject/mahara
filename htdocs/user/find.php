@@ -73,7 +73,7 @@ if ($query && !$data['count']) {
 }
 
 $smarty = smarty(array(), array(), array(), array('sideblocks' => array(friends_control_sideblock('find'))));
-$smarty->assign('heading', TITLE);
+$smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->assign('users', $data['data']);
 $smarty->assign('form', $searchform);
 $smarty->assign('pagination', $pagination['html']);

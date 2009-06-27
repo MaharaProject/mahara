@@ -14,7 +14,7 @@
 {if $institution}                {$institutionselector}{/if}
 
 {if $views}
-            <table id="myviews" class="fullwidth">
+            <table id="myviews" class="fullwidth listing">
                 <tbody>
 {foreach from=$views item=view}
                     <tr class="{cycle values=r0,r1}">

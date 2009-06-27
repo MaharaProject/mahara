@@ -1,27 +1,21 @@
 {include file="header.tpl"}
-{include file="sidebar.tpl"}
-
-{include file="columnleftstart.tpl"}
-
 {$form}
 
 {if $groups}
-<table id="findgroups" class="fullwidth">
+            <table id="findgroups" class="fullwidth listing">
 {foreach from=$groups item=group name=groups}
-<tr class="r{cycle values=0,1}">
-<td>
+                <tbody>
+                    <tr class="r{cycle values=0,1}">
+                        <td><div class="rel">
 {include file="group/group.tpl" group=$group returnto='find'}
-</td>
-</tr>
+                        </div></td>
+                    </tr>
 {/foreach}
-</table>
+                </tbody>
+            </table>
 
 {$pagination}
 {else}
-<div class="message">
-{str tag="nogroupsfound" section="group"}
-</div>
+            <div class="message">{str tag="nogroupsfound" section="group"}</div>
 {/if}
-
-{include file="columnleftend.tpl"}
 {include file="footer.tpl"}
