@@ -422,9 +422,9 @@ div.rbuttons form div {
 
 /* Pagination */
 div.pagination  {
-	font-size: .9em;
-	margin: 1em 0;
-	text-align: center;
+    font-size: .9em;
+    margin: 1em 0;
+    text-align: center;
 }
 .pagination a {
     border: 1px solid #d1d1d1;
@@ -433,7 +433,7 @@ div.pagination  {
     text-decoration: none;
 }
 .pagination .disabled {
-	background-color: #EBEBEB;
+    background-color: #EBEBEB;
     border: 1px solid #d1d1d1;
     margin: 0 .25em;
     padding: .5em;
