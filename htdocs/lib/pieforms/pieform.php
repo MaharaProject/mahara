@@ -529,6 +529,9 @@ class Pieform {/*{{{*/
         if ($this->has_errors()) {
             $result .= ' error';
         }
+        if (isset($this->data['class'])) {
+            $result .= ' ' . $this->data['class'];
+        }
         $result .= '"';
         foreach (array('name', 'method', 'action') as $attribute) {
             $result .= ' ' . $attribute . '="' . $this->data[$attribute] . '"';
