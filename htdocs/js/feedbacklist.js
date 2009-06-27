@@ -68,41 +68,39 @@ function objectionSuccess() {
 
 addLoadEvent(function () {
     if ($('add_feedback_form')) {
-        hideElement('add_feedback_form');
         if ($('add_feedback_link')) {
             connect('add_feedback_link', 'onclick', function(e) {
                 e.stop();
                 if ($('objection_form')) {
-                    hideElement('objection_form');
+                    addElementClass('objection_form', 'js-hidden');
                 }
                 $('add_feedback_form').reset();
-                showElement('add_feedback_form');
+                removeElementClass('add_feedback_form', 'js-hidden');
                 return false;
             });
         }
         connect('cancel_add_feedback_form_submit', 'onclick', function (e) {
             e.stop();
-            hideElement('add_feedback_form');
+            addElementClass('add_feedback_form', 'js-hidden');
             return false;
         });
     }
 
     if ($('objection_form')) {
-        hideElement('objection_form');
         if ($('objection_link')) {
             connect('objection_link', 'onclick', function(e) {
                 e.stop();
                 if ($('add_feedback_form')) {
-                    hideElement('add_feedback_form');
+                    addElementClass('add_feedback_form', 'js-hidden');
                 }
                 $('objection_form').reset();
-                showElement('objection_form');
+                removeElementClass('objection_form', 'js-hidden');
                 return false;
             });
         }
         connect('cancel_objection_form_submit', 'onclick', function (e) {
             e.stop();
-            hideElement('objection_form');
+            addElementClass('objection_form', 'js-hidden');
             return false;
         });
     }

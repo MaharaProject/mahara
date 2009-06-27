@@ -2444,6 +2444,7 @@ function add_feedback_form($attachments=false) {
     $form = array(
         'name'            => 'add_feedback_form',
         'method'          => 'post',
+        'class'           => 'js-hidden',
         'plugintype'      => 'core',
         'pluginname'      => 'view',
         'jsform'          => true,
@@ -2593,6 +2594,7 @@ function objection_form() {
     $form = array(
         'name'            => 'objection_form',
         'method'          => 'post',
+        'class'           => 'js-hidden',
         'plugintype'      => 'core',
         'pluginname'      => 'view',
         'jsform'          => true,
