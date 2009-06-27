@@ -126,6 +126,16 @@ td {
 }
 
 /* Top of page elements */
+.sitemessage {
+    background-color: #f99;
+    font-weight: bold;
+    padding: .5em;
+}
+.sitemessage img {
+    float: left;
+    margin-top: 2px;
+    padding-right: .5em;
+}
 #container {
     background-color: #fff;
     margin: 0 auto;
