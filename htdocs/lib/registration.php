@@ -39,6 +39,7 @@ function register_site()  {
     $strfield = get_string('Field', 'admin');
     $strvalue = get_string('Value', 'admin');
     $info = <<<EOF
+<tr><td>
 <table>
     <tr>
         <th>$strfield</th>
@@ -49,7 +50,7 @@ EOF;
     foreach($data as $key => $val) {
         $info .= '<tr><td>'. hsc($key) . '</td><td>' . hsc($val) . "</td></tr>\n";
     }
-    $info .= '</table>';
+    $info .= '</table></td></tr>';
 
     $form = array(
         'name' => 'register',
