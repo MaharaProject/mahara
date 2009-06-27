@@ -204,7 +204,7 @@ td {
     padding: 0 1.5em 1em;
     overflow: scroll;
 }
-#main-column-container {
+#main-column-container, div.rel {
     position: relative;
 }
 
@@ -404,14 +404,18 @@ div.sideblock h3 {
     padding: .2em .5em;
     text-decoration: none;
 }
-div.page-buttons {
-    /* todo: possibly switch to being an ID instead of class */
+.btn-d {
+    color: #ca0000;
+    padding-left: 1em;
+    background: url(../images/icon-delete.gif) no-repeat left 50%;
+}
+div.rbuttons {
     position: absolute;
     right: 0;
     top: 0;
 }
-div.page-buttons form,
-div.page-buttons form div {
+div.rbuttons form,
+div.rbuttons form div {
     display: inline;
     padding-left: 1em;
 }
