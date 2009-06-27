@@ -223,7 +223,7 @@ class View {
             }
 
             // Users can only have one view of each non-portfolio type
-            if ($viewdata['type'] != 'portfolio' && get_record('view', 'owner', $viewdata['owner'], 'type', $viewdata['type'])) {
+            if (isset($viewdata['type']) && $viewdata['type'] != 'portfolio' && get_record('view', 'owner', $viewdata['owner'], 'type', $viewdata['type'])) {
                 $viewdata['type'] = 'portfolio';
             }
 
