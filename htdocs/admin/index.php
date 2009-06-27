@@ -56,6 +56,7 @@ if (!get_config('registration_lastsent')) {
 }
 
 $smarty = smarty();
+$smarty->assign('PAGEHEADING', hsc(get_string('administration', 'admin')));
 
 // normal admin page starts here
 $smarty->assign('upgrades', $upgrades);

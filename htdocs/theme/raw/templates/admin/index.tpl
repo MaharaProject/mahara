@@ -1,8 +1,5 @@
 {include file='header.tpl'}
 
-{include file="columnfullstart.tpl"}
-<h2>{str tag="administration" section=admin}</h2>
-
 <div id="adminhome">
 {if $upgrades}
 <h3>{str tag="upgrades" section=admin}</h3>
@@ -70,7 +67,5 @@
         <li><strong><a href="{$WWWROOT}admin/extensions/filter.php">{str tag=htmlfilters section=admin}</a></strong> - {str tag=htmlfiltersdescription section=admin}</li>
     </ul>
 </div>
-
-{include file="columnfullend.tpl"}
 
 {include file='footer.tpl'}
