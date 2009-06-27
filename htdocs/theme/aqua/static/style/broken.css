@@ -1,218 +1,9 @@
-/**
- * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @author     Paul Walker <paul.walker@catalyst-eu.net>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2009 Catalyst IT Europe http://catalyst-eu.net
- */
-/* working styles */
+
+/* uninspected */
 body {
     background: #1D499F url(../images/bg.jpg) repeat-x top center;
 	color: #14336F;
 }
-
-/* HEADER ELEMENTS */
-#top-wrapper {
-    background: transparent;
-	height: 134px;
-	*height: 133px;	/* IE specific */
-}
-#top-wrapper ul,
-#top-wrapper li {
-    padding: 0;
-    margin: 0;
-    text-align: right;
-    display: inline;
-}
-
-/* main menu */
-#main-nav {
-    float:right;
-    padding: 0;
-    margin: 0 10px 0 0;
-	height: 33px;
-}
-#main-nav ul {
-    background: url(../images/menu-bg.gif) repeat-x;
-}
-#main-nav li {
-    float:left;
-    color: #FFFFFF;
-    text-decoration: none;
-    font-weight: normal;
-	font-size: 12px;
-	margin: 0 0 0 3px;
-	padding: 8px 15px 0px 15px;
-	background: #14336F;
-}
-#main-nav li a,
-#main-nav li a:link,
-#main-nav li a:visited,
-#main-nav li a:active {
-	margin: 0;
-	padding: 0;
-    color: #FFFFFF;
-	width:auto;
-	display:block;
-}
-#main-nav li a:hover {
-    color: #FFFFFF;
-    text-decoration: underline;
-}
-#main-nav li.selected {
-	padding: 8px 15px 0px 15px;
-	background: #FFFFFF;
-}
-#main-nav li.selected a:link,
-#main-nav li.selected a:visited,
-#main-nav li.selected a:active {
-    color: #14336F;
-}
-
-#logo {
-    padding: 0;
-	font-size: 3.3em;
-	font-weight:normal;
-	color: #FFFFFF;
-	width:600px;
-	padding: 20px 25px 5px 0
-}
-#logo a,
-#logo a:link,
-#logo a:active,
-#logo a:visited {
-	color: #FFFFFF;
-}
-#logo a:hover {
-	color: #F0F0F0;
-}
-
-
-/* Sub menu */
-#sub-nav {
-    clear:both;	
-    padding: 0;
-    margin: 0;
-    font-size: 12px;
-    font-weight: bold;
-    text-align: left;
-    background: #FFF;
-    height: 25px;
-	border-bottom:1px solid #DDD;
-	width:100%;
-}
-#sub-nav.group {
-    padding: 0;
-}
-#sub-nav ul {
-    float:right;
-	height: 15px;
-	padding: 5px 10px 5px 0;
-}
-#sub-nav li {
-    height: 25px;
-    padding: 5px 13px 5px 8px;
-    margin: 0;
-	background: url(../images/submenu-divider.gif) no-repeat top right;
-}
-#sub-nav li.selected {
-    display: inline;
-    height: 25px;
-    padding: 5px 13px 5px 8px;
-    margin: 0;
-	background: transparent;
-}
-#sub-nav li a,
-#sub-nav li a:link,
-#sub-nav li a:visited,
-#sub-nav li a:active {
-    color: #14336F;
-	height: 25px;
-}
-#sub-nav li a:hover {
-    color: #1A428F;
-    text-decoration: underline;
-}
-#sub-nav li.selected a:link,
-#sub-nav li.selected a:visited,
-#sub-nav li.selected a:active {
-    color: #1D499F;
-    text-decoration: underline;
-}
-#sub-nav li.groupname {
-    background: url(../images/menu-over-bg.gif) repeat-x left;
-    color: #feef45;
-}
-
-/* search box in header */
-#usf {
-    font-size: 11px;
-    font-weight: bold;
-    color: #333333;
-    margin: 35px 6px 0 0;
-    text-align: right;
-    padding: 0;
-}
-#usf_submit {
-    border: none;
-    margin-left: 0;
-    padding-bottom: 5px;
-    text-align: right;
-    vertical-align: middle;
-}
-#usf_query_container, #usf_submit_container {
-    vertical-align: middle;
-}
-#usf_query_container input {
-    padding: 2px 3px;
-    color: #333333;
-	background-color: #FFFFFF;
-    width: 190px;
-}
-
-#container,
-#containerX {
-    background: #1D499F url(../images/bg-container.jpg) repeat-x top center;
-    margin-top:0px;
-    padding-top:0px;
-}
-
-/* CONTENT LAYOUT */
-#main-wrapper {
-	background: #FFF;
-}
-
-
-#right-column {
-	background: #F4F7F9;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-/* uninspected */
 
 #loading_box {
     top: 0;
@@ -585,6 +376,16 @@ tr.required th,
 }
 
 
+/* CONTENT LAYOUT */
+#mainwrapper {
+	background: #FFF;
+}
+#column-full {
+    background-color: #FFF;
+}
+#column-right {
+	background: #F4F7F9;
+}
 .maincontent {
     line-height: 18px;
     padding: 10px 25px 25px 25px;

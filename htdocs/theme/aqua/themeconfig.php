@@ -25,7 +25,7 @@
 
 $theme = new StdClass;
 
-$theme->name   = 'Aqua';
+$theme->displayname   = 'Aqua';
 $theme->parent = 'raw';
 $theme->formrenderer = 'table';
 
