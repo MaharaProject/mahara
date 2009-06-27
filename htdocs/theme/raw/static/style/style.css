@@ -423,6 +423,21 @@ div.sideblock h3 {
     padding-left: 1em;
     background: url(../images/icon-delete.gif) no-repeat left 50%;
 }
+.btn-msg {
+	background: url(../images/icon-mail.gif) no-repeat left 4px;
+	font-weight: bold;
+	padding-left: 1em;
+}
+.btn-req {
+	background: url(../images/icon-add.gif) no-repeat left 4px;
+	padding-left: 1em;
+}
+input#addfriend_add,
+input#myfriends_addfriend_add {
+	background: transparent url(../images/icon-add.gif) no-repeat left;
+	border: 0;
+    margin: 0;
+}
 div.rbuttons {
     position: absolute;
     right: 0;
