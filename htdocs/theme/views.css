@@ -217,6 +217,9 @@
 .blockinstance.configure td {
     padding: 0;
 }
+.blockinstance-content p:first-child {
+    margin-top: 0;
+}
 
 
 /* styling the tabs for the artefact chooser */

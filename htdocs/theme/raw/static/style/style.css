@@ -25,9 +25,10 @@ label {
     font-weight: bold;
 }
 #main-column h1, #main-column h2, #main-column h3, #main-column h4, #main-column h5, #main-column h6 {
-    margin: 1em 0 .5em;
+    margin: .75em 0 .5em;
 }
-#main-column h1 + p, #main-column h2 + p, #main-column h3 + p, #main-column h4 + p, #main-column h5 + p, #main-column h6 + p, #main-column-container h1:first-child {
+#main-column h1:first-child, #main-column h2:first-child, #main-column h3:first-child, #main-column h4:first-child, #main-column h5:first-child, #main-column h6:first-child,
+#main-column h1 + p, #main-column h2 + p, #main-column h3 + p, #main-column h4 + p, #main-column h5 + p, #main-column h6 + p {
     margin-top: 0;
 }
 #main-column h1 {
