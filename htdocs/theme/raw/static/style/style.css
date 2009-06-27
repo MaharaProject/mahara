@@ -418,7 +418,7 @@ div.sideblock h3 {
     padding: .2em .5em;
     text-decoration: none;
 }
-.btn-d {
+.btn-del {
     color: #ca0000;
     padding-left: 1em;
     background: url(../images/icon-delete.gif) no-repeat left 50%;
