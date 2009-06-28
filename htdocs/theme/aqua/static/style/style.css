@@ -74,6 +74,13 @@ h6 {
 }
 
 
+/* Alternative row background colours */
+.r0 {
+    background-color: #e0e8ee;
+}
+.r1 {
+    background-color: #f4f7f9;
+}
 /* LINKS */
 a,
 a:link,
@@ -85,6 +92,45 @@ a:visited {
 a:hover {
     color: #14336F;
     text-decoration: underline;
+}
+
+select {
+    border: 1px solid #b2b2b2;
+    padding: 0;
+}
+
+input.error, select.error {
+    border-color: #cc0000;
+}
+
+/* LABEL */
+label {
+    color: #888888;
+    margin: 0 5px 0 0;
+}
+.required,
+div.required label,
+tr.required label,
+tr.required th,
+.required td label,
+.required td,
+.requiredmarker {
+    color: #333333;
+}
+/* Legend */
+legend {
+	color: #1e6297;
+	margin-bottom:5px;
+}
+legend a,
+legend a:link,
+legend a:visited,
+legend a:active {
+	color: #1e6297 !important;
+}
+/* Fieldset */
+fieldset {
+    border: 1px solid #14436F;
 }
 
 /* HEADER ELEMENTS */
@@ -105,9 +151,6 @@ a:hover {
     padding: 0;
     margin: 0 10px 0 0;
 	height: 27px;
-}
-#main-nav ul {
-    background: url(../images/menu-bg.gif) repeat-x;
 }
 #main-nav li {
     float:left;
@@ -186,8 +229,9 @@ a:hover {
 #sub-nav li {
     height: 25px;
     padding: 5px 13px 5px 8px;
-    margin: 0;
-	background: url(../images/submenu-divider.gif) no-repeat top right;
+    margin: 0 !important;
+    /* not working */
+	/*background: url(../images/submenu-divider.gif) no-repeat top right; */
 }
 #sub-nav li.selected {
     display: inline;
@@ -330,13 +374,20 @@ div.sideblock h3 a:active {
 div.sideblock p {
     font-size: .9em;
 }
-.btn {
+
+.btn,
+input.submit,
+input.button, button,
+input.submitcancel,
+input.cancelbackcreate,
+#settings_delete {
 	background-color: #14436F;
 	padding: 3px 10px;
 	border-color: #D9DFEA #b2b2b2 #b2b2b2 #D9DFEA !important;
 	border-style: solid;
 	border-width: 1px;
 	font-size: 11px;
+    font-weight:normal;
 	color: #FFF;
 	margin-left: 5px;
 }
@@ -383,4 +434,194 @@ div#sb-onlineusers ul {
 }
 div#sb-onlineusers ul img {
     padding-right:5px;
+}
+
+
+
+
+/*  Views  */
+
+#page #top-pane,
+#page #blocksinstruction {
+    background: #1D499F;
+}
+#page #blocksinstruction {
+    color: #FFFFFF;
+}
+div.configure,
+#artefactchooser-body table,
+#artefactchooser-body table th,
+#artefactchooser-body table td,
+#artefactchooser-body table td p,
+#artefactchooser-body table td div  {
+    color: #14336F;
+	background: #FFFFFF;
+}
+#page #noblocks,
+#artefactchooser-body table th label,
+body:last-child:not(:root:root) .newblockhere {
+    color: #1D499F;
+}
+#page #bottom-pane {
+	border-color: #1D499F !important;
+    border-width:1px !important;
+}
+
+#blocktype-list {
+  color: #1D499F !important;
+  background-color: #f4f7f9;
+}
+#category-list li a {
+    background-color: #e0e8ee;
+	color: #1e6297;
+    padding: 5px 10px;
+	height: 25px;
+}
+#category-list li.current a {
+    font-weight: bold;
+    background-color: #f4f7f9;
+	color: #1e6297;
+}
+/* configure icon on blocks is special */
+.configurebutton {
+    background-color:white !important;
+    border:0px !important;
+    padding:0px !important;
+    margin: 0px !important;
+}
+
+
+/* generic table listing styles
+ * like my views and my groups, etc
+ */
+table.fullwidth {
+	border-top: 1px solid #14436F;
+	border-bottom: 1px solid #14436F;
+}
+
+table.fullwidth h3 {
+	margin: 0 0 15px 0;
+	padding: 0;
+}
+table.fullwidth h3 a {
+	color: #1e6297 !important;
+}
+
+/* special styles for my views table */
+#editviewdetails,
+#editthisview,
+#editviewaccess {
+	padding-left: 15px;
+    background: url(../../../raw/static/images/icon-edit.gif) no-repeat left 2px;
+	font-size: 12px !important;
+}
+#myviews .btn-del {
+	font-size: 11px;
+    font-weight: bold;
+    color:#ca0000;
+}
+
+
+/* Side Quota Bar */
+/** this is currently broken and needs looking at
+ * default is broken too */
+#quota_message {
+    margin: 0 16px 0 0;
+	font-size: 12px;
+    padding-bottom: 10px;
+}
+#quota_bar, #quota_bar_100 {
+    background: #14436F;
+    height: 21px;
+    color: #FFF;
+    padding: 7px 0 0 0;
+}
+#quota_bar_100 {
+    background: #CC0000;
+}
+#quota_used {
+    color: #3986c3;
+}
+#quota_total {
+    color: #1F97D5;
+}
+#quota_bar_100 #quota_percentage {
+    margin: auto;
+}
+#quota_fill {
+    background: #1F97D5;
+    height:21px
+}
+
+
+/* SETTINGS > PREFERENCES */
+#accountprefs table #accountprefs_password2 {
+    margin: 0 0 20px 0;
+}
+#accountprefs table h3 {
+    margin: 5px 0 0 0;
+    padding: 0;
+	color: #1e6297;
+	font-size: 16px;
+	font-weight: bold;
+	border-bottom: 1px solid #888888
+}
+#accountprefs td label {
+    font-weight: normal;
+	color: #14336F;
+	font-size: 11px;
+}
+#accountprefs_oldpassword_container th {
+	width: 200px !important;
+}
+
+/* Tables */
+.maincontent table {
+	padding: 0;
+	border-spacing: 0;
+	border-collapse: collapse;
+	margin: 15px 0;
+}
+.maincontent thead th {
+    color: #888888;
+	padding: 2px 10px;
+	border-bottom: 1px solid #14436F;
+	vertical-align: top;
+}
+.maincontent tbody th {
+    color: #888888;
+	text-align: right;
+	padding: 7px 0 7px 10px;
+	border-bottom: none;
+}
+.maincontent th.center {
+    text-align: center;
+}
+.maincontent tbody td {
+	padding: 5px 10px;
+	vertical-align: top;
+}
+.maincontent tfoot td {
+	padding: 3px 10px;
+	border-top: 1px solid #14436F;
+}
+.tablerenderer {
+	padding: 0;
+	margin: 0;
+	border: none;
+	border-spacing: 0;
+}
+.tablerenderer td {
+	padding: 5px 10px;
+	margin: 0;
+	border: none;
+}
+.tablerenderer-loading {
+    border: 1px solid #f4f7f9;
+	background-color: #f4f7f9;
+    padding: .5em;
+    text-align: center;
+    font-weight: bold;
+    color: #1e6297;
+    font-size: 16px;
 }
