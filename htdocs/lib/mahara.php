@@ -1395,7 +1395,6 @@ function can_view_view($view_id, $user_id=null, $token=null) {
             }
 
             foreach ($public as $k => $v) {
-                log_debug($v->startdate. '->'.$v->stopdate .' | '.$dbnow);
                 if ( ($v->startdate == null || $v->startdate < $dbnow) && ($v->stopdate == null || $v->stopdate > $dbnow) ) {
                     return ($publicviews || ($publicprofiles && $v->type == 'profile'));
                 }
