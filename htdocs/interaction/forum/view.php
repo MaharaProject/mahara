@@ -113,12 +113,14 @@ if ($membership && isset($_POST['checked'])) {
         else if ($type == 'subscribe' && !$forum->subscribed) {
             db_begin();
             foreach ($checked as $key => $value) {
-                insert_record('interaction_forum_subscription_topic',
-                    (object) array(
-                        'user'  => $USER->get('id'),
-                        'topic' => $value,
-                        'key'   => dechex(mt_rand()),
+                if (!record_exists('interaction_forum_subscription_topic', 'user', $USER->get('id'), 'topic', $value)) {
+                    insert_record('interaction_forum_subscription_topic',
+                        (object) array(
+                            'user'  => $USER->get('id'),
+                            'topic' => $value,
+                            'key'   => PluginInteractionForum::generate_unsubscribe_key(),
                     ));
+                }
             }
             db_commit();
             $SESSION->add_ok_msg(get_string('topicsubscribesuccess', 'interaction.forum'));
