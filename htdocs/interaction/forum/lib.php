@@ -414,10 +414,10 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         foreach ($this->users as &$user) {
             $lang = (empty($user->lang) || $user->lang == 'default') ? get_config('lang') : $user->lang;
             if ($post->parent) {
-                $user->subject = get_string_from_language($lang, 'replyforumpostnotificationsubject', 'interaction.forum', $post->groupname, $post->topicsubject);
+                $user->subject = get_string_from_language($lang, 'replyforumpostnotificationsubject', 'interaction.forum', $post->groupname, $post->forumtitle, $post->topicsubject);
             }
             else {
-                $user->subject = get_string_from_language($lang, 'newforumpostnotificationsubject', 'interaction.forum', $post->groupname, $post->subject);
+                $user->subject = get_string_from_language($lang, 'newforumpostnotificationsubject', 'interaction.forum', $post->groupname, $post->forumtitle, $post->subject);
             }
 
             $unsubscribeid = $post->{$data->type . 'id'};
