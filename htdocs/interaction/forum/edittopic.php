@@ -182,6 +182,7 @@ function addtopic_submit(Pieform $form, $values) {
         insert_record('interaction_forum_subscription_topic', (object)array(
             'user'  => $USER->get('id'),
             'topic' => $topicid,
+            'key'   => dechex(mt_rand()),
         ));
     }
     db_commit();

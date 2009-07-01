@@ -134,7 +134,8 @@ class PluginInteractionForum extends PluginInteraction {
                         'interaction_forum_subscription_forum',
                         (object)array(
                             'forum' => $instance->get('id'),
-                            'user' => $userid,
+                            'user'  => $userid,
+                            'key'   => dechex(mt_rand()),
                         )
                     );
                 }
@@ -250,7 +251,8 @@ class PluginInteractionForum extends PluginInteraction {
                     'interaction_forum_subscription_forum',
                     (object)array(
                         'forum' => $forumid,
-                        'user' => $gm['member'],
+                        'user'  => $gm['member'],
+                        'key'   => dechex(mt_rand()),
                     )
                 );
             }
