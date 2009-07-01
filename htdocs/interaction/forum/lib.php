@@ -135,7 +135,7 @@ class PluginInteractionForum extends PluginInteraction {
                         (object)array(
                             'forum' => $instance->get('id'),
                             'user'  => $userid,
-                            'key'   => dechex(mt_rand()),
+                            'key'   => PluginInteractionForum::generate_unsubscribe_key(),
                         )
                     );
                 }
@@ -252,7 +252,7 @@ class PluginInteractionForum extends PluginInteraction {
                     (object)array(
                         'forum' => $forumid,
                         'user'  => $gm['member'],
-                        'key'   => dechex(mt_rand()),
+                        'key'   => PluginInteractionForum::generate_unsubscribe_key(),
                     )
                 );
             }
@@ -343,6 +343,18 @@ class PluginInteractionForum extends PluginInteraction {
 
     public static function can_be_disabled() {
         return false; //TODO until it either becomes an artefact plugin or stops being hardcoded everywhere
+    }
+
+    /**
+     * Generates a random key to use for unsubscription requests.
+     *
+     * See the interaction_forum_subscription_* tables and related operations 
+     * on them for more information.
+     *
+     * @return string A random key
+     */
+    public static function generate_unsubscribe_key() {
+        return dechex(mt_rand());
     }
 }
 
@@ -548,7 +560,7 @@ function subscribe_forum_submit(Pieform $form, $values) {
             (object)array(
                 'forum' => $values['forum'],
                 'user'  => $USER->get('id'),
-                'key'   => dechex(mt_rand()),
+                'key'   => PluginInteractionForum::generate_unsubscribe_key(),
             )
         );
         delete_records_sql(

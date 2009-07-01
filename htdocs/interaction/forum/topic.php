@@ -219,7 +219,7 @@ function subscribe_topic_submit(Pieform $form, $values) {
             (object)array(
                 'topic' => $values['topic'],
                 'user'  => $USER->get('id'),
-                'key'   => dechex(mt_rand()),
+                'key'   => PluginInteractionForum::generate_unsubscribe_key(),
             )
         );
     }
