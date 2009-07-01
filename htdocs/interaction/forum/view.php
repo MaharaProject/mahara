@@ -115,8 +115,9 @@ if ($membership && isset($_POST['checked'])) {
             foreach ($checked as $key => $value) {
                 insert_record('interaction_forum_subscription_topic',
                     (object) array(
-                        'user' => $USER->get('id'),
-                        'topic' => $value
+                        'user'  => $USER->get('id'),
+                        'topic' => $value,
+                        'key'   => dechex(mt_rand()),
                     ));
             }
             db_commit();
