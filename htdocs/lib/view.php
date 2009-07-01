@@ -574,6 +574,12 @@ class View {
 
         // View access
         if ($accessdata) {
+            /*
+             * There should be a cleaner way to do this
+             * $accessdata_added ensures that the same access is not granted twice because the profile page
+             * gets very grumpy if there are duplicate access rules
+             */
+            $accessdata_added = array();
             foreach ($accessdata as $item) {
                 $accessrecord = new StdClass;
                 $accessrecord->view = $this->get('id');
@@ -588,11 +594,17 @@ class View {
                     case 'loggedin':
                     case 'friends':
                         $accessrecord->accesstype = $item['type'];
-                        insert_record('view_access', $accessrecord);
+                        if (array_search($accessrecord, $accessdata_added) === false) {
+                            insert_record('view_access', $accessrecord);
+                            $accessdata_added[] = $accessrecord;
+                        }
                         break;
                     case 'user':
                         $accessrecord->usr = $item['id'];
-                        insert_record('view_access_usr', $accessrecord);
+                        if (array_search($accessrecord, $accessdata_added) === false) {
+                            insert_record('view_access_usr', $accessrecord);
+                            $accessdata_added[] = $accessrecord;
+                        }
                         break;
                     case 'group':
                         $accessrecord->group = $item['id'];
@@ -604,11 +616,18 @@ class View {
                             }
                             $accessrecord->role = $item['role'];
                         }
-                        insert_record('view_access_group', $accessrecord);
+                        if (array_search($accessrecord, $accessdata_added) === false) {
+                            insert_record('view_access_group', $accessrecord);
+                            $accessdata_added[] = $accessrecord;
+                        }
+
                         break;
                     case 'token':
                         $accessrecord->token = $item['id'];
-                        insert_record('view_access_token', $accessrecord);
+                        if (array_search($accessrecord, $accessdata_added) === false) {
+                            insert_record('view_access_token', $accessrecord);
+                            $accessdata_added[] = $accessrecord;
+                        }
                         break;
                 }
             }

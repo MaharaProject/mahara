@@ -1408,7 +1408,7 @@ function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null
         // check public
         $publicprofiles = get_config('allowpublicprofiles');
         if ($publicviews || $publicprofiles) {
-            $public = get_record_sql("
+            $public = get_records_sql_array("
                 SELECT
                     v.id, v.type, a.*
                 FROM
@@ -1416,15 +1416,18 @@ function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null
                     LEFT OUTER JOIN {view_access} a ON v.id = a.view
                 WHERE
                     v.id = ? AND a.accesstype = 'public'
-            ", array($view_id));
-            return $public && 
-                ( ( $publicviews
-                    && ( $public->startdate == null || $public->startdate < $now )
-                    && ( $public->stopdate == null || $public->stopdate > $now )
-                    )
-                  ||
-                  ( $publicprofiles && $public->type == 'profile' )
-                );
+                    ", array($view_id));
+
+            // If no public permissions
+            if ($public == false) {
+                return false;
+            }
+
+            foreach ($public as $k => $v) {
+                if ( ($v->startdate == null || $v->startdate < $dbnow) && ($v->stopdate == null || $v->stopdate > $dbnow) ) {
+                    return ($publicviews || ($publicprofiles && $v->type == 'profile'));
+                }
+            }
         }
         return false;
     }
