@@ -96,14 +96,6 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         );
     }
 
-    public static function get_artefacts(BlockInstance $instance) {
-        $configdata = $instance->get('configdata');
-        if (isset($configdata['artefactid'])) {
-            return array($configdata['artefactid']);
-        }
-        return false;
-    }
-
     public static function filebrowser_element(&$instance, $default=array()) {
         $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default);
         $element['title'] = get_string('media', 'blocktype.file/internalmedia');
