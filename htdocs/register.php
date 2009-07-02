@@ -219,10 +219,13 @@ if (count($institutions) > 1) {
         )
     );
 }
-else if ($institutions) {
+else if ($institutions) { // Only one option - probably mahara ('No Institution') but that's not certain
+
+    $institution = array_shift($institutions);
+
     $elements['institution'] = array(
         'type' => 'hidden',
-        'value' => 'mahara'
+        'value' => $institution->name
     );
 }
 else {
