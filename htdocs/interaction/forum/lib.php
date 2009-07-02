@@ -392,6 +392,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
             WHERE p.id = ?',
             array($this->postid)
         );
+        $this->fromuser = $post->poster;
 
         // When emailing forum posts, create Message-Id headers for threaded display by email clients
         $urlinfo = parse_url(get_config('wwwroot'));

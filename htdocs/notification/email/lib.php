@@ -68,7 +68,13 @@ class PluginNotificationEmail extends PluginNotification {
             $messagebody .=  "\n\n" . get_string_from_language($lang, 'emailfooter', 'notification.email', $sitename, $prefurl);
         }
 
-        $userfrom = get_record('usr', 'id', get_field('interaction_forum_post', 'poster', 'id', $data->postid));
+        $userfrom = null;
+        if (!empty($data->fromuser)) {
+            $userfrom = get_record('usr', 'id', $data->fromuser);
+            if ($data->hideemail) {
+                $userfrom->email = get_config('noreplyaddress');
+            }
+        }
         email_user($user, $userfrom, $subject, $messagebody, null, !empty($data->customheaders) ? $data->customheaders : null);
     }
 }
