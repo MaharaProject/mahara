@@ -66,8 +66,14 @@ $string['edittitle'] = 'Edit forum';
 $string['edittopic'] = 'Edit topic';
 $string['edittopicsuccess'] = 'Topic edited successfully';
 $string['forumname'] = 'Forum Name';
-$string['forumposttemplate'] = "%s: %s: %s\nBy %s - %s\n\n%s\n\n------------------------------------------------------------------------
-To see the post online, follow this link:
+$string['forumposttemplate'] = "%s by %s
+%s
+------------------------------------------------------------------------
+
+%s
+
+------------------------------------------------------------------------
+To see and reply to the post online, follow this link:
 %s
 
 To unsubscribe from this %s, visit:
