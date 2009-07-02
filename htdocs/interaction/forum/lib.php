@@ -423,10 +423,10 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
             $unsubscribeid = $post->{$data->type . 'id'};
 
             $user->message = get_string_from_language($lang, 'forumposttemplate', 'interaction.forum',
-                $post->groupname, $post->forumtitle,
                 $post->subject ? $post->subject : get_string_from_language($lang, 're', 'interaction.forum', $post->topicsubject),
                 display_name($post->poster, $user),
-                strftime(get_string('strftimedaydatetime'), $post->ctime), trim(html2text($post->body)),
+                strftime(get_string('strftimedaydatetime'), $post->ctime),
+                trim(html2text($post->body)),
                 get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid,
                 $data->type,
                 get_config('wwwroot') . 'interaction/forum/unsubscribe.php?' . $data->type . '=' . $unsubscribeid . '&key=' . $data->key

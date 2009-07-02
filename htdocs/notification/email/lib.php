@@ -68,7 +68,8 @@ class PluginNotificationEmail extends PluginNotification {
             $messagebody .=  "\n\n" . get_string_from_language($lang, 'emailfooter', 'notification.email', $sitename, $prefurl);
         }
 
-        email_user($user, null, $subject, $messagebody, null, !empty($data->customheaders) ? $data->customheaders : null);
+        $userfrom = get_record('usr', 'id', get_field('interaction_forum_post', 'poster', 'id', $data->postid));
+        email_user($user, $userfrom, $subject, $messagebody, null, !empty($data->customheaders) ? $data->customheaders : null);
     }
 }
 
