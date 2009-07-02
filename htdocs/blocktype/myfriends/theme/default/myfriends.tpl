@@ -16,7 +16,7 @@
     </table>
 {else}
     {if $USERID == $USER->get('id')}
-        <div class="message">Try <a href="{$WWWROOT}user/find.php">searching for friends</a>!</div>
+        <div class="message">{str tag="trysearchingforfriends" section=group args=$searchingforfriends}</div>
     {else}
         {if $relationship == 'none' && $friendscontrol == 'auto'}
             <div class="message">{$newfriendform}</div>
