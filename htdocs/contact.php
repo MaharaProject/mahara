@@ -119,7 +119,7 @@ function contactus_submit(Pieform $form, $values) {
     $data->subject     = $values['subject'];
     $data->message     = $values['message'];
     if ($values['userid']) {
-        $data->userfrom = $values['userid'];
+        $data->fromuser = $values['userid'];
     }
     require_once('activity.php');
     activity_occurred('contactus', $data);

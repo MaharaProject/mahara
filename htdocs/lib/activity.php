@@ -257,6 +257,18 @@ function activity_locate_typerecord($activitytype, $plugintype=null, $pluginname
 /** activity type classes **/
 abstract class ActivityType {
     
+    /**
+     * Who any notifications about this activity should appear to come from
+     */
+    protected $fromuser;
+
+    /**
+     * When sending notifications, should the email of the person sending it be 
+     * hidden? (Almost always yes, will cause the email to appear to come from 
+     * the 'noreply' address)
+     */
+    protected $hideemail = true;
+
     protected $subject;
     protected $message;
     protected $users = array();
@@ -395,12 +407,20 @@ class ActivityTypeContactus extends ActivityTypeAdmin {
     
     protected $fromname;
     protected $fromemail;
-    protected $userfrom;
+    protected $hideemail = false;
 
+    /**
+     * @param array $data Parameters:
+     *                    - message (string)
+     *                    - subject (string) (optional)
+     *                    - fromname (string)
+     *                    - fromaddress (email address)
+     *                    - fromuser (int) (if a logged in user)
+     */
     function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
-        if (!empty($this->userfrom)) {
-            $this->url = get_config('wwwroot') . 'user/view.php?id=' . $this->userfrom;
+        if (!empty($this->fromuser)) {
+            $this->url = get_config('wwwroot') . 'user/view.php?id=' . $this->fromuser;
         }
         else {
             $this->customheaders = array(
