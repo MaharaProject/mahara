@@ -402,7 +402,6 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         $hostname = $urlinfo['host'];
         $cleanforumname = str_replace('"', "'", strip_tags($post->forumtitle));
         $this->customheaders = array(
-            'Precedence: Bulk',
             'List-Id: "' . $cleanforumname . '" <forum' . $post->forumid . '@' . $hostname . '>',
             'List-Help: ' . get_config('wwwroot') . 'interaction/forum/view.php?id=' . $post->forumid,
             'Message-ID: <forumpost' . $this->postid . '@' . $hostname . '>',
