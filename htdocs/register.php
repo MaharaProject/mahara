@@ -112,7 +112,20 @@ if (isset($key)) {
 
         create_user($user, $profilefields);
 
-        $user->add_institution_request($registration->institution);
+        // If the institution is 'mahara' then don't do anything
+        if ($registration->institution != 'mahara') {
+            $institutions = get_records_select_array('institution', "name != 'mahara'");
+
+            // If there is only one available, join it without requiring approval
+            if (count($institutions) == 1) {
+                $user->join_institution($registration->institution);
+            }
+            // Else, since there are multiple, request to join
+            else {
+                $user->add_institution_request($registration->institution);
+            }
+        }
+
 
         if (!empty($registration->lang) && $registration->lang != 'default') {
             set_account_preference($user->id, 'lang', $registration->lang);
