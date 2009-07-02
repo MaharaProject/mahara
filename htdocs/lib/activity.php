@@ -48,23 +48,13 @@ function activity_occurred($activitytype, $data, $plugintype=null, $pluginname=n
 }
 
 /** 
- * This function dispatches all the activity stuff
- * to whatever notification plugin it needs to
- * and figures out all the implications of 
- * activity and who needs to know about it.
+ * This function dispatches all the activity stuff to whatever notification 
+ * plugin it needs to, and figures out all the implications of activity and who 
+ * needs to know about it.
  * 
- * @param object $activitytype record from activity_type
+ * @param object $activitytype record from database table activity_type
  * @param mixed $data must contain message to save.
- * it can also contain url.
  * each activity type has different requirements of $data - 
- *  - <b>contactus</b> must contain $message, $subject (optional), $fromname, $fromaddress, $userfrom (if a logged in user)
- *  - <b>objectionable</b> must contain $message, $view and $artefact if applicable
- *  - <b>maharamessage</b> must contain $users, an array of userids. $subject and $message (contents of message)
- *  - <b>usermessage</b> must contain $userto, id of recipient user, $userfrom, id of user from 
-    -       and $subject and $message (contents of message)
- *  - <b>feedback (artefact)</b> must contain both $artefact (id) and $view (id) and $message 
- *  - <b>feedback (view)</b> must contain $view (id) and $message
- *  - <b>watchlist (view) </b> must contain $view (id of view) as $message
  *  - <b>viewaccess</b> must contain $owner userid of view owner AND $view (id of view) and $oldusers array of userids before access change was committed.
  */
 function handle_activity($activitytype, $data, $cron=false) {
@@ -440,6 +430,13 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
     protected $artefact;
     protected $reporter;
 
+    /**
+     * @param array $data Parameters:
+     *                    - message (string)
+     *                    - view (int)
+     *                    - artefact (int) (optional)
+     *                    - reporter (int)
+     */
     function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
         if (empty($this->artefact)) {
@@ -510,6 +507,12 @@ class ActivityTypeVirusRelease extends ActivityTypeAdmin {
 
 class ActivityTypeMaharamessage extends ActivityType {
 
+    /**
+     * @param array $data Parameters:
+     *                    - subject (string)
+     *                    - message (string)
+     *                    - users (list of user ids)
+     */
     public function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
         $this->users = activity_get_users($this->get_id(), $this->users);
@@ -568,6 +571,13 @@ class ActivityTypeUsermessage extends ActivityType {
     protected $userto;
     protected $userfrom;
 
+    /**
+     * @param array $data Parameters:
+     *                    - userto (int)
+     *                    - userfrom (int)
+     *                    - subject (string)
+     *                    - message (string)
+     */
     public function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
         $this->users = activity_get_users($this->get_id(), array($this->userto));
@@ -600,6 +610,12 @@ class ActivityTypeFeedback extends ActivityType {
     private $viewrecord;
     private $artefactinstance;
 
+    /**
+     * @param array $data Parameters:
+     *                    - view (int)
+     *                    - artefact (int) (optional)
+     *                    - message (string)
+     */
     public function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
 
@@ -651,6 +667,10 @@ class ActivityTypeWatchlist extends ActivityType {
 
     private $viewinfo;
 
+    /**
+     * @param array $data Parameters:
+     *                    - view (int)
+     */
     public function __construct($data, $cron) { 
         parent::__construct($data, $cron); 
         //$oldsubject = $this->subject;
@@ -743,6 +763,12 @@ class ActivityTypeViewaccess extends ActivityType {
 
     private $viewinfo;
 
+    /**
+     * @param array $data Parameters:
+     *                    - owner (int)
+     *                    - view (int)
+     *                    - oldusers (array of user IDs)
+     */
     public function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
         if (!$this->viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
