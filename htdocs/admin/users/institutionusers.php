@@ -184,12 +184,12 @@ function institutionusers_submit(Pieform $form, $values) {
     $maxusers = $institution->maxuseraccounts;
     if (!empty($maxusers)) {
         $members = $institution->countMembers();
-        if ($action == 'addUserAsMember' && $members + count($values['users']) >= $maxusers) {
+        if ($action == 'addUserAsMember' && $members + count($values['users']) > $maxusers) {
             $SESSION->add_error_msg(get_string('institutionuserserrortoomanyusers', 'admin'));
             redirect($url);
         }
         if ($action == 'inviteUser'
-            && $members + $institution->countInvites() + count($values['users']) >= $maxusers) {
+            && $members + $institution->countInvites() + count($values['users']) > $maxusers) {
             $SESSION->add_error_msg(get_string('institutionuserserrortoomanyinvites', 'admin'));
             redirect($url);
         }
