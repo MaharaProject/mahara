@@ -1099,6 +1099,13 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $cron);
     }
 
+    if ($oldversion < 2009070600) {
+        // This was forgotten as part of the 1.0 -> 1.1 upgrade
+        if ($data = check_upgrades('blocktype.file/html')) {
+              upgrade_plugin($data); 
+        };
+    }
+
     return $status;
 
 }
