@@ -73,6 +73,7 @@ class XMLDBmysql extends XMLDBGenerator {
     var $rename_key_sql = null; //SQL sentence to rename one key (MySQL doesn't support this!)
                                       //TABLENAME, OLDKEYNAME, NEWKEYNAME are dinamically replaced
 
+    var $unique_keys = true;  // Does the generator build unique keys
     var $foreign_keys = true; // Does the generator build foreign keys
     /**
      * Creates one new XMLDBmysql
