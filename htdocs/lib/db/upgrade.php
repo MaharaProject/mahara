@@ -878,6 +878,13 @@ function xmldb_core_upgrade($oldversion=0) {
         set_field('view_access_group', 'role', null, 'role', 'null');
     }
 
+    if ($oldversion < 2009022616) {
+        // This was forgotten as part of the 1.0 -> 1.1 upgrade
+        if ($data = check_upgrades('blocktype.file/html')) {
+              upgrade_plugin($data); 
+        };
+    }
+
     return $status;
 
 }
