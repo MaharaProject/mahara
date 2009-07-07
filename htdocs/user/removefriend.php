@@ -94,6 +94,8 @@ function removefriend_submit(Pieform $form, $values) {
     require_once('activity.php');
     activity_occurred('maharamessage', $n);
 
+    handle_event('removefriend' array('user' => $loggedinid, 'friend' => $id));
+
     $SESSION->add_ok_msg(get_string('friendformremovesuccess', 'group', display_name($id)));
     switch (param_alpha('returnto', 'myfriends')) {
         case 'find':

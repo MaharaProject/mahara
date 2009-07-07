@@ -1106,6 +1106,13 @@ function xmldb_core_upgrade($oldversion=0) {
         };
     }
 
+    if ($oldversion < 2009070700) {
+        foreach (array('addfriend', 'removefriend', 'addfriendrequest', 'removefriendrequest') as $eventtype) {
+            $event = (object) array('name' => $eventtype);
+            ensure_record_exists('event_type', $event, $event);
+        }
+    }
+
     return $status;
 
 }
