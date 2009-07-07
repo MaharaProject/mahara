@@ -648,6 +648,10 @@ function core_install_firstcoredata_defaults() {
         'saveview',
         'deleteview',
         'blockinstancecommit',
+        'addfriend',
+        'removefriend',
+        'addfriendrequest',
+        'removefriendrequest',
     );
 
     foreach ($eventtypes as $et) {
