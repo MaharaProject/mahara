@@ -94,7 +94,7 @@ function denyrequest_submit(Pieform $form, $values) {
     require_once('activity.php');
     activity_occurred('maharamessage', $n);
 
-    handle_event('removefriendrequest' array('owner' => $loggedinid, 'requester' => $id));
+    handle_event('removefriendrequest', array('owner' => $loggedinid, 'requester' => $id));
 
     $SESSION->add_ok_msg(get_string('friendformrejectsuccess', 'group'));
     switch (param_alpha('returnto', 'myfriends')) {

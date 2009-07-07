@@ -99,7 +99,7 @@ function requestfriendship_submit(Pieform $form, $values) {
     require_once('activity.php');
     activity_occurred('maharamessage', $n);
 
-    handle_event('addfriendrequest' array('requester' => $loggedinid, 'owner' => $id));
+    handle_event('addfriendrequest', array('requester' => $loggedinid, 'owner' => $id));
 
     $SESSION->add_ok_msg(get_string('friendformrequestsuccess', 'group', display_name($id)));
     switch (param_alpha('returnto', 'myfriends')) {

@@ -1209,7 +1209,7 @@ function acceptfriend_submit(Pieform $form, $values) {
 
     db_commit();
 
-    handle_event('addfriend' array('user' => $f->usr2, 'friend' => $f->usr1));
+    handle_event('addfriend', array('user' => $f->usr2, 'friend' => $f->usr1));
 
     $SESSION->add_ok_msg(get_string('friendformacceptsuccess', 'group'));
     redirect('/user/view.php?id=' . $values['id']);
@@ -1242,7 +1242,7 @@ function addfriend_submit(Pieform $form, $values) {
     require_once('activity.php');
     activity_occurred('maharamessage', $n);
 
-    handle_event('addfriend' array('user' => $f->usr2, 'friend' => $f->usr1));
+    handle_event('addfriend', array('user' => $f->usr2, 'friend' => $f->usr1));
 
     $SESSION->add_ok_msg(get_string('friendformaddsuccess', 'group', display_name($user)));
     redirect('/user/view.php?id=' . $values['id']);
