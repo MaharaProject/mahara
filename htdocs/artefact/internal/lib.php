@@ -448,7 +448,7 @@ class ArtefactTypeWebAddress extends ArtefactTypeProfileField {
 
     public function commit() {
         $url = $this->get('title');
-        if (strpos($url, '://') == false) {
+        if (strlen($url) && strpos($url, '://') == false) {
             $this->set('title', 'http://' . $url);
         }
         parent::commit();
