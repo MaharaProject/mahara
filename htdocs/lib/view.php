@@ -1688,6 +1688,9 @@ class View {
         $select .= $extraselect;
 
         $cols = $short ? 'a.id, a.id AS b' : 'a.*'; // get_records_sql_assoc wants > 1 column
+        if (isset($data['extracols'])) {
+            $cols .= ', ' . $data['extracols'];
+        }
 
         $artefacts = get_records_sql_assoc(
             'SELECT ' . $cols . $from . ' WHERE ' . $select . ($sortorder ? (' ORDER BY ' . $sortorder) : ''),

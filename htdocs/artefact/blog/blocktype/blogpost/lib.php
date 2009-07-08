@@ -141,6 +141,8 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
     }
 
     public static function artefactchooser_element($default=null, $istemplate=false) {
+        $extrajoin   = ' JOIN {artefact_blog_blogpost} ON {artefact_blog_blogpost}.blogpost = a.id ';
+
         $element = array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
@@ -150,6 +152,8 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
             'limit'     => 10,
             'selectone' => true,
             'artefacttypes' => array('blogpost'),
+            'extrajoin' => $extrajoin,
+            'extracols' => '1 - {artefact_blog_blogpost}.published AS draft',
             'template'  => 'artefact:blog:artefactchooser-element.tpl',
         );
         if (!$istemplate) {
