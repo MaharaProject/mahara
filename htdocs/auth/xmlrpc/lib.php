@@ -426,8 +426,8 @@ class AuthXmlrpc extends Auth {
     private function import_user_settings($user, $remoteuser) {
         // City
         if (!empty($remoteuser->city)) {
-            if (get_profile_field($user->id, 'city') != $remoteuser->city) {
-                set_profile_field($user->id, 'city', $remoteuser->city);
+            if (get_profile_field($user->id, 'town') != $remoteuser->city) {
+                set_profile_field($user->id, 'town', $remoteuser->city);
             }
         }
 
