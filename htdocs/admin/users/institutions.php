@@ -202,7 +202,9 @@ if ($institution || $add) {
             ),
             'help'   => true,
         ),
-        'expiry' => array(
+    );
+    if ($institution != 'mahara') {
+       $elements['expiry'] = array(
             'type'         => 'date',
             'title'        => get_string('institutionexpiry', 'admin'),
             'description'  => get_string('institutionexpirydescription', 'admin', $sitename),
@@ -210,9 +212,8 @@ if ($institution || $add) {
             'help'         => true,
             'minyear'      => date('Y') - 2,
             'maxyear'      => date('Y') + 10,
-        ),
-    );
-
+        );
+    }
     if ($USER->get('admin')) {
         $elements['authplugin'] = array(
             'type'    => 'authlist',
@@ -489,7 +490,7 @@ function institution_cancel_submit() {
     redirect('/admin/users/institutions.php');
 }
 
-if ($institution) {
+if ($institution && $institution != 'mahara') {
     function institution_suspend_submit(Pieform $form, $values) {
         global $SESSION, $USER;
         if (!$USER->get('admin')) {
@@ -563,12 +564,10 @@ if ($institution) {
         $suspendformdef['successcallback'] = 'institution_unsuspend_submit';
         $suspendform_top = pieform($suspendformdef);
     }
-
     $smarty->assign('suspendform', $suspendform);
     if (isset($suspendform_top)) {
         $smarty->assign('suspendform_top', $suspendform_top);
     }
-
     if ($suspended) {
         $smarty->assign('suspended', get_string('suspendedinstitutionmessage', 'admin'));
     }
