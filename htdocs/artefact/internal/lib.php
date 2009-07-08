@@ -446,6 +446,14 @@ class ArtefactTypeIntroduction extends ArtefactTypeProfileField {
 }
 class ArtefactTypeWebAddress extends ArtefactTypeProfileField {
 
+    public function commit() {
+        $url = $this->get('title');
+        if (strpos($url, '://') == false) {
+            $this->set('title', 'http://' . $url);
+        }
+        parent::commit();
+    }
+
     public function render_self($options) {
         if (array_key_exists('link', $options) && $options['link'] == true) {
             $html = '<a href="' . hsc($this->title) . '">' . hsc($this->title) . '</a>';
