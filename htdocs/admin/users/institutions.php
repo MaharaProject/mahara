@@ -207,7 +207,7 @@ if ($institution || $add) {
        $elements['expiry'] = array(
             'type'         => 'date',
             'title'        => get_string('institutionexpiry', 'admin'),
-            'description'  => get_string('institutionexpirydescription', 'admin', $sitename),
+            'description'  => get_string('institutionexpirydescription', 'admin', hsc($sitename)),
             'defaultvalue' => is_null($data->expiry) ? null : strtotime($data->expiry),
             'help'         => true,
             'minyear'      => date('Y') - 2,
