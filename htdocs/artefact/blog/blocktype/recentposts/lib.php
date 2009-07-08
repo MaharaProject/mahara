@@ -51,6 +51,7 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
             'SELECT a.title, ' . db_format_tsfield('a.ctime', 'ctime') . ', p.title AS parenttitle, a.id, a.parent
                 FROM {artefact} a
                 JOIN {artefact} p ON a.parent = p.id
+                JOIN {artefact_blog_blogpost} ab ON (ab.blogpost = a.id AND ab.published = 1)
                 WHERE a.artefacttype = \'blogpost\'
                 AND a.parent IN ( ' . $artefactids . ' ) 
                 AND a.owner = (SELECT owner from {view} WHERE id = ?)
