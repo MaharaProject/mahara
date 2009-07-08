@@ -760,7 +760,7 @@ function delete_user($userid) {
     // by deleted users.
     $authinst = get_field('auth_instance', 'id', 'institution', 'mahara', 'authname', 'internal');
     if ($authinst) {
-        $deleterec->authinstance = $deleterec->lastauthinstance = $authinst;
+        $deleterec->authinstance = $authinst;
     }
 
     update_record('usr', $deleterec);

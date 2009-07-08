@@ -81,7 +81,6 @@ if ($institution || $add) {
             db_begin();
             foreach ($authinstanceids as $id) {
                 delete_records('auth_instance_config', 'instance', $id);
-                execute_sql('UPDATE {usr} SET lastauthinstance = NULL WHERE lastauthinstance = ?', array($id));
             }
             delete_records('auth_instance', 'institution', $values['i']);
             delete_records('host', 'institution', $values['i']);
@@ -425,7 +424,6 @@ function institution_submit(Pieform $form, $values) {
         }
 
         foreach($values['authplugin']['deletearray'] as $instanceid) {
-            execute_sql('UPDATE {usr} SET lastauthinstance = NULL WHERE lastauthinstance = ?', array($instanceid));
             delete_records('auth_remote_user', 'authinstance', $instanceid);
             delete_records('auth_instance_config', 'instance', $instanceid);
             delete_records('auth_instance', 'id', $instanceid);

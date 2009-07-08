@@ -64,7 +64,6 @@ class User {
             'lastlogin'        => null,
             'lastlastlogin'    => null,
             'lastaccess'       => null, /* Is not necessarily updated every request, see accesstimeupdatefrequency config variable */
-            'lastauthinstance' => null,
             'inactivemailsent' => 0,
             'staff'            => 0,
             'admin'            => 0,
@@ -799,7 +798,6 @@ class LiveUser extends User {
         }
         $auth = AuthFactory::create($instanceid);
         if ($auth->authenticate_user_account($user, $password)) {
-            $user->lastauthinstance = $auth->instanceid;
             $this->authenticate($user, $auth->instanceid);
 
             // Check for a suspended institution
@@ -924,7 +922,6 @@ class LiveUser extends User {
      */
     public function reanimate($id, $instanceid) {
         if ($user = get_record('usr','id',$id)) {
-            $user->lastauthinstance = $instanceid;
             $this->authenticate($user, $instanceid);
             return true;
         }

@@ -1113,6 +1113,12 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2009070900) {
+        $table = new XMLDBTable('usr');
+        $field = new XMLDBField('lastauthinstance');
+        drop_field($table, $field);
+    }
+
     return $status;
 
 }
