@@ -148,13 +148,27 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
             }
         }
 
-        $form['profileicon'] = array(
-            'type'    => 'radio',
-            'title'   => get_string('profileicon', 'artefact.file'),
-            'options' => $iconoptions,
-            'defaultvalue' => (isset($configdata['profileicon'])) ? $configdata['profileicon'] : 0,
-            'separator' => '<br>',
-        );
+        if (count($iconoptions) == 1) {
+            $form['noprofileicon'] = array(
+                'type'  => 'html',
+                'title' => get_string('profileicon', 'artefact.file'),
+                'description' => get_string('uploadaprofileicon', 'blocktype.internal/profileinfo', get_config('wwwroot')),
+            );
+            $form['profileicon'] = array(
+                'type'    => 'hidden',
+                'value'   => 0,
+            );
+        }
+        else {
+            $form['profileicon'] = array(
+                'type'    => 'radio',
+                'title'   => get_string('profileicon', 'artefact.file'),
+                'options' => $iconoptions,
+                'defaultvalue' => (isset($configdata['profileicon'])) ? $configdata['profileicon'] : 0,
+                'separator' => '<br>',
+            );
+        }
+
 
         $form['email'] = array(
             'type'    => 'radio',
