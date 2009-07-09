@@ -35,5 +35,6 @@ $string['introtext'] = 'Introduction Text';
 $string['useintroductioninstead'] = 'You can use your introduction profile field instead by enabling that and leaving this field blank';
 $string['dontshowprofileicon'] = "Don't show a profile icon";
 $string['dontshowemail'] = "Don't show email address";
+$string['uploadaprofileicon'] = "You have no profile icons. <a href=\"%sartefact/file/profileicons.php\" target=\"_blank\">Upload one</a>";
 
 ?>
