@@ -9,12 +9,19 @@ addLoadEvent(function() {
     forEach(legends, function(legend) {
         var a = A({'href': ''}, legend.firstChild);
         legend.parentNode.tabLink = a;
-        a.id = legend.id + '_a';
+        // Pieforms is unhelpful with legend/fieldset ids; get it from children
+        var fsid = 'general';
+        var row = getFirstElementByTagAndClassName('tr', 'html', legend.parentNode);
+        if (row) {
+            fsid = getNodeAttribute(row, 'id').replace(/^profileform_(.*)description_container$/, '$1');
+        }
+        a.id = fsid + '_a';
         connect(a, 'onclick', function(e) {
             forEach(fieldsets, function(fieldset) {
                 if (fieldset == legend.parentNode) {
                     addElementClass(fieldset.tabLink, 'current-tab');
                     removeElementClass(fieldset, 'safe-hidden');
+                    $('profileform_fs').value = fsid;
                 }
                 else {
                     removeElementClass(fieldset.tabLink, 'current-tab');

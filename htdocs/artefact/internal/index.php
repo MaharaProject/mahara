@@ -144,6 +144,10 @@ $elements = array(
         'class' => $fieldset != 'general' ? 'collapsed' : '',
         'elements' => $items
     ),
+    'fs' => array(
+        'type' => 'hidden',
+        'value' => $fieldset,
+    ),
     'submit' => array(
         'type'  => 'submitcancel',
         'value' => array(get_string('saveprofile','artefact.internal'), get_string('viewmyprofile', 'artefact.internal')),
