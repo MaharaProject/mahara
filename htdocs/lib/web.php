@@ -2786,6 +2786,8 @@ function mahara_http_request($config) {
     // standard curl_setopt stuff; configs passed to the function can override these
     curl_setopt($ch, CURLOPT_TIMEOUT, 60);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_MAXREDIRS, 5);
 
     curl_setopt_array($ch, $config);
 
