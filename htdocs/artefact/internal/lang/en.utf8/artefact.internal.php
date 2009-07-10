@@ -94,6 +94,7 @@ The email address %s has been added to your user account in Mahara. Please visit
 EOF;
 
 $string['validationemailwillbesent'] = 'a validation email will be sent when you save your profile';
+$string['validationemailsent'] = 'a validation email has been sent';
 $string['emailactivation'] = 'Email Activation';
 $string['emailactivationsucceeded'] = 'Email Activation Successful';
 $string['emailactivationfailed'] = 'Email Activation Failed';

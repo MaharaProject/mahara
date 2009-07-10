@@ -52,6 +52,10 @@ function pieform_element_emaillist(Pieform $form, $element) {
         $value['unvalidated'] = array();
     }
 
+    if (!isset($value['unsent'])) {
+        $value['unsent'] = array();
+    }
+
     if (!isset($value['default'])) {
         $value['default'] = '';
     }
@@ -59,6 +63,7 @@ function pieform_element_emaillist(Pieform $form, $element) {
     if (is_array($value) && count($value)) {
         $smarty->assign('validated', $value['validated']);
         $smarty->assign('unvalidated', $value['unvalidated']);
+        $smarty->assign('unsent', $value['unsent']);
         $smarty->assign('default', $value['default']);
     }
 
@@ -84,6 +89,10 @@ function pieform_element_emaillist_get_value(Pieform $form, $element) {
 
     if (isset($global[$name . '_invalid']) && is_array($global[$name . '_invalid'])) {
         $value['unvalidated'] = $global[$name . '_invalid'];
+    }
+
+    if (isset($global[$name . '_unsent']) && is_array($global[$name . '_unsent'])) {
+        $value['unsent'] = $global[$name . '_unsent'];
     }
 
     return $value;

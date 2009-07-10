@@ -29,8 +29,8 @@
                 alert(get_string('emailtoolong'));
             }
             else {
-                appendChildNodes('{{$name}}_list', DIV({'class': 'unvalidated'},
-                    INPUT({'type': 'hidden', 'name': '{{$name}}_invalid[]'       , 'value': {{$name}}_newrefinput.value}),
+                appendChildNodes('{{$name}}_list', DIV({'class': 'unsent'},
+                    INPUT({'type': 'hidden', 'name': '{{$name}}_unsent[]'       , 'value': {{$name}}_newrefinput.value}),
                     ' ',
                     {{$name}}_newrefinput.value,
                     A({'href': '', 'onclick': '{{$name}}_remove(this); return false'}, '[x]'),
@@ -88,6 +88,14 @@
 {{foreach from=$unvalidated item=email}}
     <div class="unvalidated">
         <input type="hidden" name="{{$name}}_invalid[]" value="{{$email|escape}}">
+        {{$email|escape}}
+        <a href="" onclick="{{$name}}_remove(this); return false;">[x]</a>
+        <span>{{str tag=validationemailsent section=artefact.internal}}</span>
+    </div>
+{{/foreach}}
+{{foreach from=$unsent item=email}}
+    <div class="unsent">
+        <input type="hidden" name="{{$name}}_unsent[]" value="{{$email|escape}}">
         {{$email|escape}}
         <a href="" onclick="{{$name}}_remove(this); return false;">[x]</a>
     </div>

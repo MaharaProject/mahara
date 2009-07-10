@@ -56,13 +56,17 @@ $profilefields['email'] = array();
 $profilefields['email']['all'] = get_records_array('artefact_internal_profile_email', 'owner', $USER->get('id'));
 $profilefields['email']['validated'] = array();
 $profilefields['email']['unvalidated'] = array();
+$profilefields['email']['unsent'] = array();
 if ($profilefields['email']['all']) {
     foreach ($profilefields['email']['all'] as $email) {
         if ($email->verified) {
             $profilefields['email']['validated'][] = $email->email;
         }
-        else {
+        else if (!empty($email->key)) {
             $profilefields['email']['unvalidated'][] = $email->email;
+        }
+        else {
+            $profilefields['email']['unsent'][] = $email->email;
         }
 
         if ($email->principal) {
@@ -194,11 +198,11 @@ function profileform_validate(Pieform $form, $values) {
         $form->set_error('email', get_string('primaryemailinvalid'));
     }
 
-    if (isset($values['email']['unvalidated']) && is_array($values['email']['validated'])) {
+    if (isset($values['email']['unsent']) && is_array($values['email']['validated'])) {
         require_once('phpmailer/class.phpmailer.php');
-        foreach ($values['email']['unvalidated'] as $email) {
+        foreach ($values['email']['unsent'] as $email) {
             if (!PHPMailer::ValidateAddress($email)) {
-                $form->set_error('email', get_string('invalidemailaddress', 'artefact.internal'));
+                $form->set_error('email', get_string('invalidemailaddress', 'artefact.internal') . ': ' . hsc($email));
             }
             else if (record_exists('artefact_internal_profile_email', 'email', $email)) {
                 $form->set_error('email', get_string('unvalidatedemailalreadytaken', 'artefact.internal'));
@@ -227,11 +231,11 @@ function profileform_submit(Pieform $form, $values) {
         }
 
         if ($element == 'email') {
-            if (!isset($values['email']['unvalidated'])) {
-                $values['email']['unvalidated'] = array();
+            if (!isset($values['email']['unsent'])) {
+                $values['email']['unsent'] = array();
             }
             // find new addresses
-            foreach ($values['email']['unvalidated'] as $email) {
+            foreach ($values['email']['unsent'] as $email) {
                 if (
                     in_array($email, $profilefields['email']['validated'])
                     || in_array($email, $profilefields['email']['unvalidated'])
