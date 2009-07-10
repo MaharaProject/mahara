@@ -325,7 +325,7 @@ function editaccess_submit(Pieform $form, $values) {
 
 $form = pieform($form);
 
-$smarty = smarty(array('tablerenderer'), pieform_element_calendar_get_headdata(pieform_element_calendar_configure(array())), array('mahara' => array('From', 'To')));
+$smarty = smarty(array('tablerenderer'), array(), array('mahara' => array('From', 'To')));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('pagetitle', TITLE);
 $smarty->assign('heading', TITLE);
