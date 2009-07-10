@@ -195,8 +195,12 @@ function profileform_validate(Pieform $form, $values) {
     }
 
     if (isset($values['email']['unvalidated']) && is_array($values['email']['validated'])) {
+        require_once('phpmailer/class.phpmailer.php');
         foreach ($values['email']['unvalidated'] as $email) {
-            if (record_exists('artefact_internal_profile_email', 'email', $email)) {
+            if (!PHPMailer::ValidateAddress($email)) {
+                $form->set_error('email', get_string('invalidemailaddress', 'artefact.internal'));
+            }
+            else if (record_exists('artefact_internal_profile_email', 'email', $email)) {
                 $form->set_error('email', get_string('unvalidatedemailalreadytaken', 'artefact.internal'));
             }
         }
