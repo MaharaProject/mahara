@@ -203,9 +203,11 @@ function profileform_validate(Pieform $form, $values) {
         foreach ($values['email']['unsent'] as $email) {
             if (!PHPMailer::ValidateAddress($email)) {
                 $form->set_error('email', get_string('invalidemailaddress', 'artefact.internal') . ': ' . hsc($email));
+                break;
             }
             else if (record_exists('artefact_internal_profile_email', 'email', $email)) {
                 $form->set_error('email', get_string('unvalidatedemailalreadytaken', 'artefact.internal'));
+                break;
             }
         }
     }

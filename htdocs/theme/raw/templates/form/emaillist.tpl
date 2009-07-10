@@ -93,12 +93,5 @@
         <span>{{str tag=validationemailsent section=artefact.internal}}</span>
     </div>
 {{/foreach}}
-{{foreach from=$unsent item=email}}
-    <div class="unsent">
-        <input type="hidden" name="{{$name}}_unsent[]" value="{{$email|escape}}">
-        {{$email|escape}}
-        <a href="" onclick="{{$name}}_remove(this); return false;">[x]</a>
-    </div>
-{{/foreach}}
 </div>
 <a href="" onclick="{{$name}}_new(); return false;">{{str tag="addemail"}}</a>
