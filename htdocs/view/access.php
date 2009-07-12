@@ -241,12 +241,20 @@ function editaccess_validate(Pieform $form, $values) {
     }
     $loggedinaccess = false;
     if ($values['accesslist']) {
-        foreach ($values['accesslist'] as $item) {
+        foreach ($values['accesslist'] as &$item) {
             if (!isset($item['startdate'])) {
                 $item['startdate'] = null;
             }
+            else if (!$item['startdate'] = strtotime($item['startdate'])) {
+                $form->set_error('accesslist', get_string('unrecogniseddateformat', 'view'));
+                break;
+            }
             if (!isset($item['stopdate'])) {
                 $item['stopdate'] = null;
+            }
+            else if (!$item['stopdate'] = strtotime($item['stopdate'])) {
+                $form->set_error('accesslist', get_string('invaliddate', 'view'));
+                break;
             }
             if ($item['type'] == 'loggedin' && !$item['startdate'] && !$item['stopdate']) {
                 $loggedinaccess = true;
@@ -285,6 +293,16 @@ function editaccess_submit(Pieform $form, $values) {
         redirect('/view/blocks.php?id=' . $view->get('id') . '&new=' . $new);
     }
 
+    if ($values['accesslist']) {
+        foreach ($values['accesslist'] as &$item) {
+            if (isset($item['startdate'])) {
+                $item['startdate'] = strtotime($item['startdate']);
+            }
+            if (isset($item['stopdate'])) {
+                $item['stopdate'] = strtotime($item['stopdate']);
+            }
+        }
+    }
     $view->set_access($values['accesslist']);
 
     $view->set('startdate', $values['startdate']);
