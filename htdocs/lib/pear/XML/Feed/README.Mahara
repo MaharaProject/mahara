@@ -1,0 +1,13 @@
+Pear XML Feed Parser in Mahara
+==============================
+
+Website: http://pear.php.net/package/XML_Feed_Parser/
+Version: 1.0.2
+
+This class is used by the externalfeed blocktype to parse RSS feeds and XML documents.
+
+Changes:
+
+ * Patch to make the parser respect its own $suppressWarnings flag (master commit 6c29487b165de198b9d65621e9a4630a36efa8d6)
+ * Patch to make the parser pick the correct <link> from the feed (master commit e662d5d94192e15ac4c6e9092e2c29c77ba1515c)
+
