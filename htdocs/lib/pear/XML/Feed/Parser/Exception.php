@@ -31,7 +31,7 @@ require_once 'PEAR/Exception.php';
  * to help with identification of the source of exceptions.
  *
  * @author  James Stewart <james@jystewart.net>
- * @version Release: 1.0.2
+ * @version Release: 1.0.3
  * @package XML_Feed_Parser
  */ 
 class XML_Feed_Parser_Exception extends PEAR_Exception

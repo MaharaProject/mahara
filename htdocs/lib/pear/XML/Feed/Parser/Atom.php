@@ -17,7 +17,7 @@
  * @author     James Stewart <james@jystewart.net>
  * @copyright  2005 James Stewart <james@jystewart.net>
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU LGPL 2.1
- * @version    CVS: $Id: Atom.php,v 1.25 2007/03/26 12:49:05 jystewart Exp $
+ * @version    CVS: $Id: Atom.php,v 1.29 2008/03/30 22:00:36 jystewart Exp $
  * @link       http://pear.php.net/package/XML_Feed_Parser/
 */
 
@@ -30,7 +30,7 @@
  *  person - defaults to name, but parameter based access
  *
  * @author    James Stewart <james@jystewart.net>
- * @version    Release: 1.0.2
+ * @version    Release: 1.0.3
  * @package XML_Feed_Parser
  */
 class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
@@ -148,7 +148,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
 
         if ($entries->length > 0) {
             $xmlBase = $entries->item(0)->baseURI;
-            $entry = new $this->itemElement($entries->item(0), $this, $xmlBase);
+            $entry = new $this->itemClass($entries->item(0), $this, $xmlBase);
             
             if (in_array('evaluate', get_class_methods($this->xpath))) {
                 $offset = $this->xpath->evaluate("count(preceding-sibling::atom:entry)", $entries->item(0));
@@ -232,6 +232,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
             }
             return false;
         }
+
         return $this->parseTextConstruct($content);
     }
     
@@ -258,12 +259,11 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
         if (strpos($type, 'text/') === 0) {
             $type = 'text';
         }
+
         switch ($type) {
             case 'text':
-                return $content->nodeValue;
-                break;
             case 'html':
-                return str_replace('&lt;', '<', $content->nodeValue);
+                return $content->textContent;
                 break;
             case 'xhtml':
                 $container = $content->getElementsByTagName('div');
@@ -277,7 +277,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
                     foreach ($contents->childNodes as $node) {
                         $result .= $this->traverseNode($node);
                     }
-                    return utf8_decode($result);
+                    return $result;
                 }
                 break;
             case preg_match('@^[a-zA-Z]+/[a-zA-Z+]*xml@i', $type) > 0:

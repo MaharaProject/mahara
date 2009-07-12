@@ -17,7 +17,7 @@
  * @author     James Stewart <james@jystewart.net>
  * @copyright  2005 James Stewart <james@jystewart.net>
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU LGPL 2.1
- * @version    CVS: $Id: RSS2.php,v 1.11 2006/07/27 13:52:05 jystewart Exp $
+ * @version    CVS: $Id: RSS2.php,v 1.12 2008/03/08 18:16:45 jystewart Exp $
  * @link       http://pear.php.net/package/XML_Feed_Parser/
  */
 
@@ -25,7 +25,7 @@
  * This class handles RSS2 feeds.
  * 
  * @author    James Stewart <james@jystewart.net>
- * @version    Release: 1.0.2
+ * @version    Release: 1.0.3
  * @package XML_Feed_Parser
  */
 class XML_Feed_Parser_RSS2 extends XML_Feed_Parser_Type
@@ -194,7 +194,7 @@ class XML_Feed_Parser_RSS2 extends XML_Feed_Parser_Type
      */
     protected function getImage()
     {
-        $images = $this->model->getElementsByTagName('image');
+        $images = $this->xpath->query("//image");
         if ($images->length > 0) {
             $image = $images->item(0);
             $desc = $image->getElementsByTagName('description');
@@ -321,8 +321,7 @@ class XML_Feed_Parser_RSS2 extends XML_Feed_Parser_Type
      */
     function getLink($offset, $attribute = 'href', $params = array())
     {
-        $xPath = new DOMXPath($this->model);
-        $links = $xPath->query('//link');
+        $links = $this->model->getElementsByTagName('link');
 
         if ($links->length <= $offset) {
             return false;

@@ -25,7 +25,7 @@
  * This class handles RSS0.9 feeds.
  * 
  * @author    James Stewart <james@jystewart.net>
- * @version    Release: 1.0.2
+ * @version    Release: 1.0.3
  * @package XML_Feed_Parser
  * @todo    Find a Relax NG URI we can use
  */

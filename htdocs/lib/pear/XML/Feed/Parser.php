@@ -39,7 +39,7 @@ require_once 'XML/Feed/Parser/Exception.php';
  * to the entire feed.
  *
  * @author  James Stewart <james@jystewart.net>
- * @version Release: 1.0.2
+ * @version Release: 1.0.3
  * @package XML_Feed_Parser
  */
 class XML_Feed_Parser implements Iterator
@@ -86,13 +86,8 @@ class XML_Feed_Parser implements Iterator
      */
     function __construct($feed, $strict = false, $suppressWarnings = false, $tidy = false)
     {
-        $options = 0;
-        if ($suppressWarnings) {
-            $options |= LIBXML_NOWARNING;
-            $options |= LIBXML_NOERROR;
-        }
         $this->model = new DOMDocument;
-        if (! $this->model->loadXML($feed, $options)) {
+        if (! $this->model->loadXML($feed)) {
             if (extension_loaded('tidy') && $tidy) {
                 $tidy = new tidy;
                 $tidy->parseString($feed, 
