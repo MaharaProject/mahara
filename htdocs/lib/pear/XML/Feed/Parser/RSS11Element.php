@@ -26,7 +26,7 @@
  * XML_Feed_Parser_RSS11 with which it shares many methods.
  *
  * @author    James Stewart <james@jystewart.net>
- * @version    Release: 1.0.2
+ * @version    Release: 1.0.3
  * @package XML_Feed_Parser
  */
 class XML_Feed_Parser_RSS11Element extends XML_Feed_Parser_RSS11

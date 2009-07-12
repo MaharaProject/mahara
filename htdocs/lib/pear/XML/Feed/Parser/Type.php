@@ -17,7 +17,7 @@
  * @author     James Stewart <james@jystewart.net>
  * @copyright  2005 James Stewart <james@jystewart.net>
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU LGPL 2.1
- * @version    CVS: $Id: Type.php,v 1.22 2006/08/15 13:02:36 jystewart Exp $
+ * @version    CVS: $Id: Type.php,v 1.25 2008/03/08 18:39:09 jystewart Exp $
  * @link       http://pear.php.net/package/XML_Feed_Parser/
  */
 
@@ -27,7 +27,7 @@
  *
  * @package XML_Feed_Parser
  * @author  James Stewart <james@jystewart.net>
- * @version Release: 1.0.2
+ * @version Release: 1.0.3
  */
 abstract class XML_Feed_Parser_Type
 {
@@ -48,6 +48,11 @@ abstract class XML_Feed_Parser_Type
      * @var array
      */
     public $entries = array();
+
+    /**
+     * Store mappings between entry IDs and their position in the feed
+     */
+    public $idMappings = array();
 
     /**
      * Proxy to allow use of element names as method names
@@ -219,7 +224,7 @@ abstract class XML_Feed_Parser_Type
     protected function getDate($method, $arguments)
     {
         $time = $this->model->getElementsByTagName($method);
-        if ($time->length == 0) {
+        if ($time->length == 0 || empty($time->item(0)->nodeValue)) {
             return false;
         }
         return strtotime($time->item(0)->nodeValue);
@@ -307,12 +312,12 @@ abstract class XML_Feed_Parser_Type
         $return = '';
         foreach ($node->attributes as $attribute) {
             if ($attribute->name == 'src' or $attribute->name == 'href') {
-                $attribute->value = $this->addBase($attribute->value, $attribute);
+                $attribute->value = $this->addBase(htmlentities($attribute->value, NULL, 'utf-8'), $attribute);
             }
             if ($attribute->name == 'base') {
                 continue;
             }
-            $return .= $attribute->name . '="' . $attribute->value .'" ';
+            $return .= $attribute->name . '="' . htmlentities($attribute->value, NULL, 'utf-8') .'" ';
         }
         if (! empty($return)) {
             return ' ' . trim($return);
@@ -321,12 +326,33 @@ abstract class XML_Feed_Parser_Type
     }
 
     /**
+     * Convert HTML entities based on the current character set.
+     * 
+     * @param String
+     * @return String
+     */
+    function processEntitiesForNodeValue($node) 
+    {
+        if (function_exists('iconv')) {
+          $current_encoding = $node->ownerDocument->encoding;
+          $value = iconv($current_encoding, 'UTF-8', $node->nodeValue);
+        } else if ($current_encoding == 'iso-8859-1') {
+          $value = utf8_encode($node->nodeValue);
+        } else {
+          $value = $node->nodeValue;
+        }
+
+        $decoded = html_entity_decode($value, NULL, 'UTF-8');
+        return htmlentities($decoded, NULL, 'UTF-8');
+    }
+
+    /**
      * Part of our xml:base processing code
      *
      * We need a couple of methods to access XHTML content stored in feeds. 
      * This is because we dereference all xml:base references before returning
      * the element. This method recurs through the tree descending from the node
-     * and builds our string
+     * and builds our string.
      *
      * @param   DOMElement $node    The DOM node we are processing
      * @return   string
@@ -349,7 +375,7 @@ abstract class XML_Feed_Parser_Type
         }
 
         if ($node instanceof DOMText) {
-            $content .= htmlentities($node->nodeValue);
+            $content .= $this->processEntitiesForNodeValue($node);
         }
 
         /* Add the closing of this node to the content */

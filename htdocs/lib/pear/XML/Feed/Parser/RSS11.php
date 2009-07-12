@@ -26,7 +26,7 @@
  * http://inamidst.com/rss1.1/
  * 
  * @author    James Stewart <james@jystewart.net>
- * @version    Release: 1.0.2
+ * @version    Release: 1.0.3
  * @package XML_Feed_Parser
  * @todo    Support for RDF:List
  * @todo    Ensure xml:lang is accessible to users
