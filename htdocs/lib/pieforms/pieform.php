@@ -1072,6 +1072,7 @@ EOF;
         }
 
         // Fall back to the default string
+        $this->include_plugin($plugin, $pluginname);
         $function = 'pieform_' . $plugin . '_' . $pluginname . '_i18n';
         if (function_exists($function)) {
             $strings = $function();
