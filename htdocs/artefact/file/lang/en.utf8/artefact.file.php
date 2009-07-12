@@ -83,6 +83,7 @@ $string['lastmodified'] = 'Last Modified';
 $string['myfiles'] = 'My Files';
 $string['Name'] = 'Name';
 $string['namefieldisrequired'] = 'The name field is required';
+$string['maxuploadsize'] = 'Max upload size';
 $string['movefaileddestinationinartefact'] = 'You cannot put a folder inside itself.';
 $string['movefaileddestinationnotfolder'] = 'You can only move files into folders.';
 $string['movefailednotfileartefact'] = 'Only file, folder and image artefacts can be moved.';
