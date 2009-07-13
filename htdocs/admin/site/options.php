@@ -229,6 +229,16 @@ function siteoptions_submit(Pieform $form, $values) {
         }
     }
 
+    if ($values['viruschecking'] == 'on') {
+        $pathtoclam = escapeshellcmd(trim(get_config('pathtoclam')));
+        if (!$pathtoclam || !file_exists($pathtoclam) && !is_executable($pathtoclam)) {
+            $form->reply(PIEFORM_ERR, array(
+                'message' => get_string('clamlost', 'mahara', $pathtoclam),
+                'goto'    => '/admin/site/options.php',
+            ));
+        }
+    }
+
     $message = get_string('siteoptionsset', 'admin');
     if ($oldtheme != $values['theme']) {
         $message .= '  ' . get_string('usersseenewthemeonlogin', 'admin');
