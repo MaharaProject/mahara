@@ -98,8 +98,13 @@ class upload_manager {
             return get_string('notphpuploadedfile');
         }
 
-        if (get_config('viruschecking') && ($errormsg = mahara_clam_scan_file($file))) {
-            return $errormsg;
+        if (get_config('viruschecking')) {
+            $pathtoclam = escapeshellcmd(trim(get_config('pathtoclam')));
+            if ($pathtoclam && file_exists($pathtoclam) && is_executable($pathtoclam)) {
+                if ($errormsg = mahara_clam_scan_file($file)) {
+                    return $errormsg;
+                }
+            }
         }
 
         $this->file = $file;
