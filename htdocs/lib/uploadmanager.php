@@ -105,6 +105,9 @@ class upload_manager {
                     return $errormsg;
                 }
             }
+            else {
+                clam_mail_admins(get_string('clamlost', 'mahara', $pathtoclam));
+            }
         }
 
         $this->file = $file;
