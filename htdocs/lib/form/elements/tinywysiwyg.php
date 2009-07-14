@@ -72,7 +72,12 @@ function pieform_element_tinywysiwyg_views_js(Pieform $form, $element) {
     if ($USER->get_account_preference('wysiwyg') || defined('PUBLIC')) {
         $formname = json_encode($form->get_name());
         $editor = json_encode($form->get_name() . '_' . $element['name']);
-        return "\ntinyMCE.idCounter=0;tinyMCE.execCommand('mceAddControl', true, $editor);PieformManager.connect('onsubmit', $formname, tinyMCE.triggerSave);";
+        return "\ntinyMCE.idCounter=0;"
+            . "\ntinyMCE.execCommand('mceAddControl', false, $editor);"
+            . "\nPieformManager.connect('onsubmit', $formname, tinyMCE.triggerSave);"
+            . "\nPieformManager.connect('onreply', $formname, function () {"
+            . "\n  tinyMCE.execCommand('mceRemoveControl', false, $editor);"
+            . "});";
     }
     return '';
 }

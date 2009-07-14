@@ -281,36 +281,28 @@ function imageIdFromSrc(src) {
 
 var imageList = {};
 
-function blogpostExecCommandHandler(editor_id, elm, command, user_interface, value) {
-    var linkElm, imageElm, inst;
-    switch (command) {
-    case "mceImage":
-        a = getSelectedImgAttributes(editor_id);
+function blogpostImageWindow(ui, v) {
+    var t = tinyMCE.activeEditor;
 
-        imageList = attachedImageList();
-        if (imageList.length == 0) {
-            alert({$noimagesmessage});
-            return true;
-        }
-
-        var template = new Array();
-
-        template['file'] = '{$wwwroot}artefact/blog/image_popup.php?src=\{\$src\}';
-        template['width'] = 355;
-        template['height'] = 265 + (tinyMCE.isMSIE ? 25 : 0);
-
-        // Language specific width and height addons
-        template['width'] += tinyMCE.getLang('lang_insert_image_delta_width', 0);
-        template['height'] += tinyMCE.getLang('lang_insert_image_delta_height', 0);
-
-        a.inline = "yes";
-        tinyMCE.openWindow(template, a);
-
+    imageList = attachedImageList();
+    if (imageList.length == 0) {
+        alert({$noimagesmessage});
         return true;
     }
-    return false;
-}
 
+    var template = new Array();
+
+    template['file'] = '{$wwwroot}artefact/blog/image_popup.php?src=\{\$src\}';
+    template['width'] = 355;
+    template['height'] = 275 + (tinyMCE.isMSIE ? 25 : 0);
+
+    // Language specific width and height addons
+    template['width'] += t.getLang('lang_insert_image_delta_width', 0);
+    template['height'] += t.getLang('lang_insert_image_delta_height', 0);
+    template['inline'] = true;
+
+    t.windowManager.open(template);
+}
 
 function editpost_success(form, data) {
     editpost_filebrowser.success(form, data);
@@ -322,8 +314,13 @@ function editpost_error(form, data) {
 
 EOF;
 
+$tinymcesetup = "
+function (ed) {
+    ed.addCommand('mceImage', blogpostImageWindow);
+}";
+
 $smarty = smarty(array(), array(), array(), array(
-    'tinymcecommandcallback' => 'blogpostExecCommandHandler',
+    'tinymcesetup' => $tinymcesetup,
     'sideblocks' => array(
         array(
             'name'   => 'quota',

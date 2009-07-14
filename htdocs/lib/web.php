@@ -123,8 +123,8 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
                 $content_css = json_encode($THEME->get_url('style/tinymce.css'));
                 $language = substr(current_language(), 0, 2);
                 $execcommand = '';
-                if (isset($extraconfig['tinymcecommandcallback'])) {
-                    $execcommand = 'execcommand_callback: "' . $extraconfig['tinymcecommandcallback'] . '",';
+                if (isset($extraconfig['tinymcesetup'])) {
+                    $execcommand = 'setup: ' . $extraconfig['tinymcesetup'] . ',';
                 }
 
                     if ($check[$key] == 'tinymce') {
@@ -146,8 +146,8 @@ EOF;
     editor_selector: 'tinywysiwyg',
     theme: "advanced",
     plugins: "fullscreen,inlinepopups",
-    theme_advanced_buttons1 : "bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull",
-    theme_advanced_buttons2 : "bullist,numlist,separator,link,unlink,separator,code,fullscreen",
+    theme_advanced_buttons1 : "bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,separator,code,fullscreen",
+    theme_advanced_buttons2 : "",
     theme_advanced_buttons3 : "",
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "left",
@@ -175,12 +175,25 @@ tinyMCE.init({
     //document_base_url: {$jswwwroot},
     relative_urls: false
 });
-function custom_urlconvert (url, node, on_save) {
+function custom_urlconvert (u, n, e) {
   // Don't convert the url on the skype status buttons.
-  if (url.indexOf('skype:') == 0) {
-      return url;
+  if (u.indexOf('skype:') == 0) {
+      return u;
   }
-  return TinyMCE.prototype.convertURL(url, node, on_save);
+  var t = tinyMCE.activeEditor, s = t.settings;
+
+  // Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs
+  if (!s.convert_urls || (e && e.nodeName == 'LINK') || u.indexOf('file:') === 0)
+      return u;
+
+  // Convert to relative
+  if (s.relative_urls)
+      return t.documentBaseURI.toRelative(u);
+
+  // Convert to absolute
+  u = t.documentBaseURI.toAbsolute(u, s.remove_script_host);
+
+  return u;
 }
 </script>
 

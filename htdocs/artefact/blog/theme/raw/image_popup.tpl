@@ -7,8 +7,8 @@
 	<script language="javascript" type="text/javascript" src="{$WWWROOT}artefact/blog/image_popup.js"></script>
 	<base target="_self" />
 </head>
-<body id="image" onload="tinyMCEPopup.executeOnLoad('init();');" style="display: none">
-<form onsubmit="insertImage();return false;" action="#">
+<body id="image" style="display: none">
+<form onsubmit="ImageDialog.update();return false;" action="#">
 	<div class="tabs">
 		<ul>
 			<li id="general_tab" class="current"><span><a href="javascript:mcTabs.displayTab('general_tab','general_panel');" onmousedown="return false;">{str tag=insertimage section=artefact.blog}</a></span></li>
@@ -37,9 +37,8 @@
                 <option value="top">{str section=artefact.blog tag=top}</option>
                 <option value="middle">{str section=artefact.blog tag=middle}</option>
                 <option value="bottom">{str section=artefact.blog tag=bottom}</option>
-                <option value="texttop">{str section=artefact.blog tag=texttop}</option>
-                <option value="absmiddle">{str section=artefact.blog tag=absolutemiddle}</option>
-                <option value="absbottom">{str section=artefact.blog tag=absolutebottom}</option>
+                <option value="text-top">{str section=artefact.blog tag=texttop}</option>
+                <option value="text-bottom">{str section=artefact.blog tag=textbottom}</option>
                 <option value="left">{str section=artefact.blog tag=left}</option>
                 <option value="right">{str section=artefact.blog tag=right}</option>
               </select></td>
@@ -68,7 +67,7 @@
 
 	<div class="mceActionPanel">
 		<div style="float: left">
-			<input type="button" id="insert" name="insert" value="{str section=artefact.blog tag=insert}" onclick="insertImage();" />
+			<input type="button" id="insert" name="insert" value="{str section=artefact.blog tag=insert}" onclick="ImageDialog.update();return false;" />
 		</div>
 
 		<div style="float: right">

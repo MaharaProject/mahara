@@ -11,7 +11,7 @@ var oldPageName = 'home';
 var checkOldContent = false;
 
 function updateWYSIWYGText() {
-    if (checkOldContent && oldPageContent != tinyMCE.getContent() && !confirm(get_string('discardpageedits', 'admin'))) {
+    if (checkOldContent && oldPageContent != tinyMCE.activeEditor.getContent() && !confirm(get_string('discardpageedits', 'admin'))) {
         $('editsitepage_pagename').value = oldPageName;
         return;
     }
@@ -25,8 +25,8 @@ function updateWYSIWYGText() {
         'POST',
         function(data) {
             if (!data.error) {
-                tinyMCE.setContent(data.content);
-                oldPageContent = tinyMCE.getContent();
+                tinyMCE.activeEditor.setContent(data.content);
+                oldPageContent = tinyMCE.activeEditor.getContent();
                 oldPageName = $('editsitepage_pagename').value;
             }
         }
@@ -43,7 +43,7 @@ function contentSaved(form, data) {
         // Disabling changed content check for IE; Need to work out
         // why the getBody() call in getContent fails to return the
         // body element.
-        oldPageContent = tinyMCE.getContent();
+        oldPageContent = tinyMCE.activeEditor.getContent();
     }
     formSuccess(form, data);
 }

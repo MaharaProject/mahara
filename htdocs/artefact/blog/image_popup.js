@@ -5,98 +5,264 @@
  * Copyright: 2006-2008 Catalyst IT Ltd
  * This file is licensed under the same terms as Mahara itself
  */
-function insertImage() {
-	var src = document.forms[0].src.value;
-	var alt = document.forms[0].alt.value;
-	var border = document.forms[0].border.value;
-	var vspace = document.forms[0].vspace.value;
-	var hspace = document.forms[0].hspace.value;
-	var width = document.forms[0].width.value;
-	var height = document.forms[0].height.value;
-	var align = document.forms[0].align.options[document.forms[0].align.selectedIndex].value;
 
-	tinyMCEPopup.restoreSelection();
-	tinyMCE.themes['advanced']._insertImage(src, alt, border, hspace, vspace, width, height, align);
-	tinyMCEPopup.close();
-}
 
-function imageSelectorHTML(src) {
-    var imageid = tinyMCEPopup.windowOpener.imageIdFromSrc(src);
-    var imagefiles = tinyMCEPopup.windowOpener.imageList;
-    if (imagefiles.length == 0) {
-        return '';
-    }
-    else {
-        var sel = '<select class="select" name="image_list" id="image_list" onchange="this.form.src.value=this.options[this.selectedIndex].value;resetImageData();getImageData(this.form.src.value);">';
-        sel += '<option value="">--</option>';
-        for (var i = 0; i < imagefiles.length; i++) {
-            sel += '<option value="' + imagefiles[i].id + '"';
-            if (imageid == imagefiles[i].id) {
-                sel += ' selected';
-            }
-            sel += '>' + imagefiles[i].name + '</option>';
+var ImageDialog = {
+    preInit : function() {
+        var url;
+        tinyMCEPopup.requireLangPack();
+    },
+
+    init : function() {
+        var f = document.forms[0], ed = tinyMCEPopup.editor;
+
+        e = ed.selection.getNode();
+
+        if (e.nodeName == 'IMG') {
+            f.src.value = ed.dom.getAttrib(e, 'src');
+            f.alt.value = ed.dom.getAttrib(e, 'alt');
+            f.border.value = this.getAttrib(e, 'border');
+            f.vspace.value = this.getAttrib(e, 'vspace');
+            f.hspace.value = this.getAttrib(e, 'hspace');
+            f.width.value = ed.dom.getAttrib(e, 'width');
+            f.height.value = ed.dom.getAttrib(e, 'height');
+            f.insert.value = ed.getLang('update');
+            this.styleVal = ed.dom.getAttrib(e, 'style');
+            //selectByValue(f, 'image_list', f.src.value);
+            selectByValue(f, 'align', this.getAttrib(e, 'align'));
+            this.updateStyle();
         }
-        return sel;
-    }
-}
-
-function init() {
-	tinyMCEPopup.resizeToInnerSize();
-
-	var formObj = document.forms[0];
-
-	for (var i=0; i<document.forms[0].align.options.length; i++) {
-		if (document.forms[0].align.options[i].value == tinyMCE.getWindowArg('align'))
-			document.forms[0].align.options.selectedIndex = i;
-	}
-
-	formObj.src.value = tinyMCE.getWindowArg('src');
-	formObj.alt.value = tinyMCE.getWindowArg('alt');
-	formObj.border.value = tinyMCE.getWindowArg('border');
-	formObj.vspace.value = tinyMCE.getWindowArg('vspace');
-	formObj.hspace.value = tinyMCE.getWindowArg('hspace');
-	formObj.width.value = tinyMCE.getWindowArg('width');
-	formObj.height.value = tinyMCE.getWindowArg('height');
-	formObj.insert.value = tinyMCE.getLang('lang_' + tinyMCE.getWindowArg('action'), 'Insert', true); 
-
-	// Handle file browser
-	if (isVisible('srcbrowser'))
-		document.getElementById('src').style.width = '180px';
 
         // Get image list from calling window
-        document.getElementById('image_list_container').innerHTML = imageSelectorHTML(formObj.src.value);
+        document.getElementById('image_list_container').innerHTML = this.imageSelectorHTML(f.src.value);
+    },
 
-}
+    imageSelectorHTML : function(src) {
+        var imageid = tinyMCEPopup.getWin().imageIdFromSrc(src);
+        var imagefiles = tinyMCEPopup.getWin().imageList;
+        if (imagefiles.length == 0) {
+            return '';
+        }
+        else {
+            var sel = '<select class="select" name="image_list" id="image_list" onchange="this.form.src.value=this.options[this.selectedIndex].value;ImageDialog.resetImageData();ImageDialog.getImageData(this.form.src.value);">';
+            sel += '<option value="">--</option>';
+            for (var i = 0; i < imagefiles.length; i++) {
+                sel += '<option value="' + imagefiles[i].id + '"';
+                if (imageid == imagefiles[i].id) {
+                    sel += ' selected';
+                }
+                sel += '>' + imagefiles[i].name + '</option>';
+            }
+            return sel;
+        }
+    },
 
-var preloadImg = new Image();
+    update : function() {
+        var f = document.forms[0], nl = f.elements, ed = tinyMCEPopup.editor, args = {}, el;
 
-function resetImageData() {
-	var formObj = document.forms[0];
-	formObj.width.value = formObj.height.value = "";	
-}
+        tinyMCEPopup.restoreSelection();
 
-function updateImageData() {
-	var formObj = document.forms[0];
+        if (f.src.value === '') {
+            if (ed.selection.getNode().nodeName == 'IMG') {
+                ed.dom.remove(ed.selection.getNode());
+                ed.execCommand('mceRepaint');
+            }
 
-	if (formObj.width.value == "")
-		formObj.width.value = preloadImg.width;
+            tinyMCEPopup.close();
+            return;
+        }
 
-	if (formObj.height.value == "")
-		formObj.height.value = preloadImg.height;
-}
+        if (!ed.settings.inline_styles) {
+            args = tinymce.extend(args, {
+                vspace : nl.vspace.value,
+                hspace : nl.hspace.value,
+                border : nl.border.value,
+                align : getSelectValue(f, 'align')
+            });
+        } else {
+            this.updateStyle();
+            args.style = this.styleVal;
+        }
 
-function getImageData(imageid) {
-    preloadImg = new Image();
-    tinyMCE.addEvent(preloadImg, "load", updateImageData);
-    tinyMCE.addEvent(preloadImg, "error", function () {var formObj = document.forms[0];formObj.width.value = formObj.height.value = "";});
-    var imgsrc = tinyMCEPopup.windowOpener.imageSrcFromId(imageid);
-    var f = document.forms[0];
-    f.src.value = imgsrc;
-    if (f.image_list.options[f.image_list.selectedIndex].childNodes[0].nodeValue &&
-        typeof(f.image_list.options[f.image_list.selectedIndex].childNodes[0].nodeValue) == 'string') {
-        f.alt.value = f.image_list.options[f.image_list.selectedIndex].childNodes[0].nodeValue;
+        tinymce.extend(args, {
+            src : f.src.value,
+            alt : f.alt.value,
+            width : f.width.value,
+            height : f.height.value
+        });
+
+        el = ed.selection.getNode();
+
+        if (el && el.nodeName == 'IMG') {
+            ed.dom.setAttribs(el, args);
+        } else {
+            ed.execCommand('mceInsertContent', false, '<img id="__mce_tmp" />', {skip_undo : 1});
+            ed.dom.setAttribs('__mce_tmp', args);
+            ed.dom.setAttrib('__mce_tmp', 'id', '');
+            ed.undoManager.add();
+        }
+
+        tinyMCEPopup.close();
+    },
+
+    updateStyle : function() {
+        var dom = tinyMCEPopup.dom, st, v, f = document.forms[0];
+
+        if (tinyMCEPopup.editor.settings.inline_styles) {
+            st = tinyMCEPopup.dom.parseStyle(this.styleVal);
+
+            // Handle align
+            v = getSelectValue(f, 'align');
+            if (v) {
+                if (v == 'left' || v == 'right') {
+                    st['float'] = v;
+                    delete st['vertical-align'];
+                } else {
+                    st['vertical-align'] = v;
+                    delete st['float'];
+                }
+            } else {
+                delete st['float'];
+                delete st['vertical-align'];
+            }
+
+            // Handle border
+            v = f.border.value;
+            if (v || v == '0') {
+                if (v == '0')
+                    st['border'] = '0';
+                else
+                    st['border'] = v + 'px solid black';
+            } else
+                delete st['border'];
+
+            // Handle hspace
+            v = f.hspace.value;
+            if (v) {
+                delete st['margin'];
+                st['margin-left'] = v + 'px';
+                st['margin-right'] = v + 'px';
+            } else {
+                delete st['margin-left'];
+                delete st['margin-right'];
+            }
+
+            // Handle vspace
+            v = f.vspace.value;
+            if (v) {
+                delete st['margin'];
+                st['margin-top'] = v + 'px';
+                st['margin-bottom'] = v + 'px';
+            } else {
+                delete st['margin-top'];
+                delete st['margin-bottom'];
+            }
+
+            // Merge
+            st = tinyMCEPopup.dom.parseStyle(dom.serializeStyle(st));
+            this.styleVal = dom.serializeStyle(st);
+        }
+    },
+
+    getAttrib : function(e, at) {
+        var ed = tinyMCEPopup.editor, dom = ed.dom, v, v2;
+
+        if (ed.settings.inline_styles) {
+            switch (at) {
+                case 'align':
+                    if (v = dom.getStyle(e, 'float'))
+                        return v;
+
+                    if (v = dom.getStyle(e, 'vertical-align'))
+                        return v;
+
+                    break;
+
+                case 'hspace':
+                    v = dom.getStyle(e, 'margin-left')
+                    v2 = dom.getStyle(e, 'margin-right');
+                    if (v && v == v2)
+                        return parseInt(v.replace(/[^0-9]/g, ''));
+
+                    break;
+
+                case 'vspace':
+                    v = dom.getStyle(e, 'margin-top')
+                    v2 = dom.getStyle(e, 'margin-bottom');
+                    if (v && v == v2)
+                        return parseInt(v.replace(/[^0-9]/g, ''));
+
+                    break;
+
+                case 'border':
+                    v = 0;
+
+                    tinymce.each(['top', 'right', 'bottom', 'left'], function(sv) {
+                        sv = dom.getStyle(e, 'border-' + sv + '-width');
+
+                        // False or not the same as prev
+                        if (!sv || (sv != v && v !== 0)) {
+                            v = 0;
+                            return false;
+                        }
+
+                        if (sv)
+                            v = sv;
+                    });
+
+                    if (v)
+                        return parseInt(v.replace(/[^0-9]/g, ''));
+
+                    break;
+            }
+        }
+
+        if (v = dom.getAttrib(e, at))
+            return v;
+
+        return '';
+    },
+
+    resetImageData : function() {
+        var f = document.forms[0];
+
+        f.width.value = f.height.value = "";
+    },
+
+    updateImageData : function() {
+        var f = document.forms[0], t = ImageDialog;
+
+        if (f.width.value == "")
+            f.width.value = t.preloadImg.width;
+
+        if (f.height.value == "")
+            f.height.value = t.preloadImg.height;
+    },
+
+    getImageData : function(imageid) {
+        var f = document.forms[0];
+
+        this.preloadImg = new Image();
+        this.preloadImg.onload = this.updateImageData;
+        this.preloadImg.onerror = this.resetImageData;
+
+        var imgsrc = tinyMCEPopup.getWin().imageSrcFromId(imageid);
+        f.src.value = imgsrc;
+        if (f.image_list.options[f.image_list.selectedIndex].childNodes[0].nodeValue &&
+            typeof(f.image_list.options[f.image_list.selectedIndex].childNodes[0].nodeValue) == 'string') {
+            f.alt.value = f.image_list.options[f.image_list.selectedIndex].childNodes[0].nodeValue;
+        }
+        f.imgid.value = imageid;
+
+        this.preloadImg.src = imgsrc;
     }
-    f.imgid.value = imageid;
-    preloadImg.src = imgsrc;
-}
+
+};
+
+ImageDialog.preInit();
+tinyMCEPopup.onInit.add(ImageDialog.init, ImageDialog);
+
+
+
+
 

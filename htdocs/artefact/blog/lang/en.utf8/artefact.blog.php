@@ -123,8 +123,7 @@ $string['top'] = 'Top';
 $string['middle'] = 'Middle';
 $string['bottom'] = 'Bottom';
 $string['texttop'] = 'Text top';
-$string['absolutemiddle'] = 'Absolute middle';
-$string['absolutebottom'] = 'Absolute bottom';
+$string['textbottom'] = 'Text bottom';
 $string['left'] = 'Left';
 $string['right'] = 'Right';
 

@@ -304,6 +304,9 @@ function ViewManager() {
 
 
     this.showMediaPlayers = function () {
+        if (tinyMCE && tinyMCE.activeEditor && tinyMCE.activeEditor.editorId) {
+            tinyMCE.execCommand('mceRemoveControl', false, tinyMCE.activeEditor.editorId);
+        }
         var cols = $('column-container');
         forEach(getElementsByTagAndClassName(null, 'mediaplayer-container', cols), function (e) {
             showElement(getFirstElementByTagAndClassName(null, 'mediaplayer', e));
