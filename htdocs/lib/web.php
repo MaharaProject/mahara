@@ -172,6 +172,8 @@ tinyMCE.init({
     urlconverter_callback : "custom_urlconvert",
     language: '{$language}',
     content_css : {$content_css},
+    forced_root_block : "",
+    force_p_newlines : false,
     //document_base_url: {$jswwwroot},
     relative_urls: false
 });
