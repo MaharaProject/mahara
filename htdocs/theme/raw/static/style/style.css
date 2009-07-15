@@ -447,6 +447,14 @@ input#myfriends_addfriend_add {
 	border: 0;
     margin: 0;
 }
+div.delete input {
+    background: url(../images/icon-delete.gif) no-repeat left 50%;
+    color: #dd0221;
+}
+div.add input {
+	background: url(../images/icon-add.gif) no-repeat left 4px;
+    color: #547c22;
+}
 div.rbuttons {
     position: absolute;
     right: 0;
@@ -716,6 +724,28 @@ p.progress-text {
   font-weight: bold;
 }
 
+
+/* Group members */
+#results .twocolumn form input {
+    border: none;
+	font-weight: normal;
+	font-size: .9em;
+    line-height: .9em;
+}
+#results .twocolumn {
+	font-size: .9em;
+}
+#results .twocolumn td {
+	width: 50%;
+	border: 4px solid #FFF;
+}
+#results .twocolumn td img {
+    margin-right: .5em;
+}
+#results .twocolumn h3 {
+    margin: 0;
+}
+
 /*
 
 #staffusers table,
@@ -946,12 +976,6 @@ input#myfriends_addfriend_add {
 	padding: .25em 0 0 .6em;
 	font-size: .85em;
 	font-weight: bold;
-}
-#membersearchresults .removeform input {
-	background: url(../images/icon-delete.gif) no-repeat left 7px;
-	padding-left: .6em;
-    border: none;
-	color: #ca0000;
 }
 /****** DELETE FORUM ICON LINKS ********/
     /*
@@ -1529,19 +1553,10 @@ fieldset.collapsed .mceEditor td {
 	list-style: none;
 }
 
-#membersearchresults td {
-	width: 50%;
-	border: 4px solid #FFF;
-}
-#membersearchresults form {
-	margin: 0;
-	float: right;
-}
 
 #mygroupstable,
 #findgroups,
-.friendinfo,
-#membersearchresults {
+.friendinfo {
 	font-size: .9em;
 }
 

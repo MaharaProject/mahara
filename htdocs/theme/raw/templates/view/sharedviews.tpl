@@ -1,6 +1,4 @@
 {include file="header.tpl"}
-{include file="sidebar.tpl"}
-{include file="columnleftstart.tpl"}
 
 {if $views}
     <table id="myviewstable" class="groupviews">
@@ -33,6 +31,5 @@
 {/if}
 
 
-{include file="columnleftend.tpl"}
 {include file="footer.tpl"}
 

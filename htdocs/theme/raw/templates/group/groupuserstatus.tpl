@@ -10,11 +10,7 @@
 	
 {if $group->jointype == 'request' && $group->requests}
 	<li>
-{if $group->requests == 1}
-		<a href="{$WWWROOT}group/members.php?id={$group->id|escape}&amp;membershiptype=request" class="btn-pending">{str tag="thereispendingrequest" section="group"}</a>
-{else}
-		<a href="{$WWWROOT}group/members.php?id={$group->id|escape}&amp;membershiptype=request" class="btn-pending">{str tag="therearependingrequests" section="group" args=$group->requests}</a>
-{/if}
+		<a href="{$WWWROOT}group/members.php?id={$group->id|escape}&amp;membershiptype=request" class="btn-pending">{str tag="membershiprequests" section="group"} ({$group->requests})</a>
 	</li>
 {/if}
 	
