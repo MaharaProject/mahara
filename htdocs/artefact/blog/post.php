@@ -331,7 +331,7 @@ $smarty = smarty(array(), array(), array(), array(
 ));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign_by_ref('form', $form);
-$smarty->assign('pagetitle', $pagetitle);
+$smarty->assign('PAGEHEADING', hsc($pagetitle));
 $smarty->display('artefact:blog:editpost.tpl');
 
 

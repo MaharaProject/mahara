@@ -78,6 +78,7 @@ $form = pieform(array(
 
 $smarty =& smarty();
 $smarty->assign_by_ref('newblogform', $form);
+$smarty->assign_by_ref('PAGEHEADING', hsc(TITLE));
 $smarty->display('artefact:blog:new.tpl');
 exit;
 
