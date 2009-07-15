@@ -78,7 +78,6 @@ function &smarty_core() {
  * @return Smarty
  */
 
-//smarty(array('js/tablerenderer.js', 'artefact/file/js/filebrowser.js'))
 function &smarty($javascript = array(), $headers = array(), $pagestrings = array(), $extraconfig = array()) {
     global $USER, $SESSION, $THEME;
 

@@ -974,6 +974,7 @@ function pieform_element_filebrowser_views_js(Pieform $form, $element) {
  * loaded and so it's added explicitly to the smarty() call.
  */
 function pieform_element_filebrowser_get_headdata($element) {
+    global $THEME;
     $headdata = array('<script type="text/javascript" src="' . get_config('wwwroot') . 'artefact/file/js/filebrowser.js"></script>');
 
     $strings = PluginArtefactFile::jsstrings('filebrowser');
@@ -984,6 +985,11 @@ function pieform_element_filebrowser_get_headdata($element) {
         }
     }
     $headdata[] = '<script type="text/javascript">' . $jsstrings . '</script>';
+
+    foreach ($THEME->get_url('style/style.css', true, 'artefact/file') as $sheet) {
+        $headdata[] = '<link rel="stylesheet" type="text/css" href="' . $sheet . '">';
+    }
+
     return $headdata;
 }
 
