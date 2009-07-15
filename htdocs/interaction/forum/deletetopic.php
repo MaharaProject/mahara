@@ -77,29 +77,6 @@ if (!$moderator) {
 
 define('TITLE', $topic->title . ' - ' . get_string('deletetopicvariable', 'interaction.forum', $topic->subject));
 
-$breadcrumbs = array(
-    array(
-        get_config('wwwroot') . 'group/view.php?id=' . $topic->group,
-        $topic->groupname,
-    ),
-    array(
-        get_config('wwwroot') . 'interaction/forum/index.php?group=' . $topic->group,
-        get_string('nameplural', 'interaction.forum')
-    ),
-    array(
-        get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forumid,
-        $topic->title
-    ),
-    array(
-        get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
-        $topic->subject
-    ),
-    array(
-        get_config('wwwroot') . 'interaction/forum/deletetopic.php?id=' . $topicid,
-        get_string('deletetopic', 'interaction.forum')
-    )
-);
-
 $form = pieform(array(
     'name'     => 'deletetopic',
     'renderer' => 'div',
@@ -134,7 +111,6 @@ function deletetopic_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('forum', $topic->title);
-$smarty->assign('heading', $topic->groupname);
 $smarty->assign('subheading', TITLE);
 $smarty->assign('topic', $topic);
 $smarty->assign('groupadmins', group_get_admin_ids($topic->group));

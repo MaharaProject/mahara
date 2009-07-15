@@ -1,15 +1,10 @@
 {include file="header.tpl"}
-{include file="sidebar.tpl"}
 
-{include file="columnleftstart.tpl"}
-
-<h2>{$subheading|escape}</h2>
-{include file="interaction:forum:breadcrumbs.tpl" breadcrumbs=$breadcrumbs}
+<h2><a href="{$WWWROOT}interaction/forum/topic.php?id={$parent->topic}">{$parent->topicsubject|escape}</a> - {$action|escape}</h2>
 
 {$editform}
 
 <h4>{str tag="replyto" section="interaction.forum"}</h4>
 {include file="interaction:forum:simplepost.tpl" post=$parent groupadmins=$groupadmins}
 
-{include file="columnleftend.tpl"}
 {include file="footer.tpl"}

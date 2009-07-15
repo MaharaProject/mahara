@@ -49,14 +49,8 @@ input#myfriends_addfriend_add {
 }
 
 
-.profile-fieldsets {
-  padding: 0;
-  clear: left;
-}
 .profile-fieldsets fieldset {
-	margin: 0 0 1em 0;
-	border: 1px solid #ddd;
-	padding: 1em;
+	border: none;
 }
 fieldset.safe-hidden .mceEditor {
 	display: none;

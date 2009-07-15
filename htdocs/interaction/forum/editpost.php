@@ -84,17 +84,6 @@ if (!$parent) {
 
 define('GROUP', $parent->group);
 
-$breadcrumbs = array(
-    array(
-        get_config('wwwroot') . 'interaction/forum/view.php?id=' . $parent->forum,
-        $parent->forumtitle
-    ),
-    array(
-        get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $parent->topic,
-        $parent->topicsubject
-    )
-);
-
 $membership = user_can_access_forum((int)$parent->forum);
 $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
@@ -105,11 +94,8 @@ if (!isset($postid)) { // post reply
     if (!$moderator && $parent->topicclosed) {
         throw new AccessDeniedException(get_string('cantaddposttotopic', 'interaction.forum'));
     }
-    define('TITLE', $parent->topicsubject . ' - ' . get_string('postreply','interaction.forum'));
-    $breadcrumbs[] = array(
-        get_config('wwwroot') . 'interaction/forum/editpost.php?parent=' . $parentid,
-        get_string('postreply', 'interaction.forum')
-    );
+    $action = get_string('postreply', 'interaction.forum');
+    define('TITLE', $parent->topicsubject . ' - ' . $action);
 }
 else { // edit post
     // no record for edits to own posts with 30 minutes
@@ -122,11 +108,8 @@ else { // edit post
     else {
         throw new AccessDeniedException(get_string('canteditpost', 'interaction.forum'));
     }
-    define('TITLE', $parent->topicsubject . ' - ' . get_string('editpost','interaction.forum'));
-    $breadcrumbs[] = array(
-        get_config('wwwroot') . 'interaction/forum/editpost.php?id=' . $postid,
-        get_string('editpost', 'interaction.forum')
-    );
+    $action = get_string('editpost', 'interaction.forum');
+    define('TITLE', $parent->topicsubject . ' - ' . $action);
 }
 
 $parent->ctime = relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $parent->ctime);
@@ -238,11 +221,9 @@ function addpost_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
-$smarty->assign('breadcrumbs', $breadcrumbs);
-$smarty->assign('heading', $parent->groupname);
-$smarty->assign('subheading', TITLE);
 $smarty->assign('editform', $editform);
 $smarty->assign('parent', $parent);
+$smarty->assign('action', $action);
 $smarty->assign('groupadmins', group_get_admin_ids($parent->group));
 
 if (isset($inlinejs)) {

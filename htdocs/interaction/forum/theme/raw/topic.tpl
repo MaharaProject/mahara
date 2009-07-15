@@ -1,11 +1,8 @@
 {include file="header.tpl"}
-{include file="sidebar.tpl"}
 
-{include file="columnleftstart.tpl"}
-
-
+<h2><a href="{$WWWROOT}interaction/forum/view.php?id={$topic->forumid}">{$topic->forumtitle|escape}</a> - {$topic->subject|escape}</h2>
 {if $membership}
-	<div class="forumaddicon fr">
+	<div class="rbuttons pagetabs">
 	{if $topic->canedit}
 	<a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}" id="btn-edittopic">{str tag=edittopic section=interaction.forum}</a>
 		{if $moderator}
@@ -17,13 +14,10 @@
 	{/if}
 	</div>
 {/if}
-<h2>{$subheading|escape}</h2>
-{include file="interaction:forum:breadcrumbs.tpl" breadcrumbs=$breadcrumbs}
 
 {if $topic->closed}
 	<div class="message">{str tag=topicisclosed section=interaction.forum}</div>
 {/if}
 {$posts}
 
-{include file="columnleftend.tpl"}
 {include file="footer.tpl"}

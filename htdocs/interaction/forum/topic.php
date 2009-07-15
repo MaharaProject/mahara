@@ -71,17 +71,6 @@ define('TITLE', $topic->forumtitle . ' - ' . $topic->subject);
 
 $groupadmins = group_get_admin_ids($topic->groupid);
 
-$breadcrumbs = array(
-    array(
-        get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forumid,
-        $topic->forumtitle
-    ),
-    array(
-        get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
-        $topic->subject
-    )
-);
-
 if ($membership && !$topic->forumsubscribed) {
     $topic->subscribe = pieform(array(
         'name'     => 'subscribe_topic',
@@ -158,9 +147,6 @@ for ($i = 0; $i < $count; $i++) {
 $posts = buildpost(0, '', $posts);
 
 $smarty = smarty();
-$smarty->assign('breadcrumbs', $breadcrumbs);
-$smarty->assign('heading', $topic->groupname);
-$smarty->assign('subheading', TITLE);
 $smarty->assign('topic', $topic);
 $smarty->assign('membership', $membership);
 $smarty->assign('moderator', $moderator);

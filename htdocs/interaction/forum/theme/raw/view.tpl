@@ -1,22 +1,20 @@
 {include file="header.tpl"}
-{include file="sidebar.tpl"}
 
-{include file="columnleftstart.tpl"}
-<div class="forumaddicon fr">
+<h2>{$subheading|escape}</h2>
+<div class="rbuttons pagetabs">
 	{if $admin}
 		<a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}" id="btn-editforum">{str tag="edittitle" section="interaction.forum"}</a>
 		<a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}" id="btn-deleteforum">{str tag="deleteforum" section="interaction.forum"}</a>
 	{/if}
 	{$forum->subscribe}
 </div>
-<h2>{$subheading|escape}</h2>
 <div id="forumdescription">{$forum->description}</div>
-<div id="viewforum">
+<div id="viewforum" class="rel">
 	<h3>{str tag=Topics section="interaction.forum"}</h3>
     {if $membership}
-	<span class="forumaddicon fr">
+	<div class="rbuttons">
 	<a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id|escape}" id="btn-newtopic">{str tag="newtopic" section="interaction.forum}</a>
-	</span>
+	</div>
 	{/if}
 	<label>{str tag="groupadminlist" section="interaction.forum"}</label>
 	{foreach name=groupadmins from=$groupadmins item=groupadmin}<a href="{$WWWROOT}user/view.php?id={$groupadmin}" class="groupadmin s">
@@ -114,5 +112,4 @@
 <p>{str tag="notopics" section="interaction.forum"}</p>
 {/if}
 
-{include file="columnleftend.tpl"}
 {include file="footer.tpl"}

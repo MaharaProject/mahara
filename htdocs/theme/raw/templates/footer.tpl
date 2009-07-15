@@ -1,3 +1,6 @@
+{if $GROUP}
+                        </div><!--end group-->
+{/if}
                     </div>
                 </td>
 {if $SIDEBARS && $SIDEBLOCKS.right}

@@ -53,6 +53,8 @@ $member = group_user_access($group->id);
 $shared = param_boolean('shared', 0) && $member;
 $can_edit = group_user_can_edit_views($group->id);
 
+$createviewform = pieform(create_view_form($group->id));
+
 $smarty = smarty();
 $smarty->assign('heading', $group->name);
 
@@ -78,7 +80,7 @@ $smarty->assign('groupviews', 1);
 $smarty->assign('member', $member);
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
-$smarty->assign('createviewform', pieform(create_view_form($group->id)));
+$smarty->assign('createviewform', $createviewform);
 
 if ($can_edit) { // && !$shared) {
     $smarty->display('view/index.tpl');

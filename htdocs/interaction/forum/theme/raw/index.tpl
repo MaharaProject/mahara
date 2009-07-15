@@ -1,14 +1,12 @@
 {include file="header.tpl"}
-{include file="sidebar.tpl"}
 
-{include file="columnleftstart.tpl"}
 <h2>{str tag="nameplural" section=interaction.forum}</h2>
-<div>
 {if $admin}
-<span class="addicon fr">
+<div class="rbuttons pagetabs">
 <a href="{$WWWROOT}interaction/edit.php?group={$groupid|escape}&amp;plugin=forum" id="btn-newforum">{str tag="newforum" section=interaction.forum}</a>
-</span>
+</div>
 {/if}
+<div>
 <label class="blue">{str tag="groupadminlist" section="interaction.forum"}</label> 
 {foreach name=groupadmins from=$groupadmins item=groupadmin}<a href="{$WWWROOT}user/view.php?id={$groupadmin}" class="groupadmin s">
 <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupadmin}" alt="">
@@ -52,5 +50,4 @@
 {else}
 <div class="message">{str tag=noforums section=interaction.forum}</div>
 {/if}
-{include file="columnleftend.tpl"}
 {include file="footer.tpl"}

@@ -1,7 +1,4 @@
 {include file="header.tpl"}
-{include file="sidebar.tpl"}
-
-{include file="columnleftstart.tpl"}
 
 <form action="{$WWWROOT}group/members.php" method="post">
     <input type="hidden" id="groupid" name="id" value="{$GROUP->id|escape}">
@@ -23,5 +20,4 @@
     </div>
     {$pagination}
 
-{include file="columnleftend.tpl"}
 {include file="footer.tpl"}

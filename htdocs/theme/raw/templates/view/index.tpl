@@ -1,6 +1,8 @@
 {include file="header.tpl"}
 
-            <div class="rbuttons">
+{if $GROUP}<h2>{str tag=groupviews section=view}</h2>
+{/if}
+            <div class="rbuttons{if $GROUP} pagetabs{/if}">
                 {$createviewform}
                 <form method="post" action="{$WWWROOT}view/choosetemplate.php">
                     <input type="submit" class="submit" value="{str tag="copyaview" section="view"}">

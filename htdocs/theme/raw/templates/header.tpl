@@ -25,3 +25,10 @@
 
 {if $PAGEHEADING}                    <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON}</span>{/if}</h1>
 {/if}
+{if $GROUP}{* Tabs and beginning of page container for group info pages *}                        <ul class="in-page-tabs">
+{foreach from=$GROUPNAV item=item}
+                            <li><a {if $item.selected}class="current-tab" {/if}href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>
+{/foreach}
+                        </ul>
+                        <div class="in-page-page rel">
+{/if}

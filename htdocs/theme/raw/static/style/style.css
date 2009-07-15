@@ -259,34 +259,35 @@ div.ok, div.error, div.info {
 
 
 /* Tabbed pages */
-/*#grouppage-tabs ul,*/
-ul.profile-tabs {
+ul.in-page-tabs {
   font-size: .9em;
   font-weight: bold;
   list-style: none;
   margin: 0;
   padding: 0;
 }
-/*#grouppage-tabs ul li,*/
-ul.profile-tabs li {
+ul.in-page-tabs li {
   display: inline;
   margin: 0 0 0 .5em;
 }
-/*#grouppage-tabs ul li.selected a,
-#grouppage-tabs ul li.selected a:hover,*/
-ul.profile-tabs li a.current-tab {
+ul.in-page-tabs li a.current-tab {
   color: #333;
   cursor: default;
   text-decoration: none;
   background: #ddd;
 }
-/*#grouppage-tabs li a,*/
-ul.profile-tabs li a {
+ul.in-page-tabs li a {
   padding: .4em 1em .3em 1em;
 }
 /*#grouppage-tabs li a:hover,
 ul.profile-tabs li a:hover {
 }*/
+
+.in-page-page {
+	margin: 0 0 1em 0;
+	border: 1px solid #ddd;
+	padding: 1em;
+}
 
 
 /* Forms */
@@ -451,6 +452,10 @@ div.rbuttons {
     position: absolute;
     right: 0;
     top: 0;
+}
+div.rbuttons.pagetabs {
+    right: 1em;
+    top: 0.5em;
 }
 div.rbuttons form,
 div.rbuttons form div {

@@ -406,8 +406,10 @@ EOF;
     }
     if (defined('GROUP')) {
         require_once('group.php');
-        $smarty->assign('GROUP', group_current_group());
+        $group = group_current_group();
+        $smarty->assign('GROUP', $group);
         $smarty->assign('GROUPNAV', group_get_menu_tabs());
+        $smarty->assign('PAGEHEADING', hsc($group->name));
     }
 
     // ---------- sideblock stuff ----------

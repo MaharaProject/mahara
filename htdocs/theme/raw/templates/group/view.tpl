@@ -1,7 +1,5 @@
 {include file="header.tpl"}
-{include file="sidebar.tpl"}
 
-{include file="columnleftstart.tpl"}
 {if $GROUP->description}
 	<div id="group-description">{$GROUP->description}</div>
 {/if}
@@ -89,5 +87,4 @@
     </div>
 {/if}
 
-{include file="columnleftend.tpl"}
 {include file="footer.tpl"}

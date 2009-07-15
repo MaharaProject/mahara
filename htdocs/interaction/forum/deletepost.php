@@ -78,21 +78,6 @@ define('GROUP', $post->group);
 define('TITLE', $post->topicsubject . ' - ' . get_string('deletepost', 'interaction.forum'));
 $post->ctime = relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $post->ctime);
 
-$breadcrumbs = array(
-    array(
-        get_config('wwwroot') . 'interaction/forum/view.php?id=' . $post->forum,
-        $post->forumtitle
-    ),
-    array(
-        get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topic,
-        $post->topicsubject
-    ),
-    array(
-        get_config('wwwroot') . 'interaction/forum/deletepost.php?id=' . $postid,
-        get_string('deletepost', 'interaction.forum')
-    )
-);
-
 $form = pieform(array(
     'name'     => 'deletepost',
     'renderer' => 'div',
@@ -133,8 +118,6 @@ function deletepost_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
-$smarty->assign('breadcrumbs', $breadcrumbs);
-$smarty->assign('heading', $post->groupname);
 $smarty->assign('subheading', TITLE);
 $smarty->assign('post', $post);
 $smarty->assign('deleteform', $form);

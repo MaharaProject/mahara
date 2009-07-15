@@ -49,17 +49,6 @@ if (!$membership && !$group->public) {
 
 define('TITLE', $group->name . ' - ' . get_string('nameplural', 'interaction.forum'));
 
-$breadcrumbs = array(
-    array(
-        get_config('wwwroot') . 'group/view.php?id=' . $groupid,
-        $group->name
-    ),
-    array(
-        get_config('wwwroot') . 'interaction/forum/index.php?group=' . $groupid,
-        get_string('nameplural', 'interaction.forum')
-    )
-);
-
 $forums = get_records_sql_array(
     'SELECT f.id, f.title, f.description, m.user AS moderator, COUNT(t.id) AS topiccount, s.forum AS subscribed
     FROM {interaction_instance} f

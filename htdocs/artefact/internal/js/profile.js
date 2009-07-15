@@ -32,7 +32,7 @@ addLoadEvent(function() {
         });
         tabs.push(LI(null, a));
     });
-    var tabUL = UL({'class': 'profile-tabs'}, tabs);
+    var tabUL = UL({'class': 'in-page-tabs'}, tabs);
 
     forEach(fieldsets, function(fieldset) {
         if (hasElementClass(fieldset, 'collapsed')) {
@@ -54,7 +54,7 @@ addLoadEvent(function() {
 
     // last part is the submit buttons
     appendChildNodes('profileform',
-        tabUL, DIV({'class': 'profile-fieldsets'}, fieldsets), getFirstElementByTagAndClassName('td', null, 'profileform_submit_container').childNodes
+        tabUL, DIV({'class': 'profile-fieldsets in-page-page'}, fieldsets), getFirstElementByTagAndClassName('td', null, 'profileform_submit_container').childNodes
     );
     removeElement(
         getFirstElementByTagAndClassName('table', null, 'profileform')
