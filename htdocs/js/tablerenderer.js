@@ -274,13 +274,13 @@ function TableRenderer(target, source, columns, options) {
         self.doupdate(self.lastArgs);
     };
 
-    this.updateOnLoad = function() {
+    this.updateOnLoad = function(request_args) {
         self.updateOnLoadFlag = true;
         if ( TableRendererPageLoaded ) {
             self.doupdate();
         }
         else {
-            addLoadEvent(partial(self.doupdate, {}));
+            addLoadEvent(partial(self.doupdate, request_args));
         }
     }
 
