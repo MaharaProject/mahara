@@ -24,29 +24,29 @@ img {
 label {
     font-weight: bold;
 }
-#main-column h1, #main-column h2, #main-column h3, #main-column h4, #main-column h5, #main-column h6 {
+.main-column h1, .main-column h2, .main-column h3, .main-column h4, .main-column h5, .main-column h6 {
     margin: .75em 0 .5em;
 }
-#main-column h1:first-child, #main-column h2:first-child, #main-column h3:first-child, #main-column h4:first-child, #main-column h5:first-child, #main-column h6:first-child,
-#main-column h1 + p, #main-column h2 + p, #main-column h3 + p, #main-column h4 + p, #main-column h5 + p, #main-column h6 + p {
+.main-column h1:first-child, .main-column h2:first-child, .main-column h3:first-child, .main-column h4:first-child, .main-column h5:first-child, .main-column h6:first-child,
+.main-column h1 + p, .main-column h2 + p, .main-column h3 + p, .main-column h4 + p, .main-column h5 + p, .main-column h6 + p {
     margin-top: 0;
 }
-#main-column h1 {
+.main-column h1 {
     font-size: 2.25em;
 }
-#main-column h2 {
+.main-column h2 {
     font-size: 1.8em;
 }
-#main-column h3 {
+.main-column h3 {
     font-size: 1.4em;
 }
-#main-column h4 {
+.main-column h4 {
     font-size: 1.2em;
 }
-#main-column h5 {
+.main-column h5 {
     font-size: 1em;
 }
-#main-column h6 {
+.main-column h6 {
     font-size: .9em;
 }
 .left {
@@ -670,6 +670,27 @@ p.progress-text {
 }
 #progressbar {
     height: 40px;
+}
+
+
+/* Copy a view */
+#viewpreview {
+  position: absolute;
+  border: 10px solid #eee;
+  background-color: #fff;
+}
+#viewpreviewinner {
+  border: 1px solid #ccc;
+  padding: 1em;
+}
+#viewpreviewclose {
+  width: 100%;
+  text-align: right;
+  border-bottom: 1px dotted #ccc;
+  padding-bottom: 1em;
+}
+#viewpreviewcontent {
+  margin-top: 1em;
 }
 
 /*
@@ -1507,25 +1528,6 @@ fieldset.collapsed .mceEditor td {
 }
 .preview-group ul#group-info {
   padding: 0;
-}
-
-#viewpreview {
-  position: absolute;
-  border: 10px solid #eee;
-  background-color: #fff;
-}
-#viewpreviewinner {
-  border: 1px solid #ccc;
-  padding: 1em;
-}
-#viewpreviewclose {
-  width: 100%;
-  text-align: right;
-  border-bottom: 1px dotted #ccc;
-  padding-bottom: 1em;
-}
-#viewpreviewcontent {
-  margin-top: 1em;
 }
 
 /* GROUPS */

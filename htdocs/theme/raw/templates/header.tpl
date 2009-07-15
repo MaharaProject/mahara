@@ -19,7 +19,7 @@
 {include file="sidebar.tpl" blocks=$SIDEBLOCKS.left}
                 </td>
 {/if}
-                <td id="main-column">
+                <td id="main-column" class="main-column">
                     {insert name="messages"}
                     <div id="main-column-container">
 

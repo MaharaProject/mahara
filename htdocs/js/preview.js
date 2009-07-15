@@ -6,7 +6,7 @@
  * This file is licensed under the same terms as Mahara itself
  */
 
-var preview = DIV({'id':'viewpreview', 'class':'hidden'},
+var preview = DIV({'id':'viewpreview', 'class':'hidden main-column'},
     DIV({'id':'viewpreviewinner'},
         DIV({'id':'viewpreviewclose'},
             A({'href':'','id':'closepreview'}, 'Close')
