@@ -40,6 +40,18 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         return array('feeds');
     }
 
+    public static function postinst($prevversion) {
+        if ($prevversion == 0) {
+            // MySQL can't handle uniqueness of > 255 chars
+            if (is_postgres()) {
+                execute_sql('CREATE UNIQUE INDEX blocextedata_url_uix ON blocktype_externalfeed_data(url);');
+            }
+            else if (is_mysql()) {
+                execute_sql('ALTER TABLE blocktype_externalfeed_data ADD UNIQUE blocextedata_url_uix (url(255))');
+            }
+        }
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
         if ($configdata['feedid']) {
@@ -109,7 +121,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                 'defaultvalue' => $url,
                 'rules' => array(
                     'required' => true,
-                    'maxlength' => 255, // mysql hack, see install.xml for this plugin
+                    'maxlength' => 2048, // See install.xml for this plugin - MySQL can only safely handle up to 255 chars
                 ),
             ),
             'full' => array(
