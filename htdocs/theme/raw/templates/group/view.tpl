@@ -1,38 +1,43 @@
 {include file="header.tpl"}
 
 {if $GROUP->description}
-	<div id="group-description">{$GROUP->description}</div>
+	<p>{$GROUP->description}</p>
 {/if}
 
-<ul id="group-controls">
-	{include file="group/groupuserstatus.tpl" group=$group returnto='view'}
-</ul><br class="cl"/>
-{include file="group/info.tpl"}
+<p>
+  <div class="rel">
+  {include file="group/info.tpl"}
+    <div class="rbuttons pagetabs">
+      <ul class="group-controls">
+	    {include file="group/groupuserstatus.tpl" group=$group returnto='view'}
+      </ul><br class="cl"/>
+    </div>
+  </div>
+</p>
 
 {if $group->public || $role}
-	<div class="group-info-para">
-		<h3>{str tag=latestforumposts section=interaction.forum}</h3>
-		{if $foruminfo}
-			<table id="latestforumpost" class="fullwidth s">
-			{foreach from=$foruminfo item=postinfo}
-			<tr class="r{cycle values=0,1}">
-			  <td><strong><a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic|escape}#post{$postinfo->id|escape}">{$postinfo->topicname|escape}</a></strong></td>
-			  <td>{$postinfo->body|str_shorten_html:100:true}</td>
-			  <td><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$postinfo->poster|escape}" alt="">
-				<a href="{$WWWROOT}user/view.php?id={$postinfo->poster|escape}">{$postinfo->poster|display_name|escape}</a></td>
-			</tr>
-			{/foreach}
-			</table>
-			{else}
-			<div class="message">{str tag=noforumpostsyet section=interaction.forum}</div>
-		{/if}
-		<p class="gotoforum"><a href="{$WWWROOT}interaction/forum/?group={$group->id|escape}">{str tag=gotoforums section=interaction.forum} &raquo;</a></p>
-	</div>
+    <h3>{str tag=latestforumposts section=interaction.forum}</h3>
+    {if $foruminfo}
+        <table id="latestforumpost" class="fullwidth s">
+        {foreach from=$foruminfo item=postinfo}
+            <tr class="r{cycle values=0,1}">
+                <td><strong><a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic|escape}#post{$postinfo->id|escape}">{$postinfo->topicname|escape}</a></strong></td>
+                <td>{$postinfo->body|str_shorten_html:100:true}</td>
+                <td><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$postinfo->poster|escape}" alt="">
+                    <a href="{$WWWROOT}user/view.php?id={$postinfo->poster|escape}">{$postinfo->poster|display_name|escape}</a>
+                </td>
+            </tr>
+        {/foreach}
+        </table>
+    {else}
+        <p>{str tag=noforumpostsyet section=interaction.forum}</p>
+    {/if}
+    <div class="right"><a href="{$WWWROOT}interaction/forum/?group={$group->id|escape}"><strong>{str tag=gotoforums section=interaction.forum} &raquo;</strong></a></div>
 {/if}
 
 {if $sharedviews}
-    <div class="group-info-para">
     <h3>{str tag="viewssharedtogroupbyothers" section="view"}</h3>
+    <p>
     <table class="groupviews">
     {foreach from=$sharedviews item=view}
         <tr class="r{cycle values=0,1}">
@@ -57,12 +62,12 @@
     {/foreach}
     </table>
     {$pagination}
-    </div>
+    </p>
 {/if}
 
 {if $submittedviews}
-    <div class="group-info-para">
     <h3>{str tag="viewssubmittedtogroup" section="view"}</h3>
+    <p>
     <table class="groupviews">
     {foreach from=$submittedviews item=view}
         <tr class="r{cycle values=0,1}">
@@ -84,7 +89,7 @@
     {/foreach}
     </table>
     {$pagination}
-    </div>
+    </p>
 {/if}
 
 {include file="footer.tpl"}

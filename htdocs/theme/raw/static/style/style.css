@@ -279,14 +279,13 @@ ul.in-page-tabs li a.current-tab {
 ul.in-page-tabs li a {
   padding: .4em 1em .3em 1em;
 }
-/*#grouppage-tabs li a:hover,
-ul.profile-tabs li a:hover {
-}*/
-
 .in-page-page {
 	margin: 0 0 1em 0;
-	border: 1px solid #ddd;
-	padding: 1em;
+    border: 1px solid #d1d1d1;
+	padding: 1.5em;
+}
+.in-page-page p:first-child {
+	margin: 0;
 }
 
 
@@ -696,6 +695,25 @@ p.progress-text {
 }
 #viewpreviewcontent {
   margin-top: 1em;
+}
+
+/* Group - about */
+.group-info {
+    list-style: none;
+	background-color: #eee;
+	padding: 1em;
+	border: 10px solid #ddd;
+	margin: 0 0 1em 0;
+}
+.group-info li {
+	margin: 0;
+}
+.group-info li span {
+	margin: 0 2em 0 0;
+}
+.group-controls li {
+  font-size: .9em;
+  font-weight: bold;
 }
 
 /*
@@ -1176,36 +1194,6 @@ html>/**//*body #overlay {
 
 
 
-/**************** IN PAGE TAB NAVIGATION ****************/
-    /*
-#grouppage-tabs ul,
-ul.profile-tabs {
-  font-size: .9em;
-  font-weight: bold;
-  list-style: none;
-  margin: 0;
-}
-#grouppage-tabs ul li,
-ul.profile-tabs li {
-  display: inline;
-  margin: 0 0 0 .5em;
-}
-#grouppage-tabs ul li.selected a,
-#grouppage-tabs ul li.selected a:hover,
-ul.profile-tabs li a.current-tab {
-  color: #333;
-  cursor: default;
-  text-decoration: none;
-  background: #ddd;
-}
-#grouppage-tabs li a,
-ul.profile-tabs li a {
-  padding: .4em 1em .3em 1em;
-}
-#grouppage-tabs li a:hover,
-ul.profile-tabs li a:hover {
-}
-
 /**************** RIGHT SIDEBAR START *********/
     /*
 div.sidebar ul {
@@ -1624,49 +1612,11 @@ ul.groupuserstatus li.last {
 
 /* GROUPS > VIEWING A GROUP */
     /*
-#grouppage-tabs {
-  font-weight: bold;
-}
-#grouppage-container {
-  padding: 1.5em;
-  border: 1px solid #d1d1d1;
-  margin: 0 0 1em 0;
-}
 #grouppage-container span.addicon {
 	margin: 0;
 }
 #grouppage-container .searchform {
 	margin: 0 0 1em 0;
-}
-#group-description {
-	margin: 0;
-}
-#group-info {
-    list-style: none;
-	background-color: #eee;
-	padding: 1em;
-	border: 10px solid #ddd;
-	margin: 0 0 1em 0;
-}
-#group-info li {
-	margin: 0;
-}
-#group-info li span {
-	margin: 0 2em 0 0;
-}
-
-#group-controls {
-    list-style: none;
-	float: right;
-	margin: 2.5em 1em 0 0;
-}
-#group-controls li {
-  font-size: .9em;
-}
-.gotoforum {
-	font-weight: bold;
-	margin: 0 .5em;
-	text-align: right;
 }
 
 

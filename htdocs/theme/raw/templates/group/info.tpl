@@ -1,4 +1,4 @@
-                <ul id="group-info">
+                <ul class="group-info">
                     <li><label>{str tag=groupadmins section=group}:</label> {foreach name=admins from=$group->admins item=id}
                     <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$id|escape}" alt="">
                     <a href="{$WWWROOT}user/view.php?id={$id|escape}">{$id|display_name|escape}</a>{if !$smarty.foreach.admins.last}, {/if}
