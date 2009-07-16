@@ -9,11 +9,13 @@
 {/if}
 <tr>
 	<td class="forumpostleft">
-	<div class="posttime">{$post->ctime}</div>
-	<div><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=100&amp;id={$post->poster}" alt=""></div>
-	<h6><a href="{$WWWROOT}user/view.php?id={$post->poster}"{if in_array($post->poster, $groupadmins)} class="groupadmin"{elseif $post->moderator} class="moderator"{/if}>
-{$post->poster|display_name|escape}</a></h6>
-	<h6>{$post->postcount}</h6></td>
+	  <div class="posttime">{$post->ctime}</div>
+      <div class="author">
+         <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=40&amp;id={$post->poster}" alt="" class="fl">
+         <p><a href="{$WWWROOT}user/view.php?id={$post->poster}"{if in_array($post->poster, $groupadmins)} class="groupadmin"{elseif $post->moderator} class="moderator"{/if}>{$post->poster|display_name|escape}</a></p>
+         <p>{$post->postcount}</p>
+      </div>
+    </td>
 	<td class="postedits">{$post->body|clean_html}
 {if $post->edit}
         <h5>{str tag="editstothispost" section="interaction.forum}</h5>

@@ -86,13 +86,16 @@
 	border-bottom: 1px solid #f1f1f1;
 }
 .forumpostleft {
-	text-align: center;
 	width: 160px;
 	border-right: 1px solid #f1f1f1;
 }
-.forumpostleft h6 {
-	text-align: center;
+.forumpostleft .author p {
 	color: #999999;
+    font-weight: bold;
+    margin: 0;
+}
+.forumpostleft .author img {
+    margin: .25em .5em .25em .25em;
 }
 .posttime {
 	font-size: .9em;
@@ -103,6 +106,7 @@
 }
 .postbtns {
 	font-size: .9em;
+    font-weight: bold;
 	text-align: right;
 	background-color: #f1f1f1;
 	border-bottom: 3px solid #d1d1d1;

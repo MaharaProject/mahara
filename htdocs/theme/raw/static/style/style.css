@@ -220,6 +220,9 @@ td {
 .listing {
     font-size: .9em;
 }
+.listing h3, .listing h5 {
+    margin: 0;
+}
 
 /* Informational messages */
 #messages {
@@ -357,8 +360,13 @@ div.sideblock h3 {
     padding: 0;
     list-style: none;
 }
+#sb-profile ul {
+    font-weight: bold;
+}
 #sb-profile ul ul {
     font-size: .9em;
+    font-weight: normal;
+    padding-left: 2em;
     list-style-type: disc;
 }
 #changeuser {
@@ -421,7 +429,7 @@ div.sideblock h3 {
     padding: .2em .5em;
     text-decoration: none;
 }
-.btn-del, .btn-msg, .btn-req, .btn-edit, .btn-pending, .btn-leavegroup {
+.btn-del, .btn-msg, .btn-req, .btn-edit, .btn-pending, .btn-reply, .btn-leavegroup, .btn-link {
     padding-left: 1em;
 }
 .btn-del, .btn-leavegroup {
@@ -440,6 +448,9 @@ div.sideblock h3 {
 }
 .btn-pending {
 	background: url(../images/icon-pending.gif) no-repeat left 3px;
+}
+.btn-reply {
+	background: url(../images/icon-reply.gif) no-repeat left 4px;
 }
 input#addfriend_add,
 input#myfriends_addfriend_add {
@@ -566,10 +577,11 @@ ul.groupuserstatus li {
 ul.groupuserstatus li.last {
 	border-bottom: none;
 }
-form#search {
+form#search, form#filter {
     /* Also applies to Find Friends */
     margin-bottom: 1em;
 }
+
 
 /* My Friends */
 #friendslist ul.viewlist {
@@ -726,24 +738,18 @@ p.progress-text {
 
 
 /* Group members */
-#results .twocolumn form input {
+.listing.twocolumn td {
+	width: 50%;
+	border: 4px solid #FFF;
+}
+.listing.twocolumn td img {
+    margin-right: .5em;
+}
+.listing.twocolumn form input {
     border: none;
 	font-weight: normal;
 	font-size: .9em;
     line-height: .9em;
-}
-#results .twocolumn {
-	font-size: .9em;
-}
-#results .twocolumn td {
-	width: 50%;
-	border: 4px solid #FFF;
-}
-#results .twocolumn td img {
-    margin-right: .5em;
-}
-#results .twocolumn h3 {
-    margin: 0;
 }
 
 /*
