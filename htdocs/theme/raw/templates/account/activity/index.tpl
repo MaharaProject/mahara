@@ -1,7 +1,5 @@
 {include file="header.tpl"}
-{include file="sidebar.tpl"}
 
-{include file="columnleftstart.tpl"}	
 			<div id="notifications">
 			<form method="post">
 			<label>{str section='activity' tag='type'}:</label>
@@ -40,5 +38,4 @@
 			</form>
 			</div>
 			
-{include file="columnleftend.tpl"}
 {include file="footer.tpl"}
