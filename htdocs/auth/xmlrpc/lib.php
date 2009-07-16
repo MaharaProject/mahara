@@ -820,6 +820,7 @@ class PluginAuthXmlrpc extends PluginAuth {
         $elements['weimportcontent'] = array(
             'type'         => 'checkbox',
             'title'        => get_string('weimportcontent', 'auth'),
+            'description'  => get_string('weimportcontentdescription', 'auth'),
             'defaultvalue' => self::$default_config['weimportcontent'],
             'help'         => true,
         );

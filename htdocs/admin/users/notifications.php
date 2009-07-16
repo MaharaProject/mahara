@@ -87,7 +87,7 @@ if ($userinstitutions) {
 $smarty = smarty();
 $smarty->assign('users', $users);
 $smarty->assign('types', $types);
-$smarty->assign('heading', get_string('adminnotifications', 'admin'));
+$smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('admin/users/notifications.tpl');
 
 

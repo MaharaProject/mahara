@@ -1,6 +1,6 @@
 {if !empty($results.data)}
-    <h3>{str tag="Results"}</h3>
-    <table id="searchresults" class="tablerenderer">
+    <h2>{str tag="Results"}</h2>
+    <table id="searchresults" class="tablerenderer fullwidth listing">
         <thead>
           {mahara_pagelinks offset=$results.offset limit=$results.limit count=$results.count url=$pagebaseurl assign=pagelinks}
           {if (!empty($pagelinks))}

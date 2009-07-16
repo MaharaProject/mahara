@@ -1,14 +1,4 @@
 {include file="microheader.tpl"}
-
-
-    
-            <h2>{str tag="adminauthorities" section="admin"}</h2>
-            
-            
-
+            <h3>{str tag="adminauthorities" section="admin"}</h3>
             {$auth_imap_form}
-
-
-
-
 {include file="microfooter.tpl"}

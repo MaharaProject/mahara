@@ -414,7 +414,7 @@ EOF;
 
     // ---------- sideblock stuff ----------
     if (!defined('INSTALLER') && (!defined('MENUITEM') || substr(MENUITEM, 0, 5) != 'admin')) {
-        if (get_config('installed')) {
+        if (get_config('installed') && !defined('ADMIN') && !defined('INSTITUTIONALADMIN')) {
             $data = site_menu();
             if (!empty($data)) {
                 $smarty->assign('SITEMENU', site_menu());
@@ -434,7 +434,7 @@ EOF;
             );
         }
 
-        if($USER->is_logged_in()) {
+        if($USER->is_logged_in() && !defined('ADMIN') && !defined('INSTITUTIONALADMIN')) {
             $SIDEBLOCKS[] = array(
                 'name'   => 'profile',
                 'id'     => 'sb-profile',

@@ -1,13 +1,7 @@
 {include file="header.tpl"}
-
-{include file="columnfullstart.tpl"}
-			<h2>{str tag="institutionstaff" section="admin"}</h2>
-
 			<p>{str tag="institutionstaffuserspagedescription" section="admin"}</p>
-
 			{$institutionselector}
+            <div class="userlistform">
 			{$staffusersform}
-
-{include file="columnfullend.tpl"}
-
+            </div>
 {include file="footer.tpl"}

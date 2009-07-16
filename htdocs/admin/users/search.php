@@ -58,7 +58,7 @@ $smarty->assign('search', $search);
 $smarty->assign('alphabet', explode(',', get_string('alphabet')));
 $smarty->assign('institutions', $institutions);
 $smarty->assign('results', build_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir));
-$smarty->assign('heading', get_string('usersearch', 'admin'));
+$smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('admin/users/search.tpl');
 
 ?>

@@ -1,6 +1,5 @@
 {include file="header.tpl"}
 
-{include file="columnfullstart.tpl"}
     <p>{str tag="usersearchinstructions" section="admin"}</p>
     <div id="initials">
       <label>{str tag="firstname"}:</label>
@@ -45,11 +44,10 @@
             {/if}
             <button id="query-button" type="submit">{str tag="go"}</button>
         </div>
-        <div id="results">
+        <div id="results" class="section">
             {$results}
         </div>
     </form>
 
-{include file="columnfullend.tpl"}
 {include file="footer.tpl"}
 

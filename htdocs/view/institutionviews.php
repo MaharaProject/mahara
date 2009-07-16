@@ -50,16 +50,13 @@ $s = institution_selector_for_page($institution,
 
 $institution = $s['institution'];
 
-$smarty = smarty();
+define('TITLE', get_string('institutionviews', 'view'));
+
 if ($institution === false) {
+    $smarty = smarty();
     $smarty->display('admin/users/noinstitutions.tpl');
     exit;
 }
-
-$title = get_string('institutionviews', 'view');
-define('TITLE', $title);
-
-$smarty->assign('heading', $title);
 
 $data = View::get_myviews_data($limit, $offset, null, $institution);
 
@@ -72,6 +69,8 @@ $pagination = build_pagination(array(
     'resultcounttextplural' => get_string('views', 'view')
 ));
 
+$smarty = smarty();
+$smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->assign('institutionselector', $s['institutionselector']);
 $smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs']);
 $smarty->assign('views', $data->data);

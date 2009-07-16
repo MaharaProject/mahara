@@ -245,6 +245,7 @@ function adduser_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('form', $form);
+$smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('admin/users/add.tpl');
 
 ?>

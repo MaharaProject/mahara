@@ -1,9 +1,5 @@
 {include file='header.tpl'}
 
-{include file="columnfullstart.tpl"}
-
-<h2>{$heading}</h2>
-
 <p>{str tag=htmlfiltersdescription section=admin}</p>
 
 {if $filters}
@@ -19,7 +15,5 @@
 
 <p>{$newfiltersdescription}</p>
 <div>{$reloadform}</div>
-
-{include file="columnfullend.tpl"}
 
 {include file='footer.tpl'}

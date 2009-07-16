@@ -29,7 +29,7 @@
 define('INTERNAL', 1);
 define('INSTITUTIONALADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('adminusers', 'admin'));
+define('TITLE', get_string('institutionadmins', 'admin'));
 require_once('pieforms/pieform.php');
 define('MENUITEM', 'manageinstitutions/institutionadmins');
 
@@ -105,6 +105,7 @@ function adminusers_submit(Pieform $form, $values) {
 $smarty->assign('institutionselector', $s['institutionselector']);
 $smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs']);
 $smarty->assign('adminusersform', pieform($form));
+$smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('admin/users/institutionadmins.tpl');
 
 ?>

@@ -1,7 +1,5 @@
 {include file='header.tpl'}
 
-{include file="columnfullstart.tpl"}
-
 <div id="adminplugin">
 <ul class="adminpluginstypes">
 {foreach from=$plugins key='plugintype' item='plugins'}
@@ -50,6 +48,5 @@
 {/foreach}
 </ul>
 </div>
-{include file="columnfullend.tpl"}
 
 {include file='footer.tpl'}

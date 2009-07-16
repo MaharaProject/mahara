@@ -192,7 +192,7 @@ $smarty = smarty();
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('plugins', $plugins);
 $smarty->assign('installlink', 'installplugin');
-$smarty->assign('heading', get_string('pluginadmin', 'admin'));
+$smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('admin/extensions/plugins.tpl');
 
 ?>

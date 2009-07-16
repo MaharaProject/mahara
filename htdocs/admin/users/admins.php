@@ -85,7 +85,7 @@ function adminusers_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('adminusersform', $form);
-$smarty->assign('heading', get_string('adminusers', 'admin'));
+$smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('admin/users/admin.tpl');
 
 ?>

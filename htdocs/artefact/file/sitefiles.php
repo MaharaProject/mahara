@@ -40,7 +40,7 @@ $js = ArtefactTypeFileBase::files_js();
 
 $smarty = smarty();
 $smarty->assign('descriptionstrargs', array('<a href="' . get_config('wwwroot') . 'admin/site/menu.php">', '</a>'));
-$smarty->assign('heading', get_string('sitefiles', 'admin'));
+$smarty->assign('PAGEHEADING', hsc(get_string('sitefiles', 'admin')));
 $smarty->assign('institution', 'mahara');
 $smarty->assign('form', $form);
 $smarty->assign('INLINEJAVASCRIPT', $js);

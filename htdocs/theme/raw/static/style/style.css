@@ -259,6 +259,12 @@ div.ok, div.error, div.info {
     border: 1px solid #ddd;
     text-align: center;
 }
+.message p {
+    margin: 0;
+}
+div.section {
+    padding-top: .75em;
+}
 
 
 /* Tabbed pages */
@@ -512,6 +518,43 @@ div.pagination  {
     text-align: center;
 }
 
+/* Fieldset */
+fieldset {
+	padding: 1em 1.5em;
+	margin: 5px 0;
+}
+fieldset.collapsible {
+	padding: 1em 1.5em;
+}
+fieldset.collapsed {
+	border: 0 !important;
+	padding: 0;
+	margin: 0;
+}
+fieldset.collapsed table {
+    position: absolute;
+    visibility: hidden;
+	padding: 0;
+	border: 0;
+	margin: 0;
+}
+fieldset legend a {
+    padding-left: 1em;
+    background: url(../images/icon_fieldset_down.gif) 2px center no-repeat;
+}
+fieldset legend a:hover {
+	text-decoration: none;
+}
+fieldset.collapsed legend a {
+    background: url(../images/icon_fieldset_left.gif) 2px center no-repeat;
+}
+/* fieldset.collapsed .mceEditor {
+	display: none;
+}
+fieldset.collapsed .mceEditor td {
+	border: 0;
+}*/
+
 /* Footer */
 #footer-wrap {
     clear: both;
@@ -577,7 +620,7 @@ ul.groupuserstatus li {
 ul.groupuserstatus li.last {
 	border-bottom: none;
 }
-form#search, form#filter {
+form#search, form#filter, div.searchform {
     /* Also applies to Find Friends */
     margin-bottom: 1em;
 }
@@ -1315,9 +1358,6 @@ div.sidebar ul ul a {
     border: 1px solid #ddd;
     text-align: center;
 }
-.message p {
-    margin: 0;
-}
 .message a {
 }
 
@@ -1401,43 +1441,6 @@ div.sidebar ul ul a {
 legend {
 	font-weight: bold;
 	font-size: 1.3em;
-}
-/* Fieldset */
-    /*
-fieldset {
-	padding: 1em 1.5em;
-	margin: 5px 0;
-}
-fieldset.collapsible {
-	padding: 1em 1.5em;
-}
-fieldset.collapsed {
-	border: 0 !important;
-	padding: 0;
-	margin: 0;
-}
-fieldset.collapsed table {
-    position: absolute;
-    visibility: hidden;
-	padding: 0;
-	border: 0;
-	margin: 0;
-}
-fieldset legend a {
-    padding-left: 1em;
-    background: url(../images/icon_fieldset_down.gif) 2px center no-repeat;
-}
-fieldset legend a:hover {
-	text-decoration: none;
-}
-fieldset.collapsed legend a {
-    background: url(../images/icon_fieldset_left.gif) 2px center no-repeat;
-}
-fieldset.collapsed .mceEditor {
-	display: none;
-}
-fieldset.collapsed .mceEditor td {
-	border: 0;
 }
 
 

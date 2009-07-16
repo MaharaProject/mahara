@@ -366,6 +366,7 @@ $form = pieform($form);
 $smarty = smarty();
 $smarty->assign('uploadcsvpagedescription', $uploadcsvpagedescription);
 $smarty->assign('uploadcsvform', $form);
+$smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('admin/users/uploadcsv.tpl');
 
 ?>

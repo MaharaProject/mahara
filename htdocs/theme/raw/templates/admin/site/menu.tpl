@@ -1,6 +1,5 @@
 {include file="header.tpl"}
 
-{include file="columnfullstart.tpl"}
             <p>{str tag=linksandresourcesmenupagedescription section=admin args=$descriptionstrargs}</p>
 			
 			<div id="editmenus">
@@ -16,7 +15,5 @@
 				<div id="menuitemlist"></div>
 			
 			</div>
-
-{include file="columnfullend.tpl"}
 
 {include file="footer.tpl"}

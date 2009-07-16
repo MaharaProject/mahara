@@ -1,6 +1,5 @@
 {include file="header.tpl"}
 
-{include file="columnfullstart.tpl"}
             <table id="notificationstable" class="fullwidth">
 			<thead>
                 <tr>
@@ -29,6 +28,5 @@
 {/foreach} 
 			</tbody>
             </table>
-{include file="columnfullend.tpl"}
 
 {include file="footer.tpl"}

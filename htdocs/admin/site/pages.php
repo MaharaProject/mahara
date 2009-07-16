@@ -95,7 +95,7 @@ function editsitepage_submit(Pieform $form, $values) {
 
 $smarty = smarty(array('adminsitepages'), array(), array('admin' => array('discardpageedits')));
 $smarty->assign('pageeditform', $form);
-$smarty->assign('heading', get_string('editsitepages', 'admin'));
+$smarty->assign('PAGEHEADING', hsc(get_string('editsitepages', 'admin')));
 $smarty->display('admin/site/pages.tpl');
 
 ?>

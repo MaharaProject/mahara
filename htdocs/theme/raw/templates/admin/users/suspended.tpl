@@ -1,6 +1,5 @@
 {include file="header.tpl"}
 
-{include file="columnfullstart.tpl"}
             {$buttonformopen}
             {$buttonform}
             <table id="suspendedlist" class="fullwidth">
@@ -18,7 +17,5 @@
                 </tbody>
             </table>
             </form>
-
-{include file="columnfullend.tpl"}
 
 {include file="footer.tpl"}

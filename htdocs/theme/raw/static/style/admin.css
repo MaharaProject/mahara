@@ -156,6 +156,7 @@ table.tablerenderer th.desc {
 }
 
 
+
 /* MANAGE USERS > EDIT USER */
 #edituser hr {
     border-top: 1px dotted #d1d1d1;
@@ -175,11 +176,12 @@ table.tablerenderer th.desc {
 
 
 /* MANAGE USERS > SITE STAFF */
-
-
 /* MANAGE USERS > SITE ADMINS */
 
-
+.userlistform table {
+    width: 100%;
+    * width: 98%;
+}
 
 
 /* MANAGE USERS > ADMIN NOTIFICATIONS */

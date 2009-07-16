@@ -1,6 +1,5 @@
 {include file="header.tpl"}
 
-{include file="columnfullstart.tpl"}
 			{if $delete_form}
 			<h3>{str tag="deleteinstitution" section="admin"}</h3>
 			<p>{str tag="deleteinstitutionconfirm" section="admin"}</p>
@@ -92,6 +91,5 @@
 			
 			{/if}
 
-{include file="columnfullend.tpl"}
 
 {include file="footer.tpl"}

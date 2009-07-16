@@ -124,7 +124,7 @@
         }
 
         if (requiresConfig(selectedPlugin) == 1) {
-            window.open('addauthority.php?add=1&i={{$institution}}&p=' + selectedPlugin, 'addinstance', 'height=520,width=550,screenx=250,screenY=200,scrollbars=1');
+            window.open('addauthority.php?add=1&i={{$institution}}&p=' + selectedPlugin, 'addinstance', 'height=600,width=800,screenx=250,screenY=200,scrollbars=1');
             return;
         }
 
