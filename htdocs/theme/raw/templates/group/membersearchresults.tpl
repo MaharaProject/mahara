@@ -9,7 +9,7 @@
                 <div class="rel">
                   <strong>{$results.roles[$r.role]->display}</strong>
                   {if $caneditroles && $r.canchangerole} (<a href="{$WWWROOT}group/changerole.php?group={$group}&amp;user={$r.id}">{str tag=changerole section=group}</a>){/if}
-                  <div class="rbuttons delete">{$r.removeform}</div>
+                  <div class="rbuttons btn-del">{$r.removeform}</div>
                   <div>{$r.introduction|str_shorten_html:80:true}</div>
                   <label>{str tag="Joined" section="group"}:</label> {$r.jointime}
                 </div>
@@ -17,7 +17,7 @@
                 <div>{str tag=hasrequestedmembership section=group}.{if $r.reason}
                   <label>{str tag=reason}:</label> {$r.reason|format_whitespace}{/if}
                 </div>
-                <div class="right add">{$r.addform}</div>
+                <div class="right btn-add">{$r.addform}</div>
                 {elseif $membershiptype == 'invite'}
                 <div>{str tag=hasbeeninvitedtojoin section=group}</div>
                 {/if}

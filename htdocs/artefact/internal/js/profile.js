@@ -54,7 +54,7 @@ addLoadEvent(function() {
 
     // last part is the submit buttons
     appendChildNodes('profileform',
-        tabUL, DIV({'class': 'profile-fieldsets in-page-page'}, fieldsets), getFirstElementByTagAndClassName('td', null, 'profileform_submit_container').childNodes
+        tabUL, DIV({'class': 'profile-fieldsets subpage'}, fieldsets), getFirstElementByTagAndClassName('td', null, 'profileform_submit_container').childNodes
     );
     removeElement(
         getFirstElementByTagAndClassName('table', null, 'profileform')

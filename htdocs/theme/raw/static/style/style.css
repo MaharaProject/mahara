@@ -288,12 +288,12 @@ ul.in-page-tabs li a.current-tab {
 ul.in-page-tabs li a {
   padding: .4em 1em .3em 1em;
 }
-.in-page-page {
+.subpage {
 	margin: 0 0 1em 0;
     border: 1px solid #d1d1d1;
 	padding: 1.5em;
 }
-.in-page-page p:first-child {
+.subpage p:first-child {
 	margin: 0;
 }
 
@@ -314,9 +314,9 @@ div.grippie {
     cursor: s-resize;
     height: 14px;
 }
-input.submit {
+/* input.submit {
     font-weight: bold;
-}
+}*/
 .errmsg {
     color: #cc0000;
     font-size: .9em;
@@ -340,6 +340,10 @@ div.sideblock {
 div.sideblock h3 {
     font-size: 1.3em;
     margin: 0 0 .5em 0;
+}
+div.sideblock ul {
+    padding: 0 2em 0;
+    margin: 0;
 }
 
 /* Login sideblock */
@@ -435,21 +439,27 @@ div.sideblock h3 {
     padding: .2em .5em;
     text-decoration: none;
 }
-.btn-del, .btn-msg, .btn-req, .btn-edit, .btn-pending, .btn-reply, .btn-leavegroup, .btn-link {
+div.btn-add input, div.btn-edit input, div.btn-del input,
+a.btn-del, .btn-msg, .btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup {
     padding-left: 1em;
+    cursor: pointer;
+    border: none;
 }
-.btn-del, .btn-leavegroup {
+a.btn-del, .btn-leavegroup, div.btn-del input {
     color: #ca0000;
     background: url(../images/icon-delete.gif) no-repeat left 50%;
+}
+div.btn-bold input {
+    font-weight: bold;
 }
 .btn-msg {
 	background: url(../images/icon-mail.gif) no-repeat left 4px;
 	font-weight: bold;
 }
-.btn-req {
+.btn-req, div.btn-add input {
 	background: url(../images/icon-add.gif) no-repeat left 4px;
 }
-.btn-edit {
+a.btn-edit, div.btn-edit input {
 	background: url(../images/icon-edit.gif) no-repeat left 4px;
 }
 .btn-pending {
@@ -464,14 +474,14 @@ input#myfriends_addfriend_add {
 	border: 0;
     margin: 0;
 }
-div.delete input {
-    background: url(../images/icon-delete.gif) no-repeat left 50%;
-    color: #dd0221;
+div.btn-link input.submit {
+    border: none;
+    text-decoration: underline;
+    cursor: pointer;
 }
-div.add input {
-	background: url(../images/icon-add.gif) no-repeat left 4px;
-    color: #547c22;
-}
+/* div.btn-bold input.submit {
+    font-weight: bold;
+}*/
 div.rbuttons {
     position: absolute;
     right: 0;
@@ -773,10 +783,6 @@ p.progress-text {
 }
 .group-info li span {
 	margin: 0 2em 0 0;
-}
-.group-controls li {
-  font-size: .9em;
-  font-weight: bold;
 }
 
 

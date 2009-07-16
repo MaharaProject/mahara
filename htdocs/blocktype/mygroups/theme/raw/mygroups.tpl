@@ -1,5 +1,5 @@
 {if $USERGROUPS}
-<table id="usergroupstable">
+<table id="usergroupstable" class="fullwidth">
 {foreach from=$USERGROUPS item=item}
     <tr>
         <td class="r{cycle values=0,1}">

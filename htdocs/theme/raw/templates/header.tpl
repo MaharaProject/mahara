@@ -30,5 +30,5 @@
                             <li><a {if $item.selected}class="current-tab" {/if}href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>
 {/foreach}
                         </ul>
-                        <div class="in-page-page rel">
+                        <div class="subpage rel">
 {/if}
