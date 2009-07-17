@@ -40,13 +40,13 @@ function xmldb_blocktype_externalfeed_upgrade($oldversion=0) {
     if ($oldversion < 2008042101) {
         // We hit the 255 character limit for feed URLs
         if (is_postgres()) {
-            execute_sql('ALTER TABLE blocktype_externalfeed_data ALTER COLUMN url TYPE TEXT');
+            execute_sql('ALTER TABLE {blocktype_externalfeed_data} ALTER COLUMN url TYPE TEXT');
         }
         else if (is_mysql()) {
             // If 2 URLs > 255 chars have the same first 255 characters then mahara will error - this is a MySQL issue though, their unique key length limit is to blame
-            execute_sql('ALTER TABLE blocktype_externalfeed_data DROP KEY blocextedata_url_uix'); // We have to remove then add the constraint again else the change will make MySQL cry
-            execute_sql('ALTER TABLE blocktype_externalfeed_data MODIFY COLUMN "url" text');
-            execute_sql('ALTER TABLE blocktype_externalfeed_data add unique blocextedata_url_uix (url(255))');
+            execute_sql('ALTER TABLE {blocktype_externalfeed_data} DROP KEY {blocextedata_url_uix}'); // We have to remove then add the constraint again else the change will make MySQL cry
+            execute_sql('ALTER TABLE {blocktype_externalfeed_data} MODIFY COLUMN "url" text');
+            execute_sql('ALTER TABLE {blocktype_externalfeed_data} add unique {blocextedata_url_uix} (url(255))');
         }
     }
     return true;
