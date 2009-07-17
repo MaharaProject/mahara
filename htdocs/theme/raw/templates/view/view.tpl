@@ -7,7 +7,7 @@
 
 {if $can_edit}
 <div class="page-buttons">
-    <a class="btn" href="blocks.php?id={$viewid}&amp;new={$new}">{$streditviewbutton}</a>
+    <a class="btn-link" href="blocks.php?id={$viewid}&amp;new={$new}">{$streditviewbutton}</a>
 </div>
 {/if}
 
