@@ -34,25 +34,27 @@ $type = param_alpha('type');
 switch ($type) {
     case 'profileiconbyid':
     case 'profileicon':
-        $id = param_integer('id');
+        $id = param_integer('id', 0);
         $size = get_imagesize_parameters();
 
-        if ($type == 'profileicon') {
-            // Convert ID of user to the ID of a profileicon
-            $data = get_record_sql('
-                SELECT u.profileicon, f.filetype
-                FROM {usr} u INNER JOIN {artefact_file_files} f ON u.profileicon = f.artefact
-                WHERE u.id = ?', array($id));
-            if ($data) {
-                $id = $data->profileicon;
-                $mimetype = $data->filetype;
+        if ($id) {
+            if ($type == 'profileicon') {
+                // Convert ID of user to the ID of a profileicon
+                $data = get_record_sql('
+                    SELECT u.profileicon, f.filetype
+                    FROM {usr} u INNER JOIN {artefact_file_files} f ON u.profileicon = f.artefact
+                    WHERE u.id = ?', array($id));
+                if ($data) {
+                    $id = $data->profileicon;
+                    $mimetype = $data->filetype;
+                }
+                else {
+                    $id = null;
+                }
             }
             else {
-                $id = null;
+                $mimetype = get_field('artefact_file_files', 'filetype', 'artefact', $id);
             }
-        }
-        else {
-            $mimetype = get_field('artefact_file_files', 'filetype', 'artefact', $id);
         }
 
         if ($id) {

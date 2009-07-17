@@ -341,7 +341,7 @@ function log_build_backtrace($backtrace) {
  * @todo this function should go away
  */
 function die_info($message) {
-    $smarty = smarty();
+    $smarty = smarty(array(), array(), array(), array('sidebars' => false));
     $smarty->assign('message', $message);
     $smarty->assign('type', 'info');
     $smarty->display('message.tpl');
@@ -529,7 +529,7 @@ class MaharaException extends Exception {
         $outputmessage = trim($this->render_exception());
 
         if (function_exists('smarty') && !$this instanceof ConfigSanityException) {
-            $smarty = smarty();
+            $smarty = smarty(array(), array(), array(), array('sidebars' => false));
             $smarty->assign('title', $outputtitle);
             $smarty->assign('message', $outputmessage);
             $smarty->display('error.tpl');

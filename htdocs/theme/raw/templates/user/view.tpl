@@ -15,11 +15,11 @@
 {/if}
 {if $invitedlist}                            <div>{str tag=groupinvitesfrom section=group}{$invitedlist}</div>
 {/if}
-{if $inviteform}                            {$inviteform}
+{if $inviteform}                            <div class="btn-msg">{$inviteform}</div>
 {/if}
 {if $requestedlist}                            <div>{str tag=requestedmembershipin section=group}{$requestedlist}</div>
 {/if}
-                            {$addform}
+                            <div class="btn-add">{$addform}</div>
                             <div class="btn-bold btn-edit">{$togglepublic}</div>
                     </div>
 {if $relationship == 'pending'}

@@ -44,7 +44,7 @@ $view = $block->get_view();
 $owner = $view->get_owner_object();
 $owner->displayname = display_name($owner);
 
-$smarty = smarty();
+$smarty = smarty(array(), array(), array(), array('sidebars' => false));
 $smarty->assign('instanceid', $instanceid);
 $smarty->assign('owner', $owner);
 $smarty->assign('wholewall', true);

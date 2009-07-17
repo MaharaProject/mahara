@@ -29,14 +29,12 @@ define('MENUITEM', 'groups');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
+require_once(get_config('libroot') . 'group.php');
 
-$id = param_integer('id');
+define('GROUP', param_integer('id'));
+$group = group_current_group();
 
-if (!$group = get_record('group', 'id', $id, 'deleted', 0)) {
-    throw new GroupNotFoundException(get_string('groupnotfound', 'group', $id));
-}
-
-if (!$group->owner == $USER->get('id')) {
+if (group_user_access($group->id, $USER->get('id')) != 'admin') {
     throw new AccessDeniedException(get_string('notallowedtoeditinteraction', 'group'));
 }
 
@@ -50,7 +48,7 @@ $interactiontypes = array_flip(
 );
 
 if (!$interactions = get_records_select_array('interaction_instance', 
-    '"group" = ? AND deleted = ?', array($id, 0), 
+    '"group" = ? AND deleted = ?', array($group->id, 0),
     'plugin, ctime', 'id, plugin, title')) {
     $interactions = array();
 }
@@ -72,7 +70,7 @@ $smarty = smarty();
 $smarty->assign('group', $group);
 $smarty->assign('data', $interactiontypes);
 $smarty->assign('pluginnames', $names);
-$smarty->assign('heading', TITLE);
+$smarty->assign('subheading', hsc(TITLE));
 $smarty->display('group/interactions.tpl');
 
 ?>

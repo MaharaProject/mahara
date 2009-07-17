@@ -102,7 +102,7 @@ define('TITLE', $group->name . ' - ' . get_string('changerole', 'group'));
 
 $smarty = smarty();
 $smarty->assign('heading', $group->name);
-$smarty->assign('subtitle', get_string('changeroleofuseringroup', 'group', display_name($user), $group->name));
+$smarty->assign('subheading', get_string('changeroleofuseringroup', 'group', display_name($user), $group->name));
 $smarty->assign('changeform', $changeform);
 
 $smarty->display('group/changerole.tpl');

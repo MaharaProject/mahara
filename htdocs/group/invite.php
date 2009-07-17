@@ -84,7 +84,7 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
-$smarty->assign('heading', TITLE);
+$smarty->assign('subheading', hsc(TITLE));
 $smarty->assign('form', $form);
 $smarty->display('group/invite.tpl');
 

@@ -1,6 +1,5 @@
 {include file="header.tpl"}
 
-{include file="columnfullstart.tpl"}
                 <div class="searchform">
                     <h2>{str tag="search"}</h2>
                     <form method="post" onsubmit="dosearch(); return false;">
@@ -17,5 +16,4 @@
                         </tbody>
                     </table>
 				</div>
-{include file="columnfullend.tpl"}
 {include file="footer.tpl"}

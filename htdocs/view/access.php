@@ -343,10 +343,9 @@ function editaccess_submit(Pieform $form, $values) {
 
 $form = pieform($form);
 
-$smarty = smarty(array('tablerenderer'), array(), array('mahara' => array('From', 'To')));
+$smarty = smarty(array('tablerenderer'), array(), array('mahara' => array('From', 'To')), array('sidebars' => false));
 $smarty->assign('INLINEJAVASCRIPT', $js);
-$smarty->assign('pagetitle', TITLE);
-$smarty->assign('heading', TITLE);
+$smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->assign('form', $form);
 $smarty->display('view/access.tpl');
 

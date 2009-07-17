@@ -65,8 +65,8 @@ $columnsform = pieform(array(
     )
 ));
 
-$smarty = smarty();
-$smarty->assign('heading', TITLE);
+$smarty = smarty(array(), array(), array(), array('sidebars' => false));
+$smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->assign('form', $columnsform);
 $smarty->display('view/columns.tpl');
 

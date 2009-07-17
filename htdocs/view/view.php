@@ -134,6 +134,7 @@ $smarty = smarty(
     array(),
     array(
         'stylesheets' => array('style/views.css'),
+        'sidebars' => false,
     )
 );
 
@@ -167,7 +168,6 @@ if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
     }
 }
 
-$smarty->assign('SIDEBARS', false);
 $smarty->assign('ownername', $view->formatted_owner());
 $smarty->assign('streditviewbutton', ($new) ? get_string('backtocreatemyview', 'view') : get_string('editmyview', 'view'));
 $smarty->assign('viewdescription', $view->get('description'));

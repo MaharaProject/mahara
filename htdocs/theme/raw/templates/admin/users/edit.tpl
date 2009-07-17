@@ -1,13 +1,16 @@
 {include file="header.tpl"}
 
-{include file="columnfullstart.tpl"}
-<div id="edituser">
-    <div class="fr"><a href="{$WWWROOT}user/view.php?id={$user->id}"><img src="{$WWWROOT}thumb.php?type=profileiconbyid&amp;maxwidth=100&amp;maxheight=100&amp;id={$user->profileicon}" alt=""></a></div>
-    <h2><a href="{$WWWROOT}user/view.php?id={$user->id}">{$user|display_name|escape}</a></h2>
+<div class="fr center">
+    <div>
+        <a href="{$WWWROOT}user/view.php?id={$user->id}"><img src="{$WWWROOT}thumb.php?type=profileiconbyid&amp;maxwidth=100&amp;maxheight=100&amp;id={$user->profileicon}" alt=""></a><br>
+        <a href="{$WWWROOT}user/view.php?id={$user->id}">{$user|display_name|escape}</a>
+    </div>
     {if !empty($loginas)}
-      <span class="addicon fr"><a href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">{$loginas}</a></span>
+       <div><a href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">{$loginas}</a></div>
     {/if}
+</div>
 
+<div id="edituser">
     {if $suspended}
     <div class="message">
       <h4>{$suspendedby|escape}</h4>
@@ -50,6 +53,6 @@
     {$institutionform}
     {/if}
 </div>
-{include file="columnfullend.tpl"}
+
 {include file="footer.tpl"}
 

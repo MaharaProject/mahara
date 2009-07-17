@@ -227,8 +227,6 @@ td {
 /* Informational messages */
 #messages {
     padding: .5em 0;
-    font-size: larger;
-    font-weight: bold;
 }
 div.ok, div.error, div.info {
     padding: .4em .5em .4em 2.5em;
@@ -439,27 +437,29 @@ div.sideblock ul {
     padding: .2em .5em;
     text-decoration: none;
 }
-div.btn-add input, div.btn-edit input, div.btn-del input,
-a.btn-del, .btn-msg, .btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup {
+div.btn-del input.submit,
+div.btn-msg input.submit,
+div.btn-add input.submit,
+div.btn-edit input.submit,
+a.btn-del, a.btn-msg, a.btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup {
     padding-left: 1em;
     cursor: pointer;
     border: none;
 }
-a.btn-del, .btn-leavegroup, div.btn-del input {
+a.btn-del, .btn-leavegroup, div.btn-del input.submit {
     color: #ca0000;
     background: url(../images/icon-delete.gif) no-repeat left 50%;
 }
-div.btn-bold input {
+div.btn-bold input.submit {
     font-weight: bold;
 }
-.btn-msg {
+a.btn-msg, div.btn-msg input.submit {
 	background: url(../images/icon-mail.gif) no-repeat left 4px;
-	font-weight: bold;
 }
-.btn-req, div.btn-add input {
+a.btn-req, div.btn-add input.submit {
 	background: url(../images/icon-add.gif) no-repeat left 4px;
 }
-a.btn-edit, div.btn-edit input {
+a.btn-edit, div.btn-edit input.submit {
 	background: url(../images/icon-edit.gif) no-repeat left 4px;
 }
 .btn-pending {
@@ -475,8 +475,12 @@ input#myfriends_addfriend_add {
     margin: 0;
 }
 div.btn-link input.submit {
-    border: none;
-    text-decoration: underline;
+    border: 0;
+    background: transparent;
+    margin: 0;
+    padding: 0;
+    color: #00f;
+    display: inline;
     cursor: pointer;
 }
 /* div.btn-bold input.submit {

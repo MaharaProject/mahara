@@ -66,7 +66,7 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
-$smarty->assign('heading', TITLE);
+$smarty->assign('subheading', hsc(TITLE));
 $smarty->assign('message', $views ? get_string('groupconfirmdeletehasviews', 'group') : get_string('groupconfirmdelete', 'group'));
 $smarty->assign('form', $form);
 $smarty->display('group/delete.tpl');

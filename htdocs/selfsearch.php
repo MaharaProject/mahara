@@ -88,7 +88,7 @@ else {
     $javascript .= 'results.query = \'\';';
 }
 
-$smarty = smarty(array('tablerenderer'));
+$smarty = smarty(array('tablerenderer'), array(), array(), array('sidebars' => false));
 $smarty->assign('query', $query);
 $smarty->assign('artefacttype', $artefacttype);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);

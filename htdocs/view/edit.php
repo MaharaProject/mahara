@@ -200,8 +200,8 @@ function editview_submit(Pieform $form, $values) {
 
 }
 
-$smarty = smarty();
-$smarty->assign('heading', $heading);
+$smarty = smarty(array(), array(), array(), array('sidebars' => false));
+$smarty->assign('PAGEHEADING', hsc($heading));
 $smarty->assign('editview', $editview);
 $smarty->display('view/edit.tpl');
 

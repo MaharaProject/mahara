@@ -114,6 +114,7 @@ $view->process_changes($category, $new);
 
 $extraconfig = array(
     'stylesheets' => array('style/views.css'),
+    'sidebars'    => false,
 );
 
 $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
@@ -151,7 +152,6 @@ foreach (array_keys($_POST + $_GET) as $key) {
 }
 
 $smarty->assign('PAGEHEADING', hsc(TITLE));
-$smarty->assign('SIDEBARS', false);
 $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
 $smarty->assign('category', $category);
 $smarty->assign('new', $new);

@@ -413,7 +413,8 @@ EOF;
     }
 
     // ---------- sideblock stuff ----------
-    if (!defined('INSTALLER') && (!defined('MENUITEM') || substr(MENUITEM, 0, 5) != 'admin')) {
+    $sidebars = !isset($extraconfig['sidebars']) || $extraconfig['sidebars'] !== false;
+    if ($sidebars && !defined('INSTALLER') && (!defined('MENUITEM') || substr(MENUITEM, 0, 5) != 'admin')) {
         if (get_config('installed') && !defined('ADMIN') && !defined('INSTITUTIONALADMIN')) {
             $data = site_menu();
             if (!empty($data)) {
@@ -502,7 +503,7 @@ EOF;
         $smarty->assign('userauthinstance', $SESSION->get('authinstance'));
         $smarty->assign('MNETUSER', $SESSION->get('mnetuser'));
         $smarty->assign('SIDEBLOCKS', $SIDEBLOCKS);
-        $smarty->assign('SIDEBARS', true);
+        $smarty->assign('SIDEBARS', $sidebars);
 
         if ($USER->get('parentuser')) {
             $smarty->assign('USERMASQUERADING', true);
@@ -971,6 +972,9 @@ function param_integer($name) {
 
     if (preg_match('/^\d+$/',$value)) {
         return (int)$value;
+    }
+    else if ($value == '' && isset($args[1])) {
+        return $args[1];
     }
 
     throw new ParameterException("The '$name' parameter is not an integer");

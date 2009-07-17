@@ -97,7 +97,9 @@ $string['validationemailwillbesent'] = 'a validation email will be sent when you
 $string['validationemailsent'] = 'a validation email has been sent';
 $string['emailactivation'] = 'Email Activation';
 $string['emailactivationsucceeded'] = 'Email Activation Successful';
+$string['emailalreadyactivated'] = 'Email already activiated';
 $string['emailactivationfailed'] = 'Email Activation Failed';
+$string['verificationlinkexpired'] = 'Verification link expired';
 $string['invalidemailaddress'] = 'Invalid email address';
 $string['unvalidatedemailalreadytaken'] = 'The e-mail address you are trying to validate is already taken';
 

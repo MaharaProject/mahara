@@ -39,37 +39,49 @@ $key   = param_variable('key');
 
 $row = get_record('artefact_internal_profile_email', 'email', $email, 'key', $key, null,null,'owner,artefact,email,verified,' . db_format_tsfield('expiry'));
 
-if ($row && $row->expiry > time()) {
-    if ($row->artefact) {
-        $artefact = new ArtefactTypeEmail($row->artefact);
+if ($row) {
+    if ($row->expiry > time()) {
+        if ($row->artefact) {
+            $artefact = new ArtefactTypeEmail($row->artefact);
+        }
+        else {
+            $artefact = new ArtefactTypeEmail();
+        }
+
+        $artefact->set('owner', $row->owner);
+        $artefact->set('title', $row->email);
+        $artefact->commit();
+
+        update_record(
+            'artefact_internal_profile_email',
+            (object)array(
+                'verified' => 1,
+                'key'      => null,
+                'expiry'   => null,
+                'artefact' => $artefact->get('id'),
+            ),
+            (object)array(
+                'owner' => $row->owner,
+                'email' => $row->email,
+            )
+        );
+        $SESSION->add_ok_msg(get_string('emailactivationsucceeded', 'artefact.internal'));
+        redirect(get_config('wwwroot') . 'artefact/internal/index.php?fs=contact');
     }
     else {
-        $artefact = new ArtefactTypeEmail();
+        $message = get_string('verificationlinkexpired', 'artefact.internal');
     }
-
-    $artefact->set('owner', $row->owner);
-    $artefact->set('title', $row->email);
-    $artefact->commit();
-
-    update_record(
-        'artefact_internal_profile_email',
-        (object)array(
-            'verified' => 1,
-            'key'      => null,
-            'expiry'   => null,
-            'artefact' => $artefact->get('id'),
-        ),
-        (object)array(
-            'owner' => $row->owner,
-            'email' => $row->email,
-        )
-    );
-    $SESSION->add_ok_msg(get_string('emailactivationsucceeded', 'artefact.internal'));
-    redirect(get_config('wwwroot') . 'artefact/internal/index.php?fs=contact');
+}
+else if (get_record('artefact_internal_profile_email', 'email', $email, 'verified', 1)) {
+    $message = get_string('emailalreadyactivated', 'artefact.internal');
+}
+else {
+    $message = get_string('emailactivationfailed', 'artefact.internal');
 }
 
 $smarty = smarty();
-$smarty->assign('message', get_string('emailactivationfailed', 'artefact.internal'));
+$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('message', $message);
 $smarty->display('artefact:internal:validate.tpl');
 
 ?>

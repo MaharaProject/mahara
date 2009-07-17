@@ -104,7 +104,8 @@ $smarty = smarty(
     array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
     array(),
     array(
-        'stylesheets' => array('style/views.css')
+        'stylesheets' => array('style/views.css'),
+        'sidebars'    => false,
     )
 );
 

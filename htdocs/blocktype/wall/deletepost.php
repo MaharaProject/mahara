@@ -40,7 +40,8 @@ if (!PluginBlocktypeWall::can_delete_wallpost($wallpost->from, $view->get('owner
     throw new AccessDeniedException();
 }
 
-$goto = ($return == 'wall')
+$goto = get_config('wwwroot');
+$goto .= ($return == 'wall')
     ? '/blocktype/wall/wall.php?id=' . $instance->get('id')
     : '/user/view.php?id=' . $view->get('owner');
 
@@ -71,6 +72,7 @@ function deletepost_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('deleteform', $form);
+$smarty->assign('PAGEHEADING', hsc(get_string('deletepost', 'blocktype.wall')));
 $smarty->display('blocktype:wall:deletepost.tpl');
 
 ?>

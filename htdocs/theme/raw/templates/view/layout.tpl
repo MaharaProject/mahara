@@ -1,9 +1,5 @@
 {include file="header.tpl"}
 
-{include file="columnfullstart.tpl"}
-
-        <h2>{str tag='changemyviewlayout' section='view'}</h2>
-
         <p>{str tag='viewlayoutpagedescription' section='view'}</p>
 
         {$form_start_tag}
@@ -27,7 +23,5 @@
                 <input type="submit" class="submit" name="submit" value="{str tag='changeviewlayout' section='view'}">
             </div>
         </form>
-
-{include file="columnfullend.tpl"}
 
 {include file="footer.tpl"}

@@ -63,7 +63,7 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
-$smarty->assign('heading', TITLE);
+$smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->assign('form', $form);
 $smarty->assign('user', $user);
 $smarty->display('user/requestfriendship.tpl');
