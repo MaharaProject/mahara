@@ -179,14 +179,6 @@ pre, tt {
 
 
 /* Navigation shared rules */
-#main-nav ul {
-    margin: 0;
-    padding: 0;
-}
-#sub-nav ul {
-    margin: 0 3.5em 0;
-    padding: 0;
-}
 #main-nav li, #sub-nav li {
     display: inline;
 }
@@ -201,16 +193,20 @@ pre, tt {
     clear: left;
     font-size: 1.2em;
     font-weight: bold;
-    height: 1.6em;
     white-space: nowrap;
 }
 @media screen and (-webkit-min-device-pixel-ratio:0) { /* todo: is this needed? should be in safari-specific stylesheet anyway */
     #main-nav ul { padding: 5px 0 6px 0; }
 }
-#main-nav li a {
-    padding: .4em 1em;
+#main-nav ul {
+    margin: 0;
+    padding: 0;
 }
-#main-nav li.selected a {
+#main-nav li {
+    padding: 0.4em 1em;
+    line-height: 1.6em;
+}
+#main-nav li.selected {
     background-color: #ddd;
 }
 
@@ -219,6 +215,9 @@ pre, tt {
     background-color: #ddd;
     padding: .25em;
     white-space: nowrap;
+}
+#sub-nav ul {
+    margin: 0 3.5em 0;
 }
 #sub-nav li a {
     padding: .25em 1em;
@@ -376,6 +375,10 @@ div.sideblock ul {
     font-size: .85em;
     line-height: 1.3em;
     padding-left: .5em;
+}
+#login_login_username_container input,
+#login_login_password_container input {
+    width: 180px;
 }
 
 /* Profile sideblock */

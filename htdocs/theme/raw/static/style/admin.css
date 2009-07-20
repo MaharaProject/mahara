@@ -163,11 +163,10 @@ table.tablerenderer th.desc {
     border-width: 1px 0 0 0;
 	height: 1px;
 }
-#edituser div#delete {
+#suspenddelete div#delete {
 	background-color: #fef1f1;
 	padding: 1em;
 	width: 33%;
-    float: right;
 }
 
 

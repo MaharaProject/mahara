@@ -32,17 +32,17 @@
     <hr>
     <h3 id="suspend">{str tag="suspenddeleteuser" section=admin}</h3>
     <p>{str tag="suspenddeleteuserdescription" section=admin}</p>
+    <div id="suspenddelete" class="rel">
+        <h4>{str tag="suspenduser" section=admin}</h4>
+        {$suspendform}
 		{if $USER->get('admin')}
-		<div id="delete">
-			<h4>{str tag=deleteuser section=admin}</h4>
-			<p>{str tag=deleteusernote section=admin}</p>
-			{$deleteform}
-		</div>
-		{/if}
-    	<div id="suspenddelete">
-        	<h4>{str tag="suspenduser" section=admin}</h4>
-                {$suspendform}
+        <div id="delete" class="rbuttons">
+            <h4>{str tag=deleteuser section=admin}</h4>
+            <p>{str tag=deleteusernote section=admin}</p>
+            {$deleteform}
         </div>
+		{/if}
+    </div>
     {/if}
 	<div class="cb"></div>
 
