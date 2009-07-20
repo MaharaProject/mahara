@@ -218,17 +218,6 @@ table.tablerenderer th.desc {
 	color: #ca0000;
 	font-size: .9em;
 }
-#institution table table tr {
-	float: left;
-	width: 30%;
-	margin-right: 2em;
-}
-#institution table table th {
-	float: left;
-}
-#institution table table td {
-	float: right;
-}
 
 
 /* MANAGE INSTITUTIONS > INSTITUTION MEMBERS */
