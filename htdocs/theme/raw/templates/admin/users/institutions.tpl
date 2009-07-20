@@ -39,13 +39,36 @@
                     <th></th>
 				</tr>
 				</thead>
-				{foreach from=$institutions item=institution}
+				<tfoot>
+				<tr>
+					<td>
+                    {if $siteadmin}
+                        <form action="" method="post">
+                            <input type="submit" class="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
+                        </form>
+                    {/if}
+                    </td>
+                    <td colspan="5" class="institutionedituserbuttons right">{if count($institutions) > 1}
+                        <form action="{$WWWROOT}admin/users/institutionusers.php" method="post">
+                            <input type="submit" class="submit" name="editmembers" value="{str tag="editmembers" section="admin"}">
+                        </form>
+                        <form action="{$WWWROOT}admin/users/institutionstaff.php" method="post">
+                            <input type="submit" class="submit" name="editstaff" value="{str tag="editstaff" section="admin"}">
+                        </form>
+                        <form action="{$WWWROOT}admin/users/institutionadmins.php" method="post">
+                            <input type="submit" class="submit" name="editadmins" value="{str tag="editadmins" section="admin"}">
+                        </form>
+                    {/if}</td>
+                    <td></td>
+                </tr>
+				</tfoot>
 				<tbody>
+				{foreach from=$institutions item=institution}
 				<tr class="{cycle values=r1,r0}">
 					<td>{$institution->displayname|escape}</td>
 					<td>
 					  {if $institution->name != 'mahara'}
-						<a href="{$WWWROOT}admin/users/institutionusers.php?usertype=members&institution={$institution->name}">{$institution->members}</a>
+						<a href="{$WWWROOT}admin/users/institutionusers.php?usertype=members&amp;institution={$institution->name}">{$institution->members}</a>
 					  {else}
 						<a href="{$WWWROOT}admin/users/search.php?institution=mahara">{$institution->members}</a>
 					  {/if}
@@ -56,35 +79,14 @@
 					<td>
 						<form action="" method="post">
 							<input type="hidden" name="i" value="{$institution->name}">
-							<input type="submit" class="submit btn-edit s" name="edit" value="{str tag="edit"}" id="admininstitution_edit">
-							{if $siteadmin && !$institution->members && $institution->name != 'mahara'}<input type="submit" class="submit btn-del s" name="delete" value="{str tag="delete"}" id="admininstitution_delete">{/if}
+							<input type="submit" class="submit btn-edit s" name="edit" value="{str tag="edit"}">
+							{if $siteadmin && !$institution->members && $institution->name != 'mahara'}<input type="submit" class="submit btn-del s" name="delete" value="{str tag="delete"}">{/if}
 						</form>
 					</td>
                       <td class="center">{if $institution->suspended}<span class="suspended">{str tag="suspendedinstitution" section=admin}</span>{/if}</td>
 				</tr>
 				{/foreach}
-				<tr>
 				</tbody>
-				<tfoot>
-					<td>
-{if $siteadmin}
-            <form action="" method="post">
-              <input type="submit" class="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
-            </form>
-{/if}</td>
-					<td colspan="5" class="institutionedituserbuttons right">{if count($institutions) > 1}
-    <form action="{$WWWROOT}admin/users/institutionusers.php" method="post">
-      <input type="submit" class="submit" name="editmembers" value="{str tag="editmembers" section="admin"}">
-    </form>
-    <form action="{$WWWROOT}admin/users/institutionstaff.php" method="post">
-      <input type="submit" class="submit" name="editstaff" value="{str tag="editstaff" section="admin"}">
-    </form>
-    <form action="{$WWWROOT}admin/users/institutionadmins.php" method="post">
-      <input type="submit" class="submit" name="editadmins" value="{str tag="editadmins" section="admin"}">
-    </form>
-{/if}</td>
-    <td></td>
-				</tfoot>
 			</table>
 
 			{/if}
