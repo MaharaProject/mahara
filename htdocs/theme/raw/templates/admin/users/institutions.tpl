@@ -56,8 +56,8 @@
 					<td>
 						<form action="" method="post">
 							<input type="hidden" name="i" value="{$institution->name}">
-							<input type="submit" class="submit" name="edit" value="{str tag="edit"}" id="admininstitution_edit">
-							{if $siteadmin && !$institution->members && $institution->name != 'mahara'}<input type="submit" class="cancel" name="delete" value="{str tag="delete"}" id="admininstitution_delete">{/if}
+							<input type="submit" class="submit btn-edit s" name="edit" value="{str tag="edit"}" id="admininstitution_edit">
+							{if $siteadmin && !$institution->members && $institution->name != 'mahara'}<input type="submit" class="submit btn-del s" name="delete" value="{str tag="delete"}" id="admininstitution_delete">{/if}
 						</form>
 					</td>
                       <td class="center">{if $institution->suspended}<span class="suspended">{str tag="suspendedinstitution" section=admin}</span>{/if}</td>
