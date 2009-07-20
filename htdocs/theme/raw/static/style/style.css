@@ -105,6 +105,7 @@ html>/**/body #overlay {
 }
 table {
     border-spacing: 0;
+    border-collapse: collapse;
 }
 th {
     padding: .25em 0;
@@ -293,7 +294,7 @@ ul.in-page-tabs {
 }
 ul.in-page-tabs li {
   display: inline;
-  margin: 0 0 0 .5em;
+  margin: 0 .25em;
 }
 ul.in-page-tabs li a.current-tab {
   color: #333;
@@ -302,12 +303,12 @@ ul.in-page-tabs li a.current-tab {
   background: #ddd;
 }
 ul.in-page-tabs li a {
-  padding: .4em 1em .3em 1em;
+  padding: .3em 1em;
 }
 .subpage {
-	margin: 0 0 1em 0;
     border: 1px solid #d1d1d1;
 	padding: 1.5em;
+    overflow: auto;
 }
 .subpage p:first-child {
 	margin: 0;
