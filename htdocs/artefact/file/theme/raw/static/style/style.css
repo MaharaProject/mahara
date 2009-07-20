@@ -84,3 +84,8 @@ form#files .filelist td {
 	font-size: 11px;
 	padding: 3px 0;
 }
+
+.filelist .disabled {
+	color: #C3C3C3;
+}
+

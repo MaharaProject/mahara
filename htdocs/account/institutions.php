@@ -41,6 +41,7 @@ if (!empty($member)) {
     foreach ($member as $i) {
         $elements[] = array(
             'type' => 'submit',
+            'class' => 'btn-del',
             'name' => '_leave_' . $i->institution,
             'confirm' => get_string('reallyleaveinstitution'),
             'title' => get_string('youareamemberof', 'mahara', 

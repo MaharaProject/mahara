@@ -39,6 +39,7 @@ $wwwroot = get_config('wwwroot');
 $enc_delete = json_encode(get_string('delete', 'artefact.blog'));
 $enc_confirmdelete = json_encode(get_string('deleteblog?', 'artefact.blog'));
 $enc_addpost = json_encode(get_string('addpost', 'artefact.blog'));
+$enc_settings = json_encode(get_string('settings', 'artefact.blog'));
 
 // This JavaScript creates a table to display the blog entries.
 $js = <<<EOF
@@ -59,10 +60,11 @@ var bloglist = new TableRenderer(
             return td;
         },
         function (r) {
-            var deleteButton = BUTTON(null, {$enc_delete});
+            var deleteButton = A({'class': 'btn-del', 'href': ''}, {$enc_delete});
             connect(deleteButton, 'onclick', function (e) {
+                e.stop();
                 if (!confirm({$enc_confirmdelete})) {
-                    return;
+                    return false;
                 }
                 sendjsonrequest(
                     'index.json.php',
@@ -75,11 +77,14 @@ var bloglist = new TableRenderer(
                         bloglist.doupdate();
                     }
                 );
+                return false;
             });
-            return TD(null, deleteButton);
-        },
-        function(r) {
-            return TD(null, DIV({'class':'addicon fr'}, A({'href':'{$wwwroot}artefact/blog/post.php?blog=' + r.id}, {$enc_addpost})));
+
+            return TD(null, [
+                deleteButton,
+                DIV(null, A({'class': 'btn-edit', 'href':'{$wwwroot}artefact/blog/settings/?id=' + r.id}, {$enc_settings})),
+                A({'class': 'btn-add', 'href':'{$wwwroot}artefact/blog/post.php?blog=' + r.id}, {$enc_addpost})
+            ]);
         }
     ]
 );

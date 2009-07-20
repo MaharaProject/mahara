@@ -23,6 +23,7 @@ img {
 }
 label {
     font-weight: bold;
+    margin: 0 .5em 0 0;
 }
 .main-column h1, .main-column h2, .main-column h3, .main-column h4, .main-column h5, .main-column h6 {
     margin: .75em 0 .5em;
@@ -124,6 +125,20 @@ td {
 .nojs-hidden-inline, .nojs-hidden-block, .nojs-hidden-table {
     display: none;
 }
+.s {
+    font-size: .9em;
+    font-weight: normal;
+}
+pre, tt {
+	font-size: 1.2em;
+}
+.main-column ul {
+    margin: .5em 0 1em 0;
+	padding: 0;
+}
+.main-column ul li {
+	margin: 0 0 .25em 1.5em;
+}
 
 /* Top of page elements */
 .sitemessage {
@@ -164,8 +179,12 @@ td {
 
 
 /* Navigation shared rules */
-#main-nav ul, #sub-nav ul {
+#main-nav ul {
     margin: 0;
+    padding: 0;
+}
+#sub-nav ul {
+    margin: 0 3.5em 0;
     padding: 0;
 }
 #main-nav li, #sub-nav li {
@@ -304,6 +323,10 @@ ul.in-page-tabs li a {
 	font-weight: normal;
 	font-size: .9em;
 }
+.pieform td.description {
+	padding-top: 0 !important;
+    font-size: .9em;
+}
 div.grippie {
 	border-color: #d1d1d1;
     border-style: solid;
@@ -312,9 +335,6 @@ div.grippie {
     cursor: s-resize;
     height: 14px;
 }
-/* input.submit {
-    font-weight: bold;
-}*/
 .errmsg {
     color: #cc0000;
     font-size: .9em;
@@ -322,6 +342,9 @@ div.grippie {
 legend {
 	font-weight: bold;
 	font-size: 1.3em;
+}
+select {
+	margin-right: .5em;
 }
 
 /* Left/right columns */
@@ -382,6 +405,10 @@ div.sideblock ul {
     text-align: center;
     font-weight: bold;
 }
+li#pendingfriends a {
+	padding-left: 1em;
+	background: url(../images/icon-user.gif) no-repeat 2px 4px;
+}
 
 /* Online users sideblock */
 #sb-onlineusers ul {
@@ -403,6 +430,62 @@ div.sideblock ul {
     font-style: italic;
 }
 
+/* Side Quota Bar */
+#quota_message {
+    text-align: center;
+    margin: 0 0 1em 0;
+	font-size: 1em;
+    width: 210px;
+}
+#quota_used {
+	font-weight: bold;
+}
+#quota_total {
+	font-weight: bold;
+}
+#quota_fill {
+    margin: 0 5px;
+    height: 28px;
+    background-image: url(../images/quota_bar_highlight.gif);
+    position: absolute;
+}
+#quota_bar,
+#quota_bar_100 {
+    background: url(../images/quota_bar_bg.gif) no-repeat;
+    height: 28px;
+    width: 210px;
+	line-height: 2.5em;
+    text-align: center;
+    margin: 0;
+}
+#quota_bar_100 {
+    background: url(../images/quota_bar_full.gif) no-repeat;
+}
+#quota_percentage {
+    text-align: center;
+    position: relative;
+    z-index: 10;
+    color: #ffffff;
+	font-weight: bold;
+}
+
+/* Friends control sideblock */
+div.sideblock #friendscontrol label {
+	line-height: 1.8em;
+	vertical-align: top;
+}
+
+/* AJAX LOGIN */
+#ajax-login-form {
+    border: 5px solid #ddd;
+    background-color: #fff;
+    position: absolute;
+    top: 150px;
+    left: 20%;
+    width: 250px;
+    z-index: 1000;
+    text-align: left;
+}
 
 /* Help popups & icons */
 .contextualHelp {
@@ -441,7 +524,7 @@ div.btn-del input.submit,
 div.btn-msg input.submit,
 div.btn-add input.submit,
 div.btn-edit input.submit,
-a.btn-del, a.btn-msg, a.btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup {
+a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup {
     padding-left: 1em;
     cursor: pointer;
     border: none;
@@ -456,7 +539,7 @@ div.btn-bold input.submit {
 a.btn-msg, div.btn-msg input.submit {
 	background: url(../images/icon-mail.gif) no-repeat left 4px;
 }
-a.btn-req, div.btn-add input.submit {
+a.btn-add, a.btn-req, div.btn-add input.submit {
 	background: url(../images/icon-add.gif) no-repeat left 4px;
 }
 a.btn-edit, div.btn-edit input.submit {
@@ -483,9 +566,6 @@ div.btn-link input.submit {
     display: inline;
     cursor: pointer;
 }
-/* div.btn-bold input.submit {
-    font-weight: bold;
-}*/
 div.rbuttons {
     position: absolute;
     right: 0;
@@ -562,12 +642,6 @@ fieldset legend a:hover {
 fieldset.collapsed legend a {
     background: url(../images/icon_fieldset_left.gif) 2px center no-repeat;
 }
-/* fieldset.collapsed .mceEditor {
-	display: none;
-}
-fieldset.collapsed .mceEditor td {
-	border: 0;
-}*/
 
 /* Footer */
 #footer-wrap {
@@ -620,7 +694,6 @@ fieldset.collapsed .mceEditor td {
 /* My Groups */
 ul.groupuserstatus {
 	margin: .5em 1em;
-	/*float: right;*/
 	width: 200px;
     position: absolute;
     top: 0;
@@ -774,734 +847,7 @@ p.progress-text {
   margin-top: 1em;
 }
 
-/* Group - about */
-.group-info {
-    list-style: none;
-	background-color: #eee;
-	padding: 1em;
-	border: 10px solid #ddd;
-	margin: 0 0 1em 0;
-}
-.group-info li {
-	margin: 0;
-}
-.group-info li span {
-	margin: 0 2em 0 0;
-}
-
-
-/* Group members */
-.listing.twocolumn td {
-	width: 50%;
-	border: 4px solid #FFF;
-}
-.listing.twocolumn td img {
-    margin-right: .5em;
-}
-.listing.twocolumn form input {
-    border: none;
-	font-weight: normal;
-	font-size: .9em;
-    line-height: .9em;
-}
-
-/*
-
-#staffusers table,
-#adminusers table,
-#institutionusers table,
-#searchresults,
-.fullwidth {
-    width: 100%;
-    * width: 98%;
-}
-.s {
-    font-size: .9em;
-    font-weight: normal;
-}
-.description,
-.postdetails {
-    font-size: .9em;
-    padding-bottom: .5em;
-}
-td.description {
-	padding-top: 0 !important;
-    font-size: .9em;
-}
-acronym {
-    cursor: help;
-}
-pre { 
-	font-size: 1.2em;
-	margin: 0 1.5em 1em 1.5em;
-}
-tt {
-	font-size: 1.2em;
-}
-
-
-/*********************** FORM ELEMENTS ********************************/
-    /*
-form,
-form#login,
-#resumewrap form,
-#myviewstable .viewitem form,
-form#edituser_delete,
-#forumslist form,
-#userview form {
-	margin: 0;
-}
-form.pieform {
-	margin: 1em 0;
-}
-select {
-	margin-right: .5em;
-}
-
-/* Text fields and such */
-    /*
-input.radio, 
-input.checkbox,
-input[type=radio], 
-input[type=checkbox] {
-    border: 0;
-    padding: 0;
-}
-
-table.mceEditor {
-	margin: 0 !important;
-}
-.mceToolbarTop {
-	padding: .25em;
-}
-.mceContentBody {
-	padding: .5em 1em !important;
-}
-/* td for grippie to work 
-.maincontent #profileform #profileform_address_container td,
-.maincontent #contactus #contactus_message_container td {
-    padding: 0 0 0 10px;
-    margin: 0;
-}*/
-
-
-/******************** LABEL *************************/
-/*
-label,
-.required .searchtd label {
-    font-weight: bold;
-    padding: 0;
-    margin: 0 .5em 0 0;
-}
-td label,
-th label {
-    margin: 0;
-}
-
-
-
-/******************** BUTTONS **********************/
-/* Default light buttons to the big ones */
-    /*
-input.submit, 
-input.button, 
-button,
-#btn-logout,
-.addicon a,
-.forumaddicon a,
-#editview_back,
-#editview_submit,
-#editaccess_back,
-#editaccess_submit,
-.btn-editdk,
-.upgradeicon a  {
-   /* background-color: #92b328;
-	border-color: #d5ed8a #496000 #496000 #d5ed8a;
-	border-style: solid;
-	border-width: 1px;
-    color: #FFF;*/
-/*
-    cursor: pointer;
-	font-size: .9em;
-    padding: .2em .5em;
-}
-/* Default dark buttons to the big ones */
-    /*
-input.cancel,
-input.cancelbackcreate,
-button.cancel,
-#btn-settings,
-.viewicon a,
-.btn-deletedk,
-#browsebutton,
-.settingsicon a {
-   /*background-color: #7d9728;
-	border-color: #bdda5e #4e6307 #4e6307 #bdda5e;
-	border-style: solid;
-	border-width: 1px;
-    color: #FFF;*/
-/*
-    cursor: pointer;
-	font-size: .9em;
-    padding: .2em .5em;
-}
-/* Ones inside tables should be smaller... */
-    /*
-#menuitemlist input.button,
-.viewitem input {
-    padding: .1em .3em;
-}
-/* funny hover underlines */
-    /*
-#btn-logout:hover,
-.addicon a:hover,
-#btn-settings:hover,
-.viewicon a:hover,
-.btn-editdk:hover,
-.btn-deletedk:hover,
-.settingsicon a:hover,
-.upgradeicon a:hover {
-	text-decoration: none;
-}
-/***** DELETE RED BUTTON ********/
-    /*
-#edituser_delete_submit {
-    /*background-color: #ca0000;
-	border-color: #D9DFEA #b2b2b2 #b2b2b2 #D9DFEA;
-	border-style: solid;
-	border-width: 1px;
-    color: #FFF;*/
-/*
-    margin: 0 .25em;
-    cursor: pointer;
-	font-size: .9em;
-    padding: .2em .5em;
-}
-
-/***** ACCESS ICON LINKS ******/
-    /*
-#togglepublic_submit {
-	background: url(../images/icon-access.gif) no-repeat left 4px;
-    padding-left: 1em;
-    font-weight: bold;
-	border: 0;
-}
-/****** ADD ICON LINKS ******/
-    /*
-.btn-request,
-#joinrequest {
-	background: url(../images/icon-add.gif) no-repeat left 4px;
-	padding-left: 1em;
-}
-#potentialpresetitems button,
-#viewacl_lhs #results .button {
-}
-#userview #addmember_submit,
-#btn-add {
-	border: 0;
-	background: url(../images/icon-add.gif) no-repeat left 6px;
-    padding-left: 1em;
-    font-weight: bold;
-}
-input#addfriend_add,
-input#myfriends_addfriend_add {
-	background: transparent url(../images/icon-add.gif) no-repeat left;
-	border: 0;
-    margin: 0;
-}
-#btn-request {
-	background: url(../images/icon-add.gif) no-repeat left 3px;
-	padding-left: 1em;
-	font-weight: bold;
-}
-/***** DELETE ICON LINKS ******/
-    /*
-#btn-deletethisview {
-	font-size: .85em;
-	color: #ca0000;
-	padding-left: 1em;
-	background: url(../images/icon-delete.gif) no-repeat left 6px;
-}
-#btn-delete,
-#btn-leavegroup {
-	padding-left: 1em;
-	background: url(../images/icon-delete.gif) no-repeat left 3px;
-	font-weight: bold;
-}
-#accesslistitems .removebutton button {
-	border: none;
-	color: #ca0000;
-	background: url(../images/icon-delete.gif) no-repeat left 7px;
-	padding: .25em 0 0 .6em;
-	font-size: .85em;
-	font-weight: bold;
-}
-/****** DELETE FORUM ICON LINKS ********/
-    /*
-input.delete {
-	background: url(../images/icon-delete.gif) no-repeat left 7px;
-	padding-left: .7em;
-	border: none;
-	font-weight: bold;
-	font-size: .85em;
-	margin-left: 1em;
-}
-#btn-denyrequest {
-	background: url(../images/icon-delete.gif) no-repeat left 3px;
-	padding-left: 1em;
-	border: none;
-	font-weight: bold;
-}
-/***** EDIT ICON LINKS ******/
-    /*
-#btn-edit {
-	background: url(../images/icon-edit.gif) no-repeat left 4px;
-	border: none;
-	padding-left: 1em;
-	font-weight: bold;
-}
-input.edit {
-	background: url(../images/icon-edit.gif) no-repeat left 7px;
-	border: none;
-	padding-left: .7em;
-	font-weight: bold;
-	font-size: .85em;
-}
-/****** MAIL ICON LINKS *********/
-    /*
-#btn-sendmessage {
-	background: url(../images/icon-mail.gif) no-repeat left 4px;
-	padding-left: 1em;
-	font-weight: bold;
-}
-#userview .user-icon input#invite_submit {
-	background: transparent url(../images/icon-mail.gif) no-repeat left;
-	border: 0;
-}
-#unreadmessages a {
-    background: url(../images/email.gif) no-repeat;
-	padding-left: 1em;
-}
-/* TODO these may also belong to forum */
-/********* PENDING ICON LINKS *******/
-    /*
-#btn-pending {
-	padding-left: 1.2em;
-	background: url(../images/icon-pending.gif) no-repeat left 3px;
-}
-/***** REPLY ICON LINKS ******/
-    /*
-#btn-reply {
-	padding-left: 12px;
-	background: url(../images/icon-reply.gif) no-repeat left 4px;
-	font-weight: bold;
-}
-/********* REQUEST ICON LINKS *******/
-    /*
-#btn-requests {
-	border: 0;
-	background: url(../images/icon-add.gif) no-repeat left 3px;
-    padding-left: 1em;
-    font-weight: bold;
-}
-/****** SEARCH BUTTONS *********/
-    /*
-#users_search_btn,
-.query-button,
-#query-button,
-#moderator_search_btn,
-#search_submit,
-#search_search,
-#selfsearch button,
-#dosearch {
-}
-/****** SUBSCRIBE ICON LINKS ********/
-    /*
-#forumslist form tr.submit td input.submit {
-	background: url(../images/icon-subscribe.gif) no-repeat left 5px;
-	padding-left: .8em;
-	border: none;
-	font-weight: bold;
-	font-size: .87em;
-}
-/********* USER ICON LINKS **********/
-    /*
-li#pendingfriends a {
-	padding-left: 1em;
-	background: url(../images/icon-user.gif) no-repeat 2px 4px;
-}
-
-
-.sitemessage {
-    background-color: #f99;
-    font-weight: bold;
-    padding: .5em;
-}
-.sitemessage img {
-    float: left;
-    margin-top: -1px;
-    padding-right: .5em;
-}
-.sitemessage a,
-.sitemessage a:link {
-    color: #00f;
-    text-decoration: underline;
-}
-
-
-#uploadformmessage,
-#createfolderformmessage,
-.error {
-    color: #cc0000;
-}
-input.error, 
-select.error {
-    border-color: #cc0000;
-}
-.errmsg {
-    color: #cc0000;
-    font-size: .9em;
-}
-.error .filebrowser {
-    color: #333;
-}
-.disabled {
-	color: #C3C3C3;
-}
-
-.maincontent ul {
-	margin: .5em 0 1em 0;
-	padding: 0;
-}
-.maincontent ul li {
-	margin: 0 0 .25em 1.5em;
-}
-
-
-span.addicon {
-    display: block;
-    margin-top: -30px;
-    float: right;
-}
-div.addicon {
-    display: block;
-	margin: 1em 0;
-}
-div.forumaddicon {
-	display: block;
-	margin: 0;
-}
-.addicon form,
-.addicon form div {
-  display: inline;
-}
-
-
-/* CALENDAR */
-    /*
-a.pieform-calendar-toggle {
-    border: 0 !important;
-}
-
-/* PAGINATION */
-    /*
-div.pagination  {
-	margin: 1em 0;
-	font-size: .9em;
-	text-align: center;
-}
-.pagination a {
-    border: 1px solid #d1d1d1;
-    padding: .5em;
-    text-decoration: none;
-    margin: 0 .25em;
-} 
-.pagination .disabled {
-    border: 1px solid #d1d1d1;
-	background-color: #EBEBEB;
-    padding: .5em;
-    text-decoration: none;
-    margin: 0 .25em;
-}
-.pagination .selected {
-    font-weight: bold;
-    padding: .5em;
-    margin: 0 .25em;
-    border: 1px solid #d1d1d1;
-}
-.pagination .results {
-    text-align: center;
-    color: #838383;
-    margin: 1em;
-}
-
-
-
-/* AJAX LOGIN */
-    /*
-#ajax-login-form {
-    border: 5px solid #ddd;
-    background-color: #fff;
-    position: absolute;
-    top: 150px;
-    left: 20%;
-    width: 250px;
-    z-index: 1000;
-    text-align: left;
-}
-#overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.5;
-    background-color: #808080;
-    filter: alpha(opacity=50);
-}
-/** all browsers except ie7 hack to make it at least partially work */
-    /*
-html>/**//*body #overlay {
-    z-index: 1;
-}
-
-
-
-/* CONTENT LAYOUT */
-    /*
-.maincontent.group {
-    padding: 1em 1.5em 1em 2em;
-}
-
-
-
-
-
-/**************** RIGHT SIDEBAR START *********/
-    /*
-div.sidebar ul {
-	margin: 0 0 1em 0;
-	padding: 0 0 0 1.5em;
-	font-weight: normal;
-}
-div.sidebar ul li {
-	margin: 0 0 .5em 0;
-}
-div.sidebar ul a {
-	font-weight: bold;
-}
-div.sidebar ul ul {
-	margin: 0;
-	padding: .25em 0 0 1.5em;
-	font-weight: normal;
-}
-div.sidebar ul ul li {
-	margin: 0 0 .25em 0;
-}
-div.sidebar ul ul a {
-	font-weight: normal;
-}
-
-/* Side Quota Bar */
-    /*
-#quota_message {
-    text-align: center;
-    margin: 0 0 1em 0;
-	font-size: 1em;
-    width: 210px;
-}
-#quota_used {
-	font-weight: bold;
-}
-#quota_total {
-	font-weight: bold;
-}
-#quota_fill {
-    margin: 0 5px;
-    height: 28px;
-    background-image: url(../images/quota_bar_highlight.gif);
-    position: absolute;
-}
-#quota_bar, 
-#quota_bar_100 {
-    background: url(../images/quota_bar_bg.gif) no-repeat;
-    height: 28px;
-    width: 210px;
-	line-height: 2.5em;
-    text-align: center;
-    margin: 0;
-}
-#quota_bar_100 {
-    background: url(../images/quota_bar_full.gif) no-repeat;
-}
-#quota_percentage {
-    text-align: center;
-    position: relative;
-    z-index: 10;
-    color: #ffffff;
-	font-weight: bold;
-}
-
-
-/* Side Friends Control */
-    /*
-.sidebar #friendscontrol label {
-	line-height: 1.8em;
-	vertical-align: top;
-}
-
-/* Side Search */
-    /*
-.sidebar #selfsearch input {
-	width: 180px;
-}
-/**************** END RIGHT SIDEBAR *********/
-
-
-/**************** MAIN CONTENT START *********/
-/* Message */
-    /*
-.message {
-	margin: .5em 0;
-    padding: .5em;
-    background: #eee;
-    border: 1px solid #ddd;
-    text-align: center;
-}
-.message a {
-}
-
-/* system messages in main content: seems to happen on account/activity, need to investigate */
-    /*
-.maincontent #messagediv {
-    padding: .25em;
-    color: #e3ac03;
-    text-align: left;
-    float: none;
-    font-style: italic;
-}
-
-/* help
-.maincontent table.help-wrapper {
-    border: none !important;
-    width: auto !important;
-    margin: 0 !important;
-    border-spacing: 0 !important;
-}
-.maincontent table.help-wrapper td {
-    vertical-align: top !important;
-    padding: 0 !important;
-}
-.maincontent table.help-wrapper td.helpcontainer {
-    padding-left: 3px !important;
-}
-
-
-/* Tables */
-    /*
-.maincontent td {
-	padding: .25em .5em;
-	vertical-align: top;
-}
-.maincontent thead th {
-	padding: .25em .5em;
-	white-space: nowrap;
-	text-align: left;
-}
-.maincontent tbody th {
-	padding: .25em .5em;
-	vertical-align: top;
-	white-space: nowrap;
-	text-align: left;
-}
-/******* TH in tbody that should appear like it's in thead with a line under and left aligned *******/
-    /*
-#menuitemlist table th,
-#postlist th,
-#forumslist th,
-#forumtopicstable th {
-	padding: .25em .5em;
-}
-.maincontent tfoot td {
-	padding: .25em .5em;
-}
-/********* Tables that require a bottom border to enclose elements *********/
-    /*
-#filelist,
-#filebrowser,
-#attachedfiles,
-#bloglist,
-.templateresults,
-#feedbacktable,
-#forumslist,
-#forumtopicstable,
-#notificationstable,
-#suspendedlist {
-}
-
-
-/* Tables that are inside MCE Editors */
-    /*
-.mceEditor td {
-	padding: 0 !important;
-}
-
-/* Legend */
-    /*
-legend {
-	font-weight: bold;
-	font-size: 1.3em;
-}
-
-
-
-
-/****************************** PAGE BY PAGE STYLES **********************************/
-
-
-/* MY PORTFOLIO > MY VIEWS */
-
-    /*
-#myviewstable .viewitem {
-	float: left;
-	padding: .5em 1.5em .5em 0;
-	line-height: 1.2em;
-	width: 30%;
-	font-size: .9em;
-}
-#myviewstable .viewitemdesc {
-	font-size: .9em;
-}
-#myviewstable .submit-viewitem {
-	float: left;
-	padding: .25em 0;
-}
-#myviewstable .submit-viewitem select {
-	font-size: .9em;
-}
-#myviewstable .submitted-viewitem {
-	float: left;
-	padding: .5em 1.5em .5em 1.5em;
-	font-style: italic;
-	color: #969696;
-    font-size: 1em;
-	width: 60%;
-}
-#myviewstable .viewitem br {
-	display: none;
-}
-#myviewstable .viewitem a {
-	font-weight: bold;
-}
-
-
-
-#editview td a {
-	font-size: .9em;
-}
-#grouppage-container #noviews {
-    margin-top: 30px;
-}
+/* View access */
 #viewacl_lhs {
     float: right;
     padding: 1em;
@@ -1512,7 +858,6 @@ legend {
 #viewacl_lhs #results {
 	margin-top: 1em;
 }
-
 #accesslistitems {
 	margin-right: 350px;
 }
@@ -1551,231 +896,49 @@ legend {
 	padding: .25em 0;
 }
 
-.searchquery {
-	margin: 1em .5em;
-	line-height: 2.5em;
-}
-.templateresults td form {
-	margin: 0;
-}
-
-.preview-group {
-  margin: 10px;
-}
-.preview-group ul#group-info {
-  padding: 0;
-}
-
-/* GROUPS */
-    /*
-#groupsviewlist {
-	list-style: none;
-}
-
-
-#mygroupstable,
-#findgroups,
-.friendinfo {
-	font-size: .9em;
-}
-
-/* GROUPS > MY GROUPS */
-    /*
-ul.groupuserstatus {
-	margin: .5em 1em;
-	float: right;
-	width: 200px;
-}
-ul.groupuserstatus li {
-	list-style: none;
-	margin: 0;
-	border-bottom: 1px solid #d1d1d1;
-}
-ul.groupuserstatus li.last {
-	border-bottom: none;
-}
-
-#search_filter_container {
-	margin: 0 0 0 .5em;
-}
-#accesslistitems div div {
-    background: none;
-    width: 220px;
-}
-
-
-/* GROUPS > MY FRIENDS */
-    /*
-#friendslist ul.viewlist {
-	margin: 0;
-	font-size: 1em;
-}
-#friendslist ul.viewlist li.label {
-	background: none;
-	padding-left: 0;
-}
-#friendslist ul.viewlist li {
-	display: inline;
-	margin: 0;
-	padding-left: 1em;
-	background: url(../images/divider-dot.gif) no-repeat left;
-}
-#friendslist ul.actionlist {
-	margin: 0 1em;
-	float: right;
-	width: 200px;
-}
-#friendslist ul.actionlist li {
-	list-style: none;
-	margin: 0;
-	padding: 0 .25em;
-	border-bottom: 1px solid #d1d1d1;
-}
-#friendslist ul.actionlist li.last {
-	border-bottom: none;
-}
-#friendslist .leftdiv {
-	float: left;
-}
-#friendslist .rightdiv {
-	min-height: 35px;
-	padding: .5em 0 0 4.5em;
-}
-
-
-
-/* GROUPS > VIEWING A GROUP */
-    /*
-#grouppage-container span.addicon {
-	margin: 0;
-}
-#grouppage-container .searchform {
+/* Group about */
+.group-info {
+    list-style: none;
+	background-color: #eee;
+	padding: 1em;
+	border: 10px solid #ddd;
 	margin: 0 0 1em 0;
 }
-
-
-
-/* GROUPS > GROUP VIEWS */
-    /*
-ul#groupviewoptions {
-    list-style-type: none;
-    font-weight: bold;
-  border-left: 1px solid #ddd;
-  border-right: 1px solid #ddd;
+.group-info li {
+	margin: 0;
 }
-#groupviewoptions li {
-    display: inline;
-    margin: 0;
-    padding: 5px;
-}
-#groupviewoptions li.current {
-}
-#groupviewoptions li.current a {
-    color: #4c711d;
-}
-#groupviewoptions li a {
-    color: #474220;
-}
-table.groupviews{
-    width: 100%;
-    margin-top: 10px;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
+.group-info li span {
+	margin: 0 2em 0 0;
 }
 
+/* Group members */
+.listing.twocolumn td {
+	width: 50%;
+	border: 4px solid #FFF;
+}
+.listing.twocolumn td img {
+    margin-right: .5em;
+}
+.listing.twocolumn form input {
+    border: none;
+	font-weight: normal;
+	font-size: .9em;
+    line-height: .9em;
+}
 
 /* SETTINGS > PREFERENCES */
-    /*
 #accountprefs_addremovecolumns_container th {
 	white-space: normal;
 }
 
-
 /* SETTINGS > NOTIFICATIONS */
-    /*
 #activitylist th {
 	line-height: 1.2em;
 	vertical-align: bottom;
+    padding-left: 0.5em;
 }
 #activitylist th a {
 	font-size: .8em;
 	font-weight: normal;
 }
 
-/* SETTINGS > INSTITUTION MENBERSHIP */
-
-/* EXPORT */
-    /*
-#export h3 {
-    margin: .5em 0;
-}
-#export .radio-description {
-    padding-left: 2em;
-}
-#export fieldset {
-    padding: .5em;
-    margin: .5em;
-}
-#export .element div {
-    padding-bottom: .25em;
-}
-#export .view {
-    float: left;
-    padding-right: 2em;
-    white-space: nowrap;
-}
-#export fieldset {
-    border: none;
-}
-#export fieldset table {
-    width: 95%;
-    margin: 0 auto;
-}
-#export fieldset table div {
-    padding-left: 1.75em;
-}
-#export fieldset label {
-    color: #8598a7;
-}
-#export_submit_container {
-    text-align: center;
-}
-
-#exportgeneration {
-    text-align: center;
-}
-#progress {
-    border: 2px solid #d0d0d0;
-    height: 40px;
-    width: 600px;
-    margin-top: 1em;
-}
-div.progress-bar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: #999;
-    height: 40px;
-    color: #fff;
-    text-align: center;
-    font-weight: bold;
-}
-* html div.progress-bar {
-    * height: 45px;
-}
-div.progress-bar a {
-    color: #ffd !important;
-    text-decoration: underline !important;
-}
-p.progress-text {
-    position: absolute;
-    top: 0;
-    left: 0;
-    text-align: center;
-    color: #fff;
-    font-weight: bold;
-    width: 100%;
-}
-#progressbar {
-    height: 40px;
-}

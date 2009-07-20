@@ -31,7 +31,6 @@
 						  <input class="submit" type="submit" value="{str tag='markasread' section='activity'}" />
 						  <input class="submit btn-delete" type="button" value="{str tag='delete'}" onClick="{$markdel}" />
 						</div>
-						<div id="messagediv"></div></td>
 				  	</tr>
 				</tfoot>
 			</table>

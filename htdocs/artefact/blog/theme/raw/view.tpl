@@ -1,10 +1,10 @@
 {include file="header.tpl"}
-			<div id="myblogs">
+			<div id="myblogs rel">
 
-				<span class="addicon fr">
-					<a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
-					<a href="{$WWWROOT}artefact/blog/settings/?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
-				</span>
+				<div class="rbuttons">
+                    <div><a class="btn-add" href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a></div>
+					<div><a class="btn-edit" href="{$WWWROOT}artefact/blog/settings/?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a></div>
+				</div>
 
                 <p>{$blog->get('description')}</p>
 		

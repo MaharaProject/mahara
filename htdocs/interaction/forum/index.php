@@ -98,6 +98,7 @@ if ($forums && $membership) {
             'elements' => array(
                 'submit' => array(
                     'type'  => 'submit',
+                    'class' => 'btn-subscribe',
                     'value' => $forum->subscribed ? get_string('Unsubscribe', 'interaction.forum') : get_string('Subscribe', 'interaction.forum'),
                     'help' => $i == 0 ? true : false
                 ),

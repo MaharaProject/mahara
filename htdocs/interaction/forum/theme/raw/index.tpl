@@ -43,7 +43,7 @@
         <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}&amp;returnto=index" id="btn-delete">{str tag=delete}</a>
         </td>
         {/if}
-        {if $forum->subscribe}<td class="nowrap">{$forum->subscribe}</td>{/if}
+        {if $forum->subscribe}<td class="nowrap s">{$forum->subscribe}</td>{/if}
 	</tr>
     {/foreach}
 </table>

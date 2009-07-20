@@ -567,31 +567,6 @@ function keepElementInViewport(element) {
     }
 }
 
-// this function creates a pre-augmented tags control
-function create_tags_control(name, value, options) {
-    var elements = [];
-
-    options = update({
-            'size': 40
-        },
-        options
-    );
-
-    if (typeof(value) == 'object') {
-        value = value.join(', ');
-    }
-    if (!value) {
-        value = '';
-    }
-
-    var tagControl = INPUT({'name': name, 'size': options.size, 'value': value});
-    var tagshelp = SPAN(null); tagshelp.innerHTML = get_string('tags.help');
-    elements.push(augment_tags_control(tagControl, true));
-    elements.push(TABLE({'class': 'help-wrapper'}, TBODY(null, TR(null, TD(null, tagControl), TD({'class': 'helpcontainer'}, tagshelp)))));
-
-    return DIV(null, elements);
-}
-
 // this function takes an existing input element and augments it
 function augment_tags_control(elem, returnContainer) {
     elem = getElement(elem);

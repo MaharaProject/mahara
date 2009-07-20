@@ -11,7 +11,7 @@
 				</div>
 				<div id="selfsearchresults">
                     <h3>{str tag="Results"}</h3>
-                    <table id="searchresults" class="hidden tablerenderer">
+                    <table id="searchresults" class="hidden tablerenderer fullwidth">
                         <tbody>
                         </tbody>
                     </table>
