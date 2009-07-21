@@ -81,6 +81,7 @@ if ($membership && !$topic->forumsubscribed) {
         'elements' => array(
             'submit' => array(
                'type'  => 'submit',
+               'class' => 'btn-subscribe',
                'value' => $topic->topicsubscribed ? get_string('unsubscribefromtopic', 'interaction.forum') : get_string('subscribetotopic', 'interaction.forum'),
                'help' => true
             ),

@@ -3,7 +3,7 @@
 <h2>{str tag="nameplural" section=interaction.forum}</h2>
 {if $admin}
 <div class="rbuttons pagetabs">
-<a href="{$WWWROOT}interaction/edit.php?group={$groupid|escape}&amp;plugin=forum" id="btn-newforum">{str tag="newforum" section=interaction.forum}</a>
+<a href="{$WWWROOT}interaction/edit.php?group={$groupid|escape}&amp;plugin=forum" class="btn-add s">{str tag="newforum" section=interaction.forum}</a>
 </div>
 {/if}
 <div>
@@ -39,8 +39,8 @@
         <td align="center">{$forum->topiccount}</td>
         {if $admin}
         <td class="nowrap btn-spacer s">
-        <a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}&amp;returnto=index" id="btn-edit">{str tag=edit}</a>
-        <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}&amp;returnto=index" id="btn-delete">{str tag=delete}</a>
+        <a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}&amp;returnto=index" id="btn-edit" class="btn-edit">{str tag=edit}</a>
+        <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}&amp;returnto=index" id="btn-delete" class="btn-del">{str tag=delete}</a>
         </td>
         {/if}
         {if $forum->subscribe}<td class="nowrap s">{$forum->subscribe}</td>{/if}

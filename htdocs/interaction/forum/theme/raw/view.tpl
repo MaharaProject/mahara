@@ -3,8 +3,8 @@
 <h2>{$subheading|escape}</h2>
 <div class="rbuttons pagetabs">
 	{if $admin}
-		<a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}" id="btn-editforum">{str tag="edittitle" section="interaction.forum"}</a>
-		<a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}" id="btn-deleteforum">{str tag="deleteforum" section="interaction.forum"}</a>
+		<a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}" class="btn-edit s" id="btn-editforum">{str tag="edittitle" section="interaction.forum"}</a>
+        <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}" class="btn-del s" id="btn-deleteforum">{str tag="deleteforum" section="interaction.forum"}</a>
 	{/if}
 	{$forum->subscribe}
 </div>
@@ -13,7 +13,7 @@
 	<h3>{str tag=Topics section="interaction.forum"}</h3>
     {if $membership}
 	<div class="rbuttons">
-	<a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id|escape}" id="btn-newtopic">{str tag="newtopic" section="interaction.forum}</a>
+	<a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id|escape}" class="btn-add s">{str tag="newtopic" section="interaction.forum}</a>
 	</div>
 	{/if}
 	<label>{str tag="groupadminlist" section="interaction.forum"}</label>
@@ -32,28 +32,6 @@
 </div>
 {if $stickytopics || $regulartopics}
 <form action="" method="post">
-    {if $membership && (!$forum->subscribed || $moderator)}
-    <div class="forumselectwrap"><select name="type1">
-        <option value="default" selected="selected">{str tag="chooseanaction" section="interaction.forum"}</option>
-        {if !$forum->subscribed}
-        <option value="subscribe">{str tag="Subscribe" section="interaction.forum"}</option>
-        <option value="unsubscribe">{str tag="Unsubscribe" section="interaction.forum"}</option>
-        {/if}
-        {if $moderator}
-        <option value="sticky">{str tag="Sticky" section="interaction.forum"}</option>
-        <option value="unsticky">{str tag="Unsticky" section="interaction.forum"}</option>
-        <option value="closed">{str tag="Close" section="interaction.forum"}</option>
-        <option value="open">{str tag="Open" section="interaction.forum"}</option>
-        {/if}
-    </select>
-    <input type="submit" name="updatetopics1" value="{str tag="updateselectedtopics" section="interaction.forum"}" class="submit">
-		{if $moderator}
-			{contextualhelp plugintype='interaction' pluginname='forum' section='updatemod'}
-		{else}
-			{contextualhelp plugintype='interaction' pluginname='forum' section='update'}
-		{/if}
-	</div>	
-    {/if}
     <table id="forumtopicstable" class="fullwidth">
         <tr>
         <th></th>
@@ -76,7 +54,7 @@
     	<div class="fr">{$pagination}</div>
     {/if}
     {if $membership && (!$forum->subscribed || $moderator)}
-    <div class="forumselectwrap fl"><select name="type2">
+    <div class="forumselectwrap fl"><select name="type">
         <option value="default" selected="selected">{str tag="chooseanaction" section="interaction.forum"}</option>
         {if !$forum->subscribed}
         <option value="subscribe">{str tag="Subscribe" section="interaction.forum"}</option>
@@ -89,7 +67,7 @@
         <option value="open">{str tag="Open" section="interaction.forum"}</option>
         {/if}
     </select>
-    <input type="submit" name="updatetopics2" value="{str tag="updateselectedtopics" section="interaction.forum"}" class="submit">
+    <input type="submit" name="updatetopics" value="{str tag="updateselectedtopics" section="interaction.forum"}" class="submit">
 		{if $moderator}
 			{contextualhelp plugintype='interaction' pluginname='forum' section='updatemod'}
 		{else}

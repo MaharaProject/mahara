@@ -4,9 +4,9 @@
 {if $membership}
 	<div class="rbuttons pagetabs">
 	{if $topic->canedit}
-	<a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}" id="btn-edittopic">{str tag=edittopic section=interaction.forum}</a>
+	<a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}" id="btn-edittopic" class="btn-edit s">{str tag=edittopic section=interaction.forum}</a>
 		{if $moderator}
-		<a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id|escape}" id="btn-deletetopic" class="delete">{str tag=deletetopic section=interaction.forum}</a>
+		<a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id|escape}" id="btn-deletetopic" class="delete btn-del s">{str tag=deletetopic section=interaction.forum}</a>
 		{/if}
 	{/if}
 	{if !$topic->forumsubscribed}

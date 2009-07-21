@@ -134,17 +134,3 @@
 }
 
 
-#btn-newforum {
-	background: url(../images/icon-newforum.gif) no-repeat left 3px;
-	padding-left: 1.5em;
-	border: none;
-	font-weight: bold;
-	font-size: 1em;
-}
-#btn-newtopic {
-	background: url(../images/icon-newtopic.gif) no-repeat left 3px;
-	padding-left: 1.5em;
-	border: none;
-	font-weight: bold;
-	font-size: 1em;
-}

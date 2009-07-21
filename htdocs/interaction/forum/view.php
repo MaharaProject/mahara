@@ -85,11 +85,8 @@ $moderators = get_column_sql(
 if ($membership && isset($_POST['checked'])) {
     $checked = array_keys($_POST['checked']);
     // get type based on which button was pressed
-    if (isset($_POST['updatetopics1'])) {
-        $type = $_POST['type1'];
-    }
-    else if (isset($_POST['updatetopics2'])) {
-        $type = $_POST['type2'];
+    if (isset($_POST['updatetopics'])) {
+        $type = $_POST['type'];
     }
     // check that user is only messing with topics from this forum
     $alltopics = get_column('interaction_forum_topic', 'id', 'forum', $forumid, 'deleted', 0);
