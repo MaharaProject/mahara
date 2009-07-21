@@ -12,6 +12,7 @@
  */
 
 function smarty_resource_interaction_source ($tpl_name, &$tpl_source, &$smarty_obj) {
+    global $THEME;
     $name = explode(':', $tpl_name);
 
     $plugin_name = $name[0];
@@ -20,7 +21,7 @@ function smarty_resource_interaction_source ($tpl_name, &$tpl_source, &$smarty_o
 
     $basedir = get_config('docroot') . 'interaction/' . $plugin_name . '/theme/';
 
-    foreach (theme_setup()->inheritance as $theme) {
+    foreach ($THEME->inheritance as $theme) {
         $filename = $basedir . $theme . '/' . $plugin_path;
         if (is_readable($filename)) {
             $tpl_source = file_get_contents($filename);
@@ -32,6 +33,7 @@ function smarty_resource_interaction_source ($tpl_name, &$tpl_source, &$smarty_o
 }
 
 function smarty_resource_interaction_timestamp($tpl_name, &$tpl_timestamp, &$smarty_obj) {
+    global $THEME;
     $name = explode(':', $tpl_name);
 
     $plugin_name = $name[0];
@@ -39,7 +41,7 @@ function smarty_resource_interaction_timestamp($tpl_name, &$tpl_timestamp, &$sma
 
     $basedir = get_config('docroot') . 'interaction/' . $plugin_name . '/theme/';
 
-    foreach (theme_setup()->inheritance as $theme) {
+    foreach ($THEME->inheritance as $theme) {
         $filename = $basedir . $theme . '/' . $plugin_path;
         if (is_readable($filename)) {
             $tpl_timestamp = filemtime($filename);
