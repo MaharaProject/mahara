@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 {if $views}
-    <table id="myviewstable" class="groupviews">
+    <table class="fullwidth">
     {foreach from=$views item=view}
         <tr>
             <td class="r{cycle values=0,1}">
