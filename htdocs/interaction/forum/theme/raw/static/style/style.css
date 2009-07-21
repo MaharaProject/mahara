@@ -9,13 +9,16 @@
 	margin-bottom: .5em;
 }
 .groupadmin{
-    color: #d32a8a !important;
+    color: #d32a8a;
 }
 .moderator {
-    color: #2a8bd3 !important;
+    color: #2a8bd3;
 }
-.btn-spacer #btn-delete {
-	margin-left: 1em;
+.forumuser {
+    vertical-align: top;
+}
+.inlinelist img {
+    vertical-align: middle;
 }
 #forumslist {
 	margin: 1em 0;
@@ -30,7 +33,10 @@
 	margin: 1em 0;
 }
 #viewforum {
-	padding: .25em;
+	padding: 0 .25em;
+}
+#viewforum h3 {
+    margin: 0;
 }
 .btn-subscribe input.submit {
 	background: url(../images/icon-subscribe.gif) no-repeat left 5px;
@@ -48,33 +54,11 @@
 .nowrap {
 	white-space: nowrap;
 }
-.lastpost {
-	font-size: .9em;
-	color: #aaaaaa;
-}
 .forumselectwrap {
 	padding: .5em 0;
 }
-.forumkey {
-	clear: left;
-	font-size: .9em;
-	padding: .5em;
-}
-#forumkeylist {
-	list-style: none;
-	margin: 0;
-	display: inline;
-}
-#forumkeylist li {
-	display: inline;
-	margin: 0 1.5em 0 0;
-}
 .stickytopic {
 	background-color: #f4fbdc;
-}
-.forumtopicdescription,
-.forumposter {
-	font-size: .9em;
 }
 
 /* FORUM > ADD TOPIC */

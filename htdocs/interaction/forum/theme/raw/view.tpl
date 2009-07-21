@@ -3,8 +3,8 @@
 <h2>{$subheading|escape}</h2>
 <div class="rbuttons pagetabs">
 	{if $admin}
-		<a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}" class="btn-edit s" id="btn-editforum">{str tag="edittitle" section="interaction.forum"}</a>
-        <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}" class="btn-del s" id="btn-deleteforum">{str tag="deleteforum" section="interaction.forum"}</a>
+		<a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}" class="btn-edit s">{str tag="edittitle" section="interaction.forum"}</a>
+        <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}" class="btn-del s">{str tag="deleteforum" section="interaction.forum"}</a>
 	{/if}
 	{$forum->subscribe}
 </div>
@@ -12,24 +12,10 @@
 <div id="viewforum" class="rel">
 	<h3>{str tag=Topics section="interaction.forum"}</h3>
     {if $membership}
-	<div class="rbuttons">
+    <div class="rbuttons">
 	<a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id|escape}" class="btn-add s">{str tag="newtopic" section="interaction.forum}</a>
 	</div>
 	{/if}
-	<label>{str tag="groupadminlist" section="interaction.forum"}</label>
-	{foreach name=groupadmins from=$groupadmins item=groupadmin}<a href="{$WWWROOT}user/view.php?id={$groupadmin}" class="groupadmin s">
-	<img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupadmin}" alt="">
-	{$groupadmin|display_name|escape}</a>{if !$smarty.foreach.groupadmins.last}, {/if}{/foreach}
-	{if $moderators}
-	<br>
-	<label>{str tag="moderatorslist" section="interaction.forum"}</label>
-	{foreach from=$moderators item=mod name=moderators}
-	<a href="{$WWWROOT}user/view.php?id={$mod}" class="moderator">
-	<img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$mod}" alt="">
-	{$mod|display_name|escape}</a>{if !$smarty.foreach.moderators.last}, {/if}
-	{/foreach}
-	{/if}
-</div>
 {if $stickytopics || $regulartopics}
 <form action="" method="post">
     <table id="forumtopicstable" class="fullwidth">
@@ -76,15 +62,27 @@
 	</div>	
     {/if}
 </form>
+</div>
 
-<div class="forumkey">
-<label>{str tag="Key" section="interaction.forum"}:</label>
-<ul id="forumkeylist">
-    <li><img src="{$closedicon|escape}" alt="{str tag="Closed" section="interaction.forum"}"> {str tag="Closed" section="interaction.forum"}</li>
-    <li><img src="{$subscribedicon|escape}" alt="{str tag="Subscribed" section="interaction.forum"}"> {str tag="Subscribed" section="interaction.forum"}</li>
-    <li><span class="groupadmin">{str tag="groupadmins" section="interaction.forum"}</span></li>
-    <li><span class="moderator">{str tag="Moderators" section="interaction.forum"}</span></li>
-</ul>
+<div class="cr">
+	<label>{str tag="groupadminlist" section="interaction.forum"}</label>
+	{foreach from=$groupadmins item=groupadmin}
+    <span class="s inlinelist">
+        <a href="{$WWWROOT}user/view.php?id={$groupadmin}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupadmin}" alt=""></a>
+        <a href="{$WWWROOT}user/view.php?id={$groupadmin}" class="groupadmin">{$groupadmin|display_name|escape}</a>
+    </span>
+    {/foreach}
+	{if $moderators}
+    <div>
+    <label>{str tag="moderatorslist" section="interaction.forum"}</label>
+        {foreach from=$moderators item=mod}
+        <span class="s inlinelist">
+            <a href="{$WWWROOT}user/view.php?id={$mod}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$mod}" alt=""></a>
+            <a href="{$WWWROOT}user/view.php?id={$mod}" class="moderator">{$mod|display_name|escape}</a>
+        </span>
+        {/foreach}
+    </div>
+	{/if}
 </div>
 {else}
 <p>{str tag="notopics" section="interaction.forum"}</p>

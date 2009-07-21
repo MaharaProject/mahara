@@ -15,29 +15,17 @@
     {/if}
     <td>
     <a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id|escape}">{$topic->subject|escape}</a>
-    <div class="forumtopicdescription">{$topic->body}</div>
+    <div class="s">{$topic->body}</div>
     </td>
-    <td class="forumposter">
-    <a href="{$WWWROOT}user/view.php?id={$topic->poster}"
-    {if in_array($topic->poster, $groupadmins)} class="groupadmin"
-    {elseif $topic->moderator} class="moderator"
-    {/if}
-    >
-    <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$topic->poster}" alt="">
-    {$topic->poster|display_name|escape}
-    </a>
+    <td class="s">
+        <a href="{$WWWROOT}user/view.php?id={$topic->poster}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$topic->poster}" alt=""></a>
+        <a href="{$WWWROOT}user/view.php?id={$topic->poster}" class="forumuser{if in_array($topic->poster, $groupadmins)} groupadmin{elseif $topic->moderator} moderator{/if}">{$topic->poster|display_name|escape}</a>
     </td>
     <td class="postscount">{$topic->postcount|escape}</td>
-    <td class="lastpost">
+    <td class="s">
     {if !$topic->lastpostdeleted}
-    <a href="{$WWWROOT}user/view.php?id={$topic->lastposter}"
-    {if in_array($topic->lastposter, $groupadmins)} class="groupadmin"
-    {elseif $topic->lastpostermoderator} class="moderator"
-    {/if}
-    >
-    {$topic->lastposter|display_name|escape}</a>
-    <br>
-    <a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}#post{$topic->lastpost}">{$topic->lastposttime}</a>
+    <a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}#post{$topic->lastpost}">{$topic->lastposttime}</a> {str tag=by section=view}
+    <a href="{$WWWROOT}user/view.php?id={$topic->lastposter}" {if in_array($topic->lastposter, $groupadmins)} class="groupadmin"{elseif $topic->lastpostermoderator} class="moderator"{/if}>{$topic->lastposter|display_name|escape}</a>
     {/if}
     </td>
     {if $moderator}

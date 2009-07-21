@@ -7,16 +7,20 @@
 </div>
 {/if}
 <div>
-<label class="blue">{str tag="groupadminlist" section="interaction.forum"}</label> 
-{foreach name=groupadmins from=$groupadmins item=groupadmin}<a href="{$WWWROOT}user/view.php?id={$groupadmin}" class="groupadmin s">
-<img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupadmin}" alt="">
-{$groupadmin|display_name|escape}</a>{if !$smarty.foreach.groupadmins.last}, {/if}{/foreach}
+	<label>{str tag="groupadminlist" section="interaction.forum"}</label>
+	{foreach from=$groupadmins item=groupadmin}
+    <span class="s inlinelist">
+        <a href="{$WWWROOT}user/view.php?id={$groupadmin}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupadmin}" alt=""></a>
+        <a href="{$WWWROOT}user/view.php?id={$groupadmin}" class="groupadmin">{$groupadmin|display_name|escape}</a>
+    </span>
+    {/foreach}
 </div>
 {if $forums}
 <table id="forumslist" class="fullwidth">
 	<tr>
 		<th>{str tag="forumname" section="interaction.forum"}</th>
 		<th>{str tag="description"}</th>
+		<th>{str tag=Moderators section=interaction.forum}</th>
 		<th>{str tag="Topics" section="interaction.forum"}</th>
 		{if $admin}<th></th>{/if}
 		{if $forum->subscribe}{/if}<th></th>
@@ -27,12 +31,14 @@
         </td>
 		<td>
         {$forum->description}
+        </td>
+        <td>
         {if $forum->moderators}
-        {str tag="moderatorslist" section="interaction.forum"}
-        {foreach from=$forum->moderators item=mod name=moderators}
-            <a href="{$WWWROOT}user/view.php?id={$mod}" class="moderator">
-            <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$mod}" alt="">
-            {$mod|display_name|escape}</a>{if !$smarty.foreach.moderators.last}, {/if}
+        {foreach from=$forum->moderators item=mod}
+            <div class="s">
+                <a href="{$WWWROOT}user/view.php?id={$mod}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$mod}" alt=""></a>
+                <a href="{$WWWROOT}user/view.php?id={$mod}" class="moderator forumuser">{$mod|display_name|escape}</a>
+            </div>
         {/foreach}
         {/if}
 		</td>
@@ -40,7 +46,7 @@
         {if $admin}
         <td class="nowrap btn-spacer s">
         <a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}&amp;returnto=index" id="btn-edit" class="btn-edit">{str tag=edit}</a>
-        <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}&amp;returnto=index" id="btn-delete" class="btn-del">{str tag=delete}</a>
+        <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}&amp;returnto=index" class="btn-del">{str tag=delete}</a>
         </td>
         {/if}
         {if $forum->subscribe}<td class="nowrap s">{$forum->subscribe}</td>{/if}
