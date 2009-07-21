@@ -69,7 +69,7 @@ class PluginInteractionForum extends PluginInteraction {
             'fieldset' => array(
                 'type' => 'fieldset',
                 'collapsible' => true,
-                'collapsed' => true,
+                'collapsed' => false,
                 'legend' => get_string('settings'),
                 'elements' => array(
                     'autosubscribe' => array(

@@ -84,7 +84,7 @@ abstract class PluginInteraction extends Plugin {
                 'type'         => 'wysiwyg',
                 'title'        => get_string('description'),
                 'rows'         => 10,
-                'cols'         => 70,
+                'cols'         => 60,
                 'defaultvalue' => (isset($instance) ? $instance->get('description') : ''),
                 'rules'        => array(
                     'required' => true,

@@ -32,15 +32,6 @@
 #viewforum {
 	padding: .25em;
 }
-#subscribe_forum,
-#subscribe_topic {
-    display: inline;
-	margin: 0 0 0 2em;
-}
-#subscribe_forum div,
-#subscribe_topic div {
-    display: inline;
-}
 .btn-subscribe input.submit {
 	background: url(../images/icon-subscribe.gif) no-repeat left 5px;
     font-weight: bold;
@@ -49,6 +40,8 @@
     padding-left: 1em;
     cursor: pointer;
 	border: none;
+    width: 1;
+    overflow: visible;
 }
 
 

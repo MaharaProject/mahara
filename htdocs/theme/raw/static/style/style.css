@@ -659,6 +659,28 @@ fieldset.collapsed legend a {
     padding-right: 1em;
 }
 
+/* Userlists used in admin section and on edit interaction form */
+.userlisttable .lrbuttons {
+    text-align: center;
+}
+.userlisttable .lrbuttons button {
+    margin: .25em 0;
+}
+.userlisttable .lrfieldlists {
+    width: 50%;
+    padding: 0;
+    margin: 0;
+}
+.userlisttable .searchtd {
+	padding: .25em;
+}
+.userlisttable tr th {
+	text-align: left;
+	padding: 0;
+	font-size: .9em;
+	color: #333;
+}
+
 
 /* Specific page rules */
 
@@ -937,3 +959,7 @@ p.progress-text {
 	font-weight: normal;
 }
 
+/* Interaction settings */
+tr#edit_interaction_autosubscribe_container th {
+	white-space: normal;
+}

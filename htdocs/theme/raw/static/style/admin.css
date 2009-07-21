@@ -135,27 +135,6 @@ table.tablerenderer th.desc {
 }
 
 
-.userlisttable .lrbuttons button {
-	margin: .25em 0;
-}
-.userlisttable .lrfieldlists {
-	width: 50%;
-}
-.userlisttable .searchtd {
-	padding: .25em;
-}
-.userlisttable tr th {
-	text-align: left;
-	padding: 0 .25em !important;
-	font-size: .9em;
-	color: #333;
-}
-.userlisttable th,
-.userlisttable td {
-	padding: 0 .25em;
-}
-
-
 
 /* MANAGE USERS > EDIT USER */
 #edituser hr {
