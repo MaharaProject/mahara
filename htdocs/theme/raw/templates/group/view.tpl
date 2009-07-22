@@ -4,21 +4,17 @@
 	<p>{$GROUP->description}</p>
 {/if}
 
-<p>
-  <div class="rel">
-  {include file="group/info.tpl"}
-    <div class="rbuttons pagetabs">
-      <ul class="group-controls">
-	    {include file="group/groupuserstatus.tpl" group=$group returnto='view'}
-      </ul><br class="cl"/>
-    </div>
+<div class="group-info">
+  <div class="fr">
+  {include file="group/groupuserstatus.tpl" group=$group returnto='view'}
   </div>
-</p>
+  {include file="group/info.tpl"}
+</div>
 
 {if $group->public || $role}
     <h3>{str tag=latestforumposts section=interaction.forum}</h3>
     {if $foruminfo}
-        <table id="latestforumpost" class="fullwidth s">
+        <table class="fullwidth s">
         {foreach from=$foruminfo item=postinfo}
             <tr class="r{cycle values=0,1}">
                 <td><strong><a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic|escape}#post{$postinfo->id|escape}">{$postinfo->topicname|escape}</a></strong></td>

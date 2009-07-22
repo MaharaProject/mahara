@@ -84,11 +84,11 @@ foreach ( $element_list as $element => $type ) {
 
     if ($type == 'wysiwyg') {
         $items[$element]['rows'] = 10;
-        $items[$element]['cols'] = 60;
+        $items[$element]['cols'] = 50;
     }
     if ($type == 'textarea') {
         $items[$element]['rows'] = 4;
-        $items[$element]['cols'] = 60;
+        $items[$element]['cols'] = 50;
     }
     if ($element == 'country') {
         $items[$element]['options'] = getoptions_country();

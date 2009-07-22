@@ -51,6 +51,7 @@ input#myfriends_addfriend_add {
 
 .profile-fieldsets fieldset {
 	border: none;
+	padding: 0;
 }
 fieldset.safe-hidden .mceEditor {
 	display: none;

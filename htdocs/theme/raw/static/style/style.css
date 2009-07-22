@@ -110,8 +110,10 @@ table {
 th {
     padding: .25em 0;
     text-align: left;
-    white-space: nowrap;
     vertical-align: top;
+}
+thead th {
+    white-space: nowrap;
 }
 td {
     padding: .25em .5em;
@@ -231,16 +233,25 @@ pre, tt {
 }
 #main-column {
     padding: 0 1.5em 1em;
-    overflow: scroll;
+    overflow: auto;
 }
-#main-column-container, div.rel {
+#main-column-container {
     position: relative;
+    min-height: 0;
+    padding-top: .2em;
+}
+div.rel {
+    position: relative;
+    min-height: 0;
 }
 .listing {
     font-size: .9em;
 }
 .listing h3, .listing h5 {
     margin: 0;
+}
+div.listing {
+	padding: .5em 1em;
 }
 
 /* Informational messages */
@@ -307,17 +318,19 @@ ul.in-page-tabs li a {
 }
 .subpage {
     border: 1px solid #d1d1d1;
-	padding: 1.5em;
-    overflow: auto;
+	padding: 1em;
 }
 .subpage p:first-child {
-	margin: 0;
+	margin: .5em 0;
 }
 
 
 /* Forms */
 .required th, div.required label, .requiredmarker {
     color: #cc6600;
+}
+.pieform tbody tr th label {
+	white-space: normal;
 }
 .pieform td label {
 	font-weight: normal;
@@ -710,11 +723,7 @@ fieldset.collapsed legend a {
 
 /* My Groups */
 ul.groupuserstatus {
-	margin: .5em 1em;
-	width: 200px;
-    position: absolute;
-    top: 0;
-    right: 0;
+    width: 200px;
 }
 ul.groupuserstatus li {
 	list-style: none;
@@ -914,17 +923,23 @@ p.progress-text {
 }
 
 /* Group about */
+.subpage .group-info {
+    margin-top: 1em;
+}
 .group-info {
-    list-style: none;
 	background-color: #eee;
 	padding: 1em;
 	border: 10px solid #ddd;
 	margin: 0 0 1em 0;
 }
-.group-info li {
+.group-info ul {
+    margin: 0;
+    list-style: none;
+}
+.group-info ul li {
 	margin: 0;
 }
-.group-info li span {
+.group-info ul li span {
 	margin: 0 2em 0 0;
 }
 
@@ -943,11 +958,6 @@ p.progress-text {
     line-height: .9em;
 }
 
-/* SETTINGS > PREFERENCES */
-#accountprefs_addremovecolumns_container th {
-	white-space: normal;
-}
-
 /* SETTINGS > NOTIFICATIONS */
 #activitylist th {
 	line-height: 1.2em;
@@ -959,7 +969,3 @@ p.progress-text {
 	font-weight: normal;
 }
 
-/* Interaction settings */
-tr#edit_interaction_autosubscribe_container th {
-	white-space: normal;
-}
