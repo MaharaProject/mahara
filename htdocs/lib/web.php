@@ -614,8 +614,9 @@ class Theme {
 
         if (!$themename) {
             // Theme to show to when no theme has been suggested
-            $themename = get_config('theme');
-            $themename = 'raw'; //TODO: debug
+            if (!$themename = get_config('theme')) {
+                $themename = 'raw';
+            }
         }
         $this->init_theme($themename);
     }
