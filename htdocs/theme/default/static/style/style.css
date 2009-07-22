@@ -134,8 +134,10 @@ button {
 	border-width: 1px;
     margin: 0 .25em 0 0;
     color: #FFF !important;
-    padding: .25em .5em .2em .5em;
-	* padding: 0.1em 0;
+    padding: .1em .3em !important;
+    * padding: 0;
+    /* padding: .25em .5em .2em .5em;
+    * padding: 0.1em 0; */
 }
 /* Default dark buttons to the big ones */
 input.cancel,
@@ -147,8 +149,10 @@ button.cancel {
 	border-width: 1px;
     margin: 0 .25em 0 0;
     color: #FFF !important;
-    padding: .25em .5em .2em .5em;
-	* padding: 0.1em 0;
+    padding: .1em .3em !important;
+    * padding: 0;
+    /* padding: .25em .5em .2em .5em;
+	* padding: 0.1em 0; */
 }
 
 /***** DELETE RED BUTTON ********/
@@ -420,22 +424,8 @@ ul.in-page-tabs li a:hover {
 }
 
 /**************** RIGHT SIDEBAR START *********/
-div.sidebar {
+.sidebar {
     background: url(../images/sidebar-bg.gif) repeat-x top;
-    padding: 1em 1.25em 1.5em 1.25em;
-    font-size: .9em;
-}
-div.sidebar ul {
-	list-style-type: disc;
-}
-div.sidebar ul li {
-	line-height: 1.3em;
-}
-div.sidebar ul ul {
-	list-style-type: square;
-}
-div.sidebar ul ul li {
-	line-height: 1.3em;
 }
 
 /* side profile */
@@ -475,18 +465,20 @@ div.sidebar ul ul li {
 /* Side Login */
 #login label {
     color: #3986c3;
+    font-size: 1.1em;
 }
-#column-right input.text,
-#column-right input.password {
+#sb-loginbox input.text,
+#sb-loginbox input.password {
 	background-color: #ecf3d4;
     width: 205px;
     padding: .25em .5em;
-    font-size: 1em;
+    margin: 0 0 .5em 0;
+    font-size: 1.1em;
 }
-#column-right #login a,
-#column-right #login a:link,
-#column-right #login a:active,
-#column-right #login a:visited {
+#sb-loginbox #login a,
+#sb-loginbox #login a:link,
+#sb-loginbox #login a:active,
+#sb-loginbox #login a:visited {
     font-size: .85em;
 	line-height: 1.4em;
 }
