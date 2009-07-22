@@ -34,7 +34,7 @@
 {if $sharedviews}
     <h3>{str tag="viewssharedtogroupbyothers" section="view"}</h3>
     <p>
-    <table class="groupviews">
+    <table class="fullwidth">
     {foreach from=$sharedviews item=view}
         <tr class="r{cycle values=0,1}">
             <td>
@@ -64,7 +64,7 @@
 {if $submittedviews}
     <h3>{str tag="viewssubmittedtogroup" section="view"}</h3>
     <p>
-    <table class="groupviews">
+    <table class="fullwidth">
     {foreach from=$submittedviews item=view}
         <tr class="r{cycle values=0,1}">
             <td>
