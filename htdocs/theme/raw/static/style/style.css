@@ -235,14 +235,12 @@ pre, tt {
     padding: 0 1.5em 1em;
     overflow: auto;
 }
-#main-column-container {
+#main-column-container, div.rel {
     position: relative;
     min-height: 0;
-    padding-top: .2em;
 }
-div.rel {
-    position: relative;
-    min-height: 0;
+#main-column-container {
+    padding-top: .2em;
 }
 .listing {
     font-size: .9em;

@@ -26,16 +26,6 @@ body {
 }
 
 /* Base styles */
-/* tables with top and bottom border */
-#findgroups,
-#myviewstable,
-#mygroupstable,
-#friendslist,
-#latestforumpost {
-	border-top: 1px solid #95a8b7;
-	border-bottom: 1px solid #95a8b7;
-}
-
 .description,
 .postdetails {
     color: #838383;
@@ -88,7 +78,7 @@ h5 {
 h6 {
     color: #5c8727;
 }
-.maincontent table h3 a {
+.main-column table h3 a {
 	color: #1e6297 !important;
 }
 
@@ -137,16 +127,7 @@ label,
 /* Default light buttons to the big ones */
 input.submit, 
 input.button, 
-button,
-#btn-logout,
-.addicon a,
-.forumaddicon a,
-#editview_back,
-#editview_submit,
-#editaccess_back,
-#editaccess_submit,
-.btn-editdk,
-.upgradeicon a  {
+button {
     background-color: #92b328;
 	border-color: #d5ed8a #496000 #496000 #d5ed8a !important;
 	border-style: solid;
@@ -159,12 +140,7 @@ button,
 /* Default dark buttons to the big ones */
 input.cancel,
 input.cancelbackcreate,
-button.cancel,
-#btn-settings,
-.viewicon a,
-.btn-deletedk,
-#browsebutton,
-.settingsicon a {
+button.cancel {
     background-color: #7d9728;
 	border-color: #bdda5e #4e6307 #4e6307 #bdda5e !important;
 	border-style: solid;
@@ -173,17 +149,6 @@ button.cancel,
     color: #FFF !important;
     padding: .25em .5em .2em .5em;
 	* padding: 0.1em 0;
-}
-#btn-logout,
-#btn-settings {
-	* padding: .25em .5em !important; /* TODO */
-	font-size: 1em;
-}
-/* Ones inside tables should be smaller... */
-#menuitemlist input.button,
-.viewitem input {
-    padding: .1em .3em !important;
-	* padding: 0;
 }
 
 /***** DELETE RED BUTTON ********/
@@ -216,33 +181,12 @@ input#myfriends_addfriend_add {
     color: #3092ce;
 }
 
-/***** DELETE ICON LINKS ******/
-#membersearchresults .removeform input {
-    color: #7f9d16 !important;
-}
-
-/****** DELETE FORUM ICON LINKS ********/
-input.delete {
-	color: #7f9d16 !important;
-}
-#btn-denyrequest {
-	color: #7f9d16 !important;
-}
-
-/***** EDIT ICON LINKS ******/
-#btn-edit {
-	color: #7f9d16 !important;
-}
-#admininstitution_edit {
-	padding-left: 1.2em;
-	background: url(../../../raw/static/images/icon-edit.gif) no-repeat left 7px;
-	border: none;
-	color: #7f9d16 !important;
-	padding-left: .7em;
-	font-weight: bold;
-	font-size: .85em;
-}
-input.edit {
+/***** ICON LINKS ******/
+div.btn-del input.submit, input.submit.btn-del,
+div.btn-msg input.submit,
+div.btn-add input.submit, input.submit.btn-add,
+div.btn-edit input.submit, input.submit.btn-edit,
+a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup {
 	color: #7f9d16 !important;
 }
 
@@ -252,19 +196,6 @@ input.edit {
 }
 #unreadmessages a {
 	color: #3986c3;
-}
-
-/****** NEW TOPIC ICON LINKS ********/
-#btn-newforum {
-	color: #7f9d16 !important;
-}
-#btn-newtopic {
-	color: #7f9d16 !important;
-}
-
-/********* REQUEST ICON LINKS *******/
-#btn-requests {
-	color: #7f9d16 !important;
 }
 
 /****** SEARCH BUTTONS *********/
@@ -315,28 +246,24 @@ li#pendingfriends a {
 
 
 /* CONTENT LAYOUT */
-#column-full {
+#main-wrapper {
     background-color: #FFF;
 }
-.maincontent {
+.main-content {
 	background: url(../images/dot-vert.gif) repeat-y top right;
 }
 
 /* HEADER ELEMENTS */
-#topwrapper {
+#top-wrapper {
     background: url(../images/header-bg.gif) repeat-x bottom left;
 	height: 100px;
 }
-#topwrapper ul,
-#topwrapper li {
+#top-wrapper ul,
+#top-wrapper li {
     padding: 0;
     margin: 0;
     text-align: right;
     display: inline;
-}
-#logo {
-    padding: 0;
-	margin: 0;
 }
 
 /* search box in header */
@@ -369,15 +296,15 @@ li#pendingfriends a {
 }
 
 /**************** TOP NAVIGATION ****************/
-#mainnav {
+#main-nav {
 	height: 25px;
 }
-#mainnav ul {
-	padding: 0 0 0 .75em;
+#main-nav ul {
+    padding: 0 0 0 0.75em;
 	height: 25px;
 	line-height: 25px;
 }
-#mainnav li {
+#main-nav li {
     color: #e6c560;
     text-decoration: none;
     font-weight: bold;
@@ -386,35 +313,36 @@ li#pendingfriends a {
 	padding: 0;
 	height: 25px;
 }
-#mainnav li a,
-#mainnav li a:link,
-#mainnav li a:visited,
-#mainnav li a:active {
+#main-nav li a,
+#main-nav li a:link,
+#main-nav li a:visited,
+#main-nav li a:active {
 	padding: 5px 10px 5px 12px;
 	background: url(../images/menu-dividerbg.gif) no-repeat left;
     color: #FFF;
 	height: 25px;
 }
 @media screen and (-webkit-min-device-pixel-ratio:0) {
-	#mainnav li a, #mainnav li a:link, #mainnav li a:visited, #mainnav li a:active { padding: 5px 10px 6px 12px; }
+	#main-nav li a, #main-nav li a:link, #main-nav li a:visited, #main-nav li a:active { padding: 5px 10px 6px 12px; }
 }
-#mainnav li a:hover {
+#main-nav li a:hover {
     color: #e4ffb4;
     text-decoration: none;
 }
-#mainnav li.selected a,
-#mainnav li.selected a:link,
-#mainnav li.selected a:visited,
-#mainnav li.selected a:active {
+#main-nav li.selected a,
+#main-nav li.selected a:link,
+#main-nav li.selected a:visited,
+#main-nav li.selected a:active {
     color: #feef45;
 	background: url(../images/menu-over-bg.gif) no-repeat left;
 }
 
 
 /**************** SUB NAVIGATION ****************/
-#subnav {
-	clear: both;
+#sub-nav {
+    clear: both;
     margin: 0;
+    padding: 0;
     font-size: 12px;
     font-weight: bold;
     text-align: left;
@@ -422,79 +350,73 @@ li#pendingfriends a {
     height: 25px;
 	line-height: 25px;
 }
-#subnav ul {
+#sub-nav ul {
     padding: 0 0 0 1em;
     height: 25px;
 }
-#subnav li {
+#sub-nav li {
     height: 25px;
     padding: 0;
     margin: 0;
 }
-#subnav li a,
-#subnav li a:link,
-#subnav li a:visited,
-#subnav li a:active {
+#sub-nav li a,
+#sub-nav li a:link,
+#sub-nav li a:visited,
+#sub-nav li a:active {
     color: #474220;
 	height: 25px;
     padding: 5px 12px 5px 10px;
 	background: url(../images/submenu-divider.gif) no-repeat top right;
 }
 @media screen and (-webkit-min-device-pixel-ratio:0) {
-	#subnav li a, #subnav li a:link, #subnav li a:visited, #subnav li a:active { padding: 6px 12px 6px 10px; }
+	#sub-nav li a, #sub-nav li a:link, #sub-nav li a:visited, #sub-nav li a:active { padding: 6px 12px 6px 10px; }
 }
-#subnav li a:hover {
+#sub-nav li a:hover {
     color: #7e7327;
     text-decoration: none;
 }
-#subnav li.selected a:link,
-#subnav li.selected a:visited,
-#subnav li.selected a:active {
+#sub-nav li.selected a:link,
+#sub-nav li.selected a:visited,
+#sub-nav li.selected a:active {
     padding: 5px 12px 5px 10px;
 	background: url(../images/submenu-over-bg.gif) no-repeat top right;
     color: #4c711d;
 }
 @media screen and (-webkit-min-device-pixel-ratio:0) {
-	#subnav li.selected a:link, #subnav li.selected a:visited, #subnav li.selected a:active { padding: 5px 12px 6px 10px; }
-}
-#subnav li.groupname {
-    background: url(../images/menu-over-bg.gif) repeat-x left;
-    color: #feef45;
+	#sub-nav li.selected a:link, #sub-nav li.selected a:visited, #sub-nav li.selected a:active { padding: 5px 12px 6px 10px; }
 }
 
 
 /**************** IN PAGE TAB NAVIGATION ****************/
-#grouppage-tabs ul,
-ul.profile-tabs {
+ul.in-page-tabs {
   padding: 0;
-  margin: 0 !important; /**TODO test removing this */
-  line-height: 24px;
+  margin: 15px 0 0 0;
+  line-height: 25px;
   height: 25px;
   background: url(../images/tabs-bg.gif) repeat-x top left;
 }
-#grouppage-tabs ul li,
-ul.profile-tabs li {
+ul.in-page-tabs li {
   float: left;
   height: 25px;
   margin: 0;
   padding: 0;
   background: url(../images/tabs-divider.gif) no-repeat top right;
 }
-#grouppage-tabs ul li.selected a,
-ul.profile-tabs li a.current-tab {
+ul.in-page-tabs li a.current-tab {
   background: url(../images/tabs-over-bg.gif) no-repeat top right;
   color: #000;
 }
-#grouppage-tabs li a,
-ul.profile-tabs li a {
+ul.in-page-tabs li a {
   color: #1E6297;
   padding: 5px 12px 6px 10px;
   * padding: 6px 12px 6px 10px;
   text-decoration: none;
 }
-#grouppage-tabs li a:hover,
-ul.profile-tabs li a:hover {
+ul.in-page-tabs li a:hover {
   color: #7E7327;
+}
+.subpage {
+  border-top: 0;
 }
 
 /**************** RIGHT SIDEBAR START *********/
@@ -517,23 +439,23 @@ div.sidebar ul ul li {
 }
 
 /* side profile */
-div.sidebar ul.sidebar-ul-title {
+#sb-profile h3 {
 	font-weight: bold;
 	color: #95a8b6;
 }
-div.sidebar ul.sidebar-ul-title a {
+#sb-profile ul a {
 	color: #95a8b6;
 }
-div.sidebar ul.sidebar-ul-title ul a {
+#sb-profile ul ul a {
 	color: #7f9d16;
 	font-weight: bold;
 }
 
 /* Online users sideblock */
-#onlineusers a img {
+#sb-onlineusers a img {
 	padding-right: .25em;
 }
-#onlineusers li {
+#sb-onlineusers li {
 	line-height: 2em;
 }
 
@@ -720,14 +642,6 @@ tr.folder td a {
 	font-weight: bold;
 }
 
-
-/* GROUPS > VIEWING A GROUP */
-#grouppage-tabs {
-  padding: 0;
-  height: 25px;
-  margin: 15px 0 0 0;
-  line-height: 25px;
-}
 #group-info {
 	background-color: #f4f7f9;
 	border: 10px solid #e0e8ee;
