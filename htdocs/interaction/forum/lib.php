@@ -314,12 +314,13 @@ class PluginInteractionForum extends PluginInteraction {
             $count = count($posts);
             for ($i = 0; $i < $count; $i++) {
                 $posts[$i]->users = array($posts[$i]->subscriber);
+                $posts[$i]->subscriptions = array($posts[$i]->subscriber => array('key' => $posts[$i]->key, 'type' => $posts[$i]->type));
                 $temp = $i;
                 while (isset($posts[$i+1])
-                    && $posts[$i+1]->id == $posts[$temp]->id
-                    && $posts[$i+1]->type == $posts[$temp]->type) {
+                    && $posts[$i+1]->id == $posts[$temp]->id) {
                     $i++;
                     $posts[$temp]->users[] = $posts[$i]->subscriber;
+                    $posts[$temp]->subscriptions[$posts[$i]->subscriber] = array('key' => $posts[$i]->key, 'type' => $posts[$i]->type);
                     unset($posts[$i]);
                 }
             }
@@ -327,10 +328,9 @@ class PluginInteractionForum extends PluginInteraction {
                 activity_occurred(
                     'newpost',
                     array(
-                        'type' => $post->type,
-                        'key'  => $post->key,
                         'postid' => $post->id,
-                        'users' => $post->users
+                        'users' => $post->users,
+                        'subscriptions' => $post->subscriptions,
                     ),
                     'interaction',
                     'forum'
@@ -379,7 +379,6 @@ class InteractionForumInstance extends InteractionInstance {
 class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
 
     protected $postid;
-    protected $type; // forum or topic
 
     public function __construct($data) {
         parent::__construct($data);
@@ -415,8 +414,6 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         $posttime = strftime(get_string('strftimedaydatetime'), $post->ctime);
         $textbody = trim(html2text($post->body));
         $postlink = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid;
-        $unsubscribeid = $post->{$data->type . 'id'};
-        $unsubscribelink = get_config('wwwroot') . 'interaction/forum/unsubscribe.php?' . $data->type . '=' . $unsubscribeid . '&key=' . $data->key;
 
         foreach ($this->users as &$user) {
             $lang = (empty($user->lang) || $user->lang == 'default') ? get_config('lang') : $user->lang;
@@ -427,13 +424,17 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
                 $user->subject = get_string_from_language($lang, 'newforumpostnotificationsubject', 'interaction.forum', $post->groupname, $post->forumtitle, $post->subject);
             }
 
+            $type = $data->subscriptions[$user->id]['type'];
+            $unsubscribeid = $post->{$type . 'id'};
+            $unsubscribelink = get_config('wwwroot') . 'interaction/forum/unsubscribe.php?' . $type . '=' . $unsubscribeid . '&key=' . $data->subscriptions[$user->id]['key'];
+
             $user->message = get_string_from_language($lang, 'forumposttemplate', 'interaction.forum',
                 $post->subject ? $post->subject : get_string_from_language($lang, 're', 'interaction.forum', $post->topicsubject),
                 display_name($post->poster, $user),
                 $posttime,
                 $textbody,
                 $postlink,
-                $data->type,
+                $type,
                 $unsubscribelink
             );
         }
@@ -456,7 +457,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
     }
 
     public function get_required_parameters() {
-        return array('postid', 'type');
+        return array('postid');
     }
 }
 
