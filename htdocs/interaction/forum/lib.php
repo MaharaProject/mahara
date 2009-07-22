@@ -411,6 +411,13 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
             $this->customheaders[] = 'In-Reply-To: <forumpost' . $post->parent . '@' . $hostname . '>';
             $this->customheaders[] = 'References: <forumpost' . $post->parent . '@' . $hostname . '>';
         }
+
+        $posttime = strftime(get_string('strftimedaydatetime'), $post->ctime);
+        $textbody = trim(html2text($post->body));
+        $postlink = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid;
+        $unsubscribeid = $post->{$data->type . 'id'};
+        $unsubscribelink = get_config('wwwroot') . 'interaction/forum/unsubscribe.php?' . $data->type . '=' . $unsubscribeid . '&key=' . $data->key;
+
         foreach ($this->users as &$user) {
             $lang = (empty($user->lang) || $user->lang == 'default') ? get_config('lang') : $user->lang;
             if ($post->parent) {
@@ -420,16 +427,14 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
                 $user->subject = get_string_from_language($lang, 'newforumpostnotificationsubject', 'interaction.forum', $post->groupname, $post->forumtitle, $post->subject);
             }
 
-            $unsubscribeid = $post->{$data->type . 'id'};
-
             $user->message = get_string_from_language($lang, 'forumposttemplate', 'interaction.forum',
                 $post->subject ? $post->subject : get_string_from_language($lang, 're', 'interaction.forum', $post->topicsubject),
                 display_name($post->poster, $user),
-                strftime(get_string('strftimedaydatetime'), $post->ctime),
-                trim(html2text($post->body)),
-                get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid,
+                $posttime,
+                $textbody,
+                $postlink,
                 $data->type,
-                get_config('wwwroot') . 'interaction/forum/unsubscribe.php?' . $data->type . '=' . $unsubscribeid . '&key=' . $data->key
+                $unsubscribelink
             );
         }
     }
