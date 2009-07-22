@@ -44,10 +44,10 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         if ($prevversion == 0) {
             // MySQL can't handle uniqueness of > 255 chars
             if (is_postgres()) {
-                execute_sql('CREATE UNIQUE INDEX blocextedata_url_uix ON blocktype_externalfeed_data(url);');
+                execute_sql('CREATE UNIQUE INDEX {blocextedata_url_uix} ON {blocktype_externalfeed_data}(url);');
             }
             else if (is_mysql()) {
-                execute_sql('ALTER TABLE blocktype_externalfeed_data ADD UNIQUE blocextedata_url_uix (url(255))');
+                execute_sql('ALTER TABLE {blocktype_externalfeed_data} ADD UNIQUE {blocextedata_url_uix} (url(255))');
             }
         }
     }
