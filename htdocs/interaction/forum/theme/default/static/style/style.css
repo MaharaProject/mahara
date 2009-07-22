@@ -1,0 +1,9 @@
+/**
+ * CSS rules for the forum interaction plugin
+ *
+ * Copyright (C) 2006-2009 Catalyst IT
+ * This file is distributed under the same terms as Mahara itself
+ */
+input.submit.btn-subscribe {
+	color: #7f9d16 !important;
+}
