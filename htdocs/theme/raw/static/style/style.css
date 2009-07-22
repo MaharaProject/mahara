@@ -586,6 +586,9 @@ div.rbuttons form div {
     display: inline;
     padding-left: 1em;
 }
+.controls a {
+    margin: 0 .5em;
+}
 
 /* Pagination */
 div.pagination  {

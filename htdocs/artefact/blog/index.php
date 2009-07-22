@@ -80,9 +80,9 @@ var bloglist = new TableRenderer(
                 return false;
             });
 
-            return TD(null, [
+            return TD({'class': 'controls'}, [
                 deleteButton,
-                DIV(null, A({'class': 'btn-edit', 'href':'{$wwwroot}artefact/blog/settings/?id=' + r.id}, {$enc_settings})),
+                A({'class': 'btn-edit', 'href':'{$wwwroot}artefact/blog/settings/?id=' + r.id}, {$enc_settings}),
                 A({'class': 'btn-add', 'href':'{$wwwroot}artefact/blog/post.php?blog=' + r.id}, {$enc_addpost})
             ]);
         }
