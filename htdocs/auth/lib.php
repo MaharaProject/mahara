@@ -808,7 +808,7 @@ function auth_check_password_change() {
     if (method_exists($authobj, 'change_password')) {
 
         require_once('pieforms/pieform.php');
-        $form = array(
+        $form = pieform(array(
             'name'       => 'change_password',
             'method'     => 'post',
             'plugintype' => 'auth',
@@ -844,10 +844,10 @@ function auth_check_password_change() {
                     'value' => get_string('changepassword'),
                 ),
             )
-        );
+        ));
 
         $smarty = smarty();
-        $smarty->assign('change_password_form', pieform($form));
+        $smarty->assign('change_password_form', $form);
         if ($USER->get('parentuser')) {
             $smarty->assign('loginasoverridepasswordchange',
                 get_string('loginasoverridepasswordchange', 'admin',
