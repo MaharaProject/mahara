@@ -532,6 +532,8 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     padding-left: .7em;
     cursor: pointer;
     border: none;
+    * width: 1;
+    * overflow: visible;
 }
 a.btn-del, .btn-leavegroup, div.btn-del input.submit, input.submit.btn-del {
     color: #ca0000;

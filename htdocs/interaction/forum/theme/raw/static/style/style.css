@@ -46,8 +46,8 @@
     padding-left: 1em;
     cursor: pointer;
 	border: none;
-    width: 1;
-    overflow: visible;
+    * width: 1;
+    * overflow: visible;
 }
 
 
