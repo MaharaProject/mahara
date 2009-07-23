@@ -237,10 +237,8 @@ pre, tt {
 }
 #main-column-container, div.rel {
     position: relative;
-    min-height: 0;
-}
-#main-column-container {
-    padding-top: .2em;
+    min-height: 0;  /* IE layout hack */
+    * padding-top: .2em;
 }
 .listing {
     font-size: .9em;

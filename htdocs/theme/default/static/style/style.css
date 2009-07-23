@@ -124,35 +124,33 @@ label,
 
 
 /******************** BUTTONS **********************/
-/* Default light buttons to the big ones */
-input.submit, 
-input.button, 
+input.submit,
+input.button,
+input.cancel,
+input.cancelbackcreate,
 button {
-    background-color: #92b328;
-	border-color: #d5ed8a #496000 #496000 #d5ed8a !important;
 	border-style: solid;
 	border-width: 1px;
     margin: 0 .25em 0 0;
     color: #FFF !important;
-    padding: .1em .3em !important;
+    padding: .1em .2em .05em;
     * padding: 0;
     /* padding: .25em .5em .2em .5em;
     * padding: 0.1em 0; */
+}
+/* Default light buttons to the big ones */
+input.submit,
+input.button,
+button {
+	border-color: #d5ed8a #496000 #496000 #d5ed8a;
+    background-color: #92b328;
 }
 /* Default dark buttons to the big ones */
 input.cancel,
 input.cancelbackcreate,
 button.cancel {
     background-color: #7d9728;
-	border-color: #bdda5e #4e6307 #4e6307 #bdda5e !important;
-	border-style: solid;
-	border-width: 1px;
-    margin: 0 .25em 0 0;
-    color: #FFF !important;
-    padding: .1em .3em !important;
-    * padding: 0;
-    /* padding: .25em .5em .2em .5em;
-	* padding: 0.1em 0; */
+	border-color: #bdda5e #4e6307 #4e6307 #bdda5e;
 }
 
 /***** DELETE RED BUTTON ********/
@@ -260,7 +258,6 @@ li#pendingfriends a {
 /* HEADER ELEMENTS */
 #top-wrapper {
     background: url(../images/header-bg.gif) repeat-x bottom left;
-	height: 100px;
 }
 #top-wrapper ul,
 #top-wrapper li {
