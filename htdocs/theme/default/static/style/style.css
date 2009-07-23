@@ -422,6 +422,9 @@ ul.in-page-tabs li a:hover {
 
 /**************** RIGHT SIDEBAR START *********/
 .sidebar {
+    padding: 0;
+}
+div.sideblock {
     background: url(../images/sidebar-bg.gif) repeat-x top;
 }
 
