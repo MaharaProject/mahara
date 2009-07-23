@@ -62,9 +62,10 @@ else { // edit topic
 }
 
 $forum = get_record_sql(
-    'SELECT f.group AS groupid, f.title, g.name AS groupname, g.grouptype
+    'SELECT f.group AS groupid, f.title, g.name AS groupname, g.grouptype, ic.value AS newtopicusers
     FROM {interaction_instance} f
     INNER JOIN {group} g ON (g.id = f.group AND g.deleted = ?)
+    LEFT OUTER JOIN {interaction_forum_instance_config} ic ON (f.id = ic.forum AND ic.field = \'createtopicusers\')
     WHERE f.id = ?
     AND f.deleted != ?',
     array(0, $forumid, 1)
@@ -77,7 +78,7 @@ define('GROUP', $forum->groupid);
 $membership = user_can_access_forum((int)$forumid);
 $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
-if (!$membership) {
+if (!$membership || ($forum->newtopicusers == 'moderators' && !$moderator)) {
     throw new AccessDeniedException(get_string('cantaddtopic', 'interaction.forum'));
 }
 

@@ -11,7 +11,7 @@
 <div id="forumdescription">{$forum->description}</div>
 <div id="viewforum" class="rel">
 	<h3>{str tag=Topics section="interaction.forum"}</h3>
-    {if $membership}
+    {if $membership && ($moderator || $forum->newtopicusers != 'moderators') }
     <div class="rbuttons">
 	<a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id|escape}" class="btn-add s">{str tag="newtopic" section="interaction.forum}</a>
 	</div>
