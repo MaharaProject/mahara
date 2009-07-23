@@ -49,7 +49,7 @@ if ($USER->get('admin')) {
 
 $morestr = get_string('more...');
 
-$star = json_encode(theme_get_url('images/star.png'));
+$star = json_encode($THEME->get_url('images/star.png'));
 $unread = json_encode(get_string('unread', 'activity'));
 
 $javascript = <<<JAVASCRIPT
