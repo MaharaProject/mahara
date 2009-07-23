@@ -506,47 +506,48 @@ div.sideblock {
 }
 
 /* Login */
-.maincontent #loginform_container th {
+.main-column #loginform_container th {
 	padding: .5em .25em;
 }
-.maincontent #loginform_container td {
+.main-column #loginform_container td {
     padding: .25em;
 }
 
 /* Tables */
-.maincontent td {
+.main-column td {
 	margin: 0;
 }
-.maincontent thead th {
+.main-column thead th {
     color: #677a8a;
 	border-bottom: 1px solid #95a8b7;
 	vertical-align: top;
 }
-.maincontent tbody th {
+.main-column tbody th {
     color: #677a8a;
 	text-align: right;
 	border-bottom: none;
 }
 /******* TH in tbody that should appear like it's in thead with a line under and left aligned *******/
+table.nohead th,
 #menuitemlist table th,
-#postlist th,
-#forumslist th,
-#forumtopicstable th {
+#postlist th {
 	border-bottom: 1px solid #95a8b7;
 	text-align: left;
 }
-.maincontent tfoot td {
+table.nohead th.center {
+	text-align: center;
+}
+.main-column tfoot td {
 	border-top: 1px solid #95a8b7;
 }
 /********* Tables that require a bottom border to enclose elements *********/
+table.nohead,
 #filelist,
 #filebrowser,
 #attachedfiles,
 #bloglist,
 .templateresults,
 #feedbacktable,
-#forumslist,
-#forumtopicstable,
 #notificationstable,
 #suspendedlist {
 	border-bottom: 1px solid #95a8b7;

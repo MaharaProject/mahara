@@ -119,6 +119,9 @@ td {
     padding: .25em .5em;
     vertical-align: top;
 }
+td.narrow {
+    padding: 0;
+}
 .r0 {
     background-color: #f1f1f1;
 }

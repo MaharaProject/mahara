@@ -16,40 +16,37 @@
     {/foreach}
 </div>
 {if $forums}
-<table id="forumslist" class="fullwidth">
+<table id="forumslist" class="fullwidth nohead">
 	<tr>
-		<th>{str tag="forumname" section="interaction.forum"}</th>
-		<th>{str tag="description"}</th>
-		<th>{str tag=Moderators section=interaction.forum}</th>
-		<th>{str tag="Topics" section="interaction.forum"}</th>
-		{if $admin}<th></th>{/if}
-		{if $forum->subscribe}{/if}<th></th>
+		<th>{str tag="name" section="interaction.forum"}</th>
+		<th class="center">{str tag="Topics" section="interaction.forum"}</th>
+		<th></th>
 	</tr>
     {foreach from=$forums item=forum}
     <tr class="r{cycle values=0,1}">
-        <td class="nowrap"><strong><a href="{$WWWROOT}interaction/forum/view.php?id={$forum->id|escape}">{$forum->title|escape}</a></strong>
-        </td>
-		<td>
-        {$forum->description}
-        </td>
         <td>
-        {if $forum->moderators}
-        {foreach from=$forum->moderators item=mod}
-            <div class="s">
-                <a href="{$WWWROOT}user/view.php?id={$mod}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$mod}" alt=""></a>
-                <a href="{$WWWROOT}user/view.php?id={$mod}" class="moderator forumuser">{$mod|display_name|escape}</a>
+            {if $admin}
+            <div class="fr btn-spacer s">
+                <a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}&amp;returnto=index" id="btn-edit" class="btn-edit">{str tag=edit}</a>
+                <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}&amp;returnto=index" class="btn-del">{str tag=delete}</a>
             </div>
-        {/foreach}
-        {/if}
-		</td>
-        <td align="center">{$forum->topiccount}</td>
-        {if $admin}
-        <td class="nowrap btn-spacer s">
-        <a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}&amp;returnto=index" id="btn-edit" class="btn-edit">{str tag=edit}</a>
-        <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}&amp;returnto=index" class="btn-del">{str tag=delete}</a>
+            {/if}
+            <div class="nowrap">
+                <strong><a href="{$WWWROOT}interaction/forum/view.php?id={$forum->id|escape}">{$forum->title|escape}</a></strong>
+            </div>
+            <div class="s">{$forum->description|str_shorten_html:1000:true}</div>
+            {if $forum->moderators}
+            <div class="s inlinelist">
+                <span>{str tag="Moderators" section="interaction.forum"}:</span>
+                {foreach from=$forum->moderators item=mod}
+                    <a href="{$WWWROOT}user/view.php?id={$mod}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$mod}" alt=""></a>
+                    <a href="{$WWWROOT}user/view.php?id={$mod}" class="moderator">{$mod|display_name:null:true|escape}</a>
+                {/foreach}
+            </div>
+            {/if}
         </td>
-        {/if}
-        {if $forum->subscribe}<td class="nowrap s">{$forum->subscribe}</td>{/if}
+        <td class="center">{$forum->topiccount}</td>
+        <td class="nowrap s">{if $forum->subscribe}{$forum->subscribe}{/if}</td>
 	</tr>
     {/foreach}
 </table>

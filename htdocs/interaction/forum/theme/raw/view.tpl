@@ -18,10 +18,10 @@
 	{/if}
 {if $stickytopics || $regulartopics}
 <form action="" method="post">
-    <table id="forumtopicstable" class="fullwidth">
+    <table id="forumtopicstable" class="fullwidth nohead">
         <tr>
         <th></th>
-        {if $membership && (!$forum->subscribed || $moderator)}<th></th>{/if}
+        <th></th>
         <th>{str tag="Topic" section="interaction.forum"}</th>
         <th>{str tag="Poster" section="interaction.forum"}</th>
         <th class="postscount">{str tag="Posts" section="interaction.forum"}</th>
@@ -31,7 +31,6 @@
     {if $stickytopics}
     	{include file="interaction:forum:topics.tpl" topics=$stickytopics moderator=$moderator forum=$forum sticky=true}
     {/if}
-    {if $stickytopics && $regulartopics}<tr><td></td></tr>{/if}
     {if $regulartopics}
     	{include file="interaction:forum:topics.tpl" topics=$regulartopics moderator=$moderator forum=$forum sticky=false}
     {/if}
