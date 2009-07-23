@@ -311,6 +311,8 @@ class PluginInteractionForum extends PluginInteraction {
         // query gets a new object for every subscription
         // this combines all the objects for the same post together with an array for the subscribers
         if ($posts) {
+            set_field_select('interaction_forum_post', 'sent', 1,
+                'ctime < ? AND deleted = 0 AND sent = 0', array(db_format_timestamp($minpostdelay)));
             $count = count($posts);
             for ($i = 0; $i < $count; $i++) {
                 $posts[$i]->users = array($posts[$i]->subscriber);
@@ -336,8 +338,6 @@ class PluginInteractionForum extends PluginInteraction {
                     'forum'
                 );
             }
-            set_field_select('interaction_forum_post', 'sent', 1,
-                'ctime < ? AND deleted = 0 AND sent = 0', array(db_format_timestamp($minpostdelay)));
         }
     }
 
