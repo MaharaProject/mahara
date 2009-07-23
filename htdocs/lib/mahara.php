@@ -153,7 +153,7 @@ function ensure_sanity() {
         throw new ConfigSanityException(get_string('couldnotmakedatadirectories', 'error'));
     }
 
-    raise_memory_limit('32M');
+    raise_memory_limit('128M');
 }
 
 /**
