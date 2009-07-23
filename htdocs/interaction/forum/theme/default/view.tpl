@@ -18,7 +18,7 @@
 </table>
 
 <h3>{str tag=Topics section="interaction.forum"}</h3>
-{if $membership}
+{if $membership && ($moderator || $forum->newtopicusers != 'moderators') }
 <span class="addicon fr">
 <a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id|escape}">{str tag="newtopic" section="interaction.forum}</a>
 </span>

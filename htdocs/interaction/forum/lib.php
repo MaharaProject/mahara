@@ -30,8 +30,11 @@ class PluginInteractionForum extends PluginInteraction {
 
     public static function instance_config_form($group, $instance=null) {
         if (isset($instance)) {
-            $autosubscribe = get_field('interaction_forum_instance_config', 'value', 'field', 'autosubscribe', 'forum', $instance->get('id'));
-            $weight = get_field('interaction_forum_instance_config', 'value', 'field', 'weight', 'forum', $instance->get('id'));
+            $instanceconfig = get_records_assoc('interaction_forum_instance_config', 'forum', $instance->get('id'), '', 'field,value');
+            $autosubscribe = isset($instanceconfig['autosubscribe']) ? $instanceconfig['autosubscribe']->value : false;
+            $weight = isset($instanceconfig['weight']) ? $instanceconfig['weight']->value : null;
+            $createtopicusers = isset($instanceconfig['createtopicusers']) ? $instanceconfig['createtopicusers']->value : null;
+
             $moderators = get_column_sql(
                 'SELECT fm.user FROM {interaction_forum_moderator} fm
                 JOIN {usr} u ON (fm.user = u.id AND u.deleted = 0)
@@ -105,7 +108,18 @@ class PluginInteractionForum extends PluginInteraction {
                         'filter' => false,
                         'lefttitle' => get_string('potentialmoderators', 'interaction.forum'),
                         'righttitle' => get_string('currentmoderators', 'interaction.forum')
-                    )
+                    ),
+                    'createtopicusers' => array(
+                        'type'         => 'select',
+                        'title'        => get_string('whocancreatetopics', 'interaction.forum'),
+                        'options'      => array('members'    => get_string('allgroupmembers', 'group'),
+                                                'moderators' => get_string('moderatorsandgroupadminsonly', 'interaction.forum')),
+                        'description'  => get_string('createtopicusersdescription', 'interaction.forum'),
+                        'defaultvalue' => (isset($createtopicusers) && $createtopicusers == 'moderators') ? 'moderators' : 'members',
+                        'rules' => array(
+                            'required' => true,
+                        ),
+                    ),
                 )
             )
         );
@@ -194,6 +208,20 @@ class PluginInteractionForum extends PluginInteraction {
                 )
             );
         }
+
+        // Create topic users
+        delete_records_sql(
+            "DELETE FROM {interaction_forum_instance_config}
+            WHERE field = 'createtopicusers' AND forum = ?",
+            array($instance->get('id'))
+        );
+        insert_record('interaction_forum_instance_config', (object)array(
+            'forum' => $instance->get('id'),
+            'field' => 'createtopicusers',
+            'value' => $values['createtopicusers'] == 'moderators' ? 'moderators' : 'members',
+        ));
+
+
         db_commit();
     }
 
