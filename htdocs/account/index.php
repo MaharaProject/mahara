@@ -43,7 +43,7 @@ $authobj = AuthFactory::create($USER->authinstance);
 if (method_exists($authobj, 'change_password')) {
     $elements = array(
         'changepassworddesc' => array(
-            'value' => '<tr><th colspan="2"><h3>' . get_string('changepassworddesc', 'account') . '</h3></th></tr>'
+            'value' => '<tr><td colspan="2"><h3>' . get_string('changepassworddesc', 'account') . '</h3></td></tr>'
         ),
         'oldpassword' => array( 'type' => 'password',
             'title' => get_string('oldpassword'),
@@ -64,7 +64,7 @@ else if ($url = get_config_plugin_instance('auth', $USER->authinstance, 'changep
     // @todo contextual help
     $elements = array(
         'changepasswordotherinterface' => array(
-            'value' => '<tr><th colspan="2"><h3>' . get_string('changepasswordotherinterface', 'account', $url) . '</h3></th></tr>'
+            'value' => '<tr><td colspan="2"><h3>' . get_string('changepasswordotherinterface', 'account', $url) . '</h3></td></tr>'
         )
     );
 }
@@ -74,7 +74,7 @@ else {
 
 if ($authobj->authname == 'internal') {
     $elements['changeusernameheading'] = array(
-        'value' => '<tr><th colspan="2"><h3>' . get_string('changeusernameheading', 'account') . '</h3></th></tr>'
+        'value' => '<tr><td colspan="2"><h3>' . get_string('changeusernameheading', 'account') . '</h3></td></tr>'
     );
     $elements['username'] = array(
         'type' => 'text',
@@ -85,7 +85,7 @@ if ($authobj->authname == 'internal') {
 }
 
 $elements['accountoptionsdesc'] = array(
-    'value' => '<tr><th colspan="2"><h3>' . get_string('accountoptionsdesc', 'account') . '</h3></th></tr>'
+    'value' => '<tr><td colspan="2"><h3>' . get_string('accountoptionsdesc', 'account') . '</h3></td></tr>'
 );
 $elements['friendscontrol'] = array(
     'type' => 'radio',

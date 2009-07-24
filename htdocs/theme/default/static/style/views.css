@@ -161,3 +161,16 @@ td label {
 	background-color: #F8FBFD;
     padding: .5em;
 }
+
+
+#viewacl_lhs {
+	background-color: #FBFBFB;
+	width: 310px;
+}
+#viewacl_lhs #results {
+	border-bottom: 1px solid #95a8b7;
+}
+
+#accesslistitems .ai-container {
+    background-color: #f4f7f9;
+}

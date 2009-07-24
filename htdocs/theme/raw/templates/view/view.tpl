@@ -23,7 +23,7 @@
         </div>
         <div>{$releaseform}</div>
 	<div id="publicfeedback">
-	<table id="feedbacktable" class="fullwidth">
+	<table id="feedbacktable" class="fullwidth table">
 		<thead>
 			<tr><th>{str tag="feedback" section="view"}</th></tr>
 		</thead>

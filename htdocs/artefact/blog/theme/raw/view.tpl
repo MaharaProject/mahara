@@ -9,7 +9,7 @@
                 <p>{$blog->get('description')}</p>
 		
                 {if $blog->count_children() > 0}
-				<div><table id="postlist" class="hidden tablerenderer fullwidth">
+				<div><table id="postlist" class="hidden tablerenderer fullwidth nohead">
 					<tbody>
 							  <tr><td></td><td></td><td></td></tr>
 					</tbody>

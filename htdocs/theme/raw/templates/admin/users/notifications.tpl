@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-            <table id="notificationstable" class="fullwidth">
+            <table id="notificationstable" class="fullwidth table">
 			<thead>
                 <tr>
                     <th>&nbsp;</th>

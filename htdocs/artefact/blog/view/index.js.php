@@ -135,7 +135,7 @@ postlist.rowfunction = function(d, n, gd) {
                              TD(null, d.files[i].description)));
         }
         rows.push(TR(null, TD({'colSpan':3}, 
-                              TABLE({'class': 'blogpost-attachments'}, 
+                              TABLE({'class': 'attachments fullwidth'},
                                     createDOM('col', {'width':'5%'}),
                                     createDOM('col', {'width':'40%'}),
                                     createDOM('col', {'width':'55%'}),

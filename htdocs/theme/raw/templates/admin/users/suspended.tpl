@@ -2,7 +2,7 @@
 
             {$buttonformopen}
             {$buttonform}
-            <table id="suspendedlist" class="fullwidth">
+            <table id="suspendedlist" class="table fullwidth">
                 <thead>
                     <tr>
                         <th>{str tag=fullname}</th>

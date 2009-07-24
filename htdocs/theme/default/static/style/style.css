@@ -27,6 +27,7 @@ body {
 
 /* Base styles */
 .description,
+.unvalidated,
 .postdetails {
     color: #838383;
 }
@@ -34,10 +35,6 @@ body {
 acronym {
     color: #474220;
     border-bottom: 1px dotted #d4d1c0;
-}
-
-.unvalidated { 
-    color: #838383;
 }
 
 /* LINKS */
@@ -100,25 +97,14 @@ input[type=file] {
 
 
 /******************** LABEL *************************/
-label,
-.required .searchtd label {
+label {
     color: #677a8a;
 }
-
-.required label,
-.required th,
-.required td label,
-.required td,
-.requiredmarker,
-#register_tandc_container th {
+.required th, .required label, .requiredmarker, #register_tandc_container th {
     color: #c87e14;
 }
-/* labels that ended up with required colour but needs to be normal */
-.emaillist .validated label,
-#accountprefs td label,
-#personalinformation_gender_container label,
-#register td label,
-.sidebar #friendscontrol label {
+/* override required colour */
+.required label.plain, .required.radio td label, .required.emaillist td label {
 	color: #474220;
 }
 
@@ -135,8 +121,6 @@ button {
     color: #FFF !important;
     padding: .1em .2em .05em;
     * padding: 0;
-    /* padding: .25em .5em .2em .5em;
-    * padding: 0.1em 0; */
 }
 /* Default light buttons to the big ones */
 input.submit,
@@ -164,25 +148,6 @@ button.cancel {
 	* padding: 0.1em 0;
 }
 
-/***** ACCESS ICON LINKS ******/
-#togglepublic_submit {
-	color: #7f9d16 !important;
-}
-
-/****** ADD ICON LINKS ******/
-#potentialpresetitems button,
-#viewacl_lhs #results .button {
-	border: 0;
-	background: url(../../../raw/static/images/icon-add.gif) no-repeat left 6px;
-	color: #7f9d16 !important;
-    padding-left: 1em;
-    font-weight: bold;
-}
-input#addfriend_add,
-input#myfriends_addfriend_add {
-    color: #3092ce;
-}
-
 /***** ICON LINKS ******/
 div.btn-del input.submit, input.submit.btn-del,
 div.btn-msg input.submit,
@@ -190,14 +155,6 @@ div.btn-add input.submit, input.submit.btn-add,
 div.btn-edit input.submit, input.submit.btn-edit,
 a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup {
 	color: #7f9d16 !important;
-}
-
-/****** MAIL ICON LINKS *********/
-#userview .user-icon input#invite_submit {
-	color: #7f9d16;
-}
-#unreadmessages a {
-	color: #3986c3;
 }
 
 /****** SEARCH BUTTONS *********/
@@ -217,23 +174,14 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 	color: transparent !important;
 }
 
-/****** SUBSCRIBE ICON LINKS ********/
-#forumslist form tr.submit td input.submit {
-	color: #7f9d16 !important;
-}
-/********* USER ICON LINKS **********/
-li#pendingfriends a {
-	color: #3986c3;
-}
-
-#loading_box {
-    background-color: #ECF3D4;
+#loading-box {
+    background-color: #ECF3D4 !important;
 }
 
 
 /* PAGINATION */
 .pagination a {
-	background-color: #E7EFC5;
+    background-color: #E7EFC5;
 }
 
 #installer th {
@@ -440,6 +388,10 @@ div.sideblock {
 	color: #7f9d16;
 	font-weight: bold;
 }
+#sb-profile li#unreadmessages a.btn-msg,
+#sb-profile li#pendingfriends a {
+	color: #3986c3 !important;
+}
 
 /* Online users sideblock */
 #sb-onlineusers a img {
@@ -461,7 +413,6 @@ div.sideblock {
     color: #5c8727;
 }
 
-
 /* Side Login */
 #login label {
     color: #3986c3;
@@ -482,7 +433,6 @@ div.sideblock {
     font-size: .85em;
 	line-height: 1.4em;
 }
-
 
 /* Side Search */
 .sidebar #selfsearch input {
@@ -519,18 +469,22 @@ div.sideblock {
 }
 .main-column thead th {
     color: #677a8a;
-	border-bottom: 1px solid #95a8b7;
+	border-bottom: 1px solid #95a8b7 !important;
 	vertical-align: top;
 }
 .main-column tbody th {
     color: #677a8a;
-	text-align: right;
 	border-bottom: none;
 }
+.main-column .pieform tbody th {
+	text-align: right;
+}
+.main-column table.tablerenderer,
+.main-column table.table {
+	border-bottom: 1px solid #95a8b7 !important;
+}
 /******* TH in tbody that should appear like it's in thead with a line under and left aligned *******/
-table.nohead th,
-#menuitemlist table th,
-#postlist th {
+table.nohead th {
 	border-bottom: 1px solid #95a8b7;
 	text-align: left;
 }
@@ -538,18 +492,10 @@ table.nohead th.center {
 	text-align: center;
 }
 .main-column tfoot td {
-	border-top: 1px solid #95a8b7;
+	border-top: 1px solid #95a8b7 !important;
 }
 /********* Tables that require a bottom border to enclose elements *********/
-table.nohead,
-#filelist,
-#filebrowser,
-#attachedfiles,
-#bloglist,
-.templateresults,
-#feedbacktable,
-#notificationstable,
-#suspendedlist {
+table.nohead {
 	border-bottom: 1px solid #95a8b7;
 }
 
@@ -568,9 +514,6 @@ legend a:active {
 fieldset {
     border: 1px solid #95a8b7;
 }
-fieldset.collapsed table {
-	display: hidden; /* todo change to none and promote to raw? */
-}
 
 .tags {
     font-size: .9em;
@@ -584,126 +527,10 @@ fieldset.collapsed table {
     background-color: #f8fbfd;
 }
 
-
-
-
-/****************************** PAGE BY PAGE STYLES **********************************/
-
-/* PROFILE > EDIT PROFILE */
-
-.profile-fieldsets fieldset {
-	margin-top: 0;
-	border: 1px solid #d1d1d1;
-}
-
-/* MY PORTFOLIO > MY VIEWS */
-#viewacl_lhs {
-	background-color: #FBFBFB;
-	width: 310px;
-}
-#viewacl_lhs #results {
-	border-bottom: 1px solid #95a8b7;
-}
-
-#accesslistitems .ai-container {
-    background-color: #f4f7f9;
-}
-
-/* MY PORTFOLIO > MY FILES */
-tr.folder td a {
-    color: #1E6297;
-}
-#filelist tr.highlight-file td {
-    color: #837d37;
-}
-#filelist table table.editpermissions td {
-	font-size: 11px;
-	padding: 3px 0;
-}
-
-
-/* MY PORTFOLIO > MY BLOGS */
-.blogpost-attachments {
+.attachments {
 	border: 1px solid #d3e4f2;
 	background-color: #d3e4f2;
 }
-
-
-/* GROUPS > MY FRIENDS */
-#friendslist ul.viewlist li a {
-    color: #3986c3;
-	font-weight: bold;
-}
-
-#group-info {
-	background-color: #f4f7f9;
-	border: 10px solid #e0e8ee;
-}
-
-
-/* SETTINGS > PREFERENCES */
-#accountprefs table p {
-    margin: 5px 0 0 0;
-	color: #1e6297;
-	font-size: 1.2em;
-	font-weight: bold;
-	border-bottom: 1px solid #95a8b7
-}
-
-
-/* SETTINGS > INSTITUTION MENBERSHIP */
-#requestmembership_institution_container {
-	margin: 1em 0;
-}
-#requestmembership_studentid_container {
-	margin: 1em .5em 0 1em;
-}
-#cancelrequest label {
-	display: block;
-}
-
-/* EXPORT */
-div.progress-bar {
-    background-color: #7d9728;
-}
-
-
-/* ADMIN HOME */
-/* Administration Home styles */
-#register-site form legend a {
-	color: #7f9d16 !important;
-}
-
-#runupgrade {
-    background-color: #e0e8ee;
-    border: 1px solid #95a8b7;
-}
-#upgradestable th {
-    border-bottom: 1px solid #95a8b7;
-    background-color: #e0e8ee;
-	color: #677a8a;
-}
-#upgradestable td {
-	background-color: #f4f7f9;
-}
-
-/* CONFIGURE SITE > LINKS AND RESOURCES MENU */
-#menuitemlist table td {
-	background-color: #FBFBFB;
-}
-#menuitemlist #rownew td {
-	background-color: #f4f7f9;
-	border-bottom: 1px solid #95a8b7;
-}
-#menuitemlist tr.edit td {
-	background-color: #f9f7e7;
-}
-
-/* SEARCH RESULTS TABLE */
-.userlisttable tr th {
-	color: #555555;
-}
-
 
 /* FOOTER */
 #footerwrap {
@@ -728,3 +555,24 @@ div.progress-bar {
 #footerwrap p {
 	margin: 0.5em 0;
 }
+
+
+/****************************** PAGE BY PAGE STYLES **********************************/
+
+/* GROUPS > MY FRIENDS */
+#friendslist ul.viewlist li a {
+    color: #3986c3;
+	font-weight: bold;
+}
+.group-info {
+	background-color: #f4f7f9;
+	border: 10px solid #e0e8ee;
+}
+
+
+/* EXPORT */
+div.progress-bar {
+    background-color: #7d9728;
+}
+
+

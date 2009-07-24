@@ -72,6 +72,9 @@ body:last-child:not(:root:root) .newblockhere {
 	float: left;
 	margin-right: 5px;
 }
+#feedbacktable p {
+    margin: 0 0 .25em;
+}
 
 #view #publicfeedback {
 	padding: 1em .5em .5em .5em;
@@ -84,6 +87,17 @@ body:last-child:not(:root:root) .newblockhere {
 	text-align: right;
 	padding-top: 5px !important;
 	padding-bottom: 5px !important;
+}
+
+#view .blockinstance-content .attachments {
+    border: 0;
+    background-color: #fff;
+}
+#view .blockinstance-content .attachments td {
+    font-size: .9em;
+    margin: 0;
+    padding: 0 .5em;
+    background-color: #fff;
 }
 
 form#wallpost {

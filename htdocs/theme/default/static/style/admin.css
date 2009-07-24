@@ -1,0 +1,30 @@
+/* ADMIN HOME */
+/* Administration Home styles */
+#register-site form legend a {
+	color: #7f9d16 !important;
+}
+
+#runupgrade {
+    background-color: #e0e8ee;
+    border: 1px solid #95a8b7;
+}
+#upgradestable th {
+    border-bottom: 1px solid #95a8b7;
+    background-color: #e0e8ee;
+	color: #677a8a;
+}
+#upgradestable td {
+	background-color: #f4f7f9;
+}
+
+/* CONFIGURE SITE > LINKS AND RESOURCES MENU */
+#menuitemlist table td {
+	background-color: #FBFBFB;
+}
+#menuitemlist #rownew td {
+	background-color: #f4f7f9;
+	border-bottom: 1px solid #95a8b7;
+}
+#menuitemlist tr.edit td {
+	background-color: #f9f7e7;
+}

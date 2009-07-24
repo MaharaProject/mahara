@@ -81,10 +81,6 @@
 			</li>
 			{/foreach}
 		</ul>
-		{else}
-		<p>
-			{str tag='noviewstosee' section='group'}
-		</p>
 		{/if}
 	{/if}
 	{if $user->introduction}

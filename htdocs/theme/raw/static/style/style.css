@@ -325,9 +325,14 @@ ul.in-page-tabs li a {
 
 
 /* Forms */
-.required th, div.required label, .requiredmarker {
+.required th, .required label, .requiredmarker, #register_tandc_container th {
     color: #cc6600;
 }
+/* override required colour */
+.required label.plain, .required.radio td label, .required.emaillist td label {
+    color: #333;
+}
+
 .pieform tbody tr th label {
 	white-space: normal;
 }
@@ -529,7 +534,7 @@ div.sideblock #friendscontrol label {
 /* Buttons */
 div.btn-del input.submit, input.submit.btn-del,
 div.btn-msg input.submit,
-div.btn-add input.submit, input.submit.btn-add,
+div.btn-add input.submit, input.submit.btn-add, button.btn-add,
 div.btn-edit input.submit, input.submit.btn-edit,
 a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup {
     padding-left: .7em;
@@ -548,7 +553,7 @@ div.btn-bold input.submit {
 a.btn-msg, div.btn-msg input.submit {
 	background: url(../images/icon-mail.gif) no-repeat left 4px;
 }
-a.btn-add, a.btn-req, div.btn-add input.submit, input.submit.btn-add {
+a.btn-add, a.btn-req, div.btn-add input.submit, input.submit.btn-add, button.btn-add {
 	background: url(../images/icon-add.gif) no-repeat left 4px;
 }
 a.btn-edit, div.btn-edit input.submit, input.submit.btn-edit {
@@ -688,14 +693,24 @@ fieldset.collapsed legend a {
     padding: 0;
     margin: 0;
 }
-.userlisttable .searchtd {
-	padding: .25em;
-}
-.userlisttable tr th {
+.userlisttable tbody tr th {
 	text-align: left;
 	padding: 0;
 	font-size: .9em;
 	color: #333;
+}
+
+.attachments {
+	border: 1px solid #ddd;
+	background-color: #ddd;
+}
+.attachments tbody th {
+	border: none !important;
+	padding: .25em .5em 0;
+	text-align: left;
+}
+.attachments td {
+	padding: .25em .5em;
 }
 
 
@@ -778,6 +793,17 @@ form#search, form#filter, div.searchform {
 #friendslist .rightdiv {
 	min-height: 35px;
 	padding: .5em 0 0 4.5em;
+}
+
+/* SETTINGS > INSTITUTION MENBERSHIP */
+#requestmembership_institution_container {
+	margin: 1em 0;
+}
+#requestmembership_studentid_container {
+	margin: 1em .5em 0 1em;
+}
+#cancelrequest label {
+	display: block;
 }
 
 /* Export */

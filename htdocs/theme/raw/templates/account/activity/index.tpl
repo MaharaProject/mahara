@@ -21,18 +21,15 @@
 						<th width="50">{str tag='delete'}<br><a href="" onclick="{$selectalldel}">{str section='activity' tag='selectall'}</a></th>
 					</tr>
 				</thead>
-				<tbody>
-			
-				</tbody>
                 <tfoot>
 				  	<tr>
-						<td colspan="5" class="markasreadtd">
-						<div class="fr">
+						<td colspan="5" class="right">
 						  <input class="submit" type="submit" value="{str tag='markasread' section='activity'}" />
 						  <input class="submit btn-delete" type="button" value="{str tag='delete'}" onClick="{$markdel}" />
-						</div>
+						</td>
 				  	</tr>
 				</tfoot>
+				<tbody></tbody>
 			</table>
 			</form>
 			</div>
