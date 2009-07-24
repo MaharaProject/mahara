@@ -328,7 +328,9 @@ EOF;
         }
     }
     if (defined('ADMIN') || defined('INSTITUTIONALADMIN')) {
-        $stylesheets[] = $THEME->get_url('style/admin.css');
+        if ($adminsheets = $THEME->get_url('style/admin.css', true)) {
+            $stylesheets = array_merge($stylesheets, array_reverse($adminsheets));
+        }
     }
     if (get_config('developermode') & DEVMODE_DEBUGCSS) {
         $stylesheets[] = get_config('wwwroot') . 'theme/debug.css';
