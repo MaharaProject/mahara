@@ -1011,6 +1011,9 @@ class LiveUser extends User {
         $this->reset_institutions();
     }
 
-
+    public function update_theme() {
+        $this->reset_institutions();
+        $this->commit();
+    }
 }
 ?>

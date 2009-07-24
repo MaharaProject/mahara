@@ -241,7 +241,9 @@ function siteoptions_submit(Pieform $form, $values) {
 
     $message = get_string('siteoptionsset', 'admin');
     if ($oldtheme != $values['theme']) {
+        global $USER;
         $message .= '  ' . get_string('usersseenewthemeonlogin', 'admin');
+        $USER->update_theme();
     }
     $form->reply(PIEFORM_OK, array('message' => $message, 'goto' => '/admin/site/options.php'));
 }

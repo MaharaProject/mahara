@@ -475,6 +475,7 @@ function institution_submit(Pieform $form, $values) {
         $message = get_string('institutionupdatedsuccessfully', 'admin');
         if (isset($values['theme']) && $oldtheme != $values['theme']
             && (!empty($oldtheme) || $values['theme'] != 'sitedefault')) {
+            $USER->update_theme();
             $message .= '  ' . get_string('usersseenewthemeonlogin', 'admin');
         }
         $SESSION->add_ok_msg($message);
