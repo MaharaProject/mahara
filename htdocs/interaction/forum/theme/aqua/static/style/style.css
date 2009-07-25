@@ -1,0 +1,139 @@
+
+/* FORUMS */
+span.breadcrumbs {
+	display: block;
+}
+span.breadcrumbs a {
+	color: #888888;
+	font-size: 11px;
+	padding: 0 5px;
+}
+#forumslist {
+	list-style: none;
+	border-bottom: 1px solid #14436F;
+}
+#forumslist th {
+	text-align: left;
+	padding: 2px 10px;
+	border-bottom: 1px solid #14436F;
+}
+#forumslist h4 {
+	margin: 0;
+}
+#forumslist table {
+	margin: 0;
+	border: none;
+}
+#forumslist table th {
+	border: none;
+}
+#forumslist table td {
+	padding: 0;
+}
+#forumslist table td input {
+	margin: 0;
+}
+#forumslist #btn-edit {
+	padding-right: 10px;
+}
+#viewforum {
+	margin-bottom: 5px;
+}
+#viewforum #btn-edit {
+	padding-right: 10px;
+}
+#viewforum #forumdescription {
+	margin-top: 10px;
+	background-color: #ececec;
+	padding: 10px 10px;
+    width: 100%;
+	* width: 98%;
+	border: 1px solid #d7d7d7;
+}
+#viewforum #subscribe_forum {
+    display: inline;
+}
+#viewforum #subscribe_forum div {
+    display: inline;
+    margin-right: 2em; /* makes up for margin on input button, else button is pushed right */
+}
+#viewforum #subscribe_forum input {
+    margin: 0 0 0 2em;
+}
+#forumtopicstable {
+	width: 100%;
+	* width: 98%;
+	border-bottom: 1px solid #14436F;
+}
+#forumtopicstable th {
+	text-align: left;
+	border-bottom: 1px solid #14436F;
+	padding: 2px 10px;
+}
+.subscribetoforum {
+	margin-top: 5px;
+}
+#forumtopicbtnwrap {
+	width: 100%;
+	* width: 98%;
+	margin-bottom: 0;
+}
+.lastpost {
+	font-size: 11px;
+}
+#forumkeylist {
+	margin: 5px 0;
+}
+#forumkeylist li {
+	margin: 0 20px 0 0;
+}
+.stickytopic {
+	background-color: #ceeafe;
+}
+.forumtopicdescription {
+	font-size: 11px;
+}
+.forumposter {
+	font-size: 11px;
+}
+.postscount {
+	text-align: center !important;
+}
+.forumpost {
+	background-color: #f4f7f9;
+	width: 100%;
+	* width: 98%;
+	border-top: 1px solid #14436F;
+	border-bottom: 1px solid #14436F;
+	margin-bottom: 0;
+}
+.forumpost th {
+        line-height: 10px;
+	background-color: #888888;
+}
+.forumpost th h4 {
+	margin: 0;
+	color: #FFF;
+	text-align: left;
+}
+.forumpostleft {
+	background-color: #FFF;
+	font-size: 11px;
+}
+.forumpostleft h5 {
+	color: #888888;
+	font-size: 11px;
+}
+.posttime {
+	font-size: 11px;
+}
+.postbtns {
+	padding-right: 10px;
+}
+.postedits {
+    padding-top: 1.5em;
+    padding-left: .5em;
+}
+.postreply {
+	list-style: none;
+}

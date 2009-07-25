@@ -1,0 +1,28 @@
+/* sub sub tabs for the profile pages */
+ul.profile-tabs {
+	margin: 0 !important;
+	padding: 0 !important;
+    font-weight:normal;
+}
+ul.profile-tabs li {
+    list-style: none;
+    padding: 0 !important;
+	font-size: 11px;
+	margin: 0 0 0 5px !important;
+}
+ul.profile-tabs li a {
+    color: #FFF;
+    background-color: #BCBCBC;
+    padding: 4px 10px;
+	margin: 0;
+}
+ul.profile-tabs li a.current-tab {
+    color: #FFF;
+	font-weight: bold;
+    background-color: #14436F;
+}
+ul.profile-tabs li a:hover {
+	text-decoration: none;
+    color: #FFF;
+    background-color: #AAA;
+}
