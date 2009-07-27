@@ -19,6 +19,6 @@ GNU General Public License for more details.</p>
 along with this program.  If not, see <a href="http://www.gnu.org/licenses/gpl.html">http://www.gnu.org/licenses/</a>.
             </div>
 
-            <form action="{$WWWROOT}admin/upgrade.php" method="post" class="center"><input type="submit" class="submit" value="{str tag=agreelicense section=admin}" style="font-weight: bold;"></form>
+            <form action="{$WWWROOT}admin/upgrade.php" method="post" class="center"><input type="submit" class="submit" value="{str tag=agreelicense section=admin}"></form>
 
 {include file='admin/upgradefooter.tpl'}
