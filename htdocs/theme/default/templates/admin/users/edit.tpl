@@ -22,7 +22,7 @@
     {/if}
 
     <h3>{str tag="siteaccountsettings" section="admin"}</h3>
-    <p>{str tag="usereditdescription" section="admin"}</p>
+    <p style="margin-right: 100px;">{str tag="usereditdescription" section="admin"}</p>
     {$siteform}
     <!--<h3>{str tag="suspenduser" section="admin"}</h3>-->
     {if $USER->get('admin') || (!$user->get('admin') && !$user->get('staff')) }
