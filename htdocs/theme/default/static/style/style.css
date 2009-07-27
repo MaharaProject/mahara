@@ -1,47 +1,25 @@
 /**
- * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Stylesheet for Mahara's Default theme.
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @author     Evonne Cheung <evonne@catalyst.net.nz>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
+ * Copyright (C) 2006-2009 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
  */
 
+/* General rules */
 body {
     background: url(../images/background.gif) repeat;
 	color: #474220;
 }
-
-/* Base styles */
 .description,
 .unvalidated,
 .postdetails {
     color: #838383;
 }
-
 acronym {
     color: #474220;
     border-bottom: 1px dotted #d4d1c0;
 }
-
-/* LINKS */
-a,
-a:link,
-a:active,
-a:visited {
+a {
     color: #7f9d16;
     text-decoration: none;
 }
@@ -49,21 +27,13 @@ a:hover {
     color: #84aa00;
     text-decoration: underline;
 }
-
-
-/* TITLES */
-h1, h3, h4, h5, h6 {
-    font-weight: bold;
-}
 h1 {
     color: #4c711d;
 }
 h2 {
-    font-size: 2em;
     color: #4c711d;
 }
 h3 {
-    font-size: 1.4em;
     color: #1e6297;
 }
 h4 {
@@ -204,8 +174,12 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 }
 
 /* HEADER ELEMENTS */
+#site-logo {
+    padding-bottom: 0;
+}
 #top-wrapper {
     background: url(../images/header-bg.gif) repeat-x bottom left;
+    overflow: auto;
 }
 #top-wrapper ul,
 #top-wrapper li {
@@ -533,27 +507,16 @@ fieldset {
 }
 
 /* FOOTER */
-#footerwrap {
+#footer-wrap {
     background-color: #717277;
-	padding: .5em .25em;
     color: #bdb582;
 }
-#footerwrap a,
-#footerwrap a:link,
-#footerwrap a:active,
-#footerwrap a:visited {
+#footer-wrap a {
     color: #FFFFFF;
+    text-decoration: underline;
 }
-#footerwrap a:hover {
+#footer-wrap a:hover {
     color: #bdb582;
-    text-decoration: none;
-}
-#poweredby {
-	margin-left: 1em;
-	height: 31px;
-}
-#footerwrap p {
-	margin: 0.5em 0;
 }
 
 
