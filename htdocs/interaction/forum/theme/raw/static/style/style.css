@@ -39,7 +39,7 @@
     margin: 0;
 }
 .btn-subscribe input.submit {
-	background: url(../images/icon-subscribe.gif) no-repeat left 5px;
+	background: url(../images/icon-subscribe.gif) no-repeat center left;
     font-weight: bold;
     font-size: 0.9em;
     height: 1.8em;

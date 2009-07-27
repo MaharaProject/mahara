@@ -123,9 +123,26 @@ div.btn-del input.submit, input.submit.btn-del,
 div.btn-msg input.submit,
 div.btn-add input.submit, input.submit.btn-add,
 div.btn-edit input.submit, input.submit.btn-edit,
-a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup {
-	color: #7f9d16 !important;
+a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup, a.btn-link {
+    color: #7f9d16 !important;
 }
+
+/* Links from raw theme that should look like buttons */
+a.btn-link {
+	border-color: #d5ed8a #496000 #496000 #d5ed8a;
+    background-color: #92b328;
+	border-style: solid;
+	border-width: 1px;
+    margin: 0 .25em 0 0;
+    color: #FFF !important;
+    padding: .2em .3em .1em;
+    * padding: 0;
+    font-size: 1.1em;
+}
+a.btn-link:hover {
+    text-decoration: none;
+}
+
 
 /****** SEARCH BUTTONS *********/
 #users_search_btn,
