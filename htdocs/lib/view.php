@@ -608,7 +608,7 @@ class View {
                         break;
                     case 'group':
                         $accessrecord->group = $item['id'];
-                        if ($item['role']) {
+                        if (isset($item['role']) && strlen($item['role'])) {
                             // Don't insert a record for a role the group doesn't have
                             $roleinfo = group_get_role_info($item['id']);
                             if (!isset($roleinfo[$item['role']])) {
