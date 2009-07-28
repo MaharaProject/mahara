@@ -108,13 +108,7 @@ label {
     color: #888888;
     margin: 0 5px 0 0;
 }
-.required,
-div.required label,
-tr.required label,
-tr.required th,
-.required td label,
-.required td,
-.requiredmarker {
+.required th, .required label, .requiredmarker, #register_tandc_container th {
     color: #333333;
 }
 /* Legend */
@@ -159,7 +153,7 @@ fieldset {
     font-weight: normal;
 	font-size: 12px;
 	margin: 0 0 0 3px;
-	padding: 8px 15px 0px 15px;
+	padding: 5px 15px 3px;
 	background: #14336F;
 }
 #main-nav li a,
@@ -177,7 +171,6 @@ fieldset {
     text-decoration: underline;
 }
 #main-nav li.selected {
-	padding: 8px 15px 0px 15px;
 	background: #FFFFFF;
 }
 #main-nav li.selected a:link,
@@ -186,7 +179,7 @@ fieldset {
     color: #14336F;
 }
 
-#logo {
+#site-logo {
     padding: 0;
 	font-size: 3.3em;
 	font-weight:normal;
@@ -194,13 +187,13 @@ fieldset {
 	width:600px;
 	padding: 20px 25px 5px 0
 }
-#logo a,
-#logo a:link,
-#logo a:active,
-#logo a:visited {
+#site-logo a,
+#site-logo a:link,
+#site-logo a:active,
+#site-logo a:visited {
 	color: #FFFFFF;
 }
-#logo a:hover {
+#site-logo a:hover {
 	color: #F0F0F0;
 }
 
@@ -224,19 +217,18 @@ fieldset {
 #sub-nav ul {
     float:right;
 	height: 15px;
-	padding: 5px 10px 5px 0;
+	padding: 4px 10px 6px 0;
 }
 #sub-nav li {
     height: 25px;
     padding: 5px 13px 5px 8px;
     margin: 0 !important;
     /* not working */
-	/*background: url(../images/submenu-divider.gif) no-repeat top right; */
+    /* background: url(../../../default/static/images/submenu-divider.gif) no-repeat top right; */
 }
 #sub-nav li.selected {
     display: inline;
     height: 25px;
-    padding: 5px 13px 5px 8px;
     margin: 0;
 	background: transparent;
 }
@@ -256,10 +248,6 @@ fieldset {
 #sub-nav li.selected a:active {
     color: #1D499F;
     text-decoration: underline;
-}
-#sub-nav li.groupname {
-    background: url(../images/menu-over-bg.gif) repeat-x left;
-    color: #feef45;
 }
 
 /* search box in header */
@@ -376,6 +364,7 @@ div.sideblock p {
 }
 
 .btn,
+.btn-link,
 input.submit,
 input.button, button,
 input.submitcancel,
@@ -388,7 +377,7 @@ input.cancelbackcreate,
 	border-width: 1px;
 	font-size: 11px;
     font-weight:normal;
-	color: #FFF;
+	color: #FFF !important;
 	margin-left: 5px;
 }
 a.btn,
@@ -399,6 +388,14 @@ a.btn:hover {
 /* special case */
 #btn-logout {
 	background-color: #1D499F;
+}
+/***** ICON LINKS ******/
+div.btn-del input.submit, input.submit.btn-del,
+div.btn-msg input.submit,
+div.btn-add input.submit, input.submit.btn-add,
+div.btn-edit input.submit, input.submit.btn-edit,
+a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup {
+    color: #1F97D5 !important;
 }
 
 /* these are the first level styles */
@@ -525,32 +522,28 @@ table.fullwidth h3 a {
 /* Side Quota Bar */
 /** this is currently broken and needs looking at
  * default is broken too */
-#quota_message {
-    margin: 0 16px 0 0;
-	font-size: 12px;
-    padding-bottom: 10px;
-}
-#quota_bar, #quota_bar_100 {
-    background: #14436F;
-    height: 21px;
-    color: #FFF;
-    padding: 7px 0 0 0;
-}
-#quota_bar_100 {
-    background: #CC0000;
-}
 #quota_used {
     color: #3986c3;
 }
 #quota_total {
     color: #1F97D5;
 }
-#quota_bar_100 #quota_percentage {
-    margin: auto;
+#quota_bar {
+    background: #14436F;
+    color: #FFF;
+}
+#quota_bar_100 {
+    background: #CC0000;
+}
+
+#quota_message {
+    margin: 0 16px 0 0;
+	font-size: 12px;
+    padding-bottom: 10px;
 }
 #quota_fill {
+    margin: 0;
     background: #1F97D5;
-    height:21px
 }
 
 
@@ -576,42 +569,44 @@ table.fullwidth h3 a {
 }
 
 /* Tables */
-.maincontent table {
+.main-column table {
 	padding: 0;
 	border-spacing: 0;
 	border-collapse: collapse;
 	margin: 15px 0;
 }
-.maincontent thead th {
+.main-column thead th {
     color: #888888;
 	padding: 2px 10px;
 	border-bottom: 1px solid #14436F;
 	vertical-align: top;
 }
-.maincontent tbody th {
+.main-column tbody th {
     color: #888888;
-	text-align: right;
 	padding: 7px 0 7px 10px;
 	border-bottom: none;
 }
-.maincontent th.center {
+.main-column .pieform tbody th {
+	text-align: right;
+}
+.main-column th.center {
     text-align: center;
 }
-.maincontent tbody td {
+.main-column tbody td {
 	padding: 5px 10px;
 	vertical-align: top;
 }
-.maincontent tfoot td {
+.main-column tfoot td {
 	padding: 3px 10px;
 	border-top: 1px solid #14436F;
 }
-.tablerenderer {
+table.table, .tablerenderer {
 	padding: 0;
 	margin: 0;
 	border: none;
 	border-spacing: 0;
 }
-.tablerenderer td {
+table.table td, .tablerenderer td {
 	padding: 5px 10px;
 	margin: 0;
 	border: none;

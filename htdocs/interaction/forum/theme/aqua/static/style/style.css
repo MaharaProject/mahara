@@ -1,19 +1,11 @@
-
-/* FORUMS */
-span.breadcrumbs {
-	display: block;
-}
-span.breadcrumbs a {
-	color: #888888;
-	font-size: 11px;
-	padding: 0 5px;
+input.submit.btn-subscribe {
+    color: #1F97D5 !important;
 }
 #forumslist {
 	list-style: none;
 	border-bottom: 1px solid #14436F;
 }
 #forumslist th {
-	text-align: left;
 	padding: 2px 10px;
 	border-bottom: 1px solid #14436F;
 }
@@ -33,14 +25,8 @@ span.breadcrumbs a {
 #forumslist table td input {
 	margin: 0;
 }
-#forumslist #btn-edit {
-	padding-right: 10px;
-}
 #viewforum {
 	margin-bottom: 5px;
-}
-#viewforum #btn-edit {
-	padding-right: 10px;
 }
 #viewforum #forumdescription {
 	margin-top: 10px;
@@ -61,14 +47,12 @@ span.breadcrumbs a {
     margin: 0 0 0 2em;
 }
 #forumtopicstable {
-	width: 100%;
-	* width: 98%;
 	border-bottom: 1px solid #14436F;
 }
 #forumtopicstable th {
 	text-align: left;
 	border-bottom: 1px solid #14436F;
-	padding: 2px 10px;
+	padding: 2px 0;
 }
 .subscribetoforum {
 	margin-top: 5px;
@@ -99,7 +83,7 @@ span.breadcrumbs a {
 .postscount {
 	text-align: center !important;
 }
-.forumpost {
+table.forumpost {
 	background-color: #f4f7f9;
 	width: 100%;
 	* width: 98%;
@@ -107,14 +91,9 @@ span.breadcrumbs a {
 	border-bottom: 1px solid #14436F;
 	margin-bottom: 0;
 }
-.forumpost th {
-        line-height: 10px;
-	background-color: #888888;
-}
-.forumpost th h4 {
-	margin: 0;
-	color: #FFF;
-	text-align: left;
+.forumpost .forumsubject h3 {
+    padding: 0;
+    margin: 0;
 }
 .forumpostleft {
 	background-color: #FFF;
@@ -129,6 +108,7 @@ span.breadcrumbs a {
 }
 .postbtns {
 	padding-right: 10px;
+    border-bottom: none;
 }
 .postedits {
     padding-top: 1.5em;
@@ -136,4 +116,5 @@ span.breadcrumbs a {
 }
 .postreply {
 	list-style: none;
+	background-color: #f4f7f9;
 }
