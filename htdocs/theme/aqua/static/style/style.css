@@ -26,6 +26,12 @@ body {
 	color: #14336F;
 }
 
+.description,
+.unvalidated,
+.postdetails {
+    color: #838383;
+}
+
 p {
     margin: 10px 0 10px 0;
 	line-height: 18px;
@@ -296,43 +302,20 @@ fieldset {
 
 #footer-wrap {
     background-color: #1D499F;
-    padding: 0 0 10px 0;
-    color: #FFF;
-    font-size: 11px;
-}
-#footer-wrap p {
-    height: 30px;
-    margin: 0;
-    padding: 8px 0 0 5px;
-    font-size: 11px;
-    color: #FFF;
-    text-align: center;
-    background-color: #1D499F;
 }
 #footer-wrap a,
 #footer-wrap a:link,
 #footer-wrap a:active,
 #footer-wrap a:visited {
     color: #FFFFFF;
-    text-decoration: none;
 	padding: 0 5px;
 }
 #footer-wrap a:hover {
     color: #FFF;
-    text-decoration: underline;
 }
-.performanceinfo {
-    font-size:9px;
-    text-align:center;
-    margin-top:4px;
-}
-.performanceinfo span {
-	display: inline;
-	margin-right: 5px;
-	margin-left: 5px;
-}
-.performanceinfo br {
-	display: none;
+
+#performance-info {
+    color: #fff;
 }
 
 #powered-by {
@@ -431,60 +414,6 @@ div#sb-onlineusers ul {
 }
 div#sb-onlineusers ul img {
     padding-right:5px;
-}
-
-
-
-
-/*  Views  */
-
-#page #top-pane,
-#page #blocksinstruction {
-    background: #1D499F;
-}
-#page #blocksinstruction {
-    color: #FFFFFF;
-}
-div.configure,
-#artefactchooser-body table,
-#artefactchooser-body table th,
-#artefactchooser-body table td,
-#artefactchooser-body table td p,
-#artefactchooser-body table td div  {
-    color: #14336F;
-	background: #FFFFFF;
-}
-#page #noblocks,
-#artefactchooser-body table th label,
-body:last-child:not(:root:root) .newblockhere {
-    color: #1D499F;
-}
-#page #bottom-pane {
-	border-color: #1D499F !important;
-    border-width:1px !important;
-}
-
-#blocktype-list {
-  color: #1D499F !important;
-  background-color: #f4f7f9;
-}
-#category-list li a {
-    background-color: #e0e8ee;
-	color: #1e6297;
-    padding: 5px 10px;
-	height: 25px;
-}
-#category-list li.current a {
-    font-weight: bold;
-    background-color: #f4f7f9;
-	color: #1e6297;
-}
-/* configure icon on blocks is special */
-.configurebutton {
-    background-color:white !important;
-    border:0px !important;
-    padding:0px !important;
-    margin: 0px !important;
 }
 
 

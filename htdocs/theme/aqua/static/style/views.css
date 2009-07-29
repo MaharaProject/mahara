@@ -1,0 +1,46 @@
+/*  Views  */
+#page #top-pane,
+#page #blocksinstruction {
+    background: #1D499F;
+}
+#page #blocksinstruction {
+    color: #FFFFFF;
+}
+div.configure,
+#artefactchooser-body table,
+#artefactchooser-body table th,
+#artefactchooser-body table td,
+#artefactchooser-body table td p,
+#artefactchooser-body table td div  {
+    color: #14336F;
+	background: #FFFFFF;
+}
+#page #noblocks,
+#artefactchooser-body table th label,
+body:last-child:not(:root:root) .newblockhere {
+    color: #1D499F;
+}
+#page #bottom-pane {
+	border-color: #1D499F !important;
+}
+
+#blocktype-list {
+  color: #1D499F !important;
+  background-color: #f4f7f9;
+}
+#category-list li a {
+    background-color: #e0e8ee;
+	color: #1e6297;
+}
+#category-list li.current a {
+    background-color: #f4f7f9;
+	color: #1e6297;
+}
+/* configure icon on blocks is special */
+.configurebutton {
+    background-color:white !important;
+    border:0px !important;
+    padding:0px !important;
+    margin: 0px !important;
+}
+
