@@ -47,7 +47,8 @@ function pieform_element_expiry(Pieform $form, $element) {/*{{{*/
         $seconds = $element['value'];
         $values = pieform_element_expiry_get_expiry_from_seconds($element['value']);
     }
-    else if (isset($global[$element['name']])
+    else if ($form->is_submitted()
+             && isset($global[$element['name']])
              && isset($global[$element['name'] . '_units'])) {
         $values = array('number' => $global[$element['name']],
                         'units'  => $global[$element['name'] . '_units']);
