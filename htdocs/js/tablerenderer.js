@@ -25,6 +25,7 @@ function TableRenderer(target, source, columns, options) {
     this.emptycontent = undefined;  // Something to display when no results are found
     this.rowfunction = function(rowdata, rownumber, data) { return TR({'class': 'r' + (rownumber % 2)}); }
     this.updatecallback = function () {};
+    this.postupdatecallback = function () {};
     this.updateOnLoadFlag = false;
     this.lastArgs = {};
 
@@ -226,6 +227,13 @@ function TableRenderer(target, source, columns, options) {
             self.renderdata(response);
 
             removeElementClass(self.table, 'hidden');
+
+            try {
+                self.postupdatecallback(response);
+            }
+            catch (e) {
+                logError('tablerenderer call postupdatecallback(', response, ') failed.');
+            }
 
         }, null, true);
     };
