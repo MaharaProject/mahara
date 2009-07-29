@@ -41,4 +41,14 @@ $string['deletepost'] = 'Delete post';
 $string['Post'] = 'Post';
 $string['deletepostsure'] = 'Are you sure you want to do this? It cannot be undone.';
 $string['deletepostsuccess'] = 'Post deleted successfully';
+$string['maxcharacters'] = "Maximum %s characters per post.";
+$string['sorrymaxcharacters'] = "Sorry, your post cannot be more than %s characters long.";
+
+// Config strings
+$string['postsizelimit'] = "Post Size Limit";
+$string['postsizelimitdescription'] = "You can limit the size of wall posts here. Existing posts will not be changed";
+$string['postsizelimitmaxcharacters'] = "Maximum number of characters";
+$string['postsizelimitinvalid'] = "This is not a valid number.";
+$string['postsizelimittoosmall'] = "This limit cannot be lower than zero.";
+
 ?>

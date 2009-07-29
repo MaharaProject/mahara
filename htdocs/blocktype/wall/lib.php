@@ -77,6 +77,52 @@ class PluginBlocktypeWall extends SystemBlocktype {
         return false;
     }
 
+    public static function has_config() {
+        return true;
+    }
+
+    public static function get_config_options() {
+        $elements = array();
+        $elements['sizelimitfieldset'] = array(
+            'type' => 'fieldset',
+            'legend' => get_string('postsizelimit', 'blocktype.wall'),
+            'elements' => array(
+                'postsizelimitdescription' => array(
+                    'value' => get_string('postsizelimitdescription', 'blocktype.wall')
+                ),
+                'defaultpostsizelimit' => array(
+                    'title'        => get_string('postsizelimitmaxcharacters', 'blocktype.wall'),
+                    'type'         => 'text',
+                    'defaultvalue' => get_config_plugin('blocktype', 'wall', 'defaultpostsizelimit'),
+                    'rules' => array( 'maxlength' => 6 )
+                )
+            ),
+        );
+        return array(
+            'elements' => $elements,
+        );
+
+    }
+
+    public static function validate_config_options($form, $values) {
+        if (!is_numeric($values['defaultpostsizelimit'])) {
+            $form->set_error('defaultpostsizelimit', get_string('postsizelimitinvalid', 'blocktype.wall'));
+        }
+        else if ($values['defaultpostsizelimit'] < 0) {
+            $form->set_error('defaultpostsizelimit', get_string('postsizelimittoosmall', 'blocktype.wall'));
+        }
+    }
+
+    public static function save_config_options($values) {
+        set_config_plugin('blocktype', 'wall', 'defaultpostsizelimit', (int)$values['defaultpostsizelimit']);
+    }
+
+    public static function postinst($prevversion) {
+        if ($prevversion == 0) {
+            set_config_plugin('blocktype', 'wall', 'defaultpostsizelimit', 1500); // 1500 characters
+        }
+    }
+
     public static function delete_instance(BlockInstance $instance) {
         return delete_records('blocktype_wall_post', 'instance', $instance->get('id'));
     }
@@ -90,12 +136,12 @@ class PluginBlocktypeWall extends SystemBlocktype {
         }
         require_once('pieforms/pieform.php');
         return pieform(array(
-            'name'      => 'wallpost',
+            'name'      => 'wallpost_'.$instance->get('id'),
             'renderer'  => 'maharatable',
-            'action'    => get_config('wwwroot') . 'blocktype/wall/post.php',
             'autofocus' => false,
             'template'  => 'wallpost.php',
             'templatedir' => pieform_template_dir('wallpost.php', 'blocktype/wall'),
+            'validatecallback' => array('PluginBlocktypeWall', 'wallpost_validate'),
             'successcallback' => array('PluginBlocktypeWall', 'wallpost_submit'),
             'elements' => array(
                 'text' => array(
@@ -105,6 +151,10 @@ class PluginBlocktypeWall extends SystemBlocktype {
                     'cols' => 50,
                     'defaultvalue' => '',
                     'width' => '100%',
+                ),
+                'postsizelimit' => array(
+                    'type' => 'html',
+                    'value' => get_string('maxcharacters', 'blocktype.wall', get_config_plugin('blocktype', 'wall', 'defaultpostsizelimit'))
                 ),
                 'private' => array(
                     'type' => 'checkbox',
@@ -128,6 +178,13 @@ class PluginBlocktypeWall extends SystemBlocktype {
         // depending on if the user we're replying to has a wall
     }
 
+    public static function wallpost_validate(Pieform $form, $values) {
+        $sizelimit = get_config_plugin('blocktype', 'wall', 'defaultpostsizelimit');
+        if (strlen($values['text']) > $sizelimit) {
+            $form->set_error('text', get_string('sorrymaxcharacters', 'blocktype.wall', $sizelimit));
+        }
+    }
+
     public static function wallpost_submit(Pieform $form, $values) {
         global $USER;
         $record = (object)array(
@@ -138,6 +195,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
             'postdate' => db_format_timestamp(time()),
             'text'     => $values['text'],
         );
+
         insert_record('blocktype_wall_post', $record);
         $userid = get_field_sql('SELECT owner FROM {view} WHERE id = (SELECT "view" FROM {block_instance} WHERE id = ?)', array($values['instance']));
         redirect('/user/view.php?id=' . $userid);

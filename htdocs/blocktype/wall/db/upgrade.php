@@ -26,8 +26,12 @@
 
 defined('INTERNAL') || die();
 
-$config = new StdClass;
-$config->version = 2009073000;
-$config->release = '1.0.1';
+function xmldb_blocktype_wall_upgrade($oldversion=0) {
+
+    if ($oldversion < 2009021801) {
+        set_config_plugin('blocktype', 'wall', 'defaultpostsizelimit', 1500); // 1500 characters
+    }
+    return true;
+}
 
 ?>
