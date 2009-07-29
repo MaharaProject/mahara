@@ -47,7 +47,8 @@ function pieform_element_bytes(Pieform $form, $element) {/*{{{*/
         $bytes = $element['value'];
         $values = pieform_element_bytes_get_bytes_from_bytes($element['value']);
     }
-    else if (isset($global[$element['name']])
+    else if ($form->is_submitted()
+             && isset($global[$element['name']])
              && isset($global[$element['name'] . '_units'])) {
         $values = array('number' => $global[$element['name']],
                         'units'  => $global[$element['name'] . '_units']);
