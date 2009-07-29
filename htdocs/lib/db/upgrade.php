@@ -28,7 +28,7 @@ defined('INTERNAL') || die();
 
 function xmldb_core_upgrade($oldversion=0) {
     ini_set('max_execution_time', 120); // Let's be safe
-    raise_memory_limit('64M');
+    raise_memory_limit('256M');
 
     $INNODB = (is_mysql()) ? ' TYPE=innodb' : '';
     $status = true;
