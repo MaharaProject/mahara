@@ -37,7 +37,7 @@ function pieform_element_checkbox(Pieform $form, $element) {/*{{{*/
         $checked = true;
     }
     $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
-    if (isset($global[$element['name']])) {
+    if ($form->is_submitted() && isset($global[$element['name']])) {
         $checked = true;
     }
     else if (!$form->is_submitted() && !empty($element['defaultvalue'])) {
