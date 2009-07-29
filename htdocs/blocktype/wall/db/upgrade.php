@@ -26,26 +26,12 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Wall';
-$string['otherusertitle'] = "%s's Wall";
-$string['description'] = 'Display an area where people can leave you comments';
-$string['noposts'] = 'No wall posts to display';
-$string['makeyourpostprivate'] = 'Make your post private?';
-$string['viewwall'] = 'View wall';
-$string['backtoprofile'] = 'Back to profile';
-$string['wall'] = 'Wall';
-$string['wholewall'] = 'View whole wall';
-$string['reply'] = 'reply';
-$string['delete'] = 'delete post';
-$string['Post'] = 'Post';
-$string['maxcharacters'] = "Maximum %s characters per post.";
-$string['sorrymaxcharacters'] = "Sorry, your post cannot be more than %s characters long.";
+function xmldb_blocktype_wall_upgrade($oldversion=0) {
 
-// Config strings
-$string['postsizelimit'] = "Post Size Limit";
-$string['postsizelimitdescription'] = "You can limit the size of wall posts here. Existing posts will not be changed";
-$string['postsizelimitmaxcharacters'] = "Maximum number of characters";
-$string['postsizelimitinvalid'] = "This is not a valid number.";
-$string['postsizelimittoosmall'] = "This limit cannot be lower than zero.";
+    if ($oldversion < 2009021801) {
+        set_config_plugin('blocktype', 'wall', 'defaultpostsizelimit', 1500); // 1500 characters
+    }
+    return true;
+}
 
 ?>
