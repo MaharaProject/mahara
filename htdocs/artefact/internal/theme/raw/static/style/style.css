@@ -7,29 +7,6 @@
 input#myfriends_addfriend_add {
     font-weight: bold;
 }
-#userview {
-	margin: 1em 0;
-	padding: .5em 1em;
-	background-color: #F6F6F6;
-}
-#userview .user-icon a {
-	margin-left: 1em;
-}
-#userview .user-icon #invite,
-#userview .user-icon #addmember {
-	margin-top: 1em;
-}
-#userview .submit {
-	border: 0;
-    padding: .2em 0.5em .2em 1em;
-    font-size: .9em;
-}
-#userview #addmember_submit {
-	background: transparent url(../../../../../../theme/raw/static/images/icon-add.gif) no-repeat left 6px;
-}
-#userview #invite_submit {
-	background: transparent url(../../../../../../theme/raw/static/images/icon-mail.gif) no-repeat left;
-}
 #userfriendstable a {
     display: block;
 }

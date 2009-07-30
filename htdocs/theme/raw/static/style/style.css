@@ -720,6 +720,24 @@ fieldset.collapsed legend a {
 
 /* Specific page rules */
 
+/* View user */
+#userview {
+	margin: 1em 0;
+	padding: .5em 1em;
+	background-color: #eee;
+}
+#userview .user-icon a {
+	margin-left: 1em;
+}
+#userview #invite,
+#userview #addmember {
+	margin-top: 1em;
+}
+#userview .submit {
+    padding-top: .2em;
+    font-size: .9em;
+}
+
 /* My Views */
 #myviews h3 {
     font-size: 1.5em;
