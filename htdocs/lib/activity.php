@@ -360,8 +360,8 @@ abstract class ActivityType {
         }
 
         // always do internal
-        $this->internalid = $userdata->internalid = call_static_method('PluginNotificationInternal', 'notify_user', $user, $userdata);
-        if ($this->update_url()) {
+        $userdata->internalid = call_static_method('PluginNotificationInternal', 'notify_user', $user, $userdata);
+        if ($this->update_url($userdata->internalid)) {
             $updatenotification = true;
             $userdata->url = $this->url;
         }
@@ -613,8 +613,8 @@ class ActivityTypeUsermessage extends ActivityType {
         return $this->subject;
     }
 
-    protected function update_url() {
-        $this->url = get_config('wwwroot') . 'user/sendmessage.php?id=' . $this->userfrom . '&replyto=' . $this->internalid;
+    protected function update_url($internalid) {
+        $this->url = get_config('wwwroot') . 'user/sendmessage.php?id=' . $this->userfrom . '&replyto=' . $internalid;
         return true;
     }
 
