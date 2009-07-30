@@ -986,7 +986,8 @@ function pieform_element_filebrowser_get_headdata($element) {
     }
     $headdata[] = '<script type="text/javascript">' . $jsstrings . '</script>';
 
-    foreach ($THEME->get_url('style/style.css', true, 'artefact/file') as $sheet) {
+    $pluginsheets = $THEME->get_url('style/style.css', true, 'artefact/file');
+    foreach (array_reverse($pluginsheets) as $sheet) {
         $headdata[] = '<link rel="stylesheet" type="text/css" href="' . $sheet . '">';
     }
 
