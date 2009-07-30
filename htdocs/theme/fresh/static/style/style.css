@@ -486,6 +486,18 @@ div#sb-onlineusers ul img {
     color:#ca0000;
 }
 
+/* Copy a view */
+#viewpreview {
+  border: 10px solid #1C3740;
+  background-color: #10171A;
+}
+#viewpreviewinner {
+  border: 1px solid #BEE3F1;
+}
+#viewpreviewclose {
+  border-bottom: 1px dotted #BEE3F1;
+}
+
 /* Group: about */
 .group-info {
     border: 2px solid #1C3740;

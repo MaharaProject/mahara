@@ -86,3 +86,11 @@ div.configure {
     border-bottom: 1px dotted #BEE3F1;
 	background: #1C3740;
 }
+
+
+#view .blockinstance-content .attachments {
+    background-color: #10171A;
+}
+#view .blockinstance-content .attachments td {
+    background-color: #10171A;
+}
