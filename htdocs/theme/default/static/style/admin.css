@@ -1,5 +1,9 @@
 /* ADMIN HOME */
 /* Administration Home styles */
+#installer th {
+    border-bottom: 1px solid #819f18;
+}
+
 #register-site form legend a {
 	color: #7f9d16 !important;
 }
