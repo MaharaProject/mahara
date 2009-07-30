@@ -1,0 +1,13 @@
+/* ADMIN HOME */
+/* Administration Home styles */
+#runupgrade {
+    background-color: #1A292F;
+    border: 1px dotted #BEE3F1;
+}
+#upgradestable th,
+#upgradestable td {
+    background-color: #10171A;
+}
+#upgradestable th {
+    border-bottom: 1px dotted #BEE3F1;
+}
