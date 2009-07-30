@@ -336,6 +336,12 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 $(self.id + '_moveto').value = '';
             }
         });
+
+        // Droppable() calls makePositioned() on the row, which causes the
+        // the border disappear from its child elements.  Set it back to
+        // 'static' and see if this causes any problems...
+        // setStyle(row, {'position': 'static'});
+        undoPositioned(row);
     };
 
     this.drag = {};
