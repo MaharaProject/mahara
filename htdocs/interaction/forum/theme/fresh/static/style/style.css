@@ -1,0 +1,52 @@
+input.submit.btn-subscribe {
+	color: #FFF !important;
+}
+#forumslist {
+    border-bottom: 1px dotted #BEE3F1;
+}
+#forumslist th {
+	padding: 2px 10px;
+    border-bottom: 1px dotted #BEE3F1;
+}
+#forumslist table {
+	margin: 0;
+}
+#forumtopicstable {
+    border-bottom: 1px dotted #BEE3F1;
+}
+#forumtopicstable th {
+    border-bottom: 1px dotted #BEE3F1;
+	padding: 2px 0;
+}
+.stickytopic {
+	background-color: #10171A;
+}
+table.forumpost {
+	border: 1px dotted #BEE3F1;
+	background-color: #10171A;
+	margin-bottom: 0;
+}
+.forumsubject {
+	border-bottom: 1px dotted #BEE3F1;
+}
+.forumpost .forumsubject h3 {
+    padding: 0;
+    margin: 0;
+}
+.forumpostleft {
+	background-color: #10171A;
+	border-right: 1px dotted #BEE3F1;
+}
+.forumpostleft h5 {
+    color: #BEE3F1;
+}
+.posttime {
+    color: #BEE3F1;
+}
+.postbtns {
+    border-bottom: none;
+	background-color: #10171A;
+}
+.postreply {
+	background-color: #10171A;
+}

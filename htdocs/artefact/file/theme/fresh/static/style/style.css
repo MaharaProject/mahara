@@ -1,0 +1,9 @@
+tr.folder td {
+    background-color: #10171A;
+}
+filelist thead th {
+    border-bottom: 1px dotted #BEE3F1;
+}
+.filelist td {
+    border-bottom: 1px dotted #BEE3F1;
+}
