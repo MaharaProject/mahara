@@ -449,12 +449,20 @@ class BlockInstance {
                 $content = '';
             }
 
+            $blocktitle = $this->get('title');
+            if (trim($blocktitle) == "") {
+                $blocktitle = "this";
+            }
+            else {
+                $blocktitle = "'".$blocktitle."'";
+            }
+
             if (!defined('JSON') && !$jsreply) {
                 if ($this->get('canmoveleft')) {
                     $movecontrols[] = array(
                         'column' => $this->get('column') - 1,
                         'order'  => $this->get('order'),
-                        'title'  => get_string('moveblockleft', 'view'),
+                        'title'  => get_string('moveblockleft', 'view', $blocktitle),
                         'arrow'  => '&larr;',
                         'dir'    => 'left',
                     );
@@ -463,7 +471,7 @@ class BlockInstance {
                     $movecontrols[] = array(
                         'column' => $this->get('column'),
                         'order'  => $this->get('order') + 1,
-                        'title'  => get_string('moveblockdown', 'view'),
+                        'title'  => get_string('moveblockdown', 'view', $blocktitle),
                         'arrow'  => '&darr;',
                         'dir'    => 'down',
                     );
@@ -472,7 +480,7 @@ class BlockInstance {
                     $movecontrols[] = array(
                         'column' => $this->get('column'),
                         'order'  => $this->get('order') - 1,
-                        'title'  => get_string('moveblockup', 'view'),
+                        'title'  => get_string('moveblockup', 'view', $blocktitle),
                         'arrow'  => '&uarr;',
                         'dir'    => 'up',
                     );
@@ -481,7 +489,7 @@ class BlockInstance {
                     $movecontrols[] = array(
                         'column' => $this->get('column') + 1,
                         'order'  => $this->get('order'),
-                        'title'  => get_string('moveblockright', 'view'),
+                        'title'  => get_string('moveblockright', 'view', $blocktitle),
                         'arrow'  => '&rarr;',
                         'dir'    => 'right',
                     );
@@ -503,6 +511,7 @@ class BlockInstance {
         $smarty->assign('content', $content);
         $smarty->assign('javascript', defined('JSON'));
         $smarty->assign('strnotitle', get_string('notitle', 'view'));
+        $smarty->assign('blocktitle', array($blocktitle));
 
         return array('html' => $smarty->fetch('view/blocktypecontainerediting.tpl'), 'javascript' => $js);
     }
