@@ -25,18 +25,21 @@ body {
     background: #f7be23 url(../images/bg.jpg) repeat-x top center;
 	color: #000000;
 }
-
-.description,
-.unvalidated,
-.postdetails {
-    color: #8E1901;
+a,
+a:link,
+a:active,
+a:visited {
+    color: #3B6065;
+    text-decoration: none;
 }
-
+a:hover {
+    color: #8E1901;
+    text-decoration: underline;
+}
 p {
     margin: 10px 0 10px 0;
 	line-height: 18px;
 }
-
 h1 {
     color: #8E1901;
     font-size: 34px;
@@ -77,8 +80,75 @@ h6 {
     font-weight: bold;
     margin: 10px 0 0 0;
 }
+.description,
+.unvalidated,
+.postdetails {
+    color: #8E1901;
+}
 
-
+/* Tables */
+.main-column table {
+	padding: 0;
+	border-spacing: 0;
+	border-collapse: collapse;
+	margin: 15px 0;
+}
+.main-column thead th {
+    color: #8E1901;
+	padding: 2px 10px;
+	border-bottom: 1px dotted #8E1901;
+	vertical-align: top;
+}
+.main-column tbody th {
+    color: #8E1901;
+	padding: 7px 0 7px 10px;
+	border-bottom: none;
+}
+.main-column .pieform tbody th {
+	text-align: right;
+}
+.main-column th.center {
+    text-align: center;
+}
+.main-column tbody td {
+	padding: 5px 10px;
+	vertical-align: top;
+}
+.main-column tfoot td {
+	padding: 3px 10px;
+	border-top: 1px dotted #8E1901;
+}
+table.table, .tablerenderer {
+	padding: 0;
+	margin: 0;
+	border: none;
+	border-spacing: 0;
+}
+table.table td, .tablerenderer td {
+	padding: 5px 10px;
+	margin: 0;
+	border: none;
+}
+.tablerenderer-loading {
+    border: 1px solid #8E1901;
+	background-color: #ffffff;
+    padding: .5em;
+    text-align: center;
+    font-weight: bold;
+    color: #ffffff;
+    font-size: 16px;
+}
+table.fullwidth {
+	border-top: 1px solid #8e1901;
+	border-bottom: 1px solid #8e1901;
+}
+table.fullwidth h3 {
+	margin: 0 0 15px 0;
+	padding: 0;
+}
+table.fullwidth h3 a {
+	color: #1e6297 !important;
+}
 /* Alternative row background colours */
 .r0 {
     background-color: #ffe7cf;
@@ -86,22 +156,23 @@ h6 {
 .r1 {
     background-color: #efd7c2;
 }
-/* LINKS */
-a,
-a:link,
-a:active,
-a:visited {
-    color: #3B6065;
-    text-decoration: none;
-}
-a:hover {
+
+
+/* Form elements */
+label {
     color: #8E1901;
-    text-decoration: underline;
+    margin: 0 5px 0 0;
 }
-
-/* FORM ELEMENTS */
-
-/* Text fields and such */
+.required th, .required label, .requiredmarker, #register_tandc_container th {
+    color: #8E1901;
+}
+select {
+    border: 1px solid #b2b2b2;
+    padding: 0;
+}
+input.error, select.error {
+    border-color: #cc0000;
+}
 input.text,
 input.password,
 input.file,
@@ -112,24 +183,7 @@ input[type=file] {
     border: 1px solid #aaaaaa;
 }
 
-select {
-    border: 1px solid #b2b2b2;
-    padding: 0;
-}
-
-input.error, select.error {
-    border-color: #cc0000;
-}
-
-/* LABEL */
-label {
-    color: #8E1901;
-    margin: 0 5px 0 0;
-}
-.required th, .required label, .requiredmarker, #register_tandc_container th {
-    color: #8E1901;
-}
-/* Legend */
+/* Fieldset */
 legend {
 	color: #8E1901;
     font-family:Georgia, "Times New Roman", Times, serif;
@@ -141,22 +195,57 @@ legend a:visited,
 legend a:active {
 	color: #8E1901 !important;
 }
-/* Fieldset */
 fieldset {
     border: 1px solid #8E1901;
 }
 
-#loading-box {
-    color: #fff;
-    background-color: #8E1901;
+/* Buttons */
+.btn,
+.btn-link,
+input.submit,
+input.button, button,
+input.submitcancel,
+input.cancelbackcreate,
+#settings_delete {
+	background-color: #c66c14;
+	padding: 3px 10px;
+	border-color: #8E1901 !important;
+	border-style: solid;
+	border-width: 1px;
+	font-size: 11px;
+    font-weight:normal;
+	color: #FFF !important;
+	margin-left: 5px;
+}
+a.btn,
+a.btn:hover {
+	color: #FFF;
+    text-decoration:none;
+}
+/* special case */
+#btn-logout {
+	background-color: #c66c14;
+}
+/***** ICON LINKS ******/
+div.btn-del input.submit, input.submit.btn-del,
+div.btn-msg input.submit,
+div.btn-add input.submit, input.submit.btn-add,
+div.btn-edit input.submit, input.submit.btn-edit,
+a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup {
+    color: #3B6065 !important;
 }
 
-/* HEADER ELEMENTS */
 
+/* Top of page elements */
+#container,
+#containerX {
+    background-color: transparent;
+    margin-top:0px;
+    padding-top:0px;
+}
 #top-wrapper {
     background: transparent url(../images/header-b.jpg) no-repeat top left;
 }
-
 #site-logo {
     font-family:Georgia, "Times New Roman", Times, serif;
 	font-size: 3.8em;
@@ -171,6 +260,24 @@ fieldset {
 }
 #site-logo a:hover {
 	color: #FFFFFF;
+}
+#loading-box {
+    color: #fff;
+    background-color: #8E1901;
+}
+/* search box in header */
+#usf {
+    font-size: 11px;
+    font-weight: bold;
+    color: #8E1901;
+    padding: 35px 6px 0 0;
+    text-align: right;
+}
+#usf_query_container input {
+    padding: 2px 3px;
+    color: #8E1901;
+	background-color: #FFFFFF;
+    width: 190px;
 }
 
 /* main menu */
@@ -259,7 +366,6 @@ fieldset {
     text-decoration: underline;
 }
 
-
 /* Tabbed pages */
 ul.in-page-tabs li a {
   color: #ffffff;
@@ -279,84 +385,43 @@ ul.in-page-tabs li a.current-tab {
   border: 1px solid #C66C14;
 }
 
-
-/* search box in header */
-#usf {
-    font-size: 11px;
-    font-weight: bold;
-    color: #8E1901;
-    padding: 35px 6px 0 0;
-    text-align: right;
-}
-#usf_query_container input {
-    padding: 2px 3px;
-    color: #8E1901;
-	background-color: #FFFFFF;
-    width: 190px;
-}
-
 /* CONTENT LAYOUT */
-#container,
-#containerX {
-    background-color: transparent;
-    margin-top:0px;
-    padding-top:0px;
-}
-
 #main-column {
     display: block;
     margin: 15px 0;
     padding: 0 15px 15px;
 	background: #fff;
 }
-
-#right-column {
-	background: transparent;
-    padding:0px;
+.message {
+    color: #8E1901;
+    background-color: #efd7c2;
+    border: 1px dotted #8E1901;
+}
+.message a {
+    color: #3B6065;
+}
+/* system messages between nav and main content */
+#messages .ok {
+    color: #8E1901;
+    background: #FFE7CF url(../images/icon_goodtogo.gif) no-repeat 10px 5px;
+}
+#messages .error {
+    color: #dd0221;
+    background: #FFE7CF url(../images/icon_problem.gif) no-repeat 10px 5px;
+}
+#messages .info {
+    color: #1666a9;
+    background: #FFE7CF url(../images/icon_question.gif) no-repeat 10px 4px;
 }
 
-#footer-wrap {
-    background-color: transparent;
-}
-
-.btn,
-.btn-link,
-input.submit,
-input.button, button,
-input.submitcancel,
-input.cancelbackcreate,
-#settings_delete {
-	background-color: #c66c14;
-	padding: 3px 10px;
-	border-color: #8E1901 !important;
-	border-style: solid;
-	border-width: 1px;
-	font-size: 11px;
-    font-weight:normal;
-	color: #FFF !important;
-	margin-left: 5px;
-}
-a.btn,
-a.btn:hover {
-	color: #FFF;
-    text-decoration:none;
-}
-/* special case */
-#btn-logout {
-	background-color: #c66c14;
-}
-/***** ICON LINKS ******/
-div.btn-del input.submit, input.submit.btn-del,
-div.btn-msg input.submit,
-div.btn-add input.submit, input.submit.btn-add,
-div.btn-edit input.submit, input.submit.btn-edit,
-a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup {
-    color: #3B6065 !important;
-}
 
 /* RIGHT SIDE COLUMN */
 #left-column, #right-column {
     width: 271px;
+}
+#right-column {
+	background: transparent;
+    padding:0px;
 }
 div.sideblock {
 	color: #000000;
@@ -380,20 +445,16 @@ div.sideblock p {
     font-size: .9em;
     color: #000000;
 }
-
-/* these are the first level styles */
 div.sideblock ul li {
 	padding: 2px 0;
 	font-size: 12px;
 	font-weight: bold;
 	color: #000000;
 }
-
 div.sideblock ul ul {
 	list-style-type: square;
 	color: #000000;
 }
-
 div.sideblock ul li ul li {
 	font-size: 11px;
 	padding:0px;
@@ -409,61 +470,6 @@ div#sb-profile ul li a {
 div#sb-profile ul li ul li a {
 	color: #3B6065;
 }
-
-.message {
-    color: #8E1901;
-    background-color: #efd7c2;
-    border: 1px dotted #8E1901;
-}
-.message a {
-    color: #3B6065;
-}
-
-
-/* system messages between nav and main content */
-#messages .ok {
-    color: #8E1901;
-    background: #FFE7CF url(../images/icon_goodtogo.gif) no-repeat 10px 5px;
-}
-#messages .error {
-    color: #dd0221;
-    background: #FFE7CF url(../images/icon_problem.gif) no-repeat 10px 5px;
-}
-#messages .info {
-    color: #1666a9;
-    background: #FFE7CF url(../images/icon_question.gif) no-repeat 10px 4px;
-}
-
-
-
-/* generic table listing styles
- * like my views and my groups, etc
- */
-table.fullwidth {
-	border-top: 1px solid #8e1901;
-	border-bottom: 1px solid #8e1901;
-}
-
-table.fullwidth h3 {
-	margin: 0 0 15px 0;
-	padding: 0;
-}
-table.fullwidth h3 a {
-	color: #1e6297 !important;
-}
-
-/* special styles for my views table */
-#editviewdetails,
-#editthisview,
-#editviewaccess {
-    color: #8E1901;
-}
-#myviews .btn-del {
-	font-size: 11px;
-    font-weight: bold;
-    color: #dd0221;
-}
-
 
 /* Side Quota Bar */
 /** this is currently broken and needs looking at
@@ -499,7 +505,25 @@ table.fullwidth h3 a {
 }
 
 
-/* SETTINGS > PREFERENCES */
+/* Footer */
+#footer-wrap {
+    background-color: transparent;
+}
+
+
+/* My Views */
+#editviewdetails,
+#editthisview,
+#editviewaccess {
+    color: #8E1901;
+}
+#myviews .btn-del {
+	font-size: 11px;
+    font-weight: bold;
+    color: #dd0221;
+}
+
+/* Settings > Preferences */
 #accountprefs table #accountprefs_password2 {
     margin: 0 0 20px 0;
 }
@@ -518,57 +542,4 @@ table.fullwidth h3 a {
 }
 #accountprefs_oldpassword_container th {
 	width: 200px !important;
-}
-
-/* Tables */
-.main-column table {
-	padding: 0;
-	border-spacing: 0;
-	border-collapse: collapse;
-	margin: 15px 0;
-}
-.main-column thead th {
-    color: #8E1901;
-	padding: 2px 10px;
-	border-bottom: 1px dotted #8E1901;
-	vertical-align: top;
-}
-.main-column tbody th {
-    color: #8E1901;
-	padding: 7px 0 7px 10px;
-	border-bottom: none;
-}
-.main-column .pieform tbody th {
-	text-align: right;
-}
-.main-column th.center {
-    text-align: center;
-}
-.main-column tbody td {
-	padding: 5px 10px;
-	vertical-align: top;
-}
-.main-column tfoot td {
-	padding: 3px 10px;
-	border-top: 1px dotted #8E1901;
-}
-table.table, .tablerenderer {
-	padding: 0;
-	margin: 0;
-	border: none;
-	border-spacing: 0;
-}
-table.table td, .tablerenderer td {
-	padding: 5px 10px;
-	margin: 0;
-	border: none;
-}
-.tablerenderer-loading {
-    border: 1px solid #8E1901;
-	background-color: #ffffff;
-    padding: .5em;
-    text-align: center;
-    font-weight: bold;
-    color: #ffffff;
-    font-size: 16px;
 }

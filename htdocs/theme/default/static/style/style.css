@@ -10,11 +10,6 @@ body {
     background: url(../images/background.gif) repeat;
 	color: #474220;
 }
-.description,
-.unvalidated,
-.postdetails {
-    color: #838383;
-}
 acronym {
     color: #474220;
     border-bottom: 1px dotted #d4d1c0;
@@ -45,13 +40,97 @@ h5 {
 h6 {
     color: #5c8727;
 }
+.tags {
+    font-size: .9em;
+}
+.description,
+.unvalidated,
+.postdetails {
+    color: #838383;
+}
+
+
+/* Tables */
+.main-column td {
+	margin: 0;
+}
+.main-column thead th {
+    color: #677a8a;
+	border-bottom: 1px solid #95a8b7 !important;
+	vertical-align: top;
+}
+.main-column tbody th {
+    color: #677a8a;
+	border-bottom: none;
+}
 .main-column table h3 a {
 	color: #1e6297 !important;
 }
+.main-column .pieform tbody th {
+	text-align: right;
+}
+.main-column table.tablerenderer,
+.main-column table.table {
+	border-bottom: 1px solid #95a8b7 !important;
+}
+/******* TH in tbody that should appear like it's in thead with a line under and left aligned *******/
+table.nohead th {
+	border-bottom: 1px solid #95a8b7;
+	text-align: left;
+}
+table.nohead th.center {
+	text-align: center;
+}
+.main-column tfoot td {
+	border-top: 1px solid #95a8b7 !important;
+}
+/********* Tables that require a bottom border to enclose elements *********/
+table.nohead {
+	border-bottom: 1px solid #95a8b7;
+}
+/* Alternative row background colours */
+.r0 {
+    background-color: #eff5f8;
+}
+.r1 {
+    background-color: #f8fbfd;
+}
 
-/*********************** FORM ELEMENTS ********************************/
+/* Pagination */
+.pagination a {
+    background-color: #E7EFC5;
+}
+
+
+/* Forms */
+label {
+    color: #677a8a;
+}
+.required th, .required label, .requiredmarker, #register_tandc_container th {
+    color: #c87e14;
+}
+/* override required colour */
+.required label.plain, .required.radio td label, .required.emaillist td label {
+	color: #474220;
+}
 select {
     border: 1px solid #D1D1D1;
+}
+
+/* Legend */
+legend {
+	color: #1e6297;
+}
+legend a,
+legend a:link,
+legend a:visited,
+legend a:active {
+	color: #1e6297 !important;
+}
+
+/* Fieldset */
+fieldset {
+    border: 1px solid #95a8b7;
 }
 
 /* Text fields and such */
@@ -65,21 +144,7 @@ input[type=file] {
     border: 1px solid #D1D1D1;
 }
 
-
-/******************** LABEL *************************/
-label {
-    color: #677a8a;
-}
-.required th, .required label, .requiredmarker, #register_tandc_container th {
-    color: #c87e14;
-}
-/* override required colour */
-.required label.plain, .required.radio td label, .required.emaillist td label {
-	color: #474220;
-}
-
-
-/******************** BUTTONS **********************/
+/* Buttons */
 input.submit,
 input.button,
 input.cancel,
@@ -106,8 +171,7 @@ button.cancel {
     background-color: #7d9728;
 	border-color: #bdda5e #4e6307 #4e6307 #bdda5e;
 }
-
-/***** DELETE RED BUTTON ********/
+/* Delete red button */
 #edituser_delete_submit {
     background-color: #ca0000;
 	border-color: #D9DFEA #b2b2b2 #b2b2b2 #D9DFEA !important;
@@ -117,8 +181,7 @@ button.cancel {
     padding: .25em .5em;
 	* padding: 0.1em 0;
 }
-
-/***** ICON LINKS ******/
+/* Icon links */
 div.btn-del input.submit, input.submit.btn-del,
 div.btn-msg input.submit,
 div.btn-add input.submit, input.submit.btn-add,
@@ -126,7 +189,6 @@ div.btn-edit input.submit, input.submit.btn-edit,
 a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup, a.btn-link {
     color: #7f9d16 !important;
 }
-
 /* Links from raw theme that should look like buttons */
 a.btn-link {
 	border-color: #d5ed8a #496000 #496000 #d5ed8a;
@@ -142,9 +204,7 @@ a.btn-link {
 a.btn-link:hover {
     text-decoration: none;
 }
-
-
-/****** SEARCH BUTTONS *********/
+/* Search buttons */
 #users_search_btn,
 .query-button,
 #query-button,
@@ -161,36 +221,11 @@ a.btn-link:hover {
 	color: transparent !important;
 }
 
+
+/* Top of page elements */
 #loading-box {
     background-color: #ECF3D4 !important;
 }
-
-
-/* PAGINATION */
-.pagination a {
-    background-color: #E7EFC5;
-}
-
-#installer th {
-    border-bottom: 1px solid #819f18;
-}
-
-
-/* AJAX LOGIN */
-#ajax-login-form {
-    border: 5px solid #D9DFEA;
-}
-
-
-/* CONTENT LAYOUT */
-#main-wrapper {
-    background-color: #FFF;
-}
-.main-content {
-	background: url(../images/dot-vert.gif) repeat-y top right;
-}
-
-/* HEADER ELEMENTS */
 #site-logo {
     padding-bottom: 0;
 }
@@ -204,35 +239,6 @@ a.btn-link:hover {
     margin: 0;
     text-align: right;
     display: inline;
-}
-
-/* search box in header */
-.searchbox {
-    font-weight: bold;
-    color: #497424;
-    margin: 2em 1em 0 0;
-    text-align: right;
-    padding: 0;
-}
-#searchform_submit {
-	background: url(../../../raw/static/images/btn_search_off.gif) no-repeat;
-	border: none;
-	width: 25px;
-	height: 24px;
-	text-indent: -9999px;
-	color: transparent !important;
-	margin-left: 5px;
-}
-#searchform_query_container, 
-#searchform_submit_container {
-    vertical-align: middle;
-}
-#searchform_query_container input {
-    padding: .25em .5em;
-    font-size: 1em;
-    color: #767676;
-	background-color: #ecf3d4;
-    width: 190px;
 }
 
 /**************** TOP NAVIGATION ****************/
@@ -359,6 +365,25 @@ ul.in-page-tabs li a:hover {
   border-top: 0;
 }
 
+
+/**************** MAIN CONTENT START *********/
+.message {
+    background-color: #f4f7f9;
+    border: 1px solid #e0e8ee;
+}
+.message a {
+    color: #819F18;
+}
+
+#main-wrapper {
+    background-color: #FFF;
+}
+.main-content {
+	background: url(../images/dot-vert.gif) repeat-y top right;
+}
+
+
+
 /**************** RIGHT SIDEBAR START *********/
 .sidebar {
     padding: 0;
@@ -435,16 +460,6 @@ div.sideblock {
 /**************** END RIGHT SIDEBAR *********/
 
 
-/**************** MAIN CONTENT START *********/
-/* Message */
-.message {
-    background-color: #f4f7f9;
-    border: 1px solid #e0e8ee;
-}
-.message a {
-    color: #819F18;
-}
-
 /* Login */
 .main-column #loginform_container th {
 	padding: .5em .25em;
@@ -452,75 +467,11 @@ div.sideblock {
 .main-column #loginform_container td {
     padding: .25em;
 }
-
-/* Tables */
-.main-column td {
-	margin: 0;
-}
-.main-column thead th {
-    color: #677a8a;
-	border-bottom: 1px solid #95a8b7 !important;
-	vertical-align: top;
-}
-.main-column tbody th {
-    color: #677a8a;
-	border-bottom: none;
-}
-.main-column .pieform tbody th {
-	text-align: right;
-}
-.main-column table.tablerenderer,
-.main-column table.table {
-	border-bottom: 1px solid #95a8b7 !important;
-}
-/******* TH in tbody that should appear like it's in thead with a line under and left aligned *******/
-table.nohead th {
-	border-bottom: 1px solid #95a8b7;
-	text-align: left;
-}
-table.nohead th.center {
-	text-align: center;
-}
-.main-column tfoot td {
-	border-top: 1px solid #95a8b7 !important;
-}
-/********* Tables that require a bottom border to enclose elements *********/
-table.nohead {
-	border-bottom: 1px solid #95a8b7;
+/* AJAX LOGIN */
+#ajax-login-form {
+    border: 5px solid #D9DFEA;
 }
 
-/* Legend */
-legend {
-	color: #1e6297;
-}
-legend a,
-legend a:link,
-legend a:visited,
-legend a:active {
-	color: #1e6297 !important;
-}
-
-/* Fieldset */
-fieldset {
-    border: 1px solid #95a8b7;
-}
-
-.tags {
-    font-size: .9em;
-}
-
-/* Alternative row background colours */
-.r0 {
-    background-color: #eff5f8;
-}
-.r1 {
-    background-color: #f8fbfd;
-}
-
-.attachments {
-	border: 1px solid #d3e4f2;
-	background-color: #d3e4f2;
-}
 
 /* FOOTER */
 #footer-wrap {
@@ -536,7 +487,17 @@ fieldset {
 }
 
 
+.attachments {
+	border: 1px solid #d3e4f2;
+	background-color: #d3e4f2;
+}
+
 /****************************** PAGE BY PAGE STYLES **********************************/
+
+/* EXPORT */
+div.progress-bar {
+    background-color: #7d9728;
+}
 
 /* GROUPS > MY FRIENDS */
 #friendslist ul.viewlist li a {
@@ -549,9 +510,25 @@ fieldset {
 }
 
 
-/* EXPORT */
-div.progress-bar {
-    background-color: #7d9728;
+
+/* Search forms -- check */
+#searchform_submit {
+	background: url(../../../raw/static/images/btn_search_off.gif) no-repeat;
+	border: none;
+	width: 25px;
+	height: 24px;
+	text-indent: -9999px;
+	color: transparent !important;
+	margin-left: 5px;
 }
-
-
+#searchform_query_container, 
+#searchform_submit_container {
+    vertical-align: middle;
+}
+#searchform_query_container input {
+    padding: .25em .5em;
+    font-size: 1em;
+    color: #767676;
+	background-color: #ecf3d4;
+    width: 190px;
+}

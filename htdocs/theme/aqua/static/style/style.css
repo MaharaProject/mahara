@@ -20,26 +20,22 @@
  * @copyright  (C) 2009 Catalyst IT Europe http://catalyst-eu.net
  */
 
-/* styles based on elements */
+/* General rules */
 body {
     background: #1D499F url(../images/bg.jpg) repeat-x top center;
 	color: #14336F;
 }
-
-.description,
-.unvalidated,
-.postdetails {
-    color: #838383;
+a,
+a:link,
+a:active,
+a:visited {
+    color: #1F97D5;
+    text-decoration: none;
 }
-
-p {
-    margin: 10px 0 10px 0;
-	line-height: 18px;
+a:hover {
+    color: #14336F;
+    text-decoration: underline;
 }
-a img {
-    border: none;
-}
-
 h1 {
     color: #1A428F;
     font-size: 30px;
@@ -78,424 +74,16 @@ h6 {
     font-weight: bold;
     margin: 10px 0 0 0;
 }
-
-
-/* Alternative row background colours */
-.r0 {
-    background-color: #e0e8ee;
+p {
+    margin: 10px 0 10px 0;
+	line-height: 18px;
 }
-.r1 {
-    background-color: #f4f7f9;
-}
-/* LINKS */
-a,
-a:link,
-a:active,
-a:visited {
-    color: #1F97D5;
-    text-decoration: none;
-}
-a:hover {
-    color: #14336F;
-    text-decoration: underline;
+.description,
+.unvalidated,
+.postdetails {
+    color: #838383;
 }
 
-select {
-    border: 1px solid #b2b2b2;
-    padding: 0;
-}
-
-input.error, select.error {
-    border-color: #cc0000;
-}
-
-/* LABEL */
-label {
-    color: #888888;
-    margin: 0 5px 0 0;
-}
-.required th, .required label, .requiredmarker, #register_tandc_container th {
-    color: #333333;
-}
-/* Legend */
-legend {
-	color: #1e6297;
-	margin-bottom:5px;
-}
-legend a,
-legend a:link,
-legend a:visited,
-legend a:active {
-	color: #1e6297 !important;
-}
-/* Fieldset */
-fieldset {
-    border: 1px solid #14436F;
-}
-
-/* HEADER ELEMENTS */
-#top-wrapper {
-    background: transparent;
-}
-#top-wrapper ul,
-#top-wrapper li {
-    padding: 0;
-    margin: 0;
-    text-align: right;
-    display: inline;
-}
-
-/* main menu */
-#main-nav {
-    float:right;
-    padding: 0;
-    margin: 0 10px 0 0;
-	height: 27px;
-}
-#main-nav li {
-    float:left;
-    color: #FFFFFF;
-    text-decoration: none;
-    font-weight: normal;
-	font-size: 12px;
-	margin: 0 0 0 3px;
-	padding: 5px 15px 3px;
-	background: #14336F;
-}
-#main-nav li a,
-#main-nav li a:link,
-#main-nav li a:visited,
-#main-nav li a:active {
-	margin: 0;
-	padding: 0;
-    color: #FFFFFF;
-	width:auto;
-	display:block;
-}
-#main-nav li a:hover {
-    color: #FFFFFF;
-    text-decoration: underline;
-}
-#main-nav li.selected {
-	background: #FFFFFF;
-}
-#main-nav li.selected a:link,
-#main-nav li.selected a:visited,
-#main-nav li.selected a:active {
-    color: #14336F;
-}
-
-#site-logo {
-    padding: 0;
-	font-size: 3.3em;
-	font-weight:normal;
-	color: #FFFFFF;
-	width:600px;
-	padding: 20px 25px 5px 0
-}
-#site-logo a,
-#site-logo a:link,
-#site-logo a:active,
-#site-logo a:visited {
-	color: #FFFFFF;
-}
-#site-logo a:hover {
-	color: #F0F0F0;
-}
-
-
-/* Sub menu */
-#sub-nav {
-    clear:both;
-    padding: 0;
-    margin: 0;
-    font-size: 12px;
-    font-weight: bold;
-    text-align: left;
-    background: #FFF;
-    height: 24px;
-	border-bottom:1px solid #DDD;
-	width:100%;
-}
-#sub-nav.group {
-    padding: 0;
-}
-#sub-nav ul {
-    float:right;
-	height: 15px;
-	padding: 4px 10px 6px 0;
-}
-#sub-nav li {
-    height: 25px;
-    padding: 5px 13px 5px 8px;
-    margin: 0 !important;
-    /* not working */
-    /* background: url(../../../default/static/images/submenu-divider.gif) no-repeat top right; */
-}
-#sub-nav li.selected {
-    display: inline;
-    height: 25px;
-    margin: 0;
-	background: transparent;
-}
-#sub-nav li a,
-#sub-nav li a:link,
-#sub-nav li a:visited,
-#sub-nav li a:active {
-    color: #14336F;
-	height: 25px;
-}
-#sub-nav li a:hover {
-    color: #1A428F;
-    text-decoration: underline;
-}
-#sub-nav li.selected a:link,
-#sub-nav li.selected a:visited,
-#sub-nav li.selected a:active {
-    color: #1D499F;
-    text-decoration: underline;
-}
-
-/* search box in header */
-#usf {
-    font-size: 11px;
-    font-weight: bold;
-    color: #333333;
-    padding: 35px 6px 0 0;
-    text-align: right;
-}
-#usf_submit {
-    border: none;
-    margin-left: 0;
-    padding-bottom: 5px;
-    text-align: right;
-    vertical-align: middle;
-}
-#usf_query_container, #usf_submit_container {
-    vertical-align: middle;
-}
-#usf_query_container input {
-    padding: 2px 3px;
-    color: #333333;
-	background-color: #FFFFFF;
-    width: 190px;
-}
-
-/* CONTENT LAYOUT */
-#container,
-#containerX {
-    background: #1D499F url(../images/bg-container.jpg) repeat-x top center;
-    margin-top:0px;
-    padding-top:0px;
-}
-
-#main-wrapper {
-	background: #FFF;
-}
-
-
-#right-column {
-	background: #F4F7F9;
-    padding:0px;
-}
-
-
-#footer-wrap {
-    background-color: #1D499F;
-}
-#footer-wrap a,
-#footer-wrap a:link,
-#footer-wrap a:active,
-#footer-wrap a:visited {
-    color: #FFFFFF;
-	padding: 0 5px;
-}
-#footer-wrap a:hover {
-    color: #FFF;
-}
-
-#performance-info {
-    color: #fff;
-}
-
-#powered-by {
-    background-color: #ffffff;
-    padding:3px;
-}
-
-/* RIGHT SIDE COLUMN */
-div.sideblock {
-    background: transparent url(../images/pixel_grey.gif) repeat-y top left;
-    padding: 10px 15px 15px 15px;
-	margin-left:-1px;
-	border-bottom:1px solid #DDD;
-}
-div.sideblock h3 {
-    padding: 0;
-    margin: 3px 0 10px 0;
-    font-size: 14px;
-    color: #1e6297;
-}
-div.sideblock h3 a,
-div.sideblock h3 a:link,
-div.sideblock h3 a:visited,
-div.sideblock h3 a:active {
-	color: #1e6297 !important;
-}
-div.sideblock p {
-    font-size: .9em;
-}
-
-.btn,
-.btn-link,
-input.submit,
-input.button, button,
-input.submitcancel,
-input.cancelbackcreate,
-#settings_delete {
-	background-color: #14436F;
-	padding: 3px 10px;
-	border-color: #D9DFEA #b2b2b2 #b2b2b2 #D9DFEA !important;
-	border-style: solid;
-	border-width: 1px;
-	font-size: 11px;
-    font-weight:normal;
-	color: #FFF !important;
-	margin-left: 5px;
-}
-a.btn,
-a.btn:hover {
-	color: #FFF;
-    text-decoration:none;
-}
-/* special case */
-#btn-logout {
-	background-color: #1D499F;
-}
-/***** ICON LINKS ******/
-div.btn-del input.submit, input.submit.btn-del,
-div.btn-msg input.submit,
-div.btn-add input.submit, input.submit.btn-add,
-div.btn-edit input.submit, input.submit.btn-edit,
-a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup {
-    color: #1F97D5 !important;
-}
-
-/* these are the first level styles */
-div.sideblock ul li {
-	padding: 2px 0;
-	font-size: 12px;
-	font-weight: bold;
-	color: #1A428F;
-}
-
-div.sideblock ul ul {
-	list-style-type: square;
-}
-
-div.sideblock ul li ul li {
-	font-size: 11px;
-	padding:0px;
-    margin:0px;
-}
-
-/** very specific overrides for the profile block
- * since it uses different nesting strategy
- * as far as i can tell :/ */
-div#sb-profile ul li a {
-	color: #1A428F;
-}
-div#sb-profile ul li ul li a {
-	color: #1F97D5;
-}
-
-div#sb-onlineusers ul {
-    padding-left:20px;
-}
-div#sb-onlineusers ul img {
-    padding-right:5px;
-}
-
-
-/* generic table listing styles
- * like my views and my groups, etc
- */
-table.fullwidth {
-	border-top: 1px solid #14436F;
-	border-bottom: 1px solid #14436F;
-}
-
-table.fullwidth h3 {
-	margin: 0 0 15px 0;
-	padding: 0;
-}
-table.fullwidth h3 a {
-	color: #1e6297 !important;
-}
-
-/* special styles for my views table */
-#editviewdetails,
-#editthisview,
-#editviewaccess {
-	padding-left: 15px;
-    background: url(../../../raw/static/images/icon-edit.gif) no-repeat left 2px;
-	font-size: 12px !important;
-}
-#myviews .btn-del {
-	font-size: 11px;
-    font-weight: bold;
-    color:#ca0000;
-}
-
-
-/* Side Quota Bar */
-/** this is currently broken and needs looking at
- * default is broken too */
-#quota_used {
-    color: #3986c3;
-}
-#quota_total {
-    color: #1F97D5;
-}
-#quota_bar {
-    background: #14436F;
-    color: #FFF;
-}
-#quota_bar_100 {
-    background: #CC0000;
-}
-
-#quota_message {
-    margin: 0 16px 0 0;
-	font-size: 12px;
-    padding-bottom: 10px;
-}
-#quota_fill {
-    margin: 0;
-    background: #1F97D5;
-}
-
-
-/* SETTINGS > PREFERENCES */
-#accountprefs table #accountprefs_password2 {
-    margin: 0 0 20px 0;
-}
-#accountprefs table h3 {
-    margin: 5px 0 0 0;
-    padding: 0;
-	color: #1e6297;
-	font-size: 16px;
-	font-weight: bold;
-	border-bottom: 1px solid #888888
-}
-#accountprefs td label {
-    font-weight: normal;
-	color: #14336F;
-	font-size: 11px;
-}
-#accountprefs_oldpassword_container th {
-	width: 200px !important;
-}
 
 /* Tables */
 .main-column table {
@@ -549,3 +137,392 @@ table.table td, .tablerenderer td {
     color: #1e6297;
     font-size: 16px;
 }
+/* generic table listing styles
+ * like my views and my groups, etc
+ */
+table.fullwidth {
+	border-top: 1px solid #14436F;
+	border-bottom: 1px solid #14436F;
+}
+
+table.fullwidth h3 {
+	margin: 0 0 15px 0;
+	padding: 0;
+}
+table.fullwidth h3 a {
+	color: #1e6297 !important;
+}
+/* Alternative row background colours */
+.r0 {
+    background-color: #e0e8ee;
+}
+.r1 {
+    background-color: #f4f7f9;
+}
+
+
+/* Form elements */
+label {
+    color: #888888;
+    margin: 0 5px 0 0;
+}
+.required th, .required label, .requiredmarker, #register_tandc_container th {
+    color: #333333;
+}
+select {
+    border: 1px solid #b2b2b2;
+    padding: 0;
+}
+
+input.error, select.error {
+    border-color: #cc0000;
+}
+/* Legend */
+legend {
+	color: #1e6297;
+	margin-bottom:5px;
+}
+legend a,
+legend a:link,
+legend a:visited,
+legend a:active {
+	color: #1e6297 !important;
+}
+/* Fieldset */
+fieldset {
+    border: 1px solid #14436F;
+}
+
+/* Buttons */
+.btn,
+.btn-link,
+input.submit,
+input.button, button,
+input.submitcancel,
+input.cancelbackcreate,
+#settings_delete {
+	background-color: #14436F;
+	padding: 3px 10px;
+	border-color: #D9DFEA #b2b2b2 #b2b2b2 #D9DFEA !important;
+	border-style: solid;
+	border-width: 1px;
+	font-size: 11px;
+    font-weight:normal;
+	color: #FFF !important;
+	margin-left: 5px;
+}
+a.btn,
+a.btn:hover {
+	color: #FFF;
+    text-decoration:none;
+}
+/* special case */
+#btn-logout {
+	background-color: #1D499F;
+}
+/***** ICON LINKS ******/
+div.btn-del input.submit, input.submit.btn-del,
+div.btn-msg input.submit,
+div.btn-add input.submit, input.submit.btn-add,
+div.btn-edit input.submit, input.submit.btn-edit,
+a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup {
+    color: #1F97D5 !important;
+}
+
+/* Top of page elements */
+#container,
+#containerX {
+    background: #1D499F url(../images/bg-container.jpg) repeat-x top center;
+    margin-top:0px;
+    padding-top:0px;
+}
+#top-wrapper {
+    background: transparent;
+}
+#top-wrapper ul,
+#top-wrapper li {
+    padding: 0;
+    margin: 0;
+    text-align: right;
+    display: inline;
+}
+
+#site-logo {
+    padding: 0;
+	font-size: 3.3em;
+	font-weight:normal;
+	color: #FFFFFF;
+	width:600px;
+	padding: 20px 25px 5px 0
+}
+#site-logo a,
+#site-logo a:link,
+#site-logo a:active,
+#site-logo a:visited {
+	color: #FFFFFF;
+}
+#site-logo a:hover {
+	color: #F0F0F0;
+}
+
+/* search box in header */
+#usf {
+    font-size: 11px;
+    font-weight: bold;
+    color: #333333;
+    padding: 35px 6px 0 0;
+    text-align: right;
+}
+#usf_query_container input {
+    padding: 2px 3px;
+    color: #333333;
+	background-color: #FFFFFF;
+    width: 190px;
+}
+
+/* main menu */
+#main-nav {
+    float:right;
+    padding: 0;
+    margin: 0 10px 0 0;
+	height: 27px;
+}
+#main-nav li {
+    float:left;
+    color: #FFFFFF;
+    text-decoration: none;
+    font-weight: normal;
+	font-size: 12px;
+	margin: 0 0 0 3px;
+	padding: 5px 15px 3px;
+	background: #14336F;
+}
+#main-nav li a,
+#main-nav li a:link,
+#main-nav li a:visited,
+#main-nav li a:active {
+	margin: 0;
+	padding: 0;
+    color: #FFFFFF;
+	width:auto;
+	display:block;
+}
+#main-nav li a:hover {
+    color: #FFFFFF;
+    text-decoration: underline;
+}
+#main-nav li.selected {
+	background: #FFFFFF;
+}
+#main-nav li.selected a:link,
+#main-nav li.selected a:visited,
+#main-nav li.selected a:active {
+    color: #14336F;
+}
+
+/* Sub menu */
+#sub-nav {
+    clear:both;
+    padding: 0;
+    margin: 0;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: left;
+    background: #FFF;
+    height: 24px;
+	border-bottom:1px solid #DDD;
+	width:100%;
+}
+#sub-nav ul {
+    float:right;
+	height: 15px;
+	padding: 4px 10px 6px 0;
+}
+#sub-nav li {
+    height: 25px;
+    padding: 5px 13px 5px 8px;
+    margin: 0 !important;
+    /* not working */
+    /* background: url(../../../default/static/images/submenu-divider.gif) no-repeat top right; */
+}
+#sub-nav li.selected {
+    display: inline;
+    height: 25px;
+    margin: 0;
+	background: transparent;
+}
+#sub-nav li a,
+#sub-nav li a:link,
+#sub-nav li a:visited,
+#sub-nav li a:active {
+    color: #14336F;
+	height: 25px;
+}
+#sub-nav li a:hover {
+    color: #1A428F;
+    text-decoration: underline;
+}
+#sub-nav li.selected a:link,
+#sub-nav li.selected a:visited,
+#sub-nav li.selected a:active {
+    color: #1D499F;
+    text-decoration: underline;
+}
+
+/* CONTENT LAYOUT */
+#main-wrapper {
+	background: #FFF;
+}
+
+
+/* RIGHT SIDE COLUMN */
+#right-column {
+	background: #F4F7F9;
+    padding:0px;
+}
+div.sideblock {
+    background: transparent url(../images/pixel_grey.gif) repeat-y top left;
+    padding: 10px 15px 15px 15px;
+	margin-left:-1px;
+	border-bottom:1px solid #DDD;
+}
+div.sideblock h3 {
+    padding: 0;
+    margin: 3px 0 10px 0;
+    font-size: 14px;
+    color: #1e6297;
+}
+div.sideblock h3 a,
+div.sideblock h3 a:link,
+div.sideblock h3 a:visited,
+div.sideblock h3 a:active {
+	color: #1e6297 !important;
+}
+div.sideblock p {
+    font-size: .9em;
+}
+
+
+/* these are the first level styles */
+div.sideblock ul li {
+	padding: 2px 0;
+	font-size: 12px;
+	font-weight: bold;
+	color: #1A428F;
+}
+
+div.sideblock ul ul {
+	list-style-type: square;
+}
+
+div.sideblock ul li ul li {
+	font-size: 11px;
+	padding:0px;
+    margin:0px;
+}
+
+/** very specific overrides for the profile block
+ * since it uses different nesting strategy
+ * as far as i can tell :/ */
+div#sb-profile ul li a {
+	color: #1A428F;
+}
+div#sb-profile ul li ul li a {
+	color: #1F97D5;
+}
+
+div#sb-onlineusers ul {
+    padding-left:20px;
+}
+div#sb-onlineusers ul img {
+    padding-right:5px;
+}
+
+
+/* Side Quota Bar */
+/** this is currently broken and needs looking at
+ * default is broken too */
+#quota_used {
+    color: #3986c3;
+}
+#quota_total {
+    color: #1F97D5;
+}
+#quota_bar {
+    background: #14436F;
+    color: #FFF;
+}
+#quota_bar_100 {
+    background: #CC0000;
+}
+
+#quota_message {
+    margin: 0 16px 0 0;
+	font-size: 12px;
+    padding-bottom: 10px;
+}
+#quota_fill {
+    margin: 0;
+    background: #1F97D5;
+}
+
+/* Footer */
+#footer-wrap {
+    background-color: #1D499F;
+}
+#footer-wrap a,
+#footer-wrap a:link,
+#footer-wrap a:active,
+#footer-wrap a:visited {
+    color: #FFFFFF;
+	padding: 0 5px;
+}
+#footer-wrap a:hover {
+    color: #FFF;
+}
+#performance-info {
+    color: #fff;
+}
+#powered-by {
+    background-color: #ffffff;
+    padding:3px;
+}
+
+
+/* Page by page styles */
+
+/* My Views */
+#editviewdetails,
+#editthisview,
+#editviewaccess {
+	padding-left: 15px;
+    background: url(../../../raw/static/images/icon-edit.gif) no-repeat left 2px;
+	font-size: 12px !important;
+}
+#myviews .btn-del {
+	font-size: 11px;
+    font-weight: bold;
+    color:#ca0000;
+}
+
+/* Settings > Preferences */
+#accountprefs table #accountprefs_password2 {
+    margin: 0 0 20px 0;
+}
+#accountprefs table h3 {
+    margin: 5px 0 0 0;
+    padding: 0;
+	color: #1e6297;
+	font-size: 16px;
+	font-weight: bold;
+	border-bottom: 1px solid #888888
+}
+#accountprefs td label {
+    font-weight: normal;
+	color: #14336F;
+	font-size: 11px;
+}
+#accountprefs_oldpassword_container th {
+	width: 200px !important;
+}
+

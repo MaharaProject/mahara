@@ -21,10 +21,6 @@ body {
 img {
     border: 0;
 }
-label {
-    font-weight: bold;
-    margin: 0 .5em 0 0;
-}
 .main-column h1, .main-column h2, .main-column h3, .main-column h4, .main-column h5, .main-column h6 {
     margin: .75em 0 .5em;
 }
@@ -76,6 +72,13 @@ label {
 .cb {
     clear: both;
 }
+.s {
+    font-size: .9em;
+    font-weight: normal;
+}
+pre, tt {
+	font-size: 1.2em;
+}
 .fullwidth {
     width: 100%;
 }
@@ -89,6 +92,10 @@ label {
     visibility: hidden;
     top: 0;
 }
+.nojs-hidden-inline, .nojs-hidden-block, .nojs-hidden-table {
+    display: none;
+}
+
 #overlay {
     position: fixed;
     top: 0;
@@ -103,6 +110,8 @@ label {
 html>/**/body #overlay {
     z-index: 1;
 }
+
+/* Tables */
 table {
     border-spacing: 0;
     border-collapse: collapse;
@@ -128,22 +137,190 @@ td.narrow {
 .r1 {
     background-color: #f7f7f7;
 }
-.nojs-hidden-inline, .nojs-hidden-block, .nojs-hidden-table {
-    display: none;
-}
-.s {
+.listing {
     font-size: .9em;
-    font-weight: normal;
 }
-pre, tt {
-	font-size: 1.2em;
+.listing h3, .listing h5 {
+    margin: 0;
 }
-.main-column ul {
-    margin: .5em 0 1em 0;
+div.listing {
+	padding: .5em 1em;
+}
+
+/* Pagination */
+div.pagination  {
+    font-size: .9em;
+    margin: 1em 0;
+    text-align: center;
+}
+.pagination a {
+    border: 1px solid #d1d1d1;
+    margin: 0 .25em;
+    padding: .5em;
+    text-decoration: none;
+}
+.pagination .disabled {
+    background-color: #EBEBEB;
+    border: 1px solid #d1d1d1;
+    margin: 0 .25em;
+    padding: .5em;
+    text-decoration: none;
+}
+.pagination .selected {
+    border: 1px solid #d1d1d1;
+    font-weight: bold;
+    margin: 0 .25em;
+    padding: .5em;
+}
+.pagination .results {
+    color: #838383;
+    margin: 1em;
+    text-align: center;
+}
+
+/* Forms */
+label {
+    font-weight: bold;
+    margin: 0 .5em 0 0;
+}
+.required th, .required label, .requiredmarker, #register_tandc_container th {
+    color: #cc6600;
+}
+/* override required colour */
+.required label.plain, .required.radio td label, .required.emaillist td label {
+    color: #333;
+}
+
+.pieform tbody tr th label {
+	white-space: normal;
+}
+.pieform td label {
+	font-weight: normal;
+	font-size: .9em;
+}
+.pieform td.description {
+	padding-top: 0 !important;
+    font-size: .9em;
+}
+div.grippie {
+	border-color: #d1d1d1;
+    border-style: solid;
+    border-width: 0 1px 1px 1px;
+    background: #eeeeee url(../images/grippie.png) no-repeat scroll 100% 50%;
+    cursor: s-resize;
+    height: 14px;
+}
+.errmsg {
+    color: #cc0000;
+    font-size: .9em;
+}
+legend {
+	font-weight: bold;
+	font-size: 1.3em;
+}
+select {
+	margin-right: .5em;
+}
+
+/* Fieldset */
+fieldset {
+	padding: 1em 1.5em;
+	margin: 5px 0;
+}
+fieldset.collapsible {
+	padding: 1em 1.5em;
+}
+fieldset.collapsed {
+	border: 0 !important;
 	padding: 0;
+	margin: 0;
 }
-.main-column ul li {
-	margin: 0 0 .25em 1.5em;
+fieldset.collapsed table {
+    position: absolute;
+    visibility: hidden;
+	padding: 0;
+	border: 0;
+	margin: 0;
+}
+fieldset legend a {
+    padding-left: 1em;
+    background: url(../images/icon_fieldset_down.gif) 2px center no-repeat;
+}
+fieldset legend a:hover {
+	text-decoration: none;
+}
+fieldset.collapsed legend a {
+    background: url(../images/icon_fieldset_left.gif) 2px center no-repeat;
+}
+
+/* Buttons */
+a.btn-del, div.btn-del input.submit, input.submit.btn-del,
+.btn-leavegroup,
+.btn-pending,
+a.btn-add, a.btn-req, div.btn-add input.submit, input.submit.btn-add, button.btn-add,
+div.btn-msg input.submit,
+div.btn-edit input.submit, input.submit.btn-edit,
+a.btn-msg, a.btn-edit, .btn-reply {
+    padding-left: .8em;
+    margin-right: .2em;
+    cursor: pointer;
+    border: none;
+    * width: 1;
+    * overflow: visible;
+}
+a.btn-del, .btn-leavegroup, div.btn-del input.submit, input.submit.btn-del {
+    color: #ca0000;
+    background: url(../images/icon-delete.gif) no-repeat center left;
+}
+div.btn-bold input.submit {
+    font-weight: bold;
+}
+a.btn-msg, div.btn-msg input.submit {
+	background: url(../images/icon-mail.gif) no-repeat center left;
+}
+a.btn-add, a.btn-req, div.btn-add input.submit, input.submit.btn-add, button.btn-add {
+	background: url(../images/icon-add.gif) no-repeat center left;
+}
+a.btn-edit, div.btn-edit input.submit, input.submit.btn-edit {
+	background: url(../images/icon-edit.gif) no-repeat center left;
+}
+.btn-pending {
+	background: url(../images/icon-pending.gif) no-repeat left 3px;
+}
+.btn-reply {
+	background: url(../images/icon-reply.gif) no-repeat left 4px;
+}
+input#addfriend_add,
+input#myfriends_addfriend_add {
+	background: transparent url(../images/icon-add.gif) no-repeat left;
+	border: 0;
+    margin: 0;
+}
+div.btn-link input.submit {
+    border: 0;
+    background: transparent;
+    margin: 0;
+    padding: 0;
+    color: #00f;
+    display: inline;
+    cursor: pointer;
+}
+div.rbuttons {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+div.rbuttons.pagetabs {
+    right: 1em;
+    top: 0.5em;
+}
+div.rbuttons form,
+div.rbuttons form div {
+    display: inline;
+    padding-left: 1em;
+}
+.controls a {
+    margin: 0 .5em;
 }
 
 /* Top of page elements */
@@ -243,14 +420,12 @@ pre, tt {
     min-height: 0;  /* IE layout hack */
     * padding-top: .2em;
 }
-.listing {
-    font-size: .9em;
+.main-column ul {
+    margin: .5em 0 1em 0;
+	padding: 0;
 }
-.listing h3, .listing h5 {
-    margin: 0;
-}
-div.listing {
-	padding: .5em 1em;
+.main-column ul li {
+	margin: 0 0 .25em 1.5em;
 }
 
 /* Informational messages */
@@ -323,46 +498,6 @@ ul.in-page-tabs li a {
 	margin: .5em 0;
 }
 
-
-/* Forms */
-.required th, .required label, .requiredmarker, #register_tandc_container th {
-    color: #cc6600;
-}
-/* override required colour */
-.required label.plain, .required.radio td label, .required.emaillist td label {
-    color: #333;
-}
-
-.pieform tbody tr th label {
-	white-space: normal;
-}
-.pieform td label {
-	font-weight: normal;
-	font-size: .9em;
-}
-.pieform td.description {
-	padding-top: 0 !important;
-    font-size: .9em;
-}
-div.grippie {
-	border-color: #d1d1d1;
-    border-style: solid;
-    border-width: 0 1px 1px 1px;
-    background: #eeeeee url(../images/grippie.png) no-repeat scroll 100% 50%;
-    cursor: s-resize;
-    height: 14px;
-}
-.errmsg {
-    color: #cc0000;
-    font-size: .9em;
-}
-legend {
-	font-weight: bold;
-	font-size: 1.3em;
-}
-select {
-	margin-right: .5em;
-}
 
 /* Left/right columns */
 #left-column, #right-column {
@@ -532,138 +667,6 @@ div.sideblock #friendscontrol label {
 }
 
 
-/* Buttons */
-a.btn-del, div.btn-del input.submit, input.submit.btn-del,
-.btn-leavegroup,
-.btn-pending,
-a.btn-add, a.btn-req, div.btn-add input.submit, input.submit.btn-add, button.btn-add,
-div.btn-msg input.submit,
-div.btn-edit input.submit, input.submit.btn-edit,
-a.btn-msg, a.btn-edit, .btn-reply {
-    padding-left: .8em;
-    margin-right: .2em;
-    cursor: pointer;
-    border: none;
-    * width: 1;
-    * overflow: visible;
-}
-a.btn-del, .btn-leavegroup, div.btn-del input.submit, input.submit.btn-del {
-    color: #ca0000;
-    background: url(../images/icon-delete.gif) no-repeat center left;
-}
-div.btn-bold input.submit {
-    font-weight: bold;
-}
-a.btn-msg, div.btn-msg input.submit {
-	background: url(../images/icon-mail.gif) no-repeat center left;
-}
-a.btn-add, a.btn-req, div.btn-add input.submit, input.submit.btn-add, button.btn-add {
-	background: url(../images/icon-add.gif) no-repeat center left;
-}
-a.btn-edit, div.btn-edit input.submit, input.submit.btn-edit {
-	background: url(../images/icon-edit.gif) no-repeat center left;
-}
-.btn-pending {
-	background: url(../images/icon-pending.gif) no-repeat left 3px;
-}
-.btn-reply {
-	background: url(../images/icon-reply.gif) no-repeat left 4px;
-}
-input#addfriend_add,
-input#myfriends_addfriend_add {
-	background: transparent url(../images/icon-add.gif) no-repeat left;
-	border: 0;
-    margin: 0;
-}
-div.btn-link input.submit {
-    border: 0;
-    background: transparent;
-    margin: 0;
-    padding: 0;
-    color: #00f;
-    display: inline;
-    cursor: pointer;
-}
-div.rbuttons {
-    position: absolute;
-    right: 0;
-    top: 0;
-}
-div.rbuttons.pagetabs {
-    right: 1em;
-    top: 0.5em;
-}
-div.rbuttons form,
-div.rbuttons form div {
-    display: inline;
-    padding-left: 1em;
-}
-.controls a {
-    margin: 0 .5em;
-}
-
-/* Pagination */
-div.pagination  {
-    font-size: .9em;
-    margin: 1em 0;
-    text-align: center;
-}
-.pagination a {
-    border: 1px solid #d1d1d1;
-    margin: 0 .25em;
-    padding: .5em;
-    text-decoration: none;
-}
-.pagination .disabled {
-    background-color: #EBEBEB;
-    border: 1px solid #d1d1d1;
-    margin: 0 .25em;
-    padding: .5em;
-    text-decoration: none;
-}
-.pagination .selected {
-    border: 1px solid #d1d1d1;
-    font-weight: bold;
-    margin: 0 .25em;
-    padding: .5em;
-}
-.pagination .results {
-    color: #838383;
-    margin: 1em;
-    text-align: center;
-}
-
-/* Fieldset */
-fieldset {
-	padding: 1em 1.5em;
-	margin: 5px 0;
-}
-fieldset.collapsible {
-	padding: 1em 1.5em;
-}
-fieldset.collapsed {
-	border: 0 !important;
-	padding: 0;
-	margin: 0;
-}
-fieldset.collapsed table {
-    position: absolute;
-    visibility: hidden;
-	padding: 0;
-	border: 0;
-	margin: 0;
-}
-fieldset legend a {
-    padding-left: 1em;
-    background: url(../images/icon_fieldset_down.gif) 2px center no-repeat;
-}
-fieldset legend a:hover {
-	text-decoration: none;
-}
-fieldset.collapsed legend a {
-    background: url(../images/icon_fieldset_left.gif) 2px center no-repeat;
-}
-
 /* Footer */
 #footer-wrap {
     clear: both;
@@ -704,6 +707,7 @@ fieldset.collapsed legend a {
 	color: #333;
 }
 
+/* Attached file lists */
 .attachments {
 	border: 1px solid #ddd;
 	background-color: #ddd;
@@ -762,70 +766,73 @@ fieldset.collapsed legend a {
     width: 60%;
 }
 
-/* My Groups */
-ul.groupuserstatus {
-    width: 200px;
+/* Copy a view */
+#viewpreview {
+  position: absolute;
+  border: 10px solid #eee;
+  background-color: #fff;
 }
-ul.groupuserstatus li {
-	list-style: none;
-	margin: 0;
-	border-bottom: 1px solid #d1d1d1;
+#viewpreviewinner {
+  border: 1px solid #ccc;
+  padding: 1em;
 }
-ul.groupuserstatus li.last {
-	border-bottom: none;
+#viewpreviewclose {
+  width: 100%;
+  text-align: right;
+  border-bottom: 1px dotted #ccc;
+  padding-bottom: 1em;
 }
-form#search, form#filter, div.searchform {
-    /* Also applies to Find Friends */
-    margin-bottom: 1em;
+#viewpreviewcontent {
+  margin-top: 1em;
 }
 
-
-/* My Friends */
-#friendslist ul.viewlist {
-	margin: 0;
-	font-size: 1em;
+/* View access */
+#viewacl_lhs {
+    float: right;
+    padding: 1em;
+    margin: 0 0 1em 1em;
+    border: 1px dotted #d1d1d1;
+	width: 320px;
 }
-#friendslist ul.viewlist li.label {
-	background: none;
-	padding-left: 0;
+#viewacl_lhs #results {
+	margin-top: 1em;
 }
-#friendslist ul.viewlist li {
-	display: inline;
-	margin: 0;
-	padding-left: 1em;
-	background: url(../images/divider-dot.gif) no-repeat left;
+#accesslistitems {
+	margin-right: 350px;
 }
-#friendslist ul.actionlist {
-	margin: 0 1em;
-	float: right;
-	width: 200px;
-}
-#friendslist ul.actionlist li {
-	list-style: none;
-	margin: 0;
-	padding: 0 .25em;
-	border-bottom: 1px solid #d1d1d1;
-}
-#friendslist ul.actionlist li.last {
-	border-bottom: none;
-}
-#friendslist .leftdiv {
+#accesslistitems .ai-container {
+	margin: 1em 1em 0 0;
 	float: left;
+    background: #eee;
 }
-#friendslist .rightdiv {
-	min-height: 35px;
-	padding: .5em 0 0 4.5em;
+#accesslistitems .ai-container th {
+	text-align: left;
+}
+#accesslistitems .ai-container table {
+	margin: 0;
+	padding: 0;
+	width: auto;
+}
+#accesslistitems .ai-container table td,
+#accesslistitems .ai-container table th {
+	padding: .25em .5em;
+}
+#accesslistitems .ai-container table th {
+	color: #555555;
 }
 
-/* SETTINGS > INSTITUTION MENBERSHIP */
-#requestmembership_institution_container {
-	margin: 1em 0;
+#accesslistitems table th img {
+	height: 16px;
 }
-#requestmembership_studentid_container {
-	margin: 1em .5em 0 1em;
+#editaccess_overrides_container {
+	clear: both;
 }
-#cancelrequest label {
-	display: block;
+#editaccess_overrides_container fieldset legend {
+	margin-top: 1em;
+}
+#editaccess_startdate_container,
+#editaccess_stopdate_container {
+	padding: .25em 0;
 }
 
 /* Export */
@@ -904,77 +911,62 @@ p.progress-text {
     height: 40px;
 }
 
-
-/* Copy a view */
-#viewpreview {
-  position: absolute;
-  border: 10px solid #eee;
-  background-color: #fff;
+/* My Groups */
+ul.groupuserstatus {
+    width: 200px;
 }
-#viewpreviewinner {
-  border: 1px solid #ccc;
-  padding: 1em;
-}
-#viewpreviewclose {
-  width: 100%;
-  text-align: right;
-  border-bottom: 1px dotted #ccc;
-  padding-bottom: 1em;
-}
-#viewpreviewcontent {
-  margin-top: 1em;
-}
-
-/* View access */
-#viewacl_lhs {
-    float: right;
-    padding: 1em;
-    margin: 0 0 1em 1em;
-    border: 1px dotted #d1d1d1;
-	width: 320px;
-}
-#viewacl_lhs #results {
-	margin-top: 1em;
-}
-#accesslistitems {
-	margin-right: 350px;
-}
-#accesslistitems .ai-container {
-	margin: 1em 1em 0 0;
-	float: left;
-    background: #eee;
-}
-#accesslistitems .ai-container th {
-	text-align: left;
-}
-#accesslistitems .ai-container table {
+ul.groupuserstatus li {
+	list-style: none;
 	margin: 0;
-	padding: 0;
-	width: auto;
+	border-bottom: 1px solid #d1d1d1;
 }
-#accesslistitems .ai-container table td,
-#accesslistitems .ai-container table th {
-	padding: .25em .5em;
+ul.groupuserstatus li.last {
+	border-bottom: none;
 }
-#accesslistitems .ai-container table th {
-	color: #555555;
-}
-
-#accesslistitems table th img {
-	height: 16px;
-}
-#editaccess_overrides_container {
-	clear: both;
-}
-#editaccess_overrides_container fieldset legend {
-	margin-top: 1em;
-}
-#editaccess_startdate_container,
-#editaccess_stopdate_container {
-	padding: .25em 0;
+form#search, form#filter, div.searchform {
+    /* Also applies to Find Friends */
+    margin-bottom: 1em;
 }
 
-/* Group about */
+
+/* My Friends */
+#friendslist ul.viewlist {
+	margin: 0;
+	font-size: 1em;
+}
+#friendslist ul.viewlist li.label {
+	background: none;
+	padding-left: 0;
+}
+#friendslist ul.viewlist li {
+	display: inline;
+	margin: 0;
+	padding-left: 1em;
+	background: url(../images/divider-dot.gif) no-repeat left;
+}
+#friendslist ul.actionlist {
+	margin: 0 1em;
+	float: right;
+	width: 200px;
+}
+#friendslist ul.actionlist li {
+	list-style: none;
+	margin: 0;
+	padding: 0 .25em;
+	border-bottom: 1px solid #d1d1d1;
+}
+#friendslist ul.actionlist li.last {
+	border-bottom: none;
+}
+#friendslist .leftdiv {
+	float: left;
+}
+#friendslist .rightdiv {
+	min-height: 35px;
+	padding: .5em 0 0 4.5em;
+}
+
+/* Group: about */
 .subpage .group-info {
     margin-top: 1em;
 }
@@ -995,7 +987,7 @@ p.progress-text {
 	margin: 0 2em 0 0;
 }
 
-/* Group members */
+/* Group: members */
 .listing.twocolumn td {
 	width: 50%;
 	border: 4px solid #FFF;
@@ -1010,7 +1002,7 @@ p.progress-text {
     line-height: .9em;
 }
 
-/* SETTINGS > NOTIFICATIONS */
+/* Settings > Notifications */
 #activitylist th {
 	line-height: 1.2em;
 	vertical-align: bottom;
@@ -1019,5 +1011,16 @@ p.progress-text {
 #activitylist th a {
 	font-size: .8em;
 	font-weight: normal;
+}
+
+/* Settings > Institution membership */
+#requestmembership_institution_container {
+	margin: 1em 0;
+}
+#requestmembership_studentid_container {
+	margin: 1em .5em 0 1em;
+}
+#cancelrequest label {
+	display: block;
 }
 
