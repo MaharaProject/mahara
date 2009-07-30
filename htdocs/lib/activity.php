@@ -343,6 +343,8 @@ abstract class ActivityType {
     abstract function get_required_parameters();
 
     public function notify_user($user) {
+        $updatenotification = false;
+
         $userdata = $this->to_stdclass();
         // some stuff gets overridden by user specific stuff
         if (!empty($user->url)) {
@@ -358,9 +360,9 @@ abstract class ActivityType {
         }
 
         // always do internal
-        $this->internalid = call_static_method('PluginNotificationInternal', 'notify_user', $user, $userdata);
+        $this->internalid = $userdata->internalid = call_static_method('PluginNotificationInternal', 'notify_user', $user, $userdata);
         if ($this->update_url()) {
-            $userdata->internalid = $this->internalid;
+            $updatenotification = true;
             $userdata->url = $this->url;
         }
 
@@ -370,7 +372,7 @@ abstract class ActivityType {
             try {
                 call_static_method(generate_class_name('notification', $method), 'notify_user', $user, $userdata);
                 $user->markasread = true; // if we're doing something else, don't generate unread internal ones.
-                $userdata->internalid = $this->internalid;
+                $updatenotification = true;
             }
             catch (Exception $e) {
                 $user->markasread = false; // if we fail (eg email falls over), don't mark it as read...
@@ -378,7 +380,7 @@ abstract class ActivityType {
             }
         }
 
-        if (isset($userdata->internalid)) {
+        if ($updatenotification) {
             call_static_method('PluginNotificationInternal', 'update_notification', $user, $userdata);
         }
 
