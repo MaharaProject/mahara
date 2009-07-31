@@ -343,7 +343,7 @@ abstract class ActivityType {
     abstract function get_required_parameters();
 
     public function notify_user($user) {
-        $updatenotification = false;
+        $changes = new stdClass;
 
         $userdata = $this->to_stdclass();
         // some stuff gets overridden by user specific stuff
@@ -362,8 +362,7 @@ abstract class ActivityType {
         // always do internal
         $userdata->internalid = call_static_method('PluginNotificationInternal', 'notify_user', $user, $userdata);
         if ($this->update_url($userdata->internalid)) {
-            $updatenotification = true;
-            $userdata->url = $this->url;
+            $changes->url = $userdata->url = $this->url;
         }
 
         if ($user->method != 'internal') {
@@ -371,17 +370,19 @@ abstract class ActivityType {
             safe_require('notification', $method);
             try {
                 call_static_method(generate_class_name('notification', $method), 'notify_user', $user, $userdata);
-                $user->markasread = true; // if we're doing something else, don't generate unread internal ones.
-                $updatenotification = true;
+                $changes->read = true;
             }
-            catch (Exception $e) {
-                $user->markasread = false; // if we fail (eg email falls over), don't mark it as read...
-                // @todo Catalyst IT Ltd
+            catch (MaharaException $e) {
+                // We don't mind other notification methods failing, as it'll 
+                // go into the activity log as 'unread'
             }
         }
 
-        if ($updatenotification) {
-            call_static_method('PluginNotificationInternal', 'update_notification', $user, $userdata);
+        // Neither emtpy($changes) nor if ($changes) work properly, empty 
+        // objects aren't "empty" according to php. See http://php.net/empty
+        if (get_object_vars($changes)) {
+            $changes->id = $userdata->internalid;
+            update_record('notification_internal_activity', $changes);
         }
 
     }
