@@ -1465,6 +1465,12 @@ function auth_generate_login_form() {
         return;
     }
     require_once('pieforms/pieform.php');
+    if (count_records('institution', 'registerallowed', 1, 'suspended', 0)) {
+        $registerlink = '<a href="' . get_config('wwwroot') . 'register.php" tabindex="2">' . get_string('register') . '</a><br>';
+    }
+    else {
+        $registerlink = '';
+    }
     $loginform = get_login_form_js(pieform(array(
         'name'       => 'login',
         'renderer'   => 'div',
@@ -1493,8 +1499,8 @@ function auth_generate_login_form() {
                 'value' => get_string('login')
             ),
             'register' => array(
-                'value' => '<div id="login-helplinks"><a href="' . get_config('wwwroot') . 'register.php" tabindex="2">' . get_string('register') . '</a>'
-                    . '<br><a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('lostusernamepassword') . '</a></div>'
+                'value' => '<div id="login-helplinks">' . $registerlink
+                    . '<a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('lostusernamepassword') . '</a></div>'
             )
         )
     )));
