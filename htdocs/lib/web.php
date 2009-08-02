@@ -648,7 +648,7 @@ class Theme {
         }
 
         if (!isset($this->displayname)) {
-            $this->displayname = $themename;
+            $this->displayname = $this->basename;
         }
         if (!isset($theme->parent) || !$theme->parent) {
             $theme->parent = 'raw';
