@@ -1396,7 +1396,7 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $sec
             json_encode($pluginname) . ',' . json_encode($page) . ',' . 
             json_encode($section)
             . ',this); return false;'
-        ) . '"><img src="' . theme_get_url('images/icon_help.' . $imageext) . '" alt="?"></a></span>';
+        ) . '"><img src="' . theme_get_url('images/icon_help.' . $imageext) . '" alt="'.get_string('help').'"></a></span>';
 }
 
 function pieform_get_help(Pieform $form, $element) {
