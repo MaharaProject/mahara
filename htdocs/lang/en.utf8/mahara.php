@@ -48,6 +48,7 @@ $string['errorprocessingform'] = 'There was an error with submitting this form. 
 $string['description'] = 'Description';
 $string['remove']  = 'Remove';
 $string['Close'] = 'Close';
+$string['help'] = 'Help';
 
 $string['no']     = 'No';
 $string['yes']    = 'Yes';
