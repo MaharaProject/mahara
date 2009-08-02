@@ -74,22 +74,15 @@ h6 {
     font-weight: bold;
     margin: 10px 0 0 0;
 }
-p {
-    margin: 10px 0 10px 0;
-	line-height: 18px;
-}
 .description,
 .unvalidated,
 .postdetails {
     color: #838383;
 }
 
-
 /* Tables */
 .main-column table {
 	padding: 0;
-	border-spacing: 0;
-	border-collapse: collapse;
 	margin: 15px 0;
 }
 .main-column thead th {
@@ -121,7 +114,6 @@ table.table, .tablerenderer {
 	padding: 0;
 	margin: 0;
 	border: none;
-	border-spacing: 0;
 }
 table.table td, .tablerenderer td {
 	padding: 5px 10px;
@@ -137,14 +129,10 @@ table.table td, .tablerenderer td {
     color: #1e6297;
     font-size: 16px;
 }
-/* generic table listing styles
- * like my views and my groups, etc
- */
 table.fullwidth {
 	border-top: 1px solid #14436F;
 	border-bottom: 1px solid #14436F;
 }
-
 table.fullwidth h3 {
 	margin: 0 0 15px 0;
 	padding: 0;
@@ -177,7 +165,6 @@ select {
 input.error, select.error {
     border-color: #cc0000;
 }
-/* Legend */
 legend {
 	color: #1e6297;
 	margin-bottom:5px;
@@ -238,13 +225,6 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 }
 #top-wrapper {
     background: transparent;
-}
-#top-wrapper ul,
-#top-wrapper li {
-    padding: 0;
-    margin: 0;
-    text-align: right;
-    display: inline;
 }
 
 #site-logo {
@@ -401,20 +381,15 @@ div.sideblock h3 a:active {
 div.sideblock p {
     font-size: .9em;
 }
-
-
-/* these are the first level styles */
 div.sideblock ul li {
 	padding: 2px 0;
 	font-size: 12px;
 	font-weight: bold;
 	color: #1A428F;
 }
-
 div.sideblock ul ul {
 	list-style-type: square;
 }
-
 div.sideblock ul li ul li {
 	font-size: 11px;
 	padding:0px;

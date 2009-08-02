@@ -20,7 +20,7 @@
  * @copyright  (C) 2009 Catalyst IT Europe http://catalyst-eu.net
  */
 
-/* styles based on elements */
+/* General rules */
 body {
     background: #f7be23 url(../images/bg.jpg) repeat-x top center;
 	color: #000000;
@@ -35,10 +35,6 @@ a:visited {
 a:hover {
     color: #8E1901;
     text-decoration: underline;
-}
-p {
-    margin: 10px 0 10px 0;
-	line-height: 18px;
 }
 h1 {
     color: #8E1901;
@@ -89,8 +85,6 @@ h6 {
 /* Tables */
 .main-column table {
 	padding: 0;
-	border-spacing: 0;
-	border-collapse: collapse;
 	margin: 15px 0;
 }
 .main-column thead th {
@@ -122,7 +116,6 @@ table.table, .tablerenderer {
 	padding: 0;
 	margin: 0;
 	border: none;
-	border-spacing: 0;
 }
 table.table td, .tablerenderer td {
 	padding: 5px 10px;
@@ -510,6 +503,8 @@ div#sb-profile ul li ul li a {
     background-color: transparent;
 }
 
+
+/* Page by page styles */
 
 /* My Views */
 #editviewdetails,
