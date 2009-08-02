@@ -1290,7 +1290,28 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
     public static function append_view_url($postcontent, $view_id) {
         $postcontent = preg_replace('#(<a[^>]+href="[^>]+artefact/file/download\.php\?file=\d+)#', '\1&amp;view=' . $view_id , $postcontent);
         $postcontent = preg_replace('#(<img[^>]+src="[^>]+artefact/file/download\.php\?file=\d+)#', '\1&amp;view=' . $view_id, $postcontent);
+
+        // Find images inside <a> tags and temporarily draft them out of the 
+        // content. This is so we can link up unlinked images to open to 
+        // download.php.
+        //
+        // This is a hack really - will probably need refinement/replacement 
+        // later (if only we could do this with HTMLPurifier!)
+        $marker = '<aPONY>';
+        $matches = array();
+        $imginsidea = '#(<a[^>]+><img[^>]+></a>)#';
+        preg_match_all($imginsidea, $postcontent, $matches);
+        $postcontent = preg_replace($imginsidea, $marker, $postcontent);
+
         $postcontent = preg_replace('#(<img[^>]+src="([^>]+artefact/file/download\.php\?file=\d+&amp;view=\d+)"[^>]*>)#', '<a href="\2">\1</a>', $postcontent);
+
+        // Now put the <a><img>s we drafted out back in again
+        $i = 0;
+        $count = count($matches[1]);
+        while (false !== ($pos = strpos($postcontent, $marker)) && $i < $count) {
+            $postcontent = substr($postcontent, 0, $pos) . $matches[1][$i] . substr($postcontent, $pos + strlen($marker));
+            $i++;
+        }
 
         return $postcontent;
     }
