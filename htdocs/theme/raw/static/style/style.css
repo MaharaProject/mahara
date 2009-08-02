@@ -296,15 +296,6 @@ input#myfriends_addfriend_add {
 	border: 0;
     margin: 0;
 }
-div.btn-link input.submit {
-    border: 0;
-    background: transparent;
-    margin: 0;
-    padding: 0;
-    color: #00f;
-    display: inline;
-    cursor: pointer;
-}
 div.rbuttons {
     position: absolute;
     right: 0;
