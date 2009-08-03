@@ -402,6 +402,9 @@ div.sideblock a:visited,
 div.sideblock a:active {
 	color: #e8c1ea !important;
 }
+div.sideblock label {
+	color: #e8c1ea;
+}
 div.sideblock p {
     font-size: .9em;
 	color: #e8c1ea;	
