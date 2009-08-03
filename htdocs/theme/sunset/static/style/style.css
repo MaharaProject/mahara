@@ -83,61 +83,25 @@ h6 {
 }
 
 /* Tables */
-.main-column table {
-	padding: 0;
-	margin: 15px 0;
-}
 .main-column thead th {
     color: #8E1901;
-	padding: 2px 10px;
 	border-bottom: 1px dotted #8E1901;
-	vertical-align: top;
 }
 .main-column tbody th {
     color: #8E1901;
-	padding: 7px 0 7px 10px;
 	border-bottom: none;
 }
-.main-column .pieform tbody th {
-	text-align: right;
-}
-.main-column th.center {
-    text-align: center;
-}
-.main-column tbody td {
-	padding: 5px 10px;
-	vertical-align: top;
-}
 .main-column tfoot td {
-	padding: 3px 10px;
 	border-top: 1px dotted #8E1901;
-}
-table.table, .tablerenderer {
-	padding: 0;
-	margin: 0;
-	border: none;
-}
-table.table td, .tablerenderer td {
-	padding: 5px 10px;
-	margin: 0;
-	border: none;
 }
 .tablerenderer-loading {
     border: 1px solid #8E1901;
 	background-color: #ffffff;
-    padding: .5em;
-    text-align: center;
-    font-weight: bold;
     color: #ffffff;
-    font-size: 16px;
 }
 table.fullwidth {
 	border-top: 1px solid #8e1901;
 	border-bottom: 1px solid #8e1901;
-}
-table.fullwidth h3 {
-	margin: 0 0 15px 0;
-	padding: 0;
 }
 table.fullwidth h3 a {
     color: #8E1901 !important;
@@ -480,7 +444,6 @@ div#sb-profile ul li ul li a {
 #quota_bar_100 {
     background: #CC0000;
 }
-
 #quota_message {
     margin: 0 16px 0 0;
 	font-size: 12px;
@@ -513,22 +476,11 @@ div#sb-profile ul li ul li a {
     color: #8E1901;
 }
 #myviews .btn-del {
-	font-size: 11px;
     font-weight: bold;
-    color: #dd0221;
 }
 
 /* Settings > Preferences */
 #accountprefs table h3 {
-    margin: 5px 0 0 0;
-    padding: 0;
-	color: #8E1901;
-	font-size: 16px;
-	font-weight: bold;
+    color: #8E1901;
 	border-bottom: 1px solid #8E1901;
-}
-#accountprefs td label {
-    font-weight: normal;
-	color: #8E1901;
-	font-size: 11px;
 }

@@ -83,10 +83,6 @@ p {
 
 
 /* Tables */
-table.fullwidth {
-	border-top: 1px dotted #BEE3F1;
-	border-bottom: 1px dotted #BEE3F1;
-}
 .main-column thead th {
     color: #BEE3F1;
 	border-bottom: 1px dotted #BEE3F1;
@@ -102,6 +98,10 @@ table.fullwidth {
     border: 1px solid #000;
 	background-color: #000;
     color: #00AEF1;
+}
+table.fullwidth {
+	border-top: 1px dotted #BEE3F1;
+	border-bottom: 1px dotted #BEE3F1;
 }
 .listing.twocolumn td {
     padding: 4px !important;

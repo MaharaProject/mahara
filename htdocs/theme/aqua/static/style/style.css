@@ -81,61 +81,25 @@ h6 {
 }
 
 /* Tables */
-.main-column table {
-	padding: 0;
-	margin: 15px 0;
-}
 .main-column thead th {
     color: #888888;
-	padding: 2px 10px;
 	border-bottom: 1px solid #14436F;
-	vertical-align: top;
 }
 .main-column tbody th {
     color: #888888;
-	padding: 7px 0 7px 10px;
 	border-bottom: none;
 }
-.main-column .pieform tbody th {
-	text-align: right;
-}
-.main-column th.center {
-    text-align: center;
-}
-.main-column tbody td {
-	padding: 5px 10px;
-	vertical-align: top;
-}
 .main-column tfoot td {
-	padding: 3px 10px;
 	border-top: 1px solid #14436F;
-}
-table.table, .tablerenderer {
-	padding: 0;
-	margin: 0;
-	border: none;
-}
-table.table td, .tablerenderer td {
-	padding: 5px 10px;
-	margin: 0;
-	border: none;
 }
 .tablerenderer-loading {
     border: 1px solid #f4f7f9;
 	background-color: #f4f7f9;
-    padding: .5em;
-    text-align: center;
-    font-weight: bold;
     color: #1e6297;
-    font-size: 16px;
 }
 table.fullwidth {
 	border-top: 1px solid #14436F;
 	border-bottom: 1px solid #14436F;
-}
-table.fullwidth h3 {
-	margin: 0 0 15px 0;
-	padding: 0;
 }
 table.fullwidth h3 a {
 	color: #1e6297 !important;
@@ -475,29 +439,10 @@ div#sb-onlineusers ul img {
 	font-size: 12px !important;
 }
 #myviews .btn-del {
-	font-size: 11px;
     font-weight: bold;
-    color:#ca0000;
 }
 
 /* Settings > Preferences */
-#accountprefs table #accountprefs_password2 {
-    margin: 0 0 20px 0;
-}
 #accountprefs table h3 {
-    margin: 5px 0 0 0;
-    padding: 0;
-	color: #1e6297;
-	font-size: 16px;
-	font-weight: bold;
 	border-bottom: 1px solid #888888
 }
-#accountprefs td label {
-    font-weight: normal;
-	color: #14336F;
-	font-size: 11px;
-}
-#accountprefs_oldpassword_container th {
-	width: 200px !important;
-}
-

@@ -16,15 +16,6 @@
 .inlinelist img {
     vertical-align: middle;
 }
-#forumslist {
-	margin: 1em 0;
-}
-#forumslist table th {
-	border: none;
-}
-#forumslist table td {
-	padding: 0;
-}
 #forumdescription {
 	margin: 1em 0;
 }
@@ -54,7 +45,7 @@
 	padding: .5em 0;
 }
 .stickytopic {
-	background-color: #f4fbdc;
+	background-color: #e0e0e0;
 }
 
 /* FORUM > ADD TOPIC */

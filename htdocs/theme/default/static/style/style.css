@@ -66,9 +66,6 @@ h6 {
 .main-column table h3 a {
 	color: #1e6297 !important;
 }
-.main-column .pieform tbody th {
-	text-align: right;
-}
 .main-column table.tablerenderer,
 .main-column table.table {
 	border-bottom: 1px solid #95a8b7 !important;
@@ -531,4 +528,9 @@ div.progress-bar {
     color: #767676;
 	background-color: #ecf3d4;
     width: 190px;
+}
+
+/* Settings > Preferences */
+#accountprefs table h3 {
+	border-bottom: none;
 }
