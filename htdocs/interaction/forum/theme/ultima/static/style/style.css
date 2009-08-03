@@ -1,0 +1,18 @@
+input.submit.btn-subscribe {
+    color: #360435 !important;
+}
+#forumtopicstable th {
+	border-bottom: 1px dotted #5c0758;
+}
+.forumpost {
+	background-color: #f7f7f7;
+	border-top: 1px dotted #5c0758;
+	border-bottom: 1px dotted #5c0758;
+}
+.postbtns {
+	border: none;
+    background-color: #f1f1f1;
+}
+.forumpostleft {
+	background-color: #FFF;
+}

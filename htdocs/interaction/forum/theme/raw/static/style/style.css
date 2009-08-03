@@ -54,10 +54,13 @@
 /* FORUM > POST */
 .forumpost {
 	background-color: #FFF;
-	border: 1px solid #f1f1f1;
+	border: 1px solid #d1d1d1;
 }
 .forumsubject {
 	border-bottom: 1px solid #f1f1f1;
+}
+.forumsubject h3 {
+  margin-bottom: 0;
 }
 .forumpostleft {
 	width: 160px;
@@ -82,8 +85,9 @@
 	font-size: .9em;
     font-weight: bold;
 	text-align: right;
+    padding: 0 0 .1em 0;
 	background-color: #f1f1f1;
-	border-bottom: 3px solid #d1d1d1;
+    margin: 0;
 }
 .postbtns a {
 	margin: 0 1em;
@@ -93,8 +97,8 @@
     margin-top: 0;
 }
 .postreply {
-	padding: 1px 0 0 1.5em;
-	background-color: #d1d1d1;
+	padding: 0 0 0 1em;
+	background-color: #f1f1f1;
 }
 
 
