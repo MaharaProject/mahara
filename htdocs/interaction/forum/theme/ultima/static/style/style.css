@@ -4,6 +4,9 @@ input.submit.btn-subscribe {
 #forumtopicstable th {
 	border-bottom: 1px dotted #5c0758;
 }
+.stickytopic {
+    background-color: #e99adb;
+}
 .forumpost {
 	background-color: #f7f7f7;
 	border-top: 1px dotted #5c0758;
