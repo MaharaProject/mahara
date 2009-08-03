@@ -140,7 +140,7 @@ table.fullwidth h3 {
 	padding: 0;
 }
 table.fullwidth h3 a {
-	color: #1e6297 !important;
+    color: #8E1901 !important;
 }
 /* Alternative row background colours */
 .r0 {
@@ -519,9 +519,6 @@ div#sb-profile ul li ul li a {
 }
 
 /* Settings > Preferences */
-#accountprefs table #accountprefs_password2 {
-    margin: 0 0 20px 0;
-}
 #accountprefs table h3 {
     margin: 5px 0 0 0;
     padding: 0;
@@ -534,7 +531,4 @@ div#sb-profile ul li ul li a {
     font-weight: normal;
 	color: #8E1901;
 	font-size: 11px;
-}
-#accountprefs_oldpassword_container th {
-	width: 200px !important;
 }
