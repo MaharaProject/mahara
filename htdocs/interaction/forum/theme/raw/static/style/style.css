@@ -65,6 +65,7 @@
 .forumpostleft {
 	width: 160px;
 	border-right: 1px solid #f1f1f1;
+	background-color: #FFF;
 }
 .forumpostleft .author p {
 	color: #999999;
@@ -88,6 +89,7 @@
     padding: 0 0 .1em 0;
 	background-color: #f1f1f1;
     margin: 0;
+    border: none;
 }
 .postbtns a {
 	margin: 0 1em;

@@ -1,45 +1,19 @@
 input.submit.btn-subscribe {
     color: #8e1901 !important;
 }
-#forumslist {
-	border-bottom: 1px dotted #8E1901;
-}
-#forumslist th {
-	padding: 2px 10px;
-	border-bottom: 1px dotted #8E1901;
-}
-#forumslist table {
-	margin: 0;
-}
-#viewforum #forumdescription {
-	background-color: #c66c14;
-	border: 1px dotted #c66c14;
-}
-#forumtopicstable {
-	border-bottom: 1px solid #8E1901;
-}
 #forumtopicstable th {
 	border-bottom: 1px solid #8E1901;
-	padding: 2px 0;
 }
-table.forumpost {
+.forumpost {
 	background-color: #f4f7f9;
 	border-top: 1px dotted #8E1901;
 	border-bottom: 1px dotted #8E1901;
-	margin-bottom: 0;
 }
-.forumpost .forumsubject h3 {
-    padding: 0;
-    margin: 0;
-}
-.forumpostleft {
-	background-color: #FFF;
+.stickytopic {
+  background-color: #f7be23;
 }
 .forumpostleft h5 {
 	color: #8e1901;
-}
-.postbtns {
-    border-bottom: none;
 }
 .posttime {
     color: #8e1901;
