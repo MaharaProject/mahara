@@ -25,7 +25,7 @@
 
 $theme = new StdClass;
 
-$theme->name   = 'Ultima';
+$theme->displayname   = 'Ultima';
 $theme->parent = 'raw';
 $theme->formrenderer = 'table';
 
