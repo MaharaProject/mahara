@@ -78,6 +78,7 @@ img {
 }
 pre, tt {
 	font-size: 1.2em;
+    white-space: normal;
 }
 .fullwidth {
     width: 100%;
