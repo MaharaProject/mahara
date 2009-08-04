@@ -1088,18 +1088,20 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
     $groups = get_records_sql_assoc($sql, $values, $offset, $limit);
     
     if ($groups) {
-        // Get 3 members from each group in a separate query -- mysql doesn't like including them as subqueries with limit 1 in the above query
-        $members = get_records_sql_array("
-            SELECT m1.group, m1.member, u.* FROM {group_member} m1
-            INNER JOIN {usr} u ON (m1.member = u.id AND u.deleted = 0)
-            WHERE 3 > (
-                SELECT COUNT(m2.member)
-                FROM {group_member} m2
-                WHERE m1.group = m2.group AND m2.member < m1.member
-            )
-            AND m1.group IN (" . join(',', array_keys($groups)) . ")", array());
-        foreach ($members as $m) {
-            $groups[$m->group]->members[] = (object) array('id' => $m->id, 'name' => display_name($m));
+        // Get a few random members from each group. We've tried this with one 
+        // query before but it's painfully slow, databases don't do random rows 
+        // efficiently.
+        foreach (array_keys($groups) as $groupid) {
+            $members = get_records_sql_array("
+                SELECT u.*
+                FROM {group_member} gm
+                INNER JOIN {usr} u ON gm.member = u.id
+                WHERE gm.group = ?
+                ORDER BY " . db_random() . "
+                LIMIT 3", array($groupid));
+            foreach ($members as $m) {
+                $groups[$groupid]->members[] = (object) array('id' => $m->id, 'name' => display_name($m));
+            }
         }
         $groups = array_values($groups);
     }
