@@ -1,3 +1,11 @@
+1.1.6 (2009-08-04)
+- Forum e-mail notifications now have a cleaner format, and allow users to unsubscribe immediately.
+- Enforce UTF8 database upon installation.
+- Upgraded bundled XML feed reader to 1.0.3, multiple bug fixes to RSS handling.
+- Wall posts now have a configurable character limit.
+- Fixed a very slow query affecting My Groups and user profile pages.
+- Many bug fixes across all areas of Mahara.
+
 1.1.5 (2009-06-22)
 - Czech strings for Pieforms library
 - Bug fixes for embedded media block, multibyte character string handling,
