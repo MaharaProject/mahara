@@ -1114,6 +1114,10 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2009070900) {
+        if (is_mysql()) {
+            execute_sql("ALTER TABLE {usr} DROP FOREIGN KEY {usr_las_fk}");
+            execute_sql("ALTER TABLE {usr} DROP INDEX {usr_las_ix}");
+        }
         $table = new XMLDBTable('usr');
         $field = new XMLDBField('lastauthinstance');
         drop_field($table, $field);
