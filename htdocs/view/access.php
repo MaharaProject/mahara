@@ -114,7 +114,7 @@ if ($institution) {
         foreach (group_get_grouptypes() as $grouptype) {
             safe_require('grouptype', $grouptype);
             $jointypestrings = array();
-            foreach (call_static_method('GroupType' . $grouptype, 'allowed_join_types') as $jointype) {
+            foreach (call_static_method('GroupType' . $grouptype, 'allowed_join_types', true) as $jointype) {
                 $jointypestrings[] = get_string('membershiptype.'.$jointype, 'group');
             }
             $form['elements']['copyfornewgroups_'.$grouptype] = array(

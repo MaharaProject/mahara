@@ -42,8 +42,13 @@ class PluginGrouptypeStandard extends PluginGrouptype {
 
 class GroupTypeStandard extends GroupType {
 
-    public static function allowed_join_types() {
-        return array('open', 'request', 'invite');
+    public static function allowed_join_types($all=false) {
+        global $USER;
+        $jointypes = array('open', 'request', 'invite');
+        if ($all || $USER->get('admin') || $USER->get('staff') || $USER->is_institutional_admin() || $USER->is_institutional_staff()) {
+            $jointypes[] = 'controlled';
+        }
+        return $jointypes;
     }
 
     public static function get_roles() {
