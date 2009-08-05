@@ -927,6 +927,11 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2009022620) {
+        execute_sql("DELETE FROM {group_member_invite} WHERE \"group\" NOT IN (SELECT id FROM {group} WHERE jointype = 'invite')");
+        execute_sql("DELETE FROM {group_member_request} WHERE \"group\" NOT IN (SELECT id FROM {group} WHERE jointype = 'request')");
+    }
+
     return $status;
 
 }
