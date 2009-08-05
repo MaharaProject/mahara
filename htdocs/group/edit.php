@@ -34,7 +34,7 @@ define('TITLE', get_string('editgroup', 'group'));
 $id = param_integer('id');
 define('GROUP', $id);
 
-$group_data = get_record_sql("SELECT g.name, g.description, g.grouptype, g.jointype, g.public, g.usersautoadded
+$group_data = get_record_sql("SELECT g.id, g.name, g.description, g.grouptype, g.jointype, g.public, g.usersautoadded
     FROM {group} g
     INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
     WHERE g.id = ?
@@ -115,8 +115,7 @@ function editgroup_cancel_submit() {
 }
 
 function editgroup_submit(Pieform $form, $values) {
-    global $USER;
-    global $SESSION;
+    global $USER, $SESSION, $group_data;
 
     db_begin();
 
@@ -140,6 +139,34 @@ function editgroup_submit(Pieform $form, $values) {
         ),
         'id'
     );
+
+    // When jointype changes from invite/request to anything else,
+    // remove all open invitations/requests, ---
+    // Except for when jointype changes from request to open. Then
+    // we can just add group membership for everyone with an open
+    // request.
+
+    if ($group_data->jointype == 'invite' && $jointype != 'invite') {
+        delete_records('group_member_invite', 'group', $group_data->id);
+    }
+    else if ($group_data->jointype == 'request') {
+        if ($jointype == 'open') {
+            $userids = get_column_sql('
+                SELECT u.id
+                FROM {usr} u JOIN {group_member_request} r ON u.id = r.member
+                WHERE r.group = ? AND u.deleted = 0',
+                array($group_data->id)
+            );
+            if ($userids) {
+                foreach ($userids as $uid) {
+                    group_add_user($group_data->id, $uid);
+                }
+            }
+        }
+        else if ($jointype != 'request') {
+            delete_records('group_member_request', 'group', $group_data->id);
+        }
+    }
 
     $SESSION->add_ok_msg(get_string('groupsaved', 'group'));
 
