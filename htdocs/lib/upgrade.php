@@ -560,12 +560,15 @@ function core_postinst() {
     set_config('lang', 'en.utf8');
     set_config('installation_key', get_random_key());
 
-    // PostgreSQL supports indexes over functions of columns, MySQL does not.
-    // So we can improve the index on the username field of the usr table for
-    // Postgres
+    // PostgreSQL supports indexes over functions of columns, MySQL does not. 
+    // We make use if this if we can
     if (is_postgres()) {
+        // Improve the username index
         execute_sql('DROP INDEX {usr_use_uix}');
         execute_sql('CREATE UNIQUE INDEX {usr_use_uix} ON {usr}(LOWER(username))');
+
+        // Only one profile view per user
+        execute_sql("CREATE UNIQUE INDEX {view_own_type_uix} ON {view}(owner) WHERE type = 'profile'");
     }
 
     // Some more advanced constraints. XMLDB can't handle this in its xml file format
