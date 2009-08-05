@@ -56,9 +56,6 @@ if (is_logged_in()) {
         if ($role == 'admin') {
             $group->membershiptype = 'admin';
             $group->requests = count_records('group_member_request', 'group', $group->id);
-            if ($group->requests > 1) {
-                $group->requests = array($group->requests);
-            }
         }
         else {
             $group->membershiptype = 'member';

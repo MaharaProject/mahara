@@ -690,9 +690,6 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
         else if ($group->membershiptype == 'invite') {
             $group->invite = group_get_accept_form('invite' . $i++, $group->id, $returnto);
         }
-        else if ($group->membershiptype == 'admin' && $group->requests > 1) {
-            $group->requests = array($group->requests);
-        }
     }
 }
 
