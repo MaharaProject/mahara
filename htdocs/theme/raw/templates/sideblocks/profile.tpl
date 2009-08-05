@@ -55,7 +55,7 @@
             </li>
 {/if}
         </ul>
-        <div class="center">
+        <div class="controls center">
             <a href="{$WWWROOT}?logout" class="btn-link" id="btn-logout">{str tag="logout"}</a>&nbsp;
             <a href="{$WWWROOT}account/" class="btn-link">{str tag="settings"}</a>
         </div>

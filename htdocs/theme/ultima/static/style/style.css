@@ -39,43 +39,28 @@ a:hover {
 }
 h1 {
     color: #3C083F;
-    font-size: 34px;
     font-weight: normal;
-    margin: 0 0 10px 0;
-    padding: 0;
 }
 h2 {
     font-family:Georgia, "Times New Roman", Times, serif;
-    font-size: 28px;
     color: #3C083F;
     font-weight: normal;
-    margin: 0 0 10px 0;
-    padding: 0;
 }
 h3 {
     font-family:Georgia, "Times New Roman", Times, serif;
     color: #5A0757;
-    font-weight: bold;
-    font-size: 17px;
-    margin: 20px 0 5px 0;
+    font-size: 1.1em;
 }
 h4 {
-    font-size: 15px;
+    font-size: 1em;
     color: #360435;
-    font-weight: bold;
-    margin: 15px 0 0;
 }
 h5 {
     color: #5A0757;
-    font-weight: bold;
-    font-size: 14px;
-    margin: 5px 0 0;
+    font-size: .9em;
 }
 h6 {
-    font-size: 12px;
     color: #5A0757;
-    font-weight: bold;
-    margin: 10px 0 0 0;
 }
 .description,
 .unvalidated,
@@ -119,14 +104,12 @@ table.fullwidth h3 a {
 /* Form elements */
 label {
     color: #360435;
-    margin: 0 5px 0 0;
 }
 .required th, .required label, .requiredmarker, #register_tandc_container th {
     color: #360435;
 }
 select {
     border: 1px solid #b2b2b2;
-    padding: 0;
 }
 input.error, select.error {
     border-color: #cc0000;
@@ -205,19 +188,7 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     background: transparent;
 }
 #site-logo {
-    font-family:Georgia, "Times New Roman", Times, serif;
-	font-size: 3.3em;
-	color: #FFFFFF;
 	padding: 15px 25px 0 0
-}
-#site-logo a,
-#site-logo a:link,
-#site-logo a:active,
-#site-logo a:visited {
-	color: #FFFFFF;
-}
-#site-logo a:hover {
-	color: #FFFFFF;
 }
 #loading-box {
     color: #fff;
@@ -225,17 +196,10 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 }
 /* search box in header */
 #usf {
-    font-size: 11px;
-    font-weight: bold;
-    color: #490647;
     padding: 35px 6px 0 0;
-    text-align: right;
 }
 #usf_query_container input {
-    padding: 2px 3px;
     color: #490647;
-	background-color: #FFFFFF;
-    width: 190px;
 }
 
 /* main menu */
@@ -391,44 +355,23 @@ div.sideblock {
     padding: 8px 15px 15px 15px;
 }
 div.sideblock h3 {
-    padding: 0;
-    margin: 3px 0 25px 0;
-    font-size: 14px;
+    font-size: 1.2em;
     color: #e8c1ea;
 }
 div.sideblock a,
 div.sideblock a:link,
 div.sideblock a:visited,
 div.sideblock a:active {
-	color: #e8c1ea !important;
+	color: #e8c1ea;
 }
 div.sideblock label {
 	color: #e8c1ea;
 }
-div.sideblock p {
-    font-size: .9em;
-	color: #e8c1ea;	
-}
 div.sideblock ul li {
-	padding: 2px 0;
-	font-size: 12px;
 	font-weight: bold;
-	color: #e8c1ea;
 }
 div.sideblock ul ul {
 	list-style-type: square;
-	color: #e8c1ea;
-}
-div.sideblock ul li ul li {
-	font-size: 11px;
-	padding:0px;
-    margin:0px;
-}
-
-/** very specific overrides for the profile block
- * since it uses different nesting strategy
- * as far as i can tell :/ */
-div#sb-profile a {
 	color: #e8c1ea;
 }
 
@@ -437,11 +380,9 @@ div#sb-profile a {
  * default is broken too */
 #quota_used {
     color: #A955AD;
-	font-weight: bold;
 }
 #quota_total {
     color: #A955AD;
-	font-weight: bold;
 }
 #quota_bar {
     background: #f7d4fa;
@@ -450,7 +391,6 @@ div#sb-profile a {
 #quota_bar_100 {
     background: #CC0000;
 }
-
 #quota_bar #quota_percentage {
     color: #360435;
 }

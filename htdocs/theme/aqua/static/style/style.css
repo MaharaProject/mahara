@@ -38,41 +38,27 @@ a:hover {
 }
 h1 {
     color: #1A428F;
-    font-size: 30px;
+    font-size: 1.8em;
     font-weight: normal;
-    margin: 0 0 10px 0;
-    padding: 0;
 }
 h2 {
-    font-size: 24px;
+    font-size: 1.5em;
     color: #1A428F;
-    font-weight: bold;
-    margin: 0 0 10px 0;
-    padding: 0;
 }
 h3 {
     color: #1e6297;
-    font-weight: bold;
-    font-size: 17px;
-    margin: 20px 0 5px 0;
+    font-size: 1.1em;
 }
 h4 {
-    font-size: 15px;
+    font-size: 1em;
     color: #3986c3;
-    font-weight: bold;
-    margin: 15px 0 0;
 }
 h5 {
+    font-size: .9em;
     color: #333333;
-    font-weight: bold;
-    font-size: 14px;
-    margin: 5px 0 0;
 }
 h6 {
-    font-size: 12px;
     color: #1e6297;
-    font-weight: bold;
-    margin: 10px 0 0 0;
 }
 .description,
 .unvalidated,
@@ -116,14 +102,12 @@ table.fullwidth h3 a {
 /* Form elements */
 label {
     color: #888888;
-    margin: 0 5px 0 0;
 }
 .required th, .required label, .requiredmarker, #register_tandc_container th {
     color: #333333;
 }
 select {
     border: 1px solid #b2b2b2;
-    padding: 0;
 }
 
 input.error, select.error {
@@ -190,38 +174,16 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 #top-wrapper {
     background: transparent;
 }
-
 #site-logo {
-    padding: 0;
-	font-size: 3.3em;
-	font-weight:normal;
-	color: #FFFFFF;
-	width:600px;
 	padding: 20px 25px 5px 0
-}
-#site-logo a,
-#site-logo a:link,
-#site-logo a:active,
-#site-logo a:visited {
-	color: #FFFFFF;
-}
-#site-logo a:hover {
-	color: #F0F0F0;
 }
 
 /* search box in header */
 #usf {
-    font-size: 11px;
-    font-weight: bold;
-    color: #333333;
     padding: 35px 6px 0 0;
-    text-align: right;
 }
 #usf_query_container input {
-    padding: 2px 3px;
     color: #333333;
-	background-color: #FFFFFF;
-    width: 190px;
 }
 
 /* main menu */
@@ -290,7 +252,6 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     /* background: url(../../../default/static/images/submenu-divider.gif) no-repeat top right; */
 }
 #sub-nav li.selected {
-    display: inline;
     height: 25px;
     margin: 0;
 	background: transparent;
@@ -326,57 +287,34 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 }
 div.sideblock {
     background: transparent url(../images/pixel_grey.gif) repeat-y top left;
-    padding: 10px 15px 15px 15px;
-	margin-left:-1px;
 	border-bottom:1px solid #DDD;
 }
 div.sideblock h3 {
-    padding: 0;
-    margin: 3px 0 10px 0;
-    font-size: 14px;
+    font-size: 1.2em;
     color: #1e6297;
 }
-div.sideblock h3 a,
-div.sideblock h3 a:link,
-div.sideblock h3 a:visited,
-div.sideblock h3 a:active {
-	color: #1e6297 !important;
-}
-div.sideblock p {
-    font-size: .9em;
+div.sideblock a,
+div.sideblock a:link,
+div.sideblock a:visited,
+div.sideblock a:active {
+	color: #1e6297;
 }
 div.sideblock ul li {
-	padding: 2px 0;
-	font-size: 12px;
 	font-weight: bold;
-	color: #1A428F;
 }
 div.sideblock ul ul {
 	list-style-type: square;
-}
-div.sideblock ul li ul li {
-	font-size: 11px;
-	padding:0px;
-    margin:0px;
 }
 
 /** very specific overrides for the profile block
  * since it uses different nesting strategy
  * as far as i can tell :/ */
-div#sb-profile ul li a {
+#sb-profile ul li a {
 	color: #1A428F;
 }
-div#sb-profile ul li ul li a {
+#sb-profile ul li ul li a {
 	color: #1F97D5;
 }
-
-div#sb-onlineusers ul {
-    padding-left:20px;
-}
-div#sb-onlineusers ul img {
-    padding-right:5px;
-}
-
 
 /* Side Quota Bar */
 /** this is currently broken and needs looking at
@@ -394,11 +332,8 @@ div#sb-onlineusers ul img {
 #quota_bar_100 {
     background: #CC0000;
 }
-
 #quota_message {
-    margin: 0 16px 0 0;
-	font-size: 12px;
-    padding-bottom: 10px;
+	font-size: 1.1em;
 }
 #quota_fill {
     margin: 0;

@@ -38,49 +38,29 @@ a:hover {
 }
 h1 {
     color: #7EF000;
-    font-size: 34px;
     font-weight: normal;
-    margin: 0 0 10px 0;
-    padding: 0;
 }
 h2 {
     font-family:Georgia, "Times New Roman", Times, serif;
-    font-size: 28px;
     color: #7EF000;
     font-weight: normal;
-    margin: 0 0 10px 0;
-    padding: 0;
 }
 h3 {
     font-family:Georgia, "Times New Roman", Times, serif;
     color: #00AEF1;
-    font-weight: bold;
-    font-size: 17px;
-    margin: 20px 0 5px 0;
+    font-size: 1.1em;
 }
 h4 {
-    font-size: 15px;
+    font-size: 1em;
     color: #7EF000;
-    font-weight: bold;
-    margin: 15px 0 0;
 }
 h5 {
     color: #00AEF1;
-    font-weight: bold;
-    font-size: 14px;
-    margin: 5px 0 0;
+    font-size: .9em;
 }
 h6 {
     color: #00AEF1;
-    font-size: 12px;
-    font-weight: bold;
-    margin: 10px 0 0 0;
 }
-p {
-    margin: 10px 0 10px 0;
-	line-height: 18px;
-}
-
 
 /* Tables */
 .main-column thead th {
@@ -142,7 +122,6 @@ label {
 }
 select {
     border: 1px solid #b2b2b2;
-    padding: 0;
 }
 input.error, select.error {
     border-color: #cc0000;
@@ -203,27 +182,17 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     background: transparent;
 }
 #site-logo {
-	font-family:Georgia, "Times New Roman", Times, serif;
-	font-size: 3.3em;
-	font-weight:normal;
-	color: #7EF000;
 }
 #loading-box {
     background-color: #000;
 }
 /* search box in header */
 #usf {
-    font-size: 11px;
-    font-weight: bold;
-    color: #333333;
     padding: 35px 6px 0 0;
-    text-align: right;
 }
 #usf_query_container input {
-    padding: 2px 3px;
     color: #333333;
 	background-color: #FFFFFF;
-    width: 190px;
 }
 
 /* main menu */
@@ -386,40 +355,13 @@ div.sideblock-content,
 div.sidebar-content {
     padding: 0 10px 10px;
 }
-
-/* these are the first level styles */
 div.sideblock ul li {
-	padding: 2px 0;
-	font-size: 12px;
 	font-weight: bold;
 	color: #7EF000;
 }
 div.sideblock ul ul {
 	list-style-type: square;
 }
-div.sideblock ul li ul li {
-	font-size: 11px;
-	padding:0px;
-    margin:0px;
-}
-
-/** very specific overrides for the profile block
- * since it uses different nesting strategy
- * as far as i can tell :/ */
-div#sb-profile ul li a {
-	color: #7EF000;
-}
-div#sb-profile ul li ul li a {
-	color: #7EF000;
-}
-
-div#sb-onlineusers ul {
-    padding-left:20px;
-}
-div#sb-onlineusers ul img {
-    padding-right:5px;
-}
-
 
 /* Side Quota Bar */
 /** this is currently broken and needs looking at

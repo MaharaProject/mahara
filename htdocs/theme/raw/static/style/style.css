@@ -354,6 +354,10 @@ div.rbuttons form div {
     text-align: right;
     padding-top: 1em;
 }
+#usf_query_container input {
+    padding: 2px 3px;
+    width: 190px;
+}
 
 
 /* Navigation shared rules */
@@ -552,6 +556,9 @@ div.sideblock ul {
     padding-left: 2em;
     list-style-type: disc;
 }
+#sb-profile .controls {
+    margin-top: 1em;
+}
 #changeuser {
     padding-top: 1em;
     text-align: center;
@@ -566,19 +573,18 @@ li#pendingfriends a {
 #sb-onlineusers ul {
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: 0 0 0 0.5em;
 }
 #sb-onlineusers li {
     line-height: 2em;
 }
-#sb-onlineusers li img {
+#sb-onlineusers ul img {
     float: left;
-    margin-right: .35em;
+    padding-right: .5em;
 }
 #lastminutes {
     float: right;
     margin: 0;
-    color: #999;
     font-style: italic;
 }
 

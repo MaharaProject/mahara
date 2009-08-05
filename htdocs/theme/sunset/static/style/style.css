@@ -38,43 +38,25 @@ a:hover {
 }
 h1 {
     color: #8E1901;
-    font-size: 34px;
     font-weight: normal;
-    margin: 0 0 10px 0;
-    padding: 0;
 }
 h2 {
     font-family:Georgia, "Times New Roman", Times, serif;
-    font-size: 28px;
     color: #8E1901;
     font-weight: normal;
-    margin: 0 0 10px 0;
-    padding: 0;
 }
 h3 {
     font-family:Georgia, "Times New Roman", Times, serif;
     color: #000000;
-    font-weight: bold;
-    font-size: 17px;
-    margin: 20px 0 5px 0;
 }
 h4 {
-    font-size: 15px;
     color: #000000;
-    font-weight: bold;
-    margin: 15px 0 0;
 }
 h5 {
     color: #8E1901;
-    font-weight: bold;
-    font-size: 14px;
-    margin: 5px 0 0;
 }
 h6 {
-    font-size: 12px;
     color: #3B6065;
-    font-weight: bold;
-    margin: 10px 0 0 0;
 }
 .description,
 .unvalidated,
@@ -118,14 +100,12 @@ table.fullwidth h3 a {
 /* Form elements */
 label {
     color: #8E1901;
-    margin: 0 5px 0 0;
 }
 .required th, .required label, .requiredmarker, #register_tandc_container th {
     color: #8E1901;
 }
 select {
     border: 1px solid #b2b2b2;
-    padding: 0;
 }
 input.error, select.error {
     border-color: #cc0000;
@@ -204,19 +184,7 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     background: transparent url(../images/header-b.jpg) no-repeat top left;
 }
 #site-logo {
-    font-family:Georgia, "Times New Roman", Times, serif;
-	font-size: 3.8em;
-	color: #FFFFFF;
 	padding: 15px 25px 0 0
-}
-#site-logo a,
-#site-logo a:link,
-#site-logo a:active,
-#site-logo a:visited {
-	color: #FFFFFF;
-}
-#site-logo a:hover {
-	color: #FFFFFF;
 }
 #loading-box {
     color: #fff;
@@ -224,17 +192,10 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 }
 /* search box in header */
 #usf {
-    font-size: 11px;
-    font-weight: bold;
-    color: #8E1901;
     padding: 35px 6px 0 0;
-    text-align: right;
 }
 #usf_query_container input {
-    padding: 2px 3px;
     color: #8E1901;
-	background-color: #FFFFFF;
-    width: 190px;
 }
 
 /* main menu */
@@ -294,10 +255,10 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 }
 #sub-nav ul {
     float:right;
-	padding: 8px 10px 5px 0;
+	padding: 8px 0 5px 0;
 }
 #sub-nav li {
-    padding: 5px 13px 5px 8px;
+    padding: 5px 10px 5px 0;
     line-height: 20px;
     height: 35px;
     margin: 0 !important;
