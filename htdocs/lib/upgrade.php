@@ -99,6 +99,33 @@ function check_upgrades($name=null) {
         return $toupgrade['core'];
     }
 
+    if (!$installing && (empty($name) || $name == 'local')) {
+        $localversion = get_config('localversion');
+        $localrelease = get_config('localrelease');
+        if (is_null($localversion)) {
+            $localversion = 0;
+            $localrelease = 0;
+        }
+
+        $config = new StdClass;
+        require(get_config('docroot') . 'local/version.php');
+
+        if ($config->version > $localversion) {
+            $toupgrade['local'] = (object) array(
+                'upgrade'     => true,
+                'from'        => $localversion,
+                'fromrelease' => $localrelease,
+                'to'          => $config->version,
+                'torelease'   => $config->release,
+            );
+        }
+
+        if ($name == 'local') {
+            $toupgrade['local']->disablelogin = $disablelogin;
+            return $toupgrade['local'];
+        }
+    }
+
     $plugins = array();
     if (!empty($name)) {
         try {
@@ -275,6 +302,26 @@ function upgrade_core($upgrade) {
     if (!empty($upgrade->install)) {
         core_postinst();
     }
+
+    db_commit();
+    return true;
+}
+
+/**
+ * Upgrades local customisations.
+ *
+ * @param object $upgrade   The version to upgrade to
+ * @return bool             Whether the upgrade succeeded or not
+ * @throws SQLException     If the upgrade failed due to a database error
+ */
+function upgrade_local($upgrade) {
+    db_begin();
+
+    require_once(get_config('docroot') . 'local/upgrade.php');
+    xmldb_local_upgrade($upgrade->from);
+
+    set_config('localversion', $upgrade->to);
+    set_config('localrelease', $upgrade->torelease);
 
     db_commit();
     return true;
@@ -592,11 +639,9 @@ function core_install_lastcoredata_defaults() {
     set_profile_field($user->id, 'email', $user->email);
     set_profile_field($user->id, 'firstname', $user->firstname);
     set_profile_field($user->id, 'lastname', $user->lastname);
-    set_config('installed', true);
     handle_event('createuser', $user->id);
     activity_add_admin_defaults(array($user->id));
     db_commit();
-    $USER->login('admin', 'mahara');
 
     // if we're installing, set up the block categories here and then poll the plugins.
     // if we're upgrading this happens somewhere else.  This is because of dependency issues around
@@ -824,6 +869,18 @@ function sort_upgrades($k1, $k2) {
     }
     else if ($k2 == 'firstcoredata') {
         return 1;
+    }
+    else if ($k1 == 'localpreinst') {
+        return -1;
+    }
+    else if ($k2 == 'localpreinst') {
+        return 1;
+    }
+    else if ($k1 == 'localpostinst') {
+        return 1;
+    }
+    else if ($k2 == 'localpostinst') {
+        return -1;
     }
     else if ($k1 == 'lastcoredata') {
         return 1;

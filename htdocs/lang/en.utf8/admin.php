@@ -41,6 +41,7 @@ $string['fromversion'] = 'From version';
 $string['information'] = 'Information';
 $string['installsuccess'] = 'Successfully installed version ';
 $string['toversion'] =  'To version';
+$string['localdatasuccess'] = 'Successfully installed local customisations';
 $string['notinstalled'] = 'Not installed';
 $string['nothingtoupgrade'] = 'Nothing to upgrade';
 $string['performinginstallsandupgrades'] = 'Performing installs and upgrades...';

@@ -65,12 +65,15 @@ $installsuccessstring = json_encode(get_string('installsuccess', 'admin'));
 $successstring = json_encode(get_string('upgradesuccesstoversion', 'admin'));
 $failurestring = json_encode(get_string('upgradefailure', 'admin'));
 $coresuccess   = json_encode(get_string('coredatasuccess', 'admin'));
+$localsuccess  = json_encode(get_string('localdatasuccess', 'admin'));
 
 // Check if Mahara is being installed. An extra hook is required to insert core
 // data if so.
 if (!empty($upgrades['core']->install)) {
     $upgrades['firstcoredata'] = true;
+    $upgrades['localpreinst'] = true;
     $upgrades['lastcoredata'] = true;
+    $upgrades['localpostinst'] = true;
     $smarty->assign('install', true);
 }                   
 
@@ -91,6 +94,9 @@ $js = <<< EOJS
                         if (data.coredata) {
                             message = {$coresuccess};
                         } 
+                        else if (data.localdata) {
+                            message = {$localsuccess};
+                        }
                         else {
                             if (data.install) {
                                 message = {$installsuccessstring};

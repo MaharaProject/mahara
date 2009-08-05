@@ -31,9 +31,10 @@ define('JSON', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'upgrade.php');
+require(get_config('docroot') . 'local/install.php');
 
 $name    = param_variable('name');
-$install = ($name == 'firstcoredata' || $name == 'lastcoredata');
+$install = ($name == 'firstcoredata' || $name == 'lastcoredata' || $name == 'localpreinst' || $name == 'localpostinst');
 if (!$install) {
     $upgrade = check_upgrades($name);
     
@@ -47,15 +48,32 @@ $data = array(
 );             
 if ($install) {
     if (!get_config('installed')) {
-        try {
+        if ($name == 'localpreinst' || $name == 'localpostinst') {
+            $fun = $name;
+            $data['localdata'] = true;
+        }
+        else {
             $fun = 'core_install_' . $name . '_defaults';
+            $data['coredata'] = true;
+        }
+        try {
             $fun();
         }
         catch (SQLException $e) {
             json_reply('local', array('error' => true, 'key' => $name, 'errormessage' => $e->getMessage()));
         }
+        if ($name == 'localpostinst') {
+            // Update local version
+            $config = new StdClass;
+            require(get_config('docroot') . 'local/version.php');
+            set_config('localversion', $config->version);
+            set_config('localrelease', $config->release);
+
+            // Installation is finished
+            set_config('installed', true);
+            $USER->login('admin', 'mahara');
+        }
     }
-    $data['coredata'] = true;
     json_reply(false, $data);
 }
 
@@ -64,6 +82,9 @@ if (!empty($upgrade)) {
     if ($name == 'core') {
         $funname = 'upgrade_core';
     } 
+    else if ($name == 'local') {
+        $funname = 'upgrade_local';
+    }
     else {
         $funname = 'upgrade_plugin';
     }
