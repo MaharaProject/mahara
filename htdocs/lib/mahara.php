@@ -350,11 +350,8 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     }
 
     // First check all the normal locations for the string in the current language
-    $langfile = $langstringroot . $langdirectory . $lang . '/' . $section . '.php';
-    if (is_readable($langfile)) {
-        if ($result = get_string_from_file($identifier, $langfile)) {
-            return $replacefunc($result, $variables);
-        }
+    if ($result = get_string_local($langstringroot . $langdirectory, $lang . '/' . $section . '.php', $identifier)) {
+        return $replacefunc($result, $variables);
     }
 
     // If the preferred language was English (utf8) we can abort now
@@ -367,24 +364,35 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     $langfile = $langstringroot . 'lang/' . $lang . '/langconfig.php';
     if (is_readable($langfile)) {
         if ($parentlang = get_string_from_file('parentlanguage', $langfile)) {
-            $langfile = get_language_root($parentlang) . 'lang/' . $parentlang . '/' . $section . '.php';
-            if (is_readable($langfile)) {
-                if ($result = get_string_from_file($identifier, $langfile)) {
-                    return $replacefunc($result, $variables);
-                }
+            if ($result = get_string_local(get_language_root($parentlang) . 'lang/', $parentlang . '/' . $section . '.php', $identifier)) {
+                return $replacefunc($result, $variables);
             }
         }
     }
 
     /// Our only remaining option is to try English
-    $langfile = get_config('docroot') . $langdirectory . 'en.utf8/' . $section . '.php';
-    if (is_readable($langfile)) {
-        if ($result = get_string_from_file($identifier, $langfile)) {
-            return $replacefunc($result, $variables);
-        }
+    if ($result = get_string_local(get_config('docroot') . $langdirectory, 'en.utf8/' . $section . '.php', $identifier)) {
+        return $replacefunc($result, $variables);
     }
 
     return '[[' . $identifier . '/' . $section . ']]';  // Last resort
+}
+
+
+/**
+ * Get string from a file, checking the appropriate local customisation directory first
+ *
+ */
+function get_string_local($langpath, $langfile, $identifier) {
+    foreach (array(get_config('docroot') . 'local/lang/', $langpath) as $dir) {
+        $file = $dir . $langfile;
+        if (is_readable($file)) {
+            if ($result = get_string_from_file($identifier, $file)) {
+                return $result;
+            }
+        }
+    }
+    return false;
 }
 
 
