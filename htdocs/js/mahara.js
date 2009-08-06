@@ -321,7 +321,7 @@ function contextualHelpIcon(formName, helpName, pluginType, pluginName, page, se
     return link;
 }
 
-function contextualHelp(formName, helpName, pluginType, pluginName, page, section, ref) {
+function contextualHelp(formName, helpName, pluginType, pluginName, page, section, ref, parentElement) {
     var key;
     var target = $(formName + '_' + helpName + '_container');
     var url = config.wwwroot + 'json/help.php';
@@ -329,6 +329,10 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
         'plugintype': pluginType,
         'pluginname': pluginName
     };
+
+    if (!parentElement) {
+        parentElement = 'messages';
+    }
 
     // deduce the key
     if (page) {
@@ -370,7 +374,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
         },
         IMG({'src': config.theme['images/loading.gif']})
     );
-    appendChildNodes($('messages'), contextualHelpContainer);
+    appendChildNodes($(parentElement), contextualHelpContainer);
 
     var position = getElementPosition(ref);
     var dimensions = getElementDimensions(contextualHelpContainer);
@@ -426,6 +430,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
         },
         true);
     }
+    contextualHelpContainer.focus();
 }
 
 /*
