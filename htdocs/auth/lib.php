@@ -339,12 +339,19 @@ function auth_setup () {
     // Lock the site until core upgrades are done
     require(get_config('libroot') . 'version.php');
     $siteclosed    = $config->version > get_config('version');
+    $disablelogin  = $config->disablelogin;
+
+    if (!$siteclosed && get_config('forcelocalupgrades')) {
+        require(get_config('docroot') . 'local/version.php');
+        $siteclosed = $config->version > get_config('localversion');
+    }
+
     $cfgsiteclosed = get_config('siteclosed');
     if (
         ($siteclosed && !$cfgsiteclosed)
         || (!$siteclosed && $cfgsiteclosed)) {
         set_config('siteclosed', $siteclosed);
-        if ($config->disablelogin && $siteclosed) {
+        if ($disablelogin && $siteclosed) {
             set_config('disablelogin', 1);
         }
     }
