@@ -174,8 +174,7 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 
 
 /* Top of page elements */
-#container,
-#containerX {
+#container {
     background: #0c2839 url(../images/bg.jpg) repeat-x 3px 0;	
 }
 #top-wrapper {

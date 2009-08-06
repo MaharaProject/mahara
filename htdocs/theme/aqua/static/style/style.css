@@ -165,8 +165,7 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 }
 
 /* Top of page elements */
-#container,
-#containerX {
+#container {
     background: #1D499F url(../images/bg-container.jpg) repeat-x top center;
     margin-top:0px;
     padding-top:0px;

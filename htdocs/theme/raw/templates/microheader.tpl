@@ -31,12 +31,11 @@
 </head>
 <body>
 <div id="containerX">
-    <div id="loading_box" style="display: none;"></div>
-    <div id="topwrapper">
-        <div id="logo"><a href="{$WWWROOT}"><img src="{theme_path location='images/logo.gif'}" border="0" alt=""></a></div>
+    <div id="loading-box" style="display: none;"></div>
+    <div id="top-wrapper">
         <h1 class="hidden"><a href="{$WWWROOT}">{$hiddenheading|default:"Mahara"|escape}</a></h1>
     </div>
-    <div id="mainwrapper">
+    <div id="main-wrapper">
         {insert name="messages"}
-        <div class="maincontent">
+        <div class="main-column">
             {if $PAGEHELPNAME && $heading} <h2>{$heading|escape}<span id="{$PAGEHELPNAME}_container" class="pagehelpicon">{$PAGEHELPICON}</span></h2>{/if}

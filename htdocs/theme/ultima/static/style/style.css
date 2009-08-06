@@ -178,8 +178,7 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 
 
 /* Top of page elements */
-#container,
-#containerX {
+#container {
     background-color: transparent;
     margin-top:0px;
     padding-top:0px;

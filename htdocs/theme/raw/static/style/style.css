@@ -329,7 +329,7 @@ div.rbuttons form div {
     margin-top: 2px;
     padding-right: .5em;
 }
-#container {
+#container, #containerX {
     background-color: #fff;
     margin: 0 auto;
     max-width: 1400px;
@@ -410,6 +410,7 @@ div.rbuttons form div {
     clear: both;
     width: 100%;
 }
+#containerX .main-column,
 #main-column {
     padding: 0 1.5em 1em;
     overflow: auto;
