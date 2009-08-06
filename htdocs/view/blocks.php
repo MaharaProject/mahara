@@ -33,6 +33,9 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'group.php');
 
+// Emulate IE7 compatibility mode for IE8 - views js doesn't work with ie8
+header('X-UA-Compatible: IE=EmulateIE7');
+
 $id = param_integer('id', 0); // if 0, we're editing our profile.
 $new = param_boolean('new', false);
 $profile = param_boolean('profile');
