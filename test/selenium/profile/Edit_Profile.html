@@ -1,6 +1,9 @@
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
 <title>Edit Profile</title>
 </head>
 <body>
@@ -36,7 +39,12 @@
 <tr>
 	<td>type</td>
 	<td>profileform_preferredname</td>
-	<td>Admin</td>
+	<td>Admin User</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Contact information</td>
+	<td></td>
 </tr>
 <tr>
 	<td>click</td>
@@ -45,19 +53,16 @@
 </tr>
 <tr>
 	<td>type</td>
-	<td>document.profileform.elements[10]</td>
+	<td>//div[@id='email_list']/div[2]/input</td>
 	<td>cri@catalyst.net.nz</td>
 </tr>
-<!-- the next two rules ensure that the email confirm element is unfocused properly -->
+<!-- the next rules ensures that the email confirm element is unfocused properly-->
+<!--click //tr[12]/td/span/a/img-->
+<!--click //img[@alt='X']-->
 <tr>
-	<td>click</td>
-	<td>//tr[12]/td/span/a/img</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//img[@alt='X']</td>
-	<td></td>
+	<td>fireEvent</td>
+	<td>//div[@id='email_list']/div[2]/input</td>
+	<td>blur</td>
 </tr>
 <tr>
 	<td>type</td>
@@ -155,15 +160,23 @@
 	<td></td>
 </tr>
 <tr>
-    <td>verifyTextPresent</td>
-    <td>Profile</td>
-    <td></td>
+	<td>waitForTextPresent</td>
+	<td>Contact information</td>
+	<td>Contact information</td>
+</tr>
+<!--the following is the same as click link=Contact information, except this easier to read style doesn't always work in selenium IDE.-->
+<!--so we use the explicit xpath.  unfortunately, the xpath is less robust than the link=... :-(-->
+<tr>
+	<td>click</td>
+	<td>//ul[@class=&quot;profile-tabs&quot;]/li[2]/a</td>
+	<td></td>
 </tr>
 <tr>
-    <td>verifyTextPresent</td>
-    <td>Profile saved successfully</td>
-    <td></td>
+	<td>waitForText</td>
+	<td>//div[@id='email_list']/div[2]</td>
+	<td>cri@catalyst.net.nz<br /> [x]</td>
 </tr>
+
 </tbody></table>
 </body>
 </html>
