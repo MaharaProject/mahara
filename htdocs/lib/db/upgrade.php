@@ -1170,6 +1170,13 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("DELETE FROM {group_member_request} WHERE \"group\" NOT IN (SELECT id FROM {group} WHERE jointype = 'request')");
     }
 
+    if ($oldversion < 2009080800) {
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('theme');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, null);
+        add_field($table, $field);
+    }
+
     return $status;
 
 }
