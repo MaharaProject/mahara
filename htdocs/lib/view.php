@@ -52,6 +52,7 @@ class View {
     private $groupobj;
     private $numcolumns;
     private $layout;
+    private $theme;
     private $columns;
     private $dirtycolumns; // for when we change stuff
     private $tags;
@@ -434,6 +435,14 @@ class View {
         return $this->groupobj;
     }
 
+    public function get_theme() {
+        if ($theme = $this->get('theme')) {
+            return explode('/', $theme, 2);
+        }
+        $sitedefault = get_config('theme');
+        return array($sitedefault, $sitedefault);
+    }
+
     
     public function delete() {
         db_begin();
@@ -810,6 +819,12 @@ class View {
 
         if (!count($_POST) && count($_GET) < 3) {
             return;
+        }
+
+        $viewtheme = param_variable('viewtheme', '');
+        if ($viewtheme != join('/', $this->get_theme())
+            && preg_match('#^[a-z0-9-]+/[a-z0-9-]+$#i', $viewtheme)) {
+            $this->set('theme', $viewtheme);
         }
 
         $action = '';
