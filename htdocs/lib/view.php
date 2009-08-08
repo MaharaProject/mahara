@@ -1518,6 +1518,36 @@ class View {
     }
 
     /**
+     * Returns the list of avaliable view themes
+     */
+    public static function get_viewthemes() {
+        static $list = null;
+
+        if (is_null($list)) {
+            foreach (array_keys(get_themes()) as $themename) {
+                $viewthemebase = get_config('docroot') . 'theme/' . $themename . '/viewthemes/';
+                if (is_dir($viewthemebase) && $viewthemedir = opendir($viewthemebase)) {
+                    while (false !== ($subdir = readdir($viewthemedir))) {
+                        if ($subdir != "." && $subdir != ".." && is_dir($viewthemebase . $subdir)) {
+                            $configfile = $viewthemebase . $subdir . '/config.php';
+                            if (is_readable($configfile)) {
+                                require($configfile);
+                                $list[] = array(
+                                    'id' => $themename . '/' . $subdir,
+                                    'name' => $viewtheme->name
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        usort($list, create_function('$a, $b', 'return strnatcasecmp($a["name"], $b["name"]);'));
+        return $list;
+    }
+
+    /**
      * Builds data for the artefact chooser.
      *
      * This builds three pieces of information:
