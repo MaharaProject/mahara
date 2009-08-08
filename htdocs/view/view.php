@@ -127,15 +127,25 @@ if ($USER->is_logged_in()) {
     $objectionform = pieform(objection_form());
 }
 
+// Set up theme
+list($basetheme, $viewtheme) = $view->get_theme();
+if ($THEME->basename != $basetheme) {
+    $THEME = new Theme($basetheme);
+}
+$stylesheets = array(
+    // Basic structure CSS
+    '<link rel="stylesheet" type="text/css" href="'
+        . get_config('wwwroot') . 'theme/views.css">',
+    // Extra CSS for the view theme
+    '<link rel="stylesheet" type="text/css" href="'
+        . get_config('wwwroot') . 'theme/' . $basetheme . '/viewthemes/' . $viewtheme . '/views.css">',
+);
 
 $smarty = smarty(
     array('mahara', 'tablerenderer', 'feedbacklist', 'artefact/resume/resumeshowhide.js'),
-    array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
+    $stylesheets,
     array(),
-    array(
-        'stylesheets' => array('style/views.css'),
-        'sidebars' => false,
-    )
+    array('sidebars' => false)
 );
 
 $smarty->assign('INLINEJAVASCRIPT', $javascript);

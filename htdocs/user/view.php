@@ -65,15 +65,25 @@ if (!$view || !can_view_view($view->get('id'))) {
     throw new AccessDeniedException(get_string('youcannotviewthisusersprofile'));
 }
 
+// Set up theme
+list($basetheme, $viewtheme) = $view->get_theme();
+if ($THEME->basename != $basetheme) {
+    $THEME = new Theme($basetheme);
+}
+$stylesheets = array(
+    // Basic structure CSS
+    '<link rel="stylesheet" type="text/css" href="'
+        . get_config('wwwroot') . 'theme/views.css">',
+    // Extra CSS for the view theme
+    '<link rel="stylesheet" type="text/css" href="'
+        . get_config('wwwroot') . 'theme/' . $basetheme . '/viewthemes/' . $viewtheme . '/views.css">',
+);
+
 $name = display_name($user);
 define('TITLE', $name);
 $smarty = smarty(
     array('lib/pieforms/static/core/pieforms.js'),
-    array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
-    array(),
-    array(
-        'stylesheets' => array('style/views.css'),
-    )
+    $stylesheets
 );
 
 $sql = "SELECT g.*, a.type FROM {group} g JOIN (

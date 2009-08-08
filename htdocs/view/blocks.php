@@ -115,23 +115,39 @@ if ($category === '') {
 
 $view->process_changes($category, $new);
 
-$extraconfig = array(
-    'stylesheets' => array('style/views.css'),
-    'sidebars'    => false,
+// Set up theme
+list($basetheme, $viewtheme) = $view->get_theme();
+if ($THEME->basename != $basetheme) {
+    $THEME = new Theme($basetheme);
+}
+$stylesheets = array(
+    // Basic structure CSS
+    '<link rel="stylesheet" type="text/css" href="'
+        . get_config('wwwroot') . 'theme/views.css">',
+    // Extra CSS for the view theme
+    '<link rel="stylesheet" type="text/css" href="'
+        . get_config('wwwroot') . 'theme/' . $basetheme . '/viewthemes/' . $viewtheme . '/views.css">',
 );
 
-$stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
 foreach ($THEME->get_url('style/style.css', true, 'artefact/file') as $sheet) {
     $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . $sheet . '">';
 }
 
-$smarty = smarty(array('views', 'tinytinymce', 'paginator', 'tablerenderer', 'artefact/file/js/filebrowser.js', 'lib/pieforms/static/core/pieforms.js'), $stylesheets, false, $extraconfig);
+$smarty = smarty(
+    array('views', 'tinytinymce', 'paginator', 'tablerenderer', 'artefact/file/js/filebrowser.js', 'lib/pieforms/static/core/pieforms.js'),
+    $stylesheets,
+    false,
+    array('sidebars' => false)
+);
 
 // The list of categories for the tabbed interface
 $smarty->assign('category_list', $view->build_category_list($category, $new));
 
 // The list of blocktypes for the default category
 $smarty->assign('blocktype_list', $view->build_blocktype_list($category));
+
+$smarty->assign('viewtheme', "$basetheme/$viewtheme");
+$smarty->assign('viewthemes', View::get_viewthemes());
 
 // Tell smarty we're editing rather than just rendering
 $smarty->assign('editing', true);
