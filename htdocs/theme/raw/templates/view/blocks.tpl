@@ -19,11 +19,25 @@
                 <div class="cl"></div>
             </div>
 
-            <div class="fr">
-                <a id="btn-displaymyview" href="view.php?id={$view}&amp;new={$new}">{str tag=displaymyview section=view} &raquo;</a>
-            </div>
+            <table id="middle-pane">
+                <tr>
+                    <td>
+                        <a id="layout-link" href="columns.php?id={$view}&amp;c={$category}&amp;new={$new}"{if !$can_change_layout} class="disabled"{/if}>{str tag='changeviewlayout' section='view'}</a> {contextualhelp plugintype="core" pluginname="view" section="changeviewlayout"}
+                    </td>
+                    <td class="center">
+                        <select id="viewtheme-select" name="viewtheme">
+                            <option value="">Choose theme...</option>
+{foreach from=$viewthemes item=theme}
+                            <option value="{$theme.id|escape}"{if $theme.id == $viewtheme} selected="selected" style="font-weight: bold;"{/if}>{$theme.name|escape}</option>
+{/foreach}
+                        </select>
+                    </td>
+                    <td class="right">
+                        <a id="btn-displaymyview" href="view.php?id={$view}&amp;new={$new}">{str tag=displaymyview section=view} &raquo;</a>
+                    </td>
+                </tr>
+            </table>
 
-            <a id="layout-link" href="columns.php?id={$view}&amp;c={$category}&amp;new={$new}"{if !$can_change_layout} class="disabled"{/if}>{str tag='changeviewlayout' section='view'}</a> {contextualhelp plugintype="core" pluginname="view" section="changeviewlayout"}
 
             <div id="bottom-pane">
                 <div id="column-container">

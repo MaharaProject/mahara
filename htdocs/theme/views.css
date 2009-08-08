@@ -76,6 +76,14 @@
     text-align: center;
 }
 
+/* Between top and bottom pane */
+#middle-pane {
+    width: 100%;
+}
+#middle-pane td {
+    width: 33%;
+}
+
 /* Bottom half of the page */
 #page #bottom-pane {
     margin: .5em 0;
