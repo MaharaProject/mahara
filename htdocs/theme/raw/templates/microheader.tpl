@@ -28,6 +28,8 @@
     <link rel="stylesheet" type="text/css" href="{$cssurl}">
 {/foreach}
     <link rel="stylesheet" type="text/css" href="{theme_path location='style/print.css'}" media="print">
+    <script type="text/javascript" src="{$WWWROOT}js/css.js"></script>
+    <link rel="shortcut icon" href="{$WWWROOT}favicon.ico" type="image/vnd.microsoft.icon">
 </head>
 <body>
 <div id="containerX">
@@ -36,6 +38,8 @@
         <h1 class="hidden"><a href="{$WWWROOT}">{$hiddenheading|default:"Mahara"|escape}</a></h1>
     </div>
     <div id="main-wrapper">
-        {insert name="messages"}
         <div class="main-column">
-            {if $PAGEHELPNAME && $heading} <h2>{$heading|escape}<span id="{$PAGEHELPNAME}_container" class="pagehelpicon">{$PAGEHELPICON}</span></h2>{/if}
+            {insert name="messages"}
+            <div id="main-column-container">
+{if $PAGEHEADING}                    <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON}</span>{/if}</h1>
+{/if}
