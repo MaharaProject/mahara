@@ -38,6 +38,8 @@
         <h1 class="hidden"><a href="{$WWWROOT}">{$hiddenheading|default:"Mahara"|escape}</a></h1>
     </div>
     <div id="main-wrapper">
-        {insert name="messages"}
         <div class="main-column">
-            {if $PAGEHELPNAME && $heading} <h2>{$heading|escape}<span id="{$PAGEHELPNAME}_container" class="pagehelpicon">{$PAGEHELPICON}</span></h2>{/if}
+            {insert name="messages"}
+            <div id="main-column-container">
+{if $PAGEHEADING}                    <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON}</span>{/if}</h1>
+{/if}
