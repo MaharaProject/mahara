@@ -1,12 +1,15 @@
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Remove_Menuitem</title>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>Remove Menuitem</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Remove_Menuitem</td></tr>
+<tr><td rowspan="1" colspan="3">Remove Menuitem</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -15,13 +18,18 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Site menu</td>
+	<td>link=Configure Site</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Links and Resources Menu</td>
 	<td></td>
 </tr>
 <tr>
 	<td>select</td>
 	<td>menuselect</td>
-	<td>label=Logged in menu</td>
+	<td>label=Logged in links and resources</td>
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
@@ -30,14 +38,10 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>//tr[contains(td[2], "Test Menu Link")]/td/input[@value="Delete"]</td>
+	<td>//tr[contains(td[2], &quot;Test Menu Link&quot;)]/td/input[@value=&quot;Delete&quot;]</td>
 	<td></td>
 </tr>
-<tr>
-	<td>assertConfirmation</td>
-	<td>Do you really want to delete this item?</td>
-	<td></td>
-</tr>
+<!--removed, confirmation dialog removed? -- assertConfirmation Do you really want to delete this item?-->
 <tr>
 	<td>waitForTextPresent</td>
 	<td>Menu item deleted</td>
