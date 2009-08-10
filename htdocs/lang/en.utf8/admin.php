@@ -163,7 +163,6 @@ $string['sitenamedescription'] = 'The site name appears in certain places around
 $string['siteoptionspagedescription'] = 'Here you can set some global options that will apply by default throughout the entire site.';
 $string['siteoptionsset'] = 'Site options have been updated.';
 $string['sitethemedescription'] = 'The default theme for the site';
-$string['theme'] = 'Theme';
 $string['trustedsites'] = 'Trusted sites';
 $string['updatesiteoptions'] = 'Update site options';
 $string['usersallowedmultipleinstitutions'] = 'Users allowed multiple institutions';

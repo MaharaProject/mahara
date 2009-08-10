@@ -256,7 +256,7 @@ if ($institution || $add) {
         );
         $elements['theme'] = array(
             'type'         => 'select',
-            'title'        => get_string('theme','admin'),
+            'title'        => get_string('theme'),
             'description'  => get_string('sitethemedescription','admin'),
             'defaultvalue' => $data->theme ? $data->theme : 'sitedefault',
             'collapseifoneoption' => true,
