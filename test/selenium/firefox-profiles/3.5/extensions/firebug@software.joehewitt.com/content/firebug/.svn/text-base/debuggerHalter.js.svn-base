@@ -1,0 +1,5 @@
+
+function debuggerHalter()
+{
+	debugger;
+}

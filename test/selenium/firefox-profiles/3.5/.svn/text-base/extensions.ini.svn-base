@@ -1,0 +1,7 @@
+[ExtensionDirs]
+Extension0=/home/gerald/Projects/telecom/trunk/fixtures.nemo/firefox-3.5-selenium-template/extensions/readystate@openqa.org
+Extension1=/home/gerald/Projects/telecom/trunk/fixtures.nemo/firefox-3.5-selenium-template/extensions/firebug@software.joehewitt.com
+Extension2=/home/gerald/Projects/telecom/trunk/fixtures.nemo/firefox-3.5-selenium-template/extensions/{538F0036-F358-4f84-A764-89FB437166B4}
+Extension3=/home/gerald/Projects/telecom/trunk/fixtures.nemo/firefox-3.5-selenium-template/extensions/{503A0CD4-EDC8-489b-853B-19E0BAA8F0A4}
+[ThemeDirs]
+Extension0=/usr/lib/xulrunner-1.9.1.1/extensions/{972ce4c6-7e08-4474-a285-3208198ce6fd}

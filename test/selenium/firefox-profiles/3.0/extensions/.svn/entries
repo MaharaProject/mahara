@@ -1,0 +1,40 @@
+9
+
+dir
+28669
+svn+ssh://svn.catalyst.net.nz/var/svn/telecom/telecom.mobile.store/trunk/fixtures.nemo/firefox-selenium-template/extensions
+svn+ssh://svn.catalyst.net.nz/var/svn/telecom
+
+
+
+2009-06-11T02:04:43.353576Z
+27722
+gerald
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+85a53bc1-c412-0410-8f86-fafb5fb4d25d
+
+readystate@openqa.org
+dir
+
+{503A0CD4-EDC8-489b-853B-19E0BAA8F0A4}
+dir
+
+{538F0036-F358-4f84-A764-89FB437166B4}
+dir
+
+firebug@software.joehewitt.com
+dir
+

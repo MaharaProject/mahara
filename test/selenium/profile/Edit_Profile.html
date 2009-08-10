@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="" />
+<link rel="selenium.base" href="http://localmahara.org" />
 <title>Edit Profile</title>
 </head>
 <body>
@@ -167,7 +167,12 @@
 <!--the following is the same as click link=Contact information, except this easier to read style doesn't always work in selenium IDE.-->
 <!--so we use the explicit xpath.  unfortunately, the xpath is less robust than the link=... :-(-->
 <tr>
-	<td>click</td>
+	<td>waitForElementPresent</td>
+	<td>//ul[@class=&quot;profile-tabs&quot;]/li[2]/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
 	<td>//ul[@class=&quot;profile-tabs&quot;]/li[2]/a</td>
 	<td></td>
 </tr>
