@@ -326,7 +326,7 @@ div.rbuttons form div {
 /* Top of page elements */
 .viewheader {
     padding: .5em;
-    margin-bottom: 1px;
+    margin: 0 .25em 1px;
 }
 .viewheader .small-logo img {
     height: 2.6em;
