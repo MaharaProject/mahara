@@ -1,0 +1,886 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE window [
+<!ENTITY % firebugDTD SYSTEM "chrome://firebug/locale/firebug.dtd">
+%firebugDTD;
+]>
+
+<bindings xmlns="http://www.mozilla.org/xbl"
+    xmlns:xbl="http://www.mozilla.org/xbl"
+    xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+<binding id="initializer">
+    <implementation>
+        <destructor><![CDATA[
+           FirebugChrome.shutdown();
+        ]]></destructor>
+    </implementation>
+</binding>
+
+<binding id="panelBar">
+
+    <!-- The XUL structure for the panel bar is specified in the XUL source
+         inside each "panelBar" element.  This allows us to have panel bars
+         with substantially different layous, including the ability to embed
+         one panel bar within another - albeit at some cost in maintainability.
+    -->
+    <content>
+        <children/>
+    </content>
+
+    <implementation>
+        <constructor><![CDATA[
+            this.tabBox = this.getChildElement("tabBox");
+            this.deck = this.getChildElement("deck");
+            this.browser = this.getChildElement("browser");
+            this.panelTabs = this.getChildElement("panelTabs");
+            this.tabMap = {};
+            
+            // We initialize Firebug from here instead of from the onload event because
+            // we need to make sure it is initialized before the browser starts loading
+            // the home page
+            try
+            {
+                if(FirebugChrome.panelBarReady(this))
+                {
+                }
+            }
+            catch (e)
+            {
+                dump("bindings panelBar ctor FAILs: "+ e+"\n");
+                dump("window.top "+window.top.location+" window.opener: "+window.opener+"\n");
+            }
+        ]]></constructor>
+
+        <method name="getChildElement">
+            <parameter name="id"/>
+            <body><![CDATA[
+                // Construct a unique ID from the panel bar ID and the child element ID,
+                // for example: "panelBar1-panelTabs".  This allows us to define children
+                // in the XUL source, which in turn allows us to have panel bars with
+                // substantially different layouts.
+                return document.getElementById(this.id + "-" + id);
+            ]]></body>
+        </method>
+
+        <method name="createTab">
+            <parameter name="panelType"/>
+            <body><![CDATA[
+            var tab = document.createElement("panelTab");
+            tab.panelType = panelType;
+
+            var title = Firebug.getPanelTitle(panelType);
+            tab.setAttribute("label", title);
+
+            return this.tabMap[panelType.prototype.name] = tab;
+            ]]></body>
+        </method>
+
+        <method name="addTab">
+            <parameter name="panelType"/>
+            <body><![CDATA[
+            var tab = this.createTab(panelType);
+            this.panelTabs.appendChild(tab);
+            ]]></body>
+        </method>
+
+        <method name="updatePanels">
+            <parameter name="panelTypes"/>
+            <body><![CDATA[
+                this.tabMap = {};
+
+                // Replace tabs at the same position if type has changed
+                var i = 0;
+                var tab = this.panelTabs.firstChild;
+                for (; i < panelTypes.length && tab; tab = tab.nextSibling)
+                {
+                    var panelType = panelTypes[i++];
+                    if (tab.panelType.prototype.name != panelType.prototype.name)
+                    {
+                        var newTab = this.createTab(panelType);
+                        this.panelTabs.replaceChild(newTab, tab);
+                        tab = newTab;
+                    }
+                    else
+                        this.tabMap[panelType.prototype.name] = tab;
+                }
+
+                // Remove old tabs after the last panel
+                while (tab)
+                {
+                    var nextTab = tab.nextSibling;
+                    this.panelTabs.removeChild(tab);
+                    tab = nextTab;
+                }
+
+                // Insert new tabs after the last old tab
+                for (; i < panelTypes.length; ++i)
+                {
+                    var panelType = panelTypes[i];
+                    var newTab = this.createTab(panelType);
+                    this.panelTabs.appendChild(newTab);
+                }
+            ]]></body>
+        </method>
+
+        <method name="selectTab">
+            <parameter name="tab"/>
+            <body><![CDATA[
+                var panelName = tab ? tab.panelType.prototype.name : null;
+                if (panelName && !tab.panelType.prototype.parentPanel)
+                    Firebug.setPref(Firebug.prefDomain, "defaultPanelName", panelName);
+
+                this.selectPanel(panelName);
+            ]]></body>
+        </method>
+
+        <method name="selectPanel">
+            <parameter name="panelName"/>
+            <parameter name="forceUpdate"/>
+            <parameter name="noRefresh"/>
+            <body><![CDATA[
+                var tab = panelName ? this.tabMap[panelName] : null;
+                var panelType = tab ? tab.panelType : null;
+
+                var panel = FirebugContext ? FirebugContext.getPanel(panelName) : null;
+
+                if (panel && panel == this.selectedPanel && !forceUpdate)
+                    return panel;
+
+                if (!panel)
+                    this.tabBox.setAttribute("collapsed", "true");
+                else
+                    this.tabBox.removeAttribute("collapsed");
+
+                if (this.selectedTab)
+                {
+                    this.selectedTab.removeAttribute("selected");
+                }
+
+                this.hideSelectedPanel();
+
+                this.selectedTab = tab;
+                this.selectedPanel = panel;
+
+                if (tab)
+                {
+                    tab.setAttribute("selected", "true");
+                    if (Firebug.A11yModel && Firebug.A11yModel.isEnabled() && Firebug.A11yModel.tabFocused &&!forceUpdate)
+                        tab.focus();
+                    
+                }
+
+                if (panel)
+                {
+                    panel.panelBrowser = panel.browser ? panel.browser : this.browser;
+                    panel.panelBrowser.currentPanel = panel;
+                }
+
+                if (!panel || panel.panelBrowser != this.browser)
+                    this.browser.currentPanel = null;
+
+                var ev = document.createEvent("Events");
+                ev.initEvent("selectingPanel", true, false);
+                this.dispatchEvent(ev);
+
+                if (panel)
+                {
+                    var sel = this.browser.contentWindow.getSelection();
+                    if (sel)
+                        sel.removeAllRanges();
+
+                    this.showSelectedPanel();  // sets active attribute true
+
+                    if (!noRefresh && panel.needsRefresh)
+                    {
+                        delete panel.needsRefresh;
+                        panel.refresh();
+                    }
+
+                    if (panel.browser)
+                    {
+                        if (panel.browser.parentNode != this.deck)
+                            this.deck.appendChild(panel.browser);
+
+                        this.deck.selectedPanel = panel.browser;
+                    }
+                    else
+                        this.deck.selectedPanel = this.browser;
+                }
+
+                var ev = document.createEvent("Events");
+                ev.initEvent("selectPanel", true, false);
+                this.dispatchEvent(ev);
+
+                return panel;
+            ]]></body>
+        </method>
+
+        <method name="showSelectedPanel">
+            <body><![CDATA[
+                var panel = this.selectedPanel;
+                if (panel)
+                {
+                    panel.visible = true;
+                    panel.panelNode.setAttribute("active", true);
+
+                    var state = Firebug.getPanelState(panel);
+                    panel.show(state);
+                }
+            ]]></body>
+        </method>
+
+        <method name="hideSelectedPanel">
+            <body><![CDATA[
+                var oldPanel = this.selectedPanel;
+                if (oldPanel)
+                {
+                    oldPanel.visible = false;  // xxxjjb Why three ways to un-show the panel?
+                    var state = Firebug.getPanelState(oldPanel);
+                    oldPanel.hide(state);
+                    oldPanel.panelNode.removeAttribute("active");
+                }
+            ]]></body>
+        </method>
+
+        <method name="getTab">
+            <parameter name="panelName"/>
+            <body><![CDATA[
+                return this.tabMap[panelName];
+            ]]></body>
+        </method>
+    </implementation>
+
+    <handlers>
+        <handler event="mousedown" button="0"><![CDATA[
+            event.stopPropagation();
+            var tab = event.target;
+            for (; tab && !tab.panelType; tab = tab.parentNode);
+
+            if (tab)
+            {
+                // Select after a timeout to increase teh snappy
+                setTimeout(FBL.bindFixed(function()
+                {
+                    this.selectTab(tab);
+                }, this));
+            }
+        ]]></handler>
+    </handlers>
+</binding>
+
+<binding id="panelTab" display="xul:button">
+    <content>
+        <xul:image class="panelTab-left"/>
+        <xul:label class="panelTab-text" crop="right" flex="1"
+                   xbl:inherits="value=label,accesskey,crop,toolbarmode,buttonstyle,disabled"/>
+        <children includes="panelTabMenu"/>
+        <xul:image class="panelTab-right"/>
+    </content>
+    <implementation>
+        <constructor>
+        <![CDATA[
+            this.setAttribute('role', 'tab');
+            this.setAttribute('aria-haspopup', 'true');
+            this.tabMenu = document.createElement("panelTabMenu");
+            this.appendChild(this.tabMenu);
+            return this.tabMenu;
+        ]]>
+        </constructor>
+        <method name="setModule">
+            <parameter name="module"/>
+            <body><![CDATA[
+            // Make sure the property exists.
+            this.tabMenu.module = module ? module : null;
+            ]]></body>
+        </method>
+    </implementation>
+</binding>
+
+<binding id="panelTabMenu" display="xul:button" extends="chrome://global/content/bindings/toolbarbutton.xml#toolbarbutton">
+    <content>
+        <xul:menupopup anonid="popup" />
+        <xul:image anonid="menuTarget" class="menuTarget"/>
+    </content>
+    <implementation>
+        <constructor>
+        <![CDATA[
+            this.setAttribute('role', 'menu');
+            this.popup = document.getAnonymousElementByAttribute(this, "anonid", "popup");
+        ]]>
+        </constructor>
+        <field name="value"/>
+        <field name="module"/>
+        <property name="selectedPanel">
+            <getter><![CDATA[
+                var parentNode = this.parentNode;
+                while (parentNode)
+                {
+                    if (parentNode.hasOwnProperty("selectedPanel"))
+                        return parentNode.selectedPanel;
+                    parentNode = parentNode.parentNode;
+                }
+                return null;
+            ]]></getter>
+        </property>
+        <method name="onEnable">
+            <body><![CDATA[
+            if (this.module)
+                this.module.setDefaultState(true);
+            ]]></body>
+        </method>
+        <method name="onDisable">
+            <body><![CDATA[
+            if (this.module)
+                this.module.setDefaultState(false);
+            ]]></body>
+        </method>
+        <method name="optionMenu">
+            <parameter name="label"/>
+            <parameter name="checked"/>
+            <parameter name="command"/>
+            <body><![CDATA[
+            return {label: label, type: "radio", checked: checked,
+                command: FBL.bindFixed(command, this)};
+            ]]></body>
+        </method>
+    </implementation>
+    <handlers>
+        <handler event="mousedown" button="0"><![CDATA[
+            this.popup.showPopup(this, -1, -1, "popup", "bottomleft", "topleft");
+        ]]></handler>
+        <handler event="popupshowing"><![CDATA[
+            if (!this.selectedPanel)
+                return false;
+
+            var items = [];
+
+            // Create menu items for activation. The module is set only for activable modules.
+            if (this.module)
+            {
+                var enabled = this.module.isAlwaysEnabled();
+                items.push(this.optionMenu("panel.Enabled", enabled, this.onEnable));
+                items.push(this.optionMenu("panel.Disabled", !enabled, this.onDisable));
+            }
+
+            // Get panel's option items.
+            var panelItems = this.selectedPanel.getOptionsMenuItems(FirebugContext);
+
+            // If the module is disabled, gray out all the options.
+            if (!enabled && this.module)
+            {
+                for (var i = 0; i < panelItems.length; i++)
+                    panelItems[i].disabled = true;
+            }
+
+            if (panelItems.length > 0)
+                items.push("-");
+
+            var menu = FBL.extendArray(items, panelItems);
+            for (var i = 0; i < menu.length; ++i)
+                FBL.createMenuItem(this.popup, menu[i]);
+
+            return true;
+        ]]></handler>
+        <handler event="popuphidden"><![CDATA[
+            FBL.eraseNode(this.popup);
+        ]]></handler>
+    </handlers>
+</binding>
+
+<binding id="panelStatus">
+    <implementation>
+        <method name="addItem">
+            <parameter name="label"/>
+            <parameter name="object"/>
+            <parameter name="rep"/>
+            <parameter name="separator"/>
+            <body><![CDATA[
+                if (this.firstChild)
+                {
+                    var box = document.createElement("hbox");  // extra box needed to fix alignment issue in Vista theme
+                    box.setAttribute('role', 'separator');
+                    box.setAttribute('align', 'center');
+                    var sep = document.createElement("label");
+                    sep.setAttribute("class", "panelStatusSeparator");
+                    sep.setAttribute("value", separator);
+                    sep.setAttribute('role', 'presentation');
+                    box.appendChild(sep);
+                    this.appendChild(box);
+                }
+
+                var item = document.createElement("toolbarbutton");
+                item.setAttribute("class", "panelStatusLabel");
+                item.setAttribute("label", label);
+                item.repObject = object;
+                item.rep = rep;
+                this.appendChild(item);
+                return item;
+            ]]></body>
+        </method>
+
+        <method name="clear">
+            <parameter name="tab"/>
+            <body><![CDATA[
+                while (this.lastChild)
+                    this.removeChild(this.lastChild);
+            ]]></body>
+        </method>
+
+        <method name="getItemByObject">
+            <parameter name="object"/>
+            <body><![CDATA[
+                for (var item = this.lastChild; item; item = item.previousSibling)
+                {
+                    if (item.rep)
+                    {
+                        var itemObject = item.rep.getRealObject(item.repObject, FirebugContext);
+                        if (itemObject == object)
+                            return item;
+                    }
+                }
+            ]]></body>
+        </method>
+
+        <method name="selectObject">
+            <parameter name="object"/>
+            <body><![CDATA[
+                var item = this.getItemByObject(object);
+                this.selectItem(item);
+            ]]></body>
+        </method>
+
+        <method name="selectItem">
+            <parameter name="item"/>
+            <body><![CDATA[
+                if (this.selectedItem)
+                    this.selectedItem.removeAttribute("selected");
+
+                this.selectedItem = item;
+
+                if (item)
+                    item.setAttribute("selected", "true");
+            ]]></body>
+        </method>
+    </implementation>
+
+    <handlers>
+        <handler event="command" ><![CDATA[
+            var object = Firebug.getRepObject(event.target);
+            if (object)
+            {
+                var rep = Firebug.getRep(object);
+                object = rep.getRealObject(object, FirebugContext);
+                if (object)
+                {
+                    this.selectObject(object);
+                    Firebug.chrome.select(object, null, null, true);
+                }
+            }
+        ]]></handler>
+
+        <handler event="mouseover"><![CDATA[
+            var object = Firebug.getRepObject(event.target);
+            if (object)
+            {
+                var rep = Firebug.getRep(object);
+                object = rep.getRealObject(object, FirebugContext);
+                if (object)
+                    Firebug.Inspector.highlightObject(object, FirebugContext);
+            }
+        ]]></handler>
+
+        <handler event="mouseout"><![CDATA[
+            Firebug.Inspector.highlightObject(null);
+        ]]></handler>
+    </handlers>
+</binding>
+
+<binding id="panelFileList" >
+
+    <content popup="_child">
+        <xul:toolbarbutton  xbl:inherits="label,tooltip=labeltooltip,contextmenu=labelcontextmenu" type="menu" role="button" aria-haspopup="true">
+            <xul:menupopup anonid="popup" position="after_start"/>
+        </xul:toolbarbutton>
+    <!--
+        <xul:label class="toolbarbutton-text"
+             xbl:inherits="value=label,tooltip=labeltooltip,contextmenu=labelcontextmenu"/>
+        <xul:image class="toolbarbutton-menu-dropmarker"/>
+        <xul:menupopup anonid="popup" position="after_start"/>
+    -->
+    </content>
+
+    <resources>
+        <stylesheet src="chrome://global/skin/toolbarbutton.css"/>
+    </resources>
+
+    <implementation>
+        <constructor><![CDATA[
+            this.popup = document.getAnonymousElementByAttribute(this, "anonid", "popup");
+            this._closed = true;
+        ]]></constructor>
+
+        <property name="location">
+            <getter><![CDATA[
+                if (FBTrace.DBG_LOCATIONS)
+                    FBTrace.sysout("location getter label:"+this.getAttribute('label')+" location: "+this.getAttribute('location'));
+                return this.getAttribute("location");
+            ]]></getter>
+
+            <setter><![CDATA[
+                var locator = this.getLocator();
+
+                var fileName = null;
+                if (!locator)
+                {
+                    fileName = "no locator!";
+                }
+                else if (val)
+                {
+                    var description = locator.getObjectDescription(val);
+                    fileName = (description.label?description.label:description.name);
+                }
+                else
+                    fileName = "(none)";
+
+                this.repObject = val;
+                this.setAttribute("label", FBL.cropString(fileName, 80));
+                this.setAttribute("location", val);
+                if (FBTrace.DBG_LOCATIONS)
+                    FBTrace.sysout("location setter label:"+this.getAttribute('label')+" fileName: "+fileName+ " val: "+val);
+            ]]></setter>
+        </property>
+
+        <method name="getLocator">
+            <body><![CDATA[
+                if (!this.locator)  // XXXjjb this is complicated because the location list depends upon the current panel
+                {
+                    var functionYieldingExpression = this.getAttribute("locationProvider");
+                    if (functionYieldingExpression && functionYieldingExpression.length > 0)
+                        this.locator = eval(functionYieldingExpression);
+                    else
+                    {
+                        var whichBinding = this.getAttribute("id");
+                        var msg = "ERROR: panelFileList "+whichBinding+" requires attribute \'locationProvider\', an expression yielding a function";
+                        FBTrace.sysout(msg);
+                        return null;
+                    }
+                }
+                // The locator needs
+                //     getObjectDescription(object): return {path, name}
+                //     getLocationList(), a list of objects that can be fed into getObjectDescription
+                return this.locator(this);
+            ]]></body>
+        </method>
+
+        <method name="showPopup">
+            <body><![CDATA[
+                this.popup.showPopup(this, -1, -1, "popup", "bottomleft", "topleft");
+            ]]></body>
+        </method>
+
+        <method name="selectObject">
+            <parameter name="object"/>
+            <body><![CDATA[
+                this.repObject = object;
+
+                var ev = document.createEvent("Events");
+                ev.initEvent("selectObject", true, false);
+                this.dispatchEvent(ev);
+                Firebug.Search.displayOnly("", FirebugContext);
+            ]]></body>
+        </method>
+
+        <method name="enterActiveItem">
+            <body><![CDATA[
+                for (var child = this.popup.firstChild; child; child = child.nextSibling)
+                {
+                    if (child.getAttribute("_moz-menuactive") == "true")
+                    {
+                        this.location = child.repObject;
+                        this.selectObject(child.repObject);
+                        this.popup.hidePopup();
+                    }
+                }
+            ]]></body>
+        </method>
+
+        <method name="filterList">
+            <parameter name="substring"/>
+            <body><![CDATA[
+                var firstMatch = null;
+                var groupMatchCount = 0;
+                for (var child = this.popup.lastChild; child; child = child.previousSibling)
+                {
+                    if (child.localName == "menuitem")
+                    {
+                        var label = child.getAttribute("label").toLowerCase();
+                        child._searchMatch = label.indexOf(substring) != -1;
+                        if (child._searchMatch)
+                        {
+                            firstMatch = child;
+                            ++groupMatchCount;
+                        }
+                    }
+                    else
+                    {
+                        child._searchMatch = !!groupMatchCount;
+                        groupMatchCount = 0;
+                    }
+                }
+
+                if (firstMatch)
+                {
+                    for (var child = this.popup.firstChild; child; child = child.nextSibling)
+                    {
+                        child.hidden = !child._searchMatch;
+                        child.removeAttribute("_moz-menuactive");
+                    }
+
+                    firstMatch.setAttribute("_moz-menuactive", "true");
+                }
+            ]]></body>
+        </method>
+
+        <method name="onKeyPress">
+            <parameter name="event"/>
+            <body><![CDATA[
+                if (event.keyCode == 13) // Return
+                {
+                    this.enterActiveItem();
+                    this.searchString = '';
+                }
+                else if (event.keyCode == 8) // Backspace
+                {
+                    this.searchString = this.searchString.substr(0, this.searchString.length-1);
+                    this.filterList(this.searchString);
+                }
+                else if (event.charCode)
+                {
+                    this.searchString += String.fromCharCode(event.charCode).toLowerCase();
+                    this.filterList(this.searchString);
+                }
+                else
+                    return;
+
+                Firebug.Search.displayOnly(this.searchString, FirebugContext);
+                FBL.cancelEvent(event);
+            ]]></body>
+        </method>
+    </implementation>
+
+    <handlers>
+        <handler event="popupshowing"><![CDATA[
+            if (this.popup.firstChild)
+                return false;
+            var locator = this.getLocator();
+            var objects = locator.getLocationList();
+            if (!objects)
+            {
+                this.setAttribute("label", "");
+                this.setAttribute("location", null);
+                return false;
+            }
+
+            var groupNames = [];
+            var groups = {};
+
+            var currentDescription = null;
+            if (this.repObject)
+                currentDescription = locator.getObjectDescription(this.repObject);
+
+            for (var i = 0; i < objects.length; ++i)
+            {
+                var object = objects[i];
+                var description = locator.getObjectDescription(object);
+                if (!description)
+                    FBTrace.sysout("binding.xml popupshowing Fails" , object);
+                var entry = {object: object, fileName: description.name};
+
+                if (currentDescription && currentDescription.name == description.name && currentDescription.path == description.path)
+                    entry.selected = true;
+
+                if (groups.hasOwnProperty(description.path))
+                    groups[description.path].push(entry);
+                else
+                {
+                    groups[description.path] = [entry];
+                    groupNames.push(description.path);
+                }
+            }
+
+            groupNames.sort();
+
+            for (var i = 0; i < groupNames.length; ++i)
+            {
+                var path = groupNames[i];
+                var urls = groups[path];
+                urls.sort(function(a, b) { return a.fileName < b.fileName ? -1 : 1; });
+
+                var menuHeader = FBL.createMenuHeader(this.popup, {label: path, nol10n: true});
+                FBL.setClass(menuHeader, "fbURLMenuItem");
+
+                for (var j = 0; j < urls.length; ++j)
+                {
+                    var menuInfo = {label: urls[j].fileName, nol10n: true};
+
+                    if (urls[j].selected)
+                    {
+                        menuInfo.type = "checkbox";
+                        menuInfo.checked = true;
+                    }
+
+                    var menuItem = FBL.createMenuItem(this.popup, menuInfo);
+                    menuItem.repObject = urls[j].object;
+                    FBL.setClass(menuItem, "fbURLMenuItem");
+                }
+            }
+
+        ]]></handler>
+
+        <handler event="popupshown"><![CDATA[
+            // Weird, but this gets fired when the user clicks on a menuitem,
+            // which hiding the buttons again and resulting in jitters - let's avoid that.
+            if (!this._closed)
+                return;
+
+            // XXXjoe There is a bug in the <xul:autoscrollbox> code which,
+            // for reasons I don't grasp yet, never hides the scroll buttons
+            // after the first them they are shown - so we must do it ourselves
+            var scrollbox = document.getAnonymousElementByAttribute(
+                this.popup, "class", "popup-internal-box");
+            if (scrollbox["_scrollButtonUp"])
+                scrollbox["_scrollButtonUp"].collapsed = true;
+            if (scrollbox["_scrollButtonDown"])
+                scrollbox["_scrollButtonDown"].collapsed = true;
+
+            this._closed = false;
+
+            this.searchString = "";
+            this.onkeypress = FBL.bind(this.onKeyPress, this);
+            window.addEventListener("keypress", this.onkeypress, true);
+        ]]></handler>
+
+        <handler event="popuphidden"><![CDATA[
+            window.removeEventListener("keypress", this.onkeypress, true);
+            delete this.onkeypress;
+            delete this.searchString;
+
+            FBL.eraseNode(this.popup);
+            this._closed = true;
+        ]]></handler>
+
+        <handler event="command"><![CDATA[
+            var object = event.originalTarget.repObject;
+
+            // Select after a timeout to increase teh snappy
+            setTimeout(FBL.bindFixed(function()
+            {
+                this.selectObject(object);
+            }, this));
+        ]]></handler>
+    </handlers>
+</binding>
+
+<binding id="searchBox" extends="chrome://global/content/bindings/autocomplete.xml#autocomplete">
+    <handlers>
+        <handler event="keypress"><![CDATA[
+            if (event.keyCode == 13)
+            {
+                if (FBL.isControl(event))
+                {
+                    if (!event.ctrlKey)
+                        Firebug.Search.enter(FirebugContext);
+                    else
+                        FBL.dispatch([Firebug.A11yModel], 'moveToSearchMatch');
+                }
+                else
+                    Firebug.Search.update(FirebugContext, true);
+            }
+            else if (event.keyCode == 27)
+                Firebug.Search.cancel(FirebugContext);
+            else
+                return;
+
+            FBL.cancelEvent(event);
+        ]]></handler>
+
+        <handler event="input"><![CDATA[
+            Firebug.Search.update(FirebugContext);
+        ]]></handler>
+    </handlers>
+</binding>
+
+<binding id="commandLine" extends="chrome://global/content/bindings/textbox.xml#textarea">
+    <handlers>
+        <handler event="input"><![CDATA[
+            Firebug.CommandLine.update(FirebugContext);
+        ]]></handler>
+
+        <handler event="overflow"><![CDATA[
+            if (window.Firebug)
+                Firebug.CommandLine.checkOverflow(FirebugContext);
+        ]]></handler>
+
+        <handler event="keypress" keycode="VK_TAB"><![CDATA[
+            if (this.value == "")
+            {
+                return;
+            }
+            Firebug.CommandLine.complete(FirebugContext, FBL.isShift(event));
+            event.preventDefault();
+        ]]></handler>
+
+        <handler event="keypress" keycode="VK_RETURN" modifiers="" preventdefault="true"><![CDATA[
+            Firebug.CommandLine.enter(FirebugContext);
+        ]]></handler>
+
+        <handler event="keypress" keycode="VK_RETURN" modifiers="meta" preventdefault="true"><![CDATA[
+            Firebug.CommandLine.enterMenu(FirebugContext);
+        ]]></handler>
+
+        <handler event="keypress" keycode="VK_RETURN" modifiers="shift" preventdefault="true"><![CDATA[
+            Firebug.CommandLine.enterInspect(FirebugContext);
+        ]]></handler>
+
+        <handler event="keypress" keycode="VK_UP" preventdefault="true"><![CDATA[
+            Firebug.CommandLine.cycleCommandHistory(FirebugContext, -1);
+        ]]></handler>
+
+        <handler event="keypress" keycode="VK_DOWN" preventdefault="true"><![CDATA[
+            Firebug.CommandLine.cycleCommandHistory(FirebugContext, 1);
+        ]]></handler>
+
+        <handler event="keypress" keycode="VK_ESCAPE" preventdefault="true"><![CDATA[
+            Firebug.CommandLine.cancel(FirebugContext);
+        ]]></handler>
+    </handlers>
+</binding>
+
+<binding id="largeCommandLine" extends="chrome://global/content/bindings/textbox.xml#textarea">
+    <handlers>
+        <handler event="input"><![CDATA[
+            Firebug.CommandLine.update(FirebugContext);
+        ]]></handler>
+
+        <handler event="keypress" keycode="VK_TAB"><![CDATA[
+            var input = document.getAnonymousElementByAttribute(this, "anonid", "input");
+            FBL.insertTextIntoElement(input, Firebug.Editor.tabCharacter);
+            event.preventDefault();
+        ]]></handler>
+
+        <handler event="keypress" keycode="VK_RETURN" modifiers="meta" preventdefault="true"><![CDATA[
+            Firebug.CommandLine.enter(FirebugContext);
+        ]]></handler>
+
+        <handler event="keypress" keycode="VK_RETURN" modifiers="control" preventdefault="true"><![CDATA[
+            Firebug.CommandLine.enter(FirebugContext);
+        ]]></handler>
+
+        <handler event="keypress" keycode="VK_ESCAPE" preventdefault="true"><![CDATA[
+            Firebug.CommandLine.cancel(FirebugContext);
+        ]]></handler>
+    </handlers>
+</binding>
+
+</bindings>
