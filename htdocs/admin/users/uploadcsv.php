@@ -68,6 +68,7 @@ $ALLOWEDKEYS = array(
     'industry',
     'authinstance'
 );
+$CSVERRORS = array();
 
 if ($USER->get('admin')) {
     $authinstances = auth_get_auth_instances();
@@ -139,7 +140,7 @@ $form = array(
  * @param array    $values The values submitted
  */
 function uploadcsv_validate(Pieform $form, $values) {
-    global $CSVDATA, $ALLOWEDKEYS, $FORMAT, $USER;
+    global $CSVDATA, $ALLOWEDKEYS, $FORMAT, $USER, $CSVERRORS;
 
     // Don't even start attempting to parse if there are previous errors
     if ($form->has_errors()) {
@@ -188,8 +189,8 @@ function uploadcsv_validate(Pieform $form, $values) {
     }
 
     foreach ($csvdata->data as $key => $line) {
-        // If headers exists, increment i = key + 1 for actual line number
-        $i = ($csvusers->get('headerExists')) ? ($key + 1) : $key;
+        // If headers exists, increment i = key + 2 for actual line number
+        $i = ($csvusers->get('headerExists')) ? ($key + 2) : ($key + 1);
 
         // Trim non-breaking spaces -- they get left in place by File_CSV
         foreach ($line as &$field) {
@@ -208,28 +209,29 @@ function uploadcsv_validate(Pieform $form, $values) {
         $authobj = AuthFactory::create($authinstance);
 
         if (method_exists($authobj, 'is_username_valid') && !$authobj->is_username_valid($username)) {
-            $form->set_error('file', get_string('uploadcsverrorinvalidusername', 'admin', $i));
-            return;
+            $CSVERRORS[] = get_string('uploadcsverrorinvalidusername', 'admin', $i);
         }
         if (record_exists_select('usr', 'LOWER(username) = ?', strtolower($username)) || isset($usernames[strtolower($username)])) {
-            $form->set_error('file', get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
-            return;
+            $CSVERRORS[] = get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username);
         }
         if (record_exists('usr', 'email', $email) || record_exists('artefact_internal_profile_email', 'email', $email) || isset($emails[$email])) {
-            $form->set_error('file', get_string('uploadcsverroremailaddresstaken', 'admin', $i, $email));
-            return;
+            $CSVERRORS[] = get_string('uploadcsverroremailaddresstaken', 'admin', $i, $email);
         }
 
         // Note: only checks for valid form are done here, none of the checks
         // like whether the password is too easy. The user is going to have to
         // change their password on first login anyway.
         if (method_exists($authobj, 'is_password_valid') && !$authobj->is_password_valid($password)) {
-            $form->set_error('file', get_string('uploadcsverrorinvalidpassword', 'admin', $i));
-            return;
+            $CSVERRORS[] = get_string('uploadcsverrorinvalidpassword', 'admin', $i);
         }
 
         $usernames[strtolower($username)] = 1;
         $emails[$email] = 1;
+    }
+
+    if (!empty($CSVERRORS)) {
+        $form->set_error('file', implode("<br />\n", $CSVERRORS));
+        return;
     }
 
     $FORMAT = $csvdata->format;

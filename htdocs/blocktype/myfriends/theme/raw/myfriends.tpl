@@ -15,7 +15,7 @@
     {/foreach}
     </table>
 {else}
-    {if $USERID == $USER->get('id')}
+    {if $lookingatownpage}
         <div class="message">{str tag="trysearchingforfriends" section=group args=$searchingforfriends}</div>
     {else}
         {if $relationship == 'none' && $friendscontrol == 'auto'}
