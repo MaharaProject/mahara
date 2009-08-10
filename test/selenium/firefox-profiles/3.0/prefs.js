@@ -111,6 +111,7 @@ user_pref("privacy.cpd.cookies", true);
 user_pref("privacy.item.cookies", true);
 user_pref("privacy.item.offlineApps", true);
 user_pref("privacy.item.passwords", true);
+user_pref("privacy.sanitize.didShutdownSanitize", true);
 user_pref("privacy.sanitize.migrateFx3Prefs", true);
 user_pref("privacy.sanitize.promptOnSanitize", false);
 user_pref("privacy.sanitize.sanitizeOnShutdown", true);

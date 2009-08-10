@@ -1,0 +1,1 @@
+({windows:[], selectedWindow:0, session:{state:"stopped"}})
