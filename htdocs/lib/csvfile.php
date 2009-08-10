@@ -125,8 +125,8 @@ class CsvFile {
 
                 // The format line is valid
                 $this->format = $line;
-                //log_info('FORMAT:');
-                //log_info($this->format);
+                log_info('FORMAT:');
+                log_info($this->format);
             }
             else {
                 // Trim non-breaking spaces -- they get left in place by File_CSV
