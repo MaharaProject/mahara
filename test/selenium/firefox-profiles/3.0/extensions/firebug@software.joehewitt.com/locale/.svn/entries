@@ -1,162 +1,0 @@
-9
-
-dir
-28669
-svn+ssh://svn.catalyst.net.nz/var/svn/telecom/telecom.mobile.store/trunk/fixtures.nemo/firefox-selenium-template/extensions/firebug@software.joehewitt.com/locale
-svn+ssh://svn.catalyst.net.nz/var/svn/telecom
-
-
-
-2009-06-11T02:04:43.353576Z
-27722
-gerald
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-85a53bc1-c412-0410-8f86-fafb5fb4d25d
-
-cs-CZ
-dir
-
-zh-CN
-dir
-
-nl-NL
-dir
-
-da-DK
-dir
-
-Makefile.in
-file
-
-
-
-
-2009-07-13T22:07:44.000000Z
-e690fcfb9edb36419deb0236ea18ac2d
-2009-06-11T02:04:43.353576Z
-27722
-gerald
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-565
-
-ko-KR
-dir
-
-pl-PL
-dir
-
-pt-BR
-dir
-
-jar.mn
-file
-
-
-
-
-2009-07-13T22:07:44.000000Z
-7808307ba0c2306eff9346385d18ee6a
-2009-06-11T02:04:43.353576Z
-27722
-gerald
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-177
-
-it-IT
-dir
-
-hu-HU
-dir
-
-en-US
-dir
-
-bg
-dir
-
-sk-SK
-dir
-
-ja
-dir
-
-sv-SE
-dir
-
-ro-RO
-dir
-
-ca-AD
-dir
-
-es-AR
-dir
-
-tr-TR
-dir
-
-zh-TW
-dir
-
-fr-FR
-dir
-
-es-ES
-dir
-
-de-DE
-dir
-
