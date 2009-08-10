@@ -848,5 +848,6 @@ $string['allowpublicaccess'] = 'Allow public (non logged in) access';
 $string['thisistheprofilepagefor'] = 'This is the profile page for %s';
 
 $string['pleasedonotreplytothismessage'] = "Please do not reply to this message.";
+$string['choosetheme'] = 'Choose Theme...';
 $string['theme'] = 'Theme';
 ?>

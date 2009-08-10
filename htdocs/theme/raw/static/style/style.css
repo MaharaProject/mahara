@@ -326,8 +326,8 @@ div.rbuttons form div {
 /* Top of page elements */
 .viewheader {
     padding: .5em;
-    border-bottom: 1px dotted #666;
     background-color: #fff;
+    margin-bottom: 1px;
 }
 .viewheader .small-logo img {
     height: 2.6em;
@@ -335,6 +335,10 @@ div.rbuttons form div {
 }
 .viewheader .lbuttons {
     padding: .5em;
+}
+.viewheader .pieform ,
+.viewheader .pieform div {
+  display: inline;
 }
 .sitemessage {
     background-color: #f99;

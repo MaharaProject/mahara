@@ -125,8 +125,8 @@ $stylesheets = array(
     '<link rel="stylesheet" type="text/css" href="'
         . get_config('wwwroot') . 'theme/views.css">',
     // Extra CSS for the view theme
-    '<link rel="stylesheet" type="text/css" href="'
-        . get_config('wwwroot') . 'theme/' . $basetheme . '/viewthemes/' . $viewtheme . '/views.css">',
+    //'<link rel="stylesheet" type="text/css" href="'
+    //    . get_config('wwwroot') . 'theme/' . $basetheme . '/viewthemes/' . $viewtheme . '/views.css">',
 );
 
 foreach ($THEME->get_url('style/style.css', true, 'artefact/file') as $sheet) {
@@ -145,9 +145,6 @@ $smarty->assign('category_list', $view->build_category_list($category, $new));
 
 // The list of blocktypes for the default category
 $smarty->assign('blocktype_list', $view->build_blocktype_list($category));
-
-$smarty->assign('viewtheme', "$basetheme/$viewtheme");
-$smarty->assign('viewthemes', View::get_viewthemes());
 
 // Tell smarty we're editing rather than just rendering
 $smarty->assign('editing', true);

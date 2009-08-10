@@ -118,6 +118,23 @@ feedbacklist.statevars.push('view');
 feedbacklist.updateOnLoad();
 EOF;
 
+$can_edit = $USER->can_edit_view($view) && !$submittedgroup && !$view->is_submitted();
+if ($can_edit) {
+    $goto = get_config('wwwroot') . 'view/view.php?id=' . $viewid . ($new ? '&new=1' : '');
+    $viewthemeform = $view->viewtheme_form($goto);
+    //$smarty->assign('viewtheme', "$basetheme/$viewtheme");
+    //$smarty->assign('viewthemes', View::get_viewthemes());
+    /*$javascript .= <<<EOF
+addLoadEvent(function () {
+    var currentTheme = $('viewtheme-select').selectedIndex;
+    connect($('viewtheme-select'), 'onchange', function(e) {
+        if (this.selectedIndex != currentTheme && this.options[this.selectedIndex].value) {
+            this.form.submit();
+        };
+    });
+});
+EOF;*/
+}
 
 $anonfeedback = !$USER->is_logged_in() && ($usertoken || $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid)));
 if ($USER->is_logged_in() || $anonfeedback) {
@@ -156,12 +173,14 @@ $smarty->assign('viewtitle', $view->get('title'));
 $owner = $view->get('owner');
 if ($owner) {
     $smarty->assign('ownerlink', 'user/view.php?id=' . $owner);
-    if ($USER->get('id') == $owner) {
-        $smarty->assign('can_edit', !$submittedgroup && !$view->is_submitted());
-    }
 }
 else if ($group) {
     $smarty->assign('ownerlink', 'group/view.php?id=' . $group);
+}
+
+if ($can_edit) {
+    $smarty->assign('can_edit', 1);
+    $smarty->assign('viewthemeform', $viewthemeform);
 }
 
 // Provide a link for roaming teachers to return
@@ -177,7 +196,9 @@ if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
         }
     }
 }
-
+if ($USER->is_logged_in() && !empty($_SERVER['HTTP_REFERER'])) {
+    $smarty->assign('backurl', $_SERVER['HTTP_REFERER']);
+}
 $smarty->assign('ownername', $view->formatted_owner());
 $smarty->assign('viewdescription', $view->get('description'));
 $smarty->assign('viewcontent', $view->build_columns());
