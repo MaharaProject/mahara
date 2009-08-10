@@ -179,7 +179,6 @@ if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
 }
 
 $smarty->assign('ownername', $view->formatted_owner());
-$smarty->assign('streditviewbutton', ($new) ? get_string('backtocreatemyview', 'view') : get_string('editmyview', 'view'));
 $smarty->assign('viewdescription', $view->get('description'));
 $smarty->assign('viewcontent', $view->build_columns());
 $smarty->assign('releaseform', $releaseform);
