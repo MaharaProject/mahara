@@ -305,6 +305,11 @@ div.rbuttons {
     right: 0;
     top: 0;
 }
+div.lbuttons {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
 div.rbuttons.pagetabs {
     right: 1em;
     top: 0.5em;
@@ -319,6 +324,17 @@ div.rbuttons form div {
 }
 
 /* Top of page elements */
+.viewheader {
+    padding: .5em;
+    margin-bottom: 1px;
+}
+.viewheader .small-logo img {
+    height: 2.6em;
+    padding: 0;
+}
+.viewheader .lbuttons {
+    padding: .5em;
+}
 .sitemessage {
     background-color: #f99;
     font-weight: bold;
@@ -410,7 +426,9 @@ div.rbuttons form div {
     clear: both;
     width: 100%;
 }
-#containerX .main-column,
+#containerX .main-column {
+    padding: 1em 1.5em 1em;
+}
 #main-column {
     padding: 0 1.5em 1em;
     overflow: auto;
