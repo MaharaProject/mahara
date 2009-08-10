@@ -29,12 +29,5 @@
                     </div>
 {/if}
                 </div>
-                <div id="view" class="cl">
-                    <div id="bottom-pane">
-                        <div id="column-container">
-                           {$viewcontent}
-                            <div class="cb"></div>
-                        </div>
-                    </div>
-                </div>
+                <iframe id="viewframe" src="{$WWWROOT}/view/view.php?id={$profileviewid}&profileframe=1" width="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 {include file="footer.tpl"}
