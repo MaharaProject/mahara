@@ -41,10 +41,19 @@
 	<td>//tr[contains(td[2], &quot;Test Menu Link&quot;)]/td/input[@value=&quot;Delete&quot;]</td>
 	<td></td>
 </tr>
-<!--removed, confirmation dialog removed? -- assertConfirmation Do you really want to delete this item?-->
+<tr>
+	<td>assertConfirmation</td>
+	<td>Do you really want to delete this item?</td>
+	<td></td>
+</tr>
 <tr>
 	<td>assertElementNotPresent</td>
 	<td>//tr[@id='menuitem_5']/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Return to Site</td>
 	<td></td>
 </tr>
 
