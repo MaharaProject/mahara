@@ -127,6 +127,7 @@ if ($USER->is_logged_in()) {
     $objectionform = pieform(objection_form());
 }
 
+$can_edit = $USER->can_edit_view($view) && !$submittedgroup && !$view->is_submitted();
 
 $smarty = smarty(
     array('mahara', 'tablerenderer', 'feedbacklist', 'artefact/resume/resumeshowhide.js'),
@@ -146,12 +147,18 @@ $smarty->assign('viewtitle', $view->get('title'));
 $owner = $view->get('owner');
 if ($owner) {
     $smarty->assign('ownerlink', 'user/view.php?id=' . $owner);
-    if ($USER->get('id') == $owner) {
-        $smarty->assign('can_edit', !$submittedgroup && !$view->is_submitted());
-    }
 }
 else if ($group) {
     $smarty->assign('ownerlink', 'group/view.php?id=' . $group);
+}
+if ($can_edit) {
+    $smarty->assign('can_edit', 1);
+}
+if ($USER->is_logged_in() && !empty($_SERVER['HTTP_REFERER'])) {
+    $page = get_config('wwwroot') . 'view/view.php?id=' . $viewid . ($new ? '&new=1' : '');
+    if ($_SERVER['HTTP_REFERER'] != $page) {
+        $smarty->assign('backurl', $_SERVER['HTTP_REFERER']);
+    }
 }
 
 // Provide a link for roaming teachers to return
@@ -169,7 +176,6 @@ if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
 }
 
 $smarty->assign('ownername', $view->formatted_owner());
-$smarty->assign('streditviewbutton', ($new) ? get_string('backtocreatemyview', 'view') : get_string('editmyview', 'view'));
 $smarty->assign('viewdescription', $view->get('description'));
 $smarty->assign('viewcontent', $view->build_columns());
 $smarty->assign('releaseform', $releaseform);

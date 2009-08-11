@@ -44,9 +44,7 @@ if ($blog->count_children()) {
     $js = require('index.js.php'); 
 }
 
-$images = array('themepaths' => array('images/file.gif', 'images/image.gif'));
-
-$smarty = smarty(array('tablerenderer'), array(), array(), $images);
+$smarty = smarty(array('tablerenderer'));
 $smarty->assign_by_ref('blog', $blog);
 $smarty->assign_by_ref('editform', $form);
 $smarty->assign_by_ref('INLINEJAVASCRIPT', $js);
