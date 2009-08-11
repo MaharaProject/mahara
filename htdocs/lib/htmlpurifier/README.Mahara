@@ -1,0 +1,12 @@
+HTMLPurifier in Mahara
+======================
+
+Website: http://www.htmlpurifier.org/
+Version: 4.0.0
+
+This library is used by clean_html, to strip malicious HTML from user-generated
+content.
+
+Changes:
+
+ * Patched youtube filter to support videos at http://www.youtube.com/cp/[id]
