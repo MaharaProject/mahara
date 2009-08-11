@@ -5,7 +5,7 @@
  */
 class HTMLPurifier_URISchemeRegistry
 {
-    
+
     /**
      * Retrieve sole instance of the registry.
      * @param $prototype Optional prototype to overload sole instance with,
@@ -22,12 +22,12 @@ class HTMLPurifier_URISchemeRegistry
         }
         return $instance;
     }
-    
+
     /**
      * Cache of retrieved schemes.
      */
     protected $schemes = array();
-    
+
     /**
      * Retrieves a scheme validator object
      * @param $scheme String scheme name like http or mailto
@@ -36,25 +36,24 @@ class HTMLPurifier_URISchemeRegistry
      */
     public function getScheme($scheme, $config, $context) {
         if (!$config) $config = HTMLPurifier_Config::createDefault();
-        $null = null; // for the sake of passing by reference
-        
+
         // important, otherwise attacker could include arbitrary file
-        $allowed_schemes = $config->get('URI', 'AllowedSchemes');
-        if (!$config->get('URI', 'OverrideAllowedSchemes') &&
+        $allowed_schemes = $config->get('URI.AllowedSchemes');
+        if (!$config->get('URI.OverrideAllowedSchemes') &&
             !isset($allowed_schemes[$scheme])
         ) {
-            return $null;
+            return;
         }
-        
+
         if (isset($this->schemes[$scheme])) return $this->schemes[$scheme];
-        if (!isset($allowed_schemes[$scheme])) return $null;
-        
+        if (!isset($allowed_schemes[$scheme])) return;
+
         $class = 'HTMLPurifier_URIScheme_' . $scheme;
-        if (!class_exists($class)) return $null;
+        if (!class_exists($class)) return;
         $this->schemes[$scheme] = new $class();
         return $this->schemes[$scheme];
     }
-    
+
     /**
      * Registers a custom scheme to the cache, bypassing reflection.
      * @param $scheme Scheme name
@@ -63,7 +62,7 @@ class HTMLPurifier_URISchemeRegistry
     public function register($scheme, $scheme_obj) {
         $this->schemes[$scheme] = $scheme_obj;
     }
-    
+
 }
 
-
+// vim: et sw=4 sts=4
