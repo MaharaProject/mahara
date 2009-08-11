@@ -456,7 +456,7 @@ function get_views_for_user($username, $query=null) {
         return false;
     }
 
-    $USER->reanimate($user->id, $authinstance->id);
+    $USER->reanimate($user->id, $authinstance->instanceid);
     require_once('view.php');
     $data = View::view_search($query, null, (object) array('owner' => $USER->get('id')));
     $data->displayname = display_name($user);
