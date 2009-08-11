@@ -110,17 +110,6 @@ class PluginArtefactFile extends PluginArtefact {
         return strnatcasecmp($a->text, $b->text);
     }
 
-    public static function themepaths($type) {
-        static $themepaths = array(
-            'filebrowser' => array(
-                'images/file.gif',
-                'images/folder.gif',
-                'images/image.gif',
-            ),
-        );
-        return $themepaths[$type];
-    }
-
     public static function jsstrings($type) {
         static $jsstrings = array(
             'filebrowser' => array(
