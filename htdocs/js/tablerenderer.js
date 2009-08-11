@@ -25,6 +25,7 @@ function TableRenderer(target, source, columns, options) {
     this.emptycontent = undefined;  // Something to display when no results are found
     this.rowfunction = function(rowdata, rownumber, data) { return TR({'class': 'r' + (rownumber % 2)}); }
     this.updatecallback = function () {};
+    this.postupdatecallback = function () {};
     this.updateOnLoadFlag = false;
     this.lastArgs = {};
 
@@ -227,6 +228,13 @@ function TableRenderer(target, source, columns, options) {
 
             removeElementClass(self.table, 'hidden');
 
+            try {
+                self.postupdatecallback(response);
+            }
+            catch (e) {
+                logError('tablerenderer call postupdatecallback(', response, ') failed.');
+            }
+
         }, null, true);
     };
 
@@ -266,13 +274,13 @@ function TableRenderer(target, source, columns, options) {
         self.doupdate(self.lastArgs);
     };
 
-    this.updateOnLoad = function() {
+    this.updateOnLoad = function(request_args) {
         self.updateOnLoadFlag = true;
         if ( TableRendererPageLoaded ) {
             self.doupdate();
         }
         else {
-            addLoadEvent(partial(self.doupdate, {}));
+            addLoadEvent(partial(self.doupdate, request_args));
         }
     }
 

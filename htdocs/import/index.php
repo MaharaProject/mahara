@@ -139,7 +139,7 @@ function import_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', hsc(get_string('import')));
+$smarty->assign('PAGEHEADING', hsc(get_string('import', 'import')));
 $smarty->assign('form', $form);
 $smarty->assign('previouslyimporteduser', param_integer('user', null));
 $smarty->display('import/index.tpl');
