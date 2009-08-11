@@ -322,9 +322,9 @@ class PluginInteractionForum extends PluginInteraction {
         $posts = get_records_sql_array(
             'SELECT s.subscriber, s.type, s.key, p.id
             FROM (
-                SELECT st."user" AS subscriber, st.topic AS topic, st.key AS key, \'topic\' AS type
+                SELECT st."user" AS subscriber, st.topic AS topic, st.key AS "key", \'topic\' AS type
                 FROM {interaction_forum_subscription_topic} st
-                UNION SELECT sf."user" AS subscriber, t.id AS topic, sf.key AS key, \'forum\' AS type
+                UNION SELECT sf."user" AS subscriber, t.id AS topic, sf.key AS "key", \'forum\' AS type
                 FROM {interaction_forum_subscription_forum} sf
                 INNER JOIN {interaction_forum_topic} t ON t.forum = sf.forum
             ) s
