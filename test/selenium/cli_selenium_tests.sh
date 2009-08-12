@@ -4,17 +4,27 @@
 #   3.5  - will use firefox-3.5-selenium-template and stay foreground
 # the default (if no parameter) is to use firefox-selenium-template 
 # and stay foreground
-
-# we clear the mahara database (the tests start with an install and
-# assumes the tables aren't there).  the ff assumes that we can sudo
-# to postgres with no password, and that the database and user are
-# mahara. FIXME: this won't work for everyone yet.  What works for
-# everyone?
-
-#echo "drop database mahara;create database mahara with encoding='UTF8';grant all on database mahara to mahara;" | sudo -u postgres psql
+#
+# we don't drop/create the db here.  callers should do that.
+# some features may be customised by setting environment variables, e.g.,
+# PROXYHOST=192.168.200.200, PROXYPORT=3128 to use a proxy
+# MAHARA_URL=http://whatever.com/whatever_else to specify the mahara 
+#    instance to test against.
+# SUITE=TestSuite.html (an absolute or relative path to the suite.html file
+#    to test with.  TestSuite.html is the default.
 
 XMS=64m
 XMX=256m
+
+if [ -z $MAHARA_URL ]
+then
+	MAHARA_URL=http://localmahara.org
+fi
+
+if [ -z $SUITE ]
+then
+	SUITE=./TestSuite.html
+fi
 
 # Use this script to start the selenium server. A JDK is required.
 # only sun 1.6 JDKs have been tested with this so far.
@@ -68,10 +78,10 @@ else
 fi
 export FFTMPL
 
-   cmdline="java $HTTP_PROXY -Xms$XMS -Xmx$XMX -jar ./server//selenium-server.jar -trustAllSSLCertificates $SINGLEWINDOW $FFTMPL $PROXYINJECTION $REUSE -htmlSuite *chrome http://localmahara.org ./TestSuite.html ./results.html $SELENIUM_EXTRA"
+   cmdline="java $HTTP_PROXY -Xms$XMS -Xmx$XMX -jar ./server//selenium-server.jar -trustAllSSLCertificates $SINGLEWINDOW $FFTMPL $PROXYINJECTION $REUSE -htmlSuite *chrome $MAHARA_URL $SUITE ./results.html $SELENIUM_EXTRA"
 
-  echo $cmdline 
+  	echo $cmdline 
+	echo "When the tests are done, run firefox ./results.html to see the test results"
   $cmdline 
 
-echo "run firefox ./results.html to see the test results"
 exit 0
