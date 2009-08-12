@@ -12,6 +12,11 @@
 <tr><td rowspan="1" colspan="3">Create a New View</td></tr>
 </thead><tbody>
 <tr>
+	<td>setSpeed</td>
+	<td>100</td>
+	<td></td>
+</tr>
+<tr>
 	<td>open</td>
 	<td>/</td>
 	<td></td>
@@ -27,9 +32,49 @@
 	<td></td>
 </tr>
 <tr>
+	<td>assertText</td>
+	<td>//div[@id='main-column-container']/h1</td>
+	<td>Create View Step One: Layout</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Blogs (3)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=External feeds (1)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Files, images and video (6)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=General (1)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Profile (2)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Resumé (2)</td>
+	<td></td>
+</tr>
+<tr>
 	<td>clickAndWait</td>
 	<td>//input[@value='Next']</td>
 	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='main-column-container']/h1</td>
+	<td>Create View Step Two: Details</td>
 </tr>
 <tr>
 	<td>type</td>
@@ -67,24 +112,69 @@
 	<td></td>
 </tr>
 <tr>
-	<td>assertElementPresent</td>
-	<td>link=Change view layout</td>
+	<td>click</td>
+	<td>//div[@id='potentialpresetitems']/div[1]/button[@type='button']</td>
 	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>startdate_0</td>
+	<td>1/1/2001</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>stopdate_0</td>
+	<td>12/31/2001</td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=General (1)</td>
+	<td>//div[@id='potentialpresetitems']/div[2]/button[@type='button']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAndWait</td>
-	<td>//input[@value='Next']</td>
-	<td></td>
+	<td>type</td>
+	<td>startdate_1</td>
+	<td>1/1/2002</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>stopdate_1</td>
+	<td>12/31/2021</td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//button[@type='button']</td>
+	<td>//div[@id='potentialpresetitems']/div[3]/button[@type='button']</td>
 	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>startdate_2</td>
+	<td>1/1/2003</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>stopdate_2</td>
+	<td>12/31/2023</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='potentialpresetitems']/div[4]/button[@type='button']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>500</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>startdate_3</td>
+	<td>1/1/2004</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>stopdate_3</td>
+	<td>12/31/2024</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -93,12 +183,17 @@
 </tr>
 <tr>
 	<td>assertConfirmation</td>
-	<td>Your view contains no artefacts.&nbsp;&nbsp;Do you really want to give these users access to the view?</td>
+	<td>exact:Your View contains no blocks.&nbsp;&nbsp;Do you really want to give these users access to the View?</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
 	<td>View created successfully</td>
+	<td></td>
+</tr>
+<tr>
+	<td>setSpeed</td>
+	<td>0</td>
 	<td></td>
 </tr>
 
