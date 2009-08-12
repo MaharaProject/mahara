@@ -49,7 +49,7 @@ fi
 # TODO: this will need to change when FF3.5 becomes the default.
 if [ $FF35 == 1  ]
 then
-  export FIREFOX_PROFILE_TEMPLATE_DIR="firefox-profiles/3.5"
+  export FIREFOX_PROFILE_TEMPLATE_DIR="../firefox-profiles/3.5"
   CHROME="*chrome /usr/lib/firefox-3.5/firefox-3.5"
 else
   # we need to use this (and set localhost:4444 as proxy in the template)
@@ -57,7 +57,7 @@ else
   # pifirefox, firefox+proxyInjection) all fail in some ways (e.g., gallery
   # doesn't return, possibly waiting for stats.telecom.co.nz?).  With this,
   # we can then use *chrome with explicit proxy injection.
-  export FIREFOX_PROFILE_TEMPLATE_DIR="firefox-profiles/3.0"
+  export FIREFOX_PROFILE_TEMPLATE_DIR="../firefox-profiles/3.0"
   CHROME="*chrome"
 fi
 
