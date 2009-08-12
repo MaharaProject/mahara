@@ -83,8 +83,9 @@ class Client {
         $timestamp_receive = time();
         $remote_timestamp  = null;
 
-        if ($this->rawresponse == false) {
-            throw new XmlrpcClientException('Curl error: '.curl_errno($ch) .':'. curl_error($ch));
+        $curl_errno = curl_errno($ch);
+        if ($curl_errno || $this->rawresponse == false) {
+            throw new XmlrpcClientException('Curl error: ' . $curl_errno . ': ' . curl_error($ch));
             return false;
         }
 
