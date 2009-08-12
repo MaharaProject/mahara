@@ -8,54 +8,19 @@
 # we clear the mahara database (the tests start with an install and
 # assumes the tables aren't there).  the ff assumes that we can sudo
 # to postgres with no password, and that the database and user are
-# mahara
+# mahara. FIXME: this won't work for everyone yet.  What works for
+# everyone?
 
-echo "drop database mahara;create database mahara with encoding='UTF8';grant all on database mahara to mahara;" | sudo -u postgres psql
-
-
-DEBUG_SELENIUM_SERVER_OUTPUT=/tmp/selenium-server.$USER.$DISPLAY.tmp
-
-BGTRUE=1
-BGFALSE=0
-BG=$BGFALSE
-
-PORT=" -port 4444 "
-
-if [ $1 = 'hudson' ]
-then
-  BG=$BGTRUE
-fi
-
-if [ $1 = 'tiger-hudson' ]
-then
-  PORT=" -port 4445 "
-  BG=$BGTRUE
-fi
+#echo "drop database mahara;create database mahara with encoding='UTF8';grant all on database mahara to mahara;" | sudo -u postgres psql
 
 XMS=64m
 XMX=256m
 
-# Use this script to start the selenium server, if you're
-# going to be running selenium tests via JUnit.
-# There should be a java (1.5 and 1.6 will work, 1.4 will
-# probably work) executable in your path.
+# Use this script to start the selenium server. A JDK is required.
+# only sun 1.6 JDKs have been tested with this so far.
 
-# configs for nemo.  we will likely need to 
-if [ `hostname` == 'nemo' ]
-then
-  export PATH=/usr/lib/iceweasel:$PATH
-
-  # used by the selenium-server. If the browser is in proxy injection mode
-  # or is explicitly using localhost:4444 as its proxy then the selenium-server
-  # browses outward using this proxy.
-  #export PROXYHOST=192.168.2.239
-  export PROXYHOST=192.168.2.228
-  export PROXYPORT=3128
-fi
-
-  # for now, we use a single set of configs (since nemo is now able to
-  # use chrome
-  #export SINGLEWINDOW="-multiWindow"
+# for now, we use a single set of configs (assumes *chrome and FF3.0
+# or iceweasel equivalent).
   export SINGLEWINDOW="-singleWindow"
   export REUSE="-browserSessionReuse"
   unset PROXYINJECTION
@@ -67,11 +32,11 @@ then
   FF35=1
 fi
 
-if [ `hostname` = 'quimpo' ]
-then
- FF35=1
-fi
-
+# NOTE: the firefox-3.5* directory keeps changing name as new versions
+# are created (3.5.1, 3.5.2).  Create a /usr/lib/firefox-3.5 link that
+# points to the real firefox 3.5 directory on your machine.  Ignore this
+# if you never use FF3.5. 
+# TODO: this will need to change when FF3.5 becomes the default.
 if [ $FF35 == 1  ]
 then
   export FIREFOX_PROFILE_TEMPLATE_DIR="firefox-profiles/3.5"
@@ -82,7 +47,7 @@ else
   # pifirefox, firefox+proxyInjection) all fail in some ways (e.g., gallery
   # doesn't return, possibly waiting for stats.telecom.co.nz?).  With this,
   # we can then use *chrome with explicit proxy injection.
-  export FIREFOX_PROFILE_TEMPLATE_DIR="fixtures-profiles/3.0"
+  export FIREFOX_PROFILE_TEMPLATE_DIR="firefox-profiles/3.0"
   CHROME="*chrome"
 fi
 
@@ -103,35 +68,10 @@ else
 fi
 export FFTMPL
 
-if [ ! -z $DEBUG ]
-then
-   DEBUG=" -debug "
-else
-   DEBUG=""
-fi
+   cmdline="java $HTTP_PROXY -Xms$XMS -Xmx$XMX -jar ./server//selenium-server.jar -trustAllSSLCertificates $SINGLEWINDOW $FFTMPL $PROXYINJECTION $REUSE -htmlSuite *chrome http://localmahara.org ./TestSuite.html ./results.html $SELENIUM_EXTRA"
 
-# avoid file descriptor leak per http://wiki.hudson-ci.org/display/HUDSON/Spawning+processes+from+build
-# from http://blog.apokalyptik.com/2007/10/24/bash-tip-closing-file-descriptors
-
-if [ $BG == $BGTRUE ]
-then
-   exec 0>&- # close stdin
-   exec 1>&- # close stdout 
-   exec 2>&- # close stderr
-fi
-
-   cmdline="java $HTTP_PROXY -Xms$XMS -Xmx$XMX -jar ./server//selenium-server.jar $PORT -trustAllSSLCertificates $DEBUG $SINGLEWINDOW $FFTMPL $PROXYINJECTION $REUSE -htmlSuite *chrome http://localmahara.org ./TestSuite.html ./results.html $SELENIUM_EXTRA"
-
-if [ $BG == $BGTRUE ]
-then
-  echo $cmdline > $DEBUG_SELENIUM_SERVER_OUTPUT
-  $cmdline >> $DEBUG_SELENIUM_SERVER_OUTPUT 2>&1 &
-  pid=$!
-  sleep 10
-  echo $pid > selenium-server.$DISPLAY.pid
-else
   echo $cmdline 
   $cmdline 
-fi
 
+echo "run firefox ./results.html to see the test results"
 exit 0
