@@ -2345,32 +2345,32 @@ function format_whitespace($text) {
 function clean_html($text) {
     require_once('htmlpurifier/HTMLPurifier.auto.php');
     $config = HTMLPurifier_Config::createDefault();
-    $config->set('Cache', 'SerializerPath', get_config('dataroot') . 'htmlpurifier');
+    $config->set('Cache.SerializerPath', get_config('dataroot') . 'htmlpurifier');
 
-    $config->set('Core', 'Encoding', 'UTF-8');
-    $config->set('HTML', 'Doctype', 'HTML 4.01 Transitional');
-    $config->set('AutoFormat', 'Linkify', true);
+    $config->set('Core.Encoding', 'UTF-8');
+    $config->set('HTML.Doctype', 'HTML 4.01 Transitional');
+    $config->set('AutoFormat.Linkify', true);
 
     $customfilters = array();
     if (get_config('filters')) {
         foreach (unserialize(get_config('filters')) as $filter) {
             if ($filter->file == 'YouTube') {
-                $config->set('Filter', 'YouTube', true);
+                $config->set('Filter.YouTube', true);
             } else {
                 require_once(get_config('libroot') . 'htmlpurifiercustom/' . $filter->file . '.php');
                 $classname = 'HTMLPurifier_Filter_' . $filter->file;
                 $customfilters[] = new $classname();
             }
         }
-        $config->set('Filter', 'Custom', $customfilters);
+        $config->set('Filter.Custom', $customfilters);
     }
 
     // These settings help identify the configuration definition. If the 
     // definition (the $def object below) is changed (e.g. new method calls 
     // made on it), the DefinitionRev needs to be increased. See
     // http://htmlpurifier.org/live/configdoc/plain.html#HTML.DefinitionID
-    $config->set('HTML', 'DefinitionID', 'Mahara customisations to default config');
-    $config->set('HTML', 'DefinitionRev', 1);
+    $config->set('HTML.DefinitionID', 'Mahara customisations to default config');
+    $config->set('HTML.DefinitionRev', 1);
 
     $def =& $config->getHTMLDefinition(true);
     $def->addAttribute('a', 'target', 'Enum#_blank,_self,_target,_top');

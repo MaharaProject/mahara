@@ -124,8 +124,8 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
         static $embedsources = array(
             // www.youtube.com
             array(
-                'match' => '#.*youtube\.com.*v(=|\/)([a-zA-Z0-9_-]+).*#',
-                'url'   => 'http://www.youtube.com/v/$2'
+                'match' => '#.*youtube\.com.*(v|(cp))(=|\/)([a-zA-Z0-9_=-]+).*#',
+                'url'   => 'http://www.youtube.com/$1/$4'
             ),
             // video.google.com
             array(
