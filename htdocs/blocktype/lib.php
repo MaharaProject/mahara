@@ -636,7 +636,7 @@ class BlockInstance {
         }
 
         $form = array(
-            'name' => 'cb_' . $this->get('id'),
+            'name' => 'instconf',
             'renderer' => 'maharatable',
             'validatecallback' => array(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_validate'),
             'successcallback'  => array($this, 'instance_config_store'),
@@ -649,6 +649,8 @@ class BlockInstance {
             'viewinstitution' => $this->get_view()->get('institution'),
             'institution' => $this->get_view()->get('institution'),
             'configdirs' => $configdirs,
+            'plugintype' => 'blocktype',
+            'pluginname' => $this->get('blocktype'),
         );
 
         if (param_variable('action_acsearch_id_' . $this->get('id'), false)) {
