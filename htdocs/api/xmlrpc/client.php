@@ -65,6 +65,13 @@ class Client {
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->encryptedrequest);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml charset=UTF-8", 'Expect: '));
 
+        if (strpos($URL, 'https://') === 0) {
+            if ($cainfo = get_config('cacertinfo')) {
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+                curl_setopt($ch, CURLOPT_CAINFO, $cainfo);
+            }
+        }
+
         $timestamp_send    = time();
         $this->rawresponse = curl_exec($ch);
 
