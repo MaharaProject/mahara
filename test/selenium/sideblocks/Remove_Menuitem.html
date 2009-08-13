@@ -32,13 +32,33 @@
 	<td>label=Logged in links and resources</td>
 </tr>
 <tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td>sleep a bit here.&nbsp;&nbsp;json needs to complete</td>
+</tr>
+<tr>
 	<td>waitForTextPresent</td>
 	<td>Test Menu Link</td>
 	<td></td>
 </tr>
 <tr>
-	<td>setSpeed</td>
-	<td>500</td>
+	<td>waitForElementPresent</td>
+	<td>//tr[contains(td[2], &quot;Test Menu Link&quot;)]/td/input[@value=&quot;Delete&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForVisible</td>
+	<td>//tr[contains(td[2], &quot;Test Menu Link&quot;)]/td/input[@value=&quot;Delete&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>//tr[contains(td[2], &quot;Test Menu Link&quot;)]/td/input[@value=&quot;Delete&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementVisible</td>
+	<td>//tr[contains(td[2], &quot;Test Menu Link&quot;)]/td/input[@value=&quot;Delete&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -52,13 +72,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>assertConfirmation</td>
+	<td>waitForConfirmation</td>
 	<td>Do you really want to delete this item?</td>
 	<td></td>
 </tr>
 <tr>
-	<td>assertElementNotPresent</td>
-	<td>//tr[@id='menuitem_5']/td[2]</td>
+	<td>waitForElementNotPresent</td>
+	<td>//tr[contains(td[2], &quot;Test Menu Link&quot;)]</td>
 	<td></td>
 </tr>
 <tr>

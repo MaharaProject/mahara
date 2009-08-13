@@ -17,11 +17,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>setSpeed</td>
-	<td>500</td>
-	<td></td>
-</tr>
-<tr>
 	<td>clickAndWait</td>
 	<td>link=Site Administration</td>
 	<td></td>
@@ -47,6 +42,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>setSpeed</td>
+	<td>200</td>
+	<td></td>
+</tr>
+<tr>
 	<td>type</td>
 	<td>namenew</td>
 	<td>Test Menu Link</td>
@@ -57,8 +57,23 @@
 	<td>http://www.mahara.org/</td>
 </tr>
 <tr>
+	<td>assertValue</td>
+	<td>namenew</td>
+	<td>Test Menu Link</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>linkedtonew</td>
+	<td>http://www.mahara.org/</td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//input[@value='Add']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>setSpeed</td>
+	<td>0</td>
 	<td></td>
 </tr>
 <tr>
@@ -67,19 +82,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>assertTextPresent</td>
-	<td>Test Menu Link</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertTextPresent</td>
+	<td>assertText</td>
+	<td>//tr/td[3]/a</td>
 	<td>exact:http://www.mahara.org/</td>
-	<td></td>
-</tr>
-<tr>
-	<td>setSpeed</td>
-	<td>0</td>
-	<td></td>
 </tr>
 
 </tbody></table>
