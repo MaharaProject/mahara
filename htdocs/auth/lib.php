@@ -1195,7 +1195,10 @@ function login_submit(Pieform $form, $values) {
                     $USER->email = null;
                 }
                 try {
-                    create_user($USER, array(), $institution);
+                    // If this authinstance is a parent auth for some xmlrpc authinstance, pass it along to create_user
+                    // so that this username also gets recorded as the username for sso from the remote sites.
+                    $remoteauth = count_records('auth_instance_config', 'field', 'parent', 'value', $authinstance->id) ? $authinstance : null;
+                    create_user($USER, array(), $institution, $remoteauth);
                     $USER->reanimate($USER->id, $authinstance->id);
                 }
                 catch (Exception $e) {
