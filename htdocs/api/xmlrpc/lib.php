@@ -624,6 +624,9 @@ function get_public_key($uri, $application=null) {
 
     $result = mahara_http_request($config);
 
+    if (!empty($result->errno)) {
+        throw new XmlrpcClientException('Curl error: ' . $result->errno . ': ' . $result->error);
+    }
     if (empty($result->data)) {
         throw new XmlrpcClientException('CURL connection failed');
     }

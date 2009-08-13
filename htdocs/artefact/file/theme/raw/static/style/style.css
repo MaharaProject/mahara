@@ -71,7 +71,7 @@ form#files .filelist td {
 	padding: .25em;
 }
 .filelist tr.highlight-file td {
-    background: #fffcd8 url(../images/highlight-bg.gif) repeat left top !important;
+    background: #fffcd8 url(../../images/highlight-bg.gif) repeat left top !important;
     font-weight: bold;
 }
 .filelist table table.editpermissions {

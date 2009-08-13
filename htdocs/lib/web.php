@@ -2824,11 +2824,22 @@ function mahara_http_request($config) {
         }
     }
 
+    if (strpos($config[CURLOPT_URL], 'https://') === 0) {
+        if ($cainfo = get_config('cacertinfo')) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+            curl_setopt($ch, CURLOPT_CAINFO, $cainfo);
+        }
+    }
+
     $result = new StdClass();
     $result->data = curl_exec($ch);
     $result->info = curl_getinfo($ch);
     $result->error = curl_error($ch);
+    $result->errno = curl_errno($ch);
 
+    if ($result->errno) {
+        log_warn('Curl error: ' . $result->errno . ': ' . $result->error);
+    }
 
     curl_close($ch);
 
