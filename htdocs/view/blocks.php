@@ -121,7 +121,7 @@ $extraconfig = array(
 );
 
 $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
-foreach ($THEME->get_url('style/style.css', true, 'artefact/file') as $sheet) {
+foreach (array_reverse($THEME->get_url('style/style.css', true, 'artefact/file')) as $sheet) {
     $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . $sheet . '">';
 }
 
