@@ -2835,9 +2835,10 @@ function mahara_http_request($config) {
     $result->data = curl_exec($ch);
     $result->info = curl_getinfo($ch);
     $result->error = curl_error($ch);
+    $result->errno = curl_errno($ch);
 
-    if ($curl_errno = curl_errno($ch)) {
-        log_warn('Curl error: ' . $curl_errno . ': ' . $result->error);
+    if ($result->errno) {
+        log_warn('Curl error: ' . $result->errno . ': ' . $result->error);
     }
 
     curl_close($ch);
