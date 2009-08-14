@@ -214,6 +214,7 @@ class PluginExportLeap extends PluginExport {
             $this->smarty->assign('summary', $view->get('description'));
             $this->smarty->assign('contenttype', 'html');
             $this->smarty->assign('content', $view->build_columns());
+            $this->smarty->assign('ownerformat', $view->get('ownerformat'));
             $this->smarty->assign('leaptype', 'selection');
             $this->smarty->assign('categories', array(
                 array(
@@ -222,7 +223,7 @@ class PluginExportLeap extends PluginExport {
                 )
             ));
             $this->smarty->assign('links', $this->get_links_for_view($view->get('id')));
-            $this->xml .= $this->smarty->fetch("export:leap:entry.tpl");
+            $this->xml .= $this->smarty->fetch("export:leap:view.tpl");
         }
     }
 
