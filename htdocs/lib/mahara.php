@@ -507,8 +507,6 @@ function get_language_root($language=null) {
 
 /**
  * Return a list of available themes.
- *
- * Themes _must_ have a config.php, and it should specify a theme name.
  */
 function get_themes() {
     $themes = array();
