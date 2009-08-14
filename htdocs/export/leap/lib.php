@@ -210,8 +210,8 @@ class PluginExportLeap extends PluginExport {
             $this->smarty->assign('id', 'portfolio:view' . $view->get('id'));
             $this->smarty->assign('updated', self::format_rfc3339_date(strtotime($view->get('mtime'))));
             $this->smarty->assign('created', self::format_rfc3339_date(strtotime($view->get('ctime'))));
-            // TODO this is wrong - view description is HTML, summary should be text
-            //$this->smarty->assign('summary', $view->get('description'));
+            $this->smarty->assign('summarytype', 'html');
+            $this->smarty->assign('summary', $view->get('description'));
             $this->smarty->assign('contenttype', 'html');
             $this->smarty->assign('content', $view->build_columns());
             $this->smarty->assign('leaptype', 'selection');
