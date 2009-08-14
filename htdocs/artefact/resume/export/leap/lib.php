@@ -252,18 +252,22 @@ abstract class LeapExportElementResumeCompositeChild extends LeapExportElement {
         $this->smarty->assign('artefacttype', 'pseudo:' . $this->parentartefact->get('artefacttype'));
         $this->smarty->assign('artefactplugin', 'resume');
         $this->smarty->assign('id', 'portfolio:' . $this->get_id());
-        if (isset($this->entrydata['start']) && isset($this->entrydata['end'])) {
-            $this->entrydata['content'] .= "\n\n";
-            $lines = array();
-            if (isset($this->entrydata['start']) && $this->entrydata['start']) {
-                $lines[] = get_string('startdate', 'artefact.resume') . ': ' . $this->entrydata['start'];
-            }
-            if (isset($this->entrydata['end']) && $this->entrydata['end']) {
-                $lines[] = get_string('enddate', 'artefact.resume') . ': ' . $this->entrydata['end'];
-            }
-            $this->entrydata['content'] .= implode("\n", $lines);
-        }
         foreach ($this->entrydata as $field => $value) {
+            if ($field == 'start' || $field == 'end') {
+                // Special case. Start and end are dates as per 
+                // http://wiki.cetis.ac.uk/LEAP2A_types#activity - but Mahara 
+                // allows date input for resume items as text fields. So we try 
+                // and coerce them into "real" dates if possible. 
+                // Unfortunately, strtotime isn't a mind reader, so this is 
+                // going to result in some invalid dates...
+                if (($date = strtotime($value)) === false) {
+                    // TODO What to do when we can't establish a real date?
+                }
+                else {
+                    $this->smarty->assign($field . '_date', PluginExportLeap::format_rfc3339_date($date));
+                    $this->smarty->assign($field . '_label', $value);
+                }
+            }
             $this->smarty->assign($field, $value);
         }
         $this->smarty->assign('leaptype', $this->get_leap_type());

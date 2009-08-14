@@ -1,6 +1,7 @@
 TODOs for export LEAP plugin
 ============================
 
+* Resume dates on export - can't export them as leap:dates, it has to be in the content, yet we have to import them again properly too
 * Export views properly!
  - flag artefacts in the export properly that aren't otherwise surrounded by <a> or similar (e.g. blogs)
  - rewrite links to views when the views are part of the export
