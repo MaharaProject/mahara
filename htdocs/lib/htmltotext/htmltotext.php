@@ -34,9 +34,8 @@ class HtmltoText {
     private $lines;
     private $line;
     private $prefix;
-    private $blockquote;
-    private $list;
     private $nls;
+    private $indent;
 
     public function __construct($html) {
         $doc = new domDocument;
@@ -46,8 +45,8 @@ class HtmltoText {
         $this->lines = array();
         $this->line = '';
         $this->prefix = '';
-        $this->blockquote = 0;
         $this->pre = 0;
+        $this->indent = array();
     }
 
     public function text() {
@@ -81,18 +80,23 @@ class HtmltoText {
         $this->nls = 2;
     }
 
+    private $indentfirstchar = array('bq' => '> ', 'list' => '- ');
+    private $indentchar      = array('bq' => '> ', 'list' => '  ');
+
     private function output($str) {
         if ($this->nls) {
             $this->wrap_line();
             $this->prefix = "\n";
-            $this->line = '';
-            $bq = $this->blockquote ? str_repeat('>', $this->blockquote) . ' ' : '';
-            $this->prefix .= $bq;
-            $this->line .= str_repeat("$bq\n", $this->nls - 1) . $bq;
-            if ($this->list) {
-                $list = str_repeat(' ', $this->list);
-                $this->prefix .= $list . '  ';
-                $this->line .= $list . '- ';
+            $this->line = str_repeat("\n", $this->nls - 1);
+            $totalindents = count($this->indent);
+            if ($totalindents) {
+                $this->prefix .= ' ';
+                $this->line .= ' ';
+                for ($i = 0; $i < $totalindents - 1; $i++) {
+                    $this->line .= $this->indentchar[$this->indent[$i]];
+                }
+                $this->prefix .= $this->line . $this->indentchar[$this->indent[$i]];
+                $this->line .= $this->indentfirstchar[$this->indent[$i]];
             }
             $this->nls = 0;
         }
@@ -160,9 +164,9 @@ class HtmltoText {
 
             case 'blockquote':
                 $this->para();
-                $this->blockquote += 1;
+                $this->indent[] = 'bq';
                 $this->process_children($node);
-                $this->blockquote -= 1;
+                array_pop($this->indent);
                 $this->para();
                 break;
 
@@ -196,16 +200,15 @@ class HtmltoText {
                 break;
 
             case 'ol': case 'ul':
-                $this->list += 1;
                 $this->para();
+                $this->indent[] = 'list';
                 $this->process_children($node);
                 $this->para();
-                $this->list -= 1;
+                array_pop($this->indent);
                 break;
                 
             case 'li':
                 $this->nl();
-                $this->output(str_repeat(' ', $this->list) . '- ');
                 $this->process_children($node);
                 $this->nl();
                 break;
