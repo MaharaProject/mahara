@@ -663,8 +663,10 @@ class HtmlExportOutputFilter {
     private function get_folder_path_for_file(ArtefactTypeFileBase $file) {
         if ($this->folderdata === null) {
             $this->folderdata = get_records_select_assoc('artefact', "artefacttype = 'folder' AND owner = ?", array($file->get('owner')));
-            foreach ($this->folderdata as &$folder) {
-                $folder->title = PluginExportHtml::sanitise_path($folder->title);
+            if ($this->folderdata) {
+                foreach ($this->folderdata as &$folder) {
+                    $folder->title = PluginExportHtml::sanitise_path($folder->title);
+                }
             }
         }
         $folderpath = ArtefactTypeFileBase::get_full_path($file->get('parent'), $this->folderdata);
