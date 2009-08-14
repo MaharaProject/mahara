@@ -27,7 +27,8 @@
 defined('INTERNAL') || die();
 
 /**
-* LEAP export plugin.  See http://wiki.cetis.ac.uk/LEAP2A_specification
+* LEAP export plugin.  See http://wiki.cetis.ac.uk/LEAP2A_specification and
+* http://wiki.mahara.org/Developer_Area/Import%2f%2fExport/LEAP_Export
 */
 class PluginExportLeap extends PluginExport {
 
