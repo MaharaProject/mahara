@@ -1566,6 +1566,19 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $sec
     global $THEME;
     // TODO: remove the hax for ie, I'm sure we can do this with a PNG file
     // I see no reason why IE has to drag the quality of the interwebs down with it
+
+    // Build a unique ID for the help div
+    $parentelement = 'help-'.$plugintype.'-'.$pluginname;
+    if ($element != '') {
+        $parentelement .= '-'.$element;
+    }
+    else if ($page != '') {
+        $parentelement .= '-'.$page;
+    }
+    else if ($section != '') {
+        $parentelement .= '-'.$section;
+    }
+
     $imageext = (isset($_SERVER['HTTP_USER_AGENT']) && false !== stripos($_SERVER['HTTP_USER_AGENT'], 'msie 6.0')) ? 'gif' : 'png';
     return ' <span class="help"><a href="" onclick="'. 
         hsc(
@@ -1573,8 +1586,10 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $sec
             json_encode($element) . ',' . json_encode($plugintype) . ',' . 
             json_encode($pluginname) . ',' . json_encode($page) . ',' . 
             json_encode($section)
-            . ',this); return false;'
-        ) . '"><img src="' . $THEME->get_url('images/icon_help.' . $imageext) . '" alt="' . get_string('Help') . '" title="' . get_string('Help') . '"></a></span>';
+            . ',this,' .
+            json_encode($parentelement) .
+            '); return false;'
+        ) . '"><img src="' . $THEME->get_url('images/icon_help.' . $imageext) . '" alt="' . get_string('Help') . '" title="' . get_string('Help') . '"></a></span><span id="'.$parentelement.'"></span>';
 }
 
 function pieform_get_help(Pieform $form, $element) {
