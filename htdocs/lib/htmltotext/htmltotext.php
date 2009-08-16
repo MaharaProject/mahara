@@ -34,7 +34,7 @@ class HtmltoText {
     private $lines;
     private $line;
     private $prefix;
-    private $nls;
+    private $newlines;
     private $indent;
 
     public function __construct($html) {
@@ -70,24 +70,24 @@ class HtmltoText {
         $this->lines[] = wordwrap($this->line, 75, $this->prefix);
     }
 
-    private function nl() {
-        if ($this->nls == 0) {
-            $this->nls = 1;
+    private function newline() {
+        if ($this->newlines == 0) {
+            $this->newlines = 1;
         }
     }
 
     private function para() {
-        $this->nls = 2;
+        $this->newlines = 2;
     }
 
     private $indentfirstchar = array('bq' => '> ', 'list' => '- ');
     private $indentchar      = array('bq' => '> ', 'list' => '  ');
 
     private function output($str) {
-        if ($this->nls) {
+        if ($this->newlines) {
             $this->wrap_line();
             $this->prefix = "\n";
-            $this->line = str_repeat("\n", $this->nls - 1);
+            $this->line = str_repeat("\n", $this->newlines - 1);
             $totalindents = count($this->indent);
             if ($totalindents) {
                 $this->prefix .= ' ';
@@ -98,7 +98,7 @@ class HtmltoText {
                 $this->prefix .= $this->line . $this->indentchar[$this->indent[$i]];
                 $this->line .= $this->indentfirstchar[$this->indent[$i]];
             }
-            $this->nls = 0;
+            $this->newlines = 0;
         }
         $this->line .= $str;
     }
@@ -113,6 +113,12 @@ class HtmltoText {
 
     private function process_node($node) {
         if ($node->nodeType === XML_TEXT_NODE) {
+            if ($this->newlines) {
+                $text = ltrim($node->nodeValue);
+                if (empty($text)) {
+                    return;
+                }
+            }
             $this->output($node->nodeValue);
         }
         else if ($node->nodeType === XML_ELEMENT_NODE) {
@@ -129,7 +135,7 @@ class HtmltoText {
                 return;
 
             case 'br':
-                $this->nl();
+                $this->newline();
                 return;
 
             case 'img':
@@ -189,9 +195,9 @@ class HtmltoText {
                 break;
 
             case 'dt':
-                $this->nl();
+                $this->newline();
                 $this->process_children($node);
-                $this->nl();
+                $this->newline();
                 break;
                 
             case 'dd':
@@ -208,9 +214,9 @@ class HtmltoText {
                 break;
                 
             case 'li':
-                $this->nl();
+                $this->newline();
                 $this->process_children($node);
-                $this->nl();
+                $this->newline();
                 break;
 
             case 'table': case 'tr':
@@ -219,7 +225,7 @@ class HtmltoText {
                 break;
 
             case 'td':
-                $this->nl();
+                $this->newline();
                 $this->process_children($node);
                 break;
 
