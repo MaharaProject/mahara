@@ -1411,7 +1411,7 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $sec
             . ',this,' .
             json_encode($parentelement) .
             '); return false;'
-        ) . '"><img src="' . theme_get_url('images/icon_help.' . $imageext) . '" alt="' . get_string('Help') . '" title="' . get_string('Help') . '"></a></span><div id="'.$parentelement.'"></div>';
+        ) . '"><img src="' . theme_get_url('images/icon_help.' . $imageext) . '" alt="' . get_string('Help') . '" title="' . get_string('Help') . '"></a></span><span id="'.$parentelement.'"></span>';
 }
 
 function pieform_get_help(Pieform $form, $element) {
