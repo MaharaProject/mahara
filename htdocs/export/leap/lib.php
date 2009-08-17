@@ -274,14 +274,11 @@ class PluginExportLeap extends PluginExport {
             };
             $element = null;
             // go see if we have to do anything special for this artefact type.
-            try {
-                safe_require('export', 'leap/' . $artefact->get_plugin_name());
-                $classname = 'LeapExportElement' . ucfirst($artefact->get('artefacttype'));
-                if (class_exists($classname)) {
-                    $element = new $classname($artefact, $this);
-                }
+            safe_require('export', 'leap/' . $artefact->get_plugin_name());
+            $classname = 'LeapExportElement' . ucfirst($artefact->get('artefacttype'));
+            if (class_exists($classname)) {
+                $element = new $classname($artefact, $this);
             }
-            catch (Exception $e) { }// overriding this is not required.
 
             if (is_null($element)) {
                 $element = new LeapExportElement($artefact, $this);
