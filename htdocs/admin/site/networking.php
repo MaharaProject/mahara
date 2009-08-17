@@ -72,7 +72,7 @@ $networkingform = pieform(
                 'type'         => 'html',
                 'title'        => get_string('publickey','admin'),
                 'description'  => get_string('publickeydescription2', 'admin', 365),
-                'value'        => '<pre style="font-size: 0.7em">'.$openssl->certificate.'</pre>'
+                'value'        => '<pre style="font-size: 0.7em; white-space: pre;">'.$openssl->certificate.'</pre>'
             ),
             'expires' => array(
                 'type'         => 'html',
