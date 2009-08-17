@@ -98,8 +98,8 @@ class HtmltoText {
         $this->newlines = 2;
     }
 
-    private $indentfirstchar = array('bq' => '> ', 'list' => '- ');
-    private $indentchar      = array('bq' => '> ', 'list' => '  ');
+    private $indentfirstchar = array('bq' => '> ', 'list' => '- ', 'dd' => '   ');
+    private $indentchar      = array('bq' => '> ', 'list' => '  ', 'dd' => '   ');
 
     private function output($str, $wrap=true) {
         if ($this->newlines) {
@@ -221,14 +221,17 @@ class HtmltoText {
                 break;
 
             case 'dt':
-                $this->newline();
+                $this->para();
                 $this->process_children($node);
                 $this->newline();
                 break;
-                
+
             case 'dd':
-                $this->output('    ');
+                $this->newline();
+                $this->indent[] = 'dd';
                 $this->process_children($node);
+                $this->newline();
+                array_pop($this->indent);
                 break;
 
             case 'ol': case 'ul':
