@@ -44,17 +44,10 @@ defined('INTERNAL') || die();
 class LeapImportInternal extends LeapImportArtefactPlugin {
 
     /**
-     * Dummy strategy used to bags the person entry corresponding to the author
-     */
-    const STRATEGY_DUMMY = 1;
-
-    /**
      * For grabbing entries representing profile data that can't be exported as 
      * persondata
      */
-    const STRATEGY_IMPORT_AS_PROFILE_FIELD = 2;
-
-    private static $persondataid = null;
+    const STRATEGY_IMPORT_AS_PROFILE_FIELD = 1;
 
     /**
      * Lookup table for some of the persondata fields.
@@ -155,40 +148,17 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImport $importer) {
         $strategies = array();
 
-        if (is_null(self::$persondataid)) {
-            $author = $importer->get('xml')->xpath('//a:feed/a:author[1]');
-            $author = $author[0];
-            if (isset($author->uri) && $importer->get_entry_by_id((string)$author->uri)) {
-                self::$persondataid = (string)$author->uri;
-            }
-            else {
-                self::$persondataid = false;
-            }
-        }
-
-        // TODO: also check other element has the right leaptype (person)
-        //$correctrdftype = count($entry->xpath('rdf:type['
-        //    . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'selection') . ']')) == 1;
-        if ((string)$entry->id == self::$persondataid) {
+        // If it's a raw entry with the right mahara:plugin and mahara:type 
+        // we should be able to import it
+        $correctrdftype = count($entry->xpath('rdf:type['
+            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'entry') . ']')) == 1;
+        $correctplugintype = count($entry->xpath('mahara:artefactplugin[@mahara:plugin="internal"]')) == 1;
+        if ($correctrdftype && $correctplugintype) {
             $strategies[] = array(
-                'strategy' => self::STRATEGY_DUMMY,
+                'strategy' => self::STRATEGY_IMPORT_AS_PROFILE_FIELD,
                 'score'    => 100,
                 'other_required_entries' => array(),
             );
-        }
-        else {
-            // If it's a raw entry with the right mahara:plugin and mahara:type 
-            // we should be able to import it
-            $correctrdftype = count($entry->xpath('rdf:type['
-                . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'entry') . ']')) == 1;
-            $correctplugintype = count($entry->xpath('mahara:artefactplugin[@mahara:plugin="internal"]')) == 1;
-            if ($correctrdftype && $correctplugintype) {
-                $strategies[] = array(
-                    'strategy' => self::STRATEGY_IMPORT_AS_PROFILE_FIELD,
-                    'score'    => 100,
-                    'other_required_entries' => array(),
-                );
-            }
         }
 
         return $strategies;
@@ -197,9 +167,6 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     public static function import_using_strategy(SimpleXMLElement $entry, PluginImport $importer, $strategy, array $otherentries) {
         $artefactmapping = array();
         switch ($strategy) {
-        case self::STRATEGY_DUMMY:
-            // This space intentionally left blank
-            break;
         case self::STRATEGY_IMPORT_AS_PROFILE_FIELD:
             // Based on the mahara:type, we might be able to import it as 
             // something useful - otherwise, there is nothing we can do. The 
@@ -241,10 +208,10 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
      *
      * @param PluginImport $importer The importer
      */
-    public static function import_author_data(PluginImport $importer) {
-        if (self::$persondataid) {
+    public static function import_author_data(PluginImport $importer, $persondataid) {
+        if ($persondataid) {
             // Grab all the leap:persondata elements and import them
-            $person = $importer->get_entry_by_id(self::$persondataid);
+            $person = $importer->get_entry_by_id($persondataid);
 
             // The introduction comes from the entry content
             $introduction = new ArtefactTypeIntroduction(0, array('owner' => $importer->get('usr')));
