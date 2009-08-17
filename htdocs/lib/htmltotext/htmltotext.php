@@ -43,8 +43,7 @@ class HtmltoText {
         $doc->loadHTML($html);
         $this->body = $doc->getElementsByTagName('html')->item(0)->getElementsByTagName('body')->item(0);
         $this->lines = array();
-        $this->line = (object) array('text' => '', 'wrap' => true);
-        $this->prefix = '';
+        $this->line = (object) array('text' => '', 'wrap' => true, 'prefix' => "\n");
         $this->pre = 0;
         $this->indent = array();
         $this->baseurl = $baseurl;
@@ -82,7 +81,7 @@ class HtmltoText {
 
     private function wrap_line() {
         if ($this->line->wrap) {
-            $this->lines[] = wordwrap($this->line->text, 75, $this->prefix);
+            $this->lines[] = wordwrap($this->line->text, 75, $this->line->prefix);
         }
         else {
             $this->lines[] = $this->line->text;
@@ -105,17 +104,18 @@ class HtmltoText {
     private function output($str, $wrap=true) {
         if ($this->newlines) {
             $this->wrap_line();
-            $this->prefix = "\n";
-            $this->line = (object) array('text' => str_repeat("\n", $this->newlines - 1), 'wrap' => $wrap);
+            $this->line = (object) array('text' => '', 'wrap' => $wrap, 'prefix' => "\n");
             $totalindents = count($this->indent);
             if ($totalindents) {
-                $this->prefix .= ' ';
                 $this->line->text .= ' ';
                 for ($i = 0; $i < $totalindents - 1; $i++) {
                     $this->line->text .= $this->indentchar[$this->indent[$i]];
                 }
-                $this->prefix .= $this->line->text . $this->indentchar[$this->indent[$i]];
+                $this->line->prefix .= $this->line->text . $this->indentchar[$this->indent[$i]];
                 $this->line->text .= $this->indentfirstchar[$this->indent[$i]];
+            }
+            if ($this->newlines == 2) {
+                $this->line->text = "\n" . $this->line->text;
             }
             $this->newlines = 0;
         }
