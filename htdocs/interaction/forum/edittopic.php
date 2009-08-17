@@ -173,7 +173,7 @@ function addtopic_submit(Pieform $form, $values) {
             'closed' => isset($values['closed']) && $values['closed'] ? 1 : 0
         ), 'id', true
     );
-    insert_record(
+    $postid = insert_record(
         'interaction_forum_post',
         (object)array(
             'topic' => $topicid,
@@ -181,7 +181,8 @@ function addtopic_submit(Pieform $form, $values) {
             'subject' => $values['subject'],
             'body' => $values['body'],
             'ctime' =>  db_format_timestamp(time())
-        )
+        ),
+        'id', true
     );
     if (!record_exists('interaction_forum_subscription_forum', 'user', $USER->get('id'), 'forum', $forumid)) {
         insert_record('interaction_forum_subscription_topic', (object)array(
@@ -191,6 +192,10 @@ function addtopic_submit(Pieform $form, $values) {
         ));
     }
     db_commit();
+    $delay = get_config_plugin('interaction', 'forum', 'postdelay');
+    if (!is_null($delay) && $delay == 0) {
+        PluginInteractionForum::interaction_forum_new_post(array($postid));
+    }
     $SESSION->add_ok_msg(get_string('addtopicsuccess', 'interaction.forum'));
     redirect('/interaction/forum/topic.php?id='.$topicid);
 }
