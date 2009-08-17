@@ -317,7 +317,7 @@ class PluginInteractionForum extends PluginInteraction {
     /**
      * Process new forum posts.
      *
-     * @param array $postnow An array of post ids to be sent immediately.  If null, send all posts older than 30 mins.
+     * @param array $postnow An array of post ids to be sent immediately.  If null, send all posts older than postdelay.
      */
     public static function interaction_forum_new_post($postnow=null) {
         if (is_array($postnow) && !empty($postnow)) {
@@ -326,7 +326,7 @@ class PluginInteractionForum extends PluginInteraction {
         }
         else {
             $currenttime = time();
-            $minpostdelay = $currenttime - 30 * 60;
+            $minpostdelay = $currenttime - get_config_plugin('interaction', 'forum', 'postdelay') * 60;
             $values = array(db_format_timestamp($minpostdelay));
             $postswhere = 'ctime < ?';
         }
@@ -398,6 +398,35 @@ class PluginInteractionForum extends PluginInteraction {
      */
     public static function generate_unsubscribe_key() {
         return dechex(mt_rand());
+    }
+
+
+    public static function has_config() {
+        return true;
+    }
+
+    public static function get_config_options() {
+        $postdelay = get_config_plugin('interaction', 'forum', 'postdelay');
+        if (!is_numeric($postdelay)) {
+            $postdelay = 30;
+        }
+
+        return array(
+            'elements' => array(
+                'postdelay' => array(
+                    'title'        => get_string('postdelay', 'interaction.forum'),
+                    'description'  => get_string('postdelaydescription', 'interaction.forum'),
+                    'type'         => 'text',
+                    'rules'        => array('integer' => true, 'minvalue' => 0, 'maxvalue' => 10000000),
+                    'defaultvalue' => (int) $postdelay,
+                ),
+            ),
+            'renderer' => 'table'
+        );
+    }
+
+    public static function save_config_options($values) {
+        set_config_plugin('interaction', 'forum', 'postdelay', $values['postdelay']);
     }
 }
 
@@ -562,7 +591,7 @@ function user_can_edit_post($poster, $posttime, $userid=null) {
         global $USER;
         $userid = $USER->get('id');
     }
-    return $poster == $userid && $posttime > (time() - 30 * 60);
+    return $poster == $userid && $posttime > (time() - get_config_plugin('interaction', 'forum', 'postdelay') * 60);
 }
 
 /**
