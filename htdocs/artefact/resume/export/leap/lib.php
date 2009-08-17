@@ -117,7 +117,7 @@ class LeapExportElementPersonalinformation extends LeapExportElement {
                 ));
             case 'gender':
                 return array_merge($basics, array(
-                    'value'          => (($key == 'male') ? 1 : 2),
+                    'value'          => (($value == 'male') ? 1 : 2),
                 ));
             default:
                 return array_merge($basics, array(
