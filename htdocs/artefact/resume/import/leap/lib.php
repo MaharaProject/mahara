@@ -131,6 +131,59 @@ class LeapImportResume extends LeapImportArtefactPlugin {
     }
 
     /**
+     * Imports data for the personalinformation artefact type, by looking for 
+     * it in the persondata element
+     */
+    public static function import_author_data(PluginImport $importer, $persondataid) {
+        if ($persondataid) {
+            $composites = array();
+
+            $person = $importer->get_entry_by_id($persondataid);
+            $persondata = $person->xpath('leap:persondata');
+            foreach ($persondata as $item) {
+                $leapattributes = array();
+                foreach ($item->attributes(PluginImportLeap::NS_LEAP) as $key => $value) {
+                    $leapattributes[$key] = (string)$value;
+                }
+
+                if (!isset($leapattributes['field'])) {
+                    // 'Field' is required
+                    // http://wiki.cetis.ac.uk/2009-03/LEAP2A_personal_data#field
+                    $importer->trace('WARNING: persondata element did not have leap:field attribute');
+                    continue;
+                }
+
+                if ($leapattributes['field'] == 'dob') {
+                    $composites['dateofbirth'] = (string)$item;
+                }
+                if ($leapattributes['field'] == 'gender') {
+                    $gender = (string)$item;
+                    if ($gender == '1') {
+                        $composites['gender'] = 'male';
+                    }
+                    else if ($gender == '2') {
+                        $composites['gender'] = 'female';
+                    }
+                    else {
+                        $importer->trace('WARNING: gender found but not male or female - no gender stored for this user');
+                    }
+                }
+            }
+
+            if ($composites) {
+                $importer->trace('Resume personal information:');
+                $importer->trace($composites);
+
+                $artefact = new ArtefactTypePersonalinformation(0, array('owner' => $importer->get('usr')));
+                foreach ($composites as $key => $value) {
+                    $artefact->set_composite($key, $value);
+                }
+                $artefact->commit();
+            }
+        }
+    }
+
+    /**
      * Creates an artefact in the manner required to overwrite existing profile 
      * artefacts
      *
