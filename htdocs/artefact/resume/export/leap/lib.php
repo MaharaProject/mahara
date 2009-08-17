@@ -153,14 +153,20 @@ class LeapExportElementResumeWysiwygField extends LeapExportElement {
     }
 }
 
+class LeapExportElementResumeSkillField extends LeapExportElementResumeWysiwygField {
+    public function get_leap_type() {
+        return 'ability';
+    }
+}
+
 class LeapExportElementInterest extends LeapExportElementResumeWysiwygField {}
 class LeapExportElementCoverletter extends LeapExportElementResumeWysiwygField {}
 class LeapExportElementCareergoal extends LeapExportElementResumeWysiwygField {}
 class LeapExportElementAcademicgoal extends LeapExportElementResumeWysiwygField {}
 class LeapExportElementPersonalgoal extends LeapExportElementResumeWysiwygField {}
-class LeapExportElementWorkskill extends LeapExportElementResumeWysiwygField {}
-class LeapExportElementAcademicskill extends LeapExportElementResumeWysiwygField {}
-class LeapExportElementPersonalskill extends LeapExportElementResumeWysiwygField {}
+class LeapExportElementWorkskill extends LeapExportElementResumeSkillField {}
+class LeapExportElementAcademicskill extends LeapExportElementResumeSkillField {}
+class LeapExportElementPersonalskill extends LeapExportElementResumeSkillField {}
 
 /**
 * Base class for the composite artefacts
