@@ -168,6 +168,17 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                         $importer->trace('WARNING: gender found but not male or female - no gender stored for this user');
                     }
                 }
+
+                $maharaattributes = array();
+                foreach ($item->attributes(PluginImportLeap::NS_MAHARA) as $key => $value) {
+                    $maharaattributes[$key] = (string)$value;
+                }
+
+                if (isset($maharaattributes['field'])) {
+                    if (in_array($maharaattributes['field'], array('placeofbirth', 'citizenship', 'visastatus', 'maritalstatus'))) {
+                        $composites[$maharaattributes['field']] = (string)$item;
+                    }
+                }
             }
 
             if ($composites) {
