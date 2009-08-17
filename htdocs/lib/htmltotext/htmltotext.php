@@ -26,8 +26,6 @@
 
 defined('INTERNAL') || die();
 
-// Bastard child of html2text.py, class.html2text.php
-
 class HtmltoText {
 
     private $body;
@@ -36,34 +34,50 @@ class HtmltoText {
     private $prefix;
     private $newlines;
     private $indent;
+    private $baseurl;
+    private $links;
+    private $linkcount;
 
-    public function __construct($html) {
+    public function __construct($html, $baseurl) {
         $doc = new domDocument;
         $doc->loadHTML($html);
-        log_debug($doc->saveHTML());
         $this->body = $doc->getElementsByTagName('html')->item(0)->getElementsByTagName('body')->item(0);
         $this->lines = array();
         $this->line = '';
         $this->prefix = '';
         $this->pre = 0;
         $this->indent = array();
+        $this->baseurl = $baseurl;
+        $this->links = array();
+        $this->linkcount = 0;
     }
 
     public function text() {
         $this->process_children($this->body);
+
+        if (!empty($this->links)) {
+            $this->para();
+            foreach ($this->links as $link => $i) {
+                $this->output("[$i] $link");
+                $this->newline();
+            }
+        }
+
         if ($this->line) {
             $this->wrap_line();
         }
+
         return join("\n", $this->lines);
     }
 
-    private function attributes($node_map) {
-        if ($node_map->length === 0) return array();
-        $array = array();
-        foreach ($node_map as $attr) {
-            $array[$attr->name] = $attr->value;
+    private function get_attributes($node) {
+        $attrs = array();
+        if ($node->hasAttributes()) {
+            foreach ($node->attributes as $attr) {
+                $attrs[$attr->name] = $attr->value;
+            }
         }
-        return $array;
+        return $attrs;
     }
 
     private function wrap_line() {
@@ -139,11 +153,9 @@ class HtmltoText {
                 return;
 
             case 'img':
-                if ($node->hasAttributes()) {
-                    $attr = $this->attributes($node->attributes);
-                    if (!empty($attr['src'])) {
-                        $this->output('[' . $attr['src'] . ']');
-                    }
+                $attrs = $this->get_attributes($node);
+                if (!empty($attrs['src'])) {
+                    $this->output('[' . $attrs['src'] . ']');
                 }
                 return;
             }
@@ -232,6 +244,27 @@ class HtmltoText {
             case 'pre':
                 $this->para();
                 $this->process_children($node);
+                break;
+
+            case 'a':
+                $attrs = $this->get_attributes($node);
+                $href = $attrs['href'];
+                if (!empty($href) && substr($href, 0, 1) != '#' && substr($href, 0, 11) != 'javascript:') {
+                    if (strpos($href, '://') == false) {
+                        $href = $this->baseurl . $href;
+                    }
+                    if (!isset($this->links[$href])) {
+                        $this->links[$href] = ++$this->linkcount;
+                    }
+                    $this->output('[');
+                }
+                else {
+                    $href = null;
+                }
+                $this->process_children($node);
+                if (!empty($href)) {
+                    $this->output('][' . $this->links[$href] . ']');
+                }
                 break;
 
             default:
