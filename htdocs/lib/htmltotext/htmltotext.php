@@ -43,7 +43,7 @@ class HtmltoText {
         $doc->loadHTML($html);
         $this->body = $doc->getElementsByTagName('html')->item(0)->getElementsByTagName('body')->item(0);
         $this->lines = array();
-        $this->line = '';
+        $this->line = (object) array('text' => '', 'wrap' => true);
         $this->prefix = '';
         $this->pre = 0;
         $this->indent = array();
@@ -58,7 +58,7 @@ class HtmltoText {
         if (!empty($this->links)) {
             $this->para();
             foreach ($this->links as $link => $i) {
-                $this->output("[$i] $link");
+                $this->output("[$i] $link", false);
                 $this->newline();
             }
         }
@@ -81,7 +81,12 @@ class HtmltoText {
     }
 
     private function wrap_line() {
-        $this->lines[] = wordwrap($this->line, 75, $this->prefix);
+        if ($this->line->wrap) {
+            $this->lines[] = wordwrap($this->line->text, 75, $this->prefix);
+        }
+        else {
+            $this->lines[] = $this->line->text;
+        }
     }
 
     private function newline() {
@@ -97,24 +102,25 @@ class HtmltoText {
     private $indentfirstchar = array('bq' => '> ', 'list' => '- ');
     private $indentchar      = array('bq' => '> ', 'list' => '  ');
 
-    private function output($str) {
+    private function output($str, $wrap=true) {
         if ($this->newlines) {
             $this->wrap_line();
             $this->prefix = "\n";
-            $this->line = str_repeat("\n", $this->newlines - 1);
+            $this->line = (object) array('text' => str_repeat("\n", $this->newlines - 1), 'wrap' => $wrap);
             $totalindents = count($this->indent);
             if ($totalindents) {
                 $this->prefix .= ' ';
-                $this->line .= ' ';
+                $this->line->text .= ' ';
                 for ($i = 0; $i < $totalindents - 1; $i++) {
-                    $this->line .= $this->indentchar[$this->indent[$i]];
+                    $this->line->text .= $this->indentchar[$this->indent[$i]];
                 }
-                $this->prefix .= $this->line . $this->indentchar[$this->indent[$i]];
-                $this->line .= $this->indentfirstchar[$this->indent[$i]];
+                $this->prefix .= $this->line->text . $this->indentchar[$this->indent[$i]];
+                $this->line->text .= $this->indentfirstchar[$this->indent[$i]];
             }
             $this->newlines = 0;
         }
-        $this->line .= $str;
+        $this->line->text .= $str;
+        $this->line->wrap &= $wrap;
     }
 
     private function process_children($node) {
@@ -155,7 +161,15 @@ class HtmltoText {
             case 'img':
                 $attrs = $this->get_attributes($node);
                 if (!empty($attrs['src'])) {
-                    $this->output('[' . $attrs['src'] . ']');
+                    $href = $attrs['src'];
+                    $alt = isset($attrs['alt']) ? $attrs['alt'] : '';
+                    if (strpos($href, '://') == false) {
+                        $href = $this->baseurl . $href;
+                    }
+                    if (!isset($this->links[$href])) {
+                        $this->links[$href] = ++$this->linkcount;
+                    }
+                    $this->output('![' . $alt . '][' . $this->links[$href] . ']');
                 }
                 return;
             }
