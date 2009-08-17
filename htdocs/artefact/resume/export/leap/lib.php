@@ -85,8 +85,8 @@ class LeapExportElementContactinformation extends LeapExportElement {
 
 class LeapExportElementPersonalinformation extends LeapExportElement {
 
-    public function __construct(LeapExporter $exporter, ArtefactType $artefact) {
-        parent::__construct($exporter, $artefact);
+    public function __construct(ArtefactType $artefact, LeapExporter $exporter) {
+        parent::__construct($artefact, $exporter);
         $c = $this->artefact->get('composites');
         $persondata = array();
         foreach ($c as $k => $v) {
