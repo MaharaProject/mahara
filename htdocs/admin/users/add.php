@@ -164,7 +164,7 @@ function adduser_validate(Pieform $form, $values) {
     $password  = $values['password'];
 
     if (method_exists($authobj, 'is_username_valid') && !$authobj->is_username_valid($username)) {
-        $form->set_error('username', get_string('addusererrorinvalidusername', 'admin'));
+        $form->set_error('username', get_string('usernameinvalidform', 'auth.internal'));
         return;
     }
     if (!$form->get_error('username') && record_exists_select('usr', 'LOWER(username) = ?', strtolower($username))) {
