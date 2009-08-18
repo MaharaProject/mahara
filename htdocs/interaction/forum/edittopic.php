@@ -118,7 +118,7 @@ $editform = array(
         'body' => array(
             'type'         => 'wysiwyg',
             'title'        => get_string('Body', 'interaction.forum'),
-            'rows'         => 10,
+            'rows'         => 18,
             'cols'         => 70,
             'defaultvalue' => isset($topic) ? $topic->body : null,
             'rules'        => array( 'required' => true )
