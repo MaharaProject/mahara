@@ -43,7 +43,12 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Contact information</td>
+	<td>contact_a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForVisible</td>
+	<td>//a[@id=&quot;contact_a&quot; and @class=&quot;current-tab&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -161,68 +166,13 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>contact_a</td>
+	<td>messaging_a</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>Contact information</td>
+	<td>waitForVisible</td>
+	<td>//a[@id=&quot;messaging_a&quot; and @class=&quot;current-tab&quot;]</td>
 	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Add email address</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Add email address</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>profileform_officialwebsite</td>
-	<td>www.catalyst.net.nz</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>profileform_personalwebsite</td>
-	<td>www.stuff.co.nz</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>profileform_blogaddress</td>
-	<td>www.blog.com</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>profileform_address</td>
-	<td>150 Willis Street</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>profileform_city</td>
-	<td>CBD</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>profileform_homenumber</td>
-	<td>04928375</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>profileform_businessnumber</td>
-	<td>040298375</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>profileform_mobilenumber</td>
-	<td>0272093875482</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>profileform_faxnumber</td>
-	<td>09237842</td>
 </tr>
 <tr>
 	<td>type</td>
@@ -240,21 +190,34 @@
 	<td>admin</td>
 </tr>
 <tr>
-	<td>typeAndWait</td>
+	<td>type</td>
 	<td>profileform_yahoochat</td>
 	<td>admin</td>
 </tr>
-<!--the following is the same as click link=Contact information, except this easier to read style doesn't always work in selenium IDE.-->
-<!--so we use the explicit xpath.  unfortunately, the xpath is less robust than the link=... :-(-->
 <tr>
-	<td>waitForVisible</td>
-	<td>//ul[@class=&quot;in-page-tabs&quot;]/li[2]/a</td>
+	<td>clickAndWait</td>
+	<td>profileform_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextNotPresent</td>
+	<td>Processing...</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>messaging_a</td>
 	<td></td>
 </tr>
 <tr>
 	<td>fireEvent</td>
-	<td>//ul[@class=&quot;in-page-tabs&quot;]/li[2]/a</td>
+	<td>contact_a</td>
 	<td>click</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//a[@id=&quot;contact_a&quot; and @class=&quot;current-tab&quot;]</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForText</td>
