@@ -80,6 +80,7 @@ ensure_sanity();
 require('dml.php');
 require('web.php');
 require('user.php');
+require(get_config('docroot') . 'local/lib.php');
 
 // Database access functions
 require('adodb/adodb-exceptions.inc.php');
