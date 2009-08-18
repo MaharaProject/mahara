@@ -67,6 +67,14 @@ $string['edittitle'] = 'Edit forum';
 $string['edittopic'] = 'Edit topic';
 $string['edittopicsuccess'] = 'Topic edited successfully';
 $string['forumname'] = 'Forum Name';
+$string['forumposthtmltemplate'] = "<div style=\"padding: 0.5em 0; border-bottom: 1px solid #999;\"><strong>%s by %s</strong><br>%s</div>
+
+<div style=\"margin: 1em 0;\">%s</div>
+
+<div style=\"font-size: smaller; border-top: 1px solid #999;\">
+<p>To see and reply to the post online, follow this link:<br><a href=\"%s\">%s</a></p>
+<p>To unsubscribe from this %s, visit: <a href=\"%s\">%s</a></p>
+</div>";
 $string['forumposttemplate'] = "%s by %s
 %s
 ------------------------------------------------------------------------

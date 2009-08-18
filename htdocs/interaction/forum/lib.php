@@ -484,6 +484,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         }
 
         $posttime = strftime(get_string('strftimedaydatetime'), $post->ctime);
+        $htmlbody = $post->body;
         $textbody = trim(html2text($post->body));
         $postlink = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid;
 
@@ -508,6 +509,15 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
                 $postlink,
                 $type,
                 $unsubscribelink
+            );
+            $user->htmlmessage = get_string_from_language($lang, 'forumposthtmltemplate', 'interaction.forum',
+                $post->subject ? $post->subject : get_string_from_language($lang, 're', 'interaction.forum', $post->topicsubject),
+                display_name($post->poster, $user),
+                $posttime,
+                $htmlbody,
+                $postlink, $postlink,
+                $type,
+                $unsubscribelink, $unsubscribelink
             );
         }
     }
