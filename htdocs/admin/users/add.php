@@ -117,7 +117,7 @@ if (count($authinstances) > 0) {
         $elements['remoteusername'] = array(
             'type'         => 'text',
             'title'        => get_string('remoteusername', 'admin'),
-            'description'  => get_string('remoteusernamedescription', 'admin', get_config('sitename')),
+            'description'  => get_string('remoteusernamedescription', 'admin', hsc(get_config('sitename'))),
         );
     }
 }
