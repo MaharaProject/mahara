@@ -98,8 +98,8 @@ class HtmltoText {
         $this->newlines = 2;
     }
 
-    private $indentfirstchar = array('bq' => '> ', 'list' => '- ', 'dd' => '   ');
-    private $indentchar      = array('bq' => '> ', 'list' => '  ', 'dd' => '   ');
+    private $indentfirstchar = array('bq' => '> ', 'list' => '- ', 'dd' => '   ', 'td' => '  ');
+    private $indentchar      = array('bq' => '> ', 'list' => '  ', 'dd' => '   ', 'td' => '  ');
 
     private function output($str, $wrap=true) {
         if ($this->newlines) {
@@ -251,11 +251,15 @@ class HtmltoText {
             case 'table': case 'tr':
                 $this->para();
                 $this->process_children($node);
+                $this->para();
                 break;
 
-            case 'td':
+            case 'td': case 'th':
                 $this->newline();
+                $this->indent[] = 'td';
                 $this->process_children($node);
+                $this->newline();
+                array_pop($this->indent);
                 break;
 
             case 'pre':
