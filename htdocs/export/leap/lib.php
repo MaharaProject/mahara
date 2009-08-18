@@ -27,7 +27,8 @@
 defined('INTERNAL') || die();
 
 /**
-* LEAP export plugin.  See http://wiki.cetis.ac.uk/LEAP2A_specification
+* LEAP export plugin.  See http://wiki.cetis.ac.uk/LEAP2A_specification and
+* http://wiki.mahara.org/Developer_Area/Import%2f%2fExport/LEAP_Export
 */
 class PluginExportLeap extends PluginExport {
 
@@ -209,10 +210,11 @@ class PluginExportLeap extends PluginExport {
             $this->smarty->assign('id', 'portfolio:view' . $view->get('id'));
             $this->smarty->assign('updated', self::format_rfc3339_date(strtotime($view->get('mtime'))));
             $this->smarty->assign('created', self::format_rfc3339_date(strtotime($view->get('ctime'))));
-            // TODO this is wrong - view description is HTML, summary should be text
-            //$this->smarty->assign('summary', $view->get('description'));
+            $this->smarty->assign('summarytype', 'html');
+            $this->smarty->assign('summary', $view->get('description'));
             $this->smarty->assign('contenttype', 'html');
             $this->smarty->assign('content', $view->build_columns());
+            $this->smarty->assign('ownerformat', $view->get('ownerformat'));
             $this->smarty->assign('leaptype', 'selection');
             $this->smarty->assign('categories', array(
                 array(
@@ -221,7 +223,7 @@ class PluginExportLeap extends PluginExport {
                 )
             ));
             $this->smarty->assign('links', $this->get_links_for_view($view->get('id')));
-            $this->xml .= $this->smarty->fetch("export:leap:entry.tpl");
+            $this->xml .= $this->smarty->fetch("export:leap:view.tpl");
         }
     }
 
@@ -272,14 +274,11 @@ class PluginExportLeap extends PluginExport {
             };
             $element = null;
             // go see if we have to do anything special for this artefact type.
-            try {
-                safe_require('export', 'leap/' . $artefact->get_plugin_name());
-                $classname = 'LeapExportElement' . ucfirst($artefact->get('artefacttype'));
-                if (class_exists($classname)) {
-                    $element = new $classname($artefact, $this);
-                }
+            safe_require('export', 'leap/' . $artefact->get_plugin_name());
+            $classname = 'LeapExportElement' . ucfirst($artefact->get('artefacttype'));
+            if (class_exists($classname)) {
+                $element = new $classname($artefact, $this);
             }
-            catch (Exception $e) { }// overriding this is not required.
 
             if (is_null($element)) {
                 $element = new LeapExportElement($artefact, $this);

@@ -6,6 +6,8 @@ TODOs for export LEAP plugin
  - rewrite links to views when the views are part of the export
  - export special attributes on blocktypes to help us detect them on the way in (do this in combination with advanced import)
  - what about smilies?
+* Default profile icon/exporting links between users and depictions of themselves (email thread on list discussing this currently)
+ - If the person element was linked to some entries with depicts: relationships, then we wouldn't have to look for profile icons
 * Documentation
  - developer
  - end-user

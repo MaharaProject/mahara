@@ -216,6 +216,10 @@ function addpost_submit(Pieform $form, $values) {
         ),
         'id', true
     );
+    $delay = get_config_plugin('interaction', 'forum', 'postdelay');
+    if (!is_null($delay) && $delay == 0) {
+        PluginInteractionForum::interaction_forum_new_post(array($postid));
+    }
     $SESSION->add_ok_msg(get_string('addpostsuccess', 'interaction.forum'));
     redirect('/interaction/forum/topic.php?id=' . $values['topic'] . '#post' . $postid);
 }

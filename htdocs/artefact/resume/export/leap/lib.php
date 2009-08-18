@@ -85,8 +85,8 @@ class LeapExportElementContactinformation extends LeapExportElement {
 
 class LeapExportElementPersonalinformation extends LeapExportElement {
 
-    public function __construct(LeapExporter $exporter, ArtefactType $artefact) {
-        parent::__construct($exporter, $artefact);
+    public function __construct(ArtefactType $artefact, LeapExporter $exporter) {
+        parent::__construct($artefact, $exporter);
         $c = $this->artefact->get('composites');
         $persondata = array();
         foreach ($c as $k => $v) {
@@ -117,7 +117,7 @@ class LeapExportElementPersonalinformation extends LeapExportElement {
                 ));
             case 'gender':
                 return array_merge($basics, array(
-                    'value'          => (($key == 'male') ? 1 : 2),
+                    'value'          => (($value == 'male') ? 1 : 2),
                 ));
             default:
                 return array_merge($basics, array(
@@ -153,14 +153,20 @@ class LeapExportElementResumeWysiwygField extends LeapExportElement {
     }
 }
 
+class LeapExportElementResumeSkillField extends LeapExportElementResumeWysiwygField {
+    public function get_leap_type() {
+        return 'ability';
+    }
+}
+
 class LeapExportElementInterest extends LeapExportElementResumeWysiwygField {}
 class LeapExportElementCoverletter extends LeapExportElementResumeWysiwygField {}
 class LeapExportElementCareergoal extends LeapExportElementResumeWysiwygField {}
 class LeapExportElementAcademicgoal extends LeapExportElementResumeWysiwygField {}
 class LeapExportElementPersonalgoal extends LeapExportElementResumeWysiwygField {}
-class LeapExportElementWorkskill extends LeapExportElementResumeWysiwygField {}
-class LeapExportElementAcademicskill extends LeapExportElementResumeWysiwygField {}
-class LeapExportElementPersonalskill extends LeapExportElementResumeWysiwygField {}
+class LeapExportElementWorkskill extends LeapExportElementResumeSkillField {}
+class LeapExportElementAcademicskill extends LeapExportElementResumeSkillField {}
+class LeapExportElementPersonalskill extends LeapExportElementResumeSkillField {}
 
 /**
 * Base class for the composite artefacts
@@ -252,17 +258,6 @@ abstract class LeapExportElementResumeCompositeChild extends LeapExportElement {
         $this->smarty->assign('artefacttype', 'pseudo:' . $this->parentartefact->get('artefacttype'));
         $this->smarty->assign('artefactplugin', 'resume');
         $this->smarty->assign('id', 'portfolio:' . $this->get_id());
-        if (isset($this->entrydata['start']) && isset($this->entrydata['end'])) {
-            $this->entrydata['content'] .= "\n\n";
-            $lines = array();
-            if (isset($this->entrydata['start']) && $this->entrydata['start']) {
-                $lines[] = get_string('startdate', 'artefact.resume') . ': ' . $this->entrydata['start'];
-            }
-            if (isset($this->entrydata['end']) && $this->entrydata['end']) {
-                $lines[] = get_string('enddate', 'artefact.resume') . ': ' . $this->entrydata['end'];
-            }
-            $this->entrydata['content'] .= implode("\n", $lines);
-        }
         foreach ($this->entrydata as $field => $value) {
             $this->smarty->assign($field, $value);
         }

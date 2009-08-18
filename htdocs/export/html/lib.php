@@ -380,7 +380,7 @@ class PluginExportHtml extends PluginExport {
         }
 
         // Smilies
-        $directoriestocopy[get_config('docroot') . 'js/tinymce/plugins/emotions/images'] = $staticdir . 'smilies/';
+        $directoriestocopy[get_config('docroot') . 'js/tinymce/plugins/emotions/img'] = $staticdir . 'smilies/';
 
         $filestocopy = array(
             get_config('docroot') . 'theme/views.css' => $staticdir . 'views.css',
@@ -481,7 +481,7 @@ class HtmlExportOutputFilter {
                 // We don't care about javascript
                 '#<script[^>]*>.*?</script>#si',
                 // Fix simlies from tinymce
-                '#<img src="(' . $wwwroot . ')?/?js/tinymce/plugins/emotions/images/([^"]+)"([^>]+)>#',
+                '#<img ([^>]*)src="(' . $wwwroot . ')?/?js/tinymce/plugins/emotions/img/([^"]+)"([^>]+)>#',
                 // No forms
                 '#<form[^>]*>.*?</form>#si',
                 // Gratuitous hack for the RSS blocktype
@@ -489,7 +489,7 @@ class HtmlExportOutputFilter {
             ),
             array(
                 '',
-                '<img src="' . $this->basepath . '/static/smilies/$2"$3>',
+                '<img $1src="' . $this->basepath . '/static/smilies/$3"$4>',
                 '',
                 '',
             ),
@@ -663,8 +663,10 @@ class HtmlExportOutputFilter {
     private function get_folder_path_for_file(ArtefactTypeFileBase $file) {
         if ($this->folderdata === null) {
             $this->folderdata = get_records_select_assoc('artefact', "artefacttype = 'folder' AND owner = ?", array($file->get('owner')));
-            foreach ($this->folderdata as &$folder) {
-                $folder->title = PluginExportHtml::sanitise_path($folder->title);
+            if ($this->folderdata) {
+                foreach ($this->folderdata as &$folder) {
+                    $folder->title = PluginExportHtml::sanitise_path($folder->title);
+                }
             }
         }
         $folderpath = ArtefactTypeFileBase::get_full_path($file->get('parent'), $this->folderdata);

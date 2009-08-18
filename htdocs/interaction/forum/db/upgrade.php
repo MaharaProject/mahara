@@ -81,6 +81,12 @@ function xmldb_interaction_forum_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2009081700) {
+        if (!get_record('interaction_config', 'plugin', 'forum', 'field', 'postdelay')) {
+            insert_record('interaction_config', (object) array('plugin' => 'forum', 'field' => 'postdelay', 'value' => 30));
+        }
+    }
+
     return true;
 }
 

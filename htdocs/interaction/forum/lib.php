@@ -313,12 +313,23 @@ class PluginInteractionForum extends PluginInteraction {
         return $forums;
     }
 
-/**
- * cronjob for new forum posts
- */
-    public static function interaction_forum_new_post() {
-        $currenttime = time();
-        $minpostdelay = $currenttime - 30 * 60;
+
+    /**
+     * Process new forum posts.
+     *
+     * @param array $postnow An array of post ids to be sent immediately.  If null, send all posts older than postdelay.
+     */
+    public static function interaction_forum_new_post($postnow=null) {
+        if (is_array($postnow) && !empty($postnow)) {
+            $values = array();
+            $postswhere = 'id IN (' . join(',', $postnow) . ')';
+        }
+        else {
+            $currenttime = time();
+            $minpostdelay = $currenttime - get_config_plugin('interaction', 'forum', 'postdelay') * 60;
+            $values = array(db_format_timestamp($minpostdelay));
+            $postswhere = 'ctime < ?';
+        }
         $posts = get_records_sql_array(
             'SELECT s.subscriber, s.type, s.key, p.id
             FROM (
@@ -329,18 +340,21 @@ class PluginInteractionForum extends PluginInteraction {
                 INNER JOIN {interaction_forum_topic} t ON t.forum = sf.forum
             ) s
             INNER JOIN {interaction_forum_topic} t ON (t.deleted != 1 AND t.id = s.topic)
-            INNER JOIN {interaction_forum_post} p ON (p.sent != 1 AND p.ctime < ? AND p.deleted != 1 AND p.topic = t.id)
+            INNER JOIN {interaction_forum_post} p ON (
+                p.sent != 1 AND p.deleted != 1 AND p.topic = t.id
+                AND p.' . $postswhere . '
+            )
             INNER JOIN {interaction_instance} f ON (f.id = t.forum AND f.deleted != 1)
             INNER JOIN {group} g ON (g.id = f.group AND g.deleted = 0)
             INNER JOIN {group_member} gm ON (gm.member = s.subscriber AND gm.group = f.group)
             ORDER BY type, p.id',
-            array(db_format_timestamp($minpostdelay))
+            $values
         );
         // query gets a new object for every subscription
         // this combines all the objects for the same post together with an array for the subscribers
         if ($posts) {
             set_field_select('interaction_forum_post', 'sent', 1,
-                'ctime < ? AND deleted = 0 AND sent = 0', array(db_format_timestamp($minpostdelay)));
+                'deleted = 0 AND sent = 0 AND ' . $postswhere, $values);
             $count = count($posts);
             for ($i = 0; $i < $count; $i++) {
                 $posts[$i]->users = array($posts[$i]->subscriber);
@@ -363,7 +377,8 @@ class PluginInteractionForum extends PluginInteraction {
                         'subscriptions' => $post->subscriptions,
                     ),
                     'interaction',
-                    'forum'
+                    'forum',
+                    (bool) $postnow
                 );
             }
         }
@@ -383,6 +398,35 @@ class PluginInteractionForum extends PluginInteraction {
      */
     public static function generate_unsubscribe_key() {
         return dechex(mt_rand());
+    }
+
+
+    public static function has_config() {
+        return true;
+    }
+
+    public static function get_config_options() {
+        $postdelay = get_config_plugin('interaction', 'forum', 'postdelay');
+        if (!is_numeric($postdelay)) {
+            $postdelay = 30;
+        }
+
+        return array(
+            'elements' => array(
+                'postdelay' => array(
+                    'title'        => get_string('postdelay', 'interaction.forum'),
+                    'description'  => get_string('postdelaydescription', 'interaction.forum'),
+                    'type'         => 'text',
+                    'rules'        => array('integer' => true, 'minvalue' => 0, 'maxvalue' => 10000000),
+                    'defaultvalue' => (int) $postdelay,
+                ),
+            ),
+            'renderer' => 'table'
+        );
+    }
+
+    public static function save_config_options($values) {
+        set_config_plugin('interaction', 'forum', 'postdelay', $values['postdelay']);
     }
 }
 
@@ -547,7 +591,7 @@ function user_can_edit_post($poster, $posttime, $userid=null) {
         global $USER;
         $userid = $USER->get('id');
     }
-    return $poster == $userid && $posttime > (time() - 30 * 60);
+    return $poster == $userid && $posttime > (time() - get_config_plugin('interaction', 'forum', 'postdelay') * 60);
 }
 
 /**

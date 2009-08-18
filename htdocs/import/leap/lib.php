@@ -40,6 +40,8 @@ class PluginImportLeap extends PluginImport {
     private $loadmapping = array();
     private $artefactids = array();
 
+    protected $persondataid = null;
+
     protected $loglevel = 0;
     protected $logtargets = LOG_TARGET_ERRORLOG;
     protected $profile = false;
@@ -122,10 +124,31 @@ class PluginImportLeap extends PluginImport {
      */
     private function create_strategy_listing() {
         $this->trace("-------------------------\ncreate_strategy_listing()");
+
+        // First, try to establish whether there is an element representing the 
+        // author of the feed
+        // TODO: also check this element has the right leaptype (person)
+        if (is_null($this->persondataid)) {
+            $author = $this->get('xml')->xpath('//a:feed/a:author[1]');
+            $author = $author[0];
+            if (isset($author->uri) && $this->get_entry_by_id((string)$author->uri)) {
+                $this->persondataid = (string)$author->uri;
+            }
+            else {
+                $this->persondataid = false;
+            }
+        }
+
+        // Generate strategy listing
         foreach ($this->xml->xpath('//a:feed/a:entry') as $entry) {
             $this->registerXpathNamespaces($entry);
             $entryid = (string)$entry->id;
             $this->trace(" * $entryid ({$entry->title})");
+
+            if ($this->persondataid && $entryid == $this->persondataid) {
+                // We don't offer this element to any plugin to be imported
+                continue;
+            }
 
             foreach (plugins_installed('artefact') as $plugin) {
                 $plugin = $plugin->name;
@@ -288,13 +311,14 @@ class PluginImportLeap extends PluginImport {
             $loadedentries[] = $entryid;
         }
 
-        // The internal artefact plugin needs to deal with the <author> tag 
-        // plus persondata for the author.
-        // Note: I don't feel guilty doing this in this way because a) internal 
-        // artefact plugin is required and b) it's the only one that needs this
+        // Give plugins a chance to import stuff about the feed author from the 
+        // persondata entry
         // TODO: this should return an artefact mapping so things can create 
         // links to profile fields, but nothing actually needs it yet
-        LeapImportInternal::import_author_data($this);
+        foreach (plugins_installed('artefact') as $plugin) {
+            $classname = 'LeapImport' . ucfirst($plugin->name);
+            $strategies = call_static_method($classname, 'import_author_data', $this, $this->persondataid);
+        }
 
         // Now all artefacts are loaded, allow each plugin to load 
         // relationships for them if they need to
@@ -627,6 +651,12 @@ abstract class LeapImportArtefactPlugin {
      *               import of each entry
      */
     abstract public static function import_using_strategy(SimpleXMLElement $entry, PluginImport $importer, $strategy, array $otherentries);
+
+    /**
+     * Gives plugins a chance to import author data
+     */
+    public static function import_author_data(PluginImport $importer, $persondataid) {
+    }
 
     /**
      * Gives plugins a chance to construct relationships between the newly 

@@ -33,9 +33,9 @@ defined('INTERNAL') || die();
  * @param string $activitytype type of activity
  * @param mixed $data data 
  */
-function activity_occurred($activitytype, $data, $plugintype=null, $pluginname=null) {
+function activity_occurred($activitytype, $data, $plugintype=null, $pluginname=null, $overridedelay=false) {
     $at = activity_locate_typerecord($activitytype, $plugintype, $pluginname);
-    if (!empty($at->delay)) {
+    if (!empty($at->delay) && !$overridedelay) {
         $delayed = new StdClass;
         $delayed->type = $at->id;
         $delayed->data = serialize($data);
