@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="" />
+<link rel="selenium.base" href="http://localmahara.org" />
 <title>Remove Menuitem</title>
 </head>
 <body>
@@ -17,28 +17,48 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAndWait</td>
-	<td>link=Configure Site</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Links and Resources Menu</td>
+	<td>setSpeed</td>
+	<td>200</td>
 	<td></td>
 </tr>
 <tr>
 	<td>select</td>
 	<td>menuselect</td>
-	<td>label=Logged in links and resources</td>
+	<td>value=loggedoutmenu</td>
 </tr>
 <tr>
-	<td>pause</td>
-	<td>2000</td>
-	<td>sleep a bit here.&nbsp;&nbsp;json needs to complete</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id=&quot;loading-box&quot; and @style=&quot;display: none;&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>menuselect</td>
+	<td>value=loggedinmenu</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id=&quot;loading-box&quot; and @style=&quot;display: none;&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>setSpeed</td>
+	<td>0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>setTimeout</td>
+	<td>60000</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
 	<td>Test Menu Link</td>
+	<td></td>
+</tr>
+<tr>
+	<td>setTimeout</td>
+	<td>30000</td>
 	<td></td>
 </tr>
 <tr>
@@ -53,11 +73,6 @@
 </tr>
 <tr>
 	<td>assertElementPresent</td>
-	<td>//tr[contains(td[2], &quot;Test Menu Link&quot;)]/td/input[@value=&quot;Delete&quot;]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertElementVisible</td>
 	<td>//tr[contains(td[2], &quot;Test Menu Link&quot;)]/td/input[@value=&quot;Delete&quot;]</td>
 	<td></td>
 </tr>
