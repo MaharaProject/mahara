@@ -298,6 +298,8 @@ function group_create($data) {
         }
     }
 
+    $data['id'] = $id;
+    handle_event('creategroup', $data);
     db_commit();
 
     return $id;

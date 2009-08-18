@@ -700,6 +700,7 @@ function core_install_firstcoredata_defaults() {
         'removefriend',
         'addfriendrequest',
         'removefriendrequest',
+        'creategroup',
     );
 
     foreach ($eventtypes as $et) {
