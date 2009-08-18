@@ -64,6 +64,7 @@ $string['createandpublishdesc'] = 'This will create the blog post and make it av
 $string['createasdraftdesc'] = 'This will create the blog post, but it will not become available to others until you choose to publish it.';
 $string['createblog'] = 'Create Blog';
 $string['dataimportedfrom'] = 'Data imported from %s';
+$string['defaultblogtitle'] = '%s\'s Blog';
 $string['delete'] = 'Delete';
 $string['deleteblog?'] = 'Are you sure you want to delete this blog?';
 $string['deleteblogpost?'] = 'Are you sure you want to delete this post?';

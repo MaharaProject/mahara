@@ -62,6 +62,16 @@ class PluginArtefactBlog extends PluginArtefact {
     }
 
 
+    public static function get_event_subscriptions() {
+        return array(
+            (object)array(
+                'plugin'       => 'blog',
+                'event'        => 'createuser',
+                'callfunction' => 'create_default_blog',
+            ),
+        );
+    }
+
     public static function block_advanced_options_element($configdata, $artefacttype) {
         $strartefacttype = get_string($artefacttype, 'artefact.blog');
         return array(
@@ -86,6 +96,14 @@ class PluginArtefactBlog extends PluginArtefact {
         );
     }
 
+    public static function create_default_blog($event, $user) {
+        $name = display_name($user, null, true);
+        $blog = new ArtefactTypeBlog(0, (object) array(
+            'title'       => get_string('defaultblogtitle', 'artefact.blog', $name),
+            'owner'       => $user['id'],
+        ));
+        $blog->commit();
+    }
 }
 
 /**
