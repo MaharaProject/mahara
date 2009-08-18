@@ -62,6 +62,16 @@ class PluginArtefactBlog extends PluginArtefact {
     }
 
 
+    public static function get_event_subscriptions() {
+        return array(
+            (object)array(
+                'plugin'       => 'blog',
+                'event'        => 'createuser',
+                'callfunction' => 'create_default_blog',
+            ),
+        );
+    }
+
     public static function block_advanced_options_element($configdata, $artefacttype) {
         $strartefacttype = get_string($artefacttype, 'artefact.blog');
         return array(
@@ -86,6 +96,14 @@ class PluginArtefactBlog extends PluginArtefact {
         );
     }
 
+    public static function create_default_blog($event, $user) {
+        $name = display_name($user, null, true);
+        $blog = new ArtefactTypeBlog(0, (object) array(
+            'title'       => get_string('defaultblogtitle', 'artefact.blog', $name),
+            'owner'       => $user['id'],
+        ));
+        $blog->commit();
+    }
 }
 
 /**
@@ -255,19 +273,41 @@ class ArtefactTypeBlog extends ArtefactType {
      * @param User
      * @return array (count: integer, data: array)
      */
-    public static function get_blog_list(User $user, $limit = self::pagination, $offset = 0) {
+    public static function get_blog_list($limit, $offset) {
+        global $USER;
         ($result = get_records_sql_array("
          SELECT id, title, description
          FROM {artefact}
          WHERE owner = ?
           AND artefacttype = 'blog'
          ORDER BY title
-         LIMIT ? OFFSET ?", array($user->get('id'), $limit, $offset)))
+         LIMIT ? OFFSET ?", array($USER->get('id'), $limit, $offset)))
             || ($result = array());
 
-        $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $user->get('id'), 'artefacttype', 'blog');
+        $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $USER->get('id'), 'artefacttype', 'blog');
 
         return array($count, $result);
+    }
+
+    public static function build_blog_list_html(&$blogs) {
+        $smarty = smarty_core();
+        $smarty->assign_by_ref('blogs', $blogs);
+        $blogs->html = $smarty->fetch('artefact:blog:bloglist.tpl');
+        $blogs->pagination = build_pagination(array(
+            'id' => 'bloglist_pagination',
+            'class' => 'center',
+            'url' => get_config('wwwroot') . 'artefact/blog/index.php',
+            'count' => $blogs->count,
+            'limit' => $blogs->limit,
+            'offset' => $blogs->offset,
+            'firsttext' => '',
+            'previoustext' => '',
+            'nexttext' => '',
+            'lasttext' => '',
+            'numbersincludefirstlast' => false,
+            'resultcounttextsingular' => get_string('blog', 'artefact.blog'),
+            'resultcounttextplural' => get_string('blogs', 'artefact.blog'),
+        ));
     }
 
     /**

@@ -161,14 +161,16 @@ class PluginInteractionForum extends PluginInteraction {
             'interaction_forum_moderator',
             'forum', $instance->get('id')
         );
-        foreach ($values['moderator'] as $user) {
-            insert_record(
-                'interaction_forum_moderator',
-                (object)array(
-                    'user' => $user,
-                    'forum' => $instance->get('id')
-                )
-            );
+        if (isset($values['moderator']) && is_array($values['moderator'])) {
+            foreach ($values['moderator'] as $user) {
+                insert_record(
+                    'interaction_forum_moderator',
+                    (object)array(
+                        'user' => $user,
+                        'forum' => $instance->get('id')
+                    )
+                );
+            }
         }
 
         // Re-order the forums according to their new ordering
@@ -256,6 +258,11 @@ class PluginInteractionForum extends PluginInteraction {
                 'event'        => 'userjoinsgroup',
                 'callfunction' => 'user_joined_group',
             ),
+            (object)array(
+                'plugin'       => 'forum',
+                'event'        => 'creategroup',
+                'callfunction' => 'create_default_forum',
+            ),
         );
     }
 
@@ -286,6 +293,41 @@ class PluginInteractionForum extends PluginInteraction {
             }
             db_commit();
         }
+    }
+
+    /**
+     * When a group is created, create one forum automatically.
+     *
+     * @param array $eventdata
+     */
+    public static function create_default_forum($event, $eventdata) {
+        global $USER;
+        $creator = 0;
+        if (isset($eventdata['members'][$USER->get('id')])) {
+            $creator = $USER->get('id');
+        }
+        else {
+            foreach($eventdata['members'] as $userid => $role) {
+                if ($role == 'admin') {
+                    $creator = $userid;
+                    break;
+                }
+            }
+        }
+        db_begin();
+        $forum = new InteractionForumInstance(0, (object) array(
+            'group'       => $eventdata['id'],
+            'creator'     => $creator,
+            'title'       => get_string('defaultforumtitle', 'interaction.forum'),
+            'description' => get_string('defaultforumdescription', 'interaction.forum', $eventdata['name']),
+        ));
+        $forum->commit();
+        self::instance_config_save($forum, array(
+            'createtopicusers' => 'members',
+            'autosubscribe'    => 1,
+            'justcreated'      => 1,
+        ));
+        db_commit();
     }
 
     /**
@@ -484,6 +526,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         }
 
         $posttime = strftime(get_string('strftimedaydatetime'), $post->ctime);
+        $htmlbody = $post->body;
         $textbody = trim(html2text($post->body));
         $postlink = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid;
 
@@ -508,6 +551,15 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
                 $postlink,
                 $type,
                 $unsubscribelink
+            );
+            $user->htmlmessage = get_string_from_language($lang, 'forumposthtmltemplate', 'interaction.forum',
+                $post->subject ? $post->subject : get_string_from_language($lang, 're', 'interaction.forum', $post->topicsubject),
+                display_name($post->poster, $user),
+                $posttime,
+                $htmlbody,
+                $postlink, $postlink,
+                $type,
+                $unsubscribelink, $unsubscribelink
             );
         }
     }

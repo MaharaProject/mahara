@@ -2400,10 +2400,9 @@ function clean_html($text) {
  * @return string The formatted text
  */
 function html2text($html) {
-    require_once('html2text/class.html2text.php');
-    $h2t = new html2text($html);
-    $h2t->set_base_url(get_config('wwwroot'));
-    return $h2t->get_text();
+    require_once('htmltotext/htmltotext.php');
+    $h2t = new HtmltoText($html, get_config('wwwroot'));
+    return $h2t->text();
 }
 
 /**

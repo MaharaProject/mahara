@@ -34,69 +34,26 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('myblogs','artefact.blog'));
 safe_require('artefact', 'blog');
 
-// This is the wwwroot.
-$wwwroot = get_config('wwwroot');
-$enc_delete = json_encode(get_string('delete', 'artefact.blog'));
-$enc_confirmdelete = json_encode(get_string('deleteblog?', 'artefact.blog'));
-$enc_addpost = json_encode(get_string('addpost', 'artefact.blog'));
-$enc_settings = json_encode(get_string('settings', 'artefact.blog'));
+if ($delete = param_integer('delete', 0)) {
+    $blog = artefact_instance_from_id($delete);
+    if ($blog instanceof ArtefactTypeBlog) {
+        $blog->check_permission();
+        $blog->delete();
+        $SESSION->add_ok_msg(get_string('blogdeleted', 'artefact.blog'));
+    }
+}
 
-// This JavaScript creates a table to display the blog entries.
-$js = <<<EOF
-
-var bloglist = new TableRenderer(
-    'bloglist',
-    'index.json.php',
-    [
-        function(r) {
-            return TD(
-              null,
-              A({'href':'{$wwwroot}artefact/blog/view/?id=' + r.id}, r.title)
-            );
-        },
-        function(r) {
-            var td = TD();
-            td.innerHTML = r.description;
-            return td;
-        },
-        function (r) {
-            var deleteButton = A({'class': 'btn-del', 'href': ''}, {$enc_delete});
-            connect(deleteButton, 'onclick', function (e) {
-                e.stop();
-                if (!confirm({$enc_confirmdelete})) {
-                    return false;
-                }
-                sendjsonrequest(
-                    'index.json.php',
-                    {
-                        'action': 'delete',
-                        'id': r.id
-                    },
-                    'POST',
-                    function (data) {
-                        bloglist.doupdate();
-                    }
-                );
-                return false;
-            });
-
-            return TD({'class': 'controls'}, [
-                deleteButton,
-                A({'class': 'btn-edit', 'href':'{$wwwroot}artefact/blog/settings/?id=' + r.id}, {$enc_settings}),
-                A({'class': 'btn-add', 'href':'{$wwwroot}artefact/blog/post.php?blog=' + r.id}, {$enc_addpost})
-            ]);
-        }
-    ]
+$blogs = (object) array(
+    'offset' => param_integer('offset', 0),
+    'limit'  => param_integer('limit', 10),
 );
 
-bloglist.updateOnLoad();
+list($blogs->count, $blogs->data) = ArtefactTypeBlog::get_blog_list($blogs->limit, $blogs->offset);
+ArtefactTypeBlog::build_blog_list_html($blogs);
 
-EOF;
-
-$smarty = smarty(array('tablerenderer'));
-$smarty->assign_by_ref('INLINEJAVASCRIPT', $js);
+$smarty = smarty();
 $smarty->assign_by_ref('blogs', $blogs);
 $smarty->assign('PAGEHEADING', hsc(get_string("myblogs", "artefact.blog")));
-$smarty->display('artefact:blog:list.tpl');
+$smarty->display('artefact:blog:index.tpl');
 
 ?>

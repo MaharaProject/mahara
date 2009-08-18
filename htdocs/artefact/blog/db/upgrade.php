@@ -148,6 +148,11 @@ function xmldb_artefact_blog_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2009081800) {
+        $subscription = (object) array('plugin' => 'blog', 'event' => 'createuser', 'callfunction' => 'create_default_blog');
+        ensure_record_exists('artefact_event_subscription', $subscription, $subscription);
+    }
+
     return true;
 }
 

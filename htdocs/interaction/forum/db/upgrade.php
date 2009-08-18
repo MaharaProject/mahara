@@ -87,6 +87,11 @@ function xmldb_interaction_forum_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2009081800) {
+        $subscription = (object) array('plugin' => 'forum', 'event' => 'creategroup', 'callfunction' => 'create_default_forum');
+        ensure_record_exists('interaction_event_subscription', $subscription, $subscription);
+    }
+
     return true;
 }
 

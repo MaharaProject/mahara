@@ -1170,6 +1170,13 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("DELETE FROM {group_member_request} WHERE \"group\" NOT IN (SELECT id FROM {group} WHERE jointype = 'request')");
     }
 
+    if ($oldversion < 2009081800) {
+        $event = (object)array(
+            'name' => 'creategroup',
+        );
+        ensure_record_exists('event_type', $event, $event);
+    }
+
     return $status;
 
 }

@@ -52,6 +52,8 @@ $string['closeddescription'] = 'Closed topics can only be replied to by moderato
 $string['Count'] = 'Count';
 $string['createtopicusersdescription'] = 'If set to "All group members", anyone can create new topics and reply to existing topics.  If set to "Moderators and group admins", only moderators and group administrators can start new topics, but once topics exist, all users can post replies to them.';
 $string['currentmoderators'] = 'Current Moderators';
+$string['defaultforumtitle'] = 'General Discussion';
+$string['defaultforumdescription'] = '%s general discussion forum';
 $string['deleteforum'] = 'Delete forum';
 $string['deletepost'] = 'Delete post';
 $string['deletepostsuccess'] = 'Post deleted successfully';
@@ -67,6 +69,14 @@ $string['edittitle'] = 'Edit forum';
 $string['edittopic'] = 'Edit topic';
 $string['edittopicsuccess'] = 'Topic edited successfully';
 $string['forumname'] = 'Forum Name';
+$string['forumposthtmltemplate'] = "<div style=\"padding: 0.5em 0; border-bottom: 1px solid #999;\"><strong>%s by %s</strong><br>%s</div>
+
+<div style=\"margin: 1em 0;\">%s</div>
+
+<div style=\"font-size: smaller; border-top: 1px solid #999;\">
+<p>To see and reply to the post online, follow this link:<br><a href=\"%s\">%s</a></p>
+<p>To unsubscribe from this %s, visit: <a href=\"%s\">%s</a></p>
+</div>";
 $string['forumposttemplate'] = "%s by %s
 %s
 ------------------------------------------------------------------------

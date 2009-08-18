@@ -32,9 +32,14 @@ class PluginNotificationEmail extends PluginNotification {
 
     public static function notify_user($user, $data) {
 
+        $messagehtml = null;
+
         if (!empty($data->overridemessagecontents)) {
             $subject = $data->subject;
             $messagebody = $data->message;
+            if (!empty($user->htmlmessage)) {
+                $messagehtml = $user->htmlmessage;
+            }
         }
         else {
             $lang = (empty($user->lang) || $user->lang == 'default') ? get_config('lang') : $user->lang;
@@ -75,7 +80,7 @@ class PluginNotificationEmail extends PluginNotification {
                 $userfrom->email = get_config('noreplyaddress');
             }
         }
-        email_user($user, $userfrom, $subject, $messagebody, null, !empty($data->customheaders) ? $data->customheaders : null);
+        email_user($user, $userfrom, $subject, $messagebody, $messagehtml, !empty($data->customheaders) ? $data->customheaders : null);
     }
 }
 
