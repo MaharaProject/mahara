@@ -276,12 +276,8 @@ class ArtefactTypeBlog extends ArtefactType {
     public static function get_blog_list($limit, $offset) {
         global $USER;
         ($result = get_records_sql_array("
-         SELECT id, title, description
-         FROM {artefact}
-         WHERE owner = ?
-          AND artefacttype = 'blog'
-         ORDER BY title
-         LIMIT ? OFFSET ?", array($USER->get('id'), $limit, $offset)))
+         SELECT * FROM {artefact} WHERE owner = ? AND artefacttype = 'blog'
+         ORDER BY title LIMIT ? OFFSET ?", array($USER->get('id'), $limit, $offset)))
             || ($result = array());
 
         $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $USER->get('id'), 'artefacttype', 'blog');

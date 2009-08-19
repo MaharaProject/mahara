@@ -5,7 +5,6 @@
             </div>
             <div id="bloglist">
             {$blogs->html}
-            {*include file="artefact:blog:bloglist.tpl" blogs=$blogs*}
             </div>
-            {$blogs->pagination.html}
+            {if $blogs->data}{$blogs->pagination.html}{/if}
 {include file="footer.tpl"}
