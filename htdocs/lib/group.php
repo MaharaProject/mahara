@@ -1094,7 +1094,7 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
             $members = get_records_sql_array("
                 SELECT u.*
                 FROM {group_member} gm
-                INNER JOIN {usr} u ON gm.member = u.id
+                INNER JOIN {usr} u ON (gm.member = u.id AND u.deleted = 0)
                 WHERE gm.group = ?
                 ORDER BY " . db_random() . "
                 LIMIT 3", array($groupid));
