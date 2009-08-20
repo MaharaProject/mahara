@@ -16,6 +16,7 @@
 	<td>/admin/site/menu.php</td>
 	<td></td>
 </tr>
+<!--we do need the setSpeed since it might take some millis for the loading-box to display.  without the setSpeed, we'd blow through the waitForElement since javascript hadn't gotten around to changing the style yet-->
 <tr>
 	<td>setSpeed</td>
 	<td>200</td>
@@ -99,11 +100,6 @@
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Return to Site</td>
-	<td></td>
-</tr>
-<tr>
-	<td>setSpeed</td>
-	<td>0</td>
 	<td></td>
 </tr>
 

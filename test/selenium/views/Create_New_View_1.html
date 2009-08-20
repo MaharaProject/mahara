@@ -12,11 +12,6 @@
 <tr><td rowspan="1" colspan="3">Create a New View</td></tr>
 </thead><tbody>
 <tr>
-	<td>setSpeed</td>
-	<td>0</td>
-	<td></td>
-</tr>
-<tr>
 	<td>open</td>
 	<td>/</td>
 	<td></td>
@@ -161,9 +156,15 @@
 	<td>//div[@id='potentialpresetitems']/div[4]/button[@type='button']</td>
 	<td></td>
 </tr>
+<!--wait for _3 elements.  without the wait (or a pause or setSpeed), the elements are sometimes not yet available.-->
 <tr>
-	<td>pause</td>
-	<td>500</td>
+	<td>waitForElementPresent</td>
+	<td>startdate_3</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>stopdate_3</td>
 	<td></td>
 </tr>
 <tr>
@@ -189,11 +190,6 @@
 <tr>
 	<td>verifyTextPresent</td>
 	<td>View created successfully</td>
-	<td></td>
-</tr>
-<tr>
-	<td>setSpeed</td>
-	<td>0</td>
 	<td></td>
 </tr>
 
