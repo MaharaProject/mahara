@@ -11,5 +11,5 @@
         <div class="main-column">
             {insert name="messages"}
             <div id="main-column-container">
-{if $PAGEHEADING}                    <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON}</span>{/if}</h1>
+{if isset($PAGEHEADING)}                    <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON}</span>{/if}</h1>
 {/if}

@@ -168,7 +168,14 @@ class View {
             $view->set('title', self::new_title(get_string('Copyof', 'mahara', $template->get('title')), (object)$viewdata));
             $view->set('dirty', true);
         }
-        $copystatus = $view->copy_contents($template);
+
+        try {
+            $copystatus = $view->copy_contents($template);
+        }
+        catch (QuotaExceededException $e) {
+            db_rollback();
+            return array(null, $template, array('quotaexceeded' => true));
+        }
 
         $view->commit();
         db_commit();
@@ -2437,6 +2444,10 @@ function createview_submit(Pieform $form, $values) {
         $templateid = $values['usetemplate'];
         unset($values['usetemplate']);
         list($view, $template, $copystatus) = View::create_from_template($values, $templateid);
+        if (isset($copystatus['quotaexceeded'])) {
+            $SESSION->add_error_msg(get_string('viewcopywouldexceedquota', 'view'));
+            redirect(get_config('wwwroot') . 'view/choosetemplate.php');
+        }
         $SESSION->add_ok_msg(get_string('copiedblocksandartefactsfromtemplate', 'view',
             $copystatus['blocks'],
             $copystatus['artefacts'],

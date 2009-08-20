@@ -276,12 +276,8 @@ class ArtefactTypeBlog extends ArtefactType {
     public static function get_blog_list($limit, $offset) {
         global $USER;
         ($result = get_records_sql_array("
-         SELECT id, title, description
-         FROM {artefact}
-         WHERE owner = ?
-          AND artefacttype = 'blog'
-         ORDER BY title
-         LIMIT ? OFFSET ?", array($USER->get('id'), $limit, $offset)))
+         SELECT * FROM {artefact} WHERE owner = ? AND artefacttype = 'blog'
+         ORDER BY title LIMIT ? OFFSET ?", array($USER->get('id'), $limit, $offset)))
             || ($result = array());
 
         $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $USER->get('id'), 'artefacttype', 'blog');
@@ -292,11 +288,13 @@ class ArtefactTypeBlog extends ArtefactType {
     public static function build_blog_list_html(&$blogs) {
         $smarty = smarty_core();
         $smarty->assign_by_ref('blogs', $blogs);
-        $blogs->html = $smarty->fetch('artefact:blog:bloglist.tpl');
-        $blogs->pagination = build_pagination(array(
+        $blogs->tablerows = $smarty->fetch('artefact:blog:bloglist.tpl');
+        $pagination = build_pagination(array(
             'id' => 'bloglist_pagination',
             'class' => 'center',
             'url' => get_config('wwwroot') . 'artefact/blog/index.php',
+            'jsonscript' => 'artefact/blog/index.json.php',
+            'datatable' => 'bloglist',
             'count' => $blogs->count,
             'limit' => $blogs->limit,
             'offset' => $blogs->offset,
@@ -308,6 +306,8 @@ class ArtefactTypeBlog extends ArtefactType {
             'resultcounttextsingular' => get_string('blog', 'artefact.blog'),
             'resultcounttextplural' => get_string('blogs', 'artefact.blog'),
         ));
+        $blogs->pagination = $pagination['html'];
+        $blogs->pagination_js = $pagination['javascript'];
     }
 
     /**

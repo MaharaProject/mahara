@@ -2005,6 +2005,10 @@ function main_nav() {
         $menu = mahara_standard_nav();
     }
 
+    // local_main_nav_update allows sites to customise the menu by munging the $menu array.
+    if (function_exists('local_main_nav_update')) {
+        local_main_nav_update($menu);
+    }
     $menu_structure = find_menu_children($menu, '');
     return $menu_structure;
 }

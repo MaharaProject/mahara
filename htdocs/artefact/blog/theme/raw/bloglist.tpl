@@ -1,14 +1,3 @@
-{if empty($blogs->data)}
-<div>{str tag=youhavenoblogs section=artefact.blog}</div>
-{else}
-<table class="tablerenderer fullwidth">
-  <thead>
-    <tr>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
   {foreach from=$blogs->data item=blog}
     <tr class="{cycle name=rows values=r1,r0}">
       <td>
@@ -22,6 +11,3 @@
       </td>
     </tr>
   {/foreach}
-  </tbody>
-</table>
-{/if}

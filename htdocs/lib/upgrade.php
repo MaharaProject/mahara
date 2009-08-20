@@ -642,7 +642,7 @@ function core_install_lastcoredata_defaults() {
     set_profile_field($user->id, 'email', $user->email);
     set_profile_field($user->id, 'firstname', $user->firstname);
     set_profile_field($user->id, 'lastname', $user->lastname);
-    handle_event('createuser', $user->id);
+    handle_event('createuser', $user);
     activity_add_admin_defaults(array($user->id));
     db_commit();
 
