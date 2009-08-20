@@ -3,6 +3,7 @@
                         <div class="user-icon right">
                             {$institutions}
 {if !empty($loginas)}                      <strong><a href="{$WWWROOT}admin/users/changeuser.php?id={$USERID}">{$loginas}</a></strong>
+  {if $USER->get('admin')}<a href="{$WWWROOT}admin/users/edit.php?id={$USERID}">{str tag=accountsettings section=admin}</a>{/if}
 {/if}
 {if $canmessage}                        <a href="{$WWWROOT}user/sendmessage.php?id={$USERID}&amp;returnto=view" class="btn-msg">{str tag='sendmessage' section='group'}</a>
 {/if}
