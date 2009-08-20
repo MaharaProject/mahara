@@ -637,7 +637,7 @@ abstract class ArtefactType {
         
         $type = strtolower(substr($classname, strlen('ArtefactType')));
 
-        if (!record_exists('artefact_installed_type', 'name', $type)) {
+        if (!artefact_type_installed($type)) {
             throw new InvalidArgumentException("Classname $classname not a valid artefact type");
         }
 
@@ -1207,6 +1207,16 @@ function artefact_get_records_by_id($ids) {
         }
     }
     return array();
+}
+
+function artefact_type_installed($type) {
+    static $types = array();
+
+    if (!$types) {
+        $types = get_records_assoc('artefact_installed_type');
+    }
+
+    return isset($types[$type]);
 }
 
 ?>
