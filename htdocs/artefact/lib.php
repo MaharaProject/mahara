@@ -718,13 +718,13 @@ abstract class ArtefactType {
             'parentinstance' => 1,
             'parentmetadata' => 1
         );
-        $data = array();
+        $data = new StdClass;
         foreach (get_object_vars($this) as $k => $v) {
             if (in_array($k, array('atime', 'ctime', 'mtime'))) {
-                $data[$k] = db_format_timestamp($v);
+                $data->$k = db_format_timestamp($v);
             }
             else if (!isset($ignore[$k])) {
-                $data[$k] = $v;
+                $data->$k = $v;
             }
         }
         return $data;
@@ -735,13 +735,13 @@ abstract class ArtefactType {
 
     public function copy_for_new_owner($user, $group, $institution) {
         $data = $this->copy_data();
-        $data['owner'] = $user;
-        $data['group'] = $group;
-        $data['institution'] = $institution;
-        $data['parent'] = null;
-        $classname = generate_artefact_class_name($data['artefacttype']);
-        safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $data['artefacttype']));
-        $copy = new $classname(0, $data);
+        $data->owner = $user;
+        $data->group = $group;
+        $data->institution = $institution;
+        $data->parent = null;
+        $classname = generate_artefact_class_name($data->artefacttype);
+        safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $data->artefacttype));
+        $copy = new $classname(0, (object) $data);
         $this->copy_extra($copy);
         $copy->commit();
         return $copy->get('id');
