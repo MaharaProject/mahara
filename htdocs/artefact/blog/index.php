@@ -78,9 +78,10 @@ define('SECTION_PAGE', 'index');
 
 ArtefactTypeBlog::build_blog_list_html($blogs);
 
-$smarty = smarty();
+$smarty = smarty(array('paginator'));
 $smarty->assign_by_ref('blogs', $blogs);
 $smarty->assign('PAGEHEADING', hsc(get_string("myblogs", "artefact.blog")));
+$smarty->assign('INLINEJAVASCRIPT', 'addLoadEvent(function() {' . $blogs->pagination_js . '});');
 $smarty->display('artefact:blog:index.tpl');
 
 ?>

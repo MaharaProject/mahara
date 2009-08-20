@@ -3,8 +3,17 @@
             <div class="rbuttons">
                 <a class="btn-add" href="{$WWWROOT}artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
             </div>
-            <div id="bloglist">
-            {$blogs->html}
-            </div>
-            {if $blogs->data}{$blogs->pagination.html}{/if}
+{if empty($blogs->data)}
+           <div>{str tag=youhavenoblogs section=artefact.blog}</div>
+{else}
+           <table id="bloglist" class="tablerenderer fullwidth">
+             <thead>
+               <tr><th></th><th></th></tr>
+             </thead>
+             <tbody>
+              {$blogs->tablerows}
+             </tbody>
+           </table>
+           {$blogs->pagination}
+{/if}
 {include file="footer.tpl"}

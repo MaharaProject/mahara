@@ -80,8 +80,8 @@ var Paginator = function(id, datatable, script, extradata) {
 
                     // Update the result count
                     var results = getFirstElementByTagAndClassName('div', 'results', self.id);
-                    if (results) {
-                        results.innerHTML = data['data']['results'];
+                    if (results && data.data.results) {
+                        results.innerHTML = data.data.results;
                     }
                 }
 
