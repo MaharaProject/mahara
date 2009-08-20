@@ -184,28 +184,8 @@ function gravatar_icon($email, $size=null) {
     }
 
     $url = "http://www.gravatar.com/avatar/{$md5sum}.jpg?r=g&s=$s";
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, "$url&d=404");
-    curl_setopt($ch, CURLOPT_REFERER, ''); // for privacy
-    curl_setopt($ch, CURLOPT_USERAGENT, 'Mahara ' . get_config('release'));
-
-    // Only return the status code
-    curl_setopt($ch, CURLOPT_FAILONERROR, true);
-    curl_setopt($ch, CURLOPT_HEADER, false);
-    curl_setopt($ch, CURLOPT_NOBODY, true);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-    // Set some aggressive timeouts
-    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-    curl_setopt($ch, CURLOPT_LOW_SPEED_TIME, 10);
-
-    if (false === curl_exec($ch)) {
-        return false;
-    }
-    else {
-        return $url;
-    }
+    $notfound = get_config('wwwroot').'/thumb.php?type=profileiconbyid';
+    return "$url&d=".urlencode($notfound);
 }
 
 ?>
