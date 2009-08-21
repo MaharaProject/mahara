@@ -38,6 +38,7 @@ switch ($type) {
     case 'profileicon':
         $id = param_integer('id', 0);
         $size = get_imagesize_parameters();
+        $earlyexpiry = param_boolean('earlyexpiry');
         $useremail = null;
 
         if ($id) {
@@ -70,7 +71,7 @@ switch ($type) {
                     // user can change it at any time. But we can cache 
                     // 'profileiconbyid' for quite a while, because it will 
                     // never change
-                    if ($type == 'profileiconbyid') {
+                    if ($type == 'profileiconbyid' and !$earlyexpiry) {
                         $maxage = 604800; // 1 week
                     }
                     else {
@@ -87,7 +88,7 @@ switch ($type) {
         }
 
         // Look for an appropriate image on gravatar.com
-        if ($useremail and $gravatarurl = gravatar_icon($useremail, '', $size)) {
+        if ($useremail and $gravatarurl = gravatar_icon($useremail, $size, $earlyexpiry)) {
             redirect($gravatarurl);
         }
 
@@ -95,7 +96,10 @@ switch ($type) {
         // photo' image for the current theme
 
         // We can cache such images
-        $maxage = 604800;
+        $maxage = 604800; // 1 week
+        if ($earlyexpiry) {
+            $maxage = 600; // 10 minutes
+        }
         header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
         header('Cache-Control: max-age=' . $maxage);
         header('Pragma: public');
@@ -169,12 +173,13 @@ switch ($type) {
 /**
  * Return a Gravatar URL if one exists for the given user.
  *
- * @param string $email    Email address of the user
- * @param object $size     Maximum size of the image
+ * @param string  $email         Email address of the user
+ * @param object  $size          Maximum size of the image
+ * @param boolean $earlyexpiry
  *
  * @returns string The URL of the image or FALSE if none was found
  */
-function gravatar_icon($email, $size=null) {
+function gravatar_icon($email, $size, $earlyexpiry) {
     $md5sum = md5(strtolower($email));
 
     $s = 100;
@@ -184,7 +189,7 @@ function gravatar_icon($email, $size=null) {
     }
 
     $url = "http://www.gravatar.com/avatar/{$md5sum}.jpg?r=g&s=$s";
-    $notfound = get_config('wwwroot').'/thumb.php?type=profileiconbyid';
+    $notfound = get_config('wwwroot').'thumb.php?type=profileiconbyid' . ($earlyexpiry ? '&earlyexpiry=1' : '');
     return "$url&d=".urlencode($notfound);
 }
 
