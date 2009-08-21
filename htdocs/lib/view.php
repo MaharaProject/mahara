@@ -1148,6 +1148,14 @@ class View {
             throw new UserException('[translate] Cannot put ' . $values['blocktype'] . ' blocktypes into this view');
         }
 
+        if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'single_only', $this)) {
+            $count = count_records_select('block_instance', "view = ? AND blocktype = ?",
+                                          array($this->id, $values['blocktype']));
+            if ($count > 0) {
+                throw new UserException(get_string('onlyoneblocktypeperview', 'error', $values['blocktype']));
+            }
+        }
+
         $bi = new BlockInstance(0,
             array(
                 'blocktype'  => $values['blocktype'],
