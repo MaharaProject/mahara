@@ -33,7 +33,7 @@
                         </select>
                     </td>
                     <td class="right">
-                        <a id="btn-displaymyview" href="view.php?id={$view}&amp;new={$new}">{str tag=displaymyview section=view} &raquo;</a>
+                        <a id="btn-displaymyview" href="{$viewurl|escape}">{str tag=displaymyview section=view} &raquo;</a>
                     </td>
                 </tr>
             </table>
