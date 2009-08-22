@@ -10,6 +10,7 @@ function ViewManager() {
 
     this.init = function () {
         self.bottomPane = $('bottom-pane');
+        self.viewThemeSelect = $('viewtheme-select');
 
         if (!self.isIE6) {
             // Set up the column container reference, and make the container the
@@ -61,6 +62,9 @@ function ViewManager() {
 
             // Change the intruction to be for ajax
             self.ajaxInstructions();
+
+            // Wire up the view theme selector
+            self.rewriteViewThemeSelector();
 
             // Make the top pane a dropzone for cancelling adding block types
             if (!self.isIE6) {
@@ -734,6 +738,19 @@ function ViewManager() {
     }
 
     /**
+     * Wire up the view theme selector
+     */
+    this.rewriteViewThemeSelector = function() {
+        var currentTheme = self.viewThemeSelect.selectedIndex;
+        connect(self.viewThemeSelect, 'onchange', function(e) {
+            var choice = self.viewThemeSelect.options[self.viewThemeSelect.selectedIndex];
+            if (self.viewThemeSelect.selectedIndex != currentTheme && choice.value) {
+                self.viewThemeSelect.form.submit();
+            }
+        });
+    }
+
+    /**
      * Place hotzones over the blockinstances on the page, so that we can work
      * out where to drop the blockinstance.
      *
@@ -1078,6 +1095,9 @@ function ViewManager() {
 
     // The bottom pane - set in self.init
     this.bottomPane = null;
+
+    // The view theme select element - set in self.init
+    this.viewThemeSelect = null;
 
     // Whether the browser is IE7 - needed for some hacks
     this.isIE7 = document.all && document.documentElement && typeof(document.documentElement.style.maxHeight) != "undefined" && !window.opera;

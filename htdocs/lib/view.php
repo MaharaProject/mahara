@@ -821,6 +821,12 @@ class View {
             return;
         }
 
+        $viewtheme = param_variable('viewtheme', '');
+        if ($viewtheme != join('/', $this->get_theme())
+            && preg_match('#^[a-z0-9-]+/[a-z0-9-]+$#i', $viewtheme)) {
+            $this->set('theme', $viewtheme);
+        }
+
         $action = '';
         foreach ($_POST as $key => $value) {
             if (substr($key, 0, 7) == 'action_') {
@@ -2415,42 +2421,6 @@ class View {
         return false;
     }
 
-    public function viewtheme_form($goto) {
-        $options = array(0 => get_string('choosetheme'));
-        foreach (self::get_viewthemes() as $viewtheme) {
-            $options[$viewtheme['id']] = hsc($viewtheme['name']);
-        }
-        $form = pieform(array(
-            'name'            => 'change_viewtheme',
-            'method'          => 'post',
-            'plugintype'      => 'core',
-            'pluginname'      => 'view',
-            'renderer'        => 'oneline',
-            'page'            => $goto,
-            'elements'        => array(
-                'theme' => array(
-                    'type'           => 'select',
-                    'title'          => get_string('theme'),
-                    'options'        => $options,
-                    'defaultvalue'   => $this->get('theme'),
-                ),
-            ),
-        ));
-        $form .= <<<EOF
-<script type="text/javascript">
-addLoadEvent(function () {
-    var currentTheme = $('change_viewtheme_theme').selectedIndex;
-    connect($('change_viewtheme_theme'), 'onchange', function(e) {
-        if (this.selectedIndex != currentTheme && this.options[this.selectedIndex].value) {
-            this.form.submit();
-        };
-    });
-});
-</script>
-EOF;
-        return $form;
-    }
-
 }
 
 
@@ -2747,18 +2717,6 @@ function objection_form_cancel_submit(Pieform $form) {
     $form->reply(PIEFORM_OK, array(
         'goto' => '/view/view.php?id=' . $view->get('id'),
     ));
-}
-
-function change_viewtheme_submit(Pieform $form, $values) {
-    global $view;
-    log_debug($values);
-    if (!empty($values['theme'])
-        && $values['theme'] != join('/', $view->get_theme())
-        && preg_match('#^[a-z0-9-]+/[a-z0-9-]+$#i', $values['theme'])) {
-        $view->set('theme', $values['theme']);
-        $view->commit();
-    }
-    redirect($form->get_property('page'));
 }
 
 
