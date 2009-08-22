@@ -118,15 +118,6 @@ feedbacklist.statevars.push('view');
 feedbacklist.updateOnLoad();
 EOF;
 
-if (param_boolean('profileframe', false)) {
-    $profileframe = 1;
-    $javascript .= <<<EOF
-feedbacklist.postupdatecallback = function () {
-    parent.resizeFrame(document.body.scrollHeight + 'px');
-};
-EOF;
-}
-
 $can_edit = $USER->can_edit_view($view) && !$submittedgroup && !$view->is_submitted();
 $page = get_config('wwwroot') . 'view/view.php?id=' . $viewid . ($new ? '&new=1' : '');
 if ($can_edit) {
@@ -184,9 +175,6 @@ if ($can_edit) {
 }
 if (isset($backurl)) {
     $smarty->assign('backurl', $backurl);
-}
-if (isset($profileframe)) {
-    $smarty->assign('profileframe', 1);
 }
 
 // Provide a link for roaming teachers to return

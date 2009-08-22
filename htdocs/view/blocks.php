@@ -116,10 +116,10 @@ if ($category === '') {
 $view->process_changes($category, $new);
 
 // Set up theme
-/* list($basetheme, $viewtheme) = $view->get_theme();
+list($basetheme, $viewtheme) = $view->get_theme();
 if ($THEME->basename != $basetheme) {
     $THEME = new Theme($basetheme);
-}*/
+}
 $stylesheets = array(
     // Basic structure CSS
     '<link rel="stylesheet" type="text/css" href="'

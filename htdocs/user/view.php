@@ -25,6 +25,11 @@
  */
 define('INTERNAL', 1);
 define('PUBLIC', 1);
+// Technically these are lies, but we set them like this to hook in the right 
+// plugin stylesheet. This file should be provided by artefact/internal anyway.
+define('SECTION_PLUGINTYPE', 'artefact');
+define('SECTION_PLUGINNAME', 'internal');
+define('SECTION_PAGE', 'view');
 
 require(dirname(dirname(__FILE__)).'/init.php');
 require_once('group.php');
@@ -60,20 +65,26 @@ if (!$view || !can_view_view($view->get('id'))) {
     throw new AccessDeniedException(get_string('youcannotviewthisusersprofile'));
 }
 
+// Set up theme
+list($basetheme, $viewtheme) = $view->get_theme();
+if ($THEME->basename != $basetheme) {
+    $THEME = new Theme($basetheme);
+}
+$stylesheets = array(
+    // Basic structure CSS
+    '<link rel="stylesheet" type="text/css" href="'
+        . get_config('wwwroot') . 'theme/views.css">',
+    // Extra CSS for the view theme
+    '<link rel="stylesheet" type="text/css" href="'
+        . get_config('wwwroot') . 'theme/' . $basetheme . '/viewthemes/' . $viewtheme . '/views.css">',
+);
+
 $name = display_name($user);
 define('TITLE', $name);
 $smarty = smarty(
     array('lib/pieforms/static/core/pieforms.js'),
-    array(),
-    array(),
-    array('sidebars' => false)
+    $stylesheets
 );
-$js = <<<EOF
-function resizeFrame(h) {
-    setStyle('viewframe', {'height': h});
-}
-EOF;
-$smarty->assign('INLINEJAVASCRIPT', $js);
 
 $sql = "SELECT g.*, a.type FROM {group} g JOIN (
 SELECT gm.group, 'invite' AS type
@@ -255,8 +266,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
     $smarty->assign('relationship', $relationship);
 
 }
-// Move to edit profile page ...
-/* else if (!empty($loggedinid)) {
+else if (!empty($loggedinid)) {
     if (get_config('allowpublicprofiles')) {
         $public = array_filter($view->get_access(), 
             create_function(
@@ -281,7 +291,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
         ));
         $smarty->assign('togglepublic', $togglepublic);
     }
-} */
+}
 
 if ($userid != $USER->get('id') && $USER->is_admin_for_user($user) && is_null($USER->get('parentuser'))) {
     $loginas = get_string('loginasuser', 'admin', hsc($user->username));
@@ -297,8 +307,7 @@ $smarty->assign('institutions', get_institution_string_for_user($userid));
 $smarty->assign('canmessage', can_send_message($loggedinid, $userid));
 $smarty->assign('NAME',$name);
 $smarty->assign('USERID', $userid);
-$smarty->assign('profileviewid', $view->get('id'));
-//$smarty->assign('viewcontent', $view->build_columns());
+$smarty->assign('viewcontent', $view->build_columns());
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('user/view.tpl');
 
@@ -347,7 +356,7 @@ function approve_deny_friendrequest_submit(Pieform $form, $values) {
     }
 }
 
-/* function togglepublic_submit(Pieform $form, $values) {
+function togglepublic_submit(Pieform $form, $values) {
     global $SESSION, $userid, $view;
     $access = array(
         array(
@@ -368,6 +377,6 @@ function approve_deny_friendrequest_submit(Pieform $form, $values) {
     $SESSION->add_ok_msg(get_string('viewaccesseditedsuccessfully', 'view'));
 
     redirect('/user/view.php?id=' . $userid);
-}*/
+}
 
 ?>

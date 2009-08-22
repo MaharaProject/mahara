@@ -2,7 +2,6 @@
 <html>
 {include file="header/head.tpl"}
 <body>
-{if !$profileframe}
 <div class="viewheader center rel">
   <div class="rbuttons">
     <a class="small-logo" href="{$WWWROOT}"><img src="{theme_url filename='images/site-logo.png'}" alt="{$sitename|escape}"></a>
@@ -19,7 +18,6 @@
   </div>
   {if !$new}<a href="{$WWWROOT}view/view.php?id={$viewid}">{/if}{$viewtitle|escape}{if !$new}</a>{/if}{if $ownername} {str tag=by section=view} <a href="{$WWWROOT}{$ownerlink}">{$ownername|escape}</a>{/if}
 </div>
-{/if}
 <div id="containerX">
     <div id="loading-box" style="display: none;"></div>
     <div id="top-wrapper">
