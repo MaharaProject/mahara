@@ -1,4 +1,4 @@
-{include file="header.tpl"}
+{include file="viewmicroheader.tpl"}
                     <div id="userview">
                         <div class="user-icon right">
                             {$institutions}
@@ -37,4 +37,4 @@
                         </div>
                     </div>
                 </div>
-{include file="footer.tpl"}
+{include file="microfooter.tpl"}
