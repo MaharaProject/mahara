@@ -325,16 +325,35 @@ div.rbuttons form div {
 
 /* Top of page elements */
 .viewheader {
-    padding: .5em;
-    border-bottom: 1px dotted #666;
+    border-bottom: 1px solid #666;
     background-color: #fff;
+    height: 32px;
+}
+#dropshadow {
+    background-image: url(../images/dropshadow.png);
+    background-repeat: repeat-x;
+    z-index: 1;
+    height: 15px;
+    width: 100%;
+    float: left;
 }
 .viewheader .small-logo img {
-    height: 2.6em;
+    height: 32px;
     padding: 0;
 }
-.viewheader .lbuttons {
+.viewheader .rbuttons {
     padding: .5em;
+}
+.viewheader h1 {
+    font-size: 1.2em;
+    margin: 0;
+    padding: .5em;
+}
+.viewheader h1 #vt-title {
+    font-weight: bold;
+}
+.viewheader h1 #vt-by {
+    font-size: .9em;
 }
 .sitemessage {
     background-color: #f99;

@@ -3,15 +3,17 @@
 {include file="header/head.tpl"}
 <body>
 <div class="viewheader center rel">
-  <div class="rbuttons">
+  <div class="lbuttons">
     <a class="small-logo" href="{$WWWROOT}"><img src="{theme_url filename='images/site-logo.png'}" alt="{$sitename|escape}"></a>
-    {if $mnethost}&nbsp;&nbsp;<a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a>{/if}
+    {if $mnethost}<a href="{$mnethost.url|escape}">{str tag=backto arg1=$mnethost.name}</a>{/if}
+    {if $backurl}<a class="btn-reply" href="{$backurl|escape}">{str tag=back}</a>{/if}
   </div>
-  {if $can_edit}
-    <div class="lbuttons"><a href="blocks.php?id={$viewid}&amp;new={$new}">{str tag=edit}</a></div>
+  {if $edit_url}
+    <div class="rbuttons"><strong><a href="{$edit_url|escape}" class="btn-edit">{str tag=edit}</a></strong></div>
   {/if}
-  {if !$new}<a href="{$WWWROOT}view/view.php?id={$viewid}">{/if}{$viewtitle|escape}{if !$new}</a>{/if}{if $ownername} {str tag=by section=view} <a href="{$WWWROOT}{$ownerlink}">{$ownername|escape}</a>{/if}
+  <h1>{$viewtitle}</h1>
 </div>
+<div id="dropshadow"></div>
 <div id="containerX">
     <div id="loading-box" style="display: none;"></div>
     <div id="top-wrapper">

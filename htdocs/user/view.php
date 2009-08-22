@@ -307,6 +307,14 @@ $smarty->assign('institutions', get_institution_string_for_user($userid));
 $smarty->assign('canmessage', can_send_message($loggedinid, $userid));
 $smarty->assign('NAME',$name);
 $smarty->assign('USERID', $userid);
+$smarty->assign('viewid', $view->get('id'));
+$smarty->assign('viewtitle', 'This is the profile of ' . display_name($user) . ' at ' . get_config('sitename'));
+if ($loggedinid && $loggedinid == $userid) {
+    $smarty->assign('edit_url', get_config('wwwroot') . 'view/blocks.php?profile=' . $userid);
+}
+if (isset($_SERVER['HTTP_REFERER']) && false === strpos($_SERVER['HTTP_REFERER'], get_config('wwwroot') . 'user/view.php?id=' . $userid)) {
+    $smarty->assign('backurl', $_SERVER['HTTP_REFERER']);
+}
 $smarty->assign('viewcontent', $view->build_columns());
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('user/view.tpl');

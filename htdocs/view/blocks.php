@@ -178,6 +178,10 @@ $smarty->assign('profile', $profile);
 $smarty->assign('view', $view->get('id'));
 $smarty->assign('groupid', $group);
 $smarty->assign('institution', $institution);
+$smarty->assign('viewurl', (!empty($profile))
+    ? get_config('wwwroot') . 'user/view.php?id=' . $view->get('owner')
+    : 'view.php?id=' . $view->get('id') . '&new=' . $new
+);
 $smarty->assign('can_change_layout', (!$USER->get_account_preference('addremovecolumns') || ($view->get('numcolumns') > 1 && $view->get('numcolumns') < 5)));
 
 $blockid = $view->get_blockinstance_currently_being_configured();

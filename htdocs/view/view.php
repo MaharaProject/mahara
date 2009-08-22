@@ -151,18 +151,21 @@ $smarty = smarty(
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('new', $new);
 $smarty->assign('viewid', $viewid);
-$smarty->assign('viewtitle', $view->get('title'));
-
 $owner = $view->get('owner');
+if ($owner && $USER->get('id') == $owner && !$submittedgroup && !$view->is_submitted()) {
+    $smarty->assign('edit_url', get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . '&new=' . $new);
+}
+$ownerlink = '';
 if ($owner) {
-    $smarty->assign('ownerlink', 'user/view.php?id=' . $owner);
-    if ($USER->get('id') == $owner) {
-        $smarty->assign('can_edit', !$submittedgroup && !$view->is_submitted());
-    }
+    $ownerlink = 'user/view.php?id=' . $owner;
 }
 else if ($group) {
-    $smarty->assign('ownerlink', 'group/view.php?id=' . $group);
+    $ownerlink = 'group/view.php?id=' . $group;
 }
+$smarty->assign('viewtitle', get_string('viewtitle', 'view',
+    $view->get('title'),
+    '<a href="' . get_config('wwwroot') . hsc($ownerlink) . '">' . display_name($owner) . '</a>'
+));
 
 // Provide a link for roaming teachers to return
 if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
@@ -176,6 +179,9 @@ if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
             ));
         }
     }
+}
+else if (isset($_SERVER['HTTP_REFERER']) && false === strpos($_SERVER['HTTP_REFERER'], get_config('wwwroot') . 'view/view.php?id=' . $viewid)) {
+    $smarty->assign('backurl', $_SERVER['HTTP_REFERER']);
 }
 
 $smarty->assign('ownername', $view->formatted_owner());
