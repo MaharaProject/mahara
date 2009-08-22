@@ -119,12 +119,21 @@ feedbacklist.updateOnLoad();
 EOF;
 
 $can_edit = $USER->can_edit_view($view) && !$submittedgroup && !$view->is_submitted();
-$page = get_config('wwwroot') . 'view/view.php?id=' . $viewid . ($new ? '&new=1' : '');
 if ($can_edit) {
-    $viewthemeform = $view->viewtheme_form($page);
-}
-if ($USER->is_logged_in() && !empty($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != $page) {
-    $backurl = $_SERVER['HTTP_REFERER'];
+    $goto = get_config('wwwroot') . 'view/view.php?id=' . $viewid . ($new ? '&new=1' : '');
+    $viewthemeform = $view->viewtheme_form($goto);
+    //$smarty->assign('viewtheme', "$basetheme/$viewtheme");
+    //$smarty->assign('viewthemes', View::get_viewthemes());
+    /*$javascript .= <<<EOF
+addLoadEvent(function () {
+    var currentTheme = $('viewtheme-select').selectedIndex;
+    connect($('viewtheme-select'), 'onchange', function(e) {
+        if (this.selectedIndex != currentTheme && this.options[this.selectedIndex].value) {
+            this.form.submit();
+        };
+    });
+});
+EOF;*/
 }
 
 $anonfeedback = !$USER->is_logged_in() && ($usertoken || $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid)));
@@ -173,9 +182,6 @@ if ($can_edit) {
     $smarty->assign('can_edit', 1);
     $smarty->assign('viewthemeform', $viewthemeform);
 }
-if (isset($backurl)) {
-    $smarty->assign('backurl', $backurl);
-}
 
 // Provide a link for roaming teachers to return
 if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
@@ -189,6 +195,9 @@ if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
             ));
         }
     }
+}
+if ($USER->is_logged_in() && !empty($_SERVER['HTTP_REFERER'])) {
+    $smarty->assign('backurl', $_SERVER['HTTP_REFERER']);
 }
 $smarty->assign('ownername', $view->formatted_owner());
 $smarty->assign('viewdescription', $view->get('description'));
