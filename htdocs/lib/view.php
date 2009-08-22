@@ -361,7 +361,7 @@ class View {
             'numcolumns'  => 3,
             'template'    => 0,
             'type'        => 'portfolio',
-            'title'       => self::new_title(get_string('Untitled', 'view'), (object)$viewdata),
+            'title'       => (array_key_exists('title', $viewdata)) ? $viewdata['title'] : self::new_title(get_string('Untitled', 'view'), (object)$viewdata),
         );
 
         $data = (object)array_merge($defaultdata, $viewdata);
