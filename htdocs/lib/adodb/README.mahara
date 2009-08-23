@@ -2,11 +2,10 @@ adodb
 -----
 
 Source: http://adodb.sourceforge.net/
-Version: 5.18
+Version: 5.19
 
 Modifications:
 
-- fix MySQL bug on installing Mahara (e7029e5fc1fd3329a3a817f26b2ad5c3f61239cf)
 - RecordSet_postgres7->MoveNext() - remove expensive is_array() (04ef8a3b9770f93326a2ece31e4089368117faca)
 - check for Postgres 8.1 (c6dfccadfae432147fff99fa15b0985dcae7e503)
 - Check for valid columns in adodb postgres64 driver MetaIndexes fn (b87d9961020a8d52a2eaf709a9197520b3c6b65b)
