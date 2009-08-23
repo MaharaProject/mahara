@@ -9,5 +9,6 @@ Modifications:
 - RecordSet_postgres7->MoveNext() - remove expensive is_array() (04ef8a3b9770f93326a2ece31e4089368117faca)
 - check for Postgres 8.1 (c6dfccadfae432147fff99fa15b0985dcae7e503)
 - Check for valid columns in adodb postgres64 driver MetaIndexes fn (b87d9961020a8d52a2eaf709a9197520b3c6b65b)
+- add __wakeup to connection object (417077459037550239fe9b09bd20b50d4c19b57f)
 - Deleted many files we're not using, including tests, docs, other drivers, other error langs
 

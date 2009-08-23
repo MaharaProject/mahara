@@ -415,11 +415,11 @@ if (!defined('_ADODB_LAYER')) {
 	var $dataProvider = 'native';
 	var $databaseType = '';		/// RDBMS currently in use, eg. odbc, mysql, mssql
 	var $database = '';			/// Name of database to be used.
-	var $host = '';				/// The hostname of the database server
-	var $user = '';				/// The username which is used to connect to the database server.
-	var $password = '';			/// Password for the username. For security, we no longer store it.
-	var $debug = false;			/// if set to true will output sql statements
-	var $maxblobsize = 262144;	/// maximum size of blobs or large text fields (262144 = 256K)-- some db's die otherwise like foxpro
+	var $host = ''; 			/// The hostname of the database server
+	var $user = ''; 			/// The username which is used to connect to the database server.
+    private $password = '';     /// Password for the username. This is required for __wakeup
+	var $debug = false; 		/// if set to true will output sql statements
+	var $maxblobsize = 262144; 	/// maximum size of blobs or large text fields (262144 = 256K)-- some db's die otherwise like foxpro
 	var $concat_operator = '+'; /// default concat operator -- change to || for Oracle/Interbase
 	var $substr = 'substr';		/// substring operator
 	var $length = 'length';		/// string length ofperator
@@ -639,7 +639,7 @@ if (!defined('_ADODB_LAYER')) {
 			$this->user = $argUsername;
 		}
 		if ($argPassword != "") {
-			$this->password = 'not stored'; // not stored for security reasons
+			$this->password = $argPassword;
 		}
 		if ($argDatabaseName != "") {
 			$this->database = $argDatabaseName;
@@ -3024,6 +3024,9 @@ http://www.stanford.edu/dept/itss/docs/oracle/10g/server.101/b10759/statements_1
 		return $rs;
 	}
 
+    function __wakeup() {
+        $this->Connect($this->host, $this->user, $this->password, $this->database, true);
+    }
 } // end class ADOConnection
 
 
