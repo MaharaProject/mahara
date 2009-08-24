@@ -424,7 +424,7 @@ function error ($code, $message, $file, $line, $vars) {
 
     // Ignore errors from smarty templates, which happen all too often
     if (function_exists('get_config')) {
-        $compiledir = realpath(get_config('dataroot') . 'smarty/compile');
+        $compiledir = realpath(get_config('dataroot') . 'dwoo/compile');
 
         if (E_NOTICE == $code && substr($file, 0, strlen($compiledir)) == $compiledir) {
             return;
