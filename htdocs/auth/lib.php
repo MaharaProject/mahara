@@ -406,7 +406,6 @@ function auth_setup () {
             }
         }
         $USER->renew();
-        auth_check_password_change();
         auth_check_required_fields();
     }
     else if ($sessionlogouttime > 0) {
@@ -689,18 +688,85 @@ function auth_get_available_auth_types($institution=null) {
 }
 /**
  * Checks that all the required fields are set, and handles setting them if required.
+ *
+ * Checks whether the current user needs to change their password, and handles
+ * the password changing if it's required.
  */
 function auth_check_required_fields() {
-    global $USER;
+    global $USER, $SESSION;
 
-    if (defined('JSON')) {
+    $changepassword = true;
+    $elements = array();
+
+    if (
+        !$USER->get('passwordchange')                                // User doesn't need to change their password
+        || ($USER->get('parentuser') && $USER->get('loginanyway'))   // User is masquerading and wants to log in anyway
+        || defined('NOCHECKPASSWORDCHANGE')                          // The page wants to skip this hassle
+        ) {
+        $changepassword = false;
+    }
+
+    // Check if the user wants to log in anyway
+    if ($USER->get('passwordchange') && $USER->get('parentuser') && isset($_GET['loginanyway'])) {
+        $USER->loginanyway = true;
+        $changepassword = false;
+    }
+
+    if ($changepassword) {
+        $authobj = AuthFactory::create($USER->authinstance);
+
+        if ($authobj->changepasswordurl) {
+            redirect($authobj->changepasswordurl);
+            exit;
+        }
+
+        if (method_exists($authobj, 'change_password')) {
+
+            if ($SESSION->get('resetusername')) {
+                $elements['username'] = array(
+                    'type' => 'text',
+                    'defaultvalue' => $USER->get('username'),
+                    'title' => get_string('changeusername', 'account'),
+                    'description' => get_string('changeusernamedesc', 'account', hsc(get_config('sitename'))),
+                );
+            }
+
+            $elements['password1'] = array(
+                'type'        => 'password',
+                'title'       => get_string('newpassword') . ':',
+                'description' => get_string('yournewpassword'),
+                'rules'       => array(
+                    'required' => true
+                )
+            );
+
+            $elements['password2'] = array(
+                'type'        => 'password',
+                'title'       => get_string('confirmpassword') . ':',
+                'description' => get_string('yournewpasswordagain'),
+                'rules'       => array(
+                    'required' => true,
+                ),
+            );
+
+            $elements['email'] = array(
+                'type'   => 'text',
+                'title'  => get_string('principalemailaddress', 'artefact.internal'),
+                'ignore' => (trim($USER->get('email')) != '' && !preg_match('/@example\.org$/', $USER->get('email'))),
+                'rules'  => array(
+                    'required' => true,
+                    'email'    => true,
+                ),
+            );
+        }
+    }
+    else if (defined('JSON')) {
         // Don't need to check this for json requests
         return;
     }
 
     safe_require('artefact', 'internal');
     require_once('pieforms/pieform.php');
-    $elements = array();
 
     $alwaysmandatoryfields = array_keys(ArtefactTypeProfile::get_always_mandatory_fields());
     foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
@@ -716,7 +782,10 @@ function auth_check_required_fields() {
         }
 
         if ($field == 'email') {
-            // Use a text field for their first e-mail address, not the 
+            if (isset($elements['email'])) {
+                continue;
+            }
+            // Use a text field for their first e-mail address, not the
             // emaillist element
             $type = 'text';
         }
@@ -763,118 +832,22 @@ function auth_check_required_fields() {
     ));
 
     $smarty = smarty();
+    if ($USER->get('parentuser')) {
+        $smarty->assign('loginasoverridepasswordchange',
+            get_string('loginasoverridepasswordchange', 'admin',
+                       '<a href="' . get_config('wwwroot') . '?loginanyway">', '</a>'));
+    }
+    $smarty->assign('changepassword', $changepassword);
     $smarty->assign('form', $form);
     $smarty->display('requiredfields.tpl');
     exit;
 }
 
-function requiredfields_submit(Pieform $form, $values) {
-    global $USER, $SESSION;
-    foreach ($values as $field => $value) {
-        if (in_array($field, array('submit', 'sesskey'))) {
-            continue;
-        }
-        set_profile_field($USER->get('id'), $field, $value);
-    }
-    $SESSION->add_ok_msg(get_string('requiredfieldsset', 'auth'));
-    redirect();
-}
-
-/**
- * Checks whether the current user needs to change their password, and handles
- * the password changing if it's required.
- *
- * This only applies for the internal authentication plugin. Other plugins
- * will, in theory, have different data stores, making changing the password
- * via the internal form difficult.
- */
-function auth_check_password_change() {
+function requiredfields_validate(Pieform $form, $values) {
     global $USER;
-    if (
-        !$USER->get('passwordchange')                                // User doesn't need to change their password
-        || ($USER->get('parentuser') && $USER->get('loginanyway'))   // User is masquerading and wants to log in anyway
-        || defined('NOCHECKPASSWORDCHANGE')                          // The page wants to skip this hassle
-        ) {
-        return;
+    if (!isset($values['password1'])) {
+        return true;
     }
-
-    // Check if the user wants to log in anyway
-    if ($USER->get('passwordchange') && $USER->get('parentuser') && isset($_GET['loginanyway'])) {
-        $USER->loginanyway = true;
-        return;
-    }
-
-    $authobj = AuthFactory::create($USER->authinstance);
-
-    if ($authobj->changepasswordurl) {
-        redirect($authobj->changepasswordurl);
-        exit;
-    }
-
-    // @todo auth preference for a password change screen for all auth methods other than internal
-    if (method_exists($authobj, 'change_password')) {
-
-        require_once('pieforms/pieform.php');
-        $form = pieform(array(
-            'name'       => 'change_password',
-            'method'     => 'post',
-            'plugintype' => 'auth',
-            'pluginname' => 'internal',
-            'elements'   => array(
-                'password1' => array(
-                    'type'        => 'password',
-                    'title'       => get_string('newpassword') . ':',
-                    'description' => get_string('yournewpassword'),
-                    'rules'       => array(
-                        'required' => true
-                    )
-                ),
-                'password2' => array(
-                    'type'        => 'password',
-                    'title'       => get_string('confirmpassword') . ':',
-                    'description' => get_string('yournewpasswordagain'),
-                    'rules'       => array(
-                        'required' => true,
-                    ),
-                ),
-                'email' => array(
-                    'type'   => 'text',
-                    'title'  => get_string('principalemailaddress', 'artefact.internal'),
-                    'ignore' => (trim($USER->get('email')) != '' && !preg_match('/@example\.org$/', $USER->get('email'))),
-                    'rules'  => array(
-                        'required' => true,
-                        'email'    => true,
-                    ),
-                ),
-                'submit' => array(
-                    'type'  => 'submit',
-                    'value' => get_string('changepassword'),
-                ),
-            )
-        ));
-
-        $smarty = smarty();
-        $smarty->assign('change_password_form', $form);
-        if ($USER->get('parentuser')) {
-            $smarty->assign('loginasoverridepasswordchange',
-                get_string('loginasoverridepasswordchange', 'admin',
-                    '<a href="' . get_config('wwwroot') . '?loginanyway">', '</a>'));
-        }
-        $smarty->display('change_password.tpl');
-        exit;
-    }
-}
-
-/**
- * Validates the form for changing the password for a user.
- *
- * Change password will only be if a URL for it exists, or a function exists.
- *
- * @param Pieform  $form   The form to check
- * @param array    $values The values to check
- */
-function change_password_validate(Pieform $form, $values) {
-    global $USER;
 
     // Get the authentication type for the user, and
     // use the information to validate the password
@@ -888,33 +861,61 @@ function change_password_validate(Pieform $form, $values) {
         && $authobj->authenticate_user_account($USER, $values['password1'])) {
         $form->set_error('password1', get_string('passwordnotchanged'));
     }
+
+    if ($authobj->authname == 'internal' && isset($values['username']) && $values['username'] != $USER->get('username')) {
+        if (!AuthInternal::is_username_valid($values['username'])) {
+            $form->set_error('username', get_string('usernameinvalidform', 'auth.internal'));
+        }
+        if (!$form->get_error('username') && record_exists_select('usr', 'LOWER(username) = ?', strtolower($values['username']))) {
+            $form->set_error('username', get_string('usernamealreadytaken', 'auth.internal'));
+        }
+    }
 }
 
-/**
- * Changes the password for a user, given that it is valid.
- *
- * @param array $values The submitted form values
- */
-function change_password_submit(Pieform $form, $values) {
+function requiredfields_submit(Pieform $form, $values) {
     global $USER, $SESSION;
 
-    $authobj = AuthFactory::create($USER->authinstance);
+    if (isset($values['password1'])) {
+        $authobj = AuthFactory::create($USER->authinstance);
 
-    // This method should exist, because if it did not then the change
-    // password form would not have been shown.
-    if ($password = $authobj->change_password($USER, $values['password1'])) {
-        $SESSION->add_ok_msg(get_string('passwordsaved'));
-        if (!empty($values['email'])) {
-            $USER->email = $values['email'];
-            $USER->commit();
-            set_profile_field($USER->id, 'email', $values['email']);
+        // This method should exist, because if it did not then the change
+        // password form would not have been shown.
+        if ($password = $authobj->change_password($USER, $values['password1'])) {
+            $SESSION->add_ok_msg(get_string('passwordsaved'));
         }
-        redirect();
+        else {
+            // TODO: Exception is the wrong type here!
+            throw new Exception('Attempt by "' . $USER->get('username') . '@'
+                . $USER->get('institution') . 'to change their password failed');
+        }
     }
 
-    // TODO: Exception is the wrong type here!
-    throw new Exception('Attempt by "' . $USER->get('username') . '@'
-        . $USER->get('institution') . 'to change their password failed');
+    if (isset($values['username'])) {
+        $SESSION->set('resetusername', false);
+        if ($values['username'] != $USER->get('username')) {
+            $USER->username = $values['username'];
+            $USER->commit();
+            $otherfield = true;
+        }
+    }
+
+    foreach ($values as $field => $value) {
+        if (in_array($field, array('submit', 'sesskey', 'password1', 'password2', 'username'))) {
+            continue;
+        }
+        if ($field == 'email') {
+            $USER->email = $values['email'];
+            $USER->commit();
+        }
+        set_profile_field($USER->get('id'), $field, $value);
+        $otherfield = true;
+    }
+
+    if (isset($otherfield)) {
+        $SESSION->add_ok_msg(get_string('requiredfieldsset', 'auth'));
+    }
+
+    redirect();
 }
 
 /**
@@ -1260,7 +1261,6 @@ function login_submit(Pieform $form, $values) {
 
     // User is allowed to log in
     //$USER->login($userdata);
-    auth_check_password_change();
     auth_check_required_fields();
 }
 

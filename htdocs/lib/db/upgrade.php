@@ -1177,6 +1177,16 @@ function xmldb_core_upgrade($oldversion=0) {
         ensure_record_exists('event_type', $event, $event);
     }
 
+    if ($oldversion < 2009082400) {
+        $table = new XMLDBTable('usr_registration');
+        $field = new XMLDBField('username');
+        drop_field($table, $field);
+        $field = new XMLDBField('salt');
+        drop_field($table, $field);
+        $field = new XMLDBField('password');
+        drop_field($table, $field);
+    }
+
     return $status;
 
 }
