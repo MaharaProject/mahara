@@ -838,6 +838,7 @@ function auth_check_required_fields() {
                        '<a href="' . get_config('wwwroot') . '?loginanyway">', '</a>'));
     }
     $smarty->assign('changepassword', $changepassword);
+    $smarty->assign('changeusername', $SESSION->get('resetusername'));
     $smarty->assign('form', $form);
     $smarty->display('requiredfields.tpl');
     exit;
