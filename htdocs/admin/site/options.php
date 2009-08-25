@@ -184,6 +184,18 @@ $siteoptionform = array(
             'defaultvalue' => get_config('institutionautosuspend'),
             'help'         => true,
         ),
+        'captchaonregisterform' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('captchaonregisterform', 'admin'),
+            'description'  => get_string('captchaonregisterformdescription', 'admin'),
+            'defaultvalue' => get_config('captchaonregisterform'),
+        ),
+        'captchaoncontactform' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('captchaoncontactform', 'admin'),
+            'description'  => get_string('captchaoncontactformdescription', 'admin'),
+            'defaultvalue' => get_config('captchaoncontactform'),
+        ),
     )
 );
 
@@ -202,10 +214,13 @@ function siteoptions_fail(Pieform $form, $field) {
 }
 
 function siteoptions_submit(Pieform $form, $values) {
-    $fields = array('sitename','lang','theme', 'pathtoclam',
-                    'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn', 
-                    'allowpublicviews', 'allowpublicprofiles', 'createpublicgroups', 'searchplugin',
-                    'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend');
+    $fields = array(
+        'sitename','lang','theme', 'pathtoclam',
+        'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
+        'allowpublicviews', 'allowpublicprofiles', 'createpublicgroups', 'searchplugin',
+        'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
+        'captchaonregisterform', 'captchaoncontactform',
+    );
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');
     foreach ($fields as $field) {

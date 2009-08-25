@@ -1187,6 +1187,13 @@ function xmldb_core_upgrade($oldversion=0) {
         drop_field($table, $field);
     }
 
+    if ($oldversion < 2009082600) {
+        $captcha = get_config('captcha_on_contact_form');
+        set_config('captchaoncontactform', (int) (is_null($captcha) || $captcha));
+        $captcha = get_config('captcha_on_register_form');
+        set_config('captchaonregisterform', (int) (is_null($captcha) || $captcha));
+    }
+
     return $status;
 
 }

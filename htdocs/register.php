@@ -236,8 +236,7 @@ $elements['tandc'] = array(
     'separator' => ' &nbsp; '
 );
 
-$captcharequired = get_config('captcha_on_register_form');
-if (is_null($captcharequired) || $captcharequired) {
+if (get_config('captchaonregisterform')) {
     $elements['captcha'] = array(
         'type' => 'captcha',
         'title' => get_string('captchatitle'),
@@ -296,8 +295,7 @@ function register_validate(Pieform $form, $values) {
     }
 
     // CAPTCHA image
-    $captcharequired = get_config('captcha_on_register_form');
-    if ((is_null($captcharequired) || $captcharequired) && !$values['captcha']) {
+    if (get_config('captchaonregisterform') && !$values['captcha']) {
         $form->set_error('captcha', get_string('captchaincorrect'));
     }
 
