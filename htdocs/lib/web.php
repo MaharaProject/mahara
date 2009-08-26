@@ -435,6 +435,11 @@ EOF;
                 'weight' => 0,
                 'data'   => array(),
             );
+            $SIDEBLOCKS[] = array(
+                'name'   => 'mytags',
+                'weight' => 0,
+                'data'   => mytags_sideblock(),
+            );
         }
 
         if($USER->is_logged_in() && !defined('ADMIN') && !defined('INSTITUTIONALADMIN')) {

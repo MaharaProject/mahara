@@ -837,6 +837,47 @@ class PluginSearchInternal extends PluginSearch {
 
 
     /**
+     * Returns portfolio items (artefacts, views) owned by $owner and tagged
+     * with $tag.
+     *
+     * @param string   $tag Tag
+     * @param object   $owner: owner type (user,group,institution), and id
+     * @param integer  $limit
+     * @param integer  $offset
+     */
+    public static function portfolio_search_by_tag($tag, $owner, $limit, $offset) {
+        $from = "FROM (
+           (SELECT a.id, a.title, a.description, 'artefact' AS type, a.artefacttype, " . db_format_tsfield('a.ctime', 'ctime') . "
+            FROM {artefact} a JOIN {artefact_tag} at ON (a.id = at.artefact AND at.tag = ?)
+            WHERE a.owner = ?)
+           UNION
+           (SELECT v.id, v.title, v.description, 'view' AS type, NULL AS artefacttype, " . db_format_tsfield('v.ctime', 'ctime') . "
+            FROM {view} v JOIN {view_tag} vt ON (v.id = vt.view AND vt.tag = ?)
+            WHERE v.owner = ?)
+        ) p";
+
+        $values = array($tag, $owner->id, $tag, $owner->id);
+
+        $result = (object) array(
+            'tag'    => $tag,
+            'owner'  => $owner,
+            'offset' => $offset,
+            'limit'  => $limit,
+            'count'  => 0,
+            'data'   => array(),
+        );
+
+        if ($count = count_records_sql('SELECT COUNT(*) ' . $from, $values, $offset, $limit)) {
+            $result->count = $count;
+            if ($data = get_records_sql_array('SELECT * ' . $from . ' ORDER BY p.title ASC', $values, $offset, $limit)) {
+                $result->data = $data;
+            }
+        }
+        return $result;
+    }
+
+
+    /**
      * Parses a query string into SQL fragments for searching. Supports 
      * phrases, AND/OR etc.
      *

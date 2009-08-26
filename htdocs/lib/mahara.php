@@ -2033,6 +2033,30 @@ function onlineusers_sideblock() {
     );
 }
 
+function mytags_sideblock() {
+    global $USER;
+    $id = $USER->get('id');
+    $tags = get_records_sql_array("
+        SELECT
+            t.tag, COUNT(t.tag)
+        FROM (
+           (SELECT at.tag, a.id, 'artefact' AS type
+            FROM {artefact_tag} at JOIN {artefact} a ON a.id = at.artefact
+            WHERE a.owner = ?)
+           UNION
+           (SELECT vt.tag, v.id, 'view' AS type
+            FROM {view_tag} vt JOIN {view} v ON v.id = vt.view
+            WHERE v.owner = ?)
+        ) t
+        GROUP BY t.tag
+        ORDER BY COUNT(t.tag) DESC
+        LIMIT 10",
+        array($id, $id)
+    );
+    return array('tags' => $tags);
+}
+
+
 /**
  * Cronjob to recalculate how much quota each user is using and update it as 
  * appropriate.
@@ -2096,6 +2120,42 @@ function random_string($length=15) {
         $string .= substr($pool, (mt_rand()%($poollen)), 1);
     }
     return $string;
+}
+
+function build_portfolio_search_html(&$data) {
+    $artefacttypes = get_records_assoc('artefact_installed_type');
+    foreach ($data->data as &$item) {
+        $item->ctime = format_date($item->ctime);
+        if ($item->type == 'view') {
+            $item->typestr = get_string('view');
+            $item->url     = get_config('wwwroot') . 'view/view.php?id=' . $item->id;
+        }
+        else { // artefact
+            safe_require('artefact', $artefacttypes[$item->artefacttype]->plugin);
+            $links = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_links', $item->id);
+            $item->url     = $links['_default'];
+            $item->icon    = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_icon', array('id' => $item->id));
+            $item->typestr = get_string($item->artefacttype, 'artefact.' . $artefacttypes[$item->artefacttype]->plugin);
+        }
+    }
+    $smarty = smarty_core();
+    $smarty->assign_by_ref('data', $data->data);
+    $data->tablerows = $smarty->fetch('portfoliosearchresults.tpl');
+    $pagination = build_pagination(array(
+        'id' => 'portfoliosearch_pagination',
+        'class' => 'center',
+        'url' => get_config('wwwroot') . 'tags.php?tag=' . urlencode($data->tag),
+        'jsonscript' => 'json/tagsearch.php',
+        'datatable' => 'results',
+        'count' => $data->count,
+        'limit' => $data->limit,
+        'offset' => $data->offset,
+        'numbersincludefirstlast' => false,
+        'resultcounttextsingular' => get_string('result'),
+        'resultcounttextplural' => get_string('results'),
+    ));
+    $data->pagination = $pagination['html'];
+    $data->pagination_js = $pagination['javascript'];
 }
 
 ?>

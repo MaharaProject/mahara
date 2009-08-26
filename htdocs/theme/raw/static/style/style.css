@@ -76,6 +76,9 @@ img {
     font-size: .9em;
     font-weight: normal;
 }
+.ctime {
+    color: #838383;
+}
 pre, tt {
 	font-size: 1.2em;
     white-space: normal;
