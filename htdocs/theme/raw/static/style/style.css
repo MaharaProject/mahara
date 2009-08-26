@@ -654,6 +654,14 @@ div.sideblock #friendscontrol label {
 	vertical-align: top;
 }
 
+.sidebar-content.mytags {
+    text-align: center;
+}
+div.sideblock .tag {
+    padding: 0 .5em 0 0;
+    vertical-align: middle;
+}
+
 /* AJAX LOGIN */
 #ajax-login-form {
     border: 5px solid #ddd;

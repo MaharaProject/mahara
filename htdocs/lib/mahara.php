@@ -2033,10 +2033,15 @@ function onlineusers_sideblock() {
     );
 }
 
-function mytags_sideblock() {
+function tag_weight($freq) {
+    return pow($freq, 2);
+    // return log10($freq);
+}
+
+function get_my_tags($limit=null, $cloud=true) {
     global $USER;
     $id = $USER->get('id');
-    $tags = get_records_sql_array("
+    $tagrecords = get_records_sql_array("
         SELECT
             t.tag, COUNT(t.tag)
         FROM (
@@ -2049,11 +2054,35 @@ function mytags_sideblock() {
             WHERE v.owner = ?)
         ) t
         GROUP BY t.tag
-        ORDER BY COUNT(t.tag) DESC
-        LIMIT 10",
+        ORDER BY COUNT(t.tag) DESC" . (is_null($limit) ? '' : " LIMIT $limit"),
         array($id, $id)
     );
-    return array('tags' => $tags);
+    if ($cloud && $tagrecords) {
+        $minfreq = $tagrecords[count($tagrecords) - 1]->count;
+        $maxfreq = $tagrecords[0]->count;
+
+        $minweight = tag_weight($minfreq);
+        $maxweight = tag_weight($maxfreq);
+
+        $minsize = 0.8;
+        $maxsize = 2.5;
+
+        foreach ($tagrecords as &$t) {
+            $weight = (tag_weight($t->count) - $minweight) / ($maxweight - $minweight);
+            $t->size = sprintf("%0.1f", $minsize + ($maxsize - $minsize) * $weight);
+        }
+        usort($tagrecords, create_function('$a,$b', 'return strnatcasecmp($a->tag, $b->tag);'));
+        return $tagrecords;
+    }
+    return false;
+}
+
+function mytags_sideblock() {
+    $maxtags = 20;
+    if ($tagrecords = get_my_tags($maxtags)) {
+        return array('tags' => $tagrecords);
+    }
+    return null;
 }
 
 
