@@ -153,31 +153,11 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             }
             break;
         case self::STRATEGY_IMPORT_AS_ACHIEVEMENT:
-            $dateelement = $entry->xpath('leap:date[@leap:point="end"]');
-            if (count($dateelement) == 1) {
-                $dateelement = $dateelement[0];
-            }
-
-            $date = '';
-            if ($dateelement instanceof SimpleXMLElement) {
-                $date = (string)$dateelement;
-                if ($date) {
-                    $date = strftime(get_string_from_language(/* TODO: user's language */'en.utf8', 'strftimedaydatetime'), strtotime($date));
-                }
-                else {
-                    // Parse for leap:label
-                    $leapattributes = array();
-                    foreach ($dateelement->attributes(PluginImportLeap::NS_LEAP) as $key => $value) {
-                        $leapattributes[$key] = (string)$value;
-                    }
-                    if (isset($leapattributes['label'])) {
-                        $date = $leapattributes['label'];
-                    }
-                }
-            }
+            $dates = PluginImportLeap::get_leap_dates($entry);
+            $enddate = (isset($dates['end'])) ? self::convert_leap_date_to_resume_date($dates['end']) : '';
 
             $values = array(
-                'date'          => $date,
+                'date'          => $enddate,
                 'title'         => $entry->title,
                 'description'   => PluginImportLeap::get_entry_content($entry, $importer),
                 'displayorder'  => '', // TODO: if it's part of a selection_type#Grouping  of mahara:type=certification, get ordering from there
