@@ -266,6 +266,10 @@ abstract class LeapExportElementResumeCompositeChild extends LeapExportElement {
         }
         $this->smarty->assign('leaptype', $this->get_leap_type());
         $this->smarty->assign('contenttype', 'text');
+        if (!$categories = $this->get_categories()) {
+            $categories = array();
+        }
+        $this->smarty->assign('categories', $categories);
         $this->add_links();
         $this->smarty->assign('links', $this->links);
     }
