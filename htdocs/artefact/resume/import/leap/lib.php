@@ -45,6 +45,11 @@ class LeapImportResume extends LeapImportArtefactPlugin {
     const STRATEGY_IMPORT_AS_ABILITY = 2;
 
     /**
+     * Achievements map in Mahara to certifications/accreditations
+     */
+    const STRATEGY_IMPORT_AS_ACHIEVEMENT = 3;
+
+    /**
      * Description of strategies used
      */
     public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImport $importer) {
@@ -73,6 +78,29 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 'other_required_entries' => array(),
             );
         }
+
+        // Achievements
+        $correctrdftype = count($entry->xpath('rdf:type['
+            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'achievement') . ']')) == 1;
+        if ($correctrdftype && $correctplugintype) {
+            if (count($entry->xpath('mahara:artefactplugin[@mahara:plugin="resume" and @mahara:type="pseudo:certification"]')) == 1) {
+                // We know for certain these are meant to be certifications within Mahara
+                $score = 100;
+            }
+            else {
+                // Some things are achievements, but are wrapped up in other things within Mahara, 
+                // so these don't get the full score. Of course, if nothing 
+                // else claims them, they'll be imported as certifications
+                $score = 50;
+            }
+            $strategies[] = array(
+                'strategy' => self::STRATEGY_IMPORT_AS_ACHIEVEMENT,
+                'score'    => $score,
+                'other_required_entries' => array(),
+            );
+        }
+
+        // Employment
 
         return $strategies;
     }
@@ -123,6 +151,38 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                     ));
                 }
             }
+            break;
+        case self::STRATEGY_IMPORT_AS_ACHIEVEMENT:
+            $dateelement = $entry->xpath('leap:date[@leap:point="end"]');
+            if (count($dateelement) == 1) {
+                $dateelement = $dateelement[0];
+            }
+
+            $date = '';
+            if ($dateelement instanceof SimpleXMLElement) {
+                $date = (string)$dateelement;
+                if ($date) {
+                    $date = strftime(get_string_from_language(/* TODO: user's language */'en.utf8', 'strftimedaydatetime'), strtotime($date));
+                }
+                else {
+                    // Parse for leap:label
+                    $leapattributes = array();
+                    foreach ($dateelement->attributes(PluginImportLeap::NS_LEAP) as $key => $value) {
+                        $leapattributes[$key] = (string)$value;
+                    }
+                    if (isset($leapattributes['label'])) {
+                        $date = $leapattributes['label'];
+                    }
+                }
+            }
+
+            $values = array(
+                'date'          => $date,
+                'title'         => $entry->title,
+                'description'   => PluginImportLeap::get_entry_content($entry, $importer),
+                'displayorder'  => '', // TODO: if it's part of a selection_type#Grouping  of mahara:type=certification, get ordering from there
+            );
+            ArtefactTypeResumeComposite::ensure_composite_value($values, 'certification', $importer->get('usr'));
             break;
         default:
             throw new ImportException($importer, 'TODO: get_string: unknown strategy chosen for importing entry');
