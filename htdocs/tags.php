@@ -28,7 +28,7 @@ define('INTERNAL', 1);
 define('MENUITEM', 'myportfolio');
 require('init.php');
 require('searchlib.php');
-define('TITLE', get_string('tags'));
+define('TITLE', get_string('mytags'));
 
 if ($tag = param_variable('tag', null)) {
     $limit  = param_integer('limit', 10);
@@ -38,8 +38,11 @@ if ($tag = param_variable('tag', null)) {
     build_portfolio_search_html($data);
 }
 
+$tags = get_my_tags();
+
 $smarty = smarty(array('paginator'));
 $smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('tags', $tags);
 if (!is_null($tag) && isset($data)) {
     $smarty->assign('tag', $tag);
     $smarty->assign_by_ref('results', $data);

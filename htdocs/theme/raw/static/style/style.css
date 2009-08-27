@@ -656,10 +656,18 @@ div.sideblock #friendscontrol label {
 
 .sidebar-content.mytags {
     text-align: center;
+    padding: 0;
 }
-div.sideblock .tag {
-    padding: 0 .5em 0 0;
+.mytags {
+    padding: .5em 0;
+}
+.mytags .tag {
+    padding: 0 5px;
     vertical-align: middle;
+}
+.mytags .tag.selected {
+    color: #444;
+    text-decoration: underline;
 }
 
 /* AJAX LOGIN */
