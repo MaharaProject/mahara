@@ -195,7 +195,7 @@ class LeapExportElementResumeComposite extends LeapExportElement {
         $xml = '';
         foreach ($this->composites as $c) {
             $classname = 'LeapExportElementResumeCompositeChild' . $this->artefact->get('artefacttype');
-            $child = new $classname($this->exporter, $this->artefact, $c);
+            $child = new $classname($this->artefact, $this->exporter, $c);
             $xml .= $child->get_export_xml();
             if ($siblings = $child->get_siblings()) {
                 foreach ($siblings as $sibling) {
@@ -246,10 +246,13 @@ abstract class LeapExportElementResumeCompositeChild extends LeapExportElement {
     protected $originalrecord;
     protected $parentartefact;
 
-    public function __construct(LeapExporter $exporter, ArtefactTypeResumeComposite $parentartefact, $child) {
+    public function __construct(ArtefactTypeResumeComposite $parentartefact, LeapExporter $exporter, $child) {
         $this->originalrecord = $child;
         $this->entrydata = $this->record_to_entrydata($child);
         $this->parentartefact = $parentartefact;
+        // We pass 'null' as the artefact ID, as this class represents 
+        // composite children that aren't really artefacts. The field 
+        // 'parentartefact' holds a reference to the parent.
         parent::__construct(null, $exporter);
         $this->assign_smarty_vars();
     }
@@ -347,10 +350,10 @@ class LeapExportElementResumeCompositeChildEducationhistory extends LeapExportEl
 
     public function ensure_siblings() {
         $this->siblings = array(
-            'is_supported_by' => new LeapExportElementResumeCompositeSibling($this->exporter, $this->parentartefact, $this, array(
+            'is_supported_by' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
                 'title' => $this->originalrecord->institution,
             ), 'organisation', 'supports'),
-            'supports' => new LeapExportElementResumeCompositeSibling($this->exporter, $this->parentartefact, $this, array(
+            'supports' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
                 'title' => $this->originalrecord->qualtype,
                 'content' => $this->originalrecord->qualname,
             ), 'achievement', 'is_supported_by')
@@ -375,7 +378,7 @@ class LeapExportElementResumeCompositeChildEmploymenthistory extends LeapExportE
 
     public function ensure_siblings() {
         $this->siblings = array(
-            'is_supported_by' => new LeapExportElementResumeCompositeSibling($this->exporter, $this->parentartefact, $this, array(
+            'is_supported_by' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
                 'title' => $this->originalrecord->employer,
             ), 'organisation', 'supports')
         );
@@ -398,7 +401,7 @@ class LeapExportElementResumeCompositeChildBook extends LeapExportElementResumeC
 
     public function ensure_siblings() {
         $this->siblings = array(
-            'relation' => new LeapExportElementResumeCompositeSibling($this->exporter, $this->parentartefact, $this, array(
+            'relation' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
                 'title' => $this->originalrecord->contribution
             ), 'achievement', 'relation')
         );
