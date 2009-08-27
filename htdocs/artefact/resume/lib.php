@@ -375,17 +375,27 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
     * @throws Exception
     */
     public static function process_compositeform(Pieform $form, $values) {
+        global $USER;
+        self::ensure_composite_value($values, $values['compositetype'], $USER->get('id'));
+    }
 
+    /**
+     * Ensures that the given value for the given composite is present
+     * TODO: expand on these docs.
+     */
+    public static function ensure_composite_value($values, $compositetype, $owner) {
+        if (!in_array($compositetype, self::get_composite_artefact_types())) {
+            throw new SystemException("ensure_composite_value called with invalid composite type");
+        }
         try {
-            $a = artefact_instance_from_type($values['compositetype']);
+            $a = artefact_instance_from_type($compositetype, $owner);
             $a->set('mtime', time());
         }
         catch (Exception $e) {
-            global $USER;
-            $classname = generate_artefact_class_name($values['compositetype']);
+            $classname = generate_artefact_class_name($compositetype);
             $a = new $classname(0, array(
-                'owner' => $USER->get('id'),
-                'title' => get_string($values['compositetype'], 'artefact.resume'),
+                'owner' => $owner,
+                'title' => get_string($compositetype, 'artefact.resume'),
                 )
             );
         }
@@ -394,7 +404,7 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
 
         $values['artefact'] = $a->get('id');
 
-        $table = 'artefact_resume_' . $values['compositetype'];
+        $table = 'artefact_resume_' . $compositetype;
         if (!empty($values['id'])) {
             update_record($table, (object)$values, 'id');
         }
