@@ -36,21 +36,17 @@ if ($tags && is_null($tag)) {
     $tag = $tags[0]->tag;
 }
 
+$js = '';
 if ($tag) {
     $limit  = param_integer('limit', 10);
     $offset = param_integer('offset', 0);
     $owner = (object) array('type' => 'user', 'id' => $USER->get('id'));
     $data = get_portfolio_items_by_tag($tag, $owner, $limit, $offset);
     build_portfolio_search_html($data);
-    $pagerjs = $data->pagination_js;
-}
-else {
-    $pagerjs = 'var results_pager = new Paginator("portfoliosearch_pagination", "results", "json\\/tagsearch.php", null);';
-}
 
-$js .= <<<EOF
+    $js = <<<EOF
 addLoadEvent(function() {
-    {$pagerjs}
+    {$data->pagination_js}
     forEach(getElementsByTagAndClassName('a', 'tag', 'main-column-container'), function(elem) {
         disconnectAll(elem);
         connect(elem, 'onclick', function(e) {
@@ -69,6 +65,8 @@ addLoadEvent(function() {
     });
 });
 EOF;
+
+}
 
 $smarty = smarty(array('paginator'));
 $smarty->assign('PAGEHEADING', hsc(TITLE));
