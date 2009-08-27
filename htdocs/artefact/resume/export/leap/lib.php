@@ -28,26 +28,8 @@
 class LeapExportElementBook extends LeapExportElementResumeComposite {}
 class LeapExportElementCertification extends LeapExportElementResumeComposite {}
 class LeapExportElementMembership extends LeapExportElementResumeComposite {}
-class LeapExportElementEducationhistory extends LeapExportElementResumeComposite {
-    public function get_categories() {
-        return array_merge(parent::get_categories(), array(
-            'life_area' => array(
-                'scheme' => 'life_area',
-                'term'   => 'Education',
-            )
-        ));
-    }
-}
-class LeapExportElementEmploymenthistory extends LeapExportElementResumeComposite {
-    public function get_categories() {
-        return array_merge(parent::get_categories(), array(
-            'life_area' => array(
-                'scheme' => 'life_area',
-                'term'   => 'Work',
-            )
-        ));
-    }
-}
+class LeapExportElementEducationhistory extends LeapExportElementResumeComposite {}
+class LeapExportElementEmploymenthistory extends LeapExportElementResumeComposite {}
 
 class LeapExportElementContactinformation extends LeapExportElement {
     public function get_categories() {
@@ -228,10 +210,6 @@ class LeapExportElementResumeComposite extends LeapExportElement {
                 'scheme' => 'selection_type',
                 'term'   => 'Grouping'
             ),
-            'life_area' => array(
-                'scheme' => 'life_area',
-                'term'   => 'Development',
-            )
         );
     }
 }
@@ -376,6 +354,15 @@ class LeapExportElementResumeCompositeChildEducationhistory extends LeapExportEl
     public function get_leap_type() {
         return 'activity';
     }
+
+    public function get_categories() {
+        return array_merge(parent::get_categories(), array(
+            'life_area' => array(
+                'scheme' => 'life_area',
+                'term'   => 'Education',
+            )
+        ));
+    }
 }
 
 class LeapExportElementResumeCompositeChildEmploymenthistory extends LeapExportElementResumeCompositeChildWithSiblings {
@@ -400,6 +387,15 @@ class LeapExportElementResumeCompositeChildEmploymenthistory extends LeapExportE
     public function get_leap_type() {
         return 'activity';
     }
+
+    public function get_categories() {
+        return array_merge(parent::get_categories(), array(
+            'life_area' => array(
+                'scheme' => 'life_area',
+                'term'   => 'Work',
+            )
+        ));
+    }
 }
 class LeapExportElementResumeCompositeChildBook extends LeapExportElementResumeCompositeChildWithSiblings {
 
@@ -421,6 +417,15 @@ class LeapExportElementResumeCompositeChildBook extends LeapExportElementResumeC
 
     public function get_leap_type() {
         return 'resource';
+    }
+
+    public function get_categories() {
+        return array(
+            'resource_type' => array(
+                'scheme' => 'resource_type',
+                'term'   => 'Printed'
+            ),
+        );
     }
 }
 
