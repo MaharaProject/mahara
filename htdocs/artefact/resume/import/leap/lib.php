@@ -57,10 +57,10 @@ class LeapImportResume extends LeapImportArtefactPlugin {
 
         $correctplugintype = count($entry->xpath('mahara:artefactplugin[@mahara:plugin="resume"]')) == 1;
 
+        // Goals, cover letter & interests
         $correctrdftype = count($entry->xpath('rdf:type['
             . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'entry') . ']')) == 1;
         if ($correctrdftype && $correctplugintype) {
-            // Goals, cover letter, interests match here
             $strategies[] = array(
                 'strategy' => self::STRATEGY_IMPORT_AS_ENTRY,
                 'score'    => 100,
@@ -68,10 +68,10 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             );
         }
 
+        // Skills
         $correctrdftype = count($entry->xpath('rdf:type['
             . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'ability') . ']')) == 1;
         if ($correctrdftype && $correctplugintype) {
-            // Skills match here
             $strategies[] = array(
                 'strategy' => self::STRATEGY_IMPORT_AS_ABILITY,
                 'score'    => 100,
