@@ -273,6 +273,23 @@ class LeapImportResume extends LeapImportArtefactPlugin {
         return $artefact->get('id');
     }
 
+    /**
+     * Converts a LEAP2A date point to a plain text version for resume date 
+     * purposes.
+     *
+     * @param array $date The date - expected to come from {PluginImportLeap::....()}
+     * @return string     The date in string form for resume composites
+     */
+    private static function convert_leap_date_to_resume_date($date) {
+        if (isset($date['value'])) {
+            return strftime(get_string_from_language(/* TODO: user's language */'en.utf8', 'strftimedaydatetime'), strtotime($date['value']));
+        }
+        if (isset($date['label'])) {
+            return $date['label'];
+        }
+        return '';
+    }
+
 }
 
 ?>
