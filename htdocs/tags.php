@@ -30,15 +30,45 @@ require('init.php');
 require('searchlib.php');
 define('TITLE', get_string('mytags'));
 
-if ($tag = param_variable('tag', null)) {
+$tags = get_my_tags();
+$tag = param_variable('tag', null);
+if ($tags && is_null($tag)) {
+    $tag = $tags[0]->tag;
+}
+
+if ($tag) {
     $limit  = param_integer('limit', 10);
     $offset = param_integer('offset', 0);
     $owner = (object) array('type' => 'user', 'id' => $USER->get('id'));
     $data = get_portfolio_items_by_tag($tag, $owner, $limit, $offset);
     build_portfolio_search_html($data);
+    $pagerjs = $data->pagination_js;
+}
+else {
+    $pagerjs = 'var results_pager = new Paginator("portfoliosearch_pagination", "results", "json\\/tagsearch.php", null);';
 }
 
-$tags = get_my_tags();
+$js .= <<<EOF
+addLoadEvent(function() {
+    {$pagerjs}
+    forEach(getElementsByTagAndClassName('a', 'tag', 'main-column-container'), function(elem) {
+        disconnectAll(elem);
+        connect(elem, 'onclick', function(e) {
+            e.stop();
+            var href = getNodeAttribute(this, 'href');
+            var params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
+            sendjsonrequest(config.wwwroot + 'json/tagsearch.php', params, 'POST', function(data) {
+                results_pager.updateResults(data);
+                forEach(getElementsByTagAndClassName('a', 'selected', 'main-column-container'), function(selected) {
+                    removeElementClass(selected, 'selected');
+                });
+                addElementClass(elem, 'selected');
+            });
+            return false;
+        });
+    });
+});
+EOF;
 
 $smarty = smarty(array('paginator'));
 $smarty->assign('PAGEHEADING', hsc(TITLE));
@@ -46,7 +76,7 @@ $smarty->assign('tags', $tags);
 if (!is_null($tag) && isset($data)) {
     $smarty->assign('tag', $tag);
     $smarty->assign_by_ref('results', $data);
-    $smarty->assign('INLINEJAVASCRIPT', 'addLoadEvent(function() {' . $data->pagination_js . '});');
 }
+$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('tags.tpl');
 ?>

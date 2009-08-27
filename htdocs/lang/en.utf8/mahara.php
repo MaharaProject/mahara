@@ -87,6 +87,7 @@ $string['youhavenottaggedanythingyet'] = 'You have not tagged anything yet';
 $string['mytags'] = 'My Tags';
 $string['Tag'] = 'Tag';
 $string['itemstaggedwith'] = 'Items tagged with "%s"';
+$string['numitems'] = '%s items';
 
 $string['selfsearch'] = 'Search My Portfolio';
 
