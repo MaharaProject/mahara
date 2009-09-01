@@ -6,10 +6,10 @@
 <a href="{$WWWROOT}interaction/edit.php?group={$groupid|escape}&amp;plugin=forum" class="btn-add s">{str tag="newforum" section=interaction.forum}</a>
 </div>
 {/if}
-<div>
+<div class="forummods">
 	<label>{str tag="groupadminlist" section="interaction.forum"}</label>
 	{foreach from=$groupadmins item=groupadmin}
-    <span class="s inlinelist">
+    <span class="inlinelist">
         <a href="{$WWWROOT}user/view.php?id={$groupadmin}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupadmin}" alt=""></a>
         <a href="{$WWWROOT}user/view.php?id={$groupadmin}" class="groupadmin">{$groupadmin|display_name|escape}</a>
     </span>
@@ -36,7 +36,7 @@
             </div>
             <div class="s">{$forum->description|str_shorten_html:1000:true}</div>
             {if $forum->moderators}
-            <div class="s inlinelist">
+            <div class="inlinelist">
                 <span>{str tag="Moderators" section="interaction.forum"}:</span>
                 {foreach from=$forum->moderators item=mod}
                     <a href="{$WWWROOT}user/view.php?id={$mod}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$mod}" alt=""></a>
@@ -45,8 +45,8 @@
             </div>
             {/if}
         </td>
-        <td class="center">{$forum->topiccount}</td>
-        <td class="nowrap s">{if $forum->subscribe}{$forum->subscribe}{/if}</td>
+        <td class="center" width="15%">{$forum->topiccount}</td>
+        <td class="nowrap s subscribetd">{if $forum->subscribe}{$forum->subscribe}{/if}</td>
 	</tr>
     {/foreach}
 </table>

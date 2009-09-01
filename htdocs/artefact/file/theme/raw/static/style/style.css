@@ -21,10 +21,32 @@
 
 form#files .foldernav {
     padding: 0 0 0 2em;
-    font-size: 1.2em;
+    font-size: 1.4em;
 	line-height: 1.6em;
     height: 1.7em;
     background: url(../images/foldernav.gif) no-repeat left 2px;
+}
+#files_filebrowser_filelist_container {
+	margin-left: 2.5em;
+}
+#files_filebrowser_agreement td {
+	font-size: .9em;
+}
+#files_filebrowser_edit_row td {
+	border-top: 0;
+	border-left: 1px solid #eee;
+	border-right: 1px solid #eee;
+	border-bottom: 1px solid #eee;
+}
+#files_filebrowser_edit_row td td {
+	border: none;
+}
+#files_filebrowser_edit_row #files_filebrowser_edit_heading {
+	text-align: left;
+	font-size: 1.2em;
+}
+#files_filebrowser_edit_row table td #files_filebrowser_edit_artefact {
+	margin-left: 65px;
 }
 
 tr.folderhover.directory-item td {
@@ -34,8 +56,13 @@ tr.folderhover.directory-item a {
     color: #000;
     text-decoration: none;
 }
-tr.folder td {
-    background-color: #d3e4f2;
+tr.folder.r0 td {
+	background: #e7e7e7;
+}
+tr.folder.r1 td {
+	background: #eee;
+}
+tr.folder td.filename {
 	font-weight: bold;
 }
 
@@ -45,7 +72,6 @@ tr.folder td {
 }
 .filelist thead th {
     padding: 0.125em 0.25em;
-	border-bottom: 1px dotted #d1d1d1;
 }
 form#files .filelist thead th {
     padding: 0.25em 0.5em;
@@ -53,7 +79,6 @@ form#files .filelist thead th {
 .filelist td {
     padding: 0.125em 0.25em;
     line-height: 2em;
-	border-bottom: 1px dotted #d1d1d1;
 }
 form#files .filelist td {
     padding: 0.25em 0.5em;

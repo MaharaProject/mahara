@@ -5,10 +5,10 @@
  * This file is distributed under the same terms as Mahara itself
  */
 .groupadmin{
-    color: #d32a8a;
+    color: blue;
 }
 .moderator {
-    color: #2a8bd3;
+    color: blue;
 }
 .forumuser {
     vertical-align: top;
@@ -19,34 +19,120 @@
 #forumdescription {
 	margin: 1em 0;
 }
+
+div.pagetabs a.btn-add {
+	font-weight: bold !important;
+	border: none;
+	margin: 0;
+	padding: 0 0 0 1.7em;
+	text-decoration: none;
+	background: url(../images/icon-newforum.gif) no-repeat center left;
+}
+div.pagetabs a.btn-edit {
+	font-weight: bold !important;
+	border: none;
+	margin: 0 1em 0 0;
+	padding: 0 0 0 1.8em;
+	text-decoration: none;
+	background: url(../images/icon-editforum.gif) no-repeat center left;
+}
+div.pagetabs a.btn-del {
+	font-weight: bold !important;
+	border: none;
+	margin: 0 1em 0 0;
+	padding: 0 0 0 1.6em;
+	text-decoration: none;
+	background: url(../images/icon-deleteforum.gif) no-repeat center left;
+}
+div.pagetabs #subscribe_forum_submit {
+	font-weight: bold !important;
+	border: none;
+    font-size: .9em;
+	margin: 0;
+	padding: 0 0 0 1.4em;
+	font-family: Arial, Helvetica, sans-serif;
+	background: url(../images/icon-subscribeforum.gif) no-repeat center left;
+	color: blue;
+}
+.btn-subscribe input.submit {
+    font-size: 1em;
+    * width: 1;
+    * overflow: visible;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.subscribetd {
+	width: 150px;
+}
+.forummods {
+	font-size: .9em;
+	padding: 1em .5em;
+}
+
 #viewforum {
 	padding: 0 .25em;
+	margin: 0;
 }
 #viewforum h3 {
     margin: 0;
+	font-size: 1.4em;
 }
-.btn-subscribe input.submit {
-	background: url(../images/icon-subscribe.gif) no-repeat center left;
-    font-weight: bold;
-    font-size: 0.9em;
-    height: 1.8em;
-    padding-left: 1em;
-    cursor: pointer;
+#viewforum .rbuttons {
+	top: -3px;
+}
+#viewforum .rbuttons .btn-add {
+	font-weight: bold !important;
+	font-size: .9em !important;
 	border: none;
-    * width: 1;
-    * overflow: visible;
+	margin: 0;
+	padding: 0 0 0 1.7em;
+	text-decoration: none;
+	background: url(../images/icon-newforum.gif) no-repeat center left;
+}
+.rbuttons #subscribe_topic_submit {
+	font-weight: bold !important;
+	border: none;
+    font-size: .9em;
+	margin: 0;
+	padding: 0 0 0 1.4em;
+	font-family: Arial, Helvetica, sans-serif;
+	background: url(../images/icon-subscribeforum.gif) no-repeat center left;
+	color: blue;
 }
 
+#forumslist .btn-spacer a,
+#forumtopicstable .btn-spacer a {
+	padding-left: 1em;
+	margin-left: 1em;
+}
+
+#forumslist th,
+#forumtopicstable th {
+	background: #eee;
+}
+#forumslist table th,
+#forumslist table td {
+	background: none;
+	padding-top: 0;
+}
+#forumtopicstable td {
+	border-bottom: 1px solid #fff;
+}
 
 .nowrap {
 	white-space: nowrap;
 }
 .forumselectwrap {
-	padding: .5em 0;
+	padding: 1em 0;
 }
-.stickytopic {
-	background-color: #e0e0e0;
+.stickytopic td {
+	background-color: #fffaea;
+	border-top: 1px solid #fff;
 }
+.forumfooter {
+	margin: 0 .5em 1em .5em;
+}
+
+
 
 /* FORUM > ADD TOPIC */
 
@@ -57,42 +143,48 @@
 	border: 1px solid #d1d1d1;
 }
 .forumsubject {
-	border-bottom: 1px solid #f1f1f1;
+	border-bottom: 1px solid #d1d1d1;
 }
 .forumsubject h3 {
-  margin-bottom: 0;
+	margin: 0 !important;
+	font-size: 1.2em;
 }
 .forumpostleft {
 	width: 160px;
-	border-right: 1px solid #f1f1f1;
-	background-color: #FFF;
+	border-right: 1px solid #eee;
+	text-align: center;
 }
-.forumpostleft .author p {
-	color: #999999;
-    font-weight: bold;
-    margin: 0;
+.forumpostleft .author p a {
+    font-size: .9em;
 }
 .forumpostleft .author img {
     margin: .25em .5em .25em .25em;
 }
 .posttime {
 	font-size: .9em;
-	color: #999999;
-}
-.postedits {
-    padding: .5em;
+	color: #888;
 }
 .postbtns {
 	font-size: .9em;
-    font-weight: bold;
 	text-align: right;
-    padding: 0 0 .1em 0;
-	background-color: #f1f1f1;
-    margin: 0;
+    padding: 0;
+    margin: 0 0 1em 0;
     border: none;
+	color: #d1d1d1;
 }
 .postbtns a {
-	margin: 0 1em;
+	margin: 0 .5em;
+	padding-left: 1em;
+}
+.forumpostleft .author p.poster {
+	color: #888;
+    font-weight: bold;
+    margin: 0;
+}
+.forumpostleft .author p.postcount {
+	font-size: .9em;
+	font-weight: normal;
+    margin: 0;
 }
 .deletedpost {
     color: gray;
@@ -100,7 +192,6 @@
 }
 .postreply {
 	padding: 0 0 0 1em;
-	background-color: #f1f1f1;
 }
 
 

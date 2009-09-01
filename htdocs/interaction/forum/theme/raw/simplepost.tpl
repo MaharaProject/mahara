@@ -11,9 +11,9 @@
 	<td class="forumpostleft">
 	  <div class="posttime">{$post->ctime}</div>
       <div class="author">
-         <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=40&amp;id={$post->poster}" alt="" class="fl">
-         <p><a href="{$WWWROOT}user/view.php?id={$post->poster}"{if in_array($post->poster, $groupadmins)} class="groupadmin"{elseif $post->moderator} class="moderator"{/if}>{$post->poster|display_name|escape}</a></p>
-         <p>{$post->postcount}</p>
+         <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=40&amp;id={$post->poster}" alt="" class="center">
+         <p class="poster"><a href="{$WWWROOT}user/view.php?id={$post->poster}"{if in_array($post->poster, $groupadmins)} class="groupadmin"{elseif $post->moderator} class="moderator"{/if}>{$post->poster|display_name|escape}</a></p>
+         <p class="postcount">{$post->postcount}</p>
       </div>
     </td>
 	<td class="postedits">{$post->body|clean_html}

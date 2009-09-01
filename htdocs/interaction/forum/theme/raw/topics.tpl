@@ -15,7 +15,7 @@
     </td>
     <td>
         {if $moderator}
-        <div class="s fr">
+        <div class="s btn-spacer fr">
             <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}&amp;returnto=view" class="btn-edit">{str tag="edit"}</a>
             <a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id|escape}&amp;returnto=view" class="btn-del">{str tag="delete"}</a>
         </div>

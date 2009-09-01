@@ -1,12 +1,12 @@
 {include file="header.tpl"}
 
-<div class="fr center">
-    <div>
+<div class="fl center">
+    <div id="profilepict">
         <a href="{$WWWROOT}user/view.php?id={$user->id}"><img src="{$WWWROOT}thumb.php?type=profileiconbyid&amp;maxwidth=100&amp;maxheight=100&amp;id={$user->profileicon}" alt=""></a><br>
         <a href="{$WWWROOT}user/view.php?id={$user->id}">{$user|display_name|escape}</a>
     </div>
     {if !empty($loginas)}
-       <div><a href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">{$loginas}</a></div>
+       <div><a class="btn-loginas" href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">{$loginas}</a></div>
     {/if}
 </div>
 
@@ -20,7 +20,7 @@
         {$user->suspendedreason|format_whitespace}
       </div>
       {/if}
-      <div class="center">{$suspendform2}</div>
+      {$suspendform2}
     </div>
     {/if}
 
@@ -29,14 +29,15 @@
     {$siteform}
     <!--<h3>{str tag="suspenduser" section="admin"}</h3>-->
     {if $USER->get('admin') || (!$user->get('admin') && !$user->get('staff')) }
-    <hr>
-    <h3 id="suspend">{str tag="suspenddeleteuser" section=admin}</h3>
-    <p>{str tag="suspenddeleteuserdescription" section=admin}</p>
-    <div id="suspenddelete" class="rel">
-        <h4>{str tag="suspenduser" section=admin}</h4>
-        {$suspendform}
+    <div id="suspenddelete">
+    	<h3>{str tag="suspenddeleteuser" section=admin}</h3>
+    	<p>{str tag="suspenddeleteuserdescription" section=admin}</p>
+    	<div id="suspend">
+        	<h4>{str tag="suspenduser" section=admin}</h4>
+        	{$suspendform}
+     	</div>
 		{if $USER->get('admin')}
-        <div id="delete" class="rbuttons">
+        <div id="delete">
             <h4>{str tag=deleteuser section=admin}</h4>
             <p>{str tag=deleteusernote section=admin}</p>
             {$deleteform}
@@ -47,10 +48,11 @@
 	<div class="cb"></div>
 
     {if ($institutions)}
-    <hr>
-    <h3 id="institutions">{str tag="institutionsettings" section="admin"}</h3>
-    <p>{str tag="institutionsettingsdescription" section="admin"}</p>
-    {$institutionform}
+    <div id="institutions">
+    	<h3>{str tag="institutionsettings" section="admin"}</h3>
+    	<p>{str tag="institutionsettingsdescription" section="admin"}</p>
+    	{$institutionform}
+    </div>
     {/if}
 </div>
 

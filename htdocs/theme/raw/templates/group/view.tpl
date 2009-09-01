@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 {if $GROUP->description}
-	<p>{$GROUP->description}</p>
+	<div class="groupdescription">{$GROUP->description}</div>
 {/if}
 
 <div class="group-info">
