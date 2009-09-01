@@ -31,7 +31,7 @@
 // it to suit your environment.
 //
 // Information about this file is available on the Mahara wiki:
-// http://wiki.mahara.org/System_Administrator%27s_Guide/Installing_Mahara#Mahara_Configuration
+// http://wiki.mahara.org/System_Administrator's_Guide/Installing_Mahara#Create_Mahara's_config.php
 //
 
 $cfg = new StdClass;
