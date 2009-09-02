@@ -429,6 +429,7 @@ div#sb-profile ul li ul li a {
 /* Footer */
 #footer-wrap {
     background-color: transparent;
+    border: 0;
 }
 
 

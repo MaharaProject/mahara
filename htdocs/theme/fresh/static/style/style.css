@@ -391,7 +391,7 @@ div.sideblock ul ul {
 #footer-wrap {
     background-color: transparent;
     padding: 10px 5px 15px;
-    text-align: center;
+    border: 0;
 }
 #footer-wrap a,
 #footer-wrap a:link,

@@ -346,6 +346,7 @@ div.sideblock ul ul {
 /* Footer */
 #footer-wrap {
     background-color: #1D499F;
+    border: 0;
 }
 #footer-wrap a,
 #footer-wrap a:link,

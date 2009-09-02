@@ -211,7 +211,6 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     float:right;
     padding: 0;
     margin: 0;
-    height: 33px;
     background: transparent;
 }
 #main-nav li {
@@ -411,6 +410,7 @@ div.sideblock ul ul {
 /* Footer */
 #footer-wrap {
     background-color: transparent;
+    border: 0;
 }
 
 /* Group: about */
