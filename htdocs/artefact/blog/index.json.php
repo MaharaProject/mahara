@@ -17,20 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage core
+ * @subpackage artefact-blog
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+define('JSON', 1);
 
-$config = new StdClass;
-$config->version = 2009082600;
-$config->release = '1.2.0beta2dev';
-$config->minupgradefrom = 2008040200;
-$config->minupgraderelease = '1.0.0 (release tag 1.0.0_RELEASE)';
-$config->disablelogin = true;
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+safe_require('artefact', 'blog');
+
+$blogs = (object) array(
+    'offset' => param_integer('offset', 0),
+    'limit'  => param_integer('limit', 10),
+);
+
+list($blogs->count, $blogs->data) = ArtefactTypeBlog::get_blog_list($blogs->limit, $blogs->offset);
+ArtefactTypeBlog::build_blog_list_html($blogs);
+
+json_reply(false, array('data' => $blogs));
 
 ?>

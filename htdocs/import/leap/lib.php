@@ -535,6 +535,62 @@ class PluginImportLeap extends PluginImport {
         return array_unique($tags);
     }
 
+    /**
+     * Look for leap:date elements that are part of an entry (if any) and 
+     * return the values we parse from them
+     *
+     * Returned in a structure like so:
+     * array(
+     *     'start' => array(
+     *         'value' => 'w3c compliant date/time format, as allowed by LEAP2A',
+     *         'label' => 'label attribute, which is a plaintext version of the date',
+     *     ),
+     *     'end' => array(
+     *         'value' => 'maybe only the value is set on some elements',
+     *     ),
+     *     'target' => array(
+     *         'label' => 'sometimes, only the label will be set'
+     *     )
+     * )
+     *
+     * The only keys in the return value are those allowed by the LEAP2A spec, 
+     * and only if they exist on the entry.
+     *
+     * The values may have the 'value', 'label' or both keys, depending on what 
+     * each element has.
+     *
+     * Try and use the 'value' first, if you have a choice. Quite a few places 
+     * in Mahara currently just store dates as plaintext though.
+     *
+     * Spec reference: http://wiki.cetis.ac.uk/2009-03/LEAP2A_literals#date
+     */
+    public static function get_leap_dates(SimpleXMLElement $entry) {
+        $dates = array();
+        foreach (array('start', 'end', 'target') as $point) {
+            $dateelement = $entry->xpath('leap:date[@leap:point="' . $point . '"]');
+            if (count($dateelement) == 1) {
+                $dateelement = $dateelement[0];
+            }
+
+            if ($dateelement instanceof SimpleXMLElement) {
+                $date = (string)$dateelement;
+                if ($date) {
+                    $dates[$point]['value'] = $date;
+                }
+
+                // Parse for leap:label
+                $leapattributes = array();
+                foreach ($dateelement->attributes(PluginImportLeap::NS_LEAP) as $key => $value) {
+                    $leapattributes[$key] = (string)$value;
+                }
+                if (isset($leapattributes['label'])) {
+                    $dates[$point]['label'] = $leapattributes['label'];
+                }
+            }
+        }
+        return $dates;
+    }
+
 }
 
 

@@ -1177,6 +1177,23 @@ function xmldb_core_upgrade($oldversion=0) {
         ensure_record_exists('event_type', $event, $event);
     }
 
+    if ($oldversion < 2009082400) {
+        $table = new XMLDBTable('usr_registration');
+        $field = new XMLDBField('username');
+        drop_field($table, $field);
+        $field = new XMLDBField('salt');
+        drop_field($table, $field);
+        $field = new XMLDBField('password');
+        drop_field($table, $field);
+    }
+
+    if ($oldversion < 2009082600) {
+        $captcha = get_config('captcha_on_contact_form');
+        set_config('captchaoncontactform', (int) (is_null($captcha) || $captcha));
+        $captcha = get_config('captcha_on_register_form');
+        set_config('captchaonregisterform', (int) (is_null($captcha) || $captcha));
+    }
+
     return $status;
 
 }

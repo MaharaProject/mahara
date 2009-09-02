@@ -64,6 +64,8 @@ $cfg = new StdClass;
 // For each log level, you can specify where the messages are displayed.
 // LOG_TARGET_SCREEN makes the error messages go to the screen - useful
 // when debugging but not on a live site!
+// LOG_TARGET_ADMIN sends error messages to the screen but only when
+// browsing in the admin section
 // LOG_TARGET_ERRORLOG makes the error messages go to the log as specified
 // by the apache ErrorLog directive. It's probably useful to have this on
 // for all log levels.

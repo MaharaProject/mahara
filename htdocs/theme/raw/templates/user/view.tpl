@@ -4,6 +4,7 @@
                             {$institutions}
 {if !empty($loginas)}
 							<a href="{$WWWROOT}admin/users/changeuser.php?id={$USERID}" class="btn-loginas">{$loginas}</a>
+    {if $USER->get('admin')}<a href="{$WWWROOT}admin/users/edit.php?id={$USERID}">{str tag=accountsettings section=admin}</a>{/if}
 {/if}
 {if $canmessage}
 							<a href="{$WWWROOT}user/sendmessage.php?id={$USERID}&amp;returnto=view" class="btn-msg">{str tag='sendmessage' section='group'}</a>

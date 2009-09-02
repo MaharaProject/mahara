@@ -78,8 +78,7 @@ $elements = array(
     )
 );
 
-$captcharequired = get_config('captcha_on_contact_form');
-if (is_null($captcharequired) || $captcharequired) {
+if (get_config('captchaoncontactform') && !$USER->is_logged_in()) {
     $elements['captcha'] = array(
         'type'  => 'captcha',
         'title' => get_string('captchatitle'),
@@ -105,8 +104,8 @@ $contactform = pieform(array(
 ));
 
 function contactus_validate(Pieform $form, $values) {
-    $captcharequired = get_config('captcha_on_contact_form');
-    if ((is_null($captcharequired) || $captcharequired) && !$values['captcha']) {
+    global $USER;
+    if (get_config('captchaoncontactform') && !$USER->is_logged_in() && !$values['captcha']) {
         $form->set_error('captcha', get_string('captchaincorrect'));
     }
 }

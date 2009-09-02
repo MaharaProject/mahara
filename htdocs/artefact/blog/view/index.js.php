@@ -52,7 +52,7 @@ return <<<EOJAVASCRIPT
 
 var postlist = new TableRenderer(
     'postlist',
-    'index.json.php',
+    {$enc_wwwroot} + 'artefact/blog/view/index.json.php',
     [undefined, undefined, undefined]
 );
 postlist.limit = $limit;

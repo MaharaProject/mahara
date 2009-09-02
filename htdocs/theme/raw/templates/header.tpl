@@ -23,7 +23,7 @@
                     {insert name="messages"}
                     <div id="main-column-container">
 
-{if $PAGEHEADING}                    <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON}</span>{/if}</h1>
+{if isset($PAGEHEADING)}                    <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON}</span>{/if}</h1>
 {/if}
 {if $GROUP}{* Tabs and beginning of page container for group info pages *}                        <ul class="in-page-tabs">
 {foreach from=$GROUPNAV item=item}

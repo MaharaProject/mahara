@@ -4,6 +4,7 @@
 				<div class="rbuttons">
                     <a class="btn-add" href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
 					<a class="btn-edit" href="{$WWWROOT}artefact/blog/settings/?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
+					<a class="btn-add" href="{$WWWROOT}artefact/blog/new">{str tag=addblog section=artefact.blog}</a>
 				</div>
 
                 <p>{$blog->get('description')}</p>

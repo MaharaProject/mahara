@@ -45,6 +45,16 @@ class LeapImportResume extends LeapImportArtefactPlugin {
     const STRATEGY_IMPORT_AS_ABILITY = 2;
 
     /**
+     * Achievements map in Mahara to certifications/accreditations
+     */
+    const STRATEGY_IMPORT_AS_ACHIEVEMENT = 3;
+
+    /**
+     * Activities in category life_area:Work map to employment history
+     */
+    const STRATEGY_IMPORT_AS_EMPLOYMENT = 4;
+
+    /**
      * Description of strategies used
      */
     public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImport $importer) {
@@ -52,10 +62,10 @@ class LeapImportResume extends LeapImportArtefactPlugin {
 
         $correctplugintype = count($entry->xpath('mahara:artefactplugin[@mahara:plugin="resume"]')) == 1;
 
+        // Goals, cover letter & interests
         $correctrdftype = count($entry->xpath('rdf:type['
             . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'entry') . ']')) == 1;
         if ($correctrdftype && $correctplugintype) {
-            // Goals, cover letter, interests match here
             $strategies[] = array(
                 'strategy' => self::STRATEGY_IMPORT_AS_ENTRY,
                 'score'    => 100,
@@ -63,14 +73,48 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             );
         }
 
+        // Skills
         $correctrdftype = count($entry->xpath('rdf:type['
             . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'ability') . ']')) == 1;
         if ($correctrdftype && $correctplugintype) {
-            // Skills match here
             $strategies[] = array(
                 'strategy' => self::STRATEGY_IMPORT_AS_ABILITY,
                 'score'    => 100,
                 'other_required_entries' => array(),
+            );
+        }
+
+        // Achievements
+        $correctrdftype = count($entry->xpath('rdf:type['
+            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'achievement') . ']')) == 1;
+        if ($correctrdftype && $correctplugintype) {
+            if (count($entry->xpath('mahara:artefactplugin[@mahara:plugin="resume" and @mahara:type="pseudo:certification"]')) == 1) {
+                // We know for certain these are meant to be certifications within Mahara
+                $score = 100;
+            }
+            else {
+                // Some things are achievements, but are wrapped up in other things within Mahara, 
+                // so these don't get the full score. Of course, if nothing 
+                // else claims them, they'll be imported as certifications
+                $score = 50;
+            }
+            $strategies[] = array(
+                'strategy' => self::STRATEGY_IMPORT_AS_ACHIEVEMENT,
+                'score'    => $score,
+                'other_required_entries' => array(),
+            );
+        }
+
+        // Employment
+        $correctrdftype = count($entry->xpath('rdf:type['
+            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'activity') . ']')) == 1;
+        $correctcategoryscheme = count($entry->xpath('a:category[('
+            . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'life_area#') . ') and @term="Work"]')) == 1;
+        if ($correctrdftype && $correctcategoryscheme) {
+            $strategies[] = array(
+                'strategy' => self::STRATEGY_IMPORT_AS_EMPLOYMENT,
+                'score'    => 100,
+                'other_required_entries' => array(), // TODO: we need is_supported_by entries, which in mahara usually refer to organisations
             );
         }
 
@@ -123,6 +167,33 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                     ));
                 }
             }
+            break;
+        case self::STRATEGY_IMPORT_AS_ACHIEVEMENT:
+            $dates = PluginImportLeap::get_leap_dates($entry);
+            $enddate = (isset($dates['end'])) ? self::convert_leap_date_to_resume_date($dates['end']) : '';
+
+            $values = array(
+                'date'          => $enddate,
+                'title'         => $entry->title,
+                'description'   => PluginImportLeap::get_entry_content($entry, $importer),
+                'displayorder'  => '', // TODO: if it's part of a selection_type#Grouping  of mahara:type=certification, get ordering from there
+            );
+            ArtefactTypeResumeComposite::ensure_composite_value($values, 'certification', $importer->get('usr'));
+            break;
+        case self::STRATEGY_IMPORT_AS_EMPLOYMENT:
+            $dates = PluginImportLeap::get_leap_dates($entry);
+            $startdate = (isset($dates['start'])) ? self::convert_leap_date_to_resume_date($dates['start']) : '';
+            $enddate   = (isset($dates['end']))   ? self::convert_leap_date_to_resume_date($dates['end'])   : '';
+
+            $values = array(
+                'startdate' => $startdate,
+                'enddate'   => $enddate,
+                'employer'  => '', // TODO - get from related organisation
+                'jobtitle'  => $entry->title,
+                'positiondescription' => PluginImportLeap::get_entry_content($entry, $importer),
+                'displayorder' => '', // TODO: get from the grouping, or failing that, from this entry itself
+            );
+            ArtefactTypeResumeComposite::ensure_composite_value($values, 'employmenthistory', $importer->get('usr'));
             break;
         default:
             throw new ImportException($importer, 'TODO: get_string: unknown strategy chosen for importing entry');
@@ -211,6 +282,23 @@ class LeapImportResume extends LeapImportArtefactPlugin {
         $artefact->set('description', $content);
         $artefact->commit();
         return $artefact->get('id');
+    }
+
+    /**
+     * Converts a LEAP2A date point to a plain text version for resume date 
+     * purposes.
+     *
+     * @param array $date The date - expected to come from {PluginImportLeap::....()}
+     * @return string     The date in string form for resume composites
+     */
+    private static function convert_leap_date_to_resume_date($date) {
+        if (isset($date['value'])) {
+            return strftime(get_string_from_language(/* TODO: user's language */'en.utf8', 'strftimedaydatetime'), strtotime($date['value']));
+        }
+        if (isset($date['label'])) {
+            return $date['label'];
+        }
+        return '';
     }
 
 }

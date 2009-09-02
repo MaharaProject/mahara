@@ -221,17 +221,14 @@ if (ul) {
                 sendjsonrequest(p.jsonScript, queryData, 'GET', function(data) {
                     var tbody = getFirstElementByTagAndClassName('tbody', null, p.datatable);
                     if (tbody) {
-                    //    var temp = DIV();
-                    //    temp.innerHTML = data['data']['tablerows'];
-                    //    swapDOM(tbody, temp);
                         if (
                             (document.all && document.documentElement && typeof(document.documentElement.style.maxHeight) != "undefined" && !window.opera)
                             ||
                             (/Konqueror|AppleWebKit|KHTML/.test(navigator.userAgent))) {
-                            var temp = $('ie-workaround');
-                            temp.innerHTML = '<table><tbody>' + data['data']['tablerows'];
+                            var temp = DIV({'id':'ie-workaround'});
+                            temp.innerHTML = '<table><tbody>' + data.data.tablerows + '</tbody></table>';
                             swapDOM(tbody, temp.childNodes[0].childNodes[0]);
-                            replaceChildNodes(temp);
+                            removeElement(temp);
                         }
                         else {
                             // This does not work in IE and Konqueror, the tbody 

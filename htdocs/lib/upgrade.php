@@ -663,6 +663,8 @@ function core_install_firstcoredata_defaults() {
     set_config('createpublicgroups', 'all');
     set_config('allowpublicviews', 1);
     set_config('allowpublicprofiles', 1);
+    set_config('captchaoncontactform', 1);
+    set_config('captchaonregisterform', 1);
 
     // install the applications
     $app = new StdClass;

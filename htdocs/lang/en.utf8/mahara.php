@@ -262,6 +262,8 @@ $string['youraccounthasbeensuspended'] = 'Your account has been suspeneded';
 $string['youraccounthasbeenunsuspended'] = 'Your account has been unsuspeneded';
 $string['changepassword'] = 'Change Password';
 $string['changepasswordinfo'] = 'You are required to change your password before you can proceed.';
+$string['chooseusernamepassword'] = 'Choose your username and password';
+$string['chooseusernamepasswordinfo'] = 'You need a username and password to log in to %s.  Please choose them now.';
 $string['confirmpassword'] = 'Confirm password';
 $string['javascriptnotenabled'] = 'Your browser does not have javascript enabled for this site. Mahara requires javascript to be enabled before you can log in';
 $string['cookiesnotenabled'] = 'Your browser does not have cookies enabled, or is blocking cookies from this site. Mahara requires cookies to be enabled before you can log in';
@@ -848,4 +850,5 @@ $string['allowpublicaccess'] = 'Allow public (non logged in) access';
 $string['thisistheprofilepagefor'] = 'This is the profile page for %s';
 
 $string['pleasedonotreplytothismessage'] = "Please do not reply to this message.";
+$string['deleteduser'] = 'Deleted user';
 ?>

@@ -36,6 +36,9 @@ define('LOG_TARGET_SCREEN', 1);
 define('LOG_TARGET_ERRORLOG', 2);
 /** Write the error to stdout (using echo) */
 define('LOG_TARGET_STDOUT', 4);
+/** Display the errors on the screen in the admin area only (short term hack
+    until we create an admin notifications page) */
+define('LOG_TARGET_ADMIN', 8);
 
 // Logging levels
 /** Environment type errors, such as register_globals being on */
@@ -194,7 +197,7 @@ function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $lin
     }
     $prefix = '[' . str_pad(substr(strtoupper($loglevelnames[$loglevel]), 0, 3), 3) . '] ' . $prefix;
 
-    if ($targets & LOG_TARGET_SCREEN) {
+    if ($targets & LOG_TARGET_SCREEN || (defined('ADMIN') && $targets & LOG_TARGET_ADMIN)) {
         // Work out which method to call for displaying the message
         if ($loglevel == LOG_LEVEL_DBG || $loglevel == LOG_LEVEL_INFO) {
             $method = 'add_info_msg';

@@ -168,7 +168,14 @@ class View {
             $view->set('title', self::new_title(get_string('Copyof', 'mahara', $template->get('title')), (object)$viewdata));
             $view->set('dirty', true);
         }
-        $copystatus = $view->copy_contents($template);
+
+        try {
+            $copystatus = $view->copy_contents($template);
+        }
+        catch (QuotaExceededException $e) {
+            db_rollback();
+            return array(null, $template, array('quotaexceeded' => true));
+        }
 
         $view->commit();
         db_commit();
@@ -1139,6 +1146,14 @@ class View {
         safe_require('blocktype', $values['blocktype']);
         if (!call_static_method(generate_class_name('blocktype', $values['blocktype']), 'allowed_in_view', $this)) {
             throw new UserException('[translate] Cannot put ' . $values['blocktype'] . ' blocktypes into this view');
+        }
+
+        if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'single_only', $this)) {
+            $count = count_records_select('block_instance', "view = ? AND blocktype = ?",
+                                          array($this->id, $values['blocktype']));
+            if ($count > 0) {
+                throw new UserException(get_string('onlyoneblocktypeperview', 'error', $values['blocktype']));
+            }
         }
 
         $bi = new BlockInstance(0,
@@ -2437,6 +2452,10 @@ function createview_submit(Pieform $form, $values) {
         $templateid = $values['usetemplate'];
         unset($values['usetemplate']);
         list($view, $template, $copystatus) = View::create_from_template($values, $templateid);
+        if (isset($copystatus['quotaexceeded'])) {
+            $SESSION->add_error_msg(get_string('viewcopywouldexceedquota', 'view'));
+            redirect(get_config('wwwroot') . 'view/choosetemplate.php');
+        }
         $SESSION->add_ok_msg(get_string('copiedblocksandartefactsfromtemplate', 'view',
             $copystatus['blocks'],
             $copystatus['artefacts'],

@@ -372,56 +372,11 @@ class PluginInteractionForum extends PluginInteraction {
             $values = array(db_format_timestamp($minpostdelay));
             $postswhere = 'ctime < ?';
         }
-        $posts = get_records_sql_array(
-            'SELECT s.subscriber, s.type, s.key, p.id
-            FROM (
-                SELECT st."user" AS subscriber, st.topic AS topic, st.key AS "key", \'topic\' AS type
-                FROM {interaction_forum_subscription_topic} st
-                UNION SELECT sf."user" AS subscriber, t.id AS topic, sf.key AS "key", \'forum\' AS type
-                FROM {interaction_forum_subscription_forum} sf
-                INNER JOIN {interaction_forum_topic} t ON t.forum = sf.forum
-            ) s
-            INNER JOIN {interaction_forum_topic} t ON (t.deleted != 1 AND t.id = s.topic)
-            INNER JOIN {interaction_forum_post} p ON (
-                p.sent != 1 AND p.deleted != 1 AND p.topic = t.id
-                AND p.' . $postswhere . '
-            )
-            INNER JOIN {interaction_instance} f ON (f.id = t.forum AND f.deleted != 1)
-            INNER JOIN {group} g ON (g.id = f.group AND g.deleted = 0)
-            INNER JOIN {group_member} gm ON (gm.member = s.subscriber AND gm.group = f.group)
-            ORDER BY type, p.id',
-            $values
-        );
-        // query gets a new object for every subscription
-        // this combines all the objects for the same post together with an array for the subscribers
+        $posts = get_column_sql('SELECT id FROM {interaction_forum_post} WHERE sent = 0 AND deleted = 0 AND ' . $postswhere, $values);
         if ($posts) {
-            set_field_select('interaction_forum_post', 'sent', 1,
-                'deleted = 0 AND sent = 0 AND ' . $postswhere, $values);
-            $count = count($posts);
-            for ($i = 0; $i < $count; $i++) {
-                $posts[$i]->users = array($posts[$i]->subscriber);
-                $posts[$i]->subscriptions = array($posts[$i]->subscriber => array('key' => $posts[$i]->key, 'type' => $posts[$i]->type));
-                $temp = $i;
-                while (isset($posts[$i+1])
-                    && $posts[$i+1]->id == $posts[$temp]->id) {
-                    $i++;
-                    $posts[$temp]->users[] = $posts[$i]->subscriber;
-                    $posts[$temp]->subscriptions[$posts[$i]->subscriber] = array('key' => $posts[$i]->key, 'type' => $posts[$i]->type);
-                    unset($posts[$i]);
-                }
-            }
-            foreach ($posts as $post) {
-                activity_occurred(
-                    'newpost',
-                    array(
-                        'postid' => $post->id,
-                        'users' => $post->users,
-                        'subscriptions' => $post->subscriptions,
-                    ),
-                    'interaction',
-                    'forum',
-                    (bool) $postnow
-                );
+            set_field_select('interaction_forum_post', 'sent', 1, 'deleted = 0 AND sent = 0 AND ' . $postswhere, $values);
+            foreach ($posts as $postid) {
+                activity_occurred('newpost', array('postid' => $postid), 'interaction', 'forum', (bool) $postnow);
             }
         }
     }
@@ -497,18 +452,35 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
     public function __construct($data) {
         parent::__construct($data);
         $this->overridemessagecontents = true;
-        $this->users = activity_get_users($this->get_id(), $this->users);
-        $post = get_record_sql(
-            'SELECT p.subject, p.body, p.poster, p.parent, ' . db_format_tsfield('p.ctime', 'ctime') . ',
-            t.id AS topicid, p2.subject AS topicsubject, f.title AS forumtitle, g.name AS groupname, f.id AS forumid
+
+        $post = get_record_sql('
+            SELECT
+                p.subject, p.body, p.poster, p.parent, ' . db_format_tsfield('p.ctime', 'ctime') . ',
+                t.id AS topicid, fp.subject AS topicsubject, f.title AS forumtitle, g.name AS groupname, f.id AS forumid
             FROM {interaction_forum_post} p
-            INNER JOIN {interaction_forum_topic} t ON t.id = p.topic
-            INNER JOIN {interaction_forum_post} p2 ON (p2.parent IS NULL AND p2.topic = t.id)
-            INNER JOIN {interaction_instance} f ON t.forum = f.id
-            INNER JOIN {group} g ON f.group = g.id
-            WHERE p.id = ?',
+            INNER JOIN {interaction_forum_topic} t ON (t.id = p.topic AND t.deleted = 0)
+            INNER JOIN {interaction_forum_post} fp ON (fp.parent IS NULL AND fp.topic = t.id)
+            INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted = 0)
+            INNER JOIN {group} g ON (f.group = g.id AND g.deleted = 0)
+            WHERE p.id = ? AND p.deleted = 0',
             array($this->postid)
         );
+
+        // The post may have been deleted during the activity delay
+        if (!$post) {
+            $this->users = array();
+            return;
+        }
+
+        $subscribers = get_records_sql_assoc('
+            SELECT "user" AS subscriber, \'topic\' AS type, key FROM {interaction_forum_subscription_topic} WHERE topic = ?
+            UNION
+            SELECT "user" AS subscriber, \'forum\' AS type, key FROM {interaction_forum_subscription_forum} WHERE forum = ?
+            ORDER BY type',
+            array($post->topicid, $post->forumid)
+        );
+
+        $this->users = $subscribers ? activity_get_users($this->get_id(), array_keys($subscribers)) : array();
         $this->fromuser = $post->poster;
 
         // When emailing forum posts, create Message-Id headers for threaded display by email clients
@@ -539,9 +511,9 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
                 $user->subject = get_string_from_language($lang, 'newforumpostnotificationsubject', 'interaction.forum', $post->groupname, $post->forumtitle, $post->subject);
             }
 
-            $type = $data->subscriptions[$user->id]['type'];
+            $type = $subscribers[$user->id]->type;
             $unsubscribeid = $post->{$type . 'id'};
-            $unsubscribelink = get_config('wwwroot') . 'interaction/forum/unsubscribe.php?' . $type . '=' . $unsubscribeid . '&key=' . $data->subscriptions[$user->id]['key'];
+            $unsubscribelink = get_config('wwwroot') . 'interaction/forum/unsubscribe.php?' . $type . '=' . $unsubscribeid . '&key=' . $subscribers[$user->id]->key;
 
             $user->message = get_string_from_language($lang, 'forumposttemplate', 'interaction.forum',
                 $post->subject ? $post->subject : get_string_from_language($lang, 're', 'interaction.forum', $post->topicsubject),
