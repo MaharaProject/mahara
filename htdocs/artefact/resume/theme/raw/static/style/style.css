@@ -57,3 +57,8 @@ tr#contactinformation_contactinformation_container td .resumecontactinfo th {
     font-weight: bold;
     font-size: 1em;
 }
+
+#goalform .mceEditor .mceLayout,
+#skillform .mceEditor .mceLayout {
+	margin-bottom: 1em;
+}

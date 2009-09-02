@@ -1327,9 +1327,3 @@ form#search input.text {
 	display: block;
 }
 
-
-#goalform .mceEditor .mceLayout,
-#skillform .mceEditor .mceLayout {
-	margin-bottom: 1em;
-}
-
