@@ -575,7 +575,6 @@ div.rbuttons .small-logo {
 }
 #main-column {
     padding: 0 1.5em 1.5em;
-    overflow: auto;
 }
 #main-column-container, div.rel {
     position: relative;

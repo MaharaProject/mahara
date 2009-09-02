@@ -232,7 +232,6 @@ a.btn-link:hover {
 }
 #top-wrapper {
     background: url(../images/header-bg.gif) repeat-x bottom left;
-    overflow: auto;
 }
 #top-wrapper ul,
 #top-wrapper li {
