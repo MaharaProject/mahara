@@ -130,7 +130,6 @@ fieldset {
 
 /* Buttons */
 .btn,
-.btn-link,
 input.submit,
 input.button, button,
 input.submitcancel,
@@ -242,13 +241,12 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     float:right;
 	height: 15px;
 	padding: 4px 10px 6px 0;
+	background: #FFF;
 }
 #sub-nav li {
     height: 25px;
     padding: 5px 13px 5px 8px;
     margin: 0 !important;
-    /* not working */
-    /* background: url(../../../default/static/images/submenu-divider.gif) no-repeat top right; */
 }
 #sub-nav li.selected {
     height: 25px;
@@ -277,7 +275,6 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 #main-wrapper {
 	background: #FFF;
 }
-
 
 /* RIGHT SIDE COLUMN */
 #right-column {
