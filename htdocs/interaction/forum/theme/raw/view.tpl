@@ -19,13 +19,13 @@
 {if $stickytopics || $regulartopics}
 <form action="" method="post">
     <table id="forumtopicstable" class="fullwidth nohead">
-        <tr>
+    <tr>
         <th></th>
         <th></th>
         <th>{str tag="Topic" section="interaction.forum"}</th>
         <th>{str tag="Poster" section="interaction.forum"}</th>
-        <th class="postscount">{str tag="Posts" section="interaction.forum"}</th>
-        <th>{str tag="lastpost" section="interaction.forum"}</th>
+        <th class="postscount center">{str tag="Posts" section="interaction.forum"}</th>
+        <th class="lastpost">{str tag="lastpost" section="interaction.forum"}</th>
         {if $moderator}<th></th>{/if}
     </tr>
     {if $stickytopics}
@@ -36,10 +36,10 @@
     {/if}
     </table>
     {if $regulartopics}
-    	<div class="fr">{$pagination}</div>
+    	<div class="right">{$pagination}</div>
     {/if}
     {if $membership && (!$forum->subscribed || $moderator)}
-    <div class="forumselectwrap fl"><select name="type">
+    <div class="forumselectwrap"><select name="type">
         <option value="default" selected="selected">{str tag="chooseanaction" section="interaction.forum"}</option>
         {if !$forum->subscribed}
         <option value="subscribe">{str tag="Subscribe" section="interaction.forum"}</option>
@@ -63,7 +63,7 @@
 </form>
 </div>
 
-<div class="cr">
+<div class="forumfooter">
 	<label>{str tag="groupadminlist" section="interaction.forum"}</label>
 	{foreach from=$groupadmins item=groupadmin}
     <span class="s inlinelist">

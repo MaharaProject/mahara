@@ -10,6 +10,10 @@ body {
     background: url(../images/background.gif) repeat;
 	color: #474220;
 }
+#container, #containerX {
+	width: 90%;
+	min-width: 950px;
+}
 acronym {
     color: #474220;
     border-bottom: 1px dotted #d4d1c0;
@@ -228,7 +232,6 @@ a.btn-link:hover {
 }
 #top-wrapper {
     background: url(../images/header-bg.gif) repeat-x bottom left;
-    overflow: auto;
 }
 #top-wrapper ul,
 #top-wrapper li {
@@ -296,6 +299,7 @@ a.btn-link:hover {
 #sub-nav ul {
     padding: 0 0 0 1em;
     height: 25px;
+	background: none;
 }
 #sub-nav li {
     height: 25px;
@@ -472,15 +476,15 @@ div.sideblock {
 
 /* FOOTER */
 #footer-wrap {
-    background-color: #717277;
-    color: #bdb582;
+    background-color: #b1b1b1;
+    color: #fff9d4;
 }
 #footer-wrap a {
     color: #FFFFFF;
     text-decoration: underline;
 }
 #footer-wrap a:hover {
-    color: #bdb582;
+    color: #fff9d4;
 }
 
 

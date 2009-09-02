@@ -3,25 +3,23 @@
  */
 
 /** When viewing an artefact */
-#view .filedata-icon {
-    margin: 0 .5em;
+#view .filedata-icon.fr {
+	padding: .5em 1em 1em 1em;
+	background: #eee;
+}
+#view .filedata-icon.fl {
+	margin: 0 .25em 0 0;
 }
 #view table.filedata {
-    margin-top: 1em;
     border: none;
-}
-#view table.filedata th {
-    width: 8em;
-    padding: 5px 0 0 0;
 }
 
 #category-list li a:hover {
-    background-color: #f2f5e6;
     text-decoration: none;
 }
 
 #layout-link {
-	background: url(../images/icon-change.gif) no-repeat;
+	background: url(../images/icon-change.gif) no-repeat left center;
 	padding-left: 1.5em;
 	font-weight: bold;
 }
@@ -29,19 +27,15 @@
     color: #aaa;
 }
 #btn-displaymyview {
-	background: url(../images/icon-display.gif) no-repeat;
-	padding-left: 1.5em;
+	background: url(../images/icon-display.gif) no-repeat left center;
+	padding-left: 1.6em;
 	font-weight: bold;
 }
 
-/* This rule is incredibly annoying, as it enforces the widths on a whole bunch of tables that don't need to be forced - like the blog attachments table and any tables the user generates by the wysiwyg editor. Can it be made more specific? */
-/*.blockinstance-content table {
-	width: 100%;
-	* width: 99%;
-}*/
-
-
-
+#copyview .searchquery {
+	background: #eee;
+	padding: .5em 1em;
+}
 
 
 /* todo: test this */
@@ -77,11 +71,15 @@ body:last-child:not(:root:root) .newblockhere {
 }
 
 #view #publicfeedback {
-	padding: 1em .5em .5em .5em;
-	border-top: 2px dotted #D2D2D2;
+	padding: 1em;
+	border: 1px solid #eee;
 }
 #viewmenu a {
 	margin: 0 .5em;
+	padding-left: 1em;
+}
+#viewmenu .help a {
+	padding: 0;
 }
 #view .blockinstance-content .postdetails {
 	text-align: right;
@@ -110,26 +108,17 @@ form#wallpost input.submit {
 	font-size: 1em;
 	margin: 0;
 }
-#wall .private {
-    background: url(../images/privatebg.gif) repeat top left;
+
+#userfriendstable td {
+	background: none;
 }
-.wallpost {
-    border-bottom: 1px dotted #ddd;
-	background: #eee;
-    padding: .5em .5em 0 .5em;
+
+#userviewstable td h4,
+#usergroupstable td h4 {
+	font-size: 1.2em;
+	margin: 0;
 }
-.wallpost .text p {
-    margin: .25em;
-}
-.wallpost .userinfo img {
-	float: left;
-	padding-right: .5em;
-}
-.wallpost .userinforight {
-	padding: .25em;
-}
-.wallpost .postedon {
-    color: #888;
-	font-style: italic;
+#userviewstable {
+	width: 100%;
 }
 

@@ -14,28 +14,51 @@
 #resumewrap table {
 	width: 100%;
 }
-#resumewrap form table td,
-#resumewrap form table tbody th {
+#resumewrap table td {
 	padding: 0;
 }
-#resumewrap form table td,
-#resumewrap form table tbody th {
-	padding: .25em;
+#resumewrap #addemploymenthistory table td,
+#resumewrap #addeducationhistory table td,
+#resumewrap #addcertification table td,
+#resumewrap #addbook table td,
+#resumewrap #addmembership table td {
+	padding: 0.25em;
+}
+#resumewrap table table {
+	width: auto;
+}
+#resumewrap form {
+	margin: 0;
+}
+#resumewrap form .resumecontactinfo td,
+#resumewrap form .resumecontactinfo tbody th,
+#personalinformation table table td,
+#personalinformation table table tbody th {
+	padding: 0.25em;
 }
 fieldset legend.resumeh3 a {
 	background: none;
 	padding: 0;
+}
+#resumewrap fieldset table {
+	float: left;
 }
 
 tr#contactinformation_contactinformation_container th {
 	display: none;
 }
 tr#contactinformation_contactinformation_container td .resumecontactinfo th {
-	width: 30%;
-	display: table-cell;
+	display: block;
+	width: 170px;
+	line-height: 1.6em;
 }
 
 #personalinformation fieldset th label {
     font-weight: bold;
     font-size: 1em;
+}
+
+#goalform .mceEditor .mceLayout,
+#skillform .mceEditor .mceLayout {
+	margin-bottom: 1em;
 }

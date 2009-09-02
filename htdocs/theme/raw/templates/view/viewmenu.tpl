@@ -4,7 +4,7 @@
 {if $LOGGEDIN}
   <a id="objection_link" href="">{str tag=reportobjectionablematerial section=view}</a> |
 {/if}
-  <a href="" onclick="window.print(); return false;">{str tag=print section=view}</a>
+  <a id="print_link" href="" onclick="window.print(); return false;">{str tag=print section=view}</a>
 {if $LOGGEDIN}
   | <a id="toggle_watchlist_link" href="">{if $viewbeingwatched}{str tag=removefromwatchlist section=view}{else}{str tag=addtowatchlist section=view}{/if}</a>
   | {contextualhelp plugintype='core' pluginname='view' section='viewmenu'}

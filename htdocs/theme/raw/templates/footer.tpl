@@ -20,10 +20,10 @@
              support the Mahara project. Support us and we'll
              support you! If you remove this image and link, you
              may not receive support in the Mahara forums -->
-        <p><a href="{$WWWROOT}terms.php">{str tag=termsandconditions}</a> | 
+        <div id="footernav"><a href="{$WWWROOT}terms.php">{str tag=termsandconditions}</a> | 
         <a href="{$WWWROOT}privacy.php">{str tag=privacystatement}</a> | 
         <a href="{$WWWROOT}about.php">{str tag=about}</a> | 
-        <a href="{$WWWROOT}contact.php">{str tag=contactus}</a></p>
+        <a href="{$WWWROOT}contact.php">{str tag=contactus}</a></div>
 {mahara_performance_info}
 {mahara_version}
     </div>

@@ -143,7 +143,7 @@ legend a:active {
 
 /* Buttons */
 .btn,
-.btn-link,
+#sb-profile .controls a,
 input.submit,
 input.button, button,
 input.submitcancel,
@@ -159,9 +159,11 @@ input.cancelbackcreate {
 	margin-left: 5px;
 }
 a.btn,
+#sb-profile .controls a:hover,
 a.btn:hover {
 	color: #FFF;
     text-decoration:none;
+    background-color: #1C3740;
 }
 /***** ICON LINKS ******/
 div.btn-del input.submit, input.submit.btn-del,
@@ -176,9 +178,12 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 /* Top of page elements */
 #container {
     background: #0c2839 url(../images/bg.jpg) repeat-x 3px 0;	
+    min-width: 970px;
+    width: 90%;
 }
 #top-wrapper {
     background: transparent;
+    border: none;
 }
 #site-logo {
 }
@@ -254,6 +259,7 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 #sub-nav ul {
     margin: 0;
     padding: 0;
+    background: transparent;
 }
 #sub-nav li {
     padding: 10px 13px 10px 10px;
@@ -385,7 +391,7 @@ div.sideblock ul ul {
 #footer-wrap {
     background-color: transparent;
     padding: 10px 5px 15px;
-    text-align: center;
+    border: 0;
 }
 #footer-wrap a,
 #footer-wrap a:link,

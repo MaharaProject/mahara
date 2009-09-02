@@ -45,16 +45,48 @@
 	padding: .5em 1.5em 0 1.5em;
 	margin-bottom: 1em;
 }
+
+#register-site form fieldset.collapsed {
+	border: 1px solid #eee;
+}
+#register-site form fieldset.collapsible {
+	border: 1px solid #eee;
+	margin: 0;
+	padding: 0;
+}
+#register-site form table {
+	margin-left: 0em;
+	margin-top: 1em;
+}
+#register-site form table table {
+	margin-left: .75em;
+	margin-top: 0;
+}
 #register-site form table th {
 	text-align: left;
+	padding: .25em 0.5em;
+	width: 130px;
+}
+#register-site form table table th {
+	text-align: left;
 	padding: .25em 0;
+	line-height: 1.4em;
 }
 #register-site form table td {
-	padding: .25em 0;
+	padding: 0 1em 0 0;
 }
 #register-site form legend a {
-	font-size: .9em;
+	font-size: .8em;
 }
+#register_register_container th {
+	display: none;
+}
+#register_register_container td {
+	float: left;
+	margin-bottom: 1em;
+	margin-left: .5em;
+}
+
 
 #runupgrade {
     padding: 1em;
@@ -77,6 +109,11 @@
 #upgradestable td {
     padding: .5em 1em;
 }
+
+
+/* CONFIGURE SITE > SITE OPTIONS */
+
+
 
 /* CONFIGURE SITE > LINKS AND RESOURCES MENU */
 #menuitemlist {
@@ -121,6 +158,10 @@
 .searchform .institutions {
 	margin-left: 1em;
 }
+#edituser_institution th label {
+	font-size: 1em;
+	font-weight: bold;
+}
 /* SEARCH RESULTS TABLE */
 table.tablerenderer th.asc { 
 	background: transparent url(../images/down.gif) no-repeat left;
@@ -137,20 +178,47 @@ table.tablerenderer th.desc {
 
 
 /* MANAGE USERS > EDIT USER */
-#edituser hr {
-    border-top: 1px dotted #d1d1d1;
-    border-width: 1px 0 0 0;
-	height: 1px;
+#edituser .message {
+	margin-left: 155px;
 }
-#suspenddelete div#delete {
-	background-color: #fef1f1;
+#profilepict {
+	padding: 0 1em;
+	font-size: .9em;
+	margin-right: 1em;
+	text-align: center
+}
+#suspenddelete {
+	clear: both;
+	margin-top: 2em;
+}
+#suspenddelete #suspend {
+	border: 1px solid #d1d1d1;
+	float: left;
 	padding: 1em;
-	width: 33%;
+}
+#suspenddelete #delete {
+	border: 1px solid #d1d1d1;
+	background-color: #fef1f1;
+	float: left;
+	padding: 1em;
+	margin-left: 1em;
+}
+#suspenddelete h4 {
+	margin-top: 0;
+}
+#institutions {
+	margin-top: 2em;
+	clear: both;
+}
+#institutions h4 {
+	margin: 0;
 }
 
 
 /* MANAGE USERS > SUSPENDED USERS */
-
+#suspendedlist {
+	margin: 1em 0;
+}
 
 
 /* MANAGE USERS > SITE STAFF */
@@ -159,6 +227,10 @@ table.tablerenderer th.desc {
 .userlistform table {
     width: 100%;
     * width: 98%;
+}
+.userlisttable td label {
+	font-size: 1em;
+	font-weight: bold;
 }
 
 
@@ -174,11 +246,7 @@ table.tablerenderer th.desc {
 
 
 /* MANAGE INSTITUTIONS  */
-#institutionselect table,
-#usertypeselect table {
-	font-size: 1.4em;
-	font-weight: bold;
-}
+
 #institutionselect table td,
 #institutionselect table th,
 #usertypeselect table td,
@@ -197,42 +265,104 @@ table.tablerenderer th.desc {
 	color: #ca0000;
 	font-size: .9em;
 }
+.admininstitutionbtns input.submit {
+	border: none;
+	font-size: .9em;
+	color: blue;
+	margin-left: 1em;
+	padding-left: 1em;
+}
+#institution table td fieldset {
+	margin-left: 6em;
+}
+#suspendinstitution {
+	margin-top: 1em;
+	border: 1px solid #e98a88;
+	background: #fbeceb;
+	padding: .5em 1em 1em 1em;
+}
 
 
 /* MANAGE INSTITUTIONS > INSTITUTION MEMBERS */
 #institutionusers table #institutionusers_users_container th {
-	width: 110px;
+	width: 120px;
+}
+#institutionusers table #institutionusers_users_container td th {
+	width: auto !important;
+	white-space: nowrap;
+}
+#usertypeselect_institution_container th,
+#institutionselect_institution_container th {
+	padding: 1em 0 .5em 0 !important;
+	font-size: 1.5em;
+	line-height: 1.4em;
+	font-weight: bold;
+}
+#usertypeselect_institution_container td,
+#institutionselect_institution_container td {
+	padding: 1em 0 .5em .5em !important;
+	font-size: 1.5em;
+	line-height: 1.4em;
+	font-weight: bold;
 }
 
 /* MANAGE INSTITUTIONS > INSTITUTION STAFF */
 #adminusers table #adminusers_users_container th {
-	width: 90px;
+	width: 90px !important;
+}
+#adminusers table #adminusers_users_container td th {
+	width: auto !important;
+	white-space: nowrap;
 }
 
 /* MANAGE INSTITUTIONS > INSTITUTION ADMINISTRATORS */
 #staffusers table #staffusers_users_container th {
-	width: 80px;
+	width: 80px !important;
+}
+#staffusers table #staffusers_users_container td th {
+	width: auto !important;
+	white-space: nowrap;
 }
 
 /* ADMINISTER EXTENSIONS */
-#adminplugin ul.adminpluginstypes,
-#adminplugin ul.adminpluginstypes ul li,
-#adminplugin ul.adminpluginstypes ul ul {
+#adminplugin h4 {
+	margin-bottom: .25em;
+}
+#adminplugin ul.adminpluginstypes {
 	margin: 0;
+	padding: 0;
 }
 #adminplugin ul.adminpluginstypes li {
 	float: left;
 	list-style: none;
-	margin: 1em 3em 2em 0;
+	margin: 1em 2em 1em 0;
 	padding: 0;
 }
 #adminplugin ul.adminpluginstypes ul {
-	margin: 0 .5em;
+	margin: 0;
+	padding: 0;
+}
+#adminplugin ul.adminpluginstypes ul li {
+	margin: 0;
+	padding: 0;
+}
+#adminplugin ul.adminpluginstypes ul ul {
+	margin: 0;
 	padding: 0;
 }
 #adminplugin ul.adminpluginstypes ul ul li {
 	float: none;
-	list-style: disc;
-	margin:0 0 0 1.5em;
+	list-style: none;
+	padding: 0;
+	margin: 0;
 	font-size: .9em;
+}
+#adminplugin ul.adminpluginstypes ul ul ul {
+	margin: 0;
+	padding: 0;
+}
+#adminplugin ul.adminpluginstypes ul ul ul li {
+	list-style: disc;
+	margin: 0 0 0 1.5em;
+	line-height: 1.4em;
 }

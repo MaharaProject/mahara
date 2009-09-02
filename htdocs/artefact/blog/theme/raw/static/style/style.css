@@ -5,8 +5,15 @@
  * This file is distributed under the same terms as Mahara itself
  */
 #postlist td.postdetails {
-	padding-bottom: 2em;
+	padding-bottom: 1em;
 	font-style: italic;
+	font-size: .9em;
+	color: #888;
+}
+#postlist th {
+	padding: 1em .4em .25em .4em;
+	font-size: 1.3em;
+	border-top: 1px dotted #d1d1d1;
 }
 #postlist p {
 	margin: 0 0 1em 0;
@@ -14,4 +21,26 @@
 
 #bloglist td .addicon {
 	margin: 0;
+}
+#editpost_filebrowser_empty_selectlist {
+	margin: 0;
+}
+#postlist .attachments {
+	margin-top: 1em;
+}
+#postlist .attachments th {
+	padding: .25em .5em;
+	font-size: 1em;
+	border-top: none;
+}
+#postlist input.delete,
+#postlist input.edit {
+	font-size: .7em;
+	font-family: Arial, Helvetica, sans-serif;
+	color: blue;
+}
+table#bloglist .right a {
+	font-size: .9em;
+	margin-left: 1em;
+	padding-left: 1em;
 }

@@ -24,27 +24,27 @@ img {
 .main-column h1, .main-column h2, .main-column h3, .main-column h4, .main-column h5, .main-column h6 {
     margin: .75em 0 .5em;
 }
-.main-column h1:first-child, .main-column h2:first-child, .main-column h3:first-child, .main-column h4:first-child, .main-column h5:first-child, .main-column h6:first-child,
+ .main-column h1:first-child, .main-column h2:first-child, .main-column h3:first-child, .main-column h4:first-child, .main-column h5:first-child, .main-column h6:first-child,
 .main-column h1 + p, .main-column h2 + p, .main-column h3 + p, .main-column h4 + p, .main-column h5 + p, .main-column h6 + p {
-    margin-top: 0;
+    margin-top: .5em;
 }
 .main-column h1 {
-    font-size: 2.25em;
+    font-size: 2em;
 }
 .main-column h2 {
     font-size: 1.8em;
 }
 .main-column h3 {
-    font-size: 1.4em;
+    font-size: 1.5em;
 }
 .main-column h4 {
-    font-size: 1.2em;
+    font-size: 1.4em;
 }
 .main-column h5 {
-    font-size: 1em;
+    font-size: 1.2em;
 }
 .main-column h6 {
-    font-size: .9em;
+    font-size: 1em;
 }
 .left {
     text-align: left;
@@ -58,6 +58,9 @@ img {
 .fl {
     float: left;
 /*  padding-right: 1em;*/
+}
+.fl img {
+	padding-right: 1em;
 }
 .fr {
     float: right;
@@ -109,6 +112,7 @@ pre, tt {
     opacity: 0.5;
     background-color: #808080;
     filter: alpha(opacity=50);
+	* z-index: 1;
 }
 /** all browsers except ie7 hack to make it at least partially work */
 html>/**/body #overlay {
@@ -126,7 +130,11 @@ th {
     vertical-align: top;
 }
 thead th {
+	padding: .25em .5em;
     white-space: nowrap;
+}
+.nohead tbody th {
+	padding: .25em .5em;
 }
 td {
     padding: .25em .5em;
@@ -137,61 +145,76 @@ td.narrow {
 }
 .main-column .pieform tbody th {
 	text-align: right;
+	line-height: 1.2em;
+	padding: .5em .5em .25em .5em;
+}
+.main-column #files_filebrowser_upload_container tbody th {
+	width: 80px;
 }
 .r0 {
-    background-color: #f1f1f1;
+    background-color: #f9f9f9;
+	border-top: 1px solid #FFF;
 }
 .r1 {
-    background-color: #f7f7f7;
+    background-color: #f3f3f3;
+	border-top: 1px solid #FFF;
 }
 .listing {
-    font-size: .9em;
+	margin-bottom: .5em;
 }
-.listing h3, .listing h5 {
+.listing h3 {
+	font-size: 1.4em;
+    margin: 0 !important;
+} 
+.listing h5 {
+	font-size: 1em;
     margin: 0;
 }
 div.listing {
-	padding: .5em 1em;
+	padding: .5em;
+}
+.listing div div {
+	font-size: .9em;
 }
 
 /* Pagination */
 div.pagination  {
     font-size: .9em;
-    margin: 1em 0;
     text-align: center;
+	margin: .25em 0;
 }
-.pagination a {
+div.pagination span {
     border: 1px solid #d1d1d1;
     margin: 0 .25em;
-    padding: .5em;
+    padding: .25em .5em;
+}
+.pagination a {
     text-decoration: none;
 }
 .pagination .disabled {
     background-color: #EBEBEB;
-    border: 1px solid #d1d1d1;
-    margin: 0 .25em;
-    padding: .5em;
     text-decoration: none;
+	color: #c1c1c1;
 }
 .pagination .selected {
-    border: 1px solid #d1d1d1;
     font-weight: bold;
-    margin: 0 .25em;
-    padding: .5em;
 }
 .pagination .results {
     color: #838383;
-    margin: 1em;
     text-align: center;
 }
 
 /* Forms */
 label {
     font-weight: bold;
-    margin: 0 .5em 0 0;
+    margin: 0;
+}
+form {
+	margin: 0;
+	padding: 0;
 }
 .required th, .required label, .requiredmarker, #register_tandc_container th {
-    color: #cc6600;
+    color: #c81511;
 }
 /* override required colour */
 .required label.plain, .required.radio td label, .required.emaillist td label {
@@ -208,9 +231,10 @@ label {
 .pieform td.description {
 	padding-top: 0 !important;
     font-size: .9em;
+	color: #7d7d7d;
 }
 div.grippie {
-	border-color: #d1d1d1;
+	border-color: #a5acb2;
     border-style: solid;
     border-width: 0 1px 1px 1px;
     background: #eeeeee url(../images/grippie.png) no-repeat scroll 100% 50%;
@@ -218,29 +242,44 @@ div.grippie {
     height: 14px;
 }
 .errmsg {
-    color: #cc0000;
+    color: #dd0221;
     font-size: .9em;
+    background: #ffd3d9 url(../images/failure.gif) no-repeat .5em center;
+	padding-left: 2em;
 }
 legend {
 	font-weight: bold;
 	font-size: 1.3em;
+	* padding-bottom: .5em;
+	* padding-top: .5em;
 }
 select {
-	margin-right: .5em;
+	margin-right: .25em;
 }
+textarea {
+	border: 1px solid #a5acb2;
+}
+input.text {
+	border: 1px solid #a5acb2;
+}
+input.text.required {
+	border: 1px solid #e98a88;
+}
+
+
 
 /* Fieldset */
 fieldset {
-	padding: 1em 1.5em;
+	padding: 0 1.5em 1em 1.5em;
 	margin: 5px 0;
 }
 fieldset.collapsible {
 	padding: 1em 1.5em;
 }
 fieldset.collapsed {
-	border: 0 !important;
 	padding: 0;
 	margin: 0;
+	border: 0;
 }
 fieldset.collapsed table {
     position: absolute;
@@ -261,28 +300,58 @@ fieldset.collapsed legend a {
 }
 
 /* Buttons */
-a.btn-del, div.btn-del input.submit, input.submit.btn-del,
-.btn-leavegroup,
-.btn-pending,
-a.btn-add, a.btn-req, div.btn-add input.submit, input.submit.btn-add, button.btn-add,
-div.btn-msg input.submit,
-div.btn-edit input.submit, input.submit.btn-edit,
-a.btn-msg, a.btn-edit, .btn-reply {
-    padding-left: .8em;
+input.submit,
+input.cancel,
+button,
+input.buttondk {
+    font-size: 1em;
+	font-family: Arial, Helvetica, sans-serif;
+}
+a.btn-del, a.btn-add, a.btn-req, a.btn-msg, a.btn-edit {
     margin-right: .2em;
     cursor: pointer;
     border: none;
     * width: 1;
     * overflow: visible;
 }
-a.btn-del, .btn-leavegroup, div.btn-del input.submit, input.submit.btn-del {
-    color: #ca0000;
+
+div.btn-del input.submit, input.submit.btn-del,
+.btn-leavegroup,
+.btn-pending,
+div.btn-add input.submit, input.submit.btn-add, button.btn-add,
+div.btn-msg input.submit,
+div.btn-edit input.submit, .btn-reply {
+    margin-right: .25em;
+    cursor: pointer;
+    border: none;
+    * width: 1;
+    * overflow: visible;
+	color: blue;
+}
+#filelist input.submit {
+	font-size: .9em;
+    border: none;
+	padding-left: .7em;
+	color: blue;
+}
+
+a.btn-del, 
+.btn-leavegroup, 
+div.btn-del input.submit, 
+input.submit.btn-del,
+#btn-delete {
     background: url(../images/icon-delete.gif) no-repeat center left;
+}
+#btn-request {
+	background: url(../images/icon-add.gif) no-repeat center left;
 }
 div.btn-bold input.submit {
     font-weight: bold;
 }
 a.btn-msg, div.btn-msg input.submit {
+	background: url(../images/icon-mail.gif) no-repeat center left;
+}
+#btn-sendmessage {
 	background: url(../images/icon-mail.gif) no-repeat center left;
 }
 a.btn-add, a.btn-req, div.btn-add input.submit, input.submit.btn-add, button.btn-add {
@@ -294,8 +363,20 @@ a.btn-edit, div.btn-edit input.submit, input.submit.btn-edit {
 .btn-pending {
 	background: url(../images/icon-pending.gif) no-repeat left 3px;
 }
-.btn-reply {
+.btn-reply, #add_feedback_link {
 	background: url(../images/icon-reply.gif) no-repeat left 4px;
+}
+#objection_link {
+	background: url(../images/icon-flag.gif) no-repeat left 4px;
+}
+#print_link {
+	background: url(../images/icon-print.gif) no-repeat left 4px;
+}
+#toggle_watchlist_link {
+	background: url(../images/icon-watch.gif) no-repeat left 4px;
+}
+.btn-settings {
+	background: url(../images/icon-settings.gif) no-repeat left 4px;
 }
 input#addfriend_add,
 input#myfriends_addfriend_add {
@@ -303,27 +384,77 @@ input#myfriends_addfriend_add {
 	border: 0;
     margin: 0;
 }
+.btn-loginas {
+	background: transparent url(../images/icon-login.gif) no-repeat center left;
+	padding-left: 1em;
+}
 div.rbuttons {
     position: absolute;
     right: 0;
     top: 0;
+	font-weight: bold;
+}
+.listing div.rbuttons {
+    position: absolute;
+    right: 0;
+    top: 5px;
+}
+div.rbuttons a {
+	border: 1px solid #D1D1D1;
+	margin: 0 0.25em;
+	padding: 0.25em 0.5em;
+	background: #eee;
+	line-height: 2em;
+}
+.listing div.rbuttons a {
+	font-size: 1em;
+	border: 1px solid #D1D1D1;
+	margin: 0.25em;
+	padding: 0.25em .5em;
+	background: #eee;
+	font-weight: normal;
+	line-height: 2em;
 }
 div.lbuttons {
     position: absolute;
     left: 0;
     top: 0;
 }
+div.lbuttons a {
+    padding-left: 1em;
+}
 div.rbuttons.pagetabs {
     right: 1em;
     top: 0.5em;
 }
+div.pagetabs {
+    top: 1.5em !important;
+    right: .5em;
+}
+div.pagetabs a {
+	font-weight: bold !important;
+	border: none;
+	margin: 0 1em;
+	padding: 0;
+	background: none;
+}
+
+div.pagetabs .help a {
+	margin: 0;
+}
 div.rbuttons form,
 div.rbuttons form div {
     display: inline;
-    padding-left: 1em;
 }
 .controls a {
     margin: 0 .5em;
+}
+#buttons input {
+	margin: 0 .25em 0 0;
+}
+div.rbuttons .small-logo {
+	border: 0;
+	background: none;
 }
 
 /* Top of page elements */
@@ -332,10 +463,12 @@ div.rbuttons form div {
     margin: 0 .25em 1px;
 }
 .viewheader .small-logo img {
+	margin: .25em 0;
     padding: 0;
 }
 .viewheader .lbuttons {
     padding: .5em;
+	font-size: .9em;
 }
 .sitemessage {
     background-color: #f99;
@@ -351,8 +484,8 @@ div.rbuttons form div {
     background-color: #fff;
     margin: 0 auto;
     max-width: 1400px;
-    min-width: 950px;
-    width: 90%;
+    min-width: 970px;
+    width: 100%;
 }
 #loading-box {
     /* TODO: check this rule */
@@ -366,27 +499,27 @@ div.rbuttons form div {
 #site-logo {
     float: left;
     margin: 0;
-    padding: .5em;
+    padding: .5em .75em;
 }
 #language-select, #usf {
     text-align: right;
-    padding-top: 1em;
+    padding: 1em;
 }
 #usf_query_container input {
-    padding: 2px 3px;
-    width: 190px;
+    width: 195px;
+	margin-right: .25em;
 }
 
+#top-wrapper {
+	border-bottom: 1px solid #eee;
+	padding: 0;
+}
 
-/* Navigation shared rules */
-#main-nav li, #sub-nav li {
-    display: inline;
+#containerX #top-wrapper {
+	background: #eee;
+	padding: .25em;
 }
-#main-nav li.selected a, #sub-nav li.selected a {
-    color: #333;
-    cursor: default;
-    text-decoration: none;
-}
+
 
 /* Main navigation */
 #main-nav {
@@ -395,32 +528,44 @@ div.rbuttons form div {
     font-weight: bold;
     white-space: nowrap;
 }
-@media screen and (-webkit-min-device-pixel-ratio:0) { /* todo: is this needed? should be in safari-specific stylesheet anyway */
-    #main-nav ul { padding: 5px 0 6px 0; }
-}
 #main-nav ul {
-    margin: 0;
+    margin: 0 0 0 .5em;
     padding: 0;
 }
 #main-nav li {
-    padding: 0.4em 1em;
-    line-height: 1.6em;
+    padding: .5em 1em;
+    line-height: 2em;
+	display: inline;
 }
 #main-nav li.selected {
     background-color: #ddd;
 }
+#main-nav li.selected a {
+    color: #333;
+    cursor: default;
+    text-decoration: none;
+    font-weight: bold;
+}
 
 /* Sub navigation (second row of tabs) */
 #sub-nav {
-    background-color: #ddd;
-    padding: .25em;
     white-space: nowrap;
+	border-top: 1px solid #ddd;
 }
 #sub-nav ul {
-    margin: 0 3.5em 0;
+    margin: 0;
+	padding: .25em .25em .25em .5em;
+	background: #ddd;
 }
-#sub-nav li a {
-    padding: .25em 1em;
+#sub-nav li {
+    padding: .5em 1em;
+	display: inline;
+}
+#sub-nav li.selected a {
+    color: #333;
+    cursor: default;
+    text-decoration: none;
+    font-weight: bold;
 }
 
 /* Main content area */
@@ -432,13 +577,16 @@ div.rbuttons form div {
     padding: 1em 1.5em 1em;
 }
 #main-column {
-    padding: 0 1.5em 1em;
-    overflow: auto;
+    padding: 0 1.5em 1.5em;
 }
 #main-column-container, div.rel {
     position: relative;
     min-height: 0;  /* IE layout hack */
     * padding-top: .2em;
+}
+.twocolumn div.rel {
+	margin-left: 53px;
+	margin-top: 3px;
 }
 .main-column ul {
     margin: .5em 0 1em 0;
@@ -455,15 +603,18 @@ div.rbuttons form div {
 div.ok, div.error, div.info {
     padding: .4em .5em .4em 2.5em;
 }
-#messages .ok {
+#messages .ok,
+div.ok {
     color: #547c22;
     background: #e7f1c3 url(../images/success.gif) no-repeat .5em;
 }
-#messages .error {
+#messages .error,
+div.error {
     color: #dd0221;
     background: #ffd3d9 url(../images/failure.gif) no-repeat .5em;
 }
-#messages .info {
+#messages .info,
+div.inf {
     color: #1666a9;
     /* TODO: get evonne to look at these icons */
     background: #d2ebff url(../images/icon_question.gif) no-repeat .5em;
@@ -481,6 +632,9 @@ div.ok, div.error, div.info {
     border: 1px solid #ddd;
     text-align: center;
 }
+.message h4 {
+    margin: 0 !important;
+}
 .message p {
     margin: 0;
 }
@@ -491,7 +645,7 @@ div.section {
 
 /* Tabbed pages */
 ul.in-page-tabs {
-  font-size: .9em;
+  font-size: 1em;
   font-weight: bold;
   list-style: none;
   margin: 0;
@@ -499,20 +653,25 @@ ul.in-page-tabs {
 }
 ul.in-page-tabs li {
   display: inline;
-  margin: 0 .25em;
+  line-height: 1.8em;
+  padding: 0;
+  margin: 0 .5em 0 0;
 }
 ul.in-page-tabs li a.current-tab {
   color: #333;
   cursor: default;
   text-decoration: none;
-  background: #ddd;
+  background: #D1D1D1;
 }
 ul.in-page-tabs li a {
   padding: .3em 1em;
+  * line-height: 1.9em;
+  background: #EEEEEE;
 }
 .subpage {
     border: 1px solid #d1d1d1;
 	padding: 1em;
+	margin-bottom: 1em;
 }
 .subpage p:first-child {
 	margin: .5em 0;
@@ -520,7 +679,10 @@ ul.in-page-tabs li a {
 
 
 /* Left/right columns */
-#left-column, #right-column {
+#left-column {
+    width: 256px;
+}
+#right-column {
     width: 256px;
 }
 
@@ -531,11 +693,11 @@ div.sideblock {
     padding: 1em 1.25em;
 }
 div.sideblock h3 {
-    font-size: 1.3em;
-    margin: 0 0 .5em 0;
+    font-size: 1.5em;
+    margin: .5em 0;
 }
 div.sideblock ul {
-    padding: 0 2em 0;
+    padding: 0 0 0 1.5em;
     margin: 0;
 }
 
@@ -563,6 +725,7 @@ div.sideblock ul {
 #user-profileicon {
     float: right;
     padding-left: .25em;
+	border: 1px solid #d1d1d1;
 }
 #sb-profile .sideblock-content > ul {
     padding: 0;
@@ -572,13 +735,23 @@ div.sideblock ul {
     font-weight: bold;
 }
 #sb-profile ul ul {
-    font-size: .9em;
+    font-size: 1em;
     font-weight: normal;
-    padding-left: 2em;
+    padding-left: 1.5em;
     list-style-type: disc;
 }
 #sb-profile .controls {
     margin-top: 1em;
+}
+#sb-profile .controls a {
+	font-weight: bold;
+	border: 1px solid #D1D1D1;
+	margin: 0 0.25em;
+	padding: .25em 0.5em;
+	background: #eee;
+}
+#sb-profile .controls a:hover {
+	background: #d1d1d1;
 }
 #changeuser {
     padding-top: 1em;
@@ -594,10 +767,10 @@ li#pendingfriends a {
 #sb-onlineusers ul {
     list-style: none;
     margin: 0;
-    padding: 0 0 0 0.5em;
+    padding: 0;
 }
 #sb-onlineusers li {
-    line-height: 2em;
+    line-height: 2.1em;
 }
 #sb-onlineusers ul img {
     float: left;
@@ -605,7 +778,7 @@ li#pendingfriends a {
 }
 #lastminutes {
     float: right;
-    margin: 0;
+    margin: .75em 0 0 0;
     font-style: italic;
 }
 
@@ -652,6 +825,7 @@ li#pendingfriends a {
 div.sideblock #friendscontrol label {
 	line-height: 1.8em;
 	vertical-align: top;
+	font-size: 1em;
 }
 
 .sidebar-content.mytags {
@@ -689,19 +863,28 @@ div.sideblock #friendscontrol label {
     margin: 0;
     width: 250px;
     max-height: 30%;
-    overflow: auto;
+    overflow: inherit;
     background-color: #f9f9f9;
     border: 1px solid #b2b2b2;
     cursor: help;
-    font-size: .9em;
+    font-size: 12px;
+	color: #333;
 }
 .help a:focus {
     outline: none;
 }
 .page-help-icon .help {
-    vertical-align: text-top;
+    vertical-align: middle;
     font-size: .4em;
     padding-top: .2em;
+}
+#helpstop h3 {
+	white-space: normal;
+	margin-top: 0;
+}
+#helpstop p {
+	font-weight: normal;
+	white-space: normal;
 }
 
 
@@ -710,20 +893,34 @@ div.sideblock #friendscontrol label {
     clear: both;
     font-size: .9em;
     padding: .5em;
-    background: #eee;
+	border-top: 1px solid #D1D1D1;
 }
-#footer-wrap p {
+#footernav {
     margin: .5em;
+	color: #d1d1d1;
+    float: left;
 }
-#footer-wrap p a {
+#footernav a {
     padding: 0 .5em;
 }
 #powered-by {
     margin: .5em 1em;
     float: left;
 }
-#performance-info span {
-    padding-right: 1em;
+#performance-info {
+    float: right;
+	margin: .5em;
+	color: #888;
+}
+#version {
+    float: right;
+	margin: .5em;
+	color: #888;
+}
+#viewmenu {
+	font-size: .9em;
+	padding: .75em 0;
+	color: #d1d1d1;
 }
 
 /* Userlists used in admin section and on edit interaction form */
@@ -732,31 +929,25 @@ div.sideblock #friendscontrol label {
 }
 .userlisttable .lrbuttons button {
     margin: .25em 0;
+	white-space: nowrap;
 }
 .userlisttable .lrfieldlists {
-    width: 50%;
+    width: 48%;
     padding: 0;
     margin: 0;
 }
 .userlisttable tbody tr th {
 	text-align: left !important;
-	padding: 0;
-	font-size: .9em;
+	padding: .25em 0 !important;
+	font-size: 1em;
 	color: #333;
 }
 
 /* Attached file lists */
-.attachments {
-	border: 1px solid #ddd;
-	background-color: #ddd;
-}
+
 .attachments tbody th {
-	border: none !important;
-	padding: .25em .5em 0;
 	text-align: left;
-}
-.attachments td {
-	padding: .25em .5em;
+	background-color: #ddd;
 }
 
 
@@ -765,30 +956,86 @@ div.sideblock #friendscontrol label {
 /* View user */
 #userview {
 	margin: 1em 0;
-	padding: .5em 1em;
+	line-height: 1em;
+}
+#userview .user-icon {
+    font-size: .9em;
+	padding: .5em;
 	background-color: #eee;
 }
 #userview .user-icon a {
 	margin-left: 1em;
+	padding-left: 1em;
 }
 #userview #invite,
 #userview #addmember {
 	margin-top: 1em;
 }
 #userview .submit {
-    padding-top: .2em;
-    font-size: .9em;
+    font-size: 1em;
+	font-weight: normal;
+	margin-right: 0;
+}
+.wallpost .text p {
+    margin: .25em 0;
+}
+.userinfo {
+	height: 25px;
+}
+.wallpost .userinfo img {
+	float: left;
+	padding-right: .5em;
+}
+.wallpost .userinforight {
+	padding: .25em;
+}
+.wallpost .postedon {
+    color: #888;
+	font-style: italic;
+	font-size: .9em;
+}
+.wallpost .controls {
+	font-size: .9em;
+    color: #888;
+}
+.wallpost .controls a {
+	margin: 0;
 }
 
+#wall .private {
+    background: url(../images/privatebg.gif) repeat top left;
+}
+.wallpost {
+    border-bottom: 2px solid #FFF;
+	background: #F9F9F9;
+    padding: .5em;
+}
+#viewlayout .fl {
+	margin: 0 2em 1em 0;
+}
+
+
 /* My Views */
+#myviews td {
+	border-bottom: 2px solid #FFF;
+}
 #myviews h3 {
-    font-size: 1.5em;
+    font-size: 1.4em;
+}
+#myviews h4 {
+	font-size: 1.1em;
 }
 #myviews .vi {
     float: left;
     line-height: 1.2em;
     padding: .5em 1.5em .5em 0;
     width: 30%;
+}
+#myviews .rbuttons .btn-del {
+    color: #ca0000;
+    background: url(../images/icon-delete.gif) no-repeat center left;
+	padding-left: 1em;
+	border: none;
 }
 /* todo: check the below three rules */
 #myviews .submit-viewitem {
@@ -797,7 +1044,7 @@ div.sideblock #friendscontrol label {
 }
 #myviews .submitted-viewitem {
     float: left;
-    padding: .5em 1.5em .5em 1.5em;
+    padding: 1em 2.75em 0 0;
     font-style: italic;
     color: #969696;
     font-size: 1em;
@@ -826,25 +1073,29 @@ div.sideblock #friendscontrol label {
 
 /* View access */
 #viewacl_lhs {
-    float: right;
+    float: left;
     padding: 1em;
-    margin: 0 0 1em 1em;
-    border: 1px dotted #d1d1d1;
+    margin: 0 1em 1em 0;
+    border: 1px solid #d1d1d1;
 	width: 320px;
+}
+#potentialpresetitems div {
+	margin: .25em 0;
 }
 #viewacl_lhs #results {
 	margin-top: 1em;
 }
 #accesslistitems {
-	margin-right: 350px;
+	margin-left: 360px;
 }
 #accesslistitems .ai-container {
-	margin: 1em 1em 0 0;
+	margin: 0 1em 1em 0;
 	float: left;
     background: #eee;
 }
 #accesslistitems .ai-container th {
 	text-align: left;
+	line-height: 1.6em;
 }
 #accesslistitems .ai-container table {
 	margin: 0;
@@ -875,7 +1126,8 @@ div.sideblock #friendscontrol label {
 
 /* Export */
 #export h3 {
-    margin: .5em 0;
+    margin: .75em 0 .25em 0;
+	font-size: 1.4em;
 }
 #export .radio-description {
     padding-left: 2em;
@@ -905,9 +1157,6 @@ div.sideblock #friendscontrol label {
 #export fieldset label {
     font-size: normal;
     font-weight: bold;
-}
-#export_submit_container {
-    text-align: center;
 }
 
 #exportgeneration {
@@ -951,19 +1200,29 @@ p.progress-text {
 
 /* My Groups */
 ul.groupuserstatus {
-    width: 200px;
+    width: 180px;
+	font-size: .9em;
+	margin: 0 0 0 1em;
 }
 ul.groupuserstatus li {
 	list-style: none;
-	margin: 0;
+	margin: 0 0 0 1em;
 	border-bottom: 1px solid #d1d1d1;
+	padding: 0 .25em;
 }
+ul.groupuserstatus li a {
+	padding-left: 1em;
+}
+ul.groupuserstatus li
 ul.groupuserstatus li.last {
 	border-bottom: none;
 }
 form#search, form#filter, div.searchform {
     /* Also applies to Find Friends */
     margin-bottom: 1em;
+}
+form#search input.text {
+	margin-right: .25em;
 }
 
 
@@ -983,9 +1242,10 @@ form#search, form#filter, div.searchform {
 	background: url(../images/divider-dot.gif) no-repeat left;
 }
 #friendslist ul.actionlist {
-	margin: 0 1em;
+	margin: 0 0 0 1em;
 	float: right;
-	width: 200px;
+	width: 180px;
+	font-size: .9em;
 }
 #friendslist ul.actionlist li {
 	list-style: none;
@@ -993,15 +1253,20 @@ form#search, form#filter, div.searchform {
 	padding: 0 .25em;
 	border-bottom: 1px solid #d1d1d1;
 }
+#friendslist ul.actionlist li a {
+	padding-left: 1em;
+}
 #friendslist ul.actionlist li.last {
 	border-bottom: none;
 }
 #friendslist .leftdiv {
 	float: left;
+	width: 4.5em;
 }
 #friendslist .rightdiv {
 	min-height: 35px;
-	padding: .5em 0 0 4.5em;
+	padding: .5em 0 0 0;
+	margin-left: 4.5em;
 }
 
 /* Group: about */
@@ -1030,14 +1295,16 @@ form#search, form#filter, div.searchform {
 	width: 50%;
 	border: 4px solid #FFF;
 }
-.listing.twocolumn td img {
-    margin-right: .5em;
-}
 .listing.twocolumn form input {
     border: none;
 	font-weight: normal;
-	font-size: .9em;
-    line-height: .9em;
+	font-size: 1.1em;
+	padding-left: .8em;
+	margin: 0;
+	padding-right: 0;
+}
+.listing.twocolumn .btn-del {
+	top: 0;
 }
 
 /* Settings > Preferences */
@@ -1045,8 +1312,8 @@ form#search, form#filter, div.searchform {
     padding-left: 0;
 }
 #accountprefs table h3 {
-    margin: .8em 0 .4em 0;
-	border-bottom: 1px solid #000;
+    font-size: 1.4em;
+	margin: .75em 0 0 0;
 }
 
 /* Settings > Notifications */
@@ -1058,14 +1325,22 @@ form#search, form#filter, div.searchform {
 #activitylist th a {
 	font-size: .8em;
 	font-weight: normal;
+	white-space: nowrap;
+}
+#activitylist tbody td div {
+	font-size: .9em;
+	line-height: 1.4em;
+}
+#activitylist tbody td div .s {
+	font-size: 1em;
 }
 
 /* Settings > Institution membership */
-#requestmembership_institution_container {
-	margin: 1em 0;
-}
 #requestmembership_studentid_container {
-	margin: 1em .5em 0 1em;
+	margin: 0 .5em;
+}
+#requestmembership_studentid_container label {
+	margin: 0 .25em 0 0;
 }
 #cancelrequest label {
 	display: block;
