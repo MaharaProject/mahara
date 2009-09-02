@@ -115,7 +115,7 @@ class ArtefactTypeResume extends ArtefactType {
      * Default render method for resume fields - show their description
      */
     public function render_self($options) {
-        return array('html' => $this->description);
+        return array('html' => clean_html($this->description));
     }
 
     /**
