@@ -114,3 +114,6 @@ form#files .filelist td {
 	color: #C3C3C3;
 }
 
+.icon-drag {
+    cursor: move;
+}
