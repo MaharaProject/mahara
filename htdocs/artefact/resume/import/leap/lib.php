@@ -55,6 +55,11 @@ class LeapImportResume extends LeapImportArtefactPlugin {
     const STRATEGY_IMPORT_AS_EMPLOYMENT = 4;
 
     /**
+     * Resources of resource_type:Printed map to books/publications
+     */
+    const STRATEGY_IMPORT_AS_BOOK = 5;
+
+    /**
      * Description of strategies used
      */
     public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImport $importer) {
@@ -115,6 +120,19 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 'strategy' => self::STRATEGY_IMPORT_AS_EMPLOYMENT,
                 'score'    => 100,
                 'other_required_entries' => array(), // TODO: we need is_supported_by entries, which in mahara usually refer to organisations
+            );
+        }
+
+        // Books
+        $correctrdftype = count($entry->xpath('rdf:type['
+            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'resource') . ']')) == 1;
+        $correctcategoryscheme = count($entry->xpath('a:category[('
+            . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'resource_type#') . ') and @term="Printed"]')) == 1;
+        if ($correctrdftype && $correctcategoryscheme) {
+            $strategies[] = array(
+                'strategy' => self::STRATEGY_IMPORT_AS_BOOK,
+                'score'    => 100,
+                'other_required_entries' => array(),
             );
         }
 
@@ -194,6 +212,19 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 'displayorder' => '', // TODO: get from the grouping, or failing that, from this entry itself
             );
             ArtefactTypeResumeComposite::ensure_composite_value($values, 'employmenthistory', $importer->get('usr'));
+            break;
+        case self::STRATEGY_IMPORT_AS_BOOK:
+            $dates = PluginImportLeap::get_leap_dates($entry);
+            $enddate   = (isset($dates['end']))   ? self::convert_leap_date_to_resume_date($dates['end'])   : '';
+
+            $values = array(
+                'date' => $enddate,
+                'title'   => $entry->title,
+                'contribution' => '', // TODO - get from related entry
+                'description' => PluginImportLeap::get_entry_content($entry, $importer), // TODO Still debate over what this is the description of
+                'displayorder' => '', // TODO: get from the grouping, or failing that, from this entry itself
+            );
+            ArtefactTypeResumeComposite::ensure_composite_value($values, 'book', $importer->get('usr'));
             break;
         default:
             throw new ImportException($importer, 'TODO: get_string: unknown strategy chosen for importing entry');
