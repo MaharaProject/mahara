@@ -39,14 +39,9 @@
 	font-family: Arial, Helvetica, sans-serif;
 	color: blue;
 }
-
-input.delete {
-    background: url(../images/icon-delete.gif) no-repeat center left;
-	padding-left: .7em;
-	border: none;
-}
-input.edit {
-    background: url(../images/icon-edit.gif) no-repeat center left;
-	padding-left: .7em;
-	border: none;
+#bloglist a.btn-settings,
+#bloglist a.btn-del,
+#bloglist a.btn-add {
+  padding-left: .7em;
+  margin-left: .4em;
 }
