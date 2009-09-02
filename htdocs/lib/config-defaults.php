@@ -58,7 +58,7 @@ $cfg = new StdClass;
 // system mail address. emails out come from this address.
 // if not specified, will default to noreply@ automatically detected host.
 // if that doesn't work or you want something else, then specify it here.
-// $cfg->noreplyaddress = 'noreply@myhost.com'
+// $cfg->noreplyaddress = 'noreply@myhost.com';
 
 // Logging configuration
 // For each log level, you can specify where the messages are displayed.
