@@ -171,7 +171,6 @@ class Peer {
 
             // Couldn't find the IP address?
             if ($ipaddress === $hostname && !preg_match('/^\d+\.\d+\.\d+.\d+$/',$hostname)) {
-                $this->error[] = array('code' => 2, 'text' => get_string("noaddressforhost", 'mnet'));
                 throw new ParamOutOfRangeException('Could not find IP address for host: '.addslashes($hostname));
                 return false;
             }
