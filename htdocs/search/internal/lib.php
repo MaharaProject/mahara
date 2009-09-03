@@ -844,8 +844,9 @@ class PluginSearchInternal extends PluginSearch {
      * @param object   $owner: owner type (user,group,institution), and id
      * @param integer  $limit
      * @param integer  $offset
+     * @param boolean  $returntags Return all the tags that have been attached to each result
      */
-    public static function portfolio_search_by_tag($tag, $owner, $limit, $offset) {
+    public static function portfolio_search_by_tag($tag, $owner, $limit, $offset, $returntags) {
         $from = "FROM (
            (SELECT a.id, a.title, a.description, 'artefact' AS type, a.artefacttype, " . db_format_tsfield('a.ctime', 'ctime') . "
             FROM {artefact} a JOIN {artefact_tag} at ON (a.id = at.artefact AND at.tag = ?)
@@ -869,7 +870,27 @@ class PluginSearchInternal extends PluginSearch {
 
         if ($count = count_records_sql('SELECT COUNT(*) ' . $from, $values, $offset, $limit)) {
             $result->count = $count;
-            if ($data = get_records_sql_array('SELECT * ' . $from . ' ORDER BY p.title ASC', $values, $offset, $limit)) {
+            if ($data = get_records_sql_assoc("SELECT type || ':' || id AS tid, * " . $from . ' ORDER BY p.title ASC', $values, $offset, $limit)) {
+                if ($returntags) {
+                    $ids = array('view' => array(), 'artefact' => array());
+                    foreach ($data as &$d) {
+                        $ids[$d->type][$d->id] = 1;
+                    }
+                    if (!empty($ids['view'])) {
+                        if ($viewtags = get_records_select_array('view_tag', 'view IN (' . join(',', array_keys($ids['view'])) . ')')) {
+                            foreach ($viewtags as &$vt) {
+                                $data['view:' . $vt->view]->tags[] = $vt->tag;
+                            }
+                        }
+                    }
+                    if (!empty($ids['artefact'])) {
+                        if ($artefacttags = get_records_select_array('artefact_tag', 'artefact IN (' . join(',', array_keys($ids['artefact'])) . ')')) {
+                            foreach ($artefacttags as &$at) {
+                                $data['artefact:' . $at->artefact]->tags[] = $at->tag;
+                            }
+                        }
+                    }
+                }
                 $result->data = $data;
             }
         }

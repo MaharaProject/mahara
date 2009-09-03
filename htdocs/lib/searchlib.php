@@ -441,7 +441,7 @@ function search_selfsearch($query_string, $limit, $offset, $type = 'all') {
     return call_static_method(generate_class_name('search', $plugin), 'self_search', $query_string, $limit, $offset, $type);
 }
 
-function get_portfolio_items_by_tag($tag, $owner, $limit, $offset) {
+function get_portfolio_items_by_tag($tag, $owner, $limit, $offset, $returntags=true) {
     // For now, can only be used to search a user's portfolio
     if (empty($owner->id) || empty($owner->type)) {
         throw new SystemException('get_views_and_artefacts_by_tag: invalid owner');
@@ -453,7 +453,7 @@ function get_portfolio_items_by_tag($tag, $owner, $limit, $offset) {
     $plugin = 'internal';
     safe_require('search', $plugin);
 
-    return call_static_method(generate_class_name('search', $plugin), 'portfolio_search_by_tag', $tag, $owner, $limit, $offset);
+    return call_static_method(generate_class_name('search', $plugin), 'portfolio_search_by_tag', $tag, $owner, $limit, $offset, $returntags);
 }
 
 function get_search_plugins() {

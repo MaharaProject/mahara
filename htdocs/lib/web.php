@@ -437,6 +437,7 @@ EOF;
             );
             $SIDEBLOCKS[] = array(
                 'name'   => 'mytags',
+                'id'     => 'sb-mytags',
                 'weight' => 0,
                 'data'   => mytags_sideblock(),
             );

@@ -88,6 +88,7 @@ $string['mytags'] = 'My Tags';
 $string['Tag'] = 'Tag';
 $string['itemstaggedwith'] = 'Items tagged with "%s"';
 $string['numitems'] = '%s items';
+$string['searchresultsfor'] = 'Search results for';
 
 $string['selfsearch'] = 'Search My Portfolio';
 

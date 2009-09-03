@@ -3,14 +3,15 @@
 {if $tags}
     <div class="mytags">
   {foreach from=$tags item=t}
-      <a class="tag{if $t->tag == $tag} selected{/if}" style="font-size: {$t->size}em;" href="{$WWWROOT}tags.php?tag={$t->tag|urlencode}" title="{str tag=numitems arg1=$t->count}">{$t->tag|escape}</a>
+      <a id="tag:{$t->tag}" class="tag{if $t->tag == $tag} selected{/if}" href="{$WWWROOT}tags.php?tag={$t->tag|urlencode}">{$t->tag|escape}&nbsp;<span class="tagfreq">({$t->count})</span></a> 
   {/foreach}
     </div>
 {else}
     <div>{str tag=youhavenottaggedanythingyet}</div>
 {/if}
 
-           <table id="results" class="tablerenderer fullwidth">
+           <h6 id="results_heading"{if !$tag} class="hidden"{/if}>{str tag=searchresultsfor}: <a class="tag" href="{$WWWROOT}tags.php?tag={$tag|urlencode}">{$tag|escape}</a></h4>
+           <table id="results" class="tablerenderer fullwidth{if !$tag} hidden{/if}">
              <thead>
                <tr><th></th><th></th><th></th></tr>
              </thead>

@@ -841,7 +841,12 @@ div.sideblock #friendscontrol label {
 }
 .mytags .tag.selected {
     color: #444;
-    text-decoration: underline;
+    font-weight: bold;
+}
+.mytags .tagfreq {
+    font-weight: normal;
+    font-size: .9em;
+    color: #444;
 }
 
 /* AJAX LOGIN */

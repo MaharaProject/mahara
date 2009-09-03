@@ -2171,7 +2171,7 @@ function build_portfolio_search_html(&$data) {
     $smarty->assign_by_ref('data', $data->data);
     $data->tablerows = $smarty->fetch('portfoliosearchresults.tpl');
     $pagination = build_pagination(array(
-        'id' => 'portfoliosearch_pagination',
+        'id' => 'results_pagination',
         'class' => 'center',
         'url' => get_config('wwwroot') . 'tags.php?tag=' . urlencode($data->tag),
         'jsonscript' => 'json/tagsearch.php',
