@@ -46,7 +46,7 @@ if ($tag) {
 
     $js = <<<EOF
 addLoadEvent(function() {
-    {$data->pagination_js}
+    var p = {$data->pagination_js}
     forEach(getElementsByTagAndClassName('a', 'tag', 'main-column-container'), function(elem) {
         disconnectAll(elem);
         connect(elem, 'onclick', function(e) {
@@ -54,7 +54,7 @@ addLoadEvent(function() {
             var href = getNodeAttribute(this, 'href');
             var params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
             sendjsonrequest(config.wwwroot + 'json/tagsearch.php', params, 'POST', function(data) {
-                results_pager.updateResults(data);
+                p.updateResults(data);
                 forEach(getElementsByTagAndClassName('a', 'selected', 'main-column-container'), function(selected) {
                     removeElementClass(selected, 'selected');
                 });

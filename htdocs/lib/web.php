@@ -2790,7 +2790,7 @@ function build_pagination($params) {
         $datatable    = json_encode($params['datatable']);
         $jsonscript   = json_encode($params['jsonscript']);
         $extradata    = json_encode($params['extradata']);
-        $js .= "var {$params['datatable']}_pager = new Paginator($id, $datatable, $jsonscript, $extradata);";
+        $js .= "new Paginator($id, $datatable, $jsonscript, $extradata);";
     }
 
     // Output the count of results
