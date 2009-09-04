@@ -2038,9 +2038,15 @@ function tag_weight($freq) {
     // return log10($freq);
 }
 
-function get_my_tags($limit=null, $cloud=true) {
+function get_my_tags($limit=null, $cloud=true, $sort='freq') {
     global $USER;
     $id = $USER->get('id');
+    if ($limit || $sort != 'alpha') {
+        $sort = 'COUNT(t.tag) DESC';
+    }
+    else {
+        $sort = 't.tag ASC';
+    }
     $tagrecords = get_records_sql_array("
         SELECT
             t.tag, COUNT(t.tag)
@@ -2054,10 +2060,13 @@ function get_my_tags($limit=null, $cloud=true) {
             WHERE v.owner = ?)
         ) t
         GROUP BY t.tag
-        ORDER BY COUNT(t.tag) DESC" . (is_null($limit) ? '' : " LIMIT $limit"),
+        ORDER BY " . $sort . (is_null($limit) ? '' : " LIMIT $limit"),
         array($id, $id)
     );
-    if ($cloud && $tagrecords) {
+    if (!$tagrecords) {
+        return false;
+    }
+    if ($cloud) {
         $minfreq = $tagrecords[count($tagrecords) - 1]->count;
         $maxfreq = $tagrecords[0]->count;
 
@@ -2072,9 +2081,8 @@ function get_my_tags($limit=null, $cloud=true) {
             $t->size = sprintf("%0.1f", $minsize + ($maxsize - $minsize) * $weight);
         }
         usort($tagrecords, create_function('$a,$b', 'return strnatcasecmp($a->tag, $b->tag);'));
-        return $tagrecords;
     }
-    return false;
+    return $tagrecords;
 }
 
 function mytags_sideblock() {
@@ -2167,13 +2175,17 @@ function build_portfolio_search_html(&$data) {
             $item->typestr = get_string($item->artefacttype, 'artefact.' . $artefacttypes[$item->artefacttype]->plugin);
         }
     }
+
+    $data->baseurl = get_config('wwwroot') . 'tags.php?tag=' . urlencode($data->tag);
+    $data->sortcols = array('name', 'date');
+
     $smarty = smarty_core();
     $smarty->assign_by_ref('data', $data->data);
     $data->tablerows = $smarty->fetch('portfoliosearchresults.tpl');
     $pagination = build_pagination(array(
         'id' => 'results_pagination',
         'class' => 'center',
-        'url' => get_config('wwwroot') . 'tags.php?tag=' . urlencode($data->tag),
+        'url' => $data->baseurl . ($data->sort == 'name' ? '' : '&sort=' . $data->sort),
         'jsonscript' => 'json/tagsearch.php',
         'datatable' => 'results',
         'count' => $data->count,

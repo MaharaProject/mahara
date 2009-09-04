@@ -32,10 +32,11 @@ require('searchlib.php');
 
 $tag    = param_variable('tag');
 $offset = param_integer('offset', 0);
+$sort   = param_alpha('sort', 'name');
 $limit  = param_integer('limit', 10);
 $owner  = (object) array('type' => 'user', 'id' => $USER->get('id'));
 
-$data = get_portfolio_items_by_tag($tag, $owner, $limit, $offset);
+$data = get_portfolio_items_by_tag($tag, $owner, $limit, $offset, $sort);
 build_portfolio_search_html($data);
 $data->tagdisplay = hsc($tag);
 

@@ -839,7 +839,9 @@ div.sideblock #friendscontrol label {
     padding: 0 5px;
     vertical-align: middle;
 }
-.mytags .tag.selected {
+/* .tag-sort.selected, */
+.tag-results .selected,
+.mytags .selected {
     color: #444;
     font-weight: bold;
 }

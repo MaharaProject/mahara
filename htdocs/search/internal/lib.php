@@ -844,9 +844,10 @@ class PluginSearchInternal extends PluginSearch {
      * @param object   $owner: owner type (user,group,institution), and id
      * @param integer  $limit
      * @param integer  $offset
+     * @param string   $sort
      * @param boolean  $returntags Return all the tags that have been attached to each result
      */
-    public static function portfolio_search_by_tag($tag, $owner, $limit, $offset, $returntags) {
+    public static function portfolio_search_by_tag($tag, $owner, $limit, $offset, $sort, $returntags) {
         $from = "FROM (
            (SELECT a.id, a.title, a.description, 'artefact' AS type, a.artefacttype, " . db_format_tsfield('a.ctime', 'ctime') . "
             FROM {artefact} a JOIN {artefact_tag} at ON (a.id = at.artefact AND at.tag = ?)
@@ -864,13 +865,15 @@ class PluginSearchInternal extends PluginSearch {
             'owner'  => $owner,
             'offset' => $offset,
             'limit'  => $limit,
+            'sort'   => $sort,
             'count'  => 0,
             'data'   => array(),
         );
 
         if ($count = count_records_sql('SELECT COUNT(*) ' . $from, $values, $offset, $limit)) {
             $result->count = $count;
-            if ($data = get_records_sql_assoc("SELECT type || ':' || id AS tid, * " . $from . ' ORDER BY p.title ASC', $values, $offset, $limit)) {
+            $sort = $sort == 'date' ? 'ctime DESC' : 'title ASC';
+            if ($data = get_records_sql_assoc("SELECT type || ':' || id AS tid, * " . $from . ' ORDER BY ' . $sort, $values, $offset, $limit)) {
                 if ($returntags) {
                     $ids = array('view' => array(), 'artefact' => array());
                     foreach ($data as &$d) {

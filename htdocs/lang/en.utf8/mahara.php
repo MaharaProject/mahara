@@ -88,7 +88,11 @@ $string['mytags'] = 'My Tags';
 $string['Tag'] = 'Tag';
 $string['itemstaggedwith'] = 'Items tagged with "%s"';
 $string['numitems'] = '%s items';
-$string['searchresultsfor'] = 'Search results for';
+$string['searchresultsfor'] = 'Search results for:';
+$string['sortalpha'] = 'Sort tags alphabetically';
+$string['sortfreq'] = 'Sort tags by frequency';
+$string['sortresultsby'] = 'Sort results by:';
+$string['date'] = 'Date';
 
 $string['selfsearch'] = 'Search My Portfolio';
 
