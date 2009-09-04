@@ -208,12 +208,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             if (count($artefactpluginelement) == 1) {
                 $artefactpluginelement = $artefactpluginelement[0];
 
-                $maharaattributes = array();
-                foreach ($artefactpluginelement->attributes(PluginImportLeap::NS_MAHARA)
-                    as $key => $value) {
-                    $maharaattributes[$key] = (string)$value;
-                }
-
+                $maharaattributes = PluginImportLeap::get_attributes($artefactpluginelement, PluginImportLeap::NS_MAHARA);
                 if (isset($maharaattributes['type']) && in_array($maharaattributes['type'], $types)) {
                     $artefactmapping[(string)$entry->id] = array(self::create_artefact(
                         $importer,
@@ -311,10 +306,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             $person = $importer->get_entry_by_id($persondataid);
             $persondata = $person->xpath('leap:persondata');
             foreach ($persondata as $item) {
-                $leapattributes = array();
-                foreach ($item->attributes(PluginImportLeap::NS_LEAP) as $key => $value) {
-                    $leapattributes[$key] = (string)$value;
-                }
+                $leapattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_LEAP);
 
                 if (!isset($leapattributes['field'])) {
                     // 'Field' is required
@@ -339,10 +331,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                     }
                 }
 
-                $maharaattributes = array();
-                foreach ($item->attributes(PluginImportLeap::NS_MAHARA) as $key => $value) {
-                    $maharaattributes[$key] = (string)$value;
-                }
+                $maharaattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_MAHARA);
 
                 if (isset($maharaattributes['field'])) {
                     if (in_array($maharaattributes['field'], array('placeofbirth', 'citizenship', 'visastatus', 'maritalstatus'))) {

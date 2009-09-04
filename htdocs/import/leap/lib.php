@@ -591,6 +591,23 @@ class PluginImportLeap extends PluginImport {
         return $dates;
     }
 
+    /**
+     * Waffer thin helper to grab all attributes in a namespace.
+     *
+     * It's often much easier to work with them in this form. SimpleXML doesn't 
+     * provide a nice property to get at them with.
+     *
+     * @param string $ns The namespace to get the attributes for
+     * @return array     The attributes in the namespace
+     */
+    public static function get_attributes(SimpleXMLElement $item, $ns) {
+        $attributes = array();
+        foreach ($item->attributes($ns) as $key => $value) {
+            $attributes[$key] = (string)$value;
+        }
+        return $attributes;
+    }
+
 }
 
 

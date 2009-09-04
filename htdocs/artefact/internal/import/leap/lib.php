@@ -181,12 +181,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             if (count($artefactpluginelement) == 1) {
                 $artefactpluginelement = $artefactpluginelement[0];
 
-                $maharaattributes = array();
-                foreach ($artefactpluginelement->attributes(PluginImportLeap::NS_MAHARA)
-                    as $key => $value) {
-                    $maharaattributes[$key] = (string)$value;
-                }
-
+                $maharaattributes = PluginImportLeap::get_attributes($artefactpluginelement, PluginImportLeap::NS_MAHARA);
                 if (isset($maharaattributes['type']) && in_array($maharaattributes['type'], $types)) {
                     $artefactmapping[(string)$entry->id] = array(self::create_artefact($importer, $maharaattributes['type'], PluginImportLeap::get_entry_content($entry, $importer)));
                 }
@@ -221,10 +216,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             // Most of the rest of the profile data comes from leap:persondata elements
             $persondata = $person->xpath('leap:persondata');
             foreach ($persondata as $item) {
-                $leapattributes = array();
-                foreach ($item->attributes(PluginImportLeap::NS_LEAP) as $key => $value) {
-                    $leapattributes[$key] = (string)$value;
-                }
+                $leapattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_LEAP);
 
                 if (!isset($leapattributes['field'])) {
                     // 'Field' is required
@@ -335,11 +327,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
         // We've been given a 'website' field, but Mahara has three profile 
         // fields for website. So we need to examine it deeper to establish 
         // which field it should import into
-        $maharaattributes = array();
-        foreach ($item->attributes(PluginImportLeap::NS_MAHARA)
-            as $key => $value) {
-            $maharaattributes[$key] = (string)$value;
-        }
+        $maharaattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_MAHARA);
 
         if (isset($maharaattributes['artefactplugin'])
             && isset($maharaattributes['artefacttype'])
@@ -370,11 +358,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     private static function import_persondata_other(PluginImport $importer, SimpleXMLEntry $item, array $leapattributes) {
         // The only 'other' field we can actually import is one we recognise as 
         // 'student ID'
-        $maharaattributes = array();
-        foreach ($item->attributes(PluginImportLeap::NS_MAHARA)
-            as $key => $value) {
-            $maharaattributes[$key] = (string)$value;
-        }
+        $maharaattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_MAHARA);
 
         if (isset($maharaattributes['artefactplugin'])
             && isset($maharaattributes['artefacttype'])
@@ -403,11 +387,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
         // 'address' field
         $personaddress = '';
         foreach ($addresslines as $addressline) {
-            $maharaattributes = array();
-            foreach ($addressline->attributes(PluginImportLeap::NS_MAHARA)
-                as $key => $value) {
-                $maharaattributes[$key] = (string)$value;
-            }
+            $maharaattributes = PluginImportLeap::get_attributes($addressline, PluginImportLeap::NS_MAHARA);
 
             if (isset($maharaattributes['artefacttype'])) {
                 switch ($maharaattributes['artefacttype']) {
@@ -431,11 +411,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
 
         if (count($country) == 1) {
             $country = $country[0];
-
-            $leapattributes = array();
-            foreach ($country->attributes(PluginImportLeap::NS_LEAP) as $key => $value) {
-                $leapattributes[$key] = (string)$value;
-            }
+            $leapattributes = PluginImportLeap::get_attributes($country, PluginImportLeap::NS_LEAP);
 
             // Try using countrycode attribute first, but fall back to name if it's not present or 
             // doesn't represent a country
@@ -468,10 +444,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
         );
 
         foreach ($persondata as $item) {
-            $leapattributes = array();
-            foreach ($item->attributes(PluginImportLeap::NS_LEAP) as $key => $value) {
-                $leapattributes[$key] = (string)$value;
-            }
+            $leapattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_LEAP);
             if (in_array($leapattributes['field'], array_keys($namefields))) {
                 // legal_given_name is allowed to occur any number of times
                 if ($leapattributes['field'] == 'legal_given_name'
