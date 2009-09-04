@@ -65,6 +65,14 @@ class LeapImportResume extends LeapImportArtefactPlugin {
     const STRATEGY_IMPORT_AS_EDUCATION = 6;
 
     /**
+     * Activities using some mapping to be decided map to professional memberships
+     *
+     * It doesn't look like the spec provides a way to represent these, so for 
+     * now we look at the Mahara plugin element
+     */
+    const STRATEGY_IMPORT_AS_MEMBERSHIP = 7;
+
+    /**
      * Description of strategies used
      */
     public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImport $importer) {
@@ -149,6 +157,18 @@ class LeapImportResume extends LeapImportArtefactPlugin {
         if ($correctrdftype && $correctcategoryscheme) {
             $strategies[] = array(
                 'strategy' => self::STRATEGY_IMPORT_AS_EDUCATION,
+                'score'    => 100,
+                'other_required_entries' => array(), // TODO: we need is_supported_by entries, which in mahara usually refer to organisations
+            );
+        }
+
+        // Professional Membership
+        $correctrdftype = count($entry->xpath('rdf:type['
+            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'activity') . ']')) == 1;
+        $correctmaharatype = count($entry->xpath('mahara:artefactplugin[@mahara:plugin="resume" and @mahara:type="pseudo:membership"]')) == 1;
+        if ($correctrdftype && $correctmaharatype) {
+            $strategies[] = array(
+                'strategy' => self::STRATEGY_IMPORT_AS_MEMBERSHIP,
                 'score'    => 100,
                 'other_required_entries' => array(), // TODO: we need is_supported_by entries, which in mahara usually refer to organisations
             );
@@ -259,6 +279,20 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 'displayorder' => '', // TODO: get from the grouping, or failing that, from this entry itself
             );
             ArtefactTypeResumeComposite::ensure_composite_value($values, 'educationhistory', $importer->get('usr'));
+            break;
+        case self::STRATEGY_IMPORT_AS_MEMBERSHIP:
+            $dates = PluginImportLeap::get_leap_dates($entry);
+            $startdate = (isset($dates['start'])) ? self::convert_leap_date_to_resume_date($dates['start']) : '';
+            $enddate   = (isset($dates['end']))   ? self::convert_leap_date_to_resume_date($dates['end'])   : '';
+
+            $values = array(
+                'startdate' => $startdate,
+                'enddate'   => $enddate,
+                'title'  => $entry->title,
+                'description' => PluginImportLeap::get_entry_content($entry, $importer),
+                'displayorder' => '', // TODO: get from the grouping, or failing that, from this entry itself
+            );
+            ArtefactTypeResumeComposite::ensure_composite_value($values, 'membership', $importer->get('usr'));
             break;
         default:
             throw new ImportException($importer, 'TODO: get_string: unknown strategy chosen for importing entry');
