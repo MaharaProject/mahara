@@ -137,15 +137,32 @@ class LeapImportResume extends LeapImportArtefactPlugin {
         }
 
         // Books
+        $other_required_entries = array();
         $correctrdftype = count($entry->xpath('rdf:type['
             . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'resource') . ']')) == 1;
         $correctcategoryscheme = count($entry->xpath('a:category[('
             . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'resource_type#') . ') and @term="Printed"]')) == 1;
         if ($correctrdftype && $correctcategoryscheme) {
+            // If it exists, the related achievement will be the user's role in 
+            // relation to the book
+            foreach ($entry->link as $link) {
+                if ($importer->curie_equals($link['rel'], '', 'relation') && isset($link['href'])) {
+                    if ($potentialrole = $importer->get_entry_by_id((string)$link['href'])) {
+                        $correctrdftype = count($potentialrole->xpath('rdf:type['
+                            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'achievement') . ']')) == 1;
+                        if ($correctrdftype) {
+                            // We have a related achievement!
+                            $other_required_entries[] = (string)$link['href'];
+                            break;
+                        }
+                    }
+                }
+            }
+
             $strategies[] = array(
                 'strategy' => self::STRATEGY_IMPORT_AS_BOOK,
                 'score'    => 100,
-                'other_required_entries' => array(),
+                'other_required_entries' => $other_required_entries,
             );
         }
 
@@ -250,10 +267,16 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             $dates = PluginImportLeap::get_leap_dates($entry);
             $enddate   = (isset($dates['end']))   ? self::convert_leap_date_to_resume_date($dates['end'])   : '';
 
+            $contribution = '';
+            if (count($otherentries)) {
+                $role = $importer->get_entry_by_id($otherentries[0]);
+                $contribution = $role->title;
+            }
+
             $values = array(
                 'date' => $enddate,
                 'title'   => $entry->title,
-                'contribution' => '', // TODO - get from related entry
+                'contribution' => $contribution,
                 'description' => PluginImportLeap::get_entry_content($entry, $importer), // TODO Still debate over what this is the description of
                 'displayorder' => '', // TODO: get from the grouping, or failing that, from this entry itself
             );
