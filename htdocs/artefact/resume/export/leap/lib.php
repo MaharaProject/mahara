@@ -346,7 +346,7 @@ class LeapExportElementResumeCompositeChildEducationhistory extends LeapExportEl
         return array(
             'start'   => $record->startdate,
             'end'     => $record->enddate,
-            'title'   => $record->qualname . ' (' . $record->qualtype . ')',
+            'title'   => $record->qualname,
             'content' => $record->qualdescription,
         );
     }
