@@ -124,15 +124,23 @@ class LeapImportResume extends LeapImportArtefactPlugin {
         }
 
         // Employment
+        $other_required_entries = array();
         $correctrdftype = count($entry->xpath('rdf:type['
             . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'activity') . ']')) == 1;
         $correctcategoryscheme = count($entry->xpath('a:category[('
             . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'life_area#') . ') and @term="Work"]')) == 1;
         if ($correctrdftype && $correctcategoryscheme) {
+            foreach ($entry->link as $link) {
+                if (!isset($other_required_entries['organisation'])
+                    && $organisation = self::check_for_supporting_organisation($importer, $link)) {
+                    $other_required_entries['organisation'] = $organisation;
+                }
+            }
+
             $strategies[] = array(
                 'strategy' => self::STRATEGY_IMPORT_AS_EMPLOYMENT,
                 'score'    => 100,
-                'other_required_entries' => array(), // TODO: we need is_supported_by entries, which in mahara usually refer to organisations
+                'other_required_entries' => $other_required_entries,
             );
         }
 
@@ -184,9 +192,13 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                         if ($correctrdftype) {
                             // We have a related achievement!
                             $other_required_entries['achievement'] = (string)$link['href'];
-                            break;
                         }
                     }
+                }
+
+                if (!isset($other_required_entries['organisation'])
+                    && $organisation = self::check_for_supporting_organisation($importer, $link)) {
+                    $other_required_entries['organisation'] = $organisation;
                 }
             }
             $strategies[] = array(
@@ -204,7 +216,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             $strategies[] = array(
                 'strategy' => self::STRATEGY_IMPORT_AS_MEMBERSHIP,
                 'score'    => 100,
-                'other_required_entries' => array(), // TODO: we need is_supported_by entries, which in mahara usually refer to organisations
+                'other_required_entries' => array(),
             );
         }
 
@@ -270,10 +282,16 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             $startdate = (isset($dates['start'])) ? self::convert_leap_date_to_resume_date($dates['start']) : '';
             $enddate   = (isset($dates['end']))   ? self::convert_leap_date_to_resume_date($dates['end'])   : '';
 
+            $employer = '';
+            if (isset($otherentries['organisation'])) {
+                $organisation = $importer->get_entry_by_id($otherentries['organisation']);
+                $employer = $organisation->title;
+            }
+
             $values = array(
                 'startdate' => $startdate,
                 'enddate'   => $enddate,
-                'employer'  => '', // TODO - get from related organisation
+                'employer'  => $employer,
                 'jobtitle'  => $entry->title,
                 'positiondescription' => PluginImportLeap::get_entry_content($entry, $importer),
                 'displayorder' => '', // TODO: get from the grouping, or failing that, from this entry itself
@@ -312,12 +330,18 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 $qualname      = PluginImportLeap::get_entry_content($qualification, $importer);
             }
 
+            $institution = '';
+            if (isset($otherentries['organisation'])) {
+                $organisation = $importer->get_entry_by_id($otherentries['organisation']);
+                $institution = $organisation->title;
+            }
+
             $values = array(
                 'startdate' => $startdate,
                 'enddate'   => $enddate,
                 'qualtype'  => $qualtype,
                 'qualname'  => $qualname,
-                'institution' => '', // TODO - get from related entry (organisation)
+                'institution' => $institution,
                 'qualdescription' => PluginImportLeap::get_entry_content($entry, $importer),
                 'displayorder' => '', // TODO: get from the grouping, or failing that, from this entry itself
             );
@@ -433,6 +457,27 @@ class LeapImportResume extends LeapImportArtefactPlugin {
         }
         if (isset($date['label'])) {
             return $date['label'];
+        }
+        return '';
+    }
+
+    /**
+     * Given an entry link, see whether it's a relationship referring to a 
+     * supporting organisation, and if so, returns the ID of the organisation
+     *
+     * @param PluginImport $importer The importer
+     * @param array        $link     The link to check
+     * @return string The ID of the organisation if there is one, else an empty string
+     */
+    private static function check_for_supporting_organisation(PluginImport $importer, $link) {
+        if ($importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'is_supported_by') && isset($link['href'])) {
+            if ($potentialorganisation = $importer->get_entry_by_id((string)$link['href'])) {
+                $correctrdftype = count($potentialorganisation->xpath('rdf:type['
+                    . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'organisation') . ']')) == 1;
+                if ($correctrdftype) {
+                    return (string)$link['href'];
+                }
+            }
         }
         return '';
     }
