@@ -176,13 +176,14 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             // If this entry supports an achievement, that achievement will be 
             // the qualification the user gained in relation to this entry
             foreach ($entry->link as $link) {
-                if ($importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'supports') && isset($link['href'])) {
+                if (!isset($other_required_entries['achievement'])
+                    && $importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'supports') && isset($link['href'])) {
                     if ($potentialqualification = $importer->get_entry_by_id((string)$link['href'])) {
                         $correctrdftype = count($potentialqualification->xpath('rdf:type['
                             . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'achievement') . ']')) == 1;
                         if ($correctrdftype) {
                             // We have a related achievement!
-                            $other_required_entries[] = (string)$link['href'];
+                            $other_required_entries['achievement'] = (string)$link['href'];
                             break;
                         }
                     }
@@ -305,8 +306,8 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             $enddate   = (isset($dates['end']))   ? self::convert_leap_date_to_resume_date($dates['end'])   : '';
 
             $qualtype = $qualname = '';
-            if (count($otherentries)) {
-                $qualification = $importer->get_entry_by_id($otherentries[0]);
+            if (isset($otherentries['achievement'])) {
+                $qualification = $importer->get_entry_by_id($otherentries['achievement']);
                 $qualtype      = $qualification->title;
                 $qualname      = PluginImportLeap::get_entry_content($qualification, $importer);
             }
