@@ -267,17 +267,18 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             $dates = PluginImportLeap::get_leap_dates($entry);
             $enddate   = (isset($dates['end']))   ? self::convert_leap_date_to_resume_date($dates['end'])   : '';
 
-            $contribution = '';
+            $contribution = $description = '';
             if (count($otherentries)) {
                 $role = $importer->get_entry_by_id($otherentries[0]);
                 $contribution = $role->title;
+                $description  = PluginImportLeap::get_entry_content($role, $importer);
             }
 
             $values = array(
                 'date' => $enddate,
                 'title'   => $entry->title,
                 'contribution' => $contribution,
-                'description' => PluginImportLeap::get_entry_content($entry, $importer), // TODO Still debate over what this is the description of
+                'description'  => $description,
                 'displayorder' => '', // TODO: get from the grouping, or failing that, from this entry itself
             );
             ArtefactTypeResumeComposite::ensure_composite_value($values, 'book', $importer->get('usr'));
