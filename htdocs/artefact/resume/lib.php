@@ -808,7 +808,7 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
                 'rows' => 10,
                 'cols' => 50,
                 'resizable' => false,
-                'title' => get_string('description', 'artefact.resume'),
+                'title' => get_string('detailsofyourcontribution', 'artefact.resume'),
             ),
         );
     }
