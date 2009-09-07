@@ -504,6 +504,21 @@ class PluginImportLeap extends PluginImport {
     }
 
     /**
+     * Returns if the entry has the given term in the given category
+     *
+     * @param SimpleXMLElement $entry    The entry to check
+     * $param PluginImportLeap $importer The importer
+     * @param string $category           The category to look in. See http://wiki.cetis.ac.uk/2009-03/LEAP2A_categories
+     * @param string $term               The term to look for (see the docs for the appropriate category)
+     * @return boolean Whether the entry has the term in the category
+     */
+    public static function is_correct_category_scheme(SimpleXMLElement $entry, PluginImportLeap $importer, $category, $term) {
+        $result = $entry->xpath('a:category[('
+            . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, $category . '#') . ') and @term="' . $term . '"]');
+        return isset($result[0]) && $result[0] instanceof SimpleXMLElement;
+    }
+
+    /**
      * Returns the <content> for a given entry, stripping off any transport 
      * encoding and respecting the content type.
      *

@@ -124,9 +124,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
 
         // Employment
         $other_required_entries = array();
-        $correctcategoryscheme = count($entry->xpath('a:category[('
-            . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'life_area#') . ') and @term="Work"]')) == 1;
-        if ($isactivity && $correctcategoryscheme) {
+        if ($isactivity && PluginImportLeap::is_correct_category_scheme($entry, $importer, 'life_area', 'Work')) {
             foreach ($entry->link as $link) {
                 if (!isset($other_required_entries['organisation'])
                     && $organisation = self::check_for_supporting_organisation($importer, $link)) {
@@ -143,9 +141,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
 
         // Books
         $other_required_entries = array();
-        $correctcategoryscheme = count($entry->xpath('a:category[('
-            . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'resource_type#') . ') and @term="Printed"]')) == 1;
-        if ($isresource && $correctcategoryscheme) {
+        if ($isresource && PluginImportLeap::is_correct_category_scheme($entry, $importer, 'resource_type', 'Printed')) {
             // If it exists, the related achievement will be the user's role in 
             // relation to the book
             foreach ($entry->link as $link) {
@@ -169,9 +165,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
 
         // Education
         $other_required_entries = array();
-        $correctcategoryscheme = count($entry->xpath('a:category[('
-            . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'life_area#') . ') and @term="Education"]')) == 1;
-        if ($isactivity && $correctcategoryscheme) {
+        if ($isactivity && PluginImportLeap::is_correct_category_scheme($entry, $importer, 'life_area', 'Education')) {
             // If this entry supports an achievement, that achievement will be 
             // the qualification the user gained in relation to this entry
             foreach ($entry->link as $link) {
@@ -496,8 +490,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 }
                 else if ($potentialselection = $importer->get_entry_by_id($href)) {
                     if (PluginImportLeap::is_rdf_type($potentialselection, $importer, 'selection')) {
-                        if (count($potentialselection->xpath('a:category[('
-                        . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'selection_type#') . ') and @term="Grouping"]')) == 1) {
+                        if (PluginImportLeap::is_correct_category_scheme($potentialselection, $importer, 'selection_type', 'Grouping')) {
                             if (count($potentialselection->xpath('mahara:artefactplugin[@mahara:type="' . $selectiontype . '"]')) == 1) {
                                 $cache[$href] = true;
                                 $found = true;

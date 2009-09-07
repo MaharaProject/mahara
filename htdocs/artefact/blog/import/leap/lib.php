@@ -53,10 +53,8 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
     public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImport $importer) {
         $strategies = array();
 
-        $correctcategoryscheme = count($entry->xpath('a:category[('
-            . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'selection_type#') . ') and @term="Blog"]')) == 1;
-
-        if (PluginImportLeap::is_rdf_type($entry, $importer, 'selection') && $correctcategoryscheme) {
+        if (PluginImportLeap::is_rdf_type($entry, $importer, 'selection')
+            && PluginImportLeap::is_correct_category_scheme($entry, $importer, 'selection_type', 'Blog')) {
             $otherrequiredentries = array();
 
             // Get entries that this blog feels are a part of it
@@ -246,9 +244,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
             $blogpost->set('mtime', $updated);
         }
 
-        $draftpost = count($entry->xpath('a:category[('
-            . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'readiness#')
-            . ') and @term="Unready"]')) == 1;
+        $draftpost = PluginImportLeap::is_correct_category_scheme($entry, $importer, 'readiness', 'Unready');
         $blogpost->set('published', $draftpost ? 0 : 1);
 
         $blogpost->set('owner', $importer->get('usr'));

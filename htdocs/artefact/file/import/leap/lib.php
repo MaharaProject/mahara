@@ -121,9 +121,8 @@ class LeapImportFile extends LeapImportArtefactPlugin {
         if (isset($cache[$id])) {
             return $cache[$id];
         }
-        $correctcategoryscheme = count($entry->xpath('a:category[('
-            . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'selection_type#') . ') and @term="Folder"]')) == 1;
-        return ($cache[$id] = PluginImportLeap::is_rdf_type($entry, $importer, 'selection') && $correctcategoryscheme);
+        return ($cache[$id] = PluginImportLeap::is_rdf_type($entry, $importer, 'selection')
+            && PluginImportLeap::is_correct_category_scheme($entry, $importer, 'selection_type', 'Folder'));
     }
 
     /**
