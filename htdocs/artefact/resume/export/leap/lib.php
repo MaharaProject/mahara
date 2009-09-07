@@ -401,10 +401,10 @@ class LeapExportElementResumeCompositeChildBook extends LeapExportElementResumeC
 
     public function ensure_siblings() {
         $this->siblings = array(
-            'relation' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
+            'related' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
                 'title' => $this->originalrecord->contribution,
                 'content' => $this->originalrecord->description,
-            ), 'achievement', 'relation')
+            ), 'achievement', 'related')
         );
     }
 

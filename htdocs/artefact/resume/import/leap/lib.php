@@ -145,7 +145,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             // If it exists, the related achievement will be the user's role in 
             // relation to the book
             foreach ($entry->link as $link) {
-                if ($importer->curie_equals($link['rel'], '', 'relation') && isset($link['href'])) {
+                if ($importer->curie_equals($link['rel'], '', 'related') && isset($link['href'])) {
                     if ($potentialrole = $importer->get_entry_by_id((string)$link['href'])) {
                         if (PluginImportLeap::is_rdf_type($potentialrole, $importer, 'achievement')) {
                             // We have a related achievement!
