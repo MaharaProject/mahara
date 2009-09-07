@@ -190,6 +190,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                     $other_required_entries['organisation'] = $organisation;
                 }
             }
+
             $strategies[] = array(
                 'strategy' => self::STRATEGY_IMPORT_AS_EDUCATION,
                 'score'    => 100,
