@@ -246,14 +246,23 @@ class LeapImportFile extends LeapImportArtefactPlugin {
             throw new ImportException($importer, 'TODO: get_string: was unable to import file');
         }
 
+        $artefact = artefact_instance_from_id($id);
+
         // Work out if the file was really a profile icon
         $isprofileicon = false;
-        $match = $entry->xpath('mahara:artefactplugin[@mahara:plugin="file" and @mahara:type="profileicon"]');
-        if (count($match) == 1) {
-            $isprofileicon = true;
+        if ($artefact->get('artefacttype') == 'image') {
+            $match = $entry->xpath('mahara:artefactplugin[@mahara:plugin="file" and @mahara:type="profileicon"]');
+            if (count($match) == 1) {
+                $isprofileicon = true;
+            }
+            else if ($importer->get('persondataid')) {
+                $persondata = $importer->get_entry_by_id($importer->get('persondataid'));
+                if (count($persondata->xpath('a:link[@rel="related" and @href="' . (string)$entry->id . '"]')) == 1) {
+                    $isprofileicon = true;
+                }
+            }
         }
 
-        $artefact = artefact_instance_from_id($id);
         // Work around that save_file doesn't let us set the mtime
         $artefact->set('mtime', strtotime((string)$entry->updated));
         if ($isprofileicon) {
