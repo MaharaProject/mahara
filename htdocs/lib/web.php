@@ -436,10 +436,10 @@ EOF;
                 'data'   => array(),
             );
             $SIDEBLOCKS[] = array(
-                'name'   => 'mytags',
-                'id'     => 'sb-mytags',
+                'name'   => 'tags',
+                'id'     => 'sb-tags',
                 'weight' => 0,
-                'data'   => mytags_sideblock(),
+                'data'   => tags_sideblock(),
             );
         }
 

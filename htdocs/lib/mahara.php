@@ -2086,7 +2086,7 @@ function get_my_tags($limit=null, $cloud=true, $sort='freq') {
     return $tagrecords;
 }
 
-function mytags_sideblock() {
+function tags_sideblock() {
     $maxtags = 20;
     if ($tagrecords = get_my_tags($maxtags)) {
         return array('tags' => $tagrecords);

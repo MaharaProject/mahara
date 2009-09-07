@@ -185,7 +185,7 @@ addLoadEvent(function() {
     mytags_container = getFirstElementByTagAndClassName(null, 'mytags', 'main-column-container');
     p = {$data->pagination_js}
     forEach(getElementsByTagAndClassName('a', 'tag', mytags_container), function (elem) {rewriteTagLink(elem, [], 'tag')});
-    forEach(getElementsByTagAndClassName('a', 'tag', 'sb-mytags'), function (elem) {rewriteTagLink(elem, [], 'tag')});
+    forEach(getElementsByTagAndClassName('a', 'tag', 'sb-tags'), function (elem) {rewriteTagLink(elem, [], 'tag')});
     forEach(getElementsByTagAndClassName('a', 'tag', 'results'), function (elem) {rewriteTagLink(elem, [], 'tag')});
     forEach(getElementsByTagAndClassName('a', null, 'results_sort'), function (elem) {rewriteTagLink(elem, ['tag', 'type'], 'sort')});
     forEach(getElementsByTagAndClassName('a', null, 'results_filter'), function (elem) {rewriteTagLink(elem, ['tag', 'sort'], 'type')});

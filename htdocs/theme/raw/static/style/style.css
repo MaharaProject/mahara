@@ -828,13 +828,14 @@ div.sideblock #friendscontrol label {
 	font-size: 1em;
 }
 
-.sidebar-content.mytags {
+.sidebar-content.tags {
     text-align: center;
     padding: 0;
 }
 .mytags {
     padding: .5em 0;
 }
+.sidebar-content.tags .tag,
 .mytags .tag {
     padding: 0 5px;
     vertical-align: middle;
