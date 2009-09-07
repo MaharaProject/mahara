@@ -273,7 +273,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 'date'          => $enddate,
                 'title'         => $entry->title,
                 'description'   => PluginImportLeap::get_entry_content($entry, $importer),
-                'displayorder'  => '', // TODO: if it's part of a selection_type#Grouping  of mahara:type=certification, get ordering from there
+                'displayorder'  => self::get_display_order_for_entry($entry, $importer, 'certification'),
             );
             ArtefactTypeResumeComposite::ensure_composite_value($values, 'certification', $importer->get('usr'));
             break;
@@ -294,7 +294,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 'employer'  => $employer,
                 'jobtitle'  => $entry->title,
                 'positiondescription' => PluginImportLeap::get_entry_content($entry, $importer),
-                'displayorder' => '', // TODO: get from the grouping, or failing that, from this entry itself
+                'displayorder'  => self::get_display_order_for_entry($entry, $importer, 'employmenthistory'),
             );
             ArtefactTypeResumeComposite::ensure_composite_value($values, 'employmenthistory', $importer->get('usr'));
             break;
@@ -314,7 +314,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 'title'   => $entry->title,
                 'contribution' => $contribution,
                 'description'  => $description,
-                'displayorder' => '', // TODO: get from the grouping, or failing that, from this entry itself
+                'displayorder'  => self::get_display_order_for_entry($entry, $importer, 'book'),
             );
             ArtefactTypeResumeComposite::ensure_composite_value($values, 'book', $importer->get('usr'));
             break;
@@ -343,7 +343,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 'qualname'  => $qualname,
                 'institution' => $institution,
                 'qualdescription' => PluginImportLeap::get_entry_content($entry, $importer),
-                'displayorder' => '', // TODO: get from the grouping, or failing that, from this entry itself
+                'displayorder'  => self::get_display_order_for_entry($entry, $importer, 'educationhistory'),
             );
             ArtefactTypeResumeComposite::ensure_composite_value($values, 'educationhistory', $importer->get('usr'));
             break;
@@ -357,7 +357,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 'enddate'   => $enddate,
                 'title'  => $entry->title,
                 'description' => PluginImportLeap::get_entry_content($entry, $importer),
-                'displayorder' => '', // TODO: get from the grouping, or failing that, from this entry itself
+                'displayorder' => self::get_display_order_for_entry($entry, $importer, 'membership'),
             );
             ArtefactTypeResumeComposite::ensure_composite_value($values, 'membership', $importer->get('usr'));
             break;
@@ -480,6 +480,56 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             }
         }
         return '';
+    }
+
+    /**
+     * Given an entry, see if it's attached to one of the special selections 
+     * representing a Mahara resume group. If so, return the display order it 
+     * should have in that group.
+     *
+     * We look for the special Mahara selections only, because entries could be 
+     * in more than one selection, with different display orders in each.
+     *
+     * @param SimpleXMLElement $entry The entry to check
+     * @param PluginImport $importer  The importer
+     * @param string $selectiontype   The type of selection we're checking to 
+     *                                see if the entry is part of - one of the 
+     *                                special Mahara resume selections
+     * @return int The display order of the element in the selection, should it 
+     *             be in one - else null
+     */
+    private static function get_display_order_for_entry(SimpleXMLElement $entry, PluginImport $importer, $selectiontype) {
+        static $cache = array();
+        $found = false;
+
+        foreach ($entry->link as $link) {
+            if ($importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'is_part_of') && isset($link['href'])) {
+                $href = (string)$link['href'];
+                if (isset($cache[$href])) {
+                    $found = true;
+                }
+                else if ($potentialselection = $importer->get_entry_by_id($href)) {
+                    if (count($potentialselection->xpath('rdf:type['
+                        . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'selection') . ']')) == 1) {
+                        if (count($potentialselection->xpath('a:category[('
+                        . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'selection_type#') . ') and @term="Grouping"]')) == 1) {
+                            if (count($potentialselection->xpath('mahara:artefactplugin[@mahara:type="' . $selectiontype . '"]')) == 1) {
+                                $cache[$href] = true;
+                                $found = true;
+                            }
+                        }
+                    }
+                }
+
+                if ($found) {
+                    $leapattributes = $importer->get_attributes($link, PluginImportLeap::NS_LEAP);
+                    $displayorder = (isset($leapattributes['display_order']) && intval($leapattributes['display_order']) > 0)
+                        ? $leapattributes['display_order']
+                        : '';
+                    return $displayorder;
+                }
+            }
+        }
     }
 
 }
