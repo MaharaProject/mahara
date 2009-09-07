@@ -200,6 +200,7 @@ function expected_account_preferences() {
                  'messages'       => 'allow',
                  'lang'           => 'default',
                  'addremovecolumns' => 0,
+                 'tagssideblockmaxtags' => get_config('tagssideblockmaxtags'),
                  );
 }
 

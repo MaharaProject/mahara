@@ -2087,7 +2087,10 @@ function get_my_tags($limit=null, $cloud=true, $sort='freq') {
 }
 
 function tags_sideblock() {
-    if ($tagrecords = get_my_tags(get_config('tagssideblockmaxtags'))) {
+    global $USER;
+    $maxtags = $USER->get_account_preference('tagssideblockmaxtags');
+    $maxtags = is_null($maxtags) ? get_config('tagssideblockmaxtags') : $maxtags;
+    if ($tagrecords = get_my_tags($maxtags)) {
         return array('tags' => $tagrecords);
     }
     return null;
