@@ -2178,6 +2178,13 @@ function build_portfolio_search_html(&$data) {
 
     $data->baseurl = get_config('wwwroot') . 'tags.php?tag=' . urlencode($data->tag);
     $data->sortcols = array('name', 'date');
+    $data->filtercols = array(
+        'all'   => get_string('tagfilter_all'),
+        'file'  => get_string('tagfilter_file'),
+        'image' => get_string('tagfilter_image'),
+        'text'  => get_string('tagfilter_text'),
+        'view'  => get_string('tagfilter_view'),
+    );
 
     $smarty = smarty_core();
     $smarty->assign_by_ref('data', $data->data);
@@ -2185,7 +2192,7 @@ function build_portfolio_search_html(&$data) {
     $pagination = build_pagination(array(
         'id' => 'results_pagination',
         'class' => 'center',
-        'url' => $data->baseurl . ($data->sort == 'name' ? '' : '&sort=' . $data->sort),
+        'url' => $data->baseurl . ($data->sort == 'name' ? '' : '&sort=' . $data->sort) . ($data->filter == 'all' ? '' : '&type=' . $data->filter),
         'jsonscript' => 'json/tagsearch.php',
         'datatable' => 'results',
         'count' => $data->count,

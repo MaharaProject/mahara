@@ -93,6 +93,13 @@ $string['sortalpha'] = 'Sort tags alphabetically';
 $string['sortfreq'] = 'Sort tags by frequency';
 $string['sortresultsby'] = 'Sort results by:';
 $string['date'] = 'Date';
+$string['filterresultsby'] = 'Filter results by:';
+$string['tagfilter_all'] = 'All';
+$string['tagfilter_file'] = 'Files';
+$string['tagfilter_image'] = 'Images';
+$string['tagfilter_text'] = 'Text';
+$string['tagfilter_view'] = 'Views';
+
 
 $string['selfsearch'] = 'Search My Portfolio';
 

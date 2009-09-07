@@ -31,12 +31,13 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require('searchlib.php');
 
 $tag    = param_variable('tag');
+$limit  = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 $sort   = param_alpha('sort', 'name');
-$limit  = param_integer('limit', 10);
+$type   = param_alpha('type', null);
 $owner  = (object) array('type' => 'user', 'id' => $USER->get('id'));
 
-$data = get_portfolio_items_by_tag($tag, $owner, $limit, $offset, $sort);
+$data = get_portfolio_items_by_tag($tag, $owner, $limit, $offset, $sort, $type);
 build_portfolio_search_html($data);
 $data->tagdisplay = hsc($tag);
 

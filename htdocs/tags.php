@@ -33,7 +33,6 @@ define('TITLE', get_string('mytags'));
 
 $tagsort = param_alpha('ts', null) != 'freq' ? 'alpha' : 'freq';
 $tags = get_my_tags(null, false, $tagsort);
-$tagsstr = json_encode($tags);
 
 $tag = param_variable('tag', null);
 
@@ -42,16 +41,28 @@ $js = '';
 $limit  = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 $sort   = param_alpha('sort', 'name');
+$type   = param_alpha('type', null);
 $owner = (object) array('type' => 'user', 'id' => $USER->get('id'));
-$data = get_portfolio_items_by_tag($tag, $owner, $limit, $offset, $sort);
+
+$data = get_portfolio_items_by_tag($tag, $owner, $limit, $offset, $sort, $type);
 build_portfolio_search_html($data);
 
+$str = array();
+foreach (array('tags', 'tag', 'sort', 'type') as $v) {
+    $str[$v] = json_encode($$v);
+}
 $hidepagination = $tag ? '' : "addElementClass('results_pagination', 'hidden');";
 $js = <<<EOF
 var p = null;
 var mytags_container = null;
-var inittags = {$tagsstr};
+var inittags = {$str['tags']};
 var mytags = {};
+
+var params = {
+    'tag': {$str['tag']},
+    'sort': {$str['sort']},
+    'type': {$str['type']}
+};
 
 function sortTagAlpha(a, b) {
     var aid = getNodeAttribute(a, 'id');
@@ -85,49 +96,81 @@ function rewriteTagSortLink(elem) {
     });
 }
 
-function rewriteTagLink(elem) {
+function rewriteTagLink(elem, keep, replace) {
     disconnectAll(elem);
     connect(elem, 'onclick', function(e) {
         e.stop();
         var href = getNodeAttribute(this, 'href');
-        var params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
-        sendjsonrequest(config.wwwroot + 'json/tagsearch.php', params, 'POST', function(data) {
+        var hrefparams = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
+        var reqparams = {};
+        reqparams[replace] = hrefparams[replace];
+        for (var i = 0; i < keep.length; i++) {
+            if (params[keep[i]]) {
+                reqparams[keep[i]] = params[keep[i]];
+            }
+        }
+
+        for (var i in reqparams) {
+            log(i + ' ' + reqparams[i]);
+        }
+
+        sendjsonrequest(config.wwwroot + 'json/tagsearch.php', reqparams, 'POST', function(data) {
             p.updateResults(data);
 
-            // Update tag links in the My Tags list:
-            forEach(getElementsByTagAndClassName('a', 'selected', mytags_container), function(selected) {
-                removeElementClass(selected, 'selected');
-            });
+            if (data.data.tag != params.tag) {
 
-            // Mark the selected tag in the My Tags list:
-            addElementClass('tag:' + params.tag, 'selected');
+                // Update tag links in the My Tags list:
+                forEach(getElementsByTagAndClassName('a', 'selected', mytags_container), function(selected) {
+                    removeElementClass(selected, 'selected');
+                });
 
-            // Replace the tag in the Search Results heading
-            var heading_tag = getFirstElementByTagAndClassName('a', 'tag', 'results_heading');
-            if (heading_tag) {
-                heading_tag.href = href;
-                heading_tag.innerHTML = data.data.tagdisplay;
+                // Mark the selected tag in the My Tags list:
+                addElementClass('tag:' + data.data.tag, 'selected');
+
+                // Replace the tag in the Search Results heading
+                var heading_tag = getFirstElementByTagAndClassName('a', 'tag', 'results_heading');
+                if (heading_tag) {
+                    heading_tag.href = href;
+                    heading_tag.innerHTML = data.data.tagdisplay;
+                }
+
+                removeElementClass('results_container', 'hidden');
+                params.tag = data.data.tag;
             }
 
-            removeElementClass('results_container', 'hidden');
-
             // Rewrite tag links in the results list:
-            forEach(getElementsByTagAndClassName('a', 'tag', 'results'), rewriteTagLink);
+            forEach(getElementsByTagAndClassName('a', 'tag', 'results'), function (elem) {rewriteTagLink(elem, [], 'tag')});
 
-            // Rewrite Sort By links above the Search results:
-            forEach(getElementsByTagAndClassName('a', null, 'results_sort'), function (a) {
-                var href = getNodeAttribute(a, 'href');
-                var params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
-                params.tag = data.data.tag;
-                setNodeAttribute(a, 'href', config.wwwroot + 'tags.php?' + queryString(params));
-                if (hasElementClass(a, 'selected') && data.data.sort != params.sort) {
-                    removeElementClass(a, 'selected');
-                }
-                else if (!hasElementClass(a, 'selected') && data.data.sort == params.sort) {
-                    addElementClass(a, 'selected');
-                }
-                rewriteTagLink(a);
-            });
+            // Change selected Sort By links above the Search results:
+            if (data.data.sort != params.sort) {
+                forEach(getElementsByTagAndClassName('a', null, 'results_sort'), function (a) {
+                    var href = getNodeAttribute(a, 'href');
+                    var hrefparams = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
+                    if (hasElementClass(a, 'selected') && data.data.sort != hrefparams.sort) {
+                        removeElementClass(a, 'selected');
+                    }
+                    else if (!hasElementClass(a, 'selected') && data.data.sort == hrefparams.sort) {
+                        addElementClass(a, 'selected');
+                    }
+                });
+                params.sort = data.data.sort;
+            }
+
+            // Change selected Filter By links above the Search results:
+            if (data.data.type != params.type) {
+                forEach(getElementsByTagAndClassName('a', null, 'results_filter'), function (a) {
+                    var href = getNodeAttribute(a, 'href');
+                    var hrefparams = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
+                    if (hasElementClass(a, 'selected') && data.data.type != hrefparams.type) {
+                        removeElementClass(a, 'selected');
+                    }
+                    else if (!hasElementClass(a, 'selected') && data.data.type == hrefparams.type) {
+                        addElementClass(a, 'selected');
+                    }
+                });
+                params.type = data.data.type;
+            }
+
         });
         return false;
     });
@@ -141,10 +184,11 @@ addLoadEvent(function() {
 
     mytags_container = getFirstElementByTagAndClassName(null, 'mytags', 'main-column-container');
     p = {$data->pagination_js}
-    forEach(getElementsByTagAndClassName('a', 'tag', mytags_container), rewriteTagLink);
-    forEach(getElementsByTagAndClassName('a', 'tag', 'sb-mytags'), rewriteTagLink);
-    forEach(getElementsByTagAndClassName('a', 'tag', 'results'), rewriteTagLink);
-    forEach(getElementsByTagAndClassName('a', null, 'results_sort'), rewriteTagLink);
+    forEach(getElementsByTagAndClassName('a', 'tag', mytags_container), function (elem) {rewriteTagLink(elem, [], 'tag')});
+    forEach(getElementsByTagAndClassName('a', 'tag', 'sb-mytags'), function (elem) {rewriteTagLink(elem, [], 'tag')});
+    forEach(getElementsByTagAndClassName('a', 'tag', 'results'), function (elem) {rewriteTagLink(elem, [], 'tag')});
+    forEach(getElementsByTagAndClassName('a', null, 'results_sort'), function (elem) {rewriteTagLink(elem, ['tag', 'type'], 'sort')});
+    forEach(getElementsByTagAndClassName('a', null, 'results_filter'), function (elem) {rewriteTagLink(elem, ['tag', 'sort'], 'type')});
     {$hidepagination}
 });
 EOF;

@@ -19,7 +19,12 @@
            <h2 id="results_heading">{str tag=searchresultsfor} <a class="tag" href="{$WWWROOT}tags.php?tag={$tag|urlencode}">{$tag|escape}</a></h4>
            <div id="results_sort">{str tag=sortresultsby}
 {foreach from=$results->sortcols item=sortfield name=sortcols}
-           <a href="{$results->baseurl}&sort={$sortfield}"{if $results->sort == $sortfield} class="selected"{/if}>{str tag=$sortfield}</a>{if !$smarty.foreach.sortcols.last} | {/if}
+           <a href="{$results->baseurl}&type={$results->filter}&sort={$sortfield}"{if $results->sort == $sortfield} class="selected"{/if}>{str tag=$sortfield}</a>{if !$smarty.foreach.sortcols.last} | {/if}
+{/foreach}
+           </div>
+           <div id="results_filter">{str tag=filterresultsby}
+{foreach from=$results->filtercols key=filtername item=filterdisplay name=filtercols}
+           <a href="{$results->baseurl}&sort={$results->sort}&type={$filtername}"{if $results->filter == $filtername} class="selected"{/if}>{$filterdisplay}</a>{if !$smarty.foreach.filtercols.last} | {/if}
 {/foreach}
            </div>
            <table id="results" class="tablerenderer fullwidth">

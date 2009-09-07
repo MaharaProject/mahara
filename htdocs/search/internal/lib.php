@@ -845,17 +845,29 @@ class PluginSearchInternal extends PluginSearch {
      * @param integer  $limit
      * @param integer  $offset
      * @param string   $sort
+     * @param array    $types view/artefacttype filters
      * @param boolean  $returntags Return all the tags that have been attached to each result
      */
-    public static function portfolio_search_by_tag($tag, $owner, $limit, $offset, $sort, $returntags) {
+    public static function portfolio_search_by_tag($tag, $owner, $limit, $offset, $sort, $types, $returntags) {
+        $viewfilter = is_null($types) || $types['view'] == true ? 'TRUE' : 'FALSE';
+        if (is_null($types)) {
+            $artefacttypefilter = '';
+        }
+        else if (!empty($types['artefact'])) {
+            $artefacttypefilter = ' AND a.artefacttype IN (' . join(',', array_map('db_quote', $types['artefact'])) . ')';
+        }
+        else {
+            $artefacttypefilter = ' AND FALSE';
+        }
+
         $from = "FROM (
            (SELECT a.id, a.title, a.description, 'artefact' AS type, a.artefacttype, " . db_format_tsfield('a.ctime', 'ctime') . "
             FROM {artefact} a JOIN {artefact_tag} at ON (a.id = at.artefact AND at.tag = ?)
-            WHERE a.owner = ?)
+            WHERE a.owner = ?" . $artefacttypefilter . ")
            UNION
            (SELECT v.id, v.title, v.description, 'view' AS type, NULL AS artefacttype, " . db_format_tsfield('v.ctime', 'ctime') . "
             FROM {view} v JOIN {view_tag} vt ON (v.id = vt.view AND vt.tag = ?)
-            WHERE v.owner = ?)
+            WHERE v.owner = ? AND " . $viewfilter . ")
         ) p";
 
         $values = array($tag, $owner->id, $tag, $owner->id);

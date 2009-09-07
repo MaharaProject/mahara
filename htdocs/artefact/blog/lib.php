@@ -104,6 +104,12 @@ class PluginArtefactBlog extends PluginArtefact {
         ));
         $blog->commit();
     }
+
+    public static function get_artefact_type_content_types() {
+        return array(
+            'blogpost' => array('text'),
+        );
+    }
 }
 
 /**

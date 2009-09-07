@@ -200,6 +200,14 @@ class PluginArtefactFile extends PluginArtefact {
     public static function can_be_disabled() {
         return false;
     }
+
+    public static function get_artefact_type_content_types() {
+        return array(
+            'file'        => array('file'),
+            'image'       => array('file', 'image'),
+            'profileicon' => array('image'),
+        );
+    }
 }
 
 abstract class ArtefactTypeFileBase extends ArtefactType {
