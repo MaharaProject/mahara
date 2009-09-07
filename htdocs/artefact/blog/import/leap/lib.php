@@ -53,13 +53,10 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
     public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImport $importer) {
         $strategies = array();
 
-        // TODO: when the xpath has an error in it, count(error) == 1 also.. so should check return type
-        $correctrdftype = count($entry->xpath('rdf:type['
-            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'selection') . ']')) == 1;
         $correctcategoryscheme = count($entry->xpath('a:category[('
             . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'selection_type#') . ') and @term="Blog"]')) == 1;
 
-        if ($correctrdftype && $correctcategoryscheme) {
+        if (PluginImportLeap::is_rdf_type($entry, $importer, 'selection') && $correctcategoryscheme) {
             $otherrequiredentries = array();
 
             // Get entries that this blog feels are a part of it

@@ -79,11 +79,14 @@ class LeapImportResume extends LeapImportArtefactPlugin {
         $strategies = array();
 
         $correctplugintype = count($entry->xpath('mahara:artefactplugin[@mahara:plugin="resume"]')) == 1;
+        $isentry       = PluginImportLeap::is_rdf_type($entry, $importer, 'entry');
+        $isability     = PluginImportLeap::is_rdf_type($entry, $importer, 'ability');
+        $isachievement = PluginImportLeap::is_rdf_type($entry, $importer, 'achievement');
+        $isactivity    = PluginImportLeap::is_rdf_type($entry, $importer, 'activity');
+        $isresource    = PluginImportLeap::is_rdf_type($entry, $importer, 'resource');
 
         // Goals, cover letter & interests
-        $correctrdftype = count($entry->xpath('rdf:type['
-            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'entry') . ']')) == 1;
-        if ($correctrdftype && $correctplugintype) {
+        if ($isentry && $correctplugintype) {
             $strategies[] = array(
                 'strategy' => self::STRATEGY_IMPORT_AS_ENTRY,
                 'score'    => 100,
@@ -92,9 +95,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
         }
 
         // Skills
-        $correctrdftype = count($entry->xpath('rdf:type['
-            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'ability') . ']')) == 1;
-        if ($correctrdftype && $correctplugintype) {
+        if ($isability && $correctplugintype) {
             $strategies[] = array(
                 'strategy' => self::STRATEGY_IMPORT_AS_ABILITY,
                 'score'    => 100,
@@ -103,9 +104,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
         }
 
         // Achievements
-        $correctrdftype = count($entry->xpath('rdf:type['
-            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'achievement') . ']')) == 1;
-        if ($correctrdftype && $correctplugintype) {
+        if ($isachievement && $correctplugintype) {
             if (count($entry->xpath('mahara:artefactplugin[@mahara:plugin="resume" and @mahara:type="pseudo:certification"]')) == 1) {
                 // We know for certain these are meant to be certifications within Mahara
                 $score = 100;
@@ -125,11 +124,9 @@ class LeapImportResume extends LeapImportArtefactPlugin {
 
         // Employment
         $other_required_entries = array();
-        $correctrdftype = count($entry->xpath('rdf:type['
-            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'activity') . ']')) == 1;
         $correctcategoryscheme = count($entry->xpath('a:category[('
             . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'life_area#') . ') and @term="Work"]')) == 1;
-        if ($correctrdftype && $correctcategoryscheme) {
+        if ($isactivity && $correctcategoryscheme) {
             foreach ($entry->link as $link) {
                 if (!isset($other_required_entries['organisation'])
                     && $organisation = self::check_for_supporting_organisation($importer, $link)) {
@@ -146,19 +143,15 @@ class LeapImportResume extends LeapImportArtefactPlugin {
 
         // Books
         $other_required_entries = array();
-        $correctrdftype = count($entry->xpath('rdf:type['
-            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'resource') . ']')) == 1;
         $correctcategoryscheme = count($entry->xpath('a:category[('
             . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'resource_type#') . ') and @term="Printed"]')) == 1;
-        if ($correctrdftype && $correctcategoryscheme) {
+        if ($isresource && $correctcategoryscheme) {
             // If it exists, the related achievement will be the user's role in 
             // relation to the book
             foreach ($entry->link as $link) {
                 if ($importer->curie_equals($link['rel'], '', 'relation') && isset($link['href'])) {
                     if ($potentialrole = $importer->get_entry_by_id((string)$link['href'])) {
-                        $correctrdftype = count($potentialrole->xpath('rdf:type['
-                            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'achievement') . ']')) == 1;
-                        if ($correctrdftype) {
+                        if (PluginImportLeap::is_rdf_type($potentialrole, $importer, 'achievement')) {
                             // We have a related achievement!
                             $other_required_entries[] = (string)$link['href'];
                             break;
@@ -176,20 +169,16 @@ class LeapImportResume extends LeapImportArtefactPlugin {
 
         // Education
         $other_required_entries = array();
-        $correctrdftype = count($entry->xpath('rdf:type['
-            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'activity') . ']')) == 1;
         $correctcategoryscheme = count($entry->xpath('a:category[('
             . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'life_area#') . ') and @term="Education"]')) == 1;
-        if ($correctrdftype && $correctcategoryscheme) {
+        if ($isactivity && $correctcategoryscheme) {
             // If this entry supports an achievement, that achievement will be 
             // the qualification the user gained in relation to this entry
             foreach ($entry->link as $link) {
                 if (!isset($other_required_entries['achievement'])
                     && $importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'supports') && isset($link['href'])) {
                     if ($potentialqualification = $importer->get_entry_by_id((string)$link['href'])) {
-                        $correctrdftype = count($potentialqualification->xpath('rdf:type['
-                            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'achievement') . ']')) == 1;
-                        if ($correctrdftype) {
+                        if (PluginImportLeap::is_rdf_type($potentialqualification, $importer, 'achievement')) {
                             // We have a related achievement!
                             $other_required_entries['achievement'] = (string)$link['href'];
                         }
@@ -209,10 +198,8 @@ class LeapImportResume extends LeapImportArtefactPlugin {
         }
 
         // Professional Membership
-        $correctrdftype = count($entry->xpath('rdf:type['
-            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'activity') . ']')) == 1;
         $correctmaharatype = count($entry->xpath('mahara:artefactplugin[@mahara:plugin="resume" and @mahara:type="pseudo:membership"]')) == 1;
-        if ($correctrdftype && $correctmaharatype) {
+        if ($isactivity && $correctmaharatype) {
             $strategies[] = array(
                 'strategy' => self::STRATEGY_IMPORT_AS_MEMBERSHIP,
                 'score'    => 100,
@@ -472,9 +459,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
     private static function check_for_supporting_organisation(PluginImport $importer, $link) {
         if ($importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'is_supported_by') && isset($link['href'])) {
             if ($potentialorganisation = $importer->get_entry_by_id((string)$link['href'])) {
-                $correctrdftype = count($potentialorganisation->xpath('rdf:type['
-                    . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'organisation') . ']')) == 1;
-                if ($correctrdftype) {
+                if (PluginImportLeap::is_rdf_type($potentialorganisation, $importer, 'organisation')) {
                     return (string)$link['href'];
                 }
             }
@@ -509,8 +494,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                     $found = true;
                 }
                 else if ($potentialselection = $importer->get_entry_by_id($href)) {
-                    if (count($potentialselection->xpath('rdf:type['
-                        . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'selection') . ']')) == 1) {
+                    if (PluginImportLeap::is_rdf_type($potentialselection, $importer, 'selection')) {
                         if (count($potentialselection->xpath('a:category[('
                         . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'selection_type#') . ') and @term="Grouping"]')) == 1) {
                             if (count($potentialselection->xpath('mahara:artefactplugin[@mahara:type="' . $selectiontype . '"]')) == 1) {

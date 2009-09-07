@@ -150,10 +150,8 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
 
         // If it's a raw entry with the right mahara:plugin and mahara:type 
         // we should be able to import it
-        $correctrdftype = count($entry->xpath('rdf:type['
-            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'entry') . ']')) == 1;
         $correctplugintype = count($entry->xpath('mahara:artefactplugin[@mahara:plugin="internal"]')) == 1;
-        if ($correctrdftype && $correctplugintype) {
+        if (PluginImportLeap::is_rdf_type($entry, $importer, 'entry') && $correctplugintype) {
             $strategies[] = array(
                 'strategy' => self::STRATEGY_IMPORT_AS_PROFILE_FIELD,
                 'score'    => 100,

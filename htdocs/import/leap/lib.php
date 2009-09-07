@@ -486,6 +486,24 @@ class PluginImportLeap extends PluginImport {
     }
 
     /**
+     * Returns whether an entry has the given RDF type
+     *
+     * This helper method should probably be replaced by the as yet unwritten 
+     * get_rdf_type at some point, as it would be faster to get the type and do 
+     * comparisons than call this multiple times.
+     *
+     * @param SimpleXMLElement $entry    The entry to check
+     * $param PluginImportLeap $importer The importer
+     * @param string $rdftype            The type to check for
+     * @return boolean Whether the entry has the given RDF type
+     */
+    public function is_rdf_type(SimpleXMLElement $entry, PluginImportLeap $importer, $rdftype) {
+        $result = $entry->xpath('rdf:type['
+            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, $rdftype) . ']');
+        return isset($result[0]) && $result[0] instanceof SimpleXMLElement;
+    }
+
+    /**
      * TODO: document
      * TODO: make sure we are rawurlencoding our file paths in our export
      */

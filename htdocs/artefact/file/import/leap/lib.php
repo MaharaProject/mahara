@@ -104,10 +104,8 @@ class LeapImportFile extends LeapImportArtefactPlugin {
      * @return boolean Whether the entry is a file
      */
     private static function is_file(SimpleXMLElement $entry, PluginImport $importer) {
-        $correctrdftype = count($entry->xpath('rdf:type['
-            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'resource') . ']')) == 1;
         $outoflinecontent = isset($entry->content['src']);
-        return $correctrdftype && $outoflinecontent;
+        return PluginImportLeap::is_rdf_type($entry, $importer, 'resource') && $outoflinecontent;
     }
 
     /**
@@ -123,11 +121,9 @@ class LeapImportFile extends LeapImportArtefactPlugin {
         if (isset($cache[$id])) {
             return $cache[$id];
         }
-        $correctrdftype = count($entry->xpath('rdf:type['
-            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'selection') . ']')) == 1;
         $correctcategoryscheme = count($entry->xpath('a:category[('
             . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'selection_type#') . ') and @term="Folder"]')) == 1;
-        return ($cache[$id] = $correctrdftype && $correctcategoryscheme);
+        return ($cache[$id] = PluginImportLeap::is_rdf_type($entry, $importer, 'selection') && $correctcategoryscheme);
     }
 
     /**
