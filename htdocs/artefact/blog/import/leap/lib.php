@@ -50,7 +50,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
      */
     const STRATEGY_IMPORT_AS_ENTRY = 2;
 
-    public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImport $importer) {
+    public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImportLeap $importer) {
         $strategies = array();
 
         if (PluginImportLeap::is_rdf_type($entry, $importer, 'selection')
@@ -87,7 +87,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
         return $strategies;
     }
 
-    public static function import_using_strategy(SimpleXMLElement $entry, PluginImport $importer, $strategy, array $otherentries) {
+    public static function import_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
         $artefactmapping = array();
         switch ($strategy) {
         case self::STRATEGY_IMPORT_AS_BLOG:
@@ -137,7 +137,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
      * If importing an entry resulted in importing a new file (caused by the 
      * entry having out-of-line content), we attach that file to the entry.
      */
-    public static function setup_relationships(SimpleXMLElement $entry, PluginImport $importer, $strategy, array $otherentries) {
+    public static function setup_relationships(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
         switch ($strategy) {
         case self::STRATEGY_IMPORT_AS_BLOG:
             foreach ($otherentries as $entryid) {

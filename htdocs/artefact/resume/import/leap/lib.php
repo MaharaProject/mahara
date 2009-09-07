@@ -75,7 +75,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
     /**
      * Description of strategies used
      */
-    public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImport $importer) {
+    public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImportLeap $importer) {
         $strategies = array();
 
         $correctplugintype = count($entry->xpath('mahara:artefactplugin[@mahara:plugin="resume"]')) == 1;
@@ -205,7 +205,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
         return array();
     }
 
-    public static function import_using_strategy(SimpleXMLElement $entry, PluginImport $importer, $strategy, array $otherentries) {
+    public static function import_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
         $artefactmapping = array();
         switch ($strategy) {
         case self::STRATEGY_IMPORT_AS_ENTRY:
@@ -411,13 +411,13 @@ class LeapImportResume extends LeapImportArtefactPlugin {
      * Creates an artefact in the manner required to overwrite existing profile 
      * artefacts
      *
-     * @param PluginImport $importer The importer
-     * @param string $artefacttype   The type of artefact to create
-     * @param string $title          The title for the artefact
-     * @param string $content        The content for the artefact
+     * @param PluginImportLeap $importer The importer
+     * @param string $artefacttype       The type of artefact to create
+     * @param string $title              The title for the artefact
+     * @param string $content            The content for the artefact
      * @return int The ID of the artefact created
      */
-    private static function create_artefact(PluginImport $importer, $artefacttype, $title, $content) {
+    private static function create_artefact(PluginImportLeap $importer, $artefacttype, $title, $content) {
         $classname = 'ArtefactType' . ucfirst($artefacttype);
         $artefact = new $classname(0, array('owner' => $importer->get('usr')));
         $artefact->set('title', $title);
@@ -447,11 +447,11 @@ class LeapImportResume extends LeapImportArtefactPlugin {
      * Given an entry link, see whether it's a relationship referring to a 
      * supporting organisation, and if so, returns the ID of the organisation
      *
-     * @param PluginImport $importer The importer
-     * @param array        $link     The link to check
+     * @param PluginImportLeap $importer The importer
+     * @param array            $link     The link to check
      * @return string The ID of the organisation if there is one, else an empty string
      */
-    private static function check_for_supporting_organisation(PluginImport $importer, $link) {
+    private static function check_for_supporting_organisation(PluginImportLeap $importer, $link) {
         if ($importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'is_supported_by') && isset($link['href'])) {
             if ($potentialorganisation = $importer->get_entry_by_id((string)$link['href'])) {
                 if (PluginImportLeap::is_rdf_type($potentialorganisation, $importer, 'organisation')) {
@@ -470,15 +470,15 @@ class LeapImportResume extends LeapImportArtefactPlugin {
      * We look for the special Mahara selections only, because entries could be 
      * in more than one selection, with different display orders in each.
      *
-     * @param SimpleXMLElement $entry The entry to check
-     * @param PluginImport $importer  The importer
-     * @param string $selectiontype   The type of selection we're checking to 
-     *                                see if the entry is part of - one of the 
-     *                                special Mahara resume selections
+     * @param SimpleXMLElement $entry    The entry to check
+     * @param PluginImportLeap $importer The importer
+     * @param string $selectiontype      The type of selection we're checking to 
+     *                                   see if the entry is part of - one of the 
+     *                                   special Mahara resume selections
      * @return int The display order of the element in the selection, should it 
      *             be in one - else null
      */
-    private static function get_display_order_for_entry(SimpleXMLElement $entry, PluginImport $importer, $selectiontype) {
+    private static function get_display_order_for_entry(SimpleXMLElement $entry, PluginImportLeap $importer, $selectiontype) {
         static $cache = array();
         $found = false;
 

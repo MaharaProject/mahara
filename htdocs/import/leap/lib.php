@@ -704,11 +704,11 @@ abstract class LeapImportArtefactPlugin {
      * best match, as the user may choose the less obvious method of importing 
      * for some reason.
      *
-     * @param SimpleXMLElement $entry The entry to find import strategies for
-     * @param PluginImport $importer  The importer
+     * @param SimpleXMLElement $entry    The entry to find import strategies for
+     * @param PluginImportLeap $importer The importer
      * @return array A list of strategies that could be used to import this entry
      */
-    abstract public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImport $importer);
+    abstract public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImportLeap $importer);
 
     /**
      * Converts an entry into the appropriate artefacts using the given 
@@ -750,25 +750,25 @@ abstract class LeapImportArtefactPlugin {
      * attached to blog posts even though the files and blog posts were 
      * imported by different plugins.
      *
-     * @param SimpleXMLElement $entry The entry to import
-     * @param PluginImport $importer  The importer
-     * @param int $strategy           The strategy to use (should be a class 
-     *                                constant on your class, see the 
-     *                                documentation of get_import_strategies_for_entry
-     *                                for more information)
-     * @param array $otherentries     A list of entry IDs that this class 
-     *                                previously said were required to import 
-     *                                the entry
+     * @param SimpleXMLElement $entry    The entry to import
+     * @param PluginImportLeap $importer The importer
+     * @param int $strategy              The strategy to use (should be a class 
+     *                                   constant on your class, see the documentation
+     *                                   of get_import_strategies_for_entry for more
+     *                                   information)
+     * @param array $otherentries        A list of entry IDs that this class 
+     *                                   previously said were required to import 
+     *                                   the entry
      * @throws ImportException If the strategy is unrecognised
      * @return array A list describing what artefacts were created by the 
      *               import of each entry
      */
-    abstract public static function import_using_strategy(SimpleXMLElement $entry, PluginImport $importer, $strategy, array $otherentries);
+    abstract public static function import_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries);
 
     /**
      * Gives plugins a chance to import author data
      */
-    public static function import_author_data(PluginImport $importer, $persondataid) {
+    public static function import_author_data(PluginImportLeap $importer, $persondataid) {
     }
 
     /**
@@ -784,18 +784,18 @@ abstract class LeapImportArtefactPlugin {
      *
      * This method has no return value.
      *
-     * @param SimpleXMLElement $entry The entry previously imported
-     * @param PluginImport $importer  The importer
-     * @param int $strategy           The strategy to use (should be a class 
-     *                                constant on your class, see the 
-     *                                documentation of get_import_strategies_for_entry
-     *                                for more information)
+     * @param SimpleXMLElement $entry    The entry previously imported
+     * @param PluginImportLeap $importer The importer
+     * @param int $strategy              The strategy to use (should be a class 
+     *                                   constant on your class, see the documentation
+     *                                   of get_import_strategies_for_entry for more
+     *                                   information)
      * @param array $otherentries     A list of entry IDs that this class 
      *                                previously said were required to import 
      *                                the entry
      * @throws ImportException If the strategy is unrecognised
      */
-    public static function setup_relationships(SimpleXMLElement $entry, PluginImport $importer, $strategy, array $otherentries) {
+    public static function setup_relationships(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
     }
 
 }
