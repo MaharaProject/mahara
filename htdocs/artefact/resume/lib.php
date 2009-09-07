@@ -409,8 +409,13 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
             update_record($table, (object)$values, 'id');
         }
         else {
-            $max = get_field($table, 'MAX(displayorder)', 'artefact', $values['artefact']);
-            $values['displayorder'] = is_numeric($max) ? $max + 1 : 0;
+            if (isset($values['displayorder'])) {
+                $values['displayorder'] = intval($values['displayorder']);
+            }
+            else {
+                $max = get_field($table, 'MAX(displayorder)', 'artefact', $values['artefact']);
+                $values['displayorder'] = is_numeric($max) ? $max + 1 : 0;
+            }
             insert_record($table, (object)$values);
         }
     }
