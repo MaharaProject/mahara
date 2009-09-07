@@ -87,20 +87,20 @@ class LeapImportResume extends LeapImportArtefactPlugin {
 
         // Goals, cover letter & interests
         if ($isentry && $correctplugintype) {
-            $strategies[] = array(
+            return array(array(
                 'strategy' => self::STRATEGY_IMPORT_AS_ENTRY,
                 'score'    => 100,
                 'other_required_entries' => array(),
-            );
+            ));
         }
 
         // Skills
         if ($isability && $correctplugintype) {
-            $strategies[] = array(
+            return array(array(
                 'strategy' => self::STRATEGY_IMPORT_AS_ABILITY,
                 'score'    => 100,
                 'other_required_entries' => array(),
-            );
+            ));
         }
 
         // Achievements
@@ -115,11 +115,11 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 // else claims them, they'll be imported as certifications
                 $score = 50;
             }
-            $strategies[] = array(
+            return array(array(
                 'strategy' => self::STRATEGY_IMPORT_AS_ACHIEVEMENT,
                 'score'    => $score,
                 'other_required_entries' => array(),
-            );
+            ));
         }
 
         // Employment
@@ -132,11 +132,11 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 }
             }
 
-            $strategies[] = array(
+            return array(array(
                 'strategy' => self::STRATEGY_IMPORT_AS_EMPLOYMENT,
                 'score'    => 100,
                 'other_required_entries' => $other_required_entries,
-            );
+            ));
         }
 
         // Books
@@ -156,11 +156,11 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 }
             }
 
-            $strategies[] = array(
+            return array(array(
                 'strategy' => self::STRATEGY_IMPORT_AS_BOOK,
                 'score'    => 100,
                 'other_required_entries' => $other_required_entries,
-            );
+            ));
         }
 
         // Education
@@ -185,24 +185,24 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 }
             }
 
-            $strategies[] = array(
+            return array(array(
                 'strategy' => self::STRATEGY_IMPORT_AS_EDUCATION,
                 'score'    => 100,
                 'other_required_entries' => $other_required_entries,
-            );
+            ));
         }
 
         // Professional Membership
         $correctmaharatype = count($entry->xpath('mahara:artefactplugin[@mahara:plugin="resume" and @mahara:type="pseudo:membership"]')) == 1;
         if ($isactivity && $correctmaharatype) {
-            $strategies[] = array(
+            return array(array(
                 'strategy' => self::STRATEGY_IMPORT_AS_MEMBERSHIP,
                 'score'    => 100,
                 'other_required_entries' => array(),
-            );
+            ));
         }
 
-        return $strategies;
+        return array();
     }
 
     public static function import_using_strategy(SimpleXMLElement $entry, PluginImport $importer, $strategy, array $otherentries) {
