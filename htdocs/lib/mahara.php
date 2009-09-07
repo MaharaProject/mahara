@@ -2070,15 +2070,16 @@ function get_my_tags($limit=null, $cloud=true, $sort='freq') {
         $minfreq = $tagrecords[count($tagrecords) - 1]->count;
         $maxfreq = $tagrecords[0]->count;
 
-        $minweight = tag_weight($minfreq);
-        $maxweight = tag_weight($maxfreq);
+        if ($minfreq != $maxfreq) {
+            $minweight = tag_weight($minfreq);
+            $maxweight = tag_weight($maxfreq);
+            $minsize = 0.8;
+            $maxsize = 2.5;
 
-        $minsize = 0.8;
-        $maxsize = 2.5;
-
-        foreach ($tagrecords as &$t) {
-            $weight = (tag_weight($t->count) - $minweight) / ($maxweight - $minweight);
-            $t->size = sprintf("%0.1f", $minsize + ($maxsize - $minsize) * $weight);
+            foreach ($tagrecords as &$t) {
+                $weight = (tag_weight($t->count) - $minweight) / ($maxweight - $minweight);
+                $t->size = sprintf("%0.1f", $minsize + ($maxsize - $minsize) * $weight);
+            }
         }
         usort($tagrecords, create_function('$a,$b', 'return strnatcasecmp($a->tag, $b->tag);'));
     }
