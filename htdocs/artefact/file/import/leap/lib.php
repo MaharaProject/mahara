@@ -269,10 +269,6 @@ class LeapImportFile extends LeapImportArtefactPlugin {
             if (!rename($basedir  . $olddir . $id, $basedir . $newdir . $id)) {
                 throw new ImportException($importer, 'TODO: get_string: was unable to move profile icon');
             }
-
-            // Unconditionally set as default, even if there is more than one
-            $importer->get('usrobj')->profileicon = $id;
-            $importer->get('usrobj')->commit();
         }
 
         $artefact->commit();

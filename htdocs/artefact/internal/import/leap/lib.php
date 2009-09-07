@@ -235,6 +235,24 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             if (count($addressdata) == 1) {
                 self::import_addressdata($importer, $addressdata[0]);
             }
+
+            // Set default profile icon. We look at rel="related" links on this 
+            // element, and take the first one that we turned into a profile 
+            // icon to be the default. In future versions of the spec, we may use
+            // a "depicts" type relationship to explicitly identify them.
+            foreach ($person->link as $link) {
+                if ($importer->curie_equals($link['rel'], '', 'related') && isset($link['href'])) {
+                    $artefactids = $importer->get_artefactids_imported_by_entryid((string)$link['href']);
+                    if (count($artefactids) == 1 && $potentialicon = artefact_instance_from_id($artefactids[0])) {
+                        if ($potentialicon->get('artefacttype') == 'profileicon') {
+                            $importer->get('usrobj')->profileicon = $potentialicon->get('id');
+                            $importer->get('usrobj')->commit();
+                            // The first one we find in the export is the profile icon
+                            break;
+                        }
+                    }
+                }
+            }
         }
         else {
             $author = $importer->get('xml')->xpath('//a:feed/a:author[1]');

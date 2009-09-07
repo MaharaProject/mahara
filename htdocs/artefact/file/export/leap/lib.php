@@ -93,6 +93,13 @@ class LeapExportElementFolder extends LeapExportElement {
 }
 
 class LeapExportElementImage extends LeapExportElementFile { }
-class LeapExportElementProfileIcon extends LeapExportElementFile { }
+class LeapExportElementProfileIcon extends LeapExportElementFile {
+
+    public function add_links() {
+        parent::add_links();
+        $this->add_generic_link('artefactinternal', 'related');
+    }
+
+}
 
 ?>
