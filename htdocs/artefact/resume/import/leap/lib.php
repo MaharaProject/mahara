@@ -73,6 +73,11 @@ class LeapImportResume extends LeapImportArtefactPlugin {
     const STRATEGY_IMPORT_AS_MEMBERSHIP = 7;
 
     /**
+     * Selections made for grouping resume fields are blackholed
+     */
+    const STRATEGY_IMPORT_AS_SELECTION = 8;
+
+    /**
      * Description of strategies used
      */
     public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImportLeap $importer) {
@@ -197,6 +202,18 @@ class LeapImportResume extends LeapImportArtefactPlugin {
         if ($isactivity && $correctmaharatype) {
             return array(array(
                 'strategy' => self::STRATEGY_IMPORT_AS_MEMBERSHIP,
+                'score'    => 100,
+                'other_required_entries' => array(),
+            ));
+        }
+
+        // Special Mahara selections made for grouping resume entries
+        $correctmaharaplugin = count($entry->xpath('mahara:artefactplugin[@mahara:plugin="resume"]')) == 1;
+        if ($correctmaharaplugin
+            && PluginImportLeap::is_rdf_type($entry, $importer, 'selection')
+            && PluginImportLeap::is_correct_category_scheme($entry, $importer, 'selection_type', 'Grouping')) {
+            return array(array(
+                'strategy' => self::STRATEGY_IMPORT_AS_SELECTION,
                 'score'    => 100,
                 'other_required_entries' => array(),
             ));
@@ -342,6 +359,9 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 'displayorder' => self::get_display_order_for_entry($entry, $importer, 'membership'),
             );
             ArtefactTypeResumeComposite::ensure_composite_value($values, 'membership', $importer->get('usr'));
+            break;
+        case self::STRATEGY_IMPORT_AS_SELECTION:
+            // This space intentionally left blank
             break;
         default:
             throw new ImportException($importer, 'TODO: get_string: unknown strategy chosen for importing entry');
