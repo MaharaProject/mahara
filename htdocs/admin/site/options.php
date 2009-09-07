@@ -196,6 +196,26 @@ $siteoptionform = array(
             'description'  => get_string('captchaoncontactformdescription', 'admin'),
             'defaultvalue' => get_config('captchaoncontactform'),
         ),
+        'showselfsearchsideblock' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('showselfsearchsideblock', 'admin'),
+            'description'  => get_string('showselfsearchsideblockdescription', 'admin'),
+            'defaultvalue' => get_config('showselfsearchsideblock'),
+        ),
+        'showtagssideblock' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('showtagssideblock', 'admin'),
+            'description'  => get_string('showtagssideblockdescription', 'admin'),
+            'defaultvalue' => get_config('showtagssideblock'),
+        ),
+        'tagssideblockmaxtags' => array(
+            'type'         => 'text',
+            'size'         => 4,
+            'title'        => get_string('tagssideblockmaxtags', 'admin'),
+            'description'  => get_string('tagssideblockmaxtagsdescription', 'admin'),
+            'defaultvalue' => get_config('tagssideblockmaxtags'),
+            'rules'        => array('integer' => true, 'minvalue' => 0, 'maxvalue' => 1000),
+        ),
     )
 );
 
@@ -219,7 +239,8 @@ function siteoptions_submit(Pieform $form, $values) {
         'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
         'allowpublicviews', 'allowpublicprofiles', 'createpublicgroups', 'searchplugin',
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
-        'captchaonregisterform', 'captchaoncontactform',
+        'captchaonregisterform', 'captchaoncontactform', 'showselfsearchsideblock', 'showtagssideblock',
+        'tagssideblockmaxtags'
     );
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');
