@@ -22,7 +22,7 @@
 
 /* General rules */
 body {
-    background: #1D499F url(../images/bg.jpg) repeat-x top center;
+    background: #0B1960 url(../images/bg.jpg) repeat-x top center;
 	color: #14336F;
 }
 a,
@@ -155,7 +155,7 @@ a.btn:hover {
 }
 /* special case */
 #btn-logout {
-	background-color: #1D499F;
+	background-color: #0B1960;
 }
 /***** ICON LINKS ******/
 div.btn-del input.submit, input.submit.btn-del,
@@ -168,7 +168,7 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 
 /* Top of page elements */
 #container {
-    background: #1D499F url(../images/bg-container.jpg) repeat-x top center;
+    background: transparent url(../images/bg-container.jpg) no-repeat top center;
     margin-top:0px;
     padding-top:0px;
     min-width: 970px;
@@ -179,15 +179,24 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     border: none;
 }
 #site-logo {
-	padding: 20px 25px 5px 0
+	padding: 25px 25px 0 0
 }
 
 /* search box in header */
 #usf {
-    padding: 35px 6px 0 0;
+    padding: 45px 6px 0 0;
 }
 #usf_query_container input {
     color: #333333;
+}
+#usf #usf_submit {
+    border:none;
+	width:30px;
+	padding:3px 0;
+	margin:0;
+	text-indent:-1000px;
+	cursor:pointer;
+    background: transparent url(../images/btn_search_off.png) no-repeat center center;	
 }
 
 /* main menu */
@@ -206,7 +215,7 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 	font-size: 12px;
 	margin: 0 0 0 3px;
 	padding: 5px 15px 3px;
-	background: #14336F;
+	background: #00084F;
 }
 #main-nav li a,
 #main-nav li a:link,
@@ -241,6 +250,7 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     text-align: left;
     background: #FFF;
     height: 25px;
+	border:none;
 	border-bottom:1px solid #DDD;
 	width:100%;
 }
@@ -274,7 +284,7 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 #sub-nav li.selected a:link,
 #sub-nav li.selected a:visited,
 #sub-nav li.selected a:active {
-    color: #1D499F;
+    color: #0B1960;
     text-decoration: underline;
 }
 
@@ -344,8 +354,12 @@ div.sideblock ul ul {
 }
 
 /* Footer */
+#footernav,
+#footer-wrap #version  {
+  color: #FFFFFF;
+} 
 #footer-wrap {
-    background-color: #1D499F;
+    background-color: #0B1960;
     border: 0;
 }
 #footer-wrap a,

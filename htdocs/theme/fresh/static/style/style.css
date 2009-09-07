@@ -89,9 +89,11 @@ table.fullwidth {
 }
 /* Alternative row background colours */
 .r0 {
+    border:none;
     background: #1C3740;
 }
 .r1 {
+    border:none;
     background-color: #1A292F;
 }
 /* PAGINATION */
@@ -186,6 +188,7 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     border: none;
 }
 #site-logo {
+  padding:1.1em 0.75em 0.5em 0.75em;
 }
 #loading-box {
     background-color: #000;
@@ -197,6 +200,15 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 #usf_query_container input {
     color: #333333;
 	background-color: #FFFFFF;
+}
+#usf #usf_submit {
+    border:none;
+	width:30px;
+	padding:3px 0;
+	margin:0;
+	text-indent:-1000px;
+	cursor:pointer;
+    background: transparent url(../images/btn_search_off.png) no-repeat center center;	
 }
 
 /* main menu */
@@ -246,15 +258,16 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 /* Sub menu */
 #sub-nav {
 	padding: 0px 0 0 0;
-    margin: 0 5px 5px 5px;
+    margin: 0 5px 8px 0;
     font-size: 12px;
     font-weight: bold;
     background: #00AEF1 url(../images/subnav-bg.gif) repeat-x center;
     height: 30px;
     line-height: 30px;
-	width:100%;
+	width:99.1%;
     float:right;
     text-align:right;
+	border:none;
 }
 #sub-nav ul {
     margin: 0;
@@ -262,8 +275,9 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     background: transparent;
 }
 #sub-nav li {
-    padding: 10px 13px 10px 10px;
-    background: url(../../../default/static/images/submenu-divider.gif) no-repeat center right;
+    padding: 0px 13px 0px 10px;
+    background: transparent;
+	border-left: 1px solid #FFF;
 }
 #sub-nav li a,
 #sub-nav li a:link,
@@ -339,7 +353,7 @@ ul.in-page-tabs li a.current-tab {
 }
 div.sideblock {
     background: #080D0F;
-	margin: 0 5px 5px 5px;
+	margin: 0 5px 8px 8px;
     padding: 0;
 }
 div.sideblock h3 {
@@ -388,10 +402,15 @@ div.sideblock ul ul {
 
 
 /* Footer */
+#footernav,
+#footer-wrap #version  {
+  color: #FFFFFF;
+} 
 #footer-wrap {
     background-color: transparent;
     padding: 10px 5px 15px;
     border: 0;
+	height:30px;
 }
 #footer-wrap a,
 #footer-wrap a:link,
@@ -431,6 +450,10 @@ div.sideblock ul ul {
 	font-size: 11px;
     font-weight: bold;
     color:#ca0000;
+}
+
+#myviews td {
+   border:none;
 }
 
 /* Copy a view */

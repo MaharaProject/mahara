@@ -192,7 +192,7 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     border: none;
 }
 #site-logo {
-	padding: 15px 25px 0 0
+	padding: 25px 25px 0 0
 }
 #loading-box {
     color: #fff;
@@ -200,10 +200,19 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 }
 /* search box in header */
 #usf {
-    padding: 35px 6px 0 0;
+    padding: 48px 6px 0 0;
 }
 #usf_query_container input {
     color: #490647;
+}
+#usf #usf_submit {
+    border:none;
+	width:30px;
+	padding:3px 0;
+	margin:0;
+	text-indent:-1000px;
+	cursor:pointer;
+    background: transparent url(../images/btn_search_off.png) no-repeat center center;	
 }
 
 /* main menu */
@@ -259,6 +268,7 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     background: #5c0758 url(../images/subnav-bg.gif) repeat-x top center;
     height: 35px;
 	width:100%;
+	border: none;
 }
 #sub-nav ul {
     float:right;
@@ -408,6 +418,11 @@ div.sideblock ul ul {
 
 
 /* Footer */
+#footernav,
+#footer-wrap #version {
+    color: #5A0757;
+}
+
 #footer-wrap {
     background-color: transparent;
     border: 0;

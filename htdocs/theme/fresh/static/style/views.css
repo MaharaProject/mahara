@@ -6,10 +6,16 @@
 #page #blocksinstruction {
     color: #BEE3F1;
 }
-
-
+#category-list {
+  margin-left:10px;
+}
+#category-list li {
+  margin:3px;
+}
 #category-list li a {
-    background-color: #10171A;
+  border: 1px dotted #FFFFFF;
+  border-bottom:none;
+  background-color: #10171A;
 }
 #category-list li a:hover {
     background-color: #10171A;
@@ -21,6 +27,7 @@
 }
 
 #blocktype-list {
+  border: 1px dotted #BEE3F1;
     background-color: #10171A;
 }
 .blocktype {

@@ -721,8 +721,11 @@ div.sideblock ul {
 }
 #user-profileicon {
     float: right;
-    padding-left: .25em;
+    margin-left: .25em;
 	border: 1px solid #d1d1d1;
+}
+#user-profileicon img {
+	border: 1px solid #FFFFFF;
 }
 #sb-profile .sideblock-content > ul {
     padding: 0;

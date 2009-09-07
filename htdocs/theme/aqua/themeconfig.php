@@ -20,13 +20,12 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  */
 
 $theme = new StdClass;
 
-$theme->displayname   = 'Aqua';
-$theme->parent = 'raw';
-$theme->formrenderer = 'table';
+$theme->displayname = 'Aqua';
+$theme->parent      = 'raw';
 
 ?>

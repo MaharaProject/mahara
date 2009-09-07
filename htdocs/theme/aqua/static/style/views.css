@@ -28,6 +28,9 @@ body:last-child:not(:root:root) .newblockhere {
   color: #1D499F !important;
   background-color: #f4f7f9;
 }
+#category-list {
+  margin-left:10px;
+}
 #category-list li a {
     background-color: #e0e8ee;
 	color: #1e6297;
