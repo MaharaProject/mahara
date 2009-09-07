@@ -463,7 +463,7 @@ EOF;
             );
         }
 
-        if (!$USER->is_logged_in()) {
+        if (!$USER->is_logged_in() && !(get_config('siteclosed') && get_config('disablelogin'))) {
             $SIDEBLOCKS[] = array(
                 'name'   => 'login',
                 'weight' => -10,
