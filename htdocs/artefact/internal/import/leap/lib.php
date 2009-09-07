@@ -138,8 +138,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
      *
      * The persondata entry is not actually imported using a strategy, because 
      * we need to be able to import basic data from the <author> element if 
-     * it's not present too. So all the importing is handled in one custom hook 
-     * - import_author_data()
+     * it's not present too. So all the person importing is handled in import_author_data()
      *
      * The importer also tries to reserve raw entries with mahara:plugin="internal"
      * - these can be used to populate some of our profile fields that aren't 
