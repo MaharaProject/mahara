@@ -504,8 +504,14 @@ class PluginImportLeap extends PluginImport {
     }
 
     /**
-     * TODO: document
+     * Returns the <content> for a given entry, stripping off any transport 
+     * encoding and respecting the content type.
+     *
      * TODO: make sure we are rawurlencoding our file paths in our export
+     *
+     * @param SimpleXMLElement $entry   The entry to get the content for
+     * @param PlugimImporLeap $importer The importer
+     * @return string The content
      */
     public static function get_entry_content(SimpleXMLElement $entry, PluginImportLeap $importer) {
         // Entries have content, and that content can be of different types. So we want to make sure we grab it in the right type
