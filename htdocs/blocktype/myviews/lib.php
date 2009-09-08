@@ -95,6 +95,12 @@ class PluginBlocktypeMyviews extends SystemBlocktype {
                     }
                 }
             }
+            $tags = get_records_select_array('view_tag', 'view IN (' . $viewidlist . ')');
+            if ($tags) {
+                foreach ($tags as &$tag) {
+                    $views[$tag->view]->tags[] = $tag->tag;
+                }
+            }
         }
         $smarty->assign('VIEWS',$views);
         return $smarty->fetch('blocktype:myviews:myviews.tpl');
