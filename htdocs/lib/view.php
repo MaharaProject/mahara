@@ -1788,6 +1788,7 @@ class View {
                 WHERE view in (' . $viewidlist . ')
                 ORDER BY view, accesstype, grouptype, role, name, id
             ', array());
+            $tags = get_records_select_array('view_tag', 'view IN (' . $viewidlist . ')');
         }
     
         $data = array();
@@ -1851,6 +1852,11 @@ class View {
                       'startdate' => $access->startdate,
                       'stopdate' => $access->stopdate
                       );
+                }
+            }
+            if ($tags) {
+                foreach ($tags as $tag) {
+                    $data[$index[$tag->view]]['tags'][] = $tag->tag;
                 }
             }
         }

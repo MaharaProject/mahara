@@ -31,6 +31,9 @@
 {if $view.description}
                                 <div class="videsc">{$view.description}</div>
 {/if}
+{if $view.tags}
+                                <div class="tags">{str tag=tags}: {list_tags owntags=true tags=$view.tags}</div>
+{/if}
                             </div>
                             <div class="vi">
                                 <h4><a href="{$WWWROOT}view/blocks.php?id={$view.id}" id="editthisview">{str tag ="editthisview" section="view"}</a></h4>
