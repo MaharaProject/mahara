@@ -24,6 +24,11 @@
  *
  */
 
+/*
+ * For more information about file LEAP export, see:
+ * http://wiki.mahara.org/Developer_Area/Import//Export/LEAP_Export/File_Artefact_Plugin
+ */
+
 defined('INTERNAL') || die();
 
 class LeapExportElementFile extends LeapExportElement {
@@ -32,7 +37,7 @@ class LeapExportElementFile extends LeapExportElement {
 
     public function add_links() {
        parent::add_links();
-        // check for blog posts this file may be attached to
+        // Check for artefacts this file may be attached to
         if (!$posts = get_records_array('artefact_attachment',
             'attachment', $this->artefact->get('id'))) {
             return;
