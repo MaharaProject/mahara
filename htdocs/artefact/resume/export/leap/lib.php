@@ -306,6 +306,8 @@ abstract class LeapExportElementResumeCompositeChildWithSiblings extends LeapExp
         }
         return $this->siblings;
     }
+
+    public abstract function ensure_siblings();
 }
 
 class LeapExportElementResumeCompositeChildEducationhistory extends LeapExportElementResumeCompositeChildWithSiblings {
