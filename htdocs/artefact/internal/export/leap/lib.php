@@ -24,9 +24,12 @@
  *
  */
 
+/*
+ * For more information about internal LEAP export, see:
+ * http://wiki.mahara.org/Developer_Area/Import//Export/LEAP_Export/Internal_Artefact_Plugin
+ */
+
 class LeapExportInternal extends LeapExportArtefactPlugin {
-
-
     public function get_export_xml() {
         $element = new LeapExportElementInternal($this->exporter, $this->artefacts);
         return $element->get_export_xml();

@@ -34,7 +34,6 @@ defined('INTERNAL') || die();
  *
  * TODO:
  * - how do we want to handle potentially overwriting data?
- * - We are exporting all services as field:id, not field:im - awaiting clarification on the list
  * - Address for person (leap:spatial) - our export might have to be modified 
  *   to output them in a more "correct" order for other systems
  * - Validate the values of profile fields coming in? Especially email
@@ -131,18 +130,13 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     );
 
     /**
-     * The profile importer has two strategies it can use for certain entries.
-     *
-     * The profile importer attempts to "reserve" the persondata entry 
-     * representing the user being imported (if one exists).
+     * The profile importer tries to import raw profile fields using the 
+     * strategy mechanism, but most of the useful profile information is stored 
+     * in the person entry corresponding to the author.
      *
      * The persondata entry is not actually imported using a strategy, because 
      * we need to be able to import basic data from the <author> element if 
      * it's not present too. So all the person importing is handled in import_author_data()
-     *
-     * The importer also tries to reserve raw entries with mahara:plugin="internal"
-     * - these can be used to populate some of our profile fields that aren't 
-     * explicitly mapped in LEAP2A.
      */
     public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImportLeap $importer) {
         $strategies = array();
@@ -191,7 +185,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     }
 
     /**
-     * Custom hook to import data about the feed author.
+     * Import data about the feed author.
      *
      * If we have a persondata element for them, we can import lots of 
      * different information about them into Mahara's profile section. 
@@ -199,6 +193,8 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
      * <author> element.
      *
      * @param PluginImportLeap $importer The importer
+     * @param string $persondataid       The ID of the person entry corresponding
+     *                                   to the author, if there is one
      */
     public static function import_author_data(PluginImportLeap $importer, $persondataid) {
         if ($persondataid) {
