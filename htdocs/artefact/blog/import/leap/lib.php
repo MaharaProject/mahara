@@ -30,13 +30,11 @@ defined('INTERNAL') || die();
  * Implements LEAP2A import of blog related entries into Mahara
  *
  * For more information about LEAP blog importing, see:
- * http://wiki.mahara.org/Developer_Area/Import%2f%2fExport/LEAP_Import/Blog_Artefact_Plugin
+ * http://wiki.mahara.org/Developer_Area/Import//Export/LEAP_Import/Blog_Artefact_Plugin
  *
  * TODO:
  * - Get entries that feel they're part of the blog, not just entries the blog feels are part of it
  * - Import raw ATOM feed entries as blog posts
- * - Provide a default strategy for importing anything into a 'miscellaneous' blog
- * - Handle importing things that don't have inline entry content into a blogpost
  */
 class LeapImportBlog extends LeapImportArtefactPlugin {
 
