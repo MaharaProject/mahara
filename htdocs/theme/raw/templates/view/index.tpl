@@ -32,7 +32,7 @@
                                 <div class="videsc">{$view.description}</div>
 {/if}
 {if $view.tags}
-                                <div class="tags">{str tag=tags}: {list_tags owntags=true tags=$view.tags}</div>
+                                <div class="tags">{str tag=tags}: {list_tags owner=$view.owner tags=$view.tags}</div>
 {/if}
                             </div>
                             <div class="vi">

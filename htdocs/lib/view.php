@@ -1739,6 +1739,7 @@ class View {
 
         global $USER;
         $userid = $USER->get('id');
+        $owner = null;
 
         if ($groupid) {
             $count = count_records('view', 'group', $groupid);
@@ -1764,6 +1765,7 @@ class View {
                 WHERE v.owner = ' . $userid . '
                 AND v.type != \'profile\'
                 ORDER BY v.title, v.id', '', $offset, $limit);
+            $owner = $userid;
         }
 
         if ($viewdata) {
@@ -1797,6 +1799,7 @@ class View {
                 $index[$viewdata[$i]->id] = $i;
                 $data[$i]['id'] = $viewdata[$i]->id;
                 $data[$i]['title'] = $viewdata[$i]->title;
+                $data[$i]['owner'] = $owner;
                 $data[$i]['description'] = $viewdata[$i]->description;
                 if (!empty($viewdata[$i]->submitgroupid)) {
                     $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view',

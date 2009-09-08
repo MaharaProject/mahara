@@ -20,11 +20,12 @@
  * @return Internationalized string
  */
 function smarty_function_list_tags($params, &$smarty) {
+    global $USER;
     if (empty($params['tags']) || !is_array($params['tags'])) {
         return '';
     }
 
-    if (empty($params['owntags'])) {
+    if (empty($params['owner']) || $params['owner'] != $USER->get('id')) {
         return join(', ', array_map('hsc', $params['tags']));
     }
 
