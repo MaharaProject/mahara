@@ -312,7 +312,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     /**
      * Attempts to import a persondata field with leap:field="id"
      */
-    public static function import_persondata_id(PluginImportLeap $importer, SimpleXMLElement $item, array $leapattributes) {
+    private static function import_persondata_id(PluginImportLeap $importer, SimpleXMLElement $item, array $leapattributes) {
         if ($leapattributes['field'] == 'id' && !isset($leapattributes['service'])) {
             // 'id' must have a service set
             // http://wiki.cetis.ac.uk/2009-03/LEAP2A_personal_data#service
