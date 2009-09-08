@@ -131,9 +131,9 @@ class LeapImportResume extends LeapImportArtefactPlugin {
         $other_required_entries = array();
         if ($isactivity && PluginImportLeap::is_correct_category_scheme($entry, $importer, 'life_area', 'Work')) {
             foreach ($entry->link as $link) {
-                if (!isset($other_required_entries['organisation'])
-                    && $organisation = self::check_for_supporting_organisation($importer, $link)) {
-                    $other_required_entries['organisation'] = $organisation;
+                if (!isset($other_required_entries['organization'])
+                    && $organization = self::check_for_supporting_organization($importer, $link)) {
+                    $other_required_entries['organization'] = $organization;
                 }
             }
 
@@ -184,9 +184,9 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                     }
                 }
 
-                if (!isset($other_required_entries['organisation'])
-                    && $organisation = self::check_for_supporting_organisation($importer, $link)) {
-                    $other_required_entries['organisation'] = $organisation;
+                if (!isset($other_required_entries['organization'])
+                    && $organization = self::check_for_supporting_organization($importer, $link)) {
+                    $other_required_entries['organization'] = $organization;
                 }
             }
 
@@ -282,9 +282,9 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             $enddate   = (isset($dates['end']))   ? self::convert_leap_date_to_resume_date($dates['end'])   : '';
 
             $employer = '';
-            if (isset($otherentries['organisation'])) {
-                $organisation = $importer->get_entry_by_id($otherentries['organisation']);
-                $employer = $organisation->title;
+            if (isset($otherentries['organization'])) {
+                $organization = $importer->get_entry_by_id($otherentries['organization']);
+                $employer = $organization->title;
             }
 
             $values = array(
@@ -330,9 +330,9 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             }
 
             $institution = '';
-            if (isset($otherentries['organisation'])) {
-                $organisation = $importer->get_entry_by_id($otherentries['organisation']);
-                $institution = $organisation->title;
+            if (isset($otherentries['organization'])) {
+                $organization = $importer->get_entry_by_id($otherentries['organization']);
+                $institution = $organization->title;
             }
 
             $values = array(
@@ -407,16 +407,16 @@ class LeapImportResume extends LeapImportArtefactPlugin {
 
     /**
      * Given an entry link, see whether it's a relationship referring to a 
-     * supporting organisation, and if so, returns the ID of the organisation
+     * supporting organization, and if so, returns the ID of the organization
      *
      * @param PluginImportLeap $importer The importer
      * @param array            $link     The link to check
-     * @return string The ID of the organisation if there is one, else an empty string
+     * @return string The ID of the organization if there is one, else an empty string
      */
-    private static function check_for_supporting_organisation(PluginImportLeap $importer, $link) {
+    private static function check_for_supporting_organization(PluginImportLeap $importer, $link) {
         if ($importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'is_supported_by') && isset($link['href'])) {
-            if ($potentialorganisation = $importer->get_entry_by_id((string)$link['href'])) {
-                if (PluginImportLeap::is_rdf_type($potentialorganisation, $importer, 'organisation')) {
+            if ($potentialorganization = $importer->get_entry_by_id((string)$link['href'])) {
+                if (PluginImportLeap::is_rdf_type($potentialorganization, $importer, 'organization')) {
                     return (string)$link['href'];
                 }
             }

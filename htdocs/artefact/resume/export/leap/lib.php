@@ -316,7 +316,7 @@ class LeapExportElementResumeCompositeChildEducationhistory extends LeapExportEl
         $this->siblings = array(
             'is_supported_by' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
                 'title' => $this->originalrecord->institution,
-            ), 'organisation', 'supports'),
+            ), 'organization', 'supports'),
             'supports' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
                 'title' => $this->originalrecord->qualtype,
                 'content' => $this->originalrecord->qualname,
@@ -353,7 +353,7 @@ class LeapExportElementResumeCompositeChildEmploymenthistory extends LeapExportE
         $this->siblings = array(
             'is_supported_by' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
                 'title' => $this->originalrecord->employer,
-            ), 'organisation', 'supports')
+            ), 'organization', 'supports')
         );
     }
 
