@@ -40,6 +40,7 @@ $smarty->assign('viewtitle', $view->get('title'));
 $smarty->assign('ownername', $view->formatted_owner());
 $smarty->assign('viewdescription', $view->get('description'));
 $smarty->assign('viewcontent', $view->build_columns());
+$smarty->assign('tags', $view->get('tags'));
 ob_start();
 $smarty->display('view/viewcontent.tpl');
 $html = ob_get_contents();
