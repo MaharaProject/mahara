@@ -24,49 +24,26 @@
  *
  */
 
-// all the special case 'composite' types are handled the same
-class LeapExportElementBook extends LeapExportElementResumeComposite {}
-class LeapExportElementCertification extends LeapExportElementResumeComposite {}
-class LeapExportElementMembership extends LeapExportElementResumeComposite {}
-class LeapExportElementEducationhistory extends LeapExportElementResumeComposite {}
-class LeapExportElementEmploymenthistory extends LeapExportElementResumeComposite {}
+/*
+ * For more information about resume LEAP export, see:
+ * http://wiki.mahara.org/Developer_Area/Import//Export/LEAP_Export/Resume_Artefact_Plugin
+ */
 
+/**
+ * The contact information artefact is deliberatly skipped from leap export, as 
+ * the information is duplicated from the profile anyway
+ */
 class LeapExportElementContactinformation extends LeapExportElement {
-    public function get_categories() {
-        return array(
-            'selection_type' => array(
-                'scheme' => 'selection_type',
-                'term'   => 'Grouping',
-            ),
-        );
-    }
-
-    public function get_leap_type() {
-        return 'selection';
-    }
-
-    public function add_links() {
-        $fields = ArtefactTypeContactinformation::get_profile_fields();
-        foreach ($fields as $f) {
-            try {
-                $$f = artefact_instance_from_type($f, $this->artefact->get('owner'));
-                $this->add_artefact_link($$f, 'has_part');
-            }
-            catch (MaharaException $e) { } // might not exist which is ok
-        }
-    }
-
-    public function get_content() {
-        return '';
-    }
-
     public function is_leap() {
         return false;
     }
 }
 
+/**
+ * The information in the personalinformation artefact is sent to the internal 
+ * export plugin to be exported as persondata
+ */
 class LeapExportElementPersonalinformation extends LeapExportElement {
-
     public function __construct(ArtefactType $artefact, LeapExporter $exporter) {
         parent::__construct($artefact, $exporter);
         $c = $this->artefact->get('composites');
@@ -108,33 +85,24 @@ class LeapExportElementPersonalinformation extends LeapExportElement {
         }
     }
 
-    /*
-    // remove these for now - we can't link to the persondata fields individually
-    // and linking to the person entry itself makes no sense
-    public function get_leap_type() {
-        return 'selection';
-    }
-
-    public function get_categories() {
-        return array(
-            'selection_type' => array(
-                'scheme' => 'selection_type',
-                'term'   => 'grouping',
-            ),
-        );
-    }
-    */
     public function is_leap() {
         return false;
     }
 }
 
+/**
+ * The simple WYSIWYG resume fields are exported as simple entries with html 
+ * content
+ */
 class LeapExportElementResumeWysiwygField extends LeapExportElement {
     public function get_content_type() {
         return 'html';
     }
 }
 
+/**
+ * Skills WYSIWYG entries are exported as abilities instead of entries
+ */
 class LeapExportElementResumeSkillField extends LeapExportElementResumeWysiwygField {
     public function get_leap_type() {
         return 'ability';
@@ -151,9 +119,10 @@ class LeapExportElementAcademicskill extends LeapExportElementResumeSkillField {
 class LeapExportElementPersonalskill extends LeapExportElementResumeSkillField {}
 
 /**
-* Base class for the composite artefacts
-* Just a normal element except they return multiple <entry> elements using LeapExportElementResumeCompositeChild
-*/
+ * Base class for the composite artefacts. They consist of one or more
+ * entries per each artefact, and one entry to tie them all together in a 
+ * grouping (which is what this class represents)
+ */
 class LeapExportElementResumeComposite extends LeapExportElement {
 
     protected $composites;
@@ -214,10 +183,18 @@ class LeapExportElementResumeComposite extends LeapExportElement {
     }
 }
 
+// all the special case 'composite' types are handled the same
+class LeapExportElementBook extends LeapExportElementResumeComposite {}
+class LeapExportElementCertification extends LeapExportElementResumeComposite {}
+class LeapExportElementMembership extends LeapExportElementResumeComposite {}
+class LeapExportElementEducationhistory extends LeapExportElementResumeComposite {}
+class LeapExportElementEmploymenthistory extends LeapExportElementResumeComposite {}
+
+
 /**
-* Element to create pseudo-elements for composite children which aren't really artefacts in Mahara
-* but do need to map to LEAP elements
-*/
+ * Element to create pseudo-elements for composite children which aren't really 
+ * artefacts in Mahara but do need to map to LEAP elements
+ */
 abstract class LeapExportElementResumeCompositeChild extends LeapExportElement {
 
     protected $entrydata;
@@ -315,6 +292,10 @@ class LeapExportElementResumeCompositeChildMembership extends LeapExportElementR
     }
 }
 
+/**
+ * Some of the resume composites need to be converted into more than one entry. 
+ * This class represents such a composite.
+ */
 abstract class LeapExportElementResumeCompositeChildWithSiblings extends LeapExportElementResumeCompositeChild {
 
     protected $siblings;
@@ -327,7 +308,6 @@ abstract class LeapExportElementResumeCompositeChildWithSiblings extends LeapExp
     }
 }
 
-// these three are harder and have siblings.
 class LeapExportElementResumeCompositeChildEducationhistory extends LeapExportElementResumeCompositeChildWithSiblings {
 
     public function ensure_siblings() {
