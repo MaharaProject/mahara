@@ -1,6 +1,7 @@
 <div>
   {if !$simpledisplay}<h3>{$title|escape}</h3>{/if}
   <div>{$description|escape}</div>
+  {if $tags}<div class="tags">{str tag=tags}: {list_tags owner=$owner tags=$tags}</div>{/if}
   <div>
   {if (isset($children))}
     <table>
