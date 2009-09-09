@@ -261,12 +261,12 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $smarty->assign('iconpath', $this->get_icon($options));
         $smarty->assign('downloadpath', $downloadpath);
         $smarty->assign('filetype', $filetype);
-        $smarty->assign('owner', $this->display_owner());
+        $smarty->assign('ownername', $this->display_owner());
         $smarty->assign('created', strftime(get_string('strftimedaydatetime'), $this->get('ctime')));
         $smarty->assign('modified', strftime(get_string('strftimedaydatetime'), $this->get('mtime')));
         $smarty->assign('size', $this->describe_size() . ' (' . $this->get('size') . ' ' . get_string('bytes', 'artefact.file') . ')');
 
-        foreach (array('title', 'description', 'artefacttype') as $field) {
+        foreach (array('title', 'description', 'artefacttype', 'owner', 'tags') as $field) {
             $smarty->assign($field, $this->get($field));
         }
 
