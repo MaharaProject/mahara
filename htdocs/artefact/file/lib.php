@@ -867,7 +867,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             $f->delete();
             throw new UploadException($error);
         }
-        else if ($owner) {
+        else if (isset($owner)) {
             $owner->quota_add($size);
             $owner->commit();
         }
