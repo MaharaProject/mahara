@@ -1186,16 +1186,13 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         // name of the directory uses the site language rather than
         // the language of the admin who first creates it.
         $name = get_string_from_language(get_config('lang'), 'adminpublicdirname', 'admin');
-        $folderid = get_field_sql("
-           SELECT
-             a.id
-           FROM {artefact} a
-             INNER JOIN {artefact_file_files} f ON a.id = f.artefact
-           WHERE a.title = ?
-             AND a.artefacttype = ?
-             AND a.institution = 'mahara'
-             AND a.parent IS NULL", array($name, 'folder'));
-        if (!$folderid) {
+        $folders = get_records_select_array(
+            'artefact',
+            'title = ? AND artefacttype = ? AND institution = ? AND parent IS NULL',
+            array($name, 'folder', 'mahara'),
+            'id', 'id', 0, 1
+        );
+        if (!$folders) {
             $description = get_string_from_language(get_config('lang'), 'adminpublicdirdescription', 'admin');
             $data = (object) array('title' => $name,
                                    'description' => $description,
@@ -1204,25 +1201,21 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             $f->commit();
             $folderid = $f->get('id');
         }
-        return $folderid;
+        return $folders[0]->id;
     }
 
     public static function change_public_folder_name($oldlang, $newlang) {
         $oldname = get_string_from_language($oldlang, 'adminpublicdirname', 'admin');
-        $folderid = get_field_sql("
-           SELECT
-             a.id
-           FROM {artefact} a
-             INNER JOIN {artefact_file_files} f ON a.id = f.artefact
-           WHERE a.title = ?
-             AND a.artefacttype = ?
-             AND a.institution = 'mahara'
-             AND a.parent IS NULL", array($oldname, 'folder'));
-
-        if (!$folderid) {
+        $folders = get_records_select_array(
+            'artefact',
+            'title = ? AND artefacttype = ? AND institution = ? AND parent IS NULL',
+            array($oldname, 'folder', 'mahara'),
+            'id', 'id', 0, 1
+        );
+        if (!$folders) {
             return;
         }
-
+        $folderid = $folders[0]->id;
         $name = get_string_from_language($newlang, 'adminpublicdirname', 'admin');
         $description = get_string_from_language($newlang, 'adminpublicdirdescription', 'admin');
         if (!empty($name)) {

@@ -24,9 +24,12 @@
  *
  */
 
+/*
+ * For more information about internal LEAP export, see:
+ * http://wiki.mahara.org/Developer_Area/Import//Export/LEAP_Export/Internal_Artefact_Plugin
+ */
+
 class LeapExportInternal extends LeapExportArtefactPlugin {
-
-
     public function get_export_xml() {
         $element = new LeapExportElementInternal($this->exporter, $this->artefacts);
         return $element->get_export_xml();
@@ -44,9 +47,11 @@ class LeapExportElementInternal extends LeapExportElement {
     }
 
     public function assign_smarty_vars() {
+        $user = $this->get('exporter')->get('user');
+        $userid = $user->get('id');
         $this->smarty->assign('artefacttype', 'internal');
         $this->smarty->assign('artefactplugin', 'internal');
-        $this->smarty->assign('title', display_name($this->get('exporter')->get('user'), $this->get('exporter')->get('user')));
+        $this->smarty->assign('title', display_name($user, $user));
         // If this ID is changed, you'll have to change it in author.tpl too
         $this->smarty->assign('id', 'portfolio:artefactinternal');
         $this->smarty->assign('leaptype', $this->get_leap_type());
@@ -82,6 +87,21 @@ class LeapExportElementInternal extends LeapExportElement {
         }
         $this->smarty->assign('persondata', $persondata);
         $this->smarty->assign('spacialdata', $spacialdata);
+
+        // Grab profile icons and link to them, making sure the default is first
+        if ($icons = get_column_sql("SELECT id
+            FROM {artefact}
+            WHERE artefacttype = 'profileicon'
+            AND owner = ?
+            ORDER BY id = (
+                SELECT profileicon FROM {usr} WHERE id = ?
+            ) DESC, id", array($userid, $userid))) {
+            foreach ($icons as $icon) {
+                $icon = artefact_instance_from_id($icon);
+                $this->add_artefact_link($icon, 'related');
+            }
+            $this->smarty->assign('links', $this->links);
+        }
     }
 
     public function get_template_path() {

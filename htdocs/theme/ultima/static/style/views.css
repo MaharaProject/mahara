@@ -6,7 +6,8 @@
 #page #blocksinstruction {
     color: #FFFFFF;
 }
-#page #bottom-pane {
+#page #bottom-pane,
+#blocktype-list {
 	border-color: #5C0758 !important;
 }
 
@@ -16,5 +17,9 @@
     border:0px !important;
     padding:0px !important;
     margin: 0px !important;
+}
+
+#category-list { 
+  margin-left:1px;
 }
 

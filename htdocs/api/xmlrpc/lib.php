@@ -655,6 +655,7 @@ function get_public_key($uri, $application=null) {
             if (strpos($uri, $host) !== false) {
                 return $keyarray[$uri];
             }
+            throw new XmlrpcClientException('The remote site sent us a key that is valid for ' . $host . ' instead of their hostname (' . $uri . ')', 500);
         }
     } else {
         throw new XmlrpcClientException($res['faultString'], $res['faultCode']);

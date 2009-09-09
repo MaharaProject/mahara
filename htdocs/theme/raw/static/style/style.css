@@ -724,8 +724,11 @@ div.sideblock ul {
 }
 #user-profileicon {
     float: right;
-    padding-left: .25em;
+    margin-left: .25em;
 	border: 1px solid #d1d1d1;
+}
+#user-profileicon img {
+	border: 1px solid #FFFFFF;
 }
 #sb-profile .sideblock-content > ul {
     padding: 0;
@@ -876,9 +879,9 @@ a.tag {
     /* TODO check this rule */
     padding: 1em;
     margin: 0;
-    width: 250px;
-    max-height: 30%;
-    overflow: inherit;
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
     background-color: #f9f9f9;
     border: 1px solid #b2b2b2;
     cursor: help;
