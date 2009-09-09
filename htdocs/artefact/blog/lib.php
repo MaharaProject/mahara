@@ -217,6 +217,8 @@ class ArtefactTypeBlog extends ArtefactType {
 
         $smarty->assign('options', $options);
         $smarty->assign('description', clean_html($this->get('description')));
+        $smarty->assign('owner', $this->get('owner'));
+        $smarty->assign('tags', $this->get('tags'));
 
         // Remove unnecessary options for blog posts
         unset($options['hidetitle']);
