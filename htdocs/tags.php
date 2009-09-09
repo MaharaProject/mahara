@@ -85,7 +85,12 @@ function rewriteTagSortLink(elem) {
         var params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
         var elems = getElementsByTagAndClassName('a', 'tag', mytags_container);
         elems.sort(sort_functions[params.ts]);
-        replaceChildNodes(mytags_container, elems);
+
+        // FF needs spaces in between each element for wrapping
+        replaceChildNodes(mytags_container, []);
+        forEach(elems, function (a) {
+            appendChildNodes(mytags_container, a, ' ');
+        });
 
         forEach(getElementsByTagAndClassName('a', 'current-tab'), function(selected) {
             removeElementClass(selected, 'current-tab');

@@ -828,23 +828,30 @@ div.sideblock #friendscontrol label {
 	font-size: 1em;
 }
 
+/* Tags */
+.mytags {
+  padding: .5em 0;
+}
+a.tag {
+  text-decoration: none;
+}
+.mytags a.tag {
+  padding: 0 5px;
+  white-space: nowrap;
+}
 .sidebar-content.tags {
     text-align: center;
     padding: 0;
 }
-.mytags {
-    padding: .5em 0;
-}
-.sidebar-content.tags .tag,
-.mytags .tag {
+.sidebar-content.tags .tag {
     padding: 0 5px;
     vertical-align: middle;
 }
-/* .tag-sort.selected, */
 .tag-results .selected,
 .mytags .selected {
     color: #444;
     font-weight: bold;
+    text-decoration: none;
 }
 .mytags .tagfreq {
     font-weight: normal;

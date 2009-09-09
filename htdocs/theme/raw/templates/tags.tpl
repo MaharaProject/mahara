@@ -8,7 +8,7 @@
   </ul>
   <div class="subpage mytags">
   {foreach from=$tags item=t}
-    <a id="tag:{$t->tag}" class="tag{if $t->tag == $tag} selected{/if}" href="{$WWWROOT}tags.php?tag={$t->tag|urlencode}">{$t->tag|escape}&nbsp;<span class="tagfreq">({$t->count})</span></a> 
+    <a id="tag:{$t->tag}" class="tag{if $t->tag == $tag} selected{/if}" href="{$WWWROOT}tags.php?tag={$t->tag|urlencode}">{$t->tag|str_shorten_text:30|escape}&nbsp;<span class="tagfreq">({$t->count})</span></a> 
   {/foreach}
   </div>
 {else}
@@ -16,7 +16,7 @@
 {/if}
 
          <div id="results_container" class="tag-results{if !$tag} hidden{/if}">
-           <h2 id="results_heading">{str tag=searchresultsfor} <a class="tag" href="{$WWWROOT}tags.php?tag={$tag|urlencode}">{$tag|escape}</a></h4>
+           <h2 id="results_heading">{str tag=searchresultsfor} <a class="tag" href="{$WWWROOT}tags.php?tag={$tag|urlencode}">{$tag|str_shorten_text:50|escape}</a></h4>
            <div id="results_sort">{str tag=sortresultsby}
 {foreach from=$results->sortcols item=sortfield name=sortcols}
            <a href="{$results->baseurl}&type={$results->filter}&sort={$sortfield}"{if $results->sort == $sortfield} class="selected"{/if}>{str tag=$sortfield}</a>{if !$smarty.foreach.sortcols.last} | {/if}

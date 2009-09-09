@@ -39,7 +39,7 @@ $owner  = (object) array('type' => 'user', 'id' => $USER->get('id'));
 
 $data = get_portfolio_items_by_tag($tag, $owner, $limit, $offset, $sort, $type);
 build_portfolio_search_html($data);
-$data->tagdisplay = hsc($tag);
+$data->tagdisplay = hsc(str_shorten_text($tag, 50));
 
 json_reply(false, array('data' => $data));
 ?>

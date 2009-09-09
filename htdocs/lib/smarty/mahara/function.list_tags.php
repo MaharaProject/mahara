@@ -30,7 +30,7 @@ function smarty_function_list_tags($params, &$smarty) {
     }
 
     foreach ($params['tags'] as &$t) {
-        $t = '<a class="tag" href="' . get_config('wwwroot') . 'tags.php?tag=' . urlencode($t) . '">' . hsc($t) . '</a>';
+        $t = '<a class="tag" href="' . get_config('wwwroot') . 'tags.php?tag=' . urlencode($t) . '">' . hsc(str_shorten_text($t, 50)) . '</a>';
     }
     return join(', ', $params['tags']);
 }
