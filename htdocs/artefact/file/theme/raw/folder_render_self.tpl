@@ -4,7 +4,7 @@
   {if $tags}<div class="tags">{str tag=tags}: {list_tags owner=$owner tags=$tags}</div>{/if}
   <div>
   {if (isset($children))}
-    <table>
+  <table class="fullwidth">
     <thead>
       <tr>
         <th colspan="5">{str tag=contents section=artefact.file}:</th>
