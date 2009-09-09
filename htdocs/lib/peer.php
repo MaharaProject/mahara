@@ -240,10 +240,10 @@ class Peer {
                         throw new RemoteServerException('Networking is disabled on the host at '.$this->wwwroot.'.');
                     }
                     else {
-                        throw new RemoteServerException('Error retrieving public key, failed with error code: '. $errcode);
+                        throw new RemoteServerException('Error retrieving public key, failed with error code ' . $errcode . ': ' . $e->getMessage());
                     }
                 } catch (Exception $e) {
-                    throw new RemoteServerException('Error retrieving public key ');
+                    throw new RemoteServerException('Error retrieving public key: ' . $e->getMessage());
                 }
             } else {
                 $this->publickey       = new PublicKey($pubkey, $this->wwwroot);
