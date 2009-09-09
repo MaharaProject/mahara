@@ -638,6 +638,12 @@ abstract class ArtefactType {
         if ($group = $this->get('group')) {
             return get_field('group', 'name', 'id', $group);
         }
+        if ($institution = $this->get('institution')) {
+            if ($institution == 'mahara') {
+                return get_config('sitename');
+            }
+            return get_field('institution', 'displayname', 'name', $institution);
+        }
         return null;
     }
 
