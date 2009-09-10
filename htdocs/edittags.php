@@ -68,6 +68,7 @@ $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->assign('tags', $tags);
 if ($tag) {
     $smarty->assign('tag', $tag);
+    $smarty->assign('tagsearchurl', get_config('wwwroot') . 'tags.php?tag=' . urlencode($tag));
     $smarty->assign('edittagform', $edittagform);
     $smarty->assign('deletetagform', $deletetagform);
 }

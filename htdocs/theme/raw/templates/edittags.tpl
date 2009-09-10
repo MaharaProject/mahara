@@ -1,6 +1,7 @@
 {include file="header.tpl"}
 
 {if $tags}
+  <div class="rbuttons"><a href="{$WWWROOT}tags.php">{str tag=mytags}</a></div>
   <div class="edittags mytags">
   <div>{str tag=selectatagtoedit}:</div>
   {foreach from=$tags item=t}
@@ -12,10 +13,10 @@
 {/if}
 
 {if $tag}
-<h3>{str tag=edittag arg1=$tag|escape}</h3>
+<h2>{str tag=edittag arg1=$tagsearchurl arg2=$tag|escape}</h2>
 <p>{str tag=edittagdescription arg1=$tag|escape}</p>
 {$edittagform}
-<h3>{str tag=deletetag arg1=$tag|escape}</h3>
+<h2>{str tag=deletetag arg1=$tagsearchurl arg2=$tag|escape}</h2>
 <p>{str tag=deletetagdescription}</p>
 {$deletetagform}
 {/if}
