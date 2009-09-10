@@ -80,6 +80,7 @@ $string['sendrequest'] = 'Send request';
 $string['reason'] = 'Reason';
 $string['select'] = 'Select';
 
+// Tags
 $string['tags'] = 'Tags';
 $string['tagsdesc'] = 'Enter comma separated tags for this item.';
 $string['tagsdescprofile'] = 'Enter comma separated tags for this item. Items tagged with \'profile\' are displayed in your sidebar.';
@@ -99,7 +100,15 @@ $string['tagfilter_file'] = 'Files';
 $string['tagfilter_image'] = 'Images';
 $string['tagfilter_text'] = 'Text';
 $string['tagfilter_view'] = 'Views';
-
+$string['edittags'] = 'Edit Tags';
+$string['selectatagtoedit'] = 'Select a tag to edit';
+$string['edittag'] = 'Edit Tag "%s"';
+$string['edittagdescription'] = 'All items in your portfolio tagged "%s" will be updated';
+$string['deletetag'] = 'Delete Tag "%s"';
+$string['confirmdeletetag'] = 'Do you really want to delete this tag from everything in your portfolio?';
+$string['deletetagdescription'] = 'Remove this tag from all items in your portfolio';
+$string['tagupdatedsuccessfully'] = 'Tag updated successfully';
+$string['tagdeletedsuccessfully'] = 'Tag deleted successfully';
 
 $string['selfsearch'] = 'Search My Portfolio';
 

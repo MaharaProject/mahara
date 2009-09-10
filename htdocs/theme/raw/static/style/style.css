@@ -835,6 +835,14 @@ div.sideblock #friendscontrol label {
 .mytags {
   padding: .5em 0;
 }
+.subpage.mytags {
+  margin-bottom: 2em;
+}
+.edittags {
+  border: 1px solid #ddd;
+  margin: 0;
+  padding: .25em .5em;
+}
 a.tag {
   text-decoration: none;
 }
