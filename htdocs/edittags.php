@@ -34,7 +34,7 @@ define('TITLE', get_string('edittags'));
 $tags = get_my_tags();
 
 if ($tag = param_variable('tag', null)) {
-    $edittagform = array(
+    $edittagform = pieform(array(
         'name'     => 'edit_tag',
         'elements' => array(
             'tagname' => array(
@@ -49,8 +49,8 @@ if ($tag = param_variable('tag', null)) {
                 'value'        => get_string('submit'),
             ),
         ),
-    );
-    $deletetagform = array(
+    ));
+    $deletetagform = pieform(array(
         'name'     => 'delete_tag',
         'renderer' => 'oneline',
         'elements' => array(
@@ -60,7 +60,7 @@ if ($tag = param_variable('tag', null)) {
                 'confirm'      => get_string('confirmdeletetag'),
             ),
         ),
-    );
+    ));
 }
 
 $smarty = smarty();
@@ -68,8 +68,8 @@ $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->assign('tags', $tags);
 if ($tag) {
     $smarty->assign('tag', $tag);
-    $smarty->assign('edittagform', pieform($edittagform));
-    $smarty->assign('deletetagform', pieform($deletetagform));
+    $smarty->assign('edittagform', $edittagform);
+    $smarty->assign('deletetagform', $deletetagform);
 }
 $smarty->display('edittags.tpl');
 
