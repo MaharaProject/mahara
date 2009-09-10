@@ -1,6 +1,7 @@
 {if !$options.hidetitle}<h2>{$artefacttitle}</h2>{/if}
 
 {$description}
+{if $tags}<div class="tags">{str tag=tags}: {list_tags owner=$owner tags=$tags}</div>{/if}
 
 {foreach from=$postdata item=post}
 {$post.content.html}

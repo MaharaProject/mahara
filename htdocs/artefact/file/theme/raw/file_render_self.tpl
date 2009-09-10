@@ -6,7 +6,8 @@
 <table class="filedata">
     <tr><th>{str tag=Type section=artefact.file}:</th><td>{$filetype}</td></tr>
     <tr><th>{str tag=Description section=artefact.file}:</th><td>{$description|escape}</td></tr>
-    <tr><th>{str tag=Owner section=artefact.file}:</th><td>{$owner|escape}</td></tr>
+    <tr><th>{str tag=tags}:</th><td>{list_tags owner=$owner tags=$tags}</td></tr>
+    <tr><th>{str tag=Owner section=artefact.file}:</th><td>{$ownername|escape}</td></tr>
     <tr><th>{str tag=Created section=artefact.file}:</th><td>{$created}</td></tr>
     <tr><th>{str tag=lastmodified section=artefact.file}:</th><td>{$modified}</td></tr>
     <tr><th>{str tag=Size section=artefact.file}:</th><td>{$size|escape}</td></tr>

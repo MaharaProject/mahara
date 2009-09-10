@@ -17,45 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage artefact-blog
+ * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+define('JSON', 1);
 
-$enc_wwwroot = json_encode(get_config('wwwroot'));
-$enc_id = json_encode($this->id);
-$enc_options = json_encode(json_encode($options));
+require(dirname(dirname(__FILE__)) . '/init.php');
+require('searchlib.php');
 
-return <<<EOJAVASCRIPT
+$tag    = param_variable('tag');
+$limit  = param_integer('limit', 10);
+$offset = param_integer('offset', 0);
+$sort   = param_alpha('sort', 'name');
+$type   = param_alpha('type', null);
+$owner  = (object) array('type' => 'user', 'id' => $USER->get('id'));
 
-var blog_listchildren{$blockid} = new TableRenderer(
-    'blog_listchildren{$blockid}',
-    {$enc_wwwroot} + 'artefact/blog/render/blog_listchildren.json.php',
-    [
-        function(r) {
-            var td = TD();
-            if (typeof(r.content.html) != 'undefined') {
-                td.innerHTML = r.content.html;
-            }
-            else {
-                td.innerHTML = r.content;
-            }
-            return td;
-        }
-    ]
-);
+$data = get_portfolio_items_by_tag($tag, $owner, $limit, $offset, $sort, $type);
+build_portfolio_search_html($data);
+$data->tagdisplay = hsc(str_shorten_text($tag, 50));
+$data->tagurl = urlencode($tag);
 
-blog_listchildren{$blockid}.statevars.push('id');
-blog_listchildren{$blockid}.id = {$enc_id};
-blog_listchildren{$blockid}.statevars.push('options');
-blog_listchildren{$blockid}.options = {$enc_options};
-
-blog_listchildren{$blockid}.updateOnLoad();
-
-EOJAVASCRIPT;
-
+json_reply(false, array('data' => $data));
 ?>

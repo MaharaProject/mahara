@@ -2033,6 +2033,70 @@ function onlineusers_sideblock() {
     );
 }
 
+function tag_weight($freq) {
+    return pow($freq, 2);
+    // return log10($freq);
+}
+
+function get_my_tags($limit=null, $cloud=true, $sort='freq') {
+    global $USER;
+    $id = $USER->get('id');
+    if ($limit || $sort != 'alpha') {
+        $sort = 'COUNT(t.tag) DESC';
+    }
+    else {
+        $sort = 't.tag ASC';
+    }
+    $tagrecords = get_records_sql_array("
+        SELECT
+            t.tag, COUNT(t.tag)
+        FROM (
+           (SELECT at.tag, a.id, 'artefact' AS type
+            FROM {artefact_tag} at JOIN {artefact} a ON a.id = at.artefact
+            WHERE a.owner = ?)
+           UNION
+           (SELECT vt.tag, v.id, 'view' AS type
+            FROM {view_tag} vt JOIN {view} v ON v.id = vt.view
+            WHERE v.owner = ?)
+        ) t
+        GROUP BY t.tag
+        ORDER BY " . $sort . (is_null($limit) ? '' : " LIMIT $limit"),
+        array($id, $id)
+    );
+    if (!$tagrecords) {
+        return false;
+    }
+    if ($cloud) {
+        $minfreq = $tagrecords[count($tagrecords) - 1]->count;
+        $maxfreq = $tagrecords[0]->count;
+
+        if ($minfreq != $maxfreq) {
+            $minweight = tag_weight($minfreq);
+            $maxweight = tag_weight($maxfreq);
+            $minsize = 0.8;
+            $maxsize = 2.5;
+
+            foreach ($tagrecords as &$t) {
+                $weight = (tag_weight($t->count) - $minweight) / ($maxweight - $minweight);
+                $t->size = sprintf("%0.1f", $minsize + ($maxsize - $minsize) * $weight);
+            }
+        }
+        usort($tagrecords, create_function('$a,$b', 'return strnatcasecmp($a->tag, $b->tag);'));
+    }
+    return $tagrecords;
+}
+
+function tags_sideblock() {
+    global $USER;
+    $maxtags = $USER->get_account_preference('tagssideblockmaxtags');
+    $maxtags = is_null($maxtags) ? get_config('tagssideblockmaxtags') : $maxtags;
+    if ($tagrecords = get_my_tags($maxtags)) {
+        return array('tags' => $tagrecords);
+    }
+    return null;
+}
+
+
 /**
  * Cronjob to recalculate how much quota each user is using and update it as 
  * appropriate.
@@ -2096,6 +2160,53 @@ function random_string($length=15) {
         $string .= substr($pool, (mt_rand()%($poollen)), 1);
     }
     return $string;
+}
+
+function build_portfolio_search_html(&$data) {
+    $artefacttypes = get_records_assoc('artefact_installed_type');
+    foreach ($data->data as &$item) {
+        $item->ctime = format_date($item->ctime);
+        if ($item->type == 'view') {
+            $item->typestr = get_string('view');
+            $item->url     = get_config('wwwroot') . 'view/view.php?id=' . $item->id;
+        }
+        else { // artefact
+            safe_require('artefact', $artefacttypes[$item->artefacttype]->plugin);
+            $links = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_links', $item->id);
+            $item->url     = $links['_default'];
+            $item->icon    = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_icon', array('id' => $item->id));
+            $item->typestr = get_string($item->artefacttype, 'artefact.' . $artefacttypes[$item->artefacttype]->plugin);
+        }
+    }
+
+    $data->baseurl = get_config('wwwroot') . 'tags.php?tag=' . urlencode($data->tag);
+    $data->sortcols = array('name', 'date');
+    $data->filtercols = array(
+        'all'   => get_string('tagfilter_all'),
+        'file'  => get_string('tagfilter_file'),
+        'image' => get_string('tagfilter_image'),
+        'text'  => get_string('tagfilter_text'),
+        'view'  => get_string('tagfilter_view'),
+    );
+
+    $smarty = smarty_core();
+    $smarty->assign_by_ref('data', $data->data);
+    $data->tablerows = $smarty->fetch('portfoliosearchresults.tpl');
+    $pagination = build_pagination(array(
+        'id' => 'results_pagination',
+        'class' => 'center',
+        'url' => $data->baseurl . ($data->sort == 'name' ? '' : '&sort=' . $data->sort) . ($data->filter == 'all' ? '' : '&type=' . $data->filter),
+        'jsonscript' => 'json/tagsearch.php',
+        'datatable' => 'results',
+        'count' => $data->count,
+        'limit' => $data->limit,
+        'offset' => $data->offset,
+        'numbersincludefirstlast' => false,
+        'resultcounttextsingular' => get_string('result'),
+        'resultcounttextplural' => get_string('results'),
+    ));
+    $data->pagination = $pagination['html'];
+    $data->pagination_js = $pagination['javascript'];
 }
 
 ?>

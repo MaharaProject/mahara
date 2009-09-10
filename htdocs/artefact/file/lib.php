@@ -200,6 +200,14 @@ class PluginArtefactFile extends PluginArtefact {
     public static function can_be_disabled() {
         return false;
     }
+
+    public static function get_artefact_type_content_types() {
+        return array(
+            'file'        => array('file'),
+            'image'       => array('file', 'image'),
+            'profileicon' => array('image'),
+        );
+    }
 }
 
 abstract class ArtefactTypeFileBase extends ArtefactType {
@@ -253,12 +261,12 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $smarty->assign('iconpath', $this->get_icon($options));
         $smarty->assign('downloadpath', $downloadpath);
         $smarty->assign('filetype', $filetype);
-        $smarty->assign('owner', $this->display_owner());
+        $smarty->assign('ownername', $this->display_owner());
         $smarty->assign('created', strftime(get_string('strftimedaydatetime'), $this->get('ctime')));
         $smarty->assign('modified', strftime(get_string('strftimedaydatetime'), $this->get('mtime')));
         $smarty->assign('size', $this->describe_size() . ' (' . $this->get('size') . ' ' . get_string('bytes', 'artefact.file') . ')');
 
-        foreach (array('title', 'description', 'artefacttype') as $field) {
+        foreach (array('title', 'description', 'artefacttype', 'owner', 'tags') as $field) {
             $smarty->assign($field, $this->get($field));
         }
 
@@ -859,7 +867,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             $f->delete();
             throw new UploadException($error);
         }
-        else if ($owner) {
+        else if (isset($owner)) {
             $owner->quota_add($size);
             $owner->commit();
         }
@@ -1136,6 +1144,8 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         $smarty = smarty_core();
         $smarty->assign('title', $this->get('title'));
         $smarty->assign('description', $this->get('description'));
+        $smarty->assign('tags', $this->get('tags'));
+        $smarty->assign('owner', $this->get('owner'));
         $smarty->assign('viewid', isset($options['viewid']) ? $options['viewid'] : 0);
         $smarty->assign('simpledisplay', isset($options['simpledisplay']) ? $options['simpledisplay'] : false);
 

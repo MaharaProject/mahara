@@ -38,6 +38,43 @@ var Paginator = function(id, datatable, script, extradata) {
         });
     }
 
+    this.updateResults = function (data) {
+        var tbody = getFirstElementByTagAndClassName('tbody', null, self.datatable);
+        if (tbody) {
+            // You can't write to table nodes innerHTML in IE and
+            // konqueror, so this workaround detects them and does
+            // things differently
+            if (
+                (document.all && document.documentElement && typeof(document.documentElement.style.maxHeight) != "undefined" && !window.opera)
+                    ||
+                    (/Konqueror|AppleWebKit|KHTML/.test(navigator.userAgent))) {
+                var temp = DIV({'id':'ie-workaround'});
+                temp.innerHTML = '<table><tbody>' + data.data.tablerows + '</tbody></table>';
+                swapDOM(tbody, temp.childNodes[0].childNodes[0]);
+                removeElement(temp);
+            }
+            else {
+                tbody.innerHTML = data['data']['tablerows'];
+            }
+        }
+
+        // Update the pagination
+        if ($(self.id)) {
+            var tmp = DIV();
+            tmp.innerHTML = data['data']['pagination'];
+            swapDOM(self.id, tmp.firstChild);
+
+            // Run the pagination js to make it live
+            eval(data['data']['pagination_js']);
+
+            // Update the result count
+            var results = getFirstElementByTagAndClassName('div', 'results', self.id);
+            if (results && data.data.results) {
+                results.innerHTML = data.data.results;
+            }
+        }
+    }
+
     this.rewritePaginatorLink = function(a) {
         connect(a, 'onclick', function(e) {
             e.stop();
@@ -50,41 +87,7 @@ var Paginator = function(id, datatable, script, extradata) {
             }
 
             sendjsonrequest(self.jsonScript, queryData, 'GET', function(data) {
-                var tbody = getFirstElementByTagAndClassName('tbody', null, self.datatable);
-                if (tbody) {
-                    // You can't write to table nodes innerHTML in IE and
-                    // konqueror, so this workaround detects them and does
-                    // things differently
-                    if (
-                        (document.all && document.documentElement && typeof(document.documentElement.style.maxHeight) != "undefined" && !window.opera)
-                        ||
-                        (/Konqueror|AppleWebKit|KHTML/.test(navigator.userAgent))) {
-                        var temp = DIV({'id':'ie-workaround'});
-                        temp.innerHTML = '<table><tbody>' + data.data.tablerows + '</tbody></table>';
-                        swapDOM(tbody, temp.childNodes[0].childNodes[0]);
-                        removeElement(temp);
-                    }
-                    else {
-                        tbody.innerHTML = data['data']['tablerows'];
-                    }
-                }
-
-                // Update the pagination
-                if ($(self.id)) {
-                    var tmp = DIV();
-                    tmp.innerHTML = data['data']['pagination'];
-                    swapDOM(self.id, tmp.firstChild);
-
-                    // Run the pagination js to make it live
-                    eval(data['data']['pagination_js']);
-
-                    // Update the result count
-                    var results = getFirstElementByTagAndClassName('div', 'results', self.id);
-                    if (results && data.data.results) {
-                        results.innerHTML = data.data.results;
-                    }
-                }
-
+                self.updateResults(data);
                 self.alertProxy('pagechanged', data['data']);
             });
         });

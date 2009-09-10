@@ -8,6 +8,7 @@
   <table class="cb attachments fullwidth">
     <tbody>
       <tr><th colspan="2">{str tag=attachedfiles section=artefact.blog}:</th></tr>
+  {if $artefact->get('tags')}<div class="tags">{str tag=tags}: {list_tags owner=$artefact->get('owner') tags=$artefact->get('tags')}</div>{/if}
   {foreach from=$attachments item=item}
       <tr class="r{cycle values=1,0}">
         {if $icons}<td style="width: 22px;"><img src="{$item->iconpath|escape}" alt=""></td>{/if}

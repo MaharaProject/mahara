@@ -79,6 +79,18 @@ class PluginArtefactResume extends Plugin {
         );
     }
 
+    public static function get_artefact_type_content_types() {
+        return array(
+            'coverletter'   => array('text'),
+            'interest'      => array('text'),
+            'personalgoal'  => array('text'),
+            'academicgoal'  => array('text'),
+            'careergoal'    => array('text'),
+            'personalskill' => array('text'),
+            'academicskill' => array('text'),
+            'workskill'     => array('text'),
+        );
+    }
 }
 
 class ArtefactTypeResume extends ArtefactType {

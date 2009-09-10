@@ -79,6 +79,9 @@ img {
     font-size: .9em;
     font-weight: normal;
 }
+.ctime {
+    color: #838383;
+}
 pre, tt {
 	font-size: 1.2em;
     white-space: normal;
@@ -826,6 +829,44 @@ div.sideblock #friendscontrol label {
 	line-height: 1.8em;
 	vertical-align: top;
 	font-size: 1em;
+}
+
+/* Tags */
+.mytags {
+  padding: .5em 0;
+}
+.subpage.mytags {
+  margin-bottom: 2em;
+}
+.edittags {
+  border: 1px solid #ddd;
+  padding: .25em .5em;
+}
+a.tag {
+  text-decoration: none;
+}
+.mytags a.tag {
+  padding: 0 5px;
+  white-space: nowrap;
+}
+.sidebar-content.tags {
+    text-align: center;
+    padding: 0;
+}
+.sidebar-content.tags .tag {
+    padding: 0 5px;
+    vertical-align: middle;
+}
+.tag-results .selected,
+.mytags .selected {
+    color: #444;
+    font-weight: bold;
+    text-decoration: none;
+}
+.mytags .tagfreq {
+    font-weight: normal;
+    font-size: .9em;
+    color: #444;
 }
 
 /* AJAX LOGIN */

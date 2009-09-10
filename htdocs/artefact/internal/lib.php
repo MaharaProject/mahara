@@ -127,6 +127,12 @@ class PluginArtefactInternal extends PluginArtefact {
     public static function can_be_disabled() {
         return false;
     }
+
+    public static function get_artefact_type_content_types() {
+        return array(
+            'introduction' => array('text'),
+        );
+    }
 }
 
 class ArtefactTypeProfile extends ArtefactType {

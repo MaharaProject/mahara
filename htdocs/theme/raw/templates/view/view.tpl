@@ -12,18 +12,17 @@
                 </div>
             </div>
         </div>
-        <div>{$releaseform}</div>
-	<div id="publicfeedback">
-	<table id="feedbacktable" class="fullwidth table">
-		<thead>
-			<tr><th>{str tag="feedback" section="view"}</th></tr>
-		</thead>
-	</table>
-	</div>
+  <div class="viewfooter">
+    {if $tags}<div class="tags">{str tag=tags}: {list_tags owner=$owner tags=$tags}</div>{/if}
+    <div>{$releaseform}</div>
+    <table id="feedbacktable" class="fullwidth table">
+      <thead><tr><th>{str tag="feedback" section="view"}</th></tr></thead>
+    </table>
 	<div id="viewmenu">
         {include file="view/viewmenu.tpl"}
     </div>
     {if $addfeedbackform}<div>{$addfeedbackform}</div>{/if}
     {if $objectionform}<div>{$objectionform}</div>{/if}
+  </div>
 </div>
 {include file="microfooter.tpl"}

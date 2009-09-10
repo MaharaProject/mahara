@@ -441,6 +441,36 @@ function search_selfsearch($query_string, $limit, $offset, $type = 'all') {
     return call_static_method(generate_class_name('search', $plugin), 'self_search', $query_string, $limit, $offset, $type);
 }
 
+function get_portfolio_types_from_param($filter) {
+    if (is_null($filter) || $filter == 'all') {
+        return null;
+    }
+    if ($filter == 'view') {
+        return array('view' => true, 'artefact' => false);
+    }
+    require_once(get_config('docroot') . 'artefact/lib.php');
+    return array('view' => false, 'artefact' => artefact_get_types_from_filter($filter));
+}
+
+function get_portfolio_items_by_tag($tag, $owner, $limit, $offset, $sort='name', $type=null, $returntags=true) {
+    // For now, can only be used to search a user's portfolio
+    if (empty($owner->id) || empty($owner->type)) {
+        throw new SystemException('get_views_and_artefacts_by_tag: invalid owner');
+    }
+    if ($owner->type != 'user') {
+        throw new SystemException('get_views_and_artefacts_by_tag only implemented for users');
+    }
+
+    $types = get_portfolio_types_from_param($type);
+
+    $plugin = 'internal';
+    safe_require('search', $plugin);
+
+    $result = call_static_method(generate_class_name('search', $plugin), 'portfolio_search_by_tag', $tag, $owner, $limit, $offset, $sort, $types, $returntags);
+    $result->filter = $result->type = $type ? $type : 'all';
+    return $result;
+}
+
 function get_search_plugins() {
     $searchpluginoptions = array();
 
