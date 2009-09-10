@@ -8,6 +8,6 @@
         <div>{str tag=tags}: {list_tags tags=$result->tags owner=1}</div>
         {/if}
       </td>
-      <td class="right s">{$result->typestr}<div class="ctime">{$result->ctime}</div></td>
+      <td class="right s"><div class="ctime">{$result->ctime}</div>{$result->typestr}</td>
     </tr>
   {/foreach}
