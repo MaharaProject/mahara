@@ -16,8 +16,9 @@
     <div>{str tag=youhavenottaggedanythingyet}</div>
 {/if}
 
-         <div id="results_container" class="tag-results{if !$tag} hidden{/if}">
+         <div id="results_container" class="rel tag-results{if !$tag} hidden{/if}">
            <h2 id="results_heading">{str tag=searchresultsfor} <a class="tag" href="{$WWWROOT}tags.php?tag={$tag|urlencode}">{$tag|str_shorten_text:50|escape}</a></h2>
+           <div class="rbuttons"><a class="edit-tag" href="{$WWWROOT}edittags.php?tag={$tag|urlencode}">{str tag=editthistag}</a></div>
            <div id="results_sort">{str tag=sortresultsby}
 {foreach from=$results->sortcols item=sortfield name=sortcols}
            <a href="{$results->baseurl}&type={$results->filter}&sort={$sortfield}"{if $results->sort == $sortfield} class="selected"{/if}>{str tag=$sortfield}</a>{if !$smarty.foreach.sortcols.last} | {/if}

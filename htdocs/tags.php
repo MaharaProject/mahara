@@ -34,15 +34,13 @@ define('TITLE', get_string('mytags'));
 $tagsort = param_alpha('ts', null) != 'freq' ? 'alpha' : 'freq';
 $tags = get_my_tags(null, false, $tagsort);
 
-$tag = param_variable('tag', null);
-
-$js = '';
+$tag    = param_variable('tag', null);
 
 $limit  = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 $sort   = param_alpha('sort', 'name');
 $type   = param_alpha('type', null);
-$owner = (object) array('type' => 'user', 'id' => $USER->get('id'));
+$owner  = (object) array('type' => 'user', 'id' => $USER->get('id'));
 
 $data = get_portfolio_items_by_tag($tag, $owner, $limit, $offset, $sort, $type);
 build_portfolio_search_html($data);
@@ -135,8 +133,12 @@ function rewriteTagLink(elem, keep, replace) {
                 // Replace the tag in the Search Results heading
                 var heading_tag = getFirstElementByTagAndClassName('a', 'tag', 'results_heading');
                 if (heading_tag) {
-                    heading_tag.href = href;
+                    setNodeAttribute(heading_tag, 'href', href);
                     heading_tag.innerHTML = data.data.tagdisplay;
+                }
+                var edit_tag_link = getFirstElementByTagAndClassName('a', 'edit-tag', 'results_container');
+                if (edit_tag_link) {
+                    setNodeAttribute(edit_tag_link, 'href', config.wwwroot + 'edittags.php?tag=' + data.data.tagurl);
                 }
 
                 removeElementClass('results_container', 'hidden');
