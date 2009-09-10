@@ -2049,7 +2049,7 @@ function get_my_tags($limit=null, $cloud=true, $sort='freq') {
     }
     $tagrecords = get_records_sql_array("
         SELECT
-            t.tag, COUNT(t.tag)
+            t.tag, COUNT(t.tag) AS count
         FROM (
            (SELECT at.tag, a.id, 'artefact' AS type
             FROM {artefact_tag} at JOIN {artefact} a ON a.id = at.artefact

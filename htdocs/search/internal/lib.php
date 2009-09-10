@@ -885,7 +885,7 @@ class PluginSearchInternal extends PluginSearch {
         if ($count = count_records_sql('SELECT COUNT(*) ' . $from, $values, $offset, $limit)) {
             $result->count = $count;
             $sort = $sort == 'date' ? 'ctime DESC' : 'title ASC';
-            if ($data = get_records_sql_assoc("SELECT type || ':' || id AS tid, * " . $from . ' ORDER BY ' . $sort, $values, $offset, $limit)) {
+            if ($data = get_records_sql_assoc("SELECT type || ':' || id AS tid, p.* " . $from . ' ORDER BY ' . $sort, $values, $offset, $limit)) {
                 if ($returntags) {
                     $ids = array('view' => array(), 'artefact' => array());
                     foreach ($data as &$d) {
