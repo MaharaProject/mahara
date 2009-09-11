@@ -102,6 +102,11 @@ class LeapExportElementInternal extends LeapExportElement {
             }
             $this->smarty->assign('links', $this->links);
         }
+
+        if (!$categories = $this->get_categories()) {
+            $categories = array();
+        }
+        $this->smarty->assign('categories', $categories);
     }
 
     public function get_template_path() {
@@ -110,6 +115,15 @@ class LeapExportElementInternal extends LeapExportElement {
 
     public function get_leap_type() {
         return 'person';
+    }
+
+    public function get_categories() {
+        return array(
+            array(
+                'scheme' => 'person_type',
+                'term'   => 'Self',
+            )
+        );
     }
 
     public function data_mapping(ArtefactType $artefact) {
