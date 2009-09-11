@@ -118,6 +118,14 @@ class PluginImportLeap extends PluginImport {
         // able to import raw ATOM feeds too)
 
         //throw new ImportException($this, "Import wasn't valid. TODO: error reporting");
+
+        // Check all the namespaces we're gonna need are declared, and warn if 
+        // they're not there
+        foreach (array(self::NS_ATOM, self::NS_RDF, self::NS_LEAP, self::NS_LEAPTYPE, self::NS_CATEGORIES) as $ns) {
+            if (!isset($this->namespaces[$ns])) {
+                $this->trace("WARNING: Namespaces $ns wasn't declared - this will make importing data correctly difficult");
+            }
+        }
     }
 
     /**
