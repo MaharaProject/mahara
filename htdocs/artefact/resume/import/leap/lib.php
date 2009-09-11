@@ -338,6 +338,10 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 $institution = $organization->title;
             }
 
+            if (!$qualname) {
+                $qualname = $entry->title;
+            }
+
             $values = array(
                 'startdate' => $startdate,
                 'enddate'   => $enddate,
