@@ -567,7 +567,7 @@ class PluginImportLeap extends PluginImport {
                     return '';
                 }
             }
-            log_debug("ERROR: <content> tag declared to be type xhtml but didn't wrap its content in a div with xmlns=http://www.w3.org/1999/xhtml");
+            log_debug("ERROR: <content> tag for entry {$entry->id} declared to be type xhtml but didn't wrap its content in a div with xmlns=http://www.w3.org/1999/xhtml");
 
             $starttaglength = strlen('<content type="xhtml">');
             $endtaglength   = strlen('</content>');
