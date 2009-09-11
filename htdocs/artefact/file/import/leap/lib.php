@@ -247,6 +247,7 @@ class LeapImportFile extends LeapImportArtefactPlugin {
         }
 
         $artefact = artefact_instance_from_id($id);
+        $artefact->set('tags', PluginImportLeap::get_entry_tags($entry));
 
         // Work out if the file was really a profile icon
         $isprofileicon = false;
