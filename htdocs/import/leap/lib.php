@@ -146,7 +146,14 @@ class PluginImportLeap extends PluginImport {
                 $this->persondataid = (string)$author->uri;
             }
             else {
-                $this->persondataid = false;
+                $persondata = $this->get('xml')->xpath('//a:feed/a:entry/a:category[('
+                    . $this->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'person_type#') . ') and @term="Self"]/../a:id');
+                if (isset($persondata[0])) {
+                    $this->persondataid = (string)$persondata[0][0];
+                }
+                else {
+                    $this->persondataid = false;
+                }
             }
         }
 
