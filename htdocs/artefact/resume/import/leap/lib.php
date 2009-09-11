@@ -109,8 +109,8 @@ class LeapImportResume extends LeapImportArtefactPlugin {
         }
 
         // Achievements
-        if ($isachievement && $correctplugintype) {
-            if (count($entry->xpath('mahara:artefactplugin[@mahara:plugin="resume" and @mahara:type="pseudo:certification"]')) == 1) {
+        if ($isachievement) {
+            if ($correctplugintype && count($entry->xpath('mahara:artefactplugin[@mahara:plugin="resume" and @mahara:type="pseudo:certification"]')) == 1) {
                 // We know for certain these are meant to be certifications within Mahara
                 $score = 100;
             }
@@ -129,7 +129,10 @@ class LeapImportResume extends LeapImportArtefactPlugin {
 
         // Employment
         $other_required_entries = array();
-        if ($isactivity && PluginImportLeap::is_correct_category_scheme($entry, $importer, 'life_area', 'Work')) {
+        if (($isactivity || $isentry) &&
+            (PluginImportLeap::is_correct_category_scheme($entry, $importer, 'life_area', 'Work')
+            || PluginImportLeap::is_correct_category_scheme($entry, $importer, 'life_area', 'Placement'))
+            ) {
             foreach ($entry->link as $link) {
                 if (!isset($other_required_entries['organization'])
                     && $organization = self::check_for_supporting_organization($importer, $link)) {
@@ -146,7 +149,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
 
         // Books
         $other_required_entries = array();
-        if ($isresource && PluginImportLeap::is_correct_category_scheme($entry, $importer, 'resource_type', 'Printed')) {
+        if (($isresource || $isentry) && PluginImportLeap::is_correct_category_scheme($entry, $importer, 'resource_type', 'Printed')) {
             // If it exists, the related achievement will be the user's role in 
             // relation to the book
             foreach ($entry->link as $link) {
@@ -170,7 +173,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
 
         // Education
         $other_required_entries = array();
-        if ($isactivity && PluginImportLeap::is_correct_category_scheme($entry, $importer, 'life_area', 'Education')) {
+        if (($isactivity || $isentry) && PluginImportLeap::is_correct_category_scheme($entry, $importer, 'life_area', 'Education')) {
             // If this entry supports an achievement, that achievement will be 
             // the qualification the user gained in relation to this entry
             foreach ($entry->link as $link) {
