@@ -42,11 +42,18 @@ defined('INTERNAL') || die();
  */
 class LeapImportInternal extends LeapImportArtefactPlugin {
 
+    private static $personcontentblank = null;
+
     /**
      * For grabbing entries representing profile data that can't be exported as 
      * persondata
      */
     const STRATEGY_IMPORT_AS_PROFILE_FIELD = 1;
+
+    /**
+     * Entries with common_item:Personalstatement are introductions
+     */
+    const STRATEGY_IMPORT_AS_INTRODUCTION = 2;
 
     /**
      * Lookup table for some of the persondata fields.
@@ -139,20 +146,36 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
      * it's not present too. So all the person importing is handled in import_author_data()
      */
     public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImportLeap $importer) {
-        $strategies = array();
+        if (self::$personcontentblank === null) {
+            self::$personcontentblank = true;
+            if ($persondataid = $importer->get('persondataid')) {
+                self::$personcontentblank = !(string)$importer->get_entry_by_id($persondataid)->content;
+            }
+        }
+
+        $isentry = PluginImportLeap::is_rdf_type($entry, $importer, 'entry');
+
+        if ($isentry && self::$personcontentblank
+            && PluginImportLeap::is_correct_category_scheme($entry, $importer, 'common_item', 'Personalstatement')) {
+            return array(array(
+                'strategy' => self::STRATEGY_IMPORT_AS_INTRODUCTION,
+                'score'    => 100,
+                'other_required_entries' => array(),
+            ));
+        }
 
         // If it's a raw entry with the right mahara:plugin and mahara:type 
         // we should be able to import it
         $correctplugintype = count($entry->xpath('mahara:artefactplugin[@mahara:plugin="internal"]')) == 1;
-        if (PluginImportLeap::is_rdf_type($entry, $importer, 'entry') && $correctplugintype) {
-            $strategies[] = array(
+        if ($isentry && $correctplugintype) {
+            return array(array(
                 'strategy' => self::STRATEGY_IMPORT_AS_PROFILE_FIELD,
                 'score'    => 100,
                 'other_required_entries' => array(),
-            );
+            ));
         }
 
-        return $strategies;
+        return array();
     }
 
     public static function import_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
@@ -178,6 +201,12 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
                 }
             }
             break;
+        case self::STRATEGY_IMPORT_AS_INTRODUCTION:
+            // The introduction comes from the entry content
+            $introduction = new ArtefactTypeIntroduction(0, array('owner' => $importer->get('usr')));
+            $introduction->set('title', PluginImportLeap::get_entry_content($entry, $importer));
+            $introduction->commit();
+            break;
         default:
             throw new ImportException($importer, 'TODO: get_string: unknown strategy chosen for importing entry');
         }
@@ -202,9 +231,11 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             $person = $importer->get_entry_by_id($persondataid);
 
             // The introduction comes from the entry content
-            $introduction = new ArtefactTypeIntroduction(0, array('owner' => $importer->get('usr')));
-            $introduction->set('title', PluginImportLeap::get_entry_content($person, $importer));
-            $introduction->commit();
+            if (!self::$personcontentblank) {
+                $introduction = new ArtefactTypeIntroduction(0, array('owner' => $importer->get('usr')));
+                $introduction->set('title', PluginImportLeap::get_entry_content($person, $importer));
+                $introduction->commit();
+            }
 
             // Most of the rest of the profile data comes from leap:persondata elements
             $persondata = $person->xpath('leap:persondata');
