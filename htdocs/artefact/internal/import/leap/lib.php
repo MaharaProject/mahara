@@ -211,14 +211,15 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             foreach ($persondata as $item) {
                 $leapattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_LEAP);
 
-                if (!isset($leapattributes['field'])) {
+                if (isset($leapattributes['field'])) {
+                    self::import_persondata($importer, $item, $leapattributes);
+                }
+                else {
                     // 'Field' is required
                     // http://wiki.cetis.ac.uk/2009-03/LEAP2A_personal_data#field
                     $importer->trace('WARNING: persondata element did not have leap:field attribute');
                     continue;
                 }
-
-                self::import_persondata($importer, $item, $leapattributes);
             }
 
             // The information about someone's name is much more comprehensive 
@@ -456,15 +457,23 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
 
         foreach ($persondata as $item) {
             $leapattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_LEAP);
-            if (in_array($leapattributes['field'], array_keys($namefields))) {
-                // legal_given_name is allowed to occur any number of times
-                if ($leapattributes['field'] == 'legal_given_name'
-                    && $namefields['legal_given_name'] != '') {
-                    $namefields['legal_given_name'] .= ' ' . (string)$item;
+            if (isset($leapattributes['field'])) {
+                if (in_array($leapattributes['field'], array_keys($namefields))) {
+                    // legal_given_name is allowed to occur any number of times
+                    if ($leapattributes['field'] == 'legal_given_name'
+                        && $namefields['legal_given_name'] != '') {
+                        $namefields['legal_given_name'] .= ' ' . (string)$item;
+                    }
+                    else {
+                        $namefields[$leapattributes['field']] = (string)$item;
+                    }
                 }
-                else {
-                    $namefields[$leapattributes['field']] = (string)$item;
-                }
+            }
+            else {
+                // 'Field' is required
+                // http://wiki.cetis.ac.uk/2009-03/LEAP2A_personal_data#field
+                $importer->trace('WARNING: persondata element did not have leap:field attribute');
+                continue;
             }
         }
 
