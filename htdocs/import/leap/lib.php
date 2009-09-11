@@ -58,6 +58,9 @@ class PluginImportLeap extends PluginImport {
     const NS_CATEGORIES = 'http://wiki.cetis.ac.uk/2009-03/LEAP2A_categories/';
     const NS_MAHARA     = 'http://wiki.mahara.org/Developer_Area/Import%2F%2FExport/LEAP_Extensions#';
 
+    const XHTML_DIV       = '<div xmlns="http://www.w3.org/1999/xhtml">';
+    const XHTML_DIV_EMPTY = '<div xmlns="http://www.w3.org/1999/xhtml"/>';
+
     public static function validate_import_data($importdata) {
     }
 
@@ -541,9 +544,12 @@ class PluginImportLeap extends PluginImport {
                 // to be "fixed" (turned back into browser-happy xhtml) if it 
                 // causes problems.
                 $content = (string)$entry->content->div->asXML();
-                if (substr($content, 0, 42) == '<div xmlns="http://www.w3.org/1999/xhtml">') {
+                if (substr($content, 0, 42) == self::XHTML_DIV) {
                     $content = substr($content, 42, -6);
                     return $content;
+                }
+                else if (substr($content, 0, 43) == self::XHTML_DIV_EMPTY) {
+                    return '';
                 }
             }
             log_debug("ERROR: <content> tag declared to be type xhtml but didn't wrap its content in a div with xmlns=http://www.w3.org/1999/xhtml");
