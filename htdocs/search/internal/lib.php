@@ -849,7 +849,8 @@ class PluginSearchInternal extends PluginSearch {
      * @param boolean  $returntags Return all the tags that have been attached to each result
      */
     public static function portfolio_search_by_tag($tag, $owner, $limit, $offset, $sort, $types, $returntags) {
-        $viewfilter = is_null($types) || $types['view'] == true ? 'TRUE' : 'FALSE';
+        $viewfilter = is_null($types) || $types['view'] == true ? 'AND TRUE' : 'AND FALSE';
+
         if (is_null($types)) {
             $artefacttypefilter = '';
         }
@@ -860,17 +861,24 @@ class PluginSearchInternal extends PluginSearch {
             $artefacttypefilter = ' AND FALSE';
         }
 
+        if (!is_null($tag)) {
+            $artefacttypefilter .= ' AND at.tag = ?';
+            $viewfilter .= ' AND vt.tag = ?';
+            $values = array($owner->id, $tag, $owner->id, $tag);
+        }
+        else {
+            $values = array($owner->id, $owner->id);
+        }
+
         $from = "FROM (
            (SELECT a.id, a.title, a.description, 'artefact' AS type, a.artefacttype, " . db_format_tsfield('a.ctime', 'ctime') . "
-            FROM {artefact} a JOIN {artefact_tag} at ON (a.id = at.artefact AND at.tag = ?)
+            FROM {artefact} a JOIN {artefact_tag} at ON (a.id = at.artefact)
             WHERE a.owner = ?" . $artefacttypefilter . ")
            UNION
            (SELECT v.id, v.title, v.description, 'view' AS type, NULL AS artefacttype, " . db_format_tsfield('v.ctime', 'ctime') . "
-            FROM {view} v JOIN {view_tag} vt ON (v.id = vt.view AND vt.tag = ?)
-            WHERE v.owner = ? AND " . $viewfilter . ")
+            FROM {view} v JOIN {view_tag} vt ON (v.id = vt.view)
+            WHERE v.owner = ? " . $viewfilter . ")
         ) p";
-
-        $values = array($tag, $owner->id, $tag, $owner->id);
 
         $result = (object) array(
             'tag'    => $tag,

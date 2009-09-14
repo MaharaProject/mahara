@@ -49,7 +49,7 @@ $str = array();
 foreach (array('tags', 'tag', 'sort', 'type') as $v) {
     $str[$v] = json_encode($$v);
 }
-$hidepagination = $tag ? '' : "addElementClass('results_pagination', 'hidden');";
+
 $js = <<<EOF
 var p = null;
 var mytags_container = null;
@@ -113,10 +113,6 @@ function rewriteTagLink(elem, keep, replace) {
             }
         }
 
-        for (var i in reqparams) {
-            log(i + ' ' + reqparams[i]);
-        }
-
         sendjsonrequest(config.wwwroot + 'json/tagsearch.php', reqparams, 'POST', function(data) {
             p.updateResults(data);
 
@@ -128,7 +124,9 @@ function rewriteTagLink(elem, keep, replace) {
                 });
 
                 // Mark the selected tag in the My Tags list:
-                addElementClass('tag:' + data.data.tag, 'selected');
+                if (data.data.tag) {
+                    addElementClass('tag:' + data.data.tag, 'selected');
+                }
 
                 // Replace the tag in the Search Results heading
                 var heading_tag = getFirstElementByTagAndClassName('a', 'tag', 'results_heading');
@@ -138,11 +136,18 @@ function rewriteTagLink(elem, keep, replace) {
                 }
                 var edit_tag_link = getFirstElementByTagAndClassName('a', 'edit-tag', 'results_container');
                 if (edit_tag_link) {
-                    setNodeAttribute(edit_tag_link, 'href', config.wwwroot + 'edittags.php?tag=' + data.data.tagurl);
+                    if (data.data.tag) {
+                        setNodeAttribute(edit_tag_link, 'href', config.wwwroot + 'edittags.php?tag=' + data.data.tagurl);
+                        removeElementClass(edit_tag_link, 'hidden');
+                    }
+                    else {
+                        addElementClass(edit_tag_link, 'hidden');
+                    }
                 }
 
-                removeElementClass('results_container', 'hidden');
-                params.tag = data.data.tag;
+                if (data.data.tag) {
+                    params.tag = data.data.tag;
+                }
             }
 
             // Rewrite tag links in the results list:
@@ -196,7 +201,6 @@ addLoadEvent(function() {
     forEach(getElementsByTagAndClassName('a', 'tag', 'results'), function (elem) {rewriteTagLink(elem, [], 'tag')});
     forEach(getElementsByTagAndClassName('a', null, 'results_sort'), function (elem) {rewriteTagLink(elem, ['tag', 'type'], 'sort')});
     forEach(getElementsByTagAndClassName('a', null, 'results_filter'), function (elem) {rewriteTagLink(elem, ['tag', 'sort'], 'type')});
-    {$hidepagination}
 });
 EOF;
 

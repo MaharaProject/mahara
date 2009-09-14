@@ -2179,7 +2179,7 @@ function build_portfolio_search_html(&$data) {
         }
     }
 
-    $data->baseurl = get_config('wwwroot') . 'tags.php?tag=' . urlencode($data->tag);
+    $data->baseurl = get_config('wwwroot') . 'tags.php' . (is_null($data->tag) ? '' : '?tag=' . urlencode($data->tag));
     $data->sortcols = array('name', 'date');
     $data->filtercols = array(
         'all'   => get_string('tagfilter_all'),

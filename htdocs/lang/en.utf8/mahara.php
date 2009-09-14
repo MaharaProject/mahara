@@ -90,6 +90,7 @@ $string['Tag'] = 'Tag';
 $string['itemstaggedwith'] = 'Items tagged with "%s"';
 $string['numitems'] = '%s items';
 $string['searchresultsfor'] = 'Search results for';
+$string['alltags'] = 'All Tags';
 $string['sortalpha'] = 'Sort tags alphabetically';
 $string['sortfreq'] = 'Sort tags by frequency';
 $string['sortresultsby'] = 'Sort results by:';
