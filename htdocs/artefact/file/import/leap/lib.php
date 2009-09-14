@@ -81,7 +81,9 @@ class LeapImportFile extends LeapImportArtefactPlugin {
         $artefactmapping = array();
         switch ($strategy) {
         case self::STRATEGY_IMPORT_AS_FILE:
-            $artefactmapping[(string)$entry->id] = array(self::create_file($entry, $importer)->get('id'));
+            if ($file = self::create_file($entry, $importer)) {
+                $artefactmapping[(string)$entry->id] = array($file->get('id'));
+            }
             break;
         case self::STRATEGY_IMPORT_AS_FOLDER:
             $artefactmapping = self::create_folder_and_children($entry, $importer);
@@ -243,7 +245,8 @@ class LeapImportFile extends LeapImportArtefactPlugin {
 
         // This API sucks, but that's not my problem
         if (!$id = ArtefactTypeFile::save_file($pathname, $data, $importer->get('usrobj'))) {
-            throw new ImportException($importer, 'TODO: get_string: was unable to import file');
+            $importer->trace("WARNING: the file for entry $entry->id does not exist in the import (path={$entry->content['src']})");
+            return;
         }
 
         $artefact = artefact_instance_from_id($id);
@@ -348,7 +351,9 @@ class LeapImportFile extends LeapImportArtefactPlugin {
                 $artefactmapping = array_merge($artefactmapping, $result);
             }
             else {
-                $artefactmapping[$childid] = array(self::create_file($child, $importer, $folderid)->get('id'));
+                if ($file = self::create_file($child, $importer, $folderid)) {
+                    $artefactmapping[$childid] = array($file->get('id'));
+                }
             }
         }
 
