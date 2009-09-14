@@ -350,7 +350,7 @@ function profileform_submit(Pieform $form, $values) {
             }
         }
         else {
-            if ($values[$element] != $profilefields[$element]) {
+            if (!isset($profilefields[$element]) || $values[$element] != $profilefields[$element]) {
                 $classname = generate_artefact_class_name($element);
                 $profile = new $classname(0, array('owner' => $USER->get('id')));
                 $profile->set('title', $values[$element]);
