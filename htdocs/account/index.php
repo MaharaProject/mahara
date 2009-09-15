@@ -142,6 +142,16 @@ $elements['addremovecolumns'] = array(
     'separator' => '<br>',
     'help' => 'true'
 );
+if (get_config('showtagssideblock')) {
+    $elements['tagssideblockmaxtags'] = array(
+        'type'         => 'text',
+        'size'         => 4,
+        'title'        => get_string('tagssideblockmaxtags', 'account'),
+        'description'  => get_string('tagssideblockmaxtagsdescription', 'account'),
+        'defaultvalue' => isset($prefs->tagssideblockmaxtags) ? $prefs->tagssideblockmaxtags : get_config('tagssideblockmaxtags'),
+        'rules'        => array('integer' => true, 'minvalue' => 0, 'maxvalue' => 1000),
+    );
+}
 $elements['submit'] = array(
     'type' => 'submit',
     'value' => get_string('save')

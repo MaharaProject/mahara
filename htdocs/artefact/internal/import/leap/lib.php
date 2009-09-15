@@ -34,7 +34,6 @@ defined('INTERNAL') || die();
  *
  * TODO:
  * - how do we want to handle potentially overwriting data?
- * - We are exporting all services as field:id, not field:im - awaiting clarification on the list
  * - Address for person (leap:spatial) - our export might have to be modified 
  *   to output them in a more "correct" order for other systems
  * - Validate the values of profile fields coming in? Especially email
@@ -43,11 +42,18 @@ defined('INTERNAL') || die();
  */
 class LeapImportInternal extends LeapImportArtefactPlugin {
 
+    private static $personcontentblank = null;
+
     /**
      * For grabbing entries representing profile data that can't be exported as 
      * persondata
      */
     const STRATEGY_IMPORT_AS_PROFILE_FIELD = 1;
+
+    /**
+     * Entries with common_item:Personalstatement are introductions
+     */
+    const STRATEGY_IMPORT_AS_INTRODUCTION = 2;
 
     /**
      * Lookup table for some of the persondata fields.
@@ -131,40 +137,48 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     );
 
     /**
-     * The profile importer has two strategies it can use for certain entries.
-     *
-     * The profile importer attempts to "reserve" the persondata entry 
-     * representing the user being imported (if one exists).
+     * The profile importer tries to import raw profile fields using the 
+     * strategy mechanism, but most of the useful profile information is stored 
+     * in the person entry corresponding to the author.
      *
      * The persondata entry is not actually imported using a strategy, because 
      * we need to be able to import basic data from the <author> element if 
-     * it's not present too. So all the importing is handled in one custom hook 
-     * - import_author_data()
-     *
-     * The importer also tries to reserve raw entries with mahara:plugin="internal"
-     * - these can be used to populate some of our profile fields that aren't 
-     * explicitly mapped in LEAP2A.
+     * it's not present too. So all the person importing is handled in import_author_data()
      */
-    public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImport $importer) {
-        $strategies = array();
+    public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImportLeap $importer) {
+        if (self::$personcontentblank === null) {
+            self::$personcontentblank = true;
+            if ($persondataid = $importer->get('persondataid')) {
+                self::$personcontentblank = !(string)$importer->get_entry_by_id($persondataid)->content;
+            }
+        }
+
+        $isentry = PluginImportLeap::is_rdf_type($entry, $importer, 'entry');
+
+        if ($isentry && self::$personcontentblank
+            && PluginImportLeap::is_correct_category_scheme($entry, $importer, 'common_item', 'Personalstatement')) {
+            return array(array(
+                'strategy' => self::STRATEGY_IMPORT_AS_INTRODUCTION,
+                'score'    => 100,
+                'other_required_entries' => array(),
+            ));
+        }
 
         // If it's a raw entry with the right mahara:plugin and mahara:type 
         // we should be able to import it
-        $correctrdftype = count($entry->xpath('rdf:type['
-            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'entry') . ']')) == 1;
         $correctplugintype = count($entry->xpath('mahara:artefactplugin[@mahara:plugin="internal"]')) == 1;
-        if ($correctrdftype && $correctplugintype) {
-            $strategies[] = array(
+        if ($isentry && $correctplugintype) {
+            return array(array(
                 'strategy' => self::STRATEGY_IMPORT_AS_PROFILE_FIELD,
                 'score'    => 100,
                 'other_required_entries' => array(),
-            );
+            ));
         }
 
-        return $strategies;
+        return array();
     }
 
-    public static function import_using_strategy(SimpleXMLElement $entry, PluginImport $importer, $strategy, array $otherentries) {
+    public static function import_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
         $artefactmapping = array();
         switch ($strategy) {
         case self::STRATEGY_IMPORT_AS_PROFILE_FIELD:
@@ -181,16 +195,17 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             if (count($artefactpluginelement) == 1) {
                 $artefactpluginelement = $artefactpluginelement[0];
 
-                $maharaattributes = array();
-                foreach ($artefactpluginelement->attributes(PluginImportLeap::NS_MAHARA)
-                    as $key => $value) {
-                    $maharaattributes[$key] = (string)$value;
-                }
-
+                $maharaattributes = PluginImportLeap::get_attributes($artefactpluginelement, PluginImportLeap::NS_MAHARA);
                 if (isset($maharaattributes['type']) && in_array($maharaattributes['type'], $types)) {
                     $artefactmapping[(string)$entry->id] = array(self::create_artefact($importer, $maharaattributes['type'], PluginImportLeap::get_entry_content($entry, $importer)));
                 }
             }
+            break;
+        case self::STRATEGY_IMPORT_AS_INTRODUCTION:
+            // The introduction comes from the entry content
+            $introduction = new ArtefactTypeIntroduction(0, array('owner' => $importer->get('usr')));
+            $introduction->set('title', PluginImportLeap::get_entry_content($entry, $importer));
+            $introduction->commit();
             break;
         default:
             throw new ImportException($importer, 'TODO: get_string: unknown strategy chosen for importing entry');
@@ -199,41 +214,43 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     }
 
     /**
-     * Custom hook to import data about the feed author.
+     * Import data about the feed author.
      *
      * If we have a persondata element for them, we can import lots of 
      * different information about them into Mahara's profile section. 
      * Otherwise, we can only import some very basic information from the 
      * <author> element.
      *
-     * @param PluginImport $importer The importer
+     * @param PluginImportLeap $importer The importer
+     * @param string $persondataid       The ID of the person entry corresponding
+     *                                   to the author, if there is one
      */
-    public static function import_author_data(PluginImport $importer, $persondataid) {
+    public static function import_author_data(PluginImportLeap $importer, $persondataid) {
         if ($persondataid) {
             // Grab all the leap:persondata elements and import them
             $person = $importer->get_entry_by_id($persondataid);
 
             // The introduction comes from the entry content
-            $introduction = new ArtefactTypeIntroduction(0, array('owner' => $importer->get('usr')));
-            $introduction->set('title', PluginImportLeap::get_entry_content($person, $importer));
-            $introduction->commit();
+            if (!self::$personcontentblank) {
+                $introduction = new ArtefactTypeIntroduction(0, array('owner' => $importer->get('usr')));
+                $introduction->set('title', PluginImportLeap::get_entry_content($person, $importer));
+                $introduction->commit();
+            }
 
             // Most of the rest of the profile data comes from leap:persondata elements
             $persondata = $person->xpath('leap:persondata');
             foreach ($persondata as $item) {
-                $leapattributes = array();
-                foreach ($item->attributes(PluginImportLeap::NS_LEAP) as $key => $value) {
-                    $leapattributes[$key] = (string)$value;
-                }
+                $leapattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_LEAP);
 
-                if (!isset($leapattributes['field'])) {
+                if (isset($leapattributes['field'])) {
+                    self::import_persondata($importer, $item, $leapattributes);
+                }
+                else {
                     // 'Field' is required
                     // http://wiki.cetis.ac.uk/2009-03/LEAP2A_personal_data#field
                     $importer->trace('WARNING: persondata element did not have leap:field attribute');
                     continue;
                 }
-
-                self::import_persondata($importer, $item, $leapattributes);
             }
 
             // The information about someone's name is much more comprehensive 
@@ -244,6 +261,24 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             $addressdata = $person->xpath('leap:spatial');
             if (count($addressdata) == 1) {
                 self::import_addressdata($importer, $addressdata[0]);
+            }
+
+            // Set default profile icon. We look at rel="related" links on this 
+            // element, and take the first one that we turned into a profile 
+            // icon to be the default. In future versions of the spec, we may use
+            // a "depicts" type relationship to explicitly identify them.
+            foreach ($person->link as $link) {
+                if ($importer->curie_equals($link['rel'], '', 'related') && isset($link['href'])) {
+                    $artefactids = $importer->get_artefactids_imported_by_entryid((string)$link['href']);
+                    if (count($artefactids) == 1 && $potentialicon = artefact_instance_from_id($artefactids[0])) {
+                        if ($potentialicon->get('artefacttype') == 'profileicon') {
+                            $importer->get('usrobj')->profileicon = $potentialicon->get('id');
+                            $importer->get('usrobj')->commit();
+                            // The first one we find in the export is the profile icon
+                            break;
+                        }
+                    }
+                }
             }
         }
         else {
@@ -281,7 +316,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     /**
      * Attempts to import a persondata element
      */
-    private static function import_persondata(PluginImport $importer, SimpleXMLElement $item, array $leapattributes) {
+    private static function import_persondata(PluginImportLeap $importer, SimpleXMLElement $item, array $leapattributes) {
         $field = $leapattributes['field'];
 
         if (isset(self::$persondatafields[$field]['mahara_fieldname'])) {
@@ -309,7 +344,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     /**
      * Attempts to import a persondata field with leap:field="id"
      */
-    public static function import_persondata_id(PluginImport $importer, SimpleXMLElement $item, array $leapattributes) {
+    private static function import_persondata_id(PluginImportLeap $importer, SimpleXMLElement $item, array $leapattributes) {
         if ($leapattributes['field'] == 'id' && !isset($leapattributes['service'])) {
             // 'id' must have a service set
             // http://wiki.cetis.ac.uk/2009-03/LEAP2A_personal_data#service
@@ -331,15 +366,11 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     /**
      * Attempts to import a persondata field with leap:field="website"
      */
-    private static function import_persondata_website(PluginImport $importer, SimpleXMLEntry $item, array $leapattributes) {
+    private static function import_persondata_website(PluginImportLeap $importer, SimpleXMLEntry $item, array $leapattributes) {
         // We've been given a 'website' field, but Mahara has three profile 
         // fields for website. So we need to examine it deeper to establish 
         // which field it should import into
-        $maharaattributes = array();
-        foreach ($item->attributes(PluginImportLeap::NS_MAHARA)
-            as $key => $value) {
-            $maharaattributes[$key] = (string)$value;
-        }
+        $maharaattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_MAHARA);
 
         if (isset($maharaattributes['artefactplugin'])
             && isset($maharaattributes['artefacttype'])
@@ -367,14 +398,10 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     /**
      * Attempts to import a persondata field with leap:field="other"
      */
-    private static function import_persondata_other(PluginImport $importer, SimpleXMLEntry $item, array $leapattributes) {
+    private static function import_persondata_other(PluginImportLeap $importer, SimpleXMLEntry $item, array $leapattributes) {
         // The only 'other' field we can actually import is one we recognise as 
         // 'student ID'
-        $maharaattributes = array();
-        foreach ($item->attributes(PluginImportLeap::NS_MAHARA)
-            as $key => $value) {
-            $maharaattributes[$key] = (string)$value;
-        }
+        $maharaattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_MAHARA);
 
         if (isset($maharaattributes['artefactplugin'])
             && isset($maharaattributes['artefacttype'])
@@ -393,7 +420,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
      * Imports info from a leap:spatial element as a user's address-related 
      * profile fields
      */
-    private static function import_addressdata(PluginImport $importer, SimpleXMLElement $addressdata) {
+    private static function import_addressdata(PluginImportLeap $importer, SimpleXMLElement $addressdata) {
         // TODO: this xpath doesn't respect the namespace prefix - we should 
         // look it up from $importer->namespaces[NS_LEAP]
         $addresslines = $addressdata->xpath('leap:addressline');
@@ -403,11 +430,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
         // 'address' field
         $personaddress = '';
         foreach ($addresslines as $addressline) {
-            $maharaattributes = array();
-            foreach ($addressline->attributes(PluginImportLeap::NS_MAHARA)
-                as $key => $value) {
-                $maharaattributes[$key] = (string)$value;
-            }
+            $maharaattributes = PluginImportLeap::get_attributes($addressline, PluginImportLeap::NS_MAHARA);
 
             if (isset($maharaattributes['artefacttype'])) {
                 switch ($maharaattributes['artefacttype']) {
@@ -431,11 +454,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
 
         if (count($country) == 1) {
             $country = $country[0];
-
-            $leapattributes = array();
-            foreach ($country->attributes(PluginImportLeap::NS_LEAP) as $key => $value) {
-                $leapattributes[$key] = (string)$value;
-            }
+            $leapattributes = PluginImportLeap::get_attributes($country, PluginImportLeap::NS_LEAP);
 
             // Try using countrycode attribute first, but fall back to name if it's not present or 
             // doesn't represent a country
@@ -455,7 +474,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
         }
     }
 
-    private static function import_namedata(PluginImport $importer, array $persondata) {
+    private static function import_namedata(PluginImportLeap $importer, array $persondata) {
         $namefields = array(
             'full_name' => false,
             'legal_family_name' => false,
@@ -468,19 +487,24 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
         );
 
         foreach ($persondata as $item) {
-            $leapattributes = array();
-            foreach ($item->attributes(PluginImportLeap::NS_LEAP) as $key => $value) {
-                $leapattributes[$key] = (string)$value;
+            $leapattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_LEAP);
+            if (isset($leapattributes['field'])) {
+                if (in_array($leapattributes['field'], array_keys($namefields))) {
+                    // legal_given_name is allowed to occur any number of times
+                    if ($leapattributes['field'] == 'legal_given_name'
+                        && $namefields['legal_given_name'] != '') {
+                        $namefields['legal_given_name'] .= ' ' . (string)$item;
+                    }
+                    else {
+                        $namefields[$leapattributes['field']] = (string)$item;
+                    }
+                }
             }
-            if (in_array($leapattributes['field'], array_keys($namefields))) {
-                // legal_given_name is allowed to occur any number of times
-                if ($leapattributes['field'] == 'legal_given_name'
-                    && $namefields['legal_given_name'] != '') {
-                    $namefields['legal_given_name'] .= ' ' . (string)$item;
-                }
-                else {
-                    $namefields[$leapattributes['field']] = (string)$item;
-                }
+            else {
+                // 'Field' is required
+                // http://wiki.cetis.ac.uk/2009-03/LEAP2A_personal_data#field
+                $importer->trace('WARNING: persondata element did not have leap:field attribute');
+                continue;
             }
         }
 
@@ -518,13 +542,13 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
      * Creates an artefact in the manner required to overwrite existing profile 
      * artefacts
      *
-     * @param PluginImport $importer The importer
-     * @param string $artefacttype   The type of artefact to create
-     * @param string $title          The title for the artefact (with profile 
-     *                               fields, this is the main data)
+     * @param PluginImportLeap $importer The importer
+     * @param string $artefacttype        The type of artefact to create
+     * @param string $title               The title for the artefact (with profile 
+     *                                    fields, this is the main data)
      * @return int The ID of the artefact created
      */
-    private static function create_artefact(PluginImport $importer, $artefacttype, $title) {
+    private static function create_artefact(PluginImportLeap $importer, $artefacttype, $title) {
         $classname = 'ArtefactType' . ucfirst($artefacttype);
         $artefact = new $classname(0, array('owner' => $importer->get('usr')));
         $artefact->set('title', $title);

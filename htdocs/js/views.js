@@ -281,7 +281,7 @@ function ViewManager() {
             self.addConfigureBlock(blockinstance, data.data);
             $('action-dummy').name = getNodeAttribute(button, 'name');
 
-            var cancelButton = $('cancel_cb_' + blockinstanceId + '_action_configureblockinstance_id_' + blockinstanceId);
+            var cancelButton = $('cancel_instconf_action_configureblockinstance_id_' + blockinstanceId);
             connect(cancelButton, 'onclick', function(e) {
                 e.stop();
                 self.removeConfigureBlocks();
@@ -342,7 +342,7 @@ function ViewManager() {
         if (removeoncancel) {
             var oldblockid = newblock.id.substr(0, newblock.id.length - '_configure'.length);
             var blockinstanceId = oldblockid.substr(oldblockid.lastIndexOf('_') + 1);
-            var cancelbutton = $('cancel_cb_' + blockinstanceId + '_action_configureblockinstance_id_' + blockinstanceId);
+            var cancelbutton = $('cancel_instconf_action_configureblockinstance_id_' + blockinstanceId);
             if (cancelbutton) {
                 setNodeAttribute(cancelbutton, 'name', getNodeAttribute(deletebutton, 'name'));
                 disconnectAll(cancelbutton);

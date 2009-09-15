@@ -145,6 +145,8 @@ $smarty->assign('viewid', $viewid);
 $smarty->assign('viewtitle', $view->get('title'));
 
 $owner = $view->get('owner');
+$smarty->assign('owner', $owner);
+$smarty->assign('tags', $view->get('tags'));
 if ($owner) {
     $smarty->assign('ownerlink', 'user/view.php?id=' . $owner);
 }

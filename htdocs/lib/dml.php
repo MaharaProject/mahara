@@ -987,6 +987,7 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
     $data = (array)$dataobject;
 
   // Pull out data matching these fields
+    $ddd = array();
     foreach ($columns as $column) {
         if (isset($data[$column->name])) {
             if ($column->name == $primarykey && empty($setfromseq)) {

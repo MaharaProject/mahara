@@ -24,6 +24,11 @@
  *
  */
 
+/*
+ * For more information about blog LEAP export, see:
+ * http://wiki.mahara.org/Developer_Area/Import//Export/LEAP_Export/Blog_Artefact_Plugin
+ */
+
 defined('INTERNAL') || die();
 
 class LeapExportElementBlogpost extends LeapExportElement {

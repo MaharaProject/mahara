@@ -80,10 +80,37 @@ $string['sendrequest'] = 'Send request';
 $string['reason'] = 'Reason';
 $string['select'] = 'Select';
 
+// Tags
 $string['tags'] = 'Tags';
 $string['tagsdesc'] = 'Enter comma separated tags for this item.';
 $string['tagsdescprofile'] = 'Enter comma separated tags for this item. Items tagged with \'profile\' are displayed in your sidebar.';
 $string['youhavenottaggedanythingyet'] = 'You have not tagged anything yet';
+$string['mytags'] = 'My Tags';
+$string['Tag'] = 'Tag';
+$string['itemstaggedwith'] = 'Items tagged with "%s"';
+$string['numitems'] = '%s items';
+$string['searchresultsfor'] = 'Search results for';
+$string['alltags'] = 'All Tags';
+$string['sortalpha'] = 'Sort tags alphabetically';
+$string['sortfreq'] = 'Sort tags by frequency';
+$string['sortresultsby'] = 'Sort results by:';
+$string['date'] = 'Date';
+$string['filterresultsby'] = 'Filter results by:';
+$string['tagfilter_all'] = 'All';
+$string['tagfilter_file'] = 'Files';
+$string['tagfilter_image'] = 'Images';
+$string['tagfilter_text'] = 'Text';
+$string['tagfilter_view'] = 'Views';
+$string['edittags'] = 'Edit Tags';
+$string['selectatagtoedit'] = 'Select a tag to edit';
+$string['edittag'] = 'Edit <a href="%s">%s</a>';
+$string['editthistag'] = 'Edit This Tag';
+$string['edittagdescription'] = 'All items in your portfolio tagged "%s" will be updated';
+$string['deletetag'] = 'Delete <a href="%s">%s</a>';
+$string['confirmdeletetag'] = 'Do you really want to delete this tag from everything in your portfolio?';
+$string['deletetagdescription'] = 'Remove this tag from all items in your portfolio';
+$string['tagupdatedsuccessfully'] = 'Tag updated successfully';
+$string['tagdeletedsuccessfully'] = 'Tag deleted successfully';
 
 $string['selfsearch'] = 'Search My Portfolio';
 

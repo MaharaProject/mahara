@@ -17,4 +17,6 @@
     padding:0px !important;
     margin: 0px !important;
 }
-
+#category-list {
+  margin-left:2px;
+}

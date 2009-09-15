@@ -430,11 +430,21 @@ EOF;
         }
 
         if ($USER->is_logged_in() && defined('MENUITEM') && substr(MENUITEM, 0, 11) == 'myportfolio') {
-            $SIDEBLOCKS[] = array(
-                'name'   => 'selfsearch',
-                'weight' => 0,
-                'data'   => array(),
-            );
+            if (get_config('showselfsearchsideblock')) {
+                $SIDEBLOCKS[] = array(
+                    'name'   => 'selfsearch',
+                    'weight' => 0,
+                    'data'   => array(),
+                );
+            }
+            if (get_config('showtagssideblock')) {
+                $SIDEBLOCKS[] = array(
+                    'name'   => 'tags',
+                    'id'     => 'sb-tags',
+                    'weight' => 0,
+                    'data'   => tags_sideblock(),
+                );
+            }
         }
 
         if($USER->is_logged_in() && !defined('ADMIN') && !defined('INSTITUTIONALADMIN')) {
@@ -463,7 +473,7 @@ EOF;
             );
         }
 
-        if (!$USER->is_logged_in()) {
+        if (!$USER->is_logged_in() && !(get_config('siteclosed') && get_config('disablelogin'))) {
             $SIDEBLOCKS[] = array(
                 'name'   => 'login',
                 'weight' => -10,

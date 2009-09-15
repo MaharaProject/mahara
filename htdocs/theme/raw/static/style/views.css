@@ -63,6 +63,9 @@ body:last-child:not(:root:root) .newblockhere {
 
 
 /* VIEWS */
+#view .viewfooter {
+  padding: 1em;
+}
 #feedbacktable .details {
 	margin-top: 10px;
 	color: #9e9e9e;
@@ -75,11 +78,11 @@ body:last-child:not(:root:root) .newblockhere {
     margin: 0 0 .25em;
 }
 
-#publicfeedback {
-	clear: both;
-	margin: 1em 0 0 0;
-	padding: 1em;
-	border: 1px solid #eee;
+#view #feedbacktable {
+  clear: both;
+  margin: 1em 0 0 0;
+  padding: 1em;
+  border: 1px solid #eee;
 }
 #viewmenu a {
 	margin: 0 .5em;

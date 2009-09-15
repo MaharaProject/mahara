@@ -350,10 +350,12 @@ function profileform_submit(Pieform $form, $values) {
             }
         }
         else {
-            $classname = generate_artefact_class_name($element);
-            $profile = new $classname(0, array('owner' => $USER->get('id')));
-            $profile->set('title', $values[$element]);
-            $profile->commit();
+            if ($values[$element] != $profilefields[$element]) {
+                $classname = generate_artefact_class_name($element);
+                $profile = new $classname(0, array('owner' => $USER->get('id')));
+                $profile->set('title', $values[$element]);
+                $profile->commit();
+            }
         }
     }
 

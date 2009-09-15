@@ -19,11 +19,13 @@ addLoadEvent(function() {
         connect(a, 'onclick', function(e) {
             forEach(fieldsets, function(fieldset) {
                 if (fieldset == legend.parentNode) {
+                    addElementClass(fieldset.tabLink.parentNode, 'current-tab');
                     addElementClass(fieldset.tabLink, 'current-tab');
                     removeElementClass(fieldset, 'safe-hidden');
                     $('profileform_fs').value = fsid;
                 }
                 else {
+                    removeElementClass(fieldset.tabLink.parentNode, 'current-tab');
                     removeElementClass(fieldset.tabLink, 'current-tab');
                     addElementClass(fieldset, 'safe-hidden');
                 }
@@ -41,6 +43,7 @@ addLoadEvent(function() {
         }
         else {
             // not collapsed by default, probably was the default one to show
+            addElementClass(fieldset.tabLink.parentNode, 'current-tab');
             addElementClass(fieldset.tabLink, 'current-tab');
         }
     });

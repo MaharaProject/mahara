@@ -665,6 +665,9 @@ function core_install_firstcoredata_defaults() {
     set_config('allowpublicprofiles', 1);
     set_config('captchaoncontactform', 1);
     set_config('captchaonregisterform', 1);
+    set_config('showselfsearchsideblock', 0);
+    set_config('showtagssideblock', 1);
+    set_config('tagssideblockmaxtags', 20);
 
     // install the applications
     $app = new StdClass;

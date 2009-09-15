@@ -200,6 +200,14 @@ class PluginArtefactFile extends PluginArtefact {
     public static function can_be_disabled() {
         return false;
     }
+
+    public static function get_artefact_type_content_types() {
+        return array(
+            'file'        => array('file'),
+            'image'       => array('file', 'image'),
+            'profileicon' => array('image'),
+        );
+    }
 }
 
 abstract class ArtefactTypeFileBase extends ArtefactType {
@@ -253,12 +261,12 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $smarty->assign('iconpath', $this->get_icon($options));
         $smarty->assign('downloadpath', $downloadpath);
         $smarty->assign('filetype', $filetype);
-        $smarty->assign('owner', $this->display_owner());
+        $smarty->assign('ownername', $this->display_owner());
         $smarty->assign('created', strftime(get_string('strftimedaydatetime'), $this->get('ctime')));
         $smarty->assign('modified', strftime(get_string('strftimedaydatetime'), $this->get('mtime')));
         $smarty->assign('size', $this->describe_size() . ' (' . $this->get('size') . ' ' . get_string('bytes', 'artefact.file') . ')');
 
-        foreach (array('title', 'description', 'artefacttype') as $field) {
+        foreach (array('title', 'description', 'artefacttype', 'owner', 'tags') as $field) {
             $smarty->assign($field, $this->get($field));
         }
 
@@ -859,7 +867,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             $f->delete();
             throw new UploadException($error);
         }
-        else if ($owner) {
+        else if (isset($owner)) {
             $owner->quota_add($size);
             $owner->commit();
         }
@@ -1136,6 +1144,8 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         $smarty = smarty_core();
         $smarty->assign('title', $this->get('title'));
         $smarty->assign('description', $this->get('description'));
+        $smarty->assign('tags', $this->get('tags'));
+        $smarty->assign('owner', $this->get('owner'));
         $smarty->assign('viewid', isset($options['viewid']) ? $options['viewid'] : 0);
         $smarty->assign('simpledisplay', isset($options['simpledisplay']) ? $options['simpledisplay'] : false);
 
@@ -1176,16 +1186,13 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         // name of the directory uses the site language rather than
         // the language of the admin who first creates it.
         $name = get_string_from_language(get_config('lang'), 'adminpublicdirname', 'admin');
-        $folderid = get_field_sql("
-           SELECT
-             a.id
-           FROM {artefact} a
-             INNER JOIN {artefact_file_files} f ON a.id = f.artefact
-           WHERE a.title = ?
-             AND a.artefacttype = ?
-             AND a.institution = 'mahara'
-             AND a.parent IS NULL", array($name, 'folder'));
-        if (!$folderid) {
+        $folders = get_records_select_array(
+            'artefact',
+            'title = ? AND artefacttype = ? AND institution = ? AND parent IS NULL',
+            array($name, 'folder', 'mahara'),
+            'id', 'id', 0, 1
+        );
+        if (!$folders) {
             $description = get_string_from_language(get_config('lang'), 'adminpublicdirdescription', 'admin');
             $data = (object) array('title' => $name,
                                    'description' => $description,
@@ -1194,25 +1201,21 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             $f->commit();
             $folderid = $f->get('id');
         }
-        return $folderid;
+        return $folders[0]->id;
     }
 
     public static function change_public_folder_name($oldlang, $newlang) {
         $oldname = get_string_from_language($oldlang, 'adminpublicdirname', 'admin');
-        $folderid = get_field_sql("
-           SELECT
-             a.id
-           FROM {artefact} a
-             INNER JOIN {artefact_file_files} f ON a.id = f.artefact
-           WHERE a.title = ?
-             AND a.artefacttype = ?
-             AND a.institution = 'mahara'
-             AND a.parent IS NULL", array($oldname, 'folder'));
-
-        if (!$folderid) {
+        $folders = get_records_select_array(
+            'artefact',
+            'title = ? AND artefacttype = ? AND institution = ? AND parent IS NULL',
+            array($oldname, 'folder', 'mahara'),
+            'id', 'id', 0, 1
+        );
+        if (!$folders) {
             return;
         }
-
+        $folderid = $folders[0]->id;
         $name = get_string_from_language($newlang, 'adminpublicdirname', 'admin');
         $description = get_string_from_language($newlang, 'adminpublicdirdescription', 'admin');
         if (!empty($name)) {

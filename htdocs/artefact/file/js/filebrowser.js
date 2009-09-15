@@ -537,6 +537,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             else if (data.deleted) {
                 quotaUpdate(data.quotaused, data.quota);
             }
+            if (data.tagblockhtml && $('sb-tags')) {
+                $('sb-tags').innerHTML = data.tagblockhtml;
+            }
             self.browse_init();
         }
         else if (data.goto) {

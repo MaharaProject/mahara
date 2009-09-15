@@ -54,6 +54,9 @@ $string['language'] = 'Language';
 
 $string['showviewcolumns'] = 'Show controls to add and remove columns when editing a view';
 
+$string['tagssideblockmaxtags'] = 'Maximum tags in cloud';
+$string['tagssideblockmaxtagsdescription'] = 'Maximum number of tags to display in your Tag Cloud';
+
 $string['prefssaved']  = 'Preferences saved';
 $string['prefsnotsaved'] = 'Failed to save your Preferences!';
 

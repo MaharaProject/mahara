@@ -1739,6 +1739,7 @@ class View {
 
         global $USER;
         $userid = $USER->get('id');
+        $owner = null;
 
         if ($groupid) {
             $count = count_records('view', 'group', $groupid);
@@ -1764,6 +1765,7 @@ class View {
                 WHERE v.owner = ' . $userid . '
                 AND v.type != \'profile\'
                 ORDER BY v.title, v.id', '', $offset, $limit);
+            $owner = $userid;
         }
 
         if ($viewdata) {
@@ -1788,6 +1790,7 @@ class View {
                 WHERE view in (' . $viewidlist . ')
                 ORDER BY view, accesstype, grouptype, role, name, id
             ', array());
+            $tags = get_records_select_array('view_tag', 'view IN (' . $viewidlist . ')');
         }
     
         $data = array();
@@ -1796,6 +1799,7 @@ class View {
                 $index[$viewdata[$i]->id] = $i;
                 $data[$i]['id'] = $viewdata[$i]->id;
                 $data[$i]['title'] = $viewdata[$i]->title;
+                $data[$i]['owner'] = $owner;
                 $data[$i]['description'] = $viewdata[$i]->description;
                 if (!empty($viewdata[$i]->submitgroupid)) {
                     $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view',
@@ -1851,6 +1855,11 @@ class View {
                       'startdate' => $access->startdate,
                       'stopdate' => $access->stopdate
                       );
+                }
+            }
+            if ($tags) {
+                foreach ($tags as $tag) {
+                    $data[$index[$tag->view]]['tags'][] = $tag->tag;
                 }
             }
         }
@@ -2198,11 +2207,12 @@ class View {
                     $institutions[$v->institution] = $v->institution;
                 }
             }
+            $viewidlist = join(',', array_keys($viewdata));
             $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
                 FROM {view_artefact} va
                 INNER JOIN {artefact} a ON va.artefact = a.id
                 INNER JOIN {artefact_installed_type} t ON a.artefacttype = t.name
-                WHERE va.view IN (' . join(',', array_keys($viewdata)) . ')
+                WHERE va.view IN (' . $viewidlist . ')
                 GROUP BY va.view, va.artefact, a.title, a.artefacttype, t.plugin
                 ORDER BY a.title, va.artefact', '');
             if ($artefacts) {
@@ -2219,6 +2229,12 @@ class View {
                         $viewdata[$artefactrec->view]->artefacts[] = array('id'    => $artefactrec->artefact,
                                                                            'title' => $artname);
                     }
+                }
+            }
+            $tags = get_records_select_array('view_tag', 'view IN (' . $viewidlist . ')');
+            if ($tags) {
+                foreach ($tags as &$tag) {
+                    $viewdata[$tag->view]->tags[] = $tag->tag;
                 }
             }
             if (!empty($owners)) {

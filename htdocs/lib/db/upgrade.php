@@ -1194,6 +1194,12 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('captchaonregisterform', (int) (is_null($captcha) || $captcha));
     }
 
+    if ($oldversion < 2009090700) {
+        set_config('showselfsearchsideblock', 1);
+        set_config('showtagssideblock', 1);
+        set_config('tagssideblockmaxtags', 20);
+    }
+
     return $status;
 
 }

@@ -79,6 +79,18 @@ class PluginArtefactResume extends Plugin {
         );
     }
 
+    public static function get_artefact_type_content_types() {
+        return array(
+            'coverletter'   => array('text'),
+            'interest'      => array('text'),
+            'personalgoal'  => array('text'),
+            'academicgoal'  => array('text'),
+            'careergoal'    => array('text'),
+            'personalskill' => array('text'),
+            'academicskill' => array('text'),
+            'workskill'     => array('text'),
+        );
+    }
 }
 
 class ArtefactTypeResume extends ArtefactType {
@@ -409,8 +421,13 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
             update_record($table, (object)$values, 'id');
         }
         else {
-            $max = get_field($table, 'MAX(displayorder)', 'artefact', $values['artefact']);
-            $values['displayorder'] = is_numeric($max) ? $max + 1 : 0;
+            if (isset($values['displayorder'])) {
+                $values['displayorder'] = intval($values['displayorder']);
+            }
+            else {
+                $max = get_field($table, 'MAX(displayorder)', 'artefact', $values['artefact']);
+                $values['displayorder'] = is_numeric($max) ? $max + 1 : 0;
+            }
             insert_record($table, (object)$values);
         }
     }
@@ -808,7 +825,7 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
                 'rows' => 10,
                 'cols' => 50,
                 'resizable' => false,
-                'title' => get_string('description', 'artefact.resume'),
+                'title' => get_string('detailsofyourcontribution', 'artefact.resume'),
             ),
         );
     }

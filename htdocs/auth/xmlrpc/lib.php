@@ -843,6 +843,7 @@ class PluginAuthXmlrpc extends PluginAuth {
             try {
                 $peer->bootstrap($values['wwwroot'], null, $values['appname'], $values['institution']);
             } catch (RemoteServerException $e) {
+                log_debug($e->getMessage());
                 $form->set_error('wwwroot',get_string('cantretrievekey', 'auth'));
             }
         }
