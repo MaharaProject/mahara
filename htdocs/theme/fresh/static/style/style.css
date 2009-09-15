@@ -105,12 +105,6 @@ table.fullwidth {
 }
 
 
-.attachments {
-	border: 1px solid #BEE3F1;
-	background-color: #10171A;
-}
-
-
 /* Form elements */
 label {
     color: #BEE3F1;
@@ -160,6 +154,7 @@ input.cancelbackcreate {
 	color: #FFF !important;
 	margin-left: 5px;
 }
+div.rbuttons a,
 a.btn,
 #sb-profile .controls a:hover,
 a.btn:hover {
@@ -175,7 +170,6 @@ div.btn-edit input.submit, input.submit.btn-edit,
 a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup {
     color: #7EF000 !important;
 }
-
 
 /* Top of page elements */
 #container {
@@ -427,6 +421,14 @@ div.sideblock ul ul {
 }
 #performance-info {
     color: #fff;
+}
+
+/* Attached file lists */
+.attachments {
+	border: 1px solid #BEE3F1;
+}
+.attachments tbody th {
+	background-color: #10171A;
 }
 
 

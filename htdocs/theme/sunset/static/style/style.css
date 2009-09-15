@@ -171,7 +171,7 @@ div.btn-msg input.submit,
 div.btn-add input.submit, input.submit.btn-add,
 div.btn-edit input.submit, input.submit.btn-edit,
 a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup {
-    color: #8E1901 !important;
+    color: #8E1901;
 }
 
 
