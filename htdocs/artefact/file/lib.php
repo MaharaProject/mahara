@@ -791,15 +791,20 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      * Moves a file into the myfiles area.
      * Takes the name of a file outside the myfiles area.
      * Returns a boolean indicating success or failure.
+     *
+     * Note: this method is crappy because it returns false instead of throwing 
+     * exceptions. It's not used in many places, and should probably die in a 
+     * future version. So think twice before using it :)
      */
     public static function save_file($pathname, $data, User &$user=null, $outsidedataroot=false) {
         $dataroot = get_config('dataroot');
         if (!$outsidedataroot) {
             $pathname = $dataroot . $pathname;
         }
-        if (!$size = filesize($pathname)) {
+        if (!file_exists($pathname) || !is_readable($pathname)) {
             return false;
         }
+        $size = filesize($pathname);
         $f = self::new_file($pathname, $data);
         $f->set('size', $size);
         // @todo: Set mime type! (and old extension)
