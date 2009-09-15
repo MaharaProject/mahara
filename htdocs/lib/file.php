@@ -360,7 +360,9 @@ function is_image_type($type) {
 function is_image_file($path) {
     if (function_exists('exif_imagetype')) {
         // exif_imagetype is faster
-        if (!$type = exif_imagetype($path)) {
+        // surpressing errors because exif_imagetype spews "read error!" to the logs on small files
+        // http://nz.php.net/manual/en/function.exif-imagetype.php#79283
+        if (!$type = @exif_imagetype($path)) {
             return false;
         }
     }
