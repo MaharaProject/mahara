@@ -40,9 +40,6 @@ fieldset legend.resumeh3 a {
 	background: none;
 	padding: 0;
 }
-#resumewrap fieldset table {
-	float: left;
-}
 
 tr#contactinformation_contactinformation_container th {
 	display: none;

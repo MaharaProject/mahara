@@ -26,6 +26,7 @@
         <a href="{$WWWROOT}contact.php">{str tag=contactus}</a></div>
 {mahara_performance_info}
 {mahara_version}
+		<div class="cb"></div>
     </div>
 </div>
 </body>

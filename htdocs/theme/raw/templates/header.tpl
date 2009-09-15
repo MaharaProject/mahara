@@ -10,6 +10,7 @@
         <h1 id="site-logo"><a href="{$WWWROOT}"><img src="{theme_url filename='images/site-logo.png'}" alt="{$sitename|escape}"></a></h1>
 {include file="header/topright.tpl"}
 {include file="header/navigation.tpl"}
+		<div class="cb"></div>
     </div>
     <table id="main-wrapper">
         <tbody>

@@ -5,10 +5,8 @@
  * This file is distributed under the same terms as Mahara itself
  */
 .groupadmin{
-    color: blue;
 }
 .moderator {
-    color: blue;
 }
 .forumuser {
     vertical-align: top;
@@ -17,55 +15,46 @@
     vertical-align: middle;
 }
 #forumdescription {
-	margin: 1em 0;
+	margin: 1em 0 2em 0;
+	clear: both;
 }
 
-div.pagetabs a.btn-add {
-	font-weight: bold !important;
-	border: none;
+a.btn-addtopic {
+	font-weight: bold;
 	margin: 0;
-	padding: 0 0 0 1.7em;
-	text-decoration: none;
-	background: url(../images/icon-newforum.gif) no-repeat center left;
 }
-div.pagetabs a.btn-edit {
-	font-weight: bold !important;
-	border: none;
+a.btn-edittopic {
+	font-weight: bold;
 	margin: 0 1em 0 0;
-	padding: 0 0 0 1.8em;
-	text-decoration: none;
-	background: url(../images/icon-editforum.gif) no-repeat center left;
 }
-div.pagetabs a.btn-del {
-	font-weight: bold !important;
-	border: none;
+a.btn-deletetopic {
+	font-weight: bold;
 	margin: 0 1em 0 0;
-	padding: 0 0 0 1.6em;
-	text-decoration: none;
-	background: url(../images/icon-deleteforum.gif) no-repeat center left;
 }
-div.pagetabs #subscribe_forum_submit {
-	font-weight: bold !important;
-	border: none;
-    font-size: .9em;
-	margin: 0;
-	padding: 0 0 0 1.4em;
+
+#subscribe_forum_submit {
 	font-family: Arial, Helvetica, sans-serif;
-	background: url(../images/icon-subscribeforum.gif) no-repeat center left;
-	color: blue;
 }
+
 .btn-subscribe input.submit {
-    font-size: 1em;
     * width: 1;
     * overflow: visible;
-	font-family: Arial, Helvetica, sans-serif;
+}
+.btn-subscribe span.help a {
+	border: 0;
+	background: none;
+	margin: 0;
+	padding: 0;
 }
 .subscribetd {
-	width: 150px;
+	width: 140px;
 }
 .forummods {
 	font-size: .9em;
-	padding: 1em .5em;
+	padding: .5em 0;
+}
+.forummods a {
+	margin-right: .5em;
 }
 
 #viewforum {
@@ -73,35 +62,16 @@ div.pagetabs #subscribe_forum_submit {
 	margin: 0;
 }
 #viewforum h3 {
-    margin: 0;
 	font-size: 1.4em;
 }
-#viewforum .rbuttons {
-	top: -3px;
-}
 #viewforum .rbuttons .btn-add {
-	font-weight: bold !important;
-	font-size: .9em !important;
-	border: none;
-	margin: 0;
-	padding: 0 0 0 1.7em;
-	text-decoration: none;
-	background: url(../images/icon-newforum.gif) no-repeat center left;
+	font-weight: bold;
 }
 .rbuttons #subscribe_topic_submit {
-	font-weight: bold !important;
-	border: none;
-    font-size: .9em;
-	margin: 0;
-	padding: 0 0 0 1.4em;
 	font-family: Arial, Helvetica, sans-serif;
-	background: url(../images/icon-subscribeforum.gif) no-repeat center left;
-	color: blue;
 }
 
-#forumslist .btn-spacer a,
-#forumtopicstable .btn-spacer a {
-	padding-left: 1em;
+.btn-spacer a {
 	margin-left: 1em;
 }
 
@@ -139,15 +109,15 @@ div.pagetabs #subscribe_forum_submit {
 
 /* FORUM > POST */
 .forumpost {
-	background-color: #FFF;
-	border: 1px solid #d1d1d1;
+	border: 1px solid #eee;
+	clear: both;
+	margin-top: 1em;
 }
 .forumsubject {
-	border-bottom: 1px solid #d1d1d1;
+	border-bottom: 1px solid #eee;
 }
-.forumsubject h3 {
+.forumsubject h6 {
 	margin: 0 !important;
-	font-size: 1.2em;
 }
 .forumpostleft {
 	width: 160px;
@@ -167,14 +137,10 @@ div.pagetabs #subscribe_forum_submit {
 .postbtns {
 	font-size: .9em;
 	text-align: right;
-    padding: 0;
-    margin: 0 0 1em 0;
-    border: none;
 	color: #d1d1d1;
 }
 .postbtns a {
 	margin: 0 .5em;
-	padding-left: 1em;
 }
 .forumpostleft .author p.poster {
 	color: #888;
@@ -193,5 +159,3 @@ div.pagetabs #subscribe_forum_submit {
 .postreply {
 	padding: 0 0 0 1em;
 }
-
-

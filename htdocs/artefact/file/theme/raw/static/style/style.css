@@ -20,7 +20,7 @@
 }
 
 form#files .foldernav {
-    padding: 0 0 0 2em;
+    padding: 0 0 0 1.6em;
     font-size: 1.4em;
 	line-height: 1.6em;
     height: 1.7em;
@@ -50,17 +50,14 @@ form#files .foldernav {
 }
 
 tr.folderhover.directory-item td {
-    background-color: #ffc !important;
+    background-color: #ffc;
 }
 tr.folderhover.directory-item a {
     color: #000;
     text-decoration: none;
 }
-tr.folder.r0 td {
+tr.folder td {
 	background: #e7e7e7;
-}
-tr.folder.r1 td {
-	background: #eee;
 }
 tr.folder td.filename {
 	font-weight: bold;
@@ -69,6 +66,9 @@ tr.folder td.filename {
 .filelist {
     width: 100%;
     margin-top: 0.2em;
+}
+* html .filelist {
+	width: 96%;
 }
 .filelist thead th {
     padding: 0.125em 0.25em;

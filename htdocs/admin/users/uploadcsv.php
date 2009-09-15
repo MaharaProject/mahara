@@ -340,14 +340,14 @@ function uploadcsv_submit(Pieform $form, $values) {
 
 // Get a list of all profile fields, to inform the user on what fields they can
 // put in their file.
-$fields = "<ul>\n";
+$fields = "<ul class=fieldslist>\n";
 foreach (array_keys(ArtefactTypeProfile::get_all_fields()) as $type) {
     if ($type == 'firstname' || $type == 'lastname' || $type == 'email') {
         continue;
     }
     $fields .= '<li>' . hsc($type) . "</li>\n";
 }
-$fields .= "</ul>\n";
+$fields .= "<div class=cl></div></ul>\n";
 
 if ($USER->get('admin')) {
     $uploadcsvpagedescription = get_string('uploadcsvpagedescription2', 'admin',

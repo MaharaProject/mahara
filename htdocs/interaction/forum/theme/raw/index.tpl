@@ -2,16 +2,15 @@
 
 <h2>{str tag="nameplural" section=interaction.forum}</h2>
 {if $admin}
-<div class="rbuttons pagetabs">
-<a href="{$WWWROOT}interaction/edit.php?group={$groupid|escape}&amp;plugin=forum" class="btn-add s">{str tag="newforum" section=interaction.forum}</a>
+<div id="forumbtns" class="rbuttons">
+<a href="{$WWWROOT}interaction/edit.php?group={$groupid|escape}&amp;plugin=forum" class="btn-add">{str tag="newforum" section=interaction.forum}</a>
 </div>
 {/if}
 <div class="forummods">
 	<label>{str tag="groupadminlist" section="interaction.forum"}</label>
 	{foreach from=$groupadmins item=groupadmin}
     <span class="inlinelist">
-        <a href="{$WWWROOT}user/view.php?id={$groupadmin}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupadmin}" alt=""></a>
-        <a href="{$WWWROOT}user/view.php?id={$groupadmin}" class="groupadmin">{$groupadmin|display_name|escape}</a>
+        <a href="{$WWWROOT}user/view.php?id={$groupadmin}" class="groupadmin"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupadmin}" alt=""> {$groupadmin|display_name|escape}</a>
     </span>
     {/foreach}
 </div>
@@ -27,7 +26,7 @@
         <td>
             {if $admin}
             <div class="fr btn-spacer s">
-                <a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}&amp;returnto=index" id="btn-edit" class="btn-edit">{str tag=edit}</a>
+                <a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}&amp;returnto=index" class="btn-edit">{str tag=edit}</a>
                 <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}&amp;returnto=index" class="btn-del">{str tag=delete}</a>
             </div>
             {/if}

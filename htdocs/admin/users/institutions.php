@@ -293,7 +293,7 @@ if ($institution || $add) {
         );
     }
     $elements['lockedfieldshelp'] = array(
-        'value' => '<tr><th colspan="2">'
+        'value' => '<tr id="lockedfieldshelp"><th colspan="2">'
         . get_help_icon('core', 'admin', 'institution', 'lockedfields') 
         . '</th></tr>'
     );

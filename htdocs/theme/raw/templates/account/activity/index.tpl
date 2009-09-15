@@ -17,8 +17,8 @@
 						<th>{str section='activity' tag='subject'}</th>
 						<th>{str section='activity' tag='type'}</th>
 						<th>{str section='activity' tag='date'}</th>
-						<th width="50">{str section='activity' tag='read'}<br><a href="" onclick="{$selectallread}">{str section='activity' tag='selectall'}</a></th>
-						<th width="50">{str tag='delete'}<br><a href="" onclick="{$selectalldel}">{str section='activity' tag='selectall'}</a></th>
+						<th width="50" class="center">{str section='activity' tag='read'}<br><a href="" onclick="{$selectallread}">{str section='activity' tag='selectall'}</a></th>
+						<th width="50" class="center">{str tag='delete'}<br><a href="" onclick="{$selectalldel}">{str section='activity' tag='selectall'}</a></th>
 					</tr>
 				</thead>
                 <tfoot>

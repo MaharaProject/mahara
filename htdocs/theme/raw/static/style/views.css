@@ -6,12 +6,17 @@
 #view .filedata-icon.fr {
 	padding: .5em 1em 1em 1em;
 	background: #eee;
+	margin: 0 0 1em 0;
 }
 #view .filedata-icon.fl {
-	margin: 0 .25em 0 0;
+	margin: 0.25em 0 0 0;
 }
 #view table.filedata {
     border: none;
+}
+#view .filedata-icon h4 {
+	font-size: .9em;
+	margin: 0;
 }
 
 #category-list li a:hover {
@@ -70,32 +75,35 @@ body:last-child:not(:root:root) .newblockhere {
     margin: 0 0 .25em;
 }
 
-#view #publicfeedback {
+#publicfeedback {
+	clear: both;
+	margin: 1em 0 0 0;
 	padding: 1em;
 	border: 1px solid #eee;
 }
 #viewmenu a {
 	margin: 0 .5em;
-	padding-left: 1em;
 }
 #viewmenu .help a {
 	padding: 0;
 }
-#view .blockinstance-content .postdetails {
+.postdetails {
 	text-align: right;
 	padding-top: 5px !important;
 	padding-bottom: 5px !important;
+	font-size: .9em;
+	color: #888;
 }
 
-#view .blockinstance-content .attachments {
+.attachments {
     border: 0;
     background-color: #fff;
+	margin: .5em 0;
 }
 #view .blockinstance-content .attachments td {
     font-size: .9em;
     margin: 0;
     padding: 0 .5em;
-    background-color: #fff;
 }
 
 form#wallpost {

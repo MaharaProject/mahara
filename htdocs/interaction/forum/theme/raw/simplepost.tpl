@@ -4,7 +4,7 @@
 <table class="forumpost fullwidth">
 {if $post->subject && !$nosubject}
 <tr>
-	<td colspan="2" class="forumsubject"><h3>{$post->subject|escape}</h3></td>
+	<td colspan="2" class="forumsubject"><h6>{$post->subject|escape}</h6></td>
 </tr>
 {/if}
 <tr>

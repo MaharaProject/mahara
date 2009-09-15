@@ -1,10 +1,10 @@
 {include file="header.tpl"}
 
 <h2>{$subheading|escape}</h2>
-<div class="rbuttons pagetabs">
+<div id="forumbtns" class="rbuttons">
 	{if $admin}
-		<a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}" class="btn-edit s">{str tag="edittitle" section="interaction.forum"}</a>
-        <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}" class="btn-del s">{str tag="deleteforum" section="interaction.forum"}</a>
+		<a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}" class="btn-editforum">{str tag="edittitle" section="interaction.forum"}</a>
+        <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}" class="btn-deleteforum">{str tag="deleteforum" section="interaction.forum"}</a>
 	{/if}
 	{$forum->subscribe}
 </div>
@@ -20,12 +20,12 @@
 <form action="" method="post">
     <table id="forumtopicstable" class="fullwidth nohead">
     <tr>
-        <th></th>
-        <th></th>
-        <th>{str tag="Topic" section="interaction.forum"}</th>
+        <th width="12px"></th>
+        <th width="12px"></th>
+        <th width="40%">{str tag="Topic" section="interaction.forum"}</th>
         <th>{str tag="Poster" section="interaction.forum"}</th>
-        <th class="postscount center">{str tag="Posts" section="interaction.forum"}</th>
-        <th class="lastpost">{str tag="lastpost" section="interaction.forum"}</th>
+        <th class="postscount center" width="10%">{str tag="Posts" section="interaction.forum"}</th>
+        <th class="lastpost" width="25%">{str tag="lastpost" section="interaction.forum"}</th>
         {if $moderator}<th></th>{/if}
     </tr>
     {if $stickytopics}

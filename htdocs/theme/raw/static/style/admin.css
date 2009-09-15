@@ -42,7 +42,7 @@
 #register-site {
     text-align: left;
     font-weight: normal;
-	padding: .5em 1.5em 0 1.5em;
+	padding: 1em 1.5em;
 	margin-bottom: 1em;
 }
 
@@ -65,7 +65,7 @@
 #register-site form table th {
 	text-align: left;
 	padding: .25em 0.5em;
-	width: 130px;
+	width: 140px;
 }
 #register-site form table table th {
 	text-align: left;
@@ -83,9 +83,12 @@
 }
 #register_register_container td {
 	float: left;
-	margin-bottom: 1em;
 	margin-left: .5em;
 }
+input#register_register {
+	* margin-bottom: 1em;
+}
+
 
 
 #runupgrade {
@@ -129,6 +132,10 @@
 }
 #menuitemlist tr.edit td {
 }
+#menuitemlist td input.button {
+	font-size: .9em;
+	font-family: Arial, Helvetica, sans-serif;
+}
 
 /* CONFIGURE SITE > NETWORKING */
 #networkingform_pubkey_container td {
@@ -162,6 +169,17 @@
 	font-size: 1em;
 	font-weight: bold;
 }
+#users_search_btn {
+	font-size: .9em;
+	line-height: .9em;
+}
+@media all and (-webkit-min-device-pixel-ratio: 0) { 
+#users_search_btn {
+	font-size: .9em;
+	line-height: 1.5em;
+}
+}
+
 /* SEARCH RESULTS TABLE */
 table.tablerenderer th.asc { 
 	background: transparent url(../images/down.gif) no-repeat left;
@@ -186,6 +204,13 @@ table.tablerenderer th.desc {
 	font-size: .9em;
 	margin-right: 1em;
 	text-align: center
+}
+#profilepict a img {
+	padding: 0;
+}
+#loginas {
+	margin-right: 1em;
+	margin-top: 1em;
 }
 #suspenddelete {
 	clear: both;
@@ -226,7 +251,12 @@ table.tablerenderer th.desc {
 
 .userlistform table {
     width: 100%;
-    * width: 98%;
+}
+* html .userlistform table {
+	width: 96%;
+}
+* html .userlisttable {
+	width: 96%;
 }
 .userlisttable td label {
 	font-size: 1em;
@@ -242,8 +272,13 @@ table.tablerenderer th.desc {
 
 
 /* MANAGE USERS > ADD USERS BY CSV */
-
-
+ul.fieldslist li {
+	float: left;
+	width: 15%;
+}
+form#uploadcsv {
+	clear: both;
+}
 
 /* MANAGE INSTITUTIONS  */
 
@@ -266,11 +301,7 @@ table.tablerenderer th.desc {
 	font-size: .9em;
 }
 .admininstitutionbtns input.submit {
-	border: none;
 	font-size: .9em;
-	color: blue;
-	margin-left: 1em;
-	padding-left: 1em;
 }
 #institution table td fieldset {
 	margin-left: 6em;
@@ -281,7 +312,9 @@ table.tablerenderer th.desc {
 	background: #fbeceb;
 	padding: .5em 1em 1em 1em;
 }
-
+#institution #lockedfieldshelp {
+	float: right;
+}
 
 /* MANAGE INSTITUTIONS > INSTITUTION MEMBERS */
 #institutionusers table #institutionusers_users_container th {

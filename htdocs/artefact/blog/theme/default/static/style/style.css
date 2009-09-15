@@ -1,0 +1,15 @@
+/**
+ * CSS rules for the blog artefact plugin
+ *
+ * Copyright (C) 2006-2009 Catalyst IT
+ * This file is distributed under the same terms as Mahara itself
+ */
+#postlist input.delete,
+#postlist input.edit {
+	color: #84AA00;
+	background-color: transparent;
+}
+
+#postlist th {
+	border-top: none;
+}

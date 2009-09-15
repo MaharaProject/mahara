@@ -30,7 +30,10 @@
     line-height: 1.9em;
     margin: 0 .5em 0 0;
     padding: 0;
+	position: static;
+	z-index:5;
 }
+@media all and (-webkit-min-device-pixel-ratio: 0) { #category-list li { line-height: 1.8em; } }
 #category-list li a {
     background-color: #eee;
     padding: .3em .5em;
@@ -45,7 +48,7 @@
 
 /* The panel that contains the blocktype icons */
 #blocktype-list {
-    overflow: auto;
+    overflow: hidden;
     min-height: 95px;
     background-color: #FFF;
     padding: .5em .5em 1em .5em;
@@ -60,6 +63,8 @@
     text-align: center;
     margin: 1em 1em 0;
     width: 22%;
+	position: relative;
+	* z-index: 100;
 }
 #blocktype-list .blocktype-radio {
     border: none;
@@ -80,14 +85,16 @@
     margin: .5em 0;
     border: 5px solid #eee;
 }
-#column-container {
-    width: 100%;
+html>body #column-container {
+	* width: 100%;
 }
+
 #blocksinstruction {
     padding: 0 1em .5em;
     background: #eee;
     color: #919191;
     font-weight: bold;
+	margin-bottom: 1em;
 }
 
 #column-container input.submit {
@@ -104,27 +111,43 @@
 /* each column div will have a class matching one of these, the number is the
    number of columns in total, so widths can be made equal */
 .columns1 {
-    width: 98%;
+    width: 99%;
 }
 .columns2 {
-    width: 48%;
+    width: 49%;
 }
 .columns3 {
-    width: 31%;
+    width: 32%;
 }
 .columns4 {
-    width: 23%;
+    width: 24%;
 }
 .columns5 {
-    width: 18%;
+    width: 19%;
 }
 
 .column {
     vertical-align: top;
     float: left;
     margin: 0;
-    padding: 0 0.9%;
+    padding: 0 0.9% 0 0;
+	position: relative;
 }
+
+* html .columns1 {
+    width: 96%;
+}
+* html .columns2 {
+    width: 46%;
+}
+* html .columns3 {
+    width: 30%;
+}
+* html .column {
+	overflow: hidden;
+	padding: 0 5px 0 0;
+}
+
 
 /* An explicit height for when there is one column and no remove button */
 .column-header {
@@ -161,6 +184,7 @@
 /* needed for when there are no add/remove buttons so the column doesn't disappear */
 .column-header-empty {
     height: 1px;
+	line-height: 1px;
 }
 
 .column-content {
@@ -175,9 +199,14 @@
 /* block instance styles */
 .blockinstance {
     margin: 0 0 1em 0;
-    padding: 0 .25em 1em .25em;
+    padding: 0 .5em 1em 0;
     position: relative;
-	border-bottom: 1px dotted #d1d1d1;
+}
+
+.column-content .add-button input {
+	border: none;
+	font-size: .85em;
+	border: 1px solid #d1d1d1;
 }
 
 .blockinstance-controls {
@@ -223,9 +252,10 @@
 	margin-bottom: 0;
 }
 .blockinstance-content div a img {
-	max-width: 100%;
+	max-width: 98%;
 	margin: .5em 0;
 }
+
 .blockinstance-content .description {
 	font-size: .9em;
 	color: #888888;
@@ -236,19 +266,19 @@
 
 /* styling the tabs for the artefact chooser */
 ul.artefactchooser-tabs.files {
-  margin-top: 1em;
+  margin: 1em 0 0 0 !important;
   font-size: 1em;
 }
 ul.artefactchooser-tabs {
-  padding: 0;
+  padding: 0 !important;
   margin: 0;
   font-weight: bold;
   list-style: none;
-  line-height: 1.6em;
+  line-height: 1.65em;
 }
 ul.artefactchooser-tabs li {
   display: inline;
-  margin: 0 .5em 0 0;
+  margin: 0 .5em 0 0 !important;
   padding: 0;
 }
 ul.artefactchooser-tabs li a {
@@ -261,8 +291,8 @@ ul.artefactchooser-tabs li.current a {
   color: #333;
 }
 ul.artefactchooser-subtabs {
-  margin: 2px;
-  padding: 0 0 .2em 0;
+  margin: 2px !important;
+  padding: 0 0 .2em 0 !important;
   font-size: .9em;
   list-style: none;
   border-bottom: 1px solid #ddd;
@@ -270,6 +300,7 @@ ul.artefactchooser-subtabs {
 ul.artefactchooser-subtabs li {
   display: inline;
   padding: 0 .5em;
+  margin: 0 !important;
   border-right: 1px solid #d1d1d1;
 }
 ul.artefactchooser-subtabs li a {
@@ -321,6 +352,9 @@ div.artefactchooser-splitter {
 	white-space: nowrap;
 	font-weight: bold;
 }
+#artefactchooser-body .artefactchooser-data th label {
+	font-weight: normal;
+}
 #instconf_artefactid_agreement td {
 	font-size: .9em;
 }
@@ -350,14 +384,17 @@ div.artefactchooser-splitter {
 .blockinstance.configure .maharatable thead th {
 	padding-top: 0 !important;
 	font-size: 1em !important;
+	text-align: left !important;
 }
 .blockinstance.configure .maharatable tbody th {
-	padding-top: .5em;
+	padding: .5em 0 0 0 !important;
 	font-size: 1.2em;
+	text-align: left !important;
 }
 .blockinstance.configure .maharatable .artefactchooser-data tbody th {
 	padding-top: 0;
 	font-size: 1em;
+	text-align: left;
 }
 .blockinstance.configure .maharatable td {
 	padding-bottom: .5em;
@@ -365,6 +402,7 @@ div.artefactchooser-splitter {
 .blockinstance.configure .maharatable td td {
 	padding-bottom: 0;
 }
+
 
 #view-wizard-controls form {
     display: inline;
@@ -374,4 +412,11 @@ div.artefactchooser-splitter {
     margin: .5em .25em;
 }
 
-.defaultSkin table.mceToolbar, .defaultSkin tr.mceFirst .mceToolbar tr td, .defaultSkin tr.mceLast .mceToolbar tr td {border:0; margin:0; padding:0; width: auto;}
+.defaultSkin table.mceToolbar, .defaultSkin tr.mceFirst .mceToolbar tr td, .defaultSkin tr.mceLast .mceToolbar tr td {
+	border: 0; 
+	margin:0; 
+	padding:0; 
+	width: auto;
+}
+
+

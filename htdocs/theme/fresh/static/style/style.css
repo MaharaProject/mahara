@@ -424,7 +424,7 @@ div.sideblock ul ul {
 #editthisview,
 #editviewaccess {
 	padding-left: 15px;
-    background: url(../../../raw/static/images/icon-edit.gif) no-repeat left 2px;
+    background: url(../images/icon-edit.gif) no-repeat left 2px;
 	font-size: 12px !important;
 }
 #myviews .btn-del {
