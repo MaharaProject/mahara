@@ -54,6 +54,10 @@ require_once(get_config('docroot') . 'import/lib.php');
 require_once(get_config('docroot') . 'export/lib.php');
 require_once(get_config('docroot') . 'lib/activity.php');
 
+if (!$maxrunage = get_config('maxrunage')) {
+    $maxrunage = MAXRUNAGE;
+}
+
 // This is here for debugging purposes, it allows us to fake the time to test
 // cron behaviour
 if(isset($argv[1])) {
@@ -73,7 +77,7 @@ foreach (plugin_types() as $plugintype) {
     $jobs = get_records_select_array(
         $plugintype . '_cron',
         'nextrun >= ? AND nextrun < ?',
-        array(db_format_timestamp($now - MAXRUNAGE), db_format_timestamp($now)),
+        array(db_format_timestamp($now - $maxrunage), db_format_timestamp($now)),
         '',
         'plugin,callfunction,minute,hour,day,month,dayofweek,' . db_format_tsfield('nextrun')
     );
@@ -110,7 +114,7 @@ foreach (plugin_types() as $plugintype) {
     $jobs = get_records_select_array(
         $plugintype . '_cron',
         'nextrun < ? OR nextrun IS NULL',
-        array(db_format_timestamp($now - MAXRUNAGE)),
+        array(db_format_timestamp($now - $maxrunage)),
         '',
         'plugin,callfunction,minute,hour,day,month,dayofweek,nextrun'
     );
@@ -140,7 +144,7 @@ foreach (plugin_types() as $plugintype) {
 
 // and now the core ones (much simpler)
 if ($jobs = get_records_select_array('cron', 'nextrun >= ? AND nextrun < ?',
-    array(db_format_timestamp($now - MAXRUNAGE), db_format_timestamp($now)))) {
+    array(db_format_timestamp($now - $maxrunage), db_format_timestamp($now)))) {
     foreach ($jobs as $job) {
         log_debug("Running core cron " . $job->callfunction);
 
@@ -156,11 +160,11 @@ if ($jobs = get_records_select_array('cron', 'nextrun >= ? AND nextrun < ?',
 
 // and missed ones...
 if ($jobs = get_records_select_array('cron', 'nextrun < ? OR nextrun IS NULL',
-    array(db_format_timestamp($now - MAXRUNAGE)))) {
+    array(db_format_timestamp($now - $maxrunage)))) {
     foreach ($jobs as $job) {
       if ($job->nextrun) {
           log_warn('core cronjob "' . $job->callfunction 
-              . '" didn\'t get run because the nextrun time was too old');
+              . '" didn\'t get run because the nextrun time (' . $job->nextrun . ') was too old (less than ' . ($now - $maxrunage) . ')');
       }
       
       $nextrun = cron_next_run_time($now, (array)$job);
