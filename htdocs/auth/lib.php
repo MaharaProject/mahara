@@ -348,13 +348,14 @@ function auth_setup () {
     }
 
     $cfgsiteclosed = get_config('siteclosed');
-    if (
-        ($siteclosed && !$cfgsiteclosed)
-        || (!$siteclosed && $cfgsiteclosed)) {
-        set_config('siteclosed', $siteclosed);
-        if ($disablelogin && $siteclosed) {
-            set_config('disablelogin', 1);
+    if ($siteclosed && !$cfgsiteclosed || !$siteclosed && $cfgsiteclosed) {
+        // If the admin closed the site manually, open it automatically
+        // when an upgrade is successful.
+        if ($cfgsiteclosed && get_config('siteclosedbyadmin')) {
+            set_config('siteclosedbyadmin', false);
         }
+        set_config('siteclosed', $siteclosed);
+        set_config('disablelogin', $disablelogin);
     }
 
     // Check the time that the session is set to log out. If the user does

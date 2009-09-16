@@ -233,22 +233,23 @@ if (!defined('INSTALLER')) {
     auth_setup();
 }
 
-if (get_config('siteclosed')) {
-    if ($USER->admin) {
-        if (get_config('disablelogin')) {
-            $USER->logout();
-        }
-        else if (!defined('INSTALLER')) {
-            redirect('/admin/upgrade.php');
-        }
+$siteclosedforupgrade = get_config('siteclosed');
+if ($siteclosedforupgrade && $USER->admin) {
+    if (get_config('disablelogin')) {
+        $USER->logout();
     }
-    if (!$USER->admin) {
-        if ($USER->is_logged_in()) {
-            $USER->logout();
-        }
-        if (!defined('HOME') && !defined('INSTALLER')) {
-            redirect();
-        }
+    else if (!defined('INSTALLER')) {
+        redirect('/admin/upgrade.php');
+    }
+}
+
+$siteclosed = $siteclosedforupgrade || get_config('siteclosedbyadmin');
+if ($siteclosed && !$USER->admin) {
+    if ($USER->is_logged_in()) {
+        $USER->logout();
+    }
+    if (!defined('HOME') && !defined('INSTALLER')) {
+        redirect();
     }
 }
 

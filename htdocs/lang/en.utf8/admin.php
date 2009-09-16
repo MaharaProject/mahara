@@ -130,6 +130,14 @@ $string['registeryourmaharasitedetail'] = '
 <p>If you tick &quot;send weekly updates&quot;, Mahara will automatically send an update to mahara.org once a week with your updated information.</p>
 <p>Registering will remove this notice. You will be able to change whether you send weekly updates on the <a href="%sadmin/site/options.php">site options</a> page.</p>';
 
+// Close site
+$string['Close'] = 'Close';
+$string['closesite'] = 'Close Site';
+$string['closesitedetail'] = 'You may close the site to everyone except administrators.  This will be useful when preparing for a database upgrade.  Only administrators will be able to log in until you either reopen the site, or an upgrade is successfully completed.';
+$string['Open'] = 'Open';
+$string['reopensite'] = 'Reopen Site';
+$string['reopensitedetail'] = 'Your site is closed.  Site administrators may stay logged in until an upgrade is detected.';
+
 // Site options
 $string['adminsonly'] = 'Administrators only';
 $string['allowpublicviews'] = 'Allow public views';

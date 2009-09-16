@@ -393,13 +393,12 @@ EOF;
     $smarty->assign('SESSKEY', $USER->get('sesskey'));
     $smarty->assign_by_ref('JAVASCRIPT', $javascript_array);
     $smarty->assign_by_ref('HEADERS', $headers);
-    if (get_config('siteclosed')) {
-        if (get_config('disablelogin')) {
-            $smarty->assign('SITECLOSED', get_string('siteclosedlogindisabled', 'mahara', get_config('wwwroot') . 'admin/upgrade.php'));
-        }
-        else {
-            $smarty->assign('SITECLOSED', get_string('siteclosed'));
-        }
+    $siteclosedforupgrade = get_config('siteclosed');
+    if ($siteclosedforupgrade && get_config('disablelogin')) {
+        $smarty->assign('SITECLOSED', get_string('siteclosedlogindisabled', 'mahara', get_config('wwwroot') . 'admin/upgrade.php'));
+    }
+    else if ($siteclosedforupgrade || get_config('siteclosedbyadmin')) {
+        $smarty->assign('SITECLOSED', get_string('siteclosed'));
     }
 
     if ((!isset($extraconfig['pagehelp']) || $extraconfig['pagehelp'] !== false)
