@@ -62,6 +62,8 @@ class PluginImportLeap extends PluginImport {
     const XHTML_DIV       = '<div xmlns="http://www.w3.org/1999/xhtml">';
     const XHTML_DIV_EMPTY = '<div xmlns="http://www.w3.org/1999/xhtml"/>';
 
+    const STRATEGY_IMPORT_AS_VIEW = 1;
+
     public static function validate_import_data($importdata) {
     }
 
@@ -180,19 +182,28 @@ class PluginImportLeap extends PluginImport {
                     $this->trace("   artefact.$plugin strategies: " . count($strategies));
                     if ($strategies) {
                         $this->trace($strategies, self::LOG_LEVEL_VERBOSE);
-                    }
-
-                    foreach ($strategies as $strategy) {
-                        // Verify they're in valid form
-                        if (!array_key_exists('strategy', $strategy)
-                            || !array_key_exists('score', $strategy)
-                            || !array_key_exists('other_required_entries', $strategy)) {
-                            throw new SystemException("$classname::get_import_strategies_for_entry returned a strategy missing "
-                                . "one or more of the strategy, score or other_required_entries keys");
+                        foreach ($strategies as $strategy) {
+                            // Verify they're in valid form
+                            if (!array_key_exists('strategy', $strategy)
+                                || !array_key_exists('score', $strategy)
+                                || !array_key_exists('other_required_entries', $strategy)) {
+                                throw new SystemException("$classname::get_import_strategies_for_entry returned a strategy missing "
+                                    . "one or more of the strategy, score or other_required_entries keys");
+                            }
+                            $strategy['artefactplugin'] = $plugin;
+                            $this->strategylisting[$entryid][] = $strategy;
                         }
-                        $strategy['artefactplugin'] = $plugin;
-                        $this->strategylisting[$entryid][] = $strategy;
                     }
+                }
+            }
+
+            $strategies = $this->get_import_strategies_for_entry($entry);
+            $this->trace("   core strategies: " . count($strategies));
+            if ($strategies) {
+                $this->trace($strategies, self::LOG_LEVEL_VERBOSE);
+                foreach ($strategies as $strategy) {
+                    $strategy['artefactplugin'] = null;
+                    $this->strategylisting[$entryid][] = $strategy;
                 }
             }
 
@@ -304,15 +315,22 @@ class PluginImportLeap extends PluginImport {
                 }
             }
 
-            $this->trace("Importing $entryid using strategy $strategydata[strategy] of plugin $strategydata[artefactplugin]");
-            safe_require('artefact', $strategydata['artefactplugin']);
-            $entry = $this->get_entry_by_id($entryid);
-            $classname = 'LeapImport' . ucfirst($strategydata['artefactplugin']);
-            // TODO: this throws ImportException if it can't be imported, need 
-            // to decide if this exception can bubble up or whether it should 
-            // be caught here
-            $artefactmapping = call_static_method($classname, 'import_using_strategy',
-                $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
+            if ($strategydata['artefactplugin'] != '') {
+                $this->trace("Importing $entryid using strategy $strategydata[strategy] of plugin $strategydata[artefactplugin]");
+                safe_require('artefact', $strategydata['artefactplugin']);
+                $entry = $this->get_entry_by_id($entryid);
+                $classname = 'LeapImport' . ucfirst($strategydata['artefactplugin']);
+                // TODO: this throws ImportException if it can't be imported, need 
+                // to decide if this exception can bubble up or whether it should 
+                // be caught here
+                $artefactmapping = call_static_method($classname, 'import_using_strategy',
+                    $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
+            }
+            else {
+                $this->trace("Importing $entryid using the core");
+                $entry = $this->get_entry_by_id($entryid);
+                $artefactmapping = $this->import_using_strategy($entry, $strategydata['strategy'], $strategydata['other_required_entries']);
+            }
 
             if (!is_array($artefactmapping)) {
                 throw new SystemException("import_from_load_mapping(): $classname::import_using_strategy has not return a list");
@@ -343,10 +361,12 @@ class PluginImportLeap extends PluginImport {
         // relationships for them if they need to
         foreach ($loadedentries as $entryid) {
             $strategydata = $this->loadmapping[$entryid];
-            $classname = 'LeapImport' . ucfirst($strategydata['artefactplugin']);
-            $entry = $this->get_entry_by_id($entryid);
-            call_static_method($classname, 'setup_relationships',
-                $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
+            if ($strategydata['artefactplugin'] != '') {
+                $classname = 'LeapImport' . ucfirst($strategydata['artefactplugin']);
+                $entry = $this->get_entry_by_id($entryid);
+                call_static_method($classname, 'setup_relationships',
+                    $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
+            }
         }
     }
 
@@ -420,6 +440,77 @@ class PluginImportLeap extends PluginImport {
                 'ram'  => memory_get_usage(), // TODO: http://php.net/memory_get_usage suggests this isn't available everywhere
             );
         }
+    }
+
+    /**
+     * Given an entry, should return a list of the possible ways that it could 
+     * be imported by the core.
+     *
+     * The core handles View importing, so this method looks for entries that 
+     * could be converted into Views.
+     *
+     * For more information about this method, see 
+     * {LeapImportArtefactPlugin::get_import_strategies_for_entry}
+     *
+     * @param SimpleXMLElement $entry
+     */
+    public function get_import_strategies_for_entry(SimpleXMLElement $entry) {
+        if (self::is_rdf_type($entry, $this, 'selection')
+            && self::is_correct_category_scheme($entry, $this, 'selection_type', 'Webpage')) {
+            return array(array(
+                'strategy' => self::STRATEGY_IMPORT_AS_VIEW,
+                'score'    => 100,
+                'other_required_entries' => array(),
+            ));
+        }
+        return array();
+    }
+
+    /**
+     */
+    public function import_using_strategy(SimpleXMLElement $entry, $strategy, array $otherentries) {
+        $artefactmapping = array();
+        switch ($strategy) {
+        case self::STRATEGY_IMPORT_AS_VIEW:
+            require_once('view.php');
+
+            $viewdata = array(
+                'title' => (string)$entry->title,
+                'description' => (string)$entry->summary,
+                'ownerformat' => FORMAT_NAME_DISPLAYNAME, // TODO
+                'owner' => $this->get('usr'),
+            );
+            if ($published = strtotime((string)$entry->published)) {
+                $viewdata['ctime'] = $published;
+            }
+            if ($updated = strtotime((string)$entry->updated)) {
+                $viewdata['mtime'] = $updated;
+            }
+
+            $view = View::create($viewdata, $this->get('usr'));
+
+            // Now for the blocks
+            $view->set('numcolumns', 1);
+            $view->commit();
+
+            safe_require('blocktype', 'textbox');
+            $bi = new BlockInstance(0,
+                array(
+                    'blocktype'  => 'textbox',
+                    'title'      => '',
+                    'column'     => 1,
+                    'order'      => 1,
+                    'configdata' => array(
+                        'text' => self::get_entry_content($entry, $this),
+                    ),
+                )
+            );
+            $view->addblockinstance($bi);
+            break;
+        default:
+            throw new ImportException($importer, 'TODO: get_string: unknown strategy chosen for importing entry');
+        }
+        return $artefactmapping;
     }
 
     /**
