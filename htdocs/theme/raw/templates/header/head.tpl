@@ -27,7 +27,7 @@
 {/foreach}
     <link rel="stylesheet" type="text/css" href="{theme_url filename='style/print.css'}" media="print">
     <script type="text/javascript" src="{$WWWROOT}js/css.js"></script>
-    <!--[if lte IE 6]><script type="text/javascript" src="{$WWWROOT}js/pngfix.js"></script><![endif]-->
+    <!--[if MSIE]><script type="text/javascript" src="{$WWWROOT}js/pngfix.js"></script><![endif]-->
     <link rel="shortcut icon" href="{$WWWROOT}favicon.ico" type="image/vnd.microsoft.icon">
 </head>
 
