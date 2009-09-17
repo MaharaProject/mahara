@@ -489,28 +489,131 @@ class PluginImportLeap extends PluginImport {
 
             $view = View::create($viewdata, $this->get('usr'));
 
-            // Now for the blocks
-            $view->set('numcolumns', 1);
-            $view->commit();
+            if (!$this->import_entry_as_mahara_view($entry, $view)) {
+                // Not a Mahara view, just do basic import
+                $this->trace('Not a Mahara view, doing basic import', self::LOG_LEVEL_VERBOSE);
 
-            safe_require('blocktype', 'textbox');
-            $bi = new BlockInstance(0,
-                array(
-                    'blocktype'  => 'textbox',
-                    'title'      => '',
-                    'column'     => 1,
-                    'order'      => 1,
-                    'configdata' => array(
-                        'text' => self::get_entry_content($entry, $this),
-                    ),
-                )
-            );
-            $view->addblockinstance($bi);
+                $view->set('numcolumns', 1);
+                $view->commit();
+
+                safe_require('blocktype', 'textbox');
+                $bi = new BlockInstance(0,
+                    array(
+                        'blocktype'  => 'textbox',
+                        'title'      => '',
+                        'column'     => 1,
+                        'order'      => 1,
+                        'configdata' => array(
+                            'text' => self::get_entry_content($entry, $this),
+                        ),
+                    )
+                );
+                $view->addblockinstance($bi);
+            }
             break;
         default:
-            throw new ImportException($importer, 'TODO: get_string: unknown strategy chosen for importing entry');
+            throw new ImportException($this, 'TODO: get_string: unknown strategy chosen for importing entry');
         }
         return $artefactmapping;
+    }
+
+    /**
+     * Attempts to import an entry as a mahara view
+     *
+     * Looks at the entry content to see if it looks like it could reasonably 
+     * be a Mahara view. We know this if the top level is just divs that have a 
+     * class of "column" on them, with "column-container" divs inside them.
+     *
+     * If it does "look" like a view, we attempt to import it as one, by 
+     * looking for blockinstance divs inside it. This differs a bit from the 
+     * LEAP2A specification, but we do so deliberately to get 100% 
+     * compatibility with Mahara to Mahara exports. Other systems can also 
+     * construct content in the right format to trigger Mahara to import things 
+     * as a full view.
+     *
+     * If it does not look like a View, we give up. Code elsewhere will simply 
+     * import the content into a textbox in a single column view.
+     *
+     * @param SimpleXMLElement $entry The entry to be imported
+     * @param View $view              The view object that has been created for 
+     *                                this view
+     * @return boolean Whether it could be imported. If not, we try and import 
+     *                 all the view content into a text box
+     */
+    private function import_entry_as_mahara_view(SimpleXMLElement $entry, View $view) {
+        static $blocktypes_installed = null;
+
+        $viewcontent = self::get_entry_content($entry, $this);
+        $dom = new DOMDocument;
+        libxml_use_internal_errors(true);
+        if (!$dom->loadHTML($viewcontent)) {
+            $this->trace("Unable to parse view content for entry {$entry->id} into a DOM document");
+            return false;
+        }
+        $errors = libxml_get_errors();
+        libxml_clear_errors();
+        libxml_use_internal_errors(false);
+        $this->trace('Imported view contents to DOM document with ' . count($errors) . ' internal libxml parsing errors', self::LOG_LEVEL_VERBOSE);
+        $viewdoc = simplexml_import_dom($dom);
+
+        $columns       = $viewdoc->body->xpath('div[contains(@class,"column")]/div[@class="column-content"]');
+        $columncount   = count($columns);
+        $toplevelnodes = count($viewdoc->body->xpath('*'));
+
+        // We check to see whether the content looks like it's a Mahara View. 
+        // If so, we'll try and import it the "smart" way.
+        if ($columncount && $columncount <= 5 && $columncount == $toplevelnodes) {
+            $this->trace(" ** Entry {$entry->title} is a View with $columncount columns **", self::LOG_LEVEL_VERBOSE);
+
+            $view->set('numcolumns', $columncount);
+            $view->commit();
+
+            if ($blocktypes_installed === null) {
+                $blocktypes_installed = array_map(create_function('$a', 'return $a->name;'), plugins_installed('blocktype'));
+            }
+
+            $col = 1;
+            foreach ($columns as $column) {
+                // Work out what blockinstances are in it
+                $blockinstances = $column->xpath('div[contains(@class,"blockinstance")]');
+                $blockinstancecount = count($blockinstances);
+
+                $row = 1;
+                foreach ($blockinstances as $blockinstance) {
+                    $matches = array();
+                    if (preg_match('/bt\-([a-z][a-z0-9_-]*)/', $blockinstance['class'], $matches)) {
+                        $blocktype = $matches[1];
+                        $this->trace("  Found block with type $blocktype at [$col][$row]");
+
+                        if (in_array($blocktype, $blocktypes_installed)) {
+                            // Create it!
+                            safe_require('blocktype', $blocktype);
+                            $bi = new BlockInstance(0,
+                                array(
+                                    'blocktype'  => $blocktype,
+                                    'title'      => 'title',
+                                    'column'     => $col,
+                                    'order'      => $row,
+                                    'configdata' => array(
+                                    ),
+                                )
+                            );
+                            $view->addblockinstance($bi);
+                        }
+                        else {
+                            $this->trace("  Ignoring unknown blocktype $blocktype");
+                        }
+                    }
+                    $row++;
+                }
+                $col++;
+            }
+
+            return true;
+        }
+
+        // The entry doesn't look like a Mahara view so we give up
+        return false;
     }
 
     /**
