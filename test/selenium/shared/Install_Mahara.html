@@ -17,38 +17,28 @@
 	<td></td>
 </tr>
 <tr>
-	<td>setTimeout</td>
-	<td>120000</td>
-	<td></td>
-</tr>
-<tr>
 	<td>clickAndWait</td>
 	<td>//input[@value='I agree']</td>
 	<td></td>
 </tr>
 <tr>
+	<td>setTimeout</td>
+	<td>120000</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForText</td>
-	<td>//td[@id='lastcoredata']</td>
-	<td>Successfully installed core data</td>
+	<td>//td[@id='localpostinst']</td>
+	<td>Successfully installed local customisations</td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>Successfully installed Mahara!</td>
+	<td>setTimeout</td>
+	<td>30000</td>
 	<td></td>
 </tr>
 <tr>
-	<td>assertTextPresent</td>
-	<td>Successfully installed Mahara!</td>
-	<td></td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>2000</td>
-	<td></td>
-</tr>
-<tr>
-	<td>captureEntirePageScreenshot</td>
-	<td>/tmp/screen.png</td>
+	<td>verifyTextPresent</td>
+	<td>Successfully installed Mahara</td>
 	<td></td>
 </tr>
 <tr>
@@ -57,33 +47,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>Welcome to Mahara</td>
+	<td>waitForElementPresent</td>
+	<td>requiredfields_password1</td>
 	<td></td>
 </tr>
 <tr>
-	<td>assertElementPresent</td>
-	<td>login_login_username</td>
+	<td>waitForElementPresent</td>
+	<td>requiredfields_password1</td>
 	<td></td>
 </tr>
 <tr>
-	<td>type</td>
-	<td>login_login_username</td>
-	<td>admin</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>login_login_password</td>
-	<td>mahara</td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>login_submit</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextPresent</td>
-	<td>Change password</td>
+	<td>waitForElementPresent</td>
+	<td>requiredfields_email</td>
 	<td></td>
 </tr>
 <tr>
@@ -93,22 +68,22 @@
 </tr>
 <tr>
 	<td>type</td>
-	<td>change_password_password1</td>
+	<td>requiredfields_password1</td>
 	<td>password1</td>
 </tr>
 <tr>
 	<td>type</td>
-	<td>change_password_password2</td>
+	<td>requiredfields_password2</td>
 	<td>password2</td>
 </tr>
 <tr>
 	<td>type</td>
-	<td>change_password_email</td>
+	<td>requiredfields_email</td>
 	<td>dev@mahara.org</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>change_password_submit</td>
+	<td>requiredfields_submit</td>
 	<td></td>
 </tr>
 <tr>
@@ -118,12 +93,12 @@
 </tr>
 <tr>
 	<td>type</td>
-	<td>change_password_password2</td>
+	<td>requiredfields_password2</td>
 	<td>password1</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>change_password_submit</td>
+	<td>requiredfields_submit</td>
 	<td></td>
 </tr>
 <tr>
@@ -133,12 +108,7 @@
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>You are logged in as Admin User (admin)</td>
-	<td></td>
-</tr>
-<tr>
-	<td>setTimeout</td>
-	<td>0</td>
+	<td>Admin User (admin)</td>
 	<td></td>
 </tr>
 
