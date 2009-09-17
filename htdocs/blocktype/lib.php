@@ -538,6 +538,7 @@ class BlockInstance {
 
         $smarty = smarty_core();
         $smarty->assign('id',     $this->get('id'));
+        $smarty->assign('blocktype', $this->get('blocktype'));
         $title = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'override_instance_title', $this);
         $smarty->assign('title', $title ? $title : $this->get('title'));
 
