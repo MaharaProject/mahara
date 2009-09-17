@@ -213,106 +213,12 @@ class PluginArtefactFile extends PluginArtefact {
 
 abstract class ArtefactTypeFileBase extends ArtefactType {
 
-    protected $size;
-
-    // The original filename extension (when the file is first
-    // uploaded) is saved here.  This is used as a workaround for IE's
-    // detecting filetypes by extension: when the file is downloaded,
-    // the extension can be appended to the name if it's not there
-    // already.
-    protected $oldextension;
-
-    // The id used for the filename on the filesystem.  Usually this
-    // is the same as the artefact id, but it can be different if the
-    // file is a copy of another file artefact.
-    protected $fileid;
-
-    protected $filetype; // Mime type
-
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
         
         if (empty($this->id)) {
             $this->locked = 0;
         }
-
-        if ($this->id && ($filedata = get_record('artefact_file_files', 'artefact', $this->id))) {
-            foreach($filedata as $name => $value) {
-                if (property_exists($this, $name)) {
-                    $this->{$name} = $value;
-                }
-            }
-        }
-
-    }
-
-    public function render_self($options) {
-        $options['id'] = $this->get('id');
-
-        $downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->get('id');
-        if (isset($options['viewid'])) {
-            $downloadpath .= '&view=' . $options['viewid'];
-        }
-        $filetype = get_string($this->get('oldextension'), 'artefact.file');
-        if (substr($filetype, 0, 2) == '[[') {
-            $filetype = $this->get('oldextension') . ' ' . get_string('file', 'artefact.file');
-        }
-
-        $smarty = smarty_core();
-        $smarty->assign('iconpath', $this->get_icon($options));
-        $smarty->assign('downloadpath', $downloadpath);
-        $smarty->assign('filetype', $filetype);
-        $smarty->assign('ownername', $this->display_owner());
-        $smarty->assign('created', strftime(get_string('strftimedaydatetime'), $this->get('ctime')));
-        $smarty->assign('modified', strftime(get_string('strftimedaydatetime'), $this->get('mtime')));
-        $smarty->assign('size', $this->describe_size() . ' (' . $this->get('size') . ' ' . get_string('bytes', 'artefact.file') . ')');
-
-        foreach (array('title', 'description', 'artefacttype', 'owner', 'tags') as $field) {
-            $smarty->assign($field, $this->get($field));
-        }
-
-        return array('html' => $smarty->fetch('artefact:file:file_render_self.tpl'), 'javascript' => '');
-    }
-
-    /**
-     * This function updates or inserts the artefact.  This involves putting
-     * some data in the artefact table (handled by parent::commit()), and then
-     * some data in the artefact_file_files table.
-     */
-    public function commit() {
-        // Just forget the whole thing when we're clean.
-        if (empty($this->dirty)) {
-            return;
-        }
-      
-        // We need to keep track of newness before and after.
-        $new = empty($this->id);
-
-        // Commit to the artefact table.
-        parent::commit();
-
-        // Reset dirtyness for the time being.
-        $this->dirty = true;
-
-        $data = (object)array(
-            'artefact'      => $this->get('id'),
-            'size'          => $this->get('size'),
-            'oldextension'  => $this->get('oldextension'),
-            'fileid'        => $this->get('fileid'),
-            'filetype'      => $this->get('filetype'),
-        );
-
-        if ($new) {
-            if ($this->get('artefacttype') != 'folder' && empty($data->fileid)) {
-                $data->fileid = $data->artefact;
-            }
-            insert_record('artefact_file_files', $data);
-        }
-        else {
-            update_record('artefact_file_files', $data, 'artefact');
-        }
-
-        $this->dirty = false;
     }
 
     public static function is_singular() {
@@ -331,18 +237,6 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $this->set('parent', $newparentid);
         $this->commit();
         return true;
-    }
-
-    public function delete() {
-        if (empty($this->id)) {
-            return; 
-        }
-        try {
-            delete_records('artefact_attachment', 'attachment', $this->id);
-        } 
-        catch ( Exception $e ) {}
-        delete_records('artefact_file_files', 'artefact', $this->id);
-        parent::delete();
     }
 
     // Check if something exists in the db with a given title and parent,
@@ -754,13 +648,77 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
 
 class ArtefactTypeFile extends ArtefactTypeFileBase {
 
+    protected $size;
+
+    // The original filename extension (when the file is first
+    // uploaded) is saved here.  This is used as a workaround for IE's
+    // detecting filetypes by extension: when the file is downloaded,
+    // the extension can be appended to the name if it's not there
+    // already.
+    protected $oldextension;
+
+    // The id used for the filename on the filesystem.  Usually this
+    // is the same as the artefact id, but it can be different if the
+    // file is a copy of another file artefact.
+    protected $fileid;
+
+    protected $filetype; // Mime type
+
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
         
+        if ($this->id && ($filedata = get_record('artefact_file_files', 'artefact', $this->id))) {
+            foreach($filedata as $name => $value) {
+                if (property_exists($this, $name)) {
+                    $this->{$name} = $value;
+                }
+            }
+        }
+
         if (empty($this->id)) {
             $this->container = 0;
         }
+    }
 
+    /**
+     * This function updates or inserts the artefact.  This involves putting
+     * some data in the artefact table (handled by parent::commit()), and then
+     * some data in the artefact_file_files table.
+     */
+    public function commit() {
+        // Just forget the whole thing when we're clean.
+        if (empty($this->dirty)) {
+            return;
+        }
+
+        // We need to keep track of newness before and after.
+        $new = empty($this->id);
+
+        // Commit to the artefact table.
+        parent::commit();
+
+        // Reset dirtyness for the time being.
+        $this->dirty = true;
+
+        $data = (object)array(
+            'artefact'      => $this->get('id'),
+            'size'          => $this->get('size'),
+            'oldextension'  => $this->get('oldextension'),
+            'fileid'        => $this->get('fileid'),
+            'filetype'      => $this->get('filetype'),
+        );
+
+        if ($new) {
+            if (empty($data->fileid)) {
+                $data->fileid = $data->artefact;
+            }
+            insert_record('artefact_file_files', $data);
+        }
+        else {
+            update_record('artefact_file_files', $data, 'artefact');
+        }
+
+        $this->dirty = false;
     }
 
     public static function get_file_directory($id) {
@@ -892,6 +850,34 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return $name . (substr($name, -1) == '.' ? '' : '.') . $extn;
     }
 
+    public function render_self($options) {
+        $options['id'] = $this->get('id');
+
+        $downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->get('id');
+        if (isset($options['viewid'])) {
+            $downloadpath .= '&view=' . $options['viewid'];
+        }
+        $filetype = get_string($this->get('oldextension'), 'artefact.file');
+        if (substr($filetype, 0, 2) == '[[') {
+            $filetype = $this->get('oldextension') . ' ' . get_string('file', 'artefact.file');
+        }
+
+        $smarty = smarty_core();
+        $smarty->assign('iconpath', $this->get_icon($options));
+        $smarty->assign('downloadpath', $downloadpath);
+        $smarty->assign('filetype', $filetype);
+        $smarty->assign('ownername', $this->display_owner());
+        $smarty->assign('created', strftime(get_string('strftimedaydatetime'), $this->get('ctime')));
+        $smarty->assign('modified', strftime(get_string('strftimedaydatetime'), $this->get('mtime')));
+        $smarty->assign('size', $this->describe_size() . ' (' . $this->get('size') . ' ' . get_string('bytes', 'artefact.file') . ')');
+
+        foreach (array('title', 'description', 'artefacttype', 'owner', 'tags') as $field) {
+            $smarty->assign($field, $this->get($field));
+        }
+
+        return array('html' => $smarty->fetch('artefact:file:file_render_self.tpl'), 'javascript' => '');
+    }
+
 
     public static function get_admin_files($public) {
         $pubfolder = ArtefactTypeFolder::admin_public_folder_id();
@@ -899,7 +885,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             SELECT
                 a.id, a.title, a.parent, a.artefacttype
             FROM {artefact} a
-                INNER JOIN {artefact_file_files} f ON f.artefact = a.id
+                LEFT OUTER JOIN {artefact_file_files} f ON f.artefact = a.id
             WHERE a.institution = 'mahara'", array());
 
         $files = array();
@@ -945,6 +931,9 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 $USER->commit();
             }
         }
+
+        delete_records('artefact_attachment', 'attachment', $this->id);
+        delete_records('artefact_file_files', 'artefact', $this->id);
         parent::delete();
     }
 

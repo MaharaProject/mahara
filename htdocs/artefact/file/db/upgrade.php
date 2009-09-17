@@ -223,6 +223,10 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2009091700) {
+        execute_sql("DELETE FROM {artefact_file_files} WHERE artefact IN (SELECT id FROM {artefact} WHERE artefacttype = 'folder')");
+    }
+
     return $status;
 }
 
