@@ -1,4 +1,4 @@
-<h3>{str tag="tags"}</h3>
+<h3><a href="{$WWWROOT}tags.php">{str tag="tags"}</a></h3>
 <div class="sidebar-content tags">
 {if $data.tags}
   {foreach from=$data.tags item=tag}
