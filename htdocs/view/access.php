@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -245,14 +246,14 @@ function editaccess_validate(Pieform $form, $values) {
             if (empty($item['startdate'])) {
                 $item['startdate'] = null;
             }
-            else if (!$item['startdate'] = strtotime($item['startdate'])) {
+            else if (!$item['startdate'] = strptime($item['startdate'], get_string('strftimedatetimeshort'))) {
                 $form->set_error('accesslist', get_string('unrecogniseddateformat', 'view'));
                 break;
             }
             if (empty($item['stopdate'])) {
                 $item['stopdate'] = null;
             }
-            else if (!$item['stopdate'] = strtotime($item['stopdate'])) {
+            else if (!$item['stopdate'] = strptime($item['stopdate'], get_string('strftimedatetimeshort'))) {
                 $form->set_error('accesslist', get_string('invaliddate', 'view'));
                 break;
             }

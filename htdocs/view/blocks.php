@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -125,7 +126,7 @@ foreach (array_reverse($THEME->get_url('style/style.css', true, 'artefact/file')
     $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . $sheet . '">';
 }
 
-$smarty = smarty(array('views', 'tinytinymce', 'paginator', 'tablerenderer', 'artefact/file/js/filebrowser.js', 'lib/pieforms/static/core/pieforms.js'), $stylesheets, false, $extraconfig);
+$smarty = smarty(array('views', 'tinytinymce', 'paginator', 'tablerenderer', 'artefact/file/js/filebrowser.js', 'lib/pieforms/static/core/pieforms.js', 'blocktype/creativecommons/js/creativecommons.js'), $stylesheets, false, $extraconfig);
 
 // The list of categories for the tabbed interface
 $smarty->assign('category_list', $view->build_category_list($category, $new));

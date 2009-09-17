@@ -13,6 +13,7 @@
             <FIELD NAME="filetype" TYPE="text" NOTNULL="false" />
         </FIELDS>
         <KEYS>
+            <KEY NAME="artefactpk" TYPE="primary" FIELDS="artefact" />
             <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
         </KEYS>
     </TABLE>
@@ -23,6 +24,7 @@
             <FIELD NAME="height" TYPE="int" LENGTH="10" NOTNULL="false" />
         </FIELDS>
         <KEYS>
+            <KEY NAME="artefactpk" TYPE="primary" FIELDS="artefact" />
             <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
         </KEYS>
     </TABLE>

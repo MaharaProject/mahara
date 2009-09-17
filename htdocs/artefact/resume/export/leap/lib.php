@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,71 +21,30 @@
  * @subpackage artefact-resume-export-leap
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-// all the special case 'composite' types are handled the same
-class LeapExportElementBook extends LeapExportElementResumeComposite {}
-class LeapExportElementCertification extends LeapExportElementResumeComposite {}
-class LeapExportElementMembership extends LeapExportElementResumeComposite {}
-class LeapExportElementEducationhistory extends LeapExportElementResumeComposite {
-    public function get_categories() {
-        return array_merge(parent::get_categories(), array(
-            'life_area' => array(
-                'scheme' => 'life_area',
-                'term'   => 'Education',
-            )
-        ));
-    }
-}
-class LeapExportElementEmploymenthistory extends LeapExportElementResumeComposite {
-    public function get_categories() {
-        return array_merge(parent::get_categories(), array(
-            'life_area' => array(
-                'scheme' => 'life_area',
-                'term'   => 'Work',
-            )
-        ));
-    }
-}
+/*
+ * For more information about resume LEAP export, see:
+ * http://wiki.mahara.org/Developer_Area/Import//Export/LEAP_Export/Resume_Artefact_Plugin
+ */
 
+/**
+ * The contact information artefact is deliberatly skipped from leap export, as 
+ * the information is duplicated from the profile anyway
+ */
 class LeapExportElementContactinformation extends LeapExportElement {
-    public function get_categories() {
-        return array(
-            'selection_type' => array(
-                'scheme' => 'selection_type',
-                'term'   => 'Grouping',
-            ),
-        );
-    }
-
-    public function get_leap_type() {
-        return 'selection';
-    }
-
-    public function add_links() {
-        $fields = ArtefactTypeContactinformation::get_profile_fields();
-        foreach ($fields as $f) {
-            try {
-                $$f = artefact_instance_from_type($f, $this->artefact->get('owner'));
-                $this->add_artefact_link($$f, 'has_part');
-            }
-            catch (MaharaException $e) { } // might not exist which is ok
-        }
-    }
-
-    public function get_content() {
-        return '';
-    }
-
     public function is_leap() {
         return false;
     }
 }
 
+/**
+ * The information in the personalinformation artefact is sent to the internal 
+ * export plugin to be exported as persondata
+ */
 class LeapExportElementPersonalinformation extends LeapExportElement {
-
     public function __construct(ArtefactType $artefact, LeapExporter $exporter) {
         parent::__construct($artefact, $exporter);
         $c = $this->artefact->get('composites');
@@ -126,33 +86,24 @@ class LeapExportElementPersonalinformation extends LeapExportElement {
         }
     }
 
-    /*
-    // remove these for now - we can't link to the persondata fields individually
-    // and linking to the person entry itself makes no sense
-    public function get_leap_type() {
-        return 'selection';
-    }
-
-    public function get_categories() {
-        return array(
-            'selection_type' => array(
-                'scheme' => 'selection_type',
-                'term'   => 'grouping',
-            ),
-        );
-    }
-    */
     public function is_leap() {
         return false;
     }
 }
 
+/**
+ * The simple WYSIWYG resume fields are exported as simple entries with html 
+ * content
+ */
 class LeapExportElementResumeWysiwygField extends LeapExportElement {
     public function get_content_type() {
         return 'html';
     }
 }
 
+/**
+ * Skills WYSIWYG entries are exported as abilities instead of entries
+ */
 class LeapExportElementResumeSkillField extends LeapExportElementResumeWysiwygField {
     public function get_leap_type() {
         return 'ability';
@@ -169,9 +120,10 @@ class LeapExportElementAcademicskill extends LeapExportElementResumeSkillField {
 class LeapExportElementPersonalskill extends LeapExportElementResumeSkillField {}
 
 /**
-* Base class for the composite artefacts
-* Just a normal element except they return multiple <entry> elements using LeapExportElementResumeCompositeChild
-*/
+ * Base class for the composite artefacts. They consist of one or more
+ * entries per each artefact, and one entry to tie them all together in a 
+ * grouping (which is what this class represents)
+ */
 class LeapExportElementResumeComposite extends LeapExportElement {
 
     protected $composites;
@@ -195,7 +147,7 @@ class LeapExportElementResumeComposite extends LeapExportElement {
         $xml = '';
         foreach ($this->composites as $c) {
             $classname = 'LeapExportElementResumeCompositeChild' . $this->artefact->get('artefacttype');
-            $child = new $classname($this->exporter, $this->artefact, $c);
+            $child = new $classname($this->artefact, $this->exporter, $c);
             $xml .= $child->get_export_xml();
             if ($siblings = $child->get_siblings()) {
                 foreach ($siblings as $sibling) {
@@ -228,28 +180,35 @@ class LeapExportElementResumeComposite extends LeapExportElement {
                 'scheme' => 'selection_type',
                 'term'   => 'Grouping'
             ),
-            'life_area' => array(
-                'scheme' => 'life_area',
-                'term'   => 'Development',
-            )
         );
     }
 }
 
+// all the special case 'composite' types are handled the same
+class LeapExportElementBook extends LeapExportElementResumeComposite {}
+class LeapExportElementCertification extends LeapExportElementResumeComposite {}
+class LeapExportElementMembership extends LeapExportElementResumeComposite {}
+class LeapExportElementEducationhistory extends LeapExportElementResumeComposite {}
+class LeapExportElementEmploymenthistory extends LeapExportElementResumeComposite {}
+
+
 /**
-* Element to create pseudo-elements for composite children which aren't really artefacts in Mahara
-* but do need to map to LEAP elements
-*/
+ * Element to create pseudo-elements for composite children which aren't really 
+ * artefacts in Mahara but do need to map to LEAP elements
+ */
 abstract class LeapExportElementResumeCompositeChild extends LeapExportElement {
 
     protected $entrydata;
     protected $originalrecord;
     protected $parentartefact;
 
-    public function __construct(LeapExporter $exporter, ArtefactTypeResumeComposite $parentartefact, $child) {
+    public function __construct(ArtefactTypeResumeComposite $parentartefact, LeapExporter $exporter, $child) {
         $this->originalrecord = $child;
         $this->entrydata = $this->record_to_entrydata($child);
         $this->parentartefact = $parentartefact;
+        // We pass 'null' as the artefact ID, as this class represents 
+        // composite children that aren't really artefacts. The field 
+        // 'parentartefact' holds a reference to the parent.
         parent::__construct(null, $exporter);
         $this->assign_smarty_vars();
     }
@@ -263,6 +222,10 @@ abstract class LeapExportElementResumeCompositeChild extends LeapExportElement {
         }
         $this->smarty->assign('leaptype', $this->get_leap_type());
         $this->smarty->assign('contenttype', 'text');
+        if (!$categories = $this->get_categories()) {
+            $categories = array();
+        }
+        $this->smarty->assign('categories', $categories);
         $this->add_links();
         $this->smarty->assign('links', $this->links);
     }
@@ -330,6 +293,10 @@ class LeapExportElementResumeCompositeChildMembership extends LeapExportElementR
     }
 }
 
+/**
+ * Some of the resume composites need to be converted into more than one entry. 
+ * This class represents such a composite.
+ */
 abstract class LeapExportElementResumeCompositeChildWithSiblings extends LeapExportElementResumeCompositeChild {
 
     protected $siblings;
@@ -340,17 +307,18 @@ abstract class LeapExportElementResumeCompositeChildWithSiblings extends LeapExp
         }
         return $this->siblings;
     }
+
+    public abstract function ensure_siblings();
 }
 
-// these three are harder and have siblings.
 class LeapExportElementResumeCompositeChildEducationhistory extends LeapExportElementResumeCompositeChildWithSiblings {
 
     public function ensure_siblings() {
         $this->siblings = array(
-            'is_supported_by' => new LeapExportElementResumeCompositeSibling($this->exporter, $this->parentartefact, $this, array(
+            'is_supported_by' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
                 'title' => $this->originalrecord->institution,
-            ), 'organisation', 'supports'),
-            'supports' => new LeapExportElementResumeCompositeSibling($this->exporter, $this->parentartefact, $this, array(
+            ), 'organization', 'supports'),
+            'supports' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
                 'title' => $this->originalrecord->qualtype,
                 'content' => $this->originalrecord->qualname,
             ), 'achievement', 'is_supported_by')
@@ -361,7 +329,7 @@ class LeapExportElementResumeCompositeChildEducationhistory extends LeapExportEl
         return array(
             'start'   => $record->startdate,
             'end'     => $record->enddate,
-            'title'   => $record->qualname . ' (' . $record->qualtype . ')',
+            'title'   => $record->qualname,
             'content' => $record->qualdescription,
         );
     }
@@ -369,15 +337,24 @@ class LeapExportElementResumeCompositeChildEducationhistory extends LeapExportEl
     public function get_leap_type() {
         return 'activity';
     }
+
+    public function get_categories() {
+        return array_merge(parent::get_categories(), array(
+            'life_area' => array(
+                'scheme' => 'life_area',
+                'term'   => 'Education',
+            )
+        ));
+    }
 }
 
 class LeapExportElementResumeCompositeChildEmploymenthistory extends LeapExportElementResumeCompositeChildWithSiblings {
 
     public function ensure_siblings() {
         $this->siblings = array(
-            'is_supported_by' => new LeapExportElementResumeCompositeSibling($this->exporter, $this->parentartefact, $this, array(
+            'is_supported_by' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
                 'title' => $this->originalrecord->employer,
-            ), 'organisation', 'supports')
+            ), 'organization', 'supports')
         );
     }
 
@@ -393,14 +370,24 @@ class LeapExportElementResumeCompositeChildEmploymenthistory extends LeapExportE
     public function get_leap_type() {
         return 'activity';
     }
+
+    public function get_categories() {
+        return array_merge(parent::get_categories(), array(
+            'life_area' => array(
+                'scheme' => 'life_area',
+                'term'   => 'Work',
+            )
+        ));
+    }
 }
 class LeapExportElementResumeCompositeChildBook extends LeapExportElementResumeCompositeChildWithSiblings {
 
     public function ensure_siblings() {
         $this->siblings = array(
-            'relation' => new LeapExportElementResumeCompositeSibling($this->exporter, $this->parentartefact, $this, array(
-                'title' => $this->originalrecord->contribution
-            ), 'achievement', 'relation')
+            'related' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
+                'title' => $this->originalrecord->contribution,
+                'content' => $this->originalrecord->description,
+            ), 'achievement', 'related')
         );
     }
 
@@ -408,12 +395,20 @@ class LeapExportElementResumeCompositeChildBook extends LeapExportElementResumeC
         return array(
             'end'     => $record->date,
             'title'   => $record->title,
-            'content' => $record->description,
         );
     }
 
     public function get_leap_type() {
         return 'resource';
+    }
+
+    public function get_categories() {
+        return array(
+            'resource_type' => array(
+                'scheme' => 'resource_type',
+                'term'   => 'Printed'
+            ),
+        );
     }
 }
 

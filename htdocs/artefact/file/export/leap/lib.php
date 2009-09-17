@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,8 +21,13 @@
  * @subpackage artefact-file-export-leap
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
+ */
+
+/*
+ * For more information about file LEAP export, see:
+ * http://wiki.mahara.org/Developer_Area/Import//Export/LEAP_Export/File_Artefact_Plugin
  */
 
 defined('INTERNAL') || die();
@@ -32,7 +38,7 @@ class LeapExportElementFile extends LeapExportElement {
 
     public function add_links() {
        parent::add_links();
-        // check for blog posts this file may be attached to
+        // Check for artefacts this file may be attached to
         if (!$posts = get_records_array('artefact_attachment',
             'attachment', $this->artefact->get('id'))) {
             return;
@@ -93,6 +99,13 @@ class LeapExportElementFolder extends LeapExportElement {
 }
 
 class LeapExportElementImage extends LeapExportElementFile { }
-class LeapExportElementProfileIcon extends LeapExportElementFile { }
+class LeapExportElementProfileIcon extends LeapExportElementFile {
+
+    public function add_links() {
+        parent::add_links();
+        $this->add_generic_link('artefactinternal', 'related');
+    }
+
+}
 
 ?>

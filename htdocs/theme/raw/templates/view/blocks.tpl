@@ -16,23 +16,21 @@
                 <div id="blocktype-list">
                     {$blocktype_list}
                 </div>
-                <div class="cl"></div>
+                <div class="cb"></div>
             </div>
 
-            <div class="fr">
-                <a id="btn-displaymyview" href="view.php?id={$view}&amp;new={$new}">{str tag=displaymyview section=view} &raquo;</a>
-            </div>
-
+            <a id="btn-displaymyview" class="fr" href="view.php?id={$view}&amp;new={$new}">{str tag=displaymyview section=view} &raquo;</a>
+            
             <a id="layout-link" href="columns.php?id={$view}&amp;c={$category}&amp;new={$new}"{if !$can_change_layout} class="disabled"{/if}>{str tag='changeviewlayout' section='view'}</a> {contextualhelp plugintype="core" pluginname="view" section="changeviewlayout"}
+                <div class="cb"></div>
 
             <div id="bottom-pane">
                 <div id="column-container">
-                <div id="blocksinstruction" class="center">
-                    {str tag='blocksintructionnoajax' section='view'}
-                </div>
-                    {$columns}
-                    <div class="cb">
-                    </div>
+                	<div id="blocksinstruction" class="center">
+                	    {str tag='blocksintructionnoajax' section='view'}
+                	</div>
+                	    {$columns}
+                    <div class="cb"></div>
                 </div>
             </div>
             <script type="text/javascript">

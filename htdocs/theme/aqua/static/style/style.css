@@ -22,7 +22,7 @@
 
 /* General rules */
 body {
-    background: #1D499F url(../images/bg.jpg) repeat-x top center;
+    background: #0B1960 url(../images/bg.jpg) repeat-x top center;
 	color: #14336F;
 }
 a,
@@ -130,7 +130,7 @@ fieldset {
 
 /* Buttons */
 .btn,
-.btn-link,
+#sb-profile .controls a,
 input.submit,
 input.button, button,
 input.submitcancel,
@@ -147,13 +147,15 @@ input.cancelbackcreate,
 	margin-left: 5px;
 }
 a.btn,
+#sb-profile .controls a:hover,
 a.btn:hover {
 	color: #FFF;
     text-decoration:none;
+	background-color: #14436F;
 }
 /* special case */
 #btn-logout {
-	background-color: #1D499F;
+	background-color: #0B1960;
 }
 /***** ICON LINKS ******/
 div.btn-del input.submit, input.submit.btn-del,
@@ -166,23 +168,35 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 
 /* Top of page elements */
 #container {
-    background: #1D499F url(../images/bg-container.jpg) repeat-x top center;
+    background: transparent url(../images/bg-container.jpg) no-repeat top center;
     margin-top:0px;
     padding-top:0px;
+    min-width: 970px;
+    width: 90%;
 }
 #top-wrapper {
     background: transparent;
+    border: none;
 }
 #site-logo {
-	padding: 20px 25px 5px 0
+	padding: 25px 25px 0 0
 }
 
 /* search box in header */
 #usf {
-    padding: 35px 6px 0 0;
+    padding: 45px 6px 0 0;
 }
 #usf_query_container input {
     color: #333333;
+}
+#usf #usf_submit {
+    border:none;
+	width:30px;
+	padding:3px 0;
+	margin:0;
+	text-indent:-1000px;
+	cursor:pointer;
+    background: transparent url(../images/btn_search_off.png) no-repeat center center;	
 }
 
 /* main menu */
@@ -196,11 +210,12 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     float:left;
     color: #FFFFFF;
     text-decoration: none;
+    line-height: 1.6em;
     font-weight: normal;
 	font-size: 12px;
 	margin: 0 0 0 3px;
 	padding: 5px 15px 3px;
-	background: #14336F;
+	background: #00084F;
 }
 #main-nav li a,
 #main-nav li a:link,
@@ -234,7 +249,8 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     font-weight: bold;
     text-align: left;
     background: #FFF;
-    height: 24px;
+    height: 25px;
+	border:none;
 	border-bottom:1px solid #DDD;
 	width:100%;
 }
@@ -242,13 +258,12 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     float:right;
 	height: 15px;
 	padding: 4px 10px 6px 0;
+	background: #FFF;
 }
 #sub-nav li {
     height: 25px;
     padding: 5px 13px 5px 8px;
     margin: 0 !important;
-    /* not working */
-    /* background: url(../../../default/static/images/submenu-divider.gif) no-repeat top right; */
 }
 #sub-nav li.selected {
     height: 25px;
@@ -269,7 +284,7 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 #sub-nav li.selected a:link,
 #sub-nav li.selected a:visited,
 #sub-nav li.selected a:active {
-    color: #1D499F;
+    color: #0B1960;
     text-decoration: underline;
 }
 
@@ -277,7 +292,6 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 #main-wrapper {
 	background: #FFF;
 }
-
 
 /* RIGHT SIDE COLUMN */
 #right-column {
@@ -340,8 +354,13 @@ div.sideblock ul ul {
 }
 
 /* Footer */
+#footernav,
+#footer-wrap #version  {
+  color: #FFFFFF;
+} 
 #footer-wrap {
-    background-color: #1D499F;
+    background-color: #0B1960;
+    border: 0;
 }
 #footer-wrap a,
 #footer-wrap a:link,
@@ -369,7 +388,7 @@ div.sideblock ul ul {
 #editthisview,
 #editviewaccess {
 	padding-left: 15px;
-    background: url(../../../raw/static/images/icon-edit.gif) no-repeat left 2px;
+    background: url(../images/icon-edit.gif) no-repeat left 2px;
 	font-size: 12px !important;
 }
 #myviews .btn-del {

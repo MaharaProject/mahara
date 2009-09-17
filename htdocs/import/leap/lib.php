@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage import-leap
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -57,6 +58,11 @@ class PluginImportLeap extends PluginImport {
     const NS_LEAPTYPE   = 'http://wiki.cetis.ac.uk/2009-03/LEAP2A_types#';
     const NS_CATEGORIES = 'http://wiki.cetis.ac.uk/2009-03/LEAP2A_categories/';
     const NS_MAHARA     = 'http://wiki.mahara.org/Developer_Area/Import%2F%2FExport/LEAP_Extensions#';
+
+    const XHTML_DIV       = '<div xmlns="http://www.w3.org/1999/xhtml">';
+    const XHTML_DIV_EMPTY = '<div xmlns="http://www.w3.org/1999/xhtml"/>';
+
+    const STRATEGY_IMPORT_AS_VIEW = 1;
 
     public static function validate_import_data($importdata) {
     }
@@ -115,6 +121,14 @@ class PluginImportLeap extends PluginImport {
         // able to import raw ATOM feeds too)
 
         //throw new ImportException($this, "Import wasn't valid. TODO: error reporting");
+
+        // Check all the namespaces we're gonna need are declared, and warn if 
+        // they're not there
+        foreach (array(self::NS_ATOM, self::NS_RDF, self::NS_LEAP, self::NS_LEAPTYPE, self::NS_CATEGORIES) as $ns) {
+            if (!isset($this->namespaces[$ns])) {
+                $this->trace("WARNING: Namespaces $ns wasn't declared - this will make importing data correctly difficult");
+            }
+        }
     }
 
     /**
@@ -135,7 +149,14 @@ class PluginImportLeap extends PluginImport {
                 $this->persondataid = (string)$author->uri;
             }
             else {
-                $this->persondataid = false;
+                $persondata = $this->get('xml')->xpath('//a:feed/a:entry/a:category[('
+                    . $this->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'person_type#') . ') and @term="Self"]/../a:id');
+                if (isset($persondata[0])) {
+                    $this->persondataid = (string)$persondata[0][0];
+                }
+                else {
+                    $this->persondataid = false;
+                }
             }
         }
 
@@ -161,19 +182,28 @@ class PluginImportLeap extends PluginImport {
                     $this->trace("   artefact.$plugin strategies: " . count($strategies));
                     if ($strategies) {
                         $this->trace($strategies, self::LOG_LEVEL_VERBOSE);
-                    }
-
-                    foreach ($strategies as $strategy) {
-                        // Verify they're in valid form
-                        if (!array_key_exists('strategy', $strategy)
-                            || !array_key_exists('score', $strategy)
-                            || !array_key_exists('other_required_entries', $strategy)) {
-                            throw new SystemException("$classname::get_import_strategies_for_entry returned a strategy missing "
-                                . "one or more of the strategy, score or other_required_entries keys");
+                        foreach ($strategies as $strategy) {
+                            // Verify they're in valid form
+                            if (!array_key_exists('strategy', $strategy)
+                                || !array_key_exists('score', $strategy)
+                                || !array_key_exists('other_required_entries', $strategy)) {
+                                throw new SystemException("$classname::get_import_strategies_for_entry returned a strategy missing "
+                                    . "one or more of the strategy, score or other_required_entries keys");
+                            }
+                            $strategy['artefactplugin'] = $plugin;
+                            $this->strategylisting[$entryid][] = $strategy;
                         }
-                        $strategy['artefactplugin'] = $plugin;
-                        $this->strategylisting[$entryid][] = $strategy;
                     }
+                }
+            }
+
+            $strategies = $this->get_import_strategies_for_entry($entry);
+            $this->trace("   core strategies: " . count($strategies));
+            if ($strategies) {
+                $this->trace($strategies, self::LOG_LEVEL_VERBOSE);
+                foreach ($strategies as $strategy) {
+                    $strategy['artefactplugin'] = null;
+                    $this->strategylisting[$entryid][] = $strategy;
                 }
             }
 
@@ -285,15 +315,22 @@ class PluginImportLeap extends PluginImport {
                 }
             }
 
-            $this->trace("Importing $entryid using strategy $strategydata[strategy] of plugin $strategydata[artefactplugin]");
-            safe_require('artefact', $strategydata['artefactplugin']);
-            $entry = $this->get_entry_by_id($entryid);
-            $classname = 'LeapImport' . ucfirst($strategydata['artefactplugin']);
-            // TODO: this throws ImportException if it can't be imported, need 
-            // to decide if this exception can bubble up or whether it should 
-            // be caught here
-            $artefactmapping = call_static_method($classname, 'import_using_strategy',
-                $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
+            if ($strategydata['artefactplugin'] != '') {
+                $this->trace("Importing $entryid using strategy $strategydata[strategy] of plugin $strategydata[artefactplugin]");
+                safe_require('artefact', $strategydata['artefactplugin']);
+                $entry = $this->get_entry_by_id($entryid);
+                $classname = 'LeapImport' . ucfirst($strategydata['artefactplugin']);
+                // TODO: this throws ImportException if it can't be imported, need 
+                // to decide if this exception can bubble up or whether it should 
+                // be caught here
+                $artefactmapping = call_static_method($classname, 'import_using_strategy',
+                    $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
+            }
+            else {
+                $this->trace("Importing $entryid using the core");
+                $entry = $this->get_entry_by_id($entryid);
+                $artefactmapping = $this->import_using_strategy($entry, $strategydata['strategy'], $strategydata['other_required_entries']);
+            }
 
             if (!is_array($artefactmapping)) {
                 throw new SystemException("import_from_load_mapping(): $classname::import_using_strategy has not return a list");
@@ -324,10 +361,12 @@ class PluginImportLeap extends PluginImport {
         // relationships for them if they need to
         foreach ($loadedentries as $entryid) {
             $strategydata = $this->loadmapping[$entryid];
-            $classname = 'LeapImport' . ucfirst($strategydata['artefactplugin']);
-            $entry = $this->get_entry_by_id($entryid);
-            call_static_method($classname, 'setup_relationships',
-                $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
+            if ($strategydata['artefactplugin'] != '') {
+                $classname = 'LeapImport' . ucfirst($strategydata['artefactplugin']);
+                $entry = $this->get_entry_by_id($entryid);
+                call_static_method($classname, 'setup_relationships',
+                    $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
+            }
         }
     }
 
@@ -401,6 +440,180 @@ class PluginImportLeap extends PluginImport {
                 'ram'  => memory_get_usage(), // TODO: http://php.net/memory_get_usage suggests this isn't available everywhere
             );
         }
+    }
+
+    /**
+     * Given an entry, should return a list of the possible ways that it could 
+     * be imported by the core.
+     *
+     * The core handles View importing, so this method looks for entries that 
+     * could be converted into Views.
+     *
+     * For more information about this method, see 
+     * {LeapImportArtefactPlugin::get_import_strategies_for_entry}
+     *
+     * @param SimpleXMLElement $entry
+     */
+    public function get_import_strategies_for_entry(SimpleXMLElement $entry) {
+        if (self::is_rdf_type($entry, $this, 'selection')
+            && self::is_correct_category_scheme($entry, $this, 'selection_type', 'Webpage')) {
+            return array(array(
+                'strategy' => self::STRATEGY_IMPORT_AS_VIEW,
+                'score'    => 100,
+                'other_required_entries' => array(),
+            ));
+        }
+        return array();
+    }
+
+    /**
+     */
+    public function import_using_strategy(SimpleXMLElement $entry, $strategy, array $otherentries) {
+        $artefactmapping = array();
+        switch ($strategy) {
+        case self::STRATEGY_IMPORT_AS_VIEW:
+            require_once('view.php');
+
+            $viewdata = array(
+                'title' => (string)$entry->title,
+                'description' => (string)$entry->summary,
+                'ownerformat' => FORMAT_NAME_DISPLAYNAME, // TODO
+                'owner' => $this->get('usr'),
+            );
+            if ($published = strtotime((string)$entry->published)) {
+                $viewdata['ctime'] = $published;
+            }
+            if ($updated = strtotime((string)$entry->updated)) {
+                $viewdata['mtime'] = $updated;
+            }
+
+            $view = View::create($viewdata, $this->get('usr'));
+
+            if (!$this->import_entry_as_mahara_view($entry, $view)) {
+                // Not a Mahara view, just do basic import
+                $this->trace('Not a Mahara view, doing basic import', self::LOG_LEVEL_VERBOSE);
+
+                $view->set('numcolumns', 1);
+                $view->commit();
+
+                safe_require('blocktype', 'textbox');
+                $bi = new BlockInstance(0,
+                    array(
+                        'blocktype'  => 'textbox',
+                        'title'      => '',
+                        'column'     => 1,
+                        'order'      => 1,
+                        'configdata' => array(
+                            'text' => self::get_entry_content($entry, $this),
+                        ),
+                    )
+                );
+                $view->addblockinstance($bi);
+            }
+            break;
+        default:
+            throw new ImportException($this, 'TODO: get_string: unknown strategy chosen for importing entry');
+        }
+        return $artefactmapping;
+    }
+
+    /**
+     * Attempts to import an entry as a mahara view
+     *
+     * Looks at the entry content to see if it looks like it could reasonably 
+     * be a Mahara view. We know this if the top level is just divs that have a 
+     * class of "column" on them, with "column-container" divs inside them.
+     *
+     * If it does "look" like a view, we attempt to import it as one, by 
+     * looking for blockinstance divs inside it. This differs a bit from the 
+     * LEAP2A specification, but we do so deliberately to get 100% 
+     * compatibility with Mahara to Mahara exports. Other systems can also 
+     * construct content in the right format to trigger Mahara to import things 
+     * as a full view.
+     *
+     * If it does not look like a View, we give up. Code elsewhere will simply 
+     * import the content into a textbox in a single column view.
+     *
+     * @param SimpleXMLElement $entry The entry to be imported
+     * @param View $view              The view object that has been created for 
+     *                                this view
+     * @return boolean Whether it could be imported. If not, we try and import 
+     *                 all the view content into a text box
+     */
+    private function import_entry_as_mahara_view(SimpleXMLElement $entry, View $view) {
+        static $blocktypes_installed = null;
+
+        $viewcontent = self::get_entry_content($entry, $this);
+        $dom = new DOMDocument;
+        libxml_use_internal_errors(true);
+        if (!$dom->loadHTML($viewcontent)) {
+            $this->trace("Unable to parse view content for entry {$entry->id} into a DOM document");
+            return false;
+        }
+        $errors = libxml_get_errors();
+        libxml_clear_errors();
+        libxml_use_internal_errors(false);
+        $this->trace('Imported view contents to DOM document with ' . count($errors) . ' internal libxml parsing errors', self::LOG_LEVEL_VERBOSE);
+        $viewdoc = simplexml_import_dom($dom);
+
+        $columns       = $viewdoc->body->xpath('div[contains(@class,"column")]/div[@class="column-content"]');
+        $columncount   = count($columns);
+        $toplevelnodes = count($viewdoc->body->xpath('*'));
+
+        // We check to see whether the content looks like it's a Mahara View. 
+        // If so, we'll try and import it the "smart" way.
+        if ($columncount && $columncount <= 5 && $columncount == $toplevelnodes) {
+            $this->trace(" ** Entry {$entry->title} is a View with $columncount columns **", self::LOG_LEVEL_VERBOSE);
+
+            $view->set('numcolumns', $columncount);
+            $view->commit();
+
+            if ($blocktypes_installed === null) {
+                $blocktypes_installed = array_map(create_function('$a', 'return $a->name;'), plugins_installed('blocktype'));
+            }
+
+            $col = 1;
+            foreach ($columns as $column) {
+                // Work out what blockinstances are in it
+                $blockinstances = $column->xpath('div[contains(@class,"blockinstance")]');
+                $blockinstancecount = count($blockinstances);
+
+                $row = 1;
+                foreach ($blockinstances as $blockinstance) {
+                    $matches = array();
+                    if (preg_match('/bt\-([a-z][a-z0-9_-]*)/', $blockinstance['class'], $matches)) {
+                        $blocktype = $matches[1];
+                        $this->trace("  Found block with type $blocktype at [$col][$row]");
+
+                        if (in_array($blocktype, $blocktypes_installed)) {
+                            // Create it!
+                            safe_require('blocktype', $blocktype);
+                            $bi = new BlockInstance(0,
+                                array(
+                                    'blocktype'  => $blocktype,
+                                    'title'      => 'title',
+                                    'column'     => $col,
+                                    'order'      => $row,
+                                    'configdata' => array(
+                                    ),
+                                )
+                            );
+                            $view->addblockinstance($bi);
+                        }
+                        else {
+                            $this->trace("  Ignoring unknown blocktype $blocktype");
+                        }
+                    }
+                    $row++;
+                }
+                $col++;
+            }
+
+            return true;
+        }
+
+        // The entry doesn't look like a Mahara view so we give up
+        return false;
     }
 
     /**
@@ -486,8 +699,47 @@ class PluginImportLeap extends PluginImport {
     }
 
     /**
-     * TODO: document
+     * Returns whether an entry has the given RDF type
+     *
+     * This helper method should probably be replaced by the as yet unwritten 
+     * get_rdf_type at some point, as it would be faster to get the type and do 
+     * comparisons than call this multiple times.
+     *
+     * @param SimpleXMLElement $entry    The entry to check
+     * $param PluginImportLeap $importer The importer
+     * @param string $rdftype            The type to check for
+     * @return boolean Whether the entry has the given RDF type
+     */
+    public static function is_rdf_type(SimpleXMLElement $entry, PluginImportLeap $importer, $rdftype) {
+        $result = $entry->xpath('rdf:type['
+            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, $rdftype) . ']');
+        return isset($result[0]) && $result[0] instanceof SimpleXMLElement;
+    }
+
+    /**
+     * Returns if the entry has the given term in the given category
+     *
+     * @param SimpleXMLElement $entry    The entry to check
+     * $param PluginImportLeap $importer The importer
+     * @param string $category           The category to look in. See http://wiki.cetis.ac.uk/2009-03/LEAP2A_categories
+     * @param string $term               The term to look for (see the docs for the appropriate category)
+     * @return boolean Whether the entry has the term in the category
+     */
+    public static function is_correct_category_scheme(SimpleXMLElement $entry, PluginImportLeap $importer, $category, $term) {
+        $result = $entry->xpath('a:category[('
+            . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, $category . '#') . ') and @term="' . $term . '"]');
+        return isset($result[0]) && $result[0] instanceof SimpleXMLElement;
+    }
+
+    /**
+     * Returns the <content> for a given entry, stripping off any transport 
+     * encoding and respecting the content type.
+     *
      * TODO: make sure we are rawurlencoding our file paths in our export
+     *
+     * @param SimpleXMLElement $entry   The entry to get the content for
+     * @param PlugimImporLeap $importer The importer
+     * @return string The content
      */
     public static function get_entry_content(SimpleXMLElement $entry, PluginImportLeap $importer) {
         // Entries have content, and that content can be of different types. So we want to make sure we grab it in the right type
@@ -502,12 +754,15 @@ class PluginImportLeap extends PluginImport {
                 // to be "fixed" (turned back into browser-happy xhtml) if it 
                 // causes problems.
                 $content = (string)$entry->content->div->asXML();
-                if (substr($content, 0, 42) == '<div xmlns="http://www.w3.org/1999/xhtml">') {
+                if (substr($content, 0, 42) == self::XHTML_DIV) {
                     $content = substr($content, 42, -6);
                     return $content;
                 }
+                else if (substr($content, 0, 43) == self::XHTML_DIV_EMPTY) {
+                    return '';
+                }
             }
-            log_debug("ERROR: <content> tag declared to be type xhtml but didn't wrap its content in a div with xmlns=http://www.w3.org/1999/xhtml");
+            log_debug("ERROR: <content> tag for entry {$entry->id} declared to be type xhtml but didn't wrap its content in a div with xmlns=http://www.w3.org/1999/xhtml");
 
             $starttaglength = strlen('<content type="xhtml">');
             $endtaglength   = strlen('</content>');
@@ -533,6 +788,80 @@ class PluginImportLeap extends PluginImport {
             }
         }
         return array_unique($tags);
+    }
+
+    /**
+     * Look for leap:date elements that are part of an entry (if any) and 
+     * return the values we parse from them
+     *
+     * Returned in a structure like so:
+     * array(
+     *     'start' => array(
+     *         'value' => 'w3c compliant date/time format, as allowed by LEAP2A',
+     *         'label' => 'label attribute, which is a plaintext version of the date',
+     *     ),
+     *     'end' => array(
+     *         'value' => 'maybe only the value is set on some elements',
+     *     ),
+     *     'target' => array(
+     *         'label' => 'sometimes, only the label will be set'
+     *     )
+     * )
+     *
+     * The only keys in the return value are those allowed by the LEAP2A spec, 
+     * and only if they exist on the entry.
+     *
+     * The values may have the 'value', 'label' or both keys, depending on what 
+     * each element has.
+     *
+     * Try and use the 'value' first, if you have a choice. Quite a few places 
+     * in Mahara currently just store dates as plaintext though.
+     *
+     * Spec reference: http://wiki.cetis.ac.uk/2009-03/LEAP2A_literals#date
+     */
+    public static function get_leap_dates(SimpleXMLElement $entry) {
+        $dates = array();
+        foreach (array('start', 'end', 'target') as $point) {
+            $dateelement = $entry->xpath('leap:date[@leap:point="' . $point . '"]');
+            if (count($dateelement) == 1) {
+                $dateelement = $dateelement[0];
+            }
+
+            if ($dateelement instanceof SimpleXMLElement) {
+                $date = (string)$dateelement;
+                if ($date) {
+                    $dates[$point]['value'] = $date;
+                }
+
+                // Parse for leap:label
+                $leapattributes = array();
+                foreach ($dateelement->attributes(PluginImportLeap::NS_LEAP) as $key => $value) {
+                    $leapattributes[$key] = (string)$value;
+                }
+                if (isset($leapattributes['label'])) {
+                    $dates[$point]['label'] = $leapattributes['label'];
+                }
+            }
+        }
+        return $dates;
+    }
+
+    /**
+     * Waffer thin helper to grab all attributes in a namespace.
+     *
+     * It's often much easier to work with them in this form. SimpleXML doesn't 
+     * provide a nice property to get at them with.
+     *
+     * @param SimpleXMLElement $element The element to get attributes from
+     * @param string $ns                The namespace to get the attributes for
+     * @return array                    The attributes in the namespace
+     */
+    public static function get_attributes(SimpleXMLElement $item, $ns) {
+        $attributes = array();
+        foreach ($item->attributes($ns) as $key => $value) {
+            $attributes[$key] = (string)$value;
+        }
+        return $attributes;
     }
 
 }
@@ -591,11 +920,11 @@ abstract class LeapImportArtefactPlugin {
      * best match, as the user may choose the less obvious method of importing 
      * for some reason.
      *
-     * @param SimpleXMLElement $entry The entry to find import strategies for
-     * @param PluginImport $importer  The importer
+     * @param SimpleXMLElement $entry    The entry to find import strategies for
+     * @param PluginImportLeap $importer The importer
      * @return array A list of strategies that could be used to import this entry
      */
-    abstract public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImport $importer);
+    abstract public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImportLeap $importer);
 
     /**
      * Converts an entry into the appropriate artefacts using the given 
@@ -637,25 +966,25 @@ abstract class LeapImportArtefactPlugin {
      * attached to blog posts even though the files and blog posts were 
      * imported by different plugins.
      *
-     * @param SimpleXMLElement $entry The entry to import
-     * @param PluginImport $importer  The importer
-     * @param int $strategy           The strategy to use (should be a class 
-     *                                constant on your class, see the 
-     *                                documentation of get_import_strategies_for_entry
-     *                                for more information)
-     * @param array $otherentries     A list of entry IDs that this class 
-     *                                previously said were required to import 
-     *                                the entry
+     * @param SimpleXMLElement $entry    The entry to import
+     * @param PluginImportLeap $importer The importer
+     * @param int $strategy              The strategy to use (should be a class 
+     *                                   constant on your class, see the documentation
+     *                                   of get_import_strategies_for_entry for more
+     *                                   information)
+     * @param array $otherentries        A list of entry IDs that this class 
+     *                                   previously said were required to import 
+     *                                   the entry
      * @throws ImportException If the strategy is unrecognised
      * @return array A list describing what artefacts were created by the 
      *               import of each entry
      */
-    abstract public static function import_using_strategy(SimpleXMLElement $entry, PluginImport $importer, $strategy, array $otherentries);
+    abstract public static function import_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries);
 
     /**
      * Gives plugins a chance to import author data
      */
-    public static function import_author_data(PluginImport $importer, $persondataid) {
+    public static function import_author_data(PluginImportLeap $importer, $persondataid) {
     }
 
     /**
@@ -671,18 +1000,18 @@ abstract class LeapImportArtefactPlugin {
      *
      * This method has no return value.
      *
-     * @param SimpleXMLElement $entry The entry previously imported
-     * @param PluginImport $importer  The importer
-     * @param int $strategy           The strategy to use (should be a class 
-     *                                constant on your class, see the 
-     *                                documentation of get_import_strategies_for_entry
-     *                                for more information)
+     * @param SimpleXMLElement $entry    The entry previously imported
+     * @param PluginImportLeap $importer The importer
+     * @param int $strategy              The strategy to use (should be a class 
+     *                                   constant on your class, see the documentation
+     *                                   of get_import_strategies_for_entry for more
+     *                                   information)
      * @param array $otherentries     A list of entry IDs that this class 
      *                                previously said were required to import 
      *                                the entry
      * @throws ImportException If the strategy is unrecognised
      */
-    public static function setup_relationships(SimpleXMLElement $entry, PluginImport $importer, $strategy, array $otherentries) {
+    public static function setup_relationships(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
     }
 
 }

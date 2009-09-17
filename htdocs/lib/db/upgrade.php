@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -1175,6 +1176,29 @@ function xmldb_core_upgrade($oldversion=0) {
             'name' => 'creategroup',
         );
         ensure_record_exists('event_type', $event, $event);
+    }
+
+    if ($oldversion < 2009082400) {
+        $table = new XMLDBTable('usr_registration');
+        $field = new XMLDBField('username');
+        drop_field($table, $field);
+        $field = new XMLDBField('salt');
+        drop_field($table, $field);
+        $field = new XMLDBField('password');
+        drop_field($table, $field);
+    }
+
+    if ($oldversion < 2009082600) {
+        $captcha = get_config('captcha_on_contact_form');
+        set_config('captchaoncontactform', (int) (is_null($captcha) || $captcha));
+        $captcha = get_config('captcha_on_register_form');
+        set_config('captchaonregisterform', (int) (is_null($captcha) || $captcha));
+    }
+
+    if ($oldversion < 2009090700) {
+        set_config('showselfsearchsideblock', 1);
+        set_config('showtagssideblock', 1);
+        set_config('tagssideblockmaxtags', 20);
     }
 
     return $status;

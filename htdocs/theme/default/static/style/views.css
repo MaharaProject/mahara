@@ -2,55 +2,32 @@
  * Stylesheet for views for the default theme
  */
 
-
-#top-pane {
-    background-color: #95a8b7;
-}
 #category-list ul {
-	margin: 0 0 0 .5em;
+	margin: 0;
+  	background: url(../images/tabs-bg.gif) repeat-x left top;
+  	height: 25px;
 }
 #category-list li {
-	height: 25px;
-	line-height: 25px;
-}
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-    #category-list li { line-height: 24px; }
+  	line-height: 25px;
+	margin: 0;
+	padding: 0;
+	float: left;
 }
 #category-list li a {
-    background-color: #e0e8ee;
+  	background: transparent url(../images/tabs-divider.gif) no-repeat right top;
 	color: #1e6297;
-    padding: 5px 10px;
+  	padding: 5px 12px 6px 10px;
 	height: 25px;
-}
-#category-list li a:hover {
-	background-color: #d0dee8;
+    text-decoration: none;
 }
 #category-list li.current a {
-    background-color: #f4f7f9;
+    background: transparent url(../images/tabs-over-bg.gif) no-repeat right top;
 }
 
 #blocktype-list {
-    background-color: #f4f7f9;
-    margin-left: .5em;
+    background-color: #f5f9fc;
 }
 
-#page #bottom-pane {
-	border: 5px solid #f1f1f1;
-}
-
-#blocksinstruction {
-    background: #f1f1f1;
-    color: #6e6e6e;
-    font-weight: bold;
-}
-
-.column-header input {
-    font-family: Verdana, Arial, Helvetica, sans-serif; /* todo audit */
-}
-
-.blockinstance {
-    margin: 1em 0 1em 0;
-}
 .blockinstance-header h4 {
     padding: 0 .25em;
     border-bottom: 2px solid #d2d2d2;
@@ -61,6 +38,8 @@
 
 .blockinstance-controls input {
     color: #acc067;
+	background: none;
+	border: 0;
 }
 
 .blockinstance-content {
@@ -70,107 +49,43 @@
 #artefactchooser-body table,
 #artefactchooser-body table th,
 #artefactchooser-body table td {
-    padding: 0 .25em;
-	text-align: left;
+    padding: 0 .25em !important;
+}
+
+thead th {
+    color: #677a8a;
+	border-bottom: 1px solid #95a8b7 !important;
 }
 
 /* styling the tabs for the artefact chooser */
 ul.artefactchooser-tabs {
-  line-height: 24px;
+  line-height: 25px;
   font-weight: bold;
-  height: 24px;
-  background: url(../images/tabs-bg.gif) repeat-x top left;
+  height: 25px;
+  font-size: 12px;
+  background: url(../images/tabs-bg.gif) repeat-x left top;
 }
 ul.artefactchooser-tabs li {
+  margin: 0 !important;
   float: left;
-  height: 24px;
-  background: url(../images/tabs-divider.gif) no-repeat top right;
 }
 ul.artefactchooser-tabs li a {
   color: #1E6297;
   padding: 5px 12px 5px 10px;
   * padding: 6px 12px 6px 10px;
+  background: transparent url(../images/tabs-divider.gif) no-repeat right top;
 }
 ul.artefactchooser-tabs li.current a {
-  background: url(../images/tabs-over-bg.gif) no-repeat top right;
+  background: transparent url(../images/tabs-over-bg.gif) no-repeat right top;
   color: #000;
 }
 
 #artefactchooser-body {
-    border: 1px solid #d9dfea;
-	padding: .25em .5em;
-}
-#artefactids_data label,
-td label {
-	font-weight: normal;
-	color: #474220;
-	font-size: .9em;
-	color: #474220;
+    border: 1px solid #d1d1d1;
 }
 
-.blockinstance-content p.noartefacts {
-    margin-top: 0;
-}
-.blockinstance-content p {
-	margin: .5em 0;
-}
-.maincontent table.artefactchooser-data {
-    border: none;
-    margin-top: 0;
-    padding: .5em .5em 0;
-}
-.blockinstance-content .maharatable th {
-	text-align: left !important;
-}
-.blockconfig-background {
-  width: 100%;
-  text-align: center;
-  margin-top: 20px;
-}
-.blockinstance.configure {
-  border: 4px solid #f4f7f9;
-  background: #fff;
-  width: 700px;
-  text-align: left;
-  margin-left: auto;
-  margin-right: auto;
-}
-.blockinstance.configure .blockinstance-header {
-  padding: .25em .5em;
-}
-.configure .blockinstance-content {
-  border: 4px solid #F4F7F9;
-  padding: 0.25em 0.5em;
-}
-.configure .blockinstance-content th {
-  padding: .5em 0 0 0;
-}
-.configure .blockinstance-content td {
-  padding: 0 0 .5em 0;
-}
 
 /* VIEWS */
-#blockconfig-header {
-  font-weight: bold;
-  padding: .25em .5em;
-  border: 4px solid #F4F7F9;
-}
-
 .wallpost {
-    border-bottom: 1px dotted #d1d1d1;
 	background-color: #F8FBFD;
-    padding: .5em;
-}
-
-
-#viewacl_lhs {
-	background-color: #FBFBFB;
-	width: 310px;
-}
-#viewacl_lhs #results {
-	border-bottom: 1px solid #95a8b7;
-}
-
-#accesslistitems .ai-container {
-    background-color: #f4f7f9;
 }

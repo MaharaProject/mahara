@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -58,12 +59,14 @@ $cfg = new StdClass;
 // system mail address. emails out come from this address.
 // if not specified, will default to noreply@ automatically detected host.
 // if that doesn't work or you want something else, then specify it here.
-// $cfg->noreplyaddress = 'noreply@myhost.com'
+// $cfg->noreplyaddress = 'noreply@myhost.com';
 
 // Logging configuration
 // For each log level, you can specify where the messages are displayed.
 // LOG_TARGET_SCREEN makes the error messages go to the screen - useful
 // when debugging but not on a live site!
+// LOG_TARGET_ADMIN sends error messages to the screen but only when
+// browsing in the admin section
 // LOG_TARGET_ERRORLOG makes the error messages go to the log as specified
 // by the apache ErrorLog directive. It's probably useful to have this on
 // for all log levels.
@@ -160,5 +163,20 @@ $cfg->accessidletimeout = 600;
 
 // Whether to show the onlineusers sideblock
 $cfg->showonlineuserssideblock = true;
+
+// CRON job maximum run age in SECONDS
+// ... Mahara decides to run a cron job only if the "next run time" is between the current date+time and (max run age) seconds ago.
+//
+// IMPORTANT:  THIS MUST BE EQUAL TO OR GREATER THAN YOUR CRON JOB THAT HITS {$cfg->wwwroot}/lib/cron.php
+// ... The setup/install instructions require you to set a server cron job to hit the cron.php.
+// ... The default assumption by Mahara is that this will be every minute.
+// ... Not all hosting providers will allow you to schedule a cron job every minute.  Also, you may for your own purposes
+//     not want to have a cron job every minute for CPU / performance reasons.
+//
+// If this is not set properly, any cron periodicities less than your server cron periodicity will likely be perpetually skipped.
+// This will be evident in cron job report that is output by your server after hitting cron.php.
+//
+// EXAMPLE:  Your cron job hits cron.php every 15 minutes.  Then $cfg->maxrunage must be 900 or greater.
+$cfg->maxrunage = 300;
 
 ?>

@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -200,6 +201,7 @@ function expected_account_preferences() {
                  'messages'       => 'allow',
                  'lang'           => 'default',
                  'addremovecolumns' => 0,
+                 'tagssideblockmaxtags' => get_config('tagssideblockmaxtags'),
                  );
 }
 
@@ -439,6 +441,7 @@ function display_name($user, $userto=null, $nameonly=false) {
             $user->lastname      = $USER->get('lastname');
             $user->admin         = $USER->get('admin') || $USER->is_institutional_admin();
             $user->staff         = $USER->get('staff') || $USER->is_institutional_staff();
+            $user->deleted       = 0;
             $usercache[$user->id] = $user;
         }
         else {
@@ -459,6 +462,7 @@ function display_name($user, $userto=null, $nameonly=false) {
         $user->lastname      = $userObj->get('lastname');
         $user->admin         = $userObj->get('admin');
         $user->staff         = $userObj->get('staff');
+        $user->deleted       = $userObj->get('deleted');
     }
 
     $user->id   = (isset($user->id)) ? $user->id : null;
@@ -469,23 +473,21 @@ function display_name($user, $userto=null, $nameonly=false) {
     }
 
     // if they don't have a preferred name set, just return here
+    $firstlast = (isset($user->deleted) && $user->deleted) ? get_string('deleteduser') : ($user->firstname . ' ' . $user->lastname);
     if (empty($user->preferredname)) {
         if ((!empty($userto->admin) || !empty($userto->staff)) && !$nameonly) {
-            return ($resultcache[$user->id][$userto->id][$nameonly]
-                = $user->firstname . ' ' . $user->lastname . ' (' . $user->username . ')');
+            return ($resultcache[$user->id][$userto->id][$nameonly] = $firstlast . ' (' . $user->username . ')');
         }
-        return ($resultcache[$user->id][$userto->id][$nameonly]
-            = $user->firstname . ' ' . $user->lastname);
+        return ($resultcache[$user->id][$userto->id][$nameonly] = $firstlast);
     }
     else if ($user->id == $userto->id) {
         // If viewing our own name, show it how we like it
-        return ($resultcache[$user->id][$userto->id][$nameonly]
-            = $user->preferredname);
+        return ($resultcache[$user->id][$userto->id][$nameonly] = $user->preferredname);
     }
 
     if ((!empty($userto->admin) || !empty($userto->staff)) && !$nameonly) {
         return ($resultcache[$user->id][$userto->id][$nameonly]
-            = $user->preferredname . ' (' . $user->firstname . ' ' . $user->lastname . ' - ' . $user->username . ')');
+            = $user->preferredname . ' (' . $firstlast . ' - ' . $user->username . ')');
     }
 
     $sql = "SELECT g1.member
@@ -496,10 +498,9 @@ function display_name($user, $userto=null, $nameonly=false) {
             WHERE g1.member = ? AND g2.member = ? AND g2.role = 'tutor'";
     if (record_exists_sql($sql, array($user->id, $userto->id))) {
         return ($resultcache[$user->id][$userto->id][$nameonly]
-            = $user->preferredname . ($nameonly ? '' : ' (' . $user->firstname . ' ' . $user->lastname . ')'));
+            = $user->preferredname . ($nameonly ? '' : ' (' . $firstlast . ')'));
     }
-    return ($resultcache[$user->id][$userto->id][$nameonly]
-        = $user->preferredname);
+    return ($resultcache[$user->id][$userto->id][$nameonly] = $user->preferredname);
 }
 
 /**

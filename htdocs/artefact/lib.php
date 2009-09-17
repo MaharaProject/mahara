@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage artefact
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -92,6 +93,18 @@ abstract class PluginArtefact extends Plugin {
      * @return array of artefact ids
      */
     public static function view_export_extra_artefacts($viewids) {
+        return array();
+    }
+
+
+    /**
+     * When filtering searches, some artefact types are classified the same way
+     * even when they come from different artefact plugins.  This function allows
+     * artefact plugins to declare which search filter content type each of their 
+     * artefact types belong to.
+     * @return array of artefacttype => array of filter content types
+     */
+    public static function get_artefact_type_content_types() {
         return array();
     }
 }
@@ -625,6 +638,12 @@ abstract class ArtefactType {
         }
         if ($group = $this->get('group')) {
             return get_field('group', 'name', 'id', $group);
+        }
+        if ($institution = $this->get('institution')) {
+            if ($institution == 'mahara') {
+                return get_config('sitename');
+            }
+            return get_field('institution', 'displayname', 'name', $institution);
         }
         return null;
     }
@@ -1218,5 +1237,35 @@ function artefact_type_installed($type) {
 
     return isset($types[$type]);
 }
+
+function artefact_get_types_from_filter($filter) {
+    static $contenttype_artefacttype = null;
+
+    if (is_null($contenttype_artefacttype)) {
+        $contenttype_artefacttype = array();
+        foreach (plugins_installed('artefact') as $plugin) {
+            safe_require('artefact', $plugin->name);
+            $classname = generate_class_name('artefact', $plugin->name);
+            if (!is_callable($classname . '::get_artefact_type_content_types')) {
+                continue;
+            }
+            $artefacttypetypes = call_static_method($classname, 'get_artefact_type_content_types');
+            foreach ($artefacttypetypes as $artefacttype => $contenttypes) {
+                if (!empty($contenttypes)) {
+                    foreach ($contenttypes as $ct) {
+                        $contenttype_artefacttype[$ct][] = $artefacttype;
+                    }
+                }
+            }
+        }
+    }
+
+    if (empty($contenttype_artefacttype[$filter])) {
+        return null;
+    }
+
+    return $contenttype_artefacttype[$filter];
+}
+
 
 ?>

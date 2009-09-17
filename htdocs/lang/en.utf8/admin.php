@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage lang
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -31,7 +32,7 @@ $string['administration'] = 'Administration';
 // Installer
 $string['installation'] = 'Installation';
 $string['release'] = 'version %s (%s)';
-$string['copyright'] = 'Copyright &copy; 2006 onwards, Catalyst IT Ltd';
+$string['copyright'] = 'Copyright &copy; 2006 onwards, <a href="http://wiki.mahara.org/Contributors">Catalyst IT Ltd and others</a>';
 $string['agreelicense'] = 'I agree';
 $string['component'] = 'Component or plugin';
 $string['continue'] = 'Continue';
@@ -129,12 +130,24 @@ $string['registeryourmaharasitedetail'] = '
 <p>If you tick &quot;send weekly updates&quot;, Mahara will automatically send an update to mahara.org once a week with your updated information.</p>
 <p>Registering will remove this notice. You will be able to change whether you send weekly updates on the <a href="%sadmin/site/options.php">site options</a> page.</p>';
 
+// Close site
+$string['Close'] = 'Close';
+$string['closesite'] = 'Close Site';
+$string['closesitedetail'] = 'You may close the site to everyone except administrators.  This will be useful when preparing for a database upgrade.  Only administrators will be able to log in until you either reopen the site, or an upgrade is successfully completed.';
+$string['Open'] = 'Open';
+$string['reopensite'] = 'Reopen Site';
+$string['reopensitedetail'] = 'Your site is closed.  Site administrators may stay logged in until an upgrade is detected.';
+
 // Site options
 $string['adminsonly'] = 'Administrators only';
 $string['allowpublicviews'] = 'Allow public views';
 $string['allowpublicviewsdescription'] = 'If set to yes, users will be able to create portfolio Views that are accessable to the public rather than only to logged in users';
 $string['allowpublicprofiles'] = 'Allow public profiles';
 $string['allowpublicprofilesdescription'] = 'If set to yes, users will be able to set their profile Views to be accessable to the public rather than only to logged in users';
+$string['captchaonregisterform'] = 'Captcha required for registration';
+$string['captchaonregisterformdescription'] = 'Require users to type letters from a captcha image when submitting the registration form';
+$string['captchaoncontactform'] = 'Captcha required for contact us';
+$string['captchaoncontactformdescription'] = 'Require logged-out users to type letters from a captcha image when submitting the Contact Us form';
 $string['defaultaccountinactiveexpire'] = 'Default account inactivity time';
 $string['defaultaccountinactiveexpiredescription'] = 'How long a user account will remain active without the user logging in';
 $string['defaultaccountinactivewarn'] = 'Warning time for inactivity/expiry';
@@ -156,6 +169,10 @@ $string['searchplugindescription'] = 'Search plugin to use';
 $string['sessionlifetime'] = 'Session lifetime';
 $string['sessionlifetimedescription'] = 'Time in minutes after which an inactive logged in user will be automatically logged out';
 $string['setsiteoptionsfailed'] = 'Failed setting the %s option';
+$string['showselfsearchsideblock'] = 'Enable Portfolio Search';
+$string['showselfsearchsideblockdescription'] = 'Display the "Search My Portfolio" side block in the My Portfolio section of the site';
+$string['showtagssideblock'] = 'Enable Tag Cloud';
+$string['showtagssideblockdescription'] = 'If enabled, users will see a side block in the My Portfolio section of the site with a list of their most frequently used tags';
 $string['sitedefault'] = 'Site Default';
 $string['sitelanguagedescription'] = 'The default language for the site';
 $string['sitename'] = 'Site name';
@@ -163,6 +180,8 @@ $string['sitenamedescription'] = 'The site name appears in certain places around
 $string['siteoptionspagedescription'] = 'Here you can set some global options that will apply by default throughout the entire site.';
 $string['siteoptionsset'] = 'Site options have been updated.';
 $string['sitethemedescription'] = 'The default theme for the site';
+$string['tagssideblockmaxtags'] = 'Maximum Tags in Cloud';
+$string['tagssideblockmaxtagsdescription'] = 'The default number of tags to display in user tag clouds';
 $string['theme'] = 'Theme';
 $string['trustedsites'] = 'Trusted sites';
 $string['updatesiteoptions'] = 'Update site options';

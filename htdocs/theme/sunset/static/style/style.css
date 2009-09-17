@@ -29,7 +29,7 @@ a,
 a:link,
 a:active,
 a:visited {
-    color: #3B6065;
+    color: #8E1901;
     text-decoration: none;
 }
 a:hover {
@@ -56,7 +56,7 @@ h5 {
     color: #8E1901;
 }
 h6 {
-    color: #3B6065;
+    color: #8E1901;
 }
 .description,
 .unvalidated,
@@ -138,7 +138,7 @@ fieldset {
 
 /* Buttons */
 .btn,
-.btn-link,
+#sb-profile .controls a,
 input.submit,
 input.button, button,
 input.submitcancel,
@@ -155,7 +155,9 @@ input.cancelbackcreate,
 	margin-left: 5px;
 }
 a.btn,
+#sb-profile .controls a:hover,
 a.btn:hover {
+	background-color: #c66c14;
 	color: #FFF;
     text-decoration:none;
 }
@@ -169,7 +171,7 @@ div.btn-msg input.submit,
 div.btn-add input.submit, input.submit.btn-add,
 div.btn-edit input.submit, input.submit.btn-edit,
 a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup {
-    color: #3B6065 !important;
+    color: #8E1901;
 }
 
 
@@ -178,12 +180,14 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     background-color: transparent;
     margin-top:0px;
     padding-top:0px;
+    width: 90%;
 }
 #top-wrapper {
     background: transparent url(../images/header-b.jpg) no-repeat top left;
+    border: none;
 }
 #site-logo {
-	padding: 15px 25px 0 0
+	padding: 25px 25px 0 0
 }
 #loading-box {
     color: #fff;
@@ -191,10 +195,19 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 }
 /* search box in header */
 #usf {
-    padding: 35px 6px 0 0;
+    padding: 48px 6px 0 0;
 }
 #usf_query_container input {
     color: #8E1901;
+}
+#usf #usf_submit {
+    border:none;
+	width:30px;
+	padding:3px 0;
+	margin:0;
+	text-indent:-1000px;
+	cursor:pointer;
+    background: transparent url(../images/btn_search_off.png) no-repeat center center;	
 }
 
 /* main menu */
@@ -203,7 +216,8 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     padding: 0;
     margin: 0;
     height: 33px;
-    background: transparent url(../images/mainnav-bg.jpg) no-repeat top left;
+	border:none;
+    background: transparent url(../images/transparency.png) repeat center center;	
 }
 #main-nav li {
     float:left;
@@ -214,7 +228,6 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     line-height: 20px;
 	margin: 0 0 0 5px;
     padding: 6px 15px 7px;
-	background: transparent url(../images/nav-sep.gif) no-repeat right 12px;
 }
 #main-nav li a,
 #main-nav li a:link,
@@ -251,10 +264,12 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     background: #ffffff url(../images/subnav-bg.jpg) repeat-x bottom center;;
     height: 35px;
 	width:100%;
+	border:none;
 }
 #sub-nav ul {
     float:right;
 	padding: 8px 0 5px 0;
+    background: transparent;
 }
 #sub-nav li {
     padding: 5px 10px 5px 0;
@@ -315,7 +330,7 @@ ul.in-page-tabs li a.current-tab {
     border: 1px dotted #8E1901;
 }
 .message a {
-    color: #3B6065;
+    color: #8E1901;
 }
 /* system messages between nav and main content */
 #messages .ok {
@@ -385,7 +400,7 @@ div#sb-profile ul li a {
 	color: #000000;
 }
 div#sb-profile ul li ul li a {
-	color: #3B6065;
+	color: #8E1901;
 }
 
 /* Side Quota Bar */
@@ -422,8 +437,14 @@ div#sb-profile ul li ul li a {
 
 
 /* Footer */
+#footernav,
+#footer-wrap #version  {
+  color: #8E1901;
+} 
+
 #footer-wrap {
     background-color: transparent;
+    border: 0;
 }
 
 

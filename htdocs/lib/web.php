@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  * @copyright  (C) portions from Moodle, (C) Martin Dougiamas http://dougiamas.com
  */
 
@@ -392,13 +393,12 @@ EOF;
     $smarty->assign('SESSKEY', $USER->get('sesskey'));
     $smarty->assign_by_ref('JAVASCRIPT', $javascript_array);
     $smarty->assign_by_ref('HEADERS', $headers);
-    if (get_config('siteclosed')) {
-        if (get_config('disablelogin')) {
-            $smarty->assign('SITECLOSED', get_string('siteclosedlogindisabled', 'mahara', get_config('wwwroot') . 'admin/upgrade.php'));
-        }
-        else {
-            $smarty->assign('SITECLOSED', get_string('siteclosed'));
-        }
+    $siteclosedforupgrade = get_config('siteclosed');
+    if ($siteclosedforupgrade && get_config('disablelogin')) {
+        $smarty->assign('SITECLOSED', get_string('siteclosedlogindisabled', 'mahara', get_config('wwwroot') . 'admin/upgrade.php'));
+    }
+    else if ($siteclosedforupgrade || get_config('siteclosedbyadmin')) {
+        $smarty->assign('SITECLOSED', get_string('siteclosed'));
     }
 
     if ((!isset($extraconfig['pagehelp']) || $extraconfig['pagehelp'] !== false)
@@ -430,11 +430,21 @@ EOF;
         }
 
         if ($USER->is_logged_in() && defined('MENUITEM') && substr(MENUITEM, 0, 11) == 'myportfolio') {
-            $SIDEBLOCKS[] = array(
-                'name'   => 'selfsearch',
-                'weight' => 0,
-                'data'   => array(),
-            );
+            if (get_config('showselfsearchsideblock')) {
+                $SIDEBLOCKS[] = array(
+                    'name'   => 'selfsearch',
+                    'weight' => 0,
+                    'data'   => array(),
+                );
+            }
+            if (get_config('showtagssideblock')) {
+                $SIDEBLOCKS[] = array(
+                    'name'   => 'tags',
+                    'id'     => 'sb-tags',
+                    'weight' => 0,
+                    'data'   => tags_sideblock(),
+                );
+            }
         }
 
         if($USER->is_logged_in() && !defined('ADMIN') && !defined('INSTITUTIONALADMIN')) {
@@ -463,7 +473,7 @@ EOF;
             );
         }
 
-        if (!$USER->is_logged_in()) {
+        if (!$USER->is_logged_in() && !(get_config('siteclosed') && get_config('disablelogin'))) {
             $SIDEBLOCKS[] = array(
                 'name'   => 'login',
                 'weight' => -10,

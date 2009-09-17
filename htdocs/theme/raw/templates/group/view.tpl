@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 {if $GROUP->description}
-	<p>{$GROUP->description}</p>
+	<div class="groupdescription">{$GROUP->description}</div>
 {/if}
 
 <div class="group-info">
@@ -50,6 +50,7 @@
                     {/if}
                 {/if}
                 <div>{$view.shortdescription}</div>
+                {if $view.tags}<div class="tags">{str tag=tags}: {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
                 {if $view.template}
                 <div><a href="">{str tag=copythisview section=view}</a></div>
                 {/if}
@@ -80,6 +81,7 @@
                     {/if}
                 {/if}
                 <div>{$view.shortdescription}</div>
+                {if $view.tags}<div class="tags">{str tag=tags}: {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
             </td>
         </tr>
     {/foreach}

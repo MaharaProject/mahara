@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -232,22 +233,23 @@ if (!defined('INSTALLER')) {
     auth_setup();
 }
 
-if (get_config('siteclosed')) {
-    if ($USER->admin) {
-        if (get_config('disablelogin')) {
-            $USER->logout();
-        }
-        else if (!defined('INSTALLER')) {
-            redirect('/admin/upgrade.php');
-        }
+$siteclosedforupgrade = get_config('siteclosed');
+if ($siteclosedforupgrade && $USER->admin) {
+    if (get_config('disablelogin')) {
+        $USER->logout();
     }
-    if (!$USER->admin) {
-        if ($USER->is_logged_in()) {
-            $USER->logout();
-        }
-        if (!defined('HOME') && !defined('INSTALLER')) {
-            redirect();
-        }
+    else if (!defined('INSTALLER')) {
+        redirect('/admin/upgrade.php');
+    }
+}
+
+$siteclosed = $siteclosedforupgrade || get_config('siteclosedbyadmin');
+if ($siteclosed && !$USER->admin) {
+    if ($USER->is_logged_in()) {
+        $USER->logout();
+    }
+    if (!defined('HOME') && !defined('INSTALLER')) {
+        redirect();
     }
 }
 

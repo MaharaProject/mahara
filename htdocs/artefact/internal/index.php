@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage artefact-internal
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -350,10 +351,12 @@ function profileform_submit(Pieform $form, $values) {
             }
         }
         else {
-            $classname = generate_artefact_class_name($element);
-            $profile = new $classname(0, array('owner' => $USER->get('id')));
-            $profile->set('title', $values[$element]);
-            $profile->commit();
+            if (!isset($profilefields[$element]) || $values[$element] != $profilefields[$element]) {
+                $classname = generate_artefact_class_name($element);
+                $profile = new $classname(0, array('owner' => $USER->get('id')));
+                $profile->set('title', $values[$element]);
+                $profile->commit();
+            }
         }
     }
 

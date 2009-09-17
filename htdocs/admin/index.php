@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage admin
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -38,6 +39,7 @@ if (get_config('installed')) {
 else {
     define('TITLE', get_string('installation', 'admin'));
 }
+require_once('pieforms/pieform.php');
 require(get_config('libroot') . 'upgrade.php');
 require(get_config('libroot') . 'registration.php');
 
@@ -55,6 +57,22 @@ if (!get_config('registration_lastsent')) {
     $register = register_site();
 }
 
+$closed = get_config('siteclosedbyadmin');
+$closeform = pieform(array(
+    'name'     => 'close_site',
+    'renderer' => 'oneline',
+    'elements' => array(
+        'close' => array(
+            'type'  => 'hidden',
+            'value' => !$closed,
+        ),
+        'submit' => array(
+            'type'  => 'submit',
+            'value' => get_string($closed ? 'Open' : 'Close', 'admin'),
+        ),
+    ),
+));
+
 $smarty = smarty();
 $smarty->assign('PAGEHEADING', hsc(get_string('administration', 'admin')));
 
@@ -65,6 +83,20 @@ if (isset($register)) {
     $smarty->assign('register', $register);
 }
 
+$smarty->assign('closed', $closed);
+$smarty->assign('closeform', $closeform);
+
 $smarty->display('admin/index.tpl');
+
+function close_site_submit(Pieform $form, $values) {
+    global $closed;
+    if (!$closed && $values['close']) {
+        set_config('siteclosedbyadmin', 1);
+    }
+    else if ($closed && !$values['close']) {
+        set_config('siteclosedbyadmin', 0);
+    }
+    redirect(get_config('wwwroot') . 'admin/index.php');
+}
 
 ?>

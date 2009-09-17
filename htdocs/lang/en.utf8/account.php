@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -53,6 +54,9 @@ $string['messagesallow'] = 'Allow anyone to send me messages';
 $string['language'] = 'Language';
 
 $string['showviewcolumns'] = 'Show controls to add and remove columns when editing a view';
+
+$string['tagssideblockmaxtags'] = 'Maximum tags in cloud';
+$string['tagssideblockmaxtagsdescription'] = 'Maximum number of tags to display in your Tag Cloud';
 
 $string['prefssaved']  = 'Preferences saved';
 $string['prefsnotsaved'] = 'Failed to save your Preferences!';

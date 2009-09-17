@@ -1,10 +1,10 @@
 {include file="header.tpl"}
 
 <h2>{$subheading|escape}</h2>
-<div class="rbuttons pagetabs">
+<div id="forumbtns" class="rbuttons">
 	{if $admin}
-		<a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}" class="btn-edit s">{str tag="edittitle" section="interaction.forum"}</a>
-        <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}" class="btn-del s">{str tag="deleteforum" section="interaction.forum"}</a>
+		<a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}" class="btn-editforum">{str tag="edittitle" section="interaction.forum"}</a>
+        <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}" class="btn-deleteforum">{str tag="deleteforum" section="interaction.forum"}</a>
 	{/if}
 	{$forum->subscribe}
 </div>
@@ -19,13 +19,13 @@
 {if $stickytopics || $regulartopics}
 <form action="" method="post">
     <table id="forumtopicstable" class="fullwidth nohead">
-        <tr>
-        <th></th>
-        <th></th>
-        <th>{str tag="Topic" section="interaction.forum"}</th>
+    <tr>
+        <th width="12px"></th>
+        <th width="12px"></th>
+        <th width="40%">{str tag="Topic" section="interaction.forum"}</th>
         <th>{str tag="Poster" section="interaction.forum"}</th>
-        <th class="postscount">{str tag="Posts" section="interaction.forum"}</th>
-        <th>{str tag="lastpost" section="interaction.forum"}</th>
+        <th class="postscount center" width="10%">{str tag="Posts" section="interaction.forum"}</th>
+        <th class="lastpost" width="25%">{str tag="lastpost" section="interaction.forum"}</th>
         {if $moderator}<th></th>{/if}
     </tr>
     {if $stickytopics}
@@ -36,10 +36,10 @@
     {/if}
     </table>
     {if $regulartopics}
-    	<div class="fr">{$pagination}</div>
+    	<div class="right">{$pagination}</div>
     {/if}
     {if $membership && (!$forum->subscribed || $moderator)}
-    <div class="forumselectwrap fl"><select name="type">
+    <div class="forumselectwrap"><select name="type">
         <option value="default" selected="selected">{str tag="chooseanaction" section="interaction.forum"}</option>
         {if !$forum->subscribed}
         <option value="subscribe">{str tag="Subscribe" section="interaction.forum"}</option>
@@ -63,7 +63,7 @@
 </form>
 </div>
 
-<div class="cr">
+<div class="forumfooter">
 	<label>{str tag="groupadminlist" section="interaction.forum"}</label>
 	{foreach from=$groupadmins item=groupadmin}
     <span class="s inlinelist">

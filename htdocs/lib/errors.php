@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -36,6 +37,9 @@ define('LOG_TARGET_SCREEN', 1);
 define('LOG_TARGET_ERRORLOG', 2);
 /** Write the error to stdout (using echo) */
 define('LOG_TARGET_STDOUT', 4);
+/** Display the errors on the screen in the admin area only (short term hack
+    until we create an admin notifications page) */
+define('LOG_TARGET_ADMIN', 8);
 
 // Logging levels
 /** Environment type errors, such as register_globals being on */
@@ -194,7 +198,7 @@ function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $lin
     }
     $prefix = '[' . str_pad(substr(strtoupper($loglevelnames[$loglevel]), 0, 3), 3) . '] ' . $prefix;
 
-    if ($targets & LOG_TARGET_SCREEN) {
+    if ($targets & LOG_TARGET_SCREEN || (defined('ADMIN') && $targets & LOG_TARGET_ADMIN)) {
         // Work out which method to call for displaying the message
         if ($loglevel == LOG_LEVEL_DBG || $loglevel == LOG_LEVEL_INFO) {
             $method = 'add_info_msg';

@@ -89,9 +89,11 @@ table.fullwidth {
 }
 /* Alternative row background colours */
 .r0 {
+    border:none;
     background: #1C3740;
 }
 .r1 {
+    border:none;
     background-color: #1A292F;
 }
 /* PAGINATION */
@@ -100,12 +102,6 @@ table.fullwidth {
 }
 .pagination .disabled {
     background-color: #1A292F;
-}
-
-
-.attachments {
-	border: 1px solid #BEE3F1;
-	background-color: #10171A;
 }
 
 
@@ -143,7 +139,7 @@ legend a:active {
 
 /* Buttons */
 .btn,
-.btn-link,
+#sb-profile .controls a,
 input.submit,
 input.button, button,
 input.submitcancel,
@@ -158,10 +154,13 @@ input.cancelbackcreate {
 	color: #FFF !important;
 	margin-left: 5px;
 }
+div.rbuttons a,
 a.btn,
+#sb-profile .controls a:hover,
 a.btn:hover {
 	color: #FFF;
     text-decoration:none;
+    background-color: #1C3740;
 }
 /***** ICON LINKS ******/
 div.btn-del input.submit, input.submit.btn-del,
@@ -172,15 +171,18 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     color: #7EF000 !important;
 }
 
-
 /* Top of page elements */
 #container {
     background: #0c2839 url(../images/bg.jpg) repeat-x 3px 0;	
+    min-width: 970px;
+    width: 90%;
 }
 #top-wrapper {
     background: transparent;
+    border: none;
 }
 #site-logo {
+  padding:1.1em 0.75em 0.5em 0.75em;
 }
 #loading-box {
     background-color: #000;
@@ -192,6 +194,15 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 #usf_query_container input {
     color: #333333;
 	background-color: #FFFFFF;
+}
+#usf #usf_submit {
+    border:none;
+	width:30px;
+	padding:3px 0;
+	margin:0;
+	text-indent:-1000px;
+	cursor:pointer;
+    background: transparent url(../images/btn_search_off.png) no-repeat center center;	
 }
 
 /* main menu */
@@ -241,23 +252,26 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
 /* Sub menu */
 #sub-nav {
 	padding: 0px 0 0 0;
-    margin: 0 5px 5px 5px;
+    margin: 0 5px 8px 0;
     font-size: 12px;
     font-weight: bold;
     background: #00AEF1 url(../images/subnav-bg.gif) repeat-x center;
     height: 30px;
     line-height: 30px;
-	width:100%;
+	width:99.1%;
     float:right;
     text-align:right;
+	border:none;
 }
 #sub-nav ul {
     margin: 0;
     padding: 0;
+    background: transparent;
 }
 #sub-nav li {
-    padding: 10px 13px 10px 10px;
-    background: url(../../../default/static/images/submenu-divider.gif) no-repeat center right;
+    padding: 0px 13px 0px 10px;
+    background: transparent;
+	border-left: 1px solid #FFF;
 }
 #sub-nav li a,
 #sub-nav li a:link,
@@ -333,7 +347,7 @@ ul.in-page-tabs li a.current-tab {
 }
 div.sideblock {
     background: #080D0F;
-	margin: 0 5px 5px 5px;
+	margin: 0 5px 8px 8px;
     padding: 0;
 }
 div.sideblock h3 {
@@ -382,10 +396,15 @@ div.sideblock ul ul {
 
 
 /* Footer */
+#footernav,
+#footer-wrap #version  {
+  color: #FFFFFF;
+} 
 #footer-wrap {
     background-color: transparent;
     padding: 10px 5px 15px;
-    text-align: center;
+    border: 0;
+	height:30px;
 }
 #footer-wrap a,
 #footer-wrap a:link,
@@ -404,6 +423,14 @@ div.sideblock ul ul {
     color: #fff;
 }
 
+/* Attached file lists */
+.attachments {
+	border: 1px solid #BEE3F1;
+}
+.attachments tbody th {
+	background-color: #10171A;
+}
+
 
 /* Page by page styles */
 
@@ -418,13 +445,17 @@ div.sideblock ul ul {
 #editthisview,
 #editviewaccess {
 	padding-left: 15px;
-    background: url(../../../raw/static/images/icon-edit.gif) no-repeat left 2px;
+    background: url(../images/icon-edit.gif) no-repeat left 2px;
 	font-size: 12px !important;
 }
 #myviews .btn-del {
 	font-size: 11px;
     font-weight: bold;
     color:#ca0000;
+}
+
+#myviews td {
+   border:none;
 }
 
 /* Copy a view */

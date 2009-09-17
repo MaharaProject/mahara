@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage artefact-file
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -787,17 +788,33 @@ function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
 
     $artefact->set('title', $data['title']);
     $artefact->set('description', $data['description']);
-    $artefact->set('tags', preg_split("/\s*,\s*/", trim($data['tags'])));
+
+    $oldtags = $artefact->get('tags');
+    $newtags = preg_split("/\s*,\s*/", trim($data['tags']));
+    $updatetags = $oldtags != $newtags;
+    if ($updatetags) {
+        $artefact->set('tags', $newtags);
+    }
+
     if ($form->get_property('group') && $data['permissions']) {
         $artefact->set('rolepermissions', $data['permissions']);
     }
     $artefact->commit();
 
-    return array(
+    $returndata = array(
         'error' => false,
         'message' => get_string('changessaved', 'artefact.file'),
         'newlist' => pieform_element_filebrowser_build_filelist($form, $element, $artefact->get('parent')),
     );
+
+    if ($updatetags && $form->submitted_by_js()) {
+        $smarty = smarty_core();
+        $tagdata = tags_sideblock();
+        $smarty->assign('data', $tagdata);
+        $returndata['tagblockhtml'] = $smarty->fetch('sideblocks/tags.tpl');
+    }
+
+    return $returndata;
 }
 
 

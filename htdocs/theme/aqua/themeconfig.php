@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,8 +26,7 @@
 
 $theme = new StdClass;
 
-$theme->displayname   = 'Aqua';
-$theme->parent = 'raw';
-$theme->formrenderer = 'table';
+$theme->displayname = 'Aqua';
+$theme->parent      = 'raw';
 
 ?>
