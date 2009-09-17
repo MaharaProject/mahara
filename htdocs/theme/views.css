@@ -63,7 +63,7 @@
     text-align: center;
     margin: 1em 1em 0;
     width: 22%;
-	position: relative;
+	/* position: relative; /* Breaks blocktype drag & drop in firefox */
 	* z-index: 100;
 }
 #blocktype-list .blocktype-radio {
