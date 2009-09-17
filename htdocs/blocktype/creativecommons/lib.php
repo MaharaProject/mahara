@@ -107,50 +107,23 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
             }
         }
 
-        $displayseal = 'class = "hidden"';
+        $displayseal = ' hidden';
         if (0 == $noncommercial and $noderivatives < 2) {
             $displayseal = '';
         }
 
         // Dirty hack to display the seal just before the table
         // TODO: add a way to append stuff to the header in the maharatable pieform renderer
-        $sealpositionhack = "obj = this.parentNode; objparent = obj.parentNode; targetform = obj.parentNode.parentNode.parentNode.parentNode.parentNode; targetdiv = targetform.parentNode; targetdiv.insertBefore(obj, targetform);";
+        $sealpositionhack = "insertSiblingNodesBefore('instconf', $('freecultureseal')); addElementClass('instconf', 'fl');";
 
         return array(
-            'toggleseal' => array(
-                'type' => 'html',
-                'value' => '<script type="text/javascript">
-function toggle_seal() {
-    freeculture = true;
-    sealimage = $("freecultureseal");
-
-    nc_checkboxes = getElementsByTagAndClassName("input", null, $("instconf_noncommercial_container"));
-    if (!nc_checkboxes[0].checked) {
-        freeculture = false;
-    }
-
-    nd_checkboxes = getElementsByTagAndClassName("input", null, $("instconf_noderivatives_container"));
-    if (nd_checkboxes[2].checked) {
-        freeculture = false;
-    }
-
-    if (freeculture) {
-        removeElementClass(sealimage, "hidden");
-    }
-    else {
-        addElementClass(sealimage, "hidden");
-    }
-}
-</script>',
-            ),
-
             'seal' => array(
                 'type' => 'html',
-                'value' => '<a id="freecultureseal" href="http://freedomdefined.org/" '.$displayseal.'>'.
+                'value' => '<div id="freecultureseal" class="fr' .$displayseal.'"><a href="http://freedomdefined.org/">'.
                            '<img "alt="'.hsc(get_string('sealalttext', 'blocktype.creativecommons')).'" '.
                            'onload="'.hsc($sealpositionhack).'" '.
-                           'style="border-width:0; float: right" src="'.
-                           get_config('wwwroot').'blocktype/creativecommons/icons/seal.png" /></a>',
+                           'style="border-width:0;" src="'.
+                           get_config('wwwroot').'blocktype/creativecommons/icons/seal.png" /></a></div>',
             ),
 
             'noncommercial' => array(
