@@ -227,6 +227,18 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         execute_sql("DELETE FROM {artefact_file_files} WHERE artefact IN (SELECT id FROM {artefact} WHERE artefacttype = 'folder')");
     }
 
+    if ($oldversion < 2009091701) {
+        $table = new XMLDBTable('artefact_file_files');
+        $key = new XMLDBKey('artefactpk');
+        $key->setAttributes(XMLDB_KEY_PRIMARY, array('artefact'));
+        add_key($table, $key);
+
+        $table = new XMLDBTable('artefact_file_image');
+        $key = new XMLDBKey('artefactpk');
+        $key->setAttributes(XMLDB_KEY_PRIMARY, array('artefact'));
+        add_key($table, $key);
+    }
+
     return $status;
 }
 
