@@ -44,10 +44,7 @@ var Paginator = function(id, datatable, script, extradata) {
             // You can't write to table nodes innerHTML in IE and
             // konqueror, so this workaround detects them and does
             // things differently
-            if (
-                (document.all && document.documentElement && typeof(document.documentElement.style.maxHeight) != "undefined" && !window.opera)
-                    ||
-                    (/Konqueror|AppleWebKit|KHTML/.test(navigator.userAgent))) {
+            if ((document.all && !window.opera) || (/Konqueror|AppleWebKit|KHTML/.test(navigator.userAgent))) {
                 var temp = DIV({'id':'ie-workaround'});
                 temp.innerHTML = '<table><tbody>' + data.data.tablerows + '</tbody></table>';
                 swapDOM(tbody, temp.childNodes[0].childNodes[0]);
