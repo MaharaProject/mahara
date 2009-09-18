@@ -9,7 +9,7 @@
   </ul>
   <div class="subpage mytags">
   {foreach from=$tags item=t}
-    <a id="tag:{$t->tag}" class="tag{if $t->tag == $tag} selected{/if}" href="{$WWWROOT}tags.php?tag={$t->tag|urlencode}">{$t->tag|str_shorten_text:30|escape}&nbsp;<span class="tagfreq">({$t->count})</span></a> 
+    <a id="tag:{$t->tag|urlencode}" class="tag{if $t->tag == $tag} selected{/if}" href="{$WWWROOT}tags.php?tag={$t->tag|urlencode}">{$t->tag|str_shorten_text:30|escape}&nbsp;<span class="tagfreq">({$t->count})</span></a> 
   {/foreach}
   </div>
 {else}

@@ -126,7 +126,7 @@ function rewriteTagLink(elem, keep, replace) {
 
                 // Mark the selected tag in the My Tags list:
                 if (data.data.tag) {
-                    addElementClass('tag:' + data.data.tag, 'selected');
+                    addElementClass('tag:' + data.data.tagurl, 'selected');
                 }
 
                 // Replace the tag in the Search Results heading
@@ -191,7 +191,7 @@ function rewriteTagLink(elem, keep, replace) {
 
 addLoadEvent(function() {
     forEach(inittags, function(t) {
-        mytags['tag:' + t.tag] = t.count;
+        mytags['tag:' + t.tagurl] = t.count;
     });
     forEach(getElementsByTagAndClassName('a', 'tag-sort'), rewriteTagSortLink);
 

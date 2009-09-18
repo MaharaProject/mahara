@@ -2084,6 +2084,11 @@ function get_my_tags($limit=null, $cloud=true, $sort='freq') {
         }
         usort($tagrecords, create_function('$a,$b', 'return strnatcasecmp($a->tag, $b->tag);'));
     }
+    else {
+        foreach ($tagrecords as &$t) {
+            $t->tagurl = urlencode($t->tag);
+        }
+    }
     return $tagrecords;
 }
 
