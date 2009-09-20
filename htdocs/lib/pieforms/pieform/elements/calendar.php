@@ -176,6 +176,9 @@ function pieform_element_calendar_i18n() {/*{{{*/
         'cs.utf8' => array(
             'invalidvalue' => 'Neplatný datum/čas'
         ),
+        'zh_tw.utf8' => array(
+            'invalidvalue' => '指定了無效的日期/時間'
+        ),
 
     );
 }/*}}}*/

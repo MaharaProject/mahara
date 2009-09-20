@@ -68,6 +68,9 @@ function pieform_rule_email_i18n() {/*{{{*/
         'cs.utf8' => array(
             'email' => 'Neplatná e-mailová adresa'
         ),
+        'zh_tw.utf8' => array(
+            'email' => '電郵地址不正確'
+        ),
 
     );
 }/*}}}*/

@@ -69,6 +69,9 @@ function pieform_rule_before_i18n() {/*{{{*/
         'cs.utf8' => array(
             'before' => 'Zadaná hodnota nemůže být větší než v poli "%s"'
         ),
+        'zh_tw.utf8' => array(
+            'before' => '這個不能在欄位「 %s 」之後'
+        ),
 
     );
 }/*}}}*/

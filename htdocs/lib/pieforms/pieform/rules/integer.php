@@ -65,6 +65,9 @@ function pieform_rule_integer_i18n() {/*{{{*/
         'cs.utf8' => array(
             'integer'   => 'Musíte zadat celé číslo'
         ),
+        'zh_tw.utf8' => array(
+            'integer'   => '欄位必需是整數'
+        ),
 
     );
 }/*}}}*/

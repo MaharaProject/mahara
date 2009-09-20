@@ -65,6 +65,9 @@ function pieform_rule_minvalue_i18n() {/*{{{*/
         'cs.utf8' => array(
             'minvalue' => 'Nemůžete zadat hodnotu menší než %d'
         ),
+        'zh_tw.utf8' => array(
+            'minvalue' => '這個數值不能在 %d 以下'
+        ),
 
     );
 }/*}}}*/
