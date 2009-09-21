@@ -782,6 +782,18 @@ class LiveUser extends User {
             throw new AuthUnknownUserException("\"$username\" is not known");
         }
 
+        $siteclosedforupgrade = get_config('siteclosed');
+        if ($siteclosedforupgrade && get_config('disablelogin')) {
+            global $SESSION;
+            $SESSION->add_error_msg(get_string('siteclosedlogindisabled'));
+            return false;
+        }
+        if (!$user->admin && ($siteclosedforupgrade || get_config('siteclosedbyadmin'))) {
+            global $SESSION;
+            $SESSION->add_error_msg(get_string('siteclosed'));
+            return false;
+        }
+
         // Authentication instances that have parents do so because they cannot 
         // use Mahara's normal login mechanism - for example, XMLRPC. If the 
         // user is using one of these authentication instances, we look and try 
