@@ -5,7 +5,7 @@
 {if $USERMASQUERADING}<div class="sitemessage"><img src="{theme_url filename='images/icon_problem.gif'}" alt="">{$masqueradedetails} {$becomeyouagain}</div>{/if}
 {if $SITECLOSED}<div class="sitemessage center">{$SITECLOSED}</div>{/if}
 <div id="containerX">
-    <div id="loading-box" style="display: none;"></div>
+    <div id="loading-box"></div>
     <div id="top-wrapper">
       <div class="viewheader rel">
         <div class="rbuttons">

@@ -3,7 +3,7 @@
 {include file="header/head.tpl"}
 <body>
 <div id="containerX">
-    <div id="loading-box" style="display: none;"></div>
+    <div id="loading-box"></div>
     <div id="top-wrapper">
         <h1 class="hidden"><a href="{$WWWROOT}">{$hiddenheading|default:"Mahara"|escape}</a></h1>
     </div>
