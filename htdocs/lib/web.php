@@ -346,6 +346,13 @@ EOF;
         }
     }
 
+    // Include rtl.css for right-to-left langs
+    if (get_string('thisdirection', 'langconfig') == 'rtl') {
+        if ($rtlsheets = $THEME->get_url('style/rtl.css', true)) {
+            $stylesheets = array_merge($stylesheets, array_reverse($rtlsheets));
+        }
+    }
+
     $smarty->assign('STRINGJS', $stringjs);
 
     $smarty->assign('STYLESHEETLIST', $stylesheets);
