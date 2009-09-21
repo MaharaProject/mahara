@@ -1201,6 +1201,15 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('tagssideblockmaxtags', 20);
     }
 
+    if ($oldversion < 2009092100) {
+        if ($data = check_upgrades('import.file')) {
+            upgrade_plugin($data);
+        }
+        if ($data = check_upgrades('blocktype.creativecommons')) {
+            upgrade_plugin($data);
+        }
+    }
+
     return $status;
 
 }
