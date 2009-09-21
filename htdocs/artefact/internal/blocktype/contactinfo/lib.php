@@ -57,10 +57,18 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
         if (!empty($configdata['artefactids'])) {
             $viewowner = get_field('view', 'owner', 'id', $instance->get('view'));
             foreach ($configdata['artefactids'] as $id) {
-                $artefact = artefact_instance_from_id($id);
-                if ($artefact->get('owner') == $viewowner) {
-                    $rendered = $artefact->render_self(array('link' => true));
-                    $data[$artefact->get('artefacttype')] = $rendered['html'];
+                try {
+                    $artefact = artefact_instance_from_id($id);
+                    if ($artefact->get('owner') == $viewowner) {
+                        $rendered = $artefact->render_self(array('link' => true));
+                        $data[$artefact->get('artefacttype')] = $rendered['html'];
+                    }
+                }
+                catch (ArtefactNotFoundException $e) {
+                    log_debug('Artefact not found when rendering contactinfo block instance. '
+                        . 'There might be a bug with deleting artefacts of this type? '
+                        . 'Original error follows:');
+                    log_debug($e->getMessage());
                 }
             }
         }
