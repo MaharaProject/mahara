@@ -120,7 +120,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
     }
 
     public static function artefactchooser_element($default=null, $istemplate=false) {
-        $element = array(
+        return array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
             'title' => get_string('image'),
@@ -130,13 +130,6 @@ class PluginBlocktypeImage extends PluginBlocktype {
             'artefacttypes' => array('image', 'profileicon'),
             'template' => 'artefact:file:artefactchooser-element.tpl',
         );
-        if (!$istemplate) {
-            // You don't have to choose a file if this view is a template
-            $element['rules'] = array(
-                'required' => true,
-            );
-        }
-        return $element;
     }
 
     /**

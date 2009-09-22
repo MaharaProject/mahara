@@ -126,7 +126,7 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
         // Note: the owner check will have to change when we do group/site 
         // blogs
         if (empty($configdata['artefactid']) || $blog->get('owner') == $USER->get('id')) {
-            $elements[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate);
+            $elements[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null);
             if ($istemplate) {
                 $elements[] = PluginArtefactBlog::block_advanced_options_element($configdata, 'blogpost');
             };
@@ -157,11 +157,6 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
             'extracols' => '1 - {artefact_blog_blogpost}.published AS draft',
             'template'  => 'artefact:blog:artefactchooser-element.tpl',
         );
-        if (!$istemplate) {
-            $element['rules'] = array(
-                'required' => true,
-            );
-        }
         return $element;
     }
 

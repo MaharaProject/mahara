@@ -83,11 +83,6 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
     }
 
     public static function instance_config_form($instance, $istemplate) {
-        if ($istemplate) {
-            // Don't offer any configuration. Profile data needs to be reworked 
-            // so it's not artefacts before this will work
-            return array();
-        }
         $configdata = $instance->get('configdata');
 
         $form = array();
@@ -120,7 +115,7 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
         );
 
         // Which fields does the user want
-        $form[] = self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null, $istemplate);
+        $form[] = self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null);
 
         return $form;
     }

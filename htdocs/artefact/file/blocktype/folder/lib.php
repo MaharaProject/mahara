@@ -81,12 +81,12 @@ class PluginBlocktypeFolder extends PluginBlocktype {
     public static function instance_config_form($instance, $istemplate) {
         $configdata = $instance->get('configdata');
         return array(
-            self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate),
+            self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null),
         );
     }
 
     public static function artefactchooser_element($default=null, $istemplate=false) {
-        $element = array(
+        return array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
             'title' => get_string('folder', 'artefact.file'),
@@ -96,13 +96,6 @@ class PluginBlocktypeFolder extends PluginBlocktype {
             'artefacttypes' => array('folder'),
             'template' => 'artefact:file:artefactchooser-element.tpl',
         );
-        if (!$istemplate) {
-            // You don't have to choose a folder if this view is a template
-            $element['rules'] = array(
-                'required' => true,
-            );
-        }
-        return $element;
     }
 
     /**

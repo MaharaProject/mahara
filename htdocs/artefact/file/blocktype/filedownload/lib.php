@@ -108,7 +108,7 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
     }
 
     public static function artefactchooser_element($default=null, $istemplate=false) {
-        $element = array(
+        return array(
             'name' => 'artefactids',
             'type'  => 'artefactchooser',
             'title' => get_string('Files', 'blocktype.file/filedownload'),
@@ -119,13 +119,6 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
             'artefacttypes' => array('file', 'image', 'profileicon'),
             'template' => 'artefact:file:artefactchooser-element.tpl',
         );
-        if (!$istemplate) {
-            // You don't have to choose a file if this view is a template
-            $element['rules'] = array(
-                'required' => true,
-            );
-        }
-        return $element;
     }
 
     /**

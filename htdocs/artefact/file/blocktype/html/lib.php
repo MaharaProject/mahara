@@ -96,7 +96,7 @@ class PluginBlocktypeHtml extends PluginBlocktype {
         $extraselect = 'filetype IN (' . join(',', array_map('db_quote', self::get_allowed_mimetypes())) . ')';
         $extrajoin   = ' JOIN {artefact_file_files} ON {artefact_file_files}.artefact = a.id ';
 
-        $element = array(
+        return array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
             'title' => get_string('file', 'artefact.file'),
@@ -107,12 +107,6 @@ class PluginBlocktypeHtml extends PluginBlocktype {
             'template' => 'artefact:file:artefactchooser-element.tpl',
             'extraselect' => $extraselect,
         );
-        if (!$istemplate) {
-            $element['rules'] = array(
-                'required' => true,
-            );
-        }
-        return $element;
     }
 
     public static function default_copy_type() {

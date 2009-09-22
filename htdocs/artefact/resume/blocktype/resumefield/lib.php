@@ -80,15 +80,12 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
     }
 
     public static function instance_config_form($instance, $istemplate) {
-        if ($istemplate) {
-            return array();
-        }
         $configdata = $instance->get('configdata');
 
         $form = array();
 
         // Which resume field does the user want
-        $form[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate);
+        $form[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null);
         $form['message'] = array(
             'type' => 'html',
             'value' => get_string('filloutyourresume', 'blocktype.resume/resumefield', '<a href="' . get_config('wwwroot') . 'artefact/resume/">', '</a>'),

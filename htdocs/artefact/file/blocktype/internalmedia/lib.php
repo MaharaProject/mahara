@@ -126,13 +126,6 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             'extrajoin' => $extrajoin,
             'template' => 'artefact:file:artefactchooser-element.tpl',
         );
-        if (!$istemplate) {
-            // You don't have to choose a file if this view is a template
-            $element['rules'] = array(
-                'required' => true,
-            );
-        }
-        return $element;
     }
 
     public static function artefactchooser_get_element_data($artefact) {

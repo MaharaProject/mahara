@@ -150,7 +150,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
     }
 
     public static function artefactchooser_element($default=null, $istemplate=false) {
-        $element = array(
+        return array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
             'title' => get_string('blog', 'artefact.blog'),
@@ -161,12 +161,6 @@ class PluginBlocktypeBlog extends PluginBlocktype {
             'artefacttypes' => array('blog'),
             'template'  => 'artefact:blog:artefactchooser-element.tpl',
         );
-        if (!$istemplate) {
-            $element['rules'] = array(
-                'required' => true,
-            );
-        }
-        return $element;
     }
 
     /**
