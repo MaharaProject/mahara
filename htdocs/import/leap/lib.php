@@ -542,78 +542,70 @@ class PluginImportLeap extends PluginImport {
      */
     private function import_entry_as_mahara_view(SimpleXMLElement $entry, View $view) {
         static $blocktypes_installed = null;
+        $viewelement = $entry->xpath('mahara:view[1]');
 
-        $viewcontent = self::get_entry_content($entry, $this);
-        $dom = new DOMDocument;
-        libxml_use_internal_errors(true);
-        if (!$dom->loadHTML($viewcontent)) {
-            $this->trace("Unable to parse view content for entry {$entry->id} into a DOM document");
+        if (count($viewelement) != 1) {
+            // This isn't a Mahara view
             return false;
         }
-        $errors = libxml_get_errors();
-        libxml_clear_errors();
-        libxml_use_internal_errors(false);
-        $this->trace('Imported view contents to DOM document with ' . count($errors) . ' internal libxml parsing errors', self::LOG_LEVEL_VERBOSE);
-        $viewdoc = simplexml_import_dom($dom);
 
-        $columns       = $viewdoc->body->xpath('div[contains(@class,"column")]/div[@class="column-content"]');
-        $columncount   = count($columns);
-        $toplevelnodes = count($viewdoc->body->xpath('*'));
-
-        // We check to see whether the content looks like it's a Mahara View. 
-        // If so, we'll try and import it the "smart" way.
-        if ($columncount && $columncount <= 5 && $columncount == $toplevelnodes) {
-            $this->trace(" ** Entry {$entry->title} is a View with $columncount columns **", self::LOG_LEVEL_VERBOSE);
-
-            $view->set('numcolumns', $columncount);
-            $view->commit();
-
-            if ($blocktypes_installed === null) {
-                $blocktypes_installed = array_map(create_function('$a', 'return $a->name;'), plugins_installed('blocktype'));
-            }
-
-            $col = 1;
-            foreach ($columns as $column) {
-                // Work out what blockinstances are in it
-                $blockinstances = $column->xpath('div[contains(@class,"blockinstance")]');
-                $blockinstancecount = count($blockinstances);
-
-                $row = 1;
-                foreach ($blockinstances as $blockinstance) {
-                    $matches = array();
-                    if (preg_match('/bt\-([a-z][a-z0-9_-]*)/', $blockinstance['class'], $matches)) {
-                        $blocktype = $matches[1];
-                        $this->trace("  Found block with type $blocktype at [$col][$row]");
-
-                        if (in_array($blocktype, $blocktypes_installed)) {
-                            // Create it!
-                            safe_require('blocktype', $blocktype);
-                            $bi = new BlockInstance(0,
-                                array(
-                                    'blocktype'  => $blocktype,
-                                    'title'      => 'title',
-                                    'column'     => $col,
-                                    'order'      => $row,
-                                    'configdata' => array(
-                                    ),
-                                )
-                            );
-                            $view->addblockinstance($bi);
-                        }
-                        else {
-                            $this->trace("  Ignoring unknown blocktype $blocktype");
-                        }
-                    }
-                    $row++;
-                }
-                $col++;
-            }
-
-            return true;
+        $columns = $entry->xpath('mahara:view[1]/mahara:column');
+        $columncount = count($columns);
+        if ($columncount < 1 || $columncount > 5) {
+            // Whoops, invalid number of columns
+            $this->trace("Invalid number of columns specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
+            return false;
         }
 
-        // The entry doesn't look like a Mahara view so we give up
-        return false;
+        // TODO: find out view layout and set here too
+        $view->set('numcolumns', $columncount);
+        $view->commit();
+
+        $col = 1;
+        foreach ($columns as $column) {
+            $blockinstances = $column->xpath('mahara:blockinstance');
+            $row = 1;
+            foreach ($blockinstances as $blockinstance) {
+                $attrs = self::get_attributes($blockinstance, PluginImportLeap::NS_MAHARA);
+                if (!isset($attrs['blocktype'])) {
+                    $this->trace("  No mahara:blocktype attribute set for blockinstance at col $col, row $row: skipping");
+                    continue;
+                }
+                $this->trace("  Found block with type {$attrs['blocktype']} at [$col][$row]", self::LOG_LEVEL_VERBOSE);
+
+                if ($blocktypes_installed === null) {
+                    $blocktypes_installed = array_map(create_function('$a', 'return $a->name;'), plugins_installed('blocktype'));
+                }
+
+                if (in_array($attrs['blocktype'], $blocktypes_installed)) {
+                    $configelements = $blockinstance->xpath('mahara:*');
+                    $config = array();
+                    foreach ($configelements as $element) {
+                        $config[$element->getName()] = (string)$element;
+                    }
+
+                    safe_require('blocktype', $attrs['blocktype']);
+                    $bi = call_static_method(generate_class_name('blocktype', $attrs['blocktype']), 'import_create_blockinstance', $config);
+                    if ($bi) {
+                        $bi->set('title',  $attrs['blocktitle']);
+                        $bi->set('column', $col);
+                        $bi->set('order',  $row);
+                        $view->addblockinstance($bi);
+
+                        $row++;
+                    }
+                    else {
+                        $this->trace("  Blocktype {$attrs['blocktype']} doesn't implement import_create_blockinstance, so not importing this block");
+                    }
+                }
+                else {
+                    $this->trace("  Ignoring unknown blocktype {$attrs['blocktype']}");
+                }
+            }
+            $col++;
+        }
+
+        return true;
     }
 
     /**
