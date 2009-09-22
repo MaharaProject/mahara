@@ -142,7 +142,7 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
                 'match' => '#.*teachertube\.com/viewVideo\.php\?video_id=(\d+).*#',
                 'url'   => 'http://www.teachertube.com/embed/player.swf?file=http://www.teachertube.com/embedFLV.php?pg=video_$1'
             ),
-            // www.scivee.tv="
+            // www.scivee.tv
             array(
                 'match' => '#.*scivee.tv/node/([0-9]+).*#',
                 'url'   => 'http://scivee.tv/flash/embedPlayer.swf?id=$1&type=3',
