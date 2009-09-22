@@ -327,7 +327,7 @@ class BlockInstance {
     private $blocktype;
     private $artefactplugin;
     private $title;
-    private $configdata;
+    private $configdata = array();
     private $dirty;
     private $view;
     private $view_obj;
@@ -412,6 +412,10 @@ class BlockInstance {
         unset($values['sesskey']);
         unset($values['blockinstance']);
         unset($values['action_configureblockinstance_id_' . $this->get('id')]);
+        unset($values['blockconfig']);
+        unset($values['id']);
+        unset($values['change']);
+        unset($values['new']);
 
         if (is_callable(array(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_save'))) {
             $values = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_save', $values);
