@@ -1067,7 +1067,8 @@ class View {
     /**
      * Returns the HTML for a particular column
      *
-     * @param int  $column     The column to build
+     * @param int $column   The column to build
+     * @param int $editing  Whether the view is being built in edit mode
      */
     public function build_column($column, $editing=false) {
         global $USER;
