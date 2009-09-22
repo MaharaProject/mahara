@@ -219,12 +219,22 @@ class PluginExportLeap extends PluginExport {
             $this->smarty->assign('viewdata',    $config['columns']);
             $this->smarty->assign('ownerformat', $config['ownerformat']);
             $this->smarty->assign('leaptype',    'selection');
-            $this->smarty->assign('categories',  array(
+
+            $tags = array();
+            if ($config['tags']) {
+                $tags = array_map(create_function('$a',
+                    'return array(
+                        \'term\' => LeapExportElement::normalise_tag($a),
+                        \'label\' => $a
+                    );'), $config['tags']);
+            }
+            $this->smarty->assign('categories', array_merge(array(
                 array(
                     'scheme' => 'selection_type',
                     'term' => 'Webpage',
                 )
-            ));
+            ), $tags));
+
             $this->smarty->assign('links', $this->get_links_for_view($view->get('id')));
             $this->xml .= $this->smarty->fetch("export:leap:view.tpl");
         }
