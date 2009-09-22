@@ -1568,7 +1568,7 @@ class View {
             $row = 1;
             foreach ($column as $blockinstance) {
                 safe_require('blocktype', $blockinstance['type']);
-                $bi = call_static_method(generate_class_name('blocktype', $blockinstance['type']), 'import_create_blockinstance', $blockinstance['config']);
+                $bi = call_static_method(generate_class_name('blocktype', $blockinstance['type']), 'import_create_blockinstance', $blockinstance);
                 if ($bi) {
                     $bi->set('title',  $blockinstance['title']);
                     $bi->set('column', $col);
