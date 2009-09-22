@@ -474,27 +474,27 @@ class PluginImportLeap extends PluginImport {
         case self::STRATEGY_IMPORT_AS_VIEW:
             require_once('view.php');
 
-            $viewdata = array(
-                'title' => (string)$entry->title,
-                'description' => (string)$entry->summary,
-                'ownerformat' => FORMAT_NAME_DISPLAYNAME, // TODO
-                'owner' => $this->get('usr'),
-            );
-            if ($published = strtotime((string)$entry->published)) {
-                $viewdata['ctime'] = $published;
-            }
-            if ($updated = strtotime((string)$entry->updated)) {
-                $viewdata['mtime'] = $updated;
-            }
-
-            $view = View::create($viewdata, $this->get('usr'));
-
-            if (!$this->import_entry_as_mahara_view($entry, $view)) {
+            if (!$this->import_entry_as_mahara_view($entry)) {
                 // Not a Mahara view, just do basic import
                 $this->trace('Not a Mahara view, doing basic import', self::LOG_LEVEL_VERBOSE);
 
-                $view->set('numcolumns', 1);
-                $view->commit();
+                $viewdata = array(
+                    'title'       => (string)$entry->title,
+                    'description' => (string)$entry->summary,
+                    'type'        => 'portfolio', // TODO
+                    'layout'      => null, // TODO
+                    'numcolumns'  => 1,
+                    'ownerformat' => FORMAT_NAME_DISPLAYNAME, // TODO
+                    'owner'       => $this->get('usr'),
+                );
+                if ($published = strtotime((string)$entry->published)) {
+                    $viewdata['ctime'] = $published;
+                }
+                if ($updated = strtotime((string)$entry->updated)) {
+                    $viewdata['mtime'] = $updated;
+                }
+
+                $view = View::create($viewdata, $this->get('usr'));
 
                 safe_require('blocktype', 'textbox');
                 $bi = new BlockInstance(0,
@@ -520,27 +520,21 @@ class PluginImportLeap extends PluginImport {
     /**
      * Attempts to import an entry as a mahara view
      *
-     * Looks at the entry content to see if it looks like it could reasonably 
-     * be a Mahara view. We know this if the top level is just divs that have a 
-     * class of "column" on them, with "column-container" divs inside them.
+     * We look for custom mahara namespaced tags that explain the View 
+     * structure. If they're present, we use them to create a View using that 
+     * structure.
      *
-     * If it does "look" like a view, we attempt to import it as one, by 
-     * looking for blockinstance divs inside it. This differs a bit from the 
-     * LEAP2A specification, but we do so deliberately to get 100% 
-     * compatibility with Mahara to Mahara exports. Other systems can also 
-     * construct content in the right format to trigger Mahara to import things 
-     * as a full view.
+     * This differs a bit from the LEAP2A specification, but we do so 
+     * deliberately to get 100% compatibility with Mahara to Mahara exports. 
+     * Other systems can also construct content in the right format to trigger 
+     * Mahara to import things as a full view.
      *
-     * If it does not look like a View, we give up. Code elsewhere will simply 
-     * import the content into a textbox in a single column view.
+     * If the mahara tags are not present, we give up.
      *
      * @param SimpleXMLElement $entry The entry to be imported
-     * @param View $view              The view object that has been created for 
-     *                                this view
-     * @return boolean Whether it could be imported. If not, we try and import 
-     *                 all the view content into a text box
+     * @return boolean Whether it could be imported.
      */
-    private function import_entry_as_mahara_view(SimpleXMLElement $entry, View $view) {
+    private function import_entry_as_mahara_view(SimpleXMLElement $entry) {
         static $blocktypes_installed = null;
         $viewelement = $entry->xpath('mahara:view[1]');
 
@@ -557,14 +551,20 @@ class PluginImportLeap extends PluginImport {
             return false;
         }
 
-        // TODO: find out view layout and set here too
-        $view->set('numcolumns', $columncount);
-        $view->commit();
+        $config = array(
+            'title'       => (string)$entry->title,
+            'description' => (string)$entry->summary,
+            'type'        => 'portfolio', // TODO
+            'layout'      => null, // TODO
+            'numcolumns'  => $columncount,
+            'ownerformat' => FORMAT_NAME_DISPLAYNAME, // TODO
+        );
 
         $col = 1;
         foreach ($columns as $column) {
             $blockinstances = $column->xpath('mahara:blockinstance');
             $row = 1;
+            $config['columns'][$col] = array();
             foreach ($blockinstances as $blockinstance) {
                 $attrs = self::get_attributes($blockinstance, PluginImportLeap::NS_MAHARA);
                 if (!isset($attrs['blocktype'])) {
@@ -579,24 +579,16 @@ class PluginImportLeap extends PluginImport {
 
                 if (in_array($attrs['blocktype'], $blocktypes_installed)) {
                     $configelements = $blockinstance->xpath('mahara:*');
-                    $config = array();
+                    $config['columns'][$col][$row] = array(
+                        'type'   => $attrs['blocktype'],
+                        'title'  => $attrs['blocktitle'],
+                        'config' => array()
+                    );
                     foreach ($configelements as $element) {
-                        $config[$element->getName()] = (string)$element;
+                        $config['columns'][$col][$row]['config'][$element->getName()] = (string)$element;
                     }
 
-                    safe_require('blocktype', $attrs['blocktype']);
-                    $bi = call_static_method(generate_class_name('blocktype', $attrs['blocktype']), 'import_create_blockinstance', $config);
-                    if ($bi) {
-                        $bi->set('title',  $attrs['blocktitle']);
-                        $bi->set('column', $col);
-                        $bi->set('order',  $row);
-                        $view->addblockinstance($bi);
-
-                        $row++;
-                    }
-                    else {
-                        $this->trace("  Blocktype {$attrs['blocktype']} doesn't implement import_create_blockinstance, so not importing this block");
-                    }
+                    $row++;
                 }
                 else {
                     $this->trace("  Ignoring unknown blocktype {$attrs['blocktype']}");
@@ -605,6 +597,17 @@ class PluginImportLeap extends PluginImport {
             $col++;
         }
 
+        $view = View::import_from_config($config, $this->get('usr'));
+
+        if ($published = strtotime((string)$entry->published)) {
+            $view->set('ctime', $published);
+        }
+        if ($updated = strtotime((string)$entry->updated)) {
+            $view->set('mtime', $updated);
+        }
+        $view->set('owner', $this->get('usr'));
+
+        $view->commit();
         return true;
     }
 
