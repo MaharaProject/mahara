@@ -287,8 +287,30 @@ abstract class PluginBlocktype extends Plugin {
      * @return array The configuration required to import the block again later
      */
     public static function export_blockinstance_config(BlockInstance $bi) {
-        // TODO: a default implementation might just turn $bi->get('configdata') into an array
-        return array();
+        // TODO: check the quoting of json_encoded quotes in output
+        // TODO: encode artefactids properly
+        $configdata = $bi->get('configdata');
+
+        if (is_array($configdata)) {
+            // Unset a bunch of stuff that we don't want to export. These fields 
+            // weren't being cleaned up before blockinstances were being saved 
+            // previously, so we make sure they're not going to be in the result
+            unset($configdata['blockconfig']);
+            unset($configdata['id']);
+            unset($configdata['change']);
+            unset($configdata['new']);
+
+            foreach ($configdata as &$value) {
+                if (is_array($value) || is_object($value)) {
+                    $value = json_encode($value);
+                }
+            }
+        }
+        else {
+            $configdata = array();
+        }
+
+        return $configdata;
     }
 
     /**
@@ -305,6 +327,19 @@ abstract class PluginBlocktype extends Plugin {
         // TODO: a default implementation might just create a new blockinstance 
         // with the config shunted into configdata - but with artefactids 
         // replaced with new ones
+        //
+        // TODO: unsetting these for now, will want them to be references to 
+        // artefacts in the export
+        unset($config['config']['artefactid']);
+        if (isset($config['config']['artefactids'])) $config['config']['artefactids'] = array();
+        $bi = new BlockInstance(0,
+            array(
+                'blocktype'  => $config['type'],
+                'configdata' => $config['config'],
+            )
+        );
+
+        return $bi;
     }
 
 }
