@@ -377,6 +377,49 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         return 'full';
     }
 
+    /**
+     * The URL is not stored in the configdata, so we need to get it separately
+     *
+     * TODO: call parent::export_blockinstance_config and then augment with URL?
+     */
+    public static function export_blockinstance_config(BlockInstance $bi) {
+        $config = $bi->get('configdata');
+        $url = ($config['feedid']) ? get_field('blocktype_externalfeed_data', 'url', 'id', $config['feedid']) : '';
+        return array(
+            'url' => $url,
+            'full' => isset($config['full']) ? ($config['full'] ? 1 : 0) : 0,
+        );
+    }
+
+    /**
+     * Overrides default import to trigger retrieving the feed.
+     *
+     * TODO: possibly use the parent method to create the blockinstance, then 
+     * augment with the url ?
+     */
+    public static function import_create_blockinstance(array $config) {
+        // Trigger retrieving the feed
+        // Note: may have to re-think this at some point - we'll end up retrieving all the 
+        // RSS feeds for this user at import time, which could easily be quite 
+        // slow. This plugin will need a bit of re-working for this to be possible
+        if (!empty($config['url'])) {
+            $values = self::instance_config_save(array('url' => $config['url']));
+        }
+
+        $bi = new BlockInstance(0,
+            array(
+                'blocktype'  => 'externalfeed',
+                'configdata' => array(
+                    'url'    => (isset($config['url']))    ? $config['url']    : '', // TODO: should this even be set in configdata??
+                    'feedid' => (isset($values['feedid'])) ? $values['feedid'] : '',
+                    'full'   => (isset($config['full']))   ? $config['full']   : '',
+                ),
+            )
+        );
+
+        return $bi;
+    }
+
 }
 
 ?>
