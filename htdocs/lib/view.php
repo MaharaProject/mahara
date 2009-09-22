@@ -1508,16 +1508,15 @@ class View {
      * include access rules or ownership information - only the information 
      * required to rebuild the view's layout, blocks and other such info.
      *
-     * TODO: This structure can then be imported again.
+     * This structure can then be imported again, using {@link import_from_config()}
      *
-     * This structure contains all the information necessary to rebuild the view layout.
-     *
-     * TODO: needs tweaking. Should I implement import() ?
+     * @return array The configuration for this view, try calling this to see 
+     *               what fields are available.
      */
     public function export_config() {
         $data = $this->get_column_datastructure();
         $config = array(
-            'title' => $this->get('title'),
+            'title'       => $this->get('title'),
             'description' => $this->get('description'),
             'type'        => $this->get('type'),
             'layout'      => $this->get('layout'),
