@@ -207,17 +207,19 @@ class PluginExportLeap extends PluginExport {
      */
     private function export_views() {
         foreach ($this->get('views') as $view) {
-            $this->smarty->assign('title', $view->get('title'));
-            $this->smarty->assign('id', 'portfolio:view' . $view->get('id'));
-            $this->smarty->assign('updated', self::format_rfc3339_date(strtotime($view->get('mtime'))));
-            $this->smarty->assign('created', self::format_rfc3339_date(strtotime($view->get('ctime'))));
+            $config = $view->export_config();
+            $this->smarty->assign('title',       $config['title']);
+            $this->smarty->assign('id',          'portfolio:view' . $view->get('id'));
+            $this->smarty->assign('updated',     self::format_rfc3339_date(strtotime($view->get('mtime'))));
+            $this->smarty->assign('created',     self::format_rfc3339_date(strtotime($view->get('ctime'))));
             $this->smarty->assign('summarytype', 'html');
-            $this->smarty->assign('summary', $view->get('description'));
+            $this->smarty->assign('summary',     $config['description']);
             $this->smarty->assign('contenttype', 'html');
-            $this->smarty->assign('content', $view->build_columns());
-            $this->smarty->assign('ownerformat', $view->get('ownerformat'));
-            $this->smarty->assign('leaptype', 'selection');
-            $this->smarty->assign('categories', array(
+            $this->smarty->assign('content',     $view->build_columns());
+            $this->smarty->assign('viewdata',    $config['columns']);
+            $this->smarty->assign('ownerformat', $config['ownerformat']);
+            $this->smarty->assign('leaptype',    'selection');
+            $this->smarty->assign('categories',  array(
                 array(
                     'scheme' => 'selection_type',
                     'term' => 'Webpage',
