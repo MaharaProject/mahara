@@ -332,12 +332,12 @@ class BlockInstance {
     private $view;
     private $view_obj;
     private $column;
-    private $order; 
+    private $order;
     private $canmoveleft;
     private $canmoveright;
     private $canmoveup;
     private $canmovedown;
-    private $maxorderincolumn; 
+    private $maxorderincolumn;
 
     public function __construct($id=0, $data=null) {
          if (!empty($id)) {
