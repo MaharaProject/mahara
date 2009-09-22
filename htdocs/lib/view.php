@@ -1503,6 +1503,44 @@ class View {
         return null;
     }
 
+    /**
+     * Exports the view configuration as a data structure. This does not 
+     * include access rules or ownership information - only the information 
+     * required to rebuild the view's layout, blocks and other such info.
+     *
+     * TODO: This structure can then be imported again.
+     *
+     * This structure contains all the information necessary to rebuild the view layout.
+     *
+     * TODO: needs tweaking. Should I implement import() ?
+     */
+    public function export_config() {
+        $data = $this->get_column_datastructure();
+        $config = array(
+            'title' => $this->get('title'),
+            'description' => $this->get('description'),
+            'type'        => $this->get('type'),
+            'layout'      => $this->get('layout'),
+            'tags'        => $this->get('tags'),
+            'numcolumns'  => $this->get('numcolumns'),
+            'ownerformat' => $this->get('ownerformat'),
+        );
+
+        foreach ($data as $key => $column) {
+            $config['columns'][$key] = array();
+            foreach ($column['blockinstances'] as $bi) {
+                safe_require('blocktype', $bi->get('blocktype'));
+                $config['columns'][$key][] = array(
+                    'blocktype' => $bi->get('blocktype'),
+                    'title'     => $bi->get('title'),
+                    'config'    => call_static_method(generate_class_name('blocktype', $bi->get('blocktype')), 'export_blockinstance_config', $bi),
+                );
+            }
+        }
+
+        return $config;
+    }
+
 
     /**
      * Makes a URL for a view block editing page
