@@ -483,6 +483,7 @@ class PluginImportLeap extends PluginImport {
                     'description' => (string)$entry->summary,
                     'type'        => 'portfolio', // TODO
                     'layout'      => null, // TODO
+                    'tags'        => self::get_entry_tags($entry),
                     'numcolumns'  => 1,
                     'ownerformat' => FORMAT_NAME_DISPLAYNAME, // TODO
                     'owner'       => $this->get('usr'),
@@ -556,6 +557,7 @@ class PluginImportLeap extends PluginImport {
             'description' => (string)$entry->summary,
             'type'        => 'portfolio', // TODO
             'layout'      => null, // TODO
+            'tags'        => self::get_entry_tags($entry),
             'numcolumns'  => $columncount,
             'ownerformat' => FORMAT_NAME_DISPLAYNAME, // TODO
         );

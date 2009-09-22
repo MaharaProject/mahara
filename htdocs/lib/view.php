@@ -1557,11 +1557,11 @@ class View {
             'description' => $config['description'],
             'type'        => $config['type'],
             'layout'      => $config['layout'],
+            'tags'        => $config['tags'],
             'numcolumns'  => $config['numcolumns'],
             'ownerformat' => $config['ownerformat'],
         );
         $view = View::create($viewdata, $userid);
-        if (isset($config['tags'])) $view->set('tags', $config['tags']);  // TODO can this be done in the constructor?
 
         $col = 1;
         foreach ($config['columns'] as $column) {
