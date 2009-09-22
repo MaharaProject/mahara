@@ -81,9 +81,6 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
         safe_require('artefact', 'blog');
         $configdata = $instance->get('configdata');
         $elements = array(self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null));
-        if ($istemplate) {
-            $elements[] = PluginArtefactBlog::block_advanced_options_element($configdata, 'blog');
-        }
         return $elements;
     }
 
