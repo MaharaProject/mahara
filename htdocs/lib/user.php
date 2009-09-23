@@ -991,7 +991,7 @@ function get_new_username($desired) {
  * @param $userlist the ids separated by commas
  * @return array containing the users in the order from $userlist
  */
-function get_users_data($userlist) {
+function get_users_data($userlist, $getviews=true) {
 	global $USER;
     $sql = 'SELECT u.id, 0 AS pending,
                 COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages,
@@ -1026,31 +1026,32 @@ function get_users_data($userlist) {
         $record->institutions = get_institution_string_for_user($record->id);
     }
 
-    if (!$data || !$views = get_views(array_keys($data), null, null)) {
+    if (!$data || !$getviews || !$views = get_views(array_keys($data), null, null)) {
         $views = array();
     }
 
-   $viewcount = array_map('count', $views);
-    // since php is so special and inconsistent, we can't use array_map for this because it breaks the top level indexes.
-    $cleanviews = array();
-    foreach ($views as $userindex => $viewarray) {
-        $cleanviews[$userindex] = array_slice($viewarray, 0, 5);
+    if ($getviews) {
+        $viewcount = array_map('count', $views);
+        // since php is so special and inconsistent, we can't use array_map for this because it breaks the top level indexes.
+        $cleanviews = array();
+        foreach ($views as $userindex => $viewarray) {
+            $cleanviews[$userindex] = array_slice($viewarray, 0, 5);
 
-        // Don't reveal any more about the view than necessary
-        foreach ($cleanviews as $userviews) {
-            foreach ($userviews as &$view) {
-               foreach (array_keys(get_object_vars($view)) as $key) {
-                    if ($key != 'id' && $key != 'title') {
-                        unset($view->$key);
+            // Don't reveal any more about the view than necessary
+            foreach ($cleanviews as $userviews) {
+                foreach ($userviews as &$view) {
+                    foreach (array_keys(get_object_vars($view)) as $key) {
+                        if ($key != 'id' && $key != 'title') {
+                            unset($view->$key);
+                        }
                     }
                 }
             }
         }
-
     }
 
     foreach ($data as $friend) {
-        if (isset($cleanviews[$friend->id])) {
+        if ($getviews && isset($cleanviews[$friend->id])) {
             $friend->views = $cleanviews[$friend->id];
         }
         if ($friend->pending) {

@@ -41,7 +41,7 @@ $data = search_user($query, $limit, $offset, array('exclude' => $USER->get('id')
 
 if ($data['data']) {
     $userlist = join(',', array_map(create_function('$u','return $u[\'id\'];'), $data['data']));
-    $data['data'] = get_users_data($userlist);
+    $data['data'] = get_users_data($userlist, false);
 }
 
 $searchform = pieform(array(
