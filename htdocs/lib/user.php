@@ -1139,6 +1139,7 @@ function build_userlist_html(&$data, $page) {
         'offset' => $data['offset'],
         'resultcounttextsingular' => get_string('user', 'group'),
         'resultcounttextplural' => get_string('users', 'group'),
+        'extradata' => array('page' => $page),
     ));
     $data['pagination'] = $pagination['html'];
     $data['pagination_js'] = $pagination['javascript'];

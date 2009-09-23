@@ -35,9 +35,17 @@ $query  = param_variable('query', '');
 $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);
 
+$page = 'myfriends';
+if ($extradata = param_variable('extradata', null)) {
+    $extradata = json_decode($extradata);
+    if ($extradata->page) {
+        $page = $extradata->page;
+    }
+}
+
 $data = search_user($query, $limit, $offset, array('exclude' => $USER->get('id')));
 $data['query'] = $query;
-build_userlist_html($data, 'find');
+build_userlist_html($data, $page);
 
 json_reply(false, array('data' => $data));
 ?>
