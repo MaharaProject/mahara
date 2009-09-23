@@ -347,7 +347,8 @@ EOF;
     }
 
     // Include rtl.css for right-to-left langs
-    if (get_string('thisdirection', 'langconfig') == 'rtl') {
+    $langdirection = get_string('thisdirection', 'langconfig');
+    if ($langdirection == 'rtl') {
         if ($rtlsheets = $THEME->get_url('style/rtl.css', true)) {
             $stylesheets = array_merge($stylesheets, array_reverse($rtlsheets));
         }
@@ -513,11 +514,12 @@ EOF;
         // Place all sideblocks on the right. If this structure is munged 
         // appropriately, you can put blocks on the left. In future versions of 
         // Mahara, we'll make it easy to do this.
-        $tmp = $SIDEBLOCKS;
-        $SIDEBLOCKS = array(
-            'left'  => array(),
-            'right' => $tmp,
-        );
+        if ($langdirection == 'rtl') {
+            $SIDEBLOCKS = array('left' => $SIDEBLOCKS, 'right' => array());
+        }
+        else {
+            $SIDEBLOCKS = array('left' => array(), 'right' => $SIDEBLOCKS);
+        }
 
         $smarty->assign('userauthinstance', $SESSION->get('authinstance'));
         $smarty->assign('MNETUSER', $SESSION->get('mnetuser'));
