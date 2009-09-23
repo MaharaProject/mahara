@@ -402,17 +402,16 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         // Note: may have to re-think this at some point - we'll end up retrieving all the 
         // RSS feeds for this user at import time, which could easily be quite 
         // slow. This plugin will need a bit of re-working for this to be possible
-        if (!empty($config['url'])) {
-            $values = self::instance_config_save(array('url' => $config['url']));
+        if (!empty($config['config']['url'])) {
+            $values = self::instance_config_save(array('url' => $config['config']['url']));
         }
 
         $bi = new BlockInstance(0,
             array(
                 'blocktype'  => 'externalfeed',
                 'configdata' => array(
-                    'url'    => (isset($config['url']))    ? $config['url']    : '', // TODO: should this even be set in configdata??
                     'feedid' => (isset($values['feedid'])) ? $values['feedid'] : '',
-                    'full'   => (isset($config['full']))   ? $config['full']   : '',
+                    'full'   => (isset($config['config']['full']))   ? $config['config']['full']   : '',
                 ),
             )
         );
