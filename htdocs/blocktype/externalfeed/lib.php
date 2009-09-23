@@ -379,8 +379,6 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
 
     /**
      * The URL is not stored in the configdata, so we need to get it separately
-     *
-     * TODO: call parent::export_blockinstance_config and then augment with URL?
      */
     public static function export_blockinstance_config(BlockInstance $bi) {
         $config = $bi->get('configdata');
@@ -393,9 +391,6 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
 
     /**
      * Overrides default import to trigger retrieving the feed.
-     *
-     * TODO: possibly use the parent method to create the blockinstance, then 
-     * augment with the url ?
      */
     public static function import_create_blockinstance(array $config) {
         // Trigger retrieving the feed
