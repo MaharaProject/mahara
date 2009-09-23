@@ -1114,17 +1114,17 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
 }
 
 
-function group_get_user_groups($userid=null) {
+function group_get_user_groups($userid=null, $roles=null) {
     if (is_null($userid)) {
         global $USER;
         $userid = $USER->get('id');
     }
     if ($groups = get_records_sql_array(
-        "SELECT g.id, g.name, gm.role
+        "SELECT g.id, g.name, gm.role, g.jointype, g.grouptype
         FROM {group} g
         JOIN {group_member} gm ON (gm.group = g.id)
         WHERE gm.member = ?
-        AND g.deleted = 0
+        AND g.deleted = 0 " . (is_array($roles) ? (' AND gm.role IN (' . join(',', array_map('db_quote', $roles)) . ')') : '') . "
         ORDER BY gm.role = 'admin' DESC, gm.role, g.id", array($userid))) {
         return $groups;
     }
