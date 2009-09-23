@@ -26,47 +26,19 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups/findfriends');
-require(dirname(dirname(__FILE__)) . '/init.php');
-require_once('pieforms/pieform.php');
-define('TITLE', get_string('findfriends'));
-require('searchlib.php');
-safe_require('search', 'internal');
+define('JSON', 1);
 
-$query = param_variable('query', '');
+require(dirname(dirname(__FILE__)) . '/init.php');
+require('searchlib.php');
+
+$query  = param_variable('query', '');
 $offset = param_integer('offset', 0);
-$limit  = 10;
+$limit  = param_integer('limit', 10);
 
 $data = search_user($query, $limit, $offset, array('exclude' => $USER->get('id')));
 $data['query'] = $query;
 build_userlist_html($data, 'find');
 
-$js = 'addLoadEvent(function () {' . $data['pagination_js'] . '});';
-
-$searchform = pieform(array(
-    'name' => 'search',
-    'renderer' => 'oneline',
-    'elements' => array(
-        'query' => array(
-            'type' => 'text',
-            'defaultvalue' => $query
-        ),
-        'submit' => array(
-            'type' => 'submit',
-            'value' => get_string('search')
-        )
-    )
-));
-
-$smarty = smarty(array('paginator'), array(), array(), array('sideblocks' => array(friends_control_sideblock('find'))));
-$smarty->assign('PAGEHEADING', hsc(TITLE));
-$smarty->assign('INLINEJAVASCRIPT', $js);
-$smarty->assign('results', $data);
-$smarty->assign('form', $searchform);
-$smarty->display('user/find.tpl');
-
-function search_submit(Pieform $form, $values) {
-    redirect('/user/find.php' . (isset($values['query']) ? '?query=' . urlencode($values['query']) : ''));
-}
-
+log_debug($data);
+json_reply(false, array('data' => $data));
 ?>

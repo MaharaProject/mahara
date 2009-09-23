@@ -1119,6 +1119,31 @@ function get_users_data($userlist, $getviews=true) {
     return $ordereddata;
 }
 
+function build_userlist_html(&$data, $page) {
+    if ($data['data']) {
+        $userlist = join(',', array_map(create_function('$u','return $u[\'id\'];'), $data['data']));
+        $userdata = get_users_data($userlist, $page == 'myfriends');
+    }
+    $smarty = smarty_core();
+    $smarty->assign('data', isset($userdata) ? $userdata : null);
+    $smarty->assign('page', $page);
+    $smarty->assign('query', $data['query']);
+    $data['tablerows'] = $smarty->fetch('user/userresults.tpl');
+    $pagination = build_pagination(array(
+        'id' => 'friendslist_pagination',
+        'url' => get_config('wwwroot') . 'user/' . $page . '.php?query=' . $data['query'],
+        'jsonscript' => 'json/friendsearch.php',
+        'datatable' => 'friendslist',
+        'count' => $data['count'],
+        'limit' => $data['limit'],
+        'offset' => $data['offset'],
+        'resultcounttextsingular' => get_string('user', 'group'),
+        'resultcounttextplural' => get_string('users', 'group'),
+    ));
+    $data['pagination'] = $pagination['html'];
+    $data['pagination_js'] = $pagination['javascript'];
+}
+
 function get_institution_string_for_user($userid) {
     static $institutions = null;
     if (is_null($institutions)) {
