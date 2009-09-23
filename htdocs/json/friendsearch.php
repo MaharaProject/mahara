@@ -39,6 +39,5 @@ $data = search_user($query, $limit, $offset, array('exclude' => $USER->get('id')
 $data['query'] = $query;
 build_userlist_html($data, 'find');
 
-log_debug($data);
 json_reply(false, array('data' => $data));
 ?>
