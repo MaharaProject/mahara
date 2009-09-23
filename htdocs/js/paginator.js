@@ -72,6 +72,13 @@ var Paginator = function(id, datatable, script, extradata) {
         }
     }
 
+    this.sendQuery = function(params) {
+        sendjsonrequest(self.jsonScript, params, 'GET', function(data) {
+            self.updateResults(data);
+            self.alertProxy('pagechanged', data['data']);
+        });
+    }
+
     this.rewritePaginatorLink = function(a) {
         connect(a, 'onclick', function(e) {
             e.stop();
@@ -83,10 +90,7 @@ var Paginator = function(id, datatable, script, extradata) {
                 queryData.extradata = serializeJSON(self.extraData);
             }
 
-            sendjsonrequest(self.jsonScript, queryData, 'GET', function(data) {
-                self.updateResults(data);
-                self.alertProxy('pagechanged', data['data']);
-            });
+            self.sendQuery(queryData);
         });
     }
 

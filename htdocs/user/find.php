@@ -41,8 +41,6 @@ $data = search_user($query, $limit, $offset, array('exclude' => $USER->get('id')
 $data['query'] = $query;
 build_userlist_html($data, 'find');
 
-$js = 'addLoadEvent(function () {' . $data['pagination_js'] . '});';
-
 $searchform = pieform(array(
     'name' => 'search',
     'renderer' => 'oneline',
@@ -57,6 +55,16 @@ $searchform = pieform(array(
         )
     )
 ));
+
+$js = <<< EOF
+addLoadEvent(function () {
+    p = {$data['pagination_js']}
+    connect('search_submit', 'onclick', function () {
+        var params = {'query': $('search_query').value};
+        p.sendQuery(params);
+    });
+});
+EOF;
 
 $smarty = smarty(array('paginator'), array(), array(), array('sideblocks' => array(friends_control_sideblock('find'))));
 $smarty->assign('PAGEHEADING', hsc(TITLE));
