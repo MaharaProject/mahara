@@ -35,6 +35,7 @@ class PluginArtefactFile extends PluginArtefact {
             'folder',
             'image',
             'profileicon',
+            'archive',
         );
     }
     
@@ -742,6 +743,17 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             $data->width    = $imageinfo[0];
             $data->height   = $imageinfo[1];
             return new ArtefactTypeImage(0, $data);
+        }
+        if ((!isset($data->filetype) || in_array($data->filetype, ArtefactTypeArchive::zip_mime_types()))
+            && function_exists('zip_open')) {
+            $zip = zip_open($path);
+            if (is_resource($zip)) {
+                zip_close($zip);
+                if (!isset($data->filetype)) {
+                    $data->filetype = 'application/zip';
+                }
+                return new ArtefactTypeArchive(0, $data);
+            }
         }
         return new ArtefactTypeFile(0, $data);
     }
@@ -1472,5 +1484,21 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
 
 }
 
+class ArtefactTypeArchive extends ArtefactTypeFile {
+
+    public static function get_icon($options=null) {
+        global $THEME;
+        return $THEME->get_url('images/archive.gif');
+    }
+
+    public static function zip_mime_types() {
+        static $mimetypes = null;
+        if (is_null($mimetypes)) {
+            $mimetypes = get_column('artefact_file_mime_types', 'mimetype', 'description', 'zip');
+        }
+        return $mimetypes;
+    }
+
+}
 
 ?>

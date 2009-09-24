@@ -205,4 +205,12 @@ $string['usenodefault'] = 'Use no default';
 $string['usingnodefaultprofileicon'] = 'Now using no default profile icon';
 $string['wrongfiletypeforblock'] = 'The file you uploaded was not the correct type for this block.';
 
+// Unzip
+$string['Contents'] = 'Contents';
+$string['extractfilessuccess'] = 'Created %s folders and %s files.';
+$string['filesextractedfromziparchive'] = 'Files extracted from Zip archive';
+$string['fileswillbeextractedintofolder'] = 'Files will be extracted into %s';
+$string['insufficientquotaforunzip'] = 'Your remaining file quota is too small to unzip this file.';
+$string['spacerequired'] = 'Space Required';
+$string['Unzip'] = 'Unzip';
 ?>
