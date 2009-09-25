@@ -1195,6 +1195,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             $f = new ArtefactTypeFolder(0, $data);
             $f->commit();
             $folderid = $f->get('id');
+            return $folderid;
         }
         return $folders[0]->id;
     }
