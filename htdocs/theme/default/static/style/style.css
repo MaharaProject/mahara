@@ -128,7 +128,7 @@ input[type=file] {
 input.submit,
 input.button,
 button,*/
-div.rbuttons a {
+div.rbuttons a.btn {
 	border-color: #d5ed8a #496000 #496000 #d5ed8a;
     background-color: #92b328;
 	border-style: solid;
@@ -136,7 +136,7 @@ div.rbuttons a {
     color: #FFF;
 	cursor: pointer;
 }
-div.rbuttons a:hover {
+div.rbuttons a.btn:hover {
 	text-decoration: none;
 }
 

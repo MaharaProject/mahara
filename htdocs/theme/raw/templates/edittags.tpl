@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 {if $tags}
-  <div class="rbuttons"><a href="{$WWWROOT}tags.php">{str tag=mytags}</a></div>
+  <div class="rbuttons"><a class="btn" href="{$WWWROOT}tags.php">{str tag=mytags}</a></div>
   <div class="edittags mytags">
   <div>{str tag=selectatagtoedit}:</div>
   {foreach from=$tags item=t}

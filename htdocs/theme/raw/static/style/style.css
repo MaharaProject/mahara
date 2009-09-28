@@ -351,7 +351,6 @@ div.rbuttons {
     position: absolute;
     right: 0;
     top: 0;
-	font-weight: bold;
 }
 * html div.rbuttons {
 	right: 2em;
@@ -364,12 +363,13 @@ div.rbuttons {
 .listing .rel .rbuttons {
 	top: 0;
 }
-.rbuttons a {
+.rbuttons a.btn {
 	border: 1px solid #D1D1D1;
 	margin: 0 0.25em;
 	padding: 0.25em 0.5em;
 	background: #eee;
 	line-height: 2em;
+	font-weight: bold;
 }
 .listing .rbuttons a {
 	font-size: 1em;

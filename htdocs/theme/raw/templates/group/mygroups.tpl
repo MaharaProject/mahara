@@ -1,6 +1,6 @@
 {include file="header.tpl"}
             <div class="rbuttons">
-                <a href="{$WWWROOT}group/create.php" class="btn-link">{str tag="creategroup" section="group"}</a>
+                <a href="{$WWWROOT}group/create.php" class="btn">{str tag="creategroup" section="group"}</a>
             </div>
 {$form}
 {if $groups}
