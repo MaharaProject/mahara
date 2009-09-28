@@ -216,6 +216,10 @@ class PluginArtefactFile extends PluginArtefact {
             'profileicon' => array('image'),
         );
     }
+
+    public static function get_attachment_types() {
+        return array('file', 'image');
+    }
 }
 
 abstract class ArtefactTypeFileBase extends ArtefactType {
