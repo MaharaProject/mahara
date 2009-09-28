@@ -1056,6 +1056,20 @@ function rebuild_artefact_parent_cache_complete() {
     db_commit();
 }
 
+function artefact_get_attachment_types() {
+    static $artefacttypes = null;
+    if (is_null($artefacttypes)) {
+        $artefacttypes = array();
+        foreach (require_artefact_plugins() as $plugin) {
+            $classname = generate_class_name('artefact', $plugin->name);
+            if (!is_callable($classname . '::get_attachment_types')) {
+                continue;
+            }
+            $artefacttypes = array_merge($artefacttypes, call_static_method($classname, 'get_attachment_types'));
+        }
+    }
+    return $artefacttypes;
+}
 
 function artefact_get_parents_for_cache($artefactid, &$parentids=false) {
     $current = $artefactid;
@@ -1067,7 +1081,7 @@ function artefact_get_parents_for_cache($artefactid, &$parentids=false) {
             break;
         }
         // get any blog posts it may be attached to 
-        if (($parent->artefacttype == 'file' || $parent->artefacttype == 'image')
+        if (in_array($parent->artefacttype, artefact_get_attachment_types())
             && $associated = ArtefactType::attached_id_list($parent->id)) {
             foreach ($associated as $a) {
                 $parentids[$a] = 1;
@@ -1238,13 +1252,23 @@ function artefact_type_installed($type) {
     return isset($types[$type]);
 }
 
+function require_artefact_plugins() {
+    static $plugins = null;
+    if (is_null($plugins)) {
+        $plugins = plugins_installed('artefact');
+        foreach ($plugins as $plugin) {
+            safe_require('artefact', $plugin->name);
+        }
+    }
+    return $plugins;
+}
+
 function artefact_get_types_from_filter($filter) {
     static $contenttype_artefacttype = null;
 
     if (is_null($contenttype_artefacttype)) {
         $contenttype_artefacttype = array();
-        foreach (plugins_installed('artefact') as $plugin) {
-            safe_require('artefact', $plugin->name);
+        foreach (require_artefact_plugins() as $plugin) {
             $classname = generate_class_name('artefact', $plugin->name);
             if (!is_callable($classname . '::get_artefact_type_content_types')) {
                 continue;
