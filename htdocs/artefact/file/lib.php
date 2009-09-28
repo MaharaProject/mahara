@@ -119,11 +119,16 @@ class PluginArtefactFile extends PluginArtefact {
                     'remove',
                 ),
                 'artefact.file' => array(
-                    'detachfilewarning',
+                    'confirmdeletefile',
+                    'confirmdeletefolder',
+                    'confirmdeletefolderandcontents',
                     'editfile',
                     'editfolder',
+                    'fileattached',
                     'filewithnameexists',
                     'foldernamerequired',
+                    'foldernotempty',
+                    'itemappearsinviews',
                     'nametoolong',
                     'namefieldisrequired',
                     'uploadingfiletofolder',
@@ -277,11 +282,12 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $select = '
             SELECT
                 a.id, a.artefacttype, a.mtime, f.size, a.title, a.description,
-                COUNT(c.id) AS childcount, COUNT (aa.artefact) AS attachcount';
+                COUNT(DISTINCT c.id) AS childcount, COUNT (DISTINCT aa.artefact) AS attachcount, COUNT(DISTINCT va.view) AS viewcount';
         $from = '
             FROM {artefact} a
                 LEFT OUTER JOIN {artefact_file_files} f ON f.artefact = a.id
                 LEFT OUTER JOIN {artefact} c ON c.parent = a.id 
+                LEFT OUTER JOIN {view_artefact} va ON va.artefact = a.id
                 LEFT OUTER JOIN {artefact_attachment} aa ON aa.attachment = a.id';
 
         if (!empty($filters['artefacttype'])) {
@@ -1207,6 +1213,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             $f = new ArtefactTypeFolder(0, $data);
             $f->commit();
             $folderid = $f->get('id');
+            return $folderid;
         }
         return $folders[0]->id;
     }

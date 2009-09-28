@@ -32,7 +32,7 @@ define('SECTION_PLUGINNAME', 'blog');
 define('SECTION_PAGE', 'new');
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
-define('TITLE', get_string('newblog','artefact.blog'));
+define('TITLE', get_string('newblog','artefact.blog') . ': ' . get_string('blogsettings','artefact.blog'));
 require_once('pieforms/pieform.php');
 safe_require('artefact', 'blog');
 
