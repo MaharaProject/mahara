@@ -214,11 +214,12 @@ class PluginArtefactFile extends PluginArtefact {
             'file'        => array('file'),
             'image'       => array('file', 'image'),
             'profileicon' => array('image'),
+            'archive'     => array('file'),
         );
     }
 
     public static function get_attachment_types() {
-        return array('file', 'image');
+        return array('file', 'image', 'archive');
     }
 }
 

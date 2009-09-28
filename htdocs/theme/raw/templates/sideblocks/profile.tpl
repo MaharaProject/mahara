@@ -45,7 +45,7 @@
 {foreach from=$data.artefacts item=artefact}
 {if $artefact->artefacttype == 'blog'}
                     <li><a href="{$WWWROOT}artefact/blog/view/?id={$artefact->id}">{$artefact->title|escape}</a></li>
-{elseif $artefact->artefacttype == 'file' || $artefact->artefacttype == 'image'}
+{elseif $artefact->artefacttype == 'file' || $artefact->artefacttype == 'image' || $artefact->artefacttype == 'archive'}
                     <li><a href="{$WWWROOT}artefact/file/download.php?file={$artefact->id}">{$artefact->title|escape}</a></li>
 {elseif $artefact->artefacttype == 'folder'}
                     <li><a href="{$WWWROOT}artefact/file/?folder={$artefact->id}">{$artefact->title|escape}</a></li>
