@@ -429,7 +429,7 @@ abstract class ArtefactType {
             }
         }
 
-        artefact_watchlist_notification($this->id);
+        artefact_watchlist_notification(array($this->id));
 
         handle_event('saveartefact', $this);
 
@@ -482,38 +482,131 @@ abstract class ArtefactType {
             }
         }
 
-        artefact_watchlist_notification($this->id);
+        artefact_watchlist_notification(array($this->id));
 
-        // Delete any references to this artefact from non-artefact places.
-        delete_records_select('artefact_parent_cache', 'artefact = ? OR parent = ?', array($this->id, $this->id));
-
-        // Make sure that the artefact is removed from any view blockinstances that have it
-        if ($records = get_column('view_artefact', 'block', 'artefact', $this->id)) {
-            foreach ($records as $blockid) {
-                require_once(get_config('docroot') . 'blocktype/lib.php');
-                $bi = new BlockInstance($blockid);
-                $bi->delete_artefact($this->id);
-            }
-        }
-        delete_records('view_artefact', 'artefact', $this->id);
-        delete_records('artefact_feedback', 'artefact', $this->id);
-        delete_records('artefact_tag', 'artefact', $this->id);
-        delete_records('artefact_access_role', 'artefact', $this->id);
-        delete_records('artefact_access_usr', 'artefact', $this->id);
+        self::_delete_dbrecords(array($this->id));
 
         if ($this->can_be_logged()) {
             $this->log('deleted');
         }
       
-        // Delete the record itself.
-        delete_records('artefact', 'id', $this->id);
-        
         handle_event('deleteartefact', $this);
 
         // Set flags.
         $this->dirty = false;
         $this->parentdirty = true;
         $this->deleted = true;
+
+        db_commit();
+    }
+
+    /**
+     * Does a bulk_delete on a list of artefacts, grouping artefacts of
+     * the same type.
+     *
+     * Currently only tested for folders and their contents.
+     */
+    public static function delete_by_artefacttype($artefactids) {
+        if (empty($artefactids)) {
+            return;
+        }
+
+        db_begin();
+
+        artefact_watchlist_notification($artefactids);
+
+        $records = get_records_select_assoc(
+            'artefact',
+            'id IN (' . join(',', $artefactids) . ')',
+            null, 'artefacttype', 'id,parent,artefacttype,container'
+        );
+
+        $containers = array();
+        $leaves = array();
+        foreach ($records as $r) {
+            if ($r->container) {
+                $containers[$r->artefacttype][] = $r->id;
+            }
+            else {
+                $leaves[$r->artefacttype][] = $r->id;
+            }
+        }
+
+        // Delete non-containers grouped by artefacttype
+        foreach ($leaves as $artefacttype => $ids) {
+            $classname = generate_artefact_class_name($artefacttype);
+            call_static_method($classname, 'bulk_delete', $ids);
+        }
+
+        // Delete containers grouped by artefacttype
+        foreach ($containers as $artefacttype => $ids) {
+            $classname = generate_artefact_class_name($artefacttype);
+            call_static_method($classname, 'bulk_delete', $ids);
+        }
+
+        handle_event('deleteartefacts', $artefactids);
+
+        db_commit();
+    }
+
+    /**
+     * Faster delete for multiple artefacts.
+     *
+     * Should only be called on artefacts with no children, after
+     * additional data in other tables has already been deleted.
+     */
+    public static function bulk_delete($artefactids, $log=false) {
+        db_begin();
+
+        self::_delete_dbrecords($artefactids);
+
+        // Logging must be triggered by the caller because it's
+        // slow to go through each artefact and ask it if it should
+        // be logged.
+        if ($log) {
+            global $USER;
+            $entry = (object) array(
+                'usr'      => $USER->get('id'),
+                'time'     => db_format_timestamp(time()),
+                'deleted'  => 1,
+            );
+            foreach ($artefactids as $id) {
+                $entry->artefact = $id;
+                insert_record('artefact_log', $entry);
+            }
+        }
+
+        db_commit();
+    }
+
+
+    private static function _delete_dbrecords($artefactids) {
+        if (empty($artefactids)) {
+            return;
+        }
+
+        $idstr = '(' . join(',', $artefactids) . ')';
+
+        db_begin();
+
+        // Delete any references to these artefacts from non-artefact places.
+        delete_records_select('artefact_parent_cache', "artefact IN $idstr");
+
+        // Make sure that the artefacts are removed from any view blockinstances
+        if ($records = get_records_sql_array("
+            SELECT va.block, va.artefact, bi.configdata
+            FROM {view_artefact} va JOIN {block_instance} bi ON va.block = bi.id
+            WHERE va.artefact IN $idstr", array())) {
+            require_once(get_config('docroot') . 'blocktype/lib.php');
+            BlockInstance::bulk_delete_artefacts($records);
+        }
+        delete_records_select('view_artefact', "artefact IN $idstr");
+        delete_records_select('artefact_feedback', "artefact IN $idstr");
+        delete_records_select('artefact_tag', "artefact IN $idstr");
+        delete_records_select('artefact_access_role', "artefact IN $idstr");
+        delete_records_select('artefact_access_usr', "artefact IN $idstr");
+
+        delete_records_select('artefact', "id IN $idstr");
 
         db_commit();
     }
@@ -1071,28 +1164,47 @@ function artefact_get_attachment_types() {
     return $artefacttypes;
 }
 
-function artefact_get_parents_for_cache($artefactid, &$parentids=false) {
-    $current = $artefactid;
+function artefact_get_parents_for_cache($artefactids, &$parentids=false) {
+    if (is_integer($artefactids)) {
+        $artefactids = array($artefactids);
+    }
+    $current = $artefactids;
     if (empty($parentids)) { // first call
         $parentids = array();
     }
     while (true) {
-        if (!$parent = get_record('artefact', 'id', $current)) {
+        if (!$parents = get_records_select_array('artefact', 'id IN (' . join(',',$current) . ')')) {
             break;
         }
-        // get any blog posts it may be attached to 
-        if (in_array($parent->artefacttype, artefact_get_attachment_types())
-            && $associated = ArtefactType::attached_id_list($parent->id)) {
-            foreach ($associated as $a) {
-                $parentids[$a] = 1;
-                artefact_get_parents_for_cache($a, $parentids);
+
+        // get any blog posts these artefacts may be attached to
+        $checkattachments = array();
+        foreach ($parents as $p) {
+            if (in_array($p->artefacttype, artefact_get_attachment_types())) {
+                $checkattachments[] = $p->id;
             }
         }
-        if (!$parent->parent) {
+        if (!empty($checkattachments)) {
+            if ($associated = get_records_select_assoc('artefact_attachment', 'attachment IN (' . join(',', $checkattachments) . ')')) {
+                $associated = array_keys($associated);
+                foreach ($associated as $a) {
+                    $parentids[$a] = 1;
+                }
+                artefact_get_parents_for_cache($associated, $parentids);
+            }
+        }
+
+        // check parents
+        $current = array();
+        foreach ($parents as $p) {
+            if ($p->parent) {
+                $parentids[$p->parent] = 1;
+                $current[] = $p->parent;
+            }
+        }
+        if (empty($current)) {
             break;
         }
-        $parentids[$parent->parent] = 1;
-        $current = $parent->parent;
     }
     return $parentids;
 }
@@ -1168,9 +1280,9 @@ function artefact_instance_from_type($artefact_type, $user_id=null) {
     throw new ArtefactNotFoundException("Artefact of type '${artefact_type}' doesn't exist");
 }
 
-function artefact_watchlist_notification($artefactid) {
+function artefact_watchlist_notification($artefactids) {
     // gets all the views containing this artefact or a parent of this artefact and creates a watchlist activity for each view
-    if ($views = get_column_sql('SELECT DISTINCT view FROM {view_artefact} WHERE artefact IN (' . implode(',', array_merge(array_keys(artefact_get_parents_for_cache($artefactid)), array($artefactid))) . ')')) {
+    if ($views = get_column_sql('SELECT DISTINCT view FROM {view_artefact} WHERE artefact IN (' . implode(',', array_merge(array_keys(artefact_get_parents_for_cache($artefactids)), $artefactids)) . ')')) {
         require_once('activity.php');
         foreach ($views as $view) {
             activity_occurred('watchlist', (object)array('view' => $view));
