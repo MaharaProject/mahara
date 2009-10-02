@@ -3,8 +3,8 @@
 <h2>{$subheading|escape}</h2>
 <div id="forumbtns" class="rbuttons">
 	{if $admin}
-		<a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}" class="btn-editforum">{str tag="edittitle" section="interaction.forum"}</a>
-        <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}" class="btn-deleteforum">{str tag="deleteforum" section="interaction.forum"}</a>
+		<a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}" class="btn btn-editforum">{str tag="edittitle" section="interaction.forum"}</a>
+        <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}" class="btn btn-deleteforum">{str tag="deleteforum" section="interaction.forum"}</a>
 	{/if}
 	{$forum->subscribe}
 </div>
@@ -13,7 +13,7 @@
 	<h3>{str tag=Topics section="interaction.forum"}</h3>
     {if $membership && ($moderator || $forum->newtopicusers != 'moderators') }
     <div class="rbuttons">
-	<a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id|escape}" class="btn-add s">{str tag="newtopic" section="interaction.forum}</a>
+	<a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id|escape}" class="btn btn-add s">{str tag="newtopic" section="interaction.forum}</a>
 	</div>
 	{/if}
 {if $stickytopics || $regulartopics}

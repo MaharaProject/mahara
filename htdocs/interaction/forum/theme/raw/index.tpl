@@ -3,7 +3,7 @@
 <h2>{str tag="nameplural" section=interaction.forum}</h2>
 {if $admin}
 <div id="forumbtns" class="rbuttons">
-<a href="{$WWWROOT}interaction/edit.php?group={$groupid|escape}&amp;plugin=forum" class="btn-add">{str tag="newforum" section=interaction.forum}</a>
+<a href="{$WWWROOT}interaction/edit.php?group={$groupid|escape}&amp;plugin=forum" class="btn btn-add">{str tag="newforum" section=interaction.forum}</a>
 </div>
 {/if}
 <div class="forummods">

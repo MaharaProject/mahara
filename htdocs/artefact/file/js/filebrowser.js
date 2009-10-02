@@ -248,9 +248,34 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                     }
                     else if (name[1] == 'delete') {
                         var id = name[2];
-                        if (self.filedata[id].attachcount > 0) {
+                        var warn = '';
+                        if (self.filedata[id].artefacttype == 'folder') {
+                            if (self.filedata[id].viewcount > 0) {
+                                warn += get_string('folderappearsinviews') + ' ';
+                            }
+                            if (self.filedata[id].childcount > 0) {
+                                warn += get_string('foldernotempty') + ' ';
+                                warn += get_string('confirmdeletefolderandcontents');
+                            }
+                            else if (warn != '') {
+                                warn += get_string('confirmdeletefolder');
+                            }
+                        }
+                        else {
+                            if (self.filedata[id].attachcount > 0) {
+                                warn += get_string('fileattached', self.filedata[id].attachcount) + ' ';
+                            }
+                            if (self.filedata[id].viewcount > 0) {
+                                warn += get_string('fileappearsinviews') + ' ';
+                            }
+                            if (warn != '') {
+                                warn += get_string('confirmdeletefile');
+                            }
+                        }
+
+                        if (warn != '') {
                             connect(elem, 'onclick', function (e) {
-                                if (!confirm(get_string('detachfilewarning', self.filedata[id].attachcount))) {
+                                if (!confirm(warn)) {
                                     e.stop();
                                     return false;
                                 }
