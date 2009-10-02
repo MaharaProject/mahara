@@ -699,6 +699,7 @@ function core_install_firstcoredata_defaults() {
         'userjoinsgroup',
         'saveartefact',
         'deleteartefact',
+        'deleteartefacts',
         'saveview',
         'deleteview',
         'blockinstancecommit',

@@ -888,8 +888,10 @@ class BlockInstance {
      *    value 'artefactid' or in the array 'artefactids'
      * 2) The block must ALWAYS continue to work even when artefacts are 
      *    removed from it
+     *
+     * Don't override this method without doing the right thing in bulk_delete_artefacts too.
      */
-    public function delete_artefact($artefact) {
+    final public function delete_artefact($artefact) {
         $configdata = $this->get('configdata');
         $changed = false;
 
@@ -913,6 +915,42 @@ class BlockInstance {
         }
     }
 
+    /**
+     * Deletes artefacts from the blockinstances given in $records.
+     * $records should be an array of stdclass objects, each containing
+     * a blockid, an artefactid, and the block's configdata
+     */
+    public static function bulk_delete_artefacts($records) {
+        if (empty($records)) {
+            return;
+        }
+        $blocklist = array();
+        foreach ($records as $record) {
+            if (isset($blocklist[$record->block])) {
+                $blocklist[$record->block]->artefacts[] = $record->artefact;
+            }
+            else {
+                $blocklist[$record->block] = (object) array(
+                    'artefacts' => array($record->artefact),
+                    'configdata' => unserialize($record->configdata),
+                );
+            }
+        }
+        foreach ($blocklist as $blockid => $blockdata) {
+            if (isset($blockdata->configdata['artefactid'])) {
+                if ($change = $blockdata->configdata['artefactid'] == $blockdata->artefacts[0]) {
+                    $blockdata->configdata['artefactid'] = null;
+                }
+            }
+            else if (isset($blockdata->configdata['artefactids'])) {
+                $blockdata->configdata['artefactids'] = array_diff($blockdata->configdata['artefactids'], $blockdata->artefacts);
+                $change = true;
+            }
+            if ($change) {
+                set_field('block_instance', 'configdata', serialize($blockdata->configdata), 'id', $blockid);
+            }
+        }
+    }
 
     /** 
      * Get an artefact instance, checking republish permissions

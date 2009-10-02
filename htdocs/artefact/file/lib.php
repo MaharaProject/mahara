@@ -948,6 +948,64 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         parent::delete();
     }
 
+    public static function bulk_delete($artefactids) {
+        global $USER;
+
+        if (empty($artefactids)) {
+            return;
+        }
+
+        $idstr = join(',', $artefactids);
+
+        db_begin();
+        // Get the size of all the files we're about to delete that belong to
+        // the user.
+        $totalsize = get_field_sql('
+            SELECT SUM(size)
+            FROM {artefact_file_files} f JOIN {artefact} a ON f.artefact = a.id
+            WHERE a.owner = ? AND f.artefact IN (' . $idstr . ')',
+            array($USER->get('id'))
+        );
+
+        // Get all fileids so that we can delete the files on disk
+        $fileids = get_records_select_assoc('artefact_file_files', 'artefact IN (' . $idstr . ')', array());
+
+        $fileidcounts = get_records_sql_assoc('
+            SELECT fileid, COUNT(fileid)
+            FROM {artefact_file_files}
+            WHERE artefact IN (' . $idstr . ')
+            GROUP BY fileid',
+            null
+        );
+
+        // The current rule is that file deletion should be logged in the artefact_log table
+        // only for group-owned files.  To save time we will be slightly naughty here and
+        // log deletion for all these files if at least one is group-owned.
+        $log = (bool) count_records_select('artefact', 'id IN (' . $idstr . ') AND "group" IS NOT NULL');
+
+        set_field_select('view_feedback', 'attachment', null, 'attachment IN (' . $idstr . ')', array());
+        delete_records_select('artefact_attachment', 'attachment IN (' . $idstr . ')');
+        delete_records_select('artefact_file_files', 'artefact IN (' . $idstr . ')');
+        parent::bulk_delete($artefactids, $log);
+
+        foreach ($fileids as $r) {
+            // Delete the file on disk if there's only one artefact left pointing to it
+            if ($fileidcounts[$r->fileid]->count == 1) {
+                $file = get_config('dataroot') . self::get_file_directory($r->fileid) . '/' .  $r->fileid;
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+            $fileidcounts[$r->fileid]->count--;
+        }
+
+        if ($totalsize) {
+            $USER->quota_remove($totalsize);
+            $USER->commit();
+        }
+        db_commit();
+    }
+
     public static function has_config() {
         return true;
     }
@@ -1140,6 +1198,19 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             $this->size = null;
         }
 
+    }
+
+    public function delete() {
+        // ArtefactType::delete() deletes all the child artefacts one by one.
+        // If the folder contains a lot of artefacts, it's too slow to do this
+        // but for very small directories it seems to be slightly faster.
+        $descendants = artefact_get_descendants(array($this->id));
+        if (count($descendants) < 10) {
+            parent::delete();
+        }
+        else {
+            ArtefactType::delete_by_artefacttype($descendants);
+        }
     }
 
     public function folder_contents() {
@@ -1428,6 +1499,16 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         }
         delete_records('artefact_file_image', 'artefact', $this->id);
         parent::delete();
+    }
+
+    public static function bulk_delete($artefactids) {
+        if (empty($artefactids)) {
+            return;
+        }
+        db_begin();
+        delete_records_select('artefact_file_image', 'artefact IN (' . join(',', $artefactids) . ')');
+        parent::bulk_delete($artefactids);
+        db_commit();
     }
 
     public function render_self($options) {

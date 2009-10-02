@@ -1210,6 +1210,13 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2009092900) {
+        $event = (object)array(
+            'name' => 'deleteartefacts',
+        );
+        ensure_record_exists('event_type', $event, $event);
+    }
+
     return $status;
 
 }
