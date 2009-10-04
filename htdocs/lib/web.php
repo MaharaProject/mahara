@@ -112,6 +112,8 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
     $javascript_array = array();
     $jsroot = $wwwroot . 'js/';
 
+    $langdirection = get_string('thisdirection', 'langconfig');
+
     // TinyMCE must be included first for some reason we're not sure about
     $checkarray = array(&$javascript, &$headers);
     $found_tinymce = false;
@@ -127,37 +129,57 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
                     $execcommand = 'setup: ' . $extraconfig['tinymcesetup'] . ',';
                 }
 
-                    if ($check[$key] == 'tinymce') {
-                        $tinymce_config = <<<EOF
+                $adv_buttons = array(
+                    "bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,separator,code,fullscreen",
+                    "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,image,iespell,cleanup,separator,link,unlink,separator,code",
+                    "bullist,numlist,separator,tablecontrols,separator,cut,copy,paste,pasteword",
+                    "fontselect,separator,fontsizeselect,separator,formatselect",
+                );
+
+                // For right-to-left langs, reverse button order & align controls right.
+                if ($langdirection == 'rtl') {
+                    $tinymce_langdir = 'rtl';
+                    $toolbar_align = 'right';
+                    foreach ($adv_buttons as &$b) {
+                        $b = join(',',array_reverse(split(',', $b)));
+                    }
+                }
+                else {
+                    $tinymce_langdir = 'ltr';
+                    $toolbar_align = 'left';
+                }
+
+                if ($check[$key] == 'tinymce') {
+                    $tinymce_config = <<<EOF
     mode: "none",
     theme: "advanced",
     plugins: "table,emotions,iespell,inlinepopups,paste",
-    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,image,iespell,cleanup,separator,link,unlink,separator,code",
-    theme_advanced_buttons2 : "bullist,numlist,separator,tablecontrols,separator,cut,copy,paste,pasteword",
-    theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect",
+    theme_advanced_buttons1 : "{$adv_buttons[1]}",
+    theme_advanced_buttons2 : "{$adv_buttons[2]}",
+    theme_advanced_buttons3 : "{$adv_buttons[3]}",
     theme_advanced_toolbar_location : "top",
-    theme_advanced_toolbar_align : "left",
+    theme_advanced_toolbar_align : "{$toolbar_align}",
     //width: '512',
 EOF;
-                    }
-                    else {
-                        $tinymce_config = <<<EOF
+                }
+                else {
+                    $tinymce_config = <<<EOF
     mode: "textareas",
     editor_selector: 'tinywysiwyg',
     theme: "advanced",
     plugins: "fullscreen,inlinepopups",
-    theme_advanced_buttons1 : "bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,separator,code,fullscreen",
+    theme_advanced_buttons1 : "{$adv_buttons[0]}",
     theme_advanced_buttons2 : "",
     theme_advanced_buttons3 : "",
     theme_advanced_toolbar_location : "top",
-    theme_advanced_toolbar_align : "left",
+    theme_advanced_toolbar_align : "{$toolbar_align}",
     fullscreen_new_window: true,
     fullscreen_settings: {
         theme: "advanced",
         plugins: "table,emotions,iespell,inlinepopups,paste",
-        theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,image,iespell,cleanup,separator,link,unlink,separator,code",
-        theme_advanced_buttons2 : "bullist,numlist,separator,tablecontrols,separator,cut,copy,paste,pasteword",
-        theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect"
+        theme_advanced_buttons1 : "{$adv_buttons[1]}",
+        theme_advanced_buttons2 : "{$adv_buttons[2]}",
+        theme_advanced_buttons3 : "{$adv_buttons[3]}"
     },
 EOF;
                 }
@@ -171,6 +193,7 @@ tinyMCE.init({
     extended_valid_elements : "object[width|height|classid|codebase],param[name|value],embed[src|type|width|height|flashvars|wmode],script[src,type,language],+ul[id|type|compact]",
     urlconverter_callback : "custom_urlconvert",
     language: '{$language}',
+    directionality: "{$tinymce_langdir}",
     content_css : {$content_css},
     forced_root_block : "",
     force_p_newlines : false,
@@ -347,7 +370,6 @@ EOF;
     }
 
     // Include rtl.css for right-to-left langs
-    $langdirection = get_string('thisdirection', 'langconfig');
     if ($langdirection == 'rtl') {
         if ($rtlsheets = $THEME->get_url('style/rtl.css', true)) {
             $stylesheets = array_merge($stylesheets, array_reverse($rtlsheets));
