@@ -1635,7 +1635,7 @@ class View {
             $data['sortorder'] = call_static_method($blocktypeclass, 'artefactchooser_get_sort_order');
         }
 
-        list($artefacts, $totalartefacts) = self::get_artefactchooser_artefacts($data, $group, $institution);
+        list($artefacts, $totalartefacts) = self::get_artefactchooser_artefacts($data, $USER, $group, $institution);
 
         $selectone     = $data['selectone'];
         $value         = $data['defaultvalue'];
@@ -1707,8 +1707,21 @@ class View {
      * Return artefacts available for inclusion in a particular block
      *
      */
-    public static function get_artefactchooser_artefacts($data, $group=null, $institution=null, $short=false) {
-        global $USER;
+    public static function get_artefactchooser_artefacts($data, $owner=null, $group=null, $institution=null, $short=false) {
+        if ($owner === null) {
+            global $USER;
+            $user = $USER;
+        }
+        else if ($owner instanceof User) {
+            $user = $owner;
+        }
+        else if (intval($owner) != 0) {
+            $user = new User();
+            $user->find_by_id(intval($owner));
+        }
+        else {
+            throw new SystemException("Invalid argument type " . gettype($owner) . " passed to View::get_artefactchooser_artefacts");
+        }
 
         $offset        = !empty($data['offset']) ? $data['offset'] : null;
         $limit         = !empty($data['limit']) ? $data['limit'] : null;
@@ -1731,7 +1744,7 @@ class View {
                     INNER JOIN {group_member} m ON r.role = m.role
                 WHERE
                     m."group" = ' . $group . '
-                    AND m.member = ' . $USER->get('id') . '
+                    AND m.member = ' . $user->get('id') . '
                     AND r.can_view = 1
             ) ga ON (ga.group = a.group AND a.id = ga.artefact)';
             $select = "(a.institution = 'mahara' OR ga.can_view = 1)";
@@ -1745,7 +1758,7 @@ class View {
             // the user has republish permission on, artefacts owned
             // by the user's institutions.
             $from .= '
-            LEFT OUTER JOIN {artefact_access_usr} aau ON (a.id = aau.artefact AND aau.usr = ' . $USER->get('id') . ')
+            LEFT OUTER JOIN {artefact_access_usr} aau ON (a.id = aau.artefact AND aau.usr = ' . $user->get('id') . ')
             LEFT OUTER JOIN {artefact_parent_cache} apc ON (a.id = apc.artefact)
             LEFT OUTER JOIN (
                 SELECT
@@ -1754,15 +1767,15 @@ class View {
                     {artefact_access_role} aar
                     INNER JOIN {group_member} m ON aar.role = m.role
                 WHERE
-                    m.member = ' . $USER->get('id') . '
+                    m.member = ' . $user->get('id') . '
                     AND aar.can_republish = 1
             ) ra ON (a.id = ra.artefact AND a.group = ra.group)';
-            $institutions = array_keys($USER->get('institutions'));
+            $institutions = array_keys($user->get('institutions'));
             $select = '(
-                owner = ' . $USER->get('id') . '
+                owner = ' . $user->get('id') . '
                 OR ra.can_republish = 1
                 OR aau.can_republish = 1';
-            if ($USER->get('admin')) {
+            if ($user->get('admin')) {
                 $institutions[] = 'mahara';
             }
             else {

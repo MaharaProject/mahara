@@ -826,6 +826,7 @@ class BlockInstance {
         );
         list($allowed, $count) = View::get_artefactchooser_artefacts(
             $searchdata,
+            $this->get_view()->get('owner'),
             $this->get_view()->get('group'),
             $this->get_view()->get('institution'),
             true
