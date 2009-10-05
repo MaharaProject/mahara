@@ -100,7 +100,6 @@ function import_submit(Pieform $form, $values) {
         'password' => 'import1',
         'firstname' => 'Imported',
         'lastname' => 'User (' . $nicedate .')',
-        'email'    => 'imported@example.org',
     );
     $userid = create_user($user);
 
@@ -125,11 +124,6 @@ function import_submit(Pieform $form, $values) {
     ));
     $importer->process();
 
-    // Now done, delete the temporary e-mail address if there's a new one
-    // A bit sucky, presumes only one email in the import
-    $email = artefact_instance_from_id(get_field('artefact', 'id', 'title', 'imported@example.org', 'artefacttype', 'email', 'owner', $userid));
-    $email->delete();
-    execute_sql('UPDATE {artefact_internal_profile_email} SET principal = 1 WHERE "owner" = ?', array($userid));
     db_commit();
 
     echo "\n\n";
