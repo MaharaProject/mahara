@@ -315,25 +315,26 @@ class PluginExportLeap extends PluginExport {
             };
             $element = null;
             // go see if we have to do anything special for this artefact type.
-            safe_require('export', 'leap/' . $artefact->get_plugin_name());
-            $classname = 'LeapExportElement' . ucfirst($artefact->get('artefacttype'));
-            if (class_exists($classname)) {
-                $element = new $classname($artefact, $this);
-            }
+            if (safe_require('export', 'leap/' . $artefact->get_plugin_name(), 'lib.php', 'require_once', true)) {
+                $classname = 'LeapExportElement' . ucfirst($artefact->get('artefacttype'));
+                if (class_exists($classname)) {
+                    $element = new $classname($artefact, $this);
+                }
 
-            if (is_null($element)) {
-                $element = new LeapExportElement($artefact, $this);
+                if (is_null($element)) {
+                    $element = new LeapExportElement($artefact, $this);
+                }
+                if (array_key_exists($artefact->get_plugin_name(), $this->specialcases) && !$element->override_plugin_specialcase()) {
+                    $this->specialcases[$artefact->get_plugin_name()][] = $artefact;
+                    continue;
+                }
+                if (!$element->is_leap()) {
+                    continue;
+                }
+                $element->add_attachments();
+                $element->assign_smarty_vars();
+                $this->xml .= $element->get_export_xml();
             }
-            if (array_key_exists($artefact->get_plugin_name(), $this->specialcases) && !$element->override_plugin_specialcase()) {
-                $this->specialcases[$artefact->get_plugin_name()][] = $artefact;
-                continue;
-            }
-            if (!$element->is_leap()) {
-                continue;
-            }
-            $element->add_attachments();
-            $element->assign_smarty_vars();
-            $this->xml .= $element->get_export_xml();
         }
     }
 
