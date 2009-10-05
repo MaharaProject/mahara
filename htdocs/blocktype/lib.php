@@ -300,10 +300,8 @@ abstract class PluginBlocktype extends Plugin {
             unset($configdata['change']);
             unset($configdata['new']);
 
-            foreach ($configdata as &$value) {
-                if (is_array($value) || is_object($value)) {
-                    $value = json_encode($value);
-                }
+            foreach ($configdata as $key => &$value) {
+                $value = json_encode($value);
             }
         }
         else {
