@@ -806,7 +806,19 @@ class BlockInstance {
             db_commit();
             return true;
         }
-            
+
+        foreach ($artefacts as $key => $id) {
+            if (!$id || intval($id) == 0) {
+                log_warn("get_artefacts returned an invalid artefact ID for block instance $this->id (" . $this->get('blocktype') . ")");
+                unset($artefacts[$key]);
+            }
+        }
+
+        if (count($artefacts) == 0) {
+            db_commit();
+            return true;
+        }
+
         // Get list of allowed artefacts
         require_once('view.php');
         $searchdata = array(
