@@ -39,6 +39,7 @@ class PluginImportLeap extends PluginImport {
     private $namespaces = array();
     private $strategylisting = array();
     private $loadmapping = array();
+    private $coreloadmapping = array();
     private $artefactids = array();
 
     protected $persondataid = null;
@@ -261,7 +262,12 @@ class PluginImportLeap extends PluginImport {
                 }
 
                 $this->trace(" * using strategy $strategydata[strategy] from plugin $strategydata[artefactplugin]");
-                $this->loadmapping[$entryid] = $strategydata;
+                if ($strategydata['artefactplugin']) {
+                    $this->loadmapping[$entryid] = $strategydata;
+                }
+                else {
+                    $this->coreloadmapping[$entryid] = $strategydata;
+                }
 
                 $usedlist[] = $entryid;
 
@@ -278,8 +284,10 @@ class PluginImportLeap extends PluginImport {
                 break;
             }
         }
-        $this->trace("*** Load mapping: ***");
+        $this->trace("*** Plugin load mapping: ***");
         $this->trace($this->loadmapping);
+        $this->trace("*** Core load mapping: ***");
+        $this->trace($this->coreloadmapping);
     }
 
     private function strategy_listing_sort($a, $b) {
@@ -315,22 +323,15 @@ class PluginImportLeap extends PluginImport {
                 }
             }
 
-            if ($strategydata['artefactplugin'] != '') {
-                $this->trace("Importing $entryid using strategy $strategydata[strategy] of plugin $strategydata[artefactplugin]");
-                safe_require('artefact', $strategydata['artefactplugin']);
-                $entry = $this->get_entry_by_id($entryid);
-                $classname = 'LeapImport' . ucfirst($strategydata['artefactplugin']);
-                // TODO: this throws ImportException if it can't be imported, need 
-                // to decide if this exception can bubble up or whether it should 
-                // be caught here
-                $artefactmapping = call_static_method($classname, 'import_using_strategy',
-                    $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
-            }
-            else {
-                $this->trace("Importing $entryid using the core");
-                $entry = $this->get_entry_by_id($entryid);
-                $artefactmapping = $this->import_using_strategy($entry, $strategydata['strategy'], $strategydata['other_required_entries']);
-            }
+            $this->trace("Importing $entryid using strategy $strategydata[strategy] of plugin $strategydata[artefactplugin]");
+            safe_require('artefact', $strategydata['artefactplugin']);
+            $entry = $this->get_entry_by_id($entryid);
+            $classname = 'LeapImport' . ucfirst($strategydata['artefactplugin']);
+            // TODO: this throws ImportException if it can't be imported, need
+            // to decide if this exception can bubble up or whether it should
+            // be caught here
+            $artefactmapping = call_static_method($classname, 'import_using_strategy',
+                $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
 
             if (!is_array($artefactmapping)) {
                 throw new SystemException("import_from_load_mapping(): $classname::import_using_strategy has not return a list");
@@ -354,19 +355,48 @@ class PluginImportLeap extends PluginImport {
         // links to profile fields, but nothing actually needs it yet
         foreach (plugins_installed('artefact') as $plugin) {
             $classname = 'LeapImport' . ucfirst($plugin->name);
-            $strategies = call_static_method($classname, 'import_author_data', $this, $this->persondataid);
+            if (method_exists($classname, 'import_author_data')) {
+                call_static_method($classname, 'import_author_data', $this, $this->persondataid);
+            }
         }
 
         // Now all artefacts are loaded, allow each plugin to load 
         // relationships for them if they need to
         foreach ($loadedentries as $entryid) {
             $strategydata = $this->loadmapping[$entryid];
-            if ($strategydata['artefactplugin'] != '') {
-                $classname = 'LeapImport' . ucfirst($strategydata['artefactplugin']);
-                $entry = $this->get_entry_by_id($entryid);
-                call_static_method($classname, 'setup_relationships',
-                    $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
+            $classname = 'LeapImport' . ucfirst($strategydata['artefactplugin']);
+            $entry = $this->get_entry_by_id($entryid);
+            call_static_method($classname, 'setup_relationships',
+                $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
+        }
+
+        // Now import views
+        foreach ($this->coreloadmapping as $entryid => $strategydata) {
+            if (in_array($entryid, $usedlist)) {
+                $this->trace("WARNING: $entryid has already been imported as part of a previous entry");
+                continue;
             }
+            if (isset($strategydata['other_required_entries'])) {
+                foreach ($strategydata['other_required_entries'] as $otherentryid) {
+                    if (in_array($otherentryid, $usedlist)) {
+                        $this->trace("WARNING: $entryid has already been imported as part of a previous entry");
+                        continue(2);
+                    }
+                }
+            }
+
+            $this->trace("Importing $entryid using the core");
+            $entry = $this->get_entry_by_id($entryid);
+            $this->import_using_strategy($entry, $strategydata['strategy'], $strategydata['other_required_entries']);
+
+            $usedlist[] = $entryid;
+            if (isset($strategydata['other_required_entries'])) {
+                foreach ($strategydata['other_required_entries'] as $otherentryid) {
+                    $usedlist[] = $otherentryid;
+                }
+            }
+
+            $loadedentries[] = $entryid;
         }
     }
 
@@ -374,6 +404,7 @@ class PluginImportLeap extends PluginImport {
         $this->trace("------------------\nimport_completed()");
 
         unset($this->loadmapping);
+        unset($this->coreloadmapping);
         unset($this->strategylisting);
         unset($this->xpath);
         unset($this->dom);
