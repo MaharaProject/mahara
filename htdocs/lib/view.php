@@ -1561,6 +1561,15 @@ class View {
             'numcolumns'  => $config['numcolumns'],
             'ownerformat' => $config['ownerformat'],
         );
+        if (isset($config['owner'])) {
+            $viewdata['owner'] = $config['owner'];
+        }
+        if (isset($config['group'])) {
+            $viewdata['group'] = $config['group'];
+        }
+        if (isset($config['institution'])) {
+            $viewdata['institution'] = $config['institution'];
+        }
         $view = View::create($viewdata, $userid);
 
         $col = 1;
