@@ -254,6 +254,124 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
         return $view->get('owner') != null;
     }
 
+    /**
+     * Overrides the default implementation so we can export enough information
+     * to reconstitute profile information again.
+     *
+     * LEAP2A export doesn't export profile related artefacts as entries, so we
+     * need to take that into account when exporting config for it.
+     */
+    public static function export_blockinstance_config_leap(BlockInstance $bi) {
+        static $cache = array();
+        $owner = $bi->get_view()->get('owner');
+
+        // This blocktype is only allowed in personal views
+        if (!$owner) {
+            return array();
+        }
+
+        if (!isset($cache[$owner])) {
+            $cache[$owner] = get_records_sql_assoc("SELECT id, artefacttype, title
+                FROM {artefact}
+                WHERE owner = ?
+                AND artefacttype IN (
+                    SELECT name
+                    FROM {artefact_installed_type}
+                    WHERE plugin = 'internal'
+            )", array($owner));
+        }
+
+        $configdata = $bi->get('configdata');
+
+        $result = array();
+        if (is_array($configdata)) {
+            // Convert the actual profile artefact IDs to their field names
+            if (isset($configdata['artefactids']) && is_array($configdata['artefactids'])) {
+                $result['fields'] = array();
+                foreach ($configdata['artefactids'] as $id) {
+                    $result['fields'][] = $cache[$owner][$id]->artefacttype;
+                }
+                $result['fields'] = json_encode($result['fields']);
+            }
+
+            // Email addresses are not entries in leap2a (they're elements on
+            // the persondata element), so we export the actual address here
+            // instead of an artefact ID.
+            if (!empty($configdata['email']) && isset($cache[$owner][$configdata['email']])) {
+                $result['email'] = $cache[$owner][$configdata['email']]->title;
+            }
+
+            if (!empty($configdata['profileicon'])) {
+                $result['artefactid'] = intval($configdata['profileicon']);
+            }
+
+            if (isset($configdata['introtext'])) {
+                $result['introtext'] = $configdata['introtext'];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Sister method to export_blockinstance_config_leap (creates block
+     * instance based of what that method exports)
+     */
+    public static function import_create_blockinstance_leap(array $biconfig, array $viewconfig) {
+        static $cache = array();
+        $configdata = array();
+
+        // This blocktype is only allowed in personal views
+        if (empty($viewconfig['owner'])) {
+            return;
+        }
+        $owner = $viewconfig['owner'];
+
+        if (isset($biconfig['config']) && is_array($biconfig['config'])) {
+            $impcfg = $biconfig['config'];
+            if (isset($impcfg['fields']) && is_array($impcfg['fields'])) {
+                // Convert the fields to their artefact ids
+                $configdata['artefactids'] = array();
+                foreach ($impcfg['fields'] as $field) {
+                    if (!isset($cache[$owner])) {
+                        $cache[$owner] = get_records_sql_assoc("SELECT artefacttype, id
+                            FROM {artefact}
+                            WHERE owner = ?
+                            AND artefacttype IN (
+                                SELECT name
+                                FROM {artefact_installed_type}
+                                WHERE plugin = 'internal'
+                        )", array($owner));
+                    }
+
+                    $configdata['artefactids'][] = $cache[$owner][$field]->id;
+                }
+            }
+
+            if (!empty($impcfg['email'])) {
+                if ($artefactid = get_field('artefact_internal_profile_email', 'artefact', 'owner', $owner, 'email', $impcfg['email'])) {
+                    $configdata['email'] = $artefactid;
+                }
+            }
+
+            if (!empty($impcfg['artefactid'])) {
+                $configdata['profileicon'] = intval($impcfg['artefactid']);
+            }
+
+            if (isset($impcfg['introtext'])) {
+                $configdata['introtext'] = $impcfg['introtext'];
+            }
+        }
+        $bi = new BlockInstance(0,
+            array(
+                'blocktype'  => $biconfig['type'],
+                'configdata' => $configdata,
+            )
+        );
+
+        return $bi;
+    }
+
 }
 
 ?>
