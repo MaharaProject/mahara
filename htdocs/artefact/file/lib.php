@@ -1593,6 +1593,108 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
         return $mimetypes;
     }
 
+    public static function zip_file_info($zip) {
+        $info = (object) array(
+            'files'     => 0,
+            'folders'   => 0,
+            'totalsize' => 0,
+            'names'     => array(),
+        );
+        while ($entry = zip_read($zip)) {
+            $name = zip_entry_name($entry);
+            $info->names[] = $name;
+            if (substr($name, -1) == '/') {
+                $info->folders++;
+            }
+            else {
+                $info->files++;
+                if ($size = zip_entry_filesize($entry)) {
+                    $info->totalsize += $size;
+                }
+            }
+        }
+        $info->displaysize = ArtefactTypeFile::short_size($info->totalsize);
+        return $info;
+    }
+
+    public static function get_unzip_directory_name($file) {
+        $folderdata = ArtefactTypeFileBase::artefactchooser_folder_data($file);
+        $parent = $file->get('parent');
+        $strpath = ArtefactTypeFileBase::get_full_path($parent, $folderdata->data);
+        $extn = $file->get('oldextension');
+        $name = $file->get('title');
+        if (substr($name, -1-strlen($extn)) == '.' . $extn) {
+            $name = substr($name, 0, strlen($name)-1-strlen($extn));
+        }
+        $name = ArtefactTypeFileBase::get_new_file_title($name, $parent, $file->get('owner'), $file->get('group'), $file->get('institution'));
+        return array('basename' => $name, 'fullname' => $strpath . $name);
+    }
+
+    public function unzip($progresscallback=null) {
+        global $USER;
+
+        $foldername = ArtefactTypeArchive::get_unzip_directory_name($this);
+        $foldername = $foldername['basename'];
+
+        $data = (object) array(
+            'owner' => $this->get('owner'),
+            'group' => $this->get('group'),
+            'institution' => $this->get('institution'),
+            'title' => $foldername,
+            'description' => get_string('filesextractedfromziparchive', 'artefact.file'),
+            'parent' => $this->get('parent'),
+        );
+
+        $user = $data->owner ? $USER : null;
+
+        $basefolder = new ArtefactTypeFolder(0, $data);
+        $basefolder->commit();
+        $folders = array('.' => $basefolder->get('id'));
+        $status = (object) array('folders' => 1, 'files' => 0, 'basefolderid' => $basefolder->get('id'));
+
+        unset($data->description);
+
+        $tempdir = get_config('dataroot') . 'artefact/file/temp';
+        check_dir_exists($tempdir);
+
+        $zip = zip_open($this->get_path());
+        $tempfile = tempnam($tempdir, '');
+
+        $i = 0;
+
+        while ($entry = zip_read($zip)) {
+            $name = zip_entry_name($entry);
+            $folder = dirname($name);
+            $data->title = basename($name);
+            $data->parent = $folders[$folder];
+            if (substr($name, -1) == '/') {
+                $newfolder = new ArtefactTypeFolder(0, $data);
+                $newfolder->commit();
+                $status->folders++;
+                $folderindex = ($folder == '.' ? '' : ($folder . '/')) . $data->title;
+                $folders[$folderindex] = $newfolder->get('id');
+            }
+            else {
+                $h = fopen($tempfile, 'w');
+                $size = zip_entry_filesize($entry);
+                $contents = zip_entry_read($entry, $size);
+                fwrite($h, $contents);
+                fclose($h);
+                ArtefactTypeFile::save_file($tempfile, $data, $user, true);
+                $status->files++;
+            }
+
+            if ($progresscallback) {
+                $i++;
+                if ($i % 5 == 0) {
+                    call_user_func_array($progresscallback, $i);
+                }
+            }
+
+        }
+        return $status;
+    }
+
 }
 
 ?>

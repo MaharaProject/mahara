@@ -213,10 +213,13 @@ $string['wrongfiletypeforblock'] = 'The file you uploaded was not the correct ty
 
 // Unzip
 $string['Contents'] = 'Contents';
+$string['Continue'] = 'Continue';
 $string['extractfilessuccess'] = 'Created %s folders and %s files.';
 $string['filesextractedfromziparchive'] = 'Files extracted from Zip archive';
 $string['fileswillbeextractedintofolder'] = 'Files will be extracted into %s';
 $string['insufficientquotaforunzip'] = 'Your remaining file quota is too small to unzip this file.';
+$string['pleasewaitwhileyourfilesarebeingunzipped'] = 'Please wait while your files are being unzipped.';
 $string['spacerequired'] = 'Space Required';
 $string['Unzip'] = 'Unzip';
+$string['unzipprogress'] = '%s files/folders created.';
 ?>

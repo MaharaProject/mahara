@@ -69,11 +69,11 @@ if ($fileid) {
     if (!is_resource($zip)) {
         throw new NotFoundException();
     }
-    $zipinfo = zip_file_info($zip);
+    $zipinfo = ArtefactTypeArchive::zip_file_info($zip);
     zip_close($zip);
 
     if (!$file->get('owner') || $USER->quota_allowed($zipinfo->totalsize)) {
-        $name = get_unzip_directory_name($file);
+        $name = ArtefactTypeArchive::get_unzip_directory_name($file);
         $message = get_string('fileswillbeextractedintofolder', 'artefact.file', $name['fullname']);
 
         $goto = files_page($file);
@@ -109,43 +109,6 @@ if ($fileid) {
     $smarty->display('artefact:file:extract.tpl');
 }
 
-function zip_file_info($zip) {
-    $info = (object) array(
-        'files'     => 0,
-        'folders'   => 0,
-        'totalsize' => 0,
-        'names'     => array(),
-    );
-    while ($entry = zip_read($zip)) {
-        $name = zip_entry_name($entry);
-        $info->names[] = $name;
-        if (substr($name, -1) == '/') {
-            $info->folders++;
-        }
-        else {
-            $info->files++;
-            if ($size = zip_entry_filesize($entry)) {
-                $info->totalsize += $size;
-            }
-        }
-    }
-    $info->displaysize = ArtefactTypeFile::short_size($info->totalsize);
-    return $info;
-}
-
-function get_unzip_directory_name($file) {
-    $folderdata = ArtefactTypeFileBase::artefactchooser_folder_data($file);
-    $parent = $file->get('parent');
-    $strpath = ArtefactTypeFileBase::get_full_path($parent, $folderdata->data);
-    $extn = $file->get('oldextension');
-    $name = $file->get('title');
-    if (substr($name, -1-strlen($extn)) == '.' . $extn) {
-        $name = substr($name, 0, strlen($name)-1-strlen($extn));
-    }
-    $name = ArtefactTypeFileBase::get_new_file_title($name, $parent, $file->get('owner'), $file->get('group'), $file->get('institution'));
-    return array('basename' => $name, 'fullname' => $strpath . $name);
-}
-
 function files_page($file) {
     $url = get_config('wwwroot') . 'artefact/file/';
     if ($owner = $file->get('owner')) {
@@ -166,61 +129,21 @@ function files_page($file) {
 }
 
 function unzip_artefact_submit(Pieform $form, $values) {
-    global $file, $USER, $SESSION;
+    global $file, $zipinfo, $SESSION;
 
-    $foldername = get_unzip_directory_name($file);
-    $foldername = $foldername['basename'];
+    $from = files_page($file);
 
-    $data = (object) array(
-        'owner' => $file->get('owner'),
-        'group' => $file->get('group'),
-        'institution' => $file->get('institution'),
-        'title' => $foldername,
-        'description' => get_string('filesextractedfromziparchive', 'artefact.file'),
-        'parent' => $file->get('parent'),
-    );
-
-    $user = $data->owner ? $USER : null;
-
-    $basefolder = new ArtefactTypeFolder(0, $data);
-    $basefolder->commit();
-    $folders = array('.' => $basefolder->get('id'));
-    $created = (object) array('folders' => 1, 'files' => 0);
-
-    unset($data->description);
-
-    $tempdir = get_config('dataroot') . 'artefact/file/temp';
-    check_dir_exists($tempdir);
-
-    $zip = zip_open($file->get_path());
-    $tempfile = tempnam($tempdir, '');
-
-    while ($entry = zip_read($zip)) {
-        $name = zip_entry_name($entry);
-        $folder = dirname($name);
-        $data->title = basename($name);
-        $data->parent = $folders[$folder];
-        if (substr($name, -1) == '/') {
-            $newfolder = new ArtefactTypeFolder(0, $data);
-            $newfolder->commit();
-            $created->folders++;
-            $folderindex = ($folder == '.' ? '' : ($folder . '/')) . $data->title;
-            $folders[$folderindex] = $newfolder->get('id');
-        }
-        else {
-            $h = fopen($tempfile, 'w');
-            $size = zip_entry_filesize($entry);
-            $contents = zip_entry_read($entry, $size);
-            fwrite($h, $contents);
-            fclose($h);
-            ArtefactTypeFile::save_file($tempfile, $data, $user, true);
-            $created->files++;
-        }
+    if (count($zipinfo->names) > 10) {
+        $SESSION->set('unzip', array('file' => $file->get('id'), 'from' => $from, 'artefacts' => count($zipinfo->names)));
+        $smarty = smarty();
+        $smarty->display('artefact:file:extract-progress.tpl');
+        exit;
     }
 
+    $created = $file->unzip();
+
     $SESSION->add_ok_msg(get_string('extractfilessuccess', 'artefact.file', $created->folders, $created->files));
-    $redirect = files_page($file);
-    $redirect .= (strpos($redirect, '?') === false ? '?' : '&') . 'folder=' . $basefolder->get('id');
+    $redirect = $from . (strpos($from, '?') === false ? '?' : '&') . 'folder=' . $created->basefolderid;
     redirect($redirect);
 }
 
