@@ -310,7 +310,6 @@ class PluginImportLeap extends PluginImport {
         uasort($this->loadmapping, create_function('$a, $b', 'return $a["score"] < $b["score"];'));
         foreach ($this->loadmapping as $entryid => $strategydata) {
             if (in_array($entryid, $usedlist)) {
-                // TODO: what should we do in this case?
                 $this->trace("WARNING: $entryid has already been imported as part of a previous entry");
                 continue;
             }
