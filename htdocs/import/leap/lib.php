@@ -616,7 +616,7 @@ class PluginImportLeap extends PluginImport {
                         'config' => array()
                     );
                     foreach ($configelements as $element) {
-                        $config['columns'][$col][$row]['config'][$element->getName()] = (string)$element;
+                        $config['columns'][$col][$row]['config'][$element->getName()] = json_decode((string)$element);
                     }
 
                     $row++;
