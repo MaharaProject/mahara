@@ -58,6 +58,7 @@ class LeapExportElementInternal extends LeapExportElement {
         $this->smarty->assign('leaptype', $this->get_leap_type());
         $persondata = array();
         $spacialdata = array();
+        usort($this->artefacts, array($this, 'artefact_sort'));
         foreach ($this->artefacts as $a) {
             if (!$data = $this->data_mapping($a)) {
                 if ($a->get('artefacttype') == 'introduction') {
@@ -183,6 +184,46 @@ class LeapExportElementInternal extends LeapExportElement {
             'introduction // not part of persondata
             */
         return false;
+    }
+
+    /**
+     * Sort artefacts, making sure that the primary e-mail address comes first,
+     * then other e-mail addresses, then everything else.
+     *
+     * Semantically, this means our exports have the most important e-mails
+     * first, which we use at import time to make sure we set the primary
+     * e-mail correctly.
+     */
+    private function artefact_sort($a, $b) {
+        static $emailcache = array();
+
+        $atype = $a->get('artefacttype');
+        $btype = $b->get('artefacttype');
+        if ($atype == 'email') {
+            if ($btype == 'email') {
+                $user = $this->get('exporter')->get('user');
+                $userid = $user->get('id');
+                if (!isset($emailcache[$userid])) {
+                    $emailcache[$userid] = $user->get('email');
+                }
+
+                if ($a->get('title') == $emailcache[$userid]) {
+                    return -1;
+                }
+                else if ($b->get('title') == $emailcache[$userid]) {
+                    return 1;
+                }
+            }
+            else {
+                return -1;
+            }
+        }
+        else {
+            if ($btype == 'email') {
+                return 1;
+            }
+        }
+        return $atype > $btype;
     }
 
 }
