@@ -78,7 +78,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
         ),
         'email' => array(
             // TODO: validation
-            'mahara_fieldname' => 'email',
+            'helper_method' => true,
         ),
         'homephone' => array(
             'mahara_fieldname' => 'homenumber',
@@ -362,6 +362,38 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
 
         // TODO what do we do here?
         $importer->trace(" * Unrecognised service $attributes[service], ignored");
+    }
+
+    /**
+     * Attempts to import a persondata field with leap:field="email"
+     */
+    private static function import_persondata_email(PluginImportLeap $importer, SimpleXMLElement $item, array $leapattributes) {
+        static $firstdone = false;
+        static $seen = array();
+
+        if (count($seen) >= 5) {
+            $importer->trace("WARNING: users cannot have more than 5 e-mail addresses");
+            return;
+        }
+
+        $email = (string)$item;
+
+        if (!in_array($email, $seen)) {
+            $id = self::create_artefact($importer, 'email', $email);
+            if (!$firstdone) {
+                update_record('artefact_internal_profile_email', (object)array(
+                    'principal' => 1,
+                ), (object)array(
+                    'artefact'  => $id,
+                ));
+                $importer->get('usrobj')->email = $email;
+                $importer->get('usrobj')->commit();
+                $firstdone = true;
+            }
+        }
+        else {
+            $importer->trace("WARNING: export file had the same e-mail address listed more than once ($email)");
+        }
     }
 
     /**
