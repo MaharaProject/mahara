@@ -307,7 +307,7 @@ class PluginImportLeap extends PluginImport {
         $this->trace("--------------------------\nimport_from_load_mapping()");
         // TODO: do both usedlists as by key instead of by value for faster checks
         $usedlist = $loadedentries = array();
-        uksort($this->loadmapping, create_function('$a, $b', 'return $a["score"] < $b["score"];'));
+        uasort($this->loadmapping, create_function('$a, $b', 'return $a["score"] < $b["score"];'));
         foreach ($this->loadmapping as $entryid => $strategydata) {
             if (in_array($entryid, $usedlist)) {
                 // TODO: what should we do in this case?
