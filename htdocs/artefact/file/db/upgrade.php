@@ -239,6 +239,28 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         add_key($table, $key);
     }
 
+    if ($oldversion < 2009092300) {
+        insert_record('artefact_installed_type', (object) array('plugin' => 'file', 'name' => 'archive'));
+        // update old files
+        if (function_exists('zip_open')) {
+            $files = get_records_select_array('artefact_file_files', "filetype IN ('application/zip', 'application/x-zip')");
+            if ($files) {
+                $checked = array();
+                foreach ($files as $file) {
+                    $path = get_config('dataroot') . 'artefact/file/originals/' . ($file->fileid % 256) . '/' . $file->fileid;
+                    $zip = zip_open($path);
+                    if (is_resource($zip)) {
+                        $checked[] = $file->artefact;
+                        zip_close($zip);
+                    }
+                }
+                if (!empty($checked)) {
+                    set_field_select('artefact', 'artefacttype', 'archive', "artefacttype = 'file' AND id IN (" . join(',', $checked) . ')', array());
+                }
+            }
+        }
+    }
+
     return $status;
 }
 

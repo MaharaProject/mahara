@@ -562,6 +562,7 @@ class HtmlExportOutputFilter {
             return '<a href="' . $this->basepath . '/files/blog/' . PluginExportHtml::text_to_path($artefact->get('title')) . '/' . $page . '.html">' . $matches[5] . '</a>';
         case 'file':
         case 'image':
+        case 'archive':
             $folderpath = $this->get_folder_path_for_file($artefact);
             return '<a href="' . $this->basepath . '/files/file/' . $folderpath . PluginExportHtml::sanitise_path($artefact->get('title')) . '">' . $matches[5] . '</a>';
         default:

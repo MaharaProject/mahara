@@ -38,8 +38,9 @@
     <td>{$file->description|escape}</td>
     <td>{$file->size}</td>
     <td>{$file->mtime}</td>
-    <td>
+    <td class="right">
     {if $editable && !$file->isparent}
+      {if $file->artefacttype == 'archive'}<a href="{$WWWROOT}artefact/file/extract.php?file={$file->id}">{str tag=Unzip section=artefact.file}</a>{/if}
       {if !isset($file->can_edit) || $file->can_edit !== 0}<input type="submit" class="submit btn-edit s" name="{$prefix}_edit[{$file->id}]" value="{str tag=edit}" />
       <input type="submit" class="submit btn-del s" name="{$prefix}_delete[{$file->id}]" value="{str tag=delete}" />{/if}
     {/if}
