@@ -101,15 +101,15 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
      */
     public static function get_artefacts(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
-        $return = false;
-        if (isset($configdata['artefactids'])) {
+        $return = array();
+        if (isset($configdata['artefactids']) && is_array($configdata['artefactids'])) {
             $return = $configdata['artefactids'];
         }
         if (!empty($configdata['profileicon'])) {
-            $return = array_merge((array)$return, array($configdata['profileicon']));
+            $return = array_merge($return, array($configdata['profileicon']));
         }
 
-        return $return;
+        return $return ? $return : false;
     }
 
     public static function has_instance_config() {
