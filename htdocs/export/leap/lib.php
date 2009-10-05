@@ -207,7 +207,7 @@ class PluginExportLeap extends PluginExport {
      */
     private function export_views() {
         foreach ($this->get('views') as $view) {
-            $config = $view->export_config();
+            $config = $this->rewrite_artefact_ids($view->export_config('leap'));
             $this->smarty->assign('title',       $config['title']);
             $this->smarty->assign('id',          'portfolio:view' . $view->get('id'));
             $this->smarty->assign('updated',     self::format_rfc3339_date(strtotime($view->get('mtime'))));
@@ -238,6 +238,34 @@ class PluginExportLeap extends PluginExport {
             $this->smarty->assign('links', $this->get_links_for_view($view->get('id')));
             $this->xml .= $this->smarty->fetch("export:leap:view.tpl");
         }
+    }
+
+    /**
+     * Looks at all blockinstance configurations, and rewrites the artefact IDs
+     * found to be IDs in the generated export.
+     *
+     * This only works for the 'artefactid' and 'artefactids' fields, which is
+     * somewhat of a limitation, as it makes it hard for blocks that want to
+     * store artefact ids in other configdata fields. We might have to address
+     * this limitation later.
+     */
+    private function rewrite_artefact_ids($config) {
+        foreach ($config['columns'] as &$column) {
+            foreach ($column as &$blockinstance) {
+                if (isset($blockinstance['config']['artefactid'])) {
+                    $blockinstance['config']['artefactid'] = 'portfolio:artefact' . $blockinstance['config']['artefactid'];
+                }
+                else if (isset($blockinstance['config']['artefactids'])) {
+                    $ids = json_decode($blockinstance['config']['artefactids']);
+                    $blockinstance['config']['artefactids'] = json_encode(array_map(array($this, 'prepend_artefact_identifier'), $ids));
+                }
+            }
+        }
+        return $config;
+    }
+
+    private function prepend_artefact_identifier($artefactid) {
+        return 'portfolio:artefact' . $artefactid;
     }
 
     private function get_links_for_view($viewid) {
