@@ -78,8 +78,28 @@ if ($institution || $add) {
             global $SESSION;
 
             $authinstanceids = get_column('auth_instance', 'id', 'institution', $values['i']);
+            $viewids = get_column('view', 'id', 'institution', $values['i']);
+            $artefactids = get_column('artefact', 'id', 'institution', $values['i']);
 
             db_begin();
+            if ($viewids) {
+                require_once(get_config('libroot') . 'view.php');
+                foreach ($viewids as $viewid) {
+                    $view = new View($viewid);
+                    $view->delete();
+                }
+            }
+            if ($artefactids) {
+                foreach ($artefactids as $artefactid) {
+                    try {
+                        $a = artefact_instance_from_id($artefactid);
+                        $a->delete();
+                    }
+                    catch (ArtefactNotFoundException $e) {
+                        // Awesome, it's already gone.
+                    }
+                }
+            }
             foreach ($authinstanceids as $id) {
                 delete_records('auth_instance_config', 'instance', $id);
             }
