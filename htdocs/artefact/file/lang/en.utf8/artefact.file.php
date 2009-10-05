@@ -186,6 +186,7 @@ $string['rm'] = 'RM Real Player Movie';
 
 
 // Profile icons
+$string['cantcreatetempprofileiconfile'] = 'Could not write temporary profile icon image in %s';
 $string['profileiconsize'] = 'Profile Icon Size';
 $string['profileicons'] = 'Profile Icons';
 $string['Default'] = 'Default';

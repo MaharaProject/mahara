@@ -271,84 +271,88 @@ class AuthXmlrpc extends Auth {
             $imageobject = (object)$client->response;
 
             $u = preg_replace('/[^A-Za-z0-9 ]/', '', $user->username);
-            $filename = '/tmp/'.intval($this->instanceid).'_'.$u;
+            $filename = get_config('dataroot') . 'temp/mpi_' . intval($this->instanceid) . '_' . $u;
 
             if (array_key_exists('f1', $client->response)) {
                 $imagecontents = base64_decode($client->response['f1']);
-                file_put_contents($filename, $imagecontents);
-                $imageexists = false;
-                $icons       = false;
+                if (file_put_contents($filename, $imagecontents)) {
+                    $imageexists = false;
+                    $icons       = false;
 
-                if ($update) {
-                    $newchecksum = sha1_file($filename);
-                    $icons = get_records_select_array('artefact', 'artefacttype = \'profileicon\' AND owner = ? ', array($user->id), '', 'id');
-                    if (false != $icons) {
-                        foreach ($icons as $icon) {
-                            $iconfile = get_config('dataroot') . 'artefact/file/profileicons/originals/' . ($icon->id % 256) . '/'.$icon->id;
-                            $checksum = sha1_file($iconfile);
-                            if ($newchecksum == $checksum) {
-                                $imageexists = true;
-                                unlink($filename);
-                                break;
+                    if ($update) {
+                        $newchecksum = sha1_file($filename);
+                        $icons = get_records_select_array('artefact', 'artefacttype = \'profileicon\' AND owner = ? ', array($user->id), '', 'id');
+                        if (false != $icons) {
+                            foreach ($icons as $icon) {
+                                $iconfile = get_config('dataroot') . 'artefact/file/profileicons/originals/' . ($icon->id % 256) . '/'.$icon->id;
+                                $checksum = sha1_file($iconfile);
+                                if ($newchecksum == $checksum) {
+                                    $imageexists = true;
+                                    unlink($filename);
+                                    break;
+                                }
                             }
                         }
                     }
+
+                    if (false == $imageexists) {
+                        $filesize = filesize($filename);
+                        if (!$user->quota_allowed($filesize)) {
+                            $error = get_string('profileiconuploadexceedsquota', 'artefact.file', get_config('wwwroot'));
+                        }
+
+                        require_once('file.php');
+                        $imagesize = getimagesize($filename);
+                        if (!$imagesize || !is_image_type($imagesize[2])) {
+                            $error = get_string('filenotimage');
+                        }
+
+                        $mime   = $imagesize['mime'];
+                        $width  = $imagesize[0];
+                        $height = $imagesize[1];
+                        $imagemaxwidth  = get_config('imagemaxwidth');
+                        $imagemaxheight = get_config('imagemaxheight');
+                        if ($width > $imagemaxwidth || $height > $imagemaxheight) {
+                            $error = get_string('profileiconimagetoobig', 'artefact.file', $width, $height, $imagemaxwidth, $imagemaxheight);
+                        }
+
+                        try {
+                            $user->quota_add($filesize);
+                        }
+                        catch (QuotaException $qe) {
+                            $error =  get_string('profileiconuploadexceedsquota', 'artefact.file', get_config('wwwroot'));
+                        }
+
+                        require_once(get_config('docroot') .'/artefact/lib.php');
+                        require_once(get_config('docroot') .'/artefact/file/lib.php');
+
+                        // Entry in artefact table
+                        $artefact = new ArtefactTypeProfileIcon();
+                        $artefact->set('owner', $user->id);
+                        $artefact->set('title', 'Profile Icon');
+                        $artefact->set('note', 'Profile Icon');
+                        $artefact->set('size', $filesize);
+                        $artefact->set('filetype', $mime);
+                        $artefact->set('width', $width);
+                        $artefact->set('height', $height);
+                        $artefact->commit();
+
+                        $id = $artefact->get('id');
+
+                        // Move the file into the correct place.
+                        $directory = get_config('dataroot') . 'artefact/file/profileicons/originals/' . ($id % 256) . '/';
+                        check_dir_exists($directory);
+                        rename($filename, $directory . $id);
+                        if ($create || empty($icons)) {
+                            $user->profileicon = $id;
+                        }
+                    }
+
+                    $user->commit();
                 }
-
-                if (false == $imageexists) {
-                    $filesize = filesize($filename);
-                    if (!$user->quota_allowed($filesize)) {
-                        $error = get_string('profileiconuploadexceedsquota', 'artefact.file', get_config('wwwroot'));
-                    }
-
-                    require_once('file.php');
-                    $imagesize = getimagesize($filename);
-                    if (!$imagesize || !is_image_type($imagesize[2])) {
-                        $error = get_string('filenotimage');
-                    }
-
-                    $mime   = $imagesize['mime'];
-                    $width  = $imagesize[0];
-                    $height = $imagesize[1];
-                    $imagemaxwidth  = get_config('imagemaxwidth');
-                    $imagemaxheight = get_config('imagemaxheight');
-                    if ($width > $imagemaxwidth || $height > $imagemaxheight) {
-                        $error = get_string('profileiconimagetoobig', 'artefact.file', $width, $height, $imagemaxwidth, $imagemaxheight);
-                    }
-
-                    try {
-                        $user->quota_add($filesize);
-                    }
-                    catch (QuotaException $qe) {
-                        $error =  get_string('profileiconuploadexceedsquota', 'artefact.file', get_config('wwwroot'));
-                    }
-
-                    require_once(get_config('docroot') .'/artefact/lib.php');
-                    require_once(get_config('docroot') .'/artefact/file/lib.php');
-
-                    // Entry in artefact table
-                    $artefact = new ArtefactTypeProfileIcon();
-                    $artefact->set('owner', $user->id);
-                    $artefact->set('title', 'Profile Icon');
-                    $artefact->set('note', 'Profile Icon');
-                    $artefact->set('size', $filesize);
-                    $artefact->set('filetype', $mime);
-                    $artefact->set('width', $width);
-                    $artefact->set('height', $height);
-                    $artefact->commit();
-
-                    $id = $artefact->get('id');
-
-                    // Move the file into the correct place.
-                    $directory = get_config('dataroot') . 'artefact/file/profileicons/originals/' . ($id % 256) . '/';
-                    check_dir_exists($directory);
-                    rename($filename, $directory . $id);
-                    if ($create || empty($icons)) {
-                        $user->profileicon = $id;
-                    }
+                else {
+                    log_warn(get_string('cantcreatetempprofileiconfile', 'artefact.file', $filename));
                 }
-
-                $user->commit();
             }
         }
 
