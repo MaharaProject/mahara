@@ -596,9 +596,9 @@ class BlockInstance {
             $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this);
         }
         catch (ArtefactNotFoundException $e) {
-            // Whoops - where did the image go? There is possibly a bug 
-            // somewhere else that meant that this blockinstance wasn't 
-            // told that the image was previously deleted. But the block 
+            // Whoops - where did the image go? There is possibly a bug
+            // somewhere else that meant that this blockinstance wasn't
+            // told that the image was previously deleted. But the block
             // instance is not allowed to treat this as a failure
             log_debug('Artefact not found when rendering a block instance. '
                 . 'There might be a bug with deleting artefacts of this type? '
@@ -613,7 +613,7 @@ class BlockInstance {
         $title = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'override_instance_title', $this);
         $smarty->assign('title', $title ? $title : $this->get('title'));
 
-        // If this block is for just one artefact, we set the title of the 
+        // If this block is for just one artefact, we set the title of the
         // block to be a link to view more information about that artefact
         $configdata = $this->get('configdata');
         if (!empty($configdata['artefactid'])) {
@@ -622,7 +622,7 @@ class BlockInstance {
         }
 
         $smarty->assign('content', $content);
-        
+
         return $smarty->fetch('view/blocktypecontainerviewing.tpl');
     }
 
