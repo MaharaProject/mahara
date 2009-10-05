@@ -1009,6 +1009,17 @@ abstract class LeapImportArtefactPlugin {
 
     /**
      * Gives plugins a chance to import author data
+     *
+     * This gets passed the entry ID for the entry that represents the person
+     * who is being imported, should there be such an entry. This method can
+     * then dig through it to create artefacts. Contrast this with exporting
+     * persondata in the plugin's export implementation. A plugin might export
+     * a persondata field there, and then look for it again here.
+     *
+     * @param PluginImportLeap $importer The importer
+     * @param string $persondataid       The entry ID for the persondata entry.
+     *                                   May be empty if no such entry was
+     *                                   found in the import.
      */
     public static function import_author_data(PluginImportLeap $importer, $persondataid) {
     }
