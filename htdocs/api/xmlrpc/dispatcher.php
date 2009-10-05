@@ -53,9 +53,15 @@ class Dispatcher {
             'auth/mnet/auth.php/keepalive_server' => 'xmlrpc_not_implemented',
             'auth/mnet/auth.php/kill_children' => 'kill_children',
             'auth/mnet/auth.php/kill_child' => 'xmlrpc_not_implemented',
+            // Lines added for the mahara assignment type plugin for Moodle; the first three
+            // are for an old version that require a patched Moodle and will eventually be removed.
+            // All of these should be pulled in from the artefact plugin.
             'mod/assignment/type/mahara/rpclib.php/get_views_for_user' => 'get_views_for_user',
             'mod/assignment/type/mahara/rpclib.php/submit_view_for_assessment' => 'submit_view_for_assessment',
             'mod/assignment/type/mahara/rpclib.php/release_submitted_view' => 'release_submitted_view',
+            'mod/mahara/rpclib.php/get_views_for_user' => 'get_views_for_user',
+            'mod/mahara/rpclib.php/submit_view_for_assessment' => 'submit_view_for_assessment',
+            'mod/mahara/rpclib.php/release_submitted_view' => 'release_submitted_view',
             ),
         'portfolio_in' => array(
             'portfolio/mahara/lib.php/send_content_intent' => 'send_content_intent',
