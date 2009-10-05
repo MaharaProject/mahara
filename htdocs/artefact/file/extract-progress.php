@@ -64,6 +64,7 @@ function unzip_iframe_progress_handler($artefacts) {
     global $unzip;
     $percent = $artefacts / $unzip['artefacts'] * 100;
     $status = get_string('unzipprogress', 'artefact.file', $artefacts . '/' . $unzip['artefacts']);
+    set_time_limit(10);
 
     // "Erase" the current output with a new background div
     echo '<div style="width: 100%; background-color: #808080;" class="progress-bar"></div>';
