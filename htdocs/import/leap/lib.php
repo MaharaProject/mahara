@@ -499,7 +499,6 @@ class PluginImportLeap extends PluginImport {
     /**
      */
     public function import_using_strategy(SimpleXMLElement $entry, $strategy, array $otherentries) {
-        $artefactmapping = array();
         switch ($strategy) {
         case self::STRATEGY_IMPORT_AS_VIEW:
             require_once('view.php');
@@ -545,7 +544,6 @@ class PluginImportLeap extends PluginImport {
         default:
             throw new ImportException($this, 'TODO: get_string: unknown strategy chosen for importing entry');
         }
-        return $artefactmapping;
     }
 
     /**
