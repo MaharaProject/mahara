@@ -80,8 +80,10 @@ class PluginBlocktypeFolder extends PluginBlocktype {
 
     public static function instance_config_form($instance, $istemplate) {
         $configdata = $instance->get('configdata');
+        safe_require('artefact', 'file');
+        $instance->set('artefactplugin', 'file');
         return array(
-            self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null),
+            'artefactid' => self::filebrowser_element($instance, (isset($configdata['artefactid'])) ? array($configdata['artefactid']) : null),
         );
     }
 
@@ -116,6 +118,18 @@ class PluginBlocktypeFolder extends PluginBlocktype {
 
     public static function artefactchooser_get_sort_order() {
         return 'parent, title';
+    }
+
+    public static function filebrowser_element(&$instance, $default=array()) {
+        $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default);
+        $element['title'] = get_string('file', 'artefact.file');
+        $element['name'] = 'artefactid';
+        $element['config']['selectone'] = true;
+        $element['config']['selectfolders'] = true;
+        $element['filters'] = array(
+            'artefacttype'    => array('folder'),
+        );
+        return $element;
     }
 
     public static function default_copy_type() {

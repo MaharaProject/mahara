@@ -44,7 +44,7 @@
       {if !isset($file->can_edit) || $file->can_edit !== 0}<input type="submit" class="submit btn-edit s" name="{$prefix}_edit[{$file->id}]" value="{str tag=edit}" />
       <input type="submit" class="submit btn-del s" name="{$prefix}_delete[{$file->id}]" value="{str tag=delete}" />{/if}
     {/if}
-    {if $selectable && $file->artefacttype != 'folder' && $publishable}
+    {if $selectable && ($file->artefacttype != 'folder' || $selectfolders) && $publishable && !$file->isparent}
       <input type="submit" class="select small" name="{$prefix}_select[{$file->id}]" id="{$prefix}_select_{$file->id}" value="{str tag=select}" />
     {/if}
     </td>
