@@ -628,7 +628,7 @@ class PluginImportLeap extends PluginImport {
             $col++;
         }
 
-        $view = View::import_from_config($config, $this->get('usr'));
+        $view = View::import_from_config($this->rewrite_artefact_ids($config), $this->get('usr'), 'leap');
 
         if ($published = strtotime((string)$entry->published)) {
             $view->set('ctime', $published);
@@ -640,6 +640,55 @@ class PluginImportLeap extends PluginImport {
 
         $view->commit();
         return true;
+    }
+
+    /**
+     * Given the view config that we have built from the export, rewrite all
+     * the entry references in blockinstance artefactid fields to be actual
+     * artefact IDs.
+     */
+    private function rewrite_artefact_ids($config) {
+        foreach ($config['columns'] as &$column) {
+            foreach ($column as &$blockinstance) {
+                if (isset($blockinstance['config']['artefactid'])) {
+                    $artefactid = $blockinstance['config']['artefactid'];
+                    if (isset($this->artefactids[$artefactid])) {
+                        if (count($this->artefactids[$artefactid]) == 1) {
+                            $blockinstance['config']['artefactid'] = intval($this->artefactids[$artefactid][0]);
+                        }
+                        else {
+                            $this->trace('WARNING: View config specified one artefact, but loadmapping says more than one artefact was loaded for ' . $artefactid);
+                            $this->trace($this->artefactids[$artefactid]);
+                            unset($blockinstance['config']['artefactid']);
+                        }
+                    }
+                    else {
+                        $this->trace('WARNING: View config specified an artefact, but loadmapping does not say one was loaded for '. $artefactid);
+                        unset($blockinstance['config']['artefactid']);
+                    }
+                }
+                else if (isset($blockinstance['config']['artefactids'])) {
+                    $ids = $blockinstance['config']['artefactids'];
+                    foreach ($blockinstance['config']['artefactids'] as $key => $artefactid) {
+                        if (isset($this->artefactids[$artefactid])) {
+                            if (count($this->artefactids[$artefactid]) == 1) {
+                                $blockinstance['config']['artefactids'][$key] = intval($this->artefactids[$artefactid][0]);
+                            }
+                            else {
+                                $this->trace('WARNING: View config specified one artefact, but loadmapping says more than one artefact was loaded for ' . $artefactid);
+                                $this->trace($this->artefactids[$artefactid]);
+                                unset($blockinstance['config']['artefactids'][$key]);
+                            }
+                        }
+                        else {
+                            $this->trace('WARNING: View config specified an artefact, but loadmapping does not say one was loaded for '. $artefactid);
+                            unset($blockinstance['config']['artefactids'][$key]);
+                        }
+                    }
+                }
+            }
+        }
+        return $config;
     }
 
     /**
