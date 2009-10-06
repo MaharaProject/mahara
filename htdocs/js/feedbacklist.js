@@ -56,13 +56,13 @@ feedbacklist.rowfunction = function(r, n, d) {
 feedbacklist.emptycontent = get_string('nopublicfeedback');
 
 function addFeedbackSuccess() {
-    hideElement('add_feedback_form');
+    addElementClass('add_feedback_form', 'js-hidden');
     $('add_feedback_form_message').innerHTML = '';
     feedbacklist.doupdate();
 }
 
 function objectionSuccess() {
-    hideElement('objection_form');
+    addElementClass('objection_form', 'js-hidden');
     $('objection_form_message').innerHTML = '';
 }
 
