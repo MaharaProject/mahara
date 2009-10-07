@@ -92,7 +92,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
             'showdescription' => array(
                 'type'  => 'checkbox',
                 'title' => get_string('showdescription', 'blocktype.file/image'),
-                'defaultvalue' => $configdata['showdescription'],
+                'defaultvalue' => !empty($configdata['showdescription']) ? true : false,
             ),
             'width' => array(
                 'type' => 'text',
