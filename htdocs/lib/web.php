@@ -137,17 +137,8 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
                 );
 
                 // For right-to-left langs, reverse button order & align controls right.
-                if ($langdirection == 'rtl') {
-                    $tinymce_langdir = 'rtl';
-                    $toolbar_align = 'right';
-                    foreach ($adv_buttons as &$b) {
-                        $b = join(',',array_reverse(split(',', $b)));
-                    }
-                }
-                else {
-                    $tinymce_langdir = 'ltr';
-                    $toolbar_align = 'left';
-                }
+                $tinymce_langdir = $langdirection == 'rtl' ? 'rtl' : 'ltr';
+                $toolbar_align = 'left';
 
                 if ($check[$key] == 'tinymce') {
                     $tinymce_config = <<<EOF
@@ -371,6 +362,7 @@ EOF;
 
     // Include rtl.css for right-to-left langs
     if ($langdirection == 'rtl') {
+        $smarty->assign('LANGDIRECTION', 'rtl');
         if ($rtlsheets = $THEME->get_url('style/rtl.css', true)) {
             $stylesheets = array_merge($stylesheets, array_reverse($rtlsheets));
         }
@@ -536,12 +528,7 @@ EOF;
         // Place all sideblocks on the right. If this structure is munged 
         // appropriately, you can put blocks on the left. In future versions of 
         // Mahara, we'll make it easy to do this.
-        if ($langdirection == 'rtl') {
-            $SIDEBLOCKS = array('left' => $SIDEBLOCKS, 'right' => array());
-        }
-        else {
-            $SIDEBLOCKS = array('left' => array(), 'right' => $SIDEBLOCKS);
-        }
+        $SIDEBLOCKS = array('left' => array(), 'right' => $SIDEBLOCKS);
 
         $smarty->assign('userauthinstance', $SESSION->get('authinstance'));
         $smarty->assign('MNETUSER', $SESSION->get('mnetuser'));
