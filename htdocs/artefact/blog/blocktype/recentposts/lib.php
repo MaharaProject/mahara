@@ -90,9 +90,6 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
             'type'  => 'artefactchooser',
             'title' => get_string('blogs', 'artefact.blog'),
             'defaultvalue' => $default,
-            'rules' => array(
-                'required' => true,
-            ),
             'blocktype' => 'recentposts',
             'limit'     => 10,
             'selectone' => false,
