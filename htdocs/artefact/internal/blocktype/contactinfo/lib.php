@@ -180,6 +180,25 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
         return $view->get('owner') != null;
     }
 
+    /**
+     * Overrides the default implementation so we can export enough information
+     * to reconstitute profile information again.
+     *
+     * LEAP2A export doesn't export profile related artefacts as entries, so we
+     * need to take that into account when exporting config for it.
+     */
+    public static function export_blockinstance_config_leap(BlockInstance $bi) {
+        return PluginArtefactInternal::export_blockinstance_config_leap($bi);
+    }
+
+    /**
+     * Sister method to export_blockinstance_config_leap (creates block
+     * instance based of what that method exports)
+     */
+    public static function import_create_blockinstance_leap(array $biconfig, array $viewconfig) {
+        return PluginArtefactInternal::import_create_blockinstance_leap($biconfig, $viewconfig);
+    }
+
 }
 
 ?>
