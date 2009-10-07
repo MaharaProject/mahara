@@ -42,7 +42,7 @@ class LeapExportElementBlogpost extends LeapExportElement {
         }
         foreach ($attachments as $attachment) {
             $f = artefact_instance_from_id($attachment);
-            $this->add_artefact_link($f, 'has_attachment');
+            $this->add_artefact_link($f, 'enclosure');
         }
     }
 

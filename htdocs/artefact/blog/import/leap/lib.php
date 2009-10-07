@@ -142,16 +142,12 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
             foreach ($otherentries as $entryid) {
                 $blogpostentry = $importer->get_entry_by_id($entryid);
                 // Get all attachments this blogpost things are attached to it
-                // TODO: get all entries that think they're attached to the blogpost.
-                // I think we can only look for files, Mahara doesn't understand 
-                // attaching something that isn't a file to a blogpost
-                if (!isset($blogpost->link)) {
+                if (!isset($blogpostentry->link)) {
                     continue;
                 }
                 foreach ($blogpostentry->link as $blogpostlink) {
                     $blogpost = null;
-                    if ($importer->curie_equals($blogpostlink['rel'], PluginImportLeap::NS_LEAP, 'has_attachment') && isset($blogpostlink['href'])) {
-
+                    if ($importer->curie_equals($blogpostlink['rel'], '', 'enclosure') && isset($blogpostlink['href'])) {
                         if (!$blogpost) {
                             $artefactids = $importer->get_artefactids_imported_by_entryid((string)$blogpostentry->id);
                             $blogpost = new ArtefactTypeBlogPost($artefactids[0]);

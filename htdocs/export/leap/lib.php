@@ -526,7 +526,7 @@ class LeapExportElement {
     * @param keyed array $extras any extra bits to go in (eg display_order => 1)
     */
     public function add_generic_link($id, $rel, $extras=null) {
-        if (!in_array($rel, array('related', 'alternate'))) {
+        if (!in_array($rel, array('related', 'alternate', 'enclosure'))) {
             $rel = 'leap:' . $rel;
         }
         $link = array(

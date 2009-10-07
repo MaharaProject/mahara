@@ -36,19 +36,6 @@ class LeapExportElementFile extends LeapExportElement {
 
     private $filename;
 
-    public function add_links() {
-       parent::add_links();
-        // Check for artefacts this file may be attached to
-        if (!$posts = get_records_array('artefact_attachment',
-            'attachment', $this->artefact->get('id'))) {
-            return;
-        }
-        foreach ($posts as $p) {
-            $post = artefact_instance_from_id($p->artefact);
-            $this->add_artefact_link($post, 'is_attachment_of');
-        }
-    }
-
     public function get_leap_type() {
         return 'resource';
     }
