@@ -253,7 +253,13 @@ class PluginExportLeap extends PluginExport {
         foreach ($config['columns'] as &$column) {
             foreach ($column as &$blockinstance) {
                 if (isset($blockinstance['config']['artefactid'])) {
-                    $blockinstance['config']['artefactid'] = 'portfolio:artefact' . $blockinstance['config']['artefactid'];
+                    // json_encoded value of null is the string 'null', don't include these
+                    if ($blockinstance['config']['artefactid'] != 'null') {
+                        $blockinstance['config']['artefactid'] = 'portfolio:artefact' . $blockinstance['config']['artefactid'];
+                    }
+                    else {
+                        $blockinstance['config']['artefactid'] = null;
+                    }
                 }
                 else if (isset($blockinstance['config']['artefactids'])) {
                     $ids = json_decode($blockinstance['config']['artefactids']);
