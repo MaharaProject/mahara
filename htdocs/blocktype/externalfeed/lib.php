@@ -55,7 +55,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
-        if ($configdata['feedid']) {
+        if (!empty($configdata['feedid'])) {
             $data = get_record('blocktype_externalfeed_data', 'id', $configdata['feedid']);
 
             $data->content = unserialize($data->content);
