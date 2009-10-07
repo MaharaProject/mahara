@@ -1,7 +1,5 @@
 {include file="export:leap:entry.tpl" skipfooter=true}
-{if $ownerformat}        <mahara:ownerformat>{$ownerformat|escape}</mahara:ownerformat>
-{/if}
-        <mahara:view>
+        <mahara:view{if $layout} mahara:layout="{$layout|escape}"{/if} mahara:ownerformat="{$ownerformat|escape}">
 {foreach from=$viewdata item=column}
             <mahara:column>
 {foreach from=$column item=blockinstance}
@@ -14,5 +12,4 @@
             </mahara:column>
 {/foreach}
         </mahara:view>
-        <mahara:viewlayout>TODO</mahara:viewlayout>
 {include file="export:leap:entryfooter.tpl"}

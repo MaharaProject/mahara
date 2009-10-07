@@ -206,6 +206,8 @@ class PluginExportLeap extends PluginExport {
      * Export the views
      */
     private function export_views() {
+        $layouts = get_records_assoc('view_layout');
+
         foreach ($this->get('views') as $view) {
             $config = $this->rewrite_artefact_ids($view->export_config('leap'));
             $this->smarty->assign('title',       $config['title']);
@@ -217,7 +219,19 @@ class PluginExportLeap extends PluginExport {
             $this->smarty->assign('contenttype', 'html');
             $this->smarty->assign('content',     $view->build_columns());
             $this->smarty->assign('viewdata',    $config['columns']);
-            $this->smarty->assign('ownerformat', $config['ownerformat']);
+            if (isset($layouts[$config['layout']])) {
+                $layout = $config['layout'];
+            }
+            else {
+                // This line ruthlessly stolen from lib/upgrade.php - the only
+                // place where view layouts are canonically specified
+                $layout = ($config['numcolumns'] == 2 ? 1 : ($config['numcolumns'] == 3 ? 4 : 7));
+            }
+            if (isset($layouts[$layout])) {
+                $this->smarty->assign('layout',  $layouts[$layout]->widths);
+            }
+            $ownerformat = ($config['ownerformat']) ? $config['ownerformat'] : FORMAT_NAME_DISPLAYNAME;
+            $this->smarty->assign('ownerformat', $ownerformat);
             $this->smarty->assign('leaptype',    'selection');
 
             $tags = array();
