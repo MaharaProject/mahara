@@ -795,8 +795,8 @@ class LeapExportOutputFilter {
         // Links to download files
         $html = preg_replace_callback(
             array(
-                '#<(a[^>]+)href="(' . preg_quote(get_config('wwwroot')) . ')?/?artefact/file/download\.php\?file=(\d+)(&amp;view=\d+)?([^>]*)>#',
-                '#<(img[^>]+)src="(' . preg_quote(get_config('wwwroot')) . ')?/?artefact/file/download\.php\?file=(\d+)(&amp;view=\d+)?([^>]*)>#',
+                '#<(a[^>]+)href="(' . preg_quote(get_config('wwwroot')) . ')?/?artefact/file/download\.php\?file=(\d+)(&amp;view=\d+)?"([^>]*)>#',
+                '#<(img[^>]+)src="(' . preg_quote(get_config('wwwroot')) . ')?/?artefact/file/download\.php\?file=(\d+)(&amp;view=\d+)?"([^>]*)>#',
             ),
             array($this, 'replace_download_link'),
             $html
