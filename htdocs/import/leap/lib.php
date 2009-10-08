@@ -369,6 +369,13 @@ class PluginImportLeap extends PluginImport {
                 $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
         }
 
+        // Fix up any artefact references in the content of imported artefacts
+        if ($artefacts = get_records_array('artefact', 'owner', $this->get('usr'), '', 'id, title, description')) {
+            foreach ($artefacts as $artefact) {
+                $this->fix_artefact_references($artefact);
+            }
+        }
+
         // Now import views
         foreach ($this->coreloadmapping as $entryid => $strategydata) {
             if (in_array($entryid, $usedlist)) {
@@ -705,6 +712,81 @@ class PluginImportLeap extends PluginImport {
             }
         }
         return $config;
+    }
+
+    /**
+     * Given an artefact record, looks through it for any leap2a style
+     * references to other artefacts, and rewrite those to point at the created
+     * ones.
+     *
+     * @param array $artefact A record from the artefact table (only id, title,
+     *                        description fields required)
+     */
+    private function fix_artefact_references(array $artefact) {
+        $changed = false;
+
+        if ($this->artefact_reference_quickcheck($artefact->title)) {
+            if ($title = $this->fix_artefact_reference($artefact->title)) {
+                $changed = true;
+                $artefact->title = $title;
+            }
+        }
+
+        if ($this->artefact_reference_quickcheck($artefact->description)) {
+            if ($description = $this->fix_artefact_reference($artefact->description)) {
+                $changed = true;
+                $artefact->description = $description;
+            }
+        }
+
+        if ($changed) {
+            update_record('artefact', $artefact);
+        }
+
+    }
+
+    /**
+     * Detect whether it's worth running the potentially costly regex
+     * replacements and content updates when fixing artefact references
+     *
+     * @param string   The field to check
+     * @return boolean Whether it's worth checking in more detail
+     */
+    private function artefact_reference_quickcheck($field) {
+        return (false !== strpos($field, 'rel="has_part"'))
+            && (
+                (false !== strpos($field, '<img'))
+                || (false !== strpos($field, '<a'))
+               );
+    }
+
+    /**
+     * Fix up references to artefacts in a field
+     *
+     * @param string $field The field to fix
+     * @return string The fixed field
+     */
+    private function fix_artefact_reference($field) {
+        $match = '#<((img)|a)([^>]+)rel="has_part" href="portfolio:artefact([\d]+)"([^>]*)>#';
+        $field = preg_replace_callback($match,
+            array($this, '_fixref'),
+            $field);
+        return $field;
+    }
+
+    private function _fixref($matches) {
+        static $basepath;
+        if (!$basepath) {
+            $basepath = get_mahara_install_subdirectory();
+        }
+
+        $artefacts = $this->get_artefactids_imported_by_entryid('portfolio:artefact' . $matches[4]);
+        if (is_null($artefacts) || count($artefacts) != 1) {
+            log_debug("Warning: fixref was expecting one artefact to have been imported by entry portfolio:artefact{$matches[4]} but seems to have gotten " . count($artefacts));
+            return $matches[0];
+        }
+        return '<' . $matches[1] . $matches[3] . ($matches[1] == 'img' ? 'src' : 'href') . '="'
+            . $basepath . 'artefact/file/download.php?file=' . $artefacts[0] . '"' . $matches[5] . '>';
     }
 
     /**
