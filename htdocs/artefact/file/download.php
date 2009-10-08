@@ -48,11 +48,11 @@ else {
 
 if ($viewid && $fileid) {
     if (!artefact_in_view($fileid, $viewid)) {
-        throw new AccessDeniedException();
+        throw new AccessDeniedException('');
     }
 
     if (!can_view_view($viewid)) {
-        throw new AccessDeniedException();
+        throw new AccessDeniedException('');
     }
 
     $file = artefact_instance_from_id($fileid);
