@@ -399,7 +399,6 @@ class InteractionForumInstance extends InteractionInstance {
 
 }
 
-
 class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
 
     protected $postid;
@@ -437,7 +436,9 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
 
         $posttime = strftime(get_string('strftimedaydatetime'), $post->ctime);
         $textbody = trim(html2text($post->body));
-        $postlink = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid;
+
+        $postlink = 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid;
+        $localpostlink = get_config('wwwroot') . $postlink;
 
         foreach ($this->users as &$user) {
             $lang = (empty($user->lang) || $user->lang == 'default') ? get_config('lang') : $user->lang;
@@ -452,12 +453,23 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
             $unsubscribeid = $post->{$type . 'id'};
             $unsubscribelink = get_config('wwwroot') . 'interaction/forum/unsubscribe.php?' . $type . '=' . $unsubscribeid . '&key=' . $data->subscriptions[$user->id]['key'];
 
+            if ($user->mnethostwwwroot) {
+                if (!isset($mnetpostlink)) {
+                    require_once(get_config('docroot') . 'auth/xmlrpc/lib.php');
+                }
+                $userpostlink = $mnetpostlink = PluginAuthXmlrpc::get_jump_link($user->mnethostwwwroot, $user->mnethostapp, $postlink);
+
+            }
+            else {
+                $userpostlink = $localpostlink;
+            }
+
             $user->message = get_string_from_language($lang, 'forumposttemplate', 'interaction.forum',
                 $post->subject ? $post->subject : get_string_from_language($lang, 're', 'interaction.forum', $post->topicsubject),
                 display_name($post->poster, $user),
                 $posttime,
                 $textbody,
-                $postlink,
+                $userpostlink,
                 $type,
                 $unsubscribelink
             );
