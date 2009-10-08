@@ -742,10 +742,9 @@ function xmldb_core_upgrade($oldversion=0) {
         // allowed to be copied by everyone
         require_once('view.php');
         execute_sql("UPDATE {view} SET template = 1 WHERE owner = 0 AND type = 'profile'");
-        $view = new View(get_field('view', 'id', 'owner', 0, 'type', 'profile'));
-        $view->set_access(array(array(
-            'type' => 'loggedin'
-        )));
+        $viewid = get_field('view', 'id', 'owner', 0, 'type', 'profile');
+        delete_records('view_access', 'view', $viewid);
+        insert_record('view_access', (object) array('view' => $viewid, 'accesstype' => 'loggedin'));
     }
 
     if ($oldversion < 2008122300) {
