@@ -965,6 +965,27 @@ class PluginAuthXmlrpc extends PluginAuth {
         return $values;
     }
 
+    public static function get_jump_link($hostwwwroot, $hostapp, $href) {
+        $jumpurl = $hostwwwroot . '/';
+        $jumpurl .= $hostapp == 'moodle' ? 'auth/mnet/jump.php' : 'auth/xmlrpc/jump.php';
+        // Remove trailing slash on wwwroot
+        $jumpurl .= '?hostwwwroot=' . substr(get_config('wwwroot'), 0, -1) . '&wantsurl=';
+        $localpart='';
+        $urlparts = parse_url($href);
+        if ($urlparts) {
+            if (isset($urlparts['path'])) {
+                $localpart .= $urlparts['path'];
+            }
+            if (isset($urlparts['query'])) {
+                $localpart .= '?'.$urlparts['query'];
+            }
+            if (isset($urlparts['fragment'])) {
+                $localpart .= '#'.$urlparts['fragment'];
+            }
+        }
+        $href = $jumpurl . urlencode($localpart);
+        return $href;
+    }
 }
 
 ?>
