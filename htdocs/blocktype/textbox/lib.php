@@ -78,7 +78,7 @@ class PluginBlocktypeTextbox extends SystemBlocktype {
                 'title' => get_string('blockcontent', 'blocktype.textbox'),
                 'width' => '90%',
                 'height' => '150px',
-                'defaultvalue' => $configdata['text'],
+                'defaultvalue' => isset($configdata['text']) ? $configdata['text'] : '',
             ),
         );
     }
