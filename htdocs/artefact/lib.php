@@ -435,16 +435,16 @@ abstract class ArtefactType {
 
         if (!empty($this->parentdirty)) {
             if ($this->parent) {
-                // First set anything relating to this artefact as dirty
-                set_field_select('artefact_parent_cache', 'dirty', 1,
-                                 'artefact = ? OR parent = ?', array($this->id, $this->id));
-                // Then make sure we have a clean record for the new parent
+                // Make sure we have a record for the new parent
                 delete_records('artefact_parent_cache', 'artefact', $this->id, 'parent', $this->parent);
                 insert_record('artefact_parent_cache', (object)array(
                     'artefact' => $this->id,
                     'parent'   => $this->parent,
                     'dirty'    => 0
                 ));
+                // Set anything relating to this artefact as dirty
+                set_field_select('artefact_parent_cache', 'dirty', 1,
+                                 'artefact = ? OR parent = ?', array($this->id, $this->id));
             }
             else {
                 // No parent - no need for any records in the apc then
