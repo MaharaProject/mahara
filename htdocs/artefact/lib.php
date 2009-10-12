@@ -1165,7 +1165,7 @@ function artefact_get_attachment_types() {
 }
 
 function artefact_get_parents_for_cache($artefactids, &$parentids=false) {
-    if (is_integer($artefactids)) {
+    if (!is_array($artefactids)) {
         $artefactids = array($artefactids);
     }
     $current = $artefactids;
