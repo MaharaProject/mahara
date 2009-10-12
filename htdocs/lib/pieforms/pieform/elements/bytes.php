@@ -66,7 +66,7 @@ function pieform_element_bytes(Pieform $form, $element) {/*{{{*/
     // @todo probably create with an actual input element, as tabindex doesn't work here for one thing
     // Same with the select. And do the events using mochikit signal instead of dom events
     $numberinput = '<input';
-    $numberinput .= ' type="text" size="8" name="' . $name . '"';
+    $numberinput .= ' type="text" size="6" name="' . $name . '"';
     $numberinput .= ' id="' . $formname . '_' . $name . '" value="' . $values['number'] . '" tabindex="' . $element['tabindex'] . '"';
     $numberinput .= (isset($element['error']) ? ' class="error"' : '') . ">\n";
 
