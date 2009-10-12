@@ -46,6 +46,7 @@ class PluginImportLeap extends PluginImport {
 
     protected $loglevel = 0;
     protected $logtargets = LOG_TARGET_ERRORLOG;
+    protected $logfile = '';
     protected $profile = false;
 
     private $snapshots = array();
@@ -462,11 +463,14 @@ class PluginImportLeap extends PluginImport {
             // trace() was called, rather than saying all of the messages came 
             // from trace() itself
             global $CFG;
-            $old = $CFG->log_dbg_targets;
+            $oldtargets = $CFG->log_dbg_targets;
+            $oldfile    = $CFG->log_file;
             $CFG->log_dbg_targets = $this->logtargets;
+            $CFG->log_file = $this->logfile;
             $file = $line = $trace = null;
-            log_message ($message, LOG_LEVEL_DBG, true, true, $file, $line, $trace);
-            $CFG->log_dbg_targets = $old;
+            log_message($message, LOG_LEVEL_DBG, true, true, $file, $line, $trace);
+            $CFG->log_dbg_targets = $oldtargets;
+            $CFG->log_file = $oldfile;
         }
     }
 
