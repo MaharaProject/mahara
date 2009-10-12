@@ -298,7 +298,23 @@ function ViewManager() {
             var d = getElementDimensions(e);
             setStyle(e, {'height': d.h+'px'});
             hideElement(getFirstElementByTagAndClassName(null, 'mediaplayer', e));
+            forEach(getElementsByTagAndClassName('object', null, e), function(o) {
+                addElementClass(o, 'in-mediaplayer');
+            });
         });
+
+        // Try to find and hide players floating around in text blocks, etc. by looking for object elements
+        forEach(getElementsByTagAndClassName('object', null, cols), function (e) {
+            if (!hasElementClass(e, 'in-mediaplayer')) {
+                var d = getElementDimensions(e);
+                var temp = DIV({'class': 'hidden mediaplayer-placeholder'});
+                setStyle(temp, {'height': d.h+'px'});
+                insertSiblingNodesAfter(e, temp);
+                addElementClass(e, 'hidden');
+                removeElementClass(temp, 'hidden');
+            }
+        });
+
         insertSiblingNodesBefore(document.body.firstChild, DIV({'id': 'overlay'}));
     }
 
@@ -311,6 +327,11 @@ function ViewManager() {
         forEach(getElementsByTagAndClassName(null, 'mediaplayer-container', cols), function (e) {
             showElement(getFirstElementByTagAndClassName(null, 'mediaplayer', e));
             setStyle(e, {'height': 'auto'});
+        });
+        forEach(getElementsByTagAndClassName(null, 'mediaplayer-placeholder', cols), function (e) {
+            addElementClass(e, 'hidden');
+            removeElementClass(e.previousSibling, 'hidden');
+            removeElement(e);
         });
         removeElement('overlay');
     }
