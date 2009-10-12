@@ -7,9 +7,9 @@ class HTMLPurifier_Filter_Twitter extends HTMLPurifier_Filter
     
     public function preFilter($html, $config, $context) {
         $pre_regex = array(
-            '#<div id="twitter_div">\s*<h2 class="sidebar-title">([^<]*)</h2>\s*<ul id="twitter_update_list">\s*</ul>\s*</div>\s*'.
+            '#<div id="twitter_div">\s*<h2 class="sidebar-title">([^<]*)</h2>\s*<ul id="twitter_update_list">\s*</ul>\s*</div>\s*(?:<p>)?\s*'.
             '<script\b[^>]+?\bsrc="http://twitter.com/javascripts/blogger.js"[^>]*></script>\s*'.
-            '<script\b[^>]+?\bsrc="http://twitter.com/statuses/user_timeline/([a-zA-Z0-9_]+).json\?callback=twitterCallback2&(?:amp;)?count=(\d+)"[^>]*></script>#s',
+            '<script\b[^>]+?\bsrc="http://twitter.com/statuses/user_timeline/([a-zA-Z0-9_]+).json\?callback=twitterCallback2&(?:amp;)?count=(\d+)"[^>]*></script>(?:</p>)?#s',
             '#<embed\s+src="http://twitter.com/flash/twitter_badge.swf"[^>]+?\bflashvars="([^"]+)"[^>]*>\s*(</embed>)?#s',
             '#<embed\s+src="http://static.twitter.com/flash/twitter_timeline_badge.swf"[^>]+?\bflashvars="([^"]+)"[^>]*>\s*</embed>#s',
         );

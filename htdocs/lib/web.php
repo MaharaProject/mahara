@@ -186,9 +186,6 @@ tinyMCE.init({
     language: '{$language}',
     directionality: "{$tinymce_langdir}",
     content_css : {$content_css},
-    forced_root_block : "",
-    force_p_newlines : false,
-    apply_source_formatting: false,
     //document_base_url: {$jswwwroot},
     relative_urls: false
 });
