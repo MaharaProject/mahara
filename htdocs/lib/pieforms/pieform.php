@@ -1056,7 +1056,7 @@ EOF;
      *                           can specify there own i18n strings for rules
      * @return string            The internationalised string
      */
-    public function i18n($plugin, $pluginname, $key, $element) {/*{{{*/
+    public function i18n($plugin, $pluginname, $key, $element=null) {/*{{{*/
         if (!in_array($plugin, array('element', 'renderer', 'rule'))) {
             throw new PieformException("Invalid plugin name '$plugin'");
         }
