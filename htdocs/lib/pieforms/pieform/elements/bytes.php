@@ -26,7 +26,7 @@
 
 /**
  * Provides a size chooser, with a text box for a number and a
- * select box to choose the units, in bytes, kilobytes, or megabytes
+ * select box to choose the units, in bytes, kilobytes, megabytes or gigabytes
  *
  * @param Pieform $form    The form to render the element for
  * @param array   $element The element to render
@@ -108,6 +108,9 @@ function pieform_element_bytes_get_value(Pieform $form, $element) {/*{{{*/
 
 function pieform_element_bytes_in($units) {/*{{{*/
     switch ($units) {
+        case 'gigabytes':
+            return 1073741824;
+            break;
         case 'megabytes':
             return 1048576;
             break;
@@ -126,48 +129,56 @@ function pieform_element_bytes_i18n() {/*{{{*/
             'bytes'        => 'Bytes',
             'kilobytes'    => 'Kilobytes',
             'megabytes'    => 'Megabytes',
+            'gigabytes'    => 'Gigabytes',
             'invalidvalue' => 'Value must be a number',
         ),
         'de.utf8' => array(
             'bytes'        => 'Bytes',
             'kilobytes'    => 'Kilobytes',
             'megabytes'    => 'Megabytes',
+            'gigabytes'    => 'Gigabytes',
             'invalidvalue' => 'Wert muss eine Zahl sein',
         ),
         'fr.utf8' => array(
             'bytes'        => 'Octets',
             'kilobytes'    => 'Kilooctets',
             'megabytes'    => 'Mégaoctets',
+            'gigabytes'    => 'Gigaoctets',
             'invalidvalue' => 'Valeur doit être un nombre',
         ),
         'ja.utf8' => array(
             'bytes'        => 'B',
             'kilobytes'    => 'KB',
             'megabytes'    => 'MB',
+            'gigabytes'    => 'GB',
             'invalidvalue' => '値は数値にしてください',
         ),
         'es.utf8' => array(
             'bytes'        => 'Bytes',
             'kilobytes'    => 'Kilobytes',
             'megabytes'    => 'Megabytes',
+            'gigabytes'    => 'Gigabytes',
             'invalidvalue' => 'El valor debe ser un número',
         ),
         'sl.utf8' => array(
             'bytes'        => 'B',
             'kilobytes'    => 'kB',
             'megabytes'    => 'MB',
+            'gigabytes'    => 'GB',
             'invalidvalue' => 'Vrednost mora biti število',
         ),
         'nl.utf8' => array(
             'bytes'        => 'Bytes',
             'kilobytes'    => 'Kilobytes',
             'megabytes'    => 'Megabytes',
+            'gigabytes'    => 'Gigabytes',
             'invalidvalue' => 'Waarde moet een getal zijn',
         ),
         'cs.utf8' => array(
             'bytes'        => 'B',
             'kilobytes'    => 'kB',
             'megabytes'    => 'MB',
+            'gigabytes'    => 'GB',
             'invalidvalue' => 'Hodnota musí být číselná',
         ),
 
@@ -175,7 +186,7 @@ function pieform_element_bytes_i18n() {/*{{{*/
 }/*}}}*/
 
 function pieform_element_bytes_get_bytes_units() {/*{{{*/
-    return array('bytes', 'kilobytes', 'megabytes');
+    return array('bytes', 'kilobytes', 'megabytes', 'gigabytes');
 }/*}}}*/
 
 function pieform_element_bytes_get_bytes_from_bytes($bytes) {/*{{{*/
@@ -183,8 +194,8 @@ function pieform_element_bytes_get_bytes_from_bytes($bytes) {/*{{{*/
         return array('number' => '0', 'units' => 'bytes');
     }
 
-    foreach (array('megabytes', 'kilobytes') as $units) {
-        if ( $bytes > pieform_element_bytes_in($units) ) {
+    foreach (array('gigabytes', 'megabytes', 'kilobytes') as $units) {
+        if ( $bytes >= pieform_element_bytes_in($units) ) {
             return array('number' => $bytes / pieform_element_bytes_in($units) , 'units' => $units);
         }
     }
