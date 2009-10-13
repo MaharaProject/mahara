@@ -569,6 +569,10 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
         self::create_artefact($importer, 'firstname', $firstname);
         self::create_artefact($importer, 'lastname', $lastname);
         self::create_artefact($importer, 'preferredname', $preferredname);
+        $importer->get('usrobj')->firstname = $firstname;
+        $importer->get('usrobj')->lastname = $lastname;
+        $importer->get('usrobj')->preferredname = $preferredname;
+        $importer->get('usrobj')->commit();
     }
 
     /**
