@@ -65,15 +65,15 @@ if ($fileid) {
         throw new AccessDeniedException();
     }
 
-    $zip = zip_open($file->get_path());
-    if (!is_resource($zip)) {
-        throw new NotFoundException();
+    try {
+        $zipinfo = $file->read_archive();
     }
-    $zipinfo = ArtefactTypeArchive::zip_file_info($zip);
-    zip_close($zip);
+    catch (SystemException $e) {
+        $message = get_string('invalidarchive', 'artefact.file');
+    }
 
-    if (!$file->get('owner') || $USER->quota_allowed($zipinfo->totalsize)) {
-        $name = ArtefactTypeArchive::get_unzip_directory_name($file);
+    if ($zipinfo && !$file->get('owner') || $USER->quota_allowed($zipinfo->totalsize)) {
+        $name = $file->unzip_directory_name();
         $message = get_string('fileswillbeextractedintofolder', 'artefact.file', $name['fullname']);
 
         $goto = files_page($file);
@@ -129,21 +129,23 @@ function files_page($file) {
 }
 
 function unzip_artefact_submit(Pieform $form, $values) {
-    global $file, $zipinfo, $SESSION;
+    global $file, $SESSION;
+
+    $zipinfo = $file->read_archive();
 
     $from = files_page($file);
 
     if (count($zipinfo->names) > 10) {
-        $SESSION->set('unzip', array('file' => $file->get('id'), 'from' => $from, 'artefacts' => count($zipinfo->names)));
+        $SESSION->set('unzip', array('file' => $file->get('id'), 'from' => $from, 'artefacts' => count($zipinfo->names), 'zipinfo' => $zipinfo));
         $smarty = smarty();
         $smarty->display('artefact:file:extract-progress.tpl');
         exit;
     }
 
-    $created = $file->unzip();
+    $status = $file->extract();
 
-    $SESSION->add_ok_msg(get_string('extractfilessuccess', 'artefact.file', $created->folders, $created->files));
-    $redirect = $from . (strpos($from, '?') === false ? '?' : '&') . 'folder=' . $created->basefolderid;
+    $SESSION->add_ok_msg(get_string('extractfilessuccess', 'artefact.file', $status['folderscreated'], $status['filescreated']));
+    $redirect = $from . (strpos($from, '?') === false ? '?' : '&') . 'folder=' . $status['basefolderid'];
     redirect($redirect);
 }
 

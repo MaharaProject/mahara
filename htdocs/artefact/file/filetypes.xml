@@ -57,12 +57,20 @@
         <description>gz</description>
         <mimetypes>
             <mimetype>application/g-zip</mimetype>
+            <mimetype>application/x-gzip</mimetype>
+        </mimetypes>
+    </filetype>
+    <filetype>
+        <description>tgz</description>
+        <mimetypes>
+            <mimetype>application/x-compressed-tar</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>bz2</description>
         <mimetypes>
             <mimetype>application/x-bzip2</mimetype>
+            <mimetype>application/x-bzip</mimetype>
         </mimetypes>
     </filetype>
 

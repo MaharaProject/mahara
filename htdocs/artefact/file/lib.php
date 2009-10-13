@@ -756,16 +756,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             $data->height   = $imageinfo[1];
             return new ArtefactTypeImage(0, $data);
         }
-        if ((!isset($data->filetype) || in_array($data->filetype, ArtefactTypeArchive::zip_mime_types()))
-            && function_exists('zip_open')) {
-            $zip = zip_open($path);
-            if (is_resource($zip)) {
-                zip_close($zip);
-                if (!isset($data->filetype)) {
-                    $data->filetype = 'application/zip';
-                }
-                return new ArtefactTypeArchive(0, $data);
-            }
+        if ($archive = ArtefactTypeArchive::new_archive($path, $data)) {
+            return $archive;
         }
         return new ArtefactTypeFile(0, $data);
     }
@@ -1580,60 +1572,210 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
 
 class ArtefactTypeArchive extends ArtefactTypeFile {
 
+    private $archivetype;
+    private $handle;
+    private $info;
+    private $data = array();
+
+    public function __construct($id = 0, $data = null) {
+        parent::__construct($id, $data);
+
+        if ($this->id) {
+            $descriptions = self::archive_file_descriptions();
+            $validtypes = self::archive_mime_types();
+            $this->archivetype = $descriptions[$validtypes[$this->filetype]->description];
+        }
+    }
+
+    public static function new_archive($path, $data) {
+        if (!isset($data->filetype)) {
+            return self::archive_from_file($path, $data);
+        }
+        $descriptions = self::archive_file_descriptions();
+        $validtypes = self::archive_mime_types();
+        if (isset($validtypes[$data->filetype])) {
+            return self::archive_from_file($path, $data, $descriptions[$validtypes[$data->filetype]->description]);
+        }
+        return false;
+    }
+
+    public static function is_zip($path) {
+        if (function_exists('zip_read')) {
+            $zip = zip_open($path);
+            if (is_resource($zip)) {
+                zip_close($zip);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static function is_tar($path) {
+        require_once('Archive/Tar.php');
+        if (!$tar = new Archive_Tar($path)) {
+            return false;
+        }
+        $list = $tar->listContent();
+        if (empty($list)) {
+            return false;
+        }
+        switch ($tar->_compress_type) {
+        case 'gz': return 'application/x-gzip';
+        case 'bz2': return 'application/x-bzip2';
+        case 'none': return 'application/x-tar';
+        }
+        return false;
+    }
+
+    public static function archive_from_file($path, $data, $type=null) {
+        if (is_null($type)) {
+            if (self::is_zip($path)) {
+                $data->filetype = 'application/zip';
+                $data->archivetype = 'zip';
+                return new ArtefactTypeArchive(0, $data);
+            }
+            if ($data->filetype = self::is_tar($path)) {
+                $data->archivetype = 'tar';
+                // @todo:: TEST!
+                return new ArtefactTypeArchive(0, $data);
+            }
+        }
+        else if ($type == 'zip' && self::is_zip($path) || $type == 'tar' && self::is_tar($path)) {
+            $data->archivetype = $type;
+            return new ArtefactTypeArchive(0, $data);
+        }
+        return false;
+    }
+
+    public static function archive_file_descriptions() {
+        static $descriptions = null;
+        if (is_null($descriptions)) {
+            $descriptions = array('tar' => 'tar', 'gz' => 'tar', 'tgz' => 'tar', 'bz2' => 'tar');
+            if (function_exists('zip_open')) {
+                $descriptions['zip'] = 'zip';
+            }
+        }
+        return $descriptions;
+    }
+
+    public static function archive_mime_types() {
+        static $mimetypes = null;
+        if (is_null($mimetypes)) {
+            $descriptions = self::archive_file_descriptions();
+            $mimetypes = get_records_select_assoc('artefact_file_mime_types', 'description IN (' . join(',', array_map('db_quote', array_keys($descriptions))) . ')');
+        }
+        return $mimetypes;
+    }
+
     public static function get_icon($options=null) {
         global $THEME;
         return $THEME->get_url('images/archive.gif');
     }
 
-    public static function zip_mime_types() {
-        static $mimetypes = null;
-        if (is_null($mimetypes)) {
-            $mimetypes = get_column('artefact_file_mime_types', 'mimetype', 'description', 'zip');
+    public function open_archive() {
+        if ($this->archivetype == 'zip') {
+            $this->handle = zip_open($this->get_path());
+            if (!is_resource($this->handle)) {
+                $this->handle = null;
+                throw new NotFoundException();
+            }
         }
-        return $mimetypes;
+        else if ($this->archivetype == 'tar') {
+            require_once('Archive/Tar.php');
+            if (!$this->handle = new Archive_Tar($this->get_path())) {
+                throw new NotFoundException();
+            }
+        }
     }
 
-    public static function zip_file_info($zip) {
-        $info = (object) array(
+    public function set_archive_info($zipinfo) {
+        $this->info = $zipinfo;
+    }
+
+    public function read_archive() {
+        if (!$this->handle) {
+            $this->open_archive();
+        }
+        if ($this->info) {
+            return $this->info;
+        }
+        $this->info = (object) array(
             'files'     => 0,
             'folders'   => 0,
             'totalsize' => 0,
             'names'     => array(),
         );
-        while ($entry = zip_read($zip)) {
-            $name = zip_entry_name($entry);
-            $info->names[] = $name;
-            if (substr($name, -1) == '/') {
-                $info->folders++;
-            }
-            else {
-                $info->files++;
-                if ($size = zip_entry_filesize($entry)) {
-                    $info->totalsize += $size;
+        if ($this->archivetype == 'zip') {
+            while ($entry = zip_read($this->handle)) {
+                $name = zip_entry_name($entry);
+                $this->info->names[] = $name;
+                if (substr($name, -1) == '/') {
+                    $this->info->folders++;
+                }
+                else {
+                    $this->info->files++;
+                    if ($size = zip_entry_filesize($entry)) {
+                        $this->info->totalsize += $size;
+                    }
                 }
             }
         }
-        $info->displaysize = ArtefactTypeFile::short_size($info->totalsize);
-        return $info;
+        else if ($this->archivetype == 'tar') {
+            $foldernames = array();
+            $list = $this->handle->listContent();
+            if (empty($list)) {
+                throw new SystemException("Unknown archive type");
+            }
+
+            foreach ($list as $entry) {
+                $path = split('/', $entry['filename']);
+                if ($isfolder = substr($entry['filename'], -1) == '/') {
+                    array_pop($path);
+                }
+
+                $folder = '';
+                for ($i = 0; $i < count($path) - 1; $i++) {
+                    $folder .= $path[$i] . '/';
+                    if (!isset($foldernames[$folder])) {
+                        $foldernames[$folder] = 1;
+                        $this->info->names[] = $folder;
+                        $this->info->folders++;
+                    }
+                }
+
+                if (!$isfolder) {
+                    $this->info->names[] = $entry['filename'];
+                    $this->info->files++;
+                    $this->info->totalsize += $entry['size'];
+                }
+            }
+        }
+        else {
+            throw new SystemException("Unknown archive type");
+        }
+        $this->info->displaysize = ArtefactTypeFile::short_size($this->info->totalsize);
+        return $this->info;
     }
 
-    public static function get_unzip_directory_name($file) {
-        $folderdata = ArtefactTypeFileBase::artefactchooser_folder_data($file);
-        $parent = $file->get('parent');
+    public function unzip_directory_name() {
+        if (isset($this->data['unzipdir'])) {
+            return $this->data['unzipdir'];
+        }
+        $folderdata = ArtefactTypeFileBase::artefactchooser_folder_data($this);
+        $parent = $this->get('parent');
         $strpath = ArtefactTypeFileBase::get_full_path($parent, $folderdata->data);
-        $extn = $file->get('oldextension');
-        $name = $file->get('title');
+        $extn = $this->get('oldextension');
+        $name = $this->get('title');
         if (substr($name, -1-strlen($extn)) == '.' . $extn) {
             $name = substr($name, 0, strlen($name)-1-strlen($extn));
         }
-        $name = ArtefactTypeFileBase::get_new_file_title($name, $parent, $file->get('owner'), $file->get('group'), $file->get('institution'));
-        return array('basename' => $name, 'fullname' => $strpath . $name);
+        $name = ArtefactTypeFileBase::get_new_file_title($name, $parent, $this->get('owner'), $this->get('group'), $this->get('institution'));
+        $this->data['unzipdir'] = array('basename' => $name, 'fullname' => $strpath . $name);
+        return $this->data['unzipdir'];
     }
 
-    public function unzip($progresscallback=null) {
-        global $USER;
-
-        $foldername = ArtefactTypeArchive::get_unzip_directory_name($this);
+    public function create_base_folder() {
+        $foldername = $this->unzip_directory_name();
         $foldername = $foldername['basename'];
 
         $data = (object) array(
@@ -1641,58 +1783,98 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
             'group' => $this->get('group'),
             'institution' => $this->get('institution'),
             'title' => $foldername,
-            'description' => get_string('filesextractedfromziparchive', 'artefact.file'),
+            'description' => get_string('filesextractedfromarchive', 'artefact.file'),
             'parent' => $this->get('parent'),
         );
-
-        $user = $data->owner ? $USER : null;
-
         $basefolder = new ArtefactTypeFolder(0, $data);
         $basefolder->commit();
-        $folders = array('.' => $basefolder->get('id'));
-        $status = (object) array('folders' => 1, 'files' => 0, 'basefolderid' => $basefolder->get('id'));
+        return $basefolder->get('id');
+    }
 
-        unset($data->description);
+    public function create_folder($folder) {
+        $newfolder = new ArtefactTypeFolder(0, $this->data['template']);
+        $newfolder->commit();
+        $folderindex = ($folder == '.' ? '' : ($folder . '/')) . $this->data['template']->title;
+        $this->data['folderids'][$folderindex] = $newfolder->get('id');
+        $this->data['folderscreated']++;
+    }
+
+    public function extract($progresscallback=null) {
+        global $USER;
+
+        $quotauser = $this->owner ? $USER : null;
+
+        $this->data['basefolderid'] = $this->create_base_folder();
+        $this->data['folderids'] = array('.' => $this->data['basefolderid']);
+        $this->data['folderscreated'] = 1;
+        $this->data['filescreated'] = 0;
+        $this->data['template'] = (object) array(
+            'owner' => $this->get('owner'),
+            'group' => $this->get('group'),
+            'institution' => $this->get('institution'),
+        );
 
         $tempdir = get_config('dataroot') . 'artefact/file/temp';
         check_dir_exists($tempdir);
 
-        $zip = zip_open($this->get_path());
-        $tempfile = tempnam($tempdir, '');
+        $this->read_archive();
 
-        $i = 0;
+        if ($this->archivetype == 'tar') {
 
-        while ($entry = zip_read($zip)) {
-            $name = zip_entry_name($entry);
-            $folder = dirname($name);
-            $data->title = basename($name);
-            $data->parent = $folders[$folder];
-            if (substr($name, -1) == '/') {
-                $newfolder = new ArtefactTypeFolder(0, $data);
-                $newfolder->commit();
-                $status->folders++;
-                $folderindex = ($folder == '.' ? '' : ($folder . '/')) . $data->title;
-                $folders[$folderindex] = $newfolder->get('id');
-            }
-            else {
-                $h = fopen($tempfile, 'w');
-                $size = zip_entry_filesize($entry);
-                $contents = zip_entry_read($entry, $size);
-                fwrite($h, $contents);
-                fclose($h);
-                ArtefactTypeFile::save_file($tempfile, $data, $user, true);
-                $status->files++;
+            // Untar everything into a temp directory first
+            $tempsubdir = tempnam($tempdir, '');
+            unlink($tempsubdir);
+            mkdir($tempsubdir);
+            if (!$this->handle->extract($tempsubdir)) {
+                throw new SystemException("Unable to extract archive into $tempsubdir");
             }
 
-            if ($progresscallback) {
-                $i++;
-                if ($i % 5 == 0) {
+            $i = 0;
+            foreach ($this->info->names as $name) {
+                $folder = dirname($name);
+                $this->data['template']->parent = $this->data['folderids'][$folder];
+                $this->data['template']->title = basename($name);
+                if (substr($name, -1) == '/') {
+                    $this->create_folder($folder);
+                }
+                else {
+                    ArtefactTypeFile::save_file($tempsubdir . '/' . $name, $this->data['template'], $quotauser, true);
+                    $this->data['filescreated']++;
+                }
+                if ($progresscallback && ++$i % 5 == 0) {
                     call_user_func_array($progresscallback, $i);
                 }
             }
 
+        } else if ($this->archivetype == 'zip') {
+
+            $tempfile = tempnam($tempdir, '');
+            $i = 0;
+
+            while ($entry = zip_read($this->handle)) {
+                $name = zip_entry_name($entry);
+                $folder = dirname($name);
+                $this->data['template']->parent = $this->data['folderids'][$folder];
+                $this->data['template']->title = basename($name);
+                if (substr($name, -1) == '/') {
+                    $this->create_folder($folder);
+                }
+                else {
+                    $h = fopen($tempfile, 'w');
+                    $size = zip_entry_filesize($entry);
+                    $contents = zip_entry_read($entry, $size);
+                    fwrite($h, $contents);
+                    fclose($h);
+
+                    ArtefactTypeFile::save_file($tempfile, $this->data['template'], $quotauser, true);
+                    $this->data['filescreated']++;
+                }
+                if ($progresscallback && ++$i % 5 == 0) {
+                    call_user_func_array($progresscallback, $i);
+                }
+            }
         }
-        return $status;
+        return $this->data;
     }
 
 }

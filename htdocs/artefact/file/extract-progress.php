@@ -76,14 +76,15 @@ function unzip_iframe_progress_handler($artefacts) {
 }
 
 $file = artefact_instance_from_id($unzip['file']);
-$status = $file->unzip('unzip_iframe_progress_handler');
+$file->set_archive_info($unzip['zipinfo']);
+$status = $file->extract('unzip_iframe_progress_handler');
 
 $next = $unzip['from'];
-$next .= (strpos($next, '?') === false ? '?' : '&') . 'folder=' . $status->basefolderid;
+$next .= (strpos($next, '?') === false ? '?' : '&') . 'folder=' . $status['basefolderid'];
 
 $SESSION->set('unzip', false);
 
-$message = get_string('extractfilessuccess', 'artefact.file', $status->folders, $status->files);
+$message = get_string('extractfilessuccess', 'artefact.file', $status['folderscreated'], $status['filescreated']);
 ?>
         <div class="progress-bar" style="width: 100%;">
         <p><?php echo $message; ?> <a href="<?php echo $next; ?>" target="_top"><?php echo get_string('Continue', 'artefact.file'); ?></a></p>
