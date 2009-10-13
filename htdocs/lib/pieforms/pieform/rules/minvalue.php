@@ -34,7 +34,7 @@
  * @return string            The error message, if the value is invalid.
  */
 function pieform_rule_minvalue(Pieform $form, $value, $element, $minvalue) {/*{{{*/
-    if ($value != '' && intval($value) < $minvalue) {
+    if ($value != '' && doubleval($value) < $minvalue) {
         return sprintf($form->i18n('rule', 'minvalue', 'minvalue', $element), $minvalue);
     }
 }/*}}}*/
