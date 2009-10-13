@@ -1,5 +1,5 @@
 {include file='header.tpl' nosearch='true'}
-            <h2 class="center">{str tag=performinginstallsandupgrades section=admin}</h2>
+            <h2 class="center">{$upgradeheading}</h2>
             <div class="center js-hidden" id="jsrequiredforupgrade">{str tag=jsrequiredforupgrade section=admin}</div>
             <table id="installer" class="nojs-hidden-table">
                 <thead>

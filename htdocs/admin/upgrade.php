@@ -30,12 +30,20 @@ define('ADMIN', 1);
 define('INSTALLER', 1);
 
 require(dirname(dirname(__FILE__)).'/init.php');
-define('TITLE', get_string('upgrades', 'admin'));
 require(get_config('libroot') . 'upgrade.php');
 
 $smarty = smarty();
 
 $upgrades = check_upgrades();
+if (!empty($upgrades['core']->install)) {
+    define('TITLE', get_string('installation', 'admin'));
+    $smarty->assign('upgradeheading', get_string('performinginstallation', 'admin'));
+}
+else {
+    define('TITLE', get_string('upgrades', 'admin'));
+    $smarty->assign('upgradeheading', get_string('performingupgrades', 'admin'));
+}
+
 if (empty($upgrades['disablelogin'])) {
     auth_setup();
 }
