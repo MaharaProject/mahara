@@ -999,6 +999,10 @@ EOF;
             }
         }
 
+        if (isset($element['elementtitle'])) {
+            $result .= ' title="' . self::hsc($element['elementtitle']) . '"';
+        }
+
         if (!in_array('maxlength', $exclude) && isset($element['rules']['maxlength'])) {
             $result .= ' maxlength="' . intval($element['rules']['maxlength']) . '"';
         }
