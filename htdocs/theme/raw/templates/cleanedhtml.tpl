@@ -7,7 +7,7 @@
 <body>
   <div style="font-family: Arial, sans-serif; font-size: smaller; border-bottom: 1px solid #aaa; margin-bottom: 1em; padding-bottom: .5em; text-align: center;">
     <div style="float: left; margin-right: 1em; height: 2em;"><a href="" onclick="history.go(-1); return false;">&laquo; {str tag="back"}</a></div>
-    {$htmlremovedmessage}{if !empty($params.downloadurl)} <a href="{$params.downloadurl}">{str tag="downloadoriginalversion" section="artefact.file"}</a>{/if}</div>
+    {$htmlremovedmessage}{if $params.downloadurl} <a href="{$params.downloadurl}">{str tag="downloadoriginalversion" section="artefact.file"}</a>{/if}</div>
   <div>
     {$content}
   </div>

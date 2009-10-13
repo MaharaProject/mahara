@@ -9,7 +9,7 @@
     </div>
     <div id="main-wrapper">
         <div class="main-column">
-            {insert name="messages"}
+            {dynamic}{insert_messages}{/dynamic}
             <div id="main-column-container">
 {if isset($PAGEHEADING)}                    <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON}</span>{/if}</h1>
 {/if}

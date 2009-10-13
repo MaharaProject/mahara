@@ -1,4 +1,4 @@
-{if !empty($results.data)}
+{if $results.data}
         {foreach from=$results.cdata item=row}
           <tr class="r{cycle values='0,1'}">
             {foreach from=$row item=r}

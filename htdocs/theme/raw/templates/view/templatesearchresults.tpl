@@ -7,7 +7,7 @@
     </tr>
   </thead>
   <tbody>
-{if !empty($results)}
+{if $results}
 {foreach from=$results item=row}
     <tr class="r{cycle values='0,1'}">
       <td>

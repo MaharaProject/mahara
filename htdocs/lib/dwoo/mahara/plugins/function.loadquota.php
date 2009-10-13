@@ -11,7 +11,7 @@
  * @version  1.0
  * @return Nothing
  */
-function Dwoo_Function_loadquota(Dwoo $dwoo) {
+function Dwoo_Plugin_loadquota(Dwoo $dwoo) {
     global $USER;
 
     if (!$USER->is_logged_in()) {

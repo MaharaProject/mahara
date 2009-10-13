@@ -3,7 +3,7 @@
             <div class="rbuttons">
                 <a class="btn btn-add" href="{$WWWROOT}artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
             </div>
-{if empty($blogs->data)}
+{if !$blogs->data}
            <div>{str tag=youhavenoblogs section=artefact.blog}</div>
 {else}
            <table id="bloglist" class="tablerenderer fullwidth">
