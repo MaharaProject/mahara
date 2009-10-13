@@ -586,7 +586,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
      * @return int The ID of the artefact created
      */
     private static function create_artefact(PluginImportLeap $importer, $artefacttype, $title) {
-        $classname = 'ArtefactType' . ucfirst($artefacttype);
+        $classname = generate_artefact_class_name($artefacttype);
         $artefact = new $classname(0, array('owner' => $importer->get('usr')));
         $artefact->set('title', $title);
         $artefact->commit();
