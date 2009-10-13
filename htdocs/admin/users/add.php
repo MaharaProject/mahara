@@ -266,6 +266,7 @@ function adduser_submit(Pieform $form, $values) {
         'username'       => $values['username'],
         'firstname'      => ($values['firstname']) ? $values['firstname'] : 'Imported',
         'lastname'       => ($values['lastname']) ? $values['lastname'] : 'User',
+        'email'          => $values['email'],
         'password'       => $values['password'],
         'quota'          => $values['quota'],
         'passwordchange' => 1,
