@@ -384,9 +384,25 @@ $string['deleteusernote'] = 'Please note that this operation <strong>cannot be u
 // Add User
 $string['adduser'] = 'Add User';
 $string['adduserdescription'] = 'Create a new user';
-$string['adduserpagedescription'] = '<p>Here you may add a new user to the system. Once added, they will be sent an e-mail informing them of their new account, including their username and password. They will be asked to change their password upon first log in.</p>';
+$string['basicinformationforthisuser'] = 'Basic information for this user.';
+$string['clickthebuttontocreatetheuser'] = 'Click the button to create the user.';
+$string['createnewuserfromscratch'] = 'Create new user from scratch';
 $string['createuser'] = 'Create User';
+$string['failedtoobtainuploadedleapfile'] = 'Failed to obtain the uploaded LEAP2A file';
+$string['failedtounzipleap2afile'] = 'Failed to unzip the LEAP2A file. Check the error log for more information';
+$string['fileisnotaziporxmlfile'] = 'This file has not been detected to be a zipfile or XML file';
+$string['howdoyouwanttocreatethisuser'] = 'How do you want to create this user?';
+$string['leap2aimportfailed'] = '<p><strong>Sorry - Importing the LEAP2A file failed.</strong></p><p>This could be because you did not select a valid LEAP2A file to upload. Alternatively, there may be a bug in Mahara causing your file to fail, even though it is valid.</p><p>Please <a href="add.php">go back and try again</a>, and if the problem persists, you may want to post to the <a href="http://mahara.org/forums/">Mahara Forums</a> to ask for help. Be prepared to be asked for a copy of your file!</p>';
 $string['newuseremailnotsent'] = 'Failed to send welcome email to new user.';
+$string['newusercreated'] = 'New user account created successfully';
+$string['noleap2axmlfiledetected'] = 'No leap2a.xml file detected - please check your export file again';
+$string['Or...'] = 'Or...';
+$string['userwillreceiveemailandhastochangepassword'] = 'They will receive an e-mail informing them of their new account details. On first log in, they will be forced to change their password.';
+$string['uploadleap2afile'] = 'Upload LEAP2A File';
+
+$string['usercreationmethod'] = '1 - User Creation Method';
+$string['basicdetails'] = '2 - Basic Details';
+$string['create'] = '3 - Create';
 
 // Login as
 $string['loginasuser'] = 'Login as %s';
@@ -478,6 +494,7 @@ $string['institutionusersupdated_inviteUser'] = 'Invitations sent';
 
 $string['maxuseraccounts'] = 'Maximum User Accounts Allowed';
 $string['maxuseraccountsdescription'] = 'The maximum number of user accounts that can be associated with the institution.  If there is no limit, this field should be left blank.';
+$string['institutionmaxusersexceeded'] = 'This institution is full, you will have to increase the number of allowed users in this institution before this user can be added.';
 $string['institutionuserserrortoomanyusers'] = 'The users were not added.  The number of members cannot exceed the maximum allowed for the institution.  You can add fewer users, remove some users from the institution, or ask the site administrator to increase the maximum number of users.';
 $string['institutionuserserrortoomanyinvites'] = 'Your invitations were not sent.  The number of existing members plus the number of outstanding invitations cannot exceed the institution\'s maximum number of users.  You can invite fewer users, remove some users from the institution, or ask the site administrator to increase the maximum number of users.';
 

@@ -269,6 +269,69 @@ table.tablerenderer th.desc {
 
 
 /* MANAGE USERS > ADD USER */
+#adduser-t {
+    margin: 0 auto;
+    min-width: 800px;
+    max-width: 1000px;
+    width: 950px;
+}
+#adduser-t td {
+    /*padding-right: 3em;*/
+}
+#adduser-t .current {
+    background-color: #f0f8ff;
+}
+#adduser thead th {
+    text-align: left;
+    font-size: 1.3em;
+    border-bottom: none !important;
+}
+#adduser #tr-fc td {
+    padding-bottom: 1em;
+}
+#adduser label {
+    font-weight: bold;
+    font-size: 1em;
+}
+#adduser table table label {
+    font-size: .9em;
+}
+#adduser div.choice {
+    font-size: 1.1em;
+    padding-bottom: .5em;
+}
+#adduser #or {
+    margin-top: .5em;
+}
+#adduser #uploadleap {
+    margin-top: 1em;
+}
+#adduser td.step3 {
+    text-align: center;
+}
+#adduser td.filler {
+    padding: 2em .5em 0 .75em;
+    font-size: 250%;
+    width: 3%;
+}
+#adduser th.filler {
+    font-size: 200%;
+    vertical-align: top;
+}
+#adduser td.step1, #adduser td.step3 {
+    width: 30%;
+}
+#adduser td.step2 {
+    width: 36%;
+}
+#adduser #step1 th {
+    white-space: nowrap;
+}
+#adduser #step3info {
+    width: 20em;
+    padding-top: 1em;
+    text-align: left;
+}
 
 
 
