@@ -786,6 +786,8 @@ class PluginImportLeap extends PluginImport {
 
         $artefacts = $this->get_artefactids_imported_by_entryid('portfolio:artefact' . $matches[4]);
         if (is_null($artefacts) || count($artefacts) != 1) {
+            // This can happen if a leap2a xml file is uploaded that refers to
+            // files that (naturally) weren't uploaded with it.
             log_debug("Warning: fixref was expecting one artefact to have been imported by entry portfolio:artefact{$matches[4]} but seems to have gotten " . count($artefacts));
             return $matches[0];
         }
