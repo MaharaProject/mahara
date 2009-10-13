@@ -154,7 +154,9 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
                         }
                         $importer->trace("Attaching file $blogpostlink[href] to blog post $blogpostentry->id", PluginImportLeap::LOG_LEVEL_VERBOSE);
                         $artefactids = $importer->get_artefactids_imported_by_entryid((string)$blogpostlink['href']);
-                        $blogpost->attach($artefactids[0]);
+                        if (isset($artefactids[0])) {
+                            $blogpost->attach($artefactids[0]);
+                        }
                     }
                     if ($blogpost) {
                         $blogpost->commit();
