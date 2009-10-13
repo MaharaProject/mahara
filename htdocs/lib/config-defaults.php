@@ -63,6 +63,7 @@ $cfg = new StdClass;
 
 // Logging configuration
 // For each log level, you can specify where the messages are displayed.
+//
 // LOG_TARGET_SCREEN makes the error messages go to the screen - useful
 // when debugging but not on a live site!
 // LOG_TARGET_ADMIN sends error messages to the screen but only when
@@ -70,7 +71,14 @@ $cfg = new StdClass;
 // LOG_TARGET_ERRORLOG makes the error messages go to the log as specified
 // by the apache ErrorLog directive. It's probably useful to have this on
 // for all log levels.
-// You can combine them with bitwise operations,
+// LOG_TARGET_FILE allows you to specify a file that messages will be logged
+// to. It's best to pick a path in dataroot, but note that logfiles tend to get
+// very large over time - so it's advisable to implement some kind of logrotate
+// if you want to leave this on all the time. The other option is to just turn
+// this on when you are getting some kind of error or want to see the logging,
+// and know that you're not going to let the logfile get large.
+//
+// You can combine the targets with bitwise operations,
 // e.g. LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG
 //
 // This configuration is suitable for people running Mahara for the first
@@ -89,6 +97,10 @@ $cfg->log_environ_targets = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
 //$cfg->log_info_targets    = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
 //$cfg->log_warn_targets    = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
 //$cfg->log_environ_targets = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
+
+// If you use LOG_TARGET_FILE, this is the file that errors will be logged to.
+// It's best to pick a path under dataroot, as we know we can write there.
+$cfg->log_file = $CFG->dataroot . '/error.log';
 
 // The log levels that will generate backtraces. Useful for development,
 // but probably only warnings are useful on a live site.

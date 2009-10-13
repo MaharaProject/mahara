@@ -40,6 +40,8 @@ define('LOG_TARGET_STDOUT', 4);
 /** Display the errors on the screen in the admin area only (short term hack
     until we create an admin notifications page) */
 define('LOG_TARGET_ADMIN', 8);
+/** Log to a specific file */
+define('LOG_TARGET_FILE', 16);
 
 // Logging levels
 /** Environment type errors, such as register_globals being on */
@@ -251,6 +253,40 @@ function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $lin
         }
         if ($backtrace && $textbacktrace) {
             echo $textbacktrace;
+        }
+    }
+
+    if (function_exists('get_config')) {
+        $logfilename = get_config('log_file');
+        if (($targets & LOG_TARGET_FILE) && $logfilename) {
+            global $LOGFILE_FH;
+            static $logfile_open_attempted = null;
+            if (!$logfile_open_attempted) {
+                $logfile_open_attempted = true;
+                $LOGFILE_FH = fopen($logfilename, 'wb');
+                if ($LOGFILE_FH !== false) {
+                    function _close_logfile() {
+                        global $LOGFILE_FH;
+                        fclose($LOGFILE_FH);
+                    }
+                    register_shutdown_function('_close_logfile');
+                }
+                else {
+                    error_log("Could not open your custom log file ($logfilename)");
+                }
+            }
+
+            if (is_resource($LOGFILE_FH)) {
+                foreach ($loglines as $line) {
+                    fwrite($LOGFILE_FH, $prefix . $line . "\n");
+                }
+                if ($backtrace && $textbacktrace) {
+                    $lines = explode("\n", $textbacktrace);
+                    foreach ($lines as $line) {
+                        fwrite($LOGFILE_FH, $line . "\n");
+                    }
+                }
+            }
         }
     }
 }
