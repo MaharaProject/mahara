@@ -19,7 +19,7 @@
             <table id="myviews" class="fullwidth listing">
                 <tbody>
 {foreach from=$views item=view}
-                    <tr class="{cycle values=r0,r1}">
+                    <tr class="{cycle values='r0,r1'}">
                         <td><div class="rel">
                             <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a></h3>
 {if $view.submittedto}
