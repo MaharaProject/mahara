@@ -10,7 +10,7 @@
  * @version  1.0
  */
 function Dwoo_Plugin_display_name(Dwoo $dwoo, $user) {
-    if (!is_object($user)) {
+    if (!$user) {
         return '';
     }
 
