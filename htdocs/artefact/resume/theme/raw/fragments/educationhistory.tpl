@@ -19,7 +19,7 @@
     </thead>
     <tbody>
         {foreach from=$rows item=row}
-        <tr class="r{cycle values='0,1'}">
+        <tr class="{cycle values='r0,r1'}">
             <td>{$row->startdate|escape}</td>
             <td>{$row->enddate|escape}</td>
             <td><div class="jstitle">{$row->qualification|escape}</div><div class="jsdescription">{$row->qualdescription|escape}</div></td>

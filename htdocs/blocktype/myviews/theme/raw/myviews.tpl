@@ -2,7 +2,7 @@
     <table id="userviewstable">
     {foreach from=$VIEWS item=item name=view}
         <tr>
-            <td class="r{cycle values='0,1'}">
+            <td class="{cycle values='r0,r1'}">
                 <h4><a href="{$WWWROOT}view/view.php?id={$item->id}">{$item->title|escape}</a></h4>
                 {if $item->description}
                   <div>{$item->description}</div>

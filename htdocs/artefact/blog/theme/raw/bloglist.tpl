@@ -1,5 +1,5 @@
   {foreach from=$blogs->data item=blog}
-    <tr class="{cycle name=rows values=r1,r0}">
+    <tr class="{cycle name=rows values='r0,r1'}">
       <td>
         <div><strong><a href="{$WWWROOT}artefact/blog/view/?id={$blog->id}">{$blog->title|escape}</a></strong></div>
         <div>{$blog->description|clean_html}</div>

@@ -9,7 +9,7 @@
   <tbody>
 {if $results}
 {foreach from=$results item=row}
-    <tr class="r{cycle values='r0,r1'}">
+    <tr class="{cycle values='r0,r1'}">
       <td>
         <a class="viewlink" href="{$WWWROOT}view/view.php?id={$row.id|escape}" target="_blank">{$row.title|escape}</a>
       </td>

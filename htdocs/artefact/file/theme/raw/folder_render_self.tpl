@@ -18,7 +18,7 @@
     </thead>
     <tbody>
     {foreach from=$children item=child}
-      <tr class="{cycle values=r1,r0}">
+      <tr class="{cycle values='r0,r1'}">
         <td><img src="{$child->iconsrc|escape}" border="0" alt="{$child->artefacttype|escape}"></td>
         <td><a href="{$WWWROOT}view/artefact.php?artefact={$child->id|escape}&amp;view={$viewid|escape}" title="{$child->hovertitle|escape}">{$child->title|escape}</a></td>
         <td>{$child->description|escape}</td>

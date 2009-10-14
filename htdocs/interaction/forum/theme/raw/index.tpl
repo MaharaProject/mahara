@@ -22,7 +22,7 @@
 		<th></th>
 	</tr>
     {foreach from=$forums item=forum}
-    <tr class="r{cycle values='0,1'}">
+    <tr class="{cycle values='r0,r1'}">
         <td>
             {if $admin}
             <div class="fr btn-spacer s">

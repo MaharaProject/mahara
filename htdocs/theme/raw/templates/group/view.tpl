@@ -16,7 +16,7 @@
     {if $foruminfo}
         <table class="fullwidth s">
         {foreach from=$foruminfo item=postinfo}
-            <tr class="r{cycle values='r0,r1'}">
+            <tr class="{cycle values='r0,r1'}">
                 <td><strong><a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic|escape}#post{$postinfo->id|escape}">{$postinfo->topicname|escape}</a></strong></td>
                 <td>{$postinfo->body|str_shorten_html:100:true}</td>
                 <td><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$postinfo->poster|escape}" alt="">
@@ -36,7 +36,7 @@
     <p>
     <table class="fullwidth">
     {foreach from=$sharedviews item=view}
-        <tr class="r{cycle values='r0,r1'}">
+        <tr class="{cycle values='r0,r1'}">
             <td>
                 <a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a>
                 {if $view.sharedby}
@@ -67,7 +67,7 @@
     <p>
     <table class="fullwidth">
     {foreach from=$submittedviews item=view}
-        <tr class="r{cycle values='r0,r1'}">
+        <tr class="{cycle values='r0,r1'}">
             <td>
                 <a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a>
                 {if $view.sharedby}
