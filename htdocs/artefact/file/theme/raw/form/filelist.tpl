@@ -36,8 +36,8 @@
     {/if}
     </td>
     <td>{$file->description|escape}</td>
-    <td>{$file->size}</td>
-    <td>{$file->mtime}</td>
+    <td>{tif $file->size ?: ''}</td>
+    <td>{tif $file->mtime ?: ''}</td>
     <td class="right">
     {if $editable && !$file->isparent}
       {if $file->artefacttype == 'archive'}<a href="{$WWWROOT}artefact/file/extract.php?file={$file->id}">{str tag=Unzip section=artefact.file}</a>{/if}
