@@ -124,7 +124,7 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
         $sql .= '
         GROUP BY
             u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff,
-            p.method, ap.value
+            p.method, ap.value, aic.value, h.appname
         HAVING (u.admin = 1 OR SUM(ui.admin) > 0)';
     } else if ($adminonly) {
         $sql .= ' AND u.admin = 1';
