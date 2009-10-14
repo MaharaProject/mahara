@@ -18,7 +18,7 @@
     </td>
 	<td class="postedits">{$post->body|clean_html}
 {if $post->edit}
-        <h5>{str tag="editstothispost" section="interaction.forum}</h5>
+        <h5>{str tag="editstothispost" section="interaction.forum"}</h5>
         <ul>
             {foreach from=$post->edit item=edit}
             <li>
