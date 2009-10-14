@@ -194,8 +194,11 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
         $artefacts = array_filter($this->artefactdata,
             create_function('$a', 'return $a->get("parent") == ' . $parent . ' && $a->get("artefacttype") ' . $equality . ' "folder";'));
         foreach ($artefacts as $artefact) {
-            $size = $artefact->get('size');
-            $size = ($size) ? display_size($size) : '';
+            $size = '';
+            if ($artefact->get('artefacttype') != 'folder') {
+                $size = $artefact->get('size');
+                $size = ($size) ? display_size($size) : '';
+            }
             $data[] = array(
                 'icon'        => '',
                 'title'       => $artefact->get('title'),
