@@ -1,4 +1,4 @@
-{if $filelist}
+{if !$filelist}
 <p>{str tag=nofilesfound section=artefact.file}</p>
 {else}
 <table id="filelist" class="tablerenderer filelist">
