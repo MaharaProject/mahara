@@ -1870,7 +1870,6 @@ function institutional_admin_nav() {
  */
 function mahara_standard_nav() {
     $exportenabled = plugins_installed('export');
-    $importenabled = plugins_installed('import');
     $menu = array(
         array(
             'path' => '',
@@ -1896,13 +1895,6 @@ function mahara_standard_nav() {
             'title' => get_string('Export', 'export'),
             'weight' => 40,
             'ignore' => !$exportenabled,
-        ),
-        array(
-            'path' => 'myportfolio/import',
-            'url' => 'import/',
-            'title' => get_string('import', 'import'),
-            'weight' => 40,
-            'ignore' => !$importenabled,
         ),
         array(
             'path' => 'profile/view',
