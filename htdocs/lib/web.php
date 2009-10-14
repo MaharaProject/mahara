@@ -45,6 +45,7 @@ function &smarty_core() {
 
     $smarty->assign('THEME', $THEME);
     $smarty->assign('WWWROOT', get_config('wwwroot'));
+    $smarty->assign('HTTPSWWWROOT', get_config('httpswwwroot'));
 
     $theme_list = array();
     foreach ($themepaths['mahara'] as $themepath) {
@@ -2235,8 +2236,8 @@ function get_script_path() {
 }
 
 /**
- * Like {@link me()} but returns a full URL
- * @see me()
+ * Like {@link get_script_path()} but returns a full URL
+ * @see get_script_path()
  * @return string
  */
 function get_full_script_path() {
@@ -2280,6 +2281,17 @@ function get_full_script_path() {
 
     $url_prefix = $protocol.$hostname;
     return $url_prefix . get_script_path();
+}
+
+/**
+ * Like {@link get_script_path()} but returns a URI relative to WWWROOT
+ * @see get_script_path()
+ * @return string
+ */
+function get_relative_script_path() {
+    $maharadir = get_mahara_install_subdirectory();
+    // $maharadir always has a trailing '/'
+    return substr(get_script_path(), strlen($maharadir) - 1);
 }
 
 /**

@@ -2,7 +2,7 @@
         <div id="main-nav">
             <ul>{strip}
 {foreach from=$MAINNAV item=item}
-                <li{if $item.selected}{assign var=MAINNAVSELECTED value=$item} class="selected"{/if}><a href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>
+                <li{if $item.selected}{assign var=MAINNAVSELECTED value=$item} class="selected"{/if}><a href="{if get_config('httpswwwroot') && $item.url=='account/'}{$HTTPSWWWROOT}{else}{$WWWROOT}{/if}{$item.url|escape}">{$item.title|escape}</a></li>
 {/foreach}
 {if $LOGGEDIN}{if $USER->get('admin') || $USER->is_institutional_admin()}
 {if $ADMIN || $INSTITUTIONALADMIN}
@@ -21,7 +21,7 @@
 {if $MAINNAVSELECTED.submenu}
             <ul>{strip}
 {foreach from=$MAINNAVSELECTED.submenu item=item}
-                <li{if $item.selected} class="selected"{/if}><a href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>
+                <li{if $item.selected} class="selected"{/if}><a href="{if get_config('httpswwwroot') && $item.url=='account/'}{$HTTPSWWWROOT}{else}{$WWWROOT}{/if}{$item.url|escape}">{$item.title|escape}</a></li>
 {/foreach}
             {/strip}</ul>
 {/if}

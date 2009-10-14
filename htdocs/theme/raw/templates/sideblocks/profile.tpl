@@ -57,7 +57,7 @@
         </ul>
         <div class="controls center">
             <a href="{$WWWROOT}?logout" class="btn-link" id="btn-logout">{str tag="logout"}</a>&nbsp;
-            <a href="{$WWWROOT}account/" class="btn-link">{str tag="settings"}</a>
+            <a href="{if get_config('httpswwwroot')}{$HTTPSWWWROOT}{else}{$WWWROOT}{/if}account/" class="btn-link">{str tag="settings"}</a>
         </div>
 {if $USERMASQUERADING}        <div id="changeuser">{$becomeyouagain}</div>
 {/if}

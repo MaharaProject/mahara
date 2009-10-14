@@ -182,6 +182,11 @@ if (!isset($CFG->wwwroot) && isset($_SERVER['HTTP_HOST'])) {
         $CFG->wwwroot = $wwwroot;
     }
 }
+if (isset($CFG->httpswwwroot)) {
+    if (substr($CFG->httpswwwroot, -1, 1) != '/') {
+        $CFG->httpswwwroot .= '/';
+    }
+}
 if (!isset($CFG->noreplyaddress) && isset($_SERVER['HTTP_HOST'])) {
     $noreplyaddress = 'noreply@';
     $host  =  (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST'];

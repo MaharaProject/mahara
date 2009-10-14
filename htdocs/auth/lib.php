@@ -1001,15 +1001,20 @@ function auth_get_login_form() {
     // remembers the GET and POST data sent to it and resends that on
     // afterwards. 
     $action = '';
+    if (get_config('httpswwwroot')) {
+        $action = rtrim(get_config('httpswwwroot'), '/') . hsc(strip_querystring(get_relative_script_path()));
+    }
     if ($_GET) {
         if (isset($_GET['logout'])) {
             // You can log the user out on any particular page by appending
             // ?logout to the URL. In this case, we don't want the "action"
             // of the url to include that, or be blank, else the next time
             // the user logs in they will be logged out again.
-            $action = hsc(substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?')));
+            if ($action == '') {
+                $action = hsc(substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?')));
+            }
         } else {
-            $action = '?';
+            $action .= '?';
             foreach ($_GET as $key => $value) {
                 if ($key != 'logout' && $key != 'login') {
                     $action .= hsc($key) . '=' . hsc($value) . '&amp;';
@@ -1265,6 +1270,19 @@ function login_submit(Pieform $form, $values) {
     // User is allowed to log in
     //$USER->login($userdata);
     auth_check_required_fields();
+
+    if (get_config('httpswwwroot') && !defined('JSON')) {
+        // If we are using HTTPS for logins we need to go back to
+        // non-HTTPS URLs. Otherwise, Javascript (and possibly CSS)
+        // breaks. Don't use get_full_script_path(), as it doesn't
+        // work if someone sets httpswwwroot to something like
+        // 'https://x.y.z.w:443/...'  (unlikely, but
+        // possible). get_full_script_path() doesn't gives us the
+        // ':443' part and things break horribly.
+        $parts = parse_url(get_config('httpswwwroot'));
+        $httpsrequest = rtrim($parts['path'], '/');
+        redirect(hsc(substr(get_script_path(), strlen($httpsrequest))));
+    }
 }
 
 /**
@@ -1477,6 +1495,10 @@ function auth_generate_login_form() {
     if (!get_config('installed')) {
         return;
     }
+    $action='';
+    if (get_config('httpswwwroot')) {
+        $action = rtrim(get_config('httpswwwroot'), '/') . hsc(strip_querystring(get_relative_script_path()));
+    }
     require_once('pieforms/pieform.php');
     if (count_records('institution', 'registerallowed', 1, 'suspended', 0)) {
         $registerlink = '<a href="' . get_config('wwwroot') . 'register.php" tabindex="2">' . get_string('register') . '</a><br>';
@@ -1488,6 +1510,7 @@ function auth_generate_login_form() {
         'name'       => 'login',
         'renderer'   => 'div',
         'submit'     => false,
+        'action'     => $action,
         'plugintype' => 'auth',
         'pluginname' => 'internal',
         'autofocus'  => false,
