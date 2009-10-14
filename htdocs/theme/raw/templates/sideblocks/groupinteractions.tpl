@@ -1,7 +1,7 @@
     <h3>{str tag="groupinteractions" section="group"}</h3>
 
     <div class="sidebar-content">
-    {if $data}
+    {if $sbdata}
     <ul>
     {foreach from=$sbdata.interactiontypes item=interactions key=plugin}
         <li>
