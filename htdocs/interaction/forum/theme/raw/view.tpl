@@ -13,7 +13,7 @@
 	<h3>{str tag=Topics section="interaction.forum"}</h3>
     {if $membership && ($moderator || $forum->newtopicusers != 'moderators') }
     <div class="rbuttons">
-	<a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id|escape}" class="btn btn-add s">{str tag="newtopic" section="interaction.forum}</a>
+	<a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id|escape}" class="btn btn-add s">{str tag="newtopic" section="interaction.forum"}</a>
 	</div>
 	{/if}
 {if $stickytopics || $regulartopics}
