@@ -57,7 +57,8 @@ $loadingicon = $THEME->get_url('images/loading.gif');
 $successicon = $THEME->get_url('images/success.gif');
 $failureicon = $THEME->get_url('images/failure.gif');
 
-// Remove all files in the smarty cache
+// Remove all files in the smarty and dwoo caches
+// TODO post 1.2 remove the smarty part
 require_once('file.php');
 $basedir = get_config('dataroot') . 'smarty/compile/';
 $dh = new DirectoryIterator($basedir);
@@ -68,6 +69,16 @@ foreach ($dh as $themedir) {
     clearstatcache();
     check_dir_exists($themedirname);
 }
+$basedir = get_config('dataroot') . 'dwoo/compile/';
+$dh = new DirectoryIterator($basedir);
+foreach ($dh as $themedir) {
+    if ($themedir->isDot()) continue;
+    $themedirname = $basedir . $themedir->getFilename();
+    rmdirr($themedirname);
+    clearstatcache();
+    check_dir_exists($themedirname);
+}
+
 
 $loadingstring = json_encode(get_string('upgradeloading', 'admin'));
 $installsuccessstring = json_encode(get_string('installsuccess', 'admin'));

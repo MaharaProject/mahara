@@ -4,7 +4,7 @@
       <td>
         <div><strong><a href="{$result->url}">{$result->title|escape}</a></strong></div>
         <div>{$result->description|str_shorten_html:100}</div>
-        {if !empty($result->tags)}
+        {if $result->tags}
         <div>{str tag=tags}: {list_tags tags=$result->tags owner=1}</div>
         {/if}
       </td>

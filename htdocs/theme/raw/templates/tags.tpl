@@ -34,7 +34,7 @@
                <tr><th></th><th></th><th></th></tr>
              </thead>
              <tbody>
-{if !empty($results->data)}
+{if $results->data}
               {$results->tablerows}
 {/if}
              </tbody>

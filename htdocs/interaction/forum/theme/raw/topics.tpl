@@ -2,7 +2,7 @@
 {if $sticky}
 <tr class="stickytopic">
 {else}
-<tr class="r{cycle values=0,1}">
+<tr class="r{cycle values='0,1'}">
 {/if}
     <td>
     {if $topic->closed}<img src="{$closedicon|escape}" alt="{str tag="Closed" section="interaction.forum"}">{/if}

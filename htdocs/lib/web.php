@@ -28,32 +28,11 @@
 defined('INTERNAL') || die();
 
 
-function &smarty_core() {
-    global $THEME;
-    require_once('smarty/libs/Smarty.class.php');
-    $smarty =& new Smarty();
-    
-    $themepaths = themepaths();
+function smarty_core() {
+    require_once 'dwoo/dwoo/dwooAutoload.php';
+    require_once 'dwoo/mahara/Dwoo_Mahara.php';
 
-    $smarty->template_dir = $THEME->templatedirs;
-
-    check_dir_exists(get_config('dataroot') . 'smarty/compile/' . $THEME->basename);
-    check_dir_exists(get_config('dataroot') . 'smarty/cache/' . $THEME->basename);
-    $smarty->compile_dir   = get_config('dataroot') . 'smarty/compile/' . $THEME->basename;
-    $smarty->cache_dir     = get_config('dataroot') . 'smarty/cache/' . $THEME->basename;
-    $smarty->plugins_dir[] = get_config('libroot') . 'smarty/mahara/';
-
-    $smarty->assign('THEME', $THEME);
-    $smarty->assign('WWWROOT', get_config('wwwroot'));
-    $smarty->assign('HTTPSWWWROOT', get_config('httpswwwroot'));
-
-    $theme_list = array();
-    foreach ($themepaths['mahara'] as $themepath) {
-        $theme_list[$themepath] = $THEME->get_url($themepath);
-    }
-    $smarty->assign('THEMELIST', json_encode($theme_list));
-
-    return $smarty;
+    return new Dwoo_Mahara();
 }
 
 
@@ -80,7 +59,7 @@ function &smarty_core() {
  * @return Smarty
  */
 
-function &smarty($javascript = array(), $headers = array(), $pagestrings = array(), $extraconfig = array()) {
+function smarty($javascript = array(), $headers = array(), $pagestrings = array(), $extraconfig = array()) {
     global $USER, $SESSION, $THEME;
 
     if (!is_array($headers)) {
@@ -96,7 +75,6 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
     $SIDEBLOCKS = array();
 
     $smarty = smarty_core();
-    $smarty->register_function('user_search_form', 'user_search_form');
 
     $wwwroot = get_config('wwwroot');
     // NOTE: not using jswwwroot - it seems to wreck image paths if you 

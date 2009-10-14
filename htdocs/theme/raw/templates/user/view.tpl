@@ -2,7 +2,7 @@
                     <div id="userview">
                         <div class="user-icon right">
                             {$institutions}
-{if !empty($loginas)}
+{if $loginas}
 							<a href="{$WWWROOT}admin/users/changeuser.php?id={$USERID}" class="btn-loginas">{$loginas}</a>
     {if $USER->get('admin')}<a href="{$WWWROOT}admin/users/edit.php?id={$USERID}" class="btn-edit">{str tag=accountsettings section=admin}</a>{/if}
 {/if}
@@ -25,7 +25,7 @@
 {if $requestedlist}
 							<div>{str tag=requestedmembershipin section=group}{$requestedlist}</div>
 {/if}
-                            <div class="btn-add">{$addform}</div>
+                            <div class="btn-add">{if $addform}{$addform}{/if}</div>
                             <div class="btn-bold btn-edit">{$togglepublic}</div>
                     	</div>
 {if $relationship == 'pending'}

@@ -3,7 +3,7 @@
 {$memberform}
 {$requestedform}
 {$invitedform}
-{if !empty($joinform)}
+{if $joinform}
   <h3>{str tag="requestmembershipofaninstitution"}</h3>
   {$joinform}
 {/if}

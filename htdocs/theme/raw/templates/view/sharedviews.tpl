@@ -4,7 +4,7 @@
     <table class="fullwidth">
     {foreach from=$views item=view}
         <tr>
-            <td class="r{cycle values=0,1}">
+            <td class="r{cycle values='0,1'}">
                 <h5><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a> {str tag=by section=view}
                     <a href="{$WWWROOT}{if $view.group}group{else}user{/if}/view.php?id={if $view.group}{$view.group}{else}{$view.owner}{/if}">{if $view.sharedby}{$view.sharedby}{else}{$groupname}{/if}</a>
                 </h5>

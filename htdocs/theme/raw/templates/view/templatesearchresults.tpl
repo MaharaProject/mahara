@@ -7,9 +7,9 @@
     </tr>
   </thead>
   <tbody>
-{if !empty($results)}
+{if $results}
 {foreach from=$results item=row}
-    <tr class="r{cycle values=0,1}">
+    <tr class="r{cycle values='0,1'}">
       <td>
         <a class="viewlink" href="{$WWWROOT}view/view.php?id={$row.id|escape}" target="_blank">{$row.title|escape}</a>
       </td>
