@@ -60,7 +60,7 @@
 	<div class="rightdiv">
 	<h3>
 		<a href="{$WWWROOT}user/view.php?id={$user->id}">
-			{$user|display_name|escape}
+			{$user->id|display_name|escape}
 		</a>
 		{if $page == 'find'}
 			- {str tag='existingfriend' section='group'}
