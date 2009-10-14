@@ -2449,7 +2449,7 @@ function html2text($html) {
  */
 function autolink_text($text) {
     $text = preg_replace(
-        '#(^|.)(https?://\S+)#e',
+        '#(^|.)(https?://\S+)#me',
         "_autolink_text_helper('$2', '$1')",
         $text
     );
