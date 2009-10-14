@@ -5,7 +5,7 @@
 {$form}
 {if $groups}
 {foreach from=$groups item=group}
-            <div class="r{cycle values='0,1'} listing">
+            <div class="r{cycle values='r0,r1'} listing">
                 <div class="fr">
                      {include file="group/groupuserstatus.tpl" group=$group returnto='find'}
                 </div>

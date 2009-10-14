@@ -12,7 +12,7 @@
                 </thead>
                 <tbody>
                 {foreach from=$upgrades key=name item=upgrade}
-                    <tr class="{cycle name=rows values='r1,r0'}">
+                    <tr class="{cycle name=rows values='r0,r1'}">
                         <td>{$name}</td>
                         {if $name == 'firstcoredata' || $name == 'lastcoredata'} 
                         <td></td>

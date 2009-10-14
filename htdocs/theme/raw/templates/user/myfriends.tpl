@@ -4,7 +4,7 @@
 {if $users}
     <table id="friendslist" class="fullwidth listing">
     {foreach from=$users item=user}
-        <tr class="r{cycle values='1,0'}">
+        <tr class="r{cycle values='r0,r1'}">
         {include file="user/user.tpl" user=$user page='myfriends'}
         </tr>
     {/foreach}

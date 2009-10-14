@@ -1,6 +1,6 @@
 {if $results.data}
         {foreach from=$results.cdata item=row}
-          <tr class="r{cycle values='0,1'}">
+          <tr class="r{cycle values='r0,r1'}">
             {foreach from=$row item=r}
             <td>
               <div class="fl"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=40&amp;id={$r.id|escape}" alt=""></div>
