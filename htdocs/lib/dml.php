@@ -90,6 +90,7 @@ function db_is_utf8() {
  *
  * @uses $db
  * @param string $command The sql string you wish to be executed.
+ * @param array $values When using prepared statements, this is the value array (optional).
  * @return string
  * @throws SQLException
  */
@@ -164,6 +165,7 @@ function record_exists($table, $field1=null, $value1=null, $field2=null, $value2
  * 
  * @param string $table The database table to be checked against.
  * @param string $select A fragment of SQL to be used in a WHERE clause in the SQL call.
+ * @param array $values When using prepared statements, this is the value array (optional).
  * @return bool true if a matching record exists, else false.
  * @throws SQLException
  */
@@ -184,7 +186,7 @@ function record_exists_select($table, $select='', $values=null) {
  * This function returns true if at least one record is returned.
  *
  * @param string $sql The SQL statement to be executed. If using $values, placeholder ?s are expected. If not, the string should be escaped correctly.
- * @param array $values When using prepared statements, this is the value array. Optional.
+ * @param array $values When using prepared statements, this is the value array (optional).
  * @return bool true if the SQL executes without errors and returns at least one record.
  * @throws SQLException
  */
@@ -239,6 +241,7 @@ function count_records_select($table, $select='', $values=null, $countitem='COUN
  *
  * @uses $db
  * @param string $sql The SQL string you wish to be executed.
+ * @param array $values When using prepared statements, this is the value array (optional).
  * @return int        The count.
  * @throws SQLException
  */
@@ -254,11 +257,11 @@ function count_records_sql($sql, $values=null) {
  *
  * @param string $table The table to select from.
  * @param string $field1 the first field to check (optional).
- * @param string $value1 the value field1 must have (requred if field1 is given, else optional).
+ * @param string $value1 the value field1 must have (required if field1 is given, else optional).
  * @param string $field2 the second field to check (optional).
- * @param string $value2 the value field2 must have (requred if field2 is given, else optional).
+ * @param string $value2 the value field2 must have (required if field2 is given, else optional).
  * @param string $field3 the third field to check (optional).
- * @param string $value3 the value field3 must have (requred if field3 is given, else optional).
+ * @param string $value3 the value field3 must have (required if field3 is given, else optional).
  * @return mixed a fieldset object containing the first mathcing record, or false if none found.
  * @throws SQLException
  */
@@ -275,10 +278,7 @@ function get_record($table, $field1, $value1, $field2=null, $value2=null, $field
  * an exception is thrown. If you want more than one record, use get_records_sql_array or get_records_sql_assoc
  *
  * @param string $sql The SQL string you wish to be executed, should normally only return one record.
- * @param bool $expectmultiple If the SQL cannot be written to conviniently return just one record,
- *      set this to true to hide the debug message.
- * @param bool $nolimit sometimes appending ' LIMIT 1' to the SQL causes an error. Set this to true
- *      to stop your SQL being modified. This argument should probably be deprecated.
+ * @param array $values When using prepared statements, this is the value array (optional).
  * @return Found record as object. False if not found
  * @throws SQLException
  */
@@ -309,7 +309,7 @@ function get_record_sql($sql, $values=null) {
  *
  * @param string $table The database table to be checked against.
  * @param string $select A fragment of SQL to be used in a where clause in the SQL call.
- * @param array $values If using placeholder ? in $select, pass values here.
+ * @param array $values When using prepared statements, this is the value array (optional).
  * @param string $fields A comma separated list of fields to be returned from the chosen table.
  * @return object Returns an array of found records (as objects)
  * @throws SQLException
@@ -348,7 +348,7 @@ function get_record_select($table, $select='', $values=null, $fields='*') {
  *
  * @param string $table the table to query.
  * @param string $field a field to check (optional).
- * @param string $value the value the field must have (requred if field1 is given, else optional).
+ * @param string $value the value the field must have (required if field1 is given, else optional).
  * @param string $sort an order to sort the results in (optional, a valid SQL ORDER BY parameter).
  * @param string $fields a comma separated list of fields to return (optional, by default all fields are returned).
  * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
@@ -378,7 +378,7 @@ function get_recordset($table, $field='', $value='', $sort='', $fields='*', $lim
  *
  * @param string $table the table to query.
  * @param string $select A fragment of SQL to be used in a where clause in the SQL call.
- * @param array $values If using placeholder ?s in $select, pass values here.
+ * @param array $values When using prepared statements, this is the value array (optional).
  * @param string $sort an order to sort the results in (optional, a valid SQL ORDER BY parameter).
  * @param string $fields a comma separated list of fields to return (optional, by default all fields are returned).
  * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
@@ -413,6 +413,7 @@ function get_recordset_select($table, $select='', $values=null, $sort='', $field
  *
  * @uses $db
  * @param string $sql the SQL select query to execute.
+ * @param array $values When using prepared statements, this is the value array (optional).
  * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
  * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
  * @return mixed an ADODB RecordSet object
@@ -456,7 +457,7 @@ function get_recordset_sql($sql, $values=null, $limitfrom=null, $limitnum=null) 
  * Utility function to turn a result set into an array of records
  *
  * @param object an ADODB RecordSet object.
- * @return mixed mixed an array of objects, or false if the RecordSet was empty.
+ * @return mixed an array of objects, or false if the RecordSet was empty.
  * @throws SQLException
  */
 function recordset_to_array($rs) {
@@ -482,7 +483,7 @@ function recordset_to_array($rs) {
  * This method turns a result set into a hash of records (keyed by the first
  * field in the result set)
  *
- * @param  object An ADODB RecordSet object.
+ * @param  object $rs An ADODB RecordSet object.
  * @return mixed  An array of objects, or false if the RecordSet was empty.
  * @throws SQLException
  * @access private
@@ -566,7 +567,7 @@ function get_records_array($table, $field='', $value='', $sort='', $fields='*', 
  *
  * @param string $table the table to query.
  * @param string $select A fragment of SQL to be used in a where clause in the SQL call.
- * @param array $values if using placeholder ? in $select, pass values here.
+ * @param array $values When using prepared statements, this is the value array (optional).
  * @param string $sort an order to sort the results in (optional, a valid SQL ORDER BY parameter).
  * @param string $fields a comma separated list of fields to return (optional, by default all fields are returned).
  * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
@@ -586,7 +587,7 @@ function get_records_select_assoc($table, $select='', $values=null, $sort='', $f
  *
  * @param string $table the table to query.
  * @param string $select A fragment of SQL to be used in a where clause in the SQL call.
- * @param array $values if using placeholder ? in $select, pass values here.
+ * @param array $values When using prepared statements, this is the value array (optional).
  * @param string $sort an order to sort the results in (optional, a valid SQL ORDER BY parameter).
  * @param string $fields a comma separated list of fields to return (optional, by default all fields are returned).
  * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
@@ -605,6 +606,7 @@ function get_records_select_array($table, $select='', $values=null, $sort='', $f
  * Return value as for @see function get_records_assoc
  *
  * @param string $sql the SQL select query to execute.
+ * @param array $values When using prepared statements, this is the value array.
  * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
  * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
  * @return mixed an array of objects, or false if no records were found.
@@ -621,7 +623,7 @@ function get_records_sql_assoc($sql,$values, $limitfrom='', $limitnum='') {
  * Return value as for {@link get_records_array}
  *
  * @param string $sql the SQL select query to execute.
- * @param array values of placeholders in the SQL
+ * @param array $values When using prepared statements, this is the value array.
  * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
  * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
  * @return mixed an array of objects, or false if no records were found.
@@ -640,7 +642,7 @@ function get_records_sql_array($sql,$values, $limitfrom='', $limitnum='') {
 /**
  * Utility function used by the following 3 methods.
  *
- * @param object an ADODB RecordSet object with two columns.
+ * @param object $rs an ADODB RecordSet object with two columns.
  * @return mixed an associative array, or false if an error occured or the RecordSet was empty.
  * @access private
  */
@@ -696,6 +698,7 @@ function get_records_menu($table, $field='', $value='', $sort='', $fields='*') {
  *
  * @param string $table The database table to be checked against.
  * @param string $select A fragment of SQL to be used in a where clause in the SQL call.
+ * @param array $values When using prepared statements, this is the value array (optional).
  * @param string $sort Sort order (optional) - a valid SQL order parameter
  * @param string $fields A comma separated list of fields to be returned from the chosen table.
  * @return mixed an associative array, or false if no records were found or an error occured.
@@ -712,6 +715,7 @@ function get_records_select_menu($table, $select='', $values=null, $sort='', $fi
  * Return value as for @see function get_records_menu.
  *
  * @param string $sql The SQL string you wish to be executed.
+ * @param array $values When using prepared statements, this is the value array (optional).
  * @return mixed an associative array, or false if no records were found or an error occured.
  */
 function get_records_sql_menu($sql,$values=null) {
@@ -749,6 +753,7 @@ function get_field($table, $field, $field1=null, $value1=null, $field2=null, $va
  * Get a single value from a table.
  *
  * @param string $sql an SQL statement expected to return a single value.
+ * @param array $values When using prepared statements, this is the value array (optional).
  * @return mixed the specified value.
  * @throws SQLException
  */
@@ -791,6 +796,7 @@ function get_column($table, $field, $field1=null, $value1=null, $field2=null, $v
  * Get a single column from a table.
  *
  * @param string $sql an SQL statement expected to return a single value.
+ * @param array $values When using prepared statements, this is the value array (optional).
  * @return mixed the specified value.
  * @throws SQLException
  */
@@ -901,6 +907,7 @@ function delete_records($table, $field1=null, $value1=null, $field2=null, $value
  * @uses $db
  * @param string $table The database table to be checked against.
  * @param string $select A fragment of SQL to be used in a where clause in the SQL call (used to define the selection criteria).
+ * @param array $values When using prepared statements, this is the value array (optional).
  * @return object A PHP standard object with the results from the SQL call.
  * @throws SQLException
  */
