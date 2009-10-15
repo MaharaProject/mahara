@@ -1,27 +1,29 @@
 <?php
-/**
- * Smarty plugin
- * @package Smarty
- * @subpackage plugins
- */
-
 
 /**
- * Creates pagination links for a table
+ * Dwoo {mahara_pagelinks} function pluging
+ *
  * appends an 'offset=n' parameter to the url to get the url for a different page
  * @param integer $limit  number of items per page
  * @param integer $offset offset of first data item on this page
  * @param integer $count  total number of items
  * @param string  $url    where to get results from
+ * @param string  $assign the template var to assign the result to
  * @return string
  *
- * THIS IS DEPRECATED. The build_pagelinks function in lib/mahara.php should be 
- * used instead.
- * One place this is being used is the admin user search. Hopefully that can be 
- * converted away soon.
+ * THIS IS DEPRECATED. Pagination is done differently almost everywhere else
+ * (e.g. find friends). One place this is being used is the admin user search.
+ * Hopefully that can be converted away soon.
  */
 
-function smarty_function_mahara_pagelinks($params, &$smarty) {
+function Dwoo_Plugin_mahara_pagelinks(Dwoo $dwoo, $offset, $limit, $count, $url, $assign='') {
+    $params = array(
+        'offset' => $offset,
+        'limit'  => $limit,
+        'count'  => $count,
+        'url'    => $url,
+        'assign' => $assign,
+    );
 
     $id = substr(md5(microtime()), 0, 4);
     $output = '<div class="pagination" id="' . $id . '">';
@@ -111,7 +113,7 @@ EOF;
     $output .= '</div>';
 
     if (!empty($params['assign'])) {
-        $smarty->assign($params['assign'], $output);
+        $dwoo->assignInScope($output, $params['assign']);
         return;
     }
 
