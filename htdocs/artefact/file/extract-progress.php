@@ -76,6 +76,9 @@ function unzip_iframe_progress_handler($artefacts) {
 }
 
 $file = artefact_instance_from_id($unzip['file']);
+if ($file->get('group')) {
+    require_once(get_config('libroot') . 'group.php');
+}
 $file->set_archive_info($unzip['zipinfo']);
 $status = $file->extract('unzip_iframe_progress_handler');
 

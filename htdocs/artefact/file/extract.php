@@ -72,32 +72,34 @@ if ($fileid) {
         $message = get_string('invalidarchive', 'artefact.file');
     }
 
-    if ($zipinfo && !$file->get('owner') || $USER->quota_allowed($zipinfo->totalsize)) {
-        $name = $file->unzip_directory_name();
-        $message = get_string('fileswillbeextractedintofolder', 'artefact.file', $name['fullname']);
+    if ($zipinfo) {
+        if (!$file->get('owner') || $USER->quota_allowed($zipinfo->totalsize)) {
+            $name = $file->unzip_directory_name();
+            $message = get_string('fileswillbeextractedintofolder', 'artefact.file', $name['fullname']);
 
-        $goto = files_page($file);
-        if ($parent = $file->get('parent')) {
-            $goto .= (strpos($goto, '?') === false ? '?' : '&') . 'folder=' . $parent;
-        }
+            $goto = files_page($file);
+            if ($parent = $file->get('parent')) {
+                $goto .= (strpos($goto, '?') === false ? '?' : '&') . 'folder=' . $parent;
+            }
 
-        $form = pieform(array(
-            'name' => 'unzip_artefact',
-            'elements' => array(
-                'fileid' => array(
-                    'type' => 'hidden',
-                    'value' => $fileid,
+            $form = pieform(array(
+                'name' => 'unzip_artefact',
+                'elements' => array(
+                    'fileid' => array(
+                        'type' => 'hidden',
+                        'value' => $fileid,
+                    ),
+                    'submit' => array(
+                        'type' => 'submitcancel',
+                        'value' => array(get_string('Unzip', 'artefact.file'), get_string('cancel')),
+                        'goto' => $goto,
+                    )
                 ),
-                'submit' => array(
-                    'type' => 'submitcancel',
-                    'value' => array(get_string('Unzip', 'artefact.file'), get_string('cancel')),
-                    'goto' => $goto,
-                )
-            ),
-        ));
-    }
-    else {
-        $message = get_string('insufficientquotaforunzip', 'artefact.file');
+            ));
+        }
+        else {
+            $message = get_string('insufficientquotaforunzip', 'artefact.file');
+        }
     }
 
     $smarty = smarty(array(), array(), array(), $smartyconfig);
