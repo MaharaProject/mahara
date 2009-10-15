@@ -33,7 +33,7 @@ function Dwoo_Plugin_str(Dwoo $dwoo, $tag, $section = 'mahara', $args = null, $a
 
     // If there is an 'assign' parameter, place it into that instead.
     if (!empty($assign)) {
-        $dwoo->assign($assign, $ret);
+        $dwoo->assignInScope($ret, $assign);
         return;
     }
 
