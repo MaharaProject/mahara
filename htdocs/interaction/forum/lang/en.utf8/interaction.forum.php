@@ -75,8 +75,8 @@ $string['forumposthtmltemplate'] = "<div style=\"padding: 0.5em 0; border-bottom
 <div style=\"margin: 1em 0;\">%s</div>
 
 <div style=\"font-size: smaller; border-top: 1px solid #999;\">
-<p>To see and reply to the post online, follow this link:<br><a href=\"%s\">%s</a></p>
-<p>To unsubscribe from this %s, visit: <a href=\"%s\">%s</a></p>
+<p><a href=\"%s\">Reply to this post online</a></p>
+<p><a href=\"%s\">Unsubscribe from this %s</a></p>
 </div>";
 $string['forumposttemplate'] = "%s by %s
 %s

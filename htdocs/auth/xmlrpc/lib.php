@@ -969,27 +969,48 @@ class PluginAuthXmlrpc extends PluginAuth {
         return $values;
     }
 
-    public static function get_jump_link($hostwwwroot, $hostapp, $href) {
-        $jumpurl = $hostwwwroot . '/';
-        $jumpurl .= $hostapp == 'moodle' ? 'auth/mnet/jump.php' : 'auth/xmlrpc/jump.php';
-        // Remove trailing slash on wwwroot
-        $jumpurl .= '?hostwwwroot=' . substr(get_config('wwwroot'), 0, -1) . '&wantsurl=';
-        $localpart='';
-        $urlparts = parse_url($href);
-        if ($urlparts) {
-            if (isset($urlparts['path'])) {
-                $localpart .= $urlparts['path'];
-            }
-            if (isset($urlparts['query'])) {
-                $localpart .= '?'.$urlparts['query'];
-            }
-            if (isset($urlparts['fragment'])) {
-                $localpart .= '#'.$urlparts['fragment'];
-            }
-        }
-        $href = $jumpurl . urlencode($localpart);
-        return $href;
+    public static function get_jump_url_prefix($hostwwwroot, $hostapp) {
+        return $hostwwwroot . '/' . ($hostapp == 'moodle' ? 'auth/mnet/jump.php' : 'auth/xmlrpc/jump.php')
+            . '?hostwwwroot=' . substr(get_config('wwwroot'), 0, -1) . '&wantsurl=';
     }
+
+}
+
+/**
+ * Lifted from Moodle.
+ *
+ * Inline function to modify a url string so that mnet users are requested to
+ * log in at their mnet identity provider (if they are not already logged in)
+ * before ultimately being directed to the original url.
+ *
+ * uses global IDPJUMPURL - the url which user should initially be directed to
+ * @param array $url array with 3 elements
+ *     0 - context the url was taken from, possibly just the url, possibly href="url"
+ *     1 - the destination url
+ *     2 - the destination url, without the wwwroot part
+ * @return string the url the remote user should be supplied with.
+ */
+function localurl_to_jumpurl($url) {
+    global $IDPJUMPURL;
+    $localpart='';
+    $urlparts = parse_url($url[2]);
+    if ($urlparts) {
+        if (isset($urlparts['path'])) {
+            $localpart .= $urlparts['path'];
+        }
+        if (isset($urlparts['query'])) {
+            $localpart .= '?'.$urlparts['query'];
+        }
+        if (isset($urlparts['fragment'])) {
+            $localpart .= '#'.$urlparts['fragment'];
+        }
+    }
+    $indirecturl = $IDPJUMPURL . urlencode($localpart);
+    //If we matched on more than just a url (ie an html link), return the url to an href format
+    if ($url[0] != $url[1]) {
+        $indirecturl = 'href="'.$indirecturl.'"';
+    }
+    return $indirecturl;
 }
 
 ?>

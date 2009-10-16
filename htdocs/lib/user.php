@@ -269,6 +269,9 @@ function get_profile_field($userid, $field) {
  * @throws EmailException
  */ 
 function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='', $customheaders=null) {
+    global $IDPJUMPURL;
+    static $mnetjumps = array();
+
     if (!get_config('sendemail')) {
         // You can entirely disable Mahara from sending any e-mail via the 
         // 'sendemail' configuration variable
@@ -279,6 +282,29 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         throw new InvalidArgumentException("empty user given to email_user");
     }
     
+    // If the user is a remote xmlrpc user, trawl through the email text for URLs
+    // to our wwwroot and modify the url to direct the user's browser to login at
+    // their home site before hitting the link on this site
+    if (!empty($userto->mnethostwwwroot) && !empty($userto->mnethostapp)) {
+        require_once(get_config('docroot') . 'auth/xmlrpc/lib.php');
+
+        // Form the request url to hit the idp's jump.php
+        if (isset($mnetjumps[$userto->mnethostwwwroot])) {
+            $IDPJUMPURL = $mnetjumps[$userto->mnethostwwwroot];
+        } else {
+            $mnetjumps[$userto->mnethostwwwroot] = $IDPJUMPURL = PluginAuthXmlrpc::get_jump_url_prefix($userto->mnethostwwwroot, $userto->mnethostapp);
+        }
+
+        $wwwroot = get_config('wwwroot');
+        $messagetext = preg_replace_callback('%(' . $wwwroot . '([\w_:\?=#&@/;.~-]*))%',
+            'localurl_to_jumpurl',
+            $messagetext);
+        $messagehtml = preg_replace_callback('%href=["\'`](' . $wwwroot . '([\w_:\?=#&@/;.~-]*))["\'`]%',
+            'localurl_to_jumpurl',
+            $messagehtml);
+    }
+
+
     require_once('phpmailer/class.phpmailer.php');
 
     $mail = new phpmailer();
