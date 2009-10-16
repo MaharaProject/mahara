@@ -37,6 +37,9 @@ if ($exportfile = $SESSION->get('exportfile')) {
     exit;
 }
 
+// Turn off gzip if it's on, because it prevents output from being flushed
+apache_setenv('no-gzip', 1);
+
 if (!$exportdata = $SESSION->get('exportdata')) {
     redirect('/export/');
 }
