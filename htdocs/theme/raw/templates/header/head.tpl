@@ -30,4 +30,4 @@
     <!--[if MSIE 6]><script type="text/javascript" src="{$WWWROOT}js/pngfix.js"></script><![endif]-->
     <link rel="shortcut icon" href="{$WWWROOT}favicon.ico" type="image/vnd.microsoft.icon">
 </head>
-
+{dynamic}{flush}{/dynamic}
