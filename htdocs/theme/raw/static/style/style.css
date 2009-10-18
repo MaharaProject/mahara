@@ -111,6 +111,13 @@ pre, tt {
     visibility: hidden;
     top: 0;
 }
+/* IE7 hack to make safe-hidden work */
+html>body .safe-hidden {
+    *position: relative;
+    *height: 0;
+    *margin: 0;
+    *padding: 0;
+}
 .nojs-hidden-inline, .nojs-hidden-block, .nojs-hidden-table {
     display: none;
 }
