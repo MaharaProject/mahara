@@ -812,7 +812,7 @@ function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
     if ($updatetags && $form->submitted_by_js()) {
         $smarty = smarty_core();
         $tagdata = tags_sideblock();
-        $smarty->assign('data', $tagdata);
+        $smarty->assign('sbdata', $tagdata);
         $returndata['tagblockhtml'] = $smarty->fetch('sideblocks/tags.tpl');
     }
 
