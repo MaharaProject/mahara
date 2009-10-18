@@ -22,4 +22,5 @@
     </div>
     <div id="main-wrapper">
         <div class="main-column">
+            {dynamic}{insert_messages}{/dynamic}
             <div id="main-column-container">

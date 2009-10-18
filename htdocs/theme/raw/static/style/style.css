@@ -541,7 +541,7 @@ div.rbuttons .small-logo {
     width: 100%;
 }
 #containerX .main-column {
-    padding: 1em 1.5em 1em;
+    padding: 0 1.5em 1em;
 }
 #main-column {
     padding: 0 1.5em 1.5em;
@@ -566,6 +566,9 @@ div.rbuttons .small-logo {
 /* Informational messages */
 #messages {
     padding: 1.5em 0 .5em 0;
+}
+#containerX #messages {
+    padding-top: .5em;
 }
 div.ok, div.error, div.info {
     padding: .4em .5em .4em 2.5em;
