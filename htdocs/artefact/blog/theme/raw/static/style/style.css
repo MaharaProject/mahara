@@ -4,40 +4,53 @@
  * Copyright (C) 2006-2009 Catalyst IT
  * This file is distributed under the same terms as Mahara itself
  */
+#postlist th {
+	padding: 1em .5em .25em 0;
+	font-size: 1.3em;
+	border-bottom: 1px dotted #d1d1d1;
+}
+#postlist td {
+	padding: .25em 0;
+}
 #postlist td.postdetails {
 	padding-bottom: 1em;
-	font-style: italic;
 	font-size: .9em;
 	color: #888;
-}
-#postlist th {
-	padding: 1em .4em .25em .4em;
-	font-size: 1.3em;
 }
 #postlist p {
 	margin: 0 0 1em 0;
 }
 
-#bloglist td .addicon {
-	margin: 0;
-}
-#editpost_filebrowser_empty_selectlist {
-	margin: 0;
-}
-#postlist .attachments {
-	margin-top: 1em;
-}
 #postlist .attachments th {
 	padding: .25em .5em;
 	font-size: 1em;
-	border-top: none;
+	border: 0;
 }
 #postlist input.delete,
 #postlist input.edit {
 	font-size: .7em;
-	font-family: Arial, Helvetica, sans-serif;
 }
 table#bloglist .right a {
 	font-size: .9em;
 	margin-left: 1em;
+}
+
+#bloglist td .addicon,
+#editpost_filebrowser_empty_selectlist {
+	margin: 0;
+}
+#editpost_filebrowser_selectlist {
+	border: 1px solid #eee;
+	font-size: .9em;
+	* width: 98.5%;
+}
+#editpost_filebrowser_selectlist th {
+	background: #eee;
+	text-align: left;
+}
+#editpost_filebrowser_upload_browse {
+	border-right: 1px solid #eee;
+	border-bottom: 4px solid #eee;
+	border-left: 1px solid #eee;
+	padding: 1em;
 }
