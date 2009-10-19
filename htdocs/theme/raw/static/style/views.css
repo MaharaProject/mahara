@@ -14,9 +14,18 @@
 #view table.filedata {
     border: none;
 }
+#view .filedata-icon {
+	display: inline;
+}
 #view .filedata-icon h4 {
 	font-size: .9em;
 	margin: 0;
+}
+#view table.filedata th {
+	padding: 0;
+}
+#view table.filedata td {
+	padding: 0 .5em;
 }
 
 #category-list li a:hover {
@@ -37,9 +46,15 @@
 	font-weight: bold;
 }
 
+#publicfeedback {
+	clear: both;
+}
 #copyview .searchquery {
 	background: #eee;
+	border: 1px solid #d1d1d1;
 	padding: .5em 1em;
+	line-height: 2.4em;
+	margin-bottom: 1em;
 }
 
 
@@ -64,7 +79,8 @@ body:last-child:not(:root:root) .newblockhere {
 
 /* VIEWS */
 #view .viewfooter {
-  padding: 1em;
+  padding: 1em 0;
+  border-top: 1px solid #ddd;
 }
 #feedbacktable .details {
 	margin-top: 10px;
@@ -133,3 +149,6 @@ form#wallpost input.submit {
 	width: 100%;
 }
 
+#add_feedback_form_message {
+	width: 90%;
+}

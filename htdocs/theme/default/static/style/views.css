@@ -3,22 +3,24 @@
  */
 
 #category-list ul {
-	margin: 0;
-  	background: url(../images/tabs-bg.gif) repeat-x left top;
-  	height: 25px;
+    background: url(../images/tabs-bg.gif) repeat-x left top;
+    height: 25px;
+    padding-left: 1em;
 }
 #category-list li {
-  	line-height: 25px;
-	margin: 0;
-	padding: 0;
-	float: left;
+    line-height: 25px;
+    margin: 0;
+    float: left;
+    color: #1E6297;
 }
 #category-list li a {
-  	background: transparent url(../images/tabs-divider.gif) no-repeat right top;
-	color: #1e6297;
-  	padding: 5px 12px 6px 10px;
-	height: 25px;
-    text-decoration: none;
+    background: transparent url(../images/tabs-divider.gif) no-repeat right top;
+    color: #474220;
+    padding: 5px 12px 6px 10px;
+    height: 25px;
+}
+#category-list li a:hover {
+    color: #7E7327;
 }
 #category-list li.current a {
     background: transparent url(../images/tabs-over-bg.gif) no-repeat right top;
@@ -26,66 +28,73 @@
 
 #blocktype-list {
     background-color: #f5f9fc;
+    border-top: 0;
 }
 
 .blockinstance-header h4 {
-    padding: 0 .25em;
     border-bottom: 2px solid #d2d2d2;
 }
 .blockinstance-header h4 a {
     text-decoration: none;
 }
 
-.blockinstance-controls input {
-    color: #acc067;
-	background: none;
-	border: 0;
+.blockinstance-controls input,
+.blockinstance-controls input:hover {
+    background: none;
+    border: 0;
+    cursor: pointer;
 }
 
-.blockinstance-content {
-    padding: .25em .5em;
+
+.blockinstance-content thead th {
+    color: #186194;
+}
+
+/* styling the tabs for the artefact chooser */
+ul.artefactchooser-tabs {
+    line-height: 25px;
+    font-weight: bold;
+    font-size: 12px !important;
+    background: url(../images/tabs-bg.gif) repeat-x left top;
+    height: 25px;
+    padding-left: 1em !important;
+}
+ul.artefactchooser-tabs li {
+    line-height: 25px;
+    margin: 0 !important;
+    float: left;
+    color: #1E6297 !important;
+}
+ul.artefactchooser-tabs li a {
+    background: transparent url(../images/tabs-divider.gif) no-repeat right top;
+    color: #474220 !important;
+    padding: 5px 12px 6px 10px;
+    height: 25px;
+}
+ul.artefactchooser-tabs li a:hover {
+    color: #7E7327 !important;
+}
+ul.artefactchooser-tabs li.current a {
+    background: transparent url(../images/tabs-over-bg.gif) no-repeat right top;
+    color: #1E6297 !important;
+}
+
+#artefactchooser-body {
+    background: #F5F9FC;
 }
 
 #artefactchooser-body table,
 #artefactchooser-body table th,
 #artefactchooser-body table td {
-    padding: 0 .25em !important;
-}
-
-thead th {
-    color: #677a8a;
-	border-bottom: 1px solid #95a8b7 !important;
-}
-
-/* styling the tabs for the artefact chooser */
-ul.artefactchooser-tabs {
-  line-height: 25px;
-  font-weight: bold;
-  height: 25px;
-  font-size: 12px;
-  background: url(../images/tabs-bg.gif) repeat-x left top;
-}
-ul.artefactchooser-tabs li {
-  margin: 0 !important;
-  float: left;
-}
-ul.artefactchooser-tabs li a {
-  color: #1E6297;
-  padding: 5px 12px 5px 10px;
-  * padding: 6px 12px 6px 10px;
-  background: transparent url(../images/tabs-divider.gif) no-repeat right top;
-}
-ul.artefactchooser-tabs li.current a {
-  background: transparent url(../images/tabs-over-bg.gif) no-repeat right top;
-  color: #000;
-}
-
-#artefactchooser-body {
-    border: 1px solid #d1d1d1;
+    padding: .25em !important;
 }
 
 
 /* VIEWS */
 .wallpost {
-	background-color: #F8FBFD;
+    background-color: #F8FBFD;
+}
+
+#viewmenu a {
+    padding-left: 1em;
 }
