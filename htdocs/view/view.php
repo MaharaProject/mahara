@@ -65,7 +65,17 @@ $new = param_boolean('new');
 if (!can_view_view($viewid, null, $usertoken, $mnettoken)) {
     throw new AccessDeniedException(get_string('accessdenied', 'error'));
 }
+
+// Feedback list pagination requires limit/offset params
+$limit    = param_integer('limit', 10);
+$offset   = param_integer('offset', 0);
+
 $view = new View($viewid);
+
+// Create the "make feedback private form" now if it's been submitted
+if (param_variable('make_private_submit', null)) {
+    pieform(make_private_form(param_integer('feedback')));
+}
 
 $group = $view->get('group');
 
@@ -112,13 +122,8 @@ function releaseview_submit() {
   
 $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
 
-// Feedback 
-$javascript = <<<EOF
-feedbacklist.view = {$viewid};
-feedbacklist.statevars.push('view');
-feedbacklist.updateOnLoad();
-EOF;
-
+$feedback = $view->get_feedback($limit, $offset);
+build_feedback_html($feedback);
 
 $anonfeedback = !$USER->is_logged_in() && ($usertoken || $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid)));
 if ($USER->is_logged_in() || $anonfeedback) {
@@ -131,7 +136,7 @@ if ($USER->is_logged_in()) {
 $can_edit = $USER->can_edit_view($view) && !$submittedgroup && !$view->is_submitted();
 
 $smarty = smarty(
-    array('mahara', 'tablerenderer', 'feedbacklist', 'artefact/resume/resumeshowhide.js'),
+    array('paginator', 'feedbacklist', 'artefact/resume/resumeshowhide.js'),
     array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
     array(),
     array(
@@ -140,10 +145,18 @@ $smarty = smarty(
     )
 );
 
+$javascript = <<<EOF
+var viewid = {$viewid};
+addLoadEvent(function () {
+    paginator = {$feedback->pagination_js}
+});
+EOF;
+
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('new', $new);
 $smarty->assign('viewid', $viewid);
 $smarty->assign('viewtitle', $view->get('title'));
+$smarty->assign('feedback', $feedback);
 
 $owner = $view->get('owner');
 $smarty->assign('owner', $owner);

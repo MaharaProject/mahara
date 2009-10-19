@@ -17,7 +17,11 @@
     <div>{$releaseform}</div>
     <table id="feedbacktable" class="fullwidth table">
       <thead><tr><th>{str tag="feedback" section="view"}</th></tr></thead>
+      <tbody>
+        {$feedback->tablerows}
+      </tbody>
     </table>
+    {$feedback->pagination}
 	<div id="viewmenu">
         {include file="view/viewmenu.tpl"}
     </div>

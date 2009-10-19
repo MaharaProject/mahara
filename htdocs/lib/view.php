@@ -2525,6 +2525,49 @@ class View {
         return false;
     }
 
+    public function get_feedback($limit=10, $offset=0, $lastpage=false) {
+        global $USER;
+        $userid = $USER->get('id');
+        $viewid = $this->id;
+        $canedit = $USER->can_edit_view($this);
+        $count = count_records_sql('
+            SELECT COUNT(*)
+            FROM {view_feedback}
+            WHERE view = ' . $viewid . (!$canedit ? ' AND (public = 1 OR author = ' . $userid . ')' : ''));
+        if ($lastpage) { // Ignore $offset and just get the last page of feedback
+            $offset = (ceil($count / $limit) - 1) * $limit;
+        }
+        $feedback = get_records_sql_array('
+            SELECT
+                f.id, f.author, f.authorname, f.ctime, f.message, f.public, f.attachment, a.title, af.size
+            FROM {view_feedback} f
+            LEFT OUTER JOIN {artefact} a ON f.attachment = a.id
+            LEFT OUTER JOIN {artefact_file_files} af ON af.artefact = a.id
+            WHERE view = ' . $viewid . (!$canedit ? ' AND (f.public = 1 OR f.author = ' . $userid . ')' : '') . '
+            ORDER BY id', '', $offset, $limit);
+        if ($feedback) {
+            foreach ($feedback as &$f) {
+                if ($f->public && $canedit) {
+                    $f->pubmessage = get_string('thisfeedbackispublic', 'view');
+                    $f->makeprivateform = pieform(make_private_form($f->id));
+                }
+                else if (!$f->public) {
+                    $f->pubmessage = get_string('thisfeedbackisprivate', 'view');
+                }
+            }
+        }
+        return (object) array(
+            'count'    => $count,
+            'limit'    => $limit,
+            'offset'   => $offset,
+            'lastpage' => $lastpage,
+            'data'     => $feedback ? $feedback : array(),
+            'view'     => $viewid,
+            'canedit'  => $canedit,
+            'isowner'  => $userid && $userid == $this->get('owner'),
+        );
+    }
+
 }
 
 
@@ -2746,15 +2789,20 @@ function add_feedback_form_submit(Pieform $form, $values) {
 
     db_commit();
 
+    $newlist = null;
     if ($artefact) {
         $goto = get_config('wwwroot') . 'view/artefact.php?artefact=' . $artefact->get('id') . '&view='.$view->get('id');
+        $newlist = $artefact->get_feedback(10, null, $view->get('id'), true);
     }
     else {
         $goto = get_config('wwwroot') . 'view/view.php?id='.$view->get('id');
+        $newlist = $view->get_feedback(10, null, true);
     }
+    build_feedback_html($newlist);
     $form->reply(PIEFORM_OK, array(
         'message' => get_string('feedbacksubmitted', 'view'),
         'goto' => $goto,
+        'data' => $newlist,
     ));
 }
 
@@ -2763,6 +2811,34 @@ function add_feedback_form_cancel_submit(Pieform $form) {
     $form->reply(PIEFORM_OK, array(
         'goto' => '/view/view.php?id=' . $view->get('id'),
     ));
+}
+
+function make_private_form($feedbackid) {
+    return array(
+        'name'            => 'make_private',
+        'renderer'        => 'oneline',
+        'class'           => 'makeprivate',
+        'elements'        => array(
+            'feedback' => array('type' => 'hidden', 'value' => $feedbackid),
+            'submit'   => array(
+                'type' => 'submit',
+                'name' => 'make_private_submit',
+                'value' => get_string('makeprivate', 'view'),
+            ),
+        ),
+    );
+}
+
+function make_private_submit(Pieform $form, $values) {
+    global $SESSION, $view, $artefact;
+    if (isset($artefact) && $artefact instanceof ArtefactType) {
+        update_record('artefact_feedback', (object) array('public' => 0, 'id' => (int) $values['feedback']));
+        $SESSION->add_ok_msg(get_string('feedbackchangedtoprivate', 'view'));
+        redirect(get_config('wwwroot') . 'view/artefact.php?view=' . $view->get('id') . '&artefact=' . $artefact->get('id'));
+    }
+    update_record('view_feedback', (object) array('public' => 0, 'id' => (int) $values['feedback']));
+    $SESSION->add_ok_msg(get_string('feedbackchangedtoprivate', 'view'));
+    redirect(get_config('wwwroot') . 'view/view.php?id=' . $view->get('id'));
 }
 
 function objection_form() {

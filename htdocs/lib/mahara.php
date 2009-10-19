@@ -2216,4 +2216,53 @@ function build_portfolio_search_html(&$data) {
     $data->pagination_js = $pagination['javascript'];
 }
 
+// When feedback becomes an artefact type, move this into the feedback artefact plugin
+function build_feedback_html(&$data) {
+    foreach ($data->data as &$item) {
+        $item->date    = format_date(strtotime($item->ctime), 'strftimedatetime');
+        $item->message = clean_html(parse_bbcode($item->message));
+        $item->name    = $item->author ? display_name($item->author) : $item->authorname;
+        if (!empty($item->attachment)) {
+            $item->attachid    = $item->attachment;
+            $item->attachtitle = $item->title;
+            $item->attachsize  = display_size($item->size);
+            if ($data->isowner) {
+                $item->attachmessage = get_string('feedbackattachmessage', 'view', get_string('feedbackattachdirname', 'view'));
+            }
+        }
+    }
+    $extradata = array('view' => $data->view);
+    if (!empty($data->artefact)) {
+        $data->baseurl = get_config('wwwroot') . 'view/artefact.php?view=' . $data->view . '&artefact=' . $data->artefact;
+        $data->jsonscript = 'view/artefactfeedback.json.php';
+        $extradata['artefact'] = $data->artefact;
+    }
+    else {
+        $data->baseurl = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
+        $data->jsonscript = 'view/viewfeedback.json.php';
+    }
+    $smarty = smarty_core();
+    $smarty->assign_by_ref('data', $data->data);
+    $smarty->assign('canedit', $data->canedit);
+    $smarty->assign('baseurl', $data->baseurl);
+    $data->tablerows = $smarty->fetch('view/feedbacklist.tpl');
+    $pagination = build_pagination(array(
+        'id' => 'feedback_pagination',
+        'class' => 'center',
+        'url' => $data->baseurl,
+        'jsonscript' => $data->jsonscript,
+        'datatable' => 'feedbacktable',
+        'count' => $data->count,
+        'limit' => $data->limit,
+        'offset' => $data->offset,
+        'lastpage' => $data->lastpage,
+        'resultcounttextsingular' => get_string('comment', 'view'),
+        'resultcounttextplural' => get_string('comments', 'view'),
+        'extradata' => $extradata,
+    ));
+    $data->pagination = $pagination['html'];
+    $data->pagination_js = $pagination['javascript'];
+}
+
+
 ?>

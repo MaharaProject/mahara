@@ -797,16 +797,6 @@ function jsstrings() {
                 'cancel',
             ),
         ),
-        'feedbacklist' => array(
-            'view' => array(
-                'feedbackattachmessage',
-                'makeprivate',
-                'thisfeedbackisprivate',
-                'thisfeedbackispublic',
-                'attachment',
-                'nopublicfeedback',
-            ),
-        ),
     );
 }
 
@@ -2736,6 +2726,9 @@ function build_pagination($params) {
         $page = $params['offset'] / $params['limit'];
 
         $last = $pages - 1;
+        if (!empty($params['lastpage'])) {
+            $page = $last;
+        }
         $next = min($last, $page + 1);
         $prev = max(0, $page - 1);
 

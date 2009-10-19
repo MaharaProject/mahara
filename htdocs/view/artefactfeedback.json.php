@@ -26,36 +26,27 @@
  */
 
 define('INTERNAL', 1);
+define('PUBLIC', 1);
 define('JSON', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
+$extradata = json_decode(param_variable('extradata'));
 
-json_headers();
-
-$data = new StdClass;
-
-$data->view       = param_integer('view');
-$data->artefact   = param_integer('artefact', null);
-$data->message    = param_variable('message');
-$data->public     = param_boolean('public') ? 1 : 0;
-$data->attachment = param_integer('attachment', null);
-$data->author     = $USER->get('id');
-$data->ctime      = db_format_timestamp(time());
-
-if ($data->artefact) {
-    $table = 'artefact_feedback';
+if (!can_view_view($extradata->view)) {
+    json_reply('local', get_string('noaccesstoview', 'view'));
 }
-else {
-    $table = 'view_feedback';
+if (!artefact_in_view($extradata->artefact, $extradata->view)) {
+    json_reply('local', get_string('accessdenied', 'error'));
 }
 
-if (!insert_record($table, $data, 'id', true)) {
-    json_reply('local', get_string('addfeedbackfailed', 'view'));
-}
+$limit    = param_integer('limit', 10);
+$offset   = param_integer('offset', 0);
 
-require_once('activity.php');
-activity_occurred('feedback', $data);
+require_once(get_config('docroot') . 'artefact/lib.php');
+$artefact = artefact_instance_from_id($extradata->artefact);
 
-json_reply(false,get_string('feedbacksubmitted', 'view'));
+$data = $artefact->get_feedback($limit, $offset, $extradata->view);
+build_feedback_html($data);
+json_reply(false, array('data' => $data));
 
 ?>

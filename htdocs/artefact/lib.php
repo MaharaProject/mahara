@@ -1050,6 +1050,54 @@ abstract class ArtefactType {
     public static function attached_id_list($attachmentid) {
         return get_column('artefact_attachment', 'artefact', 'attachment', $attachmentid);
     }
+
+    public function get_feedback($limit=10, $offset=0, $viewid, $lastpage=false) {
+        global $USER;
+        $userid = $USER->get('id');
+        $artefactid = $this->id;
+        $canedit = $USER->can_edit_artefact($this);
+
+        $count = count_records_sql('
+            SELECT COUNT(*)
+            FROM {artefact_feedback}
+            WHERE view = ' . $viewid . ' AND artefact = ' . $artefactid
+                . (!$canedit ? ' AND (public = 1 OR author = ' . $userid . ')' : ''));
+        if ($lastpage) { // Ignore $offset and just get the last page of feedback
+            $offset = (ceil($count / $limit) - 1) * $limit;
+        }
+        $feedback = get_records_sql_array('
+            SELECT
+                id, author, authorname, ctime, message, public
+            FROM {artefact_feedback}
+            WHERE view = ' . $viewid . ' AND artefact = ' . $artefactid
+                . (!$canedit ? ' AND (f.public = 1 OR f.author = ' . $userid . ')' : '') . '
+            ORDER BY id', '', $offset, $limit);
+        if ($feedback) {
+            require_once(get_config('libroot') . 'view.php');
+            require_once(get_config('libroot') . 'pieforms/pieform.php');
+            foreach ($feedback as &$f) {
+                if ($f->public && $canedit) {
+                    $f->pubmessage = get_string('thisfeedbackispublic', 'view');
+                    $f->makeprivateform = pieform(make_private_form($f->id));
+                }
+                else if (!$f->public) {
+                    $f->pubmessage = get_string('thisfeedbackisprivate', 'view');
+                }
+            }
+        }
+        return (object) array(
+            'count'    => $count,
+            'limit'    => $limit,
+            'offset'   => $offset,
+            'lastpage' => $lastpage,
+            'data'     => $feedback ? $feedback : array(),
+            'view'     => $viewid,
+            'artefact' => $artefactid,
+            'canedit'  => $canedit,
+            'isowner'  => $userid && $userid == $this->get('owner'),
+        );
+    }
+
 }
 
 /**
