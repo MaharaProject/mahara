@@ -1,7 +1,7 @@
 <div id="blocktype_externalfeed_feed">
     {if $feedimage}<div class="fr">{$feedimage}</div>{/if}
     <div id="blocktype_externalfeed_title">
-    <a href="{$url|escape}"><img src="{theme_url filename="images/rss.png"}"></a>
+    <a href="{$url|escape}"><img src="{theme_url filename="images/rss.gif"}"></a>
     {if $link}<a href="{$link|escape}">{/if}
     {$title|escape}
     {if $link}</a>{/if}
