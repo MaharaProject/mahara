@@ -643,7 +643,7 @@ class LeapExportElement {
     *
     * @return string
     */
-    public function get_view_relationship(View $view) {
+    public function get_view_relationship($viewid) {
         return 'is_part_of';
     }
 
