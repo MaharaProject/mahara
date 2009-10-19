@@ -6,8 +6,7 @@
 {if $SITECLOSED}<div class="sitemessage center">{$SITECLOSED}</div>{/if}
 <div id="container">
     <div id="loading-box"></div>
-    <div id="top-wrapper">
-        <h1 id="site-logo"><a href="{$WWWROOT}"><img src="{theme_url filename='images/site-logo.png'}" alt="{$sitename|escape}"></a></h1>
+    <div id="top-wrapper"><h1 id="site-logo"><a href="{$WWWROOT}"><img src="{theme_url filename='images/site-logo.png'}" alt="{$sitename|escape}"></a></h1>
 {include file="header/topright.tpl"}
 {include file="header/navigation.tpl"}
 		<div class="cb"></div>
