@@ -421,14 +421,14 @@ class LeapExportElementResumeCompositeSibling extends LeapExportElementResumeCom
     protected $leaptype;
     protected $sibling;
 
-    public function __construct(LeapExporter $exporter,
-        ArtefactTypeResumeComposite $parentartefact,
+    public function __construct(ArtefactTypeResumeComposite $parentartefact,
+        PluginExportLeap $exporter,
         LeapExportElementResumeCompositeChild $sibling, $record, $leaptype, $siblingrel) {
 
         $this->leaptype   = $leaptype;
         $this->siblingrel = $siblingrel;
         $this->sibling    = $sibling;
-        parent::__construct($exporter, $parentartefact, $record);
+        parent::__construct($parentartefact, $exporter, $record);
     }
 
     public function get_siblings() {
