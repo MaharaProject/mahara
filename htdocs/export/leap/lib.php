@@ -462,6 +462,15 @@ class LeapExportElement {
     * assign the smarty vars used in this template
     */
     public function assign_smarty_vars() {
+        if (!($this->artefact instanceof ArtefactType)) {
+            // If you're seeing this error, this means you have subclassed
+            // LeapExportElement and are using it to represent something more
+            // than just one artefact. In this case, you must override this
+            // method.
+            throw new ImportException("LeapExportElement::assign_smarty_vars was called with null artefact. "
+                . "If you are using LeapExportElement as a dummy class for exporting more than one artefact, "
+                . "you must override assign_smarty_vars yourself.");
+        }
         $this->smarty->assign('artefacttype', $this->artefact->get('artefacttype'));
         $this->smarty->assign('artefactplugin', $this->artefact->get_plugin_name());
         $this->smarty->assign('title', $this->artefact->get('title'));
