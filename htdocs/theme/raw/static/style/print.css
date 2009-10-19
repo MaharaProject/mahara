@@ -1,10 +1,12 @@
 body {
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 11pt;
+	font-family: "Times New Roman", Times, serif;
+	font-size: 12pt;
 	line-height: 16pt;
 	background: none;
 	color: #000000;
 	width: 100%;
+	margin: 0;
+	padding: 0;
 }
 
 .hiddenStructure {
@@ -67,8 +69,10 @@ h6 {
 .s,
 .description,
 td.description {
-	font-size: 9pt;
+	font-size: 6pt;
     font-weight: normal;
+	line-height: 10pt;
+    color: #000;
 }
 acronym {
     color: #000;
@@ -100,8 +104,8 @@ a:link,
 a:active,
 a:visited,
 a:hover {
-    color: #000;
-	text-decoration: none;
+    color: #0033ff;
+	text-decoration: underline;
 }
 
 
@@ -133,12 +137,13 @@ ul.in-page-tabs li a.current-tab {
 	display: inherit;
 	float: left;
 	padding: 0;
-	font-size: 14pt;
+	font-size: 18pt;
 	color: #000;
 }
 .subpage {
 	border: none;
 	padding: 0;
+	clear: both;
 }
 
 #top-pane,
@@ -225,7 +230,21 @@ label {
 
 #site-logo {
 	float: none;
+	padding: 0;
+	margin-bottom: 20pt;
 }
+.viewheader {
+	padding: 0;
+	margin-bottom: 20pt;
+}
+.viewheader .small-logo img {
+	margin: 0;
+	padding: 0;
+}
+.viewheader .center {
+	text-align: right;
+}
+
 /* search box in header */
 #usf,
 #main-nav,
@@ -242,7 +261,12 @@ div.sidebar,
 * html .content {
 	float: none;
 }
-
+#main-column {
+	padding: 0;
+}
+#containerX .main-column {
+	padding: 0;
+}
 .maincontent ul {
 	page-break-before: avoid; 
 }
@@ -256,12 +280,6 @@ div.sidebar,
 }
 
 
-.description { 
-	font-size: 9pt; 
-	font-style: italic; 
-	color: #6e6e6e;
-}
-
 .error { 
 	color: #6e6e6e; 
 }
@@ -271,6 +289,9 @@ div.sidebar,
 	font-size: 9pt; 
 }
 
+.column {
+	padding: 0 1% 0 0;
+}
 
 
 /* MAIN CONTENT */
@@ -332,8 +353,8 @@ legend a:active {
 /* Fieldset */
 
 /* Alternative row background colours */
-.r0,
-.r1 {
+.r0, .r0 td,
+.r1, .r1 td {
     background: none;
 }
 
