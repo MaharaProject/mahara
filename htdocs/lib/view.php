@@ -2295,7 +2295,7 @@ class View {
      */
     public static function get_submitted_views($groupid) {
         $viewdata = get_records_sql_assoc('
-            SELECT id, title, description, owner, ownerformat
+            SELECT id, title, description, owner, ownerformat, "group", institution
             FROM {view}
             WHERE submittedgroup = ?
             ORDER BY title, id',
@@ -2321,7 +2321,7 @@ class View {
                     $owners[$v->owner] = $v->owner;
                 } else if ($v->group && !isset($groups[$v->group])) {
                     $groups[$v->group] = $v->group;
-                } else if ($v->institution && !isset($institutions[$v->institution])) {
+                } else if (strlen($v->institution) && !isset($institutions[$v->institution])) {
                     $institutions[$v->institution] = $v->institution;
                 }
             }
