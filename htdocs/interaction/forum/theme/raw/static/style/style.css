@@ -20,20 +20,7 @@
 }
 
 a.btn-addtopic {
-	font-weight: bold;
 	margin: 0;
-}
-a.btn-edittopic {
-	font-weight: bold;
-	margin: 0 1em 0 0;
-}
-a.btn-deletetopic {
-	font-weight: bold;
-	margin: 0 1em 0 0;
-}
-
-#subscribe_forum_submit {
-	font-family: Arial, Helvetica, sans-serif;
 }
 
 .btn-subscribe input.submit {
@@ -63,12 +50,6 @@ a.btn-deletetopic {
 }
 #viewforum h3 {
 	font-size: 1.4em;
-}
-#viewforum .rbuttons .btn-add {
-	font-weight: bold;
-}
-.rbuttons #subscribe_topic_submit {
-	font-family: Arial, Helvetica, sans-serif;
 }
 
 .btn-spacer a {
@@ -158,4 +139,7 @@ a.btn-deletetopic {
 }
 .postreply {
 	padding: 0 0 0 1em;
+}
+#forumbtns {
+	height: 3em;
 }
