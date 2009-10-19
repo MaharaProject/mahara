@@ -406,6 +406,7 @@ function error ($code, $message, $file, $line, $vars) {
     static $error_lookup = array(
         E_NOTICE => 'Notice',
         E_WARNING => 'Warning',
+        E_RECOVERABLE_ERROR => 'Warning',
         // Not sure if these ever get handled here
         E_ERROR => 'Error',
         // These three are not used by this application but may be used by third parties
