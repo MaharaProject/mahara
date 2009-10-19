@@ -41,7 +41,7 @@ class LeapExportElementInternal extends LeapExportElement {
 
     protected $artefacts = array();
 
-    public function __construct(LeapExporter $exporter, array $artefacts) {
+    public function __construct(PluginExportLeap $exporter, array $artefacts) {
         parent::__construct(null, $exporter);
         $this->artefacts = $artefacts;
         $this->assign_smarty_vars();

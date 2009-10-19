@@ -441,9 +441,9 @@ class LeapExportElement {
     * constructor.
     *
     * @param ArtefactType $artefact artefact this element represents
-    * @param LeapExporter $exporter the exporter object
+    * @param PluginExportLeap $exporter the exporter object
     */
-    public function __construct(ArtefactType $artefact, LeapExporter $exporter) {
+    public function __construct(ArtefactType $artefact=null, PluginExportLeap $exporter=null) {
         $this->artefact = $artefact;
         $this->exporter = $exporter;
         $this->smarty   = smarty_core();
@@ -727,7 +727,7 @@ abstract class LeapExportArtefactPlugin {
     protected $exporter;
     protected $artefacts;
 
-    public function __construct(LeapExporter $exporter, array $artefacts) {
+    public function __construct(PluginExportLeap $exporter, array $artefacts) {
         $this->exporter = $exporter;
         $this->artefacts = $artefacts;
     }
@@ -743,9 +743,6 @@ abstract class LeapExportArtefactPlugin {
 
     /**
     * export xml for the subclass.
-    *
-    * @param LeapExporter $exporter the exporter object. Can be used to fetch smarty object.
-    * @param array $artefacts the array of selected artefacts that belong to this plugin
     *
     * @return XML string
     */

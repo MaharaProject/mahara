@@ -45,7 +45,7 @@ class LeapExportElementContactinformation extends LeapExportElement {
  * export plugin to be exported as persondata
  */
 class LeapExportElementPersonalinformation extends LeapExportElement {
-    public function __construct(ArtefactType $artefact, LeapExporter $exporter) {
+    public function __construct(ArtefactType $artefact, PluginExportLeap $exporter) {
         parent::__construct($artefact, $exporter);
         $c = $this->artefact->get('composites');
         $persondata = array();
@@ -129,7 +129,7 @@ class LeapExportElementResumeComposite extends LeapExportElement {
     protected $composites;
     protected $children = array();
 
-    public function __construct(ArtefactType $artefact, LeapExporter $exporter) {
+    public function __construct(ArtefactType $artefact, PluginExportLeap $exporter) {
         parent::__construct($artefact, $exporter);
         $this->set_composites();
     }
@@ -202,7 +202,7 @@ abstract class LeapExportElementResumeCompositeChild extends LeapExportElement {
     protected $originalrecord;
     protected $parentartefact;
 
-    public function __construct(ArtefactTypeResumeComposite $parentartefact, LeapExporter $exporter, $child) {
+    public function __construct(ArtefactTypeResumeComposite $parentartefact, PluginExportLeap $exporter, $child) {
         $this->originalrecord = $child;
         $this->entrydata = $this->record_to_entrydata($child);
         $this->parentartefact = $parentartefact;
