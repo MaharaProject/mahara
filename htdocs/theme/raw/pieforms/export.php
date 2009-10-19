@@ -3,14 +3,14 @@
 function export_form_cell_html($element) {
     global $THEME;
     $strclicktopreview = get_string('clicktopreview', 'export');
-    $previewimg = $THEME->get_url('images/icon-display.png');
+    $previewimg = $THEME->get_url('images/icon-display.gif');
     $strpreview = get_string('Preview');
     $element['description'] = clean_html($element['description']);
 return <<<EOF
 <td>
 {$element['html']} {$element['labelhtml']}
 <div>{$element['description']}</div>
-<div><a href="{$element['viewlink']}" class="viewlink nojs-hidden-inline" target="_blank">{$strclicktopreview}</a></div>
+<div><a href="{$element['viewlink']}" class="viewlink nojs-hidden-inline" target="_blank"><img src="{$previewimg}" alt=""> {$strclicktopreview}</a></div>
 </td>
 EOF;
 }
