@@ -41,48 +41,54 @@ h6 {
 
 /* Tables */
 .main-column thead th {
-    color: #677a8a;
-	border-bottom: 1px solid #95a8b7 !important;
+    color: #186194;
 }
 .main-column tbody th {
-    color: #677a8a;
+    color: #186194;
 	border-bottom: none;
 }
 .main-column table h3 a,
-.listing div h3 a {
+.main-column table h3 a:visited,
+.main-column table h3 a:link,
+.listing div h3 a,
+.listing div h3 a:visited,
+.listing div h3 a:link {
 	color: #1e6297 !important;
 	text-decoration: underline;
 }
-/******* TH in tbody that should appear like it's in thead with a line under and left aligned *******/
-table.nohead th {
-	border-bottom: 1px solid #95a8b7;
+.main-column table h3 a:hover,
+.listing div h3 a:hover {
+	color: #0a77cb !important;
 }
+
 .main-column tfoot td {
-	border-top: 1px solid #95a8b7 !important;
+	padding: .5em 0;
 }
 /********* Tables that require a bottom border to enclose elements *********/
 
+/********* Tables that need the line taken out ********/
+
+
 /* Alternative row background colours */
-.r0 {
-    background-color: #f8faf0;
+.r0,
+.r0 td {
+    background-color: #fafbf7;
 }
-.r1 {
-    background-color: #fafbf5;
+.r1,
+.r1 td {
+    background-color: #f3f7ec;
 }
 tr.folder td {
-	background-color: #eaf2d2 !important;
+	background-color: #f4f7f9 !important;
 }
 
 /* Pagination */
-div.pagination span {
+div.pagination span a {
 	background-color: #E7EFC5;
 }
 
 
 /* Forms */
-label {
-    color: #677a8a;
-}
 /* override required colour */
 .required label.plain, .required.radio td label, .required.emaillist td label {
 	color: #474220;
@@ -94,12 +100,6 @@ select {
 /* Legend */
 legend {
 	color: #1e6297;
-}
-legend a,
-legend a:link,
-legend a:visited,
-legend a:active {
-	color: #1e6297 !important;
 }
 
 /* Fieldset */
@@ -118,65 +118,85 @@ input[type=file] {
     border: 1px solid #D1D1D1;
 }
 
-#usf_query_container input {
-	font-size: .9em;
-	padding: .25em;
-}
 
-/* Buttons */
-/* Default light buttons to the big ones 
+/****************************** Buttons ****************************/
+/** input buttons **/
 input.submit,
+input.cancel,
+button,
 input.button,
-button,*/
-div.rbuttons a.btn {
+input.buttondk,
+input.select,
+input#files_filebrowser_edit_artefact {
 	border-color: #d5ed8a #496000 #496000 #d5ed8a;
-    background-color: #92b328;
-	border-style: solid;
-	border-width: 1px;
-    color: #FFF;
-	cursor: pointer;
+	background: #6e8e00;
+	color: #FFF;
 }
-div.rbuttons a.btn:hover {
+/** link buttons **/
+.rbuttons a.btn,
+#sb-profile .controls a {
+	border-color: #d5ed8a #496000 #496000 #d5ed8a;
+	background: #6e8e00;
+	color: #FFF;
+}
+/** hover for buttons **/
+input.submit:hover,
+input.cancel:hover,
+button:hover,
+input.button:hover,
+input.buttondk:hover,
+input.select:hover,
+input#files_filebrowser_edit_artefact:hover,
+.rbuttons a.btn:hover,
+#sb-profile .controls a:hover {
+	background: #84aa00;
 	text-decoration: none;
+}
+/** Depress for buttons **/
+input.submit:active,
+input.cancel:active,
+button:active,
+input.button:active,
+input.buttondk:active,
+input.select:active,
+input#files_filebrowser_edit_artefact:active,
+.rbuttons a.btn:active,
+#sb-profile .controls a:active {
+	border-color: #496000 #d5ed8a #d5ed8a #496000;
+	background: #84aa00;
+	color: #FFF;
 }
 
-.btn-leavegroup {
-    background: url(../images/icon-delete.gif) no-repeat left center;
+.lbuttons a {
+	padding-left: 1em;
 }
-.btn-del, 
-.btn-del input.submit {
+
+
+.btn-leavegroup,
+a.btn-del,
+a#btn-delete {
     background: transparent url(../images/icon-delete.gif) no-repeat left center;
-    color: #ca0000;
-}
-#myviews .rbuttons .btn-del {
-	padding-left: 10px;
-	text-decoration: none;
-	font-size: .9em;
-	border: none;
+    color: #ca0000 !important;
+	padding-left: 1em;
 }
 #btn-request, 
 a.btn-add, 
-a.btn-req, 
-div.btn-add input.submit, 
-input.submit.btn-add, 
-button.btn-add {
+a.btn-req {
 	background: url(../images/icon-add.gif) no-repeat left center;
-	color: #376b19;
+	padding-left: 1em;
 }
 
-div.btn-bold input.submit {
-    font-weight: bold;
-}
-a.btn-msg, div.btn-msg input.submit, #btn-sendmessage {
+a.btn-msg, #btn-sendmessage {
 	background: url(../images/icon-mail.gif) no-repeat left center;
+	padding-left: 1em;
 }
-a.btn-edit, div.btn-edit input.submit, input.submit.btn-edit,
-input.edit {
+a.btn-edit {
 	background: url(../images/icon-edit.gif) no-repeat left center;
-	color: #7b6c0a;
+	padding-left: 1em;
 }
 .btn-pending {
-	background: url(../images/icon-pending.gif) no-repeat left 3px;
+	background: url(../images/icon-pending.gif) no-repeat left center;
+	padding-left: 1em;
 }
 .btn-reply, #add_feedback_link {
 	background: url(../images/icon-reply.gif) no-repeat left 4px;
@@ -192,7 +212,7 @@ input.edit {
 }
 .btn-settings {
 	background: url(../images/icon-settings.gif) no-repeat left 4px;
-	color: #2555a2;
+	padding-left: 1em;
 }
 input#addfriend_add,
 input#myfriends_addfriend_add {
@@ -202,74 +222,34 @@ input#myfriends_addfriend_add {
 }
 #togglepublic_submit,
 .btn-loginas {
-	background: transparent url(../images/icon-login.gif) no-repeat center left;
-	padding-left: 10px !important;
-	color: #7b6c0a;
+	background: url(../images/icon-login.gif) no-repeat center left;
+	padding-left: 1em !important;
+	color: #7f9d16;
+	border: 0;
 }
-/* Default dark buttons to the big ones 
-input.cancel,
-input.cancelbackcreate,
-button.cancel,
-input.buttondk {
-    background-color: #7d9728;
-	border-color: #bdda5e #4e6307 #4e6307 #bdda5e;
-	border-style: solid;
-	border-width: 1px;
-    color: #FFF;
-	cursor: pointer;
-}*/
-/* Delete red button 
-#edituser_delete_submit {
-    background-color: #ca0000;
-	border-color: #D9DFEA #b2b2b2 #b2b2b2 #D9DFEA !important;
-	border-style: solid;
-	border-width: 1px;
-    color: #FFF !important;
-    padding: .25em .5em;
-	* padding: 0.1em 0;
-}*/
-/* Icon links 
-div.btn-del input.submit, input.submit.btn-del,
-div.btn-msg input.submit,
-div.btn-add input.submit, input.submit.btn-add,
-div.btn-edit input.submit, input.submit.btn-edit,
-a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup, a.btn-link {
-    color: #7f9d16 !important;
-}*/
-/* Links from raw theme that should look like buttons 
-a.btn-link {
-	border-color: #d5ed8a #496000 #496000 #d5ed8a;
-    background-color: #92b328;
-	border-style: solid;
-	border-width: 1px;
-    margin: 0 .25em 0 0;
-    color: #FFF !important;
-    padding: .2em .3em .1em;
-    * padding: 0;
-    font-size: 1.1em;
-}
-a.btn-link:hover {
-    text-decoration: none;
-}*/
 
 /* Search buttons */
 #usf_submit,
 #dosearch,
-#selfsearch button /*,
+#selfsearch button ,
 .query-button,
 #query-button,
 #moderator_search_btn,
 #search_submit,
 #search_search,
 #selfsearch button,
-*/ {
+#users_search_btn {
 	background: url(../images/btn_search_off.gif) no-repeat !important;
-	border: none;
+	border: 0;
 	width: 25px;
 	height: 24px;
-	text-indent: -9999px;
-	color: transparent !important;
+	text-indent: -999px;
+	font-size: 1%;
+	color: #94ba18;
 	cursor: pointer;
+	padding: 10px;
+	vertical-align: middle;
+	* vertical-align: inherit;
 }
 
 
@@ -296,34 +276,34 @@ a.btn-link:hover {
     display: inline;
 }
 #usf {
-	padding-top: 2.5em;
+	padding: 25px 1em 0 0;
+}
+#usf_query_container input {
+	font-size: .9em;
+	padding: .25em;
 }
 
 /**************** TOP NAVIGATION ****************/
 #main-nav {
-	height: 25px;
 }
 #main-nav ul {
-    padding: 0;
-	height: 25px;
-	line-height: 25px;
 }
 #main-nav li {
     color: #e6c560;
-    text-decoration: none;
-	font-size: 12px;
 }
 #main-nav li a,
 #main-nav li a:link,
 #main-nav li a:visited,
 #main-nav li a:active {
-	padding: 5px 10px 5px 12px;
-	background: url(../images/menu-dividerbg.gif) no-repeat left;
+	background: url(../images/menu-dividerbg.gif) no-repeat left top;
     color: #FFF;
+	font-size: 12px;
 	height: 25px;
-}
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-	#main-nav li a, #main-nav li a:link, #main-nav li a:visited, #main-nav li a:active { padding: 5px 10px 6px 12px; }
+	line-height: 25px;
+    text-decoration: none;
+	display: block;
+	float: left;
+	padding: 0 10px 0 12px;
 }
 #main-nav li a:hover {
     color: #e4ffb4;
@@ -340,16 +320,16 @@ a.btn-link:hover {
 
 /**************** SUB NAVIGATION ****************/
 #sub-nav {
+	clear: both;
     font-size: 12px;
     font-weight: bold;
-    background: url(../images/submenu-bg.gif) repeat-x;
+    background: url(../images/submenu-bg.gif) repeat-x left top;
     height: 25px;
 	line-height: 25px;
 	border: none;
 }
 #sub-nav ul {
     padding: 0 0 0 .5em;
-    height: 25px;
 	background: none;
 }
 #sub-nav li a,
@@ -359,35 +339,17 @@ a.btn-link:hover {
     color: #474220;
 	height: 25px;
     padding: 5px 12px 5px 10px;
-	background: url(../images/submenu-divider.gif) no-repeat top right;
+	background: url(../images/submenu-divider.gif) no-repeat right top;
 }
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-#sub-nav li a, 
-#sub-nav li a:link, 
-#sub-nav li a:visited, 
-#sub-nav li a:active { 
-	padding: 6px 12px 6px 10px; 
-}
-}
-
 #sub-nav li a:hover {
     color: #7e7327;
     text-decoration: none;
 }
-
 #sub-nav li.selected a:link,
 #sub-nav li.selected a:visited,
 #sub-nav li.selected a:active {
-    padding: 5px 12px 5px 10px;
-	background: url(../images/submenu-over-bg.gif) no-repeat top right;
+	background: url(../images/submenu-over-bg.gif) no-repeat right top;
     color: #4c711d;
-}
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-#sub-nav li.selected a:link, 
-#sub-nav li.selected a:visited, 
-#sub-nav li.selected a:active { 
-	padding: 5px 12px 6px 10px;
-}
 }
 
 
@@ -397,6 +359,7 @@ ul.in-page-tabs {
   height: 25px;
   font-size: 12px;
   background: url(../images/tabs-bg.gif) repeat-x left top;
+  display: block;
 }
 ul.in-page-tabs li {
   float: left;
@@ -412,7 +375,6 @@ ul.in-page-tabs li a.current-tab {
 ul.in-page-tabs li a {
   color: #1E6297;
   padding: 5px 12px 6px 10px;
-  * padding: 6px 12px 6px 10px;
   text-decoration: none;
   background: transparent url(../images/tabs-divider.gif) no-repeat right top;
 }
@@ -420,16 +382,13 @@ ul.in-page-tabs li a:hover {
   color: #7E7327;
 }
 
-
-/**************** MAIN CONTENT START ********
-.message {
-    background-color: #f4f7f9;
-    border: 1px solid #e0e8ee;
+.fileupload {
+	background: #F5F9FC !important;
+	border: 1px solid #95A8B7 !important;
 }
-.message a {
-    color: #819F18;
-}*/
 
+
+/**************** MAIN CONTENT START *********/
 .main-column {
 	background: url(../images/dot-vert.gif) repeat-y top right;
 }
@@ -442,10 +401,13 @@ td.sidebar {
 div.sideblock {
     background: url(../images/sidebar-bg.gif) repeat-x top;
 }
+div.sideblock h3 {
+	margin: 0 0 .5em 0;
+}
 
 /* side profile */
 #sb-profile ul a {
-	color: #95a8b6;
+	color: #66879f;
 }
 #sb-profile ul ul a {
 	color: #7f9d16;
@@ -453,17 +415,6 @@ div.sideblock {
 #sb-profile li#unreadmessages a.btn-msg,
 #sb-profile li#pendingfriends a {
 	color: #3986c3 !important;
-}
-#sb-profile .controls a {
-	background: #92B328;
-	border-color: #D5ED8A #496000 #496000 #D5ED8A;
-	border-style: solid;
-	border-width: 1px;
-	color: #fff;
-}
-#sb-profile .controls a:hover {
-	text-decoration: none;
-	background: #92B328;
 }
 
 
@@ -485,14 +436,14 @@ div.sideblock {
 	color: #677A8A;
 }
 
-/* Side Search 
+/* Side Search */
 .sidebar #selfsearch input {
 	width: 170px;
     padding: .25em .5em;
     font-size: 1em;
     color: #767676;
 	background-color: #ecf3d4;
-}*/
+}
 /**************** END RIGHT SIDEBAR *********/
 
 
@@ -513,53 +464,33 @@ div.sideblock {
 #footer-wrap {
     background-color: #939393;
 	border: 0;
-    color: #bdb582;
+    color: #c9c9c9;
 }
 #footernav {
-    color: #bdb582;
+    color: #c9c9c9;
 }
 #footer-wrap a {
     color: #FFF;
 }
+#version {
+	color: #c9c9c9;
+}
 
 /****************************** PAGE BY PAGE STYLES **********************************/
-
-/* EXPORT 
-div.progress-bar {
-    background-color: #7d9728;
-}*/
-
-/* GROUPS > MY FRIENDS 
-#friendslist ul.viewlist li a {
-    color: #3986c3;
-	font-weight: bold;
+.subpage {
+	display: block;
+	border-top: 0;
 }
-.group-info {
-	background-color: #f4f7f9;
-	border: 10px solid #e0e8ee;
-}*/
 
-
-
-/* Search forms -- check 
-#searchform_submit {
-	background: url(../images/btn_search_off.gif) no-repeat;
-	border: none;
-	width: 25px;
-	height: 24px;
-	text-indent: -9999px;
-	color: transparent !important;
-	margin-left: 5px;
+.groupdescription {
+	margin-bottom: 1em;
 }
-#searchform_query_container, 
-#searchform_submit_container {
-    vertical-align: middle;
-}
-#searchform_query_container input {
-    padding: .25em .5em;
-    font-size: 1em;
-    color: #767676;
-	background-color: #ecf3d4;
-    width: 190px;
-}*/
 
+#accountprefs table label,
+#accountprefs table th {
+	color: #66879F;
+}
+#accountprefs table td label {
+	color: #333333;
+	font-size: 1em;
+}
