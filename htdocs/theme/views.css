@@ -23,7 +23,7 @@
     list-style: none;
     margin: 0;
     padding: 0;
-    width: 100%;
+	display: block;
 }
 #category-list li {
     display: inline;
@@ -33,14 +33,13 @@
 	position: static;
 	z-index:5;
 }
-@media all and (-webkit-min-device-pixel-ratio: 0) { #category-list li { line-height: 1.8em; } }
 #category-list li a {
     background-color: #eee;
     padding: .3em .5em;
     font-weight: bold;
 }
 #category-list li.current a {
-    background-color: #d1d1d1;
+    background: #d1d1d1;
     color: #333;
     cursor: default;
     text-decoration: none;
@@ -50,7 +49,7 @@
 #blocktype-list {
     overflow: hidden;
     min-height: 95px;
-    background-color: #FFF;
+    background: #FFF;
     padding: .5em .5em 1em .5em;
     font-size: .8em;
 	border: 1px solid #D1D1D1;
@@ -63,8 +62,10 @@
     text-align: center;
     margin: 1em 1em 0;
     width: 22%;
-	/* position: relative; /* Breaks blocktype drag & drop in firefox */
 	* z-index: 100;
+}
+* html #blocktype-list li {
+	position: relative;
 }
 #blocktype-list .blocktype-radio {
     border: none;
@@ -130,7 +131,7 @@ html>body #column-container {
     vertical-align: top;
     float: left;
     margin: 0;
-    padding: 0 0.9% 0 0;
+    padding: 0 0.9%;
 	position: relative;
 }
 
@@ -145,9 +146,7 @@ html>body #column-container {
 }
 * html .column {
 	overflow: hidden;
-	padding: 0 5px 0 0;
 }
-
 
 /* An explicit height for when there is one column and no remove button */
 .column-header {
@@ -224,6 +223,7 @@ html>body #column-container {
 .blockinstance-controls input.submit {
     margin: 0;
 }
+
 .blockinstance.configure {
   border: 7px solid #eee;
   background: #fff;
@@ -253,7 +253,13 @@ html>body #column-container {
 }
 .blockinstance-content div a img {
 	max-width: 98%;
+}
+.bt-image .blockinstance-content div a img {
+	max-width: 100%;
 	margin: .5em 0;
+}
+* html .bt-image .blockinstance-content div a img {
+	width: 100%;
 }
 
 .blockinstance-content .description {
@@ -366,7 +372,7 @@ div.artefactchooser-splitter {
 }
 #instconf_artefactid_foldernav {
 	font-size: 1.4em;
-	margin: 1em 0;
+	margin: 1em 0 0 0;
 }
 #instconf_artefactid_filelist_container #filelist td {
 	padding: .25em .5em;
@@ -418,5 +424,3 @@ div.artefactchooser-splitter {
 	padding:0; 
 	width: auto;
 }
-
-
