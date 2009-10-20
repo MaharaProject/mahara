@@ -210,7 +210,7 @@ class LocalImporterTransport extends ImporterTransport {
     private $relativepath;
     private $zipfilename;
 
-    public function __construct(Importer $importer/* TODO: wtf is an Importer? */) {
+    public function __construct(PluginImport $importer) {
     }
 
     public function cleanup() {
@@ -245,7 +245,7 @@ class MnetImporterTransport extends ImporterTransport {
     private $tempdir;
     private $zipfilename;
 
-    public function __construct(Importer $importer) {
+    public function __construct(PluginImport $importer) {
         $this->importer = $importer;
         $this->token = $importer->get('token');
         $this->host = get_record('host', 'wwwroot', $importer->get('host'));
