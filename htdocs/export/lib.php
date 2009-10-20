@@ -172,7 +172,7 @@ abstract class PluginExport extends Plugin {
 
         // Get the list of views to export
         if ($views == self::EXPORT_ALL_VIEWS) {
-            $tmpviews = get_column('view', 'id', 'owner', $userid);
+            $tmpviews = get_column_sql('SELECT id FROM {view} WHERE owner = ? ORDER BY id', array($userid));
             $this->viewexportmode = $views;
         }
         else if (is_array($views)) {
@@ -202,7 +202,7 @@ abstract class PluginExport extends Plugin {
 
         // Get the list of artefacts to export
         if ($artefacts == self::EXPORT_ALL_ARTEFACTS) {
-            $tmpartefacts = get_column('artefact', 'id', 'owner', $userid);
+            $tmpartefacts = get_column_sql('SELECT id FROM {artefact} WHERE owner = ? ORDER BY id', array($userid));
             $this->artefactexportmode = $artefacts;
         }
         else {
@@ -211,7 +211,8 @@ abstract class PluginExport extends Plugin {
                     FROM {view_artefact} va
                     LEFT JOIN {view} v ON v.id = va.view
                     WHERE v.owner = ?
-                    $vaextra";
+                    $vaextra
+                    ORDER BY va.artefact";
                 $tmpartefacts = (array)get_column_sql($sql, array($userid));
 
                 // Some artefacts are not inside the view, but still need to be exported with it
