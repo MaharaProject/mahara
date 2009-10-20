@@ -1216,6 +1216,22 @@ function xmldb_core_upgrade($oldversion=0) {
         ensure_record_exists('event_type', $event, $event);
     }
 
+    if ($oldversion < 2009101600) {
+        // Remove bbcode formatting from existing feedback
+        if ($records = get_records_sql_array("SELECT * FROM {view_feedback} WHERE message LIKE '%[%'", array())) {
+            foreach ($records as &$r) {
+                $r->message = parse_bbcode($r->message);
+                update_record('view_feedback', $r);
+            }
+        }
+        if ($records = get_records_sql_array("SELECT * FROM {artefact_feedback} WHERE message LIKE '%[%'", array())) {
+            foreach ($records as &$r) {
+                $r->message = parse_bbcode($r->message);
+                update_record('artefact_feedback', $r);
+            }
+        }
+    }
+
     return $status;
 
 }

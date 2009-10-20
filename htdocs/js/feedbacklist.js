@@ -2,13 +2,13 @@
 
 function addFeedbackSuccess(form, data) {
     addElementClass('add_feedback_form', 'js-hidden');
-    $('add_feedback_form_message').innerHTML = '';
     paginator.updateResults(data);
+    $('add_feedback_form_message').value = '';
 }
 
 function objectionSuccess() {
     addElementClass('objection_form', 'js-hidden');
-    $('objection_form_message').innerHTML = '';
+    $('objection_form_message').value = '';
 }
 
 addLoadEvent(function () {
@@ -19,7 +19,6 @@ addLoadEvent(function () {
                 if ($('objection_form')) {
                     addElementClass('objection_form', 'js-hidden');
                 }
-                $('add_feedback_form').reset();
                 removeElementClass('add_feedback_form', 'js-hidden');
                 return false;
             });
@@ -38,7 +37,6 @@ addLoadEvent(function () {
                 if ($('add_feedback_form')) {
                     addElementClass('add_feedback_form', 'js-hidden');
                 }
-                $('objection_form').reset();
                 removeElementClass('objection_form', 'js-hidden');
                 return false;
             });

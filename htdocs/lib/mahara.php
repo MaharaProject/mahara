@@ -2220,7 +2220,7 @@ function build_portfolio_search_html(&$data) {
 function build_feedback_html(&$data) {
     foreach ($data->data as &$item) {
         $item->date    = format_date(strtotime($item->ctime), 'strftimedatetime');
-        $item->message = clean_html(parse_bbcode($item->message));
+        $item->message = clean_html($item->message);
         $item->name    = $item->author ? display_name($item->author) : $item->authorname;
         if (!empty($item->attachment)) {
             $item->attachid    = $item->attachment;
