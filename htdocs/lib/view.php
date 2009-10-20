@@ -1205,6 +1205,12 @@ class View {
             }
             else {
                 $this->shuffle_column($bi->get('column'), $values['order'], $bi->get('order'));
+                if ($bi->get('order') < $values['order']) {
+                    // When moving a block down within a column, the final order is one less
+                    // than the 'desired' order because of the empty space created when the
+                    // block gets taken out of its original spot.
+                    $values['order'] -= 1;
+                }
             }
         } 
         // moving to another column
@@ -1354,15 +1360,12 @@ class View {
             if (!empty($insert)) {
                 // shuffle everything up
                 $this->shuffle_helper('order', 'up', '>=', $insert, '"column" = ?', array($column)); 
-
-            }
-            // shuffle everything down
-            $this->shuffle_helper('order', 'down', '>', $remove, '"column" = ?', array($column));
-
-            if (!empty($insert)) {
                 // now move it back
                 set_field('block_instance', 'order', $insert, 'view', $this->get('id'), 'column', $column, 'order', 0);
             }
+
+            // shuffle everything down
+            $this->shuffle_helper('order', 'down', '>', $remove, '"column" = ?', array($column));
         }
         else if (!empty($insert)) {
             // shuffle everything up
