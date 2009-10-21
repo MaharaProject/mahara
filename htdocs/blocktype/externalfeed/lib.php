@@ -99,7 +99,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
     public static function instance_config_form($instance) {
         $configdata = $instance->get('configdata');
 
-        if (isset($configdata['feedid'])) {
+        if (!empty($configdata['feedid'])) {
             $url = get_field('blocktype_externalfeed_data', 'url', 'id', $configdata['feedid']);
         }
         else {
