@@ -2867,6 +2867,7 @@ function add_feedback_form_submit(Pieform $form, $values) {
 
     require_once('activity.php');
     unset($data->id);
+    $data->message = html2text($data->message);
     activity_occurred('feedback', $data);
 
     db_commit();
