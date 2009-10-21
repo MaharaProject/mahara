@@ -60,4 +60,3 @@ else {
 $smarty->display('blocktype:wall:wallposts.tpl');
 
 ?>
-
