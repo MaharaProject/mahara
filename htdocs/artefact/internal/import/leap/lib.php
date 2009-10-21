@@ -399,7 +399,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     /**
      * Attempts to import a persondata field with leap:field="website"
      */
-    private static function import_persondata_website(PluginImportLeap $importer, SimpleXMLEntry $item, array $leapattributes) {
+    private static function import_persondata_website(PluginImportLeap $importer, SimpleXMLElement $item, array $leapattributes) {
         // We've been given a 'website' field, but Mahara has three profile 
         // fields for website. So we need to examine it deeper to establish 
         // which field it should import into
@@ -431,7 +431,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     /**
      * Attempts to import a persondata field with leap:field="other"
      */
-    private static function import_persondata_other(PluginImportLeap $importer, SimpleXMLEntry $item, array $leapattributes) {
+    private static function import_persondata_other(PluginImportLeap $importer, SimpleXMLElement $item, array $leapattributes) {
         // The only 'other' field we can actually import is one we recognise as 
         // 'student ID'
         $maharaattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_MAHARA);
