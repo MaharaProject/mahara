@@ -219,17 +219,7 @@ class PluginExportLeap extends PluginExport {
             $this->smarty->assign('contenttype', 'html');
             $this->smarty->assign('content',     $view->build_columns());
             $this->smarty->assign('viewdata',    $config['columns']);
-            if (isset($layouts[$config['layout']])) {
-                $layout = $config['layout'];
-            }
-            else {
-                // This line ruthlessly stolen from lib/upgrade.php - the only
-                // place where view layouts are canonically specified
-                $layout = ($config['numcolumns'] == 2 ? 1 : ($config['numcolumns'] == 3 ? 4 : 7));
-            }
-            if (isset($layouts[$layout])) {
-                $this->smarty->assign('layout',  $layouts[$layout]->widths);
-            }
+            $this->smarty->assign('layout',      $view->get_layout()->widths);
             $ownerformat = ($config['ownerformat']) ? $config['ownerformat'] : FORMAT_NAME_DISPLAYNAME;
             $this->smarty->assign('ownerformat', $ownerformat);
             $this->smarty->assign('leaptype',    'selection');

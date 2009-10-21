@@ -109,40 +109,12 @@ html>body #column-container {
     cursor: default;
 }
 
-/* each column div will have a class matching one of these, the number is the
-   number of columns in total, so widths can be made equal */
-.columns1 {
-    width: 99%;
-}
-.columns2 {
-    width: 49%;
-}
-.columns3 {
-    width: 32%;
-}
-.columns4 {
-    width: 24%;
-}
-.columns5 {
-    width: 19%;
-}
-
 .column {
     vertical-align: top;
     float: left;
     margin: 0;
     padding: 0 0.9%;
 	position: relative;
-}
-
-* html .columns1 {
-    width: 96%;
-}
-* html .columns2 {
-    width: 46%;
-}
-* html .columns3 {
-    width: 30%;
 }
 * html .column {
 	overflow: hidden;

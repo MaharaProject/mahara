@@ -1232,6 +1232,20 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2009102100) {
+        // Now the view_layout table has to have records for all column widths
+        $record = (object)array(
+            'columns' => 1,
+            'widths'  => '100',
+        );
+        insert_record('view_layout', $record);
+        $record = (object)array(
+            'columns' => 5,
+            'widths'  => '20,20,20,20,20',
+        );
+        insert_record('view_layout', $record);
+    }
+
     return $status;
 
 }

@@ -51,7 +51,7 @@ if (!$USER->can_edit_view($view)) {
 
 // if not set, use equal width layout for that number of columns
 if (!$currentlayout) {
-    $currentlayout = ($numcolumns == 2 ? 1 : ($numcolumns == 3 ? 4 : 7));
+    $currentlayout = $view->get_layout()->id;
 }
 
 if ($numcolumns > 1 && $numcolumns < 5) {

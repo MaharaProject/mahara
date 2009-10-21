@@ -63,6 +63,49 @@ class View {
     private $copynewgroups;
     private $type;
 
+    /**
+     * Valid view layouts. These are read at install time and inserted into
+     * view_layout, but not updated afterwards, so if you're changing one
+     * you'll need to do that manually. Actually, you'd better talk to the
+     * Mahara dev team about what else needs changing if you do touch this.
+     *
+     * A hash of columns => list of view widths
+     */
+    public static $layouts = array(
+        1 => array(
+            '100',
+        ),
+        2 => array(
+            '50,50',
+            '67,33',
+            '33,67',
+        ),
+        3 => array(
+            '33,33,33',
+            '25,50,25',
+            '15,70,15',
+        ),
+        4 => array(
+            '25,25,25,25',
+            '20,30,30,20',
+        ),
+        5 => array(
+            '20,20,20,20,20',
+        ),
+    );
+
+    /**
+     * Which view layout is considered the "default" for views with the given
+     * number of columns. Must be present in $layouts of course.
+     */
+    public static $defaultlayouts = array(
+        1 => '100',
+        2 => '50,50',
+        3 => '33,33,33',
+        4 => '25,25,25,25',
+        5 => '20,20,20,20,20',
+    );
+
     public function __construct($id=0, $data=null) {
         if (!empty($id)) {
             $tempdata = get_record('view','id',$id);
@@ -983,16 +1026,16 @@ class View {
         }
 
         // Set column widths
-        if ($this->get('numcolumns') > 1) {
-            $layout = $this->get('layout');
-            if ($layout) {
-                $i = 0;
-                // The get_field also verifies the layout is correct for the
-                // number of columns in the view
-                foreach (explode(',', get_field('view_layout', 'widths', 'id', $layout, 'columns', $this->get('numcolumns'))) as $width) {
-                    $this->columns[++$i]['width'] = $width;
-                }
+        $layout = $this->get_layout();
+        $i = 0;
+        $is_ie6 = (false !== strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 6.0'));
+        foreach (explode(',', $layout->widths) as $width) {
+            // IE6 has interesting padding issues that mean we have to tell
+            // porkies so all the columns stay beside each other
+            if ($is_ie6) {
+                $width -= 2;
             }
+            $this->columns[++$i]['width'] = $width;
         }
 
         foreach ($data as $block) {
@@ -1504,6 +1547,43 @@ class View {
             return $group->name;
         }
         return null;
+    }
+
+    /**
+     * Returns a record from the view_layout table matching the layout for this
+     * View.
+     *
+     * If the layout for the view is null, then this method returns the record
+     * for the default layout for the number of columns the View has.
+     *
+     * Check the view_layout table for what fields you'll get back, but the
+     * most interesting one is 'widths', which is a comma-separated list of %
+     * widths for the columns in the View.
+     *
+     * @return array A record from the view_layout table.
+     */
+    public function get_layout() {
+        static $viewlayouts = null;
+        if ($viewlayouts === null) {
+            $viewlayouts = get_records_assoc('view_layout');
+        }
+
+        $layout     = $this->get('layout');
+        $numcolumns = $this->get('numcolumns');
+
+        if (!$layout) {
+            foreach ($viewlayouts as $layout) {
+                if ($layout->widths == self::$defaultlayouts[$numcolumns]) {
+                    return $layout;
+                }
+            }
+        }
+
+        if (isset($viewlayouts[$layout])) {
+            return $viewlayouts[$layout];
+        }
+
+        throw new SystemException("Unknown view layout (id=$layout)");
     }
 
     /**
