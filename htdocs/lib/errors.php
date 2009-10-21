@@ -406,7 +406,6 @@ function error ($code, $message, $file, $line, $vars) {
     static $error_lookup = array(
         E_NOTICE => 'Notice',
         E_WARNING => 'Warning',
-        E_RECOVERABLE_ERROR => 'Warning',
         // Not sure if these ever get handled here
         E_ERROR => 'Error',
         // These three are not used by this application but may be used by third parties
@@ -414,6 +413,10 @@ function error ($code, $message, $file, $line, $vars) {
         E_USER_WARNING => 'User Warning',
         E_USER_ERROR => 'User Error'
     );
+
+    if (defined('E_RECOVERABLE_ERROR')) {
+        $error_lookup[E_RECOVERABLE_ERROR] = 'Warning';
+    }
 
     if (!error_reporting()) {
         return;
