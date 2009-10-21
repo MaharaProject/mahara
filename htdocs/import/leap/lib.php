@@ -723,10 +723,10 @@ class PluginImportLeap extends PluginImport {
      * references to other artefacts, and rewrite those to point at the created
      * ones.
      *
-     * @param array $artefact A record from the artefact table (only id, title,
+     * @param object $artefact A record from the artefact table (only id, title,
      *                        description fields required)
      */
-    private function fix_artefact_references(array $artefact) {
+    private function fix_artefact_references($artefact) {
         $changed = false;
 
         if ($this->artefact_reference_quickcheck($artefact->title)) {
