@@ -176,22 +176,22 @@ class PluginArtefactInternal extends PluginArtefact {
                 foreach ($configdata['artefactids'] as $id) {
                     $result['fields'][] = $cache[$owner][$id]->artefacttype;
                 }
-                $result['fields'] = json_encode($result['fields']);
+                $result['fields'] = json_encode(array($result['fields']));
             }
 
             // Email addresses are not entries in leap2a (they're elements on
             // the persondata element), so we export the actual address here
             // instead of an artefact ID.
             if (!empty($configdata['email']) && isset($cache[$owner][$configdata['email']])) {
-                $result['email'] = $cache[$owner][$configdata['email']]->title;
+                $result['email'] = json_encode(array($cache[$owner][$configdata['email']]->title));
             }
 
             if (!empty($configdata['profileicon'])) {
-                $result['artefactid'] = intval($configdata['profileicon']);
+                $result['artefactid'] = json_encode(array(intval($configdata['profileicon'])));
             }
 
             if (isset($configdata['introtext'])) {
-                $result['introtext'] = $configdata['introtext'];
+                $result['introtext'] = json_encode(array($configdata['introtext']));
             }
         }
 

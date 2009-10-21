@@ -643,7 +643,14 @@ class PluginImportLeap extends PluginImport {
                         'config' => array()
                     );
                     foreach ($configelements as $element) {
-                        $config['columns'][$col][$row]['config'][$element->getName()] = json_decode((string)$element);
+                        $value = json_decode((string)$element);
+                        if (is_array($value) && isset($value[0])) {
+                            $config['columns'][$col][$row]['config'][$element->getName()] = $value[0];
+                        }
+                        else {
+                            $this->trace("  Value for {$element->getName()} is not an array, ignoring (value follows below)");
+                            $this->trace($value);
+                        }
                     }
 
                     $row++;

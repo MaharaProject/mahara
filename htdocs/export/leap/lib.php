@@ -267,9 +267,9 @@ class PluginExportLeap extends PluginExport {
         foreach ($config['columns'] as &$column) {
             foreach ($column as &$blockinstance) {
                 if (isset($blockinstance['config']['artefactid'])) {
-                    // json_encoded value of null is the string 'null', don't include these
-                    if ($blockinstance['config']['artefactid'] != 'null') {
-                        $blockinstance['config']['artefactid'] = 'portfolio:artefact' . $blockinstance['config']['artefactid'];
+                    $id = json_decode($blockinstance['config']['artefactid']);
+                    if ($id[0] != null) {
+                        $blockinstance['config']['artefactid'] = json_encode(array('portfolio:artefact' . $id[0]));
                     }
                     else {
                         $blockinstance['config']['artefactid'] = null;
@@ -277,7 +277,7 @@ class PluginExportLeap extends PluginExport {
                 }
                 else if (isset($blockinstance['config']['artefactids'])) {
                     $ids = json_decode($blockinstance['config']['artefactids']);
-                    $blockinstance['config']['artefactids'] = json_encode(array_map(array($this, 'prepend_artefact_identifier'), $ids));
+                    $blockinstance['config']['artefactids'] = json_encode(array(array_map(array($this, 'prepend_artefact_identifier'), $ids[0])));
                 }
             }
         }

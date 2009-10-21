@@ -287,8 +287,6 @@ abstract class PluginBlocktype extends Plugin {
      * @return array The configuration required to import the block again later
      */
     public static function export_blockinstance_config(BlockInstance $bi) {
-        // TODO: check the quoting of json_encoded quotes in output
-        // TODO: encode artefactids properly
         $configdata = $bi->get('configdata');
 
         if (is_array($configdata)) {
@@ -299,15 +297,36 @@ abstract class PluginBlocktype extends Plugin {
             unset($configdata['id']);
             unset($configdata['change']);
             unset($configdata['new']);
-
-            foreach ($configdata as $key => &$value) {
-                $value = json_encode($value);
-            }
         }
         else {
             $configdata = array();
         }
 
+        return $configdata;
+    }
+
+    /**
+     * Exports configuration data the format required for LEAP2A export.
+     *
+     * This format is XML, and as the exporter can't generate complicated XML
+     * structures, we have to json_encode all the values.
+     *
+     * Furthermore, because of how json_encode and json_decode "work" in PHP,
+     * we make double sure that our values are all inside arrays. See the
+     * craziness that is PHP bugs 38680 and 46518 for more information.
+     *
+     * The array is assumed to be there when importing, so if you're overriding
+     * this method and don't wrap any values in an array, you can expect import
+     * to growl at you and not import your config.
+     *
+     * @param BlockInstance $bi The block instance to export config for
+     * @return array The configuration required to import the block again later
+     */
+    public static function export_blockinstance_config_leap(BlockInstance $bi) {
+        $configdata = call_static_method(generate_class_name('blocktype', $bi->get('blocktype')), 'export_blockinstance_config', $bi);
+        foreach ($configdata as $key => &$value) {
+            $value = json_encode(array($value));
+        }
         return $configdata;
     }
 
