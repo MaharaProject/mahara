@@ -273,11 +273,8 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
 
         $result = mahara_http_request($config);
 
-        if($result->data) {
-            if ($result->error) {
-                $cache[$source] = $result->error;
-                throw $cache[$source];
-            }
+        if ($result->error) {
+            throw new XML_Feed_Parser_Exception($result->error);
         }
 
         try {
@@ -398,7 +395,13 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         // RSS feeds for this user at import time, which could easily be quite 
         // slow. This plugin will need a bit of re-working for this to be possible
         if (!empty($config['config']['url'])) {
-            $values = self::instance_config_save(array('url' => $config['config']['url']));
+            try {
+                $values = self::instance_config_save(array('url' => $config['config']['url']));
+            }
+            catch (XML_Feed_Parser_Exception $e) {
+                log_info("Note: was unable to parse RSS feed for new blockinstance. URL was {$config['config']['url']}");
+                $values = array();
+            }
         }
 
         $bi = new BlockInstance(0,
