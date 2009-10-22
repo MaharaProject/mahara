@@ -207,7 +207,6 @@ html>body #column-container {
 }
 .main-column .blockinstance-header h4, .blockinstance.configure h4 {
     margin: 0;
-    cursor: default;
 	font-size: 1.4em;
 }
 .blockinstance.configure table {
