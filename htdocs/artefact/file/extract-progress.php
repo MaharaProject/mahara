@@ -33,6 +33,9 @@ if (!$unzip = $SESSION->get('unzip')) {
     redirect('/artefact/file/');
 }
 
+// Turn off gzip if it's on, because it prevents output from being flushed
+apache_setenv('no-gzip', 1);
+
 $stylesheets = array_reverse($THEME->get_url('style/style.css', true));
 ?>
 <html>
