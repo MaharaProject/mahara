@@ -156,3 +156,8 @@ form#wallpost input.submit {
 #add_feedback_form_message {
 	width: 90%;
 }
+
+input.addcolumn, input.removecolumn {
+    background: none;
+    border: none;
+}
