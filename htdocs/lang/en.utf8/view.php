@@ -202,6 +202,7 @@ $string['blocksinstructionajax'] = 'Drag blocks below this line to add them to y
 $string['addnewblockhere'] = 'Add new block here';
 $string['add'] = 'Add';
 $string['addcolumn'] = 'Add Column';
+$string['remove'] = 'Remove';
 $string['removecolumn'] = 'Remove this column';
 $string['moveblockleft'] = "Move %s block left";
 $string['movethisblockleft'] = "Move this block left";
