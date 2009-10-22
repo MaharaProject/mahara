@@ -1092,6 +1092,9 @@ class AuthFactory {
      *                          instance doesn't exist (Should never happen)
      */
     public static function create($id) {
+        if (is_object($id) && isset($id->id)) {
+            $id = $id->id;
+        }
 
         if (isset(self::$authcache[$id]) && is_object(self::$authcache[$id])) {
             return self::$authcache[$id];
