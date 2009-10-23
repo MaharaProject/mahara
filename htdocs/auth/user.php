@@ -557,6 +557,14 @@ class User {
         return $this->get('admin') || $this->is_institutional_admin($institution);
     }
 
+    /**
+     * Returns whether this user is allowed to perform administration type
+     * actions on another user.
+     *
+     * @param mixed $user The user to check we can perform actions on. Can
+     *                    either be a User object, a row from the usr table or
+     *                    an ID
+     */
     public function is_admin_for_user($user) {
         if ($this->get('admin')) {
             return true;
@@ -564,21 +572,29 @@ class User {
         if (!$this->is_institutional_admin()) {
             return false;
         }
+
+        // Check privileges for institutional admins now
         if ($user instanceof User) {
-            $userinstitutions = $user->get('institutions');
+            $userobj = $user;
         }
         else if (is_numeric($user)) {
-            $userinstitutions = load_user_institutions($user);
+            $userobj = new User;
+            $userobj->find_by_id($user);
         }
         else if (is_object($user)) {
             // Should be a row from the usr table
-            $userinstitutions = load_user_institutions($user->id);
+            $userobj = new User;
+            $userobj->find_by_id($user->id);
         }
         else {
             throw new SystemException("Invalid argument pass to is_admin_for_user method");
         }
 
-        foreach ($userinstitutions as $i) {
+        if ($userobj->get('admin')) {
+            return false;
+        }
+
+        foreach ($userobj->get('institutions') as $i) {
             if ($this->is_institutional_admin($i->institution)) {
                 return true;
             }
