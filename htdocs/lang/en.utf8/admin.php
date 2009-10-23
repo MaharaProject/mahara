@@ -381,6 +381,7 @@ $string['usereditdescription'] = 'Here you can view and set details for this use
 $string['suspenddeleteuser'] = 'Suspend/Delete User';
 $string['suspenddeleteuserdescription'] = 'Here you may suspend or entirely delete a user account. Suspended users are unable to log in until their account is unsuspended. Please note that while a suspension can be undone, deletion <strong>cannot</strong> be undone.';
 $string['deleteusernote'] = 'Please note that this operation <strong>cannot be undone</strong>.';
+$string['youcannotadministerthisuser'] = 'You cannot administer this user';
 
 // Add User
 $string['adduser'] = 'Add User';

@@ -286,15 +286,8 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
     $searchurl = get_config('wwwroot') . 'admin/users/search.php?' . join('&amp;', $params)
         . '&amp;limit=' . $limit;
 
-    $usernametemplate = '<a href="' . get_config('wwwroot') . 'admin/users/edit.php?id={$r.id}">{$r.username|escape}</a>';
-    if (!$USER->get('admin')) {
-        // Only create the edit link if the returned user belongs to an institution that the viewer administers
-        $cond = array();
-        foreach ($USER->get('admininstitutions') as $i) {
-            $cond[] = 'isset($r.institutions.' . $i . ')';
-        }
-        $usernametemplate = '{if ' . join('||', $cond) . '}' . $usernametemplate . '{else}{$r.username}{/if}';
-    }
+    $usernametemplate = '<a href="' . get_config('wwwroot')
+        . '{if $USER->is_admin_for_user($r.id)}admin/users/edit.php?id={$r.id}{else}user/view.php?id={$r.id}{/if}">{$r.username|escape}</a>';
 
     $cols = array(
         'icon'        => array('name'     => '',
