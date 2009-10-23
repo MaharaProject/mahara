@@ -298,6 +298,7 @@ $string['suspendedby'] = 'This user has been suspended by %s';
 $string['filequota'] = 'File quota (MB)';
 $string['filequotadescription'] = 'Total storage available in the user\'s files area.';
 $string['confirmremoveuserfrominstitution'] = 'Are you sure you want to remove the user from this institution?';
+$string['youcannotadministerthisuser'] = 'You cannot administer this user';
 
 // Add User
 $string['adduser'] = 'Add User';
