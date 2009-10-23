@@ -33,5 +33,6 @@
 			</table>
 			</form>
 			</div>
+            {$deleteall}
 			
 {include file="footer.tpl"}
