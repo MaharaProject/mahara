@@ -40,7 +40,8 @@ $user = new User;
 $user->find_by_id($id);
 
 if (!$USER->is_admin_for_user($user)) {
-    redirect(get_config('wwwroot').'user/view.php?id='.$id);
+    $SESSION->add_error_msg(get_string('youcannotadministerthisuser', 'admin'));
+    redirect('/user/view.php?id=' . $id);
 }
 
 
