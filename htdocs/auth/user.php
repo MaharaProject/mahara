@@ -566,9 +566,18 @@ class User {
         }
         if ($user instanceof User) {
             $userinstitutions = $user->get('institutions');
-        } else {
+        }
+        else if (is_numeric($user)) {
+            $userinstitutions = load_user_institutions($user);
+        }
+        else if (is_object($user)) {
+            // Should be a row from the usr table
             $userinstitutions = load_user_institutions($user->id);
         }
+        else {
+            throw new SystemException("Invalid argument pass to is_admin_for_user method");
+        }
+
         foreach ($userinstitutions as $i) {
             if ($this->is_institutional_admin($i->institution)) {
                 return true;
