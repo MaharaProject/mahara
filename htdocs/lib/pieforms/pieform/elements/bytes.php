@@ -170,6 +170,12 @@ function pieform_element_bytes_i18n() {/*{{{*/
             'megabytes'    => 'MB',
             'invalidvalue' => 'Hodnota musí být číselná',
         ),
+        'zh_tw.utf8' => array(
+            'bytes'        => 'B',
+            'kilobytes'    => 'kB',
+            'megabytes'    => 'MB',
+            'invalidvalue' => '值必需是數字',
+        ),
 
     );
 }/*}}}*/

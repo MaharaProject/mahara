@@ -399,7 +399,6 @@ class InteractionForumInstance extends InteractionInstance {
 
 }
 
-
 class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
 
     protected $postid;

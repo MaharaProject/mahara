@@ -66,6 +66,9 @@ function pieform_rule_regex_i18n() {/*{{{*/
         'cs.utf8' => array(
             'regex' => 'Neplatný formát'
         ),
+        'zh_tw.utf8' => array(
+            'regex' => '這個欄位的樣式不正確'
+        ),
 
     );
 }/*}}}*/

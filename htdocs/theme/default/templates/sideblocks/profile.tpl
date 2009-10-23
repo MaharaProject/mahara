@@ -64,7 +64,7 @@
     </ul>
     <div class="center">
     <a href="{$WWWROOT}?logout" id="btn-logout">{str tag="logout"}</a>
-    <a href="{$WWWROOT}account/" id="btn-settings">{str tag="settings"}</a>
+    <a href="{if get_config('httpswwwroot')}{$HTTPSWWWROOT}{else}{$WWWROOT}{/if}account/" id="btn-settings">{str tag="settings"}</a>
     </div>
     {if $USERMASQUERADING}<div id="changeuser">{$becomeyouagain}</div>{/if}
     {* This makes sure the profile block still appears to contain the profile image, even if the profile block is pretty much empty otherwise *}

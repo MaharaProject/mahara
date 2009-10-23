@@ -161,6 +161,10 @@ function pieform_element_date_i18n() {/*{{{*/
             'or' => 'nebo',
             'notspecified' => 'Neurčeno'
         ),
+        'zh_tw.utf8' => array(
+            'or' => '或',
+            'notspecified' => '未指定'
+        ),
 
     );
 }/*}}}*/

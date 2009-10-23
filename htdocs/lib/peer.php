@@ -171,7 +171,6 @@ class Peer {
 
             // Couldn't find the IP address?
             if ($ipaddress === $hostname && !preg_match('/^\d+\.\d+\.\d+.\d+$/',$hostname)) {
-                $this->error[] = array('code' => 2, 'text' => get_string("noaddressforhost", 'mnet'));
                 throw new ParamOutOfRangeException('Could not find IP address for host: '.addslashes($hostname));
                 return false;
             }
@@ -241,10 +240,10 @@ class Peer {
                         throw new RemoteServerException('Networking is disabled on the host at '.$this->wwwroot.'.');
                     }
                     else {
-                        throw new RemoteServerException('Error retrieving public key, failed with error code: '. $errcode);
+                        throw new RemoteServerException('Error retrieving public key, failed with error code ' . $errcode . ': ' . $e->getMessage());
                     }
                 } catch (Exception $e) {
-                    throw new RemoteServerException('Error retrieving public key ');
+                    throw new RemoteServerException('Error retrieving public key: ' . $e->getMessage());
                 }
             } else {
                 $this->publickey       = new PublicKey($pubkey, $this->wwwroot);

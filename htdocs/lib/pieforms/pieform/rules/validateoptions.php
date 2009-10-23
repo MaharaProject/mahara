@@ -73,6 +73,9 @@ function pieform_rule_validateoptions_i18n() {/*{{{*/
         'cs.utf8' => array(
             'validateoptions' => 'Neplatný výběr "%s"'
         ),
+        'zh_tw.utf8' => array(
+            'validateoptions' => '選項「 %s 」不正確'
+        ),
 
     );
 }/*}}}*/

@@ -65,6 +65,9 @@ function pieform_rule_maxlength_i18n() {/*{{{*/
         'cs.utf8' => array(
             'maxlength' => 'Můžete zadat nejvýše %d znaků'
         ),
+        'zh_tw.utf8' => array(
+            'maxlength' => '這個欄位最長只能是 %d 個字元'
+        ),
 
     );
 }/*}}}*/

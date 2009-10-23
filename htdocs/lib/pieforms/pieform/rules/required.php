@@ -65,6 +65,9 @@ function pieform_rule_required_i18n() {/*{{{*/
         'cs.utf8' => array(
             'required' => 'Povinné pole'
         ),
+        'zh_tw.utf8' => array(
+            'required' => '這個欄位必須填寫'
+        ),
 
     );
 }/*}}}*/
