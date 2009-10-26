@@ -1108,4 +1108,14 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
 
 }
 
+function group_get_member_ids($group, $roles=null) {
+    $rolesql = is_null($roles) ? '' : (' AND gm.role IN (' . join(',', array_map('db_quote', $roles)) . ')');
+    return get_column_sql('
+        SELECT gm.member
+        FROM {group_member} gm INNER JOIN {group} g ON gm.group = g.id
+        WHERE g.deleted = 0 AND g.id = ?' . $rolesql,
+        array($group)
+    );
+}
+
 ?>
