@@ -30,6 +30,7 @@ define('MENUITEM', 'myportfolio/views');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('view.php');
+require_once('activity.php');
 $viewid = param_integer('id');
 $groupid = param_integer('group');
 
@@ -72,8 +73,18 @@ $smarty->assign('form', $form);
 $smarty->display('view/submit.tpl');
 
 function submitview_submit(Pieform $form, $values) {
-	global $SESSION, $viewid, $groupid;
+    global $SESSION, $USER, $viewid, $groupid;
+    db_begin();
     update_record('view', array('submittedgroup' => $groupid), array('id' => $viewid));
+    activity_occurred('groupmessage', array(
+        'subject'       => get_string('viewsubmitted', 'view'), // will be overwritten
+        'message'       => get_string('viewsubmitted', 'view'), // will be overwritten
+        'submittedview' => $viewid,
+        'viewowner'     => $USER->get('id'),
+        'group'         => $groupid,
+        'roles'         => array('admin', 'tutor'),
+    ));
+    db_commit();
     $SESSION->add_ok_msg(get_string('viewsubmitted', 'view'));
     redirect('/view/');
 }

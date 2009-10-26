@@ -38,6 +38,7 @@ $string['typevirusrepeat'] = 'Repeat virus upload';
 $string['typevirusrelease'] = 'Virus flag release';
 $string['typeadminmessages'] = 'Administration messages';
 $string['typeinstitutionmessage'] = 'Institution message';
+$string['typegroupmessage'] = 'Group message';
 
 $string['type'] = 'Activity type';
 $string['attime'] = 'at';
@@ -107,4 +108,8 @@ $string['institutioninvitemessage'] = 'You can confirm your membership of this i
 
 $string['deleteallnotifications'] = 'Delete all notifications';
 $string['reallydeleteallnotifications'] = 'Are you sure you want to delete all your notifications?';
+
+$string['viewsubmittedsubject'] = 'View submitted to %s';
+$string['viewsubmittedmessage'] = '%s has submitted their view "%s" to %s';
+
 ?>

@@ -1246,6 +1246,10 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('view_layout', $record);
     }
 
+    if ($oldversion < 2009102200) {
+        insert_record('activity_type', (object) array('name' => 'groupmessage', 'admin' => 0, 'delay' => 0));
+    }
+
     return $status;
 
 }
