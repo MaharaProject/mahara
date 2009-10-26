@@ -55,6 +55,7 @@ $string['studentid'] = 'Student ID';
 $string['preferredname'] = 'Preferred Name';
 $string['introduction'] = 'Introduction';
 $string['email'] = 'Email Address';
+$string['maildisabled'] = ' ';
 $string['officialwebsite'] = 'Official Website Address';
 $string['personalwebsite'] = 'Personal Website Address';
 $string['blogaddress'] = 'Blog Address';
