@@ -46,6 +46,7 @@ class AuthLdap extends Auth {
         $this->config['bind_dn'] = '';
         $this->config['bind_pw'] = '';
         $this->config['version'] = '2';
+        $this->config['updateuserinfoonlogin'] = 0;
         $this->config['weautocreateusers'] = 1;
         $this->config['firstnamefield' ] = '';
         $this->config['surnamefield'] = '';
@@ -95,6 +96,12 @@ class AuthLdap extends Auth {
             return false;
         }
 
+        // For update user info on login
+        $update = false;
+
+        if ('1' == $this->config['updateuserinfoonlogin']) {
+                $update = true;
+        }
         // Missed out AD bit, someone might want to put it back :-)
 
         // attempt ldap connection
@@ -112,6 +119,25 @@ class AuthLdap extends Auth {
             $ldap_login = @ldap_bind($ldapconnection, $ldap_user_dn, $password);
             ldap_close($ldapconnection);
             if ($ldap_login) {
+                if ($update) {
+                    // Define ldap attributes
+                    $ldapattributes = array();
+                    $ldapattributes['firstname'] = $this->config['firstnamefield'];
+                    $ldapattributes['lastname']  = $this->config['surnamefield' ];
+
+                    // Retrieve information of user from LDAP
+                    $ldapdetails = $this->get_userinfo_ldap($username, $ldapattributes);
+
+                    // Match database and ldap entries and update in database if required
+                    $fieldstoimport = array('firstname', 'lastname');
+                    foreach ($fieldstoimport as $field) {
+                        if ($user->$field != $ldapdetails[$field]) {
+                            $user->$field = $ldapdetails[$field];
+                            set_profile_field($user->id, $field, $user->$field);
+                        }
+                    }
+               }
+
                 return true;
             }
         }
@@ -384,6 +410,7 @@ class PluginAuthLdap extends PluginAuth {
         'bind_dn'           => '',
         'bind_pw'           => '',
         'version'           => 2,
+        'updateuserinfoonlogin' => 0,
         'weautocreateusers' => 1,
         'firstnamefield'    => '',
         'surnamefield'      => '',
@@ -531,6 +558,12 @@ class PluginAuthLdap extends PluginAuth {
                 'defaultvalue' => self::$default_config['version'],
                 'help'  => true,
             ),
+            'updateuserinfoonlogin' => array(
+                'type'  => 'checkbox',
+                'title' => get_string('updateuserinfoonlogin', 'auth.ldap'),
+                'defaultvalue' => self::$default_config['updateuserinfoonlogin'],
+                'help'  => true,
+            ),
             'weautocreateusers' => array(
                 'type'  => 'checkbox',
                 'title' => get_string('weautocreateusers', 'auth.ldap'),
@@ -611,6 +644,7 @@ class PluginAuthLdap extends PluginAuth {
                                         'bind_dn' => $values['bind_dn'],
                                         'bind_pw' => $values['bind_pw'],
                                         'version' => $values['version'],
+                                        'updateuserinfoonlogin' => $values['updateuserinfoonlogin'],
                                         'weautocreateusers' => $values['weautocreateusers'],
                                         'firstnamefield' => $values['firstnamefield'],
                                         'surnamefield' => $values['surnamefield'],
