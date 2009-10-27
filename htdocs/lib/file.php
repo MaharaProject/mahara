@@ -603,10 +603,13 @@ function image_get_new_dimensions($oldx, $oldy, $size) {
 }
 
 /**
- * Deletes an image, including all resized versions of it, from dataroot.
+ * Deletes an image, excluding all resized versions of it, from dataroot.
  *
  * This function does not delete anything from anywhere else - it is your
  * responsibility to delete any database records.
+ *
+ * This function also does not try to delete all resized versions of this
+ * image, as it would take a lot of effort to find them all.
  *
  * @param string $path The path in dataroot of the base directory where the
  *                     image resides.
