@@ -335,9 +335,6 @@ function register_submit(Pieform $form, $values) {
     try {
         insert_record('usr_registration', $values);
 
-        $f = fopen('/tmp/donal.txt','w');
-        fwrite($f, get_string('registeredemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('sitename')));
-
         $user =(object) $values;
         $user->admin = 0;
         $user->staff = 0;
