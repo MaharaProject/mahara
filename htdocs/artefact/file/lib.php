@@ -1636,7 +1636,6 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
             }
             if ($data->filetype = self::is_tar($path)) {
                 $data->archivetype = 'tar';
-                // @todo:: TEST!
                 return new ArtefactTypeArchive(0, $data);
             }
         }
