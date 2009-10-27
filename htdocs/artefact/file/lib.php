@@ -976,7 +976,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         $fileids = get_records_select_assoc('artefact_file_files', 'artefact IN (' . $idstr . ')', array());
 
         $fileidcounts = get_records_sql_assoc('
-            SELECT fileid, COUNT(fileid)
+            SELECT fileid, COUNT(fileid) AS fileidcount
             FROM {artefact_file_files}
             WHERE artefact IN (' . $idstr . ')
             GROUP BY fileid',
@@ -995,13 +995,13 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
         foreach ($fileids as $r) {
             // Delete the file on disk if there's only one artefact left pointing to it
-            if ($fileidcounts[$r->fileid]->count == 1) {
+            if ($fileidcounts[$r->fileid]->fileidcount == 1) {
                 $file = get_config('dataroot') . self::get_file_directory($r->fileid) . '/' .  $r->fileid;
                 if (is_file($file)) {
                     unlink($file);
                 }
             }
-            $fileidcounts[$r->fileid]->count--;
+            $fileidcounts[$r->fileid]->fileidcount--;
         }
 
         if ($totalsize) {

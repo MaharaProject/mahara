@@ -541,6 +541,9 @@ abstract class ArtefactType {
         // Delete containers grouped by artefacttype
         foreach ($containers as $artefacttype => $ids) {
             $classname = generate_artefact_class_name($artefacttype);
+            if (is_mysql()) {
+                set_field_select('artefact', 'parent', null, 'id IN (' . join(',', $ids) . ')', array());
+            }
             call_static_method($classname, 'bulk_delete', $ids);
         }
 
