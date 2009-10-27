@@ -132,6 +132,20 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
     return get_records_sql_array($sql, $values);
 }
 
+
+function activity_default_notification_method() {
+    static $method = null;
+    if (is_null($method)) {
+        if (in_array('email', array_map(create_function('$a', 'return $a->name;'), plugins_installed('notification')))) {
+            $method = 'email';
+        }
+        else {
+            $method = 'internal';
+        }
+    }
+    return $method;
+}
+
 /**
  * this function inserts a default set of activity preferences for a given user
  * id
@@ -139,15 +153,9 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
 function activity_set_defaults($eventdata) {
     $user_id = $eventdata['id'];
     $activitytypes = get_records_array('activity_type', 'admin', 0);
-    $haveemail = in_array('email', array_map(create_function('$a', 'return $a->name;'),
-                                             plugins_installed('notification')));
+    $method = activity_default_notification_method();
+
     foreach ($activitytypes as $type) {
-        if ($haveemail) {
-            $method = 'email';
-        }
-        else {
-            $method = 'internal';
-        }
         insert_record('usr_activity_preference', (object)array(
             'usr' => $user_id,
             'activity' => $type->id,
@@ -159,14 +167,8 @@ function activity_set_defaults($eventdata) {
 
 function activity_add_admin_defaults($userids) {
     $activitytypes = get_records_array('activity_type', 'admin', 1);
-    $haveemail = in_array('email', array_map(create_function('$a', 'return $a->name;'),
-                                             plugins_installed('notification')));
-    if ($haveemail) {
-        $method = 'email';
-    }
-    else {
-        $method = 'internal';
-    }
+    $method = activity_default_notification_method();
+
     foreach ($activitytypes as $type) {
         foreach ($userids as $id) {
             if (!record_exists('usr_activity_preference', 'usr', $id, 'activity', $type->id)) {
@@ -259,6 +261,17 @@ function activity_locate_typerecord($activitytype, $plugintype=null, $pluginname
         throw new Exception("Invalid activity type $activitytype");
     }
     return $at;
+}
+
+function generate_activity_class_name($name, $plugintype, $pluginname) {
+    if (!empty($plugintype)) {
+        safe_require($plugintype, $pluginname);
+        return 'ActivityType' .
+            ucfirst($plugintype) .
+            ucfirst($pluginname) .
+            ucfirst($name);
+    }
+    return 'ActivityType' . $name;
 }
 
 /** activity type classes **/
@@ -363,7 +376,7 @@ abstract class ActivityType {
         $userdata->message = $this->get_message($user);
         $userdata->subject = $this->get_subject($user);
         if (empty($user->method)) {
-            $user->method = 'internal';
+            $user->method = call_static_method(get_class($this), 'default_notification_method');
         }
 
         // always do internal
@@ -401,6 +414,10 @@ abstract class ActivityType {
         foreach ($this->get_users() as $user) {
             $this->notify_user($user);
         }
+    }
+
+    public static function default_notification_method() {
+        return activity_default_notification_method();
     }
 }
 

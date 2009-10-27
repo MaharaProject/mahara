@@ -34,6 +34,7 @@ define('SECTION_PAGE', 'activitypreferences');
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 define('TITLE', get_string('activityprefs'));
 require_once('pieforms/pieform.php');
+require_once(get_config('libroot') . 'activity.php');
 
 $activitytypes = get_records_array('activity_type', 'admin', 0);
 if ($USER->get('admin') || $USER->is_institutional_admin()) {
@@ -52,11 +53,7 @@ foreach ($notifications as $n) {
 foreach ($activitytypes as $type) {
     $dv = $USER->get_activity_preference($type->id);
     if (empty($dv)) {
-        if (!empty($type->admin) && $USER->get('admin')) {
-            $dv = 'none';
-        } else {
-            $dv = 'email';
-        }
+        $dv = call_static_method(generate_activity_class_name($type->name, $type->plugintype, $type->pluginname), 'default_notification_method');
     }
     if (!empty($type->plugintype)) {
         $section = $type->plugintype . '.' . $type->pluginname;
