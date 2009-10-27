@@ -489,8 +489,8 @@ class AuthXmlrpc extends Auth {
             log_debug("XMLRPC error occured while calling MNET method kill_children on $this->wwwroot");
             log_debug("This means that single-signout probably didn't work properly, but the problem "
                 . "is at the remote application");
-            log_debug("If the remote application is Moodle, and you're happy with a Mahara developer "
-                . "getting access to your system so they can try and debug the problem, get in touch with dev@mahara.org");
+            log_debug("If the remote application is Moodle, you are likely a victim of "
+                . "http://tracker.moodle.org/browse/MDL-16872 - try applying the attached patch to fix the issue");
             log_debug("Exception message follows:");
             log_debug($e->getMessage());
         }
