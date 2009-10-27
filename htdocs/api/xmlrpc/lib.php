@@ -1191,18 +1191,14 @@ class OpenSslRepo {
         $dn["commonName"] = preg_replace(':/$:', '', $dn["commonName"]);
 
         if (!$new_key = openssl_pkey_new()) {
-            throw new ConfigException('Could not generate a new SSL key. Are '
-                . 'you sure that both openssl and the PHP module for openssl are '
-                . 'installed on this machine?');
+            throw new ConfigException(get_string('errorcouldnotgeneratenewsslkey', 'auth'));
         }
 
         if (!$csr_rsc = openssl_csr_new($dn, $new_key, array('private_key_bits',2048))) {
             // This behaviour has been observed once before, on an ubuntu hardy box. 
             // The php5-openssl package was installed but somehow openssl 
             // wasn't.
-            throw new ConfigException('Could not generate a new SSL key. Are '
-                . 'you sure that both openssl and the PHP module for openssl are '
-                . 'installed on this machine?');
+            throw new ConfigException(get_string('errorcouldnotgeneratenewsslkey', 'auth'));
         }
         $selfSignedCert = openssl_csr_sign($csr_rsc, null, $new_key, 365 /*days*/);
         unset($csr_rsc); // Free up the resource
