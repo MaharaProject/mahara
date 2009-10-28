@@ -73,6 +73,9 @@ function ensure_sanity() {
     if(!extension_loaded('curl')) {
         throw new ConfigSanityException(get_string('curllibrarynotinstalled', 'error'));
     }
+    if (!extension_loaded('dom')) {
+        throw new ConfigSanityException(get_string('domextensionnotloaded', 'error'));
+    }
 
     //Check for freetype in the gd extension
     $gd_info = gd_info();
