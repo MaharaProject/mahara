@@ -277,6 +277,10 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             throw new XML_Feed_Parser_Exception($result->error);
         }
 
+        if (empty($result->data)) {
+            throw new XML_Feed_Parser_Exception('Feed url returned no data');
+        }
+
         try {
             $feed = new XML_Feed_Parser($result->data, false, true, false);
         }
