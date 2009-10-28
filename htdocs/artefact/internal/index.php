@@ -78,6 +78,19 @@ if ($profilefields['email']['all']) {
 
 $items = array();
 foreach ( $element_list as $element => $type ) {
+    if ($type == 'wysiwyg' && isset($lockedfields[$element]) && !$USER->get('admin')) {
+        // TinyMCE ignores the disabled attribute on the textarea, so just turn it
+        // into an html element instead.
+        $items[$element] = array(
+            'type'  => 'html',
+            'title' => get_string($element, 'artefact.internal'),
+        );
+        if (isset($profilefields[$element])) {
+            $items[$element]['value'] = $profilefields[$element];
+        }
+        continue;
+    }
+
     $items[$element] = array(
         'type'  => $type,
         'title' => get_string($element, 'artefact.internal'),
