@@ -2112,7 +2112,7 @@ function tags_sideblock() {
  * has caused the quota count to get out of sync
  */
 function recalculate_quota() {
-    if (!$artefacts = get_records_array('artefact', '', '', '', 'id, artefacttype, owner')) {
+    if (!$artefacts = get_records_select_array('artefact', 'owner IS NOT NULL', null, '', 'id, artefacttype, owner')) {
         // Nothing to do
         return;
     }
