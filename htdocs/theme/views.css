@@ -235,6 +235,9 @@ html>body #column-container {
 .blockinstance.configure td {
     padding: 0;
 }
+.blockinstance-content {
+    margin-top: .25em;
+}
 .blockinstance-content p:first-child {
     margin-top: 0;
 }
@@ -246,7 +249,6 @@ html>body #column-container {
 }
 .bt-image .blockinstance-content div a img {
 	max-width: 100%;
-	margin: .5em 0;
 }
 * html .bt-image .blockinstance-content div a img {
 	width: 100%;
