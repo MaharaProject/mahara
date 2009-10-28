@@ -86,7 +86,7 @@ foreach ( $element_list as $element => $type ) {
             'title' => get_string($element, 'artefact.internal'),
         );
         if (isset($profilefields[$element])) {
-            $items[$element]['value'] = $profilefields[$element];
+            $items[$element]['value'] = clean_html($profilefields[$element]);
         }
         continue;
     }
