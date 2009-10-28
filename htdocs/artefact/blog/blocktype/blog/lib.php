@@ -99,9 +99,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         // blogs
         if (empty($configdata['artefactid']) || $blog->get('owner') == $USER->get('id')) {
             $elements[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate);
-            if ($istemplate) {
-                $elements[] = PluginArtefactBlog::block_advanced_options_element($configdata, 'blog');
-            };
+            $elements[] = PluginArtefactBlog::block_advanced_options_element($configdata, 'blog');
         }
         else {
             $elements[] = array(
