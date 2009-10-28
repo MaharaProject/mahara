@@ -221,6 +221,20 @@ class PluginArtefactFile extends PluginArtefact {
     public static function get_attachment_types() {
         return array('file', 'image', 'archive');
     }
+
+    public static function recalculate_quota() {
+        $data = get_records_sql_assoc("
+            SELECT a.owner, SUM(f.size) AS usage
+            FROM {artefact} a JOIN {artefact_file_files} f ON a.id = f.artefact
+            WHERE a.artefacttype IN ('file', 'image', 'profileicon', 'archive')
+            AND a.owner IS NOT NULL
+            GROUP BY a.owner", array()
+        );
+        if ($data) {
+            return array_map(create_function('$a', 'return $a->usage;'), $data);
+        }
+        return array();
+    }
 }
 
 abstract class ArtefactTypeFileBase extends ArtefactType {
@@ -1557,11 +1571,6 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
 
     public function in_view_list() {
         return true;
-    }
-
-    public static function get_quota_usage($artefact) {
-        return filesize(get_config('dataroot') . 'artefact/file/profileicons/originals/'
-            . ($artefact % 256) . '/' . $artefact);
     }
 
     public function default_parent_for_copy(&$view, &$template, $artefactstoignore) {

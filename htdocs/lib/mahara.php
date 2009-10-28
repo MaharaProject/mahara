@@ -2112,19 +2112,24 @@ function tags_sideblock() {
  * has caused the quota count to get out of sync
  */
 function recalculate_quota() {
-    if (!$artefacts = get_records_select_array('artefact', 'owner IS NOT NULL', null, '', 'id, artefacttype, owner')) {
-        // Nothing to do
-        return;
-    }
+    $plugins = plugins_installed('artefact', true);
 
     $userquotas = array();
 
-    foreach ($artefacts as $artefact) {
-        safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact->artefacttype));
-        if (!isset($userquotas[$artefact->owner])) {
-            $userquotas[$artefact->owner] = 0;
+    foreach ($plugins as $plugin) {
+        safe_require('artefact', $plugin->name);
+        $classname = generate_class_name('artefact', $plugin->name);
+        if (is_callable($classname . '::recalculate_quota')) {
+            $pluginuserquotas = call_static_method($classname, 'recalculate_quota');
+            foreach ($pluginuserquotas as $userid => $usage) {
+                if (!isset($userquotas[$userid])) {
+                    $userquotas[$userid] = $usage;
+                }
+                else {
+                    $userquotas[$userid] += $usage;
+                }
+            }
         }
-        $userquotas[$artefact->owner] += call_static_method(generate_artefact_class_name($artefact->artefacttype), 'get_quota_usage', $artefact->id);
     }
 
     foreach ($userquotas as $user => $quota) {
