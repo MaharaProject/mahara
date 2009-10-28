@@ -79,7 +79,7 @@ class PluginBlocktypeEntireresume extends PluginBlocktype {
         return array();
     }
 
-    public static function artefactchooser_element($default=null, $istemplate=false) {
+    public static function artefactchooser_element($default=null) {
     }
 
     /**

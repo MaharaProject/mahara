@@ -106,7 +106,7 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance, $istemplate) {
+    public static function instance_config_form($instance) {
         global $USER;
         safe_require('artefact', 'blog');
         $configdata = $instance->get('configdata');
@@ -139,7 +139,7 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
         return $elements;
     }
 
-    public static function artefactchooser_element($default=null, $istemplate=false) {
+    public static function artefactchooser_element($default=null) {
         $extrajoin   = ' JOIN {artefact_blog_blogpost} ON {artefact_blog_blogpost}.blogpost = a.id ';
 
         $element = array(

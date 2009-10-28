@@ -76,7 +76,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance, $istemplate) {
+    public static function instance_config_form($instance) {
         $configdata = $instance->get('configdata');
         safe_require('artefact', 'file');
         $instance->set('artefactplugin', 'file');
@@ -109,7 +109,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         return $element;
     }
 
-    public static function artefactchooser_element($default=null, $istemplate=false) {
+    public static function artefactchooser_element($default=null) {
         $extraselect = 'filetype IN (' . join(',', array_map('db_quote', self::get_allowed_mimetypes())) . ')';
         $extrajoin   = ' JOIN {artefact_file_files} ON {artefact_file_files}.artefact = a.id ';
 

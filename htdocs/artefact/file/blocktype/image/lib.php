@@ -83,7 +83,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance, $istemplate) {
+    public static function instance_config_form($instance) {
         $configdata = $instance->get('configdata');
         safe_require('artefact', 'file');
         $instance->set('artefactplugin', 'file');
@@ -119,7 +119,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
         return $element;
     }
 
-    public static function artefactchooser_element($default=null, $istemplate=false) {
+    public static function artefactchooser_element($default=null) {
         return array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',

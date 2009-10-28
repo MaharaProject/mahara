@@ -82,7 +82,7 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance, $istemplate) {
+    public static function instance_config_form($instance) {
         $configdata = $instance->get('configdata');
 
         $form = array();
@@ -121,7 +121,7 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
     }
 
     // TODO: make decision on whether this should be abstract or not
-    public static function artefactchooser_element($default=null, $istemplate=false) {
+    public static function artefactchooser_element($default=null) {
         safe_require('artefact', 'internal');
         return array(
             'name'  => 'artefactids',

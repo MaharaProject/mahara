@@ -98,9 +98,8 @@ abstract class PluginBlocktype extends Plugin {
      * blocktype that the form is for.
      *
      * @param mixed $default The default value for the element
-     * @param boolean $istemplate Whether the View this block is in is a template
      */
-    public static abstract function artefactchooser_element($default=null, $istemplate=false);
+    public static abstract function artefactchooser_element($default=null);
 
     /**
     * subclasses can override this if they need to do something a bit special
@@ -360,7 +359,7 @@ abstract class SystemBlockType extends PluginBlockType {
         return array();
     }
 
-    public final static function artefactchooser_element($default=null, $istemplate=false) {
+    public final static function artefactchooser_element($default=null) {
     }
 
 }

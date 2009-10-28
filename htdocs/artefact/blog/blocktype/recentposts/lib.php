@@ -77,14 +77,14 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance, $istemplate) {
+    public static function instance_config_form($instance) {
         safe_require('artefact', 'blog');
         $configdata = $instance->get('configdata');
         $elements = array(self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null));
         return $elements;
     }
 
-    public static function artefactchooser_element($default=null, $istemplate=false) {
+    public static function artefactchooser_element($default=null) {
         return array(
             'name'  => 'artefactids',
             'type'  => 'artefactchooser',

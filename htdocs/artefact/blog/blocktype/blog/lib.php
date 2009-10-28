@@ -78,7 +78,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance, $istemplate) {
+    public static function instance_config_form($instance) {
         global $USER;
         safe_require('artefact', 'blog');
         $configdata = $instance->get('configdata');
@@ -98,7 +98,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         // Note: the owner check will have to change when we do group/site 
         // blogs
         if (empty($configdata['artefactid']) || $blog->get('owner') == $USER->get('id')) {
-            $elements[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate);
+            $elements[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null);
             $elements[] = PluginArtefactBlog::block_advanced_options_element($configdata, 'blog');
         }
         else {
@@ -147,7 +147,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         return $artefacts;
     }
 
-    public static function artefactchooser_element($default=null, $istemplate=false) {
+    public static function artefactchooser_element($default=null) {
         return array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
