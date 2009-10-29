@@ -236,9 +236,11 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         $ids = array();
         if ($instances = get_records_array('block_instance', 'blocktype', 'externalfeed')) {
             foreach ($instances as $block) {
-                $data = unserialize($block->configdata);
-                if ($data['feedid']) {
-                    $ids[$data['feedid']] = true;
+                if (is_string($block->configdata) && strlen($block->configdata)) {
+                    $data = unserialize($block->configdata);
+                    if (isset($data['feedid']) && $data['feedid']) {
+                        $ids[$data['feedid']] = true;
+                    }
                 }
             }
         }
