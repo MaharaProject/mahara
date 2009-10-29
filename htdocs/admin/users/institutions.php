@@ -390,7 +390,7 @@ function institution_validate(Pieform $form, $values) {
 }
 
 function institution_submit(Pieform $form, $values) {
-    global $SESSION, $institution, $add, $instancearray, $USER;
+    global $SESSION, $institution, $add, $instancearray, $USER, $authinstances;
 
     db_begin();
     // Update the basic institution record...
@@ -445,6 +445,21 @@ function institution_submit(Pieform $form, $values) {
         }
 
         foreach($values['authplugin']['deletearray'] as $instanceid) {
+            // If this authinstance is the only xmlrpc authinstance that references a host, delete the host record.
+            $hostwwwroot = null;
+            foreach ($authinstances as $ai) {
+                if ($ai->id == $instanceid && $ai->authname == 'xmlrpc') {
+                    $hostwwwroot = get_field_sql("SELECT value FROM {auth_instance_config} WHERE instance = ? AND field = 'wwwroot'", array($instanceid));
+                    if ($hostwwwroot && count_records_select('auth_instance_config', "field = 'wwwroot' AND value = ?", array($hostwwwroot)) == 1) {
+                        // Unfortunately, it's possible that this host record could belong to a different institution,
+                        // so specify the institution here.
+                        delete_records('host', 'wwwroot', $hostwwwroot, 'institution', $institution);
+                        // We really need to fix this, either by removing the institution from the host table, or refusing to allow the
+                        // institution to be changed in the host record when another institution's authinstance is still pointing at it.
+                    }
+                    break;
+                }
+            }
             delete_records('auth_remote_user', 'authinstance', $instanceid);
             delete_records('auth_instance_config', 'instance', $instanceid);
             delete_records('auth_instance', 'id', $instanceid);
