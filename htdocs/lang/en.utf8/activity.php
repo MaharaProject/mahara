@@ -37,6 +37,7 @@ $string['typevirusrepeat'] = 'Repeat virus upload';
 $string['typevirusrelease'] = 'Virus flag release';
 $string['typeadminmessages'] = 'Administration messages';
 $string['typeinstitutionmessage'] = 'Institution message';
+$string['typegroupmessage'] = 'Group message';
 
 $string['type'] = 'Activity type';
 $string['attime'] = 'at';
@@ -104,4 +105,6 @@ $string['institutionrequestmessage'] = 'You can add users to institutions on the
 $string['institutioninvitesubject'] = 'You have been invited to join the institution %s.';
 $string['institutioninvitemessage'] = 'You can confirm your membership of this institution on your Institution Settings Page:';
 
+$string['viewsubmittedsubject'] = 'View submitted to %s';
+$string['viewsubmittedmessage'] = '%s has submitted their view "%s" to %s';
 ?>
