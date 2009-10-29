@@ -36,7 +36,7 @@ $groupid = param_integer('group');
 
 $view = get_record('view', 'id', $viewid, 'owner', $USER->get('id'));
 $group = get_record_sql(
-    'SELECT g.id, g.name
+    'SELECT g.id, g.name, g.grouptype
        FROM {group_member} u
        INNER JOIN {group} g ON (u.group = g.id AND g.deleted = 0)
        INNER JOIN {grouptype} gt ON gt.name = g.grouptype
@@ -73,7 +73,7 @@ $smarty->assign('form', $form);
 $smarty->display('view/submit.tpl');
 
 function submitview_submit(Pieform $form, $values) {
-    global $SESSION, $USER, $viewid, $groupid;
+    global $SESSION, $USER, $viewid, $groupid, $group;
     db_begin();
     update_record('view', array('submittedgroup' => $groupid), array('id' => $viewid));
     activity_occurred('groupmessage', array(
@@ -82,7 +82,7 @@ function submitview_submit(Pieform $form, $values) {
         'submittedview' => $viewid,
         'viewowner'     => $USER->get('id'),
         'group'         => $groupid,
-        'roles'         => array('admin', 'tutor'),
+        'roles'         => get_column('grouptype_roles', 'role', 'grouptype', $group->grouptype, 'see_submitted_views', 1),
     ));
     db_commit();
     $SESSION->add_ok_msg(get_string('viewsubmitted', 'view'));
