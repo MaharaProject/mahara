@@ -1,3 +1,13 @@
+1.1.7 (2009-10-29)
+- Upgraded HTMLPurifier to 4.0.0
+- Fix creation of duplicate user accounts when using LDAP and XMLRPC authentication
+- HTTPS logins supported
+- Improvements to MNET: windows profile icon importing & links in emails
+- Implemented "update user info on login" flag for LDAP
+- CVE-2009-3298: Privelege escalation vulnerability
+- CVE-2009-3299: Cross site scripting in resume
+- Several bug fixes and minor translation updates across Mahara
+
 1.1.6 (2009-08-04)
 - Forum e-mail notifications now have a cleaner format, and allow users to unsubscribe immediately.
 - Enforce UTF8 database upon installation.
