@@ -1,3 +1,7 @@
+1.0.13 (2009-10-29)
+- CVE-2009-3298: Privelege escalation vulnerability
+- CVE-2009-3299: Cross site scripting in resume
+
 1.0.12 (2009-06-22)
 - Fix XSS vulnerabilities in folder and one resume field blocktypes
 
