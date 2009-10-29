@@ -1250,6 +1250,12 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('activity_type', (object) array('name' => 'groupmessage', 'admin' => 0, 'delay' => 0));
     }
 
+    if ($oldversion < 2009102900) {
+        $table = new XMLDBTable('usr');
+        $field = new XMLDBField('sessionid');
+        drop_field($table, $field);
+    }
+
     return $status;
 
 }
