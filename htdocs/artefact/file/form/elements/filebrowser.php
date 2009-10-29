@@ -462,16 +462,21 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
         ));
     }
 
+    // {$prefix}_upload is set in all browsers except safari when javascript is
+    // on (and set in all browsers when it's not)
     $upload = param_variable($prefix . '_upload', null);
     if (!empty($upload)) {
-        if (!isset($_FILES['userfile']['name'])) {
+        if (empty($_FILES['userfile']['name'])) {
             return array(
                 'error'   => true,
                 'message' => get_string('filenamefieldisrequired', 'artefact.file'),
                 'browse'  => 1,
             );
         }
-        else if (strlen($_FILES['userfile']['name']) > 1024) {
+    }
+
+    if (isset($_FILES['userfile']['error']) && $_FILES['userfile']['error'] == 0) {
+        if (strlen($_FILES['userfile']['name']) > 1024) {
             return array(
                 'error'   => true,
                 'message' => get_string('nametoolong', 'artefact.file'),
