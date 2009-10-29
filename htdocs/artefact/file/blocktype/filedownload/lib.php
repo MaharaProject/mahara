@@ -72,18 +72,19 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
                 }
 
                 $result .= '<div title="' . hsc($artefact->get('title')) . '">';
-                $result .= '<div class="fl"><a href="' . hsc($downloadurl) . '">';
+                $result .= '<div class="fl"><a href="' . hsc($downloadurl) . '" target="_blank">';
                 $result .= '<img src="' . hsc(call_static_method(generate_artefact_class_name($artefact->get('artefacttype')), 'get_icon', $icondata))
                     . '" alt=""></a></div>';
                 $result .= '<div style="margin-left: 30px;">';
 
-                $result .= '<h4><a href="' . hsc($detailsurl) . '">' . str_shorten_text($artefact->get('title'), 20) . '</a></h4>';
+                $result .= '<h4><a href="' . hsc($downloadurl) . '" target="_blank">' . str_shorten_text($artefact->get('title'), 20) . '</a></h4>';
 
                 $description = $artefact->get('description');
                 if ($description) {
                     $result .= '<p style="margin: 0;"><strong>' . hsc($description) . '</strong></p>';
                 }
                 $result .= '' . display_size($size) . ' | ' . strftime(get_string('strftimedaydate'),$artefact->get('ctime'));
+                $result .= ' | <a href="' . hsc($detailsurl) . '">' . get_string('Details', 'artefact.file') . '</a>';
                 $result .= '</div>';
 
 
