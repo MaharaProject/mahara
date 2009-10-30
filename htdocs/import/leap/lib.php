@@ -140,6 +140,16 @@ class PluginImportLeap extends PluginImport {
      */
     private function create_strategy_listing() {
         $this->trace("-------------------------\ncreate_strategy_listing()");
+        // Give all plugins a chance to perform setup tasks
+        foreach (plugins_installed('artefact') as $plugin) {
+            $plugin = $plugin->name;
+            if (safe_require('import', 'leap/' . $plugin, 'lib.php', 'require_once', true)) {
+                $classname = 'LeapImport' . ucfirst($plugin);
+                if (method_exists($classname, 'setup')) {
+                    call_static_method($classname, 'setup', $this);
+                }
+            }
+        }
 
         // First, try to establish whether there is an element representing the 
         // author of the feed
@@ -175,25 +185,27 @@ class PluginImportLeap extends PluginImport {
 
             foreach (plugins_installed('artefact') as $plugin) {
                 $plugin = $plugin->name;
-                if (safe_require('import', 'leap/' . $plugin, 'lib.php', 'require_once', true)) {
-                    $classname = 'LeapImport' . ucfirst($plugin);
+                $classname = 'LeapImport' . ucfirst($plugin);
+                if (class_exists($classname)) {
                     if (!is_subclass_of($classname, 'LeapImportArtefactPlugin')) {
                         throw new SystemException("Class $classname does not extend LeapImportArtefactPlugin as it should");
                     }
-                    $strategies = call_static_method($classname, 'get_import_strategies_for_entry', $entry, $this);
-                    $this->trace("   artefact.$plugin strategies: " . count($strategies));
-                    if ($strategies) {
-                        $this->trace($strategies, self::LOG_LEVEL_VERBOSE);
-                        foreach ($strategies as $strategy) {
-                            // Verify they're in valid form
-                            if (!array_key_exists('strategy', $strategy)
-                                || !array_key_exists('score', $strategy)
-                                || !array_key_exists('other_required_entries', $strategy)) {
-                                throw new SystemException("$classname::get_import_strategies_for_entry returned a strategy missing "
-                                    . "one or more of the strategy, score or other_required_entries keys");
+                    if (method_exists($classname, 'get_import_strategies_for_entry')) {
+                        $strategies = call_static_method($classname, 'get_import_strategies_for_entry', $entry, $this);
+                        $this->trace("   artefact.$plugin strategies: " . count($strategies));
+                        if ($strategies) {
+                            $this->trace($strategies, self::LOG_LEVEL_VERBOSE);
+                            foreach ($strategies as $strategy) {
+                                // Verify they're in valid form
+                                if (!array_key_exists('strategy', $strategy)
+                                    || !array_key_exists('score', $strategy)
+                                    || !array_key_exists('other_required_entries', $strategy)) {
+                                    throw new SystemException("$classname::get_import_strategies_for_entry returned a strategy missing "
+                                        . "one or more of the strategy, score or other_required_entries keys");
+                                }
+                                $strategy['artefactplugin'] = $plugin;
+                                $this->strategylisting[$entryid][] = $strategy;
                             }
-                            $strategy['artefactplugin'] = $plugin;
-                            $this->strategylisting[$entryid][] = $strategy;
                         }
                     }
                 }
@@ -408,6 +420,13 @@ class PluginImportLeap extends PluginImport {
     }
 
     private function import_completed() {
+        // Give all plugins a chance to perform final tasks
+        foreach (plugins_installed('artefact') as $plugin) {
+            $classname = 'LeapImport' . ucfirst($plugin->name);
+            if (method_exists($classname, 'cleanup')) {
+                call_static_method($classname, 'cleanup', $this);
+            }
+        }
         $this->trace("------------------\nimport_completed()");
 
         unset($this->loadmapping);
@@ -1072,6 +1091,15 @@ class PluginImportLeap extends PluginImport {
 abstract class LeapImportArtefactPlugin {
 
     /**
+     * Runs as the importer is starting up, giving the plugin a chance to do
+     * some initialisation.
+     *
+     * @param PluginImportLeap $importer The importer
+     */
+    public static function setup(PluginImportLeap $importer) {
+    }
+
+    /**
      * Given an entry, should return a list of the possible ways that it could 
      * be imported by this plugin.
      *
@@ -1217,6 +1245,15 @@ abstract class LeapImportArtefactPlugin {
      * @throws ImportException If the strategy is unrecognised
      */
     public static function setup_relationships(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
+    }
+
+    /**
+     * Runs after the importer has finished, to allow the plugin to perform any
+     * cleanup operations.
+     *
+     * @param PluginImportLeap $importer The importer
+     */
+    public static function cleanup(PluginImportLeap $importer) {
     }
 
 }
