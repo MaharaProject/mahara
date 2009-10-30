@@ -358,9 +358,10 @@ function ViewManager() {
         });
 
         var deletebutton = getFirstElementByTagAndClassName('input', 'deletebutton', newblock);
-        self.rewriteDeleteButton(deletebutton);
 
         if (removeoncancel) {
+            self.rewriteDeleteButton(deletebutton);
+
             var oldblockid = newblock.id.substr(0, newblock.id.length - '_configure'.length);
             var blockinstanceId = oldblockid.substr(oldblockid.lastIndexOf('_') + 1);
             var cancelbutton = $('cancel_instconf_action_configureblockinstance_id_' + blockinstanceId);
@@ -369,6 +370,14 @@ function ViewManager() {
                 disconnectAll(cancelbutton);
                 self.rewriteCancelButton(cancelbutton, blockinstanceId);
             }
+        }
+        else {
+            disconnectAll(deletebutton);
+            connect(deletebutton, 'onclick', function(e) {
+                e.stop();
+                self.removeConfigureBlocks();
+                self.showMediaPlayers();
+            });
         }
 
         showElement(newblock);
