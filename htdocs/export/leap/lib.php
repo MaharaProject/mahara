@@ -220,6 +220,7 @@ class PluginExportLeap extends PluginExport {
             $this->smarty->assign('content',     $view->build_columns());
             $this->smarty->assign('viewdata',    $config['columns']);
             $this->smarty->assign('layout',      $view->get_layout()->widths);
+            $this->smarty->assign('type',        $config['type']);
             $ownerformat = ($config['ownerformat']) ? $config['ownerformat'] : FORMAT_NAME_DISPLAYNAME;
             $this->smarty->assign('ownerformat', $ownerformat);
             $this->smarty->assign('leaptype',    'selection');

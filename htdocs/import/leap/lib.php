@@ -577,6 +577,7 @@ class PluginImportLeap extends PluginImport {
     private function import_entry_as_mahara_view(SimpleXMLElement $entry) {
         static $blocktypes_installed = null;
         static $viewlayouts = null;
+        static $viewtypes = null;
         $viewelement = $entry->xpath('mahara:view[1]');
 
         if (count($viewelement) != 1) {
@@ -587,12 +588,19 @@ class PluginImportLeap extends PluginImport {
         if (is_null($viewlayouts)) {
             $viewlayouts = get_records_assoc('view_layout', '', '', '', 'widths, id');
         }
+        if (is_null($viewtypes)) {
+            $viewtypes = get_column('view_type', 'type');
+        }
 
         $maharaattributes = PluginImportLeap::get_attributes($viewelement[0], PluginImportLeap::NS_MAHARA);
 
         $layout = null;
         if (isset($viewlayouts[$maharaattributes['layout']])) {
             $layout = $viewlayouts[$maharaattributes['layout']]->id;
+        }
+        $type = 'portfolio';
+        if (isset($maharaattributes['type']) && in_array($maharaattributes['type'], $viewtypes)) {
+            $type = $maharaattributes['type'];
         }
         $ownerformat = intval($maharaattributes['ownerformat']);
         if (!$ownerformat) {
@@ -610,7 +618,7 @@ class PluginImportLeap extends PluginImport {
         $config = array(
             'title'       => (string)$entry->title,
             'description' => (string)$entry->summary,
-            'type'        => 'portfolio', // TODO
+            'type'        => $type,
             'layout'      => $layout,
             'tags'        => self::get_entry_tags($entry),
             'numcolumns'  => $columncount,

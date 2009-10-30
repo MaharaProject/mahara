@@ -1,5 +1,5 @@
 {include file="export:leap:entry.tpl" skipfooter=true}
-        <mahara:view{if $layout} mahara:layout="{$layout|escape}"{/if} mahara:ownerformat="{$ownerformat|escape}">
+        <mahara:view{if $layout} mahara:layout="{$layout|escape}"{/if}{if $type} mahara:type="{$type|escape}"{/if} mahara:ownerformat="{$ownerformat|escape}">
 {foreach from=$viewdata item=column}
             <mahara:column>
 {foreach from=$column item=blockinstance}
