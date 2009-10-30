@@ -321,7 +321,7 @@ function contextualHelpIcon(formName, helpName, pluginType, pluginName, page, se
     return link;
 }
 
-function contextualHelp(formName, helpName, pluginType, pluginName, page, section, ref, parentElement) {
+function contextualHelp(formName, helpName, pluginType, pluginName, page, section, ref) {
     var key;
     var target = $(formName + '_' + helpName + '_container');
     var url = config.wwwroot + 'json/help.php';
@@ -330,9 +330,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
         'pluginname': pluginName
     };
 
-    if (!parentElement) {
-        parentElement = 'messages';
-    }
+    var parentElement = 'messages';
 
     // deduce the key
     if (page) {
@@ -369,8 +367,8 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
 
     // create and display the container
     contextualHelpContainer = DIV({
-            'style': 'position: absolute; visibility: hidden; z-index: 1000;',
-            'class': 'contextualHelp'
+            'style': 'position: absolute;',
+            'class': 'contextualHelp hidden'
         },
         IMG({'src': config.theme['images/loading.gif']})
     );
@@ -393,7 +391,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
 
     // Once it has been positioned, make it visible
     setElementPosition(contextualHelpContainer, position);
-    setStyle(contextualHelpContainer, {'visibility': 'visible'});
+    removeElementClass(contextualHelpContainer, 'hidden');
 
     contextualHelpSelected = key;
 
