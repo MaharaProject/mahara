@@ -217,7 +217,7 @@ class AuthXmlrpc extends Auth {
             db_begin();
             $user->username           = get_new_username($remoteuser->username);
 
-            $user->id = create_user($user, array(), $peer->institution, $this, $remoteuser->username);
+            $user->id = create_user($user, array(), $this->institution, $this, $remoteuser->username);
 
             $this->import_user_settings($user, $remoteuser);
 
