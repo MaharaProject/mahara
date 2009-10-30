@@ -328,10 +328,10 @@ class PluginExportLeap extends PluginExport {
         $artefactcount = count($artefacts);
         $i = 0;
         foreach ($artefacts as $artefact) {
-            if ($i++ % 10 == 1) {
+            if ($i++ % 3 == 0) {
                 $percent = intval($progressstart + ($i / $artefactcount) * ($progressend - $progressstart));
                 $this->notify_progress_callback($percent, "Exporting artefacts: $i/$artefactcount");
-            };
+            }
             $element = null;
             // go see if we have to do anything special for this artefact type.
             if (safe_require('export', 'leap/' . $artefact->get_plugin_name(), 'lib.php', 'require_once', true)) {
