@@ -87,7 +87,7 @@ if (count($authinstances) > 0) {
 
     foreach ($authinstances as $authinstance) {
         if ($USER->can_edit_institution($authinstance->name)) {
-            $options[$authinstance->id .'_'. $authinstance->name] = $authinstance->displayname. ': '.$authinstance->instancename;
+            $options[$authinstance->id] = $authinstance->displayname. ': '.$authinstance->instancename;
         }
     }
     $default = key($options);
@@ -155,10 +155,8 @@ function uploadcsv_validate(Pieform $form, $values) {
 
     require_once('csvfile.php');
 
-    // Don't be tempted to use 'explode' here. There may be > 1 underscore.
-    $break = strpos($values['authinstance'], '_');
-    $authinstance = substr($values['authinstance'], 0, $break);
-    $institution  = substr($values['authinstance'], $break+1);
+    $authinstance = (int) $values['authinstance'];
+    $institution = get_field('auth_instance', 'institution', 'id', $authinstance);
     if (!$USER->can_edit_institution($institution)) {
         $form->set_error('authinstance', get_string('notadminforinstitution', 'admin'));
         return;
@@ -248,11 +246,10 @@ function uploadcsv_submit(Pieform $form, $values) {
 
     $formatkeylookup = array_flip($FORMAT);
 
-    // Don't be tempted to use 'explode' here. There may be > 1 underscore.
-    $break = strpos($values['authinstance'], '_');
-    $authinstance = substr($values['authinstance'], 0, $break);
-    $institution = substr($values['authinstance'], $break+1);
-    $institution = new Institution($institution);
+    $authinstance = (int) $values['authinstance'];
+    $authobj = get_record('auth_instance', 'id', $authinstance);
+
+    $institution = new Institution($authobj->institution);
 
     $maxusers = $institution->maxuseraccounts; 
     if (!empty($maxusers)) {
@@ -268,7 +265,6 @@ function uploadcsv_submit(Pieform $form, $values) {
     log_info('Inserting users from the CSV file');
     db_begin();
 
-    $authobj = get_record('auth_instance', 'id', $authinstance);
     $addedusers = array();
     foreach ($CSVDATA as $record) {
         log_debug('adding user ' . $record[$formatkeylookup['username']]);
