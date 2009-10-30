@@ -37,7 +37,7 @@ echo $form_tag;
 <?php } ?>
                 </table>
                 <div id="or"><?php echo get_string('Or...', 'admin'); ?></div>
-                <div class="choice"><input type="radio" name="createmethod" class="ic"<?php if (isset($_POST['createmethod']) && $_POST['createmethod'] == 'leap2a') { ?> checked="checked"<?php } ?> id="uploadleap" value="leap2a"> <label for="uploadleap"><?php echo get_string('uploadleap2afile', 'admin'); ?></label> ?</div>
+                <div class="choice"><input type="radio" name="createmethod" class="ic"<?php if (isset($_POST['createmethod']) && $_POST['createmethod'] == 'leap2a') { ?> checked="checked"<?php } ?> id="uploadleap" value="leap2a"> <label for="uploadleap"><?php echo get_string('uploadleap2afile', 'admin'); ?></label> <?php echo get_help_icon('core', 'admin', 'adduser', 'leap2afile'); ?></div>
                 <?php echo $elements['leap2afile']['html']; ?>
 <?php if ($elements['leap2afile']['error']) { ?>
                 <div class="errmsg"><?php echo $elements['leap2afile']['error']; ?></div>
