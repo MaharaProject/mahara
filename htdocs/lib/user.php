@@ -1302,7 +1302,16 @@ function addfriend_submit(Pieform $form, $values) {
     redirect('/user/view.php?id=' . $values['id']);
 }
 
-
+/**
+ * Create user
+ *
+ * @param object $user stdclass or User object for the usr table
+ * @param array  $profile profile field/values to set
+ * @param string $institution Institution the user should joined to
+ * @param stdclass $remoteauth authinstance record for a remote authinstance
+ * @param string $remotename username on the remote site
+ * @return integer id of the new user
+ */
 function create_user($user, $profile=array(), $institution=null, $remoteauth=null, $remotename=null) {
     db_begin();
 
