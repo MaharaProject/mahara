@@ -49,6 +49,18 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
      */
     const STRATEGY_IMPORT_AS_ENTRY = 2;
 
+    private static $firstblogid = null;
+    private static $importedablog = false;
+
+    /**
+     * Users get a default blog when they're created. We don't want this user
+     * to have one if their import includes a blog. So we remember the default
+     * blog ID here in order to delete it later if necessary.
+     */
+    public static function setup(PluginImportLeap $importer) {
+        self::$firstblogid = get_field('artefact', 'id', 'owner', $importer->get('usr'), 'artefacttype', 'blog');
+    }
+
     public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImportLeap $importer) {
         $strategies = array();
 
@@ -104,6 +116,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
             $blog->set('tags', PluginImportLeap::get_entry_tags($entry));
             $blog->commit();
             $artefactmapping[(string)$entry->id] = array($blog->get('id'));
+            self::$importedablog = true;
 
             // Then, the blog posts
             foreach ($otherentries as $entryid) {
@@ -175,6 +188,16 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
     }
 
     /**
+     * Deletes the default blog that is created for all users
+     */
+    public static function cleanup(PluginImportLeap $importer) {
+        if (self::$importedablog && self::$firstblogid) {
+            $blog = artefact_instance_from_id(self::$firstblogid);
+            $blog->delete();
+        }
+    }
+
+    /**
      * Creates a catch-all blog if one doesn't exist already
      *
      * @param PluginImportLeap $importer The importer
@@ -193,6 +216,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
             $blog->set('mtime', $time);
             $blog->commit();
             $blogid = $blog->get('id');
+            self::$importedablog = true;
         }
 
         return $blogid;
