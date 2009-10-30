@@ -108,7 +108,7 @@ class PluginExportLeap extends PluginExport {
         $outputfilter = LeapExportOutputFilter::singleton();
         $outputfilter->set_artefactids(array_keys($this->artefacts));
 
-        $this->notify_progress_callback(5, 'Setup complete');
+        $this->notify_progress_callback(5, get_string('setupcomplete', 'export'));
     }
 
     public static function get_title() {
@@ -125,12 +125,12 @@ class PluginExportLeap extends PluginExport {
     public function export() {
         // the xml stuff
         $this->export_header();
-        $this->notify_progress_callback(10, 'Exporting Views');
+        $this->notify_progress_callback(10, get_string('exportingviews', 'export'));
         $this->export_views();
-        $this->notify_progress_callback(50, 'Exporting artefacts');
+        $this->notify_progress_callback(50, get_string('exportingartefacts', 'export'));
         $this->export_artefacts();
 
-        $this->notify_progress_callback(80, 'Exporting artefact plugin data');
+        $this->notify_progress_callback(80, get_string('exportingartefactplugindata', 'export'));
         $internal = null;
         foreach ($this->specialcases as $plugin => $artefacts) {
             if ($plugin == 'internal') {
@@ -146,10 +146,10 @@ class PluginExportLeap extends PluginExport {
             $pluginexport = new LeapExportInternal($this, $internal);
             $this->xml .= $pluginexport->get_export_xml();
         }
-        $this->notify_progress_callback(85, 'Exporting footer');
+        $this->notify_progress_callback(85, get_string('exportingfooter', 'export'));
 
         $this->export_footer();
-        $this->notify_progress_callback(90, 'Writing files');
+        $this->notify_progress_callback(90, get_string('writingfiles', 'export'));
 
         // write out xml to a file
         if (!file_put_contents($this->exportdir . $this->leapfile, $this->xml)) {
@@ -162,7 +162,7 @@ class PluginExportLeap extends PluginExport {
             $desiredname  = $fileinfo->name;
             copy($existingfile, $this->exportdir . $this->filedir . $id . '-' . $desiredname);
         }
-        $this->notify_progress_callback(95, 'Creating zipfile');
+        $this->notify_progress_callback(95, get_string('creatingzipfile', 'export'));
 
         // zip everything up
         $cwd = getcwd();
@@ -180,7 +180,7 @@ class PluginExportLeap extends PluginExport {
         if ($returnvar != 0) {
             throw new SystemException('Failed to zip the export file: return code ' . $returnvar);
         }
-        $this->notify_progress_callback(100, 'Done');
+        $this->notify_progress_callback(100, get_string('Done', 'export'));
         return $this->zipfile;
     }
 
@@ -215,7 +215,7 @@ class PluginExportLeap extends PluginExport {
         $i = 0;
         foreach ($views as $view) {
             $percent = intval($progressstart + ($i++ / $viewcount) * ($progressend - $progressstart));
-            $this->notify_progress_callback($percent, "Exporting views: $i/$viewcount");
+            $this->notify_progress_callback($percent, get_string('exportingviewsprogress', 'export', $i, $viewcount));
 
             $config = $this->rewrite_artefact_ids($view->export_config('leap'));
             $this->smarty->assign('title',       $config['title']);
@@ -330,7 +330,7 @@ class PluginExportLeap extends PluginExport {
         foreach ($artefacts as $artefact) {
             if ($i++ % 3 == 0) {
                 $percent = intval($progressstart + ($i / $artefactcount) * ($progressend - $progressstart));
-                $this->notify_progress_callback($percent, "Exporting artefacts: $i/$artefactcount");
+                $this->notify_progress_callback($percent, get_string('exportingartefactsprogress', 'export', $i, $artefactcount));
             }
             $element = null;
             // go see if we have to do anything special for this artefact type.
