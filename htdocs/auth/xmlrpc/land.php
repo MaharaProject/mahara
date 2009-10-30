@@ -63,11 +63,8 @@ $remotewwwroot = param_variable('idp');
 $wantsurl      = param_variable('wantsurl', '/');
 $remoteurl     = param_boolean('remoteurl');
 
-$institution = new Institution();
-
-try {
-    $institution->findByWwwroot($remotewwwroot);
-} catch (ParamOutOfRangeException $e) {
+$len = strlen($remotewwwroot);
+if ($len < 1 || $len > 255) {
     throw new ParameterException(get_string('errnoxmlrpcwwwroot','auth', $remotewwwroot));
 }
 
