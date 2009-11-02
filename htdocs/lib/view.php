@@ -1936,6 +1936,14 @@ class View {
         }
     }
 
+    public static function can_remove_viewtype($viewtype) {
+        // allow local custom code to make 'sticky' view types
+        if (function_exists('local_can_remove_viewtype')) {
+            return local_can_remove_viewtype($viewtype);
+        }
+        return true;
+    }
+
     public static function get_myviews_data($limit=5, $offset=0, $groupid=null, $institution=null) {
 
         global $USER;
@@ -1944,21 +1952,21 @@ class View {
 
         if ($groupid) {
             $count = count_records('view', 'group', $groupid);
-            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, v.type
                 FROM {view} v
                 WHERE v.group = ' . $groupid . '
                 ORDER BY v.title, v.id', '', $offset, $limit);
         }
         else if ($institution) {
             $count = count_records('view', 'institution', $institution);
-            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, v.type
                 FROM {view} v
                 WHERE v.institution = ?
                 ORDER BY v.title, v.id', array($institution), $offset, $limit);
         }
         else {
             $count = count_records_select('view', 'owner = ? AND type != ?', array($userid, 'profile'));
-            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template,
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, v.type,
                     g.id AS submitgroupid, g.name AS submitgroupname, h.wwwroot AS submithostwwwroot, h.name AS submithostname
                 FROM {view} v
                 LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
@@ -2001,6 +2009,7 @@ class View {
                 $data[$i]['id'] = $viewdata[$i]->id;
                 $data[$i]['title'] = $viewdata[$i]->title;
                 $data[$i]['owner'] = $owner;
+                $data[$i]['removable'] = self::can_remove_viewtype($viewdata[$i]->type);
                 $data[$i]['description'] = $viewdata[$i]->description;
                 if (!empty($viewdata[$i]->submitgroupid)) {
                     $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view',
