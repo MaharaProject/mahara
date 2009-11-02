@@ -79,6 +79,15 @@ class LeapImportResume extends LeapImportArtefactPlugin {
     const STRATEGY_IMPORT_AS_SELECTION = 8;
 
     /**
+     * All users need one of these, but it's a "fake" artefact - it just
+     * represents profile information. It's not exported. So we create one here
+     * for imported users.
+     */
+    public static function setup(PluginImportLeap $importer) {
+        ArtefactTypeContactinformation::setup_new($importer->get('usr'));
+    }
+
+    /**
      * Description of strategies used
      */
     public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImportLeap $importer) {
