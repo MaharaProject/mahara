@@ -202,7 +202,14 @@ abstract class PluginExport extends Plugin {
 
         // Get the list of artefacts to export
         if ($artefacts == self::EXPORT_ALL_ARTEFACTS) {
-            $tmpartefacts = get_column_sql('SELECT id FROM {artefact} WHERE owner = ? ORDER BY id', array($userid));
+            $tmpartefacts = get_column_sql('SELECT id
+                FROM {artefact}
+                WHERE owner = ?
+            UNION
+                SELECT artefact
+                FROM {view_artefact}
+                WHERE "view" IN (SELECT id FROM {view} WHERE owner = ?)
+                ORDER BY id', array($userid, $userid));
             $this->artefactexportmode = $artefacts;
         }
         else {
@@ -241,9 +248,16 @@ abstract class PluginExport extends Plugin {
             if (is_null($artefact)) {
                 throw new ParamOutOfRangeException("Invalid artefact $a");
             }
-            if ($artefact->get('owner') != $userid) {
-                throw new UserException("User $userid does not own artefact " . $artefact->get('id'));
-            }
+            // This check won't work, at the _least_ because at the time of
+            // writing, can_view_artefact does not support normal users viewing
+            // site files. This check is also pretty damn slow. So think twice
+            // before uncommenting it. I presume if you _are_ uncommenting it,
+            // it's because you're trying to isloate a security vulnerability
+            // where a user can export another user's files or something. In
+            // which case you'll be being careful anyway, I hope.
+            //if (!$this->user->can_view_artefact($artefact)) {
+            //    throw new SystemException("User $userid does not own artefact " . $artefact->get('id'));
+            //}
             $this->artefacts[$artefact->get('id')] = $artefact;
         }
 
