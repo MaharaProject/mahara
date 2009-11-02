@@ -72,10 +72,15 @@ $smarty->assign('form', $form);
 $smarty->display('view/delete.tpl');
 
 function deleteview_submit(Pieform $form, $values) {
-    global $SESSION, $viewid, $groupid, $institution;
+    global $SESSION, $USER, $viewid, $groupid, $institution;
     $view = new View($viewid, null);
-    $view->delete();
-    $SESSION->add_ok_msg(get_string('viewdeleted', 'view'));
+    if (View::can_remove_viewtype($view->get('type')) || $USER->get('admin')) {
+        $view->delete();
+        $SESSION->add_ok_msg(get_string('viewdeleted', 'view'));
+    }
+    else {
+        $SESSION->add_error_msg(get_string('cantdeleteview', 'view'));
+    }
     if ($groupid) {
         redirect('/view/groupviews.php?group='.$groupid);
     }
