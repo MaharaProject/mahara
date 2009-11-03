@@ -115,8 +115,14 @@ else {
 
 function releaseview_submit() {
     global $USER, $SESSION, $view;
+    $groupid = $view->get('submittedgroup');
     $view->release($USER);
     $SESSION->add_ok_msg(get_string('viewreleasedsuccess', 'group'));
+    if ($groupid) {
+        // The tutor might not have access to the view any more; send
+        // them back to the group page.
+        redirect(get_config('wwwroot') . 'group/view.php?id='.$groupid);
+    }
     redirect(get_config('wwwroot') . 'view/view.php?id='.$view->get('id'));
 }
   
