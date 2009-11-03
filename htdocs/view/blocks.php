@@ -126,7 +126,7 @@ foreach (array_reverse($THEME->get_url('style/style.css', true, 'artefact/file')
     $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . $sheet . '">';
 }
 
-$smarty = smarty(array('views', 'tinytinymce', 'paginator', 'tablerenderer', 'artefact/file/js/filebrowser.js', 'lib/pieforms/static/core/pieforms.js', 'blocktype/creativecommons/js/creativecommons.js'), $stylesheets, false, $extraconfig);
+$smarty = smarty(array('views', 'tinymce', 'paginator', 'tablerenderer', 'artefact/file/js/filebrowser.js', 'lib/pieforms/static/core/pieforms.js', 'blocktype/creativecommons/js/creativecommons.js'), $stylesheets, false, $extraconfig);
 
 // The list of categories for the tabbed interface
 $smarty->assign('category_list', $view->build_category_list($category, $new));

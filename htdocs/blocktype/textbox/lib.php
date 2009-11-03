@@ -74,7 +74,7 @@ class PluginBlocktypeTextbox extends SystemBlocktype {
         $configdata = $instance->get('configdata');
         return array(
             'text' => array(
-                'type' => 'tinywysiwyg',
+                'type' => 'wysiwyg',
                 'title' => get_string('blockcontent', 'blocktype.textbox'),
                 'width' => '90%',
                 'height' => '150px',

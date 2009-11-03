@@ -184,7 +184,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
 
         // Introduction
         $form['introtext'] = array(
-            'type'    => 'tinywysiwyg',
+            'type'    => 'wysiwyg',
             'title'   => get_string('introtext', 'blocktype.internal/profileinfo'),
             'description' => get_string('useintroductioninstead', 'blocktype.internal/profileinfo'),
             'defaultvalue' => (isset($configdata['introtext'])) ? $configdata['introtext'] : '',
