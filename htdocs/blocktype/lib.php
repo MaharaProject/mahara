@@ -807,6 +807,11 @@ class BlockInstance {
 
     public function rebuild_artefact_list() {
         db_begin();
+
+        // Remember what was in this block before saving, and always allow those artefacts to remain
+        // in it, regardless of the user's current permissions.
+        $old = get_records_assoc('view_artefact', 'block', $this->id, '', 'artefact, id');
+
         delete_records('view_artefact', 'block', $this->id);
         safe_require('blocktype', $this->get('blocktype'));
         if (!$artefacts = call_static_method(
@@ -831,7 +836,8 @@ class BlockInstance {
         // Get list of allowed artefacts
         require_once('view.php');
         $searchdata = array(
-            'extraselect' => 'id IN (' . join(',', $artefacts) . ')',
+            'extraselect'          => 'id IN (' . join(',', $artefacts) . ')',
+            'userartefactsallowed' => true,  // If this is a group view, the user can add personally owned artefacts
         );
         list($allowed, $count) = View::get_artefactchooser_artefacts(
             $searchdata,
@@ -846,7 +852,7 @@ class BlockInstance {
         $va->block = $this->id;
 
         foreach ($artefacts as $id) {
-            if (isset($allowed[$id])) {
+            if (isset($allowed[$id]) || isset($old[$id])) {
                 $va->artefact = $id;
                 insert_record('view_artefact', $va);
             }

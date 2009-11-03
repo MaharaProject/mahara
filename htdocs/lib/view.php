@@ -1849,7 +1849,11 @@ class View {
                     AND m.member = ' . $user->get('id') . '
                     AND r.can_view = 1
             ) ga ON (ga.group = a.group AND a.id = ga.artefact)';
-            $select = "(a.institution = 'mahara' OR ga.can_view = 1)";
+            $select = "(a.institution = 'mahara' OR ga.can_view = 1";
+            if (!empty($data['userartefactsallowed'])) {
+                $select .= ' OR owner = ' . $user->get('id');
+            }
+            $select .= ')';
         }
         else if ($institution) {
             // Site artefacts & artefacts owned by this institution
