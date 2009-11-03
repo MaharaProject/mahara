@@ -385,24 +385,24 @@ abstract class ActivityType {
             $changes->url = $userdata->url = $this->url;
         }
 
+        if ($user->method != 'internal' || isset($changes->url)) {
+            $changes->read = (int) ($user->method != 'internal');
+            $changes->id = $userdata->internalid;
+            update_record('notification_internal_activity', $changes);
+        }
+
         if ($user->method != 'internal') {
             $method = $user->method;
             safe_require('notification', $method);
             try {
                 call_static_method(generate_class_name('notification', $method), 'notify_user', $user, $userdata);
-                $changes->read = true;
             }
             catch (MaharaException $e) {
                 // We don't mind other notification methods failing, as it'll 
                 // go into the activity log as 'unread'
+                $changes->read = 0;
+                update_record('notification_internal_activity', $changes);
             }
-        }
-
-        // Neither emtpy($changes) nor if ($changes) work properly, empty 
-        // objects aren't "empty" according to php. See http://php.net/empty
-        if (get_object_vars($changes)) {
-            $changes->id = $userdata->internalid;
-            update_record('notification_internal_activity', $changes);
         }
 
     }
