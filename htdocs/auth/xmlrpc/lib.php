@@ -852,6 +852,14 @@ class PluginAuthXmlrpc extends PluginAuth {
                 $form->set_error('wwwroot',get_string('cantretrievekey', 'auth'));
             }
         }
+        else if ($values['institution'] != $peer->institution) {
+            if (get_records_sql_array("
+                SELECT ai.*, aic.*
+                FROM {auth_instance} ai JOIN {auth_instance_config} aic ON ai.id = aic.instance
+                WHERE aic.field = 'wwwroot' AND aic.value = ? AND ai.institution = ?", array($values['wwwroot'], $peer->institution))) {
+                $form->set_error('wwwroot',get_string('hostwwwrootinuse', 'auth', hsc(get_field('institution', 'displayname', 'name', $peer->institution))));
+            }
+        }
 
         if (isset($values['publickey'])) {
             try {

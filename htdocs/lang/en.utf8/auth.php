@@ -79,4 +79,5 @@ $string['requiredfields'] = 'Required profile fields';
 $string['requiredfieldsset'] = 'Required profile fields set';
 $string['noauthpluginconfigoptions'] = 'There are no configuration options associated with this plugin';
 
+$string['hostwwwrootinuse'] = 'WWW root already in use by another institution (%s)';
 ?>
