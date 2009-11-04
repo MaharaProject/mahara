@@ -430,6 +430,9 @@ div.btn-edit input.submit,
     top: 0;
 	line-height: 2.1em;
 }
+.rbuttons a {
+    padding-right: .5em;
+}
 * html .rbuttons {
 	right: 2em;
 }
