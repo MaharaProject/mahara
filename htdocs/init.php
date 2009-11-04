@@ -166,6 +166,7 @@ if (!isset($CFG->wwwroot) && isset($_SERVER['HTTP_HOST'])) {
     }
     $path  = substr(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT']));
     if ($path) {
+        $path = str_replace('\\', '/', $path);  // windows
         if (substr($path, 0, 1) != '/') {
             $path = '/' . $path;
         }
