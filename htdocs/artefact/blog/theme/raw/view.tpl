@@ -8,7 +8,7 @@
 				</div>
 
                 <p>{$blog->get('description')}</p>
-                {if $blog->get('tags')}<p class="tags">{str tag=tags}: {list_tags owner=$blog->get('owner') tags=$blog->get('tags')}</p{/if}
+                {if $blog->get('tags')}<p class="tags">{str tag=tags}: {list_tags owner=$blog->get('owner') tags=$blog->get('tags')}</p>{/if}
 
                 {if $blog->count_children() > 0}
 				<table id="postlist" class="hidden tablerenderer fullwidth nohead">
