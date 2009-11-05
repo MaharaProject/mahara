@@ -47,6 +47,13 @@ else {
 
 $smarty = smarty();
 $smarty->assign('page_content', get_site_page_content($pagename));
+
+if ($nviews = get_config('homepageviewlist')) {
+    require_once('view.php');
+    $views = View::view_search(null, null, null, null, $nviews, 0, true, 'mtime DESC');
+    $smarty->assign('views', $views->data);
+}
+
 $smarty->display('index.tpl');
 
 ?>

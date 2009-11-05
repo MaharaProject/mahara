@@ -2130,9 +2130,10 @@ class View {
      * @param integer  $limit
      * @param integer  $offset
      * @param bool     $extra       Return full set of properties on each view including an artefact list
+     * @param string   $sort        Order by
      *
      */
-    public static function view_search($query=null, $ownerquery=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0, $extra=true) {
+    public static function view_search($query=null, $ownerquery=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0, $extra=true, $sort=null) {
         global $USER;
         $admin = $USER->get('admin');
         $loggedin = $USER->is_logged_in();
@@ -2248,14 +2249,15 @@ class View {
         }
 
         $count = count_records_sql('SELECT COUNT (DISTINCT v.id) ' . $from . $where, $ph);
+        $orderby = is_null($sort) ? 'title ASC' : $sort;
         $viewdata = get_records_sql_array('
             SELECT * FROM (
                 SELECT
-                    v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution, v.template
+                    v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution, v.template, v.mtime
                 ' . $from . $where . '
-                GROUP BY v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution, v.template
+                GROUP BY v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution, v.template, v.mtime
             ) a
-            ORDER BY a.title, a.id ',
+            ORDER BY a.' . $orderby . ', a.id ASC',
             $ph, $offset, $limit
         );
 
