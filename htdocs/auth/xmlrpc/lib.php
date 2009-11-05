@@ -787,18 +787,12 @@ class PluginAuthXmlrpc extends PluginAuth {
             'help'         => true,
         );
 
-        $elements['wessoout'] = array(
-            'type'         => 'checkbox',
-            'title'        => get_string('wessoout', 'auth'),
-            'defaultvalue' => self::$default_config['wessoout'],
-            'help'   => true
-        );
-
-        $elements['theyssoin'] = array(
-            'type'         => 'checkbox',
-            'title'        => get_string('theyssoin', 'auth'),
-            'defaultvalue' => self::$default_config['theyssoin'],
-            'help'   => true
+        $elements['ssodirection'] = array(
+            'type'         => 'select',
+            'title'        => get_string('ssodirection', 'auth'),
+            'options'      => array(0 => '--', 'theyssoin' => get_string('theyssoin', 'auth'), 'wessoout' => get_string('wessoout', 'auth')),
+            'defaultvalue' => self::$default_config['wessoout'] ? 'wessoout' : 'theyssoin',
+            'help'   => true,
         );
 
         $elements['updateuserinfoonlogin'] = array(
@@ -825,7 +819,6 @@ class PluginAuthXmlrpc extends PluginAuth {
         $elements['weimportcontent'] = array(
             'type'         => 'checkbox',
             'title'        => get_string('weimportcontent', 'auth'),
-            'description'  => get_string('weimportcontentdescription', 'auth'),
             'defaultvalue' => self::$default_config['weimportcontent'],
             'help'         => true,
         );
@@ -944,15 +937,26 @@ class PluginAuthXmlrpc extends PluginAuth {
         }
 
         self::$default_config = array(  'wwwroot'               => $values['wwwroot'],
-                                        'updateuserinfoonlogin' => $values['updateuserinfoonlogin'],
-                                        'weautocreateusers'     => $values['weautocreateusers'],
-                                        'theyautocreateusers'   => $values['theyautocreateusers'],
                                         'parent'                => $values['parent'],
                                         'authloginmsg'          => $values['authloginmsg'],
-                                        'wessoout'              => $values['wessoout'],
-                                        'theyssoin'             => $values['theyssoin'],
-                                        'weimportcontent'       => $values['weimportcontent'],
+                                        'wessoout'              => 0,
+                                        'theyssoin'             => 0,
+                                        'theyautocreateusers'   => 0,
+                                        'weautocreateusers'     => 0,
+                                        'updateuserinfoonlogin' => 0,
+                                        'weimportcontent'       => 0,
                                         );
+
+        if ($values['ssodirection'] == 'wessoout') {
+            self::$default_config['wessoout']              = 1;
+            self::$default_config['theyautocreateusers']   = $values['theyautocreateusers'];
+        }
+        else if ($values['ssodirection'] == 'theyssoin') {
+            self::$default_config['theyssoin']             = 1;
+            self::$default_config['updateuserinfoonlogin'] = $values['updateuserinfoonlogin'];
+            self::$default_config['weautocreateusers']     = $values['weautocreateusers'];
+            self::$default_config['weimportcontent']       = $values['weimportcontent'];
+        }
 
         foreach(self::$default_config as $field => $value) {
             $record = new stdClass();

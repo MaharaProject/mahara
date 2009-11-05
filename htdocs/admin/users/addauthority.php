@@ -174,10 +174,31 @@ function nextSiblingTR(node) {
     }
     return node.nextSibling;
 }
+var ssoAllOptions = {
+    'updateuserinfoonlogin': 'theyssoin',
+    'weautocreateusers': 'theyssoin',
+    'theyautocreateusers': 'wessoout',
+    'weimportcontent': 'theyssoin'
+};
+function updateSsoOptions() {
+    var current = $('auth_config_ssodirection').value;
+    for (var opt in ssoAllOptions) {
+        if (ssoAllOptions[opt] == current) {
+            removeElementClass('auth_config_' + opt + '_container', 'hidden');
+        }
+        else {
+            addElementClass('auth_config_' + opt + '_container', 'hidden');
+        }
+    }
+}
 addLoadEvent(
     function() {
         connect('auth_config_parent', 'onchange', authloginmsgVisibility);
         authloginmsgVisibility();
+        if ($('auth_config_ssodirection')) {
+            connect('auth_config_ssodirection', 'onchange', updateSsoOptions);
+        }
+        updateSsoOptions();
     }
 );
 EOF;
