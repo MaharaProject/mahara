@@ -32,6 +32,10 @@ require_once('pieforms/pieform.php');
 require_once('group.php');
 define('TITLE', get_string('creategroup', 'group'));
 
+if (!group_can_create_groups()) {
+    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+}
+
 $creategroup = pieform(array(
     'name'     => 'creategroup',
     'method'   => 'post',
@@ -90,9 +94,6 @@ $smarty->display('group/create.tpl');
 
 
 function creategroup_validate(Pieform $form, $values) {
-    //global $USER;
-    //global $SESSION;
-
     if (get_field('group', 'id', 'name', $values['name'])) {
         $form->set_error('name', get_string('groupalreadyexists', 'group'));
     }

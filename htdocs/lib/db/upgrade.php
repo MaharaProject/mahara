@@ -1256,6 +1256,10 @@ function xmldb_core_upgrade($oldversion=0) {
         drop_field($table, $field);
     }
 
+    if ($oldversion < 2009110500) {
+        set_config('creategroups', 'all');
+    }
+
     return $status;
 
 }

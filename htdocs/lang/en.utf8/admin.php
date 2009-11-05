@@ -141,6 +141,7 @@ $string['reopensitedetail'] = 'Your site is closed.  Site administrators may sta
 
 // Site options
 $string['adminsonly'] = 'Administrators only';
+$string['adminsandstaffonly'] = 'Administrators and Staff only';
 $string['allowpublicviews'] = 'Allow public views';
 $string['allowpublicviewsdescription'] = 'If set to yes, users will be able to create portfolio Views that are accessable to the public rather than only to logged in users';
 $string['allowpublicprofiles'] = 'Allow public profiles';
@@ -191,8 +192,10 @@ $string['usersallowedmultipleinstitutionsdescription'] = 'If checked, users can 
 $string['usersseenewthemeonlogin'] = 'Other users will see the new theme the next time they log in.';
 $string['viruschecking'] = 'Virus checking';
 $string['viruscheckingdescription'] = 'If checked, virus checking will be enabled for all uploaded files using ClamAV';
+$string['whocancreategroups'] = 'Who can create Groups';
+$string['whocancreategroupsdescription'] = 'Which users will be able to create new groups';
 $string['whocancreatepublicgroups'] = 'Who can create Public Groups';
-$string['whocancreatepublicgroupsdescription'] = 'If set to yes, users will be able to make groups that are viewable by the general public';
+$string['whocancreatepublicgroupsdescription'] = 'Which users will be able to make groups that are viewable by the general public';
 
 // Site content
 $string['about']               = 'About';

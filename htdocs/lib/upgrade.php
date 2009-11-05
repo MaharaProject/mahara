@@ -661,6 +661,7 @@ function core_install_firstcoredata_defaults() {
     set_config('session_timeout', 86400);
     set_config('sitename', 'Mahara');
     set_config('defaultaccountinactivewarn', 604800);
+    set_config('creategroups', 'all');
     set_config('createpublicgroups', 'all');
     set_config('allowpublicviews', 1);
     set_config('allowpublicprofiles', 1);

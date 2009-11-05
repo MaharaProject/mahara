@@ -1,7 +1,9 @@
 {include file="header.tpl"}
+{if $cancreate}
             <div class="rbuttons">
                 <a href="{$WWWROOT}group/create.php" class="btn">{str tag="creategroup" section="group"}</a>
             </div>
+{/if}
 {$form}
 {if $groups}
 {foreach from=$groups item=group}

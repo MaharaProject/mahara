@@ -1141,4 +1141,16 @@ function group_get_member_ids($group, $roles=null) {
         array($group)
     );
 }
+
+function group_can_create_groups() {
+    global $USER;
+    $creators = get_config('creategroups');
+    if ($creators == 'all') {
+        return true;
+    }
+    if ($USER->get('admin') || $USER->is_institutional_admin()) {
+        return true;
+    }
+    return $creators == 'staff' && ($USER->get('staff') || $USER->is_institutional_staff());
+}
 ?>

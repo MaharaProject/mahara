@@ -125,6 +125,17 @@ $siteoptionform = array(
             'options'      => $yesno,
             'help'         => true,
         ),
+        'creategroups' => array(
+            'type'         => 'select',
+            'title'        => get_string('whocancreategroups', 'admin'),
+            'description'  => get_string('whocancreategroupsdescription', 'admin'),
+            'defaultvalue' => get_config('creategroups'),
+            'options'      => array(
+                'admins' => get_string('adminsonly', 'admin'),
+                'staff'  => get_string('adminsandstaffonly', 'admin'),
+                'all'    => get_string('Everyone', 'admin'),
+            ),
+        ),
         'createpublicgroups' => array(
             'type'         => 'select',
             'title'        => get_string('whocancreatepublicgroups', 'admin'),
@@ -238,7 +249,7 @@ function siteoptions_submit(Pieform $form, $values) {
     $fields = array(
         'sitename','lang','theme', 'pathtoclam',
         'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
-        'allowpublicviews', 'allowpublicprofiles', 'createpublicgroups', 'searchplugin',
+        'allowpublicviews', 'allowpublicprofiles', 'creategroups', 'createpublicgroups', 'searchplugin',
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
         'captchaonregisterform', 'captchaoncontactform', 'showselfsearchsideblock', 'showtagssideblock',
         'tagssideblockmaxtags'

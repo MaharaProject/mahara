@@ -78,6 +78,7 @@ group_prepare_usergroups_for_display($results['groups'], 'mygroups');
 
 $smarty = smarty();
 $smarty->assign('groups', $results['groups']);
+$smarty->assign('cancreate', group_can_create_groups());
 $smarty->assign('form', $form);
 $smarty->assign('filter', $filter);
 $smarty->assign('pagination', $pagination['html']);
