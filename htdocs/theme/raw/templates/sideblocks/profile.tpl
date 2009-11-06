@@ -59,6 +59,8 @@
             <a href="{$WWWROOT}?logout" class="btn-link" id="btn-logout">{str tag="logout"}</a>&nbsp;
             <a href="{if get_config('httpswwwroot')}{$HTTPSWWWROOT}{else}{$WWWROOT}{/if}account/" class="btn-link">{str tag="settings"}</a>
         </div>
+{if $sbdata.peer}                <div class="center"><a href="{$sbdata.peer.wwwroot}">{$sbdata.peer.name|escape}</a></div>
+{/if}
 {if $USERMASQUERADING}        <div id="changeuser">{$becomeyouagain}</div>
 {/if}
         <div class="cb"></div>
