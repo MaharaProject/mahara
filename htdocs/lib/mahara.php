@@ -1959,12 +1959,14 @@ function profile_sideblock() {
     $authinstance = $SESSION->get('mnetuser') ? $SESSION->get('authinstance') : $USER->get('authinstance');
     if ($authinstance) {
         $authobj = AuthFactory::create($authinstance);
-        $peer = get_peer($authobj->wwwroot);
-        if ($SESSION->get('mnetuser')) {
-            $data['mnetloggedinfrom'] = get_string('youhaveloggedinfrom', 'auth.xmlrpc', $authobj->wwwroot, $peer->name);
-        }
-        else {
-            $data['peer'] = array('name' => $peer->name, 'wwwroot' => $peer->wwwroot);
+        if ($authobj->authname == 'xmlrpc') {
+            $peer = get_peer($authobj->wwwroot);
+            if ($SESSION->get('mnetuser')) {
+                $data['mnetloggedinfrom'] = get_string('youhaveloggedinfrom', 'auth.xmlrpc', $authobj->wwwroot, $peer->name);
+            }
+            else {
+                $data['peer'] = array('name' => $peer->name, 'wwwroot' => $peer->wwwroot);
+            }
         }
     }
     $data['unreadnotifications'] = call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'));
