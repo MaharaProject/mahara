@@ -1260,6 +1260,21 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('creategroups', 'all');
     }
 
+    if ($oldversion < 2009110900) {
+        // Fix export cronjob so it runs 12 hours apart
+        execute_sql("UPDATE {cron} SET hour = '3,15' WHERE callfunction = 'export_cleanup_old_exports'");
+
+        // Cron job to clean old imports
+        $cron = new StdClass;
+        $cron->callfunction = 'import_cleanup_old_imports';
+        $cron->minute       = '0';
+        $cron->hour         = '4,16';
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
+        insert_record('cron', $cron);
+    }
+
     return $status;
 
 }

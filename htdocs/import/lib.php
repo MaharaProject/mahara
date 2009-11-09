@@ -302,5 +302,24 @@ class MnetImporterTransport extends ImporterTransport {
     }
 }
 
+/**
+ * Looks in the import staging area in dataroot and deletes old, unneeded
+ * import.
+ */
+function import_cleanup_old_imports() {
+    require_once('file.php');
+    $basedir = get_config('dataroot') . 'import/';
+    $importdir = new DirectoryIterator($basedir);
+    $mintime = time() - (12 * 60 * 60); // delete imports older than 12 hours
+
+    // The import dir contains one directory for each attempted import, named
+    // after their username and the import timestamp
+    foreach ($importdir as $attemptdir) {
+        if ($attemptdir->isDot()) continue;
+        if ($attemptdir->getCTime() < $mintime) {
+            rmdirr($basedir . $attemptdir->getFilename());
+        }
+    }
+}
 
 ?>
