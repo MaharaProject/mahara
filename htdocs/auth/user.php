@@ -730,7 +730,14 @@ class User {
 
     public function can_delete_self() {
         if (!$this->get('admin')) {
-            return true; // institution setting?
+            // Users who belong to an institution that doesn't allow
+            // registration cannot delete themselves.
+            foreach ($this->get('institutions') as $i) {
+                if (!$i->registerallowed) {
+                    return false;
+                }
+            }
+            return true;
         }
         // The last admin user should not be deleted.
         return count_records('usr', 'admin', 1, 'deleted', 0) > 1;
