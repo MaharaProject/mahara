@@ -35,31 +35,35 @@ require_once('pieforms/pieform.php');
 $institutions = get_records_assoc('institution', '', '', '', 'name,displayname,registerallowed');
 
 // For all institutions the user is already a member of, create a
-// button to leave the institution
+// button to leave the institution, unless the institution does not
+// allow registration.
 $member = $USER->get('institutions');
 if (!empty($member)) {
     $elements = array();
     foreach ($member as $i) {
-        $elements[] = array(
-            'type' => 'submit',
-            'class' => 'btn-del',
-            'name' => '_leave_' . $i->institution,
-            'confirm' => get_string('reallyleaveinstitution'),
-            'title' => get_string('youareamemberof', 'mahara', 
-                                  $institutions[$i->institution]->displayname),
-            'value' => get_string('leaveinstitution')
-        );
-        $elements[] = array(
-            'type' => 'html',
-            'name' => '_leavehtml_' . $i->institution,
-            'value' => '<br>',
-        );
+        if ($institutions[$i->institution]->registerallowed) {
+            $elements[] = array(
+                'type' => 'submit',
+                'class' => 'btn-del',
+                'name' => '_leave_' . $i->institution,
+                'confirm' => get_string('reallyleaveinstitution'),
+                'title' => get_string('youareamemberof', 'mahara', $institutions[$i->institution]->displayname),
+                'value' => get_string('leaveinstitution')
+            );
+        }
+        else {
+            $elements[] = array(
+                'type' => 'html',
+                'name' => '_noleave_' . $i->institution,
+                'title' => get_string('youareamemberof', 'mahara', $institutions[$i->institution]->displayname),
+                'value' => '',
+            );
+        }
         unset($institutions[$i->institution]);
     }
     $memberform = pieform(array(
         'name'        => 'leaveinstitution',
         'method'      => 'post',
-        'renderer'    => 'oneline',
         'plugintype'  => 'core',
         'pluginname'  => 'account',
         'elements'    => $elements
@@ -103,7 +107,6 @@ if (!empty($requested)) {
     $requestedform = pieform(array(
         'name'        => 'cancelrequest',
         'method'      => 'post',
-        'renderer'    => 'oneline',
         'plugintype'  => 'core',
         'pluginname'  => 'account',
         'elements'    => $elements
@@ -152,7 +155,6 @@ if (!empty($invited)) {
     $invitedform = pieform(array(
         'name'        => 'confirminvite',
         'method'      => 'post',
-        'renderer'    => 'oneline',
         'plugintype'  => 'core',
         'pluginname'  => 'account',
         'elements'    => $elements
@@ -202,12 +204,12 @@ if (!empty($institutions) &&
     $joinform = pieform(array(
         'name'        => 'requestmembership',
         'method'      => 'post',
-        'renderer'    => 'oneline',
         'plugintype'  => 'core',
         'pluginname'  => 'account',
         'elements'    => array(
             'institution' => array(
                 'type' => 'select',
+                'title' => get_string('institution'),
                 'collapseifoneoption' => false,
                 'options' => $options,
                 'defaultvalue' => key($options),

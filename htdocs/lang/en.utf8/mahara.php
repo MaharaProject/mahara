@@ -513,6 +513,9 @@ $string['institutionmemberconfirmsubject'] = 'Institution membership confirmatio
 $string['institutionmemberconfirmmessage'] = 'You have been added as a member of %s.';
 $string['institutionmemberrejectsubject'] = 'Institution membership request declined';
 $string['institutionmemberrejectmessage'] = 'Your request for membership of %s was declined.';
+$string['Memberships'] = 'Memberships';
+$string['Requests'] = 'Requests';
+$string['Invitations'] = 'Invitations';
 
 $string['config'] = 'Config';
 
