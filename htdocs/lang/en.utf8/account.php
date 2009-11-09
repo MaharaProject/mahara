@@ -61,4 +61,7 @@ $string['tagssideblockmaxtagsdescription'] = 'Maximum number of tags to display 
 $string['prefssaved']  = 'Preferences saved';
 $string['prefsnotsaved'] = 'Failed to save your Preferences!';
 
+$string['deleteaccount']  = 'Delete Account';
+$string['deleteaccountdescription']  = 'If you delete your account, your profile information and your Views will no longer be visible to other users.  The content of any forum posts you have written will still be visible, but the author\'s name will no longer be displayed.';
+$string['accountdeleted']  = 'Your account has been deleted.';
 ?>

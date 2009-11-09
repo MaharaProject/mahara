@@ -1358,6 +1358,19 @@ form#search input.text {
 #accountprefs table h3 {
 	border-bottom: 1px dotted #d1d1d1;
 }
+#deleteaccount {
+	border: 1px solid #e98a88;
+	background: #fbeceb;
+	padding: 1em;
+	margin: 0 1em 1em;
+}
+#deleteaccount h1 {
+	color: #ca0000;
+}
+#deleteaccount input.submit {
+	border: 1px solid #e98a88;
+	background-color: #ca0000;
+}
 
 /* Settings > Notifications */
 #activitylist th {

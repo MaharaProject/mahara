@@ -239,6 +239,7 @@ $prefsform = pieform($prefsform);
 
 $smarty = smarty();
 $smarty->assign('form', $prefsform);
+$smarty->assign('candeleteself', $USER->can_delete_self());
 $smarty->assign('INLINEJAVASCRIPT', "
 function clearPasswords(form, data) {
     formSuccess(form, data);

@@ -728,6 +728,14 @@ class User {
         return false;
     }
 
+    public function can_delete_self() {
+        if (!$this->get('admin')) {
+            return true; // institution setting?
+        }
+        // The last admin user should not be deleted.
+        return count_records('usr', 'admin', 1, 'deleted', 0) > 1;
+    }
+
     /**
      * Makes a literal copy of a list of views for this user.
      *
