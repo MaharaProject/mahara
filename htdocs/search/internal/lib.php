@@ -181,7 +181,7 @@ class PluginSearchInternal extends PluginSearch {
 
     public static function search_user_my($query_string, $limit, $offset, $data, $publicfields) {
         $fieldlist = "('" . join("','", $publicfields) . "')";
-
+        $data = self::prepare_search_user_options($data);
         $sql = 'SELECT
                 COUNT(DISTINCT u.id)
             FROM
@@ -249,7 +249,7 @@ class PluginSearchInternal extends PluginSearch {
                     AND ( ' . $namesql . '
                     )
                     ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
-                ORDER BY u.firstname, u.lastname, u.id';
+                ORDER BY ' . $data['orderby'];
             $data = get_records_sql_array($sql, $values, $offset, $limit);
             if ($data) {
                 foreach ($data as &$item) {
