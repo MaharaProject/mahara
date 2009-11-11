@@ -156,6 +156,13 @@ class Dispatcher {
                 throw new XmlrpcServerException('The function does not exist', 6011);
             }
 
+            // Read custom xmlrpc functions from local
+            if (function_exists('local_xmlrpc_services')) {
+                foreach (local_xmlrpc_services() as $name => $localservices) {
+                    $this->services[$name] = array_merge($this->services[$name], $localservices);
+                }
+            }
+
             foreach ($this->services as $container) {
                 if (array_key_exists($this->method, $container)) {
                     $xmlrpcserver = xmlrpc_server_create();
