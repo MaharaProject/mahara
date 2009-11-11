@@ -1124,44 +1124,49 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2009080600) {
-        // Delete duplicate profile views if there are any, then add an index
-        // that will prevent it happening again - but only on postgres, as it's
-        // the only db that supports partial indexes
-        if ($viewdata = get_records_sql_array("
-            SELECT owner, id
-            FROM {view}
-            WHERE owner IN (
-                SELECT owner
+        $table = new XMLDBTable('view');
+        $index = new XMLDBIndex('view_own_type_uix');
+        $index->setAttributes(XMLDB_INDEX_UNIQUE, array('owner'));
+        if (!index_exists($table, $index)) {
+            // Delete duplicate profile views if there are any, then add an index
+            // that will prevent it happening again - but only on postgres, as it's
+            // the only db that supports partial indexes
+            if ($viewdata = get_records_sql_array("
+                SELECT owner, id
                 FROM {view}
-                WHERE type = 'profile'
-                GROUP BY owner
-                HAVING COUNT(*) > 1
-            )
-            AND type = 'profile'
-            ORDER BY owner, id", array())) {
+                WHERE owner IN (
+                    SELECT owner
+                    FROM {view}
+                    WHERE type = 'profile'
+                    GROUP BY owner
+                    HAVING COUNT(*) > 1
+                )
+                AND type = 'profile'
+                ORDER BY owner, id", array())) {
 
-            require_once('view.php');
-            $seen = array();
-            foreach ($viewdata as $record) {
-                $seen[$record->owner][] = $record->id;
-            }
+                require_once('view.php');
+                $seen = array();
+                foreach ($viewdata as $record) {
+                    $seen[$record->owner][] = $record->id;
+                }
 
-            foreach ($seen as $owner => $views) {
-                // Remove the first one, which is their real profile view
-                array_shift($views);
-                foreach ($views as $viewid) {
-                    $view = new View($viewid);
-                    if ($view->get('type') == 'profile') {
-                        $view->delete();
-                    }
-                    else {
-                        log_info("Odd: upgrade to delete duplicate profile views tried to delete a normal view? (id=$viewid)");
+                foreach ($seen as $owner => $views) {
+                    // Remove the first one, which is their real profile view
+                    array_shift($views);
+                    foreach ($views as $viewid) {
+                        $view = new View($viewid);
+                        if ($view->get('type') == 'profile') {
+                            $view->delete();
+                        }
+                        else {
+                            log_info("Odd: upgrade to delete duplicate profile views tried to delete a normal view? (id=$viewid)");
+                        }
                     }
                 }
             }
-        }
-        if (is_postgres()) {
-            execute_sql("CREATE UNIQUE INDEX {view_own_type_uix} ON {view}(owner) WHERE type = 'profile'");
+            if (is_postgres()) {
+                execute_sql("CREATE UNIQUE INDEX {view_own_type_uix} ON {view}(owner) WHERE type = 'profile'");
+            }
         }
     }
 
