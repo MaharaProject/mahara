@@ -19,19 +19,25 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Andrew Nicols <andrew.nicols@luns.net.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
- *
+ * @copyright  (C) 2009 Lancaster University Network Services Limited
+ *                      http://www.luns.net.uk
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+define('PUBLIC', 1);
+define('TITLE', '');
 
-$config = new StdClass;
-$config->version = 2009111201;
-$config->release = '1.2.0rc2dev';
-$config->minupgradefrom = 2008040200;
-$config->minupgraderelease = '1.0.0 (release tag 1.0.0_RELEASE)';
-$config->disablelogin = true;
+require(dirname(dirname(__FILE__)).'/init.php');
+
+$address = $_ENV['RECIPIENT'];
+
+log_debug('---------- started  processing email at ' . date('r', time()) . ' ----------');
+log_debug('-- mail from ' . $address );
+
+$email = process_email($address);
+
+log_debug('---------- finished processing email at ' . date('r', time()) . ' ----------');
 
 ?>
