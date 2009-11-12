@@ -342,9 +342,14 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         }
     }
 
+    if (get_config('bounces_handle') && isset($mailinfo->owner)) {
+        $mail->Sender = generate_email_processing_address($mailinfo->owner, $userto);
+    }
     if (empty($userfrom) || $userfrom->email == get_config('noreplyaddress')) {
-        $mail->Sender = get_config('noreplyaddress');
-        $mail->From = $mail->Sender;
+        if (empty($mail->Sender)) {
+            $mail->Sender = get_config('noreplyaddress');
+        }
+        $mail->From = get_config('noreplyaddress');
         $mail->FromName = (isset($userfrom->id)) ? display_name($userfrom, $userto) : get_config('sitename');
         $customheaders[] = 'Precedence: Bulk'; // Try to avoid pesky out of office responses
         $messagetext .= "\n\n" . get_string('pleasedonotreplytothismessage') . "\n";
@@ -353,8 +358,10 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         }
     }
     else {
-        $mail->Sender = $userfrom->email;
-        $mail->From = $mail->Sender;
+        if (empty($mail->Sender)) {
+            $mail->Sender = $userfrom->email;
+        }
+        $mail->From = $userfrom->email;
         $mail->FromName = display_name($userfrom, $userto);
     }
     $replytoset = false;
@@ -440,6 +447,24 @@ function can_receive_email($userto) {
     }
 
     return $mailinfo;
+}
+
+/**
+ * Generate an email processing address for VERP handling of email
+ *
+ * @param int $userid the ID of the user sending the mail
+ * @param object $userto an object containing the email address
+ * @param char $type The type of address to generate
+ *
+ * The type of address is typically a Bounce. These are processed by the
+ * process_email function.
+ */
+function generate_email_processing_address($userid, $userto, $type='B') {
+    $mailprefix = get_config('bounceprefix');
+    $maildomain = get_config('bouncedomain');
+    $installation_key = get_config('installation_key');
+    $args = $type . base64_encode(pack('V', $userid)) . substr(md5($userto->email), 0, 16);
+    return $mailprefix . $args . substr(md5($mailprefix . $userto->email . $installation_key), 0, 16) . '@' . $maildomain;
 }
 
 /**
