@@ -396,10 +396,31 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
     }
 
     if ($mail->Send()) {
+        // Update the count of sent mail
+        update_send_count($userto);
+
         return true;
     } 
     throw new EmailException("Couldn't send email to $usertoname with subject $subject. "
                         . "Error from phpmailer was: " . $mail->ErrorInfo );
+}
+
+/**
+ * Update the send count for the specified e-mail address
+ *
+ * @param object $userto object to update count for. Must contain email and
+ * user id
+ * @param boolean reset Reset the sent mail count to 0 (optional).
+ */
+function update_send_count($userto, $reset=false) {
+    if (!$userto->id) {
+        // We need a user id to update the send count.
+        return false;
+    }
+    if ($mailinfo = get_record_select('artefact_internal_profile_email', 'owner = ? AND email = ? AND principal = 1', array($userto->id, $userto->email))) {
+        $mailinfo->mailssent = (!empty($reset)) ? 0 : $mailinfo->mailssent+1;
+        update_record('artefact_internal_profile_email', $mailinfo, array('email' => $userto->email, 'owner' => $userto->id));
+    }
 }
 
 /**

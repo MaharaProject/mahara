@@ -1282,6 +1282,13 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $cron);
     }
 
+    if ($oldversion < 2009111200) {
+        $table = new XMLDBTable('artefact_internal_profile_email');
+        $field = new XMLDBField('mailssent');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+    }
+
     return $status;
 
 }
