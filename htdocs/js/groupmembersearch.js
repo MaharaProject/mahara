@@ -50,19 +50,16 @@ function UserSearch() {
     this.doSearch = function() {
         self.params.action = 'search';
         sendjsonrequest('membersearchresults.php', self.params, 'POST', function(data) {
-            var tbody = getElementsByTagAndClassName('tbody', null, 'results')[0];
-            if (
-                (document.all && document.documentElement && typeof(document.documentElement.style.maxHeight) != "undefined" && !window.opera)
-                    ||
-                    (/Konqueror|AppleWebKit|KHTML/.test(navigator.userAgent))) {
-                var temp = DIV({'id':'ie-workaround'});
+           if ( document.all && document.documentElement && typeof(document.documentElement.style.maxHeight) != "undefined" && !window.opera ) {
+               // IE stuff
+               var tbody = getElementsByTagAndClassName('tbody', null, 'results')[0];
+               var temp = DIV({'id':'ie-workaround'});
                 temp.innerHTML = '<table><tbody>' + data.data.tablerows + '</tbody></table>';
                 swapDOM(tbody, temp.childNodes[0].childNodes[0]);
                 removeElement(temp);
-            }
-            else {
-                tbody.innerHTML = data.data.tablerows;
-            }
+           } else {
+                   $('membersearchresults').innerHTML = '<tbody>' + data.data.tablerows + '</tbody>';
+           }
             $('pagination').innerHTML = data.data.pagination;
             if (data.data.count) {
                 self.rewritePaging();
