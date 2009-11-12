@@ -7,8 +7,16 @@
    <th></th>
    <th>{str tag=Name section=artefact.file}</th>
    <th>{str tag=Description section=artefact.file}</th>
+  {if !$showtags && !$editmeta}
    <th>{str tag=Size section=artefact.file}</th>
    <th>{str tag=Date section=artefact.file}</th>
+  {/if}
+  {if $showtags}
+   <th>{str tag=tags}</th>
+  {/if}
+  {if $editmeta}
+   <th></th>
+  {/if}
    <th></th>
   </tr>
  </thead>
@@ -36,8 +44,20 @@
     {/if}
     </td>
     <td>{$file->description|escape}</td>
+    {if !$showtags && !$editmeta}
     <td>{tif $file->size ?: ''}</td>
     <td>{tif $file->mtime ?: ''}</td>
+    {/if}
+    {if $showtags}
+    <td>{if $file->tags}<span class="tags">{list_tags tags=$file->tags owner=$showtags}</span>{/if}</td>
+    {/if}
+    {if $editmeta}
+    <td>
+      {if !$file->isparent}
+        {if !isset($file->can_edit) || $file->can_edit !== 0}<input type="submit" class="tag-edit submit" name="{$prefix}_edit[{$file->id}]" value="{str tag=edit}" />{/if}
+      {/if}
+    </td>
+    {/if}
     <td class="right">
     {if $editable && !$file->isparent}
       {if $file->artefacttype == 'archive'}<a href="{$WWWROOT}artefact/file/extract.php?file={$file->id}">{str tag=Unzip section=artefact.file}</a>{/if}

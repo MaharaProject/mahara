@@ -660,6 +660,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
                 'createfolder'    => false,
                 'edit'            => false,
+                'tag'             => true,
                 'select'          => true,
                 'alwaysopen'      => true,
                 'publishing'      => true,

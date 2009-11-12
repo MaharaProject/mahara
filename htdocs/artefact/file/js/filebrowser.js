@@ -25,7 +25,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             self.upload_init();
         }
         self.browse_init();
-        if (self.config.edit) {
+        if (self.config.edit || self.config.editmeta) {
             self.edit_init();
         }
     }
@@ -190,13 +190,15 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         if (!hasElementClass(editrow, 'hidden')) {
             addElementClass(editrow, 'hidden');
             // Reconnect the old edit button to open the form
-            forEach(getElementsByTagAndClassName('input', null, editrow.previousSibling), function (elem) {
-                var name = getNodeAttribute(elem, 'name').match(new RegExp('^' + self.id + "_([a-z]+)\\[(\\d+)\\]$"));
-                if (name && name[1] && name[1] == 'edit') {
-                    disconnectAll(elem);
-                    connect(elem, 'onclick', self.edit_form);
-                }
-            });
+            if (editrow.previousSibling) {
+                forEach(getElementsByTagAndClassName('input', null, editrow.previousSibling), function (elem) {
+                    var name = getNodeAttribute(elem, 'name').match(new RegExp('^' + self.id + "_([a-z]+)\\[(\\d+)\\]$"));
+                    if (name && name[1] && name[1] == 'edit') {
+                        disconnectAll(elem);
+                        connect(elem, 'onclick', self.edit_form);
+                    }
+                });
+            }
         }
     }
 
@@ -239,7 +241,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
     this.edit_init = function () { augment_tags_control(self.id + '_edit_tags'); }
 
     this.browse_init = function () {
-        if (self.config.edit) {
+        if (self.config.edit || self.config.editmeta) {
             forEach(getElementsByTagAndClassName('input', null, 'filelist'), function (elem) {
                 var name = getNodeAttribute(elem, 'name').match(new RegExp('^' + self.id + "_([a-z]+)\\[(\\d+)\\]$"));
                 if (name && name[1]) {
@@ -291,14 +293,16 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             });
             connect(self.id + '_edit_artefact', 'onclick', self.edit_submit);
 
-            // IE doesn't like it when Mochikit has droppables registered without elements attached.
-            forEach(Draggables.drags, function (drag) { drag.destroy(); });
-            forEach(Droppables.drops, function (drop) { drop.destroy(); });
+            if (self.config.edit) {
+                // IE doesn't like it when Mochikit has droppables registered without elements attached.
+                forEach(Draggables.drags, function (drag) { drag.destroy(); });
+                forEach(Droppables.drops, function (drop) { drop.destroy(); });
 
-            forEach(getElementsByTagAndClassName('div', 'icon-drag', 'filelist'), function (elem) {
-                self.make_icon_draggable(elem);
-            });
-            forEach(getElementsByTagAndClassName('tr', 'folder', 'filelist'), self.make_row_droppable);
+                forEach(getElementsByTagAndClassName('div', 'icon-drag', 'filelist'), function (elem) {
+                    self.make_icon_draggable(elem);
+                });
+                forEach(getElementsByTagAndClassName('tr', 'folder', 'filelist'), self.make_row_droppable);
+            }
         }
         forEach(getElementsByTagAndClassName('a', 'changeowner', self.id + '_upload_browse'), function (elem) {
             connect(elem, 'onclick', function (e) {
@@ -537,7 +541,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         // Only update the file listing if the user hasn't changed folders yet
         if (data.newlist && (data.folder == self.folderid || data.changedfolder)) {
             self.filedata = data.newlist.data;
-            if (self.config.edit) {
+            if (self.config.edit || self.config.editmeta) {
                 replaceChildNodes(self.id + '_edit_placeholder', removeElement(self.id + '_edit_row'));
             }
             $(self.id+'_filelist_container').innerHTML = data.newlist.html;

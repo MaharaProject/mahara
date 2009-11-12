@@ -113,6 +113,9 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         $config['browsehelp'] = $element['browsehelp'];
     }
 
+    $config['showtags'] = !empty($config['tag']) ? (int) $userid : 0;
+    $config['editmeta'] = (int) ($userid && !$config['edit'] && !empty($config['tag']));
+
     $smarty->assign('config', $config);
 
     $filters = isset($element['filters']) ? $element['filters'] : null;
@@ -218,6 +221,8 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     $selectable = (int) $element['config']['select'];
     $selectfolders = (int) !empty($element['config']['selectfolders']);
     $publishing = (int) !empty($element['config']['publishing']);
+    $showtags = !empty($element['config']['tag']) ? (int) $userid : 0;
+    $editmeta = (int) ($userid && !$editable && !empty($element['config']['tag']));
     $querybase = $element['page'] . (strpos($element['page'], '?') === false ? '?' : '&');
     $prefix = $form->get_name() . '_' . $element['name'];
 
@@ -230,6 +235,8 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     $smarty->assign('selectable', $selectable);
     $smarty->assign('selectfolders', $selectfolders);
     $smarty->assign('publishing', $publishing);
+    $smarty->assign('showtags', $showtags);
+    $smarty->assign('editmeta', $editmeta);
     $smarty->assign('filelist', $filedata);
     $smarty->assign('querybase', $querybase);
     $smarty->assign('prefix', $prefix);
