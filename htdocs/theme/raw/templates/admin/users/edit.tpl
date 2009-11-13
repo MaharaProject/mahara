@@ -2,8 +2,8 @@
 
 <div class="fl center">
     <div id="profilepict">
-        <a href="{$WWWROOT}user/view.php?id={$user->id}"><img src="{$WWWROOT}thumb.php?type=profileiconbyid&amp;maxwidth=100&amp;maxheight=100&amp;id={$user->profileicon}" alt=""></a><br>
-        <a href="{$WWWROOT}user/view.php?id={$user->id}">{$user|display_name|escape}</a>
+        <a href="{$WWWROOT}user/view.php?id={$user->id}"><img src="{$WWWROOT}thumb.php?type=profileiconbyid&amp;maxwidth=100&amp;maxheight=100&amp;id={$user->profileicon}" alt=""></a>
+        <div id="profilename"><a href="{$WWWROOT}user/view.php?id={$user->id}">{$user|display_name|escape}</a></div>
     </div>
     {if $loginas}
        <div id="loginas"><a class="btn-loginas" href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">{$loginas}</a></div>

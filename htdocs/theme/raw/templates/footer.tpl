@@ -24,8 +24,8 @@
         <a href="{$WWWROOT}privacy.php">{str tag=privacystatement}</a> | 
         <a href="{$WWWROOT}about.php">{str tag=about}</a> | 
         <a href="{$WWWROOT}contact.php">{str tag=contactus}</a></div>
-{mahara_performance_info}
-{mahara_version}
+		<div id="performance-info">{mahara_performance_info}</div>
+		<div id="version">{mahara_version}</div>
 		<div class="cb"></div>
     </div>
 </div>

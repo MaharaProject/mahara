@@ -12,7 +12,7 @@
                 </div>
             </div>
         </div>
-  <div class="viewfooter">
+  <div class="viewfooter cb">
     {if $tags}<div class="tags">{str tag=tags}: {list_tags owner=$owner tags=$tags}</div>{/if}
     <div>{$releaseform}</div>
     <table id="feedbacktable" class="fullwidth table">

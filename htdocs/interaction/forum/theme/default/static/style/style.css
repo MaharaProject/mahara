@@ -4,38 +4,87 @@
  * Copyright (C) 2006-2009 Catalyst IT
  * This file is distributed under the same terms as Mahara itself
  */
-.subscribetd #subscribe_forum_submit {
-	font-weight: bold !important;
-	border: none !important;
-    font-size: .9em !important;
-	margin: 0 !important;
-	padding: 0 !important;
-	font-family: Arial, Helvetica, sans-serif !important;
-	background: none !important;
-	color: #7f9d16 !important;
-}
-.subscribetd input.btn-subscribe {
-	font-weight: bold !important;
-	border: none !important;
-    font-size: 1em !important;
-	margin: 0 !important;
-	padding: 0 !important;
-	font-family: Arial, Helvetica, sans-serif !important;
-	background: none !important;
-	color: #7f9d16 !important;
-}
-.rbuttons #subscribe_topic_submit {
-	color: #FFF !important;
+ 
+/* Edit and Delete in list */
+.btn-spacer a {
+	padding-left: 12px;
 }
 
+/* Forum list */
+#forumslist{
+	border-bottom: 1px solid #ccc;
+}
+#forumslist th{
+	border-bottom: 1px solid #ccc;
+}
+
+/* Topic list */
+#viewforum {
+	border: 1px solid #eee;
+}
+#viewforum h3 {
+}
+#forumtopicstable {
+	border-bottom: 1px solid #ccc;
+}
+#forumtopicstable th {
+	border-bottom: 1px solid #ccc;
+}
+/* topic types */
+.stickytopic td {
+	background-color: #fffcd8;
+	border-bottom: 1px solid #FFFFFF;
+}
+
+
+/* Forum Pagination */
+#viewforum div.pagination {
+}
+#viewforum div.pagination a {
+	border: 1px solid #ccc;
+}
+#viewforum div.pagination .results {
+}
+/* admin & moderator */
+.groupadmin {
+	color: #3366CC;
+}
+.moderator {
+	color: #993399;
+}
+
+
+/* Posts */
+.closed {
+}
+.forumpost {
+	border: 1px solid #eee;
+}
+.forumsubject {
+	border-bottom: 1px solid #eee;
+}
+.forumsubject h6 {
+}
+.forumpostleft {
+	border-right: 1px solid #eee;
+}
+.forumpostleft .posttime {
+	color: #888;
+}
+.forumpostleft .author p.poster {
+	color: #888;
+}
+.forumpostleft .author p.postcount {
+}
+.postbtns {
+	color: #d1d1d1;
+}
 .postbtns a {
-	padding-left: 1em;
+	padding-left: 12px;
 }
-
-#subscribe_forum td {
-	font-size: 1.1em !important;
+.deletedpost {
+    color: #666666;
 }
-
-#forumslist th, #forumtopicstable th {
-	background: none;
+.postreply {
 }
+ 

@@ -2,8 +2,8 @@
 
 <div id="adminhome">
 {if $upgrades}
-<h3>{str tag="upgrades" section=admin}</h3>
 <div id="runupgrade">
+<h3>{str tag="upgrades" section=admin}</h3>
 <div class="fr"><span class="upgradeicon"><a href="upgrade.php">{str tag=runupgrade section=admin}</a></span></div>
 <h4>{str tag=thefollowingupgradesareready section=admin}</h4>
 <table id="upgradestable">
@@ -79,5 +79,6 @@
 {/if}
     {$closeform}
 </div>
+<div class="cb"></div>
 
 {include file='footer.tpl'}

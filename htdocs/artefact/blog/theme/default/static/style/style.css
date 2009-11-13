@@ -4,8 +4,15 @@
  * Copyright (C) 2006-2009 Catalyst IT
  * This file is distributed under the same terms as Mahara itself
  */
- #bloglist thead th {
-	border: 0 !important;
+ 
+ /* Blog list */
+#bloglist .right a {
+	padding-left: 12px;
+}
+
+/* Post list */
+#postlist th {
+	border-bottom: 1px dotted #d1d1d1;
 }
 
 #postlist input.delete {
@@ -21,3 +28,7 @@
 	padding-left: .8em;
 	border: 0;
 }
+#postlist td.postdetails {
+	color: #888;
+}
+

@@ -7,14 +7,15 @@
 input#myfriends_addfriend_add {
     font-weight: bold;
 }
+
 #userfriendstable a {
     display: block;
 }
+
 #sendmessage input,
 #invitetogroup #invitetogroup_submit_container input {
 	margin: 0;
 }
-
 
 #email_list {
 	line-height: 2em;
@@ -28,11 +29,11 @@ input#myfriends_addfriend_add {
 	font-size: .9em;
 }
 
-
 .profile-fieldsets fieldset {
 	border: none;
 	padding: 0;
 }
+
 fieldset.safe-hidden .mceEditor {
 	display: none;
 }

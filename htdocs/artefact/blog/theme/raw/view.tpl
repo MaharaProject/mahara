@@ -2,8 +2,8 @@
 			<div id="myblogs rel">
 
 				<div class="rbuttons">
-                    <a href="{$WWWROOT}artefact/blog/settings/?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
-					<a href="{$WWWROOT}artefact/blog/new">{str tag=addblog section=artefact.blog}</a>
+                    <a class="btn btn-settings" href="{$WWWROOT}artefact/blog/settings/?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
+					<a class="btn btn-new" href="{$WWWROOT}artefact/blog/new">{str tag=addblog section=artefact.blog}</a>
                     <a class="btn btn-add" href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
 				</div>
 

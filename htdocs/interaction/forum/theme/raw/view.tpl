@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-<h2>{$subheading|escape}</h2>
+<h3>{$subheading|escape}</h3>
 <div id="forumbtns" class="rbuttons">
 	{if $admin}
 		<a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}" class="btn btn-editforum">{str tag="edittitle" section="interaction.forum"}</a>
@@ -26,7 +26,6 @@
         <th>{str tag="Poster" section="interaction.forum"}</th>
         <th class="postscount center" width="10%">{str tag="Posts" section="interaction.forum"}</th>
         <th class="lastpost" width="25%">{str tag="lastpost" section="interaction.forum"}</th>
-        {if $moderator}<th></th>{/if}
     </tr>
     {if $stickytopics}
     	{include file="interaction:forum:topics.tpl" topics=$stickytopics moderator=$moderator forum=$forum sticky=true}

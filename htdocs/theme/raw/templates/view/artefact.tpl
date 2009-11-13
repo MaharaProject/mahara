@@ -1,11 +1,11 @@
 {include file="header.tpl"}
 
-        <h1>
+        <h2>
             <a href="{$WWWROOT}view/view.php?id={$viewid}">{$viewtitle|escape}</a>{if $ownername} {str tag=by section=view}
             <a href="{$WWWROOT}{$ownerlink}">{$ownername|escape}</a>{/if}{foreach from=$artefactpath item=a}:
                 {if $a.url}<a href="{$a.url}">{/if}{$a.title|escape}{if $a.url}</a>{/if}
             {/foreach}
-        </h1>
+        </h2>
 
         <div id="view">
             <div id="bottom-pane">
@@ -15,7 +15,7 @@
             </div>
         </div>
 
-      <div class="viewfooter">
+      <div class="viewfooter cb">
         <table id="feedbacktable" class="fullwidth table">
           <thead><tr><th>{str tag="feedback" section="view"}</th></tr></thead>
           <tbody>

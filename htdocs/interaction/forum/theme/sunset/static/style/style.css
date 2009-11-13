@@ -1,17 +1,30 @@
+#forumslist th, 
 #forumtopicstable th {
 	border-bottom: 1px solid #8E1901;
 }
-.forumpost {
-	background-color: #f4f7f9;
-	border-top: 1px dotted #8E1901;
-	border-bottom: 1px dotted #8E1901;
+#forumtopicstable td {
 }
-.stickytopic {
-  background-color: #f7be23;
+.stickytopic td {
+	background-color: #f7be23;
+}
+.forumpost {
+}
+.forumsubject {
+}
+.forumpostleft {
+	background-color: #f4f7f9;
 }
 .forumpostleft h5 {
 	color: #8e1901;
 }
 .posttime {
     color: #8e1901;
+}
+.postbtns {
+}
+.postbtns a {
+}
+.forumpostleft .author p.poster {
+}
+.deletedpost {
 }

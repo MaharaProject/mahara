@@ -1,103 +1,221 @@
 /*  Views  */
-#page #top-pane,
-#page #blocksinstruction {
-    background: #1C3740;
+#views-loading {
 }
-#page #blocksinstruction {
-    color: #BEE3F1;
+/********************** Top pane of Edit View *************************/
+#top-pane {
 }
+/* The tabs that allow you to select a blocktype category */
 #category-list {
   margin-left:10px;
 }
-#category-list li {
-  margin:3px;
+#category-list ul {
 }
-#category-list li a {
-  border: 1px dotted #FFFFFF;
-  border-bottom:none;
-  background-color: #10171A;
+#category-list li {
+  margin: 0 3px 0 0;
+}
+#category-list li a,
+#category-list li a:link,
+#category-list li a:visited,
+#category-list li a:active {
+  border: 0;
+  background: #1C3740;
 }
 #category-list li a:hover {
-    background-color: #10171A;
     color: #BEE3F1;
 }
-#category-list li.current a {
-    background-color: #10171A;
-    color: #BEE3F1;
+#category-list li.current a,
+#category-list li.current a:link,
+#category-list li.current a:visited,
+#category-list li.current a:active {
+    background: #00AEF1;
+    color: #FFF;
+}
+#category-list li.current a:hover {
 }
 
+/* The panel that contains the blocktype icons */
 #blocktype-list {
-  border: 1px dotted #BEE3F1;
+    border: 1px solid #28353b;
     background-color: #10171A;
+    color: #1C3740 !important;
 }
-.blocktype {
+.blocktype div {
+	color: #BEE3F1;
+}
+#noblocks {
+}
+
+
+/********************** Between Panes *************************************/
+#layout-link {
+}
+#layout-link.disabled {
+}
+#btn-displaymyview {
+}
+
+
+/********************** Bottom pane of Edit View *************************/
+#page #bottom-pane {
+	border-color: #1C3740 !important;
+}
+#blocksinstruction {
+    background: #1C3740;
     color: #BEE3F1;
 }
 
-ul.artefactchooser-tabs,
-ul.artefactchooser-subtabs {
-  border-bottom: 1px solid #1C3740;
-}
-ul.artefactchooser-tabs li a {
-  background: #1C3740;
-  color: #BEE3F1;
-}
-ul.artefactchooser-subtabs li a {
-  color: #BEE3F1;
-}
-ul.artefactchooser-tabs li.current a,
-ul.artefactchooser-subtabs li.current a {
-  background: #1C3740;
-  color: #BEE3F1;
-  font-weight: bold;
-}
-.blockinstance-content p.noartefacts {
-    color: #BEE3F1;
+#column-container .column-header input[disabled="disabled"] {
 }
 
-#artefactchooser-body {
-    border: 1px solid #BEE3F1;
-}
-div.configure {
-    background: #10171A;
-}
-#artefactchooser-body table,
-#artefactchooser-body table th,
-#artefactchooser-body table td,
-#artefactchooser-body table td p,
-#artefactchooser-body table td div  {
-    color: #BEE3F1;
-    background: #10171A;
+.column-content .add-button input {
 }
 
+#block-placeholder {
+}
+
+/********************** Blockinstance ************************************/
+.blockinstance {
+}
 .blockinstance.configure {
   border: 4px solid #1C3740;
   background: #10171A;
 }
 
-#page #bottom-pane {
-	border-color: #1C3740 !important;
+/* header*/
+.blockinstance-header h4 {
+	font-size: 1.4em !important;
+}
+.blockinstance-header h4 a,
+.blockinstance-header h4 a:link,
+.blockinstance-header h4 a:visited,
+.blockinstance-header h4 a:active {
+    text-decoration: none;
+}
+.blockinstance-header h4 a:hover {
 }
 
-#blocktype-list {
-    color: #1C3740 !important;
+/* content */
+.blockinstance-content {
+	padding: 0;
 }
-.configurebutton {
-    background-color: transparent;
-    border:0px !important;
-    padding:0px !important;
-    margin: 0px !important;
+.blockinstance-content h3 {
+}
+.blockinstance-content h4 {
 }
 
+/* Wall */
 .wallpost {
-    border-bottom: 1px dotted #BEE3F1;
+    border-bottom: 1px solid #080D0F;
 	background: #1C3740;
 }
-
-
-#view .blockinstance-content .attachments {
-    background-color: #10171A;
+#wall .private {
+    background: #274f5c;
 }
+
+
+/* tabs for the artefact chooser */
+ul.artefactchooser-tabs {
+  border-bottom: 1px solid #1C3740;
+}
+ul.artefactchooser-tabs li {
+	margin: 0 3px 0 0 !important;
+}
+ul.artefactchooser-tabs li a,
+ul.artefactchooser-tabs li a:link,
+ul.artefactchooser-tabs li a:visited,
+ul.artefactchooser-tabs li a:active {
+  background: #1C3740;
+  color: #BEE3F1;
+}
+ul.artefactchooser-tabs li a:hover {
+}
+ul.artefactchooser-tabs li.current a,
+ul.artefactchooser-tabs li.current a:link,
+ul.artefactchooser-tabs li.current a:visited
+ul.artefactchooser-tabs li.current a:active {
+  background: #00AEF1;
+  color: #FFF;
+  font-weight: bold;
+}
+ul.artefactchooser-tabs li.current a:hover {
+}
+ul.artefactchooser-subtabs {
+  border-bottom: 1px solid #1C3740;
+}
+ul.artefactchooser-subtabs li {
+	border-right: 0;
+}
+ul.artefactchooser-subtabs li a,
+ul.artefactchooser-subtabs li a:link,
+ul.artefactchooser-subtabs li a:visited,
+ul.artefactchooser-subtabs li a:active {
+  color: #BEE3F1;
+  padding: 5px 10px;
+}
+ul.artefactchooser-subtabs li a:hover {
+}
+ul.artefactchooser-subtabs li.current a,
+ul.artefactchooser-subtabs li.current a:link,
+ul.artefactchooser-subtabs li.current a:visited,
+ul.artefactchooser-subtabs li.current a:active {
+  background: #1C3740;
+  color: #BEE3F1;
+  font-weight: bold;
+}
+ul.artefactchooser-subtabs li.current a:hover {
+}
+
+
+#artefactchooser-body {
+    border: 1px solid #1C3740;
+}
+.upload_browse #artefactchooser-body {
+    border: 1px solid #1C3740;
+}
+
+
+/* pagination */
+.ac-pagination .results {
+}
+
+/* attachments */
+.attachments {
+	background-color: #10171A;
+}
+#view .blockinstance-content .attachments,
 #view .blockinstance-content .attachments td {
     background-color: #10171A;
+}
+
+/** When viewing an artefact */
+#view .filedata-icon.fr {
+	background: #0C2839;
+}
+
+#copyview .searchquery {
+	background: #0C2839;
+	border: 1px solid #1C3740;
+}
+
+/* table */
+.maharatable thead th {
+}
+.maharatable tbody th {
+}
+#artefactchooser-body th label {
+}
+.maharatable td label {
+}
+
+
+/* View Page footer menu */
+#view .viewfooter {
+	border-top: 1px solid #10171A;
+}
+#view #feedbacktable {
+	border: 1px solid #10171A;
+	clear: both;
+}
+#viewmenu a {
+    padding-left: 12px;
 }

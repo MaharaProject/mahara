@@ -1,9 +1,13 @@
-tr.folder td {
-    background-color: #10171A !important;
-}
 filelist thead th {
     border-bottom: 1px dotted #BEE3F1;
 }
 .filelist td {
     border-bottom: 1px dotted #BEE3F1;
+}
+
+#files_filebrowser_edit_row td {
+    border: 4px solid #1A292F;
+}
+tr.folder td {
+	background-color:#10171A;
 }

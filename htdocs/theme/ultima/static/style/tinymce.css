@@ -1,4 +1,10 @@
-body, td {
+body{
+	font-family: Arial, Helvetica, sans-serif !important;
+	font-size: 12px !important;
+	padding: 5px !important;
+	color: #3C083F;
+}
+td {
 	font-family: Arial, Helvetica, sans-serif !important;
 	font-size: 12px !important;
 	padding: 5px !important;
@@ -18,7 +24,7 @@ a:hover {
 }
 
 h1 {
-    color: #580754 !important;
+    color: #3C083F !important;
     font-size: 30px !important;
     font-weight: normal !important;
     margin: 0 0 5px 0 !important;
@@ -26,15 +32,17 @@ h1 {
 }
 h2 {
     font-size: 24px !important;
-    color: #580754 !important;
-    font-weight: bold !important;
+    color: #3C083F !important;
+    font-family:Georgia, "Times New Roman", Times, serif !important;
+    font-weight: normal !important;
     margin: 0 0 5px 0 !important;
     padding: 0 !important;
 }
 
 h3 {
+    font-family:Georgia, "Times New Roman", Times, serif !important;
     color: #3C083F !important;
-    font-weight: bold !important;
+    font-weight: normal !important;
     font-size: 17px !important;
     margin: 20px 0 0 !important;
 }

@@ -6,14 +6,6 @@
 <a href="{$WWWROOT}interaction/edit.php?group={$groupid|escape}&amp;plugin=forum" class="btn btn-add">{str tag="newforum" section=interaction.forum}</a>
 </div>
 {/if}
-<div class="forummods">
-	<label>{str tag="groupadminlist" section="interaction.forum"}</label>
-	{foreach from=$groupadmins item=groupadmin}
-    <span class="inlinelist">
-        <a href="{$WWWROOT}user/view.php?id={$groupadmin}" class="groupadmin"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupadmin}" alt=""> {$groupadmin|display_name|escape}</a>
-    </span>
-    {/foreach}
-</div>
 {if $forums}
 <table id="forumslist" class="fullwidth nohead">
 	<tr>
@@ -52,4 +44,12 @@
 {else}
 <div class="message">{str tag=noforums section=interaction.forum}</div>
 {/if}
+<div class="forummods">
+	<label>{str tag="groupadminlist" section="interaction.forum"}</label>
+	{foreach from=$groupadmins item=groupadmin}
+    <span class="inlinelist">
+        <a href="{$WWWROOT}user/view.php?id={$groupadmin}" class="groupadmin"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupadmin}" alt=""> {$groupadmin|display_name|escape}</a>
+    </span>
+    {/foreach}
+</div>
 {include file="footer.tpl"}
