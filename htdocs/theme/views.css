@@ -10,49 +10,55 @@
     text-align: center;
     margin: 1em;
     font-size: 100%;
-    color: #666;
 }
-
-/* The top part of the page, containing the category selector */
-#top-pane {
+/* just the bottom pane when not editing */
+#bottom-pane {
+    margin: .5em 0;
+}
+/********************** Top pane of Edit View *************************/
+#page #top-pane {
     margin-bottom: .5em;
 }
-
 /* The tabs that allow you to select a blocktype category */
 #category-list ul {
     list-style: none;
     margin: 0;
     padding: 0;
 	display: block;
+	height: 25px;
 }
 #category-list li {
     display: inline;
-    line-height: 1.9em;
+    line-height: 25px;
     margin: 0 .5em 0 0;
     padding: 0;
 	position: static;
 	z-index:5;
 }
-#category-list li a {
-    background-color: #eee;
-    padding: .3em .5em;
+#category-list li a,
+#category-list li a:link,
+#category-list li a:visited,
+#category-list li a:active {
+    padding: 5px 10px;
     font-weight: bold;
 }
-#category-list li.current a {
-    background: #d1d1d1;
-    color: #333;
+#category-list li a:hover {
+}
+#category-list li.current a,
+#category-list li.current a:link,
+#category-list li.current a:visited,
+#category-list li.current a:active {
     cursor: default;
     text-decoration: none;
 }
-
+#category-list li.current a:hover {
+}
 /* The panel that contains the blocktype icons */
 #blocktype-list {
     overflow: hidden;
     min-height: 95px;
-    background: #FFF;
     padding: .5em .5em 1em .5em;
     font-size: .8em;
-	border: 1px solid #D1D1D1;
 }
 #blocktype-list ul {
     list-style-type: none;
@@ -63,6 +69,7 @@
     margin: 1em 1em 0;
     width: 22%;
 	* z-index: 100;
+	line-height: 1.4em;
 }
 * html #blocktype-list li {
 	position: relative;
@@ -76,28 +83,22 @@
 }
 #noblocks {
     font-size: larger;
-    color: #666;
     margin-top: 40px;
     text-align: center;
 }
 
-/* Bottom half of the page */
-#page #bottom-pane {
-    margin: .5em 0;
-    border: 5px solid #eee;
-}
+
+/********************** Bottom pane of Edit View *************************/
 html>body #column-container {
 	* width: 100%;
 }
-
 #blocksinstruction {
     padding: 0 1em .5em;
-    background: #eee;
-    color: #919191;
     font-weight: bold;
 	margin-bottom: 1em;
 }
 
+/* columns */
 #column-container input.submit {
     cursor: pointer;
 }
@@ -105,7 +106,6 @@ html>body #column-container {
     width: 50px;
 }
 #column-container .column-header input[disabled="disabled"] {
-    color: #ccc;
     cursor: default;
 }
 
@@ -176,67 +176,77 @@ html>body #column-container {
     height: 1px;
 	line-height: 1px;
 }
-
 .column-content {
     min-height: 2em;
 }
+.column-content .add-button input {
+	border: none;
+	font-size: .85em;
+}
 
 #block-placeholder {
-    border: 2px dashed #bfbfbf;
     margin-top: 1em;
 }
 
-/* block instance styles */
+/**************** Blockinstance **********************/
 .blockinstance {
     margin: 0 0 1em 0;
     padding: 0 .5em 1em 0;
     position: relative;
 }
-
-.column-content .add-button input {
-	border: none;
-	font-size: .85em;
-	border: 1px solid #d1d1d1;
-}
-
-.blockinstance-controls {
-    position: absolute;
-	right: 2px;
-	top: 2px;
-}
-.blockinstance-controls input {
-    height: 16px;
-    width: 16px;
-    border: none;
-    background: none;
-    padding: 0;
-}
-.blockinstance-controls input.submit {
-    margin: 0;
-}
-
+/* Configure blockinstance */
 .blockinstance.configure {
-  border: 7px solid #eee;
-  background: #fff;
   width: 700px;
   text-align: left;
   margin-left: auto;
   margin-right: auto;
   padding: 1em;
 }
-.main-column .blockinstance-header h4, .blockinstance.configure h4 {
+
+/* header */
+.blockinstance-header h4 {
+    margin: 0 !important;
+    cursor: default;
+	font-size: 1.4em;
+}
+
+/* control */
+.blockinstance-controls {
+    position: absolute;
+	right: 2px;
+	top: 2px;
+}
+.blockinstance-controls input,
+.blockinstance-controls input.submit,
+.blockinstance-controls input.cancel {
+    height: 16px;
+    width: 16px;
+    border: 0;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+	margin: 0;
+}
+
+/* content */
+.blockinstance-content {
+	padding: .5em 0;
+    margin-top: .25em;
+}
+
+.main-column .blockinstance-header h4, 
+.blockinstance.configure h4 {
     margin: 0;
 	font-size: 1.4em;
 }
-.blockinstance.configure table {
-    margin: 0;
-    width: 100%;
+.blockinstance-content h3 {
+	font-size: 1.2em !important;
+	margin-top: .5em !important;
+	margin-bottom: 0 !important;
 }
-.blockinstance.configure td {
-    padding: 0;
-}
-.blockinstance-content {
-    margin-top: .25em;
+.blockinstance-content h4 {
+	font-size: 1.1em !important;
+	margin-bottom: 0 !important;
 }
 .blockinstance-content p:first-child {
     margin-top: 0;
@@ -244,6 +254,21 @@ html>body #column-container {
 .blockinstance-content p:last-child {
 	margin-bottom: 0;
 }
+.blockinstance-content p.noartefacts {
+    text-align: center;
+    padding: .5em;
+}
+.blockinstance-content .description {
+	font-size: .9em;
+}
+
+
+/* Wall */
+.blockinstance-content #wall {
+	margin: .5em 0;
+}
+
+/* Image Blockinstance */
 .blockinstance-content div a img {
 	max-width: 98%;
 }
@@ -254,160 +279,206 @@ html>body #column-container {
 	width: 100%;
 }
 
-.blockinstance-content .description {
-	font-size: .9em;
-	color: #888888;
+/* External Feed */
+#blocktype_externalfeed_title {
+	font-weight: bold;
+	font-size: 1.1em;
 }
-.blockinstance-content #wall {
-	margin: 1em 0 .5em 0;
+#blocktype_externalfeed_entries ol,
+#blocktype_externalfeed_entries ul {
+	margin: 0;
 }
 
-/* styling the tabs for the artefact chooser */
-ul.artefactchooser-tabs.files {
-  margin: 1em 0 0 0 !important;
-  font-size: 1em;
-}
+/* tabs for the artefact chooser */
 ul.artefactchooser-tabs {
   padding: 0 !important;
   margin: 0;
   font-weight: bold;
   list-style: none;
-  line-height: 1.65em;
+  line-height: 25px;
+  font-size: 12px;
 }
 ul.artefactchooser-tabs li {
   display: inline;
   margin: 0 .5em 0 0 !important;
   padding: 0;
+  line-height: 25px;
 }
-ul.artefactchooser-tabs li a {
-  padding: .2em .5em;
+ul.artefactchooser-tabs li a,
+ul.artefactchooser-tabs li a:link,
+ul.artefactchooser-tabs li a:visited,
+ul.artefactchooser-tabs li a:active {
+  padding: 5px 10px;
   text-decoration: none;
-  background: #eee;
 }
-ul.artefactchooser-tabs li.current a {
-  background: #ddd;
-  color: #333;
+ul.artefactchooser-tabs li a:hover {
+	text-decoration: underline;
+}
+ul.artefactchooser-tabs li.current a,
+ul.artefactchooser-tabs li.current a:link,
+ul.artefactchooser-tabs li.current a:visited
+ul.artefactchooser-tabs li.current a:active {
+}
+ul.artefactchooser-tabs li.current a:hover {
 }
 ul.artefactchooser-subtabs {
   margin: 2px !important;
   padding: 0 0 .2em 0 !important;
   font-size: .9em;
   list-style: none;
-  border-bottom: 1px solid #ddd;
 }
 ul.artefactchooser-subtabs li {
   display: inline;
   padding: 0 .5em;
   margin: 0 !important;
-  border-right: 1px solid #d1d1d1;
 }
-ul.artefactchooser-subtabs li a {
+ul.artefactchooser-subtabs li a,
+ul.artefactchooser-subtabs li a:link,
+ul.artefactchooser-subtabs li a:visited,
+ul.artefactchooser-subtabs li a:active {
   text-decoration: none;
   padding: 2px;
 }
-ul.artefactchooser-subtabs li.current a {
-  color: #333;
+ul.artefactchooser-subtabs li a:hover {
+	text-decoration: underline;
+}
+ul.artefactchooser-subtabs li.current a,
+ul.artefactchooser-subtabs li.current a:link,
+ul.artefactchooser-subtabs li.current a:visited,
+ul.artefactchooser-subtabs li.current a:active {
   font-weight: bold;
+}
+ul.artefactchooser-subtabs li.current a:hover {
 }
 
 #artefactchooser-body {
-    border: 1px solid #ddd;
 	margin-bottom: .5em;
 	padding: 1em;
+}
+#instconf_artefactids_container #artefactchooser-body,
+#instconf_artefactid_container #artefactchooser-body {
+	padding: 0;
+}
+
+
+/* table */
+.maharatable {
+    margin: 0;
+    width: 100%;
+}
+.maharatable thead th {
+	padding-top: 0 !important;
+	font-size: 1em !important;
+	text-align: left !important;
+}
+.maharatable tbody th {
+	padding: .5em 0 0 0 !important;
+	font-size: 1.2em;
+	text-align: left !important;
+}
+.maharatable tbody td {
+	padding: .25em 0;
+}
+.maharatable #artefactchooser-body table,
+.maharatable #artefactchooser-body table th,
+.maharatable #artefactchooser-body table td {
+    padding: .25em !important;
+}
+.maharatable #artefactchooser-body .artefactchooser-data,
+.maharatable #artefactchooser-body .artefactchooser-data th,
+.maharatable #artefactchooser-body .artefactchooser-data td {
+    padding: 0 .25em !important;
+}
+#artefactchooser-body th label {
+	font-weight: normal;
+	font-size: .85em;
+}
+.maharatable td label {
+	font-weight: normal;
+}
+#artefactchooser-searchform {
+	padding: .25em .5em;
 }
 #artefactchooser-searchsubmit {
     margin: 0;
 }
 div.artefactchooser-splitter {
-    padding: .25em 0 0;
-}
-.blockinstance-content p.noartefacts {
-    color: #808080;
-    text-align: center;
-    padding: .5em;
+    padding: .25em 0 0 0;
 }
 .blockconfig-background {
     width: 100%;
     text-align: center;
     margin-top: 20px;
 }
-#artefactids_pagination {
-    text-align: center;
+
+/* pagination */
+.ac-pagination {
     white-space: nowrap;
+	margin: 0 !important;
+}
+.ac-pagination .results {
 	margin: 0;
 }
-#artefactids_pagination .results,
-#artefactid_pagination .results {
-	margin: 0;
-	background: #eee;
-}
-.ac-pagination a, .ac-pagination .disabled {
+.ac-pagination a, 
+.ac-pagination .disabled {
     margin: 0 1px;
     padding: 1px 3px;
 }
-#artefactchooser-body th label {
-	font-size: 1em;
-	white-space: nowrap;
-	font-weight: bold;
+
+/* attachments */
+.attachments {
+    border: 0;
+	margin: .5em 0;
 }
-#artefactchooser-body .artefactchooser-data th label {
-	font-weight: normal;
+.attachments th {
+	padding: .25em .5em !important;
 }
-#instconf_artefactid_agreement td {
+.attachments td {
+	padding: .25em .5em !important;
+}
+.attachments td input.small {
+    font-size: .9em;
+}
+
+/* upload */
+.uploadform td {
 	font-size: .9em;
 }
-#instconf_artefactid_upload_container th {
+.uploadform th label {
+	font-weight: bold !important;
+}
+.fileupload th {
 	padding: .25em 0;
-}
-#instconf_artefactid_upload_container td {
-	padding: .25em .5em;
-}
-#instconf_artefactid_foldernav {
-	font-size: 1.4em;
-	margin: 1em 0 0 0;
-}
-#instconf_artefactid_filelist_container #filelist td {
-	padding: .25em .5em;
-}
-#instconf_artefactid_filelist_container #filelist td input.small {
-	font-size: .9em;
-}
-
-#instconf_artefactid_selectlist td {
-	padding: .25em .5em;
-}
-#instconf_artefactid_selectlist td input.small {
-	font-size: .9em;
-}
-.blockinstance.configure .maharatable thead th {
-	padding-top: 0 !important;
-	font-size: 1em !important;
 	text-align: left !important;
 }
-.blockinstance.configure .maharatable tbody th {
-	padding: .5em 0 0 0 !important;
-	font-size: 1.2em;
-	text-align: left !important;
+.fileupload td {
+	padding: .25em .5em;
 }
-.blockinstance.configure .maharatable .artefactchooser-data tbody th {
-	padding-top: 0;
-	font-size: 1em;
-	text-align: left;
+.fileupload #filelist td {
+	padding: .25em .5em;
 }
-.blockinstance.configure .maharatable td {
-	padding-bottom: .5em;
+.fileupload #filelist td input.small {
+	font-size: .9em;
 }
-.blockinstance.configure .maharatable td td {
-	padding-bottom: 0;
+.upload_browse #artefactchooser-body {
+	padding: 1em !important;
 }
-
+.upload_browse .uploadform td {
+	line-height: 1.2em;
+}
+.upload_browse #artefactchooser-body {
+	margin-bottom: .5em;
+	padding: 1em;
+}
 
 #view-wizard-controls form {
     display: inline;
 }
 
 #view-description {
-    margin: .5em .25em;
+    margin: 0 0 1em 0;
+	padding: .25em 0;
+	border-bottom: 1px dotted #ccc;
 }
 
 .defaultSkin table.mceToolbar, .defaultSkin tr.mceFirst .mceToolbar tr td, .defaultSkin tr.mceLast .mceToolbar tr td {
@@ -415,4 +486,65 @@ div.artefactchooser-splitter {
 	margin:0; 
 	padding:0; 
 	width: auto;
+}
+
+/* VIEWS */
+/* views footer */
+.viewfooter {
+	clear: both;
+	padding: 1em;
+	margin-bottom: 1em;
+}
+#viewmenu {
+	font-size: .9em;
+}
+#viewmenu a {
+	margin: 0 .5em;
+}
+#viewmenu .help a {
+	padding: 0;
+}
+#feedbacktable .details {
+	font-size: .9em;
+}
+#feedbacktable .icon {
+	float: left;
+	margin-right: 5px;
+}
+#feedbacktable p {
+    margin: 0 0 .25em;
+}
+#feedback_pagination {
+	margin: 0;
+}
+#feedbacktable form.makeprivate,
+#feedbacktable form.makeprivate div {
+	display: inline;
+}
+#add_feedback_form {
+	margin-top: 1em;
+}
+
+/** viewing artefact */
+#view .filedata-icon.fr {
+	padding: .5em 1em 1em 1em;
+	margin: 0 0 1em 0;
+}
+#view .filedata-icon h4 {
+	font-size: .9em;
+	margin: 0;
+}
+#view .filedata-icon.fl {
+	margin: 0.25em 0 0 0;
+}
+#view table.filedata th {
+	padding: 0 .5em 0 0;
+}
+#view table.filedata td {
+	padding: 0 .5em;
+}
+
+
+#publicfeedback {
+	clear: both;
 }

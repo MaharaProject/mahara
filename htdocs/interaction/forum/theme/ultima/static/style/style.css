@@ -1,14 +1,30 @@
-input.submit.btn-subscribe {
-    color: #360435 !important;
-}
+#forumslist th, 
 #forumtopicstable th {
 	border-bottom: 1px dotted #5c0758;
 }
-.stickytopic {
+#forumtopicstable td {
+}
+.stickytopic td {
     background-color: #e99adb;
 }
 .forumpost {
 	background-color: #f7f7f7;
 	border-top: 1px dotted #5c0758;
 	border-bottom: 1px dotted #5c0758;
+}
+.forumsubject {
+}
+.forumpostleft {
+}
+.forumpostleft h5 {
+}
+.posttime {
+}
+.postbtns {
+}
+.postbtns a {
+}
+.forumpostleft .author p.poster {
+}
+.deletedpost {
 }

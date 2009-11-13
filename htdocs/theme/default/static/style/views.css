@@ -1,7 +1,10 @@
-/**
- * Stylesheet for views for the default theme
- */
-
+/*  Views  */
+#views-loading {
+}
+/********************** Top pane of Edit View *************************/
+#top-pane {
+}
+/* The tabs that allow you to select a blocktype category */
 #category-list ul {
     background: url(../images/tabs-bg.gif) repeat-x left top;
     height: 25px;
@@ -13,7 +16,10 @@
     float: left;
     color: #1E6297;
 }
-#category-list li a {
+#category-list li a,
+#category-list li a:link,
+#category-list li a:visited,
+#category-list li a:active {
     background: transparent url(../images/tabs-divider.gif) no-repeat right top;
     color: #474220;
     padding: 5px 12px 6px 10px;
@@ -22,35 +28,86 @@
 #category-list li a:hover {
     color: #7E7327;
 }
-#category-list li.current a {
+#category-list li.current a,
+#category-list li.current a:link,
+#category-list li.current a:visited,
+#category-list li.current a:active {
     background: transparent url(../images/tabs-over-bg.gif) no-repeat right top;
 }
+#category-list li.current a:hover {
+}
 
+/* The panel that contains the blocktype icons */
 #blocktype-list {
     background-color: #f5f9fc;
     border-top: 0;
 }
+.blocktype div {
+}
+#noblocks {
+}
 
+
+/******************* Between Panes **************************************/
+#layout-link {
+}
+#layout-link.disabled {
+}
+#btn-displaymyview {
+}
+
+
+/********************** Bottom pane of Edit View *************************/
+#page #bottom-pane {
+}
+#blocksinstruction {
+}
+
+#column-container .column-header input[disabled="disabled"] {
+}
+
+.column-content .add-button input {
+}
+
+#block-placeholder {
+}
+
+/**************** Blockinstance **********************/
+.blockinstance {
+}
+.blockinstance.configure {
+}
+/* header*/
 .blockinstance-header h4 {
     border-bottom: 2px solid #d2d2d2;
 }
-.blockinstance-header h4 a {
+.blockinstance-header h4 a,
+.blockinstance-header h4 a:link,
+.blockinstance-header h4 a:visited,
+.blockinstance-header h4 a:active {
     text-decoration: none;
+	color: #1E6297;
+}
+.blockinstance-header h4 a:hover {
+	color: #267bbd;
 }
 
-.blockinstance-controls input,
-.blockinstance-controls input:hover {
-    background: none;
-    border: 0;
-    cursor: pointer;
+/* content */
+.blockinstance-content {
+}
+.blockinstance-content h3 {
+}
+.blockinstance-content h4 {
 }
 
-
-.blockinstance-content thead th {
-    color: #186194;
+/* Wall */
+.wallpost {
+    background-color: #F8FBFD;
+}
+#wall .private {
 }
 
-/* styling the tabs for the artefact chooser */
+/* tabs for the artefact chooser */
 ul.artefactchooser-tabs {
     line-height: 25px;
     font-weight: bold;
@@ -65,7 +122,10 @@ ul.artefactchooser-tabs li {
     float: left;
     color: #1E6297 !important;
 }
-ul.artefactchooser-tabs li a {
+ul.artefactchooser-tabs li a,
+ul.artefactchooser-tabs li a:link,
+ul.artefactchooser-tabs li a:visited,
+ul.artefactchooser-tabs li a:active {
     background: transparent url(../images/tabs-divider.gif) no-repeat right top;
     color: #474220 !important;
     padding: 5px 12px 6px 10px;
@@ -74,27 +134,89 @@ ul.artefactchooser-tabs li a {
 ul.artefactchooser-tabs li a:hover {
     color: #7E7327 !important;
 }
-ul.artefactchooser-tabs li.current a {
+ul.artefactchooser-tabs li.current a,
+ul.artefactchooser-tabs li.current a:link,
+ul.artefactchooser-tabs li.current a:visited
+ul.artefactchooser-tabs li.current a:active {
     background: transparent url(../images/tabs-over-bg.gif) no-repeat right top;
     color: #1E6297 !important;
+}
+ul.artefactchooser-tabs li.current a:hover {
+}
+ul.artefactchooser-subtabs {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+ul.artefactchooser-subtabs li {
+  padding: 0;
+  margin: 0 3px 0 0 !important;
+  border-right: 0;
+}
+ul.artefactchooser-subtabs li a,
+ul.artefactchooser-subtabs li a:link,
+ul.artefactchooser-subtabs li a:visited,
+ul.artefactchooser-subtabs li a:active {
+  text-decoration: none;
+  padding: .25em .5em;
+  background: #F3F7EC;
+}
+ul.artefactchooser-subtabs li a:hover {
+	text-decoration: none;
+}
+ul.artefactchooser-subtabs li.current a,
+ul.artefactchooser-subtabs li.current a:link,
+ul.artefactchooser-subtabs li.current a:visited,
+ul.artefactchooser-subtabs li.current a:active {
+  color: #333;
+  font-weight: bold;
+  background: #DDD;
+}
+ul.artefactchooser-subtabs li.current a:hover {
+	text-decoration: none;
 }
 
 #artefactchooser-body {
     background: #F5F9FC;
 }
+.upload_browse #artefactchooser-body {
+}
 
-#artefactchooser-body table,
-#artefactchooser-body table th,
-#artefactchooser-body table td {
-    padding: .25em !important;
+/* pagination */
+.ac-pagination .results {
+}
+
+/* attachments */
+.attachments {
+}
+#view .blockinstance-content .attachments,
+#view .blockinstance-content .attachments td {
+}
+
+/** When viewing an artefact */
+#view .filedata-icon.fr {
+}
+
+#copyview .searchquery {
+}
+
+/* table */
+.maharatable thead th {
+    color: #186194;
+}
+.maharatable tbody th {
+}
+#artefactchooser-body th label {
+}
+.maharatable td label {
 }
 
 
-/* VIEWS */
-.wallpost {
-    background-color: #F8FBFD;
+/* View Page footer menu */
+#view .viewfooter {
+  border-top: 0;
 }
-
+#view #feedbacktable {
+}
 #viewmenu a {
-    padding-left: 1em;
+    padding-left: 12px;
 }

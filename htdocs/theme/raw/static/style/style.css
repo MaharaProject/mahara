@@ -18,7 +18,6 @@ body {
     margin: 0;
     padding: 0;
 }
-
 img {
     border: 0;
 }
@@ -85,10 +84,14 @@ p {
 }
 .cb {
     clear: both;
+	* height: 0; /* IE hack */
 }
 .s {
     font-size: .9em;
     font-weight: normal;
+}
+.nowrap {
+	white-space: nowrap;
 }
 .ctime {
     color: #838383;
@@ -151,9 +154,10 @@ th {
     text-align: left;
     vertical-align: top;
 }
-thead th {
+.main-column thead th {
 	padding: .25em .5em;
     white-space: nowrap;
+	border-bottom: 1px solid #ccc;
 }
 .nohead tbody th {
 	padding: .25em .5em;
@@ -167,18 +171,42 @@ td {
     padding: .25em .5em;
     vertical-align: top;
 }
+.main-column tfoot td {
+	padding: .5em 0;
+}
 td.narrow {
     padding: 0;
 }
+/* table with th border-bottom */
+#searchresults thead th,
+#filelist,
+#groupforumtable {
+	border-bottom: 1px solid #ccc;
+}
+/* table with tfoot border-top */
+#searchresults tfoot td,
+#adminstitutionslist tfoot td,
+#profileicons tfoot td,
+#activitylist tfoot td,
+#groupforumtable {
+	border-top: 1px solid #ccc;
+}
+/* table with gap between rows */
+#friendslist td {
+	border-bottom: 2px solid #FFF;
+}
+/* table without border */
+#bloglist th {
+	border: 0;
+}
+/* Alternative row background colours */
 .r0,
 .r0 td  {
     background-color: #f9f9f9;
-	border-top: 1px solid #FFF;
 }
 .r1,
 .r1 td {
     background-color: #f3f3f3;
-	border-top: 1px solid #FFF;
 }
 .listing {
 	margin-bottom: .5em;
@@ -203,43 +231,39 @@ div.pagination  {
 div.pagination span {
     margin: 0 .25em;
 }
-.pagination a {
+div.pagination a {
     text-decoration: none;
 	padding: .25em .5em;
     border: 1px solid #d1d1d1;
+	background: #fff;
 }
-.pagination .disabled {
+div.pagination .disabled {
     background-color: #EBEBEB;
     text-decoration: none;
 	color: #c1c1c1;
 	padding: .25em .5em;
 }
-.pagination .selected {
+div.pagination .selected {
     font-weight: bold;
     border: none;
+	padding: .25em .5em;
 }
-.pagination .results {
+div.pagination .results {
     color: #838383;
-    text-align: center;
+	display: inline;
+	padding: .25em .5em;
 }
 
 /**************************** Forms ****************************/
-label {
-    font-weight: bold;
-    margin: 0;
-}
 form {
 	margin: 0;
 	padding: 0;
 }
-.required th, .required label, .requiredmarker, #register_tandc_container th {
-    color: #c81511;
+/* Label */
+label {
+    font-weight: bold;
+    margin: 0;
 }
-/* override required colour */
-.required label.plain, .required.radio td label, .required.emaillist td label {
-    color: #333;
-}
-
 .pieform tbody tr th label {
 	white-space: normal;
 }
@@ -247,8 +271,13 @@ form {
 	font-weight: normal;
 	font-size: .9em;
 }
-.pieform #filelist td label {
-	font-weight: bold;
+/* required */
+.required th, .required label, .requiredmarker, #register_tandc_container th {
+    color: #c81511;
+}
+/* override required colour to normal colour */
+.required label.plain, .required.radio td label, .required.emaillist td label {
+    color: #333;
 }
 .pieform td.description {
 	padding-top: 0 !important;
@@ -263,32 +292,21 @@ div.grippie {
     cursor: s-resize;
     height: 14px;
 }
-.errmsg {
-    color: #dd0221;
-    font-size: .9em;
-    background: #ffd3d9 url(../images/failure.gif) no-repeat .5em center;
-	padding-left: 2em;
-}
+
+/* Legend */
 legend {
 	font-weight: bold;
 	font-size: 1.3em;
 	* padding-bottom: .5em;
 	* padding-top: .5em;
 }
+
+/* Select */
 select {
 	margin-right: .25em;
 }
-textarea,
-input.text {
-	border: 1px solid #a5acb2;
-}
-input.text.required {
-	border: 1px solid #e98a88;
-}
 
-
-
-/**************************** Fieldset ****************************/
+/* Fieldset */
 fieldset {
 	padding: 1em 1.5em;
 	margin: 5px 0;
@@ -325,8 +343,33 @@ fieldset.collapsed legend a {
     background: url(../images/icon_fieldset_left.gif) 2px center no-repeat;
 }
 
-/****************************** Buttons ****************************/
+/* Text fields and such */
+input.text, 
+input.password, 
+input.file,
+textarea,
+input[type=text],
+input[type=password],
+input[type=file] {
+	border: 1px solid #a5acb2;
+}
+input.text.required {
+	border: 1px solid #e98a88;
+}
 
+/* error */
+input.error, select.error {
+    border-color: #dd0221;
+}
+.errmsg {
+    color: #dd0221;
+    font-size: .9em;
+    background: #ffd3d9 url(../images/failure.gif) no-repeat .5em center;
+	padding-left: 2em;
+}
+
+
+/****************************** Buttons ****************************/
 /** input buttons **/
 input.submit,
 input.cancel,
@@ -351,7 +394,9 @@ input#files_filebrowser_edit_artefact {
 }
 /** link buttons **/
 .rbuttons a.btn,
-#sb-profile .controls a {
+#sb-profile .controls a,
+.upgradeicon a,
+#loginas .btn-loginas {
     font-size: 1em;
 	font-family: Arial, Helvetica, sans-serif;
 	border-width: 1px;
@@ -392,10 +437,9 @@ input#files_filebrowser_edit_artefact:active,
 	background: #d1d1d1;
 }
 
-
 /** fixes block control buttons **/
 .blockinstance-controls input {
-	background: none;
+	background: none !important;
 	border: 0;
 	margin: 0 0.25em;
 	padding: 0;
@@ -403,7 +447,6 @@ input#files_filebrowser_edit_artefact:active,
 .blockinstance-controls input:hover {
 	background: none;
 }
-
 
 div.btn-del input.submit, 
 input.submit.btn-del,
@@ -414,7 +457,8 @@ input.submit.btn-add,
 button.btn-add,
 div.btn-msg input.submit,
 div.btn-edit input.submit, 
-.btn-reply {
+.btn-reply,
+.btn-subscribe input.submit {
     margin-right: .25em;
     * width: 1;
     * overflow: visible;
@@ -454,14 +498,6 @@ div.btn-edit input.submit,
     position: absolute;
     left: 0;
     top: 0;
-}
-
-#forumbtns {
-    right: 1em;
-    top: 1em;
-}
-* html #forumbtns {
-	right: 2.5em;
 }
 
 div.pagetabs {
@@ -509,6 +545,7 @@ div.rbuttons .small-logo {
 .viewheader .lbuttons {
     padding: .5em;
 	font-size: .9em;
+	margin-left: .5em;
 }
 .sitemessage {
     background-color: #f99;
@@ -527,8 +564,14 @@ div.rbuttons .small-logo {
     min-width: 950px;
     width: 100%;
 }
+#top-wrapper {
+	padding: 0;
+}
+#containerX #top-wrapper {
+	background: #eee;
+	padding: .25em;
+}
 #loading-box {
-    /* TODO: check this rule */
     background-color: #ddd;
     display: none;
     padding: .5em 1em;
@@ -541,6 +584,7 @@ div.rbuttons .small-logo {
     margin: 0;
     padding: .5em;
 }
+/* Search and language bar */
 #language-select, #usf {
     text-align: right;
     padding: 1em;
@@ -550,17 +594,7 @@ div.rbuttons .small-logo {
 	margin-right: .25em;
 }
 
-#top-wrapper {
-	padding: 0;
-}
-
-#containerX #top-wrapper {
-	background: #eee;
-	padding: .25em;
-}
-
-
-/* Main navigation */
+/**************** TOP NAVIGATION ****************/
 #main-nav {
     clear: left;
     font-size: 1.2em;
@@ -579,13 +613,16 @@ div.rbuttons .small-logo {
 #main-nav li.selected {
     background-color: #ddd;
 }
-#main-nav li.selected a {
+#main-nav li.selected a,
+#main-nav li.selected a:link,
+#main-nav li.selected a:visited,
+#main-nav li.selected a:active {
     color: #333;
     text-decoration: none;
     font-weight: bold;
 }
 
-/* Sub navigation (second row of tabs) */
+/**************** SUB NAVIGATION ****************/
 #sub-nav {
     white-space: nowrap;
 	border-top: 1px solid #ddd;
@@ -599,24 +636,71 @@ div.rbuttons .small-logo {
     padding: .5em 1em;
 	display: inline;
 }
-#sub-nav li.selected a {
+#sub-nav li.selected a,
+#sub-nav li.selected a:link,
+#sub-nav li.selected a:visited,
+#sub-nav li.selected a:active {
     color: #333;
     text-decoration: none;
     font-weight: bold;
 }
 
-/* Main content area */
+/**************** IN PAGE TAB NAVIGATION ****************/
+ul.in-page-tabs {
+  font-size: 1em;
+  font-weight: bold;
+  list-style: none;
+  margin: 0 !important;
+  padding: 0;
+  position: relative;
+  z-index: 0;
+}
+ul.in-page-tabs li {
+  display: inline;
+  line-height: 1.8em;
+  padding: 0;
+  margin: 0 .25em 0 0 !important;
+}
+ul.in-page-tabs li a,
+ul.in-page-tabs li a:link,
+ul.in-page-tabs li a:visited,
+ul.in-page-tabs li a:active {
+  padding: .3em 1em;
+  * padding: .25em 1em;
+  background: #EEEEEE;
+}
+ul.in-page-tabs li a.current-tab,
+ul.in-page-tabs li a.current-tab:link,
+ul.in-page-tabs li a.current-tab:visited,
+ul.in-page-tabs li a.current-tab:active {
+  color: #333;
+  text-decoration: none;
+  background: #D1D1D1;
+}
+
+.subpage {
+    border: 1px solid #d1d1d1;
+	padding: 1em !important;
+	margin-bottom: 1em;
+}
+.subpage p:first-child {
+	margin: 0 0 .5em 0;
+}
+
+
+/**************** MAIN CONTENT *****************/
 #main-wrapper {
     clear: both;
     width: 100%;
 }
-#containerX .main-column {
-    padding: 0 1.5em 1em;
-}
 #main-column {
-    padding: 0 1.5em 1.5em;
+    padding: 1.5em;
 }
-#main-column-container, div.rel {
+#containerX .main-column {
+    padding: 1em 1.5em;
+}
+#main-column-container, 
+div.rel {
     position: relative;
     min-height: 0;  /* IE layout hack */
     * padding-top: .2em;
@@ -633,97 +717,81 @@ div.rbuttons .small-logo {
 	margin: 0 0 .25em 1.5em;
 }
 
-/********************************** Informational messages **********************************/
+/* system messages between nav and main content */
 #messages {
-    padding: 1.5em 0 .5em 0;
+    padding: 0;
+}
+#messages div {
+	margin: 0 0 1em 0;
 }
 #containerX #messages {
     padding-top: .5em;
 }
-div.ok, div.error, div.info {
+div.ok, div.error {
     padding: .4em .5em .4em 2.5em;
 }
+/* upload file message */
+div.info {
+    padding: .4em .5em;
+	background: #e7f1c3;
+	margin: .5em;
+    color: #547c22;
+	font-size: .9em;
+}
+/* different message types */
 #messages .ok,
 div.ok {
     color: #547c22;
     background: #e7f1c3 url(../images/success.gif) no-repeat .5em;
 }
 #messages .error,
-div.error,
-.message.delete {
+div.error, {
     color: #dd0221;
     background: #ffd3d9 url(../images/failure.gif) no-repeat .5em;
+    border: 1px solid #dd0221;
 }
-#messages .info,
-div.inf {
+#messages .info {
     color: #1666a9;
     background: #d2ebff url(../images/icon_question.gif) no-repeat .5em;
 }
 #messages img {
-    padding-top: .2em;
+    padding: .25em;
 }
 .backtrace {
     font: normal 100% monospace;
 }
+/* system messages */
 .message {
 	margin: .5em 0;
     padding: .5em;
-    background: #eee;
+    background: #f6f6f6;
     border: 1px solid #ddd;
     text-align: center;
+}
+.message.delete {
+    color: #dd0221;
+	background: #ffd3d9;
+    border: 1px solid #dd0221;
 }
 .message h4 {
     margin: 0 !important;
 }
-.message p {
-    margin: 0;
+.message p:first-child {
+    margin: 0 0 1em 0;
+}
+.message p:last-child {
+    margin: 1em 0 0 0;
 }
 div.section {
     padding-top: .75em;
 }
 
 
-/********************************** Tabbed pages *********************************/
-ul.in-page-tabs {
-  font-size: 1em;
-  font-weight: bold;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-ul.in-page-tabs li {
-  display: inline;
-  line-height: 1.8em;
-  padding: 0;
-  margin: 0 .5em 0 0;
-}
-ul.in-page-tabs li a {
-  padding: .3em 1em;
-  * padding: .25em 1em;
-  background: #EEEEEE;
-}
-ul.in-page-tabs li a.current-tab {
-  color: #333;
-  text-decoration: none;
-  background: #D1D1D1;
-}
-.subpage {
-    border: 1px solid #d1d1d1;
-	padding: 1em !important;
-	margin-bottom: 1em;
-}
-.subpage p:first-child {
-	margin: .5em 0;
-}
-
-
-/********************************* Left/right columns *********************************/
+/**************** SIDEBAR *********/
 #left-column,
 #right-column {
     width: 256px;
 }
-
-/* General sideblock rules */
 div.sideblock {
     clear: both;
     font-size: .9em;
@@ -731,14 +799,14 @@ div.sideblock {
 }
 div.sideblock h3 {
     font-size: 1.5em;
-    margin: .5em 0;
+    margin: 0 0 .5em 0;
 }
 div.sideblock ul {
     padding: 0 0 0 1.5em;
     margin: 0;
 }
 
-/* Login sideblock */
+/* Side Login */
 #login_submit_container {
     display: inline;
     float: left;
@@ -754,7 +822,7 @@ div.sideblock ul {
     margin: 0 0 .5em 0;
 }
 
-/**************************** Profile sideblock ****************************/
+/* Side Profile */
 #profile-sideblock-username {
     font-size: .9em;
     font-weight: normal;
@@ -800,7 +868,7 @@ li#pendingfriends a {
 	background: url(../images/icon-user.gif) no-repeat 2px 4px;
 }
 
-/* Online users sideblock */
+/* Side Online Users */
 #sb-onlineusers ul {
     list-style: none;
     margin: 0;
@@ -815,7 +883,7 @@ li#pendingfriends a {
 }
 #lastminutes {
     float: right;
-    margin: .75em 0 0 0;
+    margin: 0;
     font-style: italic;
 }
 
@@ -824,13 +892,17 @@ li#pendingfriends a {
     text-align: center;
     margin: 0 0 1em 0;
 	font-size: 1em;
-    width: 210px;
 }
 #quota_used {
 	font-weight: bold;
 }
 #quota_total {
 	font-weight: bold;
+}
+#quotawrap {
+	text-align: center;
+	width: 210px;
+	margin: 0 auto;
 }
 #quota_fill {
     margin: 0 5px;
@@ -858,6 +930,15 @@ li#pendingfriends a {
 	font-weight: bold;
 }
 
+/* Side Search */
+.sidebar #selfsearch {
+	text-align: center;
+}
+.sidebar #selfsearch input {
+	width: 190px;
+}
+
+
 /* Friends control sideblock */
 div.sideblock #friendscontrol label {
 	line-height: 1.8em;
@@ -883,9 +964,6 @@ a.tag {
   padding: 0 5px;
   white-space: nowrap;
 }
-.sidebar-content.tags {
-    padding: 0;
-}
 .sidebar-content.tags .tag {
     padding: 0 5px;
     vertical-align: middle;
@@ -902,7 +980,7 @@ a.tag {
     color: #444;
 }
 
-/* AJAX LOGIN */
+/* Ajax Login */
 #ajax-login-form {
     border: 5px solid #ddd;
     background-color: #fff;
@@ -916,7 +994,6 @@ a.tag {
 
 /* Help popups & icons */
 .contextualHelp {
-    /* TODO check this rule */
     padding: 1em;
     margin: 0;
     width: 300px;
@@ -947,7 +1024,7 @@ a.tag {
 }
 
 
-/* Footer */
+/******************** FOOTER ****************************/
 #footer-wrap {
     clear: both;
     font-size: .9em;
@@ -959,7 +1036,10 @@ a.tag {
 	color: #d1d1d1;
     float: left;
 }
-#footernav a {
+#footernav a,
+#footernav a:link,
+#footernav a:active,
+#footernav a:visited {
     padding: 0 .5em;
 }
 #powered-by {
@@ -976,18 +1056,21 @@ a.tag {
 	margin: .5em;
 	color: #888;
 }
-#viewmenu {
-	font-size: .9em;
-	padding: .75em 0;
-	color: #d1d1d1;
+#release {
+    float: right;
+	margin: .5em;
+	color: #888;
 }
+
+
+/****************************** PAGE BY PAGE STYLES **********************************/
 
 /* Userlists used in admin section and on edit interaction form */
 .userlisttable .lrbuttons {
     text-align: center;
 }
 .userlisttable .lrbuttons button {
-    margin: .25em 0;
+    margin: .25em;
 	white-space: nowrap;
 }
 .userlisttable .lrfieldlists {
@@ -1010,10 +1093,7 @@ a.tag {
 	border: 0;
 }
 
-
-/******************* Specific page rules *******************/
-
-/* View user */
+/* User/view */
 #userview {
 	margin: 1em 0;
 }
@@ -1027,13 +1107,20 @@ a.tag {
 #userview #addmember {
 	margin-top: 1em;
 }
-.wallpost .text p {
-    margin: .25em 0;
+
+/* Wall */
+.wallpost {
+    border-bottom: 2px solid #FFF;
+	background: #F9F9F9;
+    padding: .5em;
 }
-.userinfo {
+#wall .private {
+    background: url(../images/privatebg.gif) repeat top left;
+}
+.wallpost .userinfo {
 	min-height: 25px;
 }
-* html .userinfo {
+* html .wallpost .userinfo {
 	height: 25px;
 }
 .wallpost .userinfo img {
@@ -1049,22 +1136,19 @@ a.tag {
 	font-size: .9em;
 	line-height: 1.2em;
 }
+.wallpost .text p {
+    margin: 0 0 .25em 0;
+}
 .wallpost .controls {
 	font-size: .9em;
     color: #888;
+	line-height: 1em;
 }
 .wallpost .controls a {
 	margin: 0;
 }
 
-#wall .private {
-    background: url(../images/privatebg.gif) repeat top left;
-}
-.wallpost {
-    border-bottom: 2px solid #FFF;
-	background: #F9F9F9;
-    padding: .5em;
-}
+
 #viewlayout .fl {
 	margin: 0 2em 1em 0;
 }
@@ -1084,6 +1168,9 @@ a.tag {
     padding: .5em 1.5em .5em 0;
     width: 30%;
 }
+#myviews .vi .videsc p {
+	margin: 0;
+}
 #myviews .submit-viewitem {
     float: left;
     padding: .25em 0;
@@ -1099,6 +1186,7 @@ a.tag {
 #deleteview label {
     color: #ca0000;
 }
+
 /* Copy a view */
 #viewpreview {
   position: absolute;
@@ -1131,13 +1219,25 @@ a.tag {
 	width: 320px;
 }
 #potentialpresetitems {
-	margin-bottom: 2em;
+	margin-bottom: 1em;
 }
 #potentialpresetitems div {
 	margin: .25em 0;
 }
-#viewacl_lhs #results {
-	margin-top: 1em;
+#viewacl_lhs #results thead td div {
+	font-size: .9em;
+	font-weight: bold;
+	padding: 0 .5em;
+	position: relative;
+	display: inline;
+	top: 25px;
+	left: 145px;
+}
+#viewacl_lhs #results tfoot td {
+	border-top: 1px solid #ccc;
+	font-size: .9em;
+	font-weight: bold;
+	padding: .25em .5em .25em 100px;
 }
 #accesslistitems {
 	margin-left: 360px;
@@ -1235,7 +1335,6 @@ a.tag {
     font-size: normal;
     font-weight: bold;
 }
-
 #exportgeneration {
     text-align: center;
 }
@@ -1344,6 +1443,9 @@ form#search input.text {
 .group-info ul li span {
 	margin: 0 2em 0 0;
 }
+.groupdescription {
+	margin-bottom: 1em;
+}
 
 /* Group: members */
 .listing.twocolumn td {
@@ -1385,6 +1487,11 @@ form#search input.text {
 #activitylist tbody td div {
 	font-size: .9em;
 	line-height: 1.4em;
+}
+#delete_all_notifications {
+	position: relative;
+	top: -30px;
+	left: -15px;
 }
 
 /* Settings > Institution membership */

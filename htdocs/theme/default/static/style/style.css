@@ -1,18 +1,29 @@
 /**
- * Stylesheet for Mahara's Default theme.
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- * Copyright (C) 2006-2009 Catalyst IT Ltd
- * This file is licensed under the same terms as Mahara itself
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author     Paul Walker <paul.walker@catalyst-eu.net>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
+ * @copyright  (C) 2009 Catalyst IT Europe http://catalyst-eu.net
  */
 
 /* General rules */
 body {
     background: url(../images/background.gif) repeat;
 	color: #474220;
-}
-#container, #containerX {
-	width: 90%;
-	min-width: 950px;
 }
 acronym {
     border-bottom: 1px dotted #d4d1c0;
@@ -21,7 +32,7 @@ a, a:visited, a:link, a:active {
     color: #6e8e00;
     text-decoration: none;
 }
-a:hover {
+a:hover, a:focus {
     color: #84aa00;
     text-decoration: underline;
 }
@@ -37,15 +48,31 @@ h5,
 h6 {
     color: #5c8727;
 }
+.description,
+.unvalidated,
+.postdetails {
+}
 
 
-/* Tables */
+/**************************** Tables ****************************/
 .main-column thead th {
     color: #186194;
+	border-bottom: 1px solid #ccc;
 }
 .main-column tbody th {
     color: #186194;
-	border-bottom: none;
+}
+/* table with th border-bottom */
+#searchresults thead th,
+#filelist {
+	border-bottom: 1px solid #ccc;
+}
+/* table with tfoot border-top */
+#searchresults tfoot td,
+#adminstitutionslist tfoot td,
+#profileicons tfoot td,
+#activitylist tfoot td {
+	border-top: 1px solid #ccc;
 }
 .main-column table h3 a,
 .main-column table h3 a:visited,
@@ -53,22 +80,15 @@ h6 {
 .listing div h3 a,
 .listing div h3 a:visited,
 .listing div h3 a:link {
-	color: #1e6297 !important;
+	color: #186194 !important;
 	text-decoration: underline;
 }
 .main-column table h3 a:hover,
 .listing div h3 a:hover {
 	color: #0a77cb !important;
 }
-
-.main-column tfoot td {
-	padding: .5em 0;
+.tablerenderer-loading {
 }
-/********* Tables that require a bottom border to enclose elements *********/
-
-/********* Tables that need the line taken out ********/
-
-
 /* Alternative row background colours */
 .r0,
 .r0 td {
@@ -82,24 +102,37 @@ tr.folder td {
 	background-color: #f4f7f9 !important;
 }
 
-/* Pagination */
-div.pagination span a {
+/**************************** Pagination ****************************/
+div.pagination a {
 	background-color: #E7EFC5;
 }
+div.pagination .disabled {
+}
 
-
-/* Forms */
-/* override required colour */
+/**************************** Forms ****************************/
+/* Label */
+label {
+}
+/* required */
+.required th, .required label, .requiredmarker, #register_tandc_container th {
+    color: #c81511;
+}
+/* override required colour to normal colour */
 .required label.plain, .required.radio td label, .required.emaillist td label {
 	color: #474220;
 }
-select {
-    border: 1px solid #D1D1D1;
+/* description */
+.pieform td.description {
 }
 
 /* Legend */
 legend {
 	color: #1e6297;
+}
+
+/* Select */
+select {
+    border: 1px solid #D1D1D1;
 }
 
 /* Fieldset */
@@ -116,6 +149,14 @@ input[type=text],
 input[type=password],
 input[type=file] {
     border: 1px solid #D1D1D1;
+}
+input.text.required {
+}
+
+/* error */
+input.error, select.error {
+}
+.errmsg {
 }
 
 
@@ -134,10 +175,12 @@ input#files_filebrowser_edit_artefact {
 }
 /** link buttons **/
 .rbuttons a.btn,
-#sb-profile .controls a {
+#sb-profile .controls a,
+.upgradeicon a,
+.btn-loginas {
 	border-color: #d5ed8a #496000 #496000 #d5ed8a;
 	background: #6e8e00;
-	color: #FFF;
+	color: #FFF !important;
 }
 /** hover for buttons **/
 input.submit:hover,
@@ -167,65 +210,70 @@ input#files_filebrowser_edit_artefact:active,
 	color: #FFF;
 }
 
-.lbuttons a {
-	padding-left: 1em;
+
+/** Buttons with icons **/
+a.btn-req {
+	background: url(../images/icon-join.gif) no-repeat left center;
+	padding-left: 15px;
 }
-
-
-.btn-leavegroup,
+.btn-leavegroup {
+    background: transparent url(../images/icon-leave.gif) no-repeat left center;
+	padding-left: 15px;
+}
 a.btn-del,
 a#btn-delete {
     background: transparent url(../images/icon-delete.gif) no-repeat left center;
     color: #ca0000 !important;
-	padding-left: 1em;
+	padding-left: 12px;
 }
 #btn-request, 
-a.btn-add, 
-a.btn-req {
+a.btn-add {
 	background: url(../images/icon-add.gif) no-repeat left center;
-	padding-left: 1em;
+	padding-left: 12px;
 }
-
 a.btn-msg, #btn-sendmessage {
 	background: url(../images/icon-mail.gif) no-repeat left center;
-	padding-left: 1em;
+	padding-left: 12px;
 }
 a.btn-edit {
 	background: url(../images/icon-edit.gif) no-repeat left center;
-	padding-left: 1em;
+	padding-left: 12px;
 }
 .btn-pending {
 	background: url(../images/icon-pending.gif) no-repeat left center;
-	padding-left: 1em;
+	padding-left: 12px;
 }
 .btn-reply, #add_feedback_link {
-	background: url(../images/icon-reply.gif) no-repeat left 4px;
+	background: url(../images/icon-reply.gif) no-repeat left center;
+	padding-left: 12px;
 }
 #objection_link {
-	background: url(../images/icon-flag.gif) no-repeat left 4px;
+	background: url(../images/icon-flag.gif) no-repeat left center;
 }
 #print_link {
-	background: url(../images/icon-print.gif) no-repeat left 4px;
+	background: url(../images/icon-print.gif) no-repeat left center;
 }
 #toggle_watchlist_link {
-	background: url(../images/icon-watch.gif) no-repeat left 4px;
+	background: url(../images/icon-watch.gif) no-repeat left center;
 }
 .btn-settings {
-	background: url(../images/icon-settings.gif) no-repeat left 4px;
-	padding-left: 1em;
+	background: url(../images/icon-settings.gif) no-repeat left center;
+	padding-left: 12px;
 }
 input#addfriend_add,
 input#myfriends_addfriend_add {
-	background: transparent url(../images/icon-add.gif) no-repeat left;
+	background: transparent url(../images/icon-add.gif) no-repeat left center;
 	border: 0;
     margin: 0;
 }
-#togglepublic_submit,
-.btn-loginas {
-	background: url(../images/icon-login.gif) no-repeat center left;
-	padding-left: 1em !important;
+#togglepublic_submit {
+	background: url(../images/icon-login.gif) no-repeat left center;
+	padding-left: 12px !important;
 	color: #7f9d16;
 	border: 0;
+}
+.lbuttons a {
+	padding-left: 12px !important;
 }
 
 /* Search buttons */
@@ -253,12 +301,10 @@ input#myfriends_addfriend_add {
 }
 
 
-/* Top of page elements */
-#loading-box {
-    background-color: #ECF3D4 !important;
-}
-#site-logo {
-    padding: 0;
+/**************************** Top of page elements ****************************/
+#container, #containerX {
+	width: 90%;
+	min-width: 950px;
 }
 #top-wrapper {
     background: url(../images/top-wrapper-bkgd.png) repeat-x left top;
@@ -268,6 +314,12 @@ input#myfriends_addfriend_add {
 #containerX #top-wrapper {
 	height: auto;
 }
+#loading-box {
+    background-color: #ECF3D4 !important;
+}
+#site-logo {
+    padding: 0;
+}
 #top-wrapper ul,
 #top-wrapper li {
     padding: 0;
@@ -275,12 +327,15 @@ input#myfriends_addfriend_add {
     text-align: right;
     display: inline;
 }
-#usf {
+/* Search and language bar */
+#language-select, #usf {
 	padding: 25px 1em 0 0;
 }
 #usf_query_container input {
 	font-size: .9em;
 	padding: .25em;
+    color: #767676;
+	background-color: #ecf3d4;
 }
 
 /**************** TOP NAVIGATION ****************/
@@ -309,12 +364,16 @@ input#myfriends_addfriend_add {
     color: #e4ffb4;
     text-decoration: none;
 }
+#main-nav li.selected {
+}
 #main-nav li.selected a,
 #main-nav li.selected a:link,
 #main-nav li.selected a:visited,
 #main-nav li.selected a:active {
     color: #feef45;
 	background: url(../images/menu-over-bg.gif) no-repeat left;
+}
+#main-nav li.selected a:hover {
 }
 
 
@@ -332,6 +391,8 @@ input#myfriends_addfriend_add {
     padding: 0 0 0 .5em;
 	background: none;
 }
+#sub-nav li {
+}
 #sub-nav li a,
 #sub-nav li a:link,
 #sub-nav li a:visited,
@@ -345,13 +406,17 @@ input#myfriends_addfriend_add {
     color: #7e7327;
     text-decoration: none;
 }
+#sub-nav li.selected {
+}
+#sub-nav li.selected a,
 #sub-nav li.selected a:link,
 #sub-nav li.selected a:visited,
 #sub-nav li.selected a:active {
 	background: url(../images/submenu-over-bg.gif) no-repeat right top;
     color: #4c711d;
 }
-
+#sub-nav li.selected a:hover {
+}
 
 /**************** IN PAGE TAB NAVIGATION ****************/
 ul.in-page-tabs {
@@ -364,15 +429,14 @@ ul.in-page-tabs {
 ul.in-page-tabs li {
   float: left;
   height: 25px;
-  margin: 0;
+  margin: 0 !important;
   background: none;
   line-height: 25px;
 }
-ul.in-page-tabs li a.current-tab {
-  background: transparent url(../images/tabs-over-bg.gif) no-repeat right top;
-  color: #000;
-}
-ul.in-page-tabs li a {
+ul.in-page-tabs li a,
+ul.in-page-tabs li a:link,
+ul.in-page-tabs li a:visited,
+ul.in-page-tabs li a:active {
   color: #1E6297;
   padding: 5px 12px 6px 10px;
   text-decoration: none;
@@ -381,49 +445,79 @@ ul.in-page-tabs li a {
 ul.in-page-tabs li a:hover {
   color: #7E7327;
 }
+ul.in-page-tabs li a.current-tab,
+ul.in-page-tabs li a.current-tab:link,
+ul.in-page-tabs li a.current-tab:visited,
+ul.in-page-tabs li a.current-tab:active {
+  background: transparent url(../images/tabs-over-bg.gif) no-repeat right top;
+  color: #000;
+}
+ul.in-page-tabs li a.current-tab:hover {
+}
 
-.fileupload {
-	background: #F5F9FC !important;
-	border: 1px solid #95A8B7 !important;
+.subpage {
+	display: block;
+	border-top: 0;
 }
 
 
-/**************** MAIN CONTENT START *********/
+/**************** MAIN CONTENT *****************/
 .main-column {
 	background: url(../images/dot-vert.gif) repeat-y top right;
 }
 
+/* system messages between nav and main content */
+/* upload file message */
+div.info {
+	background: #e7f1c3;
+    color: #547c22;
+}
+/* different message types */
+#messages .ok,
+div.ok {
+    color: #547c22;
+    background: #e7f1c3 url(../images/success.gif) no-repeat .5em;
+}
+#messages .error,
+div.error, {
+    color: #dd0221;
+    background: #ffd3d9 url(../images/failure.gif) no-repeat .5em;
+    border: 1px solid #dd0221;
+}
+#messages .info {
+    color: #1666a9;
+    background: #d2ebff url(../images/icon_question.gif) no-repeat .5em;
+}
+/* system messages */
+.message {
+    background: #f6f6f6;
+    border: 1px solid #ddd;
+}
+.message.delete {
+    color: #dd0221;
+	background: #ffd3d9;
+    border: 1px solid #dd0221;
+}
 
-/**************** RIGHT SIDEBAR START *********/
-td.sidebar {
-	padding: 0;
+
+/**************** SIDEBAR *********/
+#left-column,
+#right-column {
+    padding: 0;
 }
 div.sideblock {
     background: url(../images/sidebar-bg.gif) repeat-x top;
 }
 div.sideblock h3 {
-	margin: 0 0 .5em 0;
 }
-
-/* side profile */
-#sb-profile ul a {
-	color: #66879f;
+div.sideblock h3 a,
+div.sideblock h3 a:link,
+div.sideblock h3 a:visited,
+div.sideblock h3 a:active {
+	color: #1E6297;
 }
-#sb-profile ul ul a {
-	color: #7f9d16;
-}
-#sb-profile li#unreadmessages a.btn-msg,
-#sb-profile li#pendingfriends a {
-	color: #3986c3 !important;
-}
-
-
-/* Side Quota Bar */
-#quota_used {
-    color: #3986c3;
-}
-#quota_total {
-    color: #7f9d16;
+div.sideblock h3 a:hover {
+	color: #267bbd;
 }
 
 /* Side Login */
@@ -436,31 +530,86 @@ div.sideblock h3 {
 	color: #677A8A;
 }
 
+/* Side Profile */
+#sb-profile ul a,
+#sb-profile ul a:link,
+#sb-profile ul a:visited,
+#sb-profile ul a:active {
+	color: #66879f;
+}
+#sb-profile ul ul a,
+#sb-profile ul ul a:link,
+#sb-profile ul ul a:visited,
+#sb-profile ul ul a:active {
+	color: #7f9d16;
+}
+#sb-profile li#unreadmessages a.btn-msg,
+#sb-profile li#unreadmessages a.btn-msg:link,
+#sb-profile li#unreadmessages a.btn-msg:visited,
+#sb-profile li#unreadmessages a.btn-msg:active,
+#sb-profile li#pendingfriends a,
+#sb-profile li#pendingfriends a:link,
+#sb-profile li#pendingfriends a:visited,
+#sb-profile li#pendingfriends a:active {
+	color: #3986c3 !important;
+}
+
+/* Side Online Users */
+#sb-onlineusers ul {
+}
+#sb-onlineusers li {
+}
+#sb-onlineusers ul img {
+}
+#lastminutes {
+}
+
+/* Side Quota Bar */
+#quota_used {
+    color: #3986c3;
+}
+#quota_total {
+    color: #7f9d16;
+}
+
 /* Side Search */
 .sidebar #selfsearch input {
-	width: 170px;
+	width: 186px;
     padding: .25em .5em;
     font-size: 1em;
     color: #767676;
 	background-color: #ecf3d4;
 }
-/**************** END RIGHT SIDEBAR *********/
 
-
-/* Login 
-.main-column #loginform_container th {
-	padding: .5em .25em;
+/* Friends control sideblock */
+div.sideblock #friendscontrol label {
 }
-.main-column #loginform_container td {
-    padding: .25em;
-}*/
-/* AJAX LOGIN 
+
+/* Tags */
+.edittags {
+}
+a.tag {
+}
+.mytags a.tag {
+}
+.sidebar-content.tags .tag {
+}
+.tag-results .selected,
+.mytags .selected {
+}
+.mytags .tagfreq {
+}
+
+/* Ajax Login */
 #ajax-login-form {
-    border: 5px solid #D9DFEA;
-}*/
+}
+
+/* Help popups & icons */
+.contextualHelp {
+}
 
 
-/* FOOTER */
+/******************** FOOTER ****************************/
 #footer-wrap {
     background-color: #939393;
 	border: 0;
@@ -469,23 +618,145 @@ div.sideblock h3 {
 #footernav {
     color: #c9c9c9;
 }
-#footer-wrap a {
+#footernav a,
+#footernav a:link,
+#footernav a:active,
+#footernav a:visited {
     color: #FFF;
+}
+#footernav a:hover {
+    color: #FFF;
+}
+#powered-by {
+}
+#performance-info {
 }
 #version {
 	color: #c9c9c9;
 }
 
+
 /****************************** PAGE BY PAGE STYLES **********************************/
-.subpage {
-	display: block;
-	border-top: 0;
+/* Userlists used in admin section and on edit interaction form */
+.userlisttable tbody tr th {
 }
 
-.groupdescription {
-	margin-bottom: 1em;
+/* Attached file lists */
+.attachments {
+}
+.attachments tbody th {
 }
 
+/* User/view */
+#userview .user-icon {
+}
+
+/* Wall */
+.wallpost {
+}
+#wall .private {
+}
+.wallpost .postedon {
+}
+.wallpost .controls {
+}
+
+/* My Views */
+#myviews td {
+}
+#myviews h4 {
+}
+#myviews .submitted-viewitem {
+}
+#deleteview label {
+}
+
+/* Copy a view */
+#viewpreview {
+}
+#viewpreviewinner {
+}
+#viewpreviewclose {
+}
+
+/* View access */
+#viewacl_lhs {
+}
+#viewacl_lhs #results tfoot td {
+}
+#accesslistitems {
+}
+#accesslistitems .ai-container {
+}
+#accesslistitems .removebutton {
+}
+#accesslistitems .ai-container table th {
+}
+
+/* Export */
+#export h3 {
+}
+#export .radio-description {
+}
+#export fieldset {
+}
+#export .element div {
+}
+#export .view {
+}
+#export fieldset {
+}
+#export fieldset legend {
+}
+#export fieldset div a {
+}
+#export fieldset table {
+}
+#export fieldset table colgroup col {
+}
+#export fieldset table div {
+}
+#export fieldset label {
+}
+#exportgeneration {
+}
+#progress {
+}
+div.progress-bar {
+}
+* html div.progress-bar {
+}
+div.progress-bar a {
+}
+p.progress-text {
+}
+#progressbar {
+}
+
+/* My Groups *//* My Friends */
+ul.groupuserstatus {
+}
+#friendslist ul.actionlist {
+}
+ul.groupuserstatus li,
+#friendslist ul.actionlist li {
+}
+#friendslist ul.viewlist li.label {
+}
+#friendslist ul.viewlist li {
+}
+
+/* Group: about */
+.group-info {
+}
+
+/* Group: members */
+.listing.twocolumn td {
+}
+
+/* Settings > Preferences */
+#accountprefs table h3 {
+}
 #accountprefs table label,
 #accountprefs table th {
 	color: #66879F;
@@ -493,4 +764,22 @@ div.sideblock h3 {
 #accountprefs table td label {
 	color: #333333;
 	font-size: 1em;
+}
+#deleteaccount {
+}
+#deleteaccount h1 {
+}
+#deleteaccount input.submit {
+}
+
+/* Settings > Notifications */
+#activitylist th {
+}
+#activitylist th a {
+}
+#activitylist tbody td div {
+}
+
+/* Settings > Institution membership */
+#requestmembership_studentid_container label {
 }

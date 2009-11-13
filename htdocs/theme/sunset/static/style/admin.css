@@ -1,0 +1,55 @@
+/* ADMIN HOME */
+/* Administration Home styles */
+#register-site,
+#runupgrade {
+}
+#register-site form legend a {
+}
+#register-site fieldset table table th,
+#upgradestable th {
+}
+#register-site fieldset table table td,
+#upgradestable td {
+}
+
+/* delete suspend boxes */
+#close-site,
+#suspendinstitution,
+#suspenddelete #delete {
+}
+#close-site h3,
+#suspendinstitution h3#suspend,
+#suspenddelete #delete h4 {
+	color: #CA0000;
+}
+#close_site_submit,
+#institution_suspend_submit,
+#suspenddelete #delete #edituser_delete_submit {
+	border-color: #f69595 #750000 #750000 #f69595;
+	background: #ca0000;
+}
+
+
+/* CONFIGURE SITE > LINKS AND RESOURCES MENU */
+#menuitemlist table th {
+}
+#menuitemlist table td {
+}
+#menuitemlist #rownew td {
+}
+#menuitemlist tr.edit td {
+}
+
+
+#institutionusers, 
+#staffusers, 
+#adminusers {
+}
+
+/* add user */
+#adduser td.step1 {
+}
+#adduser td.step2 {
+}
+#adduser td.step3 {
+}

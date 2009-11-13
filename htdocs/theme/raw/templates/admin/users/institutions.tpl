@@ -65,7 +65,7 @@
 				</tfoot>
 				<tbody>
 				{foreach from=$institutions item=institution}
-				<tr class="{cycle values=r0,r1}">
+				<tr class="{cycle values='r0,r1'}">
 					<td>{$institution->displayname|escape}</td>
 					<td class="center">
 					  {if $institution->name != 'mahara'}

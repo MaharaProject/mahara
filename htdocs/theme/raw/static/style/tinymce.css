@@ -2,13 +2,13 @@ body {
 	font-family: Arial, Helvetica, sans-serif !important;
 	font-size: 12px !important;
 	padding: 0 !important;
-	color: #474220;
+	color: #333;
 }
 td {
 	font-family: Arial, Helvetica, sans-serif !important;
 	font-size: 12px !important;
 	padding: 5px !important;
-	color: #474220;
+	color: #333;
 }
 pre {
     font: 12px monospace !important;
@@ -24,38 +24,41 @@ a:hover {
 
 h1 {
     font-weight: normal !important;
-    margin: 0 0 5px 0 !important;
+    margin: 0 0 .5em 0 !important;
     padding: 0 !important;
+    font-size: 2em !important;
 }
 h2 {
     font-weight: bold !important;
-    margin: 0 0 5px 0 !important;
+    margin: 0 0 .5em 0 !important;
     padding: 0 !important;
+    font-size: 1.8em !important;
 }
 
 h3 {
     font-weight: bold !important;
     font-size: 17px !important;
-    margin: 20px 0 0 !important;
+    margin: 1.5em 0 .5em 0 !important;
+    font-size: 1.4em !important;
 }
 h4 {
     font-size: 15px !important;
-    color: #3986c3 !important;
     font-weight: bold !important;
-    margin: 15px 0 0 !important;
+    margin: 1.5em 0 .5em 0 !important;
+    font-size: 1.3em !important;
 }
 
 h5 {
-    color: #5c8727 !important;
     font-weight: bold !important;
     font-size: 14px !important;
-    margin: 5px 0 0 !important;
+    margin: .5em 0 !important;
+    font-size: 1.2em !important;
 }
 h6 {
     font-size: 13px !important;
-    color: #5c8727 !important;
     font-weight: bold !important;
-    margin: 5px 0 !important;
+    margin: .5em 0 !important;
+    font-size: 1em !important;
 }
 
 ul {

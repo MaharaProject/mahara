@@ -14,7 +14,7 @@
 {if $group->public || $role}
     <h3>{str tag=latestforumposts section=interaction.forum}</h3>
     {if $foruminfo}
-        <table class="fullwidth s">
+        <table class="fullwidth s" id="groupforumtable">
         {foreach from=$foruminfo item=postinfo}
             <tr class="{cycle values='r0,r1'}">
                 <td><strong><a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic|escape}#post{$postinfo->id|escape}">{$postinfo->topicname|escape}</a></strong></td>
