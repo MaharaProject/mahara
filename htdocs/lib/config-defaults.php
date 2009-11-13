@@ -146,6 +146,30 @@ $cfg->sendemail = true;
 // $cfg->smtpuser = '';
 // $cfg->smtppass = '';
 
+// Variable Envelope Return Path Handling
+// If you want mahara to keep track of email addresses which generate a
+// bounce, set bounces_handle to true.
+// If set to true, $cfg->bouncedomain *must* be set.
+$cfg->bounces_handle  = false;
+// Rather than disable an email address on the first bounce message,
+// require bounces_min bounces.
+$cfg->bounces_min     = 5;
+// Require at least (bounces_ratio*100)% of sent mail to be bounced back
+// before disabling mail for that user.
+// e.g. If using the default bounces_ratio of 0.20 and 20 mails are sent to
+// a user, at least 4 must be returned before email is disabled.
+$cfg->bounces_ratio   = 0.20;
+// Identity of the Mahara instance
+// This prefix must be four characters.
+// If you have several Mahara, Moodle, or other VERP processors on the same
+// bounce domain, you need to keep track of which processor belongs to
+// which domain.
+$cfg->bounceprefix    = 'AAA-';
+// The domainpart of the generated VERP domain. e.g.
+// <localpart>@$cfg->bouncedomain
+// This must be set for VERP handling to take effect
+//$cfg->bouncedomain    = '';
+
 // maximum allowed size of uploaded images
 // NOTE: the scalable resize might result in images with one dimesion larger than one of these sizes, but not both
 $cfg->imagemaxwidth = 1024;
