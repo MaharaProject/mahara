@@ -75,6 +75,16 @@ $networkingform = pieform(
                 'description'  => get_string('publickeydescription2', 'admin', 365),
                 'value'        => '<pre style="font-size: 0.7em; white-space: pre;">'.$openssl->certificate.'</pre>'
             ),
+            'sha1fingerprint' => array(
+                'type'         => 'html',
+                'title'        => 'SHA1 Fingerprint',
+                'value'        => $openssl->sha1_fingerprint
+            ),
+            'md5fingerprint' => array(
+                'type'         => 'html',
+                'title'        => 'MD5 Fingerprint',
+                'value'        => $openssl->md5_fingerprint
+            ),
             'expires' => array(
                 'type'         => 'html',
                 'title'        => get_string('publickeyexpires','admin'),
