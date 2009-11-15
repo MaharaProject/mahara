@@ -3,7 +3,6 @@
 }
 /********************** Top pane of Edit View *************************/
 #top-pane {
-    background: #8e1901;
 }
 /* The tabs that allow you to select a blocktype category */
 #category-list ul {
@@ -14,6 +13,9 @@
 #category-list li a:link,
 #category-list li a:visited,
 #category-list li a:active {
+  color: #ffffff;
+  font-weight: normal;
+  background-color: #c66c14;
 }
 #category-list li a:hover {
 }
@@ -21,12 +23,17 @@
 #category-list li.current a:link,
 #category-list li.current a:visited,
 #category-list li.current a:active {
+  color: #ffffff;
+  font-weight: bold;
+  background-color: #8E1901;
 }
 #category-list li.current a:hover {
 }
 
 /* The panel that contains the blocktype icons */
 #blocktype-list {
+  border: 1px solid #C66C14;
+  background: #f7ece2;
 }
 .blocktype div {
 }
@@ -138,6 +145,9 @@ ul.artefactchooser-subtabs li.current a:hover {
 /* pagination */
 .ac-pagination .results {
 }
+#feedback_pagination {
+	border-top: 1px dotted #8E1901;
+}
 
 /* attachments */
 .attachments {
@@ -170,4 +180,5 @@ ul.artefactchooser-subtabs li.current a:hover {
 #view #feedbacktable {
 }
 #viewmenu a {
+	padding-left: 12px;
 }

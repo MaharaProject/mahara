@@ -81,14 +81,17 @@ h6 {
 }
 /* table with th border-bottom */
 #searchresults thead th,
-#filelist {
+#filelist,
+#groupforumtable,
+.tag-results #results {
 	border-bottom: 1px dotted #360435;
 }
 /* table with tfoot border-top */
 #searchresults tfoot td,
 #adminstitutionslist tfoot td,
 #profileicons tfoot td,
-#activitylist tfoot td {
+#activitylist tfoot td,
+#groupforumtable {
 	border-top: 1px dotted #360435;
 }
 .main-column table h3 a,
@@ -216,7 +219,7 @@ input#files_filebrowser_edit_artefact {
 .rbuttons a.btn,
 #sb-profile .controls a,
 .upgradeicon a,
-.btn-loginas {
+#loginas .btn-loginas {
     background-color: #5c0758;
 	padding: 3px 10px;
 	border-color: #b118ba #3C083F #3C083F #b118ba !important;
@@ -530,7 +533,8 @@ ul.in-page-tabs li a.current-tab:hover {
 
 
 /**************** MAIN CONTENT *****************/
-#main-wrapper {
+#containerX #main-wrapper {
+	background: #FFF;
 }
 #main-column {
     display: block;
@@ -548,16 +552,16 @@ div.info {
 #messages .ok,
 div.ok {
     color: #3C083F;
-    background: #f7d4fa url(../images/icon_goodtogo.gif) no-repeat 10px 5px;
+    background-color: #f7d4fa;
 }
 #messages .error,
 div.error, {
     color: #dd0221;
-    background: #f7d4fa url(../images/icon_problem.gif) no-repeat 10px 5px;
+    background-color: #f7d4fa;
 }
 #messages .info {
     color: #1666a9;
-    background: #f7d4fa url(../images/icon_question.gif) no-repeat 10px 4px;
+    background-color: #f7d4fa;
 }
 /* system messages */
 .message {
@@ -670,18 +674,17 @@ div.sideblock #friendscontrol label {
 }
 
 /* Tags */
-.edittags {
+.tag-results .sep {
 }
-a.tag {
+/* edit tag box */
+.edittag {
 }
-.mytags a.tag {
+/* delete tag box */
+.deletetag {
 }
-.sidebar-content.tags .tag {
+.deletetag h3 {
 }
-.tag-results .selected,
-.mytags .selected {
-}
-.mytags .tagfreq {
+#delete_tag_submit {
 }
 
 /* Ajax Login */
@@ -839,8 +842,6 @@ ul.groupuserstatus li,
 
 /* Group: about */
 .group-info {
-  border: 10px solid #5c0758;
-  background-color: #f7d4fa;
 }
 
 

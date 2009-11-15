@@ -76,14 +76,17 @@ h6 {
 }
 /* table with th border-bottom */
 #searchresults thead th,
-#filelist {
+#filelist,
+#groupforumtable,
+.tag-results #results {
 	border-bottom: 1px solid #14436F;
 }
 /* table with tfoot border-top */
 #searchresults tfoot td,
 #adminstitutionslist tfoot td,
 #profileicons tfoot td,
-#activitylist tfoot td {
+#activitylist tfoot td,
+#groupforumtable {
 	border-top: 1px solid #14436F;
 }
 .main-column table h3 a,
@@ -207,7 +210,7 @@ input#files_filebrowser_edit_artefact {
 .rbuttons a.btn,
 #sb-profile .controls a,
 .upgradeicon a,
-.btn-loginas {
+#loginas .btn-loginas {
 	background-color: #14436F;
 	border-color: #5388b9 #011e3a #011e3a #5388b9;
 	color: #FFF;
@@ -642,18 +645,17 @@ div.sideblock #friendscontrol label {
 }
 
 /* Tags */
-.edittags {
+.tag-results .sep {
 }
-a.tag {
+/* edit tag box */
+.edittag {
 }
-.mytags a.tag {
+/* delete tag box */
+.deletetag {
 }
-.sidebar-content.tags .tag {
+.deletetag h3 {
 }
-.tag-results .selected,
-.mytags .selected {
-}
-.mytags .tagfreq {
+#delete_tag_submit {
 }
 
 /* Ajax Login */

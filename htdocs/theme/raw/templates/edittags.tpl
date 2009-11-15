@@ -3,7 +3,7 @@
 {if $tags}
   <div class="rbuttons"><a class="btn" href="{$WWWROOT}tags.php">{str tag=mytags}</a></div>
   <div class="edittags mytags">
-  <div>{str tag=selectatagtoedit}:</div>
+  <h3>{str tag=selectatagtoedit}:</h3>
   {foreach from=$tags item=t}
     <a class="tag{if $t->tag == $tag} selected{/if}" href="{$WWWROOT}edittags.php?tag={$t->tag|urlencode}">{$t->tag|str_shorten_text:30|escape}&nbsp;<span class="tagfreq">({$t->count})</span></a> 
   {/foreach}
@@ -13,12 +13,17 @@
 {/if}
 
 {if $tag}
-<h2>{str tag=edittag arg1=$tagsearchurl arg2=$tag|escape}</h2>
-<p>{str tag=edittagdescription arg1=$tag|escape}</p>
-{$edittagform}
-<h2>{str tag=deletetag arg1=$tagsearchurl arg2=$tag|escape}</h2>
-<p>{str tag=deletetagdescription}</p>
-{$deletetagform}
+<div class="edittag">
+	<h3>{str tag=edittag arg1=$tagsearchurl arg2=$tag|escape}</h3>
+	<div>{str tag=edittagdescription arg1=$tag|escape}</div>
+	{$edittagform}
+</div>
+
+<div class="deletetag">
+	<h3>{str tag=deletetag arg1=$tagsearchurl arg2=$tag|escape}</h3>
+	<div>{str tag=deletetagdescription}</div>
+	{$deletetagform}
+</div>
 {/if}
 
 {include file="footer.tpl"}

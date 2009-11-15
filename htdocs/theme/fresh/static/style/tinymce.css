@@ -1,14 +1,14 @@
 body {
 	font-family: Arial, Helvetica, sans-serif !important;
 	font-size: 12px !important;
-	padding: 5px !important;
-	color: #333;
+	padding: 0px !important;
+	color: #BEE3F1;
 }
 td {
 	font-family: Arial, Helvetica, sans-serif !important;
-	font-size: 12px !important;
-	padding: 5px !important;
-	color: #333;
+	font-size: 1em !important;
+	padding: .5em !important;
+	color: #BEE3F1;
 }
 pre {
     font: 12px monospace !important;
@@ -19,51 +19,51 @@ a:link,
 a:active,
 a:visited,
 a:hover {
-    color: #00AEF1 !important;
+    color: #7EF000 !important;
     text-decoration: none !important;
 }
 
 h1 {
     color: #00AEF1 !important;
-    font-size: 30px !important;
     font-weight: normal !important;
-    margin: 0 0 10px 0 !important;
+    margin: 0 0 .5em 0 !important;
     padding: 0 !important;
+    font-size: 2em !important;
 }
 h2 {
-    font-family:Georgia, "Times New Roman", Times, serif;
-    font-size: 28px;
-    color: #7EF000;
-    font-weight: bold;
-    margin: 0 0 10px 0;
-    padding: 0;
+    font-family:Georgia, "Times New Roman", Times, serif !important;
+    color: #7EF000 !important;
+    font-weight: bold !important;
+    margin: 0 0 .5em 0 !important;
+    padding: 0 !important;
+    font-size: 1.8em !important;
 }
 h3 {
-    font-family:Georgia, "Times New Roman", Times, serif;
-    color: #00AEF1;
-    font-weight: bold;
-    font-size: 17px;
-    margin: 20px 0 5px 0;
+    font-family:Georgia, "Times New Roman", Times, serif !important;
+    color: #00AEF1 !important;
+    font-weight: bold !important;
+    margin: 1.5em 0 .5em 0 !important;
+    font-size: 1.4em !important;
 }
 h4 {
-    font-size: 15px;
-    color: #7EF000;
-    font-weight: bold;
-    margin: 15px 0 0;
+    color: #7EF000 !important;
+    font-weight: bold !important;
+    margin: 1.5em 0 .5em 0 !important;
+    font-size: 1.3em !important;
 }
 h5 {
-    color: #00AEF1;
-    font-weight: bold;
-    font-size: 14px;
-    margin: 5px 0 0;
+    color: #00AEF1 !important;
+    font-weight: bold !important;
+    margin: .5em 0 !important;
+    font-size: 1.2em !important;
 }
 h6 {
-    font-size: 12px;
-    color: #00AEF1;
-    font-weight: bold;
-    margin: 10px 0 0 0;
+    color: #00AEF1 !important;
+    font-weight: bold !important;
+    margin: .5em 0 !important;
+    font-size: 1em !important;
 }
 ul {
     padding: 0 !important;
-    margin: 0 0 0 17px !important;
+    margin: .5em 0 1em 0 !important;
 }

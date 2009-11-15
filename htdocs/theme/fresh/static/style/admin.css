@@ -36,7 +36,6 @@
 	background: #ca0000;
 }
 
-
 /* CONFIGURE SITE > LINKS AND RESOURCES MENU */
 #menuitemlist table th {
 }
@@ -47,7 +46,6 @@
 #menuitemlist tr.edit td {
 }
 
-
 #institutionusers, 
 #staffusers, 
 #adminusers {
@@ -55,8 +53,16 @@
 
 /* add user */
 #adduser td.step1 {
+	background-color: #1b3b46;
 }
 #adduser td.step2 {
+	background-color: #1b3b46;
 }
 #adduser td.step3 {
+	background-color: #254e5c;
+}
+#adduser table table label {
+}
+#adduser #or {
+	color: #009ad5;
 }

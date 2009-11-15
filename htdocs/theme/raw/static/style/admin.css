@@ -60,6 +60,11 @@
 #close-site h3 {
 	color: #ca0000;
 }
+#close_site_submit {
+	border-color: #f69595 #750000 #750000 #f69595 !important;
+	background: #ca0000 !important;
+}
+
 
 /* register site box */
 #register-site {
@@ -218,6 +223,12 @@ table.tablerenderer th.desc {
 
 
 /* MANAGE USERS > EDIT USER */
+#edituser_institution td {
+	padding: 0;
+}
+#edituser_institution td h4 {
+	font-size: 1.2em;
+}
 #edituser_institution th label {
 	font-size: 1em;
 	font-weight: bold;
@@ -257,6 +268,11 @@ table.tablerenderer th.desc {
 	padding: 1em;
 	background: #f6f6f6;
 }
+#institution_suspend_submit, {
+	border-color: #f69595 #750000 #750000 #f69595 !important;
+	background: #ca0000 !important;
+}
+
 /* delete user */
 #suspenddelete #delete {
 	border: 1px solid #e98a88;
@@ -269,6 +285,11 @@ table.tablerenderer th.desc {
 	margin-top: 0;
 	color: #ca0000;
 }
+#suspenddelete #delete #edituser_delete_submit {
+	border-color: #f69595 #750000 #750000 #f69595 !important;
+	background: #ca0000 !important;
+}
+
 
 
 /* MANAGE USERS > SUSPENDED USERS */

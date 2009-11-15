@@ -17,16 +17,16 @@
 {/if}
 
          <div id="results_container" class="rel tag-results">
-           <h2 id="results_heading">{str tag=searchresultsfor} <a class="tag" href="{$WWWROOT}tags.php{if $tag}?tag={$tag|urlencode}{/if}">{if $tag}{$tag|str_shorten_text:50|escape}{else}{str tag=alltags}{/if}</a></h2>
+           <h3 id="results_heading">{str tag=searchresultsfor} <a class="tag" href="{$WWWROOT}tags.php{if $tag}?tag={$tag|urlencode}{/if}">{if $tag}{$tag|str_shorten_text:50|escape}{else}{str tag=alltags}{/if}</a></h3>
            <div class="rbuttons"><a class="btn edit-tag{if !$tag} hidden{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode}">{str tag=editthistag}</a></div>
-           <div id="results_sort">{str tag=sortresultsby}
+           <div id="results_sort" class="fl">{str tag=sortresultsby}
 {foreach from=$results->sortcols item=sortfield name=sortcols}
-           <a href="{$results->baseurl}&type={$results->filter}&sort={$sortfield}"{if $results->sort == $sortfield} class="selected"{/if}>{str tag=$sortfield}</a>{if !$smarty.foreach.sortcols.last} | {/if}
+           <a href="{$results->baseurl}&type={$results->filter}&sort={$sortfield}"{if $results->sort == $sortfield} class="selected"{/if}>{str tag=$sortfield}</a>{if !$smarty.foreach.sortcols.last} <span class="sep">|</span> {/if}
 {/foreach}
            </div>
-           <div id="results_filter">{str tag=filterresultsby}
+           <div id="results_filter" class="fr">{str tag=filterresultsby}
 {foreach from=$results->filtercols key=filtername item=filterdisplay name=filtercols}
-           <a href="{$results->baseurl}&sort={$results->sort}&type={$filtername}"{if $results->filter == $filtername} class="selected"{/if}>{$filterdisplay}</a>{if !$smarty.foreach.filtercols.last} | {/if}
+           <a href="{$results->baseurl}&sort={$results->sort}&type={$filtername}"{if $results->filter == $filtername} class="selected"{/if}>{$filterdisplay}</a>{if !$smarty.foreach.filtercols.last} <span class="sep">|</span> {/if}
 {/foreach}
            </div>
            <table id="results" class="tablerenderer fullwidth">

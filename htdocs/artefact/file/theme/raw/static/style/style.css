@@ -71,11 +71,13 @@ tr.parentfolder td {
 }
 /* new row */
 .filelist tr.highlight-file td {
-    background: #fffcd8 url(../images/highlight-bg.gif) repeat left top !important;
+    background-color: #fffcd8 !important;
+	border-bottom: 1px solid #FFF;
 }
 /* folder row */
 tr.folder td {
 	background-color: #e7e7e7;
+	border-bottom: 1px solid #FFF;
 }
 tr.folder td.filename {
 	font-weight: bold;

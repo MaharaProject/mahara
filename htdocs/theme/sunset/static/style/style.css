@@ -76,14 +76,17 @@ h6 {
 }
 /* table with th border-bottom */
 #searchresults thead th,
-#filelist {
+#filelist,
+#groupforumtable,
+.tag-results #results {
 	border-bottom: 1px dotted #8E1901;
 }
 /* table with tfoot border-top */
 #searchresults tfoot td,
 #adminstitutionslist tfoot td,
 #profileicons tfoot td,
-#activitylist tfoot td {
+#activitylist tfoot td,
+#groupforumtable {
 	border-top: 1px dotted #8E1901;
 }
 .main-column table h3 a,
@@ -217,7 +220,7 @@ input#files_filebrowser_edit_artefact {
 .rbuttons a.btn,
 #sb-profile .controls a,
 .upgradeicon a,
-.btn-loginas {
+#loginas .btn-loginas {
 	background-color: #c66c14;
 	padding: 3px 10px;
 	border-color: #f87e3b #8E1901 #8E1901 #f87e3b !important;
@@ -313,8 +316,8 @@ input#myfriends_addfriend_add {
 }
 #togglepublic_submit {
 	background: url(../images/icon-login.gif) no-repeat left center;
-	padding-left: 15px !important;
-	color: #7f9d16;
+	padding-left: 12px !important;
+	color: #9A4C01 !important;
 	border: 0;
 }
 .lbuttons a {
@@ -521,7 +524,8 @@ ul.in-page-tabs li a.current-tab:hover {
 
 
 /**************** MAIN CONTENT *****************/
-#main-wrapper {
+#containerX #main-wrapper {
+	background: #FFF;
 }
 #main-column {
     display: block;
@@ -537,17 +541,11 @@ div.info {
 /* different message types */
 #messages .ok,
 div.ok {
-    color: #8E1901;
-    background: #FFE7CF url(../images/icon_goodtogo.gif) no-repeat 10px 5px;
 }
 #messages .error,
 div.error, {
-    color: #dd0221;
-    background: #FFE7CF url(../images/icon_problem.gif) no-repeat 10px 5px;
 }
 #messages .info {
-    color: #1666a9;
-    background: #FFE7CF url(../images/icon_question.gif) no-repeat 10px 4px;
 }
 /* system messages */
 .message {
@@ -665,18 +663,17 @@ div.sideblock #friendscontrol label {
 }
 
 /* Tags */
-.edittags {
+.tag-results .sep {
 }
-a.tag {
+/* edit tag box */
+.edittag {
 }
-.mytags a.tag {
+/* delete tag box */
+.deletetag {
 }
-.sidebar-content.tags .tag {
+.deletetag h3 {
 }
-.tag-results .selected,
-.mytags .selected {
-}
-.mytags .tagfreq {
+#delete_tag_submit {
 }
 
 /* Ajax Login */
