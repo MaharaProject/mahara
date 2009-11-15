@@ -64,14 +64,17 @@ h6 {
 }
 /* table with th border-bottom */
 #searchresults thead th,
-#filelist {
+#filelist,
+#groupforumtable,
+.tag-results #results {
 	border-bottom: 1px solid #ccc;
 }
 /* table with tfoot border-top */
 #searchresults tfoot td,
 #adminstitutionslist tfoot td,
 #profileicons tfoot td,
-#activitylist tfoot td {
+#activitylist tfoot td,
+#groupforumtable {
 	border-top: 1px solid #ccc;
 }
 .main-column table h3 a,
@@ -177,7 +180,7 @@ input#files_filebrowser_edit_artefact {
 .rbuttons a.btn,
 #sb-profile .controls a,
 .upgradeicon a,
-.btn-loginas {
+#loginas .btn-loginas {
 	border-color: #d5ed8a #496000 #496000 #d5ed8a;
 	background: #6e8e00;
 	color: #FFF !important;
@@ -425,6 +428,7 @@ ul.in-page-tabs {
   font-size: 12px;
   background: url(../images/tabs-bg.gif) repeat-x left top;
   display: block;
+  padding-left: 1px;
 }
 ul.in-page-tabs li {
   float: left;
@@ -469,34 +473,20 @@ ul.in-page-tabs li a.current-tab:hover {
 /* system messages between nav and main content */
 /* upload file message */
 div.info {
-	background: #e7f1c3;
-    color: #547c22;
 }
 /* different message types */
 #messages .ok,
 div.ok {
-    color: #547c22;
-    background: #e7f1c3 url(../images/success.gif) no-repeat .5em;
 }
 #messages .error,
 div.error, {
-    color: #dd0221;
-    background: #ffd3d9 url(../images/failure.gif) no-repeat .5em;
-    border: 1px solid #dd0221;
 }
 #messages .info {
-    color: #1666a9;
-    background: #d2ebff url(../images/icon_question.gif) no-repeat .5em;
 }
 /* system messages */
 .message {
-    background: #f6f6f6;
-    border: 1px solid #ddd;
 }
 .message.delete {
-    color: #dd0221;
-	background: #ffd3d9;
-    border: 1px solid #dd0221;
 }
 
 
@@ -586,18 +576,25 @@ div.sideblock #friendscontrol label {
 }
 
 /* Tags */
-.edittags {
+.tag-results .sep {
+	color: #d1d1d1;
 }
-a.tag {
+/* edit tag box */
+.edittag {
+	border: 1px solid #d1d1d1;
+	background: #f6f6f6;
 }
-.mytags a.tag {
+/* delete tag box */
+.deletetag {
+	border: 1px solid #e98a88;
+	background: #fbeceb;
 }
-.sidebar-content.tags .tag {
+.deletetag h3 {
+	color: #ca0000;
 }
-.tag-results .selected,
-.mytags .selected {
-}
-.mytags .tagfreq {
+#delete_tag_submit {
+	border-color: #f69595 #750000 #750000 #f69595;
+	background: #ca0000;
 }
 
 /* Ajax Login */

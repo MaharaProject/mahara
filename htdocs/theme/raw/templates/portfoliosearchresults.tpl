@@ -1,6 +1,6 @@
   {foreach from=$data item=result}
     <tr class="{cycle name=rows values='r0,r1'}">
-      <td class="center" style="width:25px;">{if $result->icon}<img src="{$result->icon}" alt="{$result->typestr}"> {/if}</td>
+      <td class="center" style="width:25px;">{if $result->icon}<img src="{$result->icon|escape}" alt="{$result->typestr|escape}"> {/if}</td>
       <td>
         <div><strong><a href="{$result->url}">{$result->title|escape}</a></strong></div>
         <div>{$result->description|str_shorten_html:100}</div>

@@ -2,7 +2,7 @@
 /* Administration Home styles */
 #register-site,
 #runupgrade {
-    background-color: #e0e8ee;
+    background-color: #ebf0f4;
     border: 1px solid #95a8b7;
 }
 #register-site form legend a {
@@ -11,19 +11,21 @@
 #register-site fieldset table table th,
 #upgradestable th {
     border-bottom: 1px solid #ccc;
-    background-color: #e0e8ee;
+    background-color: #none;
 	color: #677a8a;
 }
 #register-site fieldset table table td,
 #upgradestable td {
-	background-color: #f4f7f9;
-    border-bottom: 1px solid #FFF;
+	background-color: #f4f7f9 !important;
+    border-bottom: 1px solid #FFF !important;
 }
 
 /* delete suspend boxes */
 #close-site,
 #suspendinstitution,
 #suspenddelete #delete {
+	border: 1px solid #e98a88;
+	background: #fbeceb;
 }
 #close-site h3,
 #suspendinstitution h3#suspend,
@@ -51,26 +53,26 @@
     background-color: #f3f7ec;
 }
 
-
-
 #institutionusers, 
 #staffusers, 
 #adminusers {
+	background-color: #EBF0F4;
+	border: 1px solid #95A8B7;
 }
 
 /* add user */
 #adduser td.step1 {
-	background: #eef1e3;
+	background: #fafbf7;
 }
 #adduser td.step2 {
-	background: #eef1e3;
+	background: #fafbf7;
 }
 #adduser td.step3 {
-	background: #e2e6c2;
+	background: #F3F7EC;
 }
 #adduser table table label {
 	color: #474220;
 }
 #adduser #or {
-	color: #919570;
+	color: #7c826c;
 }

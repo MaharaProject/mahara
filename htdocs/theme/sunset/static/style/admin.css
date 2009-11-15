@@ -2,6 +2,9 @@
 /* Administration Home styles */
 #register-site,
 #runupgrade {
+	background-color: #EFD7C2;
+	border: 1px dotted #8E1901;
+	color: #8E1901;
 }
 #register-site form legend a {
 }
@@ -29,7 +32,6 @@
 	background: #ca0000;
 }
 
-
 /* CONFIGURE SITE > LINKS AND RESOURCES MENU */
 #menuitemlist table th {
 }
@@ -39,7 +41,6 @@
 }
 #menuitemlist tr.edit td {
 }
-
 
 #institutionusers, 
 #staffusers, 
@@ -52,4 +53,8 @@
 #adduser td.step2 {
 }
 #adduser td.step3 {
+}
+#adduser table table label {
+}
+#adduser #or {
 }

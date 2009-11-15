@@ -2,6 +2,9 @@
 /* Administration Home styles */
 #register-site,
 #runupgrade {
+	background-color: #E8C1EA;
+	border: 1px dotted #360435;
+	color: #360435;
 }
 #register-site form legend a {
 }
@@ -39,7 +42,6 @@
 #menuitemlist tr.edit td {
 }
 
-
 #institutionusers, 
 #staffusers, 
 #adminusers {
@@ -51,4 +53,8 @@
 #adduser td.step2 {
 }
 #adduser td.step3 {
+}
+#adduser table table label {
+}
+#adduser #or {
 }

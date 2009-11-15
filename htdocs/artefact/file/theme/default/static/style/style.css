@@ -6,15 +6,13 @@
  */
 /* File upload box */
 .fileupload {
-	background: #eee;
-	border: 1px solid #d1d1d1;
+    background-color: #ebf0f4;
+    border: 1px solid #95a8b7;
 }
 /* folder nav */
 .foldernav {
-    background: url(../images/foldernav_small.png) no-repeat left top;
 }
 form#files .foldernav {
-    background: url(../images/foldernav.png) no-repeat left 3px;
 }
 
 /* File list */
@@ -23,19 +21,19 @@ form#files .foldernav {
 }
 /* parent folder row */
 tr.parentfolder td {
-	background-color: #ddd !important;
+	background-color: #f0f4f7 !important;
 }
 /* new row */
 .filelist tr.highlight-file td {
-    background: #fffcd8 url(../images/highlight-bg.gif) repeat left top !important;
+    background-color: #fffcd8;
 }
 /* folder row */
 tr.folder td {
-	background-color: #e7e7e7;
+	background-color: #f0f4f7 !important;
 }
 /* folder row being moved */
 tr.folderhover td {
-    background-color: #ffc;
+    background-color: #daf0ff !important;
 }
 /* File list edit box */
 #files_filebrowser_edit_row td {

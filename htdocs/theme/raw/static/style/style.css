@@ -180,7 +180,8 @@ td.narrow {
 /* table with th border-bottom */
 #searchresults thead th,
 #filelist,
-#groupforumtable {
+#groupforumtable,
+.tag-results #results {
 	border-bottom: 1px solid #ccc;
 }
 /* table with tfoot border-top */
@@ -752,7 +753,7 @@ div.error, {
 }
 #messages .info {
     color: #1666a9;
-    background: #d2ebff url(../images/icon_question.gif) no-repeat .5em;
+    background: #d2ebff;
 }
 #messages img {
     padding: .25em;
@@ -953,12 +954,9 @@ div.sideblock #friendscontrol label {
 .subpage.mytags {
   margin-bottom: 2em;
 }
-.edittags {
-  border: 1px solid #ddd;
-  padding: .25em .5em;
-}
 a.tag {
   text-decoration: none;
+	line-height: 1.2em;
 }
 .mytags a.tag {
   padding: 0 5px;
@@ -970,7 +968,6 @@ a.tag {
 }
 .tag-results .selected,
 .mytags .selected {
-    color: #444;
     font-weight: bold;
     text-decoration: none;
 }
@@ -978,6 +975,39 @@ a.tag {
     font-weight: normal;
     font-size: .9em;
     color: #444;
+}
+.tag-results .sep {
+	color: #ccc;
+	display: inline;
+	padding: 0 .25em;
+}
+/* select tag to edit */
+.edittags {
+  margin-bottom: 1em;
+}
+/* edit tag box */
+.edittag {
+	border: 1px solid #d1d1d1;
+	background: #f6f6f6;
+	padding: 1em;
+	float: left;
+	width: 45%;
+}
+/* delete tag box */
+.deletetag {
+	border: 1px solid #d1d1d1;
+	background: #f6f6f6;
+	padding: 1em;
+	float: left;
+	margin-left: 1em;
+	width: 45%;
+}
+.deletetag h3 {
+	color: #ca0000;
+}
+#delete_tag_submit {
+	border-color: #f69595 #750000 #750000 #f69595;
+	background: #ca0000;
 }
 
 /* Ajax Login */
