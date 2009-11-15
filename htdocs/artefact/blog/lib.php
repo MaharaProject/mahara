@@ -267,6 +267,8 @@ class ArtefactTypeBlog extends ArtefactType {
 
                 
     public static function get_icon($options=null) {
+        global $THEME;
+        return $THEME->get_url('images/blog.gif', false, 'artefact/blog');
     }
 
     public static function is_singular() {
@@ -563,6 +565,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
 
     public static function get_icon($options=null) {
+        global $THEME;
+        return $THEME->get_url('images/blogpost.gif', false, 'artefact/blog');
     }
 
     public static function is_singular() {
