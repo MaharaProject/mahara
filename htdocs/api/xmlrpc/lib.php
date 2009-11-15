@@ -1027,6 +1027,7 @@ class OpenSslRepo {
     private function __construct() {
         if (empty($this->keypair)) {
             $this->get_keypair();
+	    $this->calculate_fingerprints();
             $this->keypair['privatekey'] = openssl_pkey_get_private($this->keypair['keypair_PEM']);
             $this->keypair['publickey']  = openssl_pkey_get_public($this->keypair['certificate']);
         }
@@ -1086,6 +1087,8 @@ class OpenSslRepo {
     public function __get($name) {
         if ('certificate' === $name) return $this->keypair['certificate'];
         if ('expires' === $name)     return $this->keypair['expires'];
+        if ('sha1_fingerprint' === $name) return $this->keypair['sha1_fingerprint'];
+        if ('md5_fingerprint' === $name ) return $this->keypair['md5_fingerprint'];
         return null;
     }
 
@@ -1213,8 +1216,80 @@ class OpenSslRepo {
         openssl_pkey_free($new_key);
         unset($new_key); // Free up the resource
 
+	// Calculate fingerprints
+	$this->calculate_fingerprints();
+
         return $this;
     }
+
+
+    /**
+     * Calculates the SHA1 and MD5 fingerprints of the certificate in DER format
+     * It does the same as the fingerprint commandline option in x509
+     * command. For example:
+     * 
+     *        $ openssl x509 -in cert_file -fingerprint -sha1
+     *        $ openssl x509 -in cert_file -fingerprint -md5
+     */
+        
+    private function calculate_fingerprints () {
+
+        // Convert the certificate to DER and calculate the digest
+
+        $pem_cert = $this->keypair['certificate'];
+
+        $from_pos = strpos($pem_cert, "-----BEGIN CERTIFICATE-----");
+        if ( $from_pos === false ) {
+            throw new CryptException("Certificate not in PEM format");
+        }
+        $from_pos = $from_pos + 27;
+
+        $to_pos = strpos($pem_cert, "-----END CERTIFICATE-----");
+        if ( $to_pos === false ) {
+            throw new CryptException("Certificate not in PEM format");
+        }
+
+        $der_cert = base64_decode(substr($pem_cert, $from_pos, $to_pos - $from_pos));
+        if ( $der_cert === FALSE ) {
+            throw new CryptException("Certificate not in PEM format");
+        }
+
+        $_sha1_fingerprint = sha1($der_cert);
+        if ( $sha1_fingerprint === FALSE ) {
+            throw new CryptException("Error calculating sha1 fingerprint");
+        }
+        $_md5_fingerprint = md5($der_cert);
+        if ( $md5_fingerprint === FALSE ) {
+            throw new CryptException("Error calculating md5 fingerprint");
+        }
+
+	unset($der_cert);
+
+	$_sha1_fingerprint = strtoupper($_sha1_fingerprint);
+	$_md5_fingerprint  = strtoupper($_md5_fingerprint);
+
+	$sha1_fingerprint = $_sha1_fingerprint[0];
+	for ( $i = 1, $to = strlen($_sha1_fingerprint); $i < $to ; $i++ ) {
+		if ( $i % 2 == 0 ) {
+			$sha1_fingerprint .= ":" . $_sha1_fingerprint[$i];
+		} else {
+			$sha1_fingerprint .= $_sha1_fingerprint[$i];
+		}
+	}
+        $md5_fingerprint = $_md5_fingerprint[0];
+        for ( $i = 1, $to = strlen($_md5_fingerprint); $i < $to ; $i++ ) {
+                if ( $i % 2 == 0 ) {
+                        $md5_fingerprint .= ":" . $_md5_fingerprint[$i];
+                } else {
+                        $md5_fingerprint .= $_md5_fingerprint[$i];
+                }
+        }
+
+        $this->keypair['sha1_fingerprint'] = $sha1_fingerprint;
+        $this->keypair['md5_fingerprint']  = $md5_fingerprint;
+
+    }
+
 }
 
 class PublicKey {
