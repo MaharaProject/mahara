@@ -1255,11 +1255,11 @@ class OpenSslRepo {
         }
 
         $_sha1_fingerprint = sha1($der_cert);
-        if ( $sha1_fingerprint === FALSE ) {
+        if ( $_sha1_fingerprint === FALSE ) {
             throw new CryptException("Error calculating sha1 fingerprint");
         }
         $_md5_fingerprint = md5($der_cert);
-        if ( $md5_fingerprint === FALSE ) {
+        if ( $_md5_fingerprint === FALSE ) {
             throw new CryptException("Error calculating md5 fingerprint");
         }
 
