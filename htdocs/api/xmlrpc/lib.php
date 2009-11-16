@@ -1216,8 +1216,8 @@ class OpenSslRepo {
         openssl_pkey_free($new_key);
         unset($new_key); // Free up the resource
 
-	// Calculate fingerprints
-	$this->calculate_fingerprints();
+        // Calculate fingerprints
+        $this->calculate_fingerprints();
 
         return $this;
     }
@@ -1227,11 +1227,11 @@ class OpenSslRepo {
      * Calculates the SHA1 and MD5 fingerprints of the certificate in DER format
      * It does the same as the fingerprint commandline option in x509
      * command. For example:
-     * 
+     *
      *        $ openssl x509 -in cert_file -fingerprint -sha1
      *        $ openssl x509 -in cert_file -fingerprint -md5
      */
-        
+
     private function calculate_fingerprints () {
 
         // Convert the certificate to DER and calculate the digest
@@ -1263,26 +1263,27 @@ class OpenSslRepo {
             throw new CryptException("Error calculating md5 fingerprint");
         }
 
-	unset($der_cert);
+        unset($der_cert);
 
-	$_sha1_fingerprint = strtoupper($_sha1_fingerprint);
-	$_md5_fingerprint  = strtoupper($_md5_fingerprint);
+        $_sha1_fingerprint = strtoupper($_sha1_fingerprint);
+        $_md5_fingerprint  = strtoupper($_md5_fingerprint);
 
-	$sha1_fingerprint = $_sha1_fingerprint[0];
-	for ( $i = 1, $to = strlen($_sha1_fingerprint); $i < $to ; $i++ ) {
-		if ( $i % 2 == 0 ) {
-			$sha1_fingerprint .= ":" . $_sha1_fingerprint[$i];
-		} else {
-			$sha1_fingerprint .= $_sha1_fingerprint[$i];
-		}
-	}
+        $sha1_fingerprint = $_sha1_fingerprint[0];
+        for ( $i = 1, $to = strlen($_sha1_fingerprint); $i < $to ; $i++ ) {
+            if ( $i % 2 == 0 ) {
+                $sha1_fingerprint .= ":" . $_sha1_fingerprint[$i];
+            } else {
+                $sha1_fingerprint .= $_sha1_fingerprint[$i];
+            }
+        }
+
         $md5_fingerprint = $_md5_fingerprint[0];
         for ( $i = 1, $to = strlen($_md5_fingerprint); $i < $to ; $i++ ) {
-                if ( $i % 2 == 0 ) {
-                        $md5_fingerprint .= ":" . $_md5_fingerprint[$i];
-                } else {
-                        $md5_fingerprint .= $_md5_fingerprint[$i];
-                }
+            if ( $i % 2 == 0 ) {
+                $md5_fingerprint .= ":" . $_md5_fingerprint[$i];
+            } else {
+                $md5_fingerprint .= $_md5_fingerprint[$i];
+            }
         }
 
         $this->keypair['sha1_fingerprint'] = $sha1_fingerprint;
