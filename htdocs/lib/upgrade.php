@@ -76,7 +76,7 @@ function check_upgrades($name=null) {
             $toupgrade['core'] = $core;
             $installing = true;
         }
-        else if (true || $config->version > $coreversion) {
+        else if ($config->version > $coreversion) {
             $corerelease = get_config('release');
             if (isset($config->minupgradefrom) && isset($config->minupgraderelease)
                 && $coreversion < $config->minupgradefrom) {
