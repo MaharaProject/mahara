@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage blocktype-recentposts
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -76,28 +77,19 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance, $istemplate) {
-        if ($istemplate) {
-            // No configuration when this block is in a template
-            return array();
-        }
+    public static function instance_config_form($instance) {
         safe_require('artefact', 'blog');
         $configdata = $instance->get('configdata');
-        return array(
-            self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null, $istemplate),
-            PluginArtefactBlog::block_advanced_options_element($configdata, 'blog'),
-        );
+        $elements = array(self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null));
+        return $elements;
     }
 
-    public static function artefactchooser_element($default=null, $istemplate=false) {
+    public static function artefactchooser_element($default=null) {
         return array(
             'name'  => 'artefactids',
             'type'  => 'artefactchooser',
             'title' => get_string('blogs', 'artefact.blog'),
             'defaultvalue' => $default,
-            'rules' => array(
-                'required' => true,
-            ),
             'blocktype' => 'recentposts',
             'limit'     => 10,
             'selectone' => false,

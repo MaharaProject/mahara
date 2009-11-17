@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,14 +21,14 @@
  * @subpackage blocktype-wall
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 defined('INTERNAL') || die();
 
 $config = new StdClass;
-$config->version = 2009073000;
-$config->release = '1.0.1';
+$config->version = 2009111200;
+$config->release = '1.0.2';
 
 ?>

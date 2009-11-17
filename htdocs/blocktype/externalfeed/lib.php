@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage blocktype-externalfeed
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -54,7 +55,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
-        if ($configdata['feedid']) {
+        if (!empty($configdata['feedid'])) {
             $data = get_record('blocktype_externalfeed_data', 'id', $configdata['feedid']);
 
             $data->content = unserialize($data->content);
@@ -98,7 +99,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
     public static function instance_config_form($instance) {
         $configdata = $instance->get('configdata');
 
-        if (isset($configdata['feedid'])) {
+        if (!empty($configdata['feedid'])) {
             $url = get_field('blocktype_externalfeed_data', 'url', 'id', $configdata['feedid']);
         }
         else {
@@ -235,9 +236,11 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         $ids = array();
         if ($instances = get_records_array('block_instance', 'blocktype', 'externalfeed')) {
             foreach ($instances as $block) {
-                $data = unserialize($block->configdata);
-                if ($data['feedid']) {
-                    $ids[$data['feedid']] = true;
+                if (is_string($block->configdata) && strlen($block->configdata)) {
+                    $data = unserialize($block->configdata);
+                    if (isset($data['feedid']) && $data['feedid']) {
+                        $ids[$data['feedid']] = true;
+                    }
                 }
             }
         }
@@ -272,11 +275,12 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
 
         $result = mahara_http_request($config);
 
-        if($result->data) {
-            if ($result->error) {
-                $cache[$source] = $result->error;
-                throw $cache[$source];
-            }
+        if ($result->error) {
+            throw new XML_Feed_Parser_Exception($result->error);
+        }
+
+        if (empty($result->data)) {
+            throw new XML_Feed_Parser_Exception('Feed url returned no data');
         }
 
         try {
@@ -374,6 +378,49 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
 
     public static function default_copy_type() {
         return 'full';
+    }
+
+    /**
+     * The URL is not stored in the configdata, so we need to get it separately
+     */
+    public static function export_blockinstance_config(BlockInstance $bi) {
+        $config = $bi->get('configdata');
+        $url = ($config['feedid']) ? get_field('blocktype_externalfeed_data', 'url', 'id', $config['feedid']) : '';
+        return array(
+            'url' => $url,
+            'full' => isset($config['full']) ? ($config['full'] ? 1 : 0) : 0,
+        );
+    }
+
+    /**
+     * Overrides default import to trigger retrieving the feed.
+     */
+    public static function import_create_blockinstance(array $config) {
+        // Trigger retrieving the feed
+        // Note: may have to re-think this at some point - we'll end up retrieving all the 
+        // RSS feeds for this user at import time, which could easily be quite 
+        // slow. This plugin will need a bit of re-working for this to be possible
+        if (!empty($config['config']['url'])) {
+            try {
+                $values = self::instance_config_save(array('url' => $config['config']['url']));
+            }
+            catch (XML_Feed_Parser_Exception $e) {
+                log_info("Note: was unable to parse RSS feed for new blockinstance. URL was {$config['config']['url']}");
+                $values = array();
+            }
+        }
+
+        $bi = new BlockInstance(0,
+            array(
+                'blocktype'  => 'externalfeed',
+                'configdata' => array(
+                    'feedid' => (isset($values['feedid'])) ? $values['feedid'] : '',
+                    'full'   => (isset($config['config']['full']))   ? $config['config']['full']   : '',
+                ),
+            )
+        );
+
+        return $bi;
     }
 
 }

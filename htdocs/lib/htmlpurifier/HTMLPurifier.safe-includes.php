@@ -6,7 +6,7 @@
  * the core files required by HTML Purifier. This is a convenience stub that
  * includes all files using dirname(__FILE__) and require_once. PLEASE DO NOT
  * EDIT THIS FILE, changes will be overwritten the next time the script is run.
- * 
+ *
  * Changes to include_path are not necessary.
  */
 
@@ -49,6 +49,8 @@ require_once $__dir . '/HTMLPurifier/LanguageFactory.php';
 require_once $__dir . '/HTMLPurifier/Length.php';
 require_once $__dir . '/HTMLPurifier/Lexer.php';
 require_once $__dir . '/HTMLPurifier/PercentEncoder.php';
+require_once $__dir . '/HTMLPurifier/PropertyList.php';
+require_once $__dir . '/HTMLPurifier/PropertyListIterator.php';
 require_once $__dir . '/HTMLPurifier/Strategy.php';
 require_once $__dir . '/HTMLPurifier/StringHash.php';
 require_once $__dir . '/HTMLPurifier/StringHashParser.php';
@@ -90,6 +92,8 @@ require_once $__dir . '/HTMLPurifier/AttrDef/CSS/Percentage.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/CSS/TextDecoration.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/CSS/URI.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/HTML/Bool.php';
+require_once $__dir . '/HTMLPurifier/AttrDef/HTML/Nmtokens.php';
+require_once $__dir . '/HTMLPurifier/AttrDef/HTML/Class.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/HTML/Color.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/HTML/FrameTarget.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/HTML/ID.php';
@@ -97,7 +101,6 @@ require_once $__dir . '/HTMLPurifier/AttrDef/HTML/Pixels.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/HTML/Length.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/HTML/LinkTypes.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/HTML/MultiLength.php';
-require_once $__dir . '/HTMLPurifier/AttrDef/HTML/Nmtokens.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/URI/Email.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/URI/Host.php';
 require_once $__dir . '/HTMLPurifier/AttrDef/URI/IPv4.php';
@@ -115,6 +118,7 @@ require_once $__dir . '/HTMLPurifier/AttrTransform/Input.php';
 require_once $__dir . '/HTMLPurifier/AttrTransform/Lang.php';
 require_once $__dir . '/HTMLPurifier/AttrTransform/Length.php';
 require_once $__dir . '/HTMLPurifier/AttrTransform/Name.php';
+require_once $__dir . '/HTMLPurifier/AttrTransform/NameSync.php';
 require_once $__dir . '/HTMLPurifier/AttrTransform/SafeEmbed.php';
 require_once $__dir . '/HTMLPurifier/AttrTransform/SafeObject.php';
 require_once $__dir . '/HTMLPurifier/AttrTransform/SafeParam.php';

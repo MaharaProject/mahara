@@ -1,6 +1,6 @@
 {if $post->deleted}
 {assign var=poster value=$post->poster|display_name|escape}
-<h4 class="deletedpost">{str tag="postbyuserwasdeleted" section="interaction.forum args=$poster}</h4>
+<h4 class="deletedpost">{str tag="postbyuserwasdeleted" section="interaction.forum" args=$poster}</h4>
 {else}
 {if $post->parent}
 {include file="interaction:forum:simplepost.tpl" post=$post groupadmins=$groupadmins}

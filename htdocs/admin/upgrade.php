@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage admin
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -29,12 +30,20 @@ define('ADMIN', 1);
 define('INSTALLER', 1);
 
 require(dirname(dirname(__FILE__)).'/init.php');
-define('TITLE', get_string('upgrades', 'admin'));
 require(get_config('libroot') . 'upgrade.php');
 
 $smarty = smarty();
 
 $upgrades = check_upgrades();
+if (!empty($upgrades['core']->install)) {
+    define('TITLE', get_string('installation', 'admin'));
+    $smarty->assign('upgradeheading', get_string('performinginstallation', 'admin'));
+}
+else {
+    define('TITLE', get_string('upgrades', 'admin'));
+    $smarty->assign('upgradeheading', get_string('performingupgrades', 'admin'));
+}
+
 if (empty($upgrades['disablelogin'])) {
     auth_setup();
 }
@@ -48,7 +57,8 @@ $loadingicon = $THEME->get_url('images/loading.gif');
 $successicon = $THEME->get_url('images/success.gif');
 $failureicon = $THEME->get_url('images/failure.gif');
 
-// Remove all files in the smarty cache
+// Remove all files in the smarty and dwoo caches
+// TODO post 1.2 remove the smarty part
 require_once('file.php');
 $basedir = get_config('dataroot') . 'smarty/compile/';
 $dh = new DirectoryIterator($basedir);
@@ -59,6 +69,16 @@ foreach ($dh as $themedir) {
     clearstatcache();
     check_dir_exists($themedirname);
 }
+$basedir = get_config('dataroot') . 'dwoo/compile/';
+$dh = new DirectoryIterator($basedir);
+foreach ($dh as $themedir) {
+    if ($themedir->isDot()) continue;
+    $themedirname = $basedir . $themedir->getFilename();
+    rmdirr($themedirname);
+    clearstatcache();
+    check_dir_exists($themedirname);
+}
+
 
 $loadingstring = json_encode(get_string('upgradeloading', 'admin'));
 $installsuccessstring = json_encode(get_string('installsuccess', 'admin'));

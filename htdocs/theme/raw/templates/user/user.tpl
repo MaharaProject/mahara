@@ -74,7 +74,6 @@
 			</li>
 			{foreach from=$user->views item=view}
 			<li>
-				{$view}
 				<a href="{$WWWROOT}view/view.php?id={$view->id}">
 				{$view->title|escape}
 				</a>

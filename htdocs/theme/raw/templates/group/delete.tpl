@@ -1,6 +1,6 @@
 {include file="header.tpl"}
-<h2>{$subheading|escape}</h2>
 <div class="message">
+<h3>{$subheading|escape}</h3>
 <p>{$message}</p>
 {$form}
 </div>

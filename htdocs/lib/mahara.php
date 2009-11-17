@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  * @copyright  (C) portions from Moodle, (C) Martin Dougiamas http://dougiamas.com
  */
 
@@ -71,6 +72,9 @@ function ensure_sanity() {
 
     if(!extension_loaded('curl')) {
         throw new ConfigSanityException(get_string('curllibrarynotinstalled', 'error'));
+    }
+    if (!extension_loaded('dom')) {
+        throw new ConfigSanityException(get_string('domextensionnotloaded', 'error'));
     }
 
     //Check for freetype in the gd extension
@@ -148,6 +152,7 @@ function ensure_sanity() {
         !check_dir_exists(get_config('dataroot') . 'smarty/compile') ||
         !check_dir_exists(get_config('dataroot') . 'smarty/cache') ||
         !check_dir_exists(get_config('dataroot') . 'sessions') ||
+        !check_dir_exists(get_config('dataroot') . 'temp') ||
         !check_dir_exists(get_config('dataroot') . 'langpacks') ||
         !check_dir_exists(get_config('dataroot') . 'htmlpurifier')) {
         throw new ConfigSanityException(get_string('couldnotmakedatadirectories', 'error'));
@@ -507,8 +512,6 @@ function get_language_root($language=null) {
 
 /**
  * Return a list of available themes.
- *
- * Themes _must_ have a config.php, and it should specify a theme name.
  */
 function get_themes() {
     $themes = array();
@@ -1953,13 +1956,17 @@ function profile_sideblock() {
         'profileicon' => $USER->get('profileicon') ? $USER->get('profileicon') : 0,
     );
 
-    if ($SESSION->get('mnetuser')) {
-        $authinstance = $SESSION->get('authinstance');
-        if ($authinstance) {
-            $authobj = AuthFactory::create($authinstance);
+    $authinstance = $SESSION->get('mnetuser') ? $SESSION->get('authinstance') : $USER->get('authinstance');
+    if ($authinstance) {
+        $authobj = AuthFactory::create($authinstance);
+        if ($authobj->authname == 'xmlrpc') {
             $peer = get_peer($authobj->wwwroot);
-            $data['mnetloggedinfrom'] = get_string('youhaveloggedinfrom', 'auth.xmlrpc',
-                $authobj->wwwroot, $peer->name);
+            if ($SESSION->get('mnetuser')) {
+                $data['mnetloggedinfrom'] = get_string('youhaveloggedinfrom', 'auth.xmlrpc', $authobj->wwwroot, $peer->name);
+            }
+            else {
+                $data['peer'] = array('name' => $peer->name, 'wwwroot' => $peer->wwwroot);
+            }
         }
     }
     $data['unreadnotifications'] = call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'));
@@ -2035,6 +2042,75 @@ function onlineusers_sideblock() {
     );
 }
 
+function tag_weight($freq) {
+    return pow($freq, 2);
+    // return log10($freq);
+}
+
+function get_my_tags($limit=null, $cloud=true, $sort='freq') {
+    global $USER;
+    $id = $USER->get('id');
+    if ($limit || $sort != 'alpha') {
+        $sort = 'COUNT(t.tag) DESC';
+    }
+    else {
+        $sort = 't.tag ASC';
+    }
+    $tagrecords = get_records_sql_array("
+        SELECT
+            t.tag, COUNT(t.tag) AS count
+        FROM (
+           (SELECT at.tag, a.id, 'artefact' AS type
+            FROM {artefact_tag} at JOIN {artefact} a ON a.id = at.artefact
+            WHERE a.owner = ?)
+           UNION
+           (SELECT vt.tag, v.id, 'view' AS type
+            FROM {view_tag} vt JOIN {view} v ON v.id = vt.view
+            WHERE v.owner = ?)
+        ) t
+        GROUP BY t.tag
+        ORDER BY " . $sort . (is_null($limit) ? '' : " LIMIT $limit"),
+        array($id, $id)
+    );
+    if (!$tagrecords) {
+        return false;
+    }
+    if ($cloud) {
+        $minfreq = $tagrecords[count($tagrecords) - 1]->count;
+        $maxfreq = $tagrecords[0]->count;
+
+        if ($minfreq != $maxfreq) {
+            $minweight = tag_weight($minfreq);
+            $maxweight = tag_weight($maxfreq);
+            $minsize = 0.8;
+            $maxsize = 2.5;
+
+            foreach ($tagrecords as &$t) {
+                $weight = (tag_weight($t->count) - $minweight) / ($maxweight - $minweight);
+                $t->size = sprintf("%0.1f", $minsize + ($maxsize - $minsize) * $weight);
+            }
+        }
+        usort($tagrecords, create_function('$a,$b', 'return strnatcasecmp($a->tag, $b->tag);'));
+    }
+    else {
+        foreach ($tagrecords as &$t) {
+            $t->tagurl = urlencode($t->tag);
+        }
+    }
+    return $tagrecords;
+}
+
+function tags_sideblock() {
+    global $USER;
+    $maxtags = $USER->get_account_preference('tagssideblockmaxtags');
+    $maxtags = is_null($maxtags) ? get_config('tagssideblockmaxtags') : $maxtags;
+    if ($tagrecords = get_my_tags($maxtags)) {
+        return array('tags' => $tagrecords);
+    }
+    return null;
+}
+
+
 /**
  * Cronjob to recalculate how much quota each user is using and update it as 
  * appropriate.
@@ -2043,19 +2119,24 @@ function onlineusers_sideblock() {
  * has caused the quota count to get out of sync
  */
 function recalculate_quota() {
-    if (!$artefacts = get_records_array('artefact', '', '', '', 'id, artefacttype, owner')) {
-        // Nothing to do
-        return;
-    }
+    $plugins = plugins_installed('artefact', true);
 
     $userquotas = array();
 
-    foreach ($artefacts as $artefact) {
-        safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact->artefacttype));
-        if (!isset($userquotas[$artefact->owner])) {
-            $userquotas[$artefact->owner] = 0;
+    foreach ($plugins as $plugin) {
+        safe_require('artefact', $plugin->name);
+        $classname = generate_class_name('artefact', $plugin->name);
+        if (is_callable($classname . '::recalculate_quota')) {
+            $pluginuserquotas = call_static_method($classname, 'recalculate_quota');
+            foreach ($pluginuserquotas as $userid => $usage) {
+                if (!isset($userquotas[$userid])) {
+                    $userquotas[$userid] = $usage;
+                }
+                else {
+                    $userquotas[$userid] += $usage;
+                }
+            }
         }
-        $userquotas[$artefact->owner] += call_static_method(generate_artefact_class_name($artefact->artefacttype), 'get_quota_usage', $artefact->id);
     }
 
     foreach ($userquotas as $user => $quota) {
@@ -2099,5 +2180,103 @@ function random_string($length=15) {
     }
     return $string;
 }
+
+function build_portfolio_search_html(&$data) {
+    global $THEME;
+    $artefacttypes = get_records_assoc('artefact_installed_type');
+    foreach ($data->data as &$item) {
+        $item->ctime = format_date($item->ctime);
+        if ($item->type == 'view') {
+            $item->typestr = get_string('view');
+            $item->icon    = $THEME->get_url('images/view.gif');
+            $item->url     = get_config('wwwroot') . 'view/view.php?id=' . $item->id;
+        }
+        else { // artefact
+            safe_require('artefact', $artefacttypes[$item->artefacttype]->plugin);
+            $links = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_links', $item->id);
+            $item->url     = $links['_default'];
+            $item->icon    = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_icon', array('id' => $item->id));
+            $item->typestr = get_string($item->artefacttype, 'artefact.' . $artefacttypes[$item->artefacttype]->plugin);
+        }
+    }
+
+    $data->baseurl = get_config('wwwroot') . 'tags.php' . (is_null($data->tag) ? '' : '?tag=' . urlencode($data->tag));
+    $data->sortcols = array('name', 'date');
+    $data->filtercols = array(
+        'all'   => get_string('tagfilter_all'),
+        'file'  => get_string('tagfilter_file'),
+        'image' => get_string('tagfilter_image'),
+        'text'  => get_string('tagfilter_text'),
+        'view'  => get_string('tagfilter_view'),
+    );
+
+    $smarty = smarty_core();
+    $smarty->assign_by_ref('data', $data->data);
+    $data->tablerows = $smarty->fetch('portfoliosearchresults.tpl');
+    $pagination = build_pagination(array(
+        'id' => 'results_pagination',
+        'class' => 'center',
+        'url' => $data->baseurl . ($data->sort == 'name' ? '' : '&sort=' . $data->sort) . ($data->filter == 'all' ? '' : '&type=' . $data->filter),
+        'jsonscript' => 'json/tagsearch.php',
+        'datatable' => 'results',
+        'count' => $data->count,
+        'limit' => $data->limit,
+        'offset' => $data->offset,
+        'numbersincludefirstlast' => false,
+        'resultcounttextsingular' => get_string('result'),
+        'resultcounttextplural' => get_string('results'),
+    ));
+    $data->pagination = $pagination['html'];
+    $data->pagination_js = $pagination['javascript'];
+}
+
+// When feedback becomes an artefact type, move this into the feedback artefact plugin
+function build_feedback_html(&$data) {
+    foreach ($data->data as &$item) {
+        $item->date    = format_date(strtotime($item->ctime), 'strftimedatetime');
+        $item->message = clean_html($item->message);
+        $item->name    = $item->author ? display_name($item->author) : $item->authorname;
+        if (!empty($item->attachment)) {
+            $item->attachid    = $item->attachment;
+            $item->attachtitle = $item->title;
+            $item->attachsize  = display_size($item->size);
+            if ($data->isowner) {
+                $item->attachmessage = get_string('feedbackattachmessage', 'view', get_string('feedbackattachdirname', 'view'));
+            }
+        }
+    }
+    $extradata = array('view' => $data->view);
+    if (!empty($data->artefact)) {
+        $data->baseurl = get_config('wwwroot') . 'view/artefact.php?view=' . $data->view . '&artefact=' . $data->artefact;
+        $data->jsonscript = 'view/artefactfeedback.json.php';
+        $extradata['artefact'] = $data->artefact;
+    }
+    else {
+        $data->baseurl = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
+        $data->jsonscript = 'view/viewfeedback.json.php';
+    }
+    $smarty = smarty_core();
+    $smarty->assign_by_ref('data', $data->data);
+    $smarty->assign('canedit', $data->canedit);
+    $smarty->assign('baseurl', $data->baseurl);
+    $data->tablerows = $smarty->fetch('view/feedbacklist.tpl');
+    $pagination = build_pagination(array(
+        'id' => 'feedback_pagination',
+        'class' => 'center',
+        'url' => $data->baseurl,
+        'jsonscript' => $data->jsonscript,
+        'datatable' => 'feedbacktable',
+        'count' => $data->count,
+        'limit' => $data->limit,
+        'offset' => $data->offset,
+        'lastpage' => $data->lastpage,
+        'resultcounttextsingular' => get_string('comment', 'view'),
+        'resultcounttextplural' => get_string('comments', 'view'),
+        'extradata' => $extradata,
+    ));
+    $data->pagination = $pagination['html'];
+    $data->pagination_js = $pagination['javascript'];
+}
+
 
 ?>

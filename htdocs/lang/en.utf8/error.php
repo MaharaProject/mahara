@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage lang
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -32,6 +33,7 @@ $string['jsonextensionnotloaded'] = 'Your server configuration does not include 
 $string['pgsqldbextensionnotloaded'] = 'Your server configuration does not include the pgsql extension. Mahara requires this in order to store data in a relational database. Please make sure that it is loaded in php.ini, or install it if it is not installed.';
 $string['mysqldbextensionnotloaded'] = 'Your server configuration does not include the mysql extension. Mahara requires this in order to store data in a relational database. Please make sure that it is loaded in php.ini, or install it if it is not installed.';
 $string['unknowndbtype'] = 'Your server configuration references an unknown database type. Valid values are "postgres8" and "mysql5". Please change the database type setting in config.php.';
+$string['domextensionnotloaded'] = 'Your server configuration does not include the dom extension. Mahara requires this in order to parse XML data from a variety of sources.';
 $string['xmlextensionnotloaded'] = 'Your server configuration does not include the %s extension. Mahara requires this in order to parse XML data from a variety of sources. Please make sure that it is loaded in php.ini, or install it if it is not installed.';
 $string['gdextensionnotloaded'] = 'Your server configuration does not include the gd extension. Mahara requires this in order to perform resizes and other operations on uploaded images. Please make sure that it is loaded in php.ini, or install it if it is not installed.';
 $string['gdfreetypenotloaded'] = 'Your server configuration of the gd extension does not include Freetype support. Mahara requires this to in order to build CAPTCHA images. Please make sure that gd is configured with it.';
@@ -73,6 +75,7 @@ $string['blocktypeprovidedbyartefactnotinstallable'] = 'This will be installed a
 $string['blockconfigdatacalledfromset'] = 'Configdata should not be set directly, use PluginBlocktype::instance_config_save instead';
 $string['invaliddirection'] = 'Invalid direction %s';
 $string['onlyoneprofileviewallowed'] = 'You are only allowed one profile view';
+$string['onlyoneblocktypeperview'] = 'Cannot put more than one %s blocktype into a view';
 
 // if you change these next two , be sure to change them in libroot/errors.php
 // as they are duplicated there, in the case that get_string was not available.

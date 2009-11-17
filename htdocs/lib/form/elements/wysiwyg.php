@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage form
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -132,4 +133,28 @@ function pieform_element_wysiwyg_get_value(Pieform $form, $element) {
     return null;
 }
 
+/**
+ * Extension by Mahara. This api function returns the javascript required to
+ * set up the element, assuming the element has been placed in the page using
+ * javascript. This feature is used in the views interface.
+ *
+ * In theory, this could go upstream to pieforms itself
+ *
+ * @param Pieform $form     The form
+ * @param array   $element  The element
+ */
+function pieform_element_wysiwyg_views_js(Pieform $form, $element) {
+    global $USER;
+    if ($USER->get_account_preference('wysiwyg') || defined('PUBLIC')) {
+        $formname = json_encode($form->get_name());
+        $editor = json_encode($form->get_name() . '_' . $element['name']);
+        return "\ntinyMCE.idCounter=0;"
+            . "\ntinyMCE.execCommand('mceAddControl', false, $editor);"
+            . "\nPieformManager.connect('onsubmit', $formname, tinyMCE.triggerSave);"
+            . "\nPieformManager.connect('onreply', $formname, function () {"
+            . "\n  tinyMCE.execCommand('mceRemoveControl', false, $editor);"
+            . "});";
+    }
+    return '';
+}
 ?>

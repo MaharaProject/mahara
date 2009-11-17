@@ -25,14 +25,13 @@ body {
     background: #10171A url(../images/bg.gif) repeat top center;	
 	color: #BEE3F1;
 }
-a,
-a:link,
-a:active,
-a:visited {
+acronym {
+}
+a, a:visited, a:link, a:active {
     color: #7EF000;
     text-decoration: none;
 }
-a:hover {
+a:hover, a:focus {
     color: #00AEF1;
     text-decoration: underline;
 }
@@ -48,21 +47,23 @@ h2 {
 h3 {
     font-family:Georgia, "Times New Roman", Times, serif;
     color: #00AEF1;
-    font-size: 1.1em;
+    font-size: 1.2em !important;
 }
 h4 {
-    font-size: 1em;
     color: #7EF000;
 }
 h5 {
     color: #00AEF1;
-    font-size: .9em;
 }
 h6 {
     color: #00AEF1;
 }
+.description,
+.unvalidated,
+.postdetails {
+}
 
-/* Tables */
+/**************************** Tables ****************************/
 .main-column thead th {
     color: #BEE3F1;
 	border-bottom: 1px dotted #BEE3F1;
@@ -71,65 +72,92 @@ h6 {
     color: #BEE3F1;
     border-bottom: none;
 }
-.main-column tfoot td {
+/* table with th border-bottom */
+#searchresults thead th,
+#filelist,
+#groupforumtable,
+.tag-results #results {
+	border-bottom: 1px dotted #BEE3F1;
+}
+/* table with tfoot border-top */
+#searchresults tfoot td,
+#adminstitutionslist tfoot td,
+#profileicons tfoot td,
+#activitylist tfoot td,
+#groupforumtable {
 	border-top: 1px dotted #BEE3F1;
+}
+.main-column table h3 a,
+.main-column table h3 a:visited,
+.main-column table h3 a:link,
+.listing div h3 a,
+.listing div h3 a:visited,
+.listing div h3 a:link {
+	color: #BEE3F1 !important;
+}
+.main-column table h3 a:hover,
+.listing div h3 a:hover {
 }
 .tablerenderer-loading {
     border: 1px solid #000;
 	background-color: #000;
     color: #00AEF1;
 }
-table.fullwidth {
-	border-top: 1px dotted #BEE3F1;
-	border-bottom: 1px dotted #BEE3F1;
+/* table with th border-bottom */
+#searchresults thead th {
+	border-bottom: 1px solid #BEE3F1;
+}
+/* table with border-bottom */
+#searchresults tfoot td {
+	border-top: 1px solid #BEE3F1;
 }
 .listing.twocolumn td {
     padding: 4px !important;
-	border: 2px solid #00AEF1;
+	border-color: #080D0F;
 }
 /* Alternative row background colours */
-.r0 {
+.r0,
+.r0 td {
+    border:none;
     background: #1C3740;
 }
-.r1 {
+.r1,
+.r1 td {
+    border:none;
     background-color: #1A292F;
 }
-/* PAGINATION */
-.pagination a {
-    border: 1px solid #1A292F;
+tr.folder td {
+    background-color: #10171A;
 }
-.pagination .disabled {
+
+/**************************** Pagination ****************************/
+div.pagination a {
+    border: 0;
     background-color: #1A292F;
 }
-
-
-.attachments {
-	border: 1px solid #BEE3F1;
-	background-color: #10171A;
+div.pagination .disabled {
+	background-color: #080D0F;
+	color: #26363d;
 }
 
-
-/* Form elements */
+/**************************** Forms ****************************/
+/* Label */
 label {
     color: #BEE3F1;
 }
+/* required */
 .required th, .required label, .requiredmarker, #register_tandc_container th {
-    color: #BEE3F1;
+	color: #f45e5e;
 }
-/* override required colour */
+/* override required colour to normal colour */
 .required label.plain, .required.radio td label, .required.emaillist td label {
     color: #BEE3F1;
 }
-select {
-    border: 1px solid #b2b2b2;
+/* description */
+.pieform td.description {
 }
-input.error, select.error {
-    border-color: #cc0000;
-}
-/* Fieldset */
-fieldset {
-    border: 1px solid #1C3740;
-}
+
+/* Legend */
 legend {
 	color: #00AEF1;
 	font-family:Georgia, "Times New Roman", Times, serif;
@@ -137,17 +165,100 @@ legend {
 legend a,
 legend a:link,
 legend a:visited,
-legend a:active {
+legend a:active,
+legend a:hover {
 	color: #00AEF1 !important;
 }
 
-/* Buttons */
-.btn,
-.btn-link,
+/* Select */
+select {
+    border: 1px solid #b2b2b2;
+}
+
+/* Fieldset */
+fieldset {
+    border: 1px solid #1C3740;
+}
+
+/* Text fields and such */
+input.text, 
+input.password, 
+input.file,
+textarea,
+input[type=text],
+input[type=password],
+input[type=file] {
+}
+input.text.required {
+	border: 1px solid #f45e5e;
+}
+
+/* error */
+input.error, select.error {
+}
+.errmsg {
+}
+
+
+/****************************** Buttons ****************************/
+/** input buttons **/
 input.submit,
-input.button, button,
-input.submitcancel,
-input.cancelbackcreate {
+input.cancel,
+button,
+input.button,
+input.buttondk,
+input.select,
+input#files_filebrowser_edit_artefact {
+    background: #1C3740 url(../images/mainnav-bg.gif) repeat-x center;
+	border-color: #386d82 #1A292F #1A292F #386d82 !important;
+	padding: 3px 10px;
+	border-style: solid;
+	border-width: 1px;
+	font-size: 11px;
+    font-weight:normal;
+	color: #FFF !important;
+	margin-left: 5px;
+}
+
+/** link buttons **/
+.rbuttons a.btn,
+#sb-profile .controls a,
+.upgradeicon a,
+#loginas .btn-loginas {
+    background: #1C3740 url(../images/mainnav-bg.gif) repeat-x center;
+	border-color: #386d82 #1A292F #1A292F #386d82 !important;
+	padding: 3px 10px;
+	border-style: solid;
+	border-width: 1px;
+	font-size: 11px;
+    font-weight:normal;
+	color: #FFF !important;
+	margin-left: 5px;
+}
+/** hover for buttons **/
+input.submit:hover,
+input.cancel:hover,
+button:hover,
+input.button:hover,
+input.buttondk:hover,
+input.select:hover,
+input#files_filebrowser_edit_artefact:hover,
+.rbuttons a.btn:hover,
+#sb-profile .controls a:hover {
+	color: #FFF;
+    text-decoration:none;
+    background-color: #1C3740;
+}
+/** Depress for buttons **/
+input.submit:active,
+input.cancel:active,
+button:active,
+input.button:active,
+input.buttondk:active,
+input.select:active,
+input#files_filebrowser_edit_artefact:active,
+.rbuttons a.btn:active,
+#sb-profile .controls a:active {
     background: #1C3740 url(../images/mainnav-bg.gif) repeat-x center;
 	border-color: #1A292F !important;
 	padding: 3px 10px;
@@ -158,43 +269,146 @@ input.cancelbackcreate {
 	color: #FFF !important;
 	margin-left: 5px;
 }
-a.btn,
-a.btn:hover {
-	color: #FFF;
-    text-decoration:none;
+
+/** Buttons with icons **/
+a.btn-req {
+	background: url(../images/icon-join.gif) no-repeat left center;
+	padding-left: 15px;
 }
-/***** ICON LINKS ******/
-div.btn-del input.submit, input.submit.btn-del,
-div.btn-msg input.submit,
-div.btn-add input.submit, input.submit.btn-add,
-div.btn-edit input.submit, input.submit.btn-edit,
-a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup {
-    color: #7EF000 !important;
+.btn-leavegroup {
+    background: transparent url(../images/icon-leave.gif) no-repeat left center;
+	padding-left: 15px;
+}
+a.btn-del,
+a#btn-delete {
+    background: transparent url(../images/icon-delete.gif) no-repeat left center;
+    color: #f45e5e !important;
+	padding-left: 12px;
+}
+#btn-request, 
+a.btn-add {
+	background: url(../images/icon-add.gif) no-repeat left center;
+	padding-left: 12px;
+}
+a.btn-msg, #btn-sendmessage {
+	background: url(../images/icon-mail.gif) no-repeat left center;
+	padding-left: 12px;
+}
+a.btn-edit {
+	background: url(../images/icon-edit.gif) no-repeat left center;
+	padding-left: 12px;
+}
+.btn-pending {
+	background: url(../images/icon-pending.gif) no-repeat left center;
+	padding-left: 12px;
+}
+.btn-reply, #add_feedback_link {
+	background: url(../images/icon-reply.gif) no-repeat left center;
+	padding-left: 12px;
+}
+#objection_link {
+	background: url(../images/icon-flag.gif) no-repeat left center;
+}
+#print_link {
+	background: url(../images/icon-print.gif) no-repeat left center;
+}
+#toggle_watchlist_link {
+	background: url(../images/icon-watch.gif) no-repeat left center;
+}
+.btn-settings {
+	background: url(../images/icon-settings.gif) no-repeat left center;
+	padding-left: 12px;
+}
+input#addfriend_add,
+input#myfriends_addfriend_add {
+	background: transparent url(../images/icon-add.gif) no-repeat left center;
+	border: 0;
+    margin: 0;
+}
+#togglepublic_submit {
+	background: url(../images/icon-login.gif) no-repeat left center;
+	padding-left: 15px !important;
+	color: #7f9d16;
+	border: 0;
+}
+.lbuttons a {
+	padding-left: 12px !important;
+}
+
+/* Search buttons */
+#usf_submit {
+    border:none;
+	width: 25px;
+	margin:0;
+	text-indent:-1000px;
+	cursor:pointer;
+    background: transparent url(../images/btn_search_off.png) no-repeat center center;	
+	font-size: 1%;
+	padding: 10px;
+	vertical-align: middle;
+	* vertical-align: inherit;
+}
+* html #usf_submit {
+    background: transparent url(../images/btn_search_off.gif) no-repeat center center;	
+}
+#dosearch,
+#selfsearch button ,
+.query-button,
+#query-button,
+#moderator_search_btn,
+#search_submit,
+#search_search,
+#selfsearch button,
+#users_search_btn {
+    border:none;
+	width: 25px;
+	margin:0;
+	text-indent:-1000px;
+	cursor:pointer;
+    background: transparent url(../images/btn_search_off.png) no-repeat center center;	
+	font-size: 1%;
+	padding: 10px;
+	* padding: 1px 10px;
+	vertical-align: middle;
+	* vertical-align: inherit;
 }
 
 
-/* Top of page elements */
-#container {
+
+/**************************** Top of page elements ****************************/
+#container, #containerX {
     background: #0c2839 url(../images/bg.jpg) repeat-x 3px 0;	
+    min-width: 970px;
+    width: 90%;
 }
 #top-wrapper {
     background: transparent;
+    border: none;
 }
-#site-logo {
+#containerX #top-wrapper {
+	height: auto;
+	background: #080D0F;
 }
 #loading-box {
     background-color: #000;
 }
-/* search box in header */
-#usf {
+#site-logo {
+    padding: 1em 0.75em 0em 0.75em;
+}
+#top-wrapper ul,
+#top-wrapper li {
+}
+/* Search and language bar */
+#language-select, #usf {
     padding: 35px 6px 0 0;
 }
 #usf_query_container input {
     color: #333333;
 	background-color: #FFFFFF;
+	width: 235px;
 }
 
-/* main menu */
+/**************** TOP NAVIGATION ****************/
 #main-nav {
     float:right;
     padding: 0;
@@ -211,16 +425,15 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     font-weight: normal;
 	font-size: 12px;
 	margin: 0 0 0 3px;
-	padding: 5px 15px 3px;
-    background: #1C3740 url(../images/mainnav-bg.gif) repeat-x center;	
-
+	padding: 0;
 }
 #main-nav li a,
 #main-nav li a:link,
 #main-nav li a:visited,
 #main-nav li a:active {
 	margin: 0;
-	padding: 0;
+	padding: 5px 15px 3px;
+    background: #1C3740 url(../images/mainnav-bg.gif) repeat-x center;	
     color: #FFFFFF;
 	width:auto;
 	display:block;
@@ -230,34 +443,40 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     text-decoration: underline;
 }
 #main-nav li.selected {
-	background: #00AEF1;
 }
+#main-nav li.selected a,
 #main-nav li.selected a:link,
 #main-nav li.selected a:visited,
 #main-nav li.selected a:active {
     color: #FFFFFF;
+	background: #00AEF1;
+}
+#main-nav li.selected a:hover {
 }
 
-/* Sub menu */
+/**************** SUB NAVIGATION ****************/
 #sub-nav {
-	padding: 0px 0 0 0;
-    margin: 0 5px 5px 5px;
+	padding: 0;
+    margin: 0 5px 8px 0;
     font-size: 12px;
     font-weight: bold;
     background: #00AEF1 url(../images/subnav-bg.gif) repeat-x center;
     height: 30px;
     line-height: 30px;
-	width:100%;
+	width:99.1%;
     float:right;
     text-align:right;
+	border:none;
 }
 #sub-nav ul {
     margin: 0;
     padding: 0;
+    background: transparent;
 }
 #sub-nav li {
-    padding: 10px 13px 10px 10px;
-    background: url(../../../default/static/images/submenu-divider.gif) no-repeat center right;
+    padding: 0px 10px;
+    background: transparent;
+	border-left: 1px solid #FFF;
 }
 #sub-nav li a,
 #sub-nav li a:link,
@@ -269,17 +488,39 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     color: #FFFFFF;
     text-decoration: underline;
 }
+#sub-nav li.selected {
+}
+#sub-nav li.selected a,
 #sub-nav li.selected a:link,
 #sub-nav li.selected a:visited,
 #sub-nav li.selected a:active {
     color: #FFFFFF;
     text-decoration: underline;
 }
+#sub-nav li.selected a:hover {
+}
 
-/* Tabbed pages */
-ul.in-page-tabs li a {
+/**************** IN PAGE TAB NAVIGATION ****************/
+ul.in-page-tabs {
+  line-height: 25px;
+  height: 25px;
+  font-size: 12px;
+  display: block;
+}
+ul.in-page-tabs li {
+  margin: 0 3px 0 0 !important;
+  float: left;
+  height: 25px;
+  background: none;
+  line-height: 25px;
+}
+ul.in-page-tabs li a,
+ul.in-page-tabs li a:link,
+ul.in-page-tabs li a:visited,
+ul.in-page-tabs li a:active {
   color: #FFF;
   font-weight: normal;
+  padding: 5px 10px 6px 10px;
   background: #1C3740 url(../images/mainnav-bg.gif) repeat-x center;
 }
 ul.in-page-tabs li a:hover {
@@ -287,53 +528,72 @@ ul.in-page-tabs li a:hover {
   background: #1C3740 url(../images/mainnav-bg.gif) repeat-x center;
   text-decoration: underline;
 }
-ul.in-page-tabs li a.current-tab {
+ul.in-page-tabs li a.current-tab,
+ul.in-page-tabs li a.current-tab:link,
+ul.in-page-tabs li a.current-tab:visited,
+ul.in-page-tabs li a.current-tab:active {
   color: #FFF;
   font-weight: bold;
   background: #00AEF1 url(../images/subnav-bg.gif) repeat-x center;
 }
+ul.in-page-tabs li a.current-tab:hover {
+}
+
 .subpage {
   border: 1px solid #1C3740;
 }
 
-/* CONTENT LAYOUT */
+
+/**************** MAIN CONTENT *****************/
+#main-wrapper {
+}
+/* system messages between nav and main content */
+#main-column {
+    display: block;
+    margin: 0 5px;
+}
 .main-column {
 	background: #080D0F;
 }
-#main-column {
-    display: block;
-    margin: 0 0 0 5px;
-    padding: 10px 20px;
+
+/* system messages between nav and main content */
+/* upload file message */
+div.info {
 }
+/* different message types */
+#messages .ok,
+div.ok {
+    color: #2da000;
+    background-color: #cfe7c5;
+}
+#messages .error,
+div.error, {
+    color: #dd0221;
+    background-color: #eccccc;
+}
+#messages .info {
+    color: #1666a9;
+    background-color: #c7d8e6;
+}
+/* system messages */
 .message {
     background-color: #1C3740;
     border: 1px dotted #e0e8ee;
 }
-/* system messages between nav and main content */
-#messages .ok {
-    color: #2da000;
-    background: #EEEEEE url(../images/icon_goodtogo.gif) no-repeat 10px 5px;
-}
-#messages .error {
-    color: #dd0221;
-    background: #EEEEEE url(../images/icon_problem.gif) no-repeat 10px 5px;
-}
-#messages .info {
-    color: #1666a9;
-    background: #EEEEEE url(../images/icon_question.gif) no-repeat 10px 4px;
+.message.delete {
 }
 
-/* RIGHT SIDE COLUMN */
-#left-column, #right-column {
-    width: 271px;
-}
+
+/**************** SIDEBAR *********/
+#left-column,
 #right-column {
+    width: 271px;
 	background: transparent;
-    padding:0px;
+    padding: 0px;
 }
 div.sideblock {
     background: #080D0F;
-	margin: 0 5px 5px 5px;
+	margin: 0 5px 8px 0;
     padding: 0;
 }
 div.sideblock h3 {
@@ -349,7 +609,8 @@ div.sideblock h3 a:visited,
 div.sideblock h3 a:active {
 	color: #FFF !important;
 }
-
+div.sideblock h3 a:hover {
+}
 div.sideblock-content,
 div.sidebar-content {
     padding: 0 10px 10px;
@@ -362,38 +623,110 @@ div.sideblock ul ul {
 	list-style-type: square;
 }
 
+/* Side Login */
+#sb-loginbox input.text,
+#sb-loginbox input.password {
+	width: 240px;
+}
+#sb-loginbox label {
+}
+
+/* Side Profile */
+#sb-profile ul a,
+#sb-profile ul a:link,
+#sb-profile ul a:visited,
+#sb-profile ul a:active {
+}
+#sb-profile ul ul a,
+#sb-profile ul ul a:link,
+#sb-profile ul ul a:visited,
+#sb-profile ul ul a:active {
+}
+#sb-profile li#unreadmessages a.btn-msg,
+#sb-profile li#unreadmessages a.btn-msg:link,
+#sb-profile li#unreadmessages a.btn-msg:visited,
+#sb-profile li#unreadmessages a.btn-msg:active,
+#sb-profile li#pendingfriends a,
+#sb-profile li#pendingfriends a:link,
+#sb-profile li#pendingfriends a:visited,
+#sb-profile li#pendingfriends a:active {
+}
+
+/* Side Online Users */
+#sb-onlineusers ul {
+}
+#sb-onlineusers li {
+}
+#sb-onlineusers ul img {
+}
+#lastminutes {
+    margin: 6px 15px 0 0;
+}
+
 /* Side Quota Bar */
-/** this is currently broken and needs looking at
- * default is broken too */
 #quota_used {
     color: #00AEF1;
 }
 #quota_total {
     color: #7EF000;
 }
-#quota_bar, #quota_bar_100 {
-    background: #00AEF1;
-    color: #5c8727;
+#quota_bar, 
+#quota_bar_100 {
+    background: url(../images/quota_bar_bg.gif) no-repeat;
 }
 #quota_fill {
-    margin: 0;
-    background: #7EF000;
+    background-image: url(../images/quota_bar_highlight.gif);
+}
+
+/* Side Search */
+.sidebar #selfsearch input {
+	width: 215px;
+}
+
+/* Friends control sideblock */
+div.sideblock #friendscontrol label {
+}
+
+/* Tags */
+.tag-results .sep {
+}
+/* edit tag box */
+.edittag {
+}
+/* delete tag box */
+.deletetag {
+}
+.deletetag h3 {
+}
+#delete_tag_submit {
+}
+
+/* Ajax Login */
+#ajax-login-form {
+}
+
+/* Help popups & icons */
+.contextualHelp {
 }
 
 
-/* Footer */
+/******************** FOOTER ****************************/
 #footer-wrap {
     background-color: transparent;
     padding: 10px 5px 15px;
-    text-align: center;
+    border: 0;
+	height:30px;
 }
-#footer-wrap a,
-#footer-wrap a:link,
-#footer-wrap a:active,
-#footer-wrap a:visited {
+#footernav {
+  color: #FFFFFF;
+} 
+#footernav a,
+#footernav a:link,
+#footernav a:active,
+#footernav a:visited {
     color: #FFFFFF;
 }
-#footer-wrap a:hover {
+#footernav a:hover {
     color: #FFF;
 }
 #powered-by {
@@ -403,23 +736,61 @@ div.sideblock ul ul {
 #performance-info {
     color: #fff;
 }
+#version {
+  color: #FFFFFF;
+} 
 
 
-/* Page by page styles */
+/****************************** PAGE BY PAGE STYLES **********************************/
+/* Userlists used in admin section and on edit interaction form */
+.userlisttable tbody tr th {
+	color: #BEE3F1;
+}
+
+/* Attached file lists */
+.attachments {
+	border: 1px solid #1A292F;
+}
+.attachments tbody th {
+	background-color: #10171A;
+}
 
 /* User/view */
 #userview {
 	background-color: transparent;
     border: 2px solid #1C3740;
 }
+#userview .user-icon {
+	background: #0C2839;
+	border: 0;
+}
 
-/* My views */
+/* Wall */
+.wallpost {
+}
+#wall .private {
+}
+.wallpost .postedon {
+}
+.wallpost .controls {
+}
+
+
+/* My Views */
+#myviews td {
+   border:none;
+}
+#myviews h4 {
+}
+#myviews .submitted-viewitem {
+}
+#deleteview label {
+}
 #editviewdetails,
 #editthisview,
 #editviewaccess {
-	padding-left: 15px;
-    background: url(../../../raw/static/images/icon-edit.gif) no-repeat left 2px;
-	font-size: 12px !important;
+	padding-left: 12px;
+    background: url(../images/icon-edit.gif) no-repeat left center;
 }
 #myviews .btn-del {
 	font-size: 11px;
@@ -439,8 +810,115 @@ div.sideblock ul ul {
   border-bottom: 1px dotted #BEE3F1;
 }
 
+/* View access */
+#viewacl_lhs {
+	border: 1px solid #1C3740;
+}
+#viewacl_lhs #results thead th {
+	background: none;
+}
+#viewacl_lhs #results tfoot td {
+	background: none;
+}
+#accesslistitems {
+}
+#accesslistitems .ai-container {
+	background: #1C3740;
+}
+#accesslistitems .removebutton {
+}
+#accesslistitems .ai-container table th {
+	color: #BEE3F1;
+}
+
+
+
+/* Export */
+#export h3 {
+}
+#export .radio-description {
+}
+#export fieldset {
+}
+#export .element div {
+}
+#export .view {
+}
+#export fieldset {
+}
+#export fieldset legend {
+}
+#export fieldset div a {
+}
+#export fieldset table {
+}
+#export fieldset table colgroup col {
+}
+#export fieldset table div {
+}
+#export fieldset label {
+}
+#exportgeneration {
+}
+#progress {
+}
+div.progress-bar {
+}
+* html div.progress-bar {
+}
+div.progress-bar a {
+}
+p.progress-text {
+}
+#progressbar {
+}
+
+/* My Groups *//* My Friends */
+ul.groupuserstatus {
+}
+#friendslist ul.actionlist {
+}
+ul.groupuserstatus li,
+#friendslist ul.actionlist li {
+}
+#friendslist ul.viewlist li.label {
+}
+#friendslist ul.viewlist li {
+}
+
 /* Group: about */
 .group-info {
     border: 2px solid #1C3740;
 	background-color: #1A292F;
+}
+
+/* Group: members */
+.listing.twocolumn td {
+}
+
+/* Settings > Preferences */
+#accountprefs table h3 {
+}
+#accountprefs table label,
+#accountprefs table th {
+}
+#accountprefs table td label {
+}
+#deleteaccount {
+}
+#deleteaccount h1 {
+}
+#deleteaccount input.submit {
+}
+
+/* Settings > Notifications */
+#activitylist th {
+}
+#activitylist th a {
+}
+#activitylist tbody td div {
+}
+
+/* Settings > Institution membership */
+#requestmembership_studentid_container label {
 }

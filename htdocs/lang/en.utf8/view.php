@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage lang
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -202,6 +203,7 @@ $string['blocksinstructionajax'] = 'Drag blocks below this line to add them to y
 $string['addnewblockhere'] = 'Add new block here';
 $string['add'] = 'Add';
 $string['addcolumn'] = 'Add Column';
+$string['remove'] = 'Remove';
 $string['removecolumn'] = 'Remove this column';
 $string['moveblockleft'] = "Move %s block left";
 $string['movethisblockleft'] = "Move this block left";
@@ -293,8 +295,13 @@ $string['Preview'] = 'Preview';
 $string['viewscopiedfornewusersmustbecopyable'] = 'You must allow copying before you can set a view to be copied for new users.';
 $string['viewscopiedfornewgroupsmustbecopyable'] = 'You must allow copying before you can set a view to be copied for new groups.';
 $string['copynewusergroupneedsloggedinaccess'] = 'Views copied for new users or groups must give access to logged-in users.';
+$string['viewcopywouldexceedquota'] = 'Copying this View would exceed your file quota.';
 
 $string['blockcopypermission'] = 'Block copy permission';
 $string['blockcopypermissiondesc'] = 'If you allow other users to copy this View, you may choose how this block will be copied';
+
+// Feedback list
+$string['comment'] = 'comment';
+$string['comments'] = 'comments';
 
 ?>

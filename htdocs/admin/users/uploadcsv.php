@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage admin
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -86,7 +87,7 @@ if (count($authinstances) > 0) {
 
     foreach ($authinstances as $authinstance) {
         if ($USER->can_edit_institution($authinstance->name)) {
-            $options[$authinstance->id .'_'. $authinstance->name] = $authinstance->displayname. ': '.$authinstance->instancename;
+            $options[$authinstance->id] = $authinstance->displayname. ': '.$authinstance->instancename;
         }
     }
     $default = key($options);
@@ -154,10 +155,8 @@ function uploadcsv_validate(Pieform $form, $values) {
 
     require_once('csvfile.php');
 
-    // Don't be tempted to use 'explode' here. There may be > 1 underscore.
-    $break = strpos($values['authinstance'], '_');
-    $authinstance = substr($values['authinstance'], 0, $break);
-    $institution  = substr($values['authinstance'], $break+1);
+    $authinstance = (int) $values['authinstance'];
+    $institution = get_field('auth_instance', 'institution', 'id', $authinstance);
     if (!$USER->can_edit_institution($institution)) {
         $form->set_error('authinstance', get_string('notadminforinstitution', 'admin'));
         return;
@@ -247,11 +246,10 @@ function uploadcsv_submit(Pieform $form, $values) {
 
     $formatkeylookup = array_flip($FORMAT);
 
-    // Don't be tempted to use 'explode' here. There may be > 1 underscore.
-    $break = strpos($values['authinstance'], '_');
-    $authinstance = substr($values['authinstance'], 0, $break);
-    $institution = substr($values['authinstance'], $break+1);
-    $institution = new Institution($institution);
+    $authinstance = (int) $values['authinstance'];
+    $authobj = get_record('auth_instance', 'id', $authinstance);
+
+    $institution = new Institution($authobj->institution);
 
     $maxusers = $institution->maxuseraccounts; 
     if (!empty($maxusers)) {
@@ -267,7 +265,6 @@ function uploadcsv_submit(Pieform $form, $values) {
     log_info('Inserting users from the CSV file');
     db_begin();
 
-    $authobj = get_record('auth_instance', 'id', $authinstance);
     $addedusers = array();
     foreach ($CSVDATA as $record) {
         log_debug('adding user ' . $record[$formatkeylookup['username']]);
@@ -340,14 +337,14 @@ function uploadcsv_submit(Pieform $form, $values) {
 
 // Get a list of all profile fields, to inform the user on what fields they can
 // put in their file.
-$fields = "<ul>\n";
+$fields = "<ul class=fieldslist>\n";
 foreach (array_keys(ArtefactTypeProfile::get_all_fields()) as $type) {
     if ($type == 'firstname' || $type == 'lastname' || $type == 'email') {
         continue;
     }
     $fields .= '<li>' . hsc($type) . "</li>\n";
 }
-$fields .= "</ul>\n";
+$fields .= "<div class=cl></div></ul>\n";
 
 if ($USER->get('admin')) {
     $uploadcsvpagedescription = get_string('uploadcsvpagedescription2', 'admin',

@@ -1,5 +1,5 @@
 {include file='header.tpl' nosearch='true'}
-            <h2 class="center">{str tag=performinginstallsandupgrades section=admin}</h2>
+            <h2 class="center">{$upgradeheading}</h2>
             <div class="center js-hidden" id="jsrequiredforupgrade">{str tag=jsrequiredforupgrade section=admin}</div>
             <table id="installer" class="nojs-hidden-table">
                 <thead>
@@ -12,7 +12,7 @@
                 </thead>
                 <tbody>
                 {foreach from=$upgrades key=name item=upgrade}
-                    <tr class="{cycle name=rows values=r1,r0}">
+                    <tr class="{cycle name=rows values='r0,r1'}">
                         <td>{$name}</td>
                         {if $name == 'firstcoredata' || $name == 'lastcoredata'} 
                         <td></td>

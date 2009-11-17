@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage blocktype-image
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -77,15 +78,17 @@ class PluginBlocktypeFolder extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance, $istemplate) {
+    public static function instance_config_form($instance) {
         $configdata = $instance->get('configdata');
+        safe_require('artefact', 'file');
+        $instance->set('artefactplugin', 'file');
         return array(
-            self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate),
+            'artefactid' => self::filebrowser_element($instance, (isset($configdata['artefactid'])) ? array($configdata['artefactid']) : null),
         );
     }
 
-    public static function artefactchooser_element($default=null, $istemplate=false) {
-        $element = array(
+    public static function artefactchooser_element($default=null) {
+        return array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
             'title' => get_string('folder', 'artefact.file'),
@@ -95,13 +98,6 @@ class PluginBlocktypeFolder extends PluginBlocktype {
             'artefacttypes' => array('folder'),
             'template' => 'artefact:file:artefactchooser-element.tpl',
         );
-        if (!$istemplate) {
-            // You don't have to choose a folder if this view is a template
-            $element['rules'] = array(
-                'required' => true,
-            );
-        }
-        return $element;
     }
 
     /**
@@ -122,6 +118,19 @@ class PluginBlocktypeFolder extends PluginBlocktype {
 
     public static function artefactchooser_get_sort_order() {
         return 'parent, title';
+    }
+
+    public static function filebrowser_element(&$instance, $default=array()) {
+        $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default);
+        $element['title'] = get_string('file', 'artefact.file');
+        $element['name'] = 'artefactid';
+        $element['config']['upload'] = false;
+        $element['config']['selectone'] = true;
+        $element['config']['selectfolders'] = true;
+        $element['filters'] = array(
+            'artefacttype'    => array('folder'),
+        );
+        return $element;
     }
 
     public static function default_copy_type() {

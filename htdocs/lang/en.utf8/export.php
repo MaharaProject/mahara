@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage lang
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -29,20 +30,30 @@ defined('INTERNAL') || die();
 $string['allmydata'] = 'All my data';
 $string['chooseanexportformat'] = 'Choose an export format';
 $string['clicktopreview'] = 'Click to preview';
+$string['creatingzipfile'] = 'Creating zipfile';
+$string['Done'] = 'Done';
 $string['Export']     = 'Export';
 $string['exportgeneratedsuccessfully'] = 'Export generated successfully. %sClick here to download it%s';
 $string['exportgeneratedsuccessfullyjs'] = 'Export generated successfully. %sContinue%s';
+$string['exportingartefactplugindata'] = 'Exporting artefact plugin data';
+$string['exportingartefacts'] = 'Exporting artefacts';
+$string['exportingartefactsprogress'] = 'Exporting artefacts: %s/%s';
+$string['exportingfooter'] = 'Exporting footer';
+$string['exportingviews'] = 'Exporting Views';
+$string['exportingviewsprogress'] = 'Exporting Views: %s/%s';
 $string['exportpagedescription'] = 'Here you can export your portfolio. This tool exports all of your portfolio information and Views, but it does not export your site settings.';
 $string['exportyourportfolio'] = 'Export Your Portfolio';
 $string['generateexport'] = 'Generate export';
 $string['noexportpluginsenabled'] = 'No export plugins have been enabled by the administrator, so you are unable to use this feature';
 $string['justsomeviews'] = 'Just some of my Views';
 $string['pleasewaitwhileyourexportisbeinggenerated'] = 'Please wait while your export is being generated...';
+$string['setupcomplete'] = 'Setup complete';
 $string['Starting'] = 'Starting';
 $string['unabletoexportportfoliousingoptions'] = 'Unable to export a portfolio using the chosen options';
 $string['unabletogenerateexport'] = 'Unable to generate export';
 $string['viewstoexport'] = 'Views to export';
 $string['whatdoyouwanttoexport'] = 'What do you want to export?';
+$string['writingfiles'] = 'Writing files';
 $string['youarehere'] = 'You are here';
 $string['youmustselectatleastoneviewtoexport'] = 'You must select at least one View to export';
 $string['zipnotinstalled'] = 'Your system does not have the zip command. Please install zip to enable this feature';

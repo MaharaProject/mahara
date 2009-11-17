@@ -44,6 +44,8 @@
         <mimetypes>
             <mimetype>application/zip</mimetype>
             <mimetype>application/x-zip</mimetype>
+            <mimetype>application/zip-compressed</mimetype>
+            <mimetype>application/x-zip-compressed</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
@@ -57,12 +59,34 @@
         <description>gz</description>
         <mimetypes>
             <mimetype>application/g-zip</mimetype>
+            <mimetype>application/x-gzip</mimetype>
+            <mimetype>application/gzip</mimetype>
+            <mimetype>application/gzip-compressed</mimetype>
+            <mimetype>application/gzipped</mimetype>
+            <mimetype>application/gunzip</mimetype>
+            <mimetype>application/x-gunzip</mimetype>
+        </mimetypes>
+    </filetype>
+    <filetype>
+        <description>tgz</description>
+        <mimetypes>
+            <mimetype>application/x-compressed-tar</mimetype>
+            <mimetype>application/x-tgz</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>bz2</description>
         <mimetypes>
             <mimetype>application/x-bzip2</mimetype>
+            <mimetype>application/x-bzip</mimetype>
+            <mimetype>application/bzip2</mimetype>
+            <mimetype>application/x-bz2</mimetype>
+        </mimetypes>
+    </filetype>
+    <filetype>
+        <description>tbz</description>
+        <mimetypes>
+            <mimetype>application/x-bzip-compressed-tar</mimetype>
         </mimetypes>
     </filetype>
 

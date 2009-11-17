@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -129,16 +130,25 @@ $stylesheets = array(
         . get_config('wwwroot') . 'theme/' . $basetheme . '/viewthemes/' . $viewtheme . '/views.css">',
 );
 
+<<<<<<< HEAD:htdocs/view/blocks.php
 foreach ($THEME->get_url('style/style.css', true, 'artefact/file') as $sheet) {
+=======
+$stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
+foreach (array_reverse($THEME->get_url('style/style.css', true, 'artefact/file')) as $sheet) {
+>>>>>>> master:htdocs/view/blocks.php
     $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . $sheet . '">';
 }
 
+<<<<<<< HEAD:htdocs/view/blocks.php
 $smarty = smarty(
     array('views', 'tinytinymce', 'paginator', 'tablerenderer', 'artefact/file/js/filebrowser.js', 'lib/pieforms/static/core/pieforms.js'),
     $stylesheets,
     false,
     array('sidebars' => false)
 );
+=======
+$smarty = smarty(array('views', 'tinymce', 'paginator', 'tablerenderer', 'artefact/file/js/filebrowser.js', 'lib/pieforms/static/core/pieforms.js', 'blocktype/creativecommons/js/creativecommons.js'), $stylesheets, false, $extraconfig);
+>>>>>>> master:htdocs/view/blocks.php
 
 // The list of categories for the tabbed interface
 $smarty->assign('category_list', $view->build_category_list($category, $new));

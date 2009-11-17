@@ -285,7 +285,7 @@ function ViewManager() {
             self.addConfigureBlock(blockinstance, data.data);
             $('action-dummy').name = getNodeAttribute(button, 'name');
 
-            var cancelButton = $('cancel_cb_' + blockinstanceId + '_action_configureblockinstance_id_' + blockinstanceId);
+            var cancelButton = $('cancel_instconf_action_configureblockinstance_id_' + blockinstanceId);
             connect(cancelButton, 'onclick', function(e) {
                 e.stop();
                 self.removeConfigureBlocks();
@@ -302,7 +302,23 @@ function ViewManager() {
             var d = getElementDimensions(e);
             setStyle(e, {'height': d.h+'px'});
             hideElement(getFirstElementByTagAndClassName(null, 'mediaplayer', e));
+            forEach(getElementsByTagAndClassName('object', null, e), function(o) {
+                addElementClass(o, 'in-mediaplayer');
+            });
         });
+
+        // Try to find and hide players floating around in text blocks, etc. by looking for object elements
+        forEach(getElementsByTagAndClassName('object', null, cols), function (e) {
+            if (!hasElementClass(e, 'in-mediaplayer')) {
+                var d = getElementDimensions(e);
+                var temp = DIV({'class': 'hidden mediaplayer-placeholder'});
+                setStyle(temp, {'height': d.h+'px'});
+                insertSiblingNodesAfter(e, temp);
+                addElementClass(e, 'hidden');
+                removeElementClass(temp, 'hidden');
+            }
+        });
+
         insertSiblingNodesBefore(document.body.firstChild, DIV({'id': 'overlay'}));
     }
 
@@ -315,6 +331,11 @@ function ViewManager() {
         forEach(getElementsByTagAndClassName(null, 'mediaplayer-container', cols), function (e) {
             showElement(getFirstElementByTagAndClassName(null, 'mediaplayer', e));
             setStyle(e, {'height': 'auto'});
+        });
+        forEach(getElementsByTagAndClassName(null, 'mediaplayer-placeholder', cols), function (e) {
+            addElementClass(e, 'hidden');
+            removeElementClass(e.previousSibling, 'hidden');
+            removeElement(e);
         });
         removeElement('overlay');
     }
@@ -341,17 +362,26 @@ function ViewManager() {
         });
 
         var deletebutton = getFirstElementByTagAndClassName('input', 'deletebutton', newblock);
-        self.rewriteDeleteButton(deletebutton);
 
         if (removeoncancel) {
+            self.rewriteDeleteButton(deletebutton);
+
             var oldblockid = newblock.id.substr(0, newblock.id.length - '_configure'.length);
             var blockinstanceId = oldblockid.substr(oldblockid.lastIndexOf('_') + 1);
-            var cancelbutton = $('cancel_cb_' + blockinstanceId + '_action_configureblockinstance_id_' + blockinstanceId);
+            var cancelbutton = $('cancel_instconf_action_configureblockinstance_id_' + blockinstanceId);
             if (cancelbutton) {
                 setNodeAttribute(cancelbutton, 'name', getNodeAttribute(deletebutton, 'name'));
                 disconnectAll(cancelbutton);
                 self.rewriteCancelButton(cancelbutton, blockinstanceId);
             }
+        }
+        else {
+            disconnectAll(deletebutton);
+            connect(deletebutton, 'onclick', function(e) {
+                e.stop();
+                self.removeConfigureBlocks();
+                self.showMediaPlayers();
+            });
         }
 
         showElement(newblock);

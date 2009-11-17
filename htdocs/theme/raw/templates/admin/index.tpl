@@ -2,8 +2,8 @@
 
 <div id="adminhome">
 {if $upgrades}
-<h3>{str tag="upgrades" section=admin}</h3>
 <div id="runupgrade">
+<h3>{str tag="upgrades" section=admin}</h3>
 <div class="fr"><span class="upgradeicon"><a href="upgrade.php">{str tag=runupgrade section=admin}</a></span></div>
 <h4>{str tag=thefollowingupgradesareready section=admin}</h4>
 <table id="upgradestable">
@@ -33,6 +33,7 @@
 
 </div>
 {/if}
+
 <h3>{str tag=configsite section=admin}</h3>
     <ul>
         <li><strong><a href="{$WWWROOT}admin/site/options.php">{str tag=siteoptions section=admin}</a></strong> - {str tag=siteoptionsdescription section=admin}</li>
@@ -67,5 +68,17 @@
         <li><strong><a href="{$WWWROOT}admin/extensions/filter.php">{str tag=htmlfilters section=admin}</a></strong> - {str tag=htmlfiltersdescription section=admin}</li>
     </ul>
 </div>
+
+<div class="message" id="close-site">
+{if $closed}
+    <h3>{str tag=reopensite section=admin}</h3>
+    {str tag=reopensitedetail section=admin}
+{else}
+    <h3>{str tag=closesite section=admin}</h3>
+    {str tag=closesitedetail section=admin}
+{/if}
+    {$closeform}
+</div>
+<div class="cb"></div>
 
 {include file='footer.tpl'}

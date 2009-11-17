@@ -39,75 +39,155 @@
 }
 
 /* ADMIN HOME */
-#register-site {
-    text-align: left;
-    font-weight: normal;
-	padding: .5em 1.5em 0 1.5em;
-	margin-bottom: 1em;
+#adminhome {
+	width: 75%;
+	float: left;
 }
-#register-site form table th {
-	text-align: left;
-	padding: .25em 0;
-}
-#register-site form table td {
-	padding: .25em 0;
-}
-#register-site form legend a {
-	font-size: .9em;
+* html #adminhome {
+	width: 72%;
 }
 
+/* close site box */
+#close-site {
+	border: 1px solid #e98a88;
+	background: #fbeceb;
+    text-align: left;
+	padding: 1em 1.5em;
+	width: 20%;
+	float: right;
+	margin: 0 0 1em 0;
+}
+#close-site h3 {
+	color: #ca0000;
+}
+#close_site_submit {
+	border-color: #f69595 #750000 #750000 #f69595 !important;
+	background: #ca0000 !important;
+}
+
+
+/* register site box */
+#register-site {
+    text-align: left;
+	padding: 1em 1.5em;
+	margin: 0 0 1em 0;
+}
+#register-site form fieldset.collapsed {
+	border: 0;
+	font-size: .9em;
+}
+#register-site form fieldset.collapsible {
+	border: 0;
+	font-size: .9em;
+	margin: 0;
+	padding: 0;
+}
+#register-site table {
+	margin-left: 0;
+	margin-top: 1em;
+	width: 100%;
+}
+#register-site table th {
+	text-align: left;
+	padding: .5em 0.5em;
+	width: 140px;
+}
+#register-site table td {
+	padding: 0 1em 0 0;
+}
+#register-site table table {
+	margin-left: .75em;
+	margin-top: 0;
+	width: 100%;
+}
+#register-site form table {
+	margin: 0;
+}
+#register-site table fieldset table td {
+	padding: 0 0 0 1.5em;
+}
+#register-site table fieldset table table th {
+    border-bottom: 1px solid #ccc;
+	background: none;
+}
+#register-site table fieldset table table td {
+    border-bottom: 1px solid #eee;
+	padding: 0 .5em;
+	background: #fefefe;
+}
+#register-site fieldset legend a {
+	font-size: .85em;
+}
+#register_register_container th {
+	display: none;
+}
+#register_register_container td {
+	float: left;
+	margin-left: .5em;
+}
+input#register_register {
+	* margin-bottom: 1em;
+}
+
+/* run upgrade box */
 #runupgrade {
-    padding: 1em;
-    background: #eee;
-    border: 1px solid #ccc;
+    padding: 1em 1.5em;
+    background: #f6f6f6;
+    border: 1px solid #ddd;
+	margin: 0 0 1em 0;
 }
 #runupgrade h4 {
-    margin-top: 0;
-    padding-bottom: .5em;
+    margin: 0;
+	font-size: 1em;
 }
 #upgradestable {
     border: none;
 	font-size: .9em;
+	width: 100%;
 }
 #upgradestable th {
-    padding: .5em 1em;
-    background: #eee;
+    padding: .5em .5em .25em .5em;
 	text-align: left;
+    border-bottom: 1px solid #ccc;
 }
 #upgradestable td {
-    padding: .5em 1em;
+    border-bottom: 1px solid #eee;
+	background: #fefefe;
 }
+
 
 /* CONFIGURE SITE > LINKS AND RESOURCES MENU */
 #menuitemlist {
 	margin: 1em 0;
 }
+#menuitemlist table {
+	width: 100%;
+}
+#menuitemlist table th {
+    border-bottom: 1px solid #d1d1d1;
+}
 #menuitemlist table td {
 	vertical-align: middle;
     border-bottom: 1px dotted #d1d1d1;
-}
-#menuitemlist #rownew td {
 	line-height: 2em;
-	vertical-align: middle;
 }
-#menuitemlist tr.edit td {
+#menuitemlist table td .button {
+	font-size: .9em;
 }
 
 /* CONFIGURE SITE > NETWORKING */
 #networkingform_pubkey_container td {
-	font-size: 1.6em;
 	line-height: .9em;
 }
-
-/* CONFIGURE SITE > SITE VIEWS */
-
+#networkingform fieldset table th label {
+	font-weight: bold;
+}
 
 
 /* MANAGE USERS > USER SEARCH */
 #initials {
 	font-size: 1.2em;
-	margin: 0 0 1em 0;
-	line-height: 2em;
+	margin: 0 0 .5em 0;
 }
 #initials span {
 	padding: 0 .25em;
@@ -121,6 +201,10 @@
 .searchform .institutions {
 	margin-left: 1em;
 }
+#users_search_btn {
+	line-height: 1.5em;
+	* line-height: .9em;
+}
 /* SEARCH RESULTS TABLE */
 table.tablerenderer th.asc { 
 	background: transparent url(../images/down.gif) no-repeat left;
@@ -133,106 +217,305 @@ table.tablerenderer th.desc {
 .search-results-sort-column {
 	cursor: pointer;
 }
-
+#searchresults td {
+	vertical-align: middle;
+}
 
 
 /* MANAGE USERS > EDIT USER */
-#edituser hr {
-    border-top: 1px dotted #d1d1d1;
-    border-width: 1px 0 0 0;
-	height: 1px;
+#edituser_institution td {
+	padding: 0;
 }
-#suspenddelete div#delete {
-	background-color: #fef1f1;
+#edituser_institution td h4 {
+	font-size: 1.2em;
+}
+#edituser_institution th label {
+	font-size: 1em;
+	font-weight: bold;
+}
+#edituser .message {
+	margin-left: 155px;
+}
+#profilepict {
 	padding: 1em;
-	width: 33%;
+	font-size: .9em;
+	margin-right: 1em;
+	text-align: center;
+	border: 1px solid #ccc;
+	background: #f6f6f6;
 }
+#profilepict a img {
+	padding: 0;
+}
+#profilename {
+	margin: 1em 0 0 0;
+}
+#loginas {
+	margin-right: 1em;
+	margin-top: 1em;
+}
+#suspenddelete,
+#institutions {
+	clear: both;
+	margin-top: 2em;
+	padding-top: 1em;
+	border-top: 1px dotted #d1d1d1;
+}
+/* suspend user */
+#suspenddelete #suspend {
+	border: 1px solid #d1d1d1;
+	float: left;
+	padding: 1em;
+	background: #f6f6f6;
+}
+#institution_suspend_submit, {
+	border-color: #f69595 #750000 #750000 #f69595 !important;
+	background: #ca0000 !important;
+}
+
+/* delete user */
+#suspenddelete #delete {
+	border: 1px solid #e98a88;
+	background: #fbeceb;
+	float: left;
+	padding: 1em;
+	margin-left: 1em;
+}
+#suspenddelete h4 {
+	margin-top: 0;
+	color: #ca0000;
+}
+#suspenddelete #delete #edituser_delete_submit {
+	border-color: #f69595 #750000 #750000 #f69595 !important;
+	background: #ca0000 !important;
+}
+
 
 
 /* MANAGE USERS > SUSPENDED USERS */
+#suspendedlist {
+	margin: 1em 0;
+}
 
 
-
-/* MANAGE USERS > SITE STAFF */
 /* MANAGE USERS > SITE ADMINS */
-
 .userlistform table {
     width: 100%;
-    * width: 98%;
+}
+* html .userlistform table,
+* html .userlisttable {
+	width: 96%;
+}
+.userlisttable td {
+	padding: .25em 0;
+}
+.userlisttable td label {
+	font-size: 1em;
+	font-weight: bold;
 }
 
 
 /* MANAGE USERS > ADMIN NOTIFICATIONS */
+#notificationstable td {
+	vertical-align: middle;
+}
 
 
 /* MANAGE USERS > ADD USER */
-
+#adduser-t {
+    margin: 0 auto;
+    min-width: 800px;
+    max-width: 1000px;
+    width: 950px;
+}
+#adduser thead th {
+    text-align: left;
+    font-size: 1.3em;
+    border-bottom: none !important;
+}
+#adduser td.step1 {
+	background: #f6f6f6;
+	border: 1px solid #ccc;
+    width: 30%;
+	padding: 1em .5em;
+}
+#adduser td.step1 table,
+#adduser td.step1 #adduser_leap2afile {
+	margin-left: 2em;
+}
+#adduser div.choice {
+    padding-bottom: .5em;
+}
+#adduser label {
+    font-weight: bold;
+    font-size: 1em;
+}
+#adduser #or {
+	color: #8D8D8D;
+	padding: .75em .25em 1em .25em;
+	font-weight: bold;
+	font-size: 2em;
+	text-align: center;
+	text-transform: uppercase;
+}
+#adduser td.step2 {
+	background: #f6f6f6;
+	border: 1px solid #ccc;
+    width: 36%;
+	padding: 1em .5em;
+	text-align: center;
+}
+#adduser td.step2 th {
+	white-space: nowrap;
+}
+#adduser td.step2 td {
+	white-space: nowrap;
+	text-align: left;
+}
+#adduser td.step3 {
+	background: #efefef;
+	border: 1px solid #ccc;
+    width: 25%;
+    text-align: center;
+	padding: 1em .5em;
+	vertical-align: middle;
+}
+#adduser #adduser_submit {
+	font-size: 1.6em;
+	font-weight: bold;
+}
+#adduser #step3info {
+	margin-top: 2em;
+}
+#adduser td.filler {
+    padding: 2em .25em 0 .25em;
+    font-size: 3.8em;
+    width: 3%;
+	color: #8d8d8d;
+}
+#adduser table table label {
+    font-size: .9em;
+}
 
 
 /* MANAGE USERS > ADD USERS BY CSV */
-
-
-
-/* MANAGE INSTITUTIONS  */
-#institutionselect table,
-#usertypeselect table {
-	font-size: 1.4em;
-	font-weight: bold;
+ul.fieldslist li {
+	float: left;
+	width: 15%;
 }
-#institutionselect table td,
-#institutionselect table th,
+form#uploadcsv {
+	clear: both;
+}
+
+/* MANAGE INSTITUTIONS > INSTITUTIONS */
+.admininstitutionbtns {
+	font-size: .9em;
+}
+
+/* MANAGE INSTITUTIONS > INSTITUTION MEMBERS */
 #usertypeselect table td,
-#usertypeselect table th {
+#usertypeselect table th,
+#institutionselect table td,
+#institutionselect table th {
 	padding: 0 .5em .25em 0;
+	text-align: left;
 }
-
 .institutionedituserbuttons form {
 	display: inline;
 }
 #institution_maxuseraccounts_container th {
 	white-space: nowrap;
 }
-
 #instanceList .authIcons a {
 	color: #ca0000;
 	font-size: .9em;
 }
+#institution #lockedfieldshelp {
+	float: right;
+}
+#suspendinstitution {
+	margin-top: 1em;
+	border: 1px solid #e98a88;
+	background: #fbeceb;
+	padding: 1em 1em 1em 0;
+}
+#suspendinstitution h3#suspend {
+	color: #ca0000;
+	margin-left: 1em;
+}
 
 
 /* MANAGE INSTITUTIONS > INSTITUTION MEMBERS */
+#institutionusers,
+#staffusers,
+#adminusers {
+	border: 1px solid #d1d1d1;
+	background: #f6f6f6;
+	padding: 1em;
+}
+#usertypeselect_institution_container th,
+#institutionselect_institution_container th,
+#institutionselect_institution_container th {
+	padding: 0 .5em .5em 0 !important;
+	font-size: 1.5em;
+}
+#usertypeselect_institution_container td,
+#institutionselect_institution_container td {
+	padding: 0 0 .5em 0 !important;
+	font-size: 1.5em;
+}
 #institutionusers table #institutionusers_users_container th {
-	width: 110px;
+	width: 120px;
+	white-space: nowrap;
 }
-
-/* MANAGE INSTITUTIONS > INSTITUTION STAFF */
-#adminusers table #adminusers_users_container th {
-	width: 90px;
+#institutionusers table #institutionusers_users_container td th,
+#adminusers table #adminusers_users_container td th,
+#staffusers table #staffusers_users_container td th {
+	width: auto !important;
+	white-space: nowrap;
+	font-weight: bold;
 }
-
-/* MANAGE INSTITUTIONS > INSTITUTION ADMINISTRATORS */
 #staffusers table #staffusers_users_container th {
-	width: 80px;
+	width: 80px !important;
 }
+#adminusers table #adminusers_users_container th {
+	width: 90px !important;
+}
+
+
+/* MANAGE INSTITUTIONS > VIEWS */
+#editaccess_accesslist_container {
+	clear: both;
+	margin-top: 2em;
+}
+
 
 /* ADMINISTER EXTENSIONS */
-#adminplugin ul.adminpluginstypes,
-#adminplugin ul.adminpluginstypes ul li,
-#adminplugin ul.adminpluginstypes ul ul {
-	margin: 0;
+#adminplugin h4 {
+	margin-bottom: .25em;
 }
 #adminplugin ul.adminpluginstypes li {
 	float: left;
 	list-style: none;
-	margin: 1em 3em 2em 0;
+	margin: 1em 2em 1em 0;
 	padding: 0;
 }
-#adminplugin ul.adminpluginstypes ul {
-	margin: 0 .5em;
+#adminplugin ul.adminpluginstypes,
+#adminplugin ul.adminpluginstypes ul,
+#adminplugin ul.adminpluginstypes ul li,
+#adminplugin ul.adminpluginstypes ul ul,
+#adminplugin ul.adminpluginstypes ul ul li,
+#adminplugin ul.adminpluginstypes ul ul ul {
+	margin: 0;
 	padding: 0;
 }
 #adminplugin ul.adminpluginstypes ul ul li {
 	float: none;
-	list-style: disc;
-	margin:0 0 0 1.5em;
+	list-style: none;
 	font-size: .9em;
+}
+#adminplugin ul.adminpluginstypes ul ul ul li {
+	list-style: disc;
+	margin: 0 0 0 1.5em;
+	line-height: 1.4em;
 }

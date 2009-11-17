@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage artefact-internal
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -126,6 +127,139 @@ class PluginArtefactInternal extends PluginArtefact {
 
     public static function can_be_disabled() {
         return false;
+    }
+
+    public static function get_artefact_type_content_types() {
+        return array(
+            'introduction' => array('text'),
+        );
+    }
+
+    /**
+     * This method is provided by the plugin class so it can be used by the
+     * profileinfo and contactinfo blocktypes. See the blocktypes'
+     * export_blockinstance_config_leap method for more information.
+     *
+     * LEAP2A export doesn't export profile related artefacts as entries, so we
+     * need to take that into account when exporting config for it.
+     *
+     * @param BlockInstance $bi The blockinstance to export the config for.
+     * @return array The config for the blockinstance
+     */
+    public static function export_blockinstance_config_leap(BlockInstance $bi) {
+        static $cache = array();
+        $owner = $bi->get_view()->get('owner');
+
+        // This blocktype is only allowed in personal views
+        if (!$owner) {
+            return array();
+        }
+
+        if (!isset($cache[$owner])) {
+            $cache[$owner] = get_records_sql_assoc("SELECT id, artefacttype, title
+                FROM {artefact}
+                WHERE owner = ?
+                AND artefacttype IN (
+                    SELECT name
+                    FROM {artefact_installed_type}
+                    WHERE plugin = 'internal'
+            )", array($owner));
+        }
+
+        $configdata = $bi->get('configdata');
+
+        $result = array();
+        if (is_array($configdata)) {
+            // Convert the actual profile artefact IDs to their field names
+            if (isset($configdata['artefactids']) && is_array($configdata['artefactids'])) {
+                $result['fields'] = array();
+                foreach ($configdata['artefactids'] as $id) {
+                    $result['fields'][] = $cache[$owner][$id]->artefacttype;
+                }
+                $result['fields'] = json_encode(array($result['fields']));
+            }
+
+            // Email addresses are not entries in leap2a (they're elements on
+            // the persondata element), so we export the actual address here
+            // instead of an artefact ID.
+            if (!empty($configdata['email']) && isset($cache[$owner][$configdata['email']])) {
+                $result['email'] = json_encode(array($cache[$owner][$configdata['email']]->title));
+            }
+
+            if (!empty($configdata['profileicon'])) {
+                $result['artefactid'] = json_encode(array(intval($configdata['profileicon'])));
+            }
+
+            if (isset($configdata['introtext'])) {
+                $result['introtext'] = json_encode(array($configdata['introtext']));
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * This method is provided by the plugin class so it can be used by the
+     * profileinfo and contactinfo blocktypes. See the blocktypes'
+     * import_create_blockinstance_leap method for more information.
+     *
+     * @param array $biconfig   The block instance config
+     * @param array $viewconfig The view config
+     * @return BlockInstance The newly made block instance
+     */
+    public static function import_create_blockinstance_leap(array $biconfig, array $viewconfig) {
+        static $cache = array();
+        $configdata = array();
+
+        // This blocktype is only allowed in personal views
+        if (empty($viewconfig['owner'])) {
+            return;
+        }
+        $owner = $viewconfig['owner'];
+
+        if (isset($biconfig['config']) && is_array($biconfig['config'])) {
+            $impcfg = $biconfig['config'];
+            if (isset($impcfg['fields']) && is_array($impcfg['fields'])) {
+                // Convert the fields to their artefact ids
+                $configdata['artefactids'] = array();
+                foreach ($impcfg['fields'] as $field) {
+                    if (!isset($cache[$owner])) {
+                        $cache[$owner] = get_records_sql_assoc("SELECT artefacttype, id
+                            FROM {artefact}
+                            WHERE owner = ?
+                            AND artefacttype IN (
+                                SELECT name
+                                FROM {artefact_installed_type}
+                                WHERE plugin = 'internal'
+                        )", array($owner));
+                    }
+
+                    $configdata['artefactids'][] = $cache[$owner][$field]->id;
+                }
+            }
+
+            if (!empty($impcfg['email'])) {
+                if ($artefactid = get_field('artefact_internal_profile_email', 'artefact', 'owner', $owner, 'email', $impcfg['email'])) {
+                    $configdata['email'] = $artefactid;
+                }
+            }
+
+            if (!empty($impcfg['artefactid'])) {
+                $configdata['profileicon'] = intval($impcfg['artefactid']);
+            }
+
+            if (isset($impcfg['introtext'])) {
+                $configdata['introtext'] = $impcfg['introtext'];
+            }
+        }
+        $bi = new BlockInstance(0,
+            array(
+                'blocktype'  => $biconfig['type'],
+                'configdata' => $configdata,
+            )
+        );
+
+        return $bi;
     }
 }
 

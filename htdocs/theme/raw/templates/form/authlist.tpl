@@ -108,9 +108,9 @@
 
     function requiresConfig(authname) {
         var requires_config = new Array();
-        {{section name=mysec3 loop=$authtypes}}
-            requires_config['{{$authtypes[mysec3]->name}}'] = {{$authtypes[mysec3]->requires_config}};
-        {{/section}}
+        {{foreach $authtypes authtype}}
+            requires_config['{{$authtype->name}}'] = {{$authtype->requires_config}};
+        {{/foreach}}
         
         return requires_config[authname];
     }
@@ -169,31 +169,27 @@
 IMPORTANT: do not introduce any new whitespace into the instanceList div.
 
 *}}
-<div id="instanceList">{{
-section name=mysec loop=$instancelist
-}}<div class="authInstance" id="instanceDiv{{$instancelist[mysec]->id}}">
+<div id="instanceList">{{foreach $instancelist instance}}<div class="authInstance" id="instanceDiv{{$instance->id}}">
         <label class="authLabel">
-            <a href="" onclick="editinstance({{$instancelist[mysec]->id}},'{{$instancelist[mysec]->authname}}'); return false;">
-            {{assign var=section value=$instancelist[mysec]->authname}}
-            {{str tag="title" section="auth.$section"}}</a>
+            <a href="" onclick="editinstance({{$instance->id}},'{{$instance->authname}}'); return false;">
+            {{str tag="title" section="auth.`$instance->authname`"}}</a>
         </label>
-        <span class="authIcons" id="arrows{{$instancelist[mysec]->id}}">
-            {{ if $instancelist[mysec]->index + 1 < $instancelist[mysec]->total }}
-            <a href="" onclick="move_down({{$instancelist[mysec]->id}}); return false;">[&darr;]</a>
-            {{ /if }}
-            {{ if $instancelist[mysec]->index != 0 }}
-            <a href="" onclick="move_up({{$instancelist[mysec]->id}}); return false;">[&uarr;]</a>
-            {{ /if }}
-            <a href="" onclick="removeAuth({{$instancelist[mysec]->id}}); return false;">[x]</a>
+        <span class="authIcons" id="arrows{{$instance->id}}">
+            {{if $instance->index + 1 < $instance->total}}
+            <a href="" onclick="move_down({{$instance->id}}); return false;">[&darr;]</a>
+            {{/if}}
+            {{if $instance->index != 0 }}
+            <a href="" onclick="move_up({{$instance->id}}); return false;">[&uarr;]</a>
+            {{/if}}
+            <a href="" onclick="removeAuth({{$instance->id}}); return false;">[x]</a>
         </span>
-    </div>{{
-    /section
-}}</div>
+    </div>{{/foreach}}
+</div>
 <select name="dummy" id="dummySelect">
-{{section name=mysec2 loop=$authtypes}}
-    <option value="{{$authtypes[mysec2]->name|escape}}"{{if !$authtypes[mysec2]->is_usable}} disabled="disabled"{{/if}}>{{$authtypes[mysec2]->title|escape}} - {{$authtypes[mysec2]->description|escape}}</option>
-{{/section}}
+{{foreach $authtypes authtype}}
+    <option value="{{$authtype->name|escape}}"{{if !$authtype->is_usable}} disabled="disabled"{{/if}}>{{$authtype->title|escape}} - {{$authtype->description|escape}}</option>
+{{/foreach}}
 </select>
 <button type="button" onclick="addinstance(); return false;" name="button" value="foo">{{str tag=Add section=admin}}</button>
-<input type="hidden" id="instancePriority" name="instancePriority" value="{{ $instancestring }}" />
+<input type="hidden" id="instancePriority" name="instancePriority" value="{{$instancestring}}" />
 <input type="hidden" id="deleteList" name="deleteList" value="" />

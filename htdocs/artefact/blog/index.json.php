@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage artefact-blog
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -30,33 +31,14 @@ define('JSON', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'blog');
 
-$action = param_variable('action', 'list');
-$id = param_variable('id', null);
+$blogs = (object) array(
+    'offset' => param_integer('offset', 0),
+    'limit'  => param_integer('limit', 10),
+);
 
-json_headers();
+list($blogs->count, $blogs->data) = ArtefactTypeBlog::get_blog_list($blogs->limit, $blogs->offset);
+ArtefactTypeBlog::build_blog_list_html($blogs);
 
-if ($action == 'list') {
-    $limit = param_integer('limit', ArtefactTypeBlog::pagination);
-    $offset = param_integer('offset', 0);
-
-    list($count, $data) = ArtefactTypeBlog::get_blog_list($USER, $limit, $offset);
-
-    echo json_encode(array(
-        'count' => $count,
-        'limit' => $limit,
-        'offset' => $offset,
-        'data' => $data
-    ));
-}
-else if ($action == 'delete') {
-    $blog = artefact_instance_from_id($id);
-    if ($blog instanceof ArtefactTypeBlog) {
-        $blog->check_permission();
-        $blog->delete();
-        json_reply(false, get_string('blogdeleted', 'artefact.blog'));
-    }
-
-    throw new ArtefactNotFoundException(get_string('blogdoesnotexist', 'artefact.blog'));
-}
+json_reply(false, array('data' => $blogs));
 
 ?>

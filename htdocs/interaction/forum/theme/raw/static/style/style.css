@@ -4,103 +4,152 @@
  * Copyright (C) 2006-2009 Catalyst IT
  * This file is distributed under the same terms as Mahara itself
  */
-.groupadmin{
-    color: #d32a8a;
+ 
+/* top buttons */
+#forumbtns {
+    right: 1em;
+    top: 1em;
 }
-.moderator {
-    color: #2a8bd3;
+* html #forumbtns {
+	right: 2.5em;
 }
-.forumuser {
-    vertical-align: top;
-}
-.inlinelist img {
-    vertical-align: middle;
-}
+
+/* forum description */
 #forumdescription {
-	margin: 1em 0;
+	margin: 2em 0 .5em 0;
+	clear: both;
 }
+
+/* Edit and Delete in list */
+.btn-spacer a {
+	margin-left: 1em;
+}
+
+/* Forum list */
+#forumslist{
+	border-bottom: 1px solid #ccc;
+}
+#forumslist th{
+	border-bottom: 1px solid #ccc;
+}
+#forumslist table th,
+#forumslist table td {
+	background: none;
+	padding-top: 0;
+	border: 0;
+}
+
+/* Topic list */
 #viewforum {
-	padding: 0 .25em;
+	padding: 1em;
+	margin: 0;
+	border: 1px solid #eee;
 }
 #viewforum h3 {
-    margin: 0;
+	font-size: 1.4em;
 }
-.btn-subscribe input.submit {
-	background: url(../images/icon-subscribe.gif) no-repeat center left;
-    font-weight: bold;
-    font-size: 0.9em;
-    height: 1.8em;
-    padding-left: 1em;
-    cursor: pointer;
-	border: none;
-    * width: 1;
-    * overflow: visible;
+#viewforum .rbuttons {
+	right: 1em;
+	top: 1em;
+}
+#forumtopicstable {
+	border-bottom: 1px solid #ccc;
+}
+#forumtopicstable th {
+	border-bottom: 1px solid #ccc;
+}
+/* to get user picts to align with text */
+.forumuser,
+.inlinelist a img {
+    vertical-align: top;
+}
+/* topic types */
+.stickytopic td {
+	background-color: #fffcd8;
 }
 
 
-.nowrap {
-	white-space: nowrap;
+/* Forum Pagination */
+#viewforum div.pagination {
+	background: #eee;
+	margin: 0;
+	padding: .5em .25em;
 }
+#viewforum div.pagination .results {
+	display: inline;
+	padding: 0.25em 0.5em;
+}
+/* Forum Action Selector */
 .forumselectwrap {
-	padding: .5em 0;
+	padding: 1em 0 0 0;
 }
-.stickytopic {
-	background-color: #e0e0e0;
+/* Forum footer */
+.forumfooter {
+	margin: .5em;
+}
+/* admin & moderator */
+.forummods {
+	font-size: .9em;
+	padding: .5em;
+	margin: .5em 0;
+}
+.forummods a {
+	margin-right: .5em;
+}
+.groupadmin {
+}
+.moderator {
 }
 
-/* FORUM > ADD TOPIC */
 
-
-/* FORUM > POST */
+/* Posts */
+.closed {
+	margin: 0 0 1em 0;
+}
 .forumpost {
-	background-color: #FFF;
-	border: 1px solid #d1d1d1;
+	border: 1px solid #eee;
+	clear: both;
 }
 .forumsubject {
-	border-bottom: 1px solid #f1f1f1;
+	border-bottom: 1px solid #eee;
 }
-.forumsubject h3 {
-  margin-bottom: 0;
+.forumsubject h6 {
+	margin: 0 !important;
 }
 .forumpostleft {
 	width: 160px;
-	border-right: 1px solid #f1f1f1;
-	background-color: #FFF;
+	border-right: 1px solid #eee;
+	text-align: center;
+    font-size: .9em;
 }
-.forumpostleft .author p {
-	color: #999999;
-    font-weight: bold;
-    margin: 0;
+.forumpostleft .posttime {
+	color: #888;
 }
 .forumpostleft .author img {
     margin: .25em .5em .25em .25em;
 }
-.posttime {
-	font-size: .9em;
-	color: #999999;
+.forumpostleft .author p.poster {
+	color: #888;
+    font-weight: bold;
+    margin: 0;
 }
-.postedits {
-    padding: .5em;
+.forumpostleft .author p.postcount {
+	font-weight: normal;
+    margin: 0;
 }
 .postbtns {
 	font-size: .9em;
-    font-weight: bold;
 	text-align: right;
-    padding: 0 0 .1em 0;
-	background-color: #f1f1f1;
-    margin: 0;
-    border: none;
+	color: #d1d1d1;
 }
 .postbtns a {
-	margin: 0 1em;
+	margin: 0 .5em;
 }
 .deletedpost {
-    color: gray;
+    color: #666666;
     margin-top: 0;
 }
 .postreply {
+	margin-top: 1em;
 	padding: 0 0 0 1em;
-	background-color: #f1f1f1;
 }
-
-

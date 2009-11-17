@@ -1,20 +1,184 @@
 /*  Views  */
-#page #top-pane,
-#page #blocksinstruction {
-    background: #8e1901;
+#views-loading {
 }
-#page #blocksinstruction {
-    color: #FFFFFF;
+/********************** Top pane of Edit View *************************/
+#top-pane {
 }
+/* The tabs that allow you to select a blocktype category */
+#category-list ul {
+}
+#category-list li {
+}
+#category-list li a,
+#category-list li a:link,
+#category-list li a:visited,
+#category-list li a:active {
+  color: #ffffff;
+  font-weight: normal;
+  background-color: #c66c14;
+}
+#category-list li a:hover {
+}
+#category-list li.current a,
+#category-list li.current a:link,
+#category-list li.current a:visited,
+#category-list li.current a:active {
+  color: #ffffff;
+  font-weight: bold;
+  background-color: #8E1901;
+}
+#category-list li.current a:hover {
+}
+
+/* The panel that contains the blocktype icons */
+#blocktype-list {
+  border: 1px solid #C66C14;
+  background: #f7ece2;
+}
+.blocktype div {
+}
+#noblocks {
+}
+
+
+/******************* Between Panes **************************************/
+#layout-link {
+}
+#layout-link.disabled {
+}
+#btn-displaymyview {
+}
+
+
+/********************** Bottom pane of Edit View *************************/
 #page #bottom-pane {
 	border-color: #8e1901 !important;
 }
-
-/* configure icon on blocks is special */
-.configurebutton {
-    background-color:white !important;
-    border:0px !important;
-    padding:0px !important;
-    margin: 0px !important;
+#blocksinstruction {
+    background: #8e1901;
+    color: #FFFFFF;
 }
 
+#column-container .column-header input[disabled="disabled"] {
+}
+
+.column-content .add-button input {
+}
+
+#block-placeholder {
+}
+
+
+/**************** Blockinstance **********************/
+.blockinstance {
+}
+.blockinstance.configure {
+}
+/* header*/
+.blockinstance-header h4 {
+}
+.blockinstance-header h4 a,
+.blockinstance-header h4 a:link,
+.blockinstance-header h4 a:visited,
+.blockinstance-header h4 a:active {
+}
+.blockinstance-header h4 a:hover {
+}
+
+/* content */
+.blockinstance-content {
+}
+.blockinstance-content h3 {
+}
+.blockinstance-content h4 {
+}
+
+/* Wall */
+.wallpost {
+}
+#wall .private {
+}
+
+/* tabs for the artefact chooser */
+ul.artefactchooser-tabs {
+}
+ul.artefactchooser-tabs li {
+}
+ul.artefactchooser-tabs li a,
+ul.artefactchooser-tabs li a:link,
+ul.artefactchooser-tabs li a:visited,
+ul.artefactchooser-tabs li a:active {
+}
+ul.artefactchooser-tabs li a:hover {
+}
+ul.artefactchooser-tabs li.current a,
+ul.artefactchooser-tabs li.current a:link,
+ul.artefactchooser-tabs li.current a:visited
+ul.artefactchooser-tabs li.current a:active {
+}
+ul.artefactchooser-tabs li.current a:hover {
+}
+ul.artefactchooser-subtabs {
+}
+ul.artefactchooser-subtabs li {
+}
+ul.artefactchooser-subtabs li a,
+ul.artefactchooser-subtabs li a:link,
+ul.artefactchooser-subtabs li a:visited,
+ul.artefactchooser-subtabs li a:active {
+}
+ul.artefactchooser-subtabs li a:hover {
+}
+ul.artefactchooser-subtabs li.current a,
+ul.artefactchooser-subtabs li.current a:link,
+ul.artefactchooser-subtabs li.current a:visited,
+ul.artefactchooser-subtabs li.current a:active {
+}
+ul.artefactchooser-subtabs li.current a:hover {
+}
+
+#artefactchooser-body {
+}
+.upload_browse #artefactchooser-body {
+}
+
+/* pagination */
+.ac-pagination .results {
+}
+#feedback_pagination {
+	border-top: 1px dotted #8E1901;
+}
+
+/* attachments */
+.attachments {
+}
+#view .blockinstance-content .attachments,
+#view .blockinstance-content .attachments td {
+}
+
+/** When viewing an artefact */
+#view .filedata-icon.fr {
+}
+
+#copyview .searchquery {
+}
+
+/* table */
+.maharatable thead th {
+}
+.maharatable tbody th {
+}
+#artefactchooser-body th label {
+}
+.maharatable td label {
+}
+
+
+/* View Page footer menu */
+#view .viewfooter {
+}
+#view #feedbacktable {
+}
+#viewmenu a {
+	padding-left: 12px;
+}

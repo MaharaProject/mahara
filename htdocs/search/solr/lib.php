@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage search-internal
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -44,20 +45,21 @@ class PluginSearchSolr extends PluginSearchInternal {
 
     public static function get_event_subscriptions() {
         $subscriptions = array(
-            (object)array('plugin' => 'solr', 'event' => 'createuser',     'callfunction' => 'event_reindex_user'   ),
-            (object)array('plugin' => 'solr', 'event' => 'updateuser',     'callfunction' => 'event_reindex_user'   ),
-            (object)array('plugin' => 'solr', 'event' => 'suspenduser',    'callfunction' => 'event_reindex_user'   ),
-            (object)array('plugin' => 'solr', 'event' => 'unsuspenduser',  'callfunction' => 'event_reindex_user'   ),
-            (object)array('plugin' => 'solr', 'event' => 'deleteuser',     'callfunction' => 'event_reindex_user'   ),
-            (object)array('plugin' => 'solr', 'event' => 'undeleteuser',   'callfunction' => 'event_reindex_user'   ),
-            (object)array('plugin' => 'solr', 'event' => 'expireuser',     'callfunction' => 'event_reindex_user'   ),
-            (object)array('plugin' => 'solr', 'event' => 'unexpireuser',   'callfunction' => 'event_reindex_user'   ),
-            (object)array('plugin' => 'solr', 'event' => 'deactivateuser', 'callfunction' => 'event_reindex_user'   ),
-            (object)array('plugin' => 'solr', 'event' => 'activateuser',   'callfunction' => 'event_reindex_user'   ),
-            (object)array('plugin' => 'solr', 'event' => 'saveartefact',   'callfunction' => 'event_saveartefact'   ),
-            (object)array('plugin' => 'solr', 'event' => 'deleteartefact', 'callfunction' => 'event_deleteartefact' ),
-            (object)array('plugin' => 'solr', 'event' => 'saveview',       'callfunction' => 'event_saveview'       ),
-            (object)array('plugin' => 'solr', 'event' => 'deleteview',     'callfunction' => 'event_deleteview'     ),
+            (object)array('plugin' => 'solr', 'event' => 'createuser',      'callfunction' => 'event_reindex_user'   ),
+            (object)array('plugin' => 'solr', 'event' => 'updateuser',      'callfunction' => 'event_reindex_user'   ),
+            (object)array('plugin' => 'solr', 'event' => 'suspenduser',     'callfunction' => 'event_reindex_user'   ),
+            (object)array('plugin' => 'solr', 'event' => 'unsuspenduser',   'callfunction' => 'event_reindex_user'   ),
+            (object)array('plugin' => 'solr', 'event' => 'deleteuser',      'callfunction' => 'event_reindex_user'   ),
+            (object)array('plugin' => 'solr', 'event' => 'undeleteuser',    'callfunction' => 'event_reindex_user'   ),
+            (object)array('plugin' => 'solr', 'event' => 'expireuser',      'callfunction' => 'event_reindex_user'   ),
+            (object)array('plugin' => 'solr', 'event' => 'unexpireuser',    'callfunction' => 'event_reindex_user'   ),
+            (object)array('plugin' => 'solr', 'event' => 'deactivateuser',  'callfunction' => 'event_reindex_user'   ),
+            (object)array('plugin' => 'solr', 'event' => 'activateuser',    'callfunction' => 'event_reindex_user'   ),
+            (object)array('plugin' => 'solr', 'event' => 'saveartefact',    'callfunction' => 'event_saveartefact'   ),
+            (object)array('plugin' => 'solr', 'event' => 'deleteartefact',  'callfunction' => 'event_deleteartefact' ),
+            (object)array('plugin' => 'solr', 'event' => 'deleteartefacts', 'callfunction' => 'event_deleteartefacts'),
+            (object)array('plugin' => 'solr', 'event' => 'saveview',        'callfunction' => 'event_saveview'       ),
+            (object)array('plugin' => 'solr', 'event' => 'deleteview',      'callfunction' => 'event_deleteview'     ),
         );
 
         return $subscriptions;
@@ -82,6 +84,16 @@ class PluginSearchSolr extends PluginSearchInternal {
             return;
         }
         self::delete_byidtype($artefact->get('id'), 'artefact');
+        self::commit();
+    }
+    public static function event_deleteartefacts($event, $artefactids) {
+        if (!self::config_is_sane()) {
+            return;
+        }
+        // Should send these deletes in one go
+        foreach ($artefactids as $id) {
+            self::delete_byidtype($id, 'artefact');
+        }
         self::commit();
     }
 

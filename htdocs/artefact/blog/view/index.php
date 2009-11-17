@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage artefact-blog
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -44,13 +45,10 @@ if ($blog->count_children()) {
     $js = require('index.js.php'); 
 }
 
-$images = array('themepaths' => array('images/file.gif', 'images/image.gif'));
-
-$smarty = smarty(array('tablerenderer'), array(), array(), $images);
+$smarty = smarty(array('tablerenderer'));
 $smarty->assign_by_ref('blog', $blog);
-$smarty->assign_by_ref('editform', $form);
 $smarty->assign_by_ref('INLINEJAVASCRIPT', $js);
-$smarty->assign('PAGEHEADING', hsc(get_string('viewblog', 'artefact.blog') . ' - ' . $blog->get('title')));
+$smarty->assign('PAGEHEADING', hsc($blog->get('title')));
 $smarty->assign('strnopostsaddone',
     get_string('nopostsaddone', 'artefact.blog',
     '<a href="' . get_config('wwwroot') . 'artefact/blog/post.php?blog=' . $blog->get('id') . '">', '</a>'));

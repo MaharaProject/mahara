@@ -1,0 +1,11 @@
+Dwoo in Mahara
+======================
+
+Website: http://www.dwoo.org/
+Version: svn://dwoo.org/dwoo/trunk -r280
+
+This library is used for all the templating.
+
+Changes:
+
+ * None

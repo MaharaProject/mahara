@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage artefact-file-import-leap
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -30,7 +31,7 @@ defined('INTERNAL') || die();
  * Implements LEAP2A import of file/folder related entries into Mahara
  *
  * For more information about LEAP file importing, see:
- * http://wiki.mahara.org/Developer_Area/Import%2f%2fExport/LEAP_Import/File_Artefact_Plugin
+ * http://wiki.mahara.org/Developer_Area/Import//Export/LEAP_Import/File_Artefact_Plugin
  *
  * TODO:
  * - Protect get_children_of_folder against circular references
@@ -47,7 +48,7 @@ class LeapImportFile extends LeapImportArtefactPlugin {
      */
     const STRATEGY_IMPORT_AS_FOLDER = 2;
 
-    public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImport $importer) {
+    public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImportLeap $importer) {
         $strategies = array();
 
         if (!self::has_parent_folder($entry, $importer)) {
@@ -77,11 +78,13 @@ class LeapImportFile extends LeapImportArtefactPlugin {
     // TODO: we're assuming an empty files area to work with, but that might 
     // not be the case, in which case we have conflicting file/folder names to 
     // deal with!
-    public static function import_using_strategy(SimpleXMLElement $entry, PluginImport $importer, $strategy, array $otherentries) {
+    public static function import_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
         $artefactmapping = array();
         switch ($strategy) {
         case self::STRATEGY_IMPORT_AS_FILE:
-            $artefactmapping[(string)$entry->id] = array(self::create_file($entry, $importer)->get('id'));
+            if ($file = self::create_file($entry, $importer)) {
+                $artefactmapping[(string)$entry->id] = array($file->get('id'));
+            }
             break;
         case self::STRATEGY_IMPORT_AS_FOLDER:
             $artefactmapping = self::create_folder_and_children($entry, $importer);
@@ -99,35 +102,30 @@ class LeapImportFile extends LeapImportArtefactPlugin {
      * if it's of rdf:type rdf:resource. This may be more strict than necessary 
      * - possibly just having the content ouf of line should be enough.
      *
-     * @param SimpleXMLElement $entry The entry to check
-     * @param PluginImport $importer  The importer
+     * @param SimpleXMLElement $entry    The entry to check
+     * @param PluginImportLeap $importer The importer
      * @return boolean Whether the entry is a file
      */
-    private static function is_file(SimpleXMLElement $entry, PluginImport $importer) {
-        $correctrdftype = count($entry->xpath('rdf:type['
-            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'resource') . ']')) == 1;
-        $outoflinecontent = isset($entry->content['src']);
-        return $correctrdftype && $outoflinecontent;
+    private static function is_file(SimpleXMLElement $entry, PluginImportLeap $importer) {
+        return PluginImportLeap::is_rdf_type($entry, $importer, 'resource')
+            && isset($entry->content['src']);
     }
 
     /**
      * Returns whether the given entry is a folder
      *
-     * @param SimpleXMLElement $entry The entry to check
-     * @param PluginImport $importer  The importer
+     * @param SimpleXMLElement $entry    The entry to check
+     * @param PluginImportLeap $importer The importer
      * @return boolean Whether the entry is a folder
      */
-    private static function is_folder(SimpleXMLElement $entry, PluginImport $importer) {
+    private static function is_folder(SimpleXMLElement $entry, PluginImportLeap $importer) {
         static $cache = array();
         $id = (string)$entry->id;
         if (isset($cache[$id])) {
             return $cache[$id];
         }
-        $correctrdftype = count($entry->xpath('rdf:type['
-            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'selection') . ']')) == 1;
-        $correctcategoryscheme = count($entry->xpath('a:category[('
-            . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'selection_type#') . ') and @term="Folder"]')) == 1;
-        return ($cache[$id] = $correctrdftype && $correctcategoryscheme);
+        return ($cache[$id] = PluginImportLeap::is_rdf_type($entry, $importer, 'selection')
+            && PluginImportLeap::is_correct_category_scheme($entry, $importer, 'selection_type', 'Folder'));
     }
 
     /**
@@ -137,11 +135,11 @@ class LeapImportFile extends LeapImportArtefactPlugin {
      * The entry itself can be any entry, although in the context of this 
      * plugin, it is a file or folder.
      *
-     * @param SimpleXMLElement $entry The entry to check
-     * @param PluginImport $importer  The importer
+     * @param SimpleXMLElement $entry    The entry to check
+     * @param PluginImportLeap $importer The importer
      * @return boolean Whether this entry is in a folder
      */
-    private static function has_parent_folder(SimpleXMLElement $entry, PluginImport $importer) {
+    private static function has_parent_folder(SimpleXMLElement $entry, PluginImportLeap $importer) {
         foreach ($entry->link as $link) {
             if ($importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'is_part_of') && isset($link['href'])) {
                 $potentialfolder = $importer->get_entry_by_id((string)$link['href']);
@@ -161,12 +159,12 @@ class LeapImportFile extends LeapImportArtefactPlugin {
      *
      * TODO: protection against circular references
      *
-     * @param SimpleXMLElement $entry The folder to get children for
-     * @param PluginImport $importer  The importer
-     * @param boolean $recurse        Whether to return children at all levels below this folder
+     * @param SimpleXMLElement $entry    The folder to get children for
+     * @param PluginImportLeap $importer The importer
+     * @param boolean $recurse           Whether to return children at all levels below this folder
      * @return array A list of the entry IDs of children in this folder
      */
-    private static function get_children_of_folder(SimpleXMLElement $entry, PluginImport $importer, $recurse=false) {
+    private static function get_children_of_folder(SimpleXMLElement $entry, PluginImportLeap $importer, $recurse=false) {
         $children = array();
 
         // Get entries that this folder feels are a part of it
@@ -202,13 +200,13 @@ class LeapImportFile extends LeapImportArtefactPlugin {
     /**
      * Creates a file artefact based on the given entry.
      *
-     * @param SimpleXMLElement $entry The entry to base the file's data on
-     * @param PluginImport $importer  The importer
-     * @param int $parent             The ID of the parent artefact for this file
+     * @param SimpleXMLElement $entry    The entry to base the file's data on
+     * @param PluginImportLeap $importer The importer
+     * @param int $parent                The ID of the parent artefact for this file
      * @throws ImportException If the given entry is not detected as being a file
      * @return ArtefactTypeFile The file artefact created
      */
-    public static function create_file(SimpleXMLElement $entry, PluginImport $importer, $parent=null) {
+    public static function create_file(SimpleXMLElement $entry, PluginImportLeap $importer, $parent=null) {
         if (!self::is_file($entry, $importer)) {
             throw new ImportException($importer, "create_file(): Cannot create a file artefact from an entry we don't recognise as a file");
         }
@@ -248,17 +246,28 @@ class LeapImportFile extends LeapImportArtefactPlugin {
 
         // This API sucks, but that's not my problem
         if (!$id = ArtefactTypeFile::save_file($pathname, $data, $importer->get('usrobj'))) {
-            throw new ImportException($importer, 'TODO: get_string: was unable to import file');
-        }
-
-        // Work out if the file was really a profile icon
-        $isprofileicon = false;
-        $match = $entry->xpath('mahara:artefactplugin[@mahara:plugin="file" and @mahara:type="profileicon"]');
-        if (count($match) == 1) {
-            $isprofileicon = true;
+            $importer->trace("WARNING: the file for entry $entry->id does not exist in the import (path={$entry->content['src']})");
+            return;
         }
 
         $artefact = artefact_instance_from_id($id);
+        $artefact->set('tags', PluginImportLeap::get_entry_tags($entry));
+
+        // Work out if the file was really a profile icon
+        $isprofileicon = false;
+        if ($artefact->get('artefacttype') == 'image') {
+            $match = $entry->xpath('mahara:artefactplugin[@mahara:plugin="file" and @mahara:type="profileicon"]');
+            if (count($match) == 1) {
+                $isprofileicon = true;
+            }
+            else if ($importer->get('persondataid')) {
+                $persondata = $importer->get_entry_by_id($importer->get('persondataid'));
+                if (count($persondata->xpath('a:link[@rel="related" and @href="' . (string)$entry->id . '"]')) == 1) {
+                    $isprofileicon = true;
+                }
+            }
+        }
+
         // Work around that save_file doesn't let us set the mtime
         $artefact->set('mtime', strtotime((string)$entry->updated));
         if ($isprofileicon) {
@@ -274,10 +283,6 @@ class LeapImportFile extends LeapImportArtefactPlugin {
             if (!rename($basedir  . $olddir . $id, $basedir . $newdir . $id)) {
                 throw new ImportException($importer, 'TODO: get_string: was unable to move profile icon');
             }
-
-            // Unconditionally set as default, even if there is more than one
-            $importer->get('usrobj')->profileicon = $id;
-            $importer->get('usrobj')->commit();
         }
 
         $artefact->commit();
@@ -288,13 +293,13 @@ class LeapImportFile extends LeapImportArtefactPlugin {
     /**
      * Creates a folder artefact based on the given entry.
      *
-     * @param SimpleXMLElement $entry The entry to base the folder's data on
-     * @param PluginImport $importer  The importer
-     * @param int $parent             The ID of the parent artefact for this folder
+     * @param SimpleXMLElement $entry    The entry to base the folder's data on
+     * @param PluginImportLeap $importer The importer
+     * @param int $parent                The ID of the parent artefact for this folder
      * @throws ImportException If the given entry is not detected as being a folder
      * @return int The ID of the folder artefact created
      */
-    private static function create_folder(SimpleXMLElement $entry, PluginImport $importer, $parent=null) {
+    private static function create_folder(SimpleXMLElement $entry, PluginImportLeap $importer, $parent=null) {
         if (!self::is_folder($entry, $importer)) {
             throw new ImportException($importer, "create_folder(): Cannot create a folder artefact from an entry we don't recognise as a folder");
         }
@@ -320,15 +325,15 @@ class LeapImportFile extends LeapImportArtefactPlugin {
     /**
      * Creates a folder, and recursively, all folders and files under it.
      *
-     * @param SimpleXMLElement $entry The entry to base the folder's data on
-     * @param PluginImport $importer  The importer
-     * @param int $parent             The ID of the parent artefact for this folder
+     * @param SimpleXMLElement $entry    The entry to base the folder's data on
+     * @param PluginImportLeap $importer The importer
+     * @param int $parent                The ID of the parent artefact for this folder
      * @throws ImportException If the given entry is not detected as being a folder
      * @return array The artefact mapping for the folder and all children - a 
      *               list of entry ID => artefact IDs for each entry processed. See
      *               PluginImport::import_from_load_mapping() for more information
      */
-    private static function create_folder_and_children(SimpleXMLElement $entry, PluginImport $importer, $parent=null) {
+    private static function create_folder_and_children(SimpleXMLElement $entry, PluginImportLeap $importer, $parent=null) {
         if (!self::is_folder($entry, $importer)) {
             throw new ImportException($importer, "create_folder(): Cannot create a folder artefact from an entry we don't recognise as a folder");
         }
@@ -347,7 +352,9 @@ class LeapImportFile extends LeapImportArtefactPlugin {
                 $artefactmapping = array_merge($artefactmapping, $result);
             }
             else {
-                $artefactmapping[$childid] = array(self::create_file($child, $importer, $folderid)->get('id'));
+                if ($file = self::create_file($child, $importer, $folderid)) {
+                    $artefactmapping[$childid] = array($file->get('id'));
+                }
             }
         }
 

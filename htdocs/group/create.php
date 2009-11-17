@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -30,6 +31,10 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('group.php');
 define('TITLE', get_string('creategroup', 'group'));
+
+if (!group_can_create_groups()) {
+    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+}
 
 $creategroup = pieform(array(
     'name'     => 'creategroup',
@@ -89,9 +94,6 @@ $smarty->display('group/create.tpl');
 
 
 function creategroup_validate(Pieform $form, $values) {
-    //global $USER;
-    //global $SESSION;
-
     if (get_field('group', 'id', 'name', $values['name'])) {
         $form->set_error('name', get_string('groupalreadyexists', 'group'));
     }

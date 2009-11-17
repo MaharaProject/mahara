@@ -13,7 +13,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="4" class="right"><input id="settings_default" type="submit" class="submit" name="default" value="{str tag="setdefault" section=artefact.file}" tabindex="2"> {str tag="or" section="artefact.file"} <input type="submit" class="submit" name="unsetdefault" value="{str tag="usenodefault" section="artefact.file}" tabindex="2"> <input id="settings_delete" type="submit" class="cancel" name="delete" value="{str tag="deleteselectedicons" section=artefact.file}" tabindex="2"></td>
+                        <td colspan="4" class="right"><input id="settings_default" type="submit" class="submit" name="default" value="{str tag="setdefault" section=artefact.file}" tabindex="2"> {str tag="or" section="artefact.file"} <input type="submit" class="submit" name="unsetdefault" value="{str tag="usenodefault" section="artefact.file"}" tabindex="2"> <input id="settings_delete" type="submit" class="cancel" name="delete" value="{str tag="deleteselectedicons" section=artefact.file}" tabindex="2"></td>
                     </tr>
                 </tfoot>
             </table>

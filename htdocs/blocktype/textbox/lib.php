@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage blocktype-textbox
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -73,11 +74,11 @@ class PluginBlocktypeTextbox extends SystemBlocktype {
         $configdata = $instance->get('configdata');
         return array(
             'text' => array(
-                'type' => 'tinywysiwyg',
+                'type' => 'wysiwyg',
                 'title' => get_string('blockcontent', 'blocktype.textbox'),
                 'width' => '90%',
                 'height' => '150px',
-                'defaultvalue' => $configdata['text'],
+                'defaultvalue' => isset($configdata['text']) ? $configdata['text'] : '',
             ),
         );
     }

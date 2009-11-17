@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage notification-internal
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -37,6 +38,7 @@ $string['typevirusrepeat'] = 'Repeat virus upload';
 $string['typevirusrelease'] = 'Virus flag release';
 $string['typeadminmessages'] = 'Administration messages';
 $string['typeinstitutionmessage'] = 'Institution message';
+$string['typegroupmessage'] = 'Group message';
 
 $string['type'] = 'Activity type';
 $string['attime'] = 'at';
@@ -103,5 +105,11 @@ $string['institutionrequestmessage'] = 'You can add users to institutions on the
 
 $string['institutioninvitesubject'] = 'You have been invited to join the institution %s.';
 $string['institutioninvitemessage'] = 'You can confirm your membership of this institution on your Institution Settings Page:';
+
+$string['deleteallnotifications'] = 'Delete all notifications';
+$string['reallydeleteallnotifications'] = 'Are you sure you want to delete all your notifications?';
+
+$string['viewsubmittedsubject'] = 'View submitted to %s';
+$string['viewsubmittedmessage'] = '%s has submitted their view "%s" to %s';
 
 ?>

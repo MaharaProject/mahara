@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage xmlrpc
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -65,6 +66,13 @@ class Client {
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->encryptedrequest);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml charset=UTF-8", 'Expect: '));
 
+        if (strpos($URL, 'https://') === 0) {
+            if ($cainfo = get_config('cacertinfo')) {
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+                curl_setopt($ch, CURLOPT_CAINFO, $cainfo);
+            }
+        }
+
         $timestamp_send    = time();
         $this->rawresponse = curl_exec($ch);
 
@@ -83,8 +91,9 @@ class Client {
         $timestamp_receive = time();
         $remote_timestamp  = null;
 
-        if ($this->rawresponse == false) {
-            throw new XmlrpcClientException('Curl error: '.curl_errno($ch) .':'. curl_error($ch));
+        $curl_errno = curl_errno($ch);
+        if ($curl_errno || $this->rawresponse == false) {
+            throw new XmlrpcClientException('Curl error: ' . $curl_errno . ': ' . curl_error($ch));
             return false;
         }
 

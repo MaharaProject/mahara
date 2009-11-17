@@ -4,14 +4,40 @@
  * Copyright (C) 2006-2009 Catalyst IT
  * This file is distributed under the same terms as Mahara itself
  */
-#postlist td.postdetails {
-	padding-bottom: 2em;
-	font-style: italic;
+ 
+ /* Blog list */
+#bloglist .right a {
+	font-size: .9em;
+	margin-left: 1em;
+}
+#bloglist td .addicon {
+	margin: 0;
+}
+
+/* Post list */
+#postlist th {
+	border-bottom: 1px dotted #d1d1d1;
+}
+#postlist input.delete,
+#postlist input.edit {
+	font-size: .9em;
 }
 #postlist p {
 	margin: 0 0 1em 0;
 }
-
-#bloglist td .addicon {
-	margin: 0;
+#postlist td.postdetails {
+	padding-bottom: 2em;
+	font-size: .9em;
+	color: #888;
 }
+
+/* attachment files */
+#postlist .attachments th {
+	padding: .25em .5em;
+	font-size: 1em;
+	border: 0;
+}
+.attachments .unselect {
+	font-size: .9em;
+}
+

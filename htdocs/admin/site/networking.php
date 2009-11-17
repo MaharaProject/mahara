@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage admin
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -72,7 +73,17 @@ $networkingform = pieform(
                 'type'         => 'html',
                 'title'        => get_string('publickey','admin'),
                 'description'  => get_string('publickeydescription2', 'admin', 365),
-                'value'        => '<pre style="font-size: 0.7em">'.$openssl->certificate.'</pre>'
+                'value'        => '<pre style="font-size: 0.7em; white-space: pre;">'.$openssl->certificate.'</pre>'
+            ),
+            'sha1fingerprint' => array(
+                'type'         => 'html',
+                'title'        => 'SHA1 Fingerprint',
+                'value'        => $openssl->sha1_fingerprint
+            ),
+            'md5fingerprint' => array(
+                'type'         => 'html',
+                'title'        => 'MD5 Fingerprint',
+                'value'        => $openssl->md5_fingerprint
             ),
             'expires' => array(
                 'type'         => 'html',

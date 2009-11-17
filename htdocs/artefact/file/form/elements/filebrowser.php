@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage artefact-file
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -112,6 +113,9 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         $config['browsehelp'] = $element['browsehelp'];
     }
 
+    $config['showtags'] = !empty($config['tag']) ? (int) $userid : 0;
+    $config['editmeta'] = (int) ($userid && !$config['edit'] && !empty($config['tag']));
+
     $smarty->assign('config', $config);
 
     $filters = isset($element['filters']) ? $element['filters'] : null;
@@ -188,7 +192,7 @@ function pieform_element_filebrowser_build_path($form, $element, $folder, $owner
 }
 
 
-function pieform_element_filebrowser_build_filelist($form, $element, $folder, $highlight=null, $group=null, $institution=null) {
+function pieform_element_filebrowser_build_filelist($form, $element, $folder, $highlight=null, $user=null, $group=null, $institution=null) {
     if (!$form->submitted_by_js()) {
         // We're going to rebuild the page from scratch anyway.
         return;
@@ -198,7 +202,7 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
 
     $smarty = smarty_core();
 
-    if (is_null($group)) {
+    if (is_null($group) && is_null($user)) {
         $group = $form->get_property('group');
     }
     else {
@@ -215,7 +219,10 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     $userid = ($group || $institution) ? null : $USER->get('id');
     $editable = (int) $element['config']['edit'];
     $selectable = (int) $element['config']['select'];
+    $selectfolders = (int) !empty($element['config']['selectfolders']);
     $publishing = (int) !empty($element['config']['publishing']);
+    $showtags = !empty($element['config']['tag']) ? (int) $userid : 0;
+    $editmeta = (int) ($userid && !$editable && !empty($element['config']['tag']));
     $querybase = $element['page'] . (strpos($element['page'], '?') === false ? '?' : '&');
     $prefix = $form->get_name() . '_' . $element['name'];
 
@@ -226,7 +233,10 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     $smarty->assign('highlight', $highlight);
     $smarty->assign('editable', $editable);
     $smarty->assign('selectable', $selectable);
+    $smarty->assign('selectfolders', $selectfolders);
     $smarty->assign('publishing', $publishing);
+    $smarty->assign('showtags', $showtags);
+    $smarty->assign('editmeta', $editmeta);
     $smarty->assign('filelist', $filedata);
     $smarty->assign('querybase', $querybase);
     $smarty->assign('prefix', $prefix);
@@ -257,6 +267,7 @@ function pieform_element_filebrowser_configure_tabs($viewowner) {
     else if ($viewowner['type'] == 'group') {
         $selectedtab = param_variable('owner', 'group');
         $upload = $selectedtab == 'group';
+        $tabs['user'] = get_string('myfiles', 'artefact.file');
         $tabs['group'] = get_string('groupfiles', 'artefact.file');
     }
     else { // $viewowner['type'] == 'user'
@@ -459,16 +470,21 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
         ));
     }
 
+    // {$prefix}_upload is set in all browsers except safari when javascript is
+    // on (and set in all browsers when it's not)
     $upload = param_variable($prefix . '_upload', null);
     if (!empty($upload)) {
-        if (!isset($_FILES['userfile']['name'])) {
+        if (empty($_FILES['userfile']['name'])) {
             return array(
                 'error'   => true,
                 'message' => get_string('filenamefieldisrequired', 'artefact.file'),
                 'browse'  => 1,
             );
         }
-        else if (strlen($_FILES['userfile']['name']) > 1024) {
+    }
+
+    if (isset($_FILES['userfile']['error']) && $_FILES['userfile']['error'] == 0) {
+        if (strlen($_FILES['userfile']['name']) > 1024) {
             return array(
                 'error'   => true,
                 'message' => get_string('nametoolong', 'artefact.file'),
@@ -787,17 +803,33 @@ function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
 
     $artefact->set('title', $data['title']);
     $artefact->set('description', $data['description']);
-    $artefact->set('tags', preg_split("/\s*,\s*/", trim($data['tags'])));
+
+    $oldtags = $artefact->get('tags');
+    $newtags = preg_split("/\s*,\s*/", trim($data['tags']));
+    $updatetags = $oldtags != $newtags;
+    if ($updatetags) {
+        $artefact->set('tags', $newtags);
+    }
+
     if ($form->get_property('group') && $data['permissions']) {
         $artefact->set('rolepermissions', $data['permissions']);
     }
     $artefact->commit();
 
-    return array(
+    $returndata = array(
         'error' => false,
         'message' => get_string('changessaved', 'artefact.file'),
         'newlist' => pieform_element_filebrowser_build_filelist($form, $element, $artefact->get('parent')),
     );
+
+    if ($updatetags && $form->submitted_by_js()) {
+        $smarty = smarty_core();
+        $tagdata = tags_sideblock();
+        $smarty->assign('sbdata', $tagdata);
+        $returndata['tagblockhtml'] = $smarty->fetch('sideblocks/tags.tpl');
+    }
+
+    return $returndata;
 }
 
 
@@ -900,6 +932,7 @@ function pieform_element_filebrowser_changeowner(Pieform $form, $element) {
 
     $group = null;
     $institution = null;
+    $user = null;
     $folder = 0;
     if ($newtabdata['owner'] == 'site') {
         global $USER;
@@ -914,6 +947,9 @@ function pieform_element_filebrowser_changeowner(Pieform $form, $element) {
     else if ($newtabdata['owner'] == 'group') {
         $group = $newtabdata['ownerid'];
     }
+    else if ($newtabdata['owner'] == 'user') {
+        $user = true;
+    }
 
     return array(
         'error'         => false, 
@@ -921,7 +957,7 @@ function pieform_element_filebrowser_changeowner(Pieform $form, $element) {
         'changedfolder' => true,
         'tabupload'     => $newtabdata['upload'],
         'folder'        => $folder,
-        'newlist'       => pieform_element_filebrowser_build_filelist($form, $element, $folder, null, $group, $institution),
+        'newlist'       => pieform_element_filebrowser_build_filelist($form, $element, $folder, null, $user, $group, $institution),
         'newpath'       => pieform_element_filebrowser_build_path($form, $element, $folder, $newtabdata['owner'], $newtabdata['ownerid']),
         'newtabs'       => $newtabhtml,
         'newsubtabs'    => $newsubtabhtml,
@@ -930,7 +966,7 @@ function pieform_element_filebrowser_changeowner(Pieform $form, $element) {
 
 
 function pieform_element_filebrowser_changefolder(Pieform $form, $element, $folder) {
-    $owner = $ownerid = $group = $institution = null;
+    $owner = $ownerid = $group = $institution = $user = null;
 
     if (isset($element['tabs'])) {
         if ($owner = param_variable('owner', null)) {
@@ -940,8 +976,12 @@ function pieform_element_filebrowser_changefolder(Pieform $form, $element, $fold
             } else if ($ownerid = param_variable('ownerid', null)) {
                 if ($owner == 'group') {
                     $group = (int) $ownerid;
-                } else if ($owner == 'institution') {
+                }
+                else if ($owner == 'institution') {
                     $institution = $ownerid;
+                }
+                else if ($owner == 'user') {
+                    $user = true;
                 }
             }
         }
@@ -951,7 +991,7 @@ function pieform_element_filebrowser_changefolder(Pieform $form, $element, $fold
         'error'         => false, 
         'changedfolder' => true,
         'folder'        => $folder,
-        'newlist'       => pieform_element_filebrowser_build_filelist($form, $element, $folder, null, $group, $institution),
+        'newlist'       => pieform_element_filebrowser_build_filelist($form, $element, $folder, null, $user, $group, $institution),
         'newpath'       => pieform_element_filebrowser_build_path($form, $element, $folder, $owner, $ownerid),
     );
 }

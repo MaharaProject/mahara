@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage blocktype-contactinfo
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -56,10 +57,18 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
         if (!empty($configdata['artefactids'])) {
             $viewowner = get_field('view', 'owner', 'id', $instance->get('view'));
             foreach ($configdata['artefactids'] as $id) {
-                $artefact = artefact_instance_from_id($id);
-                if ($artefact->get('owner') == $viewowner) {
-                    $rendered = $artefact->render_self(array('link' => true));
-                    $data[$artefact->get('artefacttype')] = $rendered['html'];
+                try {
+                    $artefact = artefact_instance_from_id($id);
+                    if ($artefact->get('owner') == $viewowner) {
+                        $rendered = $artefact->render_self(array('link' => true));
+                        $data[$artefact->get('artefacttype')] = $rendered['html'];
+                    }
+                }
+                catch (ArtefactNotFoundException $e) {
+                    log_debug('Artefact not found when rendering contactinfo block instance. '
+                        . 'There might be a bug with deleting artefacts of this type? '
+                        . 'Original error follows:');
+                    log_debug($e->getMessage());
                 }
             }
         }
@@ -73,12 +82,7 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance, $istemplate) {
-        if ($istemplate) {
-            // Don't offer any configuration. Profile data needs to be reworked 
-            // so it's not artefacts before this will work
-            return array();
-        }
+    public static function instance_config_form($instance) {
         $configdata = $instance->get('configdata');
 
         $form = array();
@@ -111,13 +115,13 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
         );
 
         // Which fields does the user want
-        $form[] = self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null, $istemplate);
+        $form[] = self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null);
 
         return $form;
     }
 
     // TODO: make decision on whether this should be abstract or not
-    public static function artefactchooser_element($default=null, $istemplate=false) {
+    public static function artefactchooser_element($default=null) {
         safe_require('artefact', 'internal');
         return array(
             'name'  => 'artefactids',
@@ -174,6 +178,25 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
      */
     public static function allowed_in_view(View $view) {
         return $view->get('owner') != null;
+    }
+
+    /**
+     * Overrides the default implementation so we can export enough information
+     * to reconstitute profile information again.
+     *
+     * LEAP2A export doesn't export profile related artefacts as entries, so we
+     * need to take that into account when exporting config for it.
+     */
+    public static function export_blockinstance_config_leap(BlockInstance $bi) {
+        return PluginArtefactInternal::export_blockinstance_config_leap($bi);
+    }
+
+    /**
+     * Sister method to export_blockinstance_config_leap (creates block
+     * instance based of what that method exports)
+     */
+    public static function import_create_blockinstance_leap(array $biconfig, array $viewconfig) {
+        return PluginArtefactInternal::import_create_blockinstance_leap($biconfig, $viewconfig);
     }
 
 }

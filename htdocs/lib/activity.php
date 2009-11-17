@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -33,9 +34,9 @@ defined('INTERNAL') || die();
  * @param string $activitytype type of activity
  * @param mixed $data data 
  */
-function activity_occurred($activitytype, $data, $plugintype=null, $pluginname=null) {
+function activity_occurred($activitytype, $data, $plugintype=null, $pluginname=null, $overridedelay=false) {
     $at = activity_locate_typerecord($activitytype, $plugintype, $pluginname);
-    if (!empty($at->delay)) {
+    if (!empty($at->delay) && !$overridedelay) {
         $delayed = new StdClass;
         $delayed->type = $at->id;
         $delayed->data = serialize($data);
@@ -95,7 +96,7 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
     $sql = '
         SELECT
             u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff, 
-            p.method, ap.value AS lang
+            p.method, ap.value AS lang, aic.value AS mnethostwwwroot, h.appname AS mnethostapp
         FROM {usr} u
         LEFT JOIN {usr_activity_preference} p
             ON (p.usr = u.id AND p.activity = ?)' . (empty($admininstitutions) ? '' : '
@@ -104,6 +105,12 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
                 AND ui.institution IN ('.join(',',array_map('db_quote',$admininstitutions)).'))') . '
         LEFT OUTER JOIN {usr_account_preference} ap
             ON (ap.usr = u.id AND ap.field = \'lang\')
+        LEFT OUTER JOIN {auth_instance} ai
+            ON (ai.id = u.authinstance AND ai.authname = \'xmlrpc\')
+        LEFT OUTER JOIN {auth_instance_config} aic
+            ON (aic.instance = ai.id AND aic.field = \'wwwroot\')
+        LEFT OUTER JOIN {host} h
+            ON aic.value = h.wwwroot
         WHERE TRUE';
     if (!empty($userobjs) && is_array($userobjs)) {
         $sql .= ' AND u.id IN (' . implode(',',db_array_to_ph($userobjs)) . ')';
@@ -117,12 +124,26 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
         $sql .= '
         GROUP BY
             u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff,
-            p.method, ap.value
+            p.method, ap.value, aic.value, h.appname
         HAVING (u.admin = 1 OR SUM(ui.admin) > 0)';
     } else if ($adminonly) {
         $sql .= ' AND u.admin = 1';
     }
     return get_records_sql_array($sql, $values);
+}
+
+
+function activity_default_notification_method() {
+    static $method = null;
+    if (is_null($method)) {
+        if (in_array('email', array_map(create_function('$a', 'return $a->name;'), plugins_installed('notification')))) {
+            $method = 'email';
+        }
+        else {
+            $method = 'internal';
+        }
+    }
+    return $method;
 }
 
 /**
@@ -132,15 +153,9 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
 function activity_set_defaults($eventdata) {
     $user_id = $eventdata['id'];
     $activitytypes = get_records_array('activity_type', 'admin', 0);
-    $haveemail = in_array('email', array_map(create_function('$a', 'return $a->name;'),
-                                             plugins_installed('notification')));
+    $method = activity_default_notification_method();
+
     foreach ($activitytypes as $type) {
-        if ($haveemail) {
-            $method = 'email';
-        }
-        else {
-            $method = 'internal';
-        }
         insert_record('usr_activity_preference', (object)array(
             'usr' => $user_id,
             'activity' => $type->id,
@@ -152,14 +167,8 @@ function activity_set_defaults($eventdata) {
 
 function activity_add_admin_defaults($userids) {
     $activitytypes = get_records_array('activity_type', 'admin', 1);
-    $haveemail = in_array('email', array_map(create_function('$a', 'return $a->name;'),
-                                             plugins_installed('notification')));
-    if ($haveemail) {
-        $method = 'email';
-    }
-    else {
-        $method = 'internal';
-    }
+    $method = activity_default_notification_method();
+
     foreach ($activitytypes as $type) {
         foreach ($userids as $id) {
             if (!record_exists('usr_activity_preference', 'usr', $id, 'activity', $type->id)) {
@@ -252,6 +261,17 @@ function activity_locate_typerecord($activitytype, $plugintype=null, $pluginname
         throw new Exception("Invalid activity type $activitytype");
     }
     return $at;
+}
+
+function generate_activity_class_name($name, $plugintype, $pluginname) {
+    if (!empty($plugintype)) {
+        safe_require($plugintype, $pluginname);
+        return 'ActivityType' .
+            ucfirst($plugintype) .
+            ucfirst($pluginname) .
+            ucfirst($name);
+    }
+    return 'ActivityType' . $name;
 }
 
 /** activity type classes **/
@@ -356,7 +376,7 @@ abstract class ActivityType {
         $userdata->message = $this->get_message($user);
         $userdata->subject = $this->get_subject($user);
         if (empty($user->method)) {
-            $user->method = 'internal';
+            $user->method = call_static_method(get_class($this), 'default_notification_method');
         }
 
         // always do internal
@@ -365,24 +385,24 @@ abstract class ActivityType {
             $changes->url = $userdata->url = $this->url;
         }
 
+        if ($user->method != 'internal' || isset($changes->url)) {
+            $changes->read = (int) ($user->method != 'internal');
+            $changes->id = $userdata->internalid;
+            update_record('notification_internal_activity', $changes);
+        }
+
         if ($user->method != 'internal') {
             $method = $user->method;
             safe_require('notification', $method);
             try {
                 call_static_method(generate_class_name('notification', $method), 'notify_user', $user, $userdata);
-                $changes->read = true;
             }
             catch (MaharaException $e) {
                 // We don't mind other notification methods failing, as it'll 
                 // go into the activity log as 'unread'
+                $changes->read = 0;
+                update_record('notification_internal_activity', $changes);
             }
-        }
-
-        // Neither emtpy($changes) nor if ($changes) work properly, empty 
-        // objects aren't "empty" according to php. See http://php.net/empty
-        if (get_object_vars($changes)) {
-            $changes->id = $userdata->internalid;
-            update_record('notification_internal_activity', $changes);
         }
 
     }
@@ -394,6 +414,10 @@ abstract class ActivityType {
         foreach ($this->get_users() as $user) {
             $this->notify_user($user);
         }
+    }
+
+    public static function default_notification_method() {
+        return activity_default_notification_method();
     }
 }
 
@@ -820,6 +844,57 @@ class ActivityTypeViewaccess extends ActivityType {
     
     public function get_required_parameters() {
         return array('view', 'owner', 'oldusers');
+    }
+}
+
+class ActivityTypeGroupMessage extends ActivityType {
+
+    protected $group;
+    protected $roles;
+    protected $submittedview;
+    private $viewinfo;
+    private $groupinfo;
+
+    /**
+     * @param array $data Parameters:
+     *                    - subject (string)
+     *                    - message (string)
+     *                    - group (integer)
+     *                    - roles (list of roles)
+     */
+    public function __construct($data, $cron=false) {
+        require_once('group.php');
+
+        parent::__construct($data, $cron);
+
+        $this->groupinfo = get_record('group', 'id', $this->group);
+
+        $members = group_get_member_ids($this->group, isset($this->roles) ? $this->roles : null);
+        $this->users = activity_get_users($this->get_id(), $members);
+
+        if ($this->submittedview) {
+            $this->viewinfo = get_record('view', 'id', $this->submittedview);
+            $this->viewinfo->ownername = display_name($this->viewinfo->owner);
+            $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->submittedview;
+        }
+    }
+
+    public function get_subject($user) {
+        if ($this->submittedview) {
+            return get_string_from_language($user->lang, 'viewsubmittedsubject', 'activity', $this->groupinfo->name);
+        }
+        return $this->subject;
+    }
+
+    public function get_message($user) {
+        if ($this->submittedview) {
+            return get_string_from_language($user->lang, 'viewsubmittedmessage', 'activity', $this->viewinfo->ownername, $this->viewinfo->title, $this->groupinfo->name);
+        }
+        return $this->subject;
+    }
+
+    public function get_required_parameters() {
+        return array('message', 'subject', 'group');
     }
 }
 

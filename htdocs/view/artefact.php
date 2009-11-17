@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -46,8 +47,17 @@ if (!artefact_in_view($artefactid, $viewid)) {
     throw new AccessDeniedException("Artefact $artefactid not in View $viewid");
 }
 
+// Feedback list pagination requires limit/offset params
+$limit    = param_integer('limit', 10);
+$offset   = param_integer('offset', 0);
+
 require_once(get_config('docroot') . 'artefact/lib.php');
 $artefact = artefact_instance_from_id($artefactid);
+
+// Create the "make feedback private form" now if it's been submitted
+if (param_variable('make_private_submit', null)) {
+    pieform(make_private_form(param_integer('feedback')));
+}
 
 if (!$artefact->in_view_list()) {
     throw new AccessDeniedException("Artefacts of this type are only viewable within a View");
@@ -89,18 +99,21 @@ $artefactpath[] = array(
 
 
 // Feedback
+$feedback = $artefact->get_feedback($limit, $offset, $viewid);
+build_feedback_html($feedback);
+
 $javascript = <<<EOF
-feedbacklist.view = {$viewid};
-feedbacklist.artefact = {$artefactid};
-feedbacklist.statevars.push('view', 'artefact');
-feedbacklist.updateOnLoad();
+var viewid = {$viewid};
+addLoadEvent(function () {
+    paginator = {$feedback->pagination_js}
+});
 EOF;
 
 $feedbackform = pieform(add_feedback_form(false));
 $objectionform = pieform(objection_form());
 
 $smarty = smarty(
-    array('mahara', 'tablerenderer', 'feedbacklist'),
+    array('paginator', 'feedbacklist'),
     array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
     array(),
     array(
@@ -115,6 +128,7 @@ $smarty->assign('INLINEJAVASCRIPT', $javascript);
 
 $smarty->assign('viewid', $viewid);
 $smarty->assign('viewtitle', $view->get('title'));
+$smarty->assign('feedback', $feedback);
 
 $viewowner = $view->get('owner');
 if ($viewowner) {

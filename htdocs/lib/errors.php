@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -36,6 +37,11 @@ define('LOG_TARGET_SCREEN', 1);
 define('LOG_TARGET_ERRORLOG', 2);
 /** Write the error to stdout (using echo) */
 define('LOG_TARGET_STDOUT', 4);
+/** Display the errors on the screen in the admin area only (short term hack
+    until we create an admin notifications page) */
+define('LOG_TARGET_ADMIN', 8);
+/** Log to a specific file */
+define('LOG_TARGET_FILE', 16);
 
 // Logging levels
 /** Environment type errors, such as register_globals being on */
@@ -194,7 +200,7 @@ function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $lin
     }
     $prefix = '[' . str_pad(substr(strtoupper($loglevelnames[$loglevel]), 0, 3), 3) . '] ' . $prefix;
 
-    if ($targets & LOG_TARGET_SCREEN) {
+    if ($targets & LOG_TARGET_SCREEN || (defined('ADMIN') && $targets & LOG_TARGET_ADMIN)) {
         // Work out which method to call for displaying the message
         if ($loglevel == LOG_LEVEL_DBG || $loglevel == LOG_LEVEL_INFO) {
             $method = 'add_info_msg';
@@ -247,6 +253,40 @@ function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $lin
         }
         if ($backtrace && $textbacktrace) {
             echo $textbacktrace;
+        }
+    }
+
+    if (function_exists('get_config')) {
+        $logfilename = get_config('log_file');
+        if (($targets & LOG_TARGET_FILE) && $logfilename) {
+            global $LOGFILE_FH;
+            static $logfile_open_attempted = null;
+            if (!$logfile_open_attempted) {
+                $logfile_open_attempted = true;
+                $LOGFILE_FH = fopen($logfilename, 'wb');
+                if ($LOGFILE_FH !== false) {
+                    function _close_logfile() {
+                        global $LOGFILE_FH;
+                        fclose($LOGFILE_FH);
+                    }
+                    register_shutdown_function('_close_logfile');
+                }
+                else {
+                    error_log("Could not open your custom log file ($logfilename)");
+                }
+            }
+
+            if (is_resource($LOGFILE_FH)) {
+                foreach ($loglines as $line) {
+                    fwrite($LOGFILE_FH, $prefix . $line . "\n");
+                }
+                if ($backtrace && $textbacktrace) {
+                    $lines = explode("\n", $textbacktrace);
+                    foreach ($lines as $line) {
+                        fwrite($LOGFILE_FH, $line . "\n");
+                    }
+                }
+            }
         }
     }
 }
@@ -374,6 +414,10 @@ function error ($code, $message, $file, $line, $vars) {
         E_USER_ERROR => 'User Error'
     );
 
+    if (defined('E_RECOVERABLE_ERROR')) {
+        $error_lookup[E_RECOVERABLE_ERROR] = 'Warning';
+    }
+
     if (!error_reporting()) {
         return;
     }
@@ -384,7 +428,7 @@ function error ($code, $message, $file, $line, $vars) {
 
     // Ignore errors from smarty templates, which happen all too often
     if (function_exists('get_config')) {
-        $compiledir = realpath(get_config('dataroot') . 'smarty/compile');
+        $compiledir = realpath(get_config('dataroot') . 'dwoo/compile');
 
         if (E_NOTICE == $code && substr($file, 0, strlen($compiledir)) == $compiledir) {
             return;

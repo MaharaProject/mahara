@@ -2,17 +2,17 @@
 
 class HTMLPurifier_DoctypeRegistry
 {
-    
+
     /**
      * Hash of doctype names to doctype objects
      */
     protected $doctypes;
-    
+
     /**
      * Lookup table of aliases to real doctype names
      */
     protected $aliases;
-    
+
     /**
      * Registers a doctype to the registry
      * @note Accepts a fully-formed doctype object, or the
@@ -45,7 +45,7 @@ class HTMLPurifier_DoctypeRegistry
         if (isset($this->aliases[$name])) unset($this->aliases[$name]);
         return $doctype;
     }
-    
+
     /**
      * Retrieves reference to a doctype of a certain name
      * @note This function resolves aliases
@@ -62,7 +62,7 @@ class HTMLPurifier_DoctypeRegistry
         }
         return $this->doctypes[$doctype];
     }
-    
+
     /**
      * Creates a doctype based on a configuration object,
      * will perform initialization on the doctype
@@ -74,29 +74,30 @@ class HTMLPurifier_DoctypeRegistry
     public function make($config) {
         return clone $this->get($this->getDoctypeFromConfig($config));
     }
-    
+
     /**
      * Retrieves the doctype from the configuration object
      */
     public function getDoctypeFromConfig($config) {
         // recommended test
-        $doctype = $config->get('HTML', 'Doctype');
+        $doctype = $config->get('HTML.Doctype');
         if (!empty($doctype)) return $doctype;
-        $doctype = $config->get('HTML', 'CustomDoctype');
+        $doctype = $config->get('HTML.CustomDoctype');
         if (!empty($doctype)) return $doctype;
         // backwards-compatibility
-        if ($config->get('HTML', 'XHTML')) {
+        if ($config->get('HTML.XHTML')) {
             $doctype = 'XHTML 1.0';
         } else {
             $doctype = 'HTML 4.01';
         }
-        if ($config->get('HTML', 'Strict')) {
+        if ($config->get('HTML.Strict')) {
             $doctype .= ' Strict';
         } else {
             $doctype .= ' Transitional';
         }
         return $doctype;
     }
-    
+
 }
 
+// vim: et sw=4 sts=4

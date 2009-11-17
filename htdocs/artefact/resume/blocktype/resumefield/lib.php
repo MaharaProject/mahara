@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage blocktype-resumefield
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -78,16 +79,13 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance, $istemplate) {
-        if ($istemplate) {
-            return array();
-        }
+    public static function instance_config_form($instance) {
         $configdata = $instance->get('configdata');
 
         $form = array();
 
         // Which resume field does the user want
-        $form[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate);
+        $form[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null);
         $form['message'] = array(
             'type' => 'html',
             'value' => get_string('filloutyourresume', 'blocktype.resume/resumefield', '<a href="' . get_config('wwwroot') . 'artefact/resume/">', '</a>'),
@@ -102,7 +100,7 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
     }
 
     // TODO: make decision on whether this should be abstract or not
-    public static function artefactchooser_element($default=null, $istemplate=false) {
+    public static function artefactchooser_element($default=null) {
         safe_require('artefact', 'resume');
         return array(
             'name'  => 'artefactid',
@@ -153,6 +151,71 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
      */
     public static function allowed_in_view(View $view) {
         return $view->get('owner') != null;
+    }
+
+    /**
+     * Export the name of the resume field being exported instead of a
+     * reference to the artefact ID - mainly so that the fake "contact
+     * information" field (which isn't exported) gets handled properly.
+     *
+     * @param BlockInstance $bi The blockinstance to export the config for.
+     * @return array The config for the blockinstance
+     */
+    public static function export_blockinstance_config_leap(BlockInstance $bi) {
+        $configdata = $bi->get('configdata');
+        $result = array();
+
+        if (!empty($configdata['artefactid'])) {
+            if ($artefacttype = get_field('artefact', 'artefacttype', 'id', $configdata['artefactid'])) {
+                $result['artefacttype'] = json_encode(array($artefacttype));
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Load the artefact ID for the field based on the field name that is in
+     * the config (see export_blockinstance_config_leap).
+     *
+     * @param array $biconfig   The block instance config
+     * @param array $viewconfig The view config
+     * @return BlockInstance The newly made block instance
+     */
+    public static function import_create_blockinstance_leap(array $biconfig, array $viewconfig) {
+        $configdata = array();
+
+        // This blocktype is only allowed in personal views
+        if (empty($viewconfig['owner'])) {
+            return;
+        }
+        $owner = $viewconfig['owner'];
+
+        if (isset($biconfig['config']) && is_array($biconfig['config'])) {
+            $impcfg = $biconfig['config'];
+            if (!empty($impcfg['artefacttype'])) {
+                if ($artefactid = get_field_sql("SELECT id
+                    FROM {artefact}
+                    WHERE owner = ?
+                    AND artefacttype = ?
+                    AND artefacttype IN (
+                        SELECT name
+                        FROM {artefact_installed_type}
+                        WHERE plugin = 'resume'
+                    )", array($owner, $impcfg['artefacttype']))) {
+                    $configdata['artefactid'] = $artefactid;
+                }
+            }
+        }
+
+        $bi = new BlockInstance(0,
+            array(
+                'blocktype'  => $biconfig['type'],
+                'configdata' => $configdata,
+            )
+        );
+
+        return $bi;
     }
 
 }

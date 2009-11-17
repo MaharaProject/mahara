@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage interaction-forum
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -150,7 +151,7 @@ $editform = pieform(array(
         'body' => array(
             'type'         => 'wysiwyg',
             'title'        => get_string('Body', 'interaction.forum'),
-            'rows'         => 10,
+            'rows'         => 18,
             'cols'         => 70,
             'defaultvalue' => isset($post) ? $post->body : null,
             'rules'        => array( 'required' => true )
@@ -216,6 +217,10 @@ function addpost_submit(Pieform $form, $values) {
         ),
         'id', true
     );
+    $delay = get_config_plugin('interaction', 'forum', 'postdelay');
+    if (!is_null($delay) && $delay == 0) {
+        PluginInteractionForum::interaction_forum_new_post(array($postid));
+    }
     $SESSION->add_ok_msg(get_string('addpostsuccess', 'interaction.forum'));
     redirect('/interaction/forum/topic.php?id=' . $values['topic'] . '#post' . $postid);
 }

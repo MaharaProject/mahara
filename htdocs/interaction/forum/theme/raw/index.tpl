@@ -2,19 +2,10 @@
 
 <h2>{str tag="nameplural" section=interaction.forum}</h2>
 {if $admin}
-<div class="rbuttons pagetabs">
-<a href="{$WWWROOT}interaction/edit.php?group={$groupid|escape}&amp;plugin=forum" class="btn-add s">{str tag="newforum" section=interaction.forum}</a>
+<div id="forumbtns" class="rbuttons">
+<a href="{$WWWROOT}interaction/edit.php?group={$groupid|escape}&amp;plugin=forum" class="btn btn-add">{str tag="newforum" section=interaction.forum}</a>
 </div>
 {/if}
-<div>
-	<label>{str tag="groupadminlist" section="interaction.forum"}</label>
-	{foreach from=$groupadmins item=groupadmin}
-    <span class="s inlinelist">
-        <a href="{$WWWROOT}user/view.php?id={$groupadmin}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupadmin}" alt=""></a>
-        <a href="{$WWWROOT}user/view.php?id={$groupadmin}" class="groupadmin">{$groupadmin|display_name|escape}</a>
-    </span>
-    {/foreach}
-</div>
 {if $forums}
 <table id="forumslist" class="fullwidth nohead">
 	<tr>
@@ -23,11 +14,11 @@
 		<th></th>
 	</tr>
     {foreach from=$forums item=forum}
-    <tr class="r{cycle values=0,1}">
+    <tr class="{cycle values='r0,r1'}">
         <td>
             {if $admin}
             <div class="fr btn-spacer s">
-                <a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}&amp;returnto=index" id="btn-edit" class="btn-edit">{str tag=edit}</a>
+                <a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}&amp;returnto=index" class="btn-edit">{str tag=edit}</a>
                 <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}&amp;returnto=index" class="btn-del">{str tag=delete}</a>
             </div>
             {/if}
@@ -36,7 +27,7 @@
             </div>
             <div class="s">{$forum->description|str_shorten_html:1000:true}</div>
             {if $forum->moderators}
-            <div class="s inlinelist">
+            <div class="inlinelist">
                 <span>{str tag="Moderators" section="interaction.forum"}:</span>
                 {foreach from=$forum->moderators item=mod}
                     <a href="{$WWWROOT}user/view.php?id={$mod}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$mod}" alt=""></a>
@@ -45,12 +36,20 @@
             </div>
             {/if}
         </td>
-        <td class="center">{$forum->topiccount}</td>
-        <td class="nowrap s">{if $forum->subscribe}{$forum->subscribe}{/if}</td>
+        <td class="center" width="15%">{$forum->topiccount}</td>
+        <td class="nowrap s subscribetd">{if $forum->subscribe}{$forum->subscribe}{/if}</td>
 	</tr>
     {/foreach}
 </table>
 {else}
 <div class="message">{str tag=noforums section=interaction.forum}</div>
 {/if}
+<div class="forummods">
+	<label>{str tag="groupadminlist" section="interaction.forum"}</label>
+	{foreach from=$groupadmins item=groupadmin}
+    <span class="inlinelist">
+        <a href="{$WWWROOT}user/view.php?id={$groupadmin}" class="groupadmin"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupadmin}" alt=""> {$groupadmin|display_name|escape}</a>
+    </span>
+    {/foreach}
+</div>
 {include file="footer.tpl"}

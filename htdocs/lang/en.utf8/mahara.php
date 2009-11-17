@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage lang
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -80,10 +81,37 @@ $string['sendrequest'] = 'Send request';
 $string['reason'] = 'Reason';
 $string['select'] = 'Select';
 
+// Tags
 $string['tags'] = 'Tags';
 $string['tagsdesc'] = 'Enter comma separated tags for this item.';
 $string['tagsdescprofile'] = 'Enter comma separated tags for this item. Items tagged with \'profile\' are displayed in your sidebar.';
 $string['youhavenottaggedanythingyet'] = 'You have not tagged anything yet';
+$string['mytags'] = 'My Tags';
+$string['Tag'] = 'Tag';
+$string['itemstaggedwith'] = 'Items tagged with "%s"';
+$string['numitems'] = '%s items';
+$string['searchresultsfor'] = 'Search results for';
+$string['alltags'] = 'All Tags';
+$string['sortalpha'] = 'Sort tags alphabetically';
+$string['sortfreq'] = 'Sort tags by frequency';
+$string['sortresultsby'] = 'Sort results by:';
+$string['date'] = 'Date';
+$string['filterresultsby'] = 'Filter results by:';
+$string['tagfilter_all'] = 'All';
+$string['tagfilter_file'] = 'Files';
+$string['tagfilter_image'] = 'Images';
+$string['tagfilter_text'] = 'Text';
+$string['tagfilter_view'] = 'Views';
+$string['edittags'] = 'Edit Tags';
+$string['selectatagtoedit'] = 'Select a tag to edit';
+$string['edittag'] = 'Edit <a href="%s">%s</a>';
+$string['editthistag'] = 'Edit This Tag';
+$string['edittagdescription'] = 'All items in your portfolio tagged "%s" will be updated';
+$string['deletetag'] = 'Delete <a href="%s">%s</a>';
+$string['confirmdeletetag'] = 'Do you really want to delete this tag from everything in your portfolio?';
+$string['deletetagdescription'] = 'Remove this tag from all items in your portfolio';
+$string['tagupdatedsuccessfully'] = 'Tag updated successfully';
+$string['tagdeletedsuccessfully'] = 'Tag deleted successfully';
 
 $string['selfsearch'] = 'Search My Portfolio';
 
@@ -262,6 +290,8 @@ $string['youraccounthasbeensuspended'] = 'Your account has been suspeneded';
 $string['youraccounthasbeenunsuspended'] = 'Your account has been unsuspeneded';
 $string['changepassword'] = 'Change Password';
 $string['changepasswordinfo'] = 'You are required to change your password before you can proceed.';
+$string['chooseusernamepassword'] = 'Choose your username and password';
+$string['chooseusernamepasswordinfo'] = 'You need a username and password to log in to %s.  Please choose them now.';
 $string['confirmpassword'] = 'Confirm password';
 $string['javascriptnotenabled'] = 'Your browser does not have javascript enabled for this site. Mahara requires javascript to be enabled before you can log in';
 $string['cookiesnotenabled'] = 'Your browser does not have cookies enabled, or is blocking cookies from this site. Mahara requires cookies to be enabled before you can log in';
@@ -483,6 +513,9 @@ $string['institutionmemberconfirmsubject'] = 'Institution membership confirmatio
 $string['institutionmemberconfirmmessage'] = 'You have been added as a member of %s.';
 $string['institutionmemberrejectsubject'] = 'Institution membership request declined';
 $string['institutionmemberrejectmessage'] = 'Your request for membership of %s was declined.';
+$string['Memberships'] = 'Memberships';
+$string['Requests'] = 'Requests';
+$string['Invitations'] = 'Invitations';
 
 $string['config'] = 'Config';
 
@@ -848,5 +881,11 @@ $string['allowpublicaccess'] = 'Allow public (non logged in) access';
 $string['thisistheprofilepagefor'] = 'This is the profile page for %s';
 
 $string['pleasedonotreplytothismessage'] = "Please do not reply to this message.";
+
 $string['theme'] = 'Theme';
+
+$string['deleteduser'] = 'Deleted user';
+
+$string['recentupdates'] = 'Recent Updates';
+
 ?>

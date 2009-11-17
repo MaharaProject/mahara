@@ -7,29 +7,33 @@
 input#myfriends_addfriend_add {
     font-weight: bold;
 }
+
 #userfriendstable a {
     display: block;
 }
+
 #sendmessage input,
 #invitetogroup #invitetogroup_submit_container input {
 	margin: 0;
 }
 
-
 #email_list {
-  line-height: 2em;
+	line-height: 2em;
 }
 #email_list a {
   color: #ca0000;
-  font-size: .9em;
+  text-decoration: none;
   margin-left: .5em;
 }
-
+#profileform_email_container a {
+	font-size: .9em;
+}
 
 .profile-fieldsets fieldset {
 	border: none;
 	padding: 0;
 }
+
 fieldset.safe-hidden .mceEditor {
 	display: none;
 }

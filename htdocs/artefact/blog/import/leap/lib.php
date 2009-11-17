@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage artefact-blog-import-leap
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -30,13 +31,11 @@ defined('INTERNAL') || die();
  * Implements LEAP2A import of blog related entries into Mahara
  *
  * For more information about LEAP blog importing, see:
- * http://wiki.mahara.org/Developer_Area/Import%2f%2fExport/LEAP_Import/Blog_Artefact_Plugin
+ * http://wiki.mahara.org/Developer_Area/Import//Export/LEAP_Import/Blog_Artefact_Plugin
  *
  * TODO:
  * - Get entries that feel they're part of the blog, not just entries the blog feels are part of it
  * - Import raw ATOM feed entries as blog posts
- * - Provide a default strategy for importing anything into a 'miscellaneous' blog
- * - Handle importing things that don't have inline entry content into a blogpost
  */
 class LeapImportBlog extends LeapImportArtefactPlugin {
 
@@ -50,16 +49,23 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
      */
     const STRATEGY_IMPORT_AS_ENTRY = 2;
 
-    public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImport $importer) {
+    private static $firstblogid = null;
+    private static $importedablog = false;
+
+    /**
+     * Users get a default blog when they're created. We don't want this user
+     * to have one if their import includes a blog. So we remember the default
+     * blog ID here in order to delete it later if necessary.
+     */
+    public static function setup(PluginImportLeap $importer) {
+        self::$firstblogid = get_field('artefact', 'id', 'owner', $importer->get('usr'), 'artefacttype', 'blog');
+    }
+
+    public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImportLeap $importer) {
         $strategies = array();
 
-        // TODO: when the xpath has an error in it, count(error) == 1 also.. so should check return type
-        $correctrdftype = count($entry->xpath('rdf:type['
-            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, 'selection') . ']')) == 1;
-        $correctcategoryscheme = count($entry->xpath('a:category[('
-            . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'selection_type#') . ') and @term="Blog"]')) == 1;
-
-        if ($correctrdftype && $correctcategoryscheme) {
+        if (PluginImportLeap::is_rdf_type($entry, $importer, 'selection')
+            && PluginImportLeap::is_correct_category_scheme($entry, $importer, 'selection_type', 'Blog')) {
             $otherrequiredentries = array();
 
             // Get entries that this blog feels are a part of it
@@ -92,7 +98,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
         return $strategies;
     }
 
-    public static function import_using_strategy(SimpleXMLElement $entry, PluginImport $importer, $strategy, array $otherentries) {
+    public static function import_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
         $artefactmapping = array();
         switch ($strategy) {
         case self::STRATEGY_IMPORT_AS_BLOG:
@@ -110,6 +116,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
             $blog->set('tags', PluginImportLeap::get_entry_tags($entry));
             $blog->commit();
             $artefactmapping[(string)$entry->id] = array($blog->get('id'));
+            self::$importedablog = true;
 
             // Then, the blog posts
             foreach ($otherentries as $entryid) {
@@ -142,26 +149,27 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
      * If importing an entry resulted in importing a new file (caused by the 
      * entry having out-of-line content), we attach that file to the entry.
      */
-    public static function setup_relationships(SimpleXMLElement $entry, PluginImport $importer, $strategy, array $otherentries) {
+    public static function setup_relationships(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
         switch ($strategy) {
         case self::STRATEGY_IMPORT_AS_BLOG:
             foreach ($otherentries as $entryid) {
                 $blogpostentry = $importer->get_entry_by_id($entryid);
                 // Get all attachments this blogpost things are attached to it
-                // TODO: get all entries that think they're attached to the blogpost.
-                // I think we can only look for files, Mahara doesn't understand 
-                // attaching something that isn't a file to a blogpost
+                if (!isset($blogpostentry->link)) {
+                    continue;
+                }
                 foreach ($blogpostentry->link as $blogpostlink) {
                     $blogpost = null;
-                    if ($importer->curie_equals($blogpostlink['rel'], PluginImportLeap::NS_LEAP, 'has_attachment') && isset($blogpostlink['href'])) {
-
+                    if ($importer->curie_equals($blogpostlink['rel'], '', 'enclosure') && isset($blogpostlink['href'])) {
                         if (!$blogpost) {
                             $artefactids = $importer->get_artefactids_imported_by_entryid((string)$blogpostentry->id);
                             $blogpost = new ArtefactTypeBlogPost($artefactids[0]);
                         }
                         $importer->trace("Attaching file $blogpostlink[href] to blog post $blogpostentry->id", PluginImportLeap::LOG_LEVEL_VERBOSE);
                         $artefactids = $importer->get_artefactids_imported_by_entryid((string)$blogpostlink['href']);
-                        $blogpost->attach($artefactids[0]);
+                        if (isset($artefactids[0])) {
+                            $blogpost->attach($artefactids[0]);
+                        }
                     }
                     if ($blogpost) {
                         $blogpost->commit();
@@ -176,6 +184,16 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
             break;
         default:
             throw new ImportException($importer, 'TODO: get_string: unknown strategy chosen for importing entry');
+        }
+    }
+
+    /**
+     * Deletes the default blog that is created for all users
+     */
+    public static function cleanup(PluginImportLeap $importer) {
+        if (self::$importedablog && self::$firstblogid) {
+            $blog = artefact_instance_from_id(self::$firstblogid);
+            $blog->delete();
         }
     }
 
@@ -198,6 +216,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
             $blog->set('mtime', $time);
             $blog->commit();
             $blogid = $blog->get('id');
+            self::$importedablog = true;
         }
 
         return $blogid;
@@ -249,9 +268,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
             $blogpost->set('mtime', $updated);
         }
 
-        $draftpost = count($entry->xpath('a:category[('
-            . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'readiness#')
-            . ') and @term="Unready"]')) == 1;
+        $draftpost = PluginImportLeap::is_correct_category_scheme($entry, $importer, 'readiness', 'Unready');
         $blogpost->set('published', $draftpost ? 0 : 1);
 
         $blogpost->set('owner', $importer->get('usr'));

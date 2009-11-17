@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -37,11 +38,8 @@ $offset = param_integer('offset', 0);
 $limit  = 10;
 
 $data = search_user($query, $limit, $offset, array('exclude' => $USER->get('id')));
-
-if ($data['data']) {
-    $userlist = join(',', array_map(create_function('$u','return $u[\'id\'];'), $data['data']));
-    $data['data'] = get_users_data($userlist);
-}
+$data['query'] = $query;
+build_userlist_html($data, 'find');
 
 $searchform = pieform(array(
     'name' => 'search',
@@ -58,28 +56,21 @@ $searchform = pieform(array(
     )
 ));
 
-$pagination = build_pagination(array(
-    'url' => get_config('wwwroot') . 'user/find.php?query=' . $query,
-    'count' => $data['count'],
-    'limit' => $limit,
-    'offset' => $offset,
-    'resultcounttextsingular' => get_string('user', 'group'),
-    'resultcounttextplural' => get_string('users', 'group'),
-));
+$js = <<< EOF
+addLoadEvent(function () {
+    p = {$data['pagination_js']}
+    connect('search_submit', 'onclick', function () {
+        var params = {'query': $('search_query').value};
+        p.sendQuery(params);
+    });
+});
+EOF;
 
-if ($query && !$data['count']) {
-    // Search run, no results
-    $message = get_string('nosearchresultsfound', 'group');
-}
-
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(friends_control_sideblock('find'))));
+$smarty = smarty(array('paginator'), array(), array(), array('sideblocks' => array(friends_control_sideblock('find'))));
 $smarty->assign('PAGEHEADING', hsc(TITLE));
-$smarty->assign('users', $data['data']);
+$smarty->assign('INLINEJAVASCRIPT', $js);
+$smarty->assign('results', $data);
 $smarty->assign('form', $searchform);
-$smarty->assign('pagination', $pagination['html']);
-if (isset($message)) {
-    $smarty->assign('message', $message);
-}
 $smarty->display('user/find.tpl');
 
 function search_submit(Pieform $form, $values) {

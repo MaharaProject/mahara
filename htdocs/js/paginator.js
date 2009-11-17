@@ -38,6 +38,47 @@ var Paginator = function(id, datatable, script, extradata) {
         });
     }
 
+    this.updateResults = function (data) {
+        var tbody = getFirstElementByTagAndClassName('tbody', null, self.datatable);
+        if (tbody) {
+            // You can't write to table nodes innerHTML in IE and
+            // konqueror, so this workaround detects them and does
+            // things differently
+            if ((document.all && !window.opera) || (/Konqueror|AppleWebKit|KHTML/.test(navigator.userAgent))) {
+                var temp = DIV({'id':'ie-workaround'});
+                temp.innerHTML = '<table><tbody>' + data.data.tablerows + '</tbody></table>';
+                swapDOM(tbody, temp.childNodes[0].childNodes[0]);
+                removeElement(temp);
+            }
+            else {
+                tbody.innerHTML = data['data']['tablerows'];
+            }
+        }
+
+        // Update the pagination
+        if ($(self.id)) {
+            var tmp = DIV();
+            tmp.innerHTML = data['data']['pagination'];
+            swapDOM(self.id, tmp.firstChild);
+
+            // Run the pagination js to make it live
+            eval(data['data']['pagination_js']);
+
+            // Update the result count
+            var results = getFirstElementByTagAndClassName('div', 'results', self.id);
+            if (results && data.data.results) {
+                results.innerHTML = data.data.results;
+            }
+        }
+    }
+
+    this.sendQuery = function(params) {
+        sendjsonrequest(self.jsonScript, params, 'GET', function(data) {
+            self.updateResults(data);
+            self.alertProxy('pagechanged', data['data']);
+        });
+    }
+
     this.rewritePaginatorLink = function(a) {
         connect(a, 'onclick', function(e) {
             e.stop();
@@ -49,50 +90,7 @@ var Paginator = function(id, datatable, script, extradata) {
                 queryData.extradata = serializeJSON(self.extraData);
             }
 
-            sendjsonrequest(self.jsonScript, queryData, 'GET', function(data) {
-                var tbody = getFirstElementByTagAndClassName('tbody', null, self.datatable);
-                if (tbody) {
-                    // Currently the paginator is used for the artefact chooser
-                    // alone. This block assumes there is a DOM node with an ID
-                    // of 'ie-workaround', but could be improved somewhat to
-                    // perhaps not need the DOM node to be in the DOM - at
-                    // least not when the page loads.
-                    //
-                    // You can't write to table nodes innerHTML in IE and
-                    // konqueror, so this workaround detects them and does
-                    // things differently
-                    if (
-                        (document.all && document.documentElement && typeof(document.documentElement.style.maxHeight) != "undefined" && !window.opera)
-                        ||
-                        (/Konqueror|AppleWebKit|KHTML/.test(navigator.userAgent))) {
-                        var temp = $('ie-workaround');
-                        temp.innerHTML = '<table><tbody>' + data['data']['tablerows'];
-                        swapDOM(tbody, temp.childNodes[0].childNodes[0]);
-                        replaceChildNodes(temp);
-                    }
-                    else {
-                        tbody.innerHTML = data['data']['tablerows'];
-                    }
-                }
-
-                // Update the pagination
-                if ($(self.id)) {
-                    var tmp = DIV();
-                    tmp.innerHTML = data['data']['pagination'];
-                    swapDOM(self.id, tmp.firstChild);
-
-                    // Run the pagination js to make it live
-                    eval(data['data']['pagination_js']);
-
-                    // Update the result count
-                    var results = getFirstElementByTagAndClassName('div', 'results', self.id);
-                    if (results) {
-                        results.innerHTML = data['data']['results'];
-                    }
-                }
-
-                self.alertProxy('pagechanged', data['data']);
-            });
+            self.sendQuery(queryData);
         });
     }
 

@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -33,6 +34,7 @@ define('SECTION_PAGE', 'activitypreferences');
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 define('TITLE', get_string('activityprefs'));
 require_once('pieforms/pieform.php');
+require_once(get_config('libroot') . 'activity.php');
 
 $activitytypes = get_records_array('activity_type', 'admin', 0);
 if ($USER->get('admin') || $USER->is_institutional_admin()) {
@@ -51,11 +53,7 @@ foreach ($notifications as $n) {
 foreach ($activitytypes as $type) {
     $dv = $USER->get_activity_preference($type->id);
     if (empty($dv)) {
-        if (!empty($type->admin) && $USER->get('admin')) {
-            $dv = 'none';
-        } else {
-            $dv = 'email';
-        }
+        $dv = call_static_method(generate_activity_class_name($type->name, $type->plugintype, $type->pluginname), 'default_notification_method');
     }
     if (!empty($type->plugintype)) {
         $section = $type->plugintype . '.' . $type->pluginname;

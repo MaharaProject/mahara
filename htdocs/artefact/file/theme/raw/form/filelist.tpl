@@ -1,4 +1,4 @@
-{if empty($filelist)}
+{if !$filelist}
 <p>{str tag=nofilesfound section=artefact.file}</p>
 {else}
 <table id="filelist" class="tablerenderer filelist">
@@ -7,15 +7,23 @@
    <th></th>
    <th>{str tag=Name section=artefact.file}</th>
    <th>{str tag=Description section=artefact.file}</th>
+  {if !$showtags && !$editmeta}
    <th>{str tag=Size section=artefact.file}</th>
    <th>{str tag=Date section=artefact.file}</th>
+  {/if}
+  {if $showtags}
+   <th>{str tag=tags}</th>
+  {/if}
+  {if $editmeta}
+   <th></th>
+  {/if}
    <th></th>
   </tr>
  </thead>
  <tbody>
   {foreach from=$filelist item=file}
     {if !$publishing || !$file->permissions || $file->can_republish}{assign var=publishable value=1}{else}{assign var=publishable value=0}{/if}
-  <tr id="file:{$file->id}" class="r{cycle values=0,1} directory-item{if $file->isparent} parentfolder{/if}{if $file->artefacttype == 'folder'} folder{/if}{if !empty($highlight) && $highlight == $file->id} highlight-file{/if}{if $edit == $file->id} hidden{/if}{if !$publishable && $file->artefacttype != 'folder'} disabled{/if}" {if !$publishable && $file->artefacttype != 'folder'} title="{str tag=notpublishable section=artefact.file}"{/if}>
+  <tr id="file:{$file->id}" class="{cycle values='r0,r1'} directory-item{if $file->isparent} parentfolder{/if}{if $file->artefacttype == 'folder'} folder{/if}{if $highlight && $highlight == $file->id} highlight-file{/if}{if $edit == $file->id} hidden{/if}{if !$publishable && $file->artefacttype != 'folder'} disabled{/if}" {if !$publishable && $file->artefacttype != 'folder'} title="{str tag=notpublishable section=artefact.file}"{/if}>
     <td>
       {if $editable}
       <div{if !$file->isparent} class="icon-drag" id="drag:{$file->id}"{/if}>
@@ -36,14 +44,27 @@
     {/if}
     </td>
     <td>{$file->description|escape}</td>
-    <td>{$file->size}</td>
-    <td>{$file->mtime}</td>
-    <td>
-    {if $editable && !$file->isparent}
-      {if !isset($file->can_edit) || $file->can_edit !== 0}<input type="submit" class="submit btn-edit s" name="{$prefix}_edit[{$file->id}]" value="{str tag=edit}" />{/if}
-      {if $file->childcount == 0}<input type="submit" class="submit btn-del s" name="{$prefix}_delete[{$file->id}]" value="{str tag=delete}" />{/if}
+    {if !$showtags && !$editmeta}
+    <td>{tif $file->size ?: ''}</td>
+    <td>{tif $file->mtime ?: ''}</td>
     {/if}
-    {if $selectable && $file->artefacttype != 'folder' && $publishable}
+    {if $showtags}
+    <td>{if $file->tags}<span class="tags">{list_tags tags=$file->tags owner=$showtags}</span>{/if}</td>
+    {/if}
+    {if $editmeta}
+    <td>
+      {if !$file->isparent}
+        {if !isset($file->can_edit) || $file->can_edit !== 0}<input type="submit" class="tag-edit submit" name="{$prefix}_edit[{$file->id}]" value="{str tag=edit}" />{/if}
+      {/if}
+    </td>
+    {/if}
+    <td class="right">
+    {if $editable && !$file->isparent}
+      {if $file->artefacttype == 'archive'}<a href="{$WWWROOT}artefact/file/extract.php?file={$file->id}">{str tag=Unzip section=artefact.file}</a>{/if}
+      {if !isset($file->can_edit) || $file->can_edit !== 0}<input type="submit" class="submit btn-edit s" name="{$prefix}_edit[{$file->id}]" value="{str tag=edit}" />
+      <input type="submit" class="submit btn-del s" name="{$prefix}_delete[{$file->id}]" value="{str tag=delete}" />{/if}
+    {/if}
+    {if $selectable && ($file->artefacttype != 'folder' || $selectfolders) && $publishable && !$file->isparent}
       <input type="submit" class="select small" name="{$prefix}_select[{$file->id}]" id="{$prefix}_select_{$file->id}" value="{str tag=select}" />
     {/if}
     </td>

@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage auth-internal
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -216,7 +217,7 @@ class AuthXmlrpc extends Auth {
             db_begin();
             $user->username           = get_new_username($remoteuser->username);
 
-            $user->id = create_user($user, array(), $peer->institution, $this, $remoteuser->username);
+            $user->id = create_user($user, array(), $this->institution, $this, $remoteuser->username);
 
             $this->import_user_settings($user, $remoteuser);
 
@@ -270,84 +271,88 @@ class AuthXmlrpc extends Auth {
             $imageobject = (object)$client->response;
 
             $u = preg_replace('/[^A-Za-z0-9 ]/', '', $user->username);
-            $filename = '/tmp/'.intval($this->instanceid).'_'.$u;
+            $filename = get_config('dataroot') . 'temp/mpi_' . intval($this->instanceid) . '_' . $u;
 
             if (array_key_exists('f1', $client->response)) {
                 $imagecontents = base64_decode($client->response['f1']);
-                file_put_contents($filename, $imagecontents);
-                $imageexists = false;
-                $icons       = false;
+                if (file_put_contents($filename, $imagecontents)) {
+                    $imageexists = false;
+                    $icons       = false;
 
-                if ($update) {
-                    $newchecksum = sha1_file($filename);
-                    $icons = get_records_select_array('artefact', 'artefacttype = \'profileicon\' AND owner = ? ', array($user->id), '', 'id');
-                    if (false != $icons) {
-                        foreach ($icons as $icon) {
-                            $iconfile = get_config('dataroot') . 'artefact/file/profileicons/originals/' . ($icon->id % 256) . '/'.$icon->id;
-                            $checksum = sha1_file($iconfile);
-                            if ($newchecksum == $checksum) {
-                                $imageexists = true;
-                                unlink($filename);
-                                break;
+                    if ($update) {
+                        $newchecksum = sha1_file($filename);
+                        $icons = get_records_select_array('artefact', 'artefacttype = \'profileicon\' AND owner = ? ', array($user->id), '', 'id');
+                        if (false != $icons) {
+                            foreach ($icons as $icon) {
+                                $iconfile = get_config('dataroot') . 'artefact/file/profileicons/originals/' . ($icon->id % 256) . '/'.$icon->id;
+                                $checksum = sha1_file($iconfile);
+                                if ($newchecksum == $checksum) {
+                                    $imageexists = true;
+                                    unlink($filename);
+                                    break;
+                                }
                             }
                         }
                     }
+
+                    if (false == $imageexists) {
+                        $filesize = filesize($filename);
+                        if (!$user->quota_allowed($filesize)) {
+                            $error = get_string('profileiconuploadexceedsquota', 'artefact.file', get_config('wwwroot'));
+                        }
+
+                        require_once('file.php');
+                        $imagesize = getimagesize($filename);
+                        if (!$imagesize || !is_image_type($imagesize[2])) {
+                            $error = get_string('filenotimage');
+                        }
+
+                        $mime   = $imagesize['mime'];
+                        $width  = $imagesize[0];
+                        $height = $imagesize[1];
+                        $imagemaxwidth  = get_config('imagemaxwidth');
+                        $imagemaxheight = get_config('imagemaxheight');
+                        if ($width > $imagemaxwidth || $height > $imagemaxheight) {
+                            $error = get_string('profileiconimagetoobig', 'artefact.file', $width, $height, $imagemaxwidth, $imagemaxheight);
+                        }
+
+                        try {
+                            $user->quota_add($filesize);
+                        }
+                        catch (QuotaException $qe) {
+                            $error =  get_string('profileiconuploadexceedsquota', 'artefact.file', get_config('wwwroot'));
+                        }
+
+                        require_once(get_config('docroot') .'/artefact/lib.php');
+                        require_once(get_config('docroot') .'/artefact/file/lib.php');
+
+                        // Entry in artefact table
+                        $artefact = new ArtefactTypeProfileIcon();
+                        $artefact->set('owner', $user->id);
+                        $artefact->set('title', 'Profile Icon');
+                        $artefact->set('note', 'Profile Icon');
+                        $artefact->set('size', $filesize);
+                        $artefact->set('filetype', $mime);
+                        $artefact->set('width', $width);
+                        $artefact->set('height', $height);
+                        $artefact->commit();
+
+                        $id = $artefact->get('id');
+
+                        // Move the file into the correct place.
+                        $directory = get_config('dataroot') . 'artefact/file/profileicons/originals/' . ($id % 256) . '/';
+                        check_dir_exists($directory);
+                        rename($filename, $directory . $id);
+                        if ($create || empty($icons)) {
+                            $user->profileicon = $id;
+                        }
+                    }
+
+                    $user->commit();
                 }
-
-                if (false == $imageexists) {
-                    $filesize = filesize($filename);
-                    if (!$user->quota_allowed($filesize)) {
-                        $error = get_string('profileiconuploadexceedsquota', 'artefact.file', get_config('wwwroot'));
-                    }
-
-                    require_once('file.php');
-                    $imagesize = getimagesize($filename);
-                    if (!$imagesize || !is_image_type($imagesize[2])) {
-                        $error = get_string('filenotimage');
-                    }
-
-                    $mime   = $imagesize['mime'];
-                    $width  = $imagesize[0];
-                    $height = $imagesize[1];
-                    $imagemaxwidth  = get_config('imagemaxwidth');
-                    $imagemaxheight = get_config('imagemaxheight');
-                    if ($width > $imagemaxwidth || $height > $imagemaxheight) {
-                        $error = get_string('profileiconimagetoobig', 'artefact.file', $width, $height, $imagemaxwidth, $imagemaxheight);
-                    }
-
-                    try {
-                        $user->quota_add($filesize);
-                    }
-                    catch (QuotaException $qe) {
-                        $error =  get_string('profileiconuploadexceedsquota', 'artefact.file', get_config('wwwroot'));
-                    }
-
-                    require_once(get_config('docroot') .'/artefact/lib.php');
-                    require_once(get_config('docroot') .'/artefact/file/lib.php');
-
-                    // Entry in artefact table
-                    $artefact = new ArtefactTypeProfileIcon();
-                    $artefact->set('owner', $user->id);
-                    $artefact->set('title', 'Profile Icon');
-                    $artefact->set('note', 'Profile Icon');
-                    $artefact->set('size', $filesize);
-                    $artefact->set('filetype', $mime);
-                    $artefact->set('width', $width);
-                    $artefact->set('height', $height);
-                    $artefact->commit();
-
-                    $id = $artefact->get('id');
-
-                    // Move the file into the correct place.
-                    $directory = get_config('dataroot') . 'artefact/file/profileicons/originals/' . ($id % 256) . '/';
-                    check_dir_exists($directory);
-                    rename($filename, $directory . $id);
-                    if ($create || empty($icons)) {
-                        $user->profileicon = $id;
-                    }
+                else {
+                    log_warn(get_string('cantcreatetempprofileiconfile', 'artefact.file', $filename));
                 }
-
-                $user->commit();
             }
         }
 
@@ -484,8 +489,8 @@ class AuthXmlrpc extends Auth {
             log_debug("XMLRPC error occured while calling MNET method kill_children on $this->wwwroot");
             log_debug("This means that single-signout probably didn't work properly, but the problem "
                 . "is at the remote application");
-            log_debug("If the remote application is Moodle, and you're happy with a Mahara developer "
-                . "getting access to your system so they can try and debug the problem, get in touch with dev@mahara.org");
+            log_debug("If the remote application is Moodle, you are likely a victim of "
+                . "http://tracker.moodle.org/browse/MDL-16872 - try applying the attached patch to fix the issue");
             log_debug("Exception message follows:");
             log_debug($e->getMessage());
         }
@@ -782,18 +787,12 @@ class PluginAuthXmlrpc extends PluginAuth {
             'help'         => true,
         );
 
-        $elements['wessoout'] = array(
-            'type'         => 'checkbox',
-            'title'        => get_string('wessoout', 'auth'),
-            'defaultvalue' => self::$default_config['wessoout'],
-            'help'   => true
-        );
-
-        $elements['theyssoin'] = array(
-            'type'         => 'checkbox',
-            'title'        => get_string('theyssoin', 'auth'),
-            'defaultvalue' => self::$default_config['theyssoin'],
-            'help'   => true
+        $elements['ssodirection'] = array(
+            'type'         => 'select',
+            'title'        => get_string('ssodirection', 'auth'),
+            'options'      => array(0 => '--', 'theyssoin' => get_string('theyssoin', 'auth'), 'wessoout' => get_string('wessoout', 'auth')),
+            'defaultvalue' => self::$default_config['wessoout'] ? 'wessoout' : 'theyssoin',
+            'help'   => true,
         );
 
         $elements['updateuserinfoonlogin'] = array(
@@ -820,7 +819,6 @@ class PluginAuthXmlrpc extends PluginAuth {
         $elements['weimportcontent'] = array(
             'type'         => 'checkbox',
             'title'        => get_string('weimportcontent', 'auth'),
-            'description'  => get_string('weimportcontentdescription', 'auth'),
             'defaultvalue' => self::$default_config['weimportcontent'],
             'help'         => true,
         );
@@ -843,7 +841,16 @@ class PluginAuthXmlrpc extends PluginAuth {
             try {
                 $peer->bootstrap($values['wwwroot'], null, $values['appname'], $values['institution']);
             } catch (RemoteServerException $e) {
+                log_debug($e->getMessage());
                 $form->set_error('wwwroot',get_string('cantretrievekey', 'auth'));
+            }
+        }
+        else if ($values['institution'] != $peer->institution) {
+            if (get_records_sql_array("
+                SELECT ai.*, aic.*
+                FROM {auth_instance} ai JOIN {auth_instance_config} aic ON ai.id = aic.instance
+                WHERE aic.field = 'wwwroot' AND aic.value = ? AND ai.institution = ?", array($values['wwwroot'], $peer->institution))) {
+                $form->set_error('wwwroot',get_string('hostwwwrootinuse', 'auth', hsc(get_field('institution', 'displayname', 'name', $peer->institution))));
             }
         }
 
@@ -930,15 +937,26 @@ class PluginAuthXmlrpc extends PluginAuth {
         }
 
         self::$default_config = array(  'wwwroot'               => $values['wwwroot'],
-                                        'updateuserinfoonlogin' => $values['updateuserinfoonlogin'],
-                                        'weautocreateusers'     => $values['weautocreateusers'],
-                                        'theyautocreateusers'   => $values['theyautocreateusers'],
                                         'parent'                => $values['parent'],
                                         'authloginmsg'          => $values['authloginmsg'],
-                                        'wessoout'              => $values['wessoout'],
-                                        'theyssoin'             => $values['theyssoin'],
-                                        'weimportcontent'       => $values['weimportcontent'],
+                                        'wessoout'              => 0,
+                                        'theyssoin'             => 0,
+                                        'theyautocreateusers'   => 0,
+                                        'weautocreateusers'     => 0,
+                                        'updateuserinfoonlogin' => 0,
+                                        'weimportcontent'       => 0,
                                         );
+
+        if ($values['ssodirection'] == 'wessoout') {
+            self::$default_config['wessoout']              = 1;
+            self::$default_config['theyautocreateusers']   = $values['theyautocreateusers'];
+        }
+        else if ($values['ssodirection'] == 'theyssoin') {
+            self::$default_config['theyssoin']             = 1;
+            self::$default_config['updateuserinfoonlogin'] = $values['updateuserinfoonlogin'];
+            self::$default_config['weautocreateusers']     = $values['weautocreateusers'];
+            self::$default_config['weimportcontent']       = $values['weimportcontent'];
+        }
 
         foreach(self::$default_config as $field => $value) {
             $record = new stdClass();
@@ -963,6 +981,48 @@ class PluginAuthXmlrpc extends PluginAuth {
         return $values;
     }
 
+    public static function get_jump_url_prefix($hostwwwroot, $hostapp) {
+        return $hostwwwroot . '/' . ($hostapp == 'moodle' ? 'auth/mnet/jump.php' : 'auth/xmlrpc/jump.php')
+            . '?hostwwwroot=' . substr(get_config('wwwroot'), 0, -1) . '&wantsurl=';
+    }
+
+}
+
+/**
+ * Lifted from Moodle.
+ *
+ * Inline function to modify a url string so that mnet users are requested to
+ * log in at their mnet identity provider (if they are not already logged in)
+ * before ultimately being directed to the original url.
+ *
+ * uses global IDPJUMPURL - the url which user should initially be directed to
+ * @param array $url array with 3 elements
+ *     0 - context the url was taken from, possibly just the url, possibly href="url"
+ *     1 - the destination url
+ *     2 - the destination url, without the wwwroot part
+ * @return string the url the remote user should be supplied with.
+ */
+function localurl_to_jumpurl($url) {
+    global $IDPJUMPURL;
+    $localpart='';
+    $urlparts = parse_url($url[2]);
+    if ($urlparts) {
+        if (isset($urlparts['path'])) {
+            $localpart .= $urlparts['path'];
+        }
+        if (isset($urlparts['query'])) {
+            $localpart .= '?'.$urlparts['query'];
+        }
+        if (isset($urlparts['fragment'])) {
+            $localpart .= '#'.$urlparts['fragment'];
+        }
+    }
+    $indirecturl = $IDPJUMPURL . urlencode($localpart);
+    //If we matched on more than just a url (ie an html link), return the url to an href format
+    if ($url[0] != $url[1]) {
+        $indirecturl = 'href="'.$indirecturl.'"';
+    }
+    return $indirecturl;
 }
 
 ?>

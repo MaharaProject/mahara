@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -200,6 +201,7 @@ function expected_account_preferences() {
                  'messages'       => 'allow',
                  'lang'           => 'default',
                  'addremovecolumns' => 0,
+                 'tagssideblockmaxtags' => get_config('tagssideblockmaxtags'),
                  );
 }
 
@@ -267,6 +269,9 @@ function get_profile_field($userid, $field) {
  * @throws EmailException
  */ 
 function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='', $customheaders=null) {
+    global $IDPJUMPURL;
+    static $mnetjumps = array();
+
     if (!get_config('sendemail')) {
         // You can entirely disable Mahara from sending any e-mail via the 
         // 'sendemail' configuration variable
@@ -277,6 +282,29 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         throw new InvalidArgumentException("empty user given to email_user");
     }
     
+    // If the user is a remote xmlrpc user, trawl through the email text for URLs
+    // to our wwwroot and modify the url to direct the user's browser to login at
+    // their home site before hitting the link on this site
+    if (!empty($userto->mnethostwwwroot) && !empty($userto->mnethostapp)) {
+        require_once(get_config('docroot') . 'auth/xmlrpc/lib.php');
+
+        // Form the request url to hit the idp's jump.php
+        if (isset($mnetjumps[$userto->mnethostwwwroot])) {
+            $IDPJUMPURL = $mnetjumps[$userto->mnethostwwwroot];
+        } else {
+            $mnetjumps[$userto->mnethostwwwroot] = $IDPJUMPURL = PluginAuthXmlrpc::get_jump_url_prefix($userto->mnethostwwwroot, $userto->mnethostapp);
+        }
+
+        $wwwroot = get_config('wwwroot');
+        $messagetext = preg_replace_callback('%(' . $wwwroot . '([\w_:\?=#&@/;.~-]*))%',
+            'localurl_to_jumpurl',
+            $messagetext);
+        $messagehtml = preg_replace_callback('%href=["\'`](' . $wwwroot . '([\w_:\?=#&@/;.~-]*))["\'`]%',
+            'localurl_to_jumpurl',
+            $messagehtml);
+    }
+
+
     require_once('phpmailer/class.phpmailer.php');
 
     $mail = new phpmailer();
@@ -439,6 +467,7 @@ function display_name($user, $userto=null, $nameonly=false) {
             $user->lastname      = $USER->get('lastname');
             $user->admin         = $USER->get('admin') || $USER->is_institutional_admin();
             $user->staff         = $USER->get('staff') || $USER->is_institutional_staff();
+            $user->deleted       = 0;
             $usercache[$user->id] = $user;
         }
         else {
@@ -459,6 +488,7 @@ function display_name($user, $userto=null, $nameonly=false) {
         $user->lastname      = $userObj->get('lastname');
         $user->admin         = $userObj->get('admin');
         $user->staff         = $userObj->get('staff');
+        $user->deleted       = $userObj->get('deleted');
     }
 
     $user->id   = (isset($user->id)) ? $user->id : null;
@@ -469,23 +499,21 @@ function display_name($user, $userto=null, $nameonly=false) {
     }
 
     // if they don't have a preferred name set, just return here
+    $firstlast = (isset($user->deleted) && $user->deleted) ? get_string('deleteduser') : ($user->firstname . ' ' . $user->lastname);
     if (empty($user->preferredname)) {
         if ((!empty($userto->admin) || !empty($userto->staff)) && !$nameonly) {
-            return ($resultcache[$user->id][$userto->id][$nameonly]
-                = $user->firstname . ' ' . $user->lastname . ' (' . $user->username . ')');
+            return ($resultcache[$user->id][$userto->id][$nameonly] = $firstlast . ' (' . $user->username . ')');
         }
-        return ($resultcache[$user->id][$userto->id][$nameonly]
-            = $user->firstname . ' ' . $user->lastname);
+        return ($resultcache[$user->id][$userto->id][$nameonly] = $firstlast);
     }
     else if ($user->id == $userto->id) {
         // If viewing our own name, show it how we like it
-        return ($resultcache[$user->id][$userto->id][$nameonly]
-            = $user->preferredname);
+        return ($resultcache[$user->id][$userto->id][$nameonly] = $user->preferredname);
     }
 
     if ((!empty($userto->admin) || !empty($userto->staff)) && !$nameonly) {
         return ($resultcache[$user->id][$userto->id][$nameonly]
-            = $user->preferredname . ' (' . $user->firstname . ' ' . $user->lastname . ' - ' . $user->username . ')');
+            = $user->preferredname . ' (' . $firstlast . ' - ' . $user->username . ')');
     }
 
     $sql = "SELECT g1.member
@@ -496,10 +524,9 @@ function display_name($user, $userto=null, $nameonly=false) {
             WHERE g1.member = ? AND g2.member = ? AND g2.role = 'tutor'";
     if (record_exists_sql($sql, array($user->id, $userto->id))) {
         return ($resultcache[$user->id][$userto->id][$nameonly]
-            = $user->preferredname . ($nameonly ? '' : ' (' . $user->firstname . ' ' . $user->lastname . ')'));
+            = $user->preferredname . ($nameonly ? '' : ' (' . $firstlast . ')'));
     }
-    return ($resultcache[$user->id][$userto->id][$nameonly]
-        = $user->preferredname);
+    return ($resultcache[$user->id][$userto->id][$nameonly] = $user->preferredname);
 }
 
 /**
@@ -952,7 +979,7 @@ function load_user_institutions($userid) {
         throw new InvalidArgumentException("couldn't load institutions, no user id specified");
     }
     if ($institutions = get_records_sql_assoc('
-        SELECT u.institution,'.db_format_tsfield('ctime').','.db_format_tsfield('u.expiry', 'membership_expiry').',u.studentid,u.staff,u.admin,i.theme
+        SELECT u.institution,'.db_format_tsfield('ctime').','.db_format_tsfield('u.expiry', 'membership_expiry').',u.studentid,u.staff,u.admin,i.theme,i.registerallowed
         FROM {usr_institution} u INNER JOIN {institution} i ON u.institution = i.name
         WHERE u.usr = ?', array($userid))) {
         return $institutions;
@@ -990,7 +1017,7 @@ function get_new_username($desired) {
  * @param $userlist the ids separated by commas
  * @return array containing the users in the order from $userlist
  */
-function get_users_data($userlist) {
+function get_users_data($userlist, $getviews=true) {
 	global $USER;
     $sql = 'SELECT u.id, 0 AS pending,
                 COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages,
@@ -1025,31 +1052,32 @@ function get_users_data($userlist) {
         $record->institutions = get_institution_string_for_user($record->id);
     }
 
-    if (!$data || !$views = get_views(array_keys($data), null, null)) {
+    if (!$data || !$getviews || !$views = get_views(array_keys($data), null, null)) {
         $views = array();
     }
 
-   $viewcount = array_map('count', $views);
-    // since php is so special and inconsistent, we can't use array_map for this because it breaks the top level indexes.
-    $cleanviews = array();
-    foreach ($views as $userindex => $viewarray) {
-        $cleanviews[$userindex] = array_slice($viewarray, 0, 5);
+    if ($getviews) {
+        $viewcount = array_map('count', $views);
+        // since php is so special and inconsistent, we can't use array_map for this because it breaks the top level indexes.
+        $cleanviews = array();
+        foreach ($views as $userindex => $viewarray) {
+            $cleanviews[$userindex] = array_slice($viewarray, 0, 5);
 
-        // Don't reveal any more about the view than necessary
-        foreach ($cleanviews as $userviews) {
-            foreach ($userviews as &$view) {
-               foreach (array_keys(get_object_vars($view)) as $key) {
-                    if ($key != 'id' && $key != 'title') {
-                        unset($view->$key);
+            // Don't reveal any more about the view than necessary
+            foreach ($cleanviews as $userviews) {
+                foreach ($userviews as &$view) {
+                    foreach (array_keys(get_object_vars($view)) as $key) {
+                        if ($key != 'id' && $key != 'title') {
+                            unset($view->$key);
+                        }
                     }
                 }
             }
         }
-
     }
 
     foreach ($data as $friend) {
-        if (isset($cleanviews[$friend->id])) {
+        if ($getviews && isset($cleanviews[$friend->id])) {
             $friend->views = $cleanviews[$friend->id];
         }
         if ($friend->pending) {
@@ -1115,6 +1143,32 @@ function get_users_data($userlist) {
         }
     }
     return $ordereddata;
+}
+
+function build_userlist_html(&$data, $page) {
+    if ($data['data']) {
+        $userlist = join(',', array_map(create_function('$u','return $u[\'id\'];'), $data['data']));
+        $userdata = get_users_data($userlist, $page == 'myfriends');
+    }
+    $smarty = smarty_core();
+    $smarty->assign('data', isset($userdata) ? $userdata : null);
+    $smarty->assign('page', $page);
+    $smarty->assign('query', $data['query']);
+    $data['tablerows'] = $smarty->fetch('user/userresults.tpl');
+    $pagination = build_pagination(array(
+        'id' => 'friendslist_pagination',
+        'url' => get_config('wwwroot') . 'user/' . $page . '.php?query=' . $data['query'],
+        'jsonscript' => 'json/friendsearch.php',
+        'datatable' => 'friendslist',
+        'count' => $data['count'],
+        'limit' => $data['limit'],
+        'offset' => $data['offset'],
+        'resultcounttextsingular' => get_string('user', 'group'),
+        'resultcounttextplural' => get_string('users', 'group'),
+        'extradata' => array('page' => $page),
+    ));
+    $data['pagination'] = $pagination['html'];
+    $data['pagination_js'] = $pagination['javascript'];
 }
 
 function get_institution_string_for_user($userid) {
@@ -1248,7 +1302,16 @@ function addfriend_submit(Pieform $form, $values) {
     redirect('/user/view.php?id=' . $values['id']);
 }
 
-
+/**
+ * Create user
+ *
+ * @param object $user stdclass or User object for the usr table
+ * @param array  $profile profile field/values to set
+ * @param string $institution Institution the user should joined to
+ * @param stdclass $remoteauth authinstance record for a remote authinstance
+ * @param string $remotename username on the remote site
+ * @return integer id of the new user
+ */
 function create_user($user, $profile=array(), $institution=null, $remoteauth=null, $remotename=null) {
     db_begin();
 

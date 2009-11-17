@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -556,6 +557,14 @@ class User {
         return $this->get('admin') || $this->is_institutional_admin($institution);
     }
 
+    /**
+     * Returns whether this user is allowed to perform administration type
+     * actions on another user.
+     *
+     * @param mixed $user The user to check we can perform actions on. Can
+     *                    either be a User object, a row from the usr table or
+     *                    an ID
+     */
     public function is_admin_for_user($user) {
         if ($this->get('admin')) {
             return true;
@@ -563,12 +572,29 @@ class User {
         if (!$this->is_institutional_admin()) {
             return false;
         }
+
+        // Check privileges for institutional admins now
         if ($user instanceof User) {
-            $userinstitutions = $user->get('institutions');
-        } else {
-            $userinstitutions = load_user_institutions($user->id);
+            $userobj = $user;
         }
-        foreach ($userinstitutions as $i) {
+        else if (is_numeric($user)) {
+            $userobj = new User;
+            $userobj->find_by_id($user);
+        }
+        else if (is_object($user)) {
+            // Should be a row from the usr table
+            $userobj = new User;
+            $userobj->find_by_id($user->id);
+        }
+        else {
+            throw new SystemException("Invalid argument pass to is_admin_for_user method");
+        }
+
+        if ($userobj->get('admin')) {
+            return false;
+        }
+
+        foreach ($userobj->get('institutions') as $i) {
             if ($this->is_institutional_admin($i->institution)) {
                 return true;
             }
@@ -702,6 +728,21 @@ class User {
         return false;
     }
 
+    public function can_delete_self() {
+        if (!$this->get('admin')) {
+            // Users who belong to an institution that doesn't allow
+            // registration cannot delete themselves.
+            foreach ($this->get('institutions') as $i) {
+                if (!$i->registerallowed) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        // The last admin user should not be deleted.
+        return count_records('usr', 'admin', 1, 'deleted', 0) > 1;
+    }
+
     /**
      * Makes a literal copy of a list of views for this user.
      *
@@ -779,6 +820,18 @@ class LiveUser extends User {
 
         if ($user == false) {
             throw new AuthUnknownUserException("\"$username\" is not known");
+        }
+
+        $siteclosedforupgrade = get_config('siteclosed');
+        if ($siteclosedforupgrade && get_config('disablelogin')) {
+            global $SESSION;
+            $SESSION->add_error_msg(get_string('siteclosedlogindisabled'));
+            return false;
+        }
+        if (!$user->admin && ($siteclosedforupgrade || get_config('siteclosedbyadmin'))) {
+            global $SESSION;
+            $SESSION->add_error_msg(get_string('siteclosed'));
+            return false;
         }
 
         // Authentication instances that have parents do so because they cannot 

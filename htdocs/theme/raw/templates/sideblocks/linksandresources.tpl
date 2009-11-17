@@ -1,9 +1,9 @@
 <h3>{str tag="linksandresources"}</h3>
 
     <div class="sidebar-content">
-{if $data}
+{if $sbdata}
     <ul>
-{foreach from=$data item=item}
+{foreach from=$sbdata item=item}
     	<li><strong><a href="{$item.link|escape}">{$item.name}</a></strong></li>
 {/foreach}
     </ul>

@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage interaction-forum
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -161,14 +162,16 @@ class PluginInteractionForum extends PluginInteraction {
             'interaction_forum_moderator',
             'forum', $instance->get('id')
         );
-        foreach ($values['moderator'] as $user) {
-            insert_record(
-                'interaction_forum_moderator',
-                (object)array(
-                    'user' => $user,
-                    'forum' => $instance->get('id')
-                )
-            );
+        if (isset($values['moderator']) && is_array($values['moderator'])) {
+            foreach ($values['moderator'] as $user) {
+                insert_record(
+                    'interaction_forum_moderator',
+                    (object)array(
+                        'user' => $user,
+                        'forum' => $instance->get('id')
+                    )
+                );
+            }
         }
 
         // Re-order the forums according to their new ordering
@@ -256,6 +259,11 @@ class PluginInteractionForum extends PluginInteraction {
                 'event'        => 'userjoinsgroup',
                 'callfunction' => 'user_joined_group',
             ),
+            (object)array(
+                'plugin'       => 'forum',
+                'event'        => 'creategroup',
+                'callfunction' => 'create_default_forum',
+            ),
         );
     }
 
@@ -289,6 +297,41 @@ class PluginInteractionForum extends PluginInteraction {
     }
 
     /**
+     * When a group is created, create one forum automatically.
+     *
+     * @param array $eventdata
+     */
+    public static function create_default_forum($event, $eventdata) {
+        global $USER;
+        $creator = 0;
+        if (isset($eventdata['members'][$USER->get('id')])) {
+            $creator = $USER->get('id');
+        }
+        else {
+            foreach($eventdata['members'] as $userid => $role) {
+                if ($role == 'admin') {
+                    $creator = $userid;
+                    break;
+                }
+            }
+        }
+        db_begin();
+        $forum = new InteractionForumInstance(0, (object) array(
+            'group'       => $eventdata['id'],
+            'creator'     => $creator,
+            'title'       => get_string('defaultforumtitle', 'interaction.forum'),
+            'description' => get_string('defaultforumdescription', 'interaction.forum', $eventdata['name']),
+        ));
+        $forum->commit();
+        self::instance_config_save($forum, array(
+            'createtopicusers' => 'members',
+            'autosubscribe'    => 1,
+            'justcreated'      => 1,
+        ));
+        db_commit();
+    }
+
+    /**
      * Optional method. Takes a list of forums and sorts them according to 
      * their weights for the sideblock
      *
@@ -313,58 +356,28 @@ class PluginInteractionForum extends PluginInteraction {
         return $forums;
     }
 
-/**
- * cronjob for new forum posts
- */
-    public static function interaction_forum_new_post() {
-        $currenttime = time();
-        $minpostdelay = $currenttime - 30 * 60;
-        $posts = get_records_sql_array(
-            'SELECT s.subscriber, s.type, s.key, p.id
-            FROM (
-                SELECT st."user" AS subscriber, st.topic AS topic, st.key AS key, \'topic\' AS type
-                FROM {interaction_forum_subscription_topic} st
-                UNION SELECT sf."user" AS subscriber, t.id AS topic, sf.key AS key, \'forum\' AS type
-                FROM {interaction_forum_subscription_forum} sf
-                INNER JOIN {interaction_forum_topic} t ON t.forum = sf.forum
-            ) s
-            INNER JOIN {interaction_forum_topic} t ON (t.deleted != 1 AND t.id = s.topic)
-            INNER JOIN {interaction_forum_post} p ON (p.sent != 1 AND p.ctime < ? AND p.deleted != 1 AND p.topic = t.id)
-            INNER JOIN {interaction_instance} f ON (f.id = t.forum AND f.deleted != 1)
-            INNER JOIN {group} g ON (g.id = f.group AND g.deleted = 0)
-            INNER JOIN {group_member} gm ON (gm.member = s.subscriber AND gm.group = f.group)
-            ORDER BY type, p.id',
-            array(db_format_timestamp($minpostdelay))
-        );
-        // query gets a new object for every subscription
-        // this combines all the objects for the same post together with an array for the subscribers
+
+    /**
+     * Process new forum posts.
+     *
+     * @param array $postnow An array of post ids to be sent immediately.  If null, send all posts older than postdelay.
+     */
+    public static function interaction_forum_new_post($postnow=null) {
+        if (is_array($postnow) && !empty($postnow)) {
+            $values = array();
+            $postswhere = 'id IN (' . join(',', $postnow) . ')';
+        }
+        else {
+            $currenttime = time();
+            $minpostdelay = $currenttime - get_config_plugin('interaction', 'forum', 'postdelay') * 60;
+            $values = array(db_format_timestamp($minpostdelay));
+            $postswhere = 'ctime < ?';
+        }
+        $posts = get_column_sql('SELECT id FROM {interaction_forum_post} WHERE sent = 0 AND deleted = 0 AND ' . $postswhere, $values);
         if ($posts) {
-            set_field_select('interaction_forum_post', 'sent', 1,
-                'ctime < ? AND deleted = 0 AND sent = 0', array(db_format_timestamp($minpostdelay)));
-            $count = count($posts);
-            for ($i = 0; $i < $count; $i++) {
-                $posts[$i]->users = array($posts[$i]->subscriber);
-                $posts[$i]->subscriptions = array($posts[$i]->subscriber => array('key' => $posts[$i]->key, 'type' => $posts[$i]->type));
-                $temp = $i;
-                while (isset($posts[$i+1])
-                    && $posts[$i+1]->id == $posts[$temp]->id) {
-                    $i++;
-                    $posts[$temp]->users[] = $posts[$i]->subscriber;
-                    $posts[$temp]->subscriptions[$posts[$i]->subscriber] = array('key' => $posts[$i]->key, 'type' => $posts[$i]->type);
-                    unset($posts[$i]);
-                }
-            }
-            foreach ($posts as $post) {
-                activity_occurred(
-                    'newpost',
-                    array(
-                        'postid' => $post->id,
-                        'users' => $post->users,
-                        'subscriptions' => $post->subscriptions,
-                    ),
-                    'interaction',
-                    'forum'
-                );
+            set_field_select('interaction_forum_post', 'sent', 1, 'deleted = 0 AND sent = 0 AND ' . $postswhere, $values);
+            foreach ($posts as $postid) {
+                activity_occurred('newpost', array('postid' => $postid), 'interaction', 'forum', (bool) $postnow);
             }
         }
     }
@@ -383,6 +396,35 @@ class PluginInteractionForum extends PluginInteraction {
      */
     public static function generate_unsubscribe_key() {
         return dechex(mt_rand());
+    }
+
+
+    public static function has_config() {
+        return true;
+    }
+
+    public static function get_config_options() {
+        $postdelay = get_config_plugin('interaction', 'forum', 'postdelay');
+        if (!is_numeric($postdelay)) {
+            $postdelay = 30;
+        }
+
+        return array(
+            'elements' => array(
+                'postdelay' => array(
+                    'title'        => get_string('postdelay', 'interaction.forum'),
+                    'description'  => get_string('postdelaydescription', 'interaction.forum'),
+                    'type'         => 'text',
+                    'rules'        => array('integer' => true, 'minvalue' => 0, 'maxvalue' => 10000000),
+                    'defaultvalue' => (int) $postdelay,
+                ),
+            ),
+            'renderer' => 'table'
+        );
+    }
+
+    public static function save_config_options($values) {
+        set_config_plugin('interaction', 'forum', 'postdelay', $values['postdelay']);
     }
 }
 
@@ -403,7 +445,6 @@ class InteractionForumInstance extends InteractionInstance {
 
 }
 
-
 class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
 
     protected $postid;
@@ -411,18 +452,35 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
     public function __construct($data) {
         parent::__construct($data);
         $this->overridemessagecontents = true;
-        $this->users = activity_get_users($this->get_id(), $this->users);
-        $post = get_record_sql(
-            'SELECT p.subject, p.body, p.poster, p.parent, ' . db_format_tsfield('p.ctime', 'ctime') . ',
-            t.id AS topicid, p2.subject AS topicsubject, f.title AS forumtitle, g.name AS groupname, f.id AS forumid
+
+        $post = get_record_sql('
+            SELECT
+                p.subject, p.body, p.poster, p.parent, ' . db_format_tsfield('p.ctime', 'ctime') . ',
+                t.id AS topicid, fp.subject AS topicsubject, f.title AS forumtitle, g.name AS groupname, f.id AS forumid
             FROM {interaction_forum_post} p
-            INNER JOIN {interaction_forum_topic} t ON t.id = p.topic
-            INNER JOIN {interaction_forum_post} p2 ON (p2.parent IS NULL AND p2.topic = t.id)
-            INNER JOIN {interaction_instance} f ON t.forum = f.id
-            INNER JOIN {group} g ON f.group = g.id
-            WHERE p.id = ?',
+            INNER JOIN {interaction_forum_topic} t ON (t.id = p.topic AND t.deleted = 0)
+            INNER JOIN {interaction_forum_post} fp ON (fp.parent IS NULL AND fp.topic = t.id)
+            INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted = 0)
+            INNER JOIN {group} g ON (f.group = g.id AND g.deleted = 0)
+            WHERE p.id = ? AND p.deleted = 0',
             array($this->postid)
         );
+
+        // The post may have been deleted during the activity delay
+        if (!$post) {
+            $this->users = array();
+            return;
+        }
+
+        $subscribers = get_records_sql_assoc('
+            SELECT "user" AS subscriber, \'topic\' AS type, key FROM {interaction_forum_subscription_topic} WHERE topic = ?
+            UNION
+            SELECT "user" AS subscriber, \'forum\' AS type, key FROM {interaction_forum_subscription_forum} WHERE forum = ?
+            ORDER BY type',
+            array($post->topicid, $post->forumid)
+        );
+
+        $this->users = $subscribers ? activity_get_users($this->get_id(), array_keys($subscribers)) : array();
         $this->fromuser = $post->poster;
 
         // When emailing forum posts, create Message-Id headers for threaded display by email clients
@@ -440,6 +498,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         }
 
         $posttime = strftime(get_string('strftimedaydatetime'), $post->ctime);
+        $htmlbody = $post->body;
         $textbody = trim(html2text($post->body));
         $postlink = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid;
 
@@ -452,9 +511,9 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
                 $user->subject = get_string_from_language($lang, 'newforumpostnotificationsubject', 'interaction.forum', $post->groupname, $post->forumtitle, $post->subject);
             }
 
-            $type = $data->subscriptions[$user->id]['type'];
+            $type = $subscribers[$user->id]->type;
             $unsubscribeid = $post->{$type . 'id'};
-            $unsubscribelink = get_config('wwwroot') . 'interaction/forum/unsubscribe.php?' . $type . '=' . $unsubscribeid . '&key=' . $data->subscriptions[$user->id]['key'];
+            $unsubscribelink = get_config('wwwroot') . 'interaction/forum/unsubscribe.php?' . $type . '=' . $unsubscribeid . '&key=' . $subscribers[$user->id]->key;
 
             $user->message = get_string_from_language($lang, 'forumposttemplate', 'interaction.forum',
                 $post->subject ? $post->subject : get_string_from_language($lang, 're', 'interaction.forum', $post->topicsubject),
@@ -464,6 +523,15 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
                 $postlink,
                 $type,
                 $unsubscribelink
+            );
+            $user->htmlmessage = get_string_from_language($lang, 'forumposthtmltemplate', 'interaction.forum',
+                $post->subject ? $post->subject : get_string_from_language($lang, 're', 'interaction.forum', $post->topicsubject),
+                display_name($post->poster, $user),
+                $posttime,
+                $htmlbody,
+                $postlink,
+                $unsubscribelink,
+                $type
             );
         }
     }
@@ -547,7 +615,7 @@ function user_can_edit_post($poster, $posttime, $userid=null) {
         global $USER;
         $userid = $USER->get('id');
     }
-    return $poster == $userid && $posttime > (time() - 30 * 60);
+    return $poster == $userid && $posttime > (time() - get_config_plugin('interaction', 'forum', 'postdelay') * 60);
 }
 
 /**

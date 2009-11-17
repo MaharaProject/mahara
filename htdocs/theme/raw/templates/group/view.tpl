@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 {if $GROUP->description}
-	<p>{$GROUP->description}</p>
+	<div class="groupdescription">{$GROUP->description}</div>
 {/if}
 
 <div class="group-info">
@@ -14,9 +14,9 @@
 {if $group->public || $role}
     <h3>{str tag=latestforumposts section=interaction.forum}</h3>
     {if $foruminfo}
-        <table class="fullwidth s">
+        <table class="fullwidth s" id="groupforumtable">
         {foreach from=$foruminfo item=postinfo}
-            <tr class="r{cycle values=0,1}">
+            <tr class="{cycle values='r0,r1'}">
                 <td><strong><a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic|escape}#post{$postinfo->id|escape}">{$postinfo->topicname|escape}</a></strong></td>
                 <td>{$postinfo->body|str_shorten_html:100:true}</td>
                 <td><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$postinfo->poster|escape}" alt="">
@@ -36,7 +36,7 @@
     <p>
     <table class="fullwidth">
     {foreach from=$sharedviews item=view}
-        <tr class="r{cycle values=0,1}">
+        <tr class="{cycle values='r0,r1'}">
             <td>
                 <a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a>
                 {if $view.sharedby}
@@ -50,6 +50,7 @@
                     {/if}
                 {/if}
                 <div>{$view.shortdescription}</div>
+                {if $view.tags}<div class="tags">{str tag=tags}: {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
                 {if $view.template}
                 <div><a href="">{str tag=copythisview section=view}</a></div>
                 {/if}
@@ -66,7 +67,7 @@
     <p>
     <table class="fullwidth">
     {foreach from=$submittedviews item=view}
-        <tr class="r{cycle values=0,1}">
+        <tr class="{cycle values='r0,r1'}">
             <td>
                 <a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a>
                 {if $view.sharedby}
@@ -80,6 +81,7 @@
                     {/if}
                 {/if}
                 <div>{$view.shortdescription}</div>
+                {if $view.tags}<div class="tags">{str tag=tags}: {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
             </td>
         </tr>
     {/foreach}

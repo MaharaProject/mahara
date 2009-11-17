@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage xmlrpc
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -52,9 +53,15 @@ class Dispatcher {
             'auth/mnet/auth.php/keepalive_server' => 'xmlrpc_not_implemented',
             'auth/mnet/auth.php/kill_children' => 'kill_children',
             'auth/mnet/auth.php/kill_child' => 'xmlrpc_not_implemented',
+            // Lines added for the mahara assignment type plugin for Moodle; the first three
+            // are for an old version that require a patched Moodle and will eventually be removed.
+            // All of these should be pulled in from the artefact plugin.
             'mod/assignment/type/mahara/rpclib.php/get_views_for_user' => 'get_views_for_user',
             'mod/assignment/type/mahara/rpclib.php/submit_view_for_assessment' => 'submit_view_for_assessment',
             'mod/assignment/type/mahara/rpclib.php/release_submitted_view' => 'release_submitted_view',
+            'mod/mahara/rpclib.php/get_views_for_user' => 'get_views_for_user',
+            'mod/mahara/rpclib.php/submit_view_for_assessment' => 'submit_view_for_assessment',
+            'mod/mahara/rpclib.php/release_submitted_view' => 'release_submitted_view',
             ),
         'portfolio_in' => array(
             'portfolio/mahara/lib.php/send_content_intent' => 'send_content_intent',
@@ -147,6 +154,13 @@ class Dispatcher {
                 $this->callstack  = explode('/', $this->method);
             } else {
                 throw new XmlrpcServerException('The function does not exist', 6011);
+            }
+
+            // Read custom xmlrpc functions from local
+            if (function_exists('local_xmlrpc_services')) {
+                foreach (local_xmlrpc_services() as $name => $localservices) {
+                    $this->services[$name] = array_merge($this->services[$name], $localservices);
+                }
             }
 
             foreach ($this->services as $container) {

@@ -1,176 +1,222 @@
-/**
- * Stylesheet for views for the default theme
- */
-
-
-#top-pane {
-    background-color: #95a8b7;
+/*  Views  */
+#views-loading {
 }
+/********************** Top pane of Edit View *************************/
+#top-pane {
+}
+/* The tabs that allow you to select a blocktype category */
 #category-list ul {
-	margin: 0 0 0 .5em;
+    background: url(../images/tabs-bg.gif) repeat-x left top;
+    height: 25px;
+    padding-left: 1em;
 }
 #category-list li {
-	height: 25px;
-	line-height: 25px;
+    line-height: 25px;
+    margin: 0;
+    float: left;
+    color: #1E6297;
 }
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-    #category-list li { line-height: 24px; }
-}
-#category-list li a {
-    background-color: #e0e8ee;
-	color: #1e6297;
-    padding: 5px 10px;
-	height: 25px;
+#category-list li a,
+#category-list li a:link,
+#category-list li a:visited,
+#category-list li a:active {
+    background: transparent url(../images/tabs-divider.gif) no-repeat right top;
+    color: #474220;
+    padding: 5px 12px 6px 10px;
+    height: 25px;
 }
 #category-list li a:hover {
-	background-color: #d0dee8;
+    color: #7E7327;
 }
-#category-list li.current a {
-    background-color: #f4f7f9;
+#category-list li.current a,
+#category-list li.current a:link,
+#category-list li.current a:visited,
+#category-list li.current a:active {
+    background: transparent url(../images/tabs-over-bg.gif) no-repeat right top;
+}
+#category-list li.current a:hover {
 }
 
+/* The panel that contains the blocktype icons */
 #blocktype-list {
-    background-color: #f4f7f9;
-    margin-left: .5em;
+    background-color: #f5f9fc;
+    border-top: 0;
+}
+.blocktype div {
+}
+#noblocks {
 }
 
+
+/******************* Between Panes **************************************/
+#layout-link {
+}
+#layout-link.disabled {
+}
+#btn-displaymyview {
+}
+
+
+/********************** Bottom pane of Edit View *************************/
 #page #bottom-pane {
-	border: 5px solid #f1f1f1;
 }
-
 #blocksinstruction {
-    background: #f1f1f1;
-    color: #6e6e6e;
-    font-weight: bold;
 }
 
-.column-header input {
-    font-family: Verdana, Arial, Helvetica, sans-serif; /* todo audit */
+#column-container .column-header input[disabled="disabled"] {
 }
 
+.column-content .add-button input {
+}
+
+#block-placeholder {
+}
+
+/**************** Blockinstance **********************/
 .blockinstance {
-    margin: 1em 0 1em 0;
 }
+.blockinstance.configure {
+}
+/* header*/
 .blockinstance-header h4 {
-    padding: 0 .25em;
     border-bottom: 2px solid #d2d2d2;
 }
-.blockinstance-header h4 a {
+.blockinstance-header h4 a,
+.blockinstance-header h4 a:link,
+.blockinstance-header h4 a:visited,
+.blockinstance-header h4 a:active {
     text-decoration: none;
+	color: #1E6297;
+}
+.blockinstance-header h4 a:hover {
+	color: #267bbd;
 }
 
-.blockinstance-controls input {
-    color: #acc067;
-}
-
+/* content */
 .blockinstance-content {
-    padding: .25em .5em;
+}
+.blockinstance-content h3 {
+}
+.blockinstance-content h4 {
 }
 
-#artefactchooser-body table,
-#artefactchooser-body table th,
-#artefactchooser-body table td {
-    padding: 0 .25em;
-	text-align: left;
+/* Wall */
+.wallpost {
+    background-color: #F8FBFD;
+}
+#wall .private {
 }
 
-/* styling the tabs for the artefact chooser */
+/* tabs for the artefact chooser */
 ul.artefactchooser-tabs {
-  line-height: 24px;
-  font-weight: bold;
-  height: 24px;
-  background: url(../images/tabs-bg.gif) repeat-x top left;
+    line-height: 25px;
+    font-weight: bold;
+    font-size: 12px !important;
+    background: url(../images/tabs-bg.gif) repeat-x left top;
+    height: 25px;
+    padding-left: 1em !important;
 }
 ul.artefactchooser-tabs li {
-  float: left;
-  height: 24px;
-  background: url(../images/tabs-divider.gif) no-repeat top right;
+    line-height: 25px;
+    margin: 0 !important;
+    float: left;
+    color: #1E6297 !important;
 }
-ul.artefactchooser-tabs li a {
-  color: #1E6297;
-  padding: 5px 12px 5px 10px;
-  * padding: 6px 12px 6px 10px;
+ul.artefactchooser-tabs li a,
+ul.artefactchooser-tabs li a:link,
+ul.artefactchooser-tabs li a:visited,
+ul.artefactchooser-tabs li a:active {
+    background: transparent url(../images/tabs-divider.gif) no-repeat right top;
+    color: #474220 !important;
+    padding: 5px 12px 6px 10px;
+    height: 25px;
 }
-ul.artefactchooser-tabs li.current a {
-  background: url(../images/tabs-over-bg.gif) no-repeat top right;
-  color: #000;
+ul.artefactchooser-tabs li a:hover {
+    color: #7E7327 !important;
+}
+ul.artefactchooser-tabs li.current a,
+ul.artefactchooser-tabs li.current a:link,
+ul.artefactchooser-tabs li.current a:visited
+ul.artefactchooser-tabs li.current a:active {
+    background: transparent url(../images/tabs-over-bg.gif) no-repeat right top;
+    color: #1E6297 !important;
+}
+ul.artefactchooser-tabs li.current a:hover {
+}
+ul.artefactchooser-subtabs {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+ul.artefactchooser-subtabs li {
+  padding: 0;
+  margin: 0 3px 0 0 !important;
+  border-right: 0;
+}
+ul.artefactchooser-subtabs li a,
+ul.artefactchooser-subtabs li a:link,
+ul.artefactchooser-subtabs li a:visited,
+ul.artefactchooser-subtabs li a:active {
+  text-decoration: none;
+  padding: .25em .5em;
+  background: #F3F7EC;
+}
+ul.artefactchooser-subtabs li a:hover {
+	text-decoration: none;
+}
+ul.artefactchooser-subtabs li.current a,
+ul.artefactchooser-subtabs li.current a:link,
+ul.artefactchooser-subtabs li.current a:visited,
+ul.artefactchooser-subtabs li.current a:active {
+  color: #333;
+  font-weight: bold;
+  background: #DDD;
+}
+ul.artefactchooser-subtabs li.current a:hover {
+	text-decoration: none;
 }
 
 #artefactchooser-body {
-    border: 1px solid #d9dfea;
-	padding: .25em .5em;
+    background: #F5F9FC;
 }
-#artefactids_data label,
-td label {
-	font-weight: normal;
-	color: #474220;
-	font-size: .9em;
-	color: #474220;
+.upload_browse #artefactchooser-body {
 }
 
-.blockinstance-content p.noartefacts {
-    margin-top: 0;
-}
-.blockinstance-content p {
-	margin: .5em 0;
-}
-.maincontent table.artefactchooser-data {
-    border: none;
-    margin-top: 0;
-    padding: .5em .5em 0;
-}
-.blockinstance-content .maharatable th {
-	text-align: left !important;
-}
-.blockconfig-background {
-  width: 100%;
-  text-align: center;
-  margin-top: 20px;
-}
-.blockinstance.configure {
-  border: 4px solid #f4f7f9;
-  background: #fff;
-  width: 700px;
-  text-align: left;
-  margin-left: auto;
-  margin-right: auto;
-}
-.blockinstance.configure .blockinstance-header {
-  padding: .25em .5em;
-}
-.configure .blockinstance-content {
-  border: 4px solid #F4F7F9;
-  padding: 0.25em 0.5em;
-}
-.configure .blockinstance-content th {
-  padding: .5em 0 0 0;
-}
-.configure .blockinstance-content td {
-  padding: 0 0 .5em 0;
+/* pagination */
+.ac-pagination .results {
 }
 
-/* VIEWS */
-#blockconfig-header {
-  font-weight: bold;
-  padding: .25em .5em;
-  border: 4px solid #F4F7F9;
+/* attachments */
+.attachments {
+}
+#view .blockinstance-content .attachments,
+#view .blockinstance-content .attachments td {
 }
 
-.wallpost {
-    border-bottom: 1px dotted #d1d1d1;
-	background-color: #F8FBFD;
-    padding: .5em;
+/** When viewing an artefact */
+#view .filedata-icon.fr {
+}
+
+#copyview .searchquery {
+}
+
+/* table */
+.maharatable thead th {
+    color: #186194;
+}
+.maharatable tbody th {
+}
+#artefactchooser-body th label {
+}
+.maharatable td label {
 }
 
 
-#viewacl_lhs {
-	background-color: #FBFBFB;
-	width: 310px;
+/* View Page footer menu */
+#view .viewfooter {
+  border-top: 0;
 }
-#viewacl_lhs #results {
-	border-bottom: 1px solid #95a8b7;
+#view #feedbacktable {
 }
-
-#accesslistitems .ai-container {
-    background-color: #f4f7f9;
+#viewmenu a {
+    padding-left: 12px;
 }

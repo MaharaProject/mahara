@@ -104,7 +104,6 @@
                 <FIELD NAME="quota" TYPE="int" LENGTH="10" NOTNULL="false"/>
                 <FIELD NAME="quotaused" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="authinstance" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" />
-                <FIELD NAME="sessionid" TYPE="char" LENGTH="32" NOTNULL="false" DEFAULT="" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -490,10 +489,7 @@
         <TABLE NAME="usr_registration">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
-                <FIELD NAME="username" TYPE="char" LENGTH="30" NOTNULL="true"/>
-                <FIELD NAME="password" TYPE="char" LENGTH="40" NOTNULL="true"/>
                 <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true"/>
-                <FIELD NAME="salt" TYPE="char" LENGTH="8" NOTNULL="true"/>
                 <FIELD NAME="firstname" TYPE="text" NOTNULL="true"/>
                 <FIELD NAME="lastname" TYPE="text" NOTNULL="true"/>
                 <FIELD NAME="email" TYPE="text" NOTNULL="true"/>

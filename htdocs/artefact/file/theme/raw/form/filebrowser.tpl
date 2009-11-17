@@ -38,7 +38,7 @@
 <table id="{$prefix}_upload_container" class="fileupload{if $tabs && !$tabs.upload} hidden{/if}">
  <tbody>
 {if $config.upload}
-  <tr><td><input type="hidden" name="{$prefix}_uploadnumber" id="{$prefix}_uploadnumber" value="1" /></td></tr>
+  <input type="hidden" name="{$prefix}_uploadnumber" id="{$prefix}_uploadnumber" value="1" />
   <tr><td colspan=2 id="{$prefix}_upload_messages"></td></tr>
   {if $config.uploadagreement}
   <tr id="{$prefix}_agreement" class="uploadform">
@@ -76,7 +76,7 @@
     </td>
   </tr>
   <tr>
-    <td colspan=2 id="{$prefix}_createfolder_messages"></td>
+    <td colspan="2" id="{$prefix}_createfolder_messages"></td>
   </tr>
 {/if}
  </tbody>
@@ -92,7 +92,7 @@
 </div>
 
 <div id="{$prefix}_filelist_container">
-{include file="artefact:file:form/filelist.tpl" prefix=$prefix filelist=$filelist editable=$config.edit selectable=$config.select highlight=$highlight edit=$edit querybase=$querybase groupinfo=$groupinfo owner=$tabs.owner ownerid=$tabs.ownerid}
+{include file="artefact:file:form/filelist.tpl" prefix=$prefix filelist=$filelist editable=$config.edit selectable=$config.select highlight=$highlight edit=$edit querybase=$querybase groupinfo=$groupinfo owner=$tabs.owner ownerid=$tabs.ownerid selectfolders=$config.selectfolders showtags=$config.showtags editmeta=$config.editmeta}
 </div>
 
 {* Edit form used when js is available *}

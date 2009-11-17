@@ -1,9 +1,9 @@
-{if !empty($results.data)}
+{if $results.data}
     <h2>{str tag="Results"}</h2>
     <table id="searchresults" class="tablerenderer fullwidth listing">
         <thead>
           {mahara_pagelinks offset=$results.offset limit=$results.limit count=$results.count url=$pagebaseurl assign=pagelinks}
-          {if (!empty($pagelinks))}
+          {if ($pagelinks)}
           <tr class="search-results-pages">
             <td colspan="{$ncols}">
             {$pagelinks}
@@ -12,7 +12,7 @@
           {/if}
           <tr>
           {foreach from=$cols key=f item=c}
-          {if empty($c.name)}
+          {if !$c.name}
             <th></th>
           {else}
             <th class="search-results-sort-column{if $f == $sortby} {$sortdir}{/if}">
@@ -26,12 +26,12 @@
         {foreach from=$results.data item=r}
           <tr class="{cycle values="r0,r1"}">
           {foreach from=$cols key=f item=c}
-            <td{if (!empty($c.class))} class="{$c.class}"{/if}>{if empty($c.template)}{$r[$f]|escape}{else}{eval var=$c.template}{/if}</td> 
+            <td{if $c.class} class="{$c.class}"{/if}>{if !$c.template}{$r[$f]|escape}{else}{eval var=$c.template}{/if}</td> 
           {/foreach}
           </tr>
         {/foreach}
         </tbody>
-          {if (!empty($pagelinks))}
+          {if $pagelinks}
         <tfoot>
           <tr class="search-results-pages">
             <td colspan={$ncols}>

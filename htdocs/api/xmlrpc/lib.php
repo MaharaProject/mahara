@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage auth
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -456,7 +457,7 @@ function get_views_for_user($username, $query=null) {
         return false;
     }
 
-    $USER->reanimate($user->id, $authinstance->id);
+    $USER->reanimate($user->id, $authinstance->instanceid);
     require_once('view.php');
     $data = View::view_search($query, null, (object) array('owner' => $USER->get('id')));
     $data->displayname = display_name($user);
@@ -624,6 +625,9 @@ function get_public_key($uri, $application=null) {
 
     $result = mahara_http_request($config);
 
+    if (!empty($result->errno)) {
+        throw new XmlrpcClientException('Curl error: ' . $result->errno . ': ' . $result->error);
+    }
     if (empty($result->data)) {
         throw new XmlrpcClientException('CURL connection failed');
     }
@@ -652,6 +656,7 @@ function get_public_key($uri, $application=null) {
             if (strpos($uri, $host) !== false) {
                 return $keyarray[$uri];
             }
+            throw new XmlrpcClientException('The remote site sent us a key that is valid for ' . $host . ' instead of their hostname (' . $uri . ')', 500);
         }
     } else {
         throw new XmlrpcClientException($res['faultString'], $res['faultCode']);
@@ -1022,6 +1027,7 @@ class OpenSslRepo {
     private function __construct() {
         if (empty($this->keypair)) {
             $this->get_keypair();
+	    $this->calculate_fingerprints();
             $this->keypair['privatekey'] = openssl_pkey_get_private($this->keypair['keypair_PEM']);
             $this->keypair['publickey']  = openssl_pkey_get_public($this->keypair['certificate']);
         }
@@ -1081,6 +1087,8 @@ class OpenSslRepo {
     public function __get($name) {
         if ('certificate' === $name) return $this->keypair['certificate'];
         if ('expires' === $name)     return $this->keypair['expires'];
+        if ('sha1_fingerprint' === $name) return $this->keypair['sha1_fingerprint'];
+        if ('md5_fingerprint' === $name ) return $this->keypair['md5_fingerprint'];
         return null;
     }
 
@@ -1186,18 +1194,14 @@ class OpenSslRepo {
         $dn["commonName"] = preg_replace(':/$:', '', $dn["commonName"]);
 
         if (!$new_key = openssl_pkey_new()) {
-            throw new ConfigException('Could not generate a new SSL key. Are '
-                . 'you sure that both openssl and the PHP module for openssl are '
-                . 'installed on this machine?');
+            throw new ConfigException(get_string('errorcouldnotgeneratenewsslkey', 'auth'));
         }
 
         if (!$csr_rsc = openssl_csr_new($dn, $new_key, array('private_key_bits',2048))) {
             // This behaviour has been observed once before, on an ubuntu hardy box. 
             // The php5-openssl package was installed but somehow openssl 
             // wasn't.
-            throw new ConfigException('Could not generate a new SSL key. Are '
-                . 'you sure that both openssl and the PHP module for openssl are '
-                . 'installed on this machine?');
+            throw new ConfigException(get_string('errorcouldnotgeneratenewsslkey', 'auth'));
         }
         $selfSignedCert = openssl_csr_sign($csr_rsc, null, $new_key, 365 /*days*/);
         unset($csr_rsc); // Free up the resource
@@ -1212,8 +1216,81 @@ class OpenSslRepo {
         openssl_pkey_free($new_key);
         unset($new_key); // Free up the resource
 
+        // Calculate fingerprints
+        $this->calculate_fingerprints();
+
         return $this;
     }
+
+
+    /**
+     * Calculates the SHA1 and MD5 fingerprints of the certificate in DER format
+     * It does the same as the fingerprint commandline option in x509
+     * command. For example:
+     *
+     *        $ openssl x509 -in cert_file -fingerprint -sha1
+     *        $ openssl x509 -in cert_file -fingerprint -md5
+     */
+
+    private function calculate_fingerprints () {
+
+        // Convert the certificate to DER and calculate the digest
+
+        $pem_cert = $this->keypair['certificate'];
+
+        $from_pos = strpos($pem_cert, "-----BEGIN CERTIFICATE-----");
+        if ( $from_pos === false ) {
+            throw new CryptException("Certificate not in PEM format");
+        }
+        $from_pos = $from_pos + 27;
+
+        $to_pos = strpos($pem_cert, "-----END CERTIFICATE-----");
+        if ( $to_pos === false ) {
+            throw new CryptException("Certificate not in PEM format");
+        }
+
+        $der_cert = base64_decode(substr($pem_cert, $from_pos, $to_pos - $from_pos));
+        if ( $der_cert === FALSE ) {
+            throw new CryptException("Certificate not in PEM format");
+        }
+
+        $_sha1_fingerprint = sha1($der_cert);
+        if ( $_sha1_fingerprint === FALSE ) {
+            throw new CryptException("Error calculating sha1 fingerprint");
+        }
+        $_md5_fingerprint = md5($der_cert);
+        if ( $_md5_fingerprint === FALSE ) {
+            throw new CryptException("Error calculating md5 fingerprint");
+        }
+
+        unset($der_cert);
+
+        $_sha1_fingerprint = strtoupper($_sha1_fingerprint);
+        $_md5_fingerprint  = strtoupper($_md5_fingerprint);
+
+        $sha1_fingerprint = $_sha1_fingerprint[0];
+        for ( $i = 1, $to = strlen($_sha1_fingerprint); $i < $to ; $i++ ) {
+            if ( $i % 2 == 0 ) {
+                $sha1_fingerprint .= ":" . $_sha1_fingerprint[$i];
+            } else {
+                $sha1_fingerprint .= $_sha1_fingerprint[$i];
+            }
+        }
+
+        $md5_fingerprint = $_md5_fingerprint[0];
+        for ( $i = 1, $to = strlen($_md5_fingerprint); $i < $to ; $i++ ) {
+            if ( $i % 2 == 0 ) {
+                $md5_fingerprint .= ":" . $_md5_fingerprint[$i];
+            } else {
+                $md5_fingerprint .= $_md5_fingerprint[$i];
+            }
+        }
+
+        $this->keypair['sha1_fingerprint'] = $sha1_fingerprint;
+        $this->keypair['md5_fingerprint']  = $md5_fingerprint;
+
+    }
+
 }
 
 class PublicKey {

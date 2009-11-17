@@ -3,7 +3,7 @@
     <p>{str tag="usersearchinstructions" section="admin"}</p>
     <div id="initials">
       <label>{str tag="firstname"}:</label>
-       <span class="{if empty($search->f)} selected{/if} all">
+       <span class="{if !$search->f} selected{/if} all">
         <a href="{$WWWROOT}admin/users/search.php{if $search->l}?l={$search->l|escape}{/if}">{str tag="All"}</a>
        </span>
        {foreach from=$alphabet item=a}
@@ -13,7 +13,7 @@
        {/foreach}
 	  <br />
       <label>{str tag="lastname"}:</label>
-       <span class="{if empty($search->l)} selected{/if} all">
+       <span class="{if !$search->l} selected{/if} all">
         <a href="{$WWWROOT}admin/users/search.php{if $search->f}?f={$search->f|escape}{/if}">{str tag="All"}</a>
        </span>
        {foreach from=$alphabet item=a}
@@ -25,7 +25,7 @@
     <form action="{$WWWROOT}admin/users/search.php" method="post">
         <div class="searchform">
             <label>{str tag='Query' section='admin'}:</label>
-                <input type="text" name="query" id="query"{if !empty($search->query)} value="{$search->query|escape}"{/if}>
+                <input type="text" name="query" id="query"{if $search->query} value="{$search->query|escape}"{/if}>
             
             {if count($institutions) > 1}
             <span class="institutions">

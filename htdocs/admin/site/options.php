@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage admin
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -124,6 +125,17 @@ $siteoptionform = array(
             'options'      => $yesno,
             'help'         => true,
         ),
+        'creategroups' => array(
+            'type'         => 'select',
+            'title'        => get_string('whocancreategroups', 'admin'),
+            'description'  => get_string('whocancreategroupsdescription', 'admin'),
+            'defaultvalue' => get_config('creategroups'),
+            'options'      => array(
+                'admins' => get_string('adminsonly', 'admin'),
+                'staff'  => get_string('adminsandstaffonly', 'admin'),
+                'all'    => get_string('Everyone', 'admin'),
+            ),
+        ),
         'createpublicgroups' => array(
             'type'         => 'select',
             'title'        => get_string('whocancreatepublicgroups', 'admin'),
@@ -184,6 +196,38 @@ $siteoptionform = array(
             'defaultvalue' => get_config('institutionautosuspend'),
             'help'         => true,
         ),
+        'captchaonregisterform' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('captchaonregisterform', 'admin'),
+            'description'  => get_string('captchaonregisterformdescription', 'admin'),
+            'defaultvalue' => get_config('captchaonregisterform'),
+        ),
+        'captchaoncontactform' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('captchaoncontactform', 'admin'),
+            'description'  => get_string('captchaoncontactformdescription', 'admin'),
+            'defaultvalue' => get_config('captchaoncontactform'),
+        ),
+        'showselfsearchsideblock' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('showselfsearchsideblock', 'admin'),
+            'description'  => get_string('showselfsearchsideblockdescription', 'admin'),
+            'defaultvalue' => get_config('showselfsearchsideblock'),
+        ),
+        'showtagssideblock' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('showtagssideblock', 'admin'),
+            'description'  => get_string('showtagssideblockdescription', 'admin'),
+            'defaultvalue' => get_config('showtagssideblock'),
+        ),
+        'tagssideblockmaxtags' => array(
+            'type'         => 'text',
+            'size'         => 4,
+            'title'        => get_string('tagssideblockmaxtags', 'admin'),
+            'description'  => get_string('tagssideblockmaxtagsdescription', 'admin'),
+            'defaultvalue' => get_config('tagssideblockmaxtags'),
+            'rules'        => array('integer' => true, 'minvalue' => 0, 'maxvalue' => 1000),
+        ),
     )
 );
 
@@ -202,10 +246,14 @@ function siteoptions_fail(Pieform $form, $field) {
 }
 
 function siteoptions_submit(Pieform $form, $values) {
-    $fields = array('sitename','lang','theme', 'pathtoclam',
-                    'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn', 
-                    'allowpublicviews', 'allowpublicprofiles', 'createpublicgroups', 'searchplugin',
-                    'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend');
+    $fields = array(
+        'sitename','lang','theme', 'pathtoclam',
+        'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
+        'allowpublicviews', 'allowpublicprofiles', 'creategroups', 'createpublicgroups', 'searchplugin',
+        'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
+        'captchaonregisterform', 'captchaoncontactform', 'showselfsearchsideblock', 'showtagssideblock',
+        'tagssideblockmaxtags'
+    );
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');
     foreach ($fields as $field) {

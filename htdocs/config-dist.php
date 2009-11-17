@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -31,7 +32,7 @@
 // it to suit your environment.
 //
 // Information about this file is available on the Mahara wiki:
-// http://wiki.mahara.org/System_Administrator%27s_Guide/Installing_Mahara#Mahara_Configuration
+// http://wiki.mahara.org/System_Administrator's_Guide/Installing_Mahara#Create_Mahara's_config.php
 //
 
 $cfg = new StdClass;
@@ -55,6 +56,11 @@ $cfg->dbprefix = '';
 // Normally, this is automatically detected - if it doesn't work for you
 // then try specifying it here
 //$cfg->wwwroot = 'http://myhost.com/mahara/';
+
+// You will only need to specify this if you want to use HTTPS for
+// logins, but not for regular pages. If you want to serve all of your
+// Mahara content via HTTPS, just set $cfg->wwwroot to use HTTPS instead.
+//$cfg->httpswwwroot = 'https://myhost.com/mahara';
 
 // dataroot - uploaded files are stored here
 // This is a ABSOLUTE FILESYSTEM PATH. This is NOT a URL.

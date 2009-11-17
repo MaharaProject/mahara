@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage notification-email
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -32,9 +33,14 @@ class PluginNotificationEmail extends PluginNotification {
 
     public static function notify_user($user, $data) {
 
+        $messagehtml = null;
+
         if (!empty($data->overridemessagecontents)) {
             $subject = $data->subject;
             $messagebody = $data->message;
+            if (!empty($user->htmlmessage)) {
+                $messagehtml = $user->htmlmessage;
+            }
         }
         else {
             $lang = (empty($user->lang) || $user->lang == 'default') ? get_config('lang') : $user->lang;
@@ -75,7 +81,7 @@ class PluginNotificationEmail extends PluginNotification {
                 $userfrom->email = get_config('noreplyaddress');
             }
         }
-        email_user($user, $userfrom, $subject, $messagebody, null, !empty($data->customheaders) ? $data->customheaders : null);
+        email_user($user, $userfrom, $subject, $messagebody, $messagehtml, !empty($data->customheaders) ? $data->customheaders : null);
     }
 }
 

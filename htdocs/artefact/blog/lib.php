@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage artefact-blog
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -62,6 +63,16 @@ class PluginArtefactBlog extends PluginArtefact {
     }
 
 
+    public static function get_event_subscriptions() {
+        return array(
+            (object)array(
+                'plugin'       => 'blog',
+                'event'        => 'createuser',
+                'callfunction' => 'create_default_blog',
+            ),
+        );
+    }
+
     public static function block_advanced_options_element($configdata, $artefacttype) {
         $strartefacttype = get_string($artefacttype, 'artefact.blog');
         return array(
@@ -86,6 +97,20 @@ class PluginArtefactBlog extends PluginArtefact {
         );
     }
 
+    public static function create_default_blog($event, $user) {
+        $name = display_name($user, null, true);
+        $blog = new ArtefactTypeBlog(0, (object) array(
+            'title'       => get_string('defaultblogtitle', 'artefact.blog', $name),
+            'owner'       => $user['id'],
+        ));
+        $blog->commit();
+    }
+
+    public static function get_artefact_type_content_types() {
+        return array(
+            'blogpost' => array('text'),
+        );
+    }
 }
 
 /**
@@ -193,6 +218,8 @@ class ArtefactTypeBlog extends ArtefactType {
 
         $smarty->assign('options', $options);
         $smarty->assign('description', clean_html($this->get('description')));
+        $smarty->assign('owner', $this->get('owner'));
+        $smarty->assign('tags', $this->get('tags'));
 
         // Remove unnecessary options for blog posts
         unset($options['hidetitle']);
@@ -240,6 +267,8 @@ class ArtefactTypeBlog extends ArtefactType {
 
                 
     public static function get_icon($options=null) {
+        global $THEME;
+        return $THEME->get_url('images/blog.gif', false, 'artefact/blog');
     }
 
     public static function is_singular() {
@@ -255,19 +284,41 @@ class ArtefactTypeBlog extends ArtefactType {
      * @param User
      * @return array (count: integer, data: array)
      */
-    public static function get_blog_list(User $user, $limit = self::pagination, $offset = 0) {
+    public static function get_blog_list($limit, $offset) {
+        global $USER;
         ($result = get_records_sql_array("
-         SELECT id, title, description
-         FROM {artefact}
-         WHERE owner = ?
-          AND artefacttype = 'blog'
-         ORDER BY title
-         LIMIT ? OFFSET ?", array($user->get('id'), $limit, $offset)))
+         SELECT * FROM {artefact} WHERE owner = ? AND artefacttype = 'blog'
+         ORDER BY title LIMIT ? OFFSET ?", array($USER->get('id'), $limit, $offset)))
             || ($result = array());
 
-        $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $user->get('id'), 'artefacttype', 'blog');
+        $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $USER->get('id'), 'artefacttype', 'blog');
 
         return array($count, $result);
+    }
+
+    public static function build_blog_list_html(&$blogs) {
+        $smarty = smarty_core();
+        $smarty->assign_by_ref('blogs', $blogs);
+        $blogs->tablerows = $smarty->fetch('artefact:blog:bloglist.tpl');
+        $pagination = build_pagination(array(
+            'id' => 'bloglist_pagination',
+            'class' => 'center',
+            'url' => get_config('wwwroot') . 'artefact/blog/index.php',
+            'jsonscript' => 'artefact/blog/index.json.php',
+            'datatable' => 'bloglist',
+            'count' => $blogs->count,
+            'limit' => $blogs->limit,
+            'offset' => $blogs->offset,
+            'firsttext' => '',
+            'previoustext' => '',
+            'nexttext' => '',
+            'lasttext' => '',
+            'numbersincludefirstlast' => false,
+            'resultcounttextsingular' => get_string('blog', 'artefact.blog'),
+            'resultcounttextplural' => get_string('blogs', 'artefact.blog'),
+        ));
+        $blogs->pagination = $pagination['html'];
+        $blogs->pagination_js = $pagination['javascript'];
     }
 
     /**
@@ -514,6 +565,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
 
     public static function get_icon($options=null) {
+        global $THEME;
+        return $THEME->get_url('images/blogpost.gif', false, 'artefact/blog');
     }
 
     public static function is_singular() {

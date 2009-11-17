@@ -21,15 +21,17 @@ body {
 img {
     border: 0;
 }
+
 .main-column h1, .main-column h2, .main-column h3, .main-column h4, .main-column h5, .main-column h6 {
-    margin: .75em 0 .5em;
+    margin: 1.5em 0 .5em;
 }
-.main-column h1:first-child, .main-column h2:first-child, .main-column h3:first-child, .main-column h4:first-child, .main-column h5:first-child, .main-column h6:first-child,
-.main-column h1 + p, .main-column h2 + p, .main-column h3 + p, .main-column h4 + p, .main-column h5 + p, .main-column h6 + p {
+ .main-column h1:first-child, .main-column h2:first-child, .main-column h3:first-child, .main-column h4:first-child, .main-column h5:first-child, .main-column h6:first-child,
+* html .main-column h1, * html .main-column h2, * html .main-column h3, * html .main-column h4, * html .main-column h5, * html .main-column h6 {
     margin-top: 0;
 }
+
 .main-column h1 {
-    font-size: 2.25em;
+    font-size: 2em;
 }
 .main-column h2 {
     font-size: 1.8em;
@@ -38,14 +40,19 @@ img {
     font-size: 1.4em;
 }
 .main-column h4 {
-    font-size: 1.2em;
+    font-size: 1.3em;
 }
 .main-column h5 {
-    font-size: 1em;
+    font-size: 1.2em;
 }
 .main-column h6 {
-    font-size: .9em;
+    font-size: 1em;
 }
+
+p {
+	margin: 1em 0;
+}
+
 .left {
     text-align: left;
 }
@@ -57,11 +64,17 @@ img {
 }
 .fl {
     float: left;
-/*  padding-right: 1em;*/
+}
+.fl img {
+	padding-right: 1em;
 }
 .fr {
     float: right;
-/*  padding-left: 1em;*/
+}
+* html .fl,
+* html .fr {
+	z-index: 10;
+	position: relative;
 }
 .cl {
     clear: left;
@@ -71,10 +84,17 @@ img {
 }
 .cb {
     clear: both;
+	* height: 0; /* IE hack */
 }
 .s {
     font-size: .9em;
     font-weight: normal;
+}
+.nowrap {
+	white-space: nowrap;
+}
+.ctime {
+    color: #838383;
 }
 pre, tt {
 	font-size: 1.2em;
@@ -83,6 +103,10 @@ pre, tt {
 .fullwidth {
     width: 100%;
 }
+* html .fullwidth {
+	width: 96%;
+}
+
 .hidden {
     display: none;
 }
@@ -92,6 +116,13 @@ pre, tt {
     position: absolute;
     visibility: hidden;
     top: 0;
+}
+/* IE7 hack to make safe-hidden work */
+html>body .safe-hidden {
+    *position: relative;
+    *height: 0;
+    *margin: 0;
+    *padding: 0;
 }
 .nojs-hidden-inline, .nojs-hidden-block, .nojs-hidden-table {
     display: none;
@@ -106,13 +137,14 @@ pre, tt {
     opacity: 0.5;
     background-color: #808080;
     filter: alpha(opacity=50);
+	* z-index: 1;
 }
 /** all browsers except ie7 hack to make it at least partially work */
 html>/**/body #overlay {
     z-index: 1;
 }
 
-/* Tables */
+/**************************** Tables ****************************/
 table {
     border-spacing: 0;
     border-collapse: collapse;
@@ -122,79 +154,117 @@ th {
     text-align: left;
     vertical-align: top;
 }
-thead th {
+.main-column thead th {
+	padding: .25em .5em;
     white-space: nowrap;
+	border-bottom: 1px solid #ccc;
+}
+.nohead tbody th {
+	padding: .25em .5em;
+}
+.main-column .pieform tbody th {
+	text-align: right;
+	line-height: 1.2em;
+	padding: .5em .5em .25em .5em;
 }
 td {
     padding: .25em .5em;
     vertical-align: top;
 }
+.main-column tfoot td {
+	padding: .5em 0;
+}
 td.narrow {
     padding: 0;
 }
-.main-column .pieform tbody th {
-	text-align: right;
+/* table with th border-bottom */
+#searchresults thead th,
+#filelist,
+#groupforumtable,
+.tag-results #results {
+	border-bottom: 1px solid #ccc;
 }
-.r0 {
-    background-color: #f1f1f1;
+/* table with tfoot border-top */
+#searchresults tfoot td,
+#adminstitutionslist tfoot td,
+#profileicons tfoot td,
+#activitylist tfoot td,
+#groupforumtable {
+	border-top: 1px solid #ccc;
 }
-.r1 {
-    background-color: #f7f7f7;
+/* table with gap between rows */
+#friendslist td {
+	border-bottom: 2px solid #FFF;
+}
+/* table without border */
+#bloglist th {
+	border: 0;
+}
+/* Alternative row background colours */
+.r0,
+.r0 td  {
+    background-color: #f9f9f9;
+}
+.r1,
+.r1 td {
+    background-color: #f3f3f3;
 }
 .listing {
-    font-size: .9em;
+	margin-bottom: .5em;
 }
-.listing h3, .listing h5 {
+.listing h3,
+.listing h6 {
     margin: 0;
 }
 div.listing {
-	padding: .5em 1em;
+	padding: .5em;
+}
+.listing div div {
+	font-size: .9em;
 }
 
-/* Pagination */
+/**************************** Pagination ****************************/
 div.pagination  {
     font-size: .9em;
-    margin: 1em 0;
     text-align: center;
+	margin: .25em 0;
 }
-.pagination a {
-    border: 1px solid #d1d1d1;
+div.pagination span {
     margin: 0 .25em;
-    padding: .5em;
-    text-decoration: none;
 }
-.pagination .disabled {
+div.pagination a {
+    text-decoration: none;
+	padding: .25em .5em;
+    border: 1px solid #d1d1d1;
+	background: #fff;
+}
+div.pagination .disabled {
     background-color: #EBEBEB;
-    border: 1px solid #d1d1d1;
-    margin: 0 .25em;
-    padding: .5em;
     text-decoration: none;
+	color: #c1c1c1;
+	padding: .25em .5em;
 }
-.pagination .selected {
-    border: 1px solid #d1d1d1;
+div.pagination .selected {
     font-weight: bold;
-    margin: 0 .25em;
-    padding: .5em;
+    border: none;
+	padding: .25em .5em;
 }
-.pagination .results {
+div.pagination .results {
     color: #838383;
-    margin: 1em;
-    text-align: center;
+	display: inline;
+	padding: .25em .5em;
 }
 
-/* Forms */
+/**************************** Forms ****************************/
+form {
+	margin: 0;
+	padding: 0;
+}
+/* Label */
 label {
     font-weight: bold;
-    margin: 0 .5em 0 0;
+    margin: 0;
 }
-.required th, .required label, .requiredmarker, #register_tandc_container th {
-    color: #cc6600;
-}
-/* override required colour */
-.required label.plain, .required.radio td label, .required.emaillist td label {
-    color: #333;
-}
-
 .pieform tbody tr th label {
 	white-space: normal;
 }
@@ -202,28 +272,39 @@ label {
 	font-weight: normal;
 	font-size: .9em;
 }
+/* required */
+.required th, .required label, .requiredmarker, #register_tandc_container th {
+    color: #c81511;
+}
+/* override required colour to normal colour */
+.required label.plain, .required.radio td label, .required.emaillist td label {
+    color: #333;
+}
 .pieform td.description {
 	padding-top: 0 !important;
     font-size: .9em;
+	color: #7d7d7d;
 }
 div.grippie {
-	border-color: #d1d1d1;
+	border-color: #a5acb2;
     border-style: solid;
     border-width: 0 1px 1px 1px;
     background: #eeeeee url(../images/grippie.png) no-repeat scroll 100% 50%;
     cursor: s-resize;
     height: 14px;
 }
-.errmsg {
-    color: #cc0000;
-    font-size: .9em;
-}
+
+/* Legend */
 legend {
 	font-weight: bold;
 	font-size: 1.3em;
+	* padding-bottom: .5em;
+	* padding-top: .5em;
 }
+
+/* Select */
 select {
-	margin-right: .5em;
+	margin-right: .25em;
 }
 
 /* Fieldset */
@@ -231,13 +312,19 @@ fieldset {
 	padding: 1em 1.5em;
 	margin: 5px 0;
 }
+* html fieldset {
+	width: 90%;
+}
+* html .subpage fieldset {
+	width: 60%;
+}
 fieldset.collapsible {
 	padding: 1em 1.5em;
 }
 fieldset.collapsed {
-	border: 0 !important;
 	padding: 0;
 	margin: 0;
+	border: 0;
 }
 fieldset.collapsed table {
     position: absolute;
@@ -247,7 +334,7 @@ fieldset.collapsed table {
 	margin: 0;
 }
 fieldset legend a {
-    padding-left: 1em;
+    padding-left: 15px;
     background: url(../images/icon_fieldset_down.gif) 2px center no-repeat;
 }
 fieldset legend a:hover {
@@ -257,77 +344,200 @@ fieldset.collapsed legend a {
     background: url(../images/icon_fieldset_left.gif) 2px center no-repeat;
 }
 
-/* Buttons */
-a.btn-del, div.btn-del input.submit, input.submit.btn-del,
+/* Text fields and such */
+input.text, 
+input.password, 
+input.file,
+textarea,
+input[type=text],
+input[type=password],
+input[type=file] {
+	border: 1px solid #a5acb2;
+}
+input.text.required {
+	border: 1px solid #e98a88;
+}
+
+/* error */
+input.error, select.error {
+    border-color: #dd0221;
+}
+.errmsg {
+    color: #dd0221;
+    font-size: .9em;
+    background: #ffd3d9 url(../images/failure.gif) no-repeat .5em center;
+	padding-left: 2em;
+}
+
+
+/****************************** Buttons ****************************/
+/** input buttons **/
+input.submit,
+input.cancel,
+button,
+input.button,
+input.buttondk,
+input.select,
+input#files_filebrowser_edit_artefact {
+    font-size: 1em;
+	font-family: Arial, Helvetica, sans-serif;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #f0f0f0 #a3a3a3 #a3a3a3 #f0f0f0;
+	margin: 0 0.25em 0 0;
+	* margin: 0 0.1em 0 0;
+	padding: .1em .25em;
+	* padding: .1em .25em 0em .25em;
+	background: #e3e3e3;
+	text-decoration: none;
+	cursor: default;
+	color: #333;
+}
+/** link buttons **/
+.rbuttons a.btn,
+#sb-profile .controls a,
+.upgradeicon a,
+#loginas .btn-loginas {
+    font-size: 1em;
+	font-family: Arial, Helvetica, sans-serif;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #f0f0f0 #a3a3a3 #a3a3a3 #f0f0f0;
+	margin: 0 0.25em 0 0;
+	padding: .2em .5em;
+	background: #e3e3e3;
+	text-decoration: none;
+	cursor: default;
+	color: #333;
+}
+/** hover for buttons **/
+input.submit:hover,
+input.cancel:hover,
+button:hover,
+input.button:hover,
+input.buttondk:hover,
+input.select:hover,
+input#files_filebrowser_edit_artefact:hover,
+.rbuttons a.btn:hover,
+#sb-profile .controls a:hover {
+	background: #d1d1d1;
+	text-decoration: none;
+	cursor: default;
+}
+/** Depress for buttons **/
+input.submit:active,
+input.cancel:active,
+button:active,
+input.button:active,
+input.buttondk:active,
+input.select:active,
+input#files_filebrowser_edit_artefact:active,
+.rbuttons a.btn:active,
+#sb-profile .controls a:active {
+	border-color: #a3a3a3 #f0f0f0 #f0f0f0 #a3a3a3;
+	background: #d1d1d1;
+}
+
+/** fixes block control buttons **/
+.blockinstance-controls input {
+	background: none !important;
+	border: 0;
+	margin: 0 0.25em;
+	padding: 0;
+}
+.blockinstance-controls input:hover {
+	background: none;
+}
+
+div.btn-del input.submit, 
+input.submit.btn-del,
 .btn-leavegroup,
 .btn-pending,
-a.btn-add, a.btn-req, div.btn-add input.submit, input.submit.btn-add, button.btn-add,
+div.btn-add input.submit, 
+input.submit.btn-add, 
+button.btn-add,
 div.btn-msg input.submit,
-div.btn-edit input.submit, input.submit.btn-edit,
-a.btn-msg, a.btn-edit, .btn-reply {
-    padding-left: .8em;
-    margin-right: .2em;
-    cursor: pointer;
-    border: none;
+div.btn-edit input.submit, 
+.btn-reply,
+.btn-subscribe input.submit {
+    margin-right: .25em;
     * width: 1;
     * overflow: visible;
 }
-a.btn-del, .btn-leavegroup, div.btn-del input.submit, input.submit.btn-del {
-    color: #ca0000;
-    background: url(../images/icon-delete.gif) no-repeat center left;
+
+#userview .user-icon a {
+	margin: 0 0 0 1em;
 }
-div.btn-bold input.submit {
-    font-weight: bold;
-}
-a.btn-msg, div.btn-msg input.submit {
-	background: url(../images/icon-mail.gif) no-repeat center left;
-}
-a.btn-add, a.btn-req, div.btn-add input.submit, input.submit.btn-add, button.btn-add {
-	background: url(../images/icon-add.gif) no-repeat center left;
-}
-a.btn-edit, div.btn-edit input.submit, input.submit.btn-edit {
-	background: url(../images/icon-edit.gif) no-repeat center left;
-}
-.btn-pending {
-	background: url(../images/icon-pending.gif) no-repeat left 3px;
-}
-.btn-reply {
-	background: url(../images/icon-reply.gif) no-repeat left 4px;
-}
-input#addfriend_add,
-input#myfriends_addfriend_add {
-	background: transparent url(../images/icon-add.gif) no-repeat left;
-	border: 0;
-    margin: 0;
-}
-div.rbuttons {
+
+.rbuttons {
     position: absolute;
     right: 0;
     top: 0;
+	line-height: 2.1em;
 }
-div.lbuttons {
+.rbuttons a {
+    padding-right: .5em;
+}
+* html .rbuttons {
+	right: 2em;
+}
+.listing .rbuttons {
+    top: 5px;
+}
+* html .listing .rbuttons {
+	right: 5px;
+}
+.listing .rel .rbuttons {
+	top: 0;
+}
+.listing .rbuttons a {
+	font-size: 1em;
+	font-weight: normal;
+}
+
+.lbuttons {
     position: absolute;
     left: 0;
     top: 0;
 }
-div.rbuttons.pagetabs {
+
+div.pagetabs {
+    top: 1em !important;
     right: 1em;
-    top: 0.5em;
+}
+* html div.pagetabs {
+    right: 3em;
+}
+div.pagetabs a {
+	font-weight: bold !important;
+	border: none;
+	margin: 0 1em;
+	padding: 0;
+	background: none;
+}
+
+div.pagetabs .help a {
+	margin: 0;
 }
 div.rbuttons form,
 div.rbuttons form div {
     display: inline;
-    padding-left: 1em;
 }
 .controls a {
     margin: 0 .5em;
 }
+#buttons input {
+	margin: 0 .25em 0 0;
+}
+div.rbuttons .small-logo {
+	border: 0;
+	background: none;
+}
 
-/* Top of page elements */
+/**************************** Top of page elements ****************************/
 .viewheader {
-    border-bottom: 1px solid #666;
-    background-color: #fff;
-    height: 32px;
+    padding: .5em;
+    margin: 0 .25em 1px;
 }
 #dropshadow {
     background-image: url(../images/dropshadow.png);
@@ -338,22 +548,13 @@ div.rbuttons form div {
     float: left;
 }
 .viewheader .small-logo img {
-    height: 32px;
+	margin: .5em;
     padding: 0;
 }
-.viewheader .rbuttons {
+.viewheader .lbuttons {
     padding: .5em;
-}
-.viewheader h1 {
-    font-size: 1.2em;
-    margin: 0;
-    padding: .5em;
-}
-.viewheader h1 #vt-title {
-    font-weight: bold;
-}
-.viewheader h1 #vt-by {
-    font-size: .9em;
+	font-size: .9em;
+	margin-left: .5em;
 }
 .sitemessage {
     background-color: #f99;
@@ -370,10 +571,16 @@ div.rbuttons form div {
     margin: 0 auto;
     max-width: 1400px;
     min-width: 950px;
-    width: 90%;
+    width: 100%;
+}
+#top-wrapper {
+	padding: 0;
+}
+#containerX #top-wrapper {
+	background: #eee;
+	padding: .25em;
 }
 #loading-box {
-    /* TODO: check this rule */
     background-color: #ddd;
     display: none;
     padding: .5em 1em;
@@ -386,75 +593,130 @@ div.rbuttons form div {
     margin: 0;
     padding: .5em;
 }
+/* Search and language bar */
 #language-select, #usf {
     text-align: right;
-    padding-top: 1em;
+    padding: 1em;
 }
 #usf_query_container input {
-    padding: 2px 3px;
-    width: 190px;
+    width: 195px;
+	margin-right: .25em;
 }
 
-
-/* Navigation shared rules */
-#main-nav li, #sub-nav li {
-    display: inline;
-}
-#main-nav li.selected a, #sub-nav li.selected a {
-    color: #333;
-    cursor: default;
-    text-decoration: none;
-}
-
-/* Main navigation */
+/**************** TOP NAVIGATION ****************/
 #main-nav {
     clear: left;
     font-size: 1.2em;
     font-weight: bold;
     white-space: nowrap;
 }
-@media screen and (-webkit-min-device-pixel-ratio:0) { /* todo: is this needed? should be in safari-specific stylesheet anyway */
-    #main-nav ul { padding: 5px 0 6px 0; }
-}
 #main-nav ul {
     margin: 0;
     padding: 0;
 }
 #main-nav li {
-    padding: 0.4em 1em;
-    line-height: 1.6em;
+    padding: .5em 1em;
+    line-height: 2em;
+	display: inline;
 }
 #main-nav li.selected {
     background-color: #ddd;
 }
+#main-nav li.selected a,
+#main-nav li.selected a:link,
+#main-nav li.selected a:visited,
+#main-nav li.selected a:active {
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+}
 
-/* Sub navigation (second row of tabs) */
+/**************** SUB NAVIGATION ****************/
 #sub-nav {
-    background-color: #ddd;
-    padding: .25em;
     white-space: nowrap;
+	border-top: 1px solid #ddd;
 }
 #sub-nav ul {
-    margin: 0 3.5em 0;
+    margin: 0;
+	padding: .25em;
+	background: #ddd;
 }
-#sub-nav li a {
-    padding: .25em 1em;
+#sub-nav li {
+    padding: .5em 1em;
+	display: inline;
+}
+#sub-nav li.selected a,
+#sub-nav li.selected a:link,
+#sub-nav li.selected a:visited,
+#sub-nav li.selected a:active {
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
 }
 
-/* Main content area */
+/**************** IN PAGE TAB NAVIGATION ****************/
+ul.in-page-tabs {
+  font-size: 1em;
+  font-weight: bold;
+  list-style: none;
+  margin: 0 !important;
+  padding: 0;
+  position: relative;
+  z-index: 0;
+}
+ul.in-page-tabs li {
+  display: inline;
+  line-height: 1.8em;
+  padding: 0;
+  margin: 0 .25em 0 0 !important;
+}
+ul.in-page-tabs li a,
+ul.in-page-tabs li a:link,
+ul.in-page-tabs li a:visited,
+ul.in-page-tabs li a:active {
+  padding: .3em 1em;
+  * padding: .25em 1em;
+  background: #EEEEEE;
+}
+ul.in-page-tabs li a.current-tab,
+ul.in-page-tabs li a.current-tab:link,
+ul.in-page-tabs li a.current-tab:visited,
+ul.in-page-tabs li a.current-tab:active {
+  color: #333;
+  text-decoration: none;
+  background: #D1D1D1;
+}
+
+.subpage {
+    border: 1px solid #d1d1d1;
+	padding: 1em !important;
+	margin-bottom: 1em;
+}
+.subpage p:first-child {
+	margin: 0 0 .5em 0;
+}
+
+
+/**************** MAIN CONTENT *****************/
 #main-wrapper {
     clear: both;
     width: 100%;
 }
-#containerX .main-column,
 #main-column {
-    padding: 0 1.5em 1em;
-    overflow: auto;
+    padding: 1.5em;
 }
-#main-column-container, div.rel {
+#containerX .main-column {
+    padding: 1em 1.5em;
+}
+#main-column-container, 
+div.rel {
     position: relative;
     min-height: 0;  /* IE layout hack */
     * padding-top: .2em;
+}
+.twocolumn div.rel {
+	margin-left: 53px;
+	margin-top: 3px;
 }
 .main-column ul {
     margin: .5em 0 1em 0;
@@ -464,98 +726,96 @@ div.rbuttons form div {
 	margin: 0 0 .25em 1.5em;
 }
 
-/* Informational messages */
+/* system messages between nav and main content */
 #messages {
-    padding: .5em 0;
+    padding: 0;
 }
-div.ok, div.error, div.info {
+#messages div {
+	margin: 0 0 1em 0;
+}
+#containerX #messages {
+    padding-top: .5em;
+}
+div.ok, div.error {
     padding: .4em .5em .4em 2.5em;
 }
-#messages .ok {
+/* upload file message */
+div.info {
+    padding: .4em .5em;
+	background: #e7f1c3;
+	margin: .5em;
+    color: #547c22;
+	font-size: .9em;
+}
+/* different message types */
+#messages .ok,
+div.ok {
     color: #547c22;
     background: #e7f1c3 url(../images/success.gif) no-repeat .5em;
 }
-#messages .error {
+#messages .error,
+div.error, {
     color: #dd0221;
     background: #ffd3d9 url(../images/failure.gif) no-repeat .5em;
+    border: 1px solid #dd0221;
 }
 #messages .info {
     color: #1666a9;
-    /* TODO: get evonne to look at these icons */
-    background: #d2ebff url(../images/icon_question.gif) no-repeat .5em;
+    background: #d2ebff;
 }
 #messages img {
-    padding-top: .2em;
+    padding: .25em;
 }
 .backtrace {
     font: normal 100% monospace;
 }
+/* system messages */
 .message {
 	margin: .5em 0;
     padding: .5em;
-    background: #eee;
+    background: #f6f6f6;
     border: 1px solid #ddd;
     text-align: center;
 }
-.message p {
-    margin: 0;
+.message.delete {
+    color: #dd0221;
+	background: #ffd3d9;
+    border: 1px solid #dd0221;
+}
+.message h4 {
+    margin: 0 !important;
+}
+.message p:first-child {
+    margin: 0 0 1em 0;
+}
+.message p:last-child {
+    margin: 1em 0 0 0;
 }
 div.section {
     padding-top: .75em;
 }
 
 
-/* Tabbed pages */
-ul.in-page-tabs {
-  font-size: .9em;
-  font-weight: bold;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-ul.in-page-tabs li {
-  display: inline;
-  margin: 0 .25em;
-}
-ul.in-page-tabs li a.current-tab {
-  color: #333;
-  cursor: default;
-  text-decoration: none;
-  background: #ddd;
-}
-ul.in-page-tabs li a {
-  padding: .3em 1em;
-}
-.subpage {
-    border: 1px solid #d1d1d1;
-	padding: 1em;
-}
-.subpage p:first-child {
-	margin: .5em 0;
-}
-
-
-/* Left/right columns */
-#left-column, #right-column {
+/**************** SIDEBAR *********/
+#left-column,
+#right-column {
     width: 256px;
 }
-
-/* General sideblock rules */
 div.sideblock {
     clear: both;
     font-size: .9em;
     padding: 1em 1.25em;
 }
 div.sideblock h3 {
-    font-size: 1.3em;
+    font-size: 1.5em;
     margin: 0 0 .5em 0;
 }
 div.sideblock ul {
-    padding: 0 2em 0;
+    padding: 0 0 0 1.5em;
     margin: 0;
 }
 
-/* Login sideblock */
+/* Side Login */
 #login_submit_container {
     display: inline;
     float: left;
@@ -571,7 +831,7 @@ div.sideblock ul {
     margin: 0 0 .5em 0;
 }
 
-/* Profile sideblock */
+/* Side Profile */
 #profile-sideblock-username {
     font-size: .9em;
     font-weight: normal;
@@ -580,18 +840,29 @@ div.sideblock ul {
     float: right;
     padding-left: .25em;
 }
+#user-profileicon img {
+	border: 1px solid #FFFFFF;
+}
 #sb-profile .sideblock-content > ul {
     padding: 0;
     list-style: none;
+}
+* html #sb-profile ul {
+	list-style-type: none;
+	padding-left: 0;
 }
 #sb-profile ul {
     font-weight: bold;
 }
 #sb-profile ul ul {
-    font-size: .9em;
+    font-size: 1em;
     font-weight: normal;
-    padding-left: 2em;
+    padding-left: 1.5em;
     list-style-type: disc;
+}
+* html #sb-profile ul ul {
+    list-style-type: disc;
+    padding-left: 1.5em;
 }
 #sb-profile .controls {
     margin-top: 1em;
@@ -606,14 +877,14 @@ li#pendingfriends a {
 	background: url(../images/icon-user.gif) no-repeat 2px 4px;
 }
 
-/* Online users sideblock */
+/* Side Online Users */
 #sb-onlineusers ul {
     list-style: none;
     margin: 0;
-    padding: 0 0 0 0.5em;
+    padding: 0;
 }
 #sb-onlineusers li {
-    line-height: 2em;
+    line-height: 2.1em;
 }
 #sb-onlineusers ul img {
     float: left;
@@ -630,13 +901,17 @@ li#pendingfriends a {
     text-align: center;
     margin: 0 0 1em 0;
 	font-size: 1em;
-    width: 210px;
 }
 #quota_used {
 	font-weight: bold;
 }
 #quota_total {
 	font-weight: bold;
+}
+#quotawrap {
+	text-align: center;
+	width: 210px;
+	margin: 0 auto;
 }
 #quota_fill {
     margin: 0 5px;
@@ -664,13 +939,86 @@ li#pendingfriends a {
 	font-weight: bold;
 }
 
+/* Side Search */
+.sidebar #selfsearch {
+	text-align: center;
+}
+.sidebar #selfsearch input {
+	width: 190px;
+}
+
+
 /* Friends control sideblock */
 div.sideblock #friendscontrol label {
 	line-height: 1.8em;
 	vertical-align: top;
+	font-size: 1em;
 }
 
-/* AJAX LOGIN */
+/* Tags */
+.mytags {
+  padding: .5em 0;
+}
+.subpage.mytags {
+  margin-bottom: 2em;
+}
+a.tag {
+  text-decoration: none;
+	line-height: 1.2em;
+}
+.mytags a.tag {
+  padding: 0 5px;
+  white-space: nowrap;
+}
+.sidebar-content.tags .tag {
+    padding: 0 5px;
+    vertical-align: middle;
+}
+.tag-results .selected,
+.mytags .selected {
+    font-weight: bold;
+    text-decoration: none;
+}
+.mytags .tagfreq {
+    font-weight: normal;
+    font-size: .9em;
+    color: #444;
+}
+.tag-results .sep {
+	color: #ccc;
+	display: inline;
+	padding: 0 .25em;
+}
+/* select tag to edit */
+.edittags {
+  margin-bottom: 1em;
+}
+/* edit tag box */
+.edittag {
+	border: 1px solid #d1d1d1;
+	background: #f6f6f6;
+	padding: 1em;
+	float: left;
+	width: 45%;
+}
+/* delete tag box */
+.deletetag {
+	border: 1px solid #d1d1d1;
+	background: #f6f6f6;
+	padding: 1em;
+	float: left;
+	margin-left: 1em;
+	width: 45%;
+}
+.deletetag h3 {
+	color: #ca0000;
+}
+#delete_tag_submit {
+	border-color: #f69595 #750000 #750000 #f69595;
+	background: #ca0000;
+}
+
+/* Ajax Login */
 #ajax-login-form {
     border: 5px solid #ddd;
     background-color: #fff;
@@ -684,105 +1032,173 @@ div.sideblock #friendscontrol label {
 
 /* Help popups & icons */
 .contextualHelp {
-    /* TODO check this rule */
     padding: 1em;
     margin: 0;
-    width: 250px;
-    max-height: 30%;
+    width: 300px;
+    max-height: 400px;
     overflow: auto;
     background-color: #f9f9f9;
     border: 1px solid #b2b2b2;
     cursor: help;
-    font-size: .9em;
+    font-size: 12px;
+	color: #333;
+	z-index: 2000;
 }
 .help a:focus {
     outline: none;
 }
 .page-help-icon .help {
-    vertical-align: text-top;
+    vertical-align: middle;
     font-size: .4em;
     padding-top: .2em;
 }
+#helpstop h3 {
+	white-space: normal;
+	margin-top: 0;
+}
+#helpstop p {
+	font-weight: normal;
+	white-space: normal;
+}
 
 
-/* Footer */
+/******************** FOOTER ****************************/
 #footer-wrap {
     clear: both;
     font-size: .9em;
-    padding: .5em;
-    background: #eee;
+    padding: .5em .5em 1.5em .5em;
+	border-top: 1px solid #ddd;
 }
-#footer-wrap p {
+#footernav {
     margin: .5em;
+	color: #d1d1d1;
+    float: left;
 }
-#footer-wrap p a {
+#footernav a,
+#footernav a:link,
+#footernav a:active,
+#footernav a:visited {
     padding: 0 .5em;
 }
 #powered-by {
     margin: .5em 1em;
     float: left;
 }
-#performance-info span {
-    padding-right: 1em;
+#performance-info {
+    float: right;
+	margin: .5em;
+	color: #666;
 }
+#version {
+    float: right;
+	margin: .5em;
+	color: #888;
+}
+#release {
+    float: right;
+	margin: .5em;
+	color: #888;
+}
+
+
+/****************************** PAGE BY PAGE STYLES **********************************/
 
 /* Userlists used in admin section and on edit interaction form */
 .userlisttable .lrbuttons {
     text-align: center;
 }
 .userlisttable .lrbuttons button {
-    margin: .25em 0;
+    margin: .25em;
+	white-space: nowrap;
 }
 .userlisttable .lrfieldlists {
-    width: 50%;
+    width: 48%;
     padding: 0;
     margin: 0;
 }
 .userlisttable tbody tr th {
 	text-align: left !important;
-	padding: 0;
-	font-size: .9em;
+	padding: .25em 0 !important;
+	font-size: 1em;
 	color: #333;
 }
 
 /* Attached file lists */
-.attachments {
-	border: 1px solid #ddd;
-	background-color: #ddd;
-}
 .attachments tbody th {
-	border: none !important;
-	padding: .25em .5em 0;
 	text-align: left;
-}
-.attachments td {
+	background-color: #ddd;
 	padding: .25em .5em;
+	border: 0;
 }
 
-
-/* Specific page rules */
-
-/* View user */
+/* User/view */
 #userview {
 	margin: 1em 0;
-	padding: .5em 1em;
-	background-color: #eee;
 }
-#userview .user-icon a {
-	margin-left: 1em;
+#userview .user-icon {
+    font-size: .9em;
+	padding: .5em;
+	background: #eee;
+	border: 1px solid #d1d1d1;
 }
 #userview #invite,
 #userview #addmember {
 	margin-top: 1em;
 }
-#userview .submit {
-    padding-top: .2em;
-    font-size: .9em;
+
+/* Wall */
+.wallpost {
+    border-bottom: 2px solid #FFF;
+	background: #F9F9F9;
+    padding: .5em;
+}
+#wall .private {
+    background: url(../images/privatebg.gif) repeat top left;
+}
+.wallpost .userinfo {
+	min-height: 25px;
+}
+* html .wallpost .userinfo {
+	height: 25px;
+}
+.wallpost .userinfo img {
+	float: left;
+	padding-right: .5em;
+}
+.wallpost .userinforight {
+	padding: .25em;
+}
+.wallpost .postedon {
+    color: #888;
+	font-style: italic;
+	font-size: .9em;
+	line-height: 1.2em;
+}
+.wallpost .text p {
+    margin: 0 0 .25em 0;
+}
+.wallpost .controls {
+	font-size: .9em;
+    color: #888;
+	line-height: 1em;
+}
+.wallpost .controls a {
+	margin: 0;
 }
 
+
+#viewlayout .fl {
+	margin: 0 2em 1em 0;
+}
+
+
 /* My Views */
-#myviews h3 {
-    font-size: 1.5em;
+#myviews td {
+	border-bottom: 2px solid #FFF;
+}
+#myviews h4 {
+	font-size: 1.1em;
+	margin: 0 0 .25em 0;
 }
 #myviews .vi {
     float: left;
@@ -790,35 +1206,43 @@ div.sideblock #friendscontrol label {
     padding: .5em 1.5em .5em 0;
     width: 30%;
 }
-/* todo: check the below three rules */
+#myviews .vi .videsc p {
+	margin: 0;
+}
 #myviews .submit-viewitem {
     float: left;
     padding: .25em 0;
 }
 #myviews .submitted-viewitem {
     float: left;
-    padding: .5em 1.5em .5em 1.5em;
+    padding: 1em 2.75em 0 0;
     font-style: italic;
     color: #969696;
     font-size: 1em;
     width: 60%;
 }
+#deleteview label {
+    color: #ca0000;
+}
 
 /* Copy a view */
 #viewpreview {
   position: absolute;
-  border: 10px solid #eee;
+  border: 10px solid #ccc;
   background-color: #fff;
 }
 #viewpreviewinner {
-  border: 1px solid #ccc;
+  border: 1px solid #888;
   padding: 1em;
 }
 #viewpreviewclose {
   width: 100%;
   text-align: right;
-  border-bottom: 1px dotted #ccc;
-  padding-bottom: 1em;
+  border-bottom: 1px dotted #d1d1d1;
+  padding-bottom: .5em;
+}
+* html #viewpreviewclose {
+	width: 96%;
 }
 #viewpreviewcontent {
   margin-top: 1em;
@@ -826,25 +1250,49 @@ div.sideblock #friendscontrol label {
 
 /* View access */
 #viewacl_lhs {
-    float: right;
+    float: left;
     padding: 1em;
-    margin: 0 0 1em 1em;
-    border: 1px dotted #d1d1d1;
+    margin: 0 1em 1em 0;
+    border: 1px solid #d1d1d1;
 	width: 320px;
 }
-#viewacl_lhs #results {
-	margin-top: 1em;
+#potentialpresetitems {
+	margin-bottom: 1em;
+}
+#potentialpresetitems div {
+	margin: .25em 0;
+}
+#viewacl_lhs #results thead td div {
+	font-size: .9em;
+	font-weight: bold;
+	padding: 0 .5em;
+	position: relative;
+	display: inline;
+	top: 25px;
+	left: 145px;
+}
+#viewacl_lhs #results tfoot td {
+	border-top: 1px solid #ccc;
+	font-size: .9em;
+	font-weight: bold;
+	padding: .25em .5em .25em 100px;
 }
 #accesslistitems {
-	margin-right: 350px;
+	margin-left: 360px;
 }
 #accesslistitems .ai-container {
-	margin: 1em 1em 0 0;
+	margin: 0 1em 1em 0;
 	float: left;
     background: #eee;
 }
 #accesslistitems .ai-container th {
 	text-align: left;
+	padding-left: 1em;
+	line-height: 1.6em;
+}
+#accesslistitems .removebutton {
+	font-size: .9em;
+	padding: .5em .25em 0 0;
 }
 #accesslistitems .ai-container table {
 	margin: 0;
@@ -871,11 +1319,17 @@ div.sideblock #friendscontrol label {
 #editaccess_startdate_container,
 #editaccess_stopdate_container {
 	padding: .25em 0;
+	position: static;
+	z-index: 10;
+}
+#editaccess_startdate_container label,
+#editaccess_stopdate_container label {
+	padding: 0 .25em 0 0;
 }
 
 /* Export */
 #export h3 {
-    margin: .5em 0;
+    margin: .75em 0 .25em 0;
 }
 #export .radio-description {
     padding-left: 2em;
@@ -893,31 +1347,39 @@ div.sideblock #friendscontrol label {
     white-space: nowrap;
 }
 #export fieldset {
-    border: none;
+	margin-top: 0;
+	margin-left: 2em;
+	border: 1px solid #d1d1d1;
+	background: #eee;
+}
+#export fieldset legend {
+	font-size: 1em;
+}
+#export fieldset div a {
+	padding: 0 .5em 0 0;
 }
 #export fieldset table {
-    width: 95%;
+    width: 96%;
     margin: 0 auto;
 }
+#export fieldset table colgroup col {
+	border: 2px solid #eee;
+}
 #export fieldset table div {
-    padding-left: 1.75em;
+    padding: 0 0 0 1.9em;
+	font-size: .9em;
 }
 #export fieldset label {
     font-size: normal;
     font-weight: bold;
 }
-#export_submit_container {
-    text-align: center;
-}
-
 #exportgeneration {
     text-align: center;
 }
 #progress {
-    border: 2px solid #d0d0d0;
+    border: 2px solid #d1d1d1;
     height: 40px;
     width: 600px;
-    margin-top: 1em;
 }
 div.progress-bar {
     position: absolute;
@@ -934,7 +1396,6 @@ div.progress-bar {
 }
 div.progress-bar a {
     color: #ffd !important;
-    text-decoration: underline !important;
 }
 p.progress-text {
     position: absolute;
@@ -949,25 +1410,36 @@ p.progress-text {
     height: 40px;
 }
 
-/* My Groups */
+/* My Groups *//* My Friends */
 ul.groupuserstatus {
-    width: 200px;
+    width: 180px;
+	font-size: .9em;
+	margin: 0 0 0 1em;
 }
-ul.groupuserstatus li {
+#friendslist ul.actionlist {
+	margin: 0 0 0 1em;
+	float: right;
+	width: 180px;
+	font-size: .9em;
+}
+ul.groupuserstatus li,
+#friendslist ul.actionlist li {
 	list-style: none;
 	margin: 0;
 	border-bottom: 1px solid #d1d1d1;
+	padding: 0 .25em;
 }
-ul.groupuserstatus li.last {
+ul.groupuserstatus li.last,
+#friendslist ul.actionlist li.last {
 	border-bottom: none;
 }
 form#search, form#filter, div.searchform {
-    /* Also applies to Find Friends */
     margin-bottom: 1em;
 }
+form#search input.text {
+	margin-right: .25em;
+}
 
-
-/* My Friends */
 #friendslist ul.viewlist {
 	margin: 0;
 	font-size: 1em;
@@ -982,32 +1454,17 @@ form#search, form#filter, div.searchform {
 	padding-left: 1em;
 	background: url(../images/divider-dot.gif) no-repeat left;
 }
-#friendslist ul.actionlist {
-	margin: 0 1em;
-	float: right;
-	width: 200px;
-}
-#friendslist ul.actionlist li {
-	list-style: none;
-	margin: 0;
-	padding: 0 .25em;
-	border-bottom: 1px solid #d1d1d1;
-}
-#friendslist ul.actionlist li.last {
-	border-bottom: none;
-}
 #friendslist .leftdiv {
 	float: left;
+	width: 4.5em;
 }
 #friendslist .rightdiv {
 	min-height: 35px;
-	padding: .5em 0 0 4.5em;
+	padding: .5em 0 0 0;
+	margin-left: 4.5em;
 }
 
 /* Group: about */
-.subpage .group-info {
-    margin-top: 1em;
-}
 .group-info {
 	background-color: #eee;
 	padding: 1em;
@@ -1024,20 +1481,14 @@ form#search, form#filter, div.searchform {
 .group-info ul li span {
 	margin: 0 2em 0 0;
 }
+.groupdescription {
+	margin-bottom: 1em;
+}
 
 /* Group: members */
 .listing.twocolumn td {
 	width: 50%;
 	border: 4px solid #FFF;
-}
-.listing.twocolumn td img {
-    margin-right: .5em;
-}
-.listing.twocolumn form input {
-    border: none;
-	font-weight: normal;
-	font-size: .9em;
-    line-height: .9em;
 }
 
 /* Settings > Preferences */
@@ -1045,29 +1496,57 @@ form#search, form#filter, div.searchform {
     padding-left: 0;
 }
 #accountprefs table h3 {
-    margin: .8em 0 .4em 0;
-	border-bottom: 1px solid #000;
+	border-bottom: 1px dotted #d1d1d1;
+}
+#deleteaccount {
+	border: 1px solid #e98a88;
+	background: #fbeceb;
+	padding: 1em;
+	margin: 0 1em 1em;
+}
+#deleteaccount h1 {
+	color: #ca0000;
+}
+#deleteaccount input.submit {
+	border: 1px solid #e98a88;
+	background-color: #ca0000;
 }
 
 /* Settings > Notifications */
 #activitylist th {
 	line-height: 1.2em;
 	vertical-align: bottom;
-    padding-left: 0.5em;
 }
 #activitylist th a {
 	font-size: .8em;
 	font-weight: normal;
+	white-space: nowrap;
+}
+#activitylist tbody td div {
+	font-size: .9em;
+	line-height: 1.4em;
+}
+#delete_all_notifications {
+	position: relative;
+	top: -30px;
+	left: -15px;
 }
 
 /* Settings > Institution membership */
-#requestmembership_institution_container {
-	margin: 1em 0;
-}
 #requestmembership_studentid_container {
-	margin: 1em .5em 0 1em;
+	margin: 0 .5em;
+}
+#requestmembership_studentid_container label {
+	margin: 0 .25em 0 0;
 }
 #cancelrequest label {
 	display: block;
 }
 
+
+* html #edit_interaction_weight_container td input {
+	border: 0 !important;
+}
+* html #edit_interaction table td fieldset {
+	width: 92%;
+}

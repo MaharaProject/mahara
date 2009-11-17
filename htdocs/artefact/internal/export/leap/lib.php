@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,13 +21,16 @@
  * @subpackage artefact-internal-export-leap
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
+/*
+ * For more information about internal LEAP export, see:
+ * http://wiki.mahara.org/Developer_Area/Import//Export/LEAP_Export/Internal_Artefact_Plugin
+ */
+
 class LeapExportInternal extends LeapExportArtefactPlugin {
-
-
     public function get_export_xml() {
         $element = new LeapExportElementInternal($this->exporter, $this->artefacts);
         return $element->get_export_xml();
@@ -37,21 +41,24 @@ class LeapExportElementInternal extends LeapExportElement {
 
     protected $artefacts = array();
 
-    public function __construct(LeapExporter $exporter, array $artefacts) {
+    public function __construct(PluginExportLeap $exporter, array $artefacts) {
         parent::__construct(null, $exporter);
         $this->artefacts = $artefacts;
         $this->assign_smarty_vars();
     }
 
     public function assign_smarty_vars() {
+        $user = $this->get('exporter')->get('user');
+        $userid = $user->get('id');
         $this->smarty->assign('artefacttype', 'internal');
         $this->smarty->assign('artefactplugin', 'internal');
-        $this->smarty->assign('title', display_name($this->get('exporter')->get('user'), $this->get('exporter')->get('user')));
+        $this->smarty->assign('title', display_name($user, $user));
         // If this ID is changed, you'll have to change it in author.tpl too
         $this->smarty->assign('id', 'portfolio:artefactinternal');
         $this->smarty->assign('leaptype', $this->get_leap_type());
         $persondata = array();
         $spacialdata = array();
+        usort($this->artefacts, array($this, 'artefact_sort'));
         foreach ($this->artefacts as $a) {
             if (!$data = $this->data_mapping($a)) {
                 if ($a->get('artefacttype') == 'introduction') {
@@ -82,6 +89,26 @@ class LeapExportElementInternal extends LeapExportElement {
         }
         $this->smarty->assign('persondata', $persondata);
         $this->smarty->assign('spacialdata', $spacialdata);
+
+        // Grab profile icons and link to them, making sure the default is first
+        if ($icons = get_column_sql("SELECT id
+            FROM {artefact}
+            WHERE artefacttype = 'profileicon'
+            AND owner = ?
+            ORDER BY id = (
+                SELECT profileicon FROM {usr} WHERE id = ?
+            ) DESC, id", array($userid, $userid))) {
+            foreach ($icons as $icon) {
+                $icon = artefact_instance_from_id($icon);
+                $this->add_artefact_link($icon, 'related');
+            }
+            $this->smarty->assign('links', $this->links);
+        }
+
+        if (!$categories = $this->get_categories()) {
+            $categories = array();
+        }
+        $this->smarty->assign('categories', $categories);
     }
 
     public function get_template_path() {
@@ -90,6 +117,15 @@ class LeapExportElementInternal extends LeapExportElement {
 
     public function get_leap_type() {
         return 'person';
+    }
+
+    public function get_categories() {
+        return array(
+            array(
+                'scheme' => 'person_type',
+                'term'   => 'Self',
+            )
+        );
     }
 
     public function data_mapping(ArtefactType $artefact) {
@@ -148,6 +184,46 @@ class LeapExportElementInternal extends LeapExportElement {
             'introduction // not part of persondata
             */
         return false;
+    }
+
+    /**
+     * Sort artefacts, making sure that the primary e-mail address comes first,
+     * then other e-mail addresses, then everything else.
+     *
+     * Semantically, this means our exports have the most important e-mails
+     * first, which we use at import time to make sure we set the primary
+     * e-mail correctly.
+     */
+    private function artefact_sort($a, $b) {
+        static $emailcache = array();
+
+        $atype = $a->get('artefacttype');
+        $btype = $b->get('artefacttype');
+        if ($atype == 'email') {
+            if ($btype == 'email') {
+                $user = $this->get('exporter')->get('user');
+                $userid = $user->get('id');
+                if (!isset($emailcache[$userid])) {
+                    $emailcache[$userid] = $user->get('email');
+                }
+
+                if ($a->get('title') == $emailcache[$userid]) {
+                    return -1;
+                }
+                else if ($b->get('title') == $emailcache[$userid]) {
+                    return 1;
+                }
+            }
+            else {
+                return -1;
+            }
+        }
+        else {
+            if ($btype == 'email') {
+                return 1;
+            }
+        }
+        return $atype > $btype;
     }
 
 }

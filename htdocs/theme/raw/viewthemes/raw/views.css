@@ -1,27 +1,37 @@
-/**
- * Stylesheet for views for the default theme
- */
-
-/** When viewing an artefact */
-#view .filedata-icon {
-    margin: 0 .5em;
+/*  Views  */
+#views-loading {
+    color: #666;
 }
-#view table.filedata {
-    margin-top: 1em;
-    border: none;
-}
-#view table.filedata th {
-    width: 8em;
-    padding: 5px 0 0 0;
+/********************** Top pane of Edit View *************************/
+#top-pane {
 }
 
-#category-list li a:hover {
-    background-color: #f2f5e6;
-    text-decoration: none;
+/* The tabs that allow you to select a blocktype category */
+#category-list li a,
+#category-list li a:link,
+#category-list li a:visited,
+#category-list li a:active {
+    background-color: #eee;
+}
+#category-list li.current a,
+#category-list li.current a:link,
+#category-list li.current a:visited,
+#category-list li.current a:active {
+    background: #d1d1d1;
+    color: #333;
 }
 
+/* The panel that contains the blocktype icons */
+#blocktype-list {
+	border: 1px solid #D1D1D1;
+}
+#noblocks {
+    color: #666;
+}
+
+/******************* Between Panes **************************************/
 #layout-link {
-	background: url(../images/icon-change.gif) no-repeat;
+	background: url(../images/icon-change.gif) no-repeat left center;
 	padding-left: 1.5em;
 	font-weight: bold;
 }
@@ -29,20 +39,101 @@
     color: #aaa;
 }
 #btn-displaymyview {
-	background: url(../images/icon-display.gif) no-repeat;
-	padding-left: 1.5em;
+	background: url(../images/icon-display.gif) no-repeat left center;
+	padding-left: 1.6em;
 	font-weight: bold;
 }
 
-/* This rule is incredibly annoying, as it enforces the widths on a whole bunch of tables that don't need to be forced - like the blog attachments table and any tables the user generates by the wysiwyg editor. Can it be made more specific? */
-/*.blockinstance-content table {
-	width: 100%;
-	* width: 99%;
-}*/
+
+/********************** Bottom pane of Edit View *************************/
+#page #bottom-pane {
+    border: 5px solid #eee;
+}
+#blocksinstruction {
+    background: #eee;
+    color: #919191;
+}
+#column-container .column-header input[disabled="disabled"] {
+    color: #ccc;
+}
+
+.column-content .add-button input {
+	border: 1px solid #d1d1d1;
+}
+
+#block-placeholder {
+    border: 2px dashed #bfbfbf;
+}
+
+/**************** Blockinstance **********************/
+/* Configure blockinstance */
+.blockinstance.configure {
+  border: 7px solid #eee;
+  background: #fff;
+ }
+.blockinstance-content p.noartefacts,
+.blockinstance-content .description {
+    color: #808080;
+}
+
+/* tabs for the artefact chooser */
+ul.artefactchooser-tabs li a,
+ul.artefactchooser-tabs li a:link,
+ul.artefactchooser-tabs li a:visited,
+ul.artefactchooser-tabs li a:active {
+  background: #eee;
+}
+ul.artefactchooser-tabs li.current a,
+ul.artefactchooser-tabs li.current a:link,
+ul.artefactchooser-tabs li.current a:visited
+ul.artefactchooser-tabs li.current a:active {
+  background: #ddd;
+  color: #333;
+}
+ul.artefactchooser-subtabs {
+  border-bottom: 1px solid #ddd;
+}
+ul.artefactchooser-subtabs li {
+  border-right: 1px solid #d1d1d1;
+}
+ul.artefactchooser-subtabs li.current a,
+ul.artefactchooser-subtabs li.current a:link,
+ul.artefactchooser-subtabs li.current a:visited,
+ul.artefactchooser-subtabs li.current a:active {
+  color: #333;
+}
+#artefactchooser-body {
+    border: 1px solid #ddd;
+}
+.upload_browse #artefactchooser-body {
+    border: 1px solid #ddd;
+}
+
+/* pagination */
+.ac-pagination .results {
+	background: #eee;
+}
+
+/* attachments */
+.attachments {
+    background-color: #fff;
+}
+#instconf_artefactid_selectlist,
+#instconf_artefactids_selectlist,
+#instconf_artefactid_selectlist th,
+#instconf_artefactids_selectlist th {
+	border-bottom: 1px solid #ccc;
+}
 
 
 
-
+#copyview .searchquery {
+	background: #eee;
+	border: 1px solid #d1d1d1;
+	padding: .5em 1em;
+	line-height: 2.4em;
+	margin-bottom: 1em;
+}
 
 /* todo: test this */
 .column-content .add-button {
@@ -62,74 +153,56 @@ body:last-child:not(:root:root) .newblockhere {
     color: #547C22;
 }
 
-
 /* VIEWS */
+/* views footer */
+.viewfooter {
+	border: 1px solid #eee;
+}
+#viewmenu {
+	color: #d1d1d1;
+}
 #feedbacktable .details {
-	margin-top: 10px;
 	color: #9e9e9e;
 }
-#feedbacktable .icon {
-	float: left;
-	margin-right: 5px;
-}
-#feedbacktable p {
-    margin: 0 0 .25em;
+#feedback_pagination {
+	border-top: 1px solid #ccc;
 }
 
-#view #publicfeedback {
-	padding: 1em .5em .5em .5em;
-	border-top: 2px dotted #D2D2D2;
+/** viewing artefact */
+#view .filedata-icon.fr {
+	background: #F6F6F6;
+	border: 1px solid #CCCCCC;
 }
-#viewmenu a {
-	margin: 0 .5em;
+
+/* posted or last update */
+.postdetails {
+	padding-bottom: 5px !important;
+	font-size: .9em;
+	color: #888;
+	line-height: 1.3em;
 }
-#view .blockinstance-content .postdetails {
-	text-align: right;
+#blocktype_externalfeed_lastupdate {
 	padding-top: 5px !important;
 	padding-bottom: 5px !important;
+	font-size: .9em;
+	color: #888;
+	line-height: 1.3em;
 }
 
-#view .blockinstance-content .attachments {
-    border: 0;
-    background-color: #fff;
-}
-#view .blockinstance-content .attachments td {
-    font-size: .9em;
-    margin: 0;
-    padding: 0 .5em;
-    background-color: #fff;
+#userfriendstable td {
+	background: none;
 }
 
-form#wallpost {
-	margin: 0 0 1em 0;
+/* My Views */
+#userviewstable {
+	width: 100%;
 }
-form#wallpost .description {
-	padding: 0;
-}
-form#wallpost input.submit {
-	font-size: 1em;
-	margin: 0;
-}
-#wall .private {
-    background: url(../images/privatebg.gif) repeat top left;
-}
-.wallpost {
-    border-bottom: 1px dotted #ddd;
-	background: #eee;
-    padding: .5em .5em 0 .5em;
-}
-.wallpost .text p {
-    margin: .25em;
-}
-.wallpost .userinfo img {
-	float: left;
-	padding-right: .5em;
-}
-.wallpost .userinforight {
-	padding: .25em;
-}
-.wallpost .postedon {
-    color: #888;
-	font-style: italic;
+* html #userviewstable {
+	width: 98%;
 }
 
+
+input.addcolumn, input.removecolumn {
+    background: none;
+    border: none;
+}

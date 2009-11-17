@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage export
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -171,7 +172,7 @@ abstract class PluginExport extends Plugin {
 
         // Get the list of views to export
         if ($views == self::EXPORT_ALL_VIEWS) {
-            $tmpviews = get_column('view', 'id', 'owner', $userid);
+            $tmpviews = get_column_sql('SELECT id FROM {view} WHERE owner = ? ORDER BY id', array($userid));
             $this->viewexportmode = $views;
         }
         else if (is_array($views)) {
@@ -201,7 +202,14 @@ abstract class PluginExport extends Plugin {
 
         // Get the list of artefacts to export
         if ($artefacts == self::EXPORT_ALL_ARTEFACTS) {
-            $tmpartefacts = get_column('artefact', 'id', 'owner', $userid);
+            $tmpartefacts = get_column_sql('SELECT id
+                FROM {artefact}
+                WHERE owner = ?
+            UNION
+                SELECT artefact
+                FROM {view_artefact}
+                WHERE "view" IN (SELECT id FROM {view} WHERE owner = ?)
+                ORDER BY id', array($userid, $userid));
             $this->artefactexportmode = $artefacts;
         }
         else {
@@ -210,7 +218,8 @@ abstract class PluginExport extends Plugin {
                     FROM {view_artefact} va
                     LEFT JOIN {view} v ON v.id = va.view
                     WHERE v.owner = ?
-                    $vaextra";
+                    $vaextra
+                    ORDER BY va.artefact";
                 $tmpartefacts = (array)get_column_sql($sql, array($userid));
 
                 // Some artefacts are not inside the view, but still need to be exported with it
@@ -239,9 +248,16 @@ abstract class PluginExport extends Plugin {
             if (is_null($artefact)) {
                 throw new ParamOutOfRangeException("Invalid artefact $a");
             }
-            if ($artefact->get('owner') != $userid) {
-                throw new UserException("User $userid does not own artefact " . $artefact->get('id'));
-            }
+            // This check won't work, at the _least_ because at the time of
+            // writing, can_view_artefact does not support normal users viewing
+            // site files. This check is also pretty damn slow. So think twice
+            // before uncommenting it. I presume if you _are_ uncommenting it,
+            // it's because you're trying to isloate a security vulnerability
+            // where a user can export another user's files or something. In
+            // which case you'll be being careful anyway, I hope.
+            //if (!$this->user->can_view_artefact($artefact)) {
+            //    throw new SystemException("User $userid does not own artefact " . $artefact->get('id'));
+            //}
             $this->artefacts[$artefact->get('id')] = $artefact;
         }
 

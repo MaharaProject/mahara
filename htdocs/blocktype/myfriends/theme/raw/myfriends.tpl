@@ -4,7 +4,7 @@
     {foreach from=$friends item=row}
         <tr>
         {foreach from=$row item=friend}
-            <td class="r{cycle values=0,1} friendcell">
+            <td class="{cycle values='r0,r1'} friendcell">
                 <a href="{$WWWROOT}user/view.php?id={$friend}">
                    <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=60&amp;maxheight=60&amp;id={$friend}" alt="">
                 </a>

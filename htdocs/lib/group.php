@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -298,6 +299,8 @@ function group_create($data) {
         }
     }
 
+    $data['id'] = $id;
+    handle_event('creategroup', $data);
     db_commit();
 
     return $id;
@@ -1092,7 +1095,7 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
             $members = get_records_sql_array("
                 SELECT u.*
                 FROM {group_member} gm
-                INNER JOIN {usr} u ON gm.member = u.id
+                INNER JOIN {usr} u ON (gm.member = u.id AND u.deleted = 0)
                 WHERE gm.group = ?
                 ORDER BY " . db_random() . "
                 LIMIT 3", array($groupid));
@@ -1111,21 +1114,43 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
 }
 
 
-function group_get_user_groups($userid=null) {
+function group_get_user_groups($userid=null, $roles=null) {
     if (is_null($userid)) {
         global $USER;
         $userid = $USER->get('id');
     }
     if ($groups = get_records_sql_array(
-        "SELECT g.id, g.name, gm.role
+        "SELECT g.id, g.name, gm.role, g.jointype, g.grouptype
         FROM {group} g
         JOIN {group_member} gm ON (gm.group = g.id)
         WHERE gm.member = ?
-        AND g.deleted = 0
+        AND g.deleted = 0 " . (is_array($roles) ? (' AND gm.role IN (' . join(',', array_map('db_quote', $roles)) . ')') : '') . "
         ORDER BY gm.role = 'admin' DESC, gm.role, g.id", array($userid))) {
         return $groups;
     }
     return array();
 }
 
+
+function group_get_member_ids($group, $roles=null) {
+    $rolesql = is_null($roles) ? '' : (' AND gm.role IN (' . join(',', array_map('db_quote', $roles)) . ')');
+    return get_column_sql('
+        SELECT gm.member
+        FROM {group_member} gm INNER JOIN {group} g ON gm.group = g.id
+        WHERE g.deleted = 0 AND g.id = ?' . $rolesql,
+        array($group)
+    );
+}
+
+function group_can_create_groups() {
+    global $USER;
+    $creators = get_config('creategroups');
+    if ($creators == 'all') {
+        return true;
+    }
+    if ($USER->get('admin') || $USER->is_institutional_admin()) {
+        return true;
+    }
+    return $creators == 'staff' && ($USER->get('staff') || $USER->is_institutional_staff());
+}
 ?>

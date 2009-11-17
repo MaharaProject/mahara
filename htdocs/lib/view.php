@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -62,6 +63,49 @@ class View {
     private $copynewuser = 0;
     private $copynewgroups;
     private $type;
+
+    /**
+     * Valid view layouts. These are read at install time and inserted into
+     * view_layout, but not updated afterwards, so if you're changing one
+     * you'll need to do that manually. Actually, you'd better talk to the
+     * Mahara dev team about what else needs changing if you do touch this.
+     *
+     * A hash of columns => list of view widths
+     */
+    public static $layouts = array(
+        1 => array(
+            '100',
+        ),
+        2 => array(
+            '50,50',
+            '67,33',
+            '33,67',
+        ),
+        3 => array(
+            '33,33,33',
+            '25,50,25',
+            '15,70,15',
+        ),
+        4 => array(
+            '25,25,25,25',
+            '20,30,30,20',
+        ),
+        5 => array(
+            '20,20,20,20,20',
+        ),
+    );
+
+    /**
+     * Which view layout is considered the "default" for views with the given
+     * number of columns. Must be present in $layouts of course.
+     */
+    public static $defaultlayouts = array(
+        1 => '100',
+        2 => '50,50',
+        3 => '33,33,33',
+        4 => '25,25,25,25',
+        5 => '20,20,20,20,20',
+    );
 
     public function __construct($id=0, $data=null) {
         if (!empty($id)) {
@@ -169,7 +213,14 @@ class View {
             $view->set('title', self::new_title(get_string('Copyof', 'mahara', $template->get('title')), (object)$viewdata));
             $view->set('dirty', true);
         }
-        $copystatus = $view->copy_contents($template);
+
+        try {
+            $copystatus = $view->copy_contents($template);
+        }
+        catch (QuotaExceededException $e) {
+            db_rollback();
+            return array(null, $template, array('quotaexceeded' => true));
+        }
 
         $view->commit();
         db_commit();
@@ -990,16 +1041,16 @@ class View {
         }
 
         // Set column widths
-        if ($this->get('numcolumns') > 1) {
-            $layout = $this->get('layout');
-            if ($layout) {
-                $i = 0;
-                // The get_field also verifies the layout is correct for the
-                // number of columns in the view
-                foreach (explode(',', get_field('view_layout', 'widths', 'id', $layout, 'columns', $this->get('numcolumns'))) as $width) {
-                    $this->columns[++$i]['width'] = $width;
-                }
+        $layout = $this->get_layout();
+        $i = 0;
+        $is_ie6 = (false !== strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 6.0'));
+        foreach (explode(',', $layout->widths) as $width) {
+            // IE6 has interesting padding issues that mean we have to tell
+            // porkies so all the columns stay beside each other
+            if ($is_ie6) {
+                $width -= 2;
             }
+            $this->columns[++$i]['width'] = $width;
         }
 
         foreach ($data as $block) {
@@ -1074,7 +1125,8 @@ class View {
     /**
      * Returns the HTML for a particular column
      *
-     * @param int  $column     The column to build
+     * @param int $column   The column to build
+     * @param int $editing  Whether the view is being built in edit mode
      */
     public function build_column($column, $editing=false) {
         global $USER;
@@ -1154,6 +1206,14 @@ class View {
         safe_require('blocktype', $values['blocktype']);
         if (!call_static_method(generate_class_name('blocktype', $values['blocktype']), 'allowed_in_view', $this)) {
             throw new UserException('[translate] Cannot put ' . $values['blocktype'] . ' blocktypes into this view');
+        }
+
+        if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'single_only', $this)) {
+            $count = count_records_select('block_instance', "view = ? AND blocktype = ?",
+                                          array($this->id, $values['blocktype']));
+            if ($count > 0) {
+                throw new UserException(get_string('onlyoneblocktypeperview', 'error', $values['blocktype']));
+            }
         }
 
         $bi = new BlockInstance(0,
@@ -1260,6 +1320,12 @@ class View {
             }
             else {
                 $this->shuffle_column($bi->get('column'), $values['order'], $bi->get('order'));
+                if ($bi->get('order') < $values['order']) {
+                    // When moving a block down within a column, the final order is one less
+                    // than the 'desired' order because of the empty space created when the
+                    // block gets taken out of its original spot.
+                    $values['order'] -= 1;
+                }
             }
         } 
         // moving to another column
@@ -1409,15 +1475,12 @@ class View {
             if (!empty($insert)) {
                 // shuffle everything up
                 $this->shuffle_helper('order', 'up', '>=', $insert, '"column" = ?', array($column)); 
-
-            }
-            // shuffle everything down
-            $this->shuffle_helper('order', 'down', '>', $remove, '"column" = ?', array($column));
-
-            if (!empty($insert)) {
                 // now move it back
                 set_field('block_instance', 'order', $insert, 'view', $this->get('id'), 'column', $column, 'order', 0);
             }
+
+            // shuffle everything down
+            $this->shuffle_helper('order', 'down', '>', $remove, '"column" = ?', array($column));
         }
         else if (!empty($insert)) {
             // shuffle everything up
@@ -1501,6 +1564,146 @@ class View {
         return null;
     }
 
+    /**
+     * Returns a record from the view_layout table matching the layout for this
+     * View.
+     *
+     * If the layout for the view is null, then this method returns the record
+     * for the default layout for the number of columns the View has.
+     *
+     * Check the view_layout table for what fields you'll get back, but the
+     * most interesting one is 'widths', which is a comma-separated list of %
+     * widths for the columns in the View.
+     *
+     * @return array A record from the view_layout table.
+     */
+    public function get_layout() {
+        static $viewlayouts = null;
+        if ($viewlayouts === null) {
+            $viewlayouts = get_records_assoc('view_layout');
+        }
+
+        $layout     = $this->get('layout');
+        $numcolumns = $this->get('numcolumns');
+
+        if (!$layout) {
+            foreach ($viewlayouts as $layout) {
+                if ($layout->widths == self::$defaultlayouts[$numcolumns]) {
+                    return $layout;
+                }
+            }
+        }
+
+        if (isset($viewlayouts[$layout])) {
+            return $viewlayouts[$layout];
+        }
+
+        throw new SystemException("Unknown view layout (id=$layout)");
+    }
+
+    /**
+     * Exports the view configuration as a data structure. This does not
+     * include access rules or ownership information - only the information
+     * required to rebuild the view's layout, blocks and other such info.
+     *
+     * This structure can then be imported again, using {@link import_from_config()}
+     *
+     * @return array The configuration for this view, try calling this to see
+     *               what fields are available.
+     */
+    public function export_config($format='') {
+        $data = $this->get_column_datastructure();
+        $config = array(
+            'title'       => $this->get('title'),
+            'description' => $this->get('description'),
+            'type'        => $this->get('type'),
+            'layout'      => $this->get('layout'),
+            'tags'        => $this->get('tags'),
+            'numcolumns'  => $this->get('numcolumns'),
+            'ownerformat' => $this->get('ownerformat'),
+        );
+
+        foreach ($data as $key => $column) {
+            $config['columns'][$key] = array();
+            foreach ($column['blockinstances'] as $bi) {
+                safe_require('blocktype', $bi->get('blocktype'));
+                $classname = generate_class_name('blocktype', $bi->get('blocktype'));
+                $method = 'export_blockinstance_config';
+                if (method_exists($classname, $method . "_$format")) {
+                    $method .= "_$format";
+                }
+                $config['columns'][$key][] = array(
+                    'blocktype' => $bi->get('blocktype'),
+                    'title'     => $bi->get('title'),
+                    'config'    => call_static_method($classname, $method, $bi),
+                );
+            }
+        }
+
+        return $config;
+    }
+
+    /**
+     * Given a data structure like the one created by {@link export_config},
+     * creates and returns a View object representing the config.
+     *
+     * @param array $config The config, as generated by export_config. Note
+     *                      that if you miss fields, this method will throw
+     *                      warnings.
+     * @param int $userid   The user who issued the command to do the import
+     *                      (defaults to the logged in user)
+     * @return View The created view
+     */
+    public static function import_from_config(array $config, $userid=null, $format='') {
+        $viewdata = array(
+            'title'       => $config['title'],
+            'description' => $config['description'],
+            'type'        => $config['type'],
+            'layout'      => $config['layout'],
+            'tags'        => $config['tags'],
+            'numcolumns'  => $config['numcolumns'],
+            'ownerformat' => $config['ownerformat'],
+        );
+        if (isset($config['owner'])) {
+            $viewdata['owner'] = $config['owner'];
+        }
+        if (isset($config['group'])) {
+            $viewdata['group'] = $config['group'];
+        }
+        if (isset($config['institution'])) {
+            $viewdata['institution'] = $config['institution'];
+        }
+        $view = View::create($viewdata, $userid);
+
+        $col = 1;
+        foreach ($config['columns'] as $column) {
+            $row = 1;
+            foreach ($column as $blockinstance) {
+                safe_require('blocktype', $blockinstance['type']);
+                $classname = generate_class_name('blocktype', $blockinstance['type']);
+                $method = 'import_create_blockinstance';
+                if (method_exists($classname, $method . "_$format")) {
+                    $method .= "_$format";
+                }
+                $bi = call_static_method($classname, $method, $blockinstance, $config);
+                if ($bi) {
+                    $bi->set('title',  $blockinstance['title']);
+                    $bi->set('column', $col);
+                    $bi->set('order',  $row);
+                    $view->addblockinstance($bi);
+
+                    $row++;
+                }
+                else {
+                    log_debug("Blocktype {$blockinstance['type']}'s import_create_blockinstance did not give us a blockinstance, so not importing this block");
+                }
+            }
+            $col++;
+        }
+
+        return $view;
+    }
+
 
     /**
      * Makes a URL for a view block editing page
@@ -1579,7 +1782,7 @@ class View {
             $data['sortorder'] = call_static_method($blocktypeclass, 'artefactchooser_get_sort_order');
         }
 
-        list($artefacts, $totalartefacts) = self::get_artefactchooser_artefacts($data, $group, $institution);
+        list($artefacts, $totalartefacts) = self::get_artefactchooser_artefacts($data, $USER, $group, $institution);
 
         $selectone     = $data['selectone'];
         $value         = $data['defaultvalue'];
@@ -1651,8 +1854,21 @@ class View {
      * Return artefacts available for inclusion in a particular block
      *
      */
-    public static function get_artefactchooser_artefacts($data, $group=null, $institution=null, $short=false) {
-        global $USER;
+    public static function get_artefactchooser_artefacts($data, $owner=null, $group=null, $institution=null, $short=false) {
+        if ($owner === null) {
+            global $USER;
+            $user = $USER;
+        }
+        else if ($owner instanceof User) {
+            $user = $owner;
+        }
+        else if (intval($owner) != 0) {
+            $user = new User();
+            $user->find_by_id(intval($owner));
+        }
+        else {
+            throw new SystemException("Invalid argument type " . gettype($owner) . " passed to View::get_artefactchooser_artefacts");
+        }
 
         $offset        = !empty($data['offset']) ? $data['offset'] : null;
         $limit         = !empty($data['limit']) ? $data['limit'] : null;
@@ -1675,10 +1891,14 @@ class View {
                     INNER JOIN {group_member} m ON r.role = m.role
                 WHERE
                     m."group" = ' . $group . '
-                    AND m.member = ' . $USER->get('id') . '
+                    AND m.member = ' . $user->get('id') . '
                     AND r.can_view = 1
             ) ga ON (ga.group = a.group AND a.id = ga.artefact)';
-            $select = "(a.institution = 'mahara' OR ga.can_view = 1)";
+            $select = "(a.institution = 'mahara' OR ga.can_view = 1";
+            if (!empty($data['userartefactsallowed'])) {
+                $select .= ' OR owner = ' . $user->get('id');
+            }
+            $select .= ')';
         }
         else if ($institution) {
             // Site artefacts & artefacts owned by this institution
@@ -1689,7 +1909,7 @@ class View {
             // the user has republish permission on, artefacts owned
             // by the user's institutions.
             $from .= '
-            LEFT OUTER JOIN {artefact_access_usr} aau ON (a.id = aau.artefact AND aau.usr = ' . $USER->get('id') . ')
+            LEFT OUTER JOIN {artefact_access_usr} aau ON (a.id = aau.artefact AND aau.usr = ' . $user->get('id') . ')
             LEFT OUTER JOIN {artefact_parent_cache} apc ON (a.id = apc.artefact)
             LEFT OUTER JOIN (
                 SELECT
@@ -1698,15 +1918,15 @@ class View {
                     {artefact_access_role} aar
                     INNER JOIN {group_member} m ON aar.role = m.role
                 WHERE
-                    m.member = ' . $USER->get('id') . '
+                    m.member = ' . $user->get('id') . '
                     AND aar.can_republish = 1
             ) ra ON (a.id = ra.artefact AND a.group = ra.group)';
-            $institutions = array_keys($USER->get('institutions'));
+            $institutions = array_keys($user->get('institutions'));
             $select = '(
-                owner = ' . $USER->get('id') . '
+                owner = ' . $user->get('id') . '
                 OR ra.can_republish = 1
                 OR aau.can_republish = 1';
-            if ($USER->get('admin')) {
+            if ($user->get('admin')) {
                 $institutions[] = 'mahara';
             }
             else {
@@ -1765,28 +1985,37 @@ class View {
         }
     }
 
+    public static function can_remove_viewtype($viewtype) {
+        // allow local custom code to make 'sticky' view types
+        if (function_exists('local_can_remove_viewtype')) {
+            return local_can_remove_viewtype($viewtype);
+        }
+        return true;
+    }
+
     public static function get_myviews_data($limit=5, $offset=0, $groupid=null, $institution=null) {
 
         global $USER;
         $userid = $USER->get('id');
+        $owner = null;
 
         if ($groupid) {
             $count = count_records('view', 'group', $groupid);
-            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, v.type
                 FROM {view} v
                 WHERE v.group = ' . $groupid . '
                 ORDER BY v.title, v.id', '', $offset, $limit);
         }
         else if ($institution) {
             $count = count_records('view', 'institution', $institution);
-            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, v.type
                 FROM {view} v
                 WHERE v.institution = ?
                 ORDER BY v.title, v.id', array($institution), $offset, $limit);
         }
         else {
             $count = count_records_select('view', 'owner = ? AND type != ?', array($userid, 'profile'));
-            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template,
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, v.type,
                     g.id AS submitgroupid, g.name AS submitgroupname, h.wwwroot AS submithostwwwroot, h.name AS submithostname
                 FROM {view} v
                 LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
@@ -1794,6 +2023,7 @@ class View {
                 WHERE v.owner = ' . $userid . '
                 AND v.type != \'profile\'
                 ORDER BY v.title, v.id', '', $offset, $limit);
+            $owner = $userid;
         }
 
         if ($viewdata) {
@@ -1818,6 +2048,7 @@ class View {
                 WHERE view in (' . $viewidlist . ')
                 ORDER BY view, accesstype, grouptype, role, name, id
             ', array());
+            $tags = get_records_select_array('view_tag', 'view IN (' . $viewidlist . ')');
         }
     
         $data = array();
@@ -1826,6 +2057,8 @@ class View {
                 $index[$viewdata[$i]->id] = $i;
                 $data[$i]['id'] = $viewdata[$i]->id;
                 $data[$i]['title'] = $viewdata[$i]->title;
+                $data[$i]['owner'] = $owner;
+                $data[$i]['removable'] = self::can_remove_viewtype($viewdata[$i]->type);
                 $data[$i]['description'] = $viewdata[$i]->description;
                 if (!empty($viewdata[$i]->submitgroupid)) {
                     $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view',
@@ -1883,6 +2116,11 @@ class View {
                       );
                 }
             }
+            if ($tags) {
+                foreach ($tags as $tag) {
+                    $data[$index[$tag->view]]['tags'][] = $tag->tag;
+                }
+            }
         }
 
         return (object) array(
@@ -1937,9 +2175,10 @@ class View {
      * @param integer  $limit
      * @param integer  $offset
      * @param bool     $extra       Return full set of properties on each view including an artefact list
+     * @param string   $sort        Order by
      *
      */
-    public static function view_search($query=null, $ownerquery=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0, $extra=true) {
+    public static function view_search($query=null, $ownerquery=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0, $extra=true, $sort=null) {
         global $USER;
         $admin = $USER->get('admin');
         $loggedin = $USER->is_logged_in();
@@ -2055,14 +2294,15 @@ class View {
         }
 
         $count = count_records_sql('SELECT COUNT (DISTINCT v.id) ' . $from . $where, $ph);
+        $orderby = is_null($sort) ? 'title ASC' : $sort;
         $viewdata = get_records_sql_array('
             SELECT * FROM (
                 SELECT
-                    v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution, v.template
+                    v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution, v.template, v.mtime
                 ' . $from . $where . '
-                GROUP BY v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution, v.template
+                GROUP BY v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution, v.template, v.mtime
             ) a
-            ORDER BY a.title, a.id ',
+            ORDER BY a.' . $orderby . ', a.id ASC',
             $ph, $offset, $limit
         );
 
@@ -2198,7 +2438,7 @@ class View {
      */
     public static function get_submitted_views($groupid) {
         $viewdata = get_records_sql_assoc('
-            SELECT id, title, description, owner, ownerformat
+            SELECT id, title, description, owner, ownerformat, "group", institution
             FROM {view}
             WHERE submittedgroup = ?
             ORDER BY title, id',
@@ -2224,15 +2464,16 @@ class View {
                     $owners[$v->owner] = $v->owner;
                 } else if ($v->group && !isset($groups[$v->group])) {
                     $groups[$v->group] = $v->group;
-                } else if ($v->institution && !isset($institutions[$v->institution])) {
+                } else if (strlen($v->institution) && !isset($institutions[$v->institution])) {
                     $institutions[$v->institution] = $v->institution;
                 }
             }
+            $viewidlist = join(',', array_keys($viewdata));
             $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
                 FROM {view_artefact} va
                 INNER JOIN {artefact} a ON va.artefact = a.id
                 INNER JOIN {artefact_installed_type} t ON a.artefacttype = t.name
-                WHERE va.view IN (' . join(',', array_keys($viewdata)) . ')
+                WHERE va.view IN (' . $viewidlist . ')
                 GROUP BY va.view, va.artefact, a.title, a.artefacttype, t.plugin
                 ORDER BY a.title, va.artefact', '');
             if ($artefacts) {
@@ -2249,6 +2490,12 @@ class View {
                         $viewdata[$artefactrec->view]->artefacts[] = array('id'    => $artefactrec->artefact,
                                                                            'title' => $artname);
                     }
+                }
+            }
+            $tags = get_records_select_array('view_tag', 'view IN (' . $viewidlist . ')');
+            if ($tags) {
+                foreach ($tags as &$tag) {
+                    $viewdata[$tag->view]->tags[] = $tag->tag;
                 }
             }
             if (!empty($owners)) {
@@ -2421,6 +2668,49 @@ class View {
         return false;
     }
 
+    public function get_feedback($limit=10, $offset=0, $lastpage=false) {
+        global $USER;
+        $userid = $USER->get('id');
+        $viewid = $this->id;
+        $canedit = $USER->can_edit_view($this);
+        $count = count_records_sql('
+            SELECT COUNT(*)
+            FROM {view_feedback}
+            WHERE view = ' . $viewid . (!$canedit ? ' AND (public = 1 OR author = ' . $userid . ')' : ''));
+        if ($lastpage) { // Ignore $offset and just get the last page of feedback
+            $offset = (ceil($count / $limit) - 1) * $limit;
+        }
+        $feedback = get_records_sql_array('
+            SELECT
+                f.id, f.author, f.authorname, f.ctime, f.message, f.public, f.attachment, a.title, af.size
+            FROM {view_feedback} f
+            LEFT OUTER JOIN {artefact} a ON f.attachment = a.id
+            LEFT OUTER JOIN {artefact_file_files} af ON af.artefact = a.id
+            WHERE view = ' . $viewid . (!$canedit ? ' AND (f.public = 1 OR f.author = ' . $userid . ')' : '') . '
+            ORDER BY id', '', $offset, $limit);
+        if ($feedback) {
+            foreach ($feedback as &$f) {
+                if ($f->public && $canedit) {
+                    $f->pubmessage = get_string('thisfeedbackispublic', 'view');
+                    $f->makeprivateform = pieform(make_private_form($f->id));
+                }
+                else if (!$f->public) {
+                    $f->pubmessage = get_string('thisfeedbackisprivate', 'view');
+                }
+            }
+        }
+        return (object) array(
+            'count'    => $count,
+            'limit'    => $limit,
+            'offset'   => $offset,
+            'lastpage' => $lastpage,
+            'data'     => $feedback ? $feedback : array(),
+            'view'     => $viewid,
+            'canedit'  => $canedit,
+            'isowner'  => $userid && $userid == $this->get('owner'),
+        );
+    }
+
 }
 
 
@@ -2482,6 +2772,10 @@ function createview_submit(Pieform $form, $values) {
         $templateid = $values['usetemplate'];
         unset($values['usetemplate']);
         list($view, $template, $copystatus) = View::create_from_template($values, $templateid);
+        if (isset($copystatus['quotaexceeded'])) {
+            $SESSION->add_error_msg(get_string('viewcopywouldexceedquota', 'view'));
+            redirect(get_config('wwwroot') . 'view/choosetemplate.php');
+        }
         $SESSION->add_ok_msg(get_string('copiedblocksandartefactsfromtemplate', 'view',
             $copystatus['blocks'],
             $copystatus['artefacts'],
@@ -2529,11 +2823,10 @@ function add_feedback_form($attachments=false) {
         );
     }
     $form['elements']['message'] = array(
-        'type'  => 'textarea',
+        'type'  => 'wysiwyg',
         'title' => get_string('message'),
         'rows'  => 5,
         'cols'  => 80,
-        'description' => bbcode_format_post_message(),
     );
     $form['elements']['ispublic'] = array(
         'type'  => 'checkbox',
@@ -2634,19 +2927,25 @@ function add_feedback_form_submit(Pieform $form, $values) {
 
     require_once('activity.php');
     unset($data->id);
+    $data->message = html2text($data->message);
     activity_occurred('feedback', $data);
 
     db_commit();
 
+    $newlist = null;
     if ($artefact) {
         $goto = get_config('wwwroot') . 'view/artefact.php?artefact=' . $artefact->get('id') . '&view='.$view->get('id');
+        $newlist = $artefact->get_feedback(10, null, $view->get('id'), true);
     }
     else {
         $goto = get_config('wwwroot') . 'view/view.php?id='.$view->get('id');
+        $newlist = $view->get_feedback(10, null, true);
     }
+    build_feedback_html($newlist);
     $form->reply(PIEFORM_OK, array(
         'message' => get_string('feedbacksubmitted', 'view'),
         'goto' => $goto,
+        'data' => $newlist,
     ));
 }
 
@@ -2655,6 +2954,34 @@ function add_feedback_form_cancel_submit(Pieform $form) {
     $form->reply(PIEFORM_OK, array(
         'goto' => '/view/view.php?id=' . $view->get('id'),
     ));
+}
+
+function make_private_form($feedbackid) {
+    return array(
+        'name'            => 'make_private',
+        'renderer'        => 'oneline',
+        'class'           => 'makeprivate',
+        'elements'        => array(
+            'feedback' => array('type' => 'hidden', 'value' => $feedbackid),
+            'submit'   => array(
+                'type' => 'submit',
+                'name' => 'make_private_submit',
+                'value' => get_string('makeprivate', 'view'),
+            ),
+        ),
+    );
+}
+
+function make_private_submit(Pieform $form, $values) {
+    global $SESSION, $view, $artefact;
+    if (isset($artefact) && $artefact instanceof ArtefactType) {
+        update_record('artefact_feedback', (object) array('public' => 0, 'id' => (int) $values['feedback']));
+        $SESSION->add_ok_msg(get_string('feedbackchangedtoprivate', 'view'));
+        redirect(get_config('wwwroot') . 'view/artefact.php?view=' . $view->get('id') . '&artefact=' . $artefact->get('id'));
+    }
+    update_record('view_feedback', (object) array('public' => 0, 'id' => (int) $values['feedback']));
+    $SESSION->add_ok_msg(get_string('feedbackchangedtoprivate', 'view'));
+    redirect(get_config('wwwroot') . 'view/view.php?id=' . $view->get('id'));
 }
 
 function objection_form() {

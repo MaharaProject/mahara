@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage artefact
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -92,6 +93,18 @@ abstract class PluginArtefact extends Plugin {
      * @return array of artefact ids
      */
     public static function view_export_extra_artefacts($viewids) {
+        return array();
+    }
+
+
+    /**
+     * When filtering searches, some artefact types are classified the same way
+     * even when they come from different artefact plugins.  This function allows
+     * artefact plugins to declare which search filter content type each of their 
+     * artefact types belong to.
+     * @return array of artefacttype => array of filter content types
+     */
+    public static function get_artefact_type_content_types() {
         return array();
     }
 }
@@ -416,22 +429,22 @@ abstract class ArtefactType {
             }
         }
 
-        artefact_watchlist_notification($this->id);
+        artefact_watchlist_notification(array($this->id));
 
         handle_event('saveartefact', $this);
 
         if (!empty($this->parentdirty)) {
             if ($this->parent) {
-                // First set anything relating to this artefact as dirty
-                set_field_select('artefact_parent_cache', 'dirty', 1,
-                                 'artefact = ? OR parent = ?', array($this->id, $this->id));
-                // Then make sure we have a clean record for the new parent
+                // Make sure we have a record for the new parent
                 delete_records('artefact_parent_cache', 'artefact', $this->id, 'parent', $this->parent);
                 insert_record('artefact_parent_cache', (object)array(
                     'artefact' => $this->id,
                     'parent'   => $this->parent,
                     'dirty'    => 0
                 ));
+                // Set anything relating to this artefact as dirty
+                set_field_select('artefact_parent_cache', 'dirty', 1,
+                                 'artefact = ? OR parent = ?', array($this->id, $this->id));
             }
             else {
                 // No parent - no need for any records in the apc then
@@ -469,38 +482,134 @@ abstract class ArtefactType {
             }
         }
 
-        artefact_watchlist_notification($this->id);
+        artefact_watchlist_notification(array($this->id));
 
-        // Delete any references to this artefact from non-artefact places.
-        delete_records_select('artefact_parent_cache', 'artefact = ? OR parent = ?', array($this->id, $this->id));
-
-        // Make sure that the artefact is removed from any view blockinstances that have it
-        if ($records = get_column('view_artefact', 'block', 'artefact', $this->id)) {
-            foreach ($records as $blockid) {
-                require_once(get_config('docroot') . 'blocktype/lib.php');
-                $bi = new BlockInstance($blockid);
-                $bi->delete_artefact($this->id);
-            }
-        }
-        delete_records('view_artefact', 'artefact', $this->id);
-        delete_records('artefact_feedback', 'artefact', $this->id);
-        delete_records('artefact_tag', 'artefact', $this->id);
-        delete_records('artefact_access_role', 'artefact', $this->id);
-        delete_records('artefact_access_usr', 'artefact', $this->id);
+        self::_delete_dbrecords(array($this->id));
 
         if ($this->can_be_logged()) {
             $this->log('deleted');
         }
       
-        // Delete the record itself.
-        delete_records('artefact', 'id', $this->id);
-        
         handle_event('deleteartefact', $this);
 
         // Set flags.
         $this->dirty = false;
         $this->parentdirty = true;
         $this->deleted = true;
+
+        db_commit();
+    }
+
+    /**
+     * Does a bulk_delete on a list of artefacts, grouping artefacts of
+     * the same type.
+     *
+     * Currently only tested for folders and their contents.
+     */
+    public static function delete_by_artefacttype($artefactids) {
+        if (empty($artefactids)) {
+            return;
+        }
+
+        db_begin();
+
+        artefact_watchlist_notification($artefactids);
+
+        $records = get_records_select_assoc(
+            'artefact',
+            'id IN (' . join(',', $artefactids) . ')',
+            null, 'artefacttype', 'id,parent,artefacttype,container'
+        );
+
+        $containers = array();
+        $leaves = array();
+        foreach ($records as $r) {
+            if ($r->container) {
+                $containers[$r->artefacttype][] = $r->id;
+            }
+            else {
+                $leaves[$r->artefacttype][] = $r->id;
+            }
+        }
+
+        // Delete non-containers grouped by artefacttype
+        foreach ($leaves as $artefacttype => $ids) {
+            $classname = generate_artefact_class_name($artefacttype);
+            call_static_method($classname, 'bulk_delete', $ids);
+        }
+
+        // Delete containers grouped by artefacttype
+        foreach ($containers as $artefacttype => $ids) {
+            $classname = generate_artefact_class_name($artefacttype);
+            if (is_mysql()) {
+                set_field_select('artefact', 'parent', null, 'id IN (' . join(',', $ids) . ')', array());
+            }
+            call_static_method($classname, 'bulk_delete', $ids);
+        }
+
+        handle_event('deleteartefacts', $artefactids);
+
+        db_commit();
+    }
+
+    /**
+     * Faster delete for multiple artefacts.
+     *
+     * Should only be called on artefacts with no children, after
+     * additional data in other tables has already been deleted.
+     */
+    public static function bulk_delete($artefactids, $log=false) {
+        db_begin();
+
+        self::_delete_dbrecords($artefactids);
+
+        // Logging must be triggered by the caller because it's
+        // slow to go through each artefact and ask it if it should
+        // be logged.
+        if ($log) {
+            global $USER;
+            $entry = (object) array(
+                'usr'      => $USER->get('id'),
+                'time'     => db_format_timestamp(time()),
+                'deleted'  => 1,
+            );
+            foreach ($artefactids as $id) {
+                $entry->artefact = $id;
+                insert_record('artefact_log', $entry);
+            }
+        }
+
+        db_commit();
+    }
+
+
+    private static function _delete_dbrecords($artefactids) {
+        if (empty($artefactids)) {
+            return;
+        }
+
+        $idstr = '(' . join(',', $artefactids) . ')';
+
+        db_begin();
+
+        // Delete any references to these artefacts from non-artefact places.
+        delete_records_select('artefact_parent_cache', "artefact IN $idstr");
+
+        // Make sure that the artefacts are removed from any view blockinstances
+        if ($records = get_records_sql_array("
+            SELECT va.block, va.artefact, bi.configdata
+            FROM {view_artefact} va JOIN {block_instance} bi ON va.block = bi.id
+            WHERE va.artefact IN $idstr", array())) {
+            require_once(get_config('docroot') . 'blocktype/lib.php');
+            BlockInstance::bulk_delete_artefacts($records);
+        }
+        delete_records_select('view_artefact', "artefact IN $idstr");
+        delete_records_select('artefact_feedback', "artefact IN $idstr");
+        delete_records_select('artefact_tag', "artefact IN $idstr");
+        delete_records_select('artefact_access_role', "artefact IN $idstr");
+        delete_records_select('artefact_access_usr', "artefact IN $idstr");
+
+        delete_records_select('artefact', "id IN $idstr");
 
         db_commit();
     }
@@ -626,6 +735,12 @@ abstract class ArtefactType {
         if ($group = $this->get('group')) {
             return get_field('group', 'name', 'id', $group);
         }
+        if ($institution = $this->get('institution')) {
+            if ($institution == 'mahara') {
+                return get_config('sitename');
+            }
+            return get_field('institution', 'displayname', 'name', $institution);
+        }
         return null;
     }
 
@@ -637,7 +752,7 @@ abstract class ArtefactType {
         
         $type = strtolower(substr($classname, strlen('ArtefactType')));
 
-        if (!record_exists('artefact_installed_type', 'name', $type)) {
+        if (!artefact_type_installed($type)) {
             throw new InvalidArgumentException("Classname $classname not a valid artefact type");
         }
 
@@ -718,13 +833,13 @@ abstract class ArtefactType {
             'parentinstance' => 1,
             'parentmetadata' => 1
         );
-        $data = array();
+        $data = new StdClass;
         foreach (get_object_vars($this) as $k => $v) {
             if (in_array($k, array('atime', 'ctime', 'mtime'))) {
-                $data[$k] = db_format_timestamp($v);
+                $data->$k = db_format_timestamp($v);
             }
             else if (!isset($ignore[$k])) {
-                $data[$k] = $v;
+                $data->$k = $v;
             }
         }
         return $data;
@@ -735,13 +850,13 @@ abstract class ArtefactType {
 
     public function copy_for_new_owner($user, $group, $institution) {
         $data = $this->copy_data();
-        $data['owner'] = $user;
-        $data['group'] = $group;
-        $data['institution'] = $institution;
-        $data['parent'] = null;
-        $classname = generate_artefact_class_name($data['artefacttype']);
-        safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $data['artefacttype']));
-        $copy = new $classname(0, $data);
+        $data->owner = $user;
+        $data->group = $group;
+        $data->institution = $institution;
+        $data->parent = null;
+        $classname = generate_artefact_class_name($data->artefacttype);
+        safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $data->artefacttype));
+        $copy = new $classname(0, (object) $data);
         $this->copy_extra($copy);
         $copy->commit();
         return $copy->get('id');
@@ -938,6 +1053,54 @@ abstract class ArtefactType {
     public static function attached_id_list($attachmentid) {
         return get_column('artefact_attachment', 'artefact', 'attachment', $attachmentid);
     }
+
+    public function get_feedback($limit=10, $offset=0, $viewid, $lastpage=false) {
+        global $USER;
+        $userid = $USER->get('id');
+        $artefactid = $this->id;
+        $canedit = $USER->can_edit_artefact($this);
+
+        $count = count_records_sql('
+            SELECT COUNT(*)
+            FROM {artefact_feedback}
+            WHERE view = ' . $viewid . ' AND artefact = ' . $artefactid
+                . (!$canedit ? ' AND (public = 1 OR author = ' . $userid . ')' : ''));
+        if ($lastpage) { // Ignore $offset and just get the last page of feedback
+            $offset = (ceil($count / $limit) - 1) * $limit;
+        }
+        $feedback = get_records_sql_array('
+            SELECT
+                id, author, authorname, ctime, message, public
+            FROM {artefact_feedback}
+            WHERE view = ' . $viewid . ' AND artefact = ' . $artefactid
+                . (!$canedit ? ' AND (f.public = 1 OR f.author = ' . $userid . ')' : '') . '
+            ORDER BY id', '', $offset, $limit);
+        if ($feedback) {
+            require_once(get_config('libroot') . 'view.php');
+            require_once(get_config('libroot') . 'pieforms/pieform.php');
+            foreach ($feedback as &$f) {
+                if ($f->public && $canedit) {
+                    $f->pubmessage = get_string('thisfeedbackispublic', 'view');
+                    $f->makeprivateform = pieform(make_private_form($f->id));
+                }
+                else if (!$f->public) {
+                    $f->pubmessage = get_string('thisfeedbackisprivate', 'view');
+                }
+            }
+        }
+        return (object) array(
+            'count'    => $count,
+            'limit'    => $limit,
+            'offset'   => $offset,
+            'lastpage' => $lastpage,
+            'data'     => $feedback ? $feedback : array(),
+            'view'     => $viewid,
+            'artefact' => $artefactid,
+            'canedit'  => $canedit,
+            'isowner'  => $userid && $userid == $this->get('owner'),
+        );
+    }
+
 }
 
 /**
@@ -1037,29 +1200,62 @@ function rebuild_artefact_parent_cache_complete() {
     db_commit();
 }
 
+function artefact_get_attachment_types() {
+    static $artefacttypes = null;
+    if (is_null($artefacttypes)) {
+        $artefacttypes = array();
+        foreach (require_artefact_plugins() as $plugin) {
+            $classname = generate_class_name('artefact', $plugin->name);
+            if (!is_callable($classname . '::get_attachment_types')) {
+                continue;
+            }
+            $artefacttypes = array_merge($artefacttypes, call_static_method($classname, 'get_attachment_types'));
+        }
+    }
+    return $artefacttypes;
+}
 
-function artefact_get_parents_for_cache($artefactid, &$parentids=false) {
-    $current = $artefactid;
+function artefact_get_parents_for_cache($artefactids, &$parentids=false) {
+    if (!is_array($artefactids)) {
+        $artefactids = array($artefactids);
+    }
+    $current = $artefactids;
     if (empty($parentids)) { // first call
         $parentids = array();
     }
     while (true) {
-        if (!$parent = get_record('artefact', 'id', $current)) {
+        if (!$parents = get_records_select_array('artefact', 'id IN (' . join(',',$current) . ')')) {
             break;
         }
-        // get any blog posts it may be attached to 
-        if (($parent->artefacttype == 'file' || $parent->artefacttype == 'image')
-            && $associated = ArtefactType::attached_id_list($parent->id)) {
-            foreach ($associated as $a) {
-                $parentids[$a] = 1;
-                artefact_get_parents_for_cache($a, $parentids);
+
+        // get any blog posts these artefacts may be attached to
+        $checkattachments = array();
+        foreach ($parents as $p) {
+            if (in_array($p->artefacttype, artefact_get_attachment_types())) {
+                $checkattachments[] = $p->id;
             }
         }
-        if (!$parent->parent) {
+        if (!empty($checkattachments)) {
+            if ($associated = get_records_select_assoc('artefact_attachment', 'attachment IN (' . join(',', $checkattachments) . ')')) {
+                $associated = array_keys($associated);
+                foreach ($associated as $a) {
+                    $parentids[$a] = 1;
+                }
+                artefact_get_parents_for_cache($associated, $parentids);
+            }
+        }
+
+        // check parents
+        $current = array();
+        foreach ($parents as $p) {
+            if ($p->parent) {
+                $parentids[$p->parent] = 1;
+                $current[] = $p->parent;
+            }
+        }
+        if (empty($current)) {
             break;
         }
-        $parentids[$parent->parent] = 1;
-        $current = $parent->parent;
     }
     return $parentids;
 }
@@ -1135,9 +1331,9 @@ function artefact_instance_from_type($artefact_type, $user_id=null) {
     throw new ArtefactNotFoundException("Artefact of type '${artefact_type}' doesn't exist");
 }
 
-function artefact_watchlist_notification($artefactid) {
+function artefact_watchlist_notification($artefactids) {
     // gets all the views containing this artefact or a parent of this artefact and creates a watchlist activity for each view
-    if ($views = get_column_sql('SELECT DISTINCT view FROM {view_artefact} WHERE artefact IN (' . implode(',', array_merge(array_keys(artefact_get_parents_for_cache($artefactid)), array($artefactid))) . ')')) {
+    if ($views = get_column_sql('SELECT DISTINCT view FROM {view_artefact} WHERE artefact IN (' . implode(',', array_merge(array_keys(artefact_get_parents_for_cache($artefactids)), $artefactids)) . ')')) {
         require_once('activity.php');
         foreach ($views as $view) {
             activity_occurred('watchlist', (object)array('view' => $view));
@@ -1208,5 +1404,55 @@ function artefact_get_records_by_id($ids) {
     }
     return array();
 }
+
+function artefact_type_installed($type) {
+    static $types = array();
+
+    if (!$types) {
+        $types = get_records_assoc('artefact_installed_type');
+    }
+
+    return isset($types[$type]);
+}
+
+function require_artefact_plugins() {
+    static $plugins = null;
+    if (is_null($plugins)) {
+        $plugins = plugins_installed('artefact');
+        foreach ($plugins as $plugin) {
+            safe_require('artefact', $plugin->name);
+        }
+    }
+    return $plugins;
+}
+
+function artefact_get_types_from_filter($filter) {
+    static $contenttype_artefacttype = null;
+
+    if (is_null($contenttype_artefacttype)) {
+        $contenttype_artefacttype = array();
+        foreach (require_artefact_plugins() as $plugin) {
+            $classname = generate_class_name('artefact', $plugin->name);
+            if (!is_callable($classname . '::get_artefact_type_content_types')) {
+                continue;
+            }
+            $artefacttypetypes = call_static_method($classname, 'get_artefact_type_content_types');
+            foreach ($artefacttypetypes as $artefacttype => $contenttypes) {
+                if (!empty($contenttypes)) {
+                    foreach ($contenttypes as $ct) {
+                        $contenttype_artefacttype[$ct][] = $artefacttype;
+                    }
+                }
+            }
+        }
+    }
+
+    if (empty($contenttype_artefacttype[$filter])) {
+        return null;
+    }
+
+    return $contenttype_artefacttype[$filter];
+}
+
 
 ?>

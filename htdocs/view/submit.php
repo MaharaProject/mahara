@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -29,12 +30,13 @@ define('MENUITEM', 'myportfolio/views');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('view.php');
+require_once('activity.php');
 $viewid = param_integer('id');
 $groupid = param_integer('group');
 
 $view = get_record('view', 'id', $viewid, 'owner', $USER->get('id'));
 $group = get_record_sql(
-    'SELECT g.id, g.name
+    'SELECT g.id, g.name, g.grouptype
        FROM {group_member} u
        INNER JOIN {group} g ON (u.group = g.id AND g.deleted = 0)
        INNER JOIN {grouptype} gt ON gt.name = g.grouptype
@@ -71,8 +73,18 @@ $smarty->assign('form', $form);
 $smarty->display('view/submit.tpl');
 
 function submitview_submit(Pieform $form, $values) {
-	global $SESSION, $viewid, $groupid;
+    global $SESSION, $USER, $viewid, $groupid, $group;
+    db_begin();
     update_record('view', array('submittedgroup' => $groupid), array('id' => $viewid));
+    activity_occurred('groupmessage', array(
+        'subject'       => get_string('viewsubmitted', 'view'), // will be overwritten
+        'message'       => get_string('viewsubmitted', 'view'), // will be overwritten
+        'submittedview' => $viewid,
+        'viewowner'     => $USER->get('id'),
+        'group'         => $groupid,
+        'roles'         => get_column('grouptype_roles', 'role', 'grouptype', $group->grouptype, 'see_submitted_views', 1),
+    ));
+    db_commit();
     $SESSION->add_ok_msg(get_string('viewsubmitted', 'view'));
     redirect('/view/');
 }

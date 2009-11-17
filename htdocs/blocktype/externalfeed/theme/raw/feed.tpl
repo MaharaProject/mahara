@@ -1,12 +1,12 @@
 <div id="blocktype_externalfeed_feed">
     {if $feedimage}<div class="fr">{$feedimage}</div>{/if}
     <div id="blocktype_externalfeed_title">
-    <a href="{$url|escape}"><img src="{theme_url filename="images/rss.png"}"></a>
+    <a href="{$url|escape}"><img src="{theme_url filename="images/rss.gif"}"></a>
     {if $link}<a href="{$link|escape}">{/if}
     {$title|escape}
     {if $link}</a>{/if}
     </div>
-    {if $description != $entries[0]->description}<div id="blocktype_externalfeed_desc">{$description|clean_html}</a></div>{/if}
+    {if $description != $entries[0]->description}<div id="blocktype_externalfeed_desc">{$description|clean_html}</div>{/if}
     <div id="blocktype_externalfeed_entries">
         {if $full}
             {foreach from=$entries item=entry}

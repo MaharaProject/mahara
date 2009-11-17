@@ -1,9 +1,47 @@
+/**
+ * CSS rules for the file artefact plugin
+ *
+ * Copyright (C) 2006-2009 Catalyst IT
+ * This file is distributed under the same terms as Mahara itself
+ */
+/* File upload box */
+.fileupload {
+}
+/* folder nav */
+.foldernav {
+}
+form#files .foldernav {
+}
+
+/* File list */
+.filelist th {
+    border-bottom: 1px dotted #BEE3F1;
+}
+/* parent folder row */
+tr.parentfolder td {
+}
+/* new row */
+.filelist tr.highlight-file td {
+}
+/* folder row */
 tr.folder td {
-    background-color: #10171A;
+	background-color:#10171A;
 }
-filelist thead th {
-    border-bottom: 1px dotted #BEE3F1;
+/* folder row being moved */
+tr.folderhover td {
 }
-.filelist td {
-    border-bottom: 1px dotted #BEE3F1;
+/* File list edit box */
+#files_filebrowser_edit_row td {
+    border: 4px solid #1A292F;
+}
+
+/* Edit post File list */
+#editpost_filebrowser_upload_browse,
+#editpost_filebrowser_open_upload_browse_container {
+}
+
+/* Edit post selected file list */
+.filelist .disabled {
+}
+.filelist .tag-edit.submit {
 }

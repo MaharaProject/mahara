@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage search-internal
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -180,7 +181,7 @@ class PluginSearchInternal extends PluginSearch {
 
     public static function search_user_my($query_string, $limit, $offset, $data, $publicfields) {
         $fieldlist = "('" . join("','", $publicfields) . "')";
-
+        $data = self::prepare_search_user_options($data);
         $sql = 'SELECT
                 COUNT(DISTINCT u.id)
             FROM
@@ -248,7 +249,7 @@ class PluginSearchInternal extends PluginSearch {
                     AND ( ' . $namesql . '
                     )
                     ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
-                ORDER BY u.firstname, u.lastname, u.id';
+                ORDER BY ' . $data['orderby'];
             $data = get_records_sql_array($sql, $values, $offset, $limit);
             if ($data) {
                 foreach ($data as &$item) {
@@ -833,6 +834,91 @@ class PluginSearchInternal extends PluginSearch {
         }
 
         return $results;
+    }
+
+
+    /**
+     * Returns portfolio items (artefacts, views) owned by $owner and tagged
+     * with $tag.
+     *
+     * @param string   $tag Tag
+     * @param object   $owner: owner type (user,group,institution), and id
+     * @param integer  $limit
+     * @param integer  $offset
+     * @param string   $sort
+     * @param array    $types view/artefacttype filters
+     * @param boolean  $returntags Return all the tags that have been attached to each result
+     */
+    public static function portfolio_search_by_tag($tag, $owner, $limit, $offset, $sort, $types, $returntags) {
+        $viewfilter = is_null($types) || $types['view'] == true ? 'AND TRUE' : 'AND FALSE';
+
+        if (is_null($types)) {
+            $artefacttypefilter = '';
+        }
+        else if (!empty($types['artefact'])) {
+            $artefacttypefilter = ' AND a.artefacttype IN (' . join(',', array_map('db_quote', $types['artefact'])) . ')';
+        }
+        else {
+            $artefacttypefilter = ' AND FALSE';
+        }
+
+        if (!is_null($tag)) {
+            $artefacttypefilter .= ' AND at.tag = ?';
+            $viewfilter .= ' AND vt.tag = ?';
+            $values = array($owner->id, $tag, $owner->id, $tag);
+        }
+        else {
+            $values = array($owner->id, $owner->id);
+        }
+
+        $from = "FROM (
+           (SELECT a.id, a.title, a.description, 'artefact' AS type, a.artefacttype, " . db_format_tsfield('a.ctime', 'ctime') . "
+            FROM {artefact} a JOIN {artefact_tag} at ON (a.id = at.artefact)
+            WHERE a.owner = ?" . $artefacttypefilter . ")
+           UNION
+           (SELECT v.id, v.title, v.description, 'view' AS type, NULL AS artefacttype, " . db_format_tsfield('v.ctime', 'ctime') . "
+            FROM {view} v JOIN {view_tag} vt ON (v.id = vt.view)
+            WHERE v.owner = ? " . $viewfilter . ")
+        ) p";
+
+        $result = (object) array(
+            'tag'    => $tag,
+            'owner'  => $owner,
+            'offset' => $offset,
+            'limit'  => $limit,
+            'sort'   => $sort,
+            'count'  => 0,
+            'data'   => array(),
+        );
+
+        if ($count = count_records_sql('SELECT COUNT(*) ' . $from, $values, $offset, $limit)) {
+            $result->count = $count;
+            $sort = $sort == 'date' ? 'ctime DESC' : 'title ASC';
+            if ($data = get_records_sql_assoc("SELECT type || ':' || id AS tid, p.* " . $from . ' ORDER BY ' . $sort, $values, $offset, $limit)) {
+                if ($returntags) {
+                    $ids = array('view' => array(), 'artefact' => array());
+                    foreach ($data as &$d) {
+                        $ids[$d->type][$d->id] = 1;
+                    }
+                    if (!empty($ids['view'])) {
+                        if ($viewtags = get_records_select_array('view_tag', 'view IN (' . join(',', array_keys($ids['view'])) . ')')) {
+                            foreach ($viewtags as &$vt) {
+                                $data['view:' . $vt->view]->tags[] = $vt->tag;
+                            }
+                        }
+                    }
+                    if (!empty($ids['artefact'])) {
+                        if ($artefacttags = get_records_select_array('artefact_tag', 'artefact IN (' . join(',', array_keys($ids['artefact'])) . ')')) {
+                            foreach ($artefacttags as &$at) {
+                                $data['artefact:' . $at->artefact]->tags[] = $at->tag;
+                            }
+                        }
+                    }
+                }
+                $result->data = $data;
+            }
+        }
+        return $result;
     }
 
 

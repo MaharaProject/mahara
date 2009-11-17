@@ -1,13 +1,68 @@
 /* ADMIN HOME */
 /* Administration Home styles */
+#register-site,
 #runupgrade {
     background-color: #1A292F;
     border: 1px dotted #BEE3F1;
 }
-#upgradestable th,
+#register-site form legend a {
+}
+#register-site fieldset table table th,
+#upgradestable th {
+    background-color: #10171A;
+    border-bottom: 1px dotted #BEE3F1;
+}
+#register-site fieldset table table td,
 #upgradestable td {
     background-color: #10171A;
 }
-#upgradestable th {
-    border-bottom: 1px dotted #BEE3F1;
+
+/* delete suspend boxes */
+#close-site,
+#suspendinstitution,
+#suspenddelete #delete {
+	color: #333;
+	background: #eccccc;
+}
+#close-site h3,
+#suspendinstitution h3#suspend,
+#suspenddelete #delete h4 {
+	color: #CA0000;
+}
+#close_site_submit,
+#institution_suspend_submit,
+#suspenddelete #delete #edituser_delete_submit {
+	border-color: #f69595 #750000 #750000 #f69595;
+	background: #ca0000;
+}
+
+/* CONFIGURE SITE > LINKS AND RESOURCES MENU */
+#menuitemlist table th {
+}
+#menuitemlist table td {
+}
+#menuitemlist #rownew td {
+}
+#menuitemlist tr.edit td {
+}
+
+#institutionusers, 
+#staffusers, 
+#adminusers {
+}
+
+/* add user */
+#adduser td.step1 {
+	background-color: #1b3b46;
+}
+#adduser td.step2 {
+	background-color: #1b3b46;
+}
+#adduser td.step3 {
+	background-color: #254e5c;
+}
+#adduser table table label {
+}
+#adduser #or {
+	color: #009ad5;
 }

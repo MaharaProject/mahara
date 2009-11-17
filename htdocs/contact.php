@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -78,8 +79,7 @@ $elements = array(
     )
 );
 
-$captcharequired = get_config('captcha_on_contact_form');
-if (is_null($captcharequired) || $captcharequired) {
+if (get_config('captchaoncontactform') && !$USER->is_logged_in()) {
     $elements['captcha'] = array(
         'type'  => 'captcha',
         'title' => get_string('captchatitle'),
@@ -105,8 +105,8 @@ $contactform = pieform(array(
 ));
 
 function contactus_validate(Pieform $form, $values) {
-    $captcharequired = get_config('captcha_on_contact_form');
-    if ((is_null($captcharequired) || $captcharequired) && !$values['captcha']) {
+    global $USER;
+    if (get_config('captchaoncontactform') && !$USER->is_logged_in() && !$values['captcha']) {
         $form->set_error('captcha', get_string('captchaincorrect'));
     }
 }

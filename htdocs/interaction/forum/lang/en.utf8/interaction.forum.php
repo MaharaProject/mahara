@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage interaction-forum
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -52,6 +53,8 @@ $string['closeddescription'] = 'Closed topics can only be replied to by moderato
 $string['Count'] = 'Count';
 $string['createtopicusersdescription'] = 'If set to "All group members", anyone can create new topics and reply to existing topics.  If set to "Moderators and group admins", only moderators and group administrators can start new topics, but once topics exist, all users can post replies to them.';
 $string['currentmoderators'] = 'Current Moderators';
+$string['defaultforumtitle'] = 'General Discussion';
+$string['defaultforumdescription'] = '%s general discussion forum';
 $string['deleteforum'] = 'Delete forum';
 $string['deletepost'] = 'Delete post';
 $string['deletepostsuccess'] = 'Post deleted successfully';
@@ -67,6 +70,14 @@ $string['edittitle'] = 'Edit forum';
 $string['edittopic'] = 'Edit topic';
 $string['edittopicsuccess'] = 'Topic edited successfully';
 $string['forumname'] = 'Forum Name';
+$string['forumposthtmltemplate'] = "<div style=\"padding: 0.5em 0; border-bottom: 1px solid #999;\"><strong>%s by %s</strong><br>%s</div>
+
+<div style=\"margin: 1em 0;\">%s</div>
+
+<div style=\"font-size: smaller; border-top: 1px solid #999;\">
+<p><a href=\"%s\">Reply to this post online</a></p>
+<p><a href=\"%s\">Unsubscribe from this %s</a></p>
+</div>";
 $string['forumposttemplate'] = "%s by %s
 %s
 ------------------------------------------------------------------------
@@ -105,6 +116,8 @@ $string['Order'] = 'Order';
 $string['orderdescription'] = 'Choose where you want the forum to be ordered compared to the other forums';
 $string['Post'] = 'Post';
 $string['postbyuserwasdeleted'] = 'A post by %s was deleted';
+$string['postdelay'] = 'Post Delay';
+$string['postdelaydescription'] = 'The minimum time (in minutes) that must pass before a new post can be mailed out to forum subscribers.  The author of a post may make edits during this time.';
 $string['postedin'] = '%s posted in %s';
 $string['Poster'] = 'Poster';
 $string['postreply'] = 'Post reply';

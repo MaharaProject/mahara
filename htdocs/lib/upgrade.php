@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -642,7 +643,7 @@ function core_install_lastcoredata_defaults() {
     set_profile_field($user->id, 'email', $user->email);
     set_profile_field($user->id, 'firstname', $user->firstname);
     set_profile_field($user->id, 'lastname', $user->lastname);
-    handle_event('createuser', $user->id);
+    handle_event('createuser', $user);
     activity_add_admin_defaults(array($user->id));
     db_commit();
 
@@ -660,9 +661,15 @@ function core_install_firstcoredata_defaults() {
     set_config('session_timeout', 86400);
     set_config('sitename', 'Mahara');
     set_config('defaultaccountinactivewarn', 604800);
+    set_config('creategroups', 'all');
     set_config('createpublicgroups', 'all');
     set_config('allowpublicviews', 1);
     set_config('allowpublicprofiles', 1);
+    set_config('captchaoncontactform', 1);
+    set_config('captchaonregisterform', 1);
+    set_config('showselfsearchsideblock', 0);
+    set_config('showtagssideblock', 1);
+    set_config('tagssideblockmaxtags', 20);
 
     // install the applications
     $app = new StdClass;
@@ -693,6 +700,7 @@ function core_install_firstcoredata_defaults() {
         'userjoinsgroup',
         'saveartefact',
         'deleteartefact',
+        'deleteartefacts',
         'saveview',
         'deleteview',
         'blockinstancecommit',
@@ -700,6 +708,7 @@ function core_install_firstcoredata_defaults() {
         'removefriend',
         'addfriendrequest',
         'removefriendrequest',
+        'creategroup',
     );
 
     foreach ($eventtypes as $et) {
@@ -736,6 +745,7 @@ function core_install_firstcoredata_defaults() {
         array('virusrepeat', 1, 1),
         array('virusrelease', 1, 1),
         array('institutionmessage', 0, 0),
+        array('groupmessage', 0, 0),
     );
 
     foreach ($activitytypes as $at) {
@@ -758,7 +768,8 @@ function core_install_firstcoredata_defaults() {
         'recalculate_quota'                      => array('15', '2', '*', '*', '*'),
         'import_process_queue'                   => array('*/5', '*', '*', '*', '*'),
         'cron_send_registration_data'            => array(rand(0, 59), rand(0, 23), '*', '*', rand(0, 6)),
-        'export_cleanup_old_exports'             => array('0', '3,13', '*', '*', '*'),
+        'export_cleanup_old_exports'             => array('0', '3,15', '*', '*', '*'),
+        'import_cleanup_old_imports'             => array('0', '4,16', '*', '*', '*'),
     );
     foreach ($cronjobs as $callfunction => $times) {
         $cron = new StdClass;
@@ -965,25 +976,10 @@ function install_blocktype_extras() {
  */
 function install_view_column_widths() {
     db_begin();
-    $layouts = array(
-        2 => array(
-            '50,50',
-            '67,33',
-            '33,67',
-            ),
-        3 => array(
-            '33,33,33',
-            '25,50,25',
-            '15,70,15',
-            ),
-        4 => array(
-            '25,25,25,25',
-            '20,30,30,20',
-            ),
-    );
+    require_once('view.php');
 
     $layout = new StdClass;
-    foreach ($layouts as $column => $widths) {
+    foreach (View::$layouts as $column => $widths) {
         foreach ($widths as $width) {
             $layout->columns = $column;
             $layout->widths = $width;

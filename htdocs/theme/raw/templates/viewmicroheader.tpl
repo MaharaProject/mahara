@@ -1,24 +1,27 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if}>
 {include file="header/head.tpl"}
 <body>
-<div class="viewheader center rel">
-  <div class="lbuttons">
-    <a class="small-logo" href="{$WWWROOT}"><img src="{theme_url filename='images/site-logo.png'}" alt="{$sitename|escape}"></a>
-    {if $mnethost}<a href="{$mnethost.url|escape}">{str tag=backto arg1=$mnethost.name}</a>{/if}
-    {if $backurl}<a class="btn-reply" href="{$backurl|escape}">{str tag=back}</a>{/if}
-  </div>
-  {if $edit_url}
-    <div class="rbuttons"><strong><a href="{$edit_url|escape}" class="btn-edit">{str tag=edit}</a></strong></div>
-  {/if}
-  <h1>{$viewtitle}</h1>
-</div>
-<div id="dropshadow"></div>
+{if $USERMASQUERADING}<div class="sitemessage"><img src="{theme_url filename='images/icon_problem.gif'}" alt="">{$masqueradedetails} {$becomeyouagain}</div>{/if}
+{if $SITECLOSED}<div class="sitemessage center">{$SITECLOSED}</div>{/if}
 <div id="containerX">
-    <div id="loading-box" style="display: none;"></div>
+    <div id="loading-box"></div>
     <div id="top-wrapper">
-        <h1 class="hidden"><a href="{$WWWROOT}">{$hiddenheading|default:"Mahara"|escape}</a></h1>
+      <div class="viewheader rel">
+        <div class="rbuttons">
+          <a class="small-logo" href="{$WWWROOT}"><img src="{theme_url filename='images/site-logo-small.png'}" alt="{$sitename|escape}"></a>
+          {if $mnethost}&nbsp;&nbsp;<a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a>{/if}
+        </div>
+        <div class="lbuttons">
+          {if $backurl}<a class="btn-reply" href="{$backurl}">{str tag=back}</a>&nbsp;{/if}
+          {if $can_edit}<a class="btn-edit" href="blocks.php?id={$viewid}&amp;new={$new}">{str tag=edit}</a>{/if}
+        </div>
+        <div class="center">
+        {if !$new}<a href="{$WWWROOT}view/view.php?id={$viewid}">{/if}{$viewtitle|escape}{if !$new}</a>{/if}{if $ownername} {str tag=by section=view} <a href="{$WWWROOT}{$ownerlink}">{$ownername|escape}</a>{/if}</div>
+      </div>
+      <!--div id="dropshadow"></div-->
     </div>
     <div id="main-wrapper">
         <div class="main-column">
+            {dynamic}{insert_messages}{/dynamic}
             <div id="main-column-container">

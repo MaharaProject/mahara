@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage blocktype-blog
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -77,7 +78,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance, $istemplate) {
+    public static function instance_config_form($instance) {
         global $USER;
         safe_require('artefact', 'blog');
         $configdata = $instance->get('configdata');
@@ -97,10 +98,8 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         // Note: the owner check will have to change when we do group/site 
         // blogs
         if (empty($configdata['artefactid']) || $blog->get('owner') == $USER->get('id')) {
-            $elements[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $istemplate);
-            if ($istemplate) {
-                $elements[] = PluginArtefactBlog::block_advanced_options_element($configdata, 'blog');
-            };
+            $elements[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null);
+            $elements[] = PluginArtefactBlog::block_advanced_options_element($configdata, 'blog');
         }
         else {
             $elements[] = array(
@@ -148,8 +147,8 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         return $artefacts;
     }
 
-    public static function artefactchooser_element($default=null, $istemplate=false) {
-        $element = array(
+    public static function artefactchooser_element($default=null) {
+        return array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
             'title' => get_string('blog', 'artefact.blog'),
@@ -160,12 +159,6 @@ class PluginBlocktypeBlog extends PluginBlocktype {
             'artefacttypes' => array('blog'),
             'template'  => 'artefact:blog:artefactchooser-element.tpl',
         );
-        if (!$istemplate) {
-            $element['rules'] = array(
-                'required' => true,
-            );
-        }
-        return $element;
     }
 
     /**

@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -31,6 +32,7 @@ define('SECTION_PLUGINNAME', 'account');
 define('SECTION_PAGE', 'activity');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require_once('pieforms/pieform.php');
 define('TITLE', get_string('notifications'));
 
 $types = get_records_assoc('activity_type', 'admin', 0, 'plugintype,pluginname,name', 'id,name,plugintype,pluginname');
@@ -170,6 +172,28 @@ function showHideMessage(id) {
 
 JAVASCRIPT;
 
+$deleteall = pieform(array(
+    'name'        => 'delete_all_notifications',
+    'method'      => 'post',
+    'plugintype'  => 'core',
+    'pluginname'  => 'account',
+    'elements'    => array(
+        'submit' => array(
+            'type' => 'submit',
+            'value' => get_string('deleteallnotifications', 'activity'),
+            'confirm' => get_string('reallydeleteallnotifications', 'activity'),
+        ),
+    ),
+));
+
+function delete_all_notifications_submit() {
+    global $USER, $SESSION;
+    $count = count_records('notification_internal_activity', 'usr', $USER->get('id'));
+    delete_records('notification_internal_activity', 'usr', $USER->get('id'));
+    $SESSION->add_ok_msg(get_string('deletednotifications', 'activity', $count));
+    redirect(get_config('wwwroot') . 'account/activity/index.php');
+}
+
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('selectallread', 'toggleChecked(\'tocheckread\'); return false;');
 $smarty->assign('selectalldel', 'toggleChecked(\'tocheckdel\'); return false;');
@@ -179,5 +203,6 @@ $smarty->assign('typechange', 'activitylist.type = this.options[this.selectedInd
 $smarty->assign('types', $types);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('PAGEHEADING', hsc(get_string('notifications')));
+$smarty->assign('deleteall', $deleteall);
 $smarty->display('account/activity/index.tpl');
 ?>

@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage interaction-forum
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -118,7 +119,7 @@ $editform = array(
         'body' => array(
             'type'         => 'wysiwyg',
             'title'        => get_string('Body', 'interaction.forum'),
-            'rows'         => 10,
+            'rows'         => 18,
             'cols'         => 70,
             'defaultvalue' => isset($topic) ? $topic->body : null,
             'rules'        => array( 'required' => true )
@@ -173,7 +174,7 @@ function addtopic_submit(Pieform $form, $values) {
             'closed' => isset($values['closed']) && $values['closed'] ? 1 : 0
         ), 'id', true
     );
-    insert_record(
+    $postid = insert_record(
         'interaction_forum_post',
         (object)array(
             'topic' => $topicid,
@@ -181,7 +182,8 @@ function addtopic_submit(Pieform $form, $values) {
             'subject' => $values['subject'],
             'body' => $values['body'],
             'ctime' =>  db_format_timestamp(time())
-        )
+        ),
+        'id', true
     );
     if (!record_exists('interaction_forum_subscription_forum', 'user', $USER->get('id'), 'forum', $forumid)) {
         insert_record('interaction_forum_subscription_topic', (object)array(
@@ -191,6 +193,10 @@ function addtopic_submit(Pieform $form, $values) {
         ));
     }
     db_commit();
+    $delay = get_config_plugin('interaction', 'forum', 'postdelay');
+    if (!is_null($delay) && $delay == 0) {
+        PluginInteractionForum::interaction_forum_new_post(array($postid));
+    }
     $SESSION->add_ok_msg(get_string('addtopicsuccess', 'interaction.forum'));
     redirect('/interaction/forum/topic.php?id='.$topicid);
 }

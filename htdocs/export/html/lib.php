@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage export-html
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -380,7 +381,7 @@ class PluginExportHtml extends PluginExport {
         }
 
         // Smilies
-        $directoriestocopy[get_config('docroot') . 'js/tinymce/plugins/emotions/images'] = $staticdir . 'smilies/';
+        $directoriestocopy[get_config('docroot') . 'js/tinymce/plugins/emotions/img'] = $staticdir . 'smilies/';
 
         $filestocopy = array(
             get_config('docroot') . 'theme/views.css' => $staticdir . 'views.css',
@@ -481,7 +482,7 @@ class HtmlExportOutputFilter {
                 // We don't care about javascript
                 '#<script[^>]*>.*?</script>#si',
                 // Fix simlies from tinymce
-                '#<img src="(' . $wwwroot . ')?/?js/tinymce/plugins/emotions/images/([^"]+)"([^>]+)>#',
+                '#<img ([^>]*)src="(' . $wwwroot . ')?/?js/tinymce/plugins/emotions/img/([^"]+)"([^>]+)>#',
                 // No forms
                 '#<form[^>]*>.*?</form>#si',
                 // Gratuitous hack for the RSS blocktype
@@ -489,7 +490,7 @@ class HtmlExportOutputFilter {
             ),
             array(
                 '',
-                '<img src="' . $this->basepath . '/static/smilies/$2"$3>',
+                '<img $1src="' . $this->basepath . '/static/smilies/$3"$4>',
                 '',
                 '',
             ),
@@ -561,6 +562,7 @@ class HtmlExportOutputFilter {
             return '<a href="' . $this->basepath . '/files/blog/' . PluginExportHtml::text_to_path($artefact->get('title')) . '/' . $page . '.html">' . $matches[5] . '</a>';
         case 'file':
         case 'image':
+        case 'archive':
             $folderpath = $this->get_folder_path_for_file($artefact);
             return '<a href="' . $this->basepath . '/files/file/' . $folderpath . PluginExportHtml::sanitise_path($artefact->get('title')) . '">' . $matches[5] . '</a>';
         default:
@@ -663,8 +665,10 @@ class HtmlExportOutputFilter {
     private function get_folder_path_for_file(ArtefactTypeFileBase $file) {
         if ($this->folderdata === null) {
             $this->folderdata = get_records_select_assoc('artefact', "artefacttype = 'folder' AND owner = ?", array($file->get('owner')));
-            foreach ($this->folderdata as &$folder) {
-                $folder->title = PluginExportHtml::sanitise_path($folder->title);
+            if ($this->folderdata) {
+                foreach ($this->folderdata as &$folder) {
+                    $folder->title = PluginExportHtml::sanitise_path($folder->title);
+                }
             }
         }
         $folderpath = ArtefactTypeFileBase::get_full_path($file->get('parent'), $this->folderdata);

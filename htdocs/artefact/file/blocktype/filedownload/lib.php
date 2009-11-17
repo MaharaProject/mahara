@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage blocktype-image
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -71,18 +72,19 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
                 }
 
                 $result .= '<div title="' . hsc($artefact->get('title')) . '">';
-                $result .= '<div class="fl"><a href="' . hsc($downloadurl) . '">';
+                $result .= '<div class="fl"><a href="' . hsc($downloadurl) . '" target="_blank">';
                 $result .= '<img src="' . hsc(call_static_method(generate_artefact_class_name($artefact->get('artefacttype')), 'get_icon', $icondata))
                     . '" alt=""></a></div>';
                 $result .= '<div style="margin-left: 30px;">';
 
-                $result .= '<h4><a href="' . hsc($detailsurl) . '">' . str_shorten_text($artefact->get('title'), 20) . '</a></h4>';
+                $result .= '<h4><a href="' . hsc($downloadurl) . '" target="_blank">' . str_shorten_text($artefact->get('title'), 20) . '</a></h4>';
 
                 $description = $artefact->get('description');
                 if ($description) {
                     $result .= '<p style="margin: 0;"><strong>' . hsc($description) . '</strong></p>';
                 }
                 $result .= '' . display_size($size) . ' | ' . strftime(get_string('strftimedaydate'),$artefact->get('ctime'));
+                $result .= ' | <a href="' . hsc($detailsurl) . '">' . get_string('Details', 'artefact.file') . '</a>';
                 $result .= '</div>';
 
 
@@ -97,7 +99,7 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance, $istemplate) {
+    public static function instance_config_form($instance) {
         $configdata = $instance->get('configdata');
         safe_require('artefact', 'file');
         $instance->set('artefactplugin', 'file');
@@ -106,8 +108,8 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
         );
     }
 
-    public static function artefactchooser_element($default=null, $istemplate=false) {
-        $element = array(
+    public static function artefactchooser_element($default=null) {
+        return array(
             'name' => 'artefactids',
             'type'  => 'artefactchooser',
             'title' => get_string('Files', 'blocktype.file/filedownload'),
@@ -118,13 +120,6 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
             'artefacttypes' => array('file', 'image', 'profileicon'),
             'template' => 'artefact:file:artefactchooser-element.tpl',
         );
-        if (!$istemplate) {
-            // You don't have to choose a file if this view is a template
-            $element['rules'] = array(
-                'required' => true,
-            );
-        }
-        return $element;
     }
 
     /**

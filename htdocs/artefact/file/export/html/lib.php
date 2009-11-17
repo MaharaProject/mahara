@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage artefact-file-export-html
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -193,8 +194,11 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
         $artefacts = array_filter($this->artefactdata,
             create_function('$a', 'return $a->get("parent") == ' . $parent . ' && $a->get("artefacttype") ' . $equality . ' "folder";'));
         foreach ($artefacts as $artefact) {
-            $size = $artefact->get('size');
-            $size = ($size) ? display_size($size) : '';
+            $size = '';
+            if ($artefact->get('artefacttype') != 'folder') {
+                $size = $artefact->get('size');
+                $size = ($size) ? display_size($size) : '';
+            }
             $data[] = array(
                 'icon'        => '',
                 'title'       => $artefact->get('title'),

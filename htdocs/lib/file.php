@@ -192,9 +192,9 @@ function readfile_chunked($filename, $retbytes=true) {
         return false;
     }
 
-    @set_time_limit(60 * 60); //reset time limit to 60 min - should be enough for 1 MB chunk
 
     while (!feof($handle)) {
+        @set_time_limit(60 * 60); //reset time limit to 60 min - should be enough for 1 MB chunk
         $buffer = fread($handle, $chunksize);
         echo $buffer;
         flush();
@@ -225,10 +225,10 @@ function byteserving_send_file($filename, $mimetype, $ranges) {
         header('Content-Range: bytes ' . $ranges[0][1] . '-' . $ranges[0][2] . '/' . filesize($filename));
         header('Content-Type: ' . $mimetype);
         while (@ob_end_flush()); //flush the buffers - save memory and disable sid rewrite
-        @set_time_limit(60*60); //reset time limit to 60 min - should be enough for 1 MB chunk
         $buffer = '';
         fseek($handle, $ranges[0][1]);
         while (!feof($handle) && $length > 0) {
+            @set_time_limit(60*60); //reset time limit to 60 min - should be enough for 1 MB chunk
             $buffer = fread($handle, ($chunksize < $length ? $chunksize : $length));
             echo $buffer;
             flush();
@@ -253,8 +253,8 @@ function byteserving_send_file($filename, $mimetype, $ranges) {
             echo $range[0];
             $buffer = '';
             fseek($handle, $range[1]);
-            @set_time_limit(60 * 60); //reset time limit to 60 min - should be enough for 1 MB chunk
             while (!feof($handle) && $length > 0) {
+                @set_time_limit(60 * 60); //reset time limit to 60 min - should be enough for 1 MB chunk
                 $buffer = fread($handle, ($chunksize < $length ? $chunksize : $length));
                 echo $buffer;
                 flush();
@@ -360,7 +360,9 @@ function is_image_type($type) {
 function is_image_file($path) {
     if (function_exists('exif_imagetype')) {
         // exif_imagetype is faster
-        if (!$type = exif_imagetype($path)) {
+        // surpressing errors because exif_imagetype spews "read error!" to the logs on small files
+        // http://nz.php.net/manual/en/function.exif-imagetype.php#79283
+        if (!$type = @exif_imagetype($path)) {
             return false;
         }
     }
@@ -569,8 +571,8 @@ function image_get_new_dimensions($oldx, $oldy, $size) {
     }
     else if (isset($size['maxw']) && isset($size['maxh'])) {
         $scale = min(min($size['maxw'], $oldx) / $oldx, min($size['maxh'], $oldy) / $oldy);
-        $newx = $oldx * $scale;
-        $newy = $oldy * $scale;
+        $newx = max(1, $oldx * $scale);
+        $newy = max(1, $oldy * $scale);
     }
     else if (isset($size['maxw'])) {
         // Else if just maximum width
@@ -601,10 +603,13 @@ function image_get_new_dimensions($oldx, $oldy, $size) {
 }
 
 /**
- * Deletes an image, including all resized versions of it, from dataroot.
+ * Deletes an image, excluding all resized versions of it, from dataroot.
  *
  * This function does not delete anything from anywhere else - it is your
  * responsibility to delete any database records.
+ *
+ * This function also does not try to delete all resized versions of this
+ * image, as it would take a lot of effort to find them all.
  *
  * @param string $path The path in dataroot of the base directory where the
  *                     image resides.

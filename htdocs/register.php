@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -100,15 +101,14 @@ if (isset($key)) {
         }
 
         $user = new User();
-        $user->username         = $registration->username;
-        $user->password         = $registration->password;
-        $user->salt             = $registration->salt;
-        $user->passwordchange   = 0;
         $user->active           = 1;
         $user->authinstance     = $authinstance->id;
         $user->firstname        = $registration->firstname;
         $user->lastname         = $registration->lastname;
         $user->email            = $registration->email;
+        $user->username         = get_new_username($user->firstname . $user->lastname);
+        $user->passwordchange   = 1;
+        $user->salt             = substr(md5(rand(1000000, 9999999)), 2, 8);
 
         create_user($user, $profilefields);
 
@@ -150,6 +150,7 @@ if (isset($key)) {
         else {
             $SESSION->add_ok_msg(get_string('registrationcomplete', 'mahara', get_config('sitename')));
         }
+        $SESSION->set('resetusername', true);
         redirect();
     }
     create_registered_user();
@@ -159,30 +160,6 @@ if (isset($key)) {
 // Default page - show the registration form
 
 $elements = array(
-    'username' => array(
-        'type' => 'text',
-        'title' => get_string('username'),
-        'rules' => array(
-            'required' => true
-        ),
-        'help' => true,
-    ),
-    'password1' => array(
-        'type' => 'password',
-        'title' => get_string('password'),
-        'description' => get_string('passwordformdescription', 'auth.internal'),
-        'rules' => array(
-            'required' => true
-        ),
-        'help' => true,
-    ),
-    'password2' => array(
-        'type' => 'password',
-        'title' => get_string('confirmpassword'),
-        'rules' => array(
-            'required' => true
-        )
-    ),
     'firstname' => array(
         'type' => 'text',
         'title' => get_string('firstname'),
@@ -260,8 +237,7 @@ $elements['tandc'] = array(
     'separator' => ' &nbsp; '
 );
 
-$captcharequired = get_config('captcha_on_register_form');
-if (is_null($captcharequired) || $captcharequired) {
+if (get_config('captchaonregisterform')) {
     $elements['captcha'] = array(
         'type' => 'captcha',
         'title' => get_string('captchatitle'),
@@ -297,18 +273,6 @@ function register_validate(Pieform $form, $values) {
     $institution = $values['institution'];
     safe_require('auth', 'internal');
 
-    if (!$form->get_error('username') && !AuthInternal::is_username_valid($values['username'])) {
-        $form->set_error('username', get_string('usernameinvalidform', 'auth.internal'));
-    }
-
-    if (!$form->get_error('username') && record_exists_select('usr', 'LOWER(username) = ?', strtolower($values['username']))) {
-        $form->set_error('username', get_string('usernamealreadytaken', 'auth.internal'));
-    }
-
-    $user =(object) $values;
-    $user->authinstance = get_field('auth_instance', 'id', 'authname', 'internal', 'institution', $institution);
-    password_validate($form, $values, $user);
-
     // First name and last name must contain at least one non whitespace
     // character, so that there's something to read
     if (!$form->get_error('firstname') && !preg_match('/\S/', $values['firstname'])) {
@@ -332,8 +296,7 @@ function register_validate(Pieform $form, $values) {
     }
 
     // CAPTCHA image
-    $captcharequired = get_config('captcha_on_register_form');
-    if ((is_null($captcharequired) || $captcharequired) && !$values['captcha']) {
+    if (get_config('captchaonregisterform') && !$values['captcha']) {
         $form->set_error('captcha', get_string('captchaincorrect'));
     }
 
@@ -365,17 +328,12 @@ function register_submit(Pieform $form, $values) {
     // don't die_info, since reloading the page shows the login form.
     // instead, redirect to some other page that says this
     safe_require('auth', 'internal');
-    $values['salt']     = substr(md5(rand(1000000, 9999999)), 2, 8);
-    $values['password'] = AuthInternal::encrypt_password($values['password1'], $values['salt']);
     $values['key']   = get_random_key();
     // @todo the expiry date should be configurable
     $values['expiry'] = db_format_timestamp(time() + 86400);
     $values['lang'] = $SESSION->get('lang');
     try {
         insert_record('usr_registration', $values);
-
-        $f = fopen('/tmp/donal.txt','w');
-        fwrite($f, get_string('registeredemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('sitename')));
 
         $user =(object) $values;
         $user->admin = 0;

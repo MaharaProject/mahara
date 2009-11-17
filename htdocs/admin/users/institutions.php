@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage admin
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 define('INTERNAL', 1);
@@ -77,8 +78,28 @@ if ($institution || $add) {
             global $SESSION;
 
             $authinstanceids = get_column('auth_instance', 'id', 'institution', $values['i']);
+            $viewids = get_column('view', 'id', 'institution', $values['i']);
+            $artefactids = get_column('artefact', 'id', 'institution', $values['i']);
 
             db_begin();
+            if ($viewids) {
+                require_once(get_config('libroot') . 'view.php');
+                foreach ($viewids as $viewid) {
+                    $view = new View($viewid);
+                    $view->delete();
+                }
+            }
+            if ($artefactids) {
+                foreach ($artefactids as $artefactid) {
+                    try {
+                        $a = artefact_instance_from_id($artefactid);
+                        $a->delete();
+                    }
+                    catch (ArtefactNotFoundException $e) {
+                        // Awesome, it's already gone.
+                    }
+                }
+            }
             foreach ($authinstanceids as $id) {
                 delete_records('auth_instance_config', 'instance', $id);
             }
@@ -293,7 +314,7 @@ if ($institution || $add) {
         );
     }
     $elements['lockedfieldshelp'] = array(
-        'value' => '<tr><th colspan="2">'
+        'value' => '<tr id="lockedfieldshelp"><th colspan="2">'
         . get_help_icon('core', 'admin', 'institution', 'lockedfields') 
         . '</th></tr>'
     );
@@ -369,7 +390,7 @@ function institution_validate(Pieform $form, $values) {
 }
 
 function institution_submit(Pieform $form, $values) {
-    global $SESSION, $institution, $add, $instancearray, $USER;
+    global $SESSION, $institution, $add, $instancearray, $USER, $authinstances;
 
     db_begin();
     // Update the basic institution record...
@@ -424,6 +445,21 @@ function institution_submit(Pieform $form, $values) {
         }
 
         foreach($values['authplugin']['deletearray'] as $instanceid) {
+            // If this authinstance is the only xmlrpc authinstance that references a host, delete the host record.
+            $hostwwwroot = null;
+            foreach ($authinstances as $ai) {
+                if ($ai->id == $instanceid && $ai->authname == 'xmlrpc') {
+                    $hostwwwroot = get_field_sql("SELECT value FROM {auth_instance_config} WHERE instance = ? AND field = 'wwwroot'", array($instanceid));
+                    if ($hostwwwroot && count_records_select('auth_instance_config', "field = 'wwwroot' AND value = ?", array($hostwwwroot)) == 1) {
+                        // Unfortunately, it's possible that this host record could belong to a different institution,
+                        // so specify the institution here.
+                        delete_records('host', 'wwwroot', $hostwwwroot, 'institution', $institution);
+                        // We really need to fix this, either by removing the institution from the host table, or refusing to allow the
+                        // institution to be changed in the host record when another institution's authinstance is still pointing at it.
+                    }
+                    break;
+                }
+            }
             delete_records('auth_remote_user', 'authinstance', $instanceid);
             delete_records('auth_instance_config', 'instance', $instanceid);
             delete_records('auth_instance', 'id', $instanceid);

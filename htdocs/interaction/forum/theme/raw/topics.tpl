@@ -2,7 +2,7 @@
 {if $sticky}
 <tr class="stickytopic">
 {else}
-<tr class="r{cycle values=0,1}">
+<tr class="{cycle values='r0,r1'}">
 {/if}
     <td>
     {if $topic->closed}<img src="{$closedicon|escape}" alt="{str tag="Closed" section="interaction.forum"}">{/if}
@@ -15,7 +15,7 @@
     </td>
     <td>
         {if $moderator}
-        <div class="s fr">
+        <div class="s btn-spacer fr">
             <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}&amp;returnto=view" class="btn-edit">{str tag="edit"}</a>
             <a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id|escape}&amp;returnto=view" class="btn-del">{str tag="delete"}</a>
         </div>

@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -142,6 +143,16 @@ $elements['addremovecolumns'] = array(
     'separator' => '<br>',
     'help' => 'true'
 );
+if (get_config('showtagssideblock')) {
+    $elements['tagssideblockmaxtags'] = array(
+        'type'         => 'text',
+        'size'         => 4,
+        'title'        => get_string('tagssideblockmaxtags', 'account'),
+        'description'  => get_string('tagssideblockmaxtagsdescription', 'account'),
+        'defaultvalue' => isset($prefs->tagssideblockmaxtags) ? $prefs->tagssideblockmaxtags : get_config('tagssideblockmaxtags'),
+        'rules'        => array('integer' => true, 'minvalue' => 0, 'maxvalue' => 1000),
+    );
+}
 $elements['submit'] = array(
     'type' => 'submit',
     'value' => get_string('save')
@@ -228,6 +239,7 @@ $prefsform = pieform($prefsform);
 
 $smarty = smarty();
 $smarty->assign('form', $prefsform);
+$smarty->assign('candeleteself', $USER->can_delete_self());
 $smarty->assign('INLINEJAVASCRIPT', "
 function clearPasswords(form, data) {
     formSuccess(form, data);

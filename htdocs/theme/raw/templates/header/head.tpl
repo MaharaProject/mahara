@@ -22,6 +22,9 @@
 {$INLINEJAVASCRIPT}
     </script>
 {/if}
+	<!--[if lt IE 7.]>
+		<script defer type="text/javascript" src="{$WWWROOT}js/pngfix.js"></script>
+	<![endif]-->
 {foreach from=$STYLESHEETLIST item=cssurl}
     <link rel="stylesheet" type="text/css" href="{$cssurl}">
 {/foreach}
@@ -29,4 +32,4 @@
     <script type="text/javascript" src="{$WWWROOT}js/css.js"></script>
     <link rel="shortcut icon" href="{$WWWROOT}favicon.ico" type="image/vnd.microsoft.icon">
 </head>
-
+{dynamic}{flush}{/dynamic}

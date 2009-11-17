@@ -1,14 +1,84 @@
-input.submit.btn-subscribe {
-    color: #360435 !important;
+/**
+ * CSS rules for the forum interaction plugin
+ *
+ * Copyright (C) 2006-2009 Catalyst IT
+ * This file is distributed under the same terms as Mahara itself
+ */
+ 
+/* Edit and Delete in list */
+.btn-spacer a {
+	padding-left: 12px;
+}
+
+/* Forum list */
+#forumslist{
+	border-bottom: 1px dotted #5c0758;
+}
+#forumslist th{
+	border-bottom: 1px dotted #5c0758;
+}
+
+/* Topic list */
+#viewforum {
+}
+#viewforum h3 {
+}
+#forumtopicstable {
+	border-bottom: 1px dotted #5c0758;
 }
 #forumtopicstable th {
 	border-bottom: 1px dotted #5c0758;
 }
-.stickytopic {
+/* topic types */
+.stickytopic td {
     background-color: #e99adb;
+	border-bottom: 1px solid #FFF;
+}
+
+
+/* Forum Pagination */
+#viewforum div.pagination {
+}
+#viewforum div.pagination a {
+}
+#viewforum div.pagination .results {
+}
+/* admin & moderator */
+.groupadmin {
+	color: #3366CC;
+}
+.moderator {
+	color: #993399;
+}
+
+
+/* Posts */
+.closed {
 }
 .forumpost {
 	background-color: #f7f7f7;
 	border-top: 1px dotted #5c0758;
 	border-bottom: 1px dotted #5c0758;
 }
+.forumsubject {
+}
+.forumsubject h6 {
+}
+.forumpostleft {
+}
+.forumpostleft .posttime {
+}
+.forumpostleft .author p.poster {
+}
+.forumpostleft .author p.postcount {
+}
+.postbtns {
+}
+.postbtns a {
+	padding-left: 12px;
+}
+.deletedpost {
+}
+.postreply {
+}
+ 

@@ -330,6 +330,8 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
         'pluginname': pluginName
     };
 
+    var parentElement = 'messages';
+
     // deduce the key
     if (page) {
         key = pluginType + '/' + pluginName + '/' + page;
@@ -365,12 +367,12 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
 
     // create and display the container
     contextualHelpContainer = DIV({
-            'style': 'position: absolute; visibility: hidden; z-index: 1000;',
-            'class': 'contextualHelp'
+            'style': 'position: absolute;',
+            'class': 'contextualHelp hidden'
         },
         IMG({'src': config.theme['images/loading.gif']})
     );
-    appendChildNodes($('messages'), contextualHelpContainer);
+    appendChildNodes($(parentElement), contextualHelpContainer);
 
     var position = getElementPosition(ref);
     var dimensions = getElementDimensions(contextualHelpContainer);
@@ -389,7 +391,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
 
     // Once it has been positioned, make it visible
     setElementPosition(contextualHelpContainer, position);
-    setStyle(contextualHelpContainer, {'visibility': 'visible'});
+    removeElementClass(contextualHelpContainer, 'hidden');
 
     contextualHelpSelected = key;
 
@@ -426,6 +428,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
         },
         true);
     }
+    contextualHelpContainer.focus();
 }
 
 /*

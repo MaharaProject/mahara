@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,38 +21,18 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  * @copyright  (C) portions from Moodle, (C) Martin Dougiamas http://dougiamas.com
  */
 
 defined('INTERNAL') || die();
 
 
-function &smarty_core() {
-    global $THEME;
-    require_once('smarty/libs/Smarty.class.php');
-    $smarty =& new Smarty();
-    
-    $themepaths = themepaths();
+function smarty_core() {
+    require_once 'dwoo/dwoo/dwooAutoload.php';
+    require_once 'dwoo/mahara/Dwoo_Mahara.php';
 
-    $smarty->template_dir = $THEME->templatedirs;
-
-    check_dir_exists(get_config('dataroot') . 'smarty/compile/' . $THEME->basename);
-    check_dir_exists(get_config('dataroot') . 'smarty/cache/' . $THEME->basename);
-    $smarty->compile_dir   = get_config('dataroot') . 'smarty/compile/' . $THEME->basename;
-    $smarty->cache_dir     = get_config('dataroot') . 'smarty/cache/' . $THEME->basename;
-    $smarty->plugins_dir[] = get_config('libroot') . 'smarty/mahara/';
-
-    $smarty->assign('THEME', $THEME);
-    $smarty->assign('WWWROOT', get_config('wwwroot'));
-
-    $theme_list = array();
-    foreach ($themepaths['mahara'] as $themepath) {
-        $theme_list[$themepath] = $THEME->get_url($themepath);
-    }
-    $smarty->assign('THEMELIST', json_encode($theme_list));
-
-    return $smarty;
+    return new Dwoo_Mahara();
 }
 
 
@@ -78,7 +59,7 @@ function &smarty_core() {
  * @return Smarty
  */
 
-function &smarty($javascript = array(), $headers = array(), $pagestrings = array(), $extraconfig = array()) {
+function smarty($javascript = array(), $headers = array(), $pagestrings = array(), $extraconfig = array()) {
     global $USER, $SESSION, $THEME;
 
     if (!is_array($headers)) {
@@ -94,7 +75,6 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
     $SIDEBLOCKS = array();
 
     $smarty = smarty_core();
-    $smarty->register_function('user_search_form', 'user_search_form');
 
     $wwwroot = get_config('wwwroot');
     // NOTE: not using jswwwroot - it seems to wreck image paths if you 
@@ -111,6 +91,8 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
     $javascript_array = array();
     $jsroot = $wwwroot . 'js/';
 
+    $langdirection = get_string('thisdirection', 'langconfig');
+
     // TinyMCE must be included first for some reason we're not sure about
     $checkarray = array(&$javascript, &$headers);
     $found_tinymce = false;
@@ -126,37 +108,48 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
                     $execcommand = 'setup: ' . $extraconfig['tinymcesetup'] . ',';
                 }
 
-                    if ($check[$key] == 'tinymce') {
-                        $tinymce_config = <<<EOF
+                $adv_buttons = array(
+                    "bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,separator,code,fullscreen",
+                    "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,image,iespell,cleanup,separator,link,unlink,separator,code",
+                    "bullist,numlist,separator,tablecontrols,separator,cut,copy,paste,pasteword",
+                    "fontselect,separator,fontsizeselect,separator,formatselect",
+                );
+
+                // For right-to-left langs, reverse button order & align controls right.
+                $tinymce_langdir = $langdirection == 'rtl' ? 'rtl' : 'ltr';
+                $toolbar_align = 'left';
+
+                if ($check[$key] == 'tinymce') {
+                    $tinymce_config = <<<EOF
     mode: "none",
     theme: "advanced",
     plugins: "table,emotions,iespell,inlinepopups,paste",
-    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,image,iespell,cleanup,separator,link,unlink,separator,code",
-    theme_advanced_buttons2 : "bullist,numlist,separator,tablecontrols,separator,cut,copy,paste,pasteword",
-    theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect",
+    theme_advanced_buttons1 : "{$adv_buttons[1]}",
+    theme_advanced_buttons2 : "{$adv_buttons[2]}",
+    theme_advanced_buttons3 : "{$adv_buttons[3]}",
     theme_advanced_toolbar_location : "top",
-    theme_advanced_toolbar_align : "left",
+    theme_advanced_toolbar_align : "{$toolbar_align}",
     //width: '512',
 EOF;
-                    }
-                    else {
-                        $tinymce_config = <<<EOF
+                }
+                else {
+                    $tinymce_config = <<<EOF
     mode: "textareas",
     editor_selector: 'tinywysiwyg',
     theme: "advanced",
     plugins: "fullscreen,inlinepopups",
-    theme_advanced_buttons1 : "bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,separator,code,fullscreen",
+    theme_advanced_buttons1 : "{$adv_buttons[0]}",
     theme_advanced_buttons2 : "",
     theme_advanced_buttons3 : "",
     theme_advanced_toolbar_location : "top",
-    theme_advanced_toolbar_align : "left",
+    theme_advanced_toolbar_align : "{$toolbar_align}",
     fullscreen_new_window: true,
     fullscreen_settings: {
         theme: "advanced",
         plugins: "table,emotions,iespell,inlinepopups,paste",
-        theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,image,iespell,cleanup,separator,link,unlink,separator,code",
-        theme_advanced_buttons2 : "bullist,numlist,separator,tablecontrols,separator,cut,copy,paste,pasteword",
-        theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect"
+        theme_advanced_buttons1 : "{$adv_buttons[1]}",
+        theme_advanced_buttons2 : "{$adv_buttons[2]}",
+        theme_advanced_buttons3 : "{$adv_buttons[3]}"
     },
 EOF;
                 }
@@ -170,10 +163,8 @@ tinyMCE.init({
     extended_valid_elements : "object[width|height|classid|codebase],param[name|value],embed[src|type|width|height|flashvars|wmode],script[src,type,language],+ul[id|type|compact]",
     urlconverter_callback : "custom_urlconvert",
     language: '{$language}',
+    directionality: "{$tinymce_langdir}",
     content_css : {$content_css},
-    forced_root_block : "",
-    force_p_newlines : false,
-    apply_source_formatting: false,
     //document_base_url: {$jswwwroot},
     relative_urls: false
 });
@@ -345,6 +336,14 @@ EOF;
         }
     }
 
+    // Include rtl.css for right-to-left langs
+    if ($langdirection == 'rtl') {
+        $smarty->assign('LANGDIRECTION', 'rtl');
+        if ($rtlsheets = $THEME->get_url('style/rtl.css', true)) {
+            $stylesheets = array_merge($stylesheets, array_reverse($rtlsheets));
+        }
+    }
+
     $smarty->assign('STRINGJS', $stringjs);
 
     $smarty->assign('STYLESHEETLIST', $stylesheets);
@@ -392,13 +391,12 @@ EOF;
     $smarty->assign('SESSKEY', $USER->get('sesskey'));
     $smarty->assign_by_ref('JAVASCRIPT', $javascript_array);
     $smarty->assign_by_ref('HEADERS', $headers);
-    if (get_config('siteclosed')) {
-        if (get_config('disablelogin')) {
-            $smarty->assign('SITECLOSED', get_string('siteclosedlogindisabled', 'mahara', get_config('wwwroot') . 'admin/upgrade.php'));
-        }
-        else {
-            $smarty->assign('SITECLOSED', get_string('siteclosed'));
-        }
+    $siteclosedforupgrade = get_config('siteclosed');
+    if ($siteclosedforupgrade && get_config('disablelogin')) {
+        $smarty->assign('SITECLOSED', get_string('siteclosedlogindisabled', 'mahara', get_config('wwwroot') . 'admin/upgrade.php'));
+    }
+    else if ($siteclosedforupgrade || get_config('siteclosedbyadmin')) {
+        $smarty->assign('SITECLOSED', get_string('siteclosed'));
     }
 
     if ((!isset($extraconfig['pagehelp']) || $extraconfig['pagehelp'] !== false)
@@ -430,11 +428,21 @@ EOF;
         }
 
         if ($USER->is_logged_in() && defined('MENUITEM') && substr(MENUITEM, 0, 11) == 'myportfolio') {
-            $SIDEBLOCKS[] = array(
-                'name'   => 'selfsearch',
-                'weight' => 0,
-                'data'   => array(),
-            );
+            if (get_config('showselfsearchsideblock')) {
+                $SIDEBLOCKS[] = array(
+                    'name'   => 'selfsearch',
+                    'weight' => 0,
+                    'data'   => array(),
+                );
+            }
+            if (get_config('showtagssideblock')) {
+                $SIDEBLOCKS[] = array(
+                    'name'   => 'tags',
+                    'id'     => 'sb-tags',
+                    'weight' => 0,
+                    'data'   => tags_sideblock(),
+                );
+            }
         }
 
         if($USER->is_logged_in() && !defined('ADMIN') && !defined('INSTITUTIONALADMIN')) {
@@ -463,7 +471,7 @@ EOF;
             );
         }
 
-        if (!$USER->is_logged_in()) {
+        if (!$USER->is_logged_in() && !(get_config('siteclosed') && get_config('disablelogin'))) {
             $SIDEBLOCKS[] = array(
                 'name'   => 'login',
                 'weight' => -10,
@@ -496,25 +504,22 @@ EOF;
         // Place all sideblocks on the right. If this structure is munged 
         // appropriately, you can put blocks on the left. In future versions of 
         // Mahara, we'll make it easy to do this.
-        $tmp = $SIDEBLOCKS;
-        $SIDEBLOCKS = array(
-            'left'  => array(),
-            'right' => $tmp,
-        );
+        $SIDEBLOCKS = array('left' => array(), 'right' => $SIDEBLOCKS);
 
         $smarty->assign('userauthinstance', $SESSION->get('authinstance'));
         $smarty->assign('MNETUSER', $SESSION->get('mnetuser'));
         $smarty->assign('SIDEBLOCKS', $SIDEBLOCKS);
         $smarty->assign('SIDEBARS', $sidebars);
 
-        if ($USER->get('parentuser')) {
-            $smarty->assign('USERMASQUERADING', true);
-            $smarty->assign('masqueradedetails', get_string('youaremasqueradingas', 'mahara', hsc(display_name($USER))));
-            $smarty->assign('becomeyouagain',
-                ' <a href="' . hsc($wwwroot) . 'admin/users/changeuser.php?restore=1">'
-                . get_string('becomeadminagain', 'admin', $USER->get('parentuser')->name)
-                . '</a>');
-        }
+    }
+
+    if ($USER->get('parentuser')) {
+        $smarty->assign('USERMASQUERADING', true);
+        $smarty->assign('masqueradedetails', get_string('youaremasqueradingas', 'mahara', hsc(display_name($USER))));
+        $smarty->assign('becomeyouagain',
+            ' <a href="' . hsc($wwwroot) . 'admin/users/changeuser.php?restore=1">'
+            . get_string('becomeadminagain', 'admin', $USER->get('parentuser')->name)
+            . '</a>');
     }
 
     return $smarty;
@@ -790,16 +795,6 @@ function jsstrings() {
             ),
             'mahara' => array(
                 'cancel',
-            ),
-        ),
-        'feedbacklist' => array(
-            'view' => array(
-                'feedbackattachmessage',
-                'makeprivate',
-                'thisfeedbackisprivate',
-                'thisfeedbackispublic',
-                'attachment',
-                'nopublicfeedback',
             ),
         ),
     );
@@ -1566,6 +1561,7 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $sec
     global $THEME;
     // TODO: remove the hax for ie, I'm sure we can do this with a PNG file
     // I see no reason why IE has to drag the quality of the interwebs down with it
+
     $imageext = (isset($_SERVER['HTTP_USER_AGENT']) && false !== stripos($_SERVER['HTTP_USER_AGENT'], 'msie 6.0')) ? 'gif' : 'png';
     return ' <span class="help"><a href="" onclick="'. 
         hsc(
@@ -1850,7 +1846,6 @@ function institutional_admin_nav() {
  */
 function mahara_standard_nav() {
     $exportenabled = plugins_installed('export');
-    $importenabled = plugins_installed('import');
     $menu = array(
         array(
             'path' => '',
@@ -1876,13 +1871,6 @@ function mahara_standard_nav() {
             'title' => get_string('Export', 'export'),
             'weight' => 40,
             'ignore' => !$exportenabled,
-        ),
-        array(
-            'path' => 'myportfolio/import',
-            'url' => 'import/',
-            'title' => get_string('import', 'import'),
-            'weight' => 40,
-            'ignore' => !$importenabled,
         ),
         array(
             'path' => 'profile/view',
@@ -1990,6 +1978,10 @@ function main_nav() {
         $menu = mahara_standard_nav();
     }
 
+    // local_main_nav_update allows sites to customise the menu by munging the $menu array.
+    if (function_exists('local_main_nav_update')) {
+        local_main_nav_update($menu);
+    }
     $menu_structure = find_menu_children($menu, '');
     return $menu_structure;
 }
@@ -2190,8 +2182,8 @@ function get_script_path() {
 }
 
 /**
- * Like {@link me()} but returns a full URL
- * @see me()
+ * Like {@link get_script_path()} but returns a full URL
+ * @see get_script_path()
  * @return string
  */
 function get_full_script_path() {
@@ -2235,6 +2227,17 @@ function get_full_script_path() {
 
     $url_prefix = $protocol.$hostname;
     return $url_prefix . get_script_path();
+}
+
+/**
+ * Like {@link get_script_path()} but returns a URI relative to WWWROOT
+ * @see get_script_path()
+ * @return string
+ */
+function get_relative_script_path() {
+    $maharadir = get_mahara_install_subdirectory();
+    // $maharadir always has a trailing '/'
+    return substr(get_script_path(), strlen($maharadir) - 1);
 }
 
 /**
@@ -2345,32 +2348,32 @@ function format_whitespace($text) {
 function clean_html($text) {
     require_once('htmlpurifier/HTMLPurifier.auto.php');
     $config = HTMLPurifier_Config::createDefault();
-    $config->set('Cache', 'SerializerPath', get_config('dataroot') . 'htmlpurifier');
+    $config->set('Cache.SerializerPath', get_config('dataroot') . 'htmlpurifier');
 
-    $config->set('Core', 'Encoding', 'UTF-8');
-    $config->set('HTML', 'Doctype', 'HTML 4.01 Transitional');
-    $config->set('AutoFormat', 'Linkify', true);
+    $config->set('Core.Encoding', 'UTF-8');
+    $config->set('HTML.Doctype', 'HTML 4.01 Transitional');
+    $config->set('AutoFormat.Linkify', true);
 
     $customfilters = array();
     if (get_config('filters')) {
         foreach (unserialize(get_config('filters')) as $filter) {
             if ($filter->file == 'YouTube') {
-                $config->set('Filter', 'YouTube', true);
+                $config->set('Filter.YouTube', true);
             } else {
                 require_once(get_config('libroot') . 'htmlpurifiercustom/' . $filter->file . '.php');
                 $classname = 'HTMLPurifier_Filter_' . $filter->file;
                 $customfilters[] = new $classname();
             }
         }
-        $config->set('Filter', 'Custom', $customfilters);
+        $config->set('Filter.Custom', $customfilters);
     }
 
     // These settings help identify the configuration definition. If the 
     // definition (the $def object below) is changed (e.g. new method calls 
     // made on it), the DefinitionRev needs to be increased. See
     // http://htmlpurifier.org/live/configdoc/plain.html#HTML.DefinitionID
-    $config->set('HTML', 'DefinitionID', 'Mahara customisations to default config');
-    $config->set('HTML', 'DefinitionRev', 1);
+    $config->set('HTML.DefinitionID', 'Mahara customisations to default config');
+    $config->set('HTML.DefinitionRev', 1);
 
     $def =& $config->getHTMLDefinition(true);
     $def->addAttribute('a', 'target', 'Enum#_blank,_self,_target,_top');
@@ -2385,10 +2388,9 @@ function clean_html($text) {
  * @return string The formatted text
  */
 function html2text($html) {
-    require_once('html2text/class.html2text.php');
-    $h2t = new html2text($html);
-    $h2t->set_base_url(get_config('wwwroot'));
-    return $h2t->get_text();
+    require_once('htmltotext/htmltotext.php');
+    $h2t = new HtmltoText($html, get_config('wwwroot'));
+    return $h2t->text();
 }
 
 /**
@@ -2405,7 +2407,7 @@ function html2text($html) {
  */
 function autolink_text($text) {
     $text = preg_replace(
-        '#(^|.)(https?://\S+)#e',
+        '#(^|.)(https?://\S+)#me',
         "_autolink_text_helper('$2', '$1')",
         $text
     );
@@ -2710,6 +2712,9 @@ function build_pagination($params) {
         $page = $params['offset'] / $params['limit'];
 
         $last = $pages - 1;
+        if (!empty($params['lastpage'])) {
+            $page = $last;
+        }
         $next = min($last, $page + 1);
         $prev = max(0, $page - 1);
 
@@ -2824,11 +2829,22 @@ function mahara_http_request($config) {
         }
     }
 
+    if (strpos($config[CURLOPT_URL], 'https://') === 0) {
+        if ($cainfo = get_config('cacertinfo')) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+            curl_setopt($ch, CURLOPT_CAINFO, $cainfo);
+        }
+    }
+
     $result = new StdClass();
     $result->data = curl_exec($ch);
     $result->info = curl_getinfo($ch);
     $result->error = curl_error($ch);
+    $result->errno = curl_errno($ch);
 
+    if ($result->errno) {
+        log_warn('Curl error: ' . $result->errno . ': ' . $result->error);
+    }
 
     curl_close($ch);
 

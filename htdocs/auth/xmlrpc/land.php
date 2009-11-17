@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage auth-xmlrpc
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  * This file incorporates work covered by the following copyright and
  * permission notice:
@@ -62,11 +63,8 @@ $remotewwwroot = param_variable('idp');
 $wantsurl      = param_variable('wantsurl', '/');
 $remoteurl     = param_boolean('remoteurl');
 
-$institution = new Institution();
-
-try {
-    $institution->findByWwwroot($remotewwwroot);
-} catch (ParamOutOfRangeException $e) {
+$len = strlen($remotewwwroot);
+if ($len < 1 || $len > 255) {
     throw new ParameterException(get_string('errnoxmlrpcwwwroot','auth', $remotewwwroot));
 }
 

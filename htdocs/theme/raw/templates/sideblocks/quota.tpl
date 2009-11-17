@@ -5,6 +5,7 @@
         {$QUOTA_MESSAGE}
         {contextualhelp plugintype='artefact' pluginname='file' section='quota_message'}
     </p>
+    <div id="quotawrap">
 {if $QUOTA_PERCENTAGE < 100}
     <div id="quota_fill" style="width: {$QUOTA_PERCENTAGE*2}px;">&nbsp;</div>
     <p id="quota_bar">
@@ -16,4 +17,5 @@
         <span id="quota_percentage">{$QUOTA_PERCENTAGE}%</span>
     </p>
 {/if}
+	</div>
 </div>

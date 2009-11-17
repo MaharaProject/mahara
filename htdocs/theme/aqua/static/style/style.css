@@ -22,17 +22,16 @@
 
 /* General rules */
 body {
-    background: #1D499F url(../images/bg.jpg) repeat-x top center;
+    background: #0B1960 url(../images/bg.jpg) repeat-x top center;
 	color: #14336F;
 }
-a,
-a:link,
-a:active,
-a:visited {
+acronym {
+}
+a, a:visited, a:link, a:active {
     color: #1F97D5;
     text-decoration: none;
 }
-a:hover {
+a:hover, a:focus {
     color: #14336F;
     text-decoration: underline;
 }
@@ -66,7 +65,7 @@ h6 {
     color: #838383;
 }
 
-/* Tables */
+/**************************** Tables ****************************/
 .main-column thead th {
     color: #888888;
 	border-bottom: 1px solid #14436F;
@@ -75,44 +74,84 @@ h6 {
     color: #888888;
 	border-bottom: none;
 }
-.main-column tfoot td {
+/* table with th border-bottom */
+#searchresults thead th,
+#filelist,
+#groupforumtable,
+.tag-results #results {
+	border-bottom: 1px solid #14436F;
+}
+/* table with tfoot border-top */
+#searchresults tfoot td,
+#adminstitutionslist tfoot td,
+#profileicons tfoot td,
+#activitylist tfoot td,
+#groupforumtable {
 	border-top: 1px solid #14436F;
+}
+.main-column table h3 a,
+.main-column table h3 a:visited,
+.main-column table h3 a:link,
+.listing div h3 a,
+.listing div h3 a:visited,
+.listing div h3 a:link {
+	color: #1e6297 !important;
+}
+.main-column table h3 a:hover,
+.listing div h3 a:hover {
 }
 .tablerenderer-loading {
     border: 1px solid #f4f7f9;
 	background-color: #f4f7f9;
     color: #1e6297;
 }
-table.fullwidth {
-	border-top: 1px solid #14436F;
+/* table with th border-bottom */
+#searchresults thead th {
 	border-bottom: 1px solid #14436F;
 }
-table.fullwidth h3 a {
-	color: #1e6297 !important;
+/* table with border-bottom */
+#searchresults tfoot td {
+	border-top: 1px solid #14436F;
 }
 /* Alternative row background colours */
-.r0 {
+.r0,
+.r0 td {
     background-color: #e0e8ee;
 }
-.r1 {
+.r1,
+.r1 td {
     background-color: #f4f7f9;
 }
+tr.folder td {
+	background-color: #d6dce0 !important;
+}
 
+/**************************** Pagination ****************************/
+div.pagination a {
+	background-color: #f4f7f9;
+	border: 0;
+}
+div.pagination .disabled {
+}
 
-/* Form elements */
+/**************************** Forms ****************************/
+/* Label */
 label {
     color: #888888;
 }
+/* required */
 .required th, .required label, .requiredmarker, #register_tandc_container th {
-    color: #333333;
+    color: #c81511;
 }
-select {
-    border: 1px solid #b2b2b2;
+/* override required colour to normal colour */
+.required label.plain, .required.radio td label, .required.emaillist td label {
+	color: #333333;
+}
+/* description */
+.pieform td.description {
 }
 
-input.error, select.error {
-    border-color: #cc0000;
-}
+/* Legend */
 legend {
 	color: #1e6297;
 	margin-bottom:5px;
@@ -120,94 +159,256 @@ legend {
 legend a,
 legend a:link,
 legend a:visited,
-legend a:active {
+legend a:active,
+legend a:hover {
 	color: #1e6297 !important;
 }
+
+/* Select */
+select {
+    border: 1px solid #b2b2b2;
+}
+
 /* Fieldset */
 fieldset {
     border: 1px solid #14436F;
 }
 
-/* Buttons */
-.btn,
-.btn-link,
-input.submit,
-input.button, button,
-input.submitcancel,
-input.cancelbackcreate,
-#settings_delete {
-	background-color: #14436F;
-	padding: 3px 10px;
-	border-color: #D9DFEA #b2b2b2 #b2b2b2 #D9DFEA !important;
-	border-style: solid;
-	border-width: 1px;
-	font-size: 11px;
-    font-weight:normal;
-	color: #FFF !important;
-	margin-left: 5px;
+/* Text fields and such */
+input.text, 
+input.password, 
+input.file,
+textarea,
+input[type=text],
+input[type=password],
+input[type=file] {
 }
-a.btn,
-a.btn:hover {
-	color: #FFF;
-    text-decoration:none;
-}
-/* special case */
-#btn-logout {
-	background-color: #1D499F;
-}
-/***** ICON LINKS ******/
-div.btn-del input.submit, input.submit.btn-del,
-div.btn-msg input.submit,
-div.btn-add input.submit, input.submit.btn-add,
-div.btn-edit input.submit, input.submit.btn-edit,
-a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply, .btn-leavegroup {
-    color: #1F97D5 !important;
+input.text.required {
 }
 
-/* Top of page elements */
-#container {
-    background: #1D499F url(../images/bg-container.jpg) repeat-x top center;
+/* error */
+input.error, select.error {
+}
+.errmsg {
+}
+
+
+/****************************** Buttons ****************************/
+/** input buttons **/
+input.submit,
+input.cancel,
+button,
+input.button,
+input.buttondk,
+input.select,
+input#files_filebrowser_edit_artefact {
+	background-color: #14436F;
+	border-color: #5388b9 #011e3a #011e3a #5388b9;
+	color: #FFF;
+}
+/** link buttons **/
+.rbuttons a.btn,
+#sb-profile .controls a,
+.upgradeicon a,
+#loginas .btn-loginas {
+	background-color: #14436F;
+	border-color: #5388b9 #011e3a #011e3a #5388b9;
+	color: #FFF;
+}
+/** hover for buttons **/
+input.submit:hover,
+input.cancel:hover,
+button:hover,
+input.button:hover,
+input.buttondk:hover,
+input.select:hover,
+input#files_filebrowser_edit_artefact:hover,
+.rbuttons a.btn:hover,
+#sb-profile .controls a:hover {
+	background: #155a9b;
+	text-decoration: none;
+}
+/** Depress for buttons **/
+input.submit:active,
+input.cancel:active,
+button:active,
+input.button:active,
+input.buttondk:active,
+input.select:active,
+input#files_filebrowser_edit_artefact:active,
+.rbuttons a.btn:active,
+#sb-profile .controls a:active {
+	border-color: #011e3a #5388b9 #5388b9 #011e3a;
+	background: #155a9b;
+	color: #FFF;
+}
+
+/** Buttons with icons **/
+a.btn-req {
+	background: url(../images/icon-join.gif) no-repeat left center;
+	padding-left: 15px;
+}
+.btn-leavegroup {
+    background: transparent url(../images/icon-leave.gif) no-repeat left center;
+	padding-left: 15px;
+}
+a.btn-del,
+a#btn-delete {
+    background: transparent url(../images/icon-delete.gif) no-repeat left center;
+    color: #ca0000 !important;
+	padding-left: 12px;
+}
+#btn-request, 
+a.btn-add {
+	background: url(../images/icon-add.gif) no-repeat left center;
+	padding-left: 12px;
+}
+a.btn-msg, #btn-sendmessage {
+	background: url(../images/icon-mail.gif) no-repeat left center;
+	padding-left: 12px;
+}
+a.btn-edit {
+	background: url(../images/icon-edit.gif) no-repeat left center;
+	padding-left: 12px;
+}
+.btn-pending {
+	background: url(../images/icon-pending.gif) no-repeat left center;
+	padding-left: 12px;
+}
+.btn-reply, #add_feedback_link {
+	background: url(../images/icon-reply.gif) no-repeat left center;
+	padding-left: 12px;
+}
+#objection_link {
+	background: url(../images/icon-flag.gif) no-repeat left center;
+}
+#print_link {
+	background: url(../images/icon-print.gif) no-repeat left center;
+}
+#toggle_watchlist_link {
+	background: url(../images/icon-watch.gif) no-repeat left center;
+}
+.btn-settings {
+	background: url(../images/icon-settings.gif) no-repeat left center;
+	padding-left: 12px;
+}
+input#addfriend_add,
+input#myfriends_addfriend_add {
+	background: transparent url(../images/icon-add.gif) no-repeat left center;
+	border: 0;
+    margin: 0;
+}
+#togglepublic_submit {
+	background: url(../images/icon-login.gif) no-repeat left center;
+	padding-left: 12px !important;
+	color: #1F97D5;
+	border: 0;
+}
+.lbuttons a {
+	padding-left: 12px !important;
+}
+
+/* Search buttons */
+#usf_submit {
+    border:none;
+	width: 25px;
+	margin:0;
+	text-indent:-1000px;
+	font-size: 1%;
+	cursor:pointer;
+    background: transparent url(../images/btn_search_off.png) no-repeat center center;	
+	padding: 10px;
+	vertical-align: middle;
+	* vertical-align: inherit;
+}
+* html #usf_submit {
+    background: transparent url(../images/btn_search_off.gif) no-repeat center center;	
+}
+#dosearch,
+#selfsearch button ,
+.query-button,
+#query-button,
+#moderator_search_btn,
+#search_submit,
+#search_search,
+#selfsearch button,
+#users_search_btn {
+    border:none;
+	width: 25px;
+	margin:0;
+	text-indent:-1000px;
+	font-size: 1%;
+	cursor:pointer;
+    background: transparent url(../images/btn_search_off.png) no-repeat center center;	
+	padding: 10px;
+	* padding: 1px 10px;
+	vertical-align: middle;
+	* vertical-align: inherit;
+}
+
+
+/**************************** Top of page elements ****************************/
+#container, #containerX {
+    background: transparent url(../images/bg-container.jpg) no-repeat top center;
     margin-top:0px;
     padding-top:0px;
+    min-width: 970px;
+    width: 90%;
 }
 #top-wrapper {
     background: transparent;
+    border: none;
+}
+#containerX #top-wrapper {
+	height: auto;
+}
+#loading-box {
+    background-color: #ECF3D4 !important;
 }
 #site-logo {
-	padding: 20px 25px 5px 0
+	padding: 25px 25px 0 0
 }
-
-/* search box in header */
-#usf {
-    padding: 35px 6px 0 0;
+#top-wrapper ul,
+#top-wrapper li {
+    text-align: right;
+    display: inline;
+}
+/* Search and language bar */
+#language-select, #usf {
+    padding: 45px 10px 0 0;
 }
 #usf_query_container input {
+	font-size: .9em;
+	padding: .25em;
     color: #333333;
 }
 
-/* main menu */
+/**************** TOP NAVIGATION ****************/
 #main-nav {
     float:right;
     padding: 0;
     margin: 0 10px 0 0;
 	height: 27px;
 }
+#main-nav ul {
+}
 #main-nav li {
     float:left;
     color: #FFFFFF;
     text-decoration: none;
+    line-height: 1.6em;
     font-weight: normal;
 	font-size: 12px;
 	margin: 0 0 0 3px;
-	padding: 5px 15px 3px;
-	background: #14336F;
+	padding: 0;
 }
 #main-nav li a,
 #main-nav li a:link,
 #main-nav li a:visited,
 #main-nav li a:active {
 	margin: 0;
-	padding: 0;
+	padding: 5px 15px 3px;
+	background: #00084F;
     color: #FFFFFF;
 	width:auto;
 	display:block;
@@ -217,15 +418,18 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     text-decoration: underline;
 }
 #main-nav li.selected {
-	background: #FFFFFF;
 }
+#main-nav li.selected a,
 #main-nav li.selected a:link,
 #main-nav li.selected a:visited,
 #main-nav li.selected a:active {
     color: #14336F;
+	background: #FFFFFF;
+}
+#main-nav li.selected a:hover {
 }
 
-/* Sub menu */
+/**************** SUB NAVIGATION ****************/
 #sub-nav {
     clear:both;
     padding: 0;
@@ -234,26 +438,20 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     font-weight: bold;
     text-align: left;
     background: #FFF;
-    height: 24px;
+    height: 30px;
+	border:none;
 	border-bottom:1px solid #DDD;
 	width:100%;
 }
 #sub-nav ul {
     float:right;
 	height: 15px;
-	padding: 4px 10px 6px 0;
+	padding: 6px 10px 6px 0;
+	background: #FFF;
 }
 #sub-nav li {
     height: 25px;
-    padding: 5px 13px 5px 8px;
     margin: 0 !important;
-    /* not working */
-    /* background: url(../../../default/static/images/submenu-divider.gif) no-repeat top right; */
-}
-#sub-nav li.selected {
-    height: 25px;
-    margin: 0;
-	background: transparent;
 }
 #sub-nav li a,
 #sub-nav li a:link,
@@ -266,37 +464,110 @@ a.btn-del, a.btn-msg, a.btn-add, a.btn-req, a.btn-edit, .btn-pending, .btn-reply
     color: #1A428F;
     text-decoration: underline;
 }
+#sub-nav li.selected {
+    height: 25px;
+    margin: 0;
+	background: transparent;
+}
+#sub-nav li.selected a,
 #sub-nav li.selected a:link,
 #sub-nav li.selected a:visited,
 #sub-nav li.selected a:active {
-    color: #1D499F;
+    color: #0B1960;
     text-decoration: underline;
 }
+#sub-nav li.selected a:hover {
+}
 
-/* CONTENT LAYOUT */
+
+/**************** IN PAGE TAB NAVIGATION ****************/
+ul.in-page-tabs {
+  line-height: 25px;
+  height: 25px;
+  font-size: 12px;
+  display: block;
+}
+ul.in-page-tabs li {
+  margin: 0 3px 0 0 !important;
+  float: left;
+  height: 25px;
+  line-height: 25px;
+}
+ul.in-page-tabs li a,
+ul.in-page-tabs li a:link,
+ul.in-page-tabs li a:visited,
+ul.in-page-tabs li a:active {
+  color: #FFF;
+  padding: 4px 10px 5px 10px;
+  text-decoration: none;
+  background: #00084F;
+  line-height: 26px;
+}
+ul.in-page-tabs li a:hover {
+  color: #1F97D5;
+}
+ul.in-page-tabs li a.current-tab,
+ul.in-page-tabs li a.current-tab:link,
+ul.in-page-tabs li a.current-tab:visited,
+ul.in-page-tabs li a.current-tab:active {
+  color: #14336F;
+  background: #FFF;
+  border-left: 1px solid #ddd;
+  border-top: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
+ul.in-page-tabs li a.current-tab:hover {
+}
+
+.subpage {
+	border: 1px solid #ddd;
+}
+
+/**************** MAIN CONTENT *****************/
 #main-wrapper {
 	background: #FFF;
 }
 
+/* system messages between nav and main content */
+/* upload file message */
+div.info {
+}
+/* different message types */
+#messages .ok,
+div.ok {
+	background-color:#d9e7f1;
+	color: #091c6b;
+}
+#messages .error,
+div.error, {
+}
+#messages .info {
+}
+/* system messages */
+.message {
+}
+.message.delete {
+}
 
-/* RIGHT SIDE COLUMN */
+/**************** SIDEBAR ******************/
+#left-column,
 #right-column {
-	background: #F4F7F9;
+	background: #F4F7F9 url(../images/pixel_grey.gif) repeat-y top left;
     padding:0px;
 }
 div.sideblock {
-    background: transparent url(../images/pixel_grey.gif) repeat-y top left;
-	border-bottom:1px solid #DDD;
+	border-bottom: 1px solid #DDD;
 }
 div.sideblock h3 {
-    font-size: 1.2em;
-    color: #1e6297;
 }
-div.sideblock a,
-div.sideblock a:link,
-div.sideblock a:visited,
-div.sideblock a:active {
-	color: #1e6297;
+div.sideblock h3 a,
+div.sideblock h3 a:link,
+div.sideblock h3 a:visited,
+div.sideblock h3 a:active {
+	color: #1E6297;
+}
+div.sideblock h3 a:hover {
+	color: #267bbd;
 }
 div.sideblock ul li {
 	font-weight: bold;
@@ -305,78 +576,284 @@ div.sideblock ul ul {
 	list-style-type: square;
 }
 
-/** very specific overrides for the profile block
- * since it uses different nesting strategy
- * as far as i can tell :/ */
-#sb-profile ul li a {
+/* Side Login */
+#sb-loginbox input.text,
+#sb-loginbox input.password {
+}
+#sb-loginbox label {
 	color: #1A428F;
 }
-#sb-profile ul li ul li a {
+
+/* Side Profile */
+#sb-profile ul a,
+#sb-profile ul a:link,
+#sb-profile ul a:visited,
+#sb-profile ul a:active {
+	color: #1A428F;
+}
+#sb-profile ul ul a,
+#sb-profile ul ul a:link,
+#sb-profile ul ul a:visited,
+#sb-profile ul ul a:active {
 	color: #1F97D5;
+}
+#sb-profile li#unreadmessages a.btn-msg,
+#sb-profile li#unreadmessages a.btn-msg:link,
+#sb-profile li#unreadmessages a.btn-msg:visited,
+#sb-profile li#unreadmessages a.btn-msg:active,
+#sb-profile li#pendingfriends a,
+#sb-profile li#pendingfriends a:link,
+#sb-profile li#pendingfriends a:visited,
+#sb-profile li#pendingfriends a:active {
+	color: #1F97D5 !important;
+}
+
+/* Side Online Users */
+#sb-onlineusers ul {
+}
+#sb-onlineusers li {
+}
+#sb-onlineusers ul img {
+}
+#lastminutes {
 }
 
 /* Side Quota Bar */
-/** this is currently broken and needs looking at
- * default is broken too */
 #quota_used {
     color: #3986c3;
 }
 #quota_total {
     color: #1F97D5;
 }
-#quota_bar {
-    background: #14436F;
-    color: #FFF;
-}
+#quota_bar,
 #quota_bar_100 {
-    background: #CC0000;
-}
-#quota_message {
-	font-size: 1.1em;
+    background: url(../images/quota_bar_bg.gif) no-repeat left top;
+    color: #FFF;
 }
 #quota_fill {
     margin: 0;
-    background: #1F97D5;
+    background: url(../images/quota_bar_highlight.gif) repeat-x;
 }
 
-/* Footer */
+/* Side Search */
+.sidebar #selfsearch input {
+	width: 190px;
+}
+
+/* Friends control sideblock */
+div.sideblock #friendscontrol label {
+}
+
+/* Tags */
+.tag-results .sep {
+}
+/* edit tag box */
+.edittag {
+}
+/* delete tag box */
+.deletetag {
+}
+.deletetag h3 {
+}
+#delete_tag_submit {
+}
+
+/* Ajax Login */
+#ajax-login-form {
+}
+
+/* Help popups & icons */
+.contextualHelp {
+}
+
+
+
+/******************** FOOTER ****************************/
 #footer-wrap {
-    background-color: #1D499F;
+    background-color: #0B1960;
+    border: 0;
+	padding: .5em 0 1.5em 0;
 }
-#footer-wrap a,
-#footer-wrap a:link,
-#footer-wrap a:active,
-#footer-wrap a:visited {
+#footernav  {
+  color: #FFFFFF;
+} 
+#footernav a,
+#footernav a:link,
+#footernav a:active,
+#footernav a:visited {
     color: #FFFFFF;
-	padding: 0 5px;
 }
-#footer-wrap a:hover {
+#footernav a:hover {
     color: #FFF;
+}
+#powered-by {
 }
 #performance-info {
     color: #fff;
 }
-#powered-by {
-    background-color: #ffffff;
-    padding:3px;
+#version  {
+  color: #FFFFFF;
+} 
+
+
+/****************************** PAGE BY PAGE STYLES **********************************/
+/* Userlists used in admin section and on edit interaction form */
+.userlisttable tbody tr th {
+}
+
+/* Attached file lists */
+.attachments {
+}
+.attachments tbody th {
+}
+
+/* User/view */
+#userview .user-icon {
+}
+
+/* Wall */
+.wallpost {
+}
+#wall .private {
+}
+.wallpost .postedon {
+}
+.wallpost .controls {
 }
 
 
-/* Page by page styles */
-
 /* My Views */
+#myviews td {
+}
+#myviews h4 {
+}
+#myviews .submitted-viewitem {
+}
+#deleteview label {
+}
 #editviewdetails,
 #editthisview,
 #editviewaccess {
-	padding-left: 15px;
-    background: url(../../../raw/static/images/icon-edit.gif) no-repeat left 2px;
-	font-size: 12px !important;
+	padding-left: 12px;
+    background: url(../images/icon-edit.gif) no-repeat left center;
 }
 #myviews .btn-del {
-    font-weight: bold;
+    background: transparent url(../images/icon-delete.gif) no-repeat left center;
+    color: #ca0000 !important;
+	padding-left: 12px;
 }
+
+/* Copy a view */
+#viewpreview {
+}
+#viewpreviewinner {
+}
+#viewpreviewclose {
+}
+
+/* View access */
+#viewacl_lhs {
+}
+#viewacl_lhs #results tfoot td {
+}
+#accesslistitems {
+}
+#accesslistitems .ai-container {
+}
+#accesslistitems .removebutton {
+}
+#accesslistitems .ai-container table th {
+}
+
+/* Export */
+#export h3 {
+}
+#export .radio-description {
+}
+#export fieldset {
+}
+#export .element div {
+}
+#export .view {
+}
+#export fieldset {
+}
+#export fieldset legend {
+}
+#export fieldset div a {
+}
+#export fieldset table {
+}
+#export fieldset table colgroup col {
+}
+#export fieldset table div {
+}
+#export fieldset label {
+}
+#exportgeneration {
+}
+#progress {
+}
+div.progress-bar {
+}
+* html div.progress-bar {
+}
+div.progress-bar a {
+}
+p.progress-text {
+}
+#progressbar {
+}
+
+/* My Groups *//* My Friends */
+ul.groupuserstatus {
+}
+#friendslist ul.actionlist {
+}
+ul.groupuserstatus li,
+#friendslist ul.actionlist li {
+}
+#friendslist ul.viewlist li.label {
+}
+#friendslist ul.viewlist li {
+}
+
+/* Group: about */
+.group-info {
+  border: 10px solid #5c0758;
+  background-color: #f7d4fa;
+}
+
+/* Group: members */
+.listing.twocolumn td {
+}
+
 
 /* Settings > Preferences */
 #accountprefs table h3 {
 	border-bottom: 1px solid #888888
+}
+#accountprefs table label,
+#accountprefs table th {
+}
+#accountprefs table td label {
+	font-size: 1em;
+}
+#deleteaccount {
+}
+#deleteaccount h1 {
+}
+#deleteaccount input.submit {
+}
+
+/* Settings > Notifications */
+#activitylist th {
+}
+#activitylist th a {
+}
+#activitylist tbody td div {
+}
+
+/* Settings > Institution membership */
+#requestmembership_studentid_container label {
 }

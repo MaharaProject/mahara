@@ -21,9 +21,10 @@
 			{/if}
 			{$institution_form}
             {if $suspendform}
-              <hr />
+            <div id="suspendinstitution">
               <h3 id="suspend">{str tag="suspendinstitution" section=admin}</h3>
               <div class="suspendform">{$suspendform}</div>
+            </div>
             {/if}
 			{else}
 			
@@ -31,10 +32,10 @@
 				<thead>
 				<tr>
 					<th>{str tag="institution"}</th>
-					<th>{str tag="Members" section="admin"}</th>
-					<th>{str tag="Maximum" section="admin"}</th>
-					<th>{str tag="Staff" section="admin"}</th>
-					<th>{str tag="Admins" section="admin"}</th>
+					<th class="center">{str tag="Members" section="admin"}</th>
+					<th class="center">{str tag="Maximum" section="admin"}</th>
+					<th class="center">{str tag="Staff" section="admin"}</th>
+					<th class="center">{str tag="Admins" section="admin"}</th>
 					<th></th>
                     <th></th>
 				</tr>
@@ -64,19 +65,19 @@
 				</tfoot>
 				<tbody>
 				{foreach from=$institutions item=institution}
-				<tr class="{cycle values=r1,r0}">
+				<tr class="{cycle values='r0,r1'}">
 					<td>{$institution->displayname|escape}</td>
-					<td>
+					<td class="center">
 					  {if $institution->name != 'mahara'}
 						<a href="{$WWWROOT}admin/users/institutionusers.php?usertype=members&amp;institution={$institution->name}">{$institution->members}</a>
 					  {else}
 						<a href="{$WWWROOT}admin/users/search.php?institution=mahara">{$institution->members}</a>
 					  {/if}
 					</td>
-					<td>{$institution->maxuseraccounts}</td>
-					<td><a href="{$WWWROOT}admin/users/institutionstaff.php?institution={$institution->name}">{$institution->staff}</a></td>
-					<td><a href="{$WWWROOT}admin/users/institutionadmins.php?institution={$institution->name}">{$institution->admins}</a></td>
-					<td>
+					<td class="center">{$institution->maxuseraccounts}</td>
+					<td class="center"><a href="{$WWWROOT}admin/users/institutionstaff.php?institution={$institution->name}">{$institution->staff}</a></td>
+					<td class="center"><a href="{$WWWROOT}admin/users/institutionadmins.php?institution={$institution->name}">{$institution->admins}</a></td>
+					<td class="admininstitutionbtns right">
 						<form action="" method="post">
 							<input type="hidden" name="i" value="{$institution->name}">
 							<input type="submit" class="submit btn-edit s" name="edit" value="{str tag="edit"}">

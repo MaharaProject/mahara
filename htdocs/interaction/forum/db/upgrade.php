@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage artefact-internal
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -79,6 +80,17 @@ function xmldb_interaction_forum_upgrade($oldversion=0) {
             $field->setAttributes(XMLDB_TYPE_CHAR, 50, XMLDB_UNSIGNED, XMLDB_NOTNULL);
             change_field_notnull($table, $field);
         }
+    }
+
+    if ($oldversion < 2009081700) {
+        if (!get_record('interaction_config', 'plugin', 'forum', 'field', 'postdelay')) {
+            insert_record('interaction_config', (object) array('plugin' => 'forum', 'field' => 'postdelay', 'value' => 30));
+        }
+    }
+
+    if ($oldversion < 2009081800) {
+        $subscription = (object) array('plugin' => 'forum', 'event' => 'creategroup', 'callfunction' => 'create_default_forum');
+        ensure_record_exists('interaction_event_subscription', $subscription, $subscription);
     }
 
     return true;

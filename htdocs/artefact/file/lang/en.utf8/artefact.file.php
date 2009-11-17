@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage lang
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -30,6 +31,7 @@ $string['pluginname'] = 'Files';
 
 $string['sitefilesloaded'] = 'Site files loaded';
 $string['addafile'] = 'Add a file';
+$string['archive'] = 'Archive';
 $string['bytes'] = 'bytes';
 $string['cannoteditfolder'] = 'You do not have permission to add content to this folder';
 $string['changessaved'] = 'Changes saved';
@@ -39,6 +41,9 @@ $string['copyrightnotice'] = 'Copyright notice';
 $string['create'] = 'Create';
 $string['Created'] = 'Created';
 $string['createfolder'] = 'Create folder';
+$string['confirmdeletefile'] = 'Are you sure you want to delete this file?';
+$string['confirmdeletefolder'] = 'Are you sure you want to delete this folder?';
+$string['confirmdeletefolderandcontents'] = 'Are you sure you want to delete this folder and all its contents?';
 $string['customagreement'] = 'Custom Agreement';
 $string['Date'] = 'Date';
 $string['defaultagreement'] = 'Default Agreement';
@@ -48,16 +53,18 @@ $string['deletefile?'] = 'Are you sure you want to delete this file?';
 $string['deletefolder?'] = 'Are you sure you want to delete this folder?';
 $string['Description'] = 'Description';
 $string['destination'] = 'Destination';
-$string['detachfilewarning'] = 'If you delete this file, it will be detached from %s other item(s) in your portfolio.';
+$string['Details'] = 'Details';
 $string['Download'] = 'Download';
 $string['downloadfile'] = 'Download %s';
 $string['downloadoriginalversion'] = 'Download the original version';
 $string['editfile'] = 'Edit file';
 $string['editfolder'] = 'Edit folder';
 $string['emptyfolder'] = 'Empty folder';
-$string['file'] = 'file';
+$string['file'] = 'File'; // Capitalised to be consistent with names of all the other artefact types
 $string['File'] = 'File';
 $string['filealreadyindestination'] = 'The file you moved is already in that folder';
+$string['fileappearsinviews'] = 'This file appears in one or more of your views.';
+$string['fileattached'] = 'This file is attached to %s other item(s) in your portfolio.';
 $string['files'] = 'files';
 $string['Files'] = 'Files';
 $string['fileexists'] = 'File exists';
@@ -70,7 +77,9 @@ $string['filethingdeleted'] = '%s deleted';
 $string['filewithnameexists'] = 'A file or folder with the name "%s" already exists.';
 $string['folder'] = 'Folder';
 $string['Folder'] = 'Folder';
+$string['folderappearsinviews'] = 'This folder appears in one or more of your views.';
 $string['Folders'] = 'Folders';
+$string['foldernotempty'] = 'This folder is not empty.';
 $string['foldercreated'] = 'Folder created';
 $string['foldernamerequired'] = 'Please provide a name for the new folder.';
 $string['gotofolder'] = 'Go to %s';
@@ -179,6 +188,7 @@ $string['rm'] = 'RM Real Player Movie';
 
 
 // Profile icons
+$string['cantcreatetempprofileiconfile'] = 'Could not write temporary profile icon image in %s';
 $string['profileiconsize'] = 'Profile Icon Size';
 $string['profileicons'] = 'Profile Icons';
 $string['Default'] = 'Default';
@@ -204,4 +214,17 @@ $string['usenodefault'] = 'Use no default';
 $string['usingnodefaultprofileicon'] = 'Now using no default profile icon';
 $string['wrongfiletypeforblock'] = 'The file you uploaded was not the correct type for this block.';
 
+// Unzip
+$string['Contents'] = 'Contents';
+$string['Continue'] = 'Continue';
+$string['extractfilessuccess'] = 'Created %s folders and %s files.';
+$string['filesextractedfromarchive'] = 'Files extracted from archive';
+$string['filesextractedfromziparchive'] = 'Files extracted from Zip archive';
+$string['fileswillbeextractedintofolder'] = 'Files will be extracted into %s';
+$string['insufficientquotaforunzip'] = 'Your remaining file quota is too small to unzip this file.';
+$string['invalidarchive'] = 'Error reading archive file.';
+$string['pleasewaitwhileyourfilesarebeingunzipped'] = 'Please wait while your files are being unzipped.';
+$string['spacerequired'] = 'Space Required';
+$string['Unzip'] = 'Unzip';
+$string['unzipprogress'] = '%s files/folders created.';
 ?>

@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage blocktype-image
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -82,7 +83,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance, $istemplate) {
+    public static function instance_config_form($instance) {
         $configdata = $instance->get('configdata');
         safe_require('artefact', 'file');
         $instance->set('artefactplugin', 'file');
@@ -91,7 +92,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
             'showdescription' => array(
                 'type'  => 'checkbox',
                 'title' => get_string('showdescription', 'blocktype.file/image'),
-                'defaultvalue' => $configdata['showdescription'],
+                'defaultvalue' => !empty($configdata['showdescription']) ? true : false,
             ),
             'width' => array(
                 'type' => 'text',
@@ -118,8 +119,8 @@ class PluginBlocktypeImage extends PluginBlocktype {
         return $element;
     }
 
-    public static function artefactchooser_element($default=null, $istemplate=false) {
-        $element = array(
+    public static function artefactchooser_element($default=null) {
+        return array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
             'title' => get_string('image'),
@@ -129,13 +130,6 @@ class PluginBlocktypeImage extends PluginBlocktype {
             'artefacttypes' => array('image', 'profileicon'),
             'template' => 'artefact:file:artefactchooser-element.tpl',
         );
-        if (!$istemplate) {
-            // You don't have to choose a file if this view is a template
-            $element['rules'] = array(
-                'required' => true,
-            );
-        }
-        return $element;
     }
 
     /**

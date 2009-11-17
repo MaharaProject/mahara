@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage import
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -209,7 +210,7 @@ class LocalImporterTransport extends ImporterTransport {
     private $relativepath;
     private $zipfilename;
 
-    public function __construct(Importer $importer/* TODO: wtf is an Importer? */) {
+    public function __construct(PluginImport $importer) {
     }
 
     public function cleanup() {
@@ -244,7 +245,7 @@ class MnetImporterTransport extends ImporterTransport {
     private $tempdir;
     private $zipfilename;
 
-    public function __construct(Importer $importer) {
+    public function __construct(PluginImport $importer) {
         $this->importer = $importer;
         $this->token = $importer->get('token');
         $this->host = get_record('host', 'wwwroot', $importer->get('host'));
@@ -301,5 +302,24 @@ class MnetImporterTransport extends ImporterTransport {
     }
 }
 
+/**
+ * Looks in the import staging area in dataroot and deletes old, unneeded
+ * import.
+ */
+function import_cleanup_old_imports() {
+    require_once('file.php');
+    $basedir = get_config('dataroot') . 'import/';
+    $importdir = new DirectoryIterator($basedir);
+    $mintime = time() - (12 * 60 * 60); // delete imports older than 12 hours
+
+    // The import dir contains one directory for each attempted import, named
+    // after their username and the import timestamp
+    foreach ($importdir as $attemptdir) {
+        if ($attemptdir->isDot()) continue;
+        if ($attemptdir->getCTime() < $mintime) {
+            rmdirr($basedir . $attemptdir->getFilename());
+        }
+    }
+}
 
 ?>

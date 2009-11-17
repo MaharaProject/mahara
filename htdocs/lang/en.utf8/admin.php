@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage lang
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -31,7 +32,7 @@ $string['administration'] = 'Administration';
 // Installer
 $string['installation'] = 'Installation';
 $string['release'] = 'version %s (%s)';
-$string['copyright'] = 'Copyright &copy; 2006 onwards, Catalyst IT Ltd';
+$string['copyright'] = 'Copyright &copy; 2006 onwards, <a href="http://wiki.mahara.org/Contributors">Catalyst IT Ltd and others</a>';
 $string['agreelicense'] = 'I agree';
 $string['component'] = 'Component or plugin';
 $string['continue'] = 'Continue';
@@ -44,7 +45,8 @@ $string['toversion'] =  'To version';
 $string['localdatasuccess'] = 'Successfully installed local customisations';
 $string['notinstalled'] = 'Not installed';
 $string['nothingtoupgrade'] = 'Nothing to upgrade';
-$string['performinginstallsandupgrades'] = 'Performing installs and upgrades...';
+$string['performinginstallation'] = 'Performing installation...';
+$string['performingupgrades'] = 'Performing upgrades...';
 $string['runupgrade'] = 'Run upgrade';
 $string['successfullyinstalled'] = 'Successfully installed Mahara!';
 $string['thefollowingupgradesareready'] = 'The following upgrades are ready:';
@@ -129,12 +131,25 @@ $string['registeryourmaharasitedetail'] = '
 <p>If you tick &quot;send weekly updates&quot;, Mahara will automatically send an update to mahara.org once a week with your updated information.</p>
 <p>Registering will remove this notice. You will be able to change whether you send weekly updates on the <a href="%sadmin/site/options.php">site options</a> page.</p>';
 
+// Close site
+$string['Close'] = 'Close';
+$string['closesite'] = 'Close Site';
+$string['closesitedetail'] = 'You may close the site to everyone except administrators.  This will be useful when preparing for a database upgrade.  Only administrators will be able to log in until you either reopen the site, or an upgrade is successfully completed.';
+$string['Open'] = 'Open';
+$string['reopensite'] = 'Reopen Site';
+$string['reopensitedetail'] = 'Your site is closed.  Site administrators may stay logged in until an upgrade is detected.';
+
 // Site options
 $string['adminsonly'] = 'Administrators only';
+$string['adminsandstaffonly'] = 'Administrators and Staff only';
 $string['allowpublicviews'] = 'Allow public views';
 $string['allowpublicviewsdescription'] = 'If set to yes, users will be able to create portfolio Views that are accessable to the public rather than only to logged in users';
 $string['allowpublicprofiles'] = 'Allow public profiles';
 $string['allowpublicprofilesdescription'] = 'If set to yes, users will be able to set their profile Views to be accessable to the public rather than only to logged in users';
+$string['captchaonregisterform'] = 'Captcha required for registration';
+$string['captchaonregisterformdescription'] = 'Require users to type letters from a captcha image when submitting the registration form';
+$string['captchaoncontactform'] = 'Captcha required for contact us';
+$string['captchaoncontactformdescription'] = 'Require logged-out users to type letters from a captcha image when submitting the Contact Us form';
 $string['defaultaccountinactiveexpire'] = 'Default account inactivity time';
 $string['defaultaccountinactiveexpiredescription'] = 'How long a user account will remain active without the user logging in';
 $string['defaultaccountinactivewarn'] = 'Warning time for inactivity/expiry';
@@ -156,6 +171,10 @@ $string['searchplugindescription'] = 'Search plugin to use';
 $string['sessionlifetime'] = 'Session lifetime';
 $string['sessionlifetimedescription'] = 'Time in minutes after which an inactive logged in user will be automatically logged out';
 $string['setsiteoptionsfailed'] = 'Failed setting the %s option';
+$string['showselfsearchsideblock'] = 'Enable Portfolio Search';
+$string['showselfsearchsideblockdescription'] = 'Display the "Search My Portfolio" side block in the My Portfolio section of the site';
+$string['showtagssideblock'] = 'Enable Tag Cloud';
+$string['showtagssideblockdescription'] = 'If enabled, users will see a side block in the My Portfolio section of the site with a list of their most frequently used tags';
 $string['sitedefault'] = 'Site Default';
 $string['sitelanguagedescription'] = 'The default language for the site';
 $string['sitename'] = 'Site name';
@@ -163,6 +182,9 @@ $string['sitenamedescription'] = 'The site name appears in certain places around
 $string['siteoptionspagedescription'] = 'Here you can set some global options that will apply by default throughout the entire site.';
 $string['siteoptionsset'] = 'Site options have been updated.';
 $string['sitethemedescription'] = 'The default theme for the site';
+$string['tagssideblockmaxtags'] = 'Maximum Tags in Cloud';
+$string['tagssideblockmaxtagsdescription'] = 'The default number of tags to display in user tag clouds';
+$string['theme'] = 'Theme';
 $string['trustedsites'] = 'Trusted sites';
 $string['updatesiteoptions'] = 'Update site options';
 $string['usersallowedmultipleinstitutions'] = 'Users allowed multiple institutions';
@@ -170,8 +192,10 @@ $string['usersallowedmultipleinstitutionsdescription'] = 'If checked, users can 
 $string['usersseenewthemeonlogin'] = 'Other users will see the new theme the next time they log in.';
 $string['viruschecking'] = 'Virus checking';
 $string['viruscheckingdescription'] = 'If checked, virus checking will be enabled for all uploaded files using ClamAV';
+$string['whocancreategroups'] = 'Who can create Groups';
+$string['whocancreategroupsdescription'] = 'Which users will be able to create new groups';
 $string['whocancreatepublicgroups'] = 'Who can create Public Groups';
-$string['whocancreatepublicgroupsdescription'] = 'If set to yes, users will be able to make groups that are viewable by the general public';
+$string['whocancreatepublicgroupsdescription'] = 'Which users will be able to make groups that are viewable by the general public';
 
 // Site content
 $string['about']               = 'About';
@@ -360,13 +384,30 @@ $string['usereditdescription'] = 'Here you can view and set details for this use
 $string['suspenddeleteuser'] = 'Suspend/Delete User';
 $string['suspenddeleteuserdescription'] = 'Here you may suspend or entirely delete a user account. Suspended users are unable to log in until their account is unsuspended. Please note that while a suspension can be undone, deletion <strong>cannot</strong> be undone.';
 $string['deleteusernote'] = 'Please note that this operation <strong>cannot be undone</strong>.';
+$string['youcannotadministerthisuser'] = 'You cannot administer this user';
 
 // Add User
 $string['adduser'] = 'Add User';
 $string['adduserdescription'] = 'Create a new user';
-$string['adduserpagedescription'] = '<p>Here you may add a new user to the system. Once added, they will be sent an e-mail informing them of their new account, including their username and password. They will be asked to change their password upon first log in.</p>';
+$string['basicinformationforthisuser'] = 'Basic information for this user.';
+$string['clickthebuttontocreatetheuser'] = 'Click the button to create the user.';
+$string['createnewuserfromscratch'] = 'Create new user from scratch';
 $string['createuser'] = 'Create User';
+$string['failedtoobtainuploadedleapfile'] = 'Failed to obtain the uploaded LEAP2A file';
+$string['failedtounzipleap2afile'] = 'Failed to unzip the LEAP2A file. Check the error log for more information';
+$string['fileisnotaziporxmlfile'] = 'This file has not been detected to be a zipfile or XML file';
+$string['howdoyouwanttocreatethisuser'] = 'How do you want to create this user?';
+$string['leap2aimportfailed'] = '<p><strong>Sorry - Importing the LEAP2A file failed.</strong></p><p>This could be because you did not select a valid LEAP2A file to upload. Alternatively, there may be a bug in Mahara causing your file to fail, even though it is valid.</p><p>Please <a href="add.php">go back and try again</a>, and if the problem persists, you may want to post to the <a href="http://mahara.org/forums/">Mahara Forums</a> to ask for help. Be prepared to be asked for a copy of your file!</p>';
 $string['newuseremailnotsent'] = 'Failed to send welcome email to new user.';
+$string['newusercreated'] = 'New user account created successfully';
+$string['noleap2axmlfiledetected'] = 'No leap2a.xml file detected - please check your export file again';
+$string['Or...'] = 'Or...';
+$string['userwillreceiveemailandhastochangepassword'] = 'They will receive an e-mail informing them of their new account details. On first log in, they will be forced to change their password.';
+$string['uploadleap2afile'] = 'Upload LEAP2A File';
+
+$string['usercreationmethod'] = '1 - User Creation Method';
+$string['basicdetails'] = '2 - Basic Details';
+$string['create'] = '3 - Create';
 
 // Login as
 $string['loginasuser'] = 'Login as %s';
@@ -396,7 +437,7 @@ $string['institutionexpiry'] = 'Institution expiry date';
 $string['institutionexpirydescription'] = 'The date at which this institutions membership of %s will be suspended.';
 $string['institutionupdatedsuccessfully'] = 'Institution updated successfully.';
 $string['registrationallowed'] = 'Registration allowed?';
-$string['registrationalloweddescription2'] = 'Whether users can register for your site for this institution using the registration form';
+$string['registrationalloweddescription2'] = 'Whether users can register for your site for this institution using the registration form.  If registration is off, non-members cannot request membership of the institution, and members cannot leave the institution or delete their user accounts voluntarily.';
 $string['defaultmembershipperiod'] = 'Default membership period';
 $string['defaultmembershipperioddescription'] = 'How long new members remain associated with the institution';
 $string['authenticatedby'] = 'Authentication Method';
@@ -458,6 +499,7 @@ $string['institutionusersupdated_inviteUser'] = 'Invitations sent';
 
 $string['maxuseraccounts'] = 'Maximum User Accounts Allowed';
 $string['maxuseraccountsdescription'] = 'The maximum number of user accounts that can be associated with the institution.  If there is no limit, this field should be left blank.';
+$string['institutionmaxusersexceeded'] = 'This institution is full, you will have to increase the number of allowed users in this institution before this user can be added.';
 $string['institutionuserserrortoomanyusers'] = 'The users were not added.  The number of members cannot exceed the maximum allowed for the institution.  You can add fewer users, remove some users from the institution, or ask the site administrator to increase the maximum number of users.';
 $string['institutionuserserrortoomanyinvites'] = 'Your invitations were not sent.  The number of existing members plus the number of outstanding invitations cannot exceed the institution\'s maximum number of users.  You can invite fewer users, remove some users from the institution, or ask the site administrator to increase the maximum number of users.';
 

@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage artefact-blog
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -28,75 +29,60 @@ define('INTERNAL', 1);
 define('MENUITEM', 'myportfolio/blogs');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'blog');
-define('SECTION_PAGE', 'index');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('myblogs','artefact.blog'));
 safe_require('artefact', 'blog');
 
-// This is the wwwroot.
-$wwwroot = get_config('wwwroot');
-$enc_delete = json_encode(get_string('delete', 'artefact.blog'));
-$enc_confirmdelete = json_encode(get_string('deleteblog?', 'artefact.blog'));
-$enc_addpost = json_encode(get_string('addpost', 'artefact.blog'));
-$enc_settings = json_encode(get_string('settings', 'artefact.blog'));
+if ($delete = param_integer('delete', 0)) {
+    $blog = artefact_instance_from_id($delete);
+    if ($blog instanceof ArtefactTypeBlog) {
+        $blog->check_permission();
+        $blog->delete();
+        $SESSION->add_ok_msg(get_string('blogdeleted', 'artefact.blog'));
+    }
+}
 
-// This JavaScript creates a table to display the blog entries.
-$js = <<<EOF
-
-var bloglist = new TableRenderer(
-    'bloglist',
-    'index.json.php',
-    [
-        function(r) {
-            return TD(
-              null,
-              A({'href':'{$wwwroot}artefact/blog/view/?id=' + r.id}, r.title)
-            );
-        },
-        function(r) {
-            var td = TD();
-            td.innerHTML = r.description;
-            return td;
-        },
-        function (r) {
-            var deleteButton = A({'class': 'btn-del', 'href': ''}, {$enc_delete});
-            connect(deleteButton, 'onclick', function (e) {
-                e.stop();
-                if (!confirm({$enc_confirmdelete})) {
-                    return false;
-                }
-                sendjsonrequest(
-                    'index.json.php',
-                    {
-                        'action': 'delete',
-                        'id': r.id
-                    },
-                    'POST',
-                    function (data) {
-                        bloglist.doupdate();
-                    }
-                );
-                return false;
-            });
-
-            return TD({'class': 'controls'}, [
-                deleteButton,
-                A({'class': 'btn-edit', 'href':'{$wwwroot}artefact/blog/settings/?id=' + r.id}, {$enc_settings}),
-                A({'class': 'btn-add', 'href':'{$wwwroot}artefact/blog/post.php?blog=' + r.id}, {$enc_addpost})
-            ]);
-        }
-    ]
+$blogs = (object) array(
+    'offset' => param_integer('offset', 0),
+    'limit'  => param_integer('limit', 10),
 );
 
-bloglist.updateOnLoad();
+list($blogs->count, $blogs->data) = ArtefactTypeBlog::get_blog_list($blogs->limit, $blogs->offset);
 
-EOF;
+// If the user has exactly one blog, skip the blog listing and display it
+if (!$delete && $blogs->offset == 0 && !empty($blogs->data) && count($blogs->data) == 1) {
+    define('TITLE', get_string('viewblog','artefact.blog'));
+    define('SECTION_PAGE', 'view');
 
-$smarty = smarty(array('tablerenderer'));
-$smarty->assign_by_ref('INLINEJAVASCRIPT', $js);
+    $record = end($blogs->data);
+    $id = $record->id;
+    $blog = new ArtefactTypeBlog($id, $record);
+    // This javascript is used to generate a list of blog posts.
+    $js = '';
+    if ($blog->count_children()) {
+        $js = require(get_config('docroot') . 'artefact/blog/view/index.js.php');
+    }
+
+    $smarty = smarty(array('tablerenderer'));
+    $smarty->assign_by_ref('blog', $blog);
+    $smarty->assign_by_ref('INLINEJAVASCRIPT', $js);
+    $smarty->assign('PAGEHEADING', hsc($blog->get('title')));
+    $smarty->assign('strnopostsaddone',
+                    get_string('nopostsaddone', 'artefact.blog',
+                               '<a href="' . get_config('wwwroot') . 'artefact/blog/post.php?blog=' . $blog->get('id') . '">', '</a>'));
+    $smarty->display('artefact:blog:view.tpl');
+    exit;
+}
+
+define('TITLE', get_string('myblogs','artefact.blog'));
+define('SECTION_PAGE', 'index');
+
+ArtefactTypeBlog::build_blog_list_html($blogs);
+
+$smarty = smarty(array('paginator'));
 $smarty->assign_by_ref('blogs', $blogs);
 $smarty->assign('PAGEHEADING', hsc(get_string("myblogs", "artefact.blog")));
-$smarty->display('artefact:blog:list.tpl');
+$smarty->assign('INLINEJAVASCRIPT', 'addLoadEvent(function() {' . $blogs->pagination_js . '});');
+$smarty->display('artefact:blog:index.tpl');
 
 ?>

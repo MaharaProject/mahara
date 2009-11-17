@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage artefact-file
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -219,6 +220,44 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         if (!get_record('artefact_config', 'plugin', 'file', 'field', 'uploadagreement')) {
             insert_record('artefact_config', (object) array('plugin' => 'file', 'field' => 'uploadagreement', 'value' => 1));
             insert_record('artefact_config', (object) array('plugin' => 'file', 'field' => 'usecustomagreement', 'value' => 1));
+        }
+    }
+
+    if ($oldversion < 2009091700) {
+        execute_sql("DELETE FROM {artefact_file_files} WHERE artefact IN (SELECT id FROM {artefact} WHERE artefacttype = 'folder')");
+    }
+
+    if ($oldversion < 2009091701) {
+        $table = new XMLDBTable('artefact_file_files');
+        $key = new XMLDBKey('artefactpk');
+        $key->setAttributes(XMLDB_KEY_PRIMARY, array('artefact'));
+        add_key($table, $key);
+
+        $table = new XMLDBTable('artefact_file_image');
+        $key = new XMLDBKey('artefactpk');
+        $key->setAttributes(XMLDB_KEY_PRIMARY, array('artefact'));
+        add_key($table, $key);
+    }
+
+    if ($oldversion < 2009092300) {
+        insert_record('artefact_installed_type', (object) array('plugin' => 'file', 'name' => 'archive'));
+        // update old files
+        if (function_exists('zip_open')) {
+            $files = get_records_select_array('artefact_file_files', "filetype IN ('application/zip', 'application/x-zip')");
+            if ($files) {
+                $checked = array();
+                foreach ($files as $file) {
+                    $path = get_config('dataroot') . 'artefact/file/originals/' . ($file->fileid % 256) . '/' . $file->fileid;
+                    $zip = zip_open($path);
+                    if (is_resource($zip)) {
+                        $checked[] = $file->artefact;
+                        zip_close($zip);
+                    }
+                }
+                if (!empty($checked)) {
+                    set_field_select('artefact', 'artefacttype', 'archive', "artefacttype = 'file' AND id IN (" . join(',', $checked) . ')', array());
+                }
+            }
         }
     }
 

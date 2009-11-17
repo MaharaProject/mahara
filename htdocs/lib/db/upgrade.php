@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -741,10 +742,9 @@ function xmldb_core_upgrade($oldversion=0) {
         // allowed to be copied by everyone
         require_once('view.php');
         execute_sql("UPDATE {view} SET template = 1 WHERE owner = 0 AND type = 'profile'");
-        $view = new View(get_field('view', 'id', 'owner', 0, 'type', 'profile'));
-        $view->set_access(array(array(
-            'type' => 'loggedin'
-        )));
+        $viewid = get_field('view', 'id', 'owner', 0, 'type', 'profile');
+        delete_records('view_access', 'view', $viewid);
+        insert_record('view_access', (object) array('view' => $viewid, 'accesstype' => 'loggedin'));
     }
 
     if ($oldversion < 2008122300) {
@@ -889,14 +889,16 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $suspended);
 
         // Insert a cron job to check for soon expiring and expired institutions
-        $cron = new StdClass;
-        $cron->callfunction = 'auth_handle_institution_expiries';
-        $cron->minute       = '5';
-        $cron->hour         = '9';
-        $cron->day          = '*';
-        $cron->month        = '*';
-        $cron->dayofweek    = '*';
-        insert_record('cron', $cron);
+        if (!record_exists('cron', 'callfunction', 'auth_handle_institution_expiries')) {
+            $cron = new StdClass;
+            $cron->callfunction = 'auth_handle_institution_expiries';
+            $cron->minute       = '5';
+            $cron->hour         = '9';
+            $cron->day          = '*';
+            $cron->month        = '*';
+            $cron->dayofweek    = '*';
+            insert_record('cron', $cron);
+        }
     }
 
     if ($oldversion < 2009031800) {
@@ -1124,44 +1126,49 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2009080600) {
-        // Delete duplicate profile views if there are any, then add an index
-        // that will prevent it happening again - but only on postgres, as it's
-        // the only db that supports partial indexes
-        if ($viewdata = get_records_sql_array("
-            SELECT owner, id
-            FROM {view}
-            WHERE owner IN (
-                SELECT owner
+        $table = new XMLDBTable('view');
+        $index = new XMLDBIndex('view_own_type_uix');
+        $index->setAttributes(XMLDB_INDEX_UNIQUE, array('owner'));
+        if (!index_exists($table, $index)) {
+            // Delete duplicate profile views if there are any, then add an index
+            // that will prevent it happening again - but only on postgres, as it's
+            // the only db that supports partial indexes
+            if ($viewdata = get_records_sql_array("
+                SELECT owner, id
                 FROM {view}
-                WHERE type = 'profile'
-                GROUP BY owner
-                HAVING COUNT(*) > 1
-            )
-            AND type = 'profile'
-            ORDER BY owner, id", array())) {
+                WHERE owner IN (
+                    SELECT owner
+                    FROM {view}
+                    WHERE type = 'profile'
+                    GROUP BY owner
+                    HAVING COUNT(*) > 1
+                )
+                AND type = 'profile'
+                ORDER BY owner, id", array())) {
 
-            require_once('view.php');
-            $seen = array();
-            foreach ($viewdata as $record) {
-                $seen[$record->owner][] = $record->id;
-            }
+                require_once('view.php');
+                $seen = array();
+                foreach ($viewdata as $record) {
+                    $seen[$record->owner][] = $record->id;
+                }
 
-            foreach ($seen as $owner => $views) {
-                // Remove the first one, which is their real profile view
-                array_shift($views);
-                foreach ($views as $viewid) {
-                    $view = new View($viewid);
-                    if ($view->get('type') == 'profile') {
-                        $view->delete();
-                    }
-                    else {
-                        log_info("Odd: upgrade to delete duplicate profile views tried to delete a normal view? (id=$viewid)");
+                foreach ($seen as $owner => $views) {
+                    // Remove the first one, which is their real profile view
+                    array_shift($views);
+                    foreach ($views as $viewid) {
+                        $view = new View($viewid);
+                        if ($view->get('type') == 'profile') {
+                            $view->delete();
+                        }
+                        else {
+                            log_info("Odd: upgrade to delete duplicate profile views tried to delete a normal view? (id=$viewid)");
+                        }
                     }
                 }
             }
-        }
-        if (is_postgres()) {
-            execute_sql("CREATE UNIQUE INDEX {view_own_type_uix} ON {view}(owner) WHERE type = 'profile'");
+            if (is_postgres()) {
+                execute_sql("CREATE UNIQUE INDEX {view_own_type_uix} ON {view}(owner) WHERE type = 'profile'");
+            }
         }
     }
 
@@ -1170,7 +1177,112 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("DELETE FROM {group_member_request} WHERE \"group\" NOT IN (SELECT id FROM {group} WHERE jointype = 'request')");
     }
 
-    if ($oldversion < 2009080800) {
+    if ($oldversion < 2009081800) {
+        $event = (object)array(
+            'name' => 'creategroup',
+        );
+        ensure_record_exists('event_type', $event, $event);
+    }
+
+    if ($oldversion < 2009082400) {
+        $table = new XMLDBTable('usr_registration');
+        $field = new XMLDBField('username');
+        drop_field($table, $field);
+        $field = new XMLDBField('salt');
+        drop_field($table, $field);
+        $field = new XMLDBField('password');
+        drop_field($table, $field);
+    }
+
+    if ($oldversion < 2009082600) {
+        $captcha = get_config('captcha_on_contact_form');
+        set_config('captchaoncontactform', (int) (is_null($captcha) || $captcha));
+        $captcha = get_config('captcha_on_register_form');
+        set_config('captchaonregisterform', (int) (is_null($captcha) || $captcha));
+    }
+
+    if ($oldversion < 2009090700) {
+        set_config('showselfsearchsideblock', 1);
+        set_config('showtagssideblock', 1);
+        set_config('tagssideblockmaxtags', 20);
+    }
+
+    if ($oldversion < 2009092100) {
+        if ($data = check_upgrades('import.file')) {
+            upgrade_plugin($data);
+        }
+        if ($data = check_upgrades('blocktype.creativecommons')) {
+            upgrade_plugin($data);
+        }
+    }
+
+    if ($oldversion < 2009092900) {
+        $event = (object)array(
+            'name' => 'deleteartefacts',
+        );
+        ensure_record_exists('event_type', $event, $event);
+    }
+
+    if ($oldversion < 2009101600) {
+        // Remove bbcode formatting from existing feedback
+        if ($records = get_records_sql_array("SELECT * FROM {view_feedback} WHERE message LIKE '%[%'", array())) {
+            foreach ($records as &$r) {
+                $r->message = parse_bbcode($r->message);
+                update_record('view_feedback', $r);
+            }
+        }
+        if ($records = get_records_sql_array("SELECT * FROM {artefact_feedback} WHERE message LIKE '%[%'", array())) {
+            foreach ($records as &$r) {
+                $r->message = parse_bbcode($r->message);
+                update_record('artefact_feedback', $r);
+            }
+        }
+    }
+
+    if ($oldversion < 2009102100) {
+        // Now the view_layout table has to have records for all column widths
+        $record = (object)array(
+            'columns' => 1,
+            'widths'  => '100',
+        );
+        insert_record('view_layout', $record);
+        $record = (object)array(
+            'columns' => 5,
+            'widths'  => '20,20,20,20,20',
+        );
+        insert_record('view_layout', $record);
+    }
+
+    if ($oldversion < 2009102200) {
+        insert_record('activity_type', (object) array('name' => 'groupmessage', 'admin' => 0, 'delay' => 0));
+    }
+
+    if ($oldversion < 2009102900) {
+        $table = new XMLDBTable('usr');
+        $field = new XMLDBField('sessionid');
+        drop_field($table, $field);
+    }
+
+    if ($oldversion < 2009110500) {
+        set_config('creategroups', 'all');
+    }
+
+    if ($oldversion < 2009110900) {
+        // Fix export cronjob so it runs 12 hours apart
+        execute_sql("UPDATE {cron} SET hour = '3,15' WHERE callfunction = 'export_cleanup_old_exports'");
+
+        // Cron job to clean old imports
+        $cron = new StdClass;
+        $cron->callfunction = 'import_cleanup_old_imports';
+        $cron->minute       = '0';
+        $cron->hour         = '4,16';
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
+        insert_record('cron', $cron);
+    }
+
+    if ($oldversion < 2009111700) {
         $table = new XMLDBTable('view');
         $field = new XMLDBField('theme');
         $field->setAttributes(XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, null);

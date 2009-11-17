@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage lang
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -58,8 +59,10 @@ $string['theyssoin'] = 'They SSO in';
 $string['authloginmsg'] = "Enter a message to display when a user tries to log in via Mahara's login form";
 $string['application'] = 'Application';
 $string['cantretrievekey'] = 'An error occurred while retrieving the public key from the remote server.<br>Please ensure that the Application and WWW Root fields are correct, and that networking is enabled on the remote host.';
+$string['ssodirection'] = 'SSO direction';
 
 $string['errorcertificateinvalidwwwroot'] = 'This certificate claims to be for %s, but you are trying to use it for %s.';
+$string['errorcouldnotgeneratenewsslkey'] = 'Could not generate a new SSL key. Are you sure that both openssl and the PHP module for openssl are installed on this machine?';
 $string['errnoauthinstances']   = 'We don\'t seem to have any authentication plugin instances configured for the host at %s';
 $string['errornotvalidsslcertificate'] = 'This is not a valid SSL Certificate';
 $string['errnoxmlrpcinstances'] = 'We don\'t seem to have any XMLRPC authentication plugin instances configured for the host at %s';
@@ -77,4 +80,5 @@ $string['requiredfields'] = 'Required profile fields';
 $string['requiredfieldsset'] = 'Required profile fields set';
 $string['noauthpluginconfigoptions'] = 'There are no configuration options associated with this plugin';
 
+$string['hostwwwrootinuse'] = 'WWW root already in use by another institution (%s)';
 ?>

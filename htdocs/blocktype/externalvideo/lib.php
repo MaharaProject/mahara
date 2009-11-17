@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage blocktype-externalvideo
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -124,8 +125,8 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
         static $embedsources = array(
             // www.youtube.com
             array(
-                'match' => '#.*youtube\.com.*v(=|\/)([a-zA-Z0-9_-]+).*#',
-                'url'   => 'http://www.youtube.com/v/$2'
+                'match' => '#.*youtube\.com.*(v|(cp))(=|\/)([a-zA-Z0-9_=-]+).*#',
+                'url'   => 'http://www.youtube.com/$1/$4'
             ),
             // video.google.com
             array(
@@ -141,7 +142,7 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
                 'match' => '#.*teachertube\.com/viewVideo\.php\?video_id=(\d+).*#',
                 'url'   => 'http://www.teachertube.com/embed/player.swf?file=http://www.teachertube.com/embedFLV.php?pg=video_$1'
             ),
-            // www.scivee.tv="
+            // www.scivee.tv
             array(
                 'match' => '#.*scivee.tv/node/([0-9]+).*#',
                 'url'   => 'http://scivee.tv/flash/embedPlayer.swf?id=$1&type=3',

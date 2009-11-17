@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage artefact-internal
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -34,6 +35,7 @@ class PluginArtefactFile extends PluginArtefact {
             'folder',
             'image',
             'profileicon',
+            'archive',
         );
     }
     
@@ -110,17 +112,6 @@ class PluginArtefactFile extends PluginArtefact {
         return strnatcasecmp($a->text, $b->text);
     }
 
-    public static function themepaths($type) {
-        static $themepaths = array(
-            'filebrowser' => array(
-                'images/file.gif',
-                'images/folder.gif',
-                'images/image.gif',
-            ),
-        );
-        return $themepaths[$type];
-    }
-
     public static function jsstrings($type) {
         static $jsstrings = array(
             'filebrowser' => array(
@@ -128,11 +119,17 @@ class PluginArtefactFile extends PluginArtefact {
                     'remove',
                 ),
                 'artefact.file' => array(
-                    'detachfilewarning',
+                    'confirmdeletefile',
+                    'confirmdeletefolder',
+                    'confirmdeletefolderandcontents',
                     'editfile',
                     'editfolder',
+                    'fileappearsinviews',
+                    'fileattached',
                     'filewithnameexists',
+                    'folderappearsinviews',
                     'foldernamerequired',
+                    'foldernotempty',
                     'nametoolong',
                     'namefieldisrequired',
                     'uploadingfiletofolder',
@@ -211,25 +208,36 @@ class PluginArtefactFile extends PluginArtefact {
     public static function can_be_disabled() {
         return false;
     }
+
+    public static function get_artefact_type_content_types() {
+        return array(
+            'file'        => array('file'),
+            'image'       => array('file', 'image'),
+            'profileicon' => array('image'),
+            'archive'     => array('file'),
+        );
+    }
+
+    public static function get_attachment_types() {
+        return array('file', 'image', 'archive');
+    }
+
+    public static function recalculate_quota() {
+        $data = get_records_sql_assoc("
+            SELECT a.owner, SUM(f.size) AS usage
+            FROM {artefact} a JOIN {artefact_file_files} f ON a.id = f.artefact
+            WHERE a.artefacttype IN ('file', 'image', 'profileicon', 'archive')
+            AND a.owner IS NOT NULL
+            GROUP BY a.owner", array()
+        );
+        if ($data) {
+            return array_map(create_function('$a', 'return $a->usage;'), $data);
+        }
+        return array();
+    }
 }
 
 abstract class ArtefactTypeFileBase extends ArtefactType {
-
-    protected $size;
-
-    // The original filename extension (when the file is first
-    // uploaded) is saved here.  This is used as a workaround for IE's
-    // detecting filetypes by extension: when the file is downloaded,
-    // the extension can be appended to the name if it's not there
-    // already.
-    protected $oldextension;
-
-    // The id used for the filename on the filesystem.  Usually this
-    // is the same as the artefact id, but it can be different if the
-    // file is a copy of another file artefact.
-    protected $fileid;
-
-    protected $filetype; // Mime type
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
@@ -237,84 +245,6 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         if (empty($this->id)) {
             $this->locked = 0;
         }
-
-        if ($this->id && ($filedata = get_record('artefact_file_files', 'artefact', $this->id))) {
-            foreach($filedata as $name => $value) {
-                if (property_exists($this, $name)) {
-                    $this->{$name} = $value;
-                }
-            }
-        }
-
-    }
-
-    public function render_self($options) {
-        $options['id'] = $this->get('id');
-
-        $downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->get('id');
-        if (isset($options['viewid'])) {
-            $downloadpath .= '&view=' . $options['viewid'];
-        }
-        $filetype = get_string($this->get('oldextension'), 'artefact.file');
-        if (substr($filetype, 0, 2) == '[[') {
-            $filetype = $this->get('oldextension') . ' ' . get_string('file', 'artefact.file');
-        }
-
-        $smarty = smarty_core();
-        $smarty->assign('iconpath', $this->get_icon($options));
-        $smarty->assign('downloadpath', $downloadpath);
-        $smarty->assign('filetype', $filetype);
-        $smarty->assign('owner', $this->display_owner());
-        $smarty->assign('created', strftime(get_string('strftimedaydatetime'), $this->get('ctime')));
-        $smarty->assign('modified', strftime(get_string('strftimedaydatetime'), $this->get('mtime')));
-        $smarty->assign('size', $this->describe_size() . ' (' . $this->get('size') . ' ' . get_string('bytes', 'artefact.file') . ')');
-
-        foreach (array('title', 'description', 'artefacttype') as $field) {
-            $smarty->assign($field, $this->get($field));
-        }
-
-        return array('html' => $smarty->fetch('artefact:file:file_render_self.tpl'), 'javascript' => '');
-    }
-
-    /**
-     * This function updates or inserts the artefact.  This involves putting
-     * some data in the artefact table (handled by parent::commit()), and then
-     * some data in the artefact_file_files table.
-     */
-    public function commit() {
-        // Just forget the whole thing when we're clean.
-        if (empty($this->dirty)) {
-            return;
-        }
-      
-        // We need to keep track of newness before and after.
-        $new = empty($this->id);
-
-        // Commit to the artefact table.
-        parent::commit();
-
-        // Reset dirtyness for the time being.
-        $this->dirty = true;
-
-        $data = (object)array(
-            'artefact'      => $this->get('id'),
-            'size'          => $this->get('size'),
-            'oldextension'  => $this->get('oldextension'),
-            'fileid'        => $this->get('fileid'),
-            'filetype'      => $this->get('filetype'),
-        );
-
-        if ($new) {
-            if ($this->get('artefacttype') != 'folder' && empty($data->fileid)) {
-                $data->fileid = $data->artefact;
-            }
-            insert_record('artefact_file_files', $data);
-        }
-        else {
-            update_record('artefact_file_files', $data, 'artefact');
-        }
-
-        $this->dirty = false;
     }
 
     public static function is_singular() {
@@ -333,18 +263,6 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $this->set('parent', $newparentid);
         $this->commit();
         return true;
-    }
-
-    public function delete() {
-        if (empty($this->id)) {
-            return; 
-        }
-        try {
-            delete_records('artefact_attachment', 'attachment', $this->id);
-        } 
-        catch ( Exception $e ) {}
-        delete_records('artefact_file_files', 'artefact', $this->id);
-        parent::delete();
     }
 
     // Check if something exists in the db with a given title and parent,
@@ -384,11 +302,12 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $select = '
             SELECT
                 a.id, a.artefacttype, a.mtime, f.size, a.title, a.description,
-                COUNT(c.id) AS childcount, COUNT (aa.artefact) AS attachcount';
+                COUNT(DISTINCT c.id) AS childcount, COUNT (DISTINCT aa.artefact) AS attachcount, COUNT(DISTINCT va.view) AS viewcount';
         $from = '
             FROM {artefact} a
                 LEFT OUTER JOIN {artefact_file_files} f ON f.artefact = a.id
                 LEFT OUTER JOIN {artefact} c ON c.parent = a.id 
+                LEFT OUTER JOIN {view_artefact} va ON va.artefact = a.id
                 LEFT OUTER JOIN {artefact_attachment} aa ON aa.attachment = a.id';
 
         if (!empty($filters['artefacttype'])) {
@@ -735,12 +654,13 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             'folder'       => (int) param_variable('folder', 0),
             'highlight'    => null,
             'browse'       => true,
-            'page'         => View::make_base_url(),
+            'page'         => '/view/blocks.php' . View::make_base_url(),
             'config'       => array(
                 'upload'          => true,
                 'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
                 'createfolder'    => false,
                 'edit'            => false,
+                'tag'             => true,
                 'select'          => true,
                 'alwaysopen'      => true,
                 'publishing'      => true,
@@ -756,13 +676,77 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
 
 class ArtefactTypeFile extends ArtefactTypeFileBase {
 
+    protected $size;
+
+    // The original filename extension (when the file is first
+    // uploaded) is saved here.  This is used as a workaround for IE's
+    // detecting filetypes by extension: when the file is downloaded,
+    // the extension can be appended to the name if it's not there
+    // already.
+    protected $oldextension;
+
+    // The id used for the filename on the filesystem.  Usually this
+    // is the same as the artefact id, but it can be different if the
+    // file is a copy of another file artefact.
+    protected $fileid;
+
+    protected $filetype; // Mime type
+
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
         
+        if ($this->id && ($filedata = get_record('artefact_file_files', 'artefact', $this->id))) {
+            foreach($filedata as $name => $value) {
+                if (property_exists($this, $name)) {
+                    $this->{$name} = $value;
+                }
+            }
+        }
+
         if (empty($this->id)) {
             $this->container = 0;
         }
+    }
 
+    /**
+     * This function updates or inserts the artefact.  This involves putting
+     * some data in the artefact table (handled by parent::commit()), and then
+     * some data in the artefact_file_files table.
+     */
+    public function commit() {
+        // Just forget the whole thing when we're clean.
+        if (empty($this->dirty)) {
+            return;
+        }
+
+        // We need to keep track of newness before and after.
+        $new = empty($this->id);
+
+        // Commit to the artefact table.
+        parent::commit();
+
+        // Reset dirtyness for the time being.
+        $this->dirty = true;
+
+        $data = (object)array(
+            'artefact'      => $this->get('id'),
+            'size'          => $this->get('size'),
+            'oldextension'  => $this->get('oldextension'),
+            'fileid'        => $this->get('fileid'),
+            'filetype'      => $this->get('filetype'),
+        );
+
+        if ($new) {
+            if (empty($data->fileid)) {
+                $data->fileid = $data->artefact;
+            }
+            insert_record('artefact_file_files', $data);
+        }
+        else {
+            update_record('artefact_file_files', $data, 'artefact');
+        }
+
+        $this->dirty = false;
     }
 
     public static function get_file_directory($id) {
@@ -787,6 +771,9 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             $data->height   = $imageinfo[1];
             return new ArtefactTypeImage(0, $data);
         }
+        if ($archive = ArtefactTypeArchive::new_archive($path, $data)) {
+            return $archive;
+        }
         return new ArtefactTypeFile(0, $data);
     }
 
@@ -794,15 +781,20 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      * Moves a file into the myfiles area.
      * Takes the name of a file outside the myfiles area.
      * Returns a boolean indicating success or failure.
+     *
+     * Note: this method is crappy because it returns false instead of throwing 
+     * exceptions. It's not used in many places, and should probably die in a 
+     * future version. So think twice before using it :)
      */
     public static function save_file($pathname, $data, User &$user=null, $outsidedataroot=false) {
         $dataroot = get_config('dataroot');
         if (!$outsidedataroot) {
             $pathname = $dataroot . $pathname;
         }
-        if (!$size = filesize($pathname)) {
+        if (!file_exists($pathname) || !is_readable($pathname)) {
             return false;
         }
+        $size = filesize($pathname);
         $f = self::new_file($pathname, $data);
         $f->set('size', $size);
         // @todo: Set mime type! (and old extension)
@@ -870,7 +862,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             $f->delete();
             throw new UploadException($error);
         }
-        else if ($owner) {
+        else if (isset($owner)) {
             $owner->quota_add($size);
             $owner->commit();
         }
@@ -889,6 +881,34 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return $name . (substr($name, -1) == '.' ? '' : '.') . $extn;
     }
 
+    public function render_self($options) {
+        $options['id'] = $this->get('id');
+
+        $downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->get('id');
+        if (isset($options['viewid'])) {
+            $downloadpath .= '&view=' . $options['viewid'];
+        }
+        $filetype = get_string($this->get('oldextension'), 'artefact.file');
+        if (substr($filetype, 0, 2) == '[[') {
+            $filetype = $this->get('oldextension') . ' ' . get_string('file', 'artefact.file');
+        }
+
+        $smarty = smarty_core();
+        $smarty->assign('iconpath', $this->get_icon($options));
+        $smarty->assign('downloadpath', $downloadpath);
+        $smarty->assign('filetype', $filetype);
+        $smarty->assign('ownername', $this->display_owner());
+        $smarty->assign('created', strftime(get_string('strftimedaydatetime'), $this->get('ctime')));
+        $smarty->assign('modified', strftime(get_string('strftimedaydatetime'), $this->get('mtime')));
+        $smarty->assign('size', $this->describe_size() . ' (' . $this->get('size') . ' ' . get_string('bytes', 'artefact.file') . ')');
+
+        foreach (array('title', 'description', 'artefacttype', 'owner', 'tags') as $field) {
+            $smarty->assign($field, $this->get($field));
+        }
+
+        return array('html' => $smarty->fetch('artefact:file:file_render_self.tpl'), 'javascript' => '');
+    }
+
 
     public static function get_admin_files($public) {
         $pubfolder = ArtefactTypeFolder::admin_public_folder_id();
@@ -896,7 +916,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             SELECT
                 a.id, a.title, a.parent, a.artefacttype
             FROM {artefact} a
-                INNER JOIN {artefact_file_files} f ON f.artefact = a.id
+                LEFT OUTER JOIN {artefact_file_files} f ON f.artefact = a.id
             WHERE a.institution = 'mahara'", array());
 
         $files = array();
@@ -942,7 +962,68 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 $USER->commit();
             }
         }
+
+        delete_records('artefact_attachment', 'attachment', $this->id);
+        delete_records('artefact_file_files', 'artefact', $this->id);
         parent::delete();
+    }
+
+    public static function bulk_delete($artefactids) {
+        global $USER;
+
+        if (empty($artefactids)) {
+            return;
+        }
+
+        $idstr = join(',', $artefactids);
+
+        db_begin();
+        // Get the size of all the files we're about to delete that belong to
+        // the user.
+        $totalsize = get_field_sql('
+            SELECT SUM(size)
+            FROM {artefact_file_files} f JOIN {artefact} a ON f.artefact = a.id
+            WHERE a.owner = ? AND f.artefact IN (' . $idstr . ')',
+            array($USER->get('id'))
+        );
+
+        // Get all fileids so that we can delete the files on disk
+        $fileids = get_records_select_assoc('artefact_file_files', 'artefact IN (' . $idstr . ')', array());
+
+        $fileidcounts = get_records_sql_assoc('
+            SELECT fileid, COUNT(fileid) AS fileidcount
+            FROM {artefact_file_files}
+            WHERE artefact IN (' . $idstr . ')
+            GROUP BY fileid',
+            null
+        );
+
+        // The current rule is that file deletion should be logged in the artefact_log table
+        // only for group-owned files.  To save time we will be slightly naughty here and
+        // log deletion for all these files if at least one is group-owned.
+        $log = (bool) count_records_select('artefact', 'id IN (' . $idstr . ') AND "group" IS NOT NULL');
+
+        set_field_select('view_feedback', 'attachment', null, 'attachment IN (' . $idstr . ')', array());
+        delete_records_select('artefact_attachment', 'attachment IN (' . $idstr . ')');
+        delete_records_select('artefact_file_files', 'artefact IN (' . $idstr . ')');
+        parent::bulk_delete($artefactids, $log);
+
+        foreach ($fileids as $r) {
+            // Delete the file on disk if there's only one artefact left pointing to it
+            if ($fileidcounts[$r->fileid]->fileidcount == 1) {
+                $file = get_config('dataroot') . self::get_file_directory($r->fileid) . '/' .  $r->fileid;
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+            $fileidcounts[$r->fileid]->fileidcount--;
+        }
+
+        if ($totalsize) {
+            $USER->quota_remove($totalsize);
+            $USER->commit();
+        }
+        db_commit();
     }
 
     public static function has_config() {
@@ -1139,6 +1220,19 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
     }
 
+    public function delete() {
+        // ArtefactType::delete() deletes all the child artefacts one by one.
+        // If the folder contains a lot of artefacts, it's too slow to do this
+        // but for very small directories it seems to be slightly faster.
+        $descendants = artefact_get_descendants(array($this->id));
+        if (count($descendants) < 10) {
+            parent::delete();
+        }
+        else {
+            ArtefactType::delete_by_artefacttype($descendants);
+        }
+    }
+
     public function folder_contents() {
         return get_records_array('artefact', 'parent', $this->get('id'));
     }
@@ -1147,6 +1241,8 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         $smarty = smarty_core();
         $smarty->assign('title', $this->get('title'));
         $smarty->assign('description', $this->get('description'));
+        $smarty->assign('tags', $this->get('tags'));
+        $smarty->assign('owner', $this->get('owner'));
         $smarty->assign('viewid', isset($options['viewid']) ? $options['viewid'] : 0);
         $smarty->assign('simpledisplay', isset($options['simpledisplay']) ? $options['simpledisplay'] : false);
 
@@ -1187,16 +1283,13 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         // name of the directory uses the site language rather than
         // the language of the admin who first creates it.
         $name = get_string_from_language(get_config('lang'), 'adminpublicdirname', 'admin');
-        $folderid = get_field_sql("
-           SELECT
-             a.id
-           FROM {artefact} a
-             INNER JOIN {artefact_file_files} f ON a.id = f.artefact
-           WHERE a.title = ?
-             AND a.artefacttype = ?
-             AND a.institution = 'mahara'
-             AND a.parent IS NULL", array($name, 'folder'));
-        if (!$folderid) {
+        $folders = get_records_select_array(
+            'artefact',
+            'title = ? AND artefacttype = ? AND institution = ? AND parent IS NULL',
+            array($name, 'folder', 'mahara'),
+            'id', 'id', 0, 1
+        );
+        if (!$folders) {
             $description = get_string_from_language(get_config('lang'), 'adminpublicdirdescription', 'admin');
             $data = (object) array('title' => $name,
                                    'description' => $description,
@@ -1204,26 +1297,23 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             $f = new ArtefactTypeFolder(0, $data);
             $f->commit();
             $folderid = $f->get('id');
+            return $folderid;
         }
-        return $folderid;
+        return $folders[0]->id;
     }
 
     public static function change_public_folder_name($oldlang, $newlang) {
         $oldname = get_string_from_language($oldlang, 'adminpublicdirname', 'admin');
-        $folderid = get_field_sql("
-           SELECT
-             a.id
-           FROM {artefact} a
-             INNER JOIN {artefact_file_files} f ON a.id = f.artefact
-           WHERE a.title = ?
-             AND a.artefacttype = ?
-             AND a.institution = 'mahara'
-             AND a.parent IS NULL", array($oldname, 'folder'));
-
-        if (!$folderid) {
+        $folders = get_records_select_array(
+            'artefact',
+            'title = ? AND artefacttype = ? AND institution = ? AND parent IS NULL',
+            array($oldname, 'folder', 'mahara'),
+            'id', 'id', 0, 1
+        );
+        if (!$folders) {
             return;
         }
-
+        $folderid = $folders[0]->id;
         $name = get_string_from_language($newlang, 'adminpublicdirname', 'admin');
         $description = get_string_from_language($newlang, 'adminpublicdirdescription', 'admin');
         if (!empty($name)) {
@@ -1431,6 +1521,16 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         parent::delete();
     }
 
+    public static function bulk_delete($artefactids) {
+        if (empty($artefactids)) {
+            return;
+        }
+        db_begin();
+        delete_records_select('artefact_file_image', 'artefact IN (' . join(',', $artefactids) . ')');
+        parent::bulk_delete($artefactids);
+        db_commit();
+    }
+
     public function render_self($options) {
         $result = parent::render_self($options);
         $result['html'] = '<div class="fr filedata-icon" style="text-align: center;"><h4>' . get_string('Preview', 'artefact.file') . '</h4><a href="'
@@ -1474,16 +1574,318 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
         return true;
     }
 
-    public static function get_quota_usage($artefact) {
-        return filesize(get_config('dataroot') . 'artefact/file/profileicons/originals/'
-            . ($artefact % 256) . '/' . $artefact);
-    }
-
     public function default_parent_for_copy(&$view, &$template, $artefactstoignore) {
         return null;
     }
 
 }
 
+class ArtefactTypeArchive extends ArtefactTypeFile {
+
+    private $archivetype;
+    private $handle;
+    private $info;
+    private $data = array();
+
+    public function __construct($id = 0, $data = null) {
+        parent::__construct($id, $data);
+
+        if ($this->id) {
+            $descriptions = self::archive_file_descriptions();
+            $validtypes = self::archive_mime_types();
+            $this->archivetype = $descriptions[$validtypes[$this->filetype]->description];
+        }
+    }
+
+    public static function new_archive($path, $data) {
+        if (!isset($data->filetype)) {
+            return self::archive_from_file($path, $data);
+        }
+        $descriptions = self::archive_file_descriptions();
+        $validtypes = self::archive_mime_types();
+        if (isset($validtypes[$data->filetype])) {
+            return self::archive_from_file($path, $data, $descriptions[$validtypes[$data->filetype]->description]);
+        }
+        return false;
+    }
+
+    public static function is_zip($path) {
+        if (function_exists('zip_read')) {
+            $zip = zip_open($path);
+            if (is_resource($zip)) {
+                zip_close($zip);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static function is_tar($path) {
+        require_once('Archive/Tar.php');
+        if (!$tar = new Archive_Tar($path)) {
+            return false;
+        }
+        $list = $tar->listContent();
+        if (empty($list)) {
+            return false;
+        }
+        switch ($tar->_compress_type) {
+        case 'gz': return 'application/x-gzip';
+        case 'bz2': return 'application/x-bzip2';
+        case 'none': return 'application/x-tar';
+        }
+        return false;
+    }
+
+    public static function archive_from_file($path, $data, $type=null) {
+        if (is_null($type)) {
+            if (self::is_zip($path)) {
+                $data->filetype = 'application/zip';
+                $data->archivetype = 'zip';
+                return new ArtefactTypeArchive(0, $data);
+            }
+            if ($data->filetype = self::is_tar($path)) {
+                $data->archivetype = 'tar';
+                return new ArtefactTypeArchive(0, $data);
+            }
+        }
+        else if ($type == 'zip' && self::is_zip($path) || $type == 'tar' && self::is_tar($path)) {
+            $data->archivetype = $type;
+            return new ArtefactTypeArchive(0, $data);
+        }
+        return false;
+    }
+
+    public static function archive_file_descriptions() {
+        static $descriptions = null;
+        if (is_null($descriptions)) {
+            $descriptions = array('tar' => 'tar', 'gz' => 'tar', 'tgz' => 'tar', 'bz2' => 'tar');
+            if (function_exists('zip_open')) {
+                $descriptions['zip'] = 'zip';
+            }
+        }
+        return $descriptions;
+    }
+
+    public static function archive_mime_types() {
+        static $mimetypes = null;
+        if (is_null($mimetypes)) {
+            $descriptions = self::archive_file_descriptions();
+            $mimetypes = get_records_select_assoc('artefact_file_mime_types', 'description IN (' . join(',', array_map('db_quote', array_keys($descriptions))) . ')');
+        }
+        return $mimetypes;
+    }
+
+    public static function get_icon($options=null) {
+        global $THEME;
+        return $THEME->get_url('images/archive.gif');
+    }
+
+    public function open_archive() {
+        if ($this->archivetype == 'zip') {
+            $this->handle = zip_open($this->get_path());
+            if (!is_resource($this->handle)) {
+                $this->handle = null;
+                throw new NotFoundException();
+            }
+        }
+        else if ($this->archivetype == 'tar') {
+            require_once('Archive/Tar.php');
+            if (!$this->handle = new Archive_Tar($this->get_path())) {
+                throw new NotFoundException();
+            }
+        }
+    }
+
+    public function set_archive_info($zipinfo) {
+        $this->info = $zipinfo;
+    }
+
+    public function read_archive() {
+        if (!$this->handle) {
+            $this->open_archive();
+        }
+        if ($this->info) {
+            return $this->info;
+        }
+        $this->info = (object) array(
+            'files'     => 0,
+            'folders'   => 0,
+            'totalsize' => 0,
+            'names'     => array(),
+        );
+        if ($this->archivetype == 'zip') {
+            while ($entry = zip_read($this->handle)) {
+                $name = zip_entry_name($entry);
+                $this->info->names[] = $name;
+                if (substr($name, -1) == '/') {
+                    $this->info->folders++;
+                }
+                else {
+                    $this->info->files++;
+                    if ($size = zip_entry_filesize($entry)) {
+                        $this->info->totalsize += $size;
+                    }
+                }
+            }
+        }
+        else if ($this->archivetype == 'tar') {
+            $foldernames = array();
+            $list = $this->handle->listContent();
+            if (empty($list)) {
+                throw new SystemException("Unknown archive type");
+            }
+
+            foreach ($list as $entry) {
+                $path = split('/', $entry['filename']);
+                if ($isfolder = substr($entry['filename'], -1) == '/') {
+                    array_pop($path);
+                }
+
+                $folder = '';
+                for ($i = 0; $i < count($path) - 1; $i++) {
+                    $folder .= $path[$i] . '/';
+                    if (!isset($foldernames[$folder])) {
+                        $foldernames[$folder] = 1;
+                        $this->info->names[] = $folder;
+                        $this->info->folders++;
+                    }
+                }
+
+                if (!$isfolder) {
+                    $this->info->names[] = $entry['filename'];
+                    $this->info->files++;
+                    $this->info->totalsize += $entry['size'];
+                }
+            }
+        }
+        else {
+            throw new SystemException("Unknown archive type");
+        }
+        $this->info->displaysize = ArtefactTypeFile::short_size($this->info->totalsize);
+        return $this->info;
+    }
+
+    public function unzip_directory_name() {
+        if (isset($this->data['unzipdir'])) {
+            return $this->data['unzipdir'];
+        }
+        $folderdata = ArtefactTypeFileBase::artefactchooser_folder_data($this);
+        $parent = $this->get('parent');
+        $strpath = ArtefactTypeFileBase::get_full_path($parent, $folderdata->data);
+        $extn = $this->get('oldextension');
+        $name = $this->get('title');
+        if (substr($name, -1-strlen($extn)) == '.' . $extn) {
+            $name = substr($name, 0, strlen($name)-1-strlen($extn));
+        }
+        $name = ArtefactTypeFileBase::get_new_file_title($name, $parent, $this->get('owner'), $this->get('group'), $this->get('institution'));
+        $this->data['unzipdir'] = array('basename' => $name, 'fullname' => $strpath . $name);
+        return $this->data['unzipdir'];
+    }
+
+    public function create_base_folder() {
+        $foldername = $this->unzip_directory_name();
+        $foldername = $foldername['basename'];
+
+        $data = (object) array(
+            'owner' => $this->get('owner'),
+            'group' => $this->get('group'),
+            'institution' => $this->get('institution'),
+            'title' => $foldername,
+            'description' => get_string('filesextractedfromarchive', 'artefact.file'),
+            'parent' => $this->get('parent'),
+        );
+        $basefolder = new ArtefactTypeFolder(0, $data);
+        $basefolder->commit();
+        return $basefolder->get('id');
+    }
+
+    public function create_folder($folder) {
+        $newfolder = new ArtefactTypeFolder(0, $this->data['template']);
+        $newfolder->commit();
+        $folderindex = ($folder == '.' ? '' : ($folder . '/')) . $this->data['template']->title;
+        $this->data['folderids'][$folderindex] = $newfolder->get('id');
+        $this->data['folderscreated']++;
+    }
+
+    public function extract($progresscallback=null) {
+        global $USER;
+
+        $quotauser = $this->owner ? $USER : null;
+
+        $this->data['basefolderid'] = $this->create_base_folder();
+        $this->data['folderids'] = array('.' => $this->data['basefolderid']);
+        $this->data['folderscreated'] = 1;
+        $this->data['filescreated'] = 0;
+        $this->data['template'] = (object) array(
+            'owner' => $this->get('owner'),
+            'group' => $this->get('group'),
+            'institution' => $this->get('institution'),
+        );
+
+        $tempdir = get_config('dataroot') . 'artefact/file/temp';
+        check_dir_exists($tempdir);
+
+        $this->read_archive();
+
+        if ($this->archivetype == 'tar') {
+
+            // Untar everything into a temp directory first
+            $tempsubdir = tempnam($tempdir, '');
+            unlink($tempsubdir);
+            mkdir($tempsubdir);
+            if (!$this->handle->extract($tempsubdir)) {
+                throw new SystemException("Unable to extract archive into $tempsubdir");
+            }
+
+            $i = 0;
+            foreach ($this->info->names as $name) {
+                $folder = dirname($name);
+                $this->data['template']->parent = $this->data['folderids'][$folder];
+                $this->data['template']->title = basename($name);
+                if (substr($name, -1) == '/') {
+                    $this->create_folder($folder);
+                }
+                else {
+                    ArtefactTypeFile::save_file($tempsubdir . '/' . $name, $this->data['template'], $quotauser, true);
+                    $this->data['filescreated']++;
+                }
+                if ($progresscallback && ++$i % 5 == 0) {
+                    call_user_func_array($progresscallback, $i);
+                }
+            }
+
+        } else if ($this->archivetype == 'zip') {
+
+            $tempfile = tempnam($tempdir, '');
+            $i = 0;
+
+            while ($entry = zip_read($this->handle)) {
+                $name = zip_entry_name($entry);
+                $folder = dirname($name);
+                $this->data['template']->parent = $this->data['folderids'][$folder];
+                $this->data['template']->title = basename($name);
+                if (substr($name, -1) == '/') {
+                    $this->create_folder($folder);
+                }
+                else {
+                    $h = fopen($tempfile, 'w');
+                    $size = zip_entry_filesize($entry);
+                    $contents = zip_entry_read($entry, $size);
+                    fwrite($h, $contents);
+                    fclose($h);
+
+                    ArtefactTypeFile::save_file($tempfile, $this->data['template'], $quotauser, true);
+                    $this->data['filescreated']++;
+                }
+                if ($progresscallback && ++$i % 5 == 0) {
+                    call_user_func_array($progresscallback, $i);
+                }
+            }
+        }
+        return $this->data;
+    }
+
+}
 
 ?>

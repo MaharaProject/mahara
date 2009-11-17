@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,14 +21,15 @@
  * @subpackage export-leap
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 defined('INTERNAL') || die();
 
 /**
-* LEAP export plugin.  See http://wiki.cetis.ac.uk/LEAP2A_specification
+* LEAP export plugin.  See http://wiki.cetis.ac.uk/LEAP2A_specification and
+* http://wiki.mahara.org/Developer_Area/Import%2f%2fExport/LEAP_Export
 */
 class PluginExportLeap extends PluginExport {
 
@@ -106,7 +108,7 @@ class PluginExportLeap extends PluginExport {
         $outputfilter = LeapExportOutputFilter::singleton();
         $outputfilter->set_artefactids(array_keys($this->artefacts));
 
-        $this->notify_progress_callback(15, 'Setup complete');
+        $this->notify_progress_callback(5, get_string('setupcomplete', 'export'));
     }
 
     public static function get_title() {
@@ -123,12 +125,12 @@ class PluginExportLeap extends PluginExport {
     public function export() {
         // the xml stuff
         $this->export_header();
-        $this->notify_progress_callback(20, 'Exporting Views');
+        $this->notify_progress_callback(10, get_string('exportingviews', 'export'));
         $this->export_views();
-        $this->notify_progress_callback(30, 'Exporting artefacts');
+        $this->notify_progress_callback(50, get_string('exportingartefacts', 'export'));
         $this->export_artefacts();
 
-        $this->notify_progress_callback(70, 'Exporting artefact plugin data');
+        $this->notify_progress_callback(80, get_string('exportingartefactplugindata', 'export'));
         $internal = null;
         foreach ($this->specialcases as $plugin => $artefacts) {
             if ($plugin == 'internal') {
@@ -144,10 +146,10 @@ class PluginExportLeap extends PluginExport {
             $pluginexport = new LeapExportInternal($this, $internal);
             $this->xml .= $pluginexport->get_export_xml();
         }
-        $this->notify_progress_callback(75, 'Exporting footer');
+        $this->notify_progress_callback(85, get_string('exportingfooter', 'export'));
 
         $this->export_footer();
-        $this->notify_progress_callback(80, 'Writing files');
+        $this->notify_progress_callback(90, get_string('writingfiles', 'export'));
 
         // write out xml to a file
         if (!file_put_contents($this->exportdir . $this->leapfile, $this->xml)) {
@@ -160,7 +162,7 @@ class PluginExportLeap extends PluginExport {
             $desiredname  = $fileinfo->name;
             copy($existingfile, $this->exportdir . $this->filedir . $id . '-' . $desiredname);
         }
-        $this->notify_progress_callback(85, 'Creating zipfile');
+        $this->notify_progress_callback(95, get_string('creatingzipfile', 'export'));
 
         // zip everything up
         $cwd = getcwd();
@@ -178,7 +180,7 @@ class PluginExportLeap extends PluginExport {
         if ($returnvar != 0) {
             throw new SystemException('Failed to zip the export file: return code ' . $returnvar);
         }
-        $this->notify_progress_callback(100, 'Done');
+        $this->notify_progress_callback(100, get_string('Done', 'export'));
         return $this->zipfile;
     }
 
@@ -204,25 +206,85 @@ class PluginExportLeap extends PluginExport {
      * Export the views
      */
     private function export_views() {
-        foreach ($this->get('views') as $view) {
-            $this->smarty->assign('title', $view->get('title'));
-            $this->smarty->assign('id', 'portfolio:view' . $view->get('id'));
-            $this->smarty->assign('updated', self::format_rfc3339_date(strtotime($view->get('mtime'))));
-            $this->smarty->assign('created', self::format_rfc3339_date(strtotime($view->get('ctime'))));
-            // TODO this is wrong - view description is HTML, summary should be text
-            //$this->smarty->assign('summary', $view->get('description'));
+        $layouts = get_records_assoc('view_layout');
+
+        $progressstart = 10;
+        $progressend   = 50;
+        $views = $this->get('views');
+        $viewcount = count($views);
+        $i = 0;
+        foreach ($views as $view) {
+            $percent = intval($progressstart + ($i++ / $viewcount) * ($progressend - $progressstart));
+            $this->notify_progress_callback($percent, get_string('exportingviewsprogress', 'export', $i, $viewcount));
+
+            $config = $this->rewrite_artefact_ids($view->export_config('leap'));
+            $this->smarty->assign('title',       $config['title']);
+            $this->smarty->assign('id',          'portfolio:view' . $view->get('id'));
+            $this->smarty->assign('updated',     self::format_rfc3339_date(strtotime($view->get('mtime'))));
+            $this->smarty->assign('created',     self::format_rfc3339_date(strtotime($view->get('ctime'))));
+            $this->smarty->assign('summarytype', 'html');
+            $this->smarty->assign('summary',     $config['description']);
             $this->smarty->assign('contenttype', 'html');
-            $this->smarty->assign('content', $view->build_columns());
-            $this->smarty->assign('leaptype', 'selection');
-            $this->smarty->assign('categories', array(
+            $this->smarty->assign('content',     $view->build_columns());
+            $this->smarty->assign('viewdata',    $config['columns']);
+            $this->smarty->assign('layout',      $view->get_layout()->widths);
+            $this->smarty->assign('type',        $config['type']);
+            $ownerformat = ($config['ownerformat']) ? $config['ownerformat'] : FORMAT_NAME_DISPLAYNAME;
+            $this->smarty->assign('ownerformat', $ownerformat);
+            $this->smarty->assign('leaptype',    'selection');
+
+            $tags = array();
+            if ($config['tags']) {
+                $tags = array_map(create_function('$a',
+                    'return array(
+                        \'term\' => LeapExportElement::normalise_tag($a),
+                        \'label\' => $a
+                    );'), $config['tags']);
+            }
+            $this->smarty->assign('categories', array_merge(array(
                 array(
                     'scheme' => 'selection_type',
                     'term' => 'Webpage',
                 )
-            ));
+            ), $tags));
+
             $this->smarty->assign('links', $this->get_links_for_view($view->get('id')));
-            $this->xml .= $this->smarty->fetch("export:leap:entry.tpl");
+            $this->xml .= $this->smarty->fetch("export:leap:view.tpl");
         }
+    }
+
+    /**
+     * Looks at all blockinstance configurations, and rewrites the artefact IDs
+     * found to be IDs in the generated export.
+     *
+     * This only works for the 'artefactid' and 'artefactids' fields, which is
+     * somewhat of a limitation, as it makes it hard for blocks that want to
+     * store artefact ids in other configdata fields. We might have to address
+     * this limitation later.
+     */
+    private function rewrite_artefact_ids($config) {
+        foreach ($config['columns'] as &$column) {
+            foreach ($column as &$blockinstance) {
+                if (isset($blockinstance['config']['artefactid'])) {
+                    $id = json_decode($blockinstance['config']['artefactid']);
+                    if ($id[0] != null) {
+                        $blockinstance['config']['artefactid'] = json_encode(array('portfolio:artefact' . $id[0]));
+                    }
+                    else {
+                        $blockinstance['config']['artefactid'] = null;
+                    }
+                }
+                else if (isset($blockinstance['config']['artefactids'])) {
+                    $ids = json_decode($blockinstance['config']['artefactids']);
+                    $blockinstance['config']['artefactids'] = json_encode(array(array_map(array($this, 'prepend_artefact_identifier'), $ids[0])));
+                }
+            }
+        }
+        return $config;
+    }
+
+    private function prepend_artefact_identifier($artefactid) {
+        return 'portfolio:artefact' . $artefactid;
     }
 
     private function get_links_for_view($viewid) {
@@ -260,40 +322,38 @@ class PluginExportLeap extends PluginExport {
      * Export the artefacts
      */
     private function export_artefacts() {
-        $progressstart = 30;
-        $progressend   = 70;
+        $progressstart = 50;
+        $progressend   = 80;
         $artefacts     = $this->get('artefacts');
         $artefactcount = count($artefacts);
         $i = 0;
         foreach ($artefacts as $artefact) {
-            if ($i++ % 10 == 1) {
+            if ($i++ % 3 == 0) {
                 $percent = intval($progressstart + ($i / $artefactcount) * ($progressend - $progressstart));
-                $this->notify_progress_callback($percent, "Exporting artefacts: $i/$artefactcount");
-            };
+                $this->notify_progress_callback($percent, get_string('exportingartefactsprogress', 'export', $i, $artefactcount));
+            }
             $element = null;
             // go see if we have to do anything special for this artefact type.
-            try {
-                safe_require('export', 'leap/' . $artefact->get_plugin_name());
+            if (safe_require('export', 'leap/' . $artefact->get_plugin_name(), 'lib.php', 'require_once', true)) {
                 $classname = 'LeapExportElement' . ucfirst($artefact->get('artefacttype'));
                 if (class_exists($classname)) {
                     $element = new $classname($artefact, $this);
                 }
-            }
-            catch (Exception $e) { }// overriding this is not required.
 
-            if (is_null($element)) {
-                $element = new LeapExportElement($artefact, $this);
+                if (is_null($element)) {
+                    $element = new LeapExportElement($artefact, $this);
+                }
+                if (array_key_exists($artefact->get_plugin_name(), $this->specialcases) && !$element->override_plugin_specialcase()) {
+                    $this->specialcases[$artefact->get_plugin_name()][] = $artefact;
+                    continue;
+                }
+                if (!$element->is_leap()) {
+                    continue;
+                }
+                $element->add_attachments();
+                $element->assign_smarty_vars();
+                $this->xml .= $element->get_export_xml();
             }
-            if (array_key_exists($artefact->get_plugin_name(), $this->specialcases) && !$element->override_plugin_specialcase()) {
-                $this->specialcases[$artefact->get_plugin_name()][] = $artefact;
-                continue;
-            }
-            if (!$element->is_leap()) {
-                continue;
-            }
-            $element->add_attachments();
-            $element->assign_smarty_vars();
-            $this->xml .= $element->get_export_xml();
         }
     }
 
@@ -380,9 +440,9 @@ class LeapExportElement {
     * constructor.
     *
     * @param ArtefactType $artefact artefact this element represents
-    * @param LeapExporter $exporter the exporter object
+    * @param PluginExportLeap $exporter the exporter object
     */
-    public function __construct(ArtefactType $artefact, LeapExporter $exporter) {
+    public function __construct(ArtefactType $artefact=null, PluginExportLeap $exporter=null) {
         $this->artefact = $artefact;
         $this->exporter = $exporter;
         $this->smarty   = smarty_core();
@@ -401,6 +461,15 @@ class LeapExportElement {
     * assign the smarty vars used in this template
     */
     public function assign_smarty_vars() {
+        if (!($this->artefact instanceof ArtefactType)) {
+            // If you're seeing this error, this means you have subclassed
+            // LeapExportElement and are using it to represent something more
+            // than just one artefact. In this case, you must override this
+            // method.
+            throw new ImportException("LeapExportElement::assign_smarty_vars was called with null artefact. "
+                . "If you are using LeapExportElement as a dummy class for exporting more than one artefact, "
+                . "you must override assign_smarty_vars yourself.");
+        }
         $this->smarty->assign('artefacttype', $this->artefact->get('artefacttype'));
         $this->smarty->assign('artefactplugin', $this->artefact->get_plugin_name());
         $this->smarty->assign('title', $this->artefact->get('title'));
@@ -465,7 +534,7 @@ class LeapExportElement {
     * @param keyed array $extras any extra bits to go in (eg display_order => 1)
     */
     public function add_generic_link($id, $rel, $extras=null) {
-        if ($rel != 'relation') {
+        if (!in_array($rel, array('related', 'alternate', 'enclosure'))) {
             $rel = 'leap:' . $rel;
         }
         $link = array(
@@ -573,7 +642,7 @@ class LeapExportElement {
     *
     * @return string
     */
-    public function get_view_relationship(View $view) {
+    public function get_view_relationship($viewid) {
         return 'is_part_of';
     }
 
@@ -666,7 +735,7 @@ abstract class LeapExportArtefactPlugin {
     protected $exporter;
     protected $artefacts;
 
-    public function __construct(LeapExporter $exporter, array $artefacts) {
+    public function __construct(PluginExportLeap $exporter, array $artefacts) {
         $this->exporter = $exporter;
         $this->artefacts = $artefacts;
     }
@@ -682,9 +751,6 @@ abstract class LeapExportArtefactPlugin {
 
     /**
     * export xml for the subclass.
-    *
-    * @param LeapExporter $exporter the exporter object. Can be used to fetch smarty object.
-    * @param array $artefacts the array of selected artefacts that belong to this plugin
     *
     * @return XML string
     */
@@ -734,8 +800,8 @@ class LeapExportOutputFilter {
         // Links to download files
         $html = preg_replace_callback(
             array(
-                '#<(a[^>]+)href="(' . preg_quote(get_config('wwwroot')) . ')?/?artefact/file/download\.php\?file=(\d+)(&amp;view=\d+)?([^>]*)>#',
-                '#<(img[^>]+)src="(' . preg_quote(get_config('wwwroot')) . ')?/?artefact/file/download\.php\?file=(\d+)(&amp;view=\d+)?([^>]*)>#',
+                '#<(a[^>]+)href="(' . preg_quote(get_config('wwwroot')) . ')?/?artefact/file/download\.php\?file=(\d+)(&amp;view=\d+)?"([^>]*)>#',
+                '#<(img[^>]+)src="(' . preg_quote(get_config('wwwroot')) . ')?/?artefact/file/download\.php\?file=(\d+)(&amp;view=\d+)?"([^>]*)>#',
             ),
             array($this, 'replace_download_link'),
             $html

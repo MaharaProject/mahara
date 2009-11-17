@@ -19,17 +19,20 @@
             <table id="myviews" class="fullwidth listing">
                 <tbody>
 {foreach from=$views item=view}
-                    <tr class="{cycle values=r0,r1}">
+                    <tr class="{cycle values='r0,r1'}">
                         <td><div class="rel">
                             <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a></h3>
 {if $view.submittedto}
                             <div class="vi submitted-viewitem">{$view.submittedto}</div>
 {else}
-                            <div class="rbuttons"><a href="{$WWWROOT}view/delete.php?id={$view.id}" class="btn-del">{str tag="deletethisview" section="view"}</a></div>
+                            {if $view.removable}<div class="rbuttons"><a href="{$WWWROOT}view/delete.php?id={$view.id}" class="btn-del">{str tag="deletethisview" section="view"}</a></div>{/if}
                             <div class="vi">
                                 <h4><a href="{$WWWROOT}view/edit.php?id={$view.id}" id="editviewdetails">{str tag="editviewnameanddescription" section="view"}</a></h4>
 {if $view.description}
                                 <div class="videsc">{$view.description}</div>
+{/if}
+{if $view.tags}
+                                <div class="tags">{str tag=tags}: {list_tags owner=$view.owner tags=$view.tags}</div>
 {/if}
                             </div>
                             <div class="vi">
@@ -55,7 +58,7 @@
 {elseif $accessgroup.accesstype == 'friends'}
     <a href="{$WWWROOT}user/myfriends.php" id="link-myfriends">{str tag="friendslower" section="view"}</a>
 {elseif $accessgroup.accesstype == 'group'}
-    <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name|escape}</a>{if !empty($accessgroup.role)} ({$accessgroup.roledisplay}){/if}
+    <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name|escape}</a>{if $accessgroup.role} ({$accessgroup.roledisplay}){/if}
 {elseif $accessgroup.accesstype == 'user'}
     <a href="{$WWWROOT}user/view.php?id={$accessgroup.id}">{$accessgroup.id|display_name|escape}</a>
 {/if}{/strip}{if !$smarty.foreach.artefacts.last}, {/if}

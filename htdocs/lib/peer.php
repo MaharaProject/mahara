@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,7 @@
  * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -171,7 +172,6 @@ class Peer {
 
             // Couldn't find the IP address?
             if ($ipaddress === $hostname && !preg_match('/^\d+\.\d+\.\d+.\d+$/',$hostname)) {
-                $this->error[] = array('code' => 2, 'text' => get_string("noaddressforhost", 'mnet'));
                 throw new ParamOutOfRangeException('Could not find IP address for host: '.addslashes($hostname));
                 return false;
             }
@@ -241,10 +241,10 @@ class Peer {
                         throw new RemoteServerException('Networking is disabled on the host at '.$this->wwwroot.'.');
                     }
                     else {
-                        throw new RemoteServerException('Error retrieving public key, failed with error code: '. $errcode);
+                        throw new RemoteServerException('Error retrieving public key, failed with error code ' . $errcode . ': ' . $e->getMessage());
                     }
                 } catch (Exception $e) {
-                    throw new RemoteServerException('Error retrieving public key ');
+                    throw new RemoteServerException('Error retrieving public key: ' . $e->getMessage());
                 }
             } else {
                 $this->publickey       = new PublicKey($pubkey, $this->wwwroot);
