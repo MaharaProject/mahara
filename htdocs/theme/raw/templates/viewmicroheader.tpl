@@ -14,11 +14,16 @@
         </div>
         <div class="lbuttons">
           {if $backurl}<a class="btn-reply" href="{$backurl}">{str tag=back}</a>&nbsp;{/if}
-          {if $can_edit}<a class="btn-edit" href="{$WWWROOT}view/blocks.php?id={$viewid}&amp;new={$new}">{str tag=edit}</a>&nbsp;{/if}
           {if $edit_profile || $viewtype == 'profile'}
+              <a href="{$WWWROOT}user/view.php">{str tag=viewmyprofilepage}</a>&nbsp;
+              <a class="btn-edit" href="{$WWWROOT}view/blocks.php?profile=1">{str tag=editmyprofilepage}</a>&nbsp;
               <a class="btn-edit" href="{$WWWROOT}artefact/internal/index.php">{str tag=editprofile section=artefact.internal}</a>
-          {elseif isset($viewtype)}
-              <a class="btn-reply" href="{$WWWROOT}view/index.php">{str tag=myviews}</a>&nbsp;
+          {elseif !empty($viewtype)}
+              <a href="{$WWWROOT}view/index.php">{str tag=myviews}</a>&nbsp;
+              <a class="btn-edit" href="{$WWWROOT}view/edit.php?id={$viewid}&amp;new={$new}">{str tag=editdetails section=view}</a>
+              <a class="btn-edit" href="{$WWWROOT}view/access.php?id={$viewid}&amp;new={$new}">{str tag=editaccess section=view}</a>
+          {elseif $can_edit}
+              <a class="btn-edit" href="{$WWWROOT}view/blocks.php?id={$viewid}&amp;new={$new}">{str tag=edit}</a>
           {/if}
         </div>
         <div class="center">
