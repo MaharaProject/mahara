@@ -255,6 +255,7 @@ class MnetImporterTransport extends ImporterTransport {
         if (empty($this->tempdir)) {
             return;
         }
+        require_once('file.php');
         rmdirr($this->tempdir);
     }
 
