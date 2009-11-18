@@ -38,7 +38,6 @@ $string['editaccessforview']      = 'Edit Access for View "%s"';
 $string['next']                   = 'Next';
 $string['back']                   = 'Back';
 $string['title']                  = 'View Title';
-$string['viewtitle']              = '<span id="vt-title">%s</span> <span id="vt-by">by %s</span>';
 $string['description']            = 'View Description';
 $string['startdate']              = 'Access Start Date/Time';
 $string['stopdate']               = 'Access End Date/Time';
