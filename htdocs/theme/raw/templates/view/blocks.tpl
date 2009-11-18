@@ -1,5 +1,5 @@
 {include file="viewmicroheader.tpl"}
-<h1>{$PAGEHEADING|escape}</h1>
+<h1>{$PAGEHEADING}</h1>
 {if $columns}
     {str tag="editblockspagedescription" section="view"}
 
