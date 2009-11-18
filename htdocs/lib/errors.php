@@ -926,7 +926,9 @@ class ImportException extends SystemException {
 
     public function __construct($importer, $message=null, $code=0) {
         parent::__construct($message, $code);
-        $importer->cleanup();
+        if ($importer instanceof PluginImport) {
+            $importer->cleanup();
+        }
     }
 
     public function render_exception() {
