@@ -84,7 +84,6 @@ p {
 }
 .cb {
     clear: both;
-	* height: 0; /* IE hack */
 }
 .s {
     font-size: .9em;
