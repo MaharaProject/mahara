@@ -1061,6 +1061,9 @@ a.tag {
     padding: .5em .5em 1.5em .5em;
 	border-top: 1px solid #ddd;
 }
+#containerX #footer-wrap {
+    padding: 0;
+}
 #footernav {
     margin: .5em;
 	color: #d1d1d1;
