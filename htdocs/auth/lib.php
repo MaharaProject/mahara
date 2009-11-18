@@ -809,7 +809,7 @@ function auth_check_required_fields() {
         }
         if ($field == 'country') {
             $elements[$field]['options'] = getoptions_country();
-            $elements[$field]['defaultvalue'] = 'nz';
+            $elements[$field]['defaultvalue'] = get_config('country') ? get_config('country') : 'nz';
         }
 
         if ($field == 'email') {

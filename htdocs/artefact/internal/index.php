@@ -106,8 +106,7 @@ foreach ( $element_list as $element => $type ) {
     }
     if ($element == 'country') {
         $items[$element]['options'] = getoptions_country();
-        // @todo configure default country somehow...
-        $items[$element]['defaultvalue'] = 'nz';
+        $items[$element]['defaultvalue'] = get_config('country') ? get_config('country') : 'nz';
     }
 
     if (get_helpfile_location('artefact', 'internal', 'profileform', $element)) {
@@ -130,6 +129,7 @@ foreach ( $element_list as $element => $type ) {
 if ($items['firstname']) {
     $items['firstname']['autofocus'] = true;
 }
+
 
 // build form elements
 $elements = array(
