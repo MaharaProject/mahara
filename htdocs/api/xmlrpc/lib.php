@@ -281,15 +281,15 @@ function send_content_intent($username) {
 
     list ($user, $authinstance) = find_remote_user($username, $REMOTEWWWROOT);
     if (!$user) {
-        throw new ImportException("Could not find user $username for $REMOTEWWWROOT");
+        throw new ImportException(null, "Could not find user $username for $REMOTEWWWROOT");
     }
 
     if (!is_executable(get_config('pathtounzip'))) {
-        throw new ImportException("Cannot find unzip executable");
+        throw new ImportException(null, "Cannot find unzip executable");
     }
 
     if (!$authinstance->weimportcontent) {
-        $e = new ImportException('Importing content is disabled');
+        $e = new ImportException(null, 'Importing content is disabled');
         $e->set_log_off(); // we don't want these ones.
         throw $e;
     }
@@ -308,16 +308,16 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
 
     list ($user, $authinstance) = find_remote_user($username, $REMOTEWWWROOT);
     if (!$user) {
-        throw new ImportException("Could not find user $username for $REMOTEWWWROOT");
+        throw new ImportException(null, "Could not find user $username for $REMOTEWWWROOT");
     }
 
     // go verify the token
     if (!$queue = get_record('import_queue', 'token', $token, 'host', $REMOTEWWWROOT)) {
-        throw new ImportException("Could not find queue record with given token for username $username for $REMOTEWWWROOT");
+        throw new ImportException(null, "Could not find queue record with given token for username $username for $REMOTEWWWROOT");
     }
 
     if (strtotime($queue->expirytime) < time()) {
-        throw new ImportException("Queue record has expired");
+        throw new ImportException(null, "Queue record has expired");
     }
 
     $queue->format = $format;
@@ -325,20 +325,20 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
     try {
         $class = PluginImport::class_from_format($format);
     } catch (Exception $e) {
-        throw new ImportException('Invalid format $format');
+        throw new ImportException(null, 'Invalid format $format');
     }
     try {
         call_static_method($class, 'validate_import_data', $importdata);
     } catch (Exception $e) {
-        throw new ImportException('Invalid importdata: ' . $e->getMessage());
+        throw new ImportException(null, 'Invalid importdata: ' . $e->getMessage());
     }
 
     if (!array_key_exists('totalsize', $importdata)) {
-        throw new ImportException('Invalid importdata: missing totalsize');
+        throw new ImportException(null, 'Invalid importdata: missing totalsize');
     }
 
     if (!$user->quota_allowed($importdata['totalsize'])) {
-        $e = new ImportException('Exceeded user quota');
+        $e = new ImportException(null, 'Exceeded user quota');
         $e->set_log_off();
         throw $e;
     }
