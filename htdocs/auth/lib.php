@@ -1326,11 +1326,25 @@ function auth_handle_account_expiries() {
         AND expirymailsent = 0', array(time() + $warn))) {
         foreach ($users as $user) {
             $displayname  = display_name($user);
-            email_user($user, null,
-                get_string('accountexpirywarning'),
-                get_string('accountexpirywarningtext', 'mahara', $displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename),
-                get_string('accountexpirywarninghtml', 'mahara', $displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename)
-            );
+            try {
+                email_user($user, null,
+                    get_string('accountexpirywarning'),
+                    get_string('accountexpirywarningtext', 'mahara', $displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename),
+                    get_string('accountexpirywarninghtml', 'mahara', $displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename)
+                );
+            }
+            catch (EmailDisabledException $e) {
+                // Send a notification instead - email is disabled for this
+                // user
+                $message = new StdClass;
+                $message->users = array($user->id);
+
+                $message->subject = get_string('accountexpirywarning');
+                $message->message = get_string('accountexpirywarningtext', 'mahara', $displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename);
+
+                require_once('activity.php');
+                activity_occurred('maharamessage', $message);
+            }
             set_field('usr', 'expirymailsent', 1, 'id', $user->id);
         }
     }
@@ -1354,10 +1368,24 @@ function auth_handle_account_expiries() {
             AND inactivemailsent = 0', array(time()))) {
             foreach ($users as $user) {
                 $displayname = display_name($user);
-                email_user($user, null, get_string('accountinactivewarning'),
-                    get_string('accountinactivewarningtext', 'mahara', $displayname, $sitename, $daystoexpire, $sitename),
-                    get_string('accountinactivewarninghtml', 'mahara', $displayname, $sitename, $daystoexpire, $sitename)
-                );
+                try {
+                    email_user($user, null, get_string('accountinactivewarning'),
+                        get_string('accountinactivewarningtext', 'mahara', $displayname, $sitename, $daystoexpire, $sitename),
+                        get_string('accountinactivewarninghtml', 'mahara', $displayname, $sitename, $daystoexpire, $sitename)
+                    );
+                }
+                catch (EmailDisabledException $e) {
+                    // Send a notification instead - email is disabled for this
+                    // user
+                    $message = new StdClass;
+                    $message->users = array($user->id);
+
+                    $message->subject = get_string('accountinactivewarningtext', 'mahara', $displayname, $sitename, $daystoexpire, $sitename);
+                    $message->message = get_string('accountinactivewarninghtml', 'mahara', $displayname, $sitename, $daystoexpire, $sitename);
+
+                    require_once('activity.php');
+                    activity_occurred('maharamessage', $message);
+                }
                 set_field('usr', 'inactivemailsent', 1, 'id', $user->id);
             }
         }
@@ -1389,13 +1417,28 @@ function auth_handle_account_expiries() {
         AND ui.expirymailsent = 0', array(time() + $warn))) {
         foreach ($users as $user) {
             $displayname  = display_name($user);
-            email_user($user, null,
-                get_string('institutionmembershipexpirywarning'),
-                get_string('institutionmembershipexpirywarningtext', 'mahara', $displayname, $user->institutionname,
-                           $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename),
-                get_string('institutionmembershipexpirywarninghtml', 'mahara', $displayname, $user->institutionname,
-                           $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename)
-            );
+            try {
+                email_user($user, null,
+                    get_string('institutionmembershipexpirywarning'),
+                    get_string('institutionmembershipexpirywarningtext', 'mahara', $displayname, $user->institutionname,
+                            $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename),
+                    get_string('institutionmembershipexpirywarninghtml', 'mahara', $displayname, $user->institutionname,
+                            $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename)
+                );
+            }
+            catch (EmailDisabledException $e) {
+                // Send a notification instead - email is disabled for this
+                // user
+                $message = new StdClass;
+                $message->users = array($user->id);
+
+                $message->subject = get_string('institutionmembershipexpirywarning');
+                $message->message = get_string('institutionmembershipexpirywarningtext', 'mahara', $displayname, $user->institutionname,
+                            $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename);
+
+                require_once('activity.php');
+                activity_occurred('maharamessage', $message);
+            }
             set_field('usr_institution', 'expirymailsent', 1, 'usr', $user->id,
                       'institution', $user->institution);
         }
@@ -1436,11 +1479,25 @@ function auth_handle_institution_expiries() {
             // Email site administrators
             foreach ($siteadmins as $user) {
                 $user_displayname  = display_name($user);
-                email_user($user, null,
-                    get_string('institutionexpirywarning'),
-                    get_string('institutionexpirywarningtext_site', 'mahara', $user_displayname, $institution_displayname, $daystoexpire, $sitename, $sitename),
-                    get_string('institutionexpirywarninghtml_site', 'mahara', $user_displayname, $institution_displayname, $daystoexpire, $sitename, $sitename)
-                );
+                try {
+                    email_user($user, null,
+                        get_string('institutionexpirywarning'),
+                        get_string('institutionexpirywarningtext_site', 'mahara', $user_displayname, $institution_displayname, $daystoexpire, $sitename, $sitename),
+                        get_string('institutionexpirywarninghtml_site', 'mahara', $user_displayname, $institution_displayname, $daystoexpire, $sitename, $sitename)
+                    );
+                }
+                catch (EmailDisabledException $e) {
+                    // Send a notification instead - email is disabled for
+                    // this user
+                    $message = new StdClass;
+                    $message->users = array($user->id);
+
+                    $message->subject = get_string('institutionexpirywarning');
+                    $message->message = get_string('institutionexpirywarningtext_institution', 'mahara', $user_displayname, $institution_displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename);
+
+                    require_once('activity.php');
+                    activity_occurred('maharamessage', $message);
+                }
             }
 
             // Email institutional administrators
@@ -1450,11 +1507,25 @@ function auth_handle_institution_expiries() {
             );
             foreach ($institutionaladmins as $user) {
                 $user_displayname  = display_name($user);
-                email_user($user, null,
-                    get_string('institutionexpirywarning'),
-                    get_string('institutionexpirywarningtext_institution', 'mahara', $user_displayname, $institution_displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename),
-                    get_string('institutionexpirywarninghtml_institution', 'mahara', $user_displayname, $institution_displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename)
-                );
+                try {
+                    email_user($user, null,
+                        get_string('institutionexpirywarning'),
+                        get_string('institutionexpirywarningtext_institution', 'mahara', $user_displayname, $institution_displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename),
+                        get_string('institutionexpirywarninghtml_institution', 'mahara', $user_displayname, $institution_displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename)
+                    );
+                }
+                catch (EmailDisabledException $e) {
+                    // Send a notification instead - email is disabled for
+                    // this user
+                    $message = new StdClass;
+                    $message->users = array($user->id);
+
+                    $message->subject = get_string('institutionexpirywarning');
+                    $message->message = get_string('institutionexpirywarningtext_institution', 'mahara', $user_displayname, $institution_displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename);
+
+                    require_once('activity.php');
+                    activity_occurred('maharamessage', $message);
+                }
             }
             set_field('institution', 'expirymailsent', 1, 'name', $institution->name);
         }

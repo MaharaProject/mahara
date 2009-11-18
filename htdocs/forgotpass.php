@@ -170,6 +170,9 @@ function forgotpass_submit(Pieform $form, $values) {
     catch (SQLException $e) {
         die_info(get_string('forgotpassemailsendunsuccessful'));
     }
+    catch (EmailDisabledException $e) {
+        die_info(get_string('forgotpassemaildisabled'));
+    }
     catch (EmailException $e) {
         die_info(get_string('forgotpassemailsendunsuccessful'));
     }
