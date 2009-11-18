@@ -50,10 +50,10 @@ class PluginImportFile extends PluginImport {
             !array_key_exists('filesmanifest', $importdata) ||
             !is_array($importdata['filesmanifest']) ||
             count($importdata['filesmanifest']) == 0) {
-            throw new ImportException('Missing files manifest in import data');
+            throw new ImportException($this, 'Missing files manifest in import data');
         }
         if (!array_key_exists('zipfilesha1', $importdata)) {
-            throw new ImportException('Missing zipfile sha1 in import data');
+            throw new ImportException($this, 'Missing zipfile sha1 in import data');
         }
         return true;
     }
@@ -72,12 +72,12 @@ class PluginImportFile extends PluginImport {
         $this->tempdir = $filesinfo['tempdir'];
 
         if (sha1_file($this->tempdir . $this->zipfile) != $this->zipfilesha1) {
-            throw new ImportException('sha1 of recieved zipfile didn\'t match expected sha1');
+            throw new ImportException($this, 'sha1 of recieved zipfile didn\'t match expected sha1');
         }
 
         $this->unzipdir = $this->tempdir . 'extract/';
         if (!check_dir_exists($this->unzipdir)) {
-            throw new ImportException('Failed to create the temporary directories to work in');
+            throw new ImportException($this, 'Failed to create the temporary directories to work in');
         }
 
         $command = sprintf('%s %s %s %s',
@@ -89,7 +89,7 @@ class PluginImportFile extends PluginImport {
         $output = array();
         exec($command, $output, $returnvar);
         if ($returnvar != 0) {
-            throw new ImportException('Failed to unzip the file recieved from the transport object');
+            throw new ImportException($this, 'Failed to unzip the file recieved from the transport object');
         }
     }
 
@@ -122,7 +122,7 @@ class PluginImportFile extends PluginImport {
         $bad_c = count($badfiles);
         $man_c = count($this->manifest);
         if ($ok_c != $man_c) {
-            throw new ImportException('Files receieved did not exactly match what was in the manifest');
+            throw new ImportException($this, 'Files receieved did not exactly match what was in the manifest');
             // @todo penny later - better reporting (missing files, too many files, etc)
         }
         $this->files = $okfiles;
@@ -134,7 +134,7 @@ class PluginImportFile extends PluginImport {
         try {
             $this->importdir = ArtefactTypeFolder::get_folder_id('incoming', get_string('incomingfolderdesc'), null, true, $this->get('usr'));
         } catch (Exception $e) {
-            throw new ImportException($e->getMessage());
+            throw new ImportException($this, $e->getMessage());
         }
         $savedfiles = array(); // to put files into so we can delete them should we encounter an exception
         foreach ($this->files as $f) {
@@ -160,7 +160,7 @@ class PluginImportFile extends PluginImport {
                     true
                 );
                 if (empty($id)) {
-                    throw new ImportException("Failed to create new artefact for $f->sha1");
+                    throw new ImportException($this, "Failed to create new artefact for $f->sha1");
                 }
                 $savedfiles[] = $id;
             }
@@ -169,7 +169,7 @@ class PluginImportFile extends PluginImport {
                     $tmp = artefact_instance_from_id($fileid);
                     $tmp->delete();
                 }
-                throw new ImportException('Failed to create some new artefacts');
+                throw new ImportException($this, 'Failed to create some new artefacts');
             }
         }
         $this->artefacts = $savedfiles;

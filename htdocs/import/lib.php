@@ -266,10 +266,10 @@ class MnetImporterTransport extends ImporterTransport {
                     ->add_param($this->token)
                     ->send($this->host->wwwroot);
         } catch (XmlrpcClientException $e) {
-            throw new ImportException('Failed to retrieve zipfile from remote server: ' . $e->getMessage());
+            throw new ImportException($this->importer, 'Failed to retrieve zipfile from remote server: ' . $e->getMessage());
         }
         if (!$filecontents = base64_decode($client->response)) {
-            throw new ImportException('Failed to retrieve zipfile from remote server');
+            throw new ImportException($this->importer, 'Failed to retrieve zipfile from remote server');
         }
 
         $this->relativepath = 'temp/import/' . $this->importer->get('id') . '/';
@@ -280,12 +280,12 @@ class MnetImporterTransport extends ImporterTransport {
             $this->tempdir = get_config('dataroot') . $this->relativepath;
         }
         if (!check_dir_exists($this->tempdir)) {
-            throw new ImportException('Failed to create the temporary directories to work in');
+            throw new ImportException($this->importer, 'Failed to create the temporary directories to work in');
         }
 
         $this->zipfilename = 'import.zip';
         if (!file_put_contents($this->tempdir  . $this->zipfilename, $filecontents)) {
-            throw new ImportException('Failed to write out the zipfile to local temporary storage');
+            throw new ImportException($this->importer, 'Failed to write out the zipfile to local temporary storage');
         }
     }
 
