@@ -478,8 +478,11 @@ div.artefactchooser-splitter {
 	padding: 1em;
 }
 
+#view-wizard-controls form {
+    display: inline;
+}
 #view-wizard-controls {
-  padding-bottom: .5em;
+    padding-bottom: .5em;
 }
 
 #view-description {
