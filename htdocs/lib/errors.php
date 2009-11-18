@@ -790,6 +790,11 @@ class CryptException extends SystemException {}
  */
 class EmailException extends SystemException {}
 
+/**
+ * Exception - Email is disabled for this user
+ */
+class EmailDisabledException extends EmailException {}
+
 /** 
  * Exception - artefact not found 
  */

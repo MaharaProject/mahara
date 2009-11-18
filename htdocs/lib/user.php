@@ -201,6 +201,7 @@ function expected_account_preferences() {
                  'messages'       => 'allow',
                  'lang'           => 'default',
                  'addremovecolumns' => 0,
+                 'maildisabled'   => 0,
                  'tagssideblockmaxtags' => get_config('tagssideblockmaxtags'),
                  );
 }
@@ -267,6 +268,7 @@ function get_profile_field($userid, $field) {
  * @param string $messagehtml html version of email (will send both html and text)
  * @param array  $customheaders email headers
  * @throws EmailException
+ * @throws EmailDisabledException
  */ 
 function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='', $customheaders=null) {
     global $IDPJUMPURL;
@@ -281,7 +283,11 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
     if (empty($userto)) {
         throw new InvalidArgumentException("empty user given to email_user");
     }
-    
+
+    if (!$mailinfo = can_receive_email($userto)) {
+        throw new EmailDisabledException("email for this user has been disabled");
+    }
+
     // If the user is a remote xmlrpc user, trawl through the email text for URLs
     // to our wwwroot and modify the url to direct the user's browser to login at
     // their home site before hitting the link on this site
@@ -403,6 +409,37 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
     } 
     throw new EmailException("Couldn't send email to $usertoname with subject $subject. "
                         . "Error from phpmailer was: " . $mail->ErrorInfo );
+}
+
+/**
+ * Checks whether an email address is allowed to be sent email
+ * This checks whether that user has email turned on, and if so whether
+ * that user has hit their email bounce threshold.
+ *
+ * @param object $userto the user to check bounce threshold for
+ * @return mixed Returns false if the user cannot send an email or an
+ * object containing the email properties if they can
+ */
+function can_receive_email($userto) {
+    if (!$userto->id) {
+        // No user ID was provided by email_user
+        return new StdClass;
+    }
+
+    // Retrieve data for this mail address
+    if (!$mailinfo = get_record_select('artefact_internal_profile_email', 'owner = ? AND email = ?', array($userto->id, $userto->email))) {
+        // Since we don't know who this address belongs to, we must return
+        // an object. They're not disabled, we just don't know about them.
+        return new StdClass;
+    }
+
+    // If this user has email disabled, then return false.
+    if (get_account_preference($mailinfo->owner, 'maildisabled') == 1) {
+        // Email is disabled for this user
+        return false;
+    }
+
+    return $mailinfo;
 }
 
 /**
