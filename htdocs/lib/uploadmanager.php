@@ -330,9 +330,14 @@ function clam_mail_admins($notice) {
     $adminusers = get_records_array('usr', 'admin', 1);
     if ($adminusers) {
         foreach ($adminusers as $admin) {
-            // This should probably be some kind of notification
-            // rather than an email
-            email_user($admin, null, $subject, $notice);
+            $message = new StdClass;
+            $message->users = array($admin->id);
+
+            $message->subject = $subject;
+            $message->message = $notice;
+
+            require_once('activity.php');
+            activity_occurred('maharamessage', $message);
         }
     }
 }
