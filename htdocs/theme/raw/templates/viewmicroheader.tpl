@@ -15,7 +15,11 @@
         <div class="lbuttons">
           {if $backurl}<a class="btn-reply" href="{$backurl}">{str tag=back}</a>&nbsp;{/if}
           {if $can_edit}<a class="btn-edit" href="{$WWWROOT}view/blocks.php?id={$viewid}&amp;new={$new}">{str tag=edit}</a>&nbsp;{/if}
-          {if $edit_profile}<a class="btn-edit" href="{$WWWROOT}artefact/internal/index.php">{str tag=editprofile section=artefact.internal}</a>{/if}
+          {if $edit_profile || $viewtype == 'profile'}
+              <a class="btn-edit" href="{$WWWROOT}artefact/internal/index.php">{str tag=editprofile section=artefact.internal}</a>
+          {elseif isset($viewtype)}
+              <a class="btn-reply" href="{$WWWROOT}view/index.php">{str tag=myviews}</a>&nbsp;
+          {/if}
         </div>
         <div class="center">
         {if !$new}<a href="{$WWWROOT}view/view.php?id={$viewid}">{/if}{$viewtitle|escape}{if !$new}</a>{/if}{if $ownername} {str tag=by section=view} <a href="{$WWWROOT}{$ownerlink}">{$ownername|escape}</a>{/if}</div>

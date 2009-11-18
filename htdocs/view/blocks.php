@@ -167,6 +167,7 @@ $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
 $smarty->assign('category', $category);
 $smarty->assign('new', $new);
 $smarty->assign('profile', $profile);
+$smarty->assign('viewtype', $view->get('type'));
 $smarty->assign('view', $view->get('id'));
 $smarty->assign('groupid', $group);
 $smarty->assign('institution', $institution);
