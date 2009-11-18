@@ -514,21 +514,26 @@ function get_language_root($language=null) {
  * Return a list of available themes.
  */
 function get_themes() {
-    $themes = array();
-    $themebase = get_config('docroot') . 'theme/';
-    if (!$themedir = opendir($themebase)) {
-        throw new SystemException('Unable to read theme directory '.$themebase);
-    }
-    while (false !== ($subdir = readdir($themedir))) {
-        if ($subdir != "." && $subdir != ".." && is_dir($themebase . $subdir)) {
-            $config_path = $themebase . $subdir . '/themeconfig.php';
-            if (is_readable($config_path)) {
-                require($config_path);
-                $themes[$subdir] = isset($theme->displayname) ? $theme->displayname : $subdir;
+    static $themes = null;
+
+    if (is_null($themes)) {
+        $themes = array();
+        $themebase = get_config('docroot') . 'theme/';
+        if (!$themedir = opendir($themebase)) {
+            throw new SystemException('Unable to read theme directory '.$themebase);
+        }
+        while (false !== ($subdir = readdir($themedir))) {
+            if ($subdir != "." && $subdir != ".." && is_dir($themebase . $subdir)) {
+                $config_path = $themebase . $subdir . '/themeconfig.php';
+                if (is_readable($config_path)) {
+                    require($config_path);
+                    $themes[$subdir] = isset($theme->displayname) ? $theme->displayname : $subdir;
+                }
             }
         }
+        closedir($themedir);
     }
-    closedir($themedir);
+
     return $themes;
 }
 

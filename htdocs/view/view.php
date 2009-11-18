@@ -139,34 +139,23 @@ if ($USER->is_logged_in()) {
     $objectionform = pieform(objection_form());
 }
 
-<<<<<<< HEAD:htdocs/view/view.php
 // Set up theme
-list($basetheme, $viewtheme) = $view->get_theme();
-if ($THEME->basename != $basetheme) {
-    $THEME = new Theme($basetheme);
+$viewtheme = $view->get('theme');
+if ($viewtheme && $THEME->basename != $viewtheme) {
+    $THEME = new Theme($viewtheme);
 }
-$stylesheets = array(
-    // Basic structure CSS
-    '<link rel="stylesheet" type="text/css" href="'
-        . get_config('wwwroot') . 'theme/views.css">',
-    // Extra CSS for the view theme
-    '<link rel="stylesheet" type="text/css" href="'
-        . get_config('wwwroot') . 'theme/' . $basetheme . '/viewthemes/' . $viewtheme . '/views.css">',
-);
-=======
+$stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
+
 $can_edit = $USER->can_edit_view($view) && !$submittedgroup && !$view->is_submitted();
->>>>>>> master:htdocs/view/view.php
 
 $smarty = smarty(
-<<<<<<< HEAD:htdocs/view/view.php
-    array('mahara', 'tablerenderer', 'feedbacklist', 'artefact/resume/resumeshowhide.js'),
-    $stylesheets,
-=======
     array('paginator', 'feedbacklist', 'artefact/resume/resumeshowhide.js'),
-    array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
->>>>>>> master:htdocs/view/view.php
+    $stylesheets,
     array(),
-    array('sidebars' => false)
+    array(
+        'stylesheets' => array('style/views.css'),
+        'sidebars' => false,
+    )
 );
 
 $javascript = <<<EOF
@@ -179,38 +168,18 @@ EOF;
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('new', $new);
 $smarty->assign('viewid', $viewid);
-<<<<<<< HEAD:htdocs/view/view.php
-=======
 $smarty->assign('viewtitle', $view->get('title'));
 $smarty->assign('feedback', $feedback);
 
->>>>>>> master:htdocs/view/view.php
 $owner = $view->get('owner');
-<<<<<<< HEAD:htdocs/view/view.php
-if ($owner && $USER->get('id') == $owner && !$submittedgroup && !$view->is_submitted()) {
-    $smarty->assign('edit_url', get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . '&new=' . $new);
-}
-$ownerlink = '';
-=======
 $smarty->assign('owner', $owner);
 $smarty->assign('tags', $view->get('tags'));
->>>>>>> master:htdocs/view/view.php
 if ($owner) {
-<<<<<<< HEAD:htdocs/view/view.php
-    $ownerlink = 'user/view.php?id=' . $owner;
-=======
     $smarty->assign('ownerlink', 'user/view.php?id=' . $owner);
->>>>>>> master:htdocs/view/view.php
 }
 else if ($group) {
-    $ownerlink = 'group/view.php?id=' . $group;
+    $smarty->assign('ownerlink', 'group/view.php?id=' . $group);
 }
-<<<<<<< HEAD:htdocs/view/view.php
-$smarty->assign('viewtitle', get_string('viewtitle', 'view',
-    $view->get('title'),
-    '<a href="' . get_config('wwwroot') . hsc($ownerlink) . '">' . display_name($owner) . '</a>'
-));
-=======
 if ($can_edit) {
     $smarty->assign('can_edit', 1);
 }
@@ -220,7 +189,6 @@ if ($USER->is_logged_in() && !empty($_SERVER['HTTP_REFERER'])) {
         $smarty->assign('backurl', $_SERVER['HTTP_REFERER']);
     }
 }
->>>>>>> master:htdocs/view/view.php
 
 // Provide a link for roaming teachers to return
 if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
@@ -234,9 +202,6 @@ if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
             ));
         }
     }
-}
-else if (isset($_SERVER['HTTP_REFERER']) && false === strpos($_SERVER['HTTP_REFERER'], get_config('wwwroot') . 'view/view.php?id=' . $viewid)) {
-    $smarty->assign('backurl', $_SERVER['HTTP_REFERER']);
 }
 
 $smarty->assign('ownername', $view->formatted_owner());

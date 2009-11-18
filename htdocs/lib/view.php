@@ -486,14 +486,6 @@ class View {
         return $this->groupobj;
     }
 
-    public function get_theme() {
-        if ($theme = $this->get('theme')) {
-            return explode('/', $theme, 2);
-        }
-        $sitedefault = get_config('theme');
-        return array($sitedefault, $sitedefault);
-    }
-
     
     public function delete() {
         db_begin();
@@ -873,8 +865,7 @@ class View {
         }
 
         $viewtheme = param_variable('viewtheme', '');
-        if ($viewtheme != join('/', $this->get_theme())
-            && preg_match('#^[a-z0-9-]+/[a-z0-9-]+$#i', $viewtheme)) {
+        if ($viewtheme && $viewtheme != $this->get('theme')) {
             $this->set('theme', $viewtheme);
         }
 
@@ -1718,36 +1709,6 @@ class View {
         }
         $baseurl = substr($baseurl, 0, -5);
         return $baseurl;
-    }
-
-    /**
-     * Returns the list of avaliable view themes
-     */
-    public static function get_viewthemes() {
-        static $list = null;
-
-        if (is_null($list)) {
-            foreach (array_keys(get_themes()) as $themename) {
-                $viewthemebase = get_config('docroot') . 'theme/' . $themename . '/viewthemes/';
-                if (is_dir($viewthemebase) && $viewthemedir = opendir($viewthemebase)) {
-                    while (false !== ($subdir = readdir($viewthemedir))) {
-                        if ($subdir != "." && $subdir != ".." && is_dir($viewthemebase . $subdir)) {
-                            $configfile = $viewthemebase . $subdir . '/config.php';
-                            if (is_readable($configfile)) {
-                                require($configfile);
-                                $list[] = array(
-                                    'id' => $themename . '/' . $subdir,
-                                    'name' => $viewtheme->name
-                                );
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        usort($list, create_function('$a, $b', 'return strnatcasecmp($a["name"], $b["name"]);'));
-        return $list;
     }
 
     /**

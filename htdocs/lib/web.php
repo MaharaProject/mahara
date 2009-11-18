@@ -1873,18 +1873,6 @@ function mahara_standard_nav() {
             'ignore' => !$exportenabled,
         ),
         array(
-            'path' => 'profile/view',
-            'url' => 'user/view.php',
-            'title' => get_string('viewmyprofilepage'),
-            'weight' => 9,
-        ),
-        array(
-            'path' => 'profile/editprofilepage',
-            'url' => 'view/blocks.php?profile=1',
-            'title' => get_string('editmyprofilepage'),
-            'weight' => 9,
-        ),
-        array(
             'path' => 'groups',
             'url' => 'group/mygroups.php',
             'title' => get_string('groups'),

@@ -474,8 +474,6 @@ $string['findgroups']         = 'Find Groups';
 $string['returntosite']       = 'Return to Site';
 $string['siteadministration'] = 'Site Administration';
 $string['useradministration'] = 'User Administration';
-$string['viewmyprofilepage']  = 'View profile page';
-$string['editmyprofilepage']  = 'Edit profile page';
 
 $string['unreadmessages'] = 'unread messages';
 $string['unreadmessage'] = 'unread message';
@@ -875,17 +873,17 @@ $string['remotehost'] = 'Remote host %s';
 
 $string['Copyof'] = 'Copy of %s';
 
-// Profie views
+// Profile views
 $string['loggedinusersonly'] = 'Logged in users only';
 $string['allowpublicaccess'] = 'Allow public (non logged in) access';
 $string['thisistheprofilepagefor'] = 'This is the profile page for %s';
+$string['viewmyprofilepage']  = 'View profile page';
+$string['editmyprofilepage']  = 'Edit profile page';
+$string['usersprofile'] = "%s's Profile";
 
 $string['pleasedonotreplytothismessage'] = "Please do not reply to this message.";
-
-$string['theme'] = 'Theme';
-
 $string['deleteduser'] = 'Deleted user';
 
 $string['recentupdates'] = 'Recent Updates';
-
+$string['theme'] = 'Theme';
 ?>

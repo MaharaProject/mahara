@@ -184,7 +184,6 @@ $string['siteoptionsset'] = 'Site options have been updated.';
 $string['sitethemedescription'] = 'The default theme for the site';
 $string['tagssideblockmaxtags'] = 'Maximum Tags in Cloud';
 $string['tagssideblockmaxtagsdescription'] = 'The default number of tags to display in user tag clouds';
-$string['theme'] = 'Theme';
 $string['trustedsites'] = 'Trusted sites';
 $string['updatesiteoptions'] = 'Update site options';
 $string['usersallowedmultipleinstitutions'] = 'Users allowed multiple institutions';

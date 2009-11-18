@@ -539,14 +539,6 @@ div.rbuttons .small-logo {
     padding: .5em;
     margin: 0 .25em 1px;
 }
-#dropshadow {
-    background-image: url(../images/dropshadow.png);
-    background-repeat: repeat-x;
-    z-index: 1;
-    height: 15px;
-    width: 100%;
-    float: left;
-}
 .viewheader .small-logo img {
 	margin: .5em;
     padding: 0;

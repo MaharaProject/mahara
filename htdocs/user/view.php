@@ -67,24 +67,22 @@ if (!$view || !can_view_view($view->get('id'))) {
 }
 
 // Set up theme
-list($basetheme, $viewtheme) = $view->get_theme();
-if ($THEME->basename != $basetheme) {
-    $THEME = new Theme($basetheme);
+$viewtheme = $view->get('theme');
+if ($viewtheme && $THEME->basename != $viewtheme) {
+    $THEME = new Theme($viewtheme);
 }
-$stylesheets = array(
-    // Basic structure CSS
-    '<link rel="stylesheet" type="text/css" href="'
-        . get_config('wwwroot') . 'theme/views.css">',
-    // Extra CSS for the view theme
-    '<link rel="stylesheet" type="text/css" href="'
-        . get_config('wwwroot') . 'theme/' . $basetheme . '/viewthemes/' . $viewtheme . '/views.css">',
-);
+$stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
 
 $name = display_name($user);
 define('TITLE', $name);
 $smarty = smarty(
     array('lib/pieforms/static/core/pieforms.js'),
-    $stylesheets
+    $stylesheets,
+    array(),
+    array(
+        'stylesheets' => array('style/views.css'),
+        'sidebars'    => false,
+    )
 );
 
 $sql = "SELECT g.*, a.type FROM {group} g JOIN (
@@ -309,11 +307,12 @@ $smarty->assign('canmessage', can_send_message($loggedinid, $userid));
 $smarty->assign('NAME',$name);
 $smarty->assign('USERID', $userid);
 $smarty->assign('viewid', $view->get('id'));
-$smarty->assign('viewtitle', 'This is the profile of ' . display_name($user) . ' at ' . get_config('sitename'));
+$smarty->assign('viewtitle', get_string('usersprofile', 'mahara', display_name($user, null, true)));
 if ($loggedinid && $loggedinid == $userid) {
-    $smarty->assign('edit_url', get_config('wwwroot') . 'view/blocks.php?profile=' . $userid);
+    $smarty->assign('can_edit', true);
+    $smarty->assign('edit_profile', true);
 }
-if (isset($_SERVER['HTTP_REFERER']) && false === strpos($_SERVER['HTTP_REFERER'], get_config('wwwroot') . 'user/view.php?id=' . $userid)) {
+if (isset($_SERVER['HTTP_REFERER'])) {
     $smarty->assign('backurl', $_SERVER['HTTP_REFERER']);
 }
 $smarty->assign('viewcontent', $view->build_columns());

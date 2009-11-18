@@ -116,48 +116,30 @@ if ($category === '') {
 
 $view->process_changes($category, $new);
 
-// Set up theme
-list($basetheme, $viewtheme) = $view->get_theme();
-if ($THEME->basename != $basetheme) {
-    $THEME = new Theme($basetheme);
-}
-$stylesheets = array(
-    // Basic structure CSS
-    '<link rel="stylesheet" type="text/css" href="'
-        . get_config('wwwroot') . 'theme/views.css">',
-    // Extra CSS for the view theme
-    '<link rel="stylesheet" type="text/css" href="'
-        . get_config('wwwroot') . 'theme/' . $basetheme . '/viewthemes/' . $viewtheme . '/views.css">',
+$extraconfig = array(
+    'stylesheets' => array('style/views.css'),
+    'sidebars'    => false,
 );
 
-<<<<<<< HEAD:htdocs/view/blocks.php
-foreach ($THEME->get_url('style/style.css', true, 'artefact/file') as $sheet) {
-=======
+// Set up theme
+$viewtheme = $view->get('theme');
+if ($viewtheme && $THEME->basename != $viewtheme) {
+    $THEME = new Theme($viewtheme);
+}
+
+// Pull in cross-theme view stylesheet and file stylesheets
 $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
 foreach (array_reverse($THEME->get_url('style/style.css', true, 'artefact/file')) as $sheet) {
->>>>>>> master:htdocs/view/blocks.php
     $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . $sheet . '">';
 }
 
-<<<<<<< HEAD:htdocs/view/blocks.php
-$smarty = smarty(
-    array('views', 'tinytinymce', 'paginator', 'tablerenderer', 'artefact/file/js/filebrowser.js', 'lib/pieforms/static/core/pieforms.js'),
-    $stylesheets,
-    false,
-    array('sidebars' => false)
-);
-=======
 $smarty = smarty(array('views', 'tinymce', 'paginator', 'tablerenderer', 'artefact/file/js/filebrowser.js', 'lib/pieforms/static/core/pieforms.js', 'blocktype/creativecommons/js/creativecommons.js'), $stylesheets, false, $extraconfig);
->>>>>>> master:htdocs/view/blocks.php
 
 // The list of categories for the tabbed interface
 $smarty->assign('category_list', $view->build_category_list($category, $new));
 
 // The list of blocktypes for the default category
 $smarty->assign('blocktype_list', $view->build_blocktype_list($category));
-
-$smarty->assign('viewtheme', "$basetheme/$viewtheme");
-$smarty->assign('viewthemes', View::get_viewthemes());
 
 // Tell smarty we're editing rather than just rendering
 $smarty->assign('editing', true);
@@ -188,11 +170,20 @@ $smarty->assign('profile', $profile);
 $smarty->assign('view', $view->get('id'));
 $smarty->assign('groupid', $group);
 $smarty->assign('institution', $institution);
-$smarty->assign('viewurl', (!empty($profile))
-    ? get_config('wwwroot') . 'user/view.php?id=' . $view->get('owner')
-    : 'view.php?id=' . $view->get('id') . '&new=' . $new
-);
 $smarty->assign('can_change_layout', (!$USER->get_account_preference('addremovecolumns') || ($view->get('numcolumns') > 1 && $view->get('numcolumns') < 5)));
+
+$smarty->assign('viewtheme', $viewtheme);
+$smarty->assign('viewthemes', get_themes());
+
+$smarty->assign('viewid', $view->get('id'));
+$smarty->assign('viewtitle', $view->get('title'));
+$owner = $view->get('owner');
+if ($owner) {
+    $smarty->assign('ownerlink', 'user/view.php?id=' . $owner);
+}
+else if ($group) {
+    $smarty->assign('ownerlink', 'group/view.php?id=' . $group);
+}
 
 $blockid = $view->get_blockinstance_currently_being_configured();
 if (!$blockid) {
