@@ -34,5 +34,5 @@ $string['media'] = 'Media';
 $string['flashanimation'] = 'Flash animation';
 
 $string['typeremoved'] = 'This block points to a media type that has been disallowed by the administrator';
-$string['configdesc'] = 'Configure which file types users can embed into this block. Note that types disabled by the files artefact plugin cannot be enabled.  If you disable a filetype that has already been used in a block, it will not be rendered anymore';
+$string['configdesc'] = 'Configure which file types users can embed into this block.  If you disable a filetype that has already been used in a block, it will not be rendered anymore';
 ?>
