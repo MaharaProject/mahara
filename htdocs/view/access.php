@@ -220,6 +220,42 @@ $form['elements']['submit'] = array(
     'confirm' => !empty($new) ? array(get_string('confirmcancelcreatingview', 'view'), null, null) : null,
 );
 
+if (!function_exists('strptime')) {
+    // Windows doesn't have this, use an inferior version
+    function strptime($date, $format) {
+        $result = array(
+            'tm_sec'  => 0, 'tm_min'  => 0, 'tm_hour' => 0, 'tm_mday'  => 1,
+            'tm_mon'  => 0, 'tm_year' => 0, 'tm_wday' => 0, 'tm_yday'  => 0,
+        );
+        $formats = array(
+            '%Y' => array('len' => 4, 'key' => 'tm_year'),
+            '%m' => array('len' => 2, 'key' => 'tm_mon'),
+            '%d' => array('len' => 2, 'key' => 'tm_mday'),
+            '%H' => array('len' => 2, 'key' => 'tm_hour'),
+            '%M' => array('len' => 2, 'key' => 'tm_min'),
+        );
+        while ($format) {
+            $start = substr($format, 0, 2);
+            switch ($start) {
+            case '%Y': case '%m': case '%d': case '%H': case '%M':
+                $result[$formats[$start]['key']] = substr($date, 0, $formats[$start]['len']);
+                $format = substr($format, 2);
+                $date = substr($date, $formats[$start]['len']);
+            default:
+                $format = substr($format, 1);
+                $date = substr($date, 1);
+            }
+        }
+        if ($result['tm_mon'] < 1 || $result['tm_mon'] > 12
+            || $result['tm_mday'] < 1 || $result['tm_mday'] > 31
+            || $result['tm_hour'] < 0 || $result['tm_hour'] > 23
+            || $result['tm_min'] < 0 || $result['tm_min'] > 59) {
+            return false;
+        }
+        return $result;
+    }
+}
+
 function editaccess_validate(Pieform $form, $values) {
     global $institution, $group;
     if ($institution && $values['copynewuser'] && !$values['template']) {
@@ -242,18 +278,19 @@ function editaccess_validate(Pieform $form, $values) {
     }
     $loggedinaccess = false;
     if ($values['accesslist']) {
+        $dateformat = get_string('strftimedatetimeshort');
         foreach ($values['accesslist'] as &$item) {
             if (empty($item['startdate'])) {
                 $item['startdate'] = null;
             }
-            else if (!$item['startdate'] = strptime($item['startdate'], get_string('strftimedatetimeshort'))) {
+            else if (!$item['startdate'] = strptime($item['startdate'], $dateformat)) {
                 $form->set_error('accesslist', get_string('unrecogniseddateformat', 'view'));
                 break;
             }
             if (empty($item['stopdate'])) {
                 $item['stopdate'] = null;
             }
-            else if (!$item['stopdate'] = strptime($item['stopdate'], get_string('strftimedatetimeshort'))) {
+            else if (!$item['stopdate'] = strptime($item['stopdate'], $dateformat)) {
                 $form->set_error('accesslist', get_string('invaliddate', 'view'));
                 break;
             }
