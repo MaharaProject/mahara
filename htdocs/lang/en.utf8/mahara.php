@@ -393,7 +393,7 @@ $string['forgotusernamepasswordemailmessagehtml'] = '<p>Dear %s,</p>
 
 <p>Regards, %s Site Administrator</p>';
 $string['forgotpassemailsendunsuccessful'] = 'Sorry, it appears that the e-mail could not be sent successfully. This is our fault, please try again shortly';
-$string['forgotpassemaildisabled'] = 'Sorry, email is disabled for the email addres oer username you entered. Please contact an administrator to reset your password.';
+$string['forgotpassemaildisabled'] = 'Sorry, email is disabled for the email address or username you entered. Please contact an administrator to reset your password.';
 $string['forgotpassnosuchemailaddressorusername'] = 'The email address or username you entered doesn\'t match any users for this site';
 $string['forgotpasswordenternew'] = 'Please enter your new password to continue';
 $string['nosuchpasswordrequest'] = 'No such password request';
