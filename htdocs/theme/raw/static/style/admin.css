@@ -268,7 +268,7 @@ table.tablerenderer th.desc {
 	padding: 1em;
 	background: #f6f6f6;
 }
-#institution_suspend_submit, {
+#institution_suspend_submit {
 	border-color: #f69595 #750000 #750000 #f69595 !important;
 	background: #ca0000 !important;
 }
