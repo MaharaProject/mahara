@@ -57,6 +57,7 @@ $string['date'] = 'Date';
 $string['position'] = 'Position';
 $string['qualification'] = 'Qualification';
 $string['title'] = 'Title';
+$string['description'] = 'Description';
 $string['employer'] = 'Employer';
 $string['jobtitle'] = 'Job Title';
 $string['jobdescription'] = 'Position Description';
