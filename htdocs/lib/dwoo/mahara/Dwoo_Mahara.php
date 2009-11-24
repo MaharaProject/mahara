@@ -70,7 +70,7 @@ class Dwoo_Mahara extends Dwoo {
             'THEME' => $THEME,
             'WWWROOT' => get_config('wwwroot'),
             'THEMELIST' => json_encode($theme_list),
-            'HTTPSWWWROOT', get_config('httpswwwroot'),
+            'HTTPSWWWROOT' => get_config('httpswwwroot'),
         );
     }
     
