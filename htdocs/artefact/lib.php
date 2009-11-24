@@ -1073,7 +1073,7 @@ abstract class ArtefactType {
                 id, author, authorname, ctime, message, public
             FROM {artefact_feedback}
             WHERE view = ' . $viewid . ' AND artefact = ' . $artefactid
-                . (!$canedit ? ' AND (f.public = 1 OR f.author = ' . $userid . ')' : '') . '
+                . (!$canedit ? ' AND (public = 1 OR author = ' . $userid . ')' : '') . '
             ORDER BY id', '', $offset, $limit);
         if ($feedback) {
             require_once(get_config('libroot') . 'view.php');
