@@ -325,7 +325,7 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
     try {
         $class = PluginImport::class_from_format($format);
     } catch (Exception $e) {
-        throw new ImportException(null, 'Invalid format $format');
+        throw new ImportException(null, "Invalid format $format");
     }
     try {
         call_static_method($class, 'validate_import_data', $importdata);
