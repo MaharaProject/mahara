@@ -773,6 +773,7 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
         else if ($group->membershiptype == 'invite') {
             $group->invite = group_get_accept_form('invite' . $i++, $group->id, $returnto);
         }
+        $group->grouptypedescription = get_string('grouptypedescription', 'group', get_string('name', 'grouptype.' . $group->grouptype), get_string('membershiptype.'.$group->jointype, 'group'));
     }
 }
 

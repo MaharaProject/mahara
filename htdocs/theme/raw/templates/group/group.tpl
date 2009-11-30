@@ -1,5 +1,6 @@
 <h3><a href="{$WWWROOT}group/view.php?id={$group->id|escape}">{$group->name|escape}</a></h3>
 <h6>{foreach name=admins from=$group->admins item=id}<a href="{$WWWROOT}user/view.php?id={$id|escape}">{$id|display_name|escape}</a>{if !$.foreach.admins.last}, {/if}{/foreach}</h6>
+<div>{str tag="grouptype" section="group"}: {$group->grouptypedescription}</div>
 {$group->description}
 <div>{str tag="memberslist" section="group"}
 {foreach name=members from=$group->members item=member}

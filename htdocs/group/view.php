@@ -50,6 +50,7 @@ $group->admins = get_column_sql("SELECT member
     AND role = 'admin'", array($group->id));
 
 $role = group_user_access($group->id);
+$group->role = $role;
 
 if (is_logged_in()) {
     $afterjoin = param_variable('next', 'view');
@@ -76,6 +77,8 @@ if (is_logged_in()) {
         $group->groupjoin = group_get_join_form('joingroup', $group->id, $afterjoin);
     }
 }
+
+$group->grouptypedescription = get_string('grouptypedescription', 'group', get_string('name', 'grouptype.' . $group->grouptype), get_string('membershiptype.'.$group->jointype, 'group'));
 
 $filecounts = ArtefactTypeFileBase::count_user_files(null, $group->id, null);
 
