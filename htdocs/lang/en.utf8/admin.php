@@ -61,6 +61,7 @@ $string['youcanupgrade'] = 'You can upgrade Mahara from %s (%s) to %s (%s)!';
 $string['Plugin'] = 'Plugin';
 $string['jsrequiredforupgrade'] = 'You must enable javascript to perform an install or upgrade.';
 $string['dbnotutf8warning'] = 'You are not using a UTF-8 database. Mahara stores all data as UTF-8 internally. You may still attempt this upgrade but it is recommended that you convert your database to UTF-8.';
+$string['dbcollationmismatch'] = 'A column of your database is using a collation that is not the same as the database default.  Please ensure all columns use the same collation as the database.';
 
 // Admin navigation menu
 $string['adminhome']      = 'Admin home';

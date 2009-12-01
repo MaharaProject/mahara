@@ -45,6 +45,7 @@ else {
         global $SESSION;
         $SESSION->add_error_msg(get_string('dbnotutf8warning', 'admin'));
     }
+    ensure_upgrade_sanity();
     $smarty->assign('upgradeheading', get_string('performingupgrades', 'admin'));
 }
 
