@@ -2387,8 +2387,11 @@ function clean_html($text) {
  * @param string $html The html to be formatted
  * @return string The formatted text
  */
-function html2text($html) {
+function html2text($html, $fragment=true) {
     require_once('htmltotext/htmltotext.php');
+    if ($fragment) {
+        $html = '<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head>' . $html;
+    }
     $h2t = new HtmltoText($html, get_config('wwwroot'));
     return $h2t->text();
 }
