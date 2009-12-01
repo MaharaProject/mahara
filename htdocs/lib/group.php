@@ -40,7 +40,7 @@ defined('INTERNAL') || die();
  * @return mixed          The role the user has in the group, or false if they 
  *                        have no role in the group
  */
-function group_user_access($groupid, $userid=null) {
+function group_user_access($groupid, $userid=null, $refresh=null) {
     static $result;
 
     if (!is_logged_in()) {
@@ -50,7 +50,7 @@ function group_user_access($groupid, $userid=null) {
     $groupid = group_param_groupid($groupid);
     $userid  = group_param_userid($userid);
 
-    if (isset($result[$groupid][$userid])) {
+    if (isset($result[$groupid][$userid]) && !isset($refresh)) {
         return $result[$groupid][$userid];
     }
 
