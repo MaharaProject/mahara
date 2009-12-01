@@ -1284,6 +1284,17 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $cron);
     }
 
+    if ($oldversion < 2009111004) {
+        // Fix for bug in 1.1 => 1.2 upgrade which may have inserted
+        // a second groupmessage activity_type record
+        $records = get_records_select_array('activity_type', 'name = ? AND plugintype IS NULL AND pluginname IS NULL', array('groupmessage'));
+        if ($records && count($records) > 1) {
+            for ($i = 1; $i < count($records); $i++) {
+                delete_records('activity_type', 'id', $records[$i]->id);
+            }
+        }
+    }
+
     return $status;
 
 }
