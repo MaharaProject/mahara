@@ -1254,7 +1254,9 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2009102200) {
-        insert_record('activity_type', (object) array('name' => 'groupmessage', 'admin' => 0, 'delay' => 0));
+        if (!count_records_select('activity_type', 'name = ? AND plugintype IS NULL AND pluginname IS NULL', array('groupmessage'))) {
+            insert_record('activity_type', (object) array('name' => 'groupmessage', 'admin' => 0, 'delay' => 0));
+        }
     }
 
     if ($oldversion < 2009102900) {
