@@ -555,7 +555,7 @@ div.ok {
     background-color: #f7d4fa;
 }
 #messages .error,
-div.error, {
+div.error {
     color: #dd0221;
     background-color: #f7d4fa;
 }
