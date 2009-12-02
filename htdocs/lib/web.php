@@ -2570,7 +2570,7 @@ function str_shorten_html($str, $maxlen=100, $truncate=false, $newlines=true) {
     $str = str_replace('<br', "\n<br", $str);
 
     $str = strip_tags($str);
-    $str = html_entity_decode($str); // no things like &nbsp; only take up one character
+    $str = html_entity_decode($str, ENT_COMPAT, 'UTF-8'); // no things like &nbsp; only take up one character
     // take the first $length chars, then up to the first space (max length $length + $extra chars)
 
     if (function_exists('mb_substr')) {
