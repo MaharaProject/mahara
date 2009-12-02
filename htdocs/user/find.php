@@ -59,9 +59,10 @@ $searchform = pieform(array(
 $js = <<< EOF
 addLoadEvent(function () {
     p = {$data['pagination_js']}
-    connect('search_submit', 'onclick', function () {
+    connect('search_submit', 'onclick', function (event) {
         var params = {'query': $('search_query').value};
         p.sendQuery(params);
+        event.stop();
     });
 });
 EOF;
