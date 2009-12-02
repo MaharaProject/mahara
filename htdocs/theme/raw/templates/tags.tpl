@@ -21,12 +21,12 @@
            <div class="rbuttons"><a class="btn edit-tag{if !$tag} hidden{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode}">{str tag=editthistag}</a></div>
            <div id="results_sort" class="fl">{str tag=sortresultsby}
 {foreach from=$results->sortcols item=sortfield name=sortcols}
-           <a href="{$results->baseurl}&type={$results->filter}&sort={$sortfield}"{if $results->sort == $sortfield} class="selected"{/if}>{str tag=$sortfield}</a>{if !$smarty.foreach.sortcols.last} <span class="sep">|</span> {/if}
+           <a href="{$results->baseurl}&type={$results->filter}&sort={$sortfield}"{if $results->sort == $sortfield} class="selected"{/if}>{str tag=$sortfield}</a>{if !$.foreach.sortcols.last} <span class="sep">|</span> {/if}
 {/foreach}
            </div>
            <div id="results_filter" class="fr">{str tag=filterresultsby}
 {foreach from=$results->filtercols key=filtername item=filterdisplay name=filtercols}
-           <a href="{$results->baseurl}&sort={$results->sort}&type={$filtername}"{if $results->filter == $filtername} class="selected"{/if}>{$filterdisplay}</a>{if !$smarty.foreach.filtercols.last} <span class="sep">|</span> {/if}
+           <a href="{$results->baseurl}&sort={$results->sort}&type={$filtername}"{if $results->filter == $filtername} class="selected"{/if}>{$filterdisplay}</a>{if !$.foreach.filtercols.last} <span class="sep">|</span> {/if}
 {/foreach}
            </div>
            <table id="results" class="tablerenderer fullwidth">
