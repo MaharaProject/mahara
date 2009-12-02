@@ -157,6 +157,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
                 'type'  => 'html',
                 'title' => get_string('profileicon', 'artefact.file'),
                 'description' => get_string('uploadaprofileicon', 'blocktype.internal/profileinfo', get_config('wwwroot')),
+                'value' => '',
             );
             $form['profileicon'] = array(
                 'type'    => 'hidden',
