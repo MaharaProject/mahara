@@ -18,7 +18,7 @@
           <tr>
             <th><label>{str tag=tags}</label></th>
             <td>
-              <input name="{$prefix}_edit_tags" size="40"  id="{$prefix}_edit_tags" value="{foreach from=$fileinfo->tags item=tag name=tags}{if !$smarty.foreach.tags.first}, {/if}{$tag}{/foreach}" />
+              <input name="{$prefix}_edit_tags" size="40"  id="{$prefix}_edit_tags" value="{foreach from=$fileinfo->tags item=tag name=tags}{if !$.foreach.tags.first}, {/if}{$tag}{/foreach}" />
               <span>{contextualhelp plugintype='artefact' pluginname='file' section='tags'}</span>
             </td>
           </tr>

@@ -35,9 +35,9 @@
                     {else}
                     <select name="institution_requested" id="institution_requested">
                     {/if}
-                        <option value="all"{if !$smarty.request.institution} selected="selected"{/if}>{str tag=All}</option>
+                        <option value="all"{if !$.request.institution} selected="selected"{/if}>{str tag=All}</option>
                         {foreach from=$institutions item=i}
-                        <option value="{$i->name|escape}"{if $i->name == $smarty.request.institution}" selected="selected"{/if}>{$i->displayname|escape}</option>
+                        <option value="{$i->name|escape}"{if $i->name == $.request.institution}" selected="selected"{/if}>{$i->displayname|escape}</option>
                         {/foreach}
                     </select>
             </span>

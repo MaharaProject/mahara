@@ -15,7 +15,7 @@
                 {if $view.description && $view.artefacts}<br>{/if}
                 {if $view.artefacts}
                     <strong>{str tag="artefacts" section="view"}:</strong>
-                    {foreach from=$view.artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$view.id}" class="link-artefacts">{$artefact.title|escape}</a>{if !$smarty.foreach.artefacts.last}, {/if}{/foreach}
+                    {foreach from=$view.artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$view.id}" class="link-artefacts">{$artefact.title|escape}</a>{if !$.foreach.artefacts.last}, {/if}{/foreach}
                 {/if}
                 {if $view.template}
                     <a href="">{str tag=copythisview section=view}</a>
