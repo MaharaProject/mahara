@@ -70,11 +70,22 @@ $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);
 list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersearch_data($group->id, $query, $offset, $limit, $membershiptype);
 
+// Type-specific instructions
+$instructions = '';
+if ('admin' == $role) {
+    if ('invite' == $group->jointype) {
+        $instructions = get_string('instructions:invite', 'group');
+    } elseif ('controlled' == $group->jointype) {
+        $instructions = get_string('instructions:controlled', 'group');
+    }
+}
+
 $smarty = smarty(array('groupmembersearch'));
 $smarty->assign('heading', $group->name);
 $smarty->assign('query', $query);
 $smarty->assign('results', $html);
 $smarty->assign('pagination', $pagination['html']);
+$smarty->assign('instructions', $instructions);
 $smarty->assign('membershiptype', $membershiptype);
 $smarty->display('group/members.tpl');
 

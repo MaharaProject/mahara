@@ -9,6 +9,9 @@
         <button id="query-button" type="submit">{str tag="go"}</button>
         {if $membershiptype}<input type="hidden" name="membershiptype" value="{$membershiptype|escape}" />{/if}
     </div>
+    <div>
+        {$instructions}
+    </div>
 </form>
     {if $membershiptype}<h3>{str tag=pendingmembers section=group}</h3>{/if}
     <div id="results">
