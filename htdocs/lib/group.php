@@ -106,7 +106,14 @@ function group_can_change_role($groupid, $userid, $role) {
         return false;
     }
 
-    // Maybe one day more checks will be needed - they go here
+    // admin role permissions check
+    if ($role == 'admin') {
+        $group = group_current_group();
+        $user = new User();
+        $user->find_by_id($userid);
+        safe_require('grouptype', $group->grouptype);
+        return in_array($group->jointype, call_static_method('GroupType' . $group->grouptype, 'user_allowed_join_types', $user));
+    }
 
     return true;
 }

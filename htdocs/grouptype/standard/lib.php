@@ -45,9 +45,13 @@ class GroupTypeStandard extends GroupType {
 
     public static function allowed_join_types($all=false) {
         global $USER;
+        return self::user_allowed_join_types($USER, $all);
+    }
+
+    public static function user_allowed_join_types($user, $all=false) {
         $jointypes = array('open', 'request', 'invite');
-        if (defined('INSTALLER') || $all || $USER->get('admin') || $USER->get('staff') || $USER->is_institutional_admin() || $USER->is_institutional_staff()) {
-            $jointypes[] = 'controlled';
+        if (defined('INSTALLER') || $all || $user->get('admin') || $user->get('staff') || $user->is_institutional_admin() || $user->is_institutional_staff()) {
+           $jointypes[] = 'controlled';
         }
         return $jointypes;
     }
