@@ -1301,9 +1301,13 @@ function xmldb_core_upgrade($oldversion=0) {
     if ($oldversion < 2009120100) {
         // Fix for bug in 1.1 => 1.2 upgrade which may have inserted
         // a second groupmessage activity_type record
-        $records = get_records_select_array('activity_type', 'name = ? AND plugintype IS NULL AND pluginname IS NULL', array('groupmessage'));
+        $records = get_records_select_array('activity_type', 'name = ? AND plugintype IS NULL AND pluginname IS NULL', array('groupmessage'), 'id');
         if ($records && count($records) > 1) {
             for ($i = 1; $i < count($records); $i++) {
+                delete_records('activity_queue', 'type', $records[$i]->id);
+                delete_records('notification_internal_activity', 'type', $records[$i]->id);
+                delete_records('notification_emaildigest_queue', 'type', $records[$i]->id);
+                delete_records('usr_activity_preference', 'activity', $records[$i]->id);
                 delete_records('activity_type', 'id', $records[$i]->id);
             }
         }
