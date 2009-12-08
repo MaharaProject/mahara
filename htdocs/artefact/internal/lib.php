@@ -342,6 +342,7 @@ class ArtefactTypeProfile extends ArtefactType {
             'jabberusername'  => 'text',
             'occupation'      => 'text',
             'industry'        => 'text',
+            'maildisabled'    => 'html',
         );
     }
 

@@ -47,7 +47,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
 
     public static function postinst($oldversion) {
         if ($oldversion == 0) {
-            set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize(self::get_all_filetypes()));
+            set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize(array('flv')));
         }
     }
 

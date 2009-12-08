@@ -60,6 +60,8 @@ $string['noupgrades'] = 'Nothing to upgrade! You are fully up to date!';
 $string['youcanupgrade'] = 'You can upgrade Mahara from %s (%s) to %s (%s)!';
 $string['Plugin'] = 'Plugin';
 $string['jsrequiredforupgrade'] = 'You must enable javascript to perform an install or upgrade.';
+$string['dbnotutf8warning'] = 'You are not using a UTF-8 database. Mahara stores all data as UTF-8 internally. You may still attempt this upgrade but it is recommended that you convert your database to UTF-8.';
+$string['dbcollationmismatch'] = 'A column of your database is using a collation that is not the same as the database default.  Please ensure all columns use the same collation as the database.';
 
 // Admin navigation menu
 $string['adminhome']      = 'Admin home';
@@ -164,6 +166,7 @@ $string['institutionautosuspenddescription'] = 'If checked, expired institutions
 $string['institutionexpirynotification'] = 'Warning time for institution expiry';
 $string['institutionexpirynotificationdescription'] = 'A notification message will be sent to site and institutional admins the long before a site expires';
 $string['language'] = 'Language';
+$string['country'] = 'Country';
 $string['pathtoclam'] = 'Path to clam';
 $string['pathtoclamdescription'] = 'The filesystem path to clamscan or clamdscan';
 $string['searchplugin'] = 'Search plugin';
@@ -177,6 +180,7 @@ $string['showtagssideblock'] = 'Enable Tag Cloud';
 $string['showtagssideblockdescription'] = 'If enabled, users will see a side block in the My Portfolio section of the site with a list of their most frequently used tags';
 $string['sitedefault'] = 'Site Default';
 $string['sitelanguagedescription'] = 'The default language for the site';
+$string['sitecountrydescription'] = 'The default country for the site';
 $string['sitename'] = 'Site name';
 $string['sitenamedescription'] = 'The site name appears in certain places around the site and in e-mails sent from the site';
 $string['siteoptionspagedescription'] = 'Here you can set some global options that will apply by default throughout the entire site.';

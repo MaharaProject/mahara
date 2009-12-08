@@ -106,8 +106,7 @@ foreach ( $element_list as $element => $type ) {
     }
     if ($element == 'country') {
         $items[$element]['options'] = getoptions_country();
-        // @todo configure default country somehow...
-        $items[$element]['defaultvalue'] = 'nz';
+        $items[$element]['defaultvalue'] = get_config('country') ? get_config('country') : 'nz';
     }
 
     if (get_helpfile_location('artefact', 'internal', 'profileform', $element)) {
@@ -131,6 +130,10 @@ if ($items['firstname']) {
     $items['firstname']['autofocus'] = true;
 }
 
+
+$items['maildisabled']['ignore'] = !get_account_preference($USER->get('id'),'maildisabled');
+$items['maildisabled']['value'] = get_string('maildisableddescription', 'account', get_config('wwwroot') . 'account/');
+
 // build form elements
 $elements = array(
     'topsubmit' => array(
@@ -148,7 +151,7 @@ $elements = array(
         'type' => 'fieldset',
         'legend' => get_string('contact', 'artefact.internal'),
         'class' => $fieldset != 'contact' ? 'collapsed' : '',
-        'elements' => get_desired_fields($items, array('email', 'officialwebsite', 'personalwebsite', 'blogaddress', 'address', 'town', 'city', 'country', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber'), 'contact'),
+        'elements' => get_desired_fields($items, array('email', 'maildisabled', 'officialwebsite', 'personalwebsite', 'blogaddress', 'address', 'town', 'city', 'country', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber'), 'contact'),
     ),
     'messaging' => array(
         'type' => 'fieldset',
@@ -225,6 +228,7 @@ function profileform_validate(Pieform $form, $values) {
             }
         }
     }
+
 }
 
 function profileform_submit(Pieform $form, $values) {
@@ -362,6 +366,9 @@ function profileform_submit(Pieform $form, $values) {
                 $USER->email = $values['email']['default'];
                 $USER->commit();
             }
+        }
+        else if ($element == 'maildisabled') {
+            continue;
         }
         else {
             if (!isset($profilefields[$element]) || $values[$element] != $profilefields[$element]) {

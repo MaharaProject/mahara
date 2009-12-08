@@ -466,10 +466,6 @@ ul.in-page-tabs li a.current-tab:hover {
 
 
 /**************** MAIN CONTENT *****************/
-.main-column {
-	background: url(../images/dot-vert.gif) repeat-y top right;
-}
-
 /* system messages between nav and main content */
 /* upload file message */
 div.info {
@@ -479,7 +475,7 @@ div.info {
 div.ok {
 }
 #messages .error,
-div.error, {
+div.error {
 }
 #messages .info {
 }

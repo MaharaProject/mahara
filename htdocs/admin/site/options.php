@@ -68,6 +68,14 @@ $siteoptionform = array(
             'options'      => $langoptions,
             'help'         => true,
         ),
+        'country' => array(
+            'type'         => 'select',
+            'title'        => get_string('country', 'admin'),
+            'description'  => get_string('sitecountrydescription', 'admin'),
+            'defaultvalue' => 'nz',
+            'options'      => getoptions_country(),
+            'help'         => true,
+        ),
         'theme' => array(
             'type'         => 'select',
             'title'        => get_string('theme'),

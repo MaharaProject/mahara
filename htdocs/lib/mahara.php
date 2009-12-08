@@ -172,6 +172,18 @@ function ensure_install_sanity() {
     }
 }
 
+function ensure_upgrade_sanity() {
+    // Check column collation is equal to the default
+    if (is_mysql()) {
+        require_once('ddl.php');
+        if (table_exists(new XMLDBTable('event_type'))) {
+            if (!column_collation_is_default('event_type', 'name')) {
+                throw new ConfigSanityException(get_string('dbcollationmismatch', 'admin'));
+            }
+        }
+    }
+}
+
 /**
  * Check to see if the internal plugins are installed. Die if they are not.
  */

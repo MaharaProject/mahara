@@ -41,6 +41,11 @@ if (!empty($upgrades['core']->install)) {
 }
 else {
     define('TITLE', get_string('upgrades', 'admin'));
+    if (!db_is_utf8()) {
+        global $SESSION;
+        $SESSION->add_error_msg(get_string('dbnotutf8warning', 'admin'));
+    }
+    ensure_upgrade_sanity();
     $smarty->assign('upgradeheading', get_string('performingupgrades', 'admin'));
 }
 

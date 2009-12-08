@@ -809,7 +809,7 @@ function auth_check_required_fields() {
         }
         if ($field == 'country') {
             $elements[$field]['options'] = getoptions_country();
-            $elements[$field]['defaultvalue'] = 'nz';
+            $elements[$field]['defaultvalue'] = get_config('country') ? get_config('country') : 'nz';
         }
 
         if ($field == 'email') {
@@ -1296,6 +1296,24 @@ function auth_clean_partial_registrations() {
         WHERE expiry < ?', array(db_format_timestamp(time())));
 }
 
+
+function _email_or_notify($user, $subject, $bodytext, $bodyhtml) {
+    try {
+        email_user($user, null, $subject, $bodytext, $bodyhtml);
+    }
+    catch (EmailDisabledException $e) {
+        // Send a notification instead - email is disabled for this user
+        $message = new StdClass;
+        $message->users = array($user->id);
+        $message->subject = $subject;
+        $message->message = $bodytext;
+
+        require_once('activity.php');
+        activity_occurred('maharamessage', $message);
+    }
+}
+
+
 /**
  * Sends notification e-mails to users in two situations:
  *
@@ -1326,8 +1344,7 @@ function auth_handle_account_expiries() {
         AND expirymailsent = 0', array(time() + $warn))) {
         foreach ($users as $user) {
             $displayname  = display_name($user);
-            email_user($user, null,
-                get_string('accountexpirywarning'),
+            _email_or_notify($user, get_string('accountexpirywarning'),
                 get_string('accountexpirywarningtext', 'mahara', $displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename),
                 get_string('accountexpirywarninghtml', 'mahara', $displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename)
             );
@@ -1354,7 +1371,7 @@ function auth_handle_account_expiries() {
             AND inactivemailsent = 0', array(time()))) {
             foreach ($users as $user) {
                 $displayname = display_name($user);
-                email_user($user, null, get_string('accountinactivewarning'),
+                _email_or_notify($user, get_string('accountinactivewarning'),
                     get_string('accountinactivewarningtext', 'mahara', $displayname, $sitename, $daystoexpire, $sitename),
                     get_string('accountinactivewarninghtml', 'mahara', $displayname, $sitename, $daystoexpire, $sitename)
                 );
@@ -1389,12 +1406,11 @@ function auth_handle_account_expiries() {
         AND ui.expirymailsent = 0', array(time() + $warn))) {
         foreach ($users as $user) {
             $displayname  = display_name($user);
-            email_user($user, null,
-                get_string('institutionmembershipexpirywarning'),
+            _email_or_notify($user, get_string('institutionmembershipexpirywarning'),
                 get_string('institutionmembershipexpirywarningtext', 'mahara', $displayname, $user->institutionname,
-                           $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename),
+                    $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename),
                 get_string('institutionmembershipexpirywarninghtml', 'mahara', $displayname, $user->institutionname,
-                           $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename)
+                    $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename)
             );
             set_field('usr_institution', 'expirymailsent', 1, 'usr', $user->id,
                       'institution', $user->institution);
@@ -1436,8 +1452,7 @@ function auth_handle_institution_expiries() {
             // Email site administrators
             foreach ($siteadmins as $user) {
                 $user_displayname  = display_name($user);
-                email_user($user, null,
-                    get_string('institutionexpirywarning'),
+                _email_or_notify($user, get_string('institutionexpirywarning'),
                     get_string('institutionexpirywarningtext_site', 'mahara', $user_displayname, $institution_displayname, $daystoexpire, $sitename, $sitename),
                     get_string('institutionexpirywarninghtml_site', 'mahara', $user_displayname, $institution_displayname, $daystoexpire, $sitename, $sitename)
                 );
@@ -1450,8 +1465,7 @@ function auth_handle_institution_expiries() {
             );
             foreach ($institutionaladmins as $user) {
                 $user_displayname  = display_name($user);
-                email_user($user, null,
-                    get_string('institutionexpirywarning'),
+                _email_or_notify($user, get_string('institutionexpirywarning'),
                     get_string('institutionexpirywarningtext_institution', 'mahara', $user_displayname, $institution_displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename),
                     get_string('institutionexpirywarninghtml_institution', 'mahara', $user_displayname, $institution_displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename)
                 );

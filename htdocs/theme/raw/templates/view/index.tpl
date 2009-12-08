@@ -39,7 +39,7 @@
                                 <h4><a href="{$WWWROOT}view/blocks.php?id={$view.id}" id="editthisview">{str tag ="editthisview" section="view"}</a></h4>
 {if $view.artefacts}
                                 <div class="videsc">{str tag="artefacts" section="view"}:
-                                {foreach from=$view.artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$view.id}" id="link-artefacts">{$artefact.title|escape}</a>{if !$smarty.foreach.artefacts.last}, {/if}{/foreach}</div>
+                                {foreach from=$view.artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$view.id}" id="link-artefacts">{$artefact.title|escape}</a>{if !$.foreach.artefacts.last}, {/if}{/foreach}</div>
 {/if}
                             </div>
 {/if}
@@ -61,7 +61,7 @@
     <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name|escape}</a>{if $accessgroup.role} ({$accessgroup.roledisplay}){/if}
 {elseif $accessgroup.accesstype == 'user'}
     <a href="{$WWWROOT}user/view.php?id={$accessgroup.id}">{$accessgroup.id|display_name|escape}</a>
-{/if}{/strip}{if !$smarty.foreach.artefacts.last}, {/if}
+{/if}{/strip}{if !$.foreach.artefacts.last}, {/if}
 {/foreach}
 {if $view.template}<br>{str tag=thisviewmaybecopied section=view}{/if}
                                 </div>

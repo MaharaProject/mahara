@@ -84,7 +84,6 @@ p {
 }
 .cb {
     clear: both;
-	* height: 0; /* IE hack */
 }
 .s {
     font-size: .9em;
@@ -746,7 +745,7 @@ div.ok {
     background: #e7f1c3 url(../images/success.gif) no-repeat .5em;
 }
 #messages .error,
-div.error, {
+div.error {
     color: #dd0221;
     background: #ffd3d9 url(../images/failure.gif) no-repeat .5em;
     border: 1px solid #dd0221;

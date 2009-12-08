@@ -78,6 +78,17 @@ if ($USER->get('admin')) {
         'help'         => true,
     );
 }
+$elements['maildisabled'] = array(
+    'type' => 'radio',
+    'defaultvalue' => get_account_preference($user->id, 'maildisabled'),
+    'title' => get_string('email'),
+    'separator' => '<br>',
+    'options' => array(
+        0 => get_string('enabled', 'account'),
+        1 => get_string('disabled', 'account'),
+    ),
+    'help' => true,
+);
 $elements['expiry'] = array(
     'type'         => 'date',
     'title'        => get_string('accountexpiry', 'admin'),
@@ -173,6 +184,17 @@ function edituser_site_submit(Pieform $form, $values) {
             activity_add_admin_defaults(array($user->id));
         }
     }
+
+    if ($values['maildisabled'] == 0 && get_account_preference($user->id, 'maildisabled') == 1) {
+        // Reset the sent and bounce counts otherwise mail will be disabled
+        // on the next send attempt
+        $u = new StdClass;
+        $u->email = $user->get('email');
+        $u->id = $user->get('id');
+        update_bounce_count($u,true);
+        update_send_count($u,true);
+    }
+    set_account_preference($user->id, 'maildisabled', $values['maildisabled']);
 
     // Authinstance can be changed by institutional admins if both the
     // old and new authinstances belong to the admin's institutions

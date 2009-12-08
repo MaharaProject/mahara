@@ -18,21 +18,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage blocktype-internalmedia
- * @author     Catalyst IT Ltd
+ * @subpackage core
+ * @author     Andrew Nicols <andrew.nicols@luns.net.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
- *
+ * @copyright  (C) 2009 Lancaster University Network Services Limited
+ *                      http://www.luns.net.uk
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+define('PUBLIC', 1);
+define('TITLE', '');
 
-$string['title'] = 'Embedded Media';
-$string['description'] = 'Select files for embedded viewing';
+require(dirname(dirname(__FILE__)).'/init.php');
 
-$string['media'] = 'Media';
-$string['flashanimation'] = 'Flash animation';
+$address = $_ENV['RECIPIENT'];
 
-$string['typeremoved'] = 'This block points to a media type that has been disallowed by the administrator';
-$string['configdesc'] = 'Configure which file types users can embed into this block.  If you disable a filetype that has already been used in a block, it will not be rendered anymore';
+log_debug('---------- started  processing email at ' . date('r', time()) . ' ----------');
+log_debug('-- mail from ' . $address );
+
+$email = process_email($address);
+
+log_debug('---------- finished processing email at ' . date('r', time()) . ' ----------');
+
 ?>

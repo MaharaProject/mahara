@@ -111,6 +111,17 @@ $elements['wysiwyg'] = array(
     ),
     'help' => true,
 );
+$elements['maildisabled'] = array(
+    'type' => 'radio',
+    'defaultvalue' => get_account_preference($USER->get('id'), 'maildisabled'),
+    'title' => get_string('email'),
+    'separator' => '<br>',
+    'options' => array(
+        0 => get_string('enabled', 'account'),
+        1 => get_string('disabled', 'account'),
+    ),
+    'help' => true,
+);
 $elements['messages'] = array(
     'type' => 'radio',
     'defaultvalue' => $prefs->messages,
@@ -214,6 +225,16 @@ function accountprefs_submit(Pieform $form, $values) {
 
     // use this as looping through values is not safe.
     $expectedprefs = expected_account_preferences(); 
+    if ($values['maildisabled'] == 0 && get_account_preference($USER->get('id'), 'maildisabled') == 1) {
+        // Reset the sent and bounce counts otherwise mail will be disabled
+        // on the next send attempt
+        $u = new StdClass;
+        $u->email = $USER->get('email');
+        $u->id = $USER->get('id');
+        update_bounce_count($u,true);
+        update_send_count($u,true);
+    }
+
     foreach (array_keys($expectedprefs) as $pref) {
         if (isset($values[$pref])) {
             $USER->set_account_preference($pref, $values[$pref]);

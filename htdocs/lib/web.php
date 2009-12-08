@@ -2375,8 +2375,11 @@ function clean_html($text) {
  * @param string $html The html to be formatted
  * @return string The formatted text
  */
-function html2text($html) {
+function html2text($html, $fragment=true) {
     require_once('htmltotext/htmltotext.php');
+    if ($fragment) {
+        $html = '<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head>' . $html;
+    }
     $h2t = new HtmltoText($html, get_config('wwwroot'));
     return $h2t->text();
 }
@@ -2555,7 +2558,7 @@ function str_shorten_html($str, $maxlen=100, $truncate=false, $newlines=true) {
     $str = str_replace('<br', "\n<br", $str);
 
     $str = strip_tags($str);
-    $str = html_entity_decode($str); // no things like &nbsp; only take up one character
+    $str = html_entity_decode($str, ENT_COMPAT, 'UTF-8'); // no things like &nbsp; only take up one character
     // take the first $length chars, then up to the first space (max length $length + $extra chars)
 
     if (function_exists('mb_substr')) {

@@ -45,6 +45,8 @@ $string['updatedfriendcontrolsetting'] = 'Updated friends control';
 $string['wysiwygdescr'] = 'HTML editor';
 $string['on'] = 'On';
 $string['off'] = 'Off';
+$string['disabled'] = 'Disabled';
+$string['enabled'] = 'Enabled';
 
 $string['messagesdescr'] = 'Messages from other users';
 $string['messagesnobody'] = 'Do not allow anyone to send me messages';
@@ -60,6 +62,13 @@ $string['tagssideblockmaxtagsdescription'] = 'Maximum number of tags to display 
 
 $string['prefssaved']  = 'Preferences saved';
 $string['prefsnotsaved'] = 'Failed to save your Preferences!';
+
+$string['maildisabled'] = 'E-mail disabled';
+$string['maildisabledbounce'] =<<< EOF
+Sending of e-mail to your e-mail address has been disabled as too many messages have been returned to the server.
+Please check that your e-mail account is working as expected before you re-enable e-mail on the account preferences at %s.
+EOF;
+$string['maildisableddescription'] = 'Sending of email to your account has been disabled. You may <a href="%s">re-enable your email</a> from the account preferences page.';
 
 $string['deleteaccount']  = 'Delete Account';
 $string['deleteaccountdescription']  = 'If you delete your account, your profile information and your Views will no longer be visible to other users.  The content of any forum posts you have written will still be visible, but the author\'s name will no longer be displayed.';

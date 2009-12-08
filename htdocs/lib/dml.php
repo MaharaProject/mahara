@@ -83,6 +83,23 @@ function db_is_utf8() {
     return false;
 }
 
+function column_collation_is_default($table, $column) {
+    global $db;
+    if (!is_a($db, 'ADOConnection')) {
+        throw new SQLException('Database connection is not available ');
+    }
+    if (is_mysql()) {
+        $result = $db->Execute("SHOW VARIABLES LIKE 'collation_database'");
+        $defaultcollation = $result->fields['Value'];
+
+        $command = 'SHOW FULL COLUMNS FROM ' . db_table_name($table) . ' WHERE field = ?';
+        $stmt = $db->Prepare($command);
+        $result = $db->Execute($stmt, array($column));
+        return $result->fields['Collation'] == $defaultcollation;
+    }
+    return true;
+}
+
 /**
  * Execute a given sql command string
  *

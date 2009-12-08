@@ -1254,7 +1254,9 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2009102200) {
-        insert_record('activity_type', (object) array('name' => 'groupmessage', 'admin' => 0, 'delay' => 0));
+        if (!count_records_select('activity_type', 'name = ? AND plugintype IS NULL AND pluginname IS NULL', array('groupmessage'))) {
+            insert_record('activity_type', (object) array('name' => 'groupmessage', 'admin' => 0, 'delay' => 0));
+        }
     }
 
     if ($oldversion < 2009102900) {
@@ -1282,7 +1284,36 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $cron);
     }
 
-    if ($oldversion < 2009111700) {
+    if ($oldversion < 2009111200) {
+        $table = new XMLDBTable('artefact_internal_profile_email');
+        $field = new XMLDBField('mailssent');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+    }
+
+    if ($oldversion < 2009111201) {
+        $table = new XMLDBTable('artefact_internal_profile_email');
+        $field = new XMLDBField('mailsbounced');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+    }
+
+    if ($oldversion < 2009120100) {
+        // Fix for bug in 1.1 => 1.2 upgrade which may have inserted
+        // a second groupmessage activity_type record
+        $records = get_records_select_array('activity_type', 'name = ? AND plugintype IS NULL AND pluginname IS NULL', array('groupmessage'), 'id');
+        if ($records && count($records) > 1) {
+            for ($i = 1; $i < count($records); $i++) {
+                delete_records('activity_queue', 'type', $records[$i]->id);
+                delete_records('notification_internal_activity', 'type', $records[$i]->id);
+                delete_records('notification_emaildigest_queue', 'type', $records[$i]->id);
+                delete_records('usr_activity_preference', 'activity', $records[$i]->id);
+                delete_records('activity_type', 'id', $records[$i]->id);
+            }
+        }
+    }
+
+    if ($oldversion < 2009120900) {
         $table = new XMLDBTable('view');
         $field = new XMLDBField('theme');
         $field->setAttributes(XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, null);

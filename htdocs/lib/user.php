@@ -201,6 +201,7 @@ function expected_account_preferences() {
                  'messages'       => 'allow',
                  'lang'           => 'default',
                  'addremovecolumns' => 0,
+                 'maildisabled'   => 0,
                  'tagssideblockmaxtags' => get_config('tagssideblockmaxtags'),
                  );
 }
@@ -267,6 +268,7 @@ function get_profile_field($userid, $field) {
  * @param string $messagehtml html version of email (will send both html and text)
  * @param array  $customheaders email headers
  * @throws EmailException
+ * @throws EmailDisabledException
  */ 
 function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='', $customheaders=null) {
     global $IDPJUMPURL;
@@ -281,7 +283,11 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
     if (empty($userto)) {
         throw new InvalidArgumentException("empty user given to email_user");
     }
-    
+
+    if (!$mailinfo = can_receive_email($userto)) {
+        throw new EmailDisabledException("email for this user has been disabled");
+    }
+
     // If the user is a remote xmlrpc user, trawl through the email text for URLs
     // to our wwwroot and modify the url to direct the user's browser to login at
     // their home site before hitting the link on this site
@@ -336,9 +342,14 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         }
     }
 
+    if (get_config('bounces_handle') && isset($mailinfo->owner)) {
+        $mail->Sender = generate_email_processing_address($mailinfo->owner, $userto);
+    }
     if (empty($userfrom) || $userfrom->email == get_config('noreplyaddress')) {
-        $mail->Sender = get_config('noreplyaddress');
-        $mail->From = $mail->Sender;
+        if (empty($mail->Sender)) {
+            $mail->Sender = get_config('noreplyaddress');
+        }
+        $mail->From = get_config('noreplyaddress');
         $mail->FromName = (isset($userfrom->id)) ? display_name($userfrom, $userto) : get_config('sitename');
         $customheaders[] = 'Precedence: Bulk'; // Try to avoid pesky out of office responses
         $messagetext .= "\n\n" . get_string('pleasedonotreplytothismessage') . "\n";
@@ -347,8 +358,10 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         }
     }
     else {
-        $mail->Sender = $userfrom->email;
-        $mail->From = $mail->Sender;
+        if (empty($mail->Sender)) {
+            $mail->Sender = $userfrom->email;
+        }
+        $mail->From = $userfrom->email;
         $mail->FromName = display_name($userfrom, $userto);
     }
     $replytoset = false;
@@ -396,10 +409,209 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
     }
 
     if ($mail->Send()) {
+        // Update the count of sent mail
+        update_send_count($userto);
+
         return true;
     } 
     throw new EmailException("Couldn't send email to $usertoname with subject $subject. "
                         . "Error from phpmailer was: " . $mail->ErrorInfo );
+}
+
+/**
+ * Checks whether an email address is allowed to be sent email
+ * This checks whether that user has email turned on, and if so whether
+ * that user has hit their email bounce threshold.
+ *
+ * @param object $userto the user to check bounce threshold for
+ * @return mixed Returns false if the user cannot send an email or an
+ * object containing the email properties if they can
+ */
+function can_receive_email($userto) {
+    if (!$userto->id) {
+        // No user ID was provided by email_user
+        return new StdClass;
+    }
+
+    // Retrieve data for this mail address
+    if (!$mailinfo = get_record_select('artefact_internal_profile_email', 'owner = ? AND email = ?', array($userto->id, $userto->email))) {
+        // Since we don't know who this address belongs to, we must return
+        // an object. They're not disabled, we just don't know about them.
+        return new StdClass;
+    }
+
+    // If this user has email disabled, then return false.
+    if (get_account_preference($mailinfo->owner, 'maildisabled') == 1) {
+        // Email is disabled for this user
+        return false;
+    }
+
+    return $mailinfo;
+}
+
+/**
+ * Generate an email processing address for VERP handling of email
+ *
+ * @param int $userid the ID of the user sending the mail
+ * @param object $userto an object containing the email address
+ * @param char $type The type of address to generate
+ *
+ * The type of address is typically a Bounce. These are processed by the
+ * process_email function.
+ */
+function generate_email_processing_address($userid, $userto, $type='B') {
+    $mailprefix = get_config('bounceprefix');
+    $maildomain = get_config('bouncedomain');
+    $installation_key = get_config('installation_key');
+    $args = $type . base64_encode(pack('V', $userid)) . substr(md5($userto->email), 0, 16);
+    return $mailprefix . $args . substr(md5($mailprefix . $userto->email . $installation_key), 0, 16) . '@' . $maildomain;
+}
+
+/**
+ * Check whether an email account is over the site-wide bounce threshold.
+ * If the user is over threshold, then e-mail is disabled for their
+ * account, and they are sent a notification to notify them of the change.
+ *
+ * @param object $mailinfo The row from artefact_internal_profile_email for
+ * the user being processed.
+ * @return boolean false if the user is not over threshold, true if they
+ * are.
+ */
+function check_overcount($mailinfo) {
+    // if we don't handle bounce e-mails, then we can't be over threshold
+    if (!get_config('bounces_handle')) {
+        return false;
+    }
+
+    if ((! $minbounces = get_config('bounces_min')) || (! $bounceratio = get_config('bounces_ratio'))) {
+        return false;
+    }
+
+    if ($mailinfo->mailssent == 0) {
+        return false;
+    }
+
+    // If the bouncecount is larger than the allowed amount
+    // and the bounce count ratio (bounces/total sent) is larger than the
+    // bounceratio, then disable email
+    $overlimit = ($mailinfo->mailsbounced >= $minbounces) && ($mailinfo->mailsbounced/$mailinfo->mailssent >= $bounceratio);
+
+    if ($overlimit) {
+        if (get_account_preference($mailinfo->owner,'maildisabled') != 1) {
+            // Disable the e-mail account
+            db_begin();
+            set_account_preference($mailinfo->owner, 'maildisabled', 1);
+
+            $lang = get_user_language($mailinfo->owner);
+
+            // Send a notification that e-mail has been disabled
+            $message = new StdClass;
+            $message->users = array($mailinfo->owner);
+
+            $message->subject = get_string_from_language($lang, 'maildisabled', 'account');
+            $message->message = get_string_from_language($lang, 'maildisabledbounce', 'account', get_config('wwwroot') . 'account/');
+
+            require_once('activity.php');
+            activity_occurred('maharamessage', $message);
+
+            db_commit();
+        }
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Update the send count for the specified e-mail address
+ *
+ * @param object $userto object to update count for. Must contain email and
+ * user id
+ * @param boolean reset Reset the sent mail count to 0 (optional).
+ */
+function update_send_count($userto, $reset=false) {
+    if (!$userto->id) {
+        // We need a user id to update the send count.
+        return false;
+    }
+    if ($mailinfo = get_record_select('artefact_internal_profile_email', 'owner = ? AND email = ? AND principal = 1', array($userto->id, $userto->email))) {
+        $mailinfo->mailssent = (!empty($reset)) ? 0 : $mailinfo->mailssent+1;
+        update_record('artefact_internal_profile_email', $mailinfo, array('email' => $userto->email, 'owner' => $userto->id));
+    }
+}
+
+/**
+ * Update the bounce count for the specified e-mail address
+ *
+ * @param object $userto object to update count for. Must contain email and
+ * user id
+ * @param boolean reset Reset the sent mail count to 0 (optional).
+ */
+function update_bounce_count($userto, $reset=false) {
+    if (!$userto->id) {
+        // We need a user id to update the bounce count.
+        return false;
+    }
+    if ($mailinfo = get_record_select('artefact_internal_profile_email', 'owner = ? AND email = ? AND principal = 1', array($userto->id, $userto->email))) {
+        $mailinfo->mailsbounced = (!empty($reset)) ? 0 : $mailinfo->mailsbounced+1;
+        update_record('artefact_internal_profile_email', $mailinfo, array('email' => $userto->email, 'owner' => $userto->id));
+    }
+}
+
+/**
+ * Process an incoming email
+ *
+ * @param string $address the email address to process
+ */
+function process_email($address) {
+
+    $email = new StdClass;
+
+    if (strlen($address) <= 30) {
+        log_debug ('-- Email address not long enough to contain valid data.');
+        return $email;
+    }
+
+    if (!strstr($address, '@')) {
+        log_debug ('-- Email address does not contain @.');
+        return $email;
+    }
+
+    list($email->localpart,$email->domain) = explode('@',$address);
+    // The prefix is stored in the first four characters
+    $email->prefix        = substr($email->localpart,0,4);
+    // The type of message received is a one letter code
+    $email->type          = substr($email->localpart,4,1);
+    // The userid should be available immediately afterwards
+    list(,$email->userid) = unpack('V',base64_decode(substr($email->localpart,5,8)));
+    // Any additional arguments
+    $email->args          = substr($email->localpart,13,-16);
+    // And a hash of the intended recipient for authentication
+    $email->addresshash   = substr($email->localpart,-16);
+
+    if (!$email->userid) {
+        log_debug('-- no userid associated with this email address');
+        return $email;
+    }
+
+    switch ($email->type) {
+    case 'B': // E-mail bounces
+        if ($user = get_record_select('artefact_internal_profile_email', 'owner = ? AND principal = 1', array($email->userid))) {
+            $mailprefix = get_config('bounceprefix');
+            $maildomain = get_config('bouncedomain');
+            $installation_key = get_config('installation_key');
+            // check the half md5 of their email
+            $md5check = substr(md5($mailprefix . $user->email . $installation_key), 0, 16);
+            $user->id = $user->owner;
+            if ($md5check == substr($email->addresshash, -16)) {
+                update_bounce_count($user);
+                check_overcount($user);
+            }
+            // else maybe they've already changed their email address
+        }
+        break;
+        // No more cases yet
+    }
+    return $email;
 }
 
 /**
