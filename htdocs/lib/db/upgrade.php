@@ -1287,14 +1287,14 @@ function xmldb_core_upgrade($oldversion=0) {
     if ($oldversion < 2009111200) {
         $table = new XMLDBTable('artefact_internal_profile_email');
         $field = new XMLDBField('mailssent');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 2, null, XMLDB_NOTNULL, null, null, null, 0);
         add_field($table, $field);
     }
 
     if ($oldversion < 2009111201) {
         $table = new XMLDBTable('artefact_internal_profile_email');
         $field = new XMLDBField('mailsbounced');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 2, null, XMLDB_NOTNULL, null, null, null, 0);
         add_field($table, $field);
     }
 

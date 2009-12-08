@@ -13,6 +13,8 @@
             <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="false"/>
             <FIELD NAME="key" TYPE="char" LENGTH="16" NOTNULL="false"/>
             <FIELD NAME="expiry" TYPE="datetime" NOTNULL="false"/>
+            <FIELD NAME="mailssent" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0"/>
+            <FIELD NAME="mailsbounced" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0"/>
         </FIELDS>
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="owner,email"/>
