@@ -670,6 +670,7 @@ function core_install_firstcoredata_defaults() {
     set_config('showselfsearchsideblock', 0);
     set_config('showtagssideblock', 1);
     set_config('tagssideblockmaxtags', 20);
+    set_config('usersallowedmultipleinstitutions', 1);
 
     // install the applications
     $app = new StdClass;
