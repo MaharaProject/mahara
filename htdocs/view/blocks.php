@@ -123,6 +123,7 @@ $extraconfig = array(
 
 // Set up theme
 $viewtheme = $view->get('theme');
+$allowedthemes = get_themes(false);
 if ($viewtheme && $THEME->basename != $viewtheme) {
     $THEME = new Theme($viewtheme);
 }
@@ -131,6 +132,20 @@ if ($viewtheme && $THEME->basename != $viewtheme) {
 $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
 foreach (array_reverse($THEME->get_url('style/style.css', true, 'artefact/file')) as $sheet) {
     $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . $sheet . '">';
+}
+
+// Tell the user to change the view theme if the current one is no
+// longer available to them.
+if (!isset($allowedthemes[$viewtheme])) {
+    $smarty = smarty(array(), $stylesheets, false, $extraconfig);
+    $smarty->assign('PAGEHEADING', hsc(TITLE));
+    $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
+    $smarty->assign('view', $view->get('id'));
+    $smarty->assign('viewtitle', $view->get('title'));
+    $smarty->assign('viewtheme', $viewtheme);
+    $smarty->assign('viewthemes', $allowedthemes);
+    $smarty->display('view/changetheme.tpl');
+    exit;
 }
 
 $smarty = smarty(array('views', 'tinymce', 'paginator', 'tablerenderer', 'artefact/file/js/filebrowser.js', 'lib/pieforms/static/core/pieforms.js', 'blocktype/creativecommons/js/creativecommons.js'), $stylesheets, false, $extraconfig);
@@ -174,7 +189,7 @@ $smarty->assign('institution', $institution);
 $smarty->assign('can_change_layout', (!$USER->get_account_preference('addremovecolumns') || ($view->get('numcolumns') > 1 && $view->get('numcolumns') < 5)));
 
 $smarty->assign('viewtheme', $viewtheme);
-$smarty->assign('viewthemes', get_themes());
+$smarty->assign('viewthemes', $allowedthemes);
 
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewtitle', $view->get('title'));

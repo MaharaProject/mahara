@@ -257,6 +257,8 @@ $string['noartefactstochoosefrom'] = 'Sorry, no artefacts to choose from';
 $string['access'] = 'Access';
 $string['noaccesstoview'] = 'You do not have permission to access this view';
 
+$string['changeviewtheme'] = 'The theme you have chosen for this view is no longer available to you.  Please select a different theme.';
+
 // Templates
 $string['Template'] = 'Template';
 $string['allowcopying'] = 'Allow copying';

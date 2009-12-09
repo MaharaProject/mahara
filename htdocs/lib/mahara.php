@@ -525,8 +525,19 @@ function get_language_root($language=null) {
 /**
  * Return a list of available themes.
  */
-function get_themes() {
+function get_themes($all=true) {
     static $themes = null;
+
+    $institutionthemes = array();
+    if (!$all) {
+        global $USER;
+        $institutions = $USER->get('institutions');
+        foreach ($institutions as &$i) {
+            if (!empty($i->theme)) {
+                $institutionthemes[$i->theme] = 1;
+            }
+        }
+    }
 
     if (is_null($themes)) {
         $themes = array();
@@ -539,7 +550,9 @@ function get_themes() {
                 $config_path = $themebase . $subdir . '/themeconfig.php';
                 if (is_readable($config_path)) {
                     require($config_path);
-                    $themes[$subdir] = isset($theme->displayname) ? $theme->displayname : $subdir;
+                    if ($all || empty($theme->institution_only) || isset($institutionthemes[$subdir])) {
+                        $themes[$subdir] = isset($theme->displayname) ? $theme->displayname : $subdir;
+                    }
                 }
             }
         }
