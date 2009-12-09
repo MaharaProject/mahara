@@ -483,7 +483,13 @@ function edituser_institution_submit(Pieform $form, $values) {
 
     if (isset($values['add']) && $USER->get('admin')
         && (empty($userinstitutions) || get_config('usersallowedmultipleinstitutions'))) {
-        $user->join_institution($values['addinstitution']);
+        if ($user->id == $USER->id) {
+            $USER->join_institution($values['addinstitution']);
+            $USER->commit();
+        }
+        else {
+            $user->join_institution($values['addinstitution']);
+        }
     }
 
     redirect('/admin/users/edit.php?id='.$user->id);
