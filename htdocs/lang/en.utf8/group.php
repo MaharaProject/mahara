@@ -67,6 +67,7 @@ $string['Admin'] = 'Admin';
 $string['grouptype'] = 'Group type';
 $string['publiclyviewablegroup'] = 'Publicly Viewable Group?';
 $string['publiclyviewablegroupdescription'] = 'Allow anyone (including people who aren\'t members of this site) to view this group, including the forums?';
+$string['publicvisibility'] = 'Publicly visible';
 $string['usersautoadded'] = 'Users auto-added?';
 $string['usersautoaddeddescription'] = 'Automatically put all new users into this group?';
 $string['grouptypedescription'] = '%s > %s';

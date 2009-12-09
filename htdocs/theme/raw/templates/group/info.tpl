@@ -4,6 +4,7 @@
                     <a href="{$WWWROOT}user/view.php?id={$id|escape}">{$id|display_name|escape}</a>{if !$.foreach.admins.last}, {/if}
                     {/foreach}</li>
                     <li><label>{str tag="grouptype" section="group"}:</label> {$group->grouptypedescription}</li>
+                    <li><label>{str tag="publicvisibility" section="group"}:</label> {if $group->public}{str tag="yes"}{else}{str tag="no"}{/if}</li>
                     <li><label>{str tag=Created section=group}:</label> {$group->ctime}</li>
                     <li><span><label>{str tag=Members section=group}:</label> {$membercount}&nbsp;</span>
                         <span><label>{str tag=Views section=view}:</label> {$viewcount}&nbsp;</span>

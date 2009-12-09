@@ -1153,18 +1153,18 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
     // gets the groups filtered by above
     // and the first three members by id
     
-    $sql = 'SELECT g1.id, g1.name, g1.description, g1.jointype, g1.grouptype, g1.membershiptype, g1.reason, g1.role, g1.membercount, COUNT(gmr.member) AS requests
+    $sql = 'SELECT g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.grouptype, g1.membershiptype, g1.reason, g1.role, g1.membercount, COUNT(gmr.member) AS requests
         FROM (
-        SELECT g.id, g.name, g.description, g.jointype, g.grouptype, t.membershiptype, t.reason, t.role, COUNT(gm.member) AS membercount
+        SELECT g.id, g.name, g.description, g.public, g.jointype, g.grouptype, t.membershiptype, t.reason, t.role, COUNT(gm.member) AS membercount
             FROM {group} g
             LEFT JOIN {group_member} gm ON (gm.group = g.id)' .
             $sql . '
             WHERE g.deleted = ?
-            GROUP BY g.id, g.name, g.description, g.jointype, g.grouptype, t.membershiptype, t.reason, t.role
+            GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.grouptype, t.membershiptype, t.reason, t.role
             ORDER BY g.name
         ) g1
         LEFT JOIN {group_member_request} gmr ON (gmr.group = g1.id)
-        GROUP BY g1.id, g1.name, g1.description, g1.jointype, g1.grouptype, g1.membershiptype, g1.reason, g1.role, g1.membercount';
+        GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.grouptype, g1.membershiptype, g1.reason, g1.role, g1.membercount';
     
     $groups = get_records_sql_assoc($sql, $values, $offset, $limit);
     
