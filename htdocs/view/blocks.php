@@ -136,7 +136,7 @@ foreach (array_reverse($THEME->get_url('style/style.css', true, 'artefact/file')
 
 // Tell the user to change the view theme if the current one is no
 // longer available to them.
-if (!isset($allowedthemes[$viewtheme])) {
+if ($viewtheme && !isset($allowedthemes[$viewtheme])) {
     $smarty = smarty(array(), $stylesheets, false, $extraconfig);
     $smarty->assign('PAGEHEADING', hsc(TITLE));
     $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
@@ -182,7 +182,40 @@ $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
 $smarty->assign('category', $category);
 $smarty->assign('new', $new);
 $smarty->assign('profile', $profile);
-$smarty->assign('viewtype', $view->get('type'));
+$viewid = $view->get('id');
+$viewtype = $view->get('type');
+$viewtitle = $view->get('title');
+$owner = $view->get('owner');
+if ($owner) {
+    if ($viewtype == 'profile') {
+        $microheaderlinks = array(
+            array(
+                'name' => get_string('viewmyprofilepage'),
+                'url' => get_config('wwwroot') . 'user/view.php',
+            ),
+            array(
+                'name' => get_string('editmyprofile', 'artefact.internal'),
+                'url' => get_config('wwwroot') . 'artefact/internal/index.php',
+            ),
+        );
+        $viewtitle = get_string('usersprofile', 'mahara', display_name($view->get('owner'), null, true));
+    }
+    else {
+        $microheaderlinks = array(
+            array(
+                'name' => get_string('editdetails', 'view'),
+                'url' => get_config('wwwroot') . 'view/edit.php?id=' . $viewid . '&amp;new=' . $new,
+            ),
+            array(
+                'name' => get_string('editaccess', 'view'),
+                'url' => get_config('wwwroot') . 'view/access.php?id=' . $viewid . '&amp;new=' . $new,
+            ),
+        );
+    }
+    $smarty->assign('microheaderlinks', $microheaderlinks);
+}
+$smarty->assign('userdisplayname', display_name($USER, null, true));
+$smarty->assign('viewtype', $viewtype);
 $smarty->assign('view', $view->get('id'));
 $smarty->assign('groupid', $group);
 $smarty->assign('institution', $institution);
@@ -192,8 +225,7 @@ $smarty->assign('viewtheme', $viewtheme);
 $smarty->assign('viewthemes', $allowedthemes);
 
 $smarty->assign('viewid', $view->get('id'));
-$smarty->assign('viewtitle', $view->get('title'));
-$owner = $view->get('owner');
+$smarty->assign('viewtitle', $viewtitle);
 if ($owner) {
     $smarty->assign('ownerlink', 'user/view.php?id=' . $owner);
 }

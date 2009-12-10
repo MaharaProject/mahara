@@ -110,6 +110,7 @@ $string['emailingfailed'] = 'Profile saved, but emails were not sent to: %s';
 $string['loseyourchanges'] = 'Lose your changes?';
 
 $string['editprofile']  = 'Edit Profile';
+$string['editmyprofile']  = 'Edit My Profile';
 $string['Title'] = 'Title';
 
 $string['Created'] = 'Created';

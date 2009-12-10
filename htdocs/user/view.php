@@ -309,9 +309,19 @@ $smarty->assign('USERID', $userid);
 $smarty->assign('userdisplayname', display_name($USER, null, true));
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewtitle', get_string('usersprofile', 'mahara', display_name($user, null, true)));
+$smarty->assign('viewtype', 'profile');
 if ($loggedinid && $loggedinid == $userid) {
-    $smarty->assign('can_edit', true);
-    $smarty->assign('edit_profile', true);
+    $microheaderlinks = array(
+        array(
+            'name' => get_string('editmyprofilepage'),
+            'url' => get_config('wwwroot') . 'view/blocks.php?profile=1',
+        ),
+        array(
+            'name' => get_string('editmyprofile', 'artefact.internal'),
+            'url' => get_config('wwwroot') . 'artefact/internal/index.php',
+        ),
+    );
+    $smarty->assign('microheaderlinks', $microheaderlinks);
 }
 if (isset($_SERVER['HTTP_REFERER'])) {
     $smarty->assign('backurl', $_SERVER['HTTP_REFERER']);

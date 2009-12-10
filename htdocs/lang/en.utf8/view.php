@@ -34,6 +34,7 @@ $string['createviewstepthree']    = 'Create View Step Three: Access';
 $string['createtemplate']         = 'Create Template';
 $string['editdetails']            = 'Edit Details';
 $string['editviewdetails']        = 'Edit Details for View "%s"';
+$string['editview']               = 'Edit View';
 $string['editblocksforview']      = 'Edit View "%s"';
 $string['editaccess']             = 'Edit Access';
 $string['editaccessforview']      = 'Edit Access for View "%s"';

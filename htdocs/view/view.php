@@ -174,7 +174,8 @@ $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('new', $new);
 $smarty->assign('viewid', $viewid);
 $smarty->assign('viewtitle', $title);
-$smarty->assign('viewtype', $view->get('type'));
+$viewtype = $view->get('type');
+$smarty->assign('viewtype', $viewtype);
 $smarty->assign('feedback', $feedback);
 
 $owner = $view->get('owner');
@@ -187,7 +188,35 @@ else if ($group) {
     $smarty->assign('ownerlink', 'group/view.php?id=' . $group);
 }
 if ($can_edit) {
-    $smarty->assign('can_edit', 1);
+    if ($viewtype == 'profile') {
+        $microheaderlinks = array(
+            array(
+                'name' => get_string('editmyprofilepage'),
+                'url' => get_config('wwwroot') . 'view/blocks.php?profile=1',
+            ),
+            array(
+                'name' => get_string('editmyprofile', 'artefact.internal'),
+                'url' => get_config('wwwroot') . 'artefact/internal/index.php',
+            ),
+        );
+    }
+    else {
+        $microheaderlinks = array(
+            array(
+                'name' => get_string('editdetails', 'view'),
+                'url' => get_config('wwwroot') . 'view/edit.php?id=' . $viewid . '&amp;new=' . $new,
+            ),
+            array(
+                'name' => get_string('editview', 'view'),
+                'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . '&amp;new=' . $new,
+            ),
+            array(
+                'name' => get_string('editaccess', 'view'),
+                'url' => get_config('wwwroot') . 'view/access.php?id=' . $viewid . '&amp;new=' . $new,
+            ),
+        );
+    }
+    $smarty->assign('microheaderlinks', $microheaderlinks);
 }
 if ($USER->is_logged_in()) {
     $smarty->assign('userdisplayname', display_name($USER, null, true));
