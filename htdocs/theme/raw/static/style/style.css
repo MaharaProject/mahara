@@ -535,17 +535,26 @@ div.rbuttons .small-logo {
 
 /**************************** Top of page elements ****************************/
 .viewheader {
-    padding: .5em;
+    padding: 0 .5em 0;
     margin: 0 .25em 1px;
 }
 .viewheader .small-logo img {
-	margin: .5em;
+    vertical-align: top;
     padding: 0;
 }
-.viewheader .lbuttons {
-    padding: .5em;
-	font-size: .9em;
-	margin-left: .5em;
+.viewheader .nav {
+  float: right;
+  padding: 0 .5em .25em;
+  font-size: .9em;
+}
+.viewheader .links {
+  float: left;
+  padding: 0 .5em .25em;
+  font-size: .9em;
+}
+.viewheader .title {
+  border-top: 1px dotted #ddd;
+  padding: .5em 0 .25em;
 }
 .sitemessage {
     background-color: #f99;

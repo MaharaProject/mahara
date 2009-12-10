@@ -7,12 +7,21 @@
 <div id="containerX">
     <div id="loading-box"></div>
     <div id="top-wrapper">
-      <div class="viewheader rel">
-        <div class="rbuttons">
+      <div class="viewheader">
+        <div class="nav">
+{if $LOGGEDIN}
+          <a href="{$WWWROOT}user/view.php">{$userdisplayname|escape}</a>&nbsp;
+          {foreach from=$MAINNAV item=item}
+            {if $item.path}
+              <a href="{if get_config('httpswwwroot') && $item.url=='account/'}{$HTTPSWWWROOT}{else}{$WWWROOT}{/if}{$item.url|escape}">{$item.title|escape}</a>&nbsp;
+            {/if}
+          {/foreach}
+          {if $mnethost}<a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a>&nbsp;{/if}
+{/if}
           <a class="small-logo" href="{$WWWROOT}"><img src="{theme_url filename='images/site-logo-small.png'}" alt="{$sitename|escape}"></a>
-          {if $mnethost}&nbsp;&nbsp;<a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a>{/if}
         </div>
-        <div class="lbuttons">
+{if $LOGGEDIN}
+        <div class="links">
           {if $backurl}<a class="btn-reply" href="{$backurl}">{str tag=back}</a>&nbsp;{/if}
           {if $edit_profile || $viewtype == 'profile'}
               <a href="{$WWWROOT}user/view.php">{str tag=viewmyprofilepage}</a>&nbsp;
@@ -26,8 +35,9 @@
               <a class="btn-edit" href="{$WWWROOT}view/blocks.php?id={$viewid}&amp;new={$new}">{str tag=edit}</a>
           {/if}
         </div>
-        <div class="center">
-        {if !$new}<a href="{$WWWROOT}view/view.php?id={$viewid}">{/if}{$viewtitle|escape}{if !$new}</a>{/if}{if $ownername} {str tag=by section=view} <a href="{$WWWROOT}{$ownerlink}">{$ownername|escape}</a>{/if}</div>
+{/if}
+        <div class="center cb title">
+        <strong>{$viewtitle|escape}</strong>{if $ownername && $viewtype != 'profile'} {str tag=by section=view} <a href="{$WWWROOT}{$ownerlink}">{$ownername|escape}</a>{/if}</div>
       </div>
     </div>
     <div id="main-wrapper">

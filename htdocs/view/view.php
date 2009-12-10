@@ -79,7 +79,12 @@ if (param_variable('make_private_submit', null)) {
 
 $group = $view->get('group');
 
-$title = $view->get('title');
+if ($view->get('type') == 'profile') {
+    $title = get_string('usersprofile', 'mahara', display_name($view->get('owner'), null, true));
+}
+else {
+    $title = $view->get('title');
+}
 define('TITLE', $title);
 
 $submittedgroup = (int)$view->get('submittedgroup');
@@ -168,7 +173,8 @@ EOF;
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('new', $new);
 $smarty->assign('viewid', $viewid);
-$smarty->assign('viewtitle', $view->get('title'));
+$smarty->assign('viewtitle', $title);
+$smarty->assign('viewtype', $view->get('type'));
 $smarty->assign('feedback', $feedback);
 
 $owner = $view->get('owner');
@@ -183,10 +189,13 @@ else if ($group) {
 if ($can_edit) {
     $smarty->assign('can_edit', 1);
 }
-if ($USER->is_logged_in() && !empty($_SERVER['HTTP_REFERER'])) {
-    $page = get_config('wwwroot') . 'view/view.php?id=' . $viewid . ($new ? '&new=1' : '');
-    if ($_SERVER['HTTP_REFERER'] != $page) {
-        $smarty->assign('backurl', $_SERVER['HTTP_REFERER']);
+if ($USER->is_logged_in()) {
+    $smarty->assign('userdisplayname', display_name($USER, null, true));
+    if (!empty($_SERVER['HTTP_REFERER'])) {
+        $page = get_config('wwwroot') . 'view/view.php?id=' . $viewid . ($new ? '&new=1' : '');
+        if ($_SERVER['HTTP_REFERER'] != $page) {
+            $smarty->assign('backurl', $_SERVER['HTTP_REFERER']);
+        }
     }
 }
 

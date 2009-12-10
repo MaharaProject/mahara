@@ -306,6 +306,7 @@ $smarty->assign('institutions', get_institution_string_for_user($userid));
 $smarty->assign('canmessage', can_send_message($loggedinid, $userid));
 $smarty->assign('NAME',$name);
 $smarty->assign('USERID', $userid);
+$smarty->assign('userdisplayname', display_name($USER, null, true));
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewtitle', get_string('usersprofile', 'mahara', display_name($user, null, true)));
 if ($loggedinid && $loggedinid == $userid) {

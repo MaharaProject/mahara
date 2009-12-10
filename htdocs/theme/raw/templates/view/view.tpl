@@ -1,6 +1,8 @@
 {include file="viewmicroheader.tpl"}
 
+{if $viewtype != 'profile'}
 <h1>{if !$new}<a href="{$WWWROOT}view/view.php?id={$viewid}">{/if}{$viewtitle|escape}{if !$new}</a>{/if}</h1>
+{/if}
 
 <p id="view-description">{$viewdescription}</p>
 
