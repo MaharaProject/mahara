@@ -839,7 +839,7 @@ function group_get_membersearch_data($group, $query, $offset, $limit, $membershi
         'limit' => $limit,
         'offset' => $offset,
         'datatable' => 'membersearchresults',
-        'jsonscript' => 'group/membersearchresults.php',
+        'jsonscript' => 'group/membersearchresults.json.php',
         'firsttext' => '',
         'previoustext' => '',
         'nexttext' => '',

@@ -40,7 +40,7 @@ $limit  = param_integer('limit', 10);
 define('GROUP', $id);
 $group = group_current_group();
 if (!is_logged_in() && !$group->public) {
-    throw new AccessDeniedException();
+    throw new AccessDeniedException(get_string('accessdenied', 'error'));
 }
 
 $membershiptype = param_variable('membershiptype', '');
