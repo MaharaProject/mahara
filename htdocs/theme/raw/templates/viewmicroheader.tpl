@@ -14,7 +14,7 @@
         <div class="links lbuttons">
           {if $microheaderlinks}
             {foreach from=$microheaderlinks item=item}
-              <a href="{$item.url}">{$item.name|escape}</a>&nbsp;
+              <a {if $item.edit}class="btn-edit" {/if}href="{$item.url}">{$item.name|escape}</a>&nbsp;
             {/foreach}
           {elseif $backurl}<a class="btn-reply" href="{$backurl}">{str tag=back}</a>&nbsp;
           {/if}

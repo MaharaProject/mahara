@@ -196,6 +196,7 @@ if ($owner) {
             array(
                 'name' => get_string('editmyprofile', 'artefact.internal'),
                 'url' => get_config('wwwroot') . 'artefact/internal/index.php',
+                'edit' => 1,
             ),
         );
         $viewtitle = get_string('usersprofile', 'mahara', display_name($view->get('owner'), null, true));
@@ -205,10 +206,12 @@ if ($owner) {
             array(
                 'name' => get_string('editdetails', 'view'),
                 'url' => get_config('wwwroot') . 'view/edit.php?id=' . $viewid . '&amp;new=' . $new,
+                'edit' => 1,
             ),
             array(
                 'name' => get_string('editaccess', 'view'),
                 'url' => get_config('wwwroot') . 'view/access.php?id=' . $viewid . '&amp;new=' . $new,
+                'edit' => 1,
             ),
         );
     }
