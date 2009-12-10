@@ -19,8 +19,8 @@
           {elseif $backurl}<a class="btn-reply" href="{$backurl}">{str tag=back}</a>&nbsp;
           {/if}
         </div>
-        <div class="nav">
 {if $LOGGEDIN}
+        <div class="nav">
           <a href="{$WWWROOT}user/view.php">{$userdisplayname|escape}</a>&nbsp;:
           {foreach from=$MAINNAV item=item}
             {if $item.path}
@@ -28,8 +28,8 @@
             {/if}
           {/foreach}
           {if $mnethost}<a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a>&nbsp;{/if}
-{/if}
         </div>
+{/if}
         <div class="center cb title">
         <strong>{$viewtitle|escape}</strong>{if $ownername && $viewtype != 'profile'} {str tag=by section=view} <a href="{$WWWROOT}{$ownerlink}">{$ownername|escape}</a>{/if}</div>
       </div>

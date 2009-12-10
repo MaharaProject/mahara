@@ -544,15 +544,15 @@ div.rbuttons .small-logo {
     padding: 0;
 }
 .viewheader .links {
-  padding: 0 .5em .25em;
+  padding: 0 .5em 0;
   font-size: .9em;
 }
 .viewheader .nav {
-  padding: 0 .5em .25em;
+  padding: 0 .5em .5em;
   font-size: .9em;
+  border-bottom: 1px dotted #ddd;
 }
 .viewheader .title {
-  border-top: 1px dotted #ddd;
   padding: .5em 0 .25em;
 }
 .sitemessage {
