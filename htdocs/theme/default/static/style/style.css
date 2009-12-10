@@ -627,6 +627,12 @@ div.sideblock #friendscontrol label {
 #version {
 	color: #c9c9c9;
 }
+#release {
+	color: #c9c9c9;
+}
+#release a {
+    color: #FFF;
+}
 
 
 /****************************** PAGE BY PAGE STYLES **********************************/
