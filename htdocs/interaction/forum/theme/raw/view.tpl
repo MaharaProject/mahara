@@ -6,7 +6,7 @@
 		<a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}" class="btn btn-editforum">{str tag="edittitle" section="interaction.forum"}</a>
         <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}" class="btn btn-deleteforum">{str tag="deleteforum" section="interaction.forum"}</a>
 	{/if}
-	{$forum->subscribe}
+	{if $membership}{$forum->subscribe}{/if}
 </div>
 <div id="forumdescription">{$forum->description}</div>
 <div id="viewforum" class="rel">
