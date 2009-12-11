@@ -1826,9 +1826,9 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
         $tempdir = get_config('dataroot') . 'artefact/file/temp';
         check_dir_exists($tempdir);
 
-        $this->read_archive();
-
         if ($this->archivetype == 'tar') {
+
+            $this->read_archive();
 
             // Untar everything into a temp directory first
             $tempsubdir = tempnam($tempdir, '');
@@ -1856,6 +1856,8 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
             }
 
         } else if ($this->archivetype == 'zip') {
+
+            $this->open_archive();
 
             $tempfile = tempnam($tempdir, '');
             $i = 0;
