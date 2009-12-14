@@ -183,6 +183,7 @@ $profileform = pieform(array(
     // will be uncommented when js for tabbed interface is called again after form submit
     //'jsform'     => true,
     'method'     => 'post',
+    'renderer'   => 'table',  // don't change unless you also modify profile.js to not require tables.
     'elements'   => $elements,
     'autofocus'  => false,
 ));
