@@ -217,6 +217,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             if (self.filedata[id].permissions[perm[1]] && self.filedata[id].permissions[perm[1]][perm[2]] == 1) {
                 elem.checked = true;
             }
+            else {
+                elem.checked = false;
+            }
         });
         // $(self.id + '_edit_artefact').value = id; // Changes button text in IE
         setNodeAttribute(self.id + '_edit_artefact', 'name', self.id + '_update[' + id + ']');
