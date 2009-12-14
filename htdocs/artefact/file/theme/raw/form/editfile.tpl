@@ -37,15 +37,13 @@
   {foreach from=$groupinfo.roles item=role key=r}
                   <tr>
                     <td>{$role->display}</td>
-    {if $fileinfo}
-      {foreach from=$fileinfo->permissions.$r item=permvalue key=permname}
-                    <td><input type="checkbox" class="permission" name="{$prefix}_permission:{$r}:{$permname}"{if $permvalue} checked{/if}{if $r == 'admin'} disabled{/if} /></td>
-      {/foreach}
-    {else}
-      {foreach from=$groupinfo.perms.$r item=permvalue key=permname}
-                    <td><input type="checkbox" class="permission" name="{$prefix}_permission:{$r}:{$permname}" {if $r == 'admin'} checked disabled{/if}/></td>
-      {/foreach}
-    {/if}
+    {foreach from=$groupinfo.perm item=whocares key=permid}
+      {if $fileinfo}
+                    <td><input type="checkbox" class="permission" name="{$prefix}_permission:{$r}:{$permid}"{if $fileinfo->permissions.$r.$permid} checked{/if}{if $r == 'admin'} disabled{/if} /></td>
+      {else}
+                    <td><input type="checkbox" class="permission" name="{$prefix}_permission:{$r}:{$permid}" {if $r == 'admin'} checked disabled{/if}/></td>
+      {/if}
+    {/foreach}
                   </tr>
   {/foreach}
                 </tbody>
