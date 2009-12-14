@@ -400,7 +400,6 @@ function institution_submit(Pieform $form, $values) {
     }
 
     $newinstitution->displayname                  = $values['displayname'];
-    $newinstitution->expiry                       = db_format_timestamp($values['expiry']);
     $newinstitution->authplugin                   = empty($values['authplugin']) ? null : $values['authplugin'];
     if (get_config('usersuniquebyusername')) {
         // Registering absolutely not allowed when this setting is on, it's a 
@@ -413,6 +412,7 @@ function institution_submit(Pieform $form, $values) {
     }
     $newinstitution->theme                        = (empty($values['theme']) || $values['theme'] == 'sitedefault') ? null : $values['theme'];
     if ($institution != 'mahara') {
+        $newinstitution->expiry                   = db_format_timestamp($values['expiry']);
         $newinstitution->defaultmembershipperiod  = ($values['defaultmembershipperiod']) ? intval($values['defaultmembershipperiod']) : null;
         if ($USER->get('admin')) {
             $newinstitution->maxuseraccounts      = ($values['maxuseraccounts']) ? intval($values['maxuseraccounts']) : null;
