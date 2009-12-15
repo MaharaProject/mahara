@@ -11,7 +11,7 @@
                 <FIELD NAME="link" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="title" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
-                <FIELD NAME="content" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="content" TYPE="text" LENGTH="big" NOTNULL="false" />
                 <FIELD NAME="lastupdate" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="image" TYPE="text" NOTNULL="false" />
             </FIELDS>

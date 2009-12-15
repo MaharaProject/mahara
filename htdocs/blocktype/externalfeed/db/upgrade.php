@@ -50,6 +50,17 @@ function xmldb_blocktype_externalfeed_upgrade($oldversion=0) {
             execute_sql('ALTER TABLE {blocktype_externalfeed_data} add unique {blocextedata_url_uix} (url(255))');
         }
     }
+
+    if ($oldversion < 2009121600) {
+        if (is_mysql()) {
+            // Make content column wider (TEXT is only 65kb in mysql)
+            $table = new XMLDBTable('blocktype_externalfeed_data');
+            $field = new XMLDBField('content');
+            $field->setAttributes(XMLDB_TYPE_TEXT, "big", null, null);
+            change_field_precision($table, $field);
+        }
+    }
+
     return true;
 }
 
