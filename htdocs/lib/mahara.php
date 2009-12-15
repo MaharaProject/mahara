@@ -1346,14 +1346,20 @@ function pieform_validate(Pieform $form, $values) {
         throw new UserException('Invalid session key');
     }
 
-    // Check to make sure the user has not been suspended, so that they cannot
+    // Check to make sure the user has not been suspended or deleted, so that they cannot
     // perform any action
     if ($USER) {
-        $record = get_record_sql('SELECT suspendedctime, suspendedreason
+        $record = get_record_sql('SELECT suspendedctime, suspendedreason, deleted
             FROM {usr}
             WHERE id = ?', array($USER->get('id')));
-        if ($record && $record->suspendedctime) {
-            throw new UserException(get_string('accountsuspended', 'mahara', $record->suspendedctime, $record->suspendedreason));
+        if ($record) {
+            if ($record->suspendedctime) {
+                throw new UserException(get_string('accountsuspended', 'mahara', $record->suspendedctime, $record->suspendedreason));
+            }
+            if ($record->deleted) {
+                $USER->logout();
+                throw new AccessDeniedException(get_string('accountdeleted', 'mahara'));
+            }
         }
     }
 }
