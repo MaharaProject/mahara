@@ -177,7 +177,7 @@ if ($institution || $add) {
 
         $authtypes = auth_get_available_auth_types();
     }
-    $themeoptions = get_themes();
+    $themeoptions = get_institution_themes($institution);
     $themeoptions['sitedefault'] = '- ' . get_string('sitedefault', 'admin') . ' (' . $themeoptions[get_config('theme')] . ') -';
     uksort($themeoptions, 'theme_sort');
 
