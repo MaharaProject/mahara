@@ -395,13 +395,7 @@ function auth_setup () {
                 redirect();
             }
         } else if (defined('INSTITUTIONALADMIN') && !$USER->get('admin')) {
-            $userreallyadminfor = get_column('usr_institution', 'institution', 'usr', $USER->id, 'admin', 1);
-            if (!$USER->is_institutional_admin() && !empty($userreallyadminfor)) {
-                $USER->set_admin_institutions($userreallyadminfor);
-            }
-            else if ($USER->is_institutional_admin() && empty($userreallyadminfor)) {
-                $USER->set_admin_institutions(array());
-            }
+            $USER->reset_institutions();
             if (!$USER->is_institutional_admin()) {
                 $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
                 redirect();
