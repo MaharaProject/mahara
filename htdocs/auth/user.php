@@ -623,14 +623,6 @@ class User {
         return false;
     }
 
-    public function set_admin_institutions($institutions) {
-        if (empty($institutions)) {
-            $this->set('admininstitutions', array());
-        } else {
-            $this->set('admininstitutions', array_combine($institutions, $institutions));
-        }
-    }
-
     public function add_institution_request($institution, $studentid = null) {
         if (empty($institution) || $institution == 'mahara') {
             return;
@@ -640,7 +632,7 @@ class User {
         $institution->addRequestFromUser($this, $studentid);
     }
 
-    protected function reset_institutions() {
+    public function reset_institutions() {
         $institutions             = load_user_institutions($this->id);
         $admininstitutions = array();
         $staffinstitutions = array();
