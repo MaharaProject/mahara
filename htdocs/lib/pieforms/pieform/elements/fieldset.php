@@ -95,9 +95,8 @@ function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
  */
 function pieform_element_fieldset_views_js(Pieform $form, $element) {
     // NOTE: $element['name'] is not set properly at this point
-    $blockname = json_encode('blockinstance_' . substr($form->get_name(), 3));
     return <<<EOF
-    forEach(getElementsByTagAndClassName('legend', null, $blockname), function(legend) {
+    forEach(getElementsByTagAndClassName('legend', null, 'instconf'), function(legend) {
         if (legend.firstChild.tagName == 'SCRIPT') {
             if (typeof(legend.firstChild.text) != 'undefined') {
                 // IE7
