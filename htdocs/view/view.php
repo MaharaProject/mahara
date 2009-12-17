@@ -193,31 +193,40 @@ if ($can_edit) {
             array(
                 'name' => get_string('editmyprofilepage'),
                 'url' => get_config('wwwroot') . 'view/blocks.php?profile=1',
-                'edit' => 1,
+                'type' => 'edit',
             ),
             array(
                 'name' => get_string('editmyprofile', 'artefact.internal'),
                 'url' => get_config('wwwroot') . 'artefact/internal/index.php',
-                'edit' => 1,
+                'type' => 'edit',
+            ),
+        );
+    }
+    else if ($new) {
+        $microheaderlinks = array(
+            array(
+                'name' => get_string('back'),
+                'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . '&amp;new=1',
+                'type' => 'reply',
             ),
         );
     }
     else {
         $microheaderlinks = array(
             array(
-                'name' => get_string('editdetails', 'view'),
+                'name' => get_string('edittitle', 'view'),
                 'url' => get_config('wwwroot') . 'view/edit.php?id=' . $viewid . '&amp;new=' . $new,
-                'edit' => 1,
+                'type' => 'edit',
             ),
             array(
-                'name' => get_string('editview', 'view'),
+                'name' => get_string('editcontent', 'view'),
                 'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . '&amp;new=' . $new,
-                'edit' => 1,
+                'type' => 'edit',
             ),
             array(
                 'name' => get_string('editaccess', 'view'),
                 'url' => get_config('wwwroot') . 'view/access.php?id=' . $viewid . '&amp;new=' . $new,
-                'edit' => 1,
+                'type' => 'edit',
             ),
         );
     }

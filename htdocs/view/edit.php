@@ -54,10 +54,10 @@ View::set_nav($group, $institution);
 $new = param_boolean('new', 0);
 
 if ($new) {
-    define('TITLE', get_string('createviewsteptwo', 'view'));
+    define('TITLE', get_string('edittitleanddescription', 'view'));
 }
 else {
-    define('TITLE', get_string('editviewdetails', 'view', $view->get('title')));
+    define('TITLE', $view->get('title') . ': ' . get_string('edittitleanddescription', 'view'));
 }
 
 $heading = TITLE; // for the smarty template
@@ -137,7 +137,7 @@ if (!($group || $institution)) {
 if ($new) {
     $editview['elements']['submit'] = array(
         'type'  => 'cancelbackcreate',
-        'value' => array(get_string('cancel'), get_string('back','view'), get_string('next')),
+        'value' => array(get_string('cancel'), get_string('back','view'), get_string('next') . ': ' . get_string('editaccess', 'view')),
         'confirm' => array(get_string('confirmcancelcreatingview', 'view'), null, null),
     );
 }
@@ -166,7 +166,7 @@ function editview_cancel_submit() {
 
 function editview_submit(Pieform $form, $values) {
 
-    global $view, $SESSION;
+    global $new, $view, $SESSION;
 
     if (param_boolean('back')) {
         redirect('/view/blocks.php?id=' . $view->get('id') . '&new=' . $new);

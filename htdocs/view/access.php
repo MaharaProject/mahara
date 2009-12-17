@@ -42,12 +42,7 @@ $institution = $view->get('institution');
 View::set_nav($group, $institution);
 $new = param_boolean('new');
 
-if ($new) {
-    define('TITLE', get_string('createviewstepthree', 'view'));
-}
-else {
-    define('TITLE', get_string('editaccessforview', 'view', $view->get('title')));
-}
+define('TITLE', $view->get('title') . ': ' . get_string('editaccess', 'view'));
 
 if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();

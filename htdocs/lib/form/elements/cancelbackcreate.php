@@ -36,12 +36,15 @@ function pieform_element_cancelbackcreate(Pieform $form, $element) {
     $form->include_plugin('element', 'submit');
     $form->include_plugin('element', 'cancel');
     $cancelelement = $element;
+    $cancelelement['class'] = (isset($cancelelement['class'])) ? $cancelelement['class'] . ' cancel' : 'cancel';
     $cancelelement['value'] = $element['value'][0];
     $backelement = $element;
     $backelement['name'] = 'back';
     $backelement['id'] = 'back';
+    $backelement['class'] = (isset($backelement['class'])) ? $backelement['class'] . ' cancel' : 'cancel';
     $backelement['value'] = $element['value'][1];
     $submitelement = $element;
+    $submitelement['class'] = (isset($submitelement['class'])) ? $submitelement['class'] . ' submit' : 'submit';
     $submitelement['value'] = $element['value'][2];
 
     if (isset($element['confirm']) && isset($element['confirm'][0])) {

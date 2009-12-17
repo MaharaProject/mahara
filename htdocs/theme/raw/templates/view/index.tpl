@@ -27,7 +27,7 @@
 {else}
                             {if $view.removable}<div class="rbuttons"><a href="{$WWWROOT}view/delete.php?id={$view.id}" class="btn-del">{str tag="deletethisview" section="view"}</a></div>{/if}
                             <div class="vi">
-                                <h4><a href="{$WWWROOT}view/edit.php?id={$view.id}" id="editviewdetails">{str tag="editviewnameanddescription" section="view"}</a></h4>
+                                <h4><a href="{$WWWROOT}view/edit.php?id={$view.id}" id="editviewdetails">{str tag="edittitleanddescription" section="view"}</a></h4>
 {if $view.description}
                                 <div class="videsc">{$view.description}</div>
 {/if}
@@ -36,7 +36,7 @@
 {/if}
                             </div>
                             <div class="vi">
-                                <h4><a href="{$WWWROOT}view/blocks.php?id={$view.id}" id="editthisview">{str tag ="editthisview" section="view"}</a></h4>
+                                <h4><a href="{$WWWROOT}view/blocks.php?id={$view.id}" id="editthisview">{str tag ="editcontentandlayout" section="view"}</a></h4>
 {if $view.artefacts}
                                 <div class="videsc">{str tag="artefacts" section="view"}:
                                 {foreach from=$view.artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$view.id}" id="link-artefacts">{$artefact.title|escape}</a>{if !$.foreach.artefacts.last}, {/if}{/foreach}</div>
@@ -44,7 +44,7 @@
                             </div>
 {/if}
                             <div class="vi">
-                                <h4><a href="{$WWWROOT}view/access.php?id={$view.id}" id="editviewaccess">{str tag="editviewaccess" section="view"}</a></h4>
+                                <h4><a href="{$WWWROOT}view/access.php?id={$view.id}" id="editviewaccess">{str tag="editaccess" section="view"}</a></h4>
 {if $view.access}
                                <div class="videsc">{$view.access}</div>
 {/if}

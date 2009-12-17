@@ -67,10 +67,10 @@
         <form action="{$WWWROOT}view/edit.php" method="GET">
             <input type="hidden" name="id" value="{$view}">
             <input type="hidden" name="new" value="1">
-            <input type="submit" class="submit" value="{str tag='next'}">
+            <input type="submit" class="submit" value="{str tag=next}: {str tag='edittitleanddescription' section=view}">
         </form>
     {elseif $profile}
-        <form action="{$WWWROOT}user/view.php" method="GET">
+        <form action="{$WWWROOT}artefact/internal/index.php" method="GET">
             <input class="submit" type="submit" value="{str tag='done'}">
         </form>
     {else}

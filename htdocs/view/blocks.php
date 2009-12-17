@@ -99,13 +99,13 @@ View::set_nav($group, $institution, ($view->get('type') == 'profile'));
 
 if ($view->get('type') == 'profile') {
     $profile = true;
-    define('TITLE', get_string('editprofileview', 'view'));
+    define('TITLE', get_string('editprofilepage'));
 }
 else if ($new) {
-    define('TITLE', get_string('createviewstepone', 'view'));
+    define('TITLE', get_string('editcontentandlayout', 'view'));
 }
 else {
-    define('TITLE', get_string('editblocksforview', 'view', $view->get('title')));
+    define('TITLE', $view->get('title') . ': ' . get_string('editcontentandlayout', 'view'));
 }
 
 $category = param_alpha('c', '');
@@ -196,22 +196,25 @@ if ($owner) {
             array(
                 'name' => get_string('editmyprofile', 'artefact.internal'),
                 'url' => get_config('wwwroot') . 'artefact/internal/index.php',
-                'edit' => 1,
+                'type' => 'edit',
             ),
         );
         $viewtitle = get_string('usersprofile', 'mahara', display_name($view->get('owner'), null, true));
     }
+    else if ($new) {
+        $microheaderlinks = array();
+    }
     else {
         $microheaderlinks = array(
             array(
-                'name' => get_string('editdetails', 'view'),
+                'name' => get_string('edittitle', 'view'),
                 'url' => get_config('wwwroot') . 'view/edit.php?id=' . $viewid . '&amp;new=' . $new,
-                'edit' => 1,
+                'type' => 'edit',
             ),
             array(
                 'name' => get_string('editaccess', 'view'),
                 'url' => get_config('wwwroot') . 'view/access.php?id=' . $viewid . '&amp;new=' . $new,
-                'edit' => 1,
+                'type' => 'edit',
             ),
         );
     }
