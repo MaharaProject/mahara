@@ -99,7 +99,8 @@ View::set_nav($group, $institution, ($view->get('type') == 'profile'));
 
 if ($view->get('type') == 'profile') {
     $profile = true;
-    define('TITLE', get_string('editprofilepage'));
+    $title = get_string('usersprofile', 'mahara', display_name($view->get('owner'), null, true));
+    define('TITLE', $title . ': ' . get_string('editcontentandlayout', 'view'));
 }
 else if ($new) {
     define('TITLE', get_string('editcontentandlayout', 'view'));
