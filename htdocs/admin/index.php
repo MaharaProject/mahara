@@ -41,7 +41,6 @@ else {
 }
 require_once('pieforms/pieform.php');
 require(get_config('libroot') . 'upgrade.php');
-require(get_config('libroot') . 'registration.php');
 
 $upgrades = check_upgrades();
 
@@ -54,7 +53,7 @@ if (isset($upgrades['core']) && !empty($upgrades['core']->install)) {
 }
 
 if (!get_config('registration_lastsent')) {
-    $register = register_site();
+    $register = true;
 }
 
 $closed = get_config('siteclosedbyadmin');

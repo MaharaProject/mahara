@@ -127,11 +127,15 @@ $string['Register'] = 'Register';
 $string['registrationfailedtrylater'] = 'Registation failed with error code %s. Please try again later.';
 $string['registrationsuccessfulthanksforregistering'] = 'Registation successful - thanks for registering!';
 $string['registeryourmaharasite'] = 'Register your Mahara Site';
+$string['registeryourmaharasitesummary'] = '
+<p>You can choose to register your Mahara Site with <a href="http://mahara.org/">mahara.org</a>, and help us to build up a picture of the Mahara installation base around the world.  Registering will remove this notice.</p>
+<p>You can register your site, and preview the information that will be sent on the <strong><a href="%sadmin/registersite.php">Site Registration page.</a></strong></p>';
 $string['registeryourmaharasitedetail'] = '
 <p>You can choose to register your Mahara Site with <a href="http://mahara.org/">mahara.org</a>. Registration is free, and helps us build up a picture of the Mahara installation base around the world.</p>
 <p>You can see the information that will be sent to mahara.org - nothing that can personally identify any of your users will be sent.</p>
 <p>If you tick &quot;send weekly updates&quot;, Mahara will automatically send an update to mahara.org once a week with your updated information.</p>
 <p>Registering will remove this notice. You will be able to change whether you send weekly updates on the <a href="%sadmin/site/options.php">site options</a> page.</p>';
+$string['siteregistered'] = 'Your site has been registered. You can turn weekly updates on and off on the <a href="%sadmin/site/options.php">site options</a> page.</p>';
 
 // Close site
 $string['Close'] = 'Close';

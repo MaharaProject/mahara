@@ -26,11 +26,8 @@
 {/if}
 {if $register}
 <div class="message" id="register-site">
-
     <h3>{str tag=registeryourmaharasite section=admin}</h3>
-    {str tag=registeryourmaharasitedetail section=admin args=$WWWROOT}
-    {$register}
-
+    {str tag=registeryourmaharasitesummary section=admin args=$WWWROOT}
 </div>
 {/if}
 
