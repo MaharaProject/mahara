@@ -108,6 +108,18 @@ function xmldb_artefact_resume_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2009122100) {
+        $table = new XMLDBTable('artefact_resume_employmenthistory');
+        $field = new XMLDBField('employeraddress');
+        $field->setAttributes(XMLDB_TYPE_TEXT);
+        add_field($table, $field);
+
+        $table = new XMLDBTable('artefact_resume_educationhistory');
+        $field = new XMLDBField('institutionaddress');
+        $field->setAttributes(XMLDB_TYPE_TEXT);
+        add_field($table, $field);
+    }
+
     return $status;
 }
 

@@ -26,6 +26,7 @@
                 <FIELD NAME="startdate" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="enddate" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="employer" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="employeraddress" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="jobtitle" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="positiondescription" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="displayorder" TYPE="int" LENGTH="10" NOTNULL="true" />
@@ -44,6 +45,7 @@
                 <FIELD NAME="qualtype" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="qualname" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="institution" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="institutionaddress" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="qualdescription" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="displayorder" TYPE="int" LENGTH="10" NOTNULL="true" />
             </FIELDS>
