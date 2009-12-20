@@ -624,6 +624,10 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
                 ),
                 'title' => get_string('employer', 'artefact.resume'),
             ),
+            'employeraddress' => array(
+                'type' => 'text',
+                'title' => get_string('employeraddress', 'artefact.resume'),
+            ),
             'jobtitle' => array(
                 'type' => 'text',
                 'rules' => array(
@@ -698,6 +702,10 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
                     'required' => true,
                 ),
                 'title' => get_string('institution', 'artefact.resume'),
+            ),
+            'institutionaddress' => array(
+                'type' => 'text',
+                'title' => get_string('institutionaddress', 'artefact.resume'),
             ),
             'qualtype' => array(
                 'type' => 'text',

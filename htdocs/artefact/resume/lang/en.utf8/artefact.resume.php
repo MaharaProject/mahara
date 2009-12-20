@@ -85,5 +85,7 @@ $string['moveup'] = 'Move Up';
 $string['movedown'] = 'Move Down';
 $string['viewyourresume'] = 'View your Resumé';
 $string['resumeofuser'] = 'Resumé of %s';
+$string['employeraddress'] = 'Employer Address';
+$string['institutionaddress'] = 'Institution Address';
 
 ?>
