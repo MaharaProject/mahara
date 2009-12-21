@@ -614,7 +614,9 @@ function get_all_theme_objects() {
                 $config_path = $themebase . $subdir . '/themeconfig.php';
                 if (is_readable($config_path)) {
                     require($config_path);
-                    $themes[$subdir] = $theme;
+                    if (empty($theme->disabled) || !$theme->disabled) {
+                        $themes[$subdir] = $theme;
+                    }
                 }
             }
         }
