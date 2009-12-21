@@ -548,7 +548,7 @@ function get_all_themes() {
  * institution specific are returned.
  * @return array subdir => name
  */
-function get_available_themes() {
+function get_user_accessible_themes() {
     global $USER;
 
     $themes = array();
