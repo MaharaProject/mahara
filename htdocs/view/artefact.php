@@ -112,6 +112,8 @@ EOF;
 $feedbackform = pieform(add_feedback_form(false));
 $objectionform = pieform(objection_form());
 
+$viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
+
 $smarty = smarty(
     array('paginator', 'feedbacklist'),
     array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
@@ -142,6 +144,7 @@ $smarty->assign('ownername', $view->formatted_owner());
 $smarty->assign('addfeedbackform', $feedbackform);
 $smarty->assign('objectionform', $objectionform);
 $smarty->assign('anonfeedback', !$USER->is_logged_in() && $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid)));
+$smarty->assign('viewbeingwatched', $viewbeingwatched);
 
 $smarty->display('view/artefact.tpl');
 
