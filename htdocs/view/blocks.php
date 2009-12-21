@@ -124,7 +124,7 @@ $extraconfig = array(
 
 // Set up theme
 $viewtheme = $view->get('theme');
-$allowedthemes = get_themes(false);
+$allowedthemes = get_user_accessible_themes();
 if ($viewtheme && $THEME->basename != $viewtheme) {
     $THEME = new Theme($viewtheme);
 }

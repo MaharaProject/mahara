@@ -38,7 +38,7 @@ require_once('searchlib.php');
 define('TITLE', get_string('siteoptions', 'admin'));
 
 $langoptions = get_languages();
-$themeoptions = get_themes();
+$themeoptions = get_all_themes();
 $yesno = array(true  => get_string('yes'),
                false => get_string('no'));
 

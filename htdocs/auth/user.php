@@ -648,6 +648,14 @@ class User {
                 $this->theme = $i->theme;
             }
         }
+        if ($this->authinstance) {
+            $authobj = AuthFactory::create($this->authinstance);
+            if (isset($institutions[$authobj->institution])) {
+                if ($t = $institutions[$authobj->institution]->theme) {
+                    $this->theme = $t;
+                }
+            }
+        }
         $this->institutions       = $institutions;
         $this->admininstitutions  = $admininstitutions;
         $this->staffinstitutions  = $staffinstitutions;
