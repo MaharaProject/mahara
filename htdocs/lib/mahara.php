@@ -523,7 +523,7 @@ function get_language_root($language=null) {
 }
 
 /**
- * Return a list of available themes.
+ * Return a list of all available themes.
  * @return array subdir => name
  */
 function get_all_themes() {
@@ -564,7 +564,7 @@ function get_available_themes() {
     else {
         $themelist = get_all_theme_objects();
         foreach ($themelist AS $subdir => $theme) {
-            if (empty($theme->institution)) {
+            if (!is_array($theme->institutions)) {
                 $themes[$subdir] = isset($theme->displayname) ? $theme->displayname : $subdir;
             }
         }
@@ -585,7 +585,7 @@ function get_institution_themes($institution) {
         $themes = get_all_theme_objects();
         $r = array();
         foreach ($themes AS $subdir => $theme) {
-            if (empty($theme->institution) || $theme->institution == $institution) {
+            if (empty($theme->institutions) || !is_array($theme->institutions) || in_array($institution, $theme->institutions)) {
                 $r[$subdir] = isset($theme->displayname) ? $theme->displayname : $subdir;
             }
         }
