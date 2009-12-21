@@ -178,3 +178,14 @@ function registration_data() {
 
     return $data_to_send;
 }
+
+function site_statistics() {
+    return array(
+        'name' => get_config('sitename'),
+        'users' => count_records_select('usr', 'id > 0 AND deleted = 0'),
+        'groups' => count_records('group', 'deleted', 0),
+        'views' => count_records_select('view', 'owner <> 0'),
+    );
+}
+
+?>

@@ -145,6 +145,9 @@ $string['Open'] = 'Open';
 $string['reopensite'] = 'Reopen Site';
 $string['reopensitedetail'] = 'Your site is closed.  Site administrators may stay logged in until an upgrade is detected.';
 
+// Statistics
+$string['sitestatistics'] = 'Site Statistics';
+
 // Site options
 $string['adminsonly'] = 'Administrators only';
 $string['adminsandstaffonly'] = 'Administrators and Staff only';

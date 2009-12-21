@@ -1,5 +1,16 @@
 {include file='header.tpl'}
 
+<div class="message" id="close-site">
+{if $closed}
+    <h3>{str tag=reopensite section=admin}</h3>
+    {str tag=reopensitedetail section=admin}
+{else}
+    <h3>{str tag=closesite section=admin}</h3>
+    {str tag=closesitedetail section=admin}
+{/if}
+    {$closeform}
+</div>
+
 <div id="adminhome">
 {if $upgrades}
 <div id="runupgrade">
@@ -24,12 +35,24 @@
 </table>
 </div>
 {/if}
+
+{if $sitedata}
+  {include file='admin/stats.tpl' cron=1}
+{/if}
+
 {if $register}
 <div class="message" id="register-site">
     <h3>{str tag=registeryourmaharasite section=admin}</h3>
     {str tag=registeryourmaharasitesummary section=admin args=$WWWROOT}
 </div>
 {/if}
+
+</div>
+
+
+<div class="cb"></div>
+
+<div class="admin-home-column fl">
 
 <h3>{str tag=configsite section=admin}</h3>
     <ul>
@@ -40,6 +63,16 @@
         <li><strong><a href="{$WWWROOT}admin/site/views.php">{str tag=siteviews section=admin}</a></strong> - {str tag=siteviewsdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}artefact/file/sitefiles.php">{str tag=sitefiles section=admin}</a></strong> - {str tag=sitefilesdescription section=admin}</li>
     </ul>
+
+<h3>{str tag=configextensions section=admin}</h3>
+    <ul>
+        <li><strong><a href="{$WWWROOT}admin/extensions/plugins.php">{str tag=pluginadmin section=admin}</a></strong> - {str tag=pluginadmindescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}admin/extensions/filter.php">{str tag=htmlfilters section=admin}</a></strong> - {str tag=htmlfiltersdescription section=admin}</li>
+    </ul>
+</div>
+
+<div class="admin-home-column fr">
+
 <h3>{str tag=configusers section=admin}</h3>
     <ul>
         <li><strong><a href="{$WWWROOT}admin/users/search.php">{str tag=usersearch section=admin}</a></strong> - {str tag=usersearchdescription section=admin}</li>
@@ -59,23 +92,7 @@
         <li><strong><a href="{$WWWROOT}view/institutionviews.php">{str tag=institutionviews section=admin}</a></strong> - {str tag=institutionviewsdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}artefact/file/institutionfiles.php">{str tag=institutionfiles section=admin}</a></strong> - {str tag=institutionfilesdescription section=admin}</li>
     </ul>
-<h3>{str tag=configextensions section=admin}</h3>
-    <ul>
-        <li><strong><a href="{$WWWROOT}admin/extensions/plugins.php">{str tag=pluginadmin section=admin}</a></strong> - {str tag=pluginadmindescription section=admin}</li>
-        <li><strong><a href="{$WWWROOT}admin/extensions/filter.php">{str tag=htmlfilters section=admin}</a></strong> - {str tag=htmlfiltersdescription section=admin}</li>
-    </ul>
 </div>
 
-<div class="message" id="close-site">
-{if $closed}
-    <h3>{str tag=reopensite section=admin}</h3>
-    {str tag=reopensitedetail section=admin}
-{else}
-    <h3>{str tag=closesite section=admin}</h3>
-    {str tag=closesitedetail section=admin}
-{/if}
-    {$closeform}
-</div>
-<div class="cb"></div>
 
 {include file='footer.tpl'}

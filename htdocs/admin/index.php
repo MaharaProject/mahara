@@ -33,6 +33,7 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'index');
 
 require(dirname(dirname(__FILE__)).'/init.php');
+require(get_config('libroot') . 'registration.php');
 if (get_config('installed')) {
     define('TITLE', get_string('administration', 'admin'));
 }
@@ -77,6 +78,9 @@ $smarty->assign('PAGEHEADING', hsc(get_string('administration', 'admin')));
 
 // normal admin page starts here
 $smarty->assign('upgrades', $upgrades);
+if (empty($upgrades)) {
+    $smarty->assign('sitedata', site_statistics());
+}
 
 if (isset($register)) {
     $smarty->assign('register', $register);
