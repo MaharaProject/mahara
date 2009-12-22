@@ -164,6 +164,9 @@ input#register_register {
 .site-stats p {
   margin: .1em;
 }
+#site-stats-graph {
+  margin: 0 .3em 1em;
+}
 
 .admin-home-column {
   width: 49%;

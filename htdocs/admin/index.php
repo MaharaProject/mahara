@@ -73,13 +73,22 @@ $closeform = pieform(array(
     ),
 ));
 
-$smarty = smarty();
+$jsfiles = array();
+if (empty($upgrades)) {
+    $sitedata = site_statistics();
+    if (!empty($sitedata['weekly'])) {
+        $jsfiles = array('js/PlotKit/excanvas.js', 'js/PlotKit/PlotKit.js');
+        $sitedata['dataarray'] = json_encode($sitedata['weekly']);
+    }
+}
+
+$smarty = smarty($jsfiles);
 $smarty->assign('PAGEHEADING', hsc(get_string('administration', 'admin')));
 
 // normal admin page starts here
 $smarty->assign('upgrades', $upgrades);
-if (empty($upgrades)) {
-    $smarty->assign('sitedata', site_statistics());
+if (isset($sitedata)) {
+    $smarty->assign('sitedata', $sitedata);
 }
 
 if (isset($register)) {
