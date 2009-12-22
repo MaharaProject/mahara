@@ -78,7 +78,7 @@ if (empty($upgrades)) {
     $sitedata = site_statistics();
     if (!empty($sitedata['weekly'])) {
         $jsfiles = array('js/PlotKit/excanvas.js', 'js/PlotKit/PlotKit.js');
-        $sitedata['dataarray'] = json_encode($sitedata['weekly']);
+        $sitedata['dataarray'] = json_encode(array($sitedata['weekly']['view-count'], $sitedata['weekly']['user-count'], $sitedata['weekly']['group-count']));
     }
 }
 

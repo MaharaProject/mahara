@@ -2209,21 +2209,24 @@ function cron_send_registration_data() {
  * Cronjob to save weekly site data locally
  */
 function cron_site_data_weekly() {
+    require_once(get_config('libroot') . 'registration.php');
+    $current = site_data_current();
     $time = db_format_timestamp(time());
+
     insert_record('site_data', (object) array(
         'ctime' => $time,
         'type'  => 'user-count',
-        'value' => count_records_select('usr', 'id > 0 AND deleted = 0'),
+        'value' => $current['users'],
     ));
     insert_record('site_data', (object) array(
         'ctime' => $time,
         'type'  => 'group-count',
-        'value' => count_records('group', 'deleted', 0),
+        'value' => $current['groups'],
     ));
     insert_record('site_data', (object) array(
         'ctime' => $time,
         'type'  => 'view-count',
-        'value' => count_records_select('view', 'owner <> 0'),
+        'value' => $current['views'],
     ));
 }
 
