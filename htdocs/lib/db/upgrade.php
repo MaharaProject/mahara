@@ -1320,6 +1320,22 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    // @TODO: Stats upgrade:
+    // Need table for weekly stats: counts of users, groups, views, view visits
+    // Daily data: count of logged-in users
+    // Add ctime to usr table for count of users created
+    // Add site start time to config table; initialise with earliest ctime from view, artefact, site_content?
+    // Add visits column to view table, updated daily from log on filesystem
+    // Records in cron table
+    if ($oldversion < 2009122200) {
+        $table = new XMLDBTable('site_data');
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('type', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('value', XMLDB_TYPE_TEXT, 'small', null);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('ctime','type'));
+        create_table($table);
+    }
+
     return $status;
 
 }
