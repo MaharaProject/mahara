@@ -555,10 +555,7 @@ function get_user_accessible_themes() {
     if ($institutions = $USER->get('institutions')) {
         // Get themes for all of this users institutions
         foreach ($institutions AS $i) {
-            $themelist = get_institution_themes($i->institution);
-            foreach ($themelist AS $subdir => $theme) {
-                $themes[$subdir] = isset($theme->displayname) ? $theme->displayname : $subdir;
-            }
+            $themes = array_merge($themes, get_institution_themes($i->institution));
         }
     }
     else {
