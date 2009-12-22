@@ -771,6 +771,7 @@ function core_install_firstcoredata_defaults() {
         'cron_send_registration_data'            => array(rand(0, 59), rand(0, 23), '*', '*', rand(0, 6)),
         'export_cleanup_old_exports'             => array('0', '3,15', '*', '*', '*'),
         'import_cleanup_old_imports'             => array('0', '4,16', '*', '*', '*'),
+        'cron_site_data_weekly'                  => array('55', '23', '*', '*', '6'),
     );
     foreach ($cronjobs as $callfunction => $times) {
         $cron = new StdClass;

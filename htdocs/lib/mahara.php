@@ -2205,6 +2205,27 @@ function cron_send_registration_data() {
     }
 }
 
+/**
+ * Cronjob to save weekly site data locally
+ */
+function cron_site_data_weekly() {
+    $time = db_format_timestamp(time());
+    insert_record('site_data', (object) array(
+        'ctime' => $time,
+        'type'  => 'user-count',
+        'value' => count_records_select('usr', 'id > 0 AND deleted = 0'),
+    ));
+    insert_record('site_data', (object) array(
+        'ctime' => $time,
+        'type'  => 'group-count',
+        'value' => count_records('group', 'deleted', 0),
+    ));
+    insert_record('site_data', (object) array(
+        'ctime' => $time,
+        'type'  => 'view-count',
+        'value' => count_records_select('view', 'owner <> 0'),
+    ));
+}
 
 function random_string($length=15) {
     $pool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
