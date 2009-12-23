@@ -561,7 +561,7 @@ function get_user_accessible_themes() {
     else {
         $themelist = get_all_theme_objects();
         foreach ($themelist AS $subdir => $theme) {
-            if (!is_array($theme->institutions)) {
+            if (!isset($theme->institutions) || !is_array($theme->institutions)) {
                 $themes[$subdir] = isset($theme->displayname) ? $theme->displayname : $subdir;
             }
         }
