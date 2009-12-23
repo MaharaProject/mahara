@@ -514,6 +514,14 @@ class User {
         return true;
     }
 
+    public function quota_init() {
+        if (!$this->get('quota')) {
+            if ($defaultquota = get_config_plugin('artefact', 'file', 'defaultquota')) {
+                $this->set('quota', $defaultquota);
+            }
+        }
+    }
+
     public function join_institution($institution) {
         if ($institution != 'mahara' && !$this->in_institution($institution)) {
             require_once('institution.php');
