@@ -311,11 +311,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             if ($count == 10) {
                 break;
             }
-            $description = $item->description;
-            if (!$description && ($item->content || $item->summary)) {
-                // ATOM feed
-                $description = $item->content ? $item->content : ($item->summary ? $item->summary : null);
-            }
+            $description = $item->content ? $item->content : ($item->description ? $item->description : ($item->summary ? $item->summary : null));
             $data->content[] = (object)array('title' => $item->title, 'link' => $item->link, 'description' => $description);
         }
         $cache[$source] = $data;
