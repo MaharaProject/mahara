@@ -428,7 +428,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
  * object containing the email properties if they can
  */
 function can_receive_email($userto) {
-    if (!$userto->id) {
+    if (empty($userto->id)) {
         // No user ID was provided by email_user
         return new StdClass;
     }
