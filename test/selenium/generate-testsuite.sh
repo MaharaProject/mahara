@@ -1,5 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 # Generates the testsuite from the files in this directory
+# Use explicit bash shell because on recent debian/ubuntu, /bin/sh is a
+# link to /bin/dash and function is a syntax error.
 #
 # Author: Nigel McNie
 # Copyright (C) 2007 Catalyst IT Ltd.
@@ -30,7 +32,7 @@ EOF
 insert_testsuite ./basic-install
 
 # Insert all test suites
-for TS in $(find . -mindepth 1 -type d -not -name 'shared' -not -name '*install*'); do
+for TS in $(find . -mindepth 1 -type d -not -name 'shared' -not -name '*install*' -not -name 'server' | sort); do
     insert_testsuite $TS
 done
 

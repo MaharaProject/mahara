@@ -1,0 +1,129 @@
+Generated File. Do not edit.
+
+[HEADER]
+Version:0.09:$
+
+[PLUGINS]
+/usr/lib/totem/gstreamer/libtotem-narrowspace-plugin.so:$
+:$
+1239706446000:1:0:$
+The <a href="http://www.gnome.org/projects/totem/">Totem</a> 2.26.1 plugin handles video and audio streams.:$
+QuickTime Plug-in 7.2.0:$
+5
+0:video/quicktime:QuickTime video:mov:$
+1:video/mp4:MPEG-4 video:mp4:$
+2:image/x-macpaint:MacPaint Bitmap image:pntg:$
+3:image/x-quicktime:Macintosh Quickdraw/PICT drawing:pict, pict1, pict2:$
+4:video/x-m4v:MPEG-4 video:m4v:$
+/usr/lib/totem/gstreamer/libtotem-mully-plugin.so:$
+:$
+1239706446000:1:0:$
+DivX Web Player version 1.4.0.233:$
+DivX® Web Player:$
+1
+0:video/divx:AVI video:divx:$
+/usr/lib/totem/gstreamer/libtotem-gmp-plugin.so:$
+:$
+1239706446000:1:0:$
+The <a href="http://www.gnome.org/projects/totem/">Totem</a> 2.26.1 plugin handles video and audio streams.:$
+Windows Media Player Plug-in 10 (compatible; Totem):$
+13
+0:application/x-mplayer2:AVI video:avi, wma, wmv:$
+1:video/x-ms-asf-plugin:ASF video:asf, wmv:$
+2:video/x-msvideo:AVI video:asf, wmv:$
+3:video/x-ms-asf:ASF video:asf:$
+4:video/x-ms-wmv:Windows Media video:wmv:$
+5:video/x-wmv:Windows Media video:wmv:$
+6:video/x-ms-wvx:Windows Media video:wmv:$
+7:video/x-ms-wm:Windows Media video:wmv:$
+8:video/x-ms-wmp:Windows Media video:wmv:$
+9:application/x-ms-wms:Windows Media video:wms:$
+10:application/x-ms-wmp:Windows Media video:wmp:$
+11:application/asx:Microsoft ASX playlist:asx:$
+12:audio/x-ms-wma:Windows Media audio:wma:$
+/usr/lib/totem/gstreamer/libtotem-cone-plugin.so:$
+:$
+1239706446000:1:0:$
+The <a href="http://www.gnome.org/projects/totem/">Totem</a> 2.26.1 plugin handles video and audio streams.:$
+VLC Multimedia Plugin (compatible Totem 2.26.1):$
+19
+0:application/x-vlc-plugin:VLC Multimedia Plugin::$
+1:application/vlc:VLC Multimedia Plugin::$
+2:video/x-google-vlc-plugin:VLC Multimedia Plugin::$
+3:application/x-ogg:Ogg multimedia file:ogg:$
+4:application/ogg:Ogg multimedia file:ogg:$
+5:audio/ogg:Ogg Audio:oga:$
+6:audio/x-ogg:Ogg Audio:ogg:$
+7:video/ogg:Ogg Video:ogv:$
+8:video/x-ogg:Ogg Video:ogg:$
+9:application/annodex:Annodex exchange format:anx:$
+10:audio/annodex:Annodex Audio:axa:$
+11:video/annodex:Annodex Video:axv:$
+12:video/mpeg:MPEG video:mpg, mpeg, mpe:$
+13:audio/wav:WAV audio:wav:$
+14:audio/x-wav:WAV audio:wav:$
+15:audio/mpeg:MP3 audio:mp3:$
+16:application/x-nsv-vp3-mp3:NullSoft video:nsv:$
+17:video/flv:Flash video:flv:$
+18:application/x-totem-plugin:Totem Multimedia plugin::$
+/usr/lib/jvm/java-6-openjdk/jre/lib/amd64/IcedTeaPlugin.so:$
+:$
+1249781389000:1:0:$
+The IcedTea Java Web Browser Plugin 1.4.1 (6b14-1.4.1-0ubuntu11) executes Java applets.:$
+IcedTea Java Web Browser Plugin:$
+33
+0:application/x-java-vm:IcedTea:class,jar:$
+1:application/x-java-applet:IcedTea:class,jar:$
+2:application/x-java-applet;version=1.1:IcedTea:class,jar:$
+3:application/x-java-applet;version=1.1.1:IcedTea:class,jar:$
+4:application/x-java-applet;version=1.1.2:IcedTea:class,jar:$
+5:application/x-java-applet;version=1.1.3:IcedTea:class,jar:$
+6:application/x-java-applet;version=1.2:IcedTea:class,jar:$
+7:application/x-java-applet;version=1.2.1:IcedTea:class,jar:$
+8:application/x-java-applet;version=1.2.2:IcedTea:class,jar:$
+9:application/x-java-applet;version=1.3:IcedTea:class,jar:$
+10:application/x-java-applet;version=1.3.1:IcedTea:class,jar:$
+11:application/x-java-applet;version=1.4:IcedTea:class,jar:$
+12:application/x-java-applet;version=1.4.1:IcedTea:class,jar:$
+13:application/x-java-applet;version=1.4.2:IcedTea:class,jar:$
+14:application/x-java-applet;version=1.5:IcedTea:class,jar:$
+15:application/x-java-applet;version=1.6:IcedTea:class,jar:$
+16:application/x-java-applet;jpi-version=1.6.0_00:IcedTea:class,jar:$
+17:application/x-java-bean:IcedTea:class,jar:$
+18:application/x-java-bean;version=1.1:IcedTea:class,jar:$
+19:application/x-java-bean;version=1.1.1:IcedTea:class,jar:$
+20:application/x-java-bean;version=1.1.2:IcedTea:class,jar:$
+21:application/x-java-bean;version=1.1.3:IcedTea:class,jar:$
+22:application/x-java-bean;version=1.2:IcedTea:class,jar:$
+23:application/x-java-bean;version=1.2.1:IcedTea:class,jar:$
+24:application/x-java-bean;version=1.2.2:IcedTea:class,jar:$
+25:application/x-java-bean;version=1.3:IcedTea:class,jar:$
+26:application/x-java-bean;version=1.3.1:IcedTea:class,jar:$
+27:application/x-java-bean;version=1.4:IcedTea:class,jar:$
+28:application/x-java-bean;version=1.4.1:IcedTea:class,jar:$
+29:application/x-java-bean;version=1.4.2:IcedTea:class,jar:$
+30:application/x-java-bean;version=1.5:IcedTea:class,jar:$
+31:application/x-java-bean;version=1.6:IcedTea:class,jar:$
+32:application/x-java-bean;jpi-version=1.6.0_00:IcedTea:class,jar:$
+/var/lib/flashplugin-installer/npwrapper.libflashplayer.so:$
+:$
+1249856061000:1:1:$
+Shockwave Flash 10.0 r32:$
+Shockwave Flash:$
+2
+0:application/x-shockwave-flash:Shockwave Flash:swf:$
+1:application/futuresplash:FutureSplash Player:spl:$
+/usr/lib/xulrunner-addons/plugins/libunixprintplugin.so:$
+:$
+1251913079000:1:0:$
+The demo print plugin for unix.:$
+Demo Print Plugin for unix/linux:$
+1
+0:application/x-print-unix-nsplugin:Demo Print Plugin for Unix/Linux:.pnt:$
+/usr/lib/xulrunner-addons/plugins/libnullplugin.so:$
+:$
+1251913079000:1:1:$
+The default plugin handles plugin data for mimetypes and extensions that are not specified and facilitates downloading of new plugins.:$
+Default Plugin:$
+1
+0:*:All types:.*:$

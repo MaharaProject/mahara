@@ -1,82 +1,120 @@
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>create_new_view_1</title>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>Create a New View</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">create_new_view_1</td></tr>
+<tr><td rowspan="1" colspan="3">Create a New View</td></tr>
 </thead><tbody>
 <tr>
-    <td>open</td>
-    <td>/</td>
-    <td></td>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
 </tr>
 <tr>
-    <td>clickAndWait</td>
-    <td>link=My Portfolio</td>
-    <td></td>
+	<td>clickAndWait</td>
+	<td>link=My Portfolio</td>
+	<td></td>
 </tr>
 <tr>
-    <td>clickAndWait</td>
-    <td>createnew</td>
-    <td></td>
+	<td>clickAndWait</td>
+	<td>createview_submit</td>
+	<td></td>
 </tr>
 <tr>
-    <td>type</td>
-    <td>editview_title</td>
-    <td>Test view</td>
+	<td>assertText</td>
+	<td>//div[@id='main-column-container']/h1</td>
+	<td>Create View Step One: Layout</td>
 </tr>
 <tr>
-    <td>clickAndWait</td>
-    <td>editview_submit</td>
-    <td></td>
+	<td>click</td>
+	<td>link=Blogs (3)</td>
+	<td></td>
 </tr>
 <tr>
-    <td>assertElementPresent</td>
-    <td>//input[@value='Back']</td>
-    <td></td>
+	<td>click</td>
+	<td>link=External feeds (1)</td>
+	<td></td>
 </tr>
 <tr>
-    <td>assertElementPresent</td>
-    <td>//input[@value='Next']</td>
-    <td></td>
+	<td>click</td>
+	<td>link=Files, images and video (6)</td>
+	<td></td>
 </tr>
 <tr>
-    <td>assertElementPresent</td>
-    <td>link=Change view layout</td>
-    <td></td>
+	<td>click</td>
+	<td>link=General (2)</td>
+	<td></td>
 </tr>
 <tr>
-    <td>click</td>
-    <td>link=General (1)</td>
-    <td></td>
+	<td>click</td>
+	<td>link=Profile (2)</td>
+	<td></td>
 </tr>
 <tr>
-    <td>clickAndWait</td>
-    <td>//input[@value='Next']</td>
-    <td></td>
+	<td>click</td>
+	<td>link=Resumé (2)</td>
+	<td></td>
 </tr>
 <tr>
-    <td>click</td>
-    <td>//button[@type='button']</td>
-    <td></td>
+	<td>clickAndWait</td>
+	<td>//input[@value='Next']</td>
+	<td></td>
 </tr>
 <tr>
-    <td>clickAndWait</td>
-    <td>editaccess_submit</td>
-    <td></td>
+	<td>assertText</td>
+	<td>//div[@id='main-column-container']/h1</td>
+	<td>Create View Step Two: Details</td>
 </tr>
 <tr>
-    <td>assertConfirmation</td>
-    <td>Your view contains no artefacts.&nbsp;&nbsp;Do you really want to give these users access to the view?</td>
-    <td></td>
+	<td>type</td>
+	<td>editview_title</td>
+	<td>Test view</td>
 </tr>
 <tr>
-    <td>verifyTextPresent</td>
-    <td>View created successfully</td>
-    <td></td>
+	<td>chooseCancelOnNextConfirmation</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>cancel_editview_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>This View has not been completed. Do you really want to cancel?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>//input[@value='Back']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>//input[@value='Next']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>editview_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>editaccess_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>View created successfully</td>
+	<td></td>
 </tr>
 
 </tbody></table>

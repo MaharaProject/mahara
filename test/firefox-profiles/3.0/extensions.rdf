@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<RDF:RDF xmlns:NS1="http://www.mozilla.org/2004/em-rdf#"
+         xmlns:NC="http://home.netscape.com/NC-rdf#"
+         xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <RDF:Description RDF:about="rdf:#$d+rwc"
+                   NS1:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                   NS1:minVersion="3.0"
+                   NS1:maxVersion="3.5.*" />
+  <RDF:Description RDF:about="rdf:#$L+rwc"
+                   NS1:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                   NS1:minVersion="1.5"
+                   NS1:maxVersion="3.5.*" />
+  <RDF:Description RDF:about="urn:mozilla:item:{972ce4c6-7e08-4474-a285-3208198ce6fd}"
+                   NS1:installLocation="gre-global"
+                   NS1:version="3.0.14"
+                   NS1:internalName="classic/1.0"
+                   NS1:locked="true"
+                   NS1:appManaged="true"
+                   NS1:name="Default"
+                   NS1:description="The default theme."
+                   NS1:creator="Mozilla"
+                   NS1:contributor="Mozilla Contributors">
+    <NS1:type NC:parseType="Integer">4</NS1:type>
+    <NS1:targetApplication RDF:resource="rdf:#$.+rwc"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mozilla:item:{503A0CD4-EDC8-489b-853B-19E0BAA8F0A4}"
+                   NS1:installLocation="app-profile"
+                   NS1:version="1.0"
+                   NS1:name="Selenium RC Runner"
+                   NS1:description="Provides a chrome URL that can accept commands from Selenium Remote Control">
+    <NS1:type NC:parseType="Integer">2</NS1:type>
+    <NS1:targetApplication RDF:resource="rdf:#$z+rwc"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mozilla:item:{538F0036-F358-4f84-A764-89FB437166B4}"
+                   NS1:installLocation="app-profile"
+                   NS1:version="1.0"
+                   NS1:name="KillFF"
+                   NS1:description="Provides a chrome URL that can kill the browser">
+    <NS1:type NC:parseType="Integer">2</NS1:type>
+    <NS1:targetApplication RDF:resource="rdf:#$K+rwc"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="rdf:#$z+rwc"
+                   NS1:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                   NS1:minVersion="1.4.1"
+                   NS1:maxVersion="3.0.*" />
+  <RDF:Description RDF:about="urn:mozilla:item:firebug@software.joehewitt.com"
+                   NS1:installLocation="app-profile"
+                   NS1:version="1.4.2"
+                   NS1:iconURL="chrome://firebug/content/firebug.png"
+                   NS1:name="Firebug"
+                   NS1:description="Web Development Evolved."
+                   NS1:creator="Joe Hewitt"
+                   NS1:homepageURL="http://www.getfirebug.com/">
+    <NS1:type NC:parseType="Integer">2</NS1:type>
+    <NS1:translator>Leszek(teo)Życzkowski (pl-PL)</NS1:translator>
+    <NS1:translator>markh (nl-NL)</NS1:translator>
+    <NS1:translator>peter3 (sv-SE)</NS1:translator>
+    <NS1:translator>AlleyKat (da-DK)</NS1:translator>
+    <NS1:translator>lovelywcm (zh-CN)</NS1:translator>
+    <NS1:translator>Lukáš Kucharczyk, Michal Kec (cs-CZ)</NS1:translator>
+    <NS1:translator>Team erweiterungen.de, ReinekeFux, Benedikt Langens (de-DE)</NS1:translator>
+    <NS1:translator>l0stintranslation, gonzalopirobutirro (it-IT)</NS1:translator>
+    <NS1:translator>alexxed (ro-RO)</NS1:translator>
+    <NS1:translator>Nicolas Martin, Franck Marcia (fr-FR)</NS1:translator>
+    <NS1:translator>gLes (hu-HU)</NS1:translator>
+    <NS1:translator>Xavi Ivars - Softcatalà (ca)</NS1:translator>
+    <NS1:translator>gezmen (tr-TR)</NS1:translator>
+    <NS1:translator>eternoendless (es-AR)</NS1:translator>
+    <NS1:translator>Dark Preacher (ru-RU)</NS1:translator>
+    <NS1:translator>Tiago Oliveira, Diego de Carvalho Zimmermann, Alexandre Rapaki (pt-BR)</NS1:translator>
+    <NS1:translator>Juan Botías (es-ES)</NS1:translator>
+    <NS1:translator>Andriy Zhouck (uk-UA)</NS1:translator>
+    <NS1:translator>Hisateru Tanaka (ja-JP)</NS1:translator>
+    <NS1:contributor>John J. Barton (IBM Almaden)</NS1:contributor>
+    <NS1:contributor>Jan Odvarko (All Peers Inc.)</NS1:contributor>
+    <NS1:contributor>Max Stepanov (Aptana Inc.)</NS1:contributor>
+    <NS1:contributor>Rob Campbell (Mozilla Corp.)</NS1:contributor>
+    <NS1:contributor>Hans Hillen, (Paciello Group, Mozilla)</NS1:contributor>
+    <NS1:contributor>Curtis Bartley, (Mozilla Corp.)</NS1:contributor>
+    <NS1:contributor>Mike Collins, (IBM Almaden)</NS1:contributor>
+    <NS1:contributor>Kevin Decker</NS1:contributor>
+    <NS1:contributor>Mike Ratcliffe, (Comartis AG)</NS1:contributor>
+    <NS1:contributor>Hernan Rodríguez Colmeiro</NS1:contributor>
+    <NS1:contributor>Austin Andrews</NS1:contributor>
+    <NS1:contributor>Christoph Dorn</NS1:contributor>
+    <NS1:targetApplication RDF:resource="rdf:#$d+rwc"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="rdf:#$o+rwc"
+                   NS1:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                   NS1:minVersion="1.4.1"
+                   NS1:maxVersion="3.0.*" />
+  <RDF:Description RDF:about="rdf:#$w.rwc"
+                   NS1:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                   NS1:minVersion="3.0"
+                   NS1:maxVersion="3.0.*" />
+  <RDF:Description RDF:about="rdf:#$p.rwc"
+                   NS1:id="toolkit@mozilla.org"
+                   NS1:minVersion="1.9"
+                   NS1:maxVersion="1.9.0.*" />
+  <RDF:Description RDF:about="urn:mozilla:item:langpack-en-GB@firefox-3.0.ubuntu.com"
+                   NS1:installLocation="app-global"
+                   NS1:version="3.0.7"
+                   NS1:name="Firefox (en-GB)"
+                   NS1:creator="http://translations.launchpad.net">
+    <NS1:type NC:parseType="Integer">8</NS1:type>
+    <NS1:targetApplication RDF:resource="rdf:#$w.rwc"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mozilla:item:langpack-en-GB@xulrunner-1.9.ubuntu.com"
+                   NS1:installLocation="gre-global"
+                   NS1:version="1.9.0.8"
+                   NS1:name="Xulrunner (en-GB)"
+                   NS1:creator="http://translations.launchpad.net">
+    <NS1:type NC:parseType="Integer">8</NS1:type>
+    <NS1:targetApplication RDF:resource="rdf:#$p.rwc"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="rdf:#$K+rwc"
+                   NS1:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                   NS1:minVersion="1.4.1"
+                   NS1:maxVersion="3.0.*" />
+  <RDF:Description RDF:about="urn:mozilla:item:readystate@openqa.org"
+                   NS1:installLocation="app-profile"
+                   NS1:version="1.0"
+                   NS1:name="DocumentReadyState"
+                   NS1:description="Provides a mechanism to update the document readyState property">
+    <NS1:type NC:parseType="Integer">2</NS1:type>
+    <NS1:targetApplication RDF:resource="rdf:#$o+rwc"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mozilla:item:{a6fd85ed-e919-4a43-a5af-8da18bda539f}"
+                   NS1:installLocation="app-profile"
+                   NS1:version="1.0.2"
+                   NS1:optionsURL="chrome://selenium-ide/content/optionsDialog.xul"
+                   NS1:name="Selenium IDE"
+                   NS1:description="Record, edit and play Selenium tests"
+                   NS1:creator="Shinya Kasatani"
+                   NS1:homepageURL="http://seleniumhq.org/projects/ide">
+    <NS1:type NC:parseType="Integer">2</NS1:type>
+    <NS1:targetApplication RDF:resource="rdf:#$L+rwc"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="rdf:#$.+rwc"
+                   NS1:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                   NS1:minVersion="3.0.14"
+                   NS1:maxVersion="3.0.14" />
+  <RDF:Seq RDF:about="urn:mozilla:item:root">
+    <RDF:li RDF:resource="urn:mozilla:item:{972ce4c6-7e08-4474-a285-3208198ce6fd}"/>
+    <RDF:li RDF:resource="urn:mozilla:item:readystate@openqa.org"/>
+    <RDF:li RDF:resource="urn:mozilla:item:firebug@software.joehewitt.com"/>
+    <RDF:li RDF:resource="urn:mozilla:item:langpack-en-GB@firefox-3.0.ubuntu.com"/>
+    <RDF:li RDF:resource="urn:mozilla:item:{538F0036-F358-4f84-A764-89FB437166B4}"/>
+    <RDF:li RDF:resource="urn:mozilla:item:{a6fd85ed-e919-4a43-a5af-8da18bda539f}"/>
+    <RDF:li RDF:resource="urn:mozilla:item:{503A0CD4-EDC8-489b-853B-19E0BAA8F0A4}"/>
+    <RDF:li RDF:resource="urn:mozilla:item:langpack-en-GB@xulrunner-1.9.ubuntu.com"/>
+  </RDF:Seq>
+</RDF:RDF>

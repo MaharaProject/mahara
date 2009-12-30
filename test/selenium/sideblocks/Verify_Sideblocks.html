@@ -1,12 +1,15 @@
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Verify_Sideblocks</title>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>Verify Sideblocks</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Verify_Sideblocks</td></tr>
+<tr><td rowspan="1" colspan="3">Verify Sideblocks</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -14,14 +17,29 @@
 	<td></td>
 </tr>
 <tr>
-    <td>assertElementPresent</td>
-    <td>//div[@class='sidebar sidebar_1']</td>
-    <td></td>
+	<td>assertElementPresent</td>
+	<td>//div[@id='sb-profile' and @class='sideblock sideblock-1']</td>
+	<td></td>
 </tr>
 <tr>
-    <td>assertElementPresent</td>
-    <td>//ul[@id='sitemenu']</td>
-    <td></td>
+	<td>assertElementPresent</td>
+	<td>//div[@id='sb-onlineusers' and @class='sideblock sideblock-2']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>//div[@id='main-nav']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='sb-onlineusers']/h3</td>
+	<td>Online users</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='sb-profile']/h3/a</td>
+	<td>Admin User</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -29,9 +47,34 @@
 	<td></td>
 </tr>
 <tr>
-    <td>assertElementNotPresent</td>
-    <td>//p[@id='quota_message']</td>
-    <td></td>
+	<td>assertElementPresent</td>
+	<td>//div[@id='sb-profile' and @class='sideblock sideblock-1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>//div[@id='sb-onlineusers' and @class='sideblock sideblock-2']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>//div[@id='main-nav']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='sb-onlineusers']/h3</td>
+	<td>Online users</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='sb-profile']/h3/a</td>
+	<td>Admin User</td>
+</tr>
+<tr>
+	<td>assertElementNotPresent</td>
+	<td>//p[@id='quota_message']</td>
+	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -39,14 +82,14 @@
 	<td></td>
 </tr>
 <tr>
-    <td>assertElementPresent</td>
-    <td>//div[@class='sidebar sidebar_1']</td>
-    <td></td>
+	<td>assertElementPresent</td>
+	<td>//div[@class='sideblock sideblock-1']</td>
+	<td></td>
 </tr>
 <tr>
-    <td>assertElementPresent</td>
-    <td>//p[@id='quota_message']</td>
-    <td></td>
+	<td>assertElementPresent</td>
+	<td>//p[@id='quota_message']</td>
+	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -54,39 +97,24 @@
 	<td></td>
 </tr>
 <tr>
-    <td>assertElementPresent</td>
-    <td>//form[@id='selfsearch']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>assertElementPresent</td>
-    <td>//ul[@id='sitemenu']</td>
-    <td></td>
-</tr>
-<tr>
-    <td>assertElementNotPresent</td>
-    <td>//p[@id='quota_message']</td>
-    <td></td>
-</tr>
-<tr>
 	<td>clickAndWait</td>
-	<td>link=files</td>
+	<td>link=My Views</td>
 	<td></td>
 </tr>
 <tr>
-    <td>assertElementPresent</td>
-    <td>//form[@id='selfsearch']</td>
-    <td></td>
+	<td>assertElementNotPresent</td>
+	<td>//p[@id='quota_message']</td>
+	<td></td>
 </tr>
 <tr>
-    <td>assertElementPresent</td>
-    <td>//ul[@id='sitemenu']</td>
-    <td></td>
+	<td>clickAndWait</td>
+	<td>link=My Files</td>
+	<td></td>
 </tr>
 <tr>
-    <td>assertElementPresent</td>
-    <td>//p[@id='quota_message']</td>
-    <td></td>
+	<td>assertElementPresent</td>
+	<td>//p[@id='quota_message']</td>
+	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -94,29 +122,25 @@
 	<td></td>
 </tr>
 <tr>
-    <td>assertElementPresent</td>
-    <td>//ul[@id='sitemenu']</td>
-    <td></td>
+	<td>clickAndWait</td>
+	<td>link=My Groups</td>
+	<td></td>
 </tr>
+<!--needs sideblock checks for My groups and all the other sub-categories under Groups-->
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Settings</td>
 	<td></td>
 </tr>
 <tr>
-    <td>assertElementPresent</td>
-    <td>//ul[@id='sitemenu']</td>
-    <td></td>
+	<td>clickAndWait</td>
+	<td>link=Preferences</td>
+	<td></td>
 </tr>
 <tr>
-    <td>open</td>
-    <td>/user/view.php?id=1</td>
-    <td></td>
-</tr>
-<tr>
-    <td>assertElementPresent</td>
-    <td>//ul[@id='sitemenu']</td>
-    <td></td>
+	<td>open</td>
+	<td>/user/view.php?id=1</td>
+	<td></td>
 </tr>
 
 </tbody></table>
