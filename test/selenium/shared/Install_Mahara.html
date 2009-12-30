@@ -1,12 +1,15 @@
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Install_Mahara</title>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>Install Mahara</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Install_Mahara</td></tr>
+<tr><td rowspan="1" colspan="3">Install Mahara</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -19,9 +22,19 @@
 	<td></td>
 </tr>
 <tr>
+	<td>setTimeout</td>
+	<td>120000</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForText</td>
-	<td>//td[@id='lastcoredata']</td>
-	<td>Successfully installed core data</td>
+	<td>//td[@id='localpostinst']</td>
+	<td>Successfully installed local customisations</td>
+</tr>
+<tr>
+	<td>setTimeout</td>
+	<td>30000</td>
+	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
@@ -34,33 +47,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>Welcome to Mahara</td>
+	<td>waitForElementPresent</td>
+	<td>requiredfields_password1</td>
 	<td></td>
 </tr>
 <tr>
-	<td>assertElementPresent</td>
-	<td>login_login_username</td>
+	<td>waitForElementPresent</td>
+	<td>requiredfields_password2</td>
 	<td></td>
 </tr>
 <tr>
-	<td>type</td>
-	<td>login_login_username</td>
-	<td>admin</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>login_login_password</td>
-	<td>mahara</td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>login_submit</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextPresent</td>
-	<td>Change password</td>
+	<td>waitForElementPresent</td>
+	<td>requiredfields_email</td>
 	<td></td>
 </tr>
 <tr>
@@ -70,22 +68,22 @@
 </tr>
 <tr>
 	<td>type</td>
-	<td>change_password_password1</td>
+	<td>requiredfields_password1</td>
 	<td>password1</td>
 </tr>
 <tr>
 	<td>type</td>
-	<td>change_password_password2</td>
+	<td>requiredfields_password2</td>
 	<td>password2</td>
 </tr>
 <tr>
 	<td>type</td>
-	<td>change_password_email</td>
+	<td>requiredfields_email</td>
 	<td>dev@mahara.org</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>change_password_submit</td>
+	<td>requiredfields_submit</td>
 	<td></td>
 </tr>
 <tr>
@@ -95,12 +93,12 @@
 </tr>
 <tr>
 	<td>type</td>
-	<td>change_password_password2</td>
+	<td>requiredfields_password2</td>
 	<td>password1</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>change_password_submit</td>
+	<td>requiredfields_submit</td>
 	<td></td>
 </tr>
 <tr>
@@ -110,7 +108,7 @@
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>You are logged in as Admin User (admin)</td>
+	<td>Admin User (admin)</td>
 	<td></td>
 </tr>
 
