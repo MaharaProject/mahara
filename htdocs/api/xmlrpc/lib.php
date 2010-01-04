@@ -350,7 +350,8 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
     $result = new StdClass;
     if ($fetchnow && PluginImport::import_immediately_allowed()) {
         // either immediately spawn a curl request to go fetch the file
-        $importer = PluginImport::create_importer($queue->id, $queue);
+        $tr = new MnetImporterTransport($queue);
+        $importer = PluginImport::create_importer($queue->id, $tr, $queue);
         $importer->prepare();
         $importer->process();
         $importer->cleanup();

@@ -31,7 +31,6 @@ class PluginImportFile extends PluginImport {
 
     private $manifest;
     private $files;
-    private $unzipdir;
     private $zipfilesha1;
     private $artefacts;
     private $importdir;
@@ -59,42 +58,14 @@ class PluginImportFile extends PluginImport {
     }
 
     public function process() {
-        $this->extract_file();
+        $this->importertransport->extract_file($this->importertransport->get('mimetype'), $this->zipfilesha1);
         $this->verify_file_contents();
         $this->add_artefacts();
     }
 
-    public function extract_file() {
-        $filesinfo = $this->get('importertransport')->files_info();
-        // this contains relativepath and zipfile name
-        $this->relativepath = $filesinfo['relativepath'];
-        $this->zipfile = $filesinfo['zipfile'];
-        $this->tempdir = $filesinfo['tempdir'];
-
-        if (sha1_file($this->tempdir . $this->zipfile) != $this->zipfilesha1) {
-            throw new ImportException($this, 'sha1 of recieved zipfile didn\'t match expected sha1');
-        }
-
-        $this->unzipdir = $this->tempdir . 'extract/';
-        if (!check_dir_exists($this->unzipdir)) {
-            throw new ImportException($this, 'Failed to create the temporary directories to work in');
-        }
-
-        $command = sprintf('%s %s %s %s',
-            get_config('pathtounzip'),
-            escapeshellarg($this->tempdir . $this->zipfile),
-            get_config('unzipdirarg'),
-            escapeshellarg($this->unzipdir)
-        );
-        $output = array();
-        exec($command, $output, $returnvar);
-        if ($returnvar != 0) {
-            throw new ImportException($this, 'Failed to unzip the file recieved from the transport object');
-        }
-    }
-
     public function verify_file_contents() {
-        $includedfiles = get_dir_contents($this->unzipdir);
+        $uzd = $this->importertransport->get('tempdir') . 'extract/';
+        $includedfiles = get_dir_contents($uzd);
         $okfiles = array();
         $badfiles = array();
         // check what arrived in the directory
@@ -105,7 +76,7 @@ class PluginImportFile extends PluginImport {
                 unset($includedfiles[$k]);
                 continue;
             }
-            $sha1 = sha1_file($this->unzipdir . $f);
+            $sha1 = sha1_file($uzd . $f);
             if (array_key_exists($sha1, $this->manifest)) {
                 $tmp = new StdClass;
                 $tmp->sha1 = $sha1;
@@ -131,6 +102,7 @@ class PluginImportFile extends PluginImport {
     public function add_artefacts() {
         // we're just adding them as files into an 'incoming' directory in the user's file area.
         safe_require('artefact', 'file');
+        $uzd = $this->importertransport->get('tempdir') . 'extract/';
         try {
             $this->importdir = ArtefactTypeFolder::get_folder_id('incoming', get_string('incomingfolderdesc'), null, true, $this->get('usr'));
         } catch (Exception $e) {
@@ -148,13 +120,13 @@ class PluginImportFile extends PluginImport {
                     'locked' => 0,
                 );
 
-                if ($imagesize = getimagesize($this->tempdir . 'extract/' . $f->actualfilename)) {
+                if ($imagesize = getimagesize($uzd . $f->actualfilename)) {
                     $mime = $imagesize['mime'];
                     $data->filetype = $mime;
                 }
 
                 $id = ArtefactTypeFile::save_file(
-                    $this->tempdir . 'extract/' . $f->actualfilename,
+                    $uzd . $f->actualfilename,
                     $data,
                     $this->get('usrobj'),
                     true

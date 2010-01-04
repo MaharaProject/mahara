@@ -67,6 +67,23 @@ class PluginImportLeap extends PluginImport {
     const STRATEGY_IMPORT_AS_VIEW = 1;
 
     public static function validate_import_data($importdata) {
+        if (!$file = self::find_file($importdata)) {
+            throw new ImportException(null, 'Missing leap xml file');
+        }
+    }
+
+    public static function find_file($importdata) {
+        $path = $importdata['tempdir'] . 'extract/';
+        if (!empty($importdata['manifestfile'])) {
+            $files = array($importdata['manifestfile']);
+        } else {
+            $files = array('leap.xml', 'leap2.xml', 'leap2a.xml');
+        }
+        foreach ($files as $f) {
+            if (file_exists($path . $f)) {
+                return $path . $f;
+            }
+        }
     }
 
     public function get($field) {
@@ -79,8 +96,8 @@ class PluginImportLeap extends PluginImport {
     public function process() {
         db_begin();
 
-        $data = $this->get('data');
-        $filename = get_config('dataroot') . $data['filename'];
+        $filename = self::find_file($this->get('importertransport')->files_info());
+        $this->logfile = dirname($filename) . '/import.log';
         $this->trace('Loading import from ' . $filename);
         $this->snapshot('begin');
 

@@ -27,17 +27,25 @@
 
 defined('INTERNAL') || die();
 
+/**
+ * base class for imports.
+ * handles queuing and sets up some basic helper functions
+ */
 abstract class PluginImport extends Plugin {
 
-    private $id;
-    private $data;
-    private $host; // this might move
-    private $expirytime;
-    private $token;
-    private $usr;
-    private $usrobj;
-    private $importertransport;
+    protected $id;
+    protected $data;
+    protected $expirytime;
+    protected $usr;
+    protected $usrobj;
 
+    /** the ImporterTransport object to use */
+    protected $importertransport;
+
+    /**
+     * @param int $id the queue record id
+     * @param stdclass $record (optional, pass this to save db queries)
+     */
     public function __construct($id, $record=null) {
         if (empty($record)) {
             if (!$record = get_record('import_queue', 'id', $id)) {
@@ -52,29 +60,40 @@ abstract class PluginImport extends Plugin {
         }
         $this->usrobj = new User();
         $this->usrobj->find_by_id($this->usr);
-
-        if (!empty($this->host)) {
-            $this->importertransport = new MnetImporterTransport($this);
-        }
-        else {
-            $this->importertransport = new LocalImporterTransport($this);
-        }
-        // we could do more here later I guess
     }
 
+    /**
+     * set the importer transport to use for this import
+     *
+     * @param ImporterTransport $transport
+     */
+    public function set_transport(ImporterTransport $transport) {
+        $this->importertransport = $transport;
+    }
+
+    /**
+     * initialisation.  by default just calls the transporter's prepare method
+     */
     public function prepare() {
         $this->importertransport->prepare_files();
     }
 
     /**
-    * processes the files and adds them to the user's artefact area
+    * process the files and adds them to the user's artefact area
     */
     public abstract function process();
 
+    /**
+     * perform cleanup tasks, delete temp files etc
+     */
     public function cleanup() {
         $this->importertransport->cleanup();
     }
 
+    /**
+     * helper method to return member variables
+     * @todo maybe refactor this to just use __get
+     */
     public function get($field) {
         if (!property_exists($this,$field)) {
             throw new ParamOutOfRangeException("Field $field wasn't found in class " . get_class($this));
@@ -82,10 +101,22 @@ abstract class PluginImport extends Plugin {
         return $this->{$field};
     }
 
+    /**
+     * helper function to return the appropriate class name from an import format
+     * this will try and resolve inconsistencies (eg file/files, leap/leap2a etc
+     * and also pull in the class definition for you
+     */
     public static function class_from_format($format) {
         $format = trim($format);
-        if ($format == 'files') {
-            $format = 'file';
+        $corr = array(
+            'files' => 'file',
+            'leap2a' => 'leap'
+        );
+        foreach ($corr as $bad => $good) {
+            if ($format == $bad) {
+                $format = $good;
+                break;
+            }
         }
         safe_require('import', $format);
         return generate_class_name('import', $format);
@@ -116,20 +147,42 @@ abstract class PluginImport extends Plugin {
         return $queue;
     }
 
-    public static function create_importer($id, $record=null) {
+    /**
+     * creates an importer object from the queue information
+     *
+     * @param int               $id the queue record (if there is one, else pass 0)
+     * @param ImporterTransport $transport the transporter object to use
+     * @param stdclass          $record the queue data (this <b>must</b> be passed when no id is given
+     *
+     * @return PluginImport
+     */
+    public static function create_importer($id, ImporterTransport $transporter, $record=null) {
         if (empty($record)) {
             if (!$record = get_record('import_queue', 'id', $id)) {
                 throw new NotFoundException("Failed to find import queue record with id $id");
             }
         }
         $class = self::class_from_format($record->format);
-        return new $class($id,$record);
+        $i =  new $class($id,$record);
+        $i->set_transport($transporter);
+        $transporter->set_importer($i);
+        return $i;
     }
 
+    /**
+     * validate the import data (usually what files_info returns
+     * @throws ImportException
+     */
     public static abstract function validate_import_data($importdata);
 
+    /**
+     * Whether imports are allowed immediately or if they must be queued
+     * eg if the server is under load or whatever
+     * @todo not implemented yet, but <b>use this anyway</b>
+     *
+     * @return boolean
+     */
     public static final function import_immediately_allowed() {
-    // @todo change this (check whatever)
         return true;
     }
 
@@ -144,6 +197,9 @@ abstract class PluginImport extends Plugin {
     }
 }
 
+/**
+ * cron job to process the queue and wake up and finish imports
+ */
 function import_process_queue() {
 
     if (!$ready = get_records_select_array('import_queue',
@@ -161,7 +217,14 @@ function import_process_queue() {
             $processed[] = $item->id;
             continue;
         }
-        $importer = PluginImport::create_importer($item->id, $item);
+        $tr = null;
+        if (!empty($item->host)) {
+            $tr = new MnetImporterTransport($item);
+        }
+        else {
+            $tr = new LocalImporterTransport($item);
+        }
+        $importer = PluginImport::create_importer($item->id, $tr, $item);
         try {
             $importer->prepare();
             $importer->process();
@@ -185,14 +248,82 @@ function import_process_queue() {
     );
 }
 
+/**
+ * base class for transport layers.
+ * Implements helper methods and makes some abstract stuff
+ */
 abstract class ImporterTransport {
+
+    /** temporary directory to work in if necessary  */
+    protected $tempdir;
+
+    /** the importer to eventually handle the import */
+    protected $importer;
+
+    /** unique id for the import directories.  usually the import queue id, but sometimes needs to be set manually */
+    protected $importid;
+
+    /** relative path inside the temporary directory */
+    protected $relativepath;
+
+    /** whether the tempdir has been set up already */
+    private $tempdirprepared = false;
+
+    /** the file to import (sometimes a zip file) */
+    protected $importfile;
+
+    /** the manifest file, if there is one and we know about it */
+    protected $manifestfile;
+
+    /** the mimetype of the file we are importing */
+    protected $mimetype;
+
+    /**
+     * figure out the temporary directory to use
+     * and make sure it exists, etc
+     */
+    public function prepare_tempdir() {
+        if ($this->tempdirprepared) {
+            return true;
+        }
+        $this->relativepath = 'temp/import/' . $this->importid . '/';
+        if ($tmpdir = get_config('unziptempdir')) {
+            $this->tempdir = $tmpdir . $this->relativepath;
+        }
+        else {
+            $this->tempdir = get_config('dataroot') . $this->relativepath;
+        }
+        if (!check_dir_exists($this->tempdir)) {
+            throw new ImportException($this->importer, 'Failed to create the temporary directories to work in');
+        }
+        $this->tempdirprepared = true;
+
+    }
+
+    /**
+     * helper get method
+     * @todo maybe refactor this to __get
+     */
+    public function get($field) {
+        if (!property_exists($this,$field)) {
+            throw new ParamOutOfRangeException("Field $field wasn't found in class " . get_class($this));
+        }
+        return $this->{$field};
+    }
 
     /**
     * this might be a path to a directory containing the files
     * or an array containing some other info
     * or the path to a file, depending on the format
     */
-    public abstract function files_info();
+    public function files_info() {
+        return array(
+            'importfile'   => $this->importfile,
+            'tempdir'      => $this->tempdir,
+            'relativepath' => $this->relativepath,
+            'manifestfile' => $this->manifestfile,
+        );
+    }
 
     /**
     * do whatever is necessary to retrieve the file(s)
@@ -202,55 +333,6 @@ abstract class ImporterTransport {
     /**
     * cleanup temporary working area
     */
-    public abstract function cleanup();
-}
-
-class LocalImporterTransport extends ImporterTransport {
-
-    private $relativepath;
-    private $zipfilename;
-
-    public function __construct(PluginImport $importer) {
-    }
-
-    public function cleanup() {
-        // TODO
-    }
-
-    public function prepare_files() {
-    }
-
-    /**
-     * For this to work with the 'file' import plugin, it needs to provide 'zipfile' and 'relativepath'
-     *
-     * Other import plugins might need different things
-     */
-    public function files_info() {
-        return array(
-            'zipfile' => $this->zipfilename,
-            'relativepath' => $this->relativepath,
-        );
-    }
-}
-
-
-class MnetImporterTransport extends ImporterTransport {
-
-    private $importer;
-
-    private $host;
-    private $token;
-
-    private $relativepath;
-    private $tempdir;
-    private $zipfilename;
-
-    public function __construct(PluginImport $importer) {
-        $this->importer = $importer;
-        $this->token = $importer->get('token');
-        $this->host = get_record('host', 'wwwroot', $importer->get('host'));
-    }
-
     public function cleanup() {
         if (empty($this->tempdir)) {
             return;
@@ -259,7 +341,107 @@ class MnetImporterTransport extends ImporterTransport {
         rmdirr($this->tempdir);
     }
 
+    /*
+     * set the importer object
+     * this must be done before prepare_files is called
+     *
+     * @param PluginImport $importer
+     */
+    public function set_importer(PluginImport $importer) {
+        $this->importer = $importer;
+    }
+
+    /**
+     * helper function for import code to use to extract a file
+     * it will either unzip a zip file, or move an import file to the destination
+     *
+     * @param string $expectedsha1 optional, if given will validate the sha1 first
+     *
+     * @throws ImportException
+     */
+    public function extract_file($mimetype, $expectedsha1=null) {
+        $this->prepare_tempdir();
+        if ($expectedsha1 &&  sha1_file($this->importfile) != $expectedsha1) {
+            throw new ImportException($this->importer, 'sha1 of recieved importfile didn\'t match expected sha1');
+        }
+
+        $todir = $this->tempdir . 'extract/';
+        if (!check_dir_exists($todir)) {
+            throw new ImportException($this, 'Failed to create the temporary directories to work in');
+        }
+
+        safe_require('artefact', 'file');
+        $ziptypes = PluginArtefactFile::get_mimetypes_from_description('zip');
+        // if we don't have a zipfile, just move the import file to the extract location
+        if (!in_array($mimetype, $ziptypes)) {
+            if (strpos($this->importfile, $todir) !== 0) {
+                rename($this->importfile, $todir . $this->importfilename);
+            }
+            $this->manifestfile = $this->importfilename;
+            return;
+        }
+
+        $command = sprintf('%s %s %s %s',
+            get_config('pathtounzip'),
+            escapeshellarg($this->importfile),
+            get_config('unzipdirarg'),
+            escapeshellarg($todir)
+        );
+        $output = array();
+        exec($command, $output, $returnvar);
+        if ($returnvar != 0) {
+            throw new ImportException($this, 'Failed to unzip the file recieved from the transport object');
+        }
+    }
+}
+
+/**
+ * class to handle 'local' transport - eg uploaded files
+*/
+class LocalImporterTransport extends ImporterTransport {
+
+    public function __construct($importfile, $importfilename, $importid) {
+        $this->importfile = $importfile;
+        $this->importfilename = $importfilename;
+        $this->importid   = $importid;
+    }
+
+    // nothing to do, uploaded files live in /tmp
+    public function cleanup() { }
+
+    // nothing to do, unzipping is handled elsewhere
+    public function prepare_files() { }
+}
+
+
+/**
+ * transport layer for mnet based imports
+ * this just overrides prepare_files to do an xmlrpc request
+ */
+class MnetImporterTransport extends ImporterTransport {
+
+    /** xmlrpc host */
+    private $host;
+    /** token set for retrieiving files */
+    private $token;
+
+    /**
+     * @param stdclass $import the import record
+     */
+    public function __construct($import) {
+        $this->host = get_record('host', 'wwwroot', $import->host);
+        $this->importid = $import->id; // since we have an import record, use the id
+    }
+
+    /**
+     * retrieves the files from the remote host
+     */
     public function prepare_files() {
+        if (empty($this->importer)) {
+            throw new ImportException(null, 'Failed to initialise XMLRPC file retrieval - no importer object');
+        }
+        $this->prepare_tempdir();
+        $this->token = $this->importer->get('token');
         require_once(get_config('docroot') . 'api/xmlrpc/client.php');
         $client = new Client();
         try {
@@ -273,31 +455,27 @@ class MnetImporterTransport extends ImporterTransport {
             throw new ImportException($this->importer, 'Failed to retrieve zipfile from remote server');
         }
 
-        $this->relativepath = 'temp/import/' . $this->importer->get('id') . '/';
-        if ($tmpdir = get_config('unziptempdir')) {
-            $this->tempdir = $tmpdir . $this->relativepath;
-        }
-        else {
-            $this->tempdir = get_config('dataroot') . $this->relativepath;
-        }
-        if (!check_dir_exists($this->tempdir)) {
-            throw new ImportException($this->importer, 'Failed to create the temporary directories to work in');
-        }
-
-        $this->zipfilename = 'import.zip';
-        if (!file_put_contents($this->tempdir  . $this->zipfilename, $filecontents)) {
+        $this->importfilename = 'import.zip';
+        $this->importfile = $this->tempdir . $this->importfilename;
+        if (!file_put_contents($this->tempdir  . $this->importfilename, $filecontents)) {
             throw new ImportException($this->importer, 'Failed to write out the zipfile to local temporary storage');
         }
+        // detect the filetype and bail if it's not a zip file
+        safe_require('artefact', 'file');
+        $ziptypes = PluginArtefactFile::get_mimetypes_from_description('zip');
+        $this->mimetype = mime_content_type($this->tempdir . $this->importfilename);
+        if (!in_array($this->mimetype, $ziptypes)) {
+            throw new ImportException($this->importer, 'Not a valid zipfile - mimetype was ' . $this->mimetype);
+        }
     }
 
-    public function files_info() {
-        return array(
-            'zipfile' => $this->zipfilename,
-            'tempdir' => $this->tempdir,
-            'relativepath' => $this->relativepath,
-        );
-    }
 
+    /**
+     * used for appending to the description of created data
+     * eg "imported from blah server"
+     *
+     * @return string
+     */
     public function get_description() {
         return get_string('remotehost', 'mahara', $this->host->name);
     }
