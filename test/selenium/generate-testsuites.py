@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 '''Generate an index.html file for each test suite from its
 test_suite description file. Then create a "master" index.html
 file that installs Mahara and runs every test suite'''
