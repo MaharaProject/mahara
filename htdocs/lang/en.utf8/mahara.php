@@ -859,6 +859,8 @@ $string['country.ye'] = 'Yemen';
 $string['country.zm'] = 'Zambia';
 $string['country.zw'] = 'Zimbabwe';
 
+$string['nocountryselected'] = 'No Country Selected';
+
 // general stuff that doesn't really fit anywhere else
 $string['system'] = 'System';
 $string['done'] = 'Done';

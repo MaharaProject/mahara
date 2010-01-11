@@ -44,6 +44,8 @@ $yesno = array(true  => get_string('yes'),
 
 $searchpluginoptions = get_search_plugins();
 
+$countries = getoptions_country();
+
 $siteoptionform = array(
     'name'       => 'siteoptions',
     'jsform'     => true,
@@ -72,8 +74,8 @@ $siteoptionform = array(
             'type'         => 'select',
             'title'        => get_string('country', 'admin'),
             'description'  => get_string('sitecountrydescription', 'admin'),
-            'defaultvalue' => 'nz',
-            'options'      => getoptions_country(),
+            'defaultvalue' => get_config('country'),
+            'options'      => array('' => get_string('nocountryselected')) + $countries,
             'help'         => true,
         ),
         'theme' => array(
@@ -260,7 +262,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'allowpublicviews', 'allowpublicprofiles', 'creategroups', 'createpublicgroups', 'searchplugin',
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
         'captchaonregisterform', 'captchaoncontactform', 'showselfsearchsideblock', 'showtagssideblock',
-        'tagssideblockmaxtags'
+        'tagssideblockmaxtags', 'country'
     );
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');
