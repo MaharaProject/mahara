@@ -157,6 +157,8 @@ input#register_register {
 
 .site-stats {
   margin: 0 0 1em 0;
+  padding: 1em 1.5em;
+  text-align: left;
 }
 .site-stats h5 {
   margin-bottom: .25em;

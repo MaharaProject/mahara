@@ -205,6 +205,8 @@ function site_statistics() {
             $data['weekly'][$r->type][$keys[$r->type]++] = array($keys[$r->type], $r->value);
         }
     }
+    $data['release'] = get_config('release');
+    $data['version'] = get_config('version');
     return($data);
 
 }
