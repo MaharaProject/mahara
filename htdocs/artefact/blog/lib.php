@@ -491,10 +491,12 @@ class ArtefactTypeBlogPost extends ArtefactType {
             return;
         }
 
+        db_begin();
         $this->detach(); // Detach all file attachments
         delete_records('artefact_blog_blogpost', 'blogpost', $this->id);
       
         parent::delete();
+        db_commit();
     }
 
     /**
