@@ -1299,6 +1299,15 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2009111009) {
+        // Clean up the mess left behind by failing to delete blogposts in a transaction
+        execute_sql("
+            INSERT INTO {artefact_blog_blogpost} (blogpost)
+            SELECT id FROM {artefact} WHERE artefacttype = 'blogpost' AND id NOT IN (
+                SELECT blogpost FROM {artefact_blog_blogpost}
+            )");
+    }
+
     return $status;
 
 }
