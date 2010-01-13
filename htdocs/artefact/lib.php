@@ -1038,6 +1038,14 @@ abstract class ArtefactType {
 
     public function detach($attachmentid=null) {
         if (is_null($attachmentid)) {
+            execute_sql("
+                DELETE FROM {artefact_parent_cache}
+                WHERE parent = ?
+                AND artefact IN (
+                    SELECT attachment
+                    FROM {artefact_attachment}
+                    WHERE artefact = ?
+                )", array($this->id, $this->id));
             delete_records('artefact_attachment', 'artefact', $this->id);
             return;
         }
