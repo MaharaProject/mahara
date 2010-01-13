@@ -22,12 +22,13 @@ addLoadEvent(function() {
                     addElementClass(fieldset.tabLink.parentNode, 'current-tab');
                     addElementClass(fieldset.tabLink, 'current-tab');
                     removeElementClass(fieldset, 'safe-hidden');
+                    removeElementClass(fieldset, 'collapsed');
                     $('profileform_fs').value = fsid;
                 }
                 else {
                     removeElementClass(fieldset.tabLink.parentNode, 'current-tab');
                     removeElementClass(fieldset.tabLink, 'current-tab');
-                    addElementClass(fieldset, 'safe-hidden');
+                    addElementClass(fieldset, 'collapsed');
                 }
             });
             e.stop();
