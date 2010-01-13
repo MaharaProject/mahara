@@ -1322,6 +1322,8 @@ function xmldb_core_upgrade($oldversion=0) {
 
     if ($oldversion < 2010011300) {
         // Clean up the mess left behind by failing to delete blogposts in a transaction
+        require_once(get_config('docroot') . 'artefact/lib.php');
+        rebuild_artefact_parent_cache_dirty();
         execute_sql("
             INSERT INTO {artefact_blog_blogpost} (blogpost)
             SELECT id FROM {artefact} WHERE artefacttype = 'blogpost' AND id NOT IN (
