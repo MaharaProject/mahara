@@ -25,5 +25,5 @@
 }
 .nojs-hidden-table {
     display: table;
-    /* TODO: probably need ie6/7 hack to use display: block here */
+    *display: block;
 }
