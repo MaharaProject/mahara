@@ -12,7 +12,7 @@ addLoadEvent(function () {literal}{{/literal}
     <p><strong>{str tag=users}:</strong> {$sitedata.users}{if $sitedata.rank.users} ({str tag=Rank section=admin}: $sitedata.rank.users}){/if}</p>
     <p><strong>{str tag=groups}:</strong> {$sitedata.groups}{if $sitedata.rank.groups} ({str tag=Rank section=admin}: $sitedata.rank.groups}){/if}</p>
     <p><strong>{str tag=views}:</strong> {$sitedata.views}{if $sitedata.rank.views} ({str tag=Rank section=admin}: $sitedata.rank.views}){/if}</p>
-    <!--p><strong>{str tag=databasesize section=admin}:</strong></p-->
+    <p><strong>{str tag=databasesize section=admin}:</strong> {$sitedata.dbsize|display_size}</p>
     <!--p><strong>{str tag=diskusage section=admin}:</strong></p-->
     <p><strong>{str tag=maharaversion section=admin}:</strong> {$sitedata.release}</p>
   </div>
