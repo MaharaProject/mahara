@@ -198,7 +198,7 @@ function site_statistics() {
         FROM {site_data}
         WHERE ctime >= ? AND type IN (?,?,?)
         ORDER BY ctime, type', $values);
-    if ($weekly && count($weekly) > count($values) - 1) {
+    if ($weekly) {
         $data['weekly'] = array('user-count' => array(), 'group-count' => array(), 'view-count' => array());
         $keys = array('user-count' => 0, 'group-count' => 0, 'view-count' => 0);
         foreach ($weekly as &$r) {
