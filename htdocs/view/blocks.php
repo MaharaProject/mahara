@@ -162,7 +162,7 @@ if ($viewtheme && !isset($allowedthemes[$viewtheme])) {
     exit;
 }
 
-$javascript = array('views', 'tinymce', 'paginator', 'tablerenderer', 'artefact/file/js/filebrowser.js', 'lib/pieforms/static/core/pieforms.js', 'blocktype/creativecommons/js/creativecommons.js');
+$javascript = array('views', 'tinymce', 'paginator', 'tablerenderer', 'artefact/file/js/filebrowser.js', 'lib/pieforms/static/core/pieforms.js');
 $javascript = array_merge($javascript, $view->get_blocktype_javascript());
 
 $smarty = smarty($javascript, $stylesheets, false, $extraconfig);
