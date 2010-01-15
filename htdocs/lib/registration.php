@@ -205,12 +205,14 @@ function site_statistics() {
             $data['weekly'][$r->type][$keys[$r->type]++] = array($keys[$r->type], $r->value);
         }
     }
-    $data['release'] = get_config('release');
-    $data['version'] = get_config('version');
-    $data['dbsize']  = db_total_size();
-    $data['diskusage'] = get_field('site_data', 'value', 'type', 'disk-usage');
-    return($data);
 
+    $data['release']     = get_config('release');
+    $data['version']     = get_config('version');
+    $data['installdate'] = format_date(strtotime(get_config('installation_time')), 'strftimedate');
+    $data['dbsize']      = db_total_size();
+    $data['diskusage']   = get_field('site_data', 'value', 'type', 'disk-usage');
+
+    return($data);
 }
 
 ?>

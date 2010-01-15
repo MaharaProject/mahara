@@ -1323,9 +1323,7 @@ function xmldb_core_upgrade($oldversion=0) {
     // @TODO: Stats upgrade:
     // Daily data: count of logged-in users
     // Add ctime to usr table for count of users created
-    // Add site start time to config table; initialise with earliest ctime from view, artefact, site_content?
     // Add visits column to view table, updated daily from log on filesystem
-    // Records in cron table
 
     if ($oldversion < 2009122200) {
         // Table for collection of historical stats
@@ -1354,6 +1352,9 @@ function xmldb_core_upgrade($oldversion=0) {
         $cron->month        = '*';
         $cron->dayofweek    = '*';
         insert_record('cron', $cron);
+
+        // Put best guess at installation time into config table.
+        set_config('installation_time', get_field_sql("SELECT MIN(ctime) FROM {site_content}"));
     }
 
     return $status;

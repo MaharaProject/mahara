@@ -147,6 +147,7 @@ $string['reopensitedetail'] = 'Your site is closed.  Site administrators may sta
 
 // Statistics
 $string['sitestatistics'] = 'Site Statistics';
+$string['siteinstalled'] = 'Site Installed';
 $string['databasesize'] = 'Database Size';
 $string['diskusage'] = 'Disk Usage';
 $string['maharaversion'] = 'Mahara version';
