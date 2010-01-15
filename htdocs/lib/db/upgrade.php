@@ -1336,7 +1336,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('ctime','type'));
         create_table($table);
 
-        // Insert a cron job to save weekly site data
+        // Insert cron jobs to save site data
         $cron = new StdClass;
         $cron->callfunction = 'cron_site_data_weekly';
         $cron->minute       = 55;
@@ -1344,6 +1344,15 @@ function xmldb_core_upgrade($oldversion=0) {
         $cron->day          = '*';
         $cron->month        = '*';
         $cron->dayofweek    = 6;
+        insert_record('cron', $cron);
+
+        $cron = new StdClass;
+        $cron->callfunction = 'cron_site_data_daily';
+        $cron->minute       = 51;
+        $cron->hour         = 23;
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
         insert_record('cron', $cron);
     }
 

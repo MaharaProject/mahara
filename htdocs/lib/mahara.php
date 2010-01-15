@@ -2230,6 +2230,22 @@ function cron_site_data_weekly() {
     ));
 }
 
+function cron_site_data_daily() {
+    $time = db_format_timestamp(time());
+
+    require_once('function.dirsize.php');
+    if ($diskusage = dirsize(get_config('dataroot'))) {
+        // Currently there is no need to track disk usage
+        // over time, so delete old records first.
+        delete_records('site_data', 'type', 'disk-usage');
+        insert_record('site_data', (object) array(
+            'ctime' => $time,
+            'type'  => 'disk-usage',
+            'value' => $diskusage,
+        ));
+    }
+}
+
 function random_string($length=15) {
     $pool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     $poollen = strlen($pool);

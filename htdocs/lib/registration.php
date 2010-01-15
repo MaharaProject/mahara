@@ -208,6 +208,7 @@ function site_statistics() {
     $data['release'] = get_config('release');
     $data['version'] = get_config('version');
     $data['dbsize']  = db_total_size();
+    $data['diskusage'] = get_field('site_data', 'value', 'type', 'disk-usage');
     return($data);
 
 }
