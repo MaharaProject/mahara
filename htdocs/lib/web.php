@@ -260,8 +260,8 @@ EOF;
                 }
             }
         }
-        else {
-            // A .js file with a fully specified path
+        else if (strpos($jsfile, 'http://') === false) {
+            // A local .js file with a fully specified path
             $javascript_array[] = $wwwroot . $jsfile;
             // If $jsfile is from a plugin (i.e. plugintype/pluginname/js/foo.js)
             // Then get js strings from static function jsstrings in plugintype/pluginname/lib.php 
@@ -294,6 +294,10 @@ EOF;
                     }
                 }
             }
+        }
+        else {
+            // A remote .js file
+            $javascript_array[] = $jsfile;
         }
     }
 

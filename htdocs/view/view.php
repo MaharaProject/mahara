@@ -154,6 +154,9 @@ $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('
 
 $feedback = ArtefactTypeComment::get_comments($limit, $offset, $showcomment, $view);
 
+$javascript = array('paginator', 'viewmenu', 'artefact/resume/resumeshowhide.js');
+$javascript = array_merge($javascript, $view->get_blocktype_javascript());
+
 // Set up theme
 $viewtheme = $view->get('theme');
 if ($viewtheme && $THEME->basename != $viewtheme) {
@@ -164,7 +167,7 @@ $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_confi
 $can_edit = $USER->can_edit_view($view) && !$submittedgroup && !$view->is_submitted();
 
 $smarty = smarty(
-    array('paginator', 'viewmenu', 'artefact/resume/resumeshowhide.js'),
+    $javascript,
     $stylesheets,
     array(),
     array(

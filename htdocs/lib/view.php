@@ -1382,6 +1382,38 @@ class View {
         db_commit();
     }
 
+    /**
+     * Returns a list of required javascript files, based on
+     * the blockinstances present in the view.
+     */
+    public function get_blocktype_javascript() {
+        $view_data = $this->get_column_datastructure();
+        $javascript = array();
+        foreach($view_data as $column) {
+            foreach($column['blockinstances'] as $blockinstance) {
+                $pluginname = $blockinstance->get('blocktype');
+                safe_require('blocktype', $pluginname);
+                $instancejs = call_static_method(
+                    generate_class_name('blocktype', $pluginname),
+                    'get_instance_javascript',
+                    $blockinstance
+                );
+                foreach($instancejs as &$jsfile) {
+                    if(strpos($jsfile, 'http://') === false) {
+                        if($artefactplugin = get_field('blocktype_installed', 'artefactplugin', 'name', $pluginname)) {
+                            $jsfile = 'artefact/' . $artefactplugin . '/blocktype/' .
+                                $pluginname . '/' . $jsfile;
+                        }
+                        else {
+                            $jsfile = 'blocktype/' . $blockinstance->get('blocktype') . '/' . $jsfile;
+                        }
+                    }
+                }
+                $javascript = array_merge($javascript, $instancejs);
+            }
+        }
+        return array_unique($javascript);
+    }
 
     private $blockinstance_currently_being_configured = 0;
 

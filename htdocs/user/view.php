@@ -70,6 +70,9 @@ if (!$view || !can_view_view($viewid)) {
     throw new AccessDeniedException(get_string('youcannotviewthisusersprofile', 'error'));
 }
 
+$javascript = array('paginator', 'lib/pieforms/static/core/pieforms.js', 'artefact/resume/resumeshowhide.js');
+$javascript = array_merge($view->get_blocktype_javascript());
+
 // Set up theme
 $viewtheme = $view->get('theme');
 if ($viewtheme && $THEME->basename != $viewtheme) {
@@ -80,7 +83,7 @@ $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_confi
 $name = display_name($user);
 define('TITLE', $name);
 $smarty = smarty(
-    array('paginator', 'lib/pieforms/static/core/pieforms.js', 'artefact/resume/resumeshowhide.js'),
+    $javascript,
     $stylesheets,
     array(),
     array(

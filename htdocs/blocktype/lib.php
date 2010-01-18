@@ -84,6 +84,15 @@ abstract class PluginBlocktype extends Plugin {
     public static abstract function render_instance(BlockInstance $instance, $editing=false);
 
     /**
+    * This function must be implemented in the subclass if it requires
+    * javascript. It returns an array of javascript files, either local
+    * or remote.
+    */
+    public static function get_instance_javascript(BlockInstance $instance) {
+        return array();
+    }
+
+    /**
      * If this blocktype contains artefacts, and uses the artefactchooser 
      * Pieform element to choose them, this method must return the definition 
      * for the element.
@@ -114,6 +123,15 @@ abstract class PluginBlocktype extends Plugin {
     */
     public static function instance_config_form(BlockInstance $instance) {
         throw new SystemException(get_string('blocktypemissingconfigform', 'error', $instance->get('blocktype')));
+    }
+
+    /**
+    * Thus function must be implemented in the subclass is it has an
+    * instance config form that requires javascript. It returns an
+    * array of javascript files, either local or remote.
+    */
+    public static function get_instance_config_javascript(BlockInstance $instance) {
+        return array();
     }
 
     /**
@@ -712,6 +730,7 @@ class BlockInstance {
             $title = $this->get('title');
         }
 
+
         $elements = array_merge(
             array(
                 'title' => array(
@@ -814,6 +833,24 @@ class BlockInstance {
                 $js .= call_user_func_array($function, array($pieform, $element));
             }
         }
+
+        $configjs = call_static_method($blocktypeclass, 'get_instance_config_javascript', $this);
+        foreach($configjs as &$jsfile) {
+            if(strpos($jsfile, 'http://') === false) {
+                if($this->artefactplugin) {
+                    $jsfile = 'artefact/' . $this->artefactplugin . '/blocktype/' .
+                        $this->blocktype . '/' . $jsfile;
+                }
+                else {
+                    $jsfile = 'blocktype/' . $this->blocktype . '/' . $jsfile;
+                }
+                $jsfile = '$j.getScript("' . get_config('wwwroot') . $jsfile . '");';
+            }
+            else {
+                $jsfile = '$j.getScript("' . $jsfile . '");';
+            }
+        }
+        $js .= implode('', $configjs);
 
         $renderedform = array('html' => $html, 'javascript' => $js);
         return $renderedform;
