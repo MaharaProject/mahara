@@ -240,6 +240,8 @@ function site_statistics() {
         WHERE NOT owner IS NULL AND owner > 0
     "));
 
+    $data['cronrunning'] = !record_exists_select('cron', 'nextrun < CURRENT_DATE');
+
     return($data);
 }
 
