@@ -188,6 +188,8 @@ function site_data_current() {
 }
 
 function site_statistics($full=false) {
+    $data = array();
+
     if ($full) {
         $data = site_data_current();
         $lastyear = db_format_timestamp(time() - 60*60*12*365);
@@ -204,9 +206,34 @@ function site_statistics($full=false) {
                 $data['weekly'][$r->type][$keys[$r->type]++] = array($keys[$r->type], $r->value);
             }
         }
-    }
-    else {
-        $data = array();
+
+        if (is_postgres()) {
+            $weekago = "CURRENT_DATE - INTERVAL '1 week'";
+            $thisweeksql = "(lastaccess > $weekago)::int";
+            $todaysql = '(lastaccess > CURRENT_DATE)::int';
+            $eversql = "(NOT lastaccess IS NULL)::int";
+        }
+        else {
+            $weekago = 'CURRENT_DATE - INTERVAL 1 WEEK';
+            $thisweeksql = "lastaccess > $weekago";
+            $todaysql = 'lastaccess > CURRENT_DATE';
+            $eversql = "NOT lastaccess IS NULL";
+        }
+        $sql = "SELECT SUM($todaysql) AS today, SUM($thisweeksql) AS thisweek, $weekago AS weekago, SUM($eversql) AS ever FROM {usr}";
+        $active = get_record_sql($sql);
+        $data['usersloggedin'] = get_string('loggedinsince', 'admin', $active->today, $active->thisweek, format_date(strtotime($active->weekago), 'strftimedateshort'), $active->ever);
+
+        $memberships = count_records_sql("
+            SELECT COUNT(*)
+            FROM {group_member} m JOIN {group} g ON g.id = m.group
+            WHERE g.deleted = 0
+        ");
+        $data['groupmemberaverage'] = get_string('groupmemberaverage', 'admin', $memberships/$data['users']);
+        $data['viewsperuser'] = get_string('viewsperuser', 'admin', get_field_sql("
+            SELECT (0.0 + COUNT(id)) / COUNT(DISTINCT owner)
+            FROM {view}
+            WHERE NOT owner IS NULL AND owner > 0
+        "));
     }
 
     $data['name'] = get_config('sitename');
@@ -215,35 +242,6 @@ function site_statistics($full=false) {
     $data['installdate'] = format_date(strtotime(get_config('installation_time')), 'strftimedate');
     $data['dbsize']      = db_total_size();
     $data['diskusage']   = get_field('site_data', 'value', 'type', 'disk-usage');
-
-    if (is_postgres()) {
-        $weekago = "CURRENT_DATE - INTERVAL '1 week'";
-        $thisweeksql = "(lastaccess > $weekago)::int";
-        $todaysql = '(lastaccess > CURRENT_DATE)::int';
-        $eversql = "(NOT lastaccess IS NULL)::int";
-    }
-    else {
-        $weekago = 'CURRENT_DATE - INTERVAL 1 WEEK';
-        $thisweeksql = "lastaccess > $weekago";
-        $todaysql = 'lastaccess > CURRENT_DATE';
-        $eversql = "NOT lastaccess IS NULL";
-    }
-    $sql = "SELECT SUM($todaysql) AS today, SUM($thisweeksql) AS thisweek, $weekago AS weekago, SUM($eversql) AS ever FROM {usr}";
-    $active = get_record_sql($sql);
-    $data['usersloggedin'] = get_string('loggedinsince', 'admin', $active->today, $active->thisweek, format_date(strtotime($active->weekago), 'strftimedateshort'), $active->ever);
-
-    $memberships = count_records_sql("
-        SELECT COUNT(*)
-        FROM {group_member} m JOIN {group} g ON g.id = m.group
-        WHERE g.deleted = 0
-    ");
-    $data['groupmemberaverage'] = get_string('groupmemberaverage', 'admin', $memberships/$data['users']);
-    $data['viewsperuser'] = get_string('viewsperuser', 'admin', get_field_sql("
-        SELECT (0.0 + COUNT(id)) / COUNT(DISTINCT owner)
-        FROM {view}
-        WHERE NOT owner IS NULL AND owner > 0
-    "));
-
     $data['cronrunning'] = !record_exists_select('cron', 'nextrun < CURRENT_DATE');
 
     return($data);
