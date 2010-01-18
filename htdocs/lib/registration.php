@@ -181,31 +181,35 @@ function registration_data() {
 
 function site_data_current() {
     return array(
-        'name' => get_config('sitename'),
         'users' => count_records_select('usr', 'id > 0 AND deleted = 0'),
         'groups' => count_records('group', 'deleted', 0),
         'views' => count_records_select('view', 'owner <> 0'),
     );
 }
 
-function site_statistics() {
-    $data = site_data_current();
-
-    $lastyear = db_format_timestamp(time() - 60*60*12*365);
-    $values = array($lastyear, 'view-count', 'user-count', 'group-count');
-    $weekly = get_records_sql_array('
-        SELECT ctime, type, value, ' . db_format_tsfield('ctime', 'ts') . '
-        FROM {site_data}
-        WHERE ctime >= ? AND type IN (?,?,?)
-        ORDER BY ctime, type', $values);
-    if ($weekly) {
-        $data['weekly'] = array('user-count' => array(), 'group-count' => array(), 'view-count' => array());
-        $keys = array('user-count' => 0, 'group-count' => 0, 'view-count' => 0);
-        foreach ($weekly as &$r) {
-            $data['weekly'][$r->type][$keys[$r->type]++] = array($keys[$r->type], $r->value);
+function site_statistics($full=false) {
+    if ($full) {
+        $data = site_data_current();
+        $lastyear = db_format_timestamp(time() - 60*60*12*365);
+        $values = array($lastyear, 'view-count', 'user-count', 'group-count');
+        $weekly = get_records_sql_array('
+            SELECT ctime, type, value, ' . db_format_tsfield('ctime', 'ts') . '
+            FROM {site_data}
+            WHERE ctime >= ? AND type IN (?,?,?)
+            ORDER BY ctime, type', $values);
+        if ($weekly) {
+            $data['weekly'] = array('user-count' => array(), 'group-count' => array(), 'view-count' => array());
+            $keys = array('user-count' => 0, 'group-count' => 0, 'view-count' => 0);
+            foreach ($weekly as &$r) {
+                $data['weekly'][$r->type][$keys[$r->type]++] = array($keys[$r->type], $r->value);
+            }
         }
     }
+    else {
+        $data = array();
+    }
 
+    $data['name'] = get_config('sitename');
     $data['release']     = get_config('release');
     $data['version']     = get_config('version');
     $data['installdate'] = format_date(strtotime(get_config('installation_time')), 'strftimedate');

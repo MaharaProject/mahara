@@ -36,14 +36,19 @@
 </div>
 {/if}
 
-{if $sitedata}
-  {include file='admin/stats.tpl' cron=1}
-{/if}
-
 {if $register}
 <div class="message" id="register-site">
     <h3>{str tag=registeryourmaharasite section=admin}</h3>
     {str tag=registeryourmaharasitesummary section=admin args=$WWWROOT}
+</div>
+{/if}
+
+{if $sitedata}
+<div class="message site-stats">
+  <div class="fl"><h3>{$sitedata.name}: {str tag=siteinformation section=admin}</h3></div>
+  <div class="fr"><a href="{$WWWROOT}admin/statistics.php">{str tag=viewfullsitestatistics section=admin}</a></div>
+  <div class="cb"></div>
+  {include file='admin/stats.tpl' full=0}
 </div>
 {/if}
 

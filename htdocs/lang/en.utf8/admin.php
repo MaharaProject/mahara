@@ -146,6 +146,8 @@ $string['reopensite'] = 'Reopen Site';
 $string['reopensitedetail'] = 'Your site is closed.  Site administrators may stay logged in until an upgrade is detected.';
 
 // Statistics
+$string['siteinformation'] = 'Site Information';
+$string['viewfullsitestatistics'] = 'View Full Site Statistics';
 $string['sitestatistics'] = 'Site Statistics';
 $string['siteinstalled'] = 'Site Installed';
 $string['databasesize'] = 'Database Size';

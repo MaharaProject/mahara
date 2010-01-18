@@ -156,13 +156,16 @@ input#register_register {
 }
 
 .site-stats {
-  margin: 0 0 1em 0;
-  padding: 1em 1.5em;
+  margin: 1.5em 0 1em 0;
+  padding: 0 1em 0 0;
   text-align: left;
 }
-.site-stats h5 {
-  margin-bottom: .25em;
+.message.site-stats {
+  margin: 0 0 1em 0;
+  padding: 1em 1.5em;
 }
+.site-stats p:first-child,
+.site-stats p:last-child,
 .site-stats p {
   margin: .1em;
 }
