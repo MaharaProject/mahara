@@ -275,6 +275,12 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
         $trieden = false;
     }
 
+    //try the local settings
+    $langfile = get_config('docroot') . 'local/' . $location . $lang . '/' . $file;
+    if (is_readable($langfile)) {
+        return $langfile;
+    }
+
     // try the current language
     $langfile = get_language_root() . $location . $lang . '/' . $file;
     if (is_readable($langfile)) {
