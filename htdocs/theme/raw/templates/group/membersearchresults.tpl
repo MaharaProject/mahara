@@ -18,6 +18,7 @@
                   <label>{str tag=reason}:</label> {$r.reason|format_whitespace}{/if}
                 </div>
                 <div class="right btn-add">{$r.addform}</div>
+                <div class="right btn-add">{$r.denyform}</div>
                 {elseif $membershiptype == 'invite'}
                 <div>{str tag=hasbeeninvitedtojoin section=group}</div>
                 {/if}

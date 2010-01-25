@@ -572,6 +572,32 @@ function group_get_removeuser_form($userid, $groupid) {
     ));
 }
 
+/**
+ * Form for denying request (request jointype group)
+ */
+function group_get_denyuser_form($userid, $groupid) {
+    require_once('pieforms/pieform.php');
+    return pieform(array(
+        'name'                => 'denyuser' . $userid,
+        'successcallback'     => 'group_denyuser_submit',
+        'renderer'            => 'oneline',
+        'elements'            => array(
+            'group' => array(
+                'type'    => 'hidden',
+                'value' => $groupid,
+            ),
+            'member' => array(
+                'type'  => 'hidden',
+                'value' => $userid,
+            ),
+            'denyuser' => array(
+                'type'  => 'submit',
+                'value' => get_string('declinerequest', 'group'),
+            ),
+        ),
+    ));
+}
+
 // Functions for handling submission of group related forms
 
 function joingroup_submit(Pieform $form, $values) {
@@ -619,6 +645,24 @@ function group_adduser_submit(Pieform $form, $values) {
     }
     group_add_user($group, $values['member']);
     $SESSION->add_ok_msg(get_string('useradded', 'group'));
+    if (count_records('group_member_request', 'group', $group)) {
+        redirect('/group/members.php?id=' . $group . '&membershiptype=request');
+    }
+    redirect('/group/members.php?id=' . $group);
+}
+
+/**
+ * Denying request (request jointype group)
+ */
+function group_denyuser_submit(Pieform $form, $values) {
+    global $SESSION;
+    $group = (int)$values['group'];
+    if (group_user_access($group) != 'admin') {
+        $SESSION->add_error_msg(get_string('accessdenied', 'error'));
+        redirect('/group/members.php?id=' . $group . '&membershiptype=request');
+    }
+    delete_records('group_member_request', 'group', $values['group'], 'member', $values['member']);
+    $SESSION->add_ok_msg(get_string('declinerequestsuccess', 'group'));
     if (count_records('group_member_request', 'group', $group)) {
         redirect('/group/members.php?id=' . $group . '&membershiptype=request');
     }
@@ -814,6 +858,7 @@ function group_get_membersearch_data($group, $query, $offset, $limit, $membershi
         if ($membershiptype == 'request') {
             foreach ($results['data'] as &$r) {
                 $r['addform'] = group_get_adduser_form($r['id'], $group);
+                $r['denyform'] = group_get_denyuser_form($r['id'], $group);
                 // TODO: this will suck when there's quite a few on the page, 
                 // would be better to grab all the reasons in one go
                 $r['reason']  = get_field('group_member_request', 'reason', 'group', $group, 'member', $r['id']);
