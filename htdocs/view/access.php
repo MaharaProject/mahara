@@ -292,9 +292,27 @@ function editaccess_validate(Pieform $form, $values) {
             if ($item['type'] == 'loggedin' && !$item['startdate'] && !$item['stopdate']) {
                 $loggedinaccess = true;
             }
-            if ($item['startdate'] && $item['stopdate'] && $item['startdate'] > $item['stopdate']) {
-                $form->set_error('accesslist', get_string('startdatemustbebeforestopdate', 'view'));
-                break;
+            if ($item['startdate'] && $item['stopdate']) {
+                $starttime = mktime(
+                    $item['startdate']['tm_hour'],
+                    $item['startdate']['tm_min'],
+                    $item['startdate']['tm_sec'],
+                    1,
+                    $item['startdate']['tm_yday'] + 1,
+                    $item['startdate']['tm_year'] + 1900
+                );
+                $stoptime = mktime(
+                    $item['stopdate']['tm_hour'],
+                    $item['stopdate']['tm_min'],
+                    $item['stopdate']['tm_sec'],
+                    1,
+                    $item['stopdate']['tm_yday'] + 1,
+                    $item['stopdate']['tm_year'] + 1900
+                );
+                if ($starttime > $stoptime) {
+                    $form->set_error('accesslist', get_string('startdatemustbebeforestopdate', 'view'));
+                    break;
+                }
             }
         }
     }
