@@ -1335,6 +1335,10 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('viewmicroheaders', 1);
     }
 
+    if ($oldversion < 2010012701) {
+        set_config('userscanchooseviewthemes', 1);
+    }
+
     return $status;
 
 }
