@@ -27,8 +27,7 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('SECTION_PLUGINTYPE', 'core');
-define('SECTION_PLUGINNAME', 'admin');
+define('MENUITEM', 'adminhome');
 
 require(dirname(dirname(__FILE__)).'/init.php');
 require(get_config('libroot') . 'registration.php');
@@ -41,11 +40,19 @@ if (!empty($sitedata['weekly'])) {
     $sitedata['dataarray'] = json_encode(array($sitedata['weekly']['view-count'], $sitedata['weekly']['user-count'], $sitedata['weekly']['group-count']));
 }
 
+$type = param_alpha('type', 'users');
+$subpages = array('users', 'groups', 'views');
+if (!in_array($type, $subpages)) {
+    $type = 'users';
+}
+
 $smarty = smarty($jsfiles);
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 
 if (isset($sitedata)) {
     $smarty->assign('sitedata', $sitedata);
+    $smarty->assign('type', $type);
+    $smarty->assign('subpages', $subpages);
 }
 
 $smarty->display('admin/statistics.tpl');
