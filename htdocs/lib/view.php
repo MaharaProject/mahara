@@ -2698,7 +2698,7 @@ class View {
             $title = '<strong>' . hsc($this->title) . '</strong>';
         }
 
-        if ($ownerlink) {
+        if (isset($ownerlink)) {
             return get_string('viewtitleby', 'view', $title, $ownerlink, $ownername);
         }
 
