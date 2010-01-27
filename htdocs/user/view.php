@@ -305,26 +305,34 @@ $smarty->assign('USERID', $userid);
 $smarty->assign('userdisplayname', display_name($USER, null, true));
 $smarty->assign('viewtitle', get_string('usersprofile', 'mahara', display_name($user, null, true)));
 $smarty->assign('viewtype', 'profile');
-if ($loggedinid && $loggedinid == $userid) {
-    $microheaderlinks = array(
-        array(
-            'name' => get_string('editmyprofilepage'),
-            'url' => get_config('wwwroot') . 'view/blocks.php?profile=1',
-            'type' => 'edit',
-        ),
-        array(
-            'name' => get_string('editmyprofile', 'artefact.internal'),
-            'url' => get_config('wwwroot') . 'artefact/internal/index.php',
-            'type' => 'edit',
-        ),
-    );
-    $smarty->assign('microheaderlinks', $microheaderlinks);
+
+if (get_config('viewmicroheaders')) {
+    $smarty->assign('microheaders', true);
+    $smarty->assign('microheadertitle', $view->display_title(true, false));
+    if ($loggedinid && $loggedinid == $userid) {
+        $microheaderlinks = array(
+            array(
+                'name' => get_string('editmyprofilepage'),
+                'url' => get_config('wwwroot') . 'view/blocks.php?profile=1',
+                'type' => 'edit',
+            ),
+            array(
+                'name' => get_string('editmyprofile', 'artefact.internal'),
+                'url' => get_config('wwwroot') . 'artefact/internal/index.php',
+                'type' => 'edit',
+            ),
+        );
+        $smarty->assign('microheaderlinks', $microheaderlinks);
+    }
+    if (isset($_SERVER['HTTP_REFERER'])) {
+        $smarty->assign('backurl', $_SERVER['HTTP_REFERER']);
+    }
 }
-if (isset($_SERVER['HTTP_REFERER'])) {
-    $smarty->assign('backurl', $_SERVER['HTTP_REFERER']);
+else {
+    $smarty->assign('PAGEHEADING', $view->display_title(false));
 }
+
 $smarty->assign('viewcontent', $view->build_columns());
-$smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('user/view.tpl');
 
 // Send an invitation to the user to join a group

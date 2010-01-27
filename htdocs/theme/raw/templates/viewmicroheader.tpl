@@ -30,8 +30,7 @@
           {if $mnethost}<a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a>&nbsp;{/if}
         </div>
 {/if}
-        <div class="center cb title">
-        <strong>{$viewtitle|escape}</strong>{if $ownername && $viewtype != 'profile'} {str tag=by section=view} <a href="{$WWWROOT}{$ownerlink}">{$ownername|escape}</a>{/if}</div>
+        <div class="center cb title">{$microheadertitle}</div>
       </div>
     </div>
     <div id="main-wrapper">

@@ -2672,6 +2672,39 @@ class View {
         );
     }
 
+    public function display_title($long=true, $titlelink=true) {
+        if ($this->type == 'profile') {
+            $title = display_name($this->owner, null, true);
+            if ($long) {
+                return '<strong>' . get_string('usersprofile', 'mahara', hsc($title)) . '</strong>';
+            }
+            return $title;
+        }
+
+        $ownername = $this->formatted_owner();
+        $wwwroot = get_config('wwwroot');
+
+        if ($this->owner) {
+            $ownerlink = $wwwroot . 'user/view.php?id=' . $this->owner;
+        }
+        else if ($this->group) {
+            $ownerlink = $wwwroot . 'group/view.php?id=' . $this->group;
+        }
+
+        if ($titlelink) {
+            $title = '<a href="' . $wwwroot . 'view/view.php?id=' . $this->id . '">' . hsc($this->title) . '</a>';
+        }
+        else {
+            $title = '<strong>' . hsc($this->title) . '</strong>';
+        }
+
+        if ($ownerlink) {
+            return get_string('viewtitleby', 'view', $title, $ownerlink, $ownername);
+        }
+
+        return $title;
+    }
+
 }
 
 

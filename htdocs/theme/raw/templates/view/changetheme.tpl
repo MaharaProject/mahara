@@ -1,5 +1,6 @@
-{include file="viewmicroheader.tpl"}
-<h1>{$PAGEHEADING}</h1>
+{if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
+<h1>{$maintitle}</h1>
+
 <div class="center">
     <p>{str tag=changeviewtheme section=view}</p>
     <form action="{$formurl}" method="post">
@@ -15,4 +16,4 @@
     </form>
 </div>
 
-{include file="microfooter.tpl"}
+{if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}

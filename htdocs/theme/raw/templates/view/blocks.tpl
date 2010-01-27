@@ -1,5 +1,6 @@
-{include file="viewmicroheader.tpl"}
-<h1>{$PAGEHEADING}</h1>
+{if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
+<h1>{$maintitle}</h1>
+
 {if $columns}
     {str tag="editblockspagedescription" section="view"}
 
@@ -92,4 +93,5 @@
         </div>
     </div>
 {/if}
-{include file="microfooter.tpl"}
+
+{if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}
