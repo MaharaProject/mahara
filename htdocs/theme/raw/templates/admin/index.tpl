@@ -99,5 +99,5 @@
     </ul>
 </div>
 
-
+<div class="cb"></div>
 {include file='footer.tpl'}
