@@ -771,6 +771,9 @@ function ViewManager() {
      * Wire up the view theme selector
      */
     this.rewriteViewThemeSelector = function() {
+        if (!self.viewThemeSelect) {
+            return;
+        }
         var currentTheme = self.viewThemeSelect.selectedIndex;
         connect(self.viewThemeSelect, 'onchange', function(e) {
             var choice = self.viewThemeSelect.options[self.viewThemeSelect.selectedIndex];

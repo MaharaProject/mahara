@@ -26,6 +26,7 @@
                     <td>
                         <a id="layout-link" href="columns.php?id={$view}&amp;c={$category}&amp;new={$new}"{if !$can_change_layout} class="disabled"{/if}>{str tag='changeviewlayout' section='view'}</a> {contextualhelp plugintype="core" pluginname="view" section="changeviewlayout"}
                     </td>
+{if $viewthemes}
                     <td class="center">
                         <label for="viewtheme-select">{str tag=theme}: </label>
                         <select id="viewtheme-select" name="viewtheme">
@@ -35,6 +36,7 @@
 {/foreach}
                         </select>
                     </td>
+{/if}
                     <td class="right">
                         <a id="btn-displaymyview" href="view.php?id={$view}&amp;new={$new}">{str tag=displaymyview section=view} &raquo;</a></td>
                     </td>
