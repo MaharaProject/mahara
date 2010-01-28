@@ -315,7 +315,7 @@ $string['sessiontimedout'] = 'Your session has timed out, please enter your logi
 $string['sessiontimedoutpublic'] = 'Your session has timed out. You may <a href="%s">log in</a> to continue browsing';
 $string['sessiontimedoutreload'] = 'Your session has timed out. Reload the page to log in again';
 $string['username'] = 'Username';
-$string['preferredname'] = 'Preferred Name';
+$string['preferredname'] = 'Display Name';
 $string['usernamedescription'] = ' ';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
 $string['youaremasqueradingas'] = 'You are masquerading as %s.';
