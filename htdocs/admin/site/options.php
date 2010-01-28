@@ -238,6 +238,18 @@ $siteoptionform = array(
             'defaultvalue' => get_config('tagssideblockmaxtags'),
             'rules'        => array('integer' => true, 'minvalue' => 0, 'maxvalue' => 1000),
         ),
+        'viewmicroheaders' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('smallviewheaders', 'admin'),
+            'description'  => get_string('smallviewheadersdescription', 'admin'),
+            'defaultvalue' => get_config('viewmicroheaders'),
+        ),
+        'userscanchooseviewthemes' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('userscanchooseviewthemes', 'admin'),
+            'description'  => get_string('userscanchooseviewthemesdescription', 'admin'),
+            'defaultvalue' => get_config('userscanchooseviewthemes'),
+        ),
     )
 );
 
@@ -262,7 +274,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'allowpublicviews', 'allowpublicprofiles', 'creategroups', 'createpublicgroups', 'searchplugin',
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
         'captchaonregisterform', 'captchaoncontactform', 'showselfsearchsideblock', 'showtagssideblock',
-        'tagssideblockmaxtags', 'country'
+        'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
     );
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');

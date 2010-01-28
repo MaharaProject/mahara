@@ -76,7 +76,7 @@ $string['privacydefaultcontent'] = '<h1>Privacy Statement</h1>
 
 <p>We will only use your personal information for the purpose for which you provided it to us.</p>
 
-<p>As Mahara users you are able to determine what personal information you make available to others.  By default, unless assigned Administrator, Course Creator or Tutor access rights,  a user may only view your Preferred Name.  This includes listings within a Notification report or Visitor Log.</p>
+<p>As Mahara users you are able to determine what personal information you make available to others.  By default, unless assigned Administrator, Course Creator or Tutor access rights,  a user may only view your Display Name.  This includes listings within a Notification report or Visitor Log.</p>
 
 <p>We may also collect system usage for statistical purposes however this data will not identify any individual.</p>
 

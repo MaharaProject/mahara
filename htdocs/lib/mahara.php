@@ -236,31 +236,29 @@ function get_helpfile($plugintype, $pluginname, $form, $element, $page=null, $se
 
 function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=null, $section=null) {
 
-    $file = 'help/';
+    $subdir = 'help/';
 
-    if ($plugintype != 'core') {
-        $location = $plugintype . '/' . $pluginname . '/lang/';
-    }
-    else {
-        $location = 'lang/';
-    }
     if ($page) {
-        $page = str_replace('-', '/', $page);
+        $pagebits = split('-', $page);
+        $file = array_pop($pagebits) . '.html';
         if ($plugintype != 'core') {
-            $file .=  'pages/' . $page . '.html';
+            $subdir .= 'pages/' . join('/', $pagebits) . '/';
         }
         else {
-            $file .= 'pages/' . $pluginname . '/' . $page . '.html';
+            $subdir .= 'pages/' . $pluginname . '/' . join('/', $pagebits) . '/';
         } 
     }
     else if ($section) {
-        $file .= 'sections/' . $section . '.html';
+        $subdir .= 'sections/';
+        $file = $section . '.html';
     }
     else if (!empty($form) && !empty($element)) {
-        $file .= 'forms/' . $form . '.' . $element . '.html';
+        $subdir .= 'forms/';
+        $file = $form . '.' . $element . '.html';
     }
     else if (!empty($form) && empty($element)) {
-        $file .= 'forms/' . $form . '.html';
+        $subdir .= 'forms/';
+        $file = $form . '.html';
     }
     else {
         return false;
@@ -275,8 +273,27 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
         $trieden = false;
     }
 
+    //try the local settings
+    $langfile = get_config('docroot') . 'local/lang/' . $lang . '/' . $subdir;
+    if ($plugintype != 'core') {
+        $langfile .= $plugintype . '.' . $pluginname . '.' . $file;
+    }
+    else {
+        $langfile .= $file;
+    }
+    if (is_readable($langfile)) {
+        return $langfile;
+    }
+
+    if ($plugintype != 'core') {
+        $location = $plugintype . '/' . $pluginname . '/lang/';
+    }
+    else {
+        $location = 'lang/';
+    }
+
     // try the current language
-    $langfile = get_language_root() . $location . $lang . '/' . $file;
+    $langfile = get_language_root() . $location . $lang . '/' . $subdir . $file;
     if (is_readable($langfile)) {
         return $langfile;
     }
@@ -288,7 +305,7 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
             if ($parentlang == 'en.utf8') {
                 $trieden = true;
             }
-            $langfile = get_language_root($parentlang) . $location . $parentlang . '/' . $file;
+            $langfile = get_language_root($parentlang) . $location . $parentlang . '/' . $subdir . $file;
             if (is_readable($langfile)) {
                 return $langfile;
             }
@@ -297,7 +314,7 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
 
     // if it's STILL not found, and we haven't already tried english ...
     if (empty($data) && empty($trieden)) {
-        $langfile = get_language_root('en.utf8') . $location . 'en.utf8/' . $file;
+        $langfile = get_language_root('en.utf8') . $location . 'en.utf8/' . $subdir . $file;
         if (is_readable($langfile)) {
             return $langfile;
         }

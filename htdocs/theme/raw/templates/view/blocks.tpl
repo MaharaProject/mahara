@@ -1,5 +1,6 @@
-{include file="viewmicroheader.tpl"}
-<h1>{$PAGEHEADING}</h1>
+{if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
+<h1>{$maintitle}</h1>
+
 {if $columns}
     {str tag="editblockspagedescription" section="view"}
 
@@ -25,6 +26,7 @@
                     <td>
                         <a id="layout-link" href="columns.php?id={$view}&amp;c={$category}&amp;new={$new}"{if !$can_change_layout} class="disabled"{/if}>{str tag='changeviewlayout' section='view'}</a> {contextualhelp plugintype="core" pluginname="view" section="changeviewlayout"}
                     </td>
+{if $viewthemes}
                     <td class="center">
                         <label for="viewtheme-select">{str tag=theme}: </label>
                         <select id="viewtheme-select" name="viewtheme">
@@ -34,6 +36,7 @@
 {/foreach}
                         </select>
                     </td>
+{/if}
                     <td class="right">
                         <a id="btn-displaymyview" href="view.php?id={$view}&amp;new={$new}">{str tag=displaymyview section=view} &raquo;</a></td>
                     </td>
@@ -91,5 +94,7 @@
             {$block.html}
         </div>
     </div>
+    {if $block.javascript}<script type="text/javascript">{$block.javascript}</script>{/if}
 {/if}
-{include file="microfooter.tpl"}
+
+{if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}

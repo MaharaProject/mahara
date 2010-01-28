@@ -35,7 +35,7 @@ $string['myfiles'] = 'My Files';
 $string['mandatory'] = 'Mandatory';
 $string['public'] = 'Public';
 
-$string['aboutdescription'] = 'Enter your real first and last name here. If you want to show a different name to people in the system, put that name in as your preferred name.';
+$string['aboutdescription'] = 'Enter your real first and last name here. If you want to show a different name to people in the system, put that name in as your display name.';
 $string['contactdescription'] = 'All of this information is private, unless you choose to put it in a view.';
 $string['messagingdescription'] = 'Like your contact information, this information is private.';
 $string['viewmyprofile'] = 'View my profile';
@@ -52,7 +52,7 @@ $string['lastname'] = 'Last Name';
 $string['fullname'] = 'Full Name';
 $string['institution'] = 'Institution';
 $string['studentid'] = 'Student ID';
-$string['preferredname'] = 'Preferred Name';
+$string['preferredname'] = 'Display Name';
 $string['introduction'] = 'Introduction';
 $string['email'] = 'Email Address';
 $string['maildisabled'] = ' ';

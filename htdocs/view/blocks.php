@@ -139,7 +139,7 @@ foreach (array_reverse($THEME->get_url('style/style.css', true, 'artefact/file')
 // longer available to them.
 if ($viewtheme && !isset($allowedthemes[$viewtheme])) {
     $smarty = smarty(array(), $stylesheets, false, $extraconfig);
-    $smarty->assign('PAGEHEADING', hsc(TITLE));
+    $smarty->assign('maintitle', hsc(TITLE));
     $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
     $smarty->assign('view', $view->get('id'));
     $smarty->assign('viewtitle', $view->get('title'));
@@ -178,7 +178,7 @@ foreach (array_keys($_POST + $_GET) as $key) {
     }
 }
 
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('maintitle', hsc(TITLE));
 $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
 $smarty->assign('category', $category);
 $smarty->assign('new', $new);
@@ -187,40 +187,49 @@ $viewid = $view->get('id');
 $viewtype = $view->get('type');
 $viewtitle = $view->get('title');
 $owner = $view->get('owner');
-if ($owner) {
-    if ($viewtype == 'profile') {
-        $microheaderlinks = array(
-            array(
-                'name' => get_string('viewmyprofilepage'),
-                'url' => get_config('wwwroot') . 'user/view.php',
-            ),
-            array(
-                'name' => get_string('editmyprofile', 'artefact.internal'),
-                'url' => get_config('wwwroot') . 'artefact/internal/index.php',
-                'type' => 'edit',
-            ),
-        );
-        $viewtitle = get_string('usersprofile', 'mahara', display_name($view->get('owner'), null, true));
-    }
-    else if ($new) {
-        $microheaderlinks = array();
-    }
-    else {
-        $microheaderlinks = array(
-            array(
-                'name' => get_string('edittitle', 'view'),
-                'url' => get_config('wwwroot') . 'view/edit.php?id=' . $viewid . '&amp;new=' . $new,
-                'type' => 'edit',
-            ),
-            array(
-                'name' => get_string('editaccess', 'view'),
-                'url' => get_config('wwwroot') . 'view/access.php?id=' . $viewid . '&amp;new=' . $new,
-                'type' => 'edit',
-            ),
-        );
-    }
-    $smarty->assign('microheaderlinks', $microheaderlinks);
+if ($owner &&  $viewtype == 'profile') {
+    $viewtitle = get_string('usersprofile', 'mahara', display_name($view->get('owner'), null, true));
 }
+
+if (get_config('viewmicroheaders')) {
+    $smarty->assign('microheaders', true);
+    $smarty->assign('microheadertitle', $view->display_title(true, false));
+
+    if ($owner) {
+        if ($viewtype == 'profile') {
+            $microheaderlinks = array(
+                array(
+                    'name' => get_string('viewmyprofilepage'),
+                    'url' => get_config('wwwroot') . 'user/view.php',
+                ),
+                array(
+                    'name' => get_string('editmyprofile', 'artefact.internal'),
+                    'url' => get_config('wwwroot') . 'artefact/internal/index.php',
+                    'type' => 'edit',
+                ),
+            );
+        }
+        else if ($new) {
+            $microheaderlinks = array();
+        }
+        else {
+            $microheaderlinks = array(
+                array(
+                    'name' => get_string('edittitle', 'view'),
+                    'url' => get_config('wwwroot') . 'view/edit.php?id=' . $viewid . '&amp;new=' . $new,
+                    'type' => 'edit',
+                ),
+                array(
+                    'name' => get_string('editaccess', 'view'),
+                    'url' => get_config('wwwroot') . 'view/access.php?id=' . $viewid . '&amp;new=' . $new,
+                    'type' => 'edit',
+                ),
+            );
+        }
+        $smarty->assign('microheaderlinks', $microheaderlinks);
+    }
+}
+
 $smarty->assign('userdisplayname', display_name($USER, null, true));
 $smarty->assign('viewtype', $viewtype);
 $smarty->assign('view', $view->get('id'));
@@ -228,8 +237,10 @@ $smarty->assign('groupid', $group);
 $smarty->assign('institution', $institution);
 $smarty->assign('can_change_layout', (!$USER->get_account_preference('addremovecolumns') || ($view->get('numcolumns') > 1 && $view->get('numcolumns') < 5)));
 
-$smarty->assign('viewtheme', $viewtheme);
-$smarty->assign('viewthemes', $allowedthemes);
+if (get_config('userscanchooseviewthemes')) {
+    $smarty->assign('viewtheme', $viewtheme);
+    $smarty->assign('viewthemes', $allowedthemes);
+}
 
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewtitle', $viewtitle);

@@ -1,7 +1,11 @@
-{include file="viewmicroheader.tpl"}
+{if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
 
-{if $viewtype != 'profile'}
-<h1>{if !$new}<a href="{$WWWROOT}view/view.php?id={$viewid}">{/if}{$viewtitle|escape}{if !$new}</a>{/if}</h1>
+{if $maintitle}<h1>{$maintitle}</h1>{/if}
+
+{if !$microheaders && $mnethost}
+<div class="rbuttons">
+  <a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a>
+</div>
 {/if}
 
 <p id="view-description">{$viewdescription}</p>
@@ -31,4 +35,5 @@
     {if $objectionform}<div>{$objectionform}</div>{/if}
   </div>
 </div>
-{include file="microfooter.tpl"}
+
+{if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}

@@ -1,4 +1,5 @@
-{include file="viewmicroheader.tpl"}
+{if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
+
                     <div id="userview">
                         <div class="user-icon right">
                             {$institutions}
@@ -43,4 +44,5 @@
                         	</div>
                     	</div>
                     </div>
-{include file="microfooter.tpl"}
+
+{if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}
