@@ -84,189 +84,99 @@ class PluginSearchInternal extends PluginSearch {
         if (empty($publicfields)) {
             $publicfields = array('preferredname');
         }
-        if (is_postgres()) {
-            return self::search_user_pg($query_string, $limit, $offset, $data, $publicfields);
-        } 
-        else if (is_mysql()) {
-            return self::search_user_my($query_string, $limit, $offset, $data, $publicfields);
-        }
-        else {
-            throw new SQLException('search_user() is not implemented for your database engine (' . get_config('dbtype') . ')');
-        }
-    }
-
-    public static function search_user_pg($query_string, $limit, $offset, $data, $publicfields) {
-        $fieldlist = "('" . join("','", $publicfields) . "')";
+        $fieldlist = '(' . join(',', array_map('db_quote', $publicfields)) . ')';
+        $ilike = db_ilike();
         $data = self::prepare_search_user_options($data);
-        $sql = 'SELECT
+        $sql = '
+            SELECT
                 COUNT(DISTINCT u.id)
-            FROM
-                {usr} u
-                LEFT JOIN {artefact} a ON u.id=a.owner
-                ';
+            FROM {artefact} a
+                INNER JOIN {usr} u ON u.id = a.owner';
         if (isset($data['group'])) {
             $groupadminsql = '';
             if (isset($data['includeadmins']) and !$data['includeadmins']) {
                 $groupadminsql = " AND gm.role != 'admin'";
             }
-            $sql .= 'INNER JOIN {group_member} gm ON (gm.member = u.id AND gm.group = ' . (int)$data['group'] . $groupadminsql . ")\n";
+            $groupjoin = '
+                INNER JOIN {group_member} gm ON
+                    (gm.member = u.id AND gm.group = ' . (int)$data['group'] . $groupadminsql . ")\n";
+            $sql .= $groupjoin;
         }
         $querydata = split(' ', preg_replace('/\s\s+/', ' ', strtolower(trim($query_string))));
-        $namesql = '(
-                        u.preferredname ILIKE \'%\' || ? || \'%\'
-                    )
-                    OR (
-                        (u.preferredname IS NULL OR u.preferredname = \'\')
-                        AND (
-                            u.firstname ILIKE \'%\' || ? || \'%\'
-                            OR u.lastname ILIKE \'%\' || ? || \'%\'
-                        )
-                    )
-                    OR (
-                        a.artefacttype IN ' . $fieldlist . '
-                        AND ( a.title ILIKE \'%\' || ? || \'%\')
-                    )';
-        $namesql = join(' OR ', array_fill(0, count($querydata), $namesql));
+        $namesql = "(u.preferredname $ilike '%' || ? || '%')
+                    OR ((u.preferredname IS NULL OR u.preferredname = '')
+                        AND (u.firstname $ilike '%' || ? || '%' OR u.lastname $ilike '%' || ? || '%'))
+                    OR (a.artefacttype IN $fieldlist
+                        AND ( a.title $ilike '%' || ? || '%'))";
+        $namesql = join('
+                    OR ', array_fill(0, count($querydata), $namesql));
         $values = array();
         foreach ($querydata as $w) {
             $values = array_pad($values, count($values) + 4, $w);
         }
 
-        $sql .= 'WHERE
+        $where = '
+            WHERE
                 u.id <> 0 AND u.active = 1 AND u.deleted = 0
-                AND ( ' . $namesql . '
+                AND (
+                    ' . $namesql . '
                 )
                 ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
             ';
-        $count = get_field_sql($sql, $values);
 
-        if ($count > 0) {
-            $sql = 'SELECT DISTINCT ON (' . $data['orderby'] . ')
-                    u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff
-                FROM {artefact} a
-                    INNER JOIN {usr} u ON u.id = a.owner
-                ';
-            if (isset($data['group'])) {
-                $groupadminsql = '';
-                if (isset($data['includeadmins']) and !$data['includeadmins']) {
-                    $groupadminsql = " AND gm.role != 'admin'";
-                }
-                $sql .= 'INNER JOIN {group_member} gm ON (gm.member = u.id AND gm.group = ' . (int)$data['group'] . $groupadminsql . ")\n";
-            }
-            $sql .= 'WHERE
-                    u.id <> 0 AND u.active = 1 AND u.deleted = 0
-                    AND (' . $namesql . '
-                    )
-                    ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
-                ORDER BY ' . $data['orderby'];
-            $data = get_records_sql_array($sql, $values, $offset, $limit);
+        $sql .= $where;
+        $count = count_records_sql($sql, $values);
 
-            if ($data) {
-                foreach ($data as &$item) {
-                    $item = (array)$item;
-                }
-            }
-        }
-        else {
-            $data = false;
-        }
-
-        return array(
+        $result = array(
             'count'   => $count,
             'limit'   => $limit,
             'offset'  => $offset,
-            'data'    => $data,
+            'data'    => false,
         );
-    }
 
-    public static function search_user_my($query_string, $limit, $offset, $data, $publicfields) {
-        $fieldlist = "('" . join("','", $publicfields) . "')";
-        $data = self::prepare_search_user_options($data);
-        $sql = 'SELECT
-                COUNT(DISTINCT u.id)
-            FROM
-                {usr} u
-                LEFT JOIN {artefact} a ON u.id=a.owner
-                ';
-        if (isset($data['group'])) {
-            $sql .= 'INNER JOIN {group_member} gm ON (gm.member = u.id AND gm.group = ' . (int)$data['group'] . ')
-                ';
-            if (isset($data['owner']) && !$data['owner']) {
-                $sql .= 'INNER JOIN {group} g ON (g.id = gm.group AND g.owner != u.id)
-                    ';
-            }
-        }
-        $querydata = split(' ', preg_replace('/\s\s+/', ' ', strtolower(trim($query_string))));
-        $namesql = '(
-                        u.preferredname LIKE \'%\' || ? || \'%\'
-                    )
-                    OR (
-                        (u.preferredname IS NULL OR u.preferredname = \'\')
-                        AND (
-                            u.firstname LIKE \'%\' || ? || \'%\'
-                            OR u.lastname LIKE \'%\' || ? || \'%\'
-                        )
-                    )
-                    OR (
-                        a.artefacttype IN ' . $fieldlist . '
-                        AND ( a.title LIKE \'%\' || ? || \'%\')
-                    )';
-        $namesql = join(' OR ', array_fill(0, count($querydata), $namesql));
-        $values = array();
-        foreach ($querydata as $w) {
-            $values = array_pad($values, count($values) + 4, $w);
+        if ($count < 1) {
+            return $result;
         }
 
-        $sql .= 'WHERE
-                u.id <> 0 AND u.active = 1 AND u.deleted = 0
-                AND (' . $namesql . '
-                )
-                ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
-            ';
-
-        $count = get_field_sql($sql, $values);
-        if ($count > 0) {
+        if (is_postgres()) {
+            $sql = '
+            SELECT DISTINCT ON (' . $data['orderby'] . ')
+                u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff
+            FROM {artefact} a
+                INNER JOIN {usr} u ON u.id = a.owner';
+        }
+        else if (is_mysql()) {
             // @todo This is quite possibly not correct. See the postgres 
             // query. It should be DISTINCT ON the fields as specified by the 
             // postgres query. There is a workaround by using SELECT * followed 
             // by GROUP BY 1, 2, 3, but it's not really valid SQL. The other 
             // way is to rewrite the query using a self join on the usr table.
-            $sql = 'SELECT DISTINCT
-                    u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff
-                FROM {artefact} a
-                    INNER JOIN {usr} u ON u.id = a.owner
-                    ';
-            if (isset($data['group'])) {
-                $sql .= 'INNER JOIN {group_member} gm ON (gm.member = u.id AND gm.group = ' . (int)$data['group'] . ')
-                    ';
-                if (isset($data['owner']) && !$data['owner']) {
-                    $sql .= 'INNER JOIN {group} g ON (g.id = gm.group AND g.owner != u.id)
-                        ';
-                    }
-            }
-            $sql .= 'WHERE
-                    u.id <> 0 AND u.active = 1 AND u.deleted = 0
-                    AND ( ' . $namesql . '
-                    )
-                    ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
-                ORDER BY ' . $data['orderby'];
-            $data = get_records_sql_array($sql, $values, $offset, $limit);
-            if ($data) {
-                foreach ($data as &$item) {
-                    $item = (array)$item;
-                }
-            }
+            $sql = '
+            SELECT DISTINCT
+                u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff
+            FROM {artefact} a
+                INNER JOIN {usr} u ON u.id = a.owner';
         }
         else {
-            $data = false;
+            throw new SQLException('search_user() not implemented for your database engine (' . get_config('dbtype') . ')');
         }
 
-        return array(
-            'count'   => $count,
-            'limit'   => $limit,
-            'offset'  => $offset,
-            'data'    => $data,
-        );
+        if (isset($data['group'])) {
+            $sql .= $groupjoin;
+        }
+
+        $sql .= $where . '
+            ORDER BY ' . $data['orderby'];
+
+        $result['data'] = get_records_sql_array($sql, $values, $offset, $limit);
+
+        if ($result['data']) {
+            foreach ($result['data'] as &$item) {
+                $item = (array)$item;
+            }
+        }
+
+        return $result;
     }
 
     private static function prepare_search_user_options($options) {
