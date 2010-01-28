@@ -75,5 +75,6 @@
             {$block.html}
         </div>
     </div>
+    {if $block.javascript}<script type="text/javascript">{$block.javascript}</script>{/if}
 {/if}
 {include file="footer.tpl"}
