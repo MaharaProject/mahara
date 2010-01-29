@@ -1,3 +1,3 @@
 {include file="header.tpl"}
-{$contactform}
+{$form}
 {include file="footer.tpl"}
