@@ -2231,6 +2231,8 @@ function cron_site_data_weekly() {
 }
 
 function cron_site_data_daily() {
+    require_once(get_config('libroot') . 'registration.php');
+    $current = site_data_current();
     $time = db_format_timestamp(time());
 
     require_once('function.dirsize.php');
@@ -2244,6 +2246,22 @@ function cron_site_data_daily() {
             'value' => $diskusage,
         ));
     }
+
+    // Total users
+    insert_record('site_data', (object) array(
+        'ctime' => $time,
+        'type'  => 'user-count-daily',
+        'value' => $current['users'],
+    ));
+
+    // Logged-in users
+    $interval = is_postgres() ? "'1 day'" : '1 day';
+    $where = "lastaccess >= CURRENT_DATE AND lastaccess < CURRENT_DATE + INTERVAL $interval";
+    insert_record('site_data', (object) array(
+        'ctime' => $time,
+        'type'  => 'loggedin-users-daily',
+        'value' => count_records_select('usr', $where),
+    ));
 }
 
 function random_string($length=15) {
