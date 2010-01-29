@@ -1322,7 +1322,6 @@ function xmldb_core_upgrade($oldversion=0) {
 
     // @TODO: Stats upgrade:
     // Daily data: count of logged-in users
-    // Add ctime to usr table for count of users created
     // Add visits column to view table, updated daily from log on filesystem
 
     if ($oldversion < 2009122200) {
@@ -1355,6 +1354,12 @@ function xmldb_core_upgrade($oldversion=0) {
 
         // Put best guess at installation time into config table.
         set_config('installation_time', get_field_sql("SELECT MIN(ctime) FROM {site_content}"));
+
+        // Add ctime to usr table for daily count of users created
+        $table = new XMLDBTable('usr');
+        $field = new XMLDBField('ctime');
+        $field->setAttributes(XMLDB_TYPE_DATETIME, null, null);
+        add_field($table, $field);
     }
 
     return $status;

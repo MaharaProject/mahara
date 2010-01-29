@@ -1528,10 +1528,12 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
     db_begin();
 
     if ($user instanceof User) {
+        $user->create();
         $user->commit();
         $user = $user->to_stdclass();
     }
     else {
+        $user->ctime = db_format_timestamp(time());
         $user->id = insert_record('usr', $user, 'id', true);
     }
     // Bypass access check for 'copynewuser' institution/site views, because this user may not be logged in yet
