@@ -199,7 +199,10 @@ function adduser_validate(Pieform $form, $values) {
             $form->set_error('leap2afile', get_string('failedtoobtainuploadedleapfile', 'admin'));
         }
 
-        if ($values['leap2afile']['type'] == 'application/zip') {
+        safe_require('artefact', 'file');
+        $ziptypes = PluginArtefactFile::get_mimetypes_from_description('zip');
+
+        if (in_array($values['leap2afile']['type'], $ziptypes)) {
             // Unzip the file
             $command = sprintf('%s %s %s %s',
                 escapeshellcmd(get_config('pathtounzip')),
