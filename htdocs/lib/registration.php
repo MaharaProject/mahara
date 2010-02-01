@@ -205,6 +205,8 @@ function site_statistics($full=false) {
             foreach ($weekly as &$r) {
                 $data['weekly'][$r->type][$keys[$r->type]++] = array($keys[$r->type], $r->value);
             }
+            // Plotkit Stuff -- to be removed.
+            $data['dataarray'] = json_encode(array($data['weekly']['view-count'], $data['weekly']['user-count'], $data['weekly']['group-count']));
         }
 
         if (is_postgres()) {
@@ -236,7 +238,7 @@ function site_statistics($full=false) {
         "));
     }
 
-    $data['name'] = get_config('sitename');
+    $data['name']        = get_config('sitename');
     $data['release']     = get_config('release');
     $data['version']     = get_config('version');
     $data['installdate'] = format_date(strtotime(get_config('installation_time')), 'strftimedate');
@@ -245,6 +247,111 @@ function site_statistics($full=false) {
     $data['cronrunning'] = !record_exists_select('cron', 'nextrun < CURRENT_DATE');
 
     return($data);
+}
+
+function user_statistics($limit, $offset) {
+    $data = array();
+    $data['tableheadings'] = array(
+        get_string('date'),
+        get_string('Loggedin', 'admin'),
+        get_string('Created'),
+        get_string('Total'),
+    );
+    $data['table'] = user_stats_table($limit, $offset);
+    return $data;
+}
+
+function user_stats_table($limit, $offset) {
+    $count = count_records('site_data', 'type', 'user-count-daily');
+
+    $pagination = build_pagination(array(
+        'id' => 'stats_pagination',
+        'url' => get_config('wwwroot') . 'admin/statistics.php?type=users',
+        // @todo: 'jsonscript' => 'admin/statistics.json.php?type=users',
+        // @todo: 'datatable' => 'statistics_table',
+        'count' => $count,
+        'limit' => $limit,
+        'offset' => $offset,
+    ));
+
+    $result = array(
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+
+    if ($count < 1) {
+        return $result;
+    }
+
+    $day = is_postgres() ? "to_date(t.ctime, 'YYYY-MM-DD')" : 'DATE(t.ctime)';
+
+    $daterange = get_record_sql(
+        "SELECT
+            MIN($day) AS mindate,
+            MAX($day) AS maxdate
+        FROM (
+            SELECT ctime
+            FROM {site_data}
+            WHERE type = ?
+            ORDER BY ctime DESC
+            LIMIT $limit
+            OFFSET $offset
+        ) t",
+        array('user-count-daily')
+    );
+
+    $dayinterval = is_postgres() ? "'1 day'" : '1 day';
+
+    $day = is_postgres() ? "to_date(ctime, 'YYYY-MM-DD')" : 'DATE(ctime)';
+
+    $userdata = get_records_sql_array(
+        "SELECT ctime, type, value, $day AS date
+        FROM {site_data}
+        WHERE type IN (?,?) AND ctime >= ? AND ctime < (date(?) + (INTERVAL $dayinterval))
+        ORDER BY type = ? DESC, ctime DESC",
+        array('user-count-daily', 'loggedin-users-daily', $daterange->mindate, $daterange->maxdate, 'user-count-daily')
+    );
+
+    $userscreated = get_records_sql_array(
+        "SELECT $day AS date, COUNT(id) AS users
+        FROM {usr}
+        WHERE NOT ctime IS NULL
+        GROUP BY date
+        ORDER BY date",
+        array(),
+        $offset,
+        $limit
+    );
+
+    $data = array();
+
+    if ($userdata) {
+        foreach ($userdata as &$r) {
+            if ($r->type == 'user-count-daily') {
+                $data[$r->date] = array(
+                    'date'  => $r->date,
+                    'total' => $r->value,
+                );
+            }
+            else if ($r->type == 'loggedin-users-daily' && isset($data[$r->date])) {
+                $data[$r->date]['loggedin'] = $r->value;
+            }
+        }
+        if ($userscreated) {
+            foreach ($userscreated as &$r) {
+                if (isset($data[$r->date])) {
+                    $data[$r->date]['created'] = $r->users;
+                }
+            }
+        }
+    }
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $data);
+    $result['tablerows'] = $smarty->fetch('admin/userstats.tpl');
+
+    return $result;
 }
 
 ?>

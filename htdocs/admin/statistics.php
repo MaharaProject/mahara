@@ -34,26 +34,31 @@ require(get_config('libroot') . 'registration.php');
 
 define('TITLE', get_string('sitestatistics', 'admin'));
 
-$sitedata = site_statistics(true);
-if (!empty($sitedata['weekly'])) {
-    $jsfiles = array('js/PlotKit/excanvas.js', 'js/PlotKit/PlotKit.js');
-    $sitedata['dataarray'] = json_encode(array($sitedata['weekly']['view-count'], $sitedata['weekly']['user-count'], $sitedata['weekly']['group-count']));
-}
-
 $type = param_alpha('type', 'users');
 $subpages = array('users', 'groups', 'views');
+$offset = param_integer('offset', 0);
+$limit  = param_integer('limit', 10);
+
 if (!in_array($type, $subpages)) {
     $type = 'users';
 }
 
-$smarty = smarty($jsfiles);
+$sitedata = site_statistics(true);
+
+switch ($type) {
+case 'users':
+default:
+    $data = user_statistics($limit, $offset);
+}
+
+$smarty = smarty(array('js/PlotKit/excanvas.js', 'js/PlotKit/PlotKit.js'));
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 
-if (isset($sitedata)) {
-    $smarty->assign('sitedata', $sitedata);
-    $smarty->assign('type', $type);
-    $smarty->assign('subpages', $subpages);
-}
+$smarty->assign('sitedata', $sitedata);
+$smarty->assign('type', $type);
+$smarty->assign('subpages', $subpages);
+
+$smarty->assign('subpagedata', $data);
 
 $smarty->display('admin/statistics.tpl');
 ?>

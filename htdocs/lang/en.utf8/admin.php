@@ -160,6 +160,7 @@ $string['viewsperuser'] = 'Users who make views have about %1.1f views each';
 $string['Cron'] = 'Cron';
 $string['runningnormally'] = 'Running normally';
 $string['cronnotrunning'] = 'Cron is not running.<br>See the <a href="http://wiki.mahara.org/System_Administrator\'s_Guide/Installing_Mahara">installation guide</a> for instructions on how to set it up.';
+$string['Loggedin'] = 'Logged in';
 
 // Site options
 $string['adminsonly'] = 'Administrators only';
