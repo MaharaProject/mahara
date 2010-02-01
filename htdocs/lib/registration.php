@@ -354,4 +354,99 @@ function user_stats_table($limit, $offset) {
     return $result;
 }
 
+function group_statistics($limit, $offset) {
+    $data = array();
+    $data['tableheadings'] = array(
+        '#',
+        get_string('Group', 'group'),
+        get_string('Members', 'group'),
+        get_string('views'),
+        get_string('nameplural', 'interaction.forum'),
+        get_string('Posts', 'interaction.forum'),
+    );
+    $data['table'] = group_stats_table($limit, $offset);
+    return $data;
+}
+
+function group_stats_table($limit, $offset) {
+    $count = count_records('group', 'deleted', 0);
+
+    $pagination = build_pagination(array(
+        'id' => 'stats_pagination',
+        'url' => get_config('wwwroot') . 'admin/statistics.php?type=groups',
+        // @todo: 'jsonscript' => 'admin/statistics.json.php?type=groups',
+        // @todo: 'datatable' => 'statistics_table',
+        'count' => $count,
+        'limit' => $limit,
+        'offset' => $offset,
+    ));
+
+    $result = array(
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+
+    if ($count < 1) {
+        return $result;
+    }
+
+    $groupdata = get_records_sql_array(
+        "SELECT
+            g.id, g.name, COUNT(gm.member) AS members
+        FROM {group} g
+            LEFT JOIN {group_member} gm ON g.id = gm.group
+        WHERE
+            g.deleted = 0
+        GROUP BY g.id, g.name
+        ORDER BY members desc",
+        array()
+    );
+
+    $groupdata = get_records_sql_array(
+        "SELECT
+            g.id, g.name, mc.members, vc.views, fc.forums, pc.posts
+        FROM {group} g
+            LEFT JOIN (
+                SELECT gm.group, COUNT(gm.member) AS members
+                FROM {group_member} gm
+                GROUP BY gm.group
+            ) mc ON g.id = mc.group
+            LEFT JOIN (
+                SELECT v.group, COUNT(v.id) AS views
+                FROM {view} v
+                WHERE NOT v.group IS NULL
+                GROUP BY v.group
+            ) vc ON g.id = vc.group
+            LEFT JOIN (
+                SELECT ii.group, COUNT(ii.id) AS forums
+                FROM {interaction_instance} ii
+                WHERE ii.plugin = 'forum' AND ii.deleted = 0
+                GROUP BY ii.group
+            ) fc ON g.id = fc.group
+            LEFT JOIN (
+                SELECT ii.group, COUNT(ifp.id) AS posts
+                FROM {interaction_instance} ii
+                    INNER JOIN {interaction_forum_topic} ift ON ii.id = ift.forum
+                    INNER JOIN {interaction_forum_post} ifp ON ift.id = ifp.topic
+                WHERE ii.deleted = 0 AND ift.deleted = 0 AND ifp.deleted = 0
+                GROUP BY ii.group
+            ) pc ON g.id = pc.group
+        WHERE
+            g.deleted = 0
+        ORDER BY
+            mc.members DESC",
+        array(),
+        $offset,
+        $limit
+    );
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $groupdata);
+    $smarty->assign('offset', $offset);
+    $result['tablerows'] = $smarty->fetch('admin/groupstats.tpl');
+
+    return $result;
+}
+
 ?>
