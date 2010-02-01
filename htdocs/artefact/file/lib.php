@@ -205,6 +205,13 @@ class PluginArtefactFile extends PluginArtefact {
         db_commit();
     }
 
+    public static function get_mimetypes_from_description($description=null) {
+        if (is_null($description)) {
+            return get_column('artefact_file_mime_types', 'mimetype');
+        }
+        return get_column('artefact_file_mime_types', 'mimetype', 'description', $description);
+    }
+
     public static function can_be_disabled() {
         return false;
     }
