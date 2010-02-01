@@ -267,8 +267,8 @@ function user_stats_table($limit, $offset) {
     $pagination = build_pagination(array(
         'id' => 'stats_pagination',
         'url' => get_config('wwwroot') . 'admin/statistics.php?type=users',
-        // @todo: 'jsonscript' => 'admin/statistics.json.php?type=users',
-        // @todo: 'datatable' => 'statistics_table',
+        'jsonscript' => 'admin/statistics.json.php',
+        'datatable' => 'statistics_table',
         'count' => $count,
         'limit' => $limit,
         'offset' => $offset,
@@ -374,8 +374,8 @@ function group_stats_table($limit, $offset) {
     $pagination = build_pagination(array(
         'id' => 'stats_pagination',
         'url' => get_config('wwwroot') . 'admin/statistics.php?type=groups',
-        // @todo: 'jsonscript' => 'admin/statistics.json.php?type=groups',
-        // @todo: 'datatable' => 'statistics_table',
+        'jsonscript' => 'admin/statistics.json.php',
+        'datatable' => 'statistics_table',
         'count' => $count,
         'limit' => $limit,
         'offset' => $offset,

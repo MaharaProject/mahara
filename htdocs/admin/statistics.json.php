@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage admin
+ * @subpackage core
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
@@ -27,48 +27,29 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'adminhome');
+define('JSON', 1);
 
-require(dirname(dirname(__FILE__)).'/init.php');
+require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'registration.php');
 
-define('TITLE', get_string('sitestatistics', 'admin'));
+$limit  = param_integer('limit', 10);
+$offset = param_integer('offset');
 
 $type = param_alpha('type', 'users');
 $subpages = array('users', 'groups', 'views');
-$offset = param_integer('offset', 0);
-$limit  = param_integer('limit', 10);
-
 if (!in_array($type, $subpages)) {
     $type = 'users';
 }
 
-$sitedata = site_statistics(true);
-
 switch ($type) {
 case 'groups':
-    $data = group_statistics($limit, $offset);
+    $data = group_stats_table($limit, $offset);
     break;
 case 'users':
 default:
-    $data = user_statistics($limit, $offset);
+    $data = user_stats_table($limit, $offset);
 }
 
-$js = <<< EOF
-addLoadEvent(function () {
-    {$data['table']['pagination_js']}
-});
-EOF;
+json_reply(false, (object) array('message' => false, 'data' => $data));
 
-$smarty = smarty(array('js/PlotKit/excanvas.js', 'js/PlotKit/PlotKit.js', 'paginator'));
-$smarty->assign('PAGEHEADING', hsc(TITLE));
-$smarty->assign('INLINEJAVASCRIPT', $js);
-
-$smarty->assign('sitedata', $sitedata);
-$smarty->assign('type', $type);
-$smarty->assign('subpages', $subpages);
-
-$smarty->assign('subpagedata', $data);
-
-$smarty->display('admin/statistics.tpl');
 ?>
