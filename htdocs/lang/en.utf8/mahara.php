@@ -433,6 +433,7 @@ $string['noinstitutionsetpassemailmessagehtml'] = '<p>Dear %s,</p>
 
 <p><a href="%sforgotpass.php?key=%s">%sforgotpass.php?key=%s</a></p>';
 $string['debugemail'] = 'NOTICE: This e-mail was intended for %s <%s> but has been sent to you as per the "sendallemailto" configuration setting.';
+$string['divertingemailto'] = 'Diverting email to %s';
 
 
 // Expiry times
