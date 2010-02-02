@@ -389,6 +389,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         if ($messagehtml) {
             $messagehtml = '<p>' . hsc($notice) . '</p>' . $messagehtml;
         }
+        $usertoname = display_name($userto, $userto, true) . ' (' . get_string('divertingemailto', 'mahara', $to) . ')';
     }
     else {
         $usertoname = display_name($userto, $userto);
