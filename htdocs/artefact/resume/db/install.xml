@@ -42,8 +42,8 @@
                 <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="startdate" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="enddate" TYPE="text" NOTNULL="false" />
-                <FIELD NAME="qualtype" TYPE="text" NOTNULL="true" />
-                <FIELD NAME="qualname" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="qualtype" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="qualname" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="institution" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="institutionaddress" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="qualdescription" TYPE="text" NOTNULL="false" />

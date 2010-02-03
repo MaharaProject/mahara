@@ -576,6 +576,10 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
             }
         ";
     }
+
+    static function get_composite_js() {
+        return '';
+    }
 }
 
 class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite { 
@@ -666,14 +670,23 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
     }
 
     public static function get_tablerenderer_title_js_string() {
-        $at = get_string('at');
-        return " r.qualname + ' (' + r.qualtype + ') {$at} ' + r.institution";
+        return " formatQualification(r.qualname, r.qualtype, r.institution)";
     }
 
     public static function format_render_self_data($data) {
         $at = get_string('at');
         foreach ($data as &$row) {
-            $row->qualification = $row->qualname . ' (' . $row->qualtype . ")  $at " . $row->institution;
+            $row->qualification = '';
+            if (strlen($row->qualname) && strlen($row->qualtype)) {
+                $row->qualification = $row->qualname. ' (' . $row->qualtype . ') ' . $at . ' ';
+            }
+            else if (strlen($row->qualtype)) {
+                $row->qualification = $row->qualtype . ' ' . $at . ' ';
+            }
+            else if (strlen($row->qualname)) {
+                $row->qualification = $row->qualname . ' ' . $at . ' ';
+            }
+            $row->qualification .= $row->institution;
         }
         return $data;
     }
@@ -709,16 +722,10 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
             ),
             'qualtype' => array(
                 'type' => 'text',
-                'rules' => array(
-                    'required' => true,
-                ),
                 'title' => get_string('qualtype', 'artefact.resume'),
             ),
             'qualname' => array(
                 'type' => 'text',
-                'rules' => array(
-                    'required' => true,
-                ),
                 'title' => get_string('qualname', 'artefact.resume'),
             ),
             'qualdescription' => array(
@@ -729,6 +736,26 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
                 'title' => get_string('qualdescription', 'artefact.resume'),
             ),
         );
+    }
+
+    static function get_composite_js() {
+        $at = get_string('at');
+        return <<<EOF
+function formatQualification(name, type, institution) {
+    var qual = '';
+    if (name && type) {
+        qual = name + ' (' + type + ') {$at} ';
+    }
+    else if (type) {
+        qual = type + ' {$at} ';
+    }
+    else if (name) {
+        qual = name + ' {$at} ';
+    }
+    qual += institution;
+    return qual;
+}
+EOF;
     }
 }
 
