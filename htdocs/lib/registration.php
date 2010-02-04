@@ -437,4 +437,69 @@ function group_stats_table($limit, $offset) {
     return $result;
 }
 
+function view_statistics($limit, $offset) {
+    $data = array();
+    $data['tableheadings'] = array(
+        '#',
+        get_string('view'),
+        get_string('Owner', 'view'),
+        get_string('visits'),
+        get_string('feedback', 'view'),
+    );
+    $data['table'] = view_stats_table($limit, $offset);
+    return $data;
+}
+
+function view_stats_table($limit, $offset) {
+    $count = count_records('view');
+
+    $pagination = build_pagination(array(
+        'id' => 'stats_pagination',
+        'url' => get_config('wwwroot') . 'admin/statistics.php?type=views',
+        'jsonscript' => 'admin/statistics.json.php',
+        'datatable' => 'statistics_table',
+        'count' => $count,
+        'limit' => $limit,
+        'offset' => $offset,
+    ));
+
+    $result = array(
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+
+    if ($count < 1) {
+        return $result;
+    }
+
+    $viewdata = get_records_sql_array(
+        "SELECT
+            v.id, v.title, v.owner, v.group, v.institution,
+            u.firstname, u.lastname,
+            COUNT(vf.*) AS comments
+        FROM {view} v
+            LEFT JOIN {view_feedback} vf ON v.id = vf.view
+            LEFT JOIN {usr} u ON v.owner = u.id
+            LEFT JOIN {group} g ON v.group = g.id
+            LEFT JOIN {institution} i ON v.institution = i.name
+        GROUP BY v.id, v.title, v.owner, v.group, v.institution,
+            u.firstname, u.lastname",
+        array(),
+        $offset,
+        $limit
+    );
+
+    foreach ($viewdata as &$v) {
+        $v->author = $v->owner ? display_name($v->owner) : null;
+    }
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $viewdata);
+    $smarty->assign('offset', $offset);
+    $result['tablerows'] = $smarty->fetch('admin/viewstats.tpl');
+
+    return $result;
+}
+
 ?>

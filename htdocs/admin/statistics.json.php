@@ -45,6 +45,9 @@ switch ($type) {
 case 'groups':
     $data = group_stats_table($limit, $offset);
     break;
+case 'views':
+    $data = view_stats_table($limit, $offset);
+    break;
 case 'users':
 default:
     $data = user_stats_table($limit, $offset);
