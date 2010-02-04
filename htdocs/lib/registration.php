@@ -393,18 +393,6 @@ function group_stats_table($limit, $offset) {
 
     $groupdata = get_records_sql_array(
         "SELECT
-            g.id, g.name, COUNT(gm.member) AS members
-        FROM {group} g
-            LEFT JOIN {group_member} gm ON g.id = gm.group
-        WHERE
-            g.deleted = 0
-        GROUP BY g.id, g.name
-        ORDER BY members desc",
-        array()
-    );
-
-    $groupdata = get_records_sql_array(
-        "SELECT
             g.id, g.name, mc.members, vc.views, fc.forums, pc.posts
         FROM {group} g
             LEFT JOIN (
