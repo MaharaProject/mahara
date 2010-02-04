@@ -455,15 +455,18 @@ function get_dataroot_image_path($path, $id, $size=null) {
 
             $imageinfo = getimagesize($originalimage);
             $originalmimetype = $imageinfo['mime'];
+            $format = 'png';
             switch ($originalmimetype) {
                 case 'image/jpeg':
                 case 'image/jpg':
+                    $format = 'jpeg';
                     $oldih = imagecreatefromjpeg($originalimage);
                     break;
                 case 'image/png':
                     $oldih = imagecreatefrompng($originalimage);
                     break;
                 case 'image/gif':
+                    $format = 'gif';
                     $oldih = imagecreatefromgif($originalimage);
                     break;
                 case 'image/bmp':
@@ -521,7 +524,8 @@ function get_dataroot_image_path($path, $id, $size=null) {
                 //imagecopyresized($newih, $oldih, 0, 0, 0, 0, $newdimensions['w'], $newdimensions['h'], $oldx, $oldy);
             }
 
-            $result = imagepng($newih, $resizedimagefile);
+            $outputfunction = "image$format";
+            $result = $outputfunction($newih, $resizedimagefile);
             if ($result) {
                 return $resizedimagefile;
             }
