@@ -497,6 +497,7 @@ class View {
         delete_records('view_access_token', 'view', $this->id);
         delete_records('view_autocreate_grouptype', 'view', $this->id);
         delete_records('view_tag','view',$this->id);
+        delete_records('view_visit','view',$this->id);
         delete_records('usr_watchlist_view','view',$this->id);
         if ($blockinstanceids = get_column('block_instance', 'id', 'view', $this->id)) {
             require_once(get_config('docroot') . 'blocktype/lib.php');
