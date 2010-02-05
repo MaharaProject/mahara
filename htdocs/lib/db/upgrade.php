@@ -1320,10 +1320,6 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
-    // @TODO: Stats upgrade:
-    // Daily data: count of logged-in users
-    // Add visits column to view table, updated daily from log on filesystem
-
     if ($oldversion < 2009122200) {
         // Table for collection of historical stats
         $table = new XMLDBTable('site_data');
@@ -1360,6 +1356,20 @@ function xmldb_core_upgrade($oldversion=0) {
         $field = new XMLDBField('ctime');
         $field->setAttributes(XMLDB_TYPE_DATETIME, null, null);
         add_field($table, $field);
+
+        // Add visits column to view table
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('visits');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+
+        // Add table to store daily view visits
+        $table = new XMLDBTable('view_visit');
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+        $table->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
+        $table->addIndexInfo('ctimeix', XMLDB_INDEX_NOTUNIQUE, array('ctime'));
+        create_table($table);
     }
 
     return $status;

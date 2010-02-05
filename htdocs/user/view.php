@@ -61,8 +61,9 @@ $is_friend = is_friend($userid, $loggedinid);
 $userobj = new User();
 $userobj->find_by_id($userid);
 $view = $userobj->get_profile_view();
+$viewid = $view->get('id');
 # access will either be logged in (always) or public as well
-if (!$view || !can_view_view($view->get('id'))) {
+if (!$view || !can_view_view($viewid)) {
     throw new AccessDeniedException(get_string('youcannotviewthisusersprofile'));
 }
 
@@ -307,7 +308,7 @@ $smarty->assign('canmessage', can_send_message($loggedinid, $userid));
 $smarty->assign('NAME',$name);
 $smarty->assign('USERID', $userid);
 $smarty->assign('userdisplayname', display_name($USER, null, true));
-$smarty->assign('viewid', $view->get('id'));
+$smarty->assign('viewid', $viewid);
 $smarty->assign('viewtitle', get_string('usersprofile', 'mahara', display_name($user, null, true)));
 $smarty->assign('viewtype', 'profile');
 if ($loggedinid && $loggedinid == $userid) {
@@ -331,6 +332,9 @@ if (isset($_SERVER['HTTP_REFERER'])) {
 $smarty->assign('viewcontent', $view->build_columns());
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('user/view.tpl');
+
+// Log view visits
+error_log('[' . date("Y-m-d h:i:s") . "] $viewid\n", 3, get_config('dataroot') . 'views.log');
 
 // Send an invitation to the user to join a group
 function invite_submit(Pieform $form, $values) {

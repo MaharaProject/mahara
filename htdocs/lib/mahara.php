@@ -2262,6 +2262,48 @@ function cron_site_data_daily() {
         'type'  => 'loggedin-users-daily',
         'value' => count_records_select('usr', $where),
     ));
+
+    // Process log file containing view visits
+    if ($fh = @fopen(get_config('dataroot') . 'views.log', 'r')) {
+
+        // Read the new stuff out of the file
+        $latest = get_field_sql("SELECT MAX(ctime) FROM {view_visit}");
+        $visits = array();
+        while (!feof($fh)) {
+            $line = fgets($fh, 1024);
+            if (preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\] (\d+)$/', $line, $m) && $m[1] > $latest) {
+                $visits[] = (object) array('ctime' => $m[1], 'view' => $m[2]);
+            }
+        }
+        fclose($fh);
+
+        // Get per-view counts for the view table.
+        $visitcounts = array();
+        foreach ($visits as &$v) {
+            if (!isset($visitcounts[$v->view])) {
+                $visitcounts[$v->view] = 0;
+            }
+            $visitcounts[$v->view]++;
+        }
+
+        // Add visit records to view_visit
+        foreach ($visits as &$v) {
+            if (record_exists('view', 'id', $v->view)) {
+                insert_record('view_visit', $v);
+            }
+        }
+
+        // Delete view_visit records > 1 week old
+        delete_records_select(
+            'view_visit',
+            'ctime < CURRENT_DATE - INTERVAL ' . (is_postgres() ? "'1 week'" : '1 WEEK')
+        );
+
+        // Update view counts
+        foreach ($visitcounts as $viewid => $newvisits) {
+            execute_sql("UPDATE {view} SET visits = visits + ? WHERE id = ?", array($newvisits, $viewid));
+        }
+    }
 }
 
 function random_string($length=15) {

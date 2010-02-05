@@ -271,4 +271,6 @@ $smarty->assign('viewbeingwatched', $viewbeingwatched);
 
 $smarty->display('view/view.tpl');
 
+// Log view visits
+error_log('[' . date("Y-m-d h:i:s") . "] $viewid\n", 3, get_config('dataroot') . 'views.log');
 ?>
