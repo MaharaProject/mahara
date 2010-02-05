@@ -443,7 +443,7 @@ function view_statistics($limit, $offset) {
         '#',
         get_string('view'),
         get_string('Owner', 'view'),
-        get_string('visits'),
+        get_string('Visits'),
         get_string('feedback', 'view'),
     );
     $data['table'] = view_stats_table($limit, $offset);
@@ -475,7 +475,7 @@ function view_stats_table($limit, $offset) {
 
     $viewdata = get_records_sql_array(
         "SELECT
-            v.id, v.title, v.owner, v.group, v.institution,
+            v.id, v.title, v.owner, v.group, v.institution, v.visits,
             u.firstname, u.lastname,
             COUNT(vf.*) AS comments
         FROM {view} v
@@ -483,8 +483,9 @@ function view_stats_table($limit, $offset) {
             LEFT JOIN {usr} u ON v.owner = u.id
             LEFT JOIN {group} g ON v.group = g.id
             LEFT JOIN {institution} i ON v.institution = i.name
-        GROUP BY v.id, v.title, v.owner, v.group, v.institution,
-            u.firstname, u.lastname",
+        GROUP BY v.id, v.title, v.owner, v.group, v.institution, v.visits,
+            u.firstname, u.lastname
+        ORDER BY v.visits DESC",
         array(),
         $offset,
         $limit
