@@ -236,31 +236,29 @@ function get_helpfile($plugintype, $pluginname, $form, $element, $page=null, $se
 
 function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=null, $section=null) {
 
-    $file = 'help/';
+    $subdir = 'help/';
 
-    if ($plugintype != 'core') {
-        $location = $plugintype . '/' . $pluginname . '/lang/';
-    }
-    else {
-        $location = 'lang/';
-    }
     if ($page) {
-        $page = str_replace('-', '/', $page);
+        $pagebits = split('-', $page);
+        $file = array_pop($pagebits) . '.html';
         if ($plugintype != 'core') {
-            $file .=  'pages/' . $page . '.html';
+            $subdir .= 'pages/' . join('/', $pagebits) . '/';
         }
         else {
-            $file .= 'pages/' . $pluginname . '/' . $page . '.html';
+            $subdir .= 'pages/' . $pluginname . '/' . join('/', $pagebits) . '/';
         } 
     }
     else if ($section) {
-        $file .= 'sections/' . $section . '.html';
+        $subdir .= 'sections/';
+        $file = $section . '.html';
     }
     else if (!empty($form) && !empty($element)) {
-        $file .= 'forms/' . $form . '.' . $element . '.html';
+        $subdir .= 'forms/';
+        $file = $form . '.' . $element . '.html';
     }
     else if (!empty($form) && empty($element)) {
-        $file .= 'forms/' . $form . '.html';
+        $subdir .= 'forms/';
+        $file = $form . '.html';
     }
     else {
         return false;
@@ -275,8 +273,27 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
         $trieden = false;
     }
 
+    //try the local settings
+    $langfile = get_config('docroot') . 'local/lang/' . $lang . '/' . $subdir;
+    if ($plugintype != 'core') {
+        $langfile .= $plugintype . '.' . $pluginname . '.' . $file;
+    }
+    else {
+        $langfile .= $file;
+    }
+    if (is_readable($langfile)) {
+        return $langfile;
+    }
+
+    if ($plugintype != 'core') {
+        $location = $plugintype . '/' . $pluginname . '/lang/';
+    }
+    else {
+        $location = 'lang/';
+    }
+
     // try the current language
-    $langfile = get_language_root() . $location . $lang . '/' . $file;
+    $langfile = get_language_root() . $location . $lang . '/' . $subdir . $file;
     if (is_readable($langfile)) {
         return $langfile;
     }
@@ -288,7 +305,7 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
             if ($parentlang == 'en.utf8') {
                 $trieden = true;
             }
-            $langfile = get_language_root($parentlang) . $location . $parentlang . '/' . $file;
+            $langfile = get_language_root($parentlang) . $location . $parentlang . '/' . $subdir . $file;
             if (is_readable($langfile)) {
                 return $langfile;
             }
@@ -297,7 +314,7 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
 
     // if it's STILL not found, and we haven't already tried english ...
     if (empty($data) && empty($trieden)) {
-        $langfile = get_language_root('en.utf8') . $location . 'en.utf8/' . $file;
+        $langfile = get_language_root('en.utf8') . $location . 'en.utf8/' . $subdir . $file;
         if (is_readable($langfile)) {
             return $langfile;
         }
@@ -523,21 +540,82 @@ function get_language_root($language=null) {
 }
 
 /**
- * Return a list of available themes.
+ * Return a list of all available themes.
+ * @return array subdir => name
  */
-function get_themes($all=true) {
+function get_all_themes() {
     static $themes = null;
 
-    $institutionthemes = array();
-    if (!$all) {
-        global $USER;
-        $institutions = $USER->get('institutions');
-        foreach ($institutions as &$i) {
-            if (!empty($i->theme)) {
-                $institutionthemes[$i->theme] = 1;
-            }
+    if (is_null($themes)) {
+        $themes = array();
+        $themelist = get_all_theme_objects();
+        foreach ($themelist AS $subdir => $theme) {
+            $themes[$subdir] = isset($theme->displayname) ? $theme->displayname : $subdir;
         }
     }
+
+    return $themes;
+}
+
+/**
+ * Return a list of themes available to this user
+ * If the user is a member of any institutions, only themes available to
+ * those institutions are returned; or
+ * If a user is not a member of any institution, all themes not marked as
+ * institution specific are returned.
+ * @return array subdir => name
+ */
+function get_user_accessible_themes() {
+    global $USER;
+
+    $themes = array();
+    if ($institutions = $USER->get('institutions')) {
+        // Get themes for all of this users institutions
+        foreach ($institutions AS $i) {
+            $themes = array_merge($themes, get_institution_themes($i->institution));
+        }
+    }
+    else {
+        $themelist = get_all_theme_objects();
+        foreach ($themelist AS $subdir => $theme) {
+            if (!isset($theme->institutions) || !is_array($theme->institutions)) {
+                $themes[$subdir] = isset($theme->displayname) ? $theme->displayname : $subdir;
+            }
+        }
+
+    }
+    return $themes;
+}
+
+/**
+ * Return a list of themes available to the specified institution
+ * @param string institution the name of the institution to load themes for
+ * @return array subdir => name
+ * @throws SystemException if unable to read the theme directory
+ */
+function get_institution_themes($institution) {
+    static $institutionthemes = array();
+    if (!isset($institutionthemes[$institution])) {
+        $themes = get_all_theme_objects();
+        $r = array();
+        foreach ($themes AS $subdir => $theme) {
+            if (empty($theme->institutions) || !is_array($theme->institutions) || in_array($institution, $theme->institutions)) {
+                $r[$subdir] = isset($theme->displayname) ? $theme->displayname : $subdir;
+            }
+        }
+        $institutionthemes[$institution] = $r;
+    }
+
+    return $institutionthemes[$institution];
+}
+
+/**
+ * Return a list of all themes available on the system
+ * @return array An array of theme objects
+ * @throws SystemException if unable to read the theme directory
+ */
+function get_all_theme_objects() {
+    static $themes = null;
 
     if (is_null($themes)) {
         $themes = array();
@@ -550,8 +628,8 @@ function get_themes($all=true) {
                 $config_path = $themebase . $subdir . '/themeconfig.php';
                 if (is_readable($config_path)) {
                     require($config_path);
-                    if ($all || empty($theme->institution_only) || isset($institutionthemes[$subdir])) {
-                        $themes[$subdir] = isset($theme->displayname) ? $theme->displayname : $subdir;
+                    if (empty($theme->disabled) || !$theme->disabled) {
+                        $themes[$subdir] = $theme;
                     }
                 }
             }

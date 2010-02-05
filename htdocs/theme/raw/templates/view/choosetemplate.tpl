@@ -12,7 +12,8 @@
 
     <input type="hidden" name="viewlimit" value="{$views->limit|escape}">
     <input type="hidden" name="viewoffset" value="0">
-    <input type="hidden" name="group" value="{$views->group|escape}">
+    {if $views->group}<input type="hidden" name="group" value="{$views->group|escape}">{/if}
+    {if $views->institution}<input type="hidden" name="institution" value="{$views->institution|escape}">{/if}
 
     <br>
 	<label>{str tag="searchowners" section="view"}:</label>

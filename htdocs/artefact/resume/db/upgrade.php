@@ -108,6 +108,30 @@ function xmldb_artefact_resume_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2009122100) {
+        $table = new XMLDBTable('artefact_resume_employmenthistory');
+        $field = new XMLDBField('employeraddress');
+        $field->setAttributes(XMLDB_TYPE_TEXT);
+        add_field($table, $field);
+
+        $table = new XMLDBTable('artefact_resume_educationhistory');
+        $field = new XMLDBField('institutionaddress');
+        $field->setAttributes(XMLDB_TYPE_TEXT);
+        add_field($table, $field);
+    }
+
+    if ($oldversion < 2010020300) {
+        $table = new XMLDBTable('artefact_resume_educationhistory');
+        $field = new XMLDBField('qualtype');
+        $field->setAttributes(XMLDB_TYPE_TEXT);
+        change_field_notnull($table, $field);
+
+        $table = new XMLDBTable('artefact_resume_educationhistory');
+        $field = new XMLDBField('qualname');
+        $field->setAttributes(XMLDB_TYPE_TEXT);
+        change_field_notnull($table, $field);
+    }
+
     return $status;
 }
 

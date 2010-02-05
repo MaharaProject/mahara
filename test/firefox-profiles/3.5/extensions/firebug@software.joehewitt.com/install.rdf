@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+
+  <Description about="urn:mozilla:install-manifest">
+    <em:id>firebug@software.joehewitt.com</em:id>
+    <em:version>1.4.2</em:version>
+    <em:type>2</em:type>
+
+    <!-- Firefox -->
+    <em:targetApplication>
+      <Description>
+        <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+        <em:minVersion>3.0</em:minVersion>
+        <em:maxVersion>3.5.*</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+
+    <em:name>Firebug</em:name>
+    <em:description>Web Development Evolved.</em:description>
+    <em:creator>Joe Hewitt</em:creator>
+    <em:contributor>John J. Barton (IBM Almaden)</em:contributor>
+    <em:contributor>Jan Odvarko (All Peers Inc.)</em:contributor>
+    <em:contributor>Max Stepanov (Aptana Inc.)</em:contributor>
+    <em:contributor>Rob Campbell (Mozilla Corp.)</em:contributor>
+    <em:contributor>Hans Hillen, (Paciello Group, Mozilla)</em:contributor>
+    <em:contributor>Curtis Bartley, (Mozilla Corp.)</em:contributor>
+    <em:contributor>Mike Collins, (IBM Almaden)</em:contributor>
+    <em:contributor>Kevin Decker</em:contributor>
+    <em:contributor>Mike Ratcliffe, (Comartis AG)</em:contributor>
+    <em:contributor>Hernan Rodríguez Colmeiro</em:contributor>
+    <em:contributor>Austin Andrews</em:contributor>
+    <em:contributor>Christoph Dorn</em:contributor>
+    <em:iconURL>chrome://firebug/content/firebug.png</em:iconURL>
+    <em:homepageURL>http://www.getfirebug.com/</em:homepageURL>
+
+    <em:translator>Leszek(teo)Życzkowski (pl-PL)</em:translator>
+    <em:translator>markh (nl-NL)</em:translator>
+    <em:translator>peter3 (sv-SE)</em:translator>
+    <em:translator>AlleyKat (da-DK)</em:translator>
+    <em:translator>lovelywcm (zh-CN)</em:translator>
+    <em:translator>Lukáš Kucharczyk, Michal Kec (cs-CZ)</em:translator>
+    <em:translator>Team erweiterungen.de, ReinekeFux, Benedikt Langens (de-DE)</em:translator>
+    <em:translator>l0stintranslation, gonzalopirobutirro (it-IT)</em:translator>
+    <em:translator>alexxed (ro-RO)</em:translator>
+    <em:translator>Nicolas Martin, Franck Marcia (fr-FR)</em:translator>
+    <em:translator>gLes (hu-HU)</em:translator>
+    <em:translator>Xavi Ivars - Softcatalà (ca)</em:translator>
+    <em:translator>gezmen (tr-TR)</em:translator>
+    <em:translator>eternoendless (es-AR)</em:translator>
+    <em:translator>Dark Preacher (ru-RU)</em:translator>
+    <em:translator>Tiago Oliveira, Diego de Carvalho Zimmermann, Alexandre Rapaki (pt-BR)</em:translator>
+    <em:translator>Juan Botías (es-ES)</em:translator>
+    <em:translator>Andriy Zhouck (uk-UA)</em:translator>
+    <em:translator>Hisateru Tanaka (ja-JP)</em:translator>
+
+  </Description>
+</RDF>

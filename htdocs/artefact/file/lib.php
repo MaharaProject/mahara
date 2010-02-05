@@ -205,6 +205,13 @@ class PluginArtefactFile extends PluginArtefact {
         db_commit();
     }
 
+    public static function get_mimetypes_from_description($description=null) {
+        if (is_null($description)) {
+            return get_column('artefact_file_mime_types', 'mimetype');
+        }
+        return get_column('artefact_file_mime_types', 'mimetype', 'description', $description);
+    }
+
     public static function can_be_disabled() {
         return false;
     }
@@ -224,14 +231,14 @@ class PluginArtefactFile extends PluginArtefact {
 
     public static function recalculate_quota() {
         $data = get_records_sql_assoc("
-            SELECT a.owner, SUM(f.size) AS usage
+            SELECT a.owner, SUM(f.size) AS bytes
             FROM {artefact} a JOIN {artefact_file_files} f ON a.id = f.artefact
             WHERE a.artefacttype IN ('file', 'image', 'profileicon', 'archive')
             AND a.owner IS NOT NULL
             GROUP BY a.owner", array()
         );
         if ($data) {
-            return array_map(create_function('$a', 'return $a->usage;'), $data);
+            return array_map(create_function('$a', 'return $a->bytes;'), $data);
         }
         return array();
     }

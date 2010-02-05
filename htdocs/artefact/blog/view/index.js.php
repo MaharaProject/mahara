@@ -79,7 +79,7 @@ postlist.rowfunction = function(d, n, gd) {
             if (!confirm({$enc_publish_confirm})) {
                 return;
             }
-            sendjsonrequest('publish.json.php', { 'id': d.id }, 'GET', 
+            sendjsonrequest({$enc_wwwroot} + 'artefact/blog/view/publish.json.php', { 'id': d.id }, 'GET', 
                             function (response) {
                                 if (!response.error) {
                                     $('poststatus'+d.id).innerHTML = {$enc_published};
@@ -149,7 +149,7 @@ postlist.rowfunction = function(d, n, gd) {
         if (!confirm({$enc_delete_confirm})) {
             return;
         }
-        sendjsonrequest('delete.json.php', { 'id' : d.id }, 'GET', function(response) {
+        sendjsonrequest({$enc_wwwroot} + 'artefact/blog/view/delete.json.php', { 'id' : d.id }, 'GET', function(response) {
             if (!response.error) {
                 for (row in rows) {
                     rows[row].parentNode.removeChild(rows[row]);

@@ -595,6 +595,11 @@ abstract class ArtefactType {
         // Delete any references to these artefacts from non-artefact places.
         delete_records_select('artefact_parent_cache', "artefact IN $idstr");
 
+        // The artefacts should have no 'real' children at this point, but they
+        // could still be in the artefact_parent_cache as parents if they had
+        // attachments, or if any of their children had attachments.
+        delete_records_select('artefact_parent_cache', "parent IN $idstr");
+
         // Make sure that the artefacts are removed from any view blockinstances
         if ($records = get_records_sql_array("
             SELECT va.block, va.artefact, bi.configdata
@@ -1038,6 +1043,14 @@ abstract class ArtefactType {
 
     public function detach($attachmentid=null) {
         if (is_null($attachmentid)) {
+            execute_sql("
+                DELETE FROM {artefact_parent_cache}
+                WHERE parent = ?
+                AND artefact IN (
+                    SELECT attachment
+                    FROM {artefact_attachment}
+                    WHERE artefact = ?
+                )", array($this->id, $this->id));
             delete_records('artefact_attachment', 'artefact', $this->id);
             return;
         }

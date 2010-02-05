@@ -77,15 +77,16 @@ if (param_variable('make_private_submit', null)) {
     pieform(make_private_form(param_integer('feedback')));
 }
 
-$group = $view->get('group');
+$owner    = $view->get('owner');
+$viewtype = $view->get('type');
 
-if ($view->get('type') == 'profile') {
-    $title = get_string('usersprofile', 'mahara', display_name($view->get('owner'), null, true));
+if ($viewtype == 'profile') {
+    define('TITLE', display_name($owner, null, true));
 }
 else {
-    $title = $view->get('title');
+    define('TITLE', $view->get('title'));
 }
-define('TITLE', $title);
+$title = hsc(TITLE);
 
 $submittedgroup = (int)$view->get('submittedgroup');
 if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_views($submittedgroup, $USER->get('id'))) {
@@ -173,73 +174,78 @@ EOF;
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('new', $new);
 $smarty->assign('viewid', $viewid);
-$smarty->assign('viewtitle', $title);
-$viewtype = $view->get('type');
 $smarty->assign('viewtype', $viewtype);
 $smarty->assign('feedback', $feedback);
-
-$owner = $view->get('owner');
 $smarty->assign('owner', $owner);
 $smarty->assign('tags', $view->get('tags'));
-if ($owner) {
-    $smarty->assign('ownerlink', 'user/view.php?id=' . $owner);
-}
-else if ($group) {
-    $smarty->assign('ownerlink', 'group/view.php?id=' . $group);
-}
-if ($can_edit) {
-    if ($viewtype == 'profile') {
-        $microheaderlinks = array(
-            array(
-                'name' => get_string('editmyprofilepage'),
-                'url' => get_config('wwwroot') . 'view/blocks.php?profile=1',
-                'type' => 'edit',
-            ),
-            array(
-                'name' => get_string('editmyprofile', 'artefact.internal'),
-                'url' => get_config('wwwroot') . 'artefact/internal/index.php',
-                'type' => 'edit',
-            ),
-        );
+
+if (get_config('viewmicroheaders')) {
+    $smarty->assign('microheaders', true);
+    $smarty->assign('microheadertitle', $view->display_title(true, false));
+
+    if ($can_edit) {
+        if ($viewtype == 'profile') {
+            $microheaderlinks = array(
+                array(
+                    'name' => get_string('editmyprofilepage'),
+                    'url' => get_config('wwwroot') . 'view/blocks.php?profile=1',
+                    'type' => 'edit',
+                ),
+                array(
+                    'name' => get_string('editmyprofile', 'artefact.internal'),
+                    'url' => get_config('wwwroot') . 'artefact/internal/index.php',
+                    'type' => 'edit',
+                ),
+            );
+        }
+        else if ($new) {
+            $microheaderlinks = array(
+                array(
+                    'name' => get_string('back'),
+                    'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . '&amp;new=1',
+                    'type' => 'reply',
+                ),
+            );
+        }
+        else {
+            $microheaderlinks = array(
+                array(
+                    'name' => get_string('edittitle', 'view'),
+                    'url' => get_config('wwwroot') . 'view/edit.php?id=' . $viewid . '&amp;new=' . $new,
+                    'type' => 'edit',
+                ),
+                array(
+                    'name' => get_string('editcontent', 'view'),
+                    'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . '&amp;new=' . $new,
+                    'type' => 'edit',
+                ),
+                array(
+                    'name' => get_string('editaccess', 'view'),
+                    'url' => get_config('wwwroot') . 'view/access.php?id=' . $viewid . '&amp;new=' . $new,
+                    'type' => 'edit',
+                ),
+            );
+        }
+        $smarty->assign('microheaderlinks', $microheaderlinks);
     }
-    else if ($new) {
-        $microheaderlinks = array(
-            array(
-                'name' => get_string('back'),
-                'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . '&amp;new=1',
-                'type' => 'reply',
-            ),
-        );
-    }
-    else {
-        $microheaderlinks = array(
-            array(
-                'name' => get_string('edittitle', 'view'),
-                'url' => get_config('wwwroot') . 'view/edit.php?id=' . $viewid . '&amp;new=' . $new,
-                'type' => 'edit',
-            ),
-            array(
-                'name' => get_string('editcontent', 'view'),
-                'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . '&amp;new=' . $new,
-                'type' => 'edit',
-            ),
-            array(
-                'name' => get_string('editaccess', 'view'),
-                'url' => get_config('wwwroot') . 'view/access.php?id=' . $viewid . '&amp;new=' . $new,
-                'type' => 'edit',
-            ),
-        );
-    }
-    $smarty->assign('microheaderlinks', $microheaderlinks);
-}
-if ($USER->is_logged_in()) {
-    $smarty->assign('userdisplayname', display_name($USER, null, true));
-    if (!empty($_SERVER['HTTP_REFERER'])) {
-        $page = get_config('wwwroot') . 'view/view.php?id=' . $viewid . ($new ? '&new=1' : '');
-        if ($_SERVER['HTTP_REFERER'] != $page) {
-            $smarty->assign('backurl', $_SERVER['HTTP_REFERER']);
+
+    if ($USER->is_logged_in()) {
+        $smarty->assign('userdisplayname', display_name($USER, null, true));
+        if (!empty($_SERVER['HTTP_REFERER'])) {
+            $page = get_config('wwwroot') . 'view/view.php?id=' . $viewid . ($new ? '&new=1' : '');
+            if ($_SERVER['HTTP_REFERER'] != $page) {
+                $smarty->assign('backurl', $_SERVER['HTTP_REFERER']);
+            }
         }
     }
+}
+
+if ($viewtype != 'profile' && !get_config('viewmicroheaders')) {
+    $title = $view->display_title();
+}
+
+if ($viewtype != 'profile' || !get_config('viewmicroheaders')) {
+    $smarty->assign('maintitle', $title);
 }
 
 // Provide a link for roaming teachers to return
@@ -256,7 +262,6 @@ if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
     }
 }
 
-$smarty->assign('ownername', $view->formatted_owner());
 $smarty->assign('viewdescription', $view->get('description'));
 $smarty->assign('viewcontent', $view->build_columns());
 $smarty->assign('releaseform', $releaseform);

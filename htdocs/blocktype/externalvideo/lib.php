@@ -58,11 +58,11 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
         $result = '';
-        $url    = hsc(self::make_video_url($configdata['videoid']));
         $width  = (!empty($configdata['width'])) ? hsc($configdata['width']) : self::$default_width;
         $height = (!empty($configdata['height'])) ? hsc($configdata['height']) : self::$default_height;
 
         if (isset($configdata['videoid'])) {
+            $url     = hsc(self::make_video_url($configdata['videoid']));
             $result .= '<div class="mediaplayer-container center"><div class="mediaplayer">';
             $result .= '<object width="' . $width . '" height="' . $height . '">';
             $result .= '<param name="movie" value="' . $url . '"></param>';
@@ -89,7 +89,7 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
                 'title' => get_string('videourl','blocktype.externalvideo'),
                 'description' => get_string('videourldescription2','blocktype.externalvideo') . self::get_html_of_supported_websites(),
                 'width' => '90%',
-                'defaultvalue' => $configdata['videoid'],
+                'defaultvalue' => isset($configdata['videoid']) ? $configdata['videoid'] : null,
                 'rules' => array(
                     'required' => true
                 ),

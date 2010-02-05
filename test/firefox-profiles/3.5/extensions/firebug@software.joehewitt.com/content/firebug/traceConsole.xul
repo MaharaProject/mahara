@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/global.css"?>
+<?xml-stylesheet href="chrome://global/skin/findBar.css" type="text/css"?>
+<?xml-stylesheet href="chrome://firebug/skin/traceConsole.css"?>
+<!DOCTYPE window [
+<!ENTITY % browserDTD SYSTEM "chrome://browser/locale/browser.dtd" >
+%browserDTD;
+<!ENTITY % findBarDTD SYSTEM "chrome://global/locale/findbar.dtd" >
+%findBarDTD;
+]>
+<window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        xmlns:html="http://www.w3.org/1999/xhtml"
+        id="TraceConsole" 
+        windowtype="FBTraceConsole" 
+        title="Firebug Trace Console"
+        width="640" height="480"
+        screenX="10" screenY="10"
+        persist="screenX screenY width height sizemode"
+        onload="TraceConsole.initialize()"
+        onunload="TraceConsole.shutdown()">
+  <script type="application/x-javascript" src="chrome://global/content/globalOverlay.js"/>
+  <script type="application/x-javascript" src="chrome://global/content/findBar.js"/>
+  <script type="application/x-javascript" src="chrome://firebug/content/xpcom.js"/>
+  <script type="application/x-javascript" src="chrome://firebug/content/chrome.js"/>
+  <script type="application/x-javascript" src="chrome://firebug/content/traceConsole.js"/>
+  <script type="application/x-javascript" src="chrome://firebug/content/trace.js"/>
+  <stringbundle id="bundle_findBar" src="chrome://global/locale/findbar.properties"/>
+  <commandset id="mainCommandSet">
+    <command id="cmd_clearConsole" oncommand="TraceConsole.onClearConsole()"/>
+    <command id="cmd_find" oncommand="gFindBar.onFindCommand();"/>
+    <command id="cmd_findAgain" oncommand="gFindBar.onFindAgainCmd();"/>
+    <command id="cmd_findPrevious" oncommand="gFindBar.onFindPreviousCmd();"/>
+    <command id="cmd_separateConsole" oncommand="TraceConsole.onSeparateConsole();"/>
+    <command id="cmd_saveToFile" oncommand="TraceConsole.onSaveToFile();"/>
+    <command id="cmd_exitFirefox" oncommand="TraceConsole.onExitFirefox();"/>
+    <command id="cmd_restartFirefox" oncommand="TraceConsole.onRestartFirefox();"/>
+    <command id="cmd_copy" oncommand="goDoCommand('cmd_copy')" disabled="true"/>
+  </commandset>
+  <keyset id="mainKeyset">
+    <key id="key_find" key="&findOnCmd.commandkey;" command="cmd_find" modifiers="accel"/>
+    <key id="key_separateConsole" key="b" command="cmd_separateConsole" modifiers="accel"/>
+    <key id="key_saveToFile" key="s" command="cmd_saveToFile" modifiers="accel"/>
+    <key id="key_clearConsole" key="l" command="cmd_clearConsole" modifiers="accel"/>
+  </keyset>
+  <!-- Trace Console Toolbar -->
+  <toolbox id="consoleToolbox">
+    <toolbar id="consoleToolbar" align="center">
+      <toolbarbutton id="clearConsole"
+        label="tracing.cmd.Clear" class="toolbar-image-button"
+        tooltiptext="tracing.cmd.tip.Clear" 
+        command="cmd_clearConsole"/>
+      <toolbarbutton id="findConsole"
+        label="tracing.cmd.Find" class="toolbar-image-button"
+        tooltiptext="tracing.cmd.tip.Find" 
+        command="cmd_find"/>
+      <toolbarbutton id="separateConsole"
+        label="tracing.cmd.Bookmark" class="toolbar-image-button"
+        tooltiptext="tracing.cmd.tip.Bookmark" 
+        command="cmd_separateConsole"/>
+      <toolbarbutton id="saveToFile"
+        label="tracing.cmd.Save" class="toolbar-image-button"
+        tooltiptext="tracing.cmd.tip.Save" 
+        command="cmd_saveToFile"/>
+      <toolbarseparator flex="1"/>
+      <toolbarbutton id="restartFirefox"
+        label="tracing.cmd.Restart" class="toolbar-image-button"
+        tooltiptext="tracing.cmd.tip.Restart" 
+        command="cmd_restartFirefox"/>
+      <toolbarbutton id="closeFirefox"
+        label="tracing.cmd.Exit" class="toolbar-image-button"
+        tooltiptext="tracing.cmd.tip.Exit"
+        command="cmd_exitFirefox"/>
+    </toolbar> 
+  </toolbox>
+  <popupset id="mainPopupSet">
+    <popup id="fbContextMenu" onpopupshowing="return FirebugChrome.onContextShowing(event);" />
+    <tooltip id="fbTooltip" class="fbURLMenuItem" onpopupshowing="return FirebugChrome.onTooltipShowing(event);"/>
+  </popupset>
+  <vbox flex="1">
+    <browser id="consoleFrame" type="content-primary"
+             src="chrome://firebug/content/traceConsole.html" flex="1"
+             disablehistory="true" contextmenu="fbContextMenu"
+             tooltip="fbTooltip"/>
+    <findbar id="FindToolbar" browserid="consoleFrame"/>
+  </vbox>
+</window>

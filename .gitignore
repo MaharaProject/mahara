@@ -8,6 +8,8 @@ mahara-*.tar.gz
 mahara-*.zip
 *.swp
 .patches
+test/selenium/results.html
+test/selenium/*/index.html
 /configure-stamp
 /debian/files
 /debian/mahara-apache.postinst.debhelper

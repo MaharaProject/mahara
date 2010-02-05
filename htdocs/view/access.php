@@ -251,6 +251,22 @@ if (!function_exists('strptime')) {
     }
 }
 
+/*
+ * Converts parsed time array to unix timestamp.
+ * @param array // date parsed using strptime()
+ * @return int  // Unix timestamp
+ */
+function ptimetotime($ptime) {
+    return mktime(
+        $ptime['tm_hour'],
+        $ptime['tm_min'],
+        $ptime['tm_sec'],
+        1,
+        $ptime['tm_yday'] + 1,
+        $ptime['tm_year'] + 1900
+    );
+}
+
 function editaccess_validate(Pieform $form, $values) {
     global $institution, $group;
     if ($institution && $values['copynewuser'] && !$values['template']) {
@@ -292,12 +308,13 @@ function editaccess_validate(Pieform $form, $values) {
             if ($item['type'] == 'loggedin' && !$item['startdate'] && !$item['stopdate']) {
                 $loggedinaccess = true;
             }
-            if ($item['startdate'] && $item['stopdate'] && $item['startdate'] > $item['stopdate']) {
+            if ($item['startdate'] && $item['stopdate'] && ptimetotime($item['startdate']) > ptimetotime($item['stopdate'])) {
                 $form->set_error('accesslist', get_string('startdatemustbebeforestopdate', 'view'));
                 break;
             }
         }
     }
+
     // Must have logged in user access for copy new user/group settings.
     if (($createforgroup || ($institution && $values['copynewuser'])) && !$loggedinaccess) {
         $form->set_error('accesslist', get_string('copynewusergroupneedsloggedinaccess', 'view'));
@@ -327,12 +344,13 @@ function editaccess_submit(Pieform $form, $values) {
     }
 
     if ($values['accesslist']) {
+        $dateformat = get_string('strftimedatetimeshort');
         foreach ($values['accesslist'] as &$item) {
             if (isset($item['startdate'])) {
-                $item['startdate'] = strtotime($item['startdate']);
+                $item['startdate'] = ptimetotime(strptime($item['startdate'], $dateformat));
             }
             if (isset($item['stopdate'])) {
-                $item['stopdate'] = strtotime($item['stopdate']);
+                $item['stopdate'] = ptimetotime(strptime($item['stopdate'], $dateformat));
             }
         }
     }

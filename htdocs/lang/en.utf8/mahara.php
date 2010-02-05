@@ -315,7 +315,7 @@ $string['sessiontimedout'] = 'Your session has timed out, please enter your logi
 $string['sessiontimedoutpublic'] = 'Your session has timed out. You may <a href="%s">log in</a> to continue browsing';
 $string['sessiontimedoutreload'] = 'Your session has timed out. Reload the page to log in again';
 $string['username'] = 'Username';
-$string['preferredname'] = 'Preferred Name';
+$string['preferredname'] = 'Display Name';
 $string['usernamedescription'] = ' ';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
 $string['youaremasqueradingas'] = 'You are masquerading as %s.';
@@ -433,6 +433,7 @@ $string['noinstitutionsetpassemailmessagehtml'] = '<p>Dear %s,</p>
 
 <p><a href="%sforgotpass.php?key=%s">%sforgotpass.php?key=%s</a></p>';
 $string['debugemail'] = 'NOTICE: This e-mail was intended for %s <%s> but has been sent to you as per the "sendallemailto" configuration setting.';
+$string['divertingemailto'] = 'Diverting email to %s';
 
 
 // Expiry times
@@ -858,6 +859,8 @@ $string['country.eh'] = 'Western Sahara';
 $string['country.ye'] = 'Yemen';
 $string['country.zm'] = 'Zambia';
 $string['country.zw'] = 'Zimbabwe';
+
+$string['nocountryselected'] = 'No Country Selected';
 
 // general stuff that doesn't really fit anywhere else
 $string['system'] = 'System';

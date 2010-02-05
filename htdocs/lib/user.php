@@ -389,6 +389,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         if ($messagehtml) {
             $messagehtml = '<p>' . hsc($notice) . '</p>' . $messagehtml;
         }
+        $usertoname = display_name($userto, $userto, true) . ' (' . get_string('divertingemailto', 'mahara', $to) . ')';
     }
     else {
         $usertoname = display_name($userto, $userto);
@@ -428,7 +429,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
  * object containing the email properties if they can
  */
 function can_receive_email($userto) {
-    if (!$userto->id) {
+    if (empty($userto->id)) {
         // No user ID was provided by email_user
         return new StdClass;
     }
@@ -1529,11 +1530,15 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
 
     if ($user instanceof User) {
         $user->create();
+        $user->quota_init();
         $user->commit();
         $user = $user->to_stdclass();
     }
     else {
         $user->ctime = db_format_timestamp(time());
+        if (empty($user->quota)) {
+            $user->quota = get_config_plugin('artefact', 'file', 'defaultquota');
+        }
         $user->id = insert_record('usr', $user, 'id', true);
     }
     // Bypass access check for 'copynewuser' institution/site views, because this user may not be logged in yet

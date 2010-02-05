@@ -225,6 +225,7 @@ $string['numberofcolumns'] = 'Number of columns';
 
 
 $string['by'] = 'by';
+$string['viewtitleby'] = '%s by <a href="%s">%s</a>';
 $string['in'] = 'in';
 $string['noblocks'] = 'Sorry, no blocks in this category :(';
 $string['Preview'] = 'Preview';

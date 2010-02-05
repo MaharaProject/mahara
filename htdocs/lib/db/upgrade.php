@@ -1320,7 +1320,26 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
-    if ($oldversion < 2009122200) {
+    if ($oldversion < 2010011300) {
+        // Clean up the mess left behind by failing to delete blogposts in a transaction
+        require_once(get_config('docroot') . 'artefact/lib.php');
+        rebuild_artefact_parent_cache_dirty();
+        execute_sql("
+            INSERT INTO {artefact_blog_blogpost} (blogpost)
+            SELECT id FROM {artefact} WHERE artefacttype = 'blogpost' AND id NOT IN (
+                SELECT blogpost FROM {artefact_blog_blogpost}
+            )");
+    }
+
+    if ($oldversion < 2010012700) {
+        set_config('viewmicroheaders', 1);
+    }
+
+    if ($oldversion < 2010012701) {
+        set_config('userscanchooseviewthemes', 1);
+    }
+
+    if ($oldversion < 2010020500) {
         // Table for collection of historical stats
         $table = new XMLDBTable('site_data');
         $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, XMLDB_NOTNULL);

@@ -527,6 +527,14 @@ class User {
         return true;
     }
 
+    public function quota_init() {
+        if (!$this->get('quota')) {
+            if ($defaultquota = get_config_plugin('artefact', 'file', 'defaultquota')) {
+                $this->set('quota', $defaultquota);
+            }
+        }
+    }
+
     public function join_institution($institution) {
         if ($institution != 'mahara' && !$this->in_institution($institution)) {
             require_once('institution.php');
@@ -659,6 +667,14 @@ class User {
             }
             if (!empty($i->theme) && $i->theme != get_config('theme')) {
                 $this->theme = $i->theme;
+            }
+        }
+        if ($this->authinstance) {
+            $authobj = AuthFactory::create($this->authinstance);
+            if (isset($institutions[$authobj->institution])) {
+                if ($t = $institutions[$authobj->institution]->theme) {
+                    $this->theme = $t;
+                }
             }
         }
         $this->institutions       = $institutions;

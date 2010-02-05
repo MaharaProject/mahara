@@ -4,11 +4,11 @@ Selenium Test Suite for Mahara
 This directory contains a series of test suites for Mahara, that can be tested
 using selenium [1].
 
-The test suites are arranged into directories. Each directory has an
-'index.html' file that describes the test suite. There are some common tests in
-'shared', and the TestSuite.html in this directory is automatically generated
-from generate-testsuite.sh to include the installer test and then all of the
-test suites.
+The test suites are arranged into directories. Each directory has a set of tests
+(html files) and a 'test_suite' file that describes the order in which those
+tests should be executed. There are some common tests in 'shared', which is not
+a test suite on its own. The index.html files are generated automatically by
+the generate-testsuites.py script.
 
 To quickly set up selenium core so you can run the tests, run the
 install-selenium-core.sh script present in this directory. This will set up
@@ -20,7 +20,7 @@ Writing your own Test Suite
 You can make your own test suites if you would like. Just create another
 directory and start adding tests.
 
-You have to create an index.html file that lists what order your tests will be
+You have to create a test_suite file that lists what order your tests will be
 run in. Just copy one from another suite directory.
 
 Note that what your test suite does it MUST undo. For example, if you have a
@@ -40,13 +40,15 @@ The 'basic-install' test will install Mahara, then insert some users that your
 tests can depend on existing. Please don't create users in your tests that you
 do not remove.
 
-generate-testsuite.sh
+generate-testsuite.py
 ---------------------
 
-This script searches through all of the test suites and builds a test suite
-that includes them all, with 'basic-install' running first. You can use this
+This script searches through all of the test suites and builds an index.html
+file from each test_suite file. It also builds an index.html file that
+includes them all, with 'basic-install' running first. You can use this
 suite on an empty, uninstalled Mahara in order to give the entire codebase a
 good workout.
+
 
 TODO
 ----

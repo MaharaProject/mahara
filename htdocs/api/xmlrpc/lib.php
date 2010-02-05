@@ -736,11 +736,11 @@ function get_peer_from_instanceid($authinstanceid) {
     $sql = 'SELECT
                 h.*
             FROM
-                {auth_instance} ai,
+                {auth_instance_config} aic,
                 {host} h
             WHERE
-                ai.institution = h.institution AND
-                ai.id = ?';
+                aic.value = h.wwwroot AND
+                aic.instance = ? AND aic.field = \'wwwroot\'';
     return get_record_sql($sql, array($authinstanceid));
 }
 

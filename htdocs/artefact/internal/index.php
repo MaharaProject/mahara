@@ -105,8 +105,9 @@ foreach ( $element_list as $element => $type ) {
         $items[$element]['cols'] = 50;
     }
     if ($element == 'country') {
-        $items[$element]['options'] = getoptions_country();
-        $items[$element]['defaultvalue'] = get_config('country') ? get_config('country') : 'nz';
+        $countries = getoptions_country();
+        $items[$element]['options'] = array('' => get_string('nocountryselected')) + $countries;
+        $items[$element]['defaultvalue'] = get_config('country');
     }
 
     if (get_helpfile_location('artefact', 'internal', 'profileform', $element)) {

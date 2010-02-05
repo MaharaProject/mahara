@@ -38,11 +38,13 @@ require_once('searchlib.php');
 define('TITLE', get_string('siteoptions', 'admin'));
 
 $langoptions = get_languages();
-$themeoptions = get_themes();
+$themeoptions = get_all_themes();
 $yesno = array(true  => get_string('yes'),
                false => get_string('no'));
 
 $searchpluginoptions = get_search_plugins();
+
+$countries = getoptions_country();
 
 $siteoptionform = array(
     'name'       => 'siteoptions',
@@ -72,8 +74,8 @@ $siteoptionform = array(
             'type'         => 'select',
             'title'        => get_string('country', 'admin'),
             'description'  => get_string('sitecountrydescription', 'admin'),
-            'defaultvalue' => 'nz',
-            'options'      => getoptions_country(),
+            'defaultvalue' => get_config('country'),
+            'options'      => array('' => get_string('nocountryselected')) + $countries,
             'help'         => true,
         ),
         'theme' => array(
@@ -236,6 +238,18 @@ $siteoptionform = array(
             'defaultvalue' => get_config('tagssideblockmaxtags'),
             'rules'        => array('integer' => true, 'minvalue' => 0, 'maxvalue' => 1000),
         ),
+        'viewmicroheaders' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('smallviewheaders', 'admin'),
+            'description'  => get_string('smallviewheadersdescription', 'admin'),
+            'defaultvalue' => get_config('viewmicroheaders'),
+        ),
+        'userscanchooseviewthemes' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('userscanchooseviewthemes', 'admin'),
+            'description'  => get_string('userscanchooseviewthemesdescription', 'admin'),
+            'defaultvalue' => get_config('userscanchooseviewthemes'),
+        ),
     )
 );
 
@@ -260,7 +274,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'allowpublicviews', 'allowpublicprofiles', 'creategroups', 'createpublicgroups', 'searchplugin',
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
         'captchaonregisterform', 'captchaoncontactform', 'showselfsearchsideblock', 'showtagssideblock',
-        'tagssideblockmaxtags'
+        'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
     );
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');

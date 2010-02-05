@@ -296,6 +296,7 @@ $inlinejs .= ArtefactTypeResumeComposite::get_showhide_composite_js();
 
 $compositeforms = array();
 foreach (ArtefactTypeResumeComposite::get_composite_artefact_types() as $compositetype) {
+    $inlinejs .= call_static_method(generate_artefact_class_name($compositetype), 'get_composite_js');
     $inlinejs .= <<<EOF
 tableRenderers.{$compositetype} = new TableRenderer(
     '{$compositetype}list',
