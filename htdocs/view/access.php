@@ -346,10 +346,10 @@ function editaccess_submit(Pieform $form, $values) {
     if ($values['accesslist']) {
         $dateformat = get_string('strftimedatetimeshort');
         foreach ($values['accesslist'] as &$item) {
-            if (isset($item['startdate'])) {
+            if ($item['startdate']) {
                 $item['startdate'] = ptimetotime(strptime($item['startdate'], $dateformat));
             }
-            if (isset($item['stopdate'])) {
+            if ($item['stopdate']) {
                 $item['stopdate'] = ptimetotime(strptime($item['stopdate'], $dateformat));
             }
         }
