@@ -2345,7 +2345,13 @@ function cron_site_data_daily() {
     if ($fh = @fopen(get_config('dataroot') . 'views.log', 'r')) {
 
         // Read the new stuff out of the file
-        $latest = get_field_sql("SELECT MAX(ctime) FROM {view_visit}");
+        $latest = get_field('view_visit', 'MAX(ctime)');
+        if (empty($latest)) {
+            $latest = get_config('viewloglatest');
+        }
+        else {
+            set_config('viewloglatest', $latest);
+        }
         $visits = array();
         while (!feof($fh)) {
             $line = fgets($fh, 1024);
