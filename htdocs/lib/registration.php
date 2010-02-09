@@ -258,6 +258,20 @@ function user_statistics($limit, $offset) {
         get_string('Total'),
     );
     $data['table'] = user_stats_table($limit, $offset);
+    $maxfriends = get_records_sql_array("
+        SELECT u.id, SUM(f.friends) AS friends
+        FROM {usr} u INNER JOIN (
+            SELECT DISTINCT(usr1) AS id, COUNT(usr1) AS friends
+            FROM {usr_friend}
+            GROUP BY usr1
+            UNION SELECT DISTINCT(usr2) AS id, COUNT(usr2) AS friends
+            FROM {usr_friend}
+            GROUP BY usr2
+        ) f ON u.id = f.id
+        GROUP BY u.id
+        ORDER BY friends DESC
+        LIMIT 1");
+    $data['maxfriends'] = $maxfriends[0];
     return $data;
 }
 
