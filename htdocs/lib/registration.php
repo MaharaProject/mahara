@@ -270,7 +270,7 @@ function user_statistics($limit, $offset) {
         ) f ON u.id = f.id
         GROUP BY u.id
         ORDER BY friends DESC
-        LIMIT 1");
+        LIMIT 1", array());
     $data['maxfriends'] = $maxfriends[0];
     return $data;
 }
