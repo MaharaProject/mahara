@@ -54,7 +54,7 @@ case 'views':
     break;
 case 'users':
 default:
-    $data = user_statistics($limit, $offset);
+    $data = user_statistics($limit, $offset, $sitedata);
 }
 
 $js = <<< EOF

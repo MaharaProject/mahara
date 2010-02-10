@@ -230,12 +230,14 @@ function site_statistics($full=false) {
             FROM {group_member} m JOIN {group} g ON g.id = m.group
             WHERE g.deleted = 0
         ");
-        $data['groupmemberaverage'] = get_string('groupmemberaverage', 'admin', $memberships/$data['users']);
-        $data['viewsperuser'] = get_string('viewsperuser', 'admin', get_field_sql("
+        $data['groupmemberaverage'] = $memberships/$data['users'];
+        $data['strgroupmemberaverage'] = get_string('groupmemberaverage', 'admin', $data['groupmemberaverage']);
+        $data['viewsperuser'] = get_field_sql("
             SELECT (0.0 + COUNT(id)) / COUNT(DISTINCT owner)
             FROM {view}
             WHERE NOT owner IS NULL AND owner > 0
-        "));
+        ");
+        $data['strviewsperuser'] = get_string('viewsperuser', 'admin', $data['viewsperuser']);
     }
 
     $data['name']        = get_config('sitename');
@@ -249,7 +251,7 @@ function site_statistics($full=false) {
     return($data);
 }
 
-function user_statistics($limit, $offset) {
+function user_statistics($limit, $offset, &$sitedata) {
     $data = array();
     $data['tableheadings'] = array(
         get_string('date'),
@@ -259,7 +261,7 @@ function user_statistics($limit, $offset) {
     );
     $data['table'] = user_stats_table($limit, $offset);
     $maxfriends = get_records_sql_array("
-        SELECT u.id, SUM(f.friends) AS friends
+        SELECT u.id, u.firstname, u.lastname, u.preferredname, SUM(f.friends) AS friends
         FROM {usr} u INNER JOIN (
             SELECT DISTINCT(usr1) AS id, COUNT(usr1) AS friends
             FROM {usr_friend}
@@ -268,10 +270,71 @@ function user_statistics($limit, $offset) {
             FROM {usr_friend}
             GROUP BY usr2
         ) f ON u.id = f.id
-        GROUP BY u.id
+        GROUP BY u.id, u.firstname, u.lastname, u.preferredname
         ORDER BY friends DESC
         LIMIT 1", array());
-    $data['maxfriends'] = $maxfriends[0];
+    $maxfriends = $maxfriends[0];
+    $meanfriends = 2 * count_records('usr_friend') / $sitedata['users'];
+    $data['strmaxfriends'] = get_string(
+        'statsmaxfriends',
+        'admin',
+        $meanfriends,
+        get_config('wwwroot') . 'user/view.php?id=' . $maxfriends->id,
+        display_name($maxfriends, null, true),
+        $maxfriends->friends
+    );
+    $maxviews = get_records_sql_array("
+        SELECT u.id, u.firstname, u.lastname, u.preferredname, COUNT(v.*) AS views
+        FROM {usr} u JOIN {view} v ON u.id = v.owner
+        WHERE owner <> 0
+        GROUP BY u.id, u.firstname, u.lastname, u.preferredname
+        ORDER BY views DESC
+        LIMIT 1", array());
+    $maxviews = $maxviews[0];
+    $data['strmaxviews'] = get_string(
+        'statsmaxviews',
+        'admin',
+        $sitedata['viewsperuser'],
+        get_config('wwwroot') . 'user/view.php?id=' . $maxviews->id,
+        display_name($maxviews, null, true),
+        $maxviews->views
+    );
+    $maxgroups = get_records_sql_array("
+        SELECT u.id, u.firstname, u.lastname, u.preferredname, COUNT(m.group) AS groups
+        FROM {usr} u JOIN {group_member} m ON u.id = m.member JOIN {group} g ON m.group = g.id
+        WHERE g.deleted = 0
+        GROUP BY u.id, u.firstname, u.lastname, u.preferredname
+        ORDER BY groups DESC
+        LIMIT 1", array());
+    $maxgroups = $maxgroups[0];
+    $data['strmaxgroups'] = get_string(
+        'statsmaxgroups',
+        'admin',
+        $sitedata['groupmemberaverage'],
+        get_config('wwwroot') . 'user/view.php?id=' . $maxgroups->id,
+        display_name($maxgroups, null, true),
+        $maxgroups->groups
+    );
+    $maxquotaused = get_records_sql_array("
+        SELECT id, firstname, lastname, preferredname, quotaused
+        FROM {usr}
+        WHERE deleted = 0 AND id > 0
+        ORDER BY quotaused DESC
+        LIMIT 1", array());
+    $maxquotaused = $maxquotaused[0];
+    $data['strmaxquotaused'] = get_string(
+        'statsmaxquotaused',
+        'admin',
+        display_size(get_field('usr', 'AVG(quotaused)', 'deleted', 0)),
+        get_config('wwwroot') . 'user/view.php?id=' . $maxquotaused->id,
+        display_name($maxquotaused, null, true),
+        display_size($maxquotaused->quotaused)
+    );
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $data);
+    $data['summary'] = $smarty->fetch('admin/userstatssummary.tpl');
+
     return $data;
 }
 

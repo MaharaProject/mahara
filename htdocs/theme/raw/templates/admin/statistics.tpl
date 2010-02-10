@@ -12,12 +12,15 @@
 </ul>
 
 <div class="subpage rel">
-  <div id="statistics_table_container">
-    <table id="statistics_table" class="fullwidth listing">
+  <div class="statistics-subpage-column fl">
+  {$subpagedata.summary}
+  </div>
+  <div id="statistics_table_container" class="statistics-subpage-column fr">
+    <table id="statistics_table" class="fullwidth">
       <thead>
         <tr>
 {foreach from=$subpagedata.tableheadings item=heading}
-          <th>{$heading}</th>
+          <th>{$heading|escape}</th>
 {/foreach}
         <tr>
       </thead>
@@ -25,8 +28,9 @@
 {$subpagedata.table.tablerows}
       </tbody>
     </table>
-  </div>
 {$subpagedata.table.pagination}
+  </div>
+  <div class="cb"></div>
 </div>
 {/if}
 

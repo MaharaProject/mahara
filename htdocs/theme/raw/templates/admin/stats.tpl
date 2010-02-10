@@ -16,11 +16,11 @@ addLoadEvent(function () {literal}{{/literal}
     {/if}
     {if $sitedata.groups}
     <p><strong>{str tag=groups}:</strong> {$sitedata.groups}{if $sitedata.rank.groups} ({str tag=Rank section=admin}: $sitedata.rank.groups}){/if}</p>
-    <p>&nbsp;{$sitedata.groupmemberaverage}</p>
+    <p>&nbsp;{$sitedata.strgroupmemberaverage}</p>
     {/if}
     {if $sitedata.views}
     <p><strong>{str tag=views}:</strong> {$sitedata.views}{if $sitedata.rank.views} ({str tag=Rank section=admin}: $sitedata.rank.views}){/if}</p>
-    <p>&nbsp;{$sitedata.viewsperuser}</p>
+    <p>&nbsp;{$sitedata.strviewsperuser}</p>
     {/if}
     <p><strong>{str tag=databasesize section=admin}:</strong> {$sitedata.dbsize|display_size}</p>
     {if $sitedata.diskusage}

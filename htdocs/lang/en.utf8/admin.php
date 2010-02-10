@@ -161,6 +161,11 @@ $string['Cron'] = 'Cron';
 $string['runningnormally'] = 'Running normally';
 $string['cronnotrunning'] = 'Cron is not running.<br>See the <a href="http://wiki.mahara.org/System_Administrator\'s_Guide/Installing_Mahara">installation guide</a> for instructions on how to set it up.';
 $string['Loggedin'] = 'Logged in';
+$string['youraverageuser'] = 'Your Average User...';
+$string['statsmaxfriends'] = 'Has %1.1f friends (most is <a href="%s">%s</a> with %d)';
+$string['statsmaxviews'] = 'Has made %1.1f views (most is <a href="%s">%s</a> with %d)';
+$string['statsmaxgroups'] = 'Is in %1.1f groups (most is <a href="%s">%s</a> with %d)';
+$string['statsmaxquotaused'] = 'Has used about %s of disk quota (most is <a href="%s">%s</a> with %s)';
 
 // Site options
 $string['adminsonly'] = 'Administrators only';
