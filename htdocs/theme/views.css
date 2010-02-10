@@ -55,7 +55,6 @@
 }
 /* The panel that contains the blocktype icons */
 #blocktype-list {
-    overflow: hidden;
     min-height: 95px;
     padding: .5em .5em 1em .5em;
     font-size: .8em;
