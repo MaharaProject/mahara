@@ -2982,7 +2982,7 @@ function objection_form() {
     $form = array(
         'name'            => 'objection_form',
         'method'          => 'post',
-        'class'           => 'js-hidden',
+        'class'           => 'js-safe-hidden',
         'plugintype'      => 'core',
         'pluginname'      => 'view',
         'jsform'          => true,
