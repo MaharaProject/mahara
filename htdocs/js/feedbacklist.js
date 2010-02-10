@@ -4,11 +4,32 @@ function addFeedbackSuccess(form, data) {
     addElementClass('add_feedback_form', 'hidden');
     paginator.updateResults(data);
     $('add_feedback_form_message').value = '';
+    rewriteCancelButtons();
 }
 
 function objectionSuccess() {
     addElementClass('objection_form', 'hidden');
     $('objection_form_message').value = '';
+    rewriteCancelButtons();
+}
+
+function rewriteCancelButtons() {
+    if ($('cancel_add_feedback_form_submit')) {
+        disconnectAll('cancel_add_feedback_form_submit');
+        connect('cancel_add_feedback_form_submit', 'onclick', function (e) {
+            e.stop();
+            addElementClass('add_feedback_form', 'hidden');
+            return false;
+        });
+    }
+    if ($('cancel_objection_form_submit')) {
+        disconnectAll('cancel_objection_form_submit');
+        connect('cancel_objection_form_submit', 'onclick', function (e) {
+            e.stop();
+            addElementClass('objection_form', 'hidden');
+            return false;
+        });
+    }
 }
 
 addLoadEvent(function () {
@@ -36,11 +57,6 @@ addLoadEvent(function () {
                 return false;
             });
         }
-        connect('cancel_add_feedback_form_submit', 'onclick', function (e) {
-            e.stop();
-            addElementClass('add_feedback_form', 'hidden');
-            return false;
-        });
     }
 
     if ($('objection_form')) {
@@ -55,12 +71,9 @@ addLoadEvent(function () {
                 return false;
             });
         }
-        connect('cancel_objection_form_submit', 'onclick', function (e) {
-            e.stop();
-            addElementClass('objection_form', 'hidden');
-            return false;
-        });
     }
+
+    rewriteCancelButtons();
 
     if ($('toggle_watchlist_link')) {
         connect('toggle_watchlist_link', 'onclick', function (e) {
