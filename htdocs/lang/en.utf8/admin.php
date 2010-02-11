@@ -166,6 +166,8 @@ $string['statsmaxfriends'] = 'Has %1.1f friends (most is <a href="%s">%s</a> wit
 $string['statsmaxviews'] = 'Has made %1.1f views (most is <a href="%s">%s</a> with %d)';
 $string['statsmaxgroups'] = 'Is in %1.1f groups (most is <a href="%s">%s</a> with %d)';
 $string['statsmaxquotaused'] = 'Has used about %s of disk quota (most is <a href="%s">%s</a> with %s)';
+$string['groupcountsbytype'] = 'Number of groups by Group Type';
+$string['groupcountsbyjointype'] = 'Number of groups by Access Type';
 
 // Site options
 $string['adminsonly'] = 'Administrators only';

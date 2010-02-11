@@ -442,6 +442,24 @@ function group_statistics($limit, $offset) {
         get_string('Posts', 'interaction.forum'),
     );
     $data['table'] = group_stats_table($limit, $offset);
+
+    $smarty = smarty_core();
+    $smarty->assign('grouptypecounts', get_records_sql_array("
+        SELECT grouptype, COUNT(id) AS groups
+        FROM {group}
+        WHERE deleted = 0
+        GROUP BY grouptype
+        ORDER BY groups DESC", array()
+    ));
+    $smarty->assign('jointypecounts', get_records_sql_array("
+        SELECT jointype, COUNT(id) AS groups
+        FROM {group}
+        WHERE deleted = 0
+        GROUP BY jointype
+        ORDER BY groups DESC", array()
+    ));
+    $data['summary'] = $smarty->fetch('admin/groupstatssummary.tpl');
+
     return $data;
 }
 
