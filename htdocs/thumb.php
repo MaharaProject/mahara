@@ -180,6 +180,11 @@ switch ($type) {
  * @returns string The URL of the image or FALSE if none was found
  */
 function gravatar_icon($email, $size, $earlyexpiry) {
+
+    if (!get_config('remoteavatars')) {
+        return false;
+    }
+
     $md5sum = md5(strtolower($email));
 
     $s = 100;
@@ -192,5 +197,3 @@ function gravatar_icon($email, $size, $earlyexpiry) {
     $notfound = get_config('wwwroot').'thumb.php?type=profileiconbyid' . ($earlyexpiry ? '&earlyexpiry=1' : '');
     return "$url&d=".urlencode($notfound);
 }
-
-?>
