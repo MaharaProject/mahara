@@ -12,10 +12,10 @@
 </ul>
 
 <div class="subpage rel">
-  <div class="statistics-subpage-column fl">
+  <div class="statistics-subpage-left-column fl">
   {$subpagedata.summary}
   </div>
-  <div id="statistics_table_container" class="statistics-subpage-column fr">
+  <div id="statistics_table_container" class="statistics-subpage-right-column fr">
     <table id="statistics_table" class="fullwidth">
       <thead>
         <tr>

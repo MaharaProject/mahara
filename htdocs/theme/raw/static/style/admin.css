@@ -172,8 +172,11 @@ input#register_register {
 #site-stats-graph {
   margin: 0 .3em 1em;
 }
-.statistics-subpage-column {
-  width: 49%;
+.statistics-subpage-left-column {
+  width: 40%;
+}
+.statistics-subpage-right-column {
+  width: 59%;
 }
 
 .admin-home-column {
