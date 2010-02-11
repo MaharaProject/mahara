@@ -1532,6 +1532,7 @@ form#search input.text {
 	position: relative;
 	top: -30px;
 	left: -15px;
+        width: 50%;
 }
 
 /* Settings > Institution membership */
