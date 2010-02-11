@@ -1354,8 +1354,9 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2010021600) {
+        set_remoteavatars_default();
+    }
+
     return $status;
-
 }
-
-?>
