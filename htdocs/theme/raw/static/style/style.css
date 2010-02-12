@@ -356,6 +356,9 @@ input[type=file] {
 input.text.required {
 	border: 1px solid #e98a88;
 }
+textarea {
+    resize: none;
+}
 
 /* error */
 input.error, select.error {
