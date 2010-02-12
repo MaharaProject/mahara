@@ -857,8 +857,16 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 throw new QuotaExceededException(get_string('uploadexceedsquota', 'artefact.file'));
             }
         }
-        $data->size         = $size;
-        $data->filetype     = $um->file['type'];
+        $data->size = $size;
+
+        // the browser wasn't sure, so use mime_content_type to guess
+        if($um->file['type'] == 'application/octet-stream') {
+            $data->filetype = mime_content_type($um->file['tmp_name']);
+        }
+        else {
+            $data->filetype = $um->file['type'];
+        }
+
         $data->oldextension = $um->original_filename_extension();
         $f = self::new_file($um->file['tmp_name'], $data);
         $f->commit();
