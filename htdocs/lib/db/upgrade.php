@@ -1348,6 +1348,12 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2010021500) {
+        if ($data = check_upgrades('blocktype.recentforumposts')) {
+            upgrade_plugin($data);
+        }
+    }
+
     return $status;
 
 }
