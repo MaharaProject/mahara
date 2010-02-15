@@ -268,7 +268,7 @@ function ptimetotime($ptime) {
 }
 
 function editaccess_validate(Pieform $form, $values) {
-    global $institution, $group;
+    global $SESSION, $institution, $group;
     if ($institution && $values['copynewuser'] && !$values['template']) {
         $form->set_error('copynewuser', get_string('viewscopiedfornewusersmustbecopyable', 'view'));
     }
@@ -295,21 +295,24 @@ function editaccess_validate(Pieform $form, $values) {
                 $item['startdate'] = null;
             }
             else if (!$item['startdate'] = strptime($item['startdate'], $dateformat)) {
-                $form->set_error('accesslist', get_string('unrecogniseddateformat', 'view'));
+                $SESSION->add_error_msg(get_string('unrecogniseddateformat', 'view'));
+                $form->set_error('accesslist', '');
                 break;
             }
             if (empty($item['stopdate'])) {
                 $item['stopdate'] = null;
             }
             else if (!$item['stopdate'] = strptime($item['stopdate'], $dateformat)) {
-                $form->set_error('accesslist', get_string('invaliddate', 'view'));
+                $SESSION->add_error_msg(get_string('unrecogniseddateformat', 'view'));
+                $form->set_error('accesslist', '');
                 break;
             }
             if ($item['type'] == 'loggedin' && !$item['startdate'] && !$item['stopdate']) {
                 $loggedinaccess = true;
             }
             if ($item['startdate'] && $item['stopdate'] && ptimetotime($item['startdate']) > ptimetotime($item['stopdate'])) {
-                $form->set_error('accesslist', get_string('startdatemustbebeforestopdate', 'view'));
+                $SESSION->add_error_msg(get_string('startdatemustbebeforestopdate', 'view'));
+                $form->set_error('accesslist', '');
                 break;
             }
         }
@@ -317,7 +320,8 @@ function editaccess_validate(Pieform $form, $values) {
 
     // Must have logged in user access for copy new user/group settings.
     if (($createforgroup || ($institution && $values['copynewuser'])) && !$loggedinaccess) {
-        $form->set_error('accesslist', get_string('copynewusergroupneedsloggedinaccess', 'view'));
+        $SESSION->add_error_msg(get_string('copynewusergroupneedsloggedinaccess', 'view'));
+        $form->set_error('accesslist', '');
     }
 }
 

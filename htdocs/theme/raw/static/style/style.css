@@ -761,6 +761,13 @@ div.error {
     background: #ffd3d9 url(../images/failure.gif) no-repeat .5em;
     border: 1px solid #dd0221;
 }
+#editaccess div.error {
+    color: #474220;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
 #messages .info {
     color: #1666a9;
     background: #d2ebff;
