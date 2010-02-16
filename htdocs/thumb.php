@@ -38,6 +38,7 @@ switch ($type) {
     case 'profileicon':
         $id = param_integer('id', 0);
         $size = get_imagesize_parameters();
+        $useremail = null;
 
         if ($id) {
             if ($type == 'profileicon') {
@@ -51,6 +52,7 @@ switch ($type) {
                     $mimetype = $data->filetype;
                 }
                 else {
+                    $useremail = get_field('usr', 'email', 'id', $id);
                     $id = null;
                 }
             }
@@ -82,6 +84,11 @@ switch ($type) {
                     exit;
                 }
             }
+        }
+
+        // Look for an appropriate image on gravatar.com
+        if ($useremail and $gravatarurl = gravatar_icon($useremail, '', $size)) {
+            redirect($gravatarurl);
         }
 
         // We couldn't find an image for this user. Attempt to use the 'no user 
@@ -157,6 +164,48 @@ switch ($type) {
         }
         readfile($THEME->get_path('images/no_thumbnail.png'));
         break;
+}
+
+/**
+ * Return a Gravatar URL if one exists for the given user.
+ *
+ * @param string $email    Email address of the user
+ * @param object $size     Maximum size of the image
+ *
+ * @returns string The URL of the image or FALSE if none was found
+ */
+function gravatar_icon($email, $size=null) {
+    $md5sum = md5(strtolower($email));
+
+    $s = 100;
+    $newsize = image_get_new_dimensions($s, $s, $size);
+    if ($newsize) {
+        $s = min($newsize['w'], $newsize['h']);
+    }
+
+    $url = "http://www.gravatar.com/avatar/{$md5sum}.jpg?r=g&s=$s";
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, "$url&d=404");
+    curl_setopt($ch, CURLOPT_REFERER, ''); // for privacy
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mahara ' . get_config('release'));
+
+    // Only return the status code
+    curl_setopt($ch, CURLOPT_FAILONERROR, true);
+    curl_setopt($ch, CURLOPT_HEADER, false);
+    curl_setopt($ch, CURLOPT_NOBODY, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    // Set some aggressive timeouts
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_LOW_SPEED_TIME, 10);
+
+    if (false === curl_exec($ch)) {
+        return false;
+    }
+    else {
+        return $url;
+    }
 }
 
 ?>
