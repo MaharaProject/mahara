@@ -224,6 +224,7 @@ abstract class PluginExport extends Plugin {
 
                 // Some artefacts are not inside the view, but still need to be exported with it
                 $tmpartefacts = array_unique(array_merge($tmpartefacts, $this->get_view_extra_artefacts()));
+                $tmpartefacts = artefact_get_descendants($tmpartefacts);
             }
             if ($artefacts == self::EXPORT_ARTEFACTS_FOR_VIEWS) {
                 $this->artefactexportmode = $artefacts;
