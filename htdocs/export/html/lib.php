@@ -562,6 +562,7 @@ class HtmlExportOutputFilter {
             $page = ($page == 1) ? 'index' : $page;
             return '<a href="' . $this->basepath . '/files/blog/' . PluginExportHtml::text_to_path($artefact->get('title')) . '/' . $page . '.html">' . $matches[5] . '</a>';
         case 'file':
+        case 'folder':
         case 'image':
         case 'archive':
             $folderpath = $this->get_folder_path_for_file($artefact);
@@ -660,10 +661,10 @@ class HtmlExportOutputFilter {
      *
      * The path is pre-sanitised so it can be used when generating the export
      *
-     * @param ArtefactTypeFileBase $file The file to get the folder path for
+     * @param  $file The file or folder to get the folder path for
      * @return string
      */
-    private function get_folder_path_for_file(ArtefactTypeFileBase $file) {
+    private function get_folder_path_for_file($file) {
         if ($this->folderdata === null) {
             $this->folderdata = get_records_select_assoc('artefact', "artefacttype = 'folder' AND owner = ?", array($file->get('owner')));
             if ($this->folderdata) {
