@@ -519,6 +519,7 @@ class HtmlExportOutputFilter {
         );
 
         // Thumbnails
+        require_once('file.php');
         $html = preg_replace_callback(
             '#(' . preg_quote(get_config('wwwroot')) . ')?/?thumb\.php\?type=([a-z]+)((&amp;[a-z]+=[x0-9]+)+)*#',
             array($this, 'replace_thumbnail_link'),
