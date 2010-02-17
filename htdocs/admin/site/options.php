@@ -196,7 +196,7 @@ $siteoptionform = array(
             'type'         => 'expiry',
             'title'        => get_string('institutionexpirynotification', 'admin'),
             'description'  => get_string('institutionexpirynotificationdescription', 'admin'),
-            'defaultvalue' => is_null(get_config('institutionexpirynotification')) ? '2592000' : get_config('institutionexpirynotification'),
+            'defaultvalue' => get_config('institutionexpirynotification'),
             'help'         => true,
         ),
         'institutionautosuspend' => array(
