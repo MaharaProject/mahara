@@ -168,6 +168,7 @@ $string['statsmaxgroups'] = 'Is in %1.1f groups (most is <a href="%s">%s</a> wit
 $string['statsmaxquotaused'] = 'Has used about %s of disk quota (most is <a href="%s">%s</a> with %s)';
 $string['groupcountsbytype'] = 'Number of groups by Group Type';
 $string['groupcountsbyjointype'] = 'Number of groups by Access Type';
+$string['blockcountsbytype'] = 'Most frequently used blocks in Portfolio Views:';
 
 // Site options
 $string['adminsonly'] = 'Administrators only';

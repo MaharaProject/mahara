@@ -542,6 +542,24 @@ function view_statistics($limit, $offset) {
         get_string('feedback', 'view'),
     );
     $data['table'] = view_stats_table($limit, $offset);
+
+    $smarty = smarty_core();
+    $maxblocktypes = 5;
+    $smarty->assign('blocktypecounts', get_records_sql_array("
+        SELECT
+            b.blocktype,
+            CASE WHEN bi.artefactplugin IS NULL THEN b.blocktype
+                ELSE bi.artefactplugin || '/' || b.blocktype END AS langsection,
+            COUNT(b.id) AS blocks
+        FROM {block_instance} b
+        JOIN {blocktype_installed} bi ON (b.blocktype = bi.name)
+        JOIN {view} v ON (b.view = v.id AND v.type = 'portfolio')
+        GROUP BY b.blocktype, langsection
+        ORDER BY blocks DESC",
+        array(), 0, $maxblocktypes
+    ));
+    $data['summary'] = $smarty->fetch('admin/viewstatssummary.tpl');
+
     return $data;
 }
 
