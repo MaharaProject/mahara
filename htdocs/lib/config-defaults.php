@@ -180,6 +180,7 @@ $cfg->pathtounzip = '/usr/bin/unzip';
 $cfg->pathtozip   = '/usr/bin/zip';
 $cfg->ziprecursearg = '-r';
 $cfg->unzipdirarg = '-d';
+$cfg->unziplistarg = '-l';
 // some shared hosts have restrictions on where unzip can be used
 // dataroot is often not allowed; but /tmp is
 // Note that if there is more than one mahara on this host using this setting

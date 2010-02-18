@@ -328,6 +328,29 @@ $string['uploadcsvsomeuserscouldnotbeemailed'] = 'Some users could not be e-mail
 $string['uploadcsvusersaddedsuccessfully'] = 'The users in the file have been added successfully';
 $string['uploadcsvfailedusersexceedmaxallowed'] = 'No users have been added because there are too many users in your file.  The number of users in the institution would have exceeded the maximum number allowed.';
 
+// Bulk leap2a import
+$string['bulkleap2aimport'] = 'Import users from LEAP2A files';
+$string['bulkleap2aimportdescription'] = '<p>You can import users in bulk from a collection of LEAP2A files on your server.  You must specify a directory on the filesystem which contains all the LEAP2A zip files, and a single CSV file called import.csv, mapping usernames to filenames.</p>
+<p>import.csv will look something like this:</p>
+<pre>
+&nbsp;&nbsp;bob,mahara-export-leap-user8-1265165366.zip<br>
+&nbsp;&nbsp;nigel,mahara-export-leap-user1-1266458159.zip
+</pre>
+<p>where mahara-export-leap-user8-1265165366.zip and mahara-export-leap-user1-1266458159.zip are files in the same directory as import.csv.</p>
+<p>If you are importing a lot of users, please be patient.  The import process can take a long time.</p>';
+$string['Directory'] = 'Directory';
+$string['bulkleap2aimportdirdescription'] = 'The directory on your server containing import.csv and your LEAP2A files';
+$string['importednuserssuccessfully'] = 'Imported %d of %d users successfully';
+$string['Import'] = 'Import';
+$string['bulkimportdirdoesntexist'] = 'The directory %s does not exist';
+$string['unabletoreadbulkimportdir'] = 'The directory %s is unreadable';
+$string['unabletoreadcsvfile'] = 'Unable to read csv file %s';
+$string['importfilenotreadable'] = 'Unable to read LEAP2A file %s';
+$string['importfileisnotazipfile'] = 'Import file %s was not detected as a zip file';
+$string['unzipfailed'] = 'Failed to unzip the LEAP2A file %s. See the error log for more information.';
+$string['importfailedfornusers'] = 'Import failed for %d of %d users';
+
+
 // Admin Users
 $string['adminuserspagedescription'] = '<p>Here you can choose which users are administrators for the site. The current administrators are listed on the right, and potential administrators are on the left.</p><p>The system must have at least one administrator.</p>';
 $string['institutionadminuserspagedescription'] = 'Here you can choose which users are administrators for the institution. The current administrators are listed on the right, and potential administrators are on the left.';
