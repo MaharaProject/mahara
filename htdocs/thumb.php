@@ -45,20 +45,21 @@ switch ($type) {
             if ($type == 'profileicon') {
                 // Convert ID of user to the ID of a profileicon
                 $data = get_record_sql('
-                    SELECT u.profileicon, f.filetype
-                    FROM {usr} u INNER JOIN {artefact_file_files} f ON u.profileicon = f.artefact
+                    SELECT u.profileicon, u.email, f.filetype
+                    FROM {usr} u LEFT JOIN {artefact_file_files} f ON u.profileicon = f.artefact
                     WHERE u.id = ?', array($id));
-                if ($data) {
+                if (!empty($data->profileicon)) {
                     $id = $data->profileicon;
                     $mimetype = $data->filetype;
                 }
                 else {
-                    // Get email address for gravatar icon
-                    $useremail = get_field('usr', 'email', 'id', $id);
-                    $notfound = get_config('wwwroot').'thumb.php?type=profileiconbyid';
-                    foreach ($_GET as $k => $v) {
-                        if ($k != 'id' && $k != 'type') {
-                            $notfound .= '&' . $k . '=' . $v;
+                    if ($useremail = $data->email) {
+                        // We can use the email address for gravatar icon
+                        $notfound = get_config('wwwroot').'thumb.php?type=profileiconbyid';
+                        foreach ($_GET as $k => $v) {
+                            if ($k != 'id' && $k != 'type') {
+                                $notfound .= '&' . $k . '=' . $v;
+                            }
                         }
                     }
                     $id = null;
