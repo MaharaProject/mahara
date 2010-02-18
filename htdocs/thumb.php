@@ -53,7 +53,14 @@ switch ($type) {
                     $mimetype = $data->filetype;
                 }
                 else {
+                    // Get email address for gravatar icon
                     $useremail = get_field('usr', 'email', 'id', $id);
+                    $notfound = get_config('wwwroot').'thumb.php?type=profileiconbyid';
+                    foreach ($_GET as $k => $v) {
+                        if ($k != 'id' && $k != 'type') {
+                            $notfound .= '&' . $k . '=' . $v;
+                        }
+                    }
                     $id = null;
                 }
             }
@@ -88,7 +95,7 @@ switch ($type) {
         }
 
         // Look for an appropriate image on gravatar.com
-        if ($useremail and $gravatarurl = gravatar_icon($useremail, $size, $earlyexpiry)) {
+        if ($useremail and $gravatarurl = gravatar_icon($useremail, $size, $notfound)) {
             redirect($gravatarurl);
         }
 
@@ -175,12 +182,11 @@ switch ($type) {
  *
  * @param string  $email         Email address of the user
  * @param object  $size          Maximum size of the image
- * @param boolean $earlyexpiry
+ * @param boolean $notfound
  *
  * @returns string The URL of the image or FALSE if none was found
  */
-function gravatar_icon($email, $size, $earlyexpiry) {
-
+function gravatar_icon($email, $size, $notfound) {
     if (!get_config('remoteavatars')) {
         return false;
     }
@@ -193,7 +199,5 @@ function gravatar_icon($email, $size, $earlyexpiry) {
         $s = min($newsize['w'], $newsize['h']);
     }
 
-    $url = "http://www.gravatar.com/avatar/{$md5sum}.jpg?r=g&s=$s";
-    $notfound = get_config('wwwroot').'thumb.php?type=profileiconbyid' . ($earlyexpiry ? '&earlyexpiry=1' : '');
-    return "$url&d=".urlencode($notfound);
+    return "http://www.gravatar.com/avatar/{$md5sum}.jpg?r=g&s=$s&d=" . urlencode($notfound);
 }
