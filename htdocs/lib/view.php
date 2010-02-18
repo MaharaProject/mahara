@@ -1692,6 +1692,16 @@ class View {
             $col++;
         }
 
+        if ($viewdata['type'] == 'profile') {
+            $view->set_access(array(
+                array(
+                    'type'      => 'loggedin',
+                    'startdate' => null,
+                    'stopdate'  => null,
+                ),
+            ));
+        }
+
         return $view;
     }
 
