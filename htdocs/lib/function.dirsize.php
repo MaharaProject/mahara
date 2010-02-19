@@ -6,6 +6,8 @@
  * @version     1.2.0
  * @link        http://aidanlister.com/repos/v/function.dirsize.php
  * @param       string   $directory    Path to directory
+ * @copyright   Resides in the Public Domain, you are free to modify,
+ *              distribute or resell this code however you wish.
  */
 function dirsize($path)
 {
