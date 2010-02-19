@@ -1,4 +1,4 @@
-<a name="post{$post->id}"></a>
+{if $post->id}<a name="post{$post->id}"></a>{/if}
 
 
 <table class="forumpost fullwidth">
@@ -13,7 +13,7 @@
       <div class="author">
          <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=40&amp;id={$post->poster}" alt="" class="center">
          <p class="poster"><a href="{$WWWROOT}user/view.php?id={$post->poster}"{if in_array($post->poster, $groupadmins)} class="groupadmin"{elseif $post->moderator} class="moderator"{/if}>{$post->poster|display_name|escape}</a></p>
-         <p class="postcount">{$post->postcount}</p>
+         {if $post->postcount}<p class="postcount">{$post->postcount}</p>{/if}
       </div>
     </td>
 	<td class="postedits">{$post->body|clean_html}
