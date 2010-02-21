@@ -22,7 +22,7 @@
             </a></li>
 {/if}
 {if $sbdata.groups}
-            <li id="groups"><a href="{$WWWROOT}group/mygroups.php">{str tag="groups"}:</a>
+            <li id="groups"><a href="{$WWWROOT}group/mygroups.php">{str tag="mygroups"}:</a>
                 <ul>
 {foreach from=$sbdata.groups item=group}
                     <li><a href="{$WWWROOT}group/view.php?id={$group->id}">{$group->name|escape}</a>{if $group->role == 'admin'} ({str tag=Admin section=group}){/if}</li>
