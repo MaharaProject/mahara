@@ -39,6 +39,7 @@ $string['title']                  = 'View Title';
 $string['description']            = 'View Description';
 $string['startdate']              = 'Access Start Date/Time';
 $string['stopdate']               = 'Access End Date/Time';
+$string['stopdatecannotbeinpast'] = 'The stop date cannot be in the past';
 $string['startdatemustbebeforestopdate'] = 'The start date must be before the stop date';
 $string['unrecogniseddateformat'] = 'Unrecognised date format';
 $string['ownerformat']            = 'Name display format';

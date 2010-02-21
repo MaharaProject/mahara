@@ -310,6 +310,12 @@ function editaccess_validate(Pieform $form, $values) {
             if ($item['type'] == 'loggedin' && !$item['startdate'] && !$item['stopdate']) {
                 $loggedinaccess = true;
             }
+            $now = strptime(date('Y/m/d H:i'), $dateformat);
+            if ($item['stopdate'] && ptimetotime($now) > ptimetotime($item['stopdate'])) {
+                $SESSION->add_error_msg(get_string('stopdatecannotbeinpast', 'view'));
+                $form->set_error('accesslist', '');
+                break;
+            }
             if ($item['startdate'] && $item['stopdate'] && ptimetotime($item['startdate']) > ptimetotime($item['stopdate'])) {
                 $SESSION->add_error_msg(get_string('startdatemustbebeforestopdate', 'view'));
                 $form->set_error('accesslist', '');
