@@ -11,7 +11,11 @@
             <div class="message">
               <h4>{$suspended|escape}</h4>
               <div id="suspendedhelp">
+                {if $USER->get('admin')}
                 <p class="description">{str tag="unsuspendinstitutiondescription_top" section="admin"}</p>
+                {else}
+                <p class="description">{str tag="unsuspendinstitutiondescription_top_instadmin" section="admin"}</p>
+                {/if}
               </div>
               <div class="center">{$suspendform_top}</div>
             </div>

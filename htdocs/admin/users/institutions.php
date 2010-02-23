@@ -525,83 +525,85 @@ function institution_cancel_submit() {
     redirect('/admin/users/institutions.php');
 }
 
-if ($USER->get('admin') && $institution && $institution != 'mahara') {
-    function institution_suspend_submit(Pieform $form, $values) {
-        global $SESSION, $USER;
-        if (!$USER->get('admin')) {
-            $SESSION->add_error_msg(get_string('errorwhilesuspending', 'admin'));
-        }
-        else {
-            set_field('institution', 'suspended', 1, 'name', $values['i']);
-            $SESSION->add_ok_msg(get_string('institutionsuspended', 'admin'));
-        }
-        redirect('/admin/users/institutions.php?i=' . $values['i']);
-    }
-
-    function institution_unsuspend_submit(Pieform $form, $values) {
-        global $SESSION, $USER;
-        if (!$USER->get('admin')) {
-            $SESSION->add_error_msg(get_string('errorwhileunsuspending', 'admin'));
-        }
-        else {
-            set_field('institution', 'suspended', 0, 'name', $values['i']);
-            $SESSION->add_ok_msg(get_string('institutionunsuspended', 'admin'));
-        }
-        redirect('/admin/users/institutions.php?i=' . $values['i']);
-    }
-
+if ($institution && $institution != 'mahara') {
     $_institution = get_record('institution', 'name', $institution);
-    // Suspension controls
     $suspended = $_institution->suspended;
-    if (empty($suspended)) {
-        $suspendformdef = array(
-            'name'       => 'institution_suspend',
-            'plugintype' => 'core',
-            'pluginname' => 'admin',
-            'elements'   => array(
-                'i' => array(
-                     'type'    => 'hidden',
-                     'value'   => $institution,
-                ),
-                'submit' => array(
-                    'type'        => 'submit',
-                    'value'       => get_string('suspendinstitution','admin'),
-                    'description' => get_string('suspendinstitutiondescription','admin'),
-                ),
-            )
-        );
+    if ($USER->get('admin')) {
+        function institution_suspend_submit(Pieform $form, $values) {
+            global $SESSION, $USER;
+            if (!$USER->get('admin')) {
+                $SESSION->add_error_msg(get_string('errorwhilesuspending', 'admin'));
+            }
+            else {
+                set_field('institution', 'suspended', 1, 'name', $values['i']);
+                $SESSION->add_ok_msg(get_string('institutionsuspended', 'admin'));
+            }
+            redirect('/admin/users/institutions.php?i=' . $values['i']);
+        }
 
-        $suspendform  = pieform($suspendformdef);
-    }
-    else {
-        $suspendformdef = array(
-            'name'       => 'institution_unsuspend',
-            'plugintype' => 'core',
-            'pluginname' => 'admin',
-            'elements'   => array(
-                'i' => array(
-                     'type'    => 'hidden',
-                     'value'   => $institution,
-                ),
-                'submit' => array(
-                    'type'        => 'submit',
-                    'value'       => get_string('unsuspendinstitution','admin'),
-                    'description' => get_string('unsuspendinstitutiondescription','admin'),
-                ),
-            )
-        );
-        $suspendform  = pieform($suspendformdef);
+        function institution_unsuspend_submit(Pieform $form, $values) {
+            global $SESSION, $USER;
+            if (!$USER->get('admin')) {
+                $SESSION->add_error_msg(get_string('errorwhileunsuspending', 'admin'));
+            }
+            else {
+                set_field('institution', 'suspended', 0, 'name', $values['i']);
+                $SESSION->add_ok_msg(get_string('institutionunsuspended', 'admin'));
+            }
+            redirect('/admin/users/institutions.php?i=' . $values['i']);
+        }
 
-        // Create a second forms for unsuspension to go in the suspend message.
-        // This keeps the HTML IDs unique
-        $suspendformdef['name'] = 'institution_unsuspend_top';
-        $suspendformdef['renderer'] = 'oneline';
-        $suspendformdef['successcallback'] = 'institution_unsuspend_submit';
-        $suspendform_top = pieform($suspendformdef);
-    }
-    $smarty->assign('suspendform', $suspendform);
-    if (isset($suspendform_top)) {
-        $smarty->assign('suspendform_top', $suspendform_top);
+        // Suspension controls
+        if (empty($suspended)) {
+            $suspendformdef = array(
+                'name'       => 'institution_suspend',
+                'plugintype' => 'core',
+                'pluginname' => 'admin',
+                'elements'   => array(
+                    'i' => array(
+                        'type'    => 'hidden',
+                        'value'   => $institution,
+                    ),
+                    'submit' => array(
+                        'type'        => 'submit',
+                        'value'       => get_string('suspendinstitution','admin'),
+                        'description' => get_string('suspendinstitutiondescription','admin'),
+                    ),
+                )
+            );
+
+            $suspendform  = pieform($suspendformdef);
+        }
+        else {
+            $suspendformdef = array(
+                'name'       => 'institution_unsuspend',
+                'plugintype' => 'core',
+                'pluginname' => 'admin',
+                'elements'   => array(
+                    'i' => array(
+                        'type'    => 'hidden',
+                        'value'   => $institution,
+                    ),
+                    'submit' => array(
+                        'type'        => 'submit',
+                        'value'       => get_string('unsuspendinstitution','admin'),
+                        'description' => get_string('unsuspendinstitutiondescription','admin'),
+                    ),
+                )
+            );
+            $suspendform  = pieform($suspendformdef);
+
+            // Create a second forms for unsuspension to go in the suspend message.
+            // This keeps the HTML IDs unique
+            $suspendformdef['name'] = 'institution_unsuspend_top';
+            $suspendformdef['renderer'] = 'oneline';
+            $suspendformdef['successcallback'] = 'institution_unsuspend_submit';
+            $suspendform_top = pieform($suspendformdef);
+        }
+        $smarty->assign('suspendform', $suspendform);
+        if (isset($suspendform_top)) {
+            $smarty->assign('suspendform_top', $suspendform_top);
+        }
     }
     if ($suspended) {
         $smarty->assign('suspended', get_string('suspendedinstitutionmessage', 'admin'));
