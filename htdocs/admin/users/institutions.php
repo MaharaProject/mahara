@@ -223,7 +223,7 @@ if ($institution || $add) {
             'help'   => true,
         ),
     );
-    if ($institution != 'mahara') {
+    if ($USER->get('admin') && $institution != 'mahara') {
        $elements['expiry'] = array(
             'type'         => 'date',
             'title'        => get_string('institutionexpiry', 'admin'),
@@ -525,7 +525,7 @@ function institution_cancel_submit() {
     redirect('/admin/users/institutions.php');
 }
 
-if ($institution && $institution != 'mahara') {
+if ($USER->get('admin') && $institution && $institution != 'mahara') {
     function institution_suspend_submit(Pieform $form, $values) {
         global $SESSION, $USER;
         if (!$USER->get('admin')) {
