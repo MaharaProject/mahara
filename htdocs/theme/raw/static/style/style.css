@@ -1705,4 +1705,8 @@ ul.viewlist li:first-child {
 }
 ul.viewlist li {
   margin: 0.75em 0 0;
+
+/* Feed icons */
+img.feedicon {
+    margin-left: 10px;
 }

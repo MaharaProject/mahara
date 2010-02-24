@@ -20,7 +20,7 @@
             <a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}&amp;returnto=view" class="btn-del">{str tag="delete"}</a>
         </div>
         {/if}
-        <div><a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}">{$topic->subject}</a></div>
+        <div><a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}">{$topic->subject}</a>{if $publicgroup}<a href="{$topic->feedlink}"><img class="feedicon" src="{theme_url filename='images/rss_small.gif'}"></a>{/if}</div>
         <div class="s">{$topic->body|str_shorten_html:50:true:false|safe}</div>
     </td>
     <td class="s">

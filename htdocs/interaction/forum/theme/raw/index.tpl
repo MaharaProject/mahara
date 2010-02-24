@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-<h2>{str tag="nameplural" section=interaction.forum}</h2>
+<h2>{str tag="nameplural" section=interaction.forum}{if $publicgroup}<a href="{$feedlink}"><img class="feedicon" src="{theme_url filename='images/rss.gif'}"></a>{/if}</h2>
 {if $admin}
 <div id="forumbtns" class="rbuttons">
 <a href="{$WWWROOT}interaction/edit.php?group={$groupid}&amp;plugin=forum" class="btn btn-add">{str tag="newforum" section=interaction.forum}</a>
@@ -23,7 +23,7 @@
             </div>
             {/if}
             <div class="nowrap">
-                <strong><a href="{$WWWROOT}interaction/forum/view.php?id={$forum->id}">{$forum->title}</a></strong>
+                <strong><a href="{$WWWROOT}interaction/forum/view.php?id={$forum->id}">{$forum->title}</a>{if $publicgroup}<a href="{$forum->feedlink}"><img class="feedicon" src="{theme_url filename='images/rss_small.gif'}"></a>{/if}</strong>
             </div>
             <div class="s">{$forum->description|str_shorten_html:1000:true|safe}</div>
             {if $forum->moderators}

@@ -86,6 +86,10 @@ if ($forums) {
    }
 }
 
+foreach($forums as $forum) {
+    $forum->feedlink = get_config('wwwroot') . 'interaction/forum/atom.php?type=f&id=' . $forum->id;
+}
+
 $i = 0;
 if ($forums && $membership) {
     foreach ($forums as $forum) {
@@ -125,8 +129,16 @@ if ($forums && $membership) {
     }
 }
 
-$smarty = smarty();
+$feedlink = get_config('wwwroot') . 'interaction/forum/atom.php?type=g&id=' . $group->id;
+$headers = array();
+if ($publicgroup) {
+    $headers[] ='<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '" />';
+}
+
+$smarty = smarty(array(), $headers, array(), array());
 $smarty->assign('groupid', $groupid);
+$smarty->assign('publicgroup', $group->public);
+$smarty->assign('feedlink', $feedlink);
 $smarty->assign('heading', $group->name);
 $smarty->assign('admin', $membership == 'admin');
 $smarty->assign('groupadmins', group_get_admin_ids($groupid));

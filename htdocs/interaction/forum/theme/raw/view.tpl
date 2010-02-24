@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-<h3>{$subheading}</h3>
+<h3>{$subheading}{if $publicgroup}<a href="{$feedlink}"><img class="feedicon" src="{theme_url filename='images/rss.gif'}"></a>{/if}</h3>
 <div id="forumbtns" class="rbuttons">
 	{if $admin}
 		<a href="{$WWWROOT}interaction/edit.php?id={$forum->id}" class="btn btn-editforum">{str tag="edittitle" section="interaction.forum"}</a>
@@ -28,10 +28,10 @@
         <th class="lastpost" width="25%">{str tag="lastpost" section="interaction.forum"}</th>
     </tr>
     {if $stickytopics}
-    	{include file="interaction:forum:topics.tpl" topics=$stickytopics moderator=$moderator forum=$forum sticky=true}
+	{include file="interaction:forum:topics.tpl" topics=$stickytopics moderator=$moderator forum=$forum publicgroup=$publicgroup sticky=true}
     {/if}
     {if $regulartopics}
-    	{include file="interaction:forum:topics.tpl" topics=$regulartopics moderator=$moderator forum=$forum sticky=false}
+	{include file="interaction:forum:topics.tpl" topics=$regulartopics moderator=$moderator forum=$forum publicgroup=$publicgroup sticky=false}
     {/if}
     </table>
     {if $regulartopics}
