@@ -27,6 +27,7 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
+define('BULKEXPORT', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('export', 'leap');
 require_once('pieforms/pieform.php');

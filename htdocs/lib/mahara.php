@@ -1512,6 +1512,11 @@ function pieform_template_dir($file, $pluginlocation='') {
  */
 function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null) {
     global $USER, $SESSION;
+
+    if (defined('BULKEXPORT')) {
+        return true;
+    }
+
     $now = time();
     $dbnow = db_format_timestamp($now);
 
