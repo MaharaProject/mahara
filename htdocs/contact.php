@@ -79,15 +79,6 @@ $elements = array(
     )
 );
 
-if (get_config('captchaoncontactform') && !$USER->is_logged_in()) {
-    $elements['captcha'] = array(
-        'type'  => 'captcha',
-        'title' => get_string('captchatitle'),
-        'description' => get_string('captchadescription'),
-        'rules' => array('required' => true)
-    );
-}
-
 $elements['userid'] = array(
     'type'  => 'hidden',
     'value' => $userid,
@@ -103,13 +94,6 @@ $contactform = pieform(array(
     'action'   => '',
     'elements' => $elements
 ));
-
-function contactus_validate(Pieform $form, $values) {
-    global $USER;
-    if (get_config('captchaoncontactform') && !$USER->is_logged_in() && !$values['captcha']) {
-        $form->set_error('captcha', get_string('captchaincorrect'));
-    }
-}
 
 function contactus_submit(Pieform $form, $values) {
     global $SESSION;

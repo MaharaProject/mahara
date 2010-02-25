@@ -325,10 +325,6 @@ $string['invalidsesskey'] = 'Invalid session key';
 $string['cannotremovedefaultemail'] = 'You cannot remove your primary email address';
 $string['emailtoolong'] = 'E-mail addresses cannot be longer that 255 characters';
 $string['mustspecifyoldpassword'] = 'You must specify your current password';
-$string['captchatitle'] = 'CAPTCHA Image';
-$string['captchaimage'] = 'CAPTCHA Image';
-$string['captchadescription'] = 'Enter the characters you see in the picture. Letters are not case sensitive';
-$string['captchaincorrect'] = 'Enter the letters as they are shown in the image';
 $string['Site'] = 'Site';
 
 // Misc. register stuff that could be used elsewhere

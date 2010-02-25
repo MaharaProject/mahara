@@ -237,15 +237,6 @@ $elements['tandc'] = array(
     'separator' => ' &nbsp; '
 );
 
-if (get_config('captchaonregisterform')) {
-    $elements['captcha'] = array(
-        'type' => 'captcha',
-        'title' => get_string('captchatitle'),
-        'description' => get_string('captchadescription'),
-        'rules' => array('required' => true)
-    );
-}
-
 $elements['submit'] = array(
     'type' => 'submit',
     'value' => get_string('register'),
@@ -293,11 +284,6 @@ function register_validate(Pieform $form, $values) {
     // If the user hasn't agreed to the terms and conditions, don't bother
     if ($values['tandc'] != 'yes') {
         $form->set_error('tandc', get_string('youmaynotregisterwithouttandc', 'auth.internal'));
-    }
-
-    // CAPTCHA image
-    if (get_config('captchaonregisterform') && !$values['captcha']) {
-        $form->set_error('captcha', get_string('captchaincorrect'));
     }
 
     $institution = get_record_sql('

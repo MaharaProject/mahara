@@ -206,18 +206,6 @@ $siteoptionform = array(
             'defaultvalue' => get_config('institutionautosuspend'),
             'help'         => true,
         ),
-        'captchaonregisterform' => array(
-            'type'         => 'checkbox',
-            'title'        => get_string('captchaonregisterform', 'admin'),
-            'description'  => get_string('captchaonregisterformdescription', 'admin'),
-            'defaultvalue' => get_config('captchaonregisterform'),
-        ),
-        'captchaoncontactform' => array(
-            'type'         => 'checkbox',
-            'title'        => get_string('captchaoncontactform', 'admin'),
-            'description'  => get_string('captchaoncontactformdescription', 'admin'),
-            'defaultvalue' => get_config('captchaoncontactform'),
-        ),
         'showselfsearchsideblock' => array(
             'type'         => 'checkbox',
             'title'        => get_string('showselfsearchsideblock', 'admin'),
@@ -286,7 +274,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
         'allowpublicviews', 'allowpublicprofiles', 'creategroups', 'createpublicgroups', 'searchplugin',
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
-        'captchaonregisterform', 'captchaoncontactform', 'showselfsearchsideblock', 'showtagssideblock',
+        'showselfsearchsideblock', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
         'remoteavatars', 'userscanhiderealnames'
     );
