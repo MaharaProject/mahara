@@ -41,6 +41,7 @@ class PluginImportLeap extends PluginImport {
     private $loadmapping = array();
     private $coreloadmapping = array();
     private $artefactids = array();
+    protected $filename;
 
     protected $persondataid = null;
 
@@ -97,16 +98,16 @@ class PluginImportLeap extends PluginImport {
     public function process() {
         db_begin();
 
-        $filename = self::find_file($this->get('importertransport')->files_info());
-        $this->logfile = dirname($filename) . '/import.log';
-        $this->trace('Loading import from ' . $filename);
+        $this->filename = self::find_file($this->get('importertransport')->files_info());
+        $this->logfile = dirname($this->filename) . '/import.log';
+        $this->trace('Loading import from ' . $this->filename);
         $this->snapshot('begin');
 
         $options =
             LIBXML_COMPACT |    // Reported to greatly speed XML parsing
             LIBXML_NONET        // Disable network access - security check
         ;
-        if (!$this->xml = simplexml_load_file($filename, 'SimpleXMLElement', $options)) {
+        if (!$this->xml = simplexml_load_file($this->filename, 'SimpleXMLElement', $options)) {
             // TODO: bail out in a much nicer way...
             throw new ImportException($this, "FATAL: XML file is not well formed! Please consult Mahara's error log for more information");
         }
