@@ -2283,18 +2283,6 @@ function cron_send_registration_data() {
     }
 }
 
-
-function random_string($length=15) {
-    $pool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    $poollen = strlen($pool);
-    mt_srand ((double) microtime() * 1000000);
-    $string = '';
-    for ($i = 0; $i < $length; $i++) {
-        $string .= substr($pool, (mt_rand()%($poollen)), 1);
-    }
-    return $string;
-}
-
 function build_portfolio_search_html(&$data) {
     global $THEME;
     $artefacttypes = get_records_assoc('artefact_installed_type');

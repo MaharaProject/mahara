@@ -246,7 +246,7 @@ function bulkimport_submit(Pieform $form, $values) {
             'username'       => $username,
             'firstname'      => 'Imported',
             'lastname'       => 'User',
-            'password'       => random_string(6),
+            'password'       => get_random_key(6),
             'passwordchange' => 1,
         );
 

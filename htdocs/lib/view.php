@@ -2629,9 +2629,9 @@ class View {
         $data = new StdClass;
         $data->view    = $viewid;
         $data->visible = (int) $visible;
-        $data->token   = random_string(20);
+        $data->token   = get_random_key(20);
         while (record_exists('view_access_token', 'token', $data->token)) {
-            $data->token = random_string(20);
+            $data->token = get_random_key(20);
         }
         if (insert_record('view_access_token', $data)) {
             return $data;
