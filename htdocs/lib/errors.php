@@ -336,7 +336,7 @@ function log_build_backtrace($backtrace) {
                         $args .= 'object(' . get_class($arg) . ')';
                         break;
                     case 'resource':
-                        $args .= 'resource(' . strstr($arg, '#') . ')';
+                        $args .= 'resource(' . strstr((string)$arg, '#') . ')';
                         break;
                     case 'boolean':
                         $args .= $arg ? 'true' : 'false';
