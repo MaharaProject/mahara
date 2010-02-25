@@ -244,7 +244,7 @@ class LeapImportFile extends LeapImportArtefactPlugin {
         $pathname = $dir . DIRECTORY_SEPARATOR . $pathname;
 
         // This API sucks, but that's not my problem
-        if (!$id = ArtefactTypeFile::save_file($pathname, $data, $importer->get('usrobj'))) {
+        if (!$id = ArtefactTypeFile::save_file($pathname, $data, $importer->get('usrobj'), true)) {
             $importer->trace("WARNING: the file for entry $entry->id does not exist in the import (path={$entry->content['src']})");
             return;
         }
