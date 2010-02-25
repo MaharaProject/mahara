@@ -165,6 +165,7 @@ class PluginImportLeap extends PluginImport {
             if (safe_require('import', 'leap/' . $plugin, 'lib.php', 'require_once', true)) {
                 $classname = 'LeapImport' . ucfirst($plugin);
                 if (method_exists($classname, 'setup')) {
+                    safe_require('artefact', $plugin);
                     call_static_method($classname, 'setup', $this);
                 }
             }
