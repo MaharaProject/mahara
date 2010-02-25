@@ -567,6 +567,7 @@ $string['bulkexportdescription'] = 'Choose an institution to export <b>OR</b> sp
 $string['bulkexportusernames'] = 'Usernames to export';
 $string['bulkexportusernamesdescription'] = 'A list of the users (one username per line) to be exported along with their data';
 $string['couldnotexportusers'] = 'The following user(s) could not be exported: %s';
+$string['exportingusername'] = 'Exporting \'%s\'...';
 
 // Admin User Search
 $string['Query'] = 'Query';

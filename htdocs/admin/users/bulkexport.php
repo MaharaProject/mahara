@@ -27,99 +27,10 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('BULKEXPORT', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-safe_require('export', 'leap');
 require_once('pieforms/pieform.php');
-require_once('file.php');
 
 define('TITLE', get_string('bulkexporttitle', 'admin'));
-
-/**
- * Convert a 2D array to a CSV file. This follows the basic rules from http://en.wikipedia.org/wiki/Comma-separated_values
- *
- * @param array $input 2D array of values: each line is an array of values
- */
-function data_to_csv($input) {
-    if (empty($input) or !is_array($input)) {
-        return '';
-    }
-
-    $output = '';
-    foreach ($input as $line) {
-        $lineoutput = '';
-
-        foreach ($line as $element) {
-            $element = str_replace('"', '""', $element);
-            if (!empty($lineoutput)) {
-                $lineoutput .= ',';
-            }
-            $lineoutput .= "\"$element\"";
-        }
-
-        $output .= $lineoutput . "\r\n";
-    }
-
-    return $output;
-}
-
-function create_zipfile($listing, $files) {
-    global $USER;
-
-    if (empty($listing) or empty($files)) {
-        return false;
-    }
-    if (count($listing) != count($files)) {
-        throw new MaharaException("Files and listing don't match.");
-    }
-
-    // create temporary directories for the export
-    $exportdir = get_config('dataroot') . 'export/'
-        . $USER->get('id')  . '/' . time() .  '/';
-    if (!check_dir_exists($exportdir)) {
-        throw new SystemException("Couldn't create the temporary export directory $exportdir");
-    }
-    $usersdir = 'users/';
-    if (!check_dir_exists($exportdir . $usersdir)) {
-        throw new SystemException("Couldn't create the temporary export directory $usersdir");
-    }
-
-    // move user zipfiles into the export directory
-    foreach ($files as $filename) {
-        if (copy($filename, $exportdir . $usersdir . basename($filename))) {
-            unlink($filename);
-        }
-        else {
-            throw new SystemException("Couldn't move $filename to $usersdir");
-        }
-    }
-
-    // write username listing to a file
-    $listingfile = 'usernames.csv';
-    if (!file_put_contents($exportdir . $listingfile, data_to_csv($listing))) {
-        throw new SystemException("Couldn't write usernames to a file");
-    }
-
-    // zip everything up
-    $zipfile = $exportdir . 'mahara-bulk-export-' . time() . '.zip';
-    $cwd = getcwd();
-    $command = sprintf('%s %s %s %s %s',
-                       get_config('pathtozip'),
-                       get_config('ziprecursearg'),
-                       escapeshellarg($zipfile),
-                       escapeshellarg($listingfile),
-                       escapeshellarg($usersdir)
-                       );
-    $output = array();
-    chdir($exportdir);
-    exec($command, $output, $returnvar);
-    chdir($cwd);
-    if ($returnvar != 0) {
-        throw new SystemException('Failed to zip the export file: return code ' . $returnvar);
-    }
-
-    return $zipfile;
-}
 
 function bulkexport_submit(Pieform $form, $values) {
     global $SESSION;
@@ -142,45 +53,12 @@ function bulkexport_submit(Pieform $form, $values) {
         }
     }
 
-    $listing = array();
-    $files = array();
-    $exportcount = 0;
-    $exporterrors = array();
+    $SESSION->set('exportdata', $usernames);
 
-    foreach ($usernames as $username) {
-        $user = new User();
-        try {
-            $user->find_by_username($username);
-        } catch (AuthUnknownUserException $e) {
-            continue; // Skip non-existent users
-        }
-
-        $exporter = new PluginExportLeap($user, PluginExport::EXPORT_ALL_VIEWS, PluginExport::EXPORT_ALL_ARTEFACTS);
-        try {
-            $zipfile = $exporter->export();
-        } catch (Exception $e) {
-            $exporterrors[] = $username;
-            continue;
-        }
-
-        $listing[] = array($username, $zipfile);
-        $files[] = $exporter->get('exportdir') . $zipfile;
-        $exportcount++;
-    }
-
-    if (!$zipfile = create_zipfile($listing, $files)) {
-        $SESSION->add_error_msg(get_string('bulkexportempty', 'admin'));
-        redirect(get_config('wwwroot').'admin/users/bulkexport.php');
-    }
-
-    log_info('Exported ' . $exportcount . ' users');
-    if (!empty($exporterrors)) {
-        $SESSION->add_error_msg(get_string('couldnotexportusers', 'admin', implode(', ', $exporterrors)));
-    }
-
-    serve_file($zipfile, basename($zipfile), 'application/x-zip', array('lifetime' => 0, 'forcedownload' => true));
+    $smarty = smarty();
+    $smarty->assign('heading', '');
+    $smarty->display('admin/users/bulkdownload.tpl');
     exit;
-    // TODO: delete the zipfile (and temporary files) once it's been downloaded
 }
 
 $authinstanceelement = array('type' => 'hidden', 'value' => '');
