@@ -47,7 +47,7 @@ class PluginImportFile extends PluginImport {
     }
 
     public function process() {
-        $this->importertransport->extract_file($this->importertransport->get('mimetype'), $this->zipfilesha1);
+    //    $this->importertransport->extract_file($this->importertransport->get('mimetype'), $this->zipfilesha1);
         $this->verify_file_contents();
         $this->add_artefacts();
     }

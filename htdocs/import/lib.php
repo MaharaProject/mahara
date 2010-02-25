@@ -76,6 +76,7 @@ abstract class PluginImport extends Plugin {
      */
     public function prepare() {
         $this->importertransport->prepare_files();
+        $this->importertransport->extract_file();
     }
 
     /**
@@ -286,10 +287,26 @@ abstract class ImporterTransport {
     /** the import queue record **/
     protected $importrecord;
 
+    /** set when extract_files is called */
+    protected $extracted;
+
+    /** optional sha1 of the file we expect */
+    protected $expectedsha1;
+
     /**
      * @param stdclass $import the import record. This should correspond to a record in import_queue, but can be faked
      */
     public abstract function __construct($import);
+
+    /**
+     * small helper function to set up and unserialize the import data
+     */
+    protected  function set_import_data($import) {
+        $this->importrecord = $import;
+        if (is_string($import->data)) {
+            $import->data = unserialize($import->data);
+        }
+    }
 
     /**
      * figure out the temporary directory to use
@@ -368,13 +385,14 @@ abstract class ImporterTransport {
      * helper function for import code to use to extract a file
      * it will either unzip a zip file, or move an import file to the destination
      *
-     * @param string $expectedsha1 optional, if given will validate the sha1 first
-     *
      * @throws ImportException
      */
-    public function extract_file($mimetype, $expectedsha1=null) {
+    public function extract_file() {
+        if ($this->extracted) {
+            return;
+        }
         $this->prepare_tempdir();
-        if ($expectedsha1 &&  sha1_file($this->importfile) != $expectedsha1) {
+        if ($this->expectedsha1 &&  sha1_file($this->importfile) != $this->expectedsha1) {
             throw new ImportException($this->importer, 'sha1 of recieved importfile didn\'t match expected sha1');
         }
 
@@ -382,15 +400,18 @@ abstract class ImporterTransport {
         if (!check_dir_exists($todir)) {
             throw new ImportException($this, 'Failed to create the temporary directories to work in');
         }
-
         safe_require('artefact', 'file');
         $ziptypes = PluginArtefactFile::get_mimetypes_from_description('zip');
+        if (empty($this->mimetype)) {
+            $this->mimetype = mime_content_type($this->importfile);
+        }
         // if we don't have a zipfile, just move the import file to the extract location
-        if (!in_array($mimetype, $ziptypes)) {
+        if (!in_array($this->mimetype, $ziptypes)) {
             if (strpos($this->importfile, $todir) !== 0) {
                 rename($this->importfile, $todir . $this->importfilename);
             }
             $this->manifestfile = $this->importfilename;
+            $this->extracted = true;
             return;
         }
 
@@ -405,6 +426,7 @@ abstract class ImporterTransport {
         if ($returnvar != 0) {
             throw new ImportException($this, 'Failed to unzip the file recieved from the transport object');
         }
+        $this->extracted = true;
     }
 
     /**
@@ -422,16 +444,12 @@ class LocalImporterTransport extends ImporterTransport {
      * @param stdclass $import the import record
      */
     public function __construct($import) {
-        $this->importrecord = $import;
-        $importdata = $import->data;
-        if (is_string($importdata)) {
-            $importdata = unserialize($importdata);
-        }
-        foreach (array('importfile', 'importfilename', 'importid') as $reqkey) {
-            if (!array_key_exists($reqkey, $importdata)) {
+        $this->set_import_data($import);
+        foreach (array('importfile', 'importfilename', 'importid', 'mimetype') as $reqkey) {
+            if (!array_key_exists($reqkey, $this->importrecord->data)) {
                 throw new ImportException("Missing required information $reqkey");
             }
-            $this->{$reqkey} = $importdata[$reqkey];
+            $this->{$reqkey} = $this->importrecord->data[$reqkey];
         }
     }
 
@@ -461,9 +479,10 @@ class MnetImporterTransport extends ImporterTransport {
      * @param stdclass $import the import record
      */
     public function __construct($import) {
-        $this->importrecord = $import;
         $this->host = get_record('host', 'wwwroot', $import->host);
         $this->importid = $import->id; // since we have an import record, use the id
+        $this->set_import_data($import);
+        $this->expectedsha1 = $this->importrecord->data['zipfilesha1'];
     }
 
     /**

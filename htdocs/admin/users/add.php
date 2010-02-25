@@ -190,6 +190,13 @@ function adduser_validate(Pieform $form, $values) {
             return;
         }
 
+        if ($values['leap2afile']['type'] == 'application/octet-stream') {
+            // the browser wasn't sure, so use mime_content_type to guess
+            $mimetype = mime_content_type($values['leap2afile']['tmp_name']);
+        }
+        else {
+            $mimetype = $values['leap2afile']['type'];
+        }
         $date = time();
         $niceuser = preg_replace('/[^a-zA-Z0-9_-]/', '-', $values['username']);
         safe_require('import', 'leap');
@@ -198,19 +205,13 @@ function adduser_validate(Pieform $form, $values) {
                 'importfile'     => $values['leap2afile']['tmp_name'],
                 'importfilename' => $values['leap2afile']['name'],
                 'importid'       => $niceuser . '-' . $date,
+                'mimetype'       => $mimetype,
             )
         );
 
         $TRANSPORTER = new LocalImporterTransport($fakeimportrecord);
         try {
-            if ($values['leap2afile']['type'] == 'application/octet-stream') {
-                // the browser wasn't sure, so use mime_content_type to guess
-                $mimetype = mime_content_type($values['leap2afile']['tmp_name']);
-            }
-            else {
-                $mimetype = $values['leap2afile']['type'];
-            }
-            $TRANSPORTER->extract_file($mimetype);
+            $TRANSPORTER->extract_file();
             PluginImportLeap::validate_transported_data($TRANSPORTER);
         }
         catch (Exception $e) {
