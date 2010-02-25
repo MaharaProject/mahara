@@ -321,16 +321,21 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
     }
 
     $queue->format = $format;
+    $queue->data = serialize($importdata);
+    update_record('import_queue', $queue);
+    $tr = new MnetImporterTransport($queue);
+    try {
+        $tr->validate_import_data();
+    } catch (Exception $e) {
+        throw new ImportException(null, 'Invalid importdata: ' . $e->getMessage());
+    }
+
+
     $class = null;
     try {
         $class = PluginImport::class_from_format($format);
     } catch (Exception $e) {
         throw new ImportException(null, "Invalid format $format");
-    }
-    try {
-        call_static_method($class, 'validate_import_data', $importdata);
-    } catch (Exception $e) {
-        throw new ImportException(null, 'Invalid importdata: ' . $e->getMessage());
     }
 
     if (!array_key_exists('totalsize', $importdata)) {
@@ -343,16 +348,17 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
         throw $e;
     }
 
-    $queue->data = serialize($importdata);
-
-    update_record('import_queue', $queue);
 
     $result = new StdClass;
     if ($fetchnow && PluginImport::import_immediately_allowed()) {
         // either immediately spawn a curl request to go fetch the file
-        $tr = new MnetImporterTransport($queue);
         $importer = PluginImport::create_importer($queue->id, $tr, $queue);
         $importer->prepare();
+        try {
+            $importer->validate_transported_data($tr);
+        } catch (Exception $e) {
+            throw new ImportException(null, 'Invalid importdata: ' . $e->getMessage());
+        }
         $importer->process();
         $importer->cleanup();
         delete_records('import_queue', 'id', $queue->id);

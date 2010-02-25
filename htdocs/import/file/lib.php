@@ -38,23 +38,12 @@ class PluginImportFile extends PluginImport {
     public function __construct($id, $record=null) {
         parent::__construct($id, $record);
         $data = $this->get('data');
-        self::validate_import_data($data);
         $this->manifest = $data['filesmanifest'];
         $this->zipfilesha1 = $data['zipfilesha1'];
     }
 
-    public static function validate_import_data($importdata) {
-        if (empty($importdata) ||
-            !is_array($importdata) ||
-            !array_key_exists('filesmanifest', $importdata) ||
-            !is_array($importdata['filesmanifest']) ||
-            count($importdata['filesmanifest']) == 0) {
-            throw new ImportException($this, 'Missing files manifest in import data');
-        }
-        if (!array_key_exists('zipfilesha1', $importdata)) {
-            throw new ImportException($this, 'Missing zipfile sha1 in import data');
-        }
-        return true;
+    public static function validate_transported_data(ImporterTransport $transport) {
+        return true; // nothing to do , we're just importing files to the file artefact plugin
     }
 
     public function process() {

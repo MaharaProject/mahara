@@ -170,10 +170,15 @@ abstract class PluginImport extends Plugin {
     }
 
     /**
-     * validate the import data (usually what files_info returns
+     * validate the import data that we have after the file has been fetched.
+     * This is static, because the data may need to be validated earlier than setting up everything else
+     * For example, in the case of the administrator adding a user manually from a leap2a file,
+     * we want to validate the leap data before creating the user record.
+     *
+     * @param array $importdata usually what ImportTransporter::files_info returns
      * @throws ImportException
      */
-    public static abstract function validate_import_data($importdata);
+    public static abstract function validate_transported_data(ImporterTransport $transporter);
 
     /**
      * Whether imports are allowed immediately or if they must be queued
@@ -277,6 +282,14 @@ abstract class ImporterTransport {
 
     /** the mimetype of the file we are importing */
     protected $mimetype;
+
+    /** the import queue record **/
+    protected $importrecord;
+
+    /**
+     * @param stdclass $import the import record. This should correspond to a record in import_queue, but can be faked
+     */
+    public abstract function __construct($import);
 
     /**
      * figure out the temporary directory to use
@@ -393,6 +406,11 @@ abstract class ImporterTransport {
             throw new ImportException($this, 'Failed to unzip the file recieved from the transport object');
         }
     }
+
+    /**
+     * validate data to be imported
+     */
+    public abstract function validate_import_data();
 }
 
 /**
@@ -400,11 +418,25 @@ abstract class ImporterTransport {
 */
 class LocalImporterTransport extends ImporterTransport {
 
-    public function __construct($importfile, $importfilename, $importid) {
-        $this->importfile = $importfile;
-        $this->importfilename = $importfilename;
-        $this->importid   = $importid;
+    /**
+     * @param stdclass $import the import record
+     */
+    public function __construct($import) {
+        $this->importrecord = $import;
+        $importdata = $import->data;
+        if (is_string($importdata)) {
+            $importdata = unserialize($importdata);
+        }
+        foreach (array('importfile', 'importfilename', 'importid') as $reqkey) {
+            if (!array_key_exists($reqkey, $importdata)) {
+                throw new ImportException("Missing required information $reqkey");
+            }
+            $this->{$reqkey} = $importdata[$reqkey];
+        }
     }
+
+    public function validate_import_data() { }
+
 
     // nothing to do, uploaded files live in /tmp
     public function cleanup() { }
@@ -429,6 +461,7 @@ class MnetImporterTransport extends ImporterTransport {
      * @param stdclass $import the import record
      */
     public function __construct($import) {
+        $this->importrecord = $import;
         $this->host = get_record('host', 'wwwroot', $import->host);
         $this->importid = $import->id; // since we have an import record, use the id
     }
@@ -478,6 +511,24 @@ class MnetImporterTransport extends ImporterTransport {
      */
     public function get_description() {
         return get_string('remotehost', 'mahara', $this->host->name);
+    }
+
+    public function validate_import_data() {
+        $importdata = $this->importrecord->data;
+        if (is_string($importdata)) {
+            $importdata = unserialize($importdata);
+        }
+        if (empty($importdata) ||
+            !is_array($importdata) ||
+            !array_key_exists('filesmanifest', $importdata) ||
+            !is_array($importdata['filesmanifest']) ||
+            count($importdata['filesmanifest']) == 0) {
+            throw new ImportException($this, 'Missing files manifest in import data');
+        }
+        if (!array_key_exists('zipfilesha1', $importdata)) {
+            throw new ImportException($this, 'Missing zipfile sha1 in import data');
+        }
+        return true;
     }
 }
 

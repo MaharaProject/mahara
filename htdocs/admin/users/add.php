@@ -193,17 +193,25 @@ function adduser_validate(Pieform $form, $values) {
         $date = time();
         $niceuser = preg_replace('/[^a-zA-Z0-9_-]/', '-', $values['username']);
         safe_require('import', 'leap');
-        $TRANSPORTER = new LocalImporterTransport($values['leap2afile']['tmp_name'], $values['leap2afile']['name'], $niceuser . '-' . $date);
+        $fakeimportrecord = (object)array(
+            'data' => array(
+                'importfile'     => $values['leap2afile']['tmp_name'],
+                'importfilename' => $values['leap2afile']['name'],
+                'importid'       => $niceuser . '-' . $date,
+            )
+        );
+
+        $TRANSPORTER = new LocalImporterTransport($fakeimportrecord);
         try {
             if ($values['leap2afile']['type'] == 'application/octet-stream') {
                 // the browser wasn't sure, so use mime_content_type to guess
-                $mimetype = mime_content_type($values['leap2afile']['filename']);
+                $mimetype = mime_content_type($values['leap2afile']['tmp_name']);
             }
             else {
                 $mimetype = $values['leap2afile']['type'];
             }
             $TRANSPORTER->extract_file($mimetype);
-            PluginImportLeap::validate_import_data($TRANSPORTER->files_info());
+            PluginImportLeap::validate_transported_data($TRANSPORTER);
         }
         catch (Exception $e) {
             $form->set_error('leap2afile', $e->getMessage());

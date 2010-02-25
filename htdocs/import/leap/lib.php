@@ -66,7 +66,8 @@ class PluginImportLeap extends PluginImport {
 
     const STRATEGY_IMPORT_AS_VIEW = 1;
 
-    public static function validate_import_data($importdata) {
+    public static function validate_transported_data(ImporterTransport $transport) {
+        $importdata = $transport->files_info();
         if (!$file = self::find_file($importdata)) {
             throw new ImportException(null, 'Missing leap xml file');
         }
