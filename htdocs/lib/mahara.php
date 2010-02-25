@@ -1357,17 +1357,20 @@ function format_date($date, $formatkey='strftimedatetime', $notspecifiedkey='str
  * Returns a random string suitable for registration/change password requests
  *
  * @param int $length The length of the key to return
+ * @param array $pool The pool to draw from (optional, will use A-Za-z0-9 as a default)
  * @return string
  */
-function get_random_key($length=16) {
+function get_random_key($length=16, $pool=null) {
     if ($length < 1) {
         throw new IllegalArgumentException('Length must be a positive number');
     }
-    $pool = array_merge(
-        range('A', 'Z'),
-        range('a', 'z'),
-        range(0, 9)
-    );
+    if (empty($pool)) {
+        $pool = array_merge(
+            range('A', 'Z'),
+            range('a', 'z'),
+            range(0, 9)
+        );
+    }
     shuffle($pool);
     $result = '';
     for ($i = 0; $i < $length; $i++) {
