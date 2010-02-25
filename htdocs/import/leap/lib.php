@@ -383,10 +383,12 @@ class PluginImportLeap extends PluginImport {
         // persondata entry
         // TODO: this should return an artefact mapping so things can create 
         // links to profile fields, but nothing actually needs it yet
-        foreach (plugins_installed('artefact') as $plugin) {
-            $classname = 'LeapImport' . ucfirst($plugin->name);
-            if (method_exists($classname, 'import_author_data')) {
-                call_static_method($classname, 'import_author_data', $this, $this->persondataid);
+        if (!array_key_exists('skippersondata', $this->data) || $this->data['skippersondata'] !== true) {
+            foreach (plugins_installed('artefact') as $plugin) {
+                $classname = 'LeapImport' . ucfirst($plugin->name);
+                if (method_exists($classname, 'import_author_data')) {
+                    call_static_method($classname, 'import_author_data', $this, $this->persondataid);
+                }
             }
         }
 

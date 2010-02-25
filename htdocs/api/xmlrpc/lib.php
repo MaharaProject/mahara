@@ -320,7 +320,20 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
         throw new ImportException(null, "Queue record has expired");
     }
 
+    $class = null;
+    try {
+        $class = PluginImport::class_from_format($format);
+    } catch (Exception $e) {
+        throw new ImportException(null, "Invalid format $format");
+    }
+
     $queue->format = $format;
+    if ($class == 'PluginImportLeap') {
+        // don't import persondata over mnet
+        // because it will just silently overwrite stuff
+        // which is not really desirable.
+        $importdata['skippersondata'] = true;
+    }
     $queue->data = serialize($importdata);
     update_record('import_queue', $queue);
     $tr = new MnetImporterTransport($queue);
@@ -331,12 +344,6 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
     }
 
 
-    $class = null;
-    try {
-        $class = PluginImport::class_from_format($format);
-    } catch (Exception $e) {
-        throw new ImportException(null, "Invalid format $format");
-    }
 
     if (!array_key_exists('totalsize', $importdata)) {
         throw new ImportException(null, 'Invalid importdata: missing totalsize');
