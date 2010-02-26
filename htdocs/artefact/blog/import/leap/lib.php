@@ -64,27 +64,42 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
     public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImportLeap $importer) {
         $strategies = array();
 
-        if (PluginImportLeap::is_rdf_type($entry, $importer, 'selection')
-            && PluginImportLeap::is_correct_category_scheme($entry, $importer, 'selection_type', 'Blog')) {
+        if (PluginImportLeap::is_rdf_type($entry, $importer, 'selection')) {
+            if (PluginImportLeap::is_correct_category_scheme($entry, $importer, 'selection_type', 'Blog')) {
+                $score = 100;
+            } else {
+                // the blog plugin can either fall back to importing single entries
+                // or handle the case where things are a selection that have no other strategies either.
+                // however, in the case where the otherrequiredentries for the selection have a higher strategy elsewhere,
+                // we need to still fallback to importing a selection post as a blog post by itself, to avoid dataloss.
+                $score = 20; // other things *can* be imported as blogs
+            }
             $otherrequiredentries = array();
 
-            // Get entries that this blog feels are a part of it
+            // Get entries that this blog/selection feels are a part of it
             foreach ($entry->link as $link) {
                 if ($importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'has_part') && isset($link['href'])) {
                     $otherrequiredentries[] = (string)$link['href'];
                 }
             }
 
-            // TODO: Get entries that feel they should be a part of this blog. 
+            // TODO: Get entries that feel they should be a part of this blog/selection
             // We can compare the lists and perhaps warn if they're different
             //    $otherentries = $importer->xml->xpath('//a:feed/a:entry/a:link[@rel="leap:is_part_of" and @href="' . $entryid . '"]/../a:id');
 
             $otherrequiredentries = array_unique($otherrequiredentries);
             $strategies[] = array(
                 'strategy' => self::STRATEGY_IMPORT_AS_BLOG,
-                'score'    => 100,
+                'score'    => $score,
                 'other_required_entries' => $otherrequiredentries,
             );
+            if ($score == 20) {
+                $strategies[] = array(
+                    'strategy' => self::STRATEGY_IMPORT_AS_ENTRY,
+                    'score'    => 10,
+                    'other_required_entries' => array(),
+                );
+            }
         }
         else {
             // The blog can import any entry as a literal blog post
