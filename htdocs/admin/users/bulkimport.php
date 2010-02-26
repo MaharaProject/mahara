@@ -193,8 +193,6 @@ function bulkimport_validate(Pieform $form, $values) {
 function bulkimport_submit(Pieform $form, $values) {
     global $SESSION, $LEAP2AFILES;
 
-    log_debug($values);
-
     require_once(get_config('docroot') . 'import/lib.php');
     safe_require('import', 'leap');
 
@@ -239,6 +237,11 @@ function bulkimport_submit(Pieform $form, $values) {
             $failedusers[$username] = get_string('noleap2axmlfiledetected', 'admin');
             log_debug($failedusers[$username]);
             continue;
+        }
+
+        // If the username is already taken, append something to the end
+        while (get_record('usr', 'username', $username)) {
+            $username .= "_";
         }
 
         $user = (object)array(
@@ -339,7 +342,7 @@ function bulkimport_submit(Pieform $form, $values) {
         $SESSION->add_err_msg($message, false);
     }
 
-    redirect('/admin/users/bulkimport.php');
+    redirect(get_config('wwwroot') . '/admin/users/bulkimport.php');
 }
 
 $form = pieform($form);
