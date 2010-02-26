@@ -491,7 +491,7 @@ class MaharaException extends Exception {
 
     protected $log = true;
 
-    public function __construct($message, $code=0) {
+    public function __construct($message='', $code=0) {
         parent::__construct($message, $code);
         if (!defined('MAHARA_CRASHING')) {
             define('MAHARA_CRASHING', true);
