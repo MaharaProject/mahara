@@ -330,16 +330,20 @@ $string['uploadcsvfailedusersexceedmaxallowed'] = 'No users have been added beca
 
 // Bulk leap2a import
 $string['bulkleap2aimport'] = 'Import users from LEAP2A files';
-$string['bulkleap2aimportdescription'] = '<p>You can import users in bulk from a collection of LEAP2A files on your server.  You must specify a directory on the filesystem which contains all the LEAP2A zip files, and a single CSV file called import.csv, mapping usernames to filenames.</p>
-<p>import.csv will look something like this:</p>
+$string['bulkleap2aimportdescription'] = '<p>You can import users in bulk from a collection of LEAP2A files on your server.  You must specify a zip file on the server filesystem which contains all the LEAP2A zip files, and a single CSV file called usernames.csv, mapping usernames to filenames.</p>
+<p>usernames.csv will look something like this:</p>
 <pre>
 &nbsp;&nbsp;bob,mahara-export-leap-user8-1265165366.zip<br>
 &nbsp;&nbsp;nigel,mahara-export-leap-user1-1266458159.zip
 </pre>
-<p>where mahara-export-leap-user8-1265165366.zip and mahara-export-leap-user1-1266458159.zip are files in the same directory as import.csv.</p>
+<p>where mahara-export-leap-user8-1265165366.zip and mahara-export-leap-user1-1266458159.zip are files in a subdirectory called users.</p>
+<p>This zip file should normally be generated using the bulk export built into Mahara.</p>
 <p>If you are importing a lot of users, please be patient.  The import process can take a long time.</p>';
-$string['Directory'] = 'Directory';
-$string['bulkleap2aimportdirdescription'] = 'The directory on your server containing import.csv and your LEAP2A files';
+$string['importfile'] = 'Bulk export file';
+$string['importfilemissinglisting'] = 'The bulk export file is missing a file named usernames.csv. Did you use the Mahara bulk exporter to export these users?';
+$string['importfilenotafile'] = 'Error during form submission: file was not recognised';
+$string['importfilenotreadable'] = 'Error during form submission: file was not readable';
+$string['bulkleap2aimportfiledescription'] = 'The zip file on your server containing all exported users (in LEAP2A format) along with a CSV listing of usernames';
 $string['importednuserssuccessfully'] = 'Imported %d of %d users successfully';
 $string['Import'] = 'Import';
 $string['bulkimportdirdoesntexist'] = 'The directory %s does not exist';
@@ -349,7 +353,7 @@ $string['importfilenotreadable'] = 'Unable to read LEAP2A file %s';
 $string['importfileisnotazipfile'] = 'Import file %s was not detected as a zip file';
 $string['unzipfailed'] = 'Failed to unzip the LEAP2A file %s. See the error log for more information.';
 $string['importfailedfornusers'] = 'Import failed for %d of %d users';
-
+$string['invalidlistingfile'] = 'Invalid username listing. Did you use the Mahara bulk exporter to export these users?';
 
 // Admin Users
 $string['adminuserspagedescription'] = '<p>Here you can choose which users are administrators for the site. The current administrators are listed on the right, and potential administrators are on the left.</p><p>The system must have at least one administrator.</p>';

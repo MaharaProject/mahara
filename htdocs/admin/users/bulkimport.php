@@ -62,10 +62,11 @@ $form = array(
     'name' => 'bulkimport',
     'elements' => array(
         'authinstance' => $authinstanceelement,
-        'directory' => array(
+        'file' => array(
             'type' => 'text',
-            'title' => get_string('Directory', 'admin'),
-            'description' => get_string('bulkleap2aimportdirdescription', 'admin'),
+            'title' => get_string('importfile', 'admin'),
+            'size' => 40,
+            'description' => get_string('bulkleap2aimportfiledescription', 'admin'),
             'rules' => array(
                 'required' => true
             )
@@ -92,7 +93,7 @@ $form = array(
  * @param array    $values The values submitted
  */
 function bulkimport_validate(Pieform $form, $values) {
-    global $LEAP2AFILES;
+    global $LEAP2AFILES, $USER;
 
     // Don't even start attempting to parse if there are previous errors
     if ($form->has_errors()) {
@@ -101,22 +102,46 @@ function bulkimport_validate(Pieform $form, $values) {
 
     require_once('csvfile.php');
 
-    $strdirectory = hsc($values['directory']);
-
-    if (!is_dir($values['directory'])) {
-        $form->set_error('directory', get_string('bulkimportdirdoesntexist', 'admin', $strdirectory));
+    $zipfile = $values['file'];
+    if (!is_file($zipfile)) {
+        $form->set_error('file', get_string('importfilenotafile', 'admin'));
         return;
     }
-    if (!$dh = opendir($values['directory'])) {
-        $form->set_error('directory', get_string('unabletoreadbulkimportdir', 'admin', $strdirectory));
+    if (!is_readable($zipfile)) {
+        $form->set_error('file', get_string('importfilenotreadable', 'admin'));
         return;
     }
-    closedir($dh);
 
-    $csvfilename = $values['directory'] . '/import.csv';
+    // Create temporary directory
+    $importdir = get_config('dataroot') . 'import/'
+        . $USER->get('id')  . '/' . time() .  '/';
+    if (!check_dir_exists($importdir)) {
+        throw new SystemException("Couldn't create the temporary export directory $importdir");
+    }
 
+    $command = sprintf('%s %s %s',
+                       escapeshellcmd(get_config('pathtounzip')),
+                       escapeshellarg($zipfile),
+                       '-d ' . escapeshellarg($importdir)
+                       );
+    $output = array();
+    exec($command, $output, $returnvar);
+    if ($returnvar != 0) {
+        log_debug("unzip command failed with return value $returnvar");
+        // Let's make it obvious if the cause is obvious :)
+        if ($returnvar == 127) {
+            log_debug("This means that 'unzip' isn't installed, or the config var \$cfg->pathtounzip is not"
+                      . " pointing at unzip (see Mahara's file lib/config-defaults.php)");
+        }
+        throw new SystemException(get_string('unzipfailed', 'admin', hsc($zipfile)));
+    }
+    else {
+        log_debug("Unzipped $zipfile into $importdir");
+    }
+
+    $csvfilename = $importdir . '/usernames.csv';
     if (!is_readable($csvfilename)) {
-        $form->set_error('directory', get_string('unabletoreadcsvfile', 'admin', hsc($csvfilename)));
+        $form->set_error('file', get_string('importfilemissinglisting', 'admin'));
         return;
     }
 
@@ -126,65 +151,16 @@ function bulkimport_validate(Pieform $form, $values) {
     $csvdata = $csvusers->get_data();
 
     if (!empty($csvdata->errors['file'])) {
-        $form->set_error('directory', $csvdata->errors['file']);
+        $form->set_error('file', get_string('invalidlistingfile', 'admin'));
         return;
     }
 
-    $ziptypes = PluginArtefactFile::get_mimetypes_from_description('zip');
-    $csverrors = array();
     $LEAP2AFILES = array();
-
-    $authobj = AuthFactory::create((int) $values['authinstance']);
-
-    foreach ($csvdata->data as $key => $line) {
-        $i = $key + 1;
-
-        $username = $line[0];
-        $filename = $values['directory'] . '/' . $line[1];
-
-        if (method_exists($authobj, 'is_username_valid') && !$authobj->is_username_valid($username)) {
-            $csverrors[] = get_string('uploadcsverrorinvalidusername', 'admin', $i);
-        }
-        if (record_exists_select('usr', 'LOWER(username) = ?', strtolower($username)) || isset($LEAP2AFILES[strtolower($username)])) {
-            $csverrors[] = get_string('uploadcsverroruseralreadyexists', 'admin', $i, hsc($username));
-        }
-
-        if (!is_readable($filename)) {
-            $csverrors[] = get_string('importfilenotreadable', 'admin', $i, hsc($filename));
-        }
-        if (!in_array(mime_content_type($filename), $ziptypes)) {
-            $csverrors[] = get_string('importfileisnotazipfile', 'admin', hsc($filename));
-        }
-
-        $LEAP2AFILES[strtolower($username)] = $filename;
+    foreach ($csvdata->data as $user) {
+        $username = $user[0];
+        $filename = $user[1];
+        $LEAP2AFILES[$username] = "$importdir/users/$filename";
     }
-
-    if (empty($csverrors) && !empty($LEAP2AFILES)) {
-        // Try the unzip command just to check it's installed
-        $testfile = current($LEAP2AFILES);
-        $command = sprintf('%s %s %s',
-            escapeshellcmd(get_config('pathtounzip')),
-            get_config('unziplistarg'),
-            escapeshellarg($testfile)
-        );
-        $output = array();
-        exec($command, $output, $returnvar);
-        if ($returnvar != 0) {
-            log_debug("unzip command failed with return value $returnvar");
-            // Let's make it obvious if the cause is obvious :)
-            if ($returnvar == 127) {
-                log_debug("This means that 'unzip' isn't installed, or the config var \$cfg->pathtounzip is not"
-                    . " pointing at unzip (see Mahara's file lib/config-defaults.php)");
-            }
-            $csverrors[] = get_string('unzipfailed', 'admin', hsc($testfile));
-        }
-    }
-
-    if (!empty($csverrors)) {
-        $form->set_error('directory', implode("<br />\n", $csverrors));
-        $LEAP2AFILES = array();
-    }
-
 }
 
 /**
