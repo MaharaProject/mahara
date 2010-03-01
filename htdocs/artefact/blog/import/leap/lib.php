@@ -165,6 +165,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
      * entry having out-of-line content), we attach that file to the entry.
      */
     public static function setup_relationships(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
+        $newartefactmapping = array();
         switch ($strategy) {
         case self::STRATEGY_IMPORT_AS_BLOG:
             foreach ($otherentries as $entryid) {
@@ -184,6 +185,11 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
                         $artefactids = $importer->get_artefactids_imported_by_entryid((string)$blogpostlink['href']);
                         if (isset($artefactids[0])) {
                             $blogpost->attach($artefactids[0]);
+                        } else { // it may be just an attached file, with no leap2a element in its own right ....
+                            if ($id = self::attach_linked_file($blogpostentry, $blogpostlink, $importer)) {
+                                $blogpost->attach($id);
+                                $newartefactmapping[(string)$entry->id][] = $id;
+                            }
                         }
                     }
                     if ($blogpost) {
@@ -200,6 +206,33 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
         default:
             throw new ImportException($importer, 'TODO: get_string: unknown strategy chosen for importing entry');
         }
+        return $newartefactmapping;
+    }
+
+    /**
+     * Attaches a file to a blogpost entry that was just linked directly, rather than having a leap2a entry
+     * See http://wiki.cetis.ac.uk/LEAP2A_relationships#Attachments
+     *
+     * @param SimpleXMLElement $blogpostentry
+     * @param SimpleXMLElement $blogpostlink
+     * @param PluginImportLeap $importer
+     */
+    private static function attach_linked_file($blogpostentry, $blogpostlink, PluginImportLeap $importer) {
+        $importer->trace($blogpostlink);
+        $pathname = urldecode((string)$blogpostlink['href']);
+        $dir = dirname($importer->get('filename'));
+        $pathname = $dir . DIRECTORY_SEPARATOR . $pathname;
+        if (!file_exists($pathname)) {
+            return false;
+        }
+        // Note: this data is passed (eventually) to ArtefactType->__construct,
+        // which calls strtotime on the dates for us
+        $data = (object)array(
+            'title' => (string)$blogpostentry->title . ' ' . get_string('attachment', 'artefact.blog'),
+            'owner' => $importer->get('usr'),
+            'filetype' => mime_content_type($pathname),
+        );
+        return ArtefactTypeFile::save_file($pathname, $data, $importer->get('usrobj'), true);
     }
 
     /**

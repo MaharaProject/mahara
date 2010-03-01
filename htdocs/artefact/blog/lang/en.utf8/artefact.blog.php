@@ -37,6 +37,7 @@ $string['alignment'] = 'Alignment';
 $string['attach'] = 'Attach';
 $string['attachedfilelistloaded'] = 'Attached file list loaded';
 $string['attachedfiles'] = 'Attached files';
+$string['attachment'] = 'Attachment';
 $string['attachments'] = 'Attachments';
 $string['blogcopiedfromanotherview'] = 'Note: This block has been copied from another View. You may move it around or remove it, but you cannot change what %s is in it.';
 $string['blogdesc'] = 'Description';
