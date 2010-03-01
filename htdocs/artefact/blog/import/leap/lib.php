@@ -188,7 +188,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
                         } else { // it may be just an attached file, with no leap2a element in its own right ....
                             if ($id = self::attach_linked_file($blogpostentry, $blogpostlink, $importer)) {
                                 $blogpost->attach($id);
-                                $newartefactmapping[(string)$entry->id][] = $id;
+                                $newartefactmapping[(string)$blogpostlink['href']][] = $id;
                             }
                         }
                     }
