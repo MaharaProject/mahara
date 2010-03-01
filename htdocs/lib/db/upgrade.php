@@ -1351,6 +1351,19 @@ function xmldb_core_upgrade($oldversion=0) {
         set_remoteavatars_default();
     }
 
+    if ($oldversion < 2010022500) {
+        set_config('formsecret', get_random_key());
+        require_once(get_config('docroot') . 'lib/antispam.php');
+        if(checkdnsrr('test.uribl.com.black.uribl.com', 'A')) {
+            set_config('antispam', 'advanced');
+        }
+        else {
+            set_config('antispam', 'simple');
+        }
+        set_config('spamhaus', 0);
+        set_config('surbl', 0);
+    }
+     
     if ($oldversion < 2010031000) {
         // For existing sites, preserve current user search behaviour:
         // Users are only searchable by their display names.

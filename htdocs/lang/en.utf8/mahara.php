@@ -516,6 +516,9 @@ $string['Invitations'] = 'Invitations';
 $string['config'] = 'Config';
 
 $string['sendmessage'] = 'Send message';
+$string['spamtrap'] = 'Spam trap';
+$string['formerror'] = 'There was an error processing your submission. Please try again.';
+$string['formerroremail'] = 'Contact us at %s if you continue to have problems.';
 
 $string['notinstallable'] = 'Not installable!';
 $string['installedplugins'] = 'Installed plugins';

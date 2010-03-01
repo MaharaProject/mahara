@@ -106,7 +106,7 @@ pre, tt {
 	width: 96%;
 }
 
-.hidden {
+.hidden, .dontshow {
     display: none;
 }
 /* Hides without being "destructive" - element + children still have full

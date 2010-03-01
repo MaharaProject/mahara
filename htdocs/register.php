@@ -32,7 +32,9 @@ define('SECTION_PLUGINNAME', 'site');
 define('SECTION_PAGE', 'register');
 require('init.php');
 require_once('pieforms/pieform.php');
+require_once('lib/antispam.php');
 define('TITLE', get_string('register'));
+define('SPAM_SCORE', 3);
 $key = param_alphanum('key', null);
 
 /*
@@ -159,9 +161,22 @@ if (isset($key)) {
 
 // Default page - show the registration form
 
+// we're in the middle of processing the form, so read the time
+// from the form rather than getting a new one
+if ($_POST) {
+    $time = $_POST['timestamp'];
+}
+else {
+    $time = time();
+}
+
+$fields = array('firstname', 'lastname', 'email', 'institution', 'tandc', 'submit', 'invisiblefield', 'invisiblesubmit');
+$hashed_fields = hash_fieldnames($fields, $time);
+
 $elements = array(
     'firstname' => array(
         'type' => 'text',
+        'name' => $hashed_fields['firstname'],
         'title' => get_string('firstname'),
         'rules' => array(
             'required' => true
@@ -169,6 +184,7 @@ $elements = array(
     ),
     'lastname' => array(
         'type' => 'text',
+        'name' => $hashed_fields['lastname'],
         'title' => get_string('lastname'),
         'rules' => array(
             'required' => true
@@ -176,6 +192,7 @@ $elements = array(
     ),
     'email' => array(
         'type' => 'text',
+        'name' => $hashed_fields['email'],
         'title' => get_string('emailaddress'),
         'rules' => array(
             'required' => true,
@@ -202,6 +219,7 @@ if (count($institutions) > 1) {
     natcasesort($options);
     $elements['institution'] = array(
         'type' => 'select',
+        'name' => $hashed_fields['institution'],
         'title' => get_string('institution'),
         'options' => $options,
         'rules' => array(
@@ -215,6 +233,7 @@ else if ($institutions) { // Only one option - probably mahara ('No Institution'
 
     $elements['institution'] = array(
         'type' => 'hidden',
+        'name' => $hashed_fields['institution'],
         'value' => $institution->name
     );
 }
@@ -224,6 +243,7 @@ else {
 
 $elements['tandc'] = array(
     'type' => 'radio',
+    'name' => $hashed_fields['tandc'],
     'title' => get_string('iagreetothetermsandconditions', 'auth.internal'),
     'description' => get_string('youmustagreetothetermsandconditions', 'auth.internal'),
     'options' => array(
@@ -236,11 +256,36 @@ $elements['tandc'] = array(
     ),
     'separator' => ' &nbsp; '
 );
-
+$elements['invisiblefield'] = array(
+    'type' => 'text',
+    'name' => $hashed_fields['invisiblefield'],
+    'title' => get_string('spamtrap'),
+    'defaultvalue' => '',
+    'class' => 'dontshow',
+);
+$elements['timestamp'] = array(
+    'type' => 'hidden',
+    'value' => $time,
+);
+$elements['invisiblesubmit'] = array(
+    'type'  => 'submit',
+    'name' => $hashed_fields['invisiblesubmit'],
+    'value' => get_string('spamtrap'),
+    'class' => 'dontshow',
+);
 $elements['submit'] = array(
     'type' => 'submit',
+    'name' => $hashed_fields['submit'],
     'value' => get_string('register'),
 );
+
+// swap the name and email fields at random
+if (rand(0,1)) {
+    $firstname = array_shift($elements);
+    $lastname = array_shift($elements);
+    $email = array_shift($elements);
+    array_unshift($elements, $email, $firstname, $lastname);
+}
 
 $form = array(
     'name' => 'register',
@@ -261,29 +306,82 @@ $form = array(
  */
 function register_validate(Pieform $form, $values) {
     global $SESSION;
-    $institution = $values['institution'];
+    $error = false;
+    $currenttime = time();
+    // read the timestamp field
+    $timestamp = $values['timestamp'];
+    // recompute the field names
+    $fields = array('firstname', 'lastname', 'email', 'institution', 'tandc', 'submit', 'invisiblefield', 'invisiblesubmit');
+    $hashed = hash_fieldnames($fields, $timestamp);
+    // make sure the submission is less than a day, and more than 5 seconds old
+    if ($currenttime - $timestamp < 5 || $currenttime - $timestamp > 86400) {
+        $error = true;
+    }
+    // make sure the real submit button was used. If it wasn't, it won't exist.
+    elseif (!isset($values[$hashed['submit']]) || isset($values[$hashed['invisiblesubmit']])) {
+        $error = true;
+    }
+    // make sure the invisible field is empty
+    elseif (!isset($values[$hashed['invisiblefield']]) || $values[$hashed['invisiblefield']] != '') {
+        $error = true;
+    }
+    // make sure all the other data fields exist
+    elseif (!(isset($values[$hashed['firstname']]) && isset($values[$hashed['lastname']]) &&
+        isset($values[$hashed['email']]) && isset($values[$hashed['tandc']]) &&
+        isset($values[$hashed['institution']]))) {
+        $error = true;
+    }
+    else {
+        $spamtrap = new_spam_trap(array(
+            array(
+                'type' => 'name',
+                'value' => $values[$hashed['firstname']],
+            ),
+            array(
+                'type' => 'name',
+                'value' => $values[$hashed['lastname']],
+            ),
+            array(
+                'type' => 'email',
+                'value' => $values[$hashed['email']],
+            ),
+        ));
+        if ($spamtrap->is_spam()) {
+            $error = true;
+        }
+    }
+    if ($error) { 
+        $msg = get_string('formerror');
+        $emailcontact = get_config('emailcontact');
+        if (!empty($emailcontact)) {
+            $msg .= ' ' . get_string('formerroremail', 'mahara', $emailcontact, $emailcontact);
+        }
+        $SESSION->add_error_msg($msg);
+        $form->set_error($hashed['submit'], '');
+    }
+    $institution = $values[$hashed['institution']];
     safe_require('auth', 'internal');
 
     // First name and last name must contain at least one non whitespace
     // character, so that there's something to read
-    if (!$form->get_error('firstname') && !preg_match('/\S/', $values['firstname'])) {
-        $form->set_error('firstname', $form->i18n('required'));
+    if (!$form->get_error($hashed['firstname']) && !preg_match('/\S/', $values[$hashed['firstname']])) {
+        $form->set_error($hashed['firstname'], $form->i18n('required'));
     }
 
-    if (!$form->get_error('lastname') && !preg_match('/\S/', $values['lastname'])) {
-        $form->set_error('lastname', $form->i18n('required'));
+    if (!$form->get_error($hashed['lastname']) && !preg_match('/\S/', $values[$hashed['lastname']])) {
+        $form->set_error($hashed['lastname'], $form->i18n('required'));
     }
 
     // The e-mail address cannot already be in the system
-    if (!$form->get_error('email')
-        && (record_exists('usr', 'email', $values['email'])
-        || record_exists('artefact_internal_profile_email', 'email', $values['email']))) {
-        $form->set_error('email', get_string('emailalreadytaken', 'auth.internal'));
+    if (!$form->get_error($hashed['email'])
+        && (record_exists('usr', 'email', $values[$hashed['email']])
+        || record_exists('artefact_internal_profile_email', 'email', $values[$hashed['email']]))) {
+        $form->set_error($hashed['email'], get_string('emailalreadytaken', 'auth.internal'));
     }
     
     // If the user hasn't agreed to the terms and conditions, don't bother
-    if ($values['tandc'] != 'yes') {
-        $form->set_error('tandc', get_string('youmaynotregisterwithouttandc', 'auth.internal'));
+    if ($values[$hashed['tandc']] != 'yes') {
+        $form->set_error($hashed['tandc'], get_string('youmaynotregisterwithouttandc', 'auth.internal'));
     }
 
     $institution = get_record_sql('
@@ -298,36 +396,48 @@ function register_validate(Pieform $form, $values) {
             i.name, i.maxuseraccounts, i.registerallowed', array($institution));
 
     if (!empty($institution->maxuseraccounts) && $institution->count >= $institution->maxuseraccounts) {
-        $form->set_error('institution', get_string('institutionfull'));
+        $form->set_error($hashed['institution'], get_string('institutionfull'));
     }
 
     if (!$institution->registerallowed) {
-        $form->set_error('institution', get_string('registrationnotallowed'));
+        $form->set_error($hashed['institution'], get_string('registrationnotallowed'));
     }
 
 }
 
 function register_submit(Pieform $form, $values) {
     global $SESSION;
+    // read the timestamp field
+    $timestamp = $values['timestamp'];
+    // recompute the field names
+    $fields = array('firstname', 'lastname', 'email', 'institution', 'tandc', 'submit', 'invisiblefield', 'invisiblesubmit');
+    $hashed = hash_fieldnames($fields, $timestamp);
+
+    $record_values = array(
+        'firstname' => $values[$hashed['firstname']],
+        'lastname' => $values[$hashed['lastname']],
+        'email' => $values[$hashed['email']],
+        'institution' => $values[$hashed['institution']],
+    );
 
     // store password encrypted
     // don't die_info, since reloading the page shows the login form.
     // instead, redirect to some other page that says this
     safe_require('auth', 'internal');
-    $values['key']   = get_random_key();
+    $record_values['key']   = get_random_key();
     // @todo the expiry date should be configurable
-    $values['expiry'] = db_format_timestamp(time() + 86400);
-    $values['lang'] = $SESSION->get('lang');
+    $record_values['expiry'] = db_format_timestamp(time() + 86400);
+    $record_values['lang'] = $SESSION->get('lang');
     try {
-        insert_record('usr_registration', $values);
+        insert_record('usr_registration', $record_values);
 
-        $user =(object) $values;
+        $user =(object) $record_values;
         $user->admin = 0;
         $user->staff = 0;
         email_user($user, null,
             get_string('registeredemailsubject', 'auth.internal', get_config('sitename')),
-            get_string('registeredemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('sitename')),
-            get_string('registeredemailmessagehtml', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('wwwroot'), $values['key'], get_config('sitename')));
+            get_string('registeredemailmessagetext', 'auth.internal', $record_values['firstname'], get_config('sitename'), get_config('wwwroot'), $record_values['key'], get_config('sitename')),
+            get_string('registeredemailmessagehtml', 'auth.internal', $record_values['firstname'], get_config('sitename'), get_config('wwwroot'), $record_values['key'], get_config('wwwroot'), $record_values['key'], get_config('sitename')));
     }
     catch (EmailException $e) {
         log_warn($e);

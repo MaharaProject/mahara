@@ -79,4 +79,9 @@ $cfg->dbprefix = '';
 // this is a big security hole.
 $cfg->dataroot = '/path/to/uploaddir';
 
+// If set, this email address will be displayed in the error message if a form
+// submission is suspected of being spam. This reduces the frustration for the
+// user in the event of a false positive.
+$cfg->emailcontact = '';
+
 // closing php tag intentionally omitted to prevent whitespace issues
