@@ -332,6 +332,7 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
         // don't import persondata over mnet
         // because it will just silently overwrite stuff
         // which is not really desirable.
+        $queue->loglevel = get_config('leapovermnetloglevel');
         $importdata['skippersondata'] = true;
     }
     $queue->data = serialize($importdata);
