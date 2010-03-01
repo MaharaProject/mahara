@@ -369,7 +369,7 @@ class PluginImportLeap extends PluginImport {
                 throw new SystemException("import_from_load_mapping(): $classname::import_using_strategy has not return a list");
             }
 
-            $this->artefactids = array_merge($this->artefactids, $artefactmapping);
+            $this->artefactids = array_merge_recursive($this->artefactids, $artefactmapping);
 
             $usedlist[] = $entryid;
             if (isset($strategydata['other_required_entries'])) {
@@ -400,11 +400,15 @@ class PluginImportLeap extends PluginImport {
             $strategydata = $this->loadmapping[$entryid];
             $classname = 'LeapImport' . ucfirst($strategydata['artefactplugin']);
             $entry = $this->get_entry_by_id($entryid);
-            call_static_method($classname, 'setup_relationships',
+            $maybeartefacts = call_static_method($classname, 'setup_relationships',
                 $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
+            if (is_array($maybeartefacts)) { // some might add new artefacts (eg files attached by relpath, rather than leap id)
+                $this->artefactids = array_merge_recursive($this->artefactids, $maybeartefacts);
+            }
         }
 
         // Fix up any artefact references in the content of imported artefacts
+        // TODO: restrict this to the ones that were imported right now
         if ($artefacts = get_records_array('artefact', 'owner', $this->get('usr'), '', 'id, title, description')) {
             foreach ($artefacts as $artefact) {
                 $this->fix_artefact_references($artefact);
