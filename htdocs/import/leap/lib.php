@@ -817,7 +817,8 @@ class PluginImportLeap extends PluginImport {
      * @return boolean Whether it's worth checking in more detail
      */
     private function artefact_reference_quickcheck($field) {
-        return (false !== strpos($field, 'rel="has_part"'))
+        return (false !== strpos($field, 'rel="leap:has_part"')
+                || false !== strpos($field, 'rel="enclosure"'))
             && (
                 (false !== strpos($field, '<img'))
                 || (false !== strpos($field, '<a'))
@@ -831,7 +832,7 @@ class PluginImportLeap extends PluginImport {
      * @return string The fixed field
      */
     private function fix_artefact_reference($field) {
-        $match = '#<((img)|a)([^>]+)rel="has_part" href="portfolio:artefact([\d]+)"([^>]*)>#';
+        $match = '#<((img)|a)([^>]+)rel="(?:leap:has_part|enclosure)" (?:src|href)="([^"]+)"([^>]*)>#';
         $field = preg_replace_callback($match,
             array($this, '_fixref'),
             $field);
@@ -844,11 +845,11 @@ class PluginImportLeap extends PluginImport {
             $basepath = get_mahara_install_subdirectory();
         }
 
-        $artefacts = $this->get_artefactids_imported_by_entryid('portfolio:artefact' . $matches[4]);
+        $artefacts = $this->get_artefactids_imported_by_entryid($matches[4]);
         if (is_null($artefacts) || count($artefacts) != 1) {
             // This can happen if a leap2a xml file is uploaded that refers to
             // files that (naturally) weren't uploaded with it.
-            log_debug("Warning: fixref was expecting one artefact to have been imported by entry portfolio:artefact{$matches[4]} but seems to have gotten " . count($artefacts));
+            log_debug("Warning: fixref was expecting one artefact to have been imported by entry {$matches[4]} but seems to have gotten " . count($artefacts));
             return $matches[0];
         }
         return '<' . $matches[1] . $matches[3] . ($matches[1] == 'img' ? 'src' : 'href') . '="'
