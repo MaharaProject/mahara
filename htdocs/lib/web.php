@@ -167,7 +167,7 @@ tinyMCE.init({
     content_css : {$content_css},
     //document_base_url: {$jswwwroot},
     setup: function(ed) {
-        if (focusEditor && ed.id == focusEditor) {
+        if (typeof focusEditor!="undefined" && focusEditor && ed.id == focusEditor) {
             ed.onInit.add(function(ed) {
                 ed.focus();
             });
