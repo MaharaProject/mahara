@@ -32,7 +32,8 @@ require_once('pieforms/pieform.php');
 require_once('institution.php');
 safe_require('artefact', 'internal');
 safe_require('artefact', 'file');
-raise_memory_limit("512M");
+raise_memory_limit('1024M');
+set_time_limit(300); // 5 minutes
 
 define('TITLE', get_string('bulkleap2aimport', 'admin'));
 
@@ -183,7 +184,6 @@ function bulkimport_submit(Pieform $form, $values) {
     foreach ($LEAP2AFILES as $username => $filename) {
 
         log_debug('adding user ' . $username . ' from ' . $filename);
-        set_time_limit(10);
 
         $date = time();
         $nicedate = date('Y/m/d h:i:s', $date);
