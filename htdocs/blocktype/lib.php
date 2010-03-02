@@ -653,6 +653,14 @@ class BlockInstance {
             $smarty->assign('feedlink', get_config('wwwroot') . 'artefact/blog/atom.php?artefact='
                 . $configdata['artefactid'] . '&view=' . $this->get('view'));
         }
+        elseif($this->get('blocktype') == 'recentforumposts') {
+            $configdata = $this->get('configdata');
+            if(get_field('"group"', 'public', 'id', $configdata['groupid'])) {
+                $smarty->assign('hasfeed', true);
+                $smarty->assign('feedlink', get_config('wwwroot') . 'interaction/forum/atom.php?type=g&id=' .
+                    $configdata['groupid']);
+            }
+        }
 
         $smarty->assign('content', $content);
 
