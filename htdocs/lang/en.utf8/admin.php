@@ -558,6 +558,16 @@ $string['unsuspendinstitutiondescription'] = 'Here you may unsuspend an institut
 $string['unsuspendinstitutiondescription_top'] = '<em>Beware:</em> Unsuspending an institution without resetting or turning off its expiry date may result in a daily re-suspension.';
 $string['unsuspendinstitutiondescription_top_instadmin'] = 'Users of suspended institutions are unable to log in. Contact site administrator to unsuspend the institution.';
 
+// Bulk LEAP2A User export
+$string['bulkexport'] = 'Export users';
+$string['bulkexportempty'] = 'Nothing suitable to export. Please double-check the list of usernames.';
+$string['bulkexportinstitution'] = 'The institution from which all users should be exported';
+$string['bulkexporttitle'] = 'Export users to LEAP2A files';
+$string['bulkexportdescription'] = 'Choose an institution to export <b>OR</b> specify a list of usernames:';
+$string['bulkexportusernames'] = 'Usernames to export';
+$string['bulkexportusernamesdescription'] = 'A list of the users (one username per line) to be exported along with their data';
+$string['couldnotexportusers'] = 'The following user(s) could not be exported: %s';
+
 // Admin User Search
 $string['Query'] = 'Query';
 $string['Institution'] = 'Institution';
