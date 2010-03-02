@@ -83,14 +83,11 @@ if ($feedtype == 'g') {
     $sql = "
         SELECT u.firstname, u.lastname, p.id, p.parent, p.topic, p.subject, p.body, p.ctime
         FROM {interaction_forum_post} p
-        INNER JOIN (
-            SELECT t.id
-            FROM {interaction_forum_topic} t
-            INNER JOIN {interaction_instance} f ON t.forum = f.id
-            WHERE f.group = ?
-        ) gt ON p.topic = gt.id
+        INNER JOIN {interaction_forum_topic} t ON p.topic = t.id
+        INNER JOIN {interaction_instance} f ON t.forum = f.id
         INNER JOIN {usr} u ON p.poster = u.id
-        WHERE p.deleted = 0";
+        WHERE f.group = ?
+        AND p.deleted = 0";
 
     $link = get_config('wwwroot') . 'interaction/forum/index.php?group=' . $id;
     $title = implode(' - ', array(get_field('group', 'name', 'id', $id),
@@ -125,10 +122,10 @@ elseif ($feedtype == 't') {
 
     $sql = "
         SELECT u.firstname, u.lastname, p.id, p.parent, p.topic, p.subject, p.body, p.ctime
-        FROM {interaction_forum_post} p, {usr} u
+        FROM {interaction_forum_post} p
+        INNER JOIN {usr} u ON p.poster = u.id
         WHERE p.deleted = 0
-        AND p.topic = ?
-        AND p.poster = u.id";
+        AND p.topic = ?";
 
     $link = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $id;
     $title = implode(' - ', array(get_field('group', 'name', 'id', $groupid),

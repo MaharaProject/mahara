@@ -131,7 +131,7 @@ if ($forums && $membership) {
 
 $feedlink = get_config('wwwroot') . 'interaction/forum/atom.php?type=g&id=' . $group->id;
 $headers = array();
-if ($publicgroup) {
+if ($group->public) {
     $headers[] ='<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '" />';
 }
 
