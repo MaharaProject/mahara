@@ -172,8 +172,8 @@ $feed = array(
 );
 
 $posts = array();
-if($postrecords) {
-    foreach($postrecords as &$post) {
+if ($postrecords) {
+    foreach ($postrecords as &$post) {
         $parent = $post->parent;
         while(!$post->subject) {
             $post->subject = get_field('interaction_forum_post', 'subject', 'id', $parent);
