@@ -139,4 +139,7 @@ $string['postscopiedfromview'] = 'Posts copied from %s';
 $string['youhavenoblogs'] = 'You have no blogs.';
 $string['youhaveoneblog'] = 'You have 1 blog.';
 $string['youhaveblogs'] = 'You have %s blogs.';
+
+$string['feedsnotavailable'] = 'Feeds are not available for this artefact type.';
+$string['feedrights'] = 'Copyright %s.';
 ?>

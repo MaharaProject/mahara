@@ -561,6 +561,21 @@ class View {
         return $data;
     }
 
+    public function is_public() {
+        $timeformat = get_string('strftimedatetimeshort');
+        $now = strtotime(date('Y/m/d H:i'));
+        foreach($this->get_access($timeformat) as $access) {
+            if($access['type'] == 'public' && (
+                ($access['startdate'] == null && $access['stopdate'] == null) ||
+                ($access['startdate'] == null && strtotime($access['stopdate']) > $now) ||
+                (strtotime($access['startdate']) < $now && $access['stopdate'] == null) ||
+                (strtotime($access['startdate']) < $now && strtotime($access['stopdate']) > $now))) {
+                    return true;
+            }
+        }
+        return false;
+    }
+
     public function set_access($accessdata) {
         global $USER;
         require_once('activity.php');

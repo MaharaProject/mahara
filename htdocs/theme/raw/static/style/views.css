@@ -206,3 +206,8 @@ input.addcolumn, input.removecolumn {
     background: none;
     border: none;
 }
+
+/* Feed icons */
+img.feedicon {
+    margin-left: 10px;
+}

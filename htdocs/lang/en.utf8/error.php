@@ -96,6 +96,8 @@ $string['youcannotviewthisusersprofile'] = 'You cannot view this user\'s profile
 
 $string['artefactnotfoundmaybedeleted'] = "Artefact with id %s not found (maybe it has been deleted already?)";
 $string['artefactnotfound'] = 'Artefact with id %s not found';
+$string['artefactnotinview'] = 'Artefact %s not in View %s';
+$string['artefactonlyviewableinview'] = 'Artefacts of this type are only viewable within a View';
 $string['notartefactowner'] = 'You do not own this artefact';
 
 $string['blockinstancednotfound'] = 'Block instance with id %s not found';
