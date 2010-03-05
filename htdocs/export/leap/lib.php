@@ -817,7 +817,7 @@ class LeapExportOutputFilter {
     private function replace_artefact_link($matches) {
         $artefactid = $matches[2];
         if (in_array($artefactid, $this->artefactids)) {
-            return '<a rel="has_part" href="portfolio:artefact' . hsc($artefactid) . '"' . $matches[5] . '>';
+            return '<a rel="leap:has_part" href="portfolio:artefact' . hsc($artefactid) . '"' . $matches[5] . '>';
         }
 
         // If the artefact isn't in the export, then we can't provide an 
@@ -833,7 +833,7 @@ class LeapExportOutputFilter {
     private function replace_download_link($matches) {
         $artefactid = $matches[3];
         if (in_array($artefactid, $this->artefactids)) {
-            return '<' . $matches[1] . 'rel="has_part" href="portfolio:artefact' . hsc($artefactid) . '"' . $matches[5] . '>';
+            return '<' . $matches[1] . 'rel="leap:has_part" href="portfolio:artefact' . hsc($artefactid) . '"' . $matches[5] . '>';
         }
 
         log_debug("Not providing an export-relative link for $artefactid");
