@@ -29,14 +29,14 @@ defined('INTERNAL') || die();
 
 abstract class PluginImport extends Plugin {
 
-    private $id;
-    private $data;
-    private $host; // this might move
-    private $expirytime;
-    private $token;
-    private $usr;
-    private $usrobj;
-    private $importertransport;
+    protected $id;
+    protected $data;
+    protected $host; // this might move
+    protected $expirytime;
+    protected $token;
+    protected $usr;
+    protected $usrobj;
+    protected $importertransport;
 
     public function __construct($id, $record=null) {
         if (empty($record)) {
