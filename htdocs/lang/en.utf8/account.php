@@ -60,6 +60,9 @@ $string['showviewcolumns'] = 'Show controls to add and remove columns when editi
 $string['tagssideblockmaxtags'] = 'Maximum tags in cloud';
 $string['tagssideblockmaxtagsdescription'] = 'Maximum number of tags to display in your Tag Cloud';
 
+$string['hiderealname'] = 'Hide real name';
+$string['hiderealnamedescription'] = 'Check this box if you have set a display name and you do not want other users to be able to find you by your real name in user searches.';
+
 $string['prefssaved']  = 'Preferences saved';
 $string['prefsnotsaved'] = 'Failed to save your Preferences!';
 

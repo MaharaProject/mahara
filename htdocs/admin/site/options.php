@@ -257,6 +257,12 @@ $siteoptionform = array(
             'defaultvalue' => get_config('remoteavatars'),
             'help'         => true,
         ),
+        'userscanhiderealnames' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('userscanhiderealnames', 'admin'),
+            'description'  => get_string('userscanhiderealnamesdescription', 'admin'),
+            'defaultvalue' => get_config('userscanhiderealnames'),
+        ),
     )
 );
 
@@ -282,7 +288,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
         'captchaonregisterform', 'captchaoncontactform', 'showselfsearchsideblock', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
-        'remoteavatars',
+        'remoteavatars', 'userscanhiderealnames'
     );
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');

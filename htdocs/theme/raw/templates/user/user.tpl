@@ -22,7 +22,7 @@
 	<div class="rightdiv">
 	<h3>
 		<a href="{$WWWROOT}user/view.php?id={$user->id}">
-			{$user->id|display_name|escape}
+			{$user->display_name|escape}
 		</a>
 		- {str tag='pending' section='group'}
 	</h3>
@@ -60,7 +60,7 @@
 	<div class="rightdiv">
 	<h3>
 		<a href="{$WWWROOT}user/view.php?id={$user->id}">
-			{$user->id|display_name|escape}
+			{$user->display_name|escape}
 		</a>
 		{if $page == 'find'}
 			- {str tag='existingfriend' section='group'}
@@ -110,7 +110,7 @@
 	<div class="rightdiv">
 	<h3>
 		<a href="{$WWWROOT}user/view.php?id={$user->id}">
-			{$user->id|display_name|escape}
+			{$user->display_name|escape}
 		</a>
 	</h3>
 	{if $user->introduction}
@@ -147,7 +147,7 @@
 	<div class="rightdiv">
 	<h3>
 		<a href="{$WWWROOT}user/view.php?id={$user->id}">
-			{$user->id|display_name|escape}
+			{$user->display_name|escape}
 		</a>
 	</h3>
 	{if $user->introduction}

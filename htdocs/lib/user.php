@@ -203,6 +203,7 @@ function expected_account_preferences() {
                  'addremovecolumns' => 0,
                  'maildisabled'   => 0,
                  'tagssideblockmaxtags' => get_config('tagssideblockmaxtags'),
+                 'hiderealname'   => 0,
                  );
 }
 
@@ -629,10 +630,11 @@ function process_email($address) {
  * @param object $userto the user that is looking at the string representation (if left
  * blank, will default to the currently logged in user).
  * @param boolean $nameonly do not append the user's username even if $userto can see it.
+ * @param boolean $realname show the user's real name even if preferredname exists
  *
  * @returns string name to display
  */
-function display_name($user, $userto=null, $nameonly=false) {
+function display_name($user, $userto=null, $nameonly=false, $realname=false) {
     global $USER;
     static $resultcache = array();
     static $usercache   = array();
@@ -710,25 +712,25 @@ function display_name($user, $userto=null, $nameonly=false) {
     $user->id   = (isset($user->id)) ? $user->id : null;
     $userto->id = (isset($userto->id)) ? $userto->id : null;
 
-    if (isset($resultcache[$user->id][$userto->id][$nameonly])) {
-        return $resultcache[$user->id][$userto->id][$nameonly];
+    if (isset($resultcache[$user->id][$userto->id][$nameonly][$realname])) {
+        return $resultcache[$user->id][$userto->id][$nameonly][$realname];
     }
 
     // if they don't have a preferred name set, just return here
     $firstlast = (isset($user->deleted) && $user->deleted) ? get_string('deleteduser') : ($user->firstname . ' ' . $user->lastname);
     if (empty($user->preferredname)) {
         if ((!empty($userto->admin) || !empty($userto->staff)) && !$nameonly) {
-            return ($resultcache[$user->id][$userto->id][$nameonly] = $firstlast . ' (' . $user->username . ')');
+            return ($resultcache[$user->id][$userto->id][$nameonly][$realname] = $firstlast . ' (' . $user->username . ')');
         }
-        return ($resultcache[$user->id][$userto->id][$nameonly] = $firstlast);
+        return ($resultcache[$user->id][$userto->id][$nameonly][$realname] = $firstlast);
     }
     else if ($user->id == $userto->id) {
         // If viewing our own name, show it how we like it
-        return ($resultcache[$user->id][$userto->id][$nameonly] = $user->preferredname);
+        return ($resultcache[$user->id][$userto->id][$nameonly][$realname] = $user->preferredname);
     }
 
     if ((!empty($userto->admin) || !empty($userto->staff)) && !$nameonly) {
-        return ($resultcache[$user->id][$userto->id][$nameonly]
+        return ($resultcache[$user->id][$userto->id][$nameonly][$realname]
             = $user->preferredname . ' (' . $firstlast . ' - ' . $user->username . ')');
     }
 
@@ -738,11 +740,11 @@ function display_name($user, $userto=null, $nameonly=false) {
                 ON g1.group = g2.group
             JOIN {group} g ON (g.id = g1.group AND g.deleted = 0)
             WHERE g1.member = ? AND g2.member = ? AND g2.role = 'tutor'";
-    if (record_exists_sql($sql, array($user->id, $userto->id))) {
-        return ($resultcache[$user->id][$userto->id][$nameonly]
+    if ($realname || record_exists_sql($sql, array($user->id, $userto->id))) {
+        return ($resultcache[$user->id][$userto->id][$nameonly][$realname]
             = $user->preferredname . ($nameonly ? '' : ' (' . $firstlast . ')'));
     }
-    return ($resultcache[$user->id][$userto->id][$nameonly] = $user->preferredname);
+    return ($resultcache[$user->id][$userto->id][$nameonly][$realname] = $user->preferredname);
 }
 
 /**
@@ -1235,7 +1237,7 @@ function get_new_username($desired) {
  */
 function get_users_data($userlist, $getviews=true) {
 	global $USER;
-    $sql = 'SELECT u.id, 0 AS pending,
+    $sql = 'SELECT u.id, 0 AS pending, ap.value AS hidenamepref,
                 COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages,
                 COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'friendscontrol\'), \'auth\') AS friendscontrol,
                 (SELECT 1 FROM {usr_friend} WHERE ((usr1 = ? AND usr2 = u.id) OR (usr2 = ? AND usr1 = u.id))) AS friend,
@@ -1243,9 +1245,10 @@ function get_users_data($userlist, $getviews=true) {
                 (SELECT title FROM {artefact} WHERE artefacttype = \'introduction\' AND owner = u.id) AS introduction,
                 NULL AS message
                 FROM {usr} u
+                LEFT JOIN {usr_account_preference} ap ON (u.id = ap.usr AND ap.field = \'hiderealname\')
                 WHERE u.id IN (' . $userlist . ')
             UNION
-            SELECT u.id, 1 AS pending,
+            SELECT u.id, 1 AS pending, ap.value AS hidenamepref,
                 COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages,
                 NULL AS friendscontrol,
                 NULL AS friend,
@@ -1253,11 +1256,13 @@ function get_users_data($userlist, $getviews=true) {
                 (SELECT title FROM {artefact} WHERE artefacttype = \'introduction\' AND owner = u.id) AS introduction,
                 message
                 FROM {usr} u
+                LEFT JOIN {usr_account_preference} ap ON (u.id = ap.usr AND ap.field = \'hiderealname\')
                 JOIN {usr_friend_request} fr ON fr.requester = u.id
                 WHERE fr.owner = ?
                 AND u.id IN (' . $userlist . ')';
     $userid = $USER->get('id');
     $data = get_records_sql_assoc($sql, array($userid, $userid, $userid, $userid));
+    $allowhidename = get_config('userscanhiderealnames');
 
     foreach ($data as &$record) {
         if (isset($record->introduction)) {
@@ -1266,6 +1271,7 @@ function get_users_data($userlist, $getviews=true) {
 
         $record->messages = ($record->messages == 'allow' || $record->friend && $record->messages == 'friends' || $USER->get('admin')) ? 1 : 0;
         $record->institutions = get_institution_string_for_user($record->id);
+        $record->display_name = display_name($record->id, null, false, !$allowhidename || !$record->hidenamepref);
     }
 
     if (!$data || !$getviews || !$views = get_views(array_keys($data), null, null)) {

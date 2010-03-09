@@ -102,9 +102,12 @@ class PluginSearchInternal extends PluginSearch {
                     (gm.member = u.id AND gm.group = ' . (int)$data['group'] . $groupadminsql . ")\n";
             $sql .= $groupjoin;
         }
+        $sql .= "
+                LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = 'hiderealname')";
         $querydata = split(' ', preg_replace('/\s\s+/', ' ', strtolower(trim($query_string))));
+        $hidenameallowed = get_config('userscanhiderealnames') ? 'TRUE' : 'FALSE';
         $namesql = "(u.preferredname $ilike '%' || ? || '%')
-                    OR ((u.preferredname IS NULL OR u.preferredname = '')
+                    OR ((u.preferredname IS NULL OR u.preferredname = '' OR NOT $hidenameallowed OR h.value <> 1)
                         AND (u.firstname $ilike '%' || ? || '%' OR u.lastname $ilike '%' || ? || '%'))
                     OR (a.artefacttype IN $fieldlist
                         AND ( a.title $ilike '%' || ? || '%'))";
@@ -164,6 +167,8 @@ class PluginSearchInternal extends PluginSearch {
         if (isset($data['group'])) {
             $sql .= $groupjoin;
         }
+        $sql .= "
+                LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = 'hiderealname')";
 
         $sql .= $where . '
             ORDER BY ' . $data['orderby'];

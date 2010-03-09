@@ -164,6 +164,14 @@ if (get_config('showtagssideblock')) {
         'rules'        => array('integer' => true, 'minvalue' => 0, 'maxvalue' => 1000),
     );
 }
+if (get_config('userscanhiderealnames')) {
+    $elements['hiderealname'] = array(
+        'type'         => 'checkbox',
+        'title'        => get_string('hiderealname', 'account'),
+        'description'  => get_string('hiderealnamedescription', 'account'),
+        'defaultvalue' => $prefs->hiderealname,
+    );
+}
 $elements['submit'] = array(
     'type' => 'submit',
     'value' => get_string('save')
