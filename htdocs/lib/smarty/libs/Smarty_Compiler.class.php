@@ -1682,6 +1682,8 @@ class Smarty_Compiler extends Smarty {
         }
         // replace double quoted literal string with single quotes
         $_return = preg_replace('~^"([\s\w]+)"$~',"'\\1'",$_return);
+        // escape dollar sign if not printing a var
+        $_return = preg_replace('~\$(\W)~',"\\\\\$\\1",$_return);
         return $_return;
     }
 
