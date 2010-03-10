@@ -143,7 +143,7 @@ if (isset($key)) {
         $USER->reanimate($user->id, $authinstance->id);
 
         // A special greeting for special people
-        if (in_array($user->username, array('waawaamilk', 'Mjollnir`', 'Ned', 'richardm', 'fmarier'))) {
+        if (in_array($user->username, array('waawaamilk', 'Mjollnir`', 'Ned', 'richardm', 'fmarier', 'naveg'))) {
             $SESSION->add_ok_msg('MAMA!!! Maharababy happy to see you :D :D!');
         }
         else if ($user->username == 'htaccess') {
