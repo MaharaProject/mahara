@@ -166,13 +166,6 @@ tinyMCE.init({
     directionality: "{$tinymce_langdir}",
     content_css : {$content_css},
     //document_base_url: {$jswwwroot},
-    setup: function(ed) {
-        if (typeof focusEditor!="undefined" && focusEditor && ed.id == focusEditor) {
-            ed.onInit.add(function(ed) {
-                ed.focus();
-            });
-        }
-    },
     remove_script_host: false,
     relative_urls: false
 });
