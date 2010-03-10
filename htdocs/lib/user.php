@@ -1237,7 +1237,8 @@ function get_new_username($desired) {
  */
 function get_users_data($userlist, $getviews=true) {
 	global $USER;
-    $sql = 'SELECT u.id, 0 AS pending, ap.value AS hidenamepref,
+    $sql = 'SELECT u.id, u.username, u.preferredname, u.firstname, u.lastname, u.admin, u.staff, u.deleted,
+                0 AS pending, ap.value AS hidenamepref,
                 COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages,
                 COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'friendscontrol\'), \'auth\') AS friendscontrol,
                 (SELECT 1 FROM {usr_friend} WHERE ((usr1 = ? AND usr2 = u.id) OR (usr2 = ? AND usr1 = u.id))) AS friend,
@@ -1248,7 +1249,8 @@ function get_users_data($userlist, $getviews=true) {
                 LEFT JOIN {usr_account_preference} ap ON (u.id = ap.usr AND ap.field = \'hiderealname\')
                 WHERE u.id IN (' . $userlist . ')
             UNION
-            SELECT u.id, 1 AS pending, ap.value AS hidenamepref,
+            SELECT u.id, u.username, u.preferredname, u.firstname, u.lastname, u.admin, u.staff, u.deleted,
+                1 AS pending, ap.value AS hidenamepref,
                 COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages,
                 NULL AS friendscontrol,
                 NULL AS friend,
@@ -1271,7 +1273,7 @@ function get_users_data($userlist, $getviews=true) {
 
         $record->messages = ($record->messages == 'allow' || $record->friend && $record->messages == 'friends' || $USER->get('admin')) ? 1 : 0;
         $record->institutions = get_institution_string_for_user($record->id);
-        $record->display_name = display_name($record->id, null, false, !$allowhidename || !$record->hidenamepref);
+        $record->display_name = display_name($record, null, false, !$allowhidename || !$record->hidenamepref);
     }
 
     if (!$data || !$getviews || !$views = get_views(array_keys($data), null, null)) {
