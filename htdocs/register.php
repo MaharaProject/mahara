@@ -241,11 +241,17 @@ else {
     die_info(get_string('registeringdisallowed'));
 }
 
+$elements['tandctext'] = array(
+    'type' => 'textarea',
+    'rows' => 15,
+    'cols' => 60,
+    'readonly' => 'yes',
+    'value' => preg_replace('#([^\n])(\n)([^\n])#', '$1 $3', html2text(get_site_page_content('termsandconditions'))),
+);
 $elements['tandc'] = array(
     'type' => 'radio',
     'name' => $hashed_fields['tandc'],
     'title' => get_string('iagreetothetermsandconditions', 'auth.internal'),
-    'description' => get_string('youmustagreetothetermsandconditions', 'auth.internal'),
     'options' => array(
         'yes' => get_string('yes'),
         'no'  => get_string('no')
