@@ -631,7 +631,7 @@ class BlockInstance {
         }
 
         // if the artefact has a feed and the view is public, display a feed icon
-        if ($this->get('blocktype') == 'blog' && $this->get('view_obj')->is_public()) {
+        if ($this->get('blocktype') == 'blog' && !empty($configdata['artefactid']) && $this->get_view()->is_public()) {
             $smarty->assign('hasfeed', true);
             $smarty->assign('feedlink', get_config('wwwroot') . 'artefact/blog/atom.php?artefact='
                 . $configdata['artefactid'] . '&view=' . $this->get('view'));
