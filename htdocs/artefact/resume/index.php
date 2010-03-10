@@ -162,6 +162,7 @@ $personalinformationform = pieform(array(
                     'defaultvalue' => ((!empty($personalinformation)) 
                         ? $personalinformation->get_composite('dateofbirth') : null),
                     'title' => get_string('dateofbirth', 'artefact.resume'),
+                    'description' => get_string('dateformatguide'),
                     'help'  => true,
                 ),
                 'placeofbirth' => array(
