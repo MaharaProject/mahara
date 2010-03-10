@@ -40,6 +40,29 @@ define('TITLE', get_string('bulkleap2aimport', 'admin'));
 // Turn on autodetecting of line endings, so mac newlines (\r) will work
 ini_set('auto_detect_line_endings', 1);
 
+$ADDEDUSERS = $SESSION->get('bulkimport_addedusers');
+if (empty($ADDEDUSERS)) {
+    $ADDEDUSERS = array();
+}
+$FAILEDUSERS = $SESSION->get('bulkimport_failedusers');
+if (empty($FAILEDUSERS)) {
+    $FAILEDUSERS = array();
+}
+$LEAP2AFILES = $SESSION->get('bulkimport_leap2afiles');
+if (empty($LEAP2AFILES)) {
+    $LEAP2AFILES = array();
+}
+$AUTHINSTANCE = $SESSION->get('bulkimport_authinstance');
+$EMAILUSERS = $SESSION->get('bulkimport_emailusers');
+
+// Import in progress
+if (!empty($LEAP2AFILES)) {
+    import_next_user();
+}
+elseif (!empty($ADDEDUSERS) or !empty($FAILEDUSERS)) {
+    finish_import();
+}
+
 $authinstances = auth_get_auth_instances();
 
 if (count($authinstances) > 0) {
@@ -84,6 +107,16 @@ $form = array(
         )
     )
 );
+
+/**
+ * Work-around the redirection limit of Firefox (http://kb.mozillazine.org/Network.http.redirection-limit)
+ */
+function meta_redirect() {
+    $url = get_config('wwwroot') . '/admin/users/bulkimport.php';
+    print '<html><head><meta http-equiv="Refresh" content="0; url=' . $url . '">';
+    print '</head><body><p>Please follow <a href="'.$url.'">link</a>!</p></body></html>';
+    exit;
+}
 
 /**
  * The CSV file is parsed here so validation errors can be returned to the
@@ -156,7 +189,6 @@ function bulkimport_validate(Pieform $form, $values) {
         return;
     }
 
-    $LEAP2AFILES = array();
     foreach ($csvdata->data as $user) {
         $username = $user[0];
         $filename = $user[1];
@@ -170,122 +202,145 @@ function bulkimport_validate(Pieform $form, $values) {
 function bulkimport_submit(Pieform $form, $values) {
     global $SESSION, $LEAP2AFILES;
 
+    log_info('Attempting to import ' . count($LEAP2AFILES) . ' users from LEAP2A files');
+
+    $SESSION->set('bulkimport_leap2afiles', $LEAP2AFILES);
+    $SESSION->set('bulkimport_authinstance', (int)$values['authinstance']);
+    $SESSION->set('bulkimport_emailusers', $values['emailusers']);
+    $SESSION->set('bulkimport_addedusers', '');
+    $SESSION->set('bulkimport_failedusers', '');
+
+    redirect(get_config('wwwroot') . '/admin/users/bulkimport.php');
+}
+
+function import_next_user() {
+    global $SESSION, $ADDEDUSERS, $FAILEDUSERS, $LEAP2AFILES, $AUTHINSTANCE;
+
     require_once(get_config('docroot') . 'import/lib.php');
     safe_require('import', 'leap');
 
-    $authinstance = (int) $values['authinstance'];
-    $authobj = get_record('auth_instance', 'id', $authinstance);
+    // Pop the last element off of the LEAP2AFILES array
+    $filename = end($LEAP2AFILES);
+    $username = key($LEAP2AFILES);
+    unset($LEAP2AFILES[$username]);
+
+    log_debug('adding user ' . $username . ' from ' . $filename);
+
+    $authobj = get_record('auth_instance', 'id', $AUTHINSTANCE);
     $institution = new Institution($authobj->institution);
 
-    log_info('Attempting to import ' . count($LEAP2AFILES) . ' users from LEAP2A files');
+    $date = time();
+    $nicedate = date('Y/m/d h:i:s', $date);
+    $niceuser = preg_replace('/[^a-zA-Z0-9_-]/', '-', $username);
 
-    $addedusers = array();
-    $failedusers = array();
-    foreach ($LEAP2AFILES as $username => $filename) {
+    $uploaddir = get_config('dataroot') . 'import/' . $niceuser . '-' . $date . '/';
 
-        log_debug('adding user ' . $username . ' from ' . $filename);
+    check_dir_exists($uploaddir);
 
-        $date = time();
-        $nicedate = date('Y/m/d h:i:s', $date);
-        $niceuser = preg_replace('/[^a-zA-Z0-9_-]/', '-', $username);
-
-        $uploaddir = get_config('dataroot') . 'import/' . $niceuser . '-' . $date . '/';
-
-        check_dir_exists($uploaddir);
-
-        // Unzip the file
-        $command = sprintf('%s %s %s %s',
-            escapeshellcmd(get_config('pathtounzip')),
-            escapeshellarg($filename),
-            get_config('unzipdirarg'),
-            escapeshellarg($uploaddir)
-        );
-        $output = array();
-        exec($command, $output, $returnvar);
-        if ($returnvar != 0) {
-            $failedusers[$username] = get_string('unzipfailed', 'admin', hsc($filename));
-            log_debug("unzip command failed with return value $returnvar");
-            continue;
-        }
-
-        $leap2afilename = $uploaddir . 'leap2a.xml';
-        if (!is_file($leap2afilename)) {
-            $failedusers[$username] = get_string('noleap2axmlfiledetected', 'admin');
-            log_debug($failedusers[$username]);
-            continue;
-        }
-
-        // If the username is already taken, append something to the end
-        while (get_record('usr', 'username', $username)) {
-            $username .= "_";
-        }
-
-        $user = (object)array(
-            'authinstance'   => $authinstance,
-            'username'       => $username,
-            'firstname'      => 'Imported',
-            'lastname'       => 'User',
-            'password'       => get_random_key(6),
-            'passwordchange' => 1,
-        );
-
-        db_begin();
-
-        try {
-            $user->id = create_user($user, array(), $institution, $authobj);
-        }
-        catch (EmailException $e) {
-            // Suppress any emails (e.g. new institution membership) sent out
-            // during user creation, becuase the user doesn't have an email
-            // address until we've imported them from the LEAP2A file.
-            log_debug("Failed sending email during user import");
-        }
-
-        $importerfilename = substr($leap2afilename, strlen(get_config('dataroot')));
-        $logfile          = dirname($leap2afilename) . '/import.log';
-
-        $importer = PluginImport::create_importer(null, (object)array(
-            'token'      => '',
-            'usr'        => $user->id,
-            'queue'      => (int)!(PluginImport::import_immediately_allowed()), // import allowed straight away? Then don't queue
-            'ready'      => 0, // maybe 1?
-            'expirytime' => db_format_timestamp(time()+(60*60*24)),
-            'format'     => 'leap',
-            'data'       => array('filename' => $importerfilename),
-            'loglevel'   => PluginImportLeap::LOG_LEVEL_VERBOSE,
-            'logtargets' => LOG_TARGET_FILE,
-            'logfile'    => $logfile,
-            'profile'    => true,
-        ));
-
-        try {
-            $importer->process();
-            log_info("Imported user account $user->id from leap2a file, see $logfile for a full log");
-        }
-        catch (ImportException $e) {
-            log_info("LEAP2A import failed: " . $e->getMessage());
-            $failedusers[$username] = get_string("leap2aimportfailed");
-            db_rollback();
-            continue;
-        }
-
-        db_commit();
-
-        // Reload the user details, as various fields are changed by the
-        // importer when importing (e.g. firstname/lastname)
-        $addedusers[] = get_record('usr', 'id', $user->id);
+    // Unzip the file
+    $command = sprintf('%s %s %s %s',
+                       escapeshellcmd(get_config('pathtounzip')),
+                       escapeshellarg($filename),
+                       get_config('unzipdirarg'),
+                       escapeshellarg($uploaddir)
+                       );
+    $output = array();
+    exec($command, $output, $returnvar);
+    if ($returnvar != 0) {
+        $FAILEDUSERS[$username] = get_string('unzipfailed', 'admin', hsc($filename));
+        log_debug("unzip command failed with return value $returnvar");
+        continue;
     }
 
-    log_info('Imported ' . count($addedusers) . '/' . count($LEAP2AFILES) . ' users successfully');
+    $leap2afilename = $uploaddir . 'leap2a.xml';
+    if (!is_file($leap2afilename)) {
+        $FAILEDUSERS[$username] = get_string('noleap2axmlfiledetected', 'admin');
+        log_debug($FAILEDUSERS[$username]);
+        continue;
+    }
 
-    if (!empty($addedusers)) {
-        $SESSION->add_ok_msg(get_string('importednuserssuccessfully', 'admin', count($addedusers), count($LEAP2AFILES)));
+    // If the username is already taken, append something to the end
+    while (get_record('usr', 'username', $username)) {
+        $username .= "_";
+    }
+
+    $user = (object)array(
+                          'authinstance'   => $AUTHINSTANCE,
+                          'username'       => $username,
+                          'firstname'      => 'Imported',
+                          'lastname'       => 'User',
+                          'password'       => get_random_key(6),
+                          'passwordchange' => 1,
+                          );
+
+    db_begin();
+
+    try {
+        $user->id = create_user($user, array(), $institution, $authobj);
+    }
+    catch (EmailException $e) {
+        // Suppress any emails (e.g. new institution membership) sent out
+        // during user creation, becuase the user doesn't have an email
+        // address until we've imported them from the LEAP2A file.
+        log_debug("Failed sending email during user import");
+    }
+
+    $importerfilename = substr($leap2afilename, strlen(get_config('dataroot')));
+    $logfile          = dirname($leap2afilename) . '/import.log';
+
+    $importer = PluginImport::create_importer(null, (object)array(
+        'token'      => '',
+        'usr'        => $user->id,
+        'queue'      => (int)!(PluginImport::import_immediately_allowed()), // import allowed straight away? Then don't queue
+        'ready'      => 0, // maybe 1?
+        'expirytime' => db_format_timestamp(time()+(60*60*24)),
+        'format'     => 'leap',
+        'data'       => array('filename' => $importerfilename),
+        'loglevel'   => PluginImportLeap::LOG_LEVEL_VERBOSE,
+        'logtargets' => LOG_TARGET_FILE,
+        'logfile'    => $logfile,
+        'profile'    => true,
+    ));
+
+    try {
+        $importer->process();
+        log_info("Imported user account $user->id from leap2a file, see $logfile for a full log");
+    }
+    catch (ImportException $e) {
+        log_info("LEAP2A import failed: " . $e->getMessage());
+        $FAILEDUSERS[$username] = get_string("leap2aimportfailed");
+        db_rollback();
+        continue;
+    }
+
+    db_commit();
+
+    // Reload the user details, as various fields are changed by the
+    // importer when importing (e.g. firstname/lastname)
+    $ADDEDUSERS[] = get_record('usr', 'id', $user->id);
+
+    $SESSION->set('bulkimport_leap2afiles', $LEAP2AFILES);
+    $SESSION->set('bulkimport_addedusers', $ADDEDUSERS);
+    $SESSION->set('bulkimport_failedusers', $FAILEDUSERS);
+
+    meta_redirect();
+}
+
+function finish_import() {
+    global $SESSION, $ADDEDUSERS, $FAILEDUSERS, $EMAILUSERS;
+
+    $totalusers = count($ADDEDUSERS) + count($FAILEDUSERS);
+
+    log_info('Imported ' . count($ADDEDUSERS) . '/' . $totalusers . ' users successfully');
+
+    if (!empty($ADDEDUSERS)) {
+        $SESSION->add_ok_msg(get_string('importednuserssuccessfully', 'admin', count($ADDEDUSERS), $totalusers));
     }
 
     // Only send e-mail to users after we're sure they have been inserted
     // successfully
-    if ($values['emailusers'] && $addedusers) {
-        foreach ($addedusers as $user) {
+    if ($EMAILUSERS && $ADDEDUSERS) {
+        foreach ($ADDEDUSERS as $user) {
             $noemailusers = array();
             try {
                 email_user($user, null, get_string('accountcreated', 'mahara', get_config('sitename')),
@@ -309,14 +364,20 @@ function bulkimport_submit(Pieform $form, $values) {
         }
     }
 
-    if (!empty($failedusers)) {
-        $message = get_string('importfailedfornusers', 'admin', count($failedusers), count($LEAP2AFILES)) . "\n<ul>\n";
-        foreach ($failedusers as $username => $error) {
+    if (!empty($FAILEDUSERS)) {
+        $message = get_string('importfailedfornusers', 'admin', count($FAILEDUSERS), $totalusers) . "\n<ul>\n";
+        foreach ($FAILEDUSERS as $username => $error) {
             $message .= '<li>' . hsc($username) . ': ' . hsc($error) . "</li>\n";
         }
         $message .= "</ul>\n";
         $SESSION->add_err_msg($message, false);
     }
+
+    $SESSION->set('bulkimport_leap2afiles', '');
+    $SESSION->set('bulkimport_authinstance', '');
+    $SESSION->set('bulkimport_emailusers', '');
+    $SESSION->set('bulkimport_addedusers', '');
+    $SESSION->set('bulkimport_failedusers', '');
 
     redirect(get_config('wwwroot') . '/admin/users/bulkimport.php');
 }
@@ -327,5 +388,3 @@ $smarty = smarty();
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('admin/users/bulkimport.tpl');
-
-?>
