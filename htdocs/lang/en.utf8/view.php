@@ -197,7 +197,7 @@ $string['confirmdeleteblockinstance'] = 'Are you sure you wish to delete this bl
 $string['blockinstanceconfiguredsuccessfully'] = 'Block configured successfully';
 
 $string['blocksintructionnoajax'] = 'Select a block and choose where to add it to your View. You can position a block using the arrow buttons in its titlebar';
-$string['blocksinstructionajax'] = 'Drag blocks below this line to add them to your View layout. You can drag blocks around your View layout to position them.';
+$string['blocksinstructionajax'] = 'This area shows a preview of what your View will look like.<br>Drag blocks below this line to add them to your View layout. You can drag blocks around your View layout to position them.';
 
 $string['addnewblockhere'] = 'Add new block here';
 $string['add'] = 'Add';

@@ -757,6 +757,7 @@ div.info {
 div.ok {
     color: #547c22;
     background: #e7f1c3 url(../images/success.gif) no-repeat .5em;
+    border: 1px solid #547c22;
 }
 #messages .error,
 div.error {
