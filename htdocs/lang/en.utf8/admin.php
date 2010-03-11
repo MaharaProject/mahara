@@ -163,8 +163,11 @@ $string['cronnotrunning'] = 'Cron is not running.<br>See the <a href="http://wik
 $string['Loggedin'] = 'Logged in';
 $string['youraverageuser'] = 'Your Average User...';
 $string['statsmaxfriends'] = 'Has %1.1f friends (most is <a href="%s">%s</a> with %d)';
+$string['statsnofriends'] = 'Has 0 friends :(';
 $string['statsmaxviews'] = 'Has made %1.1f views (most is <a href="%s">%s</a> with %d)';
+$string['statsnoviews'] = 'Has made 0 views :(';
 $string['statsmaxgroups'] = 'Is in %1.1f groups (most is <a href="%s">%s</a> with %d)';
+$string['statsnogroups'] = 'Is in 0 groups :(';
 $string['statsmaxquotaused'] = 'Has used about %s of disk quota (most is <a href="%s">%s</a> with %s)';
 $string['groupcountsbytype'] = 'Number of groups by Group Type';
 $string['groupcountsbyjointype'] = 'Number of groups by Access Type';

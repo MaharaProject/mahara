@@ -233,7 +233,7 @@ function site_statistics($full=false) {
         $data['groupmemberaverage'] = $memberships/$data['users'];
         $data['strgroupmemberaverage'] = get_string('groupmemberaverage', 'admin', $data['groupmemberaverage']);
         $data['viewsperuser'] = get_field_sql("
-            SELECT (0.0 + COUNT(id)) / COUNT(DISTINCT owner)
+            SELECT (0.0 + COUNT(id)) / NULLIF(COUNT(DISTINCT owner), 0)
             FROM {view}
             WHERE NOT owner IS NULL AND owner > 0
         ");
@@ -275,14 +275,19 @@ function user_statistics($limit, $offset, &$sitedata) {
         LIMIT 1", array());
     $maxfriends = $maxfriends[0];
     $meanfriends = 2 * count_records('usr_friend') / $sitedata['users'];
-    $data['strmaxfriends'] = get_string(
-        'statsmaxfriends',
-        'admin',
-        $meanfriends,
-        get_config('wwwroot') . 'user/view.php?id=' . $maxfriends->id,
-        display_name($maxfriends, null, true),
-        $maxfriends->friends
-    );
+    if ($maxfriends) {
+        $data['strmaxfriends'] = get_string(
+            'statsmaxfriends',
+            'admin',
+            $meanfriends,
+            get_config('wwwroot') . 'user/view.php?id=' . $maxfriends->id,
+            display_name($maxfriends, null, true),
+            $maxfriends->friends
+        );
+    }
+    else {
+        $data['strmaxfriends'] = get_string('statsnofriends', 'admin');
+    }
     $maxviews = get_records_sql_array("
         SELECT u.id, u.firstname, u.lastname, u.preferredname, COUNT(v.*) AS views
         FROM {usr} u JOIN {view} v ON u.id = v.owner
@@ -291,14 +296,19 @@ function user_statistics($limit, $offset, &$sitedata) {
         ORDER BY views DESC
         LIMIT 1", array());
     $maxviews = $maxviews[0];
-    $data['strmaxviews'] = get_string(
-        'statsmaxviews',
-        'admin',
-        $sitedata['viewsperuser'],
-        get_config('wwwroot') . 'user/view.php?id=' . $maxviews->id,
-        display_name($maxviews, null, true),
-        $maxviews->views
-    );
+    if ($maxviews) {
+        $data['strmaxviews'] = get_string(
+            'statsmaxviews',
+            'admin',
+            $sitedata['viewsperuser'],
+            get_config('wwwroot') . 'user/view.php?id=' . $maxviews->id,
+            display_name($maxviews, null, true),
+            $maxviews->views
+        );
+    }
+    else {
+        $data['strmaxviews'] = get_string('statsnoviews', 'admin');
+    }
     $maxgroups = get_records_sql_array("
         SELECT u.id, u.firstname, u.lastname, u.preferredname, COUNT(m.group) AS groups
         FROM {usr} u JOIN {group_member} m ON u.id = m.member JOIN {group} g ON m.group = g.id
@@ -307,14 +317,19 @@ function user_statistics($limit, $offset, &$sitedata) {
         ORDER BY groups DESC
         LIMIT 1", array());
     $maxgroups = $maxgroups[0];
-    $data['strmaxgroups'] = get_string(
-        'statsmaxgroups',
-        'admin',
-        $sitedata['groupmemberaverage'],
-        get_config('wwwroot') . 'user/view.php?id=' . $maxgroups->id,
-        display_name($maxgroups, null, true),
-        $maxgroups->groups
-    );
+    if ($maxgroups) {
+        $data['strmaxgroups'] = get_string(
+            'statsmaxgroups',
+            'admin',
+            $sitedata['groupmemberaverage'],
+            get_config('wwwroot') . 'user/view.php?id=' . $maxgroups->id,
+            display_name($maxgroups, null, true),
+            $maxgroups->groups
+        );
+    }
+    else {
+        $data['strmaxgroups'] = get_string('statsnogroups', 'admin');
+    }
     $maxquotaused = get_records_sql_array("
         SELECT id, firstname, lastname, preferredname, quotaused
         FROM {usr}
