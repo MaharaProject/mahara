@@ -30,6 +30,7 @@ define('PUBLIC', 1);
 define('NOCHECKPASSWORDCHANGE', 1);
 require('init.php');
 require_once('file.php');
+require_once('user.php');
 
 $type = param_alpha('type');
 
@@ -178,27 +179,3 @@ switch ($type) {
         break;
 }
 
-/**
- * Return a Gravatar URL if one exists for the given user.
- *
- * @param string  $email         Email address of the user
- * @param object  $size          Maximum size of the image
- * @param boolean $notfound
- *
- * @returns string The URL of the image or FALSE if none was found
- */
-function gravatar_icon($email, $size, $notfound) {
-    if (!get_config('remoteavatars')) {
-        return false;
-    }
-
-    $md5sum = md5(strtolower($email));
-
-    $s = 100;
-    $newsize = image_get_new_dimensions($s, $s, $size);
-    if ($newsize) {
-        $s = min($newsize['w'], $newsize['h']);
-    }
-
-    return "http://www.gravatar.com/avatar/{$md5sum}.jpg?r=g&s=$s&d=" . urlencode($notfound);
-}

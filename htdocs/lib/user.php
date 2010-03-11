@@ -1238,6 +1238,7 @@ function get_new_username($desired) {
 function get_users_data($userlist, $getviews=true) {
 	global $USER;
     $sql = 'SELECT u.id, u.username, u.preferredname, u.firstname, u.lastname, u.admin, u.staff, u.deleted,
+                u.profileicon, u.email,
                 0 AS pending, ap.value AS hidenamepref,
                 COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages,
                 COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'friendscontrol\'), \'auth\') AS friendscontrol,
@@ -1250,6 +1251,7 @@ function get_users_data($userlist, $getviews=true) {
                 WHERE u.id IN (' . $userlist . ')
             UNION
             SELECT u.id, u.username, u.preferredname, u.firstname, u.lastname, u.admin, u.staff, u.deleted,
+                u.profileicon, u.email,
                 1 AS pending, ap.value AS hidenamepref,
                 COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages,
                 NULL AS friendscontrol,
@@ -1668,5 +1670,53 @@ function install_system_profile_view() {
     return $view->get('id');
 }
 
+
+/**
+ * Return profile icon url for a user
+ */
+function profile_icon_url($user, $maxwidth=40, $maxheight=40) {
+    if (is_array($user)) {
+        $user = (object)$user;
+    }
+    if (!property_exists($user, 'profileicon') || !property_exists($user, 'email')) {
+        throw new SystemException('profile_icon_url requires a user with profileicon & email properties');
+    }
+    $thumb = get_config('wwwroot') . 'thumb.php';
+    $sizeparams = 'maxwidth=' . $maxwidth . '&maxheight=' . $maxheight;
+    $notfound = $thumb . '?type=profileiconbyid&' . $sizeparams . '&id=0';
+    if (!empty($user->profileicon)) {
+        return $thumb . '?type=profileiconbyid&' . $sizeparams . '&id=' . $user->profileicon;
+    }
+    else if (get_config('remoteavatars')) {
+        return gravatar_icon($user->email, array('maxw' => $maxwidth, 'maxh' => $maxheight), $notfound);
+    }
+    return $notfound;
+}
+
+/**
+ * Return a Gravatar URL if one exists for the given user.
+ *
+ * @param string  $email         Email address of the user
+ * @param object  $size          Maximum size of the image
+ * @param boolean $notfound
+ *
+ * @returns string The URL of the image or FALSE if none was found
+ */
+function gravatar_icon($email, $size, $notfound) {
+    if (!get_config('remoteavatars')) {
+        return false;
+    }
+    require_once('file.php');
+
+    $md5sum = md5(strtolower($email));
+
+    $s = 100;
+    $newsize = image_get_new_dimensions($s, $s, $size);
+    if ($newsize) {
+        $s = min($newsize['w'], $newsize['h']);
+    }
+
+    return "http://www.gravatar.com/avatar/{$md5sum}.jpg?r=g&s=$s&d=" . urlencode($notfound);
+}
 
 ?>

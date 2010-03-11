@@ -17,7 +17,7 @@
 		{/if}
 	</ul>
 	<div class="leftdiv" id="friendinfo_{$user->id}">
-		<img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=40&amp;maxheight=40&amp;id={$user->id}" alt="">
+        <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="">
 	</div>
 	<div class="rightdiv">
 	<h3>
@@ -55,7 +55,7 @@
 		</li>
 	</ul>
 	<div class="leftdiv" id="friendinfo_{$user->id}">
-		<img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=40&amp;maxheight=40&amp;id={$user->id}" alt="">
+        <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="">
 	</div>
 	<div class="rightdiv">
 	<h3>
@@ -105,7 +105,7 @@
 		</li>
 	</ul>
 	<div class="leftdiv" id="friendinfo_{$user->id}">
-		<img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=40&amp;maxheight=40&amp;id={$user->id}" alt="">
+        <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="">
 	</div>
 	<div class="rightdiv">
 	<h3>
@@ -142,7 +142,7 @@
 		</li>
 	</ul>
     <div class="leftdiv" id="friendinfo_{$user->id}">
-        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=40&amp;maxheight=40&amp;id={$user->id}" alt="">
+        <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="">
     </div>
 	<div class="rightdiv">
 	<h3>
