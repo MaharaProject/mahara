@@ -1672,7 +1672,13 @@ function install_system_profile_view() {
 
 
 /**
- * Return profile icon url for a user
+ * Return profile icon url for a user.  Use this to quickly get a url
+ * when you already have a bunch of user records with profileicon id &
+ * email address.
+ *
+ * Avoids reloading the 'no user photo' image for each user separately
+ * when we know they have no profile icon, and avoids the redirect to
+ * gravatar.
  */
 function profile_icon_url($user, $maxwidth=40, $maxheight=40) {
     if (is_array($user)) {

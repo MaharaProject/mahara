@@ -2143,7 +2143,7 @@ function onlineusers_sideblock() {
                 $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileicon&id=' . $user->id . '&size=20x20&earlyexpiry=1';
             }
             else {
-                $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileicon&id=' . $user->id . '&size=20x20';
+                $user->profileiconurl = profile_icon_url($user, 20, 20);
             }
 
             // If the user is an MNET user, show where they've come from
