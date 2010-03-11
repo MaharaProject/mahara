@@ -63,7 +63,7 @@ $userobj->find_by_id($userid);
 $view = $userobj->get_profile_view();
 # access will either be logged in (always) or public as well
 if (!$view || !can_view_view($view->get('id'))) {
-    throw new AccessDeniedException(get_string('youcannotviewthisusersprofile'));
+    throw new AccessDeniedException(get_string('youcannotviewthisusersprofile', 'error'));
 }
 
 // Set up theme
