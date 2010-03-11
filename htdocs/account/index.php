@@ -26,13 +26,13 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'settings/preferences');
+define('MENUITEM', 'settings/account');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'account');
 define('SECTION_PAGE', 'preferences');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-define('TITLE', get_string('preferences'));
+define('TITLE', get_string('account'));
 require_once('pieforms/pieform.php');
 
 // load up user preferences
@@ -305,7 +305,7 @@ function clearPasswords(form, data) {
     }
 }
 ");
-$smarty->assign('PAGEHEADING', hsc(get_string('preferences')));
+$smarty->assign('PAGEHEADING', hsc(get_string('account')));
 $smarty->display('account/index.tpl');
 
 

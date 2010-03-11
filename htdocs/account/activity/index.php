@@ -26,14 +26,14 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'settings/notifications');
+define('MENUITEM', 'inbox');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'account');
 define('SECTION_PAGE', 'activity');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
-define('TITLE', get_string('notifications'));
+define('TITLE', get_string('inbox'));
 
 $types = get_records_assoc('activity_type', 'admin', 0, 'plugintype,pluginname,name', 'id,name,plugintype,pluginname');
 $types = array_map(create_function('$a', '
@@ -203,7 +203,7 @@ $smarty->assign('markdel', 'markread(document.notificationlist, \'del\'); return
 $smarty->assign('typechange', 'activitylist.type = this.options[this.selectedIndex].value; activitylist.doupdate();');
 $smarty->assign('types', $types);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->assign('PAGEHEADING', hsc(get_string('notifications')));
+$smarty->assign('PAGEHEADING', hsc(get_string('inbox')));
 $smarty->assign('deleteall', $deleteall);
 $smarty->display('account/activity/index.tpl');
 ?>

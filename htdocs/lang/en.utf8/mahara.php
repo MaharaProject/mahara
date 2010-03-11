@@ -489,12 +489,13 @@ $string['about']              = 'About';
 $string['contactus']          = 'Contact Us';
 
 // my account
-$string['account'] =  'My account';
+$string['account'] =  'My Account';
 $string['accountprefs'] = 'Preferences';
 $string['preferences'] = 'Preferences';
 $string['activityprefs'] = 'Activity preferences';
 $string['changepassword'] = 'Change password';
 $string['notifications'] = 'Notifications';
+$string['inbox'] = 'Inbox';
 $string['institutionmembership'] = 'Institution Membership';
 $string['institutionmembershipdescription'] = 'If you are a member of any institutions, they will be listed here.  You may also request membership of an institution, and if any institutions have invited you to join, you can accept or decline the invitation.';
 $string['youareamemberof'] = 'You are a member of %s';

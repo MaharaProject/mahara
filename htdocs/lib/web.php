@@ -1907,27 +1907,27 @@ function mahara_standard_nav() {
             'weight' => 40,
         ),
         array(
+            'path' => 'inbox',
+            'url' => 'account/activity/',
+            'title' => get_string('inbox'),
+            'weight' => 50,
+        ),
+        array(
             'path' => 'settings',
             'url' => 'account/',
             'title' => get_string('settings'),
             'weight' => 60,
         ),
         array(
-            'path' => 'settings/preferences',
+            'path' => 'settings/account',
             'url' => 'account/',
-            'title' => get_string('preferences'),
+            'title' => get_string('account'),
             'weight' => 10,
         ),
         array(
             'path' => 'settings/notifications',
-            'url' => 'account/activity/',
-            'title' => get_string('notifications'),
-            'weight' => 20,
-        ),
-        array(
-            'path' => 'settings/activitypreferences',
             'url' => 'account/activity/preferences/',
-            'title' => get_string('activityprefs'),
+            'title' => get_string('notifications'),
             'weight' => 30,
         ),
         array(
