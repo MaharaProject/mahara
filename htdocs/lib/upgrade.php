@@ -683,6 +683,7 @@ function core_install_firstcoredata_defaults() {
     set_config('viewmicroheaders', 1);
     set_config('userscanchooseviewthemes', 1);
     set_config('anonymouscomments', 1);
+    set_config('homepageinfo', 1);
 
     // install the applications
     $app = new StdClass;

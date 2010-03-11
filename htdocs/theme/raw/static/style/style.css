@@ -1589,3 +1589,46 @@ form#search input.text {
 .help, .help a, .help a img {
     vertical-align: top;
 }
+
+/* Home page info boxes */
+
+.home-info-table td {
+    width: 1%;
+    padding: 0;
+}
+.home-info {
+    padding: 10px;
+    margin: 1.7em 4px 0 4px;
+    height: 250px;
+}
+.home-info.first {
+    margin: 1.7em 4px 0 0;
+}
+.home-info.last {
+    margin: 1.7em 0 0 4px;
+}
+.home-info a,
+.home-info a:hover,
+.home-info a:active {
+    text-decoration: none;
+}
+.home-info table {
+    width: 100%;
+    text-align: center;
+}
+.home-info td {
+    width: 1%;
+    vertical-align: top;
+    white-space: nowrap;
+}
+#accessdesc {
+    background: url(../images/access.png) no-repeat left;
+    padding-left: 40px;
+    margin: 15px 10px 0 10px;
+}
+.home-info .organise {
+    padding-bottom: 15px;
+}
+.help, .help a, .help a img {
+    vertical-align: top;
+}

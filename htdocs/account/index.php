@@ -179,6 +179,19 @@ if (get_config('userscanhiderealnames')) {
         'defaultvalue' => $prefs->hiderealname,
     );
 }
+if (get_config('homepageinfo')) {
+    $elements['showhomeinfo'] = array(
+        'type' => 'radio',
+        'options' => array(
+            1 => get_string('on', 'account'),
+            0 => get_string('off', 'account'),
+        ),
+        'defaultvalue' => $prefs->showhomeinfo,
+        'title' => get_string('showhomeinfo', 'account'),
+        'separator' => '<br>',
+        'help' => 'true'
+    );
+}
 $elements['submit'] = array(
     'type' => 'submit',
     'value' => get_string('save')

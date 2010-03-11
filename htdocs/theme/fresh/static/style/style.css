@@ -931,3 +931,14 @@ ul.groupuserstatus li,
 /* Settings > Institution membership */
 #requestmembership_studentid_container label {
 }
+
+/* Home page info boxes */
+
+.home-info {
+    border: solid 2px #cccccc;
+    background: #0C2839;
+}
+.home-info p.subtitle {
+    border-top: solid 1px #cccccc;
+    border-bottom: solid 1px #cccccc;
+}

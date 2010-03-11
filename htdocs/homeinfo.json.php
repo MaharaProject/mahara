@@ -25,11 +25,20 @@
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+define('JSON', 1);
 
-$config = new StdClass;
-$config->version = 2010042603;
-$config->release = '1.3.0dev';
-$config->minupgradefrom = 2008040200;
-$config->minupgraderelease = '1.0.0 (release tag 1.0.0_RELEASE)';
-$config->disablelogin = true;
+require('init.php');
+
+$showhomeinfo = (int) param_boolean('showhomeinfo');
+
+$result = array();
+
+$USER->set_account_preference('showhomeinfo', $showhomeinfo);
+
+$result['error'] = false;
+$result['message'] = false;
+
+json_headers();
+echo json_encode($result);
+?>

@@ -282,6 +282,12 @@ $siteoptionform = array(
             'description'  => get_string('anonymouscommentsdescription', 'admin'),
             'defaultvalue' => get_config('anonymouscomments'),
         ),
+        'homepageinfo' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('homepageinfo', 'admin'),
+            'description'  => get_string('homepageinfodescription', 'admin'),
+            'defaultvalue' => get_config('homepageinfo'),
+        ),
     )
 );
 
@@ -308,6 +314,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'showselfsearchsideblock', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments',
+        'homepageinfo',
     );
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');

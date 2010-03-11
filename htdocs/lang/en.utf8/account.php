@@ -67,6 +67,8 @@ $string['disablemultipleblogserror'] = 'You cannot disable multiple blogs unless
 $string['hiderealname'] = 'Hide real name';
 $string['hiderealnamedescription'] = 'Check this box if you have set a display name and you do not want other users to be able to find you by your real name in user searches.';
 
+$string['showhomeinfo'] = 'Show information about Mahara on the home page';
+
 $string['prefssaved']  = 'Preferences saved';
 $string['prefsnotsaved'] = 'Failed to save your Preferences!';
 

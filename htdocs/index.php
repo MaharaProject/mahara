@@ -60,6 +60,25 @@ if ($USER->is_logged_in()) {
         )
     );
 
+    if ($USER->get_account_preference('showhomeinfo')) {
+        // allow the user to choose never to see the info boxes again
+        $js = <<<JAVASCRIPT
+function hideinfo() {
+    slideUp($('home-info'));
+}
+
+function nevershow() {
+    var data = {'showhomeinfo' : 0};
+    sendjsonrequest('homeinfo.json.php', data, 'POST', hideinfo);
+}
+addLoadEvent(function () {
+    $('hideinfo').onclick = nevershow;
+});
+JAVASCRIPT;
+
+        $smarty->assign('INLINEJAVASCRIPT', $js);
+    }
+
     $smarty->assign('dashboardview', true);
     $smarty->assign('viewcontent', $view->build_columns());
     $smarty->assign('viewid', $view->get('id'));

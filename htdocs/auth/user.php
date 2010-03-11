@@ -93,6 +93,7 @@ class User {
             'sesskey'          => '',
             'ctime'            => null,
             'views'            => array(),
+            'showhomeinfo'     => 1,
         );
         $this->attributes = array();
 

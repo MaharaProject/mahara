@@ -205,6 +205,7 @@ function expected_account_preferences() {
                  'tagssideblockmaxtags' => get_config('tagssideblockmaxtags'),
                  'hiderealname'   => 0,
                  'multipleblogs' => 0,
+                 'showhomeinfo' => 1,
                  );
 }
 

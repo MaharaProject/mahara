@@ -1727,5 +1727,10 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2010042603) {
+        execute_sql('ALTER TABLE {usr} ADD COLUMN showhomeinfo SMALLINT NOT NULL DEFAULT 1');
+        set_config('homepageinfo', 1);
+    }
+
     return $status;
 }
