@@ -60,32 +60,22 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
         }
 
         $smarty = smarty_core();
-        $records = get_records_sql_array('SELECT usr1, usr2 FROM {usr_friend}
-            JOIN {usr} u1 ON (u1.id = usr1 AND u1.deleted = 0)
-            JOIN {usr} u2 ON (u2.id = usr2 AND u2.deleted = 0)
-            WHERE usr1 = ? OR usr2 = ?
+        $records = get_records_sql_array('
+            SELECT f.* FROM (
+                SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff, u.profileicon
+                FROM {usr} u JOIN {usr_friend} f ON u.id = f.usr1
+                WHERE f.usr2 = ? AND u.deleted = 0
+                UNION
+                SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff, u.profileicon
+                FROM {usr} u JOIN {usr_friend} f ON u.id = f.usr2
+                WHERE f.usr1 = ? AND u.deleted = 0
+            ) f
             ORDER BY ' . db_random() . '
             LIMIT ?',
             array($userid, $userid, MAXFRIENDDISPLAY)
         );
-        // get the friends into a 4x4 array
         if ($records) {
-            $friends = array();
-            for ($i = 0; $i < 4; $i++) {
-                if (isset($records[4 * $i])) {
-                    $friends[$i] = array();
-                    for($j = 4 * $i; $j < ($i + 1 ) * 4; $j++) {
-                        if (isset($records[$j])) {
-                            if ($records[$j]->usr1 == $userid) {
-                                $friends[$i][] = $records[$j]->usr2;
-                            }
-                            else {
-                                $friends[$i][] = $records[$j]->usr1;
-                            }
-                        }
-                    }
-                }
-            }
+            $friends = array_chunk($records, 4); // get the friends into a 4x4 array
         }
         else {
             $friends = false;
