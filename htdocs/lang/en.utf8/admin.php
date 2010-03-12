@@ -172,6 +172,7 @@ $string['statsmaxquotaused'] = 'Has used about %s of disk quota (most is <a href
 $string['groupcountsbytype'] = 'Number of groups by Group Type';
 $string['groupcountsbyjointype'] = 'Number of groups by Access Type';
 $string['blockcountsbytype'] = 'Most frequently used blocks in Portfolio Views:';
+$string['Rank'] = 'Rank';
 
 // Site options
 $string['adminsonly'] = 'Administrators only';

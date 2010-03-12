@@ -90,8 +90,9 @@ function register_submit(Pieform $form, $values) {
     global $SESSION;
 
     $result = registration_send_data();
+    $data = json_decode($result->data);
 
-    if ($result->data != '1') {
+    if ($data->status != 1) {
         log_info($result);
         $SESSION->add_error_msg(get_string('registrationfailedtrylater', 'admin', $result->info['http_code']));
     }
@@ -176,6 +177,8 @@ function registration_data() {
         }
     }
 
+    $data_to_send['newstats'] = 1;
+
     return $data_to_send;
 }
 
@@ -247,6 +250,19 @@ function site_statistics($full=false) {
     $data['dbsize']      = db_total_size();
     $data['diskusage']   = get_field('site_data', 'value', 'type', 'disk-usage');
     $data['cronrunning'] = !record_exists_select('cron', 'nextrun < CURRENT_DATE');
+
+    // root user doesn't count
+    $data['users'] = count_records_select('usr', 'deleted = 0') - 1; 
+    $data['groups'] = count_records_select('group', 'deleted = 0'); 
+    $data['views'] = count_records_select('view');
+    $data['rank'] = array(
+        'users' => get_config('usersrank'),
+        'groups' => get_config('groupsrank'),
+        'views' => get_config('viewsrank'),
+    );
+
+    // FIXME: actually do this
+    $data['usersloggedin'] = 0;
 
     return($data);
 }
