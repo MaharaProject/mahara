@@ -1,19 +1,17 @@
 <div class="friends">
 {if $friends}
     <table id="userfriendstable" class="center fullwidth">
-    {foreach from=$friends item=row}
-        <tr>
-        {foreach from=$row item=friend}
-            <td class="{cycle values='r0,r1'} friendcell">
-                <a href="{$WWWROOT}user/view.php?id={$friend->id}">
-                   <img src="{profile_icon_url user=$friend maxwidth=60 maxheight=60}" alt="">
-                </a>
-                <div><a href="{$WWWROOT}user/view.php?id={$friend->id}">{$friend|display_default_name|escape}</a></div>
-            </td>
-        {/foreach}
-        </tr>
-    {/foreach}
+      <tbody>
+      {$friends.tablerows}
+      </tbody>
     </table>
+	<div id="myfriends_page_container" class="hidden">{$friends.pagination}</div>
+<script>
+addLoadEvent(function() {literal}{{/literal}
+    {$friends.pagination_js}
+    removeElementClass('myfriends_page_container', 'hidden');
+{literal}}{/literal});
+</script>
 {else}
     {if $lookingatownpage}
         <div class="message">{str tag="trysearchingforfriends" section=group args=$searchingforfriends}</div>

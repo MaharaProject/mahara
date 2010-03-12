@@ -76,7 +76,7 @@ $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_confi
 $name = display_name($user);
 define('TITLE', $name);
 $smarty = smarty(
-    array('lib/pieforms/static/core/pieforms.js', 'artefact/resume/resumeshowhide.js'),
+    array('paginator', 'lib/pieforms/static/core/pieforms.js', 'artefact/resume/resumeshowhide.js'),
     $stylesheets,
     array(),
     array(

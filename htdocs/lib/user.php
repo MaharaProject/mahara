@@ -1725,4 +1725,41 @@ function gravatar_icon($email, $size, $notfound) {
     return "http://www.gravatar.com/avatar/{$md5sum}.jpg?r=g&s=$s&d=" . urlencode($notfound);
 }
 
-?>
+/**
+ * Get user records for a user's friends
+ *
+ * @param integer $userid        id of the user whose friends we're after
+ * @param integer $limit
+ * @param integer $offset
+ *
+ * @returns array Total number of friends, along with $limit or fewer user records.
+ */
+function get_friends($userid, $limit=10, $offset=0) {
+    $result = array('count' => 0, 'limit' => $limit, 'offset' => $offset, 'data' => false);
+
+    $from = 'FROM (
+            SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff, u.profileicon
+            FROM {usr} u JOIN {usr_friend} f ON u.id = f.usr1
+            WHERE f.usr2 = ? AND u.deleted = 0
+            UNION
+            SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff, u.profileicon
+            FROM {usr} u JOIN {usr_friend} f ON u.id = f.usr2
+            WHERE f.usr1 = ? AND u.deleted = 0
+        ) f';
+
+    $values = array($userid, $userid);
+
+    if (!$result['count'] = count_records_sql('SELECT COUNT(*) ' . $from, $values)) {
+        return $result;
+    }
+
+    $sql = '
+        SELECT f.* ' . $from . "
+        ORDER BY CASE WHEN NOT f.preferredname IS NULL AND f.preferredname <> '' THEN f.preferredname ELSE f.firstname || f.lastname END";
+
+    $result['data'] = get_records_sql_array($sql, $values, $offset, $limit);
+
+    return $result;
+}
+
+
