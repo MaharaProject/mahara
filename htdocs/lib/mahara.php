@@ -2274,12 +2274,16 @@ function cron_send_registration_data() {
 
     require_once(get_config('libroot') . 'registration.php');
     $result = registration_send_data();
+    $data = json_decode($result->data);
 
-    if ($result->data != '1') {
+    if ($data->status != 1) {
         log_info($result);
     }
     else {
         set_config('registration_lastsent', time());
+        set_config('usersrank', $data->usersrank);
+        set_config('groupsrank', $data->groupsrank);
+        set_config('viewsrank', $data->viewsrank);
     }
 }
 
