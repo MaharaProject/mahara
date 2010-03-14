@@ -97,7 +97,7 @@ abstract class PluginExport extends Plugin {
     /**
      * List of views to export. Set up by constructor.
      */
-    protected $views = array();
+    public $views = array();
 
     /**
      * User object for the user being exported.
