@@ -1358,5 +1358,17 @@ function xmldb_core_upgrade($oldversion=0) {
         set_remoteavatars_default();
     }
 
+    if ($oldversion < 2010031000) {
+        // For existing sites, preserve current user search behaviour:
+        // Users are only searchable by their display names.
+        set_config('userscanhiderealnames', 1);
+        execute_sql("
+            INSERT INTO {usr_account_preference} (usr, field, value)
+            SELECT u.id, 'hiderealname', 1
+            FROM {usr} u LEFT JOIN {usr_account_preference} p ON (u.id = p.usr AND p.field = 'hiderealname')
+            WHERE NOT u.preferredname IS NULL AND u.preferredname != '' AND p.field IS NULL
+        ");
+    }
+
     return $status;
 }

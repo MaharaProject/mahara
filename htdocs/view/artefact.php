@@ -44,7 +44,7 @@ if (!can_view_view($viewid)) {
 }
 
 if (!artefact_in_view($artefactid, $viewid)) {
-    throw new AccessDeniedException("Artefact $artefactid not in View $viewid");
+    throw new AccessDeniedException(get_string('artefactnotinview', 'error', $artefactid, $viewid));
 }
 
 // Feedback list pagination requires limit/offset params
@@ -60,7 +60,7 @@ if (param_variable('make_private_submit', null)) {
 }
 
 if (!$artefact->in_view_list()) {
-    throw new AccessDeniedException("Artefacts of this type are only viewable within a View");
+    throw new AccessDeniedException(get_string('artefactsonlyviewableinview', 'error'));
 }
 
 define('TITLE', $artefact->display_title() . ' ' . get_string('in', 'view') . ' ' . $view->get('title'));
@@ -114,9 +114,21 @@ $objectionform = pieform(objection_form());
 
 $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
 
+$headers = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">',);
+
+$hasfeed = false;
+$feedlink = '';
+// add a link to the ATOM feed in the header if the view is public
+if($artefact->get('artefacttype') == 'blog' && $view->is_public()) {
+    $hasfeed = true;
+    $feedlink = get_config('wwwroot') . 'artefact/blog/atom.php?artefact=' .
+        $artefactid . '&view=' . $viewid;
+    $headers[] = '<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '" />';
+}
+
 $smarty = smarty(
     array('paginator', 'feedbacklist'),
-    array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
+    $headers,
     array(),
     array(
         'stylesheets' => array('style/views.css'),
@@ -131,6 +143,9 @@ $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('viewid', $viewid);
 $smarty->assign('viewtitle', $view->get('title'));
 $smarty->assign('feedback', $feedback);
+
+$smarty->assign('hasfeed', $hasfeed);
+$smarty->assign('feedlink', $feedlink);
 
 $viewowner = $view->get('owner');
 if ($viewowner) {

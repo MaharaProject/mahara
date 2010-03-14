@@ -1357,17 +1357,20 @@ function format_date($date, $formatkey='strftimedatetime', $notspecifiedkey='str
  * Returns a random string suitable for registration/change password requests
  *
  * @param int $length The length of the key to return
+ * @param array $pool The pool to draw from (optional, will use A-Za-z0-9 as a default)
  * @return string
  */
-function get_random_key($length=16) {
+function get_random_key($length=16, $pool=null) {
     if ($length < 1) {
         throw new IllegalArgumentException('Length must be a positive number');
     }
-    $pool = array_merge(
-        range('A', 'Z'),
-        range('a', 'z'),
-        range(0, 9)
-    );
+    if (empty($pool)) {
+        $pool = array_merge(
+            range('A', 'Z'),
+            range('a', 'z'),
+            range(0, 9)
+        );
+    }
     shuffle($pool);
     $result = '';
     for ($i = 0; $i < $length; $i++) {
@@ -1512,6 +1515,11 @@ function pieform_template_dir($file, $pluginlocation='') {
  */
 function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null) {
     global $USER, $SESSION;
+
+    if (defined('BULKEXPORT')) {
+        return true;
+    }
+
     $now = time();
     $dbnow = db_format_timestamp($now);
 
@@ -2135,7 +2143,7 @@ function onlineusers_sideblock() {
                 $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileicon&id=' . $user->id . '&size=20x20&earlyexpiry=1';
             }
             else {
-                $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileicon&id=' . $user->id . '&size=20x20';
+                $user->profileiconurl = profile_icon_url($user, 20, 20);
             }
 
             // If the user is an MNET user, show where they've come from
@@ -2281,18 +2289,6 @@ function cron_send_registration_data() {
     else {
         set_config('registration_lastsent', time());
     }
-}
-
-
-function random_string($length=15) {
-    $pool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    $poollen = strlen($pool);
-    mt_srand ((double) microtime() * 1000000);
-    $string = '';
-    for ($i = 0; $i < $length; $i++) {
-        $string .= substr($pool, (mt_rand()%($poollen)), 1);
-    }
-    return $string;
 }
 
 function build_portfolio_search_html(&$data) {

@@ -41,6 +41,7 @@ class PluginImportLeap extends PluginImport {
     private $loadmapping = array();
     private $coreloadmapping = array();
     private $artefactids = array();
+    protected $filename;
 
     protected $persondataid = null;
 
@@ -66,7 +67,25 @@ class PluginImportLeap extends PluginImport {
 
     const STRATEGY_IMPORT_AS_VIEW = 1;
 
-    public static function validate_import_data($importdata) {
+    public static function validate_transported_data(ImporterTransport $transport) {
+        $importdata = $transport->files_info();
+        if (!$file = self::find_file($importdata)) {
+            throw new ImportException(null, 'Missing leap xml file');
+        }
+    }
+
+    public static function find_file($importdata) {
+        $path = $importdata['tempdir'] . 'extract/';
+        if (!empty($importdata['manifestfile'])) {
+            $files = array($importdata['manifestfile']);
+        } else {
+            $files = array('leap.xml', 'leap2.xml', 'leap2a.xml');
+        }
+        foreach ($files as $f) {
+            if (file_exists($path . $f)) {
+                return $path . $f;
+            }
+        }
     }
 
     public function get($field) {
@@ -79,16 +98,16 @@ class PluginImportLeap extends PluginImport {
     public function process() {
         db_begin();
 
-        $data = $this->get('data');
-        $filename = get_config('dataroot') . $data['filename'];
-        $this->trace('Loading import from ' . $filename);
+        $this->filename = self::find_file($this->get('importertransport')->files_info());
+        $this->logfile = dirname($this->filename) . '/import.log';
+        $this->trace('Loading import from ' . $this->filename);
         $this->snapshot('begin');
 
         $options =
             LIBXML_COMPACT |    // Reported to greatly speed XML parsing
             LIBXML_NONET        // Disable network access - security check
         ;
-        if (!$this->xml = simplexml_load_file($filename, 'SimpleXMLElement', $options)) {
+        if (!$this->xml = simplexml_load_file($this->filename, 'SimpleXMLElement', $options)) {
             // TODO: bail out in a much nicer way...
             throw new ImportException($this, "FATAL: XML file is not well formed! Please consult Mahara's error log for more information");
         }
@@ -146,6 +165,7 @@ class PluginImportLeap extends PluginImport {
             if (safe_require('import', 'leap/' . $plugin, 'lib.php', 'require_once', true)) {
                 $classname = 'LeapImport' . ucfirst($plugin);
                 if (method_exists($classname, 'setup')) {
+                    safe_require('artefact', $plugin);
                     call_static_method($classname, 'setup', $this);
                 }
             }
@@ -349,7 +369,7 @@ class PluginImportLeap extends PluginImport {
                 throw new SystemException("import_from_load_mapping(): $classname::import_using_strategy has not return a list");
             }
 
-            $this->artefactids = array_merge($this->artefactids, $artefactmapping);
+            $this->artefactids = array_merge_recursive($this->artefactids, $artefactmapping);
 
             $usedlist[] = $entryid;
             if (isset($strategydata['other_required_entries'])) {
@@ -365,10 +385,12 @@ class PluginImportLeap extends PluginImport {
         // persondata entry
         // TODO: this should return an artefact mapping so things can create 
         // links to profile fields, but nothing actually needs it yet
-        foreach (plugins_installed('artefact') as $plugin) {
-            $classname = 'LeapImport' . ucfirst($plugin->name);
-            if (method_exists($classname, 'import_author_data')) {
-                call_static_method($classname, 'import_author_data', $this, $this->persondataid);
+        if (!is_array($this->data) || !array_key_exists('skippersondata', $this->data) || $this->data['skippersondata'] !== true) {
+            foreach (plugins_installed('artefact') as $plugin) {
+                $classname = 'LeapImport' . ucfirst($plugin->name);
+                if (method_exists($classname, 'import_author_data')) {
+                    call_static_method($classname, 'import_author_data', $this, $this->persondataid);
+                }
             }
         }
 
@@ -378,11 +400,15 @@ class PluginImportLeap extends PluginImport {
             $strategydata = $this->loadmapping[$entryid];
             $classname = 'LeapImport' . ucfirst($strategydata['artefactplugin']);
             $entry = $this->get_entry_by_id($entryid);
-            call_static_method($classname, 'setup_relationships',
+            $maybeartefacts = call_static_method($classname, 'setup_relationships',
                 $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
+            if (is_array($maybeartefacts)) { // some might add new artefacts (eg files attached by relpath, rather than leap id)
+                $this->artefactids = array_merge_recursive($this->artefactids, $maybeartefacts);
+            }
         }
 
         // Fix up any artefact references in the content of imported artefacts
+        // TODO: restrict this to the ones that were imported right now
         if ($artefacts = get_records_array('artefact', 'owner', $this->get('usr'), '', 'id, title, description')) {
             foreach ($artefacts as $artefact) {
                 $this->fix_artefact_references($artefact);
@@ -791,7 +817,8 @@ class PluginImportLeap extends PluginImport {
      * @return boolean Whether it's worth checking in more detail
      */
     private function artefact_reference_quickcheck($field) {
-        return (false !== strpos($field, 'rel="has_part"'))
+        return (false !== strpos($field, 'rel="leap:has_part"')
+                || false !== strpos($field, 'rel="enclosure"'))
             && (
                 (false !== strpos($field, '<img'))
                 || (false !== strpos($field, '<a'))
@@ -805,7 +832,7 @@ class PluginImportLeap extends PluginImport {
      * @return string The fixed field
      */
     private function fix_artefact_reference($field) {
-        $match = '#<((img)|a)([^>]+)rel="has_part" href="portfolio:artefact([\d]+)"([^>]*)>#';
+        $match = '#<((img)|a)([^>]+)rel="(?:leap:has_part|enclosure)" (?:src|href)="([^"]+)"([^>]*)>#';
         $field = preg_replace_callback($match,
             array($this, '_fixref'),
             $field);
@@ -818,11 +845,11 @@ class PluginImportLeap extends PluginImport {
             $basepath = get_mahara_install_subdirectory();
         }
 
-        $artefacts = $this->get_artefactids_imported_by_entryid('portfolio:artefact' . $matches[4]);
+        $artefacts = $this->get_artefactids_imported_by_entryid($matches[4]);
         if (is_null($artefacts) || count($artefacts) != 1) {
             // This can happen if a leap2a xml file is uploaded that refers to
             // files that (naturally) weren't uploaded with it.
-            log_debug("Warning: fixref was expecting one artefact to have been imported by entry portfolio:artefact{$matches[4]} but seems to have gotten " . count($artefacts));
+            log_debug("Warning: fixref was expecting one artefact to have been imported by entry {$matches[4]} but seems to have gotten " . count($artefacts));
             return $matches[0];
         }
         return '<' . $matches[1] . $matches[3] . ($matches[1] == 'img' ? 'src' : 'href') . '="'
@@ -983,6 +1010,8 @@ class PluginImportLeap extends PluginImport {
         case 'html':
         case 'text':
             return (string)$entry->content;
+        case '':
+            return ''; // empty entry
         default:
             throw new SystemException("Unrecognised content type for entry '$entry->id'");
         }

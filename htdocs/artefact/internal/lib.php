@@ -234,7 +234,9 @@ class PluginArtefactInternal extends PluginArtefact {
                         )", array($owner));
                     }
 
-                    $configdata['artefactids'][] = $cache[$owner][$field]->id;
+                    if (isset($cache[$owner][$field])) {
+                        $configdata['artefactids'][] = $cache[$owner][$field]->id;
+                    }
                 }
             }
 

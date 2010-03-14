@@ -48,7 +48,6 @@ var Paginator = function(id, datatable, script, extradata) {
                 var temp = DIV({'id':'ie-workaround'});
                 temp.innerHTML = '<table><tbody>' + data.data.tablerows + '</tbody></table>';
                 swapDOM(tbody, temp.childNodes[0].childNodes[0]);
-                removeElement(temp);
             }
             else {
                 tbody.innerHTML = data['data']['tablerows'];

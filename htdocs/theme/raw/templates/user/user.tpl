@@ -17,12 +17,12 @@
 		{/if}
 	</ul>
 	<div class="leftdiv" id="friendinfo_{$user->id}">
-		<img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=40&amp;maxheight=40&amp;id={$user->id}" alt="">
+        <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="">
 	</div>
 	<div class="rightdiv">
 	<h3>
 		<a href="{$WWWROOT}user/view.php?id={$user->id}">
-			{$user->id|display_name|escape}
+			{$user->display_name|escape}
 		</a>
 		- {str tag='pending' section='group'}
 	</h3>
@@ -55,12 +55,12 @@
 		</li>
 	</ul>
 	<div class="leftdiv" id="friendinfo_{$user->id}">
-		<img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=40&amp;maxheight=40&amp;id={$user->id}" alt="">
+        <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="">
 	</div>
 	<div class="rightdiv">
 	<h3>
 		<a href="{$WWWROOT}user/view.php?id={$user->id}">
-			{$user->id|display_name|escape}
+			{$user->display_name|escape}
 		</a>
 		{if $page == 'find'}
 			- {str tag='existingfriend' section='group'}
@@ -105,12 +105,12 @@
 		</li>
 	</ul>
 	<div class="leftdiv" id="friendinfo_{$user->id}">
-		<img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=40&amp;maxheight=40&amp;id={$user->id}" alt="">
+        <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="">
 	</div>
 	<div class="rightdiv">
 	<h3>
 		<a href="{$WWWROOT}user/view.php?id={$user->id}">
-			{$user->id|display_name|escape}
+			{$user->display_name|escape}
 		</a>
 	</h3>
 	{if $user->introduction}
@@ -142,12 +142,12 @@
 		</li>
 	</ul>
     <div class="leftdiv" id="friendinfo_{$user->id}">
-        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=40&amp;maxheight=40&amp;id={$user->id}" alt="">
+        <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="">
     </div>
 	<div class="rightdiv">
 	<h3>
 		<a href="{$WWWROOT}user/view.php?id={$user->id}">
-			{$user->id|display_name|escape}
+			{$user->display_name|escape}
 		</a>
 	</h3>
 	{if $user->introduction}

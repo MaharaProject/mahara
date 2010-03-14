@@ -84,7 +84,9 @@ class LeapImportResume extends LeapImportArtefactPlugin {
      * for imported users.
      */
     public static function setup(PluginImportLeap $importer) {
-        ArtefactTypeContactinformation::setup_new($importer->get('usr'));
+        try {
+            ArtefactTypeContactinformation::setup_new($importer->get('usr'));
+        } catch (ParamOutOfRangeException $e) {} // probably already has one
     }
 
     /**

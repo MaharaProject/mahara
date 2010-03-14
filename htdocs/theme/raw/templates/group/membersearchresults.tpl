@@ -3,7 +3,7 @@
           <tr class="{cycle values='r0,r1'}">
             {foreach from=$row item=r}
             <td>
-              <div class="fl"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=40&amp;id={$r.id|escape}" alt=""></div>
+              <div class="fl"><img src="{profile_icon_url user=$r maxwidth=40 maxheight=40}" alt=""></div>
                 <h3><a href="{$WWWROOT}user/view.php?id={$r.id|escape}">{$r.name|escape}</a></h3>
                 {if $r.role}
                 <div class="rel">

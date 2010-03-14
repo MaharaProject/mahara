@@ -18,18 +18,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage core
+ * @subpackage blocktype-myfriends
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+define('JSON', 1);
 
-$config = new StdClass;
-$config->version = 2010031000;
-$config->release = '1.3.0dev';
-$config->minupgradefrom = 2008040200;
-$config->minupgraderelease = '1.0.0 (release tag 1.0.0_RELEASE)';
-$config->disablelogin = true;
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+safe_require('blocktype', 'myfriends');
+require_once('user.php');
+
+$userid = param_integer('user');
+$offset = param_integer('offset');
+$limit  = param_integer('limit', MAXFRIENDDISPLAY);
+
+$friends = get_friends($userid, $limit, $offset);
+PluginBlocktypeMyfriends::build_myfriends_html($friends, $userid);
+
+json_reply(false, array('data' => $friends));
+?>

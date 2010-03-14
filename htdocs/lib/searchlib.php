@@ -291,7 +291,7 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
 
     $cols = array(
         'icon'        => array('name'     => '',
-                               'template' => '<img src="' . get_config('wwwroot') . 'thumb.php?type=profileicon&maxwidth=40&maxheight=40&id={$r.id}" alt="' . get_string('profileimage') . '" />',
+                               'template' => '<img src="{profile_icon_url user=$r maxwidth=40 maxheight=40}" alt="' . get_string('profileimage') . '" />',
                                'class'    => 'center'),
         'firstname'   => array('name'     => get_string('firstname')),
         'lastname'    => array('name'     => get_string('lastname')),
