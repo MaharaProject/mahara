@@ -858,23 +858,28 @@ class LiveUser extends User {
             $instanceid = $parentid;
         }
         $auth = AuthFactory::create($instanceid);
-        if ($auth->authenticate_user_account($user, $password)) {
-            $this->authenticate($user, $auth->instanceid);
-
-            // Check for a suspended institution
-            $authinstance = get_record_sql('
-                SELECT i.suspended, i.displayname
-                FROM {institution} i JOIN {auth_instance} a ON a.institution = i.name
-                WHERE a.id = ?', array($instanceid));
-            if ($authinstance->suspended) {
-                $sitename = get_config('sitename');
-                throw new AccessTotallyDeniedException(get_string('accesstotallydenied_institutionsuspended', 'mahara', $authinstance->displayname, $sitename));
-                return false;
+        
+        // catch the AuthInstanceException that allows authentication plugins to
+        // fail but pass onto the next possible plugin
+        try {
+            if ($auth->authenticate_user_account($user, $password)) {
+                $this->authenticate($user, $auth->instanceid);
+                // Check for a suspended institution
+                $authinstance = get_record_sql('
+                    SELECT i.suspended, i.displayname
+                    FROM {institution} i JOIN {auth_instance} a ON a.institution = i.name
+                    WHERE a.id = ?', array($instanceid));
+                if ($authinstance->suspended) {
+                    $sitename = get_config('sitename');
+                    throw new AccessTotallyDeniedException(get_string('accesstotallydenied_institutionsuspended', 'mahara', $authinstance->displayname, $sitename));
+                    return false;
+                }
+                return true;
             }
-
-            return true;
+        } catch  (AuthInstanceException $e) {
+            return false;
         }
-
+        
         // Display a message to users who are only allowed to login via their
         // external application.
         if ($auth->authloginmsg != '') {

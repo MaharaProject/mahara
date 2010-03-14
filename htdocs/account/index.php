@@ -188,9 +188,17 @@ function accountprefs_validate(Pieform $form, $values) {
     if (isset($values['oldpassword'])) {
         if ($values['oldpassword'] !== '') {
             global $USER, $authtype, $authclass;
-            if (!$authobj->authenticate_user_account($USER, $values['oldpassword'])) {
-                $form->set_error('oldpassword', get_string('oldpasswordincorrect', 'account'));
-                return;
+            try {
+                if (!$authobj->authenticate_user_account($USER, $values['oldpassword'])) {
+                    $form->set_error('oldpassword', get_string('oldpasswordincorrect', 'account'));
+                    return;
+                }
+            }
+            // propagate error correctly for User validation issues - this should
+            // be catching AuthUnknownUserException and AuthInstanceException
+             catch  (UserException $e) {
+                 $form->set_error('oldpassword', $e->getMessage());
+                 return;
             }
             password_validate($form, $values, $USER);
         }
