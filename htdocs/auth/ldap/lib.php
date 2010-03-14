@@ -95,7 +95,6 @@ class AuthLdap extends Auth {
         if (empty($username) or empty($password)) {    
             return false;
         }
-
         // For update user info on login
         $update = false;
 
@@ -137,13 +136,14 @@ class AuthLdap extends Auth {
                         }
                     }
                }
-
                 return true;
             }
         }
         else {
             @ldap_close($ldapconnection);
-            throw new AuthUnknownUserException('Cannot connect to any LDAP hosts');
+            // let's do some logging too
+            log_warn("LDAP connection failed: ".$this->config['host_url'].'/'.$this->config['contexts']);
+            throw new AuthInstanceException(get_string('cannotconnect', 'auth.ldap'));
         }
 
         return false;  // No match

@@ -36,6 +36,16 @@ require(get_config('docroot') . 'auth/user.php');
 class AuthUnknownUserException extends UserException {}
 
 /**
+ * An instance of an auth plugin failed during execution 
+ * e.g. LDAP auth failed to connect to a directory
+ * Developers can use this to fail an individual auth
+ * instance, but not kill all from being tried.
+ * If appropriate - the 'message' of the exception will be used
+ * as the display message, so don't forget to language translate it
+ */
+class AuthInstanceException extends UserException {}
+
+/**
  * We tried to call a method on an auth plugin that hasn't been init'ed 
  * successfully
  */
@@ -854,10 +864,17 @@ function requiredfields_validate(Pieform $form, $values) {
     password_validate($form, $values, $USER);
 
     // The password cannot be the same as the old one
-    if (!$form->get_error('password1')
-        && $authobj->authenticate_user_account($USER, $values['password1'])) {
-        $form->set_error('password1', get_string('passwordnotchanged'));
+    try {
+        if (!$form->get_error('password1')
+            && $authobj->authenticate_user_account($USER, $values['password1'])) {
+            $form->set_error('password1', get_string('passwordnotchanged'));
+        }
     }
+    // propagate error up as the collective error AuthUnknownUserException
+     catch  (AuthInstanceException $e) {
+        $form->set_error('password1', $e->getMessage());
+    }
+
 
     if ($authobj->authname == 'internal' && isset($values['username']) && $values['username'] != $USER->get('username')) {
         if (!AuthInternal::is_username_valid($values['username'])) {
@@ -1158,10 +1175,16 @@ function login_submit(Pieform $form, $values) {
                 if (!$auth->can_auto_create_users()) {
                     continue;
                 }
-                if ($auth->authenticate_user_account($USER, $password)) {
-                    $authenticated = true;
-                }
-                else {
+                // catch semi-fatal auth errors, but allow next auth instance to be
+                // tried
+                try {
+                    if ($auth->authenticate_user_account($USER, $password)) {
+                        $authenticated = true;
+                    }
+                    else {
+                        continue;
+                    }
+                } catch  (AuthInstanceException $e) {
                     continue;
                 }
 

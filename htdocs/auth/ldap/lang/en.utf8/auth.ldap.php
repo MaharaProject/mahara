@@ -44,5 +44,5 @@ $string['userattribute'] = 'User attribute';
 $string['usertype'] = 'User type';
 $string['weautocreateusers'] = 'We auto-create users';
 $string['updateuserinfoonlogin'] = 'Update user info on login';
-
+$string['cannotconnect'] = 'Cannot connect to any LDAP hosts';
 ?>
