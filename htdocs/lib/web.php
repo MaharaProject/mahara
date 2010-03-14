@@ -173,6 +173,7 @@ tinyMCE.init({
             });
         }
     },
+    remove_script_host: false,
     relative_urls: false
 });
 function custom_urlconvert (u, n, e) {
