@@ -1356,7 +1356,9 @@ function artefact_watchlist_notification($artefactids) {
 
 function artefact_get_descendants($new) {
     $seen = array();
-    $new = array_combine($new, $new);
+    if (!empty($new)) {
+        $new = array_combine($new, $new);
+    }
     while (!empty($new)) {
         $seen = $seen + $new;
         $children = get_column_sql('
