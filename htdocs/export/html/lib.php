@@ -343,6 +343,10 @@ class PluginExportHtml extends PluginExport {
                 );
             }
         }
+        function sort_by_title($a, $b) {
+            return strnatcasecmp($a['title'], $b['title']);
+        }
+        usort($views, 'sort_by_title');
         $smarty->assign('views', $views);
 
         if ($views) {
