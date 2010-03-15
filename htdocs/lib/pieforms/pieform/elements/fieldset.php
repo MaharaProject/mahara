@@ -69,6 +69,16 @@ function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
         else {
             $result .= '>' . Pieform::hsc($element['legend']);
         }
+        // Help icon
+        if (!empty($element['help'])) {
+            $function = $form->get_property('helpcallback');
+            if (function_exists($function)) {
+                $result .= $function($form, $element);
+            }
+            else {
+                $result .= '<span class="help"><a href="" title="' . Pieform::hsc($element['help']) . '" onclick="return false;">?</a></span>';
+            }
+        }
         $result .= "</legend>\n";
     }
 

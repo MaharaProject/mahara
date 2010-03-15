@@ -80,13 +80,13 @@ $coverletterform = pieform(array(
                     'cols'  => 70,
                     'rows'  => 10,
                     'defaultvalue' => ((!empty($coverletter)) ? $coverletter->get('description') : null),
-                    'help' => true,
                 ),
                 'save' => array(
                     'type' => 'submit',
                     'value' => get_string('save'),
                 ),
-            )
+            ),
+            'help' => true,
         )
     )
 ));
@@ -108,13 +108,13 @@ $interestsform = pieform(array(
                     'defaultvalue' => ((!empty($interest)) ? $interest->get('description') : null),
                     'cols'  => 70,
                     'rows'  => 10,
-                    'help'  => true,
                 ),
                 'save' => array(
                     'type' => 'submit',
                     'value' => get_string('save'),
                 ),
-            )
+            ),
+            'help' => true,
         )
     )
 ));
@@ -134,9 +134,9 @@ $contactinformationform = pieform(array(
                 'contactinformation' => array(
                     'type'  => 'html',
                     'value' => $contactinformation_value,
-                    'help'  => true,
                 ),
-            )
+            ),
+            'help' => true,
         )
     )
 ));
