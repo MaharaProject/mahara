@@ -21,7 +21,11 @@
 {foreach from=$views item=view}
                     <tr class="{cycle values='r0,r1'}">
                         <td><div class="rel">
+{if $view.type == 'profile'}
+                            <h3><a href="{$WWWROOT}user/view.php">{$view.title|escape}</a></h3>
+{else}
                             <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a></h3>
+{/if}
 {if $view.submittedto}
                             <div class="vi submitted-viewitem">{$view.submittedto}</div>
 {else}
@@ -36,13 +40,14 @@
 {/if}
                             </div>
                             <div class="vi">
-                                <h4><a href="{$WWWROOT}view/blocks.php?id={$view.id}" id="editthisview">{str tag ="editcontentandlayout" section="view"}</a></h4>
+                                <h4><a href="{$WWWROOT}view/blocks.php?{if $view.type == 'profile'}profile=1{else}id={$view.id}{/if}" id="editthisview">{str tag ="editcontentandlayout" section="view"}</a></h4>
 {if $view.artefacts}
                                 <div class="videsc">{str tag="artefacts" section="view"}:
                                 {foreach from=$view.artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$view.id}" id="link-artefacts">{$artefact.title|escape}</a>{if !$.foreach.artefacts.last}, {/if}{/foreach}</div>
 {/if}
                             </div>
 {/if}
+{if $view.type != 'profile'}
                             <div class="vi">
                                 <h4><a href="{$WWWROOT}view/access.php?id={$view.id}" id="editviewaccess">{str tag="editaccess" section="view"}</a></h4>
 {if $view.access}
@@ -71,6 +76,7 @@
                                 <div class="videsc">{str tag="nobodycanseethisview2" section="view"}</div>
 {/if}
                             </div>
+{/if}
 {if $view.submitto}
                             <div class="vi submit-viewitem">{$view.submitto}</div>
 {/if}

@@ -1983,6 +1983,10 @@ class View {
     }
 
     public static function can_remove_viewtype($viewtype) {
+        // profile views should not be deleted
+        if ($viewtype == 'profile') {
+            return false;
+        }
         // allow local custom code to make 'sticky' view types
         if (function_exists('local_can_remove_viewtype')) {
             return local_can_remove_viewtype($viewtype);
@@ -2011,15 +2015,14 @@ class View {
                 ORDER BY v.title, v.id', array($institution), $offset, $limit);
         }
         else {
-            $count = count_records_select('view', 'owner = ? AND type != ?', array($userid, 'profile'));
+            $count = count_records_select('view', 'owner = ?', array($userid));
             $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, v.type, v.submittedtime,
                 g.id AS submitgroupid, g.name AS submitgroupname, h.wwwroot AS submithostwwwroot, h.name AS submithostname
                 FROM {view} v
                 LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
                 LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)
                 WHERE v.owner = ' . $userid . '
-                AND v.type != \'profile\'
-                ORDER BY v.title, v.id', '', $offset, $limit);
+                ORDER BY v.type DESC, v.title, v.id', '', $offset, $limit);
             $owner = $userid;
         }
 
@@ -2055,6 +2058,7 @@ class View {
             for ($i = 0; $i < count($viewdata); $i++) {
                 $index[$viewdata[$i]->id] = $i;
                 $data[$i]['id'] = $viewdata[$i]->id;
+                $data[$i]['type'] = $viewdata[$i]->type;
                 $data[$i]['title'] = $viewdata[$i]->title;
                 $data[$i]['owner'] = $owner;
                 $data[$i]['removable'] = self::can_remove_viewtype($viewdata[$i]->type);

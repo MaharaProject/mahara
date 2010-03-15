@@ -141,9 +141,8 @@ $items['maildisabled']['value'] = get_string('maildisableddescription', 'account
 // build form elements
 $elements = array(
     'topsubmit' => array(
-        'type'  => 'submitcancel',
-        'value' => array(get_string('saveprofile','artefact.internal'), get_string('viewmyprofile', 'artefact.internal')),
-        'goto' => get_config('wwwroot') . 'user/view.php?id=' . $USER->get('id'),
+        'type'  => 'submit',
+        'value' => get_string('saveprofile','artefact.internal'),
     ),
     'profile' => array(
         'type' => 'fieldset',
@@ -174,9 +173,8 @@ $elements = array(
         'value' => $fieldset,
     ),
     'submit' => array(
-        'type'  => 'submitcancel',
-        'value' => array(get_string('saveprofile','artefact.internal'), get_string('viewmyprofile', 'artefact.internal')),
-        'goto' => get_config('wwwroot') . 'user/view.php?id=' . $USER->get('id'),
+        'type'  => 'submit',
+        'value' => get_string('saveprofile','artefact.internal'),
     )
 );
 
