@@ -170,12 +170,14 @@ $personalinformationform = pieform(array(
                     'defaultvalue' => ((!empty($personalinformation)) 
                         ? $personalinformation->get_composite('placeofbirth') : null),
                     'title' => get_string('placeofbirth', 'artefact.resume'),
+                    'size' => 30,
                 ),  
                 'citizenship' => array(
                     'type' => 'text',
                     'defaultvalue' => ((!empty($personalinformation))
                         ? $personalinformation->get_composite('citizenship') : null),
                     'title' => get_string('citizenship', 'artefact.resume'),
+                    'size' => 30,
                 ),
                 'visastatus' => array(
                     'type' => 'text', 
@@ -183,6 +185,7 @@ $personalinformationform = pieform(array(
                         ? $personalinformation->get_composite('visastatus') : null),
                     'title' => get_string('visastatus', 'artefact.resume'),
                     'help'  => true,
+                    'size' => 30,
                 ),
                 'gender' => array(
                     'type' => 'radio', 
@@ -199,6 +202,7 @@ $personalinformationform = pieform(array(
                     'defaultvalue' => ((!empty($personalinformation))
                         ? $personalinformation->get_composite('maritalstatus') :  null),
                     'title' => get_string('maritalstatus', 'artefact.resume'),
+                    'size' => 30,
                 ),
                 'save' => array(
                     'type' => 'submit',
