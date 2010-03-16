@@ -35,22 +35,27 @@ require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once(get_config('docroot') . 'artefact/lib.php');
 
-$personal = null;
-$academic = null;
-$career = null;
-
 try {
-   $personal = artefact_instance_from_type('personalgoal'); 
+    $personal = artefact_instance_from_type('personalgoal');
+    $personal = $personal->get('description');
 }
-catch (Exception $e) {}
+catch (Exception $e) {
+    $personal = get_string('defaultpersonalgoal', 'artefact.resume');
+}
 try {
     $academic = artefact_instance_from_type('academicgoal');
+    $academic = $academic->get('description');
 }
-catch (Exception $e) {}
+catch (Exception $e) {
+    $academic = get_string('defaultacademicgoal', 'artefact.resume');
+}
 try {
     $career = artefact_instance_from_type('careergoal');
+    $career = $career->get('description');
 }
-catch (Exception $e) {}
+catch (Exception $e) {
+    $career = get_string('defaultcareergoal', 'artefact.resume');
+}
 $gform = array(
     'name' => 'goalform',
     'jsform' => true,
@@ -62,21 +67,21 @@ $gform = array(
             'type' => 'wysiwyg',
             'rows' => 10,
             'cols' => 65,
-            'defaultvalue' => ((!empty($personal)) ? $personal->get('description') : null),
+            'defaultvalue' => $personal,
             'title' => get_string('personalgoal', 'artefact.resume'),
         ),
         'academicgoal' => array(
             'type' => 'wysiwyg',
             'rows' => 10,
             'cols' => 65,
-            'defaultvalue' => ((!empty($academic)) ? $academic->get('description') : null),
+            'defaultvalue' => $academic,
             'title' => get_string('academicgoal', 'artefact.resume'),
         ),
         'careergoal' => array(
             'type' => 'wysiwyg',
             'rows' => 10,
             'cols' => 65,
-            'defaultvalue' => ((!empty($career)) ? $career->get('description') : null),
+            'defaultvalue' => $career,
             'title' => get_string('careergoal', 'artefact.resume'),
         ),
         'submit' => array(
