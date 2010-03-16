@@ -377,12 +377,12 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
         foreach ($importer->get_return_data() as $k => $v) {
             $result->querystring .= $k . '=' . $v . '&';
         }
+        $importer->get('importertransport')->cleanup();
     } else {
         // or set ready to 1 for the next cronjob to go fetch it.
         $result->status = set_field('import_queue', 'ready', 1, 'id', $queue->id);
         $result->type = 'queued';
     }
-    $importer->get('importertransport')->cleanup();
     return $result;
 }
 
