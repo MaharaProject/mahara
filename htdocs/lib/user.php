@@ -1138,6 +1138,18 @@ function activate_user($userid) {
 }
 
 /**
+ * Get the thread of message up to this point, given the id of
+ * the message being replied to.
+ */
+function get_message_thread($replyto) {
+    $message = get_record('notification_internal_activity', 'id', $replyto);
+    if (!isset($message->parent)) {
+        return array($message);
+    }
+    return array_merge(get_message_thread($message->parent), array($message));
+}
+
+/**
  * Sends a message from one user to another
  *
  * @param object $to User to send the message to
@@ -1147,7 +1159,7 @@ function activate_user($userid) {
  * @throws AccessDeniedException if the message is not allowed to be sent (as 
  * configured by the 'to' user's settings)
  */
-function send_user_message($to, $message, $from=null) {
+function send_user_message($to, $message, $parent, $from=null) {
     // FIXME: permission checking!
     if ($from === null) {
         global $USER;
@@ -1162,6 +1174,7 @@ function send_user_message($to, $message, $from=null) {
                 'userto'   => $to->id, 
                 'userfrom' => $from->id, 
                 'message'  => $message,
+                'parent'   => $parent,
             )
         );
     }

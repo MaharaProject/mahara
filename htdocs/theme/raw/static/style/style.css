@@ -195,6 +195,10 @@ td.narrow {
 #friendslist td {
 	border-bottom: 2px solid #FFF;
 }
+/* table with preserved whitespace */
+#messagethread td {
+    white-space: pre;
+}
 /* table without border */
 #bloglist th {
 	border: 0;

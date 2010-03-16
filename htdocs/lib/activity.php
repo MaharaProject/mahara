@@ -299,6 +299,7 @@ abstract class ActivityType {
     protected $activityname;
     protected $cron;
     protected $overridemessagecontents;
+    protected $parent;
    
     public function get_id() {
         if (!isset($this->id)) {
@@ -643,6 +644,7 @@ class ActivityTypeUsermessage extends ActivityType {
      *                    - userfrom (int)
      *                    - subject (string)
      *                    - message (string)
+     *                    - parent (int)
      */
     public function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
@@ -658,7 +660,7 @@ class ActivityTypeUsermessage extends ActivityType {
     }
 
     protected function update_url($internalid) {
-        $this->url = get_config('wwwroot') . 'user/sendmessage.php?id=' . $this->userfrom . '&replyto=' . $internalid;
+        $this->url = get_config('wwwroot') . 'user/sendmessage.php?id=' . $this->userfrom . '&replyto=' . $internalid . '&returnto=inbox';
         return true;
     }
 

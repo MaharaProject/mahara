@@ -1609,5 +1609,10 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $cron);
     }
 
+    if ($oldversion < 2010042600) {
+        execute_sql('ALTER TABLE {notification_internal_activity} ADD COLUMN parent BIGINT');
+        execute_sql('ALTER TABLE {notification_internal_activity} ADD CONSTRAINT {notiinteacti_par_fk} FOREIGN KEY (parent) REFERENCES {notification_internal_activity}(id)');
+    }
+
     return $status;
 }

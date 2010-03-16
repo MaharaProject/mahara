@@ -41,6 +41,7 @@ class PluginNotificationInternal extends PluginNotification {
         }
         $toinsert->message = $data->message;
         $toinsert->subject = $data->subject;
+        $toinsert->parent = $data->parent;
         $toinsert->ctime = db_format_timestamp(time());
 
         if (!empty($data->url)) {

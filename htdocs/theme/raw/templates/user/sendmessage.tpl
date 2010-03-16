@@ -1,13 +1,20 @@
 {include file="header.tpl"}
 
-{include file="user/simpleuser.tpl" user=$user}
-
-{if $replyto}
-<h4>{$replyto->subject|escape}:</h4>
-<br>
-{foreach from=$replyto->lines item=line}
-{$line|escape}<br>
-{/foreach}
+{if $messages}
+<table id="messagethread" class="fullwidth listing">
+    <tbody>
+    {foreach from=$messages item=message}
+        <tr class="{cycle values='r0,r1'}">
+        {if $message->usr == $user->id}
+            <th>{include file="user/simpleuser.tpl" user=$USER}</th>
+        {else}
+            <th>{include file="user/simpleuser.tpl" user=$user}</th>
+        {/if}
+            <td>{$message->message}</td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>
 {/if}
 
 {$form}
