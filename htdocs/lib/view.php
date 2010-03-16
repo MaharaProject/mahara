@@ -2028,6 +2028,8 @@ class View {
                     INNER JOIN {group} g ON g.id = vg.group AND g.deleted = 0
                     UNION SELECT view, \'user\' AS accesstype, NULL AS grouptype, NULL AS role, usr AS id, \'\' AS name, startdate, stopdate
                     FROM {view_access_usr} vu
+                    UNION SELECT view, \'secreturl\' AS accesstype, NULL AS grouptype, NULL AS role, 0 AS id, \'\' AS name, startdate, stopdate
+                    FROM {view_access_token} vt
                     UNION SELECT view, accesstype, NULL AS grouptype, NULL AS role, 0 AS id, \'\' AS name, startdate, stopdate
                     FROM {view_access} va
                 ) AS a
@@ -2092,7 +2094,7 @@ class View {
             if ($accessgroups) {
                 foreach ($accessgroups as $access) {
                   $data[$index[$access->view]]['accessgroups'][] = array(
-                      'accesstype' => $access->accesstype, // friends, group, loggedin, public, tutorsgroup, user
+                      'accesstype' => $access->accesstype, // friends, group, loggedin, public, tutorsgroup, user, secreturl
                       'role' => $access->role,
                       'roledisplay' => $access->role ? get_string($access->role, 'grouptype.' . $access->grouptype) : null,
                       'id' => $access->id,

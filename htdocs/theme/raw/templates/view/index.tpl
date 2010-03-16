@@ -61,6 +61,8 @@
     <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name|escape}</a>{if $accessgroup.role} ({$accessgroup.roledisplay}){/if}
 {elseif $accessgroup.accesstype == 'user'}
     <a href="{$WWWROOT}user/view.php?id={$accessgroup.id}">{$accessgroup.id|display_name|escape}</a>
+{elseif $accessgroup.accesstype == 'secreturl'}
+    {str tag="peoplewiththesecreturl" section="view"}
 {/if}{/strip}{if !$.foreach.artefacts.last}, {/if}
 {/foreach}
 {if $view.template}<br>{str tag=thisviewmaybecopied section=view}{/if}
