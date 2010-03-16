@@ -384,7 +384,8 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     }
 
     // First check all the normal locations for the string in the current language
-    if ($result = get_string_local($langstringroot . $langdirectory, $lang . '/' . $section . '.php', $identifier)) {
+    $result = get_string_local($langstringroot . $langdirectory, $lang . '/' . $section . '.php', $identifier);
+    if ($result !== false) {
         return $replacefunc($result, $variables);
     }
 
@@ -398,14 +399,16 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     $langfile = $langstringroot . 'lang/' . $lang . '/langconfig.php';
     if (is_readable($langfile)) {
         if ($parentlang = get_string_from_file('parentlanguage', $langfile)) {
-            if ($result = get_string_local(get_language_root($parentlang) . 'lang/', $parentlang . '/' . $section . '.php', $identifier)) {
+            $result = get_string_local(get_language_root($parentlang) . 'lang/', $parentlang . '/' . $section . '.php', $identifier);
+            if ($result !== false) {
                 return $replacefunc($result, $variables);
             }
         }
     }
 
     /// Our only remaining option is to try English
-    if ($result = get_string_local(get_config('docroot') . $langdirectory, 'en.utf8/' . $section . '.php', $identifier)) {
+    $result = get_string_local(get_config('docroot') . $langdirectory, 'en.utf8/' . $section . '.php', $identifier);
+    if ($result !== false) {
         return $replacefunc($result, $variables);
     }
 
@@ -421,7 +424,8 @@ function get_string_local($langpath, $langfile, $identifier) {
     foreach (array(get_config('docroot') . 'local/lang/', $langpath) as $dir) {
         $file = $dir . $langfile;
         if (is_readable($file)) {
-            if ($result = get_string_from_file($identifier, $file)) {
+            $result = get_string_from_file($identifier, $file);
+            if ($result !== false) {
                 return $result;
             }
         }
