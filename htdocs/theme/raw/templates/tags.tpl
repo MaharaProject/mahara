@@ -29,6 +29,7 @@
            <a href="{$results->baseurl}&sort={$results->sort}&type={$filtername}"{if $results->filter == $filtername} class="selected"{/if}>{$filterdisplay}</a>{if !$.foreach.filtercols.last} <span class="sep">|</span> {/if}
 {/foreach}
            </div>
+           <div class="cb"></div>
            <table id="results" class="tablerenderer fullwidth">
              <thead>
                <tr><th></th><th></th><th></th></tr>
