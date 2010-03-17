@@ -2330,6 +2330,8 @@ function cron_site_data_weekly() {
         'type'  => 'view-count',
         'value' => $current['views'],
     ));
+
+    graph_site_data_weekly();
 }
 
 function cron_site_data_daily() {

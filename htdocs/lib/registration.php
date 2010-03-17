@@ -200,21 +200,8 @@ function site_statistics($full=false) {
 
     if ($full) {
         $data = site_data_current();
-        $lastyear = db_format_timestamp(time() - 60*60*12*365);
-        $values = array($lastyear, 'view-count', 'user-count', 'group-count');
-        $weekly = get_records_sql_array('
-            SELECT ctime, type, value, ' . db_format_tsfield('ctime', 'ts') . '
-            FROM {site_data}
-            WHERE ctime >= ? AND type IN (?,?,?)
-            ORDER BY ctime, type', $values);
-        if ($weekly) {
-            $data['weekly'] = array('user-count' => array(), 'group-count' => array(), 'view-count' => array());
-            $keys = array('user-count' => 0, 'group-count' => 0, 'view-count' => 0);
-            foreach ($weekly as &$r) {
-                $data['weekly'][$r->type][$keys[$r->type]++] = array($keys[$r->type], $r->value);
-            }
-            // Plotkit Stuff -- to be removed.
-            $data['dataarray'] = json_encode(array($data['weekly']['view-count'], $data['weekly']['user-count'], $data['weekly']['group-count']));
+        if (file_exists(get_config('dataroot') . 'weekly.png')) {
+            $data['weekly'] = get_config('wwwroot') . 'admin/thumb.php?type=weekly';
         }
 
         if (is_postgres()) {
@@ -648,6 +635,55 @@ function view_stats_table($limit, $offset) {
     $result['tablerows'] = $smarty->fetch('admin/viewstats.tpl');
 
     return $result;
+}
+
+function graph_site_data_weekly() {
+
+    $lastyear = db_format_timestamp(time() - 60*60*12*365);
+    $values = array($lastyear, 'view-count', 'user-count', 'group-count');
+    $weekly = get_records_sql_array('
+        SELECT ctime, type, value, ' . db_format_tsfield('ctime', 'ts') . '
+        FROM {site_data}
+        WHERE ctime >= ? AND type IN (?,?,?)
+        ORDER BY ctime, type', $values);
+
+    if (!$weekly) {
+        return;
+    }
+
+    $dataarray = array('user-count' => array(0), 'group-count' => array(0), 'view-count' => array(0));
+    $dateindex = array();
+    $key = 1;
+    foreach ($weekly as &$r) {
+        if (!isset($dateindex[$r->ctime])) {
+            $dateindex[$r->ctime] = $key++;
+        }
+        $dataarray[$r->type][$dateindex[$r->ctime]] = $r->value;
+    }
+
+    require_once(get_config('libroot') . "pear/Image/Graph.php");
+
+    $Graph =& Image_Graph::factory('graph', array(400, 300));
+    $Font =& $Graph->addNew('font', 'Vera');
+    $Font->setSize(8);
+    $Graph->setFont($Font);
+    $Plotarea =& $Graph->addNew('plotarea');
+
+    $colors = array(
+        'user-count'  => 'blue@0.8',
+        'view-count'  => 'blue@0.6',
+        'group-count' => 'blue@0.4',
+    );
+
+    foreach ($dataarray as $k => &$line) {
+        $dataset =& Image_Graph::factory('dataset', array($line));
+        $plot =& $Plotarea->addNew('line', array(&$dataset));
+        $linestyle =& Image_Graph::factory('Image_Graph_Line_Solid', array($colors[$k]));
+        $linestyle->setThickness(3);
+        $plot->setLineStyle($linestyle);
+    }
+
+    $Graph->done(array('filename' => get_config('dataroot') . 'weekly.png'));
 }
 
 ?>

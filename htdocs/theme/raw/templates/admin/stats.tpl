@@ -1,11 +1,8 @@
 {if $sitedata.weekly}
   <div class="fr">
-    <div id="site-stats-graph" class="fr" width="300" height="200"></div>
-    <script type="text/javascript">
-addLoadEvent(function () {literal}{{/literal}
-    EasyPlot('line', {literal}{}{/literal}, $('site-stats-graph'), {$sitedata.dataarray});
-{literal}}{/literal});
-    </script>
+    <div id="site-stats-graph" class="fr">
+      <img src="{$sitedata.weekly}" alt="" />
+    </div>
   </div>
 {/if}
   <div class="fl">
