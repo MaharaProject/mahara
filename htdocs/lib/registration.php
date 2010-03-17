@@ -663,7 +663,7 @@ function graph_site_data_weekly() {
 
     require_once(get_config('libroot') . "pear/Image/Graph.php");
 
-    $Graph =& Image_Graph::factory('graph', array(400, 300));
+    $Graph =& Image_Graph::factory('graph', array(300, 200));
     $Font =& $Graph->addNew('font', 'Vera');
     $Font->setSize(8);
     $Graph->setFont($Font);
