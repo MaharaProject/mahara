@@ -647,18 +647,13 @@ function graph_site_data_weekly() {
         WHERE ctime >= ? AND type IN (?,?,?)
         ORDER BY ctime, type', $values);
 
-    if (!$weekly) {
+    if (!count($weekly) > 1) {
         return;
     }
 
-    $dataarray = array('user-count' => array(0), 'group-count' => array(0), 'view-count' => array(0));
-    $dateindex = array();
-    $key = 1;
+    $dataarray = array();
     foreach ($weekly as &$r) {
-        if (!isset($dateindex[$r->ctime])) {
-            $dateindex[$r->ctime] = $key++;
-        }
-        $dataarray[$r->type][$dateindex[$r->ctime]] = $r->value;
+        $dataarray[$r->type][strftime("%d\n%b", $r->ts)] = $r->value;
     }
 
     require_once(get_config('libroot') . "pear/Image/Graph.php");
@@ -667,18 +662,28 @@ function graph_site_data_weekly() {
     $Font =& $Graph->addNew('font', 'Vera');
     $Font->setSize(8);
     $Graph->setFont($Font);
-    $Plotarea =& $Graph->addNew('plotarea');
 
-    $colors = array(
-        'user-count'  => 'blue@0.8',
-        'view-count'  => 'blue@0.6',
-        'group-count' => 'blue@0.4',
+    $Graph->add(
+        Image_Graph::vertical(
+            $Plotarea = Image_Graph::factory('plotarea'),
+            $Legend = Image_Graph::factory('legend'),
+            88
+        )
     );
 
-    foreach ($dataarray as $k => &$line) {
-        $dataset =& Image_Graph::factory('dataset', array($line));
+    $Legend->setPlotarea($Plotarea);
+
+    $datasetinfo = array(
+        'user-count'  => array('color' => 'red@0.4', 'name' => get_string('users')),
+        'view-count'  => array('color' => 'green@0.4', 'name' => get_string('views')),
+        'group-count' => array('color' => 'blue@0.4', 'name' => get_string('groups')),
+    );
+
+    foreach (array_keys($datasetinfo) as $k) {
+        $dataset =& Image_Graph::factory('dataset', array($dataarray[$k]));
+        $dataset->setName($datasetinfo[$k]['name']);
         $plot =& $Plotarea->addNew('line', array(&$dataset));
-        $linestyle =& Image_Graph::factory('Image_Graph_Line_Solid', array($colors[$k]));
+        $linestyle =& Image_Graph::factory('Image_Graph_Line_Solid', array($datasetinfo[$k]['color']));
         $linestyle->setThickness(3);
         $plot->setLineStyle($linestyle);
     }
