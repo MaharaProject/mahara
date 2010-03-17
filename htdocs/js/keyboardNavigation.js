@@ -35,13 +35,13 @@ addLoadEvent(function() {
                     document.location.href = config.wwwroot + 'artefact/file/';
                     break;
                 case 'g':
-                    document.location.href = config.wwwroot + 'group/';
+                    document.location.href = config.wwwroot + 'group/mygroups.php';
                     break;
-                case 'o':
-                    document.location.href = config.wwwroot + 'group/owned.php';
+                case 'v':
+                    document.location.href = config.wwwroot + 'view';
                     break;
                 case '/':
-                    document.searchform.query.focus();
+                    document.usf.query.focus();
                     break;
             }
             config.commandMode = false;
