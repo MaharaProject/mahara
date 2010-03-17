@@ -187,6 +187,11 @@ function site_data_current() {
         'users' => count_records_select('usr', 'id > 0 AND deleted = 0'),
         'groups' => count_records('group', 'deleted', 0),
         'views' => count_records_select('view', 'owner <> 0'),
+        'rank' => array(
+            'users' => get_config('usersrank'),
+            'groups' => get_config('groupsrank'),
+            'views' => get_config('viewsrank'),
+        ),
     );
 }
 
@@ -251,20 +256,8 @@ function site_statistics($full=false) {
     $data['diskusage']   = get_field('site_data', 'value', 'type', 'disk-usage');
     $data['cronrunning'] = !record_exists_select('cron', 'nextrun < CURRENT_DATE');
 
-    // root user doesn't count
-    $data['users'] = count_records_select('usr', 'deleted = 0') - 1; 
-    $data['groups'] = count_records_select('group', 'deleted = 0'); 
-    $data['views'] = count_records_select('view');
-    $data['rank'] = array(
-        'users' => get_config('usersrank'),
-        'groups' => get_config('groupsrank'),
-        'views' => get_config('viewsrank'),
-    );
 
     $data['strrankingsupdated'] = get_string('rankingsupdated', 'admin', date('Y-m-d H:i', get_config('registration_lastsent')));
-
-    // FIXME: actually do this
-    $data['usersloggedin'] = 0;
 
     return($data);
 }
