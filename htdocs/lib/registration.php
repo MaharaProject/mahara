@@ -387,7 +387,7 @@ function user_stats_table($limit, $offset) {
         return $result;
     }
 
-    $day = is_postgres() ? "to_date(t.ctime, 'YYYY-MM-DD')" : 'DATE(t.ctime)';
+    $day = is_postgres() ? "to_date(t.ctime::text, 'YYYY-MM-DD')" : 'DATE(t.ctime)';
 
     $daterange = get_record_sql(
         "SELECT
@@ -406,7 +406,7 @@ function user_stats_table($limit, $offset) {
 
     $dayinterval = is_postgres() ? "'1 day'" : '1 day';
 
-    $day = is_postgres() ? "to_date(ctime, 'YYYY-MM-DD')" : 'DATE(ctime)';
+    $day = is_postgres() ? "to_date(ctime::text, 'YYYY-MM-DD')" : 'DATE(ctime)';
 
     $userdata = get_records_sql_array(
         "SELECT ctime, type, value, $day AS date
