@@ -29,7 +29,7 @@ addLoadEvent(function () {literal}{{/literal}
     {if $sitedata.diskusage}
     <p><strong>{str tag=diskusage section=admin}:</strong> {$sitedata.diskusage|display_size}</p>
     {/if}
-    <p><strong>{str tag=maharaversion section=admin}:</strong> {$sitedata.release}</p>
+    <p><strong>{str tag=maharaversion section=admin}:</strong> {$sitedata.release} ({$sitedata.strlatestversion})</p>
     <p><strong>{str tag=Cron section=admin}:</strong> {if $sitedata.cronrunning}{str tag=runningnormally section=admin}{else}{str tag=cronnotrunning section=admin}{/if}</p>
   </div>
 <div class="cb"></div>

@@ -174,6 +174,8 @@ $string['groupcountsbyjointype'] = 'Number of groups by Access Type';
 $string['blockcountsbytype'] = 'Most frequently used blocks in Portfolio Views:';
 $string['Rank'] = 'Rank';
 $string['rankingsupdated'] = 'Rankings last updated: %s';
+$string['uptodate'] = 'up to date';
+$string['latestversionis'] = 'latest version is <a href="%s">%s</a>';
 
 // Site options
 $string['adminsonly'] = 'Administrators only';

@@ -2264,6 +2264,26 @@ function recalculate_quota() {
     }
 }
 
+
+/**
+ * Cronjob to check Launchpad for the latest Mahara version
+ */
+function cron_check_for_updates() {
+    $request = array(
+        CURLOPT_URL => 'https://launchpad.net/mahara',
+    );
+
+    $result = mahara_http_request($request);
+
+    $page = new DOMDocument();
+    $page->loadHTML($result->data);
+    $xpath = new DOMXPath($page);
+    $query = '//div[@class="version"]';
+    $elements = $xpath->query($query);
+    preg_match('/[0-9]+.[0-9]+.[a-zA-Z0-9]+/', $elements->item(0)->nodeValue, $match);
+    set_config('latest_version', $match[0]);
+}
+
 /**
  * Cronjob to send an update of site statistics to mahara.org
  */

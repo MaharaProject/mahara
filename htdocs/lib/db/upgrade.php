@@ -1391,6 +1391,18 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table);
     }
 
+    if ($oldversion < 2010031700) {
+        // Insert a cron job to check for new versions of Mahara
+        $cron = new StdClass;
+        $cron->callfunction = 'cron_check_for_updates';
+        $cron->minute       = rand(0, 59);
+        $cron->hour         = rand(0, 23);
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
+        insert_record('cron', $cron);
+    }
+
     return $status;
 
 }
