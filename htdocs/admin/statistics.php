@@ -63,7 +63,7 @@ addLoadEvent(function () {
 });
 EOF;
 
-$smarty = smarty(array('js/PlotKit/excanvas.js', 'js/PlotKit/PlotKit.js', 'paginator'));
+$smarty = smarty(array('paginator'));
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 
