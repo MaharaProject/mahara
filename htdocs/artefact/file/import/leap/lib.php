@@ -218,8 +218,7 @@ class LeapImportFile extends LeapImportArtefactPlugin {
         // UTF8 characters
         $pathname = urldecode((string)$entry->content['src']);
         // TODO: might want to make it easier to get at the directory where the import files are
-        $data = $importer->get('data');
-        $dir = dirname($data['filename']);
+        $dir = dirname($importer->get('filename'));
 
         // Note: this data is passed (eventually) to ArtefactType->__construct, 
         // which calls strtotime on the dates for us
@@ -245,7 +244,7 @@ class LeapImportFile extends LeapImportArtefactPlugin {
         $pathname = $dir . DIRECTORY_SEPARATOR . $pathname;
 
         // This API sucks, but that's not my problem
-        if (!$id = ArtefactTypeFile::save_file($pathname, $data, $importer->get('usrobj'))) {
+        if (!$id = ArtefactTypeFile::save_file($pathname, $data, $importer->get('usrobj'), true)) {
             $importer->trace("WARNING: the file for entry $entry->id does not exist in the import (path={$entry->content['src']})");
             return;
         }

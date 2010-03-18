@@ -205,6 +205,8 @@ $string['language'] = 'Language';
 $string['country'] = 'Country';
 $string['pathtoclam'] = 'Path to clam';
 $string['pathtoclamdescription'] = 'The filesystem path to clamscan or clamdscan';
+$string['remoteavatars'] = 'Display remote avatars';
+$string['remoteavatarsdescription'] = 'If checked, the <a href="http://www.gravatar.com">Gravatar</a> service will be used for users\' default profile icons.';
 $string['searchplugin'] = 'Search plugin';
 $string['searchplugindescription'] = 'Search plugin to use';
 $string['sessionlifetime'] = 'Session lifetime';
@@ -232,6 +234,8 @@ $string['usersallowedmultipleinstitutions'] = 'Users allowed multiple institutio
 $string['usersallowedmultipleinstitutionsdescription'] = 'If checked, users can be members of several institutions at the same time';
 $string['userscanchooseviewthemes'] = 'Users can choose View themes';
 $string['userscanchooseviewthemesdescription'] = 'If enabled, users will be allowed to select a theme when editing a View.  The View will be displayed to other users using the selected theme.';
+$string['userscanhiderealnames'] = 'Users can hide real names';
+$string['userscanhiderealnamesdescription'] = 'If checked, users who have set a display name may choose to be searchable only by their display name, and will not be found in searches for their real name.  (In the site administration section of the site, users are always searchable by their real names).';
 $string['usersseenewthemeonlogin'] = 'Other users will see the new theme the next time they log in.';
 $string['viruschecking'] = 'Virus checking';
 $string['viruscheckingdescription'] = 'If checked, virus checking will be enabled for all uploaded files using ClamAV';
@@ -361,6 +365,33 @@ $string['uploadcsvpagedescription2institutionaladmin'] = '<p>You may use this fa
 $string['uploadcsvsomeuserscouldnotbeemailed'] = 'Some users could not be e-mailed. Their e-mail addresses may be invalid, or the server Mahara is running on might not be configured to send e-mail properly. The server error log has more details. For now, you may want to contact these people manually:';
 $string['uploadcsvusersaddedsuccessfully'] = 'The users in the file have been added successfully';
 $string['uploadcsvfailedusersexceedmaxallowed'] = 'No users have been added because there are too many users in your file.  The number of users in the institution would have exceeded the maximum number allowed.';
+
+// Bulk leap2a import
+$string['bulkleap2aimport'] = 'Import users from LEAP2A files';
+$string['bulkleap2aimportdescription'] = '<p>You can import users in bulk from a collection of LEAP2A files on your server.  You must specify a zip file on the server filesystem which contains all the LEAP2A zip files, and a single CSV file called usernames.csv, mapping usernames to filenames.</p>
+<p>usernames.csv will look something like this:</p>
+<pre>
+&nbsp;&nbsp;bob,mahara-export-leap-user8-1265165366.zip<br>
+&nbsp;&nbsp;nigel,mahara-export-leap-user1-1266458159.zip
+</pre>
+<p>where mahara-export-leap-user8-1265165366.zip and mahara-export-leap-user1-1266458159.zip are files in a subdirectory called users.</p>
+<p>This zip file should normally be generated using the bulk export built into Mahara.</p>
+<p>If you are importing a lot of users, please be patient.  The import process can take a long time.</p>';
+$string['importfile'] = 'Bulk export file';
+$string['importfilemissinglisting'] = 'The bulk export file is missing a file named usernames.csv. Did you use the Mahara bulk exporter to export these users?';
+$string['importfilenotafile'] = 'Error during form submission: file was not recognised';
+$string['importfilenotreadable'] = 'Error during form submission: file was not readable';
+$string['bulkleap2aimportfiledescription'] = 'The zip file on your server containing all exported users (in LEAP2A format) along with a CSV listing of usernames';
+$string['importednuserssuccessfully'] = 'Imported %d of %d users successfully';
+$string['Import'] = 'Import';
+$string['bulkimportdirdoesntexist'] = 'The directory %s does not exist';
+$string['unabletoreadbulkimportdir'] = 'The directory %s is unreadable';
+$string['unabletoreadcsvfile'] = 'Unable to read csv file %s';
+$string['importfilenotreadable'] = 'Unable to read LEAP2A file %s';
+$string['importfileisnotazipfile'] = 'Import file %s was not detected as a zip file';
+$string['unzipfailed'] = 'Failed to unzip the LEAP2A file %s. See the error log for more information.';
+$string['importfailedfornusers'] = 'Import failed for %d of %d users';
+$string['invalidlistingfile'] = 'Invalid username listing. Did you use the Mahara bulk exporter to export these users?';
 
 // Admin Users
 $string['adminuserspagedescription'] = '<p>Here you can choose which users are administrators for the site. The current administrators are listed on the right, and potential administrators are on the left.</p><p>The system must have at least one administrator.</p>';
@@ -519,7 +550,6 @@ $string['institutionusersnonmembers'] = 'People who have not requested membershi
 $string['institutionusersmembers'] = 'People who are already institution members';
 
 $string['addnewmembers'] = 'Add new members';
-$string['addnewmembersdescription'] = '';
 $string['usersrequested'] = 'Users who have requested membership';
 $string['userstobeadded'] = 'Users to be added as members';
 $string['userstoaddorreject'] = 'Users to be added/rejected';
@@ -567,7 +597,18 @@ $string['suspendedinstitutionmessage'] = 'This institution has been suspended';
 $string['unsuspendinstitution'] = 'Unsuspend Institution';
 $string['unsuspendinstitutiondescription'] = 'Here you may unsuspend an institution. Users of suspended institutions will be unable to log in until the institution is unsuspended.<br /><strong>Beware:</strong> Unsuspending an institution without resetting or turning off its expiry date may result in a daily re-suspension.';
 $string['unsuspendinstitutiondescription_top'] = '<em>Beware:</em> Unsuspending an institution without resetting or turning off its expiry date may result in a daily re-suspension.';
+$string['unsuspendinstitutiondescription_top_instadmin'] = 'Users of suspended institutions are unable to log in. Contact site administrator to unsuspend the institution.';
 
+// Bulk LEAP2A User export
+$string['bulkexport'] = 'Export users';
+$string['bulkexportempty'] = 'Nothing suitable to export. Please double-check the list of usernames.';
+$string['bulkexportinstitution'] = 'The institution from which all users should be exported';
+$string['bulkexporttitle'] = 'Export users to LEAP2A files';
+$string['bulkexportdescription'] = 'Choose an institution to export <b>OR</b> specify a list of usernames:';
+$string['bulkexportusernames'] = 'Usernames to export';
+$string['bulkexportusernamesdescription'] = 'A list of the users (one username per line) to be exported along with their data';
+$string['couldnotexportusers'] = 'The following user(s) could not be exported: %s';
+$string['exportingusername'] = 'Exporting \'%s\'...';
 
 // Admin User Search
 $string['Query'] = 'Query';

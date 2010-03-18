@@ -27,6 +27,12 @@
               <a href="{if get_config('httpswwwroot') && $item.url=='account/'}{$HTTPSWWWROOT}{else}{$WWWROOT}{/if}{$item.url|escape}">{$item.title|escape}</a>&nbsp;
             {/if}
           {/foreach}
+          {if $USER->get('admin')}
+            <a href="{$WWWROOT}admin/">{str tag="siteadministration"}</a>&nbsp;
+          {elseif $USER->is_institutional_admin()}
+            <a href="{$WWWROOT}admin/users/search.php">{str tag="useradministration"}</a>&nbsp;
+          {/if}
+
           {if $mnethost}<a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a>&nbsp;{/if}
         </div>
 {/if}

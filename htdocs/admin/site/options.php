@@ -196,7 +196,7 @@ $siteoptionform = array(
             'type'         => 'expiry',
             'title'        => get_string('institutionexpirynotification', 'admin'),
             'description'  => get_string('institutionexpirynotificationdescription', 'admin'),
-            'defaultvalue' => is_null(get_config('institutionexpirynotification')) ? '2592000' : get_config('institutionexpirynotification'),
+            'defaultvalue' => get_config('institutionexpirynotification'),
             'help'         => true,
         ),
         'institutionautosuspend' => array(
@@ -250,6 +250,19 @@ $siteoptionform = array(
             'description'  => get_string('userscanchooseviewthemesdescription', 'admin'),
             'defaultvalue' => get_config('userscanchooseviewthemes'),
         ),
+        'remoteavatars' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('remoteavatars', 'admin'),
+            'description'  => get_string('remoteavatarsdescription', 'admin'),
+            'defaultvalue' => get_config('remoteavatars'),
+            'help'         => true,
+        ),
+        'userscanhiderealnames' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('userscanhiderealnames', 'admin'),
+            'description'  => get_string('userscanhiderealnamesdescription', 'admin'),
+            'defaultvalue' => get_config('userscanhiderealnames'),
+        ),
     )
 );
 
@@ -275,6 +288,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
         'captchaonregisterform', 'captchaoncontactform', 'showselfsearchsideblock', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
+        'remoteavatars', 'userscanhiderealnames'
     );
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');

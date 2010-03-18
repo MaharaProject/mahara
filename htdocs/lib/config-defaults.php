@@ -180,6 +180,7 @@ $cfg->pathtounzip = '/usr/bin/unzip';
 $cfg->pathtozip   = '/usr/bin/zip';
 $cfg->ziprecursearg = '-r';
 $cfg->unzipdirarg = '-d';
+$cfg->unziplistarg = '-l';
 // some shared hosts have restrictions on where unzip can be used
 // dataroot is often not allowed; but /tmp is
 // Note that if there is more than one mahara on this host using this setting
@@ -215,4 +216,7 @@ $cfg->showonlineuserssideblock = true;
 // EXAMPLE:  Your cron job hits cron.php every 15 minutes.  Then $cfg->maxrunage must be 900 or greater.
 $cfg->maxrunage = 300;
 
+// if importing leap2a over an xmlrpc mnet connection, set this to something higher than 0 to log import information
+// see the constants in import/leap/lib.php
+$cfg->leapovermnetloglevel = 0;
 ?>

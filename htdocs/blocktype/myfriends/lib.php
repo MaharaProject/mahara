@@ -51,6 +51,30 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
         return array('profile');
     }
 
+    public static function build_myfriends_html(&$friends, $userid) {
+        $friendarray = array_chunk($friends['data'], 4); // get the friends into a 4x4 array
+        $smarty = smarty_core();
+        $smarty->assign_by_ref('friends', $friendarray);
+        $friends['tablerows'] = $smarty->fetch('blocktype:myfriends:myfriendrows.tpl');
+        $baseurl = $_SERVER['REQUEST_URI']; // hmm
+        $baseurl .= (strpos($baseurl, '?') === false ? '?' : '&') . 'user=' . (int) $userid;
+        $pagination = build_pagination(array(
+            'id' => 'userfriendstable_pagination',
+            'class' => 'center nojs-hidden-block',
+            'datatable' => 'userfriendstable',
+            'url' => $baseurl,
+            'jsonscript' => 'blocktype/myfriends/myfriends.json.php',
+            'count' => $friends['count'],
+            'limit' => $friends['limit'],
+            'offset' => $friends['offset'],
+            'numbersincludefirstlast' => false,
+            'resultcounttextsingular' => get_string('friend', 'group'),
+            'resultcounttextplural' => get_string('friends', 'group'),
+        ));
+        $friends['pagination'] = $pagination['html'];
+        $friends['pagination_js'] = $pagination['javascript'];
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         global $USER;
         $userid = $instance->get_view()->get('owner');
@@ -59,37 +83,15 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
             return '';
         }
 
-        $smarty = smarty_core();
-        $records = get_records_sql_array('SELECT usr1, usr2 FROM {usr_friend}
-            JOIN {usr} u1 ON (u1.id = usr1 AND u1.deleted = 0)
-            JOIN {usr} u2 ON (u2.id = usr2 AND u2.deleted = 0)
-            WHERE usr1 = ? OR usr2 = ?
-            ORDER BY ' . db_random() . '
-            LIMIT ?',
-            array($userid, $userid, MAXFRIENDDISPLAY)
-        );
-        // get the friends into a 4x4 array
-        if ($records) {
-            $friends = array();
-            for ($i = 0; $i < 4; $i++) {
-                if (isset($records[4 * $i])) {
-                    $friends[$i] = array();
-                    for($j = 4 * $i; $j < ($i + 1 ) * 4; $j++) {
-                        if (isset($records[$j])) {
-                            if ($records[$j]->usr1 == $userid) {
-                                $friends[$i][] = $records[$j]->usr2;
-                            }
-                            else {
-                                $friends[$i][] = $records[$j]->usr1;
-                            }
-                        }
-                    }
-                }
-            }
+        $friends = get_friends($userid, MAXFRIENDDISPLAY, 0);
+        if ($friends['count']) {
+            self::build_myfriends_html($friends, $userid);
         }
         else {
             $friends = false;
         }
+
+        $smarty = smarty_core();
         $smarty->assign('friends', $friends);
         $smarty->assign('searchingforfriends', array('<a href="' . get_config('wwwroot') . 'user/find.php">', '</a>'));
 
@@ -159,23 +161,10 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
         $ownerid = $instance->get_view()->get('owner');
 
         if ($ownerid === null || $ownerid == $USER->get('id')) {
-            $title = get_string('title', 'blocktype.myfriends');
-        }
-        else {
-            $title = get_string('otherusertitle', 'blocktype.myfriends', display_name($ownerid, null, true));
+            return get_string('title', 'blocktype.myfriends');
         }
 
-        $numberoffriends = count_records_sql('SELECT COUNT(usr1) FROM {usr_friend}
-            JOIN {usr} u1 ON (u1.id = usr1 AND u1.deleted = 0)
-            JOIN {usr} u2 ON (u2.id = usr2 AND u2.deleted = 0)
-            WHERE usr1 = ? OR usr2 = ?',
-            array($ownerid, $ownerid)
-        );
-        if ($numberoffriends > MAXFRIENDDISPLAY) {
-            $title .= ' ' . get_string('numberoffriends', 'blocktype.myfriends', MAXFRIENDDISPLAY, $numberoffriends);
-        }
-
-        return $title;
+        return get_string('otherusertitle', 'blocktype.myfriends', display_name($ownerid, null, true));
     }
 
 }

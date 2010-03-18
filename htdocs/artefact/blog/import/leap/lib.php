@@ -64,27 +64,42 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
     public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImportLeap $importer) {
         $strategies = array();
 
-        if (PluginImportLeap::is_rdf_type($entry, $importer, 'selection')
-            && PluginImportLeap::is_correct_category_scheme($entry, $importer, 'selection_type', 'Blog')) {
+        if (PluginImportLeap::is_rdf_type($entry, $importer, 'selection')) {
+            if (PluginImportLeap::is_correct_category_scheme($entry, $importer, 'selection_type', 'Blog')) {
+                $score = 100;
+            } else {
+                // the blog plugin can either fall back to importing single entries
+                // or handle the case where things are a selection that have no other strategies either.
+                // however, in the case where the otherrequiredentries for the selection have a higher strategy elsewhere,
+                // we need to still fallback to importing a selection post as a blog post by itself, to avoid dataloss.
+                $score = 20; // other things *can* be imported as blogs
+            }
             $otherrequiredentries = array();
 
-            // Get entries that this blog feels are a part of it
+            // Get entries that this blog/selection feels are a part of it
             foreach ($entry->link as $link) {
                 if ($importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'has_part') && isset($link['href'])) {
                     $otherrequiredentries[] = (string)$link['href'];
                 }
             }
 
-            // TODO: Get entries that feel they should be a part of this blog. 
+            // TODO: Get entries that feel they should be a part of this blog/selection
             // We can compare the lists and perhaps warn if they're different
             //    $otherentries = $importer->xml->xpath('//a:feed/a:entry/a:link[@rel="leap:is_part_of" and @href="' . $entryid . '"]/../a:id');
 
             $otherrequiredentries = array_unique($otherrequiredentries);
             $strategies[] = array(
                 'strategy' => self::STRATEGY_IMPORT_AS_BLOG,
-                'score'    => 100,
+                'score'    => $score,
                 'other_required_entries' => $otherrequiredentries,
             );
+            if ($score == 20) {
+                $strategies[] = array(
+                    'strategy' => self::STRATEGY_IMPORT_AS_ENTRY,
+                    'score'    => 10,
+                    'other_required_entries' => array(),
+                );
+            }
         }
         else {
             // The blog can import any entry as a literal blog post
@@ -150,6 +165,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
      * entry having out-of-line content), we attach that file to the entry.
      */
     public static function setup_relationships(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
+        $newartefactmapping = array();
         switch ($strategy) {
         case self::STRATEGY_IMPORT_AS_BLOG:
             foreach ($otherentries as $entryid) {
@@ -169,6 +185,11 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
                         $artefactids = $importer->get_artefactids_imported_by_entryid((string)$blogpostlink['href']);
                         if (isset($artefactids[0])) {
                             $blogpost->attach($artefactids[0]);
+                        } else { // it may be just an attached file, with no leap2a element in its own right ....
+                            if ($id = self::attach_linked_file($blogpostentry, $blogpostlink, $importer)) {
+                                $blogpost->attach($id);
+                                $newartefactmapping[(string)$blogpostlink['href']][] = $id;
+                            }
                         }
                     }
                     if ($blogpost) {
@@ -185,6 +206,33 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
         default:
             throw new ImportException($importer, 'TODO: get_string: unknown strategy chosen for importing entry');
         }
+        return $newartefactmapping;
+    }
+
+    /**
+     * Attaches a file to a blogpost entry that was just linked directly, rather than having a leap2a entry
+     * See http://wiki.cetis.ac.uk/LEAP2A_relationships#Attachments
+     *
+     * @param SimpleXMLElement $blogpostentry
+     * @param SimpleXMLElement $blogpostlink
+     * @param PluginImportLeap $importer
+     */
+    private static function attach_linked_file($blogpostentry, $blogpostlink, PluginImportLeap $importer) {
+        $importer->trace($blogpostlink);
+        $pathname = urldecode((string)$blogpostlink['href']);
+        $dir = dirname($importer->get('filename'));
+        $pathname = $dir . DIRECTORY_SEPARATOR . $pathname;
+        if (!file_exists($pathname)) {
+            return false;
+        }
+        // Note: this data is passed (eventually) to ArtefactType->__construct,
+        // which calls strtotime on the dates for us
+        $data = (object)array(
+            'title' => (string)$blogpostentry->title . ' ' . get_string('attachment', 'artefact.blog'),
+            'owner' => $importer->get('usr'),
+            'filetype' => mime_content_type($pathname),
+        );
+        return ArtefactTypeFile::save_file($pathname, $data, $importer->get('usrobj'), true);
     }
 
     /**

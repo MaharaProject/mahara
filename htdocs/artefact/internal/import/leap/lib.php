@@ -587,7 +587,20 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
      */
     private static function create_artefact(PluginImportLeap $importer, $artefacttype, $title) {
         $classname = generate_artefact_class_name($artefacttype);
-        $artefact = new $classname(0, array('owner' => $importer->get('usr')));
+        $artefact = null;
+        if ($artefacttype == 'email') {
+            // this type is a bit special. just check if we have one with this value already
+            if ($a = get_record('artefact', 'artefacttype', 'email', 'owner', $importer->get('usr'), 'title', $title)) {
+                $artefact = new $classname($a->id, $a);
+            }
+        }
+        if (empty($artefact)) {
+            try {
+                $artefact = artefact_instance_from_type($artefacttype, $importer->get('usr'));
+            } catch (Exception $e) {
+                $artefact = new $classname(0, array('owner' => $importer->get('usr')));
+            }
+        }
         $artefact->set('title', $title);
         $artefact->commit();
         return $artefact->get('id');

@@ -53,8 +53,8 @@ else if ($usertoken) {
     if (!$viewid = get_view_from_token($usertoken, true)) {
         throw new AccessDeniedException(get_string('accessdenied', 'error'));
     }
-    if ($usertoken != get_cookie('mviewaccess:'.$viewid)) {
-        set_cookie('mviewaccess:'.$viewid, $usertoken);
+    if ($usertoken != get_cookie('viewaccess:'.$viewid)) {
+        set_cookie('viewaccess:'.$viewid, $usertoken);
     }
 }
 else {

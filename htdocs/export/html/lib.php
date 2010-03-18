@@ -322,7 +322,7 @@ class PluginExportHtml extends PluginExport {
                 }
             }
 
-            $outputfilter = new HtmlExportOutputFilter($rootpath);
+            $outputfilter = new HtmlExportOutputFilter($rootpath, $this);
             $smarty->assign('view', $outputfilter->filter($view->build_columns()));
             $content = $smarty->fetch('export:html:view.tpl');
             if (!file_put_contents("$directory/index.html", $content)) {
@@ -343,6 +343,10 @@ class PluginExportHtml extends PluginExport {
                 );
             }
         }
+        function sort_by_title($a, $b) {
+            return strnatcasecmp($a['title'], $b['title']);
+        }
+        usort($views, 'sort_by_title');
         $smarty->assign('views', $views);
 
         if ($views) {
@@ -462,11 +466,16 @@ class HtmlExportOutputFilter {
     private $htmlexportcopyproxy = null;
 
     /**
+     */
+    private $exporter = null;
+
+    /**
      * @param string $basepath The relative path to the root of the generated export
      */
-    public function __construct($basepath) {
+    public function __construct($basepath, &$exporter=null) {
         $this->basepath = preg_replace('#/$#', '', $basepath);
         $this->htmlexportcopyproxy = HtmlExportCopyProxy::singleton();
+        $this->exporter = $exporter;
     }
 
     /**
@@ -519,6 +528,7 @@ class HtmlExportOutputFilter {
         );
 
         // Thumbnails
+        require_once('file.php');
         $html = preg_replace_callback(
             '#(' . preg_quote(get_config('wwwroot')) . ')?/?thumb\.php\?type=([a-z]+)((&amp;[a-z]+=[x0-9]+)+)*#',
             array($this, 'replace_thumbnail_link'),
@@ -541,6 +551,10 @@ class HtmlExportOutputFilter {
      */
     private function replace_view_link($matches) {
         $viewid = $matches[1];
+        // Don't rewrite links to views that are not going to be included in the export
+        if (!isset($this->exporter->views[$viewid])) {
+            return $matches[0];
+        }
         if (!isset($this->viewtitles[$viewid])) {
             $this->viewtitles[$viewid] = PluginExportHtml::text_to_path(get_field('view', 'title', 'id', $viewid));
         }
@@ -561,6 +575,7 @@ class HtmlExportOutputFilter {
             $page = ($page == 1) ? 'index' : $page;
             return '<a href="' . $this->basepath . '/files/blog/' . PluginExportHtml::text_to_path($artefact->get('title')) . '/' . $page . '.html">' . $matches[5] . '</a>';
         case 'file':
+        case 'folder':
         case 'image':
         case 'archive':
             $folderpath = $this->get_folder_path_for_file($artefact);
@@ -659,10 +674,10 @@ class HtmlExportOutputFilter {
      *
      * The path is pre-sanitised so it can be used when generating the export
      *
-     * @param ArtefactTypeFileBase $file The file to get the folder path for
+     * @param  $file The file or folder to get the folder path for
      * @return string
      */
-    private function get_folder_path_for_file(ArtefactTypeFileBase $file) {
+    private function get_folder_path_for_file($file) {
         if ($this->folderdata === null) {
             $this->folderdata = get_records_select_assoc('artefact', "artefacttype = 'folder' AND owner = ?", array($file->get('owner')));
             if ($this->folderdata) {

@@ -562,6 +562,21 @@ class View {
         return $data;
     }
 
+    public function is_public() {
+        $timeformat = get_string('strftimedatetimeshort');
+        $now = strtotime(date('Y/m/d H:i'));
+        foreach($this->get_access($timeformat) as $access) {
+            if($access['type'] == 'public' && (
+                ($access['startdate'] == null && $access['stopdate'] == null) ||
+                ($access['startdate'] == null && strtotime($access['stopdate']) > $now) ||
+                (strtotime($access['startdate']) < $now && $access['stopdate'] == null) ||
+                (strtotime($access['startdate']) < $now && strtotime($access['stopdate']) > $now))) {
+                    return true;
+            }
+        }
+        return false;
+    }
+
     public function set_access($accessdata) {
         global $USER;
         require_once('activity.php');
@@ -1693,6 +1708,16 @@ class View {
             $col++;
         }
 
+        if ($viewdata['type'] == 'profile') {
+            $view->set_access(array(
+                array(
+                    'type'      => 'loggedin',
+                    'startdate' => null,
+                    'stopdate'  => null,
+                ),
+            ));
+        }
+
         return $view;
     }
 
@@ -2004,6 +2029,8 @@ class View {
                     INNER JOIN {group} g ON g.id = vg.group AND g.deleted = 0
                     UNION SELECT view, \'user\' AS accesstype, NULL AS grouptype, NULL AS role, usr AS id, \'\' AS name, startdate, stopdate
                     FROM {view_access_usr} vu
+                    UNION SELECT view, \'secreturl\' AS accesstype, NULL AS grouptype, NULL AS role, 0 AS id, \'\' AS name, startdate, stopdate
+                    FROM {view_access_token} vt
                     UNION SELECT view, accesstype, NULL AS grouptype, NULL AS role, 0 AS id, \'\' AS name, startdate, stopdate
                     FROM {view_access} va
                 ) AS a
@@ -2068,7 +2095,7 @@ class View {
             if ($accessgroups) {
                 foreach ($accessgroups as $access) {
                   $data[$index[$access->view]]['accessgroups'][] = array(
-                      'accesstype' => $access->accesstype, // friends, group, loggedin, public, tutorsgroup, user
+                      'accesstype' => $access->accesstype, // friends, group, loggedin, public, tutorsgroup, user, secreturl
                       'role' => $access->role,
                       'roledisplay' => $access->role ? get_string($access->role, 'grouptype.' . $access->grouptype) : null,
                       'id' => $access->id,
@@ -2620,9 +2647,9 @@ class View {
         $data = new StdClass;
         $data->view    = $viewid;
         $data->visible = (int) $visible;
-        $data->token   = random_string(20);
+        $data->token   = get_random_key(20);
         while (record_exists('view_access_token', 'token', $data->token)) {
-            $data->token = random_string(20);
+            $data->token = get_random_key(20);
         }
         if (insert_record('view_access_token', $data)) {
             return $data;
@@ -2983,7 +3010,7 @@ function objection_form() {
     $form = array(
         'name'            => 'objection_form',
         'method'          => 'post',
-        'class'           => 'js-hidden',
+        'class'           => 'js-safe-hidden',
         'plugintype'      => 'core',
         'pluginname'      => 'view',
         'jsform'          => true,

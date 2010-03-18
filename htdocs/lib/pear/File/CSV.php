@@ -532,7 +532,8 @@ class File_CSV
         foreach ($lines as $line) {
             $orgLine = $line;
             foreach ($seps as $sep) {
-                $line = preg_replace("|^[^$quotes$sep]*$sep*([$quotes][^$quotes]*[$quotes])|sm", '_', $orgLine);
+                // FIXME: This preg_replace is broken and causing fields to be miscounted
+                //$line = preg_replace("|^[^$quotes$sep]*$sep*([$quotes][^$quotes]*[$quotes])|s", '_', $orgLine);
                 // Find all seps that are within qoutes
                 ///FIXME ... counts legitimit lines as bad ones
 

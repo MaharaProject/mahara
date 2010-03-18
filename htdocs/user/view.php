@@ -64,7 +64,7 @@ $view = $userobj->get_profile_view();
 $viewid = $view->get('id');
 # access will either be logged in (always) or public as well
 if (!$view || !can_view_view($viewid)) {
-    throw new AccessDeniedException(get_string('youcannotviewthisusersprofile'));
+    throw new AccessDeniedException(get_string('youcannotviewthisusersprofile', 'error'));
 }
 
 // Set up theme
@@ -77,7 +77,7 @@ $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_confi
 $name = display_name($user);
 define('TITLE', $name);
 $smarty = smarty(
-    array('lib/pieforms/static/core/pieforms.js', 'artefact/resume/resumeshowhide.js'),
+    array('paginator', 'lib/pieforms/static/core/pieforms.js', 'artefact/resume/resumeshowhide.js'),
     $stylesheets,
     array(),
     array(

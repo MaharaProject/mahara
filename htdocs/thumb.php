@@ -30,6 +30,7 @@ define('PUBLIC', 1);
 define('NOCHECKPASSWORDCHANGE', 1);
 require('init.php');
 require_once('file.php');
+require_once('user.php');
 
 $type = param_alpha('type');
 
@@ -38,19 +39,30 @@ switch ($type) {
     case 'profileicon':
         $id = param_integer('id', 0);
         $size = get_imagesize_parameters();
+        $earlyexpiry = param_boolean('earlyexpiry');
+        $useremail = null;
 
         if ($id) {
             if ($type == 'profileicon') {
                 // Convert ID of user to the ID of a profileicon
                 $data = get_record_sql('
-                    SELECT u.profileicon, f.filetype
-                    FROM {usr} u INNER JOIN {artefact_file_files} f ON u.profileicon = f.artefact
+                    SELECT u.profileicon, u.email, f.filetype
+                    FROM {usr} u LEFT JOIN {artefact_file_files} f ON u.profileicon = f.artefact
                     WHERE u.id = ?', array($id));
-                if ($data) {
+                if (!empty($data->profileicon)) {
                     $id = $data->profileicon;
                     $mimetype = $data->filetype;
                 }
                 else {
+                    if ($useremail = $data->email) {
+                        // We can use the email address for gravatar icon
+                        $notfound = get_config('wwwroot').'thumb.php?type=profileiconbyid';
+                        foreach ($_GET as $k => $v) {
+                            if ($k != 'id' && $k != 'type') {
+                                $notfound .= '&' . $k . '=' . $v;
+                            }
+                        }
+                    }
                     $id = null;
                 }
             }
@@ -68,7 +80,7 @@ switch ($type) {
                     // user can change it at any time. But we can cache 
                     // 'profileiconbyid' for quite a while, because it will 
                     // never change
-                    if ($type == 'profileiconbyid') {
+                    if ($type == 'profileiconbyid' and !$earlyexpiry) {
                         $maxage = 604800; // 1 week
                     }
                     else {
@@ -84,11 +96,19 @@ switch ($type) {
             }
         }
 
+        // Look for an appropriate image on gravatar.com
+        if ($useremail and $gravatarurl = gravatar_icon($useremail, $size, $notfound)) {
+            redirect($gravatarurl);
+        }
+
         // We couldn't find an image for this user. Attempt to use the 'no user 
         // photo' image for the current theme
 
         // We can cache such images
-        $maxage = 604800;
+        $maxage = 604800; // 1 week
+        if ($earlyexpiry) {
+            $maxage = 600; // 10 minutes
+        }
         header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
         header('Cache-Control: max-age=' . $maxage);
         header('Pragma: public');
@@ -159,4 +179,3 @@ switch ($type) {
         break;
 }
 
-?>

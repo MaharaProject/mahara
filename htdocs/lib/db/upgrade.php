@@ -1339,7 +1339,38 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('userscanchooseviewthemes', 1);
     }
 
-    if ($oldversion < 2010020500) {
+    if ($oldversion < 2010012702) {
+        if ($records = get_records_sql_array("SELECT * FROM {artefact_file_files} WHERE filetype='application/octet-stream'", array())) {
+            foreach ($records as &$r) {
+                $path = get_config('dataroot') . 'artefact/file/originals/' . $r->fileid % 256 . '/' . $r->fileid;
+                set_field('artefact_file_files', 'filetype', mime_content_type($path), 'fileid', $r->fileid);
+            }
+        }
+    }
+
+    if ($oldversion < 2010021500) {
+        if ($data = check_upgrades('blocktype.recentforumposts')) {
+            upgrade_plugin($data);
+        }
+    }
+
+    if ($oldversion < 2010021600) {
+        set_remoteavatars_default();
+    }
+
+    if ($oldversion < 2010031000) {
+        // For existing sites, preserve current user search behaviour:
+        // Users are only searchable by their display names.
+        set_config('userscanhiderealnames', 1);
+        execute_sql("
+            INSERT INTO {usr_account_preference} (usr, field, value)
+            SELECT u.id, 'hiderealname', 1
+            FROM {usr} u LEFT JOIN {usr_account_preference} p ON (u.id = p.usr AND p.field = 'hiderealname')
+            WHERE NOT u.preferredname IS NULL AND u.preferredname != '' AND p.field IS NULL
+        ");
+    }
+
+    if ($oldversion < 2010031800) {
         // Table for collection of historical stats
         $table = new XMLDBTable('site_data');
         $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, XMLDB_NOTNULL);
@@ -1389,9 +1420,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
         $table->addIndexInfo('ctimeix', XMLDB_INDEX_NOTUNIQUE, array('ctime'));
         create_table($table);
-    }
 
-    if ($oldversion < 2010031700) {
         // Insert a cron job to check for new versions of Mahara
         $cron = new StdClass;
         $cron->callfunction = 'cron_check_for_updates';
@@ -1403,8 +1432,6 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $cron);
     }
 
+
     return $status;
-
 }
-
-?>

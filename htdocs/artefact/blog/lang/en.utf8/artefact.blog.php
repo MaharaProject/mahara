@@ -37,6 +37,7 @@ $string['alignment'] = 'Alignment';
 $string['attach'] = 'Attach';
 $string['attachedfilelistloaded'] = 'Attached file list loaded';
 $string['attachedfiles'] = 'Attached files';
+$string['attachment'] = 'Attachment';
 $string['attachments'] = 'Attachments';
 $string['blogcopiedfromanotherview'] = 'Note: This block has been copied from another View. You may move it around or remove it, but you cannot change what %s is in it.';
 $string['blogdesc'] = 'Description';
@@ -139,4 +140,7 @@ $string['postscopiedfromview'] = 'Posts copied from %s';
 $string['youhavenoblogs'] = 'You have no blogs.';
 $string['youhaveoneblog'] = 'You have 1 blog.';
 $string['youhaveblogs'] = 'You have %s blogs.';
+
+$string['feedsnotavailable'] = 'Feeds are not available for this artefact type.';
+$string['feedrights'] = 'Copyright %s.';
 ?>

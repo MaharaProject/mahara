@@ -356,6 +356,12 @@ input[type=file] {
 input.text.required {
 	border: 1px solid #e98a88;
 }
+textarea {
+    resize: none;
+}
+.mceEditor {
+    display: inline-block;
+}
 
 /* error */
 input.error, select.error {
@@ -758,6 +764,13 @@ div.error {
     background: #ffd3d9 url(../images/failure.gif) no-repeat .5em;
     border: 1px solid #dd0221;
 }
+#editaccess div.error {
+    color: #474220;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
 #messages .info {
     color: #1666a9;
     background: #d2ebff;
@@ -1532,6 +1545,7 @@ form#search input.text {
 	position: relative;
 	top: -30px;
 	left: -15px;
+        width: 50%;
 }
 
 /* Settings > Institution membership */
@@ -1551,4 +1565,8 @@ form#search input.text {
 }
 * html #edit_interaction table td fieldset {
 	width: 92%;
+}
+
+.help, .help a, .help a img {
+    vertical-align: top;
 }

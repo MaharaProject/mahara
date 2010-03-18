@@ -59,6 +59,10 @@ function pieform_element_viewacl(Pieform $form, $element) {
                 else {
                     $item['name'] = pieform_render_viewacl_getvaluebytype($item['type'], $item['id']);
                 }
+                // only show access that is still current. Expired access will be deleted if the form is saved
+                if($item['stopdate'] && (time() > strtotime($item['stopdate']))) {
+                    unset($value[$key]);
+                }
             }
             else {
                 unset($value[$key]);

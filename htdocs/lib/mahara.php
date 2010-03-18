@@ -384,7 +384,8 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     }
 
     // First check all the normal locations for the string in the current language
-    if ($result = get_string_local($langstringroot . $langdirectory, $lang . '/' . $section . '.php', $identifier)) {
+    $result = get_string_local($langstringroot . $langdirectory, $lang . '/' . $section . '.php', $identifier);
+    if ($result !== false) {
         return $replacefunc($result, $variables);
     }
 
@@ -398,14 +399,16 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     $langfile = $langstringroot . 'lang/' . $lang . '/langconfig.php';
     if (is_readable($langfile)) {
         if ($parentlang = get_string_from_file('parentlanguage', $langfile)) {
-            if ($result = get_string_local(get_language_root($parentlang) . 'lang/', $parentlang . '/' . $section . '.php', $identifier)) {
+            $result = get_string_local(get_language_root($parentlang) . 'lang/', $parentlang . '/' . $section . '.php', $identifier);
+            if ($result !== false) {
                 return $replacefunc($result, $variables);
             }
         }
     }
 
     /// Our only remaining option is to try English
-    if ($result = get_string_local(get_config('docroot') . $langdirectory, 'en.utf8/' . $section . '.php', $identifier)) {
+    $result = get_string_local(get_config('docroot') . $langdirectory, 'en.utf8/' . $section . '.php', $identifier);
+    if ($result !== false) {
         return $replacefunc($result, $variables);
     }
 
@@ -421,7 +424,8 @@ function get_string_local($langpath, $langfile, $identifier) {
     foreach (array(get_config('docroot') . 'local/lang/', $langpath) as $dir) {
         $file = $dir . $langfile;
         if (is_readable($file)) {
-            if ($result = get_string_from_file($identifier, $file)) {
+            $result = get_string_from_file($identifier, $file);
+            if ($result !== false) {
                 return $result;
             }
         }
@@ -1357,17 +1361,20 @@ function format_date($date, $formatkey='strftimedatetime', $notspecifiedkey='str
  * Returns a random string suitable for registration/change password requests
  *
  * @param int $length The length of the key to return
+ * @param array $pool The pool to draw from (optional, will use A-Za-z0-9 as a default)
  * @return string
  */
-function get_random_key($length=16) {
+function get_random_key($length=16, $pool=null) {
     if ($length < 1) {
         throw new IllegalArgumentException('Length must be a positive number');
     }
-    $pool = array_merge(
-        range('A', 'Z'),
-        range('a', 'z'),
-        range(0, 9)
-    );
+    if (empty($pool)) {
+        $pool = array_merge(
+            range('A', 'Z'),
+            range('a', 'z'),
+            range(0, 9)
+        );
+    }
     shuffle($pool);
     $result = '';
     for ($i = 0; $i < $length; $i++) {
@@ -1512,6 +1519,11 @@ function pieform_template_dir($file, $pluginlocation='') {
  */
 function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null) {
     global $USER, $SESSION;
+
+    if (defined('BULKEXPORT')) {
+        return true;
+    }
+
     $now = time();
     $dbnow = db_format_timestamp($now);
 
@@ -2130,12 +2142,12 @@ function onlineusers_sideblock() {
 
     if ($onlineusers) {
         foreach ($onlineusers as &$user) {
-            // Use 'profileiconbyid' for the current user, just in case they change their profile icon
             if ($user->id == $USER->get('id')) {
-                $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . (int)$user->profileicon . '&size=20x20';
+                // Use a shorter caching time for the current user, just in case they change their profile icon
+                $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileicon&id=' . $user->id . '&size=20x20&earlyexpiry=1';
             }
             else {
-                $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileicon&id=' . $user->id . '&size=20x20';
+                $user->profileiconurl = profile_icon_url($user, 20, 20);
             }
 
             // If the user is an MNET user, show where they've come from
@@ -2414,17 +2426,6 @@ function cron_site_data_daily() {
             execute_sql("UPDATE {view} SET visits = visits + ? WHERE id = ?", array($newvisits, $viewid));
         }
     }
-}
-
-function random_string($length=15) {
-    $pool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    $poollen = strlen($pool);
-    mt_srand ((double) microtime() * 1000000);
-    $string = '';
-    for ($i = 0; $i < $length; $i++) {
-        $string .= substr($pool, (mt_rand()%($poollen)), 1);
-    }
-    return $string;
 }
 
 function build_portfolio_search_html(&$data) {

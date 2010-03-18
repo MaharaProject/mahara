@@ -97,15 +97,14 @@ function pieform_element_wysiwyg_get_headdata() {
     global $USER, $_PIEFORM_WYSIWYGS;
     if ($USER->get_account_preference('wysiwyg') || defined('PUBLIC')) {
         $result = '<script type="text/javascript">'
+         . "\nvar focusEditor = '$_PIEFORM_WYSIWYGS[0]';"
          . "\nPieformManager.connect('onsubmit', null, tinyMCE.triggerSave);"
          . "\nPieformManager.connect('onload', null, function() {\n";
         foreach ($_PIEFORM_WYSIWYGS as $editor) {
             $result .= "    tinyMCE.execCommand('mceAddControl', false, '$editor');\n";
-            $result .= "    tinyMCE.execCommand('mceFocus', false, '$editor');\n";
         }
         $result .= "});\nPieformManager.connect('onreply', null, function() {\n";
         foreach ($_PIEFORM_WYSIWYGS as $editor) {
-            $result .= "    tinyMCE.execCommand('mceFocus', false, '$editor');\n";
             $result .= "    tinyMCE.execCommand('mceRemoveControl', false, '$editor');\n";
         }
         $result .= "});</script>";

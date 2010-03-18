@@ -35,6 +35,8 @@ define('SECTION_PLUGINNAME', 'admin');
 require_once('pieforms/pieform.php');
 require_once('institution.php');
 
+$TRANSPORTER = null;
+
 if ($USER->get('admin')) {
     $authinstances = auth_get_auth_instances();
 }
@@ -141,7 +143,7 @@ $form = pieform(array(
 
 
 function adduser_validate(Pieform $form, $values) {
-    global $USER, $LEAP2A_FILE;
+    global $USER, $TRANSPORTER;
 
     $authobj = AuthFactory::create($values['authinstance']);
 
@@ -188,52 +190,33 @@ function adduser_validate(Pieform $form, $values) {
             return;
         }
 
+        if ($values['leap2afile']['type'] == 'application/octet-stream') {
+            // the browser wasn't sure, so use mime_content_type to guess
+            $mimetype = mime_content_type($values['leap2afile']['tmp_name']);
+        }
+        else {
+            $mimetype = $values['leap2afile']['type'];
+        }
         $date = time();
-        $nicedate = date('Y/m/d h:i:s', $date);
         $niceuser = preg_replace('/[^a-zA-Z0-9_-]/', '-', $values['username']);
+        safe_require('import', 'leap');
+        $fakeimportrecord = (object)array(
+            'data' => array(
+                'importfile'     => $values['leap2afile']['tmp_name'],
+                'importfilename' => $values['leap2afile']['name'],
+                'importid'       => $niceuser . '-' . $date,
+                'mimetype'       => $mimetype,
+            )
+        );
 
-        $uploaddir = get_config('dataroot') . 'import/' . $niceuser . '-' . $date . '/';
-        $filename = $uploaddir . $values['leap2afile']['name'];
-        check_dir_exists($uploaddir);
-        if (!move_uploaded_file($values['leap2afile']['tmp_name'], $filename)) {
-            $form->set_error('leap2afile', get_string('failedtoobtainuploadedleapfile', 'admin'));
+        $TRANSPORTER = new LocalImporterTransport($fakeimportrecord);
+        try {
+            $TRANSPORTER->extract_file();
+            PluginImportLeap::validate_transported_data($TRANSPORTER);
         }
-
-        safe_require('artefact', 'file');
-        $ziptypes = PluginArtefactFile::get_mimetypes_from_description('zip');
-
-        if (in_array($values['leap2afile']['type'], $ziptypes)) {
-            // Unzip the file
-            $command = sprintf('%s %s %s %s',
-                escapeshellcmd(get_config('pathtounzip')),
-                escapeshellarg($filename),
-                get_config('unzipdirarg'),
-                escapeshellarg($uploaddir)
-            );
-            $output = array();
-            exec($command, $output, $returnvar);
-            if ($returnvar != 0) {
-                log_debug("unzip command failed with return value $returnvar");
-                // Let's make it obvious if the cause is obvious :)
-                if ($returnvar == 127) {
-                    log_debug("This means that 'unzip' isn't installed, or the config var \$cfg->pathtounzip is not"
-                        . " pointing at unzip (see Mahara's file lib/config-defaults.php)");
-                }
-                $form->set_error('leap2afile', get_string('failedtounzipleap2afile', 'admin'));
-                return;
-            }
-
-            $filename = $uploaddir . 'leap2a.xml';
-            if (!is_file($filename)) {
-                $form->set_error('leap2afile', get_string('noleap2axmlfiledetected', 'admin'));
-                return;
-            }
-
+        catch (Exception $e) {
+            $form->set_error('leap2afile', $e->getMessage());
         }
-        else if ($values['leap2afile']['type'] != 'text/xml') {
-            $form->set_error('leap2afile', get_string('fileisnotaziporxmlfile', 'admin'));
-        }
-        $LEAP2A_FILE = $filename;
     }
     else {
         if (!$form->get_error('firstname') && !preg_match('/\S/', $firstname)) {
@@ -258,7 +241,7 @@ function adduser_validate(Pieform $form, $values) {
 }
 
 function adduser_submit(Pieform $form, $values) {
-    global $USER, $SESSION, $LEAP2A_FILE;
+    global $USER, $SESSION, $TRANSPORTER;
     db_begin();
 
     ini_set('max_execution_time', 180);
@@ -297,28 +280,22 @@ function adduser_submit(Pieform $form, $values) {
 
     if (isset($values['leap2afile'])) {
         // And we're good to go
-        $filename = substr($LEAP2A_FILE, strlen(get_config('dataroot')));
-        $logfile  = dirname($LEAP2A_FILE) . '/import.log';
-        require_once(get_config('docroot') . 'import/lib.php');
-        safe_require('import', 'leap');
-        $importer = PluginImport::create_importer(null, (object)array(
+        $importdata = (object)array(
             'token'      => '',
-            //'host'       => '',
             'usr'        => $user->id,
             'queue'      => (int)!(PluginImport::import_immediately_allowed()), // import allowed straight away? Then don't queue
             'ready'      => 0, // maybe 1?
             'expirytime' => db_format_timestamp(time()+(60*60*24)),
             'format'     => 'leap',
-            'data'       => array('filename' => $filename),
             'loglevel'   => PluginImportLeap::LOG_LEVEL_VERBOSE,
             'logtargets' => LOG_TARGET_FILE,
-            'logfile'    => $logfile,
             'profile'    => true,
-        ));
+        );
+        $importer = PluginImport::create_importer(null, $TRANSPORTER, $importdata);
 
         try {
             $importer->process();
-            log_info("Imported user account $user->id from leap2a file, see $logfile for a full log");
+            log_info("Imported user account $user->id from leap2a file, see " . $importer->get('logfile') . ' for a full log');
         }
         catch (ImportException $e) {
             log_info("LEAP2A import failed: " . $e->getMessage());

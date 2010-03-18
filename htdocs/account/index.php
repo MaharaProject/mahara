@@ -164,6 +164,14 @@ if (get_config('showtagssideblock')) {
         'rules'        => array('integer' => true, 'minvalue' => 0, 'maxvalue' => 1000),
     );
 }
+if (get_config('userscanhiderealnames')) {
+    $elements['hiderealname'] = array(
+        'type'         => 'checkbox',
+        'title'        => get_string('hiderealname', 'account'),
+        'description'  => get_string('hiderealnamedescription', 'account'),
+        'defaultvalue' => $prefs->hiderealname,
+    );
+}
 $elements['submit'] = array(
     'type' => 'submit',
     'value' => get_string('save')
@@ -188,9 +196,17 @@ function accountprefs_validate(Pieform $form, $values) {
     if (isset($values['oldpassword'])) {
         if ($values['oldpassword'] !== '') {
             global $USER, $authtype, $authclass;
-            if (!$authobj->authenticate_user_account($USER, $values['oldpassword'])) {
-                $form->set_error('oldpassword', get_string('oldpasswordincorrect', 'account'));
-                return;
+            try {
+                if (!$authobj->authenticate_user_account($USER, $values['oldpassword'])) {
+                    $form->set_error('oldpassword', get_string('oldpasswordincorrect', 'account'));
+                    return;
+                }
+            }
+            // propagate error correctly for User validation issues - this should
+            // be catching AuthUnknownUserException and AuthInstanceException
+             catch  (UserException $e) {
+                 $form->set_error('oldpassword', $e->getMessage());
+                 return;
             }
             password_validate($form, $values, $USER);
         }

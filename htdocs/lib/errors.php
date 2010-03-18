@@ -336,7 +336,7 @@ function log_build_backtrace($backtrace) {
                         $args .= 'object(' . get_class($arg) . ')';
                         break;
                     case 'resource':
-                        $args .= 'resource(' . strstr($arg, '#') . ')';
+                        $args .= 'resource(' . strstr((string)$arg, '#') . ')';
                         break;
                     case 'boolean':
                         $args .= $arg ? 'true' : 'false';
@@ -491,7 +491,7 @@ class MaharaException extends Exception {
 
     protected $log = true;
 
-    public function __construct($message, $code=0) {
+    public function __construct($message='', $code=0) {
         parent::__construct($message, $code);
         if (!defined('MAHARA_CRASHING')) {
             define('MAHARA_CRASHING', true);
@@ -573,15 +573,23 @@ class MaharaException extends Exception {
         $outputmessage = trim($this->render_exception());
 
         if (function_exists('smarty') && !$this instanceof ConfigSanityException) {
-            $smarty = smarty(array(), array(), array(), array('sidebars' => false));
-            $smarty->assign('title', $outputtitle);
-            $smarty->assign('message', $outputmessage);
-            $smarty->display('error.tpl');
+            try {
+                $smarty = smarty(array(), array(), array(), array('sidebars' => false));
+                $smarty->assign('title', $outputtitle);
+                $smarty->assign('message', $outputmessage);
+                $smarty->display('error.tpl');
+                die();
+            }
+            catch (Exception $e) {
+                // If an exception is thrown in smarty(), ignore it
+                // and print the message out the ugly way
+                log_warn("Exception thrown by smarty call while handling exception");
+            }
         }
-        else {
-            $outputtitle   = htmlspecialchars($outputtitle, ENT_COMPAT, 'UTF-8');
-            $outputmessage = nl2br(htmlspecialchars($outputmessage, ENT_COMPAT, 'UTF-8'));
-            echo <<<EOF
+
+        $outputtitle   = htmlspecialchars($outputtitle, ENT_COMPAT, 'UTF-8');
+        $outputmessage = nl2br(htmlspecialchars($outputmessage, ENT_COMPAT, 'UTF-8'));
+        echo <<<EOF
 <html>
 <head>
     <title>$outputtitle</title>
@@ -618,13 +626,12 @@ class MaharaException extends Exception {
 </head>
 <body>
 EOF;
-    echo <<<EOF
+        echo <<<EOF
 <h1>$outputtitle</h1>
 <div id="message">$outputmessage</div>
 </body>
 </html>
 EOF;
-        }
         // end of printing stuff to the screen...
         die();
     }

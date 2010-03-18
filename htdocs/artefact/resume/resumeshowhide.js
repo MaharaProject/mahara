@@ -9,7 +9,6 @@
 addLoadEvent(function() {
     forEach(getElementsByTagAndClassName('table', 'resumecomposite', 'bottom-pane'), function(i) {
         forEach(getElementsByTagAndClassName('tr', null, getFirstElementByTagAndClassName('tbody', null, i)), function(tr) {
-            console.log(tr);
             var title = getFirstElementByTagAndClassName('div', 'jstitle', tr);
             var description = getFirstElementByTagAndClassName('div', 'jsdescription', tr);
 
