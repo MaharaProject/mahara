@@ -886,12 +886,13 @@ $string['remotehost'] = 'Remote host %s';
 $string['Copyof'] = 'Copy of %s';
 
 // Profile views
-$string['loggedinusersonly'] = 'Logged in users only';
-$string['allowpublicaccess'] = 'Allow public (non logged in) access';
+$string['loggedinusersonly'] = 'Allow logged in users only';
+$string['allowpublicaccess'] = 'Allow public access';
 $string['thisistheprofilepagefor'] = 'This is the profile page for %s';
 $string['viewmyprofilepage']  = 'View profile page';
 $string['editmyprofilepage']  = 'Edit profile page';
 $string['usersprofile'] = "%s's Profile";
+$string['profiledescription'] = 'Your profile view is what others see when they click on your name or profile icon';
 
 // Dashboard views
 $string['mydashboard'] = 'My Dashboard';

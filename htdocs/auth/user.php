@@ -448,6 +448,7 @@ class User {
         list($view) = View::create_from_template(array(
             'owner' => $this->get('id'),
             'title' => get_field('view', 'title', 'id', $systemprofileviewid),
+            'description' => get_string('profiledescription'),
             'type'  => 'profile',
         ), $systemprofileviewid, $this->get('id'));
 
@@ -509,6 +510,7 @@ class User {
         list($view) = View::create_from_template(array(
             'owner' => $this->get('id'),
             'title' => get_field('view', 'title', 'id', $systemdashboardviewid),
+            'description' => get_string('dashboarddescription'),
             'type'  => 'dashboard',
         ), $systemdashboardviewid, $this->get('id'));
 

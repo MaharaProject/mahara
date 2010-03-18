@@ -33,7 +33,9 @@
 {else}
                             {if $view.removable}<div class="rbuttons"><a href="{$WWWROOT}view/delete.php?id={$view.id}" class="btn-del">{str tag="deletethisview" section="view"}</a></div>{/if}
                             <div class="vi">
+{if $view.type != 'profile' && $view.type != 'dashboard'}
                                 <h4><a href="{$WWWROOT}view/edit.php?id={$view.id}" id="editviewdetails">{str tag="edittitleanddescription" section="view"}</a></h4>
+{/if}
 {if $view.description}
                                 <div class="videsc">{$view.description}</div>
 {/if}
@@ -49,9 +51,12 @@
 {/if}
                             </div>
 {/if}
-{if $view.type != 'profile' && $view.type != 'dashboard'}
                             <div class="vi">
+{if $view.togglepublic}
+                                {$view.togglepublic}
+{elseif $view.type != 'profile' && $view.type != 'dashboard'}
                                 <h4><a href="{$WWWROOT}view/access.php?id={$view.id}" id="editviewaccess">{str tag="editaccess" section="view"}</a></h4>
+{/if}
 {if $view.access}
                                <div class="videsc">{$view.access}</div>
 {/if}
@@ -78,8 +83,7 @@
                                 <div class="videsc">{str tag="nobodycanseethisview2" section="view"}</div>
 {/if}
                             </div>
-{/if}
-{if $view.submitto}
+{if $view.submitto && $view.type != 'profile' && $view.type != 'dashboard'}
                             <div class="vi submit-viewitem">{$view.submitto}</div>
 {/if}
                         </div></td>

@@ -269,32 +269,6 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
     $smarty->assign('relationship', $relationship);
 
 }
-else if (!empty($loggedinid)) {
-    if (get_config('allowpublicprofiles')) {
-        $public = array_filter($view->get_access(), 
-            create_function(
-                '$item', 
-                'return $item[\'type\'] == \'public\';'
-            )
-        );
-        $togglepublic = pieform(array(
-            'name'      => 'togglepublic',
-            'autofocus' => false,
-            'renderer'  => 'div',
-            'elements'  => array(
-                'changeto' => array(
-                    'type'  => 'hidden',
-                    'value' => ($public) ? 'loggedin' : 'public'
-                ),
-                'submit' => array(
-                    'type' => 'submit',
-                    'value' => ($public) ? get_string('loggedinusersonly') : get_string('allowpublicaccess'),
-                ),
-            ),
-        ));
-        $smarty->assign('togglepublic', $togglepublic);
-    }
-}
 
 if ($userid != $USER->get('id') && $USER->is_admin_for_user($user) && is_null($USER->get('parentuser'))) {
     $loginas = get_string('loginasuser', 'admin', hsc($user->username));
@@ -381,27 +355,5 @@ function approve_deny_friendrequest_submit(Pieform $form, $values) {
     }
 }
 
-function togglepublic_submit(Pieform $form, $values) {
-    global $SESSION, $userid, $view;
-    $access = array(
-        array(
-            'type'      => 'loggedin',
-            'startdate' => null,
-            'stopdate'  => null,
-        ),
-    );
-
-    if ($values['changeto'] == 'public') {
-        $access[] = array(
-            'type'      => 'public',
-            'startdate' => null,
-            'stopdate'  => null,
-        );
-    }
-    $view->set_access($access);
-    $SESSION->add_ok_msg(get_string('viewaccesseditedsuccessfully', 'view'));
-
-    redirect('/user/view.php?id=' . $userid);
-}
 
 ?>

@@ -1674,7 +1674,7 @@ function install_system_profile_view() {
         'numcolumns'  => 2,
         'ownerformat' => FORMAT_NAME_PREFERREDNAME,
         'title'       => get_string('profileviewtitle', 'view'),
-        'description' => '',
+        'description' => get_string('profiledescription'),
         'template'    => 1,
     ));
     $view->set_access(array(array(

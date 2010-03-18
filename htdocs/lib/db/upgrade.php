@@ -1662,6 +1662,7 @@ function xmldb_core_upgrade($oldversion=0) {
             'numcolumns'  => 2,
             'ownerformat' => FORMAT_NAME_PREFERREDNAME,
             'title'       => get_string('dashboardviewtitle', 'view'),
+            'description' => get_string('dashboarddescription'),
             'template'    => 1,
             'ctime'       => $dbtime,
             'atime'       => $dbtime,
@@ -1731,6 +1732,5 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql('ALTER TABLE {usr} ADD COLUMN showhomeinfo SMALLINT NOT NULL DEFAULT 1');
         set_config('homepageinfo', 1);
     }
-
     return $status;
 }

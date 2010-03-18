@@ -2960,6 +2960,59 @@ function objection_form_cancel_submit(Pieform $form) {
     ));
 }
 
+function togglepublic_form($viewid) {
+    $view = new View($viewid);
+    $public = array_filter($view->get_access(),
+        create_function(
+            '$item',
+            'return $item[\'type\'] == \'public\';'
+        )
+    );
+    $togglepublic = pieform(array(
+        'name'      => 'togglepublic',
+        'autofocus' => false,
+        'renderer'  => 'div',
+        'elements'  => array(
+            'changeto' => array(
+                'type'  => 'hidden',
+                'value' => ($public) ? 'loggedin' : 'public'
+            ),
+            'id' => array(
+                'type' => 'hidden',
+                'value' => $viewid
+            ),
+            'submit' => array(
+                'type' => 'submit',
+                'value' => ($public) ? get_string('loggedinusersonly') : get_string('allowpublicaccess'),
+            ),
+        ),
+    ));
+    return $togglepublic;
+}
+
+function togglepublic_submit(Pieform $form, $values) {
+    global $SESSION, $userid;
+    $access = array(
+        array(
+            'type'      => 'loggedin',
+            'startdate' => null,
+            'stopdate'  => null,
+        ),
+    );
+
+    if ($values['changeto'] == 'public') {
+        $access[] = array(
+            'type'      => 'public',
+            'startdate' => null,
+            'stopdate'  => null,
+        );
+    }
+    $view = new View($values['id']);
+    $view->set_access($access);
+    $SESSION->add_ok_msg(get_string('viewaccesseditedsuccessfully', 'view'));
+
+    redirect('/view');
+}
 
 /**
  * display format for author names in views - firstname
