@@ -51,45 +51,10 @@ if (!$tutorgroupdata = group_get_user_course_groups()) {
     $tutorgroupdata = array();
 }
 else {
-	$options = array();
-	foreach ($tutorgroupdata as $group) {
-	    $options[$group->id] = $group->name;
-	}
-    $i = 0;
+    $options = array();
     foreach ($data->data as &$view) {
         if (empty($view['submittedto'])) {
-            // This form sucks from a language string point of view. It should 
-            // use pieforms' form template feature
-            $view['submitto'] = pieform(array(
-                'name' => 'submitto' . $i++,
-                'method' => 'post',
-                'renderer' => 'oneline',
-                'autofocus' => false,
-                'successcallback' => 'submitto_submit',
-                'elements' => array(
-                    'text1' => array(
-                        'type' => 'html',
-                        'value' => get_string('submitthisviewto', 'view') . ' ',
-                    ),
-                    'options' => array(
-                        'type' => 'select',
-                        'collapseifoneoption' => false,
-                        'options' => $options,
-                    ),
-                    'text2' => array(
-                        'type' => 'html',
-                        'value' => get_string('forassessment', 'view'),
-                    ),
-                    'submit' => array(
-                        'type' => 'submit',
-                        'value' => get_string('submit')
-                    ),
-                    'view' => array(
-                        'type' => 'hidden',
-                        'value' => $view['id']
-                    )
-                ),
-            ));
+            $view['submitto'] = view_group_submission_form($view['id'], $tutorgroupdata);
         }
     }
 }
@@ -102,10 +67,6 @@ $pagination = build_pagination(array(
     'resultcounttextsingular' => get_string('view', 'view'),
     'resultcounttextplural' => get_string('views', 'view')
 ));
-
-function submitto_submit(Pieform $form, $values) {
-    redirect('/view/submit.php?id=' . $values['view'] . '&group=' . $values['options']);
-}
 
 $createviewform = pieform(create_view_form());
 

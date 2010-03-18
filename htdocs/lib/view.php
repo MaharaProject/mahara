@@ -2826,6 +2826,48 @@ function createview_cancel_submit(Pieform $form, $values) {
     redirect(get_config('wwwroot') . 'view/');
 }
 
+function view_group_submission_form($viewid, $tutorgroupdata) {
+    $options = array();
+    foreach ($tutorgroupdata as $group) {
+        $options[$group->id] = $group->name;
+    }
+    // This form sucks from a language string point of view. It should
+    // use pieforms' form template feature
+    return pieform(array(
+        'name' => 'view_group_submission_form_' . $viewid,
+        'method' => 'post',
+        'renderer' => 'oneline',
+        'autofocus' => false,
+        'successcallback' => 'view_group_submission_form_submit',
+        'elements' => array(
+            'text1' => array(
+                'type' => 'html', 'value' => get_string('submitthisviewto', 'view') . ' ',
+            ),
+            'options' => array(
+                'type' => 'select',
+                'collapseifoneoption' => false,
+                'options' => $options,
+            ),
+            'text2' => array(
+                'type' => 'html',
+                'value' => get_string('forassessment', 'view'),
+            ),
+            'submit' => array(
+                'type' => 'submit',
+                'value' => get_string('submit')
+            ),
+            'view' => array(
+                'type' => 'hidden',
+                'value' => $viewid
+            )
+        ),
+    ));
+}
+
+function view_group_submission_form_submit(Pieform $form, $values) {
+    redirect('/view/submit.php?id=' . $values['view'] . '&group=' . $values['options']);
+}
+
 
 function add_feedback_form($attachments=false) {
     global $USER;
