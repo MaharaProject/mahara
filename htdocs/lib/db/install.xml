@@ -331,6 +331,8 @@
                 <FIELD NAME="title" TYPE="text" NOTNULL="true"  />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false"  />
                 <FIELD NAME="note" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="author" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="authorname" TYPE="text" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -339,6 +341,7 @@
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name" />
                 <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
+                <KEY NAME="authorfk" TYPE="foreign" FIELDS="author" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <TABLE NAME="artefact_attachment">
