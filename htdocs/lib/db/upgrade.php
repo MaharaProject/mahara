@@ -1370,5 +1370,35 @@ function xmldb_core_upgrade($oldversion=0) {
         ");
     }
 
+    if ($oldversion < 2010031888) {
+        // Add author, authorname to artefact table
+
+        $table = new XMLDBTable('artefact');
+        $field = new XMLDBField('author');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '10');
+        add_field($table, $field);
+
+        $key = new XMLDBKey('authorfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('author'), 'usr', array('id'));
+        add_key($table, $key);
+
+        table_column('artefact', null, 'authorname', 'text', null, null, null, '');
+
+        if (is_postgres()) {
+            execute_sql('UPDATE {artefact} SET authorname = g.name FROM {group} g WHERE "group" = g.id');
+            execute_sql("UPDATE {artefact} SET authorname = CASE WHEN institution = 'mahara' THEN ? ELSE i.displayname END FROM {institution} i WHERE institution = i.name", array(get_config('sitename')));
+        }
+        else {
+            execute_sql("UPDATE {artefact} a, {group} g SET a.authorname = g.name WHERE a.group = g.id");
+            execute_sql("UPDATE {artefact} a, {institution} i SET a.authorname = CASE WHEN a.institution = 'mahara' THEN ? ELSE i.displayname END WHERE a.institution = i.name", array(get_config('sitename')));
+        }
+        execute_sql('UPDATE {artefact} SET author = owner WHERE owner IS NOT NULL');
+
+        execute_sql('ALTER TABLE {artefact} ADD CHECK (
+            (author IS NOT NULL AND authorname IS NULL    ) OR
+            (author IS NULL     AND authorname IS NOT NULL)
+        )');
+    }
+
     return $status;
 }
