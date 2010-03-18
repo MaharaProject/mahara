@@ -63,6 +63,7 @@ class View {
     private $copynewuser = 0;
     private $copynewgroups;
     private $type;
+    private $visits;
 
     /**
      * Valid view layouts. These are read at install time and inserted into
@@ -2733,6 +2734,19 @@ class View {
         return $title;
     }
 
+    public function visit_message() {
+        $visitcountstart = max(get_config('stats_installation_time'), $this->ctime);
+        $visitcountend = get_config('viewloglatest');
+        if ($visitcountstart && $visitcountend && $visitcountstart < $visitcountend) {
+             return get_string(
+                'viewvisitcount',
+                'view',
+                $this->visits,
+                trim(format_date(strtotime($visitcountstart), 'strftimedate')),
+                trim(format_date(strtotime($visitcountend), 'strftimedate'))
+            );
+        }
+    }
 }
 
 

@@ -131,6 +131,7 @@ $string['updatewatchlistfailed'] = 'Update of watchlist failed';
 $string['watchlistupdated'] = 'Your watchlist has been updated';
 $string['editmyview'] = 'Edit my View';
 $string['backtocreatemyview'] = 'Back to create my View';
+$string['viewvisitcount'] = '%d page visit(s) from %s to %s';
 
 $string['friend'] = 'Friend';
 $string['profileicon'] = 'Profile Icon';

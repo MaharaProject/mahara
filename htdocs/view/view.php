@@ -184,6 +184,7 @@ if (get_config('viewmicroheaders')) {
     $smarty->assign('microheadertitle', $view->display_title(true, false));
 
     if ($can_edit) {
+        $smarty->assign('visitstring', $view->visit_message());
         if ($viewtype == 'profile') {
             $microheaderlinks = array(
                 array(

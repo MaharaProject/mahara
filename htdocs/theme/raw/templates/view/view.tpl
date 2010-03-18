@@ -35,5 +35,6 @@
     {if $objectionform}<div>{$objectionform}</div>{/if}
   </div>
 </div>
+{if $visitstring}<div class="ctime center s">{$visitstring}</div>{/if}
 
 {if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}
