@@ -561,6 +561,7 @@ function core_postinst() {
     set_config('lang', 'en.utf8');
     set_config('installation_key', get_random_key());
     set_config('installation_time', $now);
+    set_config('stats_installation_time', $now);
 
     // PostgreSQL supports indexes over functions of columns, MySQL does not. 
     // We make use if this if we can

@@ -1403,6 +1403,9 @@ function xmldb_core_upgrade($oldversion=0) {
         // Put best guess at installation time into config table.
         set_config('installation_time', get_field_sql("SELECT MIN(ctime) FROM {site_content}"));
 
+        // Save the current time so we know when we started collecting stats
+        set_config('stats_installation_time', db_format_timestamp(time()));
+
         // Add ctime to usr table for daily count of users created
         $table = new XMLDBTable('usr');
         $field = new XMLDBField('ctime');
