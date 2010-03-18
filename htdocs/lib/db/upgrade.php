@@ -1370,7 +1370,9 @@ function xmldb_core_upgrade($oldversion=0) {
         ");
     }
 
-    if ($oldversion < 2010031800) {
+    if ($oldversion < 2010031800 && !table_exists(new XMLDBTable('site_data'))) {
+        // Upgrades for admin stats pages
+
         // Table for collection of historical stats
         $table = new XMLDBTable('site_data');
         $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, XMLDB_NOTNULL);
