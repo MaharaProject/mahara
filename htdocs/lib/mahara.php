@@ -2384,13 +2384,8 @@ function cron_site_data_daily() {
     if (rename($viewlog, $viewlog . '.temp') and $fh = @fopen($viewlog . '.temp', 'r')) {
 
         // Read the new stuff out of the file
-        $latest = get_field('view_visit', 'MAX(ctime)');
-        if (empty($latest)) {
-            $latest = get_config('viewloglatest');
-        }
-        else {
-            set_config('viewloglatest', $latest);
-        }
+        $latest = get_config('viewloglatest');
+
         $visits = array();
         while (!feof($fh)) {
             $line = fgets($fh, 1024);
@@ -2426,6 +2421,8 @@ function cron_site_data_daily() {
         foreach ($visitcounts as $viewid => $newvisits) {
             execute_sql("UPDATE {view} SET visits = visits + ? WHERE id = ?", array($newvisits, $viewid));
         }
+
+        set_config('viewloglatest', $time);
 
         unlink($viewlog . '.temp');
     }
