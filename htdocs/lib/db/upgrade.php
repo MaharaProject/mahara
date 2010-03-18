@@ -1385,6 +1385,8 @@ function xmldb_core_upgrade($oldversion=0) {
         table_column('artefact', null, 'authorname', 'text', null, null, null, '');
 
         if (is_postgres()) {
+            execute_sql("ALTER TABLE {artefact} ALTER COLUMN authorname DROP DEFAULT");
+            set_field('artefact', 'authorname', null);
             execute_sql('UPDATE {artefact} SET authorname = g.name FROM {group} g WHERE "group" = g.id');
             execute_sql("UPDATE {artefact} SET authorname = CASE WHEN institution = 'mahara' THEN ? ELSE i.displayname END FROM {institution} i WHERE institution = i.name", array(get_config('sitename')));
         }
