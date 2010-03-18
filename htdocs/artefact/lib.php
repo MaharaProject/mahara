@@ -133,6 +133,8 @@ abstract class ArtefactType {
     protected $tags = array();
     protected $institution;
     protected $group;
+    protected $author;
+    protected $authorname;
     protected $rolepermissions;
     protected $mtimemanuallyset;
 
@@ -384,6 +386,10 @@ abstract class ArtefactType {
             return;
         }
 
+        if (empty($this->author) && empty($this->authorname)) {
+            $this->set_author();
+        }
+
         db_begin();
 
         $fordb = new StdClass;
@@ -617,6 +623,21 @@ abstract class ArtefactType {
         delete_records_select('artefact', "id IN $idstr");
 
         db_commit();
+    }
+
+
+    /**
+     * Initialise artefact author to either the artefact owner, the
+     * logged-in user, or the system user.
+     */
+    private function set_author() {
+        global $USER;
+        if (isset($this->owner)) {
+            $this->author = $this->owner;
+        }
+        else {
+            $this->author = $USER->get('id');
+        }
     }
 
     /**
