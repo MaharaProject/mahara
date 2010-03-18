@@ -35,6 +35,7 @@ define('SECTION_PAGE', 'index');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 require_once('pieforms/pieform.php');
+require_once('group.php');
 define('TITLE', get_string('myviews', 'view'));
 
 $limit = param_integer('limit', 5);
@@ -45,15 +46,8 @@ $data = View::get_myviews_data($limit, $offset);
 $userid = $USER->get('id');
 
 /* Get a list of groups that the user belongs to which views can
-   be sumitted. */
-
-if (!$tutorgroupdata = @get_records_sql_array('SELECT g.id, g.name
-       FROM {group_member} u
-       INNER JOIN {group} g ON (u.group = g.id AND g.deleted = 0)
-       INNER JOIN {grouptype} t ON t.name = g.grouptype
-       WHERE u.member = ?
-       AND t.submittableto = 1
-       ORDER BY g.name', array($userid))) {
+    be sumitted. */
+if (!$tutorgroupdata = group_get_user_course_groups()) {
     $tutorgroupdata = array();
 }
 else {

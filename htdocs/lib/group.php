@@ -1160,4 +1160,23 @@ function group_can_create_groups() {
     }
     return $creators == 'staff' && ($USER->get('staff') || $USER->is_institutional_staff());
 }
+
+function group_get_user_course_groups($userid=null) {
+    if (is_null($userid)) {
+        global $USER;
+        $userid = $USER->get('id');
+    }
+    if ($groups = get_records_sql_array(
+        "SELECT g.id, g.name
+        FROM {group_member} u
+        INNER JOIN {group} g ON (u.group = g.id AND g.deleted = 0)
+        INNER JOIN {grouptype} t ON t.name = g.grouptype
+        WHERE u.member = ?
+        AND t.submittableto = 1
+        ORDER BY g.name
+        ", array($userid))) {
+        return $groups;
+    }
+    return array();
+}
 ?>
