@@ -1400,6 +1400,10 @@ function xmldb_core_upgrade($oldversion=0) {
             (author IS NOT NULL AND authorname IS NULL    ) OR
             (author IS NULL     AND authorname IS NOT NULL)
         )');
+
+        if ($data = check_upgrades('artefact.comment')) {
+            upgrade_plugin($data);
+        }
     }
 
     return $status;
