@@ -62,6 +62,11 @@
     </p>
 {/if}
 
+{if $group_view_submission_form}
+    <h3>{str tag="viewssubmittedtogroup" section="view"}</h3>
+    <div>{$group_view_submission_form}</div>
+{/if}
+
 {if $submittedviews}
     <h3>{str tag="viewssubmittedtogroup" section="view"}</h3>
     <p>

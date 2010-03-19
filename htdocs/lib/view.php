@@ -2123,6 +2123,24 @@ class View {
         );
     }
 
+    public function get_user_views($userid=null) {
+        if (is_null($userid)) {
+            global $USER;
+            $userid = $USER->get('id');
+        }
+        if ($views = get_records_sql_array(
+            "SELECT v.id, v.title
+            FROM {view} v
+            LEFT OUTER JOIN {group} g on (v.submittedgroup = g.id AND g.deleted = 0)
+            LEFT OUTER JOIN {host} h on (v.submittedhost = h.wwwroot)
+            WHERe v.owner = ?
+            AND v.type != 'profile'
+            ORDER BY v.title, v.id
+            ", array($userid))) {
+            return $views;
+        }
+        return array();
+    }
 
     /**
      * Returns an SQL snippet that can be used in a where clause to get views 

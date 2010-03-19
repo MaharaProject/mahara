@@ -618,6 +618,49 @@ function group_removeuser_submit(Pieform $form, $values) {
     redirect('/group/members.php?id=' . $group);
 }
 
+/**
+ * Form for submitting views to a group
+ */
+function group_view_submission_form($groupid, $viewdata) {
+    $options = array();
+    foreach ($viewdata as $view) {
+        $options[$view->id] = $view->title;
+    }
+    return pieform(array(
+        'name' => 'group_view_submission_form_' . $groupid,
+        'method' => 'post',
+        'renderer' => 'oneline',
+        'autofocus' => false,
+        'successcallback' => 'group_view_submission_form_submit',
+        'elements' => array(
+            'text1' => array(
+                'type' => 'html', 'value' => get_string('submit', 'group') . ' ',
+            ),
+            'options' => array(
+                'type' => 'select',
+                'collapseifoneoption' => false,
+                'options' => $options,
+            ),
+            'text2' => array(
+                'type' => 'html',
+                'value' => get_string('forassessment', 'view'),
+            ),
+            'submit' => array(
+                'type' => 'submit',
+                'value' => get_string('submit')
+            ),
+            'group' => array(
+                'type' => 'hidden',
+                'value' => $groupid
+            )
+        ),
+    ));
+}
+
+function group_view_submission_form_submit(Pieform $form, $values) {
+    redirect('/view/submit.php?id=' . $values['options'] . '&group=' . $values['group']);
+}
+
 // Miscellaneous group related functions
 
 /**
@@ -1178,5 +1221,9 @@ function group_get_user_course_groups($userid=null) {
         return $groups;
     }
     return array();
+}
+
+function group_allows_submission($grouptype) {
+    return get_field('grouptype', 'submittableto', 'name', $grouptype);
 }
 ?>

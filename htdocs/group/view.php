@@ -122,6 +122,14 @@ if ($role) {
         $smarty->assign('submittedviews', View::get_submitted_views($group->id));
     }
 }
+
+if (group_allows_submission($group->grouptype) &&
+    !get_record_select('view', 'owner = ? AND submittedgroup = ?', array($USER->get('id'), $group->id))
+    && ($viewdata = View::get_user_views())) {
+        $group_view_submission_form = group_view_submission_form($group->id, $viewdata);
+        $smarty->assign('group_view_submission_form', $group_view_submission_form);
+}
+
 $smarty->assign('role', $role);
 $smarty->display('group/view.tpl');
 
