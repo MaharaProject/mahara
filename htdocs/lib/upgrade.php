@@ -583,6 +583,10 @@ function core_postinst() {
         (owner IS NULL     AND "group" IS NOT NULL AND institution IS NULL) OR
         (owner IS NULL     AND "group" IS NULL     AND institution IS NOT NULL)
     )');
+    execute_sql('ALTER TABLE {artefact} ADD CHECK (
+        (author IS NOT NULL AND authorname IS NULL    ) OR
+        (author IS NULL     AND authorname IS NOT NULL)
+    )');
 
     set_remoteavatars_default();
     reload_html_filters();
