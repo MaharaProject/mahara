@@ -212,20 +212,15 @@ class ArtefactTypeContactinformation extends ArtefactTypeResume {
     }
 
     public static function setup_new($userid) {
-        $code = get_random_key(10, range(0, 9));
         try {
-            $existing = artefact_instance_from_type('contactinformation', $userid);
-            throw new ParamOutOfRangeException("Cannot create a new Contactinformation artefact for $userid - they already have one!", $code);
-        } catch (Exception $e) {
-            if ($e->getCode() ==  $code) { // it is the exception we *just* threw
-                throw $e;
-            }
+            return artefact_instance_from_type('contactinformation', $userid);
+        } catch (ArtefactNotFoundException $e) {
+            $artefact = new ArtefactTypeContactinformation(null, array(
+                'owner' => $userid,
+                'title' => get_string('contactinformation', 'artefact.resume')
+            ));
+            $artefact->commit();
         }
-        $artefact = new ArtefactTypeContactinformation(null, array(
-            'owner' => $userid,
-            'title' => get_string('contactinformation', 'artefact.resume')
-        ));
-        $artefact->commit();
         return $artefact;
     }
 
