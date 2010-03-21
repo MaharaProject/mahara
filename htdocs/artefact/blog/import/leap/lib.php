@@ -103,10 +103,17 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
         }
         else {
             // The blog can import any entry as a literal blog post
+            // Get files that this blogpost/catchall feels are a part of it
+            $otherrequiredentries = array();
+            foreach ($entry->link as $link) {
+                if ($importer->curie_equals($link['rel'], '', 'enclosure') && isset($link['href'])) {
+                    $otherrequiredentries[] = (string)$link['href'];
+                }
+            }
             $strategies[] = array(
                 'strategy' => self::STRATEGY_IMPORT_AS_ENTRY,
                 'score'    => 10,
-                'other_required_entries' => array(),
+                'other_required_entries' => $otherrequiredentries,
             );
         }
 
@@ -201,6 +208,25 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
             }
             break;
         case self::STRATEGY_IMPORT_AS_ENTRY:
+            $blogpostids = $importer->get_artefactids_imported_by_entryid((string)$entry->id);
+            if (!isset($blogpostids[0])) {
+                // weird!
+                break;
+            }
+            $blogpost = new ArtefactTypeBlogPost($blogpostids[0]);
+            foreach ($entry->link as $link) {
+                if ($importer->curie_equals($link['rel'], '', 'enclosure') && isset($link['href'])) {
+                    if (isset($artefactids[0])) {
+                        $blogpost->attach($artefactids[0]);
+                    } else {
+                        if ($id = self::attach_linked_file($entry, $link, $importer)) {
+                            $blogpost->attach($id);
+                            $newartefactmapping[(string)$link['href']][] = $id;
+                        }
+                    }
+                }
+            }
+            $blogpost->commit();
             self::setup_outoflinecontent_relationship($entry, $importer);
             break;
         default:
