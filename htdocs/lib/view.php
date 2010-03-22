@@ -2699,6 +2699,32 @@ class View {
         );
     }
 
+    public function get_comments($limit=10, $offset=0, $lastpage=false) {
+        global $USER;
+        $userid = $USER->get('id');
+        $viewid = $this->id;
+        $canedit = $USER->can_edit_view($this);
+
+        safe_require('artefact', 'comment');
+        $result = ArtefactTypeComment::get_comments($limit, $offset, $lastpage, $userid, $canedit, $viewid);
+
+        if ($result->data) {
+            foreach ($result->data as &$f) {
+                if ($f->private) {
+                    $f->pubmessage = get_string('thisfeedbackisprivate', 'view');
+                }
+                else if (!$f->private && $canedit) {
+                    $f->pubmessage = get_string('thisfeedbackispublic', 'view');
+                    $f->makeprivateform = pieform(make_private_form($f->id));
+                }
+            }
+        }
+
+        $result->isowner = $userid && $userid == $this->get('owner');
+
+        return $result;
+    }
+
     public function display_title($long=true, $titlelink=true) {
         if ($this->type == 'profile') {
             $title = display_name($this->owner, null, true);

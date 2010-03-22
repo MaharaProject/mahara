@@ -156,6 +156,64 @@ class ArtefactTypeComment extends ArtefactType {
         return array('author', 'owner', 'admin');
     }
 
+    public static function get_comments($limit, $offset, $lastpage, $userid, $canedit,
+                                        $viewid=null, $artefactid=null) {
+
+        $result = (object) array(
+            'limit'    => $limit,
+            'offset'   => $offset,
+            'lastpage' => $lastpage,
+            'view'     => $viewid,
+            'artefact' => $artefactid,
+            'canedit'  => $canedit,
+            'data'     => array(),
+        );
+
+        if (!empty($viewid)) {
+            $where = 'c.onview = ' . (int) $viewid;
+        }
+        else {
+            $where = 'c.onartefact = ' . (int) $artefactid;
+        }
+        if (!$canedit) {
+            $where .= ' AND (c.private = 0 OR a.author = ' . (int) $userid . ')';
+        }
+
+        $result->count = count_records_sql('
+            SELECT COUNT(*)
+            FROM {artefact} a JOIN {artefact_comment_comment} c ON a.id = c.artefact
+            WHERE ' . $where);
+
+        if ($result->count < 1) {
+            return $result;
+        }
+
+        if ($lastpage) { // Ignore $offset and just get the last page of feedback
+            $offset = (ceil($count / $limit) - 1) * $limit;
+        }
+
+        $comments = get_records_sql_assoc('
+            SELECT
+                a.id, a.author, a.authorname, a.ctime, a.description, c.private, c.deletedby
+            FROM {artefact} a JOIN {artefact_comment_comment} c ON a.id = c.artefact
+            WHERE ' . $where . '
+            ORDER BY a.ctime', array(), $offset, $limit);
+
+        $files = ArtefactType::attachments_from_id_list(array_keys($comments));
+        // Todo: get attachment file sizes
+
+        if ($files) {
+            safe_require('artefact', 'file');
+            foreach ($files as &$file) {
+                $comments[$file->artefact]->files[] = $file;
+            }
+        }
+
+        $result->data = array_values($comments);
+
+        return $result;
+    }
+
     public static function build_html(&$data) {
         foreach ($data->data as &$item) {
             $item->date    = format_date(strtotime($item->ctime), 'strftimedatetime');
