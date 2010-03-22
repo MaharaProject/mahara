@@ -991,11 +991,17 @@ abstract class ArtefactType {
         if (empty($artefactids)) {
             return array();
         }
+        // @todo: Join on artefact_file_files shouldn't happen below.
+        // We could either assume all attachments are files and then
+        // move all these attachment functions to the artefact file
+        // plugin, or we could allow artefact plugins to add stuff
+        // to this query.
         $attachments = get_records_sql_array('
             SELECT
-                aa.artefact, aa.attachment, a.artefacttype, a.title, a.description
+                aa.artefact, aa.attachment, a.artefacttype, a.title, a.description, f.size
             FROM {artefact_attachment} aa
                 INNER JOIN {artefact} a ON aa.attachment = a.id
+                LEFT JOIN {artefact_file_files} f ON a.id = f.artefact
             WHERE aa.artefact IN (' . join(', ', $artefactids) . ')', '');
         if (!$attachments) {
             return array();

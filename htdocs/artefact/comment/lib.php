@@ -200,7 +200,6 @@ class ArtefactTypeComment extends ArtefactType {
             ORDER BY a.ctime', array(), $offset, $limit);
 
         $files = ArtefactType::attachments_from_id_list(array_keys($comments));
-        // Todo: get attachment file sizes
 
         if ($files) {
             safe_require('artefact', 'file');
