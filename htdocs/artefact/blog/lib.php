@@ -138,10 +138,6 @@ class ArtefactTypeBlog extends ArtefactType {
         }
     }
 
-    public function is_container() {
-        return true;
-    }
-
     /**
      * This function updates or inserts the artefact.  This involves putting
      * some data in the artefact table (handled by parent::commit()), and then
