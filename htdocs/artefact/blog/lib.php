@@ -424,6 +424,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 throw new ArtefactNotFoundException(get_string('blogpostdoesnotexist', 'artefact.blog'));
             }
         }
+        else {
+            $this->allowcomments = 1; // Turn comments on for new posts
+        }
     }
 
     /**

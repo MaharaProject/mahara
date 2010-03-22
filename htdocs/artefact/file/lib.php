@@ -712,6 +712,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
         if (empty($this->id)) {
             $this->container = 0;
+            $this->allowcomments = 1;
         }
     }
 
@@ -1557,6 +1558,14 @@ class ArtefactTypeImage extends ArtefactTypeFile {
 }
 
 class ArtefactTypeProfileIcon extends ArtefactTypeImage {
+
+    public function __construct($id = 0, $data = null) {
+        parent::__construct($id, $data);
+
+        if (empty($this->id)) {
+            $this->allowcomments = 0;
+        }
+    }
 
     public static function get_links($id) {
         $wwwroot = get_config('wwwroot');
