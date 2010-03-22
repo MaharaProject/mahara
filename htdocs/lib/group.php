@@ -652,13 +652,17 @@ function group_view_submission_form($groupid, $viewdata) {
             'group' => array(
                 'type' => 'hidden',
                 'value' => $groupid
-            )
+            ),
+            'returnto' => array(
+                'type' => 'hidden',
+                'value' => get_config('wwwroot') . 'group/view.php?id=' . $groupid,
+            ),
         ),
     ));
 }
 
 function group_view_submission_form_submit(Pieform $form, $values) {
-    redirect('/view/submit.php?id=' . $values['options'] . '&group=' . $values['group']);
+    redirect('/view/submit.php?id=' . $values['options'] . '&group=' . $values['group'] . '&returnto=group');
 }
 
 // Miscellaneous group related functions

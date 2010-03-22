@@ -2844,7 +2844,7 @@ function createview_cancel_submit(Pieform $form, $values) {
     redirect(get_config('wwwroot') . 'view/');
 }
 
-function view_group_submission_form($viewid, $tutorgroupdata) {
+function view_group_submission_form($viewid, $tutorgroupdata, $returnto=null) {
     $options = array();
     foreach ($tutorgroupdata as $group) {
         $options[$group->id] = $group->name;
@@ -2877,13 +2877,17 @@ function view_group_submission_form($viewid, $tutorgroupdata) {
             'view' => array(
                 'type' => 'hidden',
                 'value' => $viewid
+            ),
+            'returnto' => array(
+                'type' => 'hidden',
+                'value' => $returnto,
             )
         ),
     ));
 }
 
 function view_group_submission_form_submit(Pieform $form, $values) {
-    redirect('/view/submit.php?id=' . $values['view'] . '&group=' . $values['options']);
+    redirect('/view/submit.php?id=' . $values['view'] . '&group=' . $values['options'] . '&returnto=' . $values['returnto']);
 }
 
 

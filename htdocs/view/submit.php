@@ -33,6 +33,7 @@ require_once('view.php');
 require_once('activity.php');
 $viewid = param_integer('id');
 $groupid = param_integer('group');
+$returnto = param_variable('returnto', 'view');
 
 $view = get_record('view', 'id', $viewid, 'owner', $USER->get('id'));
 $group = get_record_sql(
@@ -61,7 +62,7 @@ $form = pieform(array(
         'submit' => array(
             'type' => 'submitcancel',
             'value' => array(get_string('yes'), get_string('no')),
-            'goto' => get_config('wwwroot') . 'view/'
+            'goto' => get_config('wwwroot') . returnto(),
         )
     ),
 ));
@@ -86,6 +87,21 @@ function submitview_submit(Pieform $form, $values) {
     ));
     db_commit();
     $SESSION->add_ok_msg(get_string('viewsubmitted', 'view'));
-    redirect('/view/');
+    redirect('/' . returnto());
+}
+
+function returnto() {
+    GLOBAL $viewid, $groupid, $returnto;
+    // Deteremine the best place to return to
+    if ($returnto === 'group') {
+        $goto = 'group/view.php?id=' . $groupid;
+    }
+    else if ($returnto === 'view') {
+        $goto = 'view/view.php?id=' . $viewid;
+    }
+    else {
+        $goto = 'view/';
+    }
+    return $goto;
 }
 ?>
