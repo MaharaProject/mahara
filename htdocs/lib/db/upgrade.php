@@ -1370,9 +1370,8 @@ function xmldb_core_upgrade($oldversion=0) {
         ");
     }
 
-    if ($oldversion < 2010031888) {
+    if ($oldversion < 2010031888 && table_exists(new XMLDBTable('view_feedback'))) {
         // Add author, authorname to artefact table
-
         $table = new XMLDBTable('artefact');
         $field = new XMLDBField('author');
         $field->setAttributes(XMLDB_TYPE_INTEGER, '10');
@@ -1411,6 +1410,76 @@ function xmldb_core_upgrade($oldversion=0) {
         table_column('view', null, 'allowcomments', 'integer', 1, null, 1);
         // Initially allow comments on blogposts, images, files
         set_field_select('artefact', 'allowcomments', 1, 'artefacttype IN (?,?,?)', array('blogpost', 'image', 'file'));
+
+        // Convert old feedback to comment artefacts
+        if ($viewfeedback = get_records_sql_array('
+            SELECT f.*, v.id AS viewid, v.owner, v.group, v.institution
+            FROM {view_feedback} f JOIN {view} v ON f.view = v.id', array())) {
+            foreach ($viewfeedback as &$f) {
+                $artefact = (object) array(
+                    'artefacttype' => 'comment',
+                    'owner'        => $f->owner,
+                    'group'        => $f->group,
+                    'institution'  => $f->institution,
+                    'author'       => $f->author,
+                    'authorname'   => $f->authorname,
+                    'title'        => get_string('Comment', 'artefact.comment'),
+                    'description'  => $f->message,
+                    'ctime'        => $f->ctime,
+                    'atime'        => $f->ctime,
+                    'mtime'        => $f->ctime,
+                );
+                $aid = insert_record('artefact', $artefact, 'id', true);
+                $comment = (object) array(
+                    'artefact'     => $aid,
+                    'private'      => 1-$f->public,
+                    'onview'       => $f->viewid,
+                );
+                insert_record('artefact_comment_comment', $comment);
+                if (!empty($f->attachment)) {
+                    insert_record('artefact_attachment', (object) array(
+                        'artefact'   => $aid,
+                        'attachment' => $f->attachment
+                    ));
+                }
+            }
+        }
+
+        // We are throwing away the view information from artefact_feedback.
+        // From now on all artefact comments appear together and are not
+        // tied to a particular view.
+        if ($artefactfeedback = get_records_sql_array('
+            SELECT f.*, a.id AS artefactid, a.owner, a.group, a.institution
+            FROM {artefact_feedback} f JOIN {artefact} a ON f.artefact = a.id', array())) {
+            foreach ($artefactfeedback as &$f) {
+                $artefact = (object) array(
+                    'artefacttype' => 'comment',
+                    'owner'        => $f->owner,
+                    'group'        => $f->group,
+                    'institution'  => $f->institution,
+                    'author'       => $f->author,
+                    'authorname'   => $f->authorname,
+                    'title'        => get_string('Comment', 'artefact.comment'),
+                    'description'  => $f->message,
+                    'ctime'        => $f->ctime,
+                    'atime'        => $f->ctime,
+                    'mtime'        => $f->ctime,
+                );
+                $aid = insert_record('artefact', $artefact, 'id', true);
+                $comment = (object) array(
+                    'artefact'     => $aid,
+                    'private'      => 1-$f->public,
+                    'onartefact'   => $f->artefactid,
+                );
+                insert_record('artefact_comment_comment', $comment);
+            }
+        }
+
+        // Drop feedback tables
+        $table = new XMLDBTable('view_feedback');
+        drop_table($table);
+        $table = new XMLDBTable('artefact_feedback');
+        drop_table($table);
     }
 
     return $status;
