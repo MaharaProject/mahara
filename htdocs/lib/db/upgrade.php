@@ -1401,9 +1401,16 @@ function xmldb_core_upgrade($oldversion=0) {
             (author IS NULL     AND authorname IS NOT NULL)
         )');
 
+        // Install the comment artefact
         if ($data = check_upgrades('artefact.comment')) {
             upgrade_plugin($data);
         }
+
+        // Flag all views & artefacts to enable/disable comments
+        table_column('artefact', null, 'allowcomments', 'integer', 1);
+        table_column('view', null, 'allowcomments', 'integer', 1, null, 1);
+        // Initially allow comments on blogposts, images, files
+        set_field_select('artefact', 'allowcomments', 1, 'artefacttype IN (?,?,?)', array('blogpost', 'image', 'file'));
     }
 
     return $status;

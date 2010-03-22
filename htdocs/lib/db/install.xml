@@ -333,6 +333,7 @@
                 <FIELD NAME="note" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="author" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="authorname" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="allowcomments" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"  />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -580,6 +581,7 @@
                 <FIELD NAME="template" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
                 <FIELD NAME="copynewuser" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
                 <FIELD NAME="type" TYPE="char" LENGTH="50" NOTNULL="true" />
+                <FIELD NAME="allowcomments" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"  />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
