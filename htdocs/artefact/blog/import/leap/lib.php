@@ -267,7 +267,9 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
     public static function cleanup(PluginImportLeap $importer) {
         if (self::$importedablog && self::$firstblogid) {
             $blog = artefact_instance_from_id(self::$firstblogid);
-            $blog->delete();
+            if (!$blog->has_children()) { // TODO see #544160
+                $blog->delete();
+            }
         }
     }
 
