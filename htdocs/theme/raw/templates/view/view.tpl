@@ -22,12 +22,12 @@
     {if $tags}<div class="tags">{str tag=tags}: {list_tags owner=$owner tags=$tags}</div>{/if}
     <div>{$releaseform}</div>
     <table id="feedbacktable" class="fullwidth table">
-      <thead><tr><th>{str tag="feedback" section="view"}</th></tr></thead>
+      <thead><tr><th>{str tag="Comments" section="artefact.comment"}</th></tr></thead>
       <tbody>
-        {$feedback->tablerows}
+        {$comments->tablerows}
       </tbody>
     </table>
-    {$feedback->pagination}
+    {$comments->pagination}
 	<div id="viewmenu">
         {include file="view/viewmenu.tpl"}
     </div>

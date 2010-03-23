@@ -134,8 +134,8 @@ function releaseview_submit() {
   
 $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
 
-$feedback = $view->get_feedback($limit, $offset);
-build_feedback_html($feedback);
+safe_require('artefact', 'comment');
+$comments = ArtefactTypeComment::get_comments($limit, $offset, false, $view);
 
 $anonfeedback = !$USER->is_logged_in() && ($usertoken || $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid)));
 if ($USER->is_logged_in() || $anonfeedback) {
@@ -167,7 +167,7 @@ $smarty = smarty(
 $javascript = <<<EOF
 var viewid = {$viewid};
 addLoadEvent(function () {
-    paginator = {$feedback->pagination_js}
+    paginator = {$comments->pagination_js}
 });
 EOF;
 
@@ -175,7 +175,7 @@ $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('new', $new);
 $smarty->assign('viewid', $viewid);
 $smarty->assign('viewtype', $viewtype);
-$smarty->assign('feedback', $feedback);
+$smarty->assign('comments', $comments);
 $smarty->assign('owner', $owner);
 $smarty->assign('tags', $view->get('tags'));
 

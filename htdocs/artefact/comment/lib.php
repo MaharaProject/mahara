@@ -156,8 +156,21 @@ class ArtefactTypeComment extends ArtefactType {
         return array('author', 'owner', 'admin');
     }
 
-    public static function get_comments($limit, $offset, $lastpage, $userid, $canedit,
-                                        $viewid=null, $artefactid=null) {
+    public static function get_comments($limit, $offset, $lastpage, &$view=null, &$artefact=null) {
+
+        global $USER;
+        $userid = $USER->get('id');
+        $viewid = $view->get('id');
+        if (!empty($artefact)) {
+            $canedit = $USER->can_edit_artefact($artefact);
+            $isowner = $userid && $userid == $artefact->get('owner');
+            $artefactid = $artefact->get('id');
+        }
+        else {
+            $canedit = $USER->can_edit_view($view);
+            $isowner = $userid && $userid == $view->get('owner');
+            $artefactid = null;
+        }
 
         $result = (object) array(
             'limit'    => $limit,
@@ -166,14 +179,15 @@ class ArtefactTypeComment extends ArtefactType {
             'view'     => $viewid,
             'artefact' => $artefactid,
             'canedit'  => $canedit,
+            'isowner'  => $isowner,
             'data'     => array(),
         );
 
-        if (!empty($viewid)) {
-            $where = 'c.onview = ' . (int) $viewid;
+        if (!empty($artefactid)) {
+            $where = 'c.onartefact = ' . $artefactid;
         }
         else {
-            $where = 'c.onartefact = ' . (int) $artefactid;
+            $where = 'c.onview = ' . $viewid;
         }
         if (!$canedit) {
             $where .= ' AND (c.private = 0 OR a.author = ' . (int) $userid . ')';
@@ -184,65 +198,80 @@ class ArtefactTypeComment extends ArtefactType {
             FROM {artefact} a JOIN {artefact_comment_comment} c ON a.id = c.artefact
             WHERE ' . $where);
 
-        if ($result->count < 1) {
-            return $result;
-        }
-
-        if ($lastpage) { // Ignore $offset and just get the last page of feedback
-            $offset = (ceil($count / $limit) - 1) * $limit;
-        }
-
-        $comments = get_records_sql_assoc('
-            SELECT
-                a.id, a.author, a.authorname, a.ctime, a.description, c.private, c.deletedby
-            FROM {artefact} a JOIN {artefact_comment_comment} c ON a.id = c.artefact
-            WHERE ' . $where . '
-            ORDER BY a.ctime', array(), $offset, $limit);
-
-        $files = ArtefactType::attachments_from_id_list(array_keys($comments));
-
-        if ($files) {
-            safe_require('artefact', 'file');
-            foreach ($files as &$file) {
-                $comments[$file->artefact]->files[] = $file;
+        if ($result->count > 0) {
+            if ($lastpage) { // Ignore $offset and just get the last page of feedback
+                $offset = (ceil($count / $limit) - 1) * $limit;
             }
+
+            $comments = get_records_sql_assoc('
+                SELECT
+                    a.id, a.author, a.authorname, a.ctime, a.description, c.private, c.deletedby
+                FROM {artefact} a JOIN {artefact_comment_comment} c ON a.id = c.artefact
+                WHERE ' . $where . '
+                ORDER BY a.ctime', array(), $offset, $limit);
+
+            $files = ArtefactType::attachments_from_id_list(array_keys($comments));
+
+            if ($files) {
+                safe_require('artefact', 'file');
+                foreach ($files as &$file) {
+                    $comments[$file->artefact]->attachments[] = $file;
+                }
+            }
+
+            $result->data = array_values($comments);
         }
 
-        $result->data = array_values($comments);
-
+        self::build_html($result);
         return $result;
     }
 
     public static function build_html(&$data) {
         foreach ($data->data as &$item) {
             $item->date    = format_date(strtotime($item->ctime), 'strftimedatetime');
-            $item->message = clean_html($item->message);
-            $item->name    = $item->author ? display_name($item->author) : $item->authorname;
-            // @todo: Multiple attachments
-            if (!empty($item->attachment)) {
-                $item->attachid    = $item->attachment;
-                $item->attachtitle = $item->title;
-                $item->attachsize  = display_size($item->size);
+            if (!empty($item->attachments)) {
                 if ($data->isowner) {
-                    $item->attachmessage = get_string('feedbackattachmessage', 'view', get_string('feedbackattachdirname', 'view'));
+                    // @todo: move strings to comment artefact
+                    // @todo: files attached to comments are no longer always 'assessment' files,
+                    // so change the string.
+                    $item->attachmessage = get_string(
+                        'feedbackattachmessage',
+                        'view',
+                        get_string('feedbackattachdirname', 'view')
+                    );
+                }
+                foreach ($item->attachments as &$a) {
+                    $a->attachid    = $a->attachment;
+                    $a->attachtitle = $a->title;
+                    $a->attachsize  = display_size($a->size);
                 }
             }
+            if ($item->private) {
+                $item->pubmessage = get_string('thisfeedbackisprivate', 'view');
+            }
+            else if (!$item->private && $data->canedit) {
+                $item->pubmessage = get_string('thisfeedbackispublic', 'view');
+                $item->makeprivateform = pieform(make_private_form($item->id));
+            }
+
         }
+
         $extradata = array('view' => $data->view);
+        $data->jsonscript = 'artefact/comment/comments.json.php';
+
         if (!empty($data->artefact)) {
             $data->baseurl = get_config('wwwroot') . 'view/artefact.php?view=' . $data->view . '&artefact=' . $data->artefact;
-            $data->jsonscript = 'view/artefactfeedback.json.php';
             $extradata['artefact'] = $data->artefact;
         }
         else {
             $data->baseurl = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
-            $data->jsonscript = 'view/viewfeedback.json.php';
         }
+
         $smarty = smarty_core();
         $smarty->assign_by_ref('data', $data->data);
         $smarty->assign('canedit', $data->canedit);
         $smarty->assign('baseurl', $data->baseurl);
-        $data->tablerows = $smarty->fetch('view/feedbacklist.tpl');
+        $data->tablerows = $smarty->fetch('artefact:comment:commentlist.tpl');
         $pagination = build_pagination(array(
             'id' => 'feedback_pagination',
             'class' => 'center',
@@ -261,6 +290,34 @@ class ArtefactTypeComment extends ArtefactType {
         $data->pagination_js = $pagination['javascript'];
     }
 
+}
+
+function make_private_form($feedbackid) {
+    return array(
+        'name'            => 'make_private',
+        'renderer'        => 'oneline',
+        'class'           => 'makeprivate',
+        'elements'        => array(
+            'feedback' => array('type' => 'hidden', 'value' => $feedbackid),
+            'submit'   => array(
+                'type' => 'submit',
+                'name' => 'make_private_submit',
+                'value' => get_string('makeprivate', 'view'),
+            ),
+        ),
+    );
+}
+
+function make_private_submit(Pieform $form, $values) {
+    global $SESSION, $view, $artefact;
+    if (isset($artefact) && $artefact instanceof ArtefactType) {
+        update_record('artefact_feedback', (object) array('public' => 0, 'id' => (int) $values['feedback']));
+        $SESSION->add_ok_msg(get_string('feedbackchangedtoprivate', 'view'));
+        redirect(get_config('wwwroot') . 'view/artefact.php?view=' . $view->get('id') . '&artefact=' . $artefact->get('id'));
+    }
+    update_record('view_feedback', (object) array('public' => 0, 'id' => (int) $values['feedback']));
+    $SESSION->add_ok_msg(get_string('feedbackchangedtoprivate', 'view'));
+    redirect(get_config('wwwroot') . 'view/view.php?id=' . $view->get('id'));
 }
 
 ?>

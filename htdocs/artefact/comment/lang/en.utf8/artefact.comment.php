@@ -28,5 +28,6 @@ defined('INTERNAL') || die();
 
 $string['pluginname'] = 'Comment';
 $string['Comment'] = 'Comment';
+$string['Comments'] = 'Comments';
 
 ?>
