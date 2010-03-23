@@ -199,7 +199,7 @@ class ArtefactTypeComment extends ArtefactType {
 
         if ($result->count > 0) {
             if ($lastpage) { // Ignore $offset and just get the last page of feedback
-                $offset = (ceil($count / $limit) - 1) * $limit;
+                $offset = (ceil($result->count / $limit) - 1) * $limit;
             }
 
             $comments = get_records_sql_assoc('
