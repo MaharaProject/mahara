@@ -24,10 +24,10 @@
     <table id="feedbacktable" class="fullwidth table">
       <thead><tr><th>{str tag="Comments" section="artefact.comment"}</th></tr></thead>
       <tbody>
-        {$comments->tablerows}
+        {$feedback->tablerows}
       </tbody>
     </table>
-    {$comments->pagination}
+    {$feedback->pagination}
 	<div id="viewmenu">
         {include file="view/viewmenu.tpl"}
     </div>

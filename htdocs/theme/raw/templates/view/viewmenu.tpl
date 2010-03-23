@@ -1,5 +1,5 @@
 {if $LOGGEDIN || $anonfeedback}
-  <a id="add_feedback_link" href="">{str tag=placefeedback section=view}</a> |
+  <a id="add_feedback_link" href="">{str tag=placefeedback section=artefact.comment}</a> |
 {/if}
 {if $LOGGEDIN}
   <a id="objection_link" href="">{str tag=reportobjectionablematerial section=view}</a> |

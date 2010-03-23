@@ -1,6 +1,5 @@
-// The list of existing feedback.
-
 function addFeedbackSuccess(form, data) {
+    alert('s');
     addElementClass('add_feedback_form', 'hidden');
     paginator.updateResults(data);
     $('add_feedback_form_message').value = '';

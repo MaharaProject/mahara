@@ -156,8 +156,7 @@ class ArtefactTypeComment extends ArtefactType {
         return array('author', 'owner', 'admin');
     }
 
-    public static function get_comments($limit, $offset, $lastpage, &$view=null, &$artefact=null) {
-
+    public static function get_comments($limit=10, $offset=0, $lastpage=false, &$view=null, &$artefact=null) {
         global $USER;
         $userid = $USER->get('id');
         $viewid = $view->get('id');
@@ -228,7 +227,7 @@ class ArtefactTypeComment extends ArtefactType {
 
     public static function build_html(&$data) {
         foreach ($data->data as &$item) {
-            $item->date    = format_date(strtotime($item->ctime), 'strftimedatetime');
+            $item->date = format_date(strtotime($item->ctime), 'strftimedatetime');
             if (!empty($item->attachments)) {
                 if ($data->isowner) {
                     // @todo: move strings to comment artefact
@@ -251,7 +250,7 @@ class ArtefactTypeComment extends ArtefactType {
             }
             else if (!$item->private && $data->canedit) {
                 $item->pubmessage = get_string('thisfeedbackispublic', 'artefact.comment');
-                $item->makeprivateform = pieform(make_private_form($item->id));
+                $item->makeprivateform = pieform(self::make_private_form($item->id));
             }
 
         }
@@ -290,22 +289,66 @@ class ArtefactTypeComment extends ArtefactType {
         $data->pagination_js = $pagination['javascript'];
     }
 
-}
+    public static function add_comment_form($attachments=false) {
+        global $USER;
+        $form = array(
+            'name'            => 'add_feedback_form',
+            'method'          => 'post',
+            'class'           => 'js-hidden',
+            'plugintype'      => 'artefact',
+            'pluginname'      => 'comment',
+            'jsform'          => true,
+            'autofocus'       => false,
+            'elements'        => array(),
+            'jssuccesscallback' => 'addFeedbackSuccess',
+        );
+        if (!$USER->is_logged_in()) {
+            $form['elements']['authorname'] = array(
+                'type'  => 'text',
+                'title' => get_string('name'),
+                'rules' => array(
+                    'required' => true,
+                ),
+            );
+        }
+        $form['elements']['message'] = array(
+            'type'  => 'wysiwyg',
+            'title' => get_string('message'),
+            'rows'  => 5,
+            'cols'  => 80,
+        );
+        $form['elements']['ispublic'] = array(
+            'type'  => 'checkbox',
+            'title' => get_string('makepublic', 'artefact.comment'),
+        );
+        if ($attachments) {
+            $form['elements']['attachment'] = array(
+                'type'  => 'file',
+                'title' => get_string('attachfile', 'artefact.comment'),
+            );
+        }
+        $form['elements']['submit'] = array(
+            'type'  => 'submitcancel',
+            'value' => array(get_string('placefeedback', 'artefact.comment'), get_string('cancel')),
+        );
+        return $form;
+    }
 
-function make_private_form($id) {
-    return array(
-        'name'            => 'make_private',
-        'renderer'        => 'oneline',
-        'class'           => 'makeprivate',
-        'elements'        => array(
-            'comment'  => array('type' => 'hidden', 'value' => $id),
-            'submit'   => array(
-                'type' => 'submit',
-                'name' => 'make_private_submit',
-                'value' => get_string('makeprivate', 'artefact.comment'),
+    public static function make_private_form($id) {
+        return array(
+            'name'            => 'make_private',
+            'renderer'        => 'oneline',
+            'class'           => 'makeprivate',
+            'elements'        => array(
+                'comment'  => array('type' => 'hidden', 'value' => $id),
+                'submit'   => array(
+                    'type' => 'submit',
+                    'name' => 'make_private_submit',
+                    'value' => get_string('makeprivate', 'artefact.comment'),
+                ),
             ),
-        ),
-    );
+        );
+    }
 }
 
 function make_private_submit(Pieform $form, $values) {
@@ -319,6 +362,123 @@ function make_private_submit(Pieform $form, $values) {
         redirect(get_config('wwwroot') . 'view/artefact.php?view=' . $viewid . '&artefact=' . $artefact);
     }
     redirect(get_config('wwwroot') . 'view/view.php?id=' . $viewid);
+}
+
+function add_feedback_form_validate(Pieform $form, $values) {
+    global $USER, $view;
+    if (!$USER->is_logged_in()) {
+        $token = get_cookie('viewaccess:'.$view->get('id'));
+        if (!$token || get_view_from_token($token) != $view->get('id')) {
+            $form->set_error('message', get_string('placefeedbacknotallowed', 'artefact.comment'));
+        }
+    }
+}
+
+function add_feedback_form_submit(Pieform $form, $values) {
+    global $view, $artefact, $USER;
+    $data = (object) array(
+        'title'       => get_string('Comment', 'artefact.comment'),
+        'description' => $values['message'],
+        'private'     => 1 - (int) $values['ispublic'],
+    );
+
+    if ($artefact) {
+        $data->onartefact  = $artefact->get('id');
+        $data->owner       = $artefact->get('owner');
+        $data->group       = $artefact->get('group');
+        $data->institution = $artefact->get('institution');
+    }
+    else {
+        $data->onview      = $view->get('id');
+        $data->owner       = $view->get('owner');
+        $data->group       = $view->get('group');
+        $data->institution = $view->get('institution');
+    }
+
+    if ($author = $USER->get('id')) {
+        $data->author = $author;
+    }
+    else {
+        $data->authorname = $values['authorname'];
+    }
+
+    db_begin();
+
+    $comment = new ArtefactTypeComment(0, $data);
+    $comment->commit();
+
+    if (0&&isset($values['attachment']) && is_array($values['attachment'])) {
+        require_once(get_config('libroot') . 'group.php');
+        require_once(get_config('libroot') . 'uploadmanager.php');
+        safe_require('artefact', 'file');
+
+        $groupid = $view->get('submittedgroup');
+        if (group_user_can_assess_submitted_views($groupid, $USER->get('id'))) {
+
+            $um = new upload_manager('attachment');
+            if ($error = $um->preprocess_file()) {
+                throw new UploadException($error);
+            }
+
+            $owner = $view->get('owner');
+            $ownerlang = get_user_language($owner);
+            $folderid = ArtefactTypeFolder::get_folder_id(
+                get_string_from_language($ownerlang, 'feedbackattachdirname', 'view'),
+                get_string_from_language($ownerlang, 'feedbackattachdirdesc', 'view'),
+                null, true, $owner
+            );
+
+            $attachment = (object) array(
+                'owner'       => $owner,
+                'parent'      => $folderid,
+                'title'       => ArtefactTypeFileBase::get_new_file_title($values['attachment']['name'], $folderid, $owner),
+                'size'        => $values['attachment']['size'],
+                'filetype'    => $values['attachment']['type'],
+                'oldextensin' => $um->original_filename_extension(),
+                'description' => get_string_from_language(
+                    $ownerlang,
+                    'feedbackonviewbytutorofgroup',
+                    'view',
+                    $view->get('title'),
+                    display_name($USER),
+                    get_field('group', 'name', 'id', $groupid)
+                ),
+            );
+
+            try {
+                $data->attachment = ArtefactTypeFile::save_uploaded_file('attachment', $attachment);
+            }
+            catch (QuotaExceededException $e) {}
+        }
+    }
+
+    require_once('activity.php');
+    $data->message = html2text($data->description);
+    $data->view    = $view->get('id');
+    activity_occurred('feedback', $data);
+
+    db_commit();
+
+    if ($artefact) {
+        $goto = get_config('wwwroot') . 'view/artefact.php?artefact=' . $artefact->get('id') . '&view='.$view->get('id');
+        $newlist = ArtefactTypeComment::get_comments(10, 0, true, $view, $artefact);
+    }
+    else {
+        $goto = get_config('wwwroot') . 'view/view.php?id='.$view->get('id');
+        $newlist = ArtefactTypeComment::get_comments(10, 0, true, $view);
+    }
+    $form->reply(PIEFORM_OK, array(
+        'message' => get_string('feedbacksubmitted', 'artefact.comment'),
+        'goto' => $goto,
+        'data' => $newlist,
+    ));
+}
+
+function add_feedback_form_cancel_submit(Pieform $form) {
+    global $view;
+    $form->reply(PIEFORM_OK, array(
+        'goto' => '/view/view.php?id=' . $view->get('id'),
+    ));
 }
 
 ?>

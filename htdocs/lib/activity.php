@@ -652,7 +652,8 @@ class ActivityTypeUsermessage extends ActivityType {
 class ActivityTypeFeedback extends ActivityType { 
 
     protected $view;
-    protected $artefact;
+    protected $onview;
+    protected $onartefact;
 
     private $viewrecord;
     private $artefactinstance;
@@ -660,16 +661,17 @@ class ActivityTypeFeedback extends ActivityType {
     /**
      * @param array $data Parameters:
      *                    - view (int)
-     *                    - artefact (int) (optional)
+     *                    - onview (int) (optional)
+     *                    - onartefact (int) (optional)
      *                    - message (string)
      */
     public function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
 
-        if (!empty($this->artefact)) { // feedback on artefact
+        if (!empty($this->onartefact)) { // feedback on artefact
             $userid = null;
             require_once(get_config('docroot') . 'artefact/lib.php');
-            $this->artefactinstance = artefact_instance_from_id($this->artefact);
+            $this->artefactinstance = artefact_instance_from_id($this->onartefact);
             if ($this->artefactinstance->feedback_notify_owner()) {
                 $userid = $this->artefactinstance->get('owner');
             }
@@ -679,12 +681,12 @@ class ActivityTypeFeedback extends ActivityType {
             }
         } 
         else { // feedback on view.
-            if (!$this->viewrecord = get_record('view', 'id', $this->view)) {
-                throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
+            if (!$this->viewrecord = get_record('view', 'id', $this->onview)) {
+                throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->onview));
             }
             $userid = $this->viewrecord->owner;
             if (empty($this->url)) {
-                $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->view;
+                $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->onview;
             }
         }
         if ($userid) {
@@ -693,7 +695,7 @@ class ActivityTypeFeedback extends ActivityType {
     }
 
     public function get_subject($user) {
-        if (!empty($this->artefact)) { // feedback on artefact
+        if (!empty($this->onartefact)) { // feedback on artefact
             return get_string_from_language($user->lang, 'newfeedbackonartefact', 'activity')
                 . ' ' . $this->artefactinstance->get('title');
         }

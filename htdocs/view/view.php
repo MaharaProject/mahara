@@ -61,6 +61,7 @@ else if ($usertoken) {
 else {
     $viewid = param_integer('id');
 }
+
 $new = param_boolean('new');
 
 if (!can_view_view($viewid, null, $usertoken, $mnettoken)) {
@@ -135,11 +136,11 @@ function releaseview_submit() {
   
 $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
 
-$comments = ArtefactTypeComment::get_comments($limit, $offset, false, $view);
+$feedback = ArtefactTypeComment::get_comments($limit, $offset, false, $view);
 
 $anonfeedback = !$USER->is_logged_in() && ($usertoken || $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid)));
 if ($USER->is_logged_in() || $anonfeedback) {
-    $addfeedbackform = pieform(add_feedback_form($allowattachments));
+    $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form($allowattachments));
 }
 if ($USER->is_logged_in()) {
     $objectionform = pieform(objection_form());
@@ -155,7 +156,7 @@ $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_confi
 $can_edit = $USER->can_edit_view($view) && !$submittedgroup && !$view->is_submitted();
 
 $smarty = smarty(
-    array('paginator', 'feedbacklist', 'artefact/resume/resumeshowhide.js'),
+    array('paginator', 'viewmenu', 'artefact/resume/resumeshowhide.js'),
     $stylesheets,
     array(),
     array(
@@ -167,7 +168,7 @@ $smarty = smarty(
 $javascript = <<<EOF
 var viewid = {$viewid};
 addLoadEvent(function () {
-    paginator = {$comments->pagination_js}
+    paginator = {$feedback->pagination_js}
 });
 EOF;
 
@@ -175,7 +176,7 @@ $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('new', $new);
 $smarty->assign('viewid', $viewid);
 $smarty->assign('viewtype', $viewtype);
-$smarty->assign('comments', $comments);
+$smarty->assign('feedback', $feedback);
 $smarty->assign('owner', $owner);
 $smarty->assign('tags', $view->get('tags'));
 
