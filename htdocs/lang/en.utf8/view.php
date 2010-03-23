@@ -122,9 +122,6 @@ $string['notifysiteadministrator'] = 'Notify site administrator';
 $string['placefeedback'] = 'Place feedback';
 $string['placefeedbacknotallowed'] = 'You are not allowed to place feedback on this View';
 $string['print'] = 'Print';
-$string['thisfeedbackispublic'] = 'This feedback is public';
-$string['thisfeedbackisprivate'] = 'This feedback is private';
-$string['makeprivate'] = 'Change to Private';
 $string['reportobjectionablematerial'] = 'Report objectionable material';
 $string['reportsent'] = 'Your report has been sent';
 $string['updatewatchlistfailed'] = 'Update of watchlist failed';
@@ -163,7 +160,6 @@ $string['viewinformationsaved'] = 'View information saved successfully';
 $string['canteditdontown'] = 'You can\'t edit this View because you don\'t own it';
 $string['canteditdontownfeedback'] = 'You can\'t edit this feedback because you don\'t own it';
 $string['canteditsubmitted'] = 'You can\'t edit this View because it has been submitted for assessment to "%s". You will have to wait until a tutor releases your view.';
-$string['feedbackchangedtoprivate'] = 'Feedback changed to private';
 
 $string['addtutors'] = 'Add Tutors';
 $string['viewcreatedsuccessfully'] = 'View created successfully';
@@ -299,9 +295,5 @@ $string['viewcopywouldexceedquota'] = 'Copying this View would exceed your file 
 
 $string['blockcopypermission'] = 'Block copy permission';
 $string['blockcopypermissiondesc'] = 'If you allow other users to copy this View, you may choose how this block will be copied';
-
-// Feedback list
-$string['comment'] = 'comment';
-$string['comments'] = 'comments';
 
 ?>

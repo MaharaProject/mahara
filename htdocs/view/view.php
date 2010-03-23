@@ -34,6 +34,7 @@ define('SECTION_PAGE', 'view');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'view.php');
 require('group.php');
+safe_require('artefact', 'comment');
 
 // access key for roaming teachers
 $mnettoken = $SESSION->get('mnetuser') ? param_alphanum('mt', null) : null;
@@ -74,7 +75,7 @@ $view = new View($viewid);
 
 // Create the "make feedback private form" now if it's been submitted
 if (param_variable('make_private_submit', null)) {
-    pieform(make_private_form(param_integer('feedback')));
+    pieform(make_private_form(param_integer('comment')));
 }
 
 $owner    = $view->get('owner');
@@ -134,7 +135,6 @@ function releaseview_submit() {
   
 $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
 
-safe_require('artefact', 'comment');
 $comments = ArtefactTypeComment::get_comments($limit, $offset, false, $view);
 
 $anonfeedback = !$USER->is_logged_in() && ($usertoken || $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid)));

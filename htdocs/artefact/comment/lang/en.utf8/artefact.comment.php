@@ -29,5 +29,12 @@ defined('INTERNAL') || die();
 $string['pluginname'] = 'Comment';
 $string['Comment'] = 'Comment';
 $string['Comments'] = 'Comments';
+$string['comment'] = 'comment';
+$string['comments'] = 'comments';
+
+$string['feedbackchangedtoprivate'] = 'Feedback changed to private';
+$string['makeprivate'] = 'Change to Private';
+$string['thisfeedbackispublic'] = 'This feedback is public';
+$string['thisfeedbackisprivate'] = 'This feedback is private';
 
 ?>

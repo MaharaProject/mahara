@@ -247,10 +247,10 @@ class ArtefactTypeComment extends ArtefactType {
                 }
             }
             if ($item->private) {
-                $item->pubmessage = get_string('thisfeedbackisprivate', 'view');
+                $item->pubmessage = get_string('thisfeedbackisprivate', 'artefact.comment');
             }
             else if (!$item->private && $data->canedit) {
-                $item->pubmessage = get_string('thisfeedbackispublic', 'view');
+                $item->pubmessage = get_string('thisfeedbackispublic', 'artefact.comment');
                 $item->makeprivateform = pieform(make_private_form($item->id));
             }
 
@@ -282,8 +282,8 @@ class ArtefactTypeComment extends ArtefactType {
             'limit' => $data->limit,
             'offset' => $data->offset,
             'lastpage' => $data->lastpage,
-            'resultcounttextsingular' => get_string('comment', 'view'),
-            'resultcounttextplural' => get_string('comments', 'view'),
+            'resultcounttextsingular' => get_string('comment', 'artefact.comment'),
+            'resultcounttextplural' => get_string('comments', 'artefact.comment'),
             'extradata' => $extradata,
         ));
         $data->pagination = $pagination['html'];
@@ -292,32 +292,33 @@ class ArtefactTypeComment extends ArtefactType {
 
 }
 
-function make_private_form($feedbackid) {
+function make_private_form($id) {
     return array(
         'name'            => 'make_private',
         'renderer'        => 'oneline',
         'class'           => 'makeprivate',
         'elements'        => array(
-            'feedback' => array('type' => 'hidden', 'value' => $feedbackid),
+            'comment'  => array('type' => 'hidden', 'value' => $id),
             'submit'   => array(
                 'type' => 'submit',
                 'name' => 'make_private_submit',
-                'value' => get_string('makeprivate', 'view'),
+                'value' => get_string('makeprivate', 'artefact.comment'),
             ),
         ),
     );
 }
 
 function make_private_submit(Pieform $form, $values) {
-    global $SESSION, $view, $artefact;
-    if (isset($artefact) && $artefact instanceof ArtefactType) {
-        update_record('artefact_feedback', (object) array('public' => 0, 'id' => (int) $values['feedback']));
-        $SESSION->add_ok_msg(get_string('feedbackchangedtoprivate', 'view'));
-        redirect(get_config('wwwroot') . 'view/artefact.php?view=' . $view->get('id') . '&artefact=' . $artefact->get('id'));
+    global $SESSION, $view;
+    $viewid = $view->get('id');
+    $comment = new ArtefactTypeComment((int) $values['comment']);
+    $comment->set('private', 1);
+    $comment->commit();
+    $SESSION->add_ok_msg(get_string('feedbackchangedtoprivate', 'artefact.comment'));
+    if ($artefact = $comment->get('onartefact')) {
+        redirect(get_config('wwwroot') . 'view/artefact.php?view=' . $viewid . '&artefact=' . $artefact);
     }
-    update_record('view_feedback', (object) array('public' => 0, 'id' => (int) $values['feedback']));
-    $SESSION->add_ok_msg(get_string('feedbackchangedtoprivate', 'view'));
-    redirect(get_config('wwwroot') . 'view/view.php?id=' . $view->get('id'));
+    redirect(get_config('wwwroot') . 'view/view.php?id=' . $viewid);
 }
 
 ?>
