@@ -58,7 +58,7 @@ function pieform_element_files_get_value(Pieform $form, $element) {
 
     foreach ($_FILES as $k => $v) {
         if (preg_match('/^' . $name . '_files_\d+$/', $k) && !empty($v['name'])) {
-            $value[] = $v;
+            $value[] = $k;
         }
     }
 

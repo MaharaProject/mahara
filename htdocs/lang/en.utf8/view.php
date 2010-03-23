@@ -113,7 +113,6 @@ $string['feedbackattachdirname'] = 'assessmentfiles';
 $string['feedbackattachdirdesc'] = 'Files attached to View assessments';
 $string['feedbackattachmessage'] = 'The attached file has been added to your %s folder';
 $string['feedbackonthisartefactwillbeprivate'] = 'Feedback on this artefact will only be visible to the owner.';
-$string['feedbackonviewbytutorofgroup'] = 'Feedback on %s by %s of %s';
 $string['nopublicfeedback'] = 'No public feedback';
 $string['notifysiteadministrator'] = 'Notify site administrator';
 $string['print'] = 'Print';

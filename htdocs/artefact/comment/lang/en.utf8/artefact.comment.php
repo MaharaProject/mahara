@@ -33,7 +33,9 @@ $string['comment'] = 'comment';
 $string['comments'] = 'comments';
 
 $string['attachfile'] = "Attach file";
+$string['Attachments'] = "Attachments";
 $string['feedbackchangedtoprivate'] = 'Feedback changed to private';
+$string['feedbackonviewbyuser'] = 'Feedback on %s by %s';
 $string['feedbacksubmitted'] = 'Feedback submitted';
 $string['makeprivate'] = 'Change to Private';
 $string['makepublic'] = 'Make public';

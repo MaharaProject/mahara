@@ -322,9 +322,10 @@ class ArtefactTypeComment extends ArtefactType {
             'title' => get_string('makepublic', 'artefact.comment'),
         );
         if ($attachments) {
-            $form['elements']['attachment'] = array(
-                'type'  => 'file',
-                'title' => get_string('attachfile', 'artefact.comment'),
+            $form['elements']['attachments'] = array(
+                'type'         => 'files',
+                'title'        => get_string('attachfile', 'artefact.comment'),
+                'defaultvalue' => array(),
             );
         }
         $form['elements']['submit'] = array(
@@ -407,48 +408,58 @@ function add_feedback_form_submit(Pieform $form, $values) {
     $comment = new ArtefactTypeComment(0, $data);
     $comment->commit();
 
-    if (0&&isset($values['attachment']) && is_array($values['attachment'])) {
-        require_once(get_config('libroot') . 'group.php');
+    if (!empty($values['attachments']) && is_array($values['attachments']) && !empty($data->author)) {
+
         require_once(get_config('libroot') . 'uploadmanager.php');
         safe_require('artefact', 'file');
 
-        $groupid = $view->get('submittedgroup');
-        if (group_user_can_assess_submitted_views($groupid, $USER->get('id'))) {
+        $ownerlang = empty($data->owner) ? get_config('lang') : get_user_language($data->owner);
+        $folderid = ArtefactTypeFolder::get_folder_id(
+            get_string_from_language($ownerlang, 'feedbackattachdirname', 'view'),
+            get_string_from_language($ownerlang, 'feedbackattachdirdesc', 'view'),
+            null, true, $data->owner, $data->group, $data->institution
+        );
 
-            $um = new upload_manager('attachment');
+        $attachment = (object) array(
+            'owner'         => $data->owner,
+            'group'         => $data->group,
+            'institution'   => $data->institution,
+            'author'        => $data->author,
+            'allowcomments' => 0,
+            'parent'        => $folderid,
+            'description'   => get_string_from_language(
+                $ownerlang,
+                'feedbackonviewbyuser',
+                'artefact.comment',
+                $view->get('title'),
+                display_name($USER)
+            ),
+        );
+
+        foreach ($values['attachments'] as $filesindex) {
+
+            $um = new upload_manager($filesindex);
             if ($error = $um->preprocess_file()) {
                 throw new UploadException($error);
             }
 
-            $owner = $view->get('owner');
-            $ownerlang = get_user_language($owner);
-            $folderid = ArtefactTypeFolder::get_folder_id(
-                get_string_from_language($ownerlang, 'feedbackattachdirname', 'view'),
-                get_string_from_language($ownerlang, 'feedbackattachdirdesc', 'view'),
-                null, true, $owner
+            $attachment->title = ArtefactTypeFileBase::get_new_file_title(
+                $um->file['name'],
+                $folderid,
+                $data->owner,
+                $data->group,
+                $data->institution
             );
-
-            $attachment = (object) array(
-                'owner'       => $owner,
-                'parent'      => $folderid,
-                'title'       => ArtefactTypeFileBase::get_new_file_title($values['attachment']['name'], $folderid, $owner),
-                'size'        => $values['attachment']['size'],
-                'filetype'    => $values['attachment']['type'],
-                'oldextensin' => $um->original_filename_extension(),
-                'description' => get_string_from_language(
-                    $ownerlang,
-                    'feedbackonviewbytutorofgroup',
-                    'view',
-                    $view->get('title'),
-                    display_name($USER),
-                    get_field('group', 'name', 'id', $groupid)
-                ),
-            );
+            $attachment->size         = $um->file['size'];
+            $attachment->filetype     = $um->file['type'];
+            $attachment->oldextension = $um->original_filename_extension();
 
             try {
-                $data->attachment = ArtefactTypeFile::save_uploaded_file('attachment', $attachment);
+                $fileid = ArtefactTypeFile::save_uploaded_file($filesindex, $attachment);
             }
             catch (QuotaExceededException $e) {}
+
+            $comment->attach($fileid);
         }
     }
 

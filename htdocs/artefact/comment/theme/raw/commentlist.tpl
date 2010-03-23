@@ -16,9 +16,11 @@
         {if $item->pubmessage}
            | {$item->pubmessage|escape}{if $item->makeprivateform}{$item->makeprivateform}{/if}
         {/if}
-        {foreach $item->attachments item=a}
-           | {str tag=attachment section=view}: <a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}">{$a->attachtitle|escape}</a> ({$a->attachsize|escape})
+        {strip}
+        {foreach $item->attachments item=a name=attachments}
+          {if $.foreach.attachments.first} | {str tag=Attachments section=artefact.comment}:{else},{/if} <a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}">{$a->attachtitle|escape}</a> ({$a->attachsize|escape})
         {/foreach}
+        {/strip}
         </div>
       </td>
     </tr>
