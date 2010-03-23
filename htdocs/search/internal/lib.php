@@ -107,7 +107,7 @@ class PluginSearchInternal extends PluginSearch {
         $querydata = split(' ', preg_replace('/\s\s+/', ' ', strtolower(trim($query_string))));
         $hidenameallowed = get_config('userscanhiderealnames') ? 'TRUE' : 'FALSE';
         $namesql = "(u.preferredname $ilike '%' || ? || '%')
-                    OR ((u.preferredname IS NULL OR u.preferredname = '' OR NOT $hidenameallowed OR h.value <> 1)
+                    OR ((u.preferredname IS NULL OR u.preferredname = '' OR NOT $hidenameallowed OR h.value::integer <> 1)
                         AND (u.firstname $ilike '%' || ? || '%' OR u.lastname $ilike '%' || ? || '%'))
                     OR (a.artefacttype IN $fieldlist
                         AND ( a.title $ilike '%' || ? || '%'))";
