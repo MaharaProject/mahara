@@ -47,7 +47,7 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
             if ($profileviewid == $viewid) {
                 $smarty->assign('breadcrumbs', array(array('text' => 'Profile page', 'path' => 'profilepage.html')));
                 $view = $this->exporter->get('user')->get_profile_view();
-                $outputfilter = new HtmlExportOutputFilter('../../');
+                $outputfilter = new HtmlExportOutputFilter('../../', $this->exporter);
                 $smarty->assign('view', $outputfilter->filter($view->build_columns()));
 
                 $content = $smarty->fetch('export:html/internal:profilepage.tpl');
@@ -80,7 +80,7 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
             $artefact = artefact_instance_from_id($id);
             $rendered = $artefact->render_self(array('link' => true));
             if ($artefact->get('artefacttype') == 'introduction') {
-                $outputfilter = new HtmlExportOutputFilter('../../');
+                $outputfilter = new HtmlExportOutputFilter('../../', $this->exporter);
                 $rendered['html'] = $outputfilter->filter($rendered['html']);
             }
             $sections[$this->get_category_for_artefacttype($artefact->get('artefacttype'))][$artefact->get('artefacttype')] = array(
@@ -113,7 +113,7 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
 
     public function get_summary() {
         $smarty = $this->exporter->get_smarty();
-        $outputfilter = new HtmlExportOutputFilter('.');
+        $outputfilter = new HtmlExportOutputFilter('.', $this->exporter);
         $smarty->assign('introduction', $outputfilter->filter(get_profile_field($this->exporter->get('user')->get('id'), 'introduction')));
         $smarty->assign('profileviewexported', $this->profileviewexported);
         $iconid = $this->exporter->get('user')->get('profileicon');

@@ -359,6 +359,9 @@ input.text.required {
 textarea {
     resize: none;
 }
+.mceEditor {
+    display: inline-block;
+}
 
 /* error */
 input.error, select.error {
@@ -1562,4 +1565,8 @@ form#search input.text {
 }
 * html #edit_interaction table td fieldset {
 	width: 92%;
+}
+
+.help, .help a, .help a img {
+    vertical-align: top;
 }

@@ -514,7 +514,6 @@ $string['institutionusersnonmembers'] = 'People who have not requested membershi
 $string['institutionusersmembers'] = 'People who are already institution members';
 
 $string['addnewmembers'] = 'Add new members';
-$string['addnewmembersdescription'] = '';
 $string['usersrequested'] = 'Users who have requested membership';
 $string['userstobeadded'] = 'Users to be added as members';
 $string['userstoaddorreject'] = 'Users to be added/rejected';

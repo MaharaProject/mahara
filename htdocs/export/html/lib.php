@@ -322,7 +322,7 @@ class PluginExportHtml extends PluginExport {
                 }
             }
 
-            $outputfilter = new HtmlExportOutputFilter($rootpath);
+            $outputfilter = new HtmlExportOutputFilter($rootpath, $this);
             $smarty->assign('view', $outputfilter->filter($view->build_columns()));
             $content = $smarty->fetch('export:html:view.tpl');
             if (!file_put_contents("$directory/index.html", $content)) {
@@ -343,6 +343,10 @@ class PluginExportHtml extends PluginExport {
                 );
             }
         }
+        function sort_by_title($a, $b) {
+            return strnatcasecmp($a['title'], $b['title']);
+        }
+        usort($views, 'sort_by_title');
         $smarty->assign('views', $views);
 
         if ($views) {
@@ -462,11 +466,16 @@ class HtmlExportOutputFilter {
     private $htmlexportcopyproxy = null;
 
     /**
+     */
+    private $exporter = null;
+
+    /**
      * @param string $basepath The relative path to the root of the generated export
      */
-    public function __construct($basepath) {
+    public function __construct($basepath, &$exporter=null) {
         $this->basepath = preg_replace('#/$#', '', $basepath);
         $this->htmlexportcopyproxy = HtmlExportCopyProxy::singleton();
+        $this->exporter = $exporter;
     }
 
     /**
@@ -542,6 +551,10 @@ class HtmlExportOutputFilter {
      */
     private function replace_view_link($matches) {
         $viewid = $matches[1];
+        // Don't rewrite links to views that are not going to be included in the export
+        if (!isset($this->exporter->views[$viewid])) {
+            return $matches[0];
+        }
         if (!isset($this->viewtitles[$viewid])) {
             $this->viewtitles[$viewid] = PluginExportHtml::text_to_path(get_field('view', 'title', 'id', $viewid));
         }
