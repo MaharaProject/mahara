@@ -34,6 +34,10 @@ $string['comments'] = 'comments';
 
 $string['attachfile'] = "Attach file";
 $string['Attachments'] = "Attachments";
+$string['commentremoved'] = 'Comment removed';
+$string['commentremovedbyauthor'] = 'Comment removed by the author';
+$string['commentremovedbyowner'] = 'Comment removed by the owner';
+$string['commentremovedbyadmin'] = 'Comment removed by an administrator';
 $string['feedback'] = 'Feedback';
 $string['feedbackattachdirname'] = 'commentattachments';
 $string['feedbackattachdirdesc'] = 'Files attached to comments on your portfolio';

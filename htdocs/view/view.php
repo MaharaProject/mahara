@@ -78,6 +78,9 @@ $view = new View($viewid);
 if (param_variable('make_private_submit', null)) {
     pieform(ArtefactTypeComment::make_private_form(param_integer('comment')));
 }
+else if (param_variable('delete_comment_submit', null)) {
+    pieform(ArtefactTypeComment::delete_comment_form(param_integer('comment')));
+}
 
 $owner    = $view->get('owner');
 $viewtype = $view->get('type');

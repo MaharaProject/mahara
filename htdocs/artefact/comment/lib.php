@@ -233,6 +233,13 @@ class ArtefactTypeComment extends ArtefactType {
     }
 
     public static function build_html(&$data) {
+        global $USER;
+        $candelete = $data->canedit || $USER->get('admin');
+        $deletedmessage = array(
+            'author' => get_string('commentremovedbyauthor', 'artefact.comment'),
+            'owner'  => get_string('commentremovedbyowner', 'artefact.comment'),
+            'admin'  => get_string('commentremovedbyadmin', 'artefact.comment'),
+        );
         $authors = array();
         foreach ($data->data as &$item) {
             $item->date = format_date(strtotime($item->ctime), 'strftimedatetime');
@@ -256,6 +263,13 @@ class ArtefactTypeComment extends ArtefactType {
             else if (!$item->private && $data->canedit) {
                 $item->pubmessage = get_string('thisfeedbackispublic', 'artefact.comment');
                 $item->makeprivateform = pieform(self::make_private_form($item->id));
+            }
+            if ($item->deletedby) {
+                $item->deleted = 1;
+                $item->deletedmessage = $deletedmessage[$item->deletedby];
+            }
+            else if ($candelete || ($item->author && $item->author == $USER->get('id'))) {
+                $item->deleteform = pieform(self::delete_comment_form($item->id));
             }
             if ($item->author) {
                 if (isset($authors[$item->author])) {
@@ -373,6 +387,23 @@ class ArtefactTypeComment extends ArtefactType {
             ),
         );
     }
+
+    public static function delete_comment_form($id) {
+        return array(
+            'name'     => 'delete_comment',
+            'renderer' => 'oneline',
+            'class'    => 'makeprivate',
+            'elements' => array(
+                'comment' => array('type' => 'hidden', 'value' => $id),
+                'submit'  => array(
+                    'type'  => 'submit',
+                    'class' => 'delete',
+                    'name'  => 'delete_comment_submit',
+                    'value' => get_string('delete'),
+                ),
+            ),
+        );
+    }
 }
 
 function make_private_submit(Pieform $form, $values) {
@@ -382,6 +413,32 @@ function make_private_submit(Pieform $form, $values) {
     $comment->set('private', 1);
     $comment->commit();
     $SESSION->add_ok_msg(get_string('feedbackchangedtoprivate', 'artefact.comment'));
+    if ($artefact = $comment->get('onartefact')) {
+        redirect(get_config('wwwroot') . 'view/artefact.php?view=' . $viewid . '&artefact=' . $artefact);
+    }
+    redirect(get_config('wwwroot') . 'view/view.php?id=' . $viewid);
+}
+
+function delete_comment_submit(Pieform $form, $values) {
+    global $SESSION, $USER, $view;
+
+    $comment = new ArtefactTypeComment((int) $values['comment']);
+
+    if ($USER->get('id') == $comment->get('author')) {
+        $deletedby = 'author';
+    }
+    else if ($USER->can_edit_view($view)) {
+        $deletedby = 'owner';
+    }
+    else if ($USER->get('admin')) {
+        $deletedby = 'admin';
+    }
+
+    $comment->set('deletedby', $deletedby);
+    $comment->commit();
+
+    $SESSION->add_ok_msg(get_string('commentremoved', 'artefact.comment'));
+    $viewid = $view->get('id');
     if ($artefact = $comment->get('onartefact')) {
         redirect(get_config('wwwroot') . 'view/artefact.php?view=' . $viewid . '&artefact=' . $artefact);
     }
