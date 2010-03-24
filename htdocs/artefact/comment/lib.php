@@ -415,8 +415,8 @@ function add_feedback_form_submit(Pieform $form, $values) {
 
         $ownerlang = empty($data->owner) ? get_config('lang') : get_user_language($data->owner);
         $folderid = ArtefactTypeFolder::get_folder_id(
-            get_string_from_language($ownerlang, 'feedbackattachdirname', 'view'),
-            get_string_from_language($ownerlang, 'feedbackattachdirdesc', 'view'),
+            get_string_from_language($ownerlang, 'feedbackattachdirname', 'artefact.comment'),
+            get_string_from_language($ownerlang, 'feedbackattachdirdesc', 'artefact.comment'),
             null, true, $data->owner, $data->group, $data->institution
         );
 

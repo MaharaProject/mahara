@@ -34,6 +34,9 @@ $string['comments'] = 'comments';
 
 $string['attachfile'] = "Attach file";
 $string['Attachments'] = "Attachments";
+$string['feedback'] = 'Feedback';
+$string['feedbackattachdirname'] = 'commentattachments';
+$string['feedbackattachdirdesc'] = 'Files attached to comments on your portfolio';
 $string['feedbackchangedtoprivate'] = 'Feedback changed to private';
 $string['feedbackonviewbyuser'] = 'Feedback on %s by %s';
 $string['feedbacksubmitted'] = 'Feedback submitted';
