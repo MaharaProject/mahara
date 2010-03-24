@@ -488,9 +488,9 @@ class View {
 
     
     public function delete() {
+        safe_require('artefact', 'comment');
         db_begin();
-        delete_records('artefact_feedback','view',$this->id);
-        delete_records('view_feedback','view',$this->id);
+        ArtefactTypeComment::delete_view_comments($this->id);
         delete_records('view_access','view',$this->id);
         delete_records('view_access_group','view',$this->id);
         delete_records('view_access_usr','view',$this->id);

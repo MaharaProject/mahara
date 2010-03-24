@@ -127,6 +127,24 @@ class ArtefactTypeComment extends ArtefactType {
         db_commit();
     }
 
+    public static function bulk_delete($artefactids) {
+        if (empty($artefactids)) {
+            return;
+        }
+
+        $idstr = join(',', $artefactids);
+
+        db_begin();
+        delete_records_select('artefact_comment_comment', 'artefact IN (' . $idstr . ')');
+        parent::bulk_delete($artefactids);
+        db_commit();
+    }
+
+    public static function delete_view_comments($viewid) {
+        $ids = get_column('artefact_comment_comment', 'artefact', 'onview', $viewid);
+        self::bulk_delete($ids);
+    }
+
     public static function get_links($id) {
         return array(
             '_default' => get_config('wwwroot') . 'artefact/comment/view.php?id=' . $this->get('id'),

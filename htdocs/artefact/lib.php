@@ -598,6 +598,9 @@ abstract class ArtefactType {
 
         db_begin();
 
+        // Detach any files from this artefact
+        delete_records_select('artefact_attachment', "artefact IN ($idstr)");
+
         // Delete any references to these artefacts from non-artefact places.
         delete_records_select('artefact_parent_cache', "artefact IN $idstr");
 
@@ -615,7 +618,7 @@ abstract class ArtefactType {
             BlockInstance::bulk_delete_artefacts($records);
         }
         delete_records_select('view_artefact', "artefact IN $idstr");
-        delete_records_select('artefact_feedback', "artefact IN $idstr");
+        // delete_records_select('artefact_feedback', "artefact IN $idstr");
         delete_records_select('artefact_tag', "artefact IN $idstr");
         delete_records_select('artefact_access_role', "artefact IN $idstr");
         delete_records_select('artefact_access_usr', "artefact IN $idstr");
