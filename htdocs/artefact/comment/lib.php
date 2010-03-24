@@ -155,21 +155,6 @@ class ArtefactTypeComment extends ArtefactType {
         return true;
     }
 
-    /* public function to_stdclass($options) {
-        return (object) array(
-            'id'          => $this->id,
-            'name'        => $this->title,
-            'description' => $this->description,
-            'created'     => $this->ctime,
-        );
-    }
-
-    public function render_self($options) {
-        $smarty = smarty_core();
-        $smarty->assign('comment', $this->to_stdclass($options));
-        return array('html' => $smarty->fetch('artefact:comment:comment.tpl'), 'javascript' => null);
-    }*/
-
     public static function deleted_types() {
         return array('author', 'owner', 'admin');
     }
@@ -222,8 +207,12 @@ class ArtefactTypeComment extends ArtefactType {
 
             $comments = get_records_sql_assoc('
                 SELECT
-                    a.id, a.author, a.authorname, a.ctime, a.description, c.private, c.deletedby
-                FROM {artefact} a JOIN {artefact_comment_comment} c ON a.id = c.artefact
+                    a.id, a.author, a.authorname, a.ctime, a.description, c.private, c.deletedby,
+                    u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff, u.admin,
+                    u.deleted, u.profileicon
+                FROM {artefact} a
+                    INNER JOIN {artefact_comment_comment} c ON a.id = c.artefact
+                    LEFT JOIN {usr} u ON a.author = u.id
                 WHERE ' . $where . '
                 ORDER BY a.ctime', array(), $offset, $limit);
 
@@ -244,6 +233,7 @@ class ArtefactTypeComment extends ArtefactType {
     }
 
     public static function build_html(&$data) {
+        $authors = array();
         foreach ($data->data as &$item) {
             $item->date = format_date(strtotime($item->ctime), 'strftimedatetime');
             if (!empty($item->attachments)) {
@@ -267,7 +257,25 @@ class ArtefactTypeComment extends ArtefactType {
                 $item->pubmessage = get_string('thisfeedbackispublic', 'artefact.comment');
                 $item->makeprivateform = pieform(self::make_private_form($item->id));
             }
-
+            if ($item->author) {
+                if (isset($authors[$item->author])) {
+                    $item->author = $authors[$item->author];
+                }
+                else {
+                    $item->author = $authors[$item->author] = (object) array(
+                        'id'            => $item->author,
+                        'username'      => $item->username,
+                        'firstname'     => $item->firstname,
+                        'lastname'      => $item->lastname,
+                        'preferredname' => $item->preferredname,
+                        'email'         => $item->email,
+                        'staff'         => $item->staff,
+                        'admin'         => $item->admin,
+                        'deleted'       => $item->deleted,
+                        'profileicon'   => $item->profileicon,
+                    );
+                }
+            }
         }
 
         $extradata = array('view' => $data->view);

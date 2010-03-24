@@ -5,10 +5,10 @@
         {if $item->attachmessage}<div>{$item->attachmessage}</div>{/if}
         <div class="details">
         {if $item->author}
-          <div class="icon"><a href="{$WWWROOT}user/view.php?id={$item->author|escape}">
-            <img src="{$WWWROOT}thumb.php?type=profileicon&id={$item->author|escape}&maxsize=20" valign="middle" alt="{$item->author|display_name}">
+          <div class="icon"><a href="{$WWWROOT}user/view.php?id={$item->author->id|escape}">
+            <img src="{profile_icon_url user=$item->author maxheight=20 maxwidth=20}" valign="middle" alt="{$item->author|display_name}">
           </a></div>
-          <a href="{$WWWROOT}user/view.php?id={$item->author|escape}">{$item->author|display_name}</a>
+          <a href="{$WWWROOT}user/view.php?id={$item->author->id|escape}">{$item->author|display_name}</a>
         {else}
           {$item->authorname|escape}
         {/if}
