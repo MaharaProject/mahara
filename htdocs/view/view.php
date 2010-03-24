@@ -93,8 +93,7 @@ $title = hsc(TITLE);
 $submittedgroup = (int)$view->get('submittedgroup');
 if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_views($submittedgroup, $USER->get('id'))) {
     // The user is a tutor of the group that this view has
-    // been submitted to, and is entitled to release the view, and to
-    // upload an additional file when submitting feedback.
+    // been submitted to, and is entitled to release the view
     $submittedgroup = get_record('group', 'id', $submittedgroup);
     $releaseform = pieform(array(
         'name'     => 'releaseview',
@@ -113,11 +112,9 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
             ),
         ),
     ));
-    $allowattachments = true;
 }
 else {
     $releaseform = '';
-    $allowattachments = false;
 }
 
 
@@ -140,7 +137,7 @@ $feedback = ArtefactTypeComment::get_comments($limit, $offset, false, $view);
 
 $anonfeedback = !$USER->is_logged_in() && ($usertoken || $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid)));
 if ($USER->is_logged_in() || $anonfeedback) {
-    $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form($allowattachments));
+    $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form());
 }
 if ($USER->is_logged_in()) {
     $objectionform = pieform(objection_form());

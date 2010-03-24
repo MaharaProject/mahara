@@ -289,7 +289,7 @@ class ArtefactTypeComment extends ArtefactType {
         $data->pagination_js = $pagination['javascript'];
     }
 
-    public static function add_comment_form($attachments=false) {
+    public static function add_comment_form() {
         global $USER;
         $form = array(
             'name'            => 'add_feedback_form',
@@ -321,7 +321,7 @@ class ArtefactTypeComment extends ArtefactType {
             'type'  => 'checkbox',
             'title' => get_string('makepublic', 'artefact.comment'),
         );
-        if ($attachments) {
+        if ($USER->is_logged_in()) {
             $form['elements']['attachments'] = array(
                 'type'         => 'files',
                 'title'        => get_string('attachfile', 'artefact.comment'),
