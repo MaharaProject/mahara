@@ -76,7 +76,7 @@ $view = new View($viewid);
 
 // Create the "make feedback private form" now if it's been submitted
 if (param_variable('make_private_submit', null)) {
-    pieform(make_private_form(param_integer('comment')));
+    pieform(ArtefactTypeComment::make_private_form(param_integer('comment')));
 }
 
 $owner    = $view->get('owner');
