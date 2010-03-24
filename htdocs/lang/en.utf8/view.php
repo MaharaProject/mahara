@@ -109,7 +109,6 @@ $string['attachedfileaddedtofolder'] = "The attached file %s has been added to y
 $string['complaint'] = 'Complaint';
 $string['date'] = 'Date';
 $string['feedback'] = 'Feedback';
-$string['feedbackattachmessage'] = 'The attached file has been added to your %s folder';
 $string['feedbackonthisartefactwillbeprivate'] = 'Feedback on this artefact will only be visible to the owner.';
 $string['nopublicfeedback'] = 'No public feedback';
 $string['notifysiteadministrator'] = 'Notify site administrator';

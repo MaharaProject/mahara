@@ -230,13 +230,10 @@ class ArtefactTypeComment extends ArtefactType {
             $item->date = format_date(strtotime($item->ctime), 'strftimedatetime');
             if (!empty($item->attachments)) {
                 if ($data->isowner) {
-                    // @todo: move strings to comment artefact
-                    // @todo: files attached to comments are no longer always 'assessment' files,
-                    // so change the string.
                     $item->attachmessage = get_string(
                         'feedbackattachmessage',
-                        'view',
-                        get_string('feedbackattachdirname', 'view')
+                        'artefact.comment',
+                        get_string('feedbackattachdirname', 'artefact.comment')
                     );
                 }
                 foreach ($item->attachments as &$a) {
