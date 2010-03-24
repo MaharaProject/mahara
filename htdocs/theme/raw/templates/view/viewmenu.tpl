@@ -1,4 +1,4 @@
-{if $LOGGEDIN || $anonfeedback}
+{if $enablecomments}
   <a id="add_feedback_link" href="">{str tag=placefeedback section=artefact.comment}</a> |
 {/if}
 {if $LOGGEDIN}

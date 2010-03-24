@@ -139,7 +139,9 @@ $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('
 $feedback = ArtefactTypeComment::get_comments($limit, $offset, false, $view);
 
 $anonfeedback = !$USER->is_logged_in() && ($usertoken || $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid)));
-if ($USER->is_logged_in() || $anonfeedback) {
+// If the view has comments turned off, tutors can still leave
+// comments if the view is submitted to their group.
+if (($USER->is_logged_in() || $anonfeedback) && ($view->get('allowcomments') || !empty($releaseform))) {
     $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form());
 }
 if ($USER->is_logged_in()) {
@@ -268,6 +270,7 @@ $smarty->assign('viewcontent', $view->build_columns());
 $smarty->assign('releaseform', $releaseform);
 $smarty->assign('anonfeedback', $anonfeedback);
 if (isset($addfeedbackform)) {
+    $smarty->assign('enablecomments', 1);
     $smarty->assign('addfeedbackform', $addfeedbackform);
 }
 if (isset($objectionform)) {

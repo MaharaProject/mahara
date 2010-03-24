@@ -63,6 +63,7 @@ class View {
     private $copynewuser = 0;
     private $copynewgroups;
     private $type;
+    private $allowcomments;
 
     /**
      * Valid view layouts. These are read at install time and inserted into

@@ -29,7 +29,7 @@
     </table>
     {$feedback->pagination}
 	<div id="viewmenu">
-        {include file="view/viewmenu.tpl"}
+        {include file="view/viewmenu.tpl" enablecomments=$enablecomments}
     </div>
     {if $addfeedbackform}<div>{$addfeedbackform}</div>{/if}
     {if $objectionform}<div>{$objectionform}</div>{/if}
