@@ -321,7 +321,7 @@ class View {
             )));
         }
 
-        return $view;
+        return new View($view->get('id')); // Reread to ensure defaults are set
     }
 
     public function get($field) {
