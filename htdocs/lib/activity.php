@@ -677,7 +677,7 @@ class ActivityTypeFeedback extends ActivityType {
             }
             if (empty($this->url)) {
                 $this->url = get_config('wwwroot') . 'view/artefact.php?artefact=' 
-                    . $this->artefact . '&view=' . $this->view;
+                    . $this->onartefact . '&view=' . $this->view;
             }
         } 
         else { // feedback on view.

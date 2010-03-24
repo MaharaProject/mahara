@@ -33,6 +33,7 @@ define('SECTION_PAGE', 'artefact');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'view.php');
+safe_require('artefact', 'comment');
 
 $artefactid = param_integer('artefact');
 $viewid     = param_integer('view');
@@ -54,13 +55,16 @@ $offset   = param_integer('offset', 0);
 require_once(get_config('docroot') . 'artefact/lib.php');
 $artefact = artefact_instance_from_id($artefactid);
 
-// Create the "make feedback private form" now if it's been submitted
-if (param_variable('make_private_submit', null)) {
-    pieform(make_private_form(param_integer('feedback')));
-}
-
 if (!$artefact->in_view_list()) {
     throw new AccessDeniedException(get_string('artefactsonlyviewableinview', 'error'));
+}
+
+// Create the "make feedback private form" now if it's been submitted
+if (param_variable('make_private_submit', null)) {
+    pieform(ArtefactTypeComment::make_private_form(param_integer('comment')));
+}
+else if (param_variable('delete_comment_submit', null)) {
+    pieform(ArtefactTypeComment::delete_comment_form(param_integer('comment')));
 }
 
 define('TITLE', $artefact->display_title() . ' ' . get_string('in', 'view') . ' ' . $view->get('title'));
@@ -99,8 +103,7 @@ $artefactpath[] = array(
 
 
 // Feedback
-$feedback = $artefact->get_feedback($limit, $offset, $viewid);
-build_feedback_html($feedback);
+$feedback = ArtefactTypeComment::get_comments($limit, $offset, false, $view, $artefact);
 
 $javascript = <<<EOF
 var viewid = {$viewid};
@@ -109,7 +112,10 @@ addLoadEvent(function () {
 });
 EOF;
 
-$feedbackform = pieform(add_feedback_form(false));
+if ($artefact->get('allowcomments')) {
+    $anonfeedback = !$USER->is_logged_in() && $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid));
+    $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form());
+}
 $objectionform = pieform(objection_form());
 
 $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
@@ -127,7 +133,7 @@ if($artefact->get('artefacttype') == 'blog' && $view->is_public()) {
 }
 
 $smarty = smarty(
-    array('paginator', 'feedbacklist'),
+    array('paginator', 'viewmenu'),
     $headers,
     array(),
     array(
@@ -156,9 +162,12 @@ else if ($view->get('group')) {
 }
 
 $smarty->assign('ownername', $view->formatted_owner());
-$smarty->assign('addfeedbackform', $feedbackform);
+if (isset($addfeedbackform)) {
+    $smarty->assign('enablecomments', 1);
+    $smarty->assign('anonfeedback', $anonfeedback);
+    $smarty->assign('addfeedbackform', $addfeedbackform);
+}
 $smarty->assign('objectionform', $objectionform);
-$smarty->assign('anonfeedback', !$USER->is_logged_in() && $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid)));
 $smarty->assign('viewbeingwatched', $viewbeingwatched);
 
 $smarty->display('view/artefact.tpl');
