@@ -29,6 +29,7 @@
             {if $.foreach.attachments.first} | {str tag=Attachments section=artefact.comment}:{else},{/if} <a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}">{$a->attachtitle|escape}</a> ({$a->attachsize|escape})
           {/foreach}
           {/strip}
+          {if $item->canedit} | <a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&view={$viewid}">{str tag=edit}</a>{/if}
         {/if}
         </div>
       </td>

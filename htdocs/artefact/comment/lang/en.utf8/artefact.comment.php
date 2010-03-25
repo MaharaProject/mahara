@@ -34,10 +34,17 @@ $string['comments'] = 'comments';
 
 $string['attachfile'] = "Attach file";
 $string['Attachments'] = "Attachments";
+$string['cantedithasreplies'] = 'You can only edit the most recent comment';
+$string['canteditnotauthor'] = 'You are not the author of this comment';
+$string['cantedittooold'] = 'You can only edit comments that are less than %d minutes old';
+$string['commentnotinview'] = 'Comment %d not in view %d';
 $string['commentremoved'] = 'Comment removed';
 $string['commentremovedbyauthor'] = 'Comment removed by the author';
 $string['commentremovedbyowner'] = 'Comment removed by the owner';
 $string['commentremovedbyadmin'] = 'Comment removed by an administrator';
+$string['commentupdated'] = 'Comment updated';
+$string['editcomment'] = 'Edit Comment';
+$string['editcommentdescription'] = 'You can update your comments if they are less than %d minutes old and have had no newer replies added.  After this time you may still be able to delete your comments and add new ones.';
 $string['feedback'] = 'Feedback';
 $string['feedbackattachdirname'] = 'commentattachments';
 $string['feedbackattachdirdesc'] = 'Files attached to comments on your portfolio';

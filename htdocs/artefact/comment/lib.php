@@ -52,6 +52,7 @@ class PluginArtefactComment extends PluginArtefact {
 
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
+            set_config_plugin('artefact', 'comment', 'commenteditabletime', 10);
             foreach(ArtefactTypeComment::deleted_types() as $type) {
                 insert_record('artefact_comment_deletedby', (object)array('name' => $type));
             }
@@ -232,6 +233,24 @@ class ArtefactTypeComment extends ArtefactType {
         return $result;
     }
 
+    public static function last_public_comment($view=null, $artefact=null) {
+        if (!empty($artefact)) {
+            $where = 'c.onartefact = ?';
+            $values = array($artefact);
+        }
+        else {
+            $where = 'c.onview = ?';
+            $values = array($view);
+        }
+        $newest = get_records_sql_array('
+            SELECT a.id, a.ctime
+            FROM {artefact} a INNER JOIN {artefact_comment_comment} c ON a.id = c.artefact
+            WHERE c.private = 0 AND ' . $where . '
+            ORDER BY a.ctime DESC', $values, 0, 1
+        );
+        return $newest[0];
+    }
+
     public static function build_html(&$data) {
         global $USER;
         $candelete = $data->canedit || $USER->get('admin');
@@ -241,8 +260,12 @@ class ArtefactTypeComment extends ArtefactType {
             'admin'  => get_string('commentremovedbyadmin', 'artefact.comment'),
         );
         $authors = array();
+        $lastcomment = self::last_public_comment($data->view, $data->artefact);
+        $editableafter = time() - 60 * get_config_plugin('artefact', 'comment', 'commenteditabletime');
         foreach ($data->data as &$item) {
-            $item->date = format_date(strtotime($item->ctime), 'strftimedatetime');
+            $item->ts = strtotime($item->ctime);
+            $item->date = format_date($item->ts, 'strftimedatetime');
+            $item->isauthor = $item->author && $item->author == $USER->get('id');
             if (!empty($item->attachments)) {
                 if ($data->isowner) {
                     $item->attachmessage = get_string(
@@ -260,15 +283,19 @@ class ArtefactTypeComment extends ArtefactType {
             if ($item->private) {
                 $item->pubmessage = get_string('thisfeedbackisprivate', 'artefact.comment');
             }
-            else if (!$item->private && $data->canedit) {
-                $item->pubmessage = get_string('thisfeedbackispublic', 'artefact.comment');
-                $item->makeprivateform = pieform(self::make_private_form($item->id));
+
+            // Comment authors can edit recent comments if they're private or if no one has replied yet.
+            if ($item->isauthor && ($item->private || $item->id == $lastcomment->id) && $item->ts > $editableafter) {
+                $item->canedit = 1;
             }
+
+            // $item->makeprivateform = pieform(self::make_private_form($item->id));
+
             if ($item->deletedby) {
                 $item->deleted = 1;
                 $item->deletedmessage = $deletedmessage[$item->deletedby];
             }
-            else if ($candelete || ($item->author && $item->author == $USER->get('id'))) {
+            else if ($candelete || $item->isauthor) {
                 $item->deleteform = pieform(self::delete_comment_form($item->id));
             }
             if ($item->author) {
@@ -306,6 +333,7 @@ class ArtefactTypeComment extends ArtefactType {
         $smarty = smarty_core();
         $smarty->assign_by_ref('data', $data->data);
         $smarty->assign('canedit', $data->canedit);
+        $smarty->assign('viewid', $data->view);
         $smarty->assign('baseurl', $data->baseurl);
         $data->tablerows = $smarty->fetch('artefact:comment:commentlist.tpl');
         $pagination = build_pagination(array(
