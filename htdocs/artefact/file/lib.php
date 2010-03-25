@@ -709,11 +709,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 }
             }
         }
-
-        if (empty($this->id)) {
-            $this->container = 0;
-            $this->allowcomments = 1;
-        }
     }
 
     /**
@@ -1463,6 +1458,10 @@ class ArtefactTypeImage extends ArtefactTypeFile {
                     $this->{$name} = $value;
                 }
             }
+        }
+
+        if (empty($this->id)) {
+            $this->allowcomments = 1;
         }
     }
 
