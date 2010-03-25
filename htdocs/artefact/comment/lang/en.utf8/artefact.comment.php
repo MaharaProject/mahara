@@ -32,6 +32,7 @@ $string['Comments'] = 'Comments';
 $string['comment'] = 'comment';
 $string['comments'] = 'comments';
 
+$string['allowcomments'] = 'Allow comments';
 $string['attachfile'] = "Attach file";
 $string['Attachments'] = "Attachments";
 $string['cantedithasreplies'] = 'You can only edit the most recent comment';

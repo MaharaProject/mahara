@@ -156,6 +156,12 @@ $form = pieform(array(
             'defaultvalue' => $checked,
             'help' => true,
         ),
+        'allowcomments' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('allowcomments','artefact.comment'),
+            'description'  => get_string('allowcommentsonpost','artefact.blog'),
+            'defaultvalue' => $blogpost ? $blogpostobj->get('allowcomments') : 1,
+        ),
         'submitpost' => array(
             'type' => 'submitcancel',
             'value' => array(get_string('savepost', 'artefact.blog'), get_string('cancel')),
@@ -355,6 +361,7 @@ function editpost_submit(Pieform $form, $values) {
     $postobj->set('description', $values['description']);
     $postobj->set('tags', $values['tags']);
     $postobj->set('published', !$values['draft']);
+    $postobj->set('allowcomments', (int) $values['allowcomments']);
     if (!$blogpost) {
         $postobj->set('parent', $blog);
         $postobj->set('owner', $USER->id);

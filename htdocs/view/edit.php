@@ -136,8 +136,8 @@ if (!($group || $institution)) {
 
 $editview['elements']['allowcomments'] = array(
     'type'         => 'checkbox',
-    'title'        => get_string('enablecomments','view'),
-    'description'  => get_string('enablecommentsdescription','view'),
+    'title'        => get_string('allowcomments','artefact.comment'),
+    'description'  => get_string('allowcommentsonview','view'),
     'defaultvalue' => $view->get('allowcomments'),
 );
 
