@@ -17,7 +17,7 @@
 
       <div class="viewfooter cb">
         <table id="feedbacktable" class="fullwidth table">
-          <thead><tr><th>{str tag="feedback" section="view"}</th></tr></thead>
+          <thead><tr><th>{str tag="Comments" section="artefact.comment"}</th></tr></thead>
           <tbody>
             {$feedback->tablerows}
           </tbody>

@@ -32,6 +32,8 @@ $string['Comments'] = 'Comments';
 $string['comment'] = 'comment';
 $string['comments'] = 'comments';
 
+$string['addcomment'] = 'Add comment';
+$string['addcommentnotallowed'] = 'You are not allowed to add comments on this View';
 $string['allowcomments'] = 'Allow comments';
 $string['attachfile'] = "Attach file";
 $string['Attachments'] = "Attachments";
@@ -55,8 +57,6 @@ $string['feedbackonviewbyuser'] = 'Feedback on %s by %s';
 $string['feedbacksubmitted'] = 'Feedback submitted';
 $string['makeprivate'] = 'Change to Private';
 $string['makepublic'] = 'Make public';
-$string['placefeedback'] = 'Place feedback';
-$string['placefeedbacknotallowed'] = 'You are not allowed to place feedback on this View';
 $string['thisfeedbackispublic'] = 'This feedback is public';
 $string['thisfeedbackisprivate'] = 'This feedback is private';
 

@@ -395,7 +395,7 @@ class ArtefactTypeComment extends ArtefactType {
         }
         $form['elements']['submit'] = array(
             'type'  => 'submitcancel',
-            'value' => array(get_string('placefeedback', 'artefact.comment'), get_string('cancel')),
+            'value' => array(get_string('addcomment', 'artefact.comment'), get_string('cancel')),
         );
         return $form;
     }
@@ -478,7 +478,7 @@ function add_feedback_form_validate(Pieform $form, $values) {
     if (!$USER->is_logged_in()) {
         $token = get_cookie('viewaccess:'.$view->get('id'));
         if (!$token || get_view_from_token($token) != $view->get('id')) {
-            $form->set_error('message', get_string('placefeedbacknotallowed', 'artefact.comment'));
+            $form->set_error('message', get_string('addcommentnotallowed', 'artefact.comment'));
         }
     }
 }
