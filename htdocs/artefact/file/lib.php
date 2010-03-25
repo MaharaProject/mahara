@@ -1548,10 +1548,26 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     }
 
     public function render_self($options) {
+        $downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id;
+        $url = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->id;
+        if (isset($options['viewid'])) {
+            $downloadpath .= '&view=' . $options['viewid'];
+            $url .= '&view=' . $options['viewid'];
+        }
+        $metadataurl = $url . '&details=1';
+        if (empty($options['metadata'])) {
+            $smarty = smarty_core();
+            $smarty->assign('id', $this->id);
+            $smarty->assign('title', $this->get('title'));
+            $smarty->assign('description', $this->get('description'));
+            $smarty->assign('downloadpath', $downloadpath);
+            $smarty->assign('metadataurl', $metadataurl);
+            return array('html' => $smarty->fetch('artefact:file:image_render_self.tpl'), 'javascript' => '');
+        }
         $result = parent::render_self($options);
-        $result['html'] = '<div class="fr filedata-icon" style="text-align: center;"><h4>' . get_string('Preview', 'artefact.file') . '</h4><a href="'
-            . hsc(get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id . '&view=' . (isset($options['viewid']) ? $options['viewid'] : 0)) . '"><img src="'
-            . hsc(get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id . '&view=' . (isset($options['viewid']) ? $options['viewid']  : 0). '&maxwidth=400&maxheight=180')
+        $result['html'] = '<div class="fr filedata-icon" style="text-align: center;"><h4>'
+            . get_string('Preview', 'artefact.file') . '</h4><a href="'
+            . hsc($url) . '"><img src="' . hsc($downloadpath) . '&maxwidth=400&maxheight=180'
             . '" alt=""></a></div>' . $result['html'];
         return $result;
     }

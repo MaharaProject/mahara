@@ -70,8 +70,13 @@ else if (param_variable('delete_comment_submit', null)) {
 define('TITLE', $artefact->display_title() . ' ' . get_string('in', 'view') . ' ' . $view->get('title'));
 
 // Render the artefact
-$options = array('viewid' => $viewid,
-                 'path' => $path);
+$options = array(
+    'viewid' => $viewid,
+    'path' => $path
+);
+if (param_integer('details', 0)) {
+    $options['metadata'] = 1;
+}
 $rendered = $artefact->render_self($options);
 $content = '';
 if (!empty($rendered['javascript'])) {
