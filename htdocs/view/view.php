@@ -138,7 +138,8 @@ $anonfeedback = !$USER->is_logged_in() && ($usertoken || $viewid == get_view_fro
 // If the view has comments turned off, tutors can still leave
 // comments if the view is submitted to their group.
 if (($USER->is_logged_in() || $anonfeedback) && ($view->get('allowcomments') || !empty($releaseform))) {
-    $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form());
+    $defaultprivate = !empty($releaseform);
+    $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form($defaultprivate));
 }
 if ($USER->is_logged_in()) {
     $objectionform = pieform(objection_form());
