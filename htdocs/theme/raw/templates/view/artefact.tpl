@@ -1,4 +1,4 @@
-{include file="header.tpl"}
+{if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
 
         <h2>
             <a href="{$WWWROOT}view/view.php?id={$viewid}">{$viewtitle|escape}</a>{if $ownername} {str tag=by section=view}
@@ -30,4 +30,4 @@
         <div>{$objectionform}</div>
       </div>
 
-{include file="footer.tpl"}
+{if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}

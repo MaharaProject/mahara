@@ -146,6 +146,20 @@ $smarty->assign('artefact', $content);
 $smarty->assign('artefactpath', $artefactpath);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 
+if (get_config('viewmicroheaders')) {
+    $smarty->assign('microheaders', true);
+    $smarty->assign('microheadertitle', $view->display_title(true, false));
+    if ($USER->is_logged_in()) {
+        $smarty->assign('userdisplayname', display_name($USER, null, true));
+        if (!empty($_SERVER['HTTP_REFERER'])) {
+            $page = get_config('wwwroot') . 'view/artefact.php?id=' . $artefactid . '&view=' . $viewid;
+            if ($_SERVER['HTTP_REFERER'] != $page) {
+                $smarty->assign('backurl', $_SERVER['HTTP_REFERER']);
+            }
+        }
+    }
+}
+
 $smarty->assign('viewid', $viewid);
 $smarty->assign('viewtitle', $view->get('title'));
 $smarty->assign('feedback', $feedback);
