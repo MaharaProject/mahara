@@ -32,8 +32,8 @@ define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'view');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-require(get_config('libroot') . 'view.php');
-require('group.php');
+require_once(get_config('libroot') . 'view.php');
+require_once('group.php');
 
 // access key for roaming teachers
 $mnettoken = $SESSION->get('mnetuser') ? param_alphanum('mt', null) : null;

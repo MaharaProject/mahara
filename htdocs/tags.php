@@ -28,7 +28,7 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'myportfolio');
 require('init.php');
-require('searchlib.php');
+require_once('searchlib.php');
 define('TITLE', get_string('mytags'));
 
 
