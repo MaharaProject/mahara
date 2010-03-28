@@ -28,8 +28,8 @@
 define('INTERNAL', 1);
 define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
-require('view.php');
-require('form/elements/artefactchooser.php');
+require_once('view.php');
+require_once('form/elements/artefactchooser.php');
 
 $extradata = json_decode(param_variable('extradata'));
 

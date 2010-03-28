@@ -32,7 +32,7 @@ define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'artefact');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-require(get_config('libroot') . 'view.php');
+require_once(get_config('libroot') . 'view.php');
 
 $artefactid = param_integer('artefact');
 $viewid     = param_integer('view');

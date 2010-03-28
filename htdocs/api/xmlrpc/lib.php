@@ -231,8 +231,8 @@ function user_authorise($token, $useragent) {
         throw new XmlrpcServerException('Unable to get information for the specified user');
     }
 
-    require(get_config('docroot') . 'artefact/lib.php');
-    require(get_config('docroot') . 'artefact/internal/lib.php');
+    require_once(get_config('docroot') . 'artefact/lib.php');
+    require_once(get_config('docroot') . 'artefact/internal/lib.php');
 
     $element_list = call_static_method('ArtefactTypeProfile', 'get_all_fields');
     $element_required = call_static_method('ArtefactTypeProfile', 'get_mandatory_fields');

@@ -33,7 +33,7 @@ define('SECTION_PAGE', 'editpost');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction', 'forum');
-require('group.php');
+require_once('group.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
 require_once('pieforms/pieform.php');
 

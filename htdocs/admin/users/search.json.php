@@ -47,7 +47,7 @@ if ($action == 'suspend') {
 }
 
 if ($action == 'search') {
-    require('searchlib.php');
+    require_once('searchlib.php');
 
     $params = new StdClass;
     $params->query       = trim(param_variable('query', ''));

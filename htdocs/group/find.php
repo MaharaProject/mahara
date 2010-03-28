@@ -30,8 +30,8 @@ define('MENUITEM', 'groups/find');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('findgroups'));
-require('group.php');
-require('searchlib.php');
+require_once('group.php');
+require_once('searchlib.php');
 $filter = param_alpha('filter', 'notmember');
 $offset = param_integer('offset', 0);
 
