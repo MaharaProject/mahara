@@ -40,6 +40,7 @@ $string['Attachments'] = "Attachments";
 $string['cantedithasreplies'] = 'You can only edit the most recent comment';
 $string['canteditnotauthor'] = 'You are not the author of this comment';
 $string['cantedittooold'] = 'You can only edit comments that are less than %d minutes old';
+$string['commentdeletedauthornotification'] = "Your comment on %s was deleted:\n%s";
 $string['commentdeletednotificationsubject'] = 'Comment on %s deleted';
 $string['commentnotinview'] = 'Comment %d not in view %d';
 $string['commentremoved'] = 'Comment removed';

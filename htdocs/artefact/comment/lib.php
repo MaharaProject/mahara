@@ -471,15 +471,47 @@ function delete_comment_submit(Pieform $form, $values) {
         $deletedby = 'admin';
     }
 
+    $viewid = $view->get('id');
+    if ($artefact = $comment->get('onartefact')) {
+        $url = get_config('wwwroot') . 'view/artefact.php?view=' . $viewid . '&artefact=' . $artefact;
+    }
+    else {
+        $url = get_config('wwwroot') . 'view/view.php?id=' . $viewid;
+    }
+
     db_begin();
 
     $comment->set('deletedby', $deletedby);
     $comment->commit();
 
-    require_once('activity.php');
-
     if ($deletedby != 'author') {
         // Notify author
+        if ($artefact) {
+            $title = get_field('artefact', 'title', 'id', $artefact);
+        }
+        else {
+            $title = get_field('view', 'title', 'id', $comment->get('onview'));
+        }
+        $title = hsc($title);
+        $data = (object) array(
+            'subject'   => false,
+            'message'   => false,
+            'strings'   => (object) array(
+                'subject' => (object) array(
+                    'key'     => 'commentdeletednotificationsubject',
+                    'section' => 'artefact.comment',
+                    'args'    => array($title),
+                ),
+                'message' => (object) array(
+                    'key'     => 'commentdeletedauthornotification',
+                    'section' => 'artefact.comment',
+                    'args'    => array($title, html2text($comment->get('description'))),
+                ),
+            ),
+            'users'     => array($comment->get('author')),
+            'url'       => $url,
+        );
+        activity_occurred('maharamessage', $data);
     }
     if ($deletedby != 'owner' && $comment->get('owner') != $USER->get('id')) {
         // Notify owner
@@ -493,11 +525,7 @@ function delete_comment_submit(Pieform $form, $values) {
     db_commit();
 
     $SESSION->add_ok_msg(get_string('commentremoved', 'artefact.comment'));
-    $viewid = $view->get('id');
-    if ($artefact = $comment->get('onartefact')) {
-        redirect(get_config('wwwroot') . 'view/artefact.php?view=' . $viewid . '&artefact=' . $artefact);
-    }
-    redirect(get_config('wwwroot') . 'view/view.php?id=' . $viewid);
+    redirect($url);
 }
 
 function add_feedback_form_validate(Pieform $form, $values) {
