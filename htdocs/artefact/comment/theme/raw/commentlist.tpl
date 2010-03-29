@@ -1,8 +1,8 @@
   {foreach from=$data item=item}
     <tr class="{cycle name=rows values='r0,r1'}">
       <td>
-        {if $item->deleted}
-          <span class="details">[{str tag=commentremoved section=artefact.comment}]</span>
+        {if $item->deletedmessage}
+          <span class="details">{str tag=commentremoved section=artefact.comment}</span>
         {else}
           {$item->description|clean_html}
           {if $item->attachmessage}<div>{$item->attachmessage}</div>{/if}
@@ -17,7 +17,7 @@
         {else}
           {$item->authorname|escape}
         {/if}
-        {if $item->deleted}
+        {if $item->deletedmessage}
           | {$item->deletedmessage|escape}
         {else}
           | {$item->date|escape}

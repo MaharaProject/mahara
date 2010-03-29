@@ -301,7 +301,6 @@ class ArtefactTypeComment extends ArtefactType {
             // $item->makeprivateform = pieform(self::make_private_form($item->id));
 
             if ($item->deletedby) {
-                $item->deleted = 1;
                 $item->deletedmessage = $deletedmessage[$item->deletedby];
             }
             else if ($candelete || $item->isauthor) {
