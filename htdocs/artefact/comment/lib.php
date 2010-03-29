@@ -471,8 +471,26 @@ function delete_comment_submit(Pieform $form, $values) {
         $deletedby = 'admin';
     }
 
+    db_begin();
+
     $comment->set('deletedby', $deletedby);
     $comment->commit();
+
+    require_once('activity.php');
+
+    if ($deletedby != 'author') {
+        // Notify author
+    }
+    if ($deletedby != 'owner' && $comment->get('owner') != $USER->get('id')) {
+        // Notify owner
+        $data = (object) array(
+            'commentid' => $comment->get('id'),
+            'viewid'    => $view->get('id'),
+        );
+        activity_occurred('feedback', $data, 'artefact', 'comment');
+    }
+
+    db_commit();
 
     $SESSION->add_ok_msg(get_string('commentremoved', 'artefact.comment'));
     $viewid = $view->get('id');
