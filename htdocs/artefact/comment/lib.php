@@ -255,16 +255,19 @@ class ArtefactTypeComment extends ArtefactType {
 
     public static function deleted_messages() {
         return array(
-            'author' => get_string('commentremovedbyauthor', 'artefact.comment'),
-            'owner'  => get_string('commentremovedbyowner', 'artefact.comment'),
-            'admin'  => get_string('commentremovedbyadmin', 'artefact.comment'),
+            'author' => 'commentremovedbyauthor',
+            'owner'  => 'commentremovedbyowner',
+            'admin'  => 'commentremovedbyadmin',
         );
     }
 
     public static function build_html(&$data) {
         global $USER;
         $candelete = $data->canedit || $USER->get('admin');
-        $deletedmessage = self::deleted_messages();
+        $deletedmessage = array();
+        foreach (self::deleted_messages() as $k => $v) {
+            $deletedmessage[$k] = get_string($v, 'artefact.comment');
+        }
         $authors = array();
         $lastcomment = self::last_public_comment($data->view, $data->artefact);
         $editableafter = time() - 60 * get_config_plugin('artefact', 'comment', 'commenteditabletime');
