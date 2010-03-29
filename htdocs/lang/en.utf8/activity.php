@@ -29,7 +29,6 @@ defined('INTERNAL') || die();
 
 $string['typemaharamessage'] = 'System message';
 $string['typeusermessage'] = 'Message from other users';
-$string['typefeedback'] = 'Feedback';
 $string['typewatchlist'] = 'Watchlist';
 $string['typeviewaccess'] = 'New view access';
 $string['typecontactus'] = 'Contact us';

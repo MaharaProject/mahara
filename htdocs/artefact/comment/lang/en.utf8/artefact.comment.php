@@ -59,5 +59,6 @@ $string['makeprivate'] = 'Change to Private';
 $string['makepublic'] = 'Make public';
 $string['thisfeedbackispublic'] = 'This feedback is public';
 $string['thisfeedbackisprivate'] = 'This feedback is private';
+$string['typefeedback'] = 'Feedback';
 
 ?>
