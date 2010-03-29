@@ -291,6 +291,7 @@ abstract class ActivityType {
 
     protected $subject;
     protected $message;
+    protected $strings;
     protected $users = array();
     protected $url;
     protected $id;
@@ -347,11 +348,29 @@ abstract class ActivityType {
        return (object)get_object_vars($this); 
     }
 
+    public function get_string_for_user($user, $string) {
+        $args = array_merge(
+            array(
+                $user->lang,
+                $this->strings->{$string}->key,
+                $this->strings->{$string}->section,
+            ),
+            $this->strings->{$string}->args
+        );
+        return call_user_func_array('get_string_from_language', $args);
+    }
+
     public function get_message($user) {
+        if (empty($this->message)) {
+            return $this->get_string_for_user($user, 'message');
+        }
         return $this->message;
     }
         
     public function get_subject($user) {
+        if (empty($this->subject)) {
+            return $this->get_string_for_user($user, 'subject');
+        }
         return $this->subject;
     }
 
