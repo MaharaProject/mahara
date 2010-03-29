@@ -581,8 +581,10 @@ function add_feedback_form_submit(Pieform $form, $values) {
     }
 
     require_once('activity.php');
-    $data->message = html2text($data->description);
-    $data->view    = $view->get('id');
+    $data = (object) array(
+        'commentid' => $comment->get('id'),
+        'viewid'    => $view->get('id')
+    );
     activity_occurred('feedback', $data, 'artefact', 'comment');
 
     db_commit();
@@ -611,58 +613,75 @@ function add_feedback_form_cancel_submit(Pieform $form) {
 
 class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
 
-    protected $view;
-    protected $onview;
-    protected $onartefact;
-
-    private $viewrecord;
-    private $artefactinstance;
+    protected $viewid;
+    protected $commentid;
 
     /**
      * @param array $data Parameters:
-     *                    - view (int)
-     *                    - onview (int) (optional)
-     *                    - onartefact (int) (optional)
-     *                    - message (string)
+     *                    - viewid (int)
+     *                    - commentid (int)
      */
     public function __construct($data, $cron=false) {
         parent::__construct($data, $cron);
 
-        if (!empty($this->onartefact)) { // feedback on artefact
+        $comment = new ArtefactTypeComment($this->commentid);
+
+        if ($onartefact = $comment->get('onartefact')) { // feedback on artefact
             $userid = null;
             require_once(get_config('docroot') . 'artefact/lib.php');
-            $this->artefactinstance = artefact_instance_from_id($this->onartefact);
-            if ($this->artefactinstance->feedback_notify_owner()) {
-                $userid = $this->artefactinstance->get('owner');
+            $artefactinstance = artefact_instance_from_id($onartefact);
+            if ($artefactinstance->feedback_notify_owner()) {
+                $userid = $artefactinstance->get('owner');
             }
             if (empty($this->url)) {
                 $this->url = get_config('wwwroot') . 'view/artefact.php?artefact='
-                    . $this->onartefact . '&view=' . $this->view;
+                    . $onartefact . '&view=' . $this->viewid;
             }
         }
         else { // feedback on view.
-            if (!$this->viewrecord = get_record('view', 'id', $this->onview)) {
-                throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->onview));
+            $onview = $comment->get('onview');
+            if (!$viewrecord = get_record('view', 'id', $onview)) {
+                throw new ViewNotFoundException(get_string('viewnotfound', 'error', $onview));
             }
-            $userid = $this->viewrecord->owner;
+            $userid = $viewrecord->owner;
             if (empty($this->url)) {
-                $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->onview;
+                $this->url = get_config('wwwroot') . 'view/view.php?id=' . $onview;
             }
         }
-        if ($userid) {
-            $this->users = activity_get_users($this->get_id(), array($userid));
+        if (empty($userid)) {
+            return;
         }
+
+        $this->users = activity_get_users($this->get_id(), array($userid));
+
+        $deletedby = $comment->get('deletedby');
+        $subjectkey = $deletedby ? 'commentdeletednotificationsubject' : 'newfeedbacknotificationsubject';
+        $title = $onartefact ? $artefactinstance->get('title') : $viewrecord->title;
+
+        $this->strings = (object) array(
+            'subject' => (object) array(
+                'key'     => $subjectkey,
+                'section' => 'artefact.comment',
+                'args'    => array($title),
+            ),
+        );
+
+        if ($deletedby) {
+            $deletedmessage = ArtefactTypeComment::deleted_messages();
+            $this->strings->deletedmessage = (object) array(
+                'key' => $deletedmessage[$deletedby],
+                'section' => 'artefact.comment',
+                'args' => array(),
+            );
+        }
+        $this->message = html2text($comment->get('description'));
     }
 
-    public function get_subject($user) {
-        if (!empty($this->onartefact)) { // feedback on artefact
-            return get_string_from_language($user->lang, 'newfeedbackonartefact', 'activity')
-                . ' ' . $this->artefactinstance->get('title');
+    public function get_message($user) {
+        if (!empty($this->strings->deletedmessage)) {
+            return $this->get_string_for_user($user, 'deletedmessage') . ":\n" . $this->message;
         }
-        else {
-            return get_string_from_language($user->lang, 'newfeedbackonview', 'activity')
-                . ' ' . $this->viewrecord->title;
-        }
+        return $this->message;
     }
 
     public function get_plugintype(){
@@ -674,7 +693,7 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
     }
 
     public function get_required_parameters() {
-        return array('message', 'view');
+        return array('commentid', 'viewid');
     }
 }
 
