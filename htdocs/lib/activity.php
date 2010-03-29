@@ -649,67 +649,6 @@ class ActivityTypeUsermessage extends ActivityType {
     
 }
 
-class ActivityTypeFeedback extends ActivityType { 
-
-    protected $view;
-    protected $onview;
-    protected $onartefact;
-
-    private $viewrecord;
-    private $artefactinstance;
-
-    /**
-     * @param array $data Parameters:
-     *                    - view (int)
-     *                    - onview (int) (optional)
-     *                    - onartefact (int) (optional)
-     *                    - message (string)
-     */
-    public function __construct($data, $cron=false) { 
-        parent::__construct($data, $cron);
-
-        if (!empty($this->onartefact)) { // feedback on artefact
-            $userid = null;
-            require_once(get_config('docroot') . 'artefact/lib.php');
-            $this->artefactinstance = artefact_instance_from_id($this->onartefact);
-            if ($this->artefactinstance->feedback_notify_owner()) {
-                $userid = $this->artefactinstance->get('owner');
-            }
-            if (empty($this->url)) {
-                $this->url = get_config('wwwroot') . 'view/artefact.php?artefact=' 
-                    . $this->onartefact . '&view=' . $this->view;
-            }
-        } 
-        else { // feedback on view.
-            if (!$this->viewrecord = get_record('view', 'id', $this->onview)) {
-                throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->onview));
-            }
-            $userid = $this->viewrecord->owner;
-            if (empty($this->url)) {
-                $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->onview;
-            }
-        }
-        if ($userid) {
-            $this->users = activity_get_users($this->get_id(), array($userid));
-        } 
-    }
-
-    public function get_subject($user) {
-        if (!empty($this->onartefact)) { // feedback on artefact
-            return get_string_from_language($user->lang, 'newfeedbackonartefact', 'activity')
-                . ' ' . $this->artefactinstance->get('title');
-        }
-        else {
-            return get_string_from_language($user->lang, 'newfeedbackonview', 'activity')
-                . ' ' . $this->viewrecord->title;
-        }
-    }
-
-    public function get_required_parameters() {
-        return array('message', 'view');
-    }
-}
-
 class ActivityTypeWatchlist extends ActivityType { 
 
     protected $view;

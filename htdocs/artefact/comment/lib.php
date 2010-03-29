@@ -26,6 +26,8 @@
 
 defined('INTERNAL') || die();
 
+require_once('activity.php');
+
 class PluginArtefactComment extends PluginArtefact {
 
     public static function get_artefact_types() {
@@ -575,7 +577,7 @@ function add_feedback_form_submit(Pieform $form, $values) {
     require_once('activity.php');
     $data->message = html2text($data->description);
     $data->view    = $view->get('id');
-    activity_occurred('feedback', $data);
+    activity_occurred('feedback', $data, 'artefact', 'comment');
 
     db_commit();
 
@@ -599,6 +601,75 @@ function add_feedback_form_cancel_submit(Pieform $form) {
     $form->reply(PIEFORM_OK, array(
         'goto' => '/view/view.php?id=' . $view->get('id'),
     ));
+}
+
+class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
+
+    protected $view;
+    protected $onview;
+    protected $onartefact;
+
+    private $viewrecord;
+    private $artefactinstance;
+
+    /**
+     * @param array $data Parameters:
+     *                    - view (int)
+     *                    - onview (int) (optional)
+     *                    - onartefact (int) (optional)
+     *                    - message (string)
+     */
+    public function __construct($data, $cron=false) {
+        parent::__construct($data, $cron);
+
+        if (!empty($this->onartefact)) { // feedback on artefact
+            $userid = null;
+            require_once(get_config('docroot') . 'artefact/lib.php');
+            $this->artefactinstance = artefact_instance_from_id($this->onartefact);
+            if ($this->artefactinstance->feedback_notify_owner()) {
+                $userid = $this->artefactinstance->get('owner');
+            }
+            if (empty($this->url)) {
+                $this->url = get_config('wwwroot') . 'view/artefact.php?artefact='
+                    . $this->onartefact . '&view=' . $this->view;
+            }
+        }
+        else { // feedback on view.
+            if (!$this->viewrecord = get_record('view', 'id', $this->onview)) {
+                throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->onview));
+            }
+            $userid = $this->viewrecord->owner;
+            if (empty($this->url)) {
+                $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->onview;
+            }
+        }
+        if ($userid) {
+            $this->users = activity_get_users($this->get_id(), array($userid));
+        }
+    }
+
+    public function get_subject($user) {
+        if (!empty($this->onartefact)) { // feedback on artefact
+            return get_string_from_language($user->lang, 'newfeedbackonartefact', 'activity')
+                . ' ' . $this->artefactinstance->get('title');
+        }
+        else {
+            return get_string_from_language($user->lang, 'newfeedbackonview', 'activity')
+                . ' ' . $this->viewrecord->title;
+        }
+    }
+
+    public function get_plugintype(){
+        return 'artefact';
+    }
+
+    public function get_pluginname(){
+        return 'comment';
+    }
+
+    public function get_required_parameters() {
+        return array('message', 'view');
+    }
 }
 
 ?>
