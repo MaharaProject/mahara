@@ -40,6 +40,7 @@ $string['Attachments'] = "Attachments";
 $string['cantedithasreplies'] = 'You can only edit the most recent comment';
 $string['canteditnotauthor'] = 'You are not the author of this comment';
 $string['cantedittooold'] = 'You can only edit comments that are less than %d minutes old';
+$string['commentmadepublic'] = "Comment made public";
 $string['commentdeletedauthornotification'] = "Your comment on %s was deleted:\n%s";
 $string['commentdeletednotificationsubject'] = 'Comment on %s deleted';
 $string['commentnotinview'] = 'Comment %d not in view %d';
@@ -59,9 +60,16 @@ $string['feedbackonviewbyuser'] = 'Feedback on %s by %s';
 $string['feedbacksubmitted'] = 'Feedback submitted';
 $string['makeprivate'] = 'Change to Private';
 $string['makepublic'] = 'Make public';
+$string['makepublicnotallowed'] = 'You are not allowed to make this comment public';
+$string['makepublicrequestsubject'] = 'Request to change private comment to public';
+$string['makepublicrequestbyauthormessage'] = '%s has requested that you make their comment public.';
+$string['makepublicrequestbyownermessage'] = '%s has requested that you make your comment public.';
+$string['makepublicrequestsent'] = 'A message has been sent to %s to request that the comment be made public.';
 $string['newfeedbacknotificationsubject'] = 'New feedback on %s';
+$string['requestpublic'] = 'Request make public';
 $string['thisfeedbackispublic'] = 'This feedback is public';
 $string['thisfeedbackisprivate'] = 'This feedback is private';
 $string['typefeedback'] = 'Feedback';
+$string['youhaverequestedpublic'] = 'You have requested that this comment be made public.';
 
 ?>

@@ -68,6 +68,7 @@ class ArtefactTypeComment extends ArtefactType {
     protected $onartefact;
     protected $private;
     protected $deletedby;
+    protected $requestpublic;
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
@@ -93,11 +94,12 @@ class ArtefactTypeComment extends ArtefactType {
         parent::commit();
 
         $data = (object)array(
-            'artefact'    => $this->get('id'),
-            'onview'      => $this->get('onview'),
-            'onartefact'  => $this->get('onartefact'),
-            'private'     => $this->get('private'),
-            'deletedby'   => $this->get('deletedby'),
+            'artefact'      => $this->get('id'),
+            'onview'        => $this->get('onview'),
+            'onartefact'    => $this->get('onartefact'),
+            'private'       => $this->get('private'),
+            'deletedby'     => $this->get('deletedby'),
+            'requestpublic' => $this->get('requestpublic'),
         );
 
         if ($new) {
@@ -168,12 +170,14 @@ class ArtefactTypeComment extends ArtefactType {
         $viewid = $view->get('id');
         if (!empty($artefact)) {
             $canedit = $USER->can_edit_artefact($artefact);
-            $isowner = $userid && $userid == $artefact->get('owner');
+            $owner = $artefact->get('owner');
+            $isowner = $userid && $userid == $owner;
             $artefactid = $artefact->get('id');
         }
         else {
             $canedit = $USER->can_edit_view($view);
-            $isowner = $userid && $userid == $view->get('owner');
+            $owner = $view->get('owner');
+            $isowner = $userid && $userid == $owner;
             $artefactid = null;
         }
 
@@ -184,6 +188,7 @@ class ArtefactTypeComment extends ArtefactType {
             'view'     => $viewid,
             'artefact' => $artefactid,
             'canedit'  => $canedit,
+            'owner'    => $owner,
             'isowner'  => $isowner,
             'data'     => array(),
         );
@@ -210,7 +215,8 @@ class ArtefactTypeComment extends ArtefactType {
 
             $comments = get_records_sql_assoc('
                 SELECT
-                    a.id, a.author, a.authorname, a.ctime, a.description, c.private, c.deletedby,
+                    a.id, a.author, a.authorname, a.ctime, a.description,
+                    c.private, c.deletedby, c.requestpublic,
                     u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff, u.admin,
                     u.deleted, u.profileicon
                 FROM {artefact} a
@@ -293,19 +299,34 @@ class ArtefactTypeComment extends ArtefactType {
                 $item->pubmessage = get_string('thisfeedbackisprivate', 'artefact.comment');
             }
 
-            // Comment authors can edit recent comments if they're private or if no one has replied yet.
-            if ($item->isauthor && ($item->private || $item->id == $lastcomment->id) && $item->ts > $editableafter) {
-                $item->canedit = 1;
-            }
-
-            // $item->makeprivateform = pieform(self::make_private_form($item->id));
-
             if ($item->deletedby) {
                 $item->deletedmessage = $deletedmessage[$item->deletedby];
             }
             else if ($candelete || $item->isauthor) {
                 $item->deleteform = pieform(self::delete_comment_form($item->id));
             }
+
+            // Comment authors can edit recent comments if they're private or if no one has replied yet.
+            if (!$item->deletedby && $item->isauthor
+                && ($item->private || $item->id == $lastcomment->id) && $item->ts > $editableafter) {
+                $item->canedit = 1;
+            }
+
+            // Form to make private comment public, or request that a
+            // private comment be made public
+            if (!$item->deletedby && $item->private && $item->author && $data->owner
+                && ($item->isauthor || $data->isowner)) {
+                if (empty($item->requestpublic)
+                    || $item->isauthor && $item->requestpublic == 'owner'
+                    || $data->isowner && $item->requestpublic == 'author') {
+                    $item->makepublicform = pieform(self::make_public_form($item->id));
+                }
+                else if ($item->isauthor && $item->requestpublic == 'author'
+                         || $data->isowner && $item->requestpublic == 'owner') {
+                    $item->makepublicrequested = 1;
+                }
+            }
+
             if ($item->author) {
                 if (isset($authors[$item->author])) {
                     $item->author = $authors[$item->author];
@@ -433,6 +454,23 @@ class ArtefactTypeComment extends ArtefactType {
         );
     }
 
+    public static function make_public_form($id) {
+        return array(
+            'name'            => 'make_public',
+            'renderer'        => 'oneline',
+            'class'           => 'makeprivate',
+            // 'jsform'          => true,
+            'elements'        => array(
+                'comment'  => array('type' => 'hidden', 'value' => $id),
+                'submit'   => array(
+                    'type' => 'submit',
+                    'name' => 'make_public_submit',
+                    'value' => get_string('makepublic', 'artefact.comment'),
+                ),
+            ),
+        );
+    }
+
     public static function delete_comment_form($id) {
         return array(
             'name'     => 'delete_comment',
@@ -462,6 +500,94 @@ function make_private_submit(Pieform $form, $values) {
         redirect(get_config('wwwroot') . 'view/artefact.php?view=' . $viewid . '&artefact=' . $artefact);
     }
     redirect(get_config('wwwroot') . 'view/view.php?id=' . $viewid);
+}
+
+/* To make private comments public, both the author and the owner must agree. */
+function make_public_validate(Pieform $form, $values) {
+    global $USER;
+    $comment = new ArtefactTypeComment((int) $values['comment']);
+
+    $author    = $comment->get('author');
+    $owner     = $comment->get('owner');
+    $requester = $USER->get('id');
+
+    if (!$author || !$owner || !$requester || ($requester != $owner && $requester != $author)) {
+        $form->set_error('comment', get_string('makepublicnotallowed', 'artefact.comment'));
+    }
+}
+
+function make_public_submit(Pieform $form, $values) {
+    global $SESSION, $USER, $view;
+
+    $comment = new ArtefactTypeComment((int) $values['comment']);
+
+    $viewid = $view->get('id');
+    if ($artefact = $comment->get('onartefact')) {
+        $url = get_config('wwwroot') . 'view/artefact.php?view=' . $viewid . '&artefact=' . $artefact;
+    }
+    else {
+        $url = get_config('wwwroot') . 'view/view.php?id=' . $viewid;
+    }
+
+    $author    = $comment->get('author');
+    $owner     = $comment->get('owner');
+    $requester = $USER->get('id');
+
+    if (($author == $owner && $requester == $owner)
+        || ($requester == $owner  && $comment->get('requestpublic') == 'author')
+        || ($requester == $author && $comment->get('requestpublic') == 'owner')) {
+        $comment->set('private', 0);
+        $comment->set('requestpublic', null);
+        $comment->commit();
+        $SESSION->add_ok_msg(get_string('commentmadepublic', 'artefact.comment'));
+        redirect($url);
+    }
+
+    $subject = 'makepublicrequestsubject';
+    if ($requester == $owner) {
+        $comment->set('requestpublic', 'owner');
+        $message = 'makepublicrequestbyownermessage';
+        $arg = display_name($owner, $author);
+        $userid = $author;
+        $sessionmessage = get_string('makepublicrequestsent', 'artefact.comment', display_name($author));
+    }
+    else if ($requester == $author) {
+        $comment->set('requestpublic', 'author');
+        $message = 'makepublicrequestbyauthormessage';
+        $arg = display_name($author, $owner);
+        $userid = $owner;
+        $sessionmessage = get_string('makepublicrequestsent', 'artefact.comment', display_name($owner));
+    }
+    else {
+        redirect($url); // Freak out?
+    }
+
+    db_begin();
+    $comment->commit();
+
+    $data = (object) array(
+        'subject'   => false,
+        'message'   => false,
+        'strings'   => (object) array(
+            'subject' => (object) array(
+                'key'     => $subject,
+                'section' => 'artefact.comment',
+                'args'    => array(),
+            ),
+            'message' => (object) array(
+                'key'     => $message,
+                'section' => 'artefact.comment',
+                'args'    => array(hsc($arg)),
+            ),
+        ),
+        'users'     => array($userid),
+        'url'       => $url,
+    );
+    activity_occurred('maharamessage', $data);
+    db_commit();
+
+    $SESSION->add_ok_msg($sessionmessage);
+    redirect($url);
 }
 
 function delete_comment_submit(Pieform $form, $values) {

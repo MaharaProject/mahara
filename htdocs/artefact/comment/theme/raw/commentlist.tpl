@@ -22,7 +22,9 @@
         {else}
           | {$item->date|escape}
           {if $item->pubmessage}
-             | {$item->pubmessage|escape}{if $item->makeprivateform}{$item->makeprivateform}{/if}
+             | {$item->pubmessage|escape}
+             {if $item->makepublicform}{$item->makepublicform}{/if}
+             {if $item->makepublicrequested} | {str tag=youhaverequestedpublic section=artefact.comment}{/if}
           {/if}
           {strip}
           {foreach $item->attachments item=a name=attachments}

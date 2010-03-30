@@ -75,8 +75,8 @@ $offset   = param_integer('offset', 0);
 $view = new View($viewid);
 
 // Create the "make feedback private form" now if it's been submitted
-if (param_variable('make_private_submit', null)) {
-    pieform(ArtefactTypeComment::make_private_form(param_integer('comment')));
+if (param_variable('make_public_submit', null)) {
+    pieform(ArtefactTypeComment::make_public_form(param_integer('comment')));
 }
 else if (param_variable('delete_comment_submit', null)) {
     pieform(ArtefactTypeComment::delete_comment_form(param_integer('comment')));
