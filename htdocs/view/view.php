@@ -136,9 +136,7 @@ function releaseview_submit() {
   
 // If the view has comments turned off, tutors can still leave
 // comments if the view is submitted to their group.
-
-// @todo: site setting for public comments
-if ($view->get('allowcomments') || !empty($releaseform)) {
+if (($USER->is_logged_in() || get_config('anonymouscomments')) && ($view->get('allowcomments') || !empty($releaseform))) {
     $defaultprivate = !empty($releaseform);
     $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form($defaultprivate));
 }

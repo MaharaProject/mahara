@@ -1487,6 +1487,9 @@ function xmldb_core_upgrade($oldversion=0) {
             SET plugintype = 'artefact', pluginname = 'comment'
             WHERE name = 'feedback'
         ");
+
+        // Add site setting for anonymous comments
+        set_config('anonymouscomments', 1);
     }
 
     return $status;

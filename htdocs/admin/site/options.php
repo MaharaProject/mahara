@@ -263,6 +263,12 @@ $siteoptionform = array(
             'description'  => get_string('userscanhiderealnamesdescription', 'admin'),
             'defaultvalue' => get_config('userscanhiderealnames'),
         ),
+        'anonymouscomments' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('anonymouscomments', 'admin'),
+            'description'  => get_string('anonymouscommentsdescription', 'admin'),
+            'defaultvalue' => get_config('anonymouscomments'),
+        ),
     )
 );
 
@@ -288,7 +294,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
         'captchaonregisterform', 'captchaoncontactform', 'showselfsearchsideblock', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
-        'remoteavatars', 'userscanhiderealnames'
+        'remoteavatars', 'userscanhiderealnames', 'anonymouscomments',
     );
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');
