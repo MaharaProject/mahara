@@ -438,22 +438,6 @@ class ArtefactTypeComment extends ArtefactType {
         return $form;
     }
 
-    public static function make_private_form($id) {
-        return array(
-            'name'            => 'make_private',
-            'renderer'        => 'oneline',
-            'class'           => 'makeprivate',
-            'elements'        => array(
-                'comment'  => array('type' => 'hidden', 'value' => $id),
-                'submit'   => array(
-                    'type' => 'submit',
-                    'name' => 'make_private_submit',
-                    'value' => get_string('makeprivate', 'artefact.comment'),
-                ),
-            ),
-        );
-    }
-
     public static function make_public_form($id) {
         return array(
             'name'            => 'make_public',
@@ -487,19 +471,6 @@ class ArtefactTypeComment extends ArtefactType {
             ),
         );
     }
-}
-
-function make_private_submit(Pieform $form, $values) {
-    global $SESSION, $view;
-    $viewid = $view->get('id');
-    $comment = new ArtefactTypeComment((int) $values['comment']);
-    $comment->set('private', 1);
-    $comment->commit();
-    $SESSION->add_ok_msg(get_string('feedbackchangedtoprivate', 'artefact.comment'));
-    if ($artefact = $comment->get('onartefact')) {
-        redirect(get_config('wwwroot') . 'view/artefact.php?view=' . $viewid . '&artefact=' . $artefact);
-    }
-    redirect(get_config('wwwroot') . 'view/view.php?id=' . $viewid);
 }
 
 /* To make private comments public, both the author and the owner must agree. */
