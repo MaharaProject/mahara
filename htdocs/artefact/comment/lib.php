@@ -402,6 +402,14 @@ class ArtefactTypeComment extends ArtefactType {
                 'defaultvalue' => array(),
             );
         }
+        if (!$USER->is_logged_in()) {
+            $form['elements']['captcha'] = array(
+                'type'  => 'captcha',
+                'title' => get_string('captchatitle'),
+                'description' => get_string('captchadescription'),
+                'rules' => array('required' => true)
+            );
+        }
         $form['elements']['submit'] = array(
             'type'  => 'submitcancel',
             'value' => array(get_string('addcomment', 'artefact.comment'), get_string('cancel')),
@@ -526,16 +534,6 @@ function delete_comment_submit(Pieform $form, $values) {
 
     $SESSION->add_ok_msg(get_string('commentremoved', 'artefact.comment'));
     redirect($url);
-}
-
-function add_feedback_form_validate(Pieform $form, $values) {
-    global $USER, $view;
-    if (!$USER->is_logged_in()) {
-        $token = get_cookie('viewaccess:'.$view->get('id'));
-        if (!$token || get_view_from_token($token) != $view->get('id')) {
-            $form->set_error('message', get_string('addcommentnotallowed', 'artefact.comment'));
-        }
-    }
 }
 
 function add_feedback_form_submit(Pieform $form, $values) {

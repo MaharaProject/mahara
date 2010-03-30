@@ -134,10 +134,11 @@ function releaseview_submit() {
     redirect(get_config('wwwroot') . 'view/view.php?id='.$view->get('id'));
 }
   
-$anonfeedback = !$USER->is_logged_in() && ($usertoken || $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid)));
 // If the view has comments turned off, tutors can still leave
 // comments if the view is submitted to their group.
-if (($USER->is_logged_in() || $anonfeedback) && ($view->get('allowcomments') || !empty($releaseform))) {
+
+// @todo: site setting for public comments
+if ($view->get('allowcomments') || !empty($releaseform)) {
     $defaultprivate = !empty($releaseform);
     $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form($defaultprivate));
 }
@@ -271,7 +272,6 @@ $smarty->assign('viewcontent', $view->build_columns());
 $smarty->assign('releaseform', $releaseform);
 if (isset($addfeedbackform)) {
     $smarty->assign('enablecomments', 1);
-    $smarty->assign('anonfeedback', $anonfeedback);
     $smarty->assign('addfeedbackform', $addfeedbackform);
 }
 if (isset($objectionform)) {
