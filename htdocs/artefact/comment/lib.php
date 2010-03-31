@@ -225,6 +225,7 @@ class ArtefactTypeComment extends ArtefactType {
                 if ($last == $showcomment) {
                     $rank = key($ids);
                     $result->forceoffset = $offset = ((ceil($rank / $limit) - 1) * $limit);
+                    $result->showcomment = $showcomment;
                 }
             }
 
@@ -312,6 +313,10 @@ class ArtefactTypeComment extends ArtefactType {
             }
             if ($item->private) {
                 $item->pubmessage = get_string('thisfeedbackisprivate', 'artefact.comment');
+            }
+
+            if (isset($data->showcomment) && $data->showcomment == $item->id) {
+                $item->highlight = 1;
             }
 
             if ($item->deletedby) {
@@ -514,6 +519,7 @@ function make_public_submit(Pieform $form, $values) {
     else {
         $url = get_config('wwwroot') . 'view/view.php?id=' . $viewid;
     }
+    $url .= '&showcomment=' . $comment->get('id');
 
     $author    = $comment->get('author');
     $owner     = $comment->get('owner');

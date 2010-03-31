@@ -208,6 +208,10 @@ td.narrow {
 .r1 td {
     background-color: #f3f3f3;
 }
+tr.highlight td {
+  background-color: #fffcd8 !important;
+  border-bottom: 1px solid #FFF;
+}
 .listing {
 	margin-bottom: .5em;
 }

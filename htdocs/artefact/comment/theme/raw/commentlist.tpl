@@ -1,5 +1,5 @@
   {foreach from=$data item=item}
-    <tr class="{cycle name=rows values='r0,r1'}">
+    <tr class="{cycle name=rows values='r0,r1'}{if $item->highlight} highlight{/if}">
       <td>
         {if $item->deletedmessage}
           <span class="details">{str tag=commentremoved section=artefact.comment}</span>
