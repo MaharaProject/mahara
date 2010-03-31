@@ -164,7 +164,7 @@ class ArtefactTypeComment extends ArtefactType {
         return array('author', 'owner', 'admin');
     }
 
-    public static function get_comments($limit=10, $offset=0, $lastpage=false, &$view=null, &$artefact=null) {
+    public static function get_comments($limit=10, $offset=0, $showcomment=null, &$view=null, &$artefact=null) {
         global $USER;
         $userid = $USER->get('id');
         $viewid = $view->get('id');
@@ -184,7 +184,6 @@ class ArtefactTypeComment extends ArtefactType {
         $result = (object) array(
             'limit'    => $limit,
             'offset'   => $offset,
-            'lastpage' => $lastpage,
             'view'     => $viewid,
             'artefact' => $artefactid,
             'canedit'  => $canedit,
@@ -209,8 +208,24 @@ class ArtefactTypeComment extends ArtefactType {
             WHERE ' . $where);
 
         if ($result->count > 0) {
-            if ($lastpage) { // Ignore $offset and just get the last page of feedback
-                $offset = (ceil($result->count / $limit) - 1) * $limit;
+            if ($showcomment == 'last') { // Ignore $offset and just get the last page of feedback
+                $result->forceoffset = $offset = (ceil($result->count / $limit) - 1) * $limit;
+            }
+            else if (is_numeric($showcomment)) {
+                // Ignore $offset and get the page that has the comment
+                // with id $showcomment on it.
+                // Fetch everything up to $showcomment to get its rank
+                // This will get ugly if there are 1000s of comments
+                $ids = get_column_sql('
+                SELECT a.id
+                FROM {artefact} a JOIN {artefact_comment_comment} c ON a.id = c.artefact
+                WHERE ' . $where . ' AND a.id <= ?
+                ORDER BY a.ctime', array($showcomment));
+                $last = end($ids);
+                if ($last == $showcomment) {
+                    $rank = key($ids);
+                    $result->forceoffset = $offset = ((ceil($rank / $limit) - 1) * $limit);
+                }
             }
 
             $comments = get_records_sql_assoc('
@@ -374,7 +389,7 @@ class ArtefactTypeComment extends ArtefactType {
             'count' => $data->count,
             'limit' => $data->limit,
             'offset' => $data->offset,
-            'lastpage' => $data->lastpage,
+            'forceoffset' => isset($data->forceoffset) ? $data->forceoffset : null,
             'resultcounttextsingular' => get_string('comment', 'artefact.comment'),
             'resultcounttextplural' => get_string('comments', 'artefact.comment'),
             'extradata' => $extradata,
@@ -732,11 +747,11 @@ function add_feedback_form_submit(Pieform $form, $values) {
 
     if ($artefact) {
         $goto = get_config('wwwroot') . 'view/artefact.php?artefact=' . $artefact->get('id') . '&view='.$view->get('id');
-        $newlist = ArtefactTypeComment::get_comments(10, 0, true, $view, $artefact);
+        $newlist = ArtefactTypeComment::get_comments(10, 0, 'last', $view, $artefact);
     }
     else {
         $goto = get_config('wwwroot') . 'view/view.php?id='.$view->get('id');
-        $newlist = ArtefactTypeComment::get_comments(10, 0, true, $view);
+        $newlist = ArtefactTypeComment::get_comments(10, 0, 'last', $view);
     }
     $form->reply(PIEFORM_OK, array(
         'message' => get_string('feedbacksubmitted', 'artefact.comment'),

@@ -49,8 +49,9 @@ if (!artefact_in_view($artefactid, $viewid)) {
 }
 
 // Feedback list pagination requires limit/offset params
-$limit    = param_integer('limit', 10);
-$offset   = param_integer('offset', 0);
+$limit       = param_integer('limit', 10);
+$offset      = param_integer('offset', 0);
+$showcomment = param_integer('showcomment', null);
 
 require_once(get_config('docroot') . 'artefact/lib.php');
 $artefact = artefact_instance_from_id($artefactid);
@@ -108,7 +109,7 @@ $artefactpath[] = array(
 
 
 // Feedback
-$feedback = ArtefactTypeComment::get_comments($limit, $offset, false, $view, $artefact);
+$feedback = ArtefactTypeComment::get_comments($limit, $offset, $showcomment, $view, $artefact);
 
 $javascript = <<<EOF
 var viewid = {$viewid};

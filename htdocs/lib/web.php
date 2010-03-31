@@ -2677,7 +2677,13 @@ function build_pagination($params) {
     }
 
     $params['offsetname'] = (isset($params['offsetname'])) ? $params['offsetname'] : 'offset';
-    $params['offset'] = param_integer($params['offsetname'], 0);
+    if (isset($params['forceoffset']) && !is_null($params['forceoffset'])) {
+        $params['offset'] = (int) $params['forceoffset'];
+    }
+    else {
+        $params['offset'] = param_integer($params['offsetname'], 0);
+    }
+
     // Correct for odd offsets
     $params['offset'] -= $params['offset'] % $params['limit'];
 

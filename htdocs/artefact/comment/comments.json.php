@@ -44,15 +44,14 @@ if (!empty($extradata->artefact) && !artefact_in_view($extradata->artefact, $ext
 }
 
 $limit    = param_integer('limit', 10);
-$offset   = param_integer('offset', 0);
+$offset   = param_integer('offset');
 
 if (!empty($extradata->artefact)) {
     $artefact = artefact_instance_from_id($extradata->artefact);
-    // $data = $artefact->get_comments($limit, $offset, $extradata->view);
 }
 
 $view = new View($extradata->view);
-$data = ArtefactTypeComment::get_comments($limit, $offset, false, $view, $artefact);
+$data = ArtefactTypeComment::get_comments($limit, $offset, null, $view, $artefact);
 
 json_reply(false, array('data' => $data));
 

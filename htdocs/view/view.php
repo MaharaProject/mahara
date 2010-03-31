@@ -69,8 +69,9 @@ if (!can_view_view($viewid, null, $usertoken, $mnettoken)) {
 }
 
 // Feedback list pagination requires limit/offset params
-$limit    = param_integer('limit', 10);
-$offset   = param_integer('offset', 0);
+$limit       = param_integer('limit', 10);
+$offset      = param_integer('offset', 0);
+$showcomment = param_integer('showcomment', null);
 
 $view = new View($viewid);
 
@@ -146,7 +147,7 @@ if ($USER->is_logged_in()) {
 
 $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
 
-$feedback = ArtefactTypeComment::get_comments($limit, $offset, false, $view);
+$feedback = ArtefactTypeComment::get_comments($limit, $offset, $showcomment, $view);
 
 // Set up theme
 $viewtheme = $view->get('theme');
