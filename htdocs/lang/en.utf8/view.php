@@ -77,6 +77,8 @@ $string['viewsownedbygroup'] = 'Views owned by this group';
 $string['viewssharedtogroup'] = 'Views shared to this group';
 $string['viewssharedtogroupbyothers'] = 'Views shared to this group by others';
 $string['viewssubmittedtogroup'] = 'Views submitted to this group';
+$string['submitaviewtogroup'] = 'Submit a view to this group';
+$string['youhavesubmitted'] = 'You have submitted <a href="%s">%s</a> to this group';
 
 // access levels
 $string['public'] = 'Public';

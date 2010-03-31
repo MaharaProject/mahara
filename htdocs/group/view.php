@@ -123,11 +123,15 @@ if ($role) {
     }
 }
 
-if (group_allows_submission($group->grouptype) &&
-    !get_record_select('view', 'owner = ? AND submittedgroup = ?', array($USER->get('id'), $group->id))
-    && ($viewdata = View::get_user_views())) {
+if (group_allows_submission($group->grouptype) && ($viewdata = View::get_user_views())) {
+    $submitted = get_record_select('view', 'owner = ? AND submittedgroup = ?', array($USER->get('id'), $group->id));
+    if (!$submitted) {
         $group_view_submission_form = group_view_submission_form($group->id, $viewdata);
-        $smarty->assign('group_view_submission_form', $group_view_submission_form);
+    }
+    else {
+        $group_view_submission_form = get_string('youhavesubmitted', 'view', get_config('wwwroot') . 'view/view.php?id=' . $submitted->id, $submitted->title);
+    }
+    $smarty->assign('group_view_submission_form', $group_view_submission_form);
 }
 
 $smarty->assign('role', $role);

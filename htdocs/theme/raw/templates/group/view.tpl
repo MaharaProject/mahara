@@ -63,7 +63,7 @@
 {/if}
 
 {if $group_view_submission_form}
-    <h3>{str tag="viewssubmittedtogroup" section="view"}</h3>
+    <h3>{str tag="submitaviewtogroup" section="view"}</h3>
     <div>{$group_view_submission_form}</div>
 {/if}
 

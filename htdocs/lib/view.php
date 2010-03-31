@@ -2131,9 +2131,7 @@ class View {
         if ($views = get_records_sql_array(
             "SELECT v.id, v.title
             FROM {view} v
-            LEFT OUTER JOIN {group} g on (v.submittedgroup = g.id AND g.deleted = 0)
-            LEFT OUTER JOIN {host} h on (v.submittedhost = h.wwwroot)
-            WHERe v.owner = ?
+            WHERE v.owner = ?
             AND v.type != 'profile'
             ORDER BY v.title, v.id
             ", array($userid))) {
