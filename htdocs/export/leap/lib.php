@@ -627,13 +627,18 @@ class LeapExportElement {
     }
 
     /**
-    * The id of the entry's author
-    * Override this if the author is different from the portfolio holder
+    * The name of the entry's author
     *
-    * @return int
+    * @return string
     */
     public function get_entry_author() {
-        return;
+        if ($author = $this->artefact->get('author')) {
+            if ($author != $this->artefact->get('owner')) {
+                return display_name($author);
+            }
+            return;
+        }
+        return $this->artefact->get('authorname');
     }
 
     /**
