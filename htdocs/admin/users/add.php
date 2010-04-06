@@ -199,10 +199,18 @@ function adduser_validate(Pieform $form, $values) {
             $form->set_error('leap2afile', get_string('failedtoobtainuploadedleapfile', 'admin'));
         }
 
+        if ($values['leap2afile']['type'] == 'application/octet-stream') {
+            // the browser wasn't sure, so use mime_content_type to guess
+            $mimetype = mime_content_type($filename);
+        }
+        else {
+            $mimetype = $values['leap2afile']['type'];
+        }
+
         safe_require('artefact', 'file');
         $ziptypes = PluginArtefactFile::get_mimetypes_from_description('zip');
 
-        if (in_array($values['leap2afile']['type'], $ziptypes)) {
+        if (in_array($mimetype, $ziptypes)) {
             // Unzip the file
             $command = sprintf('%s %s %s %s',
                 escapeshellcmd(get_config('pathtounzip')),
@@ -230,7 +238,7 @@ function adduser_validate(Pieform $form, $values) {
             }
 
         }
-        else if ($values['leap2afile']['type'] != 'text/xml') {
+        else if ($mimetype != 'text/xml') {
             $form->set_error('leap2afile', get_string('fileisnotaziporxmlfile', 'admin'));
         }
         $LEAP2A_FILE = $filename;

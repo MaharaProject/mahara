@@ -231,8 +231,8 @@ function user_authorise($token, $useragent) {
         throw new XmlrpcServerException('Unable to get information for the specified user');
     }
 
-    require(get_config('docroot') . 'artefact/lib.php');
-    require(get_config('docroot') . 'artefact/internal/lib.php');
+    require_once(get_config('docroot') . 'artefact/lib.php');
+    require_once(get_config('docroot') . 'artefact/internal/lib.php');
 
     $element_list = call_static_method('ArtefactTypeProfile', 'get_all_fields');
     $element_required = call_static_method('ArtefactTypeProfile', 'get_mandatory_fields');
@@ -362,12 +362,12 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
         foreach ($importer->get_return_data() as $k => $v) {
             $result->querystring .= $k . '=' . $v . '&';
         }
+        $importer->get('importertransport')->cleanup();
     } else {
         // or set ready to 1 for the next cronjob to go fetch it.
         $result->status = set_field('import_queue', 'ready', 1, 'id', $queue->id);
         $result->type = 'queued';
     }
-    $importer->get('importertransport')->cleanup();
     return $result;
 }
 

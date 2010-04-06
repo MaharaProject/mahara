@@ -473,9 +473,9 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         }
 
         $subscribers = get_records_sql_assoc('
-            SELECT "user" AS subscriber, \'topic\' AS type, key FROM {interaction_forum_subscription_topic} WHERE topic = ?
+            SELECT "user" AS subscriber, \'topic\' AS type, "key" FROM {interaction_forum_subscription_topic} WHERE topic = ?
             UNION
-            SELECT "user" AS subscriber, \'forum\' AS type, key FROM {interaction_forum_subscription_forum} WHERE forum = ?
+            SELECT "user" AS subscriber, \'forum\' AS type, "key" FROM {interaction_forum_subscription_forum} WHERE forum = ?
             ORDER BY type',
             array($post->topicid, $post->forumid)
         );

@@ -356,6 +356,9 @@ input[type=file] {
 input.text.required {
 	border: 1px solid #e98a88;
 }
+textarea {
+    resize: none;
+}
 
 /* error */
 input.error, select.error {
@@ -1521,6 +1524,7 @@ form#search input.text {
 	position: relative;
 	top: -30px;
 	left: -15px;
+        width: 50%;
 }
 
 /* Settings > Institution membership */

@@ -32,8 +32,8 @@ define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'view');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-require(get_config('libroot') . 'view.php');
-require('group.php');
+require_once(get_config('libroot') . 'view.php');
+require_once('group.php');
 
 // access key for roaming teachers
 $mnettoken = $SESSION->get('mnetuser') ? param_alphanum('mt', null) : null;
@@ -53,8 +53,8 @@ else if ($usertoken) {
     if (!$viewid = get_view_from_token($usertoken, true)) {
         throw new AccessDeniedException(get_string('accessdenied', 'error'));
     }
-    if ($usertoken != get_cookie('mviewaccess:'.$viewid)) {
-        set_cookie('mviewaccess:'.$viewid, $usertoken);
+    if ($usertoken != get_cookie('viewaccess:'.$viewid)) {
+        set_cookie('viewaccess:'.$viewid, $usertoken);
     }
 }
 else {

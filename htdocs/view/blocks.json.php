@@ -28,7 +28,7 @@
 define('INTERNAL', 1);
 define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
-require('view.php');
+require_once('view.php');
 
 $view = new View(param_integer('id'));
 $change = param_boolean('change', false);

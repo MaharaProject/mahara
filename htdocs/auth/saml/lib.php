@@ -89,10 +89,10 @@ class AuthSaml extends Auth {
             throw new AccessDeniedException();
         }
         
-        $remoteuser = $attributes[$this->config['user_attribute']][0];
-        $firstname = $attributes[$this->config['firstnamefield']][0];
-        $lastname = $attributes[$this->config['surnamefield']][0];
-        $email = $attributes[$this->config['emailfield']][0];
+        $remoteuser      = $attributes[$this->config['user_attribute']][0];
+        $firstname       = $attributes[$this->config['firstnamefield']][0];
+        $lastname        = $attributes[$this->config['surnamefield']][0];
+        $email           = $attributes[$this->config['emailfield']][0];
         $institutionname = $this->institution;
         
         $virgin = false;
@@ -134,11 +134,8 @@ class AuthSaml extends Auth {
                     throw new AccessDeniedException();
                 }
 
-                $user->find_by_username($remoteuser);
             }
-            else {
-                $user->find_by_instanceid_username($this->instanceid, $remoteuser, true);
-            }
+            $user->find_by_username($remoteuser);
 
             if ($user->get('suspendedcusr')) {
                 die_info(get_string('accountsuspended', 'mahara', strftime(get_string('strftimedaydate'), $user->get('suspendedctime')), $user->get('suspendedreason')));
@@ -178,6 +175,11 @@ class AuthSaml extends Auth {
             $user->firstname          = $firstname;
             $user->lastname           = $lastname;
             $user->email              = $email;
+
+            // must have these values
+            if (empty($firstname) || empty($lastname) || empty($email)) {
+                throw new AccessDeniedException();
+            }
 
             $user->authinstance       = empty($this->config['parent']) ? $this->instanceid : $this->parent;
 
