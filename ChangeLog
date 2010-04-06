@@ -1,3 +1,12 @@
+1.1.8 (2010-04-06)
+- Security fixes to bundled copy of smarty (CVE-2008-4810, CVE-2008-4811 and CVE-2009-1669)
+- Fix for SQL injection in MNET usernames (CVE-2010-0400)
+- Fix sql error preventing blocks being moved down two or more places within the same column
+- Respect orderby search parameter in mysql search_user()
+- Solves group pagination problem with Safari and other browsers (LP: #547521)
+- Don't refuse to serve files from inside dataroot when dataroot has a symlink in it (LP: #547289)
+- Fix delete group heading (LP: #547639)
+
 1.1.7 (2009-10-29)
 - Upgraded HTMLPurifier to 4.0.0
 - Fix creation of duplicate user accounts when using LDAP and XMLRPC authentication
