@@ -1216,7 +1216,8 @@ function get_new_username($desired) {
     $desired = strtolower(substr($desired, 0, $maxlen));
     $taken = get_column_sql('
         SELECT username FROM {usr}
-        WHERE username ' . db_ilike() . " '" . substr($desired, 0, $maxlen - 6) . "%'");
+        WHERE username ' . db_ilike() . " ?",
+        array(substr($desired, 0, $maxlen - 6) . '%'));
     if (!$taken) {
         return $desired;
     }
