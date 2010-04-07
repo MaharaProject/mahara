@@ -253,6 +253,7 @@ $siteoptionform = array(
             'title'        => get_string('userscanhiderealnames', 'admin'),
             'description'  => get_string('userscanhiderealnamesdescription', 'admin'),
             'defaultvalue' => get_config('userscanhiderealnames'),
+        ),
         'antispam' => array(
             'type'         => 'select',
             'title'        => get_string('antispam', 'admin'),
