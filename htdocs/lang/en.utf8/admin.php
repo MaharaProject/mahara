@@ -33,7 +33,7 @@ $string['administration'] = 'Administration';
 $string['installation'] = 'Installation';
 $string['release'] = 'version %s (%s)';
 $string['copyright'] = 'Copyright &copy; 2006 onwards, <a href="http://wiki.mahara.org/Contributors">Catalyst IT Ltd and others</a>';
-$string['agreelicense'] = 'I agree';
+$string['installmahara'] = 'Install Mahara';
 $string['component'] = 'Component or plugin';
 $string['continue'] = 'Continue';
 $string['coredata'] = 'core data';
