@@ -1394,6 +1394,9 @@ class View {
         if (!array_key_exists('before', $values) || empty($values['before'])) {
             throw new ParamOutOfRangeException(get_string('missingparamcolumn', 'error'));
         }
+        if (!array_key_exists($this->get('numcolumns') + 1, self::$layouts)) {
+            throw new ParamOutOfRangeException(get_string('cantaddcolumn', 'view'));
+        }
         db_begin();
         $this->set('numcolumns', $this->get('numcolumns') + 1);
         if ($values['before'] != ($this->get('numcolumns') + 1)) {
@@ -1425,6 +1428,9 @@ class View {
     public function removecolumn($values) {
         if (!array_key_exists('column', $values) || empty($values['column'])) {
             throw new ParamOutOfRangeException(get_string('missingparamcolumn', 'error'));
+        }
+        if (!array_key_exists($this->get('numcolumns') - 1, self::$layouts)) {
+            throw new ParamOutOfRangeException(get_string('cantremovecolumn', 'view'));
         }
         db_begin();
         $numcolumns = $this->get('numcolumns') - 1;

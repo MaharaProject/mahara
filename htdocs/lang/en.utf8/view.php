@@ -239,6 +239,8 @@ $string['25,50,25'] = 'Larger centre column';
 $string['15,70,15'] = 'Much larger centre column';
 $string['20,30,30,20'] = 'Larger centre columns';
 $string['noviewlayouts'] = 'There are no View layouts for a %s column View';
+$string['cantaddcolumn'] = 'You cannot add any more columns to this view';
+$string['cantremovecolumn'] = 'You cannot remove the last column from this view';
 
 $string['blocktypecategory.feeds'] = 'External feeds';
 $string['blocktypecategory.fileimagevideo'] = 'Files, images and video';
