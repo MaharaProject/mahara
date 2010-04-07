@@ -28,7 +28,7 @@
 defined('INTERNAL') || die();
 
 /**
- * Implements import of LEAP2A files
+ * Implements import of Leap2A files
  *
  * For more documentation, please see:
  * http://wiki.mahara.org/index.php?title=Developer_Area/Import%2F%2FExport/LEAP_Import
@@ -609,7 +609,7 @@ class PluginImportLeap extends PluginImport {
      * structure. If they're present, we use them to create a View using that 
      * structure.
      *
-     * This differs a bit from the LEAP2A specification, but we do so 
+     * This differs a bit from the Leap2A specification, but we do so 
      * deliberately to get 100% compatibility with Mahara to Mahara exports. 
      * Other systems can also construct content in the right format to trigger 
      * Mahara to import things as a full view.
@@ -779,7 +779,7 @@ class PluginImportLeap extends PluginImport {
     }
 
     /**
-     * Given an artefact record, looks through it for any leap2a style
+     * Given an artefact record, looks through it for any Leap2A style
      * references to other artefacts, and rewrite those to point at the created
      * ones.
      *
@@ -847,7 +847,7 @@ class PluginImportLeap extends PluginImport {
 
         $artefacts = $this->get_artefactids_imported_by_entryid($matches[4]);
         if (is_null($artefacts) || count($artefacts) != 1) {
-            // This can happen if a leap2a xml file is uploaded that refers to
+            // This can happen if a Leap2A xml file is uploaded that refers to
             // files that (naturally) weren't uploaded with it.
             log_debug("Warning: fixref was expecting one artefact to have been imported by entry {$matches[4]} but seems to have gotten " . count($artefacts));
             return $matches[0];
@@ -893,7 +893,7 @@ class PluginImportLeap extends PluginImport {
     /**
      * Returns xpath for an attribute matching a given curie
      *
-     * See http://wiki.cetis.ac.uk/2009-03/LEAP2A_elements#Use_of_CURIEs
+     * See http://wiki.cetis.ac.uk/2009-03/Leap2A_elements#Use_of_CURIEs
      *
      * @param string $attribute The attribute to match
      * @param string $namespace The namespace for the attribute value
@@ -961,7 +961,7 @@ class PluginImportLeap extends PluginImport {
      *
      * @param SimpleXMLElement $entry    The entry to check
      * $param PluginImportLeap $importer The importer
-     * @param string $category           The category to look in. See http://wiki.cetis.ac.uk/2009-03/LEAP2A_categories
+     * @param string $category           The category to look in. See http://wiki.cetis.ac.uk/2009-03/Leap2A_categories
      * @param string $term               The term to look for (see the docs for the appropriate category)
      * @return boolean Whether the entry has the term in the category
      */
@@ -1039,7 +1039,7 @@ class PluginImportLeap extends PluginImport {
      * Returned in a structure like so:
      * array(
      *     'start' => array(
-     *         'value' => 'w3c compliant date/time format, as allowed by LEAP2A',
+     *         'value' => 'w3c compliant date/time format, as allowed by Leap2A',
      *         'label' => 'label attribute, which is a plaintext version of the date',
      *     ),
      *     'end' => array(
@@ -1050,7 +1050,7 @@ class PluginImportLeap extends PluginImport {
      *     )
      * )
      *
-     * The only keys in the return value are those allowed by the LEAP2A spec, 
+     * The only keys in the return value are those allowed by the Leap2A spec, 
      * and only if they exist on the entry.
      *
      * The values may have the 'value', 'label' or both keys, depending on what 
@@ -1059,7 +1059,7 @@ class PluginImportLeap extends PluginImport {
      * Try and use the 'value' first, if you have a choice. Quite a few places 
      * in Mahara currently just store dates as plaintext though.
      *
-     * Spec reference: http://wiki.cetis.ac.uk/2009-03/LEAP2A_literals#date
+     * Spec reference: http://wiki.cetis.ac.uk/2009-03/Leap2A_literals#date
      */
     public static function get_leap_dates(SimpleXMLElement $entry) {
         $dates = array();

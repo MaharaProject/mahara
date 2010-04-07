@@ -140,7 +140,7 @@ class PluginArtefactInternal extends PluginArtefact {
      * profileinfo and contactinfo blocktypes. See the blocktypes'
      * export_blockinstance_config_leap method for more information.
      *
-     * LEAP2A export doesn't export profile related artefacts as entries, so we
+     * Leap2A export doesn't export profile related artefacts as entries, so we
      * need to take that into account when exporting config for it.
      *
      * @param BlockInstance $bi The blockinstance to export the config for.
@@ -179,7 +179,7 @@ class PluginArtefactInternal extends PluginArtefact {
                 $result['fields'] = json_encode(array($result['fields']));
             }
 
-            // Email addresses are not entries in leap2a (they're elements on
+            // Email addresses are not entries in Leap2A (they're elements on
             // the persondata element), so we export the actual address here
             // instead of an artefact ID.
             if (!empty($configdata['email']) && isset($cache[$owner][$configdata['email']])) {

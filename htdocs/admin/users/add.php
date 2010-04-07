@@ -295,10 +295,10 @@ function adduser_submit(Pieform $form, $values) {
 
         try {
             $importer->process();
-            log_info("Imported user account $user->id from leap2a file, see " . $importer->get('logfile') . ' for a full log');
+            log_info("Imported user account $user->id from Leap2A file, see " . $importer->get('logfile') . ' for a full log');
         }
         catch (ImportException $e) {
-            log_info("LEAP2A import failed: " . $e->getMessage());
+            log_info("Leap2A import failed: " . $e->getMessage());
             die_info(get_string('leap2aimportfailed', 'admin'));
         }
 

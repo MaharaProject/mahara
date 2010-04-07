@@ -28,9 +28,9 @@
 defined('INTERNAL') || die();
 
 /**
- * Implements LEAP2A import of blog related entries into Mahara
+ * Implements Leap2A import of blog related entries into Mahara
  *
- * For more information about LEAP blog importing, see:
+ * For more information about Leap blog importing, see:
  * http://wiki.mahara.org/Developer_Area/Import//Export/LEAP_Import/Blog_Artefact_Plugin
  *
  * TODO:
@@ -192,7 +192,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
                         $artefactids = $importer->get_artefactids_imported_by_entryid((string)$blogpostlink['href']);
                         if (isset($artefactids[0])) {
                             $blogpost->attach($artefactids[0]);
-                        } else { // it may be just an attached file, with no leap2a element in its own right ....
+                        } else { // it may be just an attached file, with no Leap2A element in its own right ....
                             if ($id = self::attach_linked_file($blogpostentry, $blogpostlink, $importer)) {
                                 $blogpost->attach($id);
                                 $newartefactmapping[(string)$blogpostlink['href']][] = $id;
@@ -236,8 +236,8 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
     }
 
     /**
-     * Attaches a file to a blogpost entry that was just linked directly, rather than having a leap2a entry
-     * See http://wiki.cetis.ac.uk/LEAP2A_relationships#Attachments
+     * Attaches a file to a blogpost entry that was just linked directly, rather than having a Leap2a entry
+     * See http://wiki.leapspecs.org/2A/files
      *
      * @param SimpleXMLElement $blogpostentry
      * @param SimpleXMLElement $blogpostlink
