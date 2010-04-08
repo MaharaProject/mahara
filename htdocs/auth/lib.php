@@ -1563,6 +1563,9 @@ function auth_generate_login_form() {
                 'title'       => get_string('password') . ':',
                 'description' => get_string('passworddescription'),
                 'defaultvalue'       => '',
+                'rules' => array(
+                    'required'    => true
+                )
             ),
             'submit' => array(
                 'type'  => 'submit',
