@@ -502,6 +502,7 @@ function submit_view_for_assessment($username, $viewid) {
     $view = new View($viewid);
 
     $view->set('submittedhost', $authinstance->config['wwwroot']);
+    $view->set('submittedtime', db_format_timestamp(time()));
 
     // Create secret key
     $access = View::new_token($view->get('id'), false);
@@ -544,6 +545,7 @@ function release_submitted_view($viewid, $assessmentdata, $teacherusername) {
 
     // Release the view for editing
     $view->set('submittedhost', null);
+    $view->set('submittedtime', null);
     $view->commit();
     db_commit();
 }

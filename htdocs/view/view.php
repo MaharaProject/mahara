@@ -94,6 +94,13 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
     // been submitted to, and is entitled to release the view, and to
     // upload an additional file when submitting feedback.
     $submittedgroup = get_record('group', 'id', $submittedgroup);
+    if ($view->get('submittedtime')) {
+        $pieces = explode(' ', $view->get('submittedtime'));
+        $text = get_string('viewsubmittedtogroupon', 'view', get_config('wwwroot') . 'group/view.php?id=' . $submittedgroup->id, $submittedgroup->name, $pieces[0], $pieces[1]);
+    }
+    else {
+        $text = get_string('viewsubmittedtogroup', 'view', get_config('wwwroot') . 'group/view.php?id=' . $submittedgroup->id, $submittedgroup->name);
+    }
     $releaseform = pieform(array(
         'name'     => 'releaseview',
         'method'   => 'post',
@@ -103,7 +110,7 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
         'elements' => array(
             'submittedview' => array(
                 'type'  => 'html',
-                'value' => get_string('viewsubmittedtogroup', 'view', get_config('wwwroot') . 'group/view.php?id=' . $submittedgroup->id, $submittedgroup->name),
+                'value' => $text,
             ),
             'submit' => array(
                 'type'  => 'submit',

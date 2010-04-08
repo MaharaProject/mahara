@@ -76,7 +76,7 @@ $smarty->display('view/submit.tpl');
 function submitview_submit(Pieform $form, $values) {
     global $SESSION, $USER, $viewid, $groupid, $group;
     db_begin();
-    update_record('view', array('submittedgroup' => $groupid), array('id' => $viewid));
+    update_record('view', array('submittedgroup' => $groupid, 'submittedtime' => db_format_timestamp(time())), array('id' => $viewid));
     activity_occurred('groupmessage', array(
         'subject'       => get_string('viewsubmitted', 'view'), // will be overwritten
         'message'       => get_string('viewsubmitted', 'view'), // will be overwritten

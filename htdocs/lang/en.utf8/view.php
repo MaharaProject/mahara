@@ -68,6 +68,7 @@ $string['views'] = 'views';
 $string['View'] = 'View';
 $string['Views'] = 'Views';
 $string['viewsubmittedtogroup'] = 'This View has been submitted to <a href="%s">%s</a>';
+$string['viewsubmittedtogroupon'] = 'This View was submitted to <a href="%s">%s</a> on %s at %s';
 $string['nobodycanseethisview2'] = 'Only you can see this View';
 $string['noviews'] = 'No Views.';
 $string['youhavenoviews'] = 'You have no Views.';
@@ -79,6 +80,7 @@ $string['viewssharedtogroupbyothers'] = 'Views shared to this group by others';
 $string['viewssubmittedtogroup'] = 'Views submitted to this group';
 $string['submitaviewtogroup'] = 'Submit a view to this group';
 $string['youhavesubmitted'] = 'You have submitted <a href="%s">%s</a> to this group';
+$string['youhavesubmittedon'] = 'You submitted <a href="%s">%s</a> to this group on %s at %s';
 
 // access levels
 $string['public'] = 'Public';
@@ -233,6 +235,7 @@ $string['viewtitleby'] = '%s by <a href="%s">%s</a>';
 $string['in'] = 'in';
 $string['noblocks'] = 'Sorry, no blocks in this category :(';
 $string['Preview'] = 'Preview';
+$string['timeofsubmission'] = 'Time of submission';
 
 $string['50,50'] = $string['33,33,33'] = $string['25,25,25,25'] = 'Equal widths';
 $string['67,33'] = 'Larger left column';

@@ -129,7 +129,13 @@ if (group_allows_submission($group->grouptype) && ($viewdata = View::get_user_vi
         $group_view_submission_form = group_view_submission_form($group->id, $viewdata);
     }
     else {
-        $group_view_submission_form = get_string('youhavesubmitted', 'view', get_config('wwwroot') . 'view/view.php?id=' . $submitted->id, $submitted->title);
+        if ($submitted->submittedtime) {
+            $pieces = explode(' ', $submitted->submittedtime);
+            $group_view_submission_form = get_string('youhavesubmittedon', 'view', get_config('wwwroot') . 'view/view.php?id=' . $submitted->id, $submitted->title, $pieces[0], $pieces[1]);
+        }
+        else {
+            $group_view_submission_form = get_string('youhavesubmitted', 'view', get_config('wwwroot') . 'view/view.php?id=' . $submitted->id, $submitted->title);
+        }
     }
     $smarty->assign('group_view_submission_form', $group_view_submission_form);
 }

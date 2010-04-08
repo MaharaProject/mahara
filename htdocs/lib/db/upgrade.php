@@ -1376,5 +1376,9 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('surbl', 0);
     }
 
+    if ($oldversion < 2010040800) {
+        execute_sql('ALTER TABLE {view} ADD COLUMN submittedtime TIMESTAMP');
+    }
+
     return $status;
 }

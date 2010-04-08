@@ -85,6 +85,9 @@
                         {$view.sharedby}
                     {/if}
                 {/if}
+                {if $view.submittedtime}
+                    <span> ({str tag=timeofsubmission section=view}: {$view.submittedtime})</span>
+                {/if}
                 <div>{$view.shortdescription}</div>
                 {if $view.tags}<div class="tags">{str tag=tags}: {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
             </td>

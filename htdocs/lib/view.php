@@ -43,6 +43,7 @@ class View {
     private $stopdate;
     private $submittedgroup;
     private $submittedhost;
+    private $submittedtime;
     private $title;
     private $description;
     private $loggedin;
@@ -743,6 +744,7 @@ class View {
         else if ($submitinfo['type'] == 'host') {
             $this->set('submittedhost', null);
         }
+        $this->set('submittedtime', null);
         $this->commit();
         $ownerlang = get_user_language($this->get('owner'));
         require_once('activity.php');
@@ -2007,8 +2009,8 @@ class View {
         }
         else {
             $count = count_records_select('view', 'owner = ? AND type != ?', array($userid, 'profile'));
-            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, v.type,
-                    g.id AS submitgroupid, g.name AS submitgroupname, h.wwwroot AS submithostwwwroot, h.name AS submithostname
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, v.type, v.submittedtime,
+                g.id AS submitgroupid, g.name AS submitgroupname, h.wwwroot AS submithostwwwroot, h.name AS submithostname
                 FROM {view} v
                 LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
                 LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)
@@ -2055,12 +2057,26 @@ class View {
                 $data[$i]['removable'] = self::can_remove_viewtype($viewdata[$i]->type);
                 $data[$i]['description'] = $viewdata[$i]->description;
                 if (!empty($viewdata[$i]->submitgroupid)) {
-                    $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view',
-                                                          get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
-                                                          $viewdata[$i]->submitgroupname);
+                    if (!empty($viewdata[$i]->submittedtime)) {
+                        $pieces = explode(' ', $viewdata[$i]->submittedtime);
+                        $data[$i]['submittedto'] = get_string('viewsubmittedtogroupon', 'view',
+                                                            get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
+                                                            $viewdata[$i]->submitgroupname, $pieces[0], $pieces[1]);
+                    }
+                    else {
+                        $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view',
+                                                            get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
+                                                            $viewdata[$i]->submitgroupname);
+                    }
                 }
                 else if (!empty($viewdata[$i]->submithostwwwroot)) {
-                    $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view', $viewdata[$i]->submithostwwwroot, $viewdata[$i]->submithostname);
+                    if (!empty($viewdata[$i]->submittedtime)) {
+                        $pieces = explode(' ', $viewdata[$i]->submittedtime);
+                        $data[$i]['submittedto'] = get_string('viewsubmittedtogroupon', 'view', $viewdata[$i]->submithostwwwroot, $viewdata[$i]->submithostname, $pieces[0], $pieces[1]);
+                    }
+                    else {
+                        $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view', $viewdata[$i]->submithostwwwroot, $viewdata[$i]->submithostname);
+                    }
                 }
                 $data[$i]['artefacts'] = array();
                 $data[$i]['accessgroups'] = array();
@@ -2448,7 +2464,7 @@ class View {
      */
     public static function get_submitted_views($groupid) {
         $viewdata = get_records_sql_assoc('
-            SELECT id, title, description, owner, ownerformat, "group", institution
+            SELECT id, title, description, owner, ownerformat, "group", institution, submittedtime
             FROM {view}
             WHERE submittedgroup = ?
             ORDER BY title, id',
