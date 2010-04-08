@@ -54,7 +54,7 @@ function available_spam_traps() {
     while ($file = readdir($handle)) {
         preg_match("/(.+)SpamTrap\.php/", $file, $name);
         if ($name) {
-            $results[strtolower($name[1])] = $name[1];
+            $results[strtolower($name[1])] = get_string($name[1], 'admin');
         }
     }
     return $results;

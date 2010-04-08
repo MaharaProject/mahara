@@ -597,4 +597,10 @@ $string['installed'] = 'Installed';
 $string['errors'] = 'Errors';
 $string['install'] = 'Install';
 $string['reinstall'] = 'Reinstall';
+
+// spam trap names
+$string['None'] = 'None';
+$string['Simple'] = 'Simple';
+$string['Advanced'] = 'Advanced';
+
 ?>
