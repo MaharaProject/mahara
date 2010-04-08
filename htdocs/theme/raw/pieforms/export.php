@@ -40,6 +40,9 @@ foreach ($elements as $key => $element) {
 }
 
 if ($body) {
+    echo '<div id="whatviewsselection" class="hidden"><a href="" id="selection_all">'
+        . get_string('selectall', 'export') . '</a> | <a href="" id="selection_reverse">'
+        . get_string('reverseselection', 'export') . '</a></div>';
     echo "<table>\n";
     foreach ($body as $rownum => $row) {
         if ($rownum == 0) {
