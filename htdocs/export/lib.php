@@ -92,7 +92,7 @@ abstract class PluginExport extends Plugin {
     /**
      * List of artefacts to export. Set up by constructor.
      */
-    protected $artefacts = array();
+    public $artefacts = array();
 
     /**
      * List of views to export. Set up by constructor.

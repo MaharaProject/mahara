@@ -34,18 +34,6 @@ defined('INTERNAL') || die();
 
 class LeapExportElementBlogpost extends LeapExportElement {
 
-    public function add_links() {
-       parent::add_links();
-        // add on attachments
-        if (!$attachments = $this->artefact->attachment_id_list()) {
-            return;
-        }
-        foreach ($attachments as $attachment) {
-            $f = artefact_instance_from_id($attachment);
-            $this->add_artefact_link($f, 'enclosure');
-        }
-    }
-
     public function get_content_type() {
         return 'html';
     }
