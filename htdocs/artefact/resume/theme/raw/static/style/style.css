@@ -52,6 +52,9 @@
 #resumewrap form {
 	margin: 0;
 }
+#container #resumewrap table td.errmsg {
+   padding-left: 2em;
+}
 fieldset legend.resumeh3 a {
 	background: none;
 	padding: 0;
