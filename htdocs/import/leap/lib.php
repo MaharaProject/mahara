@@ -41,6 +41,7 @@ class PluginImportLeap extends PluginImport {
     private $loadmapping = array();
     private $coreloadmapping = array();
     private $artefactids = array();
+    private $viewids = array();
     protected $filename;
 
     protected $persondataid = null;
@@ -443,6 +444,17 @@ class PluginImportLeap extends PluginImport {
 
             $loadedentries[] = $entryid;
         }
+
+        // Allow each plugin to load relationships to views if they need to
+        foreach ($loadedentries as $entryid) {
+            if (isset($this->loadmapping[$entryid])) {
+                $strategydata = $this->loadmapping[$entryid];
+                $classname = 'LeapImport' . ucfirst($strategydata['artefactplugin']);
+                $entry = $this->get_entry_by_id($entryid);
+                call_static_method($classname, 'setup_view_relationships',
+                    $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
+            }
+        }
     }
 
     private function import_completed() {
@@ -595,6 +607,7 @@ class PluginImportLeap extends PluginImport {
                     )
                 );
                 $view->addblockinstance($bi);
+                $this->viewids[(string)$entry->id] = $view->get('id');
             }
             break;
         default:
@@ -726,6 +739,7 @@ class PluginImportLeap extends PluginImport {
         $view->set('owner', $this->get('usr'));
 
         $view->commit();
+        $this->viewids[(string)$entry->id] = $view->get('id');
         return true;
     }
 
@@ -888,6 +902,13 @@ class PluginImportLeap extends PluginImport {
             return null;
         }
         return $this->artefactids[$entryid];
+    }
+
+    public function get_viewid_imported_by_entryid($entryid) {
+        if (!isset($this->viewids[$entryid])) {
+            return null;
+        }
+        return $this->viewids[$entryid];
     }
 
     /**
@@ -1274,6 +1295,13 @@ abstract class LeapImportArtefactPlugin {
      * @throws ImportException If the strategy is unrecognised
      */
     public static function setup_relationships(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
+    }
+
+    /**
+     * Gives plugins a chance to construct relationships between the newly
+     * created artefacts and newly created views.
+     */
+    public static function setup_view_relationships(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
     }
 
     /**
