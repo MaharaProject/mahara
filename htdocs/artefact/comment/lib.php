@@ -60,6 +60,39 @@ class PluginArtefactComment extends PluginArtefact {
             }
         }
     }
+
+    public static function view_export_extra_artefacts($viewids) {
+        $artefacts = array();
+        if (!$artefacts = get_column_sql("
+            SELECT artefact
+            FROM {artefact_comment_comment}
+            WHERE onview IN (" . join(',', $viewids) . ')', array())) {
+            return array();
+        }
+        if ($attachments = get_column_sql('
+            SELECT attachment
+            FROM {artefact_attachment}
+            WHERE artefact IN (' . join(',', $artefacts). ')')) {
+            $artefacts = array_merge($artefacts, $attachments);
+        }
+        return $artefacts;
+    }
+
+    public static function artefact_export_extra_artefacts($artefactids) {
+        if (!$artefacts = get_column_sql("
+            SELECT artefact
+            FROM {artefact_comment_comment}
+            WHERE onartefact IN (" . join(',', $artefactids) . ')', array())) {
+            return array();
+        }
+        if ($attachments = get_column_sql('
+            SELECT attachment
+            FROM {artefact_attachment}
+            WHERE artefact IN (' . join(',', $artefacts). ')')) {
+            $artefacts = array_merge($artefacts, $attachments);
+        }
+        return $artefacts;
+    }
 }
 
 class ArtefactTypeComment extends ArtefactType {
@@ -401,6 +434,10 @@ class ArtefactTypeComment extends ArtefactType {
         ));
         $data->pagination = $pagination['html'];
         $data->pagination_js = $pagination['javascript'];
+    }
+
+    public function render_self() {
+        return clean_html($this->get('description'));
     }
 
     public static function add_comment_form($defaultprivate=false) {
