@@ -48,11 +48,12 @@ class PluginArtefactBlog extends PluginArtefact {
     }
 
     public static function menu_items() {
+        global $USER;
         return array(
             array(
                 'path'   => 'myportfolio/blogs',
                 'url'    => 'artefact/blog/',
-                'title'  => get_string('myblogs', 'artefact.blog'),
+                'title'  => $USER->get_account_preference('multipleblogs') ? get_string('myblogs', 'artefact.blog') : get_string('myblog', 'artefact.blog'),
                 'weight' => 30,
             ),
         );
