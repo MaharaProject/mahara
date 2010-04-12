@@ -64,6 +64,3 @@ $string['registrationunsuccessful'] = 'Sorry, your registration attempt was unsu
 $string['usernamealreadytaken'] = 'Sorry, this username is already taken';
 $string['usernameinvalidform'] = 'Usernames may contain letters, numbers and most common symbols, and must be from 3 to 30 characters in length.  Spaces are not allowed.';
 $string['youmaynotregisterwithouttandc'] = 'You may not register unless you agree to abide by the <a href="terms.php">Terms and Conditions</a>';
-$string['youmustagreetothetermsandconditions'] = 'You must agree to the <a href="terms.php">Terms and Conditions</a>';
-
-?>

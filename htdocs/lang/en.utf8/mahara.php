@@ -96,6 +96,8 @@ $string['sortalpha'] = 'Sort tags alphabetically';
 $string['sortfreq'] = 'Sort tags by frequency';
 $string['sortresultsby'] = 'Sort results by:';
 $string['date'] = 'Date';
+$string['dateformatguide'] = 'Use the format YYYY/MM/DD';
+$string['datetimeformatguide'] = 'Use the format YYYY/MM/DD HH:MM';
 $string['filterresultsby'] = 'Filter results by:';
 $string['tagfilter_all'] = 'All';
 $string['tagfilter_file'] = 'Files';
@@ -319,16 +321,12 @@ $string['preferredname'] = 'Display Name';
 $string['usernamedescription'] = ' ';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
 $string['youaremasqueradingas'] = 'You are masquerading as %s.';
-$string['yournewpassword'] = 'Your new password';
+$string['yournewpassword'] = 'Your new password. Passwords must be at least six characters long and contain at least one digit and two letters';
 $string['yournewpasswordagain'] = 'Your new password again';
 $string['invalidsesskey'] = 'Invalid session key';
 $string['cannotremovedefaultemail'] = 'You cannot remove your primary email address';
 $string['emailtoolong'] = 'E-mail addresses cannot be longer that 255 characters';
 $string['mustspecifyoldpassword'] = 'You must specify your current password';
-$string['captchatitle'] = 'CAPTCHA Image';
-$string['captchaimage'] = 'CAPTCHA Image';
-$string['captchadescription'] = 'Enter the characters you see in the picture. Letters are not case sensitive';
-$string['captchaincorrect'] = 'Enter the letters as they are shown in the image';
 $string['Site'] = 'Site';
 
 // Misc. register stuff that could be used elsewhere
@@ -520,6 +518,9 @@ $string['Invitations'] = 'Invitations';
 $string['config'] = 'Config';
 
 $string['sendmessage'] = 'Send message';
+$string['spamtrap'] = 'Spam trap';
+$string['formerror'] = 'There was an error processing your submission. Please try again.';
+$string['formerroremail'] = 'Contact us at %s if you continue to have problems.';
 
 $string['notinstallable'] = 'Not installable!';
 $string['installedplugins'] = 'Installed plugins';

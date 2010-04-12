@@ -575,6 +575,7 @@
                 <FIELD NAME="atime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="submittedgroup" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="submittedhost" TYPE="char" LENGTH="255" NOTNULL="false" />
+                <FIELD NAME="submittedtime" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="numcolumns" TYPE="int" LENGTH="2" NOTNULL="true" />
                 <FIELD NAME="layout" TYPE="int" LENGTH="10"/>
                 <FIELD NAME="theme" TYPE="char" LENGTH="255" NOTNULL="false"/>

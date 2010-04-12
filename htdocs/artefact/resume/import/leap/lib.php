@@ -28,9 +28,9 @@
 defined('INTERNAL') || die();
 
 /**
- * Implements LEAP2A import of resume related entries into Mahara
+ * Implements Leap2A import of resume related entries into Mahara
  *
- * For more information about LEAP resume importing, see:
+ * For more information about Leap resume importing, see:
  * http://wiki.mahara.org/Developer_Area/Import//Export/LEAP_Import/Resume_Artefact_Plugin
  */
 class LeapImportResume extends LeapImportArtefactPlugin {
@@ -403,7 +403,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
 
                 if (!isset($leapattributes['field'])) {
                     // 'Field' is required
-                    // http://wiki.cetis.ac.uk/2009-03/LEAP2A_personal_data#field
+                    // http://wiki.cetis.ac.uk/2009-03/Leap2A_personal_data#field
                     $importer->trace('WARNING: persondata element did not have leap:field attribute');
                     continue;
                 }
@@ -466,7 +466,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
     }
 
     /**
-     * Converts a LEAP2A date point to a plain text version for resume date 
+     * Converts a Leap2A date point to a plain text version for resume date 
      * purposes.
      *
      * @param array $date The date - expected to come from {PluginImportLeap::....()}

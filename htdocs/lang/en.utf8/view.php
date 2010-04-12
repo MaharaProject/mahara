@@ -69,6 +69,7 @@ $string['views'] = 'views';
 $string['View'] = 'View';
 $string['Views'] = 'Views';
 $string['viewsubmittedtogroup'] = 'This View has been submitted to <a href="%s">%s</a>';
+$string['viewsubmittedtogroupon'] = 'This View was submitted to <a href="%s">%s</a> on %s at %s';
 $string['nobodycanseethisview2'] = 'Only you can see this View';
 $string['noviews'] = 'No Views.';
 $string['youhavenoviews'] = 'You have no Views.';
@@ -78,6 +79,9 @@ $string['viewsownedbygroup'] = 'Views owned by this group';
 $string['viewssharedtogroup'] = 'Views shared to this group';
 $string['viewssharedtogroupbyothers'] = 'Views shared to this group by others';
 $string['viewssubmittedtogroup'] = 'Views submitted to this group';
+$string['submitaviewtogroup'] = 'Submit a view to this group';
+$string['youhavesubmitted'] = 'You have submitted <a href="%s">%s</a> to this group';
+$string['youhavesubmittedon'] = 'You submitted <a href="%s">%s</a> to this group on %s at %s';
 
 // access levels
 $string['public'] = 'Public';
@@ -183,7 +187,7 @@ $string['confirmdeleteblockinstance'] = 'Are you sure you wish to delete this bl
 $string['blockinstanceconfiguredsuccessfully'] = 'Block configured successfully';
 
 $string['blocksintructionnoajax'] = 'Select a block and choose where to add it to your View. You can position a block using the arrow buttons in its titlebar';
-$string['blocksinstructionajax'] = 'Drag blocks below this line to add them to your View layout. You can drag blocks around your View layout to position them.';
+$string['blocksinstructionajax'] = 'This area shows a preview of what your View will look like.<br>Drag blocks below this line to add them to your View layout. You can drag blocks around your View layout to position them.';
 
 $string['addnewblockhere'] = 'Add new block here';
 $string['add'] = 'Add';
@@ -219,6 +223,7 @@ $string['viewtitleby'] = '%s by <a href="%s">%s</a>';
 $string['in'] = 'in';
 $string['noblocks'] = 'Sorry, no blocks in this category :(';
 $string['Preview'] = 'Preview';
+$string['timeofsubmission'] = 'Time of submission';
 
 $string['50,50'] = $string['33,33,33'] = $string['25,25,25,25'] = 'Equal widths';
 $string['67,33'] = 'Larger left column';
@@ -227,6 +232,8 @@ $string['25,50,25'] = 'Larger centre column';
 $string['15,70,15'] = 'Much larger centre column';
 $string['20,30,30,20'] = 'Larger centre columns';
 $string['noviewlayouts'] = 'There are no View layouts for a %s column View';
+$string['cantaddcolumn'] = 'You cannot add any more columns to this view';
+$string['cantremovecolumn'] = 'You cannot remove the last column from this view';
 
 $string['blocktypecategory.feeds'] = 'External feeds';
 $string['blocktypecategory.fileimagevideo'] = 'Files, images and video';

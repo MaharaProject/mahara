@@ -43,6 +43,7 @@ class View {
     private $stopdate;
     private $submittedgroup;
     private $submittedhost;
+    private $submittedtime;
     private $title;
     private $description;
     private $loggedin;
@@ -744,6 +745,7 @@ class View {
         else if ($submitinfo['type'] == 'host') {
             $this->set('submittedhost', null);
         }
+        $this->set('submittedtime', null);
         $this->commit();
         $ownerlang = get_user_language($this->get('owner'));
         require_once('activity.php');
@@ -1395,6 +1397,9 @@ class View {
         if (!array_key_exists('before', $values) || empty($values['before'])) {
             throw new ParamOutOfRangeException(get_string('missingparamcolumn', 'error'));
         }
+        if (!array_key_exists($this->get('numcolumns') + 1, self::$layouts)) {
+            throw new ParamOutOfRangeException(get_string('cantaddcolumn', 'view'));
+        }
         db_begin();
         $this->set('numcolumns', $this->get('numcolumns') + 1);
         if ($values['before'] != ($this->get('numcolumns') + 1)) {
@@ -1426,6 +1431,9 @@ class View {
     public function removecolumn($values) {
         if (!array_key_exists('column', $values) || empty($values['column'])) {
             throw new ParamOutOfRangeException(get_string('missingparamcolumn', 'error'));
+        }
+        if (!array_key_exists($this->get('numcolumns') - 1, self::$layouts)) {
+            throw new ParamOutOfRangeException(get_string('cantremovecolumn', 'view'));
         }
         db_begin();
         $numcolumns = $this->get('numcolumns') - 1;
@@ -2002,8 +2010,8 @@ class View {
         }
         else {
             $count = count_records_select('view', 'owner = ? AND type != ?', array($userid, 'profile'));
-            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, v.type,
-                    g.id AS submitgroupid, g.name AS submitgroupname, h.wwwroot AS submithostwwwroot, h.name AS submithostname
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, v.type, v.submittedtime,
+                g.id AS submitgroupid, g.name AS submitgroupname, h.wwwroot AS submithostwwwroot, h.name AS submithostname
                 FROM {view} v
                 LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
                 LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)
@@ -2050,12 +2058,26 @@ class View {
                 $data[$i]['removable'] = self::can_remove_viewtype($viewdata[$i]->type);
                 $data[$i]['description'] = $viewdata[$i]->description;
                 if (!empty($viewdata[$i]->submitgroupid)) {
-                    $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view',
-                                                          get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
-                                                          $viewdata[$i]->submitgroupname);
+                    if (!empty($viewdata[$i]->submittedtime)) {
+                        $pieces = explode(' ', $viewdata[$i]->submittedtime);
+                        $data[$i]['submittedto'] = get_string('viewsubmittedtogroupon', 'view',
+                                                            get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
+                                                            $viewdata[$i]->submitgroupname, $pieces[0], $pieces[1]);
+                    }
+                    else {
+                        $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view',
+                                                            get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
+                                                            $viewdata[$i]->submitgroupname);
+                    }
                 }
                 else if (!empty($viewdata[$i]->submithostwwwroot)) {
-                    $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view', $viewdata[$i]->submithostwwwroot, $viewdata[$i]->submithostname);
+                    if (!empty($viewdata[$i]->submittedtime)) {
+                        $pieces = explode(' ', $viewdata[$i]->submittedtime);
+                        $data[$i]['submittedto'] = get_string('viewsubmittedtogroupon', 'view', $viewdata[$i]->submithostwwwroot, $viewdata[$i]->submithostname, $pieces[0], $pieces[1]);
+                    }
+                    else {
+                        $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view', $viewdata[$i]->submithostwwwroot, $viewdata[$i]->submithostname);
+                    }
                 }
                 $data[$i]['artefacts'] = array();
                 $data[$i]['accessgroups'] = array();
@@ -2118,6 +2140,22 @@ class View {
         );
     }
 
+    public function get_user_views($userid=null) {
+        if (is_null($userid)) {
+            global $USER;
+            $userid = $USER->get('id');
+        }
+        if ($views = get_records_sql_array(
+            "SELECT v.id, v.title
+            FROM {view} v
+            WHERE v.owner = ?
+            AND v.type != 'profile'
+            ORDER BY v.title, v.id
+            ", array($userid))) {
+            return $views;
+        }
+        return array();
+    }
 
     /**
      * Returns an SQL snippet that can be used in a where clause to get views 
@@ -2427,7 +2465,7 @@ class View {
      */
     public static function get_submitted_views($groupid) {
         $viewdata = get_records_sql_assoc('
-            SELECT id, title, description, owner, ownerformat, "group", institution
+            SELECT id, title, description, owner, ownerformat, "group", institution, submittedtime
             FROM {view}
             WHERE submittedgroup = ?
             ORDER BY title, id',
@@ -2776,6 +2814,52 @@ function createview_cancel_submit(Pieform $form, $values) {
         redirect(get_config('wwwroot') . 'view/institutionviews.php?institution=' . $values['institution']);
     }
     redirect(get_config('wwwroot') . 'view/');
+}
+
+function view_group_submission_form($viewid, $tutorgroupdata, $returnto=null) {
+    $options = array();
+    foreach ($tutorgroupdata as $group) {
+        $options[$group->id] = $group->name;
+    }
+    // This form sucks from a language string point of view. It should
+    // use pieforms' form template feature
+    return pieform(array(
+        'name' => 'view_group_submission_form_' . $viewid,
+        'method' => 'post',
+        'renderer' => 'oneline',
+        'autofocus' => false,
+        'successcallback' => 'view_group_submission_form_submit',
+        'elements' => array(
+            'text1' => array(
+                'type' => 'html', 'value' => get_string('submitthisviewto', 'view') . ' ',
+            ),
+            'options' => array(
+                'type' => 'select',
+                'collapseifoneoption' => false,
+                'options' => $options,
+            ),
+            'text2' => array(
+                'type' => 'html',
+                'value' => get_string('forassessment', 'view'),
+            ),
+            'submit' => array(
+                'type' => 'submit',
+                'value' => get_string('submit')
+            ),
+            'view' => array(
+                'type' => 'hidden',
+                'value' => $viewid
+            ),
+            'returnto' => array(
+                'type' => 'hidden',
+                'value' => $returnto,
+            )
+        ),
+    ));
+}
+
+function view_group_submission_form_submit(Pieform $form, $values) {
+    redirect('/view/submit.php?id=' . $values['view'] . '&group=' . $values['options'] . '&returnto=' . $values['returnto']);
 }
 
 

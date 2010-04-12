@@ -1,6 +1,6 @@
     <h3><a href="{$WWWROOT}user/view.php?id={$sbdata.id}">{$sbdata.myname|escape}</a> <span class="s" id="profile-sideblock-username">(<a href="{$WWWROOT}user/view.php?id={$sbdata.id}">{$sbdata.username|escape}</a>)</span></h3>
     <div class="sideblock-content">
-        <div id="user-profileicon"><a href="{$WWWROOT}user/view.php?id={$sbdata.id}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=50&amp;maxheight=50&amp;id={$sbdata.id}&amp;earlyexpiry=1" alt="" width="50" height="50"></a></div>
+        <div id="user-profileicon"><a href="{$WWWROOT}user/view.php?id={$sbdata.id}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=50&amp;maxheight=50&amp;id={$sbdata.id}&amp;earlyexpiry=1" alt=""></a></div>
 {if $sbdata.mnetloggedinfrom}        <p>{$sbdata.mnetloggedinfrom}</p>
 {/if}
         <ul>

@@ -283,4 +283,7 @@ $string['Joined'] = 'Joined';
 
 $string['instructions:invite'] = 'This is an invite-only group. Invite users through their profile pages.';
 $string['instructions:controlled'] = 'This is a controlled membership group. Add users through their profile pages.';
+
+// View submission
+$string['submit'] = 'Submit';
 ?>

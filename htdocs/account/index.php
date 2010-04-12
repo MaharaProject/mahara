@@ -154,6 +154,13 @@ $elements['addremovecolumns'] = array(
     'separator' => '<br>',
     'help' => 'true'
 );
+// TODO: add a way for plugins (like blog!) to have account preferences
+$elements['multipleblogs'] = array(
+    'type' => 'checkbox',
+    'title'=> get_string('enablemultipleblogs' ,'account'),
+    'description' => get_string('enablemultipleblogsdescription', 'account'),
+    'defaultvalue' => $prefs->multipleblogs,
+);
 if (get_config('showtagssideblock')) {
     $elements['tagssideblockmaxtags'] = array(
         'type'         => 'text',

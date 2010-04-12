@@ -28,7 +28,7 @@
 defined('INTERNAL') || die();
 
 /**
-* LEAP export plugin.  See http://wiki.cetis.ac.uk/LEAP2A_specification and
+* LEAP export plugin.  See http://wiki.cetis.ac.uk/2009-03/Leap2A_specification and
 * http://wiki.mahara.org/Developer_Area/Import%2f%2fExport/LEAP_Export
 */
 class PluginExportLeap extends PluginExport {
@@ -708,7 +708,7 @@ class LeapExportElement {
 
     /**
     * The LEAP element type
-    * See http://wiki.cetis.ac.uk/2009-03/LEAP2A_types
+    * See http://wiki.cetis.ac.uk/2009-03/Leap2A_types
     *
     * @return string
     */
@@ -841,7 +841,7 @@ class LeapExportElement {
 
     /**
      * Converts a tag to a 'normalised' tag, as per 
-     * http://wiki.cetis.ac.uk/2009-03/LEAP2A_categories#Plain_tags
+     * http://wiki.cetis.ac.uk/2009-03/Leap2A_categories#Plain_tags
      *
      * The method of normalisation isn't specified at
      * the time of this being written.

@@ -1370,7 +1370,46 @@ function xmldb_core_upgrade($oldversion=0) {
         ");
     }
 
-    if ($oldversion < 2010031888 && table_exists(new XMLDBTable('view_feedback'))) {
+    if ($oldversion < 2010040700) {
+        set_antispam_defaults();
+    }
+
+    if ($oldversion < 2010040800) {
+        execute_sql('ALTER TABLE {view} ADD COLUMN submittedtime TIMESTAMP');
+    }
+
+    if ($oldversion < 2010041200) {
+        delete_records('config', 'field', 'captchaoncontactform');
+        delete_records('config', 'field', 'captchaonregisterform');
+    }
+
+    if ($oldversion < 2010041201) {
+        $sql = "
+            SELECT u.id
+            FROM {usr} u
+            JOIN {artefact} a
+                ON a.owner = u.id
+            WHERE a.artefacttype = 'blog'
+            GROUP BY u.id
+            HAVING COUNT(a.id) > 1";
+
+        $manyblogusers = get_records_sql_array($sql, null);
+
+        foreach($manyblogusers as $u) {
+            $where = (object)array(
+                'usr' => $u->id,
+                'field' => 'multipleblogs',
+            );
+            $data = (object)array(
+                'usr' => $u->id,
+                'field' => 'multipleblogs',
+                'value' => 1,
+            );
+            ensure_record_exists('usr_account_preference', $where, $data);
+        }
+    }
+
+    if ($oldversion < 2010041288 && table_exists(new XMLDBTable('view_feedback'))) {
         // Add author, authorname to artefact table
         $table = new XMLDBTable('artefact');
         $field = new XMLDBField('author');

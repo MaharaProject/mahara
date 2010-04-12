@@ -1860,12 +1860,14 @@ function mahara_standard_nav() {
             'url' => '',
             'title' => get_string('home'),
             'weight' => 10,
+            'accesskey' => 'h',
         ),
         array(
             'path' => 'myportfolio',
             'url' => 'view/',
             'title' => get_string('myportfolio'),
             'weight' => 30,
+            'accesskey' => 'v',
         ),
         array(
             'path' => 'myportfolio/views',
@@ -1885,6 +1887,7 @@ function mahara_standard_nav() {
             'url' => 'group/mygroups.php',
             'title' => get_string('groups'),
             'weight' => 40,
+            'accesskey' => 'g',
         ),
         array(
             'path' => 'groups/mygroups',

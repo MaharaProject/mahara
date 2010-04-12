@@ -47,7 +47,7 @@
 
 /********************** Bottom pane of Edit View *************************/
 #page #bottom-pane {
-    border: 5px solid #eee;
+    border: 5px solid #ccc;
 }
 #blocksinstruction {
     background: #eee;
@@ -63,6 +63,7 @@
 
 #block-placeholder {
     border: 2px dashed #bfbfbf;
+    margin-bottom: 2px;
 }
 
 /**************** Blockinstance **********************/

@@ -1,7 +1,7 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ * Copyright (C) 2006-2010 Catalyst IT Ltd and others; see:
  *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,17 +18,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage export.leap
+ * @subpackage antispam
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2010 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Leap2A';
-// TODO: link Leap2A standard format to a primer document on our wiki about Leap2A
-$string['description'] = 'Gives you an export in the <a href="">Leap2A standard format</a>. You can later use this to import your data into <a href="http://wiki.mahara.org/Developer_Area/Import%%2f%%2fExport/Interoperability">other Leap2A compliant systems</a>, although the export is hard for humans to read.';
+/**
+ * Base class for spam traps. Defines no evaluation schemes, so its
+ * is_spam() method will always return false.
+ */
+class NoneSpamTrap {
 
-?>
+    public function __construct($fields) {
+        $this->fields = $fields;
+    }
+
+    public function is_spam() {
+        // if no spam score threshold is defined, never call something spam
+        if (!defined('SPAM_SCORE')) {
+            return false;
+        }
+        $score = 0;
+        foreach ($this->fields as $field) {
+            $method = 'evaluate_' . $field['type'];
+            if (method_exists($this, $method)) {
+                $score += $this->$method($field['value']);
+            }
+        }
+        if ($score > SPAM_SCORE) {
+            return true;
+        }
+        return false;
+    }
+}

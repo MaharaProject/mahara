@@ -588,6 +588,7 @@ function core_postinst() {
         (author IS NULL     AND authorname IS NOT NULL)
     )');
 
+    set_antispam_defaults();
     set_remoteavatars_default();
     reload_html_filters();
     return $status;
@@ -670,8 +671,6 @@ function core_install_firstcoredata_defaults() {
     set_config('createpublicgroups', 'all');
     set_config('allowpublicviews', 1);
     set_config('allowpublicprofiles', 1);
-    set_config('captchaoncontactform', 1);
-    set_config('captchaonregisterform', 1);
     set_config('showselfsearchsideblock', 0);
     set_config('showtagssideblock', 1);
     set_config('tagssideblockmaxtags', 20);
@@ -1051,4 +1050,20 @@ function set_remoteavatars_default() {
         }
         curl_close($ch);
     }
+}
+
+/**
+ * Use meaningful defaults for the antispam settings.
+ */
+function set_antispam_defaults() {
+    set_config('formsecret', get_random_key());
+    require_once(get_config('docroot') . 'lib/antispam.php');
+    if(checkdnsrr('test.uribl.com.black.uribl.com', 'A')) {
+        set_config('antispam', 'advanced');
+    }
+    else {
+        set_config('antispam', 'simple');
+    }
+    set_config('spamhaus', 0);
+    set_config('surbl', 0);
 }

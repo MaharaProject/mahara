@@ -373,10 +373,6 @@ abstract class ArtefactType {
         }
     }
     
-    public function is_container() {
-        return false;
-    }
-
     /** 
      * This method updates the contents of the artefact table only.  If your
      * artefact has extra information in other tables, you need to override
@@ -661,16 +657,6 @@ abstract class ArtefactType {
 
 
     /**
-     * By default public feedback can be placed on all artefacts.
-     * Artefact types which don't want to allow public feedback should
-     * redefine this function.
-     */
-    public function public_feedback_allowed() {
-        return true;
-    }
-
-
-    /**
      * By default users are notified of all feedback on artefacts
      * which they own.  Artefact types which want to allow this
      * notification to be turned off should redefine this function.
@@ -711,13 +697,6 @@ abstract class ArtefactType {
      * @abstract
      */
     public static abstract function is_singular();
-
-    /**
-     * Whether the 'note' field is for the artefact's private use
-     */
-    public static function is_note_private() {
-        return false;
-    }
 
     /**
      * Returns a list of key => value pairs where the key is either '_default'

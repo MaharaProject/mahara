@@ -41,7 +41,7 @@ else {
 }
 require_once('pieforms/pieform.php');
 require(get_config('libroot') . 'upgrade.php');
-require(get_config('libroot') . 'registration.php');
+require_once(get_config('libroot') . 'registration.php');
 
 $upgrades = check_upgrades();
 

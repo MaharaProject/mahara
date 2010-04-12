@@ -67,6 +67,10 @@ function renderAccessListItem(item) {
             TR(null,
                 TH(null, get_string('To') + ':'),
                 TD(null, makeCalendarInput(item, 'stop'), makeCalendarLink(item, 'stop'))
+            ),
+            TR(null,
+                TH(null, null),
+                TD(null, get_string('datetimeformatguide'))
             )
         )
     );

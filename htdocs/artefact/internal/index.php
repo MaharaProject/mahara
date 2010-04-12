@@ -104,6 +104,9 @@ foreach ( $element_list as $element => $type ) {
         $items[$element]['rows'] = 4;
         $items[$element]['cols'] = 50;
     }
+    if ($type == 'text') {
+        $items[$element]['size'] = 30;
+    }
     if ($element == 'country') {
         $countries = getoptions_country();
         $items[$element]['options'] = array('' => get_string('nocountryselected')) + $countries;

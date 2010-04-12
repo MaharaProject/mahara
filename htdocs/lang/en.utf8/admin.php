@@ -33,7 +33,7 @@ $string['administration'] = 'Administration';
 $string['installation'] = 'Installation';
 $string['release'] = 'version %s (%s)';
 $string['copyright'] = 'Copyright &copy; 2006 onwards, <a href="http://wiki.mahara.org/Contributors">Catalyst IT Ltd and others</a>';
-$string['agreelicense'] = 'I agree';
+$string['installmahara'] = 'Install Mahara';
 $string['component'] = 'Component or plugin';
 $string['continue'] = 'Continue';
 $string['coredata'] = 'core data';
@@ -144,16 +144,15 @@ $string['reopensitedetail'] = 'Your site is closed.  Site administrators may sta
 // Site options
 $string['adminsonly'] = 'Administrators only';
 $string['adminsandstaffonly'] = 'Administrators and Staff only';
+$string['advanced'] = 'Advanced';
 $string['allowpublicviews'] = 'Allow public views';
 $string['allowpublicviewsdescription'] = 'If set to yes, users will be able to create portfolio Views that are accessable to the public rather than only to logged in users';
 $string['allowpublicprofiles'] = 'Allow public profiles';
 $string['allowpublicprofilesdescription'] = 'If set to yes, users will be able to set their profile Views to be accessable to the public rather than only to logged in users';
 $string['anonymouscomments'] = 'Anonymous Comments';
 $string['anonymouscommentsdescription'] = 'If checked, logged-out users can leave comments on public Views or Views they can access by secret URL.';
-$string['captchaonregisterform'] = 'Captcha required for registration';
-$string['captchaonregisterformdescription'] = 'Require users to type letters from a captcha image when submitting the registration form';
-$string['captchaoncontactform'] = 'Captcha required for contact us';
-$string['captchaoncontactformdescription'] = 'Require logged-out users to type letters from a captcha image when submitting the Contact Us form';
+$string['antispam'] = 'Anti-spam';
+$string['antispamdescription'] = 'The type of anti-spam measures used on publicly visible forms';
 $string['defaultaccountinactiveexpire'] = 'Default account inactivity time';
 $string['defaultaccountinactiveexpiredescription'] = 'How long a user account will remain active without the user logging in';
 $string['defaultaccountinactivewarn'] = 'Warning time for inactivity/expiry';
@@ -168,6 +167,7 @@ $string['institutionautosuspenddescription'] = 'If checked, expired institutions
 $string['institutionexpirynotification'] = 'Warning time for institution expiry';
 $string['institutionexpirynotificationdescription'] = 'A notification message will be sent to site and institutional admins the long before a site expires';
 $string['language'] = 'Language';
+$string['none'] = 'None';
 $string['country'] = 'Country';
 $string['pathtoclam'] = 'Path to clam';
 $string['pathtoclamdescription'] = 'The filesystem path to clamscan or clamdscan';
@@ -182,6 +182,7 @@ $string['showselfsearchsideblock'] = 'Enable Portfolio Search';
 $string['showselfsearchsideblockdescription'] = 'Display the "Search My Portfolio" side block in the My Portfolio section of the site';
 $string['showtagssideblock'] = 'Enable Tag Cloud';
 $string['showtagssideblockdescription'] = 'If enabled, users will see a side block in the My Portfolio section of the site with a list of their most frequently used tags';
+$string['simple'] = 'Simple';
 $string['sitedefault'] = 'Site Default';
 $string['sitelanguagedescription'] = 'The default language for the site';
 $string['sitecountrydescription'] = 'The default country for the site';
@@ -192,6 +193,10 @@ $string['siteoptionsset'] = 'Site options have been updated.';
 $string['sitethemedescription'] = 'The default theme for the site';
 $string['smallviewheaders'] = 'Small View page headers';
 $string['smallviewheadersdescription'] = 'If enabled, a small header and site navigation block will be displayed when viewing or editing Views.';
+$string['spamhaus'] = 'Enable Spamhaus URL blacklist';
+$string['spamhausdescription'] = 'If enabled, URLs will be checked against the Spamhaus DNSBL';
+$string['surbl'] = 'Enable SURBL URL blacklist';
+$string['surbldescription'] = 'If enabled, URLs will be checked against the SURBL DNSBL';
 $string['tagssideblockmaxtags'] = 'Maximum Tags in Cloud';
 $string['tagssideblockmaxtagsdescription'] = 'The default number of tags to display in user tag clouds';
 $string['trustedsites'] = 'Trusted sites';
@@ -332,9 +337,9 @@ $string['uploadcsvsomeuserscouldnotbeemailed'] = 'Some users could not be e-mail
 $string['uploadcsvusersaddedsuccessfully'] = 'The users in the file have been added successfully';
 $string['uploadcsvfailedusersexceedmaxallowed'] = 'No users have been added because there are too many users in your file.  The number of users in the institution would have exceeded the maximum number allowed.';
 
-// Bulk leap2a import
-$string['bulkleap2aimport'] = 'Import users from LEAP2A files';
-$string['bulkleap2aimportdescription'] = '<p>You can import users in bulk from a collection of LEAP2A files on your server.  You must specify a zip file on the server filesystem which contains all the LEAP2A zip files, and a single CSV file called usernames.csv, mapping usernames to filenames.</p>
+// Bulk Leap2A import
+$string['bulkleap2aimport'] = 'Import users from Leap2A files';
+$string['bulkleap2aimportdescription'] = '<p>You can import users in bulk from a collection of Leap2A files on your server.  You must specify a zip file on the server filesystem which contains all the Leap2A zip files, and a single CSV file called usernames.csv, mapping usernames to filenames.</p>
 <p>usernames.csv will look something like this:</p>
 <pre>
 &nbsp;&nbsp;bob,mahara-export-leap-user8-1265165366.zip<br>
@@ -347,15 +352,15 @@ $string['importfile'] = 'Bulk export file';
 $string['importfilemissinglisting'] = 'The bulk export file is missing a file named usernames.csv. Did you use the Mahara bulk exporter to export these users?';
 $string['importfilenotafile'] = 'Error during form submission: file was not recognised';
 $string['importfilenotreadable'] = 'Error during form submission: file was not readable';
-$string['bulkleap2aimportfiledescription'] = 'The zip file on your server containing all exported users (in LEAP2A format) along with a CSV listing of usernames';
+$string['bulkleap2aimportfiledescription'] = 'The zip file on your server containing all exported users (in Leap2A format) along with a CSV listing of usernames';
 $string['importednuserssuccessfully'] = 'Imported %d of %d users successfully';
 $string['Import'] = 'Import';
 $string['bulkimportdirdoesntexist'] = 'The directory %s does not exist';
 $string['unabletoreadbulkimportdir'] = 'The directory %s is unreadable';
 $string['unabletoreadcsvfile'] = 'Unable to read csv file %s';
-$string['importfilenotreadable'] = 'Unable to read LEAP2A file %s';
+$string['importfilenotreadable'] = 'Unable to read Leap2A file %s';
 $string['importfileisnotazipfile'] = 'Import file %s was not detected as a zip file';
-$string['unzipfailed'] = 'Failed to unzip the LEAP2A file %s. See the error log for more information.';
+$string['unzipfailed'] = 'Failed to unzip the Leap2A file %s. See the error log for more information.';
 $string['importfailedfornusers'] = 'Import failed for %d of %d users';
 $string['invalidlistingfile'] = 'Invalid username listing. Did you use the Mahara bulk exporter to export these users?';
 
@@ -433,17 +438,17 @@ $string['basicinformationforthisuser'] = 'Basic information for this user.';
 $string['clickthebuttontocreatetheuser'] = 'Click the button to create the user.';
 $string['createnewuserfromscratch'] = 'Create new user from scratch';
 $string['createuser'] = 'Create User';
-$string['failedtoobtainuploadedleapfile'] = 'Failed to obtain the uploaded LEAP2A file';
-$string['failedtounzipleap2afile'] = 'Failed to unzip the LEAP2A file. Check the error log for more information';
+$string['failedtoobtainuploadedleapfile'] = 'Failed to obtain the uploaded Leap2A file';
+$string['failedtounzipleap2afile'] = 'Failed to unzip the Leap2A file. Check the error log for more information';
 $string['fileisnotaziporxmlfile'] = 'This file has not been detected to be a zipfile or XML file';
 $string['howdoyouwanttocreatethisuser'] = 'How do you want to create this user?';
-$string['leap2aimportfailed'] = '<p><strong>Sorry - Importing the LEAP2A file failed.</strong></p><p>This could be because you did not select a valid LEAP2A file to upload. Alternatively, there may be a bug in Mahara causing your file to fail, even though it is valid.</p><p>Please <a href="add.php">go back and try again</a>, and if the problem persists, you may want to post to the <a href="http://mahara.org/forums/">Mahara Forums</a> to ask for help. Be prepared to be asked for a copy of your file!</p>';
+$string['leap2aimportfailed'] = '<p><strong>Sorry - Importing the Leap2A file failed.</strong></p><p>This could be because you did not select a valid Leap2A file to upload. Alternatively, there may be a bug in Mahara causing your file to fail, even though it is valid.</p><p>Please <a href="add.php">go back and try again</a>, and if the problem persists, you may want to post to the <a href="http://mahara.org/forums/">Mahara Forums</a> to ask for help. Be prepared to be asked for a copy of your file!</p>';
 $string['newuseremailnotsent'] = 'Failed to send welcome email to new user.';
 $string['newusercreated'] = 'New user account created successfully';
 $string['noleap2axmlfiledetected'] = 'No leap2a.xml file detected - please check your export file again';
 $string['Or...'] = 'Or...';
 $string['userwillreceiveemailandhastochangepassword'] = 'They will receive an e-mail informing them of their new account details. On first log in, they will be forced to change their password.';
-$string['uploadleap2afile'] = 'Upload LEAP2A File';
+$string['uploadleap2afile'] = 'Upload Leap2A File';
 
 $string['usercreationmethod'] = '1 - User Creation Method';
 $string['basicdetails'] = '2 - Basic Details';
@@ -565,11 +570,11 @@ $string['unsuspendinstitutiondescription'] = 'Here you may unsuspend an institut
 $string['unsuspendinstitutiondescription_top'] = '<em>Beware:</em> Unsuspending an institution without resetting or turning off its expiry date may result in a daily re-suspension.';
 $string['unsuspendinstitutiondescription_top_instadmin'] = 'Users of suspended institutions are unable to log in. Contact site administrator to unsuspend the institution.';
 
-// Bulk LEAP2A User export
+// Bulk Leap2A User export
 $string['bulkexport'] = 'Export users';
 $string['bulkexportempty'] = 'Nothing suitable to export. Please double-check the list of usernames.';
 $string['bulkexportinstitution'] = 'The institution from which all users should be exported';
-$string['bulkexporttitle'] = 'Export users to LEAP2A files';
+$string['bulkexporttitle'] = 'Export users to Leap2A files';
 $string['bulkexportdescription'] = 'Choose an institution to export <b>OR</b> specify a list of usernames:';
 $string['bulkexportusernames'] = 'Usernames to export';
 $string['bulkexportusernamesdescription'] = 'A list of the users (one username per line) to be exported along with their data';
@@ -594,4 +599,10 @@ $string['installed'] = 'Installed';
 $string['errors'] = 'Errors';
 $string['install'] = 'Install';
 $string['reinstall'] = 'Reinstall';
+
+// spam trap names
+$string['None'] = 'None';
+$string['Simple'] = 'Simple';
+$string['Advanced'] = 'Advanced';
+
 ?>

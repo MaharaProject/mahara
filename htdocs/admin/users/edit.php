@@ -189,8 +189,8 @@ function edituser_site_submit(Pieform $form, $values) {
         // Reset the sent and bounce counts otherwise mail will be disabled
         // on the next send attempt
         $u = new StdClass;
-        $u->email = $user->get('email');
-        $u->id = $user->get('id');
+        $u->email = $user->email;
+        $u->id = $user->id;
         update_bounce_count($u,true);
         update_send_count($u,true);
     }

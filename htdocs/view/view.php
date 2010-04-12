@@ -32,8 +32,9 @@ define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'view');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-require(get_config('libroot') . 'view.php');
-require('group.php');
+
+require_once(get_config('libroot') . 'view.php');
+require_once('group.php');
 safe_require('artefact', 'comment');
 
 // access key for roaming teachers
@@ -99,6 +100,13 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
     // The user is a tutor of the group that this view has
     // been submitted to, and is entitled to release the view
     $submittedgroup = get_record('group', 'id', $submittedgroup);
+    if ($view->get('submittedtime')) {
+        $pieces = explode(' ', $view->get('submittedtime'));
+        $text = get_string('viewsubmittedtogroupon', 'view', get_config('wwwroot') . 'group/view.php?id=' . $submittedgroup->id, $submittedgroup->name, $pieces[0], $pieces[1]);
+    }
+    else {
+        $text = get_string('viewsubmittedtogroup', 'view', get_config('wwwroot') . 'group/view.php?id=' . $submittedgroup->id, $submittedgroup->name);
+    }
     $releaseform = pieform(array(
         'name'     => 'releaseview',
         'method'   => 'post',
@@ -108,7 +116,7 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
         'elements' => array(
             'submittedview' => array(
                 'type'  => 'html',
-                'value' => get_string('viewsubmittedtogroup', 'view', get_config('wwwroot') . 'group/view.php?id=' . $submittedgroup->id, $submittedgroup->name),
+                'value' => $text,
             ),
             'submit' => array(
                 'type'  => 'submit',
@@ -277,6 +285,13 @@ if (isset($objectionform)) {
     $smarty->assign('objectionform', $objectionform);
 }
 $smarty->assign('viewbeingwatched', $viewbeingwatched);
+
+if ($tutorgroupdata = group_get_user_course_groups()) {
+    $options = array();
+    if (!$view->get('submittedgroup') && !$view->get('submittedhost')) {
+        $smarty->assign('view_group_submission_form', view_group_submission_form($view->get('id'), $tutorgroupdata, 'view'));
+    }
+}
 
 $smarty->display('view/view.tpl');
 

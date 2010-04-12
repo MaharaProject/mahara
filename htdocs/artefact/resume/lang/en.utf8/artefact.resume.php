@@ -27,9 +27,9 @@
 
 defined('INTERNAL') || die();
 
-$string['pluginname'] = 'Resumé';
+$string['pluginname'] = 'Résumé';
 
-$string['myresume'] = 'My Resumé';
+$string['myresume'] = 'My Résumé';
 $string['mygoals'] = 'My Goals';
 $string['myskills'] = 'My Skills';
 $string['coverletter'] = 'Cover Letter';
@@ -44,8 +44,8 @@ $string['female'] = 'Female';
 $string['male'] = 'Male';
 $string['gender'] = 'Gender';
 $string['maritalstatus'] = 'Marital Status';
-$string['resumesaved'] = 'Resumé saved';
-$string['resumesavefailed'] = 'Failed to update your resumé';
+$string['resumesaved'] = 'Résumé saved';
+$string['resumesavefailed'] = 'Failed to update your résumé';
 $string['educationhistory'] = 'Education History';
 $string['employmenthistory'] = 'Employment History';
 $string['certification'] = 'Certifications, Accreditations, and Awards';
@@ -71,7 +71,7 @@ $string['compositedeleteconfirm'] = 'Are you sure you want to delete this?';
 $string['compositesaved'] = 'Saved successfully';
 $string['compositesavefailed'] = 'Save failed';
 $string['compositedeleted'] = 'Deleted successfully';
-$string['backtoresume'] = 'Back to My Resumé';
+$string['backtoresume'] = 'Back to My Résumé';
 $string['personalgoal'] = 'Personal Goals';
 $string['academicgoal'] = 'Academic Goals';
 $string['careergoal'] = 'Career Goals';
@@ -82,12 +82,12 @@ $string['personalskill'] = 'Personal Skills';
 $string['academicskill'] = 'Academic Skills';
 $string['workskill'] = 'Work Skills';
 $string['goalandskillsaved'] = 'Saved successfully';
-$string['resume'] = 'Resumé';
+$string['resume'] = 'Résumé';
 $string['current'] = 'Current';
 $string['moveup'] = 'Move Up';
 $string['movedown'] = 'Move Down';
-$string['viewyourresume'] = 'View your Resumé';
-$string['resumeofuser'] = 'Resumé of %s';
+$string['viewyourresume'] = 'View your Résumé';
+$string['resumeofuser'] = 'Résumé of %s';
 $string['employeraddress'] = 'Employer Address';
 $string['institutionaddress'] = 'Institution Address';
 

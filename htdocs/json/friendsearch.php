@@ -29,8 +29,8 @@ define('INTERNAL', 1);
 define('JSON', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-require('pieforms/pieform.php');
-require('searchlib.php');
+require_once('pieforms/pieform.php');
+require_once('searchlib.php');
 
 $query  = param_variable('query', '');
 $offset = param_integer('offset', 0);
