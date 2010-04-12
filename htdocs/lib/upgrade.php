@@ -584,6 +584,7 @@ function core_postinst() {
         (owner IS NULL     AND "group" IS NULL     AND institution IS NOT NULL)
     )');
 
+    set_antispam_defaults();
     set_remoteavatars_default();
     reload_html_filters();
     return $status;
@@ -1044,4 +1045,20 @@ function set_remoteavatars_default() {
         }
         curl_close($ch);
     }
+}
+
+/**
+ * Use meaningful defaults for the antispam settings.
+ */
+function set_antispam_defaults() {
+    set_config('formsecret', get_random_key());
+    require_once(get_config('docroot') . 'lib/antispam.php');
+    if(checkdnsrr('test.uribl.com.black.uribl.com', 'A')) {
+        set_config('antispam', 'advanced');
+    }
+    else {
+        set_config('antispam', 'simple');
+    }
+    set_config('spamhaus', 0);
+    set_config('surbl', 0);
 }
