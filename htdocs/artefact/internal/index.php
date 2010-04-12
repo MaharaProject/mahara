@@ -270,6 +270,7 @@ function profileform_submit(Pieform $form, $values) {
 
                 $key = get_random_key();
                 $key_url = get_config('wwwroot') . 'artefact/internal/validate.php?email=' . rawurlencode($email) . '&key=' . $key;
+                $key_url_decline = $key_url . '&decline=1';
 
                 try {
                     email_user(
@@ -285,7 +286,7 @@ function profileform_submit(Pieform $form, $values) {
                         ),
                         null,
                         get_string('emailvalidation_subject', 'artefact.internal'),
-                        get_string('emailvalidation_body', 'artefact.internal', $USER->get('firstname'), $email, $key_url)
+                        get_string('emailvalidation_body', 'artefact.internal', $USER->get('firstname'), $email, $key_url, $key_url_decline)
                     );
                 }
                 catch (EmailException $e) {

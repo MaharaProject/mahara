@@ -37,10 +37,16 @@ define('TITLE', get_string('emailactivation','artefact.internal'));
 
 $email = param_variable('email');
 $key   = param_variable('key');
+$decline = param_boolean('decline');
 
 $row = get_record('artefact_internal_profile_email', 'email', $email, 'key', $key, null,null,'owner,artefact,email,verified,' . db_format_tsfield('expiry'));
 
 if ($row) {
+    if ($decline) {
+        delete_records_select('artefact_internal_profile_email', 'verified=0 AND key=? AND email=?', array($key, $email));
+        $SESSION->add_ok_msg(get_string('emailactivationdeclined', 'artefact.internal'));
+        redirect(get_config('wwwroot'));
+    }
     if ($row->expiry > time()) {
         if ($row->artefact) {
             $artefact = new ArtefactTypeEmail($row->artefact);
