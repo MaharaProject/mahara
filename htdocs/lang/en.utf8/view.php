@@ -106,7 +106,6 @@ $string['addusertogroup'] = 'Add this user to a group';
 $string['addedtowatchlist'] = 'This View has been added to your watchlist';
 $string['attachment'] = 'Attachment';
 $string['removedfromwatchlist'] = 'This View has been removed from your watchlist';
-$string['addfeedbackfailed'] = 'Add feedback failed';
 $string['addtowatchlist'] = 'Add View to watchlist';
 $string['removefromwatchlist'] = 'Remove View from watchlist';
 $string['alreadyinwatchlist'] = 'This View is already in your watchlist';
@@ -114,8 +113,6 @@ $string['attachedfileaddedtofolder'] = "The attached file %s has been added to y
 $string['complaint'] = 'Complaint';
 $string['date'] = 'Date';
 $string['feedback'] = 'Feedback';
-$string['feedbackonthisartefactwillbeprivate'] = 'Feedback on this artefact will only be visible to the owner.';
-$string['nopublicfeedback'] = 'No public feedback';
 $string['notifysiteadministrator'] = 'Notify site administrator';
 $string['print'] = 'Print';
 $string['reportobjectionablematerial'] = 'Report objectionable material';
@@ -154,7 +151,6 @@ $string['empty_block'] = 'Select an artefact from the tree on the left to place 
 $string['viewinformationsaved'] = 'View information saved successfully';
 
 $string['canteditdontown'] = 'You can\'t edit this View because you don\'t own it';
-$string['canteditdontownfeedback'] = 'You can\'t edit this feedback because you don\'t own it';
 $string['canteditsubmitted'] = 'You can\'t edit this View because it has been submitted for assessment to "%s". You will have to wait until a tutor releases your view.';
 
 $string['addtutors'] = 'Add Tutors';
