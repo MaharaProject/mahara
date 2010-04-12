@@ -204,6 +204,7 @@ function expected_account_preferences() {
                  'maildisabled'   => 0,
                  'tagssideblockmaxtags' => get_config('tagssideblockmaxtags'),
                  'hiderealname'   => 0,
+                 'multipleblogs' => 0,
                  );
 }
 
