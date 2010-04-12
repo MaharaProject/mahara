@@ -95,7 +95,7 @@ $form = pieform(array(
 ));
 
 function edit_comment_submit(Pieform $form, $values) {
-    global $viewid, $comment, $onartefact, $SESSION, $goto;
+    global $viewid, $comment, $SESSION, $goto;
 
     db_begin();
 
@@ -105,17 +105,11 @@ function edit_comment_submit(Pieform $form, $values) {
 
     require_once('activity.php');
     $data = (object) array(
-        'message' => html2text($comment->get('description')),
-        'view'    => $viewid,
+        'commentid' => $comment->get('id'),
+        'viewid'    => $viewid,
     );
 
-    if ($onartefact) {
-        $data->onartefact = $onartefact;
-    }
-    else {
-        $data->onview = $viewid;
-    }
-    activity_occurred('feedback', $data);
+    activity_occurred('feedback', $data, 'artefact', 'comment');
 
     db_commit();
 
