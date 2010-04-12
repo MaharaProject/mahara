@@ -23,7 +23,7 @@
     <div>{$releaseform}</div>
     {if $view_group_submission_form}<div>{$view_group_submission_form}</div>{/if}
     <table id="feedbacktable" class="fullwidth table">
-      <thead><tr><th>{str tag="Comments" section="artefact.comment"}</th></tr></thead>
+      <thead><tr><th>{str tag="feedback" section="artefact.comment"}</th></tr></thead>
       <tbody>
         {$feedback->tablerows}
       </tbody>

@@ -345,7 +345,7 @@ class ArtefactTypeComment extends ArtefactType {
                 }
             }
             if ($item->private) {
-                $item->pubmessage = get_string('thisfeedbackisprivate', 'artefact.comment');
+                $item->pubmessage = get_string('thiscommentisprivate', 'artefact.comment');
             }
 
             if (isset($data->showcomment) && $data->showcomment == $item->id) {
@@ -490,7 +490,7 @@ class ArtefactTypeComment extends ArtefactType {
         }
         $form['elements']['submit'] = array(
             'type'  => 'submitcancel',
-            'value' => array(get_string('addcomment', 'artefact.comment'), get_string('cancel')),
+            'value' => array(get_string('placefeedback', 'artefact.comment'), get_string('cancel')),
         );
         return $form;
     }

@@ -112,7 +112,6 @@ $string['alreadyinwatchlist'] = 'This View is already in your watchlist';
 $string['attachedfileaddedtofolder'] = "The attached file %s has been added to your '%s' folder.";
 $string['complaint'] = 'Complaint';
 $string['date'] = 'Date';
-$string['feedback'] = 'Feedback';
 $string['notifysiteadministrator'] = 'Notify site administrator';
 $string['print'] = 'Print';
 $string['reportobjectionablematerial'] = 'Report objectionable material';
