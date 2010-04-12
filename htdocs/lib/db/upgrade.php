@@ -1194,6 +1194,13 @@ function xmldb_core_upgrade($oldversion=0) {
         drop_field($table, $field);
     }
 
+    if ($oldversion < 2009082600) {
+        $captcha = get_config('captcha_on_contact_form');
+        set_config('captchaoncontactform', (int) (is_null($captcha) || $captcha));
+        $captcha = get_config('captcha_on_register_form');
+        set_config('captchaonregisterform', (int) (is_null($captcha) || $captcha));
+    }
+
     if ($oldversion < 2009090700) {
         set_config('showselfsearchsideblock', 1);
         set_config('showtagssideblock', 1);
@@ -1370,6 +1377,12 @@ function xmldb_core_upgrade($oldversion=0) {
     if ($oldversion < 2010040800) {
         execute_sql('ALTER TABLE {view} ADD COLUMN submittedtime TIMESTAMP');
     }
+
+    if ($oldversion < 2010041200) {
+        delete_records('config', 'field', 'captchaoncontactform');
+        delete_records('config', 'field', 'captchaonregisterform');
+    }
+
 
     return $status;
 }
