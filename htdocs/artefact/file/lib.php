@@ -958,8 +958,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             return; 
         }
         $file = $this->get_path();
-        // Detach this file from any view feedback
-        set_field('view_feedback', 'attachment', null, 'attachment', $this->id);
         if (is_file($file)) {
             $size = filesize($file);
             // Only delete the file on disk if no other artefacts point to it
@@ -1014,7 +1012,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         // log deletion for all these files if at least one is group-owned.
         $log = (bool) count_records_select('artefact', 'id IN (' . $idstr . ') AND "group" IS NOT NULL');
 
-        set_field_select('view_feedback', 'attachment', null, 'attachment IN (' . $idstr . ')', array());
         delete_records_select('artefact_attachment', 'attachment IN (' . $idstr . ')');
         delete_records_select('artefact_file_files', 'artefact IN (' . $idstr . ')');
         parent::bulk_delete($artefactids, $log);
