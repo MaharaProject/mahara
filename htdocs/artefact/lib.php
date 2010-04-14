@@ -615,7 +615,6 @@ abstract class ArtefactType {
             BlockInstance::bulk_delete_artefacts($records);
         }
         delete_records_select('view_artefact', "artefact IN $idstr");
-        // delete_records_select('artefact_feedback', "artefact IN $idstr");
         delete_records_select('artefact_tag', "artefact IN $idstr");
         delete_records_select('artefact_access_role', "artefact IN $idstr");
         delete_records_select('artefact_access_usr', "artefact IN $idstr");
