@@ -244,9 +244,9 @@ class Pieform {/*{{{*/
                 // @todo don't rely on submit element
                 throw new PieformException('Forms with spam config must have a secret and submit element');
             }
-            $this->time = isset($_POST['timestamp']) ? $_POST['timestamp'] : time();
+            $this->time = isset($_POST['__timestamp']) ? $_POST['__timestamp'] : time();
             $spamelements1 = array(
-                'invisiblefield' => array(
+                '__invisiblefield' => array(
                     'type'         => 'text',
                     'title'        => get_string('spamtrap'),
                     'defaultvalue' => '',
@@ -254,11 +254,11 @@ class Pieform {/*{{{*/
                 ),
             );
             $spamelements2 = array(
-                'timestamp' => array(
+                '__timestamp' => array(
                     'type' => 'hidden',
                     'value' => $this->time,
                 ),
-                'invisiblesubmit' => array(
+                '__invisiblesubmit' => array(
                     'type'  => 'submit',
                     'value' => get_string('spamtrap'),
                     'class' => 'dontshow',
@@ -283,8 +283,8 @@ class Pieform {/*{{{*/
             if (empty($this->data['spam']['hash'])) {
                 $this->data['spam']['hash'] = array();
             }
-            $this->data['spam']['hash'][] = 'invisiblefield';
-            $this->data['spam']['hash'][] = 'invisiblesubmit';
+            $this->data['spam']['hash'][] = '__invisiblefield';
+            $this->data['spam']['hash'][] = '__invisiblesubmit';
             $this->hash_fieldnames();
 
             if (isset($this->data['spam']['reorder'])) {
@@ -1278,16 +1278,16 @@ EOF;
 
         if (isset($this->data['spam'])) {
             // make sure the user waited long enough but not too long before submitting the form
-            $elapsed = time() - $values['timestamp'];
+            $elapsed = time() - $values['__timestamp'];
             if ($elapsed < $this->data['spam']['mintime'] || $elapsed > $this->data['spam']['maxtime']) {
                 $this->spamerror = true;
             }
             // make sure the real submit button was used. If it wasn't, it won't exist.
-            else if (!isset($values['submit']) || isset($values['invisiblesubmit'])) {
+            else if (!isset($values['submit']) || isset($values['__invisiblesubmit'])) {
                 $this->spamerror = true;
             }
             // make sure the invisible field is empty
-            else if (!isset($values['invisiblefield']) || $values['invisiblefield'] != '') {
+            else if (!isset($values['__invisiblefield']) || $values['__invisiblefield'] != '') {
                 $this->spamerror = true;
             }
         }
