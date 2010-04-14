@@ -454,6 +454,11 @@ class ArtefactTypeComment extends ArtefactType {
             'jssuccesscallback' => 'addFeedbackSuccess',
         );
         if (!$USER->is_logged_in()) {
+            $form['spam'] = array(
+                'secret'       => get_config('formsecret'),
+                'mintime'      => 3,
+                'hash'         => array('authorname', 'message', 'ispublic', 'message', 'submit'),
+            );
             $form['elements']['authorname'] = array(
                 'type'  => 'text',
                 'title' => get_string('name'),
@@ -478,14 +483,6 @@ class ArtefactTypeComment extends ArtefactType {
                 'type'         => 'files',
                 'title'        => get_string('attachfile', 'artefact.comment'),
                 'defaultvalue' => array(),
-            );
-        }
-        if (!$USER->is_logged_in()) {
-            $form['elements']['captcha'] = array(
-                'type'  => 'captcha',
-                'title' => get_string('captchatitle'),
-                'description' => get_string('captchadescription'),
-                'rules' => array('required' => true)
             );
         }
         $form['elements']['submit'] = array(

@@ -244,9 +244,6 @@ class Pieform {/*{{{*/
                 // @todo don't rely on submit element
                 throw new PieformException('Forms with spam config must have a secret and submit element');
             }
-            if (!empty($this->data['jsform'])) {
-                throw new PieformException('Antispam forms not tested with jsform yet');
-            }
             $this->time = isset($_POST['timestamp']) ? $_POST['timestamp'] : time();
             $spamelements1 = array(
                 'invisiblefield' => array(
@@ -885,6 +882,9 @@ class Pieform {/*{{{*/
         }
         else if (is_string($replacehtml)) {
             $data['replaceHTML'] = $replacehtml;
+        }
+        if (isset($this->hashedfields)) {
+            $data['fieldnames'] = $this->hashedfields;
         }
 
         $result = json_encode($data);

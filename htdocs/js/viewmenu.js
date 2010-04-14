@@ -1,7 +1,11 @@
 function addFeedbackSuccess(form, data) {
     addElementClass('add_feedback_form', 'hidden');
     paginator.updateResults(data);
-    $('add_feedback_form_message').value = '';
+    var messageid = 'message';
+    if (data.fieldnames && data.fieldnames.message) {
+        messageid = data.fieldnames.message;
+    }
+    $('add_feedback_form_' + messageid).value = '';
     rewriteCancelButtons();
 }
 
@@ -12,12 +16,18 @@ function objectionSuccess() {
 }
 
 function rewriteCancelButtons() {
-    if ($('cancel_add_feedback_form_submit')) {
-        disconnectAll('cancel_add_feedback_form_submit');
-        connect('cancel_add_feedback_form_submit', 'onclick', function (e) {
-            e.stop();
-            addElementClass('add_feedback_form', 'hidden');
-            return false;
+    if ($('add_feedback_form')) {
+        var buttons = getElementsByTagAndClassName('input', 'cancel', 'add_feedback_form');
+        var idprefix = 'cancel_add_feedback_form_';
+        forEach(buttons, function(button) {
+            if (getNodeAttribute(button, 'id').substring(0, idprefix.length) == idprefix) {
+                disconnectAll(button);
+                connect(button, 'onclick', function (e) {
+                    e.stop();
+                    addElementClass('add_feedback_form', 'hidden');
+                    return false;
+                });
+            }
         });
     }
     if ($('cancel_objection_form_submit')) {
