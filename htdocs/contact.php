@@ -47,22 +47,9 @@ else {
     $email = '';
 }
 
-// we're in the middle of processing the form, so read the time
-// from the form rather than getting a new one
-if ($_POST) {
-    $time = $_POST['timestamp'];
-}
-else {
-    $time = time();
-}
-
-$fields = array('name', 'email', 'subject', 'message', 'userid', 'submit', 'invisiblefield', 'invisiblesubmit');
-$hashed_fields = hash_fieldnames($fields, $time);
-
 $elements = array(
     'name' => array(
         'type'  => 'text',
-        'name' => $hashed_fields['name'],
         'title' => get_string('name'),
         'defaultvalue' => $name,
         'rules' => array(
@@ -71,7 +58,6 @@ $elements = array(
     ),
     'email' => array(
         'type'  => 'text',
-        'name' => $hashed_fields['email'],
         'title' => get_string('email'),
         'defaultvalue' => $email,
         'rules' => array(
@@ -81,13 +67,11 @@ $elements = array(
     ),
     'subject' => array(
         'type'  => 'text',
-        'name' => $hashed_fields['subject'],
         'title' => get_string('subject'),
         'defaultvalue' => '',
     ),
     'message' => array(
         'type'  => 'textarea',
-        'name' => $hashed_fields['message'],
         'rows'  => 10,
         'cols'  => 60,
         'title' => get_string('message'),
@@ -98,122 +82,68 @@ $elements = array(
     )
 );
 
-$elements['invisiblefield'] = array(
-    'type' => 'text',
-    'name' => $hashed_fields['invisiblefield'],
-    'title' => get_string('spamtrap'),
-    'defaultvalue' => '',
-    'class' => 'dontshow',
-);
 $elements['userid'] = array(
     'type'  => 'hidden',
-    'name' => $hashed_fields['userid'],
     'value' => $userid,
-);
-$elements['timestamp'] = array(
-    'type' => 'hidden',
-    'value' => $time,
-);
-$elements['invisiblesubmit'] = array(
-    'type'  => 'submit',
-    'name' => $hashed_fields['invisiblesubmit'],
-    'value' => get_string('spamtrap'),
-    'class' => 'dontshow',
 );
 $elements['submit'] = array(
     'type'  => 'submit',
-    'name' => $hashed_fields['submit'],
     'value' => get_string('sendmessage'),
 );
 
-// swap the name and email fields at random
-if (rand(0,1)) {
-    $name = array_shift($elements);
-    $email = array_shift($elements);
-    array_unshift($elements, $email, $name);
-}
-
 $contactform = pieform(array(
-    'name'     => 'contactus',
-    'method'   => 'post',
-    'action'   => '',
-    'elements' => $elements
+    'name'       => 'contactus',
+    'method'     => 'post',
+    'action'     => '',
+    'elements'   => $elements,
+    'spam' => array(
+        'secret'       => get_config('formsecret'),
+        'mintime'      => 5,
+        'hash'         => array('name', 'email', 'subject', 'message', 'userid', 'submit'),
+        'reorder'      => array('name', 'email'),
+    ),
 ));
 
 function contactus_validate(Pieform $form, $values) {
     global $SESSION;
-    $error = false;
-    $currenttime = time();
-    // read the timestamp field
-    $timestamp = $values['timestamp'];
-    // recompute the field names
-    $fields = array('name', 'email', 'subject', 'message', 'userid', 'submit', 'invisiblefield', 'invisiblesubmit');
-    $hashed = hash_fieldnames($fields, $timestamp);
-    // make sure the submission is less than a day, and more than 5 seconds old
-    if ($currenttime - $timestamp < 5 || $currenttime - $timestamp > 86400) {
-        $error = true;
-    }
-    // make sure the real submit button was used. If it wasn't, it won't exist.
-    elseif (!isset($values[$hashed['submit']]) || isset($values[$hashed['invisiblesubmit']])) {
-        $error = true;
-    }
-    // make sure the invisible field is empty
-    elseif (!isset($values[$hashed['invisiblefield']]) || $values[$hashed['invisiblefield']] != '') {
-        $error = true;
-    }
-    // make sure all the other data fields exist
-    elseif (!(isset($values[$hashed['name']]) && isset($values[$hashed['email']]) &&
-        isset($values[$hashed['subject']]) && isset($values[$hashed['message']]))) {
-        $error = true;
-    }
-    else {
-        $spamtrap = new_spam_trap(array(
-            array(
-                'type' => 'name',
-                'value' => $values[$hashed['name']],
-            ),
-            array(
-                'type' => 'email',
-                'value' => $values[$hashed['email']],
-            ),
-            array(
-                'type' => 'subject',
-                'value' => $values[$hashed['subject']],
-            ),
-            array(
-                'type' => 'body',
-                'value' => $values[$hashed['message']],
-            ),
-        ));
-        if ($spamtrap->is_spam()) {
-            $error = true;
-        }
-    }
-    if ($error) { 
+    $spamtrap = new_spam_trap(array(
+        array(
+            'type' => 'name',
+            'value' => $values['name'],
+        ),
+        array(
+            'type' => 'email',
+            'value' => $values['email'],
+        ),
+        array(
+            'type' => 'subject',
+            'value' => $values['subject'],
+        ),
+        array(
+            'type' => 'body',
+            'value' => $values['message'],
+        ),
+    ));
+    if ($form->spam_error() || $spamtrap->is_spam()) {
         $msg = get_string('formerror');
         $emailcontact = get_config('emailcontact');
         if (!empty($emailcontact)) {
             $msg .= ' ' . get_string('formerroremail', 'mahara', $emailcontact, $emailcontact);
         }
         $SESSION->add_error_msg($msg);
-        $form->set_error($hashed['submit'], '');
+        $form->set_error('submit', '');
     }
 }
 
 function contactus_submit(Pieform $form, $values) {
     global $SESSION;
-    // read the timestamp field
-    $timestamp = $values['timestamp'];
-    // recompute the field names
-    $fields = array('name', 'email', 'subject', 'message', 'userid', 'submit', 'invisiblefield', 'invisiblesubmit');
-    $hashed = hash_fieldnames($fields, $timestamp);
     $data = new StdClass;
-    $data->fromname    = $values[$hashed['name']];
-    $data->fromemail   = $values[$hashed['email']];
-    $data->subject     = $values[$hashed['subject']];
-    $data->message     = $values[$hashed['message']];
-    if ($values[$hashed['userid']]) {
-        $data->fromuser = $values[$hashed['userid']];
+    $data->fromname    = $values['name'];
+    $data->fromemail   = $values['email'];
+    $data->subject     = $values['subject'];
+    $data->message     = $values['message'];
+    if ($values['userid']) {
+        $data->fromuser = $values['userid'];
     }
     require_once('activity.php');
     activity_occurred('contactus', $data);

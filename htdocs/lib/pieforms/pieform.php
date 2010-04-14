@@ -239,6 +239,77 @@ class Pieform {/*{{{*/
             throw new PieformException('Forms must have a list of elements');
         }
 
+        if (isset($this->data['spam'])) {
+            if (empty($this->data['spam']['secret']) || !isset($this->data['elements']['submit'])) {
+                // @todo don't rely on submit element
+                throw new PieformException('Forms with spam config must have a secret and submit element');
+            }
+            if (!empty($this->data['jsform'])) {
+                throw new PieformException('Antispam forms not tested with jsform yet');
+            }
+            $this->time = isset($_POST['timestamp']) ? $_POST['timestamp'] : time();
+            $spamelements1 = array(
+                'invisiblefield' => array(
+                    'type'         => 'text',
+                    'title'        => get_string('spamtrap'),
+                    'defaultvalue' => '',
+                    'class'        => 'dontshow',
+                ),
+            );
+            $spamelements2 = array(
+                'timestamp' => array(
+                    'type' => 'hidden',
+                    'value' => $this->time,
+                ),
+                'invisiblesubmit' => array(
+                    'type'  => 'submit',
+                    'value' => get_string('spamtrap'),
+                    'class' => 'dontshow',
+                ),
+            );
+            $insert = rand(0, count($this->data['elements']));
+            $this->data['elements'] = array_merge(
+                array_slice($this->data['elements'], 0, $insert, true),
+                $spamelements1,
+                array_slice($this->data['elements'], $insert, count($this->data['elements']) - $insert, true),
+                $spamelements2
+            );
+
+            // Min & max number of seconds between page load & submission
+            if (!isset($this->data['spam']['mintime'])) {
+                $this->data['spam']['mintime'] = 0.01;
+            }
+            if (!isset($this->data['spam']['maxtime'])) {
+                $this->data['spam']['maxtime'] = 86400;
+            }
+
+            if (empty($this->data['spam']['hash'])) {
+                $this->data['spam']['hash'] = array();
+            }
+            $this->data['spam']['hash'][] = 'invisiblefield';
+            $this->data['spam']['hash'][] = 'invisiblesubmit';
+            $this->hash_fieldnames();
+
+            if (isset($this->data['spam']['reorder'])) {
+                // Reorder form fields randomly
+                $order = $this->data['spam']['reorder'];
+                shuffle($order);
+                $order = array_combine($this->data['spam']['reorder'], $order);
+                $temp = array();
+                foreach (array_keys($this->data['elements']) as $k) {
+                    if (isset($order[$k])) {
+                        $temp[$order[$k]] = $this->data['elements'][$order[$k]];
+                    }
+                    else {
+                        $temp[$k] = $this->data['elements'][$k];
+                    }
+                }
+                $this->data['elements'] = $temp;
+            }
+
+            $this->spamerror = false;
+        }
+
         // Get references to all the elements in the form, excluding fieldsets
         foreach ($this->data['elements'] as $name => &$element) {
             // The name can be in the element itself. This is compatibility for 
@@ -267,7 +338,8 @@ class Pieform {/*{{{*/
                 $this->elementrefs[$name] = &$element;
             }
 
-            $element['name'] = $name;
+            $element['name'] = isset($this->hashedfields[$name]) ? $this->hashedfields[$name] : $name;
+
         }
         unset($element);
 
@@ -412,9 +484,9 @@ class Pieform {/*{{{*/
             // Submit the form if things went OK
             if ($this->data['submit'] && !$this->has_errors()) {
                 $submitted = false;
-                foreach ($this->elementrefs as $element) {
+                foreach ($this->elementrefs as $name => $element) {
                     if (!empty($element['submitelement']) && isset($global[$element['name']])) {
-                        $function = "{$this->data['successcallback']}_{$element['name']}";
+                        $function = "{$this->data['successcallback']}_{$name}";
                         if (function_exists($function)) {
                             $function($this, $values);
                             $submitted = true;
@@ -857,7 +929,7 @@ EOF;
      * @throws PieformException  If the element could not be found
      */
     public function set_error($name, $message) {/*{{{*/
-        foreach ($this->data['elements'] as &$element) {
+        foreach ($this->data['elements'] as $key => &$element) {
             if ($element['type'] == 'fieldset') {
                 foreach ($element['elements'] as &$subelement) {
                     if ($subelement['name'] == $name) {
@@ -867,7 +939,7 @@ EOF;
                 }
             }
             else {
-                if ($element['name'] == $name) {
+                if ($key == $name) {
                     $element['error'] = $message;
                     return;
                 }
@@ -1143,7 +1215,7 @@ EOF;
     private function get_submitted_values() {/*{{{*/
         $result = array();
         $global = ($this->data['method'] == 'get') ? $_GET : $_POST;
-        foreach ($this->elementrefs as $element) {
+        foreach ($this->elementrefs as $name => $element) {
             if ($element['type'] != 'markup') {
                 if (
                     (empty($element['submitelement']) && empty($element['cancelelement'])) ||
@@ -1152,7 +1224,7 @@ EOF;
                         && isset($global[$element['name']])
                     )
                 ) {
-                    $result[$element['name']] = $this->get_value($element);
+                    $result[$name] = $this->get_value($element);
                 }
             }
         }
@@ -1179,10 +1251,10 @@ EOF;
         }
 
         // Perform rule validation
-        foreach ($this->elementrefs as $element) {
+        foreach ($this->elementrefs as $name => $element) {
             if (isset($element['rules']) && is_array($element['rules'])) {
                 foreach ($element['rules'] as $rule => $data) {
-                    if (!$this->get_error($element['name'])) {
+                    if (!$this->get_error($name)) {
                         // See if this element has a function that describes
                         // how this rule should apply to it
                         $function = 'pieform_element_' . $element['type'] . '_rule_' . $rule;
@@ -1196,11 +1268,27 @@ EOF;
                                 }
                             }
                         }
-                        if ($error = $function($this, $values[$element['name']], $element, $data)) {
-                            $this->set_error($element['name'], $error);
+                        if ($error = $function($this, $values[$name], $element, $data)) {
+                            $this->set_error($name, $error);
                         }
                     }
                 }
+            }
+        }
+
+        if (isset($this->data['spam'])) {
+            // make sure the user waited long enough but not too long before submitting the form
+            $elapsed = time() - $values['timestamp'];
+            if ($elapsed < $this->data['spam']['mintime'] || $elapsed > $this->data['spam']['maxtime']) {
+                $this->spamerror = true;
+            }
+            // make sure the real submit button was used. If it wasn't, it won't exist.
+            else if (!isset($values['submit']) || isset($values['invisiblesubmit'])) {
+                $this->spamerror = true;
+            }
+            // make sure the invisible field is empty
+            else if (!isset($values['invisiblefield']) || $values['invisiblefield'] != '') {
+                $this->spamerror = true;
             }
         }
 
@@ -1422,6 +1510,31 @@ EOF;
             // when displaying errors
             'showdescriptiononerror' => true,
         );
+    }/*}}}*/
+
+    private function hash_fieldnames() {/*{{{*/
+        // Mess with field names to make it harder for bots to fill in the form
+        $ip = self::get_ip();
+        $secret = $this->data['spam']['secret'];
+        $this->hashedfields = array();
+        foreach ($this->data['spam']['hash'] as $name) {
+            // prefix the hash with an underscore to ensure it is always a valid pieforms element name
+            $this->hashedfields[$name] = '_' . sha1($name . $this->time . $ip . $secret);
+        }
+    }/*}}}*/
+
+    private static function get_ip() {/*{{{*/
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            return $_SERVER['HTTP_CLIENT_IP'];
+        }
+        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            return $_SERVER['HTTP_X_FORWARDED_FOR'];
+        }
+        return $_SERVER['REMOTE_ADDR'];
+    }/*}}}*/
+
+    public function spam_error() {/*{{{*/
+        return $this->spamerror;
     }/*}}}*/
 
 }/*}}}*/

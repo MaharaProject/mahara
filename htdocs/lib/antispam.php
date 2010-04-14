@@ -27,27 +27,6 @@
 
 defined('INTERNAL') || die();
 
-function get_ip() {
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        return $_SERVER['HTTP_CLIENT_IP'];
-    }
-    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        return $_SERVER['HTTP_X_FORWARDED_FOR'];
-    }
-    return $_SERVER['REMOTE_ADDR'];
-}
-
-function hash_fieldnames($names, $time) {
-    $ip = get_ip();
-    $secret = get_config('formsecret');
-    $hashed = array();
-    foreach ($names as $name) {
-        // prefix the hash with an underscore to ensure it is always a valid pieforms element name
-        $hashed[$name] = '_' . sha1($name . $time . $ip . $secret);
-    }
-    return $hashed;
-}
-
 function available_spam_traps() {
     $results = array();
     $handle = opendir(get_config('docroot') . 'lib/antispam');
