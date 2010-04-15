@@ -49,6 +49,7 @@ class LeapImportComment extends LeapImportArtefactPlugin {
      * correct comment relationship will be restored.
      */
     private static $tempview = null;
+    private static $savetempview = false;
 
     public static function create_temporary_view($user) {
         $time = db_format_timestamp(time());
@@ -69,7 +70,13 @@ class LeapImportComment extends LeapImportArtefactPlugin {
      */
     public static function cleanup(PluginImportLeap $importer) {
         if (self::$tempview) {
-            delete_records('view', 'id', self::$tempview);
+            if (self::$savetempview) {
+                $title = get_string('entriesimportedfromleapexport', 'artefact.comment');
+                set_field('view', 'title', $title, 'id', self::$tempview);
+            }
+            else {
+                delete_records('view', 'id', self::$tempview);
+            }
         }
     }
 
@@ -159,20 +166,49 @@ class LeapImportComment extends LeapImportArtefactPlugin {
         return $createdartefacts;
     }
 
+
+    /**
+     * Get the id of the entry reflected on by a comment entry
+     */
+    public static function get_referent_entryid(SimpleXMLElement $entry, PluginImportLeap $importer) {
+        foreach ($entry->link as $link) {
+            if ($importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'reflects_on') && isset($link['href'])) {
+                return (string)$link['href'];
+            }
+        }
+
+        // Shouldn't happen -- this was checked when offering the strategy
+        throw new ImportException($importer, 'TODO: get_string: cannot find an entry for a comment to comment on');
+    }
+
+
+    public static function get_comment_instance(SimpleXMLElement $entry, PluginImportLeap $importer) {
+        $artefactids = $importer->get_artefactids_imported_by_entryid((string)$entry->id);
+        return new ArtefactTypeComment($artefactids[0]);
+    }
+
+
     /**
      * Relate comments to the artefacts they comment on
      * Attach files to comments
      */
     public static function setup_relationships(SimpleXMLElement $entry, PluginImportLeap $importer) {
-        self::link_comment($entry, $importer, 'artefacts');
+        $comment = null;
+
+        $referentid = self::get_referent_entryid($entry, $importer);
+
+        // Link artefact comments; view comments are done later
+        if ($artefactids = $importer->get_artefactids_imported_by_entryid($referentid)) {
+            $comment = self::get_comment_instance($entry, $importer);
+            $comment->set('onartefact', $artefactids[0]);
+            $comment->set('onview', null);
+        }
 
         // Attachments
-        $comment = null;
         foreach ($entry->link as $link) {
             if ($importer->curie_equals($link['rel'], '', 'enclosure') && isset($link['href'])) {
                 if (!$comment) {
-                    $artefactids = $importer->get_artefactids_imported_by_entryid((string)$entry->id);
-                    $comment = new ArtefactTypeComment($artefactids[0]);
+                    $comment = self::get_comment_instance($entry, $importer);
                 }
                 $importer->trace("Attaching file $link[href] to comment $entry->id", PluginImportLeap::LOG_LEVEL_VERBOSE);
                 $artefactids = $importer->get_artefactids_imported_by_entryid((string)$link['href']);
@@ -181,10 +217,10 @@ class LeapImportComment extends LeapImportArtefactPlugin {
                 }
             }
         }
+
         if ($comment) {
             $comment->commit();
         }
-
     }
 
     /**
@@ -193,43 +229,20 @@ class LeapImportComment extends LeapImportArtefactPlugin {
      * to change that call to happen after views are created.
      */
     public static function setup_view_relationships(SimpleXMLElement $entry, PluginImportLeap $importer) {
-        self::link_comment($entry, $importer, 'views');
-    }
+        $comment = self::get_comment_instance($entry, $importer);
 
-    public static function link_comment(SimpleXMLElement $entry, PluginImportLeap $importer, $linkto) {
-        $artefactids = $importer->get_artefactids_imported_by_entryid((string)$entry->id);
-        $comment = new ArtefactTypeComment($artefactids[0]);
+        if ($comment->get('onartefact')) {
+            return;
+        }
 
-        foreach ($entry->link as $link) {
-            // Find the entry this comment comments on
-            $commenton = null;
-            foreach ($entry->link as $link) {
-                if ($importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'reflects_on') && isset($link['href'])) {
-                    $commenton = (string)$link['href'];
-                    break;
-                }
-            }
-            if (empty($commenton)) {
-                // Shouldn't happen -- was checked when offering the strategy
-                throw new ImportException($importer, 'TODO: get_string: cannot find an entry for a comment to comment on');
-            }
-
-            if ($linkto == 'artefacts') {
-                if (!$artefactids = $importer->get_artefactids_imported_by_entryid($commenton)) {
-                    // It's probably a comment on a view; set it up later after view import.
-                    continue;
-                }
-                $comment->set('onartefact', $artefactids[0]);
-                $comment->set('onview', null);
-                $comment->commit();
-            }
-            else if ($linkto == 'views' && $comment->get('onview') == self::$tempview) {
-                if (!$viewid = $importer->get_viewid_imported_by_entryid($commenton)) {
-                    throw new ImportException($importer, hsc("TODO: get_string: view corresponding to $commenton not found when linking comment $entry->id"));
-                }
-                $comment->set('onview', $viewid);
-                $comment->commit();
-            }
+        $referentid = self::get_referent_entryid($entry, $importer);
+        if ($viewid = $importer->get_viewid_imported_by_entryid($referentid)) {
+            $comment->set('onview', $viewid);
+            $comment->commit();
+        }
+        else {
+            // Nothing to link this comment to, so leave it in the temporary view.
+            self::$savetempview = true;
         }
     }
 }

@@ -49,6 +49,7 @@ $string['commentremovedbyadmin'] = 'Comment removed by an administrator';
 $string['commentupdated'] = 'Comment updated';
 $string['editcomment'] = 'Edit Comment';
 $string['editcommentdescription'] = 'You can update your comments if they are less than %d minutes old and have had no newer replies added.  After this time you may still be able to delete your comments and add new ones.';
+$string['entriesimportedfromleapexport'] = 'Entries imported from a LEAP export, that were not able to be imported elsewhere';
 $string['feedback'] = 'Feedback';
 $string['feedbackattachdirname'] = 'commentfiles';
 $string['feedbackattachdirdesc'] = 'Files attached to comments on your portfolio';
