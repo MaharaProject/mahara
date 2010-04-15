@@ -52,6 +52,16 @@ class PluginArtefactComment extends PluginArtefact {
         return array();
     }
 
+    public static function get_activity_types() {
+        return array(
+            (object)array(
+                'name' => 'feedback',
+                'admin' => 0,
+                'delay' => 0,
+            )
+        );
+    }
+
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
             set_config_plugin('artefact', 'comment', 'commenteditabletime', 10);

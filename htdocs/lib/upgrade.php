@@ -745,7 +745,6 @@ function core_install_firstcoredata_defaults() {
     $activitytypes = array(
         array('maharamessage', 0, 0),
         array('usermessage', 0, 0),
-        array('feedback', 0, 0),
         array('watchlist', 0, 1),
         array('viewaccess', 0, 1),
         array('contactus', 1, 1),
