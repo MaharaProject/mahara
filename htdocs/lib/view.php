@@ -2161,7 +2161,7 @@ class View {
             "SELECT v.*
             FROM {view} v
             WHERE v.owner = ?
-            AND v.type != 'profile'
+            AND v.type NOT IN ('profile', 'dashboard')
             ORDER BY v.title, v.id
             ", array($userid))) {
             return $views;
