@@ -1544,7 +1544,7 @@ function addfriend_submit(Pieform $form, $values) {
     $f->usr1 = $values['id'];
     $f->usr2 = $loggedinid;
     insert_record('usr_friend', $f);
-    $n->subject = get_string_from_language($lang, 'addedtofriendslistsubject', 'group');
+    $n->subject = get_string_from_language($lang, 'addedtofriendslistsubject', 'group', $displayname);
     $n->message = get_string_from_language($lang, 'addedtofriendslistmessage', 'group', $displayname, $displayname);
 
     require_once('activity.php');

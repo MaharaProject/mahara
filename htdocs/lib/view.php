@@ -750,12 +750,18 @@ class View {
         $this->set('submittedtime', null);
         $this->commit();
         $ownerlang = get_user_language($this->get('owner'));
+        $url = get_config('wwwroot') . 'view/view.php?id=' . $this->get('id');
         require_once('activity.php');
         activity_occurred('maharamessage', 
-                  array('users'   => array($this->get('owner')),
-                  'subject' => get_string_from_language($ownerlang, 'viewreleasedsubject', 'group'),
-                  'message' => get_string_from_language($ownerlang, 'viewreleasedmessage', 'group', $submitinfo['name'], 
-                       display_name($releaseuser, $this->get_owner_object()))));
+            array(
+                'users' => array($this->get('owner')),
+                'subject' => get_string_from_language($ownerlang, 'viewreleasedsubject', 'group', $this->get('title'),
+                    $submitinfo['name'], display_name($releaseuser, $this->get_owner_object())),
+                'message' => get_string_from_language($ownerlang, 'viewreleasedmessage', 'group', $this->get('title'),
+                    $submitinfo['name'], display_name($releaseuser, $this->get_owner_object())),
+                'url' => $url,
+            )
+        );
     }
 
     /**
