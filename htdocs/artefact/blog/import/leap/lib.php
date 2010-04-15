@@ -259,6 +259,14 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
             if ($type == 'text') {
                 $description = format_whitespace($description);
             }
+            // If we happen to know that this is Mahara feedback from a later Mahara
+            // version falling through the cracks, add a notice to avoid confusion
+            // between author & owner.
+            if ($entry->xpath('mahara:artefactplugin[@mahara:type="comment"]')
+                && isset($entry->author->name) && strlen($entry->author->name)) {
+                $author = get_string('feedback', 'view') . ' ' . get_string('by', 'view') . ' ' . $entry->author->name;
+                $description .= "<div>$author</div>";
+            }
             $blogpost->set('description', $description);
         }
         if ($published = strtotime((string)$entry->published)) {
