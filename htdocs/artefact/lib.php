@@ -1075,6 +1075,10 @@ abstract class ArtefactType {
     public static function attached_id_list($attachmentid) {
         return get_column('artefact_attachment', 'artefact', 'attachment', $attachmentid);
     }
+
+    public function exportable() {
+        return true;
+    }
 }
 
 /**

@@ -76,7 +76,7 @@ class PluginArtefactComment extends PluginArtefact {
         if (!$artefacts = get_column_sql("
             SELECT artefact
             FROM {artefact_comment_comment}
-            WHERE onview IN (" . join(',', $viewids) . ')', array())) {
+            WHERE deletedby IS NULL AND onview IN (" . join(',', $viewids) . ')', array())) {
             return array();
         }
         if ($attachments = get_column_sql('
@@ -92,7 +92,7 @@ class PluginArtefactComment extends PluginArtefact {
         if (!$artefacts = get_column_sql("
             SELECT artefact
             FROM {artefact_comment_comment}
-            WHERE onartefact IN (" . join(',', $artefactids) . ')', array())) {
+            WHERE deletedby IS NULL AND onartefact IN (" . join(',', $artefactids) . ')', array())) {
             return array();
         }
         if ($attachments = get_column_sql('
@@ -534,6 +534,10 @@ class ArtefactTypeComment extends ArtefactType {
                 ),
             ),
         );
+    }
+
+    public function exportable() {
+        return empty($this->deletedby);
     }
 }
 

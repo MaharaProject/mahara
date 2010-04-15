@@ -258,7 +258,9 @@ abstract class PluginExport extends Plugin {
             //if (!$this->user->can_view_artefact($artefact)) {
             //    throw new SystemException("User $userid does not own artefact " . $artefact->get('id'));
             //}
-            $this->artefacts[$artefact->get('id')] = $artefact;
+            if ($artefact->exportable()) {
+                $this->artefacts[$artefact->get('id')] = $artefact;
+            }
         }
 
         // Now set up the temporary export directories
