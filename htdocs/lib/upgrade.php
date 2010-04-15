@@ -460,9 +460,11 @@ function upgrade_plugin($upgrade) {
             }
             $activity->plugintype = $plugintype;
             $activity->pluginname = $pluginname;
-            $where = $activity;
-            unset($where->admin);
-            unset($where->delay);
+            $where = (object) array(
+                'name'       => $activity->name,
+                'plugintype' => $plugintype,
+                'pluginname' => $pluginname,
+            );
             // Work around the fact that insert_record cached the columns that
             // _were_ in the activity_type table before it was upgraded
             global $INSERTRECORD_NOCACHE;
