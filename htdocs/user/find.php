@@ -32,6 +32,9 @@ require_once('pieforms/pieform.php');
 define('TITLE', get_string('findfriends'));
 require_once('searchlib.php');
 safe_require('search', 'internal');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'user');
+define('SECTION_PAGE', 'find');
 
 $query = param_variable('query', '');
 $offset = param_integer('offset', 0);

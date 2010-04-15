@@ -35,9 +35,7 @@ $string['myfiles'] = 'My Files';
 $string['mandatory'] = 'Mandatory';
 $string['public'] = 'Public';
 
-$string['aboutdescription'] = 'Enter your real first and last name here. If you want to show a different name to people in the system, put that name in as your display name.';
-$string['contactdescription'] = 'All of this information is private, unless you choose to put it in a view.';
-$string['messagingdescription'] = 'Like your contact information, this information is private.';
+$string['infoisprivate'] = 'This information is private until you include it in a view that is shared with others.';
 $string['viewmyprofile'] = 'View my profile';
 
 // profile categories

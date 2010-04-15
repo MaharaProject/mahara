@@ -31,8 +31,8 @@ $string['pluginname'] = 'Blogs';
 
 $string['blog'] = 'Blog';
 $string['blogs'] = 'Blogs';
-$string['addblog'] = 'Add Blog';
-$string['addpost'] = 'Add Post';
+$string['addblog'] = 'Create Blog';
+$string['addpost'] = 'New Post';
 $string['alignment'] = 'Alignment';
 $string['allowcommentsonpost'] = 'Allow comments on your post.';
 $string['attach'] = 'Attach';

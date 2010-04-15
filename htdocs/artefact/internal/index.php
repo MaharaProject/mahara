@@ -196,7 +196,7 @@ function get_desired_fields(&$allfields, $desiredfields, $section) {
     $return["{$section}description"] = array(
         'type'  => 'html',
         'labelhtml' => ($section == 'about') ? '<div id="profileicon"><a href="' . get_config('wwwroot') . 'artefact/file/profileicons.php"><img src="' . get_config('wwwroot') . 'thumb.php?type=profileicon&maxsize=100&id=' . intval($USER->get('id')) . '" alt=""></a></div>' : '',
-        'value' => get_string("{$section}description", 'artefact.internal')
+        'value' => get_string('infoisprivate', 'artefact.internal')
     );
     foreach ($desiredfields as $field) {
         if (isset($allfields[$field])) {
