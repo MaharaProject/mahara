@@ -18,6 +18,7 @@ function objectionSuccess() {
 function rewriteCancelButtons() {
     if ($('add_feedback_form')) {
         var buttons = getElementsByTagAndClassName('input', 'cancel', 'add_feedback_form');
+        // hashed field names on anon forms mean we don't know the exact id of this button
         var idprefix = 'cancel_add_feedback_form_';
         forEach(buttons, function(button) {
             if (getNodeAttribute(button, 'id').substring(0, idprefix.length) == idprefix) {
