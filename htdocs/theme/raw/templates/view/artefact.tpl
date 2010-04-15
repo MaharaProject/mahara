@@ -16,6 +16,7 @@
         </div>
 
       <div class="viewfooter cb">
+        {if $feedback->count || $enablecomments}
         <table id="feedbacktable" class="fullwidth table">
           <thead><tr><th>{str tag="feedback" section="artefact.comment"}</th></tr></thead>
           <tbody>
@@ -23,6 +24,7 @@
           </tbody>
         </table>
         {$feedback->pagination}
+        {/if}
         <div id="viewmenu">
 {include file="view/viewmenu.tpl"}
         </div>
