@@ -77,6 +77,7 @@ $string['moreoptions'] = 'More options';
 $string['mustspecifytitle'] = 'You must specify a title for your post';
 $string['mustspecifycontent'] = 'You must specify some content for your post';
 $string['myblogs'] = 'My Blogs';
+$string['myblog'] = 'My Blog';
 $string['name'] = 'Name';
 $string['newattachmentsexceedquota'] = 'The total size of the new files that you have uploaded to this post would exceed your quota.  You may be able to save the post if you remove some of the attachments you have just added.';
 $string['newblog'] = 'New Blog';
