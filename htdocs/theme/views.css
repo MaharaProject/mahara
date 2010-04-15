@@ -526,8 +526,8 @@ div.artefactchooser-splitter {
 #feedback_pagination {
 	margin: 0;
 }
-#feedbacktable form.makeprivate,
-#feedbacktable form.makeprivate div {
+#feedbacktable form,
+#feedbacktable form div {
 	display: inline;
 }
 #add_feedback_form {

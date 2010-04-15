@@ -196,6 +196,14 @@ input.btn-del:active {
     border-color: #611700 #eda58c #eda58c #611700 !important;
     background: #A82700 !important;
 }
+input.quiet {
+  background: none !important;
+  color: #6e8e00;
+}
+input.quiet.btn-del {
+  background: none !important;
+  color: #ca0000 !important;
+}
 
 /** link buttons **/
 .rbuttons a.btn,

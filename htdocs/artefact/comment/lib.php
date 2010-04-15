@@ -506,13 +506,12 @@ class ArtefactTypeComment extends ArtefactType {
         return array(
             'name'            => 'make_public',
             'renderer'        => 'oneline',
-            'class'           => 'makeprivate',
-            // 'jsform'          => true,
             'elements'        => array(
                 'comment'  => array('type' => 'hidden', 'value' => $id),
                 'submit'   => array(
-                    'type' => 'submit',
-                    'name' => 'make_public_submit',
+                    'type'  => 'submit',
+                    'class' => 'quiet',
+                    'name'  => 'make_public_submit',
                     'value' => get_string('makepublic', 'artefact.comment'),
                 ),
             ),
@@ -523,12 +522,11 @@ class ArtefactTypeComment extends ArtefactType {
         return array(
             'name'     => 'delete_comment',
             'renderer' => 'oneline',
-            'class'    => 'makeprivate',
             'elements' => array(
                 'comment' => array('type' => 'hidden', 'value' => $id),
                 'submit'  => array(
                     'type'  => 'submit',
-                    'class' => 'delete',
+                    'class' => 'quiet btn-del',
                     'name'  => 'delete_comment_submit',
                     'value' => get_string('delete'),
                 ),
