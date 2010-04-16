@@ -1409,7 +1409,7 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
-    if ($oldversion < 2010041288 && table_exists(new XMLDBTable('view_feedback'))) {
+    if ($oldversion < 2010041600 && table_exists(new XMLDBTable('view_feedback'))) {
         // Add author, authorname to artefact table
         $table = new XMLDBTable('artefact');
         $field = new XMLDBField('author');
