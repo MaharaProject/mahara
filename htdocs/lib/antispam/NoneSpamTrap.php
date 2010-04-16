@@ -37,9 +37,9 @@ class NoneSpamTrap {
         $this->fields = $fields;
     }
 
-    public function is_spam() {
+    public function is_spam($threshold=3) {
         // if no spam score threshold is defined, never call something spam
-        if (!defined('SPAM_SCORE')) {
+        if (empty($threshold)) {
             return false;
         }
         $score = 0;
@@ -49,7 +49,7 @@ class NoneSpamTrap {
                 $score += $this->$method($field['value']);
             }
         }
-        if ($score > SPAM_SCORE) {
+        if ($score > $threshold) {
             return true;
         }
         return false;

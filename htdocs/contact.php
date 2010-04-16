@@ -34,7 +34,6 @@ require('init.php');
 require_once('pieforms/pieform.php');
 require_once('lib/antispam.php');
 define('TITLE', get_string('contactus'));
-define('SPAM_SCORE', 3);
 
 if ($USER->is_logged_in()) {
     $userid = $USER->get('id');

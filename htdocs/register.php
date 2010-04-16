@@ -34,7 +34,6 @@ require('init.php');
 require_once('pieforms/pieform.php');
 require_once('lib/antispam.php');
 define('TITLE', get_string('register'));
-define('SPAM_SCORE', 3);
 $key = param_alphanum('key', null);
 
 /*
