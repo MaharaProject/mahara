@@ -1439,6 +1439,13 @@ function xmldb_core_upgrade($oldversion=0) {
             (author IS NULL     AND authorname IS NOT NULL)
         )');
 
+        // Move feedback activity type to artefact plugin
+        execute_sql("
+            UPDATE {activity_type}
+            SET plugintype = 'artefact', pluginname = 'comment'
+            WHERE name = 'feedback'
+        ");
+
         // Install the comment artefact
         if ($data = check_upgrades('artefact.comment')) {
             upgrade_plugin($data);
@@ -1519,13 +1526,6 @@ function xmldb_core_upgrade($oldversion=0) {
         drop_table($table);
         $table = new XMLDBTable('artefact_feedback');
         drop_table($table);
-
-        // Move feedback activity type to artefact plugin
-        execute_sql("
-            UPDATE {activity_type}
-            SET plugintype = 'artefact', pluginname = 'comment'
-            WHERE name = 'feedback'
-        ");
 
         // Add site setting for anonymous comments
         set_config('anonymouscomments', 1);
