@@ -466,7 +466,7 @@ class ArtefactTypeComment extends ArtefactType {
         if (!$USER->is_logged_in()) {
             $form['spam'] = array(
                 'secret'       => get_config('formsecret'),
-                'mintime'      => 3,
+                'mintime'      => 1,
                 'hash'         => array('authorname', 'message', 'ispublic', 'message', 'submit'),
             );
             $form['elements']['authorname'] = array(
@@ -698,6 +698,27 @@ function delete_comment_submit(Pieform $form, $values) {
 
     $SESSION->add_ok_msg(get_string('commentremoved', 'artefact.comment'));
     redirect($url);
+}
+
+function add_feedback_form_validate(Pieform $form, $values) {
+    if ($form->get_property('spam')) {
+        require_once(get_config('libroot') . 'antispam.php');
+        $spamtrap = new_spam_trap(array(
+            array(
+                'type' => 'body',
+                'value' => $values['message'],
+            ),
+        ));
+
+        if ($form->spam_error() || $spamtrap->is_spam()) {
+            $msg = get_string('formerror');
+            $emailcontact = get_config('emailcontact');
+            if (!empty($emailcontact)) {
+                $msg .= ' ' . get_string('formerroremail', 'mahara', $emailcontact, $emailcontact);
+            }
+            $form->set_error('message', $msg);
+        }
+    }
 }
 
 function add_feedback_form_submit(Pieform $form, $values) {
