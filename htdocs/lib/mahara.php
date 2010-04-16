@@ -497,7 +497,7 @@ function language_get_searchpaths() {
         $docrootpath = array(get_config('docroot'));
 
         // Paths to language files in dataroot
-        $datarootpaths = (array)glob(get_config('dataroot') . 'langpacks/*.utf8', GLOB_MARK | GLOB_ONLYDIR);
+        $datarootpaths = (array)glob(get_config('dataroot') . 'langpacks/*', GLOB_MARK | GLOB_ONLYDIR);
 
         // langpacksearchpaths configuration variable - for experts :)
         $lpsearchpaths = (array)get_config('langpacksearchpaths');
