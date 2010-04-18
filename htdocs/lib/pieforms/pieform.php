@@ -240,6 +240,22 @@ class Pieform {/*{{{*/
         }
 
         if (isset($this->data['spam'])) {
+            // Enable form tricks to make it harder for bots to fill in the form.
+            // This was moved from lib/antispam.php, see:
+            // http://wiki.mahara.org/Developer_Area/Specifications_in_Development/Anti-spam#section_7
+            //
+            // Use the spam_error() method in your _validate function to check whether a submitted form
+            // has failed any of these checks.
+            //
+            // Available options:
+            //  - hash:    An array of element names to be hashed.  Currently ids of input elements
+            //             are also hashed, so you need to be careful if you include 'elementname' in
+            //             the hash array, and make sure you rewrite any css or js so it doesn't rely on
+            //             an id like 'formname_elementname'.
+            //  - secret:  String used to hash the fields.
+            //  - mintime: Minimum number of seconds that must pass between page load & form submission.
+            //  - maxtime: Maximum number of seconds that must pass between page load & form submission.
+            //  - reorder: Array of element names to be reordered at random.
             if (empty($this->data['spam']['secret']) || !isset($this->data['elements']['submit'])) {
                 // @todo don't rely on submit element
                 throw new PieformException('Forms with spam config must have a secret and submit element');
