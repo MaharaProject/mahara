@@ -129,8 +129,7 @@ function contactus_validate(Pieform $form, $values) {
         if (!empty($emailcontact)) {
             $msg .= ' ' . get_string('formerroremail', 'mahara', $emailcontact, $emailcontact);
         }
-        $SESSION->add_error_msg($msg);
-        $form->set_error('submit', '');
+        $form->set_error(null, $msg);
     }
 }
 

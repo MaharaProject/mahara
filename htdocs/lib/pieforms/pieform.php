@@ -626,6 +626,9 @@ class Pieform {/*{{{*/
             $result .= ' enctype="multipart/form-data"';
         }
         $result .= '>';
+        if (!empty($this->error)) {
+            $result .= '<div class="error">' . $this->error . '</div>';
+        }
         return $result;
     }/*}}}*/
 
@@ -945,6 +948,10 @@ EOF;
      * @throws PieformException  If the element could not be found
      */
     public function set_error($name, $message) {/*{{{*/
+        if (is_null($name) && !empty($message)) {
+            $this->error = $message;
+            return;
+        }
         foreach ($this->data['elements'] as $key => &$element) {
             if ($element['type'] == 'fieldset') {
                 foreach ($element['elements'] as &$subelement) {
@@ -975,7 +982,7 @@ EOF;
                 return true;
             }
         }
-        return false;
+        return isset($this->error);
     }/*}}}*/
 
     /**
