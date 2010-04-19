@@ -204,6 +204,7 @@ function expected_account_preferences() {
                  'maildisabled'   => 0,
                  'tagssideblockmaxtags' => get_config('tagssideblockmaxtags'),
                  'hiderealname'   => 0,
+                 'multipleblogs' => 0,
                  );
 }
 
@@ -1216,7 +1217,8 @@ function get_new_username($desired) {
     $desired = strtolower(substr($desired, 0, $maxlen));
     $taken = get_column_sql('
         SELECT username FROM {usr}
-        WHERE username ' . db_ilike() . " '" . substr($desired, 0, $maxlen - 6) . "%'");
+        WHERE username ' . db_ilike() . " ?",
+        array(substr($desired, 0, $maxlen - 6) . '%'));
     if (!$taken) {
         return $desired;
     }

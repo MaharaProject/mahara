@@ -29,7 +29,6 @@ defined('INTERNAL') || die();
 
 $string['typemaharamessage'] = 'System message';
 $string['typeusermessage'] = 'Message from other users';
-$string['typefeedback'] = 'Feedback';
 $string['typewatchlist'] = 'Watchlist';
 $string['typeviewaccess'] = 'New view access';
 $string['typecontactus'] = 'Contact us';
@@ -79,8 +78,6 @@ $string['newviewmessage'] = '%s has created a new view "%s"';
 
 $string['newcontactusfrom'] = 'New contact us from';
 $string['newcontactus'] = 'New contact us';
-$string['newfeedbackonview'] = 'New feedback on view';
-$string['newfeedbackonartefact'] = 'New feedback on artefact';
 
 $string['newviewaccessmessage'] = 'You have been added to the access list for the view called "%s" by %s';
 $string['newviewaccesssubject'] = 'New view access';

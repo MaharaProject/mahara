@@ -1,4 +1,4 @@
-{include file="header.tpl"}
+{if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
 
         <h2>
             <a href="{$WWWROOT}view/view.php?id={$viewid}">{$viewtitle|escape}</a>{if $ownername} {str tag=by section=view}
@@ -16,13 +16,15 @@
         </div>
 
       <div class="viewfooter cb">
+        {if $feedback->count || $enablecomments}
         <table id="feedbacktable" class="fullwidth table">
-          <thead><tr><th>{str tag="feedback" section="view"}</th></tr></thead>
+          <thead><tr><th>{str tag="feedback" section="artefact.comment"}</th></tr></thead>
           <tbody>
             {$feedback->tablerows}
           </tbody>
         </table>
         {$feedback->pagination}
+        {/if}
         <div id="viewmenu">
 {include file="view/viewmenu.tpl"}
         </div>
@@ -30,4 +32,4 @@
         <div>{$objectionform}</div>
       </div>
 
-{include file="footer.tpl"}
+{if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}

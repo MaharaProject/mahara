@@ -76,6 +76,12 @@ function ensure_sanity() {
     if (!extension_loaded('dom')) {
         throw new ConfigSanityException(get_string('domextensionnotloaded', 'error'));
     }
+    if (!function_exists('mime_content_type')) {
+        log_environ(get_string('mimemagicnotloaded', 'error'));
+        function mime_content_type($filename) {
+            return 'application/octet-stream';
+        }
+    }
 
     //Check for freetype in the gd extension
     $gd_info = gd_info();
@@ -491,7 +497,7 @@ function language_get_searchpaths() {
         $docrootpath = array(get_config('docroot'));
 
         // Paths to language files in dataroot
-        $datarootpaths = (array)glob(get_config('dataroot') . 'langpacks/*.utf8', GLOB_MARK | GLOB_ONLYDIR);
+        $datarootpaths = (array)glob(get_config('dataroot') . 'langpacks/*', GLOB_MARK | GLOB_ONLYDIR);
 
         // langpacksearchpaths configuration variable - for experts :)
         $lpsearchpaths = (array)get_config('langpacksearchpaths');
@@ -2476,54 +2482,5 @@ function build_portfolio_search_html(&$data) {
     $data->pagination = $pagination['html'];
     $data->pagination_js = $pagination['javascript'];
 }
-
-// When feedback becomes an artefact type, move this into the feedback artefact plugin
-function build_feedback_html(&$data) {
-    foreach ($data->data as &$item) {
-        $item->date    = format_date(strtotime($item->ctime), 'strftimedatetime');
-        $item->message = clean_html($item->message);
-        $item->name    = $item->author ? display_name($item->author) : $item->authorname;
-        if (!empty($item->attachment)) {
-            $item->attachid    = $item->attachment;
-            $item->attachtitle = $item->title;
-            $item->attachsize  = display_size($item->size);
-            if ($data->isowner) {
-                $item->attachmessage = get_string('feedbackattachmessage', 'view', get_string('feedbackattachdirname', 'view'));
-            }
-        }
-    }
-    $extradata = array('view' => $data->view);
-    if (!empty($data->artefact)) {
-        $data->baseurl = get_config('wwwroot') . 'view/artefact.php?view=' . $data->view . '&artefact=' . $data->artefact;
-        $data->jsonscript = 'view/artefactfeedback.json.php';
-        $extradata['artefact'] = $data->artefact;
-    }
-    else {
-        $data->baseurl = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
-        $data->jsonscript = 'view/viewfeedback.json.php';
-    }
-    $smarty = smarty_core();
-    $smarty->assign_by_ref('data', $data->data);
-    $smarty->assign('canedit', $data->canedit);
-    $smarty->assign('baseurl', $data->baseurl);
-    $data->tablerows = $smarty->fetch('view/feedbacklist.tpl');
-    $pagination = build_pagination(array(
-        'id' => 'feedback_pagination',
-        'class' => 'center',
-        'url' => $data->baseurl,
-        'jsonscript' => $data->jsonscript,
-        'datatable' => 'feedbacktable',
-        'count' => $data->count,
-        'limit' => $data->limit,
-        'offset' => $data->offset,
-        'lastpage' => $data->lastpage,
-        'resultcounttextsingular' => get_string('comment', 'view'),
-        'resultcounttextplural' => get_string('comments', 'view'),
-        'extradata' => $extradata,
-    ));
-    $data->pagination = $pagination['html'];
-    $data->pagination_js = $pagination['javascript'];
-}
-
 
 ?>

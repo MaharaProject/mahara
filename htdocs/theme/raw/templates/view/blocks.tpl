@@ -65,7 +65,7 @@
         <form action="" method="POST">
             <input type="hidden" name="id" value="{$view}">
             <input type="hidden" name="new" value="1">
-            <input type="submit" name="cancel" class="submit" value="{str tag='cancel'}" onclick="return confirm('{str tag='confirmcancelcreatingview' section='view'}');">
+            <input type="submit" name="cancel" class="cancel" value="{str tag='cancel'}" onclick="return confirm('{str tag='confirmcancelcreatingview' section='view'}');">
         </form>
         <form action="{$WWWROOT}view/edit.php" method="GET">
             <input type="hidden" name="id" value="{$view}">

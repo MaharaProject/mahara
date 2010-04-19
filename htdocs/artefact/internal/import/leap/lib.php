@@ -28,9 +28,9 @@
 defined('INTERNAL') || die();
 
 /**
- * Implements LEAP2A import of profile related entries into Mahara
+ * Implements Leap2A import of profile related entries into Mahara
  *
- * For more information about LEAP profile importing, see:
+ * For more information about Leap profile importing, see:
  * http://wiki.mahara.org/Developer_Area/Import%2f%2fExport/LEAP_Import/Internal_Artefact_Plugin
  *
  * TODO:
@@ -60,7 +60,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
      * Lookup table for some of the persondata fields.
      *
      * Info based on the table here:
-     * http://wiki.cetis.ac.uk/2009-03/LEAP2A_personal_data#Persondata_fields
+     * http://wiki.cetis.ac.uk/2009-03/Leap2A_personal_data#Persondata_fields
      *
      * The fields here that are not listed there are either not supported, or 
      * imported a different way by this plugin. For example, name related 
@@ -99,7 +99,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
 
     /**
      * This list taken from 
-     * http://wiki.cetis.ac.uk/2009-03/LEAP2A_personal_data#Service_abbreviations
+     * http://wiki.cetis.ac.uk/2009-03/Leap2A_personal_data#Service_abbreviations
      *
      * We are only including a list of the ones we can import, so some from the 
      * list will be missing
@@ -248,14 +248,14 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
                 }
                 else {
                     // 'Field' is required
-                    // http://wiki.cetis.ac.uk/2009-03/LEAP2A_personal_data#field
+                    // http://wiki.cetis.ac.uk/2009-03/Leap2A_personal_data#field
                     $importer->trace('WARNING: persondata element did not have leap:field attribute');
                     continue;
                 }
             }
 
             // The information about someone's name is much more comprehensive 
-            // in LEAP than what Mahara has, so we have to piece it together
+            // in Leap than what Mahara has, so we have to piece it together
             self::import_namedata($importer, $persondata);
 
             // People can have address info associated with them
@@ -287,7 +287,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             $author = $author[0];
 
             if (!isset($author->name)) {
-                throw new ImportException($importer, 'TODO: get_string: <author> must include <name> - http://wiki.cetis.ac.uk/2009-03/LEAP2A_relationships#Author');
+                throw new ImportException($importer, 'TODO: get_string: <author> must include <name> - http://wiki.cetis.ac.uk/2009-03/Leap2A_relationships#Author');
             }
 
             $name = (string)$author->name;
@@ -325,7 +325,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             // allows you to keep one of each of these values, so we throw away 
             // any more if they're seen, on the assumption that they are 
             // ordered from most to least important: 
-            // http://wiki.cetis.ac.uk/2009-03/LEAP2A_personal_data#Ordering
+            // http://wiki.cetis.ac.uk/2009-03/Leap2A_personal_data#Ordering
             static $seen = array();
             if (isset($seen[$field])) {
                 return;
@@ -348,7 +348,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     private static function import_persondata_id(PluginImportLeap $importer, SimpleXMLElement $item, array $leapattributes) {
         if ($leapattributes['field'] == 'id' && !isset($leapattributes['service'])) {
             // 'id' must have a service set
-            // http://wiki.cetis.ac.uk/2009-03/LEAP2A_personal_data#service
+            // http://wiki.cetis.ac.uk/2009-03/Leap2A_personal_data#service
             throw new ImportException($importer, "TODO: get_string: persondata field was 'id' but had no service set");
         }
 
@@ -535,7 +535,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             }
             else {
                 // 'Field' is required
-                // http://wiki.cetis.ac.uk/2009-03/LEAP2A_personal_data#field
+                // http://wiki.cetis.ac.uk/2009-03/Leap2A_personal_data#field
                 $importer->trace('WARNING: persondata element did not have leap:field attribute');
                 continue;
             }

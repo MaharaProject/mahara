@@ -29,7 +29,7 @@ define('INTERNAL', 1);
 define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require('searchlib.php');
+require_once('searchlib.php');
 
 $params = new StdClass;
 $params->query       = trim(param_variable('query', ''));

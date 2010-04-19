@@ -18,25 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage form
+ * @subpackage artefact-comment
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-function pieform_element_captcha(Pieform $form, $element) {
-    $id = $form->get_name() . '_' . $element['name'];
-    $image = '<img src="' . get_config('wwwroot') . 'captcha.php?name=' . $id . '" alt="' . get_string('captchaimage') . '" style="padding: 2px 0;"><br>';
-    $input = '<input type="text" class="text required" id="' . $id . '" name="' . $element['name'] . '" style="width: 137px;" tabindex="' . $form->get_property('tabindex') . '">';
-    return $image . ' ' . $input;
-}
+defined('INTERNAL') || die();
 
-function pieform_element_captcha_get_value(Pieform $form, $element) {
-    global $SESSION;
-    $name = $element['name'];
-    $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
-    return isset($global[$name]) && strtolower($global[$name]) == strtolower($SESSION->get($form->get_name() . '_' . $name));
+function xmldb_artefact_comment_upgrade($oldversion=0) {
+
+    return true;
 }
 
 ?>

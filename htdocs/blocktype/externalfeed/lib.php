@@ -61,6 +61,10 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             $data->content = unserialize($data->content);
             $data->image   = unserialize($data->image);
 
+            // only keep the number of entries the user asked for
+            $chunks = array_chunk($data->content, $configdata['count']);
+            $data->content = $chunks[0];
+
             // Attempt to fix relative URLs in the feeds
             if (!empty($data->image['link'])) {
                 $data->description = preg_replace(
@@ -124,6 +128,15 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                     'required' => true,
                     'maxlength' => 2048, // See install.xml for this plugin - MySQL can only safely handle up to 255 chars
                 ),
+            ),
+            'count' => array(
+                'type' => 'text',
+                'title' => get_string('itemstoshow', 'blocktype.externalfeed'),
+                'description' => get_string('itemstoshowdescription', 'blocktype.externalfeed'),
+                'defaultvalue' => isset($configdata['count']) ? $configdata['count'] : 10,
+                'size' => 3,
+                'minvalue' => 1,
+                'maxvalue' => 20,
             ),
             'full' => array(
                 'type'         => 'checkbox',
@@ -308,7 +321,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
 
         $data->content = array();
         foreach ($feed as $count => $item) {
-            if ($count == 10) {
+            if ($count == 20) {
                 break;
             }
             $description = $item->content ? $item->content : ($item->description ? $item->description : ($item->summary ? $item->summary : null));

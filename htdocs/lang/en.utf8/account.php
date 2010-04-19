@@ -60,6 +60,9 @@ $string['showviewcolumns'] = 'Show controls to add and remove columns when editi
 $string['tagssideblockmaxtags'] = 'Maximum tags in cloud';
 $string['tagssideblockmaxtagsdescription'] = 'Maximum number of tags to display in your Tag Cloud';
 
+$string['enablemultipleblogs'] = 'Enable multiple blogs';
+$string['enablemultipleblogsdescription']  = 'By default, Mahara gives you one blog. If you would like to keep more than one blog, check this option.';
+
 $string['hiderealname'] = 'Hide real name';
 $string['hiderealnamedescription'] = 'Check this box if you have set a display name and you do not want other users to be able to find you by your real name in user searches.';
 

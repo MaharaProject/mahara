@@ -30,7 +30,7 @@ define('MENUITEM', 'groups/findfriends');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('findfriends'));
-require('searchlib.php');
+require_once('searchlib.php');
 safe_require('search', 'internal');
 
 $query = param_variable('query', '');

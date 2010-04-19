@@ -29,8 +29,8 @@ define('PUBLIC', 1);
 define('INTERNAL', 1);
 define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
-require('group.php');
-require('searchlib.php');
+require_once('group.php');
+require_once('searchlib.php');
 
 $id     = param_integer('id');
 $query  = trim(param_variable('query', ''));

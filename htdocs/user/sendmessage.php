@@ -29,7 +29,7 @@ define('INTERNAL', 1);
 define('MENUITEM', 'groups/findfriends');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
-require('searchlib.php');
+require_once('searchlib.php');
 safe_require('search', 'internal');
 
 $id = param_integer('id');

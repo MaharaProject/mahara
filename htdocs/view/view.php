@@ -32,8 +32,10 @@ define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'view');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-require(get_config('libroot') . 'view.php');
-require('group.php');
+
+require_once(get_config('libroot') . 'view.php');
+require_once('group.php');
+safe_require('artefact', 'comment');
 
 // access key for roaming teachers
 $mnettoken = $SESSION->get('mnetuser') ? param_alphanum('mt', null) : null;
@@ -60,6 +62,7 @@ else if ($usertoken) {
 else {
     $viewid = param_integer('id');
 }
+
 $new = param_boolean('new');
 
 if (!can_view_view($viewid, null, $usertoken, $mnettoken)) {
@@ -67,14 +70,18 @@ if (!can_view_view($viewid, null, $usertoken, $mnettoken)) {
 }
 
 // Feedback list pagination requires limit/offset params
-$limit    = param_integer('limit', 10);
-$offset   = param_integer('offset', 0);
+$limit       = param_integer('limit', 10);
+$offset      = param_integer('offset', 0);
+$showcomment = param_integer('showcomment', null);
 
 $view = new View($viewid);
 
 // Create the "make feedback private form" now if it's been submitted
-if (param_variable('make_private_submit', null)) {
-    pieform(make_private_form(param_integer('feedback')));
+if (param_variable('make_public_submit', null)) {
+    pieform(ArtefactTypeComment::make_public_form(param_integer('comment')));
+}
+else if (param_variable('delete_comment_submit', null)) {
+    pieform(ArtefactTypeComment::delete_comment_form(param_integer('comment')));
 }
 
 $owner    = $view->get('owner');
@@ -91,9 +98,15 @@ $title = hsc(TITLE);
 $submittedgroup = (int)$view->get('submittedgroup');
 if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_views($submittedgroup, $USER->get('id'))) {
     // The user is a tutor of the group that this view has
-    // been submitted to, and is entitled to release the view, and to
-    // upload an additional file when submitting feedback.
+    // been submitted to, and is entitled to release the view
     $submittedgroup = get_record('group', 'id', $submittedgroup);
+    if ($view->get('submittedtime')) {
+        $pieces = explode(' ', $view->get('submittedtime'));
+        $text = get_string('viewsubmittedtogroupon', 'view', get_config('wwwroot') . 'group/view.php?id=' . $submittedgroup->id, $submittedgroup->name, $pieces[0], $pieces[1]);
+    }
+    else {
+        $text = get_string('viewsubmittedtogroup', 'view', get_config('wwwroot') . 'group/view.php?id=' . $submittedgroup->id, $submittedgroup->name);
+    }
     $releaseform = pieform(array(
         'name'     => 'releaseview',
         'method'   => 'post',
@@ -103,7 +116,7 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
         'elements' => array(
             'submittedview' => array(
                 'type'  => 'html',
-                'value' => get_string('viewsubmittedtogroup', 'view', get_config('wwwroot') . 'group/view.php?id=' . $submittedgroup->id, $submittedgroup->name),
+                'value' => $text,
             ),
             'submit' => array(
                 'type'  => 'submit',
@@ -111,11 +124,9 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
             ),
         ),
     ));
-    $allowattachments = true;
 }
 else {
     $releaseform = '';
-    $allowattachments = false;
 }
 
 
@@ -132,18 +143,19 @@ function releaseview_submit() {
     redirect(get_config('wwwroot') . 'view/view.php?id='.$view->get('id'));
 }
   
-$viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
-
-$feedback = $view->get_feedback($limit, $offset);
-build_feedback_html($feedback);
-
-$anonfeedback = !$USER->is_logged_in() && ($usertoken || $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid)));
-if ($USER->is_logged_in() || $anonfeedback) {
-    $addfeedbackform = pieform(add_feedback_form($allowattachments));
+// If the view has comments turned off, tutors can still leave
+// comments if the view is submitted to their group.
+if (($USER->is_logged_in() || get_config('anonymouscomments')) && ($view->get('allowcomments') || !empty($releaseform))) {
+    $defaultprivate = !empty($releaseform);
+    $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form($defaultprivate));
 }
 if ($USER->is_logged_in()) {
     $objectionform = pieform(objection_form());
 }
+
+$viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
+
+$feedback = ArtefactTypeComment::get_comments($limit, $offset, $showcomment, $view);
 
 // Set up theme
 $viewtheme = $view->get('theme');
@@ -155,7 +167,7 @@ $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_confi
 $can_edit = $USER->can_edit_view($view) && !$submittedgroup && !$view->is_submitted();
 
 $smarty = smarty(
-    array('paginator', 'feedbacklist', 'artefact/resume/resumeshowhide.js'),
+    array('paginator', 'viewmenu', 'artefact/resume/resumeshowhide.js'),
     $stylesheets,
     array(),
     array(
@@ -266,14 +278,21 @@ if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
 $smarty->assign('viewdescription', $view->get('description'));
 $smarty->assign('viewcontent', $view->build_columns());
 $smarty->assign('releaseform', $releaseform);
-$smarty->assign('anonfeedback', $anonfeedback);
 if (isset($addfeedbackform)) {
+    $smarty->assign('enablecomments', 1);
     $smarty->assign('addfeedbackform', $addfeedbackform);
 }
 if (isset($objectionform)) {
     $smarty->assign('objectionform', $objectionform);
 }
 $smarty->assign('viewbeingwatched', $viewbeingwatched);
+
+if ($tutorgroupdata = group_get_user_course_groups()) {
+    $options = array();
+    if (!$view->get('submittedgroup') && !$view->get('submittedhost')) {
+        $smarty->assign('view_group_submission_form', view_group_submission_form($view->get('id'), $tutorgroupdata, 'view'));
+    }
+}
 
 $smarty->display('view/view.tpl');
 

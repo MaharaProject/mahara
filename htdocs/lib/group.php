@@ -618,6 +618,53 @@ function group_removeuser_submit(Pieform $form, $values) {
     redirect('/group/members.php?id=' . $group);
 }
 
+/**
+ * Form for submitting views to a group
+ */
+function group_view_submission_form($groupid, $viewdata) {
+    $options = array();
+    foreach ($viewdata as $view) {
+        $options[$view->id] = $view->title;
+    }
+    return pieform(array(
+        'name' => 'group_view_submission_form_' . $groupid,
+        'method' => 'post',
+        'renderer' => 'oneline',
+        'autofocus' => false,
+        'successcallback' => 'group_view_submission_form_submit',
+        'elements' => array(
+            'text1' => array(
+                'type' => 'html', 'value' => get_string('submit', 'group') . ' ',
+            ),
+            'options' => array(
+                'type' => 'select',
+                'collapseifoneoption' => false,
+                'options' => $options,
+            ),
+            'text2' => array(
+                'type' => 'html',
+                'value' => get_string('forassessment', 'view'),
+            ),
+            'submit' => array(
+                'type' => 'submit',
+                'value' => get_string('submit')
+            ),
+            'group' => array(
+                'type' => 'hidden',
+                'value' => $groupid
+            ),
+            'returnto' => array(
+                'type' => 'hidden',
+                'value' => get_config('wwwroot') . 'group/view.php?id=' . $groupid,
+            ),
+        ),
+    ));
+}
+
+function group_view_submission_form_submit(Pieform $form, $values) {
+    redirect('/view/submit.php?id=' . $values['options'] . '&group=' . $values['group'] . '&returnto=group');
+}
+
 // Miscellaneous group related functions
 
 /**
@@ -1159,5 +1206,28 @@ function group_can_create_groups() {
         return true;
     }
     return $creators == 'staff' && ($USER->get('staff') || $USER->is_institutional_staff());
+}
+
+function group_get_user_course_groups($userid=null) {
+    if (is_null($userid)) {
+        global $USER;
+        $userid = $USER->get('id');
+    }
+    if ($groups = get_records_sql_array(
+        "SELECT g.id, g.name
+        FROM {group_member} u
+        INNER JOIN {group} g ON (u.group = g.id AND g.deleted = 0)
+        INNER JOIN {grouptype} t ON t.name = g.grouptype
+        WHERE u.member = ?
+        AND t.submittableto = 1
+        ORDER BY g.name
+        ", array($userid))) {
+        return $groups;
+    }
+    return array();
+}
+
+function group_allows_submission($grouptype) {
+    return get_field('grouptype', 'submittableto', 'name', $grouptype);
 }
 ?>

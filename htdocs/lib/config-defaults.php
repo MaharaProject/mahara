@@ -216,7 +216,7 @@ $cfg->showonlineuserssideblock = true;
 // EXAMPLE:  Your cron job hits cron.php every 15 minutes.  Then $cfg->maxrunage must be 900 or greater.
 $cfg->maxrunage = 300;
 
-// if importing leap2a over an xmlrpc mnet connection, set this to something higher than 0 to log import information
+// if importing Leap2A over an xmlrpc mnet connection, set this to something higher than 0 to log import information
 // see the constants in import/leap/lib.php
 $cfg->leapovermnetloglevel = 0;
 ?>

@@ -212,20 +212,15 @@ class ArtefactTypeContactinformation extends ArtefactTypeResume {
     }
 
     public static function setup_new($userid) {
-        $code = get_random_key(10, range(0, 9));
         try {
-            $existing = artefact_instance_from_type('contactinformation', $userid);
-            throw new ParamOutOfRangeException("Cannot create a new Contactinformation artefact for $userid - they already have one!", $code);
-        } catch (Exception $e) {
-            if ($e->getCode() ==  $code) { // it is the exception we *just* threw
-                throw $e;
-            }
+            return artefact_instance_from_type('contactinformation', $userid);
+        } catch (ArtefactNotFoundException $e) {
+            $artefact = new ArtefactTypeContactinformation(null, array(
+                'owner' => $userid,
+                'title' => get_string('contactinformation', 'artefact.resume')
+            ));
+            $artefact->commit();
         }
-        $artefact = new ArtefactTypeContactinformation(null, array(
-            'owner' => $userid,
-            'title' => get_string('contactinformation', 'artefact.resume')
-        ));
-        $artefact->commit();
         return $artefact;
     }
 
@@ -624,11 +619,13 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
                     'required' => true,
                 ),
                 'title' => get_string('startdate', 'artefact.resume'),
+                'size' => 20,
                 'help' => true,
             ),
             'enddate' => array(
                 'type' => 'text', 
                 'title' => get_string('enddate', 'artefact.resume'),
+                'size' => 20,
             ),
             'employer' => array(
                 'type' => 'text',
@@ -636,10 +633,12 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
                     'required' => true,
                 ),
                 'title' => get_string('employer', 'artefact.resume'),
+                'size' => 50,
             ),
             'employeraddress' => array(
                 'type' => 'text',
                 'title' => get_string('employeraddress', 'artefact.resume'),
+                'size' => 50,
             ),
             'jobtitle' => array(
                 'type' => 'text',
@@ -647,6 +646,7 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
                     'required' => true,
                 ),
                 'title' => get_string('jobtitle', 'artefact.resume'),
+                'size' => 50,
             ),
             'positiondescription' => array(
                 'type' => 'textarea',
@@ -712,11 +712,13 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
                     'required' => true,
                 ),
                 'title' => get_string('startdate', 'artefact.resume'),
+                'size' => 20,
                 'help' => true,
             ),
             'enddate' => array(
                 'type' => 'text', 
                 'title' => get_string('enddate', 'artefact.resume'),
+                'size' => 20,
             ),
             'institution' => array(
                 'type' => 'text',
@@ -724,18 +726,22 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
                     'required' => true,
                 ),
                 'title' => get_string('institution', 'artefact.resume'),
+                'size' => 50,
             ),
             'institutionaddress' => array(
                 'type' => 'text',
                 'title' => get_string('institutionaddress', 'artefact.resume'),
+                'size' => 50,
             ),
             'qualtype' => array(
                 'type' => 'text',
                 'title' => get_string('qualtype', 'artefact.resume'),
+                'size' => 50,
             ),
             'qualname' => array(
                 'type' => 'text',
                 'title' => get_string('qualname', 'artefact.resume'),
+                'size' => 50,
             ),
             'qualdescription' => array(
                 'type' => 'textarea',
@@ -798,6 +804,7 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
                     'required' => true,
                 ),
                 'title' => get_string('date', 'artefact.resume'),
+                'size' => 20,
                 'help' => true,
             ),
             'title' => array(
@@ -806,6 +813,7 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
                     'required' => true,
                 ),
                 'title' => get_string('title', 'artefact.resume'),
+                'size' => 20,
             ),
             'description' => array(
                 'type' => 'textarea',
@@ -850,6 +858,7 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
                 ),
                 'title' => get_string('date', 'artefact.resume'),
                 'help' => true,
+                'size' => 20,
             ),
             'title' => array(
                 'type' => 'text',
@@ -857,6 +866,7 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
                     'required' => true,
                 ),
                 'title' => get_string('title', 'artefact.resume'),
+                'size' => 50,
             ),
             'contribution' => array(
                 'type' => 'text',
@@ -864,6 +874,7 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
                     'required' => true,
                 ),
                 'title' => get_string('contribution', 'artefact.resume'),
+                'size' => 50,
             ),
             'description' => array(
                 'type' => 'textarea',
@@ -909,10 +920,12 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
                 ),
                 'title' => get_string('startdate', 'artefact.resume'),
                 'help' => true,
+                'size' => 20,
             ),
             'enddate' => array(
                 'type' => 'text', 
                 'title' => get_string('enddate', 'artefact.resume'),
+                'size' => 20,
             ),
             'title' => array(
                 'type' => 'text',
@@ -920,6 +933,7 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
                     'required' => true,
                 ),
                 'title' => get_string('title', 'artefact.resume'),
+                'size' => 50,
             ),
             'description' => array(
                 'type' => 'textarea',

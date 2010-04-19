@@ -460,9 +460,11 @@ function upgrade_plugin($upgrade) {
             }
             $activity->plugintype = $plugintype;
             $activity->pluginname = $pluginname;
-            $where = $activity;
-            unset($where->admin);
-            unset($where->delay);
+            $where = (object) array(
+                'name'       => $activity->name,
+                'plugintype' => $plugintype,
+                'pluginname' => $pluginname,
+            );
             // Work around the fact that insert_record cached the columns that
             // _were_ in the activity_type table before it was upgraded
             global $INSERTRECORD_NOCACHE;
@@ -585,7 +587,12 @@ function core_postinst() {
         (owner IS NULL     AND "group" IS NOT NULL AND institution IS NULL) OR
         (owner IS NULL     AND "group" IS NULL     AND institution IS NOT NULL)
     )');
+    execute_sql('ALTER TABLE {artefact} ADD CHECK (
+        (author IS NOT NULL AND authorname IS NULL    ) OR
+        (author IS NULL     AND authorname IS NOT NULL)
+    )');
 
+    set_antispam_defaults();
     set_remoteavatars_default();
     reload_html_filters();
     return $status;
@@ -668,14 +675,13 @@ function core_install_firstcoredata_defaults() {
     set_config('createpublicgroups', 'all');
     set_config('allowpublicviews', 1);
     set_config('allowpublicprofiles', 1);
-    set_config('captchaoncontactform', 1);
-    set_config('captchaonregisterform', 1);
     set_config('showselfsearchsideblock', 0);
     set_config('showtagssideblock', 1);
     set_config('tagssideblockmaxtags', 20);
     set_config('usersallowedmultipleinstitutions', 1);
     set_config('viewmicroheaders', 1);
     set_config('userscanchooseviewthemes', 1);
+    set_config('anonymouscomments', 1);
 
     // install the applications
     $app = new StdClass;
@@ -743,7 +749,6 @@ function core_install_firstcoredata_defaults() {
     $activitytypes = array(
         array('maharamessage', 0, 0),
         array('usermessage', 0, 0),
-        array('feedback', 0, 0),
         array('watchlist', 0, 1),
         array('viewaccess', 0, 1),
         array('contactus', 1, 1),
@@ -1050,4 +1055,20 @@ function set_remoteavatars_default() {
         }
         curl_close($ch);
     }
+}
+
+/**
+ * Use meaningful defaults for the antispam settings.
+ */
+function set_antispam_defaults() {
+    set_config('formsecret', get_random_key());
+    require_once(get_config('docroot') . 'lib/antispam.php');
+    if(checkdnsrr('test.uribl.com.black.uribl.com', 'A')) {
+        set_config('antispam', 'advanced');
+    }
+    else {
+        set_config('antispam', 'simple');
+    }
+    set_config('spamhaus', 0);
+    set_config('surbl', 0);
 }

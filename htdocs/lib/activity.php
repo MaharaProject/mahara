@@ -291,6 +291,7 @@ abstract class ActivityType {
 
     protected $subject;
     protected $message;
+    protected $strings;
     protected $users = array();
     protected $url;
     protected $id;
@@ -347,11 +348,29 @@ abstract class ActivityType {
        return (object)get_object_vars($this); 
     }
 
+    public function get_string_for_user($user, $string) {
+        $args = array_merge(
+            array(
+                $user->lang,
+                $this->strings->{$string}->key,
+                $this->strings->{$string}->section,
+            ),
+            $this->strings->{$string}->args
+        );
+        return call_user_func_array('get_string_from_language', $args);
+    }
+
     public function get_message($user) {
+        if (empty($this->message)) {
+            return $this->get_string_for_user($user, 'message');
+        }
         return $this->message;
     }
         
     public function get_subject($user) {
+        if (empty($this->subject)) {
+            return $this->get_string_for_user($user, 'subject');
+        }
         return $this->subject;
     }
 
@@ -647,65 +666,6 @@ class ActivityTypeUsermessage extends ActivityType {
         return array('message', 'userto', 'userfrom');
     }
     
-}
-
-class ActivityTypeFeedback extends ActivityType { 
-
-    protected $view;
-    protected $artefact;
-
-    private $viewrecord;
-    private $artefactinstance;
-
-    /**
-     * @param array $data Parameters:
-     *                    - view (int)
-     *                    - artefact (int) (optional)
-     *                    - message (string)
-     */
-    public function __construct($data, $cron=false) { 
-        parent::__construct($data, $cron);
-
-        if (!empty($this->artefact)) { // feedback on artefact
-            $userid = null;
-            require_once(get_config('docroot') . 'artefact/lib.php');
-            $this->artefactinstance = artefact_instance_from_id($this->artefact);
-            if ($this->artefactinstance->feedback_notify_owner()) {
-                $userid = $this->artefactinstance->get('owner');
-            }
-            if (empty($this->url)) {
-                $this->url = get_config('wwwroot') . 'view/artefact.php?artefact=' 
-                    . $this->artefact . '&view=' . $this->view;
-            }
-        } 
-        else { // feedback on view.
-            if (!$this->viewrecord = get_record('view', 'id', $this->view)) {
-                throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
-            }
-            $userid = $this->viewrecord->owner;
-            if (empty($this->url)) {
-                $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->view;
-            }
-        }
-        if ($userid) {
-            $this->users = activity_get_users($this->get_id(), array($userid));
-        } 
-    }
-
-    public function get_subject($user) {
-        if (!empty($this->artefact)) { // feedback on artefact
-            return get_string_from_language($user->lang, 'newfeedbackonartefact', 'activity')
-                . ' ' . $this->artefactinstance->get('title');
-        }
-        else {
-            return get_string_from_language($user->lang, 'newfeedbackonview', 'activity')
-                . ' ' . $this->viewrecord->title;
-        }
-    }
-
-    public function get_required_parameters() {
-        return array('message', 'view');
-    }
 }
 
 class ActivityTypeWatchlist extends ActivityType { 

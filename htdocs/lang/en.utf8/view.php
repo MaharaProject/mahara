@@ -42,6 +42,7 @@ $string['stopdate']               = 'Access End Date/Time';
 $string['stopdatecannotbeinpast'] = 'The stop date cannot be in the past';
 $string['startdatemustbebeforestopdate'] = 'The start date must be before the stop date';
 $string['unrecogniseddateformat'] = 'Unrecognised date format';
+$string['allowcommentsonview']    = 'If checked, users who can see your View will be allowed to leave comments.';
 $string['ownerformat']            = 'Name display format';
 $string['ownerformatdescription'] = 'How do you want people who look at your View to see your name?';
 $string['profileviewtitle']       = 'Profile view';
@@ -68,6 +69,7 @@ $string['views'] = 'views';
 $string['View'] = 'View';
 $string['Views'] = 'Views';
 $string['viewsubmittedtogroup'] = 'This View has been submitted to <a href="%s">%s</a>';
+$string['viewsubmittedtogroupon'] = 'This View was submitted to <a href="%s">%s</a> on %s at %s';
 $string['nobodycanseethisview2'] = 'Only you can see this View';
 $string['noviews'] = 'No Views.';
 $string['youhavenoviews'] = 'You have no Views.';
@@ -77,6 +79,9 @@ $string['viewsownedbygroup'] = 'Views owned by this group';
 $string['viewssharedtogroup'] = 'Views shared to this group';
 $string['viewssharedtogroupbyothers'] = 'Views shared to this group by others';
 $string['viewssubmittedtogroup'] = 'Views submitted to this group';
+$string['submitaviewtogroup'] = 'Submit a view to this group';
+$string['youhavesubmitted'] = 'You have submitted <a href="%s">%s</a> to this group';
+$string['youhavesubmittedon'] = 'You submitted <a href="%s">%s</a> to this group on %s at %s';
 
 // access levels
 $string['public'] = 'Public';
@@ -101,30 +106,14 @@ $string['addusertogroup'] = 'Add this user to a group';
 $string['addedtowatchlist'] = 'This View has been added to your watchlist';
 $string['attachment'] = 'Attachment';
 $string['removedfromwatchlist'] = 'This View has been removed from your watchlist';
-$string['addfeedbackfailed'] = 'Add feedback failed';
 $string['addtowatchlist'] = 'Add View to watchlist';
 $string['removefromwatchlist'] = 'Remove View from watchlist';
 $string['alreadyinwatchlist'] = 'This View is already in your watchlist';
 $string['attachedfileaddedtofolder'] = "The attached file %s has been added to your '%s' folder.";
-$string['attachfile'] = "Attach file";
 $string['complaint'] = 'Complaint';
 $string['date'] = 'Date';
-$string['feedback'] = 'Feedback';
-$string['feedbackattachdirname'] = 'assessmentfiles';
-$string['feedbackattachdirdesc'] = 'Files attached to View assessments';
-$string['feedbackattachmessage'] = 'The attached file has been added to your %s folder';
-$string['feedbackonthisartefactwillbeprivate'] = 'Feedback on this artefact will only be visible to the owner.';
-$string['feedbackonviewbytutorofgroup'] = 'Feedback on %s by %s of %s';
-$string['feedbacksubmitted'] = 'Feedback submitted';
-$string['makepublic'] = 'Make public';
-$string['nopublicfeedback'] = 'No public feedback';
 $string['notifysiteadministrator'] = 'Notify site administrator';
-$string['placefeedback'] = 'Place feedback';
-$string['placefeedbacknotallowed'] = 'You are not allowed to place feedback on this View';
 $string['print'] = 'Print';
-$string['thisfeedbackispublic'] = 'This feedback is public';
-$string['thisfeedbackisprivate'] = 'This feedback is private';
-$string['makeprivate'] = 'Change to Private';
 $string['reportobjectionablematerial'] = 'Report objectionable material';
 $string['reportsent'] = 'Your report has been sent';
 $string['updatewatchlistfailed'] = 'Update of watchlist failed';
@@ -162,9 +151,7 @@ $string['empty_block'] = 'Select an artefact from the tree on the left to place 
 $string['viewinformationsaved'] = 'View information saved successfully';
 
 $string['canteditdontown'] = 'You can\'t edit this View because you don\'t own it';
-$string['canteditdontownfeedback'] = 'You can\'t edit this feedback because you don\'t own it';
 $string['canteditsubmitted'] = 'You can\'t edit this View because it has been submitted for assessment to "%s". You will have to wait until a tutor releases your view.';
-$string['feedbackchangedtoprivate'] = 'Feedback changed to private';
 
 $string['addtutors'] = 'Add Tutors';
 $string['viewcreatedsuccessfully'] = 'View created successfully';
@@ -196,7 +183,7 @@ $string['confirmdeleteblockinstance'] = 'Are you sure you wish to delete this bl
 $string['blockinstanceconfiguredsuccessfully'] = 'Block configured successfully';
 
 $string['blocksintructionnoajax'] = 'Select a block and choose where to add it to your View. You can position a block using the arrow buttons in its titlebar';
-$string['blocksinstructionajax'] = 'Drag blocks below this line to add them to your View layout. You can drag blocks around your View layout to position them.';
+$string['blocksinstructionajax'] = 'This area shows a preview of what your View will look like.<br>Drag blocks below this line to add them to your View layout. You can drag blocks around your View layout to position them.';
 
 $string['addnewblockhere'] = 'Add new block here';
 $string['add'] = 'Add';
@@ -232,6 +219,7 @@ $string['viewtitleby'] = '%s by <a href="%s">%s</a>';
 $string['in'] = 'in';
 $string['noblocks'] = 'Sorry, no blocks in this category :(';
 $string['Preview'] = 'Preview';
+$string['timeofsubmission'] = 'Time of submission';
 
 $string['50,50'] = $string['33,33,33'] = $string['25,25,25,25'] = 'Equal widths';
 $string['67,33'] = 'Larger left column';
@@ -240,6 +228,8 @@ $string['25,50,25'] = 'Larger centre column';
 $string['15,70,15'] = 'Much larger centre column';
 $string['20,30,30,20'] = 'Larger centre columns';
 $string['noviewlayouts'] = 'There are no View layouts for a %s column View';
+$string['cantaddcolumn'] = 'You cannot add any more columns to this view';
+$string['cantremovecolumn'] = 'You cannot remove the last column from this view';
 
 $string['blocktypecategory.feeds'] = 'External feeds';
 $string['blocktypecategory.fileimagevideo'] = 'Files, images and video';
@@ -300,9 +290,5 @@ $string['viewcopywouldexceedquota'] = 'Copying this View would exceed your file 
 
 $string['blockcopypermission'] = 'Block copy permission';
 $string['blockcopypermissiondesc'] = 'If you allow other users to copy this View, you may choose how this block will be copied';
-
-// Feedback list
-$string['comment'] = 'comment';
-$string['comments'] = 'comments';
 
 ?>

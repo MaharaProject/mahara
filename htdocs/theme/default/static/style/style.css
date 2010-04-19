@@ -176,6 +176,35 @@ input#files_filebrowser_edit_artefact {
 	background: #6e8e00;
 	color: #FFF;
 }
+#btn-logout,
+#buttons_delete,
+input.cancel,
+input.btn-del {
+    border-color: #eda58c #611700 #611700 #eda58c !important;
+    background: #8f2100 !important;
+}
+#btn-logout:hover,
+#buttons_delete:hover,
+input.cancel:hover,
+input.btn-del:hover {
+    background: #A82700 !important;
+}
+#btn-logout:active,
+#buttons_delete:active,
+input.cancel:active,
+input.btn-del:active {
+    border-color: #611700 #eda58c #eda58c #611700 !important;
+    background: #A82700 !important;
+}
+input.quiet {
+  background: none !important;
+  color: #6e8e00;
+}
+input.quiet.btn-del {
+  background: none !important;
+  color: #ca0000 !important;
+}
+
 /** link buttons **/
 .rbuttons a.btn,
 #sb-profile .controls a,

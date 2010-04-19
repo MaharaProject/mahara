@@ -35,6 +35,7 @@ define('SECTION_PAGE', 'siteoptions');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('searchlib.php');
+require_once('antispam.php');
 define('TITLE', get_string('siteoptions', 'admin'));
 
 $langoptions = get_languages();
@@ -45,6 +46,8 @@ $yesno = array(true  => get_string('yes'),
 $searchpluginoptions = get_search_plugins();
 
 $countries = getoptions_country();
+
+$spamtraps = available_spam_traps();
 
 $siteoptionform = array(
     'name'       => 'siteoptions',
@@ -206,18 +209,6 @@ $siteoptionform = array(
             'defaultvalue' => get_config('institutionautosuspend'),
             'help'         => true,
         ),
-        'captchaonregisterform' => array(
-            'type'         => 'checkbox',
-            'title'        => get_string('captchaonregisterform', 'admin'),
-            'description'  => get_string('captchaonregisterformdescription', 'admin'),
-            'defaultvalue' => get_config('captchaonregisterform'),
-        ),
-        'captchaoncontactform' => array(
-            'type'         => 'checkbox',
-            'title'        => get_string('captchaoncontactform', 'admin'),
-            'description'  => get_string('captchaoncontactformdescription', 'admin'),
-            'defaultvalue' => get_config('captchaoncontactform'),
-        ),
         'showselfsearchsideblock' => array(
             'type'         => 'checkbox',
             'title'        => get_string('showselfsearchsideblock', 'admin'),
@@ -263,6 +254,34 @@ $siteoptionform = array(
             'description'  => get_string('userscanhiderealnamesdescription', 'admin'),
             'defaultvalue' => get_config('userscanhiderealnames'),
         ),
+        'antispam' => array(
+            'type'         => 'select',
+            'title'        => get_string('antispam', 'admin'),
+            'description'  => get_string('antispamdescription', 'admin'),
+            'defaultvalue' => get_config('antispam'),
+            'options'      => $spamtraps,
+            'help'         => true,
+        ),
+        'spamhaus' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('spamhaus', 'admin'),
+            'description'  => get_string('spamhausdescription', 'admin'),
+            'defaultvalue' => get_config('spamhaus'),
+            'help'         => true,
+        ),
+        'surbl' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('surbl', 'admin'),
+            'description'  => get_string('surbldescription', 'admin'),
+            'defaultvalue' => get_config('surbl'),
+            'help'         => true,
+        ),
+        'anonymouscomments' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('anonymouscomments', 'admin'),
+            'description'  => get_string('anonymouscommentsdescription', 'admin'),
+            'defaultvalue' => get_config('anonymouscomments'),
+        ),
     )
 );
 
@@ -286,9 +305,9 @@ function siteoptions_submit(Pieform $form, $values) {
         'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
         'allowpublicviews', 'allowpublicprofiles', 'creategroups', 'createpublicgroups', 'searchplugin',
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
-        'captchaonregisterform', 'captchaoncontactform', 'showselfsearchsideblock', 'showtagssideblock',
+        'showselfsearchsideblock', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
-        'remoteavatars', 'userscanhiderealnames'
+        'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments',
     );
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');

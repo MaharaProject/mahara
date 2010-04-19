@@ -49,8 +49,8 @@ $blogs = (object) array(
 
 list($blogs->count, $blogs->data) = ArtefactTypeBlog::get_blog_list($blogs->limit, $blogs->offset);
 
-// If the user has exactly one blog, skip the blog listing and display it
-if (!$delete && $blogs->offset == 0 && !empty($blogs->data) && count($blogs->data) == 1) {
+// If the user has exactly one blog, and has not enabled multiple blogs, skip the blog listing and display it
+if (!$delete && $blogs->offset == 0 && !empty($blogs->data) && count($blogs->data) == 1 && !$USER->get_account_preference('multipleblogs')) {
     define('TITLE', get_string('viewblog','artefact.blog'));
     define('SECTION_PAGE', 'view');
 

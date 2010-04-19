@@ -92,7 +92,7 @@ abstract class PluginExport extends Plugin {
     /**
      * List of artefacts to export. Set up by constructor.
      */
-    protected $artefacts = array();
+    public $artefacts = array();
 
     /**
      * List of views to export. Set up by constructor.
@@ -165,7 +165,6 @@ abstract class PluginExport extends Plugin {
         $this->exporttime = time();
         $this->user = $user;
 
-        $vaextra = '';
         $userid = $this->user->get('id');
         $tmpviews = array();
         $tmpartefacts = array();
@@ -197,7 +196,6 @@ abstract class PluginExport extends Plugin {
                 throw new UserException("User $userid does not own view " . $view->get('id'));
             }
             $this->views[$view->get('id')] = $view;
-            $vaextra = 'AND va.view IN ( ' . implode(',', array_keys($this->views)) . ')';
         }
 
         // Get the list of artefacts to export
@@ -218,13 +216,14 @@ abstract class PluginExport extends Plugin {
                     FROM {view_artefact} va
                     LEFT JOIN {view} v ON v.id = va.view
                     WHERE v.owner = ?
-                    $vaextra
+                    AND va.view IN ( " . implode(',', array_keys($this->views)) . ")
                     ORDER BY va.artefact";
                 $tmpartefacts = (array)get_column_sql($sql, array($userid));
 
                 // Some artefacts are not inside the view, but still need to be exported with it
                 $tmpartefacts = array_unique(array_merge($tmpartefacts, $this->get_view_extra_artefacts()));
                 $tmpartefacts = artefact_get_descendants($tmpartefacts);
+                $tmpartefacts = array_unique(array_merge($tmpartefacts, $this->get_artefact_extra_artefacts($tmpartefacts)));
             }
             if ($artefacts == self::EXPORT_ARTEFACTS_FOR_VIEWS) {
                 $this->artefactexportmode = $artefacts;
@@ -259,7 +258,9 @@ abstract class PluginExport extends Plugin {
             //if (!$this->user->can_view_artefact($artefact)) {
             //    throw new SystemException("User $userid does not own artefact " . $artefact->get('id'));
             //}
-            $this->artefacts[$artefact->get('id')] = $artefact;
+            if ($artefact->exportable()) {
+                $this->artefacts[$artefact->get('id')] = $artefact;
+            }
         }
 
         // Now set up the temporary export directories
@@ -316,39 +317,34 @@ abstract class PluginExport extends Plugin {
     /**
      * Artefact plugins can specify additional artefacts required for view export
      */
-    protected function get_view_extra_artefacts($indexed=false) {
-        static $data = null;
-
-        if (is_null($data)) {
-            $plugins = plugins_installed('artefact');
-            $viewids = array_keys($this->views);
-            $data = array('byview' => array(), 'artefacts' => array());
-            foreach ($plugins as &$plugin) {
-                safe_require('artefact', $plugin->name);
-                $classname = generate_class_name('artefact', $plugin->name);
-                // @todo: work out why PluginArtefactResume::view_export_extra_artefacts()
-                // cannot be called while all the other PluginArtefactFoobar versions
-                // happily call the PluginArtefact parent version
-                if (is_callable($classname . '::view_export_extra_artefacts')) {
-                    $viewartefact = call_static_method($classname, 'view_export_extra_artefacts', $viewids);
-                    foreach ($viewartefact as &$va) {
-                        if (!isset($data['byview'][$va->view])) {
-                            $data['byview'][$va->view] = array();
-                        }
-                        $data['byview'][$va->view][$va->artefact] = $va->artefact;
-                        if (!isset($data['artefacts'][$va->artefact])) {
-                            $data['artefacts'][$va->artefact] = $va->artefact;
-                        }
-                    }
+    protected function get_view_extra_artefacts() {
+        $extra = array();
+        $plugins = plugins_installed('artefact');
+        foreach ($plugins as &$plugin) {
+            safe_require('artefact', $plugin->name);
+            $classname = generate_class_name('artefact', $plugin->name);
+            if (is_callable($classname . '::view_export_extra_artefacts')) {
+                if ($artefacts = call_static_method($classname, 'view_export_extra_artefacts', array_keys($this->views))) {
+                    $extra = array_unique(array_merge($extra, $artefacts));
                 }
             }
         }
+        return $extra;
+    }
 
-        if ($indexed) {
-            return $data['byview'];
+    protected function get_artefact_extra_artefacts(&$artefactids) {
+        $extra = array();
+        $plugins = plugins_installed('artefact');
+        foreach ($plugins as &$plugin) {
+            safe_require('artefact', $plugin->name);
+            $classname = generate_class_name('artefact', $plugin->name);
+            if (is_callable($classname . '::artefact_export_extra_artefacts')) {
+                if ($artefacts = call_static_method($classname, 'artefact_export_extra_artefacts', $artefactids)) {
+                    $extra = array_unique(array_merge($extra, $artefacts));
+                }
+            }
         }
-
-        return array_values($data['artefacts']);
+        return $extra;
     }
 }
 

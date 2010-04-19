@@ -21,15 +21,18 @@
   <div class="viewfooter cb">
     {if $tags}<div class="tags">{str tag=tags}: {list_tags owner=$owner tags=$tags}</div>{/if}
     <div>{$releaseform}</div>
+    {if $view_group_submission_form}<div>{$view_group_submission_form}</div>{/if}
+    {if $feedback->count || $enablecomments}
     <table id="feedbacktable" class="fullwidth table">
-      <thead><tr><th>{str tag="feedback" section="view"}</th></tr></thead>
+      <thead><tr><th>{str tag="feedback" section="artefact.comment"}</th></tr></thead>
       <tbody>
         {$feedback->tablerows}
       </tbody>
     </table>
     {$feedback->pagination}
+    {/if}
 	<div id="viewmenu">
-        {include file="view/viewmenu.tpl"}
+        {include file="view/viewmenu.tpl" enablecomments=$enablecomments}
     </div>
     {if $addfeedbackform}<div>{$addfeedbackform}</div>{/if}
     {if $objectionform}<div>{$objectionform}</div>{/if}

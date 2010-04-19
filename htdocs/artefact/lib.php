@@ -133,6 +133,9 @@ abstract class ArtefactType {
     protected $tags = array();
     protected $institution;
     protected $group;
+    protected $author;
+    protected $authorname;
+    protected $allowcomments;
     protected $rolepermissions;
     protected $mtimemanuallyset;
 
@@ -370,10 +373,6 @@ abstract class ArtefactType {
         }
     }
     
-    public function is_container() {
-        return false;
-    }
-
     /** 
      * This method updates the contents of the artefact table only.  If your
      * artefact has extra information in other tables, you need to override
@@ -382,6 +381,10 @@ abstract class ArtefactType {
     public function commit() {
         if (empty($this->dirty)) {
             return;
+        }
+
+        if (empty($this->author) && empty($this->authorname)) {
+            $this->set_author();
         }
 
         db_begin();
@@ -592,6 +595,9 @@ abstract class ArtefactType {
 
         db_begin();
 
+        // Detach any files from this artefact
+        delete_records_select('artefact_attachment', "artefact IN ($idstr)");
+
         // Delete any references to these artefacts from non-artefact places.
         delete_records_select('artefact_parent_cache', "artefact IN $idstr");
 
@@ -609,7 +615,6 @@ abstract class ArtefactType {
             BlockInstance::bulk_delete_artefacts($records);
         }
         delete_records_select('view_artefact', "artefact IN $idstr");
-        delete_records_select('artefact_feedback', "artefact IN $idstr");
         delete_records_select('artefact_tag', "artefact IN $idstr");
         delete_records_select('artefact_access_role', "artefact IN $idstr");
         delete_records_select('artefact_access_usr', "artefact IN $idstr");
@@ -617,6 +622,21 @@ abstract class ArtefactType {
         delete_records_select('artefact', "id IN $idstr");
 
         db_commit();
+    }
+
+
+    /**
+     * Initialise artefact author to either the artefact owner, the
+     * logged-in user, or the system user.
+     */
+    private function set_author() {
+        global $USER;
+        if (isset($this->owner)) {
+            $this->author = $this->owner;
+        }
+        else {
+            $this->author = $USER->get('id');
+        }
     }
 
     /**
@@ -632,16 +652,6 @@ abstract class ArtefactType {
         else {
             $options['path'] .= ',' . $this->get('id');
         }
-    }
-
-
-    /**
-     * By default public feedback can be placed on all artefacts.
-     * Artefact types which don't want to allow public feedback should
-     * redefine this function.
-     */
-    public function public_feedback_allowed() {
-        return true;
     }
 
 
@@ -686,13 +696,6 @@ abstract class ArtefactType {
      * @abstract
      */
     public static abstract function is_singular();
-
-    /**
-     * Whether the 'note' field is for the artefact's private use
-     */
-    public static function is_note_private() {
-        return false;
-    }
 
     /**
      * Returns a list of key => value pairs where the key is either '_default'
@@ -970,11 +973,17 @@ abstract class ArtefactType {
         if (empty($artefactids)) {
             return array();
         }
+        // @todo: Join on artefact_file_files shouldn't happen below.
+        // We could either assume all attachments are files and then
+        // move all these attachment functions to the artefact file
+        // plugin, or we could allow artefact plugins to add stuff
+        // to this query.
         $attachments = get_records_sql_array('
             SELECT
-                aa.artefact, aa.attachment, a.artefacttype, a.title, a.description
+                aa.artefact, aa.attachment, a.artefacttype, a.title, a.description, f.size
             FROM {artefact_attachment} aa
                 INNER JOIN {artefact} a ON aa.attachment = a.id
+                LEFT JOIN {artefact_file_files} f ON a.id = f.artefact
             WHERE aa.artefact IN (' . join(', ', $artefactids) . ')', '');
         if (!$attachments) {
             return array();
@@ -1067,53 +1076,9 @@ abstract class ArtefactType {
         return get_column('artefact_attachment', 'artefact', 'attachment', $attachmentid);
     }
 
-    public function get_feedback($limit=10, $offset=0, $viewid, $lastpage=false) {
-        global $USER;
-        $userid = $USER->get('id');
-        $artefactid = $this->id;
-        $canedit = $USER->can_edit_artefact($this);
-
-        $count = count_records_sql('
-            SELECT COUNT(*)
-            FROM {artefact_feedback}
-            WHERE view = ' . $viewid . ' AND artefact = ' . $artefactid
-                . (!$canedit ? ' AND (public = 1 OR author = ' . $userid . ')' : ''));
-        if ($lastpage) { // Ignore $offset and just get the last page of feedback
-            $offset = (ceil($count / $limit) - 1) * $limit;
-        }
-        $feedback = get_records_sql_array('
-            SELECT
-                id, author, authorname, ctime, message, public
-            FROM {artefact_feedback}
-            WHERE view = ' . $viewid . ' AND artefact = ' . $artefactid
-                . (!$canedit ? ' AND (public = 1 OR author = ' . $userid . ')' : '') . '
-            ORDER BY id', '', $offset, $limit);
-        if ($feedback) {
-            require_once(get_config('libroot') . 'view.php');
-            require_once(get_config('libroot') . 'pieforms/pieform.php');
-            foreach ($feedback as &$f) {
-                if ($f->public && $canedit) {
-                    $f->pubmessage = get_string('thisfeedbackispublic', 'view');
-                    $f->makeprivateform = pieform(make_private_form($f->id));
-                }
-                else if (!$f->public) {
-                    $f->pubmessage = get_string('thisfeedbackisprivate', 'view');
-                }
-            }
-        }
-        return (object) array(
-            'count'    => $count,
-            'limit'    => $limit,
-            'offset'   => $offset,
-            'lastpage' => $lastpage,
-            'data'     => $feedback ? $feedback : array(),
-            'view'     => $viewid,
-            'artefact' => $artefactid,
-            'canedit'  => $canedit,
-            'isowner'  => $userid && $userid == $this->get('owner'),
-        );
+    public function exportable() {
+        return true;
     }
-
 }
 
 /**

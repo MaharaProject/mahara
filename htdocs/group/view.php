@@ -122,6 +122,24 @@ if ($role) {
         $smarty->assign('submittedviews', View::get_submitted_views($group->id));
     }
 }
+
+if (group_allows_submission($group->grouptype) && ($viewdata = View::get_user_views())) {
+    $submitted = get_record_select('view', 'owner = ? AND submittedgroup = ?', array($USER->get('id'), $group->id));
+    if (!$submitted) {
+        $group_view_submission_form = group_view_submission_form($group->id, $viewdata);
+    }
+    else {
+        if ($submitted->submittedtime) {
+            $pieces = explode(' ', $submitted->submittedtime);
+            $group_view_submission_form = get_string('youhavesubmittedon', 'view', get_config('wwwroot') . 'view/view.php?id=' . $submitted->id, $submitted->title, $pieces[0], $pieces[1]);
+        }
+        else {
+            $group_view_submission_form = get_string('youhavesubmitted', 'view', get_config('wwwroot') . 'view/view.php?id=' . $submitted->id, $submitted->title);
+        }
+    }
+    $smarty->assign('group_view_submission_form', $group_view_submission_form);
+}
+
 $smarty->assign('role', $role);
 $smarty->display('group/view.tpl');
 

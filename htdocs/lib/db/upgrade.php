@@ -1370,7 +1370,168 @@ function xmldb_core_upgrade($oldversion=0) {
         ");
     }
 
-    if ($oldversion < 2010031800 && !table_exists(new XMLDBTable('site_data'))) {
+    if ($oldversion < 2010040700) {
+        set_antispam_defaults();
+    }
+
+    if ($oldversion < 2010040800) {
+        execute_sql('ALTER TABLE {view} ADD COLUMN submittedtime TIMESTAMP');
+    }
+
+    if ($oldversion < 2010041200) {
+        delete_records('config', 'field', 'captchaoncontactform');
+        delete_records('config', 'field', 'captchaonregisterform');
+    }
+
+    if ($oldversion < 2010041201) {
+        $sql = "
+            SELECT u.id
+            FROM {usr} u
+            JOIN {artefact} a
+                ON a.owner = u.id
+            WHERE a.artefacttype = 'blog'
+            GROUP BY u.id
+            HAVING COUNT(a.id) > 1";
+
+        $manyblogusers = get_records_sql_array($sql, null);
+
+        foreach($manyblogusers as $u) {
+            $where = (object)array(
+                'usr' => $u->id,
+                'field' => 'multipleblogs',
+            );
+            $data = (object)array(
+                'usr' => $u->id,
+                'field' => 'multipleblogs',
+                'value' => 1,
+            );
+            ensure_record_exists('usr_account_preference', $where, $data);
+        }
+    }
+
+    if ($oldversion < 2010041600 && table_exists(new XMLDBTable('view_feedback'))) {
+        // Add author, authorname to artefact table
+        $table = new XMLDBTable('artefact');
+        $field = new XMLDBField('author');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '10');
+        add_field($table, $field);
+
+        $key = new XMLDBKey('authorfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('author'), 'usr', array('id'));
+        add_key($table, $key);
+
+        table_column('artefact', null, 'authorname', 'text', null, null, null, '');
+
+        if (is_postgres()) {
+            execute_sql("ALTER TABLE {artefact} ALTER COLUMN authorname DROP DEFAULT");
+            set_field('artefact', 'authorname', null);
+            execute_sql('UPDATE {artefact} SET authorname = g.name FROM {group} g WHERE "group" = g.id');
+            execute_sql("UPDATE {artefact} SET authorname = CASE WHEN institution = 'mahara' THEN ? ELSE i.displayname END FROM {institution} i WHERE institution = i.name", array(get_config('sitename')));
+        }
+        else {
+            execute_sql("UPDATE {artefact} a, {group} g SET a.authorname = g.name WHERE a.group = g.id");
+            execute_sql("UPDATE {artefact} a, {institution} i SET a.authorname = CASE WHEN a.institution = 'mahara' THEN ? ELSE i.displayname END WHERE a.institution = i.name", array(get_config('sitename')));
+        }
+        execute_sql('UPDATE {artefact} SET author = owner WHERE owner IS NOT NULL');
+
+        execute_sql('ALTER TABLE {artefact} ADD CHECK (
+            (author IS NOT NULL AND authorname IS NULL    ) OR
+            (author IS NULL     AND authorname IS NOT NULL)
+        )');
+
+        // Move feedback activity type to artefact plugin
+        execute_sql("
+            UPDATE {activity_type}
+            SET plugintype = 'artefact', pluginname = 'comment'
+            WHERE name = 'feedback'
+        ");
+
+        // Install the comment artefact
+        if ($data = check_upgrades('artefact.comment')) {
+            upgrade_plugin($data);
+        }
+
+        // Flag all views & artefacts to enable/disable comments
+        table_column('artefact', null, 'allowcomments', 'integer', 1);
+        table_column('view', null, 'allowcomments', 'integer', 1, null, 1);
+        // Initially allow comments on blogposts, images, files
+        set_field_select('artefact', 'allowcomments', 1, 'artefacttype IN (?,?,?)', array('blogpost', 'image', 'file'));
+
+        // Convert old feedback to comment artefacts
+        if ($viewfeedback = get_records_sql_array('
+            SELECT f.*, v.id AS viewid, v.owner, v.group, v.institution
+            FROM {view_feedback} f JOIN {view} v ON f.view = v.id', array())) {
+            foreach ($viewfeedback as &$f) {
+                $artefact = (object) array(
+                    'artefacttype' => 'comment',
+                    'owner'        => $f->owner,
+                    'group'        => $f->group,
+                    'institution'  => $f->institution,
+                    'author'       => $f->author,
+                    'authorname'   => $f->authorname,
+                    'title'        => get_string('Comment', 'artefact.comment'),
+                    'description'  => $f->message,
+                    'ctime'        => $f->ctime,
+                    'atime'        => $f->ctime,
+                    'mtime'        => $f->ctime,
+                );
+                $aid = insert_record('artefact', $artefact, 'id', true);
+                $comment = (object) array(
+                    'artefact'     => $aid,
+                    'private'      => 1-$f->public,
+                    'onview'       => $f->viewid,
+                );
+                insert_record('artefact_comment_comment', $comment);
+                if (!empty($f->attachment)) {
+                    insert_record('artefact_attachment', (object) array(
+                        'artefact'   => $aid,
+                        'attachment' => $f->attachment
+                    ));
+                }
+            }
+        }
+
+        // We are throwing away the view information from artefact_feedback.
+        // From now on all artefact comments appear together and are not
+        // tied to a particular view.
+        if ($artefactfeedback = get_records_sql_array('
+            SELECT f.*, a.id AS artefactid, a.owner, a.group, a.institution
+            FROM {artefact_feedback} f JOIN {artefact} a ON f.artefact = a.id', array())) {
+            foreach ($artefactfeedback as &$f) {
+                $artefact = (object) array(
+                    'artefacttype' => 'comment',
+                    'owner'        => $f->owner,
+                    'group'        => $f->group,
+                    'institution'  => $f->institution,
+                    'author'       => $f->author,
+                    'authorname'   => $f->authorname,
+                    'title'        => get_string('Comment', 'artefact.comment'),
+                    'description'  => $f->message,
+                    'ctime'        => $f->ctime,
+                    'atime'        => $f->ctime,
+                    'mtime'        => $f->ctime,
+                );
+                $aid = insert_record('artefact', $artefact, 'id', true);
+                $comment = (object) array(
+                    'artefact'     => $aid,
+                    'private'      => 1-$f->public,
+                    'onartefact'   => $f->artefactid,
+                );
+                insert_record('artefact_comment_comment', $comment);
+            }
+        }
+
+        // Drop feedback tables
+        $table = new XMLDBTable('view_feedback');
+        drop_table($table);
+        $table = new XMLDBTable('artefact_feedback');
+        drop_table($table);
+
+        // Add site setting for anonymous comments
+        set_config('anonymouscomments', 1);
+    }
+
+    if ($oldversion < 2010041900 && !table_exists(new XMLDBTable('site_data'))) {
         // Upgrades for admin stats pages
 
         // Table for collection of historical stats
@@ -1436,7 +1597,6 @@ function xmldb_core_upgrade($oldversion=0) {
         $cron->dayofweek    = '*';
         insert_record('cron', $cron);
     }
-
 
     return $status;
 }

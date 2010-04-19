@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="lib/db" VERSION="20100319" COMMENT="XMLDB file for Mahara's comment-related tables"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+<TABLES>
+    <TABLE NAME="artefact_comment_deletedby">
+        <FIELDS>
+            <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="name" />
+        </KEYS>
+    </TABLE>
+    <!-- This table is supposed to have a 1-1 relation with every row in the
+    artefact table with artefacttype = 'comment'.  It contains additional data
+    that isn't in the artefact table. -->
+    <TABLE NAME="artefact_comment_comment">
+        <FIELDS>
+            <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
+            <FIELD NAME="onview" TYPE="int" LENGTH="10" NOTNULL="false" />
+            <FIELD NAME="onartefact" TYPE="int" LENGTH="10" NOTNULL="false" />
+            <FIELD NAME="private" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" UNSIGNED="true" />
+            <FIELD NAME="deletedby" TYPE="char" LENGTH="50" NOTNULL="false" />
+            <FIELD NAME="requestpublic" TYPE="char" LENGTH="50" NOTNULL="false" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="artefactpk" TYPE="primary" FIELDS="artefact" />
+            <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
+            <KEY NAME="onviewfk" TYPE="foreign" FIELDS="onview" REFTABLE="view" REFFIELDS="id" />
+            <KEY NAME="onartefactfk" TYPE="foreign" FIELDS="onartefact" REFTABLE="artefact" REFFIELDS="id" />
+            <KEY NAME="deletedbyfk" TYPE="foreign" FIELDS="deletedby" REFTABLE="artefact_comment_deletedby" REFFIELDS="name" />
+            <KEY NAME="requestpublicfk" TYPE="foreign" FIELDS="requestpublic" REFTABLE="artefact_comment_deletedby" REFFIELDS="name" />
+        </KEYS>
+    </TABLE>
+</TABLES>
+</XMLDB>

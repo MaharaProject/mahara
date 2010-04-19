@@ -231,8 +231,8 @@ function user_authorise($token, $useragent) {
         throw new XmlrpcServerException('Unable to get information for the specified user');
     }
 
-    require(get_config('docroot') . 'artefact/lib.php');
-    require(get_config('docroot') . 'artefact/internal/lib.php');
+    require_once(get_config('docroot') . 'artefact/lib.php');
+    require_once(get_config('docroot') . 'artefact/internal/lib.php');
 
     $element_list = call_static_method('ArtefactTypeProfile', 'get_all_fields');
     $element_required = call_static_method('ArtefactTypeProfile', 'get_mandatory_fields');
@@ -502,6 +502,7 @@ function submit_view_for_assessment($username, $viewid) {
     $view = new View($viewid);
 
     $view->set('submittedhost', $authinstance->config['wwwroot']);
+    $view->set('submittedtime', db_format_timestamp(time()));
 
     // Create secret key
     $access = View::new_token($view->get('id'), false);
@@ -544,6 +545,7 @@ function release_submitted_view($viewid, $assessmentdata, $teacherusername) {
 
     // Release the view for editing
     $view->set('submittedhost', null);
+    $view->set('submittedtime', null);
     $view->commit();
     db_commit();
 }

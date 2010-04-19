@@ -43,6 +43,7 @@ class View {
     private $stopdate;
     private $submittedgroup;
     private $submittedhost;
+    private $submittedtime;
     private $title;
     private $description;
     private $loggedin;
@@ -64,6 +65,7 @@ class View {
     private $copynewgroups;
     private $type;
     private $visits;
+    private $allowcomments;
 
     /**
      * Valid view layouts. These are read at install time and inserted into
@@ -321,7 +323,7 @@ class View {
             )));
         }
 
-        return $view;
+        return new View($view->get('id')); // Reread to ensure defaults are set
     }
 
     public function get($field) {
@@ -489,9 +491,9 @@ class View {
 
     
     public function delete() {
+        safe_require('artefact', 'comment');
         db_begin();
-        delete_records('artefact_feedback','view',$this->id);
-        delete_records('view_feedback','view',$this->id);
+        ArtefactTypeComment::delete_view_comments($this->id);
         delete_records('view_access','view',$this->id);
         delete_records('view_access_group','view',$this->id);
         delete_records('view_access_usr','view',$this->id);
@@ -745,6 +747,7 @@ class View {
         else if ($submitinfo['type'] == 'host') {
             $this->set('submittedhost', null);
         }
+        $this->set('submittedtime', null);
         $this->commit();
         $ownerlang = get_user_language($this->get('owner'));
         require_once('activity.php');
@@ -1396,6 +1399,9 @@ class View {
         if (!array_key_exists('before', $values) || empty($values['before'])) {
             throw new ParamOutOfRangeException(get_string('missingparamcolumn', 'error'));
         }
+        if (!array_key_exists($this->get('numcolumns') + 1, self::$layouts)) {
+            throw new ParamOutOfRangeException(get_string('cantaddcolumn', 'view'));
+        }
         db_begin();
         $this->set('numcolumns', $this->get('numcolumns') + 1);
         if ($values['before'] != ($this->get('numcolumns') + 1)) {
@@ -1427,6 +1433,9 @@ class View {
     public function removecolumn($values) {
         if (!array_key_exists('column', $values) || empty($values['column'])) {
             throw new ParamOutOfRangeException(get_string('missingparamcolumn', 'error'));
+        }
+        if (!array_key_exists($this->get('numcolumns') - 1, self::$layouts)) {
+            throw new ParamOutOfRangeException(get_string('cantremovecolumn', 'view'));
         }
         db_begin();
         $numcolumns = $this->get('numcolumns') - 1;
@@ -2003,8 +2012,8 @@ class View {
         }
         else {
             $count = count_records_select('view', 'owner = ? AND type != ?', array($userid, 'profile'));
-            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, v.type,
-                    g.id AS submitgroupid, g.name AS submitgroupname, h.wwwroot AS submithostwwwroot, h.name AS submithostname
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, v.type, v.submittedtime,
+                g.id AS submitgroupid, g.name AS submitgroupname, h.wwwroot AS submithostwwwroot, h.name AS submithostname
                 FROM {view} v
                 LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
                 LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)
@@ -2051,12 +2060,26 @@ class View {
                 $data[$i]['removable'] = self::can_remove_viewtype($viewdata[$i]->type);
                 $data[$i]['description'] = $viewdata[$i]->description;
                 if (!empty($viewdata[$i]->submitgroupid)) {
-                    $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view',
-                                                          get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
-                                                          $viewdata[$i]->submitgroupname);
+                    if (!empty($viewdata[$i]->submittedtime)) {
+                        $pieces = explode(' ', $viewdata[$i]->submittedtime);
+                        $data[$i]['submittedto'] = get_string('viewsubmittedtogroupon', 'view',
+                                                            get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
+                                                            $viewdata[$i]->submitgroupname, $pieces[0], $pieces[1]);
+                    }
+                    else {
+                        $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view',
+                                                            get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
+                                                            $viewdata[$i]->submitgroupname);
+                    }
                 }
                 else if (!empty($viewdata[$i]->submithostwwwroot)) {
-                    $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view', $viewdata[$i]->submithostwwwroot, $viewdata[$i]->submithostname);
+                    if (!empty($viewdata[$i]->submittedtime)) {
+                        $pieces = explode(' ', $viewdata[$i]->submittedtime);
+                        $data[$i]['submittedto'] = get_string('viewsubmittedtogroupon', 'view', $viewdata[$i]->submithostwwwroot, $viewdata[$i]->submithostname, $pieces[0], $pieces[1]);
+                    }
+                    else {
+                        $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view', $viewdata[$i]->submithostwwwroot, $viewdata[$i]->submithostname);
+                    }
                 }
                 $data[$i]['artefacts'] = array();
                 $data[$i]['accessgroups'] = array();
@@ -2119,6 +2142,22 @@ class View {
         );
     }
 
+    public function get_user_views($userid=null) {
+        if (is_null($userid)) {
+            global $USER;
+            $userid = $USER->get('id');
+        }
+        if ($views = get_records_sql_array(
+            "SELECT v.id, v.title
+            FROM {view} v
+            WHERE v.owner = ?
+            AND v.type != 'profile'
+            ORDER BY v.title, v.id
+            ", array($userid))) {
+            return $views;
+        }
+        return array();
+    }
 
     /**
      * Returns an SQL snippet that can be used in a where clause to get views 
@@ -2428,7 +2467,7 @@ class View {
      */
     public static function get_submitted_views($groupid) {
         $viewdata = get_records_sql_assoc('
-            SELECT id, title, description, owner, ownerformat, "group", institution
+            SELECT id, title, description, owner, ownerformat, "group", institution, submittedtime
             FROM {view}
             WHERE submittedgroup = ?
             ORDER BY title, id',
@@ -2658,49 +2697,6 @@ class View {
         return false;
     }
 
-    public function get_feedback($limit=10, $offset=0, $lastpage=false) {
-        global $USER;
-        $userid = $USER->get('id');
-        $viewid = $this->id;
-        $canedit = $USER->can_edit_view($this);
-        $count = count_records_sql('
-            SELECT COUNT(*)
-            FROM {view_feedback}
-            WHERE view = ' . $viewid . (!$canedit ? ' AND (public = 1 OR author = ' . $userid . ')' : ''));
-        if ($lastpage) { // Ignore $offset and just get the last page of feedback
-            $offset = (ceil($count / $limit) - 1) * $limit;
-        }
-        $feedback = get_records_sql_array('
-            SELECT
-                f.id, f.author, f.authorname, f.ctime, f.message, f.public, f.attachment, a.title, af.size
-            FROM {view_feedback} f
-            LEFT OUTER JOIN {artefact} a ON f.attachment = a.id
-            LEFT OUTER JOIN {artefact_file_files} af ON af.artefact = a.id
-            WHERE view = ' . $viewid . (!$canedit ? ' AND (f.public = 1 OR f.author = ' . $userid . ')' : '') . '
-            ORDER BY id', '', $offset, $limit);
-        if ($feedback) {
-            foreach ($feedback as &$f) {
-                if ($f->public && $canedit) {
-                    $f->pubmessage = get_string('thisfeedbackispublic', 'view');
-                    $f->makeprivateform = pieform(make_private_form($f->id));
-                }
-                else if (!$f->public) {
-                    $f->pubmessage = get_string('thisfeedbackisprivate', 'view');
-                }
-            }
-        }
-        return (object) array(
-            'count'    => $count,
-            'limit'    => $limit,
-            'offset'   => $offset,
-            'lastpage' => $lastpage,
-            'data'     => $feedback ? $feedback : array(),
-            'view'     => $viewid,
-            'canedit'  => $canedit,
-            'isowner'  => $userid && $userid == $this->get('owner'),
-        );
-    }
-
     public function display_title($long=true, $titlelink=true) {
         if ($this->type == 'profile') {
             $title = display_name($this->owner, null, true);
@@ -2835,190 +2831,52 @@ function createview_cancel_submit(Pieform $form, $values) {
     redirect(get_config('wwwroot') . 'view/');
 }
 
-
-function add_feedback_form($attachments=false) {
-    global $USER;
-    $form = array(
-        'name'            => 'add_feedback_form',
-        'method'          => 'post',
-        'class'           => 'js-hidden',
-        'plugintype'      => 'core',
-        'pluginname'      => 'view',
-        'jsform'          => true,
-        'autofocus'       => false,
-        'elements'        => array(),
-        'jssuccesscallback' => 'addFeedbackSuccess',
-    );
-    if (!$USER->is_logged_in()) {
-        $form['elements']['authorname'] = array(
-            'type'  => 'text',
-            'title' => get_string('name'),
-            'rules' => array(
-                'required' => true,
+function view_group_submission_form($viewid, $tutorgroupdata, $returnto=null) {
+    $options = array();
+    foreach ($tutorgroupdata as $group) {
+        $options[$group->id] = $group->name;
+    }
+    // This form sucks from a language string point of view. It should
+    // use pieforms' form template feature
+    return pieform(array(
+        'name' => 'view_group_submission_form_' . $viewid,
+        'method' => 'post',
+        'renderer' => 'oneline',
+        'autofocus' => false,
+        'successcallback' => 'view_group_submission_form_submit',
+        'elements' => array(
+            'text1' => array(
+                'type' => 'html', 'value' => get_string('submitthisviewto', 'view') . ' ',
             ),
-        );
-    }
-    $form['elements']['message'] = array(
-        'type'  => 'wysiwyg',
-        'title' => get_string('message'),
-        'rows'  => 5,
-        'cols'  => 80,
-    );
-    $form['elements']['ispublic'] = array(
-        'type'  => 'checkbox',
-        'title' => get_string('makepublic', 'view'),
-    );
-    if ($attachments) {
-        $form['elements']['attachment'] = array(
-            'type'  => 'file',
-            'title' => get_string('attachfile', 'view'),
-        );
-    }
-    $form['elements']['submit'] = array(
-        'type'  => 'submitcancel',
-        'value' => array(get_string('placefeedback', 'view'), get_string('cancel')),
-    );
-    return $form;
-}
-
-function add_feedback_form_validate(Pieform $form, $values) {
-    global $USER, $view;
-    if (!$USER->is_logged_in()) {
-        $token = get_cookie('viewaccess:'.$view->get('id'));
-        if (!$token || get_view_from_token($token) != $view->get('id')) {
-            $form->set_error('message', get_string('placefeedbacknotallowed', 'view'));
-        }
-    }
-}
-
-function add_feedback_form_submit(Pieform $form, $values) {
-    global $view, $artefact, $USER;
-
-    $data = new StdClass;
-    $data->view = $view->get('id');
-    if ($artefact) {
-        $data->artefact = $artefact->get('id');
-        $table = 'artefact_feedback';
-    }
-    else {
-        $table = 'view_feedback';
-    }
-    $data->message = $values['message'];
-    $data->public = (int) $values['ispublic'];
-    $data->author = $USER->get('id');
-    if (!$data->author) {
-        unset($data->author);
-        $data->authorname = $values['authorname'];
-    }
-    $data->ctime = db_format_timestamp(time());
-
-    db_begin();
-
-    if (isset($values['attachment']) && is_array($values['attachment'])) {
-        require_once(get_config('libroot') . 'group.php');
-        require_once(get_config('libroot') . 'uploadmanager.php');
-        safe_require('artefact', 'file');
-
-        $groupid = $view->get('submittedgroup');
-        if (group_user_can_assess_submitted_views($groupid, $USER->get('id'))) {
-
-            $um = new upload_manager('attachment');
-            if ($error = $um->preprocess_file()) {
-                throw new UploadException($error);
-            }
-
-            $owner = $view->get('owner');
-            $ownerlang = get_user_language($owner);
-            $folderid = ArtefactTypeFolder::get_folder_id(
-                get_string_from_language($ownerlang, 'feedbackattachdirname', 'view'),
-                get_string_from_language($ownerlang, 'feedbackattachdirdesc', 'view'),
-                null, true, $owner
-            );
-
-            $attachment = (object) array(
-                'owner'       => $owner,
-                'parent'      => $folderid,
-                'title'       => ArtefactTypeFileBase::get_new_file_title($values['attachment']['name'], $folderid, $owner),
-                'size'        => $values['attachment']['size'],
-                'filetype'    => $values['attachment']['type'],
-                'oldextensin' => $um->original_filename_extension(),
-                'description' => get_string_from_language(
-                    $ownerlang,
-                    'feedbackonviewbytutorofgroup',
-                    'view',
-                    $view->get('title'),
-                    display_name($USER),
-                    get_field('group', 'name', 'id', $groupid)
-                ),
-            );
-
-            try {
-                $data->attachment = ArtefactTypeFile::save_uploaded_file('attachment', $attachment);
-            }
-            catch (QuotaExceededException $e) {}
-        }
-    }
-
-    insert_record($table, $data, 'id', true);
-
-    require_once('activity.php');
-    unset($data->id);
-    $data->message = html2text($data->message);
-    activity_occurred('feedback', $data);
-
-    db_commit();
-
-    $newlist = null;
-    if ($artefact) {
-        $goto = get_config('wwwroot') . 'view/artefact.php?artefact=' . $artefact->get('id') . '&view='.$view->get('id');
-        $newlist = $artefact->get_feedback(10, null, $view->get('id'), true);
-    }
-    else {
-        $goto = get_config('wwwroot') . 'view/view.php?id='.$view->get('id');
-        $newlist = $view->get_feedback(10, null, true);
-    }
-    build_feedback_html($newlist);
-    $form->reply(PIEFORM_OK, array(
-        'message' => get_string('feedbacksubmitted', 'view'),
-        'goto' => $goto,
-        'data' => $newlist,
-    ));
-}
-
-function add_feedback_form_cancel_submit(Pieform $form) {
-    global $view;
-    $form->reply(PIEFORM_OK, array(
-        'goto' => '/view/view.php?id=' . $view->get('id'),
-    ));
-}
-
-function make_private_form($feedbackid) {
-    return array(
-        'name'            => 'make_private',
-        'renderer'        => 'oneline',
-        'class'           => 'makeprivate',
-        'elements'        => array(
-            'feedback' => array('type' => 'hidden', 'value' => $feedbackid),
-            'submit'   => array(
+            'options' => array(
+                'type' => 'select',
+                'collapseifoneoption' => false,
+                'options' => $options,
+            ),
+            'text2' => array(
+                'type' => 'html',
+                'value' => get_string('forassessment', 'view'),
+            ),
+            'submit' => array(
                 'type' => 'submit',
-                'name' => 'make_private_submit',
-                'value' => get_string('makeprivate', 'view'),
+                'value' => get_string('submit')
             ),
+            'view' => array(
+                'type' => 'hidden',
+                'value' => $viewid
+            ),
+            'returnto' => array(
+                'type' => 'hidden',
+                'value' => $returnto,
+            )
         ),
-    );
+    ));
 }
 
-function make_private_submit(Pieform $form, $values) {
-    global $SESSION, $view, $artefact;
-    if (isset($artefact) && $artefact instanceof ArtefactType) {
-        update_record('artefact_feedback', (object) array('public' => 0, 'id' => (int) $values['feedback']));
-        $SESSION->add_ok_msg(get_string('feedbackchangedtoprivate', 'view'));
-        redirect(get_config('wwwroot') . 'view/artefact.php?view=' . $view->get('id') . '&artefact=' . $artefact->get('id'));
-    }
-    update_record('view_feedback', (object) array('public' => 0, 'id' => (int) $values['feedback']));
-    $SESSION->add_ok_msg(get_string('feedbackchangedtoprivate', 'view'));
-    redirect(get_config('wwwroot') . 'view/view.php?id=' . $view->get('id'));
+function view_group_submission_form_submit(Pieform $form, $values) {
+    redirect('/view/submit.php?id=' . $values['view'] . '&group=' . $values['options'] . '&returnto=' . $values['returnto']);
 }
+
 
 function objection_form() {
     $form = array(

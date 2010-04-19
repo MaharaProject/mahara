@@ -134,11 +134,8 @@ class AuthSaml extends Auth {
                     throw new AccessDeniedException();
                 }
 
-                $user->find_by_username($remoteuser);
             }
-            else {
-                $user->find_by_instanceid_username($this->instanceid, $remoteuser, true);
-            }
+            $user->find_by_username($remoteuser);
 
             if ($user->get('suspendedcusr')) {
                 die_info(get_string('accountsuspended', 'mahara', strftime(get_string('strftimedaydate'), $user->get('suspendedctime')), $user->get('suspendedreason')));

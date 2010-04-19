@@ -184,7 +184,7 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
      * Overrides the default implementation so we can export enough information
      * to reconstitute profile information again.
      *
-     * LEAP2A export doesn't export profile related artefacts as entries, so we
+     * Leap2A export doesn't export profile related artefacts as entries, so we
      * need to take that into account when exporting config for it.
      */
     public static function export_blockinstance_config_leap(BlockInstance $bi) {

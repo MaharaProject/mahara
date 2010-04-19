@@ -8,6 +8,7 @@
  */
 
 addLoadEvent(function() {
+    removeElementClass($('whatviewsselection'), 'hidden');
     var container = $('whatviews');
     var containerVisible = false;
     var radios = [];
@@ -58,7 +59,7 @@ addLoadEvent(function() {
     var checkboxes = getElementsByTagAndClassName('input', 'checkbox', 'whatviews');
     var checkboxHelperDiv = DIV();
 
-    var checkboxSelectAll = A({'href': ''}, 'Select all');
+    var checkboxSelectAll = $('selection_all');
     connect(checkboxSelectAll, 'onclick', function(e) {
         e.stop();
         forEach(checkboxes, function(i) {
@@ -66,7 +67,7 @@ addLoadEvent(function() {
         });
     });
 
-    var checkboxReverseSelection = A({'href': ''}, 'Reverse selection');
+    var checkboxReverseSelection = $('selection_reverse');
     connect(checkboxReverseSelection, 'onclick', function(e) {
         e.stop();
         forEach(checkboxes, function(i) {
@@ -74,8 +75,6 @@ addLoadEvent(function() {
         });
     });
 
-
-    appendChildNodes(checkboxHelperDiv, checkboxSelectAll, ' | ', checkboxReverseSelection);
     insertSiblingNodesBefore(getFirstElementByTagAndClassName('table', null, container), checkboxHelperDiv);
 
 });
