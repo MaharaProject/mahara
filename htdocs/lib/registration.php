@@ -679,6 +679,7 @@ function graph_site_data_weekly() {
         'group-count' => array('color' => 'blue@0.4', 'name' => get_string('groups')),
     );
 
+    $yaxis = array('min' => array(), 'max' => array());
     foreach (array_keys($datasetinfo) as $k) {
         $dataset =& Image_Graph::factory('dataset', array($dataarray[$k]));
         $dataset->setName($datasetinfo[$k]['name']);
@@ -686,7 +687,17 @@ function graph_site_data_weekly() {
         $linestyle =& Image_Graph::factory('Image_Graph_Line_Solid', array($datasetinfo[$k]['color']));
         $linestyle->setThickness(3);
         $plot->setLineStyle($linestyle);
+        $yaxis['max'][$k] = max($dataarray[$k]);
+        $yaxis['min'][$k] = min($dataarray[$k]);
     }
+
+    $Axis =& $Plotarea->getAxis(IMAGE_GRAPH_AXIS_Y);
+    $maxy = max($yaxis['max']);
+    $Axis->forceMaximum($maxy * 1.025);
+    // $miny = min($yaxis['min']);
+    // $padding = ($maxy - $miny) * 0.025;
+    // $Axis->forceMaximum($maxy + $padding);
+    // $Axis->forceMinimum($miny - $padding);
 
     $Graph->done(array('filename' => get_config('dataroot') . 'weekly.png'));
 }
