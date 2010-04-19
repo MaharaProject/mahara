@@ -2432,6 +2432,8 @@ function cron_site_data_daily() {
 
         unlink($viewlog . '.temp');
     }
+
+    graph_site_data_daily();
 }
 
 function build_portfolio_search_html(&$data) {

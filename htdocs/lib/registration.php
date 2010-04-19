@@ -352,6 +352,10 @@ function user_statistics($limit, $offset, &$sitedata) {
         display_size($maxquotaused->quotaused)
     );
 
+    if (file_exists(get_config('dataroot') . 'institutions.png')) {
+        $data['institutions'] = get_config('wwwroot') . 'admin/thumb.php?type=institutions';
+    }
+
     $smarty = smarty_core();
     $smarty->assign('data', $data);
     $data['summary'] = $smarty->fetch('admin/userstatssummary.tpl');
@@ -700,6 +704,39 @@ function graph_site_data_weekly() {
     // $Axis->forceMinimum($miny - $padding);
 
     $Graph->done(array('filename' => get_config('dataroot') . 'weekly.png'));
+}
+
+function graph_site_data_daily() {
+    // Bar graph of number of users in each institution
+    require_once(get_config('libroot') . 'institution.php');
+    $institutions = Institution::count_members(false, true);
+    if (count($institutions) > 1) {
+        $dataarray = array();
+        foreach ($institutions as &$i) {
+            $dataarray[$i->displayname] = $i->members;
+        }
+        arsort($dataarray);
+
+        require_once(get_config('libroot') . "pear/Image/Graph.php");
+
+        $Graph =& Image_Graph::factory('graph', array(300, 200));
+        $Font =& $Graph->addNew('font', 'Vera');
+        $Font->setSize(8);
+        $Graph->setFont($Font);
+
+        $Graph->add(
+            $Plotarea = Image_Graph::factory('plotarea')
+            );
+
+        $Dataset =& Image_Graph::factory('dataset', array($dataarray));
+        $Plot =& $Plotarea->addNew('bar', array(&$Dataset));
+        $Plot->setLineColor('gray');
+        $Plot->setFillColor('blue@0.2');
+
+        $Graph->done(array('filename' => get_config('dataroot') . 'institutions.png'));
+    }
+
+    // @todo: Pie graph of views broken down by view type.
 }
 
 ?>

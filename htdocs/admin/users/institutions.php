@@ -337,49 +337,17 @@ if ($institution || $add) {
 }
 else {
     // Get a list of institutions
+    require_once(get_config('libroot') . 'institution.php');
     if (!$USER->get('admin')) { // Filter the list for institutional admins
-        $where = '
-        WHERE ii.name IN (' . join(',', array_map('db_quote', $USER->get('admininstitutions'))) . ')';
+        $filter      = $USER->get('admininstitutions');
+        $showdefault = false;
     }
     else {
-        $where = '';
         $smarty->assign('siteadmin', true);
-        $defaultinstmembers = count_records_sql('
-            SELECT COUNT(u.id) FROM {usr} u LEFT OUTER JOIN {usr_institution} i ON u.id = i.usr
-            WHERE u.deleted = 0 AND i.usr IS NULL AND u.id != 0
-        ');
+        $filter      = false;
+        $showdefault = true;
     }
-    $institutions = get_records_sql_assoc('
-        SELECT
-            ii.name,
-            ii.displayname,
-            ii.maxuseraccounts,
-            ii.suspended,
-            COALESCE(a.members, 0) AS members,
-            COALESCE(a.staff, 0) AS staff,
-            COALESCE(a.admins, 0) AS admins
-        FROM
-            {institution} ii
-            LEFT JOIN
-                (SELECT
-                    i.name, i.displayname, i.maxuseraccounts,
-                    COUNT(ui.usr) AS members, SUM(ui.staff) AS staff, SUM(ui.admin) AS admins
-                FROM
-                    {institution} i
-                    LEFT OUTER JOIN {usr_institution} ui ON (ui.institution = i.name)
-                    LEFT OUTER JOIN {usr} u ON (u.id = ui.usr)
-                WHERE
-                    (u.deleted = 0 OR u.id IS NULL)
-                GROUP BY
-                    i.name, i.displayname, i.maxuseraccounts
-                ) a ON (a.name = ii.name)' . $where . '
-                ORDER BY
-                    ii.name = \'mahara\', ii.displayname', array());
-    if (isset($defaultinstmembers)) {
-        $institutions['mahara']->members = $defaultinstmembers;
-        $institutions['mahara']->staff   = '';
-        $institutions['mahara']->admins  = '';
-    }
+    $institutions = Institution::count_members($filter, $showdefault);
     $smarty->assign('institutions', $institutions);
 }
 

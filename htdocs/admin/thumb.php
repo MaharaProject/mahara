@@ -33,13 +33,14 @@ $type = param_alpha('type');
 
 switch ($type) {
     case 'weekly':
+    case 'institutions':
         $maxage = 3600;
         header('Content-type: ' . 'image/png');
         header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
         header('Cache-Control: max-age=' . $maxage);
         header('Pragma: public');
 
-        readfile(get_config('dataroot') . 'weekly.png');
+        readfile(get_config('dataroot') . $type . '.png');
         exit;
 }
 

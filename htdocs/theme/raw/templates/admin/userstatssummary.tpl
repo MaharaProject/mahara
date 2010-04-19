@@ -5,6 +5,8 @@
   <li>{$data.strmaxgroups}</li>
   <li>{$data.strmaxquotaused}</li>
 </ul>
-
+{if $data.institutions}
+  <img src="{$data.institutions}" alt="" />
+{/if}
 
 
