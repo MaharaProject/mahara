@@ -564,7 +564,7 @@ function view_statistics($limit, $offset) {
         get_string('view'),
         get_string('Owner', 'view'),
         get_string('Visits'),
-        get_string('feedback', 'view'),
+        get_string('Comments', 'artefact.comment'),
     );
     $data['table'] = view_stats_table($limit, $offset);
 
@@ -611,26 +611,26 @@ function view_stats_table($limit, $offset) {
         return $result;
     }
 
-    $viewdata = get_records_sql_array(
+    $viewdata = get_records_sql_assoc(
         "SELECT
             v.id, v.title, v.owner, v.group, v.institution, v.visits,
-            u.firstname, u.lastname,
-            COUNT(vf.*) AS comments
+            u.firstname, u.lastname
         FROM {view} v
-            LEFT JOIN {view_feedback} vf ON v.id = vf.view
             LEFT JOIN {usr} u ON v.owner = u.id
             LEFT JOIN {group} g ON v.group = g.id
             LEFT JOIN {institution} i ON v.institution = i.name
-        GROUP BY v.id, v.title, v.owner, v.group, v.institution, v.visits,
-            u.firstname, u.lastname
         ORDER BY v.visits DESC",
         array(),
         $offset,
         $limit
     );
 
+    safe_require('artefact', 'comment');
+    $comments = ArtefactTypeComment::count_comments(array_keys($viewdata));
+
     foreach ($viewdata as &$v) {
-        $v->author = $v->owner ? display_name($v->owner) : null;
+        $v->author   = $v->owner ? display_name($v->owner) : null;
+        $v->comments = isset($comments[$v->id]) ? (int) $comments[$v->id]->comments : 0;
     }
 
     $smarty = smarty_core();
