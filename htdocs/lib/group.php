@@ -438,6 +438,32 @@ function group_remove_user($groupid, $userid=null, $force=false) {
     }
 }
 
+/**
+ * Invite a user to a group.
+ *
+ * @param object $group group
+ * @param object $userid  User to invite
+ * @param object $userfrom  User sending the invitation
+ */
+function group_invite_user($group, $userid, $userfrom, $role='member') {
+    $user = optional_userobj($userid);
+
+    $data = new StdClass;
+    $data->group = $group->id;
+    $data->member= $user->id;
+    $data->ctime = db_format_timestamp(time());
+    $data->role = $role;
+    ensure_record_exists('group_member_invite', $data, $data);
+    $lang = get_user_language($user->id);
+    require_once('activity.php');
+    activity_occurred('maharamessage',
+        array('users'   => array($user->id),
+              'subject' => get_string_from_language($lang, 'invitetogroupsubject', 'group'),
+              'message' => get_string_from_language($lang, 'invitetogroupmessage', 'group', display_name($userfrom, $user), $group->name),
+              'url'     => get_config('wwwroot')
+              . 'group/view.php?id=' . $group->id));
+}
+
 // Pieforms for various operations on groups
 
 /**
