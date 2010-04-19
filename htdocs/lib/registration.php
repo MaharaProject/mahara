@@ -456,6 +456,50 @@ function user_stats_table($limit, $offset) {
     return $result;
 }
 
+
+function user_institution_graph() {
+    // Draw a bar graph showing the number of users in each institution
+    require_once(get_config('libroot') . 'institution.php');
+
+    $institutions = Institution::count_members(false, true);
+    if (count($institutions) > 1) {
+        $dataarray = array();
+        foreach ($institutions as &$i) {
+            $dataarray[$i->displayname] = $i->members;
+        }
+        arsort($dataarray);
+
+        require_once(get_config('libroot') . "pear/Image/Graph.php");
+
+        $Graph =& Image_Graph::factory('graph', array(300, 200));
+        $Font =& $Graph->addNew('font', 'Vera');
+        $Font->setSize(9);
+        $Graph->setFont($Font);
+
+        $Graph->add(
+            Image_Graph::vertical(
+                Image_Graph::factory('title', array(get_string('institutionmembers', 'admin'), 9)),
+                $Plotarea = Image_Graph::factory('plotarea'),
+                5
+            )
+        );
+
+        $Dataset =& Image_Graph::factory('dataset', array($dataarray));
+        $Plot =& $Plotarea->addNew('bar', array(&$Dataset));
+        $Plot->setLineColor('gray');
+
+        $FillArray =& Image_Graph::factory('Image_Graph_Fill_Array');
+        $Plot->setFillStyle($FillArray);
+        $FillArray->addColor('blue@0.6');
+        $FillArray->addColor('green@0.6');
+        $FillArray->addColor('red@0.6');
+        $FillArray->addColor('yellow@0.6');
+        $FillArray->addColor('orange@0.6');
+
+        $Graph->done(array('filename' => get_config('dataroot') . 'institutions.png'));
+    }
+}
+
 function group_statistics($limit, $offset) {
     $data = array();
     $data['tableheadings'] = array(
@@ -483,6 +527,10 @@ function group_statistics($limit, $offset) {
         GROUP BY jointype
         ORDER BY groups DESC", array()
     ));
+    if (file_exists(get_config('dataroot') . 'grouptypes.png')) {
+        $smarty->assign('groupgraph', get_config('wwwroot') . 'admin/thumb.php?type=grouptypes');
+    }
+
     $data['summary'] = $smarty->fetch('admin/groupstatssummary.tpl');
 
     return $data;
@@ -557,6 +605,60 @@ function group_stats_table($limit, $offset) {
     return $result;
 }
 
+function group_type_graph() {
+    $grouptypes = get_records_sql_array("
+        SELECT grouptype, jointype, COUNT(id) AS groups
+        FROM {group}
+        WHERE deleted = 0
+        GROUP BY grouptype, jointype
+        ORDER BY groups DESC", array()
+    );
+
+    if (count($grouptypes) > 1) {
+        $dataarray = array();
+        foreach ($grouptypes as &$t) {
+            $strtype = get_string('name', 'grouptype.' . $t->grouptype);
+            $strjoin = get_string('membershiptype.' . $t->jointype, 'group');
+            $dataarray[$strtype . ': ' . $strjoin] = $t->groups;
+        }
+        arsort($dataarray);
+
+        require_once(get_config('libroot') . "pear/Image/Graph.php");
+
+        $Graph =& Image_Graph::factory('graph', array(300, 200));
+        $Font =& $Graph->addNew('font', 'Vera');
+        $Font->setSize(9);
+        $Graph->setFont($Font);
+
+        $Graph->add(
+            $Plotarea = Image_Graph::factory('plotarea')
+        );
+
+        $Plotarea->hideAxis();
+        $Dataset =& Image_Graph::factory('dataset', array($dataarray));
+        $Plot =& $Plotarea->addNew('pie', array(&$Dataset));
+
+        $Plot->setLineColor('black');
+
+        $FillArray =& Image_Graph::factory('Image_Graph_Fill_Array');
+        $Plot->setFillStyle($FillArray);
+        $FillArray->addColor('blue@0.6');
+        $FillArray->addColor('green@0.6');
+        $FillArray->addColor('red@0.6');
+        $FillArray->addColor('yellow@0.6');
+        $FillArray->addColor('orange@0.6');
+
+        $Marker =& $Plot->addNew('Image_Graph_Marker_Value', IMAGE_GRAPH_VALUE_X);
+        $Marker->setBorderColor('white');
+        $Marker->setFontSize(8);
+
+        $PointingMarker =& $Plot->addNew('Image_Graph_Marker_Pointing_Angular', array(20, &$Marker));
+        $Plot->setMarker($PointingMarker);
+
+        $Graph->done(array('filename' => get_config('dataroot') . 'grouptypes.png'));
+    }
+}
+
 function view_statistics($limit, $offset) {
     $data = array();
     $data['tableheadings'] = array(
@@ -567,6 +669,10 @@ function view_statistics($limit, $offset) {
         get_string('Comments', 'artefact.comment'),
     );
     $data['table'] = view_stats_table($limit, $offset);
+
+    if (file_exists(get_config('dataroot') . 'viewtypes.png')) {
+        $viewtypes = get_config('wwwroot') . 'admin/thumb.php?type=viewtypes';
+    }
 
     $smarty = smarty_core();
     $maxblocktypes = 5;
@@ -583,6 +689,7 @@ function view_statistics($limit, $offset) {
         ORDER BY blocks DESC",
         array(), 0, $maxblocktypes
     ));
+    $smarty->assign('viewtypes', $viewtypes);
     $data['summary'] = $smarty->fetch('admin/viewstatssummary.tpl');
 
     return $data;
@@ -641,6 +748,63 @@ function view_stats_table($limit, $offset) {
     return $result;
 }
 
+function view_type_graph() {
+    // Draw a pie graph of views broken down by view type.
+    $viewtypes = get_records_sql_array('
+        SELECT type, COUNT(id) AS views
+        FROM {view}
+        GROUP BY type',
+        array()
+    );
+
+    if (count($viewtypes) > 1) {
+        $dataarray = array();
+        foreach ($viewtypes as &$t) {
+            $dataarray[get_string($t->type, 'view')] = $t->views;
+        }
+        arsort($dataarray);
+
+        require_once(get_config('libroot') . "pear/Image/Graph.php");
+
+        $Graph =& Image_Graph::factory('graph', array(300, 200));
+        $Font =& $Graph->addNew('font', 'Vera');
+        $Font->setSize(9);
+        $Graph->setFont($Font);
+
+        $Graph->add(
+            Image_Graph::vertical(
+                Image_Graph::factory('title', array(get_string('viewsbytype', 'admin'), 9)),
+                $Plotarea = Image_Graph::factory('plotarea'),
+                5
+            )
+        );
+
+        $Plotarea->hideAxis();
+        $Dataset =& Image_Graph::factory('dataset', array($dataarray));
+        $Plot =& $Plotarea->addNew('pie', array(&$Dataset));
+
+        $Plot->setLineColor('black');
+
+        $FillArray =& Image_Graph::factory('Image_Graph_Fill_Array');
+        $Plot->setFillStyle($FillArray);
+        $FillArray->addColor('blue@0.6');
+        $FillArray->addColor('green@0.6');
+        $FillArray->addColor('red@0.6');
+        $FillArray->addColor('yellow@0.6');
+        $FillArray->addColor('orange@0.6');
+
+        $Marker =& $Plot->addNew('Image_Graph_Marker_Value', IMAGE_GRAPH_VALUE_X);
+        $Marker->setBorderColor('white');
+        $Marker->setFontSize(8);
+
+        $PointingMarker =& $Plot->addNew('Image_Graph_Marker_Pointing_Angular', array(20, &$Marker));
+        $Plot->setMarker($PointingMarker);
+
+        $Graph->done(array('filename' => get_config('dataroot') . 'viewtypes.png'));
+    }
+}
+
+
 function graph_site_data_weekly() {
 
     $lastyear = db_format_timestamp(time() - 60*60*12*365);
@@ -664,7 +828,7 @@ function graph_site_data_weekly() {
 
     $Graph =& Image_Graph::factory('graph', array(300, 200));
     $Font =& $Graph->addNew('font', 'Vera');
-    $Font->setSize(8);
+    $Font->setSize(9);
     $Graph->setFont($Font);
 
     $Graph->add(
@@ -678,9 +842,9 @@ function graph_site_data_weekly() {
     $Legend->setPlotarea($Plotarea);
 
     $datasetinfo = array(
-        'user-count'  => array('color' => 'red@0.4', 'name' => get_string('users')),
-        'view-count'  => array('color' => 'green@0.4', 'name' => get_string('views')),
-        'group-count' => array('color' => 'blue@0.4', 'name' => get_string('groups')),
+        'user-count'  => array('color' => 'blue@0.6', 'name' => get_string('users')),
+        'view-count'  => array('color' => 'green@0.6', 'name' => get_string('views')),
+        'group-count' => array('color' => 'red@0.6', 'name' => get_string('groups')),
     );
 
     $yaxis = array('min' => array(), 'max' => array());
@@ -707,36 +871,9 @@ function graph_site_data_weekly() {
 }
 
 function graph_site_data_daily() {
-    // Bar graph of number of users in each institution
-    require_once(get_config('libroot') . 'institution.php');
-    $institutions = Institution::count_members(false, true);
-    if (count($institutions) > 1) {
-        $dataarray = array();
-        foreach ($institutions as &$i) {
-            $dataarray[$i->displayname] = $i->members;
-        }
-        arsort($dataarray);
-
-        require_once(get_config('libroot') . "pear/Image/Graph.php");
-
-        $Graph =& Image_Graph::factory('graph', array(300, 200));
-        $Font =& $Graph->addNew('font', 'Vera');
-        $Font->setSize(8);
-        $Graph->setFont($Font);
-
-        $Graph->add(
-            $Plotarea = Image_Graph::factory('plotarea')
-            );
-
-        $Dataset =& Image_Graph::factory('dataset', array($dataarray));
-        $Plot =& $Plotarea->addNew('bar', array(&$Dataset));
-        $Plot->setLineColor('gray');
-        $Plot->setFillColor('blue@0.2');
-
-        $Graph->done(array('filename' => get_config('dataroot') . 'institutions.png'));
-    }
-
-    // @todo: Pie graph of views broken down by view type.
+    user_institution_graph();
+    group_type_graph();
+    view_type_graph();
 }
 
 ?>

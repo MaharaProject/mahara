@@ -176,6 +176,7 @@ $string['Rank'] = 'Rank';
 $string['rankingsupdated'] = 'Rankings last updated: %s';
 $string['uptodate'] = 'up to date';
 $string['latestversionis'] = 'latest version is <a href="%s">%s</a>';
+$string['viewsbytype'] = 'Views by Type';
 
 // Site options
 $string['adminsonly'] = 'Administrators only';

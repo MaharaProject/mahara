@@ -34,6 +34,8 @@ $type = param_alpha('type');
 switch ($type) {
     case 'weekly':
     case 'institutions':
+    case 'viewtypes':
+    case 'grouptypes':
         $maxage = 3600;
         header('Content-type: ' . 'image/png');
         header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');

@@ -7,4 +7,7 @@
 </ul>
 </p>
 {/if}
+{if $viewtypes}
+  <img src="{$viewtypes}" alt="" />
+{/if}
 

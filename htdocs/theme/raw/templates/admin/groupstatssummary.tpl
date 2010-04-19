@@ -12,4 +12,6 @@
 {/foreach}
 </ul>
 </p>
-
+{if $groupgraph}
+  <img src="{$groupgraph}" alt="" />
+{/if}

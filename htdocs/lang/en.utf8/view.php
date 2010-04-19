@@ -291,4 +291,8 @@ $string['viewcopywouldexceedquota'] = 'Copying this View would exceed your file 
 $string['blockcopypermission'] = 'Block copy permission';
 $string['blockcopypermissiondesc'] = 'If you allow other users to copy this View, you may choose how this block will be copied';
 
+// View types
+$string['profile'] = 'Profile';
+$string['portfolio'] = 'Portfolio';
+
 ?>
