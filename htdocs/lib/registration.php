@@ -618,9 +618,10 @@ function group_type_graph() {
         $dataarray = array();
         foreach ($grouptypes as &$t) {
             $strtype = get_string('name', 'grouptype.' . $t->grouptype);
-            $strjoin = get_string('membershiptype.' . $t->jointype, 'group');
-            $dataarray[$strtype . ': ' . $strjoin] = $t->groups;
+            $strjoin = get_string('membershiptype.abbrev.' . $t->jointype, 'group');
+            $dataarray[$strtype . '/' . $strjoin] = $t->groups;
         }
+        ksort($dataarray);
         arsort($dataarray);
 
         require_once(get_config('libroot') . "pear/Image/Graph.php");
@@ -631,12 +632,19 @@ function group_type_graph() {
         $Graph->setFont($Font);
 
         $Graph->add(
-            $Plotarea = Image_Graph::factory('plotarea')
+            Image_Graph::horizontal(
+                $Plotarea = Image_Graph::factory('plotarea'),
+                $Legend = Image_Graph::factory('legend'),
+                60
+            )
         );
 
+        $Legend->setPlotArea($Plotarea);
+        $Legend->setFontSize(6);
         $Plotarea->hideAxis();
+
         $Dataset =& Image_Graph::factory('dataset', array($dataarray));
-        $Plot =& $Plotarea->addNew('pie', array(&$Dataset));
+        $Plot =& $Plotarea->addNew('pie', $Dataset);
 
         $Plot->setLineColor('black');
 
@@ -647,10 +655,11 @@ function group_type_graph() {
         $FillArray->addColor('red@0.6');
         $FillArray->addColor('yellow@0.6');
         $FillArray->addColor('orange@0.6');
+        $FillArray->addColor('black@0.6');
 
-        $Marker =& $Plot->addNew('Image_Graph_Marker_Value', IMAGE_GRAPH_VALUE_X);
+        $Marker =& $Plot->addNew('Image_Graph_Marker_Value', IMAGE_GRAPH_VALUE_Y);
         $Marker->setBorderColor('white');
-        $Marker->setFontSize(8);
+        $Marker->setFontSize(7);
 
         $PointingMarker =& $Plot->addNew('Image_Graph_Marker_Pointing_Angular', array(20, &$Marker));
         $Plot->setMarker($PointingMarker);
