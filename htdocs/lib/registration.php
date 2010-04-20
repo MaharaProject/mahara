@@ -236,18 +236,20 @@ function site_statistics($full=false) {
     $data['name']        = get_config('sitename');
     $data['release']     = get_config('release');
     $data['version']     = get_config('version');
-    $data['latest_version'] = get_config('latest_version');
     $data['installdate'] = format_date(strtotime(get_config('installation_time')), 'strftimedate');
     $data['dbsize']      = db_total_size();
     $data['diskusage']   = get_field('site_data', 'value', 'type', 'disk-usage');
     $data['cronrunning'] = !record_exists_select('cron', 'nextrun < CURRENT_DATE');
 
-    if ($data['release'] == $data['latest_version']) {
-        $data['strlatestversion'] = get_string('uptodate', 'admin');
-    }
-    else {
-        $download_page = 'https://launchpad.net/mahara/+download';
-        $data['strlatestversion'] = get_string('latestversionis', 'admin', $download_page, $data['latest_version']);
+    if ($latestversion = get_config('latest_version')) {
+        $data['latest_version'] = $latestversion;
+        if ($data['release'] == $latestversion) {
+            $data['strlatestversion'] = get_string('uptodate', 'admin');
+        }
+        else {
+            $download_page = 'https://launchpad.net/mahara/+download';
+            $data['strlatestversion'] = get_string('latestversionis', 'admin', $download_page, $latestversion);
+        }
     }
 
     $data['strrankingsupdated'] = get_string('rankingsupdated', 'admin', date('Y-m-d H:i', get_config('registration_lastsent')));
