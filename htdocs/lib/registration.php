@@ -839,12 +839,12 @@ function graph_site_data_weekly() {
 
     $dataarray = array();
     foreach ($weekly as &$r) {
-        $dataarray[$r->type][strftime("%d\n%b", $r->ts)] = $r->value;
+        $dataarray[$r->type][strftime("%d %b", $r->ts)] = $r->value;
     }
 
     require_once(get_config('libroot') . "pear/Image/Graph.php");
 
-    $Graph =& Image_Graph::factory('graph', array(300, 200));
+    $Graph =& Image_Graph::factory('graph', array(350, 200));
     $Font =& $Graph->addNew('font', 'Vera');
     $Font->setSize(9);
     $Graph->setFont($Font);
@@ -866,6 +866,7 @@ function graph_site_data_weekly() {
     );
 
     $yaxis = array('min' => array(), 'max' => array());
+    $points = 1;
     foreach (array_keys($datasetinfo) as $k) {
         $dataset =& Image_Graph::factory('dataset', array($dataarray[$k]));
         $dataset->setName($datasetinfo[$k]['name']);
@@ -875,15 +876,21 @@ function graph_site_data_weekly() {
         $plot->setLineStyle($linestyle);
         $yaxis['max'][$k] = max($dataarray[$k]);
         $yaxis['min'][$k] = min($dataarray[$k]);
+        $points = max($points, count($dataarray[$k]));
     }
 
-    $Axis =& $Plotarea->getAxis(IMAGE_GRAPH_AXIS_Y);
+    $AxisX =& $Plotarea->getAxis(IMAGE_GRAPH_AXIS_X);
+    $AxisX->setFontAngle('vertical');
+    $AxisX->setFontSize(8);
+    $AxisX->setLabelInterval(ceil($points/30)); // Avoid label crowding
+
+    $AxisY =& $Plotarea->getAxis(IMAGE_GRAPH_AXIS_Y);
     $maxy = max($yaxis['max']);
-    $Axis->forceMaximum($maxy * 1.025);
+    $AxisY->forceMaximum($maxy * 1.025);
     // $miny = min($yaxis['min']);
     // $padding = ($maxy - $miny) * 0.025;
-    // $Axis->forceMaximum($maxy + $padding);
-    // $Axis->forceMinimum($miny - $padding);
+    // $AxisY->forceMaximum($maxy + $padding);
+    // $AxisY->forceMinimum($miny - $padding);
 
     $Graph->done(array('filename' => get_config('dataroot') . 'weekly.png'));
 }
