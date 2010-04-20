@@ -223,13 +223,14 @@ function site_statistics($full=false) {
             FROM {group_member} m JOIN {group} g ON g.id = m.group
             WHERE g.deleted = 0
         ");
-        $data['groupmemberaverage'] = $memberships/$data['users'];
+        $data['groupmemberaverage'] = round($memberships/$data['users'], 1);
         $data['strgroupmemberaverage'] = get_string('groupmemberaverage', 'admin', $data['groupmemberaverage']);
         $data['viewsperuser'] = get_field_sql("
             SELECT (0.0 + COUNT(id)) / NULLIF(COUNT(DISTINCT owner), 0)
             FROM {view}
             WHERE NOT owner IS NULL AND owner > 0
         ");
+        $data['viewsperuser'] = round($data['viewsperuser'], 1);
         $data['strviewsperuser'] = get_string('viewsperuser', 'admin', $data['viewsperuser']);
     }
 
@@ -285,7 +286,7 @@ function user_statistics($limit, $offset, &$sitedata) {
         $data['strmaxfriends'] = get_string(
             'statsmaxfriends',
             'admin',
-            $meanfriends,
+            round($meanfriends, 1),
             get_config('wwwroot') . 'user/view.php?id=' . $maxfriends->id,
             display_name($maxfriends, null, true),
             $maxfriends->friends
