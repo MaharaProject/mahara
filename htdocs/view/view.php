@@ -296,6 +296,5 @@ if ($tutorgroupdata = group_get_user_course_groups()) {
 
 $smarty->display('view/view.tpl');
 
-// Log view visits
-error_log('[' . date("Y-m-d h:i:s") . "] $viewid\n", 3, get_config('dataroot') . 'views.log');
+mahara_log('views', "$viewid"); // Log view visits
 ?>

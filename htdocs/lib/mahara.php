@@ -160,7 +160,9 @@ function ensure_sanity() {
         !check_dir_exists(get_config('dataroot') . 'sessions') ||
         !check_dir_exists(get_config('dataroot') . 'temp') ||
         !check_dir_exists(get_config('dataroot') . 'langpacks') ||
-        !check_dir_exists(get_config('dataroot') . 'htmlpurifier')) {
+        !check_dir_exists(get_config('dataroot') . 'htmlpurifier') ||
+        !check_dir_exists(get_config('dataroot') . 'log') ||
+        !check_dir_exists(get_config('dataroot') . 'images')) {
         throw new ConfigSanityException(get_string('couldnotmakedatadirectories', 'error'));
     }
 
@@ -2386,7 +2388,7 @@ function cron_site_data_daily() {
     ));
 
     // Process log file containing view visits
-    $viewlog = get_config('dataroot') . 'views.log';
+    $viewlog = get_config('dataroot') . 'log/views.log';
     if (rename($viewlog, $viewlog . '.temp') and $fh = @fopen($viewlog . '.temp', 'r')) {
 
         // Read the new stuff out of the file
@@ -2483,6 +2485,10 @@ function build_portfolio_search_html(&$data) {
     ));
     $data->pagination = $pagination['html'];
     $data->pagination_js = $pagination['javascript'];
+}
+
+function mahara_log($logname, $string) {
+    error_log('[' . date("Y-m-d h:i:s") . "] $string\n", 3, get_config('dataroot') . 'log/' . $logname . '.log');
 }
 
 ?>

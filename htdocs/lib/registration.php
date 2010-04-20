@@ -200,9 +200,7 @@ function site_statistics($full=false) {
 
     if ($full) {
         $data = site_data_current();
-        if (file_exists(get_config('dataroot') . 'weekly.png')) {
-            $data['weekly'] = get_config('wwwroot') . 'admin/thumb.php?type=weekly';
-        }
+        $data['weekly'] = stats_graph_url('weekly');
 
         if (is_postgres()) {
             $weekago = "CURRENT_DATE - INTERVAL '1 week'";
@@ -352,9 +350,7 @@ function user_statistics($limit, $offset, &$sitedata) {
         display_size($maxquotaused->quotaused)
     );
 
-    if (file_exists(get_config('dataroot') . 'institutions.png')) {
-        $data['institutions'] = get_config('wwwroot') . 'admin/thumb.php?type=institutions';
-    }
+    $data['institutions'] = stats_graph_url('institutions');
 
     $smarty = smarty_core();
     $smarty->assign('data', $data);
@@ -505,7 +501,7 @@ function user_institution_graph() {
         }
         $AxisX->setFontSize(8);
 
-        $Graph->done(array('filename' => get_config('dataroot') . 'institutions.png'));
+        $Graph->done(array('filename' => stats_graph_path('institutions')));
     }
 }
 
@@ -536,9 +532,7 @@ function group_statistics($limit, $offset) {
         GROUP BY jointype
         ORDER BY groups DESC", array()
     ));
-    if (file_exists(get_config('dataroot') . 'grouptypes.png')) {
-        $smarty->assign('groupgraph', get_config('wwwroot') . 'admin/thumb.php?type=grouptypes');
-    }
+    $smarty->assign('groupgraph', stats_graph_url('grouptypes'));
 
     $data['summary'] = $smarty->fetch('admin/groupstatssummary.tpl');
 
@@ -673,7 +667,7 @@ function group_type_graph() {
         $PointingMarker =& $Plot->addNew('Image_Graph_Marker_Pointing_Angular', array(20, &$Marker));
         $Plot->setMarker($PointingMarker);
 
-        $Graph->done(array('filename' => get_config('dataroot') . 'grouptypes.png'));
+        $Graph->done(array('filename' => stats_graph_path('grouptypes')));
     }
 }
 
@@ -687,10 +681,6 @@ function view_statistics($limit, $offset) {
         get_string('Comments', 'artefact.comment'),
     );
     $data['table'] = view_stats_table($limit, $offset);
-
-    if (file_exists(get_config('dataroot') . 'viewtypes.png')) {
-        $viewtypes = get_config('wwwroot') . 'admin/thumb.php?type=viewtypes';
-    }
 
     $smarty = smarty_core();
     $maxblocktypes = 5;
@@ -707,7 +697,7 @@ function view_statistics($limit, $offset) {
         ORDER BY blocks DESC",
         array(), 0, $maxblocktypes
     ));
-    $smarty->assign('viewtypes', $viewtypes);
+    $smarty->assign('viewtypes', stats_graph_url('viewtypes'));
     $data['summary'] = $smarty->fetch('admin/viewstatssummary.tpl');
 
     return $data;
@@ -818,7 +808,7 @@ function view_type_graph() {
         $PointingMarker =& $Plot->addNew('Image_Graph_Marker_Pointing_Angular', array(20, &$Marker));
         $Plot->setMarker($PointingMarker);
 
-        $Graph->done(array('filename' => get_config('dataroot') . 'viewtypes.png'));
+        $Graph->done(array('filename' => stats_graph_path('viewtypes')));
     }
 }
 
@@ -892,13 +882,24 @@ function graph_site_data_weekly() {
     // $AxisY->forceMaximum($maxy + $padding);
     // $AxisY->forceMinimum($miny - $padding);
 
-    $Graph->done(array('filename' => get_config('dataroot') . 'weekly.png'));
+    $Graph->done(array('filename' => stats_graph_path('weekly')));
 }
 
 function graph_site_data_daily() {
     user_institution_graph();
     group_type_graph();
     view_type_graph();
+}
+
+function stats_graph_path($name) {
+    return get_config('dataroot') . 'images/' . $name . '.png';
+}
+
+function stats_graph_url($name) {
+    if (file_exists(stats_graph_path($name))) {
+        return get_config('wwwroot') . 'admin/thumb.php?type=' . $name;
+    }
+    return '';
 }
 
 ?>

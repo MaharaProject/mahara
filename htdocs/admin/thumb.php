@@ -42,7 +42,7 @@ switch ($type) {
         header('Cache-Control: max-age=' . $maxage);
         header('Pragma: public');
 
-        readfile(get_config('dataroot') . $type . '.png');
+        readfile(get_config('dataroot') . 'images/' . $type . '.png');
         exit;
 }
 
