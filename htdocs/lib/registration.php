@@ -468,10 +468,12 @@ function user_institution_graph() {
             $dataarray[$i->displayname] = $i->members;
         }
         arsort($dataarray);
+        // Truncate to avoid overlapping labels
+        $dataarray = array_slice($dataarray, 0, 25, true);
 
         require_once(get_config('libroot') . "pear/Image/Graph.php");
 
-        $Graph =& Image_Graph::factory('graph', array(300, 200));
+        $Graph =& Image_Graph::factory('graph', array(300, 300));
         $Font =& $Graph->addNew('font', 'Vera');
         $Font->setSize(9);
         $Graph->setFont($Font);
@@ -487,6 +489,7 @@ function user_institution_graph() {
         $Dataset =& Image_Graph::factory('dataset', array($dataarray));
         $Plot =& $Plotarea->addNew('bar', array(&$Dataset));
         $Plot->setLineColor('gray');
+        $Plot->setSpacing(2);
 
         $FillArray =& Image_Graph::factory('Image_Graph_Fill_Array');
         $Plot->setFillStyle($FillArray);
@@ -495,6 +498,12 @@ function user_institution_graph() {
         $FillArray->addColor('red@0.6');
         $FillArray->addColor('yellow@0.6');
         $FillArray->addColor('orange@0.6');
+
+        $AxisX =& $Plotarea->getAxis(IMAGE_GRAPH_AXIS_X);
+        if (count($dataarray) > 4) {
+            $AxisX->setFontAngle('vertical');
+        }
+        $AxisX->setFontSize(8);
 
         $Graph->done(array('filename' => get_config('dataroot') . 'institutions.png'));
     }
