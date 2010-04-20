@@ -295,7 +295,7 @@ function user_statistics($limit, $offset, &$sitedata) {
         $data['strmaxfriends'] = get_string('statsnofriends', 'admin');
     }
     $maxviews = get_records_sql_array("
-        SELECT u.id, u.firstname, u.lastname, u.preferredname, COUNT(v.*) AS views
+        SELECT u.id, u.firstname, u.lastname, u.preferredname, COUNT(v.id) AS views
         FROM {usr} u JOIN {view} v ON u.id = v.owner
         WHERE owner <> 0
         GROUP BY u.id, u.firstname, u.lastname, u.preferredname
