@@ -43,7 +43,7 @@ if (!is_logged_in() && !$group->public) {
     throw new AccessDeniedException();
 }
 
-$membershiptype = param_alpha('membershiptype', null);
+$membershiptype = param_variable('membershiptype', '');
 
 if (!empty($membershiptype)) {
     if (group_user_access($id) != 'admin') {
@@ -58,6 +58,7 @@ json_reply(false, array(
     'data' => array(
         'tablerows' => $html,
         'pagination' => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
         'count' => $count,
         'results' => $count . ' ' . ($count == 1 ? get_string('result') : get_string('results')),
         'offset' => $offset,
