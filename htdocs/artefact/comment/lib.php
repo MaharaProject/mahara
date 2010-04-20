@@ -306,16 +306,18 @@ class ArtefactTypeComment extends ArtefactType {
                 SELECT c.onview, COUNT(c.artefact) AS comments
                 FROM {artefact_comment_comment} c
                 WHERE c.onview IN (' . join(',', $viewids) . ') AND c.deletedby IS NULL
-                GROUP BY c.onview
-                ', array());
+                GROUP BY c.onview',
+                array()
+            );
         }
         if (!empty($artefactids)) {
             return get_records_sql_assoc('
                 SELECT c.onartefact, COUNT(c.artefact) AS comments
                 FROM {artefact_comment_comment} c
                 WHERE c.onartefact IN (' . join(',', $artefactids) . ') AND c.deletedby IS NULL
-                GROUP BY c.onartefact
-                ', array());
+                GROUP BY c.onartefact',
+                array()
+            );
         }
     }
 
