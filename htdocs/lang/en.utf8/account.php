@@ -62,6 +62,7 @@ $string['tagssideblockmaxtagsdescription'] = 'Maximum number of tags to display 
 
 $string['enablemultipleblogs'] = 'Enable multiple blogs';
 $string['enablemultipleblogsdescription']  = 'By default, Mahara gives you one blog. If you would like to keep more than one blog, check this option.';
+$string['disablemultipleblogserror'] = 'You cannot disable multiple blogs unless you only have one blog';
 
 $string['hiderealname'] = 'Hide real name';
 $string['hiderealnamedescription'] = 'Check this box if you have set a display name and you do not want other users to be able to find you by your real name in user searches.';

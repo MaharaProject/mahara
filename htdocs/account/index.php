@@ -230,6 +230,13 @@ function accountprefs_validate(Pieform $form, $values) {
             $form->set_error('username', get_string('usernamealreadytaken', 'auth.internal'));
         }
     }
+
+    // Don't let users turn multiple blogs off unless they only have 1 blog
+    if ($USER->get_account_preference('multipleblogs')
+        && empty($values['multipleblogs'])
+        && count_records('artefact', 'artefacttype', 'blog', 'owner', $USER->get('id')) != 1) {
+        $form->set_error('multipleblogs', get_string('disablemultipleblogserror', 'account'));
+    }
 }
 
 function accountprefs_submit(Pieform $form, $values) {
