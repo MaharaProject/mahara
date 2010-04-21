@@ -104,6 +104,7 @@
                 <FIELD NAME="quota" TYPE="int" LENGTH="10" NOTNULL="false"/>
                 <FIELD NAME="quotaused" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="authinstance" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -582,6 +583,7 @@
                 <FIELD NAME="template" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
                 <FIELD NAME="copynewuser" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
                 <FIELD NAME="type" TYPE="char" LENGTH="50" NOTNULL="true" />
+                <FIELD NAME="visits" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="allowcomments" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"  />
             </FIELDS>
             <KEYS>
@@ -696,6 +698,18 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="token" />
             </KEYS>
         </TABLE>
+        <TABLE NAME="view_visit">
+            <FIELDS>
+                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="ctimeix" UNIQUE="false" FIELDS="ctime"/>
+            </INDEXES>
+        </TABLE>
         <!-- site content stuff -->
         <!-- 
         <TABLE NAME="site_file">
@@ -761,6 +775,16 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="hostfk" TYPE="foreign" FIELDS="host" REFTABLE="host" REFFIELDS="wwwroot" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="site_data">
+            <FIELDS>
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="type" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="value" TYPE="text" LENGTH="small"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="ctime,type" />
             </KEYS>
         </TABLE>
     </TABLES>

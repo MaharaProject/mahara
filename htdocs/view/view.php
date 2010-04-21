@@ -196,6 +196,7 @@ if (get_config('viewmicroheaders')) {
     $smarty->assign('microheadertitle', $view->display_title(true, false));
 
     if ($can_edit) {
+        $smarty->assign('visitstring', $view->visit_message());
         if ($viewtype == 'profile') {
             $microheaderlinks = array(
                 array(
@@ -295,4 +296,5 @@ if ($tutorgroupdata = group_get_user_course_groups()) {
 
 $smarty->display('view/view.tpl');
 
+mahara_log('views', "$viewid"); // Log view visits
 ?>

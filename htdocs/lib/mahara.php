@@ -160,7 +160,9 @@ function ensure_sanity() {
         !check_dir_exists(get_config('dataroot') . 'sessions') ||
         !check_dir_exists(get_config('dataroot') . 'temp') ||
         !check_dir_exists(get_config('dataroot') . 'langpacks') ||
-        !check_dir_exists(get_config('dataroot') . 'htmlpurifier')) {
+        !check_dir_exists(get_config('dataroot') . 'htmlpurifier') ||
+        !check_dir_exists(get_config('dataroot') . 'log') ||
+        !check_dir_exists(get_config('dataroot') . 'images')) {
         throw new ConfigSanityException(get_string('couldnotmakedatadirectories', 'error'));
     }
 
@@ -2282,6 +2284,26 @@ function recalculate_quota() {
     }
 }
 
+
+/**
+ * Cronjob to check Launchpad for the latest Mahara version
+ */
+function cron_check_for_updates() {
+    $request = array(
+        CURLOPT_URL => 'https://launchpad.net/mahara',
+    );
+
+    $result = mahara_http_request($request);
+
+    $page = new DOMDocument();
+    $page->loadHTML($result->data);
+    $xpath = new DOMXPath($page);
+    $query = '//div[@class="version"]';
+    $elements = $xpath->query($query);
+    preg_match('/[0-9]+.[0-9]+.[a-zA-Z0-9]+/', $elements->item(0)->nodeValue, $match);
+    set_config('latest_version', $match[0]);
+}
+
 /**
  * Cronjob to send an update of site statistics to mahara.org
  */
@@ -2292,13 +2314,128 @@ function cron_send_registration_data() {
 
     require_once(get_config('libroot') . 'registration.php');
     $result = registration_send_data();
+    $data = json_decode($result->data);
 
-    if ($result->data != '1') {
+    if ($data->status != 1) {
         log_info($result);
     }
     else {
         set_config('registration_lastsent', time());
+        set_config('usersrank', $data->usersrank);
+        set_config('groupsrank', $data->groupsrank);
+        set_config('viewsrank', $data->viewsrank);
     }
+}
+
+/**
+ * Cronjob to save weekly site data locally
+ */
+function cron_site_data_weekly() {
+    require_once(get_config('libroot') . 'registration.php');
+    $current = site_data_current();
+    $time = db_format_timestamp(time());
+
+    insert_record('site_data', (object) array(
+        'ctime' => $time,
+        'type'  => 'user-count',
+        'value' => $current['users'],
+    ));
+    insert_record('site_data', (object) array(
+        'ctime' => $time,
+        'type'  => 'group-count',
+        'value' => $current['groups'],
+    ));
+    insert_record('site_data', (object) array(
+        'ctime' => $time,
+        'type'  => 'view-count',
+        'value' => $current['views'],
+    ));
+
+    graph_site_data_weekly();
+}
+
+function cron_site_data_daily() {
+    require_once(get_config('libroot') . 'registration.php');
+    $current = site_data_current();
+    $time = db_format_timestamp(time());
+
+    require_once('function.dirsize.php');
+    if ($diskusage = dirsize(get_config('dataroot'))) {
+        // Currently there is no need to track disk usage
+        // over time, so delete old records first.
+        delete_records('site_data', 'type', 'disk-usage');
+        insert_record('site_data', (object) array(
+            'ctime' => $time,
+            'type'  => 'disk-usage',
+            'value' => $diskusage,
+        ));
+    }
+
+    // Total users
+    insert_record('site_data', (object) array(
+        'ctime' => $time,
+        'type'  => 'user-count-daily',
+        'value' => $current['users'],
+    ));
+
+    // Logged-in users
+    $interval = is_postgres() ? "'1 day'" : '1 day';
+    $where = "lastaccess >= CURRENT_DATE AND lastaccess < CURRENT_DATE + INTERVAL $interval";
+    insert_record('site_data', (object) array(
+        'ctime' => $time,
+        'type'  => 'loggedin-users-daily',
+        'value' => count_records_select('usr', $where),
+    ));
+
+    // Process log file containing view visits
+    $viewlog = get_config('dataroot') . 'log/views.log';
+    if (rename($viewlog, $viewlog . '.temp') and $fh = @fopen($viewlog . '.temp', 'r')) {
+
+        // Read the new stuff out of the file
+        $latest = get_config('viewloglatest');
+
+        $visits = array();
+        while (!feof($fh)) {
+            $line = fgets($fh, 1024);
+            if (preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\] (\d+)$/', $line, $m) && $m[1] > $latest) {
+                $visits[] = (object) array('ctime' => $m[1], 'view' => $m[2]);
+            }
+        }
+        fclose($fh);
+
+        // Get per-view counts for the view table.
+        $visitcounts = array();
+        foreach ($visits as &$v) {
+            if (!isset($visitcounts[$v->view])) {
+                $visitcounts[$v->view] = 0;
+            }
+            $visitcounts[$v->view]++;
+        }
+
+        // Add visit records to view_visit
+        foreach ($visits as &$v) {
+            if (record_exists('view', 'id', $v->view)) {
+                insert_record('view_visit', $v);
+            }
+        }
+
+        // Delete view_visit records > 1 week old
+        delete_records_select(
+            'view_visit',
+            'ctime < CURRENT_DATE - INTERVAL ' . (is_postgres() ? "'1 week'" : '1 WEEK')
+        );
+
+        // Update view counts
+        foreach ($visitcounts as $viewid => $newvisits) {
+            execute_sql("UPDATE {view} SET visits = visits + ? WHERE id = ?", array($newvisits, $viewid));
+        }
+
+        set_config('viewloglatest', $time);
+
+        unlink($viewlog . '.temp');
+    }
+
+    graph_site_data_daily();
 }
 
 function build_portfolio_search_html(&$data) {
@@ -2348,6 +2485,10 @@ function build_portfolio_search_html(&$data) {
     ));
     $data->pagination = $pagination['html'];
     $data->pagination_js = $pagination['javascript'];
+}
+
+function mahara_log($logname, $string) {
+    error_log('[' . date("Y-m-d h:i:s") . "] $string\n", 3, get_config('dataroot') . 'log/' . $logname . '.log');
 }
 
 ?>

@@ -127,11 +127,15 @@ $string['Register'] = 'Register';
 $string['registrationfailedtrylater'] = 'Registation failed with error code %s. Please try again later.';
 $string['registrationsuccessfulthanksforregistering'] = 'Registation successful - thanks for registering!';
 $string['registeryourmaharasite'] = 'Register your Mahara Site';
+$string['registeryourmaharasitesummary'] = '
+<p>You can choose to register your Mahara Site with <a href="http://mahara.org/">mahara.org</a>, and help us to build up a picture of the Mahara installation base around the world.  Registering will remove this notice.</p>
+<p>You can register your site, and preview the information that will be sent on the <strong><a href="%sadmin/registersite.php">Site Registration page.</a></strong></p>';
 $string['registeryourmaharasitedetail'] = '
 <p>You can choose to register your Mahara Site with <a href="http://mahara.org/">mahara.org</a>. Registration is free, and helps us build up a picture of the Mahara installation base around the world.</p>
 <p>You can see the information that will be sent to mahara.org - nothing that can personally identify any of your users will be sent.</p>
 <p>If you tick &quot;send weekly updates&quot;, Mahara will automatically send an update to mahara.org once a week with your updated information.</p>
 <p>Registering will remove this notice. You will be able to change whether you send weekly updates on the <a href="%sadmin/site/options.php">site options</a> page.</p>';
+$string['siteregistered'] = 'Your site has been registered. You can turn weekly updates on and off on the <a href="%sadmin/site/options.php">site options</a> page.</p>';
 
 // Close site
 $string['Close'] = 'Close';
@@ -140,6 +144,42 @@ $string['closesitedetail'] = 'You may close the site to everyone except administ
 $string['Open'] = 'Open';
 $string['reopensite'] = 'Reopen Site';
 $string['reopensitedetail'] = 'Your site is closed.  Site administrators may stay logged in until an upgrade is detected.';
+
+// Statistics
+$string['siteinformation'] = 'Site Information';
+$string['viewfullsitestatistics'] = 'View Full Site Statistics';
+$string['sitestatistics'] = 'Site Statistics';
+$string['siteinstalled'] = 'Site Installed';
+$string['databasesize'] = 'Database Size';
+$string['diskusage'] = 'Disk Usage';
+$string['maharaversion'] = 'Mahara version';
+$string['activeusers'] = 'Active users';
+$string['loggedinsince'] = '%s today, %s since %s, %s all time';
+$string['groupmemberaverage'] = 'On average, each user is in %s groups';
+$string['viewsperuser'] = 'Users who make views have about %s views each';
+$string['Cron'] = 'Cron';
+$string['runningnormally'] = 'Running normally';
+$string['cronnotrunning'] = 'Cron is not running.<br>See the <a href="http://wiki.mahara.org/System_Administrator\'s_Guide/Installing_Mahara">installation guide</a> for instructions on how to set it up.';
+$string['Loggedin'] = 'Logged in';
+$string['youraverageuser'] = 'Your Average User...';
+$string['statsmaxfriends'] = 'Has %s friends (most is <a href="%s">%s</a> with %d)';
+$string['statsnofriends'] = 'Has 0 friends :(';
+$string['statsmaxviews'] = 'Has made %s views (most is <a href="%s">%s</a> with %d)';
+$string['statsnoviews'] = 'Has made 0 views :(';
+$string['statsmaxgroups'] = 'Is in %s groups (most is <a href="%s">%s</a> with %d)';
+$string['statsnogroups'] = 'Is in 0 groups :(';
+$string['statsmaxquotaused'] = 'Has used about %s of disk quota (most is <a href="%s">%s</a> with %s)';
+$string['groupcountsbytype'] = 'Number of groups by Group Type';
+$string['groupcountsbyjointype'] = 'Number of groups by Access Type';
+$string['blockcountsbytype'] = 'Most frequently used blocks in Portfolio Views:';
+$string['Rank'] = 'Rank';
+$string['rankingsupdated'] = 'Rankings last updated: %s';
+$string['uptodate'] = 'up to date';
+$string['latestversionis'] = 'latest version is <a href="%s">%s</a>';
+$string['viewsbytype'] = 'Views by Type';
+$string['userstatstabletitle'] = 'Daily User Statistics';
+$string['groupstatstabletitle'] = 'Biggest Groups';
+$string['viewstatstabletitle'] = 'Most Popular Views';
 
 // Site options
 $string['adminsonly'] = 'Administrators only';

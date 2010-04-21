@@ -91,6 +91,7 @@ class User {
             'parentuser'       => null,
             'loginanyway'       => false,
             'sesskey'          => '',
+            'ctime'            => null,
         );
         $this->attributes = array();
 
@@ -111,7 +112,8 @@ class User {
                     ' . db_format_tsfield('lastlogin') . ', 
                     ' . db_format_tsfield('lastlastlogin') . ',
                     ' . db_format_tsfield('lastaccess') . ',
-                    ' . db_format_tsfield('suspendedctime') . '
+                    ' . db_format_tsfield('suspendedctime') . ',
+                    ' . db_format_tsfield('ctime') . '
                 FROM
                     {usr}
                 WHERE
@@ -148,7 +150,8 @@ class User {
                     ' . db_format_tsfield('lastlogin') . ',
                     ' . db_format_tsfield('lastlastlogin') . ',
                     ' . db_format_tsfield('lastaccess') . ',
-                    ' . db_format_tsfield('suspendedctime') . '
+                    ' . db_format_tsfield('suspendedctime') . ',
+                    ' . db_format_tsfield('ctime') . '
                 FROM
                     {usr}
                 WHERE
@@ -214,6 +217,7 @@ class User {
                         ' . db_format_tsfield('u.lastlastlogin', 'lastlastlogin') . ',
                         ' . db_format_tsfield('u.lastaccess', 'lastaccess') . ',
                         ' . db_format_tsfield('u.suspendedctime', 'suspendedctime') . '
+                        ' . db_format_tsfield('u.ctime', 'ctime') . '
                     FROM {usr} u
                     LEFT JOIN {auth_remote_user} r ON u.id = r.localusr
                     WHERE
@@ -234,7 +238,8 @@ class User {
                         ' . db_format_tsfield('lastlogin') . ',
                         ' . db_format_tsfield('lastlastlogin') . ',
                         ' . db_format_tsfield('lastaccess') . ',
-                        ' . db_format_tsfield('suspendedctime') . '
+                        ' . db_format_tsfield('suspendedctime') . ',
+                        ' . db_format_tsfield('ctime') . '
                     FROM
                         {usr}
                     WHERE
@@ -250,6 +255,14 @@ class User {
         $this->populate($user);
         return $this;
     }
+
+    /**
+     * Set stuff that needs to be initialised once before a user record is created.
+     */
+    public function create() {
+        $this->set('ctime', time());
+    }
+
 
     /**
      * Take a row object from the usr table and populate this object with the
@@ -473,7 +486,7 @@ class User {
         $this->stdclass = new StdClass;
         reset($this->defaults);
         foreach (array_keys($this->defaults) as $k) {
-            if ($k == 'expiry' || $k == 'lastlogin' || $k == 'lastlastlogin' || $k == 'lastaccess' || $k == 'suspendedctime') {
+            if ($k == 'expiry' || $k == 'lastlogin' || $k == 'lastlastlogin' || $k == 'lastaccess' || $k == 'suspendedctime' || $k == 'ctime') {
                 $this->stdclass->{$k} = db_format_timestamp($this->get($k));
             } else {
                 $this->stdclass->{$k} = $this->get($k);//(is_null($this->get($k))? 'NULL' : $this->get($k));
@@ -819,7 +832,8 @@ class LiveUser extends User {
                     ' . db_format_tsfield('lastlogin') . ',
                     ' . db_format_tsfield('lastlastlogin') . ',
                     ' . db_format_tsfield('lastaccess') . ',
-                    ' . db_format_tsfield('suspendedctime') . '
+                    ' . db_format_tsfield('suspendedctime') . ',
+                    ' . db_format_tsfield('ctime') . '
                 FROM
                     {usr}
                 WHERE

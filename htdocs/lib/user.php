@@ -1544,11 +1544,13 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
     db_begin();
 
     if ($user instanceof User) {
+        $user->create();
         $user->quota_init();
         $user->commit();
         $user = $user->to_stdclass();
     }
     else {
+        $user->ctime = db_format_timestamp(time());
         if (empty($user->quota)) {
             $user->quota = get_config_plugin('artefact', 'file', 'defaultquota');
         }

@@ -1531,5 +1531,72 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('anonymouscomments', 1);
     }
 
+    if ($oldversion < 2010041900 && !table_exists(new XMLDBTable('site_data'))) {
+        // Upgrades for admin stats pages
+
+        // Table for collection of historical stats
+        $table = new XMLDBTable('site_data');
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('type', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('value', XMLDB_TYPE_TEXT, 'small', null);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('ctime','type'));
+        create_table($table);
+
+        // Insert cron jobs to save site data
+        $cron = new StdClass;
+        $cron->callfunction = 'cron_site_data_weekly';
+        $cron->minute       = 55;
+        $cron->hour         = 23;
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = 6;
+        insert_record('cron', $cron);
+
+        $cron = new StdClass;
+        $cron->callfunction = 'cron_site_data_daily';
+        $cron->minute       = 51;
+        $cron->hour         = 23;
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
+        insert_record('cron', $cron);
+
+        // Put best guess at installation time into config table.
+        set_config('installation_time', get_field_sql("SELECT MIN(ctime) FROM {site_content}"));
+
+        // Save the current time so we know when we started collecting stats
+        set_config('stats_installation_time', db_format_timestamp(time()));
+
+        // Add ctime to usr table for daily count of users created
+        $table = new XMLDBTable('usr');
+        $field = new XMLDBField('ctime');
+        $field->setAttributes(XMLDB_TYPE_DATETIME, null, null);
+        add_field($table, $field);
+
+        // Add visits column to view table
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('visits');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+
+        // Add table to store daily view visits
+        $table = new XMLDBTable('view_visit');
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+        $table->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
+        $table->addIndexInfo('ctimeix', XMLDB_INDEX_NOTUNIQUE, array('ctime'));
+        create_table($table);
+
+        // Insert a cron job to check for new versions of Mahara
+        $cron = new StdClass;
+        $cron->callfunction = 'cron_check_for_updates';
+        $cron->minute       = rand(0, 59);
+        $cron->hour         = rand(0, 23);
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
+        insert_record('cron', $cron);
+    }
+
     return $status;
 }

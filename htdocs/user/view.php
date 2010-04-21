@@ -61,8 +61,9 @@ $is_friend = is_friend($userid, $loggedinid);
 $userobj = new User();
 $userobj->find_by_id($userid);
 $view = $userobj->get_profile_view();
+$viewid = $view->get('id');
 # access will either be logged in (always) or public as well
-if (!$view || !can_view_view($view->get('id'))) {
+if (!$view || !can_view_view($viewid)) {
     throw new AccessDeniedException(get_string('youcannotviewthisusersprofile', 'error'));
 }
 
@@ -334,6 +335,8 @@ else {
 
 $smarty->assign('viewcontent', $view->build_columns());
 $smarty->display('user/view.tpl');
+
+mahara_log('views', "$viewid"); // Log view visits
 
 // Send an invitation to the user to join a group
 function invite_submit(Pieform $form, $values) {
