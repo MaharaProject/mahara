@@ -16,11 +16,12 @@
   {$subpagedata.summary}
   </div>
   <div id="statistics_table_container" class="statistics-subpage-right-column fr">
+    <h3>{$subpagedata.tabletitle}</h3>
     <table id="statistics_table" class="fullwidth">
       <thead>
         <tr>
 {foreach from=$subpagedata.tableheadings item=heading}
-          <th>{$heading|escape}</th>
+          <th{if $heading.class} class="{$heading.class}"{/if}>{$heading.name|escape}</th>
 {/foreach}
         <tr>
       </thead>

@@ -261,12 +261,14 @@ function site_statistics($full=false) {
 function user_statistics($limit, $offset, &$sitedata) {
     $data = array();
     $data['tableheadings'] = array(
-        get_string('date'),
-        get_string('Loggedin', 'admin'),
-        get_string('Created'),
-        get_string('Total'),
+        array('name' => get_string('date')),
+        array('name' => get_string('Loggedin', 'admin'), 'class' => 'center'),
+        array('name' => get_string('Created'), 'class' => 'center'),
+        array('name' => get_string('Total'), 'class' => 'center'),
     );
     $data['table'] = user_stats_table($limit, $offset);
+    $data['tabletitle'] = get_string('userstatstabletitle', 'admin');
+
     $maxfriends = get_records_sql_array("
         SELECT u.id, u.firstname, u.lastname, u.preferredname, SUM(f.friends) AS friends
         FROM {usr} u INNER JOIN (
@@ -511,14 +513,15 @@ function user_institution_graph() {
 function group_statistics($limit, $offset) {
     $data = array();
     $data['tableheadings'] = array(
-        '#',
-        get_string('Group', 'group'),
-        get_string('Members', 'group'),
-        get_string('views'),
-        get_string('nameplural', 'interaction.forum'),
-        get_string('Posts', 'interaction.forum'),
+        array('name' => '#'),
+        array('name' => get_string('Group', 'group')),
+        array('name' => get_string('Members', 'group'), 'class' => 'center'),
+        array('name' => get_string('views'), 'class' => 'center'),
+        array('name' => get_string('nameplural', 'interaction.forum'), 'class' => 'center'),
+        array('name' => get_string('Posts', 'interaction.forum'), 'class' => 'center'),
     );
     $data['table'] = group_stats_table($limit, $offset);
+    $data['tabletitle'] = get_string('groupstatstabletitle', 'admin');
 
     $smarty = smarty_core();
     $smarty->assign('grouptypecounts', get_records_sql_array("
@@ -677,13 +680,14 @@ function group_type_graph() {
 function view_statistics($limit, $offset) {
     $data = array();
     $data['tableheadings'] = array(
-        '#',
-        get_string('view'),
-        get_string('Owner', 'view'),
-        get_string('Visits'),
-        get_string('Comments', 'artefact.comment'),
+        array('name' => '#'),
+        array('name' => get_string('view')),
+        array('name' => get_string('Owner', 'view')),
+        array('name' => get_string('Visits'), 'class' => 'center'),
+        array('name' => get_string('Comments', 'artefact.comment'), 'class' => 'center'),
     );
     $data['table'] = view_stats_table($limit, $offset);
+    $data['tabletitle'] = get_string('viewstatstabletitle', 'admin');
 
     $smarty = smarty_core();
     $maxblocktypes = 5;
