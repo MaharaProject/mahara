@@ -46,7 +46,7 @@ class GroupTypeCourse extends GroupType {
 
     public static function user_allowed_join_types($user, $all=false) {
         $jointypes = array();
-        if (defined('INSTALLER') || $all || $user->get('admin') || $user->get('staff') || $user->is_institutional_admin() || $user->is_institutional_staff()) {
+        if (defined('INSTALLER') || defined('CRON') || $all || $user->get('admin') || $user->get('staff') || $user->is_institutional_admin() || $user->is_institutional_staff()) {
             $jointypes = array_merge($jointypes, array('controlled', 'request'));
         }
         return $jointypes;
