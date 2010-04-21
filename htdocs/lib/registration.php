@@ -186,7 +186,7 @@ function site_data_current() {
     return array(
         'users' => count_records_select('usr', 'id > 0 AND deleted = 0'),
         'groups' => count_records('group', 'deleted', 0),
-        'views' => count_records_select('view', 'owner <> 0'),
+        'views' => count_records_select('view', 'owner != 0 OR owner IS NULL'),
         'rank' => array(
             'users' => get_config('usersrank'),
             'groups' => get_config('groupsrank'),
