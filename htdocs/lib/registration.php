@@ -311,7 +311,7 @@ function user_statistics($limit, $offset, &$sitedata) {
             'admin',
             $sitedata['viewsperuser'],
             get_config('wwwroot') . 'user/view.php?id=' . $maxviews->id,
-            display_name($maxviews, null, true),
+            hsc(display_name($maxviews, null, true)),
             $maxviews->views
         );
     }
@@ -332,7 +332,7 @@ function user_statistics($limit, $offset, &$sitedata) {
             'admin',
             $sitedata['groupmemberaverage'],
             get_config('wwwroot') . 'user/view.php?id=' . $maxgroups->id,
-            display_name($maxgroups, null, true),
+            hsc(display_name($maxgroups, null, true)),
             $maxgroups->groups
         );
     }
@@ -351,7 +351,7 @@ function user_statistics($limit, $offset, &$sitedata) {
         'admin',
         display_size(get_field('usr', 'AVG(quotaused)', 'deleted', 0)),
         get_config('wwwroot') . 'user/view.php?id=' . $maxquotaused->id,
-        display_name($maxquotaused, null, true),
+        hsc(display_name($maxquotaused, null, true)),
         display_size($maxquotaused->quotaused)
     );
 
@@ -714,7 +714,7 @@ function view_statistics($limit, $offset) {
 }
 
 function view_stats_table($limit, $offset) {
-    $count = count_records_select('view', 'owner != 0');
+    $count = count_records_select('view', 'owner != 0 OR owner IS NULL');
 
     $pagination = build_pagination(array(
         'id' => 'stats_pagination',
@@ -740,12 +740,14 @@ function view_stats_table($limit, $offset) {
     $viewdata = get_records_sql_assoc(
         "SELECT
             v.id, v.title, v.owner, v.group, v.institution, v.visits,
-            u.firstname, u.lastname
+            u.id AS userid, u.firstname, u.lastname,
+            g.id AS groupid, g.name AS groupname,
+            i.displayname AS institutionname
         FROM {view} v
             LEFT JOIN {usr} u ON v.owner = u.id
             LEFT JOIN {group} g ON v.group = g.id
             LEFT JOIN {institution} i ON v.institution = i.name
-        WHERE v.owner != 0
+        WHERE v.owner != 0 OR owner IS NULL
         ORDER BY v.visits DESC",
         array(),
         $offset,
@@ -756,7 +758,20 @@ function view_stats_table($limit, $offset) {
     $comments = ArtefactTypeComment::count_comments(array_keys($viewdata));
 
     foreach ($viewdata as &$v) {
-        $v->author   = $v->owner ? display_name($v->owner) : null;
+        if ($v->owner) {
+            $v->ownername = display_name($v->owner);
+            $v->ownerurl  = 'user/view.php?id=' . $v->userid;
+        }
+        else if ($v->group) {
+            $v->ownername = $v->groupname;
+            $v->ownerurl  = 'group/view.php?id=' . $v->groupid;
+        }
+        else if ($v->institution == 'mahara') {
+            $v->ownername = get_config('sitename');
+        }
+        else if ($v->institution) {
+            $v->ownername = $v->institutionname;
+        }
         $v->comments = isset($comments[$v->id]) ? (int) $comments[$v->id]->comments : 0;
     }
 
