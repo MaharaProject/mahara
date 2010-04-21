@@ -1,3 +1,6 @@
+{if $viewcount == 0}
+<p>{str tag=noviews section=view}</p>
+{/if}
 {if $blocktypecounts}
 <p>{str tag=blockcountsbytype section=admin}:
 <ul>

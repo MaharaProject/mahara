@@ -378,6 +378,7 @@ function user_stats_table($limit, $offset) {
     ));
 
     $result = array(
+        'count'         => $count,
         'tablerows'     => '',
         'pagination'    => $pagination['html'],
         'pagination_js' => $pagination['javascript'],
@@ -559,6 +560,7 @@ function group_stats_table($limit, $offset) {
     ));
 
     $result = array(
+        'count'         => $count,
         'tablerows'     => '',
         'pagination'    => $pagination['html'],
         'pagination_js' => $pagination['javascript'],
@@ -705,13 +707,14 @@ function view_statistics($limit, $offset) {
         array(), 0, $maxblocktypes
     ));
     $smarty->assign('viewtypes', stats_graph_url('viewtypes'));
+    $smarty->assign('viewcount', $data['table']['count']);
     $data['summary'] = $smarty->fetch('admin/viewstatssummary.tpl');
 
     return $data;
 }
 
 function view_stats_table($limit, $offset) {
-    $count = count_records('view');
+    $count = count_records_select('view', 'owner != 0');
 
     $pagination = build_pagination(array(
         'id' => 'stats_pagination',
@@ -724,6 +727,7 @@ function view_stats_table($limit, $offset) {
     ));
 
     $result = array(
+        'count'         => $count,
         'tablerows'     => '',
         'pagination'    => $pagination['html'],
         'pagination_js' => $pagination['javascript'],
@@ -741,6 +745,7 @@ function view_stats_table($limit, $offset) {
             LEFT JOIN {usr} u ON v.owner = u.id
             LEFT JOIN {group} g ON v.group = g.id
             LEFT JOIN {institution} i ON v.institution = i.name
+        WHERE v.owner != 0
         ORDER BY v.visits DESC",
         array(),
         $offset,

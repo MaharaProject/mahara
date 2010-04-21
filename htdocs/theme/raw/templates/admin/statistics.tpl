@@ -15,7 +15,7 @@
   <div class="statistics-subpage-left-column fl">
   {$subpagedata.summary}
   </div>
-  <div id="statistics_table_container" class="statistics-subpage-right-column fr">
+  <div id="statistics_table_container" class="statistics-subpage-right-column fr{if $subpagedata.table.count == 0} hidden{/if}">
     <h3>{$subpagedata.tabletitle}</h3>
     <table id="statistics_table" class="fullwidth">
       <thead>

@@ -1,3 +1,6 @@
+{if empty($grouptypecounts)}
+<p>{str tag=nogroups section=group}</p>
+{else}
 <p>{str tag=groupcountsbytype section=admin}:
 <ul>
 {foreach from=$grouptypecounts item=item}
@@ -14,4 +17,5 @@
 </p>
 {if $groupgraph}
   <img src="{$groupgraph}" alt="" />
+{/if}
 {/if}
