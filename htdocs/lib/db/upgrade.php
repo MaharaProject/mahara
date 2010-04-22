@@ -1387,11 +1387,11 @@ function xmldb_core_upgrade($oldversion=0) {
         $sql = "
             SELECT u.id
             FROM {usr} u
-            JOIN {artefact} a
-                ON a.owner = u.id
-            WHERE a.artefacttype = 'blog'
+            LEFT JOIN {artefact} a
+                ON (a.owner = u.id AND a.artefacttype = 'blog')
+            WHERE u.id > 0
             GROUP BY u.id
-            HAVING COUNT(a.id) > 1";
+            HAVING COUNT(a.id) != 1";
 
         $manyblogusers = get_records_sql_array($sql, null);
 
