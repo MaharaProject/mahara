@@ -1395,17 +1395,19 @@ function xmldb_core_upgrade($oldversion=0) {
 
         $manyblogusers = get_records_sql_array($sql, null);
 
-        foreach($manyblogusers as $u) {
-            $where = (object)array(
-                'usr' => $u->id,
-                'field' => 'multipleblogs',
-            );
-            $data = (object)array(
-                'usr' => $u->id,
-                'field' => 'multipleblogs',
-                'value' => 1,
-            );
-            ensure_record_exists('usr_account_preference', $where, $data);
+        if ($manyblogusers) {
+            foreach($manyblogusers as $u) {
+                $where = (object)array(
+                    'usr' => $u->id,
+                    'field' => 'multipleblogs',
+                );
+                $data = (object)array(
+                    'usr' => $u->id,
+                    'field' => 'multipleblogs',
+                    'value' => 1,
+                );
+                ensure_record_exists('usr_account_preference', $where, $data);
+            }
         }
     }
 
