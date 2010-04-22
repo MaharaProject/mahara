@@ -240,7 +240,7 @@ function site_statistics($full=false) {
     $data['installdate'] = format_date(strtotime(get_config('installation_time')), 'strftimedate');
     $data['dbsize']      = db_total_size();
     $data['diskusage']   = get_field('site_data', 'value', 'type', 'disk-usage');
-    $data['cronrunning'] = !record_exists_select('cron', 'nextrun < CURRENT_DATE');
+    $data['cronrunning'] = !record_exists_select('cron', 'nextrun IS NULL OR nextrun < CURRENT_DATE');
 
     if ($latestversion = get_config('latest_version')) {
         $data['latest_version'] = $latestversion;
