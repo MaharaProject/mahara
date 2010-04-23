@@ -50,6 +50,7 @@ $string['description'] = 'Description';
 $string['remove']  = 'Remove';
 $string['Close'] = 'Close';
 $string['Help'] = 'Help';
+$string['applychanges'] = 'Apply changes';
 
 $string['no']     = 'No';
 $string['yes']    = 'Yes';

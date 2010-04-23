@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-            <div id="friendslistcontainer">
+<div id="friendslistcontainer">
             {$form}
             <table id="friendslist" class="fullwidth listing">
                 <tbody>

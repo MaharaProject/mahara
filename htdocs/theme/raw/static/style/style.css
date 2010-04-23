@@ -1442,6 +1442,13 @@ ul.groupuserstatus {
 	width: 180px;
 	font-size: .9em;
 }
+#friendslist ul.actionlist div.groupbox{
+    position: relative;
+    display: none;
+    background: white;
+    border: 1px solid black;
+    z-index: 4;
+}
 ul.groupuserstatus li,
 #friendslist ul.actionlist li {
 	list-style: none;

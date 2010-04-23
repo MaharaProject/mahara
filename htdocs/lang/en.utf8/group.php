@@ -77,6 +77,15 @@ $string['hasbeeninvitedtojoin'] = 'has been invited to join this group';
 $string['groupinvitesfrom'] = 'Invited to join:';
 $string['requestedmembershipin'] = 'Requested membership in:';
 
+$string['controlledmembership'] = 'Controlled Group membership';
+$string['invitemembership'] = 'Invite only membership';
+$string['changedgroupmembership'] = 'Control Groups membership has changed sucessfully.';
+$string['changedgroupmembershipsubject'] = 'You Control Groups membership has changed';
+$string['addedtogroupsmessage'] = "%s has added you to controlled group(s):\n\n%s\n\n";
+$string['removedfromgroupsmessage'] = "%s has removed you from controlled group(s):\n\n%s\n\n";
+$string['cantremoveuserisadmin'] = "Tutor cannot remove admins and other tutorsmembers.";
+$string['cantremovemember'] = "Tutor cannot remove members.";
+
 // Used to refer to all the members of a group - NOT a "member" group role!
 $string['member'] = 'member';
 $string['members'] = 'members';
@@ -155,7 +164,8 @@ $string['groupsnotin'] = 'Groups I\'m not in';
 $string['allgroups'] = 'All groups';
 $string['allgroupmembers'] = 'All group members';
 $string['trysearchingforgroups'] = 'Try %ssearching for groups%s to join!';
-$string['nogroupsfound'] = 'No groups found :(';
+$string['nogroupsfound'] = 'No groups found.';
+$string['nogroups'] = 'No groups.';
 $string['group'] = 'group';
 $string['Group'] = 'Group';
 $string['groups'] = 'groups';

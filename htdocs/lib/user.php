@@ -1373,7 +1373,7 @@ function get_users_data($userlist, $getviews=true) {
     return $ordereddata;
 }
 
-function build_userlist_html(&$data, $page) {
+function build_userlist_html(&$data, $page, $admingroups) {
     if ($data['data']) {
         $userlist = join(',', array_map(create_function('$u','return $u[\'id\'];'), $data['data']));
         $userdata = get_users_data($userlist, $page == 'myfriends');
@@ -1381,18 +1381,30 @@ function build_userlist_html(&$data, $page) {
     $smarty = smarty_core();
     $smarty->assign('data', isset($userdata) ? $userdata : null);
     $smarty->assign('page', $page);
-    $smarty->assign('query', $data['query']);
+    if (isset($data['query'])) {
+        $smarty->assign('query', $data['query']);
+        $params = '?query=' . $data['query'];
+        $resultcounttextsingular = get_string('user', 'group');
+        $resultcounttextplural = get_string('users', 'group');
+    }
+    elseif (isset($data['filter'])) {
+        $smarty->assign('filter', $data['filter']);
+        $params = '?filter=' . $data['filter'];
+        $resultcounttextsingular = get_string('friend', 'group');
+        $resultcounttextplural = get_string('friends', 'group');
+    }
+    $smarty->assign('admingroups', $admingroups);
     $data['tablerows'] = $smarty->fetch('user/userresults.tpl');
     $pagination = build_pagination(array(
         'id' => 'friendslist_pagination',
-        'url' => get_config('wwwroot') . 'user/' . $page . '.php?query=' . $data['query'],
+        'url' => get_config('wwwroot') . 'user/' . $page . '.php' . $params,
         'jsonscript' => 'json/friendsearch.php',
         'datatable' => 'friendslist',
         'count' => $data['count'],
         'limit' => $data['limit'],
         'offset' => $data['offset'],
-        'resultcounttextsingular' => get_string('user', 'group'),
-        'resultcounttextplural' => get_string('users', 'group'),
+        'resultcounttextsingular' => $resultcounttextsingular,
+        'resultcounttextplural' => $resultcounttextplural,
         'extradata' => array('page' => $page),
     ));
     $data['pagination'] = $pagination['html'];
