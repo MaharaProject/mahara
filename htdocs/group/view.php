@@ -107,29 +107,20 @@ if ($role || $group->public) {
         ', array($group->id));
 }
 
-$smarty = smarty();
-$smarty->assign('group', $group);
-$smarty->assign('groupid', $group->id);
-$smarty->assign('foruminfo', $foruminfo);
-$smarty->assign('membercount', count_records('group_member', 'group', $group->id));
-$smarty->assign('viewcount', count_records('view', 'group', $group->id));
-$smarty->assign('filecount', $filecounts->files);
-$smarty->assign('foldercount', $filecounts->folders);
 if ($role) {
     // For group members, display a list of views that others have
     // shared to the group
-    $viewdata = View::get_sharedviews_data(null, 0, $group->id);
-    $smarty->assign('sharedviews', $viewdata->data);
+    $sharedviews = View::get_sharedviews_data(null, 0, $group->id);
     if (group_user_can_assess_submitted_views($group->id, $USER->get('id'))) {
         // Display a list of views submitted to the group
-        $smarty->assign('submittedviews', View::get_submitted_views($group->id));
+        $submittedviews = View::get_submitted_views($group->id);
     }
 }
 
-if (group_allows_submission($group->grouptype) && ($viewdata = View::get_user_views())) {
+if (group_allows_submission($group->grouptype) && ($userviewdata = View::get_user_views())) {
     $submitted = get_record_select('view', 'owner = ? AND submittedgroup = ?', array($USER->get('id'), $group->id));
     if (!$submitted) {
-        $group_view_submission_form = group_view_submission_form($group->id, $viewdata);
+        $group_view_submission_form = group_view_submission_form($group->id, $userviewdata);
     }
     else {
         if ($submitted->submittedtime) {
@@ -140,6 +131,24 @@ if (group_allows_submission($group->grouptype) && ($viewdata = View::get_user_vi
             $group_view_submission_form = get_string('youhavesubmitted', 'view', get_config('wwwroot') . 'view/view.php?id=' . $submitted->id, $submitted->title);
         }
     }
+}
+
+$smarty = smarty();
+$smarty->assign('group', $group);
+$smarty->assign('groupid', $group->id);
+$smarty->assign('foruminfo', $foruminfo);
+$smarty->assign('membercount', count_records('group_member', 'group', $group->id));
+$smarty->assign('viewcount', count_records('view', 'group', $group->id));
+$smarty->assign('filecount', $filecounts->files);
+$smarty->assign('foldercount', $filecounts->folders);
+
+if (isset($sharedviews)) {
+    $smarty->assign('sharedviews', $sharedviews->data);
+}
+if (isset($submittedviews)) {
+    $smarty->assign('submittedviews', $submittedviews);
+}
+if (isset($group_view_submission_form)) {
     $smarty->assign('group_view_submission_form', $group_view_submission_form);
 }
 
