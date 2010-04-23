@@ -101,6 +101,9 @@ function pieform_element_wysiwyg_get_headdata() {
          . "\nPieformManager.connect('onload', null, function() {\n";
         foreach ($_PIEFORM_WYSIWYGS as $editor) {
             $result .= "    tinyMCE.execCommand('mceAddControl', false, '$editor');\n";
+            $result .= "    $('{$editor}').focus = function() {\n";
+            $result .= "        tinyMCE.execCommand('mceFocus', false, '$editor');\n";
+            $result .= "    };\n";
         }
         $result .= "});\nPieformManager.connect('onreply', null, function() {\n";
         foreach ($_PIEFORM_WYSIWYGS as $editor) {
