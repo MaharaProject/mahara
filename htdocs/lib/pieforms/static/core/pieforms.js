@@ -49,7 +49,7 @@ function PieformManager() {//{{{
         }
         forEach(check, function(form) {
             var element = getFirstElementByTagAndClassName(null, 'autofocus', form);
-            if (element && typeof(element.focus) == 'function') {
+            if (element && (typeof(element.focus) == 'function' || (element.focus && element.focus.call))) {
                 element.focus();
                 throw MochiKit.Iter.StopIteration;
             }
