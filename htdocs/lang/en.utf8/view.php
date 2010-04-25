@@ -81,7 +81,7 @@ $string['viewssharedtogroupbyothers'] = 'Views shared to this group by others';
 $string['viewssubmittedtogroup'] = 'Views submitted to this group';
 $string['submitaviewtogroup'] = 'Submit a view to this group';
 $string['youhavesubmitted'] = 'You have submitted <a href="%s">%s</a> to this group';
-$string['youhavesubmittedon'] = 'You submitted <a href="%s">%s</a> to this group on %s at %s';
+$string['youhavesubmittedon'] = 'You submitted <a href="%s">%s</a> to this group on %s';
 
 // access levels
 $string['public'] = 'Public';

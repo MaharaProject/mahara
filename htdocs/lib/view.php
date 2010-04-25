@@ -2147,8 +2147,8 @@ class View {
             global $USER;
             $userid = $USER->get('id');
         }
-        if ($views = get_records_sql_array(
-            "SELECT v.id, v.title
+        if ($views = get_records_sql_assoc(
+            "SELECT v.*
             FROM {view} v
             WHERE v.owner = ?
             AND v.type != 'profile'
@@ -2449,7 +2449,7 @@ class View {
         );
 
         if ($viewdata) {
-            View::get_extra_view_info($viewdata);
+            View::get_extra_view_info($viewdata, false);
         }
         else {
             $viewdata = array();
@@ -2465,24 +2465,34 @@ class View {
     /** 
      * Get views submitted to a group
      */
-    public static function get_submitted_views($groupid) {
+    public static function get_submitted_views($groupid, $userid=null) {
+        $values = array($groupid);
+        $where = 'submittedgroup = ?';
+
+        if (!empty($userid)) { // Filter by view owner
+            $values[] = (int) $userid;
+            $where .= ' AND owner = ?';
+        }
+
         $viewdata = get_records_sql_assoc('
-            SELECT id, title, description, owner, ownerformat, "group", institution, submittedtime
+            SELECT
+                id, title, description, owner, ownerformat, "group", institution,
+                ' . db_format_tsfield('submittedtime') . '
             FROM {view}
-            WHERE submittedgroup = ?
+            WHERE ' . $where . '
             ORDER BY title, id',
-            array($groupid)
+            $values
         );
 
         if ($viewdata) {
-            View::get_extra_view_info($viewdata);
+            View::get_extra_view_info($viewdata, false);
             return array_values($viewdata);
         }
         return false;
     }
 
 
-    public static function get_extra_view_info(&$viewdata) {
+    public static function get_extra_view_info(&$viewdata, $getartefacts = true) {
         if ($viewdata) {
             // Get view owner details for display
             $owners = array();
@@ -2497,27 +2507,30 @@ class View {
                     $institutions[$v->institution] = $v->institution;
                 }
             }
+
             $viewidlist = join(',', array_keys($viewdata));
-            $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
-                FROM {view_artefact} va
-                INNER JOIN {artefact} a ON va.artefact = a.id
-                INNER JOIN {artefact_installed_type} t ON a.artefacttype = t.name
-                WHERE va.view IN (' . $viewidlist . ')
-                GROUP BY va.view, va.artefact, a.title, a.artefacttype, t.plugin
-                ORDER BY a.title, va.artefact', '');
-            if ($artefacts) {
-                foreach ($artefacts as $artefactrec) {
-                    safe_require('artefact', $artefactrec->plugin);
-                    $classname = generate_artefact_class_name($artefactrec->artefacttype);
-                    $artefactobj = new $classname(0, array('title' => $artefactrec->title));
-                    $artefactobj->set('dirty', false);
-                    if (!$artefactobj->in_view_list()) {
-                        continue;
-                    }
-                    $artname = $artefactobj->display_title(30);
-                    if (strlen($artname)) {
-                        $viewdata[$artefactrec->view]->artefacts[] = array('id'    => $artefactrec->artefact,
-                                                                           'title' => $artname);
+            if ($getartefacts) {
+                $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
+                    FROM {view_artefact} va
+                    INNER JOIN {artefact} a ON va.artefact = a.id
+                    INNER JOIN {artefact_installed_type} t ON a.artefacttype = t.name
+                    WHERE va.view IN (' . $viewidlist . ')
+                    GROUP BY va.view, va.artefact, a.title, a.artefacttype, t.plugin
+                    ORDER BY a.title, va.artefact', '');
+                if ($artefacts) {
+                    foreach ($artefacts as $artefactrec) {
+                        safe_require('artefact', $artefactrec->plugin);
+                        $classname = generate_artefact_class_name($artefactrec->artefacttype);
+                        $artefactobj = new $classname(0, array('title' => $artefactrec->title));
+                        $artefactobj->set('dirty', false);
+                        if (!$artefactobj->in_view_list()) {
+                            continue;
+                        }
+                        $artname = $artefactobj->display_title(30);
+                        if (strlen($artname)) {
+                            $viewdata[$artefactrec->view]->artefacts[] = array('id'    => $artefactrec->artefact,
+                                                                               'title' => $artname);
+                        }
                     }
                 }
             }

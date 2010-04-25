@@ -694,7 +694,12 @@ function group_removeuser_submit(Pieform $form, $values) {
 function group_view_submission_form($groupid, $viewdata) {
     $options = array();
     foreach ($viewdata as $view) {
-        $options[$view->id] = $view->title;
+        if (empty($view->submittedgroup) && empty($view->submittedhost)) {
+            $options[$view->id] = $view->title;
+        }
+    }
+    if (empty($options)) {
+        return;
     }
     return pieform(array(
         'name' => 'group_view_submission_form_' . $groupid,

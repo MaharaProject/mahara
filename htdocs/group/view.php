@@ -113,24 +113,32 @@ if ($role) {
     $sharedviews = View::get_sharedviews_data(null, 0, $group->id);
     if (group_user_can_assess_submitted_views($group->id, $USER->get('id'))) {
         // Display a list of views submitted to the group
-        $submittedviews = View::get_submitted_views($group->id);
+        $allsubmittedviews = View::get_submitted_views($group->id);
     }
 }
 
 if (group_allows_submission($group->grouptype) && ($userviewdata = View::get_user_views())) {
-    $submitted = get_record_select('view', 'owner = ? AND submittedgroup = ?', array($USER->get('id'), $group->id));
-    if (!$submitted) {
-        $group_view_submission_form = group_view_submission_form($group->id, $userviewdata);
-    }
-    else {
-        if ($submitted->submittedtime) {
-            $pieces = explode(' ', $submitted->submittedtime);
-            $group_view_submission_form = get_string('youhavesubmittedon', 'view', get_config('wwwroot') . 'view/view.php?id=' . $submitted->id, $submitted->title, $pieces[0], $pieces[1]);
+    // A user can submit more than one view to the same group, but no view can be
+    // submitted to more than one group.
+
+    // Display a list of views this user has submitted to this group, and a submission
+    // form containing drop-down of their unsubmitted views.
+
+    $mysubmittedviews = View::get_submitted_views($group->id, $USER->get('id'));
+
+    if (!empty($mysubmittedviews)) {
+        foreach ($mysubmittedviews as &$v) {
+            $url = get_config('wwwroot') . 'view/view.php?id=' . $v['id'];
+            if ($v['submittedtime']) {
+                $v['strsubmitted'] = get_string('youhavesubmittedon', 'view', $url, $v['title'], format_date($v['submittedtime']));
+            }
+            else {
+                $v['strsubmitted'] = get_string('youhavesubmitted', 'view', $url, $v['title']);
+            }
         }
-        else {
-            $group_view_submission_form = get_string('youhavesubmitted', 'view', get_config('wwwroot') . 'view/view.php?id=' . $submitted->id, $submitted->title);
-        }
     }
+
+    $group_view_submission_form = group_view_submission_form($group->id, $userviewdata);
 }
 
 $smarty = smarty();
@@ -145,8 +153,11 @@ $smarty->assign('foldercount', $filecounts->folders);
 if (isset($sharedviews)) {
     $smarty->assign('sharedviews', $sharedviews->data);
 }
-if (isset($submittedviews)) {
-    $smarty->assign('submittedviews', $submittedviews);
+if (isset($allsubmittedviews)) {
+    $smarty->assign('allsubmittedviews', $allsubmittedviews);
+}
+if (isset($mysubmittedviews)) {
+    $smarty->assign('mysubmittedviews', $mysubmittedviews);
 }
 if (isset($group_view_submission_form)) {
     $smarty->assign('group_view_submission_form', $group_view_submission_form);
