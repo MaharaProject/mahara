@@ -858,6 +858,12 @@ function graph_site_data_weekly() {
     foreach ($weekly as &$r) {
         $dataarray[$r->type][strftime("%d %b", $r->ts)] = $r->value;
     }
+    foreach ($dataarray as &$t) {
+        // The graph will look nasty until we have 2 points to plot.
+        if (count($t) < 2) {
+            return;
+        }
+    }
 
     require_once(get_config('libroot') . "pear/Image/Graph.php");
 
