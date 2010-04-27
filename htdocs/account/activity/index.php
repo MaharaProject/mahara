@@ -45,9 +45,12 @@ $types = array_map(create_function('$a', '
     }
     return get_string("type" . $a->name, $section);
     '), $types);
-if ($USER->get('admin')) {
-    $types['adminmessages'] = get_string('typeadminmessages', 'activity');
+
+$type = param_alphanum('type', 'all');
+if (!isset($types[$type])) {
+    $type = 'all';
 }
+$strtype = json_encode($type);
 
 $morestr = get_string('more...');
 
@@ -92,7 +95,7 @@ var activitylist = new TableRenderer(
     ]
 );
 
-activitylist.type = 'all';
+activitylist.type = {$strtype};
 activitylist.statevars.push('type');
 activitylist.updateOnLoad();
 
