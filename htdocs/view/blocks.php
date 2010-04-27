@@ -197,17 +197,7 @@ if (get_config('viewmicroheaders')) {
 
     if ($owner) {
         if ($viewtype == 'profile') {
-            $microheaderlinks = array(
-                array(
-                    'name' => get_string('viewmyprofilepage'),
-                    'url' => get_config('wwwroot') . 'user/view.php',
-                ),
-                array(
-                    'name' => get_string('editmyprofile', 'artefact.internal'),
-                    'url' => get_config('wwwroot') . 'artefact/internal/index.php',
-                    'type' => 'edit',
-                ),
-            );
+            $microheaderlinks = array();
         }
         else if ($new) {
             $microheaderlinks = array();

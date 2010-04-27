@@ -200,13 +200,8 @@ if (get_config('viewmicroheaders')) {
         if ($viewtype == 'profile') {
             $microheaderlinks = array(
                 array(
-                    'name' => get_string('editmyprofilepage'),
+                    'name' => get_string('editcontent', 'view'),
                     'url' => get_config('wwwroot') . 'view/blocks.php?profile=1',
-                    'type' => 'edit',
-                ),
-                array(
-                    'name' => get_string('editmyprofile', 'artefact.internal'),
-                    'url' => get_config('wwwroot') . 'artefact/internal/index.php',
                     'type' => 'edit',
                 ),
             );
