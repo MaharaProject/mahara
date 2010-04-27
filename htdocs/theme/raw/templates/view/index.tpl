@@ -40,7 +40,7 @@
 {/if}
                             </div>
                             <div class="vi">
-                                <h4><a href="{$WWWROOT}view/blocks.php?{if $view.type == 'profile'}profile=1{else}id={$view.id}{/if}" id="editthisview">{str tag ="editcontentandlayout" section="view"}</a></h4>
+                                <h4><a href="{$WWWROOT}view/blocks.php?id={$view.id}" id="editthisview">{str tag ="editcontentandlayout" section="view"}</a></h4>
 {if $view.artefacts}
                                 <div class="videsc">{str tag="artefacts" section="view"}:
                                 {foreach from=$view.artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$view.id}" id="link-artefacts">{$artefact.title|escape}</a>{if !$.foreach.artefacts.last}, {/if}{/foreach}</div>
