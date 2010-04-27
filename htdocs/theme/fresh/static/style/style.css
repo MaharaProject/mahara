@@ -409,6 +409,20 @@ input#myfriends_addfriend_add {
 }
 
 /**************** TOP NAVIGATION ****************/
+#right-nav ul {
+  margin: 2em 1em 0 0;
+}
+#right-nav li {
+  padding: 0 0 0 1em;
+}
+#right-nav li a {
+  color: #fff;
+}
+#right-nav li.selected a {
+  color: #fff;
+  font-weight: normal;
+  text-decoration: underline;
+}
 #main-nav {
     float:right;
     padding: 0;

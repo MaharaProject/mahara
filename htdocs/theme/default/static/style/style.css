@@ -371,6 +371,15 @@ input#myfriends_addfriend_add {
 }
 
 /**************** TOP NAVIGATION ****************/
+#right-nav ul {
+  float: right;
+  text-align: right;
+  margin: 2.5em 0.5em 0 0;
+}
+#right-nav li {
+  padding: 0 0.5em;
+}
+
 #main-nav {
 }
 #main-nav ul {

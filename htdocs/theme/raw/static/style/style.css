@@ -613,6 +613,20 @@ div.rbuttons .small-logo {
 }
 
 /**************** TOP NAVIGATION ****************/
+#right-nav ul {
+  float: right;
+  text-align: right;
+}
+#right-nav li {
+  display: inline;
+  padding: 0 0.5em;
+}
+#right-nav li.selected a {
+  color: #333;
+  text-decoration: none;
+  font-weight: bold;
+}
+
 #main-nav {
     clear: left;
     font-size: 1.2em;
