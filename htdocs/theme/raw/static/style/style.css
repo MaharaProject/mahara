@@ -404,7 +404,6 @@ input#files_filebrowser_edit_artefact {
 }
 /** link buttons **/
 .rbuttons a.btn,
-#sb-profile .controls a,
 .upgradeicon a,
 #loginas .btn-loginas {
     font-size: 1em;
@@ -427,8 +426,7 @@ input.button:hover,
 input.buttondk:hover,
 input.select:hover,
 input#files_filebrowser_edit_artefact:hover,
-.rbuttons a.btn:hover,
-#sb-profile .controls a:hover {
+.rbuttons a.btn:hover {
 	background: #d1d1d1;
 	text-decoration: none;
 	cursor: default;
@@ -441,8 +439,7 @@ input.button:active,
 input.buttondk:active,
 input.select:active,
 input#files_filebrowser_edit_artefact:active,
-.rbuttons a.btn:active,
-#sb-profile .controls a:active {
+.rbuttons a.btn:active {
 	border-color: #a3a3a3 #f0f0f0 #f0f0f0 #a3a3a3;
 	background: #d1d1d1;
 }
@@ -897,9 +894,6 @@ div.sideblock ul {
 * html #sb-profile ul ul {
     list-style-type: disc;
     padding-left: 1.5em;
-}
-#sb-profile .controls {
-    margin-top: 1em;
 }
 #changeuser {
     padding-top: 1em;

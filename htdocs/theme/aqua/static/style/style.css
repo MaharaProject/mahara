@@ -208,7 +208,6 @@ input#files_filebrowser_edit_artefact {
 }
 /** link buttons **/
 .rbuttons a.btn,
-#sb-profile .controls a,
 .upgradeicon a,
 #loginas .btn-loginas {
 	background-color: #14436F;
@@ -223,8 +222,7 @@ input.button:hover,
 input.buttondk:hover,
 input.select:hover,
 input#files_filebrowser_edit_artefact:hover,
-.rbuttons a.btn:hover,
-#sb-profile .controls a:hover {
+.rbuttons a.btn:hover {
 	background: #155a9b;
 	text-decoration: none;
 }
@@ -236,8 +234,7 @@ input.button:active,
 input.buttondk:active,
 input.select:active,
 input#files_filebrowser_edit_artefact:active,
-.rbuttons a.btn:active,
-#sb-profile .controls a:active {
+.rbuttons a.btn:active {
 	border-color: #011e3a #5388b9 #5388b9 #011e3a;
 	background: #155a9b;
 	color: #FFF;
