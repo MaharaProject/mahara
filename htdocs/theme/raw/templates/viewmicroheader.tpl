@@ -34,6 +34,7 @@
           {/if}
 
           {if $mnethost}<a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a>&nbsp;{/if}
+          <a href="{$WWWROOT}?logout">{str tag="logout"}</a>
         </div>
 {/if}
         <div class="center cb title">{$microheadertitle}</div>
