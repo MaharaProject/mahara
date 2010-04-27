@@ -1950,6 +1950,11 @@ function main_nav() {
 }
 
 function right_nav() {
+    global $USER;
+
+    safe_require('notification', 'internal');
+    $unread = call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'));
+
     $menu = array(
         array(
             'path' => 'settings',
@@ -1961,6 +1966,7 @@ function right_nav() {
             'path' => 'inbox',
             'url' => 'account/activity',
             'title' => get_string('inbox'),
+            'count' => $unread,
             'weight' => 20,
         ),
         array(

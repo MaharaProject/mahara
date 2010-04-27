@@ -55,7 +55,11 @@ class PluginNotificationInternal extends PluginNotification {
      */
 
     public static function unread_count($userid) {
-        return count_records('notification_internal_activity', 'usr', $userid, 'read', 0);
+        static $unreadcount = array();
+        if (!isset($unreadcount[$userid])) {
+            $unreadcount[$userid] = count_records('notification_internal_activity', 'usr', $userid, 'read', 0);
+        }
+        return $unreadcount[$userid];
     }
     
     public static function get_event_subscriptions() {

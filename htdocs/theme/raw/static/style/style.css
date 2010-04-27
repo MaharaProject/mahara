@@ -621,6 +621,9 @@ div.rbuttons .small-logo {
   display: inline;
   padding: 0 0.5em;
 }
+#right-nav li .navcount {
+  padding: 0 0 0 0.15em;
+}
 #right-nav li.selected a {
   color: #333;
   text-decoration: none;
