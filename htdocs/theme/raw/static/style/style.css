@@ -613,18 +613,14 @@ div.rbuttons .small-logo {
 #right-nav ul {
   float: right;
   text-align: right;
+  margin-right: 1em;
 }
 #right-nav li {
   display: inline;
-  padding: 0 0.5em;
+  padding: 0 0.25em;
 }
 #right-nav li .navcount {
   padding: 0 0 0 0.15em;
-}
-#right-nav li.selected a {
-  color: #333;
-  text-decoration: none;
-  font-weight: bold;
 }
 
 #main-nav {
@@ -863,10 +859,6 @@ div.sideblock ul {
 }
 
 /* Side Profile */
-#profile-sideblock-username {
-    font-size: .9em;
-    font-weight: normal;
-}
 #user-profileicon {
     float: right;
     padding-left: .25em;

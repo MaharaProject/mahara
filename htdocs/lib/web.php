@@ -1950,7 +1950,7 @@ function main_nav() {
 }
 
 function right_nav() {
-    global $USER;
+    global $USER, $THEME;
 
     safe_require('notification', 'internal');
     $unread = call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'));
@@ -1958,14 +1958,18 @@ function right_nav() {
     $menu = array(
         array(
             'path' => 'settings',
+            'wwwroot' => get_config('httpswwwroot'),
             'url' => 'account/',
-            'title' => get_string('settings'),
+            'title' => $USER->get('username'),
+            'icon' => $THEME->get_url('images/settings.png'),
+            'alt' => get_string('settings'),
             'weight' => 10,
         ),
         array(
             'path' => 'inbox',
             'url' => 'account/activity',
-            'title' => get_string('inbox'),
+            'icon' => $THEME->get_url('images/email.gif'),
+            'alt' => get_string('inbox'),
             'count' => $unread,
             'weight' => 20,
         ),
