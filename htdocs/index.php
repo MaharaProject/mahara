@@ -61,7 +61,6 @@ if ($USER->is_logged_in()) {
     );
 
     $smarty->assign('dashboardview', true);
-    $smarty->assign('maintitle', get_string('mydashboard'));
     $smarty->assign('viewcontent', $view->build_columns());
     $smarty->assign('viewid', $view->get('id'));
 }

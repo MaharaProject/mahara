@@ -1659,10 +1659,9 @@ function xmldb_core_upgrade($oldversion=0) {
         $viewdata = (object) array(
             'type'        => 'dashboard',
             'owner'       => 0,
-            'numcolumns'  => 3,
+            'numcolumns'  => 2,
             'ownerformat' => FORMAT_NAME_PREFERREDNAME,
             'title'       => get_string('dashboardviewtitle', 'view'),
-            'description' => '',
             'template'    => 1,
             'ctime'       => $dbtime,
             'atime'       => $dbtime,
@@ -1672,78 +1671,47 @@ function xmldb_core_upgrade($oldversion=0) {
         $accessdata = (object) array('view' => $id, 'accesstype' => 'loggedin');
         insert_record('view_access', $accessdata);
         $blocktypes = array(
-            0 => array(
-                'blocktype' => 'inbox',
-                'title' => get_string('mymessages'),
+            array(
+                'blocktype' => 'newviews',
+                'title' => get_string('title', 'blocktype.newviews'),
                 'column' => 1,
                 'config' => array(
-                    'newpost' => false,
-                    'feedback' => false,
-                    'groupmessage' => true,
-                    'institutionmessage' => true,
-                    'maharamessage' => false,
-                    'usermessage' => true,
-                    'viewaccess' => false,
-                    'watchlist' => false,
-                    'adminmessages' => false,
-                    'maxitems' => '5',
+                    'limit' => 5,
                 ),
             ),
-            1 => array(
-                'blocktype' => 'inbox',
-                'title' => get_string('recentactivity'),
-                'column' => 2,
-                'config' => array(
-                    'newpost' => false,
-                    'feedback' => true,
-                    'groupmessage' => false,
-                    'institutionmessage' => false,
-                    'maharamessage' => true,
-                    'usermessage' => false,
-                    'viewaccess' => true,
-                    'watchlist' => true,
-                    'adminmessages' => false,
-                    'maxitems' => '5',
-                ),
-            ),
-            2 => array(
-                'blocktype' => 'inbox',
-                'title' => get_string('topicsimfollowing'),
-                'column' => 3,
-                'config' => array(
-                    'newpost' => true,
-                    'feedback' => false,
-                    'groupmessage' => false,
-                    'institutionmessage' => false,
-                    'maharamessage' => false,
-                    'usermessage' => false,
-                    'viewaccess' => false,
-                    'watchlist' => false,
-                    'adminmessages' => false,
-                    'maxitems' => '5',
-                ),
-            ),
-            3 => array(
+            array(
                 'blocktype' => 'myviews',
                 'title' => get_string('title', 'blocktype.myviews'),
                 'column' => 1,
                 'config' => null,
-            ),           
-            4 => array(
-                'blocktype' => 'mygroups',
-                'title' => get_string('title', 'blocktype.mygroups'),
-                'column' => 2,
-                'config' => null,
             ),
-            5 => array(
-                'blocktype' => 'myfriends',
-                'title' => get_string('title', 'blocktype.myfriends'),
-                'column' => 3,
-                'config' => null,
+            array(
+                'blocktype' => 'inbox',
+                'title' => get_string('recentactivity'),
+                'column' => 2,
+                'config' => array(
+                    'feedback' => true,
+                    'groupmessage' => true,
+                    'institutionmessage' => true,
+                    'maharamessage' => true,
+                    'usermessage' => true,
+                    'viewaccess' => true,
+                    'watchlist' => true,
+                    'maxitems' => '5',
+                ),
+            ),
+            array(
+                'blocktype' => 'inbox',
+                'title' => get_string('topicsimfollowing'),
+                'column' => 2,
+                'config' => array(
+                    'newpost' => true,
+                    'maxitems' => '5',
+                ),
             ),
         );
         $installed = get_column_sql('SELECT name FROM {blocktype_installed}');
-        $weights = array(1 => 0, 2 => 0, 3 => 0);
+        $weights = array(1 => 0, 2 => 0);
         foreach ($blocktypes as $blocktype) {
             if (in_array($blocktype['blocktype'], $installed)) {
                 $weights[$blocktype['column']]++;
