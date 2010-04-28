@@ -42,9 +42,7 @@ if (!is_null($replytoid)) {
         throw new AccessDeniedException(get_string('cantviewmessage', 'group'));
     }
     // Make sure the thread was start by either the user being replied to, or the current user
-    $bits = parse_url($messages[0]->url);
-    parse_str($bits['query'], $params);
-    if (empty($params['id']) || ($params['id'] != $id && $params['id'] != $USER->get('id'))) {
+    if (empty($messages[0]->from) || ($messages[0]->from != $id && $messages[0]->from != $USER->get('id'))) {
         throw new AccessDeniedException(get_string('cantviewmessage', 'group'));
     }
 }
@@ -57,7 +55,7 @@ if (!$user || !can_send_message($USER->to_stdclass(), $id)) {
 	throw new AccessDeniedException(get_string('cantmessageuser', 'group'));
 }
 
-define('TITLE', get_string('sendmessageto', 'group', display_name($id)));
+define('TITLE', get_string('sendmessageto', 'group', display_name($user)));
 
 $form = pieform(array(
     'name' => 'sendmessage',

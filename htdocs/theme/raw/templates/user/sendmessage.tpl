@@ -5,12 +5,20 @@
     <tbody>
     {foreach from=$messages item=message}
         <tr class="{cycle values='r0,r1'}">
-        {if $message->usr == $user->id}
-            <th>{include file="user/simpleuser.tpl" user=$USER}</th>
+          <td style="width: 20px;">
+            <img src="{profile_icon_url user=$user maxwidth=20 maxheight=20}" alt="">
+          </td>
+          <td>
+            <h5>
+        {if $message->from == $user->id}
+              {$user|display_name|escape}
         {else}
-            <th>{include file="user/simpleuser.tpl" user=$user}</th>
+              {$USER|display_name|escape}
         {/if}
-            <td>{$message->message}</td>
+              <span class="postedon">{$message->ctime|strtotime|format_date}</span>
+            </h5>
+            <div class="messagebody">{$message->message|escape}</div>
+          </td>
         </tr>
     {/foreach}
     </tbody>

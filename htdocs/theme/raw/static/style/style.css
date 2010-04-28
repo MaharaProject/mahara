@@ -196,7 +196,7 @@ td.narrow {
 	border-bottom: 2px solid #FFF;
 }
 /* table with preserved whitespace */
-#messagethread td {
+#messagethread .messagebody {
     white-space: pre;
 }
 /* table without border */
@@ -382,6 +382,12 @@ input.error, select.error {
 	padding-left: 2em;
 }
 
+.postedon {
+    color: #888;
+	font-style: italic;
+	font-size: .9em;
+	line-height: 1.2em;
+}
 
 /****************************** Buttons ****************************/
 /** input buttons **/
@@ -1194,12 +1200,6 @@ a.tag {
 }
 .wallpost .userinforight {
 	padding: .25em;
-}
-.wallpost .postedon {
-    color: #888;
-	font-style: italic;
-	font-size: .9em;
-	line-height: 1.2em;
 }
 .wallpost .text p {
     margin: 0 0 .25em 0;

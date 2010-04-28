@@ -648,6 +648,9 @@ class ActivityTypeUsermessage extends ActivityType {
      */
     public function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
+        if ($this->userfrom) {
+            $this->fromuser = $this->userfrom;
+        }
         $this->users = activity_get_users($this->get_id(), array($this->userto));
     } 
 

@@ -1143,7 +1143,7 @@ function activate_user($userid) {
  */
 function get_message_thread($replyto) {
     $message = get_record('notification_internal_activity', 'id', $replyto);
-    if (!isset($message->parent)) {
+    if (empty($message->parent)) {
         return array($message);
     }
     return array_merge(get_message_thread($message->parent), array($message));

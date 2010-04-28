@@ -48,6 +48,10 @@ class PluginNotificationInternal extends PluginNotification {
             $toinsert->url = $data->url;
         }
         
+        if (!empty($data->fromuser)) {
+            $toinsert->from = $data->fromuser;
+        }
+
         return insert_record('notification_internal_activity', $toinsert, 'id', true);
     }
     

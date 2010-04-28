@@ -1619,6 +1619,28 @@ function xmldb_core_upgrade($oldversion=0) {
         $key = new XMLDBKey('parentfk');
         $key->setAttributes(XMLDB_KEY_FOREIGN, array('parent'), 'notification_internal_activity', array('id'));
         add_key($table, $key);
+
+        $field = new XMLDBField('from');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '10');
+        add_field($table, $field);
+
+        $key = new XMLDBKey('fromfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('from'), 'usr', array('id'));
+        add_key($table, $key);
+
+        // Set from column for old user messages
+        $usermessages = get_records_array(
+            'notification_internal_activity',
+            'type',
+            get_field('activity_type', 'id', 'name', 'usermessage')
+        );
+        if ($usermessages) {
+            foreach ($usermessages as &$m) {
+                if (preg_match('/sendmessage\.php\?id=(\d+)/', $m->url, $match)) {
+                    set_field('notification_internal_activity', 'from', $match[1], 'id', $m->id);
+                }
+            }
+        }
     }
 
     return $status;
