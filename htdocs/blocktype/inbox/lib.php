@@ -82,12 +82,14 @@ class PluginBlocktypeInbox extends SystemBlocktype {
         }
 
         $items = array();
-        foreach($records as $record) {
-            $items[] = array(
-                'subject' => $record->subject,
-                'url' => $record->url,
-                'type' => $types[$record->type]->name,
-            );
+        if ($records) {
+            foreach($records as $record) {
+                $items[] = array(
+                    'subject' => $record->subject,
+                    'url' => $record->url,
+                    'type' => $types[$record->type]->name,
+                );
+            }
         }
 
         $smarty = smarty_core();
