@@ -48,8 +48,7 @@ else {
 if ($USER->is_logged_in()) {
     // get the user's dashboard view
     require_once(get_config('libroot') . 'view.php');
-    $viewid = get_field('view', 'id', 'owner', $USER->get('id'), 'type', 'dashboard');
-    $view = new View($viewid);
+    $view = $USER->get_view_by_type('dashboard');
 
     $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
     $smarty = smarty(

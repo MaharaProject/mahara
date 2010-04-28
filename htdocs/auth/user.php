@@ -92,6 +92,7 @@ class User {
             'loginanyway'       => false,
             'sesskey'          => '',
             'ctime'            => null,
+            'views'            => array(),
         );
         $this->attributes = array();
 
@@ -319,7 +320,7 @@ class User {
         $this->attributes[$key] = $value;
 
         // For now, these fields are saved to the DB elsewhere
-        if ($key != 'activityprefs' && $key !=  'accountprefs') {
+        if ($key != 'activityprefs' && $key != 'accountprefs' && $key != 'views') {
             $this->changed = true;
         }
         return $this;
@@ -399,6 +400,25 @@ class User {
         $this->set('accountprefs', $accountprefs);
     }
 
+
+    public function get_view_by_type($viewtype) {
+        $views = $this->get('views');
+        if (isset($views[$viewtype])) {
+            $viewid = $views[$viewtype];
+        }
+        else {
+            $viewid = get_field('view', 'id', 'type', $viewtype, 'owner', $this->get('id'));
+        }
+        if (!$viewid) {
+            global $USER;
+            if (!$USER->get('id')) {
+                return null;
+            }
+            return $this->install_view($viewtype);
+        }
+        return new View($viewid);
+    }
+
     /**
      * Return the profile view object for this user.
      *
@@ -407,15 +427,7 @@ class User {
      * @return View
      */
     public function get_profile_view() {
-        $viewid = get_field('view', 'id', 'type', 'profile', 'owner', $this->get('id'));
-        if (!$viewid) {
-            global $USER;
-            if (!$USER->get('id')) {
-                return null;
-            }
-            return $this->install_profile_view();
-        }
-        return new View($viewid);
+        return $this->get_view_by_type('profile');
     }
 
     /**
@@ -478,18 +490,6 @@ class User {
      *
      * @return View
      */
-    public function get_dashboard_view() {
-        $viewid = get_field('view', 'id', 'type', 'dashboard', 'owner', $this->get('id'));
-        log_debug($viewid);
-        if (!$viewid) {
-            global $USER;
-            if (!$USER->get('id')) {
-                return null;
-            }
-            return $this->install_dashboard_view();
-        }
-        return new View($viewid);
-    }
 
     /**
      * Installs a user's dashboard view.
@@ -516,6 +516,35 @@ class User {
         return $view;
     }
 
+    protected function install_view($viewtype) {
+        $function = 'install_' . $viewtype . '_view';
+        return $this->$function();
+    }
+
+    // Store the ids of the user's special views (profile, dashboard).  Users can have only
+    // one each of these, so there really should be columns in the user table to store them.
+    protected function load_views() {
+        $types = array('profile', 'dashboard');
+        $views = get_records_select_assoc(
+            'view',
+            'owner = ? AND type IN (' . join(',', array_map('db_quote', $types)) . ')',
+            array($this->id),
+            '',
+            'type,id'
+        );
+
+        $specialviews = array();
+        foreach ($types as $type) {
+            if (!empty($views[$type])) {
+                $specialviews[$type] = $views[$type]->id;
+            }
+            else {
+                $view = $this->install_view($type);
+                $specialviews[$type] = $view->get('id');
+            }
+        }
+        $this->set('views', $specialviews);
+    }
 
     /**
      * Determines if the user is currently logged in
@@ -933,16 +962,6 @@ class LiveUser extends User {
                     return false;
                 }
 
-                // install the profile and dashboard views if they don't already exist 
-                $userobj = new User();
-                $userobj->find_by_id($user->id);
-                if (!get_field('view', 'id', 'type', 'profile', 'owner', $this->get('id'))) {
-                    $userobj->install_profile_view();
-                }
-                if (!get_field('view', 'id', 'type', 'dashboard', 'owner', $this->get('id'))) {
-                    $userobj->install_dashboard_view();
-                }
-
                 return true;
             }
         }
@@ -1041,6 +1060,8 @@ class LiveUser extends User {
         $this->accountprefs       = load_account_preferences($user->id);
         $this->reset_institutions();
         $this->reset_grouproles();
+        $this->load_views();
+
         $this->commit();
 
         // finally, after all is done, call the (maybe non existant) hook on their auth plugin
