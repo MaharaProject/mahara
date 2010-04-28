@@ -55,9 +55,15 @@ if (!$user = get_record('usr', 'id', $userid, 'deleted', 0)) {
 }
 $is_friend = is_friend($userid, $loggedinid);
 
-$userobj = new User();
-$userobj->find_by_id($userid);
-$view = $userobj->get_profile_view();
+if ($loggedinid == $userid) {
+    $view = $USER->get_profile_view();
+}
+else {
+    $userobj = new User();
+    $userobj->find_by_id($userid);
+    $view = $userobj->get_profile_view();
+}
+
 $viewid = $view->get('id');
 # access will either be logged in (always) or public as well
 if (!$view || !can_view_view($viewid)) {
