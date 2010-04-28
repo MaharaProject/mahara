@@ -1610,8 +1610,15 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2010042600) {
-        execute_sql('ALTER TABLE {notification_internal_activity} ADD COLUMN parent BIGINT');
-        execute_sql('ALTER TABLE {notification_internal_activity} ADD CONSTRAINT {notiinteacti_par_fk} FOREIGN KEY (parent) REFERENCES {notification_internal_activity}(id)');
+        // @todo: Move to notification/internal
+        $table = new XMLDBTable('notification_internal_activity');
+        $field = new XMLDBField('parent');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '10');
+        add_field($table, $field);
+
+        $key = new XMLDBKey('parentfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('parent'), 'notification_internal_activity', array('id'));
+        add_key($table, $key);
     }
 
     return $status;
