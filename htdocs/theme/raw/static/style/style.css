@@ -1600,12 +1600,13 @@ form#search input.text {
     padding: 10px;
     margin: 1.7em 4px 0 4px;
     height: 250px;
+    text-align: center;
 }
-.home-info.first {
-    margin: 1.7em 4px 0 0;
+.home-info .desc {
+    text-align: left;
 }
-.home-info.last {
-    margin: 1.7em 0 0 4px;
+.home-info .caption td {
+    padding-bottom: 1em;
 }
 .home-info a,
 .home-info a:hover,
@@ -1614,7 +1615,6 @@ form#search input.text {
 }
 .home-info table {
     width: 100%;
-    text-align: center;
 }
 .home-info td {
     width: 1%;
@@ -1625,9 +1625,6 @@ form#search input.text {
     background: url(../images/access.png) no-repeat left;
     padding-left: 40px;
     margin: 15px 10px 0 10px;
-}
-.home-info .organise {
-    padding-bottom: 15px;
 }
 .help, .help a, .help a img {
     vertical-align: top;

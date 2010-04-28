@@ -6,8 +6,8 @@
     <tr>
         <td>
             <div class="home-info">
-                <h3 class="center">Create and Collect</h3>
-                <p class="subtitle center">Develop your portfolio</p>
+                <h3>Create and Collect</h3>
+                <p class="subtitle">Develop your portfolio</p>
                 <table>
                     <tr>
                         <td>
@@ -21,7 +21,7 @@
                             {if $USER->is_logged_in()}</a>{/if}
                         </td>
                     </tr>
-                    <tr>
+                    <tr class="caption">
                         <td>
                             Update your
                             {if $USER->is_logged_in()}<a href="/artefact/internal">{/if}
@@ -47,7 +47,7 @@
                             {if $USER->is_logged_in()}</a>{/if}
                         </td>
                     </tr>
-                    <tr>
+                    <tr class="caption">
                         <td>
                             Create your
                             {if $USER->is_logged_in()}<a href="/artefact/resume">{/if}
@@ -66,24 +66,26 @@
         </td>
         <td>
             <div class="home-info">
-                <h3 class="center">Organise</h3>
-                <p class="subtitle center">Showcase your portfolio with views</p>
-                <div class="center">
+                <h3>Organise</h3>
+                <p class="subtitle">Showcase your portfolio with views</p>
+                <div>
                     {if $USER->is_logged_in()}<a href="/view">{/if}
                         <img class="organise" src="{theme_url filename='images/organise.png'}" alt="" />
                     {if $USER->is_logged_in()}</a>{/if}
                 </div>
+                <p class="desc">
                 Organise your portfolio into
                 {if $USER->is_logged_in()}<a href="/view">{/if}
                     Views.
                 {if $USER->is_logged_in()}</a>{/if}
                 Create different views for different audiences - you choose the elements to include.
+                </p>
             </div>
         </td>
         <td>
             <div class="home-info">
-                <h3 class="center">Share and Network</h3>
-                <p class="subtitle center">Meet friends and join groups</p>
+                <h3>Share and Network</h3>
+                <p class="subtitle">Meet friends and join groups</p>
                 <table>
                     <tr>
                         <td>
@@ -112,9 +114,9 @@
                         </td>
                     </tr>
                 </table>
-                <div id="accessdesc">
+                <p id="accessdesc" class="desc">
                     You can fine-tune who has access to each view, and for how long.
-                </div>
+                </p>
             </div>
         </td>
     </tr>
