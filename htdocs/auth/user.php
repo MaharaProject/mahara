@@ -423,7 +423,7 @@ class User {
      *
      * @return View
      */
-    private function install_profile_view() {
+    protected function install_profile_view() {
         static $systemprofileviewid = null;
 
         db_begin();
@@ -471,6 +471,50 @@ class User {
         return $view;
     }
 
+    /**
+     * Return the dashboard view object for this user.
+     *
+     * If the user does not yet have a dashboard view, one is created for them.
+     *
+     * @return View
+     */
+    public function get_dashboard_view() {
+        $viewid = get_field('view', 'id', 'type', 'dashboard', 'owner', $this->get('id'));
+        log_debug($viewid);
+        if (!$viewid) {
+            global $USER;
+            if (!$USER->get('id')) {
+                return null;
+            }
+            return $this->install_dashboard_view();
+        }
+        return new View($viewid);
+    }
+
+    /**
+     * Installs a user's dashboard view.
+     *
+     * @return View
+     */
+    protected function install_dashboard_view() {
+        static $systemdashboardviewid = null;
+
+        db_begin();
+        if (is_null($systemdashboardviewid)) {
+            $systemdashboardviewid = get_field('view', 'id', 'owner', 0, 'type', 'dashboard');
+        }
+
+        require_once(get_config('libroot') . 'view.php');
+        list($view) = View::create_from_template(array(
+            'owner' => $this->get('id'),
+            'title' => get_field('view', 'title', 'id', $systemdashboardviewid),
+            'type'  => 'dashboard',
+        ), $systemdashboardviewid, $this->get('id'));
+
+        db_commit();
+
+        return $view;
+    }
 
 
     /**
@@ -888,9 +932,21 @@ class LiveUser extends User {
                     throw new AccessTotallyDeniedException(get_string('accesstotallydenied_institutionsuspended', 'mahara', $authinstance->displayname, $sitename));
                     return false;
                 }
+
+                // install the profile and dashboard views if they don't already exist 
+                $userobj = new User();
+                $userobj->find_by_id($user->id);
+                if (!get_field('view', 'id', 'type', 'profile', 'owner', $this->get('id'))) {
+                    $userobj->install_profile_view();
+                }
+                if (!get_field('view', 'id', 'type', 'dashboard', 'owner', $this->get('id'))) {
+                    $userobj->install_dashboard_view();
+                }
+
                 return true;
             }
-        } catch  (AuthInstanceException $e) {
+        }
+        catch (AuthInstanceException $e) {
             return false;
         }
         

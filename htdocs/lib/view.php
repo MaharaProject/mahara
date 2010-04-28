@@ -1983,8 +1983,8 @@ class View {
     }
 
     public static function can_remove_viewtype($viewtype) {
-        // profile views should not be deleted
-        if ($viewtype == 'profile') {
+        $cannotremove = array('profile', 'dashboard');
+        if (in_array($viewtype, $cannotremove)) {
             return false;
         }
         // allow local custom code to make 'sticky' view types

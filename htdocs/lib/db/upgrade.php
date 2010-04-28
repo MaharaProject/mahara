@@ -1643,5 +1643,118 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2010042602) {
+        insert_record('view_type', (object)array(
+            'type' => 'dashboard',
+        ));
+        if ($data = check_upgrades('blocktype.inbox')) {
+            upgrade_plugin($data);
+        }
+        // Install system dashboard view
+        require_once(get_config('libroot') . 'view.php');
+        $dbtime = db_format_timestamp(time());
+        $viewdata = (object) array(
+            'type'        => 'dashboard',
+            'owner'       => 0,
+            'numcolumns'  => 3,
+            'ownerformat' => FORMAT_NAME_PREFERREDNAME,
+            'title'       => get_string('dashboardviewtitle', 'view'),
+            'description' => '',
+            'template'    => 1,
+            'ctime'       => $dbtime,
+            'atime'       => $dbtime,
+            'mtime'       => $dbtime,
+        );
+        $id = insert_record('view', $viewdata, 'id', true);
+        $accessdata = (object) array('view' => $id, 'accesstype' => 'loggedin');
+        insert_record('view_access', $accessdata);
+        $blocktypes = array(
+            0 => array(
+                'blocktype' => 'inbox',
+                'title' => get_string('mymessages'),
+                'column' => 1,
+                'config' => array(
+                    'newpost' => false,
+                    'feedback' => false,
+                    'groupmessage' => true,
+                    'institutionmessage' => true,
+                    'maharamessage' => false,
+                    'usermessage' => true,
+                    'viewaccess' => false,
+                    'watchlist' => false,
+                    'adminmessages' => false,
+                    'maxitems' => '5',
+                ),
+            ),
+            1 => array(
+                'blocktype' => 'inbox',
+                'title' => get_string('recentactivity'),
+                'column' => 2,
+                'config' => array(
+                    'newpost' => false,
+                    'feedback' => true,
+                    'groupmessage' => false,
+                    'institutionmessage' => false,
+                    'maharamessage' => true,
+                    'usermessage' => false,
+                    'viewaccess' => true,
+                    'watchlist' => true,
+                    'adminmessages' => false,
+                    'maxitems' => '5',
+                ),
+            ),
+            2 => array(
+                'blocktype' => 'inbox',
+                'title' => get_string('topicsimfollowing'),
+                'column' => 3,
+                'config' => array(
+                    'newpost' => true,
+                    'feedback' => false,
+                    'groupmessage' => false,
+                    'institutionmessage' => false,
+                    'maharamessage' => false,
+                    'usermessage' => false,
+                    'viewaccess' => false,
+                    'watchlist' => false,
+                    'adminmessages' => false,
+                    'maxitems' => '5',
+                ),
+            ),
+            3 => array(
+                'blocktype' => 'myviews',
+                'title' => get_string('title', 'blocktype.myviews'),
+                'column' => 1,
+                'config' => null,
+            ),           
+            4 => array(
+                'blocktype' => 'mygroups',
+                'title' => get_string('title', 'blocktype.mygroups'),
+                'column' => 2,
+                'config' => null,
+            ),
+            5 => array(
+                'blocktype' => 'myfriends',
+                'title' => get_string('title', 'blocktype.myfriends'),
+                'column' => 3,
+                'config' => null,
+            ),
+        );
+        $installed = get_column_sql('SELECT name FROM {blocktype_installed}');
+        $weights = array(1 => 0, 2 => 0, 3 => 0);
+        foreach ($blocktypes as $blocktype) {
+            if (in_array($blocktype['blocktype'], $installed)) {
+                $weights[$blocktype['column']]++;
+                insert_record('block_instance', (object) array(
+                    'blocktype'  => $blocktype['blocktype'],
+                    'title'      => $blocktype['title'],
+                    'view'       => $id,
+                    'column'     => $blocktype['column'],
+                    'order'      => $weights[$blocktype['column']],
+                    'configdata' => serialize($blocktype['config']),
+                ));
+            }
+        }
+    }
+
     return $status;
 }

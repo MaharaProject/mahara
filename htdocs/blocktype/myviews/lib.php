@@ -46,7 +46,7 @@ class PluginBlocktypeMyviews extends SystemBlocktype {
     }
 
     public static function get_viewtypes() {
-        return array('profile');
+        return array('profile', 'dashboard');
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
@@ -59,7 +59,7 @@ class PluginBlocktypeMyviews extends SystemBlocktype {
 
         // Get viewable views
         $views = array();
-        if ($allviews = get_records_select_array('view', 'owner = ? AND type != ?', array($userid, 'profile'), 'title')) {
+        if ($allviews = get_records_select_array('view', "owner = ? AND type NOT IN ('profile', 'dashboard')", array($userid))) {
             foreach ($allviews as $view) {
                 if (can_view_view($view->id)) {
                     $views[$view->id] = $view;

@@ -295,6 +295,11 @@ html>body #column-container {
 	margin: 0;
 }
 
+/* Inbox */
+.bt-inbox table td {
+    vertical-align: middle;
+}
+
 /* tabs for the artefact chooser */
 ul.artefactchooser-tabs {
   padding: 0 !important;

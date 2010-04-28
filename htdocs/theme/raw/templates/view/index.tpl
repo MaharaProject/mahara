@@ -23,6 +23,8 @@
                         <td><div class="rel">
 {if $view.type == 'profile'}
                             <h3><a href="{$WWWROOT}user/view.php">{$view.title|escape}</a></h3>
+{elseif $view.type == 'dashboard'}
+                            <h3><a href="{$WWWROOT}">{$view.title|escape}</a></h3>
 {else}
                             <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a></h3>
 {/if}
@@ -47,7 +49,7 @@
 {/if}
                             </div>
 {/if}
-{if $view.type != 'profile'}
+{if $view.type != 'profile' && $view.type != 'dashboard'}
                             <div class="vi">
                                 <h4><a href="{$WWWROOT}view/access.php?id={$view.id}" id="editviewaccess">{str tag="editaccess" section="view"}</a></h4>
 {if $view.access}

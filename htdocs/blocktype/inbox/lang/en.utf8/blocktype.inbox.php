@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage core
+ * @subpackage blocktype-inbox
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
@@ -27,9 +27,10 @@
 
 defined('INTERNAL') || die();
 
-$config = new StdClass;
-$config->version = 2010042602;
-$config->release = '1.3.0dev';
-$config->minupgradefrom = 2008040200;
-$config->minupgraderelease = '1.0.0 (release tag 1.0.0_RELEASE)';
-$config->disablelogin = true;
+$string['title'] = 'My Inbox';
+$string['description'] = 'Display a selection of your recent inbox messages';
+$string['messagetypes'] = 'Message types to display';
+$string['maxitems'] = 'Maximum number of items to display';
+$string['maxitemsdescription'] = 'Between 1 and 100';
+
+?>

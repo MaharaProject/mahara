@@ -45,7 +45,8 @@ $string['unrecogniseddateformat'] = 'Unrecognised date format';
 $string['allowcommentsonview']    = 'If checked, users who can see your View will be allowed to leave comments.';
 $string['ownerformat']            = 'Name display format';
 $string['ownerformatdescription'] = 'How do you want people who look at your View to see your name?';
-$string['profileviewtitle']       = 'Profile view';
+$string['profileviewtitle']       = 'Profile View';
+$string['dashboardviewtitle']  = 'Dashboard View';
 $string['editprofileview']        = 'Edit profile view';
 
 // my views

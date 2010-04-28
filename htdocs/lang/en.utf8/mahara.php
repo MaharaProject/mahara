@@ -496,6 +496,7 @@ $string['activityprefs'] = 'Activity preferences';
 $string['changepassword'] = 'Change password';
 $string['notifications'] = 'Notifications';
 $string['inbox'] = 'Inbox';
+$string['gotoinbox'] = 'Go to inbox';
 $string['institutionmembership'] = 'Institution Membership';
 $string['institutionmembershipdescription'] = 'If you are a member of any institutions, they will be listed here.  You may also request membership of an institution, and if any institutions have invited you to join, you can accept or decline the invitation.';
 $string['youareamemberof'] = 'You are a member of %s';
@@ -890,6 +891,15 @@ $string['thisistheprofilepagefor'] = 'This is the profile page for %s';
 $string['viewmyprofilepage']  = 'View profile page';
 $string['editmyprofilepage']  = 'Edit profile page';
 $string['usersprofile'] = "%s's Profile";
+
+// Dashboard views
+$string['mydashboard'] = 'My Dashboard';
+$string['editdashboard'] = 'Edit';
+$string['usersdashboard'] = "%s's Dashboard";
+$string['dashboarddescription'] = 'Your dashboard view is what you see on the homepage when you first log in. Only you have access to it';
+$string['topicsimfollowing'] = "Topics I'm Following";
+$string['recentactivity'] = 'Recent Activity';
+$string['mymessages'] = 'My Messages';
 
 $string['pleasedonotreplytothismessage'] = "Please do not reply to this message.";
 $string['deleteduser'] = 'Deleted user';

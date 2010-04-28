@@ -41,7 +41,7 @@ class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
     }
 
     public static function get_viewtypes() {
-        return array('profile', 'portfolio');
+        return array('profile', 'portfolio', 'dashboard');
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {

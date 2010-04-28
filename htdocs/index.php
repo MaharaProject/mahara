@@ -45,15 +45,32 @@ else {
     $pagename = 'home';
 }
 
-$smarty = smarty();
-$smarty->assign('page_content', get_site_page_content($pagename));
+if ($USER->is_logged_in()) {
+    // get the user's dashboard view
+    require_once(get_config('libroot') . 'view.php');
+    $viewid = get_field('view', 'id', 'owner', $USER->get('id'), 'type', 'dashboard');
+    $view = new View($viewid);
 
-if ($nviews = get_config('homepageviewlist')) {
-    require_once('view.php');
-    $views = View::view_search(null, null, null, null, $nviews, 0, true, 'mtime DESC');
-    $smarty->assign('views', $views->data);
+    $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
+    $smarty = smarty(
+        array(),
+        $stylesheets,
+        array(),
+        array(
+            'stylesheets' => array('style/views.css'),
+        )
+    );
+
+    $smarty->assign('dashboardview', true);
+    $smarty->assign('maintitle', get_string('mydashboard'));
+    $smarty->assign('viewcontent', $view->build_columns());
+    $smarty->assign('viewid', $view->get('id'));
+}
+else {
+    $smarty = smarty();
 }
 
+$smarty->assign('page_content', get_site_page_content($pagename));
 $smarty->display('index.tpl');
 
 ?>
