@@ -53,11 +53,11 @@ class PluginBlocktypeInbox extends SystemBlocktype {
 
         $desiredtypes = array();
         foreach($types as $type) {
-            if ($configdata[$type->name]) {
+            if (!empty($configdata[$type->name])) {
                 $desiredtypes[] = $type->id;
             }
         }
-        if ($USER->get('admin') && $configdata['adminmessages']) {
+        if ($USER->get('admin') && !empty($configdata['adminmessages'])) {
             $admintypes = get_records_assoc('activity_type', 'admin', 1, '', 'id,name,plugintype,pluginname');
             $types += $admintypes;
             foreach($admintypes as $type) {
@@ -77,7 +77,7 @@ class PluginBlocktypeInbox extends SystemBlocktype {
         if ($desiredtypes) {
             $records = get_records_sql_array($sql, array(
                 $USER->get('id'),
-                $configdata['maxitems']
+                $configdata['maxitems'] ? $configdata['maxitems'] : 5,
             ));
         }
 
@@ -126,14 +126,14 @@ class PluginBlocktypeInbox extends SystemBlocktype {
             $elements['types']['elements'][$type->name] = array(
                 'type' => 'checkbox',
                 'title' => $title,
-                'defaultvalue' => $configdata[$type->name] ? $configdata[$type->name] : 0,
+                'defaultvalue' => isset($configdata[$type->name]) ? $configdata[$type->name] : 0,
             );
         }
         $elements['maxitems'] = array(
             'type' => 'text',
             'title' => get_string('maxitems', 'blocktype.inbox'),
             'description' => get_string('maxitemsdescription', 'blocktype.inbox'),
-            'defaultvalue' => $configdata['maxitems'] ? $configdata['maxitems'] : 5,
+            'defaultvalue' => isset($configdata['maxitems']) ? $configdata['maxitems'] : 5,
         );
 
         return $elements;
