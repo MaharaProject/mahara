@@ -2218,7 +2218,7 @@ class View {
         $viewerid = $USER->get('id');
 
         $where = "
-            WHERE v.type != 'profile'";
+            WHERE v.type NOT IN ('profile','dashboard')";
 
         if ($ownedby) {
             $where .= ' AND v.' . self::owner_sql($ownedby);
@@ -2341,7 +2341,7 @@ class View {
 
         if ($viewdata) {
             if ($extra) {
-                View::get_extra_view_info($viewdata);
+                View::get_extra_view_info($viewdata, false);
             }
         }
         else {

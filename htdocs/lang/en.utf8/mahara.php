@@ -904,6 +904,5 @@ $string['mymessages'] = 'My Messages';
 $string['pleasedonotreplytothismessage'] = "Please do not reply to this message.";
 $string['deleteduser'] = 'Deleted user';
 
-$string['recentupdates'] = 'Recent Updates';
 $string['theme'] = 'Theme';
 ?>

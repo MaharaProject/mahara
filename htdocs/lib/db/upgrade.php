@@ -1643,11 +1643,14 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
-    if ($oldversion < 2010042602) {
+    if ($oldversion < 2010042602 && !get_record('view_type', 'type', 'dashboard')) {
         insert_record('view_type', (object)array(
             'type' => 'dashboard',
         ));
         if ($data = check_upgrades('blocktype.inbox')) {
+            upgrade_plugin($data);
+        }
+        if ($data = check_upgrades('blocktype.newviews')) {
             upgrade_plugin($data);
         }
         // Install system dashboard view
