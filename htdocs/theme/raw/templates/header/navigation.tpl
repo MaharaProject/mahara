@@ -2,7 +2,7 @@
         <div id="right-nav">
             <ul>{strip}
 {foreach from=$RIGHTNAV item=item}
-                <li{if $item.selected}{assign var=MAINNAVSELECTED value=$item} class="selected"{/if}><a href="{if $item.wwwroot}{$item.wwwroot}{else}{$WWWROOT}{/if}{$item.url|escape}">{if $item.title}{$item.title|escape}{/if}{if $item.icon}<img src="{$item.icon}" alt="{$item.alt|escape}">{if isset($item.count) && !$item.selected}<span class="navcount">{$item.count|escape}</span>{/if}</a></li>
+                <li{if $item.selected}{assign var=MAINNAVSELECTED value=$item} class="selected"{/if}><a href="{if $item.wwwroot}{$item.wwwroot}{else}{$WWWROOT}{/if}{$item.url|escape}">{if $item.title}{$item.title|escape}{/if}{if $item.icon}<img src="{$item.icon}" alt="{$item.alt|escape}">{if isset($item.count)}<span class="navcount{if $item.countclass} {$item.countclass}{/if}">{$item.count|escape}</span>{/if}</a></li>
 {/foreach}
                 <li><a href="{$WWWROOT}?logout" accesskey="l">{str tag="logout"}</a></li>
             {/strip}</ul>

@@ -1971,6 +1971,7 @@ function right_nav() {
             'icon' => $THEME->get_url('images/email.gif'),
             'alt' => get_string('inbox'),
             'count' => $unread,
+            'countclass' => 'unreadmessagecount',
             'weight' => 20,
         ),
         array(

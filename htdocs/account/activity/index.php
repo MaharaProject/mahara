@@ -133,14 +133,15 @@ function markread(form, action) {
 }
 
 function updateUnreadCount(n, decrement) {
+    var newcount = -1;
     forEach(getElementsByTagAndClassName('span', 'unreadmessagescontainer'), function(message) {
         var countnode = message.firstChild;
         if (decrement == 'decrement') {
             var oldcount = parseInt(countnode.innerHTML);
-            var newcount = (oldcount - n);
+            newcount = (oldcount - n);
         }
         else {
-            var newcount = n;
+            newcount = n;
         }
         var messagenode = message.lastChild;
         if (newcount == 1) { // jump through hoops to change between plural and singular
@@ -151,6 +152,11 @@ function updateUnreadCount(n, decrement) {
         }
         countnode.innerHTML = newcount;
     });
+    if (newcount > -1) {
+        forEach(getElementsByTagAndClassName('span', 'unreadmessagecount', 'right-nav'), function(element) {
+            element.innerHTML = newcount;
+        });
+    }
 }
 
 function showHideMessage(id) {
