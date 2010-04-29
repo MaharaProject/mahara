@@ -905,4 +905,21 @@ $string['pleasedonotreplytothismessage'] = "Please do not reply to this message.
 $string['deleteduser'] = 'Deleted user';
 
 $string['theme'] = 'Theme';
+
+// Home page info block
+$string['Hide'] = 'Hide';
+$string['createcollect'] = 'Create and Collect';
+$string['createcollectsubtitle'] = 'Develop your portfolio';
+$string['updateyourprofile'] = 'Update your <a href="%s">Profile</a>';
+$string['uploadyourfiles'] = 'Upload your <a href="%s">Files</a>';
+$string['createyourresume'] = 'Create your <a href="%s">Resume</a>';
+$string['publishablog'] = 'Publish a <a href="%s">Blog</a>';
+$string['Organise'] = 'Organise';
+$string['organisesubtitle'] = 'Showcase your portfolio with views';
+$string['organisedescription'] = 'Organise your portfolio into <a href="%s">Views.</a>  Create different views for different audiences - you choose the elements to include.';
+$string['sharenetwork'] = 'Share and Network';
+$string['sharenetworksubtitle'] = 'Meet friends and join groups';
+$string['findfriends'] = 'Find <a href="%s">Friends</a>';
+$string['joingroups'] = 'Join <a href="%s">Groups</a>';
+$string['sharenetworkdescription'] = 'You can fine-tune who has access to each view, and for how long.';
 ?>

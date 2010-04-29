@@ -87,6 +87,19 @@ else {
     $smarty = smarty();
 }
 
+// Assign urls used in homeinfo.tpl
+$wwwroot = get_config('wwwroot');
+$urls = array(
+    'profile' => $wwwroot . 'artefact/internal',
+    'files'   => $wwwroot . 'artefact/file',
+    'resume'  => $wwwroot . 'artefact/resume',
+    'blog'    => $wwwroot . 'artefact/blog',
+    'views'   => $wwwroot . 'view',
+    'friends' => $wwwroot . 'user/find.php',
+    'groups'  => $wwwroot . 'group/find.php',
+);
+$smarty->assign('url', $urls);
+
 $smarty->assign('page_content', get_site_page_content($pagename));
 $smarty->display('index.tpl');
 
