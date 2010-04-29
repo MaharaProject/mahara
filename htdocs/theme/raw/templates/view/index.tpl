@@ -36,7 +36,11 @@
 {if $view.type != 'profile' && $view.type != 'dashboard'}
                                 <h4><a href="{$WWWROOT}view/edit.php?id={$view.id}" id="editviewdetails">{str tag="edittitleanddescription" section="view"}</a></h4>
 {/if}
-{if $view.description}
+{if $view.type == 'profile'}
+                                <div class="videsc">{str tag=profiledescription}</div>
+{elseif $view.type == 'dashboard'}
+                                <div class="videsc">{str tag=dashboarddescription}</div>
+{elseif $view.description}
                                 <div class="videsc">{$view.description}</div>
 {/if}
 {if $view.tags}
