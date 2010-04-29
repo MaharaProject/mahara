@@ -89,7 +89,7 @@
                     </tr>
                     <tr>
                         <td>
-                            {assign var=s value="findfriends"|str:mahara:$url.friends}
+                            {assign var=s value="findfriendslinked"|str:mahara:$url.friends}
                             {if $USER->is_logged_in()}{$s}{else}{$s|strip_tags}{/if}
                         </td>
                         <td>

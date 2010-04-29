@@ -919,7 +919,7 @@ $string['organisesubtitle'] = 'Showcase your portfolio with views';
 $string['organisedescription'] = 'Organise your portfolio into <a href="%s">Views.</a>  Create different views for different audiences - you choose the elements to include.';
 $string['sharenetwork'] = 'Share and Network';
 $string['sharenetworksubtitle'] = 'Meet friends and join groups';
-$string['findfriends'] = 'Find <a href="%s">Friends</a>';
+$string['findfriendslinked'] = 'Find <a href="%s">Friends</a>';
 $string['joingroups'] = 'Join <a href="%s">Groups</a>';
 $string['sharenetworkdescription'] = 'You can fine-tune who has access to each view, and for how long.';
 ?>
