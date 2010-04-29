@@ -22,9 +22,9 @@
                     <tr class="{cycle values='r0,r1'}">
                         <td><div class="rel">
 {if $view.type == 'profile'}
-                            <h3><a href="{$WWWROOT}user/view.php">{$view.title|escape}</a></h3>
+                            <h3><a href="{$WWWROOT}user/view.php">{str tag=profileviewtitle section=view}</a></h3>
 {elseif $view.type == 'dashboard'}
-                            <h3><a href="{$WWWROOT}">{$view.title|escape}</a></h3>
+                            <h3><a href="{$WWWROOT}">{str tag=dashboardviewtitle section=view}</a></h3>
 {else}
                             <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a></h3>
 {/if}
