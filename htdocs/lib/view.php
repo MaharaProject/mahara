@@ -2331,9 +2331,12 @@ class View {
         $viewdata = get_records_sql_array('
             SELECT * FROM (
                 SELECT
-                    v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution, v.template, v.mtime
+                    v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution,
+                    v.template, v.mtime, v.ctime
                 ' . $from . $where . '
-                GROUP BY v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution, v.template, v.mtime
+                GROUP BY
+                    v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution,
+                    v.template, v.mtime, v.ctime
             ) a
             ORDER BY a.' . $orderby . ', a.id ASC',
             $ph, $offset, $limit

@@ -11,7 +11,10 @@
       {else}
         {$view.sharedby|escape}
       {/if}
-      <span class="postedon">{$view.mtime|strtotime|format_date:'strftimedate'}</span>
+      <span class="postedon">
+        {if $view.mtime == $view.ctime}{str tag=Created}{else}{str tag=Updated}{/if}
+        {$view.mtime|strtotime|format_date:'strftimedate'}
+      </span>
     </div>
     {/if}
   {/foreach}
