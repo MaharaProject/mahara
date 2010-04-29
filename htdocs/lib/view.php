@@ -2725,6 +2725,9 @@ class View {
             }
             return $title;
         }
+        if ($this->type == 'dashboard') {
+            return '<strong>' . get_string('dashboardviewtitle', 'view') . '</strong>';
+        }
 
         $ownername = $this->formatted_owner();
         $wwwroot = get_config('wwwroot');
