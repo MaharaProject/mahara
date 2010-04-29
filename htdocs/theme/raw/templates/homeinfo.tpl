@@ -1,4 +1,4 @@
-<table class="home-info-table{if $USER->is_logged_in()} loggedin{/if}">
+<table id="home-info" class="home-info-table{if $USER->is_logged_in()} loggedin{/if}">
     <tr>
         <td>
 {if $USER->is_logged_in()}
