@@ -1,10 +1,9 @@
-<div id="home-info" class="rel">
-{if $USER->is_logged_in()}
-<div class="rbuttons"><a id="hideinfo" class="btn-del">Don't show this</a></div>
-{/if}
-<table class="home-info-table">
+<table class="home-info-table{if $USER->is_logged_in()} loggedin{/if}">
     <tr>
         <td>
+{if $USER->is_logged_in()}
+            <a id="hideinfo" title="Hide"><img src="{theme_url filename='images/icon_close.gif'}" alt="[x]" /></a>
+{/if}
             <div class="home-info">
                 <h3>Create and Collect</h3>
                 <p class="subtitle">Develop your portfolio</p>
@@ -121,4 +120,3 @@
         </td>
     </tr>
 </table>
-</div>

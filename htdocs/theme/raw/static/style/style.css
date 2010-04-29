@@ -1591,22 +1591,31 @@ form#search input.text {
 }
 
 /* Home page info boxes */
-
+.home-info-table {
+    margin: 2em 1em 2.5em;
+}
+.home-info-table.loggedin {
+    margin: .5em 0 1.5em;
+}
+#hideinfo {
+    margin: 0 0 0 2px;
+    padding: 1px 0 0 2px;
+    float: left;
+}
 .home-info-table td {
     width: 1%;
-    padding: 0;
+    padding: 0 8px 0 2px;
 }
 .home-info {
     padding: 10px;
-    margin: 1.7em 4px 0 4px;
-    height: 250px;
+    min-height: 250px;
     text-align: center;
 }
 .home-info .desc {
     text-align: left;
 }
 .home-info .caption td {
-    padding-bottom: 1em;
+    padding-bottom: .5em;
 }
 .home-info a,
 .home-info a:hover,
@@ -1617,6 +1626,7 @@ form#search input.text {
     width: 100%;
 }
 .home-info td {
+    padding: 0;
     width: 1%;
     vertical-align: top;
     white-space: nowrap;
