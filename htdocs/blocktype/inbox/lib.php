@@ -49,36 +49,40 @@ class PluginBlocktypeInbox extends SystemBlocktype {
         global $USER;
         $configdata = $instance->get('configdata');
 
-        $types = get_records_assoc('activity_type', 'admin', 0, '', 'id,name,plugintype,pluginname');
-
         $desiredtypes = array();
-        foreach($types as $type) {
-            if (!empty($configdata[$type->name])) {
-                $desiredtypes[] = $type->id;
-            }
-        }
-        if ($USER->get('admin') && !empty($configdata['adminmessages'])) {
-            $admintypes = get_records_assoc('activity_type', 'admin', 1, '', 'id,name,plugintype,pluginname');
-            $types += $admintypes;
-            foreach($admintypes as $type) {
-                $desiredtypes[] = $type->id;
+        foreach($configdata as $k => $v) {
+            if (!empty($v) && $k != 'maxitems') {
+                $type = preg_replace('/[^a-z]+/', '', $k);
+                $desiredtypes[$type] = $type;
             }
         }
 
-        $sql = "
-            SELECT *
-            FROM {notification_internal_activity} n
-            WHERE n.usr = ?
-            AND n.type IN (" . implode(',', $desiredtypes) . ")
-            ORDER BY n.ctime DESC
-            LIMIT ?;";
+        if ($USER->get('admin') && !empty($desiredtypes['adminmessages'])) {
+            unset($desiredtypes['adminmessages']);
+            $desiredtypes += get_column('activity_type', 'name', 'admin', 1);
+        }
+
+        $maxitems = $configdata['maxitems'] ? $configdata['maxitems'] : 5;
 
         $records = array();
         if ($desiredtypes) {
+            $sql = "
+                SELECT n.*, t.name
+                FROM {notification_internal_activity} n JOIN {activity_type} t ON n.type = t.id
+                WHERE n.usr = ?
+                AND t.name IN (" . join(',', array_map('db_quote', $desiredtypes)) . ")
+                ORDER BY n.ctime DESC
+                LIMIT ?;";
+
             $records = get_records_sql_array($sql, array(
                 $USER->get('id'),
-                $configdata['maxitems'] ? $configdata['maxitems'] : 5,
+                $maxitems + 1 // Hack to decide whether to show the More... link
             ));
+        }
+
+        // Hack to decide whether to show the More... link
+        if ($showmore = count($records) > $maxitems) {
+            unset($records[$maxitems]);
         }
 
         $items = array();
@@ -87,12 +91,15 @@ class PluginBlocktypeInbox extends SystemBlocktype {
                 $items[] = array(
                     'subject' => $record->subject,
                     'url' => $record->url,
-                    'type' => $types[$record->type]->name,
+                    'type' => $record->name,
                 );
             }
         }
 
         $smarty = smarty_core();
+        if ($showmore) {
+            $smarty->assign('desiredtypes', implode(',', $desiredtypes));
+        }
         $smarty->assign('items', $items);
         return $smarty->fetch('blocktype:inbox:inbox.tpl');
     }

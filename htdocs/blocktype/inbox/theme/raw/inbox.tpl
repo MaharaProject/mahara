@@ -12,4 +12,6 @@
 </tr>
 {/foreach}
 </table>
-<a href="{$WWWROOT}account/activity" target="_blank">{str tag=gotoinbox section=mahara} &raquo;</a>
+{if $desiredtypes}
+<a href="{$WWWROOT}account/activity?type={$desiredtypes|escape}">{str tag=More section=blocktype.inbox} &raquo;</a>
+{/if}
