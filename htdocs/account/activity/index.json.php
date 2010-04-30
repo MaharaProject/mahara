@@ -91,35 +91,28 @@ $offset = param_integer('offset', 0);
 
 $userid = $USER->get('id');
 
-if ($type == 'all') {
-    $count = count_records('notification_internal_activity', 'usr', $userid);
-    $sql = 'SELECT a.*, at.name AS type,at.plugintype, at.pluginname FROM {notification_internal_activity} a 
-        JOIN {activity_type} at ON a.type = at.id
-        WHERE a.usr = ? ORDER BY ctime DESC';
-    $records = get_records_sql_array($sql, array($userid), $offset, $limit);
-} else if ($type == 'adminmessages' && $USER->get('admin')) {
-    $count = count_records_select('notification_internal_activity', 'usr = ? AND type IN (
-         SELECT id FROM {activity_type} WHERE admin = ?)', 
-                                  array($userid, 1));
-    $sql = 'SELECT a.*, at.name AS type,at.plugintype, at.pluginname FROM {notification_internal_activity} a 
-        JOIN {activity_type} at ON a.type = at.id
-        WHERE a.usr = ? AND at.admin = ? ORDER BY ctime DESC';
-    $records = get_records_sql_array($sql, array($userid, 1), $offset, $limit);
-}
-else {
+$typesql = '';
+if ($type != 'all') {
     $types = split(',', preg_replace('/[^a-z,]+/', '', $type));
     if ($types) {
-        $typesql = ' AND at.name IN (' . join(',', array_map('db_quote', $types)) . ')';
+        $typesql = ' at.name IN (' . join(',', array_map('db_quote', $types)) . ')';
+        if (in_array('adminmessages', $types)) {
+            $typesql = '(' . $typesql . ' OR at.admin = 1)';
+        }
+        $typesql = ' AND ' . $typesql;
     }
-    $from = "
-        FROM {notification_internal_activity} a
-        JOIN {activity_type} at ON a.type = at.id
-        WHERE a.usr = ? $typesql";
-    $values = array($userid);
-    $count = count_records_sql('SELECT COUNT(*)' . $from, $values);
-    $records = get_records_sql_array('
-        SELECT a.*, at.name AS type,at.plugintype, at.pluginname' . $from, $values, $offset, $limit);
 }
+
+$from = "
+    FROM {notification_internal_activity} a
+    JOIN {activity_type} at ON a.type = at.id
+    WHERE a.usr = ? $typesql";
+$values = array($userid);
+$count = count_records_sql('SELECT COUNT(*)' . $from, $values);
+$records = get_records_sql_array('
+    SELECT a.*, at.name AS type,at.plugintype, at.pluginname' . $from . '
+    ORDER BY a.ctime DESC', $values, $offset, $limit);
+
 
 if (empty($records)) {
     $records = array();

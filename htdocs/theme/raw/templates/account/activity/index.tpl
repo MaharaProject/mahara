@@ -4,8 +4,9 @@
 			<form method="post">
 			<label>{str section='activity' tag='type'}:</label>
 			<select name="type" onChange="{$typechange}">
-			{foreach from=$options item=name key=type}
-				<option value="{$type}">{$name}</option>
+				<option value="all">--</option>
+			{foreach from=$options item=name key=t}
+				<option value="{$t}"{if $type == $t} selected{/if}>{$name}</option>
 			{/foreach}
 			</select>{contextualhelp plugintype='core' pluginname='activity' section='activitytypeselect'}
 			</form>
