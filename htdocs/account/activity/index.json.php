@@ -85,7 +85,7 @@ else if ($delete) {
 
 // normal processing
 
-$type = param_alphanum('type', 'all');
+$type = param_variable('type', 'all');
 $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
@@ -107,12 +107,18 @@ if ($type == 'all') {
     $records = get_records_sql_array($sql, array($userid, 1), $offset, $limit);
 }
 else {
-    $count = count_records_select('notification_internal_activity', 'usr = ? AND type = ?',
-                                  array($userid,$type));
-    $sql = 'SELECT a.*, at.name AS type,at.plugintype, at.pluginname FROM {notification_internal_activity} a
+    $types = split(',', preg_replace('/[^a-z,]+/', '', $type));
+    if ($types) {
+        $typesql = ' AND at.name IN (' . join(',', array_map('db_quote', $types)) . ')';
+    }
+    $from = "
+        FROM {notification_internal_activity} a
         JOIN {activity_type} at ON a.type = at.id
-        WHERE a.usr = ? AND a.type = ?';
-    $records = get_records_sql_array($sql, array($userid, $type), $offset, $limit);
+        WHERE a.usr = ? $typesql";
+    $values = array($userid);
+    $count = count_records_sql('SELECT COUNT(*)' . $from, $values);
+    $records = get_records_sql_array('
+        SELECT a.*, at.name AS type,at.plugintype, at.pluginname' . $from, $values, $offset, $limit);
 }
 
 if (empty($records)) {

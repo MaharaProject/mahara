@@ -35,25 +35,36 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('inbox'));
 
-$types = get_records_assoc('activity_type', 'admin', 0, 'plugintype,pluginname,name', 'id,name,plugintype,pluginname');
-$types = array_map(create_function('$a', '
-    if (!empty($a->plugintype)) { 
-        $section = "{$a->plugintype}.{$a->pluginname}";
+$installedtypes = get_records_assoc(
+    'activity_type', '', '',
+    'plugintype,pluginname,name',
+    'name,admin,plugintype,pluginname'
+);
+
+$options = array(
+    'all' => get_string('alltypes', 'activity'),
+);
+
+foreach ($installedtypes as &$t) {
+    if (!$t->admin) {
+        $section = $t->pluginname ? "{$t->plugintype}.{$t->pluginname}" : 'activity';
+        $options[$t->name] = get_string('type' . $t->name, $section);
     }
-    else {
-        $section = "activity";
-    }
-    return get_string("type" . $a->name, $section);
-    '), $types);
+}
 
 if ($USER->get('admin')) {
-    $types['adminmessages'] = get_string('typeadminmessages', 'activity');
+    $options['adminmessages'] = get_string('typeadminmessages', 'activity');
 }
 
-$type = param_alphanum('type', 'all');
-if (!isset($types[$type])) {
-    $type = 'all';
+$type = param_variable('type', 'all');
+if (!isset($options[$type])) {
+    // Comma-separated list; filter out anything that's not an installed type
+    $types = join(',', array_unique(array_filter(
+        split(',', $type),
+        create_function('$a', 'global $installedtypes; return isset($installedtypes[$a]);')
+    )));
 }
+
 $strtype = json_encode($type);
 
 $morestr = get_string('more...');
@@ -214,7 +225,8 @@ $smarty->assign('selectalldel', 'toggleChecked(\'tocheckdel\'); return false;');
 $smarty->assign('markread', 'markread(this, \'read\'); return false;');
 $smarty->assign('markdel', 'markread(document.notificationlist, \'del\'); return false;');
 $smarty->assign('typechange', 'activitylist.type = this.options[this.selectedIndex].value; activitylist.doupdate();');
-$smarty->assign('types', $types);
+$smarty->assign('options', $options);
+$smarty->assign('type', $type);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('PAGEHEADING', hsc(get_string('inbox')));
 $smarty->assign('deleteall', $deleteall);
