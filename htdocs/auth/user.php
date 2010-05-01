@@ -216,7 +216,7 @@ class User {
                         ' . db_format_tsfield('u.lastlogin', 'lastlogin') . ',
                         ' . db_format_tsfield('u.lastlastlogin', 'lastlastlogin') . ',
                         ' . db_format_tsfield('u.lastaccess', 'lastaccess') . ',
-                        ' . db_format_tsfield('u.suspendedctime', 'suspendedctime') . '
+                        ' . db_format_tsfield('u.suspendedctime', 'suspendedctime') . ',
                         ' . db_format_tsfield('u.ctime', 'ctime') . '
                     FROM {usr} u
                     LEFT JOIN {auth_remote_user} r ON u.id = r.localusr
