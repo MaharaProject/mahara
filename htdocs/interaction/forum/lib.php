@@ -502,6 +502,9 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         $textbody = trim(html2text($post->body));
         $postlink = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid;
 
+        $this->message = $textbody;
+        $this->url     = $postlink;
+
         foreach ($this->users as &$user) {
             $lang = (empty($user->lang) || $user->lang == 'default') ? get_config('lang') : $user->lang;
             if ($post->parent) {
@@ -515,7 +518,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
             $unsubscribeid = $post->{$type . 'id'};
             $unsubscribelink = get_config('wwwroot') . 'interaction/forum/unsubscribe.php?' . $type . '=' . $unsubscribeid . '&key=' . $subscribers[$user->id]->key;
 
-            $user->message = get_string_from_language($lang, 'forumposttemplate', 'interaction.forum',
+            $user->emailmessage = get_string_from_language($lang, 'forumposttemplate', 'interaction.forum',
                 $post->subject ? $post->subject : get_string_from_language($lang, 're', 'interaction.forum', $post->topicsubject),
                 display_name($post->poster, $user),
                 $posttime,
@@ -538,10 +541,6 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
 
     public function get_subject($user) {
         return $user->subject;
-    }
-
-    public function get_message($user) {
-        return $user->message;
     }
 
     public function get_plugintype(){
