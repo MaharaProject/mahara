@@ -883,4 +883,79 @@ abstract class ActivityTypePlugin extends ActivityType {
     }
 }
 
-?>
+/**
+ * Get one page of notifications and return html
+ */
+function activitylist_html($type='all', $limit=10, $offset=0) {
+    global $USER;
+
+    $userid = $USER->get('id');
+
+    $typesql = '';
+    if ($type != 'all') {
+        // Treat as comma-separated list of activity type names
+        $types = split(',', preg_replace('/[^a-z,]+/', '', $type));
+        if ($types) {
+            $typesql = ' at.name IN (' . join(',', array_map('db_quote', $types)) . ')';
+            if (in_array('adminmessages', $types)) {
+                $typesql = '(' . $typesql . ' OR at.admin = 1)';
+            }
+            $typesql = ' AND ' . $typesql;
+        }
+    }
+
+    $from = "
+        FROM {notification_internal_activity} a
+        JOIN {activity_type} at ON a.type = at.id
+        WHERE a.usr = ? $typesql";
+    $values = array($userid);
+
+    $count = count_records_sql('SELECT COUNT(*)' . $from, $values);
+
+    $pagination = build_pagination(array(
+        'id'         => 'activitylist_pagination',
+        'url'        => get_config('wwwroot') . 'account/activity/index.php?type=' . hsc($type),
+        'jsonscript' => 'account/activity/index.json.php',
+        'datatable'  => 'activitylist',
+        'count'      => $count,
+        'limit'      => $limit,
+        'offset'     => $offset,
+    ));
+
+    $result = array(
+        'count'         => $count,
+        'limit'         => $limit,
+        'offset'        => $offset,
+        'type'          => $type,
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+
+    if ($count < 1) {
+        return $result;
+    }
+
+    $records = get_records_sql_array('
+        SELECT
+            a.*, at.name AS type, at.plugintype, at.pluginname' . $from . '
+        ORDER BY a.ctime DESC',
+        $values,
+        $offset,
+        $limit
+    );
+    if ($records) {
+        foreach ($records as &$r) {
+            $r->date = format_date(strtotime($r->ctime), 'strfdaymonthyearshort');
+            $section = empty($r->plugintype) ? 'activity' : "{$r->plugintype}.{$r->pluginname}";
+            $r->strtype = get_string('type' . $r->type, $section);
+            $r->message = clean_html(format_whitespace($r->message));
+        }
+    }
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $records);
+    $result['tablerows'] = $smarty->fetch('account/activity/activitylist.tpl');
+
+    return $result;
+}

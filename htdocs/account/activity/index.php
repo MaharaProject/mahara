@@ -59,60 +59,19 @@ if ($USER->get('admin')) {
 $type = param_variable('type', 'all');
 if (!isset($options[$type])) {
     // Comma-separated list; filter out anything that's not an installed type
-    $types = join(',', array_unique(array_filter(
+    $type = join(',', array_unique(array_filter(
         split(',', $type),
         create_function('$a', 'global $installedtypes; return isset($installedtypes[$a]);')
     )));
 }
 
-$strtype = json_encode($type);
-
-$morestr = get_string('more...');
+require_once('activity.php');
+$activitylist = activitylist_html($type);
 
 $star = json_encode($THEME->get_url('images/star.png'));
-$unread = json_encode(get_string('unread', 'activity'));
+$strread = json_encode(get_string('read', 'activity'));
 
 $javascript = <<<JAVASCRIPT
-var activitylist = new TableRenderer(
-    'activitylist',
-    'index.json.php', 
-    [
-        function(r) { 
-            if (r.message) {
-                var messagemore = DIV({'id' : 'message-' + r.id, 'style': 'display:none'});
-                messagemore.innerHTML = r.message;
-                if (r.url) {
-                    appendChildNodes(messagemore, BR(null), A({'href' : r.url, 'class': 's'}, '{$morestr}'));
-                }
-                return TD(null, A({'href': '', 'onclick': 'showHideMessage(' + r.id + '); return false;'}, r.subject),
-                          messagemore);
-            }
-            else if (r.url) { 
-                return TD(null, A({'href': r.url}, r.subject));
-            } 
-            else {
-                return TD(null, r.subject);
-            }
-        },
-        'type',
-        'date',
-        function (r, d) {
-            if (r.read == 1) {
-                return TD({'class': 'center'},IMG({'src' : d.star, 'alt' : d.unread}));
-            }
-            else {
-                return TD({'class': 'center'}, INPUT({'type' : 'checkbox', 'class' : 'tocheckread', 'name' : 'unread-' + r.id}));
-            }
-        },
-        function (r, d) {
-            return TD({'class': 'center'}, INPUT({'type' : 'checkbox', 'class' : 'tocheckdel', 'name' : 'delete-' + r.id}));
-        }
-    ]
-);
-
-activitylist.type = {$strtype};
-activitylist.statevars.push('type');
-activitylist.updateOnLoad();
 
 function markread(form, action) {
 
@@ -130,20 +89,18 @@ function markread(form, action) {
     } else if (action == 'del') {
         pd['delete'] = 1;
     }
+
+    if (paginatorData) {
+        for (p in paginatorData.params) {
+            pd[p] = paginatorData.params[p];
+        }
+    }
     
     sendjsonrequest('index.json.php', pd, 'GET', function (data) {
-        if (!data.error) {
-            if (data.count > 0) {
-                activitylist.doupdate();
-                if (data.newunreadcount && typeof(data.newunreadcount) != 'undefined') {
-                    updateUnreadCount(data.newunreadcount, 'reset');
-                } else {
-                    updateUnreadCount(data.count, 'decrement');
-                }
-            }
+        paginator.updateResults(data);
+        if (data.newunreadcount && typeof(data.newunreadcount) != 'undefined') {
+            updateUnreadCount(data.newunreadcount, 'reset');
         }
-    }, function () {
-        activitylist.doupdate();
     });
 }
 
@@ -175,24 +132,60 @@ function updateUnreadCount(n, decrement) {
 }
 
 function showHideMessage(id) {
-    if (getStyle('message-' + id, 'display') == 'none') {
-        var unread = getFirstElementByTagAndClassName('input', 'tocheckread', 
-                                                      $('message-' + id).parentNode.parentNode);
+    var message = $('message-' + id);
+    if (!message) {
+        return;
+    }
+    if (hasElementClass(message, 'hidden')) {
+        var unread = getFirstElementByTagAndClassName(
+            'input', 'tocheckread', message.parentNode.parentNode
+        );
         if (unread) {
-            var pd = {'markasread':1, 'quiet':1};
-            pd['unread-'+id] = 1;
+            var pd = {'readone':id};
             sendjsonrequest('index.json.php', pd, 'GET', function(data) {
-                return !!data.error;
+                swapDOM(unread, IMG({'src' : {$star}, 'alt' : {$strread}}));
+                updateUnreadCount(1, 'decrement');
             });
-            swapDOM(unread, IMG({'src' : {$star}, 'alt' : {$unread}}));
-            updateUnreadCount(1, 'decrement');
         }
-        showElement('message-' + id);
+        removeElementClass(message, 'hidden');
     }
     else {
-        hideElement('message-' + id);
+        addElementClass(message, 'hidden');
     }
 }
+
+function changeactivitytype() {
+    var params = {'type': this.options[this.selectedIndex].value};
+    sendjsonrequest('index.json.php', params, 'GET', function(data) {
+        paginator.updateResults(data);
+    });
+}
+
+// We want the paginator to tell us when a page gets changed.
+// @todo: remember checked/unchecked state when changing pages
+function PaginatorData() {
+    var self = this;
+    var params = {};
+
+    this.pageChanged = function(data) {
+        self.params = {
+            'offset': data.offset,
+            'limit': data.limit,
+            'type': data.type
+        }
+    }
+
+    paginatorProxy.addObserver(self);
+    connect(self, 'pagechanged', self.pageChanged);
+}
+
+var paginator;
+var paginatorData = new PaginatorData();
+
+addLoadEvent(function () {
+    paginator = {$activitylist['pagination_js']}
+    connect('notifications_type', 'onchange', changeactivitytype);
+});
 
 JAVASCRIPT;
 
@@ -219,16 +212,16 @@ function delete_all_notifications_submit() {
     redirect(get_config('wwwroot') . 'account/activity/index.php');
 }
 
-$smarty = smarty(array('tablerenderer'));
+$smarty = smarty(array('paginator'));
 $smarty->assign('selectallread', 'toggleChecked(\'tocheckread\'); return false;');
 $smarty->assign('selectalldel', 'toggleChecked(\'tocheckdel\'); return false;');
 $smarty->assign('markread', 'markread(this, \'read\'); return false;');
 $smarty->assign('markdel', 'markread(document.notificationlist, \'del\'); return false;');
-$smarty->assign('typechange', 'activitylist.type = this.options[this.selectedIndex].value; activitylist.doupdate();');
 $smarty->assign('options', $options);
 $smarty->assign('type', $type);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('PAGEHEADING', hsc(get_string('inbox')));
 $smarty->assign('deleteall', $deleteall);
+$smarty->assign('activitylist', $activitylist);
 $smarty->display('account/activity/index.tpl');
 ?>

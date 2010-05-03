@@ -3,7 +3,7 @@
 			<div id="notifications">
 			<form method="post">
 			<label>{str section='activity' tag='type'}:</label>
-			<select name="type" onChange="{$typechange}">
+			<select id="notifications_type" name="type">
 				<option value="all">--</option>
 			{foreach from=$options item=name key=t}
 				<option value="{$t}"{if $type == $t} selected{/if}>{$name}</option>
@@ -14,8 +14,8 @@
 			<table id="activitylist" class="fullwidth">
 				<thead>
 					<tr>
+						<th></th>
 						<th>{str section='activity' tag='subject'}</th>
-						<th>{str section='activity' tag='type'}</th>
 						<th>{str section='activity' tag='date'}</th>
 						<th width="50" class="center">{str section='activity' tag='read'}<br><a href="" onclick="{$selectallread}">{str section='activity' tag='selectall'}</a></th>
 						<th width="50" class="center">{str tag='delete'}<br><a href="" onclick="{$selectalldel}">{str section='activity' tag='selectall'}</a></th>
@@ -29,10 +29,13 @@
 						</td>
 				  	</tr>
 				</tfoot>
-				<tbody></tbody>
+				<tbody>
+                {$activitylist.tablerows}
+                </tbody>
 			</table>
+            {$activitylist.pagination}
 			</form>
 			</div>
-            {$deleteall}
+            <div class="left">{$deleteall}</div>
 			
 {include file="footer.tpl"}
