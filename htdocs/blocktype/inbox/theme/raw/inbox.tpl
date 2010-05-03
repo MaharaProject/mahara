@@ -5,8 +5,8 @@
         <img src="{theme_url filename=cat('images/' $i.type '.gif')}" />
     </td>
     <td>
-    {if $i.url}<a href="{$i.url}">{/if}
-    {$i.subject}
+    {if $i.url}<a href="{$i.url|escape}">{/if}
+    {$i.subject|escape}
     {if $i.url}</a>{/if}
     </td>
 </tr>
