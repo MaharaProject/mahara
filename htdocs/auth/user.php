@@ -1129,6 +1129,7 @@ class LiveUser extends User {
         $this->find_by_id($id);
         $this->activityprefs = load_activity_preferences($id);
         $this->accountprefs = load_account_preferences($id);
+        $this->load_views();
     }
 
     public function change_identity_to($userid) {
