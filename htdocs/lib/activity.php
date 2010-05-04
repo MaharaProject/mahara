@@ -350,15 +350,23 @@ abstract class ActivityType {
     }
 
     public function get_string_for_user($user, $string) {
+        if (empty($string)) {
+            return;
+        }
         $args = array_merge(
             array(
                 $user->lang,
                 $this->strings->{$string}->key,
                 $this->strings->{$string}->section,
             ),
-            $this->strings->{$string}->args
+            empty($this->strings->{$string}->args) ? array() : $this->strings->{$string}->args
         );
         return call_user_func_array('get_string_from_language', $args);
+    }
+
+    // Optional string to use for the link text.
+    public function add_urltext(array $stringdef) {
+        $this->strings->urltext = (object) $stringdef;
     }
 
     public function get_message($user) {
@@ -390,6 +398,7 @@ abstract class ActivityType {
         if (!empty($user->url)) {
             $userdata->url = $user->url;
         }
+        $userdata->urltext = $this->get_string_for_user($user, 'urltext');
         if (empty($user->lang) || $user->lang == 'default') {
             $user->lang = get_config('lang');
         }
@@ -949,7 +958,7 @@ function activitylist_html($type='all', $limit=10, $offset=0) {
             $r->date = format_date(strtotime($r->ctime), 'strfdaymonthyearshort');
             $section = empty($r->plugintype) ? 'activity' : "{$r->plugintype}.{$r->pluginname}";
             $r->strtype = get_string('type' . $r->type, $section);
-            $r->message = clean_html(format_whitespace($r->message));
+            $r->message = format_whitespace($r->message);
         }
     }
 

@@ -47,7 +47,9 @@ class PluginNotificationInternal extends PluginNotification {
         if (!empty($data->url)) {
             $toinsert->url = $data->url;
         }
-        
+        if (!empty($data->urltext)) {
+            $toinsert->urltext = $data->urltext;
+        }
         if (!empty($data->fromuser)) {
             $toinsert->from = $data->fromuser;
         }

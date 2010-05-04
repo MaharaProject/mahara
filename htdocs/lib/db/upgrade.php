@@ -1731,5 +1731,14 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql('ALTER TABLE {usr} ADD COLUMN showhomeinfo SMALLINT NOT NULL DEFAULT 1');
         set_config('homepageinfo', 1);
     }
+
+    if ($oldversion < 2010042604) {
+        // @todo: Move to notification/internal
+        $table = new XMLDBTable('notification_internal_activity');
+        $field = new XMLDBField('urltext');
+        $field->setAttributes(XMLDB_TYPE_TEXT);
+        add_field($table, $field);
+    }
+
     return $status;
 }

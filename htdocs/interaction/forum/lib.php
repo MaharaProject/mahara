@@ -504,6 +504,10 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
 
         $this->message = $textbody;
         $this->url     = $postlink;
+        $this->add_urltext(array(
+            'key'     => 'gototopic',
+            'section' => 'interaction.forum'
+        ));
 
         foreach ($this->users as &$user) {
             $lang = (empty($user->lang) || $user->lang == 'default') ? get_config('lang') : $user->lang;

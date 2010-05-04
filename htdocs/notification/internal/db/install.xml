@@ -13,6 +13,7 @@
                 <FIELD NAME="subject" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="message" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="url" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="urltext" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="read" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="parent" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="from" TYPE="int" LENGTH="10" NOTNULL="false" />

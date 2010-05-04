@@ -93,6 +93,7 @@ To unsubscribe from this %s, visit:
 $string['forumsuccessfulsubscribe'] = 'Forum subscribed successfully';
 $string['forumsuccessfulunsubscribe'] = 'Forum unsubscribed successfully';
 $string['gotoforums'] = 'Go to forums';
+$string['gototopic'] = 'Go to topic';
 $string['groupadmins'] = 'Group administrators';
 $string['groupadminlist'] = 'Group admins:';
 $string['Key'] = 'Key';
