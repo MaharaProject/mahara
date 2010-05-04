@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
 
                     <div id="userview">
@@ -46,3 +47,4 @@
                     </div>
 
 {if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}
+{/auto_escape}

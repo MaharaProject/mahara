@@ -1,3 +1,4 @@
+{auto_escape off}
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
     <title>{$PAGETITLE|escape}</title>
@@ -33,3 +34,4 @@
     <link rel="shortcut icon" href="{$WWWROOT}favicon.ico" type="image/vnd.microsoft.icon">
 </head>
 {dynamic}{flush}{/dynamic}
+{/auto_escape}

@@ -128,7 +128,7 @@ class Dwoo_Mahara extends Dwoo {
         $compiler = Dwoo_Compiler::compilerFactory();
 
         $compiler->setDelimiters($this->left_delimiter, $this->right_delimiter);
-        //$compiler->setAutoEscape(true);
+        $compiler->setAutoEscape(true);
 
         return $compiler;
     }

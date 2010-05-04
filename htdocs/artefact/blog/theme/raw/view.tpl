@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 			<div id="myblogs rel">
 
@@ -21,3 +22,4 @@
 					
             </div>
 {include file="footer.tpl"}
+{/auto_escape}

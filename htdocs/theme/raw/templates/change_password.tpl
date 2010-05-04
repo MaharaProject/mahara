@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 
 	<h1>{str tag="changepassword"}</h1>
@@ -9,3 +10,4 @@
 	{$change_password_form}
 
 {include file="footer.tpl"}
+{/auto_escape}

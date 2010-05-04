@@ -1,3 +1,4 @@
+{auto_escape off}
     <h3>{str tag="networkservers" section="auth.xmlrpc"}{contextualhelp plugintype='auth' pluginname='xmlrpc' section='networkservers'}</h3>
         <div class="sidebar-content">
 {if $sbdata}
@@ -14,3 +15,4 @@
     </ul>
 {/if}
 </div>
+{/auto_escape}

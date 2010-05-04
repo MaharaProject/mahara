@@ -1,3 +1,4 @@
+{auto_escape off}
                 <ul>
                     <li><label>{str tag=groupadmins section=group}:</label> {foreach name=admins from=$group->admins item=id}
                     <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$id|escape}" alt="">
@@ -11,3 +12,4 @@
                         <span><label>{str tag=Files section=artefact.file}:</label> {$filecount}&nbsp;</span>
                         <span><label>{str tag=Folders section=artefact.file}:</label> {$foldercount}</span></li>
                 </ul>
+{/auto_escape}

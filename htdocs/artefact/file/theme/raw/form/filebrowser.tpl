@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $config.select}
 {include file="artefact:file:form/selectedlist.tpl" selectedlist=$selectedlist prefix=$prefix highlight=$highlight}
 {/if}
@@ -108,4 +109,4 @@
 </div>
 {/if}
 
-</div>
+</div>{/auto_escape}

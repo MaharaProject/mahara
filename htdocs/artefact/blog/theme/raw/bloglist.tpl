@@ -1,3 +1,4 @@
+{auto_escape off}
 <script type="text/javascript">
     function confirmdelete(id) {
         if(confirm("{str tag=deleteblog? section=artefact.blog}")) {
@@ -18,3 +19,4 @@
       </td>
     </tr>
   {/foreach}
+{/auto_escape}

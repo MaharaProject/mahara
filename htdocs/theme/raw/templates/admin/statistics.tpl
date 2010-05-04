@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file='header.tpl'}
 
 {if $sitedata}
@@ -36,3 +37,4 @@
 {/if}
 
 {include file='footer.tpl'}
+{/auto_escape}

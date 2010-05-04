@@ -1,3 +1,4 @@
+{auto_escape off}
 {**
  * This template displays a blog post.
  *}
@@ -21,3 +22,4 @@
   {/if}
   <div class="postdetails">{$postedbyon|escape}</div>
 </div>
+{/auto_escape}

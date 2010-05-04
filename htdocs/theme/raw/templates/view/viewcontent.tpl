@@ -1,3 +1,4 @@
+{auto_escape off}
 <h2>{$viewtitle}{if $ownername} {str tag=by section=view} {$ownername}{/if}</h2>
 
 <p class="view-description">{$viewdescription}</p>
@@ -16,3 +17,4 @@
   </div>
 {/if}
 </div>
+{/auto_escape}

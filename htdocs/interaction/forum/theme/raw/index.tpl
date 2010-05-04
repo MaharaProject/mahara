@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 
 <h2>{str tag="nameplural" section=interaction.forum}</h2>
@@ -53,3 +54,4 @@
     {/foreach}
 </div>
 {include file="footer.tpl"}
+{/auto_escape}

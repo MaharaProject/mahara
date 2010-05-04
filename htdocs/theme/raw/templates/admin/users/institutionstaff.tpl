@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 			<p>{str tag="institutionstaffuserspagedescription" section="admin"}</p>
 			{$institutionselector}
@@ -5,3 +6,4 @@
 			{$staffusersform}
             </div>
 {include file="footer.tpl"}
+{/auto_escape}

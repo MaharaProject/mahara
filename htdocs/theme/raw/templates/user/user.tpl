@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $user->pending}
 <td class="pending friendinfo rel">
 	<ul class="actionlist">
@@ -204,3 +205,4 @@
 	</div>
 </td>
 {/if}
+{/auto_escape}

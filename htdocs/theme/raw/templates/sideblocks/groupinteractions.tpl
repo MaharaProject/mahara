@@ -1,3 +1,4 @@
+{auto_escape off}
     <h3>{str tag="groupinteractions" section="group"}</h3>
 
     <div class="sidebar-content">
@@ -30,3 +31,4 @@
     <p>{str tag=nointeractions section=group}</p>
     {/if}
 </div>
+{/auto_escape}

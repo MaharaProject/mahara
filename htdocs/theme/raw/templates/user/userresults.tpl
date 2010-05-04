@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $data}
 {foreach from=$data item=user}
     <tr class="{cycle values='r0,r1'}">
@@ -7,3 +8,4 @@
 {elseif $query}
     <tr><td><div class="message">{str tag=nosearchresultsfound section=group}</div></td></tr>
 {/if}
+{/auto_escape}

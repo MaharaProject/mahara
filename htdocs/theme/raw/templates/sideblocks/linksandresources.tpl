@@ -1,3 +1,4 @@
+{auto_escape off}
 <h3>{str tag="linksandresources"}</h3>
 
     <div class="sidebar-content">
@@ -10,3 +11,4 @@
 {/if}
 
 </div>
+{/auto_escape}

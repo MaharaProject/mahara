@@ -1,3 +1,4 @@
+{auto_escape off}
 <div id="column-right">
 {foreach from=$SIDEBLOCKS item=sideblock}
     {counter name="sidebar" assign=SIDEBAR_SEQUENCE}
@@ -12,4 +13,4 @@
     {include file="sideblocks/$sideblock_name.tpl" data=$sideblock.data}
     </div>
 {/foreach}
-</div>
+</div>{/auto_escape}

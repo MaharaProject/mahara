@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $MAINNAV}
         <div id="main-nav">
             <ul>{strip}
@@ -27,3 +28,4 @@
 {/if}
         </div>
 {/if}
+{/auto_escape}

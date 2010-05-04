@@ -1,3 +1,4 @@
+{auto_escape off}
   {foreach from=$data item=item}
     <tr class="{cycle name=rows values='r0,r1'}{if $item->highlight} highlight{/if}">
       <td>
@@ -37,3 +38,4 @@
       </td>
     </tr>
   {/foreach}
+{/auto_escape}

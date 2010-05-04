@@ -1,3 +1,4 @@
+{auto_escape off}
 {foreach from=$data item=item key=key}
   <tr class="{cycle values='r0,r1'}">
     <td>{$offset + $dwoo.foreach.default.iteration}</td>
@@ -8,3 +9,4 @@
     <td class="center">{$item->posts}</td>
   </tr>
 {/foreach}
+{/auto_escape}

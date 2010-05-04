@@ -1,3 +1,4 @@
+{auto_escape off}
 <h3><a href="{$WWWROOT}tags.php">{str tag="tags"}</a></h3>
 <div class="sidebar-content tags">
 {if $sbdata.tags}
@@ -8,3 +9,4 @@
   {str tag=youhavenottaggedanythingyet}
 {/if}
 </div>
+{/auto_escape}

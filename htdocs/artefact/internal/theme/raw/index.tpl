@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 
             <div class="rbuttons">
@@ -11,3 +12,4 @@
             </script>
 
 {include file="footer.tpl"}
+{/auto_escape}

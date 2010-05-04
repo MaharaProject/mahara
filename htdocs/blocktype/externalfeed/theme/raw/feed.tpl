@@ -1,3 +1,4 @@
+{auto_escape off}
 <div id="blocktype_externalfeed_feed">
     {if $feedimage}<div class="fr">{$feedimage}</div>{/if}
     <div id="blocktype_externalfeed_title">
@@ -33,3 +34,4 @@
     {$lastupdated}
     </div>
 </div>
+{/auto_escape}

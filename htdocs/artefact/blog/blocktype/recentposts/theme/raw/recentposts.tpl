@@ -1,3 +1,4 @@
+{auto_escape off}
 <ul>
 {foreach from=$mostrecent item=post}
     <li>
@@ -9,3 +10,4 @@
     </li>
 {/foreach}
 </ul>
+{/auto_escape}

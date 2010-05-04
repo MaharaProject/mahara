@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file='header.tpl' nosearch=true}
             <h3 class="center"><a href="http://mahara.org">Mahara</a> {str section='admin' tag='release' args=$releaseargs}</h3>
 
@@ -22,3 +23,4 @@ along with this program.  If not, see <a href="http://www.gnu.org/licenses/gpl.h
             <form action="{$WWWROOT}admin/upgrade.php" method="post" class="center"><input type="submit" class="submit" value="{str tag=installmahara section=admin}"></form>
 
 {include file='admin/upgradefooter.tpl'}
+{/auto_escape}

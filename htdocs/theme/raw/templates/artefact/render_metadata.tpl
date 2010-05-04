@@ -1,3 +1,4 @@
+{auto_escape off}
 <table>
     <tbody>
         <tr>
@@ -22,3 +23,4 @@
         </tr>
     </tbody>
 </table>
+{/auto_escape}

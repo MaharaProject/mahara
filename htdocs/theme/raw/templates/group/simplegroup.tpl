@@ -1,3 +1,4 @@
+{auto_escape off}
 <div>
     <h3>
         <a href="{$WWWROOT}group/view.php?id={$group->id}">
@@ -10,3 +11,4 @@
     </p>
     {/if}
 </div>
+{/auto_escape}

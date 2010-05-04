@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 <p>{str tag="institutionmembershipdescription"}</p>
 {if $memberform}
@@ -17,3 +18,4 @@
   {$joinform}
 {/if}
 {include file="footer.tpl"}
+{/auto_escape}

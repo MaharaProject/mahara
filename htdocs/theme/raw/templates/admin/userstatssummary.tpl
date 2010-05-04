@@ -1,3 +1,4 @@
+{auto_escape off}
 <h3>{str tag=youraverageuser section=admin}</h3>
 <ul>
   <li>{$data.strmaxfriends}</li>
@@ -10,3 +11,4 @@
 {/if}
 
 
+{/auto_escape}

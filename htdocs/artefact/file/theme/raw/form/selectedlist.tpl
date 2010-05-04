@@ -1,3 +1,4 @@
+{auto_escape off}
 <p id="{$prefix}_empty_selectlist"{if !$selectedlist} class="hidden"{/if}>{str tag=nofilesfound section=artefact.file}</p>
 <table id="{$prefix}_selectlist"  class="attachments fullwidth{if !$selectedlist} hidden{/if}">
  <thead>
@@ -28,3 +29,4 @@
  </tbody>
 </table>
 
+{/auto_escape}

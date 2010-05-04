@@ -1,3 +1,4 @@
+{auto_escape off}
 <ul class="groupuserstatus">
 {if $group->membershiptype == 'member'}
 	<li class="member">
@@ -39,3 +40,4 @@
 	
 {/if}
 </ul>
+{/auto_escape}

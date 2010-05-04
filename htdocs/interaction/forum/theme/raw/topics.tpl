@@ -1,3 +1,4 @@
+{auto_escape off}
 {foreach from=$topics item=topic}
 {if $sticky}
 <tr class="stickytopic">
@@ -36,3 +37,4 @@
     </td>
 </tr>
 {/foreach}
+{/auto_escape}

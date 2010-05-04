@@ -1,3 +1,4 @@
+{auto_escape off}
 {if !$nosearch && $LOGGEDIN}        {user_search_form}{/if}
 {if !$nosearch && !$LOGGEDIN && (count($LANGUAGES) > 1)}
         <form id="language-select" method="post" action="">
@@ -13,3 +14,4 @@
             </div>
         </form>
 {/if}
+{/auto_escape}

@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $USERGROUPS}
 <table id="usergroupstable" class="fullwidth">
 {foreach from=$USERGROUPS item=item}
@@ -14,3 +15,4 @@
 {else}
     {str tag='notinanygroups' section='group'}
 {/if}
+{/auto_escape}

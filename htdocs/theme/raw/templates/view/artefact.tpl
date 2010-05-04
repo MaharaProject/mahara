@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
 
         <h2>
@@ -32,4 +33,4 @@
         <div>{$objectionform}</div>
       </div>
 
-{if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}
+{if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}{/auto_escape}

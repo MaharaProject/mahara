@@ -1,3 +1,4 @@
+{auto_escape off}
 <div class="fr filedata-icon" style="text-align: center;">
     <h4>{str tag=Preview section=artefact.file}</h4>
     <img src="{$previewpath|escape}" alt="">
@@ -16,3 +17,4 @@
     <tr><th>{str tag=Size section=artefact.file}:</th><td>{$size|escape}</td></tr>
     <tr><th>{str tag=Download section=artefact.file}:</th><td><a href="{$downloadpath|escape}">{str tag=Download section=artefact.file}</a></td></tr>
 </table>
+{/auto_escape}

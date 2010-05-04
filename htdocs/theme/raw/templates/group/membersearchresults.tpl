@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $results.data}
         {foreach from=$results.cdata item=row}
           <tr class="{cycle values='r0,r1'}">
@@ -30,3 +31,4 @@
 {else}
     <div>{str tag="noresultsfound"}</div>
 {/if}
+{/auto_escape}

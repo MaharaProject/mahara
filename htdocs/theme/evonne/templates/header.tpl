@@ -1,3 +1,4 @@
+{auto_escape off}
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -77,4 +78,4 @@
 {/if}
 {/if}
 	</div>
-	<div id="mainwrapper">
+	<div id="mainwrapper">{/auto_escape}

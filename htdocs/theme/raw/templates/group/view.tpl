@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 
 {if $GROUP->description}
@@ -100,3 +101,4 @@
 {/if}
 
 {include file="footer.tpl"}
+{/auto_escape}

@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 
             <table id="notificationstable" class="fullwidth table">
@@ -30,3 +31,4 @@
             </table>
 
 {include file="footer.tpl"}
+{/auto_escape}

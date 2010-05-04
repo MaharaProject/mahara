@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 <div id="resumewrap">
 {$coverletterform}
@@ -11,3 +12,4 @@
 {include file="artefact:resume:fragments/membership.tpl" controls="true"}
 </div>
 {include file="footer.tpl"}
+{/auto_escape}

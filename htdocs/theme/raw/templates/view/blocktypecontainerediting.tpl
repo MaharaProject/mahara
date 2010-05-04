@@ -1,3 +1,4 @@
+{auto_escape off}
     <div class="blockinstance{if $configure} configure{/if}" id="blockinstance_{$id}{if $configure}_configure{/if}">
         <div class="blockinstance-header">
             <h4>{$title|default:"[$strnotitle]"|escape}{if $configure}: {str tag=Configure section=view}{/if}</h4>
@@ -18,3 +19,4 @@
             <input type="submit" class="submit newblockhere" name="action_addblocktype_column_{$column}_order_{$order+1}" value="{str tag='addnewblockhere' section='view'}">
         </div>
     {/if}
+{/auto_escape}

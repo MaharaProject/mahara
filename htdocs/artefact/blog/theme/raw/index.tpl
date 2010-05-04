@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
             <div class="rbuttons">
                 <a class="btn btn-add" href="{$WWWROOT}artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
@@ -18,3 +19,4 @@
 {/if}
                 </div>
 {include file="footer.tpl"}
+{/auto_escape}

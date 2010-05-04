@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $viewcount == 0}
 <p>{str tag=noviews section=view}</p>
 {/if}
@@ -14,3 +15,4 @@
   <img src="{$viewtypes}" alt="" />
 {/if}
 
+{/auto_escape}

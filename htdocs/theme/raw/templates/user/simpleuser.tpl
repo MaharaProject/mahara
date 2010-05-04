@@ -1,3 +1,4 @@
+{auto_escape off}
 <div>
     <div class="fl">
         <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=50&amp;maxheight=50&amp;id={$user->id}" alt="">
@@ -9,3 +10,4 @@
     <br><br>
     {/if}
 </div>
+{/auto_escape}

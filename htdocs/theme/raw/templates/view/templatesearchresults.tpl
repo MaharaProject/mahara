@@ -1,3 +1,4 @@
+{auto_escape off}
 <table class="templateresults tablerenderer fullwidth">
   <thead>
     <tr>
@@ -35,3 +36,4 @@
 {/if}
   </tbody>
 </table>
+{/auto_escape}

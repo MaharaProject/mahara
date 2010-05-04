@@ -1,3 +1,4 @@
+{auto_escape off}
     <tr>
         <td style="width: 20px;" rowspan="2">
             {$formcontrols}
@@ -7,3 +8,4 @@
     <tr>
         <td>{$artefact->description|str_shorten_html}</td>
     </tr>
+{/auto_escape}

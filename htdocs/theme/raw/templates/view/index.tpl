@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 
 {if $GROUP}<h2>{str tag=groupviews section=view}</h2>
@@ -85,3 +86,4 @@
 {/if}
 {include file="footer.tpl"}
 
+{/auto_escape}

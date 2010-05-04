@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 
     {$form}
@@ -13,3 +14,4 @@
     {$pagination}
 
 {include file="footer.tpl"}
+{/auto_escape}

@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="export:html:header.tpl"}
 
 <h2>{str tag=Folder section=artefact.file}: {$folder|escape}</h2>
@@ -49,3 +50,4 @@
 {/if}
 
 {include file="export:html:footer.tpl"}
+{/auto_escape}

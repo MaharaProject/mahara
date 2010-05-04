@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
 <h1>{$maintitle}</h1>
 
@@ -98,3 +99,4 @@
 {/if}
 
 {if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}
+{/auto_escape}

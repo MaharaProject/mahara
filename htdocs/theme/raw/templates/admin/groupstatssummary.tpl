@@ -1,3 +1,4 @@
+{auto_escape off}
 {if empty($grouptypecounts)}
 <p>{str tag=nogroups section=group}</p>
 {else}
@@ -18,4 +19,4 @@
 {if $groupgraph}
   <img src="{$groupgraph}" alt="" />
 {/if}
-{/if}
+{/if}{/auto_escape}

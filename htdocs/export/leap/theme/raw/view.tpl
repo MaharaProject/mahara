@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="export:leap:entry.tpl" skipfooter=true}
         <mahara:view{if $layout} mahara:layout="{$layout|escape}"{/if}{if $type} mahara:type="{$type|escape}"{/if} mahara:ownerformat="{$ownerformat|escape}">
 {foreach from=$viewdata item=column}
@@ -13,3 +14,4 @@
 {/foreach}
         </mahara:view>
 {include file="export:leap:entryfooter.tpl"}
+{/auto_escape}

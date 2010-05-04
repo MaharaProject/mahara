@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 {$form}
 {if $groups}
@@ -16,3 +17,4 @@
             <div class="message">{str tag="nogroupsfound" section="group"}</div>
 {/if}
 {include file="footer.tpl"}
+{/auto_escape}

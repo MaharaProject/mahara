@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $sitedata.weekly}
   <div class="fr">
     <div id="site-stats-graph" class="fr">
@@ -31,3 +32,4 @@
   </div>
 <div class="cb"></div>
 
+{/auto_escape}

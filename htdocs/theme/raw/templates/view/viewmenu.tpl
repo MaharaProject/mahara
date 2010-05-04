@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $enablecomments}
   <a id="add_feedback_link" href="">{str tag=placefeedback section=artefact.comment}</a> |
 {/if}
@@ -9,3 +10,4 @@
   | <a id="toggle_watchlist_link" href="">{if $viewbeingwatched}{str tag=removefromwatchlist section=view}{else}{str tag=addtowatchlist section=view}{/if}</a>
   | {contextualhelp plugintype='core' pluginname='view' section='viewmenu'}
 {/if}
+{/auto_escape}

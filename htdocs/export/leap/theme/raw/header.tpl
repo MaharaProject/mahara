@@ -1,3 +1,4 @@
+{auto_escape off}
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -13,3 +14,4 @@
     <generator uri="http://mahara.org/" version="{$leap_export_version|escape}">Mahara</generator>
 {include file="export:leap:author.tpl"}
 
+{/auto_escape}

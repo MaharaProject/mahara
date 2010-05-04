@@ -1,3 +1,4 @@
+{auto_escape off}
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if}>
 {include file="header/head.tpl"}
@@ -32,3 +33,4 @@
                         </ul>
                         <div class="subpage rel">
 {/if}
+{/auto_escape}

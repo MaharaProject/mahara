@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 {$page_content|clean_html}
 {if $views}
@@ -26,3 +27,4 @@
   </table>
 {/if}
 {include file="footer.tpl"}
+{/auto_escape}
