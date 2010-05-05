@@ -2027,8 +2027,8 @@ class View {
                 FROM {view} v
                 LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
                 LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)
-                WHERE v.owner = ' . $userid . '
-                ORDER BY v.type DESC, v.title, v.id', '', $offset, $limit);
+                WHERE v.owner = ' . $userid . "
+                ORDER BY v.type = 'portfolio', v.type, v.title, v.id", '', $offset, $limit);
             $owner = $userid;
         }
 
