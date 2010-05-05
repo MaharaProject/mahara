@@ -127,8 +127,8 @@ $string['updatefailed'] = 'Update failed';
 $string['strftimenotspecified']  = 'Not specified';
 
 // profile sideblock strings
-$string['invitedgroup'] = 'group invited to';
-$string['invitedgroups'] = 'groups invited to';
+$string['invitedgroup'] = 'group invitation';
+$string['invitedgroups'] = 'group invitations';
 $string['logout'] = 'Logout';
 $string['pendingfriend'] = 'pending friend';
 $string['pendingfriends'] = 'pending friends';
