@@ -350,14 +350,14 @@ abstract class ActivityType {
     }
 
     public function get_string_for_user($user, $string) {
-        if (empty($string)) {
+        if (empty($string) || empty($this->strings->{$string}->key)) {
             return;
         }
         $args = array_merge(
             array(
                 $user->lang,
                 $this->strings->{$string}->key,
-                $this->strings->{$string}->section,
+                empty($this->strings->{$string}->section) ? 'mahara' : $this->strings->{$string}->section,
             ),
             empty($this->strings->{$string}->args) ? array() : $this->strings->{$string}->args
         );

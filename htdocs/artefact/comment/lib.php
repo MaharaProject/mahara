@@ -638,6 +638,10 @@ function make_public_submit(Pieform $form, $values) {
                 'section' => 'artefact.comment',
                 'args'    => array(hsc($arg)),
             ),
+            'urltext' => (object) array(
+                'key'     => 'Comment',
+                'section' => 'artefact.comment',
+            ),
         ),
         'users'     => array($userid),
         'url'       => $url,
@@ -699,6 +703,9 @@ function delete_comment_submit(Pieform $form, $values) {
                     'key'     => 'commentdeletedauthornotification',
                     'section' => 'artefact.comment',
                     'args'    => array($title, html2text($comment->get('description'))),
+                ),
+                'urltext' => (object) array(
+                    'key'     => $artefact ? 'artefact' : 'view',
                 ),
             ),
             'users'     => array($comment->get('author')),
@@ -913,6 +920,9 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
                 'key'     => $subjectkey,
                 'section' => 'artefact.comment',
                 'args'    => array($title),
+            ),
+            'urltext' => (object) array(
+                'key'     => empty($onartefact) ? 'view' : 'artefact',
             ),
         );
 
