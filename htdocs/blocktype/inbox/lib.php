@@ -67,7 +67,7 @@ class PluginBlocktypeInbox extends SystemBlocktype {
         $records = array();
         if ($desiredtypes) {
             $sql = "
-                SELECT n.*, t.name
+                SELECT n.id, n.subject, n.message, n.url, n.urltext, n.read, t.name AS type
                 FROM {notification_internal_activity} n JOIN {activity_type} t ON n.type = t.id
                 WHERE n.usr = ?
                 AND t.name IN (" . join(',', array_map('db_quote', $desiredtypes)) . ")
@@ -85,22 +85,12 @@ class PluginBlocktypeInbox extends SystemBlocktype {
             unset($records[$maxitems]);
         }
 
-        $items = array();
-        if ($records) {
-            foreach($records as $record) {
-                $items[] = array(
-                    'subject' => $record->subject,
-                    'url' => $record->url,
-                    'type' => $record->name,
-                );
-            }
-        }
-
         $smarty = smarty_core();
         if ($showmore) {
             $smarty->assign('desiredtypes', implode(',', $desiredtypes));
         }
-        $smarty->assign('items', $items);
+        $smarty->assign('blockid', 'blockinstance_' . $instance->get('id'));
+        $smarty->assign('items', $records);
         return $smarty->fetch('blocktype:inbox:inbox.tpl');
     }
 

@@ -296,8 +296,18 @@ html>body #column-container {
 }
 
 /* Inbox */
-.bt-inbox table td {
-    vertical-align: middle;
+.bt-inbox td.icon-container {
+  vertical-align: top;
+  padding: 0;
+  width: 15px;
+}
+.bt-inbox td.icon-container .icon {
+  height: 1.4em;
+  vertical-align: bottom;
+  display: table-cell;
+}
+.inbox-showmessage.unread {
+  font-weight: bold;
 }
 
 /* tabs for the artefact chooser */
