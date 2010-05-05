@@ -505,7 +505,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         $this->message = $textbody;
         $this->url     = $postlink;
         $this->add_urltext(array(
-            'key'     => 'gototopic',
+            'key'     => 'Topic',
             'section' => 'interaction.forum'
         ));
 

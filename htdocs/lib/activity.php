@@ -661,6 +661,10 @@ class ActivityTypeUsermessage extends ActivityType {
             $this->fromuser = $this->userfrom;
         }
         $this->users = activity_get_users($this->get_id(), array($this->userto));
+        $this->add_urltext(array(
+            'key'     => 'Reply',
+            'section' => 'group',
+        ));
     } 
 
     public function get_subject($user) {
@@ -722,6 +726,7 @@ class ActivityTypeWatchlist extends ActivityType {
         $this->users = get_records_sql_array($sql, 
                                        array(get_config('wwwroot') . 'view/view.php?id=' 
                                              . $this->view, $this->get_id(), $this->view));
+        $this->add_urltext(array('key' => 'View', 'section' => 'view'));
     }
 
     public function get_subject($user) {
@@ -805,6 +810,7 @@ class ActivityTypeViewaccess extends ActivityType {
             activity_get_viewaccess_users($this->view, $this->owner, $this->get_id()),
             $this->oldusers
         );
+        $this->add_urltext(array('key' => 'View', 'section' => 'view'));
     }
 
     public function get_subject($user) {
