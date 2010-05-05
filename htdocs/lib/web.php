@@ -410,7 +410,7 @@ EOF;
         require_once('group.php');
         $group = group_current_group();
         $smarty->assign('GROUP', $group);
-        $smarty->assign('GROUPNAV', group_get_menu_tabs());
+        $smarty->assign('SUBPAGENAV', group_get_menu_tabs());
         $smarty->assign('PAGEHEADING', hsc($group->name));
     }
 
