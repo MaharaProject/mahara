@@ -294,6 +294,7 @@ abstract class ActivityType {
     protected $strings;
     protected $users = array();
     protected $url;
+    protected $urltext;
     protected $id;
     protected $type;
     protected $activityname;
@@ -369,6 +370,13 @@ abstract class ActivityType {
         $this->strings->urltext = (object) $stringdef;
     }
 
+    public function get_urltext($user) {
+        if (empty($this->urltext)) {
+            return $this->get_string_for_user($user, 'urltext');
+        }
+        return $this->urltext;
+    }
+
     public function get_message($user) {
         if (empty($this->message)) {
             return $this->get_string_for_user($user, 'message');
@@ -398,7 +406,7 @@ abstract class ActivityType {
         if (!empty($user->url)) {
             $userdata->url = $user->url;
         }
-        $userdata->urltext = $this->get_string_for_user($user, 'urltext');
+        $userdata->urltext = $this->get_urltext($user);
         if (empty($user->lang) || $user->lang == 'default') {
             $user->lang = get_config('lang');
         }
@@ -612,9 +620,11 @@ class ActivityTypeInstitutionmessage extends ActivityType {
             $this->url = get_config('wwwroot') . 'admin/users/institutionusers.php';
             $this->users = activity_get_users($this->get_id(), null, null, null,
                                               array($this->institution->name));
+            $this->add_urltext(array('key' => 'institutionmembers', 'section' => 'admin'));
         } else if ($this->messagetype == 'invite') {
             $this->url = get_config('wwwroot') . 'account/institutions.php';
             $this->users = activity_get_users($this->get_id(), $this->users);
+            $this->add_urltext(array('key' => 'institutionmembership', 'section' => 'mahara'));
         }
     }
 

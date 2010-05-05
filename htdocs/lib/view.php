@@ -760,6 +760,7 @@ class View {
                 'message' => get_string_from_language($ownerlang, 'viewreleasedmessage', 'group', $this->get('title'),
                     $submitinfo['name'], display_name($releaseuser, $this->get_owner_object())),
                 'url' => $url,
+                'urltext' => $this->get('title'),
             )
         );
     }

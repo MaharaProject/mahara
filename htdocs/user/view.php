@@ -333,11 +333,13 @@ function addmember_submit(Pieform $form, $values) {
         delete_records('group_member_request', 'member', $userid, 'group', $data->group);
         $lang = get_user_language($userid);
         require_once(get_config('libroot') . 'activity.php');
-        activity_occurred('maharamessage', 
-            array('users'   => array($userid),
-                  'subject' => get_string_from_language($lang, 'addedtogroupsubject', 'group'),
-                  'message' => get_string_from_language($lang, 'addedtogroupmessage', 'group', display_name($USER, $adduser), $ctitle),
-                  'url'     => get_config('wwwroot') . 'group/view.php?id=' . $values['group']));
+        activity_occurred('maharamessage', array(
+            'users'   => array($userid),
+            'subject' => get_string_from_language($lang, 'addedtogroupsubject', 'group'),
+            'message' => get_string_from_language($lang, 'addedtogroupmessage', 'group', display_name($USER, $adduser), $ctitle),
+            'url'     => get_config('wwwroot') . 'group/view.php?id=' . $values['group'],
+            'urltext' => $ctitle,
+        ));
         $SESSION->add_ok_msg(get_string('useradded', 'group'));
     }
     catch (SQLException $e) {

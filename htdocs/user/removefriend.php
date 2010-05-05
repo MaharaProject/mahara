@@ -81,6 +81,7 @@ function removefriend_submit(Pieform $form, $values) {
     $n->users = array($user->id);
     $lang = get_user_language($user->id);
     $displayname = display_name($USER, $user);
+    $n->urltext = $displayname;
 
     delete_records_select('usr_friend', '(usr1 = ? AND usr2 = ?) OR (usr2 = ? AND usr1 = ?)', 
                             array($id, $loggedinid, $id, $loggedinid));

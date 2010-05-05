@@ -85,6 +85,7 @@ function requestfriendship_submit(Pieform $form, $values) {
     $n->users = array($user->id);
     $lang = get_user_language($user->id);
     $displayname = display_name($USER, $user);
+    $n->strings->urltext = (object) array('key' => 'Requests');
 
     $f->owner     = $id;
     $f->requester = $loggedinid;

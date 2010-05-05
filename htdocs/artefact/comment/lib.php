@@ -921,10 +921,8 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
                 'section' => 'artefact.comment',
                 'args'    => array($title),
             ),
-            'urltext' => (object) array(
-                'key'     => empty($onartefact) ? 'view' : 'artefact',
-            ),
         );
+        $this->urltext = $title;
 
         if ($deletedby) {
             $deletedmessage = ArtefactTypeComment::deleted_messages();

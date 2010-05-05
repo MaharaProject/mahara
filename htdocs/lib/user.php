@@ -1523,6 +1523,7 @@ function acceptfriend_submit(Pieform $form, $values) {
     redirect('/user/view.php?id=' . $values['id']);
 }
 
+// Called when a user adds someone who has friendscontrol set to 'auto'
 function addfriend_submit(Pieform $form, $values) {
     global $USER, $SESSION;
     $user = get_record('usr', 'id', $values['id']);
@@ -1540,6 +1541,7 @@ function addfriend_submit(Pieform $form, $values) {
     $n->users = array($user->id);
     $lang = get_user_language($user->id);
     $displayname = display_name($USER, $user);
+    $n->urltext = $displayname;
 
     $f->usr1 = $values['id'];
     $f->usr2 = $loggedinid;
