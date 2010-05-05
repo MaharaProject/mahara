@@ -67,13 +67,12 @@ foreach (array_unique(array_merge($initialgroups, $resultgroups)) as $groupid) {
 }
 
 $groupdata = get_records_select_assoc('group', 'id IN (' . join(',', array_unique(array_merge($initialgroups, $resultgroups))) . ')');
-$groupstoremovemail = '';
-$groupstoaddmail = '';
 
 if ($jointype == 'controlled') {
     db_begin();
     //remove group membership
     if ($groupstoremove = array_diff($initialgroups, $resultgroups)) {
+        $groupstoremovemail = '';
         foreach ($groupstoremove as $groupid) {
             group_remove_user($groupid, $userid, $role=null);
             $groupstoremovemail .= $groupdata[$groupid]->name . "\n";
@@ -81,6 +80,7 @@ if ($jointype == 'controlled') {
     }
     //add group membership
     if ($groupstoadd = array_diff($resultgroups, $initialgroups)) {
+        $groupstoaddmail = '';
         foreach ($groupstoadd as $groupid) {
             group_add_user($groupid, $userid, $role=null);
             $groupstoaddmail .= $groupdata[$groupid]->name . "\n";

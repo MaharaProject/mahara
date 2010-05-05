@@ -79,10 +79,10 @@ $string['requestedmembershipin'] = 'Requested membership in:';
 
 $string['controlledmembership'] = 'Controlled Group membership';
 $string['invitemembership'] = 'Invite only membership';
-$string['changedgroupmembership'] = 'Control Groups membership has changed sucessfully.';
-$string['changedgroupmembershipsubject'] = 'You Control Groups membership has changed';
-$string['addedtogroupsmessage'] = "%s has added you to controlled group(s):\n\n%s\n\n";
-$string['removedfromgroupsmessage'] = "%s has removed you from controlled group(s):\n\n%s\n\n";
+$string['changedgroupmembership'] = 'Group membership updated sucessfully.';
+$string['changedgroupmembershipsubject'] = 'Your group memberships have been changed';
+$string['addedtogroupsmessage'] = "%s has added you to the group(s):\n\n%s\n\n";
+$string['removedfromgroupsmessage'] = "%s has removed you from the group(s):\n\n%s\n\n";
 $string['cantremoveuserisadmin'] = "Tutor cannot remove admins and other tutorsmembers.";
 $string['cantremovemember'] = "Tutor cannot remove members.";
 
