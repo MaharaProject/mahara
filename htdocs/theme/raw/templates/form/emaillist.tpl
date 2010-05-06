@@ -1,4 +1,4 @@
-{auto_escape off}
+{{auto_escape off}}
 <script type="text/javascript">
     var {{$name}}_newrefinput = null;
     var {{$name}}_newref = null;
@@ -96,4 +96,4 @@
 {{/foreach}}
 </div>
 <a href="" onclick="{{$name}}_new(); return false;">{{str tag="addemail"}}</a>
-{/auto_escape}
+{{/auto_escape}}
