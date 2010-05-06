@@ -26,13 +26,15 @@
  */
 
 define('INTERNAL', true);
-define('MENUITEM', 'profile/myskills');
+define('MENUITEM', 'profile/myresume');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'resume');
-define('SECTION_PAGE', 'skills');
+define('SECTION_PAGE', 'index');
+define('RESUME_SUBPAGE', 'skills');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
+define('TITLE', get_string('myresume', 'artefact.resume'));
 require_once(get_config('docroot') . 'artefact/lib.php');
 
 $personal = null;
@@ -58,36 +60,44 @@ $sform = array(
     'pluginname' => 'resume',
     'successcallback' => 'goalandskillform_submit',
     'elements' => array(
-        'personalskill' => array(
-            'type' => 'wysiwyg',
-            'rows' => 10,
-            'cols' => 65,
-            'defaultvalue' => ((!empty($personal)) ? $personal->get('description') : null),
-            'title' => get_string('personalskill', 'artefact.resume'),
-        ),
-        'academicskill' => array(
-            'type' => 'wysiwyg',
-            'rows' => 10,
-            'cols' => 65,
-            'defaultvalue' => ((!empty($academic)) ? $academic->get('description') : null),
-            'title' => get_string('academicskill', 'artefact.resume'),
-        ),
-        'workskill' => array(
-            'type' => 'wysiwyg',
-            'rows' => 10,
-            'cols' => 65,
-            'defaultvalue' => ((!empty($work)) ? $work->get('description') : null),
-            'title' => get_string('workskill', 'artefact.resume'),
-        ),
-        'submit' => array(
-            'type' => 'submit',
-            'value' => get_string('save'),
+        'myskills' => array(
+            'type' => 'fieldset',
+            'legend' => get_string('myskills', 'artefact.resume'),
+            'help' => true,
+            'elements' => array(
+                'personalskill' => array(
+                    'type' => 'wysiwyg',
+                    'rows' => 10,
+                    'cols' => 65,
+                    'defaultvalue' => ((!empty($personal)) ? $personal->get('description') : null),
+                    'title' => get_string('personalskill', 'artefact.resume'),
+                ),
+                'academicskill' => array(
+                    'type' => 'wysiwyg',
+                    'rows' => 10,
+                    'cols' => 65,
+                    'defaultvalue' => ((!empty($academic)) ? $academic->get('description') : null),
+                    'title' => get_string('academicskill', 'artefact.resume'),
+                ),
+                'workskill' => array(
+                    'type' => 'wysiwyg',
+                    'rows' => 10,
+                    'cols' => 65,
+                    'defaultvalue' => ((!empty($work)) ? $work->get('description') : null),
+                    'title' => get_string('workskill', 'artefact.resume'),
+                ),
+                'submit' => array(
+                    'type' => 'submit',
+                    'value' => get_string('save'),
+                ),
+            ),
         ),
     ),
 );
 $skillform = pieform($sform);
 $smarty = smarty();
 $smarty->assign('skillform', $skillform);
-$smarty->assign('PAGEHEADING', hsc(get_string('myskills', 'artefact.resume')));
+$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:skills.tpl');
-?>
+

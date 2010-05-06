@@ -1,6 +1,5 @@
 {include file="header.tpl"}
 <div id="resumewrap">
-{$coverletterform}
-{$personalinformationform}
+{$interestsform}
 </div>
 {include file="footer.tpl"}

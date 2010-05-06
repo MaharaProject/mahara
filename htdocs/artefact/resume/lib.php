@@ -65,18 +65,6 @@ class PluginArtefactResume extends Plugin {
                 'url' => 'artefact/resume/',
                 'weight' => 20,
             ),
-            array(
-                'path' => 'profile/mygoals',
-                'title' => get_string('mygoals', 'artefact.resume'),
-                'url' => 'artefact/resume/goals.php',
-                'weight' => 21,
-            ),
-            array(
-                'path' => 'profile/myskills',
-                'title' => get_string('myskills', 'artefact.resume'),
-                'url' => 'artefact/resume/skills.php',
-                'weight' => 22,
-            )
         );
     }
 
@@ -91,6 +79,45 @@ class PluginArtefactResume extends Plugin {
             'academicskill' => array('text'),
             'workskill'     => array('text'),
         );
+    }
+
+    public static function submenu_items() {
+        $tabs = array(
+            'index' => array(
+                'page'  => 'index',
+                'url'   => 'artefact/resume',
+                'title' => get_string('introduction', 'artefact.resume'),
+            ),
+            'employment' => array(
+                'page'  => 'employment',
+                'url'   => 'artefact/resume/employment.php',
+                'title' => get_string('educationandemployment', 'artefact.resume'),
+            ),
+            'achievements' => array(
+                'page'  => 'achievements',
+                'url'   => 'artefact/resume/achievements.php',
+                'title' => get_string('achievements', 'artefact.resume'),
+            ),
+            'goals' => array(
+                'page'  => 'goals',
+                'url'   => 'artefact/resume/goals.php',
+                'title' => get_string('goals', 'artefact.resume'),
+            ),
+            'skills' => array(
+                'page'  => 'skills',
+                'url'   => 'artefact/resume/skills.php',
+                'title' => get_string('skills', 'artefact.resume'),
+            ),
+            'interests' => array(
+                'page'  => 'interests',
+                'url'   => 'artefact/resume/interests.php',
+                'title' => get_string('interests', 'artefact.resume'),
+            ),
+        );
+        if (defined('RESUME_SUBPAGE') && isset($tabs[RESUME_SUBPAGE])) {
+            $tabs[RESUME_SUBPAGE]['selected'] = true;
+        }
+        return $tabs;
     }
 }
 
@@ -540,6 +567,85 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
         return $content;
     }
 
+    public static function get_js(array $compositetypes) {
+        $js = self::get_common_js();
+        foreach ($compositetypes as $compositetype) {
+            $js .= call_static_method(
+                generate_artefact_class_name($compositetype),
+                'get_artefacttype_js',
+                $compositetype
+            );
+        }
+        return $js;
+    }
+
+    public static function get_common_js() {
+        $cancelstr = get_string('cancel');
+        $addstr = get_string('add');
+        $confirmdelstr = get_string('compositedeleteconfirm', 'artefact.resume');
+        $js = <<<EOF
+var tableRenderers = {};
+
+function toggleCompositeForm(type) {
+    var elemName = '';
+    elemName = type + 'form';
+    if (hasElementClass(elemName, 'hidden')) {
+        removeElementClass(elemName, 'hidden');
+        $('add' + type + 'button').innerHTML = '{$cancelstr}';
+    }
+    else {
+        $('add' + type + 'button').innerHTML = '{$addstr}';
+        addElementClass(elemName, 'hidden');
+    }
+}
+
+function compositeSaveCallback(form, data) {
+    key = form.id.substr(3);
+    tableRenderers[key].doupdate(); 
+    toggleCompositeForm(key);
+    // Can't reset() the form here, because its values are what were just submitted, 
+    // thanks to pieforms
+    forEach(form.elements, function(element) {
+        if (hasElementClass(element, 'text') || hasElementClass(element, 'textarea')) {
+            element.value = '';
+        }
+    });
+}
+
+function deleteComposite(type, id, artefact) {
+    if (confirm('{$confirmdelstr}')) {
+        sendjsonrequest('compositedelete.json.php',
+            {'id': id, 'artefact': artefact},
+            'GET',
+            function(data) {
+                tableRenderers[type].doupdate();
+            },
+            function() {
+                // @todo error
+            }
+        );
+    }
+    return false;
+}
+
+function moveComposite(type, id, artefact, direction) {
+    sendjsonrequest('compositemove.json.php',
+        {'id': id, 'artefact': artefact, 'direction':direction},
+        'GET',
+        function(data) {
+            tableRenderers[type].doupdate();
+        },
+        function() {
+            // @todo error
+        }
+    );
+    return false;
+}
+EOF;
+        $js .= self::get_showhide_composite_js();
+        return $js;
+    }
+
     static function get_tablerenderer_title_js($titlestring, $bodystring) {
         return "
                 function (r, d) {
@@ -581,9 +687,103 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
         ";
     }
 
+    static function get_artefacttype_js($compositetype) {
+        global $THEME;
+        $editstr = get_string('edit');
+        $delstr = get_string('delete');
+        $imagemoveblockup   = json_encode($THEME->get_url('images/move-block-up.png'));
+        $imagemoveblockdown = json_encode($THEME->get_url('images/move-block-down.png'));
+        $upstr = get_string('moveup', 'artefact.resume');
+        $downstr = get_string('movedown', 'artefact.resume');
+
+        $js = call_static_method(generate_artefact_class_name($compositetype), 'get_composite_js');
+
+        $js .= <<<EOF
+tableRenderers.{$compositetype} = new TableRenderer(
+    '{$compositetype}list',
+    'composite.json.php',
+    [
+EOF;
+
+        $js .= call_static_method(generate_artefact_class_name($compositetype), 'get_tablerenderer_js');
+
+        $js .= <<<EOF
+
+        function (r) {
+            return TD(null, A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact}, '{$editstr}'));
+        },
+        function (r, d) {
+           var link = A({'href': ''}, '{$delstr}');
+            connect(link, 'onclick', function (e) {
+                e.stop();
+                return deleteComposite(d.type, r.id, r.artefact);
+            });
+            return TD(null, link);
+        },
+        function (r, d) {
+            var buttons = [];
+            if (r._rownumber > 1) {
+                var up = A({'href': ''}, IMG({'src': {$imagemoveblockup}, 'alt':'{$upstr}'}));
+                connect(up, 'onclick', function (e) {
+                    e.stop();
+                    return moveComposite(d.type, r.id, r.artefact, 'up');
+                });
+                buttons.push(up);
+            }
+            if (!r._last) {
+                var down = A({'href': ''}, IMG({'src': {$imagemoveblockdown}, 'alt':'{$downstr}'}));
+                connect(down, 'onclick', function (e) {
+                    e.stop();
+                    return moveComposite(d.type, r.id, r.artefact, 'down');
+                });
+                buttons.push(' ');
+                buttons.push(down);
+            }
+            return TD({'style':'text-align:center;'}, buttons);
+        }
+    ]
+);
+
+tableRenderers.{$compositetype}.type = '{$compositetype}';
+tableRenderers.{$compositetype}.statevars.push('type');
+tableRenderers.{$compositetype}.emptycontent = '';
+tableRenderers.{$compositetype}.updateOnLoad();
+
+EOF;
+        return $js;
+    }
+
     static function get_composite_js() {
         return '';
     }
+
+    static function get_forms(array $compositetypes) {
+        require_once(get_config('libroot') . 'pieforms/pieform.php');
+        $compositeforms = array();
+        foreach ($compositetypes as $compositetype) {
+            $elements = call_static_method(generate_artefact_class_name($compositetype), 'get_addform_elements');
+            $elements['submit'] = array(
+                'type' => 'submit',
+                'value' => get_string('save'),
+            );
+            $elements['compositetype'] = array(
+                'type' => 'hidden',
+                'value' => $compositetype,
+            );
+            $cform = array(
+                'name' => 'add' . $compositetype,
+                'plugintype' => 'artefact',
+                'pluginname' => 'resume',
+                'elements' => $elements,
+                'jsform' => true,
+                'successcallback' => 'compositeform_submit',
+                'jssuccesscallback' => 'compositeSaveCallback',
+            );
+            $compositeforms[$compositetype] = pieform($cform);
+        }
+        return $compositeforms;
+    }
+
 }
 
 class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite { 
