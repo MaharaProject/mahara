@@ -1,4 +1,4 @@
-{auto_escape off}
+{{auto_escape off}}
 <script type="text/javascript">
 
     function move_up(id) {
@@ -194,4 +194,4 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
 <button type="button" onclick="addinstance(); return false;" name="button" value="foo">{{str tag=Add section=admin}}</button>
 <input type="hidden" id="instancePriority" name="instancePriority" value="{{$instancestring}}" />
 <input type="hidden" id="deleteList" name="deleteList" value="" />
-{/auto_escape}
+{{/auto_escape}}
