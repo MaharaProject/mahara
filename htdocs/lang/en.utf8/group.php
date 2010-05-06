@@ -79,10 +79,10 @@ $string['requestedmembershipin'] = 'Requested membership in:';
 
 $string['controlledmembership'] = 'Controlled Group membership';
 $string['invitemembership'] = 'Invite only membership';
-$string['changedgroupmembership'] = 'Control Groups membership has changed sucessfully.';
-$string['changedgroupmembershipsubject'] = 'You Control Groups membership has changed';
-$string['addedtogroupsmessage'] = "%s has added you to controlled group(s):\n\n%s\n\n";
-$string['removedfromgroupsmessage'] = "%s has removed you from controlled group(s):\n\n%s\n\n";
+$string['changedgroupmembership'] = 'Group membership updated sucessfully.';
+$string['changedgroupmembershipsubject'] = 'Your group memberships have been changed';
+$string['addedtogroupsmessage'] = "%s has added you to the group(s):\n\n%s\n\n";
+$string['removedfromgroupsmessage'] = "%s has removed you from the group(s):\n\n%s\n\n";
 $string['cantremoveuserisadmin'] = "Tutor cannot remove admins and other tutorsmembers.";
 $string['cantremovemember'] = "Tutor cannot remove members.";
 
@@ -100,8 +100,8 @@ $string['remove'] = 'Remove';
 $string['updatemembership'] = 'Update membership';
 $string['memberchangefailed'] = 'Failed to update some membership information';
 $string['memberchangesuccess'] = 'Membership status changed successfully';
-$string['viewreleasedsubject'] = 'Your view has been released';
-$string['viewreleasedmessage'] = 'The view that you submitted to %s has been released back to you by %s';
+$string['viewreleasedsubject'] = 'Your view "%s" has been released from %s by %s';
+$string['viewreleasedmessage'] = 'Your view "%s" has been released from %s by %s';
 $string['viewreleasedsuccess'] = 'View was released successfully';
 $string['groupmembershipchangesubject'] = 'Group membership: %s';
 $string['groupmembershipchangedmessagetutor'] = 'You have been promoted to a tutor in this group';
@@ -186,7 +186,7 @@ $string['friendformrejectsuccess'] = 'Rejected friend request';
 $string['addtofriendslist'] = 'Add to friends';
 $string['requestfriendship'] = 'Request friendship';
 
-$string['addedtofriendslistsubject'] = 'New friend';
+$string['addedtofriendslistsubject'] = '%s has added you as a friend';
 $string['addedtofriendslistmessage'] = '%s added you as a friend! This means that %s is also on your friend list now too. '
     . ' Click on the link below to see their profile page';
 

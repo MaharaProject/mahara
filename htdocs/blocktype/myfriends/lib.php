@@ -48,7 +48,7 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
     }
 
     public static function get_viewtypes() {
-        return array('profile');
+        return array('profile', 'dashboard');
     }
 
     public static function build_myfriends_html(&$friends, $userid) {

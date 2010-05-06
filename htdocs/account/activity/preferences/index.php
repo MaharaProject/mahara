@@ -26,13 +26,13 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'settings/activitypreferences');
+define('MENUITEM', 'settings/notifications');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'account');
-define('SECTION_PAGE', 'activitypreferences');
+define('SECTION_PAGE', 'notifications');
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
-define('TITLE', get_string('activityprefs'));
+define('TITLE', get_string('notifications'));
 require_once('pieforms/pieform.php');
 require_once(get_config('libroot') . 'activity.php');
 
@@ -100,7 +100,7 @@ $prefsform = pieform(array(
 $smarty = smarty();
 $smarty->assign('prefsdescr', get_string('prefsdescr', 'activity'));
 $smarty->assign('form', $prefsform);
-$smarty->assign('PAGEHEADING', hsc(get_string('activityprefs')));
+$smarty->assign('PAGEHEADING', hsc(get_string('notifications')));
 $smarty->display('account/activity/preferences/index.tpl');
 
 function activityprefs_submit(Pieform $form, $values) {

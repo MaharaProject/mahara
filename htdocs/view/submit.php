@@ -84,6 +84,9 @@ function submitview_submit(Pieform $form, $values) {
         'viewowner'     => $USER->get('id'),
         'group'         => $groupid,
         'roles'         => get_column('grouptype_roles', 'role', 'grouptype', $group->grouptype, 'see_submitted_views', 1),
+        'strings'       => (object) array(
+            'urltext' => (object) array('key' => 'view'),
+        ),
     ));
     db_commit();
     $SESSION->add_ok_msg(get_string('viewsubmitted', 'view'));

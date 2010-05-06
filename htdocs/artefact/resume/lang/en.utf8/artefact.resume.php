@@ -29,6 +29,14 @@ defined('INTERNAL') || die();
 
 $string['pluginname'] = 'Résumé';
 
+// Tabs
+$string['introduction'] = 'Introduction';
+$string['educationandemployment'] = 'Education & Employment';
+$string['achievements'] = 'Achievements';
+$string['goals'] = 'Goals';
+$string['skills'] = 'Skills';
+$string['interests'] = 'Interests';
+
 $string['myresume'] = 'My Résumé';
 $string['mygoals'] = 'My Goals';
 $string['myskills'] = 'My Skills';

@@ -294,11 +294,13 @@ abstract class ActivityType {
     protected $strings;
     protected $users = array();
     protected $url;
+    protected $urltext;
     protected $id;
     protected $type;
     protected $activityname;
     protected $cron;
     protected $overridemessagecontents;
+    protected $parent;
    
     public function get_id() {
         if (!isset($this->id)) {
@@ -349,15 +351,30 @@ abstract class ActivityType {
     }
 
     public function get_string_for_user($user, $string) {
+        if (empty($string) || empty($this->strings->{$string}->key)) {
+            return;
+        }
         $args = array_merge(
             array(
                 $user->lang,
                 $this->strings->{$string}->key,
-                $this->strings->{$string}->section,
+                empty($this->strings->{$string}->section) ? 'mahara' : $this->strings->{$string}->section,
             ),
-            $this->strings->{$string}->args
+            empty($this->strings->{$string}->args) ? array() : $this->strings->{$string}->args
         );
         return call_user_func_array('get_string_from_language', $args);
+    }
+
+    // Optional string to use for the link text.
+    public function add_urltext(array $stringdef) {
+        $this->strings->urltext = (object) $stringdef;
+    }
+
+    public function get_urltext($user) {
+        if (empty($this->urltext)) {
+            return $this->get_string_for_user($user, 'urltext');
+        }
+        return $this->urltext;
     }
 
     public function get_message($user) {
@@ -389,6 +406,7 @@ abstract class ActivityType {
         if (!empty($user->url)) {
             $userdata->url = $user->url;
         }
+        $userdata->urltext = $this->get_urltext($user);
         if (empty($user->lang) || $user->lang == 'default') {
             $user->lang = get_config('lang');
         }
@@ -602,9 +620,11 @@ class ActivityTypeInstitutionmessage extends ActivityType {
             $this->url = get_config('wwwroot') . 'admin/users/institutionusers.php';
             $this->users = activity_get_users($this->get_id(), null, null, null,
                                               array($this->institution->name));
+            $this->add_urltext(array('key' => 'institutionmembers', 'section' => 'admin'));
         } else if ($this->messagetype == 'invite') {
             $this->url = get_config('wwwroot') . 'account/institutions.php';
             $this->users = activity_get_users($this->get_id(), $this->users);
+            $this->add_urltext(array('key' => 'institutionmembership', 'section' => 'mahara'));
         }
     }
 
@@ -643,10 +663,18 @@ class ActivityTypeUsermessage extends ActivityType {
      *                    - userfrom (int)
      *                    - subject (string)
      *                    - message (string)
+     *                    - parent (int)
      */
     public function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
+        if ($this->userfrom) {
+            $this->fromuser = $this->userfrom;
+        }
         $this->users = activity_get_users($this->get_id(), array($this->userto));
+        $this->add_urltext(array(
+            'key'     => 'Reply',
+            'section' => 'group',
+        ));
     } 
 
     public function get_subject($user) {
@@ -658,7 +686,7 @@ class ActivityTypeUsermessage extends ActivityType {
     }
 
     protected function update_url($internalid) {
-        $this->url = get_config('wwwroot') . 'user/sendmessage.php?id=' . $this->userfrom . '&replyto=' . $internalid;
+        $this->url = get_config('wwwroot') . 'user/sendmessage.php?id=' . $this->userfrom . '&replyto=' . $internalid . '&returnto=inbox';
         return true;
     }
 
@@ -708,6 +736,7 @@ class ActivityTypeWatchlist extends ActivityType {
         $this->users = get_records_sql_array($sql, 
                                        array(get_config('wwwroot') . 'view/view.php?id=' 
                                              . $this->view, $this->get_id(), $this->view));
+        $this->add_urltext(array('key' => 'View', 'section' => 'view'));
     }
 
     public function get_subject($user) {
@@ -791,6 +820,7 @@ class ActivityTypeViewaccess extends ActivityType {
             activity_get_viewaccess_users($this->view, $this->owner, $this->get_id()),
             $this->oldusers
         );
+        $this->add_urltext(array('key' => 'View', 'section' => 'view'));
     }
 
     public function get_subject($user) {
@@ -878,4 +908,79 @@ abstract class ActivityTypePlugin extends ActivityType {
     }
 }
 
-?>
+/**
+ * Get one page of notifications and return html
+ */
+function activitylist_html($type='all', $limit=10, $offset=0) {
+    global $USER;
+
+    $userid = $USER->get('id');
+
+    $typesql = '';
+    if ($type != 'all') {
+        // Treat as comma-separated list of activity type names
+        $types = split(',', preg_replace('/[^a-z,]+/', '', $type));
+        if ($types) {
+            $typesql = ' at.name IN (' . join(',', array_map('db_quote', $types)) . ')';
+            if (in_array('adminmessages', $types)) {
+                $typesql = '(' . $typesql . ' OR at.admin = 1)';
+            }
+            $typesql = ' AND ' . $typesql;
+        }
+    }
+
+    $from = "
+        FROM {notification_internal_activity} a
+        JOIN {activity_type} at ON a.type = at.id
+        WHERE a.usr = ? $typesql";
+    $values = array($userid);
+
+    $count = count_records_sql('SELECT COUNT(*)' . $from, $values);
+
+    $pagination = build_pagination(array(
+        'id'         => 'activitylist_pagination',
+        'url'        => get_config('wwwroot') . 'account/activity/index.php?type=' . hsc($type),
+        'jsonscript' => 'account/activity/index.json.php',
+        'datatable'  => 'activitylist',
+        'count'      => $count,
+        'limit'      => $limit,
+        'offset'     => $offset,
+    ));
+
+    $result = array(
+        'count'         => $count,
+        'limit'         => $limit,
+        'offset'        => $offset,
+        'type'          => $type,
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+
+    if ($count < 1) {
+        return $result;
+    }
+
+    $records = get_records_sql_array('
+        SELECT
+            a.*, at.name AS type, at.plugintype, at.pluginname' . $from . '
+        ORDER BY a.ctime DESC',
+        $values,
+        $offset,
+        $limit
+    );
+    if ($records) {
+        foreach ($records as &$r) {
+            $r->date = format_date(strtotime($r->ctime), 'strfdaymonthyearshort');
+            $section = empty($r->plugintype) ? 'activity' : "{$r->plugintype}.{$r->pluginname}";
+            $r->strtype = get_string('type' . $r->type, $section);
+            $r->message = format_whitespace($r->message);
+        }
+    }
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $records);
+    $result['tablerows'] = $smarty->fetch('account/activity/activitylist.tpl');
+
+    return $result;
+}

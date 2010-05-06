@@ -46,7 +46,7 @@ class PluginBlocktypeMyGroups extends SystemBlocktype {
     }
 
     public static function get_viewtypes() {
-        return array('profile');
+        return array('profile', 'dashboard');
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {

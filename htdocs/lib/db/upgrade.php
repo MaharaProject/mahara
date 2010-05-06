@@ -1609,5 +1609,136 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $cron);
     }
 
+    if ($oldversion < 2010042600) {
+        // @todo: Move to notification/internal
+        $table = new XMLDBTable('notification_internal_activity');
+        $field = new XMLDBField('parent');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '10');
+        add_field($table, $field);
+
+        $key = new XMLDBKey('parentfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('parent'), 'notification_internal_activity', array('id'));
+        add_key($table, $key);
+
+        $field = new XMLDBField('from');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '10');
+        add_field($table, $field);
+
+        $key = new XMLDBKey('fromfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('from'), 'usr', array('id'));
+        add_key($table, $key);
+
+        // Set from column for old user messages
+        $usermessages = get_records_array(
+            'notification_internal_activity',
+            'type',
+            get_field('activity_type', 'id', 'name', 'usermessage')
+        );
+        if ($usermessages) {
+            foreach ($usermessages as &$m) {
+                if (preg_match('/sendmessage\.php\?id=(\d+)/', $m->url, $match)) {
+                    set_field('notification_internal_activity', 'from', $match[1], 'id', $m->id);
+                }
+            }
+        }
+    }
+
+    if ($oldversion < 2010042602 && !get_record('view_type', 'type', 'dashboard')) {
+        insert_record('view_type', (object)array(
+            'type' => 'dashboard',
+        ));
+        if ($data = check_upgrades('blocktype.inbox')) {
+            upgrade_plugin($data);
+        }
+        if ($data = check_upgrades('blocktype.newviews')) {
+            upgrade_plugin($data);
+        }
+        // Install system dashboard view
+        require_once(get_config('libroot') . 'view.php');
+        $dbtime = db_format_timestamp(time());
+        $viewdata = (object) array(
+            'type'        => 'dashboard',
+            'owner'       => 0,
+            'numcolumns'  => 2,
+            'ownerformat' => FORMAT_NAME_PREFERREDNAME,
+            'title'       => get_string('dashboardviewtitle', 'view'),
+            'template'    => 1,
+            'ctime'       => $dbtime,
+            'atime'       => $dbtime,
+            'mtime'       => $dbtime,
+        );
+        $id = insert_record('view', $viewdata, 'id', true);
+        $accessdata = (object) array('view' => $id, 'accesstype' => 'loggedin');
+        insert_record('view_access', $accessdata);
+        $blocktypes = array(
+            array(
+                'blocktype' => 'newviews',
+                'title' => get_string('title', 'blocktype.newviews'),
+                'column' => 1,
+                'config' => array(
+                    'limit' => 5,
+                ),
+            ),
+            array(
+                'blocktype' => 'myviews',
+                'title' => get_string('title', 'blocktype.myviews'),
+                'column' => 1,
+                'config' => null,
+            ),
+            array(
+                'blocktype' => 'inbox',
+                'title' => get_string('recentactivity'),
+                'column' => 2,
+                'config' => array(
+                    'feedback' => true,
+                    'groupmessage' => true,
+                    'institutionmessage' => true,
+                    'maharamessage' => true,
+                    'usermessage' => true,
+                    'viewaccess' => true,
+                    'watchlist' => true,
+                    'maxitems' => '5',
+                ),
+            ),
+            array(
+                'blocktype' => 'inbox',
+                'title' => get_string('topicsimfollowing'),
+                'column' => 2,
+                'config' => array(
+                    'newpost' => true,
+                    'maxitems' => '5',
+                ),
+            ),
+        );
+        $installed = get_column_sql('SELECT name FROM {blocktype_installed}');
+        $weights = array(1 => 0, 2 => 0);
+        foreach ($blocktypes as $blocktype) {
+            if (in_array($blocktype['blocktype'], $installed)) {
+                $weights[$blocktype['column']]++;
+                insert_record('block_instance', (object) array(
+                    'blocktype'  => $blocktype['blocktype'],
+                    'title'      => $blocktype['title'],
+                    'view'       => $id,
+                    'column'     => $blocktype['column'],
+                    'order'      => $weights[$blocktype['column']],
+                    'configdata' => serialize($blocktype['config']),
+                ));
+            }
+        }
+    }
+
+    if ($oldversion < 2010042603) {
+        execute_sql('ALTER TABLE {usr} ADD COLUMN showhomeinfo SMALLINT NOT NULL DEFAULT 1');
+        set_config('homepageinfo', 1);
+    }
+
+    if ($oldversion < 2010042604) {
+        // @todo: Move to notification/internal
+        $table = new XMLDBTable('notification_internal_activity');
+        $field = new XMLDBField('urltext');
+        $field->setAttributes(XMLDB_TYPE_TEXT);
+        add_field($table, $field);
+    }
+
     return $status;
 }

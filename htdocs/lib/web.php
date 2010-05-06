@@ -381,6 +381,7 @@ EOF;
     $smarty->assign('LOGGEDIN', $USER->is_logged_in());
     if ($USER->is_logged_in()) {
         $smarty->assign('MAINNAV', main_nav());
+        $smarty->assign('RIGHTNAV', right_nav());
     }
     else {
         $smarty->assign('sitedefaultlang', get_string('sitedefault', 'admin') . ' (' . 
@@ -409,7 +410,7 @@ EOF;
         require_once('group.php');
         $group = group_current_group();
         $smarty->assign('GROUP', $group);
-        $smarty->assign('GROUPNAV', group_get_menu_tabs());
+        $smarty->assign('SUBPAGENAV', group_get_menu_tabs());
         $smarty->assign('PAGEHEADING', hsc($group->name));
     }
 
@@ -1906,36 +1907,6 @@ function mahara_standard_nav() {
             'title' => get_string('findfriends'),
             'weight' => 40,
         ),
-        array(
-            'path' => 'settings',
-            'url' => 'account/',
-            'title' => get_string('settings'),
-            'weight' => 60,
-        ),
-        array(
-            'path' => 'settings/preferences',
-            'url' => 'account/',
-            'title' => get_string('preferences'),
-            'weight' => 10,
-        ),
-        array(
-            'path' => 'settings/notifications',
-            'url' => 'account/activity/',
-            'title' => get_string('notifications'),
-            'weight' => 20,
-        ),
-        array(
-            'path' => 'settings/activitypreferences',
-            'url' => 'account/activity/preferences/',
-            'title' => get_string('activityprefs'),
-            'weight' => 30,
-        ),
-        array(
-            'path' => 'settings/institutions',
-            'url' => 'account/institutions.php',
-            'title' => get_string('institutionmembership'),
-            'weight' => 40,
-        ),
     );
 
     $menu = array_filter($menu, create_function('$a', 'return empty($a["ignore"]);'));
@@ -1974,6 +1945,54 @@ function main_nav() {
     if (function_exists('local_main_nav_update')) {
         local_main_nav_update($menu);
     }
+    $menu_structure = find_menu_children($menu, '');
+    return $menu_structure;
+}
+
+function right_nav() {
+    global $USER, $THEME;
+
+    safe_require('notification', 'internal');
+    $unread = call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'));
+
+    $menu = array(
+        array(
+            'path' => 'settings',
+            'wwwroot' => get_config('httpswwwroot'),
+            'url' => 'account/',
+            'title' => $USER->get('username'),
+            'icon' => $THEME->get_url('images/settings.png'),
+            'alt' => get_string('settings'),
+            'weight' => 10,
+        ),
+        array(
+            'path' => 'inbox',
+            'url' => 'account/activity',
+            'icon' => $THEME->get_url('images/email.gif'),
+            'alt' => get_string('inbox'),
+            'count' => $unread,
+            'countclass' => 'unreadmessagecount',
+            'weight' => 20,
+        ),
+        array(
+            'path' => 'settings/account',
+            'url' => 'account/',
+            'title' => get_string('account'),
+            'weight' => 10,
+        ),
+        array(
+            'path' => 'settings/notifications',
+            'url' => 'account/activity/preferences/',
+            'title' => get_string('notifications'),
+            'weight' => 30,
+        ),
+        array(
+            'path' => 'settings/institutions',
+            'url' => 'account/institutions.php',
+            'title' => get_string('institutionmembership'),
+            'weight' => 40,
+        ),
+    );
     $menu_structure = find_menu_children($menu, '');
     return $menu_structure;
 }

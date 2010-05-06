@@ -456,12 +456,13 @@ function group_invite_user($group, $userid, $userfrom, $role='member') {
     ensure_record_exists('group_member_invite', $data, $data);
     $lang = get_user_language($user->id);
     require_once('activity.php');
-    activity_occurred('maharamessage',
-        array('users'   => array($user->id),
-              'subject' => get_string_from_language($lang, 'invitetogroupsubject', 'group'),
-              'message' => get_string_from_language($lang, 'invitetogroupmessage', 'group', display_name($userfrom, $user), $group->name),
-              'url'     => get_config('wwwroot')
-              . 'group/view.php?id=' . $group->id));
+    activity_occurred('maharamessage', array(
+        'users'   => array($user->id),
+        'subject' => get_string_from_language($lang, 'invitetogroupsubject', 'group'),
+        'message' => get_string_from_language($lang, 'invitetogroupmessage', 'group', display_name($userfrom, $user), $group->name),
+        'url'     => get_config('wwwroot') . 'group/view.php?id=' . $group->id,
+        'urltext' => $group->name,
+    ));
 }
 
 // Pieforms for various operations on groups

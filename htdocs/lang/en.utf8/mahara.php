@@ -127,8 +127,8 @@ $string['updatefailed'] = 'Update failed';
 $string['strftimenotspecified']  = 'Not specified';
 
 // profile sideblock strings
-$string['invitedgroup'] = 'group invited to';
-$string['invitedgroups'] = 'groups invited to';
+$string['invitedgroup'] = 'group invitation';
+$string['invitedgroups'] = 'group invitations';
 $string['logout'] = 'Logout';
 $string['pendingfriend'] = 'pending friend';
 $string['pendingfriends'] = 'pending friends';
@@ -489,14 +489,16 @@ $string['about']              = 'About';
 $string['contactus']          = 'Contact Us';
 
 // my account
-$string['account'] =  'My account';
+$string['account'] =  'My Account';
 $string['accountprefs'] = 'Preferences';
 $string['preferences'] = 'Preferences';
 $string['activityprefs'] = 'Activity preferences';
 $string['changepassword'] = 'Change password';
 $string['notifications'] = 'Notifications';
+$string['inbox'] = 'Inbox';
+$string['gotoinbox'] = 'Go to inbox';
 $string['institutionmembership'] = 'Institution Membership';
-$string['institutionmembershipdescription'] = 'If you are a member of any institutions, they will be listed here.  You may also request membership of an institution, and if any institutions have invited you to join, you can accept or decline the invitation.';
+$string['institutionmembershipdescription'] = 'If you are a member of any institutions, they will be listed here. You may also request membership of institutions, and accept or decline pending membership invitations.';
 $string['youareamemberof'] = 'You are a member of %s';
 $string['leaveinstitution'] = 'Leave institution';
 $string['reallyleaveinstitution'] = 'Are you sure you want to leave this institution?';
@@ -872,6 +874,7 @@ $string['backto'] = 'Back to %s';
 $string['alphabet'] = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z';
 $string['formatpostbbcode'] = 'You can format your post using BBCode. %sLearn more%s';
 $string['Created'] = 'Created';
+$string['Updated'] = 'Updated';
 $string['Total'] = 'Total';
 $string['Visits'] = 'Visits';
 
@@ -883,16 +886,42 @@ $string['remotehost'] = 'Remote host %s';
 $string['Copyof'] = 'Copy of %s';
 
 // Profile views
-$string['loggedinusersonly'] = 'Logged in users only';
-$string['allowpublicaccess'] = 'Allow public (non logged in) access';
+$string['loggedinusersonly'] = 'Allow logged in users only';
+$string['allowpublicaccess'] = 'Allow public access';
 $string['thisistheprofilepagefor'] = 'This is the profile page for %s';
 $string['viewmyprofilepage']  = 'View profile page';
 $string['editmyprofilepage']  = 'Edit profile page';
 $string['usersprofile'] = "%s's Profile";
+$string['profiledescription'] = 'Your profile view is what others see when they click on your name or profile icon';
+
+// Dashboard views
+$string['mydashboard'] = 'My Dashboard';
+$string['editdashboard'] = 'Edit';
+$string['usersdashboard'] = "%s's Dashboard";
+$string['dashboarddescription'] = 'Your dashboard view is what you see on the homepage when you first log in. Only you have access to it';
+$string['topicsimfollowing'] = "Topics I'm Following";
+$string['recentactivity'] = 'Recent Activity';
+$string['mymessages'] = 'My Messages';
 
 $string['pleasedonotreplytothismessage'] = "Please do not reply to this message.";
 $string['deleteduser'] = 'Deleted user';
 
-$string['recentupdates'] = 'Recent Updates';
 $string['theme'] = 'Theme';
+
+// Home page info block
+$string['Hide'] = 'Hide';
+$string['createcollect'] = 'Create and Collect';
+$string['createcollectsubtitle'] = 'Develop your portfolio';
+$string['updateyourprofile'] = 'Update your <a href="%s">Profile</a>';
+$string['uploadyourfiles'] = 'Upload your <a href="%s">Files</a>';
+$string['createyourresume'] = 'Create your <a href="%s">Resume</a>';
+$string['publishablog'] = 'Publish a <a href="%s">Blog</a>';
+$string['Organise'] = 'Organise';
+$string['organisesubtitle'] = 'Showcase your portfolio with views';
+$string['organisedescription'] = 'Organise your portfolio into <a href="%s">Views.</a>  Create different views for different audiences - you choose the elements to include.';
+$string['sharenetwork'] = 'Share and Network';
+$string['sharenetworksubtitle'] = 'Meet friends and join groups';
+$string['findfriendslinked'] = 'Find <a href="%s">Friends</a>';
+$string['joingroups'] = 'Join <a href="%s">Groups</a>';
+$string['sharenetworkdescription'] = 'You can fine-tune who has access to each view, and for how long.';
 ?>

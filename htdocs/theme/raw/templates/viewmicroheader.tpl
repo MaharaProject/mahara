@@ -25,7 +25,7 @@
           <a href="{$WWWROOT}user/view.php">{$userdisplayname|escape}</a>&nbsp;:
           {foreach from=$MAINNAV item=item}
             {if $item.path}
-              <a href="{if get_config('httpswwwroot') && $item.url=='account/'}{$HTTPSWWWROOT}{else}{$WWWROOT}{/if}{$item.url|escape}">{$item.title|escape}</a>&nbsp;
+              <a href="{if $item.url=='account/' && get_config('httpswwwroot')}{$HTTPSWWWROOT}{else}{$WWWROOT}{/if}{$item.url|escape}">{$item.title|escape}</a>&nbsp;
             {/if}
           {/foreach}
           {if $USER->get('admin')}
@@ -35,6 +35,7 @@
           {/if}
 
           {if $mnethost}<a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a>&nbsp;{/if}
+          <a href="{$WWWROOT}?logout">{str tag="logout"}</a>
         </div>
 {/if}
         <div class="center cb title">{$microheadertitle}</div>

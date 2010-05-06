@@ -123,6 +123,6 @@ $string['termsandconditionsdefaultcontent'] = '<h1>Terms and Conditions</h1>
 
 <p>Any unsolicited contact you receive as a result of personal information you have publicly released via your portfolio is your responsibility, however any misconduct in behaviour from users of the system should be reported to the <a href="contact.php">Site Administrator</a> immediately.  We may occasionally make minor adjustments to our Terms and Condition to reflect changes to the system and in response to user feedback.  As such we suggest you check the Terms and Conditions each time you visit this site.  We will however notify users of any major changes to the Terms and Conditions via the [Mahara] homepage.</p>';
 
-$string['uploadcopyrightdefaultcontent'] = 'Yes: The file I am attempting to upload is my own or I have express permission to reproduce and/or distribute this item.  My use of this file does not breach any of my local Copyright legislation. This file also adheres to the Terms and Conditions outlined on this site.';
+$string['uploadcopyrightdefaultcontent'] = 'Yes: The file I am attempting to upload is my own or I have express permission to reproduce and/or distribute this item.  My use of this file does not breach any local Copyright legislation. This file also adheres to the Terms and Conditions outlined on this site.';
 
 ?>

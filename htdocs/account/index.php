@@ -26,13 +26,13 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'settings/preferences');
+define('MENUITEM', 'settings/account');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'account');
 define('SECTION_PAGE', 'preferences');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-define('TITLE', get_string('preferences'));
+define('TITLE', get_string('account'));
 require_once('pieforms/pieform.php');
 
 // load up user preferences
@@ -179,6 +179,19 @@ if (get_config('userscanhiderealnames')) {
         'defaultvalue' => $prefs->hiderealname,
     );
 }
+if (get_config('homepageinfo')) {
+    $elements['showhomeinfo'] = array(
+        'type' => 'radio',
+        'options' => array(
+            1 => get_string('on', 'account'),
+            0 => get_string('off', 'account'),
+        ),
+        'defaultvalue' => $prefs->showhomeinfo,
+        'title' => get_string('showhomeinfo', 'account'),
+        'separator' => '<br>',
+        'help' => 'true'
+    );
+}
 $elements['submit'] = array(
     'type' => 'submit',
     'value' => get_string('save')
@@ -305,7 +318,7 @@ function clearPasswords(form, data) {
     }
 }
 ");
-$smarty->assign('PAGEHEADING', hsc(get_string('preferences')));
+$smarty->assign('PAGEHEADING', hsc(get_string('account')));
 $smarty->display('account/index.tpl');
 
 

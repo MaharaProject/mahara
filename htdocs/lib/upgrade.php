@@ -637,6 +637,7 @@ function core_install_lastcoredata_defaults() {
     }
 
     install_system_profile_view();
+    install_system_dashboard_view();
 
     // Insert the admin user
     $user = new StdClass;
@@ -682,6 +683,7 @@ function core_install_firstcoredata_defaults() {
     set_config('viewmicroheaders', 1);
     set_config('userscanchooseviewthemes', 1);
     set_config('anonymouscomments', 1);
+    set_config('homepageinfo', 1);
 
     // install the applications
     $app = new StdClass;
@@ -798,7 +800,7 @@ function core_install_firstcoredata_defaults() {
     // install the view column widths
     install_view_column_widths();
 
-    $viewtypes = array('portfolio', 'profile');
+    $viewtypes = array('dashboard', 'portfolio', 'profile');
     foreach ($viewtypes as $vt) {
         insert_record('view_type', (object)array(
             'type' => $vt,

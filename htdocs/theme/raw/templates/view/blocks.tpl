@@ -39,7 +39,7 @@
                     </td>
 {/if}
                     <td class="right">
-                        <a id="btn-displaymyview" href="view.php?id={$view}&amp;new={$new}">{str tag=displaymyview section=view} &raquo;</a></td>
+                        <a id="btn-displaymyview" href="{$displaylink}">{str tag=displaymyview section=view} &raquo;</a></td>
                     </td>
                 </tr></table>
             </div>
@@ -72,10 +72,6 @@
             <input type="hidden" name="id" value="{$view}">
             <input type="hidden" name="new" value="1">
             <input type="submit" class="submit" value="{str tag=next}: {str tag='edittitleanddescription' section=view}">
-        </form>
-    {elseif $profile}
-        <form action="{$WWWROOT}artefact/internal/index.php" method="GET">
-            <input class="submit" type="submit" value="{str tag='done'}">
         </form>
     {else}
         <form action="{$WWWROOT}view/{if $groupid}groupviews.php{elseif $institution}institutionviews.php{/if}" method="GET">

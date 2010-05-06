@@ -83,6 +83,7 @@ function denyrequest_submit(Pieform $form, $values) {
     $n->users = array($user->id);
     $lang = get_user_language($user->id);
     $displayname = display_name($USER, $user);
+    $n->urltext = $displayname;
 
     delete_records('usr_friend_request', 'owner', $loggedinid, 'requester', $id);
     $n->subject = get_string_from_language($lang, 'friendrequestrejectedsubject', 'group');

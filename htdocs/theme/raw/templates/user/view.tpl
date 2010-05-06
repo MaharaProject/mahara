@@ -28,7 +28,6 @@
 							<div>{str tag=requestedmembershipin section=group}{$requestedlist}</div>
 {/if}
                             <div class="btn-add">{if $addform}{$addform}{/if}</div>
-                            <div class="btn-bold btn-edit">{$togglepublic}</div>
                     	</div>
 {if $relationship == 'pending'}
                     	<div class="message">

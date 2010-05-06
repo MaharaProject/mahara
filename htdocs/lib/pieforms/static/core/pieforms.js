@@ -51,6 +51,10 @@ function PieformManager() {//{{{
             var element = getFirstElementByTagAndClassName(null, 'autofocus', form);
             if (element && (typeof(element.focus) == 'function' || (element.focus && element.focus.call))) {
                 element.focus();
+                if (hasElementClass(element, 'autoselect')
+                    && (typeof(element.select) == 'function' || (element.focus && element.select.call))) {
+                    element.select();
+                }
                 throw MochiKit.Iter.StopIteration;
             }
         });

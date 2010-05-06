@@ -193,7 +193,6 @@ $form['elements']['overrides'] = array(
                 'showsTime'      => true,
                 'ifFormat'       => get_string('strftimedatetimeshort'),
             ),
-            'help'         => true,
         ),
         'stopdate'  => array(
             'type'         => 'calendar',
@@ -204,7 +203,6 @@ $form['elements']['overrides'] = array(
                 'showsTime'      => true,
                 'ifFormat'       => get_string('strftimedatetimeshort'),
             ),
-            'help'         => true,
         ),
     ),
 );

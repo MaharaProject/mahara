@@ -750,12 +750,19 @@ class View {
         $this->set('submittedtime', null);
         $this->commit();
         $ownerlang = get_user_language($this->get('owner'));
+        $url = get_config('wwwroot') . 'view/view.php?id=' . $this->get('id');
         require_once('activity.php');
         activity_occurred('maharamessage', 
-                  array('users'   => array($this->get('owner')),
-                  'subject' => get_string_from_language($ownerlang, 'viewreleasedsubject', 'group'),
-                  'message' => get_string_from_language($ownerlang, 'viewreleasedmessage', 'group', $submitinfo['name'], 
-                       display_name($releaseuser, $this->get_owner_object()))));
+            array(
+                'users' => array($this->get('owner')),
+                'subject' => get_string_from_language($ownerlang, 'viewreleasedsubject', 'group', $this->get('title'),
+                    $submitinfo['name'], display_name($releaseuser, $this->get_owner_object())),
+                'message' => get_string_from_language($ownerlang, 'viewreleasedmessage', 'group', $this->get('title'),
+                    $submitinfo['name'], display_name($releaseuser, $this->get_owner_object())),
+                'url' => $url,
+                'urltext' => $this->get('title'),
+            )
+        );
     }
 
     /**
@@ -1983,6 +1990,10 @@ class View {
     }
 
     public static function can_remove_viewtype($viewtype) {
+        $cannotremove = array('profile', 'dashboard');
+        if (in_array($viewtype, $cannotremove)) {
+            return false;
+        }
         // allow local custom code to make 'sticky' view types
         if (function_exists('local_can_remove_viewtype')) {
             return local_can_remove_viewtype($viewtype);
@@ -2011,15 +2022,14 @@ class View {
                 ORDER BY v.title, v.id', array($institution), $offset, $limit);
         }
         else {
-            $count = count_records_select('view', 'owner = ? AND type != ?', array($userid, 'profile'));
+            $count = count_records_select('view', 'owner = ?', array($userid));
             $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, v.type, v.submittedtime,
                 g.id AS submitgroupid, g.name AS submitgroupname, h.wwwroot AS submithostwwwroot, h.name AS submithostname
                 FROM {view} v
                 LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
                 LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)
-                WHERE v.owner = ' . $userid . '
-                AND v.type != \'profile\'
-                ORDER BY v.title, v.id', '', $offset, $limit);
+                WHERE v.owner = ' . $userid . "
+                ORDER BY v.type = 'portfolio', v.type, v.title, v.id", '', $offset, $limit);
             $owner = $userid;
         }
 
@@ -2055,6 +2065,7 @@ class View {
             for ($i = 0; $i < count($viewdata); $i++) {
                 $index[$viewdata[$i]->id] = $i;
                 $data[$i]['id'] = $viewdata[$i]->id;
+                $data[$i]['type'] = $viewdata[$i]->type;
                 $data[$i]['title'] = $viewdata[$i]->title;
                 $data[$i]['owner'] = $owner;
                 $data[$i]['removable'] = self::can_remove_viewtype($viewdata[$i]->type);
@@ -2151,7 +2162,7 @@ class View {
             "SELECT v.*
             FROM {view} v
             WHERE v.owner = ?
-            AND v.type != 'profile'
+            AND v.type NOT IN ('profile', 'dashboard')
             ORDER BY v.title, v.id
             ", array($userid))) {
             return $views;
@@ -2214,7 +2225,7 @@ class View {
         $viewerid = $USER->get('id');
 
         $where = "
-            WHERE v.type != 'profile'";
+            WHERE v.type NOT IN ('profile','dashboard')";
 
         if ($ownedby) {
             $where .= ' AND v.' . self::owner_sql($ownedby);
@@ -2327,9 +2338,12 @@ class View {
         $viewdata = get_records_sql_array('
             SELECT * FROM (
                 SELECT
-                    v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution, v.template, v.mtime
+                    v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution,
+                    v.template, v.mtime, v.ctime
                 ' . $from . $where . '
-                GROUP BY v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution, v.template, v.mtime
+                GROUP BY
+                    v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution,
+                    v.template, v.mtime, v.ctime
             ) a
             ORDER BY a.' . $orderby . ', a.id ASC',
             $ph, $offset, $limit
@@ -2337,7 +2351,7 @@ class View {
 
         if ($viewdata) {
             if ($extra) {
-                View::get_extra_view_info($viewdata);
+                View::get_extra_view_info($viewdata, false);
             }
         }
         else {
@@ -2718,6 +2732,9 @@ class View {
             }
             return $title;
         }
+        if ($this->type == 'dashboard') {
+            return '<strong>' . get_string('dashboardviewtitle', 'view') . '</strong>';
+        }
 
         $ownername = $this->formatted_owner();
         $wwwroot = get_config('wwwroot');
@@ -2953,6 +2970,59 @@ function objection_form_cancel_submit(Pieform $form) {
     ));
 }
 
+function togglepublic_form($viewid) {
+    $view = new View($viewid);
+    $public = array_filter($view->get_access(),
+        create_function(
+            '$item',
+            'return $item[\'type\'] == \'public\';'
+        )
+    );
+    $togglepublic = pieform(array(
+        'name'      => 'togglepublic',
+        'autofocus' => false,
+        'renderer'  => 'div',
+        'elements'  => array(
+            'changeto' => array(
+                'type'  => 'hidden',
+                'value' => ($public) ? 'loggedin' : 'public'
+            ),
+            'id' => array(
+                'type' => 'hidden',
+                'value' => $viewid
+            ),
+            'submit' => array(
+                'type' => 'submit',
+                'value' => ($public) ? get_string('loggedinusersonly') : get_string('allowpublicaccess'),
+            ),
+        ),
+    ));
+    return $togglepublic;
+}
+
+function togglepublic_submit(Pieform $form, $values) {
+    global $SESSION, $userid;
+    $access = array(
+        array(
+            'type'      => 'loggedin',
+            'startdate' => null,
+            'stopdate'  => null,
+        ),
+    );
+
+    if ($values['changeto'] == 'public') {
+        $access[] = array(
+            'type'      => 'public',
+            'startdate' => null,
+            'stopdate'  => null,
+        );
+    }
+    $view = new View($values['id']);
+    $view->set_access($access);
+    $SESSION->add_ok_msg(get_string('viewaccesseditedsuccessfully', 'view'));
+
+    redirect('/view');
+}
 
 /**
  * display format for author names in views - firstname

@@ -145,6 +145,24 @@ for ($i = 0; $i < $count; $i++) {
     $posts[$temp]->edit = $postedits;
 }
 
+// If the user has internal notifications for this topic, mark them
+// all as read.  Obviously there's no guarantee the user will actually
+// read all the posts on this page, but better than letting the unread
+// notifications grow too fast.  Unfortunately the only way to find
+// notifications on this topic is to look for the url of this page.
+execute_sql("
+    UPDATE {notification_internal_activity}
+    SET read = 1
+    WHERE read = 0 AND usr = ? AND url LIKE ? || '%' AND type = (
+        SELECT id FROM {activity_type} WHERE name = ?
+    )",
+    array(
+        $USER->get('id'),
+        get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid . '#post',
+        'newpost',
+    )
+);
+
 // builds the first post (with index 0) which has as children all the posts in the topic
 $posts = buildpost(0, '', $posts);
 

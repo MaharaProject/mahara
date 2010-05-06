@@ -45,7 +45,8 @@ $string['unrecogniseddateformat'] = 'Unrecognised date format';
 $string['allowcommentsonview']    = 'If checked, users who can see your View will be allowed to leave comments.';
 $string['ownerformat']            = 'Name display format';
 $string['ownerformatdescription'] = 'How do you want people who look at your View to see your name?';
-$string['profileviewtitle']       = 'Profile view';
+$string['profileviewtitle']       = 'Profile View';
+$string['dashboardviewtitle']  = 'Dashboard View';
 $string['editprofileview']        = 'Edit profile view';
 
 // my views
@@ -138,8 +139,7 @@ $string['cantdeleteview'] = 'You cannot delete this View';
 $string['deletespecifiedview'] = 'Delete View "%s"';
 $string['deleteviewconfirm'] = 'Do you really want to delete this View? It cannot be undone.';
 
-$string['editaccesspagedescription2'] = '<p>By default, only you can see your View. Here you can choose who else you would like to be able to see the information in your View. Click Add to grant access to Public, Logged in Users or Friends. Use the search box to add individual Users or Groups. All those added will appear in the right hand pane, under Added.</p>
-<p>You can also give other users permission to copy your View into their own portfolios.  When users copy a View, they will automatically get their own copies all of the files and folders within it.</p>
+$string['editaccesspagedescription2'] = '<p>By default, only you can see your View. You can share your View with others by adding access rules on this page.</p>
 <p>Once you are done, scroll down and click Save to continue.</p>';
 
 $string['overridingstartstopdate'] = 'Overriding Start/Stop Dates';
@@ -164,7 +164,7 @@ $string['confirmcancelcreatingview'] = 'This View has not been completed. Do you
 
 // view control stuff
 
-$string['editblockspagedescription'] = '<p>Choose from the tabs below to see what blocks you can display in your View. You can drag and drop the blocks in to your View layout. Select the ? Icon for more information.</p>';
+$string['editblockspagedescription'] = '<p>Drag and drop content blocks from the tabs below to create your View.</p>';
 $string['displaymyview'] = 'Display my View';
 $string['editthisview'] = 'Edit this View';
 
@@ -208,7 +208,7 @@ $string['blocktitle'] = 'Block Title';
 $string['changemyviewlayout'] = 'Change My View Layout';
 $string['viewcolumnspagedescription'] = 'First, select the number of columns in your View. In the next step, you will be able to change the widths of the columns.';
 $string['viewlayoutpagedescription'] = 'Select how you would like the columns in your View to be layed out.';
-$string['changeviewlayout'] = 'Change my View layout';
+$string['changeviewlayout'] = 'Change my View\'s column layout';
 $string['backtoyourview'] = 'Back to my View';
 $string['viewlayoutchanged'] = 'View layout changed';
 $string['numberofcolumns'] = 'Number of columns';
@@ -250,7 +250,7 @@ $string['changeviewtheme'] = 'The theme you have chosen for this view is no long
 // Templates
 $string['Template'] = 'Template';
 $string['allowcopying'] = 'Allow copying';
-$string['templatedescription'] = 'Check this box if you would like the people who can see your view to be able to make their own copies of it.';
+$string['templatedescription'] = 'Check this box if you would like the people who can see your view to be able to make their own copies of it, along with any files and folders it contains.';
 $string['choosetemplatepagedescription'] = '<p>Here you can search through the Views that you are allowed to copy as a starting point for making a new View. You can see a preview of each View by clicking on its name. Once you have found the View you wish to copy, click the corresponding "Copy View" button to make a copy and begin customising it.</p>';
 $string['choosetemplategrouppagedescription'] = '<p>Here you can search through the Views that this group is allowed to copy as a starting point for making a new View. You can see a preview of each View by clicking on its name. Once you have found the View you wish to copy, click the corresponding "Copy View" button to make a copy and begin customising it.</p><p><strong>Note:</strong> Groups cannot currently make copies of Blogs or Blog Posts.</p>';
 $string['choosetemplateinstitutionpagedescription'] = '<p>Here you can search through the Views that this institution is allowed to copy as a starting point for making a new View. You can see a preview of each View by clicking on its name. Once you have found the View you wish to copy, click the corresponding "Copy View" button to make a copy and begin customising it.</p><p><strong>Note:</strong> Institutions cannot currently make copies of Blogs or Blog Posts.</p>';

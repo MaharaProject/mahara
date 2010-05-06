@@ -47,9 +47,6 @@ else {
 if ($userid == 0) {
     redirect();
 }
-if ($userid == $loggedinid) {
-    define('MENUITEM', 'profile/view');
-}
 
 // Get the user's details
 
@@ -58,9 +55,15 @@ if (!$user = get_record('usr', 'id', $userid, 'deleted', 0)) {
 }
 $is_friend = is_friend($userid, $loggedinid);
 
-$userobj = new User();
-$userobj->find_by_id($userid);
-$view = $userobj->get_profile_view();
+if ($loggedinid == $userid) {
+    $view = $USER->get_profile_view();
+}
+else {
+    $userobj = new User();
+    $userobj->find_by_id($userid);
+    $view = $userobj->get_profile_view();
+}
+
 $viewid = $view->get('id');
 # access will either be logged in (always) or public as well
 if (!$view || !can_view_view($viewid)) {
@@ -266,32 +269,6 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
     $smarty->assign('relationship', $relationship);
 
 }
-else if (!empty($loggedinid)) {
-    if (get_config('allowpublicprofiles')) {
-        $public = array_filter($view->get_access(), 
-            create_function(
-                '$item', 
-                'return $item[\'type\'] == \'public\';'
-            )
-        );
-        $togglepublic = pieform(array(
-            'name'      => 'togglepublic',
-            'autofocus' => false,
-            'renderer'  => 'div',
-            'elements'  => array(
-                'changeto' => array(
-                    'type'  => 'hidden',
-                    'value' => ($public) ? 'loggedin' : 'public'
-                ),
-                'submit' => array(
-                    'type' => 'submit',
-                    'value' => ($public) ? get_string('loggedinusersonly') : get_string('allowpublicaccess'),
-                ),
-            ),
-        ));
-        $smarty->assign('togglepublic', $togglepublic);
-    }
-}
 
 if ($userid != $USER->get('id') && $USER->is_admin_for_user($user) && is_null($USER->get('parentuser'))) {
     $loginas = get_string('loginasuser', 'admin', hsc($user->username));
@@ -313,13 +290,8 @@ if (get_config('viewmicroheaders')) {
     if ($loggedinid && $loggedinid == $userid) {
         $microheaderlinks = array(
             array(
-                'name' => get_string('editmyprofilepage'),
+                'name' => get_string('editcontent', 'view'),
                 'url' => get_config('wwwroot') . 'view/blocks.php?profile=1',
-                'type' => 'edit',
-            ),
-            array(
-                'name' => get_string('editmyprofile', 'artefact.internal'),
-                'url' => get_config('wwwroot') . 'artefact/internal/index.php',
                 'type' => 'edit',
             ),
         );
@@ -361,11 +333,13 @@ function addmember_submit(Pieform $form, $values) {
         delete_records('group_member_request', 'member', $userid, 'group', $data->group);
         $lang = get_user_language($userid);
         require_once(get_config('libroot') . 'activity.php');
-        activity_occurred('maharamessage', 
-            array('users'   => array($userid),
-                  'subject' => get_string_from_language($lang, 'addedtogroupsubject', 'group'),
-                  'message' => get_string_from_language($lang, 'addedtogroupmessage', 'group', display_name($USER, $adduser), $ctitle),
-                  'url'     => get_config('wwwroot') . 'group/view.php?id=' . $values['group']));
+        activity_occurred('maharamessage', array(
+            'users'   => array($userid),
+            'subject' => get_string_from_language($lang, 'addedtogroupsubject', 'group'),
+            'message' => get_string_from_language($lang, 'addedtogroupmessage', 'group', display_name($USER, $adduser), $ctitle),
+            'url'     => get_config('wwwroot') . 'group/view.php?id=' . $values['group'],
+            'urltext' => $ctitle,
+        ));
         $SESSION->add_ok_msg(get_string('useradded', 'group'));
     }
     catch (SQLException $e) {
@@ -383,27 +357,5 @@ function approve_deny_friendrequest_submit(Pieform $form, $values) {
     }
 }
 
-function togglepublic_submit(Pieform $form, $values) {
-    global $SESSION, $userid, $view;
-    $access = array(
-        array(
-            'type'      => 'loggedin',
-            'startdate' => null,
-            'stopdate'  => null,
-        ),
-    );
-
-    if ($values['changeto'] == 'public') {
-        $access[] = array(
-            'type'      => 'public',
-            'startdate' => null,
-            'stopdate'  => null,
-        );
-    }
-    $view->set_access($access);
-    $SESSION->add_ok_msg(get_string('viewaccesseditedsuccessfully', 'view'));
-
-    redirect('/user/view.php?id=' . $userid);
-}
 
 ?>

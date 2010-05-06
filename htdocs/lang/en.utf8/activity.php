@@ -41,7 +41,7 @@ $string['typegroupmessage'] = 'Group message';
 
 $string['type'] = 'Activity type';
 $string['attime'] = 'at';
-$string['prefsdescr'] = 'If you select either of the email options, notifications will still be entered in the Activity log, but they will be automatically marked as read.';
+$string['prefsdescr'] = 'If you select either of the email options, notifications will still arrive in your Inbox, but they will be automatically marked as read.';
 
 $string['subject'] = 'Subject';
 $string['date'] = 'Date';

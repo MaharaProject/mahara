@@ -85,6 +85,7 @@ $editview = array(
     'name'     => 'editview',
     'method'   => 'post',
     'autofocus' => 'title',
+    'autoselect' => $new ? 'title' : null,
     'plugintype' => 'core',
     'pluginname' => 'view',
     'elements' => array(

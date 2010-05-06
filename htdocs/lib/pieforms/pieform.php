@@ -445,6 +445,11 @@ class Pieform {/*{{{*/
                     $element['autofocus'] = true;
                 }
 
+                if (!empty($element['autofocus']) && $element['type'] == 'text' && !empty($this->data['autoselect'])
+                    && $name == $this->data['autoselect']) {
+                    $element['autoselect'] = true;
+                }
+
                 // All elements inherit the form tabindex
                 $element['tabindex'] = $this->data['tabindex'];
             }
@@ -1048,6 +1053,9 @@ EOF;
         }
         if ($this->data['elementclasses']) {
             $classes[] = $element['type'];
+        }
+        if (!empty($element['autoselect'])) {
+            $classes[] = 'autoselect';
         }
         // Please make sure that 'autofocus' is the last class added in this
         // method. Otherwise, improve the logic for removing 'autofocus' from
