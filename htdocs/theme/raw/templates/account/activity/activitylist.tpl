@@ -6,7 +6,7 @@
     <td>
   {if $item->message}
       <a href="" onclick="showHideMessage({$item->id}); return false;">{$item->subject|escape}</a>
-      <div id="message-{$item->id}" class="hidden">{$item->message|clean_html}
+      <div id="message-{$item->id}" class="hidden">{$item->message|safe|clean_html}
       {if $item->url}<br><a href="{$item->url|escape}" class="s">{if $item->urltext}{$item->urltext|escape} &raquo;{else}{str tag="more..."}{/if}</a>{/if}
       </div>
   {elseif $item->url}

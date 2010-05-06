@@ -1,5 +1,5 @@
 {include file="header.tpl"}
 <div id="resumewrap">
-{$interestsform}
+{$interestsform|safe}
 </div>
 {include file="footer.tpl"}

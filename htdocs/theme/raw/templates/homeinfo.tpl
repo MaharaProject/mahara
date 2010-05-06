@@ -23,11 +23,11 @@
                     <tr class="caption">
                         <td>
                             {assign var=s value="updateyourprofile"|str:mahara:$url.profile}
-                            {if $USER->is_logged_in()}{$s}{else}{strip_tags($s)}{/if}
+                            {if $USER->is_logged_in()}{$s|safe}{else}{$s|safe|strip_tags}{/if}
                         </td>
                         <td>
                             {assign var=s value="uploadyourfiles"|str:mahara:$url.files}
-                            {if $USER->is_logged_in()}{$s}{else}{$s|strip_tags}{/if}
+                            {if $USER->is_logged_in()}{$s|safe}{else}{$s|safe|strip_tags}{/if}
                         </td>
                     </tr>
                     <tr>
@@ -45,11 +45,11 @@
                     <tr class="caption">
                         <td>
                             {assign var=s value="createyourresume"|str:mahara:$url.resume}
-                            {if $USER->is_logged_in()}{$s}{else}{$s|strip_tags}{/if}
+                            {if $USER->is_logged_in()}{$s|safe}{else}{$s|safe|strip_tags}{/if}
                         </td>
                         <td>
                             {assign var=s value="publishablog"|str:mahara:$url.blog}
-                            {if $USER->is_logged_in()}{$s}{else}{$s|strip_tags}{/if}
+                            {if $USER->is_logged_in()}{$s|safe}{else}{$s|safe|strip_tags}{/if}
                         </td>
                     </tr>
                 </table>
@@ -66,7 +66,7 @@
                 </div>
                 <p class="desc">
                     {assign var=s value="organisedescription"|str:mahara:$url.views}
-                    {if $USER->is_logged_in()}{$s}{else}{$s|strip_tags}{/if}
+                    {if $USER->is_logged_in()}{$s|safe}{else}{$s|safe|strip_tags}{/if}
                 </p>
             </div>
         </td>
@@ -90,11 +90,11 @@
                     <tr>
                         <td>
                             {assign var=s value="findfriendslinked"|str:mahara:$url.friends}
-                            {if $USER->is_logged_in()}{$s}{else}{$s|strip_tags}{/if}
+                            {if $USER->is_logged_in()}{$s|safe}{else}{$s|safe|strip_tags}{/if}
                         </td>
                         <td>
                             {assign var=s value="joingroups"|str:mahara:$url.groups}
-                            {if $USER->is_logged_in()}{$s}{else}{$s|strip_tags}{/if}
+                            {if $USER->is_logged_in()}{$s|safe}{else}{$s|safe|strip_tags}{/if}
                         </td>
                     </tr>
                 </table>
