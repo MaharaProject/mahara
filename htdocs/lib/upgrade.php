@@ -932,14 +932,17 @@ function get_blocktype_categories() {
 function install_blocktype_categories_for_plugin($blocktype) {
     safe_require('blocktype', $blocktype);
     $blocktype = blocktype_namespaced_to_single($blocktype);
+    $catsinstalled = get_column('blocktype_category', 'name');
     db_begin();
     delete_records('blocktype_installed_category', 'blocktype', $blocktype);
     if ($cats = call_static_method(generate_class_name('blocktype', $blocktype), 'get_categories')) {
         foreach ($cats as $cat) {
-            insert_record('blocktype_installed_category', (object)array(
-                'blocktype' => $blocktype,
-                'category' => $cat
-            ));
+            if (in_array($cat, $catsinstalled)) {
+                insert_record('blocktype_installed_category', (object)array(
+                    'blocktype' => $blocktype,
+                    'category' => $cat
+                ));
+            }
         }
     }
     db_commit();
@@ -948,14 +951,17 @@ function install_blocktype_categories_for_plugin($blocktype) {
 function install_blocktype_viewtypes_for_plugin($blocktype) {
     safe_require('blocktype', $blocktype);
     $blocktype = blocktype_namespaced_to_single($blocktype);
+    $vtinstalled = get_column('view_type', 'type');
     db_begin();
     delete_records('blocktype_installed_viewtype', 'blocktype', $blocktype);
     if ($viewtypes = call_static_method(generate_class_name('blocktype', $blocktype), 'get_viewtypes')) {
         foreach($viewtypes as $vt) {
-            insert_record('blocktype_installed_viewtype', (object)array(
-                'blocktype' => $blocktype,
-                'viewtype'  => $vt,
-            ));
+            if (in_array($vt, $vtinstalled)) {
+                insert_record('blocktype_installed_viewtype', (object)array(
+                    'blocktype' => $blocktype,
+                    'viewtype'  => $vt,
+                ));
+            }
         }
     }
     db_commit();
