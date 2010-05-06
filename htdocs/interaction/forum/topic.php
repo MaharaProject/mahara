@@ -151,9 +151,9 @@ for ($i = 0; $i < $count; $i++) {
 // notifications grow too fast.  Unfortunately the only way to find
 // notifications on this topic is to look for the url of this page.
 execute_sql("
-    UPDATE {notification_internal_activity}
-    SET read = 1
-    WHERE read = 0 AND usr = ? AND url LIKE ? || '%' AND type = (
+    UPDATE {notification_internal_activity} n
+    SET n.read = 1
+    WHERE n.read = 0 AND usr = ? AND url LIKE ? || '%' AND type = (
         SELECT id FROM {activity_type} WHERE name = ?
     )",
     array(
