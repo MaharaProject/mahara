@@ -916,9 +916,12 @@ li#pendingfriends a {
 #sb-onlineusers li {
     line-height: 2.1em;
 }
-#sb-onlineusers ul img {
-    float: left;
-    padding-right: .5em;
+#sb-onlineusers .image-container {
+  width: 20px;
+  height: 20px;
+  float: left;
+  padding-right:.5em;
+  text-align: center;
 }
 #lastminutes {
     float: right;
