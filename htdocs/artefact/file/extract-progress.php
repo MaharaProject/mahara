@@ -28,6 +28,7 @@
 define('INTERNAL', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
+require_once(get_config('docroot') . '/lib/htmloutput.php');
 
 if (!$unzip = $SESSION->get('unzip')) {
     redirect('/artefact/file/');
@@ -39,25 +40,7 @@ if (function_exists('apache_setenv')) {
 }
 
 $stylesheets = array_reverse($THEME->get_url('style/style.css', true));
-?>
-<html>
-    <head>
-        <title></title>
-<?php foreach ($stylesheets as $stylesheet) { ?>
-        <link rel="stylesheet" type="text/css" href="<?php echo hsc($stylesheet); ?>">
-<?php } ?>
-        <style type="text/css">
-            html, body {
-                margin: 0;
-                padding: 0;
-                background-color: #808080;
-            }
-        </style>
-    </head>
-    <body>
-    <div style="width: 100%; background-color: #808080;" class="progress-bar"></div>
-    <p class="progress-text"><?php echo get_string('unzipprogress', 'artefact.file', '0/' . $unzip['artefacts']); ?></p>
-<?php
+print_extractprogress_head($stylesheets, $unzip['artefacts']);
 flush();
 
 /**
@@ -71,12 +54,7 @@ function unzip_iframe_progress_handler($artefacts) {
     $status = get_string('unzipprogress', 'artefact.file', $artefacts . '/' . $unzip['artefacts']);
     set_time_limit(10);
 
-    // "Erase" the current output with a new background div
-    echo '<div style="width: 100%; background-color: #808080;" class="progress-bar"></div>';
-    // The progress bar itself
-    echo '<div class="progress-bar" style="width: ' . intval($percent) . '%;"></div>' . "\n";
-    // The status text
-    echo '<p class="progress-text">' . hsc($status) . "</p>\n";
+    print_iframe_progress_handler($percent, $status);
     flush();
 }
 
@@ -93,9 +71,5 @@ $next .= (strpos($next, '?') === false ? '?' : '&') . 'folder=' . $status['basef
 $SESSION->set('unzip', false);
 
 $message = get_string('extractfilessuccess', 'artefact.file', $status['folderscreated'], $status['filescreated']);
-?>
-        <div class="progress-bar" style="width: 100%;">
-        <p><?php echo $message; ?> <a href="<?php echo $next; ?>" target="_top"><?php echo get_string('Continue', 'artefact.file'); ?></a></p>
-        </div>
-    </body>
-</html>
+
+print_extractprogress_footer($message, $next);

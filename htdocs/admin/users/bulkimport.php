@@ -30,6 +30,7 @@ define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('institution.php');
+require_once(get_config('docroot') . '/lib/htmloutput.php');
 safe_require('artefact', 'internal');
 safe_require('artefact', 'file');
 raise_memory_limit('1024M');
@@ -113,8 +114,7 @@ $form = array(
  */
 function meta_redirect() {
     $url = get_config('wwwroot') . '/admin/users/bulkimport.php';
-    print '<html><head><meta http-equiv="Refresh" content="0; url=' . $url . '">';
-    print '</head><body><p>Please follow <a href="'.$url.'">link</a>!</p></body></html>';
+    print_meta_redirect($url);
     exit;
 }
 

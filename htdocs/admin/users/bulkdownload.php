@@ -29,6 +29,7 @@ define('INTERNAL', 1);
 define('ADMIN', 1);
 define('BULKEXPORT', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require_once(get_config('docroot') . '/lib/htmloutput.php');
 raise_memory_limit("1024M");
 ini_set('max_execution_time', 300); // 5 minutes
 
@@ -54,25 +55,7 @@ if (!$exportdata = $SESSION->get('exportdata')) {
 $SESSION->set('exportdata', '');
 
 $stylesheets = array_reverse($THEME->get_url('style/style.css', true));
-?>
-<html>
-    <head>
-        <title></title>
-<?php foreach ($stylesheets as $stylesheet) { ?>
-        <link rel="stylesheet" type="text/css" href="<?php echo hsc($stylesheet); ?>">
-<?php } ?>
-        <style type="text/css">
-            html, body {
-                margin: 0;
-                padding: 0;
-                background-color: #808080;
-            }
-        </style>
-    </head>
-    <body>
-    <div style="width: 100%; background-color: #808080;" class="progress-bar"></div>
-    <p class="progress-text"><?php echo get_string('Starting', 'export'); ?></p>
-<?php
+print_export_head($stylesheets);
 flush();
 
 /**
@@ -81,7 +64,7 @@ flush();
  * @param string $message The message to display to the user
  */
 function export_iframe_die($message) {
-    echo '<div class="progress-bar" style="width: 100%;"><p>' . hsc($message) . '</p></div></body></html>';
+    print_export_iframe_die($message);
     exit;
 }
 
@@ -93,12 +76,7 @@ function export_iframe_die($message) {
  * @param string $status A human-readable string describing the current step
  */
 function export_iframe_progress_handler($percent, $status) {
-    // "Erase" the current output with a new background div
-    echo '<div style="width: 100%; background-color: #808080;" class="progress-bar"></div>';
-    // The progress bar itself
-    echo '<div class="progress-bar" style="width: ' . intval($percent) . '%;"></div>' . "\n";
-    // The status text
-    echo '<p class="progress-text">' . hsc($status) . "</p>\n";
+    print_iframe_progress_handler($percent, $status);
     ob_flush();
 }
 
@@ -249,17 +227,4 @@ $SESSION->set('exportfile', $zipfile);
 $wwwroot = get_config('wwwroot');
 $strexportgeneratedsuccessfullyjs = get_string('exportgeneratedsuccessfullyjs', 'export', '<a href="' . $wwwroot . '" target="_top">', '</a>');
 $strexportgeneratedsuccessfully   = get_string('exportgeneratedsuccessfully', 'export', '<a href="bulkdownload.php" target="_top">', '</a>');
-?>
-        <script type="text/javascript">
-            document.write('<div class="progress-bar" style="width: 100%;"><p><?php echo $strexportgeneratedsuccessfullyjs; ?></p></div>');
-            if (!window.opera) {
-                // Opera can't handle this for some reason - it vomits out the 
-                // download inline in the iframe
-                document.location = 'bulkdownload.php';
-            }
-        </script>
-        <div class="progress-bar" style="width: 100%;">
-            <p><?php echo $strexportgeneratedsuccessfully; ?></p>
-        </div>
-    </body>
-</html>
+print_export_footer($strexportgeneratedsuccessfully, $strexportgeneratedsuccessfullyjs);
