@@ -11,21 +11,21 @@
     </td>
     <td>
   {if $i->message}
-      <a href="" class="inbox-showmessage{if !$i->read} unread{/if}">{$i->subject|escape}</a>
-      <div class="inbox-message hidden" id="inbox-message-{$i->id}">{$i->message|clean_html}
+      <a href="" class="inbox-showmessage{if !$i->read} unread{/if}">{$i->subject}</a>
+      <div class="inbox-message hidden" id="inbox-message-{$i->id}">{$i->message}
       {if $i->url}<br><a href="{$i->url|escape}" class="s">{if $i->urltext}{$i->urltext|escape} &raquo;{else}{str tag="more..."}{/if}</a>{/if}
       </div>
   {elseif $i->url}
-      <a href="{$i->url|escape}">{$i->subject|escape}</a>
+      <a href="{$i->url}">{$i->subject}</a>
   {else}
-      {$i->subject|escape}
+      {$i->subject}
   {/if}
     </td>
 </tr>
 {/foreach}
 </table>
 {if $desiredtypes}
-<a href="{$WWWROOT}account/activity?type={$desiredtypes|escape}">{str tag=More section=blocktype.inbox} &raquo;</a>
+<a href="{$WWWROOT}account/activity?type={$desiredtypes}">{str tag=More section=blocktype.inbox} &raquo;</a>
 {/if}
 <script>
 {literal}
