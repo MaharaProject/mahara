@@ -1,3 +1,6 @@
+{if !$items}
+{str tag=nomessages section=blocktype.inbox}
+{else}
 <table>
 {foreach from=$items item=i}
 <tr>
@@ -49,3 +52,4 @@ addLoadEvent(function() {
 });
 {/literal}
 </script>
+{/if}

@@ -18,4 +18,6 @@
     </div>
     {/if}
   {/foreach}
+{else}
+  {str tag=noviews section=view}
 {/if}

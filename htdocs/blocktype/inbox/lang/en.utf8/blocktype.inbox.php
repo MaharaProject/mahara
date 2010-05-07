@@ -33,5 +33,5 @@ $string['messagetypes'] = 'Message types to display';
 $string['maxitems'] = 'Maximum number of items to display';
 $string['maxitemsdescription'] = 'Between 1 and 100';
 $string['More'] = 'More';
-
+$string['nomessages'] = 'No messages';
 ?>
