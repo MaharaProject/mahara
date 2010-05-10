@@ -71,15 +71,6 @@ function pieform($data) {/*{{{*/
     return Pieform::process($data);
 }/*}}}*/
 
-// json_encode replacement, if the user doesn't have this function available
-if (!function_exists('json_encode')) {/*{{{*/
-    function json_encode($data) {
-        require_once 'JSON/JSON.php';
-        $json = new Services_JSON();
-        return $json->encode($data);
-    }
-}/*}}}*/
-
 /**
  * Pieforms throws PieformExceptions when things go wrong
  */
