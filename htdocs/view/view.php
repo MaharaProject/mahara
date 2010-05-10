@@ -282,10 +282,14 @@ if (isset($objectionform)) {
 }
 $smarty->assign('viewbeingwatched', $viewbeingwatched);
 
-if ($tutorgroupdata = group_get_user_course_groups()) {
-    $options = array();
-    if (!$view->get('submittedgroup') && !$view->get('submittedhost')) {
-        $smarty->assign('view_group_submission_form', view_group_submission_form($view->get('id'), $tutorgroupdata, 'view'));
+if ($owner && $owner == $USER->get('id')) {
+    if ($tutorgroupdata = group_get_user_course_groups()) {
+        if (!$view->get('submittedgroup') && !$view->get('submittedhost')) {
+            $smarty->assign(
+                'view_group_submission_form',
+                view_group_submission_form($view->get('id'), $tutorgroupdata, 'view')
+            );
+        }
     }
 }
 
