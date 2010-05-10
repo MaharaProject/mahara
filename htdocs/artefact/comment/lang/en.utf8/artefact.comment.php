@@ -64,6 +64,7 @@ $string['makepublicrequestbyownermessage'] = '%s has requested that you make you
 $string['makepublicrequestsent'] = 'A message has been sent to %s to request that the comment be made public.';
 $string['newfeedbacknotificationsubject'] = 'New feedback on %s';
 $string['placefeedback'] = 'Place feedback';
+$string['reallydeletethiscomment'] = 'Are you sure you want to delete this comment?';
 $string['thiscommentisprivate'] = 'This comment is private';
 $string['typefeedback'] = 'Feedback';
 $string['youhaverequestedpublic'] = 'You have requested that this comment be made public.';

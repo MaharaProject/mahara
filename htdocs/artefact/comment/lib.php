@@ -550,6 +550,7 @@ class ArtefactTypeComment extends ArtefactType {
                     'class' => 'quiet btn-del',
                     'name'  => 'delete_comment_submit',
                     'value' => get_string('delete'),
+                    'confirm' => get_string('reallydeletethiscomment', 'artefact.comment'),
                 ),
             ),
         );
