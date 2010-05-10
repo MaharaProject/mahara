@@ -518,18 +518,6 @@ class PluginSearchInternal extends PluginSearch {
      *           );
      */
     public static function search_group($query_string, $limit, $offset=0, $type='member') {
-        if (is_postgres()) {
-            return self::search_group_pg($query_string, $limit, $offset, $type);
-        } 
-        else if (is_mysql()) {
-            return self::search_group_my($query_string, $limit, $offset, $type);
-        } 
-        else {
-            throw new SQLException('search_group() is not implemented for your database engine (' . get_config('dbtype') . ')');
-        }
-    }
-
-    public static function search_group_pg($query_string, $limit, $offset, $type) {
         global $USER;
         $data = array();
 
@@ -537,53 +525,8 @@ class PluginSearchInternal extends PluginSearch {
             FROM
                 {group}
             WHERE (
-                name ILIKE '%' || ? || '%'
-                OR description ILIKE '%' || ? || '%'
-            ) AND deleted = 0 ";
-        $values = array($query_string, $query_string);
-
-       if ($type == 'member') {
-            $sql .=  'AND (
-                id IN (
-                    SELECT "group" FROM {group_member} WHERE member = ?
-                )
-            )';
-            $values[] = $USER->get('id');
-        }
-        else if ($type == 'notmember') {
-            $sql .=  'AND (
-                id NOT IN (
-                    SELECT "group" FROM {group_member} WHERE member = ?
-                )
-            )';
-            $values[] = $USER->get('id');
-        }
-
-        $count = get_field_sql('SELECT COUNT(*) '.$sql, $values);
-
-        if ($count > 0) {
-            $sql = 'SELECT id, name, description, grouptype, jointype, ctime, mtime ' . $sql . 'ORDER BY name';
-            $data = get_records_sql_array($sql, $values, $offset, $limit);
-        }
-
-        return array(
-            'count'   => $count,
-            'limit'   => $limit,
-            'offset'  => $offset,
-            'data'    => $data,
-        );
-    }
-
-    public static function search_group_my($query_string, $limit, $offset, $type) {
-        global $USER;
-        $data = array();
-
-        $sql = "
-            FROM
-                {group}
-            WHERE (
-                name LIKE '%' || ? || '%'
-                OR description LIKE '%' || ? || '%'
+                name " . db_ilike() . " '%' || ? || '%'
+                OR description " . db_ilike() . " '%' || ? || '%'
             ) AND deleted = 0 ";
         $values = array($query_string, $query_string);
 
