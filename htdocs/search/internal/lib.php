@@ -530,21 +530,15 @@ class PluginSearchInternal extends PluginSearch {
             ) AND deleted = 0 ";
         $values = array($query_string, $query_string);
 
+        if (!$grouproles = join(',', array_keys($USER->get('grouproles')))) {
+            $grouproles = '-1';
+        }
+
        if ($type == 'member') {
-            $sql .=  'AND (
-                id IN (
-                    SELECT "group" FROM {group_member} WHERE member = ?
-                )
-            )';
-            $values[] = $USER->get('id');
+            $sql .=  'AND id IN (' . $grouproles . ')';
         }
         else if ($type == 'notmember') {
-            $sql .=  'AND (
-                id NOT IN (
-                    SELECT "group" FROM {group_member} WHERE member = ?
-                )
-            )';
-            $values[] = $USER->get('id');
+            $sql .= 'AND id NOT IN (' . $grouproles . ')';
         }
 
         $count = get_field_sql('SELECT COUNT(*) '.$sql, $values);
