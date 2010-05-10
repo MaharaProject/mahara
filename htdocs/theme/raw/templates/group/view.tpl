@@ -50,7 +50,7 @@
                         {$view.sharedby}
                     {/if}
                 {/if}
-                <div>{$view.shortdescription}</div>
+                <div>{$view.shortdescription|clean_html}</div>
                 {if $view.tags}<div class="tags">{str tag=tags}: {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
                 {if $view.template}
                 <div><a href="">{str tag=copythisview section=view}</a></div>

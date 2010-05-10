@@ -1642,3 +1642,14 @@ form#search input.text {
 .help, .help a, .help a img {
     vertical-align: top;
 }
+
+ul.viewlist {
+  list-style: none;
+  margin: 0 0 0 0.25em;
+}
+ul.viewlist li:first-child {
+  margin: 0;
+}
+ul.viewlist li {
+  margin: 0.75em 0 0;
+}
