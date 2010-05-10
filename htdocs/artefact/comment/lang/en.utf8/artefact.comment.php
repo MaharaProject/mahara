@@ -68,4 +68,36 @@ $string['thiscommentisprivate'] = 'This comment is private';
 $string['typefeedback'] = 'Feedback';
 $string['youhaverequestedpublic'] = 'You have requested that this comment be made public.';
 
+$string['feedbacknotificationhtml'] = "<div style=\"padding: 0.5em 0; border-bottom: 1px solid #999;\"><strong>%s commented on %s</strong><br>%s</div>
+
+<div style=\"margin: 1em 0;\">%s</div>
+
+<div style=\"font-size: smaller; border-top: 1px solid #999;\">
+<p><a href=\"%s\">Reply to this comment online</a></p>
+</div>";
+$string['feedbacknotificationtext'] = "%s commented on %s
+%s
+------------------------------------------------------------------------
+
+%s
+
+------------------------------------------------------------------------
+To see and reply to the comment online, follow this link:
+%s";
+$string['feedbackdeletedhtml'] = "<div style=\"padding: 0.5em 0; border-bottom: 1px solid #999;\"><strong>A comment on %s was removed</strong><br>%s</div>
+
+<div style=\"margin: 1em 0;\">%s</div>
+
+<div style=\"font-size: smaller; border-top: 1px solid #999;\">
+<p><a href=\"%s\">%s</a></p>
+</div>";
+$string['feedbackdeletedtext'] = "A comment on %s was removed
+%s
+------------------------------------------------------------------------
+
+%s
+
+------------------------------------------------------------------------
+To see %s online, follow this link:
+%s";
 ?>

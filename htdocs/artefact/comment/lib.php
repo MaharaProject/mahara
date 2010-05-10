@@ -883,6 +883,8 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
 
         $comment = new ArtefactTypeComment($this->commentid);
 
+        $this->overridemessagecontents = true;
+
         if ($onartefact = $comment->get('onartefact')) { // feedback on artefact
             $userid = null;
             require_once(get_config('docroot') . 'artefact/lib.php');
@@ -910,36 +912,63 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
         }
 
         $this->users = activity_get_users($this->get_id(), array($userid));
-
-        $deletedby = $comment->get('deletedby');
-        $subjectkey = $deletedby ? 'commentdeletednotificationsubject' : 'newfeedbacknotificationsubject';
         $title = $onartefact ? $artefactinstance->get('title') : $viewrecord->title;
+        $this->urltext = $title;
+        $body = $comment->get('description');
+        $posttime = strftime(get_string('strftimedaydatetime'), $comment->get('ctime'));
+        $user = $this->users[0];
+        $lang = (empty($user->lang) || $user->lang == 'default') ? get_config('lang') : $user->lang;
+
+        // Internal
+        $this->message = strip_tags(str_shorten_html($body, 200, true));
+
+        // Comment deleted notification
+        if ($deletedby = $comment->get('deletedby')) {
+            $this->strings = (object) array(
+                'subject' => (object) array(
+                    'key'     => 'commentdeletednotificationsubject',
+                    'section' => 'artefact.comment',
+                    'args'    => array($title),
+                ),
+            );
+            $deletedmessage = ArtefactTypeComment::deleted_messages();
+            $removedbyline = get_string_from_language($lang, $deletedmessage[$deletedby], 'artefact.comment');
+            $this->message = $removedbyline . ":\n" . $this->message;
+
+            // Email
+            $this->users[0]->htmlmessage = get_string_from_language(
+                $lang, 'feedbackdeletedhtml', 'artefact.comment',
+                $title, $removedbyline, $body, $this->url, $title
+            );
+            $this->users[0]->emailmessage = get_string_from_language(
+                $lang, 'feedbackdeletedtext', 'artefact.comment',
+                $title, $removedbyline, trim(html2text($body)), $title, $this->url
+            );
+            return;
+        }
 
         $this->strings = (object) array(
             'subject' => (object) array(
-                'key'     => $subjectkey,
+                'key'     => 'newfeedbacknotificationsubject',
                 'section' => 'artefact.comment',
                 'args'    => array($title),
             ),
         );
-        $this->urltext = $title;
 
-        if ($deletedby) {
-            $deletedmessage = ArtefactTypeComment::deleted_messages();
-            $this->strings->deletedmessage = (object) array(
-                'key' => $deletedmessage[$deletedby],
-                'section' => 'artefact.comment',
-                'args' => array(),
-            );
-        }
-        $this->message = html2text($comment->get('description'));
-    }
+        $this->url .= '&showcomment=' . $comment->get('id');
 
-    public function get_message($user) {
-        if (!empty($this->strings->deletedmessage)) {
-            return $this->get_string_for_user($user, 'deletedmessage') . ":\n" . $this->message;
-        }
-        return $this->message;
+        // Email
+        $author = $comment->get('author');
+        $authorname = empty($author) ? $comment->get('authorname') : display_name($author, $user);
+
+        $this->users[0]->htmlmessage = get_string_from_language(
+            $lang, 'feedbacknotificationhtml', 'artefact.comment',
+            $authorname, $title, $posttime, $body, $this->url
+        );
+        $this->users[0]->emailmessage = get_string_from_language(
+            $lang, 'feedbacknotificationhtml', 'artefact.comment',
+            $authorname, $title, $posttime, trim(html2text($body)), $this->url
+        );
     }
 
     public function get_plugintype(){
@@ -954,5 +983,3 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
         return array('commentid', 'viewid');
     }
 }
-
-?>
