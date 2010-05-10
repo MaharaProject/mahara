@@ -787,9 +787,9 @@ function view_type_graph() {
     // Draw a pie graph of views broken down by view type.
     $viewtypes = get_records_sql_array('
         SELECT type, COUNT(id) AS views
-        FROM {view}
+        FROM {view} WHERE type != ?
         GROUP BY type',
-        array()
+        array('dashboard')
     );
 
     if (count($viewtypes) > 1) {
