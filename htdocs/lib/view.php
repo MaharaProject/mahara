@@ -385,7 +385,7 @@ class View {
         $fordb = new StdClass;
         foreach (get_object_vars($this) as $k => $v) {
             $fordb->{$k} = $v;
-            if (in_array($k, array('mtime', 'ctime', 'atime', 'startdate', 'stopdate')) && !empty($v)) {
+            if (in_array($k, array('mtime', 'ctime', 'atime', 'startdate', 'stopdate', 'submittedtime')) && !empty($v)) {
                 $fordb->{$k} = db_format_timestamp($v);
             }
         }
@@ -2072,10 +2072,9 @@ class View {
                 $data[$i]['description'] = $viewdata[$i]->description;
                 if (!empty($viewdata[$i]->submitgroupid)) {
                     if (!empty($viewdata[$i]->submittedtime)) {
-                        $pieces = explode(' ', $viewdata[$i]->submittedtime);
                         $data[$i]['submittedto'] = get_string('viewsubmittedtogroupon', 'view',
                                                             get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
-                                                            $viewdata[$i]->submitgroupname, $pieces[0], $pieces[1]);
+                                                            $viewdata[$i]->submitgroupname, format_date(strtotime($viewdata[$i]->submittedtime)));
                     }
                     else {
                         $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view',

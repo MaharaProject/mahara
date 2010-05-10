@@ -70,7 +70,7 @@ $string['views'] = 'views';
 $string['View'] = 'View';
 $string['Views'] = 'Views';
 $string['viewsubmittedtogroup'] = 'This View has been submitted to <a href="%s">%s</a>';
-$string['viewsubmittedtogroupon'] = 'This View was submitted to <a href="%s">%s</a> on %s at %s';
+$string['viewsubmittedtogroupon'] = 'This View was submitted to <a href="%s">%s</a> on %s';
 $string['nobodycanseethisview2'] = 'Only you can see this View';
 $string['noviews'] = 'No Views.';
 $string['youhavenoviews'] = 'You have no Views.';
