@@ -482,11 +482,20 @@ function user_institution_graph() {
 
         $Graph->add(
             Image_Graph::vertical(
-                Image_Graph::factory('title', array(get_string('institutionmembers', 'admin'), 9)),
-                $Plotarea = Image_Graph::factory('plotarea'),
-                5
+                Image_Graph::vertical(
+                    Image_Graph::factory('title', array(get_string('institutionmembers', 'admin'), 9)),
+                    $Plotarea = Image_Graph::factory('plotarea'),
+                    5
+                ),
+                $Date = Image_Graph::factory('title', array(format_date(time(), 'strftimew3cdate'), 7)),
+                96
             )
         );
+
+        $Date->setAlignment(IMAGE_GRAPH_ALIGN_RIGHT);
+        $DateFont =& $Graph->addNew('font', 'Vera');
+        $DateFont->setColor('gray@0.8');
+        $Date->setFont($DateFont);
 
         $Dataset =& Image_Graph::factory('dataset', array($dataarray));
         $Plot =& $Plotarea->addNew('bar', array(&$Dataset));
@@ -643,12 +652,21 @@ function group_type_graph() {
         $Graph->setFont($Font);
 
         $Graph->add(
-            Image_Graph::horizontal(
-                $Plotarea = Image_Graph::factory('plotarea'),
-                $Legend = Image_Graph::factory('legend'),
-                60
+            Image_Graph::vertical(
+                Image_Graph::horizontal(
+                    $Plotarea = Image_Graph::factory('plotarea'),
+                    $Legend = Image_Graph::factory('legend'),
+                    60
+                ),
+                $Date = Image_Graph::factory('title', array(format_date(time(), 'strftimew3cdate'), 7)),
+                96
             )
         );
+
+        $Date->setAlignment(IMAGE_GRAPH_ALIGN_RIGHT);
+        $DateFont =& $Graph->addNew('font', 'Vera');
+        $DateFont->setColor('gray@0.8');
+        $Date->setFont($DateFont);
 
         $Legend->setPlotArea($Plotarea);
         $Legend->setFontSize(6);
@@ -808,11 +826,20 @@ function view_type_graph() {
 
         $Graph->add(
             Image_Graph::vertical(
-                Image_Graph::factory('title', array(get_string('viewsbytype', 'admin'), 9)),
-                $Plotarea = Image_Graph::factory('plotarea'),
-                5
+                Image_Graph::vertical(
+                    Image_Graph::factory('title', array(get_string('viewsbytype', 'admin'), 9)),
+                    $Plotarea = Image_Graph::factory('plotarea'),
+                    5
+                ),
+                $Date = Image_Graph::factory('title', array(format_date(time(), 'strftimew3cdate'), 7)),
+                96
             )
         );
+
+        $Date->setAlignment(IMAGE_GRAPH_ALIGN_RIGHT);
+        $DateFont =& $Graph->addNew('font', 'Vera');
+        $DateFont->setColor('gray@0.8');
+        $Date->setFont($DateFont);
 
         $Plotarea->hideAxis();
         $Dataset =& Image_Graph::factory('dataset', array($dataarray));
@@ -874,11 +901,20 @@ function graph_site_data_weekly() {
 
     $Graph->add(
         Image_Graph::vertical(
-            $Plotarea = Image_Graph::factory('plotarea'),
-            $Legend = Image_Graph::factory('legend'),
-            88
+            Image_Graph::vertical(
+                $Plotarea = Image_Graph::factory('plotarea'),
+                $Legend = Image_Graph::factory('legend'),
+                88
+            ),
+            $Date = Image_Graph::factory('title', array(format_date(time(), 'strftimew3cdate'), 7)),
+            96
         )
     );
+
+    $Date->setAlignment(IMAGE_GRAPH_ALIGN_RIGHT);
+    $DateFont =& $Graph->addNew('font', 'Vera');
+    $DateFont->setColor('gray@0.8');
+    $Date->setFont($DateFont);
 
     $Legend->setPlotarea($Plotarea);
 
