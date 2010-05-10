@@ -758,7 +758,7 @@ function core_install_firstcoredata_defaults() {
         array('virusrepeat', 1, 1),
         array('virusrelease', 1, 1),
         array('institutionmessage', 0, 0),
-        array('groupmessage', 0, 0),
+        array('groupmessage', 0, 1),
     );
 
     foreach ($activitytypes as $at) {

@@ -1740,5 +1740,9 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2010051000) {
+        set_field('activity_type', 'delay', 1, 'name', 'groupmessage');
+    }
+
     return $status;
 }
