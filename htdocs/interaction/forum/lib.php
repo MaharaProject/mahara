@@ -499,12 +499,12 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
 
         $posttime = strftime(get_string('strftimedaydatetime'), $post->ctime);
         $htmlbody = $post->body;
-        $this->message = str_shorten_html($htmlbody, 200, true); // For internal notification
+        $this->message = strip_tags(str_shorten_html($htmlbody, 200, true)); // For internal notifications.
 
         $textbody = trim(html2text($post->body));
         $postlink = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid;
 
-        $this->url     = $postlink;
+        $this->url = $postlink;
         $this->add_urltext(array(
             'key'     => 'Topic',
             'section' => 'interaction.forum'

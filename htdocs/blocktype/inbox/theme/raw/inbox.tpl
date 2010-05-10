@@ -12,8 +12,8 @@
     <td>
   {if $i->message}
       <a href="" class="inbox-showmessage{if !$i->read} unread{/if}">{$i->subject}</a>
-      <div class="inbox-message hidden" id="inbox-message-{$i->id}">{$i->message}
-      {if $i->url}<br><a href="{$i->url|escape}" class="s">{if $i->urltext}{$i->urltext|escape} &raquo;{else}{str tag="more..."}{/if}</a>{/if}
+      <div class="inbox-message hidden" id="inbox-message-{$i->id}">{$i->message|safe}
+      {if $i->url}<br><a href="{$i->url}" class="s">{if $i->urltext}{$i->urltext} &raquo;{else}{str tag="more..."}{/if}</a>{/if}
       </div>
   {elseif $i->url}
       <a href="{$i->url}">{$i->subject}</a>

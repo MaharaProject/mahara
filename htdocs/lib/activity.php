@@ -908,6 +908,13 @@ abstract class ActivityTypePlugin extends ActivityType {
     }
 }
 
+
+function format_notification_whitespace($message) {
+    $message = preg_replace('/^(\s|<br( ?\/)?>|&nbsp;|\xc2\xa0)*/', '', $message);
+    $message = format_whitespace($message);
+    return preg_replace('/(<br( ?\/)?>\s*){2,}/', '<br><br>', $message);
+}
+
 /**
  * Get one page of notifications and return html
  */
@@ -974,7 +981,7 @@ function activitylist_html($type='all', $limit=10, $offset=0) {
             $r->date = format_date(strtotime($r->ctime), 'strfdaymonthyearshort');
             $section = empty($r->plugintype) ? 'activity' : "{$r->plugintype}.{$r->pluginname}";
             $r->strtype = get_string('type' . $r->type, $section);
-            $r->message = format_whitespace($r->message);
+            $r->message = format_notification_whitespace($r->message);
         }
     }
 

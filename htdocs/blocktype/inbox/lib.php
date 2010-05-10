@@ -85,6 +85,13 @@ class PluginBlocktypeInbox extends SystemBlocktype {
             unset($records[$maxitems]);
         }
 
+        if ($records) {
+            require_once('activity.php');
+            foreach ($records as &$r) {
+                $r->message = format_notification_whitespace($r->message);
+            }
+        }
+
         $smarty = smarty_core();
         if ($showmore) {
             $smarty->assign('desiredtypes', implode(',', $desiredtypes));
