@@ -2157,11 +2157,16 @@ class View {
                 }
                 else if (!empty($viewdata[$i]->submithostwwwroot)) {
                     if (!empty($viewdata[$i]->submittedtime)) {
-                        $pieces = explode(' ', $viewdata[$i]->submittedtime);
-                        $data[$i]['submittedto'] = get_string('viewsubmittedtogroupon', 'view', $viewdata[$i]->submithostwwwroot, $viewdata[$i]->submithostname, $pieces[0], $pieces[1]);
+                        $data[$i]['submittedto'] = get_string(
+                            'viewsubmittedtogroupon', 'view', $viewdata[$i]->submithostwwwroot,
+                            hsc($viewdata[$i]->submithostname), format_date(strtotime($viewdata[$i]->submittedtime))
+                        );
                     }
                     else {
-                        $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view', $viewdata[$i]->submithostwwwroot, $viewdata[$i]->submithostname);
+                        $data[$i]['submittedto'] = get_string(
+                            'viewsubmittedtogroup', 'view', $viewdata[$i]->submithostwwwroot,
+                            hsc($viewdata[$i]->submithostname)
+                        );
                     }
                 }
                 $data[$i]['artefacts'] = array();
