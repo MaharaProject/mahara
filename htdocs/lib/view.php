@@ -2824,9 +2824,9 @@ class View {
 
     public function display_title($long=true, $titlelink=true) {
         if ($this->type == 'profile') {
-            $title = display_name($this->owner, null, true);
+            $title = hsc(display_name($this->owner, null, true));
             if ($long) {
-                return '<strong>' . get_string('usersprofile', 'mahara', hsc($title)) . '</strong>';
+                return '<strong>' . get_string('usersprofile', 'mahara', $title) . '</strong>';
             }
             return $title;
         }
@@ -2834,7 +2834,6 @@ class View {
             return '<strong>' . get_string('dashboardviewtitle', 'view') . '</strong>';
         }
 
-        $ownername = $this->formatted_owner();
         $wwwroot = get_config('wwwroot');
 
         if ($this->type == 'grouphomepage') {
@@ -2856,6 +2855,7 @@ class View {
         }
 
         if (isset($ownerlink)) {
+            $ownername = hsc($this->formatted_owner());
             return get_string('viewtitleby', 'view', $title, $ownerlink, $ownername);
         }
 
