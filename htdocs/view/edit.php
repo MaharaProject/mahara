@@ -71,15 +71,14 @@ $ownerformatoptions = array(
     FORMAT_NAME_FIRSTNAMELASTNAME => sprintf($formatstring, get_string('fullname'), full_name())
 );
 
-$preferredname = $USER->get('preferredname');
-if ($preferredname !== '') {
-    $ownerformatoptions[FORMAT_NAME_PREFERREDNAME] = sprintf($formatstring, get_string('preferredname'), $preferredname);
+$displayname = display_name($USER);
+if ($displayname !== '') {
+    $ownerformatoptions[FORMAT_NAME_DISPLAYNAME] = sprintf($formatstring, get_string('preferredname'), $displayname);
 }
 $studentid = (string)get_field('artefact', 'title', 'owner', $USER->get('id'), 'artefacttype', 'studentid');
 if ($studentid !== '') {
     $ownerformatoptions[FORMAT_NAME_STUDENTID] = sprintf($formatstring, get_string('studentid'), $studentid);
 }
-$ownerformatoptions[FORMAT_NAME_DISPLAYNAME] = sprintf($formatstring, get_string('displayname'), display_name($USER));
 
 $editview = array(
     'name'     => 'editview',
