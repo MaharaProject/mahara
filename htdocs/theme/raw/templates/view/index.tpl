@@ -29,7 +29,7 @@
                             <div class="vi">
                                 <h4><a href="{$WWWROOT}view/edit.php?id={$view.id}" id="editviewdetails">{str tag="editviewnameanddescription" section="view"}</a></h4>
 {if $view.description}
-                                <div class="videsc">{$view.description}</div>
+                                <div class="videsc">{$view.description|clean_html}</div>
 {/if}
 {if $view.tags}
                                 <div class="tags">{str tag=tags}: {list_tags owner=$view.owner tags=$view.tags}</div>
