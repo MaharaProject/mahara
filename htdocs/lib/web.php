@@ -521,7 +521,7 @@ EOF;
         $smarty->assign('masqueradedetails', get_string('youaremasqueradingas', 'mahara', hsc(display_name($USER))));
         $smarty->assign('becomeyouagain',
             ' <a href="' . hsc($wwwroot) . 'admin/users/changeuser.php?restore=1">'
-            . get_string('becomeadminagain', 'admin', $USER->get('parentuser')->name)
+            . get_string('becomeadminagain', 'admin', hsc($USER->get('parentuser')->name))
             . '</a>');
     }
 
