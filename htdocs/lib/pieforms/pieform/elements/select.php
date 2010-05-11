@@ -51,7 +51,7 @@ function pieform_element_select(Pieform $form, $element) {/*{{{*/
             if (is_array($value)) {
                 $value = $value['value'];
             }
-            $result = $value . '<input type="hidden" name="' . $element['name'] . '" value="' . $key . '">';
+            $result = hsc($value) . '<input type="hidden" name="' . $element['name'] . '" value="' . $key . '">';
         }
         return $result;
     }
