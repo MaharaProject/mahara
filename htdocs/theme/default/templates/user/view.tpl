@@ -8,7 +8,7 @@
                     {if !empty($loginas)}
                       <div class="center"><strong><a href="{$WWWROOT}admin/users/changeuser.php?id={$USERID}">{$loginas}</a></strong></div>
                     {/if}
-                    {if $institutions}{$institutions}<br>{/if}
+                    {if $institutions}{$institutions|escape}<br>{/if}
                     {if $canmessage}
                         <a href="{$WWWROOT}user/sendmessage.php?id={$USERID}&amp;returnto=view" id="btn-sendmessage">{str tag='sendmessage' section='group'}</a>
                     {/if}
@@ -21,11 +21,11 @@
                         <br>
                         <a href="{$WWWROOT}user/requestfriendship.php?id={$USERID}&amp;returnto=view" class="btn-request">{str tag='requestfriendship' section='group'}</a>
                     {/if}
-                    {if $invitedlist}<div>{str tag=groupinvitesfrom section=group}{$invitedlist}</div>{/if}
+                    {if $invitedlist}<div>{str tag=groupinvitesfrom section=group}{$invitedlist|escape}</div>{/if}
                     {if $inviteform}
                         {$inviteform}
                     {/if}
-                    {if $requestedlist}<div>{str tag=requestedmembershipin section=group}{$requestedlist}</div>{/if}
+                    {if $requestedlist}<div>{str tag=requestedmembershipin section=group}{$requestedlist|escape}</div>{/if}
                     {if $addform}
                         {$addform}
                     {/if}
