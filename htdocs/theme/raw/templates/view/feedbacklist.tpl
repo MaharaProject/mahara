@@ -8,7 +8,7 @@
           <div class="icon"><a href="{$WWWROOT}user/view.php?id={$item->author|escape}">
             <img src="{$WWWROOT}thumb.php?type=profileicon&id={$item->author|escape}&maxsize=20" valign="middle" alt="{$item->author|display_name}">
           </a></div>
-          <a href="{$WWWROOT}user/view.php?id={$item->author|escape}">{$item->author|display_name}</a>
+          <a href="{$WWWROOT}user/view.php?id={$item->author|escape}">{$item->author|display_name|escape}</a>
         {else}
           {$item->authorname|escape}
         {/if}
