@@ -2026,12 +2026,17 @@ class View {
                 $data[$i]['removable'] = self::can_remove_viewtype($viewdata[$i]->type);
                 $data[$i]['description'] = $viewdata[$i]->description;
                 if (!empty($viewdata[$i]->submitgroupid)) {
-                    $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view',
-                                                          get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
-                                                          $viewdata[$i]->submitgroupname);
+                    $data[$i]['submittedto'] = get_string(
+                        'viewsubmittedtogroup', 'view',
+                        get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
+                        hsc($viewdata[$i]->submitgroupname)
+                    );
                 }
                 else if (!empty($viewdata[$i]->submithostwwwroot)) {
-                    $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view', $viewdata[$i]->submithostwwwroot, $viewdata[$i]->submithostname);
+                    $data[$i]['submittedto'] = get_string(
+                        'viewsubmittedtogroup', 'view',
+                        $viewdata[$i]->submithostwwwroot, hsc($viewdata[$i]->submithostname)
+                    );
                 }
                 $data[$i]['artefacts'] = array();
                 $data[$i]['accessgroups'] = array();
