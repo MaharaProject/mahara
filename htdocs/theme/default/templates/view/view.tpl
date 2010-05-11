@@ -12,7 +12,7 @@
 </div>
 {/if}
 
-<p class="view-description">{$viewdescription}</p>
+<p class="view-description">{$viewdescription|clean_html}</p>
 
 <div id="view" class="cb">
         <div id="bottom-pane">

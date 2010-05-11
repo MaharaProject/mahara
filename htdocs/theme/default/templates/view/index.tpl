@@ -35,7 +35,7 @@
     {/if}
     {if $view.description}
         {if !$view.submittedto}<br>{/if}
-        {$view.description}
+        {$view.description|clean_html}
     {/if}
     </div>
     <div class="viewitem">
