@@ -2,7 +2,7 @@
 
 <h1>{if !$new}<a href="{$WWWROOT}view/view.php?id={$viewid}">{/if}{$viewtitle|escape}{if !$new}</a>{/if}</h1>
 
-<p id="view-description">{$viewdescription}</p>
+<p id="view-description">{$viewdescription|clean_html}</p>
 
 <div id="view" class="cb">
         <div id="bottom-pane">
