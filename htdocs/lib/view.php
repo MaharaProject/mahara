@@ -2141,14 +2141,18 @@ class View {
                 $data[$i]['description'] = $viewdata[$i]->description;
                 if (!empty($viewdata[$i]->submitgroupid)) {
                     if (!empty($viewdata[$i]->submittedtime)) {
-                        $data[$i]['submittedto'] = get_string('viewsubmittedtogroupon', 'view',
-                                                            get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
-                                                            $viewdata[$i]->submitgroupname, format_date(strtotime($viewdata[$i]->submittedtime)));
+                        $data[$i]['submittedto'] = get_string(
+                            'viewsubmittedtogroupon', 'view',
+                            get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
+                            hsc($viewdata[$i]->submitgroupname), format_date(strtotime($viewdata[$i]->submittedtime))
+                        );
                     }
                     else {
-                        $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view',
-                                                            get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
-                                                            $viewdata[$i]->submitgroupname);
+                        $data[$i]['submittedto'] = get_string(
+                            'viewsubmittedtogroup', 'view',
+                            get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
+                            hsc($viewdata[$i]->submitgroupname)
+                        );
                     }
                 }
                 else if (!empty($viewdata[$i]->submithostwwwroot)) {
