@@ -46,7 +46,7 @@
 {elseif $view.type == 'grouphomepage'}
                                 <div class="videsc">{str tag=grouphomepagedescription section=view}</div>
 {elseif $view.description}
-                                <div class="videsc">{$view.description}</div>
+                                <div class="videsc">{$view.description|clean_html}</div>
 {/if}
 {if $view.tags}
                                 <div class="tags">{str tag=tags}: {list_tags owner=$view.owner tags=$view.tags}</div>
