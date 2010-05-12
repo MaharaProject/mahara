@@ -197,7 +197,7 @@ else {
             ));
         }
         else {
-            $view['submittedto'] = get_string('viewsubmittedtogroup', 'view', $view['submittedto']['id'], $view['submittedto']['name']);
+            $view['submittedto'] = get_string('viewsubmittedtogroup', 'view', $view['submittedto']['id'], hsc($view['submittedto']['name']));
         }
     }
 }
