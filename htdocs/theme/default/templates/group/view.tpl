@@ -41,11 +41,11 @@
                 {if $view.sharedby}
                     {str tag=by section=view}
                     {if $view.group}
-                        <a href="{$WWWROOT}group/view.php?id={$view.group}">{$view.sharedby}</a>
+                        <a href="{$WWWROOT}group/view.php?id={$view.group}">{$view.sharedby|escape}</a>
                     {elseif $view.owner}
-                        <a href="{$WWWROOT}user/view.php?id={$view.owner}">{$view.sharedby}</a>
+                        <a href="{$WWWROOT}user/view.php?id={$view.owner}">{$view.sharedby|escape}</a>
                     {else}
-                        {$view.sharedby}
+                        {$view.sharedby|escape}
                     {/if}
                 {/if}
                 <div>{$view.shortdescription}</div>
@@ -71,11 +71,11 @@
                 {if $view.sharedby}
                     {str tag=by section=view}
                     {if $view.group}
-                        <a href="{$WWWROOT}group/view.php?id={$view.group}">{$view.sharedby}</a>
+                        <a href="{$WWWROOT}group/view.php?id={$view.group}">{$view.sharedby|escape}</a>
                     {elseif $view.owner}
-                        <a href="{$WWWROOT}user/view.php?id={$view.owner}">{$view.sharedby}</a>
+                        <a href="{$WWWROOT}user/view.php?id={$view.owner}">{$view.sharedby|escape}</a>
                     {else}
-                        {$view.sharedby}
+                        {$view.sharedby|escape}
                     {/if}
                 {/if}
                 <div>{$view.shortdescription}</div>
