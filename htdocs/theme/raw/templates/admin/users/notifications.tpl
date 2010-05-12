@@ -1,4 +1,3 @@
-{auto_escape off}
 {include file="header.tpl"}
 
             <table id="notificationstable" class="fullwidth table">
@@ -16,7 +15,7 @@
 {foreach from=$users item='user' key='userid'}
                 <tr class="{cycle values="r0,r1"}">
                     <td class='center'><img src="{$WWWROOT}thumb.php?type=profileicon&maxwidth=40&maxheight=40&id={$userid}" alt="profile icon"/></td>
-                    <td>{display_name user=$user.user}</td>
+                    <td>{$user.user|display_name|escape}</td>
                     <td>
                     {foreach from=$user.user->institutions item=i}
                         <div>{$i}</div>
@@ -31,4 +30,3 @@
             </table>
 
 {include file="footer.tpl"}
-{/auto_escape}

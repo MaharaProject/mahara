@@ -1,4 +1,3 @@
-{{auto_escape off}}
 <script type="text/javascript">
     var {{$name}}_d;
 
@@ -57,9 +56,9 @@
                 if(users.count > users.limit) {
                     replaceChildNodes('{{$name}}_messages',
                         DIV(null,
-                            {{$onlyshowingfirst}}, ' ',
+                            {{$onlyshowingfirst|safe}}, ' ',
                             SPAN({'id': '{{$name}}_userlimit'}, users.limit),
-                            ' ', {{$resultsof}}, ' ',
+                            ' ', {{$resultsof|safe}}, ' ',
                             SPAN({'id': '{{$name}}_usercount'}, users.count - counter)
                         )
                     );
@@ -71,7 +70,7 @@
         removeElement($('{{$name}}_potential').childNodes[0]);
         removeElement($('{{$name}}_members').childNodes[0]);
 
-        {{$name}}_searchparams = {{$searchparams}};
+        {{$name}}_searchparams = {{$searchparams|safe}};
 
         {{$name}}_searchfunc({});
 
@@ -160,7 +159,7 @@
         <td class="lrfieldlists">
             <select size="10" multiple="true" id="{{$name}}_members" style="width: 100%;"><option></option>
 {{foreach from=$options key=id item=user}}
-                <option value="{{$id|escape}}">{{$user|escape}}</option>
+                <option value="{{$id}}">{{$user}}</option>
 {{/foreach}}
             </select>
         </td>
@@ -172,4 +171,3 @@
     </tr>
 </table>
 <input type="hidden" id="{{$name}}" name="{{$name}}" value="{{$value}}">
-{{/auto_escape}}

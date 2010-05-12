@@ -1,4 +1,3 @@
-{auto_escape off}
 {include file='header.tpl'}
 
 <div class="message" id="close-site">
@@ -9,7 +8,7 @@
     <h3>{str tag=closesite section=admin}</h3>
     {str tag=closesitedetail section=admin}
 {/if}
-    {$closeform}
+    {$closeform|safe}
 </div>
 
 <div id="adminhome">
@@ -27,7 +26,7 @@
 {foreach from=$upgrades key=key item=upgrade}
 {if $key != 'disablelogin'}
     <tr>
-        <td><strong>{$key|hsc}</strong></td>
+        <td><strong>{$key}</strong></td>
         <td>{$upgrade->fromrelease} ({$upgrade->from})</td>
         <td>{$upgrade->torelease} ({$upgrade->to})</td>
     </tr>
@@ -102,4 +101,4 @@
 
 <div class="cb"></div>
 {include file='footer.tpl'}
-{/auto_escape}
+
