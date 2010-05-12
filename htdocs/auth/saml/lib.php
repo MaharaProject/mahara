@@ -47,6 +47,8 @@ class AuthSaml extends Auth {
         $this->config['institutionregex'] = 0;
         $this->config['institutionvalue'] = '';
         $this->config['updateuserinfoonlogin'] = 1;
+        $this->config['remoteuser'] = false;
+        $this->instanceid = $id;
         
         if (!empty($id)) {
             return $this->init($id);
@@ -135,7 +137,13 @@ class AuthSaml extends Auth {
                 }
 
             }
-            $user->find_by_username($remoteuser);
+            $isremote = $this->config['remoteuser'] ? true : false;
+            if ($isremote) {
+                $user->find_by_instanceid_username($this->instanceid, $remoteuser, $isremote);
+            }
+            else {
+                $user->find_by_username($remoteuser);
+            }
 
             if ($user->get('suspendedcusr')) {
                 die_info(get_string('accountsuspended', 'mahara', strftime(get_string('strftimedaydate'), $user->get('suspendedctime')), $user->get('suspendedreason')));
@@ -263,7 +271,7 @@ class PluginAuthSaml extends PluginAuth {
         'simplesamlphplib'      => '',
         'simplesamlphpconfig'   => '',
         'user_attribute'        => '',
-        'weautocreateusers'     => 1,
+        'weautocreateusers'     => 0,
         'firstnamefield'        => '',
         'surnamefield'          => '',
         'emailfield'            => '',
@@ -272,6 +280,7 @@ class PluginAuthSaml extends PluginAuth {
         'institutionattribute'  => '',
         'institutionvalue'      => '',
         'institutionregex'      => 0,
+        'remoteuser'            => 0,
             );
 
     public static function has_config() {
@@ -401,6 +410,12 @@ class PluginAuthSaml extends PluginAuth {
                 'defaultvalue' => self::$default_config['user_attribute'],
                 'help' => true,
             ),
+            'remoteuser' => array(
+                'type'  => 'checkbox',
+                'title' => get_string('remoteuser', 'auth.saml'),
+                'defaultvalue' => self::$default_config['remoteuser'],
+                'help'  => true,
+            ),
             'updateuserinfoonlogin' => array(
                 'type'  => 'checkbox',
                 'title' => get_string('updateuserinfoonlogin', 'auth.saml'),
@@ -458,6 +473,11 @@ class PluginAuthSaml extends PluginAuth {
                 $form->set_error('simplesamlphpconfig', get_string('errorbadconfig', 'auth.saml', $values['simplesamlphpconfig']));
             }
         }
+        if (isset($values['weautocreateusers'])) {
+            if ($values['weautocreateusers'] && $values['remoteuser']) {
+                $form->set_error('weautocreateusers', get_string('errorbadcombo', 'auth.saml'));
+            }
+        }
     }
     
     
@@ -507,6 +527,7 @@ class PluginAuthSaml extends PluginAuth {
     
             self::$default_config =   array('user_attribute' => $values['user_attribute'],
                                             'weautocreateusers' => $values['weautocreateusers'],
+                                            'remoteuser' => $values['remoteuser'],
                                             'firstnamefield' => $values['firstnamefield'],
                                             'surnamefield' => $values['surnamefield'],
                                             'emailfield' => $values['emailfield'],
