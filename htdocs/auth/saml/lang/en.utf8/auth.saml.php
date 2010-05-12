@@ -34,6 +34,7 @@ $string['errorretryexceeded'] = 'Maximum number of retries exceeded (%s) - there
 $string['errnosamluser'] = 'No User found';
 $string['errorbadlib'] = 'SimpleSAMLPHP lib directory %s is not correct.';
 $string['errorbadconfig'] = 'SimpleSAMLPHP config directory %s is in correct.';
+$string['errorbadcombo'] = 'You can only choose user auto creation if you have not selected remoteuser';
 //$string['idpidentity'] = 'IdP Identity Service';
 $string['institutionattribute'] = 'Institution attribute (contains "%s")';
 $string['institutionvalue'] = 'Institution value to check against attribute';
@@ -48,4 +49,5 @@ $string['userattribute'] = 'User attribute';
 $string['simplesamlphplib'] = 'SimpleSAMLPHP lib directory';
 $string['simplesamlphpconfig'] = 'SimpleSAMLPHP config directory';
 $string['weautocreateusers'] = 'We auto-create users';
+$string['remoteuser'] = 'Match username attribute to Remote username';
 ?>

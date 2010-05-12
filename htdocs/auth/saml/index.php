@@ -197,7 +197,9 @@ function simplesaml_init($saml_config, $valid_saml_session, $saml_attributes, $a
         
         // find the one (it should be only one) that has the right field, and the right field value for institution
         $instance = false;
+        $institutions = array();
         foreach ($instances as $row) {
+            $institutions[]= $row->instance.':'.$row->institution.':'.$row->value;
             if (isset($saml_attributes[$row->value])) {
                 // does this institution use a regex match against the institution check value?
                 if ($configvalue = get_record('auth_instance_config', 'instance', $row->instance, 'field', 'institutionregex')) {
@@ -232,6 +234,8 @@ function simplesaml_init($saml_config, $valid_saml_session, $saml_attributes, $a
             }
         }
         if (!$instance) {
+            log_warn("auth/saml: could not find an authinstance from: " . join(",  ", $institutions));
+            log_warn("auth/saml: could not find the saml institutionattribute for user: ".var_export($saml_attributes, true));
             throw new UserNotFoundException(get_string('errorbadinstitution','auth.saml'));
         }
         try {
