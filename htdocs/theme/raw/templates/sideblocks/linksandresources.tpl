@@ -4,7 +4,7 @@
 {if $sbdata}
     <ul>
 {foreach from=$sbdata item=item}
-    	<li><strong><a href="{$item.link|escape}">{$item.name}</a></strong></li>
+      <li><strong><a href="{$item.link|escape}">{$item.name|escape}</a></strong></li>
 {/foreach}
     </ul>
 {/if}
