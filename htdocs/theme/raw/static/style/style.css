@@ -389,6 +389,11 @@ input.error, select.error {
 	line-height: 1.2em;
 }
 
+/* Calendar text style for required */
+input.calendar.required {
+	border: 1px solid #e98a88;
+}
+
 /****************************** Buttons ****************************/
 /** input buttons **/
 input.submit,
