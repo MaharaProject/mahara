@@ -1,3 +1,4 @@
+{auto_escape off}
 {loadquota}
     <h3>{str tag="quota"}</h3>
         <div class="sidebar-content">
@@ -18,4 +19,4 @@
     </p>
 {/if}
 	</div>
-</div>
+</div>{/auto_escape}

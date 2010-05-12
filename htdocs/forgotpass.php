@@ -59,6 +59,7 @@ if (isset($_GET['key'])) {
             'password1' => array(
                 'type' => 'password',
                 'title' => get_string('password'),
+                'description' => get_string('yournewpassword'),
                 'rules' => array(
                     'required' => true
                 )

@@ -1370,5 +1370,379 @@ function xmldb_core_upgrade($oldversion=0) {
         ");
     }
 
+    if ($oldversion < 2010040700) {
+        set_antispam_defaults();
+    }
+
+    if ($oldversion < 2010040800) {
+        execute_sql('ALTER TABLE {view} ADD COLUMN submittedtime TIMESTAMP');
+    }
+
+    if ($oldversion < 2010041200) {
+        delete_records('config', 'field', 'captchaoncontactform');
+        delete_records('config', 'field', 'captchaonregisterform');
+    }
+
+    if ($oldversion < 2010041201) {
+        $sql = "
+            SELECT u.id
+            FROM {usr} u
+            LEFT JOIN {artefact} a
+                ON (a.owner = u.id AND a.artefacttype = 'blog')
+            WHERE u.id > 0
+            GROUP BY u.id
+            HAVING COUNT(a.id) != 1";
+
+        $manyblogusers = get_records_sql_array($sql, null);
+
+        if ($manyblogusers) {
+            foreach($manyblogusers as $u) {
+                $where = (object)array(
+                    'usr' => $u->id,
+                    'field' => 'multipleblogs',
+                );
+                $data = (object)array(
+                    'usr' => $u->id,
+                    'field' => 'multipleblogs',
+                    'value' => 1,
+                );
+                ensure_record_exists('usr_account_preference', $where, $data);
+            }
+        }
+    }
+
+    if ($oldversion < 2010041600 && table_exists(new XMLDBTable('view_feedback'))) {
+        // Add author, authorname to artefact table
+        $table = new XMLDBTable('artefact');
+        $field = new XMLDBField('author');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '10');
+        add_field($table, $field);
+
+        $key = new XMLDBKey('authorfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('author'), 'usr', array('id'));
+        add_key($table, $key);
+
+        table_column('artefact', null, 'authorname', 'text', null, null, null, '');
+
+        if (is_postgres()) {
+            execute_sql("ALTER TABLE {artefact} ALTER COLUMN authorname DROP DEFAULT");
+            set_field('artefact', 'authorname', null);
+            execute_sql('UPDATE {artefact} SET authorname = g.name FROM {group} g WHERE "group" = g.id');
+            execute_sql("UPDATE {artefact} SET authorname = CASE WHEN institution = 'mahara' THEN ? ELSE i.displayname END FROM {institution} i WHERE institution = i.name", array(get_config('sitename')));
+        }
+        else {
+            execute_sql("UPDATE {artefact} a, {group} g SET a.authorname = g.name WHERE a.group = g.id");
+            execute_sql("UPDATE {artefact} a, {institution} i SET a.authorname = CASE WHEN a.institution = 'mahara' THEN ? ELSE i.displayname END WHERE a.institution = i.name", array(get_config('sitename')));
+        }
+        execute_sql('UPDATE {artefact} SET author = owner WHERE owner IS NOT NULL');
+
+        execute_sql('ALTER TABLE {artefact} ADD CHECK (
+            (author IS NOT NULL AND authorname IS NULL    ) OR
+            (author IS NULL     AND authorname IS NOT NULL)
+        )');
+
+        // Move feedback activity type to artefact plugin
+        execute_sql("
+            UPDATE {activity_type}
+            SET plugintype = 'artefact', pluginname = 'comment'
+            WHERE name = 'feedback'
+        ");
+
+        // Install the comment artefact
+        if ($data = check_upgrades('artefact.comment')) {
+            upgrade_plugin($data);
+        }
+
+        // Flag all views & artefacts to enable/disable comments
+        table_column('artefact', null, 'allowcomments', 'integer', 1);
+        table_column('view', null, 'allowcomments', 'integer', 1, null, 1);
+        // Initially allow comments on blogposts, images, files
+        set_field_select('artefact', 'allowcomments', 1, 'artefacttype IN (?,?,?)', array('blogpost', 'image', 'file'));
+
+        // Convert old feedback to comment artefacts
+        if ($viewfeedback = get_records_sql_array('
+            SELECT f.*, v.id AS viewid, v.owner, v.group, v.institution
+            FROM {view_feedback} f JOIN {view} v ON f.view = v.id', array())) {
+            foreach ($viewfeedback as &$f) {
+                if ($f->author > 0) {
+                    $f->authorname = null;
+                }
+                else {
+                    $f->author = null;
+                    if (empty($f->authorname)) {
+                        $f->authorname = '?';
+                    }
+                }
+                $artefact = (object) array(
+                    'artefacttype' => 'comment',
+                    'owner'        => $f->owner,
+                    'group'        => $f->group,
+                    'institution'  => $f->institution,
+                    'author'       => $f->author,
+                    'authorname'   => $f->authorname,
+                    'title'        => get_string('Comment', 'artefact.comment'),
+                    'description'  => $f->message,
+                    'ctime'        => $f->ctime,
+                    'atime'        => $f->ctime,
+                    'mtime'        => $f->ctime,
+                );
+                $aid = insert_record('artefact', $artefact, 'id', true);
+                $comment = (object) array(
+                    'artefact'     => $aid,
+                    'private'      => 1-$f->public,
+                    'onview'       => $f->viewid,
+                );
+                insert_record('artefact_comment_comment', $comment);
+                if (!empty($f->attachment)) {
+                    insert_record('artefact_attachment', (object) array(
+                        'artefact'   => $aid,
+                        'attachment' => $f->attachment
+                    ));
+                }
+            }
+        }
+
+        // We are throwing away the view information from artefact_feedback.
+        // From now on all artefact comments appear together and are not
+        // tied to a particular view.
+        if ($artefactfeedback = get_records_sql_array('
+            SELECT f.*, a.id AS artefactid, a.owner, a.group, a.institution
+            FROM {artefact_feedback} f JOIN {artefact} a ON f.artefact = a.id', array())) {
+            foreach ($artefactfeedback as &$f) {
+                $artefact = (object) array(
+                    'artefacttype' => 'comment',
+                    'owner'        => $f->owner,
+                    'group'        => $f->group,
+                    'institution'  => $f->institution,
+                    'author'       => $f->author,
+                    'authorname'   => $f->authorname,
+                    'title'        => get_string('Comment', 'artefact.comment'),
+                    'description'  => $f->message,
+                    'ctime'        => $f->ctime,
+                    'atime'        => $f->ctime,
+                    'mtime'        => $f->ctime,
+                );
+                $aid = insert_record('artefact', $artefact, 'id', true);
+                $comment = (object) array(
+                    'artefact'     => $aid,
+                    'private'      => 1-$f->public,
+                    'onartefact'   => $f->artefactid,
+                );
+                insert_record('artefact_comment_comment', $comment);
+            }
+        }
+
+        // Drop feedback tables
+        $table = new XMLDBTable('view_feedback');
+        drop_table($table);
+        $table = new XMLDBTable('artefact_feedback');
+        drop_table($table);
+
+        // Add site setting for anonymous comments
+        set_config('anonymouscomments', 1);
+    }
+
+    if ($oldversion < 2010041900 && !table_exists(new XMLDBTable('site_data'))) {
+        // Upgrades for admin stats pages
+
+        // Table for collection of historical stats
+        $table = new XMLDBTable('site_data');
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('type', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('value', XMLDB_TYPE_TEXT, 'small', null);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('ctime','type'));
+        create_table($table);
+
+        // Insert cron jobs to save site data
+        $cron = new StdClass;
+        $cron->callfunction = 'cron_site_data_weekly';
+        $cron->minute       = 55;
+        $cron->hour         = 23;
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = 6;
+        insert_record('cron', $cron);
+
+        $cron = new StdClass;
+        $cron->callfunction = 'cron_site_data_daily';
+        $cron->minute       = 51;
+        $cron->hour         = 23;
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
+        insert_record('cron', $cron);
+
+        // Put best guess at installation time into config table.
+        set_config('installation_time', get_field_sql("SELECT MIN(ctime) FROM {site_content}"));
+
+        // Save the current time so we know when we started collecting stats
+        set_config('stats_installation_time', db_format_timestamp(time()));
+
+        // Add ctime to usr table for daily count of users created
+        $table = new XMLDBTable('usr');
+        $field = new XMLDBField('ctime');
+        $field->setAttributes(XMLDB_TYPE_DATETIME, null, null);
+        add_field($table, $field);
+
+        // Add visits column to view table
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('visits');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+
+        // Add table to store daily view visits
+        $table = new XMLDBTable('view_visit');
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+        $table->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
+        $table->addIndexInfo('ctimeix', XMLDB_INDEX_NOTUNIQUE, array('ctime'));
+        create_table($table);
+
+        // Insert a cron job to check for new versions of Mahara
+        $cron = new StdClass;
+        $cron->callfunction = 'cron_check_for_updates';
+        $cron->minute       = rand(0, 59);
+        $cron->hour         = rand(0, 23);
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
+        insert_record('cron', $cron);
+    }
+
+    if ($oldversion < 2010042600) {
+        // @todo: Move to notification/internal
+        $table = new XMLDBTable('notification_internal_activity');
+        $field = new XMLDBField('parent');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '10');
+        add_field($table, $field);
+
+        $key = new XMLDBKey('parentfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('parent'), 'notification_internal_activity', array('id'));
+        add_key($table, $key);
+
+        $field = new XMLDBField('from');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '10');
+        add_field($table, $field);
+
+        $key = new XMLDBKey('fromfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('from'), 'usr', array('id'));
+        add_key($table, $key);
+
+        // Set from column for old user messages
+        $usermessages = get_records_array(
+            'notification_internal_activity',
+            'type',
+            get_field('activity_type', 'id', 'name', 'usermessage')
+        );
+        if ($usermessages) {
+            foreach ($usermessages as &$m) {
+                if (preg_match('/sendmessage\.php\?id=(\d+)/', $m->url, $match)) {
+                    set_field('notification_internal_activity', 'from', $match[1], 'id', $m->id);
+                }
+            }
+        }
+    }
+
+    if ($oldversion < 2010042602 && !get_record('view_type', 'type', 'dashboard')) {
+        insert_record('view_type', (object)array(
+            'type' => 'dashboard',
+        ));
+        if ($data = check_upgrades('blocktype.inbox')) {
+            upgrade_plugin($data);
+        }
+        if ($data = check_upgrades('blocktype.newviews')) {
+            upgrade_plugin($data);
+        }
+        // Install system dashboard view
+        require_once(get_config('libroot') . 'view.php');
+        $dbtime = db_format_timestamp(time());
+        $viewdata = (object) array(
+            'type'        => 'dashboard',
+            'owner'       => 0,
+            'numcolumns'  => 2,
+            'ownerformat' => FORMAT_NAME_PREFERREDNAME,
+            'title'       => get_string('dashboardviewtitle', 'view'),
+            'template'    => 1,
+            'ctime'       => $dbtime,
+            'atime'       => $dbtime,
+            'mtime'       => $dbtime,
+        );
+        $id = insert_record('view', $viewdata, 'id', true);
+        $accessdata = (object) array('view' => $id, 'accesstype' => 'loggedin');
+        insert_record('view_access', $accessdata);
+        $blocktypes = array(
+            array(
+                'blocktype' => 'newviews',
+                'title' => get_string('title', 'blocktype.newviews'),
+                'column' => 1,
+                'config' => array(
+                    'limit' => 5,
+                ),
+            ),
+            array(
+                'blocktype' => 'myviews',
+                'title' => get_string('title', 'blocktype.myviews'),
+                'column' => 1,
+                'config' => null,
+            ),
+            array(
+                'blocktype' => 'inbox',
+                'title' => get_string('recentactivity'),
+                'column' => 2,
+                'config' => array(
+                    'feedback' => true,
+                    'groupmessage' => true,
+                    'institutionmessage' => true,
+                    'maharamessage' => true,
+                    'usermessage' => true,
+                    'viewaccess' => true,
+                    'watchlist' => true,
+                    'maxitems' => '5',
+                ),
+            ),
+            array(
+                'blocktype' => 'inbox',
+                'title' => get_string('topicsimfollowing'),
+                'column' => 2,
+                'config' => array(
+                    'newpost' => true,
+                    'maxitems' => '5',
+                ),
+            ),
+        );
+        $installed = get_column_sql('SELECT name FROM {blocktype_installed}');
+        $weights = array(1 => 0, 2 => 0);
+        foreach ($blocktypes as $blocktype) {
+            if (in_array($blocktype['blocktype'], $installed)) {
+                $weights[$blocktype['column']]++;
+                insert_record('block_instance', (object) array(
+                    'blocktype'  => $blocktype['blocktype'],
+                    'title'      => $blocktype['title'],
+                    'view'       => $id,
+                    'column'     => $blocktype['column'],
+                    'order'      => $weights[$blocktype['column']],
+                    'configdata' => serialize($blocktype['config']),
+                ));
+            }
+        }
+    }
+
+    if ($oldversion < 2010042603) {
+        execute_sql('ALTER TABLE {usr} ADD COLUMN showhomeinfo SMALLINT NOT NULL DEFAULT 1');
+        set_config('homepageinfo', 1);
+    }
+
+    if ($oldversion < 2010042604) {
+        // @todo: Move to notification/internal
+        $table = new XMLDBTable('notification_internal_activity');
+        $field = new XMLDBField('urltext');
+        $field->setAttributes(XMLDB_TYPE_TEXT);
+        add_field($table, $field);
+    }
+
+    if ($oldversion < 2010051000) {
+        set_field('activity_type', 'delay', 1, 'name', 'groupmessage');
+    }
+
     return $status;
 }

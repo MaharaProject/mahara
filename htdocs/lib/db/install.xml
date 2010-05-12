@@ -104,6 +104,8 @@
                 <FIELD NAME="quota" TYPE="int" LENGTH="10" NOTNULL="false"/>
                 <FIELD NAME="quotaused" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="authinstance" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="showhomeinfo" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -331,6 +333,9 @@
                 <FIELD NAME="title" TYPE="text" NOTNULL="true"  />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false"  />
                 <FIELD NAME="note" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="author" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="authorname" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="allowcomments" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"  />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -339,6 +344,7 @@
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name" />
                 <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
+                <KEY NAME="authorfk" TYPE="foreign" FIELDS="author" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <TABLE NAME="artefact_attachment">
@@ -571,12 +577,15 @@
                 <FIELD NAME="atime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="submittedgroup" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="submittedhost" TYPE="char" LENGTH="255" NOTNULL="false" />
+                <FIELD NAME="submittedtime" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="numcolumns" TYPE="int" LENGTH="2" NOTNULL="true" />
                 <FIELD NAME="layout" TYPE="int" LENGTH="10"/>
                 <FIELD NAME="theme" TYPE="char" LENGTH="255" NOTNULL="false"/>
                 <FIELD NAME="template" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
                 <FIELD NAME="copynewuser" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
                 <FIELD NAME="type" TYPE="char" LENGTH="50" NOTNULL="true" />
+                <FIELD NAME="visits" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="allowcomments" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"  />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -641,42 +650,6 @@
                 <KEY NAME="blockfk" TYPE="foreign" FIELDS="block" REFTABLE="block_instance" REFFIELDS="id" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="view_feedback">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="author" TYPE="int" LENGTH="10" NOTNULL="false" />
-                <FIELD NAME="authorname" TYPE="text" NOTNULL="false" />
-                <FIELD NAME="message" TYPE="text" NOTNULL="true" />
-                <FIELD NAME="attachment" TYPE="int" LENGTH="10" NOTNULL="false" />
-                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
-                <FIELD NAME="public" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
-                <KEY NAME="authorfk" TYPE="foreign" FIELDS="author" REFTABLE="usr" REFFIELDS="id" />
-                <KEY NAME="attachmentfk" TYPE="foreign" FIELDS="attachment" REFTABLE="artefact" REFFIELDS="id" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="artefact_feedback">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="author" TYPE="int" LENGTH="10" NOTNULL="false" />
-                <FIELD NAME="authorname" TYPE="text" NOTNULL="false" />
-                <FIELD NAME="message" TYPE="text" NOTNULL="false" />
-                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
-                <FIELD NAME="public" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
-                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
-                <KEY NAME="authorfk" TYPE="foreign" FIELDS="author" REFTABLE="usr" REFFIELDS="id" />
-            </KEYS>
-        </TABLE>
         <TABLE NAME="view_access">
             <FIELDS>
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
@@ -725,6 +698,18 @@
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
                 <KEY NAME="primary" TYPE="primary" FIELDS="token" />
             </KEYS>
+        </TABLE>
+        <TABLE NAME="view_visit">
+            <FIELDS>
+                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="ctimeix" UNIQUE="false" FIELDS="ctime"/>
+            </INDEXES>
         </TABLE>
         <!-- site content stuff -->
         <!-- 
@@ -791,6 +776,16 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="hostfk" TYPE="foreign" FIELDS="host" REFTABLE="host" REFFIELDS="wwwroot" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="site_data">
+            <FIELDS>
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="type" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="value" TYPE="text" LENGTH="small"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="ctime,type" />
             </KEYS>
         </TABLE>
     </TABLES>

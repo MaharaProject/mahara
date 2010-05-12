@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $post->id}<a name="post{$post->id}"></a>{/if}
 
 
@@ -38,3 +39,4 @@
     </td>
 </tr>
 </table>
+{/auto_escape}

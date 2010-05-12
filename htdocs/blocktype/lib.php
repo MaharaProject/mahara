@@ -305,7 +305,7 @@ abstract class PluginBlocktype extends Plugin {
     }
 
     /**
-     * Exports configuration data the format required for LEAP2A export.
+     * Exports configuration data the format required for Leap2A export.
      *
      * This format is XML, and as the exporter can't generate complicated XML
      * structures, we have to json_encode all the values.

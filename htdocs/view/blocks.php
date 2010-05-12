@@ -40,6 +40,7 @@ header('X-UA-Compatible: IE=EmulateIE7');
 $id = param_integer('id', 0); // if 0, we're editing our profile.
 $new = param_boolean('new', false);
 $profile = param_boolean('profile');
+$dashboard = param_boolean('dashboard');
 
 if (empty($id)) {
     if (!empty($profile)) {
@@ -99,13 +100,22 @@ View::set_nav($group, $institution, ($view->get('type') == 'profile'));
 
 if ($view->get('type') == 'profile') {
     $profile = true;
+    $displaylink = get_config('wwwroot') . 'user/view.php';
     $title = get_string('usersprofile', 'mahara', display_name($view->get('owner'), null, true));
     define('TITLE', $title . ': ' . get_string('editcontentandlayout', 'view'));
 }
+else if ($view->get('type') == 'dashboard') {
+    $dashboard = true;
+    $displaylink = get_config('wwwroot');
+    $title = get_string('usersdashboard', 'mahara', display_name($view->get('owner'), null, true));
+    define('TITLE', $title . ': ' . get_string('editcontentandlayout', 'view'));
+}
 else if ($new) {
+    $displaylink = get_config('wwwroot') . 'view/view.php?id=' . $view->get('id') . '&new=1';
     define('TITLE', get_string('editcontentandlayout', 'view'));
 }
 else {
+    $displaylink = get_config('wwwroot') . 'view/view.php?id=' . $view->get('id');
     define('TITLE', $view->get('title') . ': ' . get_string('editcontentandlayout', 'view'));
 }
 
@@ -179,10 +189,12 @@ foreach (array_keys($_POST + $_GET) as $key) {
 }
 
 $smarty->assign('maintitle', hsc(TITLE));
+$smarty->assign('displaylink', $displaylink);
 $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
 $smarty->assign('category', $category);
 $smarty->assign('new', $new);
 $smarty->assign('profile', $profile);
+$smarty->assign('dashboard', $dashboard);
 $viewid = $view->get('id');
 $viewtype = $view->get('type');
 $viewtitle = $view->get('title');
@@ -196,20 +208,8 @@ if (get_config('viewmicroheaders')) {
     $smarty->assign('microheadertitle', $view->display_title(true, false));
 
     if ($owner) {
-        if ($viewtype == 'profile') {
-            $microheaderlinks = array(
-                array(
-                    'name' => get_string('viewmyprofilepage'),
-                    'url' => get_config('wwwroot') . 'user/view.php',
-                ),
-                array(
-                    'name' => get_string('editmyprofile', 'artefact.internal'),
-                    'url' => get_config('wwwroot') . 'artefact/internal/index.php',
-                    'type' => 'edit',
-                ),
-            );
-        }
-        else if ($new) {
+        $nolinks = array('profile', 'dashboard');
+        if ($new || in_array($viewtype, $nolinks)) {
             $microheaderlinks = array();
         }
         else {

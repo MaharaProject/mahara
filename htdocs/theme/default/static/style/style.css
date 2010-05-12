@@ -176,9 +176,37 @@ input#files_filebrowser_edit_artefact {
 	background: #6e8e00;
 	color: #FFF;
 }
+#btn-logout,
+#buttons_delete,
+input.cancel,
+input.btn-del {
+    border-color: #eda58c #611700 #611700 #eda58c !important;
+    background: #8f2100 !important;
+}
+#btn-logout:hover,
+#buttons_delete:hover,
+input.cancel:hover,
+input.btn-del:hover {
+    background: #A82700 !important;
+}
+#btn-logout:active,
+#buttons_delete:active,
+input.cancel:active,
+input.btn-del:active {
+    border-color: #611700 #eda58c #eda58c #611700 !important;
+    background: #A82700 !important;
+}
+input.quiet {
+  background: none !important;
+  color: #6e8e00;
+}
+input.quiet.btn-del {
+  background: none !important;
+  color: #ca0000 !important;
+}
+
 /** link buttons **/
 .rbuttons a.btn,
-#sb-profile .controls a,
 .upgradeicon a,
 #loginas .btn-loginas {
 	border-color: #d5ed8a #496000 #496000 #d5ed8a;
@@ -193,8 +221,7 @@ input.button:hover,
 input.buttondk:hover,
 input.select:hover,
 input#files_filebrowser_edit_artefact:hover,
-.rbuttons a.btn:hover,
-#sb-profile .controls a:hover {
+.rbuttons a.btn:hover {
 	background: #84aa00;
 	text-decoration: none;
 }
@@ -206,8 +233,7 @@ input.button:active,
 input.buttondk:active,
 input.select:active,
 input#files_filebrowser_edit_artefact:active,
-.rbuttons a.btn:active,
-#sb-profile .controls a:active {
+.rbuttons a.btn:active {
 	border-color: #496000 #d5ed8a #d5ed8a #496000;
 	background: #84aa00;
 	color: #FFF;
@@ -342,6 +368,15 @@ input#myfriends_addfriend_add {
 }
 
 /**************** TOP NAVIGATION ****************/
+#right-nav ul {
+  float: right;
+  text-align: right;
+  margin: 2.5em 0.5em 0 0;
+}
+#right-nav li {
+  padding: 0 0.25em;
+}
+
 #main-nav {
 }
 #main-nav ul {
@@ -655,8 +690,6 @@ div.sideblock #friendscontrol label {
 }
 #wall .private {
 }
-.wallpost .postedon {
-}
 .wallpost .controls {
 }
 
@@ -781,4 +814,15 @@ ul.groupuserstatus li,
 
 /* Settings > Institution membership */
 #requestmembership_studentid_container label {
+}
+
+/* Home page info boxes */
+
+.home-info {
+    border: solid 2px #cccccc;
+    background: #eeeeee;
+}
+.home-info p.subtitle {
+    border-top: solid 1px #cccccc;
+    border-bottom: solid 1px #cccccc;
 }

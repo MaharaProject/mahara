@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 
             <p>{str tag=linksandresourcesmenupagedescription section=admin args=$descriptionstrargs}</p>
@@ -17,3 +18,4 @@
 			</div>
 
 {include file="footer.tpl"}
+{/auto_escape}

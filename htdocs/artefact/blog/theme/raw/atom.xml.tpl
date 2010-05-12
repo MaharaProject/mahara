@@ -1,3 +1,4 @@
+{auto_escape off}
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <title>{$feed.title}</title>
@@ -35,3 +36,4 @@
     </entry>
 {/foreach}
 </feed>
+{/auto_escape}

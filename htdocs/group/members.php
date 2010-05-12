@@ -34,7 +34,7 @@ require_once('searchlib.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
 
 define('GROUP', param_integer('id'));
-$membershiptype = param_alpha('membershiptype', null);
+$membershiptype = param_variable('membershiptype', '');
 
 $group = group_current_group();
 if (!is_logged_in() && !$group->public) {
@@ -80,13 +80,51 @@ if ('admin' == $role) {
     }
 }
 
-$smarty = smarty(array('groupmembersearch'));
+$searchform = pieform(array(
+    'name' => 'search',
+    'renderer' => 'oneline',
+    'elements' => array(
+        'id' => array(
+            'type' => 'hidden',
+            'value' => $group->id
+        ),
+        'membershiptype' => array(
+            'type' => 'hidden',
+            'value' => $membershiptype
+        ),
+        'query' => array(
+            'type' => 'text',
+            'defaultvalue' => $query
+        ),
+        'submit' => array(
+            'type' => 'submit',
+            'value' => get_string('search')
+        )
+    )
+));
+
+$js = <<< EOF
+addLoadEvent(function () {
+    p = {$pagination['javascript']}
+    connect('search_submit', 'onclick', function (event) {
+        replaceChildNodes('messages');
+        var params = {'query': $('search_query').value, 'id':$('search_id').value, 'membershiptype':$('search_membershiptype').value};
+        p.sendQuery(params);
+        event.stop();
+    });
+});
+EOF;
+
+$smarty = smarty(array('paginator'));
+$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('heading', $group->name);
-$smarty->assign('query', $query);
+$smarty->assign('form', $searchform);
 $smarty->assign('results', $html);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('instructions', $instructions);
 $smarty->assign('membershiptype', $membershiptype);
 $smarty->display('group/members.tpl');
 
-?>
+function search_submit(Pieform $form, $values) {
+    redirect('/group/members.php?id=' . $values['id'] . (!empty($values['query']) ? '&query=' . urlencode($values['query']) : '') . (!empty($values['membershiptype']) ? '&membershiptype=' . urlencode($values['membershiptype']) : ''));
+}

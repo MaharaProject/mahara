@@ -28,7 +28,7 @@
 defined('INTERNAL') || die();
 
 /**
-* LEAP export plugin.  See http://wiki.cetis.ac.uk/LEAP2A_specification and
+* LEAP export plugin.  See http://wiki.cetis.ac.uk/2009-03/Leap2A_specification and
 * http://wiki.mahara.org/Developer_Area/Import%2f%2fExport/LEAP_Export
 */
 class PluginExportLeap extends PluginExport {
@@ -125,6 +125,7 @@ class PluginExportLeap extends PluginExport {
     public function export() {
         // the xml stuff
         $this->export_header();
+        $this->setup_links();
         $this->notify_progress_callback(10, get_string('exportingviews', 'export'));
         $this->export_views();
         $this->notify_progress_callback(50, get_string('exportingartefacts', 'export'));
@@ -253,6 +254,111 @@ class PluginExportLeap extends PluginExport {
         }
     }
 
+
+    // Some links can be determined in advance
+    private function setup_links() {
+        if (empty($this->views) || empty($this->artefacts)) {
+            return;
+        }
+
+        $viewlist = join(',', array_keys($this->views));
+        $artefactlist = join(',', array_keys($this->artefacts));
+
+        // Artefacts directly in views
+        $records = get_records_select_array(
+            'view_artefact',
+            "view IN ($viewlist) OR artefact IN ($artefactlist)"
+        );
+        if ($records) {
+            foreach ($records as &$r) {
+                $this->links->viewcontents[$r->view][$r->artefact] = 1;
+                $this->links->artefactinview[$r->artefact][$r->view] = 1;
+            }
+        }
+
+        // Artefact parent-child relationships
+        $records = get_records_select_array(
+            'artefact',
+            "parent IN ($artefactlist) AND id IN ($artefactlist)",
+            array(),
+            '',
+            'id,parent'
+        );
+        if ($records) {
+            foreach ($records as &$r) {
+                $this->links->children[$r->parent][$r->id] = 1;
+                $this->links->parent[$r->id] = $r->parent;
+            }
+        }
+
+        // Artefact-attachment relationships
+        $records = get_records_select_array(
+            'artefact_attachment',
+            "artefact IN ($artefactlist) AND attachment IN ($artefactlist)"
+        );
+        if ($records) {
+            foreach ($records as &$r) {
+                $this->links->attachments[$r->artefact][$r->attachment] = 1;
+            }
+        }
+
+        // Other leap2a relationships
+        $this->links->viewartefact = array();
+        $this->links->artefactview = array();
+        $this->links->artefactartefact = array();
+        foreach (require_artefact_plugins() as $plugin) {
+            safe_require('export', 'leap/' . $plugin->name, 'lib.php', 'require_once', true);
+        }
+        foreach (plugins_installed('artefact') as $plugin) {
+            $classname = 'LeapExportElement' . ucfirst($plugin->name);
+            if (is_callable($classname . '::setup_links')) {
+                call_static_method(
+                    $classname,
+                    'setup_links',
+                    $this->links,
+                    array_keys($this->views),
+                    array_keys($this->artefacts)
+                );
+            }
+        }
+    }
+
+    public function artefact_in_view_links($artefactid) {
+        if (isset($this->links->artefactinview[$artefactid])) {
+            return array_keys($this->links->artefactinview[$artefactid]);
+        }
+    }
+
+    public function artefact_parent_link($artefactid) {
+        if (isset($this->links->parent[$artefactid])) {
+            return $this->artefacts[$this->links->parent[$artefactid]];
+        }
+    }
+
+    public function artefact_child_links($artefactid) {
+        if (isset($this->links->children[$artefactid])) {
+            return array_intersect_key($this->artefacts, $this->links->children[$artefactid]);
+        }
+    }
+
+    public function artefact_attachment_links($artefactid) {
+        if (isset($this->links->attachments[$artefactid])) {
+            return array_intersect_key($this->artefacts, $this->links->attachments[$artefactid]);
+        }
+    }
+
+    public function artefact_artefact_links($artefactid) {
+        if (isset($this->links->artefactartefact[$artefactid])) {
+            return $this->links->artefactartefact[$artefactid];
+        }
+    }
+
+    public function artefact_view_links($artefactid) {
+        if (isset($this->links->artefactview[$artefactid])) {
+            return $this->links->artefactview[$artefactid];
+        }
+    }
+
     /**
      * Looks at all blockinstance configurations, and rewrites the artefact IDs
      * found to be IDs in the generated export.
@@ -288,33 +394,28 @@ class PluginExportLeap extends PluginExport {
     }
 
     private function get_links_for_view($viewid) {
-        static $viewartefactdata = null;
-        static $vaextra = null;
-        if (is_null($viewartefactdata)) {
-            $viewartefactdata = get_records_select_array('view_artefact', 'view IN (' . join(', ', array_keys($this->views)) . ')');
-        }
-        if (is_null($vaextra)) {
-            $vaextra = $this->get_view_extra_artefacts(true);
-        }
-
         $links = array();
-        foreach ($viewartefactdata as $va) {
-            if ($va->view == $viewid) {
+
+        if (!empty($this->links->viewcontents[$viewid])) {
+            foreach (array_keys($this->links->viewcontents[$viewid]) as $artefactid) {
                 $links[] = (object)array(
                     'type' => 'has_part',
-                    'id'   => 'portfolio:artefact' . $va->artefact,
-                );
-            }
-        }
-
-        if (isset($vaextra[$viewid])) {
-            foreach ($vaextra[$viewid] as $artefactid) {
-                $links[] = (object)array(
-                    'type' => 'is_evidence_of', // Fix this
                     'id'   => 'portfolio:artefact' . $artefactid,
                 );
             }
         }
+
+        if (!empty($this->links->viewartefact[$viewid])) {
+            foreach ($this->links->viewartefact[$viewid] as $artefactid => $linktypes) {
+                foreach ($linktypes as $linktype) {
+                    $links[] = (object)array(
+                        'type' => $linktype,
+                        'id'   => 'portfolio:artefact' . $artefactid,
+                    );
+                }
+            }
+        }
+
         return $links;
     }
 
@@ -505,9 +606,12 @@ class LeapExportElement {
     *
     * @param View $view to link to
     */
-    public function add_view_link($viewid) {
+    public function add_view_link($viewid, $rel=null) {
+        if (is_null($rel)) {
+            $rel = $this->get_view_relationship($viewid);
+        }
         if (array_key_exists($viewid, $this->exporter->get('views'))) {
-            $this->add_generic_link('view' . $viewid, $this->get_view_relationship($viewid));
+            $this->add_generic_link('view' . $viewid, $rel);
         }
     }
 
@@ -555,17 +659,37 @@ class LeapExportElement {
     * The resulting array is keyed on the LEAP portfolio:id (eg portfolio:artefact2)
     */
     public function add_links() {
-        if ($views = $this->artefact->get_views_metadata()) {
+        $id = $this->artefact->get('id');
+        if ($views = $this->exporter->artefact_in_view_links($id)) {
             foreach ($views as $view) {
-                $this->add_view_link($view->view);
+                $this->add_view_link($view);
             }
         }
-        if ($parent = $this->artefact->get_parent_instance()) {
+        if ($parent = $this->exporter->artefact_parent_link($id)) {
             $this->add_artefact_link($parent, $this->get_parent_relationship($parent));
         }
-        if ($children = $this->artefact->get_children_instances()) {
+        if ($children = $this->exporter->artefact_child_links($id)) {
             foreach ($children as $child) {
                 $this->add_artefact_link($child, $this->get_child_relationship($child));
+            }
+        }
+        if ($attachments = $this->exporter->artefact_attachment_links($id)) {
+            foreach ($attachments as $a) {
+                $this->add_artefact_link($a, 'enclosure');
+            }
+        }
+        if ($views = $this->exporter->artefact_view_links($id)) {
+            foreach ($views as $viewid => $linktypes) {
+                foreach ($linktypes as $linktype) {
+                    $this->add_view_link($viewid, $linktype);
+                }
+            }
+        }
+        if ($artefacts = $this->exporter->artefact_artefact_links($id)) {
+            foreach ($artefacts as $artefactid => $linktypes) {
+                foreach ($linktypes as $linktype) {
+                    $this->add_artefact_link($this->exporter->artefacts[$artefactid], $linktype);
+                }
             }
         }
     }
@@ -584,7 +708,7 @@ class LeapExportElement {
 
     /**
     * The LEAP element type
-    * See http://wiki.cetis.ac.uk/2009-03/LEAP2A_types
+    * See http://wiki.cetis.ac.uk/2009-03/Leap2A_types
     *
     * @return string
     */
@@ -627,13 +751,18 @@ class LeapExportElement {
     }
 
     /**
-    * The id of the entry's author
-    * Override this if the author is different from the portfolio holder
+    * The name of the entry's author
     *
-    * @return int
+    * @return string
     */
     public function get_entry_author() {
-        return;
+        if ($author = $this->artefact->get('author')) {
+            if ($author != $this->artefact->get('owner')) {
+                return display_name($author);
+            }
+            return;
+        }
+        return $this->artefact->get('authorname');
     }
 
     /**
@@ -712,7 +841,7 @@ class LeapExportElement {
 
     /**
      * Converts a tag to a 'normalised' tag, as per 
-     * http://wiki.cetis.ac.uk/2009-03/LEAP2A_categories#Plain_tags
+     * http://wiki.cetis.ac.uk/2009-03/Leap2A_categories#Plain_tags
      *
      * The method of normalisation isn't specified at
      * the time of this being written.

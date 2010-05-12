@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 {$helptext}
 <div id="copyview">
@@ -27,3 +28,4 @@
 
 </div>
 {include file="footer.tpl"}
+{/auto_escape}

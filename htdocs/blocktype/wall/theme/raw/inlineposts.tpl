@@ -1,3 +1,4 @@
+{auto_escape off}
 <div id="wall">
     {if $wallmessage}
         <p>{$wallmessage}</p>
@@ -24,3 +25,4 @@
         {/if}
     {/if}
 </div>
+{/auto_escape}

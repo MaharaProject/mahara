@@ -30,9 +30,11 @@ define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
 $id = param_integer('id');
+$user = get_record('usr', 'id', $id, 'deleted', 0);
+$user->introduction = get_field('artefact', 'title', 'artefacttype', 'introduction', 'owner', $id);
 
 $smarty = smarty_core();
-$smarty->assign('user', (object) array('id' => $id, 'introduction' => get_field('artefact', 'title', 'artefacttype', 'introduction', 'owner', $id)));
+$smarty->assign('user', $user);
 ob_start();
 $smarty->display('user/simpleuser.tpl');
 $html = ob_get_contents();

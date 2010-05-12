@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
 
                     <div id="userview">
@@ -27,7 +28,6 @@
 							<div>{str tag=requestedmembershipin section=group}{$requestedlist}</div>
 {/if}
                             <div class="btn-add">{if $addform}{$addform}{/if}</div>
-                            <div class="btn-bold btn-edit">{$togglepublic}</div>
                     	</div>
 {if $relationship == 'pending'}
                     	<div class="message">
@@ -46,3 +46,4 @@
                     </div>
 
 {if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}
+{/auto_escape}

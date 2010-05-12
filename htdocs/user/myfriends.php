@@ -29,7 +29,7 @@ define('INTERNAL', 1);
 define('MENUITEM', 'groups/myfriends');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
-require('searchlib.php');
+require_once('searchlib.php');
 define('TITLE', get_string('myfriends'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'user');
@@ -39,75 +39,31 @@ $filter = param_alpha('filter', 'all');
 $offset = param_integer('offset', 0);
 $limit = 10;
 
-$userid = $USER->get('id');
-$data = array();
-if ($filter == 'current') {
-    $count = count_records_sql('SELECT COUNT(usr1) FROM {usr_friend}
-        JOIN {usr} u1 ON (u1.id = usr1 AND u1.deleted = 0)
-        JOIN {usr} u2 ON (u2.id = usr2 AND u2.deleted = 0)
-        WHERE usr1 = ? OR usr2 = ?',
-        array($userid, $userid)
-    );
-    $data = get_column_sql('SELECT u.id, u.firstname, u.lastname
-        FROM (
-            SELECT usr1 AS id FROM {usr_friend} WHERE usr2 = ?
-            UNION SELECT usr2 AS id FROM {usr_friend} WHERE usr1 = ?
-        ) f
-        JOIN {usr} u ON f.id = u.id AND u.deleted = 0
-        ORDER BY firstname, lastname, id
-        LIMIT ? OFFSET ?', array($userid, $userid, $limit, $offset)
-    );
-    if (!$data || !$views = get_views(array_keys($data), null, null)) {
-        $views = array();
-    }
-}
-else if ($filter == 'pending') {
-	$count = count_records_sql('SELECT COUNT(owner) FROM {usr_friend_request}
-	    JOIN {usr} u ON (u.id = requester AND u.deleted = 0)
-	    WHERE owner = ?',
-	    array($userid)
-	);
-    $data = get_column_sql(
-        'SELECT requester FROM {usr_friend_request}
-        JOIN {usr} ON (requester = id AND deleted = 0) WHERE owner = ?
-        ORDER BY firstname, lastname, id
-        LIMIT ?
-        OFFSET ?', array($userid, $limit, $offset)
-    );
-}
-else {
-	$filter = 'all';
-    $count = count_records_sql('SELECT COUNT(usr1) FROM {usr_friend}
-            JOIN {usr} u1 ON (u1.id = usr1 AND u1.deleted = 0)
-            JOIN {usr} u2 ON (u2.id = usr2 AND u2.deleted = 0)
-            WHERE usr1 = ? OR usr2 = ?',
-            array($userid, $userid)
-        )
-        + count_records_sql('SELECT COUNT(owner) FROM {usr_friend_request}
-	        JOIN {usr} u ON (u.id = requester AND u.deleted = 0)
-	        WHERE owner = ?',
-	        array($userid)
-        );
-    $data = get_column_sql(
-        'SELECT f.id FROM (
-            SELECT requester AS id, \'1\' AS status FROM {usr_friend_request} WHERE owner = ?
-            UNION SELECT usr2 AS id, \'2\' AS status FROM {usr_friend} WHERE usr1 = ?
-            UNION SELECT usr1 AS id, \'2\' AS status FROM {usr_friend} WHERE usr2 = ?
-        ) f
-        JOIN {usr} u ON (f.id = u.id AND u.deleted = 0)
-        ORDER BY status, firstname, lastname, u.id
-        LIMIT ?
-        OFFSET ?', array($userid, $userid, $userid, $limit, $offset)
-    );
-    if (!$data || !$views = get_views(array_keys($data), null, null)) {
-        $views = array();
-    }
-}
+$data = search_friend($filter, $limit, $offset);
+$data['filter'] = $filter;
 
-if ($data) {
-    $userlist = join(',', $data);
-    $data = get_users_data($userlist);
-}
+$controlledgroups = count_records_sql("SELECT COUNT(g.id)
+          FROM {group} g
+          JOIN {group_member} gm ON (gm.group = g.id)
+          JOIN {grouptype_roles} gtr ON (gtr.grouptype = g.grouptype AND gtr.role = gm.role)
+          WHERE gm.member = ?
+          AND g.jointype = 'controlled'
+          AND (gm.role = 'admin' OR gtr.see_submitted_views = 1)
+          AND g.deleted = 0", array($USER->get('id')));
+
+$invite = count_records_sql("SELECT COUNT(g.id)
+        FROM {group} g
+        JOIN {group_member} gm ON (gm.group = g.id)
+        WHERE gm.member = ?
+        AND g.jointype = 'invite'
+        AND gm.role = 'admin'
+        AND g.deleted = 0", array($USER->get('id')));
+
+$admingroups = new StdClass;
+$admingroups->controlled = $controlledgroups;
+$admingroups->invite = $invite;
+
+build_userlist_html($data, 'myfriends', $admingroups);
 
 $filterform = pieform(array(
     'name' => 'filter',
@@ -129,16 +85,19 @@ $filterform = pieform(array(
     )
 ));
 
-$pagination = build_pagination(array(
-    'url' => get_config('wwwroot') . 'user/myfriends.php?filter=' . $filter,
-    'count' => $count,
-    'limit' => $limit,
-    'offset' => $offset,
-    'resultcounttextsingular' => get_string('friend', 'group'),
-    'resultcounttextplural' => get_string('friends', 'group'),
-));
+$js = <<< EOF
+addLoadEvent(function () {
+    p = {$data['pagination_js']}
+    connect('filter_submit', 'onclick', function (event) {
+        replaceChildNodes('messages');
+        var params = {'filter': $('filter_filter').value};
+        p.sendQuery(params);
+        event.stop();
+    });
+});
+EOF;
 
-if (!$data) {
+if (!$data['count']) {
     if ($filter == 'pending') {
         $message = get_string('nobodyawaitsfriendapproval', 'group');
     }
@@ -147,18 +106,22 @@ if (!$data) {
     }
 }
 
-function filter_submit(Pieform $form, $values) {
-    redirect('/user/myfriends.php?filter=' . $values['filter']);
+$javascript = array('paginator');
+if ($admingroups->invite || $admingroups->controlled) {
+    array_push($javascript, 'groupbox');
 }
-
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(friends_control_sideblock())));
+$smarty = smarty($javascript, array(), array('applychanges' => 'mahara', 'nogroups' => 'group'), array('sideblocks' => array(friends_control_sideblock())));
 $smarty->assign('PAGEHEADING', hsc(TITLE));
-$smarty->assign('users', $data);
+$smarty->assign('INLINEJAVASCRIPT', $js);
+$smarty->assign('results', $data);
 $smarty->assign('form', $filterform);
-$smarty->assign('pagination', $pagination['html']);
 if (isset($message)) {
     $smarty->assign('message', $message);
 }
 $smarty->display('user/myfriends.tpl');
+
+function filter_submit(Pieform $form, $values) {
+    redirect('/user/myfriends.php?filter=' . $values['filter']);
+}
 
 ?>

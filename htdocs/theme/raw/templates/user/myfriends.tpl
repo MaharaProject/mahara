@@ -1,21 +1,18 @@
+{auto_escape off}
 {include file="header.tpl"}
 <div id="friendslistcontainer">
     {$form}
-{if $users}
+{if $results}
     <table id="friendslist" class="fullwidth listing">
-    {foreach from=$users item=user}
-        <tr class="{cycle values='r0,r1'}">
-        {include file="user/user.tpl" user=$user page='myfriends'}
-        </tr>
-    {/foreach}
+        <tbody>
+        {$results.tablerows}
+        </tbody>
     </table>
-	<div class="center">
-	{$pagination}
-	</div>
-	{else}
-	<div class="message">
-		{$message}
-	</div>
+{$results.pagination}
+{/if}
+{if $message}
+    <div class="message">{$message}</div>
 {/if}
 </div>
 {include file="footer.tpl"}
+{/auto_escape}

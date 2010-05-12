@@ -32,6 +32,7 @@ define('SECTION_PLUGINNAME', 'site');
 define('SECTION_PAGE', 'contact');
 require('init.php');
 require_once('pieforms/pieform.php');
+require_once('lib/antispam.php');
 define('TITLE', get_string('contactus'));
 
 if ($USER->is_logged_in()) {
@@ -59,7 +60,8 @@ $elements = array(
         'title' => get_string('email'),
         'defaultvalue' => $email,
         'rules' => array(
-            'required'    => true
+            'required'    => true,
+            'email' => true,
         ),
     ),
     'subject' => array(
@@ -79,15 +81,6 @@ $elements = array(
     )
 );
 
-if (get_config('captchaoncontactform') && !$USER->is_logged_in()) {
-    $elements['captcha'] = array(
-        'type'  => 'captcha',
-        'title' => get_string('captchatitle'),
-        'description' => get_string('captchadescription'),
-        'rules' => array('required' => true)
-    );
-}
-
 $elements['userid'] = array(
     'type'  => 'hidden',
     'value' => $userid,
@@ -98,16 +91,45 @@ $elements['submit'] = array(
 );
 
 $contactform = pieform(array(
-    'name'     => 'contactus',
-    'method'   => 'post',
-    'action'   => '',
-    'elements' => $elements
+    'name'       => 'contactus',
+    'method'     => 'post',
+    'action'     => '',
+    'elements'   => $elements,
+    'spam' => array(
+        'secret'       => get_config('formsecret'),
+        'mintime'      => 5,
+        'hash'         => array('name', 'email', 'subject', 'message', 'userid', 'submit'),
+        'reorder'      => array('name', 'email'),
+    ),
 ));
 
 function contactus_validate(Pieform $form, $values) {
-    global $USER;
-    if (get_config('captchaoncontactform') && !$USER->is_logged_in() && !$values['captcha']) {
-        $form->set_error('captcha', get_string('captchaincorrect'));
+    global $SESSION;
+    $spamtrap = new_spam_trap(array(
+        array(
+            'type' => 'name',
+            'value' => $values['name'],
+        ),
+        array(
+            'type' => 'email',
+            'value' => $values['email'],
+        ),
+        array(
+            'type' => 'subject',
+            'value' => $values['subject'],
+        ),
+        array(
+            'type' => 'body',
+            'value' => $values['message'],
+        ),
+    ));
+    if ($form->spam_error() || $spamtrap->is_spam()) {
+        $msg = get_string('formerror');
+        $emailcontact = get_config('emailcontact');
+        if (!empty($emailcontact)) {
+            $msg .= ' ' . get_string('formerroremail', 'mahara', $emailcontact, $emailcontact);
+        }
+        $form->set_error(null, $msg);
     }
 }
 

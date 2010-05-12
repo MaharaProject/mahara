@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
             {$settingsformtag}
             <table id="profileicons" class="hidden tablerenderer">
@@ -25,3 +26,4 @@
 
             {$uploadform}
 {include file="footer.tpl"}
+{/auto_escape}

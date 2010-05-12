@@ -1,3 +1,4 @@
+{auto_escape off}
   <tr id="{$prefix}_edit_row"{if !$fileinfo} class="hidden"{/if}>
     <td colspan=6>
       <table>
@@ -62,3 +63,4 @@
       </table>
     </td>
   </tr>
+{/auto_escape}

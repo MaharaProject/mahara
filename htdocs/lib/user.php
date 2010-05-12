@@ -204,6 +204,8 @@ function expected_account_preferences() {
                  'maildisabled'   => 0,
                  'tagssideblockmaxtags' => get_config('tagssideblockmaxtags'),
                  'hiderealname'   => 0,
+                 'multipleblogs' => 0,
+                 'showhomeinfo' => 1,
                  );
 }
 
@@ -1137,6 +1139,18 @@ function activate_user($userid) {
 }
 
 /**
+ * Get the thread of message up to this point, given the id of
+ * the message being replied to.
+ */
+function get_message_thread($replyto) {
+    $message = get_record('notification_internal_activity', 'id', $replyto);
+    if (empty($message->parent)) {
+        return array($message);
+    }
+    return array_merge(get_message_thread($message->parent), array($message));
+}
+
+/**
  * Sends a message from one user to another
  *
  * @param object $to User to send the message to
@@ -1146,7 +1160,7 @@ function activate_user($userid) {
  * @throws AccessDeniedException if the message is not allowed to be sent (as 
  * configured by the 'to' user's settings)
  */
-function send_user_message($to, $message, $from=null) {
+function send_user_message($to, $message, $parent, $from=null) {
     // FIXME: permission checking!
     if ($from === null) {
         global $USER;
@@ -1161,6 +1175,7 @@ function send_user_message($to, $message, $from=null) {
                 'userto'   => $to->id, 
                 'userfrom' => $from->id, 
                 'message'  => $message,
+                'parent'   => $parent,
             )
         );
     }
@@ -1216,7 +1231,8 @@ function get_new_username($desired) {
     $desired = strtolower(substr($desired, 0, $maxlen));
     $taken = get_column_sql('
         SELECT username FROM {usr}
-        WHERE username ' . db_ilike() . " '" . substr($desired, 0, $maxlen - 6) . "%'");
+        WHERE username ' . db_ilike() . " ?",
+        array(substr($desired, 0, $maxlen - 6) . '%'));
     if (!$taken) {
         return $desired;
     }
@@ -1371,7 +1387,7 @@ function get_users_data($userlist, $getviews=true) {
     return $ordereddata;
 }
 
-function build_userlist_html(&$data, $page) {
+function build_userlist_html(&$data, $page, $admingroups) {
     if ($data['data']) {
         $userlist = join(',', array_map(create_function('$u','return $u[\'id\'];'), $data['data']));
         $userdata = get_users_data($userlist, $page == 'myfriends');
@@ -1379,18 +1395,30 @@ function build_userlist_html(&$data, $page) {
     $smarty = smarty_core();
     $smarty->assign('data', isset($userdata) ? $userdata : null);
     $smarty->assign('page', $page);
-    $smarty->assign('query', $data['query']);
+    if (isset($data['query'])) {
+        $smarty->assign('query', $data['query']);
+        $params = '?query=' . $data['query'];
+        $resultcounttextsingular = get_string('user', 'group');
+        $resultcounttextplural = get_string('users', 'group');
+    }
+    elseif (isset($data['filter'])) {
+        $smarty->assign('filter', $data['filter']);
+        $params = '?filter=' . $data['filter'];
+        $resultcounttextsingular = get_string('friend', 'group');
+        $resultcounttextplural = get_string('friends', 'group');
+    }
+    $smarty->assign('admingroups', $admingroups);
     $data['tablerows'] = $smarty->fetch('user/userresults.tpl');
     $pagination = build_pagination(array(
         'id' => 'friendslist_pagination',
-        'url' => get_config('wwwroot') . 'user/' . $page . '.php?query=' . $data['query'],
+        'url' => get_config('wwwroot') . 'user/' . $page . '.php' . $params,
         'jsonscript' => 'json/friendsearch.php',
         'datatable' => 'friendslist',
         'count' => $data['count'],
         'limit' => $data['limit'],
         'offset' => $data['offset'],
-        'resultcounttextsingular' => get_string('user', 'group'),
-        'resultcounttextplural' => get_string('users', 'group'),
+        'resultcounttextsingular' => $resultcounttextsingular,
+        'resultcounttextplural' => $resultcounttextplural,
         'extradata' => array('page' => $page),
     ));
     $data['pagination'] = $pagination['html'];
@@ -1495,6 +1523,7 @@ function acceptfriend_submit(Pieform $form, $values) {
     redirect('/user/view.php?id=' . $values['id']);
 }
 
+// Called when a user adds someone who has friendscontrol set to 'auto'
 function addfriend_submit(Pieform $form, $values) {
     global $USER, $SESSION;
     $user = get_record('usr', 'id', $values['id']);
@@ -1512,11 +1541,12 @@ function addfriend_submit(Pieform $form, $values) {
     $n->users = array($user->id);
     $lang = get_user_language($user->id);
     $displayname = display_name($USER, $user);
+    $n->urltext = $displayname;
 
     $f->usr1 = $values['id'];
     $f->usr2 = $loggedinid;
     insert_record('usr_friend', $f);
-    $n->subject = get_string_from_language($lang, 'addedtofriendslistsubject', 'group');
+    $n->subject = get_string_from_language($lang, 'addedtofriendslistsubject', 'group', $displayname);
     $n->message = get_string_from_language($lang, 'addedtofriendslistmessage', 'group', $displayname, $displayname);
 
     require_once('activity.php');
@@ -1542,11 +1572,13 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
     db_begin();
 
     if ($user instanceof User) {
+        $user->create();
         $user->quota_init();
         $user->commit();
         $user = $user->to_stdclass();
     }
     else {
+        $user->ctime = db_format_timestamp(time());
         if (empty($user->quota)) {
             $user->quota = get_config_plugin('artefact', 'file', 'defaultquota');
         }
@@ -1626,7 +1658,6 @@ function add_user_to_autoadd_groups($eventdata) {
 }
 
 
-
 /**
  * This function installs the site's default profile view
  *
@@ -1645,7 +1676,7 @@ function install_system_profile_view() {
         'numcolumns'  => 2,
         'ownerformat' => FORMAT_NAME_PREFERREDNAME,
         'title'       => get_string('profileviewtitle', 'view'),
-        'description' => '',
+        'description' => get_string('profiledescription'),
         'template'    => 1,
     ));
     $view->set_access(array(array(
@@ -1663,6 +1694,88 @@ function install_system_profile_view() {
                 'view'       => $view->get('id'),
                 'column'     => $blocktypes[$blocktype],
                 'order'      => $weights[$blocktypes[$blocktype]],
+            ));
+            $newblock->commit();
+        }
+    }
+    return $view->get('id');
+}
+
+/**
+ * This function installs the site's default dashboard view
+ *
+ * @throws SystemException if the system dashboard view is already installed
+ */
+function install_system_dashboard_view() {
+    $viewid = get_field('view', 'id', 'owner', 0, 'type', 'dashboard');
+    if ($viewid) {
+        throw new SystemException('A system dashboard view already seems to be installed');
+    }
+    require_once(get_config('libroot') . 'view.php');
+    require_once(get_config('docroot') . 'blocktype/lib.php');
+    $view = View::create(array(
+        'type'        => 'dashboard',
+        'owner'       => 0,
+        'numcolumns'  => 2,
+        'ownerformat' => FORMAT_NAME_PREFERREDNAME,
+        'title'       => get_string('dashboardviewtitle', 'view'),
+        'template'    => 1,
+    ));
+    $view->set_access(array(array(
+        'type' => 'loggedin'
+    )));
+    $blocktypes = array(
+        array(
+            'blocktype' => 'newviews',
+            'title' => get_string('title', 'blocktype.newviews'),
+            'column' => 1,
+            'config' => array(
+                'limit' => 5,
+            ),
+        ),
+        array(
+            'blocktype' => 'myviews',
+            'title' => get_string('title', 'blocktype.myviews'),
+            'column' => 1,
+            'config' => null,
+        ),
+        array(
+            'blocktype' => 'inbox',
+            'title' => get_string('recentactivity'),
+            'column' => 2,
+            'config' => array(
+                'feedback' => true,
+                'groupmessage' => true,
+                'institutionmessage' => true,
+                'maharamessage' => true,
+                'usermessage' => true,
+                'viewaccess' => true,
+                'watchlist' => true,
+                'maxitems' => '5',
+            ),
+        ),
+        array(
+            'blocktype' => 'inbox',
+            'title' => get_string('topicsimfollowing'),
+            'column' => 2,
+            'config' => array(
+                'newpost' => true,
+                'maxitems' => '5',
+            ),
+        ),
+    );
+    $installed = get_column_sql('SELECT name FROM {blocktype_installed}');
+    $weights = array(1 => 0, 2 => 0);
+    foreach ($blocktypes as $blocktype) {
+        if (in_array($blocktype['blocktype'], $installed)) {
+            $weights[$blocktype['column']]++;
+            $newblock = new BlockInstance(0, array(
+                'blocktype'  => $blocktype['blocktype'],
+                'title'      => $blocktype['title'],
+                'view'       => $view->get('id'),
+                'column'     => $blocktype['column'],
+                'order'      => $weights[$blocktype['column']],
+                'configdata' => $blocktype['config'],
             ));
             $newblock->commit();
         }

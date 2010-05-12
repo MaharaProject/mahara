@@ -33,6 +33,7 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'index');
 
 require(dirname(dirname(__FILE__)).'/init.php');
+require(get_config('libroot') . 'registration.php');
 if (get_config('installed')) {
     define('TITLE', get_string('administration', 'admin'));
 }
@@ -41,7 +42,7 @@ else {
 }
 require_once('pieforms/pieform.php');
 require(get_config('libroot') . 'upgrade.php');
-require(get_config('libroot') . 'registration.php');
+require_once(get_config('libroot') . 'registration.php');
 
 $upgrades = check_upgrades();
 
@@ -54,7 +55,7 @@ if (isset($upgrades['core']) && !empty($upgrades['core']->install)) {
 }
 
 if (!get_config('registration_lastsent')) {
-    $register = register_site();
+    $register = true;
 }
 
 $closed = get_config('siteclosedbyadmin');
@@ -73,11 +74,18 @@ $closeform = pieform(array(
     ),
 ));
 
+if (empty($upgrades)) {
+    $sitedata = site_statistics();
+}
+
 $smarty = smarty();
 $smarty->assign('PAGEHEADING', hsc(get_string('administration', 'admin')));
 
 // normal admin page starts here
 $smarty->assign('upgrades', $upgrades);
+if (isset($sitedata)) {
+    $smarty->assign('sitedata', $sitedata);
+}
 
 if (isset($register)) {
     $smarty->assign('register', $register);

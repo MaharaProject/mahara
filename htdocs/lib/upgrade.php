@@ -460,9 +460,11 @@ function upgrade_plugin($upgrade) {
             }
             $activity->plugintype = $plugintype;
             $activity->pluginname = $pluginname;
-            $where = $activity;
-            unset($where->admin);
-            unset($where->delay);
+            $where = (object) array(
+                'name'       => $activity->name,
+                'plugintype' => $plugintype,
+                'pluginname' => $pluginname,
+            );
             // Work around the fact that insert_record cached the columns that
             // _were_ in the activity_type table before it was upgraded
             global $INSERTRECORD_NOCACHE;
@@ -560,6 +562,8 @@ function core_postinst() {
 
     set_config('lang', 'en.utf8');
     set_config('installation_key', get_random_key());
+    set_config('installation_time', $now);
+    set_config('stats_installation_time', $now);
 
     // PostgreSQL supports indexes over functions of columns, MySQL does not. 
     // We make use if this if we can
@@ -583,7 +587,12 @@ function core_postinst() {
         (owner IS NULL     AND "group" IS NOT NULL AND institution IS NULL) OR
         (owner IS NULL     AND "group" IS NULL     AND institution IS NOT NULL)
     )');
+    execute_sql('ALTER TABLE {artefact} ADD CHECK (
+        (author IS NOT NULL AND authorname IS NULL    ) OR
+        (author IS NULL     AND authorname IS NOT NULL)
+    )');
 
+    set_antispam_defaults();
     set_remoteavatars_default();
     reload_html_filters();
     return $status;
@@ -628,6 +637,7 @@ function core_install_lastcoredata_defaults() {
     }
 
     install_system_profile_view();
+    install_system_dashboard_view();
 
     // Insert the admin user
     $user = new StdClass;
@@ -666,14 +676,14 @@ function core_install_firstcoredata_defaults() {
     set_config('createpublicgroups', 'all');
     set_config('allowpublicviews', 1);
     set_config('allowpublicprofiles', 1);
-    set_config('captchaoncontactform', 1);
-    set_config('captchaonregisterform', 1);
     set_config('showselfsearchsideblock', 0);
     set_config('showtagssideblock', 1);
     set_config('tagssideblockmaxtags', 20);
     set_config('usersallowedmultipleinstitutions', 1);
     set_config('viewmicroheaders', 1);
     set_config('userscanchooseviewthemes', 1);
+    set_config('anonymouscomments', 1);
+    set_config('homepageinfo', 1);
 
     // install the applications
     $app = new StdClass;
@@ -741,7 +751,6 @@ function core_install_firstcoredata_defaults() {
     $activitytypes = array(
         array('maharamessage', 0, 0),
         array('usermessage', 0, 0),
-        array('feedback', 0, 0),
         array('watchlist', 0, 1),
         array('viewaccess', 0, 1),
         array('contactus', 1, 1),
@@ -749,7 +758,7 @@ function core_install_firstcoredata_defaults() {
         array('virusrepeat', 1, 1),
         array('virusrelease', 1, 1),
         array('institutionmessage', 0, 0),
-        array('groupmessage', 0, 0),
+        array('groupmessage', 0, 1),
     );
 
     foreach ($activitytypes as $at) {
@@ -774,6 +783,8 @@ function core_install_firstcoredata_defaults() {
         'cron_send_registration_data'            => array(rand(0, 59), rand(0, 23), '*', '*', rand(0, 6)),
         'export_cleanup_old_exports'             => array('0', '3,15', '*', '*', '*'),
         'import_cleanup_old_imports'             => array('0', '4,16', '*', '*', '*'),
+        'cron_site_data_weekly'                  => array('55', '23', '*', '*', '6'),
+        'cron_site_data_daily'                   => array('51', '23', '*', '*', '*'),
     );
     foreach ($cronjobs as $callfunction => $times) {
         $cron = new StdClass;
@@ -789,7 +800,7 @@ function core_install_firstcoredata_defaults() {
     // install the view column widths
     install_view_column_widths();
 
-    $viewtypes = array('portfolio', 'profile');
+    $viewtypes = array('dashboard', 'portfolio', 'profile');
     foreach ($viewtypes as $vt) {
         insert_record('view_type', (object)array(
             'type' => $vt,
@@ -921,14 +932,17 @@ function get_blocktype_categories() {
 function install_blocktype_categories_for_plugin($blocktype) {
     safe_require('blocktype', $blocktype);
     $blocktype = blocktype_namespaced_to_single($blocktype);
+    $catsinstalled = get_column('blocktype_category', 'name');
     db_begin();
     delete_records('blocktype_installed_category', 'blocktype', $blocktype);
     if ($cats = call_static_method(generate_class_name('blocktype', $blocktype), 'get_categories')) {
         foreach ($cats as $cat) {
-            insert_record('blocktype_installed_category', (object)array(
-                'blocktype' => $blocktype,
-                'category' => $cat
-            ));
+            if (in_array($cat, $catsinstalled)) {
+                insert_record('blocktype_installed_category', (object)array(
+                    'blocktype' => $blocktype,
+                    'category' => $cat
+                ));
+            }
         }
     }
     db_commit();
@@ -937,14 +951,17 @@ function install_blocktype_categories_for_plugin($blocktype) {
 function install_blocktype_viewtypes_for_plugin($blocktype) {
     safe_require('blocktype', $blocktype);
     $blocktype = blocktype_namespaced_to_single($blocktype);
+    $vtinstalled = get_column('view_type', 'type');
     db_begin();
     delete_records('blocktype_installed_viewtype', 'blocktype', $blocktype);
     if ($viewtypes = call_static_method(generate_class_name('blocktype', $blocktype), 'get_viewtypes')) {
         foreach($viewtypes as $vt) {
-            insert_record('blocktype_installed_viewtype', (object)array(
-                'blocktype' => $blocktype,
-                'viewtype'  => $vt,
-            ));
+            if (in_array($vt, $vtinstalled)) {
+                insert_record('blocktype_installed_viewtype', (object)array(
+                    'blocktype' => $blocktype,
+                    'viewtype'  => $vt,
+                ));
+            }
         }
     }
     db_commit();
@@ -1046,4 +1063,20 @@ function set_remoteavatars_default() {
         }
         curl_close($ch);
     }
+}
+
+/**
+ * Use meaningful defaults for the antispam settings.
+ */
+function set_antispam_defaults() {
+    set_config('formsecret', get_random_key());
+    require_once(get_config('docroot') . 'lib/antispam.php');
+    if(checkdnsrr('test.uribl.com.black.uribl.com', 'A')) {
+        set_config('antispam', 'advanced');
+    }
+    else {
+        set_config('antispam', 'simple');
+    }
+    set_config('spamhaus', 0);
+    set_config('surbl', 0);
 }

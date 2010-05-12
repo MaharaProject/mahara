@@ -295,6 +295,21 @@ html>body #column-container {
 	margin: 0;
 }
 
+/* Inbox */
+.bt-inbox td.icon-container {
+  vertical-align: top;
+  padding: 0;
+  width: 15px;
+}
+.bt-inbox td.icon-container .icon {
+  height: 1.4em;
+  vertical-align: bottom;
+  display: table-cell;
+}
+.inbox-showmessage.unread {
+  font-weight: bold;
+}
+
 /* tabs for the artefact chooser */
 ul.artefactchooser-tabs {
   padding: 0 !important;
@@ -526,8 +541,8 @@ div.artefactchooser-splitter {
 #feedback_pagination {
 	margin: 0;
 }
-#feedbacktable form.makeprivate,
-#feedbacktable form.makeprivate div {
+#feedbacktable form,
+#feedbacktable form div {
 	display: inline;
 }
 #add_feedback_form {

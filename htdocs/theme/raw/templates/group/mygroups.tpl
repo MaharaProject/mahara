@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 {if $cancreate}
             <div class="rbuttons">
@@ -21,3 +22,4 @@
             <div class="message">{str tag="trysearchingforgroups" section="group" args=$searchingforgroups}</div>
 {/if}
 {include file="footer.tpl"}
+{/auto_escape}

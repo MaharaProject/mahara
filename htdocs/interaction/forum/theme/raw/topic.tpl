@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 
 <h3><a href="{$WWWROOT}interaction/forum/view.php?id={$topic->forumid}">{$topic->forumtitle|escape}</a></h3>
@@ -22,3 +23,4 @@
 {$posts}
 
 {include file="footer.tpl"}
+{/auto_escape}

@@ -50,6 +50,7 @@ $group->admins = get_column_sql("SELECT member
     AND role = 'admin'", array($group->id));
 
 $role = group_user_access($group->id);
+$group->role = $role;
 
 if (is_logged_in()) {
     $afterjoin = param_variable('next', 'view');
@@ -76,6 +77,8 @@ if (is_logged_in()) {
         $group->groupjoin = group_get_join_form('joingroup', $group->id, $afterjoin);
     }
 }
+
+$group->grouptypedescription = get_string('grouptypedescription', 'group', get_string('name', 'grouptype.' . $group->grouptype), get_string('membershiptype.'.$group->jointype, 'group'));
 
 $filecounts = ArtefactTypeFileBase::count_user_files(null, $group->id, null);
 
@@ -104,6 +107,40 @@ if ($role || $group->public) {
         ', array($group->id));
 }
 
+if ($role) {
+    // For group members, display a list of views that others have
+    // shared to the group
+    $sharedviews = View::get_sharedviews_data(null, 0, $group->id);
+    if (group_user_can_assess_submitted_views($group->id, $USER->get('id'))) {
+        // Display a list of views submitted to the group
+        $allsubmittedviews = View::get_submitted_views($group->id);
+    }
+}
+
+if (group_allows_submission($group->grouptype) && ($userviewdata = View::get_user_views())) {
+    // A user can submit more than one view to the same group, but no view can be
+    // submitted to more than one group.
+
+    // Display a list of views this user has submitted to this group, and a submission
+    // form containing drop-down of their unsubmitted views.
+
+    $mysubmittedviews = View::get_submitted_views($group->id, $USER->get('id'));
+
+    if (!empty($mysubmittedviews)) {
+        foreach ($mysubmittedviews as &$v) {
+            $url = get_config('wwwroot') . 'view/view.php?id=' . $v['id'];
+            if ($v['submittedtime']) {
+                $v['strsubmitted'] = get_string('youhavesubmittedon', 'view', $url, $v['title'], format_date($v['submittedtime']));
+            }
+            else {
+                $v['strsubmitted'] = get_string('youhavesubmitted', 'view', $url, $v['title']);
+            }
+        }
+    }
+
+    $group_view_submission_form = group_view_submission_form($group->id, $userviewdata);
+}
+
 $smarty = smarty();
 $smarty->assign('group', $group);
 $smarty->assign('groupid', $group->id);
@@ -112,16 +149,20 @@ $smarty->assign('membercount', count_records('group_member', 'group', $group->id
 $smarty->assign('viewcount', count_records('view', 'group', $group->id));
 $smarty->assign('filecount', $filecounts->files);
 $smarty->assign('foldercount', $filecounts->folders);
-if ($role) {
-    // For group members, display a list of views that others have
-    // shared to the group
-    $viewdata = View::get_sharedviews_data(null, 0, $group->id);
-    $smarty->assign('sharedviews', $viewdata->data);
-    if (group_user_can_assess_submitted_views($group->id, $USER->get('id'))) {
-        // Display a list of views submitted to the group
-        $smarty->assign('submittedviews', View::get_submitted_views($group->id));
-    }
+
+if (isset($sharedviews)) {
+    $smarty->assign('sharedviews', $sharedviews->data);
 }
+if (isset($allsubmittedviews)) {
+    $smarty->assign('allsubmittedviews', $allsubmittedviews);
+}
+if (isset($mysubmittedviews)) {
+    $smarty->assign('mysubmittedviews', $mysubmittedviews);
+}
+if (isset($group_view_submission_form)) {
+    $smarty->assign('group_view_submission_form', $group_view_submission_form);
+}
+
 $smarty->assign('role', $role);
 $smarty->display('group/view.tpl');
 

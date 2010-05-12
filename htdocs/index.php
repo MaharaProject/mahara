@@ -45,15 +45,62 @@ else {
     $pagename = 'home';
 }
 
-$smarty = smarty();
-$smarty->assign('page_content', get_site_page_content($pagename));
+if ($USER->is_logged_in()) {
+    // get the user's dashboard view
+    require_once(get_config('libroot') . 'view.php');
+    $view = $USER->get_view_by_type('dashboard');
 
-if ($nviews = get_config('homepageviewlist')) {
-    require_once('view.php');
-    $views = View::view_search(null, null, null, null, $nviews, 0, true, 'mtime DESC');
-    $smarty->assign('views', $views->data);
+    $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
+    $smarty = smarty(
+        array(),
+        $stylesheets,
+        array(),
+        array(
+            'stylesheets' => array('style/views.css'),
+        )
+    );
+
+    if ($USER->get_account_preference('showhomeinfo')) {
+        // allow the user to choose never to see the info boxes again
+        $js = <<<JAVASCRIPT
+function hideinfo() {
+    slideUp($('home-info'));
 }
 
+function nevershow() {
+    var data = {'showhomeinfo' : 0};
+    sendjsonrequest('homeinfo.json.php', data, 'POST', hideinfo);
+}
+addLoadEvent(function () {
+    $('hideinfo').onclick = nevershow;
+});
+JAVASCRIPT;
+
+        $smarty->assign('INLINEJAVASCRIPT', $js);
+    }
+
+    $smarty->assign('dashboardview', true);
+    $smarty->assign('viewcontent', $view->build_columns());
+    $smarty->assign('viewid', $view->get('id'));
+}
+else {
+    $smarty = smarty();
+}
+
+// Assign urls used in homeinfo.tpl
+$wwwroot = get_config('wwwroot');
+$urls = array(
+    'profile' => $wwwroot . 'artefact/internal',
+    'files'   => $wwwroot . 'artefact/file',
+    'resume'  => $wwwroot . 'artefact/resume',
+    'blog'    => $wwwroot . 'artefact/blog',
+    'views'   => $wwwroot . 'view',
+    'friends' => $wwwroot . 'user/find.php',
+    'groups'  => $wwwroot . 'group/find.php',
+);
+$smarty->assign('url', $urls);
+
+$smarty->assign('page_content', get_site_page_content($pagename));
 $smarty->display('index.tpl');
 
 ?>

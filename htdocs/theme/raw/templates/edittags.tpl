@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 
 {if $tags}
@@ -27,3 +28,4 @@
 {/if}
 
 {include file="footer.tpl"}
+{/auto_escape}

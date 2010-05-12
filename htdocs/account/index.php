@@ -26,13 +26,13 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'settings/preferences');
+define('MENUITEM', 'settings/account');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'account');
 define('SECTION_PAGE', 'preferences');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-define('TITLE', get_string('preferences'));
+define('TITLE', get_string('account'));
 require_once('pieforms/pieform.php');
 
 // load up user preferences
@@ -154,6 +154,13 @@ $elements['addremovecolumns'] = array(
     'separator' => '<br>',
     'help' => 'true'
 );
+// TODO: add a way for plugins (like blog!) to have account preferences
+$elements['multipleblogs'] = array(
+    'type' => 'checkbox',
+    'title'=> get_string('enablemultipleblogs' ,'account'),
+    'description' => get_string('enablemultipleblogsdescription', 'account'),
+    'defaultvalue' => $prefs->multipleblogs,
+);
 if (get_config('showtagssideblock')) {
     $elements['tagssideblockmaxtags'] = array(
         'type'         => 'text',
@@ -170,6 +177,19 @@ if (get_config('userscanhiderealnames')) {
         'title'        => get_string('hiderealname', 'account'),
         'description'  => get_string('hiderealnamedescription', 'account'),
         'defaultvalue' => $prefs->hiderealname,
+    );
+}
+if (get_config('homepageinfo')) {
+    $elements['showhomeinfo'] = array(
+        'type' => 'radio',
+        'options' => array(
+            1 => get_string('on', 'account'),
+            0 => get_string('off', 'account'),
+        ),
+        'defaultvalue' => $prefs->showhomeinfo,
+        'title' => get_string('showhomeinfo', 'account'),
+        'separator' => '<br>',
+        'help' => 'true'
     );
 }
 $elements['submit'] = array(
@@ -222,6 +242,13 @@ function accountprefs_validate(Pieform $form, $values) {
         if (!$form->get_error('username') && record_exists_select('usr', 'LOWER(username) = ?', strtolower($values['username']))) {
             $form->set_error('username', get_string('usernamealreadytaken', 'auth.internal'));
         }
+    }
+
+    // Don't let users turn multiple blogs off unless they only have 1 blog
+    if ($USER->get_account_preference('multipleblogs')
+        && empty($values['multipleblogs'])
+        && count_records('artefact', 'artefacttype', 'blog', 'owner', $USER->get('id')) != 1) {
+        $form->set_error('multipleblogs', get_string('disablemultipleblogserror', 'account'));
     }
 }
 
@@ -291,7 +318,7 @@ function clearPasswords(form, data) {
     }
 }
 ");
-$smarty->assign('PAGEHEADING', hsc(get_string('preferences')));
+$smarty->assign('PAGEHEADING', hsc(get_string('account')));
 $smarty->display('account/index.tpl');
 
 

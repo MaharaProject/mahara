@@ -91,6 +91,9 @@ class User {
             'parentuser'       => null,
             'loginanyway'       => false,
             'sesskey'          => '',
+            'ctime'            => null,
+            'views'            => array(),
+            'showhomeinfo'     => 1,
         );
         $this->attributes = array();
 
@@ -111,7 +114,8 @@ class User {
                     ' . db_format_tsfield('lastlogin') . ', 
                     ' . db_format_tsfield('lastlastlogin') . ',
                     ' . db_format_tsfield('lastaccess') . ',
-                    ' . db_format_tsfield('suspendedctime') . '
+                    ' . db_format_tsfield('suspendedctime') . ',
+                    ' . db_format_tsfield('ctime') . '
                 FROM
                     {usr}
                 WHERE
@@ -148,7 +152,8 @@ class User {
                     ' . db_format_tsfield('lastlogin') . ',
                     ' . db_format_tsfield('lastlastlogin') . ',
                     ' . db_format_tsfield('lastaccess') . ',
-                    ' . db_format_tsfield('suspendedctime') . '
+                    ' . db_format_tsfield('suspendedctime') . ',
+                    ' . db_format_tsfield('ctime') . '
                 FROM
                     {usr}
                 WHERE
@@ -213,7 +218,8 @@ class User {
                         ' . db_format_tsfield('u.lastlogin', 'lastlogin') . ',
                         ' . db_format_tsfield('u.lastlastlogin', 'lastlastlogin') . ',
                         ' . db_format_tsfield('u.lastaccess', 'lastaccess') . ',
-                        ' . db_format_tsfield('u.suspendedctime', 'suspendedctime') . '
+                        ' . db_format_tsfield('u.suspendedctime', 'suspendedctime') . ',
+                        ' . db_format_tsfield('u.ctime', 'ctime') . '
                     FROM {usr} u
                     LEFT JOIN {auth_remote_user} r ON u.id = r.localusr
                     WHERE
@@ -234,7 +240,8 @@ class User {
                         ' . db_format_tsfield('lastlogin') . ',
                         ' . db_format_tsfield('lastlastlogin') . ',
                         ' . db_format_tsfield('lastaccess') . ',
-                        ' . db_format_tsfield('suspendedctime') . '
+                        ' . db_format_tsfield('suspendedctime') . ',
+                        ' . db_format_tsfield('ctime') . '
                     FROM
                         {usr}
                     WHERE
@@ -250,6 +257,14 @@ class User {
         $this->populate($user);
         return $this;
     }
+
+    /**
+     * Set stuff that needs to be initialised once before a user record is created.
+     */
+    public function create() {
+        $this->set('ctime', time());
+    }
+
 
     /**
      * Take a row object from the usr table and populate this object with the
@@ -306,7 +321,7 @@ class User {
         $this->attributes[$key] = $value;
 
         // For now, these fields are saved to the DB elsewhere
-        if ($key != 'activityprefs' && $key !=  'accountprefs') {
+        if ($key != 'activityprefs' && $key != 'accountprefs' && $key != 'views') {
             $this->changed = true;
         }
         return $this;
@@ -386,6 +401,25 @@ class User {
         $this->set('accountprefs', $accountprefs);
     }
 
+
+    public function get_view_by_type($viewtype) {
+        $views = $this->get('views');
+        if (isset($views[$viewtype])) {
+            $viewid = $views[$viewtype];
+        }
+        else {
+            $viewid = get_field('view', 'id', 'type', $viewtype, 'owner', $this->get('id'));
+        }
+        if (!$viewid) {
+            global $USER;
+            if (!$USER->get('id')) {
+                return null;
+            }
+            return $this->install_view($viewtype);
+        }
+        return new View($viewid);
+    }
+
     /**
      * Return the profile view object for this user.
      *
@@ -394,15 +428,7 @@ class User {
      * @return View
      */
     public function get_profile_view() {
-        $viewid = get_field('view', 'id', 'type', 'profile', 'owner', $this->get('id'));
-        if (!$viewid) {
-            global $USER;
-            if (!$USER->get('id')) {
-                return null;
-            }
-            return $this->install_profile_view();
-        }
-        return new View($viewid);
+        return $this->get_view_by_type('profile');
     }
 
     /**
@@ -410,7 +436,7 @@ class User {
      *
      * @return View
      */
-    private function install_profile_view() {
+    protected function install_profile_view() {
         static $systemprofileviewid = null;
 
         db_begin();
@@ -422,6 +448,7 @@ class User {
         list($view) = View::create_from_template(array(
             'owner' => $this->get('id'),
             'title' => get_field('view', 'title', 'id', $systemprofileviewid),
+            'description' => get_string('profiledescription'),
             'type'  => 'profile',
         ), $systemprofileviewid, $this->get('id'));
 
@@ -458,7 +485,69 @@ class User {
         return $view;
     }
 
+    /**
+     * Return the dashboard view object for this user.
+     *
+     * If the user does not yet have a dashboard view, one is created for them.
+     *
+     * @return View
+     */
 
+    /**
+     * Installs a user's dashboard view.
+     *
+     * @return View
+     */
+    protected function install_dashboard_view() {
+        static $systemdashboardviewid = null;
+
+        db_begin();
+        if (is_null($systemdashboardviewid)) {
+            $systemdashboardviewid = get_field('view', 'id', 'owner', 0, 'type', 'dashboard');
+        }
+
+        require_once(get_config('libroot') . 'view.php');
+        list($view) = View::create_from_template(array(
+            'owner' => $this->get('id'),
+            'title' => get_field('view', 'title', 'id', $systemdashboardviewid),
+            'description' => get_string('dashboarddescription'),
+            'type'  => 'dashboard',
+        ), $systemdashboardviewid, $this->get('id'));
+
+        db_commit();
+
+        return $view;
+    }
+
+    protected function install_view($viewtype) {
+        $function = 'install_' . $viewtype . '_view';
+        return $this->$function();
+    }
+
+    // Store the ids of the user's special views (profile, dashboard).  Users can have only
+    // one each of these, so there really should be columns in the user table to store them.
+    protected function load_views() {
+        $types = array('profile', 'dashboard');
+        $views = get_records_select_assoc(
+            'view',
+            'owner = ? AND type IN (' . join(',', array_map('db_quote', $types)) . ')',
+            array($this->id),
+            '',
+            'type,id'
+        );
+
+        $specialviews = array();
+        foreach ($types as $type) {
+            if (!empty($views[$type])) {
+                $specialviews[$type] = $views[$type]->id;
+            }
+            else {
+                $view = $this->install_view($type);
+                $specialviews[$type] = $view->get('id');
+            }
+        }
+        $this->set('views', $specialviews);
+    }
 
     /**
      * Determines if the user is currently logged in
@@ -473,7 +562,7 @@ class User {
         $this->stdclass = new StdClass;
         reset($this->defaults);
         foreach (array_keys($this->defaults) as $k) {
-            if ($k == 'expiry' || $k == 'lastlogin' || $k == 'lastlastlogin' || $k == 'lastaccess' || $k == 'suspendedctime') {
+            if ($k == 'expiry' || $k == 'lastlogin' || $k == 'lastlastlogin' || $k == 'lastaccess' || $k == 'suspendedctime' || $k == 'ctime') {
                 $this->stdclass->{$k} = db_format_timestamp($this->get($k));
             } else {
                 $this->stdclass->{$k} = $this->get($k);//(is_null($this->get($k))? 'NULL' : $this->get($k));
@@ -819,7 +908,8 @@ class LiveUser extends User {
                     ' . db_format_tsfield('lastlogin') . ',
                     ' . db_format_tsfield('lastlastlogin') . ',
                     ' . db_format_tsfield('lastaccess') . ',
-                    ' . db_format_tsfield('suspendedctime') . '
+                    ' . db_format_tsfield('suspendedctime') . ',
+                    ' . db_format_tsfield('ctime') . '
                 FROM
                     {usr}
                 WHERE
@@ -874,9 +964,11 @@ class LiveUser extends User {
                     throw new AccessTotallyDeniedException(get_string('accesstotallydenied_institutionsuspended', 'mahara', $authinstance->displayname, $sitename));
                     return false;
                 }
+
                 return true;
             }
-        } catch  (AuthInstanceException $e) {
+        }
+        catch (AuthInstanceException $e) {
             return false;
         }
         
@@ -971,6 +1063,8 @@ class LiveUser extends User {
         $this->accountprefs       = load_account_preferences($user->id);
         $this->reset_institutions();
         $this->reset_grouproles();
+        $this->load_views();
+
         $this->commit();
 
         // finally, after all is done, call the (maybe non existant) hook on their auth plugin
@@ -1035,6 +1129,7 @@ class LiveUser extends User {
         $this->find_by_id($id);
         $this->activityprefs = load_activity_preferences($id);
         $this->accountprefs = load_account_preferences($id);
+        $this->load_views();
     }
 
     public function change_identity_to($userid) {

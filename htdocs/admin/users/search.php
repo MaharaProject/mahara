@@ -33,7 +33,7 @@ define('TITLE', get_string('usersearch', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'usersearch');
-require('searchlib.php');
+require_once('searchlib.php');
 
 $search = (object) array(
     'query'       => trim(param_variable('query', '')),

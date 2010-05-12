@@ -1,6 +1,9 @@
+{auto_escape off}
 <ul class="groupuserstatus">
 {if $group->membershiptype == 'member'}
-	<li class="member">{str tag="youaregroupmember" section="group"}</li>
+	<li class="member">
+            {str tag="youaregroup$group->role" section="group"}
+        </li>
 {if $group->canleave}
     <li><a href = "{$WWWROOT}group/leave.php?id={$group->id|escape}&amp;returnto={$returnto}" class="btn-leavegroup">{str tag="leavegroup" section="group"}</a></li>
 {/if}
@@ -37,3 +40,4 @@
 	
 {/if}
 </ul>
+{/auto_escape}

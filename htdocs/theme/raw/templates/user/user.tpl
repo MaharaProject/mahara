@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $user->pending}
 <td class="pending friendinfo rel">
 	<ul class="actionlist">
@@ -9,12 +10,24 @@
 			</a>
 		</li>
 		{if $user->messages}
-		<li class="last">
+		<li {if !$admingroups} class="last"{/if}>
 			<a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}" id="btn-sendmessage">
 				{str tag='sendmessage' section='group'}
 			</a>
 		</li>
 		{/if}
+                {if $admingroups->controlled}
+                <li {if !$admingroups->invite}class="last"{/if}><a href="#" onclick="showGroupBox(event, {$user->id}, 'controlled')">{str tag='controlledmembership' section='group'}</a></li>
+                <div class="groupbox" id="controlledgroupbox_{$user->id}">
+                    <ul></ul>
+                </div>
+                {/if}
+                {if $admingroups->invite}
+                <li class="last"><a href="#" onclick="showGroupBox(event, {$user->id}, 'invite')">{str tag='invitemembership' section='group'}</a></li>
+                <div class="groupbox" id="invitegroupbox_{$user->id}">
+                    <ul></ul>
+                </div>
+                {/if}
 	</ul>
 	<div class="leftdiv" id="friendinfo_{$user->id}">
         <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="">
@@ -48,11 +61,23 @@
 			</a>
 		</li>
 	{/if}
-		<li class="last">
+		<li {if !$admingroups} class="last"{/if}>
 			<a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}" id="btn-delete">
 				{str tag='removefromfriendslist' section='group'}
 			</a>
 		</li>
+                {if $admingroups->controlled}
+                <li {if !$admingroups->invite}class="last"{/if}><a href="#" onclick="showGroupBox(event, {$user->id}, 'controlled')">{str tag='controlledmembership' section='group'}</a></li>
+                <div class="groupbox" id="controlledgroupbox_{$user->id}">
+                    <ul></ul>
+                </div>
+                {/if}
+                {if $admingroups->invite}
+                <li class="last"><a href="#" onclick="showGroupBox(event, {$user->id}, 'invite')">{str tag='invitemembership' section='group'}</a></li>
+                <div class="groupbox" id="invitegroupbox_{$user->id}">
+                    <ul></ul>
+                </div>
+                {/if}
 	</ul>
 	<div class="leftdiv" id="friendinfo_{$user->id}">
         <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="">
@@ -100,9 +125,21 @@
 			</a>
 		</li>
 		{/if}
-		<li class="last">
+		<li {if !$admingroups} class="last"{/if}>
 			{str tag='friendshiprequested' section='group'}
 		</li>
+                {if $admingroups->controlled}
+                <li {if !$admingroups->invite}class="last"{/if}><a href="#" onclick="showGroupBox(event, {$user->id}, 'controlled')">{str tag='controlledmembership' section='group'}</a></li>
+                <div class="groupbox" id="controlledgroupbox_{$user->id}">
+                    <ul></ul>
+                </div>
+                {/if}
+                {if $admingroups->invite}
+                <li class="last"><a href="#" onclick="showGroupBox(event, {$user->id}, 'invite')">{str tag='invitemembership' section='group'}</a></li>
+                <div class="groupbox" id="invitegroupbox_{$user->id}">
+                    <ul></ul>
+                </div>
+                {/if}
 	</ul>
 	<div class="leftdiv" id="friendinfo_{$user->id}">
         <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="">
@@ -129,7 +166,7 @@
 			</a>
 		</li>
 		{/if}
-		<li class="last">
+		<li {if !$admingroups} class="last"{/if}>
 			{if $user->friendscontrol == 'auth'}
 			<a href="{$WWWROOT}user/requestfriendship.php?id={$user->id}&amp;returnto={$page}" id="btn-request">
 				{str tag='sendfriendrequest' section='group'}
@@ -140,6 +177,18 @@
 				{str tag='userdoesntwantfriends' section='group'}
 			{/if}
 		</li>
+                {if $admingroups->controlled}
+                <li {if !$admingroups->invite}class="last"{/if}><a href="#" onclick="showGroupBox(event, {$user->id}, 'controlled')">{str tag='controlledmembership' section='group'}</a></li>
+                <div class="groupbox" id="controlledgroupbox_{$user->id}">
+                    <ul></ul>
+                </div>
+                {/if}
+                {if $admingroups->invite}
+                <li class="last"><a href="#" onclick="showGroupBox(event, {$user->id}, 'invite')">{str tag='invitemembership' section='group'}</a></li>
+                <div class="groupbox" id="invitegroupbox_{$user->id}">
+                    <ul></ul>
+                </div>
+                {/if}
 	</ul>
     <div class="leftdiv" id="friendinfo_{$user->id}">
         <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="">
@@ -156,3 +205,4 @@
 	</div>
 </td>
 {/if}
+{/auto_escape}

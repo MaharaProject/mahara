@@ -33,6 +33,7 @@ require_once('view.php');
 require_once('activity.php');
 $viewid = param_integer('id');
 $groupid = param_integer('group');
+$returnto = param_variable('returnto', 'view');
 
 $view = get_record('view', 'id', $viewid, 'owner', $USER->get('id'));
 $group = get_record_sql(
@@ -61,7 +62,7 @@ $form = pieform(array(
         'submit' => array(
             'type' => 'submitcancel',
             'value' => array(get_string('yes'), get_string('no')),
-            'goto' => get_config('wwwroot') . 'view/'
+            'goto' => get_config('wwwroot') . returnto(),
         )
     ),
 ));
@@ -75,7 +76,7 @@ $smarty->display('view/submit.tpl');
 function submitview_submit(Pieform $form, $values) {
     global $SESSION, $USER, $viewid, $groupid, $group;
     db_begin();
-    update_record('view', array('submittedgroup' => $groupid), array('id' => $viewid));
+    update_record('view', array('submittedgroup' => $groupid, 'submittedtime' => db_format_timestamp(time())), array('id' => $viewid));
     activity_occurred('groupmessage', array(
         'subject'       => get_string('viewsubmitted', 'view'), // will be overwritten
         'message'       => get_string('viewsubmitted', 'view'), // will be overwritten
@@ -83,9 +84,27 @@ function submitview_submit(Pieform $form, $values) {
         'viewowner'     => $USER->get('id'),
         'group'         => $groupid,
         'roles'         => get_column('grouptype_roles', 'role', 'grouptype', $group->grouptype, 'see_submitted_views', 1),
+        'strings'       => (object) array(
+            'urltext' => (object) array('key' => 'view'),
+        ),
     ));
     db_commit();
     $SESSION->add_ok_msg(get_string('viewsubmitted', 'view'));
-    redirect('/view/');
+    redirect('/' . returnto());
+}
+
+function returnto() {
+    GLOBAL $viewid, $groupid, $returnto;
+    // Deteremine the best place to return to
+    if ($returnto === 'group') {
+        $goto = 'group/view.php?id=' . $groupid;
+    }
+    else if ($returnto === 'view') {
+        $goto = 'view/view.php?id=' . $viewid;
+    }
+    else {
+        $goto = 'view/';
+    }
+    return $goto;
 }
 ?>

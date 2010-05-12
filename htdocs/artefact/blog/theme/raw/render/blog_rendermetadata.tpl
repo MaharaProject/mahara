@@ -1,3 +1,4 @@
+{auto_escape off}
 <table>
     <tbody>
     {foreach from=$PROPERTIES item=item}
@@ -8,3 +9,4 @@
     {/foreach}
     </tbody>
 </table>
+{/auto_escape}

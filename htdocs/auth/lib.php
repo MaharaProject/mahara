@@ -29,6 +29,7 @@ defined('INTERNAL') || die();
 
 require('session.php');
 require(get_config('docroot') . 'auth/user.php');
+require_once(get_config('docroot') . '/lib/htmloutput.php');
 
 /**
  * Unknown user exception
@@ -444,9 +445,8 @@ function auth_setup () {
             json_reply('global', get_string('sessiontimedoutreload'), 1);
         }
         if (defined('IFRAME')) {
-            $frame = '<html><head></head><body onload="parent.show_login_form(\'ajaxlogin_iframe\')"></body></html>';
             header('Content-type: text/html');
-            echo $frame;
+            print_auth_frame();
             exit;
         }
 
@@ -1563,6 +1563,9 @@ function auth_generate_login_form() {
                 'title'       => get_string('password') . ':',
                 'description' => get_string('passworddescription'),
                 'defaultvalue'       => '',
+                'rules' => array(
+                    'required'    => true
+                )
             ),
             'submit' => array(
                 'type'  => 'submit',

@@ -42,9 +42,11 @@ $string['stopdate']               = 'Access End Date/Time';
 $string['stopdatecannotbeinpast'] = 'The stop date cannot be in the past';
 $string['startdatemustbebeforestopdate'] = 'The start date must be before the stop date';
 $string['unrecogniseddateformat'] = 'Unrecognised date format';
+$string['allowcommentsonview']    = 'If checked, users who can see your View will be allowed to leave comments.';
 $string['ownerformat']            = 'Name display format';
 $string['ownerformatdescription'] = 'How do you want people who look at your View to see your name?';
-$string['profileviewtitle']       = 'Profile view';
+$string['profileviewtitle']       = 'Profile View';
+$string['dashboardviewtitle']  = 'Dashboard View';
 $string['editprofileview']        = 'Edit profile view';
 
 // my views
@@ -68,6 +70,7 @@ $string['views'] = 'views';
 $string['View'] = 'View';
 $string['Views'] = 'Views';
 $string['viewsubmittedtogroup'] = 'This View has been submitted to <a href="%s">%s</a>';
+$string['viewsubmittedtogroupon'] = 'This View was submitted to <a href="%s">%s</a> on %s';
 $string['nobodycanseethisview2'] = 'Only you can see this View';
 $string['noviews'] = 'No Views.';
 $string['youhavenoviews'] = 'You have no Views.';
@@ -77,6 +80,9 @@ $string['viewsownedbygroup'] = 'Views owned by this group';
 $string['viewssharedtogroup'] = 'Views shared to this group';
 $string['viewssharedtogroupbyothers'] = 'Views shared to this group by others';
 $string['viewssubmittedtogroup'] = 'Views submitted to this group';
+$string['submitaviewtogroup'] = 'Submit a view to this group';
+$string['youhavesubmitted'] = 'You have submitted <a href="%s">%s</a> to this group';
+$string['youhavesubmittedon'] = 'You submitted <a href="%s">%s</a> to this group on %s';
 
 // access levels
 $string['public'] = 'Public';
@@ -101,36 +107,21 @@ $string['addusertogroup'] = 'Add this user to a group';
 $string['addedtowatchlist'] = 'This View has been added to your watchlist';
 $string['attachment'] = 'Attachment';
 $string['removedfromwatchlist'] = 'This View has been removed from your watchlist';
-$string['addfeedbackfailed'] = 'Add feedback failed';
 $string['addtowatchlist'] = 'Add View to watchlist';
 $string['removefromwatchlist'] = 'Remove View from watchlist';
 $string['alreadyinwatchlist'] = 'This View is already in your watchlist';
 $string['attachedfileaddedtofolder'] = "The attached file %s has been added to your '%s' folder.";
-$string['attachfile'] = "Attach file";
 $string['complaint'] = 'Complaint';
 $string['date'] = 'Date';
-$string['feedback'] = 'Feedback';
-$string['feedbackattachdirname'] = 'assessmentfiles';
-$string['feedbackattachdirdesc'] = 'Files attached to View assessments';
-$string['feedbackattachmessage'] = 'The attached file has been added to your %s folder';
-$string['feedbackonthisartefactwillbeprivate'] = 'Feedback on this artefact will only be visible to the owner.';
-$string['feedbackonviewbytutorofgroup'] = 'Feedback on %s by %s of %s';
-$string['feedbacksubmitted'] = 'Feedback submitted';
-$string['makepublic'] = 'Make public';
-$string['nopublicfeedback'] = 'No public feedback';
 $string['notifysiteadministrator'] = 'Notify site administrator';
-$string['placefeedback'] = 'Place feedback';
-$string['placefeedbacknotallowed'] = 'You are not allowed to place feedback on this View';
 $string['print'] = 'Print';
-$string['thisfeedbackispublic'] = 'This feedback is public';
-$string['thisfeedbackisprivate'] = 'This feedback is private';
-$string['makeprivate'] = 'Change to Private';
 $string['reportobjectionablematerial'] = 'Report objectionable material';
 $string['reportsent'] = 'Your report has been sent';
 $string['updatewatchlistfailed'] = 'Update of watchlist failed';
 $string['watchlistupdated'] = 'Your watchlist has been updated';
 $string['editmyview'] = 'Edit my View';
 $string['backtocreatemyview'] = 'Back to create my View';
+$string['viewvisitcount'] = '%d page visit(s) from %s to %s';
 
 $string['friend'] = 'Friend';
 $string['profileicon'] = 'Profile Icon';
@@ -148,8 +139,7 @@ $string['cantdeleteview'] = 'You cannot delete this View';
 $string['deletespecifiedview'] = 'Delete View "%s"';
 $string['deleteviewconfirm'] = 'Do you really want to delete this View? It cannot be undone.';
 
-$string['editaccesspagedescription2'] = '<p>By default, only you can see your View. Here you can choose who else you would like to be able to see the information in your View. Click Add to grant access to Public, Logged in Users or Friends. Use the search box to add individual Users or Groups. All those added will appear in the right hand pane, under Added.</p>
-<p>You can also give other users permission to copy your View into their own portfolios.  When users copy a View, they will automatically get their own copies all of the files and folders within it.</p>
+$string['editaccesspagedescription2'] = '<p>By default, only you can see your View. You can share your View with others by adding access rules on this page.</p>
 <p>Once you are done, scroll down and click Save to continue.</p>';
 
 $string['overridingstartstopdate'] = 'Overriding Start/Stop Dates';
@@ -161,9 +151,7 @@ $string['empty_block'] = 'Select an artefact from the tree on the left to place 
 $string['viewinformationsaved'] = 'View information saved successfully';
 
 $string['canteditdontown'] = 'You can\'t edit this View because you don\'t own it';
-$string['canteditdontownfeedback'] = 'You can\'t edit this feedback because you don\'t own it';
 $string['canteditsubmitted'] = 'You can\'t edit this View because it has been submitted for assessment to "%s". You will have to wait until a tutor releases your view.';
-$string['feedbackchangedtoprivate'] = 'Feedback changed to private';
 
 $string['addtutors'] = 'Add Tutors';
 $string['viewcreatedsuccessfully'] = 'View created successfully';
@@ -176,7 +164,7 @@ $string['confirmcancelcreatingview'] = 'This View has not been completed. Do you
 
 // view control stuff
 
-$string['editblockspagedescription'] = '<p>Choose from the tabs below to see what blocks you can display in your View. You can drag and drop the blocks in to your View layout. Select the ? Icon for more information.</p>';
+$string['editblockspagedescription'] = '<p>Drag and drop content blocks from the tabs below to create your View.</p>';
 $string['displaymyview'] = 'Display my View';
 $string['editthisview'] = 'Edit this View';
 
@@ -195,7 +183,7 @@ $string['confirmdeleteblockinstance'] = 'Are you sure you wish to delete this bl
 $string['blockinstanceconfiguredsuccessfully'] = 'Block configured successfully';
 
 $string['blocksintructionnoajax'] = 'Select a block and choose where to add it to your View. You can position a block using the arrow buttons in its titlebar';
-$string['blocksinstructionajax'] = 'Drag blocks below this line to add them to your View layout. You can drag blocks around your View layout to position them.';
+$string['blocksinstructionajax'] = 'This area shows a preview of what your View will look like.<br>Drag blocks below this line to add them to your View layout. You can drag blocks around your View layout to position them.';
 
 $string['addnewblockhere'] = 'Add new block here';
 $string['add'] = 'Add';
@@ -220,7 +208,7 @@ $string['blocktitle'] = 'Block Title';
 $string['changemyviewlayout'] = 'Change My View Layout';
 $string['viewcolumnspagedescription'] = 'First, select the number of columns in your View. In the next step, you will be able to change the widths of the columns.';
 $string['viewlayoutpagedescription'] = 'Select how you would like the columns in your View to be layed out.';
-$string['changeviewlayout'] = 'Change my View layout';
+$string['changeviewlayout'] = 'Change my View\'s column layout';
 $string['backtoyourview'] = 'Back to my View';
 $string['viewlayoutchanged'] = 'View layout changed';
 $string['numberofcolumns'] = 'Number of columns';
@@ -231,6 +219,7 @@ $string['viewtitleby'] = '%s by <a href="%s">%s</a>';
 $string['in'] = 'in';
 $string['noblocks'] = 'Sorry, no blocks in this category :(';
 $string['Preview'] = 'Preview';
+$string['timeofsubmission'] = 'Time of submission';
 
 $string['50,50'] = $string['33,33,33'] = $string['25,25,25,25'] = 'Equal widths';
 $string['67,33'] = 'Larger left column';
@@ -239,6 +228,8 @@ $string['25,50,25'] = 'Larger centre column';
 $string['15,70,15'] = 'Much larger centre column';
 $string['20,30,30,20'] = 'Larger centre columns';
 $string['noviewlayouts'] = 'There are no View layouts for a %s column View';
+$string['cantaddcolumn'] = 'You cannot add any more columns to this view';
+$string['cantremovecolumn'] = 'You cannot remove the last column from this view';
 
 $string['blocktypecategory.feeds'] = 'External feeds';
 $string['blocktypecategory.fileimagevideo'] = 'Files, images and video';
@@ -259,7 +250,7 @@ $string['changeviewtheme'] = 'The theme you have chosen for this view is no long
 // Templates
 $string['Template'] = 'Template';
 $string['allowcopying'] = 'Allow copying';
-$string['templatedescription'] = 'Check this box if you would like the people who can see your view to be able to make their own copies of it.';
+$string['templatedescription'] = 'Check this box if you would like the people who can see your view to be able to make their own copies of it, along with any files and folders it contains.';
 $string['choosetemplatepagedescription'] = '<p>Here you can search through the Views that you are allowed to copy as a starting point for making a new View. You can see a preview of each View by clicking on its name. Once you have found the View you wish to copy, click the corresponding "Copy View" button to make a copy and begin customising it.</p>';
 $string['choosetemplategrouppagedescription'] = '<p>Here you can search through the Views that this group is allowed to copy as a starting point for making a new View. You can see a preview of each View by clicking on its name. Once you have found the View you wish to copy, click the corresponding "Copy View" button to make a copy and begin customising it.</p><p><strong>Note:</strong> Groups cannot currently make copies of Blogs or Blog Posts.</p>';
 $string['choosetemplateinstitutionpagedescription'] = '<p>Here you can search through the Views that this institution is allowed to copy as a starting point for making a new View. You can see a preview of each View by clicking on its name. Once you have found the View you wish to copy, click the corresponding "Copy View" button to make a copy and begin customising it.</p><p><strong>Note:</strong> Institutions cannot currently make copies of Blogs or Blog Posts.</p>';
@@ -300,8 +291,9 @@ $string['viewcopywouldexceedquota'] = 'Copying this View would exceed your file 
 $string['blockcopypermission'] = 'Block copy permission';
 $string['blockcopypermissiondesc'] = 'If you allow other users to copy this View, you may choose how this block will be copied';
 
-// Feedback list
-$string['comment'] = 'comment';
-$string['comments'] = 'comments';
+// View types
+$string['dashboard'] = 'Dashboard';
+$string['profile'] = 'Profile';
+$string['portfolio'] = 'Portfolio';
 
 ?>

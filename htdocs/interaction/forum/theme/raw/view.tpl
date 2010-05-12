@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 
 <h3>{$subheading|escape}</h3>
@@ -87,3 +88,4 @@
 {/if}
 
 {include file="footer.tpl"}
+{/auto_escape}

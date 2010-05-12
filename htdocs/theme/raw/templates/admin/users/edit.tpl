@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 
 <div class="fl center">
@@ -58,3 +59,4 @@
 
 {include file="footer.tpl"}
 
+{/auto_escape}

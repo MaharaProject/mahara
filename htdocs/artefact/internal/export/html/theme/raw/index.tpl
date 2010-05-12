@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="export:html:header.tpl"}
 
 {if $icon}<div id="profile-icon">{$icon}</div>{/if}
@@ -19,3 +20,4 @@
 {/foreach}
 
 {include file="export:html:footer.tpl"}
+{/auto_escape}

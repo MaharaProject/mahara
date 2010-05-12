@@ -29,7 +29,7 @@ define('INTERNAL', 1);
 define('MENUITEM', 'groups');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
-require('group.php');
+require_once('group.php');
 $groupid = param_integer('id');
 $userid = param_integer('user');
 
@@ -91,22 +91,8 @@ $smarty->display('group/invite.tpl');
 
 function invitetogroup_submit(Pieform $form, $values) {
     global $SESSION, $USER, $group, $user;
-    
-    $data = new StdClass;
-    $data->group = $group->id;
-    $data->member= $user->id;
-    $data->ctime = db_format_timestamp(time());
-    $data->role = $values['role'];
-    insert_record('group_member_invite', $data);
-    $lang = get_user_language($user->id);
-    require_once('activity.php');
-    activity_occurred('maharamessage', 
-        array('users'   => array($user->id), 
-              'subject' => get_string_from_language($lang, 'invitetogroupsubject', 'group'),
-              'message' => get_string_from_language($lang, 'invitetogroupmessage', 'group', display_name($USER, $user), $group->name),
-              'url'     => get_config('wwwroot') 
-              . 'group/view.php?id=' . $group->id));
+    group_invite_user($group, $user->id, $USER, $values['role']);
     $SESSION->add_ok_msg(get_string('userinvited', 'group'));
     redirect('/user/view.php?id=' . $user->id);
 }
-?>
+

@@ -168,6 +168,11 @@ function editgroup_submit(Pieform $form, $values) {
             delete_records('group_member_request', 'group', $group_data->id);
         }
     }
+    // When group type changes from course to standard, make sure that tutors
+    // are demoted to members.
+    if ($group_data->grouptype == 'course' && $grouptype != 'course') {
+        set_field('group_member', 'role', 'member', 'group', $values['id'], 'role', 'tutor');
+    }
 
     $SESSION->add_ok_msg(get_string('groupsaved', 'group'));
 

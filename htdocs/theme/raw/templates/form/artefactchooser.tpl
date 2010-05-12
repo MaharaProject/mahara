@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $searchable}<ul class="artefactchooser-tabs">
     <li{if !$.request.s} class="current"{/if}><a href="{$browseurl}">{str tag=Browse section=view}</a></li>
     <li{if $.request.s} class="current"{/if}><a href="{$searchurl}">{str tag=Search section=view}</a></li>
@@ -21,3 +22,4 @@
         {/if}
     </div>
 </div>
+{/auto_escape}

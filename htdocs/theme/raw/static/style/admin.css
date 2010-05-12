@@ -155,6 +155,34 @@ input#register_register {
 	background: #fefefe;
 }
 
+.site-stats {
+  margin: 1.5em 0 1em 0;
+  padding: 0 1em 0 0;
+  text-align: left;
+}
+.message.site-stats {
+  margin: 0 0 1em 0;
+  padding: 1em 1.5em;
+}
+.site-stats p:first-child,
+.site-stats p:last-child,
+.site-stats p {
+  margin: .1em;
+}
+#site-stats-graph {
+  margin: 0 .3em 1em;
+}
+.statistics-subpage-left-column {
+  width: 40%;
+}
+.statistics-subpage-right-column {
+  width: 59%;
+}
+
+.admin-home-column {
+  width: 49%;
+  margin: 0 .1em;
+}
 
 /* CONFIGURE SITE > LINKS AND RESOURCES MENU */
 #menuitemlist {

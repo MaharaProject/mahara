@@ -40,7 +40,7 @@ defined('INTERNAL') || die();
  * @return mixed          The role the user has in the group, or false if they 
  *                        have no role in the group
  */
-function group_user_access($groupid, $userid=null) {
+function group_user_access($groupid, $userid=null, $refresh=null) {
     static $result;
 
     if (!is_logged_in()) {
@@ -50,7 +50,7 @@ function group_user_access($groupid, $userid=null) {
     $groupid = group_param_groupid($groupid);
     $userid  = group_param_userid($userid);
 
-    if (isset($result[$groupid][$userid])) {
+    if (isset($result[$groupid][$userid]) && !isset($refresh)) {
         return $result[$groupid][$userid];
     }
 
@@ -438,6 +438,33 @@ function group_remove_user($groupid, $userid=null, $force=false) {
     }
 }
 
+/**
+ * Invite a user to a group.
+ *
+ * @param object $group group
+ * @param object $userid  User to invite
+ * @param object $userfrom  User sending the invitation
+ */
+function group_invite_user($group, $userid, $userfrom, $role='member') {
+    $user = optional_userobj($userid);
+
+    $data = new StdClass;
+    $data->group = $group->id;
+    $data->member= $user->id;
+    $data->ctime = db_format_timestamp(time());
+    $data->role = $role;
+    ensure_record_exists('group_member_invite', $data, $data);
+    $lang = get_user_language($user->id);
+    require_once('activity.php');
+    activity_occurred('maharamessage', array(
+        'users'   => array($user->id),
+        'subject' => get_string_from_language($lang, 'invitetogroupsubject', 'group'),
+        'message' => get_string_from_language($lang, 'invitetogroupmessage', 'group', display_name($userfrom, $user), $group->name),
+        'url'     => get_config('wwwroot') . 'group/view.php?id=' . $group->id,
+        'urltext' => $group->name,
+    ));
+}
+
 // Pieforms for various operations on groups
 
 /**
@@ -546,6 +573,32 @@ function group_get_removeuser_form($userid, $groupid) {
     ));
 }
 
+/**
+ * Form for denying request (request jointype group)
+ */
+function group_get_denyuser_form($userid, $groupid) {
+    require_once('pieforms/pieform.php');
+    return pieform(array(
+        'name'                => 'denyuser' . $userid,
+        'successcallback'     => 'group_denyuser_submit',
+        'renderer'            => 'oneline',
+        'elements'            => array(
+            'group' => array(
+                'type'    => 'hidden',
+                'value' => $groupid,
+            ),
+            'member' => array(
+                'type'  => 'hidden',
+                'value' => $userid,
+            ),
+            'denyuser' => array(
+                'type'  => 'submit',
+                'value' => get_string('declinerequest', 'group'),
+            ),
+        ),
+    ));
+}
+
 // Functions for handling submission of group related forms
 
 function joingroup_submit(Pieform $form, $values) {
@@ -599,6 +652,24 @@ function group_adduser_submit(Pieform $form, $values) {
     redirect('/group/members.php?id=' . $group);
 }
 
+/**
+ * Denying request (request jointype group)
+ */
+function group_denyuser_submit(Pieform $form, $values) {
+    global $SESSION;
+    $group = (int)$values['group'];
+    if (group_user_access($group) != 'admin') {
+        $SESSION->add_error_msg(get_string('accessdenied', 'error'));
+        redirect('/group/members.php?id=' . $group . '&membershiptype=request');
+    }
+    delete_records('group_member_request', 'group', $values['group'], 'member', $values['member']);
+    $SESSION->add_ok_msg(get_string('declinerequestsuccess', 'group'));
+    if (count_records('group_member_request', 'group', $group)) {
+        redirect('/group/members.php?id=' . $group . '&membershiptype=request');
+    }
+    redirect('/group/members.php?id=' . $group);
+}
+
 function group_removeuser_validate(Pieform $form, $values) {
     global $user, $group, $SESSION;
     if (!group_user_can_leave($values['group'], $values['member'])) {
@@ -616,6 +687,58 @@ function group_removeuser_submit(Pieform $form, $values) {
     group_remove_user($group, $values['member']);
     $SESSION->add_ok_msg(get_string('userremoved', 'group'));
     redirect('/group/members.php?id=' . $group);
+}
+
+/**
+ * Form for submitting views to a group
+ */
+function group_view_submission_form($groupid, $viewdata) {
+    $options = array();
+    foreach ($viewdata as $view) {
+        if (empty($view->submittedgroup) && empty($view->submittedhost)) {
+            $options[$view->id] = $view->title;
+        }
+    }
+    if (empty($options)) {
+        return;
+    }
+    return pieform(array(
+        'name' => 'group_view_submission_form_' . $groupid,
+        'method' => 'post',
+        'renderer' => 'oneline',
+        'autofocus' => false,
+        'successcallback' => 'group_view_submission_form_submit',
+        'elements' => array(
+            'text1' => array(
+                'type' => 'html', 'value' => get_string('submit', 'group') . ' ',
+            ),
+            'options' => array(
+                'type' => 'select',
+                'collapseifoneoption' => false,
+                'options' => $options,
+            ),
+            'text2' => array(
+                'type' => 'html',
+                'value' => get_string('forassessment', 'view'),
+            ),
+            'submit' => array(
+                'type' => 'submit',
+                'value' => get_string('submit')
+            ),
+            'group' => array(
+                'type' => 'hidden',
+                'value' => $groupid
+            ),
+            'returnto' => array(
+                'type' => 'hidden',
+                'value' => get_config('wwwroot') . 'group/view.php?id=' . $groupid,
+            ),
+        ),
+    ));
+}
+
+function group_view_submission_form_submit(Pieform $form, $values) {
+    redirect('/view/submit.php?id=' . $values['options'] . '&group=' . $values['group'] . '&returnto=group');
 }
 
 // Miscellaneous group related functions
@@ -700,6 +823,7 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
         else if ($group->membershiptype == 'invite') {
             $group->invite = group_get_accept_form('invite' . $i++, $group->id, $returnto);
         }
+        $group->grouptypedescription = get_string('grouptypedescription', 'group', get_string('name', 'grouptype.' . $group->grouptype), get_string('membershiptype.'.$group->jointype, 'group'));
     }
 }
 
@@ -740,6 +864,7 @@ function group_get_membersearch_data($group, $query, $offset, $limit, $membershi
         if ($membershiptype == 'request') {
             foreach ($results['data'] as &$r) {
                 $r['addform'] = group_get_adduser_form($r['id'], $group);
+                $r['denyform'] = group_get_denyuser_form($r['id'], $group);
                 // TODO: this will suck when there's quite a few on the page, 
                 // would be better to grab all the reasons in one go
                 $r['reason']  = get_field('group_member_request', 'reason', 'group', $group, 'member', $r['id']);
@@ -765,7 +890,7 @@ function group_get_membersearch_data($group, $query, $offset, $limit, $membershi
         'limit' => $limit,
         'offset' => $offset,
         'datatable' => 'membersearchresults',
-        'jsonscript' => 'group/membersearchresults.php',
+        'jsonscript' => 'group/membersearchresults.json.php',
         'firsttext' => '',
         'previoustext' => '',
         'nexttext' => '',
@@ -1079,18 +1204,18 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
     // gets the groups filtered by above
     // and the first three members by id
     
-    $sql = 'SELECT g1.id, g1.name, g1.description, g1.jointype, g1.grouptype, g1.membershiptype, g1.reason, g1.role, g1.membercount, COUNT(gmr.member) AS requests
+    $sql = 'SELECT g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.grouptype, g1.membershiptype, g1.reason, g1.role, g1.membercount, COUNT(gmr.member) AS requests
         FROM (
-        SELECT g.id, g.name, g.description, g.jointype, g.grouptype, t.membershiptype, t.reason, t.role, COUNT(gm.member) AS membercount
+        SELECT g.id, g.name, g.description, g.public, g.jointype, g.grouptype, t.membershiptype, t.reason, t.role, COUNT(gm.member) AS membercount
             FROM {group} g
             LEFT JOIN {group_member} gm ON (gm.group = g.id)' .
             $sql . '
             WHERE g.deleted = ?
-            GROUP BY g.id, g.name, g.description, g.jointype, g.grouptype, t.membershiptype, t.reason, t.role
+            GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.grouptype, t.membershiptype, t.reason, t.role
             ORDER BY g.name
         ) g1
         LEFT JOIN {group_member_request} gmr ON (gmr.group = g1.id)
-        GROUP BY g1.id, g1.name, g1.description, g1.jointype, g1.grouptype, g1.membershiptype, g1.reason, g1.role, g1.membercount';
+        GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.grouptype, g1.membershiptype, g1.reason, g1.role, g1.membercount';
     
     $groups = get_records_sql_assoc($sql, $values, $offset, $limit);
     
@@ -1159,5 +1284,28 @@ function group_can_create_groups() {
         return true;
     }
     return $creators == 'staff' && ($USER->get('staff') || $USER->is_institutional_staff());
+}
+
+function group_get_user_course_groups($userid=null) {
+    if (is_null($userid)) {
+        global $USER;
+        $userid = $USER->get('id');
+    }
+    if ($groups = get_records_sql_array(
+        "SELECT g.id, g.name
+        FROM {group_member} u
+        INNER JOIN {group} g ON (u.group = g.id AND g.deleted = 0)
+        INNER JOIN {grouptype} t ON t.name = g.grouptype
+        WHERE u.member = ?
+        AND t.submittableto = 1
+        ORDER BY g.name
+        ", array($userid))) {
+        return $groups;
+    }
+    return array();
+}
+
+function group_allows_submission($grouptype) {
+    return get_field('grouptype', 'submittableto', 'name', $grouptype);
 }
 ?>

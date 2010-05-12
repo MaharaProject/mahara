@@ -32,6 +32,7 @@ define('SECTION_PLUGINNAME', 'site');
 define('SECTION_PAGE', 'register');
 require('init.php');
 require_once('pieforms/pieform.php');
+require_once('lib/antispam.php');
 define('TITLE', get_string('register'));
 $key = param_alphanum('key', null);
 
@@ -141,7 +142,7 @@ if (isset($key)) {
         $USER->reanimate($user->id, $authinstance->id);
 
         // A special greeting for special people
-        if (in_array($user->username, array('waawaamilk', 'Mjollnir`', 'Ned', 'richardm', 'fmarier'))) {
+        if (in_array($user->username, array('waawaamilk', 'Mjollnir`', 'Ned', 'richardm', 'fmarier', 'naveg'))) {
             $SESSION->add_ok_msg('MAMA!!! Maharababy happy to see you :D :D!');
         }
         else if ($user->username == 'htaccess') {
@@ -222,10 +223,16 @@ else {
     die_info(get_string('registeringdisallowed'));
 }
 
+$elements['tandctext'] = array(
+    'type' => 'textarea',
+    'rows' => 15,
+    'cols' => 60,
+    'readonly' => 'yes',
+    'value' => preg_replace('#([^\n])(\n)([^\n])#', '$1 $3', html2text(get_site_page_content('termsandconditions'))),
+);
 $elements['tandc'] = array(
     'type' => 'radio',
     'title' => get_string('iagreetothetermsandconditions', 'auth.internal'),
-    'description' => get_string('youmustagreetothetermsandconditions', 'auth.internal'),
     'options' => array(
         'yes' => get_string('yes'),
         'no'  => get_string('no')
@@ -237,19 +244,17 @@ $elements['tandc'] = array(
     'separator' => ' &nbsp; '
 );
 
-if (get_config('captchaonregisterform')) {
-    $elements['captcha'] = array(
-        'type' => 'captcha',
-        'title' => get_string('captchatitle'),
-        'description' => get_string('captchadescription'),
-        'rules' => array('required' => true)
-    );
-}
-
 $elements['submit'] = array(
     'type' => 'submit',
     'value' => get_string('register'),
 );
+
+// swap the name and email fields at random
+if (rand(0,1)) {
+    $emailelement = $elements['email'];
+    unset($elements['email']);
+    $elements = array('email' => $emailelement) + $elements;
+}
 
 $form = array(
     'name' => 'register',
@@ -259,7 +264,12 @@ $form = array(
     'action' => '',
     'showdescriptiononerror' => false,
     'renderer' => 'table',
-    'elements' => $elements
+    'elements' => $elements,
+    'spam' => array(
+        'secret'       => get_config('formsecret'),
+        'mintime'      => 5,
+        'hash'         => array('firstname', 'lastname', 'email', 'institution', 'tandc', 'submit'),
+    ),
 );
 
 /**
@@ -270,6 +280,32 @@ $form = array(
  */
 function register_validate(Pieform $form, $values) {
     global $SESSION;
+
+    $spamtrap = new_spam_trap(array(
+        array(
+            'type' => 'name',
+            'value' => $values['firstname'],
+        ),
+        array(
+            'type' => 'name',
+            'value' => $values['lastname'],
+        ),
+        array(
+            'type' => 'email',
+            'value' => $values['email'],
+        ),
+    ));
+
+    if ($form->spam_error() || $spamtrap->is_spam()) {
+        $msg = get_string('formerror');
+        $emailcontact = get_config('emailcontact');
+        if (!empty($emailcontact)) {
+            $msg .= ' ' . get_string('formerroremail', 'mahara', $emailcontact, $emailcontact);
+        }
+        $form->set_error(null, $msg);
+        return;
+    }
+
     $institution = $values['institution'];
     safe_require('auth', 'internal');
 
@@ -295,11 +331,6 @@ function register_validate(Pieform $form, $values) {
         $form->set_error('tandc', get_string('youmaynotregisterwithouttandc', 'auth.internal'));
     }
 
-    // CAPTCHA image
-    if (get_config('captchaonregisterform') && !$values['captcha']) {
-        $form->set_error('captcha', get_string('captchaincorrect'));
-    }
-
     $institution = get_record_sql('
         SELECT 
             i.name, i.maxuseraccounts, i.registerallowed, COUNT(u.id)
@@ -312,7 +343,7 @@ function register_validate(Pieform $form, $values) {
             i.name, i.maxuseraccounts, i.registerallowed', array($institution));
 
     if (!empty($institution->maxuseraccounts) && $institution->count >= $institution->maxuseraccounts) {
-        $form->set_error('institution', get_string('institutionfull'));
+        $form->set_error($hashed['institution'], get_string('institutionfull'));
     }
 
     if (!$institution->registerallowed) {

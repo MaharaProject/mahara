@@ -1,3 +1,4 @@
+{auto_escape off}
 <p>{$stryouhaveblogs}</p>
 {if $blogs}
 <ul>
@@ -6,3 +7,4 @@
 {/foreach}
 </ul>
 {/if}
+{/auto_escape}

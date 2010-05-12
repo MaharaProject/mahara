@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="export:leap:entry.tpl" skipfooter=true}
 {foreach from=$persondata item=entry}
         <leap:persondata
@@ -22,3 +23,4 @@
         </leap:spatial>
 {/if}
 {include file="export:leap:entryfooter.tpl"}
+{/auto_escape}

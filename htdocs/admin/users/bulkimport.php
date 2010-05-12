@@ -30,6 +30,7 @@ define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('institution.php');
+require_once(get_config('docroot') . '/lib/htmloutput.php');
 safe_require('artefact', 'internal');
 safe_require('artefact', 'file');
 raise_memory_limit('1024M');
@@ -113,8 +114,7 @@ $form = array(
  */
 function meta_redirect() {
     $url = get_config('wwwroot') . '/admin/users/bulkimport.php';
-    print '<html><head><meta http-equiv="Refresh" content="0; url=' . $url . '">';
-    print '</head><body><p>Please follow <a href="'.$url.'">link</a>!</p></body></html>';
+    print_meta_redirect($url);
     exit;
 }
 
@@ -202,7 +202,7 @@ function bulkimport_validate(Pieform $form, $values) {
 function bulkimport_submit(Pieform $form, $values) {
     global $SESSION, $LEAP2AFILES;
 
-    log_info('Attempting to import ' . count($LEAP2AFILES) . ' users from LEAP2A files');
+    log_info('Attempting to import ' . count($LEAP2AFILES) . ' users from Leap2A files');
 
     $SESSION->set('bulkimport_leap2afiles', $LEAP2AFILES);
     $SESSION->set('bulkimport_authinstance', (int)$values['authinstance']);
@@ -281,7 +281,7 @@ function import_next_user() {
     catch (EmailException $e) {
         // Suppress any emails (e.g. new institution membership) sent out
         // during user creation, becuase the user doesn't have an email
-        // address until we've imported them from the LEAP2A file.
+        // address until we've imported them from the Leap2A file.
         log_debug("Failed sending email during user import");
     }
 
@@ -304,10 +304,10 @@ function import_next_user() {
 
     try {
         $importer->process();
-        log_info("Imported user account $user->id from leap2a file, see $logfile for a full log");
+        log_info("Imported user account $user->id from Leap2A file, see $logfile for a full log");
     }
     catch (ImportException $e) {
-        log_info("LEAP2A import failed: " . $e->getMessage());
+        log_info("Leap2A import failed: " . $e->getMessage());
         $FAILEDUSERS[$username] = get_string("leap2aimportfailed");
         db_rollback();
         continue;

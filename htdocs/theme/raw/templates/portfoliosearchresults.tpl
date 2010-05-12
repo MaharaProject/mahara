@@ -1,3 +1,4 @@
+{auto_escape off}
   {foreach from=$data item=result}
     <tr class="{cycle name=rows values='r0,r1'}">
       <td class="center" style="width:25px;">{if $result->icon}<img src="{$result->icon|escape}" alt="{$result->typestr|escape}"> {/if}</td>
@@ -11,3 +12,4 @@
       <td class="right s"><div class="ctime">{$result->ctime}</div>{$result->typestr}</td>
     </tr>
   {/foreach}
+{/auto_escape}

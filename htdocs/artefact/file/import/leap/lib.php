@@ -28,9 +28,9 @@
 defined('INTERNAL') || die();
 
 /**
- * Implements LEAP2A import of file/folder related entries into Mahara
+ * Implements Leap2A import of file/folder related entries into Mahara
  *
- * For more information about LEAP file importing, see:
+ * For more information about Leap file importing, see:
  * http://wiki.mahara.org/Developer_Area/Import//Export/LEAP_Import/File_Artefact_Plugin
  *
  * TODO:

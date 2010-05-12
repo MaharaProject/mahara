@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $VIEWS}
     <table id="userviewstable">
     {foreach from=$VIEWS item=item name=view}
@@ -23,3 +24,4 @@
 {else}
     {str tag='noviewstosee' section='group'}
 {/if}
+{/auto_escape}

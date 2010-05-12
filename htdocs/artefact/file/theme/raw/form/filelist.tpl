@@ -1,3 +1,4 @@
+{auto_escape off}
 {if !$filelist}
 <p>{str tag=nofilesfound section=artefact.file}</p>
 {else}
@@ -76,3 +77,4 @@
  </tbody>
 </table>
 {/if}
+{/auto_escape}

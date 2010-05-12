@@ -52,25 +52,18 @@
 #resumewrap form {
 	margin: 0;
 }
+#container #resumewrap table td.errmsg {
+   padding-left: 2em;
+}
 fieldset legend.resumeh3 a {
 	background: none;
 	padding: 0;
 }
 
-tr#contactinformation_contactinformation_container th {
-	display: none;
-}
-tr#contactinformation_contactinformation_container td .resumecontactinfo th {
-	display: block;
-	line-height: 1.4em;
-	white-space: nowrap;
-	text-align: left;
-}
-
 #personalinformation fieldset th {
 	text-align: left;
 }
-#personalinformation fieldset th label {
+#resumewrap fieldset th label {
     font-weight: bold;
     font-size: 1em;
 }

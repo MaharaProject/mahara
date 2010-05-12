@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 
 <h2>{$subheading|escape}</h2>
@@ -5,3 +6,4 @@
 {include file="interaction:forum:simplepost.tpl" post=$topic groupadmins=$groupadmins}
 
 {include file="footer.tpl"}
+{/auto_escape}

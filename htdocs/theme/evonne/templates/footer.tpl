@@ -1,3 +1,4 @@
+{auto_escape off}
 	</div>
 	<div id="footerwrap" class="center">
 		<div id="poweredby" class="fl"><a href="http://mahara.org/"><img src="{theme_path location='images/powered-by-mahara.gif'}" border="0" alt=""></a></div>
@@ -18,3 +19,4 @@
 </div>
 </body>
 </html>
+{/auto_escape}

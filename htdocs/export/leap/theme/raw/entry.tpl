@@ -1,8 +1,9 @@
+{auto_escape off}
     <entry>
         <title>{$title|escape}</title>
         <id>{$id}</id>
 {if $author}        <author>
-            <name>{$author|display_name|escape}</name>
+            <name>{$author|escape}</name>
         </author>
 {/if}
 {if $updated}        <updated>{$updated}</updated>{/if}
@@ -16,3 +17,4 @@
 {if !$skipfooter}
 {include file="export:leap:entryfooter.tpl"}
 {/if}
+{/auto_escape}

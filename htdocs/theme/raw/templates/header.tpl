@@ -1,3 +1,4 @@
+{auto_escape off}
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if}>
 {include file="header/head.tpl"}
@@ -25,10 +26,11 @@
 
 {if isset($PAGEHEADING)}                    <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON}</span>{/if}</h1>
 {/if}
-{if $GROUP}{* Tabs and beginning of page container for group info pages *}                        <ul class="in-page-tabs">
-{foreach from=$GROUPNAV item=item}
+{if $SUBPAGENAV}{* Tabs and beginning of page container for group info pages *}                        <ul class="in-page-tabs">
+{foreach from=$SUBPAGENAV item=item}
                             <li><a {if $item.selected}class="current-tab" {/if}href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>
 {/foreach}
                         </ul>
                         <div class="subpage rel">
 {/if}
+{/auto_escape}

@@ -83,6 +83,27 @@ function db_is_utf8() {
     return false;
 }
 
+function db_total_size() {
+    global $db;
+    if (!is_a($db, 'ADOConnection')) {
+        throw new SQLException('Database connection is not available ');
+    }
+    $dbname = db_quote(get_config('dbname'));
+    if (is_mysql()) {
+        $result = $db->Execute("
+            SELECT SUM( data_length + index_length ) AS dbsize
+            FROM information_schema.tables
+            WHERE table_schema = $dbname
+        ");
+        return $result->fields['dbsize'];
+    }
+    if (is_postgres()) {
+        $result = $db->Execute("SELECT * FROM pg_database_size($dbname)");
+        return $result->fields['pg_database_size'];
+    }
+    return false;
+}
+
 function column_collation_is_default($table, $column) {
     global $db;
     if (!is_a($db, 'ADOConnection')) {

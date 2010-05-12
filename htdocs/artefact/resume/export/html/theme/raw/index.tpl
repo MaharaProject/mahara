@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="export:html:header.tpl"}
 
 {if $coverletter}
@@ -100,3 +101,4 @@
 {/if}
 
 {include file="export:html:footer.tpl"}
+{/auto_escape}

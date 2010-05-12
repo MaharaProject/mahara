@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 {include file="sidebar.tpl"}
 
@@ -7,3 +8,4 @@
 {include file="footer.tpl"}
 
 
+{/auto_escape}

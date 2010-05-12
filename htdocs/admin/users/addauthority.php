@@ -29,6 +29,7 @@ define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('institutions', 'admin'));
 require_once('pieforms/pieform.php');
+require_once(get_config('docroot') . '/lib/htmloutput.php');
 
 // CHECK FOR CANCEL BEFORE THE 'REQUIRED' PARAMS:
 $cancel = param_boolean('c');
@@ -136,23 +137,6 @@ function auth_config_submit(Pieform $form, $values) {
     } else {
         execute_javascript_and_close();
     }
-    exit;
-}
-
-// TODO: move to lib if people want this:
-function execute_javascript_and_close($js='') {
-    echo '<html>
-    <head>
-        <title>You may close this window</title>
-        <script language="Javascript">
-            function closeMe() { 
-                '.$js.'
-                window.close();
-            }
-        </script>
-    </head>
-    <body onLoad="closeMe();" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; text-align: center;">This window should close automatically</body>'.
-    "\n</html>";
     exit;
 }
 

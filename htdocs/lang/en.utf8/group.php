@@ -52,6 +52,10 @@ $string['membershiptype.controlled'] = 'Controlled Membership';
 $string['membershiptype.invite']     = 'Invite Only';
 $string['membershiptype.request']    = 'Request Membership';
 $string['membershiptype.open']       = 'Open Membership';
+$string['membershiptype.abbrev.controlled'] = 'Controlled';
+$string['membershiptype.abbrev.invite']     = 'Invite';
+$string['membershiptype.abbrev.request']    = 'Request';
+$string['membershiptype.abbrev.open']       = 'Open';
 $string['pendingmembers']            = 'Pending Members';
 $string['reason']                    = 'Reason';
 $string['approve']                   = 'Approve';
@@ -60,16 +64,27 @@ $string['groupalreadyexists'] = 'A Group by this name already exists';
 $string['Created'] = 'Created';
 $string['groupadmins'] = 'Group admins';
 $string['Admin'] = 'Admin';
-$string['grouptype'] = 'Group Type';
+$string['grouptype'] = 'Group type';
 $string['publiclyviewablegroup'] = 'Publicly Viewable Group?';
 $string['publiclyviewablegroupdescription'] = 'Allow anyone (including people who aren\'t members of this site) to view this group, including the forums?';
+$string['publicvisibility'] = 'Publicly visible';
 $string['usersautoadded'] = 'Users auto-added?';
 $string['usersautoaddeddescription'] = 'Automatically put all new users into this group?';
+$string['grouptypedescription'] = '%s > %s';
 
 $string['hasrequestedmembership'] = 'has requested membership of this group';
 $string['hasbeeninvitedtojoin'] = 'has been invited to join this group';
 $string['groupinvitesfrom'] = 'Invited to join:';
 $string['requestedmembershipin'] = 'Requested membership in:';
+
+$string['controlledmembership'] = 'Controlled Group membership';
+$string['invitemembership'] = 'Invite only membership';
+$string['changedgroupmembership'] = 'Group membership updated sucessfully.';
+$string['changedgroupmembershipsubject'] = 'Your group memberships have been changed';
+$string['addedtogroupsmessage'] = "%s has added you to the group(s):\n\n%s\n\n";
+$string['removedfromgroupsmessage'] = "%s has removed you from the group(s):\n\n%s\n\n";
+$string['cantremoveuserisadmin'] = "Tutor cannot remove admins and other tutorsmembers.";
+$string['cantremovemember'] = "Tutor cannot remove members.";
 
 // Used to refer to all the members of a group - NOT a "member" group role!
 $string['member'] = 'member';
@@ -85,8 +100,8 @@ $string['remove'] = 'Remove';
 $string['updatemembership'] = 'Update membership';
 $string['memberchangefailed'] = 'Failed to update some membership information';
 $string['memberchangesuccess'] = 'Membership status changed successfully';
-$string['viewreleasedsubject'] = 'Your view has been released';
-$string['viewreleasedmessage'] = 'The view that you submitted to %s has been released back to you by %s';
+$string['viewreleasedsubject'] = 'Your view "%s" has been released from %s by %s';
+$string['viewreleasedmessage'] = 'Your view "%s" has been released from %s by %s';
 $string['viewreleasedsuccess'] = 'View was released successfully';
 $string['groupmembershipchangesubject'] = 'Group membership: %s';
 $string['groupmembershipchangedmessagetutor'] = 'You have been promoted to a tutor in this group';
@@ -141,18 +156,22 @@ $string['memberslist'] = 'Members: ';
 $string['nogroups'] = 'No groups';
 $string['deletespecifiedgroup'] = 'Delete group \'%s\'';
 $string['requestjoinspecifiedgroup'] = 'Request to join group \'%s\'';
-$string['youaregroupmember'] = 'You are  a member of this group';
+$string['youaregroupmember'] = 'You are a member of this group';
+$string['youaregrouptutor'] = 'You are a tutor in this group';
+$string['youaregroupadmin'] = 'You are an admin in this group';
 $string['youowngroup'] = 'You own this group';
 $string['groupsnotin'] = 'Groups I\'m not in';
 $string['allgroups'] = 'All groups';
 $string['allgroupmembers'] = 'All group members';
 $string['trysearchingforgroups'] = 'Try %ssearching for groups%s to join!';
-$string['nogroupsfound'] = 'No groups found :(';
+$string['nogroupsfound'] = 'No groups found.';
+$string['nogroups'] = 'No groups.';
 $string['group'] = 'group';
 $string['Group'] = 'Group';
 $string['groups'] = 'groups';
 $string['notamember'] = 'You are not a member of this group';
 $string['notmembermayjoin'] = 'You must join the group \'%s\' to see this page.';
+$string['declinerequestsuccess'] = 'Group membership request has been declined sucessfully.';
 
 // friendslist
 $string['reasonoptional'] = 'Reason (optional)';
@@ -167,7 +186,7 @@ $string['friendformrejectsuccess'] = 'Rejected friend request';
 $string['addtofriendslist'] = 'Add to friends';
 $string['requestfriendship'] = 'Request friendship';
 
-$string['addedtofriendslistsubject'] = 'New friend';
+$string['addedtofriendslistsubject'] = '%s has added you as a friend';
 $string['addedtofriendslistmessage'] = '%s added you as a friend! This means that %s is also on your friend list now too. '
     . ' Click on the link below to see their profile page';
 
@@ -283,4 +302,7 @@ $string['Joined'] = 'Joined';
 
 $string['instructions:invite'] = 'This is an invite-only group. Invite users through their profile pages.';
 $string['instructions:controlled'] = 'This is a controlled membership group. Add users through their profile pages.';
+
+// View submission
+$string['submit'] = 'Submit';
 ?>

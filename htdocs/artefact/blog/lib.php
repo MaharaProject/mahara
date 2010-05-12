@@ -48,14 +48,20 @@ class PluginArtefactBlog extends PluginArtefact {
     }
 
     public static function menu_items() {
-        return array(
-            array(
-                'path'   => 'myportfolio/blogs',
-                'url'    => 'artefact/blog/',
-                'title'  => get_string('myblogs', 'artefact.blog'),
-                'weight' => 30,
-            ),
+        global $USER;
+        $tab = array(
+            'path'   => 'myportfolio/blogs',
+            'weight' => 30,
         );
+        if ($USER->get_account_preference('multipleblogs')) {
+            $tab['url']   = 'artefact/blog/';
+            $tab['title'] = get_string('myblogs', 'artefact.blog');
+        }
+        else {
+            $tab['url']   = 'artefact/blog/view/';
+            $tab['title'] = get_string('myblog', 'artefact.blog');
+        }
+        return array($tab);
     }
 
     public static function get_cron() {
@@ -419,6 +425,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 // This should never happen unless the user is playing around with blog post IDs in the location bar or similar
                 throw new ArtefactNotFoundException(get_string('blogpostdoesnotexist', 'artefact.blog'));
             }
+        }
+        else {
+            $this->allowcomments = 1; // Turn comments on for new posts
         }
     }
 

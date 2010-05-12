@@ -27,5 +27,5 @@
 
 defined('INTERNAL') || die();
 
-$string['name'] = 'Activity log';
+$string['name'] = 'Inbox';
 ?>

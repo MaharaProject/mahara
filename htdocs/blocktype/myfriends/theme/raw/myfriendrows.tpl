@@ -1,3 +1,4 @@
+{auto_escape off}
     {foreach from=$friends item=row}
         <tr>
         {foreach from=$row item=friend}
@@ -10,3 +11,4 @@
         {/foreach}
         </tr>
     {/foreach}
+{/auto_escape}

@@ -1,3 +1,4 @@
+{auto_escape off}
 <table class="resumecontactinfo">
     <tr>
         <th>{str tag='address' section='artefact.internal'}</th>
@@ -35,3 +36,4 @@
         <td colspan="2"> <button onClick="return editprofilebutton();">{str tag='editprofile' section='artefact.internal'}</button></td>
     </tr>
 </table>
+{/auto_escape}

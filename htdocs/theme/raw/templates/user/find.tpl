@@ -1,5 +1,6 @@
+{auto_escape off}
 {include file="header.tpl"}
-            <div id="friendslistcontainer">
+<div id="friendslistcontainer">
             {$form}
             <table id="friendslist" class="fullwidth listing">
                 <tbody>
@@ -10,3 +11,4 @@
 {$results.pagination}
 </div>
 {include file="footer.tpl"}
+{/auto_escape}

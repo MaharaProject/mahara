@@ -1,3 +1,4 @@
+{auto_escape off}
     <h3>{$sbdata.group->name|escape}</h3>
         <div class="sidebar-content">
     <ul>
@@ -16,3 +17,4 @@
     {/foreach}
     </ul>
 </div>
+{/auto_escape}

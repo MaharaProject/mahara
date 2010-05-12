@@ -1,3 +1,4 @@
+{auto_escape off}
 {foreach from=$blocks item=sideblock}{strip}
     {counter name="sidebar" assign=sequence}
     {/strip}<div{if $sideblock.id} id="{$sideblock.id|escape}"{/if} class="sideblock sideblock-{$sequence}">
@@ -5,3 +6,4 @@
 
 </div>
 {/foreach}
+{/auto_escape}

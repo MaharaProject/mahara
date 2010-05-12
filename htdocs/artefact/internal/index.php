@@ -104,6 +104,9 @@ foreach ( $element_list as $element => $type ) {
         $items[$element]['rows'] = 4;
         $items[$element]['cols'] = 50;
     }
+    if ($type == 'text') {
+        $items[$element]['size'] = 30;
+    }
     if ($element == 'country') {
         $countries = getoptions_country();
         $items[$element]['options'] = array('' => get_string('nocountryselected')) + $countries;
@@ -138,9 +141,8 @@ $items['maildisabled']['value'] = get_string('maildisableddescription', 'account
 // build form elements
 $elements = array(
     'topsubmit' => array(
-        'type'  => 'submitcancel',
-        'value' => array(get_string('saveprofile','artefact.internal'), get_string('viewmyprofile', 'artefact.internal')),
-        'goto' => get_config('wwwroot') . 'user/view.php?id=' . $USER->get('id'),
+        'type'  => 'submit',
+        'value' => get_string('saveprofile','artefact.internal'),
     ),
     'profile' => array(
         'type' => 'fieldset',
@@ -171,9 +173,8 @@ $elements = array(
         'value' => $fieldset,
     ),
     'submit' => array(
-        'type'  => 'submitcancel',
-        'value' => array(get_string('saveprofile','artefact.internal'), get_string('viewmyprofile', 'artefact.internal')),
-        'goto' => get_config('wwwroot') . 'user/view.php?id=' . $USER->get('id'),
+        'type'  => 'submit',
+        'value' => get_string('saveprofile','artefact.internal'),
     )
 );
 
@@ -191,11 +192,20 @@ $profileform = pieform(array(
 
 function get_desired_fields(&$allfields, $desiredfields, $section) {
     global $USER;
-    $return = array();
-    $return["{$section}description"] = array(
-        'type'  => 'html',
-        'labelhtml' => ($section == 'about') ? '<div id="profileicon"><a href="' . get_config('wwwroot') . 'artefact/file/profileicons.php"><img src="' . get_config('wwwroot') . 'thumb.php?type=profileicon&maxsize=100&id=' . intval($USER->get('id')) . '" alt=""></a></div>' : '',
-        'value' => get_string("{$section}description", 'artefact.internal')
+    if ($section == 'about') {
+        $label = '<div id="profileicon"><a href="' . get_config('wwwroot') . 'artefact/file/profileicons.php"><img src="' . get_config('wwwroot') . 'thumb.php?type=profileicon&maxsize=100&id=' . intval($USER->get('id')) . '" alt=""></a></div>';
+        $descr = get_string('aboutdescription', 'artefact.internal');
+    }
+    else {
+        $label = '';
+        $descr = get_string('infoisprivate', 'artefact.internal');
+    }
+    $return = array(
+        "{$section}description" => array(
+            'type'      => 'html',
+            'labelhtml' => $label,
+            'value'     => $descr,
+        )
     );
     foreach ($desiredfields as $field) {
         if (isset($allfields[$field])) {
@@ -267,6 +277,7 @@ function profileform_submit(Pieform $form, $values) {
 
                 $key = get_random_key();
                 $key_url = get_config('wwwroot') . 'artefact/internal/validate.php?email=' . rawurlencode($email) . '&key=' . $key;
+                $key_url_decline = $key_url . '&decline=1';
 
                 try {
                     email_user(
@@ -282,7 +293,7 @@ function profileform_submit(Pieform $form, $values) {
                         ),
                         null,
                         get_string('emailvalidation_subject', 'artefact.internal'),
-                        get_string('emailvalidation_body', 'artefact.internal', $USER->get('firstname'), $email, $key_url)
+                        get_string('emailvalidation_body', 'artefact.internal', $USER->get('firstname'), $email, $key_url, $key_url_decline)
                     );
                 }
                 catch (EmailException $e) {

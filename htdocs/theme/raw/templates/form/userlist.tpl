@@ -1,3 +1,4 @@
+{{auto_escape off}}
 <script type="text/javascript">
     var {{$name}}_d;
 
@@ -171,3 +172,4 @@
     </tr>
 </table>
 <input type="hidden" id="{{$name}}" name="{{$name}}" value="{{$value}}">
+{{/auto_escape}}

@@ -1,3 +1,4 @@
+{{auto_escape off}}
 <input type="hidden" name="accesslist" value="">
 <div id="viewacl_lhs">
     <div id="potentialpresetitems"></div>
@@ -67,6 +68,10 @@ function renderAccessListItem(item) {
             TR(null,
                 TH(null, get_string('To') + ':'),
                 TD(null, makeCalendarInput(item, 'stop'), makeCalendarLink(item, 'stop'))
+            ),
+            TR(null,
+                TH(null, null),
+                TD(null, get_string('datetimeformatguide'))
             )
         )
     );
@@ -318,3 +323,4 @@ addLoadEvent(function() {
 });
 
 </script>
+{{/auto_escape}}

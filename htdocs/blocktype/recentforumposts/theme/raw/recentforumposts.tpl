@@ -1,3 +1,4 @@
+{auto_escape off}
                 <div>
                 {if $foruminfo}
                 {foreach from=$foruminfo item=postinfo}
@@ -13,3 +14,4 @@
                 {/if}
                 <p><a href="{$WWWROOT}interaction/forum/?group={$group->id|escape}" target="_blank">{str tag=gotoforums section=interaction.forum} &raquo;</a></p>
                 </div>
+{/auto_escape}

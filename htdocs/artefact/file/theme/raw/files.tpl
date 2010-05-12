@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 {if $institution}
   {$institutionselector}
@@ -10,3 +11,4 @@
 {/if}
 			<div>{$form}</div>
 {include file="footer.tpl"}
+{/auto_escape}

@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $profileiconpath}<div class="fr"><img src="{$profileiconpath|escape}" alt=""></div>{/if}
 <p>{$profileinfo.introduction|clean_html}</p>
 {if $profileinfo && (count($profileinfo) != 1 || !$profileinfo.introduction)}<ul>
@@ -7,3 +8,4 @@
 {/foreach}
 </ul>{/if}
 {if $profileiconpath}<div class="cb"></div>{/if}
+{/auto_escape}

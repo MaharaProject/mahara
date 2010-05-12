@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 
 {if $GROUP}<h2>{str tag=groupviews section=view}</h2>
@@ -21,14 +22,26 @@
 {foreach from=$views item=view}
                     <tr class="{cycle values='r0,r1'}">
                         <td><div class="rel">
+{if $view.type == 'profile'}
+                            <h3><a href="{$WWWROOT}user/view.php">{str tag=profileviewtitle section=view}</a></h3>
+{elseif $view.type == 'dashboard'}
+                            <h3><a href="{$WWWROOT}">{str tag=dashboardviewtitle section=view}</a></h3>
+{else}
                             <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a></h3>
+{/if}
 {if $view.submittedto}
                             <div class="vi submitted-viewitem">{$view.submittedto}</div>
 {else}
                             {if $view.removable}<div class="rbuttons"><a href="{$WWWROOT}view/delete.php?id={$view.id}" class="btn-del">{str tag="deletethisview" section="view"}</a></div>{/if}
                             <div class="vi">
+{if $view.type != 'profile' && $view.type != 'dashboard'}
                                 <h4><a href="{$WWWROOT}view/edit.php?id={$view.id}" id="editviewdetails">{str tag="edittitleanddescription" section="view"}</a></h4>
-{if $view.description}
+{/if}
+{if $view.type == 'profile'}
+                                <div class="videsc">{str tag=profiledescription}</div>
+{elseif $view.type == 'dashboard'}
+                                <div class="videsc">{str tag=dashboarddescription}</div>
+{elseif $view.description}
                                 <div class="videsc">{$view.description}</div>
 {/if}
 {if $view.tags}
@@ -44,7 +57,11 @@
                             </div>
 {/if}
                             <div class="vi">
+{if $view.togglepublic}
+                                {$view.togglepublic}
+{elseif $view.type != 'profile' && $view.type != 'dashboard'}
                                 <h4><a href="{$WWWROOT}view/access.php?id={$view.id}" id="editviewaccess">{str tag="editaccess" section="view"}</a></h4>
+{/if}
 {if $view.access}
                                <div class="videsc">{$view.access}</div>
 {/if}
@@ -71,7 +88,7 @@
                                 <div class="videsc">{str tag="nobodycanseethisview2" section="view"}</div>
 {/if}
                             </div>
-{if $view.submitto}
+{if $view.submitto && $view.type != 'profile' && $view.type != 'dashboard'}
                             <div class="vi submit-viewitem">{$view.submitto}</div>
 {/if}
                         </div></td>
@@ -85,3 +102,4 @@
 {/if}
 {include file="footer.tpl"}
 
+{/auto_escape}

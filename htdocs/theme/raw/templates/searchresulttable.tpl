@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $results.data}
     <h2>{str tag="Results"}</h2>
     <table id="searchresults" class="tablerenderer fullwidth listing">
@@ -44,3 +45,4 @@
 {else}
     <div>{str tag="noresultsfound"}</div>
 {/if}
+{/auto_escape}

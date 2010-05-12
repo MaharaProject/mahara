@@ -30,116 +30,80 @@ define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-json_headers();
-
+$readone    = param_integer('readone', 0);
 $markasread = param_integer('markasread', 0);
 $delete     = param_integer('delete', 0);
-$quiet      = param_integer('quiet', 0);
 
-if ($markasread) {
-    $count = 0;
-    db_begin();
-    try {
-        foreach ($_GET as $k => $v) {
-            if (preg_match('/^unread\-(\d+)$/',$k,$m)) {
-                set_field('notification_internal_activity', 'read', 1, 'id', $m[1], 'usr', $USER->get('id'));
-                $count++;
-            }
-        }
-    }
-    catch (Exception $e) {
-        db_rollback();
-        json_reply('local', get_string('failedtomarkasread', 'activity') . ': ' . $e->getMessage());
-    }
-    db_commit();
-    if ($quiet) {
-        json_reply(false, null);
-    }
-    json_reply(false, array('message' => get_string('markedasread', 'activity'), 'count' => $count));
-}
-else if ($delete) {
-    $count = 0;
-    db_begin();
-    try {
-        foreach ($_GET as $k => $v) {
-            if (preg_match('/^delete\-(\d+)$/',$k,$m)) {
-                delete_records('notification_internal_activity', 'id', $m[1], 'usr', $USER->get('id'));
-                $count++;
-            }
-        }
-    }
-    catch (Exception $e) {
-        db_rollback();
-        json_reply('local', get_string('failedtodeletenotifications', 'activity') . ': ' . $e->getMessage());
-    }
-    db_commit();
-    
-    safe_require('notification', 'internal');
-
-    json_reply(false, array(
-        'message' => get_string('deletednotifications', 'activity', $count),
-        'count' => $count,
-        'newunreadcount' => call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'))
-    ));
+if ($readone) {
+    set_field('notification_internal_activity', 'read', 1, 'id', $readone, 'usr', $USER->get('id'));
+    json_reply(false, null);
 }
 
-// normal processing
+require_once(get_config('libroot') . 'activity.php');
 
-$type = param_alphanum('type', 'all');
+$type = param_variable('type', 'all');
 $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
-$userid = $USER->get('id');
+$message = false;
 
-if ($type == 'all') {
-    $count = count_records('notification_internal_activity', 'usr', $userid);
-    $sql = 'SELECT a.*, at.name AS type,at.plugintype, at.pluginname FROM {notification_internal_activity} a 
-        JOIN {activity_type} at ON a.type = at.id
-        WHERE a.usr = ? ORDER BY ctime DESC';
-    $records = get_records_sql_array($sql, array($userid), $offset, $limit);
-} else if ($type == 'adminmessages' && $USER->get('admin')) {
-    $count = count_records_select('notification_internal_activity', 'usr = ? AND type IN (
-         SELECT id FROM {activity_type} WHERE admin = ?)', 
-                                  array($userid, 1));
-    $sql = 'SELECT a.*, at.name AS type,at.plugintype, at.pluginname FROM {notification_internal_activity} a 
-        JOIN {activity_type} at ON a.type = at.id
-        WHERE a.usr = ? AND at.admin = ? ORDER BY ctime DESC';
-    $records = get_records_sql_array($sql, array($userid, 1), $offset, $limit);
-}
-else {
-    $count = count_records_select('notification_internal_activity', 'usr = ? AND type = ?',
-                                  array($userid,$type));
-    $sql = 'SELECT a.*, at.name AS type,at.plugintype, at.pluginname FROM {notification_internal_activity} a
-        JOIN {activity_type} at ON a.type = at.id
-        WHERE a.usr = ? AND a.type = ?';
-    $records = get_records_sql_array($sql, array($userid, $type), $offset, $limit);
-}
-
-if (empty($records)) {
-    $records = array();
-}
-$data = array();
-$star = $THEME->get_url('images/star.png');
-$unread = get_string('unread', 'activity');
-
-foreach ($records as &$r) {
-    $r->date = format_date(strtotime($r->ctime));
-    $section = 'activity';
-    if (!empty($r->plugintype)) {
-        $section = $r->plugintype . '.' . $r->pluginname;
+if ($markasread) {
+    $ids = array();
+    foreach ($_GET as $k => $v) {
+        if (preg_match('/^unread\-(\d+)$/',$k,$m)) {
+            $ids[] = $m[1];
+        }
     }
-    $r->type = get_string('type' . $r->type, $section);
-    $r->message = clean_html(format_whitespace($r->message));
+    if ($ids) {
+        set_field_select(
+            'notification_internal_activity', 'read', 1,
+            'id IN (' . join(',', $ids) . ') AND usr = ?',
+            array($USER->get('id'))
+        );
+    }
+    $message = get_string('markedasread', 'activity');
+}
+else if ($delete) {
+    $ids = array();
+    foreach ($_GET as $k => $v) {
+        if (preg_match('/^delete\-(\d+)$/',$k,$m)) {
+            $ids[] = $m[1];
+        }
+    }
+    if ($ids) {
+        $strids = join(',', $ids);
+        $userid = $USER->get('id');
+        db_begin();
+        execute_sql("
+            UPDATE {notification_internal_activity}
+            SET parent = NULL
+            WHERE parent IN (
+                SELECT id
+                FROM {notification_internal_activity}
+                WHERE id IN ($strids) AND usr = ?
+            )",
+            array($userid)
+        );
+        delete_records_select(
+            'notification_internal_activity',
+            "id IN ($strids) AND usr = ?",
+            array($userid)
+        );
+        db_commit();
+    }
+    $message = get_string('deletednotifications', 'activity', count($ids));
 }
 
-$activity = array(
-    'count'  => $count,
-    'offset' => $offset,
-    'limit'  => $limit,
-    'data'   => $records,
-    'star'   => $star,
-    'unread' => $unread,
-);
+$newhtml = activitylist_html($type, $limit, $offset);
 
-echo json_encode($activity);
-?>
+if ($message) {
+    safe_require('notification', 'internal');
+    $newhtml['newunreadcount'] = call_static_method(
+        generate_class_name('notification', 'internal'),
+        'unread_count',
+        $USER->get('id')
+    );
+}
+
+json_reply(false, (object) array('message' => $message, 'data' => $newhtml));
+

@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $hascontent}
 <table class="resumecontactinfo">
 <colgroup width="50%" span="2"></colgroup>
@@ -51,3 +52,4 @@
 {/if}
 </table>
 {/if}
+{/auto_escape}

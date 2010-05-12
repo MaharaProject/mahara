@@ -187,22 +187,22 @@ $form['elements']['overrides'] = array(
         'startdate'        => array(
             'type'         => 'calendar',
             'title'        => get_string('startdate','view'),
+            'description'  => get_string('datetimeformatguide'),
             'defaultvalue' => isset($view) ? strtotime($view->get('startdate')) : null,
             'caloptions'   => array(
                 'showsTime'      => true,
                 'ifFormat'       => get_string('strftimedatetimeshort'),
             ),
-            'help'         => true,
         ),
         'stopdate'  => array(
             'type'         => 'calendar',
             'title'        => get_string('stopdate','view'),
+            'description'  => get_string('datetimeformatguide'),
             'defaultvalue' => isset($view) ? strtotime($view->get('stopdate')) : null,
             'caloptions'   => array(
                 'showsTime'      => true,
                 'ifFormat'       => get_string('strftimedatetimeshort'),
             ),
-            'help'         => true,
         ),
     ),
 );
@@ -404,7 +404,7 @@ function editaccess_submit(Pieform $form, $values) {
 
 $form = pieform($form);
 
-$smarty = smarty(array('tablerenderer'), array(), array('mahara' => array('From', 'To')), array('sidebars' => false));
+$smarty = smarty(array('tablerenderer'), array(), array('mahara' => array('From', 'To', 'datetimeformatguide')), array('sidebars' => false));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->assign('form', $form);

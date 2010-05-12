@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $results.data}
         {foreach from=$results.cdata item=row}
           <tr class="{cycle values='r0,r1'}">
@@ -18,6 +19,7 @@
                   <label>{str tag=reason}:</label> {$r.reason|format_whitespace}{/if}
                 </div>
                 <div class="right btn-add">{$r.addform}</div>
+                <div class="right btn-add">{$r.denyform}</div>
                 {elseif $membershiptype == 'invite'}
                 <div>{str tag=hasbeeninvitedtojoin section=group}</div>
                 {/if}
@@ -29,3 +31,4 @@
 {else}
     <div>{str tag="noresultsfound"}</div>
 {/if}
+{/auto_escape}

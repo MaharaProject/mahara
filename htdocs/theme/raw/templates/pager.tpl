@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $page != 0}
   <span class="pagniation prev"><a href="{$url}&amp;offset={$limit*$prev}">{str tag=prevpage}</a></span>
 {/if}
@@ -10,3 +11,4 @@
   <span class="pagination next"><a href="{$url}&amp;offset={$limit*$next}">{str tag=nextpage}</a></span>
 {/if}
 
+{/auto_escape}

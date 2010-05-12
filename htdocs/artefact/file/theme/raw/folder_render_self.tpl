@@ -1,3 +1,4 @@
+{auto_escape off}
 <div>
   {if !$simpledisplay}<h3>{$title|escape}</h3>{/if}
   <div>{$description|escape}</div>
@@ -33,3 +34,4 @@
   {/if}
   </div>
 </div>
+{/auto_escape}

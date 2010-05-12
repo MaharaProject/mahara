@@ -29,9 +29,12 @@ define('INTERNAL', 1);
 define('MENUITEM', 'myportfolio/blogs');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'blog');
+define('SECTION_PAGE', 'index');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'blog');
+
+define('TITLE', get_string('myblogs','artefact.blog'));
 
 if ($delete = param_integer('delete', 0)) {
     $blog = artefact_instance_from_id($delete);
@@ -48,34 +51,6 @@ $blogs = (object) array(
 );
 
 list($blogs->count, $blogs->data) = ArtefactTypeBlog::get_blog_list($blogs->limit, $blogs->offset);
-
-// If the user has exactly one blog, skip the blog listing and display it
-if (!$delete && $blogs->offset == 0 && !empty($blogs->data) && count($blogs->data) == 1) {
-    define('TITLE', get_string('viewblog','artefact.blog'));
-    define('SECTION_PAGE', 'view');
-
-    $record = end($blogs->data);
-    $id = $record->id;
-    $blog = new ArtefactTypeBlog($id, $record);
-    // This javascript is used to generate a list of blog posts.
-    $js = '';
-    if ($blog->count_children()) {
-        $js = require(get_config('docroot') . 'artefact/blog/view/index.js.php');
-    }
-
-    $smarty = smarty(array('tablerenderer'));
-    $smarty->assign_by_ref('blog', $blog);
-    $smarty->assign_by_ref('INLINEJAVASCRIPT', $js);
-    $smarty->assign('PAGEHEADING', hsc($blog->get('title')));
-    $smarty->assign('strnopostsaddone',
-                    get_string('nopostsaddone', 'artefact.blog',
-                               '<a href="' . get_config('wwwroot') . 'artefact/blog/post.php?blog=' . $blog->get('id') . '">', '</a>'));
-    $smarty->display('artefact:blog:view.tpl');
-    exit;
-}
-
-define('TITLE', get_string('myblogs','artefact.blog'));
-define('SECTION_PAGE', 'index');
 
 ArtefactTypeBlog::build_blog_list_html($blogs);
 

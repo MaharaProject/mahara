@@ -75,14 +75,6 @@ addLoadEvent(function() {
         });
     });
 
-    connect('cancel_profileform_submit', 'onclick', function(e) {
-        if (formDirty) {
-            if (!confirm(get_string('loseyourchanges'))) {
-                e.stop();
-            }
-        }
-    });
-
     // Now unhide the profile form
     hideElement('profile-loading');
     $('profileform').style.position = 'static';

@@ -27,8 +27,8 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Your Entire Resumé';
-$string['description'] = 'A quick way to show your whole resumé';
+$string['title'] = 'Your Entire Résumé';
+$string['description'] = 'A quick way to show your whole résumé';
 
 $string['History'] = 'History';
 ?>

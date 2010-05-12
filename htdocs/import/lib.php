@@ -173,7 +173,7 @@ abstract class PluginImport extends Plugin {
     /**
      * validate the import data that we have after the file has been fetched.
      * This is static, because the data may need to be validated earlier than setting up everything else
-     * For example, in the case of the administrator adding a user manually from a leap2a file,
+     * For example, in the case of the administrator adding a user manually from a Leap2A file,
      * we want to validate the leap data before creating the user record.
      *
      * @param array $importdata usually what ImportTransporter::files_info returns

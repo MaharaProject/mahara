@@ -1,3 +1,4 @@
+{auto_escape off}
 <div class="friends">
 {if $friends}
     <table id="userfriendstable" class="center fullwidth">
@@ -27,3 +28,4 @@ addLoadEvent(function() {literal}{{/literal}
     {/if}
 {/if}
 </div>
+{/auto_escape}

@@ -33,7 +33,7 @@ define('TITLE', get_string('mygroups'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'group');
 define('SECTION_PAGE', 'mygroups');
-require('group.php');
+require_once('group.php');
 $filter = param_alpha('filter', 'all');
 $offset = param_integer('offset', 'all');
 

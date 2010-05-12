@@ -27,7 +27,7 @@
 
 defined('INTERNAL') || die();
 
-$string['changepassworddesc'] = 'If you wish to change your password, please enter the details here';
+$string['changepassworddesc'] = 'New password';
 $string['changepasswordotherinterface'] = 'You may <a href="%s">change your password</a> through a different interface';
 $string['oldpasswordincorrect'] = 'This is not your current password';
 
@@ -35,7 +35,7 @@ $string['changeusernameheading'] = 'Change username';
 $string['changeusername'] = 'New username';
 $string['changeusernamedesc'] = 'The username you use to log into %s.  Usernames are 3-30 characters long, and may contain letters, numbers, and most common symbols excuding spaces.';
 
-$string['accountoptionsdesc'] = 'You can set general account options here';
+$string['accountoptionsdesc'] = 'General account options';
 $string['friendsnobody'] = 'Nobody may add me as a friend';
 $string['friendsauth'] = 'New friends require my authorisation';
 $string['friendsauto'] = 'New friends are automatically authorised';
@@ -60,8 +60,14 @@ $string['showviewcolumns'] = 'Show controls to add and remove columns when editi
 $string['tagssideblockmaxtags'] = 'Maximum tags in cloud';
 $string['tagssideblockmaxtagsdescription'] = 'Maximum number of tags to display in your Tag Cloud';
 
+$string['enablemultipleblogs'] = 'Enable multiple blogs';
+$string['enablemultipleblogsdescription']  = 'By default, Mahara gives you one blog. If you would like to keep more than one blog, check this option.';
+$string['disablemultipleblogserror'] = 'You cannot disable multiple blogs unless you only have one blog';
+
 $string['hiderealname'] = 'Hide real name';
 $string['hiderealnamedescription'] = 'Check this box if you have set a display name and you do not want other users to be able to find you by your real name in user searches.';
+
+$string['showhomeinfo'] = 'Show information about Mahara on the home page';
 
 $string['prefssaved']  = 'Preferences saved';
 $string['prefsnotsaved'] = 'Failed to save your Preferences!';

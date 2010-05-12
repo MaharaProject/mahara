@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $post->deleted}
 {assign var=poster value=$post->poster|display_name|escape}
 <h4 class="deletedpost">{str tag="postbyuserwasdeleted" section="interaction.forum" args=$poster}</h4>
@@ -21,3 +22,4 @@
 {/foreach}
 </div>
 {/if}
+{/auto_escape}

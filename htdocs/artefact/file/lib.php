@@ -709,10 +709,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 }
             }
         }
-
-        if (empty($this->id)) {
-            $this->container = 0;
-        }
     }
 
     /**
@@ -962,8 +958,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             return; 
         }
         $file = $this->get_path();
-        // Detach this file from any view feedback
-        set_field('view_feedback', 'attachment', null, 'attachment', $this->id);
         if (is_file($file)) {
             $size = filesize($file);
             // Only delete the file on disk if no other artefacts point to it
@@ -1018,7 +1012,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         // log deletion for all these files if at least one is group-owned.
         $log = (bool) count_records_select('artefact', 'id IN (' . $idstr . ') AND "group" IS NOT NULL');
 
-        set_field_select('view_feedback', 'attachment', null, 'attachment IN (' . $idstr . ')', array());
         delete_records_select('artefact_attachment', 'attachment IN (' . $idstr . ')');
         delete_records_select('artefact_file_files', 'artefact IN (' . $idstr . ')');
         parent::bulk_delete($artefactids, $log);
@@ -1463,6 +1456,10 @@ class ArtefactTypeImage extends ArtefactTypeFile {
                 }
             }
         }
+
+        if (empty($this->id)) {
+            $this->allowcomments = 1;
+        }
     }
 
     /**
@@ -1547,16 +1544,40 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     }
 
     public function render_self($options) {
+        $downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id;
+        $url = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->id;
+        if (isset($options['viewid'])) {
+            $downloadpath .= '&view=' . $options['viewid'];
+            $url .= '&view=' . $options['viewid'];
+        }
+        $metadataurl = $url . '&details=1';
+        if (empty($options['metadata'])) {
+            $smarty = smarty_core();
+            $smarty->assign('id', $this->id);
+            $smarty->assign('title', $this->get('title'));
+            $smarty->assign('description', $this->get('description'));
+            $smarty->assign('downloadpath', $downloadpath);
+            $smarty->assign('metadataurl', $metadataurl);
+            return array('html' => $smarty->fetch('artefact:file:image_render_self.tpl'), 'javascript' => '');
+        }
         $result = parent::render_self($options);
-        $result['html'] = '<div class="fr filedata-icon" style="text-align: center;"><h4>' . get_string('Preview', 'artefact.file') . '</h4><a href="'
-            . hsc(get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id . '&view=' . (isset($options['viewid']) ? $options['viewid'] : 0)) . '"><img src="'
-            . hsc(get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id . '&view=' . (isset($options['viewid']) ? $options['viewid']  : 0). '&maxwidth=400&maxheight=180')
+        $result['html'] = '<div class="fr filedata-icon" style="text-align: center;"><h4>'
+            . get_string('Preview', 'artefact.file') . '</h4><a href="'
+            . hsc($url) . '"><img src="' . hsc($downloadpath) . '&maxwidth=400&maxheight=180'
             . '" alt=""></a></div>' . $result['html'];
         return $result;
     }
 }
 
 class ArtefactTypeProfileIcon extends ArtefactTypeImage {
+
+    public function __construct($id = 0, $data = null) {
+        parent::__construct($id, $data);
+
+        if (empty($this->id)) {
+            $this->allowcomments = 0;
+        }
+    }
 
     public static function get_links($id) {
         $wwwroot = get_config('wwwroot');

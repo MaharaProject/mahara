@@ -1,3 +1,4 @@
+{auto_escape off}
                     </div>
                 </td>
             </tr>
@@ -10,3 +11,4 @@
 </div>
 </body>
 </html>
+{/auto_escape}

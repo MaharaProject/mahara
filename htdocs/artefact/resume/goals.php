@@ -26,13 +26,15 @@
  */
 
 define('INTERNAL', true);
-define('MENUITEM', 'profile/mygoals');
+define('MENUITEM', 'profile/myresume');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'resume');
-define('SECTION_PAGE', 'goals');
+define('SECTION_PAGE', 'index');
+define('RESUME_SUBPAGE', 'goals');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
+define('TITLE', get_string('myresume', 'artefact.resume'));
 require_once(get_config('docroot') . 'artefact/lib.php');
 
 try {
@@ -63,36 +65,44 @@ $gform = array(
     'pluginname' => 'resume',
     'successcallback' => 'goalandskillform_submit',
     'elements' => array(
-        'personalgoal' => array(
-            'type' => 'wysiwyg',
-            'rows' => 10,
-            'cols' => 65,
-            'defaultvalue' => $personal,
-            'title' => get_string('personalgoal', 'artefact.resume'),
-        ),
-        'academicgoal' => array(
-            'type' => 'wysiwyg',
-            'rows' => 10,
-            'cols' => 65,
-            'defaultvalue' => $academic,
-            'title' => get_string('academicgoal', 'artefact.resume'),
-        ),
-        'careergoal' => array(
-            'type' => 'wysiwyg',
-            'rows' => 10,
-            'cols' => 65,
-            'defaultvalue' => $career,
-            'title' => get_string('careergoal', 'artefact.resume'),
-        ),
-        'submit' => array(
-            'type' => 'submit',
-            'value' => get_string('save'),
+        'mygoals' => array(
+            'type' => 'fieldset',
+            'legend' => get_string('mygoals', 'artefact.resume'),
+            'help' => true,
+            'elements' => array(
+                'personalgoal' => array(
+                    'type' => 'wysiwyg',
+                    'rows' => 10,
+                    'cols' => 65,
+                    'defaultvalue' => $personal,
+                    'title' => get_string('personalgoal', 'artefact.resume'),
+                ),
+                'academicgoal' => array(
+                    'type' => 'wysiwyg',
+                    'rows' => 10,
+                    'cols' => 65,
+                    'defaultvalue' => $academic,
+                    'title' => get_string('academicgoal', 'artefact.resume'),
+                ),
+                'careergoal' => array(
+                    'type' => 'wysiwyg',
+                    'rows' => 10,
+                    'cols' => 65,
+                    'defaultvalue' => $career,
+                    'title' => get_string('careergoal', 'artefact.resume'),
+                ),
+                'submit' => array(
+                    'type' => 'submit',
+                    'value' => get_string('save'),
+                ),
+            ),
         ),
     ),
 );
 $goalform = pieform($gform);
 $smarty = smarty();
 $smarty->assign('goalform', $goalform);
-$smarty->assign('PAGEHEADING', hsc(get_string('mygoals', 'artefact.resume')));
+$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:goals.tpl');
-?>
+

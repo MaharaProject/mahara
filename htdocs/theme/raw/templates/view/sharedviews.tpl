@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 
 {if $views}
@@ -33,3 +34,4 @@
 
 {include file="footer.tpl"}
 
+{/auto_escape}

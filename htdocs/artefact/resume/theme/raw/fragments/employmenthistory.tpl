@@ -1,3 +1,4 @@
+{auto_escape off}
 <fieldset>{if !$hidetitle}<legend class="resumeh3">{str tag='employmenthistory' section='artefact.resume'}
 {if $controls} 
     {contextualhelp plugintype='artefact' pluginname='resume' section='addemploymenthistory'}
@@ -35,3 +36,4 @@
 </div>
 {/if}
 </fieldset>
+{/auto_escape}

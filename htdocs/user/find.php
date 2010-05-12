@@ -30,8 +30,11 @@ define('MENUITEM', 'groups/findfriends');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('findfriends'));
-require('searchlib.php');
+require_once('searchlib.php');
 safe_require('search', 'internal');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'user');
+define('SECTION_PAGE', 'find');
 
 $query = param_variable('query', '');
 $offset = param_integer('offset', 0);
@@ -39,7 +42,29 @@ $limit  = 10;
 
 $data = search_user($query, $limit, $offset, array('exclude' => $USER->get('id')));
 $data['query'] = $query;
-build_userlist_html($data, 'find');
+
+$controlledgroups = count_records_sql("SELECT COUNT(g.id)
+          FROM {group} g
+          JOIN {group_member} gm ON (gm.group = g.id)
+          JOIN {grouptype_roles} gtr ON (gtr.grouptype = g.grouptype AND gtr.role = gm.role)
+          WHERE gm.member = ?
+          AND g.jointype = 'controlled'
+          AND (gm.role = 'admin' OR gtr.see_submitted_views = 1)
+          AND g.deleted = 0", array($USER->get('id')));
+
+$invite = count_records_sql("SELECT COUNT(g.id)
+        FROM {group} g
+        JOIN {group_member} gm ON (gm.group = g.id)
+        WHERE gm.member = ?
+        AND g.jointype = 'invite'
+        AND gm.role = 'admin'
+        AND g.deleted = 0", array($USER->get('id')));
+
+$admingroups = new StdClass;
+$admingroups->controlled = $controlledgroups;
+$admingroups->invite = $invite;
+
+build_userlist_html($data, 'find', $admingroups);
 
 $searchform = pieform(array(
     'name' => 'search',
@@ -60,14 +85,19 @@ $js = <<< EOF
 addLoadEvent(function () {
     p = {$data['pagination_js']}
     connect('search_submit', 'onclick', function (event) {
-        var params = {'query': $('search_query').value};
+        replaceChildNodes('messages');
+        var params = {'query': $('search_query').value, 'extradata':serializeJSON({'page':'find'})};
         p.sendQuery(params);
         event.stop();
     });
 });
 EOF;
 
-$smarty = smarty(array('paginator'), array(), array(), array('sideblocks' => array(friends_control_sideblock('find'))));
+$javascript = array('paginator');
+if ($admingroups->invite || $admingroups->controlled) {
+    array_push($javascript, 'groupbox');
+}
+$smarty = smarty($javascript, array(), array('applychanges' => 'mahara', 'nogroups' => 'group'), array('sideblocks' => array(friends_control_sideblock('find'))));
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('results', $data);

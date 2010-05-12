@@ -1,3 +1,4 @@
+{auto_escape off}
 {if !$options.hidetitle}<h2>{$artefacttitle}</h2>{/if}
 
 {$description}
@@ -13,3 +14,4 @@
 {if $newerpostslink}<div><a href="{$newerpostslink|escape}">{str tag=newerposts section=artefact.blog}</a></div>{/if}
 </div>
 {/if}
+{/auto_escape}

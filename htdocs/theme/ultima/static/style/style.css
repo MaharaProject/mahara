@@ -217,7 +217,6 @@ input#files_filebrowser_edit_artefact {
 }
 /** link buttons **/
 .rbuttons a.btn,
-#sb-profile .controls a,
 .upgradeicon a,
 #loginas .btn-loginas {
     background-color: #5c0758;
@@ -238,8 +237,7 @@ input.button:hover,
 input.buttondk:hover,
 input.select:hover,
 input#files_filebrowser_edit_artefact:hover,
-.rbuttons a.btn:hover,
-#sb-profile .controls a:hover {
+.rbuttons a.btn:hover {
 	color: #FFF;
     text-decoration:none;
     background-color: #5c0758;
@@ -252,8 +250,7 @@ input.button:active,
 input.buttondk:active,
 input.select:active,
 input#files_filebrowser_edit_artefact:active,
-.rbuttons a.btn:active,
-#sb-profile .controls a:active {
+.rbuttons a.btn:active {
     background-color: #5c0758;
 	padding: 3px 10px;
 	border-color: #3C083F #b118ba #b118ba #3C083F !important;
@@ -403,6 +400,21 @@ input#myfriends_addfriend_add {
 }
 
 /**************** TOP NAVIGATION ****************/
+#right-nav ul {
+  margin: 1.1em 1em 0 0;
+}
+#right-nav li {
+  padding: 0 0 0 1em;
+}
+#right-nav li a {
+  color: #e8c1ea;
+}
+#right-nav li.selected a {
+  color: #e8c1ea;
+  font-weight: normal;
+  text-decoration: underline;
+}
+
 #main-nav {
     float:right;
     padding: 0;
@@ -472,7 +484,6 @@ input#myfriends_addfriend_add {
     line-height: 20px;
     height: 35px;
     margin: 0 !important;
-	background: url(../images/submenu-divider.gif) no-repeat top right;
 }
 #sub-nav li a,
 #sub-nav li a:link,
@@ -741,8 +752,6 @@ div.sideblock #friendscontrol label {
 }
 #wall .private {
 }
-.wallpost .postedon {
-}
 .wallpost .controls {
 }
 
@@ -876,4 +885,15 @@ ul.groupuserstatus li,
 
 /* Settings > Institution membership */
 #requestmembership_studentid_container label {
+}
+
+/* Home page info boxes */
+
+.home-info {
+    border: solid 2px #cccccc;
+    background: #eeeeee;
+}
+.home-info p.subtitle {
+    border-top: solid 1px #cccccc;
+    border-bottom: solid 1px #cccccc;
 }

@@ -71,20 +71,20 @@ $ownerformatoptions = array(
     FORMAT_NAME_FIRSTNAMELASTNAME => sprintf($formatstring, get_string('fullname'), full_name())
 );
 
-$preferredname = $USER->get('preferredname');
-if ($preferredname !== '') {
-    $ownerformatoptions[FORMAT_NAME_PREFERREDNAME] = sprintf($formatstring, get_string('preferredname'), $preferredname);
+$displayname = display_name($USER);
+if ($displayname !== '') {
+    $ownerformatoptions[FORMAT_NAME_DISPLAYNAME] = sprintf($formatstring, get_string('preferredname'), $displayname);
 }
 $studentid = (string)get_field('artefact', 'title', 'owner', $USER->get('id'), 'artefacttype', 'studentid');
 if ($studentid !== '') {
     $ownerformatoptions[FORMAT_NAME_STUDENTID] = sprintf($formatstring, get_string('studentid'), $studentid);
 }
-$ownerformatoptions[FORMAT_NAME_DISPLAYNAME] = sprintf($formatstring, get_string('displayname'), display_name($USER));
 
 $editview = array(
     'name'     => 'editview',
     'method'   => 'post',
     'autofocus' => 'title',
+    'autoselect' => $new ? 'title' : null,
     'plugintype' => 'core',
     'pluginname' => 'view',
     'elements' => array(
@@ -134,6 +134,13 @@ if (!($group || $institution)) {
     );
 }
 
+$editview['elements']['allowcomments'] = array(
+    'type'         => 'checkbox',
+    'title'        => get_string('allowcomments','artefact.comment'),
+    'description'  => get_string('allowcommentsonview','view'),
+    'defaultvalue' => $view->get('allowcomments'),
+);
+
 if ($new) {
     $editview['elements']['submit'] = array(
         'type'  => 'cancelbackcreate',
@@ -175,6 +182,7 @@ function editview_submit(Pieform $form, $values) {
     $view->set('title', $values['title']);
     $view->set('description', $values['description']);
     $view->set('tags', $values['tags']);
+    $view->set('allowcomments', (int) $values['allowcomments']);
     if (isset($values['ownerformat']) && $view->get('owner')) {
         $view->set('ownerformat', $values['ownerformat']);
     }

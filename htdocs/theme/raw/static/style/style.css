@@ -106,7 +106,7 @@ pre, tt {
 	width: 96%;
 }
 
-.hidden {
+.hidden, .dontshow {
     display: none;
 }
 /* Hides without being "destructive" - element + children still have full
@@ -195,6 +195,10 @@ td.narrow {
 #friendslist td {
 	border-bottom: 2px solid #FFF;
 }
+/* table with preserved whitespace */
+#messagethread .messagebody {
+    white-space: pre;
+}
 /* table without border */
 #bloglist th {
 	border: 0;
@@ -207,6 +211,10 @@ td.narrow {
 .r1,
 .r1 td {
     background-color: #f3f3f3;
+}
+tr.highlight td {
+  background-color: #fffcd8 !important;
+  border-bottom: 1px solid #FFF;
 }
 .listing {
 	margin-bottom: .5em;
@@ -332,7 +340,7 @@ fieldset.collapsed table {
 	border: 0;
 	margin: 0;
 }
-fieldset legend a {
+fieldset.collapsible legend a {
     padding-left: 15px;
     background: url(../images/icon_fieldset_down.gif) 2px center no-repeat;
 }
@@ -374,6 +382,17 @@ input.error, select.error {
 	padding-left: 2em;
 }
 
+.postedon {
+    color: #888;
+	font-style: italic;
+	font-size: .9em;
+	line-height: 1.2em;
+}
+
+/* Calendar text style for required */
+input.calendar.required {
+	border: 1px solid #e98a88;
+}
 
 /****************************** Buttons ****************************/
 /** input buttons **/
@@ -400,7 +419,6 @@ input#files_filebrowser_edit_artefact {
 }
 /** link buttons **/
 .rbuttons a.btn,
-#sb-profile .controls a,
 .upgradeicon a,
 #loginas .btn-loginas {
     font-size: 1em;
@@ -423,8 +441,7 @@ input.button:hover,
 input.buttondk:hover,
 input.select:hover,
 input#files_filebrowser_edit_artefact:hover,
-.rbuttons a.btn:hover,
-#sb-profile .controls a:hover {
+.rbuttons a.btn:hover {
 	background: #d1d1d1;
 	text-decoration: none;
 	cursor: default;
@@ -437,8 +454,7 @@ input.button:active,
 input.buttondk:active,
 input.select:active,
 input#files_filebrowser_edit_artefact:active,
-.rbuttons a.btn:active,
-#sb-profile .controls a:active {
+.rbuttons a.btn:active {
 	border-color: #a3a3a3 #f0f0f0 #f0f0f0 #a3a3a3;
 	background: #d1d1d1;
 }
@@ -609,6 +625,19 @@ div.rbuttons .small-logo {
 }
 
 /**************** TOP NAVIGATION ****************/
+#right-nav ul {
+  float: right;
+  text-align: right;
+  margin-right: 1em;
+}
+#right-nav li {
+  display: inline;
+  padding: 0 0.25em;
+}
+#right-nav li .navcount {
+  padding: 0 0 0 0.15em;
+}
+
 #main-nav {
     clear: left;
     font-size: 1.2em;
@@ -757,6 +786,7 @@ div.info {
 div.ok {
     color: #547c22;
     background: #e7f1c3 url(../images/success.gif) no-repeat .5em;
+    border: 1px solid #547c22;
 }
 #messages .error,
 div.error {
@@ -844,10 +874,6 @@ div.sideblock ul {
 }
 
 /* Side Profile */
-#profile-sideblock-username {
-    font-size: .9em;
-    font-weight: normal;
-}
 #user-profileicon {
     float: right;
     padding-left: .25em;
@@ -876,9 +902,6 @@ div.sideblock ul {
     list-style-type: disc;
     padding-left: 1.5em;
 }
-#sb-profile .controls {
-    margin-top: 1em;
-}
 #changeuser {
     padding-top: 1em;
     text-align: center;
@@ -898,9 +921,12 @@ li#pendingfriends a {
 #sb-onlineusers li {
     line-height: 2.1em;
 }
-#sb-onlineusers ul img {
-    float: left;
-    padding-right: .5em;
+#sb-onlineusers .image-container {
+  width: 20px;
+  height: 20px;
+  float: left;
+  padding-right:.5em;
+  text-align: center;
 }
 #lastminutes {
     float: right;
@@ -1183,12 +1209,6 @@ a.tag {
 .wallpost .userinforight {
 	padding: .25em;
 }
-.wallpost .postedon {
-    color: #888;
-	font-style: italic;
-	font-size: .9em;
-	line-height: 1.2em;
-}
 .wallpost .text p {
     margin: 0 0 .25em 0;
 }
@@ -1437,6 +1457,13 @@ ul.groupuserstatus {
 	width: 180px;
 	font-size: .9em;
 }
+#friendslist ul.actionlist div.groupbox{
+    position: relative;
+    display: none;
+    background: white;
+    border: 1px solid black;
+    z-index: 4;
+}
 ul.groupuserstatus li,
 #friendslist ul.actionlist li {
 	list-style: none;
@@ -1545,7 +1572,7 @@ form#search input.text {
 	position: relative;
 	top: -30px;
 	left: -15px;
-        width: 50%;
+    width: 10%;
 }
 
 /* Settings > Institution membership */
@@ -1569,4 +1596,65 @@ form#search input.text {
 
 .help, .help a, .help a img {
     vertical-align: top;
+}
+
+/* Home page info boxes */
+.home-info-table {
+    margin: 2em 1em 2.5em;
+}
+.home-info-table.loggedin {
+    margin: .5em 0 1.5em;
+}
+#hideinfo {
+    margin: 0 0 0 2px;
+    padding: 1px 0 0 2px;
+    float: left;
+}
+.home-info-table td {
+    width: 1%;
+    padding: 0 8px 0 2px;
+}
+.home-info {
+    padding: 10px;
+    min-height: 250px;
+    text-align: center;
+}
+.home-info .desc {
+    text-align: left;
+}
+.home-info .caption td {
+    padding-bottom: .5em;
+}
+.home-info a,
+.home-info a:hover,
+.home-info a:active {
+    text-decoration: none;
+}
+.home-info table {
+    width: 100%;
+}
+.home-info td {
+    padding: 0;
+    width: 1%;
+    vertical-align: top;
+    white-space: nowrap;
+}
+#accessdesc {
+    background: url(../images/access.png) no-repeat left;
+    padding-left: 40px;
+    margin: 15px 10px 0 10px;
+}
+.help, .help a, .help a img {
+    vertical-align: top;
+}
+
+ul.viewlist {
+  list-style: none;
+  margin: 0 0 0 0.25em;
+}
+ul.viewlist li:first-child {
+  margin: 0;
+}
+ul.viewlist li {
+  margin: 0.75em 0 0;
 }

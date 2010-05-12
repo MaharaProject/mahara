@@ -41,12 +41,19 @@ class PluginNotificationInternal extends PluginNotification {
         }
         $toinsert->message = $data->message;
         $toinsert->subject = $data->subject;
+        $toinsert->parent = $data->parent;
         $toinsert->ctime = db_format_timestamp(time());
 
         if (!empty($data->url)) {
             $toinsert->url = $data->url;
         }
-        
+        if (!empty($data->urltext)) {
+            $toinsert->urltext = $data->urltext;
+        }
+        if (!empty($data->fromuser)) {
+            $toinsert->from = $data->fromuser;
+        }
+
         return insert_record('notification_internal_activity', $toinsert, 'id', true);
     }
     
@@ -55,7 +62,11 @@ class PluginNotificationInternal extends PluginNotification {
      */
 
     public static function unread_count($userid) {
-        return count_records('notification_internal_activity', 'usr', $userid, 'read', 0);
+        static $unreadcount = array();
+        if (!isset($unreadcount[$userid])) {
+            $unreadcount[$userid] = count_records('notification_internal_activity', 'usr', $userid, 'read', 0);
+        }
+        return $unreadcount[$userid];
     }
     
     public static function get_event_subscriptions() {

@@ -303,7 +303,7 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
     $institutions = get_records_assoc('institution', '', '', '', 'name,displayname');
     if (count($institutions) > 1) {
         $cols['institution'] = array('name'     => get_string('institution'),
-                                     'template' => '{if empty($r.institutions)}{$institutions.mahara->displayname}{else}{foreach from=$r.institutions item=i}<div>{$institutions[$i]->displayname}</div>{/foreach}{/if}{if !empty($r.requested)}{foreach from=$r.requested item=i}<div class="pending">{str tag=requestto section=admin} {$institutions[$i]->displayname}{if $USER->is_institutional_admin("$i")} (<a href="{$WWWROOT}admin/users/addtoinstitution.php?id={$r.id}&institution={$i}">{str tag=confirm section=admin}</a>){/if}</div>{/foreach}{/if}{if !empty($r.invitedby)}{foreach from=$r.invitedby item=i}<div class="pending">{str tag=invitedby section=admin} {$institutions[$i]->displayname}</div>{/foreach}{/if}');
+                                     'template' => '{auto_escape off}{if empty($r.institutions)}{$institutions.mahara->displayname}{else}{foreach from=$r.institutions item=i}<div>{$institutions[$i]->displayname}</div>{/foreach}{/if}{if !empty($r.requested)}{foreach from=$r.requested item=i}<div class="pending">{str tag=requestto section=admin} {$institutions[$i]->displayname}{if $USER->is_institutional_admin("$i")} (<a href="{$WWWROOT}admin/users/addtoinstitution.php?id={$r.id}&institution={$i}">{str tag=confirm section=admin}</a>){/if}</div>{/foreach}{/if}{if !empty($r.invitedby)}{foreach from=$r.invitedby item=i}<div class="pending">{str tag=invitedby section=admin} {$institutions[$i]->displayname}</div>{/foreach}{/if}{/auto_escape}');
     }
 
     $smarty = smarty_core();
@@ -485,4 +485,76 @@ function get_search_plugins() {
 
     return $searchpluginoptions;
 }
-?>
+
+/**
+ * Given a filter string and limits, return an array of matching friends.
+ *
+ * @param string  The filter string
+ * @param integer How many results to return
+ * @param integer What result to start at (0 == first result)
+ * @return array  A data structure containing results looking like ...
+ *         $results = array(
+ *               count   => integer, // total number of results
+ *               limit   => integer, // how many results are returned
+ *               offset  => integer, // starting from which result
+ *               results => array(   // the result records
+ *                   array(
+ *                       id            => integer, //user id
+ *                   ),
+ *                   array(...),
+ *               ),
+ *           );
+ */
+function search_friend($filter, $limit, $offset) {
+    global $USER;
+    $userid = $USER->get('id');
+
+    if (!in_array($filter, array('all','current','pending'))) {
+        throw new Exception();
+    }
+
+    $sql = array();
+    $count = 0;
+
+    if (in_array($filter, array('all', 'current'))) {
+        $count += count_records_sql('SELECT COUNT(usr1) FROM {usr_friend}
+            JOIN {usr} u1 ON (u1.id = usr1 AND u1.deleted = 0)
+            JOIN {usr} u2 ON (u2.id = usr2 AND u2.deleted = 0)
+            WHERE usr1 = ? OR usr2 = ?',
+            array($userid, $userid)
+        );
+
+        array_push($sql, 'SELECT usr2 AS id, 2 AS status FROM {usr_friend} WHERE usr1 = ?
+        ');
+        array_push($sql, 'SELECT usr1 AS id, 2 AS status FROM {usr_friend} WHERE usr2 = ?
+        ');
+    }
+
+    if (in_array($filter, array('all', 'pending'))) {
+        $count += count_records_sql('SELECT COUNT(owner) FROM {usr_friend_request}
+            JOIN {usr} u ON (u.id = requester AND u.deleted = 0)
+            WHERE owner = ?',
+            array($userid)
+        );
+
+        array_push($sql, 'SELECT requester AS id, 1 AS status FROM {usr_friend_request} WHERE owner = ?
+        ');
+    }
+
+    $data = get_column_sql('SELECT f.id FROM (' . join('UNION ', $sql) . ') f
+        JOIN {usr} u ON (f.id = u.id AND u.deleted = 0)
+        ORDER BY status, firstname, lastname, u.id
+        LIMIT ?
+        OFFSET ?', array_merge(array_pad($values=array(), count($sql), $userid), array($limit, $offset)));
+
+    foreach ($data as &$result) {
+        $result = array('id' => $result);
+    }
+
+    return array(
+    'count'   => $count,
+    'limit'   => $limit,
+    'offset'  => $offset,
+    'data'    => $data,
+    );
+}

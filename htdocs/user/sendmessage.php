@@ -26,30 +26,23 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups/findfriends');
+define('MENUITEM', 'inbox');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
-require('searchlib.php');
+require_once('searchlib.php');
 safe_require('search', 'internal');
 
 $id = param_integer('id');
 $replytoid = param_integer('replyto', null);
-$replyto = false;
+$messages = null;
+
 if (!is_null($replytoid)) {
-    $replyto = get_record_sql('
-        SELECT
-            a.subject, a.message, a.url
-        FROM {notification_internal_activity} a
-            JOIN {activity_type} t ON a.type = t.id
-        WHERE t.name = ? AND a.id = ? AND a.usr = ?',
-        array('usermessage', $replytoid, $USER->get('id')));
-    if (!$replyto) {
+    $messages = get_message_thread($replytoid);
+    if (!$messages) {
         throw new AccessDeniedException(get_string('cantviewmessage', 'group'));
     }
-    // Make sure the message was sent by the user being replied to
-    $bits = parse_url($replyto->url);
-    parse_str($bits['query'], $params);
-    if (empty($params['id']) || $params['id'] != $id) {
+    // Make sure the thread was start by either the user being replied to, or the current user
+    if (empty($messages[0]->from) || ($messages[0]->from != $id && $messages[0]->from != $USER->get('id'))) {
         throw new AccessDeniedException(get_string('cantviewmessage', 'group'));
     }
 }
@@ -62,20 +55,7 @@ if (!$user || !can_send_message($USER->to_stdclass(), $id)) {
 	throw new AccessDeniedException(get_string('cantmessageuser', 'group'));
 }
 
-$user->introduction = get_field('artefact', 'title', 'artefacttype', 'introduction', 'owner', $id);
-
-$quote = '';
-if ($replyto) {
-    $replyto->lines = split("\n", $replyto->message);
-    foreach ($replyto->lines as $line) {
-        $quote .= "\n> " . wordwrap($line, 75, "\n> ");
-    }
-    define('TITLE', get_string('viewmessage', 'group'));
-}
-else {
-    define('TITLE', get_string('sendmessageto', 'group', display_name($id)));
-}
-
+define('TITLE', get_string('sendmessageto', 'group', display_name($user)));
 
 $form = pieform(array(
     'name' => 'sendmessage',
@@ -83,14 +63,13 @@ $form = pieform(array(
     'elements' => array(
         'message' => array(
             'type'  => 'textarea',
-            'title' => $replyto ? get_string('Reply', 'group') : get_string('message'),
+            'title' => $messages ? get_string('Reply', 'group') : get_string('message'),
             'cols'  => 80,
             'rows'  => 10,
-            'defaultvalue' => $quote,
         ),
         'submit' => array(
             'type' => 'submitcancel',
-            'value' => array($replyto ? get_string('Reply', 'group') : get_string('sendmessage', 'group'), get_string('cancel')),
+            'value' => array($messages ? get_string('Reply', 'group') : get_string('sendmessage', 'group'), get_string('cancel')),
             'goto' => get_config('wwwroot') . ($returnto == 'find' ? 'user/find.php' : ($returnto == 'view' ? 'user/view.php?id=' . $id : 'user/myfriends.php')),
         )
     )
@@ -100,13 +79,13 @@ $smarty = smarty();
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->assign('form', $form);
 $smarty->assign('user', $user);
-$smarty->assign('replyto', $replyto);
+$smarty->assign('messages', $messages);
 $smarty->display('user/sendmessage.tpl');
 
 function sendmessage_submit(Pieform $form, $values) {
     global $USER, $SESSION, $id;
     $user = get_record('usr', 'id', $id);
-    send_user_message($user, $values['message']);
+    send_user_message($user, $values['message'], param_integer('replyto', null));
     $SESSION->add_ok_msg(get_string('messagesent', 'group'));
     switch (param_alpha('returnto', 'myfriends')) {
         case 'find':
@@ -114,6 +93,9 @@ function sendmessage_submit(Pieform $form, $values) {
             break;
         case 'view':
             redirect('/user/view.php?id=' . $id);
+            break;
+        case 'inbox':
+            redirect('/account/activity');
             break;
         default:
             redirect('/user/myfriends.php');

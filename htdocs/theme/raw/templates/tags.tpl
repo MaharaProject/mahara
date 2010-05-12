@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="header.tpl"}
 
 {if $tags}
@@ -44,3 +45,4 @@
          </div>
 
 {include file="footer.tpl"}
+{/auto_escape}

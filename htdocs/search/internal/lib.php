@@ -518,140 +518,38 @@ class PluginSearchInternal extends PluginSearch {
      *           );
      */
     public static function search_group($query_string, $limit, $offset=0, $type='member') {
-        if (is_postgres()) {
-            return self::search_group_pg($query_string, $limit, $offset, $type);
-        } 
-        else if (is_mysql()) {
-            return self::search_group_my($query_string, $limit, $offset, $type);
-        } 
+        global $USER;
+        $data = array();
+
+        $sql = "
+            FROM
+                {group}
+            WHERE (
+                name " . db_ilike() . " '%' || ? || '%'
+                OR description " . db_ilike() . " '%' || ? || '%'
+            ) AND deleted = 0 ";
+        $values = array($query_string, $query_string);
+
+        if (!$grouproles = join(',', array_keys($USER->get('grouproles')))) {
+            $grouproles = '-1';
+        }
+
+       if ($type == 'member') {
+            $sql .=  'AND (id IN (' . $grouproles . '))';
+        }
+        else if ($type == 'notmember') {
+            $sql .= 'AND public = 1 AND (id NOT IN (' . $grouproles . '))';
+        }
         else {
-            throw new SQLException('search_group() is not implemented for your database engine (' . get_config('dbtype') . ')');
+            $sql .= 'AND (public = 1 OR id IN (' . $grouproles . '))';
         }
-    }
 
-    public static function search_group_pg($query_string, $limit, $offset, $type) {
-        global $USER;
-        $sql = "
-            SELECT
-                id, name, description, grouptype, jointype, ctime, mtime
-            FROM
-                {group}
-            WHERE (
-                name ILIKE '%' || ? || '%' 
-                OR description ILIKE '%' || ? || '%' 
-            ) AND deleted = ? ";
-        $values = array($query_string, $query_string, 0);
-        if ($type == 'member') {
-            $sql .=  'AND (
-                id IN (
-                    SELECT "group" FROM {group_member} WHERE member = ?
-                )
-            )';
-            $values[] = $USER->get('id');
-        }
-        else if ($type == 'notmember') {
-            $sql .=  'AND (
-                id NOT IN (
-                    SELECT "group" FROM {group_member} WHERE member = ?
-                )
-            )';
-            $values[] = $USER->get('id');
-        }
-        $sql .= 'ORDER BY name';
-        $data = get_records_sql_array($sql, $values, $offset, $limit);
+        $count = get_field_sql('SELECT COUNT(*) '.$sql, $values);
 
-        $sql = "
-            SELECT
-                COUNT(*)
-            FROM
-                {group} u
-            WHERE (
-                name ILIKE '%' || ? || '%' 
-                OR description ILIKE '%' || ? || '%' 
-            ) AND deleted = ? ";
-        if ($type == 'member') {
-            $sql .= 'AND (
-                    id IN (
-                        SELECT "group" FROM {group_member} WHERE member = ?
-                    )
-                )
-            ';
+        if ($count > 0) {
+            $sql = 'SELECT id, name, description, grouptype, jointype, ctime, mtime ' . $sql . 'ORDER BY name';
+            $data = get_records_sql_array($sql, $values, $offset, $limit);
         }
-        else if ($type == 'notmember') {
-            $sql .= 'AND (
-                    id NOT IN (
-                        SELECT "group" FROM {group_member} WHERE member = ?
-                    )
-                )
-            ';
-        }
-        $count = get_field_sql($sql, $values);
-
-        return array(
-            'count'   => $count,
-            'limit'   => $limit,
-            'offset'  => $offset,
-            'data'    => $data,
-        );
-    }
-
-    public static function search_group_my($query_string, $limit, $offset, $type) {
-        global $USER;
-        $sql = "
-            SELECT
-                id, name, description, grouptype, jointype, ctime, mtime
-            FROM
-                {group}
-            WHERE (
-                name LIKE '%' || ? || '%' 
-                OR description LIKE '%' || ? || '%' 
-            ) AND deleted = ? ";
-        $values = array($query_string, $query_string, 0);
-        if ($type == 'member') {
-            $sql .=  'AND (
-                id IN (
-                    SELECT gm.group FROM {group_member} gm WHERE gm.member = ?
-                )
-            )';
-            $values[] = $USER->get('id');
-        }
-        else if ($type == 'notmember') {
-            $sql .=  "AND (
-                id NOT IN (
-                    SELECT gm.group FROM {group_member} gm WHERE gm.member = ?
-                )
-            )";
-            $values[] = $USER->get('id');
-        }
-        $sql .= 'ORDER BY name';
-        $data = get_records_sql_array($sql, $values, $offset, $limit);
-
-        $sql = "
-            SELECT
-                COUNT(*)
-            FROM
-                {group} u
-            WHERE (
-                name LIKE '%' || ? || '%' 
-                OR description LIKE '%' || ? || '%' 
-            ) AND deleted = ? ";
-        if ($type == 'member') {
-            $sql .= 'AND (
-                    id IN (
-                        SELECT gm.group FROM {group_member} gm WHERE gm.member = ?
-                    )
-                )
-            ';
-        }
-        else if ($type == 'notmember') {
-            $sql .= "AND (
-                    id NOT IN (
-                        SELECT gm.group FROM {group_member} gm WHERE gm.member = ?
-                    )
-                )
-            ";
-        }
-        $count = get_field_sql($sql, $values);
 
         return array(
             'count'   => $count,

@@ -1,6 +1,7 @@
-    <h3><a href="{$WWWROOT}user/view.php?id={$sbdata.id}">{$sbdata.myname|escape}</a> <span class="s" id="profile-sideblock-username">(<a href="{$WWWROOT}user/view.php?id={$sbdata.id}">{$sbdata.username|escape}</a>)</span></h3>
+{auto_escape off}
+    <div id="user-profileicon"><a href="{$WWWROOT}user/view.php?id={$sbdata.id}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=50&amp;maxheight=50&amp;id={$sbdata.id}&amp;earlyexpiry=1" alt=""></a></div>
+    <h3><a href="{$WWWROOT}user/view.php?id={$sbdata.id}">{$sbdata.myname|escape}</a></h3>
     <div class="sideblock-content">
-        <div id="user-profileicon"><a href="{$WWWROOT}user/view.php?id={$sbdata.id}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=50&amp;maxheight=50&amp;id={$sbdata.id}&amp;earlyexpiry=1" alt="" width="50" height="50"></a></div>
 {if $sbdata.mnetloggedinfrom}        <p>{$sbdata.mnetloggedinfrom}</p>
 {/if}
         <ul>
@@ -55,13 +56,10 @@
             </li>
 {/if}
         </ul>
-        <div class="controls center">
-            <a href="{$WWWROOT}?logout" class="btn-link" id="btn-logout">{str tag="logout"}</a>&nbsp;
-            <a href="{if get_config('httpswwwroot')}{$HTTPSWWWROOT}{else}{$WWWROOT}{/if}account/" class="btn-link">{str tag="settings"}</a>
-        </div>
 {if $sbdata.peer}                <div class="center"><a href="{$sbdata.peer.wwwroot}">{$sbdata.peer.name|escape}</a></div>
 {/if}
 {if $USERMASQUERADING}        <div id="changeuser">{$becomeyouagain}</div>
 {/if}
         <div class="cb"></div>
     </div>
+{/auto_escape}

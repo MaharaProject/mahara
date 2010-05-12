@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $coverletter}<h2>{str tag=coverletter section=artefact.resume}</h2>
 {$coverletter}{/if}
 
@@ -26,3 +27,4 @@
 
 {if $membership}<h2>{str tag=membership section=artefact.resume}</h2>
 {$membership}{/if}
+{/auto_escape}

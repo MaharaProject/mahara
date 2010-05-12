@@ -37,7 +37,12 @@ class PluginNotificationEmail extends PluginNotification {
 
         if (!empty($data->overridemessagecontents)) {
             $subject = $data->subject;
-            $messagebody = $data->message;
+            if (!empty($user->emailmessage)) {
+                $messagebody = $user->emailmessage;
+            }
+            else {
+                $messagebody = $data->message;
+            }
             if (!empty($user->htmlmessage)) {
                 $messagehtml = $user->htmlmessage;
             }

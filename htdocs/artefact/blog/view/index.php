@@ -35,8 +35,21 @@ require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 define('TITLE', get_string('viewblog','artefact.blog'));
 safe_require('artefact', 'blog');
 
-$id = param_integer('id');
-$blog = new ArtefactTypeBlog($id);
+$id = param_integer('id', null);
+if (is_null($id)) {
+    if (!$records = get_records_select_array(
+            'artefact',
+            "artefacttype = 'blog' AND owner = ?",
+            array($USER->get('id')),
+            'id ASC'
+        )) {
+        throw new ParameterException();
+    }
+    $blog = new ArtefactTypeBlog($records[0]->id, $records[0]);
+}
+else {
+    $blog = new ArtefactTypeBlog($id);
+}
 $blog->check_permission();
 
 // This javascript is used to generate a list of blog posts.

@@ -1,3 +1,4 @@
+{auto_escape off}
 {include file="export:html:header.tpl"}
 
 {foreach from=$summaries key=plugin item=summary}
@@ -8,3 +9,4 @@
 {/foreach}
 
 {include file="export:html:footer.tpl"}
+{/auto_escape}

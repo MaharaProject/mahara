@@ -1,3 +1,4 @@
+{auto_escape off}
 <div id="column-left">
 	<div class="maincontent{if $GROUP} group{/if}">
 	{insert name="messages"}
@@ -14,3 +15,4 @@
                 <div id="grouppage-container">
 {/if}
 
+{/auto_escape}

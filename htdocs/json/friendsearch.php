@@ -29,12 +29,13 @@ define('INTERNAL', 1);
 define('JSON', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-require('pieforms/pieform.php');
-require('searchlib.php');
+require_once('pieforms/pieform.php');
+require_once('searchlib.php');
 
 $query  = param_variable('query', '');
 $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);
+$filter = param_alpha('filter', 'all');
 
 $page = 'myfriends';
 if ($extradata = param_variable('extradata', null)) {
@@ -44,9 +45,37 @@ if ($extradata = param_variable('extradata', null)) {
     }
 }
 
-$data = search_user($query, $limit, $offset, array('exclude' => $USER->get('id')));
-$data['query'] = $query;
-build_userlist_html($data, $page);
+if ($page == 'myfriends') {
+    $data = search_friend($filter, $limit, $offset);
+    $data['filter'] = $filter;
+}
+else {
+    $data = search_user($query, $limit, $offset, array('exclude' => $USER->get('id')));
+    $data['query'] = $query;
+}
+
+$controlledgroups = count_records_sql("SELECT COUNT(g.id)
+          FROM {group} g
+          JOIN {group_member} gm ON (gm.group = g.id)
+          JOIN {grouptype_roles} gtr ON (gtr.grouptype = g.grouptype AND gtr.role = gm.role)
+          WHERE gm.member = ?
+          AND g.jointype = 'controlled'
+          AND (gm.role = 'admin' OR gtr.see_submitted_views = 1)
+          AND g.deleted = 0", array($USER->get('id')));
+
+$invite = count_records_sql("SELECT COUNT(g.id)
+        FROM {group} g
+        JOIN {group_member} gm ON (gm.group = g.id)
+        WHERE gm.member = ?
+        AND g.jointype = 'invite'
+        AND gm.role = 'admin'
+        AND g.deleted = 0", array($USER->get('id')));
+
+$admingroups = new StdClass;
+$admingroups->controlled = $controlledgroups;
+$admingroups->invite = $invite;
+
+build_userlist_html($data, $page, $admingroups);
 
 json_reply(false, array('data' => $data));
 ?>

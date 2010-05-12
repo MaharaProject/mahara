@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $blocktypes}
 <ul>
 {foreach from=$blocktypes item=blocktype}
@@ -19,3 +20,4 @@
 {else}
 <div id="noblocks">{str tag='noblocks' section='view'}</div>
 {/if}
+{/auto_escape}

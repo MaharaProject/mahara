@@ -1,3 +1,4 @@
+{auto_escape off}
 {if $GROUP}
                         </div><!--end group-->
 {/if}
@@ -31,3 +32,4 @@
 </div>
 </body>
 </html>
+{/auto_escape}

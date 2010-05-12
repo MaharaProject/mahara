@@ -30,38 +30,24 @@ define('MENUITEM', 'profile/myresume');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'resume');
 define('SECTION_PAGE', 'index');
+define('RESUME_SUBPAGE', 'index');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('myresume', 'artefact.resume'));
 require_once('pieforms/pieform.php');
-require_once(get_config('docroot') . 'artefact/lib.php');
+safe_require('artefact', 'resume');
 
 // load up all the artefacts this user already has....
 $coverletter = null;
-$personalinformation = null;
-$contactinformation = null;
-$interest = null;
 try {
     $coverletter = artefact_instance_from_type('coverletter');
 }
 catch (Exception $e) { }
+$personalinformation = null;
 try {
     $personalinformation = artefact_instance_from_type('personalinformation');
 }
 catch (Exception $e) { }
-try {
-    $contactinformation = artefact_instance_from_type('contactinformation');
-}
-catch (Exception $e) { 
-    $contactinformation = ArtefactTypeContactinformation::setup_new($USER->get('id'));
-}
-try {
-    $interest = artefact_instance_from_type('interest');
-}
-catch (Exception $e) { }
-
-$contactinformation_value = $contactinformation->render_self(array('editing' => true));
-$contactinformation_value = $contactinformation_value['html'];
 
 $coverletterform = pieform(array(
     'name'        => 'coverletter',
@@ -80,63 +66,13 @@ $coverletterform = pieform(array(
                     'cols'  => 70,
                     'rows'  => 10,
                     'defaultvalue' => ((!empty($coverletter)) ? $coverletter->get('description') : null),
-                    'help' => true,
                 ),
                 'save' => array(
                     'type' => 'submit',
                     'value' => get_string('save'),
                 ),
-            )
-        )
-    )
-));
-
-$interestsform = pieform(array(
-    'name'        => 'interests',
-    'jsform'      => true,
-    'plugintype'  => 'artefact',
-    'pluginname'  => 'resume',
-    'jsform'      => true,
-    'method'      => 'post',
-    'elements'    => array(
-        'interestsfs' => array(
-            'type' => 'fieldset',
-            'legend' => get_string('interest', 'artefact.resume'),
-            'elements' => array(
-                'interest' => array(
-                    'type' => 'wysiwyg',
-                    'defaultvalue' => ((!empty($interest)) ? $interest->get('description') : null),
-                    'cols'  => 70,
-                    'rows'  => 10,
-                    'help'  => true,
-                ),
-                'save' => array(
-                    'type' => 'submit',
-                    'value' => get_string('save'),
-                ),
-            )
-        )
-    )
-));
-
-$contactinformationform = pieform(array(
-    'name'        => 'contactinformation',
-    'jsform'      => true,
-    'plugintype'  => 'artefact',
-    'pluginname'  => 'resume',
-    'jsform'      => true,
-    'method'      => 'post',
-    'elements'    => array(
-        'contactinformationfs' => array(
-            'type' => 'fieldset',
-            'legend' => get_string('contactinformation', 'artefact.resume'),
-            'elements' => array(
-                'contactinformation' => array(
-                    'type'  => 'html',
-                    'value' => $contactinformation_value,
-                    'help'  => true,
-                ),
-            )
+            ),
+            'help' => true,
         )
     )
 ));
@@ -149,32 +85,34 @@ $personalinformationform = pieform(array(
     'jsform'      => true,
     'method'      => 'post',
     'elements'    => array(
-        'personalinformation' => array(
-            'type'        => 'fieldset',
-            'legend'      => get_string('personalinformation', 'artefact.resume'),
-            'elements'    => array(
-               'dateofbirth' => array(
+        'personalinfomation' => array(
+            'type' => 'fieldset',
+            'legend' => get_string('personalinformation', 'artefact.resume'),
+            'elements' => array(
+                'dateofbirth' => array(
                     'type'       => 'calendar',
                     'caloptions' => array(
                         'showsTime'      => false,
                         'ifFormat'       => '%Y/%m/%d'
-                    ),
+                        ),
                     'defaultvalue' => ((!empty($personalinformation)) 
-                        ? $personalinformation->get_composite('dateofbirth') : null),
+                                       ? $personalinformation->get_composite('dateofbirth') : null),
                     'title' => get_string('dateofbirth', 'artefact.resume'),
-                    'help'  => true,
+                    'description' => get_string('dateformatguide'),
                 ),
                 'placeofbirth' => array(
                     'type' => 'text',
                     'defaultvalue' => ((!empty($personalinformation)) 
                         ? $personalinformation->get_composite('placeofbirth') : null),
                     'title' => get_string('placeofbirth', 'artefact.resume'),
+                    'size' => 30,
                 ),  
                 'citizenship' => array(
                     'type' => 'text',
                     'defaultvalue' => ((!empty($personalinformation))
                         ? $personalinformation->get_composite('citizenship') : null),
                     'title' => get_string('citizenship', 'artefact.resume'),
+                    'size' => 30,
                 ),
                 'visastatus' => array(
                     'type' => 'text', 
@@ -182,6 +120,7 @@ $personalinformationform = pieform(array(
                         ? $personalinformation->get_composite('visastatus') : null),
                     'title' => get_string('visastatus', 'artefact.resume'),
                     'help'  => true,
+                    'size' => 30,
                 ),
                 'gender' => array(
                     'type' => 'radio', 
@@ -198,179 +137,22 @@ $personalinformationform = pieform(array(
                     'defaultvalue' => ((!empty($personalinformation))
                         ? $personalinformation->get_composite('maritalstatus') :  null),
                     'title' => get_string('maritalstatus', 'artefact.resume'),
+                    'size' => 30,
                 ),
                 'save' => array(
                     'type' => 'submit',
                     'value' => get_string('save'),
                 ),
-            )
-        )
-    )
+            ),
+        ),
+    ),
 ));
 
-$cancelstr = get_string('cancel');
-$addstr = get_string('add');
-$editstr = get_string('edit');
-$delstr = get_string('delete');
-$confirmdelstr = get_string('compositedeleteconfirm', 'artefact.resume');
-$imagemoveblockup   = json_encode($THEME->get_url('images/move-block-up.png'));
-$imagemoveblockdown = json_encode($THEME->get_url('images/move-block-down.png'));
-$upstr = get_string('moveup', 'artefact.resume');
-$downstr = get_string('movedown', 'artefact.resume');
-
-$wwwroot = get_config('wwwroot');
-
-$smarty = smarty(array('tablerenderer'));
-
+$smarty = smarty();
 $smarty->assign('coverletterform', $coverletterform);
-$smarty->assign('interestsform', $interestsform);
-$smarty->assign('contactinformationform', $contactinformationform);
 $smarty->assign('personalinformationform',$personalinformationform);
-
-$inlinejs = <<<EOF
-var tableRenderers = {};
-
-function toggleCompositeForm(type) {
-    var elemName = ''; 
-    elemName = type + 'form';
-    if (hasElementClass(elemName, 'hidden')) {
-        removeElementClass(elemName, 'hidden');
-        $('add' + type + 'button').innerHTML = '{$cancelstr}';
-    }
-    else {
-        $('add' + type + 'button').innerHTML = '{$addstr}';
-        addElementClass(elemName, 'hidden'); 
-    }
-}
-
-function compositeSaveCallback(form, data) {
-    key = form.id.substr(3);
-    tableRenderers[key].doupdate(); 
-    toggleCompositeForm(key);
-    // Can't reset() the form here, because its values are what were just submitted, 
-    // thanks to pieforms
-    forEach(form.elements, function(element) {
-        if (hasElementClass(element, 'text') || hasElementClass(element, 'textarea')) {
-            element.value = '';
-        }
-    });
-}
-
-function deleteComposite(type, id, artefact) {
-    if (confirm('{$confirmdelstr}')) {
-        sendjsonrequest('compositedelete.json.php',
-            {'id': id, 'artefact': artefact},
-            'GET', 
-            function(data) {
-                tableRenderers[type].doupdate();
-            },
-            function() {
-                // @todo error
-            }
-        );
-    }
-    return false;
-}
-
-function moveComposite(type, id, artefact, direction) {
-    sendjsonrequest('compositemove.json.php',
-        {'id': id, 'artefact': artefact, 'direction':direction},
-        'GET', 
-        function(data) {
-            tableRenderers[type].doupdate();
-        },
-        function() {
-            // @todo error
-        }
-    );
-    return false;
-}
-
-function editprofilebutton() {
-    document.location='{$wwwroot}artefact/internal/index.php?fs=contact';
-    return false;
-}
-
-EOF;
-$inlinejs .= ArtefactTypeResumeComposite::get_showhide_composite_js();
-
-$compositeforms = array();
-foreach (ArtefactTypeResumeComposite::get_composite_artefact_types() as $compositetype) {
-    $inlinejs .= call_static_method(generate_artefact_class_name($compositetype), 'get_composite_js');
-    $inlinejs .= <<<EOF
-tableRenderers.{$compositetype} = new TableRenderer(
-    '{$compositetype}list',
-    'composite.json.php',
-    [
-EOF;
-    $inlinejs .= call_static_method(generate_artefact_class_name($compositetype), 'get_tablerenderer_js');
-    $inlinejs .= <<<EOF
-
-        function (r) {
-            return TD(null, A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact}, '{$editstr}'));
-        },
-        function (r, d) {
-           var link = A({'href': ''}, '{$delstr}');
-            connect(link, 'onclick', function (e) {
-                e.stop();
-                return deleteComposite(d.type, r.id, r.artefact);
-            });
-            return TD(null, link);
-        },
-        function (r, d) {
-            var buttons = [];
-            if (r._rownumber > 1) {
-                var up = A({'href': ''}, IMG({'src': {$imagemoveblockup}, 'alt':'{$upstr}'}));
-                connect(up, 'onclick', function (e) {
-                    e.stop();
-                    return moveComposite(d.type, r.id, r.artefact, 'up');
-                });
-                buttons.push(up);
-            }
-            if (!r._last) {
-                var down = A({'href': ''}, IMG({'src': {$imagemoveblockdown}, 'alt':'{$downstr}'}));
-                connect(down, 'onclick', function (e) {
-                    e.stop();
-                    return moveComposite(d.type, r.id, r.artefact, 'down');
-                });
-                buttons.push(' ');
-                buttons.push(down);
-            }
-            return TD({'style':'text-align:center;'}, buttons);
-        }
-    ]
-);
-
-tableRenderers.{$compositetype}.type = '{$compositetype}';
-tableRenderers.{$compositetype}.statevars.push('type');
-tableRenderers.{$compositetype}.emptycontent = '';
-tableRenderers.{$compositetype}.updateOnLoad();
-
-EOF;
-    $elements = call_static_method(generate_artefact_class_name($compositetype), 'get_addform_elements');
-    $elements['submit'] = array(
-        'type' => 'submit',
-        'value' => get_string('save'),
-    );
-    $elements['compositetype'] = array(
-        'type' => 'hidden',
-        'value' => $compositetype,
-    );
-    $cform = array(
-        'name' => 'add' . $compositetype,
-        'plugintype' => 'artefact',
-        'pluginname' => 'resume',
-        'elements' => $elements, 
-        'jsform' => true,
-        'successcallback' => 'compositeform_submit',
-        'jssuccesscallback' => 'compositeSaveCallback',
-    );
-    $compositeforms[$compositetype] = pieform($cform);
-} // end composite loop
-
-$smarty->assign('compositeforms', $compositeforms);
-$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
-$smarty->assign('PAGEHEADING', hsc(get_string('myresume', 'artefact.resume')));
+$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:index.tpl');
 
 function coverletter_submit(Pieform $form, $values) {
@@ -398,44 +180,6 @@ function coverletter_submit(Pieform $form, $values) {
     catch (Exception $e) {
         $errors['coverletter'] = true;
     }
-    if (empty($errors)) {
-        $form->json_reply(PIEFORM_OK, get_string('resumesaved','artefact.resume'));
-    }
-    else {
-        $message = '';
-        foreach (array_keys($errors) as $key) {
-            $message .= get_string('resumesavefailed', 'artefact.resume')."\n";
-        }
-        $form->json_reply(PIEFORM_ERR, $message);
-    }
-}
-
-function interests_submit(Pieform $form, $values) {
-    global $coverletter, $personalinformation, $interest, $USER;
-
-    $userid = $USER->get('id');
-    $errors = array();
-
-    try {
-        if (empty($interest) && !empty($values['interest'])) {
-            $interest = new ArtefactTypeInterest(0, array( 
-                'owner' => $userid, 
-                'description' => $values['interest']
-            ));
-            $interest->commit();
-        }
-        else if (!empty($interest) && !empty($values['interest'])) {
-            $interest->set('description', $values['interest']);
-            $interest->commit();
-        }
-        else if (!empty($interest) && empty($values['interest'])) {
-            $interest->delete();
-        }
-    }
-    catch (Exception $e) {
-        $errors['interest'] = true;
-    }   
-
     if (empty($errors)) {
         $form->json_reply(PIEFORM_OK, get_string('resumesaved','artefact.resume'));
     }
@@ -481,4 +225,3 @@ function personalinformation_submit(Pieform $form, $values) {
     }
 }
 
-?>
