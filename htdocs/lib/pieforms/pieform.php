@@ -611,11 +611,11 @@ class Pieform {/*{{{*/
             $result .= ' error';
         }
         if (isset($this->data['class'])) {
-            $result .= ' ' . $this->data['class'];
+            $result .= ' ' . self::hsc($this->data['class']);
         }
         $result .= '"';
         foreach (array('name', 'method', 'action') as $attribute) {
-            $result .= ' ' . $attribute . '="' . $this->data[$attribute] . '"';
+            $result .= ' ' . $attribute . '="' . self::hsc($this->data[$attribute]) . '"';
         }
         $result .= ' id="' . $this->name . '"';
         if ($this->fileupload) {
@@ -1034,7 +1034,7 @@ EOF;
     public function make_class($element) {/*{{{*/
         $classes = array();
         if (isset($element['class'])) {
-            $classes[] = $element['class'];
+            $classes[] = self::hsc($element['class']);
         }
         if (!empty($element['rules']['required'])) {
             $classes[] = 'required';
@@ -1122,6 +1122,10 @@ EOF;
             throw new PieformException("The type \"$type\" is not allowed for an include plugin");
         }
 
+        if (!isset($name) || !preg_match('/^[a-z_][a-z0-9_]*$/', $name)) {
+            throw new PieformException("The name \"$name\" is not valid (validity test: could you give a PHP function the name?)");
+        }
+
         // Check the configured include paths if they are specified
         foreach ($this->data['configdirs'] as $directory) {
             $file = "$directory/{$type}s/$name.php";
@@ -1157,6 +1161,14 @@ EOF;
     public function i18n($plugin, $pluginname, $key, $element=null) {/*{{{*/
         if (!in_array($plugin, array('element', 'renderer', 'rule'))) {
             throw new PieformException("Invalid plugin name '$plugin'");
+        }
+
+        if (!isset($pluginname) || !preg_match('/^[a-z_][a-z0-9_]*$/', $pluginname)) {
+            throw new PieformException("The pluginname \"$pluginname\" is not valid (validity test: could you give a PHP function the name?)");
+        }
+
+        if (!isset($key) || !preg_match('/^[a-z_][a-z0-9_]*$/', $key)) {
+            throw new PieformException("The key \"$key\" is not valid (validity test: could you give a PHP function the name?)");
         }
 
         // Check the element itself for the language string
