@@ -647,4 +647,13 @@ $string['None'] = 'None';
 $string['Simple'] = 'Simple';
 $string['Advanced'] = 'Advanced';
 
+//admin option fieldset legends
+$string['sitesettingslegend'] = 'Site Settings';
+$string['usersettingslegend'] = 'User Settings';
+$string['searchsettingslegend'] = 'Search Settings';
+$string['institutionsettingslegend'] = 'Institution Settings';
+$string['accountsettingslegend'] = 'Account Settings';
+$string['securitysettingslegend'] = 'Security Settings';
+$string['generalsettingslegend'] = 'General Settings';
+
 ?>
