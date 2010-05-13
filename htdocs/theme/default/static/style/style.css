@@ -372,6 +372,7 @@ input#myfriends_addfriend_add {
   float: right;
   text-align: right;
   margin: 2.5em 0.5em 0 0;
+  min-width: 20em;
 }
 #right-nav li {
   padding: 0 0.25em;
