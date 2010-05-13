@@ -535,13 +535,10 @@ class PluginSearchInternal extends PluginSearch {
         }
 
        if ($type == 'member') {
-            $sql .=  'AND (id IN (' . $grouproles . '))';
+            $sql .=  'AND id IN (' . $grouproles . ')';
         }
         else if ($type == 'notmember') {
-            $sql .= 'AND public = 1 AND (id NOT IN (' . $grouproles . '))';
-        }
-        else {
-            $sql .= 'AND (public = 1 OR id IN (' . $grouproles . '))';
+            $sql .= 'AND id NOT IN (' . $grouproles . ')';
         }
 
         $count = get_field_sql('SELECT COUNT(*) '.$sql, $values);
