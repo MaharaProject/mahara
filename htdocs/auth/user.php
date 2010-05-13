@@ -923,7 +923,7 @@ class LiveUser extends User {
         $siteclosedforupgrade = get_config('siteclosed');
         if ($siteclosedforupgrade && get_config('disablelogin')) {
             global $SESSION;
-            $SESSION->add_error_msg(get_string('siteclosedlogindisabled'));
+            $SESSION->add_error_msg(get_string('siteclosedlogindisabled', 'mahara', get_config('wwwroot') . 'admin/upgrade.php'), false);
             return false;
         }
         if (!$user->admin && ($siteclosedforupgrade || get_config('siteclosedbyadmin'))) {
