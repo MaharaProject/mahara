@@ -35,7 +35,7 @@
 function pieform_element_bytes(Pieform $form, $element) {/*{{{*/
     $formname = $form->get_name();
     $result = '';
-    $name = $element['name'];
+    $name = Pieform::hsc($element['name']);
     if (!isset($element['defaultvalue'])) {
         $element['defaultvalue'] = null;
     }
@@ -67,11 +67,11 @@ function pieform_element_bytes(Pieform $form, $element) {/*{{{*/
     // Same with the select. And do the events using mochikit signal instead of dom events
     $numberinput = '<input';
     $numberinput .= ' type="text" size="6" name="' . $name . '"';
-    $numberinput .= ' id="' . $formname . '_' . $name . '" value="' . $values['number'] . '" tabindex="' . $element['tabindex'] . '"';
+    $numberinput .= ' id="' . $formname . '_' . $name . '" value="' . Pieform::hsc($values['number']) . '" tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     $numberinput .= (isset($element['error']) ? ' class="error"' : '') . ">\n";
 
     $uselect = '<select onchange="' . $name . '_change()" ';
-    $uselect .= 'name="' . $name . '_units" id="' . $formname . '_' . $name . '_units"' . ' tabindex="' . $element['tabindex'] . "\">\n";
+    $uselect .= 'name="' . $name . '_units" id="' . $formname . '_' . $name . '_units"' . ' tabindex="' . Pieform::hsc($element['tabindex']) . "\">\n";
     foreach (pieform_element_bytes_get_bytes_units() as $u) {
         $uselect .= "\t<option value=\"$u\"" . (($values['units'] == $u) ? ' selected="selected"' : '') . '>'
             . $form->i18n('element', 'bytes', $u, $element) . "</option>\n";

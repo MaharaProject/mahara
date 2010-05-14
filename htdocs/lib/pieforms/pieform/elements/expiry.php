@@ -35,7 +35,7 @@
 function pieform_element_expiry(Pieform $form, $element) {/*{{{*/
     $formname = $form->get_name();
     $result = '';
-    $name = $element['name'];
+    $name = Pieform::hsc($element['name']);
     if (!isset($element['defaultvalue'])) {
         $element['defaultvalue'] = null;
     }
@@ -68,11 +68,11 @@ function pieform_element_expiry(Pieform $form, $element) {/*{{{*/
     $numberinput = '<input';
     $numberinput .= ($values['units'] == 'noenddate' && empty($element['rules']['required'])) ? ' disabled="disabled"' : '';
     $numberinput .= ' type="text" size="4" name="' . $name . '"';
-    $numberinput .= ' id="' . $formname . '_' . $name . '" value="' . $values['number'] . '" tabindex="' . $element['tabindex'] . '"';
+    $numberinput .= ' id="' . $formname . '_' . $name . '" value="' . Pieform::hsc($values['number']) . '" tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     $numberinput .= (isset($element['error']) ? ' class="error"' : '') . ">\n";
 
     $uselect = '<select onchange="' . $name . '_change()" ';
-    $uselect .= 'name="' . $name . '_units" id="' . $formname . '_' . $name . '_units"' . ' tabindex="' . $element['tabindex'] . "\">\n";
+    $uselect .= 'name="' . $name . '_units" id="' . $formname . '_' . $name . '_units"' . ' tabindex="' . Pieform::hsc($element['tabindex']) . "\">\n";
     foreach (pieform_element_expire_get_expiry_units() as $u) {
         // Don't allow 'no end date' if the element is required
         if ($u == 'noenddate' && !empty($element['rules']['required'])) {

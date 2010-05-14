@@ -51,7 +51,7 @@ function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
             $classes[] = 'collapsed';
         }
         if (!empty($element['class'])) {
-            $classes[] = $element['class'];
+            $classes[] = Pieform::hsc($element['class']);
         }
         $result .= ' class="' . implode(' ', $classes) . '"';
     }
