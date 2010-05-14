@@ -1,4 +1,3 @@
-{{auto_escape off}}
 <script type="text/javascript">
 
     function move_up(id) {
@@ -77,13 +76,13 @@
         inuseArray   = arrayIze('institution_inuse');
 
         if (instanceArray.length == 1) {
-            alert({{$cannotremove}});
+            alert({{$cannotremove|safe}});
             return false;
         }
 
 		for(i = 0; i < inuseArray.length; i++) {
 			if (id == inuseArray[i]) {
-				alert({{$cannotremoveinuse}});
+				alert({{$cannotremoveinuse|safe}});
 				return false;
 			}
 		}
@@ -120,7 +119,7 @@
         var selectedPlugin = document.getElementById('dummySelect').value;
         var institution = '{{$institution}}';
         if (institution.length == 0) {
-            alert({{$saveinstitutiondetailsfirst}});
+            alert({{$saveinstitutiondetailsfirst|safe}});
             return false;
         }
 
@@ -144,7 +143,7 @@
         if (requiresConfig(plugin)) {
             window.open('addauthority.php?id='+id+'&edit=1&i={{$institution}}&p=' + plugin, 'editinstance', 'height=520,width=550,screenx=250,screenY=200,scrollbars=1');
         } else {
-            alert({{$noauthpluginconfigoptions}});
+            alert({{$noauthpluginconfigoptions|safe}});
         }
     }
 
@@ -188,10 +187,9 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
 </div>
 <select name="dummy" id="dummySelect">
 {{foreach $authtypes authtype}}
-    <option value="{{$authtype->name|escape}}"{{if !$authtype->is_usable}} disabled="disabled"{{/if}}>{{$authtype->title|escape}} - {{$authtype->description|escape}}</option>
+    <option value="{{$authtype->name}}"{{if !$authtype->is_usable}} disabled="disabled"{{/if}}>{{$authtype->title}} - {{$authtype->description}}</option>
 {{/foreach}}
 </select>
 <button type="button" onclick="addinstance(); return false;" name="button" value="foo">{{str tag=Add section=admin}}</button>
 <input type="hidden" id="instancePriority" name="instancePriority" value="{{$instancestring}}" />
 <input type="hidden" id="deleteList" name="deleteList" value="" />
-{{/auto_escape}}

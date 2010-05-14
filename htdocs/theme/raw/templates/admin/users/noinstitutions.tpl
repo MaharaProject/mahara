@@ -1,4 +1,3 @@
-{auto_escape off}
 {include file="header.tpl"}
 
 <h1>{str tag="noinstitutions" section="admin"}</h1>
@@ -11,4 +10,3 @@
 </div>
 
 {include file="footer.tpl"}
-{/auto_escape}
