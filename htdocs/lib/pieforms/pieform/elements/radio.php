@@ -61,7 +61,7 @@ function pieform_element_radio(Pieform $form, $element) {/*{{{*/
             . ' value="' . Pieform::hsc($value) . '"'
             . (($form_value == $value) ? ' checked="checked"' : '')
             . '> <label for="' . $form->get_name() . '_' . $uid . '">' . Pieform::hsc($text) . "</label>"
-            . ($description != '' ? '<div class="radio-description">' . $description . '</div>' : '')
+            . ($description != '' ? '<div class="radio-description">' . Pieform::hsc($description) . '</div>' : '')
             . $separator;
     }
     $result = substr($result, 0, -strlen($separator));

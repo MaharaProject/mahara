@@ -33,7 +33,7 @@
  */
 function pieform_element_date(Pieform $form, $element) {/*{{{*/
     $result = '';
-    $name   = $element['name'];
+    $name = Pieform::hsc($element['name']);
     $element['minyear'] = (isset($element['minyear'])) ? intval($element['minyear']) : 1950;
     $element['maxyear'] = (isset($element['maxyear'])) ? intval($element['maxyear']) : 2050;
     $required = (!empty($element['rules']['required']));
@@ -45,7 +45,7 @@ function pieform_element_date(Pieform $form, $element) {/*{{{*/
     $value = pieform_element_date_get_timeperiod_value('year', $element['minyear'], $element['maxyear'], $element, $form);
     $year = '<select name="' . $name . '_year" id="' . $name . '_year"'
         . (!$required && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '')
-        . ' tabindex="' . $element['tabindex'] . "\">\n";
+        . ' tabindex="' . Pieform::hsc($element['tabindex']) . "\">\n";
     for ($i = $element['minyear']; $i <= $element['maxyear']; $i++) {
         $year .= "\t<option value=\"$i\"" . (($value == $i) ? ' selected="selected"' : '') . ">$i</option>\n";
     }
@@ -55,7 +55,7 @@ function pieform_element_date(Pieform $form, $element) {/*{{{*/
     $value = pieform_element_date_get_timeperiod_value('month', 1, 12, $element, $form);
     $month = '<select name="' . $name . '_month" id="' . $name . '_month"'
         . (!$required && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '')
-        . ' tabindex="' . $element['tabindex'] . "\">\n";
+        . ' tabindex="' . Pieform::hsc($element['tabindex']) . "\">\n";
     $monthnames = explode(',', $form->i18n('element', 'date', 'monthnames', $element));
     for ($i = 1; $i <= 12; $i++) {
         $month .= "\t<option value=\"$i\"" . (($value == $i) ? ' selected="selected"' : '') . '>' . $monthnames[$i-1] . "</option>\n";
@@ -66,7 +66,7 @@ function pieform_element_date(Pieform $form, $element) {/*{{{*/
     $value = pieform_element_date_get_timeperiod_value('day', 1, 31, $element, $form);
     $day = '<select name="' . $name . '_day" id="' . $name . '_day"'
         . (!$required && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '')
-        . ' tabindex="' . $element['tabindex'] . "\">\n";
+        . ' tabindex="' . Pieform::hsc($element['tabindex']) . "\">\n";
     for ($i = 1; $i <= 31; $i++) {
         $day .= "\t<option value=\"$i\"" . (($value == $i) ? ' selected="selected"' : '') . ">$i</option>\n";
     }
@@ -98,7 +98,7 @@ EOF;
         $optional .= ' ' . $form->i18n('element', 'date', 'or', $element) . ' <input type="checkbox" '
             . (isset($element['defaultvalue']) ? '' : 'checked="checked" ')
             . 'name="' . $name . '_optional" id="' . $name . '_optional" onchange="' . $name . '_toggle(this)" '
-            . 'tabindex="' . $element['tabindex'] . '">';
+            . 'tabindex="' . Pieform::hsc($element['tabindex']) . '">';
         $optional .= ' <label for="' . $name . '_optional">' . $form->i18n('element', 'date', 'notspecified', $element);
 
         $result .= $optional;

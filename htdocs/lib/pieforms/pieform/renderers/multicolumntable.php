@@ -91,7 +91,7 @@ class FormRendererMultiColumnTable {/*{{{*/
             $result .= "\t<tr";
             // Set the class of the enclosing <tr> to match that of the element
             if ($data['settings']['class']) {
-                $result .= ' class="' . $data['settings']['class'] . '"';
+                $result .= ' class="' . Pieform::hsc($data['settings']['class']) . '"';
             }
             $result .= ">\n\t\t";
 
@@ -108,10 +108,10 @@ class FormRendererMultiColumnTable {/*{{{*/
                 $rawelement = $data['rawelements'][$k];
                 $result .= "\t<td";
                 if (isset($rawelement['name'])) {
-                    $result .= " id=\"" . $this->form->get_name() . '_' . $rawelement['name'] . '_container"';
+                    $result .= " id=\"" . $this->form->get_name() . '_' . Pieform::hsc($rawelement['name']) . '_container"';
                 }
                 if ($rawelement['class']) {
-                    $result .= ' class="' . $rawelement['class'] . '"';
+                    $result .= ' class="' . Pieform::hsc($rawelement['class']) . '"';
                 }
                 $result .= '>';
 
