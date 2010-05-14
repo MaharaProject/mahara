@@ -36,10 +36,10 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
     // Set the class of the enclosing <div> to match that of the element
     $result = '<div';
     if (isset($element['name'])) {
-        $result .= ' id="' . $formname . '_' . $element['name'] . '_container"';
+        $result .= ' id="' . $formname . '_' .  Pieform::hsc($element['name']) . '_container"';
     }
     if (!empty($element['class'])) {
-        $result .= ' class="' . $element['class'] . '"';
+        $result .= ' class="' . Pieform::hsc($element['class']) . '"';
     }
     $result .= '>';
 
