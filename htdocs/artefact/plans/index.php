@@ -36,9 +36,11 @@ define('TITLE', get_string('plans', 'artefact.plans'));
 
 safe_require('artefact','plans');
 $plansform = ArtefactTypePlans::get_form(); // new plan form
+$rows = ArtefactTypePlans::get_plans(); // users existing plans
 
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('plansform',$plansform);
+$smarty->assign('rows',$rows);
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('artefact:plans:index.tpl');
 

@@ -62,15 +62,6 @@ class ArtefactTypePlans extends ArtefactType {
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
-
-        // if existing plan retrieve values
-        if ($this->id && ($plan = get_record('artefact_plans_plan', 'artefact', $this->id))) {
-            foreach($plan as $name => $value) {
-                if (property_exists($this, $name)) {
-                    $this->{$name} = $value;
-                }
-            }
-        }
     }
 
     public static function is_singular() {
@@ -123,7 +114,27 @@ class ArtefactTypePlans extends ArtefactType {
         return $success;
     }
 
-    public function get_form() {
+    // users existing plans (used in displaying list)
+    static function get_plans() {
+        global $USER;
+
+        $records = array();
+        $owner = $USER->get('id');
+
+        $sql = "SELECT ar.artefact, ar.id, ar.completiondate, ar.completed, ar.title, ar.description, a.owner
+            FROM {artefact} a
+            JOIN {artefact_plans_plan} ar ON ar.artefact = a.id
+            WHERE a.owner = ? AND a.artefacttype = 'plans'
+            GROUP BY ar.artefact, ar.id, ar.completiondate, ar.completed, ar.title, ar.description, a.owner
+            ORDER BY ar.completiondate ASC";
+
+        $records = get_records_sql_array($sql, array($owner));
+
+        return $records;
+    }
+
+    // get new plan form
+    static function get_form() {
         require_once(get_config('libroot') . 'pieforms/pieform.php');
         $elements = call_static_method(generate_artefact_class_name('plans'), 'get_plansform_elements');
         $elements['submit'] = array(
@@ -142,7 +153,7 @@ class ArtefactTypePlans extends ArtefactType {
     }
 
     // new plan form elements
-    public function get_plansform_elements() {
+    static function get_plansform_elements() {
         return array(
             'completiondate' => array(
                 'type'       => 'calendar',

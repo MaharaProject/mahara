@@ -14,6 +14,7 @@
             <th>{str tag='completed' section='artefact.plans'}</th>
             {if $controls}
             <th class="planscontrols"></th>
+            <th class="planscontrols"></th>
             {/if}
         </tr>
     </thead>
@@ -23,7 +24,10 @@
             <td>{$row->completiondate|escape}</td>
             <td>{$row->title|escape}<div>{$row->description|escape}</div></td>
             {if $row->completed == 1}<td><div class="completed"><img src="/artefact/plans/theme/raw/static/images/success.gif" alt="" /></div></td>{else}<td></td>{/if}
-            <td><a href="/artefact/plans/editplan.php?id={$row->id}&amp;artefact={$row->artefact}">Edit</a></td>
+            {if $controls}
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            {/if}
         </tr>
         {/foreach}
     </tbody>
