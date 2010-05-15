@@ -34,86 +34,12 @@ define('SECTION_PAGE', 'index');
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('plans', 'artefact.plans'));
 
-$taskform = pieform(array(
-    'name'       => 'taskform',
-    'plugintype' => 'artefact',
-    'pluginname' => 'plans',
-    'method'     => 'post',
-    'elements'    => array(
-        'addtask' => array(
-            'type' => 'fieldset',
-            'legend' => get_string('task', 'artefact.plans'),
-            'elements' => array(
-                'completiondate' => array(
-                    'type'       => 'calendar',
-                    'caloptions' => array(
-                        'showsTime'      => false,
-                        'ifFormat'       => '%Y/%m/%d'
-                        ),
-                    'defaultvalue' => null,
-                    'title' => get_string('completiondate', 'artefact.plans'),
-                    'description' => get_string('dateformatguide'),
-                    'rules' => array(
-                        'required' => true,
-                    ),
-                ),
-                'title' => array(
-                    'type' => 'text',
-                    'defaultvalue' => null,
-                    'title' => get_string('title', 'artefact.plans'),
-                    'size' => 30,
-                    'rules' => array(
-                        'required' => true,
-                    ),
-                ),
-                'description' => array(
-                    'type'  => 'textarea',
-                    'rows' => 10,
-                    'cols' => 50,
-                    'resizable' => false,
-                    'defaultvalue' => null,
-                    'title' => get_string('description', 'artefact.plans'),
-                ),
-                'completed' => array(
-                    'type' => 'checkbox',
-                    'defaultvalue' => 0,
-                    'title' => get_string('completed', 'artefact.plans'),
-                ),
-                'save' => array(
-                    'type' => 'submit',
-                    'value' => get_string('savetask','artefact.plans'),
-                ),
-            ),
-        ),
-    ),
-));
+safe_require('artefact','plans');
+$plansform = ArtefactTypePlans::get_form(); // new plan form
 
-$smarty = smarty();
-$smarty->assign('taskform',$taskform);
+$smarty = smarty(array('tablerenderer'));
+$smarty->assign('plansform',$plansform);
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('artefact:plans:index.tpl');
 
-function taskform_submit(Pieform $form, $values) {
-    global $USER, $SESSION;
-    safe_require('artefact', 'plans');
-
-    // Entry in artefact table
-    $data = (object) array(
-        'owner'    => $USER->id,
-        'title'    => $values['title'] ? $values['title'] : '',
-        'note'     => $values['title'],
-    );
-    $data->description      = $values['description'] ? $values['description'] : '';
-    $data->title            = $values['title'] ? $values['title'] : '';
-    $data->completiondate   = $values['completiondate'] ? $values['completiondate'] : '';
-    $data->completed        = $values['completed'] ? $values['completed'] : 0;
-
-    $artefact = new ArtefactTypePlans(0, $data);
-    
-    if ($artefact->commit()) {
-        $SESSION->add_ok_msg(get_string('tasksavedsuccessfully', 'artefact.plans'));
-    }
-
-    redirect('/artefact/plans/');
-}
 ?>

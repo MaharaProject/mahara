@@ -26,8 +26,6 @@
 
 defined('INTERNAL') || die();
 
-require_once('activity.php');
-
 class PluginArtefactPlans extends PluginArtefact {
 
     public static function get_artefact_types() {
@@ -64,6 +62,15 @@ class ArtefactTypePlans extends ArtefactType {
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
+
+        // if existing plan retrieve values
+        if ($this->id && ($plan = get_record('artefact_plans_plan', 'artefact', $this->id))) {
+            foreach($plan as $name => $value) {
+                if (property_exists($this, $name)) {
+                    $this->{$name} = $value;
+                }
+            }
+        }
     }
 
     public static function is_singular() {
@@ -105,15 +112,98 @@ class ArtefactTypePlans extends ArtefactType {
         );
 
         if ($new) {
-            $success = insert_record('artefact_plans_task', $data);
+            $success = insert_record('artefact_plans_plan', $data);
         }
         else {
-            $success = update_record('artefact_plans_task', $data, 'artefact');
+            $success = update_record('artefact_plans_plan', $data, 'artefact');
         }
 
         $this->dirty = false;
 
         return $success;
+    }
+
+    public function get_form() {
+        require_once(get_config('libroot') . 'pieforms/pieform.php');
+        $elements = call_static_method(generate_artefact_class_name('plans'), 'get_plansform_elements');
+        $elements['submit'] = array(
+            'type' => 'submit',
+            'value' => get_string('save'),
+        );
+        $plansform = array(
+            'name' => 'addplans',
+            'plugintype' => 'artefact',
+            'pluginname' => 'plans',
+            'successcallback' => array(generate_artefact_class_name('plans'),'plansform_submit'),
+            'elements' => $elements,
+        );
+
+        return pieform($plansform);
+    }
+
+    // new plan form elements
+    public function get_plansform_elements() {
+        return array(
+            'completiondate' => array(
+                'type'       => 'calendar',
+                'caloptions' => array(
+                    'showsTime'      => false,
+                    'ifFormat'       => '%Y/%m/%d'
+                    ),
+                'defaultvalue' => null,
+                'title' => get_string('completiondate', 'artefact.plans'),
+                'description' => get_string('dateformatguide'),
+                'rules' => array(
+                    'required' => true,
+                ),
+            ),
+            'title' => array(
+                'type' => 'text',
+                'defaultvalue' => null,
+                'title' => get_string('title', 'artefact.plans'),
+                'size' => 30,
+                'rules' => array(
+                    'required' => true,
+                ),
+            ),
+            'description' => array(
+                'type'  => 'textarea',
+                'rows' => 10,
+                'cols' => 50,
+                'resizable' => false,
+                'defaultvalue' => null,
+                'title' => get_string('description', 'artefact.plans'),
+            ),
+            'completed' => array(
+                'type' => 'checkbox',
+                'defaultvalue' => 0,
+                'title' => get_string('completed', 'artefact.plans'),
+            )
+        );
+    }
+
+    public function plansform_submit(Pieform $form, $values) {
+        global $USER, $SESSION;
+
+        // Entry in artefact table
+        $data = (object) array(
+            'owner'      => $USER->id,
+            'title'      => $values['title'] ? $values['title'] : '',
+            'artefact'   => isset($values['artefact']) ? $values['artefact'] : 0,
+            'id'         => isset($values['id']) ? $values['id'] : 0,
+        );
+        $data->title = isset($values['title']) ? $values['title'] : '';
+        $data->description = isset($values['description']) ? $values['description'] : '';
+        $data->completiondate = isset($values['completiondate']) ? $values['completiondate'] : '';
+        $data->completed = $values['completed'] ? $values['completed'] : 0;
+
+        $artefact = new ArtefactTypePlans($data->artefact, $data);
+
+        if ($artefact->commit()) {
+            $SESSION->add_ok_msg(get_string('tasksavedsuccessfully', 'artefact.plans'));
+        }
+
+        redirect('/artefact/plans/');
     }
 
 }
