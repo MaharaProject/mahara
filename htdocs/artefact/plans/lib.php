@@ -196,25 +196,74 @@ class ArtefactTypePlans extends ArtefactType {
     public function plansform_submit(Pieform $form, $values) {
         global $USER, $SESSION;
 
-        // Entry in artefact table
-        $data = (object) array(
-            'owner'      => $USER->id,
-            'title'      => $values['title'] ? $values['title'] : '',
-            'artefact'   => isset($values['artefact']) ? $values['artefact'] : 0,
-            'id'         => isset($values['id']) ? $values['id'] : 0,
-        );
-        $data->title = isset($values['title']) ? $values['title'] : '';
-        $data->description = isset($values['description']) ? $values['description'] : '';
-        $data->completiondate = isset($values['completiondate']) ? $values['completiondate'] : '';
-        $data->completed = $values['completed'] ? $values['completed'] : 0;
+        $userid = $USER->get('id');
 
-        $artefact = new ArtefactTypePlans($data->artefact, $data);
+        if (empty($values['artefact'])) {
+            $artefact = new ArtefactTypePlans(0, array(
+                'owner' => $userid,
+                'title' => $values['title'],
+                'description' => !empty($values['description']) ? $values['description'] : '',
+                'completiondate' => $values['completiondate'],
+                'completed' => $values['completed'] ? $values['completed'] : 0,
+            ));
+
+        }
+        else if (!empty($values['artefact'])) {
+            if (!$data = get_record('artefact','id',$values['artefact'])) {
+                throw new ArtefactNotFoundException(get_string('artefactnotfound', 'error', $values['artefact']));
+            }
+            $artefact = new ArtefactTypePlans($data->id, $data);
+            $artefact->set('title', $values['title']);
+            $artefact->set('description', $values['description']);
+            $artefact->set('completiondate', $values['completiondate']);
+            if (!$values['completed']) {
+                $artefact->set('completed', 0);
+            }
+            else {
+                $artefact->set('completed', $values['completed']);
+            }
+
+        }
 
         if ($artefact->commit()) {
             $SESSION->add_ok_msg(get_string('tasksavedsuccessfully', 'artefact.plans'));
         }
+        else {
+            $SESSION->add_error_msg(get_string('tasknotsavedsuccessfully', 'artefact.plans'));
+        }
 
         redirect('/artefact/plans/');
+    }
+
+    /**
+    * Takes a pieform that's been set up by all the
+    * subclass get_addform_elements functions
+    * and puts the default values in (and hidden id field)
+    * ready to be an edit form
+    *
+    * @param $form pieform structure (before calling pieform() on it
+    * passed by _reference_
+    */
+    public static function populate_form(&$form, $id) {
+        if (!$plan = get_record('artefact_plans_plan', 'id', $id)) {
+            throw new InvalidArgumentException("Couldn't find plan with id $id");
+        }
+        foreach ($form['elements'] as $k => $element) {
+            if ($k == 'submit') {
+                continue;
+            }
+            if (isset($plan->{$k})) {
+                $form['elements'][$k]['defaultvalue'] = $plan->{$k};
+            }
+        }
+        $form['elements']['id'] = array(
+            'type' => 'hidden',
+            'value' => $id,
+        );
+        $form['elements']['artefact'] = array(
+            'type' => 'hidden',
+            'value' => $plan->artefact,
+        );
     }
 
 }
