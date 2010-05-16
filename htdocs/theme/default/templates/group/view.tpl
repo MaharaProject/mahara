@@ -2,7 +2,7 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-                {if $GROUP->description}<p id="group-description">{$GROUP->description}</p> {/if}
+                {if $GROUP->description}<p id="group-description">{$GROUP->description|clean_html}</p> {/if}
 
                 {include file="group/info.tpl"}
                 <ul id="group-controls">
