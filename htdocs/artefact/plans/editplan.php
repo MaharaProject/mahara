@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage artefact-resume
+ * @subpackage artefact-plans
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
