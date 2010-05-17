@@ -62,10 +62,10 @@ function pieform_renderer_maharatable(Pieform $form, $element) {
     $result = '';
     if (isset($element['labelhtml']) && $element['labelhtml'] !== '') {
         $result .= "\t<tr";
-        $result .= ' id="' . $formname . '_' . $element['name'] . '_header"';
+        $result .= ' id="' . $formname . '_' . Pieform::hsc($element['name']) . '_header"';
         // Set the class of the enclosing <tr> to match that of the element
         if ($element['class']) {
-            $result .= ' class="' . $element['class'] . '"';
+            $result .= ' class="' . Pieform::hsc($element['class']) . '"';
         }
         $result .= ">\n\t\t";
 
