@@ -11,7 +11,7 @@
 {include file="columnleftstart.tpl"}
 			<div id="myblogs">
 
-                {$blog->get('description')}
+                {$blog->get('description')|clean_html}
 
                     <span class="addicon fr">
                         <a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
