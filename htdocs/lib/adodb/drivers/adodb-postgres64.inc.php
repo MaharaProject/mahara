@@ -129,11 +129,8 @@ class ADODB_postgres64 extends ADOConnection{
 
 	function ServerInfo()
 	{
-		if (isset($this->version)) return $this->version;
-
 		$arr['description'] = $this->GetOne("select version()");
 		$arr['version'] = ADOConnection::_findvers($arr['description']);
-		$this->version = $arr;
 		return $arr;
 	}
 
