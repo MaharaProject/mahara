@@ -34,7 +34,7 @@ require_once('group.php');
 require_once('searchlib.php');
 $filter = param_alpha('filter', 'notmember');
 $offset = param_integer('offset', 0);
-
+$groupcategory = param_integer('groupcategory', 0);
 $groupsperpage = 20;
 
 $query = param_variable('query', '');
@@ -50,33 +50,39 @@ else { // all or some other text
     $filter = 'all';
     $type = 'all';
 }
-
-$searchform = pieform(array(
-    'name'   => 'search',
-    'method' => 'post',
-    'renderer' => 'oneline',
-    'elements' => array(
-        'query' => array(
+$elements = array();
+$elements['query'] = array(
             'type' => 'text',
-            'defaultvalue' => $query
-        ),
-        'filter' => array(
+            'defaultvalue' => $query);
+$elements['filter'] = array(
             'type' => 'select',
             'options' => array(
                 'notmember' => get_string('groupsnotin', 'group'),
                 'member'    => get_string('groupsimin', 'group'),
                 'all'       => get_string('allgroups', 'group')
             ),
-            'defaultvalue' => $filter
-        ),
-        'search' => array(
+            'defaultvalue' => $filter);
+if (get_config('allowgroupcategories')) {
+    $options[0] = get_string('allcategories', 'group');
+    $options += get_records_menu('group_category','','','displayorder', 'id,title');
+    $elements['groupcategory'] = array(
+                'type'         => 'select',
+                'options'      => $options,
+                'defaultvalue' => $groupcategory,
+                'help'         => true);
+}
+$elements['search'] = array(
             'type' => 'submit',
-            'value' => get_string('search')
-        )
+            'value' => get_string('search'));
+$searchform = pieform(array(
+    'name'   => 'search',
+    'method' => 'post',
+    'renderer' => 'oneline',
+    'elements' => $elements
     )
-));
+);
 
-$groups = search_group($query, $groupsperpage, $offset, $type);
+$groups = search_group($query, $groupsperpage, $offset, $type, $groupcategory);
 
 // gets more data about the groups found by search_group
 // including type if the user is associated with the group in some way
@@ -149,7 +155,7 @@ $pagination = build_pagination(array(
 ));
 
 function search_submit(Pieform $form, $values) {
-    redirect('/group/find.php?filter=' . $values['filter'] . (isset($values['query']) ? '&query=' . urlencode($values['query']) : ''));
+    redirect('/group/find.php?filter=' . $values['filter'] . (isset($values['query']) ? '&query=' . urlencode($values['query']) : '') . (!empty($values['groupcategory']) ? '&groupcategory=' . intval($values['groupcategory']) : ''));
 }
 
 $smarty = smarty();

@@ -1,0 +1,256 @@
+<?php
+/**
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @package    mahara
+ * @subpackage admin
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
+ *
+ */
+
+define('INTERNAL', 1);
+define('ADMIN', 1);
+define('MENUITEM', 'configsite/groups');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'admin');
+define('SECTION_PAGE', 'groups');
+
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+define('TITLE', get_string('groups', 'admin'));
+
+$strings = array('edit','delete','update','cancel','add','name','unknownerror');
+$adminstrings = array('confirmdeletecategory', 'deletefailed');
+foreach ($strings as $string) {
+    $getstring[$string] = json_encode(get_string($string));
+}
+foreach ($adminstrings as $string) {
+    $getstring[$string] = json_encode(get_string($string, 'admin'));
+}
+//set up initial pieform
+$groupoptionform = array(
+    'name'       => 'groupoptions',
+    'jsform'     => true,
+    'renderer'   => 'table',
+    'plugintype' => 'core',
+    'pluginname' => 'admin',
+    'jssuccesscallback' => 'checkReload',
+    'elements'   => array(
+        'creategroups' => array(
+            'type'         => 'select',
+            'title'        => get_string('whocancreategroups', 'admin'),
+            'description'  => get_string('whocancreategroupsdescription', 'admin'),
+            'defaultvalue' => get_config('creategroups'),
+            'options'      => array(
+                'admins' => get_string('adminsonly', 'admin'),
+                'staff'  => get_string('adminsandstaffonly', 'admin'),
+                'all'    => get_string('Everyone', 'admin'),
+            ),
+        ),
+        'createpublicgroups' => array(
+            'type'         => 'select',
+            'title'        => get_string('whocancreatepublicgroups', 'admin'),
+            'description'  => get_string('whocancreatepublicgroupsdescription', 'admin'),
+            'defaultvalue' => get_config('createpublicgroups'),
+            'options'      => array(
+                'admins' => get_string('adminsonly', 'admin'),
+                'all' => get_string('Everyone', 'admin'),
+            ),
+            'help'         => true,
+        ),
+        'allowgroupcategories' => array(
+            'type'         => 'select',
+            'title'        => get_string('allowgroupcategories', 'admin'),
+            'description'  => get_string('allowgroupcategoriesdescription', 'admin'),
+            'defaultvalue' => get_config('allowgroupcategories'),
+            'options'      => array(true  => get_string('yes'), false => get_string('no')),
+            'help'         => true,
+        ),
+    )
+);
+
+$groupoptionform['elements']['submit'] = array(
+    'type'  => 'submit',
+    'value' => get_string('updatesiteoptions', 'admin')
+);
+
+$groupoptionform = pieform($groupoptionform);
+function groupoptions_fail(Pieform $form, $field) {
+    $form->reply(PIEFORM_ERR, array(
+        'message' => get_string('setsiteoptionsfailed', 'admin', get_string($field, 'admin')),
+        'goto'    => '/admin/site/options.php',
+    ));
+}
+
+function groupoptions_submit(Pieform $form, $values) {
+    $fields = array('creategroups', 'createpublicgroups', 'allowgroupcategories');
+    foreach ($fields as $field) {
+        if (!set_config($field, $values[$field])) {
+            siteoptions_fail($form, $field);
+        }
+    }
+
+    $message = get_string('groupoptionsset', 'group');
+    $form->reply(PIEFORM_OK, array('message' => $message, 'goto' => '/admin/site/groups.php'));
+}
+if (get_config('allowgroupcategories')) {
+$thead = array(json_encode(get_string('name', 'admin')), '""');
+$ijs = "var thead = TR(null,map(partial(TH,null),[" . implode($thead,",") . "]));\n";
+
+$ijs .= <<< EOJS
+// Request a list of menu items from the server
+function getitems() {
+    sendjsonrequest('getgroupcategories.json.php', {}, 'GET',
+                    function(data) { displaymenuitems(data.groupcategories); });
+}
+
+
+// Puts the list of menu items into the empty table.
+function displaymenuitems(itemlist) {
+    var rows = map(formatrow,itemlist);
+    var form = FORM({'id':'form','method':'post','enctype':'multipart/form-data',
+                         'encoding':'multipart/form-data'},
+                    TABLE({'class':'nohead'},TBODY(null,[thead,rows,addform()])));
+    replaceChildNodes($('menuitemlist'),form);
+}
+
+// Creates one table row
+function formatrow (item) {
+    // item has id, type, name, link, linkedto
+    var del = INPUT({'type':'button','class':'button','value':{$getstring['delete']}});
+    connect(del, 'onclick', function () { delitem(item.id); });
+    var edit = INPUT({'type':'button','class':'button','value':{$getstring['edit']}});
+    connect(edit, 'onclick', function () { edititem(item); });
+    var cells = map(
+        partial(TD,null),
+        [
+            item.name,
+            [del,edit,contextualHelpIcon(null, null, 'core', 'admin', null, 'adminmenuedit')]
+        ]
+    );
+    return TR({'id':'menuitem_'+item.id},cells);
+}
+
+// Returns the form which adds a new menu item
+function addform(type) {
+    var item = {'id':'new'};
+    return editform(item);
+}
+
+// Creates the contents of a menu item edit form
+// This is formatted as a table within the form (which is within a row of the table).
+function editform(item) {
+    // item has id, name
+
+    // Either a save, a cancel button, or both.
+    var savecancel = [];
+    var save = INPUT({'type':'button','class':'button'});
+    connect(save, 'onclick', function () { saveitem(item.id); });
+
+    var rowtype = 'add';
+    if (!item) {
+        // This is the 'add' form rather than the edit form
+        // Set defaults.
+        item = {'type':'externallist'};
+    }
+    if (!item.name) {
+        item.name = '';
+        // The save button says 'add', and there's no cancel button.
+        setNodeAttribute(save,'value',{$getstring['add']});
+        savecancel = [save];
+    }
+    else { // Editing an existing menu item.
+        // The save button says 'update' and there's a cancel button.
+        var rowtype = 'edit';
+        setNodeAttribute(save,'value',{$getstring['update']});
+        var cancel = INPUT({'type':'button','class':'button','value':{$getstring['cancel']}});
+        connect(cancel, 'onclick', closeopenedits);
+        savecancel = [save,cancel];
+    }
+
+    // A text field for the name
+    var name = INPUT({'type':'text','class':'text','id':'name'+item.id,'value':item.name});
+
+    var row = TR({'id':'row'+item.id, 'class':rowtype},
+                 map(partial(TD,null),[name,savecancel]));
+    return row;
+}
+
+// Close all open edit forms
+function closeopenedits() {
+    var rows = getElementsByTagAndClassName('tr',null,$('menuitemlist'));
+    for (var i=0; i<rows.length; i++) {
+        if (hasElementClass(rows[i],'edit')) {
+            removeElement(rows[i]);
+        }
+        else if (hasElementClass(rows[i],'invisible')) {
+            removeElementClass(rows[i],'invisible');
+        }
+    }
+}
+
+// Open a new edit form
+function edititem(item) {
+    closeopenedits();
+    var menuitem = $('menuitem_'+item.id);
+    addElementClass(menuitem,'invisible');
+    var newrow = editform(item);
+    insertSiblingNodesBefore(menuitem, newrow);
+}
+
+// Receive standard json error message
+// Request deletion of a menu item from the db
+function delitem(itemid) {
+    if (confirm({$getstring['confirmdeletecategory']})) {
+        sendjsonrequest('deletegroupcategory.json.php',{'itemid':itemid}, 'POST', getitems);
+    }
+}
+
+// Send the menu item in the form to the database.
+function saveitem(itemid) {
+    var f = $('form');
+    var name = $('name'+itemid).value;
+    if (name == '') {
+        displayMessage(get_string('namedfieldempty',{$getstring['name']}),'error');
+        return false;
+    }
+
+    var data = {'name':name,
+                'itemid':itemid,};
+    sendjsonrequest('updategroup.json.php', data, 'POST', getitems);
+    return false;
+}
+
+addLoadEvent(function () {
+    getitems();
+});
+EOJS;
+}
+$style = '<style type="text/css">.invisible{display:none;}</style>';
+$smarty = smarty(array('groupoptions'), array($style));
+$smarty->assign('PAGEHEADING', hsc(get_string('groups', 'admin')));
+$smarty->assign('groupoptionform', $groupoptionform);
+if (get_config('allowgroupcategories')) {
+    $smarty->assign('grouptitle', get_string('groupsdescription', 'admin'));
+    $smarty->assign('INLINEJAVASCRIPT', $ijs);
+}
+
+$smarty->display('admin/site/groups.tpl');
+
+?>

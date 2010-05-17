@@ -35,32 +35,31 @@ define('TITLE', get_string('creategroup', 'group'));
 if (!group_can_create_groups()) {
     throw new AccessDeniedException(get_string('accessdenied', 'error'));
 }
-
-$creategroup = pieform(array(
-    'name'     => 'creategroup',
-    'method'   => 'post',
-    'plugintype' => 'core',
-    'pluginname' => 'groups',
-    'elements' => array(
-        'name' => array(
+$elements = array();
+$elements['name'] = array(
             'type'         => 'text',
             'title'        => get_string('groupname', 'group'),
-            'rules'        => array( 'required' => true, 'maxlength' => 128 ),
-        ),
-        'description' => array(
+            'rules'        => array( 'required' => true, 'maxlength' => 128 ));
+$elements['description'] = array(
             'type'         => 'wysiwyg',
             'title'        => get_string('groupdescription', 'group'),
             'rows'         => 10,
-            'cols'         => 55,
-        ),
-        'grouptype' => array(
+            'cols'         => 55);
+$elements['grouptype'] = array(
             'type'         => 'select',
             'title'        => get_string('grouptype', 'group'),
             'options'      => group_get_grouptype_options(),
             'defaultvalue' => 'standard.open',
-            'help'         => true,
-        ),
-        'public' => array(
+            'help'         => true);
+if (get_config('allowgroupcategories')) {
+    $elements['groupcategory'] = array(
+                'type'         => 'select',
+                'title'        => get_string('groupcategory', 'group'),
+                'options'      => get_records_menu('group_category','','','displayorder', 'id,title'),
+                'defaultvalue' => '',
+                'help'         => true);
+}
+$elements['public'] = array(
             'type'         => 'select',
             'title'        => get_string('publiclyviewablegroup', 'group'),
             'description'  => get_string('publiclyviewablegroupdescription', 'group'),
@@ -68,9 +67,8 @@ $creategroup = pieform(array(
                                     false => get_string('no')),
             'defaultvalue' => 'no',
             'help'         => true,
-            'ignore'       => !(get_config('createpublicgroups') == 'all' || get_config('createpublicgroups') == 'admins' && $USER->get('admin')),
-        ),
-        'usersautoadded' => array(
+            'ignore'       => !(get_config('createpublicgroups') == 'all' || get_config('createpublicgroups') == 'admins' && $USER->get('admin')));
+$elements['usersautoadded'] = array(
             'type'         => 'select',
             'title'        => get_string('usersautoadded', 'group'),
             'description'  => get_string('usersautoaddeddescription', 'group'),
@@ -78,13 +76,17 @@ $creategroup = pieform(array(
                                     false => get_string('no')),
             'defaultvalue' => 'no',
             'help'         => true,
-            'ignore'       => !$USER->get('admin'),
-        ),
-        'submit'   => array(
+            'ignore'       => !$USER->get('admin'));
+$elements['submit']   = array(
             'type'  => 'submitcancel',
-            'value' => array(get_string('savegroup', 'group'), get_string('cancel')),
-        ),
-    ),
+            'value' => array(get_string('savegroup', 'group'), get_string('cancel')));
+
+$creategroup = pieform(array(
+    'name'     => 'creategroup',
+    'method'   => 'post',
+    'plugintype' => 'core',
+    'pluginname' => 'groups',
+    'elements' => $elements
 ));
 
 $smarty = smarty();
@@ -115,6 +117,7 @@ function creategroup_submit(Pieform $form, $values) {
         'name'           => $values['name'],
         'description'    => $values['description'],
         'grouptype'      => $grouptype,
+        'groupcategory'  => intval($values['groupcategory']),
         'jointype'       => $jointype,
         'public'         => intval($values['public']),
         'usersautoadded' => intval($values['usersautoadded']),

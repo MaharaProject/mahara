@@ -35,7 +35,7 @@ define('TITLE', get_string('editgroup', 'group'));
 $id = param_integer('id');
 define('GROUP', $id);
 
-$group_data = get_record_sql("SELECT g.id, g.name, g.description, g.grouptype, g.jointype, g.public, g.usersautoadded
+$group_data = get_record_sql("SELECT g.id, g.name, g.description, g.grouptype, g.jointype, g.public, g.usersautoadded, g.groupcategory
     FROM {group} g
     INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
     WHERE g.id = ?
@@ -45,34 +45,33 @@ if (!$group_data) {
     $SESSION->add_error_msg(get_string('canteditdontown'));
     redirect('/group/mygroups.php');
 }
-
-$editgroup = pieform(array(
-    'name'     => 'editgroup',
-    'method'   => 'post',
-    'plugintype' => 'core',
-    'pluginname' => 'groups',
-    'elements' => array(
-        'name' => array(
+$elements = array();
+$elements['name'] = array(
             'type'         => 'text',
             'title'        => get_string('groupname', 'group'),
             'rules'        => array( 'required' => true, 'maxlength' => 128 ),
-            'defaultvalue' => $group_data->name,
-        ),
-        'description' => array(
+            'defaultvalue' => $group_data->name);
+$elements['description'] = array(
             'type'         => 'wysiwyg',
             'title'        => get_string('groupdescription', 'group'),
             'rows'         => 10,
             'cols'         => 55,
-            'defaultvalue' => $group_data->description,
-        ),
-        'grouptype' => array(
+            'defaultvalue' => $group_data->description);
+$elements['grouptype'] = array(
             'type'         => 'select',
             'title'        => get_string('grouptype', 'group'),
             'options'      => group_get_grouptype_options($group_data->grouptype),
             'defaultvalue' => $group_data->grouptype . '.' . $group_data->jointype,
-            'help'         => true,
-        ),
-        'public' => array(
+            'help'         => true);
+if (get_config('allowgroupcategories')) {
+    $elements['groupcategory'] = array(
+                'type'         => 'select',
+                'title'        => get_string('groupcategory', 'group'),
+                'options'      => get_records_menu('group_category','','','displayorder', 'id,title'),
+                'defaultvalue' => $group_data->groupcategory,
+                'help'         => true);
+}
+$elements['public'] = array(
             'type'         => 'select',
             'title'        => get_string('publiclyviewablegroup', 'group'),
             'description'  => get_string('publiclyviewablegroupdescription', 'group'),
@@ -80,9 +79,8 @@ $editgroup = pieform(array(
                                     false => get_string('no')),
             'defaultvalue' => $group_data->public,
             'help'         => true,
-            'ignore'       => !(get_config('createpublicgroups') == 'all' || get_config('createpublicgroups') == 'admins' && $USER->get('admin')),
-        ),
-        'usersautoadded' => array(
+            'ignore'       => !(get_config('createpublicgroups') == 'all' || get_config('createpublicgroups') == 'admins' && $USER->get('admin')));
+$elements['usersautoadded'] = array(
             'type'         => 'select',
             'title'        => get_string('usersautoadded', 'group'),
             'description'  => get_string('usersautoaddeddescription', 'group'),
@@ -90,18 +88,20 @@ $editgroup = pieform(array(
                                     false => get_string('no')),
             'defaultvalue' => $group_data->usersautoadded,
             'help'         => true,
-            'ignore'       => !$USER->get('admin'),
-        ),
-        'id'          => array(
+            'ignore'       => !$USER->get('admin'));
+$elements['id'] = array(
             'type'         => 'hidden',
-            'value'        => $id,
-        ),
-        'submit'   => array(
+            'value'        => $id);
+$elements['submit'] = array(
             'type'  => 'submitcancel',
-            'value' => array(get_string('savegroup', 'group'), get_string('cancel')),
-        ),
-    ),
-));
+            'value' => array(get_string('savegroup', 'group'), get_string('cancel')));
+
+$editgroup = pieform(array(
+    'name'     => 'editgroup',
+    'method'   => 'post',
+    'plugintype' => 'core',
+    'pluginname' => 'groups',
+    'elements' => $elements));
 
 function editgroup_validate(Pieform $form, $values) {
     $cid = get_field('group', 'id', 'name', $values['name']);
@@ -133,6 +133,7 @@ function editgroup_submit(Pieform $form, $values) {
             'name'           => $values['name'],
             'description'    => $values['description'],
             'grouptype'      => $grouptype,
+            'groupcategory'  => intval($values['groupcategory']),
             'jointype'       => $jointype,
             'mtime'          => $now,
             'usersautoadded' => intval($values['usersautoadded']),

@@ -581,7 +581,7 @@ class PluginSearchInternal extends PluginSearch {
      *               ),
      *           );
      */
-    public static function search_group($query_string, $limit, $offset=0, $type='member') {
+    public static function search_group($query_string, $limit, $offset=0, $type='member', $category='') {
         global $USER;
         $data = array();
 
@@ -603,6 +603,9 @@ class PluginSearchInternal extends PluginSearch {
         }
         else if ($type == 'notmember') {
             $sql .= 'AND id NOT IN (' . $grouproles . ')';
+        }
+        if (!empty($category)) {
+            $sql .= ' AND groupcategory ='.$category;
         }
 
         $count = get_field_sql('SELECT COUNT(*) '.$sql, $values);

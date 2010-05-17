@@ -1646,6 +1646,12 @@ function admin_nav() {
             'weight' => 20
         ),
         array(
+            'path'   => 'configsite/groups',
+            'url'    => 'admin/site/groups.php',
+            'title'  => get_string('groups', 'admin'),
+            'weight' => 25,
+        ),
+        array(
             'path'   => 'configsite/sitemenu',
             'url'    => 'admin/site/menu.php',
             'title'  => get_string('menus', 'admin'),

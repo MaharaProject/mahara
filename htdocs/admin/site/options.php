@@ -326,30 +326,6 @@ $siteoptionform = array(
                     'help'         => true,
                     'disabled'     => in_array('allowpublicprofiles', $OVERRIDDEN),
                 ),
-                'creategroups' => array(
-                    'type'         => 'select',
-                    'title'        => get_string('whocancreategroups', 'admin'),
-                    'description'  => get_string('whocancreategroupsdescription', 'admin'),
-                    'defaultvalue' => get_config('creategroups'),
-                    'options'      => array(
-                        'admins' => get_string('adminsonly', 'admin'),
-                        'staff'  => get_string('adminsandstaffonly', 'admin'),
-                        'all'    => get_string('Everyone', 'admin'),
-                    'disabled'     => in_array('creategroups', $OVERRIDDEN),
-                    ),
-                ),
-                'createpublicgroups' => array(
-                    'type'         => 'select',
-                    'title'        => get_string('whocancreatepublicgroups', 'admin'),
-                    'description'  => get_string('whocancreatepublicgroupsdescription', 'admin'),
-                    'defaultvalue' => get_config('createpublicgroups'),
-                    'options'      => array(
-                        'admins' => get_string('adminsonly', 'admin'),
-                        'all' => get_string('Everyone', 'admin'),
-                    ),
-                    'help'         => true,
-                    'disabled'     => in_array('createpublicgroups', $OVERRIDDEN),
-                ),
                 'showtagssideblock' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('showtagssideblock', 'admin'),
@@ -410,7 +386,7 @@ function siteoptions_submit(Pieform $form, $values) {
     $fields = array(
         'sitename','lang','theme', 'pathtoclam',
         'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
-        'allowpublicviews', 'allowpublicprofiles', 'creategroups', 'createpublicgroups', 'searchplugin',
+        'allowpublicviews', 'allowpublicprofiles', 'searchplugin',
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
         'showselfsearchsideblock', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',

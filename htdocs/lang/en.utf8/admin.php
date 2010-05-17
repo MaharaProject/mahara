@@ -116,6 +116,13 @@ $string['htmlfiltersdescription'] = 'Enable new filters for HTML Purifier';
 $string['newfiltersdescription'] = 'If you have downloaded a new set of HTML filters, you can install them by unzipping the file into the folder %s and then clicking the button below';
 $string['filtersinstalled'] = 'Filters installed.';
 $string['nofiltersinstalled'] = 'No html filters installed.';
+$string['allowgroupcategories'] ='Allow Group Categories';
+$string['allowgroupcategoriesdescription'] ='If set to yes, admins will be able to create categories for users to assign their groups';
+$string['groupoptionsset'] = 'Group options have been updated.';
+$string['groups'] = 'Groups';
+$string['groupsdescription'] = 'Manage group options';
+$string['groupcategorydeleted'] = 'Category deleted';
+$string['confirmdeletecategory'] = 'Do you really want to delete this category?';
 
 // Register your Mahara
 $string['Field'] = 'Field';
