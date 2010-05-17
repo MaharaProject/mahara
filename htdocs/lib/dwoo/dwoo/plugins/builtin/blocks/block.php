@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This is used only when rendering a template that has blocks but is not extending anything, 
+ * This is used only when rendering a template that has blocks but is not extending anything,
  * it doesn't do anything by itself and should not be used outside of template inheritance context,
  * see {@link http://wiki.dwoo.org/index.php/TemplateInheritance} to read more about it.
  *

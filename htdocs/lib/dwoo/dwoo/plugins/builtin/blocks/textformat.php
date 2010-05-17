@@ -77,7 +77,7 @@ class Dwoo_Plugin_textformat extends Dwoo_Block_Plugin
 
 			// wordwraps + indents lines
 			$pgs[$i] = str_repeat($this->indChar, $this->indFirst) .
-			   		wordwrap(
+					wordwrap(
 							$pgs[$i],
 							max($this->wrap - $this->indent, 1),
 							$this->wrapChar . str_repeat($this->indChar, $this->indent),

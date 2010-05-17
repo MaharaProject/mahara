@@ -118,9 +118,9 @@ interface Dwoo_ITemplate
 
 	/**
 	 * returns some php code that will check if this template has been modified or not
-	 * 
+	 *
 	 * if the function returns null, the template will be instanciated and then the Uid checked
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getIsModifiedCode();

@@ -110,8 +110,8 @@ class Dwoo_Plugin_section extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 				   '	$_section'.$cnt.'[\'total\'] = 0;'."\n}\n";
 		$output .= 'if ($_section'.$cnt.'[\'show\']) {'."\n";
 		$output .= "\t".'for ($this->scope['.$name.'] = $_section'.$cnt.'[\'start\'], $_section'.$cnt.'[\'iteration\'] = 1; '.
-				 	'$_section'.$cnt.'[\'iteration\'] <= $_section'.$cnt.'[\'total\']; '.
-				 	'$this->scope['.$name.'] += $_section'.$cnt.'[\'step\'], $_section'.$cnt.'[\'iteration\']++) {'."\n";
+					'$_section'.$cnt.'[\'iteration\'] <= $_section'.$cnt.'[\'total\']; '.
+					'$this->scope['.$name.'] += $_section'.$cnt.'[\'step\'], $_section'.$cnt.'[\'iteration\']++) {'."\n";
 		$output .= "\t\t".'$_section'.$cnt.'[\'rownum\'] = $_section'.$cnt.'[\'iteration\'];'."\n";
 		$output .= "\t\t".'$_section'.$cnt.'[\'index_prev\'] = $this->scope['.$name.'] - $_section'.$cnt.'[\'step\'];'."\n";
 		$output .= "\t\t".'$_section'.$cnt.'[\'index_next\'] = $this->scope['.$name.'] + $_section'.$cnt.'[\'step\'];'."\n";

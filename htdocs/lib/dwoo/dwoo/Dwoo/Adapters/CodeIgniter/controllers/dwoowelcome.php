@@ -9,8 +9,8 @@ class Dwoowelcome extends Controller {
 
     function index()
     {
-    	$this->load->library('Dwootemplate');
-    	$this->dwootemplate->assign('itshowlate', date('H:i:s'));
-    	$this->dwootemplate->display('dwoowelcome.tpl');
+	$this->load->library('Dwootemplate');
+	$this->dwootemplate->assign('itshowlate', date('H:i:s'));
+	$this->dwootemplate->display('dwoowelcome.tpl');
     }
 }

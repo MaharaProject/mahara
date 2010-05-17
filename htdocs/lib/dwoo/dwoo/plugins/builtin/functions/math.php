@@ -47,9 +47,9 @@ function Dwoo_Plugin_math_compile(Dwoo_Compiler $compiler, $equation, $format=''
 	 */
 	$funcs = array
 	(
- 		'round(', 'log(', 'pow(',
+		'round(', 'log(', 'pow(',
 		'max(', 'min(', 'rand(',
- 	);
+	);
 
 	$equation = $equationSrc = str_ireplace(array('pi', 'M_PI()', 'inf', ' e '), array('M_PI', 'M_PI', 'INF', ' M_E '), $equation);
 

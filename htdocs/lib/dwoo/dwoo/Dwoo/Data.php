@@ -96,17 +96,17 @@ class Dwoo_Data implements Dwoo_IDataProvider
 			$this->data[$name] = $val;
 		}
 	}
-   	
-   	/**
-   	 * allows to assign variables using the object syntax
-   	 * 
-   	 * @param string $name the variable name
-   	 * @param string $value the value to assign to it
-   	 */
-   	public function __set($name, $value)
-   	{
-   		$this->assign($name, $value);
-   	}
+
+	/**
+	 * allows to assign variables using the object syntax
+	 *
+	 * @param string $name the variable name
+	 * @param string $value the value to assign to it
+	 */
+	public function __set($name, $value)
+	{
+		$this->assign($name, $value);
+	}
 
 	/**
 	 * assigns a value by reference to the data object
@@ -129,9 +129,9 @@ class Dwoo_Data implements Dwoo_IDataProvider
 	 * @param mixed $val the value to assign, or null if $name was an array
 	 * @param bool $merge true to merge data or false to append, defaults to false
 	 */
-   	public function append($name, $val = null, $merge = false)
-   	{
-   		if (is_array($name)) {
+	public function append($name, $val = null, $merge = false)
+	{
+		if (is_array($name)) {
 			foreach ($name as $key=>$val) {
 				if (isset($this->data[$key]) && !is_array($this->data[$key])) {
 					settype($this->data[$key], 'array');
@@ -143,9 +143,11 @@ class Dwoo_Data implements Dwoo_IDataProvider
 					$this->data[$key][] = $val;
 				}
 			}
-   		} elseif ($val !== null) {
+		} elseif ($val !== null) {
 			if (isset($this->data[$name]) && !is_array($this->data[$name])) {
 				settype($this->data[$name], 'array');
+			} elseif (!isset($this->data[$name])) {
+				$this->data[$name] = array();
 			}
 
 			if ($merge === true && is_array($val)) {
@@ -153,8 +155,8 @@ class Dwoo_Data implements Dwoo_IDataProvider
 			} else {
 				$this->data[$name][] = $val;
 			}
-   		}
-   	}
+		}
+	}
 
 	/**
 	 * appends a value by reference to the data object
@@ -164,85 +166,85 @@ class Dwoo_Data implements Dwoo_IDataProvider
 	 * @param mixed $val the value to append by reference
 	 * @param bool $merge true to merge data or false to append, defaults to false
 	 */
-   	public function appendByRef($name, &$val, $merge = false)
-   	{
-   		if (isset($this->data[$name]) && !is_array($this->data[$name])) {
+	public function appendByRef($name, &$val, $merge = false)
+	{
+		if (isset($this->data[$name]) && !is_array($this->data[$name])) {
 			settype($this->data[$name], 'array');
 		}
 
-   		if ($merge === true && is_array($val)) {
-   			foreach ($val as $key => &$val) {
-   				$this->data[$name][$key] =& $val;
-   			}
-   		} else {
-   			$this->data[$name][] =& $val;
-   		}
-   	}
-   	
-   	/**
-   	 * returns true if the variable has been assigned already, false otherwise
-   	 * 
-   	 * @param string $name the variable name
-   	 * @return bool 
-   	 */
-   	public function isAssigned($name)
-   	{
-   		return isset($this->data[$name]);
-   	}
-   	
-   	/**
-   	 * supports calls to isset($dwooData->var)
-   	 * 
-   	 * @param string $name the variable name
-   	 */
-   	public function __isset($name)
-   	{
-   		return isset($this->data[$name]);
-   	}
-   	
-   	/**
-   	 * unassigns/removes a variable
-   	 * 
-   	 * @param string $name the variable name
-   	 */
-   	public function unassign($name)
-   	{
-   		unset($this->data[$name]);
-   	}
-   	
-   	/**
-   	 * supports unsetting variables using the object syntax
-   	 * 
-   	 * @param string $name the variable name
-   	 */
-   	public function __unset($name)
-   	{
-   		unset($this->data[$name]);
-   	}
-   	
-   	/**
-   	 * returns a variable if it was assigned
-   	 * 
-   	 * @param string $name the variable name
-   	 * @return mixed
-   	 */
-   	public function get($name)
-   	{
-   		return $this->__get($name);
-   	}
+		if ($merge === true && is_array($val)) {
+			foreach ($val as $key => &$val) {
+				$this->data[$name][$key] =& $val;
+			}
+		} else {
+			$this->data[$name][] =& $val;
+		}
+	}
 
-   	/**
-   	 * allows to read variables using the object syntax
-   	 * 
-   	 * @param string $name the variable name
-   	 * @return mixed
-   	 */
-   	public function __get($name)
-   	{
-   		if (isset($this->data[$name])) {
-   			return $this->data[$name];
-   		} else {
-   			throw new Dwoo_Exception('Tried to read a value that was not assigned yet : "'.$name.'"');
-   		}
-   	}
+	/**
+	 * returns true if the variable has been assigned already, false otherwise
+	 *
+	 * @param string $name the variable name
+	 * @return bool
+	 */
+	public function isAssigned($name)
+	{
+		return isset($this->data[$name]);
+	}
+
+	/**
+	 * supports calls to isset($dwooData->var)
+	 *
+	 * @param string $name the variable name
+	 */
+	public function __isset($name)
+	{
+		return isset($this->data[$name]);
+	}
+
+	/**
+	 * unassigns/removes a variable
+	 *
+	 * @param string $name the variable name
+	 */
+	public function unassign($name)
+	{
+		unset($this->data[$name]);
+	}
+
+	/**
+	 * supports unsetting variables using the object syntax
+	 *
+	 * @param string $name the variable name
+	 */
+	public function __unset($name)
+	{
+		unset($this->data[$name]);
+	}
+
+	/**
+	 * returns a variable if it was assigned
+	 *
+	 * @param string $name the variable name
+	 * @return mixed
+	 */
+	public function get($name)
+	{
+		return $this->__get($name);
+	}
+
+	/**
+	 * allows to read variables using the object syntax
+	 *
+	 * @param string $name the variable name
+	 * @return mixed
+	 */
+	public function __get($name)
+	{
+		if (isset($this->data[$name])) {
+			return $this->data[$name];
+		} else {
+			throw new Dwoo_Exception('Tried to read a value that was not assigned yet : "'.$name.'"');
+		}
+	}
 }

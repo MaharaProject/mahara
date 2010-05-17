@@ -35,7 +35,7 @@ class Dwoo
 	 *
 	 * @var string
 	 */
-	const VERSION = '1.1.0';
+	const VERSION = '1.1.1';
 
 	/**
 	 * unique number of this dwoo release
@@ -44,7 +44,7 @@ class Dwoo
 	 * has been compiled before this release or not, so that old templates are
 	 * recompiled automatically when Dwoo is updated
 	 */
-	const RELEASE_TAG = 16;
+	const RELEASE_TAG = 17;
 
 	/**#@+
 	 * constants that represents all plugin types
@@ -198,8 +198,9 @@ class Dwoo
 	 * stores the data during template runtime
 	 *
 	 * @var array
+	 * @private
 	 */
-	protected $data;
+	public $data;
 
 	/**
 	 * stores the current scope during template runtime
@@ -246,7 +247,7 @@ class Dwoo
 	 */
 	protected $pluginProxy;
 
- 	/**
+	/**
 	 * constructor, sets the cache and compile dir to the default values if not provided
 	 *
 	 * @param string $compileDir path to the compiled directory, defaults to lib/compiled
@@ -332,7 +333,7 @@ class Dwoo
 		} else {
 			throw new Dwoo_Exception('Dwoo->get/Dwoo->output\'s data argument must be a Dwoo_IDataProvider object (i.e. Dwoo_Data) or an associative array', E_USER_NOTICE);
 		}
-		
+
 		$this->globals['template'] = $_tpl->getName();
 		$this->initRuntimeVars($_tpl);
 
@@ -354,18 +355,19 @@ class Dwoo
 			}
 		} else {
 			// no cache present
-
 			if ($doCache === true) {
 				$dynamicId = uniqid();
 			}
 
 			// render template
-			$out = include $_tpl->getCompiledTemplate($this, $_compiler);
+			$compiledTemplate = $_tpl->getCompiledTemplate($this, $_compiler);
+			$out = include $compiledTemplate;
 
 			// template returned false so it needs to be recompiled
 			if ($out === false) {
 				$_tpl->forceCompilation();
-				$out = include $_tpl->getCompiledTemplate($this, $_compiler);
+				$compiledTemplate = $_tpl->getCompiledTemplate($this, $_compiler);
+				$out = include $compiledTemplate;
 			}
 
 			if ($doCache === true) {
@@ -373,7 +375,7 @@ class Dwoo
 				if (!class_exists('Dwoo_plugin_dynamic', false)) {
 					$this->getLoader()->loadPlugin('dynamic');
 				}
-				$out = Dwoo_Plugin_dynamic::unescape($out, $dynamicId);
+				$out = Dwoo_Plugin_dynamic::unescape($out, $dynamicId, $compiledTemplate);
 			}
 
 			// process filters
@@ -408,9 +410,8 @@ class Dwoo
 				// output
 				if ($_output === true) {
 					echo $out;
-				} else {
-					return $out;
 				}
+				return $out;
 			}
 		}
 	}
@@ -1058,10 +1059,11 @@ class Dwoo
 	 * this is so a single instance of every class plugin is created at each template run,
 	 * allowing class plugins to have "per-template-run" static variables
 	 *
+	 * @private
 	 * @param string $class the class name
 	 * @return mixed an object of the given class
 	 */
-	protected function getObjectPlugin($class)
+	public function getObjectPlugin($class)
 	{
 		if (isset($this->runtimePlugins[$class])) {
 			return $this->runtimePlugins[$class];
@@ -1197,7 +1199,7 @@ class Dwoo
 		}
 
 		if (is_array($varstr) === false) {
-			preg_match_all('#(\[|->|\.)?([^.[\]-]+)\]?#i', $varstr, $m);
+			preg_match_all('#(\[|->|\.)?((?:[^.[\]-]|-(?!>))+)\]?#i', $varstr, $m);
 		} else {
 			$m = $varstr;
 		}
@@ -1211,7 +1213,7 @@ class Dwoo
 					return null;
 				}
 			} else {
-				if (is_object($data) && ($safeRead === false || isset($data->$m[2][$k]))) {
+				if (is_object($data) && ($safeRead === false || isset($data->$m[2][$k]) || is_callable(array($data, '__get')))) {
 					$data = $data->$m[2][$k];
 				} else {
 					return null;
@@ -1301,7 +1303,7 @@ class Dwoo
 				$varstr = 'dwoo'.$varstr;
 			}
 
-			preg_match_all('#(\[|->|\.)?([^.[\]-]+)\]?#i', $varstr, $m);
+			preg_match_all('#(\[|->|\.)?((?:[^.[\]-]|-(?!>))+)\]?#i', $varstr, $m);
 		}
 
 		$i = $m[2][0];
@@ -1522,6 +1524,10 @@ class Dwoo
 	 * @return mixed
 	 */
 	public function __call($method, $args) {
-		return call_user_func_array($this->getPluginProxy()->getCallback($method), $args);
+		$proxy = $this->getPluginProxy();
+		if (!$proxy) {
+			throw new Dwoo_Exception('Call to undefined method '.__CLASS__.'::'.$method.'()');
+		}
+		return call_user_func_array($proxy->getCallback($method), $args);
 	}
 }
