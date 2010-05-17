@@ -45,7 +45,8 @@ if (is_null($id)) {
         )) {
         throw new ParameterException();
     }
-    $blog = new ArtefactTypeBlog($records[0]->id, $records[0]);
+    $id = $records[0]->id;
+    $blog = new ArtefactTypeBlog($id, $records[0]);
 }
 else {
     $blog = new ArtefactTypeBlog($id);
