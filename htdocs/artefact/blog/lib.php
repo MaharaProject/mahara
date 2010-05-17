@@ -282,6 +282,10 @@ class ArtefactTypeBlog extends ArtefactType {
          LIMIT ? OFFSET ?", array($user->get('id'), $limit, $offset)))
             || ($result = array());
 
+        foreach ($result as &$b) {
+            $b->description = clean_html($b->description);
+        }
+
         $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $user->get('id'), 'artefacttype', 'blog');
 
         return array($count, $result);
