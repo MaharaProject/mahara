@@ -2,7 +2,7 @@ phpmailer in Mahara
 ======================
 
 Website: http://sourceforge.net/projects/phpmailer/
-Version: 5.0.2
+Version: 5.1
 
 This library is for the email_user() function in lib/user.php
 
