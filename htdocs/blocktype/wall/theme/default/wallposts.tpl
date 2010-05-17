@@ -2,7 +2,7 @@
 
 {include file="columnfullstart.tpl"}
 <div id="wall">
-    <h3>{$owner->displayname}: {str tag='wall' section='blocktype.wall'}</h3>
+    <h3>{$owner->displayname|escape}: {str tag='wall' section='blocktype.wall'}</h3>
     ( <a href="{$WWWROOT}/user/view.php?id={$owner->id}">{str tag='backtoprofile' section='blocktype.wall'}</a> )
     {include file="blocktype:wall:inlineposts.tpl}
 </div>
