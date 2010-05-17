@@ -7,7 +7,7 @@
                     <a class="btn btn-add" href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
 				</div>
 
-                <p>{$blog->get('description')}</p>
+                <p>{$blog->get('description')|clean_html}</p>
                 {if $blog->get('tags')}<p class="tags">{str tag=tags}: {list_tags owner=$blog->get('owner') tags=$blog->get('tags')}</p>{/if}
 
                 {if $blog->count_children() > 0}
