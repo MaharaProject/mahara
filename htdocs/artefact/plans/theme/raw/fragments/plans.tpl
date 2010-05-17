@@ -5,7 +5,7 @@
 {/if}
 </legend>{/if}
 {if $rows}
-<table id="planslist{$suffix}" class="tablerenderer">
+<table id="planslist" class="tablerenderer">
     <colgroup width="25%" span="2"></colgroup>
     <thead>
         <tr>
@@ -26,7 +26,7 @@
             {if $row->completed == 1}<td><div class="completed"><img src="/artefact/plans/theme/raw/static/images/success.gif" alt="" /></div></td>{else}<td></td>{/if}
             {if $controls}
             <td><a href="/artefact/plans/editplan.php?id={$row->id}&amp;artefact={$row->artefact}">Edit</a></td>
-            <td>&nbsp;</td>
+            <td><a href="/artefact/plans/deleteplan.php?id={$row->id}&amp;artefact={$row->artefact}">Delete</a></td>
             {/if}
         </tr>
         {/foreach}

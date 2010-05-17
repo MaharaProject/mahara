@@ -266,4 +266,12 @@ class ArtefactTypePlans extends ArtefactType {
         );
     }
 
+    public function delete() {
+        db_begin();
+
+        delete_records('artefact_plans_plan', 'artefact', $this->id);
+        parent::delete();
+
+        db_commit();
+    }
 }
