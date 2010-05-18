@@ -69,7 +69,8 @@ $columnsform = pieform(array(
 $smarty = smarty(array(), array(), array(), array('sidebars' => false));
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->assign('form', $columnsform);
-$smarty->display('view/columns.tpl');
+$smarty->assign('pagedescription', get_string('viewcolumnspagedescription', 'view'));
+$smarty->display('form.tpl');
 
 function viewcolumns_submit(Pieform $form, $values) {
     global $view, $SESSION, $category, $new;

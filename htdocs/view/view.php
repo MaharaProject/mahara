@@ -93,7 +93,6 @@ if ($viewtype == 'profile') {
 else {
     define('TITLE', $view->get('title'));
 }
-$title = hsc(TITLE);
 
 $submittedgroup = (int)$view->get('submittedgroup');
 if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_views($submittedgroup, $USER->get('id'))) {
@@ -101,10 +100,10 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
     // been submitted to, and is entitled to release the view
     $submittedgroup = get_record('group', 'id', $submittedgroup);
     if ($view->get('submittedtime')) {
-        $text = get_string('viewsubmittedtogroupon', 'view', get_config('wwwroot') . 'group/view.php?id=' . $submittedgroup->id, $submittedgroup->name, format_date(strtotime($view->get('submittedtime'))));
+        $text = get_string('viewsubmittedtogroupon', 'view', get_config('wwwroot') . 'group/view.php?id=' . $submittedgroup->id, hsc($submittedgroup->name), format_date(strtotime($view->get('submittedtime'))));
     }
     else {
-        $text = get_string('viewsubmittedtogroup', 'view', get_config('wwwroot') . 'group/view.php?id=' . $submittedgroup->id, $submittedgroup->name);
+        $text = get_string('viewsubmittedtogroup', 'view', get_config('wwwroot') . 'group/view.php?id=' . $submittedgroup->id, hsc($submittedgroup->name));
     }
     $releaseform = pieform(array(
         'name'     => 'releaseview',
@@ -247,6 +246,8 @@ if (get_config('viewmicroheaders')) {
         }
     }
 }
+
+$title = hsc(TITLE);
 
 if ($viewtype != 'profile' && !get_config('viewmicroheaders')) {
     $title = $view->display_title();

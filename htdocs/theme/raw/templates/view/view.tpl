@@ -1,7 +1,6 @@
-{auto_escape off}
 {if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
 
-{if $maintitle}<h1>{$maintitle}</h1>{/if}
+{if $maintitle}<h1>{$maintitle|safe}</h1>{/if}
 
 {if !$microheaders && $mnethost}
 <div class="rbuttons">
@@ -9,36 +8,36 @@
 </div>
 {/if}
 
-<p id="view-description">{$viewdescription|clean_html}</p>
+<p id="view-description">{$viewdescription|clean_html|safe}</p>
 
 <div id="view" class="cb">
         <div id="bottom-pane">
             <div id="column-container">
-               {$viewcontent}
+               {$viewcontent|safe}
                 <div class="cb">
                 </div>
             </div>
         </div>
   <div class="viewfooter cb">
     {if $tags}<div class="tags">{str tag=tags}: {list_tags owner=$owner tags=$tags}</div>{/if}
-    <div>{$releaseform}</div>
-    {if $view_group_submission_form}<div>{$view_group_submission_form}</div>{/if}
+    <div>{$releaseform|safe}</div>
+    {if $view_group_submission_form}<div>{$view_group_submission_form|safe}</div>{/if}
     {if $feedback->count || $enablecomments}
     <table id="feedbacktable" class="fullwidth table">
       <thead><tr><th>{str tag="feedback" section="artefact.comment"}</th></tr></thead>
       <tbody>
-        {$feedback->tablerows}
+        {$feedback->tablerows|safe}
       </tbody>
     </table>
-    {$feedback->pagination}
+    {$feedback->pagination|safe}
     {/if}
 	<div id="viewmenu">
         {include file="view/viewmenu.tpl" enablecomments=$enablecomments}
     </div>
-    {if $addfeedbackform}<div>{$addfeedbackform}</div>{/if}
-    {if $objectionform}<div>{$objectionform}</div>{/if}
+    {if $addfeedbackform}<div>{$addfeedbackform|safe}</div>{/if}
+    {if $objectionform}<div>{$objectionform|safe}</div>{/if}
   </div>
 </div>
 {if $visitstring}<div class="ctime center s">{$visitstring}</div>{/if}
 
-{if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}{/auto_escape}
+{if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}
