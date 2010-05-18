@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>Edit Resume</title>
+<title>Edit_Resume</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Edit Resume</td></tr>
+<tr><td rowspan="1" colspan="3">Edit_Resume</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -29,6 +29,11 @@
 <tr>
 	<td>clickAndWait</td>
 	<td>//a[contains(@href,'/artefact/resume/')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Education &amp; Employment</td>
 	<td></td>
 </tr>
 <tr>
@@ -104,6 +109,196 @@
 <tr>
 	<td>click</td>
 	<td>addeducationhistory_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Introduction</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Date of birth</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>personalinformation_dateofbirth</td>
+	<td>1970/01/01</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>personalinformation_placeofbirth</td>
+	<td>Wellington</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>personalinformation_maritalstatus</td>
+	<td>it's complicated</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>personalinformation_save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>personalinformation_dateofbirth</td>
+	<td>1970/01/01</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>personalinformation_placeofbirth</td>
+	<td>Wellington</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>personalinformation_maritalstatus</td>
+	<td>it's complicated</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Achievements</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>addcertificationbutton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addcertification_date</td>
+	<td>January</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addcertification_title</td>
+	<td>My First Award</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addcertification_description</td>
+	<td>Recognition that I rock</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>addcertification_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>addbookbutton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addbook_date</td>
+	<td>February</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addbook_title</td>
+	<td>Compilation of my best articles</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addbook_contribution</td>
+	<td>None</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addbook_contribution</td>
+	<td>Main author</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addbook_description</td>
+	<td>I wrote the whole book, w00t!</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>addbook_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>addmembershipbutton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addmembership_startdate</td>
+	<td>March</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addmembership_title</td>
+	<td>Associate Member of the New Zealand Society</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>addmembership_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>My First Award</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Associate Member of the New Zealand Society</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Compilation of my best articles (Main author)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Goals</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Personal Goals</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>goalform_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Skills</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Personal Skills</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>skillform_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Interests</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>interests_save</td>
 	<td></td>
 </tr>
 
