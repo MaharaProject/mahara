@@ -44,8 +44,6 @@ class PluginBlocktypeEntireresume extends PluginBlocktype {
     public static function render_instance(BlockInstance $instance, $editing=false) {
         require_once(get_config('docroot') . 'artefact/lib.php');
         $smarty = smarty_core();
-        //$configdata = $instance->get('configdata');
-        //$configdata['viewid'] = $instance->get('view');
 
         // Get data about the resume fields the user has
         $return = '';

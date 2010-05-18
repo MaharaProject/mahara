@@ -220,18 +220,13 @@ class ArtefactTypeContactinformation extends ArtefactTypeResume {
             try {
                 $$f = artefact_instance_from_type($f, $this->get('owner'));
                 $rendered = $$f->render_self(array());
-                $smarty->assign($f, format_whitespace($rendered['html']));
+                $smarty->assign($f, $rendered['html']);
                 $smarty->assign('hascontent', true);
             }
             catch (Exception $e) { }
         }
 
-        $template = 'artefact:resume:fragments/contactinformation.';
-        if (!empty($options['editing'])) {
-            $template .= 'editing.';
-        }
-        $template .= 'tpl';
-        return array('html' => $smarty->fetch($template));
+        return array('html' => $smarty->fetch('artefact:resume:fragments/contactinformation.tpl'));
     }
 
     public static function is_singular() {
