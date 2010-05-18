@@ -256,6 +256,9 @@ class PluginInteractionForum extends PluginInteraction {
             WHERE field = 'indentmode' AND forum = ?",
             array($instance->get('id'))
         );
+        if (!isset($values['indentmode'])) {
+            $values['indentmode'] = 'full_indent';
+        }
         insert_record('interaction_forum_instance_config', (object)array(
             'forum' => $instance->get('id'),
             'field' => 'indentmode',
@@ -268,6 +271,9 @@ class PluginInteractionForum extends PluginInteraction {
             WHERE field = 'maxindent' AND forum = ?",
             array($instance->get('id'))
         );
+        if (!isset($values['maxindent'])) {
+            $values['maxindent'] = 10;
+        }
         insert_record('interaction_forum_instance_config', (object)array(
             'forum' => $instance->get('id'),
             'field' => 'maxindent',
