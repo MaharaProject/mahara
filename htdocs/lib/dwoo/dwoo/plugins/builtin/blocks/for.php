@@ -47,7 +47,7 @@ class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bloc
 		$step = $params['step'];
 		$to = $params['to'];
 
- 		// evaluates which global variables have to be computed
+		// evaluates which global variables have to be computed
 		$varName = '$dwoo.for.'.trim($name, '"\'').'.';
 		$shortVarName = '$.for.'.trim($name, '"\'').'.';
 		$usesAny = strpos($tpl, $varName) !== false || strpos($tpl, $shortVarName) !== false;

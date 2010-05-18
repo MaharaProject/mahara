@@ -387,30 +387,30 @@ class Dwoo_Smarty__Adapter extends Dwoo
 		}
 	}
 
-   	public function is_cached($tpl, $cacheId = null, $compileId = null)
-   	{
-   		return $this->isCached($this->makeTemplate($tpl, $cacheId, $compileId));
-   	}
+	public function is_cached($tpl, $cacheId = null, $compileId = null)
+	{
+		return $this->isCached($this->makeTemplate($tpl, $cacheId, $compileId));
+	}
 
-   	public function append_by_ref($var, &$value, $merge=false)
-   	{
-   		$this->dataProvider->appendByRef($var, $value, $merge);
-   	}
+	public function append_by_ref($var, &$value, $merge=false)
+	{
+		$this->dataProvider->appendByRef($var, $value, $merge);
+	}
 
 	public function assign_by_ref($name, &$val)
 	{
 		$this->dataProvider->assignByRef($name, $val);
 	}
 
-   	public function clear_assign($var)
-   	{
-   		$this->dataProvider->clear($var);
-   	}
+	public function clear_assign($var)
+	{
+		$this->dataProvider->clear($var);
+	}
 
-   	public function clear_all_assign()
-   	{
-   		$this->dataProvider->clear();
-   	}
+	public function clear_all_assign()
+	{
+		$this->dataProvider->clear();
+	}
 
 	public function get_template_vars($name=null)
 	{
@@ -419,22 +419,22 @@ class Dwoo_Smarty__Adapter extends Dwoo
 		}
 
 		$data = $this->dataProvider->getData();
-   		if ($name === null)
-   			return $data;
-   		elseif (isset($data[$name]))
-   			return $data[$name];
-   		return null;
-   	}
+		if ($name === null)
+			return $data;
+		elseif (isset($data[$name]))
+			return $data[$name];
+		return null;
+	}
 
-   	public function clear_all_cache($olderThan = 0)
-   	{
-   		$this->clearCache($olderThan);
-   	}
+	public function clear_all_cache($olderThan = 0)
+	{
+		$this->clearCache($olderThan);
+	}
 
-   	public function clear_cache($template, $cacheId = null, $compileId = null, $olderThan = 0)
-   	{
-   		$this->makeTemplate($template, $cacheId, $compileId)->clearCache($olderThan);
-   	}
+	public function clear_cache($template, $cacheId = null, $compileId = null, $olderThan = 0)
+	{
+		$this->makeTemplate($template, $cacheId, $compileId)->clearCache($olderThan);
+	}
 
 	public function trigger_error($error_msg, $error_type = E_USER_WARNING)
 	{
@@ -450,8 +450,8 @@ class Dwoo_Smarty__Adapter extends Dwoo
 
 	protected function makeTemplate($file, $cacheId, $compileId)
 	{
-   		if ($compileId === null)
-   			$compileId = $this->compile_id;
+		if ($compileId === null)
+			$compileId = $this->compile_id;
 
 		$hash = bin2hex(md5($file.$cacheId.$compileId, true));
 		if (!isset(self::$tplCache[$hash])) {

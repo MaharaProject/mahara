@@ -1,4 +1,4 @@
-// CakePHP Dwoo bridge  -  v0.2 
+// CakePHP Dwoo bridge  -  v0.2
 // ------------------------
 // Installation :
 // ------------------------
@@ -8,8 +8,8 @@
 // line in dwoo.php to include the dwoo library properly.
 //
 // 2. Place this file in the  app/views directory, or on cake/libs/view.
-// 
-// 3. Create the app/tmp/dwoo/cache and app/tmp/dwoo/compile directories 
+//
+// 3. Create the app/tmp/dwoo/cache and app/tmp/dwoo/compile directories
 // and make sure they are writable.
 // ------------------------
 // Usage example :

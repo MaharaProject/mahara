@@ -7,7 +7,7 @@ Dwoo - http://dwoo.org
 CodeIgniter - http://codeigniter.com
 
 Installation:
-1) Extract package into your application directory (i.e. $webroot/application or 
+1) Extract package into your application directory (i.e. $webroot/application or
    $webroot/system/application)
 2) Change the parameters in config/dwootemplate.php
 3) Create the compile and cache directory you set in your config file in step 2

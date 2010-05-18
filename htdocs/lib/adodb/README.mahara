@@ -2,10 +2,10 @@ adodb
 -----
 
 Source: http://adodb.sourceforge.net/
-Version: 4.92
+Version: 5.11
 
 Modifications:
 
-- drivers/adodb-mysql.inc.php (d2b9a10cfa9a64e1cc1a0691adce71bf4203e1d3)
-- drivers/adodb-postgres7.inc.php (4652e5617d9616e3f61e78df5a4c863e16ac5634)
-- adodb/drivers/adodb-postgres64.inc.php (4bdafccba511540e6db92277aa104a23f57209ac)
+- drivers/adodb-mysql.inc.php (24465d23e2ccb3a89629e250a3caab1ee051e90d)
+- drivers/adodb-postgres7.inc.php (af59ab96086a319785ed682420d22dbfcbacb9bc)
+- adodb/drivers/adodb-postgres64.inc.php (d6d8884fabc598aec58e633a6a1e258cd07b3da1)
