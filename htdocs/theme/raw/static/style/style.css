@@ -629,6 +629,7 @@ div.rbuttons .small-logo {
   float: right;
   text-align: right;
   margin-right: 1em;
+  min-width: 20em;
 }
 #right-nav li {
   display: inline;

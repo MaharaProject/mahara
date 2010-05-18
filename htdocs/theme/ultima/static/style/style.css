@@ -402,6 +402,7 @@ input#myfriends_addfriend_add {
 /**************** TOP NAVIGATION ****************/
 #right-nav ul {
   margin: 1.1em 1em 0 0;
+  min-width: 20em;
 }
 #right-nav li {
   padding: 0 0 0 1em;
