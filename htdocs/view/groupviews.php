@@ -38,8 +38,6 @@ require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'group.php');
 require_once('pieforms/pieform.php');
 
-//@todo: group menu; group sideblock
-
 $limit   = param_integer('limit', 5);
 $offset  = param_integer('offset', 0);
 define('GROUP', param_integer('group'));
@@ -50,23 +48,25 @@ if (!is_logged_in() && !$group->public) {
 
 define('TITLE', $group->name . ' - ' . get_string('groupviews', 'view'));
 
-$member = group_user_access($group->id);
-$shared = param_boolean('shared', 0) && $member;
 $can_edit = group_user_can_edit_views($group->id);
 
-$createviewform = pieform(create_view_form($group->id));
-
-$smarty = smarty();
-$smarty->assign('heading', $group->name);
+// If the user can edit group views, show a page similar to the my views
+// page, otherwise just show a list of the views owned by this group that
+// are visible to the user.
 
 if ($can_edit) {
     $data = View::get_myviews_data($limit, $offset, $group->id);
+    $createviewform = pieform(create_view_form($group->id));
 }
 else {
     $data = View::view_search(null, null, (object) array('group' => $group->id), null, $limit, $offset);
+    // Add a copy view form for all templates in the list
+    foreach ($data->data as &$v) {
+        if ($v['template']) {
+            $v['copyform'] = pieform(create_view_form(null, null, $v['id']));
+        }
+    }
 }
-
-$userid = $USER->get('id');
 
 $pagination = build_pagination(array(
     'url' => get_config('wwwroot') . 'view/groupviews.php?group='.$group->id,
@@ -77,16 +77,13 @@ $pagination = build_pagination(array(
     'resultcounttextplural' => get_string('views', 'view')
 ));
 
-$smarty->assign('groupviews', 1);
-$smarty->assign('member', $member);
+$smarty = smarty();
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
-$smarty->assign('createviewform', $createviewform);
 
-if ($can_edit) { // && !$shared) {
+if ($can_edit) {
+    $smarty->assign('createviewform', $createviewform);
     $smarty->display('view/index.tpl');
 } else {
-    $smarty->display('view/sharedviews.tpl');
+    $smarty->display('view/groupviews.tpl');
 }
-
-?>
