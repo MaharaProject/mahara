@@ -1,5 +1,3 @@
-{auto_escape off}
 {include file="header.tpl"}
-{$page_content|clean_html}
+{$page_content|clean_html|safe}
 {include file="footer.tpl"}
-{/auto_escape}

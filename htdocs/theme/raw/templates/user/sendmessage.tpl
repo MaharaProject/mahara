@@ -1,4 +1,3 @@
-{auto_escape off}
 {include file="header.tpl"}
 
 {if $messages}
@@ -18,7 +17,7 @@
         {/if}
               <span class="postedon">{$message->ctime|strtotime|format_date}</span>
             </h5>
-            <div class="messagebody">{$message->message|escape}</div>
+            <div class="messagebody">{$message->message}</div>
           </td>
         </tr>
     {/foreach}
@@ -26,7 +25,6 @@
 </table>
 {/if}
 
-{$form}
+{$form|safe}
 
 {include file="footer.tpl"}
-{/auto_escape}

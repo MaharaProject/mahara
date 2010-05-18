@@ -1,4 +1,3 @@
-{auto_escape off}
 {include file="header.tpl"}
 
 <div class="fl center">
@@ -14,20 +13,20 @@
 <div id="edituser">
     {if $suspended}
     <div class="message">
-      <h4>{$suspendedby|escape}</h4>
-      {if $user->suspendedreason}
+      <h4>{$suspendedby}</h4>
+      {if $user->get('suspendedreason')}
       <div id="suspendreason">
         <h5>{str tag="suspendedreason" section="admin"}:</h5>
-        {$user->suspendedreason|format_whitespace}
+        {$user->suspendedreason}
       </div>
       {/if}
-      {$suspendform2}
+      {$suspendform2|safe}
     </div>
     {/if}
 
     <h3>{str tag="siteaccountsettings" section="admin"}</h3>
     <p>{str tag="usereditdescription" section="admin"}</p>
-    {$siteform}
+    {$siteform|safe}
     <!--<h3>{str tag="suspenduser" section="admin"}</h3>-->
     {if $USER->get('admin') || (!$user->get('admin') && !$user->get('staff')) }
     <div id="suspenddelete">
@@ -35,13 +34,13 @@
     	<p>{str tag="suspenddeleteuserdescription" section=admin}</p>
     	<div id="suspend">
         	<h4>{str tag="suspenduser" section=admin}</h4>
-        	{$suspendform}
+            {$suspendform|safe}
      	</div>
 		{if $USER->get('admin')}
         <div id="delete">
             <h4>{str tag=deleteuser section=admin}</h4>
             <p>{str tag=deleteusernote section=admin}</p>
-            {$deleteform}
+            {$deleteform|safe}
         </div>
 		{/if}
     </div>
@@ -52,11 +51,9 @@
     <div id="institutions">
     	<h3>{str tag="institutionsettings" section="admin"}</h3>
     	<p>{str tag="institutionsettingsdescription" section="admin"}</p>
-    	{$institutionform}
+        {$institutionform|safe}
     </div>
     {/if}
 </div>
 
 {include file="footer.tpl"}
-
-{/auto_escape}

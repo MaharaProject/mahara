@@ -1,4 +1,3 @@
-{auto_escape off}
 {include file='header.tpl' nosearch='true'}
             <h2 class="center">{$upgradeheading}</h2>
             <div class="center js-hidden" id="jsrequiredforupgrade">{str tag=jsrequiredforupgrade section=admin}</div>
@@ -32,4 +31,3 @@
 {include file="columnfullend.tpl"}
 
 {include file='admin/upgradefooter.tpl'}
-{/auto_escape}

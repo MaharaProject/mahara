@@ -1,7 +1,5 @@
-{auto_escape off}
 {include file="header.tpl"}
 <div id="resumewrap">
-{$skillform}
+{$skillform|safe}
 </div>
 {include file="footer.tpl"}
-{/auto_escape}

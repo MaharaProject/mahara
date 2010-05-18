@@ -1,11 +1,10 @@
-{auto_escape off}
     <tr>
         <td style="width: 20px;" rowspan="2">
-            {$formcontrols}
+            {$formcontrols|safe}
         </td>
-        <th><label for="{$elementname}_{$artefact->id}">{if $artefact->blog}{$artefact->blog|escape}: {/if}{$artefact->title|escape}</label></th>
+        <th><label for="{$elementname}_{$artefact->id}">{if $artefact->blog}{$artefact->blog}: {/if}{$artefact->title}{if $artefact->draft} [{str tag=draft section=artefact.blog}]{/if}</label></th>
     </tr>
     <tr>
-        <td>{if $artefact->description}{$artefact->description}{/if}</td>
+        <td>{if $artefact->description}{$artefact->description|clean_html|safe}{/if}</td>
     </tr>
-{/auto_escape}
+

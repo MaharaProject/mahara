@@ -1,10 +1,9 @@
-{auto_escape off}
 {include file="header.tpl"}
 
 {if $GROUP}<h2>{str tag=groupviews section=view}</h2>
 {/if}
             <div class="rbuttons{if $GROUP} pagetabs{/if}">
-                {$createviewform}
+                {$createviewform|safe}
                 <form method="post" action="{$WWWROOT}view/choosetemplate.php">
                     <input type="submit" class="submit" value="{str tag="copyaview" section="view"}">
 {if $GROUP}
@@ -14,7 +13,7 @@
 {/if}
                 </form>
             </div>
-{if $institution}                {$institutionselector}{/if}
+{if $institution}                {$institutionselector|safe}{/if}
 
 {if $views}
             <table id="myviews" class="fullwidth listing">
@@ -29,10 +28,10 @@
 {elseif $view.type == 'grouphomepage'}
                             <h3><a href="{$WWWROOT}group/view.php?id={$GROUP->id}">{str tag=grouphomepage section=view}</a></h3>
 {else}
-                            <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a></h3>
+                            <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a></h3>
 {/if}
 {if $view.submittedto}
-                            <div class="vi submitted-viewitem">{$view.submittedto}</div>
+                            <div class="vi submitted-viewitem">{$view.submittedto|clean_html|safe}</div>
 {else}
                             {if $view.removable}<div class="rbuttons"><a href="{$WWWROOT}view/delete.php?id={$view.id}" class="btn-del">{str tag="deletethisview" section="view"}</a></div>{/if}
                             <div class="vi">
@@ -46,7 +45,7 @@
 {elseif $view.type == 'grouphomepage'}
                                 <div class="videsc">{str tag=grouphomepagedescription section=view}</div>
 {elseif $view.description}
-                                <div class="videsc">{$view.description|clean_html}</div>
+                                <div class="videsc">{$view.description|clean_html|safe}</div>
 {/if}
 {if $view.tags}
                                 <div class="tags">{str tag=tags}: {list_tags owner=$view.owner tags=$view.tags}</div>
@@ -56,13 +55,13 @@
                                 <h4><a href="{$WWWROOT}view/blocks.php?id={$view.id}" id="editthisview">{str tag ="editcontentandlayout" section="view"}</a></h4>
 {if $view.artefacts}
                                 <div class="videsc">{str tag="artefacts" section="view"}:
-                                {foreach from=$view.artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$view.id}" id="link-artefacts">{$artefact.title|escape}</a>{if !$.foreach.artefacts.last}, {/if}{/foreach}</div>
+                                {foreach from=$view.artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$view.id}" id="link-artefacts">{$artefact.title}</a>{if !$.foreach.artefacts.last}, {/if}{/foreach}</div>
 {/if}
                             </div>
 {/if}
                             <div class="vi">
 {if $view.togglepublic}
-                                {$view.togglepublic}
+                                {$view.togglepublic|safe}
 {elseif $view.type != 'profile' && $view.type != 'dashboard' && $view.type != 'grouphomepage'}
                                 <h4><a href="{$WWWROOT}view/access.php?id={$view.id}" id="editviewaccess">{str tag="editaccess" section="view"}</a></h4>
 {/if}
@@ -79,7 +78,7 @@
 {elseif $accessgroup.accesstype == 'friends'}
     <a href="{$WWWROOT}user/myfriends.php" id="link-myfriends">{str tag="friendslower" section="view"}</a>
 {elseif $accessgroup.accesstype == 'group'}
-    <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name|escape}</a>{if $accessgroup.role} ({$accessgroup.roledisplay}){/if}
+    <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name}</a>{if $accessgroup.role} ({$accessgroup.roledisplay}){/if}
 {elseif $accessgroup.accesstype == 'user'}
     <a href="{$WWWROOT}user/view.php?id={$accessgroup.id}">{$accessgroup.id|display_name|escape}</a>
 {elseif $accessgroup.accesstype == 'secreturl'}
@@ -93,17 +92,15 @@
 {/if}
                             </div>
 {if $view.submitto && $view.type != 'profile' && $view.type != 'dashboard'}
-                            <div class="vi submit-viewitem">{$view.submitto}</div>
+                            <div class="vi submit-viewitem">{$view.submitto|safe}</div>
 {/if}
                         </div></td>
                     </tr>
 {/foreach}
                 </tbody>
             </table>
-{$pagination}
+{$pagination|safe}
 {else}
             <div class="message">{if $GROUP}{str tag="noviewstosee" section="group"}{elseif $institution}{str tag="noviews" section="view"}{else}{str tag="youhavenoviews" section="view"}{/if}</div>
 {/if}
 {include file="footer.tpl"}
-
-{/auto_escape}

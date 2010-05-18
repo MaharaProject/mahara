@@ -219,7 +219,7 @@ class ArtefactTypeBlog extends ArtefactType {
         }
 
         $smarty->assign('options', $options);
-        $smarty->assign('description', clean_html($this->get('description')));
+        $smarty->assign('description', $this->get('description'));
         $smarty->assign('owner', $this->get('owner'));
         $smarty->assign('tags', $this->get('tags'));
 
@@ -538,7 +538,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         }
 
         // We need to make sure that the images in the post have the right viewid associated with them
-        $postcontent = clean_html($this->get('description'));
+        $postcontent = $this->get('description');
         if (isset($options['viewid'])) {
             safe_require('artefact', 'file');
             $postcontent = ArtefactTypeFolder::append_view_url($postcontent, $options['viewid']);

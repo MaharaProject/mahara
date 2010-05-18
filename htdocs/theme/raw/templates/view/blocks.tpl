@@ -1,4 +1,3 @@
-{auto_escape off}
 {if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
 <h1>{$maintitle}</h1>
 
@@ -14,10 +13,10 @@
         <div id="page">
             <div id="top-pane">
                 <div id="category-list">
-                    {$category_list}
+                    {$category_list|safe}
                 </div>
                 <div id="blocktype-list">
-                    {$blocktype_list}
+                    {$blocktype_list|safe}
                 </div>
                 <div class="cb"></div>
             </div>
@@ -33,7 +32,7 @@
                         <select id="viewtheme-select" name="viewtheme">
                             <option value="">Choose theme...</option>
 {foreach from=$viewthemes key=themeid item=themename}
-                            <option value="{$themeid|escape}"{if $themeid == $viewtheme} selected="selected" style="font-weight: bold;"{/if}>{$themename|escape}</option>
+                            <option value="{$themeid}"{if $themeid == $viewtheme} selected="selected" style="font-weight: bold;"{/if}>{$themename}</option>
 {/foreach}
                         </select>
                     </td>
@@ -49,7 +48,7 @@
                 	<div id="blocksinstruction" class="center">
                 	    {str tag='blocksintructionnoajax' section='view'}
                 	</div>
-                	    {$columns}
+                        {$columns|safe}
                     <div class="cb"></div>
                 </div>
             </div>
@@ -92,11 +91,10 @@
 {elseif $block}
     <div class="blockconfig-background">
         <div class="blockconfig-container">
-            {$block.html}
+            {$block.html|safe}
         </div>
     </div>
-    {if $block.javascript}<script type="text/javascript">{$block.javascript}</script>{/if}
+    {if $block.javascript}<script type="text/javascript">{$block.javascript|safe}</script>{/if}
 {/if}
 
 {if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}
-{/auto_escape}

@@ -1,29 +1,28 @@
-{auto_escape off}
 <div id="blocktype_externalfeed_feed">
-    {if $feedimage}<div class="fr">{$feedimage}</div>{/if}
+    {if $feedimage}<div class="fr">{$feedimage|safe}</div>{/if}
     <div id="blocktype_externalfeed_title">
-    <a href="{$url|escape}"><img src="{theme_url filename="images/rss.gif"}"></a>
-    {if $link}<a href="{$link|escape}">{/if}
-    {$title|escape}
+    <a href="{$url}"><img src="{theme_url filename="images/rss.gif"}"></a>
+    {if $link}<a href="{$link}">{/if}
+    {$title}
     {if $link}</a>{/if}
     </div>
-    {if $description != $entries[0]->description}<div id="blocktype_externalfeed_desc">{$description|clean_html}</div>{/if}
+    {if $description != $entries[0]->description}<div id="blocktype_externalfeed_desc">{$description|clean_html|safe}</div>{/if}
     <div id="blocktype_externalfeed_entries">
         {if $full}
             {foreach from=$entries item=entry}
                 <h4>
-                {if $entry->link}<a href="{$entry->link|escape}">{/if}
-                {$entry->title|escape}
+                {if $entry->link}<a href="{$entry->link}">{/if}
+                {$entry->title}
                 {if $entry->link}</a>{/if}
                 </h4>
-                {$entry->description|clean_html}
+                {$entry->description|clean_html|safe}
             {/foreach}
         {else}
             <ol>
             {foreach from=$entries item=entry}
                 <li>
-                {if $entry->link}<a href="{$entry->link|escape}">{/if}
-                {$entry->title|escape}
+                {if $entry->link}<a href="{$entry->link}">{/if}
+                {$entry->title}
                 {if $entry->link}</a>{/if}
                 </li>
             {/foreach}
@@ -34,4 +33,4 @@
     {$lastupdated}
     </div>
 </div>
-{/auto_escape}
+

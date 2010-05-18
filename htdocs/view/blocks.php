@@ -148,7 +148,7 @@ foreach (array_reverse($THEME->get_url('style/style.css', true, 'artefact/file')
 // longer available to them.
 if ($viewtheme && !isset($allowedthemes[$viewtheme])) {
     $smarty = smarty(array(), $stylesheets, false, $extraconfig);
-    $smarty->assign('maintitle', hsc(TITLE));
+    $smarty->assign('maintitle', TITLE);
     $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
     $smarty->assign('view', $view->get('id'));
     $smarty->assign('viewtitle', $view->get('title'));
@@ -187,7 +187,7 @@ foreach (array_keys($_POST + $_GET) as $key) {
     }
 }
 
-$smarty->assign('maintitle', hsc(TITLE));
+$smarty->assign('maintitle', TITLE);
 $smarty->assign('displaylink', $displaylink);
 $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
 $smarty->assign('category', $category);

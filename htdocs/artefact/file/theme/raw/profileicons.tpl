@@ -1,6 +1,5 @@
-{auto_escape off}
 {include file="header.tpl"}
-            {$settingsformtag}
+            {$settingsformtag|safe}
             <table id="profileicons" class="hidden tablerenderer">
                 <thead>
                     <tr>
@@ -24,6 +23,5 @@
             <h3>{str tag="uploadprofileicon" section="artefact.file"}</h3>
             <p>{str tag="profileiconsiconsizenotice" section="artefact.file" args=$imagemaxdimensions}</p>
 
-            {$uploadform}
+            {$uploadform|safe}
 {include file="footer.tpl"}
-{/auto_escape}

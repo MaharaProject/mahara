@@ -1,4 +1,3 @@
-{auto_escape off}
 <script type="text/javascript">
     function confirmdelete(id) {
         if(confirm("{str tag=deleteblog? section=artefact.blog}")) {
@@ -9,8 +8,8 @@
   {foreach from=$blogs->data item=blog}
     <tr class="{cycle name=rows values='r0,r1'}">
       <td>
-        <div><strong><a href="{$WWWROOT}artefact/blog/view/?id={$blog->id}">{$blog->title|escape}</a></strong></div>
-        <div>{$blog->description|clean_html}</div>
+        <div><strong><a href="{$WWWROOT}artefact/blog/view/?id={$blog->id}">{$blog->title}</a></strong></div>
+        <div>{$blog->description|clean_html|safe}</div>
       </td>
       <td class="right">
         <a href="{$WWWROOT}artefact/blog/view/?id={$blog->id}">{$blog->postcount}</a>
@@ -20,4 +19,3 @@
       </td>
     </tr>
   {/foreach}
-{/auto_escape}

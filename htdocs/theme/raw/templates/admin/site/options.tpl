@@ -1,6 +1,5 @@
-{auto_escape off}
 {include file="header.tpl"}
 <p>{str tag=siteoptionspagedescription section=admin}</p>
-{$siteoptionform}
+{$siteoptionform|safe}
 {include file="footer.tpl"}
-{/auto_escape}
+

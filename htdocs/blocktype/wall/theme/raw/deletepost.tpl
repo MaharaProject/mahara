@@ -1,7 +1,5 @@
-{auto_escape off}
 {include file="header.tpl"}
 
-<div class="message">{$deleteform}</div>
+<div class="message">{$deleteform|safe}</div>
 
 {include file="footer.tpl"}
-{/auto_escape}
