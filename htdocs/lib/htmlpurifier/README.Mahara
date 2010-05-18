@@ -10,3 +10,4 @@ content.
 Changes:
 
  * Patched youtube filter to support videos at http://www.youtube.com/cp/[id]
+   (c0705779f9d106f34be35e4558b118ff245ed15c)
