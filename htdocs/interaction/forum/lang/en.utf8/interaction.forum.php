@@ -166,4 +166,11 @@ $string['yesterday'] = 'Yesterday';
 $string['strftimerecentrelative'] = '%%v, %%k:%%M';
 $string['strftimerecentfullrelative'] = '%%v, %%l:%%M %%p';
 
+$string['indentmode'] = 'Forum Indent Mode';
+$string['indentfullindent'] = 'Fully expand';
+$string['indentmaxindent'] = 'Expand to max';
+$string['indentflatindent'] = 'No indents';
+$string['indentmodedescription'] = 'Specify how topics in this forum should be indented.';
+$string['maxindent'] = 'Maximum Indent Level';
+$string['maxindentdescription'] = 'Set the maximum indention level for a topic. This only applies if Indent mode has been set to Expand to max';
 ?>

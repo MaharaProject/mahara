@@ -35,6 +35,8 @@ class PluginInteractionForum extends PluginInteraction {
             $autosubscribe = isset($instanceconfig['autosubscribe']) ? $instanceconfig['autosubscribe']->value : false;
             $weight = isset($instanceconfig['weight']) ? $instanceconfig['weight']->value : null;
             $createtopicusers = isset($instanceconfig['createtopicusers']) ? $instanceconfig['createtopicusers']->value : null;
+            $indentmode = isset($instanceconfig['indentmode']) ? $instanceconfig['indentmode']->value : null;
+            $maxindent = isset($instanceconfig['maxindent']) ? $instanceconfig['maxindent']->value : null;
 
             $moderators = get_column_sql(
                 'SELECT fm.user FROM {interaction_forum_moderator} fm
@@ -119,6 +121,30 @@ class PluginInteractionForum extends PluginInteraction {
                         'defaultvalue' => (isset($createtopicusers) && $createtopicusers == 'moderators') ? 'moderators' : 'members',
                         'rules' => array(
                             'required' => true,
+                        ),
+                    ),
+                    'indentmode' => array(
+                        'type'         => 'select',
+                        'title'        => get_string('indentmode', 'interaction.forum'),
+                        'options'      => array('full_indent'  => get_string('indentfullindent', 'interaction.forum'),
+                                                'max_indent'   => get_string('indentmaxindent', 'interaction.forum'),
+                                                'no_indent'    => get_string('indentflatindent', 'interaction.forum') ),
+                        'description'  => get_string('indentmodedescription', 'interaction.forum'),
+                        'defaultvalue' => isset($indentmode) ? $indentmode : 'full_indent',
+                        'rules' => array(
+                            'required' => true,
+                        ),
+                    ),
+                    'maxindent' => array(
+                        'type'         => 'text',
+                        'title'        => get_string('maxindent', 'interaction.forum'),
+                        'size'         => 2,
+                        'description'  => get_string('maxindentdescription', 'interaction.forum'),
+                        'defaultvalue' => isset($maxindent) ? $maxindent : 10,
+                        'rules' => array(
+                            'integer' => true,
+                            'minvalue' => 1,
+                            'maxvalue' => 100,
                         ),
                     ),
                 )
@@ -222,6 +248,30 @@ class PluginInteractionForum extends PluginInteraction {
             'forum' => $instance->get('id'),
             'field' => 'createtopicusers',
             'value' => $values['createtopicusers'] == 'moderators' ? 'moderators' : 'members',
+        ));
+
+        //Indent mode
+        delete_records_sql(
+            "DELETE FROM {interaction_forum_instance_config}
+            WHERE field = 'indentmode' AND forum = ?",
+            array($instance->get('id'))
+        );
+        insert_record('interaction_forum_instance_config', (object)array(
+            'forum' => $instance->get('id'),
+            'field' => 'indentmode',
+            'value' => $values['indentmode'],
+        ));
+
+        //Max indent
+        delete_records_sql(
+            "DELETE FROM {interaction_forum_instance_config}
+            WHERE field = 'maxindent' AND forum = ?",
+            array($instance->get('id'))
+        );
+        insert_record('interaction_forum_instance_config', (object)array(
+            'forum' => $instance->get('id'),
+            'field' => 'maxindent',
+            'value' => $values['maxindent'],
         ));
 
 

@@ -62,6 +62,10 @@ define('GROUP', $topic->groupid);
 $membership = user_can_access_forum((int)$topic->forumid);
 $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
+$forumconfig = get_records_assoc('interaction_forum_instance_config', 'forum', $topicid, '', 'field,value');
+$indentmode = isset($forumconfig['indentmode']) ? $forumconfig['indentmode']->value : 'full_indent';
+$maxindentdepth = isset($forumconfig['maxindent']) ? $forumconfig['maxindent']->value : 10;
+
 if (!$membership
     && !get_field('group', 'public', 'id', $topic->groupid)) {
     throw new GroupAccessDeniedException(get_string('cantviewtopic', 'interaction.forum'));
@@ -164,7 +168,7 @@ execute_sql('
 );
 
 // builds the first post (with index 0) which has as children all the posts in the topic
-$posts = buildpost(0, '', $posts);
+$posts = buildpostlist($posts, $indentmode, $maxindentdepth);
 
 $smarty = smarty();
 $smarty->assign('topic', $topic);
@@ -173,18 +177,116 @@ $smarty->assign('moderator', $moderator);
 $smarty->assign('posts', $posts);
 $smarty->display('interaction:forum:topic.tpl');
 
-/**
- * builds a post (including its children)
+function buildpostlist(&$posts, $mode, $max_depth) {
+    switch ($mode) {
+        case 'no_indent':
+            //no indent
+            return buildflatposts($posts);
+            break;
+        case 'max_indent':
+            buildsubjects(0, '', $posts);
+            $new_posts = array();
+            buildmaxindentposts(0, $posts, $max_depth);
+            $new_posts = buildpost(0, $posts);
+            return renderpost($new_posts);
+            break;
+        case 'full_indent':
+        default:
+            buildsubjects(0, '', $posts);
+            $new_posts = buildpost(0, $posts);
+            return renderpost($new_posts);
+            break;
+    }
+}
+
+
+/*
+ * Sorts posts so that if there parent is too deep will take the nearest ancestor of the right depth
  *
- * @param int $postindex the index of the post
- * @param string $parentsubject the subject of the parent
- * @param array $posts the posts in the topic
- *
- * @returns string the html for the post
+ * @param int $postindex the current index
+ * @param array $posts list of posts
+ * @param int $max_depth the maximum depth to indent to
+ * @oaram int $current_depth the current depth
+ * @param int $current_parent the current post parent/ancestor
  */
 
-function buildpost($postindex, $parentsubject, &$posts){
+function buildmaxindentposts($postindex, &$posts, $max_depth, $current_depth = 0, $current_parent = 0) {
     global $moderator, $topic, $groupadmins;
+    $localposts = $posts;
+
+    $current_depth++;
+    foreach ($localposts as $index => $post) {
+        if ($posts[$index]->parent == $posts[$postindex]->id) {
+            if ($current_depth < $max_depth) {
+                $current_parent = $posts[$postindex]->id;
+            } else {
+                $posts[$index]->parent = $current_parent;
+            }
+            buildmaxindentposts($index, $posts, $max_depth, $current_depth, $current_parent);
+        }
+    }
+}
+
+/*
+ * Renders a post and its children
+ *
+ * @param object $post post object
+ *
+ * @return string html output
+ */
+
+function renderpost($post) {
+    global $moderator, $topic, $groupadmins;
+    $children = array();
+    if (isset($post->children) && !empty($post->children)) {
+        foreach ($post->children as $index=>$child_post) {
+            $children[] = renderpost($child_post);
+        }
+    }
+    $membership = user_can_access_forum((int)$topic->forumid);
+    $smarty = smarty_core();
+    $smarty->assign('post', $post);
+    $smarty->assign('groupadmins', $groupadmins);
+    $smarty->assign('children', $children);
+    $smarty->assign('moderator', $moderator);
+    $smarty->assign('membership', $membership);
+    $smarty->assign('closed', $topic->closed);
+    return $smarty->fetch('interaction:forum:post.tpl');
+}
+
+/**
+ * Builds a flat list of posts
+ *
+ * @param array $posts the posts in the topic
+ *
+ * @returns string the html for the topc
+ */
+
+function buildflatposts(&$posts) {
+    buildsubjects(0, '', $posts);
+    $localposts = $posts;
+    $first_post = array_shift($localposts);
+    if (!isset($first_post->subject) || empty($first_post->subject)) {
+        $first_post = get_string('re', 'interaction.forum', '');
+    }
+
+    $children = array();
+    foreach ($localposts as $index => $post) {
+        $children[] = $post;
+    }
+    $first_post->children = $children;
+    return renderpost($first_post);
+}
+
+/*
+ * Builds subjects for the topic
+ *
+ * @param int $postindex index of the post
+ * @param string $parentsubject subject title of the parent post
+ * @param array $posts the posts in the topic
+ */
+
+function buildsubjects($postindex, $parentsubject, &$posts) {
     $localposts = $posts;
     if ($posts[$postindex]->subject) {
         $parentsubject = $posts[$postindex]->subject;
@@ -192,21 +294,34 @@ function buildpost($postindex, $parentsubject, &$posts){
     else {
         $posts[$postindex]->subject = get_string('re', 'interaction.forum', $parentsubject);
     }
+    foreach ($localposts as $index => $post) {
+        if ($posts[$index]->parent == $posts[$postindex]->id) {
+            buildsubjects($index, $posts[$postindex]->subject, $posts);
+        }
+    }
+}
+
+/**
+ * Sorts children posts into their parent
+ * 
+ * @param int $postindex the index of the post
+ * @param array $posts the posts in the topic
+ *
+ * @returns array the html for the post
+ */
+
+function buildpost($postindex, &$posts){
+    global $moderator, $topic, $groupadmins;
+    $localposts = $posts;
+
     $children = array();
     foreach ($localposts as $index => $post) {
         if ($posts[$index]->parent == $posts[$postindex]->id) {
-            $children[] = buildpost($index, $parentsubject, $posts);
+            $children[] = buildpost($index, $posts);
         }
     }
-    $membership = user_can_access_forum((int)$topic->forumid);
-    $smarty = smarty_core();
-    $smarty->assign('post', $posts[$postindex]);
-    $smarty->assign('groupadmins', $groupadmins);
-    $smarty->assign('children', $children);
-    $smarty->assign('moderator', $moderator);
-    $smarty->assign('membership', $membership);
-    $smarty->assign('closed', $topic->closed);
-    return $smarty->fetch('interaction:forum:post.tpl');
+    $posts[$postindex]->children = $children;
+    return $posts[$postindex];
 }
 
 function subscribe_topic_validate(Pieform $form, $values) {
