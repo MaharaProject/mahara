@@ -27,30 +27,28 @@
 
 defined('INTERNAL') || die();
 raise_memory_limit("512M");
-require_once('pear/File.php');
-require_once('pear/File/CSV.php');
+
+define('MAX_LINE_LENGTH', 1024);
 
 /**
  * TODO: Document how this class should be used.
  */
 class CsvFile {
     protected $allowedkeys = array();
-    protected $conf;
     protected $data;
     protected $errors = array();
-    protected $filename;
+    protected $filehandle = false;
     protected $format = array();
     protected $headerExists = true;
     protected $mandatoryfields;
 
     public function __construct($filename = '') {
         if (!empty($filename) && file_exists($filename)) {
-            $this->filename = $filename;
-            $this->conf = File_CSV::discoverFormat($filename);
+            if (($this->filehandle = fopen($filename, 'r')) !== false) {
+                return;
+            }
         }
-        else {
-            $this->errors['file'] = get_string('invalidfilename', 'admin', $filename);
-        }
+        $this->errors['file'] = get_string('invalidfilename', 'admin', $filename);
     }
 
     public function get($field) {
@@ -83,6 +81,9 @@ class CsvFile {
             return $csvfile;
         }
         $this->parse_data();
+        if ($this->filehandle !== false) {
+            fclose($this->filehandle);
+        }
         $csvfile->errors = $this->errors;
         if (empty($this->format) && empty($this->errors)) {
             throw new SystemException('CSV File has no headers');
@@ -100,10 +101,12 @@ class CsvFile {
     }
 
     private function parse_data() {
-        // Note: readQuoted will fill the array with empty values when there is
-        // no data in a line for that field
+        if (false === $this->filehandle) {
+            return; // file is not open
+        }
+
         $i = 0;
-        while ($line = File_CSV::readQuoted($this->filename, $this->conf)) {
+        while (($line = fgetcsv($this->filehandle, MAX_LINE_LENGTH)) !== false) {
             $i++;
             // Get the format of the file
             if ($this->headerExists && $i == 1) {
