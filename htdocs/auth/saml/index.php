@@ -57,6 +57,9 @@ require(dirname(__FILE__) . '/init.php');
 
 // get the config pointing to the SAML library - and load it
 $samllib = get_config_plugin('auth', 'saml', 'simplesamlphplib');
+if (null === $samllib) {
+    exit(0);
+}
 require_once($samllib.'/lib/_autoload.php');
 
 // point at the configured config directory
