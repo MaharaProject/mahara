@@ -1176,5 +1176,13 @@ class LiveUser extends User {
         $this->reset_institutions();
         $this->commit();
     }
+
+    public function reset_institutions() {
+        global $THEME;
+        parent::reset_institutions();
+        if (isset($THEME->basename) && $this->theme != $THEME->basename && !defined('INSTALLER')) {
+            $THEME = new Theme($this->theme);
+        }
+    }
 }
 ?>
