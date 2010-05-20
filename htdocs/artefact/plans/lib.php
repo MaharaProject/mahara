@@ -62,12 +62,6 @@ class ArtefactTypePlans extends ArtefactType {
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
-
-        if ($artefact = get_record('artefact_plans_plan', 'artefact', $id)) {
-            foreach ($fields = $this->get_plan_fields() as $field) {
-              $this->$field = $artefact->$field;
-            }
-        }
     }
 
     public static function is_singular() {
@@ -82,6 +76,10 @@ class ArtefactTypePlans extends ArtefactType {
         // @todo Catalyst IT Ltd
     }
 
+    /**
+    * Gets the list of fields for a plan
+    *
+    */
     public function get_plan_fields() {
         return array(
             'title',
@@ -91,6 +89,10 @@ class ArtefactTypePlans extends ArtefactType {
         );
     }
 
+    /**
+    * Commits the current artefact to the database
+    *
+    */
     public function commit() {
 
         // Return whether or not the commit worked
@@ -129,27 +131,32 @@ class ArtefactTypePlans extends ArtefactType {
         return $success;
     }
 
-    // users existing plans (used in displaying list)
-    static function get_plans() {
+    /**
+    * Gets the existing plans for the current user
+    *
+    */
+    public static function get_plans() {
         global $USER;
 
         $records = array();
         $owner = $USER->get('id');
 
-        $sql = "SELECT ar.artefact, ar.id, ar.completiondate, ar.completed, ar.title, ar.description, a.owner
-            FROM {artefact} a
-            JOIN {artefact_plans_plan} ar ON ar.artefact = a.id
-            WHERE a.owner = ? AND a.artefacttype = 'plans'
-            GROUP BY ar.artefact, ar.id, ar.completiondate, ar.completed, ar.title, ar.description, a.owner
-            ORDER BY ar.completiondate ASC";
+        $sql = "SELECT ar.*, a.owner
+                    FROM {artefact} a
+                    JOIN {artefact_plans_plan} ar ON ar.artefact = a.id
+                        WHERE a.owner = ? AND a.artefacttype = 'plans'
+                        ORDER BY ar.completiondate ASC";
 
         $records = get_records_sql_array($sql, array($owner));
 
         return $records;
     }
 
-    // get new plan form
-    static function get_form() {
+    /**
+    * Gets the new/edit plans form
+    *
+    */
+    public static function get_form() {
         require_once(get_config('libroot') . 'pieforms/pieform.php');
         $elements = call_static_method(generate_artefact_class_name('plans'), 'get_plansform_elements');
         $elements['submit'] = array(
@@ -167,8 +174,11 @@ class ArtefactTypePlans extends ArtefactType {
         return pieform($plansform);
     }
 
-    // new plan form elements
-    static function get_plansform_elements() {
+    /**
+    * The new/edit fields for the plans form
+    *
+    */
+    public static function get_plansform_elements() {
         return array(
             'completiondate' => array(
                 'type'       => 'calendar',
@@ -208,21 +218,26 @@ class ArtefactTypePlans extends ArtefactType {
         );
     }
 
-    public function plansform_submit(Pieform $form, $values) {
+    /**
+    * Submits the new/edited plans to save
+    *
+    * @param $form Pieform structure
+    * @param $values array the values from the pieform
+    */
+    public static function plansform_submit(Pieform $form, $values) {
         global $USER, $SESSION;
 
-        $userid = $USER->get('id');
-
+        // new artefact
         if (empty($values['artefact'])) {
             $artefact = new ArtefactTypePlans(0, array(
-                'owner' => $userid,
+                'owner' => $USER->get('id'),
                 'title' => $values['title'],
                 'description' => !empty($values['description']) ? $values['description'] : '',
                 'completiondate' => $values['completiondate'],
                 'completed' => $values['completed'] ? $values['completed'] : 0,
             ));
-
         }
+        // existing artefact
         else if (!empty($values['artefact'])) {
             if (!$data = get_record('artefact','id',$values['artefact'])) {
                 throw new ArtefactNotFoundException(get_string('artefactnotfound', 'error', $values['artefact']));
@@ -237,7 +252,6 @@ class ArtefactTypePlans extends ArtefactType {
             else {
                 $artefact->set('completed', $values['completed']);
             }
-
         }
 
         if ($artefact->commit()) {
@@ -252,7 +266,7 @@ class ArtefactTypePlans extends ArtefactType {
 
     /**
     * Takes a pieform that's been set up by all the
-    * subclass get_addform_elements functions
+    * subclass get_plansform_elements functions
     * and puts the default values in (and hidden id field)
     * ready to be an edit form
     *
@@ -281,6 +295,10 @@ class ArtefactTypePlans extends ArtefactType {
         );
     }
 
+    /**
+    * Deletes the current plan
+    *
+    */
     public function delete() {
         db_begin();
 
