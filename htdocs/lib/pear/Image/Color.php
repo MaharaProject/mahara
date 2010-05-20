@@ -6,11 +6,28 @@
  *
  * PHP versions 4 and 5
  *
- * LICENSE: This source file is subject to version 3.0 of the PHP license
+ * This package is released under both the LGPL and PHP licenses.
+ *
+ *
+ * This source file is subject to version 3.0 of the PHP license
  * that is available through the world-wide-web at the following URI:
  * http://www.php.net/license/3_0.txt.  If you did not receive a copy of
  * the PHP License and are unable to obtain it through the web, please
  * send a note to license@php.net so we can mail you a copy immediately.
+ *
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.1 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  *
  * @category    Image
  * @package     Image_Color
@@ -18,7 +35,7 @@
  * @author      Andrew Morton <drewish@katherinehouse.com>
  * @copyright   2003-2005 The PHP Group
  * @license     http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version     CVS: $Id: Color.php,v 1.17 2008/10/26 18:27:10 clockwerx Exp $
+ * @version     CVS: $Id: Color.php 299528 2010-05-20 17:45:25Z drewish $
  * @link        http://pear.php.net/package/Image_Color
  */
 
