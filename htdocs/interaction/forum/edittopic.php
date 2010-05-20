@@ -65,11 +65,11 @@ else { // edit topic
 $forum = get_record_sql(
     'SELECT f.group AS groupid, f.title, g.name AS groupname, g.grouptype, ic.value AS newtopicusers
     FROM {interaction_instance} f
-    INNER JOIN {group} g ON (g.id = f.group AND g.deleted = ?)
+    INNER JOIN {group} g ON (g.id = f.group AND g.deleted = 0)
     LEFT OUTER JOIN {interaction_forum_instance_config} ic ON (f.id = ic.forum AND ic.field = \'createtopicusers\')
     WHERE f.id = ?
-    AND f.deleted != ?',
-    array(0, $forumid, 1)
+    AND f.deleted != 1',
+    array($forumid)
 );
 if (!$forum) {
     throw new NotFoundException(get_string('cantfindforum', 'interaction.forum', $forumid));
