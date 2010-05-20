@@ -1132,6 +1132,7 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
         $adminsql   = "CAST('admin' AS TEXT)";
         $empty      = "CAST('' AS TEXT)";
     }
+    // TODO: make it work on other databases?
 
     // Different filters join on the different kinds of association
     if ($filter == 'admin') {

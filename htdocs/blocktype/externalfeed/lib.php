@@ -50,6 +50,9 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             else if (is_mysql()) {
                 execute_sql('ALTER TABLE {blocktype_externalfeed_data} ADD UNIQUE {blocextedata_url_uix} (url(255))');
             }
+            else {
+                // TODO: support other databases
+            }
         }
     }
 

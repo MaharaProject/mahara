@@ -388,7 +388,7 @@ function user_stats_table($limit, $offset) {
         return $result;
     }
 
-    $day = is_postgres() ? "to_date(t.ctime::text, 'YYYY-MM-DD')" : 'DATE(t.ctime)';
+    $day = is_postgres() ? "to_date(t.ctime::text, 'YYYY-MM-DD')" : 'DATE(t.ctime)'; // TODO: make work on other databases?
 
     $daterange = get_record_sql(
         "SELECT
