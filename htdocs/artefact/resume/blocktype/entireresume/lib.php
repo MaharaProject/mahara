@@ -109,8 +109,8 @@ class PluginBlocktypeEntireresume extends PluginBlocktype {
                 SELECT id
                 FROM {artefact}
                 WHERE artefacttype IN(' . $artefacttypes . ')
-                AND owner = (
-                    SELECT owner
+                AND "owner" = (
+                    SELECT "owner"
                     FROM {view}
                     WHERE id = ?
                 )', array($blockinstance->get('view')));

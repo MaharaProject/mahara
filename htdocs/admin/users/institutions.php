@@ -417,8 +417,8 @@ function institution_submit(Pieform $form, $values) {
             $hostwwwroot = null;
             foreach ($authinstances as $ai) {
                 if ($ai->id == $instanceid && $ai->authname == 'xmlrpc') {
-                    $hostwwwroot = get_field_sql("SELECT value FROM {auth_instance_config} WHERE instance = ? AND field = 'wwwroot'", array($instanceid));
-                    if ($hostwwwroot && count_records_select('auth_instance_config', "field = 'wwwroot' AND value = ?", array($hostwwwroot)) == 1) {
+                    $hostwwwroot = get_field_sql("SELECT \"value\" FROM {auth_instance_config} WHERE \"instance\" = ? AND field = 'wwwroot'", array($instanceid));
+                    if ($hostwwwroot && count_records_select('auth_instance_config', "field = 'wwwroot' AND \"value\" = ?", array($hostwwwroot)) == 1) {
                         // Unfortunately, it's possible that this host record could belong to a different institution,
                         // so specify the institution here.
                         delete_records('host', 'wwwroot', $hostwwwroot, 'institution', $institution);

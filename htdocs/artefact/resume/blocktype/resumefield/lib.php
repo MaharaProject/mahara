@@ -196,7 +196,7 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
             if (!empty($impcfg['artefacttype'])) {
                 if ($artefactid = get_field_sql("SELECT id
                     FROM {artefact}
-                    WHERE owner = ?
+                    WHERE \"owner\" = ?
                     AND artefacttype = ?
                     AND artefacttype IN (
                         SELECT name

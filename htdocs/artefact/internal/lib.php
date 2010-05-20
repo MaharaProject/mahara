@@ -158,7 +158,7 @@ class PluginArtefactInternal extends PluginArtefact {
         if (!isset($cache[$owner])) {
             $cache[$owner] = get_records_sql_assoc("SELECT id, artefacttype, title
                 FROM {artefact}
-                WHERE owner = ?
+                WHERE \"owner\" = ?
                 AND artefacttype IN (
                     SELECT name
                     FROM {artefact_installed_type}
@@ -226,7 +226,7 @@ class PluginArtefactInternal extends PluginArtefact {
                     if (!isset($cache[$owner])) {
                         $cache[$owner] = get_records_sql_assoc("SELECT artefacttype, id
                             FROM {artefact}
-                            WHERE owner = ?
+                            WHERE \"owner\" = ?
                             AND artefacttype IN (
                                 SELECT name
                                 FROM {artefact_installed_type}

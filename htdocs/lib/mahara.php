@@ -1617,11 +1617,11 @@ function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null
                 CASE WHEN accesstype = \'friends\' THEN 4 ELSE 1 END AS typeorder,
                 ' . db_format_tsfield('startdate') . ', ' . db_format_tsfield('stopdate') . '
             FROM {view_access}
-            WHERE view = ?
+            WHERE "view" = ?
         UNION
             SELECT \'user\' AS type, 2 AS typeorder, ' . db_format_tsfield('startdate') . ', ' . db_format_tsfield('stopdate') . '
             FROM {view_access_usr}
-            WHERE view = ? AND usr = ?
+            WHERE "view" = ? AND usr = ?
         UNION
             SELECT \'group\' AS type, 3 AS typeorder, ' . db_format_tsfield('startdate') . ', ' . db_format_tsfield('stopdate') . '
             FROM
@@ -1658,7 +1658,7 @@ function get_view_from_token($token, $visible=true) {
         return false;
     }
     return get_field_sql('
-        SELECT view
+        SELECT "view"
         FROM {view_access_token}
         WHERE token = ? AND visible = ?
             AND (startdate IS NULL OR startdate < current_timestamp)
@@ -1839,7 +1839,7 @@ function _get_views_trim_list(&$list, &$users, $limit) {
 
 function artefact_in_view($artefact, $view) {
     $sql = 'SELECT a.id 
-            FROM {view_artefact} a WHERE view = ? AND artefact = ?
+            FROM {view_artefact} a WHERE "view" = ? AND artefact = ?
             UNION
             SELECT c.parent 
             FROM {view_artefact} top JOIN {artefact_parent_cache} c

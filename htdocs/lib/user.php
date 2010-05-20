@@ -129,8 +129,8 @@ function change_language($userid, $oldlang, $newlang) {
         safe_require('artefact', 'file');
         ArtefactTypeFolder::change_language($userid, $oldlang, $newlang);
     }
-    set_field_select('artefact_tag', 'tag', get_string_from_language($newlang, 'profile'), 'WHERE tag = ? AND artefact IN (SELECT id FROM {artefact} WHERE owner = ?)', array(get_string_from_language($oldlang, 'profile'), $userid));
-    set_field_select('view_tag', 'tag', get_string_from_language($newlang, 'profile'), 'WHERE tag = ? AND view IN (SELECT id FROM {view} WHERE owner = ?)', array(get_string_from_language($oldlang, 'profile'), $userid));
+    set_field_select('artefact_tag', 'tag', get_string_from_language($newlang, 'profile'), 'WHERE tag = ? AND artefact IN (SELECT id FROM {artefact} WHERE "owner" = ?)', array(get_string_from_language($oldlang, 'profile'), $userid));
+    set_field_select('view_tag', 'tag', get_string_from_language($newlang, 'profile'), 'WHERE tag = ? AND "view" IN (SELECT id FROM {view} WHERE "owner" = ?)', array(get_string_from_language($oldlang, 'profile'), $userid));
 }
 
 /** 
@@ -441,7 +441,7 @@ function can_receive_email($userto) {
     }
 
     // Retrieve data for this mail address
-    if (!$mailinfo = get_record_select('artefact_internal_profile_email', 'owner = ? AND email = ?', array($userto->id, $userto->email))) {
+    if (!$mailinfo = get_record_select('artefact_internal_profile_email', '"owner" = ? AND email = ?', array($userto->id, $userto->email))) {
         // Since we don't know who this address belongs to, we must return
         // an object. They're not disabled, we just don't know about them.
         return new StdClass;
@@ -540,7 +540,7 @@ function update_send_count($userto, $reset=false) {
         // We need a user id to update the send count.
         return false;
     }
-    if ($mailinfo = get_record_select('artefact_internal_profile_email', 'owner = ? AND email = ? AND principal = 1', array($userto->id, $userto->email))) {
+    if ($mailinfo = get_record_select('artefact_internal_profile_email', '"owner" = ? AND email = ? AND principal = 1', array($userto->id, $userto->email))) {
         $mailinfo->mailssent = (!empty($reset)) ? 0 : $mailinfo->mailssent+1;
         update_record('artefact_internal_profile_email', $mailinfo, array('email' => $userto->email, 'owner' => $userto->id));
     }
@@ -558,7 +558,7 @@ function update_bounce_count($userto, $reset=false) {
         // We need a user id to update the bounce count.
         return false;
     }
-    if ($mailinfo = get_record_select('artefact_internal_profile_email', 'owner = ? AND email = ? AND principal = 1', array($userto->id, $userto->email))) {
+    if ($mailinfo = get_record_select('artefact_internal_profile_email', '"owner" = ? AND email = ? AND principal = 1', array($userto->id, $userto->email))) {
         $mailinfo->mailsbounced = (!empty($reset)) ? 0 : $mailinfo->mailsbounced+1;
         update_record('artefact_internal_profile_email', $mailinfo, array('email' => $userto->email, 'owner' => $userto->id));
     }
@@ -602,7 +602,7 @@ function process_email($address) {
 
     switch ($email->type) {
     case 'B': // E-mail bounces
-        if ($user = get_record_select('artefact_internal_profile_email', 'owner = ? AND principal = 1', array($email->userid))) {
+        if ($user = get_record_select('artefact_internal_profile_email', '"owner" = ? AND principal = 1', array($email->userid))) {
             $mailprefix = get_config('bounceprefix');
             $maildomain = get_config('bouncedomain');
             $installation_key = get_config('installation_key');
@@ -887,7 +887,7 @@ function is_friend($userid1, $userid2) {
  * @param int $userid2
  */
 function get_friend_request($userid1, $userid2) {
-    return get_record_select('usr_friend_request', '(owner = ? AND requester = ?) OR (requester = ? AND owner = ?)',
+    return get_record_select('usr_friend_request', '("owner" = ? AND requester = ?) OR (requester = ? AND "owner" = ?)',
                              array($userid1, $userid2, $userid1, $userid2));
         
 } 

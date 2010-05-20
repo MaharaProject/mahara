@@ -37,7 +37,7 @@ $group = get_record('group', 'id', $id);
 $group->admins = get_column_sql("SELECT member
     FROM {group_member}
     WHERE \"group\" = ?
-    AND role = 'admin'", array($group->id));
+    AND \"role\" = 'admin'", array($group->id));
 
 $filecounts = ArtefactTypeFileBase::count_user_files(null, $group->id, null);
 

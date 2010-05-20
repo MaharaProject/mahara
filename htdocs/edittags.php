@@ -85,11 +85,11 @@ function edit_tag_submit(Pieform $form, $values) {
     }
     db_begin();
     execute_sql(
-        "UPDATE {view_tag} SET tag = ? WHERE tag = ? AND view IN (SELECT id FROM {view} WHERE owner = ?)",
+        "UPDATE {view_tag} SET tag = ? WHERE tag = ? AND \"view\" IN (SELECT id FROM {view} WHERE \"owner\" = ?)",
         array($values['tagname'], $tag, $userid)
     );
     execute_sql(
-        "UPDATE {artefact_tag} SET tag = ? WHERE tag = ? AND artefact IN (SELECT id FROM {artefact} WHERE owner = ?)",
+        "UPDATE {artefact_tag} SET tag = ? WHERE tag = ? AND artefact IN (SELECT id FROM {artefact} WHERE \"owner\" = ?)",
         array($values['tagname'], $tag, $userid)
     );
     db_commit();
@@ -104,11 +104,11 @@ function delete_tag_submit(Pieform $form, $values) {
     }
     db_begin();
     execute_sql(
-        "DELETE FROM {view_tag} WHERE tag = ? AND view IN (SELECT id FROM {view} WHERE owner = ?)",
+        "DELETE FROM {view_tag} WHERE tag = ? AND view IN (SELECT id FROM {view} WHERE \"owner\" = ?)",
         array($tag, $userid)
     );
     execute_sql(
-        "DELETE FROM {artefact_tag} WHERE tag = ? AND artefact IN (SELECT id FROM {artefact} WHERE owner = ?)",
+        "DELETE FROM {artefact_tag} WHERE tag = ? AND artefact IN (SELECT id FROM {artefact} WHERE \"owner\" = ?)",
         array($tag, $userid)
     );
     db_commit();

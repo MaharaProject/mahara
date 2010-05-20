@@ -39,7 +39,7 @@ $id = param_integer('id', null);
 if (is_null($id)) {
     if (!$records = get_records_select_array(
             'artefact',
-            "artefacttype = 'blog' AND owner = ?",
+            "artefacttype = 'blog' AND \"owner\" = ?",
             array($USER->get('id')),
             'id ASC'
         )) {

@@ -422,7 +422,7 @@ function group_remove_user($groupid, $userid=null, $force=false) {
     delete_records_sql(
         'DELETE FROM {view_access_group}
         WHERE "group" = ?
-        AND view IN (
+        AND "view" IN (
             SELECT v.id
             FROM {view} v
             WHERE v.owner = ?
@@ -750,10 +750,10 @@ function group_view_submission_form_submit(Pieform $form, $values) {
  * @return array
  */
 function group_get_admin_ids($groupid) {
-    return (array)get_column_sql("SELECT member
+    return (array)get_column_sql("SELECT \"member\"
         FROM {group_member}
         WHERE \"group\" = ?
-        AND role = 'admin'", $groupid);
+        AND \"role\" = 'admin'", $groupid);
 }
 
 /**
@@ -763,7 +763,7 @@ function group_get_admin_ids($groupid) {
  * @return array
  */
 function group_get_role_info($groupid) {
-    $roles = get_records_sql_assoc('SELECT role, edit_views, see_submitted_views, gr.grouptype FROM {grouptype_roles} gr
+    $roles = get_records_sql_assoc('SELECT "role", edit_views, see_submitted_views, gr.grouptype FROM {grouptype_roles} gr
         INNER JOIN {group} g ON g.grouptype = gr.grouptype
         WHERE g.id = ?', array($groupid));
     foreach ($roles as $role) {
@@ -796,10 +796,10 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
     $groupadmins = array();
     $groupids = array_map(create_function('$a', 'return $a->id;'), $groups);
     if ($groupids) {
-        $groupadmins = get_records_sql_array('SELECT "group", member
+        $groupadmins = get_records_sql_array('SELECT "group", "member"
             FROM {group_member}
             WHERE "group" IN (' . implode(',', db_array_to_ph($groupids)) . ")
-            AND role = 'admin'", $groupids);
+            AND \"role\" = 'admin'", $groupids);
         if (!$groupadmins) {
             $groupadmins = array();
         }

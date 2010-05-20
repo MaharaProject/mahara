@@ -55,7 +55,7 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
                 JOIN {artefact_blog_blogpost} ab ON (ab.blogpost = a.id AND ab.published = 1)
                 WHERE a.artefacttype = \'blogpost\'
                 AND a.parent IN ( ' . $artefactids . ' ) 
-                AND a.owner = (SELECT owner from {view} WHERE id = ?)
+                AND a.owner = (SELECT "owner" from {view} WHERE id = ?)
                 ORDER BY a.ctime DESC
                 LIMIT 10', array($instance->get('view')))) {
                 $mostrecent = array();

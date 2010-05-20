@@ -44,10 +44,10 @@ if (!is_logged_in() && !$group->public) {
 define('TITLE', $group->name);
 $group->ctime = strftime(get_string('strftimedate'), $group->ctime);
 
-$group->admins = get_column_sql("SELECT member
+$group->admins = get_column_sql("SELECT \"member\"
     FROM {group_member}
     WHERE \"group\" = ?
-    AND role = 'admin'", array($group->id));
+    AND \"role\" = 'admin'", array($group->id));
 
 $role = group_user_access($group->id);
 $group->role = $role;

@@ -226,9 +226,9 @@ function site_statistics($full=false) {
         $data['groupmemberaverage'] = round($memberships/$data['users'], 1);
         $data['strgroupmemberaverage'] = get_string('groupmemberaverage', 'admin', $data['groupmemberaverage']);
         $data['viewsperuser'] = get_field_sql("
-            SELECT (0.0 + COUNT(id)) / NULLIF(COUNT(DISTINCT owner), 0)
+            SELECT (0.0 + COUNT(id)) / NULLIF(COUNT(DISTINCT \"owner\"), 0)
             FROM {view}
-            WHERE NOT owner IS NULL AND owner > 0
+            WHERE NOT \"owner\" IS NULL AND \"owner\" > 0
         ");
         $data['viewsperuser'] = round($data['viewsperuser'], 1);
         $data['strviewsperuser'] = get_string('viewsperuser', 'admin', $data['viewsperuser']);
@@ -300,7 +300,7 @@ function user_statistics($limit, $offset, &$sitedata) {
     $maxviews = get_records_sql_array("
         SELECT u.id, u.firstname, u.lastname, u.preferredname, COUNT(v.id) AS views
         FROM {usr} u JOIN {view} v ON u.id = v.owner
-        WHERE owner <> 0
+        WHERE \"owner\" <> 0
         GROUP BY u.id, u.firstname, u.lastname, u.preferredname
         ORDER BY views DESC
         LIMIT 1", array());
@@ -410,7 +410,7 @@ function user_stats_table($limit, $offset) {
     $day = is_postgres() ? "to_date(ctime::text, 'YYYY-MM-DD')" : 'DATE(ctime)';
 
     $userdata = get_records_sql_array(
-        "SELECT ctime, type, value, $day AS date
+        "SELECT ctime, type, \"value\", $day AS date
         FROM {site_data}
         WHERE type IN (?,?) AND ctime >= ? AND ctime < (date(?) + (INTERVAL $dayinterval))
         ORDER BY type = ? DESC, ctime DESC",
@@ -418,11 +418,11 @@ function user_stats_table($limit, $offset) {
     );
 
     $userscreated = get_records_sql_array(
-        "SELECT $day AS date, COUNT(id) AS users
+        "SELECT $day AS \"date\", COUNT(id) AS users
         FROM {usr}
         WHERE NOT ctime IS NULL
-        GROUP BY date
-        ORDER BY date",
+        GROUP BY \"date\"
+        ORDER BY \"date\"",
         array(),
         $offset,
         $limit
@@ -765,7 +765,7 @@ function view_stats_table($limit, $offset) {
             LEFT JOIN {usr} u ON v.owner = u.id
             LEFT JOIN {group} g ON v.group = g.id
             LEFT JOIN {institution} i ON v.institution = i.name
-        WHERE v.owner != 0 OR owner IS NULL
+        WHERE v.owner != 0 OR \"owner\" IS NULL
         ORDER BY v.visits DESC",
         array(),
         $offset,
@@ -872,7 +872,7 @@ function graph_site_data_weekly() {
     $lastyear = db_format_timestamp(time() - 60*60*12*365);
     $values = array($lastyear, 'view-count', 'user-count', 'group-count');
     $weekly = get_records_sql_array('
-        SELECT ctime, type, value, ' . db_format_tsfield('ctime', 'ts') . '
+        SELECT ctime, type, "value", ' . db_format_tsfield('ctime', 'ts') . '
         FROM {site_data}
         WHERE ctime >= ? AND type IN (?,?,?)
         ORDER BY ctime, type', $values);

@@ -169,7 +169,7 @@ class ArtefactTypeResume extends ArtefactType {
         parent::commit();
 
         if ($blockinstances = get_records_sql_array('
-            SELECT id, view, configdata
+            SELECT id, "view", configdata
             FROM {block_instance}
             WHERE blocktype = \'entireresume\'
             AND "view" IN (

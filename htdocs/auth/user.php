@@ -530,7 +530,7 @@ class User {
         $types = array('profile', 'dashboard');
         $views = get_records_select_assoc(
             'view',
-            'owner = ? AND type IN (' . join(',', array_map('db_quote', $types)) . ')',
+            '"owner" = ? AND type IN (' . join(',', array_map('db_quote', $types)) . ')',
             array($this->id),
             '',
             'type,id'

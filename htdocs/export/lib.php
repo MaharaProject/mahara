@@ -202,11 +202,11 @@ abstract class PluginExport extends Plugin {
         if ($artefacts == self::EXPORT_ALL_ARTEFACTS) {
             $tmpartefacts = get_column_sql('SELECT id
                 FROM {artefact}
-                WHERE owner = ?
+                WHERE "owner" = ?
             UNION
                 SELECT artefact
                 FROM {view_artefact}
-                WHERE "view" IN (SELECT id FROM {view} WHERE owner = ?)
+                WHERE "view" IN (SELECT id FROM {view} WHERE "owner" = ?)
                 ORDER BY id', array($userid, $userid));
             $this->artefactexportmode = $artefacts;
         }

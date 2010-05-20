@@ -529,19 +529,19 @@ class View {
         $data = get_records_sql_array("
             SELECT accesstype AS type, NULL AS id, NULL AS role, NULL AS grouptype, startdate, stopdate
                 FROM {view_access}
-                WHERE view = ?
+                WHERE \"view\" = ?
         UNION
             SELECT 'user' AS type, $uid AS id, NULL AS role, NULL AS grouptype, startdate, stopdate
                 FROM {view_access_usr}
-                WHERE view = ?
+                WHERE \"view\" = ?
         UNION
-            SELECT 'group', $gid, role, grouptype, startdate, stopdate FROM {view_access_group}
+            SELECT 'group', $gid, \"role\", grouptype, startdate, stopdate FROM {view_access_group}
                 INNER JOIN {group} g ON (\"group\" = g.id AND g.deleted = ?)
-                WHERE view = ?
+                WHERE \"view\" = ?
         UNION
             SELECT 'token', token, NULL AS role, NULL AS grouptype, startdate, stopdate
                 FROM {view_access_token}
-                WHERE view = ? AND visible = 1
+                WHERE \"view\" = ? AND visible = 1
         ", array($this->id, $this->id, 0, $this->id, $this->id));
         if ($data) {
             foreach ($data as &$item) {
@@ -1227,7 +1227,7 @@ class View {
         }
 
         if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'single_only', $this)) {
-            $count = count_records_select('block_instance', "view = ? AND blocktype = ?",
+            $count = count_records_select('block_instance', '"view" = ? AND blocktype = ?',
                                           array($this->id, $values['blocktype']));
             if ($count > 0) {
                 throw new UserException(get_string('onlyoneblocktypeperview', 'error', $values['blocktype']));
@@ -1900,7 +1900,7 @@ class View {
             ) ga ON (ga.group = a.group AND a.id = ga.artefact)';
             $select = "(a.institution = 'mahara' OR ga.can_view = 1";
             if (!empty($data['userartefactsallowed'])) {
-                $select .= ' OR owner = ' . $user->get('id');
+                $select .= ' OR "owner" = ' . $user->get('id');
             }
             $select .= ')';
         }
@@ -1927,7 +1927,7 @@ class View {
             ) ra ON (a.id = ra.artefact AND a.group = ra.group)';
             $institutions = array_keys($user->get('institutions'));
             $select = '(
-                owner = ' . $user->get('id') . '
+                "owner" = ' . $user->get('id') . '
                 OR ra.can_republish = 1
                 OR aau.can_republish = 1';
             if ($user->get('admin')) {
@@ -2042,22 +2042,22 @@ class View {
                 WHERE va.view IN (' . $viewidlist . ')
                 GROUP BY va.view, va.artefact, a.title, a.artefacttype, t.plugin
                 ORDER BY a.title, va.artefact', '');
-            $accessgroups = get_records_sql_array('SELECT view, accesstype, grouptype, role, id, name, startdate, stopdate
+            $accessgroups = get_records_sql_array('SELECT "view", accesstype, grouptype, "role", id, name, startdate, stopdate
                 FROM (
-                    SELECT view, \'group\' AS accesstype, g.grouptype, vg.role, g.id, g.name, startdate, stopdate
+                    SELECT "view", \'group\' AS accesstype, g.grouptype, vg.role, g.id, g.name, startdate, stopdate
                     FROM {view_access_group} vg
                     INNER JOIN {group} g ON g.id = vg.group AND g.deleted = 0
                     UNION SELECT view, \'user\' AS accesstype, NULL AS grouptype, NULL AS role, usr AS id, \'\' AS name, startdate, stopdate
                     FROM {view_access_usr} vu
-                    UNION SELECT view, \'secreturl\' AS accesstype, NULL AS grouptype, NULL AS role, 0 AS id, \'\' AS name, startdate, stopdate
+                    UNION SELECT "view", \'secreturl\' AS accesstype, NULL AS grouptype, NULL AS role, 0 AS id, \'\' AS name, startdate, stopdate
                     FROM {view_access_token} vt
-                    UNION SELECT view, accesstype, NULL AS grouptype, NULL AS role, 0 AS id, \'\' AS name, startdate, stopdate
+                    UNION SELECT "view", accesstype, NULL AS grouptype, NULL AS role, 0 AS id, \'\' AS name, startdate, stopdate
                     FROM {view_access} va
                 ) AS a
-                WHERE view in (' . $viewidlist . ')
-                ORDER BY view, accesstype, grouptype, role, name, id
+                WHERE "view" in (' . $viewidlist . ')
+                ORDER BY "view", accesstype, grouptype, "role", name, id
             ', array());
-            $tags = get_records_select_array('view_tag', 'view IN (' . $viewidlist . ')');
+            $tags = get_records_select_array('view_tag', '"view" IN (' . $viewidlist . ')');
         }
     
         $data = array();
@@ -2489,7 +2489,7 @@ class View {
 
         $viewdata = get_records_sql_assoc('
             SELECT
-                id, title, description, owner, ownerformat, "group", institution,
+                id, title, description, "owner", ownerformat, "group", institution,
                 ' . db_format_tsfield('submittedtime') . '
             FROM {view}
             WHERE ' . $where . '
