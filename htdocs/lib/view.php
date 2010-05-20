@@ -621,8 +621,8 @@ class View {
             $userids = implode(',', $userids);
 
             execute_sql('DELETE FROM {usr_watchlist_view}
-                WHERE view = ' . $this->get('id') . '
-                AND usr IN (' . $userids . ')');
+                WHERE view = ?
+                AND usr IN (' . $userids . ')', array($this->get('id')));
         }
 
         $beforeusers = activity_get_viewaccess_users($this->get('id'), $USER->get('id'), 'viewaccess');
@@ -2011,8 +2011,8 @@ class View {
             $count = count_records('view', 'group', $groupid);
             $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, v.type
                 FROM {view} v
-                WHERE v.group = ' . $groupid . '
-                ORDER BY v.title, v.id', '', $offset, $limit);
+                WHERE v.group = ?
+                ORDER BY v.title, v.id', array($groupid), $offset, $limit);
         }
         else if ($institution) {
             $count = count_records('view', 'institution', $institution);
@@ -2028,8 +2028,8 @@ class View {
                 FROM {view} v
                 LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
                 LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)
-                WHERE v.owner = ' . $userid . "
-                ORDER BY v.type = 'portfolio', v.type, v.title, v.id", '', $offset, $limit);
+                WHERE v.owner = ?
+                ORDER BY v.type = \'portfolio\', v.type, v.title, v.id', array($userid), $offset, $limit);
             $owner = $userid;
         }
 

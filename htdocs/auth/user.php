@@ -246,8 +246,8 @@ class User {
                         {usr}
                     WHERE
                         LOWER(username) = ? AND
-                        authinstance = ' . db_quote($instanceid);
-            $user = get_record_sql($sql, array($username));
+                        authinstance = ?';
+            $user = get_record_sql($sql, array($username, $instanceid));
         }
 
         if (false == $user) {
