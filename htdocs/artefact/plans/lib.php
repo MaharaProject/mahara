@@ -62,6 +62,12 @@ class ArtefactTypePlans extends ArtefactType {
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
+
+        if ($artefact = get_record('artefact_plans_plan', 'artefact', $id)) {
+            foreach ($fields = $this->get_plan_fields() as $field) {
+              $this->$field = $artefact->$field;
+            }
+        }
     }
 
     public static function is_singular() {
@@ -74,6 +80,15 @@ class ArtefactTypePlans extends ArtefactType {
 
     public static function get_icon($options=null) {
         // @todo Catalyst IT Ltd
+    }
+
+    public function get_plan_fields() {
+        return array(
+            'title',
+            'description',
+            'completiondate',
+            'completed',
+        );
     }
 
     public function commit() {
