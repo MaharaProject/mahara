@@ -66,6 +66,7 @@ $smarty->assign('todelete', $todelete);
 $smarty->assign('deleteplanform', $deleteplanform);
 $smarty->display('artefact:plans:deleteplan.tpl');
 
+// calls this function first so that we can get the artefact and call delete on it
 function delete(Pieform $form, $values) {
 
     if ($artefact = new ArtefactTypePlans($values['artefact'])) {
