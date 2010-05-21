@@ -52,14 +52,16 @@ class PluginBlocktypePlans extends PluginBlocktype {
         $return = array();
         if ($records = get_records_sql_array('
             SELECT a.id, a.owner
-            FROM {artefact} a
-            WHERE a.owner = ? AND a.artefacttype = \'plans\'', array($view->owner))) {
+                FROM {artefact} a
+                JOIN {artefact_plans_plan} ar ON ar.artefact = a.id
+            WHERE a.owner = ? AND a.artefacttype = \'plans\'
+            ORDER BY ar.completiondate ASC    ', array($view->owner))) {
             foreach ($records as $record) {
                 $artefact = new ArtefactTypePlans($record->id);
                 $artefactid = $artefact->get('id');
                 $return[$artefactid]->title = $artefact->get('title');
                 $return[$artefactid]->description = $artefact->get('description');
-                $return[$artefactid]->completiondate = $artefact->get('completiondate');
+                $return[$artefactid]->completiondate = strftime(get_string('strftimedate'), $artefact->get('completiondate'));
                 $return[$artefactid]->completed = $artefact->get('completed');
             }
 
