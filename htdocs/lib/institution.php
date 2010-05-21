@@ -362,7 +362,7 @@ class Institution {
         // If the user is being authed by the institution they are
         // being removed from, change them to internal auth
         $authinstances = get_records_select_assoc('auth_instance', "
-            institution IN ('mahara','" . $this->name . "')");
+            institution IN ('mahara', " . db_quote($this->name) . ')');
         $oldauth = $user->authinstance;
         if (isset($authinstances[$oldauth]) && $authinstances[$oldauth]->institution == $this->name) {
             foreach ($authinstances as $ai) {
