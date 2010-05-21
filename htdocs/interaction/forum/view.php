@@ -94,19 +94,19 @@ if ($membership && isset($_POST['checked'])) {
     $alltopics = get_column('interaction_forum_topic', 'id', 'forum', $forumid, 'deleted', 0);
     if ($checked == array_intersect($checked, $alltopics)) { // $checked is a subset of the topics in this forum
         if ($moderator && $type == 'sticky') {
-            set_field_select('interaction_forum_topic', 'sticky', 1, 'id IN (' . implode($checked, ',') . ')', array());
+            set_field_select('interaction_forum_topic', 'sticky', 1, 'id IN (' . implode(',', $checked) . ')', array());
             $SESSION->add_ok_msg(get_string('topicstickysuccess', 'interaction.forum'));
         }
         else if ($moderator && $type == 'unsticky') {
-            set_field_select('interaction_forum_topic', 'sticky', 0, 'id IN (' . implode($checked, ',') . ')', array());
+            set_field_select('interaction_forum_topic', 'sticky', 0, 'id IN (' . implode(',', $checked) . ')', array());
             $SESSION->add_ok_msg(get_string('topicunstickysuccess', 'interaction.forum'));
         }
         else if ($moderator && $type == 'closed') {
-            set_field_select('interaction_forum_topic', 'closed', 1, 'id IN (' . implode($checked, ',') . ')', array());
+            set_field_select('interaction_forum_topic', 'closed', 1, 'id IN (' . implode(',', $checked) . ')', array());
             $SESSION->add_ok_msg(get_string('topicclosedsuccess', 'interaction.forum'));
         }
         else if ($moderator && $type == 'open') {
-            set_field_select('interaction_forum_topic', 'closed', 0, 'id IN (' . implode($checked, ',') . ')', array());
+            set_field_select('interaction_forum_topic', 'closed', 0, 'id IN (' . implode(',', $checked) . ')', array());
             $SESSION->add_ok_msg(get_string('topicopenedsuccess', 'interaction.forum'));
         }
         else if ($type == 'subscribe' && !$forum->subscribed) {
@@ -126,7 +126,7 @@ if ($membership && isset($_POST['checked'])) {
         }
         else if ($type == 'unsubscribe' && !$forum->subscribed) {
             delete_records_sql('DELETE FROM {interaction_forum_subscription_topic}
-                WHERE topic IN (' . implode($checked, ',') . ') AND "user" = ?',
+                WHERE topic IN (' . implode(',', $checked) . ') AND "user" = ?',
                 array($USER->get('id')
             ));
             $SESSION->add_ok_msg(get_string('topicunsubscribesuccess', 'interaction.forum'));
