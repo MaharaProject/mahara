@@ -26,7 +26,7 @@
             {if $row->completed == 1}<td><div class="completed"><img src="/artefact/plans/theme/raw/static/images/success.gif" alt="" /></div></td>{else}<td></td>{/if}
             {if $controls}
             <td><a href="/artefact/plans/editplan.php?id={$row->id}&amp;artefact={$row->artefact}">Edit</a></td>
-            <td><a href="/artefact/plans/deleteplan.php?id={$row->id}&amp;artefact={$row->artefact}">Delete</a></td>
+            <td><a href="/artefact/plans/deleteplan.php?artefact={$row->artefact}">Delete</a></td>
             {/if}
         </tr>
         {/foreach}
