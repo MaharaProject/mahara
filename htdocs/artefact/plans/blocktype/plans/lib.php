@@ -48,7 +48,7 @@ class PluginBlocktypePlans extends PluginBlocktype {
         $view = get_record('view','id', $instance->get('view'));
         $smarty = smarty_core();
 
-        // Get data about the resume fields the user has
+        // Get data about the plans the user has
         $return = array();
         if ($records = get_records_sql_array('
             SELECT a.id, a.owner

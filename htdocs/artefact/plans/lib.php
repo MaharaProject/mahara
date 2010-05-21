@@ -62,6 +62,14 @@ class ArtefactTypePlans extends ArtefactType {
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
+
+        // this is needed for the blocktype view
+        if ($artefact = get_record('artefact_plans_plan', 'artefact', $id)) {
+            foreach ($fields = $this->get_plan_fields() as $field) {
+              $this->$field = $artefact->$field;
+            }
+        }
+
     }
 
     public static function is_singular() {
