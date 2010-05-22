@@ -157,6 +157,13 @@ class ArtefactTypePlans extends ArtefactType {
 
         $records = get_records_sql_array($sql, array($owner));
 
+        // ToDo: write date formatting in a better way
+        foreach ($records as $record) {
+            if (!empty($record->completiondate)) {
+                $record->completiondate = strftime(get_string('strftimedate'), $record->completiondate);
+            }
+        }
+
         return $records;
     }
 
