@@ -46,7 +46,8 @@ class PluginBlocktypePlans extends PluginBlocktype {
         safe_require('artefact','plans');
 
         $view = get_record('view','id', $instance->get('view'));
-        $smarty = smarty_core();
+        $smarty = smarty_core(array('tablerenderer'));
+        $datenow = time();
 
         // Get data about the plans the user has
         $return = array();
@@ -61,8 +62,12 @@ class PluginBlocktypePlans extends PluginBlocktype {
                 $artefactid = $artefact->get('id');
                 $return[$artefactid]->title = $artefact->get('title');
                 $return[$artefactid]->description = $artefact->get('description');
+                if (!$artefact->get('completed') && $artefact->get('completiondate') < $datenow) {
+                    $return[$artefactid]->completed = -1;
+                } else {
+                    $return[$artefactid]->completed = $artefact->get('completed');
+                }
                 $return[$artefactid]->completiondate = strftime(get_string('strftimedate'), $artefact->get('completiondate'));
-                $return[$artefactid]->completed = $artefact->get('completed');
             }
 
             $smarty->assign('rows', $return);

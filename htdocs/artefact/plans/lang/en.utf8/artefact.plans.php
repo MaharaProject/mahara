@@ -26,6 +26,7 @@
 
 defined('INTERNAL') || die();
 
+$string['addplans'] = 'Add plans';
 $string['completed'] = 'Completed';
 $string['deleting'] = 'Deleting Plan';
 $string['description'] = 'Description';

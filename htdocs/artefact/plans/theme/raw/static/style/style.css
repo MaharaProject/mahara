@@ -16,8 +16,12 @@
 	width: 100%;
 }
 
+#planswrap table tr.incomplete {
+    background: #FFD3D9;
+    color: #DD0221;
+}
+
 #planswrap table td {
-	padding: 0;
     text-align: left
 }
 
@@ -32,14 +36,7 @@
     width:60px;
 }
 
-#planswrap #planslist table td {
-	padding: 0.25em;
-}
-
-#planswrap table table {
-	width: auto;
-}
-
+/* Add plans form */
 #planswrap #addplans form {
 	margin: 0;
 }

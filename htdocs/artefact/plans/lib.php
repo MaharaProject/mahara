@@ -148,6 +148,7 @@ class ArtefactTypePlans extends ArtefactType {
 
         $records = array();
         $owner = $USER->get('id');
+        $datenow = time();
 
         $sql = "SELECT ar.*, a.owner
                     FROM {artefact} a
@@ -160,6 +161,10 @@ class ArtefactTypePlans extends ArtefactType {
         // ToDo: write date formatting in a better way
         foreach ($records as $record) {
             if (!empty($record->completiondate)) {
+                // if record hasn't been completed and completiondate has passed mark as such for display
+                if ($record->completiondate < $datenow && !$record->completed) {
+                    $record->completed = -1;
+                }
                 $record->completiondate = strftime(get_string('strftimedate'), $record->completiondate);
             }
         }

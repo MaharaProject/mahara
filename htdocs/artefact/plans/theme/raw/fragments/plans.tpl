@@ -1,5 +1,5 @@
 {auto_escape off}
-<fieldset>{if !$hidetitle}<legend class="plansh3">{str tag='plans' section='artefact.plans'}
+<fieldset>{if !$hidetitle}<legend class="plansh3">{str tag='addplans' section='artefact.plans'}
 {if $controls} 
     {contextualhelp plugintype='artefact' pluginname='plans' section='plans'}
 {/if}
@@ -20,15 +20,31 @@
     </thead>
     <tbody>
         {foreach from=$rows item=row}
-        <tr class="{cycle values='r0,r1'}">
-            <td>{$row->completiondate|escape}</td>
-            <td>{$row->title|escape}<div>{$row->description|escape}</div></td>
-            {if $row->completed == 1}<td><div class="completed"><img src="/artefact/plans/theme/raw/static/images/success.gif" alt="" /></div></td>{else}<td></td>{/if}
-            {if $controls}
-            <td><a href="/artefact/plans/editplan.php?id={$row->id}&amp;artefact={$row->artefact}">Edit</a></td>
-            <td><a href="/artefact/plans/deleteplan.php?artefact={$row->artefact}">Delete</a></td>
-            {/if}
-        </tr>
+        {if $row->completed == -1}
+            <tr class="incomplete">
+                <td>{$row->completiondate|escape}</td>
+                <td>{$row->title|escape}<div>{$row->description|escape}</div></td>
+                <td>&nbsp;</td>
+                {if $controls}
+                <td><a href="/artefact/plans/editplan.php?id={$row->id}&amp;artefact={$row->artefact}">Edit</a></td>
+                <td><a href="/artefact/plans/deleteplan.php?artefact={$row->artefact}">Delete</a></td>
+                {/if}
+            </tr>
+        {else}
+            <tr class="{cycle values='r0,r1'}">
+                <td>{$row->completiondate|escape}</td>
+                <td>{$row->title|escape}<div>{$row->description|escape}</div></td>
+                {if $row->completed == 1}
+                    <td><div class="completed"><img src="/artefact/plans/theme/raw/static/images/success.gif" alt="" /></div></td>
+                {else}
+                    <td>&nbsp;</td>
+                {/if}
+                {if $controls}
+                <td><a href="/artefact/plans/editplan.php?id={$row->id}&amp;artefact={$row->artefact}">Edit</a></td>
+                <td><a href="/artefact/plans/deleteplan.php?artefact={$row->artefact}">Delete</a></td>
+                {/if}
+            </tr>
+        {/if}
         {/foreach}
     </tbody>
 </table>
