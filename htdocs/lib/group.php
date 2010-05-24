@@ -821,7 +821,6 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
                 $group->admins[] = $admin->member;
             }
         }
-        $group->description = str_shorten_html($group->description, 100, true);
         if ($group->membershiptype == 'member') {
             $group->canleave = group_user_can_leave($group->id);
         }

@@ -1,14 +1,12 @@
-{auto_escape off}
 <div>
     <h3>
         <a href="{$WWWROOT}group/view.php?id={$group->id}">
-            {$group->name|escape}
+            {$group->name}
         </a>
     </h3>
     {if $group->description}
     <p>
-        {$group->description}
+        {$group->description|clean_html|safe}
     </p>
     {/if}
 </div>
-{/auto_escape}

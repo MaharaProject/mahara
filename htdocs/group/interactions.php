@@ -71,7 +71,7 @@ $smarty = smarty();
 $smarty->assign('group', $group);
 $smarty->assign('data', $interactiontypes);
 $smarty->assign('pluginnames', $names);
-$smarty->assign('subheading', hsc(TITLE));
+$smarty->assign('subheading', TITLE);
 $smarty->display('group/interactions.tpl');
 
 ?>

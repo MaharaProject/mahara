@@ -1,18 +1,16 @@
-{auto_escape off}
 {include file="header.tpl"}
 <div id="friendslistcontainer">
-    {$form}
+    {$form|safe}
 {if $results}
     <table id="friendslist" class="fullwidth listing">
         <tbody>
-        {$results.tablerows}
+        {$results.tablerows|safe}
         </tbody>
     </table>
-{$results.pagination}
+{$results.pagination|safe}
 {/if}
 {if $message}
-    <div class="message">{$message}</div>
+    <div class="message">{$message|safe}</div>
 {/if}
 </div>
 {include file="footer.tpl"}
-{/auto_escape}
