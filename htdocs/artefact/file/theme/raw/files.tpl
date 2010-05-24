@@ -1,7 +1,6 @@
-{auto_escape off}
 {include file="header.tpl"}
 {if $institution}
-  {$institutionselector}
+  {$institutionselector|safe}
 {/if}
 
 {if $institution && $institution == 'mahara'}
@@ -9,6 +8,6 @@
 {else}
 			<p>{str tag='fileinstructions' section='artefact.file'}</p>
 {/if}
-			<div>{$form}</div>
+			<div>{$form|safe}</div>
 {include file="footer.tpl"}
-{/auto_escape}
+

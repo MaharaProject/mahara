@@ -1,4 +1,3 @@
-{auto_escape off}
 {if $tabs.subtabs}
 <ul class="artefactchooser-subtabs">
   {foreach from=$tabs.subtabs item=displayname key=ownerid}
@@ -6,4 +5,3 @@
   {/foreach}
 </ul>
 {/if}
-{/auto_escape}

@@ -1,4 +1,3 @@
-{auto_escape off}
 {include file="header.tpl"}
             <div class="rbuttons">
                 <a class="btn btn-add" href="{$WWWROOT}artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
@@ -12,11 +11,10 @@
                <tr><th></th><th></th></tr>
              </thead>
              <tbody>
-              {$blogs->tablerows}
+              {$blogs->tablerows|safe}
              </tbody>
            </table>
-           {$blogs->pagination}
+           {$blogs->pagination|safe}
 {/if}
                 </div>
 {include file="footer.tpl"}
-{/auto_escape}
