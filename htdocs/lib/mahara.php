@@ -711,19 +711,20 @@ function ini_get_bool($ini_get_arg) {
  * @return boolean false if the assignment fails (generally if the databse is not installed)
  */
 function load_config() {
-    global $CFG;
-    
-    $dbconfig = get_records_array('config', '', '', '', 'field, value');
-    
-    foreach ($dbconfig as $cfg) {
-        if (isset($CFG->{$cfg->field}) && $CFG->{$cfg->field} != $cfg->value) {
-            // @todo warn that we're overriding db config with $CFG
-            continue;
-        }
-        $CFG->{$cfg->field} = $cfg->value;
-    }
+   global $CFG;
+   global $OVERRIDDEN;    // array containing the database config fields overridden by $CFG
 
-    return true;
+   $dbconfig = get_records_array('config', '', '', '', 'field, value');
+
+   foreach ($dbconfig as $cfg) {
+       if (isset($CFG->{$cfg->field})) {
+           $OVERRIDDEN[] = $cfg->field;
+       } else {
+           $CFG->{$cfg->field} = $cfg->value;
+       }
+   }
+
+   return true;
 }
 
 /**

@@ -68,6 +68,7 @@ $siteoptionform = array(
                     'description'  => get_string('sitenamedescription', 'admin'),
                     'defaultvalue' => get_config('sitename'),
                     'help'         => true,
+                    'disabled'     => in_array('sitename', $OVERRIDDEN),
                 ),
                 'lang' => array(
                     'type'         => 'select',
@@ -77,6 +78,7 @@ $siteoptionform = array(
                     'collapseifoneoption' => true,
                     'options'      => $langoptions,
                     'help'         => true,
+                    'disabled'     => in_array('lang', $OVERRIDDEN),
                 ),
                 'country' => array(
                     'type'         => 'select',
@@ -85,6 +87,7 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('country'),
                     'options'      => array('' => get_string('nocountryselected')) + $countries,
                     'help'         => true,
+                    'disabled'     => in_array('country', $OVERRIDDEN),
                 ),
                 'theme' => array(
                     'type'         => 'select',
@@ -94,12 +97,14 @@ $siteoptionform = array(
                     'collapseifoneoption' => true,
                     'options'      => $themeoptions,
                     'help'         => true,
+                    'disabled'     => in_array('theme', $OVERRIDDEN),
                 ),
                 'homepageinfo' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('homepageinfo', 'admin'),
                     'description'  => get_string('homepageinfodescription', 'admin'),
                     'defaultvalue' => get_config('homepageinfo'),
+                    'disabled'     => in_array('homepageinfo', $OVERRIDDEN),
                 ),
                 'registration_sendweeklyupdates' => array(
                     'type'         => 'checkbox',
@@ -107,6 +112,7 @@ $siteoptionform = array(
                     'description'  => get_string('sendweeklyupdatesdescription', 'admin'),
                     'defaultvalue' => get_config('registration_sendweeklyupdates'),
                     'help'         => true,
+                    'disabled'     => in_array('registration_sendweeklyupdates', $OVERRIDDEN),
                 ),
             ),
         ),
@@ -120,6 +126,7 @@ $siteoptionform = array(
                     'title'        => get_string('userscanchooseviewthemes', 'admin'),
                     'description'  => get_string('userscanchooseviewthemesdescription', 'admin'),
                     'defaultvalue' => get_config('userscanchooseviewthemes'),
+                    'disabled'     => in_array('userscanchooseviewthemes', $OVERRIDDEN),
                 ),
                 'remoteavatars' => array(
                     'type'         => 'checkbox',
@@ -127,18 +134,21 @@ $siteoptionform = array(
                     'description'  => get_string('remoteavatarsdescription', 'admin'),
                     'defaultvalue' => get_config('remoteavatars'),
                     'help'         => true,
+                    'disabled'     => in_array('remoteavatars', $OVERRIDDEN),
                 ),
                 'userscanhiderealnames' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('userscanhiderealnames', 'admin'),
                     'description'  => get_string('userscanhiderealnamesdescription', 'admin'),
                     'defaultvalue' => get_config('userscanhiderealnames'),
+                    'disabled'     => in_array('userscanhiderealnames', $OVERRIDDEN),
                 ),
                 'anonymouscomments' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('anonymouscomments', 'admin'),
                     'description'  => get_string('anonymouscommentsdescription', 'admin'),
                     'defaultvalue' => get_config('anonymouscomments'),
+                    'disabled'     => in_array('anonymouscomments', $OVERRIDDEN),
                 ),
             ),
         ),
@@ -155,12 +165,14 @@ $siteoptionform = array(
                     'collapseifoneoption' => true,
                     'options'      => $searchpluginoptions,
                     'help'         => true,
+                    'disabled'     => in_array('searchplugin', $OVERRIDDEN),
                 ),
                 'showselfsearchsideblock' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('showselfsearchsideblock', 'admin'),
                     'description'  => get_string('showselfsearchsideblockdescription', 'admin'),
                     'defaultvalue' => get_config('showselfsearchsideblock'),
+                    'disabled'     => in_array('showselfsearchsideblock', $OVERRIDDEN),
                 ),
             ),
         ),
@@ -175,6 +187,7 @@ $siteoptionform = array(
                     'description'  => get_string('usersallowedmultipleinstitutionsdescription', 'admin'),
                     'defaultvalue' => get_config('usersallowedmultipleinstitutions'),
                     'help'         => true,
+                    'disabled'     => in_array('usersallowedmultipleinstitutions', $OVERRIDDEN),
                 ),
                 'institutionexpirynotification' => array(
                     'type'         => 'expiry',
@@ -182,6 +195,7 @@ $siteoptionform = array(
                     'description'  => get_string('institutionexpirynotificationdescription', 'admin'),
                     'defaultvalue' => get_config('institutionexpirynotification'),
                     'help'         => true,
+                    'disabled'     => in_array('institutionexpirynotification', $OVERRIDDEN),
                 ),
                 'institutionautosuspend' => array(
                     'type'         => 'checkbox',
@@ -189,6 +203,7 @@ $siteoptionform = array(
                     'description'  => get_string('institutionautosuspenddescription', 'admin'),
                     'defaultvalue' => get_config('institutionautosuspend'),
                     'help'         => true,
+                    'disabled'     => in_array('institutionautosuspend', $OVERRIDDEN),
                 ),
             ),
         ),
@@ -205,6 +220,7 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('session_timeout') / 60,
                     'rules'        => array('integer' => true, 'minvalue' => 1, 'maxvalue' => 10000000),
                     'help'         => true,
+                    'disabled'     => in_array('session_timeout', $OVERRIDDEN),
                 ),
                 'defaultaccountlifetime' => array(
                     'type'         => 'expiry',
@@ -212,6 +228,7 @@ $siteoptionform = array(
                     'description'  => get_string('defaultaccountlifetimedescription', 'admin'),
                     'defaultvalue' => get_config('defaultaccountlifetime'),
                     'help'         => true,
+                    'disabled'     => in_array('defaultaccountlifetime', $OVERRIDDEN),
                 ),
                 'defaultaccountinactiveexpire' => array(
                     'type'         => 'expiry',
@@ -219,6 +236,7 @@ $siteoptionform = array(
                     'description'  => get_string('defaultaccountinactiveexpiredescription', 'admin'),
                     'defaultvalue' => get_config('defaultaccountinactiveexpire'),
                     'help'         => true,
+                    'disabled'     => in_array('defaultaccountinactiveexpire', $OVERRIDDEN),
                 ),
                 'defaultaccountinactivewarn' => array(
                     'type'         => 'expiry',
@@ -226,6 +244,7 @@ $siteoptionform = array(
                     'description'  => get_string('defaultaccountinactivewarndescription', 'admin'),
                     'defaultvalue' => get_config('defaultaccountinactivewarn'),
                     'help'         => true,
+                    'disabled'     => in_array('defaultaccountinactivewarn', $OVERRIDDEN),
                 ),
             ),
         ),
@@ -240,6 +259,7 @@ $siteoptionform = array(
                     'description'  => get_string('viruscheckingdescription', 'admin'),
                     'defaultvalue' => get_config('viruschecking'),
                     'help'         => true,
+                    'disabled'     => in_array('viruschecking', $OVERRIDDEN),
                 ),
                 'pathtoclam' => array(
                     'type'         => 'text',
@@ -247,6 +267,7 @@ $siteoptionform = array(
                     'description'  => get_string('pathtoclamdescription', 'admin'),
                     'defaultvalue' => get_config('pathtoclam'),
                     'help'         => true,
+                    'disabled'     => in_array('pathtoclam', $OVERRIDDEN),
                 ),
                 'antispam' => array(
                     'type'         => 'select',
@@ -255,6 +276,7 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('antispam'),
                     'options'      => $spamtraps,
                     'help'         => true,
+                    'disabled'     => in_array('antispam', $OVERRIDDEN),
                 ),
                 'spamhaus' => array(
                     'type'         => 'checkbox',
@@ -262,6 +284,7 @@ $siteoptionform = array(
                     'description'  => get_string('spamhausdescription', 'admin'),
                     'defaultvalue' => get_config('spamhaus'),
                     'help'         => true,
+                    'disabled'     => in_array('spamhaus', $OVERRIDDEN),
                 ),
                 'surbl' => array(
                     'type'         => 'checkbox',
@@ -269,6 +292,7 @@ $siteoptionform = array(
                     'description'  => get_string('surbldescription', 'admin'),
                     'defaultvalue' => get_config('surbl'),
                     'help'         => true,
+                    'disabled'     => in_array('surbl', $OVERRIDDEN),
                 ),
             ),
         ),
@@ -284,6 +308,7 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('allowpublicviews'),
                     'options'      => $yesno,
                     'help'         => true,
+                    'disabled'     => in_array('allowpublicviews', $OVERRIDDEN),
                 ),
                 'allowpublicprofiles' => array(
                     'type'         => 'select',
@@ -292,6 +317,7 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('allowpublicprofiles'),
                     'options'      => $yesno,
                     'help'         => true,
+                    'disabled'     => in_array('allowpublicprofiles', $OVERRIDDEN),
                 ),
                 'creategroups' => array(
                     'type'         => 'select',
@@ -302,6 +328,7 @@ $siteoptionform = array(
                         'admins' => get_string('adminsonly', 'admin'),
                         'staff'  => get_string('adminsandstaffonly', 'admin'),
                         'all'    => get_string('Everyone', 'admin'),
+                    'disabled'     => in_array('creategroups', $OVERRIDDEN),
                     ),
                 ),
                 'createpublicgroups' => array(
@@ -314,12 +341,14 @@ $siteoptionform = array(
                         'all' => get_string('Everyone', 'admin'),
                     ),
                     'help'         => true,
+                    'disabled'     => in_array('createpublicgroups', $OVERRIDDEN),
                 ),
                 'showtagssideblock' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('showtagssideblock', 'admin'),
                     'description'  => get_string('showtagssideblockdescription', 'admin'),
                     'defaultvalue' => get_config('showtagssideblock'),
+                    'disabled'     => in_array('showtagssideblock', $OVERRIDDEN),
                 ),
                 'tagssideblockmaxtags' => array(
                     'type'         => 'text',
@@ -328,12 +357,21 @@ $siteoptionform = array(
                     'description'  => get_string('tagssideblockmaxtagsdescription', 'admin'),
                     'defaultvalue' => get_config('tagssideblockmaxtags'),
                     'rules'        => array('integer' => true, 'minvalue' => 0, 'maxvalue' => 1000),
+                    'disabled'     => in_array('tagssideblockmaxtags', $OVERRIDDEN),
                 ),
                 'viewmicroheaders' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('smallviewheaders', 'admin'),
                     'description'  => get_string('smallviewheadersdescription', 'admin'),
                     'defaultvalue' => get_config('viewmicroheaders'),
+                    'disabled'     => in_array('viewmicroheaders', $OVERRIDDEN),
+                ),
+                'showonlineuserssideblock' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('showonlineuserssideblock', 'admin'),
+                    'description'  => get_string('showonlineuserssideblockdescription', 'admin'),
+                    'defaultvalue' => get_config('showonlineuserssideblock'),
+                    'disabled'     => in_array('showonlineuserssideblock', $OVERRIDDEN),
                 ),
             ),
         ),
@@ -363,7 +401,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'showselfsearchsideblock', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments',
-        'homepageinfo',
+        'homepageinfo', 'showonlineuserssideblock',
     );
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');

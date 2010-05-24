@@ -30,6 +30,9 @@ defined('INTERNAL') || die();
 $CFG = new StdClass;
 $CFG->docroot = dirname(__FILE__) . '/';
 
+//array containing site options from database that are overrided by $CFG
+$OVERRIDDEN = array();
+
 // Figure out our include path
 if (!empty($_SERVER['MAHARA_LIBDIR'])) {
     $CFG->libroot = $_SERVER['MAHARA_LIBDIR'];

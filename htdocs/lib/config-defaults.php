@@ -199,7 +199,7 @@ $cfg->accesstimeupdatefrequency = 300;
 $cfg->accessidletimeout = 600;
 
 // Whether to show the onlineusers sideblock
-$cfg->showonlineuserssideblock = true;
+//$cfg->showonlineuserssideblock = true;
 
 // CRON job maximum run age in SECONDS
 // ... Mahara decides to run a cron job only if the "next run time" is between the current date+time and (max run age) seconds ago.

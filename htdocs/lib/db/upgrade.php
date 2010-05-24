@@ -1744,5 +1744,10 @@ function xmldb_core_upgrade($oldversion=0) {
         set_field('activity_type', 'delay', 1, 'name', 'groupmessage');
     }
 
+    if ($oldversion < 2010052000) {
+        $showusers = get_config('showonlineuserssideblock');
+        set_config('showonlineuserssideblock', (int) (is_null($showusers) || $showusers));
+    }
+
     return $status;
 }
