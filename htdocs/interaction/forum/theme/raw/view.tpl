@@ -8,7 +8,7 @@
 	{/if}
 	{if $membership}{$forum->subscribe}{/if}
 </div>
-<div id="forumdescription">{$forum->description}</div>
+<div id="forumdescription">{$forum->description|clean_html}</div>
 <div id="viewforum" class="rel">
 	<h3>{str tag=Topics section="interaction.forum"}</h3>
     {if $membership && ($moderator || $forum->newtopicusers != 'moderators') }
