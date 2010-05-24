@@ -1,7 +1,4 @@
-{auto_escape off}
 {include file="header.tpl"}
-                <h2>{$subheading|escape}</h2>
-                {$form}
+                <h2>{$subheading}</h2>
+                {$form|safe}
 {include file="footer.tpl"}
-
-{/auto_escape}
