@@ -98,10 +98,10 @@ $prefsform = pieform(array(
 ));
 
 $smarty = smarty();
-$smarty->assign('prefsdescr', get_string('prefsdescr', 'activity'));
+$smarty->assign('pagedescription', get_string('prefsdescr', 'activity'));
 $smarty->assign('form', $prefsform);
 $smarty->assign('PAGEHEADING', hsc(get_string('notifications')));
-$smarty->display('account/activity/preferences/index.tpl');
+$smarty->display('form.tpl');
 
 function activityprefs_submit(Pieform $form, $values) {
     global $activitytypes, $admintypes, $USER;
