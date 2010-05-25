@@ -1,4 +1,9 @@
-{if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
+{if $microheaders}
+  {include file="viewmicroheader.tpl"}
+{else}
+  {include file="header.tpl"}{if $pageheadinghtml}<h1>{$pageheadinghtml|safe}</h1>{/if}
+{/if}
+
 
                     <div id="userview">
                         <div class="user-icon right">

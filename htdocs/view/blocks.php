@@ -229,7 +229,6 @@ if (get_config('viewmicroheaders')) {
     }
 }
 
-$smarty->assign('userdisplayname', display_name($USER, null, true));
 $smarty->assign('viewtype', $viewtype);
 $smarty->assign('view', $view->get('id'));
 $smarty->assign('groupid', $group);

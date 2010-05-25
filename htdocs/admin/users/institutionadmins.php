@@ -106,7 +106,7 @@ function adminusers_submit(Pieform $form, $values) {
 $smarty->assign('institutionselector', $s['institutionselector']);
 $smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs']);
 $smarty->assign('adminusersform', pieform($form));
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/institutionadmins.tpl');
 
 ?>

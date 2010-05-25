@@ -578,7 +578,7 @@ if ($institution && $institution != 'mahara') {
     }
 }
 
-$smarty->assign('PAGEHEADING', hsc(get_string('admininstitutions', 'admin')));
+$smarty->assign('PAGEHEADING', get_string('admininstitutions', 'admin'));
 $smarty->display('admin/users/institutions.tpl');
 
 function theme_sort($a, $b) {

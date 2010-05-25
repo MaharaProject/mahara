@@ -104,5 +104,5 @@ $form = pieform($form);
 $smarty = smarty();
 $smarty->assign('bulkexportform', $form);
 $smarty->assign('bulkexportdescription', get_string('bulkexportdescription', 'admin'));
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/bulkexport.tpl');

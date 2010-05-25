@@ -386,5 +386,5 @@ $form = pieform($form);
 
 $smarty = smarty();
 $smarty->assign('form', $form);
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/bulkimport.tpl');

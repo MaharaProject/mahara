@@ -1,26 +1,25 @@
-{auto_escape off}
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
-    <title>{$PAGETITLE|escape}</title>
+    <title>{$PAGETITLE}</title>
     <script type="text/javascript">
     var config = {literal}{{/literal}
-        'theme': {$THEMELIST},
+        'theme': {$THEMELIST|safe},
         'sesskey' : '{$SESSKEY}',
         'wwwroot': '{$WWWROOT}',
         'loggedin': {$USER->is_logged_in()|intval},
         'userid': {$USER->get('id')}
     {literal}}{/literal};
     </script>
-    {$STRINGJS}
+    {$STRINGJS|safe}
 {foreach from=$JAVASCRIPT item=script}
     <script type="text/javascript" src="{$script}"></script>
 {/foreach}
 {foreach from=$HEADERS item=header}
-    {$header}
+    {$header|safe}
 {/foreach}
 {if isset($INLINEJAVASCRIPT)}
     <script type="text/javascript">
-{$INLINEJAVASCRIPT}
+{$INLINEJAVASCRIPT|safe}
     </script>
 {/if}
 	<!--[if lt IE 7.]>
@@ -34,4 +33,3 @@
     <link rel="shortcut icon" href="{$WWWROOT}favicon.ico" type="image/vnd.microsoft.icon">
 </head>
 {dynamic}{flush}{/dynamic}
-{/auto_escape}

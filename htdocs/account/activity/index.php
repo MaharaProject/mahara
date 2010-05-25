@@ -189,7 +189,7 @@ $smarty = smarty(array('paginator'));
 $smarty->assign('options', $options);
 $smarty->assign('type', $type);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->assign('PAGEHEADING', hsc(get_string('inbox')));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('deleteall', $deleteall);
 $smarty->assign('activitylist', $activitylist);
 $smarty->display('account/activity/index.tpl');

@@ -111,7 +111,7 @@ if ($admingroups->invite || $admingroups->controlled) {
     array_push($javascript, 'groupbox');
 }
 $smarty = smarty($javascript, array(), array('applychanges' => 'mahara', 'nogroups' => 'group'), array('sideblocks' => array(friends_control_sideblock())));
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('results', $data);
 $smarty->assign('form', $filterform);

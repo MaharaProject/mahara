@@ -447,7 +447,7 @@ $smarty = smarty(
     array('sidebars' => false)
 );
 $smarty->assign('INLINEJAVASCRIPT', $js);
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('pagedescriptionhtml', get_string('editaccesspagedescription2', 'view'));
 $smarty->assign('form', $form);
 $smarty->display('form.tpl');

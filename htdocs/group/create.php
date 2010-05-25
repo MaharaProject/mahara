@@ -89,7 +89,7 @@ $creategroup = pieform(array(
 
 $smarty = smarty();
 $smarty->assign('form', $creategroup);
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('form.tpl');
 
 

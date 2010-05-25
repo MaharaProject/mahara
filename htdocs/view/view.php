@@ -237,7 +237,6 @@ if (get_config('viewmicroheaders')) {
     }
 
     if ($USER->is_logged_in()) {
-        $smarty->assign('userdisplayname', display_name($USER, null, true));
         if (!empty($_SERVER['HTTP_REFERER'])) {
             $page = get_config('wwwroot') . 'view/view.php?id=' . $viewid . ($new ? '&new=1' : '');
             if ($_SERVER['HTTP_REFERER'] != $page) {

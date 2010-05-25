@@ -112,7 +112,7 @@ function edit_comment_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('strdescription', get_string('editcommentdescription', 'artefact.comment', $maxage));
 $smarty->assign('form', $form);
 $smarty->display('artefact:comment:edit.tpl');

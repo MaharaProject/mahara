@@ -48,6 +48,6 @@ $compositeforms = ArtefactTypeResumeComposite::get_forms($compositetypes);
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('compositeforms', $compositeforms);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:achievements.tpl');

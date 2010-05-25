@@ -280,7 +280,6 @@ $smarty->assign('loginas', $loginas);
 $smarty->assign('institutions', get_institution_string_for_user($userid));
 $smarty->assign('canmessage', $loggedinid != $userid && can_send_message($loggedinid, $userid));
 $smarty->assign('USERID', $userid);
-$smarty->assign('userdisplayname', display_name($USER, null, true));
 $smarty->assign('viewtitle', get_string('usersprofile', 'mahara', display_name($user, null, true)));
 $smarty->assign('viewtype', 'profile');
 
@@ -302,7 +301,7 @@ if (get_config('viewmicroheaders')) {
     }
 }
 else {
-    $smarty->assign('PAGEHEADING', $view->display_title(false));
+    $smarty->assign('pageheadinghtml', $view->display_title(false));
 }
 
 $smarty->assign('viewcontent', $view->build_columns());

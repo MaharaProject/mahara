@@ -9,12 +9,12 @@
  * @author   Catalyst IT Ltd
  * @version  1.0
  */
-function Dwoo_Plugin_display_name(Dwoo $dwoo, $user) {
+function Dwoo_Plugin_display_name(Dwoo $dwoo, $user, $userto=null, $nameonly=false, $realname=false) {
     if (!$user) {
         return '';
     }
 
-    return display_name($user);
+    return display_name($user, $userto, $nameonly, $realname);
 }
 
 ?>

@@ -412,7 +412,7 @@ EOF;
         $group = group_current_group();
         $smarty->assign('GROUP', $group);
         $smarty->assign('SUBPAGENAV', group_get_menu_tabs());
-        $smarty->assign('PAGEHEADING', hsc($group->name));
+        $smarty->assign('PAGEHEADING', $group->name);
     }
 
     // ---------- sideblock stuff ----------
@@ -518,7 +518,7 @@ EOF;
 
     if ($USER->get('parentuser')) {
         $smarty->assign('USERMASQUERADING', true);
-        $smarty->assign('masqueradedetails', get_string('youaremasqueradingas', 'mahara', hsc(display_name($USER))));
+        $smarty->assign('masqueradedetails', get_string('youaremasqueradingas', 'mahara', display_name($USER)));
         $smarty->assign('becomeyouagain',
             ' <a href="' . hsc($wwwroot) . 'admin/users/changeuser.php?restore=1">'
             . get_string('becomeadminagain', 'admin', hsc($USER->get('parentuser')->name))

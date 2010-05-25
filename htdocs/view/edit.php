@@ -60,8 +60,6 @@ else {
     define('TITLE', $view->get('title') . ': ' . get_string('edittitleanddescription', 'view'));
 }
 
-$heading = TITLE; // for the smarty template
-
 require_once('pieforms/pieform.php');
 
 $formatstring = '%s (%s)';
@@ -181,7 +179,7 @@ function editview_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty(array(), array(), array(), array('sidebars' => false));
-$smarty->assign('PAGEHEADING', hsc($heading));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('editview', $editview);
 $smarty->display('view/edit.tpl');
 

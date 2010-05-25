@@ -79,7 +79,7 @@ $form = pieform(array(
 
 $smarty =& smarty();
 $smarty->assign_by_ref('form', $form);
-$smarty->assign_by_ref('PAGEHEADING', hsc(TITLE));
+$smarty->assign_by_ref('PAGEHEADING', TITLE);
 $smarty->display('form.tpl');
 exit;
 

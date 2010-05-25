@@ -516,7 +516,7 @@ if ($id != $USER->get('id') && is_null($USER->get('parentuser'))) {
     $loginas = null;
 }
 $smarty->assign('loginas', $loginas);
-$smarty->assign('PAGEHEADING', hsc(TITLE . ': ' . display_name($user)));
+$smarty->assign('PAGEHEADING', TITLE . ': ' . display_name($user));
 $smarty->display('admin/users/edit.tpl');
 
 ?>

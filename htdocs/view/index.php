@@ -76,7 +76,7 @@ $createviewform = pieform(create_view_form());
 $smarty = smarty();
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
-$smarty->assign('PAGEHEADING', hsc(get_string('myviews')));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('createviewform', $createviewform);
 $smarty->display('view/index.tpl');
 
