@@ -70,7 +70,7 @@ class PluginBlocktypeMyviews extends SystemBlocktype {
         }
 
         if ($views) {
-            $viewidlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $views));
+            $viewidlist = implode(', ', array_map(create_function('$a', 'return (int)$a->id;'), $views));
             $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
                 FROM {view_artefact} va
                 INNER JOIN {artefact} a ON va.artefact = a.id

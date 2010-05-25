@@ -197,6 +197,9 @@ class PluginSearchInternal extends PluginSearch {
         else {
             $options['orderby'] = 'u.firstname, u.lastname, u.id';
         }
+        if (isset($options['exclude'])) {
+            $options['exclude'] = intval($options['exclude']);
+        }
         return $options;
     }
     

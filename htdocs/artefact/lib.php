@@ -528,7 +528,7 @@ abstract class ArtefactType {
         $leaves = array();
         foreach ($records as $r) {
             if ($r->container) {
-                $containers[$r->artefacttype][] = $r->id;
+                $containers[$r->artefacttype][] = (int)$r->id;
             }
             else {
                 $leaves[$r->artefacttype][] = $r->id;
@@ -1210,7 +1210,7 @@ function artefact_get_parents_for_cache($artefactids, &$parentids=false) {
         $checkattachments = array();
         foreach ($parents as $p) {
             if (in_array($p->artefacttype, artefact_get_attachment_types())) {
-                $checkattachments[] = $p->id;
+                $checkattachments[] = (int)$p->id;
             }
         }
         if (!empty($checkattachments)) {

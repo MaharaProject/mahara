@@ -236,10 +236,10 @@ class ArtefactTypeComment extends ArtefactType {
         );
 
         if (!empty($artefactid)) {
-            $where = 'c.onartefact = ' . $artefactid;
+            $where = 'c.onartefact = ' . (int)$artefactid;
         }
         else {
-            $where = 'c.onview = ' . $viewid;
+            $where = 'c.onview = ' . (int)$viewid;
         }
         if (!$canedit) {
             $where .= ' AND (c.private = 0 OR a.author = ' . (int) $userid . ')';

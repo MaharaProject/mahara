@@ -1936,7 +1936,7 @@ class View {
             else {
                 safe_require('artefact', 'file');
                 $select .= "
-                OR ( a.institution = 'mahara' AND apc.parent = " . ArtefactTypeFolder::admin_public_folder_id() . ')';
+                OR ( a.institution = 'mahara' AND apc.parent = " . (int)ArtefactTypeFolder::admin_public_folder_id() . ')';
             }
             if ($institutions) {
               $select .= '
@@ -2034,7 +2034,7 @@ class View {
         }
 
         if ($viewdata) {
-            $viewidlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $viewdata));
+            $viewidlist = implode(', ', array_map(create_function('$a', 'return (int)$a->id;'), $viewdata));
             $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
                 FROM {view_artefact} va
                 INNER JOIN {artefact} a ON va.artefact = a.id
@@ -2513,9 +2513,9 @@ class View {
             $institutions = array();
             foreach ($viewdata as $v) {
                 if ($v->owner && !isset($owners[$v->owner])) {
-                    $owners[$v->owner] = $v->owner;
+                    $owners[$v->owner] = (int)$v->owner;
                 } else if ($v->group && !isset($groups[$v->group])) {
-                    $groups[$v->group] = $v->group;
+                    $groups[$v->group] = (int)$v->group;
                 } else if (strlen($v->institution) && !isset($institutions[$v->institution])) {
                     $institutions[$v->institution] = $v->institution;
                 }

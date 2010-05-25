@@ -149,7 +149,7 @@ if ($institution || $add) {
             foreach($authinstances as $key => $val) {
                 $authinstances[$key]->index = $key;
                 $authinstances[$key]->total = $c;
-                $instancearray[] = $val->id;
+                $instancearray[] = (int)$val->id;
             }
 
             $instancestring = implode(',',$instancearray);

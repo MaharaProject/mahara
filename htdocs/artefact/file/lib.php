@@ -281,7 +281,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             LEFT OUTER JOIN {artefact_file_files} f ON f.artefact = a.id
             WHERE a.title = ?
             AND a.' . $ownersql . '
-            AND a.parent ' . (empty($folder) ? ' IS NULL' : ' = ' . $folder) . '
+            AND a.parent ' . (empty($folder) ? ' IS NULL' : ' = ' . (int)$folder) . '
             AND a.artefacttype IN ' . $filetypesql, array($title));
     }
 
