@@ -1973,7 +1973,7 @@ class View {
                     {artefact_access_role} r
                     INNER JOIN {group_member} m ON r.role = m.role
                 WHERE
-                    m."group" = ' . $group . '
+                    m."group" = ' . (int)$group . '
                     AND m.member = ' . $user->get('id') . '
                     AND r.can_view = 1
             ) ga ON (ga.group = a.group AND a.id = ga.artefact)';
