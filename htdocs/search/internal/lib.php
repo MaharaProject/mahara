@@ -223,7 +223,16 @@ class PluginSearchInternal extends PluginSearch {
 
     public static function admin_search_user($queries, $constraints, $offset, $limit, 
                                              $sortfield, $sortdir) {
-        $sort = $sortfield . ' ' . strtoupper($sortdir);
+        $sort = 'TRUE';
+        if (preg_match('/^[a-zA-Z_0-9"]+$/', $sortfield)) {
+            $sort = $sortfield;
+            if (strtoupper($sortdir) != 'DESC') {
+                $sort .= ' ASC';
+            }
+            else {
+                $sort .= ' DESC';
+            }
+        }
         $where = 'WHERE u.id <> 0 AND u.deleted = 0';
         $values = array();
 
@@ -236,6 +245,9 @@ class PluginSearchInternal extends PluginSearch {
             $where .= ' AND ( ';
             $str = array();
             foreach ($queries as $f) {
+                if (!preg_match('/^[a-zA-Z_0-9"]+$/', $f['field'])) {
+                    continue; // skip this field as it fails validation
+                }
                 $str[] = 'u.' . $f['field'] 
                     . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
             }
@@ -353,6 +365,9 @@ class PluginSearchInternal extends PluginSearch {
             $where .= ' AND ( ';
             $str = array();
             foreach ($queries as $f) {
+                if (!preg_match('/^[a-zA-Z_0-9"]+$/', $f['field'])) {
+                    continue; // skip this field as it fails validation
+                }
                 $str[] = 'u.' . $f['field'] 
                     . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
             }
