@@ -2214,7 +2214,7 @@ class View {
      * @param integer  $limit
      * @param integer  $offset
      * @param bool     $extra       Return full set of properties on each view including an artefact list
-     * @param string   $sort        Order by
+     * @param array    $sort        Order by, each element of the array is an array containing "column" (string) and "desc" (boolean)
      *
      */
     public static function view_search($query=null, $ownerquery=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0, $extra=true, $sort=null) {
@@ -2333,7 +2333,26 @@ class View {
         }
 
         $count = count_records_sql('SELECT COUNT (DISTINCT v.id) ' . $from . $where, $ph);
-        $orderby = is_null($sort) ? 'title ASC' : $sort;
+        $orderby = 'title ASC';
+        if (!empty($sort)) {
+            $orderby = '';
+            foreach ($sort as $item) {
+                if (!preg_match('/^[a-zA-Z_0-9"]+$/', $item['column'])) {
+                    continue; // skip this item (it fails validation)
+                }
+
+                if (!empty($orderby)) {
+                    $orderby .= ', ';
+                }
+                $orderby .= $item['column'];
+                if ($item['desc']) {
+                    $orderby .= ' DESC';
+                }
+                else {
+                    $orderby .= ' ASC';
+                }
+            }
+        }
         $viewdata = get_records_sql_array('
             SELECT * FROM (
                 SELECT
