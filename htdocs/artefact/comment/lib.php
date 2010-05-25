@@ -76,7 +76,7 @@ class PluginArtefactComment extends PluginArtefact {
         if (!$artefacts = get_column_sql("
             SELECT artefact
             FROM {artefact_comment_comment}
-            WHERE deletedby IS NULL AND onview IN (" . join(',', $viewids) . ')', array())) {
+            WHERE deletedby IS NULL AND onview IN (" . join(',', array_map('intval', $viewids)) . ')', array())) {
             return array();
         }
         if ($attachments = get_column_sql('
@@ -180,7 +180,7 @@ class ArtefactTypeComment extends ArtefactType {
             return;
         }
 
-        $idstr = join(',', $artefactids);
+        $idstr = join(',', array_map('intval', $artefactids));
 
         db_begin();
         delete_records_select('artefact_comment_comment', 'artefact IN (' . $idstr . ')');
@@ -305,7 +305,7 @@ class ArtefactTypeComment extends ArtefactType {
             return get_records_sql_assoc('
                 SELECT c.onview, COUNT(c.artefact) AS comments
                 FROM {artefact_comment_comment} c
-                WHERE c.onview IN (' . join(',', $viewids) . ') AND c.deletedby IS NULL
+                WHERE c.onview IN (' . join(',', array_map('intval', $viewids)) . ') AND c.deletedby IS NULL
                 GROUP BY c.onview',
                 array()
             );
@@ -314,7 +314,7 @@ class ArtefactTypeComment extends ArtefactType {
             return get_records_sql_assoc('
                 SELECT c.onartefact, COUNT(c.artefact) AS comments
                 FROM {artefact_comment_comment} c
-                WHERE c.onartefact IN (' . join(',', $artefactids) . ') AND c.deletedby IS NULL
+                WHERE c.onartefact IN (' . join(',', array_map('intval', $artefactids)) . ') AND c.deletedby IS NULL
                 GROUP BY c.onartefact',
                 array()
             );

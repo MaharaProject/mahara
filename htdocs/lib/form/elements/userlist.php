@@ -49,7 +49,7 @@ function pieform_element_userlist(Pieform $form, $element) {
 
     if (is_array($value) && count($value)) {
         $orderby = (isset($element['searchparams']['orderby']) && $element['searchparams']['orderby'] == 'lastname') ? 'lastname,firstname,id' : 'firstname,lastname,id';
-        $members = get_records_select_assoc('usr','id IN (' . join(',',$value) . ')', null, $orderby, 'id,username,firstname,lastname,preferredname,staff');
+        $members = get_records_select_assoc('usr','id IN (' . join(',',array_map('intval', $value)) . ')', null, $orderby, 'id,username,firstname,lastname,preferredname,staff');
 
         foreach($members as &$member) {
             $member = display_name($member);

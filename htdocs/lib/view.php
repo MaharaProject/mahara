@@ -2521,7 +2521,7 @@ class View {
                 }
             }
 
-            $viewidlist = join(',', array_keys($viewdata));
+            $viewidlist = join(',', array_map('intval', array_keys($viewdata)));
             if ($getartefacts) {
                 $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
                     FROM {view_artefact} va

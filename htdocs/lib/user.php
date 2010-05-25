@@ -1253,6 +1253,7 @@ function get_new_username($desired) {
  */
 function get_users_data($userlist, $getviews=true) {
 	global $USER;
+    // $userlist is only used by build_userlist_html() in this file and is sanitised there
     $sql = 'SELECT u.id, u.username, u.preferredname, u.firstname, u.lastname, u.admin, u.staff, u.deleted,
                 u.profileicon, u.email,
                 0 AS pending, ap.value AS hidenamepref,
@@ -1389,7 +1390,7 @@ function get_users_data($userlist, $getviews=true) {
 
 function build_userlist_html(&$data, $page, $admingroups) {
     if ($data['data']) {
-        $userlist = join(',', array_map(create_function('$u','return $u[\'id\'];'), $data['data']));
+        $userlist = join(',', array_map(create_function('$u','return (int)$u[\'id\'];'), $data['data']));
         $userdata = get_users_data($userlist, $page == 'myfriends');
     }
     $smarty = smarty_core();

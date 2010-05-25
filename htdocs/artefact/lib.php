@@ -520,7 +520,7 @@ abstract class ArtefactType {
 
         $records = get_records_select_assoc(
             'artefact',
-            'id IN (' . join(',', $artefactids) . ')',
+            'id IN (' . join(',', array_map('intval', $artefactids)) . ')',
             null, 'artefacttype', 'id,parent,artefacttype,container'
         );
 
@@ -591,7 +591,7 @@ abstract class ArtefactType {
             return;
         }
 
-        $idstr = '(' . join(',', $artefactids) . ')';
+        $idstr = '(' . join(',', array_map('intval', $artefactids)) . ')';
 
         db_begin();
 
@@ -984,7 +984,7 @@ abstract class ArtefactType {
             FROM {artefact_attachment} aa
                 INNER JOIN {artefact} a ON aa.attachment = a.id
                 LEFT JOIN {artefact_file_files} f ON a.id = f.artefact
-            WHERE aa.artefact IN (' . join(', ', $artefactids) . ')', '');
+            WHERE aa.artefact IN (' . join(', ', array_map('intval', $artefactids)) . ')', '');
         if (!$attachments) {
             return array();
         }
@@ -1197,7 +1197,7 @@ function artefact_get_parents_for_cache($artefactids, &$parentids=false) {
     if (!is_array($artefactids)) {
         $artefactids = array($artefactids);
     }
-    $current = $artefactids;
+    $current = array_map('intval', $artefactids);
     if (empty($parentids)) { // first call
         $parentids = array();
     }
@@ -1311,7 +1311,7 @@ function artefact_instance_from_type($artefact_type, $user_id=null) {
 
 function artefact_watchlist_notification($artefactids) {
     // gets all the views containing this artefact or a parent of this artefact and creates a watchlist activity for each view
-    if ($views = get_column_sql('SELECT DISTINCT "view" FROM {view_artefact} WHERE artefact IN (' . implode(',', array_merge(array_keys(artefact_get_parents_for_cache($artefactids)), $artefactids)) . ')')) {
+    if ($views = get_column_sql('SELECT DISTINCT "view" FROM {view_artefact} WHERE artefact IN (' . implode(',', array_merge(array_keys(artefact_get_parents_for_cache($artefactids)), array_map('intval', $artefactids))) . ')')) {
         require_once('activity.php');
         foreach ($views as $view) {
             activity_occurred('watchlist', (object)array('view' => $view));
@@ -1329,7 +1329,7 @@ function artefact_get_descendants($new) {
         $children = get_column_sql('
             SELECT id
             FROM {artefact}
-            WHERE parent IN (' . implode(',', $new) . ') AND id NOT IN (' . implode(',', $seen) . ')', array());
+            WHERE parent IN (' . implode(',', array_map('intval', $new)) . ') AND id NOT IN (' . implode(',', array_map('intval', $seen)) . ')', array());
         if ($children) {
             $new = array_diff($children, $seen);
             $new = array_combine($new, $new);
@@ -1378,7 +1378,7 @@ function artefact_get_references_in_html($html) {
 
 function artefact_get_records_by_id($ids) {
     if (!empty($ids)) {
-        if ($records = get_records_select_assoc('artefact', 'id IN (' . join(',', $ids) . ')')) {
+        if ($records = get_records_select_assoc('artefact', 'id IN (' . join(',', array_map('intval', $ids)) . ')')) {
             return $records;
         }
     }

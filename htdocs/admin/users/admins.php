@@ -77,7 +77,7 @@ function adminusers_submit(Pieform $form, $values) {
         WHERE admin = 1');
     execute_sql('UPDATE {usr}
         SET admin = 1
-        WHERE id IN (' . join(',', $values['users']) . ')');
+        WHERE id IN (' . join(',', array_map('intval', $values['users'])) . ')');
     activity_add_admin_defaults($values['users']);
     db_commit();
     $SESSION->add_ok_msg(get_string('adminusersupdated', 'admin'));

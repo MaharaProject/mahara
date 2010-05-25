@@ -635,7 +635,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             $end = '';
         }
 
-        $where = $parent ? "parent = $parent" : 'parent IS NULL';
+        $where = ($parent && is_int($parent)) ? "parent = $parent" : 'parent IS NULL';
         $where .=  ' AND ' . artefact_owner_sql($owner, $group, $institution);
 
         $taken = get_column_sql("
@@ -984,7 +984,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             return;
         }
 
-        $idstr = join(',', $artefactids);
+        $idstr = join(',', array_map('intval', $artefactids));
 
         db_begin();
         // Get the size of all the files we're about to delete that belong to
@@ -1345,7 +1345,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
      * @param array $artefactstoignore A list of IDs to not consider as the given folder. See {@link default_parent_for_copy()}
      */
     public static function get_folder_by_name($name, $parentfolderid=null, $userid=null, $groupid=null, $institution=null, $artefactstoignore=array()) {
-        $parentclause = $parentfolderid ? 'parent = ' . $parentfolderid : 'parent IS NULL';
+        $parentclause = ($parentfolderid && is_int($parentfolderid)) ? 'parent = ' . $parentfolderid : 'parent IS NULL';
         $ownerclause = artefact_owner_sql($userid, $groupid, $institution);
         $ignoreclause = $artefactstoignore ? ' AND id NOT IN(' . implode(', ', array_map('db_quote', $artefactstoignore)) . ')' : '';
         return get_record_sql('SELECT * FROM {artefact}
@@ -1538,7 +1538,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
             return;
         }
         db_begin();
-        delete_records_select('artefact_file_image', 'artefact IN (' . join(',', $artefactids) . ')');
+        delete_records_select('artefact_file_image', 'artefact IN (' . join(',', array_map('intval', $artefactids)) . ')');
         parent::bulk_delete($artefactids);
         db_commit();
     }

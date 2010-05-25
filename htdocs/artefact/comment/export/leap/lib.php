@@ -29,8 +29,8 @@ defined('INTERNAL') || die();
 class LeapExportElementComment extends LeapExportElement {
 
     public static function setup_links(&$links, $viewids, $artefactids) {
-        $viewlist = join(',', $viewids);
-        $artefactlist = join(',', $artefactids);
+        $viewlist = join(',', array_map('intval', $viewids));
+        $artefactlist = join(',', array_map('intval', $artefactids));
 
         $records = get_records_select_array(
             'artefact_comment_comment',

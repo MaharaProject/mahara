@@ -365,7 +365,7 @@ class PluginInteractionForum extends PluginInteraction {
     public static function interaction_forum_new_post($postnow=null) {
         if (is_array($postnow) && !empty($postnow)) {
             $values = array();
-            $postswhere = 'id IN (' . join(',', $postnow) . ')';
+            $postswhere = 'id IN (' . join(',', array_map('intval', $postnow)) . ')';
         }
         else {
             $currenttime = time();

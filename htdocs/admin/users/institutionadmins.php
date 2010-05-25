@@ -94,7 +94,7 @@ function adminusers_submit(Pieform $form, $values) {
     if ($values['users']) {
         execute_sql('UPDATE {usr_institution}
             SET admin = 1
-            WHERE usr IN (' . join(',', $values['users']) . ') AND institution = ' . db_quote($inst));
+            WHERE usr IN (' . join(',', array_map('intval', $values['users'])) . ') AND institution = ' . db_quote($inst));
     }
     require_once('activity.php');
     activity_add_admin_defaults($values['users']);

@@ -340,7 +340,7 @@ class Institution {
     public function removeMembers($userids) {
         // Remove self last.
         global $USER;
-        $users = get_records_select_array('usr', 'id IN (' . join(',', $userids) . ')');
+        $users = get_records_select_array('usr', 'id IN (' . join(',', array_map('intval', $userids)) . ')');
         $removeself = false;
         foreach ($users as $user) {
             if ($user->id == $USER->id) {
