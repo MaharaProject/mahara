@@ -31,16 +31,18 @@ define('MENUITEM', 'profile/plans');
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 
+define('TITLE', get_string('deleteplan','artefact.plans'));
+
 safe_require('artefact','plans');
 
-$artefact = param_integer('artefact');
-
-$a = artefact_instance_from_id($artefact);
-$todelete = get_record('artefact_plans_plan','artefact',$artefact);
-
-if ($a->get('owner') != $USER->get('id')) {
-    throw new AccessDeniedException(get_string('notartefactowner', 'error'));
+if ($delete = param_integer('artefact', 0)) {
+    $a = artefact_instance_from_id($delete);
+    if ($a instanceof ArtefactTypePlan) {
+        $a->check_permission();
+    }
 }
+
+$plan = get_record('artefact_plan','artefact',$delete);
 
 $form = array(
     'name' => 'deleteplanform',
@@ -50,27 +52,34 @@ $form = array(
     'elements' => array(
         'submit' => array(
             'type' => 'submitcancel',
-            'value' => array(get_string('delete'), get_string('cancel')),
+            'value' => array(get_string('deleteplan','artefact.plans'), get_string('cancel')),
             'goto' => get_config('wwwroot') . '/artefact/plans/',
         ),
         'artefact' => array(
             'type' => 'hidden',
-            'value' => $artefact,
+            'value' => $delete,
         ),
     )
 );
 $deleteplanform = pieform($form);
 
 $smarty = smarty(array('tablerenderer'));
-$smarty->assign('todelete', $todelete);
+$smarty->assign('plan', $plan);
 $smarty->assign('deleteplanform', $deleteplanform);
-$smarty->display('artefact:plans:deleteplan.tpl');
+$smarty->assign('PAGEHEADING', hsc(get_string('deletingplan','artefact.plans',$plan->title)));
+$smarty->display('artefact:plans:delete.tpl');
 
 // calls this function first so that we can get the artefact and call delete on it
 function delete(Pieform $form, $values) {
+    global $SESSION;
 
     if ($artefact = new ArtefactTypePlans($values['artefact'])) {
-        $artefact->delete();
+        if ($artefact->delete()) {
+            $SESSION->add_ok_msg(get_string('plandeletedsuccessfully', 'artefact.plans'));
+        }
+        else {
+            $SESSION->add_error_msg(get_string('plannotdeletedsuccessfully', 'artefact.plans'));
+        }
     }
 
     redirect('/artefact/plans/');

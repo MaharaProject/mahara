@@ -46,7 +46,7 @@ class PluginArtefactPlans extends PluginArtefact {
             array(
                 'path' => 'profile/plans',
                 'url' => 'artefact/plans/',
-                'title' => get_string('plans', 'artefact.plans'),
+                'title' => get_string('myplans', 'artefact.plans'),
                 'weight' => 40,
             ),
         );
@@ -63,13 +63,12 @@ class ArtefactTypePlans extends ArtefactType {
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
 
-        // this is needed for the blocktype view
-        if ($artefact = get_record('artefact_plans_plan', 'artefact', $id)) {
-            foreach ($fields = $this->get_plan_fields() as $field) {
+        $fields = array('title','description','completiondate','completed');
+        if ($artefact = get_record('artefact_plan', 'artefact', $id)) {
+            foreach ($fields as $field) {
               $this->$field = $artefact->$field;
             }
         }
-
     }
 
     public static function is_singular() {
@@ -85,20 +84,71 @@ class ArtefactTypePlans extends ArtefactType {
     }
 
     /**
-    * Gets the list of fields for a plan
-    *
-    */
-    public function get_plan_fields() {
-        return array(
-            'title',
-            'description',
-            'completiondate',
-            'completed',
-        );
+     * This function returns a list of the given user's plans.
+     *
+     * @param limit how many plans to display per page
+     * @param offset current page to display
+     * @return array (count: integer, data: array)
+     */
+    public static function get_plans_list($limit, $offset) {
+        global $USER;
+        $datenow = time();
+
+        ($results = get_records_sql_array("
+            SELECT ar.* FROM {artefact} a
+            JOIN {artefact_plan} ar ON ar.artefact = a.id
+            WHERE owner = ? AND artefacttype = 'plans'
+            ORDER BY ar.completiondate ASC LIMIT ? OFFSET ?", array($USER->get('id'), $limit, $offset)))
+            || ($results = array());
+
+        // format the date and setup completed for display if plan is incomplete
+        if (!empty($results)) {
+            foreach ($results as $result) {
+                if (!empty($result->completiondate)) {
+                    // if record hasn't been completed and completiondate has passed mark as such for display
+                    if ($result->completiondate < $datenow && !$result->completed) {
+                        $result->completed = -1;
+                    }
+                    $result->completiondate = strftime(get_string('strftimedate'), $result->completiondate);
+                }
+            }
+        }
+
+        $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $USER->get('id'), 'artefacttype', 'plans');
+
+        return array($count, $results);
     }
 
     /**
-    * Commits the current artefact to the database
+     * Builds the plans list table
+     *
+     * @param plans (reference)
+     */
+    public static function build_plans_list_html(&$plans) {
+        $smarty = smarty_core();
+        $smarty->assign_by_ref('plans', $plans);
+        $plans->tablerows = $smarty->fetch('artefact:plans:planslist.tpl');
+        $pagination = build_pagination(array(
+            'id' => 'planslist_pagination',
+            'class' => 'center',
+            'url' => get_config('wwwroot') . 'artefact/plans/index.php',
+            'datatable' => 'planslist',
+            'count' => $plans->count,
+            'limit' => $plans->limit,
+            'offset' => $plans->offset,
+            'firsttext' => '',
+            'previoustext' => '',
+            'nexttext' => '',
+            'lasttext' => '',
+            'numbersincludefirstlast' => false,
+            'resultcounttextsingular' => get_string('plan', 'artefact.plans'),
+            'resultcounttextplural' => get_string('plans', 'artefact.plans'),
+        ));
+        $plans->pagination = $pagination['html'];
+    }
+
+    /**
+    * Commits the current plan to the database
     *
     */
     public function commit() {
@@ -128,60 +178,28 @@ class ArtefactTypePlans extends ArtefactType {
         );
 
         if ($new) {
-            $success = insert_record('artefact_plans_plan', $data);
+            $success = insert_record('artefact_plan', $data);
         }
         else {
-            $success = update_record('artefact_plans_plan', $data, 'artefact');
+            $success = update_record('artefact_plan', $data, 'artefact');
         }
 
-        $this->dirty = false;
+        $this->dirty = $success ? false : true;
 
         return $success;
     }
 
     /**
-    * Gets the existing plans for the current user
-    *
-    */
-    public static function get_plans() {
-        global $USER;
-
-        $records = array();
-        $owner = $USER->get('id');
-        $datenow = time();
-
-        $sql = "SELECT ar.*, a.owner
-                    FROM {artefact} a
-                    JOIN {artefact_plans_plan} ar ON ar.artefact = a.id
-                        WHERE a.owner = ? AND a.artefacttype = 'plans'
-                        ORDER BY ar.completiondate ASC";
-
-        $records = get_records_sql_array($sql, array($owner));
-
-        // ToDo: write date formatting in a better way
-        foreach ($records as $record) {
-            if (!empty($record->completiondate)) {
-                // if record hasn't been completed and completiondate has passed mark as such for display
-                if ($record->completiondate < $datenow && !$record->completed) {
-                    $record->completed = -1;
-                }
-                $record->completiondate = strftime(get_string('strftimedate'), $record->completiondate);
-            }
-        }
-
-        return $records;
-    }
-
-    /**
-    * Gets the new/edit plans form
+    * Gets the new/edit plans pieform
     *
     */
     public static function get_form() {
         require_once(get_config('libroot') . 'pieforms/pieform.php');
         $elements = call_static_method(generate_artefact_class_name('plans'), 'get_plansform_elements');
         $elements['submit'] = array(
-            'type' => 'submit',
-            'value' => get_string('save'),
+            'type' => 'submitcancel',
+            'value' => array(get_string('saveplan','artefact.plans'), get_string('cancel')),
+            'goto' => get_config('wwwroot') . 'artefact/plans/',
         );
         $plansform = array(
             'name' => 'addplans',
@@ -195,7 +213,7 @@ class ArtefactTypePlans extends ArtefactType {
     }
 
     /**
-    * The new/edit fields for the plans form
+    * Gets the new/edit fields for the plans pieform
     *
     */
     public static function get_plansform_elements() {
@@ -234,6 +252,7 @@ class ArtefactTypePlans extends ArtefactType {
                 'type' => 'checkbox',
                 'defaultvalue' => 0,
                 'title' => get_string('completed', 'artefact.plans'),
+                'description' => get_string('completeddesc', 'artefact.plans'),
             )
         );
     }
@@ -275,10 +294,10 @@ class ArtefactTypePlans extends ArtefactType {
         }
 
         if ($artefact->commit()) {
-            $SESSION->add_ok_msg(get_string('tasksavedsuccessfully', 'artefact.plans'));
+            $SESSION->add_ok_msg(get_string('plansavedsuccessfully', 'artefact.plans'));
         }
         else {
-            $SESSION->add_error_msg(get_string('tasknotsavedsuccessfully', 'artefact.plans'));
+            $SESSION->add_error_msg(get_string('plannotsavedsuccessfully', 'artefact.plans'));
         }
 
         redirect('/artefact/plans/');
@@ -294,7 +313,7 @@ class ArtefactTypePlans extends ArtefactType {
     * passed by _reference_
     */
     public static function populate_form(&$form, $id) {
-        if (!$plan = get_record('artefact_plans_plan', 'id', $id)) {
+        if (!$plan = get_record('artefact_plan', 'id', $id)) {
             throw new InvalidArgumentException("Couldn't find plan with id $id");
         }
         foreach ($form['elements'] as $k => $element) {
@@ -322,9 +341,29 @@ class ArtefactTypePlans extends ArtefactType {
     public function delete() {
         db_begin();
 
-        delete_records('artefact_plans_plan', 'artefact', $this->id);
+        delete_records('artefact_plan', 'artefact', $this->id);
         parent::delete();
 
         db_commit();
+
+        if ($this->deleted) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
+     * Checks that the person viewing this blog is the owner. If not, throws an
+     * AccessDeniedException. Used in the blog section to ensure only the
+     * owners of the blogs can view or change them there. Other people see
+     * blogs when they are placed in views.
+     */
+    public function check_permission() {
+        global $USER;
+        if ($USER->get('id') != $this->owner) {
+            throw new AccessDeniedException(get_string('youarenottheownerofthisplan', 'artefact.plans'));
+        }
     }
 }

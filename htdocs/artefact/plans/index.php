@@ -25,23 +25,33 @@
  *
  */
 
-define('INTERNAL', true);
+
+define('INTERNAL', 1);
 define('MENUITEM', 'profile/plans');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'plans');
 define('SECTION_PAGE', 'index');
 
-require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('plans', 'artefact.plans'));
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+safe_require('artefact', 'plans');
 
-safe_require('artefact','plans');
-$plansform = ArtefactTypePlans::get_form(); // new plan form
-$rows = ArtefactTypePlans::get_plans(); // users existing plans
+define('TITLE', get_string('myplans','artefact.plans'));
 
-$smarty = smarty(array('tablerenderer'));
-$smarty->assign('plansform',$plansform);
-$smarty->assign('rows',$rows);
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+// offset and limit for pagination
+$plans = (object) array(
+    'offset' => param_integer('offset', 0),
+    'limit'  => param_integer('limit', 10),
+);
+
+list($plans->count, $plans->data) = ArtefactTypePlans::get_plans_list($plans->limit, $plans->offset);
+ArtefactTypePlans::build_plans_list_html($plans);
+
+$smarty = smarty(array('paginator','tablerenderer'));
+$smarty->assign_by_ref('plans', $plans);
+$smarty->assign('strnoplanssaddone',
+    get_string('noplanssaddone', 'artefact.plans',
+    '<a href="' . get_config('wwwroot') . 'artefact/plans/new/">', '</a>'));
+$smarty->assign('PAGEHEADING', hsc(get_string("myplans", "artefact.plans")));
 $smarty->display('artefact:plans:index.tpl');
 
 ?>

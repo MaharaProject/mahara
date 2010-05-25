@@ -33,19 +33,20 @@ require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
 require_once(get_config('docroot') . 'artefact/lib.php');
 
+define('TITLE', get_string('editplan','artefact.plans'));
+
 $id = param_integer('id');
 $artefact = param_integer('artefact');
 
 $a = artefact_instance_from_id($artefact);
-
-if ($a->get('owner') != $USER->get('id')) {
-    throw new AccessDeniedException(get_string('notartefactowner', 'error'));
+if ($a instanceof ArtefactTypePlan) {
+    $a->check_permission();
 }
 
 $elements = call_static_method(generate_artefact_class_name('plans'), 'get_plansform_elements');
 $elements['submit'] = array(
     'type' => 'submitcancel',
-    'value' => array(get_string('save'), get_string('cancel')),
+    'value' => array(get_string('saveplan','artefact.plans'), get_string('cancel')),
     'goto' => get_config('wwwroot') . '/artefact/plans/',
 );
 $cform = array(
@@ -61,6 +62,7 @@ $plansform = pieform($cform);
 
 $smarty = smarty();
 $smarty->assign('plansform', $plansform);
-$smarty->display('artefact:plans:editplan.tpl');
+$smarty->assign('PAGEHEADING', hsc(get_string("editingplan", "artefact.plans")));
+$smarty->display('artefact:plans:edit.tpl');
 
 ?>

@@ -26,15 +26,23 @@
 
 defined('INTERNAL') || die();
 
-$string['addplans'] = 'Add plans';
+$string['newplan'] = 'New plan';
 $string['completed'] = 'Completed';
-$string['deleting'] = 'Deleting Plan';
-$string['description'] = 'Description';
 $string['completiondate'] = 'Completion date';
-$string['plans'] = 'My Plans';
-$string['savetask'] = 'Save task';
-$string['task'] = 'Task';
-$string['tasknotsavedsuccessfully'] = 'There was an error with submitting this form. Please check the marked fields and try again.';
-$string['tasksavedsuccessfully'] = 'Task saved successfully.';
+$string['completeddesc'] = 'Mark your plan completed.';
+$string['deleteplan'] = 'Delete plan';
+$string['deletingplan'] = 'Deleting Plan: \'%s\'';
+$string['description'] = 'Description';
+$string['editplan'] = 'Edit Plan';
+$string['editingplan'] = 'Editing Plan';
+$string['myplans'] = 'My Plans';
+$string['plan'] = 'Plan';
+$string['plans'] = 'Plans';
+$string['plandeletedsuccessfully'] = 'Plan deleted successfully.';
+$string['plannotdeletedsuccessfully'] = 'There was an error deleting plan.';
+$string['plannotsavedsuccessfully'] = 'There was an error submitting this form. Please check the marked fields and try again.';
+$string['plansavedsuccessfully'] = 'Plan saved successfully.';
+$string['saveplan'] = 'Save plan';
 $string['title'] = 'Title';
+$string['noplanssaddone'] = 'No plans yet. %sAdd one%s!';
 ?>
