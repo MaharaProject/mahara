@@ -23,7 +23,7 @@
                 <td>{$row->completiondate|escape}</td>
                 <td>{$row->title|escape}<div>{$row->description|escape}</div></td>
                 {if $row->completed == 1}
-                    <td><div class="completed"><img src="/artefact/plans/theme/raw/static/images/success.gif" alt="" /></div></td>
+                    <td><div class="completed"><img src="{$WWWROOT}theme/raw/static/images/success.gif" alt="" /></div></td>
                 {else}
                     <td>&nbsp;</td>
                 {/if}
