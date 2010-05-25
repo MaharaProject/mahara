@@ -388,6 +388,7 @@ EOF;
                         get_string_from_language(get_config('lang'), 'thislanguage') . ')');
         $smarty->assign('LANGUAGES', get_languages());
     }
+    $smarty->assign('FOOTERMENU', footer_menu());
 
     $smarty->assign_by_ref('USER', $USER);
     $smarty->assign('SESSKEY', $USER->get('sesskey'));
@@ -1996,6 +1997,35 @@ function right_nav() {
     $menu_structure = find_menu_children($menu, '');
     return $menu_structure;
 }
+
+
+function footer_menu() {
+    $menu = array(
+        'termsandconditions' => array(
+            'url' => 'terms.php',
+            'title' => get_string('termsandconditions'),
+        ),
+        'privacystatement' => array(
+            'url' => 'privacy.php',
+            'title' => get_string('privacystatement'),
+        ),
+        'about' => array(
+            'url' => 'about.php',
+            'title' => get_string('about'),
+        ),
+        'contactus' => array(
+            'url' => 'contact.php',
+            'title' => get_string('contactus'),
+        ),
+    );
+    if ($disabled = get_config('hidefooterlinks')) {
+        foreach (split(',', $disabled) as $k) {
+            unset($menu[$k]);
+        }
+    }
+    return $menu;
+}
+
 
 /**
  * Given a menu structure and a path, returns a data structure representing all 
