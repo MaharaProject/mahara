@@ -737,6 +737,7 @@ class PluginSearchInternal extends PluginSearch {
                 else {
                     $newresult['summary'] = $newresult['description'];
                 }
+                $newresult['summary'] = clean_html($newresult['summary']);
                 $result = $newresult;
             }
 
