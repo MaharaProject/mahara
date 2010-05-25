@@ -1760,6 +1760,18 @@ function admin_nav() {
             'weight' => 60,
         ),
         array(
+            'path'   => 'managegroups',
+            'url'    => 'admin/groups/groups.php',
+            'title'  => 'Manage Groups',
+            'weight' => 35,
+        ),
+        array(
+            'path'   => 'managegroups/groups',
+            'url'    => 'admin/groups/groups.php',
+            'title'  => 'Administer Groups',
+            'weight' => 10,
+        ),
+        array(
             'path'   => 'configextensions',
             'url'    => 'admin/extensions/plugins.php',
             'title'  => get_string('configextensions', 'admin'),

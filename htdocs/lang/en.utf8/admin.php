@@ -675,4 +675,13 @@ $string['accountsettingslegend'] = 'Account Settings';
 $string['securitysettingslegend'] = 'Security Settings';
 $string['generalsettingslegend'] = 'General Settings';
 
+$string['groupname'] = 'Group Name';
+$string['groupmembers'] = 'Members';
+$string['groupadmins'] = 'Admins';
+$string['grouptype'] = 'Group Type';
+$string['groupvisible'] = 'Visibility';
+$string['groupmanage'] = 'Manage';
+$string['groupdelete'] = 'Delete';
+$string['managegroupdescription'] = 'Use the below form to promote and demote admins for this group.';
+
 ?>
