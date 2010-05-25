@@ -195,7 +195,7 @@ class ArtefactTypeComment extends ArtefactType {
 
     public static function get_links($id) {
         return array(
-            '_default' => get_config('wwwroot') . 'artefact/comment/view.php?id=' . $this->get('id'),
+            '_default' => get_config('wwwroot') . 'artefact/comment/view.php?id=' . $id,
         );
     }
 
