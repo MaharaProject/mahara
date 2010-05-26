@@ -1299,10 +1299,6 @@ function get_users_data($userlist, $getviews=true) {
     $allowhidename = get_config('userscanhiderealnames');
 
     foreach ($data as &$record) {
-        if (isset($record->introduction)) {
-            $record->introduction = str_shorten_html($record->introduction, 100, true);
-        }
-
         $record->messages = ($record->messages == 'allow' || $record->friend && $record->messages == 'friends' || $USER->get('admin')) ? 1 : 0;
         $record->institutions = get_institution_string_for_user($record->id);
         $record->display_name = display_name($record, null, false, !$allowhidename || !$record->hidenamepref);
