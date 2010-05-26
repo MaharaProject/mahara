@@ -1781,7 +1781,7 @@ class View {
         safe_require('blocktype', $data['blocktype']);
         $blocktypeclass = generate_class_name('blocktype', $data['blocktype']);
 
-        $data['sortorder'] = 'title';
+        $data['sortorder'] = array(array('fieldname' => 'title', 'order' => 'ASC'));
         if (method_exists($blocktypeclass, 'artefactchooser_get_sort_order')) {
             $data['sortorder'] = call_static_method($blocktypeclass, 'artefactchooser_get_sort_order');
         }
@@ -1876,13 +1876,64 @@ class View {
 
         $offset        = !empty($data['offset']) ? $data['offset'] : null;
         $limit         = !empty($data['limit']) ? $data['limit'] : null;
-        $sortorder     = !empty($data['sortorder']) ? $data['sortorder'] : false;
-        $extraselect   = (isset($data['extraselect']) ? ' AND ' . $data['extraselect'] : '');
+
+        $sortorder = '';
+        if (!empty($data['sortorder'])) {
+            foreach ($data['sortorder'] as $field) {
+                if (!preg_match('/^[a-zA-Z_0-9"]+$/', $field['fieldname'])) {
+                    continue; // skip this item (it fails validation)
+                }
+
+                $order = 'ASC';
+                if (!empty($field['order']) && ('DESC' == strtoupper($field['order']))) {
+                    $order = 'DESC';
+                }
+
+                if (empty($sortorder)) {
+                    $sortorder .= 'ORDER BY ';
+                }
+                else {
+                    $sortorder .= ', ';
+                }
+
+                $sortorder .= $field['fieldname'] . ' ' . $order;
+            }
+        }
+
+        $extraselect = '';
+        if (isset($data['extraselect'])) {
+            foreach ($data['extraselect'] as $field) {
+                if (!preg_match('/^[a-zA-Z_0-9"]+$/', $field['fieldname'])) {
+                    continue; // skip this item (it fails validation)
+                }
+
+                // Sanitise all values
+                $values = $field['values'];
+                foreach ($values as &$val) {
+                    if ($field['type'] == 'int') {
+                        $val = (int)$val;
+                    }
+                    elseif ($field['type'] == 'string') {
+                        $val = db_quote($val);
+                    }
+                    else {
+                        throw new SystemException("Unsupported field type '" . $field['type'] . "' passed to View::get_artefactchooser_artefacts");
+                    }
+                }
+
+                $extraselect .= ' AND ';
+
+                if (count($values) > 1) {
+                    $extraselect .= $field['fieldname'] . ' IN (' . implode(', ', $values) . ')';
+                }
+                else {
+                    $extraselect .= $field['fieldname'] . ' = ' . reset($values);
+                }
+            }
+        }
 
         $from = ' FROM {artefact} a ';
-        if (isset($data['extrajoin'])) {
-            $from .= $data['extrajoin'];
-        }
+
         if ($group) {
             // Get group-owned artefacts that the user has view
             // permission on, and site-owned artefacts
@@ -1957,12 +2008,9 @@ class View {
         $select .= $extraselect;
 
         $cols = $short ? 'a.id, a.id AS b' : 'a.*'; // get_records_sql_assoc wants > 1 column
-        if (isset($data['extracols'])) {
-            $cols .= ', ' . $data['extracols'];
-        }
 
         $artefacts = get_records_sql_assoc(
-            'SELECT ' . $cols . $from . ' WHERE ' . $select . ($sortorder ? (' ORDER BY ' . $sortorder) : ''),
+            'SELECT ' . $cols . $from . ' WHERE ' . $select . $sortorder,
             null, $offset, $limit
         );
         $totalartefacts = count_records_sql('SELECT COUNT(*) ' . $from . ' WHERE ' . $select);

@@ -117,7 +117,7 @@ class PluginBlocktypeFolder extends PluginBlocktype {
     }
 
     public static function artefactchooser_get_sort_order() {
-        return 'parent, title';
+        return array(array('fieldname' => 'parent'), array('fieldname' => 'title'));
     }
 
     public static function filebrowser_element(&$instance, $default=array()) {

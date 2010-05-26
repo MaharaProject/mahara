@@ -98,15 +98,6 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
         );
     }
 
-    /**
-     * Optional method. If specified, changes the order in which the artefacts are sorted in the artefact chooser.
-     *
-     * This is a valid SQL string for the ORDER BY clause. Fields you can sort on are as per the artefact table
-     */
-    public static function artefactchooser_get_sort_order() {
-        return 'title';
-    }
-
     public static function default_copy_type() {
         return 'nocopy';
     }

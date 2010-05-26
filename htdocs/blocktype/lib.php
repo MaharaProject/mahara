@@ -843,7 +843,7 @@ class BlockInstance {
         // Get list of allowed artefacts
         require_once('view.php');
         $searchdata = array(
-            'extraselect'          => 'id IN (' . join(',', array_map('intval', $artefacts)) . ')',
+            'extraselect'          => array(array('fieldname' => 'id', 'type' => 'int', 'values' => $artefacts)),
             'userartefactsallowed' => true,  // If this is a group view, the user can add personally owned artefacts
         );
         list($allowed, $count) = View::get_artefactchooser_artefacts(
