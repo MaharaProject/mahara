@@ -46,11 +46,9 @@ foreach ($adminstrings as $string) {
 //set up initial pieform
 $groupoptionform = array(
     'name'       => 'groupoptions',
-    'jsform'     => true,
     'renderer'   => 'table',
     'plugintype' => 'core',
     'pluginname' => 'admin',
-    'jssuccesscallback' => 'checkReload',
     'elements'   => array(
         'creategroups' => array(
             'type'         => 'select',
@@ -91,14 +89,8 @@ $groupoptionform['elements']['submit'] = array(
 );
 
 $groupoptionform = pieform($groupoptionform);
-function groupoptions_fail(Pieform $form, $field) {
-    $form->reply(PIEFORM_ERR, array(
-        'message' => get_string('setsiteoptionsfailed', 'admin', get_string($field, 'admin')),
-        'goto'    => '/admin/site/options.php',
-    ));
-}
-
 function groupoptions_submit(Pieform $form, $values) {
+    global $SESSION;
     $fields = array('creategroups', 'createpublicgroups', 'allowgroupcategories');
     foreach ($fields as $field) {
         if (!set_config($field, $values[$field])) {
@@ -106,8 +98,8 @@ function groupoptions_submit(Pieform $form, $values) {
         }
     }
 
-    $message = get_string('groupoptionsset', 'group');
-    $form->reply(PIEFORM_OK, array('message' => $message, 'goto' => '/admin/site/groups.php'));
+    $SESSION->add_ok_msg(get_string('groupoptionsset', 'group'));
+    redirect(get_config('wwwroot') . 'admin/site/groups.php');
 }
 if (get_config('allowgroupcategories')) {
 $thead = array(json_encode(get_string('name', 'admin')), '""');
