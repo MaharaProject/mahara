@@ -35,6 +35,16 @@ json_headers();
 
 $itemid = param_integer('itemid');
 
+//first update all records that use this group id
+$groups = get_records_assoc('group', 'groupcategory', $itemid);
+if (!empty($groups)) {
+    foreach ($groups as $group) {
+        $group->groupcategory = 0;
+        update_record('group', $group);
+    }
+}
+
+//now delete actual category
 if (!delete_records('group_category','id', $itemid)) {
     json_reply('local', get_string('deletefailed','admin'));
 }

@@ -67,7 +67,7 @@ if (get_config('allowgroupcategories')) {
     $elements['groupcategory'] = array(
                 'type'         => 'select',
                 'title'        => get_string('groupcategory', 'group'),
-                'options'      => get_records_menu('group_category','','','displayorder', 'id,title'),
+                'options'      => array('0'=>get_string('nocategoryselected', 'group')) + get_records_menu('group_category','','','displayorder', 'id,title'),
                 'defaultvalue' => $group_data->groupcategory,
                 'help'         => true);
 }

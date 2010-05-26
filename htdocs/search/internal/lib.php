@@ -605,7 +605,11 @@ class PluginSearchInternal extends PluginSearch {
             $sql .= 'AND id NOT IN (' . $grouproles . ')';
         }
         if (!empty($category)) {
-            $sql .= ' AND groupcategory ='.$category;
+            if ($category == -1) { //find unassigned groups
+                    $sql .= " AND (groupcategory = 0 OR groupcategory = null)";
+            } else {
+                $sql .= ' AND groupcategory ='.$category;
+            }
         }
 
         $count = get_field_sql('SELECT COUNT(*) '.$sql, $values);

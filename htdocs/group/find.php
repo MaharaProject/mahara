@@ -34,7 +34,7 @@ require_once('group.php');
 require_once('searchlib.php');
 $filter = param_alpha('filter', 'notmember');
 $offset = param_integer('offset', 0);
-$groupcategory = param_integer('groupcategory', 0);
+$groupcategory = param_variable('groupcategory', 0);
 $groupsperpage = 20;
 
 $query = param_variable('query', '');
@@ -64,6 +64,7 @@ $elements['filter'] = array(
             'defaultvalue' => $filter);
 if (get_config('allowgroupcategories')) {
     $options[0] = get_string('allcategories', 'group');
+    $options[-1] = get_string('categoryunassigned', 'group');
     $options += get_records_menu('group_category','','','displayorder', 'id,title');
     $elements['groupcategory'] = array(
                 'type'         => 'select',
