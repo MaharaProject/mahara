@@ -94,7 +94,7 @@ class LeapExportElementInternal extends LeapExportElement {
         if ($icons = get_column_sql("SELECT id
             FROM {artefact}
             WHERE artefacttype = 'profileicon'
-            AND owner = ?
+            AND \"owner\" = ?
             ORDER BY id = (
                 SELECT profileicon FROM {usr} WHERE id = ?
             ) DESC, id", array($userid, $userid))) {

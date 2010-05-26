@@ -42,8 +42,8 @@ $menuitems = get_records_sql_array('
    FROM {site_menu} s
       LEFT OUTER JOIN {artefact} a ON s.file = a.id
    WHERE
-      s.public = ' . $public . '
-   ORDER BY s.displayorder', null);
+      s.public = ?
+   ORDER BY s.displayorder', array($public));
 $rows = array();
 if ($menuitems) {
     foreach ($menuitems as $i) {

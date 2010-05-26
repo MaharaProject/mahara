@@ -196,7 +196,7 @@ function simplesaml_init($saml_config, $valid_saml_session, $saml_attributes, $a
         $as->requireAuth();
     } else {
         // find all the possible institutions/auth instances
-        $instances = recordset_to_array(get_recordset_sql("SELECT * FROM auth_instance_config aic, auth_instance ai WHERE ai.id = aic.instance AND ai.authname = 'saml' AND aic.field = 'institutionattribute'"));
+        $instances = recordset_to_array(get_recordset_sql("SELECT * FROM {auth_instance_config} aic, {auth_instance} ai WHERE ai.id = aic.instance AND ai.authname = 'saml' AND aic.field = 'institutionattribute'"));
         
         // find the one (it should be only one) that has the right field, and the right field value for institution
         $instance = false;

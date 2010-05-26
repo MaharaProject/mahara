@@ -59,7 +59,7 @@ class PluginBlocktypeMyviews extends SystemBlocktype {
 
         // Get viewable views
         $views = array();
-        if ($allviews = get_records_select_array('view', "owner = ? AND type NOT IN ('profile', 'dashboard')", array($userid))) {
+        if ($allviews = get_records_select_array('view', "\"owner\" = ? AND type NOT IN ('profile', 'dashboard')", array($userid))) {
             foreach ($allviews as $view) {
                 if (can_view_view($view->id)) {
                     $views[$view->id] = $view;
@@ -70,7 +70,7 @@ class PluginBlocktypeMyviews extends SystemBlocktype {
         }
 
         if ($views) {
-            $viewidlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $views));
+            $viewidlist = implode(', ', array_map(create_function('$a', 'return (int)$a->id;'), $views));
             $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
                 FROM {view_artefact} va
                 INNER JOIN {artefact} a ON va.artefact = a.id

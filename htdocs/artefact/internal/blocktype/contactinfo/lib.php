@@ -92,7 +92,7 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
             FROM {artefact} a
             WHERE artefacttype = \'email\'
             AND a.owner = (
-                SELECT owner
+                SELECT "owner"
                 FROM {view}
                 WHERE id = ?
             )
@@ -151,7 +151,7 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
             $artefacttypes = array_diff(PluginArtefactInternal::get_contactinfo_artefact_types(), array('email'));
             $artefactids = get_column_sql('
                 SELECT id FROM {artefact}
-                WHERE owner = ? AND artefacttype IN (' . join(',', array_map('db_quote', $artefacttypes)) . ')', array($view->get('owner')));
+                WHERE \"owner\" = ? AND artefacttype IN (' . join(',', array_map('db_quote', $artefacttypes)) . ')', array($view->get('owner')));
             $configdata['artefactids'] = $artefactids;
             if (isset($configdata['email'])) {
                 if ($newemail = get_field('artefact_internal_profile_email', 'artefact', 'principal', 1, 'owner', $view->get('owner'))) {

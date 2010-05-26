@@ -51,7 +51,8 @@ class PluginBlocktypeNewViews extends SystemBlocktype {
         $configdata = $instance->get('configdata');
         $nviews = isset($configdata['limit']) ? intval($configdata['limit']) : 5;
 
-        $views = View::view_search(null, null, null, null, $nviews, 0, true, 'mtime DESC');
+        $sort = array(array('column' => 'mtime', 'desc' => true));
+        $views = View::view_search(null, null, null, null, $nviews, 0, true, $sort);
         $smarty = smarty_core();
         $smarty->assign('loggedin', $USER->is_logged_in());
         $smarty->assign('views', $views->data);

@@ -340,7 +340,7 @@ class Institution {
     public function removeMembers($userids) {
         // Remove self last.
         global $USER;
-        $users = get_records_select_array('usr', 'id IN (' . join(',', $userids) . ')');
+        $users = get_records_select_array('usr', 'id IN (' . join(',', array_map('intval', $userids)) . ')');
         $removeself = false;
         foreach ($users as $user) {
             if ($user->id == $USER->id) {
@@ -362,7 +362,7 @@ class Institution {
         // If the user is being authed by the institution they are
         // being removed from, change them to internal auth
         $authinstances = get_records_select_assoc('auth_instance', "
-            institution IN ('mahara','" . $this->name . "')");
+            institution IN ('mahara', " . db_quote($this->name) . ')');
         $oldauth = $user->authinstance;
         if (isset($authinstances[$oldauth]) && $authinstances[$oldauth]->institution == $this->name) {
             foreach ($authinstances as $ai) {

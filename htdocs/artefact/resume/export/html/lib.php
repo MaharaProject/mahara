@@ -46,7 +46,7 @@ class HtmlExportResume extends HtmlExportArtefactPlugin {
 
         if ($artefacts = get_column_sql("SELECT id
             FROM {artefact}
-            WHERE owner = ?
+            WHERE \"owner\" = ?
             AND artefacttype IN
             (SELECT name FROM {artefact_installed_type} WHERE plugin = 'resume')",
             array($this->exporter->get('user')->get('id')))) {

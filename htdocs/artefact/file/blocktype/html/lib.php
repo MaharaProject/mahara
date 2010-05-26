@@ -93,9 +93,6 @@ class PluginBlocktypeHtml extends PluginBlocktype {
     }
 
     public static function artefactchooser_element($default=null) {
-        $extraselect = 'filetype IN (' . join(',', array_map('db_quote', self::get_allowed_mimetypes())) . ')';
-        $extrajoin   = ' JOIN {artefact_file_files} ON {artefact_file_files}.artefact = a.id ';
-
         return array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
@@ -105,7 +102,6 @@ class PluginBlocktypeHtml extends PluginBlocktype {
             'limit' => 10,
             'artefacttypes' => array('file'),
             'template' => 'artefact:file:artefactchooser-element.tpl',
-            'extraselect' => $extraselect,
         );
     }
 

@@ -529,19 +529,19 @@ class View {
         $data = get_records_sql_array("
             SELECT accesstype AS type, NULL AS id, NULL AS role, NULL AS grouptype, startdate, stopdate
                 FROM {view_access}
-                WHERE view = ?
+                WHERE \"view\" = ?
         UNION
             SELECT 'user' AS type, $uid AS id, NULL AS role, NULL AS grouptype, startdate, stopdate
                 FROM {view_access_usr}
-                WHERE view = ?
+                WHERE \"view\" = ?
         UNION
-            SELECT 'group', $gid, role, grouptype, startdate, stopdate FROM {view_access_group}
+            SELECT 'group', $gid, \"role\", grouptype, startdate, stopdate FROM {view_access_group}
                 INNER JOIN {group} g ON (\"group\" = g.id AND g.deleted = ?)
-                WHERE view = ?
+                WHERE \"view\" = ?
         UNION
             SELECT 'token', token, NULL AS role, NULL AS grouptype, startdate, stopdate
                 FROM {view_access_token}
-                WHERE view = ? AND visible = 1
+                WHERE \"view\" = ? AND visible = 1
         ", array($this->id, $this->id, 0, $this->id, $this->id));
         if ($data) {
             foreach ($data as &$item) {
@@ -621,8 +621,8 @@ class View {
             $userids = implode(',', $userids);
 
             execute_sql('DELETE FROM {usr_watchlist_view}
-                WHERE view = ' . $this->get('id') . '
-                AND usr IN (' . $userids . ')');
+                WHERE view = ?
+                AND usr IN (' . $userids . ')', array($this->get('id')));
         }
 
         $beforeusers = activity_get_viewaccess_users($this->get('id'), $USER->get('id'), 'viewaccess');
@@ -1227,7 +1227,7 @@ class View {
         }
 
         if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'single_only', $this)) {
-            $count = count_records_select('block_instance', "view = ? AND blocktype = ?",
+            $count = count_records_select('block_instance', '"view" = ? AND blocktype = ?',
                                           array($this->id, $values['blocktype']));
             if ($count > 0) {
                 throw new UserException(get_string('onlyoneblocktypeperview', 'error', $values['blocktype']));
@@ -1781,7 +1781,7 @@ class View {
         safe_require('blocktype', $data['blocktype']);
         $blocktypeclass = generate_class_name('blocktype', $data['blocktype']);
 
-        $data['sortorder'] = 'title';
+        $data['sortorder'] = array(array('fieldname' => 'title', 'order' => 'ASC'));
         if (method_exists($blocktypeclass, 'artefactchooser_get_sort_order')) {
             $data['sortorder'] = call_static_method($blocktypeclass, 'artefactchooser_get_sort_order');
         }
@@ -1876,13 +1876,64 @@ class View {
 
         $offset        = !empty($data['offset']) ? $data['offset'] : null;
         $limit         = !empty($data['limit']) ? $data['limit'] : null;
-        $sortorder     = !empty($data['sortorder']) ? $data['sortorder'] : false;
-        $extraselect   = (isset($data['extraselect']) ? ' AND ' . $data['extraselect'] : '');
+
+        $sortorder = '';
+        if (!empty($data['sortorder'])) {
+            foreach ($data['sortorder'] as $field) {
+                if (!preg_match('/^[a-zA-Z_0-9"]+$/', $field['fieldname'])) {
+                    continue; // skip this item (it fails validation)
+                }
+
+                $order = 'ASC';
+                if (!empty($field['order']) && ('DESC' == strtoupper($field['order']))) {
+                    $order = 'DESC';
+                }
+
+                if (empty($sortorder)) {
+                    $sortorder .= 'ORDER BY ';
+                }
+                else {
+                    $sortorder .= ', ';
+                }
+
+                $sortorder .= $field['fieldname'] . ' ' . $order;
+            }
+        }
+
+        $extraselect = '';
+        if (isset($data['extraselect'])) {
+            foreach ($data['extraselect'] as $field) {
+                if (!preg_match('/^[a-zA-Z_0-9"]+$/', $field['fieldname'])) {
+                    continue; // skip this item (it fails validation)
+                }
+
+                // Sanitise all values
+                $values = $field['values'];
+                foreach ($values as &$val) {
+                    if ($field['type'] == 'int') {
+                        $val = (int)$val;
+                    }
+                    elseif ($field['type'] == 'string') {
+                        $val = db_quote($val);
+                    }
+                    else {
+                        throw new SystemException("Unsupported field type '" . $field['type'] . "' passed to View::get_artefactchooser_artefacts");
+                    }
+                }
+
+                $extraselect .= ' AND ';
+
+                if (count($values) > 1) {
+                    $extraselect .= $field['fieldname'] . ' IN (' . implode(', ', $values) . ')';
+                }
+                else {
+                    $extraselect .= $field['fieldname'] . ' = ' . reset($values);
+                }
+            }
+        }
 
         $from = ' FROM {artefact} a ';
-        if (isset($data['extrajoin'])) {
-            $from .= $data['extrajoin'];
-        }
+
         if ($group) {
             // Get group-owned artefacts that the user has view
             // permission on, and site-owned artefacts
@@ -1900,7 +1951,7 @@ class View {
             ) ga ON (ga.group = a.group AND a.id = ga.artefact)';
             $select = "(a.institution = 'mahara' OR ga.can_view = 1";
             if (!empty($data['userartefactsallowed'])) {
-                $select .= ' OR owner = ' . $user->get('id');
+                $select .= ' OR "owner" = ' . $user->get('id');
             }
             $select .= ')';
         }
@@ -1927,7 +1978,7 @@ class View {
             ) ra ON (a.id = ra.artefact AND a.group = ra.group)';
             $institutions = array_keys($user->get('institutions'));
             $select = '(
-                owner = ' . $user->get('id') . '
+                "owner" = ' . $user->get('id') . '
                 OR ra.can_republish = 1
                 OR aau.can_republish = 1';
             if ($user->get('admin')) {
@@ -1936,7 +1987,7 @@ class View {
             else {
                 safe_require('artefact', 'file');
                 $select .= "
-                OR ( a.institution = 'mahara' AND apc.parent = " . ArtefactTypeFolder::admin_public_folder_id() . ')';
+                OR ( a.institution = 'mahara' AND apc.parent = " . (int)ArtefactTypeFolder::admin_public_folder_id() . ')';
             }
             if ($institutions) {
               $select .= '
@@ -1957,12 +2008,9 @@ class View {
         $select .= $extraselect;
 
         $cols = $short ? 'a.id, a.id AS b' : 'a.*'; // get_records_sql_assoc wants > 1 column
-        if (isset($data['extracols'])) {
-            $cols .= ', ' . $data['extracols'];
-        }
 
         $artefacts = get_records_sql_assoc(
-            'SELECT ' . $cols . $from . ' WHERE ' . $select . ($sortorder ? (' ORDER BY ' . $sortorder) : ''),
+            'SELECT ' . $cols . $from . ' WHERE ' . $select . $sortorder,
             null, $offset, $limit
         );
         $totalartefacts = count_records_sql('SELECT COUNT(*) ' . $from . ' WHERE ' . $select);
@@ -2011,8 +2059,8 @@ class View {
             $count = count_records('view', 'group', $groupid);
             $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, v.type
                 FROM {view} v
-                WHERE v.group = ' . $groupid . '
-                ORDER BY v.title, v.id', '', $offset, $limit);
+                WHERE v.group = ?
+                ORDER BY v.title, v.id', array($groupid), $offset, $limit);
         }
         else if ($institution) {
             $count = count_records('view', 'institution', $institution);
@@ -2028,13 +2076,13 @@ class View {
                 FROM {view} v
                 LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
                 LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)
-                WHERE v.owner = ' . $userid . "
-                ORDER BY v.type = 'portfolio', v.type, v.title, v.id", '', $offset, $limit);
+                WHERE v.owner = ?
+                ORDER BY v.type = \'portfolio\', v.type, v.title, v.id', array($userid), $offset, $limit);
             $owner = $userid;
         }
 
         if ($viewdata) {
-            $viewidlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $viewdata));
+            $viewidlist = implode(', ', array_map(create_function('$a', 'return (int)$a->id;'), $viewdata));
             $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
                 FROM {view_artefact} va
                 INNER JOIN {artefact} a ON va.artefact = a.id
@@ -2042,22 +2090,22 @@ class View {
                 WHERE va.view IN (' . $viewidlist . ')
                 GROUP BY va.view, va.artefact, a.title, a.artefacttype, t.plugin
                 ORDER BY a.title, va.artefact', '');
-            $accessgroups = get_records_sql_array('SELECT view, accesstype, grouptype, role, id, name, startdate, stopdate
+            $accessgroups = get_records_sql_array('SELECT "view", accesstype, grouptype, "role", id, name, startdate, stopdate
                 FROM (
-                    SELECT view, \'group\' AS accesstype, g.grouptype, vg.role, g.id, g.name, startdate, stopdate
+                    SELECT "view", \'group\' AS accesstype, g.grouptype, vg.role, g.id, g.name, startdate, stopdate
                     FROM {view_access_group} vg
                     INNER JOIN {group} g ON g.id = vg.group AND g.deleted = 0
                     UNION SELECT view, \'user\' AS accesstype, NULL AS grouptype, NULL AS role, usr AS id, \'\' AS name, startdate, stopdate
                     FROM {view_access_usr} vu
-                    UNION SELECT view, \'secreturl\' AS accesstype, NULL AS grouptype, NULL AS role, 0 AS id, \'\' AS name, startdate, stopdate
+                    UNION SELECT "view", \'secreturl\' AS accesstype, NULL AS grouptype, NULL AS role, 0 AS id, \'\' AS name, startdate, stopdate
                     FROM {view_access_token} vt
-                    UNION SELECT view, accesstype, NULL AS grouptype, NULL AS role, 0 AS id, \'\' AS name, startdate, stopdate
+                    UNION SELECT "view", accesstype, NULL AS grouptype, NULL AS role, 0 AS id, \'\' AS name, startdate, stopdate
                     FROM {view_access} va
                 ) AS a
-                WHERE view in (' . $viewidlist . ')
-                ORDER BY view, accesstype, grouptype, role, name, id
+                WHERE "view" in (' . $viewidlist . ')
+                ORDER BY "view", accesstype, grouptype, "role", name, id
             ', array());
-            $tags = get_records_select_array('view_tag', 'view IN (' . $viewidlist . ')');
+            $tags = get_records_select_array('view_tag', '"view" IN (' . $viewidlist . ')');
         }
     
         $data = array();
@@ -2214,7 +2262,7 @@ class View {
      * @param integer  $limit
      * @param integer  $offset
      * @param bool     $extra       Return full set of properties on each view including an artefact list
-     * @param string   $sort        Order by
+     * @param array    $sort        Order by, each element of the array is an array containing "column" (string) and "desc" (boolean)
      *
      */
     public static function view_search($query=null, $ownerquery=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0, $extra=true, $sort=null) {
@@ -2333,7 +2381,26 @@ class View {
         }
 
         $count = count_records_sql('SELECT COUNT (DISTINCT v.id) ' . $from . $where, $ph);
-        $orderby = is_null($sort) ? 'title ASC' : $sort;
+        $orderby = 'title ASC';
+        if (!empty($sort)) {
+            $orderby = '';
+            foreach ($sort as $item) {
+                if (!preg_match('/^[a-zA-Z_0-9"]+$/', $item['column'])) {
+                    continue; // skip this item (it fails validation)
+                }
+
+                if (!empty($orderby)) {
+                    $orderby .= ', ';
+                }
+                $orderby .= $item['column'];
+                if ($item['desc']) {
+                    $orderby .= ' DESC';
+                }
+                else {
+                    $orderby .= ' ASC';
+                }
+            }
+        }
         $viewdata = get_records_sql_array('
             SELECT * FROM (
                 SELECT
@@ -2489,7 +2556,7 @@ class View {
 
         $viewdata = get_records_sql_assoc('
             SELECT
-                id, title, description, owner, ownerformat, "group", institution,
+                id, title, description, "owner", ownerformat, "group", institution,
                 ' . db_format_tsfield('submittedtime') . '
             FROM {view}
             WHERE ' . $where . '
@@ -2513,15 +2580,15 @@ class View {
             $institutions = array();
             foreach ($viewdata as $v) {
                 if ($v->owner && !isset($owners[$v->owner])) {
-                    $owners[$v->owner] = $v->owner;
+                    $owners[$v->owner] = (int)$v->owner;
                 } else if ($v->group && !isset($groups[$v->group])) {
-                    $groups[$v->group] = $v->group;
+                    $groups[$v->group] = (int)$v->group;
                 } else if (strlen($v->institution) && !isset($institutions[$v->institution])) {
                     $institutions[$v->institution] = $v->institution;
                 }
             }
 
-            $viewidlist = join(',', array_keys($viewdata));
+            $viewidlist = join(',', array_map('intval', array_keys($viewdata)));
             if ($getartefacts) {
                 $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
                     FROM {view_artefact} va

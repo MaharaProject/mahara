@@ -55,7 +55,7 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
                 JOIN {artefact_blog_blogpost} ab ON (ab.blogpost = a.id AND ab.published = 1)
                 WHERE a.artefacttype = \'blogpost\'
                 AND a.parent IN ( ' . $artefactids . ' ) 
-                AND a.owner = (SELECT owner from {view} WHERE id = ?)
+                AND a.owner = (SELECT "owner" from {view} WHERE id = ?)
                 ORDER BY a.ctime DESC
                 LIMIT 10', array($instance->get('view')))) {
                 $mostrecent = array();
@@ -96,15 +96,6 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
             'artefacttypes' => array('blog'),
             'template'  => 'artefact:blog:artefactchooser-element.tpl',
         );
-    }
-
-    /**
-     * Optional method. If specified, changes the order in which the artefacts are sorted in the artefact chooser.
-     *
-     * This is a valid SQL string for the ORDER BY clause. Fields you can sort on are as per the artefact table
-     */
-    public static function artefactchooser_get_sort_order() {
-        return 'title';
     }
 
     public static function default_copy_type() {

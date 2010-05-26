@@ -74,7 +74,7 @@ function staffusers_submit(Pieform $form, $values) {
     if ($values['users']) {
         execute_sql('UPDATE {usr}
             SET staff = 1
-            WHERE id IN (' . join(',', $values['users']) . ')');
+            WHERE id IN (' . join(',', array_map('intval', $values['users'])) . ')');
     }
     db_commit();
     $SESSION->add_ok_msg(get_string('staffusersupdated', 'admin'));

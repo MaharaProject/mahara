@@ -76,7 +76,7 @@ function search_user($query_string, $limit, $offset = 0, $data = array()) {
     $results = call_static_method(generate_class_name('search', $plugin), 'search_user', $query_string, $limit, $offset, $data);
 
     if ($results['data']) {
-        $userlist = '('.join(',', array_map(create_function('$u','return $u[\'id\'];'), $results['data'])).')';
+        $userlist = '('.join(',', array_map(create_function('$u','return (int)$u[\'id\'];'), $results['data'])).')';
 
         $public_fields = get_records_sql_array('
             SELECT 
@@ -366,10 +366,10 @@ function get_group_user_search_results($group, $query, $offset, $limit, $members
     $results = group_user_search($group, $queries, $constraints, $offset, $limit, $membershiptype);
     if ($results['count']) {
         $userids = array_map(create_function('$a', 'return $a["id"];'), $results['data']);
-        $introductions = get_records_sql_assoc("SELECT owner, title
+        $introductions = get_records_sql_assoc("SELECT \"owner\", title
             FROM {artefact}
             WHERE artefacttype = 'introduction'
-            AND owner IN (" . implode(',', db_array_to_ph($userids)) . ')',
+            AND \"owner\" IN (" . implode(',', db_array_to_ph($userids)) . ')',
             $userids);
         foreach ($results['data'] as &$result) {
             $result['name'] = display_name($result);
@@ -531,13 +531,13 @@ function search_friend($filter, $limit, $offset) {
     }
 
     if (in_array($filter, array('all', 'pending'))) {
-        $count += count_records_sql('SELECT COUNT(owner) FROM {usr_friend_request}
+        $count += count_records_sql('SELECT COUNT("owner") FROM {usr_friend_request}
             JOIN {usr} u ON (u.id = requester AND u.deleted = 0)
-            WHERE owner = ?',
+            WHERE "owner" = ?',
             array($userid)
         );
 
-        array_push($sql, 'SELECT requester AS id, 1 AS status FROM {usr_friend_request} WHERE owner = ?
+        array_push($sql, 'SELECT requester AS id, 1 AS status FROM {usr_friend_request} WHERE "owner" = ?
         ');
     }
 

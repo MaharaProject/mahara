@@ -198,7 +198,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
         );
 
         insert_record('blocktype_wall_post', $record);
-        $userid = get_field_sql('SELECT owner FROM {view} WHERE id = (SELECT "view" FROM {block_instance} WHERE id = ?)', array($values['instance']));
+        $userid = get_field_sql('SELECT "owner" FROM {view} WHERE id = (SELECT "view" FROM {block_instance} WHERE id = ?)', array($values['instance']));
         redirect('/user/view.php?id=' . $userid);
     }
 
