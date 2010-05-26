@@ -28,6 +28,4 @@
             </table>
             <div id="finished" class="nojs-hidden-block">{str section=admin tag=successfullyinstalled} <a href="{$WWWROOT}">{str section=admin tag=continue}</a></div>
 
-{include file="columnfullend.tpl"}
-
 {include file='admin/upgradefooter.tpl'}
