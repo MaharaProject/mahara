@@ -1490,7 +1490,7 @@ function friends_control_sideblock($returnto='myfriends') {
     return array(
         'name' => 'friendscontrol',
         'weight' => -5,
-        'data' => pieform($form)
+        'data' => array('form' => pieform($form))
     );
 }
 
