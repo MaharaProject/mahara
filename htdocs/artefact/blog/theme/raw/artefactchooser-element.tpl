@@ -7,4 +7,3 @@
     <tr>
         <td>{if $artefact->description}{$artefact->description|clean_html|safe}{/if}</td>
     </tr>
-

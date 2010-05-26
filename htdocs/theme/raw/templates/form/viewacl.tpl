@@ -1,4 +1,3 @@
-{{auto_escape off}}
 <input type="hidden" name="accesslist" value="">
 <div id="viewacl_lhs">
     <div id="potentialpresetitems"></div>
@@ -227,7 +226,7 @@ function setupCalendar(item, type) {
 // SETUP
 
 // Left top: public, loggedin, friends
-var potentialPresets = {{$potentialpresets}};
+var potentialPresets = {{$potentialpresets|safe}};
 forEach(potentialPresets, function(preset) {
     renderPotentialPresetItem(preset);
 });
@@ -335,7 +334,7 @@ function search(e) {
 
 // Right hand side
 addLoadEvent(function () {
-    var accesslist = {{$accesslist}};
+    var accesslist = {{$accesslist|safe}};
     if (accesslist) {
         forEach(accesslist, function(item) {
             renderAccessListItem(item);
@@ -356,4 +355,3 @@ addLoadEvent(function() {
 });
 
 </script>
-{{/auto_escape}}
