@@ -1,9 +1,7 @@
-{auto_escape off}
 {include file="header.tpl"}
 
             <div class="message">
-            {$message}
+            {$message|clean_html|safe}
             </div>
 
 {include file="footer.tpl"}
-{/auto_escape}
