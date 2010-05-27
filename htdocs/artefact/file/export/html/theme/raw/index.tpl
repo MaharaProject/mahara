@@ -1,7 +1,6 @@
-{auto_escape off}
 {include file="export:html:header.tpl"}
 
-<h2>{str tag=Folder section=artefact.file}: {$folder|escape}</h2>
+<h2>{str tag=Folder section=artefact.file}: {$folder}</h2>
 
 {if $folder == '/' && !$folders && !$files}
 <p>{str tag=nofilesfound section=artefact.file}</p>
@@ -31,23 +30,22 @@
 {foreach from=$folders item=folder}
     <tr class="{cycle values='r0,r1'}">
         <td><img src="{$rootpath}static/file/theme/default/static/images/folder.gif" alt="{str tag=Folder section=artefact.file}"></td>
-        <td><a href="{$folder.path|rawurlencode|escape}/index.html">{$folder.title|escape}</a></td>
-        <td>{$folder.description|escape}</td>
-        <td>{$folder.size|escape}</td>
-        <td>{$folder.ctime|escape}</td>
+        <td><a href="{$folder.path|rawurlencode|safe}/index.html">{$folder.title}</a></td>
+        <td>{$folder.description}</td>
+        <td>{$folder.size}</td>
+        <td>{$folder.ctime}</td>
     </tr>
 {/foreach}
 {foreach from=$files item=file}
     <tr class="{cycle values='r0,r1'}">
         <td><img src="{$rootpath}static/file/theme/default/static/images/file.gif" alt="{str tag=File section=artefact.file}"></td>
-        <td><a href="{$file.path|rawurlencode|escape}">{$file.title|escape}</a></td>
-        <td>{$file.description|escape}</td>
-        <td>{$file.size|escape}</td>
-        <td>{$file.ctime|escape}</td>
+        <td><a href="{$file.path|rawurlencode|safe}">{$file.title}</a></td>
+        <td>{$file.description}</td>
+        <td>{$file.size}</td>
+        <td>{$file.ctime}</td>
     </tr>
 {/foreach}
 </table>
 {/if}
 
 {include file="export:html:footer.tpl"}
-{/auto_escape}

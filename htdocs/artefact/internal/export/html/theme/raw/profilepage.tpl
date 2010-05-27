@@ -1,7 +1,5 @@
-{auto_escape off}
 {include file="export:html:header.tpl"}
 
-{$view}
+{$view|safe}
 
 {include file="export:html:footer.tpl"}
-{/auto_escape}
