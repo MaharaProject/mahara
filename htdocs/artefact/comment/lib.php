@@ -967,7 +967,7 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
             $authorname, $title, $posttime, $body, $this->url
         );
         $this->users[0]->emailmessage = get_string_from_language(
-            $lang, 'feedbacknotificationhtml', 'artefact.comment',
+            $lang, 'feedbacknotificationtext', 'artefact.comment',
             $authorname, $title, $posttime, trim(html2text($body)), $this->url
         );
     }
