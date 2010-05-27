@@ -1,12 +1,10 @@
-{auto_escape off}
 {include file="header.tpl"}
 			{if $register_form}
 			<p>{$registerdescription}</P>
 			
-			{$register_form}
+			{$register_form|safe}
 			{if $termsandconditions}<br><br><div>{$termsandconditions}</div>{/if}
 			{elseif $register_profile_form}
-			{$register_profile_form}
+			{$register_profile_form|safe}
 			{/if}
 {include file="footer.tpl"}
-{/auto_escape}

@@ -143,7 +143,8 @@ $smarty = smarty(
     array('stylesheets' => array('style/views.css'))
 );
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('pagedescription', get_string('exportpagedescription', 'export'));
 $smarty->assign('form', $form);
-$smarty->display('export/index.tpl');
+$smarty->display('form.tpl');
 
 ?>

@@ -1,7 +1,6 @@
-{auto_escape off}
 {include file="header.tpl"}
 			<p>
-				{$message|escape}
+				{$message}
 			</p>
 {include file="footer.tpl"}
-{/auto_escape}
+

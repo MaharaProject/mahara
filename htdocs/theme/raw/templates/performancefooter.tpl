@@ -1,4 +1,3 @@
-{auto_escape off}
         <div id="performance-info">
 {if $perf_memory_total}
             <span id="memoryused">{str tag="memoryused" section="performance"}: {$perf_memory_total_display}</span> |
@@ -21,4 +20,4 @@
             <span id="serverload">{str tag="serverload" section="performance"}: {$perf_serverload}</span>
 {/if}
         </div>
-{/auto_escape}
+
