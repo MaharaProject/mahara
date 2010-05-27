@@ -6,8 +6,8 @@
             <td>{$plan->title}</td>
             <td>{$plan->description}</td>
             <td>&nbsp;</td>
-            <td><a href="/artefact/plans/edit.php?id={$plan->id}&amp;artefact={$plan->artefact}">Edit</a></td>
-            <td><a href="/artefact/plans/delete.php?artefact={$plan->artefact}">Delete</a></td>
+            <td><a href="/artefact/plans/edit.php?plan={$plan->plan}">Edit</a></td>
+            <td><a href="/artefact/plans/delete.php?plan={$plan->plan}">Delete</a></td>
         </tr>
     {else}
         <tr class="{cycle values='r0,r1'}">
@@ -19,8 +19,8 @@
             {else}
                 <td>&nbsp;</td>
             {/if}
-            <td><a href="/artefact/plans/edit.php?id={$plan->id}&amp;artefact={$plan->artefact}">Edit</a></td>
-            <td><a href="/artefact/plans/delete.php?artefact={$plan->artefact}">Delete</a></td>
+            <td><a href="/artefact/plans/edit.php?plan={$plan->plan}">Edit</a></td>
+            <td><a href="/artefact/plans/delete.php?plan={$plan->plan}">Delete</a></td>
         </tr>
     {/if}
 {/foreach}

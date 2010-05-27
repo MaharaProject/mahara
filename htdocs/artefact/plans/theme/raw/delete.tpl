@@ -12,10 +12,10 @@
         </thead>
         <tbody>
             <tr>
-                <td>{$plan->completiondate|escape}</td>
-                <td>{$plan->title|escape}</td>
-                <td>{$plan->description|escape}</td>
-                {if $todelete->completed == 1}<td><div class="completed"><img src="/artefact/plans/theme/raw/static/images/success.gif" alt="" /></div></td>{else}<td>&nbsp;</td>{/if}
+                <td>{$todelete->completiondate|escape}</td>
+                <td>{$todelete->title|escape}</td>
+                <td>{$todelete->description|escape}</td>
+                {if $todelete->completed == 1}<td><div class="completed"><img src="{$WWWROOT}theme/raw/static/images/success.gif" alt="" /></div></td>{else}<td>&nbsp;</td>{/if}
             </tr>
         </tbody>
     </table>
