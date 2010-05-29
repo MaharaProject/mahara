@@ -36,10 +36,10 @@ safe_require('artefact', 'plans');
 
 define('TITLE', get_string('newplan','artefact.plans'));
 
-$form = ArtefactTypePlans::get_form();
+$form = ArtefactTypePlan::get_form();
 
 $smarty =& smarty();
-$smarty->assign_by_ref('newplansform', $form);
+$smarty->assign_by_ref('newplanform', $form);
 $smarty->assign_by_ref('PAGEHEADING', hsc(TITLE));
 $smarty->display('artefact:plans:new.tpl');
 exit;

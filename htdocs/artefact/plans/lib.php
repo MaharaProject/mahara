@@ -30,7 +30,8 @@ class PluginArtefactPlans extends PluginArtefact {
 
     public static function get_artefact_types() {
         return array(
-            'plans',
+            'myplans',
+            'plan',
         );
     }
 
@@ -45,30 +46,81 @@ class PluginArtefactPlans extends PluginArtefact {
         return array(
             array(
                 'path' => 'profile/plans',
-                'url' => 'artefact/plans/',
+                'url'  => 'artefact/plans/',
                 'title' => get_string('myplans', 'artefact.plans'),
                 'weight' => 40,
             ),
         );
     }
+
+    public static function get_event_subscriptions() {
+        return array(
+            (object)array(
+                'plugin'       => 'myplans',
+                'event'        => 'createuser',
+                'callfunction' => 'create_default_myplans',
+            ),
+        );
+    }
+
+    /**
+     * Sets up the default MyPlans artefact for all plan artefacts to have as parent.
+     * Each user can only have one of these and it is created at their account creation.
+     */
+    public static function create_default_myplans($event, $user) {
+        $name = display_name($user, null, true);
+        $myplans = new ArtefactTypeMyPlans(0, (object) array(
+            'title'       => get_string('myplans', 'artefact.plans'),
+            'owner'       => $user['id'],
+        ));
+        $myplans->commit();
+    }
 }
 
-class ArtefactTypePlans extends ArtefactType {
+/**
+ * A MyPlans artefact is a collection of Plan artefacts.
+ */
+class ArtefactTypeMyPlans extends ArtefactType {
 
-    protected $title;
-    protected $description;
-    protected $completiondate;
-    protected $completed;
+    /**
+     * This constant gives the per-page pagination for listing plans.
+     */
+    const pagination = 10;
 
+    /**
+     * We override the constructor to fetch the extra data.
+     *
+     * @param integer
+     * @param object
+     */
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
 
-        $fields = array('title','description','completiondate','completed');
-        if ($artefact = get_record('artefact_plan', 'artefact', $id)) {
-            foreach ($fields as $field) {
-              $this->$field = $artefact->$field;
-            }
+        if (empty($this->id)) {
+            $this->container = 1;
         }
+    }
+
+    /**
+     * This function updates or inserts the artefact.  This involves putting
+     * some data in the artefact table (handled by parent::commit())
+     */
+    public function commit() {
+        // Just forget the whole thing when we're clean.
+        if (empty($this->dirty)) {
+            return;
+        }
+
+        // We need to keep track of newness before and after.
+        $new = empty($this->id);
+
+        // Commit to the artefact table.
+        parent::commit();
+
+        $this->dirty = false;
+    }
+
+    public static function get_icon($options=null) {
     }
 
     public static function is_singular() {
@@ -76,11 +128,7 @@ class ArtefactTypePlans extends ArtefactType {
     }
 
     public static function get_links($id) {
-        // @todo Catalyst IT Ltd
-    }
-
-    public static function get_icon($options=null) {
-        // @todo Catalyst IT Ltd
+        return array();
     }
 
     /**
@@ -90,15 +138,20 @@ class ArtefactTypePlans extends ArtefactType {
      * @param offset current page to display
      * @return array (count: integer, data: array)
      */
-    public static function get_plans_list($limit, $offset) {
+    public function get_plans_list($offset) {
         global $USER;
-        $datenow = time();
+        $datenow = time(); // time now to use for formatting plans by completion
+
+        // a user can only have one myplans artefact
+        if (!$myplans = get_field('artefact','id','artefacttype','myplans','owner',$USER->get('id'))) {
+            return;
+        }
 
         ($results = get_records_sql_array("
-            SELECT ar.* FROM {artefact} a
-            JOIN {artefact_plan} ar ON ar.artefact = a.id
-            WHERE owner = ? AND artefacttype = 'plans'
-            ORDER BY ar.completiondate ASC LIMIT ? OFFSET ?", array($USER->get('id'), $limit, $offset)))
+            SELECT ar.*, a.title, a.description FROM {artefact} a
+            JOIN {artefact_plan} ar ON ar.plan = a.id
+            WHERE a.owner = ? AND a.artefacttype = 'plan' AND a.parent = ?
+            ORDER BY ar.completiondate ASC LIMIT ? OFFSET ?", array($USER->get('id'), (int)$myplans, self::pagination, $offset)))
             || ($results = array());
 
         // format the date and setup completed for display if plan is incomplete
@@ -114,17 +167,17 @@ class ArtefactTypePlans extends ArtefactType {
             }
         }
 
-        $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $USER->get('id'), 'artefacttype', 'plans');
+        $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $USER->get('id'), 'artefacttype', 'plan');
 
         return array($count, $results);
     }
 
     /**
-     * Builds the plans list table
+     * Builds the myplans list table
      *
      * @param plans (reference)
      */
-    public static function build_plans_list_html(&$plans) {
+    public function build_plans_list_html(&$plans) {
         $smarty = smarty_core();
         $smarty->assign_by_ref('plans', $plans);
         $plans->tablerows = $smarty->fetch('artefact:plans:planslist.tpl');
@@ -134,7 +187,7 @@ class ArtefactTypePlans extends ArtefactType {
             'url' => get_config('wwwroot') . 'artefact/plans/index.php',
             'datatable' => 'planslist',
             'count' => $plans->count,
-            'limit' => $plans->limit,
+            'limit' => self::pagination,
             'offset' => $plans->offset,
             'firsttext' => '',
             'previoustext' => '',
@@ -146,47 +199,181 @@ class ArtefactTypePlans extends ArtefactType {
         ));
         $plans->pagination = $pagination['html'];
     }
+}
+
+/**
+ * Plan artefacts occur within MyPlans artefacts
+ */
+class ArtefactTypePlan extends ArtefactType {
+
+    protected $completed = 0;
+    protected $completiondate;
 
     /**
-    * Commits the current plan to the database
-    *
-    */
+     * We override the constructor to fetch the extra data.
+     *
+     * @param integer
+     * @param object
+     */
+    public function __construct($id = 0, $data = null) {
+        parent::__construct($id, $data);
+
+        if ($this->id) {
+            if ($pdata = get_record('artefact_plan', 'plan', $this->id)) {
+                foreach($pdata as $name => $value) {
+                    if (property_exists($this, $name)) {
+                        $this->$name = $value;
+                    }
+                }
+            }
+            else {
+                // This should never happen unless the user is playing around with plan IDs in the location bar or similar
+                throw new ArtefactNotFoundException(get_string('plandoesnotexist', 'artefact.plans'));
+            }
+        }
+    }
+
+    public static function get_links($id) {
+        return array();
+    }
+
+    /**
+     * This method extends ArtefactType::commit() by adding additional data
+     * into the artefact_plan table.
+     *
+     */
     public function commit() {
+        if (empty($this->dirty)) {
+            return;
+        }
 
         // Return whether or not the commit worked
         $success = false;
 
-        // Just forget the whole thing when we're clean.
-        if (empty($this->dirty)) {
-            return true;
-        }
-
-        // We need to keep track of newness before and after.
+        db_begin();
         $new = empty($this->id);
 
         parent::commit();
 
-        // Reset dirtyness for the time being.
         $this->dirty = true;
 
         $data = (object)array(
-            'artefact'       => $this->get('id'),
-            'title'          => $this->get('title'),
-            'description'    => $this->get('description'),
-            'completiondate' => $this->get('completiondate'),
-            'completed'      => $this->get('completed'),
+            'plan'  => $this->get('id'),
+            'completed' => $this->get('completed'),
+            'completiondate' => $this->get('completiondate'
         );
 
         if ($new) {
             $success = insert_record('artefact_plan', $data);
         }
         else {
-            $success = update_record('artefact_plan', $data, 'artefact');
+            $success = update_record('artefact_plan', $data, 'plan');
         }
+
+        db_commit();
 
         $this->dirty = $success ? false : true;
 
         return $success;
+    }
+
+    /**
+     * This function extends ArtefactType::delete() by also deleting anything
+     * that's in plan.
+     */
+    public function delete() {
+        if (empty($this->id)) {
+            return;
+        }
+
+        $return = false;
+
+        db_begin();
+        delete_records('artefact_plan', 'plan', $this->id);
+
+        parent::delete();
+        db_commit();
+    }
+
+    /**
+     * Checks that the person viewing this plan is the owner. If not, throws an
+     * AccessDeniedException. Used in the myplans section to ensure only the
+     * owners of the plans can view or change them there. Other people see
+     * plans when they are placed in views.
+     */
+    public function check_permission() {
+        global $USER;
+        if ($USER->get('id') != $this->owner) {
+            throw new AccessDeniedException(get_string('youarenottheownerofthisplan', 'artefact.plans'));
+        }
+    }
+
+    public static function get_icon($options=null) {
+    }
+
+    public static function is_singular() {
+        return false;
+    }
+
+    public static function collapse_config() {
+    }
+
+    /**
+     * This function creates a new plan.
+     *
+     * @param User
+     * @param array
+     */
+    public function new_plan(User $user, array $values) {
+        $artefact = new ArtefactTypePlan();
+        $artefact->set('title', $values['title']);
+        $artefact->set('description', $values['description']);
+        $artefact->set('completed', ($values['completed'] ? 1 : 0));
+        $artefact->set('completiondate', $values['completiondate']);
+        $artefact->set('owner', $user->get('id'));
+        $artefact->set('parent', $values['parent']);
+        $artefact->commit();
+        return true;
+    }
+
+    /*
+     * This function updates an existing plan.
+     *
+     * @param User
+     * @param array
+     */
+    public function edit_plan(User $user, array $values) {
+        $artefact = new ArtefactTypePlan($values['id']);
+        if ($user->get('id') != $artefact->get('owner')) {
+            return false;
+        }
+
+        $artefact->set('title', $values['title']);
+        $artefact->set('description', $values['description']);
+        $artefact->set('completed', $values['completed']);
+        $artefact->set('completiondate', $values['completiondate']);
+        $artefact->commit();
+        return true;
+    }
+
+    public static function submit(Pieform $form, $values) {
+        global $USER, $SESSION;
+
+        $success = false;
+        if (empty($values['artefact']) ){
+            $success = ArtefactTypePlan::new_plan($USER, $values);
+        }
+        else {
+            $success = ArtefactTypePlan::edit_plan($USER, $values);
+        }
+
+        if ($success) {
+            $SESSION->add_ok_msg(get_string('plansavedsuccessfully', 'artefact.plans'));
+        } else {
+            $SESSION->add_error_msg(get_string('plannotsavedsuccessfully', 'artefact.plans'));
+        }
+
+        redirect('/artefact/plans/');
     }
 
     /**
@@ -195,7 +382,7 @@ class ArtefactTypePlans extends ArtefactType {
     */
     public static function get_form() {
         require_once(get_config('libroot') . 'pieforms/pieform.php');
-        $elements = call_static_method(generate_artefact_class_name('plans'), 'get_plansform_elements');
+        $elements = call_static_method(generate_artefact_class_name('plan'), 'get_plansform_elements');
         $elements['submit'] = array(
             'type' => 'submitcancel',
             'value' => array(get_string('saveplan','artefact.plans'), get_string('cancel')),
@@ -205,7 +392,7 @@ class ArtefactTypePlans extends ArtefactType {
             'name' => 'addplans',
             'plugintype' => 'artefact',
             'pluginname' => 'plans',
-            'successcallback' => array(generate_artefact_class_name('plans'),'plansform_submit'),
+            'successcallback' => array(generate_artefact_class_name('plan'),'submit'),
             'elements' => $elements,
         );
 
@@ -217,6 +404,10 @@ class ArtefactTypePlans extends ArtefactType {
     *
     */
     public static function get_plansform_elements() {
+        global $USER;
+
+        $parent = get_field('artefact','id','artefacttype','myplans','owner',$USER->get('id'));
+
         return array(
             'completiondate' => array(
                 'type'       => 'calendar',
@@ -253,54 +444,12 @@ class ArtefactTypePlans extends ArtefactType {
                 'defaultvalue' => 0,
                 'title' => get_string('completed', 'artefact.plans'),
                 'description' => get_string('completeddesc', 'artefact.plans'),
-            )
+            ),
+            'parent' => array(
+                'type' => 'hidden',
+                'value' => (int) $parent,
+            ),
         );
-    }
-
-    /**
-    * Submits the new/edited plans to save
-    *
-    * @param $form Pieform structure
-    * @param $values array the values from the pieform
-    */
-    public static function plansform_submit(Pieform $form, $values) {
-        global $USER, $SESSION;
-
-        // new artefact
-        if (empty($values['artefact'])) {
-            $artefact = new ArtefactTypePlans(0, array(
-                'owner' => $USER->get('id'),
-                'title' => $values['title'],
-                'description' => !empty($values['description']) ? $values['description'] : '',
-                'completiondate' => $values['completiondate'],
-                'completed' => $values['completed'] ? $values['completed'] : 0,
-            ));
-        }
-        // existing artefact
-        else if (!empty($values['artefact'])) {
-            if (!$data = get_record('artefact','id',$values['artefact'])) {
-                throw new ArtefactNotFoundException(get_string('artefactnotfound', 'error', $values['artefact']));
-            }
-            $artefact = new ArtefactTypePlans($data->id, $data);
-            $artefact->set('title', $values['title']);
-            $artefact->set('description', $values['description']);
-            $artefact->set('completiondate', $values['completiondate']);
-            if (!$values['completed']) {
-                $artefact->set('completed', 0);
-            }
-            else {
-                $artefact->set('completed', $values['completed']);
-            }
-        }
-
-        if ($artefact->commit()) {
-            $SESSION->add_ok_msg(get_string('plansavedsuccessfully', 'artefact.plans'));
-        }
-        else {
-            $SESSION->add_error_msg(get_string('plannotsavedsuccessfully', 'artefact.plans'));
-        }
-
-        redirect('/artefact/plans/');
     }
 
     /**
@@ -312,10 +461,8 @@ class ArtefactTypePlans extends ArtefactType {
     * @param $form pieform structure (before calling pieform() on it
     * passed by _reference_
     */
-    public static function populate_form(&$form, $id) {
-        if (!$plan = get_record('artefact_plan', 'id', $id)) {
-            throw new InvalidArgumentException("Couldn't find plan with id $id");
-        }
+    public static function populate_form(&$form, $a) {
+        $plan = new ArtefactTypePlan($a->get('id'));
         foreach ($form['elements'] as $k => $element) {
             if ($k == 'submit') {
                 continue;
@@ -324,46 +471,11 @@ class ArtefactTypePlans extends ArtefactType {
                 $form['elements'][$k]['defaultvalue'] = $plan->{$k};
             }
         }
-        $form['elements']['id'] = array(
+        $form['elements']['plan'] = array(
             'type' => 'hidden',
-            'value' => $id,
+            'value' => $plan->id,
         );
-        $form['elements']['artefact'] = array(
-            'type' => 'hidden',
-            'value' => $plan->artefact,
-        );
-    }
-
-    /**
-    * Deletes the current plan
-    *
-    */
-    public function delete() {
-        db_begin();
-
-        delete_records('artefact_plan', 'artefact', $this->id);
-        parent::delete();
-
-        db_commit();
-
-        if ($this->deleted) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    /**
-     * Checks that the person viewing this blog is the owner. If not, throws an
-     * AccessDeniedException. Used in the blog section to ensure only the
-     * owners of the blogs can view or change them there. Other people see
-     * blogs when they are placed in views.
-     */
-    public function check_permission() {
-        global $USER;
-        if ($USER->get('id') != $this->owner) {
-            throw new AccessDeniedException(get_string('youarenottheownerofthisplan', 'artefact.plans'));
-        }
     }
 }
+
+?>

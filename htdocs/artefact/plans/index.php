@@ -40,11 +40,10 @@ define('TITLE', get_string('myplans','artefact.plans'));
 // offset and limit for pagination
 $plans = (object) array(
     'offset' => param_integer('offset', 0),
-    'limit'  => param_integer('limit', 10),
 );
 
-list($plans->count, $plans->data) = ArtefactTypePlans::get_plans_list($plans->limit, $plans->offset);
-ArtefactTypePlans::build_plans_list_html($plans);
+list($plans->count, $plans->data) = ArtefactTypeMyPlans::get_plans_list($plans->offset);
+ArtefactTypeMyPlans::build_plans_list_html($plans);
 
 $smarty = smarty(array('paginator','tablerenderer'));
 $smarty->assign_by_ref('plans', $plans);

@@ -32,36 +32,36 @@ require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
 require_once(get_config('docroot') . 'artefact/lib.php');
+safe_require('artefact','plans');
 
 define('TITLE', get_string('editplan','artefact.plans'));
 
-$id = param_integer('id');
-$artefact = param_integer('artefact');
+$plan = param_integer('plan');
 
-$a = artefact_instance_from_id($artefact);
-if ($a instanceof ArtefactTypePlan) {
-    $a->check_permission();
+$artefact = artefact_instance_from_id($plan);
+if ($artefact instanceof ArtefactTypePlan) {
+    $artefact->check_permission();
 }
 
-$elements = call_static_method(generate_artefact_class_name('plans'), 'get_plansform_elements');
+$elements = call_static_method(generate_artefact_class_name('plan'), 'get_plansform_elements');
 $elements['submit'] = array(
     'type' => 'submitcancel',
     'value' => array(get_string('saveplan','artefact.plans'), get_string('cancel')),
     'goto' => get_config('wwwroot') . '/artefact/plans/',
 );
 $cform = array(
-    'name' => 'addplans',
+    'name' => 'editplan',
     'plugintype' => 'artefact',
     'pluginname' => 'plans',
-    'successcallback' => array(generate_artefact_class_name('plans'),'plansform_submit'),
+    'successcallback' => array(generate_artefact_class_name('plan'),'submit'),
     'elements' => $elements,
 );
 
-$a->populate_form($cform, $id);
-$plansform = pieform($cform);
+$artefact->populate_form($cform, $artefact);
+$editplanform = pieform($cform);
 
 $smarty = smarty();
-$smarty->assign('plansform', $plansform);
+$smarty->assign('editplanform', $editplanform);
 $smarty->assign('PAGEHEADING', hsc(get_string("editingplan", "artefact.plans")));
 $smarty->display('artefact:plans:edit.tpl');
 

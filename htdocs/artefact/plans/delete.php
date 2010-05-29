@@ -35,14 +35,18 @@ define('TITLE', get_string('deleteplan','artefact.plans'));
 
 safe_require('artefact','plans');
 
-if ($delete = param_integer('artefact', 0)) {
-    $a = artefact_instance_from_id($delete);
-    if ($a instanceof ArtefactTypePlan) {
-        $a->check_permission();
+if ($delete = param_integer('plan')) {
+    if ($plan = new ArtefactTypePlan($delete)) {
+        $plan->check_permission();
     }
 }
 
-$plan = get_record('artefact_plan','artefact',$delete);
+$todelete = (object) array(
+    'completiondate' => strftime(get_string('strftimedate'), $plan->get('completiondate')),
+    'completed'      => $plan->get('completed'),
+    'title'          => $plan->get('title'),
+    'description'    => $plan->get('description')
+);
 
 $form = array(
     'name' => 'deleteplanform',
@@ -55,7 +59,7 @@ $form = array(
             'value' => array(get_string('deleteplan','artefact.plans'), get_string('cancel')),
             'goto' => get_config('wwwroot') . '/artefact/plans/',
         ),
-        'artefact' => array(
+        'plan' => array(
             'type' => 'hidden',
             'value' => $delete,
         ),
@@ -64,17 +68,18 @@ $form = array(
 $deleteplanform = pieform($form);
 
 $smarty = smarty(array('tablerenderer'));
-$smarty->assign('plan', $plan);
+$smarty->assign('todelete', $todelete);
 $smarty->assign('deleteplanform', $deleteplanform);
-$smarty->assign('PAGEHEADING', hsc(get_string('deletingplan','artefact.plans',$plan->title)));
+$smarty->assign('PAGEHEADING', hsc(get_string('deletingplan','artefact.plans',$plan->get('title'))));
 $smarty->display('artefact:plans:delete.tpl');
 
 // calls this function first so that we can get the artefact and call delete on it
 function delete(Pieform $form, $values) {
     global $SESSION;
 
-    if ($artefact = new ArtefactTypePlans($values['artefact'])) {
-        if ($artefact->delete()) {
+    if ($artefact = artefact_instance_from_id($values['plan'])) {
+        $artefact->delete();
+        if (!record_exists('artefact_plan','plan',$values['plan']) and !record_exists('artefact','id',$values['plan'])) {
             $SESSION->add_ok_msg(get_string('plandeletedsuccessfully', 'artefact.plans'));
         }
         else {
