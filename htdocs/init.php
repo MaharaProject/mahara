@@ -158,7 +158,7 @@ catch (SQLException $e) {
 // Make sure wwwroot is set and available, either in the database or in the
 // config file. Cron requires it for some purposes.
 if (!isset($CFG->wwwroot) && isset($_SERVER['HTTP_HOST'])) {
-    $proto = (isset($_SERVER['HTTPS'])) ? 'https://' : 'http://';
+    $proto = (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off') ? 'https://' : 'http://';
     $host  =  (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST'];
     if (false !== strpos($host, ',')) {
         list($host) = explode(',', $host);
