@@ -260,7 +260,7 @@ class ArtefactTypePlan extends ArtefactType {
         $data = (object)array(
             'plan'  => $this->get('id'),
             'completed' => $this->get('completed'),
-            'completiondate' => $this->get('completiondate'
+            'completiondate' => $this->get('completiondate'),
         );
 
         if ($new) {
