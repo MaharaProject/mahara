@@ -110,7 +110,7 @@ function print_extractprogress_footer($message, $next) {
         </div>
     </body>
 </html>
-<?
+<?php
 }
 
 function execute_javascript_and_close($js='') {
