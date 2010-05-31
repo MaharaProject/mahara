@@ -919,11 +919,6 @@ class View {
             return;
         }
 
-        $viewtheme = param_variable('viewtheme', '');
-        if ($viewtheme && $viewtheme != $this->get('theme')) {
-            $this->set('theme', $viewtheme);
-        }
-
         $action = '';
         foreach ($_POST as $key => $value) {
             if (substr($key, 0, 7) == 'action_') {
@@ -945,6 +940,11 @@ class View {
                     $action = substr($key, 7);
                 }
             }
+        }
+
+        $viewtheme = param_variable('viewtheme', '');
+        if ($viewtheme && $viewtheme != $this->get('theme')) {
+            $action = 'changetheme_theme_' . $viewtheme;
         }
 
         if (empty($action)) {
@@ -993,6 +993,7 @@ class View {
             case 'moveblockinstance': // requires action_moveblockinstance_id_\d_column_\d_order_\d
             case 'addcolumn': // requires action_addcolumn_before_\d
             case 'removecolumn': // requires action_removecolumn_column_\d
+            case 'changetheme':
             break;
             default:
                 throw new InvalidArgumentException(get_string('noviewcontrolaction', 'error', $action));
@@ -1581,6 +1582,16 @@ class View {
      */
     private function get_current_max_order($column) {
         return get_field('block_instance', 'max("order")', 'column', $column, 'view', $this->get('id')); 
+    }
+
+    private function changetheme($values) {
+        if ($theme = $values['theme']) {
+            $themes = get_user_accessible_themes();
+            if (isset($themes[$theme])) {
+                $this->set('theme', $theme);
+                $this->commit();
+            }
+        }
     }
 
     /**
