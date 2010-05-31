@@ -59,6 +59,7 @@
 		{/if}
 	</div>	
     {/if}
+    <input type="hidden" name="sesskey" value="{$SESSKEY}">
 </form>
 </div>
 
