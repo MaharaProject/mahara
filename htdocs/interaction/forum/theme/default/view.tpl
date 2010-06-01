@@ -101,6 +101,7 @@
         {contextualhelp plugintype='interaction' pluginname='forum' section='update'}
     {/if}
     {/if}
+    <input type="hidden" name="sesskey" value="{$SESSKEY}">
 </form>
 
 <h4>{str tag="Key" section="interaction.forum"}:</h4>
