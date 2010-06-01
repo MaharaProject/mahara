@@ -51,6 +51,7 @@ else {
 
 // check if cancel was selected
 if ($new && isset($_POST['cancel'])) {
+    form_validate(param_variable('sesskey', null));
     $view->delete();
     redirect(get_config('wwwroot') . '/view/');
 }
