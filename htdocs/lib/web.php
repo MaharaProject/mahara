@@ -982,6 +982,37 @@ function param_integer($name) {
 }
 
 /**
+ * This function returns a GET or POST parameter as an integer with optional
+ * default.  If the default isn't specified and the parameter hasn't been sent,
+ * a ParameterException exception is thrown. Likewise, if the parameter isn't a
+ * valid integer(allows signed integers), a ParameterException exception is thrown
+ *
+ * @param string The GET or POST parameter you want returned
+ * @param mixed [optional] the default value for this parameter
+ *
+ * @return int The value of the parameter
+ *
+ */
+function param_signed_integer($name) {
+    $args = func_get_args();
+
+    list ($value, $defaultused) = call_user_func_array('_param_retrieve', $args);
+
+    if ($defaultused) {
+        return $value;
+    }
+
+    if (preg_match('#[+-]?[0-9]+#', $value)) {
+        return (int)$value;
+    }
+    else if ($value == '' && isset($args[1])) {
+        return $args[1];
+    }
+
+    throw new ParameterException("The '$name' parameter is not an integer");
+}
+
+/**
  * This function returns a GET or POST parameter as an alpha string with optional
  * default.  If the default isn't specified and the parameter hasn't been sent,
  * a ParameterException exception is thrown. Likewise, if the parameter isn't a
