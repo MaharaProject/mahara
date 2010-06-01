@@ -288,10 +288,7 @@ function buildflatposts(&$posts) {
 
 function buildsubjects($postindex, $parentsubject, &$posts) {
     $localposts = $posts;
-    if ($posts[$postindex]->subject) {
-        $parentsubject = $posts[$postindex]->subject;
-    }
-    else {
+    if (!$posts[$postindex]->subject) {
         $posts[$postindex]->subject = get_string('re', 'interaction.forum', $parentsubject);
     }
     foreach ($localposts as $index => $post) {
