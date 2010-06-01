@@ -131,6 +131,7 @@ if ($institution || $add) {
             )
         );
         $smarty->assign('delete_form', pieform($form));
+        $smarty->assign('institutionname', get_field('institution', 'displayname', 'name', $institution));
         $smarty->display('admin/users/institutions.tpl');
         exit;
     }

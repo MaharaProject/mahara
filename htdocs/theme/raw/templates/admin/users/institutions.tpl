@@ -3,6 +3,7 @@
 {if $delete_form}
 
 <h3>{str tag="deleteinstitution" section="admin"}</h3>
+<p><strong>{$institutionname}</strong></p>
 <p>{str tag="deleteinstitutionconfirm" section="admin"}</p>
 {$delete_form|safe}
 
