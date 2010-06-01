@@ -9,6 +9,7 @@
         <input type="hidden" id="viewid" name="id" value="{$view}">
         <input type="hidden" name="change" value="1">
         <input type="hidden" id="category" name="c" value="{$category}">
+        <input type="hidden" name="sesskey" value="{$SESSKEY}">
         {if $new}<input type="hidden" name="new" value="1">{/if}
         <div id="page">
             <div id="top-pane">
@@ -66,6 +67,7 @@
             <input type="hidden" name="id" value="{$view}">
             <input type="hidden" name="new" value="1">
             <input type="submit" name="cancel" class="cancel" value="{str tag='cancel'}" onclick="return confirm('{str tag='confirmcancelcreatingview' section='view'}');">
+            <input type="hidden" name="sesskey" value="{$SESSKEY}">
         </form>
         <form action="{$WWWROOT}view/edit.php" method="GET">
             <input type="hidden" name="id" value="{$view}">

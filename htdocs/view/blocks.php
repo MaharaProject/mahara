@@ -75,6 +75,10 @@ $institution = $view->get('institution');
 
 // check if cancel was selected
 if ($new && isset($_POST['cancel'])) {
+    if ($view->get('type') == 'profile' || $view->get('type') == 'dashboard') {
+        throw new AccessDeniedException(get_string('cantdeleteview', 'view'));
+    }
+    form_validate(param_variable('sesskey', null));
     $view->delete();
     $view->post_edit_redirect();
 }

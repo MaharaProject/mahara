@@ -950,7 +950,9 @@ class View {
         if (empty($action)) {
             return;
         }
-    
+
+        form_validate(param_alphanum('sesskey', null));
+
         $actionstring = $action;
         $action = substr($action, 0, strpos($action, '_'));
         $actionstring  = substr($actionstring, strlen($action) + 1);

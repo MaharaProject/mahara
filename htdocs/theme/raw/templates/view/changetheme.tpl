@@ -5,6 +5,7 @@
     <p>{str tag=changeviewtheme section=view}</p>
     <form action="{$formurl}" method="post">
         <input type="hidden" id="viewid" name="id" value="{$view}">
+        <input type="hidden" name="sesskey" value="{$SESSKEY}">
         <label for="viewtheme-select">{str tag=theme}: </label>
         <select id="viewtheme-select" name="viewtheme">
             <option value="">Choose theme...</option>
