@@ -56,7 +56,7 @@ if ($itemid == 'new') {
     }
 }
 else {
-    $data->id = $itemid;
+    $data->id = (int)$itemid;
     try {
         update_record('group_category', $data, 'id');
     }
