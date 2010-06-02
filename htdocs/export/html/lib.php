@@ -93,6 +93,13 @@ class PluginExportHtml extends PluginExport {
             }
         }
 
+        // Don't export the dashboard
+        foreach (array_keys($this->views) as $i) {
+            if ($this->views[$i]->get('type') == 'dashboard') {
+                unset($this->views[$i]);
+            }
+        }
+
         $this->exportingoneview = (
             $this->viewexportmode == PluginExport::EXPORT_LIST_OF_VIEWS &&
             $this->artefactexportmode == PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS &&
