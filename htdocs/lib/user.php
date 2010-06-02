@@ -400,6 +400,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
             throw new EmailException("Cannot send email to $usertoname with subject $subject.  User has no primary email address set.");
         }
         $mail->AddAddress($userto->email, $usertoname );
+        $to = $userto->email;
     }
 
     $mail->WordWrap = 79;   
@@ -416,6 +417,17 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
     }
 
     if ($mail->Send()) {
+        if ($logfile = get_config('emaillog')) {
+            $docroot = get_config('docroot');
+            @$client = (string) $_SERVER['REMOTE_ADDR'];
+            @$script = (string) $_SERVER['SCRIPT_FILENAME'];
+            if (strpos($script, $docroot) === 0) {
+                $script = substr($script, strlen($docroot));
+            }
+            $line = "$to <- $mail->From - " . str_shorten_text($mail->Subject, 50);
+            @error_log('[' . date("Y-m-d h:i:s") . "] [$client] [$script] $line\n", 3, $logfile);
+        }
+
         // Update the count of sent mail
         update_send_count($userto);
 

@@ -131,6 +131,9 @@ $cfg->developermode = false;
 // sendemail = true if you want to use this setting.
 $cfg->sendemail = true;
 // $cfg->sendallemailto = 'you@example.com';
+//
+// Log basic details of emails sent out by Mahara.  This will get big.
+// $cfg->emaillog = $cfg->dataroot . '/log/email.log';
 
 // capture performance information and print it
 // $cfg->perftofoot = true; // needs a call to mahara_performance_info (smarty callback) - see default theme's footer.tpl
