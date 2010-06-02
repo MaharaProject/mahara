@@ -50,6 +50,10 @@ function PieformManager() {//{{{
         forEach(check, function(form) {
             var element = getFirstElementByTagAndClassName(null, 'autofocus', form);
             if (element && (typeof(element.focus) == 'function' || (element.focus && element.focus.call))) {
+                var type = getNodeAttribute(element, 'type');
+                if (type && type == 'hidden') {
+                    return;
+                }
                 element.focus();
                 if (hasElementClass(element, 'autoselect')
                     && (typeof(element.select) == 'function' || (element.focus && element.select.call))) {
