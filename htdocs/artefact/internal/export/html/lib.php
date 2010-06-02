@@ -73,7 +73,7 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
         );
         $elementlist = call_static_method('ArtefactTypeProfile', 'get_all_fields');
         $elementlistlookup = array_flip(array_keys($elementlist));
-        $profilefields = get_column_sql('SELECT id FROM {artefact} WHERE \"owner\" = ? AND artefacttype IN ('
+        $profilefields = get_column_sql('SELECT id FROM {artefact} WHERE "owner" = ? AND artefacttype IN ('
             . join(",",array_map(create_function('$a','return db_quote($a);'), array_keys($elementlist)))
             . ")", array($this->exporter->get('user')->get('id')));
         foreach ($profilefields as $id) {
