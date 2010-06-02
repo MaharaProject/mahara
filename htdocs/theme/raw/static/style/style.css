@@ -1607,15 +1607,20 @@ form#search input.text {
     margin: .5em 0 1.5em;
 }
 #hideinfo {
-    margin: 0 0 0 2px;
+    margin: 0;
     padding: 1px 0 0 2px;
-    float: left;
+    position: absolute;
+    left: 0;
+    top: 0;
 }
 .home-info-table td {
     width: 1%;
     padding: 0 8px 0 2px;
 }
-.home-info {
+.home-info.rel {
+    padding-top: 0;
+}
+.home-info-inner {
     padding: 10px;
     min-height: 250px;
     text-align: center;

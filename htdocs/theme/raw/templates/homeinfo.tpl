@@ -1,11 +1,14 @@
 <table id="home-info" class="home-info-table{if $USER->is_logged_in()} loggedin{/if}">
     <tr>
         <td>
+            <div class="home-info rel">
+            <div class="home-info-inner">
 {if $USER->is_logged_in()}
-            <a id="hideinfo" title="{str tag=Hide}"><img src="{theme_url filename='images/icon_close.gif'}" alt="[x]" /></a>
+                <a id="hideinfo" title="{str tag=Hide}"><img src="{theme_url filename='images/icon_close.gif'}" alt="[x]" /></a>
 {/if}
-            <div class="home-info">
-                <h3>{str tag=createcollect}</h3>
+                <div>
+                    <h3>{str tag=createcollect}</h3>
+                </div>
                 <p class="subtitle">{str tag=createcollectsubtitle}</p>
                 <table>
                     <tr>
@@ -54,9 +57,11 @@
                     </tr>
                 </table>
             </div>
+            </div>
         </td>
         <td>
             <div class="home-info">
+            <div class="home-info-inner">
                 <h3>{str tag=Organise}</h3>
                 <p class="subtitle">{str tag=organisesubtitle}</p>
                 <div>
@@ -69,9 +74,11 @@
                     {if $USER->is_logged_in()}{$s|safe}{else}{$s|safe|strip_tags}{/if}
                 </p>
             </div>
+            </div>
         </td>
         <td>
             <div class="home-info">
+            <div class="home-info-inner">
                 <h3>{str tag=sharenetwork}</h3>
                 <p class="subtitle">{str tag=sharenetworksubtitle}</p>
                 <table>
@@ -99,6 +106,7 @@
                     </tr>
                 </table>
                 <p id="accessdesc" class="desc">{str tag=sharenetworkdescription}</p>
+            </div>
             </div>
         </td>
     </tr>
