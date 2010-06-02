@@ -1210,17 +1210,25 @@ class OpenSslRepo {
         // ensure we remove trailing slashes
         $dn["commonName"] = preg_replace(':/$:', '', $dn["commonName"]);
 
-        if (!$new_key = openssl_pkey_new()) {
+        $config = array();
+        $opensslcnf = get_config('opensslcnf');
+        if ($opensslcnf) {
+            $config['config'] = $opensslcnf;
+        } else {
+            $config = null;
+        }
+
+        if (!$new_key = openssl_pkey_new($config)) {
             throw new ConfigException(get_string('errorcouldnotgeneratenewsslkey', 'auth'));
         }
 
-        if (!$csr_rsc = openssl_csr_new($dn, $new_key, array('private_key_bits',2048))) {
+        if (!$csr_rsc = openssl_csr_new($dn, $new_key, $config)) {
             // This behaviour has been observed once before, on an ubuntu hardy box. 
             // The php5-openssl package was installed but somehow openssl 
             // wasn't.
             throw new ConfigException(get_string('errorcouldnotgeneratenewsslkey', 'auth'));
         }
-        $selfSignedCert = openssl_csr_sign($csr_rsc, null, $new_key, 365 /*days*/);
+        $selfSignedCert = openssl_csr_sign($csr_rsc, null, $new_key, 365 /*days*/, $config);
         unset($csr_rsc); // Free up the resource
 
         // We export our self-signed certificate to a string.
@@ -1229,7 +1237,7 @@ class OpenSslRepo {
 
         // Export your public/private key pair as a PEM encoded string. You
         // can protect it with an optional passphrase if you wish.
-        $export = openssl_pkey_export($new_key, $this->keypair['keypair_PEM'] /* , $passphrase */);
+        $export = openssl_pkey_export($new_key, $this->keypair['keypair_PEM'] , null /*$passphrase */, $config);
         openssl_pkey_free($new_key);
         unset($new_key); // Free up the resource
 
