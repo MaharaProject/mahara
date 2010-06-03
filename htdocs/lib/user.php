@@ -424,7 +424,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
             if (strpos($script, $docroot) === 0) {
                 $script = substr($script, strlen($docroot));
             }
-            $line = "$to <- $mail->From - " . str_shorten_text($mail->Subject, 50);
+            $line = "$to <- $mail->From - " . str_shorten_text($mail->Subject, 200);
             @error_log('[' . date("Y-m-d h:i:s") . "] [$client] [$script] $line\n", 3, $logfile);
         }
 
