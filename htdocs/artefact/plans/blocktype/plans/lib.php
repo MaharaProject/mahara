@@ -45,107 +45,34 @@ class PluginBlocktypePlans extends PluginBlocktype {
         require_once(get_config('docroot') . 'artefact/lib.php');
         safe_require('artefact','plans');
 
-        $view = get_record('view','id', $instance->get('view'));
-        $smarty = smarty_core(array('tablerenderer'));
-        $datenow = time();
+        $configdata = array();
+        $configdata['viewid'] = $instance->get('view');
+        $configdata['page'] = abs(param_integer('page', 1));
 
-        // Get data about the plans the user has
-        $return = array();
-        if ($records = get_records_sql_array('
-            SELECT a.id, a.owner
-                FROM {artefact} a
-                JOIN {artefact_plan} ar ON ar.artefact = a.id
-            WHERE a.owner = ? AND a.artefacttype = \'plans\'
-            ORDER BY ar.completiondate ASC    ', array($view->owner))) {
-            foreach ($records as $record) {
-                $artefact = new ArtefactTypePlans($record->id);
-                $artefactid = $artefact->get('id');
-                $return[$artefactid]->title = $artefact->get('title');
-                $return[$artefactid]->description = $artefact->get('description');
-                if (!$artefact->get('completed') && $artefact->get('completiondate') < $datenow) {
-                    $return[$artefactid]->completed = -1;
-                } else {
-                    $return[$artefactid]->completed = $artefact->get('completed');
-                }
-                $return[$artefactid]->completiondate = strftime(get_string('strftimedate'), $artefact->get('completiondate'));
-            }
+        // need to get the plans id and artefact to render
+        $owner = (int) get_field('view','owner','id', $instance->get('view'));
+        $plansid = (int) get_field('artefact','id','artefacttype','plans','owner',$owner);
+        $plans = $instance->get_artefact_instance($plansid);
 
-            $smarty->assign('rows', $return);
-       }
-        return $smarty->fetch('blocktype:plans:content.tpl');
+        $result = '';
+        $result = $plans->render_self($configdata);
+        $result = $result['html'];
+
+        return $result;
     }
 
-    // Yes, we do have instance config. People are allowed to specify the title
-    // of the block, nothing else at this time. So in the next two methods we
-    // say yes and return no fields, so the title will be configurable.
+    // My Plans blocktype only has 'title' option so next two functions return as normal
     public static function has_instance_config() {
         return true;
     }
 
-    public static function instance_config_form() {
+    public static function instance_config_form($instance) {
         return array();
     }
 
     public static function artefactchooser_element($default=null) {
+        return array();
     }
-
-    /**
-     * Subscribe to the blockinstancecommit event to make sure all artefacts 
-     * that should be in the blockinstance are
-     */
-    public static function get_event_subscriptions() {
-        return array(
-            (object)array(
-                'event'        => 'blockinstancecommit',
-                'callfunction' => 'ensure_plans_artefacts_in_blockinstance',
-            ),
-        );
-    }
-
-    /**
-     * Hook for making sure that all plans artefacts are associated with a
-     * blockinstance at blockinstance commit time
-     */
-    public static function ensure_plans_artefacts_in_blockinstance($event, $blockinstance) {
-        if ($blockinstance->get('blocktype') == 'plans') {
-            safe_require('artefact', 'plans');
-
-            // Get all artefacts that are plans and belong to the correct owner
-            $artefacts = get_records_sql_array('
-                SELECT id
-                FROM {artefact}
-                WHERE artefacttype = \'plans\'
-                AND owner = (
-                    SELECT owner
-                    FROM {view}
-                    WHERE id = ?
-                )', array($blockinstance->get('view')));
-
-            if ($artefacts) {
-                // Make sure they're registered as being in this view
-                foreach ($artefacts as $artefact) {
-                    $record = (object)array(
-                        'view' => $blockinstance->get('view'),
-                        'artefact' => $artefact->id,
-                        'block' => $blockinstance->get('id'),
-                    );
-                    ensure_record_exists('view_artefact', $record, $record);
-                }
-            }
-        }
-    }
-
-    public static function default_copy_type() {
-        return 'shallow';
-    }
-
-    /**
-     * My Plans blocktype is only allowed in personal views
-     */
-    public static function allowed_in_view(View $view) {
-        return $view->get('owner') != null;
-    }
-
 }
 
 ?>
