@@ -46,6 +46,8 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
         $configdata = $instance->get('configdata');
 
         $result = '';
+        isset($configdata['count']) ? $configdata['count'] : 10;
+        
         if (!empty($configdata['artefactids'])) {
             $artefactids = implode(', ', array_map('db_quote', $configdata['artefactids']));
             if (!$mostrecent = get_records_sql_array(
@@ -57,7 +59,7 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
                 AND a.parent IN ( ' . $artefactids . ' ) 
                 AND a.owner = (SELECT "owner" from {view} WHERE id = ?)
                 ORDER BY a.ctime DESC
-                LIMIT 10', array($instance->get('view')))) {
+                LIMIT ' . $configdata['count'], array($instance->get('view')))) {
                 $mostrecent = array();
             }
             // format the dates
@@ -80,7 +82,15 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
     public static function instance_config_form($instance) {
         safe_require('artefact', 'blog');
         $configdata = $instance->get('configdata');
-        $elements = array(self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null));
+        $elements = array(self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null),
+            'count' => array(
+                'type' => 'text',
+                'title' => get_string('itemstoshow', 'blocktype.blog/recentposts'),
+                'defaultvalue' => isset($configdata['count']) ? $configdata['count'] : 10,
+                'size' => 3,
+            ),
+        );
+	
         return $elements;
     }
 
