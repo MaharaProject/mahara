@@ -42,10 +42,10 @@ $plans = (object) array(
     'offset' => param_integer('offset', 0),
 );
 
-list($plans->count, $plans->data) = ArtefactTypeMyPlans::get_plans_list($plans->offset);
-ArtefactTypeMyPlans::build_plans_list_html($plans);
+list($plans->count, $plans->data) = ArtefactTypePlans::get_plans_list($plans->offset);
+ArtefactTypePlans::build_plans_list_html($plans);
 
-$smarty = smarty(array('paginator','tablerenderer'));
+$smarty = smarty(array('paginator'));
 $smarty->assign_by_ref('plans', $plans);
 $smarty->assign('strnoplanssaddone',
     get_string('noplanssaddone', 'artefact.plans',
