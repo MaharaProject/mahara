@@ -67,7 +67,7 @@ $form = array(
 );
 $deleteplanform = pieform($form);
 
-$smarty = smarty(array('tablerenderer'));
+$smarty = smarty();
 $smarty->assign('todelete', $todelete);
 $smarty->assign('deleteplanform', $deleteplanform);
 $smarty->assign('PAGEHEADING', hsc(get_string('deletingplan','artefact.plans',$plan->get('title'))));
