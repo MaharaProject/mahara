@@ -30,12 +30,13 @@ class PluginArtefactPlans extends PluginArtefact {
 
     public static function get_artefact_types() {
         return array(
-            'myplans',
+            'plans',
             'plan',
         );
     }
 
     public static function get_block_types() {
+        return array();
     }
 
     public static function get_plugin_name() {
@@ -56,31 +57,31 @@ class PluginArtefactPlans extends PluginArtefact {
     public static function get_event_subscriptions() {
         return array(
             (object)array(
-                'plugin'       => 'myplans',
+                'plugin'       => 'plans',
                 'event'        => 'createuser',
-                'callfunction' => 'create_default_myplans',
+                'callfunction' => 'create_default_plans',
             ),
         );
     }
 
     /**
-     * Sets up the default MyPlans artefact for all plan artefacts to have as parent.
+     * Sets up the default Plans artefact for all plan artefacts to have as parent.
      * Each user can only have one of these and it is created at their account creation.
      */
-    public static function create_default_myplans($event, $user) {
+    public static function create_default_plans($event, $user) {
         $name = display_name($user, null, true);
-        $myplans = new ArtefactTypeMyPlans(0, (object) array(
+        $plans = new ArtefactTypePlans(0, (object) array(
             'title'       => get_string('myplans', 'artefact.plans'),
             'owner'       => $user['id'],
         ));
-        $myplans->commit();
+        $plans->commit();
     }
 }
 
 /**
- * A MyPlans artefact is a collection of Plan artefacts.
+ * A Plans artefact is a collection of Plan artefacts.
  */
-class ArtefactTypeMyPlans extends ArtefactType {
+class ArtefactTypePlans extends ArtefactType {
 
     /**
      * This constant gives the per-page pagination for listing plans.
@@ -95,10 +96,69 @@ class ArtefactTypeMyPlans extends ArtefactType {
      */
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
+    }
 
-        if (empty($this->id)) {
-            $this->container = 1;
+    public function render_self($options) {
+        $this->add_to_render_path($options);
+
+        // current time/date for formatting
+        $datenow = time();
+
+        $smarty = smarty_core();
+        if (isset($options['viewid'])) {
+            $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/artefact.php?artefact='
+                                             . $this->get('id') . '&view=' . $options['viewid']
+                                             . '">' . hsc($this->get('title')) . '</a>');
         }
+        else {
+            $smarty->assign('artefacttitle', hsc($this->get('title')));
+        }
+
+        $page = (isset($options['page'])) ? abs(intval($options['page'])) : abs(param_integer('page', 1));
+        $offset = $page ? $page * self::pagination - self::pagination : 1;
+
+        // Get list of the plans the user has in plans
+        $plans = array();
+        if ($records = get_records_sql_array('
+            SELECT ar.*, a.title, a.description
+                FROM {artefact} a
+                JOIN {artefact_plan} ar ON ar.plan = a.id
+            WHERE a.parent = ? AND a.artefacttype = \'plan\'
+            ORDER BY ar.completiondate DESC
+            LIMIT ? OFFSET ?', array($this->id, self::pagination, $offset))) {
+            foreach ($records as $record) {
+                $planid = $record->plan;
+                $plans[$planid]->title = $record->title;
+                $plans[$planid]->description = $record->description;
+                if (!$record->completed && $record->completiondate < $datenow) {
+                    $plans[$planid]->completed = -1;
+                } else {
+                    $plans[$planid]->completed = $record->completed;
+                }
+                $plans[$planid]->completiondate = strftime(get_string('strftimedate'), $record->completiondate);
+            }
+
+            $count = (int)get_field('artefact', 'COUNT(*)', 'artefacttype', 'plan','parent',$this->get('id'));
+
+            // Pagination
+            if ($count > self::pagination) {
+                $baselink = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->get('id');
+                if ($options['viewid']) {
+                    $baselink .= '&view=' . $options['viewid'];
+                }
+
+                if ($offset + self::pagination < $count) {
+                    $smarty->assign('olderplanslink',  $baselink . '&page=' . ($page + 1));
+                }
+                if ($offset > 0) {
+                    $smarty->assign('newerplanslink',  $baselink . '&page=' . ($page - 1));
+                }
+            }
+
+            $smarty->assign('plans', $plans);
+        }
+
+        return array('html' => $smarty->fetch('blocktype:plans:content.tpl'));
     }
 
     /**
@@ -120,6 +180,7 @@ class ArtefactTypeMyPlans extends ArtefactType {
         $this->dirty = false;
     }
 
+    // ToDo: add Plans icon
     public static function get_icon($options=null) {
     }
 
@@ -142,16 +203,17 @@ class ArtefactTypeMyPlans extends ArtefactType {
         global $USER;
         $datenow = time(); // time now to use for formatting plans by completion
 
-        // a user can only have one myplans artefact
-        if (!$myplans = get_field('artefact','id','artefacttype','myplans','owner',$USER->get('id'))) {
+        if (!$plans = get_field('artefact','id','artefacttype','plans','owner',$USER->get('id'))) {
             return;
         }
 
         ($results = get_records_sql_array("
-            SELECT ar.*, a.title, a.description FROM {artefact} a
-            JOIN {artefact_plan} ar ON ar.plan = a.id
+            SELECT ap.*, a.title, a.description
+                FROM {artefact} a
+            JOIN {artefact_plan} ap ON ap.plan = a.id
             WHERE a.owner = ? AND a.artefacttype = 'plan' AND a.parent = ?
-            ORDER BY ar.completiondate ASC LIMIT ? OFFSET ?", array($USER->get('id'), (int)$myplans, self::pagination, $offset)))
+            ORDER BY ap.completiondate DESC 
+            LIMIT ? OFFSET ?", array($USER->get('id'), (int)$plans, self::pagination, $offset)))
             || ($results = array());
 
         // format the date and setup completed for display if plan is incomplete
@@ -167,13 +229,13 @@ class ArtefactTypeMyPlans extends ArtefactType {
             }
         }
 
-        $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $USER->get('id'), 'artefacttype', 'plan');
+        $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $USER->get('id'), 'artefacttype', 'plan','parent',(int)$plans);
 
         return array($count, $results);
     }
 
     /**
-     * Builds the myplans list table
+     * Builds the plans list table
      *
      * @param plans (reference)
      */
@@ -202,7 +264,7 @@ class ArtefactTypeMyPlans extends ArtefactType {
 }
 
 /**
- * Plan artefacts occur within MyPlans artefacts
+ * Plan artefacts occur within Plans artefacts
  */
 class ArtefactTypePlan extends ArtefactType {
 
@@ -297,7 +359,7 @@ class ArtefactTypePlan extends ArtefactType {
 
     /**
      * Checks that the person viewing this plan is the owner. If not, throws an
-     * AccessDeniedException. Used in the myplans section to ensure only the
+     * AccessDeniedException. Used in the plans section to ensure only the
      * owners of the plans can view or change them there. Other people see
      * plans when they are placed in views.
      */
@@ -308,14 +370,12 @@ class ArtefactTypePlan extends ArtefactType {
         }
     }
 
+    // ToDo: add Plan icon ?
     public static function get_icon($options=null) {
     }
 
     public static function is_singular() {
         return false;
-    }
-
-    public static function collapse_config() {
     }
 
     /**
@@ -406,7 +466,7 @@ class ArtefactTypePlan extends ArtefactType {
     public static function get_plansform_elements() {
         global $USER;
 
-        $parent = get_field('artefact','id','artefacttype','myplans','owner',$USER->get('id'));
+        $parent = get_field('artefact','id','artefacttype','plans','owner',$USER->get('id'));
 
         return array(
             'completiondate' => array(
