@@ -1,6 +1,6 @@
 {auto_escape off}
 <div id="planswrap">
-{if $rows}
+{if $plans}
 <table id="planslist" class="tablerenderer">
     <colgroup width="50%" span="2"></colgroup>
     <thead>
@@ -11,18 +11,18 @@
         </tr>
     </thead>
     <tbody>
-        {foreach from=$rows item=row}
-        {if $row->completed == -1}
+        {foreach from=$plans item=plan}
+        {if $plan->completed == -1}
             <tr class="incomplete">
-                <td>{$row->completiondate|escape}</td>
-                <td>{$row->title|escape}<div>{$row->description|escape}</div></td>
+                <td>{$plan->completiondate|escape}</td>
+                <td>{$plan->title|escape}<div>{$->description|escape}</div></td>
                 <td>&nbsp;</td>
             </tr>
         {else}
             <tr class="{cycle values='r0,r1'}">
-                <td>{$row->completiondate|escape}</td>
-                <td>{$row->title|escape}<div>{$row->description|escape}</div></td>
-                {if $row->completed == 1}
+                <td>{$plan->completiondate|escape}</td>
+                <td>{$plan->title|escape}<div>{$plan->description|escape}</div></td>
+                {if $plan->completed == 1}
                     <td><div class="completed"><img src="{$WWWROOT}theme/raw/static/images/success.gif" alt="" /></div></td>
                 {else}
                     <td>&nbsp;</td>
@@ -32,6 +32,12 @@
         {/foreach}
     </tbody>
 </table>
+{/if}
+{if $newerplanslink || $olderplanslink}
+<div class="myplans-pagination">
+{if $olderplanslink}<div class="fr"><a href="{$olderplanslink|escape}">{str tag=olderplans section=blocktype.plans/plans}</a></div>{/if}
+{if $newerplanslink}<div><a href="{$newerplanslink|escape}">{str tag=newerplans section=blocktype.plans/plans}</a></div>{/if}
+</div>
 {/if}
 </div>
 {/auto_escape}
