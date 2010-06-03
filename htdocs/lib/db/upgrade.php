@@ -1749,5 +1749,16 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('showonlineuserssideblock', (int) (is_null($showusers) || $showusers));
     }
 
+    if ($oldversion < 2010060300) {
+        // Add table to associate users with php session ids
+        $table = new XMLDBTable('usr_session');
+        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+        $table->addFieldInfo('session', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('session'));
+        $table->addIndexInfo('usrix', XMLDB_INDEX_NOTUNIQUE, array('usr'));
+        create_table($table);
+    }
+
     return $status;
 }

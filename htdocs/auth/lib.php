@@ -1517,6 +1517,8 @@ function auth_remove_old_session_files() {
     // here. In particular, -mtime +1 means files older than about two days 
     // will be removed
     exec('find ' . escapeshellarg(get_config('dataroot') . 'sessions') . ' -type f -mtime +1 | xargs -n 1000 -r rm');
+    // Throw away records of old login sessions. Should check whether any are still alive.
+    delete_records_select('usr_session', 'ctime < ?', array(db_format_timestamp(time() - 86400 * 30)));
 }
 
 /**

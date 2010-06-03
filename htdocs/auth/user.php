@@ -996,6 +996,7 @@ class LiveUser extends User {
 
         // Unset session variables related to authentication
         $this->SESSION->set('authinstance', null);
+        delete_records('usr_session', 'session', $this->get('sessionid'));
 
         reset($this->defaults);
         foreach (array_keys($this->defaults) as $key) {
@@ -1064,6 +1065,7 @@ class LiveUser extends User {
         $this->reset_institutions();
         $this->reset_grouproles();
         $this->load_views();
+        $this->store_sessionid();
 
         $this->commit();
 
@@ -1184,5 +1186,16 @@ class LiveUser extends User {
             $THEME = new Theme($this->theme);
         }
     }
+
+    private function store_sessionid() {
+        $sessionid = $this->get('sessionid');
+        delete_records('usr_session', 'session', $sessionid);
+        insert_record('usr_session', (object) array(
+            'usr' => $this->get('id'),
+            'session' => $sessionid,
+            'ctime' => db_format_timestamp(time()),
+        ));
+    }
+
 }
 ?>
