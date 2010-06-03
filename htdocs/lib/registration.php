@@ -412,7 +412,7 @@ function user_stats_table($limit, $offset) {
     $userdata = get_records_sql_array(
         "SELECT ctime, type, \"value\", $day AS date
         FROM {site_data}
-        WHERE type IN (?,?) AND ctime >= ? AND ctime < (date(?) + (INTERVAL $dayinterval))
+        WHERE type IN (?,?) AND ctime >= ? AND ctime < (date(?) + INTERVAL $dayinterval)
         ORDER BY type = ? DESC, ctime DESC",
         array('user-count-daily', 'loggedin-users-daily', $daterange->mindate, $daterange->maxdate, 'user-count-daily')
     );
