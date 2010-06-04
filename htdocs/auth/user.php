@@ -772,7 +772,7 @@ class User {
     public function can_view_artefact($a) {
         if ($this->get('admin')
             || ($this->get('id') and $this->get('id') == $a->get('owner'))
-            || $this->is_institutional_admin($a->get('institution'))) {
+            || ($a->get('institution') and $this->is_institutional_admin($a->get('institution')))) {
             return true;
         }
         if ($a->get('group')) {
@@ -788,7 +788,7 @@ class User {
     public function can_edit_artefact($a) {
         if ($this->get('admin')
             || ($this->get('id') and $this->get('id') == $a->get('owner'))
-            || $this->is_institutional_admin($a->get('institution'))) {
+            || ($a->get('institution') and $this->is_institutional_admin($a->get('institution')))) {
             return true;
         }
         $group = $a->get('group');
