@@ -274,4 +274,54 @@ function insert_messages() {
     return $SESSION->render_messages();
 }
 
-?>
+
+function remove_user_sessions($userid) {
+    global $sessionpath, $USER;
+
+    if (!$sessionids = get_column('usr_session', 'session', 'usr', $userid)) {
+        return;
+    }
+
+    $alive = array();
+    $dead = array();
+    foreach ($sessionids as $sessionid) {
+        $file = $sessionpath;
+        for ($i = 0; $i < 3; $i++) {
+            $file .= '/' . substr($sessionid, $i, 1);
+        }
+        $file .= '/sess_' . $sessionid;
+        if (file_exists($file)) {
+            $alive[] = $sessionid;
+        }
+        else {
+            $dead[] = $sessionid;
+        }
+    }
+
+    if (!empty($dead)) {
+        delete_records_select('usr_session', 'session IN (' . join(',', array_map('db_quote', $dead)) . ')');
+    }
+
+    if (empty($alive)) {
+        return;
+    }
+
+    $sid = $USER->get('sessionid');
+
+    session_commit();
+
+    foreach ($alive as $sessionid) {
+        session_id($sessionid);
+        if (session_start()) {
+            session_destroy();
+            session_commit();
+        }
+    }
+
+    session_id($sid);
+    session_start();
+
+    delete_records_select('usr_session', 'session IN (' . join(',', array_map('db_quote', $alive)) . ')');
+}
+
+

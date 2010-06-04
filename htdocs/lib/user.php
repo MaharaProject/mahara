@@ -945,6 +945,10 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
     $suspendrec->suspendedctime  = db_format_timestamp(time());
     update_record('usr', $suspendrec, 'id');
 
+    // Try to kick the user from any active login session.
+    require_once(get_config('docroot') . 'auth/session.php');
+    remove_user_sessions($suspendeduserid);
+
     $lang = get_user_language($suspendeduserid);
     $message = new StdClass;
     $message->users = array($suspendeduserid);
