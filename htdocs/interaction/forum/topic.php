@@ -62,7 +62,7 @@ define('GROUP', $topic->groupid);
 $membership = user_can_access_forum((int)$topic->forumid);
 $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
-$forumconfig = get_records_assoc('interaction_forum_instance_config', 'forum', $topicid, '', 'field,value');
+$forumconfig = get_records_assoc('interaction_forum_instance_config', 'forum', $topic->forumid, '', 'field,value');
 $indentmode = isset($forumconfig['indentmode']) ? $forumconfig['indentmode']->value : 'full_indent';
 $maxindentdepth = isset($forumconfig['maxindent']) ? $forumconfig['maxindent']->value : 10;
 
@@ -263,15 +263,17 @@ function renderpost($post) {
  */
 
 function buildflatposts(&$posts) {
-    buildsubjects(0, '', $posts);
     $localposts = $posts;
     $first_post = array_shift($localposts);
     if (!isset($first_post->subject) || empty($first_post->subject)) {
-        $first_post = get_string('re', 'interaction.forum', '');
+        $first_post->subject = get_string('re', 'interaction.forum', '');
     }
 
     $children = array();
     foreach ($localposts as $index => $post) {
+        if (!isset($post->subject) || empty($post->subject)) {
+            $post->subject = get_string('re', 'interaction.forum', $first_post->subject);
+        }
         $children[] = $post;
     }
     $first_post->children = $children;
