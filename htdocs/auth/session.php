@@ -275,16 +275,27 @@ function insert_messages() {
 }
 
 
-function remove_user_sessions($userid) {
+function remove_user_sessions($userid=null) {
     global $sessionpath, $USER;
 
-    if (!$sessionids = get_column('usr_session', 'session', 'usr', $userid)) {
+    if (is_null($userid)) {
+        $sessionids = get_column('usr_session', 'session');
+    }
+    else {
+        $sessionids = get_column('usr_session', 'session', 'usr', $userid);
+    }
+
+    if (empty($sessionids)) {
         return;
     }
 
     $alive = array();
     $dead = array();
+    $sid = $USER->get('sessionid');
     foreach ($sessionids as $sessionid) {
+        if ($sessionid == $sid) {
+            continue;
+        }
         $file = $sessionpath;
         for ($i = 0; $i < 3; $i++) {
             $file .= '/' . substr($sessionid, $i, 1);
@@ -305,8 +316,6 @@ function remove_user_sessions($userid) {
     if (empty($alive)) {
         return;
     }
-
-    $sid = $USER->get('sessionid');
 
     session_commit();
 
