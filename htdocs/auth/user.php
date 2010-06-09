@@ -996,7 +996,8 @@ class LiveUser extends User {
 
         // Unset session variables related to authentication
         $this->SESSION->set('authinstance', null);
-        if ($this->get('sessionid') && table_exists('usr_session')) {
+        if (get_config('installed') && !defined('INSTALLER') && $this->get('sessionid')
+            && function_exists('table_exists') && table_exists('usr_session')) {
             delete_records('usr_session', 'session', $this->get('sessionid'));
         }
 
