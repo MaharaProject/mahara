@@ -271,6 +271,10 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
                 $blog->delete();
             }
         }
+        $userid = $importer->get('usr');
+        if (count_records('artefact', 'artefacttype', 'blog', 'owner', $userid) != 1) {
+            set_account_preference($userid, 'multipleblogs', 1);
+        }
     }
 
     /**
