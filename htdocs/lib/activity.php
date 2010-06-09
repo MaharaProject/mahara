@@ -193,6 +193,14 @@ function activity_process_queue() {
         $watchlist = activity_locate_typerecord('watchlist');
         $viewsnotified = array();
         foreach ($toprocess as $activity) {
+            // Remove this activity from the queue to make sure we
+            // never send duplicate emails even if part of the
+            // activity handler fails for whatever reason
+            if (!delete_records('activity_queue', 'id', $activity->id)) {
+                log_warn("Unable to remove activity $activity->id from the queue. Skipping it.");
+                continue;
+            }
+
             $data = unserialize($activity->data);
             if ($activity->type == $watchlist->id && !empty($data->view)) {
                 if (isset($viewsnotified[$data->view])) {
@@ -212,7 +220,6 @@ function activity_process_queue() {
             }
             db_commit();
         }
-        delete_records('activity_queue');
     }
 }
 
