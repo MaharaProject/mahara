@@ -72,6 +72,30 @@ class PluginInteractionForum extends PluginInteraction {
         }
 
         return array(
+            'indentmode' => array(
+                'type'         => 'select',
+                'title'        => get_string('indentmode', 'interaction.forum'),
+                'options'      => array('full_indent'  => get_string('indentfullindent', 'interaction.forum'),
+                                        'max_indent'   => get_string('indentmaxindent', 'interaction.forum'),
+                                        'no_indent'    => get_string('indentflatindent', 'interaction.forum') ),
+                'description'  => get_string('indentmodedescription', 'interaction.forum'),
+                'defaultvalue' => isset($indentmode) ? $indentmode : 'full_indent',
+                'rules' => array(
+                    'required' => true,
+                ),
+            ),
+            'maxindent' => array(
+                'type'         => 'text',
+                'title'        => get_string('maxindent', 'interaction.forum'),
+                'size'         => 2,
+                'defaultvalue' => isset($maxindent) ? $maxindent : 10,
+                'class'        => (isset($indentmode) & $indentmode == 'max_indent') ? '' : 'hidden',
+                'rules' => array(
+                    'integer' => true,
+                    'minvalue' => 1,
+                    'maxvalue' => 100,
+                ),
+            ),
             'fieldset' => array(
                 'type' => 'fieldset',
                 'collapsible' => true,
@@ -123,33 +147,33 @@ class PluginInteractionForum extends PluginInteraction {
                             'required' => true,
                         ),
                     ),
-                    'indentmode' => array(
-                        'type'         => 'select',
-                        'title'        => get_string('indentmode', 'interaction.forum'),
-                        'options'      => array('full_indent'  => get_string('indentfullindent', 'interaction.forum'),
-                                                'max_indent'   => get_string('indentmaxindent', 'interaction.forum'),
-                                                'no_indent'    => get_string('indentflatindent', 'interaction.forum') ),
-                        'description'  => get_string('indentmodedescription', 'interaction.forum'),
-                        'defaultvalue' => isset($indentmode) ? $indentmode : 'full_indent',
-                        'rules' => array(
-                            'required' => true,
-                        ),
-                    ),
-                    'maxindent' => array(
-                        'type'         => 'text',
-                        'title'        => get_string('maxindent', 'interaction.forum'),
-                        'size'         => 2,
-                        'description'  => get_string('maxindentdescription', 'interaction.forum'),
-                        'defaultvalue' => isset($maxindent) ? $maxindent : 10,
-                        'rules' => array(
-                            'integer' => true,
-                            'minvalue' => 1,
-                            'maxvalue' => 100,
-                        ),
-                    ),
                 )
             )
         );
+    }
+
+    public static function instance_config_js() {
+        return <<<EOF
+function update_maxindent() {
+    var s = $('edit_interaction_indentmode');
+    var m = $('edit_interaction_maxindent_container');
+    var t = $('edit_interaction_maxindent');
+    if (!m) {
+        return;
+    }
+    if (s.options[s.selectedIndex].value == 'max_indent') {
+        removeElementClass(m, 'hidden');
+        removeElementClass(t, 'hidden');
+    }
+    else {
+        addElementClass(m, 'hidden');
+        addElementClass(t, 'hidden');
+    }
+}
+addLoadEvent(function() {
+    connect('edit_interaction_indentmode', 'onchange', update_maxindent);
+});
+EOF;
     }
 
     public static function instance_config_save($instance, $values){

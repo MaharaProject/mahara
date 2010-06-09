@@ -74,6 +74,8 @@ $elements = array_merge(
     )
 );
 
+$js = call_static_method(generate_class_name('interaction', $plugin), 'instance_config_js', $group, $instance);
+
 // save, validate and cancelhandlers are in interaction/lib.php
 $form = pieform(array(
     'name'       => 'edit_interaction',
@@ -85,6 +87,7 @@ $form = pieform(array(
 
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('form', $form);
+$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('heading', $group->name);
 $smarty->assign('subheading', TITLE);
 $smarty->display('interaction/edit.tpl');
