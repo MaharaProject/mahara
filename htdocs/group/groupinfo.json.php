@@ -41,6 +41,8 @@ $group->admins = get_column_sql("SELECT member
 
 $filecounts = ArtefactTypeFileBase::count_user_files(null, $group->id, null);
 
+$group->grouptypedescription = get_string('grouptypedescription', 'group', get_string('name', 'grouptype.' . $group->grouptype), get_string('membershiptype.'.$group->jointype, 'group'));
+
 $smarty = smarty_core();
 $smarty->assign('group', $group);
 $smarty->assign('membercount', count_records('group_member', 'group', $group->id));
