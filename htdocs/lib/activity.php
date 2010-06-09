@@ -185,7 +185,6 @@ function activity_add_admin_defaults($userids) {
 
 function activity_process_queue() {
 
-    db_begin();
     if ($toprocess = get_records_array('activity_queue')) {
         // Hack to avoid duplicate watchlist notifications on the same view
         $watchlist = activity_locate_typerecord('watchlist');
@@ -198,6 +197,8 @@ function activity_process_queue() {
                 }
                 $viewsnotified[$data->view] = true;
             }
+
+            db_begin();
             try {
                 handle_activity($activity->type, $data, true);
             }
@@ -206,10 +207,10 @@ function activity_process_queue() {
                 // log them and continue
                 log_debug($e->getMessage());
             }
+            db_commit();
         }
         delete_records('activity_queue');
     }
-    db_commit();
 }
 
 function activity_get_viewaccess_users($view, $owner, $type) {
