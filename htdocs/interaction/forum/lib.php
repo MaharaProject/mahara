@@ -446,18 +446,20 @@ EOF;
         if (is_array($postnow) && !empty($postnow)) {
             $values = array();
             $postswhere = 'id IN (' . join(',', array_map('intval', $postnow)) . ')';
+            $delay = false;
         }
         else {
             $currenttime = time();
             $minpostdelay = $currenttime - get_config_plugin('interaction', 'forum', 'postdelay') * 60;
             $values = array(db_format_timestamp($minpostdelay));
             $postswhere = 'ctime < ?';
+            $delay = null;
         }
         $posts = get_column_sql('SELECT id FROM {interaction_forum_post} WHERE sent = 0 AND deleted = 0 AND ' . $postswhere, $values);
         if ($posts) {
             set_field_select('interaction_forum_post', 'sent', 1, 'deleted = 0 AND sent = 0 AND ' . $postswhere, $values);
             foreach ($posts as $postid) {
-                activity_occurred('newpost', array('postid' => $postid), 'interaction', 'forum', (bool) $postnow);
+                activity_occurred('newpost', array('postid' => $postid), 'interaction', 'forum', $delay);
             }
         }
     }
