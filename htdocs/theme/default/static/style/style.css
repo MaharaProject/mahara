@@ -787,6 +787,12 @@ ul.groupuserstatus li,
 .listing.twocolumn td {
 }
 
+/* Group: members (Add members) */
+#addmembers {
+	background-color: #EBF0F4;
+	border: 1px solid #95A8B7;
+}
+
 /* Settings > Preferences */
 #accountprefs table h3 {
 }

@@ -1534,6 +1534,28 @@ form#search input.text {
 	border: 4px solid #FFF;
 }
 
+/* Group: members (Add members) */
+#addmembers {
+	border: 1px solid #d1d1d1;
+	background: #f6f6f6;
+	padding: 1em;
+}
+
+#addmembers table {
+    width: 100%;
+}
+* html #addmembers table,
+* html #addmembers {
+	width: 96%;
+}
+#addmembers td {
+	padding: .25em 0;
+}
+#addmembers td label {
+	font-size: 1em;
+	font-weight: bold;
+}
+
 /* Settings > Preferences */
 #accountprefs table td {
     padding-left: 0;
