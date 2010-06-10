@@ -173,6 +173,15 @@ $string['notamember'] = 'You are not a member of this group';
 $string['notmembermayjoin'] = 'You must join the group \'%s\' to see this page.';
 $string['declinerequestsuccess'] = 'Group membership request has been declined sucessfully.';
 
+// Bulk add, invite
+$string['addmembers'] = 'Add members';
+$string['invitationssent'] = '%d invitations sent';
+$string['newmembersadded'] = 'Added %d new members';
+$string['potentialmembers'] = 'Potential members';
+$string['sendinvitations'] = 'Send invitations';
+$string['userstobeadded'] = 'Users to be added';
+$string['userstobeinvited'] = 'Users to be invited';
+
 // friendslist
 $string['reasonoptional'] = 'Reason (optional)';
 $string['request'] = 'Request';
@@ -300,8 +309,8 @@ $string['About'] = 'About';
 
 $string['Joined'] = 'Joined';
 
-$string['instructions:invite'] = 'This is an invite-only group. Invite users through their profile pages.';
-$string['instructions:controlled'] = 'This is a controlled membership group. Add users through their profile pages.';
+$string['membersdescription:invite'] = 'This is an invite-only group. You can invite users through their profile pages or <a href="%s">send multiple invitations at once</a>.';
+$string['membersdescription:controlled'] = 'This is a controlled membership group. You can add users through their profile pages or <a href="%s">add many users at once</a>.';
 
 // View submission
 $string['submit'] = 'Submit';

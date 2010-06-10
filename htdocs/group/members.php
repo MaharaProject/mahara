@@ -68,15 +68,20 @@ if ($remove && $member) {
 $query  = trim(param_variable('query', ''));
 $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);
-list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersearch_data($group->id, $query, $offset, $limit, $membershiptype);
+
+$results = get_group_user_search_results($group->id, $query, $offset, $limit, $membershiptype);
+list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersearch_data($results, $group->id, $query, $membershiptype);
 
 // Type-specific instructions
 $instructions = '';
 if ('admin' == $role) {
     if ('invite' == $group->jointype) {
-        $instructions = get_string('instructions:invite', 'group');
-    } elseif ('controlled' == $group->jointype) {
-        $instructions = get_string('instructions:controlled', 'group');
+        $url = get_config('wwwroot') . 'group/inviteusers.php?id=' . GROUP;
+        $instructions = get_string('membersdescription:invite', 'group', $url);
+    }
+    else if ('controlled' == $group->jointype) {
+        $url = get_config('wwwroot') . 'group/addmembers.php?id=' . GROUP;
+        $instructions = get_string('membersdescription:controlled', 'group', $url);
     }
 }
 

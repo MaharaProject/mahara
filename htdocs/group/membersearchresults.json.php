@@ -51,7 +51,12 @@ if (!empty($membershiptype)) {
     }
 }
 
-list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersearch_data($id, $query, $offset, $limit, $membershiptype);
+$results = get_group_user_search_results($group->id, $query, $offset, $limit, $membershiptype);
+if (!param_boolean('html', true)) {
+    json_reply(false, $results);
+}
+
+list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersearch_data($results, $id, $query, $membershiptype);
 
 json_reply(false, array(
     'message' => null,

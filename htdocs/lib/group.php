@@ -828,15 +828,14 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
 }
 
 
-function group_get_membersearch_data($group, $query, $offset, $limit, $membershiptype) {
+function group_get_membersearch_data($results, $group, $query, $membershiptype) {
     global $USER;
-    $results = get_group_user_search_results($group, $query, $offset, $limit, $membershiptype);
 
     $params = array();
     if (!empty($query)) {
         $params[] = 'query=' . $query;
     }
-    $params[] = 'limit=' . $limit;
+    $params[] = 'limit=' . $results['limit'];
     if (!empty($membershiptype)) {
         $params[] = 'membershiptype=' . $membershiptype;
     }
@@ -887,8 +886,8 @@ function group_get_membersearch_data($group, $query, $offset, $limit, $membershi
         'class' => 'center',
         'url' => $searchurl,
         'count' => $results['count'],
-        'limit' => $limit,
-        'offset' => $offset,
+        'limit' => $results['limit'],
+        'offset' => $results['offset'],
         'datatable' => 'membersearchresults',
         'jsonscript' => 'group/membersearchresults.json.php',
         'firsttext' => '',
@@ -900,7 +899,7 @@ function group_get_membersearch_data($group, $query, $offset, $limit, $membershi
         'resultcounttextplural' => get_string('members', 'group'),
     ));
 
-    return array($html, $pagination, $results['count'], $offset, $membershiptype);
+    return array($html, $pagination, $results['count'], $results['offset'], $membershiptype);
 }
 
 

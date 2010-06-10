@@ -374,7 +374,9 @@ function get_group_user_search_results($group, $query, $offset, $limit, $members
         foreach ($results['data'] as &$result) {
             $result['name'] = display_name($result);
             $result['introduction'] = isset($introductions[$result['id']]) ? $introductions[$result['id']]->title : '';
-            $result['jointime'] = strftime(get_string('strftimedate'), $result['jointime']);
+            if (isset($result['jointime'])) {
+                $result['jointime'] = strftime(get_string('strftimedate'), $result['jointime']);
+            }
         }
     }
     return $results;

@@ -353,16 +353,12 @@ class PluginSearchInternal extends PluginSearch {
 
 
     public static function group_search_user($group, $queries, $constraints, $offset, $limit, $membershiptype) {
-        $where = 'WHERE gm.group = ?';
-        $values = array($group);
-
-        // Get the correct keyword for case insensitive LIKE
-        $ilike = db_ilike();
-
         // Only handle OR/AND expressions at the top level.  Eventually we may need subexpressions.
-
+        $searchsql = '';
+        $values = array();
         if (!empty($queries)) {
-            $where .= ' AND ( ';
+            $ilike = db_ilike();
+            $searchsql .= ' AND ( ';
             $str = array();
             foreach ($queries as $f) {
                 if (!preg_match('/^[a-zA-Z_0-9"]+$/', $f['field'])) {
@@ -371,30 +367,73 @@ class PluginSearchInternal extends PluginSearch {
                 $str[] = 'u.' . $f['field'] 
                     . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
             }
-            $where .= join(' OR ', $str) . ') ';
+            $searchsql .= join(' OR ', $str) . ') ';
         }
 
-        $group_member = 'group_member';
-        if (!empty($membershiptype) && in_array($membershiptype, array('request', 'invite'))) {
-            $group_member .= '_' . $membershiptype;
-            $gm_role = '';
-            $gm_role_order = '';
+        if ($membershiptype == 'nonmember') {
+            $select = '
+                    u.id, u.firstname, u.lastname, u.username, u.email, u.profileicon, u.staff';
+            $from = '
+                FROM {usr} u
+                WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
+                    AND NOT u.id IN (SELECT member FROM {group_member} gm WHERE gm.group = ?)';
+            $values[] = $group;
+            $orderby = 'u.firstname, u.lastname, u.id';
         }
-        else {
-            $gm_role = ', gm.role';
-            $gm_role_order = "gm.role = 'admin' DESC, ";
+        else if ($membershiptype == 'notinvited') {
+            $select = '
+                    u.id, u.firstname, u.lastname, u.username, u.email, u.profileicon, u.staff';
+            $from = '
+                FROM {usr} u
+                WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
+                    AND NOT u.id IN (SELECT member FROM {group_member} gm WHERE gm.group = ?)
+                    AND NOT u.id IN (SELECT member FROM {group_member_invite} gmi WHERE gmi.group = ?)';
+            $values[] = $group;
+            $values[] = $group;
+            $orderby = 'u.firstname, u.lastname, u.id';
+        }
+        else if ($membershiptype == 'request') {
+            $select = '
+                    u.id, u.firstname, u.lastname, u.username, u.email, u.profileicon,
+                    u.staff, ' . db_format_tsfield('gmr.ctime', 'jointime');
+            $from = '
+                FROM {usr} u
+                    INNER JOIN {group_member_request} gmr ON (gmr.member = u.id)
+                WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
+                    AND gmr.group = ?';
+            $values[] = $group;
+            $orderby = 'gmr.ctime, u.firstname, u.lastname, u.id';
+        }
+        else if ($membershiptype == 'invite') {
+            $select = '
+                    u.id, u.firstname, u.lastname, u.username, u.email, u.profileicon,
+                    u.staff, ' . db_format_tsfield('gmi.ctime', 'jointime');
+            $from = '
+                FROM {usr} u
+                    INNER JOIN {group_member_invite} gmi ON (gmi.member = u.id)
+                WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
+                    AND gmi.group = ?';
+            $values[] = $group;
+            $orderby = 'gmi.ctime, u.firstname, u.lastname, u.id';
+        }
+        else { // All group members
+            $select = '
+                    u.id, u.firstname, u.lastname, u.username, u.email, u.profileicon,
+                    u.staff, ' . db_format_tsfield('gm.ctime', 'jointime') . ', gm.role';
+            $from = '
+                FROM {usr} u
+                    INNER JOIN {group_member} gm ON (gm.member = u.id)
+                WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
+                    AND gm.group = ?';
+            $values[] = $group;
+            $orderby = "gm.role = 'admin' DESC, gm.ctime, u.firstname, u.lastname, u.id";
         }
 
-        $count = get_field_sql('SELECT COUNT(*) FROM {usr} u INNER JOIN {' . $group_member . '} gm ON (gm.member = u.id) ' . $where, $values);
+        $count = get_field_sql('SELECT COUNT(*)' . $from, $values);
 
         if ($count > 0) {
             $data = get_records_sql_assoc('
-                SELECT
-                    u.id, u.firstname, u.lastname, u.username, u.email, u.profileicon, u.staff, ' . db_format_tsfield('gm.ctime', 'jointime') . $gm_role . '
-                FROM
-                    {usr} u
-                INNER JOIN {' . $group_member . '} gm ON (gm.member = u.id) ' . $where . '
-                ORDER BY ' . $gm_role_order . 'gm.ctime, u.firstname, u.lastname, u.id',
+                SELECT ' . $select . $from . ' ORDER BY ' . $orderby,
                 $values,
                 $offset,
                 $limit);
