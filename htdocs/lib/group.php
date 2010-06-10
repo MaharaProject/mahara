@@ -445,7 +445,7 @@ function group_remove_user($groupid, $userid=null, $force=false) {
  * @param object $userid  User to invite
  * @param object $userfrom  User sending the invitation
  */
-function group_invite_user($group, $userid, $userfrom, $role='member') {
+function group_invite_user($group, $userid, $userfrom, $role='member', $delay=null) {
     $user = optional_userobj($userid);
 
     $data = new StdClass;
@@ -456,13 +456,14 @@ function group_invite_user($group, $userid, $userfrom, $role='member') {
     ensure_record_exists('group_member_invite', $data, $data);
     $lang = get_user_language($user->id);
     require_once('activity.php');
-    activity_occurred('maharamessage', array(
+    $activitydata = array(
         'users'   => array($user->id),
         'subject' => get_string_from_language($lang, 'invitetogroupsubject', 'group'),
         'message' => get_string_from_language($lang, 'invitetogroupmessage', 'group', display_name($userfrom, $user), $group->name),
         'url'     => get_config('wwwroot') . 'group/view.php?id=' . $group->id,
         'urltext' => $group->name,
-    ));
+    );
+    activity_occurred('maharamessage', $activitydata, null, null, $delay);
 }
 
 // Pieforms for various operations on groups

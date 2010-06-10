@@ -87,9 +87,11 @@ function addmembers_submit(Pieform $form, $values) {
         return;
     }
 
+    db_begin();
     foreach ($values['users'] as $userid) {
-        group_invite_user($group, $userid, $USER->get('id'));
+        group_invite_user($group, $userid, $USER->get('id'), 'member', true);
     }
+    db_commit();
 
     $SESSION->add_ok_msg(get_string('invitationssent', 'group', count($values['users'])));
     redirect(get_config('wwwroot') . 'group/members.php?id=' . GROUP);
