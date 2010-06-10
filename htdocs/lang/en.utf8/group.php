@@ -67,10 +67,10 @@ $string['Admin'] = 'Admin';
 $string['grouptype'] = 'Group type';
 $string['publiclyviewablegroup'] = 'Publicly Viewable Group?';
 $string['publiclyviewablegroupdescription'] = 'Allow people who are not logged-in to view this group, including the forums?';
-$string['publicvisibility'] = 'Publicly visible';
+$string['Type'] = 'Type';
+$string['publiclyvisible'] = 'Publicly visible';
 $string['usersautoadded'] = 'Users auto-added?';
 $string['usersautoaddeddescription'] = 'Automatically put all new users into this group?';
-$string['grouptypedescription'] = '%s > %s';
 
 $string['hasrequestedmembership'] = 'has requested membership of this group';
 $string['hasbeeninvitedtojoin'] = 'has been invited to join this group';
@@ -314,4 +314,5 @@ $string['membersdescription:controlled'] = 'This is a controlled membership grou
 
 // View submission
 $string['submit'] = 'Submit';
+$string['allowssubmissions'] = 'Allows submissions';
 ?>

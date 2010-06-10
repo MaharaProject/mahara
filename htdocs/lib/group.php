@@ -824,7 +824,7 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
         else if ($group->membershiptype == 'invite') {
             $group->invite = group_get_accept_form('invite' . $i++, $group->id, $returnto);
         }
-        $group->grouptypedescription = get_string('grouptypedescription', 'group', get_string('name', 'grouptype.' . $group->grouptype), get_string('membershiptype.'.$group->jointype, 'group'));
+        $group->settingsdescription = group_display_settings($group);
     }
 }
 
@@ -1307,6 +1307,20 @@ function group_get_user_course_groups($userid=null) {
 }
 
 function group_allows_submission($grouptype) {
-    return get_field('grouptype', 'submittableto', 'name', $grouptype);
+    static $grouptypes = null;
+    if (is_null($grouptypes)) {
+        $grouptypes = get_records_assoc('grouptype');
+    }
+    return (bool) $grouptypes[$grouptype]->submittableto;
 }
-?>
+
+function group_display_settings($group) {
+    $string = get_string('membershiptype.'.$group->jointype, 'group');
+    if (group_allows_submission($group->grouptype)) {
+        $string .= ', ' . get_string('allowssubmissions', 'group');
+    }
+    if ($group->public) {
+        $string .= ', ' . get_string('publiclyvisible', 'group');
+    }
+    return $string;
+}
