@@ -35,6 +35,7 @@ class PluginInteractionForum extends PluginInteraction {
             $autosubscribe = isset($instanceconfig['autosubscribe']) ? $instanceconfig['autosubscribe']->value : false;
             $weight = isset($instanceconfig['weight']) ? $instanceconfig['weight']->value : null;
             $createtopicusers = isset($instanceconfig['createtopicusers']) ? $instanceconfig['createtopicusers']->value : null;
+            $closetopics = !empty($instanceconfig['closetopics']);
             $indentmode = isset($instanceconfig['indentmode']) ? $instanceconfig['indentmode']->value : null;
             $maxindent = isset($instanceconfig['maxindent']) ? $instanceconfig['maxindent']->value : null;
 
@@ -146,6 +147,12 @@ class PluginInteractionForum extends PluginInteraction {
                         'rules' => array(
                             'required' => true,
                         ),
+                    ),
+                    'closetopics' => array(
+                        'type'         => 'checkbox',
+                        'title'        => get_string('closetopics', 'interaction.forum'),
+                        'description'  => get_string('closetopicsdescription', 'interaction.forum'),
+                        'defaultvalue' => !empty($closetopics),
                     ),
                 )
             )
@@ -273,6 +280,20 @@ EOF;
             'field' => 'createtopicusers',
             'value' => $values['createtopicusers'] == 'moderators' ? 'moderators' : 'members',
         ));
+
+        // Close topics
+        delete_records_sql(
+            "DELETE FROM {interaction_forum_instance_config}
+            WHERE field = 'closetopics' AND forum = ?",
+            array($instance->get('id'))
+        );
+        if (!empty($values['closetopics'])) {
+            insert_record('interaction_forum_instance_config', (object)array(
+                'forum' => $instance->get('id'),
+                'field' => 'closetopics',
+                'value' => 1,
+            ));
+        }
 
         //Indent mode
         delete_records_sql(

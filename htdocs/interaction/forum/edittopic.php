@@ -63,23 +63,25 @@ else { // edit topic
 }
 
 $forum = get_record_sql(
-    'SELECT f.group AS groupid, f.title, g.name AS groupname, g.grouptype, ic.value AS newtopicusers
+    'SELECT f.group AS groupid, f.title, g.name AS groupname, g.grouptype
     FROM {interaction_instance} f
     INNER JOIN {group} g ON (g.id = f.group AND g.deleted = 0)
-    LEFT OUTER JOIN {interaction_forum_instance_config} ic ON (f.id = ic.forum AND ic.field = \'createtopicusers\')
     WHERE f.id = ?
     AND f.deleted != 1',
     array($forumid)
 );
+
 if (!$forum) {
     throw new NotFoundException(get_string('cantfindforum', 'interaction.forum', $forumid));
 }
+
+$forumconfig = get_records_assoc('interaction_forum_instance_config', 'forum', $forumid, '', 'field,value');
 
 define('GROUP', $forum->groupid);
 $membership = user_can_access_forum((int)$forumid);
 $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
-if (!$membership || ($forum->newtopicusers == 'moderators' && !$moderator)) {
+if (!$membership || ($forumconfig['createtopicusers']->value == 'moderators' && !$moderator)) {
     throw new AccessDeniedException(get_string('cantaddtopic', 'interaction.forum'));
 }
 
@@ -134,7 +136,7 @@ $editform = array(
             'type'         => 'checkbox',
             'title'        => get_string('Closed', 'interaction.forum'),
             'description'  => get_string('closeddescription', 'interaction.forum'),
-            'defaultvalue' => isset($topic) && $topic->closed == 1 ? 'checked' : null
+            'defaultvalue' => isset($topic) ? $topic->closed : !empty($forumconfig['closetopics']->value),
         ),
         'submit'   => array(
             'type'  => 'submitcancel',
