@@ -194,8 +194,8 @@ function closeopenedits() {
         if (hasElementClass(rows[i],'edit')) {
             removeElement(rows[i]);
         }
-        else if (hasElementClass(rows[i],'invisible')) {
-            removeElementClass(rows[i],'invisible');
+        else if (hasElementClass(rows[i],'hidden')) {
+            removeElementClass(rows[i],'hidden');
         }
     }
 }
@@ -216,7 +216,7 @@ function changeaddform(type) {
 function edititem(item) {
     closeopenedits();
     var menuitem = $('menuitem_'+item.id);
-    addElementClass(menuitem,'invisible');
+    addElementClass(menuitem,'hidden');
     var newrow = editform(item);
     insertSiblingNodesBefore(menuitem, newrow);
 }
@@ -273,8 +273,7 @@ foreach ($menulist as &$menu) {
                   'name' => get_string($menu,'admin'));
 }
 
-$style = '<style type="text/css">.invisible{display:none;}</style>';
-$smarty = smarty(array(), array($style));
+$smarty = smarty();
 $smarty->assign('INLINEJAVASCRIPT', $ijs);
 $smarty->assign('MENUS', $menulist);
 $smarty->assign('descriptionstrargs', array('<a href="' . get_config('wwwroot') . 'artefact/file/sitefiles.php">', '</a>'));
