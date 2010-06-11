@@ -1648,7 +1648,7 @@ function admin_nav() {
         array(
             'path'   => 'configsite/sitemenu',
             'url'    => 'admin/site/menu.php',
-            'title'  => get_string('linksandresourcesmenu', 'admin'),
+            'title'  => get_string('menus', 'admin'),
             'weight' => 30,
         ),
         array(
@@ -2030,7 +2030,7 @@ function right_nav() {
 }
 
 
-function footer_menu() {
+function footer_menu($all=false) {
     $menu = array(
         'termsandconditions' => array(
             'url' => 'terms.php',
@@ -2049,9 +2049,15 @@ function footer_menu() {
             'title' => get_string('contactus'),
         ),
     );
-    if ($disabled = get_config('hidefooterlinks')) {
-        foreach (split(',', $disabled) as $k) {
-            unset($menu[$k]);
+    if ($all) {
+        return $menu;
+    }
+    if ($enabled = get_config('footerlinks')) {
+        $enabled = unserialize($enabled);
+        foreach ($menu as $k => $v) {
+            if (!in_array($k, $enabled)) {
+                unset($menu[$k]);
+            }
         }
     }
     return $menu;

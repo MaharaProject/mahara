@@ -685,6 +685,7 @@ function core_install_firstcoredata_defaults() {
     set_config('anonymouscomments', 1);
     set_config('homepageinfo', 1);
     set_config('showonlineuserssideblock', 1);
+    set_config('footerlinks', serialize(array('privacystatement', 'about', 'contactus')));
 
     // install the applications
     $app = new StdClass;

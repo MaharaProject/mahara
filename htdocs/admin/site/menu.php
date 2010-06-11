@@ -33,7 +33,8 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'sitemenu');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('linksandresourcesmenu', 'admin'));
+require_once('pieforms/pieform.php');
+define('TITLE', get_string('menus', 'admin'));
 
 $strings = array('edit','delete','update','cancel','add','name','unknownerror');
 $adminstrings = array('confirmdeletemenuitem', 'deletefailed','deletingmenuitem','savingmenuitem',
@@ -273,11 +274,50 @@ foreach ($menulist as &$menu) {
                   'name' => get_string($menu,'admin'));
 }
 
+
+// Edit form for footer links
+$all = footer_menu(true);
+$active = get_config('footerlinks');
+$active = $active ? unserialize($active) : array_keys($all);
+$footerelements = array();
+foreach ($all as $k => $v) {
+    $footerelements[$k] = array(
+        'type' => 'checkbox',
+        'title' => $v['title'],
+        'defaultvalue' => in_array($k, $active),
+    );
+}
+$footerelements['submit'] = array(
+    'type'  => 'submit',
+    'value' => get_string('savechanges', 'admin')
+);
+$footerform = pieform(array(
+    'name'              => 'footerlinks',
+    'elements'          => $footerelements,
+));
+
+function footerlinks_submit(Pieform $form, $values) {
+    global $active, $all, $SESSION;
+    $new = array();
+    foreach (array_keys($all) as $k) {
+        if (!empty($values[$k])) {
+            $new[] = $k;
+        }
+    }
+    if ($new != $active) {
+        set_config('footerlinks', serialize($new));
+        $SESSION->add_ok_msg(get_string('footerupdated', 'admin'));
+    }
+    redirect(get_config('wwwroot') . 'admin/site/menu.php');
+}
+
+
 $smarty = smarty();
 $smarty->assign('INLINEJAVASCRIPT', $ijs);
 $smarty->assign('MENUS', $menulist);
 $smarty->assign('descriptionstrargs', array('<a href="' . get_config('wwwroot') . 'artefact/file/sitefiles.php">', '</a>'));
 $smarty->assign('PAGEHEADING', hsc(get_string('linksandresourcesmenu', 'admin')));
+$smarty->assign('footerform', $footerform);
 $smarty->display('admin/site/menu.tpl');
 
 ?>

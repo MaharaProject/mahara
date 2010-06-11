@@ -17,5 +17,9 @@
 			
 			</div>
 
+            <h1>{str tag=footermenu section=admin}</h1>
+            <p>{str tag=footermenudescription section=admin}</p>
+            {$footerform}
+
 {include file="footer.tpl"}
 {/auto_escape}
