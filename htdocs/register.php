@@ -223,19 +223,22 @@ else {
     die_info(get_string('registeringdisallowed'));
 }
 
-$elements['tandc'] = array(
-    'type' => 'radio',
-    'title' => get_string('iagreetothetermsandconditions', 'auth.internal'),
-    'options' => array(
-        'yes' => get_string('yes'),
-        'no'  => get_string('no')
-    ),
-    'defaultvalue' => 'no',
-    'rules' => array(
-        'required' => true
-    ),
-    'separator' => ' &nbsp; '
-);
+$registerterms = get_config('registerterms');
+if ($registerterms) {
+    $elements['tandc'] = array(
+        'type' => 'radio',
+        'title' => get_string('iagreetothetermsandconditions', 'auth.internal'),
+        'options' => array(
+            'yes' => get_string('yes'),
+            'no'  => get_string('no')
+        ),
+        'defaultvalue' => 'no',
+        'rules' => array(
+            'required' => true
+        ),
+        'separator' => ' &nbsp; '
+    );
+}
 
 $elements['submit'] = array(
     'type' => 'submit',
@@ -272,7 +275,7 @@ $form = array(
  * can guarantee that the auth method is internal
  */
 function register_validate(Pieform $form, $values) {
-    global $SESSION;
+    global $SESSION, $registerterms;
 
     $spamtrap = new_spam_trap(array(
         array(
@@ -320,7 +323,7 @@ function register_validate(Pieform $form, $values) {
     }
     
     // If the user hasn't agreed to the terms and conditions, don't bother
-    if ($values['tandc'] != 'yes') {
+    if ($registerterms && $values['tandc'] != 'yes') {
         $form->set_error('tandc', get_string('youmaynotregisterwithouttandc', 'auth.internal'));
     }
 
@@ -382,9 +385,18 @@ function register_submit(Pieform $form, $values) {
     redirect('/register.php');
 }
 
+$registerdescription = get_string('registerwelcome');
+if ($registerterms) {
+    $registerdescription .= ' ' . get_string('registeragreeterms');
+}
+$registerdescription .= ' ' . get_string('registerprivacy');
+
 $smarty = smarty();
 $smarty->assign('register_form', pieform($form));
-$smarty->assign('termsandconditions', get_site_page_content('termsandconditions'));
+$smarty->assign('registerdescription', $registerdescription);
+if ($registerterms) {
+    $smarty->assign('termsandconditions', get_site_page_content('termsandconditions'));
+}
 $smarty->assign('PAGEHEADING', hsc(get_string('register')));
 $smarty->display('register.tpl');
 

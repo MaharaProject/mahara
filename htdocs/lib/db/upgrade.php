@@ -1751,5 +1751,9 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table);
     }
 
+    if ($oldversion < 2010061100) {
+        set_config('registerterms', 1);
+    }
+
     return $status;
 }

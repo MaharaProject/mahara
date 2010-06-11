@@ -213,6 +213,8 @@ $string['none'] = 'None';
 $string['country'] = 'Country';
 $string['pathtoclam'] = 'Path to clam';
 $string['pathtoclamdescription'] = 'The filesystem path to clamscan or clamdscan';
+$string['registerterms'] = 'Registration agreement';
+$string['registertermsdescription'] = "Force users to agree to the Terms and Conditions before registration.  You should edit your site's Terms and Conditions page before enabling this option.";
 $string['remoteavatars'] = 'Display remote avatars';
 $string['remoteavatarsdescription'] = 'If checked, the <a href="http://www.gravatar.com">Gravatar</a> service will be used for users\' default profile icons.';
 $string['searchplugin'] = 'Search plugin';

@@ -1,7 +1,7 @@
 {auto_escape off}
 {include file="header.tpl"}
 			{if $register_form}
-			<p>{str tag=registerstep1description}</P>
+			<p>{$registerdescription}</P>
 			
 			{$register_form}
 			{if $termsandconditions}<br><br><div>{$termsandconditions}</div>{/if}

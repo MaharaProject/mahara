@@ -380,6 +380,13 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('showonlineuserssideblock'),
                     'disabled'     => in_array('showonlineuserssideblock', $OVERRIDDEN),
                 ),
+                'registerterms' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('registerterms', 'admin'),
+                    'description'  => get_string('registertermsdescription', 'admin'),
+                    'defaultvalue' => get_config('registerterms'),
+                    'disabled'     => in_array('registerterms', $OVERRIDDEN),
+                ),
             ),
         ),
     )
@@ -408,7 +415,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'showselfsearchsideblock', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments',
-        'homepageinfo', 'showonlineuserssideblock',
+        'homepageinfo', 'showonlineuserssideblock', 'registerterms',
     );
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');
