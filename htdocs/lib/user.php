@@ -1216,9 +1216,6 @@ function can_send_message($from, $to) {
 	if (is_object($to)) {
 	    $to = $to->id;
 	}
-    if ($from->id == $to) {
-        return false;
-    }
     $messagepref = get_account_preference($to, 'messages');
     return (is_friend($from->id, $to) && $messagepref == 'friends') || $messagepref == 'allow' || $from->admin;
 }
