@@ -4,6 +4,7 @@
 			<p>{str tag=registerstep1description}</P>
 			
 			{$register_form}
+			{if $termsandconditions}<br><br><div>{$termsandconditions}</div>{/if}
 			{elseif $register_profile_form}
 			{$register_profile_form}
 			{/if}

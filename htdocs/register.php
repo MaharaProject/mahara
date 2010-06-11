@@ -223,13 +223,6 @@ else {
     die_info(get_string('registeringdisallowed'));
 }
 
-$elements['tandctext'] = array(
-    'type' => 'textarea',
-    'rows' => 15,
-    'cols' => 60,
-    'readonly' => 'yes',
-    'value' => preg_replace('#([^\n])(\n)([^\n])#', '$1 $3', html2text(get_site_page_content('termsandconditions'))),
-);
 $elements['tandc'] = array(
     'type' => 'radio',
     'title' => get_string('iagreetothetermsandconditions', 'auth.internal'),
@@ -391,6 +384,7 @@ function register_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('register_form', pieform($form));
+$smarty->assign('termsandconditions', get_site_page_content('termsandconditions'));
 $smarty->assign('PAGEHEADING', hsc(get_string('register')));
 $smarty->display('register.tpl');
 
