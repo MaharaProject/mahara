@@ -282,6 +282,28 @@ class View {
                 $viewdata['type'] = 'portfolio';
             }
 
+            // Try to create the view with the owner's default theme if that theme is set by an
+            // institution (i.e. if it's different from the site theme)
+            //
+            // This needs to be modified if users are ever allowed to change their own theme
+            // preference.  Currently it's okay because users' themes are forced on them by
+            // the site or institution default, but if some users are allowed to change their
+            // own theme pref, we should create those users' views without a theme.
+            if (!get_config('userscanchooseviewthemes') && !isset($viewdata['theme'])
+                && (!isset($viewdata['type']) || $viewdata['type'] != 'dashboard')) {
+                global $USER;
+                if ($viewdata['owner'] == $USER->get('id')) {
+                    $owner = $USER;
+                }
+                else {
+                    $owner = new User();
+                    $owner->find_by_id($viewdata['owner']);
+                }
+                $ownertheme = $owner->get('theme');
+                if ($ownertheme && $ownertheme != get_config('theme')) {
+                    $viewdata['theme'] = $ownertheme;
+                }
+            }
         }
 
         if (isset($viewdata['group'])) {
