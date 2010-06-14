@@ -126,6 +126,9 @@ html>body .safe-hidden {
 .nojs-hidden-inline, .nojs-hidden-block, .nojs-hidden-table {
     display: none;
 }
+.dull {
+  color: #888;
+}
 
 #overlay {
     position: fixed;
