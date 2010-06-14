@@ -611,7 +611,7 @@ function group_stats_table($limit, $offset) {
         WHERE
             g.deleted = 0
         ORDER BY
-            mc.members DESC",
+            mc.members DESC, g.name, g.id",
         array(),
         $offset,
         $limit
@@ -766,7 +766,7 @@ function view_stats_table($limit, $offset) {
             LEFT JOIN {group} g ON v.group = g.id
             LEFT JOIN {institution} i ON v.institution = i.name
         WHERE (v.owner != 0 OR \"owner\" IS NULL) AND v.type != ?
-        ORDER BY v.visits DESC",
+        ORDER BY v.visits DESC, v.title, v.id",
         array('dashboard'),
         $offset,
         $limit
