@@ -178,13 +178,12 @@ $smarty->assign('posts', $posts);
 $smarty->display('interaction:forum:topic.tpl');
 
 function buildpostlist(&$posts, $mode, $max_depth) {
+    buildsubjects(0, '', $posts);
     switch ($mode) {
         case 'no_indent':
-            //no indent
             return buildflatposts($posts);
             break;
         case 'max_indent':
-            buildsubjects(0, '', $posts);
             $new_posts = array();
             buildmaxindentposts(0, $posts, $max_depth);
             $new_posts = buildpost(0, $posts);
@@ -192,7 +191,6 @@ function buildpostlist(&$posts, $mode, $max_depth) {
             break;
         case 'full_indent':
         default:
-            buildsubjects(0, '', $posts);
             $new_posts = buildpost(0, $posts);
             return renderpost($new_posts);
             break;
@@ -271,9 +269,6 @@ function buildflatposts(&$posts) {
 
     $children = array();
     foreach ($localposts as $index => $post) {
-        if (!isset($post->subject) || empty($post->subject)) {
-            $post->subject = get_string('re', 'interaction.forum', $first_post->subject);
-        }
         $children[] = $post;
     }
     $first_post->children = $children;
@@ -290,12 +285,15 @@ function buildflatposts(&$posts) {
 
 function buildsubjects($postindex, $parentsubject, &$posts) {
     $localposts = $posts;
-    if (!$posts[$postindex]->subject) {
+    if ($posts[$postindex]->subject) {
+        $parentsubject = $posts[$postindex]->subject;
+    }
+    else {
         $posts[$postindex]->subject = get_string('re', 'interaction.forum', $parentsubject);
     }
     foreach ($localposts as $index => $post) {
         if ($posts[$index]->parent == $posts[$postindex]->id) {
-            buildsubjects($index, $posts[$postindex]->subject, $posts);
+            buildsubjects($index, $parentsubject, $posts);
         }
     }
 }
