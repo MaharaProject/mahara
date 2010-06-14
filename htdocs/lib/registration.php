@@ -732,7 +732,7 @@ function view_statistics($limit, $offset) {
 }
 
 function view_stats_table($limit, $offset) {
-    $count = count_records_select('view', 'owner != 0 OR owner IS NULL');
+    $count = count_records_select('view', '(owner != 0 OR owner IS NULL) AND type != ?', array('dashboard'));
 
     $pagination = build_pagination(array(
         'id' => 'stats_pagination',
@@ -765,9 +765,9 @@ function view_stats_table($limit, $offset) {
             LEFT JOIN {usr} u ON v.owner = u.id
             LEFT JOIN {group} g ON v.group = g.id
             LEFT JOIN {institution} i ON v.institution = i.name
-        WHERE v.owner != 0 OR \"owner\" IS NULL
+        WHERE (v.owner != 0 OR \"owner\" IS NULL) AND v.type != ?
         ORDER BY v.visits DESC",
-        array(),
+        array('dashboard'),
         $offset,
         $limit
     );
