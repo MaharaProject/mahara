@@ -418,14 +418,11 @@ function user_stats_table($limit, $offset) {
     );
 
     $userscreated = get_records_sql_array(
-        "SELECT $day AS \"date\", COUNT(id) AS users
+        "SELECT $day AS cdate, COUNT(id) AS users
         FROM {usr}
-        WHERE NOT ctime IS NULL
-        GROUP BY \"date\"
-        ORDER BY \"date\"",
-        array(),
-        $offset,
-        $limit
+        WHERE NOT ctime IS NULL AND ctime >= ? AND ctime < (date(?) + INTERVAL $dayinterval)
+        GROUP BY cdate",
+        array($daterange->mindate, $daterange->maxdate)
     );
 
     $data = array();
@@ -444,8 +441,8 @@ function user_stats_table($limit, $offset) {
         }
         if ($userscreated) {
             foreach ($userscreated as &$r) {
-                if (isset($data[$r->date])) {
-                    $data[$r->date]['created'] = $r->users;
+                if (isset($data[$r->cdate])) {
+                    $data[$r->cdate]['created'] = $r->users;
                 }
             }
         }
