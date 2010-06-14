@@ -2390,7 +2390,7 @@ function cron_site_data_daily() {
 
     // Process log file containing view visits
     $viewlog = get_config('dataroot') . 'log/views.log';
-    if (rename($viewlog, $viewlog . '.temp') and $fh = @fopen($viewlog . '.temp', 'r')) {
+    if (@rename($viewlog, $viewlog . '.temp') and $fh = @fopen($viewlog . '.temp', 'r')) {
 
         // Read the new stuff out of the file
         $latest = get_config('viewloglatest');
