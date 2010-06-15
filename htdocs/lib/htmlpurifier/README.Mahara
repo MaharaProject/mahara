@@ -2,7 +2,7 @@ HTMLPurifier in Mahara
 ======================
 
 Website: http://www.htmlpurifier.org/
-Version: 4.1.0
+Version: 4.1.1
 
 This library is used by clean_html, to strip malicious HTML from user-generated
 content.
