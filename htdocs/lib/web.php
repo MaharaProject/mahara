@@ -1989,18 +1989,18 @@ function format_whitespace($text) {
 function clean_text($text) {
     require_once('htmlpurifier/HTMLPurifier.auto.php');
     $config = HTMLPurifier_Config::createDefault();
-    $config->set('Cache', 'SerializerPath', get_config('dataroot') . 'htmlpurifier');
+    $config->set('Cache.SerializerPath', get_config('dataroot') . 'htmlpurifier');
 
-    $config->set('Core', 'Encoding', 'UTF-8');
-    $config->set('HTML', 'Doctype', 'XHTML 1.0 Transitional');
-    $config->set('AutoFormat', 'Linkify', true);
+    $config->set('Core.Encoding', 'UTF-8');
+    $config->set('HTML.Doctype', 'HTML 4.01 Transitional');
+    $config->set('AutoFormat.Linkify', true);
 
     // These settings help identify the configuration definition. If the 
     // definition (the $def object below) is changed (e.g. new method calls 
     // made on it), the DefinitionRev needs to be increased. See
     // http://htmlpurifier.org/live/configdoc/plain.html#HTML.DefinitionID
-    $config->set('HTML', 'DefinitionID', 'Mahara customisations to default config');
-    $config->set('HTML', 'DefinitionRev', 1);
+    $config->set('HTML.DefinitionID', 'Mahara customisations to default config');
+    $config->set('HTML.DefinitionRev', 1);
 
     $def =& $config->getHTMLDefinition(true);
     $def->addAttribute('a', 'target', 'Enum#_blank,_self,_target,_top');
