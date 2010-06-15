@@ -1,12 +1,5 @@
 <?php
 
-require_once 'HTMLPurifier/DefinitionCache/Serializer.php';
-require_once 'HTMLPurifier/DefinitionCache/Null.php';
-
-require_once 'HTMLPurifier/DefinitionCache/Decorator.php';
-require_once 'HTMLPurifier/DefinitionCache/Decorator/Memory.php';
-require_once 'HTMLPurifier/DefinitionCache/Decorator/Cleanup.php';
-
 /**
  * Abstract class representing Definition cache managers that implements
  * useful common methods and is a factory.
@@ -17,9 +10,9 @@ require_once 'HTMLPurifier/DefinitionCache/Decorator/Cleanup.php';
  */
 abstract class HTMLPurifier_DefinitionCache
 {
-    
+
     public $type;
-    
+
     /**
      * @param $name Type of definition objects this instance of the
      *      cache will handle.
@@ -27,17 +20,17 @@ abstract class HTMLPurifier_DefinitionCache
     public function __construct($type) {
         $this->type = $type;
     }
-    
+
     /**
      * Generates a unique identifier for a particular configuration
      * @param Instance of HTMLPurifier_Config
      */
     public function generateKey($config) {
-        return $config->version . '-' . // possibly replace with function calls
-               $config->getBatchSerial($this->type) . '-' .
-               $config->get($this->type, 'DefinitionRev');
+        return $config->version . ',' . // possibly replace with function calls
+               $config->getBatchSerial($this->type) . ',' .
+               $config->get($this->type . '.DefinitionRev');
     }
-    
+
     /**
      * Tests whether or not a key is old with respect to the configuration's
      * version and revision number.
@@ -45,19 +38,19 @@ abstract class HTMLPurifier_DefinitionCache
      * @param $config Instance of HTMLPurifier_Config to test against
      */
     public function isOld($key, $config) {
-        if (substr_count($key, '-') < 2) return true;
-        list($version, $hash, $revision) = explode('-', $key, 3);
+        if (substr_count($key, ',') < 2) return true;
+        list($version, $hash, $revision) = explode(',', $key, 3);
         $compare = version_compare($version, $config->version);
         // version mismatch, is always old
         if ($compare != 0) return true;
         // versions match, ids match, check revision number
         if (
             $hash == $config->getBatchSerial($this->type) &&
-            $revision < $config->get($this->type, 'DefinitionRev')
+            $revision < $config->get($this->type . '.DefinitionRev')
         ) return true;
         return false;
     }
-    
+
     /**
      * Checks if a definition's type jives with the cache's type
      * @note Throws an error on failure
@@ -71,37 +64,37 @@ abstract class HTMLPurifier_DefinitionCache
         }
         return true;
     }
-    
+
     /**
      * Adds a definition object to the cache
      */
     abstract public function add($def, $config);
-    
+
     /**
      * Unconditionally saves a definition object to the cache
      */
     abstract public function set($def, $config);
-    
+
     /**
      * Replace an object in the cache
      */
     abstract public function replace($def, $config);
-    
+
     /**
      * Retrieves a definition object from the cache
      */
     abstract public function get($config);
-    
+
     /**
      * Removes a definition object to the cache
      */
     abstract public function remove($config);
-    
+
     /**
      * Clears all objects from cache
      */
     abstract public function flush($config);
-    
+
     /**
      * Clears all expired (older version or revision) objects from cache
      * @note Be carefuly implementing this method as flush. Flush must
@@ -109,6 +102,7 @@ abstract class HTMLPurifier_DefinitionCache
      *       should not be repeatedly called by userland code.
      */
     abstract public function cleanup($config);
-    
+
 }
 
+// vim: et sw=4 sts=4

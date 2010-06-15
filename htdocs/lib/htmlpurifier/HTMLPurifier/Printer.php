@@ -1,48 +1,42 @@
 <?php
 
-require_once 'HTMLPurifier/Generator.php';
-require_once 'HTMLPurifier/Token.php';
-require_once 'HTMLPurifier/Encoder.php';
-
 // OUT OF DATE, NEEDS UPDATING!
+// USE XMLWRITER!
 
 class HTMLPurifier_Printer
 {
-    
+
     /**
      * Instance of HTMLPurifier_Generator for HTML generation convenience funcs
      */
     protected $generator;
-    
+
     /**
      * Instance of HTMLPurifier_Config, for easy access
      */
     protected $config;
-    
+
     /**
      * Initialize $generator.
      */
     public function __construct() {
-        $this->generator = new HTMLPurifier_Generator();
     }
-    
+
     /**
      * Give generator necessary configuration if possible
      */
     public function prepareGenerator($config) {
-        // hack for smoketests/configForm.php
         $all = $config->getAll();
-        if (empty($all['HTML'])) return;
         $context = new HTMLPurifier_Context();
-        $this->generator->generateFromTokens(array(), $config, $context);
+        $this->generator = new HTMLPurifier_Generator($config, $context);
     }
-    
+
     /**
      * Main function that renders object or aspect of that object
      * @note Parameters vary depending on printer
      */
     // function render() {}
-    
+
     /**
      * Returns a start tag
      * @param $tag Tag name
@@ -53,7 +47,7 @@ class HTMLPurifier_Printer
                     new HTMLPurifier_Token_Start($tag, $attr ? $attr : array())
                );
     }
-    
+
     /**
      * Returns an end teg
      * @param $tag Tag name
@@ -63,7 +57,7 @@ class HTMLPurifier_Printer
                     new HTMLPurifier_Token_End($tag)
                );
     }
-    
+
     /**
      * Prints a complete element with content inside
      * @param $tag Tag name
@@ -76,19 +70,19 @@ class HTMLPurifier_Printer
                ($escape ? $this->escape($contents) : $contents) .
                $this->end($tag);
     }
-    
+
     protected function elementEmpty($tag, $attr = array()) {
         return $this->generator->generateFromToken(
             new HTMLPurifier_Token_Empty($tag, $attr)
         );
     }
-    
+
     protected function text($text) {
         return $this->generator->generateFromToken(
             new HTMLPurifier_Token_Text($text)
         );
     }
-    
+
     /**
      * Prints a simple key/value row in a table.
      * @param $name Key
@@ -103,7 +97,7 @@ class HTMLPurifier_Printer
             $this->end('tr')
         ;
     }
-    
+
     /**
      * Escapes a string for HTML output.
      * @param $string String to escape
@@ -113,7 +107,7 @@ class HTMLPurifier_Printer
         $string = htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
         return $string;
     }
-    
+
     /**
      * Takes a list of strings and turns them into a single list
      * @param $array List of strings
@@ -131,7 +125,7 @@ class HTMLPurifier_Printer
         }
         return $ret;
     }
-    
+
     /**
      * Retrieves the class of an object without prefixes, as well as metadata
      * @param $obj Object to determine class of
@@ -164,10 +158,19 @@ class HTMLPurifier_Printer
                 $class .= $this->getClass($obj->single, $sec_prefix) . ', ';
                 $class .= $obj->max;
                 break;
+            case 'css_denyelementdecorator':
+                $class .= $this->getClass($obj->def, $sec_prefix) . ', ';
+                $class .= $obj->element;
+                break;
+            case 'css_importantdecorator':
+                $class .= $this->getClass($obj->def, $sec_prefix);
+                if ($obj->allow) $class .= ', !important';
+                break;
         }
         $class .= ')';
         return $class;
     }
-    
+
 }
 
+// vim: et sw=4 sts=4

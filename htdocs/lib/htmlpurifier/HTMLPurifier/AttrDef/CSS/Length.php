@@ -1,55 +1,47 @@
 <?php
 
-require_once 'HTMLPurifier/AttrDef.php';
-require_once 'HTMLPurifier/AttrDef/CSS/Number.php';
-
 /**
  * Represents a Length as defined by CSS.
  */
 class HTMLPurifier_AttrDef_CSS_Length extends HTMLPurifier_AttrDef
 {
-    
+
+    protected $min, $max;
+
     /**
-     * Valid unit lookup table.
-     * @warning The code assumes all units are two characters long.  Be careful
-     *          if we have to change this behavior!
+     * @param HTMLPurifier_Length $max Minimum length, or null for no bound. String is also acceptable.
+     * @param HTMLPurifier_Length $max Maximum length, or null for no bound. String is also acceptable.
      */
-    protected $units = array('em' => true, 'ex' => true, 'px' => true, 'in' => true,
-         'cm' => true, 'mm' => true, 'pt' => true, 'pc' => true);
-    /**
-     * Instance of HTMLPurifier_AttrDef_Number to defer number validation to
-     */
-    protected $number_def;
-    
-    /**
-     * @param $non_negative Bool indication whether or not negative values are
-     *                      allowed.
-     */
-    public function __construct($non_negative = false) {
-        $this->number_def = new HTMLPurifier_AttrDef_CSS_Number($non_negative);
+    public function __construct($min = null, $max = null) {
+        $this->min = $min !== null ? HTMLPurifier_Length::make($min) : null;
+        $this->max = $max !== null ? HTMLPurifier_Length::make($max) : null;
     }
-    
-    public function validate($length, $config, $context) {
-        
-        $length = $this->parseCDATA($length);
-        if ($length === '') return false;
-        if ($length === '0') return '0';
-        $strlen = strlen($length);
-        if ($strlen === 1) return false; // impossible!
-        
-        // we assume all units are two characters
-        $unit = substr($length, $strlen - 2);
-        if (!ctype_lower($unit)) $unit = strtolower($unit);
-        $number = substr($length, 0, $strlen - 2);
-        
-        if (!isset($this->units[$unit])) return false;
-        
-        $number = $this->number_def->validate($number, $config, $context);
-        if ($number === false) return false;
-        
-        return $number . $unit;
-        
+
+    public function validate($string, $config, $context) {
+        $string = $this->parseCDATA($string);
+
+        // Optimizations
+        if ($string === '') return false;
+        if ($string === '0') return '0';
+        if (strlen($string) === 1) return false;
+
+        $length = HTMLPurifier_Length::make($string);
+        if (!$length->isValid()) return false;
+
+        if ($this->min) {
+            $c = $length->compareTo($this->min);
+            if ($c === false) return false;
+            if ($c < 0) return false;
+        }
+        if ($this->max) {
+            $c = $length->compareTo($this->max);
+            if ($c === false) return false;
+            if ($c > 0) return false;
+        }
+
+        return $length->toString();
     }
-    
+
 }
 
+// vim: et sw=4 sts=4

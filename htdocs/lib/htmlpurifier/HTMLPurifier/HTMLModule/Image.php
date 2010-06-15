@@ -1,10 +1,5 @@
 <?php
 
-require_once 'HTMLPurifier/HTMLModule.php';
-
-require_once 'HTMLPurifier/AttrDef/URI.php';
-require_once 'HTMLPurifier/AttrTransform/ImgRequired.php';
-
 /**
  * XHTML 1.1 Image Module provides basic image embedding.
  * @note There is specialized code for removing empty images in
@@ -12,25 +7,34 @@ require_once 'HTMLPurifier/AttrTransform/ImgRequired.php';
  */
 class HTMLPurifier_HTMLModule_Image extends HTMLPurifier_HTMLModule
 {
-    
+
     public $name = 'Image';
-    
-    public function __construct() {
-        $img =& $this->addElement(
-            'img', true, 'Inline', 'Empty', 'Common',
+
+    public function setup($config) {
+        $max = $config->get('HTML.MaxImgLength');
+        $img = $this->addElement(
+            'img', 'Inline', 'Empty', 'Common',
             array(
                 'alt*' => 'Text',
-                'height' => 'Length',
-                'longdesc' => 'URI', 
+                // According to the spec, it's Length, but percents can
+                // be abused, so we allow only Pixels.
+                'height' => 'Pixels#' . $max,
+                'width'  => 'Pixels#' . $max,
+                'longdesc' => 'URI',
                 'src*' => new HTMLPurifier_AttrDef_URI(true), // embedded
-                'width' => 'Length'
             )
         );
+        if ($max === null || $config->get('HTML.Trusted')) {
+            $img->attr['height'] =
+            $img->attr['width'] = 'Length';
+        }
+
         // kind of strange, but splitting things up would be inefficient
         $img->attr_transform_pre[] =
         $img->attr_transform_post[] =
             new HTMLPurifier_AttrTransform_ImgRequired();
     }
-    
+
 }
 
+// vim: et sw=4 sts=4

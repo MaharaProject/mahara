@@ -1,7 +1,5 @@
 <?php
 
-require_once 'HTMLPurifier/ChildDef.php';
-
 /**
  * Definition that disallows all elements.
  * @warning validateChildren() in this class is actually never called, because
@@ -19,3 +17,4 @@ class HTMLPurifier_ChildDef_Empty extends HTMLPurifier_ChildDef
     }
 }
 
+// vim: et sw=4 sts=4

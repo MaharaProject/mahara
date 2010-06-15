@@ -1,7 +1,5 @@
 <?php
 
-require_once 'HTMLPurifier/AttrTransform.php';
-
 /**
  * Pre-transform that changes deprecated border attribute to CSS.
  */
@@ -14,6 +12,7 @@ class HTMLPurifier_AttrTransform_Border extends HTMLPurifier_AttrTransform {
         $this->prependCSS($attr, "border:{$border_width}px solid;");
         return $attr;
     }
-    
+
 }
 
+// vim: et sw=4 sts=4

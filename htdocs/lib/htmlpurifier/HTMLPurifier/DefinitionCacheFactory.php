@@ -1,42 +1,26 @@
 <?php
 
-require_once 'HTMLPurifier/DefinitionCache.php';
-
-HTMLPurifier_ConfigSchema::define(
-    'Cache', 'DefinitionImpl', 'Serializer', 'string/null', '
-This directive defines which method to use when caching definitions,
-the complex data-type that makes HTML Purifier tick. Set to null
-to disable caching (not recommended, as you will see a definite
-performance degradation). This directive has been available since 2.0.0.
-');
-
-HTMLPurifier_ConfigSchema::defineAlias(
-    'Core', 'DefinitionCache',
-    'Cache', 'DefinitionImpl'
-);
-
-
 /**
  * Responsible for creating definition caches.
  */
 class HTMLPurifier_DefinitionCacheFactory
 {
-    
+
     protected $caches = array('Serializer' => array());
     protected $implementations = array();
     protected $decorators = array();
-    
+
     /**
      * Initialize default decorators
      */
     public function setup() {
         $this->addDecorator('Cleanup');
     }
-    
+
     /**
      * Retrieves an instance of global definition cache factory.
      */
-    public static function &instance($prototype = null) {
+    public static function instance($prototype = null) {
         static $instance;
         if ($prototype !== null) {
             $instance = $prototype;
@@ -46,26 +30,25 @@ class HTMLPurifier_DefinitionCacheFactory
         }
         return $instance;
     }
-    
+
     /**
      * Registers a new definition cache object
      * @param $short Short name of cache object, for reference
-     * @param $long Full class name of cache object, for construction 
+     * @param $long Full class name of cache object, for construction
      */
     public function register($short, $long) {
         $this->implementations[$short] = $long;
     }
-    
+
     /**
      * Factory method that creates a cache object based on configuration
      * @param $name Name of definitions handled by cache
      * @param $config Instance of HTMLPurifier_Config
      */
-    public function &create($type, $config) {
-        $method = $config->get('Cache', 'DefinitionImpl');
+    public function create($type, $config) {
+        $method = $config->get('Cache.DefinitionImpl');
         if ($method === null) {
-            $null = new HTMLPurifier_DefinitionCache_Null($type);
-            return $null;
+            return new HTMLPurifier_DefinitionCache_Null($type);
         }
         if (!empty($this->caches[$method][$type])) {
             return $this->caches[$method][$type];
@@ -90,10 +73,10 @@ class HTMLPurifier_DefinitionCacheFactory
         $this->caches[$method][$type] = $cache;
         return $this->caches[$method][$type];
     }
-    
+
     /**
      * Registers a decorator to add to all new cache objects
-     * @param 
+     * @param
      */
     public function addDecorator($decorator) {
         if (is_string($decorator)) {
@@ -102,6 +85,7 @@ class HTMLPurifier_DefinitionCacheFactory
         }
         $this->decorators[$decorator->name] = $decorator;
     }
-    
+
 }
 
+// vim: et sw=4 sts=4
