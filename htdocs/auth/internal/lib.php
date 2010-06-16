@@ -171,7 +171,10 @@ class AuthInternal extends Auth {
             // This allows "plaintext" passwords, which are eaiser for an admin to
             // create by hacking in the database directly. The application does not
             // create passwords in this form.
-            return $theysent == $wehave;
+            // We don't allow empty passwords here to prevent anyone logging in to
+            // user accounts that were created by some other passwordless auth
+            // method and subsequently changed to internal.
+            return $wehave != '' && $theysent == $wehave;
         }
 
         if ($salt == '*') {
