@@ -615,7 +615,7 @@ class PluginAuthXmlrpc extends PluginAuth {
         $options = array('None');
         if (is_array($instances)) {
             foreach($instances as $someinstance) {
-                if ($someinstance->requires_parent == 1) {
+                if ($someinstance->requires_parent == 1 || $someinstance->authname == 'none') {
                     continue;
                 }
                 $options[$someinstance->id] = $someinstance->instancename;
