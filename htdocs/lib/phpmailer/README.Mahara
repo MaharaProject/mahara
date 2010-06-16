@@ -1,0 +1,12 @@
+phpmailer in Mahara
+======================
+
+Website: http://sourceforge.net/projects/phpmailer/
+Version: 5.0.2
+
+This library is for the email_user() function in lib/user.php
+
+Changes:
+
+ * Fix for envelope sender in emails sent on cron (described and fixed in a
+   phplist bug at http://mantis.phplist.com/view.php?id=12625)
