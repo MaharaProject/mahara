@@ -37,7 +37,7 @@ safe_require('artefact','plans');
 
 $delete = param_integer('plan');
 $plan = new ArtefactTypePlan($delete);
-$plan->check_permission();
+$USER->can_edit_artefact($delete);
 
 $todelete = (object) array(
     'completiondate' => strftime(get_string('strftimedate'), $plan->get('completiondate')),
