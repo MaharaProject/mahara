@@ -254,7 +254,7 @@ class ArtefactTypePlan extends ArtefactType {
 
         $artefact->set('title', $values['title']);
         $artefact->set('description', $values['description']);
-        $artefact->set('completed', $values['completed']);
+        $artefact->set('completed', $values['completed'] ? 1 : 0);
         $artefact->set('completiondate', $values['completiondate']);
         $artefact->commit();
 
