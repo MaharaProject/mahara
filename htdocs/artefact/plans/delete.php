@@ -35,11 +35,9 @@ define('TITLE', get_string('deleteplan','artefact.plans'));
 
 safe_require('artefact','plans');
 
-if ($delete = param_integer('plan')) {
-    if ($plan = new ArtefactTypePlan($delete)) {
-        $plan->check_permission();
-    }
-}
+$delete = param_integer('plan');
+$plan = new ArtefactTypePlan($delete);
+$plan->check_permission();
 
 $todelete = (object) array(
     'completiondate' => strftime(get_string('strftimedate'), $plan->get('completiondate')),
@@ -52,16 +50,11 @@ $form = array(
     'name' => 'deleteplanform',
     'plugintype' => 'artefact',
     'pluginname' => 'plans',
-    'successcallback' => 'delete',
     'elements' => array(
         'submit' => array(
             'type' => 'submitcancel',
             'value' => array(get_string('deleteplan','artefact.plans'), get_string('cancel')),
             'goto' => get_config('wwwroot') . '/artefact/plans/',
-        ),
-        'plan' => array(
-            'type' => 'hidden',
-            'value' => $delete,
         ),
     )
 );
@@ -74,18 +67,11 @@ $smarty->assign('PAGEHEADING', hsc(get_string('deletingplan','artefact.plans',$p
 $smarty->display('artefact:plans:delete.tpl');
 
 // calls this function first so that we can get the artefact and call delete on it
-function delete(Pieform $form, $values) {
-    global $SESSION;
+function deleteplanform_submit(Pieform $form, $values) {
+    global $SESSION, $plan;
 
-    if ($artefact = artefact_instance_from_id($values['plan'])) {
-        $artefact->delete();
-        if (!record_exists('artefact_plan','plan',$values['plan']) and !record_exists('artefact','id',$values['plan'])) {
-            $SESSION->add_ok_msg(get_string('plandeletedsuccessfully', 'artefact.plans'));
-        }
-        else {
-            $SESSION->add_error_msg(get_string('plannotdeletedsuccessfully', 'artefact.plans'));
-        }
-    }
+    $plan->delete();
+    $SESSION->add_ok_msg(get_string('plandeletedsuccessfully', 'artefact.plans'));
 
     redirect('/artefact/plans/');
 }

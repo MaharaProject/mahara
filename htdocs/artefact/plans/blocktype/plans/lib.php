@@ -45,20 +45,36 @@ class PluginBlocktypePlans extends PluginBlocktype {
         require_once(get_config('docroot') . 'artefact/lib.php');
         safe_require('artefact','plans');
 
-        $configdata = array();
-        $configdata['viewid'] = $instance->get('view');
-        $configdata['page'] = abs(param_integer('page', 1));
+        $plans = ArtefactTypePlan::get_plans();
+        self::build_plans_html($plans, $editing);
+        $smarty = smarty_core();
+        $smarty->assign('plans', $plans);
+        return $smarty->fetch('blocktype:plans:content.tpl');
+    }
 
-        // need to get the plans id and artefact to render
-        $owner = (int) get_field('view','owner','id', $instance->get('view'));
-        $plansid = (int) get_field('artefact','id','artefacttype','plans','owner',$owner);
-        $plans = $instance->get_artefact_instance($plansid);
-
-        $result = '';
-        $result = $plans->render_self($configdata);
-        $result = $result['html'];
-
-        return $result;
+    public static function build_plans_html(&$plans, $editing=false) {
+        $smarty = smarty_core();
+        $smarty->assign_by_ref('plans', $plans);
+        $plans['tablerows'] = $smarty->fetch('blocktype:plans:planrows.tpl');
+        if ($editing) {
+            return;
+        }
+        $baseurl = $_SERVER['REQUEST_URI'];
+        $pagination = build_pagination(array(
+            'id' => 'planstable_pagination',
+            'class' => 'center nojs-hidden-block',
+            'datatable' => 'planstable',
+            'url' => $baseurl,
+            'jsonscript' => 'artefact/plans/blocktype/plans/plans.json.php',
+            'count' => $plans['count'],
+            'limit' => $plans['limit'],
+            'offset' => $plans['offset'],
+            'numbersincludefirstlast' => false,
+            'resultcounttextsingular' => get_string('plan', 'artefact.plans'),
+            'resultcounttextplural' => get_string('plans', 'artefact.plans'),
+        ));
+        $plans['pagination'] = $pagination['html'];
+        $plans['pagination_js'] = $pagination['javascript'];
     }
 
     // My Plans blocktype only has 'title' option so next two functions return as normal

@@ -25,29 +25,18 @@
  *
  */
 
-define('INTERNAL', true);
-define('MENUITEM', 'profile/myplans');
+define('INTERNAL', 1);
+define('JSON', 1);
 
-require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('pieforms/pieform.php');
-require_once('pieforms/pieform/elements/calendar.php');
-require_once(get_config('docroot') . 'artefact/lib.php');
-safe_require('artefact','plans');
+require(dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/init.php');
+safe_require('artefact', 'plans');
+require_once(get_config('docroot') . 'blocktype/lib.php');
+require_once(get_config('docroot') . 'artefact/plans/blocktype/plans/lib.php');
 
-define('TITLE', get_string('editplan','artefact.plans'));
+$limit = param_integer('limit', 10);
+$offset = param_integer('offset', 0);
 
-$plan = param_integer('plan');
+$plans = ArtefactTypePlan::get_plans($offset, $limit);
+PluginBlocktypePlans::build_plans_html($plans);
 
-$artefact = artefact_instance_from_id($plan);
-if ($artefact instanceof ArtefactTypePlan) {
-    $artefact->check_permission();
-}
-
-$editplanform = ArtefactTypePlan::get_form($artefact);
-
-$smarty = smarty();
-$smarty->assign('editplanform', $editplanform);
-$smarty->assign('PAGEHEADING', hsc(get_string("editingplan", "artefact.plans")));
-$smarty->display('artefact:plans:edit.tpl');
-
-?>
+json_reply(false, (object) array('message' => false, 'data' => $plans));

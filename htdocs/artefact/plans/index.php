@@ -38,12 +38,17 @@ safe_require('artefact', 'plans');
 define('TITLE', get_string('myplans','artefact.plans'));
 
 // offset and limit for pagination
-$plans = (object) array(
-    'offset' => param_integer('offset', 0),
-);
+$offset = param_integer('offset', 0);
+$limit  = param_integer('limit', 10);
 
-list($plans->count, $plans->data) = ArtefactTypePlans::get_plans_list($plans->offset);
-ArtefactTypePlans::build_plans_list_html($plans);
+$plans = ArtefactTypePlan::get_plans($offset, $limit);
+ArtefactTypePlan::build_plans_list_html($plans);
+
+$js = <<< EOF
+addLoadEvent(function () {
+    {$plans['pagination_js']}
+});
+EOF;
 
 $smarty = smarty(array('paginator'));
 $smarty->assign_by_ref('plans', $plans);
@@ -51,6 +56,7 @@ $smarty->assign('strnoplanssaddone',
     get_string('noplanssaddone', 'artefact.plans',
     '<a href="' . get_config('wwwroot') . 'artefact/plans/new/">', '</a>'));
 $smarty->assign('PAGEHEADING', hsc(get_string("myplans", "artefact.plans")));
+$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('artefact:plans:index.tpl');
 
 ?>
