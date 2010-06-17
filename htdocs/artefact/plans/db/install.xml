@@ -8,7 +8,7 @@
     <!-- This table is supposed to have a 1-1 relation with every row in the
     artefact table with artefacttype = 'plan'.  It contains additional data
     that isn't in the artefact table. -->
-    <TABLE NAME="plan">
+    <TABLE NAME="artefact_plan">
         <FIELDS>
             <FIELD NAME="plan" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
             <FIELD NAME="completiondate" TYPE="text" NOTNULL="false" />

@@ -70,7 +70,7 @@ class ArtefactTypePlan extends ArtefactType {
         parent::__construct($id, $data);
 
         if ($this->id) {
-            if ($pdata = get_record('plan', 'plan', $this->id)) {
+            if ($pdata = get_record('artefact_plan', 'plan', $this->id)) {
                 foreach($pdata as $name => $value) {
                     if (property_exists($this, $name)) {
                         $this->$name = $value;
@@ -115,10 +115,10 @@ class ArtefactTypePlan extends ArtefactType {
         );
 
         if ($new) {
-            $success = insert_record('plan', $data);
+            $success = insert_record('artefact_plan', $data);
         }
         else {
-            $success = update_record('plan', $data, 'plan');
+            $success = update_record('artefact_plan', $data, 'plan');
         }
 
         db_commit();
@@ -138,23 +138,10 @@ class ArtefactTypePlan extends ArtefactType {
         }
 
         db_begin();
-        delete_records('plan', 'plan', $this->id);
+        delete_records('artefact_plan', 'plan', $this->id);
 
         parent::delete();
         db_commit();
-    }
-
-    /**
-     * Checks that the person viewing this plan is the owner. If not, throws an
-     * AccessDeniedException. Used in the plans section to ensure only the
-     * owners of the plans can view or change them there. Other people see
-     * plans when they are placed in views.
-     */
-    public function check_permission() {
-        global $USER;
-        if (!$USER->can_edit_artefact($this)) {
-            throw new AccessDeniedException(get_string('youarenottheownerofthisplan', 'artefact.plans'));
-        }
     }
 
     // ToDo: add Plan icon ?
@@ -180,7 +167,7 @@ class ArtefactTypePlan extends ArtefactType {
         ($results = get_records_sql_array("
             SELECT ap.*, a.title, a.description
                 FROM {artefact} a
-            JOIN {plan} ap ON ap.plan = a.id
+            JOIN {artefact_plan} ap ON ap.plan = a.id
             WHERE a.owner = ? AND a.artefacttype = 'plan'
             ORDER BY ap.completiondate DESC
             LIMIT ? OFFSET ?", array($USER->get('id'), $limit, $offset)))
