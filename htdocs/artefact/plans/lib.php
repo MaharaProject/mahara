@@ -70,7 +70,7 @@ class ArtefactTypePlan extends ArtefactType {
         parent::__construct($id, $data);
 
         if ($this->id) {
-            if ($pdata = get_record('artefact_plan', 'plan', $this->id)) {
+            if ($pdata = get_record('plan', 'plan', $this->id)) {
                 foreach($pdata as $name => $value) {
                     if (property_exists($this, $name)) {
                         $this->$name = $value;
@@ -90,7 +90,7 @@ class ArtefactTypePlan extends ArtefactType {
 
     /**
      * This method extends ArtefactType::commit() by adding additional data
-     * into the artefact_plan table.
+     * into the plan table.
      *
      */
     public function commit() {
@@ -115,10 +115,10 @@ class ArtefactTypePlan extends ArtefactType {
         );
 
         if ($new) {
-            $success = insert_record('artefact_plan', $data);
+            $success = insert_record('plan', $data);
         }
         else {
-            $success = update_record('artefact_plan', $data, 'plan');
+            $success = update_record('plan', $data, 'plan');
         }
 
         db_commit();
@@ -138,7 +138,7 @@ class ArtefactTypePlan extends ArtefactType {
         }
 
         db_begin();
-        delete_records('artefact_plan', 'plan', $this->id);
+        delete_records('plan', 'plan', $this->id);
 
         parent::delete();
         db_commit();
@@ -180,7 +180,7 @@ class ArtefactTypePlan extends ArtefactType {
         ($results = get_records_sql_array("
             SELECT ap.*, a.title, a.description
                 FROM {artefact} a
-            JOIN {artefact_plan} ap ON ap.plan = a.id
+            JOIN {plan} ap ON ap.plan = a.id
             WHERE a.owner = ? AND a.artefacttype = 'plan'
             ORDER BY ap.completiondate DESC
             LIMIT ? OFFSET ?", array($USER->get('id'), $limit, $offset)))
@@ -245,7 +245,7 @@ class ArtefactTypePlan extends ArtefactType {
         if (!empty($values['plan'])) {
             $id = (int) $values['plan'];
             $artefact = new ArtefactTypePlan($id);
-            $artefact->check_permission();
+            $USER->can_edit_artefact($id);
         }
         else {
             $artefact = new ArtefactTypePlan();

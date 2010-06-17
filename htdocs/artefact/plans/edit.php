@@ -39,9 +39,7 @@ define('TITLE', get_string('editplan','artefact.plans'));
 $plan = param_integer('plan');
 
 $artefact = artefact_instance_from_id($plan);
-if ($artefact instanceof ArtefactTypePlan) {
-    $artefact->check_permission();
-}
+$USER->can_edit_artefact($plan);
 
 $editplanform = ArtefactTypePlan::get_form($artefact);
 
