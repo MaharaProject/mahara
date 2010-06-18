@@ -76,13 +76,7 @@ $institution = $view->get('institution');
 // check if cancel was selected
 if ($new && isset($_POST['cancel'])) {
     $view->delete();
-    if ($group) {
-        redirect(get_config('wwwroot') . 'view/groupviews.php?group='.$group);
-    }
-    if ($institution) {
-        redirect(get_config('wwwroot') . 'view/institutionviews.php?institution='.$institution);
-    }
-    redirect(get_config('wwwroot') . 'view/');
+    $view->post_edit_redirect();
 }
 
 // If a block was configured & submitted, build the form now so it can

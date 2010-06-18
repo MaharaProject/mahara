@@ -2866,6 +2866,30 @@ class View {
             );
         }
     }
+
+    /**
+     * after editing the view, redirect back to the appropriate place
+     */
+    public function post_edit_redirect($new=false) {
+        if ($new) {
+            $redirecturl = '/view/access.php?id=' . $this->get('id') . '&new=1';
+        }
+        else {
+            if ($this->get('group')) {
+                if ($this->get('type') == 'grouphomepage') {
+                    $redirecturl = '/group/view.php?id='.$this->get('group');
+                }
+                $redirecturl = '/view/groupviews.php?group='.$this->get('group');
+            }
+            else if ($this->get('institution')) {
+                $redirecturl = '/view/institutionviews.php?institution=' . $this->get('institution');
+            }
+            else {
+                $redirecturl = '/view/index.php';
+            }
+        }
+        redirect($redirecturl);
+    }
 }
 
 
