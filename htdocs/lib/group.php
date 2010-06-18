@@ -145,6 +145,12 @@ function group_change_role($groupid, $userid, $role) {
  * @returns boolean
  */
 function group_user_can_edit_views($groupid, $userid=null) {
+    // root user can always do whatever it wants
+    $sysuser = get_record('usr', 'username', 'root');
+    if ($sysuser->id == $userid) {
+        return true;
+    }
+
     if (!is_logged_in()) {
         return false;
     }

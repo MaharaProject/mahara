@@ -802,7 +802,7 @@ function core_install_firstcoredata_defaults() {
     // install the view column widths
     install_view_column_widths();
 
-    $viewtypes = array('dashboard', 'portfolio', 'profile');
+    $viewtypes = array('dashboard', 'portfolio', 'profile', 'grouphomepage');
     foreach ($viewtypes as $vt) {
         insert_record('view_type', (object)array(
             'type' => $vt,
