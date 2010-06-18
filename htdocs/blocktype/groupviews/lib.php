@@ -65,16 +65,16 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
         $dwoo = smarty_core();
         $dwoo->assign('group', $data['group']);
         $dwoo->assign('groupid', $data['group']->id);
-        if (isset($sharedviews)) {
+        if (isset($data['sharedviews'])) {
             $dwoo->assign('sharedviews', $data['sharedviews']->data);
         }
-        if (isset($allsubmittedviews)) {
+        if (isset($data['allsubmittedviews'])) {
             $dwoo->assign('allsubmittedviews', $data['allsubmittedviews']);
         }
-        if (isset($mysubmittedviews)) {
+        if (isset($data['mysubmittedviews'])) {
             $dwoo->assign('mysubmittedviews', $data['mysubmittedviews']);
         }
-        if (isset($group_view_submission_form)) {
+        if (isset($data['group_view_submission_form'])) {
             $dwoo->assign('group_view_submission_form', $data['group_view_submission_form']);
         }
 
