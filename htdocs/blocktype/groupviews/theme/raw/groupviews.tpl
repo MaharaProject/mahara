@@ -1,6 +1,6 @@
 {auto_escape off}
 {if $sharedviews}
-    <h3>{str tag="viewssharedtogroupbyothers" section="view"}</h3>
+    <h5>{str tag="viewssharedtogroupbyothers" section="view"}</h5>
     <p>
     <table class="fullwidth">
     {foreach from=$sharedviews item=view}
@@ -31,7 +31,7 @@
 {/if}
 
 {if $mysubmittedviews || $group_view_submission_form}
-    <h3>{str tag="submitaviewtogroup" section="view"}</h3>
+    <h5>{str tag="submitaviewtogroup" section="view"}</h5>
     {if $mysubmittedviews}
       {foreach from=$mysubmittedviews item=view}
         <div>{$view.strsubmitted}</div>
@@ -43,7 +43,7 @@
 {/if}
 
 {if $allsubmittedviews}
-    <h3>{str tag="viewssubmittedtogroup" section="view"}</h3>
+    <h5>{str tag="viewssubmittedtogroup" section="view"}</h5>
     <p>
     <table class="fullwidth">
     {foreach from=$allsubmittedviews item=view}
