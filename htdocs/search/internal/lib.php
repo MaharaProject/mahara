@@ -352,7 +352,7 @@ class PluginSearchInternal extends PluginSearch {
     }
 
 
-    public static function group_search_user($group, $queries, $constraints, $offset, $limit, $membershiptype) {
+    public static function group_search_user($group, $queries, $constraints, $offset, $limit, $membershiptype, $random = false) {
         // Only handle OR/AND expressions at the top level.  Eventually we may need subexpressions.
         $searchsql = '';
         $values = array();
@@ -427,6 +427,10 @@ class PluginSearchInternal extends PluginSearch {
                     AND gm.group = ?';
             $values[] = $group;
             $orderby = "gm.role = 'admin' DESC, gm.ctime, u.firstname, u.lastname, u.id";
+        }
+
+        if ($random) {
+            $orderby = db_random();
         }
 
         $count = get_field_sql('SELECT COUNT(*)' . $from, $values);
