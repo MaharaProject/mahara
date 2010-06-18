@@ -1341,3 +1341,15 @@ function group_display_settings($group) {
     }
     return $string;
 }
+
+/**
+ * Return the view object for this group's homepage view
+ *
+ * @param int $groupid the id of the group to fetch the view for
+ *
+ * @throws ViewNotFoundException
+ */
+function group_get_homepage_view($groupid) {
+    $v = get_record('view', 'group', $groupid, 'type', 'grouphomepage');
+    return new View($v->id, (array)$v);
+}
