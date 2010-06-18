@@ -636,8 +636,10 @@ function core_install_lastcoredata_defaults() {
         insert_record('usr', $user);
     }
 
+    require_once('group.php');
     install_system_profile_view();
     install_system_dashboard_view();
+    install_system_grouphomepage_view();
 
     // Insert the admin user
     $user = new StdClass;
