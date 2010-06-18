@@ -44,7 +44,7 @@ class PluginBlocktypeGroupInfo extends SystemBlocktype {
     }
 
     public static function get_categories() {
-        return array('internal');
+        return array('general');
     }
 
     public static function get_viewtypes() {
