@@ -28,6 +28,6 @@
 defined('INTERNAL') || die();
 
 $string['title'] = 'Group Info';
-$string['description'] = 'Display information about the group you belong to';
+$string['description'] = 'Display information about the group';
 ?>
 
