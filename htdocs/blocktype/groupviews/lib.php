@@ -50,6 +50,10 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
         return array('grouphomepage');
     }
 
+    public static function hide_title_on_empty_content() {
+        return true;
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $groupid = $instance->get_view()->get('group');
         if (!$groupid) {
