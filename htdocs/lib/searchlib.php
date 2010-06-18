@@ -388,7 +388,7 @@ function group_user_search($group, $queries, $constraints, $offset, $limit, $mem
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
     return call_static_method(generate_class_name('search', $plugin), 'group_search_user', 
-                              $group, $queries, $constraints, $offset, $limit, $membershiptype);
+                              $group, $queries, $constraints, $offset, $limit, $membershiptype, $random);
 }
 
 /**
