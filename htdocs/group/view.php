@@ -43,11 +43,16 @@ if (!is_logged_in() && !$group->public) {
 
 define('TITLE', $group->name);
 
+$isadmin = false;
+if (is_logged_in()) {
+    $isadmin = group_user_access($group->id, $USER->id) == 'admin';
+}
+
 $view = group_get_homepage_view($group->id);
 $smarty = smarty();
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewcontent', $view->build_columns());
-$smarty->assign('isadmin', group_user_access($group->id, $userid) == 'admin');
+$smarty->assign('isadmin', $isadmin);
 $smarty->display('group/view.tpl');
 
 ?>
