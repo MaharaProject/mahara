@@ -30,3 +30,9 @@ defined('INTERNAL') || die();
 $string['title'] = 'Group Members';
 $string['description'] = 'Display a list of Members in this Group';
 $string['show_all'] = 'View all Members of this Group…';
+
+$string['options_rows_title'] = 'Rows';
+$string['options_rows_desc'] = 'The amount of rows you want to display.';
+
+$string['options_columns_title'] = 'Columns';
+$string['options_columns_desc'] = 'The columns of rows you want to display.';

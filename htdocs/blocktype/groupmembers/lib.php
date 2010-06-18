@@ -51,14 +51,19 @@ class PluginBlocktypeGroupMembers extends SystemBlocktype {
 
     public static function render_instance (BlockInstance $instance, $editing = false) {
         global $USER;
+
+        $configdata = $instance->get('configdata');
+        $rows = $configdata['rows'];
+        $columns = $configdata['columns'];
+
         $groupid = $instance->get_view()->get('group');
         require_once('searchlib.php');
-        $groupmembers = get_group_user_search_results($groupid, '', 0, 16, '');
+        $groupmembers = get_group_user_search_results($groupid, '', 0, ($rows + $columns), '', true);
 
         if ($groupmembers['count']) {
-            $friendarray = array_chunk($groupmembers['data'], 4); // get the friends into a 4x4 array
+            $groupmembersarray = array_chunk($groupmembers['data'], $columns);
             $smarty = smarty_core();
-            $smarty->assign_by_ref('friends', $friendarray);
+            $smarty->assign_by_ref('groupmembers', $groupmembersarray);
             $groupmembers['tablerows'] = $smarty->fetch('blocktype:groupmembers:row.tpl');
         } else {
             $groupmembers = false;
@@ -70,11 +75,39 @@ class PluginBlocktypeGroupMembers extends SystemBlocktype {
             );
 
         $smarty = smarty_core();
-        $smarty->assign('friends', $groupmembers);
+        $smarty->assign('groupmembers', $groupmembers);
         $smarty->assign('show_all', $show_all);
 
         return $smarty->fetch('blocktype:groupmembers:groupmembers.tpl');
 
+    }
+
+    public static function has_instance_config() {
+        return true;
+    }
+
+    public static function instance_config_form($instance) {
+        $configdata = $instance->get('configdata');
+
+        $options = range(0,9);
+        unset($options[0]);
+
+        return array(
+            'rows' => array(
+                'type'  => 'select',
+                'title' => get_string('options_rows_title', 'blocktype.groupmembers'),
+                'description' => get_string('options_rows_desc', 'blocktype.groupmembers'),
+                'defaultvalue' => $configdata['rows'] ? $configdata['rows'] : 4,
+                'options' => $options,
+            ),
+            'columns' => array(
+                'type'  => 'select',
+                'title' => get_string('options_columns_title', 'blocktype.groupmembers'),
+                'description' => get_string('options_columns_desc', 'blocktype.groupmembers'),
+                'defaultvalue' => $configdata['columns'] ? $configdata['columns'] : 3,
+                'options' => $options,
+            ),
+        );
     }
 
 }

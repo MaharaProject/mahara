@@ -1,9 +1,9 @@
 {auto_escape off}
 <div class="friends">
-{if $friends}
+{if $groupmembers}
     <table id="userfriendstable" class="center fullwidth">
       <tbody>
-      {$friends.tablerows}
+      {$groupmembers.tablerows}
       </tbody>
     </table>
 {/if}
