@@ -28,6 +28,6 @@
 defined('INTERNAL') || die();
 
 $string['title'] = 'Group Views';
-$string['description'] = 'Display the group views';
+$string['description'] = 'Display the views shared with the group';
 ?>
 
