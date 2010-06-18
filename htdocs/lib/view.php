@@ -2082,6 +2082,7 @@ class View {
             $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, v.type
                 FROM {view} v
                 WHERE v.group = ?
+                '. (group_user_access($groupid) != 'admin' ? ' AND v.type != \'grouphomepage\'' : '') . '
                 ORDER BY v.title, v.id', array($groupid), $offset, $limit);
         }
         else if ($institution) {
@@ -2294,7 +2295,11 @@ class View {
         $viewerid = $USER->get('id');
 
         $where = "
-            WHERE v.type NOT IN ('profile','dashboard')";
+            WHERE v.type NOT IN ('profile','dashboard'";
+        if (!$admin) { // only show the grouphomepage viewtype to admins
+            $where .= ",'grouphomepage'";
+        }
+        $where .= ")";
 
         if ($ownedby) {
             $where .= ' AND v.' . self::owner_sql($ownedby);
