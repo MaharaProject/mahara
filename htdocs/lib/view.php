@@ -2060,7 +2060,7 @@ class View {
     }
 
     public static function can_remove_viewtype($viewtype) {
-        $cannotremove = array('profile', 'dashboard');
+        $cannotremove = array('profile', 'dashboard', 'grouphomepage');
         if (in_array($viewtype, $cannotremove)) {
             return false;
         }
