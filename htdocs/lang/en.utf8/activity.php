@@ -83,6 +83,7 @@ $string['newfeedbackonview'] = 'New feedback on view';
 $string['newfeedbackonartefact'] = 'New feedback on artefact';
 
 $string['newviewaccessmessage'] = 'You have been added to the access list for the view called "%s" by %s';
+$string['newviewaccessmessagenoowner'] = 'You have been added to the access list for the view called "%s"';
 $string['newviewaccesssubject'] = 'New view access';
 
 $string['viewmodified'] = 'has changed their view';

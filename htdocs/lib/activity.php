@@ -826,8 +826,8 @@ class ActivityTypeViewaccess extends ActivityType {
      */
     public function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
-        if (!$this->viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
-                                         JOIN {view} v ON v.owner = u.id
+        if (!$this->viewinfo = get_record_sql('SELECT v.title, u.* FROM {view} v
+                                         LEFT JOIN {usr} u ON v.owner = u.id
                                          WHERE v.id = ?', array($this->view))) {
             if (!empty($this->cron)) { // probably deleted already
                 return;
@@ -846,8 +846,11 @@ class ActivityTypeViewaccess extends ActivityType {
     }
     
     public function get_message($user) {
-        return get_string_from_language($user->lang, 'newviewaccessmessage', 'activity',
-                                        $this->viewinfo->title, display_name($this->viewinfo, $user));
+        if ($this->viewinfo->id) {
+            return get_string_from_language($user->lang, 'newviewaccessmessage', 'activity',
+                                            $this->viewinfo->title, display_name($this->viewinfo, $user));
+        }
+        return get_string_from_language($user->lang, 'newviewaccessmessagenoowner', 'activity', $this->viewinfo->title);
     }
     
     public function get_required_parameters() {
