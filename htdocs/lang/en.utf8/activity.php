@@ -80,6 +80,7 @@ $string['newcontactusfrom'] = 'New contact us from';
 $string['newcontactus'] = 'New contact us';
 
 $string['newviewaccessmessage'] = 'You have been added to the access list for the view called "%s" by %s';
+$string['newviewaccessmessagenoowner'] = 'You have been added to the access list for the view called "%s"';
 $string['newviewaccesssubject'] = 'New view access';
 
 $string['viewmodified'] = 'has changed their view';

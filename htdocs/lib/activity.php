@@ -808,7 +808,7 @@ class ActivityTypeViewaccess extends ActivityType {
     protected $owner;
     protected $oldusers; // this can be empty though
 
-    private $viewinfo;
+    private $title, $ownername;
 
     /**
      * @param array $data Parameters:
@@ -818,9 +818,15 @@ class ActivityTypeViewaccess extends ActivityType {
      */
     public function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
-        if (!$this->viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
-                                         JOIN {view} v ON v.owner = u.id
-                                         WHERE v.id = ?', array($this->view))) {
+        if (!$viewinfo = get_record_sql('
+            SELECT v.title, v.owner, v.group, v.institution,
+                u.id, u.username, u.preferredname, u.firstname, u.lastname, u.staff, u.admin,
+                g.name AS groupname, i.displayname AS institutionname
+            FROM {view} v
+                LEFT JOIN {usr} u ON v.owner = u.id
+                LEFT JOIN {group} g ON v.group = g.id
+                LEFT JOIN {institution} i ON v.institution = i.name
+            WHERE v.id = ?', array($this->view))) {
             if (!empty($this->cron)) { // probably deleted already
                 return;
             }
@@ -831,6 +837,18 @@ class ActivityTypeViewaccess extends ActivityType {
             activity_get_viewaccess_users($this->view, $this->owner, $this->get_id()),
             $this->oldusers
         );
+        $this->title = $viewinfo->title;
+        if ($this->users) {
+            if ($viewinfo->group) {
+                $this->ownername = $viewinfo->groupname;
+            }
+            else if ($viewinfo->institution) {
+                $this->ownername = $viewinfo->institutionname;
+            }
+            else if ($viewinfo->owner) {
+                $this->ownername = display_name($viewinfo, null, true);
+            }
+        }
         $this->add_urltext(array('key' => 'View', 'section' => 'view'));
     }
 
@@ -839,8 +857,11 @@ class ActivityTypeViewaccess extends ActivityType {
     }
     
     public function get_message($user) {
-        return get_string_from_language($user->lang, 'newviewaccessmessage', 'activity',
-                                        $this->viewinfo->title, display_name($this->viewinfo, $user));
+        if ($this->ownername) {
+            return get_string_from_language($user->lang, 'newviewaccessmessage', 'activity',
+                                            $this->title, $this->ownername);
+        }
+        return get_string_from_language($user->lang, 'newviewaccessmessagenoowner', 'activity', $this->title);
     }
     
     public function get_required_parameters() {
