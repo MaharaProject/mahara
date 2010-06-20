@@ -70,6 +70,7 @@ $form = array(
     'plugintype' => 'core',
     'pluginname' => 'view',
     'viewid' => $view->get('id'),
+    'userview' => (int) $view->get('owner'),
     'elements' => array(
         'id' => array(
             'type' => 'hidden',

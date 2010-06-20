@@ -683,9 +683,12 @@ class View {
                     $accessrecord->stopdate  = db_format_timestamp($item['stopdate']);
                 }
                 switch ($item['type']) {
+                    case 'friends':
+                        if (!$this->owner) {
+                            break; // Don't add friend access to group, institution or system views
+                        }
                     case 'public':
                     case 'loggedin':
-                    case 'friends':
                         $accessrecord->accesstype = $item['type'];
                         if (array_search($accessrecord, $accessdata_added) === false) {
                             insert_record('view_access', $accessrecord);
