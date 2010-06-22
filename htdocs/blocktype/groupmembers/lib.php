@@ -54,7 +54,7 @@ class PluginBlocktypeGroupMembers extends SystemBlocktype {
 
         $configdata = $instance->get('configdata');
         $rows = $configdata['rows'];
-        $columns = $configdata['columns'];
+        $columns = $configdata['columns'] ? $configdata['columns'] : 3;
 
         $groupid = $instance->get_view()->get('group');
         require_once('searchlib.php');
