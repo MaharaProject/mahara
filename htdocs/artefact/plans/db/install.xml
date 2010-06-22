@@ -11,7 +11,7 @@
     <TABLE NAME="artefact_plan">
         <FIELDS>
             <FIELD NAME="plan" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
-            <FIELD NAME="completiondate" TYPE="text" NOTNULL="false" />
+            <FIELD NAME="completiondate" TYPE="datetime" NOTNULL="false" />
             <FIELD NAME="completed" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" />
         </FIELDS>
         <KEYS>

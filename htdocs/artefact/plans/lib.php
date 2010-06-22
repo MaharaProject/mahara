@@ -70,7 +70,7 @@ class ArtefactTypePlan extends ArtefactType {
         parent::__construct($id, $data);
 
         if ($this->id) {
-            if ($pdata = get_record('artefact_plan', 'plan', $this->id)) {
+            if ($pdata = get_record('artefact_plan', 'plan', $this->id, null, null, null, null, '*, ' . db_format_tsfield('completiondate'))) {
                 foreach($pdata as $name => $value) {
                     if (property_exists($this, $name)) {
                         $this->$name = $value;
@@ -108,10 +108,14 @@ class ArtefactTypePlan extends ArtefactType {
 
         $this->dirty = true;
 
+        $completiondate = $this->get('completiondate');
+        if (!empty($completiondate)) {
+            $value = db_format_timestamp($completiondate);
+        }
         $data = (object)array(
             'plan'  => $this->get('id'),
             'completed' => $this->get('completed'),
-            'completiondate' => $this->get('completiondate'),
+            'completiondate' => $value,
         );
 
         if ($new) {
@@ -165,7 +169,7 @@ class ArtefactTypePlan extends ArtefactType {
         $datenow = time(); // time now to use for formatting plans by completion
 
         ($results = get_records_sql_array("
-            SELECT ap.*, a.title, a.description
+            SELECT ap.plan, ap.completed, ".db_format_tsfield('completiondate').", a.title, a.description
                 FROM {artefact} a
             JOIN {artefact_plan} ap ON ap.plan = a.id
             WHERE a.owner = ? AND a.artefacttype = 'plan'
