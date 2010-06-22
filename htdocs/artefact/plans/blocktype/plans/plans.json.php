@@ -35,8 +35,9 @@ require_once(get_config('docroot') . 'artefact/plans/blocktype/plans/lib.php');
 
 $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
+$bi = new BlockInstance(param_integer('block'));
 
 $plans = ArtefactTypePlan::get_plans($offset, $limit);
-PluginBlocktypePlans::build_plans_html($plans);
+PluginBlocktypePlans::build_plans_html($plans, false, $bi);
 
 json_reply(false, (object) array('message' => false, 'data' => $plans));

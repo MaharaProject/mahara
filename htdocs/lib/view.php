@@ -2970,6 +2970,19 @@ class View {
     }
 
 
+    /**
+     * Makes a URL for a view page
+     */
+    public function get_url() {
+        if ($this->type == 'profile') {
+            $url = 'user/view.php?id=' . (int) $this->owner;
+        }
+        else {
+            $url = 'view/view.php?id=' . (int) $this->id;
+        }
+        return get_config('wwwroot') . $url;
+    }
+
 
     /**
      * Get all view access records relevant to a user

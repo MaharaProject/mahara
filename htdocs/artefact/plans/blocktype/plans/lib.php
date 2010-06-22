@@ -46,20 +46,20 @@ class PluginBlocktypePlans extends PluginBlocktype {
         safe_require('artefact','plans');
 
         $plans = ArtefactTypePlan::get_plans();
-        self::build_plans_html($plans, $editing);
+        self::build_plans_html($plans, $editing, $instance);
         $smarty = smarty_core();
         $smarty->assign('plans', $plans);
         return $smarty->fetch('blocktype:plans:content.tpl');
     }
 
-    public static function build_plans_html(&$plans, $editing=false) {
+    public static function build_plans_html(&$plans, $editing=false, BlockInstance $instance) {
         $smarty = smarty_core();
         $smarty->assign_by_ref('plans', $plans);
         $plans['tablerows'] = $smarty->fetch('blocktype:plans:planrows.tpl');
         if ($editing) {
             return;
         }
-        $baseurl = $_SERVER['REQUEST_URI'];
+        $baseurl = $instance->get_view()->get_url() . '&block=' . $instance->get('id');
         $pagination = build_pagination(array(
             'id' => 'planstable_pagination',
             'class' => 'center nojs-hidden-block',
