@@ -283,6 +283,15 @@ class ArtefactTypePlan extends ArtefactType {
     */
     public static function get_plansform_elements($plan) {
         $elements = array(
+            'title' => array(
+                'type' => 'text',
+                'defaultvalue' => null,
+                'title' => get_string('title', 'artefact.plans'),
+                'size' => 30,
+                'rules' => array(
+                    'required' => true,
+                ),
+            ),
             'completiondate' => array(
                 'type'       => 'calendar',
                 'caloptions' => array(
@@ -292,15 +301,6 @@ class ArtefactTypePlan extends ArtefactType {
                 'defaultvalue' => null,
                 'title' => get_string('completiondate', 'artefact.plans'),
                 'description' => get_string('dateformatguide'),
-                'rules' => array(
-                    'required' => true,
-                ),
-            ),
-            'title' => array(
-                'type' => 'text',
-                'defaultvalue' => null,
-                'title' => get_string('title', 'artefact.plans'),
-                'size' => 30,
                 'rules' => array(
                     'required' => true,
                 ),

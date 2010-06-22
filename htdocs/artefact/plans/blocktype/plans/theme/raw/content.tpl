@@ -1,4 +1,4 @@
-<div id="planswrap">
+<div class="blockinstance-content">
 {if $plans.data}
 <table id="planstable_{$blockid}" class="tablerenderer">
     <colgroup width="50%" span="2"></colgroup>
@@ -20,6 +20,8 @@ addLoadEvent(function() {literal}{{/literal}
     removeElementClass('plans_page_container', 'hidden');
 {literal}}{/literal});
 </script>
+{else}
+    <p>{str tag='noplans' section='artefact.plans'}</p>
 {/if}
 </div>
 

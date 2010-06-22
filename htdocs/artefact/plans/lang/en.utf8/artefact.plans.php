@@ -36,6 +36,8 @@ $string['description'] = 'Description';
 $string['editplan'] = 'Edit Plan';
 $string['editingplan'] = 'Editing Plan';
 $string['myplans'] = 'My Plans';
+$string['noplanssaddone'] = 'No plans yet. %sAdd one%s!';
+$string['noplans'] = 'No plans to display';
 $string['plan'] = 'Plan';
 $string['plans'] = 'Plans';
 $string['plandeletedsuccessfully'] = 'Plan deleted successfully.';
@@ -44,5 +46,4 @@ $string['plannotsavedsuccessfully'] = 'There was an error submitting this form. 
 $string['plansavedsuccessfully'] = 'Plan saved successfully.';
 $string['saveplan'] = 'Save plan';
 $string['title'] = 'Title';
-$string['noplanssaddone'] = 'No plans yet. %sAdd one%s!';
 ?>
