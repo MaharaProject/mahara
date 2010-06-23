@@ -48,6 +48,7 @@ class PluginBlocktypePlans extends PluginBlocktype {
         $plans = ArtefactTypePlan::get_plans();
         self::build_plans_html($plans, $editing, $instance);
         $smarty = smarty_core();
+        $smarty->assign('blockid', $instance->get('id'));
         $smarty->assign('plans', $plans);
         return $smarty->fetch('blocktype:plans:content.tpl');
     }
@@ -59,11 +60,12 @@ class PluginBlocktypePlans extends PluginBlocktype {
         if ($editing) {
             return;
         }
-        $baseurl = $instance->get_view()->get_url() . '&block=' . $instance->get('id');
+        $blockid = $instance->get('id');
+        $baseurl = $instance->get_view()->get_url() . '&block=' . $blockid;
         $pagination = build_pagination(array(
-            'id' => 'planstable_pagination',
+            'id' => 'block' . $blockid . '_pagination',
             'class' => 'center nojs-hidden-block',
-            'datatable' => 'planstable',
+            'datatable' => 'planstable_' . $blockid,
             'url' => $baseurl,
             'jsonscript' => 'artefact/plans/blocktype/plans/plans.json.php',
             'count' => $plans['count'],
@@ -74,7 +76,7 @@ class PluginBlocktypePlans extends PluginBlocktype {
             'resultcounttextplural' => get_string('plans', 'artefact.plans'),
         ));
         $plans['pagination'] = $pagination['html'];
-        $plans['pagination_js'] = $pagination['javascript'];
+        $plans['pagination_js'] = 'var paginator' . $blockid . ' = ' . $pagination['javascript'];
     }
 
     // My Plans blocktype only has 'title' option so next two functions return as normal

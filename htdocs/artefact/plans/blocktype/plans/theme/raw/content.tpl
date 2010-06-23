@@ -1,6 +1,6 @@
 <div id="planswrap">
 {if $plans.data}
-<table id="planslist" class="tablerenderer">
+<table id="planstable_{$blockid}" class="tablerenderer">
     <colgroup width="50%" span="2"></colgroup>
     <thead>
         <tr>
