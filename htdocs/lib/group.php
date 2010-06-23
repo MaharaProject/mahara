@@ -1374,7 +1374,7 @@ function install_system_grouphomepage_view() {
         'owner'       => 0,
         'numcolumns'  => 1,
         'template'    => 1,
-        'title'       => get_string('grouphomepageviewtitle', 'view'),
+        'title'       => get_string('grouphomepage', 'view'),
         'ctime'       => $dbtime,
         'atime'       => $dbtime,
         'mtime'       => $dbtime,

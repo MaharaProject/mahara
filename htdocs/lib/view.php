@@ -2832,6 +2832,10 @@ class View {
         $ownername = $this->formatted_owner();
         $wwwroot = get_config('wwwroot');
 
+        if ($this->type == 'grouphomepage') {
+            return '<strong>' . get_string('aboutgroup', 'group', $ownername) . '</strong>';
+        }
+
         if ($this->owner) {
             $ownerlink = $wwwroot . 'user/view.php?id=' . $this->owner;
         }
