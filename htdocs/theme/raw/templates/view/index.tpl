@@ -27,7 +27,7 @@
 {elseif $view.type == 'dashboard'}
                             <h3><a href="{$WWWROOT}">{str tag=dashboardviewtitle section=view}</a></h3>
 {elseif $view.type == 'grouphomepage'}
-                            <h3><a href="{$WWWROOT}">{str tag=grouphomepageviewtitle section=view}</a></h3>
+                            <h3><a href="{$WWWROOT}group/view.php?id={$GROUP->id}">{str tag=grouphomepageviewtitle section=view}</a></h3>
 {else}
                             <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a></h3>
 {/if}

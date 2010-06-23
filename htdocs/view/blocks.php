@@ -104,6 +104,11 @@ else if ($view->get('type') == 'dashboard') {
     $title = get_string('usersdashboard', 'mahara', display_name($view->get('owner'), null, true));
     define('TITLE', $title . ': ' . get_string('editcontentandlayout', 'view'));
 }
+else if ($view->get('type') == 'grouphomepage') {
+    $displaylink = get_config('wwwroot') . 'group/view.php?id=' . (int) $view->get('group');
+    $title = get_string('grouphomepage', 'view');
+    define('TITLE', $title . ': ' . get_string('editcontentandlayout', 'view'));
+}
 else if ($new) {
     $displaylink = get_config('wwwroot') . 'view/view.php?id=' . $view->get('id') . '&new=1';
     define('TITLE', get_string('editcontentandlayout', 'view'));
