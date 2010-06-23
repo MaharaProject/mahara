@@ -1788,25 +1788,25 @@ function xmldb_core_upgrade($oldversion=0) {
         $blocktypes = array(
             array(
                 'blocktype' => 'groupinfo',
-                'title' => get_string('title', 'blocktype.groupinfo'),
+                'title' => '',
                 'column' => 1,
                 'config' => null,
             ),
             array(
                 'blocktype' => 'recentforumposts',
-                'title' => get_string('title', 'blocktype.recentforumposts'),
+                'title' => get_string('recentforumposts', 'blocktype.recentforumposts'),
                 'column' => 1,
                 'config' => null,
             ),
             array(
                 'blocktype' => 'groupviews',
-                'title' => get_string('title', 'blocktype.groupviews'),
+                'title' => get_string('Views', 'view'),
                 'column' => 1,
                 'config' => null,
             ),
             array(
                 'blocktype' => 'groupmembers',
-                'title' => get_string('title', 'blocktype.groupmembers'),
+                'title' => get_string('Members', 'group'),
                 'column' => 1,
                 'config' => null,
             ),

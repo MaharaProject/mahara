@@ -34,5 +34,6 @@ $string['nogroupstochoosefrom'] = 'Sorry, no groups to choose from';
 $string['poststoshow'] = 'Maximum number of posts to show';
 $string['poststoshowdescription'] = 'Between 1 and 100';
 $string['recentforumpostsforgroup'] = "Recent Forum Posts for %s";
+$string['recentforumposts'] = "Recent Forum Posts";
 
 ?>
