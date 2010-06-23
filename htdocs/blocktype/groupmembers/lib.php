@@ -53,9 +53,9 @@ class PluginBlocktypeGroupMembers extends SystemBlocktype {
         global $USER;
 
         $configdata = $instance->get('configdata');
-        $rows = $configdata['rows'] ? $configdata['rows'] : 1;
-        $columns = $configdata['columns'] ? $configdata['columns'] : 6;
-        $order = $configdata['order'] ? $configdata['order'] : 'latest';
+        $rows = isset($configdata['rows']) ? $configdata['rows'] : 1;
+        $columns = isset($configdata['columns']) ? $configdata['columns'] : 6;
+        $order = isset($configdata['order']) ? $configdata['order'] : 'latest';
 
         $groupid = $instance->get_view()->get('group');
         require_once('searchlib.php');
@@ -98,14 +98,14 @@ class PluginBlocktypeGroupMembers extends SystemBlocktype {
                 'type'  => 'select',
                 'title' => get_string('options_rows_title', 'blocktype.groupmembers'),
                 'description' => get_string('options_rows_desc', 'blocktype.groupmembers'),
-                'defaultvalue' => $configdata['rows'] ? $configdata['rows'] : 1,
+                'defaultvalue' => isset($configdata['rows']) ? $configdata['rows'] : 1,
                 'options' => $options,
             ),
             'columns' => array(
                 'type'  => 'select',
                 'title' => get_string('options_columns_title', 'blocktype.groupmembers'),
                 'description' => get_string('options_columns_desc', 'blocktype.groupmembers'),
-                'defaultvalue' => $configdata['columns'] ? $configdata['columns'] : 6,
+                'defaultvalue' => isset($configdata['columns']) ? $configdata['columns'] : 6,
                 'options' => $options,
             ),
             'order' => array(
