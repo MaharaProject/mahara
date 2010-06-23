@@ -4,12 +4,8 @@
  * Copyright (C) 2006-2009 Catalyst IT
  * This file is distributed under the same terms as Mahara itself
  */
-.tablerenderer th.planscontrols {
+th.planscontrols {
     width:50px; !important;
-}
-
-.tablerenderer th.plansdate {
-    width:100px; !important;
 }
 
 #planswrap table {
@@ -34,16 +30,6 @@
     margin:3px;
     text-align:center;
     width:60px;
-}
-
-/* Add plans form */
-#planswrap #addplans form {
-	margin: 0;
-}
-
-#planswrap #addplans table {
-	width: 50%;
-    margin-top: 10px;
 }
 
 #container #planswrap table td.errmsg {

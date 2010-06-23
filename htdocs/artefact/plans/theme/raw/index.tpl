@@ -7,11 +7,10 @@
 {if !$plans.data}
     <div class="message">{$strnoplanssaddone|safe}</div>
 {else}
-<table id="planslist" class="tablerenderer">
-    <colgroup width="25%" span="2"></colgroup>
+<table id="planslist">
     <thead>
         <tr>
-            <th class="plansdate">{str tag='completiondate' section='artefact.plans'}</th>
+            <th>{str tag='completiondate' section='artefact.plans'}</th>
             <th>{str tag='title' section='artefact.plans'}</th>
             <th>{str tag='description' section='artefact.plans'}</th>
             <th>{str tag='completed' section='artefact.plans'}</th>

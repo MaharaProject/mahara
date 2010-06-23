@@ -1,10 +1,10 @@
 {auto_escape off}
 {include file="header.tpl"}
 <div id="planswrap">
-    <table width="100%" id="deleteplan" class="tablerenderer">
+    <table width="100%">
         <thead>
             <tr>
-                <th class="plansdate">{str tag='completiondate' section='artefact.plans'}</th>
+                <th>{str tag='completiondate' section='artefact.plans'}</th>
                 <th>{str tag='title' section='artefact.plans'}</th>
                 <th>{str tag='description' section='artefact.plans'}</th>
                 <th>{str tag='completed' section='artefact.plans'}</th>
@@ -19,7 +19,7 @@
             </tr>
         </tbody>
     </table>
-    <div class="deleteplan">{$deleteplanform}</div>
+    <div>{$deleteplanform}</div>
 </div>
 {include file="footer.tpl"}
 {/auto_escape}

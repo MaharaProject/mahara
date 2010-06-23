@@ -1,10 +1,10 @@
 <div class="blockinstance-content">
 {if $plans.data}
-<table id="planstable_{$blockid}" class="tablerenderer">
+<table id="planstable_{$blockid}">
     <colgroup width="50%" span="2"></colgroup>
     <thead>
         <tr>
-            <th class="plansdate">{str tag='completiondate' section='artefact.plans'}</th>
+            <th>{str tag='completiondate' section='artefact.plans'}</th>
             <th>{str tag='title' section='artefact.plans'}</th>
             <th>{str tag='completed' section='artefact.plans'}</th>
         </tr>
