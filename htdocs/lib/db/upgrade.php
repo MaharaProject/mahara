@@ -1831,8 +1831,14 @@ function xmldb_core_upgrade($oldversion=0) {
         foreach (get_records_array('group', '', '', '', 'id,public') as $group) {
             $viewdata->group = $group->id;
             $id = insert_record('view', $viewdata, 'id', true);
-            $accessdata->accesstype = $group->public ? 'public' : 'loggedin';
-            insert_record('view_access', $accessdata);
+            insert_record('view_access', (object) array(
+                'view' => $id,
+                'accesstype' => $group->public ? 'public' : 'loggedin',
+            ));
+            insert_record('view_access_group', (object) array(
+                'view' => $id,
+                'group' => $group->id,
+            ));
             $weights = array(1 => 0);
             foreach ($blocktypes as $blocktype) {
                 $weights[$blocktype['column']]++;
