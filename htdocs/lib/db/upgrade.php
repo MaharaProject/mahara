@@ -1794,7 +1794,7 @@ function xmldb_core_upgrade($oldversion=0) {
             ),
             array(
                 'blocktype' => 'recentforumposts',
-                'title' => get_string('recentforumposts', 'blocktype.recentforumposts'),
+                'title' => get_string('latestforumposts', 'interaction.forum'),
                 'column' => 1,
                 'config' => null,
             ),
