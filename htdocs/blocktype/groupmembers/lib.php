@@ -53,8 +53,8 @@ class PluginBlocktypeGroupMembers extends SystemBlocktype {
         global $USER;
 
         $configdata = $instance->get('configdata');
-        $rows = $configdata['rows'];
-        $columns = $configdata['columns'] ? $configdata['columns'] : 3;
+        $rows = $configdata['rows'] ? $configdata['rows'] : 1;
+        $columns = $configdata['columns'] ? $configdata['columns'] : 6;
         $order = $configdata['order'] ? $configdata['order'] : 'latest';
 
         $groupid = $instance->get_view()->get('group');
@@ -98,14 +98,14 @@ class PluginBlocktypeGroupMembers extends SystemBlocktype {
                 'type'  => 'select',
                 'title' => get_string('options_rows_title', 'blocktype.groupmembers'),
                 'description' => get_string('options_rows_desc', 'blocktype.groupmembers'),
-                'defaultvalue' => $configdata['rows'] ? $configdata['rows'] : 4,
+                'defaultvalue' => $configdata['rows'] ? $configdata['rows'] : 1,
                 'options' => $options,
             ),
             'columns' => array(
                 'type'  => 'select',
                 'title' => get_string('options_columns_title', 'blocktype.groupmembers'),
                 'description' => get_string('options_columns_desc', 'blocktype.groupmembers'),
-                'defaultvalue' => $configdata['columns'] ? $configdata['columns'] : 3,
+                'defaultvalue' => $configdata['columns'] ? $configdata['columns'] : 6,
                 'options' => $options,
             ),
             'order' => array(
