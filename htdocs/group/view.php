@@ -49,9 +49,10 @@ if (is_logged_in()) {
 }
 
 $view = group_get_homepage_view($group->id);
+$viewcontent = $view->build_columns();
 $smarty = smarty();
 $smarty->assign('viewid', $view->get('id'));
-$smarty->assign('viewcontent', $view->build_columns());
+$smarty->assign('viewcontent', $viewcontent);
 $smarty->assign('isadmin', $isadmin);
 $smarty->display('group/view.tpl');
 
