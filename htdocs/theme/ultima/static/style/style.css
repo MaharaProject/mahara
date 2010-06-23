@@ -82,7 +82,6 @@ h6 {
 /* table with th border-bottom */
 #searchresults thead th,
 #filelist,
-#groupforumtable,
 .tag-results #results {
 	border-bottom: 1px dotted #360435;
 }
@@ -90,8 +89,7 @@ h6 {
 #searchresults tfoot td,
 #adminstitutionslist tfoot td,
 #profileicons tfoot td,
-#activitylist tfoot td,
-#groupforumtable {
+#activitylist tfoot td {
 	border-top: 1px dotted #360435;
 }
 .main-column table h3 a,

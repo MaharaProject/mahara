@@ -162,13 +162,7 @@ function editview_cancel_submit() {
     if ($new) {
         $view->delete();
     }
-    if ($group) {
-        redirect('/view/groupviews.php?group='.$group);
-    }
-    if ($institution) {
-        redirect('/view/institutionviews.php?institution='.$institution);
-    }
-    redirect('/view');
+    $view->post_edit_redirect();
 }
 
 function editview_submit(Pieform $form, $values) {
@@ -188,25 +182,10 @@ function editview_submit(Pieform $form, $values) {
     }
 
     $view->commit();
-
-    if ($values['new']) {
-        $redirecturl = '/view/access.php?id=' . $view->get('id') . '&new=1';
-    } 
-    else {
+    if (!isset($values['new'])) {
         $SESSION->add_ok_msg(get_string('viewsavedsuccessfully', 'view'));
-        if ($view->get('group')) {
-            $redirecturl = '/view/groupviews.php?group='.$view->get('group');
-        }
-        else if ($view->get('institution')) {
-            $redirecturl = '/view/institutionviews.php?institution=' . $view->get('institution');
-        }
-        else {
-            $redirecturl = '/view/index.php';
-        }
     }
-
-    redirect($redirecturl);
-
+    $view->post_edit_redirect($values['new']);
 }
 
 $smarty = smarty(array(), array(), array(), array('sidebars' => false));

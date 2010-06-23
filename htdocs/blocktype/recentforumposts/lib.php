@@ -85,6 +85,9 @@ class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
                 $smarty = smarty_core();
                 $smarty->assign('group', $group);
                 $smarty->assign('foruminfo', $foruminfo);
+                if ($instance->get_view()->get('type') == 'grouphomepage') {
+                    return $smarty->fetch('blocktype:recentforumposts:latestforumposts.tpl');
+                }
                 return $smarty->fetch('blocktype:recentforumposts:recentforumposts.tpl');
             }
         }

@@ -145,6 +145,12 @@ function group_change_role($groupid, $userid, $role) {
  * @returns boolean
  */
 function group_user_can_edit_views($groupid, $userid=null) {
+    // root user can always do whatever it wants
+    $sysuser = get_record('usr', 'username', 'root');
+    if ($sysuser->id == $userid) {
+        return true;
+    }
+
     if (!is_logged_in()) {
         return false;
     }
@@ -307,6 +313,21 @@ function group_create($data) {
     }
 
     $data['id'] = $id;
+    // install the homepage
+    if ($t = get_record('view', 'type', 'grouphomepage', 'template', 1, 'owner', 0)) {
+        require_once('view.php');
+        $template = new View($t->id, (array)$t);
+        list($homepage) = View::create_from_template(array(
+            'group' => $id,
+            'title' => $template->get('title'),
+            'description' => $template->get('description'),
+            'type' => 'grouphomepage',
+        ), $t->id, 0, false);
+    }
+    insert_record('view_access', (object) array(
+        'view' => $homepage->get('id'),
+        'accesstype' => $data['public'] ? 'public' : 'loggedin',
+    ));
     handle_event('creategroup', $data);
     db_commit();
 
@@ -1323,4 +1344,85 @@ function group_display_settings($group) {
         $string .= ', ' . get_string('publiclyvisible', 'group');
     }
     return $string;
+}
+
+/**
+ * Return the view object for this group's homepage view
+ *
+ * @param int $groupid the id of the group to fetch the view for
+ *
+ * @throws ViewNotFoundException
+ */
+function group_get_homepage_view($groupid) {
+    $v = get_record('view', 'group', $groupid, 'type', 'grouphomepage');
+    return new View($v->id, (array)$v);
+}
+
+/**
+ * install the group homepage view
+ * This creates a template at system level
+ * which is subsequently copied to group hompages
+ *
+ * @return int the id of the new template
+ */
+function install_system_grouphomepage_view() {
+    $dbtime = db_format_timestamp(time());
+    // create a system template for group homepage views
+    require_once(get_config('libroot') . 'view.php');
+    $viewdata = (object) array(
+        'type'        => 'grouphomepage',
+        'owner'       => 0,
+        'numcolumns'  => 1,
+        'template'    => 1,
+        'title'       => get_string('grouphomepage', 'view'),
+        'ctime'       => $dbtime,
+        'atime'       => $dbtime,
+        'mtime'       => $dbtime,
+    );
+    $id = insert_record('view', $viewdata, 'id', true);
+    $accessdata = (object) array('view' => $id, 'accesstype' => 'loggedin');
+    insert_record('view_access', $accessdata);
+    $blocktypes = array(
+        array(
+            'blocktype' => 'groupinfo',
+            'title' => '',
+            'column' => 1,
+            'config' => null,
+        ),
+        array(
+            'blocktype' => 'recentforumposts',
+            'title' => get_string('latestforumposts', 'interaction.forum'),
+            'column' => 1,
+            'config' => null,
+        ),
+        array(
+            'blocktype' => 'groupviews',
+            'title' => get_string('Views', 'view'),
+            'column' => 1,
+            'config' => null,
+        ),
+        array(
+            'blocktype' => 'groupmembers',
+            'title' => get_string('Members', 'group'),
+            'column' => 1,
+            'config' => null,
+        ),
+    );
+    $installed = get_column_sql('SELECT name FROM {blocktype_installed}');
+    $weights = array(1 => 0);
+    foreach ($blocktypes as $blocktype) {
+        if (in_array($blocktype['blocktype'], $installed)) {
+            $weights[$blocktype['column']]++;
+            insert_record('block_instance', (object) array(
+                'blocktype'  => $blocktype['blocktype'],
+                'title'      => $blocktype['title'],
+                'view'       => $id,
+                'column'     => $blocktype['column'],
+                'order'      => $weights[$blocktype['column']],
+                'configdata' => serialize($blocktype['config']),
+            ));
+        }
+    }
+
+    return $id;
 }

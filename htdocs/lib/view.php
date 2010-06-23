@@ -2063,7 +2063,7 @@ class View {
     }
 
     public static function can_remove_viewtype($viewtype) {
-        $cannotremove = array('profile', 'dashboard');
+        $cannotremove = array('profile', 'dashboard', 'grouphomepage');
         if (in_array($viewtype, $cannotremove)) {
             return false;
         }
@@ -2085,6 +2085,7 @@ class View {
             $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, v.type
                 FROM {view} v
                 WHERE v.group = ?
+                '. (group_user_access($groupid) != 'admin' ? ' AND v.type != \'grouphomepage\'' : '') . '
                 ORDER BY v.title, v.id', array($groupid), $offset, $limit);
         }
         else if ($institution) {
@@ -2297,7 +2298,11 @@ class View {
         $viewerid = $USER->get('id');
 
         $where = "
-            WHERE v.type NOT IN ('profile','dashboard')";
+            WHERE v.type NOT IN ('profile','dashboard'";
+        if (!$admin) { // only show the grouphomepage viewtype to admins
+            $where .= ",'grouphomepage'";
+        }
+        $where .= ")";
 
         if ($ownedby) {
             $where .= ' AND v.' . self::owner_sql($ownedby);
@@ -2830,6 +2835,10 @@ class View {
         $ownername = $this->formatted_owner();
         $wwwroot = get_config('wwwroot');
 
+        if ($this->type == 'grouphomepage') {
+            return '<strong>' . get_string('aboutgroup', 'group', $ownername) . '</strong>';
+        }
+
         if ($this->owner) {
             $ownerlink = $wwwroot . 'user/view.php?id=' . $this->owner;
         }
@@ -2863,6 +2872,30 @@ class View {
                 trim(format_date(strtotime($visitcountend), 'strftimedate'))
             );
         }
+    }
+
+    /**
+     * after editing the view, redirect back to the appropriate place
+     */
+    public function post_edit_redirect($new=false) {
+        if ($new) {
+            $redirecturl = '/view/access.php?id=' . $this->get('id') . '&new=1';
+        }
+        else {
+            if ($this->get('group')) {
+                if ($this->get('type') == 'grouphomepage') {
+                    $redirecturl = '/group/view.php?id='.$this->get('group');
+                }
+                $redirecturl = '/view/groupviews.php?group='.$this->get('group');
+            }
+            else if ($this->get('institution')) {
+                $redirecturl = '/view/institutionviews.php?institution=' . $this->get('institution');
+            }
+            else {
+                $redirecturl = '/view/index.php';
+            }
+        }
+        redirect($redirecturl);
     }
 }
 

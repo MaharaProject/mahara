@@ -76,13 +76,7 @@ $institution = $view->get('institution');
 // check if cancel was selected
 if ($new && isset($_POST['cancel'])) {
     $view->delete();
-    if ($group) {
-        redirect(get_config('wwwroot') . 'view/groupviews.php?group='.$group);
-    }
-    if ($institution) {
-        redirect(get_config('wwwroot') . 'view/institutionviews.php?institution='.$institution);
-    }
-    redirect(get_config('wwwroot') . 'view/');
+    $view->post_edit_redirect();
 }
 
 // If a block was configured & submitted, build the form now so it can
@@ -108,6 +102,11 @@ else if ($view->get('type') == 'dashboard') {
     $dashboard = true;
     $displaylink = get_config('wwwroot');
     $title = get_string('usersdashboard', 'mahara', display_name($view->get('owner'), null, true));
+    define('TITLE', $title . ': ' . get_string('editcontentandlayout', 'view'));
+}
+else if ($view->get('type') == 'grouphomepage') {
+    $displaylink = get_config('wwwroot') . 'group/view.php?id=' . (int) $view->get('group');
+    $title = get_string('grouphomepage', 'view');
     define('TITLE', $title . ': ' . get_string('editcontentandlayout', 'view'));
 }
 else if ($new) {

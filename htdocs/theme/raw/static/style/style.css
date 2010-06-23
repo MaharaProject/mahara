@@ -182,7 +182,6 @@ td.narrow {
 /* table with th border-bottom */
 #searchresults thead th,
 #filelist,
-#groupforumtable,
 .tag-results #results {
 	border-bottom: 1px solid #ccc;
 }
@@ -190,8 +189,7 @@ td.narrow {
 #searchresults tfoot td,
 #adminstitutionslist tfoot td,
 #profileicons tfoot td,
-#activitylist tfoot td,
-#groupforumtable {
+#activitylist tfoot td {
 	border-top: 1px solid #ccc;
 }
 /* table with gap between rows */

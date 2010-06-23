@@ -174,6 +174,20 @@ function editgroup_submit(Pieform $form, $values) {
         set_field('group_member', 'role', 'member', 'group', $values['id'], 'role', 'tutor');
     }
 
+    // When a group changes from public -> private or vice versa, set the
+    // appropriate access permissions on the group homepage view.
+    if ($group_data->public != $values['public']) {
+        $homepageid = get_field('view', 'id', 'type', 'grouphomepage', 'group', $group_data->id);
+        if ($group_data->public && !$values['public']) {
+            delete_records('view_access', 'view', $homepageid, 'accesstype', 'public');
+            insert_record('view_access', (object) array('view' => $homepageid, 'accesstype' => 'loggedin'));
+        }
+        else if (!$group_data->public && $values['public']) {
+            delete_records('view_access', 'view', $homepageid, 'accesstype', 'loggedin');
+            insert_record('view_access', (object) array('view' => $homepageid, 'accesstype' => 'public'));
+        }
+    }
+
     $SESSION->add_ok_msg(get_string('groupsaved', 'group'));
 
     db_commit();

@@ -48,6 +48,7 @@ $string['ownerformatdescription'] = 'How do you want people who look at your Vie
 $string['profileviewtitle']       = 'Profile View';
 $string['dashboardviewtitle']  = 'Dashboard View';
 $string['editprofileview']        = 'Edit profile view';
+$string['grouphomepageviewtitle'] = 'Group Homepage View';
 
 // my views
 $string['artefacts'] = 'Artefacts';
@@ -295,5 +296,8 @@ $string['blockcopypermissiondesc'] = 'If you allow other users to copy this View
 $string['dashboard'] = 'Dashboard';
 $string['profile'] = 'Profile';
 $string['portfolio'] = 'Portfolio';
+$string['grouphomepage'] = 'Group Homepage';
+
+$string['grouphomepagedescription'] = 'The Group Homepage View is the content that appears on the About tab for this group';
 
 ?>

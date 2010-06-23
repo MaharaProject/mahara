@@ -337,13 +337,7 @@ function editaccess_cancel_submit() {
     if ($new) {
         $view->delete();
     }
-    if ($group) {
-        redirect('/view/groupviews.php?group='.$group);
-    }
-    if ($institution) {
-        redirect('/view/institutionviews.php?institution='.$institution);
-    }
-    redirect('/view');
+    $view->post_edit_redirect();
 }
 
 
@@ -393,14 +387,7 @@ function editaccess_submit(Pieform $form, $values) {
         $str = get_string('viewaccesseditedsuccessfully', 'view');
     }
     $SESSION->add_ok_msg($str);
-    if ($group) {
-        redirect('/view/groupviews.php?group='.$group);
-    }
-    if ($institution) {
-        redirect('/view/institutionviews.php?institution='.$institution);
-    }
-    redirect('/view/');
-
+    $view->post_edit_redirect();
 }
 
 $form = pieform($form);

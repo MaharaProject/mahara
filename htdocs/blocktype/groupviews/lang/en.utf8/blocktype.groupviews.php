@@ -18,17 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage blocktype-rssfeed
- * @author     Catalyst IT Ltd
+ * @subpackage blocktype-groupinfo
+ * @author     Liip AG
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2010 Liip AG http://www.liip.ch
  *
  */
 
 defined('INTERNAL') || die();
 
-$config = new StdClass;
-$config->version = 2010061800;
-$config->release = '1.0.2';
-
-?>
+$string['title'] = 'Group Views';
+$string['description'] = 'Display the views shared with the group';

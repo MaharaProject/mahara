@@ -351,6 +351,18 @@ abstract class PluginBlocktype extends Plugin {
         return $bi;
     }
 
+    /**
+     * defines if the title should be shown if there is no content in the block
+     *
+     * If the title of the block should be hidden when there is no content,
+     * override the the function in the blocktype class.
+     *
+     * @return boolean  whether the title of the block should be shown or not
+     */
+    public static function hide_title_on_empty_content() {
+        return false;
+    }
+
 }
 
 abstract class SystemBlockType extends PluginBlockType {
@@ -620,6 +632,11 @@ class BlockInstance {
         $smarty->assign('id',     $this->get('id'));
         $smarty->assign('blocktype', $this->get('blocktype'));
         $title = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'override_instance_title', $this);
+        // hide the title if required and no content is present
+        if(call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'hide_title_on_empty_content')
+            && !trim($content)) {
+            return;
+        }
         $smarty->assign('title', $title ? $title : $this->get('title'));
 
         // If this block is for just one artefact, we set the title of the

@@ -26,6 +26,8 @@
                             <h3><a href="{$WWWROOT}user/view.php">{str tag=profileviewtitle section=view}</a></h3>
 {elseif $view.type == 'dashboard'}
                             <h3><a href="{$WWWROOT}">{str tag=dashboardviewtitle section=view}</a></h3>
+{elseif $view.type == 'grouphomepage'}
+                            <h3><a href="{$WWWROOT}group/view.php?id={$GROUP->id}">{str tag=grouphomepage section=view}</a></h3>
 {else}
                             <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a></h3>
 {/if}
@@ -34,13 +36,15 @@
 {else}
                             {if $view.removable}<div class="rbuttons"><a href="{$WWWROOT}view/delete.php?id={$view.id}" class="btn-del">{str tag="deletethisview" section="view"}</a></div>{/if}
                             <div class="vi">
-{if $view.type != 'profile' && $view.type != 'dashboard'}
+{if $view.type != 'profile' && $view.type != 'dashboard' && $view.type != 'grouphomepage'}
                                 <h4><a href="{$WWWROOT}view/edit.php?id={$view.id}" id="editviewdetails">{str tag="edittitleanddescription" section="view"}</a></h4>
 {/if}
 {if $view.type == 'profile'}
                                 <div class="videsc">{str tag=profiledescription}</div>
 {elseif $view.type == 'dashboard'}
                                 <div class="videsc">{str tag=dashboarddescription}</div>
+{elseif $view.type == 'grouphomepage'}
+                                <div class="videsc">{str tag=grouphomepagedescription section=view}</div>
 {elseif $view.description}
                                 <div class="videsc">{$view.description}</div>
 {/if}
@@ -59,7 +63,7 @@
                             <div class="vi">
 {if $view.togglepublic}
                                 {$view.togglepublic}
-{elseif $view.type != 'profile' && $view.type != 'dashboard'}
+{elseif $view.type != 'profile' && $view.type != 'dashboard' && $view.type != 'grouphomepage'}
                                 <h4><a href="{$WWWROOT}view/access.php?id={$view.id}" id="editviewaccess">{str tag="editaccess" section="view"}</a></h4>
 {/if}
 {if $view.access}

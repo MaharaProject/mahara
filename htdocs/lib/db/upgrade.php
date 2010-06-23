@@ -1755,5 +1755,110 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('registerterms', 1);
     }
 
+    if ($oldversion < 2010061800) {
+        insert_record('view_type', (object)array(
+            'type' => 'grouphomepage',
+        ));
+        if ($data = check_upgrades('blocktype.groupmembers')) {
+            upgrade_plugin($data);
+        }
+        if ($data = check_upgrades('blocktype.groupinfo')) {
+            upgrade_plugin($data);
+        }
+        if ($data = check_upgrades('blocktype.groupviews')) {
+            upgrade_plugin($data);
+        }
+
+        $dbtime = db_format_timestamp(time());
+        // create a system template for group homepage views
+        require_once(get_config('libroot') . 'view.php');
+        $viewdata = (object) array(
+            'type'        => 'grouphomepage',
+            'owner'       => 0,
+            'numcolumns'  => 1,
+            'template'    => 1,
+            'title'       => get_string('grouphomepage', 'view'),
+            'ctime'       => $dbtime,
+            'atime'       => $dbtime,
+            'mtime'       => $dbtime,
+        );
+        $id = insert_record('view', $viewdata, 'id', true);
+        $accessdata = (object) array('view' => $id, 'accesstype' => 'loggedin');
+        insert_record('view_access', $accessdata);
+        $blocktypes = array(
+            array(
+                'blocktype' => 'groupinfo',
+                'title' => '',
+                'column' => 1,
+                'config' => null,
+            ),
+            array(
+                'blocktype' => 'recentforumposts',
+                'title' => get_string('latestforumposts', 'interaction.forum'),
+                'column' => 1,
+                'config' => null,
+            ),
+            array(
+                'blocktype' => 'groupviews',
+                'title' => get_string('Views', 'view'),
+                'column' => 1,
+                'config' => null,
+            ),
+            array(
+                'blocktype' => 'groupmembers',
+                'title' => get_string('Members', 'group'),
+                'column' => 1,
+                'config' => null,
+            ),
+        );
+        $installed = get_column_sql('SELECT name FROM {blocktype_installed}');
+        foreach ($blocktypes as $k => $blocktype) {
+            if (!in_array($blocktype['blocktype'], $installed)) {
+                unset($blocktypes[$k]);
+            }
+        }
+        $weights = array(1 => 0);
+        foreach ($blocktypes as $blocktype) {
+            $weights[$blocktype['column']]++;
+            insert_record('block_instance', (object) array(
+                'blocktype'  => $blocktype['blocktype'],
+                'title'      => $blocktype['title'],
+                'view'       => $id,
+                'column'     => $blocktype['column'],
+                'order'      => $weights[$blocktype['column']],
+                'configdata' => serialize($blocktype['config']),
+            ));
+        }
+
+        // add a default group homepage view for all groups in the system
+        unset($viewdata->owner);
+        $viewdata->template = 0;
+
+        foreach (get_records_array('group', '', '', '', 'id,public') as $group) {
+            $viewdata->group = $group->id;
+            $id = insert_record('view', $viewdata, 'id', true);
+            insert_record('view_access', (object) array(
+                'view' => $id,
+                'accesstype' => $group->public ? 'public' : 'loggedin',
+            ));
+            insert_record('view_access_group', (object) array(
+                'view' => $id,
+                'group' => $group->id,
+            ));
+            $weights = array(1 => 0);
+            foreach ($blocktypes as $blocktype) {
+                $weights[$blocktype['column']]++;
+                insert_record('block_instance', (object) array(
+                    'blocktype'  => $blocktype['blocktype'],
+                    'title'      => $blocktype['title'],
+                    'view'       => $id,
+                    'column'     => $blocktype['column'],
+                    'order'      => $weights[$blocktype['column']],
+                    'configdata' => serialize($blocktype['config']),
+                ));
+            }
+        }
+    }
+
     return $status;
 }
