@@ -1,8 +1,8 @@
 {auto_escape off}
 {if $sharedviews}
+    <div class="groupviewsection">
     <h5>{str tag="viewssharedtogroupbyothers" section="view"}</h5>
-    <p>
-    <table class="fullwidth">
+    <table class="fullwidth listing">
     {foreach from=$sharedviews item=view}
         <tr class="{cycle values='r0,r1'}">
             <td>
@@ -26,12 +26,14 @@
         </tr>
     {/foreach}
     </table>
-    {$pagination}
-    </p>
+    </div>
 {/if}
 
 {if $mysubmittedviews || $group_view_submission_form}
-    <h5>{str tag="submitaviewtogroup" section="view"}</h5>
+    <div class="groupviewsection">
+    {if $group_view_submission_form}
+        <h5>{str tag="submitaviewtogroup" section="view"}</h5>
+    {/if}
     {if $mysubmittedviews}
       {foreach from=$mysubmittedviews item=view}
         <div>{$view.strsubmitted}</div>
@@ -40,11 +42,12 @@
     {if $group_view_submission_form}
         <div>{$group_view_submission_form}</div>
     {/if}
+    </div>
 {/if}
 
 {if $allsubmittedviews}
+    <div class="groupviewsection">
     <h5>{str tag="viewssubmittedtogroup" section="view"}</h5>
-    <p>
     <table class="fullwidth">
     {foreach from=$allsubmittedviews item=view}
         <tr class="{cycle values='r0,r1'}">
@@ -63,8 +66,7 @@
         </tr>
     {/foreach}
     </table>
-    {$pagination}
-    </p>
+    </div>
 {/if}
 {/auto_escape}
 

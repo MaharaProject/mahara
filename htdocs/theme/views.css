@@ -310,6 +310,17 @@ html>body #column-container {
   font-weight: bold;
 }
 
+/* group homepage */
+.grouphomepage .column {
+  float: none;
+}
+.grouphomepage .bt-groupviews h5 {
+  margin: 0;
+}
+.grouphomepage .bt-groupviews .groupviewsection {
+  margin: 1em 0;
+}
+
 /* tabs for the artefact chooser */
 ul.artefactchooser-tabs {
   padding: 0 !important;

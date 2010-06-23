@@ -50,7 +50,13 @@ if (is_logged_in()) {
 
 $view = group_get_homepage_view($group->id);
 $viewcontent = $view->build_columns();
-$smarty = smarty();
+$stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
+$smarty = smarty(
+    array(),
+    $stylesheets,
+    array(),
+    array('stylesheets' => array('style/views.css'))
+);
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewcontent', $viewcontent);
 $smarty->assign('isadmin', $isadmin);

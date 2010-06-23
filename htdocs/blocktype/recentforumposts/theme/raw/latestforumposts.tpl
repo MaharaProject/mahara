@@ -1,5 +1,5 @@
     {if $foruminfo}
-        <table class="fullwidth s" id="groupforumtable">
+        <table class="fullwidth s listing">
         {foreach from=$foruminfo item=postinfo}
             <tr class="{cycle values='r0,r1'}">
                 <td><strong><a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic|escape}#post{$postinfo->id}">{$postinfo->topicname}</a></strong></td>
