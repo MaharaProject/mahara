@@ -314,16 +314,20 @@ function group_create($data) {
 
     $data['id'] = $id;
     // install the homepage
-    if ($t = get_record('view', 'type', 'grouphomepage', 'template', 1)) {
+    if ($t = get_record('view', 'type', 'grouphomepage', 'template', 1, 'owner', 0)) {
         require_once('view.php');
         $template = new View($t->id, (array)$t);
-        View::create_from_template(array(
+        list($homepage) = View::create_from_template(array(
             'group' => $id,
             'title' => $template->get('title'),
             'description' => $template->get('description'),
             'type' => 'grouphomepage',
         ), $t->id, 0, false);
     }
+    insert_record('view_access', (object) array(
+        'view' => $homepage->get('id'),
+        'accesstype' => $data['public'] ? 'public' : 'loggedin',
+    ));
     handle_event('creategroup', $data);
     db_commit();
 
