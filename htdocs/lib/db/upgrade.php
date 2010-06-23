@@ -1804,6 +1804,12 @@ function xmldb_core_upgrade($oldversion=0) {
                 'column' => 1,
                 'config' => null,
             ),
+            array(
+                'blocktype' => 'groupmembers',
+                'title' => get_string('title', 'blocktype.groupmembers'),
+                'column' => 1,
+                'config' => null,
+            ),
         );
         $installed = get_column_sql('SELECT name FROM {blocktype_installed}');
         foreach ($blocktypes as $k => $blocktype) {

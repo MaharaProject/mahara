@@ -341,7 +341,7 @@ function admin_user_search($queries, $constraints, $offset, $limit, $sortfield, 
  * @param bool   $random            Set to true if you want the result to be ordered by random, default false
  *
  */
-function get_group_user_search_results($group, $query, $offset, $limit, $membershiptype, $random = false) {
+function get_group_user_search_results($group, $query, $offset, $limit, $membershiptype, $order=null) {
     $queries = array();
     $constraints = array();
     if (!empty($query)) {
@@ -364,7 +364,7 @@ function get_group_user_search_results($group, $query, $offset, $limit, $members
         }
     }
 
-    $results = group_user_search($group, $queries, $constraints, $offset, $limit, $membershiptype, $random);
+    $results = group_user_search($group, $queries, $constraints, $offset, $limit, $membershiptype, $order);
     if ($results['count']) {
         $userids = array_map(create_function('$a', 'return $a["id"];'), $results['data']);
         $introductions = get_records_sql_assoc("SELECT \"owner\", title
@@ -384,11 +384,11 @@ function get_group_user_search_results($group, $query, $offset, $limit, $members
 }
 
 
-function group_user_search($group, $queries, $constraints, $offset, $limit, $membershiptype, $random = false) {
+function group_user_search($group, $queries, $constraints, $offset, $limit, $membershiptype, $order=null) {
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
     return call_static_method(generate_class_name('search', $plugin), 'group_search_user', 
-                              $group, $queries, $constraints, $offset, $limit, $membershiptype, $random);
+                              $group, $queries, $constraints, $offset, $limit, $membershiptype, $order);
 }
 
 /**

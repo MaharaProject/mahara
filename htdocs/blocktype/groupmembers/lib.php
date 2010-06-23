@@ -55,10 +55,11 @@ class PluginBlocktypeGroupMembers extends SystemBlocktype {
         $configdata = $instance->get('configdata');
         $rows = $configdata['rows'];
         $columns = $configdata['columns'] ? $configdata['columns'] : 3;
+        $order = $configdata['order'] ? $configdata['order'] : 'latest';
 
         $groupid = $instance->get_view()->get('group');
         require_once('searchlib.php');
-        $groupmembers = get_group_user_search_results($groupid, '', 0, ($rows + $columns), '', true);
+        $groupmembers = get_group_user_search_results($groupid, '', 0, ($rows + $columns), '', $order);
 
         if ($groupmembers['count']) {
             $groupmembersarray = array_chunk($groupmembers['data'], $columns);
@@ -106,6 +107,16 @@ class PluginBlocktypeGroupMembers extends SystemBlocktype {
                 'description' => get_string('options_columns_desc', 'blocktype.groupmembers'),
                 'defaultvalue' => $configdata['columns'] ? $configdata['columns'] : 3,
                 'options' => $options,
+            ),
+            'order' => array(
+                'type'  => 'select',
+                'title' => get_string('options_order_title', 'blocktype.groupmembers'),
+                'description' => get_string('options_order_desc', 'blocktype.groupmembers'),
+                'defaultvalue' => !empty($configdata['order']) ? $configdata['order'] : 'latest',
+                'options' => array(
+                    'latest' => get_string('Latest','blocktype.groupmembers'),
+                    'random' => get_string('Random','blocktype.groupmembers'),
+                ),
             ),
         );
     }
