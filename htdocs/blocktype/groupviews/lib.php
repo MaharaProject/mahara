@@ -74,7 +74,7 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
         if (isset($data['mysubmittedviews'])) {
             $dwoo->assign('mysubmittedviews', $data['mysubmittedviews']);
         }
-        if (isset($data['group_view_submission_form'])) {
+        if (!$editing && isset($data['group_view_submission_form'])) {
             $dwoo->assign('group_view_submission_form', $data['group_view_submission_form']);
         }
 
