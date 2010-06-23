@@ -298,4 +298,6 @@ $string['profile'] = 'Profile';
 $string['portfolio'] = 'Portfolio';
 $string['grouphomepage'] = 'Group Homepage';
 
+$string['grouphomepagedescription'] = 'The Group Homepage View is the content that appears on the About tab for this group';
+
 ?>
