@@ -1768,19 +1768,83 @@ function xmldb_core_upgrade($oldversion=0) {
         if ($data = check_upgrades('blocktype.groupviews')) {
             upgrade_plugin($data);
         }
-        require_once('group.php');
-        $id = install_system_grouphomepage_view();
-        // get back the template view so we can copy it for the groups
-        $templateview = new View($id);
+
+        $dbtime = db_format_timestamp(time());
+        // create a system template for group homepage views
+        require_once(get_config('libroot') . 'view.php');
+        $viewdata = (object) array(
+            'type'        => 'grouphomepage',
+            'owner'       => 0,
+            'numcolumns'  => 1,
+            'template'    => 1,
+            'title'       => get_string('grouphomepageviewtitle', 'view'),
+            'ctime'       => $dbtime,
+            'atime'       => $dbtime,
+            'mtime'       => $dbtime,
+        );
+        $id = insert_record('view', $viewdata, 'id', true);
+        $accessdata = (object) array('view' => $id, 'accesstype' => 'loggedin');
+        insert_record('view_access', $accessdata);
+        $blocktypes = array(
+            array(
+                'blocktype' => 'groupinfo',
+                'title' => get_string('title', 'blocktype.groupinfo'),
+                'column' => 1,
+                'config' => null,
+            ),
+            array(
+                'blocktype' => 'recentforumposts',
+                'title' => get_string('title', 'blocktype.recentforumposts'),
+                'column' => 1,
+                'config' => null,
+            ),
+            array(
+                'blocktype' => 'groupviews',
+                'title' => get_string('title', 'blocktype.groupviews'),
+                'column' => 1,
+                'config' => null,
+            ),
+        );
+        $installed = get_column_sql('SELECT name FROM {blocktype_installed}');
+        foreach ($blocktypes as $k => $blocktype) {
+            if (!in_array($blocktype['blocktype'], $installed)) {
+                unset($blocktypes[$k]);
+            }
+        }
+        $weights = array(1 => 0);
+        foreach ($blocktypes as $blocktype) {
+            $weights[$blocktype['column']]++;
+            insert_record('block_instance', (object) array(
+                'blocktype'  => $blocktype['blocktype'],
+                'title'      => $blocktype['title'],
+                'view'       => $id,
+                'column'     => $blocktype['column'],
+                'order'      => $weights[$blocktype['column']],
+                'configdata' => serialize($blocktype['config']),
+            ));
+        }
 
         // add a default group homepage view for all groups in the system
-        foreach (get_column('group', 'id') as $groupid) {
-            View::create_from_template(array(
-                'group' => $groupid,
-                'title' => $templateview->get('title'),
-                'description' => $templateview->get('description'),
-                'type' => 'grouphomepage',
-            ), $id, 0, false);
+        unset($viewdata->owner);
+        $viewdata->template = 0;
+
+        foreach (get_records_array('group', '', '', '', 'id,public') as $group) {
+            $viewdata->group = $group->id;
+            $id = insert_record('view', $viewdata, 'id', true);
+            $accessdata->accesstype = $group->public ? 'public' : 'loggedin';
+            insert_record('view_access', $accessdata);
+            $weights = array(1 => 0);
+            foreach ($blocktypes as $blocktype) {
+                $weights[$blocktype['column']]++;
+                insert_record('block_instance', (object) array(
+                    'blocktype'  => $blocktype['blocktype'],
+                    'title'      => $blocktype['title'],
+                    'view'       => $id,
+                    'column'     => $blocktype['column'],
+                    'order'      => $weights[$blocktype['column']],
+                    'configdata' => serialize($blocktype['config']),
+                ));
+            }
         }
     }
 
