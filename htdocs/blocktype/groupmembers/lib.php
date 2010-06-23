@@ -59,7 +59,7 @@ class PluginBlocktypeGroupMembers extends SystemBlocktype {
 
         $groupid = $instance->get_view()->get('group');
         require_once('searchlib.php');
-        $groupmembers = get_group_user_search_results($groupid, '', 0, ($rows + $columns), '', $order);
+        $groupmembers = get_group_user_search_results($groupid, '', 0, $rows * $columns, '', $order);
 
         if ($groupmembers['count']) {
             $groupmembersarray = array_chunk($groupmembers['data'], $columns);
