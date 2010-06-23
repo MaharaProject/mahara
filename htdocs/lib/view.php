@@ -2302,7 +2302,7 @@ class View {
         if (!$admin) { // only show the grouphomepage viewtype to admins
             $where .= ",'grouphomepage'";
         }
-        $where .= ")";
+        $where .= ") AND v.owner != 0";
 
         if ($ownedby) {
             $where .= ' AND v.' . self::owner_sql($ownedby);
