@@ -335,8 +335,7 @@ function get_raw_string($identifier, $section='mahara') {
     // For a raw string we don't want to format any arguments using
     // sprintf, so the replace function passed to get_string_location
     // should just return the first argument and ignore the second.
-    return get_string_location($identifier, $section, array(), 
-                               create_function('$string, $args','return $string;'));
+    return get_string_location($identifier, $section, array(), 'raw_langstring');
 }
 
 
@@ -929,26 +928,36 @@ function current_language() {
     }
 
     if ($USER instanceof User) {
-        $lang = $USER->get_account_preference('lang');
-        if ($lang !== null && $lang != 'default') {
-            if (language_installed($lang)) {
-                return $lang;
+        $userlang = $USER->get_account_preference('lang');
+        if ($userlang !== null && $userlang != 'default') {
+            if (language_installed($userlang)) {
+                $lang = $userlang;
             }
-            $USER->set_account_preference('lang', 'default');
+            else {
+                $USER->set_account_preference('lang', 'default');
+            }
         }
     }
 
-    if (is_a($SESSION, 'Session')) {
-        $lang = $SESSION->get('lang');
-        if (!empty($lang) && $lang != 'default') {
-            return $lang;
+    if (empty($lang) && is_a($SESSION, 'Session')) {
+        $sesslang = $SESSION->get('lang');
+        if (!empty($sesslang) && $sesslang != 'default') {
+            $lang = $sesslang;
         }
     }
 
-    if (!empty($CFG->lang)) {
-        return $lang = $CFG->lang;
+    if (empty($lang)) {
+        $lang = !empty($CFG->lang) ? $CFG->lang : 'en.utf8';
     }
-    return $lang = 'en.utf8';
+
+    // Set locale.  We are probably being called from get_string_location.
+    // $lang had better be non-empty, or it will call us again.
+    if ($args = split(',', get_string_location('locales', 'langconfig', array(), 'raw_langstring', $lang))) {
+        array_unshift($args, LC_ALL);
+        call_user_func_array('setlocale', $args);
+    }
+
+    return $lang;
 }
 
 /**
@@ -960,6 +969,10 @@ function current_language() {
  */
 function format_langstring($string,$args) {
     return call_user_func_array('sprintf',array_merge(array($string),$args));
+}
+
+function raw_langstring($string) {
+    return $string;
 }
 
 /**
