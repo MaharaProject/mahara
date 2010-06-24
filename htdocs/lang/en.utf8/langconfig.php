@@ -41,7 +41,7 @@ $string['strftimerecentfull'] = '%%a, %%d %%b %%Y, %%l:%%M %%p';
 $string['strftimetime'] = '%%l:%%M %%p';
 $string['strfdaymonthyearshort'] = '%%d/%%m/%%Y';
 $string['thislanguage'] = 'English';
-
+$string['locales'] = 'en_US.utf8,en_GB.utf8,en';
 
 
 ?>
