@@ -921,6 +921,13 @@ function print_object($mixed) {
  */
 function current_language() {
     global $USER, $CFG, $SESSION;
+
+    static $lang;
+
+    if (!empty($lang)) {
+        return $lang;
+    }
+
     if ($USER instanceof User) {
         $lang = $USER->get_account_preference('lang');
         if ($lang !== null && $lang != 'default') {
@@ -932,16 +939,16 @@ function current_language() {
     }
 
     if (is_a($SESSION, 'Session')) {
-        $sesslang = $SESSION->get('lang');
-        if (!empty($sesslang) && $sesslang != 'default') {
-            return $sesslang;
+        $lang = $SESSION->get('lang');
+        if (!empty($lang) && $lang != 'default') {
+            return $lang;
         }
     }
 
     if (!empty($CFG->lang)) {
-        return $CFG->lang;
+        return $lang = $CFG->lang;
     }
-    return 'en.utf8';
+    return $lang = 'en.utf8';
 }
 
 /**
