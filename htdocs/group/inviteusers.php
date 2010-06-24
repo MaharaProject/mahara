@@ -63,7 +63,7 @@ $form = pieform(array(
             'searchparams' => array(
                 'id' => GROUP,
                 'limit' => 100,
-                'html' => false,
+                'html' => 0,
                 'membershiptype' => 'notinvited',
             ),
         ),

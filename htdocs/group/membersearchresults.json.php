@@ -52,7 +52,7 @@ if (!empty($membershiptype)) {
 }
 
 $results = get_group_user_search_results($group->id, $query, $offset, $limit, $membershiptype);
-if (!param_boolean('html', true)) {
+if (!param_integer('html', 1)) {
     json_reply(false, $results);
 }
 
