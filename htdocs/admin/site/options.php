@@ -206,6 +206,13 @@ $siteoptionform = array(
                     'description'  => get_string('allowgroupcategoriesdescription', 'admin'),
                     'defaultvalue' => get_config('allowgroupcategories'),
                 ),
+                'searchusernames' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('searchusernames', 'admin'),
+                    'description'  => get_string('searchusernamesdescription', 'admin'),
+                    'defaultvalue' => get_config('searchusernames'),
+                    'disabled'     => in_array('searchusernames', $OVERRIDDEN),
+                ),
             ),
         ),
         'institutionsettings' => array(
@@ -424,7 +431,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
         'allowpublicviews', 'allowpublicprofiles',
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
-        'showselfsearchsideblock', 'showtagssideblock',
+        'showselfsearchsideblock', 'searchusernames', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments',
         'homepageinfo', 'showonlineuserssideblock', 'registerterms',

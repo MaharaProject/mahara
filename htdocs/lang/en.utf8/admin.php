@@ -243,6 +243,8 @@ $string['remoteavatars'] = 'Display remote avatars';
 $string['remoteavatarsdescription'] = 'If checked, the <a href="http://www.gravatar.com">Gravatar</a> service will be used for users\' default profile icons.';
 $string['searchplugin'] = 'Search plugin';
 $string['searchplugindescription'] = 'Search plugin to use';
+$string['searchusernames'] = 'Search Usernames';
+$string['searchusernamesdescription'] = 'Allow usernames to be searched on as part of "Search Users".';
 $string['sessionlifetime'] = 'Session lifetime';
 $string['sessionlifetimedescription'] = 'Time in minutes after which an inactive logged in user will be automatically logged out';
 $string['setsiteoptionsfailed'] = 'Failed setting the %s option';
