@@ -106,16 +106,18 @@ class PluginSearchInternal extends PluginSearch {
                 LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = 'hiderealname')";
         $querydata = split(' ', preg_replace('/\s\s+/', ' ', strtolower(trim($query_string))));
         $hidenameallowed = get_config('userscanhiderealnames') ? 'TRUE' : 'FALSE';
+        $searchusernamesallowed = get_config('searchusernames') ? 'TRUE' : 'FALSE';
         $namesql = "(u.preferredname $ilike '%' || ? || '%')
                     OR ((u.preferredname IS NULL OR u.preferredname = '' OR NOT $hidenameallowed OR h.value != '1')
                         AND (u.firstname $ilike '%' || ? || '%' OR u.lastname $ilike '%' || ? || '%'))
+                    OR ($searchusernamesallowed AND u.username $ilike '%' || ? || '%')
                     OR (a.artefacttype IN $fieldlist
                         AND ( a.title $ilike '%' || ? || '%'))";
         $namesql = join('
                     OR ', array_fill(0, count($querydata), $namesql));
         $values = array();
         foreach ($querydata as $w) {
-            $values = array_pad($values, count($values) + 4, $w);
+            $values = array_pad($values, count($values) + 5, $w);
         }
 
         $where = '
