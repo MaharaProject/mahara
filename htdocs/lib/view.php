@@ -549,19 +549,19 @@ class View {
         }
 
         $data = get_records_sql_array("
-            SELECT accesstype AS type, NULL AS id, NULL AS role, NULL AS grouptype, startdate, stopdate
+            SELECT accesstype AS type, NULL AS id, NULL AS role, NULL AS grouptype, startdate, stopdate, allowfeedback, approvefeedback
                 FROM {view_access}
                 WHERE \"view\" = ?
         UNION
-            SELECT 'user' AS type, $uid AS id, NULL AS role, NULL AS grouptype, startdate, stopdate
+            SELECT 'user' AS type, $uid AS id, NULL AS role, NULL AS grouptype, startdate, stopdate, allowfeedback, approvefeedback
                 FROM {view_access_usr}
                 WHERE \"view\" = ?
         UNION
-            SELECT 'group', $gid, \"role\", grouptype, startdate, stopdate FROM {view_access_group}
+            SELECT 'group', $gid, \"role\", grouptype, startdate, stopdate, allowfeedback, approvefeedback FROM {view_access_group}
                 INNER JOIN {group} g ON (\"group\" = g.id AND g.deleted = ?)
                 WHERE \"view\" = ?
         UNION
-            SELECT 'token', token, NULL AS role, NULL AS grouptype, startdate, stopdate
+            SELECT 'token', token, NULL AS role, NULL AS grouptype, startdate, stopdate, allowfeedback, approvefeedback
                 FROM {view_access_token}
                 WHERE \"view\" = ? AND visible = 1
         ", array($this->id, $this->id, 0, $this->id, $this->id));
@@ -676,6 +676,16 @@ class View {
             foreach ($accessdata as $item) {
                 $accessrecord = new StdClass;
                 $accessrecord->view = $this->get('id');
+                if (!empty($item['allowfeedback'])) {
+                    $accessrecord->allowfeedback = 1;
+                } else {
+                    $accessrecord->allowfeedback = 0;
+                }
+                if (!empty($item['approvefeedback'])) {
+                    $accessrecord->approvefeedback = 1;
+                } else {
+                    $accessrecord->approvefeedback = 0;
+                }
                 if (isset($item['startdate'])) {
                     $accessrecord->startdate = db_format_timestamp($item['startdate']);
                 }

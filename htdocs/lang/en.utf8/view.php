@@ -99,6 +99,8 @@ $string['publiclower'] = 'public';
 $string['everyoneingroup'] = 'Everyone in Group';
 $string['token'] = 'Secret URL';
 $string['peoplewiththesecreturl'] = 'People with the Secret URL';
+$string['allowfeedback'] = 'Allow feedback';
+$string['approvefeedback'] = 'Approve feedback';
 
 // view user
 $string['inviteusertojoingroup'] = 'Invite this user to join a group';

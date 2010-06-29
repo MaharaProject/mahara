@@ -59,6 +59,16 @@ function renderPotentialPresetItem(item) {
 // Given a row, render it on the right hand side
 function renderAccessListItem(item) {
     var removeButton = BUTTON({'type': 'button'}, '{{str tag=remove}}');
+    var allowfdbk = INPUT({
+                        'type': 'checkbox',
+                        'name': 'accesslist[' + count + '][allowfeedback]',
+                        'id'  :  'allowfeedback' + count,
+                        'value':  1});
+    var approvefdbk = INPUT({
+                        'type': 'checkbox',
+                        'name': 'accesslist[' + count + '][approvefeedback]',
+                        'id'  :  'approvefeedback' + count,
+                        'value':  1});
     var dateInfo = TABLE(null,
         TBODY(null,
             TR(null,
@@ -72,9 +82,24 @@ function renderAccessListItem(item) {
             TR(null,
                 TH(null, null),
                 TD(null, get_string('datetimeformatguide'))
+            ),
+            TR(null,
+                TH(null, get_string('allowfeedback') + ':'),
+                TD(null, allowfdbk)
+            ),
+            TR(null,
+                TH(null, get_string('approvefeedback') + ':'),
+                TD(null, approvefdbk)
             )
         )
     );
+
+    if (item['approvefeedback']==1) {
+        setNodeAttribute(allowfdbk,'checked',true);
+    }
+    if (item['allowfeedback']==1) {
+        setNodeAttribute(approvefdbk,'checked',true);
+    }
     var cssClass = 'ai-container';
     if (item.preset) {
         cssClass += '  preset';
@@ -128,7 +153,7 @@ function renderAccessListItem(item) {
         removeElement(row);
     });
     appendChildNodes('accesslistitems', row);
-    
+
     setupCalendar(item, 'start');
     setupCalendar(item, 'stop');
     count++;

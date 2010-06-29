@@ -1859,6 +1859,25 @@ function xmldb_core_upgrade($oldversion=0) {
             }
         }
     }
+    if ($oldversion < 2010062502) {
+        //new feature feedback control on views
+        $field = new XMLDBField('allowfeedback');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '10');
+        $field2 = new XMLDBField('approvefeedback');
+        $field2->setAttributes(XMLDB_TYPE_INTEGER, '10');
+        $table = new XMLDBTable('view_access');
+        add_field($table, $field);
+        add_field($table, $field2);
+        $table = new XMLDBTable('view_access_group');
+        add_field($table, $field);
+        add_field($table, $field2);
+        $table = new XMLDBTable('view_access_usr');
+        add_field($table, $field);
+        add_field($table, $field2);
+        $table = new XMLDBTable('view_access_token');
+        add_field($table, $field);
+        add_field($table, $field2);
+    }
 
     return $status;
 }

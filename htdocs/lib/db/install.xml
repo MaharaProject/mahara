@@ -669,6 +669,8 @@
                 <FIELD NAME="accesstype" TYPE="char" LENGTH="16" NOTNULL="true" ENUM="true" ENUMVALUES="'public', 'loggedin', 'friends'" DEFAULT="public" />
                 <FIELD NAME="startdate" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="allowfeedback" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="approvefeedback" TYPE="int" LENGTH="10" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
@@ -681,6 +683,8 @@
                 <FIELD NAME="role" TYPE="char" LENGTH="255" NOTNULL="false" />
                 <FIELD NAME="startdate" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="allowfeedback" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="approvefeedback" TYPE="int" LENGTH="10" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
@@ -693,6 +697,8 @@
                 <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="startdate" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="allowfeedback" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="approvefeedback" TYPE="int" LENGTH="10" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
@@ -706,6 +712,8 @@
                 <FIELD NAME="startdate" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="visible" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
+                <FIELD NAME="allowfeedback" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="approvefeedback" TYPE="int" LENGTH="10" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
