@@ -178,6 +178,29 @@ EOF;
     $js .= "function update_loggedin_access() {}\n";
 }
 
+$allowcomments = json_encode($view->get('allowcomments'));
+
+$js .= <<<EOF
+var allowcomments = {$allowcomments};
+function update_comment_options() {
+    allowcomments = $('editaccess_allowcomments').checked;
+    if (allowcomments) {
+        forEach(getElementsByTagAndClassName('tr', 'comments', 'accesslistitems'), function (elem) {
+            addElementClass(elem, 'hidden');
+        });
+    }
+    else {
+        forEach(getElementsByTagAndClassName('tr', 'comments', 'accesslistitems'), function (elem) {
+            removeElementClass(elem, 'hidden');
+        });
+    }
+}
+addLoadEvent(function() {
+    connect('editaccess_allowcomments', 'onchange', update_comment_options);
+});
+EOF;
+
+
 $form['elements']['accesslist'] = array(
     'type'         => 'viewacl',
     'defaultvalue' => isset($view) ? $view->get_access(get_string('strftimedatetimeshort')) : null

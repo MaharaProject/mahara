@@ -83,11 +83,11 @@ function renderAccessListItem(item) {
                 TH(null, null),
                 TD(null, get_string('datetimeformatguide'))
             ),
-            TR(null,
+            TR({'class':'comments' + (allowcomments ? ' hidden' : '')},
                 TH(null, get_string('allowfeedback') + ':'),
                 TD(null, allowfdbk)
             ),
-            TR(null,
+            TR({'class':'comments' + (allowcomments ? ' hidden' : '')},
                 TH(null, get_string('approvefeedback') + ':'),
                 TD(null, approvefdbk)
             )
