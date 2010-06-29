@@ -80,6 +80,12 @@ $form = array(
             'type' => 'hidden',
             'value' => $new,
         ),
+        'allowcomments' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('allowcomments','artefact.comment'),
+            'description'  => get_string('allowcommentsonview','view'),
+            'defaultvalue' => $view->get('allowcomments'),
+        ),
         'template' => array(
             'type'         => 'checkbox',
             'title'        => get_string('allowcopying', 'view'),
@@ -378,6 +384,7 @@ function editaccess_submit(Pieform $form, $values) {
         $view->set('copynewgroups', $createfor);
     }
 
+    $view->set('allowcomments', (int) $values['allowcomments']);
     $view->commit();
 
     if ($values['new']) {

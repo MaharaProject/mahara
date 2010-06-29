@@ -134,13 +134,6 @@ if (!($group || $institution)) {
     );
 }
 
-$editview['elements']['allowcomments'] = array(
-    'type'         => 'checkbox',
-    'title'        => get_string('allowcomments','artefact.comment'),
-    'description'  => get_string('allowcommentsonview','view'),
-    'defaultvalue' => $view->get('allowcomments'),
-);
-
 if ($new) {
     $editview['elements']['submit'] = array(
         'type'  => 'cancelbackcreate',
@@ -176,7 +169,6 @@ function editview_submit(Pieform $form, $values) {
     $view->set('title', $values['title']);
     $view->set('description', $values['description']);
     $view->set('tags', $values['tags']);
-    $view->set('allowcomments', (int) $values['allowcomments']);
     if (isset($values['ownerformat']) && $view->get('owner')) {
         $view->set('ownerformat', $values['ownerformat']);
     }
