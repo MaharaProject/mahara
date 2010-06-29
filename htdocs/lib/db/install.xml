@@ -349,6 +349,7 @@
                 <FIELD NAME="author" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="authorname" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="allowcomments" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"  />
+                <FIELD NAME="approvecomments" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"  />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -599,6 +600,7 @@
                 <FIELD NAME="type" TYPE="char" LENGTH="50" NOTNULL="true" />
                 <FIELD NAME="visits" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="allowcomments" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"  />
+                <FIELD NAME="approvecomments" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"  />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -666,59 +668,25 @@
         <TABLE NAME="view_access">
             <FIELDS>
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="accesstype" TYPE="char" LENGTH="16" NOTNULL="true" ENUM="true" ENUMVALUES="'public', 'loggedin', 'friends'" DEFAULT="public" />
-                <FIELD NAME="startdate" TYPE="datetime" NOTNULL="false" />
-                <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
-                <FIELD NAME="allowfeedback" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="approvefeedback" TYPE="int" LENGTH="10" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="view_access_group">
-            <FIELDS>
-                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="accesstype" TYPE="char" LENGTH="16" NOTNULL="false" ENUM="true" ENUMVALUES="'public', 'loggedin', 'friends'" DEFAULT="public" />
+                <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="role" TYPE="char" LENGTH="255" NOTNULL="false" />
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="token" TYPE="char" LENGTH="100" NOTNULL="false" />
+                <FIELD NAME="visible" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
                 <FIELD NAME="startdate" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
-                <FIELD NAME="allowfeedback" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="approvefeedback" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="allowcomments" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" />
+                <FIELD NAME="approvecomments" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
                 <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="view_access_usr">
-            <FIELDS>
-                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="startdate" TYPE="datetime" NOTNULL="false" />
-                <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
-                <FIELD NAME="allowfeedback" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="approvefeedback" TYPE="int" LENGTH="10" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
-        </TABLE>
-        <TABLE NAME="view_access_token">
-            <FIELDS>
-                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="token" TYPE="char" LENGTH="100" NOTNULL="true" />
-                <FIELD NAME="startdate" TYPE="datetime" NOTNULL="false" />
-                <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
-                <FIELD NAME="visible" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
-                <FIELD NAME="allowfeedback" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="approvefeedback" TYPE="int" LENGTH="10" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
-                <KEY NAME="primary" TYPE="primary" FIELDS="token" />
-            </KEYS>
+            <INDEXES>
+                <INDEX NAME="tokenuk" UNIQUE="true" FIELDS="token"/>
+            </INDEXES>
         </TABLE>
         <TABLE NAME="view_visit">
             <FIELDS>

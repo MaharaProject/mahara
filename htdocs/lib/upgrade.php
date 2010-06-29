@@ -591,6 +591,12 @@ function core_postinst() {
         (author IS NOT NULL AND authorname IS NULL    ) OR
         (author IS NULL     AND authorname IS NOT NULL)
     )');
+    execute_sql('ALTER TABLE {view_access} ADD CHECK (
+        (accesstype IS NOT NULL AND "group" IS NULL     AND usr IS NULL     AND token IS NULL) OR
+        (accesstype IS NULL     AND "group" IS NOT NULL AND usr IS NULL     AND token IS NULL) OR
+        (accesstype IS NULL     AND "group" IS NULL     AND usr IS NOT NULL AND token IS NULL) OR
+        (accesstype IS NULL     AND "group" IS NULL     AND usr IS NULL     AND token IS NOT NULL)
+    )');
 
     set_antispam_defaults();
     set_remoteavatars_default();

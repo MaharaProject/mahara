@@ -1861,22 +1861,96 @@ function xmldb_core_upgrade($oldversion=0) {
     }
     if ($oldversion < 2010062502) {
         //new feature feedback control on views
-        $field = new XMLDBField('allowfeedback');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, '10');
-        $field2 = new XMLDBField('approvefeedback');
-        $field2->setAttributes(XMLDB_TYPE_INTEGER, '10');
         $table = new XMLDBTable('view_access');
+
+        $field = new XMLDBField('allowcomments');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
         add_field($table, $field);
-        add_field($table, $field2);
+
+        $field = new XMLDBField('approvecomments');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 1);
+        add_field($table, $field);
+
+        // Add comment approval to view/artefact (default 0)
+        $field = new XMLDBField('approvecomments');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+
+        $table = new XMLDBTable('view');
+        add_field($table, $field);
+
+        $table = new XMLDBTable('artefact');
+        add_field($table, $field);
+
+        // view_access_(group|usr|token) tables are getting wide with duplicated columns,
+        // so just create all the necessary columns in view_access and move stuff there
+        $table = new XMLDBTable('view_access');
+
+        $field = new XMLDBField('accesstype');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 16, null, null);
+        change_field_notnull($table, $field);
+
+        $field = new XMLDBField('group');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, null);
+        add_field($table, $field);
+
+        $field = new XMLDBField('role');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255, null, null);
+        add_field($table, $field);
+
+        $field = new XMLDBField('usr');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, null);
+        add_field($table, $field);
+
+        $field = new XMLDBField('token');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 100, null, null);
+        add_field($table, $field);
+
+        $field = new XMLDBField('visible');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 1);
+        add_field($table, $field);
+
+        // Copy data to view_access
+        execute_sql('
+            INSERT INTO {view_access} (view, accesstype, "group", role, startdate, stopdate)
+            SELECT view, NULL, "group", role, startdate, stopdate FROM {view_access_group}'
+        );
+        execute_sql('
+            INSERT INTO {view_access} (view, accesstype, usr, startdate, stopdate)
+            SELECT view, NULL, usr, startdate, stopdate FROM {view_access_usr}'
+        );
+        execute_sql('
+            INSERT INTO {view_access} (view, accesstype, token, visible, startdate, stopdate)
+            SELECT view, NULL, token, visible, startdate, stopdate FROM {view_access_token}'
+        );
+
+        // Add foreign keys
+        $key = new XMLDBKey('groupfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('group'), 'group', array('id'));
+        add_key($table, $key);
+
+        $key = new XMLDBKey('usrfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+        add_key($table, $key);
+
+        $index = new XMLDBIndex('tokenuk');
+        $index->setAttributes(XMLDB_INDEX_UNIQUE, array('token'));
+        add_index($table, $index);
+
+        // Exactly one of accesstype, group, usr, token must be not null
+        execute_sql('ALTER TABLE {view_access} ADD CHECK (
+            (accesstype IS NOT NULL AND "group" IS NULL     AND usr IS NULL     AND token IS NULL) OR
+            (accesstype IS NULL     AND "group" IS NOT NULL AND usr IS NULL     AND token IS NULL) OR
+            (accesstype IS NULL     AND "group" IS NULL     AND usr IS NOT NULL AND token IS NULL) OR
+            (accesstype IS NULL     AND "group" IS NULL     AND usr IS NULL     AND token IS NOT NULL)
+        )');
+
+        // Drop old tables
         $table = new XMLDBTable('view_access_group');
-        add_field($table, $field);
-        add_field($table, $field2);
+        // drop_table($table);
         $table = new XMLDBTable('view_access_usr');
-        add_field($table, $field);
-        add_field($table, $field2);
+        // drop_table($table);
         $table = new XMLDBTable('view_access_token');
-        add_field($table, $field);
-        add_field($table, $field2);
+        // drop_table($table);
     }
 
     return $status;
