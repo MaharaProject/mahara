@@ -1561,110 +1561,67 @@ function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null
     }
 
     $publicviews = get_config('allowpublicviews');
-    if ($publicviews) {
-        if (!$usertoken) {
-            $usertoken = get_cookie('viewaccess:'.$view_id);
-        }
-        if ($usertoken && (!$user_id || $user_id == $USER->get('id')) && $view_id == get_view_from_token($usertoken)) {
-            return true;
-        }
-    }
+    $publicprofiles = get_config('allowpublicprofiles');
 
-    if (!$USER->is_logged_in()) {
-        // check public
-        $publicprofiles = get_config('allowpublicprofiles');
-        if ($publicviews || $publicprofiles) {
-            $public = get_records_sql_array("
-                SELECT
-                    v.id, v.type, a.*
-                FROM
-                    {view} v
-                    LEFT OUTER JOIN {view_access} a ON v.id = a.view
-                WHERE
-                    v.id = ? AND a.accesstype = 'public'
-                    ", array($view_id));
-
-            // If no public permissions
-            if ($public == false) {
-                return false;
-            }
-
-            foreach ($public as $k => $v) {
-                if ( ($v->startdate == null || $v->startdate < $dbnow) && ($v->stopdate == null || $v->stopdate > $dbnow) ) {
-                    return ($publicviews || ($publicprofiles && $v->type == 'profile'));
-                }
-            }
-        }
+    if (!$USER->is_logged_in() && !$publicviews && !$publicprofiles) {
         return false;
     }
 
-    // The user is logged in; they can see the view if
-    // - they can edit it, or
-    // - it has been submitted to them for assessment, or
-    // - they have been granted access via the edit view access page.
+    require_once(get_config('libroot') . 'view.php');
 
-    if ($SESSION->get('mnetuser')) {
-        if (!$mnettoken) {
-            $mnettoken = get_cookie('mviewaccess:'.$view_id);
-        }
-        if ($mnettoken && $view_id == get_view_from_token($mnettoken, false)) {
-            $mnetviewlist = $SESSION->get('mnetviewaccess');
-            if (empty($mnetviewlist)) {
-                $mnetviewlist = array();
-            }
-            $mnetviewlist[$view_id] = true;
-            $SESSION->set('mnetviewaccess', $mnetviewlist);
+    if ($USER->is_logged_in()) {
+        $view = new View($view_id);
+        if ($USER->can_edit_view($view)) {
             return true;
         }
     }
 
-    require_once(get_config('docroot') . 'lib/view.php');
-    $view = new View($view_id);
-
-    if ($USER->can_edit_view($view)) {
-        return true;
-    }
-
-    if ($submitgroup = $view->get('submittedgroup')) {
-        require_once(get_config('docroot') . 'lib/group.php');
-        if (group_user_can_assess_submitted_views($submitgroup, $user_id)) {
-            return true;
-        }
-    }
-
-    // Check access for loggedin, friends, user, group
-    $access = get_records_sql_array('
-            SELECT accesstype AS type,
-                CASE WHEN accesstype = \'friends\' THEN 4 ELSE 1 END AS typeorder,
-                ' . db_format_tsfield('startdate') . ', ' . db_format_tsfield('stopdate') . '
-            FROM {view_access}
-            WHERE "view" = ?
-        UNION
-            SELECT \'user\' AS type, 2 AS typeorder, ' . db_format_tsfield('startdate') . ', ' . db_format_tsfield('stopdate') . '
-            FROM {view_access}
-            WHERE "view" = ? AND usr = ?
-        UNION
-            SELECT \'group\' AS type, 3 AS typeorder, ' . db_format_tsfield('startdate') . ', ' . db_format_tsfield('stopdate') . '
-            FROM
-                {view_access} vg
-                INNER JOIN {group} g ON (vg.group = g.id AND g.deleted = 0)
-                INNER JOIN {group_member} m ON (g.id = m.group AND (vg.role IS NULL OR vg.role = m.role))
-            WHERE vg.view = ? AND m.member = ?
-        ORDER BY typeorder ', array($view_id, $view_id, $user_id, $view_id, $user_id));
+    $access = View::user_access_records($view_id, $user_id);
 
     if (empty($access)) {
         return false;
     }
 
-    foreach ($access as $a) {
-        if ($a->type == 'friends') {
-            $owner = $view->get('owner');
-            if (!get_field_sql('SELECT COUNT(*) FROM {usr_friend} f WHERE (usr1=? AND usr2=?) OR (usr1=? AND usr2=?)',
-                               array( $owner, $user_id, $user_id, $owner ))) {
-                continue;
+    if ($SESSION->get('mnetuser') && !$mnettoken) {
+        $mnettoken = get_cookie('mviewaccess:'.$view_id);
+    }
+
+    foreach ($access as &$a) {
+        if ($a->accesstype == 'public') {
+            if ($publicviews) {
+                return true;
+            }
+            else if ($publicprofiles && $view->get('type') == 'profile') {
+                return true;
             }
         }
-        if (($a->startdate == null || $a->startdate < $now) && ($a->stopdate == null || $a->stopdate > $now)) {
+        else if ($a->token) {
+            $usertoken = $usertoken ? $usertoken : get_cookie('viewaccess:'.$view_id);
+            if ($a->token == $usertoken && $publicviews) {
+                return true;
+            }
+            if ($mnettoken && $a->token == $mnettoken) {
+                $mnetviewlist = $SESSION->get('mnetviewaccess');
+                if (empty($mnetviewlist)) {
+                    $mnetviewlist = array();
+                }
+                $mnetviewlist[$view_id] = true;
+                $SESSION->set('mnetviewaccess', $mnetviewlist);
+                return true;
+            }
+        }
+        else if ($USER->is_logged_in()) {
+            if ($a->accesstype == 'friends') {
+                $owner = $view->get('owner');
+                if (!get_field_sql('
+                    SELECT COUNT(*) FROM {usr_friend} f WHERE (usr1=? AND usr2=?) OR (usr1=? AND usr2=?)',
+                    array($owner, $user_id, $user_id, $owner)
+                )) {
+                    continue;
+                }
+            }
+            // The view must have loggedin access, user access for the user
+            // or group/role access for one of the user's groups
             return true;
         }
     }

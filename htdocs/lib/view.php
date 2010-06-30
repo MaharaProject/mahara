@@ -2898,6 +2898,38 @@ class View {
         }
         redirect($redirecturl);
     }
+
+
+
+    /**
+     * Get all view access records relevant to a user
+     */
+    public static function user_access_records($viewid, $userid) {
+        static $viewaccess = array();
+        $userid = (int) $userid;
+
+        if (!isset($viewaccess[$viewid][$userid])) {
+
+            $viewaccess[$viewid][$userid] = get_records_sql_array("
+                SELECT va.*
+                FROM {view_access} va
+                    LEFT OUTER JOIN {group_member} gm
+                    ON (va.group = gm.group AND gm.member = ?
+                        AND (va.role = gm.role OR va.role IS NULL))
+                WHERE va.view = ?
+                    AND (va.startdate IS NULL OR va.startdate < current_timestamp)
+                    AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
+                    AND (va.accesstype IN ('public', 'loggedin', 'friends')
+                         OR va.usr = ? OR va.token IS NOT NULL OR va.group IS NOT NULL)
+                ORDER BY va.token IS NULL DESC, va.accesstype != 'friends' DESC",
+                array($userid, $viewid, $userid)
+            );
+        }
+
+        return $viewaccess[$viewid][$userid];
+    }
+
+
 }
 
 
