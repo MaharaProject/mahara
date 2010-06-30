@@ -761,14 +761,21 @@ class View {
             throw new ParameterException("View with id " . $this->get('id') . " has not been submitted");
         }
         $releaseuser = optional_userobj($releaseuser);
+        db_begin();
         if ($submitinfo['type'] == 'group') {
+            $group = $this->get('submittedgroup');
             $this->set('submittedgroup', null);
+            if ($group) {
+                // Remove hidden tutor view access records
+                delete_records('view_access', 'view', $this->id, 'group', $group, 'visible', 0);
+            }
         }
         else if ($submitinfo['type'] == 'host') {
             $this->set('submittedhost', null);
         }
         $this->set('submittedtime', null);
         $this->commit();
+        db_commit();
         $ownerlang = get_user_language($this->get('owner'));
         $url = get_config('wwwroot') . 'view/view.php?id=' . $this->get('id');
         require_once('activity.php');

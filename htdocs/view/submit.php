@@ -77,13 +77,25 @@ function submitview_submit(Pieform $form, $values) {
     global $SESSION, $USER, $viewid, $groupid, $group;
     db_begin();
     update_record('view', array('submittedgroup' => $groupid, 'submittedtime' => db_format_timestamp(time())), array('id' => $viewid));
+    $roles = get_column('grouptype_roles', 'role', 'grouptype', $group->grouptype, 'see_submitted_views', 1);
+    foreach ($roles as $role) {
+        $accessrecord = (object) array(
+            'view'            => $viewid,
+            'group'           => $groupid,
+            'role'            => $role,
+            'visible'         => 0,
+            'allowcomments'   => 1,
+            'approvecomments' => 0,
+        );
+        ensure_record_exists('view_access', $accessrecord, $accessrecord);
+    }
     activity_occurred('groupmessage', array(
         'subject'       => get_string('viewsubmitted', 'view'), // will be overwritten
         'message'       => get_string('viewsubmitted', 'view'), // will be overwritten
         'submittedview' => $viewid,
         'viewowner'     => $USER->get('id'),
         'group'         => $groupid,
-        'roles'         => get_column('grouptype_roles', 'role', 'grouptype', $group->grouptype, 'see_submitted_views', 1),
+        'roles'         => $roles,
         'strings'       => (object) array(
             'urltext' => (object) array('key' => 'view'),
         ),
