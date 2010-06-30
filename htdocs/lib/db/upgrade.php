@@ -1951,6 +1951,31 @@ function xmldb_core_upgrade($oldversion=0) {
         drop_table($table);
         $table = new XMLDBTable('view_access_token');
         drop_table($table);
+
+        // Insert explicit tutor access records for submitted views
+        $submittedviews = get_records_sql_array('
+            SELECT v.id, v.submittedgroup, g.grouptype
+            FROM {view} v JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)',
+            array()
+        );
+        $roles = array();
+        foreach ($submittedviews as $v) {
+            if (!isset($roles[$v->grouptype])) {
+                $rs = get_column('grouptype_roles', 'role', 'grouptype', $v->grouptype, 'see_submitted_views', 1);
+                $roles[$v->grouptype] = empty($rs) ? array() : $rs;
+            }
+            foreach ($roles[$v->grouptype] as $role) {
+                $accessrecord = (object) array(
+                    'view'            => $v->id,
+                    'group'           => $v->submittedgroup,
+                    'role'            => $role,
+                    'visible'         => 0,
+                    'allowcomments'   => 1,
+                    'approvecomments' => 0,
+                );
+                ensure_record_exists('view_access', $accessrecord, $accessrecord);
+            }
+        }
     }
 
     return $status;
