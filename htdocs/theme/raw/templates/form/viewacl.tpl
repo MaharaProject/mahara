@@ -94,10 +94,10 @@ function renderAccessListItem(item) {
         )
     );
 
-    if (item['approvecomments']==1) {
+    if (item['allowcomments']==1) {
         setNodeAttribute(allowfdbk,'checked',true);
     }
-    if (item['allowcomments']==1) {
+    if (item['approvecomments']==1) {
         setNodeAttribute(approvefdbk,'checked',true);
     }
     var cssClass = 'ai-container';
