@@ -537,12 +537,7 @@ class View {
     public function get_access($timeformat=null) {
 
         $data = get_records_sql_array("
-            SELECT va.*, g.grouptype,
-                CASE WHEN NOT va.accesstype IS NULL THEN va.accesstype
-                     WHEN NOT va.usr IS NULL THEN 'user'
-                     WHEN NOT va.group IS NULL THEN 'group'
-                     WHEN NOT va.token IS NULL THEN 'token'
-                     ELSE NULL END AS type
+            SELECT va.*, g.grouptype
             FROM {view_access} va
                 LEFT OUTER JOIN {group} g ON (va.group = g.id AND g.deleted = 0)
             WHERE va.view = ? AND va.visible = 1",
@@ -552,6 +547,23 @@ class View {
         if ($data) {
             foreach ($data as &$item) {
                 $item = (array)$item;
+                if ($item['usr']) {
+                    $item['type'] = 'user';
+                    $item['id'] = $item['usr'];
+                }
+                else if ($item['group']) {
+                    $item['type'] = 'group';
+                    $item['id'] = $item['group'];
+                }
+                else if ($item['token']) {
+                    $item['type'] = 'token';
+                    $item['id'] = $item['token'];
+                }
+                else {
+                    $item['type'] = $item['accesstype'];
+                    $item['id'] = null;
+                }
+
                 if ($item['role']) {
                     $item['roledisplay'] = get_string($item['role'], 'grouptype.'.$item['grouptype']);
                 }
