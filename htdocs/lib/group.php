@@ -428,8 +428,6 @@ function group_user_can_leave($group, $userid=null) {
 /**
  * Removes a user from a group.
  *
- * Also removes view access given by the user to the group
- *
  * @param int $groupid ID of group
  * @param int $userid  ID of user to remove
  */
@@ -438,19 +436,7 @@ function group_remove_user($groupid, $userid=null, $force=false) {
     if (!$force && !group_user_can_leave($groupid, $userid)) {
         throw new AccessDeniedException(get_string('usercantleavegroup', 'group'));
     }
-    db_begin();
     delete_records('group_member', 'group', $groupid, 'member', $userid);
-    delete_records_sql(
-        'DELETE FROM {view_access_group}
-        WHERE "group" = ?
-        AND "view" IN (
-            SELECT v.id
-            FROM {view} v
-            WHERE v.owner = ?
-        )',
-        array($groupid, $userid)
-    );
-    db_commit();
 
     require_once(get_config('docroot') . 'interaction/lib.php');
     $interactions = get_column('interaction_instance', 'id', 'group', $groupid);

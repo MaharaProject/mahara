@@ -48,16 +48,6 @@ if (!group_user_can_leave($group)) {
 
 $goto = get_config('wwwroot') . 'group/' . $returnto . '.php' . ($returnto == 'view' ? ('?id=' . $groupid) : '');
 
-$views = count_records_sql(
-    'SELECT COUNT(*)
-    FROM {view} v
-    INNER JOIN {view_access_group} a
-    ON a.group = ?
-    AND a.view = v.id
-    WHERE v.owner = ?',
-    array($groupid, $USER->get('id'))
-);
-
 $form = pieform(array(
     'name' => 'leavegroup',
     'renderer' => 'div',
@@ -79,7 +69,7 @@ $form = pieform(array(
 $smarty = smarty();
 $smarty->assign('subheading', get_string('leavespecifiedgroup', 'group', $group->name));
 $smarty->assign('form', $form);
-$smarty->assign('message', $views ? get_string('groupconfirmleavehasviews', 'group') : get_string('groupconfirmleave', 'group'));
+$smarty->assign('message', get_string('groupconfirmleave', 'group');
 $smarty->assign('group', $group);
 $smarty->display('group/leave.tpl');
 

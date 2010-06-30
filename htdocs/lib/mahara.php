@@ -1641,12 +1641,12 @@ function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null
             WHERE "view" = ?
         UNION
             SELECT \'user\' AS type, 2 AS typeorder, ' . db_format_tsfield('startdate') . ', ' . db_format_tsfield('stopdate') . '
-            FROM {view_access_usr}
+            FROM {view_access}
             WHERE "view" = ? AND usr = ?
         UNION
             SELECT \'group\' AS type, 3 AS typeorder, ' . db_format_tsfield('startdate') . ', ' . db_format_tsfield('stopdate') . '
             FROM
-                {view_access_group} vg
+                {view_access} vg
                 INNER JOIN {group} g ON (vg.group = g.id AND g.deleted = 0)
                 INNER JOIN {group_member} m ON (g.id = m.group AND (vg.role IS NULL OR vg.role = m.role))
             WHERE vg.view = ? AND m.member = ?
@@ -1680,7 +1680,7 @@ function get_view_from_token($token, $visible=true) {
     }
     return get_field_sql('
         SELECT "view"
-        FROM {view_access_token}
+        FROM {view_access}
         WHERE token = ? AND visible = ?
             AND (startdate IS NULL OR startdate < current_timestamp)
             AND (stopdate IS NULL OR stopdate > current_timestamp)
@@ -1788,7 +1788,7 @@ function get_views($users, $userlooking=null, $limit=5, $type=null) {
             ' . db_format_tsfield('ctime') . '
         FROM 
             {view} v
-            INNER JOIN {view_access_usr} a ON v.id=a.view AND a.usr=?
+            INNER JOIN {view_access} a ON v.id=a.view AND a.usr=?
         WHERE
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )
@@ -1816,7 +1816,7 @@ function get_views($users, $userlooking=null, $limit=5, $type=null) {
             ' . db_format_tsfield('v.ctime','ctime') . '
         FROM 
             {view} v
-            INNER JOIN {view_access_group} a ON v.id=a.view
+            INNER JOIN {view_access} a ON v.id=a.view
             INNER JOIN {group_member} m ON m.group=a.group AND m.member=?
             INNER JOIN {group} g ON (g.id = a.group AND g.deleted = ?)
         WHERE

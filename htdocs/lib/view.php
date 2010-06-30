@@ -517,9 +517,6 @@ class View {
         db_begin();
         ArtefactTypeComment::delete_view_comments($this->id);
         delete_records('view_access','view',$this->id);
-        delete_records('view_access_group','view',$this->id);
-        delete_records('view_access_usr','view',$this->id);
-        delete_records('view_access_token', 'view', $this->id);
         delete_records('view_autocreate_grouptype', 'view', $this->id);
         delete_records('view_tag','view',$this->id);
         delete_records('view_visit','view',$this->id);
@@ -539,32 +536,19 @@ class View {
 
     public function get_access($timeformat=null) {
 
-        if (is_mysql()) {
-            $uid = 'usr';
-            $gid = '"group"';
-        }
-        else {
-            $uid = 'CAST (usr AS TEXT)';
-            $gid = 'CAST ("group" AS TEXT)';
-        }
-
         $data = get_records_sql_array("
-            SELECT accesstype AS type, NULL AS id, NULL AS role, NULL AS grouptype, startdate, stopdate, allowfeedback, approvefeedback
-                FROM {view_access}
-                WHERE \"view\" = ?
-        UNION
-            SELECT 'user' AS type, $uid AS id, NULL AS role, NULL AS grouptype, startdate, stopdate, allowfeedback, approvefeedback
-                FROM {view_access_usr}
-                WHERE \"view\" = ?
-        UNION
-            SELECT 'group', $gid, \"role\", grouptype, startdate, stopdate, allowfeedback, approvefeedback FROM {view_access_group}
-                INNER JOIN {group} g ON (\"group\" = g.id AND g.deleted = ?)
-                WHERE \"view\" = ?
-        UNION
-            SELECT 'token', token, NULL AS role, NULL AS grouptype, startdate, stopdate, allowfeedback, approvefeedback
-                FROM {view_access_token}
-                WHERE \"view\" = ? AND visible = 1
-        ", array($this->id, $this->id, 0, $this->id, $this->id));
+            SELECT va.*, g.grouptype,
+                CASE WHEN NOT va.accesstype IS NULL THEN va.accesstype
+                     WHEN NOT va.usr IS NULL THEN 'user'
+                     WHEN NOT va.group IS NULL THEN 'group'
+                     WHEN NOT va.token IS NULL THEN 'token'
+                     ELSE NULL END AS type
+            FROM {view_access} va
+                LEFT OUTER JOIN {group} g ON (va.group = g.id AND g.deleted = 0)
+            WHERE va.view = ? AND va.visible = 1",
+            array($this->id)
+        );
+
         if ($data) {
             foreach ($data as &$item) {
                 $item = (array)$item;
@@ -659,10 +643,7 @@ class View {
         // endforeach
         //
         db_begin();
-        delete_records('view_access', 'view', $this->get('id'));
-        delete_records('view_access_usr', 'view', $this->get('id'));
-        delete_records('view_access_group', 'view', $this->get('id'));
-        delete_records('view_access_token', 'view', $this->get('id'), 'visible', 1);
+        delete_records('view_access', 'view', $this->get('id'), 'visible', 1);
         $time = db_format_timestamp(time());
 
         // View access
@@ -676,16 +657,8 @@ class View {
             foreach ($accessdata as $item) {
                 $accessrecord = new StdClass;
                 $accessrecord->view = $this->get('id');
-                if (!empty($item['allowfeedback'])) {
-                    $accessrecord->allowfeedback = 1;
-                } else {
-                    $accessrecord->allowfeedback = 0;
-                }
-                if (!empty($item['approvefeedback'])) {
-                    $accessrecord->approvefeedback = 1;
-                } else {
-                    $accessrecord->approvefeedback = 0;
-                }
+                $accessrecord->allowcomments = (bool) $item['allowcomments'];
+                $accessrecord->approvecomments = (bool) $item['approvecomments'];
                 if (isset($item['startdate'])) {
                     $accessrecord->startdate = db_format_timestamp($item['startdate']);
                 }
@@ -708,7 +681,7 @@ class View {
                     case 'user':
                         $accessrecord->usr = $item['id'];
                         if (array_search($accessrecord, $accessdata_added) === false) {
-                            insert_record('view_access_usr', $accessrecord);
+                            insert_record('view_access', $accessrecord);
                             $accessdata_added[] = $accessrecord;
                         }
                         break;
@@ -723,7 +696,7 @@ class View {
                             $accessrecord->role = $item['role'];
                         }
                         if (array_search($accessrecord, $accessdata_added) === false) {
-                            insert_record('view_access_group', $accessrecord);
+                            insert_record('view_access', $accessrecord);
                             $accessdata_added[] = $accessrecord;
                         }
 
@@ -731,7 +704,7 @@ class View {
                     case 'token':
                         $accessrecord->token = $item['id'];
                         if (array_search($accessrecord, $accessdata_added) === false) {
-                            insert_record('view_access_token', $accessrecord);
+                            insert_record('view_access', $accessrecord);
                             $accessdata_added[] = $accessrecord;
                         }
                         break;
@@ -2126,21 +2099,13 @@ class View {
                 WHERE va.view IN (' . $viewidlist . ')
                 GROUP BY va.view, va.artefact, a.title, a.artefacttype, t.plugin
                 ORDER BY a.title, va.artefact', '');
-            $accessgroups = get_records_sql_array('SELECT "view", accesstype, grouptype, "role", id, name, startdate, stopdate
-                FROM (
-                    SELECT "view", \'group\' AS accesstype, g.grouptype, vg.role, g.id, g.name, startdate, stopdate
-                    FROM {view_access_group} vg
-                    INNER JOIN {group} g ON g.id = vg.group AND g.deleted = 0
-                    UNION SELECT view, \'user\' AS accesstype, NULL AS grouptype, NULL AS role, usr AS id, \'\' AS name, startdate, stopdate
-                    FROM {view_access_usr} vu
-                    UNION SELECT "view", \'secreturl\' AS accesstype, NULL AS grouptype, NULL AS role, 0 AS id, \'\' AS name, startdate, stopdate
-                    FROM {view_access_token} vt
-                    UNION SELECT "view", accesstype, NULL AS grouptype, NULL AS role, 0 AS id, \'\' AS name, startdate, stopdate
-                    FROM {view_access} va
-                ) AS a
-                WHERE "view" in (' . $viewidlist . ')
-                ORDER BY "view", accesstype, grouptype, "role", name, id
-            ', array());
+            $accessgroups = get_records_sql_array('
+                SELECT va.*, g.grouptype, g.name
+                FROM {view_access} va LEFT OUTER JOIN {group} g ON (g.id = va.group AND g.deleted = 0)
+                WHERE va.view IN (' . $viewidlist . ')
+                ORDER BY va.view, va.accesstype, g.grouptype, va.role, g.name, va.group, va.usr',
+                array()
+            );
             $tags = get_records_select_array('view_tag', '"view" IN (' . $viewidlist . ')');
         }
     
@@ -2212,15 +2177,21 @@ class View {
             }
             if ($accessgroups) {
                 foreach ($accessgroups as $access) {
-                  $data[$index[$access->view]]['accessgroups'][] = array(
-                      'accesstype' => $access->accesstype, // friends, group, loggedin, public, tutorsgroup, user, secreturl
-                      'role' => $access->role,
-                      'roledisplay' => $access->role ? get_string($access->role, 'grouptype.' . $access->grouptype) : null,
-                      'id' => $access->id,
-                      'name' => $access->name,
-                      'startdate' => $access->startdate,
-                      'stopdate' => $access->stopdate
-                      );
+                    if ($access->usr) {
+                        $access->accesstype = 'user';
+                        $access->id = $access->usr;
+                    }
+                    else if ($access->group) {
+                        $access->accesstype = 'group';
+                        $access->id = $access->group;
+                        if ($access->role) {
+                            $access->roledisplay = get_string($access->role, 'grouptype.' . $access->grouptype);
+                        }
+                    }
+                    else if ($access->token) {
+                        $access->accesstype = 'secreturl';
+                    }
+                    $data[$index[$access->view]]['accessgroups'][] = (array) $access;
                 }
             }
             if ($tags) {
@@ -2358,11 +2329,12 @@ class View {
             ) AS vg ON (vg.groupid = v.group)
             LEFT OUTER JOIN {view_access} va ON (
                 va.view = v.id
+                AND va.accesstype IS NOT NULL
                 AND (va.startdate IS NULL OR va.startdate < current_timestamp)
                 AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
             )
             LEFT OUTER JOIN {usr_friend} f ON (usr1 = v.owner AND usr2 = ?)
-            LEFT OUTER JOIN {view_access_usr} vau ON (
+            LEFT OUTER JOIN {view_access} vau ON (
                 vau.view = v.id
                 AND (vau.startdate IS NULL OR vau.startdate < current_timestamp)
                 AND (vau.stopdate IS NULL OR vau.stopdate > current_timestamp)
@@ -2371,7 +2343,7 @@ class View {
             LEFT OUTER JOIN (
                 SELECT
                     vag.view, vagm.member
-                FROM {view_access_group} vag
+                FROM {view_access} vag
                 INNER JOIN {group_member} vagm ON (vag.group = vagm.group AND (vag.role = vagm.role OR vag.role IS NULL))
                 WHERE
                     (vag.startdate IS NULL OR vag.startdate < current_timestamp)
@@ -2556,7 +2528,7 @@ class View {
         }
         $from = '
             FROM {view} v
-            INNER JOIN {view_access_group} a ON (a.view = v.id)
+            INNER JOIN {view_access} a ON (a.view = v.id)
             INNER JOIN {group_member} m ON (a.group = m.group AND (a.role = m.role OR a.role IS NULL))
             WHERE a.group = ? AND m.member = ? AND (v.group IS NULL OR v.group != ?)';
         $ph = array($groupid, $userid, $groupid);
@@ -2814,17 +2786,17 @@ class View {
             // Currently it only makes sense to have one invisible key per view.
             // They are only used during view submission, and a view can only be
             // submitted to one group or remote host at any one time.
-            delete_records('view_access_token', 'view', $viewid, 'visible', 0);
+            delete_records_select('view_access', 'view = ? AND token IS NOT NULL AND visible = 0', array($viewid));
         }
 
         $data = new StdClass;
         $data->view    = $viewid;
         $data->visible = (int) $visible;
         $data->token   = get_random_key(20);
-        while (record_exists('view_access_token', 'token', $data->token)) {
+        while (record_exists('view_access', 'token', $data->token)) {
             $data->token = get_random_key(20);
         }
-        if (insert_record('view_access_token', $data)) {
+        if (insert_record('view_access', $data)) {
             return $data;
         }
         return false;
