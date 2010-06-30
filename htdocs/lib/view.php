@@ -2920,7 +2920,7 @@ class View {
                     AND (va.startdate IS NULL OR va.startdate < current_timestamp)
                     AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
                     AND (va.accesstype IN ('public', 'loggedin', 'friends')
-                         OR va.usr = ? OR va.token IS NOT NULL OR va.group IS NOT NULL)
+                         OR va.usr = ? OR va.token IS NOT NULL OR gm.member IS NOT NULL)
                 ORDER BY va.token IS NULL DESC, va.accesstype != 'friends' DESC",
                 array($userid, $viewid, $userid)
             );
