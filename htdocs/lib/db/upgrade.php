@@ -1946,11 +1946,11 @@ function xmldb_core_upgrade($oldversion=0) {
 
         // Drop old tables
         $table = new XMLDBTable('view_access_group');
-        // drop_table($table);
+        drop_table($table);
         $table = new XMLDBTable('view_access_usr');
-        // drop_table($table);
+        drop_table($table);
         $table = new XMLDBTable('view_access_token');
-        // drop_table($table);
+        drop_table($table);
     }
 
     return $status;
