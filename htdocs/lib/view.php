@@ -2930,6 +2930,80 @@ class View {
     }
 
 
+    /**
+     * Determine whether a user can write comments on this view
+     *
+     * If the view doesn't have the allowcomments property set,
+     * then we must look at the view_access records to determine
+     * whether the user can leave comments.
+     *
+     * In view_access, allowcomments indicates that the user can
+     * comment, however if approvecomments is also set on a particular
+     * access record, then all comments can only be private until the
+     * view owner decides to make them public.
+     *
+     * Returns false, 'private', or true
+     */
+    public function user_comments_allowed(User $user) {
+        global $SESSION;
+
+        if (!$user->is_logged_in() && !get_config('anonymouscomments')) {
+            return false;
+        }
+
+        if ($this->get('allowcomments')) {
+            return $this->get('approvecomments') ? 'private' : true;
+        }
+
+        $userid = $user->get('id');
+        $access = self::user_access_records($this->id, $userid);
+
+        $publicviews = get_config('allowpublicviews');
+        $publicprofiles = get_config('allowpublicprofiles');
+
+        $allowcomments = false;
+        $approvecomments = true;
+
+        $mnettoken = get_cookie('mviewaccess:'.$this->id);
+        $usertoken = get_cookie('viewaccess:'.$this->id);
+
+        foreach ($access as $a) {
+            if ($a->accesstype == 'public') {
+                if (!$publicviews && (!$publicprofiles || $this->type != 'profile')) {
+                    continue;
+                }
+            }
+            else if ($a->token && $a->token != $mnettoken && ($a->token != $usertoken || !$publicviews)) {
+                continue;
+            }
+            else if (!$user->is_logged_in()) {
+                continue;
+            }
+            else if ($a->accesstype == 'friends') {
+                $owner = $this->get('owner');
+                if (!get_field_sql('
+                    SELECT COUNT(*) FROM {usr_friend} f WHERE (usr1=? AND usr2=?) OR (usr1=? AND usr2=?)',
+                    array($owner, $userid, $userid, $owner)
+                )) {
+                    continue;
+                }
+            }
+
+            if ($a->allowcomments) {
+                $allowcomments |= $a->allowcomments;
+                $approvecomments &= $a->approvecomments;
+            }
+            if (!$approvecomments) {
+                return true;
+            }
+        }
+
+        if ($allowcomments) {
+            return $approvecomments ? 'private' : true;
+        }
+
+        return false;
+    }
 }
 
 

@@ -471,7 +471,7 @@ class ArtefactTypeComment extends ArtefactType {
         return clean_html($this->get('description'));
     }
 
-    public static function add_comment_form($defaultprivate=false) {
+    public static function add_comment_form($defaultprivate=false, $privateonly=false) {
         global $USER;
         $form = array(
             'name'            => 'add_feedback_form',
