@@ -66,6 +66,7 @@ class View {
     private $type;
     private $visits;
     private $allowcomments;
+    private $approvecomments;
 
     /**
      * Valid view layouts. These are read at install time and inserted into

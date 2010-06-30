@@ -136,6 +136,7 @@ abstract class ArtefactType {
     protected $author;
     protected $authorname;
     protected $allowcomments;
+    protected $approvecomments;
     protected $rolepermissions;
     protected $mtimemanuallyset;
 
