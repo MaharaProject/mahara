@@ -178,7 +178,7 @@ EOF;
     $js .= "function update_loggedin_access() {}\n";
 }
 
-$allowcomments = json_encode($view->get('allowcomments'));
+$allowcomments = json_encode((int)$view->get('allowcomments'));
 
 $js .= <<<EOF
 var allowcomments = {$allowcomments};
