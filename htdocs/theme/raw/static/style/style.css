@@ -1342,6 +1342,7 @@ a.tag {
 }
 #accesslistitems .ai-container table th {
 	color: #555555;
+    min-width: 80px;
 }
 
 #accesslistitems table th img {

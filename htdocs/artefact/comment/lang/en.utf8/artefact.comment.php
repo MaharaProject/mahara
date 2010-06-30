@@ -32,6 +32,7 @@ $string['Comments'] = 'Comments';
 $string['comment'] = 'comment';
 $string['comments'] = 'comments';
 
+$string['Allow'] = 'Allow';
 $string['allowcomments'] = 'Allow comments';
 $string['attachfile'] = "Attach file";
 $string['Attachments'] = "Attachments";
@@ -62,6 +63,7 @@ $string['makepublicrequestsubject'] = 'Request to change private comment to publ
 $string['makepublicrequestbyauthormessage'] = '%s has requested that you make their comment public.';
 $string['makepublicrequestbyownermessage'] = '%s has requested that you make your comment public.';
 $string['makepublicrequestsent'] = 'A message has been sent to %s to request that the comment be made public.';
+$string['Moderate'] = 'Moderate';
 $string['newfeedbacknotificationsubject'] = 'New feedback on %s';
 $string['placefeedback'] = 'Place feedback';
 $string['reallydeletethiscomment'] = 'Are you sure you want to delete this comment?';

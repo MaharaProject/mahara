@@ -422,7 +422,15 @@ function editaccess_submit(Pieform $form, $values) {
 
 $form = pieform($form);
 
-$smarty = smarty(array('tablerenderer'), array(), array('mahara' => array('From', 'To', 'datetimeformatguide'),'view' => array('allowfeedback', 'approvefeedback')), array('sidebars' => false));
+$smarty = smarty(
+    array('tablerenderer'),
+    array(),
+    array(
+        'mahara' => array('From', 'To', 'datetimeformatguide'),
+        'artefact.comment' => array('Comments', 'Allow', 'Moderate')
+    ),
+    array('sidebars' => false)
+);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->assign('form', $form);
