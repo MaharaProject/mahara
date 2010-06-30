@@ -61,13 +61,13 @@ function renderAccessListItem(item) {
     var removeButton = BUTTON({'type': 'button'}, '{{str tag=remove}}');
     var allowfdbk = INPUT({
                         'type': 'checkbox',
-                        'name': 'accesslist[' + count + '][allowfeedback]',
-                        'id'  :  'allowfeedback' + count,
+                        'name': 'accesslist[' + count + '][allowcomments]',
+                        'id'  :  'allowcomments' + count,
                         'value':  1});
     var approvefdbk = INPUT({
                         'type': 'checkbox',
-                        'name': 'accesslist[' + count + '][approvefeedback]',
-                        'id'  :  'approvefeedback' + count,
+                        'name': 'accesslist[' + count + '][approvecomments]',
+                        'id'  :  'approvecomments' + count,
                         'value':  1});
     var dateInfo = TABLE(null,
         TBODY(null,
@@ -94,10 +94,10 @@ function renderAccessListItem(item) {
         )
     );
 
-    if (item['approvefeedback']==1) {
+    if (item['approvecomments']==1) {
         setNodeAttribute(allowfdbk,'checked',true);
     }
-    if (item['allowfeedback']==1) {
+    if (item['allowcomments']==1) {
         setNodeAttribute(approvefdbk,'checked',true);
     }
     var cssClass = 'ai-container';

@@ -669,8 +669,8 @@ class View {
             foreach ($accessdata as $item) {
                 $accessrecord = new StdClass;
                 $accessrecord->view = $this->get('id');
-                $accessrecord->allowcomments = (bool) $item['allowcomments'];
-                $accessrecord->approvecomments = (bool) $item['approvecomments'];
+                $accessrecord->allowcomments = (int) !empty($item['allowcomments']);
+                $accessrecord->approvecomments = (int) !empty($item['approvecomments']);
                 if (isset($item['startdate'])) {
                     $accessrecord->startdate = db_format_timestamp($item['startdate']);
                 }
