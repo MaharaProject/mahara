@@ -34,6 +34,7 @@ $string['comments'] = 'comments';
 
 $string['Allow'] = 'Allow';
 $string['allowcomments'] = 'Allow comments';
+$string['approvalrequired'] = 'Comments are moderated, so if you choose to make this comment public, it will not be visible to others until it is approved by the owner.';
 $string['attachfile'] = "Attach file";
 $string['Attachments'] = "Attachments";
 $string['cantedithasreplies'] = 'You can only edit the most recent comment';

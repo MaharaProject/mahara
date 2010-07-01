@@ -509,6 +509,13 @@ class ArtefactTypeComment extends ArtefactType {
             'title' => get_string('makepublic', 'artefact.comment'),
             'defaultvalue' => !$defaultprivate,
         );
+        if ($privateonly) {
+            $form['elements']['ispublic']['description'] = get_string('approvalrequired', 'artefact.comment');
+            $form['elements']['moderate'] = array(
+                'type'  => 'hidden',
+                'value' => true,
+            );
+        }
         if ($USER->is_logged_in()) {
             $form['elements']['attachments'] = array(
                 'type'         => 'files',
@@ -761,7 +768,6 @@ function add_feedback_form_submit(Pieform $form, $values) {
     $data = (object) array(
         'title'       => get_string('Comment', 'artefact.comment'),
         'description' => $values['message'],
-        'private'     => 1 - (int) $values['ispublic'],
     );
 
     if ($artefact) {
@@ -784,10 +790,47 @@ function add_feedback_form_submit(Pieform $form, $values) {
         $data->authorname = $values['authorname'];
     }
 
-    db_begin();
+    if (isset($values['moderate']) && $values['ispublic'] && !$USER->can_edit_view($view)) {
+        $data->private = 1;
+        $data->requestpublic = 'author';
+    }
+    else {
+        $data->private = (int) !$values['ispublic'];
+    }
 
     $comment = new ArtefactTypeComment(0, $data);
+
+    db_begin();
+
     $comment->commit();
+
+    $goto = $comment->get_view_url($view->get('id'));
+
+    if ($data->requestpublic == 'author' && $data->owner) { // Fix for group views
+        $arg = $author ? display_name($USER, null, true) : $data->authorname;
+        $moderatemsg = (object) array(
+            'subject'   => false,
+            'message'   => false,
+            'strings'   => (object) array(
+                'subject' => (object) array(
+                    'key'     => 'makepublicrequestsubject',
+                    'section' => 'artefact.comment',
+                    'args'    => array(),
+                ),
+                'message' => (object) array(
+                    'key'     => 'makepublicrequestbyauthormessage',
+                    'section' => 'artefact.comment',
+                    'args'    => array(hsc($arg)),
+                ),
+                'urltext' => (object) array(
+                    'key'     => 'Comment',
+                    'section' => 'artefact.comment',
+                ),
+            ),
+            'users'     => array($data->owner),
+            'url'       => $goto,
+        );
+    }
 
     if (!empty($values['attachments']) && is_array($values['attachments']) && !empty($data->author)) {
 
@@ -851,16 +894,14 @@ function add_feedback_form_submit(Pieform $form, $values) {
     );
     activity_occurred('feedback', $data, 'artefact', 'comment');
 
+    if (isset($moderatemsg)) {
+        activity_occurred('maharamessage', $moderatemsg);
+    }
+
     db_commit();
 
-    if ($artefact) {
-        $goto = get_config('wwwroot') . 'view/artefact.php?artefact=' . $artefact->get('id') . '&view='.$view->get('id');
-        $newlist = ArtefactTypeComment::get_comments(10, 0, 'last', $view, $artefact);
-    }
-    else {
-        $goto = get_config('wwwroot') . 'view/view.php?id='.$view->get('id');
-        $newlist = ArtefactTypeComment::get_comments(10, 0, 'last', $view);
-    }
+    $newlist = ArtefactTypeComment::get_comments(10, 0, 'last', $view, $artefact);
+
     $form->reply(PIEFORM_OK, array(
         'message' => get_string('feedbacksubmitted', 'artefact.comment'),
         'goto' => $goto,
