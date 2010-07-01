@@ -471,7 +471,7 @@ class ArtefactTypeComment extends ArtefactType {
         return clean_html($this->get('description'));
     }
 
-    public static function add_comment_form($defaultprivate=false, $privateonly=false) {
+    public static function add_comment_form($defaultprivate=false, $moderate=false) {
         global $USER;
         $form = array(
             'name'            => 'add_feedback_form',
@@ -509,7 +509,7 @@ class ArtefactTypeComment extends ArtefactType {
             'title' => get_string('makepublic', 'artefact.comment'),
             'defaultvalue' => !$defaultprivate,
         );
-        if ($privateonly) {
+        if ($moderate) {
             $form['elements']['ispublic']['description'] = get_string('approvalrequired', 'artefact.comment');
             $form['elements']['moderate'] = array(
                 'type'  => 'hidden',
@@ -806,7 +806,7 @@ function add_feedback_form_submit(Pieform $form, $values) {
 
     $goto = $comment->get_view_url($view->get('id'));
 
-    if ($data->requestpublic == 'author' && $data->owner) { // Fix for group views
+    if ($data->requestpublic && $data->requestpublic === 'author' && $data->owner) {
         $arg = $author ? display_name($USER, null, true) : $data->authorname;
         $moderatemsg = (object) array(
             'subject'   => false,
