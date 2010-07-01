@@ -48,13 +48,7 @@ if ($onview && $onview != $viewid) {
 $maxage = (int) get_config_plugin('artefact', 'comment', 'commenteditabletime');
 $editableafter = time() - 60 * $maxage;
 
-$onartefact = $comment->get('onartefact');
-if ($onartefact) {
-    $goto = get_config('wwwroot') . 'view/artefact.php?artefact=' . $onartefact . '&view='.$viewid;
-}
-else {
-    $goto = get_config('wwwroot') . 'view/view.php?id='.$viewid;
-}
+$goto = $comment->get_view_url($viewid, false);
 
 if ($comment->get('ctime') < $editableafter) {
     $SESSION->add_error_msg(get_string('cantedittooold', 'artefact.comment', $maxage));

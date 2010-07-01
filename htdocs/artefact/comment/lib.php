@@ -559,6 +559,19 @@ class ArtefactTypeComment extends ArtefactType {
     public function exportable() {
         return empty($this->deletedby);
     }
+
+    public function get_view_url($viewid, $showcomment=true) {
+        if ($artefact = $this->get('onartefact')) {
+            $url = get_config('wwwroot') . 'view/artefact.php?view=' . $viewid . '&artefact=' . $artefact;
+        }
+        else {
+            $url = get_config('wwwroot') . 'view/view.php?id=' . $viewid;
+        }
+        if ($showcomment) {
+            $url .= '&showcomment=' . $this->get('id');
+        }
+        return $url;
+    }
 }
 
 /* To make private comments public, both the author and the owner must agree. */
@@ -580,14 +593,7 @@ function make_public_submit(Pieform $form, $values) {
 
     $comment = new ArtefactTypeComment((int) $values['comment']);
 
-    $viewid = $view->get('id');
-    if ($artefact = $comment->get('onartefact')) {
-        $url = get_config('wwwroot') . 'view/artefact.php?view=' . $viewid . '&artefact=' . $artefact;
-    }
-    else {
-        $url = get_config('wwwroot') . 'view/view.php?id=' . $viewid;
-    }
-    $url .= '&showcomment=' . $comment->get('id');
+    $url = $comment->get_view_url($view->get('id'));
 
     $author    = $comment->get('author');
     $owner     = $comment->get('owner');
