@@ -86,6 +86,12 @@ $form = array(
             'description'  => get_string('allowcommentsonview','view'),
             'defaultvalue' => $view->get('allowcomments'),
         ),
+        'approvecomments' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('moderatecomments', 'artefact.comment'),
+            'description'  => get_string('moderatecommentsdescription', 'artefact.comment'),
+            'defaultvalue' => $view->get('approvecomments'),
+        ),
         'template' => array(
             'type'         => 'checkbox',
             'title'        => get_string('allowcopying', 'view'),
@@ -178,18 +184,24 @@ EOF;
     $js .= "function update_loggedin_access() {}\n";
 }
 
-$allowcomments = json_encode((int)$view->get('allowcomments'));
+if (!$allowcomments = $view->get('allowcomments')) {
+    $form['elements']['approvecomments']['class'] = 'hidden';
+}
+$allowcomments = json_encode((int) $allowcomments);
 
 $js .= <<<EOF
 var allowcomments = {$allowcomments};
 function update_comment_options() {
     allowcomments = $('editaccess_allowcomments').checked;
     if (allowcomments) {
+        removeElementClass($('editaccess_approvecomments'), 'hidden');
+        removeElementClass($('editaccess_approvecomments_container'), 'hidden');
         forEach(getElementsByTagAndClassName('tr', 'comments', 'accesslistitems'), function (elem) {
             addElementClass(elem, 'hidden');
         });
     }
     else {
+        addElementClass($('editaccess_approvecomments_container'), 'hidden');
         forEach(getElementsByTagAndClassName('tr', 'comments', 'accesslistitems'), function (elem) {
             removeElementClass(elem, 'hidden');
         });
@@ -408,6 +420,9 @@ function editaccess_submit(Pieform $form, $values) {
     }
 
     $view->set('allowcomments', (int) $values['allowcomments']);
+    if ($values['allowcomments']) {
+        $view->set('approvecomments', (int) $values['approvecomments']);
+    }
     $view->commit();
 
     if ($values['new']) {
