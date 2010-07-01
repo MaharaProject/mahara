@@ -144,10 +144,10 @@ function releaseview_submit() {
   
 // If the view has comments turned off, tutors can still leave
 // comments if the view is submitted to their group.
-if (!empty($releaseform) || $commenttype = $view->user_comments_allowed($USER)) {
+if (!empty($releaseform) || ($commenttype = $view->user_comments_allowed($USER))) {
     $defaultprivate = !empty($releaseform);
-    $privateonly = isset($commenttype) && $commenttype == 'private';
-    $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form($defaultprivate, $privateonly));
+    $moderate = isset($commenttype) && $commenttype === 'private';
+    $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form($defaultprivate, $moderate));
 }
 if ($USER->is_logged_in()) {
     $objectionform = pieform(objection_form());
