@@ -92,10 +92,22 @@ function renderAccessListItem(item) {
 
     if (item['allowcomments']==1) {
         setNodeAttribute(allowfdbk,'checked',true);
+        if (item['approvecomments'] == 1) {
+            setNodeAttribute(approvefdbk, 'checked', true);
+        }
     }
-    if (item['approvecomments']==1) {
-        setNodeAttribute(approvefdbk,'checked',true);
+    else {
+        setNodeAttribute(approvefdbk, 'disabled', true);
     }
+    connect(allowfdbk, 'onclick', function() {
+        if (allowfdbk.checked) {
+            approvefdbk.disabled = false;
+        }
+        else {
+            approvefdbk.disabled = true;
+            approvefdbk.checked = false;
+        }
+    });
     var cssClass = 'ai-container';
     if (item.preset) {
         cssClass += '  preset';
