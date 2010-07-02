@@ -185,12 +185,19 @@ function activity_add_admin_defaults($userids) {
 
 function activity_process_queue() {
 
-    db_begin();
     if ($toprocess = get_records_array('activity_queue')) {
         // Hack to avoid duplicate watchlist notifications on the same view
         $watchlist = activity_locate_typerecord('watchlist');
         $viewsnotified = array();
         foreach ($toprocess as $activity) {
+            // Remove this activity from the queue to make sure we
+            // never send duplicate emails even if part of the
+            // activity handler fails for whatever reason
+            if (!delete_records('activity_queue', 'id', $activity->id)) {
+                log_warn("Unable to remove activity $activity->id from the queue. Skipping it.");
+                continue;
+            }
+
             $data = unserialize($activity->data);
             if ($activity->type == $watchlist->id && !empty($data->view)) {
                 if (isset($viewsnotified[$data->view])) {
@@ -198,6 +205,8 @@ function activity_process_queue() {
                 }
                 $viewsnotified[$data->view] = true;
             }
+
+            db_begin();
             try {
                 handle_activity($activity->type, $data, true);
             }
@@ -206,10 +215,9 @@ function activity_process_queue() {
                 // log them and continue
                 log_debug($e->getMessage());
             }
+            db_commit();
         }
-        delete_records('activity_queue');
     }
-    db_commit();
 }
 
 function activity_get_viewaccess_users($view, $owner, $type) {
@@ -818,8 +826,8 @@ class ActivityTypeViewaccess extends ActivityType {
      */
     public function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
-        if (!$this->viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
-                                         JOIN {view} v ON v.owner = u.id
+        if (!$this->viewinfo = get_record_sql('SELECT v.title, u.* FROM {view} v
+                                         LEFT JOIN {usr} u ON v.owner = u.id
                                          WHERE v.id = ?', array($this->view))) {
             if (!empty($this->cron)) { // probably deleted already
                 return;
@@ -838,8 +846,11 @@ class ActivityTypeViewaccess extends ActivityType {
     }
     
     public function get_message($user) {
-        return get_string_from_language($user->lang, 'newviewaccessmessage', 'activity',
-                                        $this->viewinfo->title, display_name($this->viewinfo, $user));
+        if ($this->viewinfo->id) {
+            return get_string_from_language($user->lang, 'newviewaccessmessage', 'activity',
+                                            $this->viewinfo->title, display_name($this->viewinfo, $user));
+        }
+        return get_string_from_language($user->lang, 'newviewaccessmessagenoowner', 'activity', $this->viewinfo->title);
     }
     
     public function get_required_parameters() {
