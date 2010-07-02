@@ -1,3 +1,9 @@
+1.0.15 (2010-07-02)
+- Multiple XSS vulnerabilities (CVE-2010-1667)
+- Multiple CSRF vulnerabilities (CVE-2010-1668)
+- Removal of dangerous auth plugin configuration options (CVE-2010-1670)
+- New version of HTML Purifier fixing an IE-only XSS (CVE-2010-2479)
+
 1.0.14 (2010-04-06)
 - Security fixes to bundled copy of smarty (CVE-2008-4810, CVE-2008-4811 and CVE-2009-1669)
 - Fix for SQL injection in MNET usernames (CVE-2010-0400)
