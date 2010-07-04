@@ -1,4 +1,3 @@
-{auto_escape off}
 {include file='header.tpl' nosearch=true}
             <h3 class="center"><a href="http://mahara.org">Mahara</a> {str section='admin' tag='release' args=$releaseargs}</h3>
 
@@ -18,9 +17,8 @@ GNU General Public License for more details.</p>
 along with this program.  If not, see <a href="http://www.gnu.org/licenses/gpl.html">http://www.gnu.org/licenses/</a>.
             </div>
 
-            <div class="message">Before you install Mahara, you may want to check out the <a href="http://wiki.mahara.org/Release_Notes{if substr($releaseargs[0], -3) != 'dev'}/{$releaseargs[0]|escape}{/if}" target="_blank">release notes</a> for this release.</div>
+            <div class="message">Before you install Mahara, you may want to check out the <a href="http://wiki.mahara.org/Release_Notes{if substr($releaseargs[0], -3) != 'dev'}/{$releaseargs[0]}{/if}" target="_blank">release notes</a> for this release.</div>
 
             <form action="{$WWWROOT}admin/upgrade.php" method="post" class="center"><input type="submit" class="submit" value="{str tag=installmahara section=admin}"></form>
 
 {include file='admin/upgradefooter.tpl'}
-{/auto_escape}

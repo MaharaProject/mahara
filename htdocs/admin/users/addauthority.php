@@ -57,6 +57,16 @@ if ($institution && $plugin) {
         // We've been asked to add an instance of an auth plugin that has no
         // config options. We've been called by an AJAX request, so we just
         // add the instance and generate an acknowledgement.
+
+        // The session key has not been checked yet, because this page doesn't
+        // define JSON
+        try {
+            form_validate(param_alphanum('sesskey', null));
+        }
+        catch (UserException $e) {
+            json_reply(true, $e->getMessage());
+        }
+
         $authinstance = new stdClass();
 
         // Get the auth instance with the highest priority number (which is

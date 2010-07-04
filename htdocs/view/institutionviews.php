@@ -71,7 +71,7 @@ $pagination = build_pagination(array(
 ));
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('institutionselector', $s['institutionselector']);
 $smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs']);
 $smarty->assign('views', $data->data);

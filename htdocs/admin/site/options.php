@@ -462,7 +462,7 @@ function siteoptions_submit(Pieform $form, $values) {
 $thispage = json_encode(get_config('wwwroot') . 'admin/site/options.php');
 $smarty = smarty(array('adminsiteoptions'));
 $smarty->assign('siteoptionform', $siteoptionform);
-$smarty->assign('PAGEHEADING', hsc(get_string('siteoptions', 'admin')));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/site/options.tpl');
 
 ?>

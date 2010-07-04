@@ -1,5 +1,9 @@
-{auto_escape off}
-{if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
+{if $microheaders}
+  {include file="viewmicroheader.tpl"}
+{else}
+  {include file="header.tpl"}{if $pageheadinghtml}<h1>{$pageheadinghtml|safe}</h1>{/if}
+{/if}
+
 
                     <div id="userview">
                         <div class="user-icon right">
@@ -14,7 +18,7 @@
 {if $relationship == 'existingfriend'}
                             <a href="{$WWWROOT}user/removefriend.php?id={$USERID}&amp;returnto=view" class="btn-del">{str tag='removefromfriendslist' section='group'}</a>
 {elseif $relationship == 'none' && $friendscontrol == 'auto'}
-                            {$newfriendform}
+                            {$newfriendform|safe}
 {elseif $relationship == 'none' && $friendscontrol == 'auth'}
                             <a href="{$WWWROOT}user/requestfriendship.php?id={$USERID}&amp;returnto=view" class="btn-req">{str tag='requestfriendship' section='group'}</a>
 {/if}
@@ -22,28 +26,27 @@
 							<div>{str tag=groupinvitesfrom section=group}{$invitedlist}</div>
 {/if}
 {if $inviteform}
-							<div class="btn-msg">{$inviteform}</div>
+							<div class="btn-msg">{$inviteform|safe}</div>
 {/if}
 {if $requestedlist}
 							<div>{str tag=requestedmembershipin section=group}{$requestedlist}</div>
 {/if}
-                            <div class="btn-add">{if $addform}{$addform}{/if}</div>
+                            <div class="btn-add">{if $addform}{$addform|safe}{/if}</div>
                     	</div>
 {if $relationship == 'pending'}
                     	<div class="message">
-                        	{str tag='whymakemeyourfriend' section='group'} {$message|escape}
-                        	{$requestform}
+                            {str tag='whymakemeyourfriend' section='group'} {$message}
+                            {$requestform|safe}
                     	</div>
 {/if}
                 	</div>
                 	<div id="view" class="cl">
                     	<div id="bottom-pane">
                     	    <div id="column-container">
-                        	   {$viewcontent}
+                                {$viewcontent|safe}
                         	    <div class="cb"></div>
                         	</div>
                     	</div>
                     </div>
-
 {if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}
-{/auto_escape}
+

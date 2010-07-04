@@ -97,7 +97,7 @@ $sform = array(
 $skillform = pieform($sform);
 $smarty = smarty();
 $smarty->assign('skillform', $skillform);
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:skills.tpl');
 

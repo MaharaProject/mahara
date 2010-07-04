@@ -1,7 +1,6 @@
-{auto_escape off}
 {include file="export:html:header.tpl"}
 
-{if $icon}<div id="profile-icon">{$icon}</div>{/if}
+{if $icon}<div id="profile-icon">{$icon|safe}</div>{/if}
 
 {foreach from=$sections key=sectionname item=section}
 {if count($section)}
@@ -11,7 +10,7 @@
 {foreach from=$section key=title item=value}
         <tr>
             <th>{str tag=$title section=artefact.internal}:</th>
-            <td>{$value}</td>
+            <td>{$value|safe}</td>
         </tr>
 {/foreach}
     </table>
@@ -20,4 +19,3 @@
 {/foreach}
 
 {include file="export:html:footer.tpl"}
-{/auto_escape}

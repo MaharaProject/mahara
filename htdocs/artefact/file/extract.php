@@ -107,7 +107,7 @@ if ($fileid) {
     $smarty->assign('zipinfo', $zipinfo);
     $smarty->assign('message', $message);
     $smarty->assign('form', $form);
-    $smarty->assign('PAGEHEADING', hsc(TITLE));
+    $smarty->assign('PAGEHEADING', TITLE);
     $smarty->display('artefact:file:extract.tpl');
 }
 

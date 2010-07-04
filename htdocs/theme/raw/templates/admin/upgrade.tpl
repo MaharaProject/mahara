@@ -1,4 +1,3 @@
-{auto_escape off}
 {include file='header.tpl' nosearch='true'}
             <h2 class="center">{$upgradeheading}</h2>
             <div class="center js-hidden" id="jsrequiredforupgrade">{str tag=jsrequiredforupgrade section=admin}</div>
@@ -29,7 +28,4 @@
             </table>
             <div id="finished" class="nojs-hidden-block">{str section=admin tag=successfullyinstalled} <a href="{$WWWROOT}">{str section=admin tag=continue}</a></div>
 
-{include file="columnfullend.tpl"}
-
 {include file='admin/upgradefooter.tpl'}
-{/auto_escape}

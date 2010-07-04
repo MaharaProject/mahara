@@ -1,6 +1,4 @@
-{auto_escape off}
 {include file="header.tpl"}
-            {$uploadcsvpagedescription}
-			{$uploadcsvform}
+            {$uploadcsvpagedescription|safe}
+			{$uploadcsvform|safe}
 {include file="footer.tpl"}
-{/auto_escape}

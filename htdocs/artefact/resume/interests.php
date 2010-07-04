@@ -73,7 +73,7 @@ $interestsform = pieform(array(
 
 $smarty = smarty();
 $smarty->assign('interestsform', $interestsform);
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:interests.tpl');
 

@@ -318,7 +318,7 @@ function clearPasswords(form, data) {
     }
 }
 ");
-$smarty->assign('PAGEHEADING', hsc(get_string('account')));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('account/index.tpl');
 
 

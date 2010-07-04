@@ -91,7 +91,7 @@ $form = pieform(array(
 $smarty = smarty();
 $smarty->assign_by_ref('editform', $form);
 $smarty->assign_by_ref('blog', $blog);
-$smarty->assign_by_ref('PAGEHEADING', hsc(TITLE));
+$smarty->assign_by_ref('PAGEHEADING', TITLE);
 $smarty->display('artefact:blog:settings.tpl');
 exit;
 

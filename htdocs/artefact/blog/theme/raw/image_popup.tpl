@@ -1,4 +1,3 @@
-{auto_escape off}
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<title>{str tag=insertimage section=artefact.blog}</title>
@@ -78,4 +77,3 @@
 </form>
 </body>
 </html>
-{/auto_escape}

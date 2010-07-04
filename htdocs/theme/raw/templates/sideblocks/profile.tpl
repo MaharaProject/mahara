@@ -1,8 +1,7 @@
-{auto_escape off}
     <div id="user-profileicon"><a href="{$WWWROOT}user/view.php?id={$sbdata.id}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=50&amp;maxheight=50&amp;id={$sbdata.id}&amp;earlyexpiry=1" alt=""></a></div>
-    <h3><a href="{$WWWROOT}user/view.php?id={$sbdata.id}">{$sbdata.myname|escape}</a></h3>
+    <h3><a href="{$WWWROOT}user/view.php?id={$sbdata.id}">{$sbdata.myname}</a></h3>
     <div class="sideblock-content">
-{if $sbdata.mnetloggedinfrom}        <p>{$sbdata.mnetloggedinfrom}</p>
+{if $sbdata.mnetloggedinfrom}        <p>{$sbdata.mnetloggedinfrom|clean_html|safe}</p>
 {/if}
         <ul>
 {if $sbdata.unreadnotifications}
@@ -26,7 +25,7 @@
             <li id="groups"><a href="{$WWWROOT}group/mygroups.php">{str tag="mygroups"}:</a>
                 <ul>
 {foreach from=$sbdata.groups item=group}
-                    <li><a href="{$WWWROOT}group/view.php?id={$group->id}">{$group->name|escape}</a>{if $group->role == 'admin'} ({str tag=Admin section=group}){/if}</li>
+                    <li><a href="{$WWWROOT}group/view.php?id={$group->id}">{$group->name}</a>{if $group->role == 'admin'} ({str tag=Admin section=group}){/if}</li>
 {/foreach}
                 </ul></li>
 {/if}
@@ -34,7 +33,7 @@
             <li id="views"><a href="{$WWWROOT}view/">{str tag="views"}:</a>
                 <ul>
 {foreach from=$sbdata.views item=view}
-                    <li><a href="{$WWWROOT}view/view.php?id={$view->id}">{$view->title|escape}</a></li>
+                    <li><a href="{$WWWROOT}view/view.php?id={$view->id}">{$view->title}</a></li>
 {/foreach}
                 </ul>
             </li>
@@ -45,21 +44,20 @@
                 <ul>
 {foreach from=$sbdata.artefacts item=artefact}
 {if $artefact->artefacttype == 'blog'}
-                    <li><a href="{$WWWROOT}artefact/blog/view/?id={$artefact->id}">{$artefact->title|escape}</a></li>
+                    <li><a href="{$WWWROOT}artefact/blog/view/?id={$artefact->id}">{$artefact->title}</a></li>
 {elseif $artefact->artefacttype == 'file' || $artefact->artefacttype == 'image' || $artefact->artefacttype == 'archive'}
-                    <li><a href="{$WWWROOT}artefact/file/download.php?file={$artefact->id}">{$artefact->title|escape}</a></li>
+                    <li><a href="{$WWWROOT}artefact/file/download.php?file={$artefact->id}">{$artefact->title}</a></li>
 {elseif $artefact->artefacttype == 'folder'}
-                    <li><a href="{$WWWROOT}artefact/file/?folder={$artefact->id}">{$artefact->title|escape}</a></li>
+                    <li><a href="{$WWWROOT}artefact/file/?folder={$artefact->id}">{$artefact->title}</a></li>
 {/if}
 {/foreach}
                 </ul>
             </li>
 {/if}
         </ul>
-{if $sbdata.peer}                <div class="center"><a href="{$sbdata.peer.wwwroot}">{$sbdata.peer.name|escape}</a></div>
+{if $sbdata.peer}                <div class="center"><a href="{$sbdata.peer.wwwroot}">{$sbdata.peer.name}</a></div>
 {/if}
-{if $USERMASQUERADING}        <div id="changeuser">{$becomeyouagain}</div>
+{if $USERMASQUERADING}        <div id="changeuser">{$becomeyouagain|safe}</div>
 {/if}
         <div class="cb"></div>
     </div>
-{/auto_escape}

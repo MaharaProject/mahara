@@ -1,4 +1,3 @@
-{{auto_escape off}}
 <script type="text/javascript">
     var {{$name}}_newrefinput = null;
     var {{$name}}_newref = null;
@@ -35,7 +34,7 @@
                     ' ',
                     {{$name}}_newrefinput.value,
                     A({'href': '', 'onclick': '{{$name}}_remove(this); return false'}, '[x]'),
-                    ' ' + {{$validationemailstr}}
+                    ' ' + {{$validationemailstr|safe}}
                 ));
             }
         }
@@ -80,20 +79,19 @@
 <div id="{{$name}}_list">
 {{foreach from=$validated item=email}}
     <div class="validated">
-        <label><input{{if $email == $default}} checked{{/if}} type="radio" name="{{$name}}_selected" value="{{$email|escape}}">
-        <input type="hidden" name="{{$name}}_valid[]" value="{{$email|escape}}">
-        {{$email|escape}}</label>
+        <label><input{{if $email == $default}} checked{{/if}} type="radio" name="{{$name}}_selected" value="{{$email}}">
+        <input type="hidden" name="{{$name}}_valid[]" value="{{$email}}">
+        {{$email}}</label>
         <a href="" onclick="{{$name}}_remove(this); return false;">[x]</a>
     </div>
 {{/foreach}}
 {{foreach from=$unvalidated item=email}}
     <div class="unvalidated">
-        <input type="hidden" name="{{$name}}_invalid[]" value="{{$email|escape}}">
-        {{$email|escape}}
+        <input type="hidden" name="{{$name}}_invalid[]" value="{{$email}}">
+        {{$email}}
         <a href="" onclick="{{$name}}_remove(this); return false;">[x]</a>
         <span>{{str tag=validationemailsent section=artefact.internal}}</span>
     </div>
 {{/foreach}}
 </div>
 <a href="" onclick="{{$name}}_new(); return false;">{{str tag="addemail"}}</a>
-{{/auto_escape}}

@@ -1,10 +1,9 @@
-{auto_escape off}
 {include file="header.tpl"}
 
 <h2>{str tag="nameplural" section=interaction.forum}</h2>
 {if $admin}
 <div id="forumbtns" class="rbuttons">
-<a href="{$WWWROOT}interaction/edit.php?group={$groupid|escape}&amp;plugin=forum" class="btn btn-add">{str tag="newforum" section=interaction.forum}</a>
+<a href="{$WWWROOT}interaction/edit.php?group={$groupid}&amp;plugin=forum" class="btn btn-add">{str tag="newforum" section=interaction.forum}</a>
 </div>
 {/if}
 {if $forums}
@@ -19,14 +18,14 @@
         <td>
             {if $admin}
             <div class="fr btn-spacer s">
-                <a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}&amp;returnto=index" class="btn-edit">{str tag=edit}</a>
-                <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}&amp;returnto=index" class="btn-del">{str tag=delete}</a>
+                <a href="{$WWWROOT}interaction/edit.php?id={$forum->id}&amp;returnto=index" class="btn-edit">{str tag=edit}</a>
+                <a href="{$WWWROOT}interaction/delete.php?id={$forum->id}&amp;returnto=index" class="btn-del">{str tag=delete}</a>
             </div>
             {/if}
             <div class="nowrap">
-                <strong><a href="{$WWWROOT}interaction/forum/view.php?id={$forum->id|escape}">{$forum->title|escape}</a></strong>
+                <strong><a href="{$WWWROOT}interaction/forum/view.php?id={$forum->id}">{$forum->title}</a></strong>
             </div>
-            <div class="s">{$forum->description|str_shorten_html:1000:true}</div>
+            <div class="s">{$forum->description|str_shorten_html:1000:true|safe}</div>
             {if $forum->moderators}
             <div class="inlinelist">
                 <span>{str tag="Moderators" section="interaction.forum"}:</span>
@@ -38,7 +37,7 @@
             {/if}
         </td>
         <td class="center" width="15%">{$forum->topiccount}</td>
-        <td class="nowrap s subscribetd">{if $forum->subscribe}{$forum->subscribe}{/if}</td>
+        <td class="nowrap s subscribetd">{if $forum->subscribe}{$forum->subscribe|safe}{/if}</td>
 	</tr>
     {/foreach}
 </table>
@@ -54,4 +53,3 @@
     {/foreach}
 </div>
 {include file="footer.tpl"}
-{/auto_escape}

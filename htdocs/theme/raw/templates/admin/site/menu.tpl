@@ -1,4 +1,3 @@
-{auto_escape off}
 {include file="header.tpl"}
 
             <p>{str tag=linksandresourcesmenupagedescription section=admin args=$descriptionstrargs}</p>
@@ -22,4 +21,3 @@
             {$footerform}
 
 {include file="footer.tpl"}
-{/auto_escape}

@@ -1,4 +1,3 @@
-{auto_escape off}
 {include file="header.tpl"}
 
 {if $tags}
@@ -10,7 +9,7 @@
   </ul>
   <div class="subpage mytags">
   {foreach from=$tags item=t}
-    <a id="tag:{$t->tag|urlencode}" class="tag{if $t->tag == $tag} selected{/if}" href="{$WWWROOT}tags.php?tag={$t->tag|urlencode}">{$t->tag|str_shorten_text:30|escape}&nbsp;<span class="tagfreq">({$t->count})</span></a> 
+    <a id="tag:{$t->tag|urlencode|safe}" class="tag{if $t->tag == $tag} selected{/if}" href="{$WWWROOT}tags.php?tag={$t->tag|urlencode|safe}">{$t->tag|str_shorten_text:30}&nbsp;<span class="tagfreq">({$t->count})</span></a> 
   {/foreach}
   </div>
 {else}
@@ -18,8 +17,8 @@
 {/if}
 
          <div id="results_container" class="rel tag-results">
-           <h3 id="results_heading">{str tag=searchresultsfor} <a class="tag" href="{$WWWROOT}tags.php{if $tag}?tag={$tag|urlencode}{/if}">{if $tag}{$tag|str_shorten_text:50|escape}{else}{str tag=alltags}{/if}</a></h3>
-           <div class="rbuttons"><a class="btn edit-tag{if !$tag} hidden{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode}">{str tag=editthistag}</a></div>
+           <h3 id="results_heading">{str tag=searchresultsfor} <a class="tag" href="{$WWWROOT}tags.php{if $tag}?tag={$tag|urlencode|safe}{/if}">{if $tag}{$tag|str_shorten_text:50}{else}{str tag=alltags}{/if}</a></h3>
+           <div class="rbuttons"><a class="btn edit-tag{if !$tag} hidden{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}">{str tag=editthistag}</a></div>
            <div id="results_sort" class="fl">{str tag=sortresultsby}
 {foreach from=$results->sortcols item=sortfield name=sortcols}
            <a href="{$results->baseurl}&type={$results->filter}&sort={$sortfield}"{if $results->sort == $sortfield} class="selected"{/if}>{str tag=$sortfield}</a>{if !$.foreach.sortcols.last} <span class="sep">|</span> {/if}
@@ -37,12 +36,11 @@
              </thead>
              <tbody>
 {if $results->data}
-              {$results->tablerows}
+              {$results->tablerows|safe}
 {/if}
              </tbody>
            </table>
-           {$results->pagination}
+           {$results->pagination|safe}
          </div>
 
 {include file="footer.tpl"}
-{/auto_escape}

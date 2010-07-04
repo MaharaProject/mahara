@@ -1,14 +1,12 @@
-{auto_escape off}
 {include file="header.tpl"}
 {if $forgotpass_form}
             {str tag="forgotusernamepasswordtext"}
 
-            {$forgotpass_form}
+            {$forgotpass_form|safe}
 {/if}
 {if $forgotpasschange_form}
             <p>{str tag="forgotpasswordenternew"}</p>
 
-            {$forgotpasschange_form}
+            {$forgotpasschange_form|safe}
 {/if}
 {include file="footer.tpl"}
-{/auto_escape}

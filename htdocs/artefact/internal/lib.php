@@ -604,7 +604,11 @@ class ArtefactTypeWebAddress extends ArtefactTypeProfileField {
 class ArtefactTypeOfficialwebsite extends ArtefactTypeWebAddress {}
 class ArtefactTypePersonalwebsite extends ArtefactTypeWebAddress {}
 class ArtefactTypeBlogAddress extends ArtefactTypeWebAddress {}
-class ArtefactTypeAddress extends ArtefactTypeProfileField {}
+class ArtefactTypeAddress extends ArtefactTypeProfileField {
+    public function render_self($options) {
+        return array('html' => format_whitespace($this->title), 'javascript' => null);
+    }
+}
 class ArtefactTypeTown extends ArtefactTypeProfileField {}
 class ArtefactTypeCity extends ArtefactTypeProfileField {}
 class ArtefactTypeCountry extends ArtefactTypeProfileField {

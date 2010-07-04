@@ -45,7 +45,7 @@ define('TITLE', $title);
 $createviewform = pieform(create_view_form(null, 'mahara'));
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 
 $data = View::get_myviews_data($limit, $offset, null, 'mahara');
 

@@ -211,7 +211,7 @@ foreach (array('alpha', 'freq') as $option) {
 }
 
 $smarty = smarty(array('paginator'));
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('tags', $tags);
 $smarty->assign('tagsortoptions', $tagsortoptions);
 $smarty->assign('tag', $tag);

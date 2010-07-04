@@ -1,11 +1,7 @@
-{auto_escape off}
 {include file="header.tpl"}
 {include file="sidebar.tpl"}
 
-                <h2>{$subheading|escape}</h2>
-                {$changeform}
+                <h2>{$subheading}</h2>
+                {$changeform|safe}
 
 {include file="footer.tpl"}
-
-
-{/auto_escape}

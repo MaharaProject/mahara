@@ -64,7 +64,7 @@ addLoadEvent(function () {
 EOF;
 
 $smarty = smarty(array('paginator'));
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 
 $smarty->assign('sitedata', $sitedata);

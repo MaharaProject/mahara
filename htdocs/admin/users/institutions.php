@@ -131,6 +131,7 @@ if ($institution || $add) {
             )
         );
         $smarty->assign('delete_form', pieform($form));
+        $smarty->assign('institutionname', get_field('institution', 'displayname', 'name', $institution));
         $smarty->display('admin/users/institutions.tpl');
         exit;
     }
@@ -578,7 +579,7 @@ if ($institution && $institution != 'mahara') {
     }
 }
 
-$smarty->assign('PAGEHEADING', hsc(get_string('admininstitutions', 'admin')));
+$smarty->assign('PAGEHEADING', get_string('admininstitutions', 'admin'));
 $smarty->display('admin/users/institutions.tpl');
 
 function theme_sort($a, $b) {

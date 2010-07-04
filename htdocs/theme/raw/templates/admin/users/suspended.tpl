@@ -1,8 +1,7 @@
-{auto_escape off}
 {include file="header.tpl"}
 
-            {$buttonformopen}
-            {$buttonform}
+            {$buttonformopen|safe}
+            {$buttonform|safe}
             <table id="suspendedlist" class="table fullwidth">
                 <thead>
                     <tr>
@@ -20,4 +19,3 @@
             </form>
 
 {include file="footer.tpl"}
-{/auto_escape}

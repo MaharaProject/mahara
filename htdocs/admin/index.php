@@ -79,7 +79,7 @@ if (empty($upgrades)) {
 }
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', hsc(get_string('administration', 'admin')));
+$smarty->assign('PAGEHEADING', get_string('administration', 'admin'));
 
 // normal admin page starts here
 $smarty->assign('upgrades', $upgrades);

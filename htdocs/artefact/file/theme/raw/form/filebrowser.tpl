@@ -1,10 +1,9 @@
-{auto_escape off}
 {if $config.select}
 {include file="artefact:file:form/selectedlist.tpl" selectedlist=$selectedlist prefix=$prefix highlight=$highlight}
 {/if}
 
 <script type="text/javascript">
-{$initjs}
+{$initjs|safe}
 </script>
 
 <input type="hidden" name="folder" id="{$prefix}_folder" value="{$folder}" />
@@ -109,4 +108,4 @@
 </div>
 {/if}
 
-</div>{/auto_escape}
+</div>

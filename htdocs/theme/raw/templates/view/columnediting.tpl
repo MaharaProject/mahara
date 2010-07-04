@@ -1,4 +1,3 @@
-{auto_escape off}
 <div id="column_{$column}" class="column columns{$numcolumns}"{if $width} style="width: {$width-2}%;"{/if}>
 {if $addremovecolumns}
     <div class="column-header">
@@ -29,9 +28,6 @@
             <input type="submit" class="submit newblockhere" name="action_addblocktype_column_{$column}_order_1" value="{str tag='addnewblockhere' section='view'}">
         </div>
     {/if} 
-    {$blockcontent} 
+    {$blockcontent|safe}
     </div>
 </div>
-
-
-{/auto_escape}

@@ -1,4 +1,3 @@
-{auto_escape off}
 {if $sitedata.weekly}
   <div class="fr">
     <div id="site-stats-graph" class="fr">
@@ -27,10 +26,8 @@
     {if $sitedata.diskusage}
     <p><strong>{str tag=diskusage section=admin}:</strong> {$sitedata.diskusage|display_size}</p>
     {/if}
-    <p><strong>{str tag=maharaversion section=admin}:</strong> {$sitedata.release}{if $sitedata.strlatestversion} ({$sitedata.strlatestversion}){/if}</p>
+    <p><strong>{str tag=maharaversion section=admin}:</strong> {$sitedata.release}{if $sitedata.strlatestversion} ({$sitedata.strlatestversion|clean_html|safe}){/if}</p>
     <p><strong>{str tag=Cron section=admin}:</strong> {if $sitedata.cronrunning}{str tag=runningnormally section=admin}{else}{str tag=cronnotrunning section=admin}{/if}</p>
     {if $sitedata.rank.users}<p class="s dull fr">* {str tag=registrationrankdescription section=admin}</p>{/if}
   </div>
 <div class="cb"></div>
-
-{/auto_escape}

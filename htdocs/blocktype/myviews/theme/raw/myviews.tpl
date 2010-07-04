@@ -1,12 +1,11 @@
-{auto_escape off}
 {if $VIEWS}
     <table id="userviewstable">
     {foreach from=$VIEWS item=item name=view}
         <tr>
             <td class="{cycle values='r0,r1'}">
-                <h4><a href="{$WWWROOT}view/view.php?id={$item->id}">{$item->title|escape}</a></h4>
+                <h4><a href="{$WWWROOT}view/view.php?id={$item->id}">{$item->title}</a></h4>
                 {if $item->description}
-                  <div>{$item->description}</div>
+                  <div>{$item->description|str_shorten_html:100:true|safe}</div>
                 {/if}
                 {if $item->tags}
                   <div class="tags"><strong>{str tag=tags}:</strong> {list_tags owner=$item->owner tags=$item->tags}</div>
@@ -14,7 +13,7 @@
                 {if $item->artefacts}
                   <div>
                     <strong>{str tag="artefacts" section="view"}:</strong>
-                    {foreach from=$item->artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$item->id}" class="link-artefacts">{$artefact.title|escape}</a>{if !$.foreach.artefacts.last}, {/if}{/foreach}
+                    {foreach from=$item->artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$item->id}" class="link-artefacts">{$artefact.title}</a>{if !$.foreach.artefacts.last}, {/if}{/foreach}
                   </div>
                 {/if}
             </td>
@@ -24,4 +23,4 @@
 {else}
     {str tag='noviewstosee' section='group'}
 {/if}
-{/auto_escape}
+

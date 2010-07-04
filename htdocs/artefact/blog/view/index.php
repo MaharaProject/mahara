@@ -62,7 +62,7 @@ if ($blog->count_children()) {
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign_by_ref('blog', $blog);
 $smarty->assign_by_ref('INLINEJAVASCRIPT', $js);
-$smarty->assign('PAGEHEADING', hsc($blog->get('title')));
+$smarty->assign('PAGEHEADING', $blog->get('title'));
 $smarty->assign('strnopostsaddone',
     get_string('nopostsaddone', 'artefact.blog',
     '<a href="' . get_config('wwwroot') . 'artefact/blog/post.php?blog=' . $blog->get('id') . '">', '</a>'));

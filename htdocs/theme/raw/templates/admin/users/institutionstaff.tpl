@@ -1,9 +1,7 @@
-{auto_escape off}
 {include file="header.tpl"}
 			<p>{str tag="institutionstaffuserspagedescription" section="admin"}</p>
-			{$institutionselector}
+			{$institutionselector|safe}
             <div class="userlistform">
-			{$staffusersform}
+			{$staffusersform|safe}
             </div>
 {include file="footer.tpl"}
-{/auto_escape}

@@ -179,6 +179,8 @@ $string['success.addcolumn'] = 'Added column successfully';
 $string['err.addcolumn'] = 'Failed to add new column';
 $string['success.removecolumn'] = 'Deleted column successfully';
 $string['err.removecolumn'] = 'Failed to delete column';
+$string['success.changetheme'] = 'Theme updated successfully';
+$string['err.changetheme'] = 'Could not update theme';
 
 $string['confirmdeleteblockinstance'] = 'Are you sure you wish to delete this block?';
 $string['blockinstanceconfiguredsuccessfully'] = 'Block configured successfully';

@@ -87,7 +87,7 @@ $smarty->assign('form', $layoutform);
 $smarty->assign('form_start_tag', $layoutform->get_form_tag());
 $smarty->assign('options', $options);
 $smarty->assign('back', $back);
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('view/layout.tpl');
 
 function viewlayout_submit(Pieform $form, $values) {

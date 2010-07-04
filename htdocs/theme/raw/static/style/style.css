@@ -1471,12 +1471,12 @@ ul.groupuserstatus li,
 #friendslist ul.actionlist li {
 	list-style: none;
 	margin: 0;
-	border-bottom: 1px solid #d1d1d1;
+    border-top: 1px solid #d1d1d1;
 	padding: 0 .25em;
 }
-ul.groupuserstatus li.last,
-#friendslist ul.actionlist li.last {
-	border-bottom: none;
+ul.groupuserstatus li:first-child,
+#friendslist ul.actionlist li:first-child {
+    border-top: none;
 }
 form#search, form#filter, div.searchform {
     margin-bottom: 1em;

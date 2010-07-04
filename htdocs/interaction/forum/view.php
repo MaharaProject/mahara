@@ -93,6 +93,7 @@ if ($membership && isset($_POST['checked'])) {
     // check that user is only messing with topics from this forum
     $alltopics = get_column('interaction_forum_topic', 'id', 'forum', $forumid, 'deleted', 0);
     if ($checked == array_intersect($checked, $alltopics)) { // $checked is a subset of the topics in this forum
+        form_validate(param_variable('sesskey', null));
         if ($moderator && $type == 'sticky') {
             set_field_select('interaction_forum_topic', 'sticky', 1, 'id IN (' . implode(',', $checked) . ')', array());
             $SESSION->add_ok_msg(get_string('topicstickysuccess', 'interaction.forum'));
@@ -267,7 +268,6 @@ $smarty->display('interaction:forum:view.tpl');
 function setup_topics(&$topics) {
     if ($topics) {
         foreach ($topics as $topic) {
-            $topic->body = str_shorten_html($topic->body, 50, true, false);
             $topic->lastposttime = relative_date(get_string('strftimerecentrelative', 'interaction.forum'), get_string('strftimerecent'), $topic->lastposttime);
         }
     }

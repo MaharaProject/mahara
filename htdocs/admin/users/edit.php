@@ -511,12 +511,12 @@ $smarty->assign('institutions', count($allinstitutions) > 1);
 $smarty->assign('institutionform', $institutionform);
 
 if ($id != $USER->get('id') && is_null($USER->get('parentuser'))) {
-    $loginas = get_string('loginasuser', 'admin', hsc($user->username));
+    $loginas = get_string('loginasuser', 'admin', $user->username);
 } else {
     $loginas = null;
 }
 $smarty->assign('loginas', $loginas);
-$smarty->assign('PAGEHEADING', hsc(TITLE . ': ' . display_name($user)));
+$smarty->assign('PAGEHEADING', TITLE . ': ' . display_name($user));
 $smarty->display('admin/users/edit.tpl');
 
 ?>

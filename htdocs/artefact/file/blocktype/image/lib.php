@@ -43,40 +43,35 @@ class PluginBlocktypeImage extends PluginBlocktype {
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata'); // this will make sure to unserialize it for us
-        $configdata['viewid'] = $instance->get('view');
 
-        // This can be either an image or profileicon. They both implement 
-        // render_self
-        $result = '';
-        if (isset($configdata['artefactid'])) {
-            $image = $instance->get_artefact_instance($configdata['artefactid']);
-
-            if ($image instanceof ArtefactTypeProfileIcon) {
-                $src = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $configdata['artefactid'];
-                $description = $image->get('title');
-            }
-            else {
-                $src = get_config('wwwroot') . 'artefact/file/download.php?file=' . $configdata['artefactid'];
-                $src .= '&view=' . $instance->get('view');
-                $description = $image->get('description');
-            }
-
-            if (!empty($configdata['width'])) {
-                $src .= '&maxwidth=' . $configdata['width'];
-            }
-
-            $result  = '<div class="center"><div>';
-            $result .= '<a href="' . get_config('wwwroot') . 'view/artefact.php?artefact=' . $configdata['artefactid'] . '&view=' . $instance->get('view') . '"><img src="' . hsc($src) . '" alt="' . hsc($description) .'"></a>';
-            $result .= '</div>';
-
-            $description = (is_a($image, 'ArtefacttypeImage')) ? $image->get('description') : $image->get('title');
-            if (!empty($configdata['showdescription']) && $description) {
-                $result .= '<p>' . hsc($description) . '</p>';
-            }
-            $result .= '</div>';
+        if (!isset($configdata['artefactid'])) {
+            return '';
         }
 
-        return $result;
+        $id = $configdata['artefactid'];
+        $image = $instance->get_artefact_instance($id);
+        $wwwroot = get_config('wwwroot');
+        $viewid = $instance->get('view');
+
+        if ($image instanceof ArtefactTypeProfileIcon) {
+            $src = $wwwroot . 'thumb.php?type=profileiconbyid&id=' . $id;
+            $description = $image->get('title');
+        }
+        else {
+            $src = $wwwroot . 'artefact/file/download.php?file=' . $id . '&view=' . $viewid;
+            $description = $image->get('description');
+        }
+
+        if (!empty($configdata['width'])) {
+            $src .= '&maxwidth=' . $configdata['width'];
+        }
+
+        $smarty = smarty_core();
+        $smarty->assign('url', $wwwroot . 'view/artefact.php?artefact=' . $id . '&view=' . $viewid);
+        $smarty->assign('src', $src);
+        $smarty->assign('description', $description);
+        $smarty->assign('showdescription', !empty($configdata['showdescription']) && !empty($description));
+        return $smarty->fetch('blocktype:image:image.tpl');
     }
 
     public static function has_instance_config() {

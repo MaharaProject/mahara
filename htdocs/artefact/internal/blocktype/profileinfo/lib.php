@@ -59,7 +59,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
             foreach ($configdata['artefactids'] as $id) {
                 try {
                     $artefact = artefact_instance_from_id($id);
-                    if ($artefact->get('owner') == $viewowner) {
+                    if (is_a($artefact, 'ArtefactTypeProfile') && $artefact->get('owner') == $viewowner) {
                         $rendered = $artefact->render_self(array('link' => true));
                         $data[$artefact->get('artefacttype')] = $rendered['html'];
                     }

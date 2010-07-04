@@ -290,7 +290,7 @@ function user_statistics($limit, $offset, &$sitedata) {
             'admin',
             round($meanfriends, 1),
             get_config('wwwroot') . 'user/view.php?id=' . $maxfriends->id,
-            display_name($maxfriends, null, true),
+            hsc(display_name($maxfriends, null, true)),
             $maxfriends->friends
         );
     }

@@ -83,7 +83,7 @@ function staffusers_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('staffusersform', $form);
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/staff.tpl');
 
 ?>

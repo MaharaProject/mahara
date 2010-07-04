@@ -1,4 +1,3 @@
-{{auto_escape off}}
 <script type="text/javascript">
     var {{$name}}_current = 0;
     var {{$name}}_newrefinput;
@@ -18,4 +17,3 @@
     <input type="file" name="{{$name}}_files_0"/>
 </div>
 <a href="" onclick="{{$name}}_new(); return false;">[+]</a>
-{{/auto_escape}}

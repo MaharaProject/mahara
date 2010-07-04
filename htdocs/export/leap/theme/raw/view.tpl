@@ -1,12 +1,11 @@
-{auto_escape off}
 {include file="export:leap:entry.tpl" skipfooter=true}
-        <mahara:view{if $layout} mahara:layout="{$layout|escape}"{/if}{if $type} mahara:type="{$type|escape}"{/if} mahara:ownerformat="{$ownerformat|escape}">
+        <mahara:view{if $layout} mahara:layout="{$layout}"{/if}{if $type} mahara:type="{$type}"{/if} mahara:ownerformat="{$ownerformat}">
 {foreach from=$viewdata item=column}
             <mahara:column>
 {foreach from=$column item=blockinstance}
-                <mahara:blockinstance mahara:blocktype="{$blockinstance.blocktype|escape}" mahara:blocktitle="{$blockinstance.title|escape}">
+                <mahara:blockinstance mahara:blocktype="{$blockinstance.blocktype}" mahara:blocktitle="{$blockinstance.title}">
 {foreach from=$blockinstance.config key=fieldname item=fieldvalue}
-                    <mahara:{$fieldname|escape}>{$fieldvalue|escape}</mahara:{$fieldname|escape}>
+                    <mahara:{$fieldname}>{$fieldvalue}</mahara:{$fieldname}>
 {/foreach}
                 </mahara:blockinstance>
 {/foreach}
@@ -14,4 +13,3 @@
 {/foreach}
         </mahara:view>
 {include file="export:leap:entryfooter.tpl"}
-{/auto_escape}

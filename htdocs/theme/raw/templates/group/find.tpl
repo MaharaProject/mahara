@@ -1,6 +1,5 @@
-{auto_escape off}
 {include file="header.tpl"}
-{$form}
+{$form|safe}
 {if $groups}
 {foreach from=$groups item=group}
             <div class="{cycle values='r0,r1'} listing">
@@ -12,9 +11,8 @@
                 </div>
             </div>
 {/foreach}
-{$pagination}
+{$pagination|safe}
 {else}
             <div class="message">{str tag="nogroupsfound" section="group"}</div>
 {/if}
 {include file="footer.tpl"}
-{/auto_escape}

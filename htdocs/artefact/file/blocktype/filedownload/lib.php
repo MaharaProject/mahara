@@ -45,7 +45,10 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
         require_once(get_config('docroot') . 'artefact/lib.php');
         $configdata = $instance->get('configdata');
 
-        $result = '';
+        $viewid = $instance->get('view');
+        $wwwroot = get_config('wwwroot');
+        $files = array();
+
         if (isset($configdata['artefactids']) && is_array($configdata['artefactids'])) {
             foreach ($configdata['artefactids'] as $artefactid) {
                 try {
@@ -55,44 +58,35 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
                     continue;
                 }
 
-                $icondata = array(
-                    'id'     => $artefactid,
-                    'viewid' => $instance->get('view'),
+                $file = array(
+                    'id' => $artefactid,
+                    'title' => $artefact->get('title'),
+                    'description' => $artefact->get('description'),
+                    'size' => $artefact->get('size'),
+                    'ctime' => $artefact->get('ctime'),
+                    'iconsrc' => call_static_method(
+                        generate_artefact_class_name($artefact->get('artefacttype')),
+                        'get_icon',
+                        array('id' => $artefactid, 'viewid' => $viewid)
+                    ),
+                    'downloadurl' => $wwwroot,
                 );
 
-                $detailsurl = get_config('wwwroot') . 'view/artefact.php?artefact=' . $artefactid . '&view=' . $instance->get('view');
                 if ($artefact instanceof ArtefactTypeProfileIcon) {
-                    require_once('file.php');
-                    $downloadurl = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $artefactid;
-                    $size = filesize(get_dataroot_image_path('artefact/file/profileicons/', $artefactid));
+                    $file['downloadurl'] .= 'thumb.php?type=profileiconbyid&id=' . $artefactid;
                 }
                 else if ($artefact instanceof ArtefactTypeFile) {
-                    $downloadurl = get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactid . '&view=' . $icondata['viewid'];
-                    $size = $artefact->get('size');
+                    $file['downloadurl'] .= 'artefact/file/download.php?file=' . $artefactid . '&view=' . $viewid;
                 }
 
-                $result .= '<div title="' . hsc($artefact->get('title')) . '">';
-                $result .= '<div class="fl"><a href="' . hsc($downloadurl) . '" target="_blank">';
-                $result .= '<img src="' . hsc(call_static_method(generate_artefact_class_name($artefact->get('artefacttype')), 'get_icon', $icondata))
-                    . '" alt=""></a></div>';
-                $result .= '<div style="margin-left: 30px;">';
-
-                $result .= '<h4><a href="' . hsc($downloadurl) . '" target="_blank">' . str_shorten_text($artefact->get('title'), 20) . '</a></h4>';
-
-                $description = $artefact->get('description');
-                if ($description) {
-                    $result .= '<p style="margin: 0;"><strong>' . hsc($description) . '</strong></p>';
-                }
-                $result .= '' . display_size($size) . ' | ' . strftime(get_string('strftimedaydate'),$artefact->get('ctime'));
-                $result .= ' | <a href="' . hsc($detailsurl) . '">' . get_string('Details', 'artefact.file') . '</a>';
-                $result .= '</div>';
-
-
-                $result .= '</div>';
+                $files[] = $file;
             }
         }
 
-        return $result;
+        $smarty = smarty_core();
+        $smarty->assign('viewid', $instance->get('view'));
+        $smarty->assign('files', $files);
+        return $smarty->fetch('blocktype:filedownload:filedownload.tpl');
     }
 
     public static function has_instance_config() {

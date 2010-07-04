@@ -88,9 +88,9 @@ $creategroup = pieform(array(
 ));
 
 $smarty = smarty();
-$smarty->assign('creategroup', $creategroup);
-$smarty->assign('PAGEHEADING', hsc(TITLE));
-$smarty->display('group/create.tpl');
+$smarty->assign('form', $creategroup);
+$smarty->assign('PAGEHEADING', TITLE);
+$smarty->display('form.tpl');
 
 
 function creategroup_validate(Pieform $form, $values) {

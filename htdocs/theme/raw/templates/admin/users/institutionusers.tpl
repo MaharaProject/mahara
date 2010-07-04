@@ -1,10 +1,8 @@
-{auto_escape off}
 {include file="header.tpl"}
 <p>{str tag="institutionmemberspagedescription" section="admin"}</p>
 <p>{$instructions}</p>
-{$usertypeselector}
+{$usertypeselector|safe}
 <div class="userlistform">
-{$institutionusersform}
+{$institutionusersform|safe}
 </div>
 {include file="footer.tpl"}
-{/auto_escape}

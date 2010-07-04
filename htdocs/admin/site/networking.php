@@ -213,7 +213,7 @@ function networkingform_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('networkingform', $networkingform);
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/site/networking.tpl');
 
 ?>

@@ -1,9 +1,8 @@
-{auto_escape off}
 {include file="header.tpl"}
 
         <p>{str tag='viewlayoutpagedescription' section='view'}</p>
 
-        {$form_start_tag}
+        {$form_start_tag|safe}
 
             {foreach from=$options key=id item=description}
             <div class="fl">
@@ -13,7 +12,7 @@
                 {else}
                 <div><input type="radio" class="radio" name="layout" value="{$id}"></div>
                 {/if}
-                <div>{$description|escape}</div>
+                <div>{$description}</div>
             </div>
             {/foreach}
             <div class="cb">
@@ -26,4 +25,3 @@
         </form>
 
 {include file="footer.tpl"}
-{/auto_escape}

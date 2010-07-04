@@ -1,4 +1,3 @@
-{auto_escape off}
     <h3>{str tag="groupinteractions" section="group"}</h3>
 
     <div class="sidebar-content">
@@ -17,9 +16,9 @@
             {foreach from=$interactions item=interaction}
                 <li>
                 {if $sbdata.membership}
-                <a href="{$WWWROOT}interaction/{$interaction->plugin|escape}/view.php?id={$interaction->id|escape}">{$interaction->title|escape}</a>
+                <a href="{$WWWROOT}interaction/{$interaction->plugin}/view.php?id={$interaction->id}">{$interaction->title}</a>
                 {else}
-                {$interaction->title|escape}
+                {$interaction->title}
                 {/if}
                 </li>
             {/foreach}
@@ -31,4 +30,3 @@
     <p>{str tag=nointeractions section=group}</p>
     {/if}
 </div>
-{/auto_escape}

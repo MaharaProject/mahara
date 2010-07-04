@@ -1451,12 +1451,12 @@ function pieform_configure() {
     );
 }
 
-function pieform_validate(Pieform $form, $values) {
+function form_validate($sesskey) {
     global $USER;
-    if (!isset($values['sesskey'])) {
+    if (is_null($sesskey)) {
         throw new UserException('No session key');
     }
-    if ($USER && $USER->is_logged_in() && $USER->get('sesskey') != $values['sesskey']) {
+    if ($USER && $USER->is_logged_in() && $USER->get('sesskey') != $sesskey) {
         throw new UserException('Invalid session key');
     }
 
@@ -1476,6 +1476,13 @@ function pieform_validate(Pieform $form, $values) {
             }
         }
     }
+}
+
+function pieform_validate(Pieform $form, $values) {
+    if (!isset($values['sesskey'])) {
+        throw new UserException('No session key');
+    }
+    form_validate($values['sesskey']);
 }
 
 function pieform_reply($code, $data) {

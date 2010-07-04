@@ -186,14 +186,10 @@ function delete_all_notifications_submit() {
 }
 
 $smarty = smarty(array('paginator'));
-$smarty->assign('selectallread', 'toggleChecked(\'tocheckread\'); return false;');
-$smarty->assign('selectalldel', 'toggleChecked(\'tocheckdel\'); return false;');
-$smarty->assign('markread', 'markread(this, \'read\'); return false;');
-$smarty->assign('markdel', 'markread(document.notificationlist, \'del\'); return false;');
 $smarty->assign('options', $options);
 $smarty->assign('type', $type);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->assign('PAGEHEADING', hsc(get_string('inbox')));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('deleteall', $deleteall);
 $smarty->assign('activitylist', $activitylist);
 $smarty->display('account/activity/index.tpl');

@@ -153,7 +153,7 @@ function search_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('form', $searchform);
 $smarty->assign('groups', $groups['data']);
 $smarty->assign('pagination', $pagination['html']);

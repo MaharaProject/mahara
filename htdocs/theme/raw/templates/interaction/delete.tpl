@@ -1,10 +1,7 @@
-{auto_escape off}
 {include file="header.tpl"}
                 <div class="message">
-                <h3>{$subheading|escape}</h3>
+                <h3>{$subheading}</h3>
                 <p>{$message}</p>
-                {$form}
+                {$form|safe}
                 </div>
 {include file="footer.tpl"}
-
-{/auto_escape}

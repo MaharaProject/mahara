@@ -1,13 +1,11 @@
-{auto_escape off}
 {include file="header.tpl"}
 
 {if $GROUP->description}
-	<div class="groupdescription">{$GROUP->description}</div>
+	<div class="groupdescription">{$GROUP->description|clean_html|safe}</div>
 {/if}
 
 <div class="grouphomepage">
-{$viewcontent}
+{$viewcontent|safe}
 </div>
 
 {include file="footer.tpl"}
-{/auto_escape}

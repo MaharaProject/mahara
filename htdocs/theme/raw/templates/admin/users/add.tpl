@@ -1,6 +1,3 @@
-{auto_escape off}
 {include file="header.tpl"}
-{$form}
+{$form|safe}
 {include file="footer.tpl"}
-
-{/auto_escape}

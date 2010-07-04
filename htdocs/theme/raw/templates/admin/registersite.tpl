@@ -1,4 +1,3 @@
-{auto_escape off}
 {include file='header.tpl'}
 
 <div class="message" id="register-site">
@@ -6,11 +5,10 @@
 
 {if $register}
   {str tag=registeryourmaharasitedetail section=admin args=$WWWROOT}
-  {$register}
+  {$register|safe}
 {else}
   {str tag=siteregistered section=admin args=$WWWROOT}
 {/if}
 </div>
 
 {include file='footer.tpl'}
-{/auto_escape}

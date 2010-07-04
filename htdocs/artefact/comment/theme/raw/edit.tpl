@@ -1,6 +1,4 @@
-{auto_escape off}
 {include file="header.tpl"}
 <p>{$strdescription}</p>
-{$form}
+{$form|safe}
 {include file="footer.tpl"}
-{/auto_escape}

@@ -67,7 +67,7 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('form', $form);
 $smarty->display('view/delete.tpl');
 

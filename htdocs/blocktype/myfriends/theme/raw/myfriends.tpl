@@ -1,15 +1,14 @@
-{auto_escape off}
 <div class="friends">
 {if $friends}
     <table id="userfriendstable" class="center fullwidth">
       <tbody>
-      {$friends.tablerows}
+      {$friends.tablerows|safe}
       </tbody>
     </table>
-	<div id="myfriends_page_container" class="hidden">{$friends.pagination}</div>
+	<div id="myfriends_page_container" class="hidden">{$friends.pagination|safe}</div>
 <script>
 addLoadEvent(function() {literal}{{/literal}
-    {$friends.pagination_js}
+    {$friends.pagination_js|safe}
     removeElementClass('myfriends_page_container', 'hidden');
 {literal}}{/literal});
 </script>
@@ -18,7 +17,7 @@ addLoadEvent(function() {literal}{{/literal}
         <div class="message">{str tag="trysearchingforfriends" section=group args=$searchingforfriends}</div>
     {else}
         {if $relationship == 'none' && $friendscontrol == 'auto'}
-            <div class="message">{$newfriendform}</div>
+            <div class="message">{$newfriendform|safe}</div>
         {elseif $relationship == 'none' && $friendscontrol == 'auth'}
             <div class="message"><a href="{$WWWROOT}user/requestfriendship.php?id={$USERID}&amp;returnto=view" class="btn-request">{str tag='requestfriendship' section='group'}</a></div>
         {elseif $relationship == 'requestedfriendship'}
@@ -28,4 +27,3 @@ addLoadEvent(function() {literal}{{/literal}
     {/if}
 {/if}
 </div>
-{/auto_escape}

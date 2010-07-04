@@ -1,4 +1,3 @@
-{auto_escape off}
 {if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
 <h1>{$maintitle}</h1>
 
@@ -10,14 +9,15 @@
         <input type="hidden" id="viewid" name="id" value="{$view}">
         <input type="hidden" name="change" value="1">
         <input type="hidden" id="category" name="c" value="{$category}">
+        <input type="hidden" name="sesskey" value="{$SESSKEY}">
         {if $new}<input type="hidden" name="new" value="1">{/if}
         <div id="page">
             <div id="top-pane">
                 <div id="category-list">
-                    {$category_list}
+                    {$category_list|safe}
                 </div>
                 <div id="blocktype-list">
-                    {$blocktype_list}
+                    {$blocktype_list|safe}
                 </div>
                 <div class="cb"></div>
             </div>
@@ -33,7 +33,7 @@
                         <select id="viewtheme-select" name="viewtheme">
                             <option value="">Choose theme...</option>
 {foreach from=$viewthemes key=themeid item=themename}
-                            <option value="{$themeid|escape}"{if $themeid == $viewtheme} selected="selected" style="font-weight: bold;"{/if}>{$themename|escape}</option>
+                            <option value="{$themeid}"{if $themeid == $viewtheme} selected="selected" style="font-weight: bold;"{/if}>{$themename}</option>
 {/foreach}
                         </select>
                     </td>
@@ -49,7 +49,7 @@
                 	<div id="blocksinstruction" class="center">
                 	    {str tag='blocksintructionnoajax' section='view'}
                 	</div>
-                	    {$columns}
+                        {$columns|safe}
                     <div class="cb"></div>
                 </div>
             </div>
@@ -67,6 +67,7 @@
             <input type="hidden" name="id" value="{$view}">
             <input type="hidden" name="new" value="1">
             <input type="submit" name="cancel" class="cancel" value="{str tag='cancel'}" onclick="return confirm('{str tag='confirmcancelcreatingview' section='view'}');">
+            <input type="hidden" name="sesskey" value="{$SESSKEY}">
         </form>
         <form action="{$WWWROOT}view/edit.php" method="GET">
             <input type="hidden" name="id" value="{$view}">
@@ -92,11 +93,10 @@
 {elseif $block}
     <div class="blockconfig-background">
         <div class="blockconfig-container">
-            {$block.html}
+            {$block.html|safe}
         </div>
     </div>
-    {if $block.javascript}<script type="text/javascript">{$block.javascript}</script>{/if}
+    {if $block.javascript}<script type="text/javascript">{$block.javascript|safe}</script>{/if}
 {/if}
 
 {if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}
-{/auto_escape}

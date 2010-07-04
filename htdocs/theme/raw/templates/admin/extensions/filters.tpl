@@ -1,4 +1,3 @@
-{auto_escape off}
 {include file='header.tpl'}
 
 <p>{str tag=htmlfiltersdescription section=admin}</p>
@@ -15,7 +14,7 @@
 {/if}
 
 <p>{$newfiltersdescription}</p>
-<div>{$reloadform}</div>
+<div>{$reloadform|safe}</div>
 
 {include file='footer.tpl'}
-{/auto_escape}
+

@@ -1,4 +1,3 @@
-{auto_escape off}
 {if !$filelist}
 <p>{str tag=nofilesfound section=artefact.file}</p>
 {else}
@@ -35,7 +34,7 @@
       {/if}
     </td>
     <td class="filename">
-    {assign var=displaytitle value=$file->title|str_shorten_text:34|escape}
+    {assign var=displaytitle value=$file->title|str_shorten_text:34|safe}
     {if $file->artefacttype == 'folder'}
       <a href="{$querybase}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" class="changefolder" title="{str tag=gotofolder section=artefact.file arg1=$displaytitle}">{$displaytitle}</a>
     {elseif !$publishable}
@@ -44,7 +43,7 @@
       <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" target="_blank" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}">{$displaytitle}</a>
     {/if}
     </td>
-    <td>{$file->description|escape}</td>
+    <td>{$file->description}</td>
     {if !$showtags && !$editmeta}
     <td>{tif $file->size ?: ''}</td>
     <td>{tif $file->mtime ?: ''}</td>
@@ -77,4 +76,3 @@
  </tbody>
 </table>
 {/if}
-{/auto_escape}

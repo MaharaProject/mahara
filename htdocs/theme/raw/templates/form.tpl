@@ -1,5 +1,8 @@
-{auto_escape off}
 {include file="header.tpl"}
-{$form}
+{if $pagedescription}
+  <p>{$pagedescription}</p>
+{elseif $pagedescriptionhtml}
+  {$pagedescriptionhtml|safe}
+{/if}
+{$form|safe}
 {include file="footer.tpl"}
-{/auto_escape}

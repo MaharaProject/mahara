@@ -1,11 +1,10 @@
-{auto_escape off}
 {if $post->id}<a name="post{$post->id}"></a>{/if}
 
 
 <table class="forumpost fullwidth">
 {if $post->subject && !$nosubject}
 <tr>
-	<td colspan="2" class="forumsubject"><h6>{$post->subject|escape}</h6></td>
+	<td colspan="2" class="forumsubject"><h6>{$post->subject}</h6></td>
 </tr>
 {/if}
 <tr>
@@ -17,7 +16,7 @@
          {if $post->postcount}<p class="postcount">{$post->postcount}</p>{/if}
       </div>
     </td>
-	<td class="postedits">{$post->body|clean_html}
+	<td class="postedits">{$post->body|clean_html|safe}
 {if $post->edit}
         <h5>{str tag="editstothispost" section="interaction.forum"}</h5>
         <ul>
@@ -31,7 +30,7 @@
                 <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$edit.editor}" alt="">
                 {$edit.editor|display_name|escape}
                 </a>
-                {$edit.edittime|escape}
+                {$edit.edittime}
             </li>
             {/foreach}
         </ul>
@@ -39,4 +38,3 @@
     </td>
 </tr>
 </table>
-{/auto_escape}

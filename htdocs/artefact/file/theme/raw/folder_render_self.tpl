@@ -1,7 +1,6 @@
-{auto_escape off}
 <div>
-  {if !$simpledisplay}<h3>{$title|escape}</h3>{/if}
-  <div>{$description|escape}</div>
+  {if !$simpledisplay}<h3>{$title}</h3>{/if}
+  <div>{$description}</div>
   {if $tags}<div class="tags">{str tag=tags}: {list_tags owner=$owner tags=$tags}</div>{/if}
   <div>
   {if (isset($children))}
@@ -20,9 +19,9 @@
     <tbody>
     {foreach from=$children item=child}
       <tr class="{cycle values='r0,r1'}">
-        <td><img src="{$child->iconsrc|escape}" border="0" alt="{$child->artefacttype|escape}"></td>
-        <td><a href="{$WWWROOT}view/artefact.php?artefact={$child->id|escape}&amp;view={$viewid|escape}" title="{$child->hovertitle|escape}">{$child->title|escape}</a></td>
-        <td>{$child->description|escape}</td>
+        <td><img src="{$child->iconsrc}" border="0" alt="{$child->artefacttype}"></td>
+        <td><a href="{$WWWROOT}view/artefact.php?artefact={$child->id}&amp;view={$viewid}" title="{$child->hovertitle}">{$child->title}</a></td>
+        <td>{$child->description}</td>
         {if !$simpledisplay}
 		<td>{$child->date}</td>
 		{/if}
@@ -34,4 +33,4 @@
   {/if}
   </div>
 </div>
-{/auto_escape}
+

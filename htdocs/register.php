@@ -397,7 +397,7 @@ $smarty->assign('registerdescription', $registerdescription);
 if ($registerterms) {
     $smarty->assign('termsandconditions', get_site_page_content('termsandconditions'));
 }
-$smarty->assign('PAGEHEADING', hsc(get_string('register')));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('register.tpl');
 
 ?>

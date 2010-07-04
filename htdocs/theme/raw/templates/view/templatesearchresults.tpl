@@ -1,4 +1,3 @@
-{auto_escape off}
 <table class="templateresults tablerenderer fullwidth">
   <thead>
     <tr>
@@ -12,22 +11,22 @@
 {foreach from=$results item=row}
     <tr class="{cycle values='r0,r1'}">
       <td>
-        <a class="viewlink" href="{$WWWROOT}view/view.php?id={$row.id|escape}" target="_blank">{$row.title|escape}</a>
+        <a class="viewlink" href="{$WWWROOT}view/view.php?id={$row.id}" target="_blank">{$row.title}</a>
       </td>
 {if $row.institution}
-      <td>{$row.sharedby|escape}</td>
+      <td>{$row.sharedby}</td>
 {elseif $row.group}
-      <td><a class="grouplink" href="{$WWWROOT}group/view.php?id={$row.group|escape}" target="_blank">{$row.sharedby|escape}</a></td>
+      <td><a class="grouplink" href="{$WWWROOT}group/view.php?id={$row.group}" target="_blank">{$row.sharedby}</a></td>
 {elseif $row.owner}
       <td>
-        <img src="{$WWWROOT}thumb.php?type=profileicon&maxwidth=20&maxheight=20&id={$row.owner|escape}" />
-        <a class="userlink" href="{$WWWROOT}user/view.php?id={$row.owner|escape}" target="_blank">{$row.sharedby|escape}</a>
+        <img src="{$WWWROOT}thumb.php?type=profileicon&maxwidth=20&maxheight=20&id={$row.owner}" />
+        <a class="userlink" href="{$WWWROOT}user/view.php?id={$row.owner}" target="_blank">{$row.sharedby}</a>
       </td>
 {else}
       <td>-</td>
 {/if}
       <td>
-        {$row.form}
+        {$row.form|safe}
       </td>
     </tr>
 {/foreach}
@@ -36,4 +35,3 @@
 {/if}
   </tbody>
 </table>
-{/auto_escape}

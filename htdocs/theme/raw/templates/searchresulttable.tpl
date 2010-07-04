@@ -1,4 +1,3 @@
-{auto_escape off}
 {if $results.data}
     <h2>{str tag="Results"}</h2>
     <table id="searchresults" class="tablerenderer fullwidth listing">
@@ -7,7 +6,7 @@
           {if ($pagelinks)}
           <tr class="search-results-pages">
             <td colspan="{$ncols}">
-            {$pagelinks}
+            {$pagelinks|safe}
             </td>
           </tr>
           {/if}
@@ -26,8 +25,18 @@
         <tbody>
         {foreach from=$results.data item=r}
           <tr class="{cycle values="r0,r1"}">
-          {foreach from=$cols key=f item=c}
-            <td{if $c.class} class="{$c.class}"{/if}>{if !$c.template}{$r[$f]|escape}{else}{eval var=$c.template}{/if}</td> 
+          {foreach from=$cols key=f item=c}{strip}
+            <td{if $c.class} class="{$c.class}"{/if}>
+            {if !$c.template}
+              {$r[$f]}
+            {else}
+              {auto_escape off}
+              {* auto_escape off seems to be required to eval these templates without errors;
+                 somehow the variables output inside them are getting escaped anyway. *}
+              {eval var=$c.template}
+              {/auto_escape}
+            {/if}
+            </td>{/strip}
           {/foreach}
           </tr>
         {/foreach}
@@ -36,7 +45,7 @@
         <tfoot>
           <tr class="search-results-pages">
             <td colspan={$ncols}>
-            {$pagelinks}
+            {$pagelinks|safe}
             </td>
           </tr>
         </tfoot>
@@ -45,4 +54,3 @@
 {else}
     <div>{str tag="noresultsfound"}</div>
 {/if}
-{/auto_escape}

@@ -412,7 +412,7 @@ EOF;
         $group = group_current_group();
         $smarty->assign('GROUP', $group);
         $smarty->assign('SUBPAGENAV', group_get_menu_tabs());
-        $smarty->assign('PAGEHEADING', hsc($group->name));
+        $smarty->assign('PAGEHEADING', $group->name);
     }
 
     // ---------- sideblock stuff ----------
@@ -518,10 +518,10 @@ EOF;
 
     if ($USER->get('parentuser')) {
         $smarty->assign('USERMASQUERADING', true);
-        $smarty->assign('masqueradedetails', get_string('youaremasqueradingas', 'mahara', hsc(display_name($USER))));
+        $smarty->assign('masqueradedetails', get_string('youaremasqueradingas', 'mahara', display_name($USER)));
         $smarty->assign('becomeyouagain',
             ' <a href="' . hsc($wwwroot) . 'admin/users/changeuser.php?restore=1">'
-            . get_string('becomeadminagain', 'admin', $USER->get('parentuser')->name)
+            . get_string('becomeadminagain', 'admin', hsc($USER->get('parentuser')->name))
             . '</a>');
     }
 
@@ -2605,11 +2605,11 @@ function display_cleaned_html($html, $filename, $params) {
     $smarty = smarty_core();
     $smarty->assign('params', $params);
     if ($params['owner']) {
-        $smarty->assign('htmlremovedmessage', get_string('htmlremovedmessage', 'artefact.file', $filename, get_config('wwwroot') . 'user/view.php?id=' . $params['owner'], display_name($params['owner'])));
+        $smarty->assign('htmlremovedmessage', get_string('htmlremovedmessage', 'artefact.file', hsc($filename), get_config('wwwroot') . 'user/view.php?id=' . (int) $params['owner'], hsc(display_name($params['owner']))));
     } else {
-        $smarty->assign('htmlremovedmessage', get_string('htmlremovedmessagenoowner', 'artefact.file', $filename));
+        $smarty->assign('htmlremovedmessage', get_string('htmlremovedmessagenoowner', 'artefact.file', hsc($filename)));
     }
-    $smarty->assign('content', clean_html($html));
+    $smarty->assign('content', $html);
     $smarty->display('cleanedhtml.tpl');
     exit;
 }

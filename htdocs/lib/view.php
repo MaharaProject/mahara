@@ -919,11 +919,6 @@ class View {
             return;
         }
 
-        $viewtheme = param_variable('viewtheme', '');
-        if ($viewtheme && $viewtheme != $this->get('theme')) {
-            $this->set('theme', $viewtheme);
-        }
-
         $action = '';
         foreach ($_POST as $key => $value) {
             if (substr($key, 0, 7) == 'action_') {
@@ -947,10 +942,17 @@ class View {
             }
         }
 
+        $viewtheme = param_variable('viewtheme', '');
+        if ($viewtheme && $viewtheme != $this->get('theme')) {
+            $action = 'changetheme_theme_' . $viewtheme;
+        }
+
         if (empty($action)) {
             return;
         }
-    
+
+        form_validate(param_alphanum('sesskey', null));
+
         $actionstring = $action;
         $action = substr($action, 0, strpos($action, '_'));
         $actionstring  = substr($actionstring, strlen($action) + 1);
@@ -973,7 +975,7 @@ class View {
             case 'removeblockinstance': // requires action_removeblockinstance_id_\d
                 if (!defined('JSON')) {
                     if (!$sure = param_boolean('sure')) {
-                        $yeslink = get_config('wwwroot') . '/view/blocks.php?id=' . $this->get('id') . '&c=file&new=' . $new . '&action_' . $action . '_' .  $actionstring . '=1&sure=true';
+                        $yeslink = get_config('wwwroot') . '/view/blocks.php?id=' . $this->get('id') . '&c=file&new=' . $new . '&action_' . $action . '_' .  $actionstring . '=1&sure=true&sesskey=' . $USER->get('sesskey');
                         $baselink = '/view/blocks.php?id=' . $this->get('id') . '&c=' . $category . '&new=' . $new;
                         $SESSION->add_info_msg(get_string('confirmdeleteblockinstance', 'view') 
                             . ' <a href="' . $yeslink . '">' . get_string('yes') . '</a>'
@@ -993,6 +995,7 @@ class View {
             case 'moveblockinstance': // requires action_moveblockinstance_id_\d_column_\d_order_\d
             case 'addcolumn': // requires action_addcolumn_before_\d
             case 'removecolumn': // requires action_removecolumn_column_\d
+            case 'changetheme':
             break;
             default:
                 throw new InvalidArgumentException(get_string('noviewcontrolaction', 'error', $action));
@@ -1583,6 +1586,16 @@ class View {
         return get_field('block_instance', 'max("order")', 'column', $column, 'view', $this->get('id')); 
     }
 
+    private function changetheme($values) {
+        if ($theme = $values['theme']) {
+            $themes = get_user_accessible_themes();
+            if (isset($themes[$theme])) {
+                $this->set('theme', $theme);
+                $this->commit();
+            }
+        }
+    }
+
     /**
      * This function formats a user's name
      * according to their view preference
@@ -1973,7 +1986,7 @@ class View {
                     {artefact_access_role} r
                     INNER JOIN {group_member} m ON r.role = m.role
                 WHERE
-                    m."group" = ' . $group . '
+                    m."group" = ' . (int)$group . '
                     AND m.member = ' . $user->get('id') . '
                     AND r.can_view = 1
             ) ga ON (ga.group = a.group AND a.id = ga.artefact)';
@@ -2141,23 +2154,32 @@ class View {
                 $data[$i]['description'] = $viewdata[$i]->description;
                 if (!empty($viewdata[$i]->submitgroupid)) {
                     if (!empty($viewdata[$i]->submittedtime)) {
-                        $data[$i]['submittedto'] = get_string('viewsubmittedtogroupon', 'view',
-                                                            get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
-                                                            $viewdata[$i]->submitgroupname, format_date(strtotime($viewdata[$i]->submittedtime)));
+                        $data[$i]['submittedto'] = get_string(
+                            'viewsubmittedtogroupon', 'view',
+                            get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
+                            hsc($viewdata[$i]->submitgroupname), format_date(strtotime($viewdata[$i]->submittedtime))
+                        );
                     }
                     else {
-                        $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view',
-                                                            get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
-                                                            $viewdata[$i]->submitgroupname);
+                        $data[$i]['submittedto'] = get_string(
+                            'viewsubmittedtogroup', 'view',
+                            get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
+                            hsc($viewdata[$i]->submitgroupname)
+                        );
                     }
                 }
                 else if (!empty($viewdata[$i]->submithostwwwroot)) {
                     if (!empty($viewdata[$i]->submittedtime)) {
-                        $pieces = explode(' ', $viewdata[$i]->submittedtime);
-                        $data[$i]['submittedto'] = get_string('viewsubmittedtogroupon', 'view', $viewdata[$i]->submithostwwwroot, $viewdata[$i]->submithostname, $pieces[0], $pieces[1]);
+                        $data[$i]['submittedto'] = get_string(
+                            'viewsubmittedtogroupon', 'view', $viewdata[$i]->submithostwwwroot,
+                            hsc($viewdata[$i]->submithostname), format_date(strtotime($viewdata[$i]->submittedtime))
+                        );
                     }
                     else {
-                        $data[$i]['submittedto'] = get_string('viewsubmittedtogroup', 'view', $viewdata[$i]->submithostwwwroot, $viewdata[$i]->submithostname);
+                        $data[$i]['submittedto'] = get_string(
+                            'viewsubmittedtogroup', 'view', $viewdata[$i]->submithostwwwroot,
+                            hsc($viewdata[$i]->submithostname)
+                        );
                     }
                 }
                 $data[$i]['artefacts'] = array();
@@ -2824,9 +2846,9 @@ class View {
 
     public function display_title($long=true, $titlelink=true) {
         if ($this->type == 'profile') {
-            $title = display_name($this->owner, null, true);
+            $title = hsc(display_name($this->owner, null, true));
             if ($long) {
-                return '<strong>' . get_string('usersprofile', 'mahara', hsc($title)) . '</strong>';
+                return '<strong>' . get_string('usersprofile', 'mahara', $title) . '</strong>';
             }
             return $title;
         }
@@ -2834,7 +2856,6 @@ class View {
             return '<strong>' . get_string('dashboardviewtitle', 'view') . '</strong>';
         }
 
-        $ownername = $this->formatted_owner();
         $wwwroot = get_config('wwwroot');
 
         if ($this->type == 'grouphomepage') {
@@ -2856,6 +2877,7 @@ class View {
         }
 
         if (isset($ownerlink)) {
+            $ownername = hsc($this->formatted_owner());
             return get_string('viewtitleby', 'view', $title, $ownerlink, $ownername);
         }
 

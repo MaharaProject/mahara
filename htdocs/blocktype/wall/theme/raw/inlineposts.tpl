@@ -1,4 +1,3 @@
-{auto_escape off}
 <div id="wall">
     {if $wallmessage}
         <p>{$wallmessage}</p>
@@ -7,9 +6,9 @@
         {foreach from=$wallposts item=wallpost}
             <div class="wallpost{if $wallpost->private} private{/if}">
                 <div class="userinfo"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=25&amp;maxheight=25&amp;id={$wallpost->from}" alt="Profile Icon"> 
-                	<div class="userinforight"><strong><a href="{$WWWROOT}user/view.php?id={$wallpost->userid|escape}">{$wallpost->displayname|escape}</a></strong><span class="postedon"> - {$wallpost->postdate|format_date}</span></div>
+                <div class="userinforight"><strong><a href="{$WWWROOT}user/view.php?id={$wallpost->userid}">{$wallpost->displayname}</a></strong><span class="postedon"> - {$wallpost->postdate|format_date}</span></div>
                 </div>
-                <div class="text">{$wallpost->text|parse_bbcode}</div>
+                <div class="text">{$wallpost->text|parse_bbcode|safe}</div>
                 <div class="controls">
        {* {if $ownwall}
                     [ <a href="{$WWWROOT}blocktype/wall/wall.php?instance={$instanceid}&amp;replyto={$wallpost->id}">{str tag='reply' section='blocktype.wall'}</a> ]
@@ -25,4 +24,3 @@
         {/if}
     {/if}
 </div>
-{/auto_escape}

@@ -1,8 +1,7 @@
-{auto_escape off}
 {include file="header.tpl"}
 {include file="sidebar.tpl"}
 
-                <h2>{$subheading|escape}</h2>
+                <h2>{$subheading}</h2>
 
     <ul>
     {foreach from=$data item=interactions key=plugin}
@@ -11,7 +10,7 @@
             <ul>
             {foreach from=$interactions item=interaction}
                 <li>
-                    <a href="{$WWWROOT}interaction/{$interaction->plugin|escape}/view.php?id={$interaction->id|escape}">{$interaction->title|escape}</a> [
+                    <a href="{$WWWROOT}interaction/{$interaction->plugin}/view.php?id={$interaction->id}">{$interaction->title}</a> [
                     <a href="{$WWWROOT}interaction/edit.php?id={$interaction->id}">{str tag='edit'}</a> |
                     <a href="{$WWWROOT}interaction/delete.php?id={$interaction->id}">{str tag='delete'}</a> ]
                 </li>
@@ -23,5 +22,3 @@
     </ul>
 
 {include file="footer.tpl"}
-
-{/auto_escape}

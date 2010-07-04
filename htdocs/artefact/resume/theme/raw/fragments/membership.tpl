@@ -1,4 +1,3 @@
-{auto_escape off}
 <fieldset>{if !$hidetitle}<legend class="resumeh3">{str tag='membership' section='artefact.resume'}
 {if $controls}
     {contextualhelp plugintype='artefact' pluginname='resume' section='addmembership'}
@@ -21,18 +20,17 @@
     <tbody>
         {foreach from=$rows item=row}
         <tr class="{cycle values='r0,r1'}">
-            <td>{$row->startdate|escape}</td>
-            <td>{$row->enddate|escape}</td>
-            <td><div class="jstitle">{$row->title|escape}</div><div class="jsdescription">{$row->description|escape}</div></td>
+            <td>{$row->startdate}</td>
+            <td>{$row->enddate}</td>
+            <td><div class="jstitle">{$row->title}</div><div class="jsdescription">{$row->description}</div></td>
         </tr>
         {/foreach}
     </tbody>
 </table>
 {if $controls}
 <div>
-    <div id="membershipform" class="hidden">{$compositeforms.membership}</div>
+    <div id="membershipform" class="hidden">{$compositeforms.membership|safe}</div>
     <button id="addmembershipbutton" class="cancel" onclick="toggleCompositeForm('membership');">{str tag='add'}</button>
 </div>
 {/if}
 </fieldset>
-{/auto_escape}

@@ -122,7 +122,7 @@ $heading = get_string('pluginadmin', 'admin') . ': ' . $plugintype . ': ' . $plu
 if ($type) {
     $heading .= ': ' . $type;
 }
-$smarty->assign('PAGEHEADING', hsc($heading));
+$smarty->assign('PAGEHEADING', $heading);
 $smarty->display('admin/extensions/pluginconfig.tpl');
 
 
