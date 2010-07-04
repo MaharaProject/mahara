@@ -396,10 +396,10 @@ EOF;
     $smarty->assign_by_ref('HEADERS', $headers);
     $siteclosedforupgrade = get_config('siteclosed');
     if ($siteclosedforupgrade && get_config('disablelogin')) {
-        $smarty->assign('SITECLOSED', get_string('siteclosedlogindisabled', 'mahara', get_config('wwwroot') . 'admin/upgrade.php'));
+        $smarty->assign('SITECLOSED', 'logindisabled');
     }
     else if ($siteclosedforupgrade || get_config('siteclosedbyadmin')) {
-        $smarty->assign('SITECLOSED', get_string('siteclosed'));
+        $smarty->assign('SITECLOSED', 'loginallowed');
     }
 
     if ((!isset($extraconfig['pagehelp']) || $extraconfig['pagehelp'] !== false)
