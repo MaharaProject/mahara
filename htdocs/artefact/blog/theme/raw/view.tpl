@@ -16,7 +16,7 @@
 					</tbody>
 				</table>
                 {else}
-                <div class="message">{$strnopostsaddone}</div>
+                <div class="message">{$strnopostsaddone|safe}</div>
                 {/if}
 					
             </div>
