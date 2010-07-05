@@ -137,4 +137,6 @@ $string['youhaveblogs'] = 'You have %s blogs.';
 
 $string['feedsnotavailable'] = 'Feeds are not available for this artefact type.';
 $string['feedrights'] = 'Copyright %s.';
+
+$string['enablemultipleblogstext'] = 'You have one blog. If you would like to start a second one, enable the multiple blogs option on the <a href="%saccount/">account settings</a> page.';
 ?>

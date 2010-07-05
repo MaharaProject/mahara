@@ -89,6 +89,12 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
+
+if (!$USER->get_account_preference('multipleblogs')
+    && count_records('artefact', 'artefacttype', 'blog', 'owner', $USER->get('id')) == 1) {
+    $smarty->assign('enablemultipleblogstext', 1);
+}
+
 $smarty->assign_by_ref('editform', $form);
 $smarty->assign_by_ref('blog', $blog);
 $smarty->assign('PAGEHEADING', TITLE);
