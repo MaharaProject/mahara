@@ -289,10 +289,10 @@ class ArtefactTypeBlog extends ArtefactType {
     public static function get_blog_list($limit, $offset) {
         global $USER;
         ($result = get_records_sql_array("
-         SELECT b.id, b.title, b.description, COUNT(p.id) AS postcount
+         SELECT b.id, b.title, b.description, b.locked, COUNT(p.id) AS postcount
          FROM {artefact} b LEFT JOIN {artefact} p ON (p.parent = b.id AND p.artefacttype = 'blogpost')
          WHERE b.owner = ? AND b.artefacttype = 'blog'
-         GROUP BY b.id, b.title, b.description
+         GROUP BY b.id, b.title, b.description, b.locked
          ORDER BY b.title", array($USER->get('id')), $offset, $limit))
             || ($result = array());
 

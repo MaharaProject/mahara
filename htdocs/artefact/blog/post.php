@@ -63,6 +63,9 @@ if (!$blogpost) {
 else {
     $blogpostobj = new ArtefactTypeBlogPost($blogpost);
     $blogpostobj->check_permission();
+    if ($blogpostobj->get('locked')) {
+        throw new AccessDeniedException(get_string('submittedforassessment', 'view'));
+    }
     $blog = $blogpostobj->get('parent');
     $title = $blogpostobj->get('title');
     $description = $blogpostobj->get('description');
@@ -74,6 +77,10 @@ else {
     define('TITLE', get_string('editblogpost','artefact.blog'));
 }
 
+$blogobj = new ArtefactTypeBlog($blog);
+if ($blogobj->get('locked')) {
+    throw new AccessDeniedException(get_string('submittedforassessment', 'view'));
+}
 
 $folder = param_integer('folder', 0);
 $browse = (int) param_variable('browse', 0);

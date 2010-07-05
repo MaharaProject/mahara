@@ -40,8 +40,13 @@ if ($delete = param_integer('delete', 0)) {
     $blog = artefact_instance_from_id($delete);
     if ($blog instanceof ArtefactTypeBlog) {
         $blog->check_permission();
-        $blog->delete();
-        $SESSION->add_ok_msg(get_string('blogdeleted', 'artefact.blog'));
+        if ($blog->get('locked')) {
+            $SESSION->add_error_msg(get_string('submittedforassessment', 'view'));
+        }
+        else {
+            $blog->delete();
+            $SESSION->add_ok_msg(get_string('blogdeleted', 'artefact.blog'));
+        }
     }
 }
 

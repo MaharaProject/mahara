@@ -12,10 +12,14 @@
         <div>{$blog->description|clean_html|safe}</div>
       </td>
       <td class="right">
+        {if $blog->locked}
+        {str tag=submittedforassessment section=view}
+        {else}
         <a href="{$WWWROOT}artefact/blog/view/?id={$blog->id}">{$blog->postcount}</a>
         <a href="{$WWWROOT}artefact/blog/settings/?id={$blog->id}" class="btn-settings">{str tag=settings}</a>
         <a onClick="confirmdelete({$blog->id});" class="btn-del">{str tag=delete}</a>
         <a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->id}" class="btn-add">{str tag=addpost section=artefact.blog}</a>
+        {/if}
       </td>
     </tr>
   {/foreach}
