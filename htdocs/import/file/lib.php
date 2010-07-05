@@ -106,7 +106,6 @@ class PluginImportFile extends PluginImport {
                     'parent' => $this->importdir,
                     'owner' => $this->get('usr'),
                     'container' => 0,
-                    'locked' => 0,
                 );
 
                 if ($imagesize = getimagesize($uzd . $f->actualfilename)) {

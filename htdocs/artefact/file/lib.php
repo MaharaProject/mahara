@@ -246,14 +246,6 @@ class PluginArtefactFile extends PluginArtefact {
 
 abstract class ArtefactTypeFileBase extends ArtefactType {
 
-    public function __construct($id = 0, $data = null) {
-        parent::__construct($id, $data);
-        
-        if (empty($this->id)) {
-            $this->locked = 0;
-        }
-    }
-
     public static function is_singular() {
         return false;
     }

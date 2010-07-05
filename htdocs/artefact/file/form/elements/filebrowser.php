@@ -649,7 +649,6 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     }
 
     $data->container = 0;
-    $data->locked = 0;
 
     $originalname = $_FILES['userfile']['name'];
     $originalname = $originalname ? basename($originalname) : get_string('file', 'artefact.file');
