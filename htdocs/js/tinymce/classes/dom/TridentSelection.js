@@ -1,79 +1,20 @@
 /**
- * $Id: TridentSelection.js 1103 2009-04-22 09:46:04Z spocke $
+ * TridentSelection.js
  *
- * @author Moxiecode
- * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
+ * Copyright 2009, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://tinymce.moxiecode.com/license
+ * Contributing: http://tinymce.moxiecode.com/contributing
  */
 
 (function() {
 	function Selection(selection) {
-		var t = this, invisibleChar = '\uFEFF', range, lastIERng;
+		var t = this, invisibleChar = '\uFEFF', range, lastIERng, dom = selection.dom, TRUE = true, FALSE = false;
 
-		function compareRanges(rng1, rng2) {
-			if (rng1 && rng2) {
-				// Both are control ranges and the selected element matches
-				if (rng1.item && rng2.item && rng1.item(0) === rng2.item(0))
-					return 1;
-
-				// Both are text ranges and the range matches
-				if (rng1.isEqual && rng2.isEqual && rng2.isEqual(rng1))
-					return 1;
-			}
-
-			return 0;
-		};
-
+		// Returns a W3C DOM compatible range object by using the IE Range API
 		function getRange() {
-			var dom = selection.dom, ieRange = selection.getRng(), domRange = dom.createRng(), startPos, endPos, element, sc, ec, collapsed;
-
-			function findIndex(element) {
-				var nl = element.parentNode.childNodes, i;
-
-				for (i = nl.length - 1; i >= 0; i--) {
-					if (nl[i] == element)
-						return i;
-				}
-
-				return -1;
-			};
-
-			function findEndPoint(start) {
-				var rng = ieRange.duplicate(), parent, i, nl, n, offset = 0, index = 0, pos, tmpRng;
-
-				// Insert marker character
-				rng.collapse(start);
-				parent = rng.parentElement();
-				rng.pasteHTML(invisibleChar); // Needs to be a pasteHTML instead of .text = since IE has a bug with nodeValue
-
-				// Find marker character
-				nl = parent.childNodes;
-				for (i = 0; i < nl.length; i++) {
-					n = nl[i];
-
-					// Calculate node index excluding text node fragmentation
-					if (i > 0 && (n.nodeType !== 3 || nl[i - 1].nodeType !== 3))
-						index++;
-
-					// If text node then calculate offset
-					if (n.nodeType === 3) {
-						// Look for marker
-						pos = n.nodeValue.indexOf(invisibleChar);
-						if (pos !== -1) {
-							offset += pos;
-							break;
-						}
-
-						offset += n.nodeValue.length;
-					} else
-						offset = 0;
-				}
-
-				// Remove marker character
-				rng.moveStart('character', -1);
-				rng.text = '';
-
-				return {index : index, offset : offset, parent : parent};
-			};
+			var ieRange = selection.getRng(), domRange = dom.createRng(), element, collapsed;
 
 			// If selection is outside the current document just return an empty range
 			element = ieRange.item ? ieRange.item(0) : ieRange.parentElement();
@@ -82,180 +23,203 @@
 
 			// Handle control selection or text selection of a image
 			if (ieRange.item || !element.hasChildNodes()) {
-				domRange.setStart(element.parentNode, findIndex(element));
+				domRange.setStart(element.parentNode, dom.nodeIndex(element));
 				domRange.setEnd(domRange.startContainer, domRange.startOffset + 1);
 
 				return domRange;
 			}
 
-			// Check collapsed state
 			collapsed = selection.isCollapsed();
 
-			// Find start and end pos index and offset
-			startPos = findEndPoint(true);
-			endPos = findEndPoint(false);
+			function findEndPoint(start) {
+				var marker, container, offset, nodes, startIndex = 0, endIndex, index, parent, checkRng, position;
 
-			// Normalize the elements to avoid fragmented dom
-			startPos.parent.normalize();
-			endPos.parent.normalize();
+				// Setup temp range and collapse it
+				checkRng = ieRange.duplicate();
+				checkRng.collapse(start);
 
-			// Set start container and offset
-			sc = startPos.parent.childNodes[Math.min(startPos.index, startPos.parent.childNodes.length - 1)];
+				// Create marker and insert it at the end of the endpoints parent
+				marker = dom.create('a');
+				parent = checkRng.parentElement();
 
-			if (sc.nodeType != 3)
-				domRange.setStart(startPos.parent, startPos.index);
-			else
-				domRange.setStart(startPos.parent.childNodes[startPos.index], startPos.offset);
+				// If parent doesn't have any children then set the container to that parent and the index to 0
+				if (!parent.hasChildNodes()) {
+					domRange[start ? 'setStart' : 'setEnd'](parent, 0);
+					return;
+				}
 
-			// Set end container and offset
-			ec = endPos.parent.childNodes[Math.min(endPos.index, endPos.parent.childNodes.length - 1)];
+				parent.appendChild(marker);
+				checkRng.moveToElementText(marker);
+				position = ieRange.compareEndPoints(start ? 'StartToStart' : 'EndToEnd', checkRng);
+				if (position > 0) {
+					// The position is after the end of the parent element.
+					// This is the case where IE puts the caret to the left edge of a table.
+					domRange[start ? 'setStartAfter' : 'setEndAfter'](parent);
+					dom.remove(marker);
+					return;
+				}
 
-			if (ec.nodeType != 3) {
-				if (!collapsed)
-					endPos.index++;
+				// Setup node list and endIndex
+				nodes = tinymce.grep(parent.childNodes);
+				endIndex = nodes.length - 1;
+				// Perform a binary search for the position
+				while (startIndex <= endIndex) {
+					index = Math.floor((startIndex + endIndex) / 2);
 
-				domRange.setEnd(endPos.parent, endPos.index);
-			} else
-				domRange.setEnd(endPos.parent.childNodes[endPos.index], endPos.offset);
+					// Insert marker and check it's position relative to the selection
+					parent.insertBefore(marker, nodes[index]);
+					checkRng.moveToElementText(marker);
+					position = ieRange.compareEndPoints(start ? 'StartToStart' : 'EndToEnd', checkRng);
+					if (position > 0) {
+						// Marker is to the right
+						startIndex = index + 1;
+					} else if (position < 0) {
+						// Marker is to the left
+						endIndex = index - 1;
+					} else {
+						// Maker is where we are
+						found = true;
+						break;
+					}
+				}
 
-			// If not collapsed then make sure offsets are valid
-			if (!collapsed) {
-				sc = domRange.startContainer;
-				if (sc.nodeType == 1)
-					domRange.setStart(sc, Math.min(domRange.startOffset, sc.childNodes.length));
+				// Setup container
+				container = position > 0 || index == 0 ? marker.nextSibling : marker.previousSibling;
 
-				ec = domRange.endContainer;
-				if (ec.nodeType == 1)
-					domRange.setEnd(ec, Math.min(domRange.endOffset, ec.childNodes.length));
-			}
+				// Handle element selection
+				if (container.nodeType == 1) {
+					dom.remove(marker);
 
-			// Restore selection to new range
-			t.addRange(domRange);
+					// Find offset and container
+					offset = dom.nodeIndex(container);
+					container = container.parentNode;
+
+					// Move the offset if we are setting the end or the position is after an element
+					if (!start || index > 0)
+						offset++;
+				} else {
+					// Calculate offset within text node
+					if (position > 0 || index == 0) {
+						checkRng.setEndPoint(start ? 'StartToStart' : 'EndToEnd', ieRange);
+						offset = checkRng.text.length;
+					} else {
+						checkRng.setEndPoint(start ? 'StartToStart' : 'EndToEnd', ieRange);
+						offset = container.nodeValue.length - checkRng.text.length;
+					}
+
+					dom.remove(marker);
+				}
+
+				domRange[start ? 'setStart' : 'setEnd'](container, offset);
+			};
+
+			// Find start point
+			findEndPoint(true);
+
+			// Find end point if needed
+			if (!collapsed)
+				findEndPoint();
 
 			return domRange;
 		};
 
 		this.addRange = function(rng) {
-			var ieRng, body = selection.dom.doc.body, startPos, endPos, sc, so, ec, eo;
+			var ieRng, ctrlRng, startContainer, startOffset, endContainer, endOffset, doc = selection.dom.doc, body = doc.body;
+
+			function setEndPoint(start) {
+				var container, offset, marker, tmpRng, nodes;
+
+				marker = dom.create('a');
+				container = start ? startContainer : endContainer;
+				offset = start ? startOffset : endOffset;
+				tmpRng = ieRng.duplicate();
+
+				if (container == doc) {
+					container = body;
+					offset = 0;
+				}
+
+				if (container.nodeType == 3) {
+					container.parentNode.insertBefore(marker, container);
+					tmpRng.moveToElementText(marker);
+					tmpRng.moveStart('character', offset);
+					dom.remove(marker);
+					ieRng.setEndPoint(start ? 'StartToStart' : 'EndToEnd', tmpRng);
+				} else {
+					nodes = container.childNodes;
+
+					if (nodes.length) {
+						if (offset >= nodes.length) {
+							dom.insertAfter(marker, nodes[nodes.length - 1]);
+						} else {
+							container.insertBefore(marker, nodes[offset]);
+						}
+
+						tmpRng.moveToElementText(marker);
+					} else {
+						// Empty node selection for example <div>|</div>
+						marker = doc.createTextNode(invisibleChar);
+						container.appendChild(marker);
+						tmpRng.moveToElementText(marker.parentNode);
+						tmpRng.collapse(TRUE);
+					}
+
+					ieRng.setEndPoint(start ? 'StartToStart' : 'EndToEnd', tmpRng);
+					dom.remove(marker);
+				}
+			}
+
+			// Destroy cached range
+			this.destroy();
 
 			// Setup some shorter versions
-			sc = rng.startContainer;
-			so = rng.startOffset;
-			ec = rng.endContainer;
-			eo = rng.endOffset;
+			startContainer = rng.startContainer;
+			startOffset = rng.startOffset;
+			endContainer = rng.endContainer;
+			endOffset = rng.endOffset;
 			ieRng = body.createTextRange();
 
-			// Find element
-			sc = sc.nodeType == 1 ? sc.childNodes[Math.min(so, sc.childNodes.length - 1)] : sc;
-			ec = ec.nodeType == 1 ? ec.childNodes[Math.min(so == eo ? eo : eo - 1, ec.childNodes.length - 1)] : ec;
-
-			// Single element selection
-			if (sc == ec && sc.nodeType == 1) {
-				// Make control selection for some elements
-				if (/^(IMG|TABLE)$/.test(sc.nodeName) && so != eo) {
-					ieRng = body.createControlRange();
-					ieRng.addElement(sc);
-				} else {
-					ieRng = body.createTextRange();
-
-					// Padd empty elements with invisible character
-					if (!sc.hasChildNodes() && sc.canHaveHTML)
-						sc.innerHTML = invisibleChar;
-
-					// Select element contents
-					ieRng.moveToElementText(sc);
-
-					// If it's only containing a padding remove it so the caret remains
-					if (sc.innerHTML == invisibleChar) {
-						ieRng.collapse(true);
-						sc.removeChild(sc.firstChild);
+			// If single element selection then try making a control selection out of it
+			if (startContainer == endContainer && startContainer.nodeType == 1 && startOffset == endOffset - 1) {
+				if (startOffset == endOffset - 1) {
+					try {
+						ctrlRng = body.createControlRange();
+						ctrlRng.addElement(startContainer.childNodes[startOffset]);
+						ctrlRng.select();
+						ctrlRng.scrollIntoView();
+						return;
+					} catch (ex) {
+						// Ignore
 					}
 				}
-
-				if (so == eo)
-					ieRng.collapse(eo <= rng.endContainer.childNodes.length - 1);
-
-				ieRng.select();
-
-				return;
 			}
 
-			function getCharPos(container, offset) {
-				var nodeVal, rng, pos;
+			// Set start/end point of selection
+			setEndPoint(true);
+			setEndPoint();
 
-				if (container.nodeType != 3)
-					return -1;
-
-				nodeVal = container.nodeValue;
-				rng = body.createTextRange();
-
-				// Insert marker at offset position
-				container.nodeValue = nodeVal.substring(0, offset) + invisibleChar + nodeVal.substring(offset);
-
-				// Find char pos of marker and remove it
-				rng.moveToElementText(container.parentNode);
-				rng.findText(invisibleChar);
-				pos = Math.abs(rng.moveStart('character', -0xFFFFF));
-				container.nodeValue = nodeVal;
-
-				return pos;
-			};
-
-			// Collapsed range
-			if (rng.collapsed) {
-				pos = getCharPos(sc, so);
-
-				ieRng = body.createTextRange();
-				ieRng.move('character', pos);
-				ieRng.select();
-
-				return;
-			} else {
-				// If same text container
-				if (sc == ec && sc.nodeType == 3) {
-					startPos = getCharPos(sc, so);
-
-					ieRng.move('character', startPos);
-					ieRng.moveEnd('character', eo - so);
-					ieRng.select();
-
-					return;
-				}
-
-				// Get caret positions
-				startPos = getCharPos(sc, so);
-				endPos = getCharPos(ec, eo);
-				ieRng = body.createTextRange();
-
-				// Move start of range to start character position or start element
-				if (startPos == -1) {
-					ieRng.moveToElementText(sc);
-					startPos = 0;
-				} else
-					ieRng.move('character', startPos);
-
-				// Move end of range to end character position or end element
-				tmpRng = body.createTextRange();
-
-				if (endPos == -1)
-					tmpRng.moveToElementText(ec);
-				else
-					tmpRng.move('character', endPos);
-
-				ieRng.setEndPoint('EndToEnd', tmpRng);
-				ieRng.select();
-
-				return;
-			}
+			// Select the new range and scroll it into view
+			ieRng.select();
+			ieRng.scrollIntoView();
 		};
 
 		this.getRangeAt = function() {
 			// Setup new range if the cache is empty
-			if (!range || !compareRanges(lastIERng, selection.getRng())) {
+			if (!range || !tinymce.dom.RangeUtils.compareRanges(lastIERng, selection.getRng())) {
 				range = getRange();
 
 				// Store away text range for next call
 				lastIERng = selection.getRng();
+			}
+
+			// IE will say that the range is equal then produce an invalid argument exception
+			// if you perform specific operations in a keyup event. For example Ctrl+Del.
+			// This hack will invalidate the range cache if the exception occurs
+			try {
+				range.startContainer.nextSibling;
+			} catch (ex) {
+				range = getRange();
+				lastIERng = null;
 			}
 
 			// Return cached range
@@ -266,6 +230,79 @@
 			// Destroy cached range and last IE range to avoid memory leaks
 			lastIERng = range = null;
 		};
+
+		// IE has an issue where you can't select/move the caret by clicking outside the body if the document is in standards mode
+		if (selection.dom.boxModel) {
+			(function() {
+				var doc = dom.doc, body = doc.body, started, startRng;
+
+				// Make HTML element unselectable since we are going to handle selection by hand
+				doc.documentElement.unselectable = TRUE;
+
+				// Return range from point or null if it failed
+				function rngFromPoint(x, y) {
+					var rng = body.createTextRange();
+
+					try {
+						rng.moveToPoint(x, y);
+					} catch (ex) {
+						// IE sometimes throws and exception, so lets just ignore it
+						rng = null;
+					}
+
+					return rng;
+				};
+
+				// Fires while the selection is changing
+				function selectionChange(e) {
+					var pointRng;
+
+					// Check if the button is down or not
+					if (e.button) {
+						// Create range from mouse position
+						pointRng = rngFromPoint(e.x, e.y);
+
+						if (pointRng) {
+							// Check if pointRange is before/after selection then change the endPoint
+							if (pointRng.compareEndPoints('StartToStart', startRng) > 0)
+								pointRng.setEndPoint('StartToStart', startRng);
+							else
+								pointRng.setEndPoint('EndToEnd', startRng);
+
+							pointRng.select();
+						}
+					} else
+						endSelection();
+				}
+
+				// Removes listeners
+				function endSelection() {
+					dom.unbind(doc, 'mouseup', endSelection);
+					dom.unbind(doc, 'mousemove', selectionChange);
+					started = 0;
+				};
+
+				// Detect when user selects outside BODY
+				dom.bind(doc, 'mousedown', function(e) {
+					if (e.target.nodeName === 'HTML') {
+						if (started)
+							endSelection();
+
+						started = 1;
+
+						// Setup start position
+						startRng = rngFromPoint(e.x, e.y);
+						if (startRng) {
+							// Listen for selection change events
+							dom.bind(doc, 'mouseup', endSelection);
+							dom.bind(doc, 'mousemove', selectionChange);
+
+							startRng.select();
+						}
+					}
+				});
+			})();
+		}
 	};
 
 	// Expose the selection object
