@@ -49,6 +49,13 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
         $limit = isset($configdata['count']) ? (int) $configdata['count'] : 10;
 
         if (!empty($configdata['artefactids'])) {
+            $before = 'TRUE';
+            if ($instance->get_view()->is_submitted()) {
+                if ($submittedtime = $instance->get_view()->get('submittedtime')) {
+                    // Don't display posts added after the submitted date.
+                    $before = "a.ctime < '$submittedtime'";
+                }
+            }
             $artefactids = implode(', ', array_map('db_quote', $configdata['artefactids']));
             if (!$mostrecent = get_records_sql_array(
             'SELECT a.title, ' . db_format_tsfield('a.ctime', 'ctime') . ', p.title AS parenttitle, a.id, a.parent
@@ -56,8 +63,9 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
                 JOIN {artefact} p ON a.parent = p.id
                 JOIN {artefact_blog_blogpost} ab ON (ab.blogpost = a.id AND ab.published = 1)
                 WHERE a.artefacttype = \'blogpost\'
-                AND a.parent IN ( ' . $artefactids . ' ) 
+                AND a.parent IN ( ' . $artefactids . ' )
                 AND a.owner = (SELECT "owner" from {view} WHERE id = ?)
+                AND ' . $before . '
                 ORDER BY a.ctime DESC
                 LIMIT ' . $limit, array($instance->get('view')))) {
                 $mostrecent = array();
