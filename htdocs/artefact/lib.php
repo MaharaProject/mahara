@@ -1087,31 +1087,30 @@ abstract class ArtefactType {
         if (empty($userid)) {
             return;
         }
+        $submitted = get_column_sql('
+            SELECT a.id
+            FROM {artefact} a
+                JOIN {view_artefact} va ON a.id = va.artefact
+                JOIN {view} v ON va.view = v.id
+            WHERE a.owner = ?
+                AND v.owner = ?
+                AND (v.submittedgroup IS NOT NULL OR v.submittedhost IS NOT NULL)',
+            array($userid, $userid)
+        );
+        if ($submitted) {
+            $lock = artefact_get_descendants($submitted);
+        }
         db_begin();
-        execute_sql('
-            UPDATE {artefact} SET locked = 1 WHERE id IN (
-                SELECT a.id
-                FROM {artefact} a
-                    JOIN {view_artefact} va ON a.id = va.artefact
-                    JOIN {view} v ON va.view = v.id
-                WHERE a.owner = ?
-                    AND a.locked = 0
-                    AND v.owner = ?
-                    AND (v.submittedgroup IS NOT NULL OR v.submittedhost IS NOT NULL)
-            )',
-            array($userid, $userid)
-        );
-        execute_sql('
-            UPDATE {artefact}
-            SET locked = 0
-            WHERE owner = ? AND locked = 1 AND id NOT IN (
-                SELECT va.artefact
-                FROM {view_artefact} va JOIN {view} v ON va.view = v.id
-                WHERE v.owner = ?
-                    AND (v.submittedgroup IS NOT NULL OR v.submittedhost IS NOT NULL)
-            )',
-            array($userid, $userid)
-        );
+        if (!empty($lock)) {
+            $idstr = '(' . join(',', $lock) . ')';
+            set_field_select('artefact', 'locked', 1, "locked = 0 AND id IN $idstr", array());
+        }
+        // Unlock
+        $select = 'locked = 1 AND "owner" = ?';
+        if (isset($idstr)) {
+            $select .= " AND NOT id IN $idstr";
+        }
+        set_field_select('artefact', 'locked', 0, $select, array($userid));
         db_commit();
     }
 }
