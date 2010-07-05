@@ -1,10 +1,13 @@
 JSCalendar
 ==========
 
-Website: http://www.dynarch.com/projects/calendar/
+Website: http://www.dynarch.com/projects/calendar/old/
 Version: 1.0
 
 This calendar is used by Pieforms' calendar element.
+
+Note: this is the last version released under the LGPL and it is no longer
+maintained upstream.
 
 Changes:
 

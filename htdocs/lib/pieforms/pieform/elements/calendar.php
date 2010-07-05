@@ -28,7 +28,7 @@
  * Provides a javascript calendar for inputting a date.
  *
  * General documentation about the calendar is available at
- * http://www.dynarch.com/demos/jscalendar/doc/html/reference.html
+ * http://www.dynarch.com/static/jscalendar-1.0/doc/html/reference.html
  *
  * @param Pieform $form    The form to render the element for
  * @param array   $element The element to render
