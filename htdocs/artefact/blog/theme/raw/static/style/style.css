@@ -18,6 +18,9 @@
 #postlist th {
 	border-bottom: 1px dotted #d1d1d1;
 }
+#postlist th.controls {
+    font-weight: normal;
+}
 #postlist input.delete,
 #postlist input.edit {
 	font-size: .9em;

@@ -596,7 +596,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
      */
     public static function get_posts(User $user, $id, $limit = self::pagination, $offset = 0) {
         ($result = get_records_sql_assoc("
-         SELECT a.id, a.title, a.description, " . db_format_tsfield('a.ctime', 'ctime') . ', ' . db_format_tsfield('a.mtime', 'mtime') . ", bp.published
+         SELECT a.id, a.title, a.description, " . db_format_tsfield('a.ctime', 'ctime') . ', ' . db_format_tsfield('a.mtime', 'mtime') . ", a.locked, bp.published
          FROM {artefact} a
           LEFT OUTER JOIN {artefact_blog_blogpost} bp
            ON a.id = bp.blogpost

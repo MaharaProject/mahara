@@ -27,6 +27,7 @@
 
 defined('INTERNAL') || die();
 
+$bloglocked = (int) $blog->get('locked');
 $enc_id = json_encode($id);
 
 $enc_wwwroot = json_encode(get_config('wwwroot'));
@@ -43,6 +44,7 @@ $enc_delete = json_encode(get_string('delete', 'artefact.blog'));
 $enc_delete_confirm = json_encode(get_string('deleteblogpost?', 'artefact.blog'));
 $enc_postedon = json_encode(get_string('postedon', 'artefact.blog'));
 $enc_cannotdeleteblogpost = json_encode(get_string('cannotdeleteblogpost', 'artefact.blog'));
+$enc_submitted = json_encode(get_string('submittedforassessment', 'view'));
 
 
 $enc_publish_help = json_encode(get_help_icon('artefact', 'blog', null, null, null, 'publish'));
@@ -61,57 +63,65 @@ postlist.limit = $limit;
 postlist.rowfunction = function(d, n, gd) {
     
     var status = TH({'id':'poststatus'+d.id});
-    var pub;
-    var pubhelp;
     if (d.published == 1) {
         status.innerHTML = {$enc_published};
-        pub = null;
-        pubhelp = null;
     }
     else {
         status.innerHTML = {$enc_draft};
-        pub = INPUT(
-            { 'type' : 'button' , 'class' : 'button publish', 'value' : {$enc_publish}}
-        );
-        pubhelp = SPAN(null); pubhelp.innerHTML = {$enc_publish_help};
-
-        connect(pub, 'onclick', function(e) {
-            if (!confirm({$enc_publish_confirm})) {
-                return;
-            }
-            sendjsonrequest({$enc_wwwroot} + 'artefact/blog/view/publish.json.php', { 'id': d.id }, 'GET', 
-                            function (response) {
-                                if (!response.error) {
-                                    $('poststatus'+d.id).innerHTML = {$enc_published};
-                                    hideElement(pub);
-                                    hideElement(pubhelp);
-                                }
-                            });
-        });
     }
 
-    var edit = FORM(
-        {
-            'method' : 'get',
-            'style' : 'display: inline;',
-            'action' : {$enc_wwwroot} + 'artefact/blog/post.php'
-        },
-        INPUT(
+    var controls = [];
+    if ({$bloglocked} || d.locked == 1) {
+        controls.push({$enc_submitted});
+    }
+    else {
+        if (d.published != 1) {
+            status.innerHTML = {$enc_draft};
+            pub = INPUT(
+                { 'type' : 'button' , 'class' : 'button publish', 'value' : {$enc_publish}}
+            );
+            pubhelp = SPAN(null); pubhelp.innerHTML = {$enc_publish_help};
+
+            connect(pub, 'onclick', function(e) {
+                if (!confirm({$enc_publish_confirm})) {
+                    return;
+                }
+                sendjsonrequest({$enc_wwwroot} + 'artefact/blog/view/publish.json.php', { 'id': d.id }, 'GET',
+                                function (response) {
+                                    if (!response.error) {
+                                        $('poststatus'+d.id).innerHTML = {$enc_published};
+                                        hideElement(pub);
+                                        hideElement(pubhelp);
+                                    }
+                                });
+            });
+            controls.push(pub, pubhelp);
+        }
+
+        var edit = FORM(
             {
-                'type'  : 'hidden',
-                'name'  : 'blogpost',
-                'value' : d.id
-            }
-        ),
-        INPUT(
-            { 'type' : 'submit', 'class' : 'submit edit',
-              'value' : {$enc_edit}
-            }
-        )
-    );
-    var del = INPUT(
-        { 'type' : 'button', 'class' : 'button delete', 'value': {$enc_delete} }
-    );
+                'method' : 'get',
+                'style' : 'display: inline;',
+                'action' : {$enc_wwwroot} + 'artefact/blog/post.php'
+            },
+            INPUT(
+                {
+                    'type'  : 'hidden',
+                    'name'  : 'blogpost',
+                    'value' : d.id
+                }
+            ),
+            INPUT(
+                { 'type' : 'submit', 'class' : 'submit edit',
+                  'value' : {$enc_edit}
+                }
+            )
+        );
+        var del = INPUT(
+            { 'type' : 'button', 'class' : 'button delete', 'value': {$enc_delete} }
+        );
+        controls.push(edit, ' ', del);
+    }
 
     var desctd = TD({'colSpan':3});
     desctd.innerHTML = d.description;
@@ -121,7 +131,7 @@ postlist.rowfunction = function(d, n, gd) {
             null,
             TH(null, d.title),
             status,
-            TH(null, [pub, pubhelp, ' ', edit, ' ', del])
+            TH({'class': 'controls'}, controls)
         ),
         TR(null, desctd)
     ];
@@ -145,18 +155,20 @@ postlist.rowfunction = function(d, n, gd) {
 
     rows.push(TR(null, TD({'colspan':2, 'class': 'postdetails'}, {$enc_postedon}, ' ', d.ctime)));
 
-    connect(del, 'onclick', function(e) {
-        if (!confirm({$enc_delete_confirm})) {
-            return;
-        }
-        sendjsonrequest({$enc_wwwroot} + 'artefact/blog/view/delete.json.php', { 'id' : d.id }, 'GET', function(response) {
-            if (!response.error) {
-                for (row in rows) {
-                    rows[row].parentNode.removeChild(rows[row]);
-                }
+    if (del) {
+        connect(del, 'onclick', function(e) {
+            if (!confirm({$enc_delete_confirm})) {
+                return;
             }
+            sendjsonrequest({$enc_wwwroot} + 'artefact/blog/view/delete.json.php', { 'id' : d.id }, 'GET', function(response) {
+                if (!response.error) {
+                    for (row in rows) {
+                        rows[row].parentNode.removeChild(rows[row]);
+                    }
+                }
+            });
         });
-    });
+    }
 
     return rows;
 };
