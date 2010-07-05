@@ -229,15 +229,25 @@ class ArtefactTypeBlog extends ArtefactType {
         $page = (isset($options['page'])) ? abs(intval($options['page'])) : abs(param_integer('page', 1));
         $offset = $page ? $page * self::pagination - self::pagination : 1;
 
+        $before = isset($options['before']) ? "a.ctime < '{$options['before']}'" : 'TRUE';
+
+        $from ="FROM {artefact} a
+            LEFT JOIN {artefact_blog_blogpost} bp ON a.id = bp.blogpost
+            WHERE a.parent = ? AND $before
+            AND bp.published = 1";
+
+        $postcount = get_field_sql("
+            SELECT COUNT(*) $from",
+            array($this->get('id'))
+        );
+
         $postids = get_column_sql("
             SELECT a.id
-            FROM {artefact} a
-            LEFT JOIN {artefact_blog_blogpost} bp ON a.id = bp.blogpost
-            WHERE a.parent = ?
-            AND bp.published = 1
+            $from
             ORDER BY a.ctime DESC
-            LIMIT ? OFFSET ?", array($this->get('id'), self::pagination, $offset));
-        $postcount = $this->count_published_posts();
+            LIMIT ? OFFSET ?",
+            array($this->get('id'), self::pagination, $offset)
+        );
 
         $data = array();
         foreach($postids as $postid) {

@@ -65,6 +65,12 @@ class PluginBlocktypeBlog extends PluginBlocktype {
             $blog = $instance->get_artefact_instance($configdata['artefactid']);
             $configdata['hidetitle'] = true;
             $configdata['viewid'] = $instance->get('view');
+            if ($instance->get_view()->is_submitted()) {
+                // Don't display posts added after the submitted date.
+                if ($submittedtime = $instance->get_view()->get('submittedtime')) {
+                    $configdata['before'] = $submittedtime;
+                }
+            }
             $result = $blog->render_self($configdata);
             $result = $result['html'] . '<script type="text/javascript">'
                 . $result['javascript'];
