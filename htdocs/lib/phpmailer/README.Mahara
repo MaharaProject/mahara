@@ -9,4 +9,5 @@ This library is for the email_user() function in lib/user.php
 Changes:
 
  * Fix for envelope sender in emails sent on cron (described and fixed in a
-   phplist bug at http://mantis.phplist.com/view.php?id=12625)
+   phplist bug at http://mantis.phplist.com/view.php?id=12625 and reported
+   upstream at http://sourceforge.net/tracker/index.php?func=detail&aid=2991547&group_id=26031&atid=385707)
