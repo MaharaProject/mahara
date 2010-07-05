@@ -1080,6 +1080,40 @@ abstract class ArtefactType {
     public function exportable() {
         return true;
     }
+
+    // Update the locked field on a user's artefacts
+    // Lock anything in a submitted view, and unlock anything that isn't
+    public static function update_locked($userid) {
+        if (empty($userid)) {
+            return;
+        }
+        db_begin();
+        execute_sql('
+            UPDATE {artefact} SET locked = 1 WHERE id IN (
+                SELECT a.id
+                FROM {artefact} a
+                    JOIN {view_artefact} va ON a.id = va.artefact
+                    JOIN {view} v ON va.view = v.id
+                WHERE a.owner = ?
+                    AND a.locked = 0
+                    AND v.owner = ?
+                    AND (v.submittedgroup IS NOT NULL OR v.submittedhost IS NOT NULL)
+            )',
+            array($userid, $userid)
+        );
+        execute_sql('
+            UPDATE {artefact}
+            SET locked = 0
+            WHERE owner = ? AND locked = 1 AND id NOT IN (
+                SELECT va.artefact
+                FROM {view_artefact} va JOIN {view} v ON va.view = v.id
+                WHERE v.owner = ?
+                    AND (v.submittedgroup IS NOT NULL OR v.submittedhost IS NOT NULL)
+            )',
+            array($userid, $userid)
+        );
+        db_commit();
+    }
 }
 
 /**

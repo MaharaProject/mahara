@@ -31,6 +31,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('view.php');
 require_once('activity.php');
+require_once(get_config('docroot') . 'artefact/lib.php');
 $viewid = param_integer('id');
 $groupid = param_integer('group');
 $returnto = param_variable('returnto', 'view');
@@ -89,6 +90,7 @@ function submitview_submit(Pieform $form, $values) {
         );
         ensure_record_exists('view_access', $accessrecord, $accessrecord);
     }
+    ArtefactType::update_locked($USER->get('id'));
     activity_occurred('groupmessage', array(
         'subject'       => get_string('viewsubmitted', 'view'), // will be overwritten
         'message'       => get_string('viewsubmitted', 'view'), // will be overwritten

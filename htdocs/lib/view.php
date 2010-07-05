@@ -531,6 +531,11 @@ class View {
         }
         handle_event('deleteview', $this->id);
         delete_records('view','id',$this->id);
+        if (!empty($this->owner) && $this->is_submitted()) {
+            // There should be no way to delete a submitted view,
+            // but unlock its artefacts just in case.
+            ArtefactType::update_locked($this->owner);
+        }
         $this->deleted = true;
         db_commit();
     }
@@ -757,6 +762,7 @@ class View {
     }
 
     public function release($releaseuser=null) {
+        require_once(get_config('docroot') . 'artefact/lib.php');
         $submitinfo = $this->submitted_to();
         if (is_null($submitinfo)) {
             throw new ParameterException("View with id " . $this->get('id') . " has not been submitted");
@@ -776,6 +782,7 @@ class View {
         }
         $this->set('submittedtime', null);
         $this->commit();
+        ArtefactType::update_locked($this->owner);
         db_commit();
         $ownerlang = get_user_language($this->get('owner'));
         $url = get_config('wwwroot') . 'view/view.php?id=' . $this->get('id');
