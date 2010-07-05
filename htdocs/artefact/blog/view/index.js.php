@@ -27,7 +27,6 @@
 
 defined('INTERNAL') || die();
 
-$bloglocked = (int) $blog->get('locked');
 $enc_id = json_encode($id);
 
 $enc_wwwroot = json_encode(get_config('wwwroot'));
@@ -71,7 +70,7 @@ postlist.rowfunction = function(d, n, gd) {
     }
 
     var controls = [];
-    if ({$bloglocked} || d.locked == 1) {
+    if (d.locked == 1) {
         controls.push({$enc_submitted});
     }
     else {

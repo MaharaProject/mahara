@@ -77,11 +77,6 @@ else {
     define('TITLE', get_string('editblogpost','artefact.blog'));
 }
 
-$blogobj = new ArtefactTypeBlog($blog);
-if ($blogobj->get('locked')) {
-    throw new AccessDeniedException(get_string('submittedforassessment', 'view'));
-}
-
 $folder = param_integer('folder', 0);
 $browse = (int) param_variable('browse', 0);
 $highlight = null;

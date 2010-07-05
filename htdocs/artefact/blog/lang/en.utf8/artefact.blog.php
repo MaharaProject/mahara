@@ -89,6 +89,7 @@ $string['noimageshavebeenattachedtothispost'] = 'No images have been attached to
 $string['nofilesattachedtothispost'] = 'No attached files';
 $string['noresults'] = 'No blog posts found';
 $string['olderposts'] = 'Older posts';
+$string['post'] = 'post';
 $string['postbody'] = 'Body';
 $string['postbodydesc'] = ' ';
 $string['postedon'] = 'Posted on';

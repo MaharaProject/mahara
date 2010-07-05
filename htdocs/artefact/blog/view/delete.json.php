@@ -40,12 +40,6 @@ $blogpost->check_permission();
 if ($blogpost->get('locked')) {
     json_reply('local', get_string('submittedforassessment', 'view'));
 }
-if ($blogpost->get('parent')) {
-    $blog = new ArtefactTypeBlog($blogpost->get('parent'));
-    if ($blog->get('locked')) {
-        json_reply('local', get_string('submittedforassessment', 'view'));
-    }
-}
 $blogpost->delete();
 
 json_reply(false, get_string('blogpostdeleted', 'artefact.blog'));
