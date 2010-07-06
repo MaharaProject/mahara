@@ -300,7 +300,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         global $USER;
         $select = '
             SELECT
-                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description,
+                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description, a.locked,
                 COUNT(DISTINCT c.id) AS childcount, COUNT (DISTINCT aa.artefact) AS attachcount, COUNT(DISTINCT va.view) AS viewcount';
         $from = '
             FROM {artefact} a
@@ -325,7 +325,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
 
         $groupby = '
             GROUP BY
-                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description';
+                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description, a.locked';
 
         $phvals = array();
 

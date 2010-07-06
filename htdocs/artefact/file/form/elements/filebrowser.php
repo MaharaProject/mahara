@@ -787,7 +787,7 @@ function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
     $collide = !empty($data['collide']) ? $data['collide'] : 'fail';
 
     $artefact = artefact_instance_from_id($data['artefact']);
-    if (!$USER->can_edit_artefact($artefact)) {
+    if (!$USER->can_edit_artefact($artefact) || $artefact->get('locked')) {
         return array('error' => true, 'message' => get_string('noeditpermission', 'mahara'));
     }
 
@@ -840,7 +840,7 @@ function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
 function pieform_element_filebrowser_delete(Pieform $form, $element, $artefact) {
     global $USER;
     $artefact = artefact_instance_from_id($artefact);
-    if (!$USER->can_edit_artefact($artefact)) {
+    if (!$USER->can_edit_artefact($artefact) || $artefact->get('locked')) {
         return array('error' => true, get_string('nodeletepermission', 'mahara'));
     }
     $parentfolder = $artefact->get('parent');
