@@ -2285,8 +2285,9 @@ function cron_check_for_updates() {
     $xpath = new DOMXPath($page);
     $query = '//div[@class="version"]';
     $elements = $xpath->query($query);
-    preg_match('/[0-9]+.[0-9]+.[a-zA-Z0-9]+/', $elements->item(0)->nodeValue, $match);
-    set_config('latest_version', $match[0]);
+    if (preg_match('/\b[0-9]+\.[0-9]+\.[0-9]+\b/', $elements->item(0)->nodeValue, $match)) {
+        set_config('latest_version', $match[0]);
+    }
 }
 
 /**
