@@ -613,6 +613,11 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
             $result['message'] = get_string('cannoteditfolder', 'artefact.file');
             return $result;
         }
+        else if ($parentartefact->get('locked')) {
+            $result['error'] = true;
+            $result['message'] = get_string('cannoteditfoldersubmitted', 'artefact.file');
+            return $result;
+        }
         $parentfoldername = $parentartefact->get('title');
     }
     else {
@@ -741,8 +746,14 @@ function pieform_element_filebrowser_createfolder(Pieform $form, $element, $data
         'title'       => $data['title'],
     );
 
-    if ($parentfolder && !$USER->can_edit_artefact(artefact_instance_from_id($parentfolder))) {
-        return array('error' => true, 'message' => get_string('cannoteditfolder', 'artefact.file'));
+    if ($parentfolder) {
+        $parentartefact = artefact_instance_from_id($parentfolder);
+        if (!$USER->can_edit_artefact($parentartefact)) {
+            return array('error' => true, 'message' => get_string('cannoteditfolder', 'artefact.file'));
+        }
+        else if ($parentartefact->get('locked')) {
+            return array('error' => true, 'message' => get_string('cannoteditfoldersubmitted', 'artefact.file'));
+        }
     }
     if ($institution) {
         $data->institution = $institution;
@@ -882,6 +893,9 @@ function pieform_element_filebrowser_move(Pieform $form, $element, $data) {
         if (!$USER->can_edit_artefact($newparent)) {
             return array('error' => true, 'message' => get_string('movefailednotowner', 'artefact.file'));
         }
+        else if ($newparent->get('locked')) {
+            return array('error' => true, 'message' => get_string('cannoteditfoldersubmitted', 'artefact.file'));
+        }
         $group = $artefact->get('group');
         if ($group && $group !== $newparent->get('group')) {
             return array('error' => true, 'message' => get_string('movefailednotowner', 'artefact.file'));
@@ -914,6 +928,14 @@ function pieform_element_filebrowser_move(Pieform $form, $element, $data) {
         }
         $newparentid = null;
     }
+
+    if ($oldparentid = $artefact->get('parent')) {
+        $oldparent = artefact_instance_from_id($oldparentid);
+        if ($oldparent->get('locked')) {
+            return array('error' => true, 'message' => get_string('cannotremovefromsubmittedfolder', 'artefact.file'));
+        }
+    }
+
 
     if ($artefact->move($newparentid)) {
         return array(
