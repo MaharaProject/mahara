@@ -1098,7 +1098,13 @@ abstract class ArtefactType {
             array($userid, $userid)
         );
         if ($submitted) {
-            $lock = artefact_get_descendants($submitted);
+            $descendants = get_column_sql('
+                SELECT artefact
+                FROM {artefact_parent_cache}
+                WHERE parent IN (' . join(',', $submitted) . ')',
+                array()
+            );
+            $lock = $descendants ? array_merge($submitted, $descendants) : $submitted;
         }
         db_begin();
         if (!empty($lock)) {
