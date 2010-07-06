@@ -1098,17 +1098,17 @@ abstract class ArtefactType {
             array($userid, $userid)
         );
         if ($submitted) {
-            $descendants = get_column_sql('
-                SELECT artefact
-                FROM {artefact_parent_cache}
-                WHERE parent IN (' . join(',', $submitted) . ')',
-                array()
-            );
-            $lock = $descendants ? array_merge($submitted, $descendants) : $submitted;
+            $submitted = artefact_get_descendants($submitted);
+            if ($attachments = get_column_sql('
+                SELECT attachment FROM {artefact_attachment}
+                WHERE artefact IN (' . join(',', $submitted) . ')',
+                array())) {
+                $submitted = array_merge($submitted, $attachments);
+            }
         }
         db_begin();
-        if (!empty($lock)) {
-            $idstr = '(' . join(',', $lock) . ')';
+        if (!empty($submitted)) {
+            $idstr = '(' . join(',', $submitted) . ')';
             set_field_select('artefact', 'locked', 1, "locked = 0 AND id IN $idstr", array());
         }
         // Unlock
