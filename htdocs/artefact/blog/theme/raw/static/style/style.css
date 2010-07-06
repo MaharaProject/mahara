@@ -13,6 +13,9 @@
 #bloglist td .addicon {
 	margin: 0;
 }
+#bloglist td div.postcontrols {
+  min-width: 12.5em;
+}
 
 /* Post list */
 #postlist th {

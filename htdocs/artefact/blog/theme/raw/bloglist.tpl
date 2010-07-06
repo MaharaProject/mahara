@@ -18,7 +18,7 @@
         <a href="{$WWWROOT}artefact/blog/settings/?id={$blog->id}" class="btn-settings">{str tag=settings}</a>
         <a onClick="confirmdelete({$blog->id});" class="btn-del">{str tag=delete}</a>
         {/if}
-        <div class="fr" style="width: 25%;">
+        <div class="fr postcontrols">
         <a href="{$WWWROOT}artefact/blog/view/?id={$blog->id}">{$blog->postcount} {if $blog->postcount == 1}{str tag=post section=artefact.blog}{else}{str tag=posts section=artefact.blog}{/if}</a>
         <a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->id}" class="btn-add">{str tag=addpost section=artefact.blog}</a>
         </div>
