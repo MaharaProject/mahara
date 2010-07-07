@@ -31,8 +31,6 @@ define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-$public = (int) param_boolean('public');
-
 $result = array();
 
 $groupcategories = get_records_array('group_category','','','displayorder');

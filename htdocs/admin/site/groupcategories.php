@@ -35,6 +35,11 @@ define('SECTION_PAGE', 'groups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('groups', 'admin'));
 
+if (!get_config('allowgroupcategories')) {
+    $SESSION->add_error_msg(get_string('groupcategoriesnotenabled', 'admin'));
+    redirect(get_config('wwwroot') . 'admin');
+}
+
 $strings = array('edit','delete','update','cancel','add','name','unknownerror');
 $adminstrings = array('confirmdeletecategory', 'deletefailed');
 foreach ($strings as $string) {
@@ -43,65 +48,7 @@ foreach ($strings as $string) {
 foreach ($adminstrings as $string) {
     $getstring[$string] = json_encode(get_string($string, 'admin'));
 }
-//set up initial pieform
-$groupoptionform = array(
-    'name'       => 'groupoptions',
-    'renderer'   => 'table',
-    'plugintype' => 'core',
-    'pluginname' => 'admin',
-    'elements'   => array(
-        'creategroups' => array(
-            'type'         => 'select',
-            'title'        => get_string('whocancreategroups', 'admin'),
-            'description'  => get_string('whocancreategroupsdescription', 'admin'),
-            'defaultvalue' => get_config('creategroups'),
-            'options'      => array(
-                'admins' => get_string('adminsonly', 'admin'),
-                'staff'  => get_string('adminsandstaffonly', 'admin'),
-                'all'    => get_string('Everyone', 'admin'),
-            ),
-        ),
-        'createpublicgroups' => array(
-            'type'         => 'select',
-            'title'        => get_string('whocancreatepublicgroups', 'admin'),
-            'description'  => get_string('whocancreatepublicgroupsdescription', 'admin'),
-            'defaultvalue' => get_config('createpublicgroups'),
-            'options'      => array(
-                'admins' => get_string('adminsonly', 'admin'),
-                'all' => get_string('Everyone', 'admin'),
-            ),
-            'help'         => true,
-        ),
-        'allowgroupcategories' => array(
-            'type'         => 'select',
-            'title'        => get_string('allowgroupcategories', 'admin'),
-            'description'  => get_string('allowgroupcategoriesdescription', 'admin'),
-            'defaultvalue' => get_config('allowgroupcategories'),
-            'options'      => array(true  => get_string('yes'), false => get_string('no')),
-            'help'         => true,
-        ),
-    )
-);
 
-$groupoptionform['elements']['submit'] = array(
-    'type'  => 'submit',
-    'value' => get_string('updatesiteoptions', 'admin')
-);
-
-$groupoptionform = pieform($groupoptionform);
-function groupoptions_submit(Pieform $form, $values) {
-    global $SESSION;
-    $fields = array('creategroups', 'createpublicgroups', 'allowgroupcategories');
-    foreach ($fields as $field) {
-        if (!set_config($field, $values[$field])) {
-            siteoptions_fail($form, $field);
-        }
-    }
-
-    $SESSION->add_ok_msg(get_string('groupoptionsset', 'group'));
-    redirect(get_config('wwwroot') . 'admin/site/groups.php');
-}
-if (get_config('allowgroupcategories')) {
 $thead = array(json_encode(get_string('name', 'admin')), '""');
 $ijs = "var thead = TR(null,map(partial(TH,null),[" . implode($thead,",") . "]));\n";
 
@@ -133,7 +80,7 @@ function formatrow (item) {
         partial(TD,null),
         [
             item.name,
-            [del,edit,contextualHelpIcon(null, null, 'core', 'admin', null, 'adminmenuedit')]
+            [del,edit]
         ]
     );
     return TR({'id':'menuitem_'+item.id},cells);
@@ -156,11 +103,6 @@ function editform(item) {
     connect(save, 'onclick', function () { saveitem(item.id); });
 
     var rowtype = 'add';
-    if (!item) {
-        // This is the 'add' form rather than the edit form
-        // Set defaults.
-        item = {'type':'externallist'};
-    }
     if (!item.name) {
         item.name = '';
         // The save button says 'add', and there's no cancel button.
@@ -191,8 +133,8 @@ function closeopenedits() {
         if (hasElementClass(rows[i],'edit')) {
             removeElement(rows[i]);
         }
-        else if (hasElementClass(rows[i],'invisible')) {
-            removeElementClass(rows[i],'invisible');
+        else if (hasElementClass(rows[i],'hidden')) {
+            removeElementClass(rows[i],'hidden');
         }
     }
 }
@@ -201,7 +143,7 @@ function closeopenedits() {
 function edititem(item) {
     closeopenedits();
     var menuitem = $('menuitem_'+item.id);
-    addElementClass(menuitem,'invisible');
+    addElementClass(menuitem,'hidden');
     var newrow = editform(item);
     insertSiblingNodesBefore(menuitem, newrow);
 }
@@ -233,16 +175,10 @@ addLoadEvent(function () {
     getitems();
 });
 EOJS;
-}
-$style = '<style type="text/css">.invisible{display:none;}</style>';
-$smarty = smarty(array('groupoptions'), array($style));
-$smarty->assign('PAGEHEADING', hsc(get_string('groups', 'admin')));
-$smarty->assign('groupoptionform', $groupoptionform);
-if (get_config('allowgroupcategories')) {
-    $smarty->assign('grouptitle', get_string('groupsdescription', 'admin'));
-    $smarty->assign('INLINEJAVASCRIPT', $ijs);
-}
 
-$smarty->display('admin/site/groups.tpl');
+$smarty = smarty(array('groupoptions'));
+$smarty->assign('PAGEHEADING', hsc(get_string('groupcategories', 'admin')));
+$smarty->assign('INLINEJAVASCRIPT', $ijs);
+$smarty->display('admin/site/groupcategories.tpl');
 
 ?>

@@ -116,6 +116,8 @@ $string['htmlfiltersdescription'] = 'Enable new filters for HTML Purifier';
 $string['newfiltersdescription'] = 'If you have downloaded a new set of HTML filters, you can install them by unzipping the file into the folder %s and then clicking the button below';
 $string['filtersinstalled'] = 'Filters installed.';
 $string['nofiltersinstalled'] = 'No html filters installed.';
+
+$string['groupcategories'] ='Group Categories';
 $string['allowgroupcategories'] ='Allow Group Categories';
 $string['allowgroupcategoriesdescription'] ='If set to yes, admins will be able to create categories for users to assign their groups';
 $string['groupoptionsset'] = 'Group options have been updated.';
@@ -666,6 +668,7 @@ $string['Advanced'] = 'Advanced';
 //admin option fieldset legends
 $string['sitesettingslegend'] = 'Site Settings';
 $string['usersettingslegend'] = 'User Settings';
+$string['groupsettingslegend'] = 'Group Settings';
 $string['searchsettingslegend'] = 'Search Settings';
 $string['institutionsettingslegend'] = 'Institution Settings';
 $string['accountsettingslegend'] = 'Account Settings';

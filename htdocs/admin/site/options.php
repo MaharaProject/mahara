@@ -154,7 +154,7 @@ $siteoptionform = array(
                 ),
             ),
         ),
-        'searchsettings' => array(
+        /* 'searchsettings' => array(
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,
@@ -170,12 +170,43 @@ $siteoptionform = array(
                     'help'         => true,
                     'disabled'     => in_array('searchplugin', $OVERRIDDEN),
                 ),
-                'showselfsearchsideblock' => array(
-                    'type'         => 'checkbox',
-                    'title'        => get_string('showselfsearchsideblock', 'admin'),
-                    'description'  => get_string('showselfsearchsideblockdescription', 'admin'),
-                    'defaultvalue' => get_config('showselfsearchsideblock'),
-                    'disabled'     => in_array('showselfsearchsideblock', $OVERRIDDEN),
+            ),
+        ),*/
+        'groupsettings' => array(
+            'type'         => 'fieldset',
+            'collapsible'  => true,
+            'collapsed'    => true,
+            'legend'       => get_string('groupsettingslegend', 'admin'),
+            'elements'     => array(
+                'creategroups' => array(
+                    'type'         => 'select',
+                    'title'        => get_string('whocancreategroups', 'admin'),
+                    'description'  => get_string('whocancreategroupsdescription', 'admin'),
+                    'defaultvalue' => get_config('creategroups'),
+                    'options'      => array(
+                        'admins' => get_string('adminsonly', 'admin'),
+                        'staff'  => get_string('adminsandstaffonly', 'admin'),
+                        'all'    => get_string('Everyone', 'admin'),
+                    ),
+                ),
+                'createpublicgroups' => array(
+                    'type'         => 'select',
+                    'title'        => get_string('whocancreatepublicgroups', 'admin'),
+                    'description'  => get_string('whocancreatepublicgroupsdescription', 'admin'),
+                    'defaultvalue' => get_config('createpublicgroups'),
+                    'options'      => array(
+                        'admins' => get_string('adminsonly', 'admin'),
+                        'all' => get_string('Everyone', 'admin'),
+                    ),
+                    'help'         => true,
+                ),
+                'allowgroupcategories' => array(
+                    'type'         => 'select',
+                    'title'        => get_string('allowgroupcategories', 'admin'),
+                    'description'  => get_string('allowgroupcategoriesdescription', 'admin'),
+                    'defaultvalue' => get_config('allowgroupcategories'),
+                    'options'      => array(true  => get_string('yes'), false => get_string('no')),
+                    'help'         => true,
                 ),
             ),
         ),
@@ -326,6 +357,13 @@ $siteoptionform = array(
                     'help'         => true,
                     'disabled'     => in_array('allowpublicprofiles', $OVERRIDDEN),
                 ),
+                'showselfsearchsideblock' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('showselfsearchsideblock', 'admin'),
+                    'description'  => get_string('showselfsearchsideblockdescription', 'admin'),
+                    'defaultvalue' => get_config('showselfsearchsideblock'),
+                    'disabled'     => in_array('showselfsearchsideblock', $OVERRIDDEN),
+                ),
                 'showtagssideblock' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('showtagssideblock', 'admin'),
@@ -386,12 +424,13 @@ function siteoptions_submit(Pieform $form, $values) {
     $fields = array(
         'sitename','lang','theme', 'pathtoclam',
         'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
-        'allowpublicviews', 'allowpublicprofiles', 'searchplugin',
+        'allowpublicviews', 'allowpublicprofiles',
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
         'showselfsearchsideblock', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments',
         'homepageinfo', 'showonlineuserssideblock', 'registerterms',
+        'creategroups', 'createpublicgroups', 'allowgroupcategories',
     );
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');

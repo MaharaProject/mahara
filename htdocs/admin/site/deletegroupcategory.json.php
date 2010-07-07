@@ -36,10 +36,10 @@ json_headers();
 $itemid = param_integer('itemid');
 
 //first update all records that use this group id
-$groups = get_records_assoc('group', 'groupcategory', $itemid);
+$groups = get_records_assoc('group', 'category', $itemid);
 if (!empty($groups)) {
     foreach ($groups as $group) {
-        $group->groupcategory = 0;
+        $group->groupcategory = null;
         update_record('group', $group);
     }
 }

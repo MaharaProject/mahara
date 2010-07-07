@@ -65,6 +65,6 @@ else {
     }
 }
 
-json_reply(false,get_string('menuitemsaved','admin'));
+json_reply(false, null);
 
 ?>
