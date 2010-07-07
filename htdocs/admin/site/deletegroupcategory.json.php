@@ -39,7 +39,7 @@ $itemid = param_integer('itemid');
 $groups = get_records_assoc('group', 'category', $itemid);
 if (!empty($groups)) {
     foreach ($groups as $group) {
-        $group->groupcategory = null;
+        $group->category = null;
         update_record('group', $group);
     }
 }

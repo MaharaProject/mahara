@@ -52,7 +52,7 @@ $elements['grouptype'] = array(
             'defaultvalue' => 'standard.open',
             'help'         => true);
 if (get_config('allowgroupcategories')) {
-    $elements['groupcategory'] = array(
+    $elements['category'] = array(
                 'type'         => 'select',
                 'title'        => get_string('groupcategory', 'group'),
                 'options'      => array('0'=>get_string('nocategoryselected', 'group')) + get_records_menu('group_category','','','displayorder', 'id,title'),
@@ -117,7 +117,7 @@ function creategroup_submit(Pieform $form, $values) {
         'name'           => $values['name'],
         'description'    => $values['description'],
         'grouptype'      => $grouptype,
-        'groupcategory'  => intval($values['groupcategory']),
+        'category'       => empty($values['category']) ? null : intval($values['category']),
         'jointype'       => $jointype,
         'public'         => intval($values['public']),
         'usersautoadded' => intval($values['usersautoadded']),

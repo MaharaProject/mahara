@@ -606,16 +606,17 @@ class PluginSearchInternal extends PluginSearch {
         }
         if (!empty($category)) {
             if ($category == -1) { //find unassigned groups
-                    $sql .= " AND (groupcategory = 0 OR groupcategory = null)";
+                $sql .= " AND category IS NULL";
             } else {
-                $sql .= ' AND groupcategory ='.$category;
+                $sql .= ' AND category = ?';
+                $values[] = $category;
             }
         }
 
         $count = get_field_sql('SELECT COUNT(*) '.$sql, $values);
 
         if ($count > 0) {
-            $sql = 'SELECT id, name, description, grouptype, jointype, ctime, mtime ' . $sql . 'ORDER BY name';
+            $sql = 'SELECT id, name, description, grouptype, jointype, ctime, mtime ' . $sql . ' ORDER BY name';
             $data = get_records_sql_array($sql, $values, $offset, $limit);
         }
 

@@ -265,7 +265,7 @@ function group_create($data) {
             'name'           => $data['name'],
             'description'    => $data['description'],
             'grouptype'      => $data['grouptype'],
-            'groupcategory'  => $data['groupcategory'],
+            'category'       => $data['category'],
             'jointype'       => $data['jointype'],
             'ctime'          => $data['ctime'],
             'mtime'          => $data['ctime'],
@@ -1141,15 +1141,6 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
     }
     // TODO: make it work on other databases?
 
-    $catsql = '';
-    if (!empty($category)) {
-        if ($category == -1) { //find unassigned groups
-            $catsql = " AND (g.groupcategory = 0 OR g.groupcategory = null)";
-        } else {
-            $catsql = ' AND g.groupcategory ='.$category;
-        }
-    }
-
     // Different filters join on the different kinds of association
     if ($filter == 'admin') {
         $sql = "
@@ -1215,6 +1206,16 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
     
     $values[] = 0;
     
+    $catsql = '';
+    if (!empty($category)) {
+        if ($category == -1) { //find unassigned groups
+            $catsql = ' AND g.category IS NULL';
+        } else {
+            $catsql = ' AND g.category = ?';
+            $values[] = $category;
+        }
+    }
+
     $count = count_records_sql('SELECT COUNT(*) FROM {group} g ' . $sql . ' WHERE g.deleted = ?'.$catsql, $values);
     
     // almost the same as query used in find - common parts should probably be pulled out

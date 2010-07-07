@@ -35,7 +35,7 @@ define('TITLE', get_string('editgroup', 'group'));
 $id = param_integer('id');
 define('GROUP', $id);
 
-$group_data = get_record_sql("SELECT g.id, g.name, g.description, g.grouptype, g.jointype, g.public, g.usersautoadded, g.groupcategory
+$group_data = get_record_sql("SELECT g.id, g.name, g.description, g.grouptype, g.jointype, g.public, g.usersautoadded, g.category
     FROM {group} g
     INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
     WHERE g.id = ?
@@ -64,11 +64,11 @@ $elements['grouptype'] = array(
             'defaultvalue' => $group_data->grouptype . '.' . $group_data->jointype,
             'help'         => true);
 if (get_config('allowgroupcategories')) {
-    $elements['groupcategory'] = array(
+    $elements['category'] = array(
                 'type'         => 'select',
                 'title'        => get_string('groupcategory', 'group'),
                 'options'      => array('0'=>get_string('nocategoryselected', 'group')) + get_records_menu('group_category','','','displayorder', 'id,title'),
-                'defaultvalue' => $group_data->groupcategory,
+                'defaultvalue' => $group_data->category,
                 'help'         => true);
 }
 $elements['public'] = array(
@@ -133,7 +133,7 @@ function editgroup_submit(Pieform $form, $values) {
             'name'           => $values['name'],
             'description'    => $values['description'],
             'grouptype'      => $grouptype,
-            'groupcategory'  => intval($values['groupcategory']),
+            'category'       => empty($values['category']) ? null : intval($values['category']),
             'jointype'       => $jointype,
             'mtime'          => $now,
             'usersautoadded' => intval($values['usersautoadded']),
