@@ -1978,5 +1978,23 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2010070700) {
+        $table = new XMLDBTable('group_category');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('title', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('displayorder', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        create_table($table);
+
+        $table = new XMLDBTable('group');
+        $field = new XMLDBField('category');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
+        add_field($table, $field);
+
+        $key = new XMLDBKey('categoryfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('category'), 'group_category', array('id'));
+        add_key($table, $key);
+    }
+
     return $status;
 }
