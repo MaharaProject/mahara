@@ -2275,7 +2275,7 @@ function recalculate_quota() {
  */
 function cron_check_for_updates() {
     $request = array(
-        CURLOPT_URL => 'https://launchpad.net/mahara',
+        CURLOPT_URL => 'https://launchpad.net/mahara/+download',
     );
 
     $result = mahara_http_request($request);
@@ -2283,10 +2283,17 @@ function cron_check_for_updates() {
     $page = new DOMDocument();
     $page->loadHTML($result->data);
     $xpath = new DOMXPath($page);
-    $query = '//div[@class="version"]';
+    $query = '//div[starts-with(@id,"release-information-")]';
     $elements = $xpath->query($query);
-    if (preg_match('/\b[0-9]+\.[0-9]+\.[0-9]+\b/', $elements->item(0)->nodeValue, $match)) {
-        set_config('latest_version', $match[0]);
+    $versions = array();
+    foreach ($elements as $e) {
+        if (preg_match('/^release-information-(\d+)-(\d+)-(\d+)$/', $e->getAttribute('id'), $match)) {
+            $versions[] = "$match[1].$match[2].$match[3]";
+        }
+    }
+    if (!empty($versions)) {
+        usort($versions, 'strnatcmp');
+        set_config('latest_version', end($versions));
     }
 }
 
