@@ -36,18 +36,14 @@ define('SECTION_PAGE', 'mygroups');
 require_once('group.php');
 $filter = param_alpha('filter', 'all');
 $offset = param_integer('offset', 'all');
+$groupcategory = param_variable('groupcategory', 0);
 
 $groupsperpage = 20;
 $offset = (int)($offset / $groupsperpage) * $groupsperpage;
 
-$results = group_get_associated_groups($USER->get('id'), $filter, $groupsperpage, $offset);
-
-$form = pieform(array(
-    'name'   => 'filter',
-    'method' => 'post',
-    'renderer' => 'oneline',
-    'elements' => array(
-        'options' => array(
+$results = group_get_associated_groups($USER->get('id'), $filter, $groupsperpage, $offset, $groupcategory);
+$elements = array();
+$elements['options'] = array(
             'type' => 'select',
             'options' => array(
                 'all'     => get_string('allmygroups', 'group'),
@@ -56,13 +52,25 @@ $form = pieform(array(
                 'invite'  => get_string('groupsiminvitedto', 'group'),
                 'request' => get_string('groupsiwanttojoin', 'group')
             ),
-            'defaultvalue' => $filter
-        ),
-        'submit' => array(
+            'defaultvalue' => $filter);
+if (get_config('allowgroupcategories')) {
+    $options[0] = get_string('allcategories', 'group');
+    $options[-1] = get_string('categoryunassigned', 'group');
+    $options += get_records_menu('group_category','','','displayorder', 'id,title');
+    $elements['groupcategory'] = array(
+                'type'         => 'select',
+                'options'      => $options,
+                'defaultvalue' => $groupcategory,
+                'help'         => true);
+}
+$elements['submit'] = array(
             'type' => 'submit',
-            'value' => get_string('filter')
-        )
-    ),
+            'value' => get_string('filter'));
+$form = pieform(array(
+    'name'   => 'filter',
+    'method' => 'post',
+    'renderer' => 'oneline',
+    'elements' => $elements
 ));
 
 $pagination = build_pagination(array(
@@ -87,7 +95,7 @@ $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('group/mygroups.tpl');
 
 function filter_submit(Pieform $form, $values) {
-    redirect('/group/mygroups.php?filter=' . $values['options']);
+    redirect('/group/mygroups.php?filter=' . $values['options']. (!empty($values['groupcategory']) ? '&groupcategory=' . intval($values['groupcategory']) : ''));
 }
 
 ?>

@@ -71,7 +71,11 @@ $string['Type'] = 'Type';
 $string['publiclyvisible'] = 'Publicly visible';
 $string['usersautoadded'] = 'Users auto-added?';
 $string['usersautoaddeddescription'] = 'Automatically put all new users into this group?';
-
+$string['groupcategory'] = 'Group category';
+$string['allcategories'] = 'All categories';
+$string['groupoptionsset'] = 'Group options have been updated.';
+$string['nocategoryselected'] = 'No category selected';
+$string['categoryunassigned'] = 'Category unassigned';
 $string['hasrequestedmembership'] = 'has requested membership of this group';
 $string['hasbeeninvitedtojoin'] = 'has been invited to join this group';
 $string['groupinvitesfrom'] = 'Invited to join:';

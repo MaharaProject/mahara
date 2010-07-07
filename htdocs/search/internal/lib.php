@@ -581,7 +581,7 @@ class PluginSearchInternal extends PluginSearch {
      *               ),
      *           );
      */
-    public static function search_group($query_string, $limit, $offset=0, $type='member') {
+    public static function search_group($query_string, $limit, $offset=0, $type='member', $category='') {
         global $USER;
         $data = array();
 
@@ -604,11 +604,19 @@ class PluginSearchInternal extends PluginSearch {
         else if ($type == 'notmember') {
             $sql .= 'AND id NOT IN (' . $grouproles . ')';
         }
+        if (!empty($category)) {
+            if ($category == -1) { //find unassigned groups
+                $sql .= " AND category IS NULL";
+            } else {
+                $sql .= ' AND category = ?';
+                $values[] = $category;
+            }
+        }
 
         $count = get_field_sql('SELECT COUNT(*) '.$sql, $values);
 
         if ($count > 0) {
-            $sql = 'SELECT id, name, description, grouptype, jointype, ctime, mtime ' . $sql . 'ORDER BY name';
+            $sql = 'SELECT id, name, description, grouptype, jointype, ctime, mtime ' . $sql . ' ORDER BY name';
             $data = get_records_sql_array($sql, $values, $offset, $limit);
         }
 

@@ -424,11 +424,11 @@ function group_user_search($group, $queries, $constraints, $offset, $limit, $mem
  *               ),
  *           );
  */
-function search_group($query_string, $limit, $offset = 0, $type = 'member') {
+function search_group($query_string, $limit, $offset = 0, $type = 'member', $groupcategory = '') {
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
 
-    return call_static_method(generate_class_name('search', $plugin), 'search_group', $query_string, $limit, $offset, $type);
+    return call_static_method(generate_class_name('search', $plugin), 'search_group', $query_string, $limit, $offset, $type, $groupcategory);
 }
 
 function search_selfsearch($query_string, $limit, $offset, $type = 'all') {

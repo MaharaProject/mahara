@@ -265,6 +265,7 @@ function group_create($data) {
             'name'           => $data['name'],
             'description'    => $data['description'],
             'grouptype'      => $data['grouptype'],
+            'category'       => $data['category'],
             'jointype'       => $data['jointype'],
             'ctime'          => $data['ctime'],
             'mtime'          => $data['ctime'],
@@ -1122,7 +1123,7 @@ function group_sideblock() {
 }
 
 
-function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=0) {
+function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=0, $category='') {
 
     // Strangely, casting is only needed for invite, request and admin and only in 
     // postgres
@@ -1205,7 +1206,17 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
     
     $values[] = 0;
     
-    $count = count_records_sql('SELECT COUNT(*) FROM {group} g ' . $sql . ' WHERE g.deleted = ?', $values);
+    $catsql = '';
+    if (!empty($category)) {
+        if ($category == -1) { //find unassigned groups
+            $catsql = ' AND g.category IS NULL';
+        } else {
+            $catsql = ' AND g.category = ?';
+            $values[] = $category;
+        }
+    }
+
+    $count = count_records_sql('SELECT COUNT(*) FROM {group} g ' . $sql . ' WHERE g.deleted = ?'.$catsql, $values);
     
     // almost the same as query used in find - common parts should probably be pulled out
     // gets the groups filtered by above
@@ -1217,13 +1228,14 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
             FROM {group} g
             LEFT JOIN {group_member} gm ON (gm.group = g.id)' .
             $sql . '
-            WHERE g.deleted = ?
+            WHERE g.deleted = ?' .
+            $catsql . '
             GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.grouptype, t.membershiptype, t.reason, t.role
             ORDER BY g.name
         ) g1
         LEFT JOIN {group_member_request} gmr ON (gmr.group = g1.id)
         GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.grouptype, g1.membershiptype, g1.reason, g1.role, g1.membercount';
-    
+
     $groups = get_records_sql_assoc($sql, $values, $offset, $limit);
     
     if ($groups) {

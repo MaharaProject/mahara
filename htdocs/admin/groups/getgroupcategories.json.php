@@ -18,18 +18,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage core
+ * @subpackage admin
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+define('ADMIN', 1);
+define('JSON', 1);
 
-$config = new StdClass;
-$config->version = 2010070700;
-$config->release = '1.3.0beta2dev';
-$config->minupgradefrom = 2008040200;
-$config->minupgraderelease = '1.0.0 (release tag 1.0.0_RELEASE)';
-$config->disablelogin = true;
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+
+$result = array();
+
+$groupcategories = get_records_array('group_category','','','displayorder');
+
+$rows = array();
+if ($groupcategories) {
+    foreach ($groupcategories as $i) {
+        $r = array();
+        $r['id'] = $i->id;
+        $r['name'] = $i->title;
+        $rows[] = $r;
+    }
+}
+
+$result['groupcategories'] = array_values($rows);
+$result['error'] = false;
+$result['message'] = false;
+
+json_headers();
+echo json_encode($result);
+?>
