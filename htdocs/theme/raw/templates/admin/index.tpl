@@ -67,17 +67,7 @@
         <li><strong><a href="{$WWWROOT}admin/site/networking.php">{str tag=networking section=admin}</a></strong> - {str tag=networkingdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/site/views.php">{str tag=siteviews section=admin}</a></strong> - {str tag=siteviewsdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}artefact/file/sitefiles.php">{str tag=sitefiles section=admin}</a></strong> - {str tag=sitefilesdescription section=admin}</li>
-        <li><strong><a href="{$WWWROOT}admin/site/groups.php">{str tag=groups section=admin}</a></strong> - {str tag=groupsdescription section=admin}</li>
     </ul>
-
-<h3>{str tag=configextensions section=admin}</h3>
-    <ul>
-        <li><strong><a href="{$WWWROOT}admin/extensions/plugins.php">{str tag=pluginadmin section=admin}</a></strong> - {str tag=pluginadmindescription section=admin}</li>
-        <li><strong><a href="{$WWWROOT}admin/extensions/filter.php">{str tag=htmlfilters section=admin}</a></strong> - {str tag=htmlfiltersdescription section=admin}</li>
-    </ul>
-</div>
-
-<div class="admin-home-column fr">
 
 <h3>{str tag=configusers section=admin}</h3>
     <ul>
@@ -89,6 +79,17 @@
         <li><strong><a href="{$WWWROOT}admin/users/add.php">{str tag=adduser section=admin}</a></strong> - {str tag=adduserdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/users/uploadcsv.php">{str tag=uploadcsv section=admin}</a></strong> - {str tag=uploadcsvdescription section=admin}</li>
     </ul>
+
+</div>
+
+<div class="admin-home-column fr">
+
+<h3>{str tag=managegroups section=admin}</h3>
+    <ul>
+        <li><strong><a href="{$WWWROOT}admin/groups/groups.php">{str tag=administergroups section=admin}</a></strong> - {str tag=administergroupsdescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}admin/groups/groupcategories.php">{str tag=groupcategories section=admin}</a></strong> - {str tag=groupcategoriesdescription section=admin}</li>
+    </ul>
+
 <h3>{str tag=manageinstitutions section=admin}</h3>
     <ul>
         <li><strong><a href="{$WWWROOT}admin/users/institutions.php">{str tag=institutions section=admin}</a></strong> - {str tag=institutionsdescription section=admin}</li>
@@ -97,6 +98,12 @@
         <li><strong><a href="{$WWWROOT}admin/users/institutionadmins.php">{str tag=institutionadmins section=admin}</a></strong> - {str tag=institutionadminsdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}view/institutionviews.php">{str tag=institutionviews section=admin}</a></strong> - {str tag=institutionviewsdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}artefact/file/institutionfiles.php">{str tag=institutionfiles section=admin}</a></strong> - {str tag=institutionfilesdescription section=admin}</li>
+    </ul>
+
+<h3>{str tag=configextensions section=admin}</h3>
+    <ul>
+        <li><strong><a href="{$WWWROOT}admin/extensions/plugins.php">{str tag=pluginadmin section=admin}</a></strong> - {str tag=pluginadmindescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}admin/extensions/filter.php">{str tag=htmlfilters section=admin}</a></strong> - {str tag=htmlfiltersdescription section=admin}</li>
     </ul>
 </div>
 

@@ -67,6 +67,9 @@ $string['dbcollationmismatch'] = 'A column of your database is using a collation
 $string['adminhome']      = 'Admin home';
 $string['configsite']  = 'Configure Site';
 $string['configusers'] = 'Manage Users';
+$string['groups'] = 'Groups';
+$string['managegroups'] = 'Manage Groups';
+$string['Extensions']   = 'Extensions';
 $string['configextensions']   = 'Administer Extensions';
 $string['manageinstitutions'] = 'Manage Institutions';
 
@@ -100,6 +103,10 @@ $string['usersearch'] = 'User Search';
 $string['usersearchdescription'] = 'Search all users and perform administrative actions on them';
 $string['usersearchinstructions'] = 'You can search for users by clicking on the initials of their first and last names, or by entering a name in the search box.  You can also enter an email address in the search box if you would like to search email addresses.';
 
+$string['administergroups'] = 'Administer Groups';
+$string['administergroupsdescription'] = 'Appoint group administrators and delete groups';
+$string['groupcategoriesdescription'] = 'Add and edit group categories';
+
 $string['institutionmembersdescription'] = 'Associate users with institutions';
 $string['institutionstaffdescription'] = 'Assign users Staff permissions';
 $string['institutionadminsdescription'] = 'Assign Institution Administrator access rights';
@@ -117,14 +124,15 @@ $string['newfiltersdescription'] = 'If you have downloaded a new set of HTML fil
 $string['filtersinstalled'] = 'Filters installed.';
 $string['nofiltersinstalled'] = 'No html filters installed.';
 
-$string['groupcategories'] ='Group Categories';
-$string['allowgroupcategories'] ='Allow Group Categories';
-$string['allowgroupcategoriesdescription'] ='If set to yes, admins will be able to create categories for users to assign their groups';
+$string['groupcategories'] = 'Group Categories';
+$string['allowgroupcategories'] = 'Allow Group Categories';
+$string['enablegroupcategories'] = 'Enable Group Categories';
+$string['addcategories'] = 'Add Categories';
+$string['allowgroupcategoriesdescription'] = 'If checked, admins will be able to create categories for users to assign their groups';
 $string['groupoptionsset'] = 'Group options have been updated.';
-$string['groups'] = 'Groups';
-$string['groupsdescription'] = 'Manage group options';
 $string['groupcategorydeleted'] = 'Category deleted';
 $string['confirmdeletecategory'] = 'Do you really want to delete this category?';
+$string['groupcategoriespagedescription'] = 'The categories listed here can be assigned to groups during group creation, and used to filter groups during searches.';
 
 // Register your Mahara
 $string['Field'] = 'Field';

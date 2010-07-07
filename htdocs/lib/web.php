@@ -1672,7 +1672,7 @@ function admin_nav() {
         array(
             'path'   => 'configusers',
             'url'    => 'admin/users/search.php',
-            'title'  => get_string('configusers', 'admin'),
+            'title'  => get_string('users'),
             'weight' => 30,
         ),
         array(
@@ -1718,10 +1718,28 @@ function admin_nav() {
             'weight' => 60,
         ),
         array(
+            'path'   => 'managegroups',
+            'url'    => 'admin/groups/groups.php',
+            'title'  => get_string('groups', 'admin'),
+            'weight' => 40,
+        ),
+        array(
+            'path'   => 'managegroups/groups',
+            'url'    => 'admin/groups/groups.php',
+            'title'  => get_string('administergroups', 'admin'),
+            'weight' => 10,
+        ),
+        array(
+            'path'   => 'managegroups/categories',
+            'url'    => 'admin/groups/groupcategories.php',
+            'title'  => get_string('groupcategories', 'admin'),
+            'weight' => 20,
+        ),
+        array(
             'path'   => 'manageinstitutions',
             'url'    => 'admin/users/institutions.php',
-            'title'  => get_string('manageinstitutions', 'admin'),
-            'weight' => 35,
+            'title'  => get_string('institutions', 'admin'),
+            'weight' => 50,
         ),
         array(
             'path'   => 'manageinstitutions/institutions',
@@ -1760,22 +1778,10 @@ function admin_nav() {
             'weight' => 60,
         ),
         array(
-            'path'   => 'managegroups',
-            'url'    => 'admin/groups/groups.php',
-            'title'  => 'Manage Groups',
-            'weight' => 35,
-        ),
-        array(
-            'path'   => 'managegroups/groups',
-            'url'    => 'admin/groups/groups.php',
-            'title'  => 'Administer Groups',
-            'weight' => 10,
-        ),
-        array(
             'path'   => 'configextensions',
             'url'    => 'admin/extensions/plugins.php',
-            'title'  => get_string('configextensions', 'admin'),
-            'weight' => 40,
+            'title'  => get_string('Extensions', 'admin'),
+            'weight' => 60,
         ),
         array(
             'path'   => 'configextensions/pluginadmin',

@@ -27,17 +27,32 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'configsite/groups');
-define('SECTION_PLUGINTYPE', 'core');
-define('SECTION_PLUGINNAME', 'admin');
-define('SECTION_PAGE', 'groups');
+define('MENUITEM', 'managegroups/categories');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('groups', 'admin'));
 
-if (!get_config('allowgroupcategories')) {
-    $SESSION->add_error_msg(get_string('groupcategoriesnotenabled', 'admin'));
-    redirect(get_config('wwwroot') . 'admin');
+$optionform = pieform(array(
+    'name'       => 'groupcategories',
+    'renderer'   => 'table',
+    'plugintype' => 'core',
+    'pluginname' => 'admin',
+    'elements'   => array(
+        'allowgroupcategories' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('enablegroupcategories', 'admin'),
+            'defaultvalue' => get_config('allowgroupcategories'),
+        ),
+        'submit' => array(
+            'type'         => 'submit',
+            'value'        => get_string('submit'),
+        ),
+    )
+));
+
+function groupcategories_submit(Pieform $form, $values) {
+    set_config('allowgroupcategories', (int) $values['allowgroupcategories']);
+    redirect(get_config('wwwroot') . 'admin/groups/groupcategories.php');
 }
 
 $strings = array('edit','delete','update','cancel','add','name','unknownerror');
@@ -176,9 +191,10 @@ addLoadEvent(function () {
 });
 EOJS;
 
-$smarty = smarty(array('groupoptions'));
+$smarty = smarty();
 $smarty->assign('PAGEHEADING', hsc(get_string('groupcategories', 'admin')));
 $smarty->assign('INLINEJAVASCRIPT', $ijs);
-$smarty->display('admin/site/groupcategories.tpl');
+$smarty->assign('optionform', $optionform);
+$smarty->display('admin/groups/groupcategories.tpl');
 
 ?>

@@ -46,14 +46,13 @@ $groups = get_records_sql_array(
     FROM {group} g WHERE g.deleted = 0 ORDER BY g.id DESC", array()
 );
 foreach ($groups as &$group) {
-    $group->type = get_string('grouptypedescription', 'group', get_string('name', 'grouptype.' . $group->grouptype), get_string('membershiptype.'.$group->jointype, 'group'));
-    //$group->type = "$group->grouptype > $group->jointype";
+    $group->type = get_string('name', 'grouptype.' . $group->grouptype) . ', ' . get_string('membershiptype.'.$group->jointype, 'group');
     $group->visible = $group->visible ? 'Public' : 'Private';
 }
 
 $smarty = smarty();
 $smarty->assign('groups', $groups);
-$smarty->assign('PAGEHEADING', hsc('Administer Groups'));
+$smarty->assign('PAGEHEADING', get_string('administergroups', 'admin'));
 $smarty->assign('siteadmin', true);
 $smarty->display('admin/groups/groups.tpl');
 

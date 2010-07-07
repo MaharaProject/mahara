@@ -201,12 +201,10 @@ $siteoptionform = array(
                     'help'         => true,
                 ),
                 'allowgroupcategories' => array(
-                    'type'         => 'select',
+                    'type'         => 'checkbox',
                     'title'        => get_string('allowgroupcategories', 'admin'),
                     'description'  => get_string('allowgroupcategoriesdescription', 'admin'),
                     'defaultvalue' => get_config('allowgroupcategories'),
-                    'options'      => array(true  => get_string('yes'), false => get_string('no')),
-                    'help'         => true,
                 ),
             ),
         ),
