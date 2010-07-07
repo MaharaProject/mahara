@@ -166,7 +166,7 @@ function saveitem(itemid) {
     }
 
     var data = {'name':name,
-                'itemid':itemid,};
+                'itemid':itemid};
     sendjsonrequest('updategroup.json.php', data, 'POST', getitems);
     return false;
 }
