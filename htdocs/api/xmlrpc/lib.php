@@ -275,6 +275,140 @@ function user_authorise($token, $useragent) {
     return $userdata;
 }
 
+/**
+ * Retrieve a file for a user calling this function
+ * The file is encoded in base64
+ * @global object $REMOTEWWWROOT
+ * @param string $username
+ * @param integer $id Artefact to send
+ * @return array The file content encoded in base 64 + file name
+ */
+function get_file($username, $id) {
+
+    global $REMOTEWWWROOT;
+
+    //check that the user exists
+    list ($user, $authinstance) = find_remote_user($username, $REMOTEWWWROOT);
+    if (!$user) {
+        throw new ExportException("Could not find user $username for $REMOTEWWWROOT");
+    }
+
+    //check that the user is owner of the requested file
+    safe_require('artefact', 'file');
+    $file = artefact_instance_from_id($id);
+    if (!record_exists('artefact', 'owner', $user->id, 'id', $id)) {
+        throw new ExportException("You are not allowed to get this file.");
+    }
+
+    //retrieve the content and send the file encoded in base 64
+    $filecontent = base64_encode(file_get_contents($file->get_path()));
+    return array($filecontent, $file->name);
+}
+
+
+/**
+ * Retrieve list of files/folders matching the search
+ * @global object $REMOTEWWWROOT
+ * @param string $username
+ * @param string $search
+ * @return array list of files/folders matching the search
+ */
+function search_folders_and_files($username, $search='') {
+
+    global $REMOTEWWWROOT;
+
+    //check that the user exists
+    list ($user, $authinstance) = find_remote_user($username, $REMOTEWWWROOT);
+    if (!$user) {
+        throw new ExportException("Could not find user $username for $REMOTEWWWROOT");
+    }
+
+    $list = array();
+    safe_require('artefact', 'file');
+    $filetypes = array_diff(PluginArtefactFile::get_artefact_types(), array('profileicon'));
+    foreach ($filetypes as $k => $v) {
+        if ($v == 'folder') {
+            unset($filetypes[$k]);
+        }
+    }
+    $filetypesql = "('" . join("','", $filetypes) . "')";
+
+    $ownersql = artefact_owner_sql($user->id);
+
+    //retrieve folders and files of a specific Mahara folder
+    $sql = "SELECT
+                *
+            FROM
+                {artefact} a
+            LEFT JOIN {artefact_tag} at ON (at.artefact = a.id)
+            WHERE
+                $ownersql
+                AND
+                (a.title like ? OR at.tag like ?)";
+    $list =  array(
+
+            'files'   => get_records_sql_array($sql." AND artefacttype IN $filetypesql ORDER BY title", array('%'.$search.'%','%'.$search.'%')),
+            'folders' => get_records_sql_array($sql." AND artefacttype = 'folder' ORDER BY title", array('%'.$search.'%','%'.$search.'%'))
+    );
+
+    return $list;
+}
+
+/**
+ * Retrieve file list in a folder
+ * @global object $REMOTEWWWROOT
+ * @param string $username
+ * @param integer $folderid  folder to browse
+ * @return array The complete folder path + list of files for a specific Mahara folder
+ */
+function get_folder_files($username, $folderid) {
+
+    global $REMOTEWWWROOT;
+
+    //check that the user exists
+    list ($user, $authinstance) = find_remote_user($username, $REMOTEWWWROOT);
+    if (!$user) {
+        throw new ExportException("Could not find user $username for $REMOTEWWWROOT");
+    }
+
+    $list = array();
+    safe_require('artefact', 'file');
+    $filetypes = array_diff(PluginArtefactFile::get_artefact_types(), array('profileicon'));
+    foreach ($filetypes as $k => $v) {
+        if ($v == 'folder') {
+            unset($filetypes[$k]);
+        }
+    }
+    $filetypesql = "('" . join("','", $filetypes) . "')";
+
+    $ownersql = artefact_owner_sql($user->id);
+
+    $folderpath = array(); //the complete folder path (some client could need it)
+    if (!empty($folderid)) {
+        $pathsql = " AND parent = $folderid";
+
+        //build the path
+        $parentids = artefact_get_parents_for_cache($folderid); //the closest parent is on the first key
+                                                            //the further parent is on the last key
+        foreach ($parentids as $id => $dump) {
+            $artefact = get_record('artefact', 'id', $id);
+            array_unshift($folderpath, array('path' => $artefact->id, 'name' => $artefact->title));
+        }
+
+    } else {
+        $pathsql = "AND parent IS NULL";
+    }
+    array_unshift($folderpath, array('path' => null, 'name' => 'Root'));
+
+    //retrieve folders and files of a specific Mahara folder
+    $list =  array(
+            'files'   => get_records_select_array('artefact', "artefacttype IN $filetypesql AND $ownersql $pathsql", array(),'title'),
+            'folders' => get_records_select_array('artefact', "artefacttype = 'folder' AND $ownersql $pathsql", array(),'title')
+    );
+
+    return array($folderpath, $list);
+}
+
 function send_content_intent($username) {
     global $REMOTEWWWROOT;
     require_once(get_config('docroot') . 'import/lib.php');

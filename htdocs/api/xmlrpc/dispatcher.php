@@ -67,11 +67,11 @@ class Dispatcher {
             'portfolio/mahara/lib.php/send_content_intent' => 'send_content_intent',
             'portfolio/mahara/lib.php/send_content_ready' => 'send_content_ready',
             ),
-        /* later...
-        'portfolio_out' => array(
-
-        ),
-        */
+        'repository_out' => array(
+            'repository/mahara/repository.class.php/get_folder_files' => 'get_folder_files',
+            'repository/mahara/repository.class.php/get_file' => 'get_file',
+            'repository/mahara/repository.class.php/search_folders_and_files' => 'search_folders_and_files'
+            )
     );
 
     private $methodhelp = array(
@@ -111,6 +111,27 @@ class Dispatcher {
                                         ),
                                     )
                                 ),
+        'get_folder_files' => array(
+                                array(
+                                    array('type' => 'array',
+                                          'description' => 'The Moodle File picker path + list of files for a specific Mahara folder'
+                                        )
+                                    )
+                                ),
+        'search_folders_and_files' => array(
+                                array(
+                                    array('type' => 'array',
+                                          'description' => 'list of files/folders matching the search'
+                                        )
+                                    )
+                                ),
+        'get_file' => array(
+                                array(
+                                    array('type' => 'array',
+                                          'description' => 'The file content encoded in base 64 + file name'
+                                        )
+                                    )
+                                )
     );
 
     function __construct($payload, $payload_signed, $payload_encrypted) {
