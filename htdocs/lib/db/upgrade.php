@@ -625,12 +625,16 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2008101602) {
+        $artefactdata = get_config('dataroot') . 'artefact/';
+        if (is_dir($artefactdata . 'file/profileicons')) {
+            throw new SystemException("Upgrade 2008101602: $artefactdata/file/profileicons already exists!");
+        }
+
         // Move artefact/internal/profileicons directory to artefact/file
         set_field('artefact_installed_type', 'plugin', 'file', 'name', 'profileicon');
         set_field('artefact_config', 'plugin', 'file', 'field', 'profileiconwidth');
         set_field('artefact_config', 'plugin', 'file', 'field', 'profileiconheight');
 
-        $artefactdata = get_config('dataroot') . 'artefact/';
         if (is_dir($artefactdata . 'internal/profileicons')) {
             if (!is_dir($artefactdata . 'file')) {
                 mkdir($artefactdata . 'file');
@@ -793,7 +797,22 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2009021700) {
-        reload_html_filters();
+        try {
+            include_once('xmlize.php');
+            $newlist = xmlize(file_get_contents(get_config('libroot') . 'htmlpurifiercustom/filters.xml'));
+            $filters = $newlist['filters']['#']['filter'];
+            foreach ($filters as &$f) {
+                $f = (object) array(
+                    'site' => $f['#']['site'][0]['#'],
+                    'file' => $f['#']['filename'][0]['#']
+                );
+            }
+            $filters[] = (object) array('site' => 'http://www.youtube.com', 'file' => 'YouTube');
+            set_config('filters', serialize($filters));
+        }
+        catch (Exception $e) {
+            log_debug('Upgrade 2009021700: failed to load html filters');
+        }
     }
 
     if ($oldversion < 2009021701) {
@@ -802,29 +821,17 @@ function xmldb_core_upgrade($oldversion=0) {
         // beta version then upgrading it
         if ($views = get_column('view', 'id', 'copynewuser', '1')) {
             $views[] = 1;
-            require_once('view.php');
             foreach ($views as $viewid) {
-                $view = new View($viewid);
-                $needsadding = true;
-                foreach ($view->get_access() as $item) {
-                    if ($item['type'] == 'loggedin') {
-                        // We're not checking that access dates are null (aka 
-                        // it can always be accessed), but the chance of people 
-                        // needing this upgrade are slim anyway
-                        $needsadding = false;
-                        break;
-                    }
-                }
-
-                if ($needsadding) {
-                    log_debug("Adding logged in access for view $viewid");
-                    $access = $view->get_access();
-                    $access[] = array(
-                        'type' => 'loggedin',
+                if (!record_exists('view_access', 'view', $viewid, 'accesstype', 'loggedin')) {
+                    // We're not checking that access dates are null (aka
+                    // it can always be accessed), but the chance of people
+                    // needing this upgrade are slim anyway
+                    insert_record('view_access', (object) array(
+                        'view' => $viewid,
+                        'accesstype' => 'loggedin',
                         'startdate' => null,
                         'stopdate'  => null,
-                    );
-                    $view->set_access($access);
+                    ));
                 }
             }
         }
@@ -1156,13 +1163,25 @@ function xmldb_core_upgrade($oldversion=0) {
                     // Remove the first one, which is their real profile view
                     array_shift($views);
                     foreach ($views as $viewid) {
-                        $view = new View($viewid);
-                        if ($view->get('type') == 'profile') {
-                            $view->delete();
+                        delete_records('artefact_feedback','view',$viewid);
+                        delete_records('view_feedback','view',$viewid);
+                        delete_records('view_access','view',$viewid);
+                        delete_records('view_access_group','view',$viewid);
+                        delete_records('view_access_usr','view',$viewid);
+                        delete_records('view_access_token', 'view', $viewid);
+                        delete_records('view_autocreate_grouptype', 'view', $viewid);
+                        delete_records('view_tag','view',$viewid);
+                        delete_records('usr_watchlist_view','view',$viewid);
+                        if ($blockinstanceids = get_column('block_instance', 'id', 'view', $viewid)) {
+                            foreach ($blockinstanceids as $id) {
+                                if (table_exists('blocktype_wall_post')) {
+                                    delete_records('blocktype_wall_post', 'instance', $id);
+                                }
+                                delete_records('view_artefact', 'block', $id);
+                                delete_records('block_instance', 'id', $id);
+                            }
                         }
-                        else {
-                            log_info("Odd: upgrade to delete duplicate profile views tried to delete a normal view? (id=$viewid)");
-                        }
+                        delete_records('view','id', $viewid);
                     }
                 }
             }
@@ -1227,13 +1246,17 @@ function xmldb_core_upgrade($oldversion=0) {
         // Remove bbcode formatting from existing feedback
         if ($records = get_records_sql_array("SELECT * FROM {view_feedback} WHERE message LIKE '%[%'", array())) {
             foreach ($records as &$r) {
-                $r->message = parse_bbcode($r->message);
+                if (function_exists('parse_bbcode')) {
+                    $r->message = parse_bbcode($r->message);
+                }
                 update_record('view_feedback', $r);
             }
         }
         if ($records = get_records_sql_array("SELECT * FROM {artefact_feedback} WHERE message LIKE '%[%'", array())) {
             foreach ($records as &$r) {
-                $r->message = parse_bbcode($r->message);
+                if (function_exists('parse_bbcode')) {
+                    $r->message = parse_bbcode($r->message);
+                }
                 update_record('artefact_feedback', $r);
             }
         }
@@ -1322,8 +1345,15 @@ function xmldb_core_upgrade($oldversion=0) {
 
     if ($oldversion < 2010011300) {
         // Clean up the mess left behind by failing to delete blogposts in a transaction
-        require_once(get_config('docroot') . 'artefact/lib.php');
-        rebuild_artefact_parent_cache_dirty();
+        try {
+            include_once(get_config('docroot') . 'artefact/lib.php');
+            if (function_exists('rebuild_artefact_parent_cache_dirty')) {
+                rebuild_artefact_parent_cache_dirty();
+            }
+        }
+        catch (Exception $e) {
+            log_debug('Upgrade 2010011300: rebuild_artefact_parent_cache_dirty failed.');
+        }
         execute_sql("
             INSERT INTO {artefact_blog_blogpost} (blogpost)
             SELECT id FROM {artefact} WHERE artefacttype = 'blogpost' AND id NOT IN (
@@ -1346,7 +1376,35 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2010021600) {
-        set_remoteavatars_default();
+        // Set remoteavatars defaults
+        // Check if the site is using https
+        $urlprotocol = substr(get_config('wwwroot'), 0, 5);
+        if (strtolower($urlprotocol) == 'https') {
+            // Avoid mix of secure and insecure contents
+            set_config('remoteavatars', 0);
+        }
+        else {
+            // Check to see if we can reach gravatar.com
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_FAILONERROR, true);
+            curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+            curl_setopt($ch, CURLOPT_HEADER, false);
+            curl_setopt($ch, CURLOPT_VERBOSE, false);
+            curl_setopt($ch, CURLOPT_NOBODY, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5); // timeout in seconds
+            curl_setopt($ch, CURLOPT_COOKIE, '');
+            curl_setopt($ch, CURLOPT_REFERER, ''); // for privacy
+            curl_setopt($ch, CURLOPT_URL, 'http://www.gravatar.com/');
+            if (curl_exec($ch)) {
+                // By default, turn it on
+                set_config('remoteavatars', 1);
+            }
+            else {
+                // Can't reach gravatar.com in a timely fashion
+                set_config('remoteavatars', 0);
+            }
+            curl_close($ch);
+        }
     }
 
     if ($oldversion < 2010031000) {
@@ -1362,7 +1420,19 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2010040700) {
-        set_antispam_defaults();
+        // Set antispam defaults
+        set_config('formsecret', get_random_key());
+        if (!function_exists('checkdnsrr')) {
+            require_once(get_config('docroot') . 'lib/antispam.php');
+        }
+        if(checkdnsrr('test.uribl.com.black.uribl.com', 'A')) {
+            set_config('antispam', 'advanced');
+        }
+        else {
+            set_config('antispam', 'simple');
+        }
+        set_config('spamhaus', 0);
+        set_config('surbl', 0);
     }
 
     if ($oldversion < 2010040800) {

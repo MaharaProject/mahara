@@ -37,6 +37,10 @@ require_once('ddl.php');
 /**
  * This function checks core and plugins for which need to be upgraded/installed
  *
+ * Note: This function is sometimes executed during upgrades from
+ * ancient databases.  Avoid rash assumptions about what's installed
+ * or these upgrades may fail.
+ *
  * @param string $name The name of the plugin to check. If no name is specified,
  *                     all plugins are checked.
  * @return array of objects
@@ -330,6 +334,10 @@ function upgrade_local($upgrade) {
 
 /**
  * Upgrades the plugin to a new version
+ *
+ * Note: This function is sometimes executed during upgrades from
+ * ancient databases.  Avoid rash assumptions about what's installed
+ * or these upgrades may fail.
  *
  * @param object $upgrade   Information about the plugin to upgrade
  * @return bool             Whether the upgrade succeeded or not
