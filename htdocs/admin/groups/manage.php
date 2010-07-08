@@ -27,102 +27,86 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('SECTION_PLUGINTYPE', 'core');
-define('SECTION_PLUGINNAME', 'admin');
-define('SECTION_PAGE', 'groupsearch');
 define('MENUITEM', 'managegroups/groups');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 require_once('pieforms/pieform.php');
 
-if (!$USER->get('admin')) {
-    //User not an admin, redirect away
-    redirect(get_config('wwwroot'));
-}
+$group = get_record_select('group', 'id = ? AND deleted = 0', array(param_integer('id')));
 
-$id = param_integer('id');
-$exists = record_exists('group', 'id', $id);
+define('TITLE', get_string('groupadminsforgroup', 'admin', $group->name));
 
-if (!$exists) {
-    //Group doesn't exist
-    redirect(get_config('wwwroot').'admin/groups/group.php');
-}
-
-$group = get_record_sql("SELECT g.name FROM {group} g WHERE g.id = ?", array($id));
-define('TITLE', "Manage group '$group->name'");
-
-$admins = get_records_sql_array(
-    "SELECT gm.member FROM {group_member} gm WHERE gm.role = 'admin' AND gm.group = ?", array($id)
+$admins = get_column_sql(
+    "SELECT gm.member FROM {group_member} gm WHERE gm.role = 'admin' AND gm.group = ?", array($group->id)
 );
-foreach ($admins as $admin) {
-    $group_admins[] = $admin->member;
-}
 
-$subscribeform = array(
+$form = pieform(array(
     'name'       => 'groupadminsform',
     'renderer'   => 'table',
     'plugintype' => 'core',
     'pluginname' => 'admin',
-    'jssuccesscallback' => 'checkReload',
     'elements'   => array(
         'admins' => array(
             'type' => 'userlist',
-            'title' => 'Group Admins',
-            'description' => 'Manage the admins for this group',
-            'defaultvalue' => $group_admins,
-            'group' => $id,
-            'includeadmins' => true,
+            'title' => get_string('groupadmins', 'group'),
+            'defaultvalue' => $admins,
             'filter' => false,
-            'lefttitle' => 'Members',
-            'righttitle' => 'Admins',
-        ),
-        'group'  => array(
-            'type' => 'hidden',
-            'value' => $id,
+            'lefttitle' => get_string('potentialadmins', 'admin'),
+            'righttitle' => get_string('currentadmins', 'admin'),
         ),
         'submit' => array(
             'type' => 'submit',
-            'value' => 'Save',
+            'value' => get_string('save'),
         ),
     ),
-);
-$subscribeform = pieform($subscribeform);
+));
 
 function groupadminsform_submit(Pieform $form, $values) {
-    global $SESSION;
-    $gid = $values['group'];
-    $old_admins = array();
-    $results = get_records_sql_array(
-        "SELECT gm.member FROM {group_member} gm WHERE gm.role = 'admin' AND gm.group = ?", array($gid)
-    );
-    foreach ($results as $row) {
-        $old_admins[] = $row->member;
-    }
+    global $SESSION, $group, $admins;
 
-    db_begin;
-    if (!empty($values['admins'])) {
-        foreach ($values['admins'] as $uid) {
-            if (!in_array($uid, $old_admins)) {
-                //An admin has been added
-                set_field('group_member', 'role', 'admin', 'group', $gid, 'member', $uid);
-            }
-        }
+    $newadmins = array_diff($values['admins'], $admins);
+    $demoted = array_diff($admins, $values['admins']);
+
+    db_begin();
+    if ($demoted) {
+        $demoted = join(',', array_map('intval', $demoted));
+        execute_sql("
+            UPDATE {group_member}
+            SET role = 'member'
+            WHERE role = 'admin' AND \"group\" = ?
+                AND member IN ($demoted)",
+            array($group->id)
+        );
     }
-    foreach ($old_admins as $uid) {
-        if (!in_array($uid, $values['admins'])) {
-            //An admin has been removed
-            set_field('group_member', 'role', 'member', 'group', $gid, 'member', $uid);
+    $dbnow = db_format_timestamp(time());
+    foreach ($newadmins as $id) {
+        if (record_exists('group_member', 'group', $group->id, 'member', $id)) {
+            execute_sql("
+                UPDATE {group_member}
+                SET role = 'admin'
+                WHERE \"group\" = ? AND member = ?",
+                array($group->id, $id)
+            );
+        }
+        else {
+            insert_record('group_member', (object) array(
+                'group' => $group->id,
+                'member' => $id,
+                'role' => 'admin',
+                'ctime' => $dbnow,
+                'mtime' => $dbnow,
+            ));
         }
     }
     db_commit();
 
-    $SESSION->add_ok_msg("Group admins have been updated");
+    $SESSION->add_ok_msg(get_string('groupadminsupdated', 'admin'));
     redirect(get_config('wwwroot').'admin/groups/groups.php');
 }
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', hsc(TITLE));
-$smarty->assign('managegroupform', $subscribeform);
+$smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('managegroupform', $form);
 $smarty->display('admin/groups/manage.tpl');
 
 ?>

@@ -124,6 +124,8 @@ $string['newfiltersdescription'] = 'If you have downloaded a new set of HTML fil
 $string['filtersinstalled'] = 'Filters installed.';
 $string['nofiltersinstalled'] = 'No html filters installed.';
 
+
+// Group management
 $string['groupcategories'] = 'Group Categories';
 $string['allowgroupcategories'] = 'Allow Group Categories';
 $string['enablegroupcategories'] = 'Enable Group Categories';
@@ -133,6 +135,10 @@ $string['groupoptionsset'] = 'Group options have been updated.';
 $string['groupcategorydeleted'] = 'Category deleted';
 $string['confirmdeletecategory'] = 'Do you really want to delete this category?';
 $string['groupcategoriespagedescription'] = 'The categories listed here can be assigned to groups during group creation, and used to filter groups during searches.';
+$string['groupadminsforgroup'] = "Group administrators for '%s'";
+$string['potentialadmins'] = 'Potential administrators';
+$string['currentadmins'] = 'Current administrators';
+$string['groupadminsupdated'] = 'Group admins have been updated';
 
 // Register your Mahara
 $string['Field'] = 'Field';
@@ -690,6 +696,6 @@ $string['grouptype'] = 'Group Type';
 $string['groupvisible'] = 'Visibility';
 $string['groupmanage'] = 'Manage';
 $string['groupdelete'] = 'Delete';
-$string['managegroupdescription'] = 'Use the below form to promote and demote admins for this group.';
+$string['managegroupdescription'] = 'Use the form below to promote and demote admins for this group.  If you remove a group administrator they will remain a group member.';
 
 ?>
