@@ -43,7 +43,7 @@ $string['registerglobals'] = 'You have dangerous PHP settings, register_globals 
 $string['magicquotesgpc'] = 'You have dangerous PHP settings, magic_quotes_gpc is on. Mahara is trying to work around this, but you should really fix it';
 $string['magicquotesruntime'] = 'You have dangerous PHP settings, magic_quotes_runtime is on. Mahara is trying to work around this, but you should really fix it';
 $string['magicquotessybase'] = 'You have dangerous PHP settings, magic_quotes_sybase is on. Mahara is trying to work around this, but you should really fix it';
-$string['mimemagicnotloaded'] = 'Your server does not have the mime_magic extension enabled. Mahara may have trouble detecting file types.';
+$string['mimemagicnotloaded'] = 'Your server may have trouble detecting file types, please install the PHP extension Fileinfo (PHP 5.3+) or the mime_magic extension(earlier PHP versions).';
 
 $string['safemodeon'] = 'Your server appears to be running safe mode. Mahara does not support running in safe mode. You must turn this off in either the php.ini file, or in your apache config for the site.
 
