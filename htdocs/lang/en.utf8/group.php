@@ -69,6 +69,7 @@ $string['publiclyviewablegroup'] = 'Publicly Viewable Group?';
 $string['publiclyviewablegroupdescription'] = 'Allow people who are not logged-in to view this group, including the forums?';
 $string['Type'] = 'Type';
 $string['publiclyvisible'] = 'Publicly visible';
+$string['Public'] = 'Public';
 $string['usersautoadded'] = 'Users auto-added?';
 $string['usersautoaddeddescription'] = 'Automatically put all new users into this group?';
 $string['groupcategory'] = 'Group category';

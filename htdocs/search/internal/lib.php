@@ -616,7 +616,7 @@ class PluginSearchInternal extends PluginSearch {
         $count = get_field_sql('SELECT COUNT(*) '.$sql, $values);
 
         if ($count > 0) {
-            $sql = 'SELECT id, name, description, grouptype, jointype, ctime, mtime ' . $sql . ' ORDER BY name';
+            $sql = 'SELECT id, name, description, grouptype, jointype, public, ctime, mtime ' . $sql . ' ORDER BY name';
             $data = get_records_sql_array($sql, $values, $offset, $limit);
         }
 
