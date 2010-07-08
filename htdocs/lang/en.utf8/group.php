@@ -224,6 +224,7 @@ $string['cantremovefriend'] = 'You cannot remove this user from your friends lis
 $string['friendshipalreadyrequested'] = 'You have requested to be added to %s\'s friends list';
 $string['friendshipalreadyrequestedowner'] = '%s has requested to be added to your friends list';
 $string['rejectfriendshipreason'] = 'Reason for rejecting request';
+$string['alreadyfriends'] = 'You are already friends with %s';
 
 $string['friendrequestacceptedsubject'] = 'Friend request accepted';
 $string['friendrequestacceptedmessage'] = '%s has accepted your friend request and they have been added to your friends list'; 

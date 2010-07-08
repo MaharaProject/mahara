@@ -33,9 +33,24 @@ require_once('pieforms/pieform.php');
 $id = param_integer('id');
 $returnto = param_alpha('returnto', 'myfriends');
 
-if (is_friend($id, $USER->get('id'))
-    || get_friend_request($id, $USER->get('id'))
-    || get_account_preference($id, 'friendscontrol') != 'auth'
+switch ($returnto) {
+case 'find': $goto = 'user/find.php'; break;
+case 'view': $goto = 'user/view.php?id=' . $id; break;
+default:
+    $goto = 'user/myfriends.php';
+}
+$goto = get_config('wwwroot') . $goto;
+
+if (is_friend($id, $USER->get('id'))) {
+    $SESSION->add_ok_msg(get_string('alreadyfriends', 'group', display_name($id)));
+    redirect($goto);
+}
+else if (get_friend_request($id, $USER->get('id'))) {
+    $SESSION->add_info_msg(get_string('friendshipalreadyrequestedowner', 'group', display_name($id)));
+    redirect(get_config('wwwroot') . 'user/myfriends.php?filter=pending');
+}
+
+if (get_account_preference($id, 'friendscontrol') != 'auth'
     || $id == $USER->get('id')
     || !($user = get_record('usr', 'id', $id, 'deleted', 0))) {
     throw new AccessDeniedException(get_string('cantrequestfriendship', 'group'));
@@ -58,7 +73,7 @@ $form = pieform(array(
         'submit' => array(
             'type' => 'submitcancel',
             'value' => array(get_string('requestfriendship', 'group'), get_string('cancel')),
-            'goto' => get_config('wwwroot') . ($returnto == 'find' ? 'user/find.php' : ($returnto == 'view' ? 'user/view.php?id=' . $id : 'user/myfriends.php')),
+            'goto' => $goto,
         )
     )
 ));
@@ -70,7 +85,7 @@ $smarty->assign('user', $user);
 $smarty->display('user/requestfriendship.tpl');
 
 function requestfriendship_submit(Pieform $form, $values) {
-    global $USER, $SESSION, $id;
+    global $USER, $SESSION, $id, $goto;
     
     $loggedinid = $USER->get('id');
     $user = get_record('usr', 'id', $id);
@@ -104,17 +119,7 @@ function requestfriendship_submit(Pieform $form, $values) {
     handle_event('addfriendrequest', array('requester' => $loggedinid, 'owner' => $id));
 
     $SESSION->add_ok_msg(get_string('friendformrequestsuccess', 'group', display_name($id)));
-    switch (param_alpha('returnto', 'myfriends')) {
-        case 'find':
-            redirect('/user/find.php');
-            break;
-        case 'view':
-            redirect('/user/view.php?id=' . $id);
-            break;
-        default:
-            redirect('/user/myfriends.php');
-            break;
-    }
+    redirect($goto);
 }
 
 ?>
