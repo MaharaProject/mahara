@@ -18,6 +18,6 @@
 
             <h1>{str tag=footermenu section=admin}</h1>
             <p>{str tag=footermenudescription section=admin}</p>
-            {$footerform}
+            {$footerform|safe}
 
 {include file="footer.tpl"}
