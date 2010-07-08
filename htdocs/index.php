@@ -39,6 +39,7 @@ if (!$USER->is_logged_in()) {
     $lang = param_alphanumext('lang', null);
     if (!empty($lang)) {
         $SESSION->set('lang', $lang);
+        redirect();
     }
 }
 else {
