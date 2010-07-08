@@ -28,37 +28,14 @@
 define('INTERNAL', 1);
 define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('SECTION_PLUGINTYPE', 'core');
-define('SECTION_PLUGINNAME', 'admin');
-define('SECTION_PAGE', 'groupsearch');
-//define('TITLE', 'Delete Group');
 define('MENUITEM', 'managegroups/groups');
 
 require_once('pieforms/pieform.php');
 
-if (!$USER->get('admin')) {
-    //User not an admin, redirect away
-    redirect(get_config('wwwroot'));
-}
-
 $groupid = param_integer('id');
-$exists = record_exists('group', 'id', $groupid);
-
-if (!$exists) {
-    //Group doesn't exist
-    redirect(get_config('wwwroot').'admin/groups/group.php');
-}
-
 $group = get_record_sql("SELECT g.name FROM {group} g WHERE g.id = ? AND g.deleted = 0", array($groupid));
 
 define('TITLE', get_string('deletespecifiedgroup', 'group', $group->name));
-
-$views = count_records_sql(
-    'SELECT COUNT(*)
-    FROM {view_access_group} a
-    WHERE a.group = ?',
-    array($groupid)
-);
 
 $form = pieform(array(
     'name' => 'admindeletegroup',
@@ -69,20 +46,20 @@ $form = pieform(array(
         'submit' => array(
             'type' => 'submitcancel',
             'value' => array(get_string('yes'), get_string('no')),
-            //'goto' => get_config('wwwroot') . 'group/view.php?id=' . $groupid
+            'goto' => get_config('wwwroot') . 'admin/groups/groups.php',
         )
     ),
 ));
 
 $smarty = smarty();
-$smarty->assign('subheading', hsc(TITLE));
-$smarty->assign('message', $views ? get_string('groupconfirmdeletehasviews', 'group') : get_string('groupconfirmdelete', 'group'));
+$smarty->assign('subheading', TITLE);
+$smarty->assign('message', get_string('groupconfirmdelete', 'group'));
 $smarty->assign('form', $form);
 $smarty->display('group/delete.tpl');
 
 function admindeletegroup_submit(Pieform $form, $values) {
     global $SESSION, $groupid;
-    require_once('../../lib/group.php');
+    require_once(get_config('libroot') . 'group.php');
     group_delete($groupid);
     $SESSION->add_ok_msg(get_string('deletegroup', 'group'));
     redirect(get_config('wwwroot').'admin/groups/groups.php');
