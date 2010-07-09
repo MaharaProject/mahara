@@ -111,7 +111,7 @@ if ($jointype == 'controlled') {
 elseif ($jointype == 'invite') {
     if ($groupstoadd = array_diff($resultgroups, $initialgroups)) {
         foreach ($groupstoadd as $groupid) {
-            group_invite_user($groupdata[$groupid], $userid);
+            group_invite_user($groupdata[$groupid], $userid, $USER->get('id'));
         }
     }
     $data['message'] = get_string('userinvited', 'group');
