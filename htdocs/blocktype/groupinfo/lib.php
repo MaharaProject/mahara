@@ -79,6 +79,7 @@ class PluginBlocktypeGroupInfo extends SystemBlocktype {
     }
 
     protected static function get_data($groupid) {
+        global $USER;
 
         if(!defined('GROUP')) {
             define('GROUP', $groupid);
