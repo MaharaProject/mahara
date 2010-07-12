@@ -82,7 +82,7 @@ function changemembership(event, user_id, type) {
 
 function getitems(user_id, successfunction) {
     sendjsonrequest('../group/controlledgroups.json.php', {
-        'userid':user_id,
+        'userid':user_id
     }, 'GET',
     function(data) {
         replaceChildNodes('groupbox');
