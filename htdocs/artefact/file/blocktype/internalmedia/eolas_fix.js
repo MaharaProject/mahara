@@ -1,5 +1,9 @@
 // Documentation & updates available at:
 // http://codecentre.eplica.is/js/eolasfix/test.htm
+// Hugsmiðjan ehf. (June 2007)
+
+// Usage: Place the following line of code somewhere in the HTML code of your page:
+// <script type="text/javascript" src="[path-to-your-script-folder]/eolasfix.js" defer="defer"></script>
 
 (function( Eolas_Fixed,
             win, doc,
@@ -32,8 +36,7 @@
           z = 0;
           // <param> elements don't show up in innerHTML IE
           // so we need to collect their outerHTML.
-          while (childNode = elm.childNodes[z++])
-              HTML += childNode[outerHTML];
+          while (childNode = elm.childNodes[z++]) HTML += childNode[outerHTML];
 
           // create a 'dummy' element 
           dummy = doc.createElement('i');
@@ -62,19 +65,19 @@
   // Then assign a window.onload event to purge the old elements.
   is_ie && !eolasfix() && win.attachEvent('onload', function(){
     x=0;
-    while(elm = elmsToRemoveOnload[x++])
-        elm[parentNode].removeChild(elm);
+    while(elm = elmsToRemoveOnload[x++]) elm[parentNode].removeChild(elm);
   });
   // For Opera set an `DOMContentLoaded` event to run the fix.
   win.opera && doc.addEventListener('DOMContentLoaded', eolasfix, 0);
 
-})( '__Eolas_Fixed',
-    window, document,
-    'getElementsByTagName',
-    'outerHTML',
-    'parentNode',
-    ['object','embed','applet'],
-    [],
-    -1 /*@cc_on,1 @*/
+})( '__Eolas_Fixed',             // Eolas_Fixed
+    window,                      // win
+    document,                    // doc
+    'getElementsByTagName',      // getElementsByTagName
+    'outerHTML',                 // outerHTML
+    'parentNode',                // parentNode
+    ['object','embed','applet'], // tags
+    [],                          // elmsToRemoveOnload
+    -1                           // x
+    /*@cc_on,1 @*/               // is_ie
   );
-
