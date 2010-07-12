@@ -1817,7 +1817,7 @@ function profile_icon_url($user, $maxwidth=40, $maxheight=40) {
         return $thumb . '?type=profileiconbyid&' . $sizeparams . '&id=' . $user->profileicon;
     }
     else if (get_config('remoteavatars')) {
-        return gravatar_icon($user->email, array('maxw' => $maxwidth, 'maxh' => $maxheight), $notfound);
+        return remote_avatar($user->email, array('maxw' => $maxwidth, 'maxh' => $maxheight), $notfound);
     }
     return $notfound;
 }
@@ -1831,7 +1831,7 @@ function profile_icon_url($user, $maxwidth=40, $maxheight=40) {
  *
  * @returns string The URL of the image or FALSE if none was found
  */
-function gravatar_icon($email, $size, $notfound) {
+function remote_avatar($email, $size, $notfound) {
     if (!get_config('remoteavatars')) {
         return false;
     }
@@ -1845,7 +1845,11 @@ function gravatar_icon($email, $size, $notfound) {
         $s = min($newsize['w'], $newsize['h']);
     }
 
-    return "http://www.gravatar.com/avatar/{$md5sum}.jpg?r=g&s=$s&d=" . urlencode($notfound);
+    $baseurl = 'http://www.gravatar.com/avatar/';
+    if (get_config('remoteavatarbaseurl')) {
+        $baseurl = get_config('remoteavatarbaseurl');
+    }
+    return "{$baseurl}{$md5sum}.jpg?r=g&s=$s&d=" . urlencode($notfound);
 }
 
 /**

@@ -17,3 +17,10 @@ Gravatar in such an environment would simply add extra delays.</p>
 <p>Also, for <b>sites delivered over https</b>, enabling Gravatar profile
 icons might trigger security warnings on some browsers. This is due to the
 fact that Gravatar images are served via normal unencrypted http.</p>
+
+<h4>Custom avatar server</h4>
+
+<p>If you have a custom avatar server which implements the Gravatar
+protocol, you may specify its base url in your config.php file:</p>
+
+<p><code>$cfg->remoteavatarbaseurl = 'http://example.com/avatar/';</code></p>

@@ -222,4 +222,7 @@ $cfg->maxrunage = 300;
 // if importing Leap2A over an xmlrpc mnet connection, set this to something higher than 0 to log import information
 // see the constants in import/leap/lib.php
 $cfg->leapovermnetloglevel = 0;
-?>
+
+// base URL of avatar server (with the trailing slash)
+// This should normally be set to http://www.gravatar.com/avatar/
+//$cfg->remoteavatarbaseurl = 'http://www.gravatar.com/avatar/';
